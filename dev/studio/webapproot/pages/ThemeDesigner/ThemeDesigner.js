@@ -985,7 +985,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                     this.setDirty(true);
 
                     var value = e.getDataValue();
-                    if (p == "headerHeight") value += "px";
+                    if (p == "headerHeight" && !value.match(/px/)) value += "px";
                     ctor.prototype[p] = value;
                     this.themePrototype[name][p] = value;                    
 		    //this.regenerateDemoPanel();
@@ -1153,7 +1153,9 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	        this.setCssSymbol(inGroupName, "Image-Position", position);
 	        this.setCssSymbol(inGroupName, "Image-Repeat", repeat);
             } else {
-                if (shortname == "Radius" || shortname == "Width" || shortname == "Margin" || shortname == "Height") value += "px";
+                if (shortname == "Radius" || shortname == "Width" || shortname == "Margin" || shortname == "Height") 
+                    if (!value.match(/px/))
+                        value += "px";
                 else if (shortname == "TextSize") value += "pt";
                 // replace "some-css-name: some-css-value; /* some-symbolic-name */
                 // with "same-dang-css-name: some-new-css-value; /* same-dang-symbolic-name */

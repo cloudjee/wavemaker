@@ -45,6 +45,8 @@ dojo.declare("wm.Layer", wm.Container, {
 		this.setCaption(this.caption);
 		if (!this.isRelativePositioned)
 			dojo.addClass(this.domNode, "wmlayer");
+            this.setBorder(this.parent.clientBorder);
+            this.setBorderColor(this.parent.clientBorderColor);
 	},
 	// FIXME: override so that we do not remove and re-add layer
 	// this is nasty but avoids dealing with layer order changing
@@ -141,7 +143,7 @@ dojo.declare("wm.Layers", wm.Container, {
 		else
 			this.setHeaderHeight('20px');
             // vertical defaults to justified; once we get rid of justified, we can remove this property
-	    this.client = new wm.Panel({isRelativePositioned:this.isRelativePositioned, border: this.clientBorder, borderColor: this.clientBorderColor, name: "client", parent: this, owner: this, height: "100%", width: "100%",  flags: {notInspectable: true}});
+	    this.client = new wm.Panel({isRelativePositioned:this.isRelativePositioned, border: 0, name: "client", parent: this, owner: this, height: "100%", width: "100%",  flags: {notInspectable: true}});
 		this.inherited(arguments);
 	},
 	postInit: function() {
@@ -182,11 +184,13 @@ dojo.declare("wm.Layers", wm.Container, {
 	},
         setClientBorder: function(inBorder) {
             this.clientBorder = inBorder;
-            if (this.client) this.client.setBorder(inBorder);
+            for (var i = 0; i < this.layers.length; i++)
+                this.layers[i].setBorder(inBorder);
         },
         setClientBorderColor: function(inBorderColor) {
             this.clientBorderColor = inBorderColor;
-            if (this.client) this.client.setBorderColor(inBorderColor);
+            for (var i = 0; i < this.layers.length; i++)
+                this.layers[i].setBorderColor(inBorderColor);
         },    
 	// public api for adding a layer
 	addLayer: function(inCaption) {

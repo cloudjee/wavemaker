@@ -80,8 +80,8 @@
 
 body.tundra.wm_template  div.wmheader,
 body.tundra .wm_template  div.wmheader,
-.wm_template  .wmTabLayers-client, 
-.wm_template  .wmWizardLayers-client {
+.wm_template  .wmTabLayers-client > .wmlayer, 
+.wm_template  .wmWizardLayers-client > .wmlayer {
     /* Common-Panel_Border */
     -moz-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
     -webkit-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
@@ -97,24 +97,15 @@ body.tundra .wm_template  div.wmheader,
     border-radius-bottomright: 4px;/* Common-Panel_BorderStyle_Radius */
 
 }    
-    .wm_template .wmTabLayers-client, 
-    .wm_template .wmWizardLayers-client {
-	/* Common-Panel_Border */
-	-moz-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
-	border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
-
-    }
-
 
 .wm_template .wmFancyPanel-labelWidget {
     /* Must always be 2-4px smaller than .wmfancypanel */
-       -moz-border-radius-topleft: 12px;   /* wm.FancyPanel_Top-Radius */
-    -moz-border-radius-topright: 12px;/* wm.FancyPanel_Top-Radius */
-    -webkit-border-top-left-radius: 12px;/* wm.FancyPanel_Top-Radius */
-    -webkit-border-top-right-radius: 12px;/* wm.FancyPanel_Top-Radius */
-    border-radius-topleft: 12px;/* wm.FancyPanel_Top-Radius */
-    border-radius-topright: 12px;/* wm.FancyPanel_Top-Radius */
+       -moz-border-radius-topleft: 12px;   /* Common-Panel_BorderStyle_Radius */
+    -moz-border-radius-topright: 12px;/* Common-Panel_BorderStyle_Radius */
+    -webkit-border-top-left-radius: 12px;/* Common-Panel_BorderStyle_Radius */
+    -webkit-border-top-right-radius: 12px;/* Common-Panel_BorderStyle_Radius */
+    border-radius-topleft: 12px;/* Common-Panel_BorderStyle_Radius */
+    border-radius-topright: 12px;/* Common-Panel_BorderStyle_Radius */
 
 }    
 

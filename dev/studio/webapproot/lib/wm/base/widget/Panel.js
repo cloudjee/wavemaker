@@ -458,8 +458,7 @@ wm.Panel.extend({
  
 wm.FancyPanel.extend({
     themeable: true,
-    themeableProps: ["innerBorder","borderColor","labelHeight"],
-    themeableStyles: ["wm.FancyPanel_Top-Radius"]
+    themeableProps: ["innerBorder","borderColor","labelHeight"]
 });
 
 wm.Object.extendSchema(wm.FancyPanel, {
