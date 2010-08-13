@@ -177,7 +177,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		// STEP 2: Set the value to the datastore item; if no datastore item then either clear (restricted values) or set the inValue text as the value (TODO: what if inValue is a wm.Variable?)
 		if (i !== undefined && i !== null && dojo.isObject(i)) {
 			// why can't we just set the value to i??? Optimization??
-			this._setEditorValue(i[this.displayField]);
+			this._setEditorValue(i[this.displayField || this._displayField]);
 			// allow any value not in store is treated as a clear
 		} else {
 			if (this.restrictValues)
