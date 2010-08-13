@@ -52,7 +52,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                  "BorderSize": ["wm.Text", {regExp: "\\d+(\\s*,\\s*\\d+){0,3}", width: "80px"}], 
                  "Radius": ["wm.Number", {minimum: 0, maximum: 24, width: "80px"}],
                  "Margin": ["wm.Number",  { width: "80px"}],
-                 "Image": ["wm.SelectMenu", {dataField: "dataValue", displayValue: "name", allowNone: true, width: "120px"},{},{
+                 "Image": ["wm.SelectMenu", {dataField: "dataValue", displayValue: "name", width: "120px"},{},{
                      binding: ["wm.Binding", {},{},{
                          wire: ["wm.Wire", {targetProperty: "dataSet", source: "imageListVar"}]
                      }]
@@ -266,7 +266,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
         /* Step 3: Get a list of images available for this theme so they're avialable for image pulldown menus */
 	var path;
         var result = studio.deploymentService.requestSync("listThemeImages", [this.currentTheme]).results[0];
-        var imageList = [];
+        var imageList = [{name: "none", dataValue: "no-repeat,top left,none"}];
         dojo.forEach(result, function(image) {
             var im = image.replace(/^.*\//,"").replace(/\)/,"");
             imageList.push({name: im, dataValue: image});
@@ -437,7 +437,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          captionSize: "15px",
                                          caption: "Radius",
                                          captionPosition: "bottom",
-                                    dataValue: this.getThemeDataValue("Headers-Default-BorderStyle", "Radius","0px").replace(/\D/g,""),
+                                    dataValue: this.getThemeDataValue("Document-HeadersDefault-BorderStyle", "Radius","0px").replace(/\D/g,""),
                                          width: "100px",
                                          height: "100%",
                                          owner: this,
@@ -448,7 +448,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                     captionSize: "15px",
                                     caption: "Width",
                                     captionPosition: "bottom",
-                                    dataValue:  wm.FancyPanel.prototype.border,
+                                    dataValue:  wm.FancyPanel.prototype.innerBorder,
                                     width: "100px",
                                     height: "100%",
                                     owner: this,
@@ -466,7 +466,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          captionSize: "15px",
                                          caption: "Background",
                                          captionPosition: "bottom",
-                                         dataValue: this.getThemeDataValue("Page-Background", "Color","#FFFFFF"),
+                                         dataValue: this.getThemeDataValue("Document-Styles-Background", "Color","#FFFFFF"),
                                          width: "100px",
                                          height: "100%",
                                          owner: this,
@@ -477,7 +477,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          captionSize: "15px",
                                          caption: "Font Color",
                                          captionPosition: "bottom",
-                                         dataValue: this.getThemeDataValue("Page-Font", "Color","#000000"),
+                                         dataValue: this.getThemeDataValue("Document-Styles-Font", "Color","#000000"),
                                          width: "100px",
                                          height: "100%",
                                          owner: this,
@@ -493,9 +493,9 @@ dojo.declare("ThemeDesigner", wm.Page, {
                       parent: container});
         editors.push(new wm.ColorPicker({name: "headerBackgroundColor",
                                          captionSize: "15px",
-                                         caption: "Color",
+                                         caption: "Background Color",
                                          captionPosition: "bottom",
-                                         dataValue: this.getThemeDataValue("Headers-Default-Background", "Color","#555555"),
+                                         dataValue: this.getThemeDataValue("Document-HeadersDefault-Background", "Color","#555555"),
                                          width: "100px",
                                          height: "100%",
                                          owner: this,
@@ -503,9 +503,9 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          readonly: Boolean(this.currentTheme.match(/^wm_/))}));
         var widget_json = this.themeTypes["Image"];
         var val = 
-            this.getThemeDataValue("Headers-Default-Background", "Image-Repeat") + "," +
-            this.getThemeDataValue("Headers-Default-Background", "Image-Position") + "," +
-            this.getThemeDataValue("Headers-Default-Background", "Image");
+            this.getThemeDataValue("Document-HeadersDefault-Background", "Image-Repeat") + "," +
+            this.getThemeDataValue("Document-HeadersDefault-Background", "Image-Position") + "," +
+            this.getThemeDataValue("Document-HeadersDefault-Background", "Image");
         var imageSelect = container.createComponent("headerImage",
 						    widget_json[0], 
 						    dojo.mixin({caption: "Header Image", 
@@ -514,7 +514,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 						    widget_json[3], this);
 
 	editors.push(imageSelect);
-        var val =  this.getThemeDataValue("Headers-Default-Font", "Color","#FFFFFF");
+        var val =  this.getThemeDataValue("Document-HeadersDefault-Font", "Color","#FFFFFF");
         editors.push(new wm.ColorPicker({name: "headerFontColor",
                                          captionSize: "15px",
                                          caption: "Font Color",
