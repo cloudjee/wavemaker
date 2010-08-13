@@ -206,11 +206,11 @@ dojo.declare("wm.Dialog", wm.Container, {
 		this.onClose(why);
 		why = null;
 	},
-    destroy: function() {
+        destroy: function() {
 	    this.dismiss();
-	    this.dialogScrim.destroy();
-
-		this.inherited(arguments);
+	    if (this.dialogScrim)
+                this.dialogScrim.destroy();
+	    this.inherited(arguments);
 	},
 	flow: function() {
 		if (this.showing) {
