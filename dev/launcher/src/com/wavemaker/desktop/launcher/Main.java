@@ -473,7 +473,7 @@ public class Main {
 			} catch (URISyntaxException e) {
 			}
 		}
-		line = "WAVEMAKER; " + line;
+		line = "WAVEMAKER: " + line;
 		PrintStream ps = logOut;
 		if (ps != null) {
 			ps.println(line);

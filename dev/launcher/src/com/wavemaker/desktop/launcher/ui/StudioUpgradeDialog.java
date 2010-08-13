@@ -95,8 +95,7 @@ public class StudioUpgradeDialog extends JDialog {
 			}
 		});
 		this.getContentPane().setLayout(new GridBagLayout());
-		this.getContentPane().add(new JLabel(
-								"Congratulations! You have successfully installed WaveMaker v" + this.version),
+		this.getContentPane().add(new JLabel("<html>Congratulations! You have successfully installed WaveMaker v" + this.version + "<P>Clear your browser's cache of previous version to ensure proper operation of Studio</html>" ),
 						new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
 								GridBagConstraints.NORTHWEST,
 								GridBagConstraints.NONE,
