@@ -512,18 +512,18 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
 .wm_darkdawn  .wmeditor .dijitComboBox
  {
      /* Common-Editor_BorderStyle_Radius */
-     -moz-border-radius: 12px; /* Common-Editor_BorderStyle_Radius */
-     -webkit-border-radius: 12px; /* Common-Editor_BorderStyle_Radius */
-     border-radius: 12px; /* Common-Editor_BorderStyle_Radius */
+     -moz-border-radius: 4px; /* Common-Editor_BorderStyle_Radius */
+     -webkit-border-radius: 4px; /* Common-Editor_BorderStyle_Radius */
+     border-radius: 4px; /* Common-Editor_BorderStyle_Radius */
 }
 .wm_darkdawn .wmeditor.wmrichtext {
     /* Common-Editor_BorderStyle_Radius */
-    -moz-border-radius-bottomleft: 12px;  /* Common-Editor_BorderStyle_Radius */
-    -moz-border-radius-bottomright: 12px; /* Common-Editor_BorderStyle_Radius */
-    -webkit-border-bottom-left-radius: 12px; /* Common-Editor_BorderStyle_Radius */
-    -webkit-border-bottom-right-radius: 12px; /* Common-Editor_BorderStyle_Radius */
-    border-radius-bottomleft: 12px; /* Common-Editor_BorderStyle_Radius */
-    border-radius-bottomright: 12px; /* Common-Editor_BorderStyle_Radius */
+    -moz-border-radius-bottomleft: 4px;  /* Common-Editor_BorderStyle_Radius */
+    -moz-border-radius-bottomright: 4px; /* Common-Editor_BorderStyle_Radius */
+    -webkit-border-bottom-left-radius: 4px; /* Common-Editor_BorderStyle_Radius */
+    -webkit-border-bottom-right-radius: 4px; /* Common-Editor_BorderStyle_Radius */
+    border-radius-bottomleft: 4px; /* Common-Editor_BorderStyle_Radius */
+    border-radius-bottomright: 4px; /* Common-Editor_BorderStyle_Radius */
 }
 /* ComboBox arrow button */
 .wm_darkdawn .wmeditor .dijitComboBox .dijitArrowButton {
@@ -1126,7 +1126,7 @@ body .wm_darkdawn ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected
     -moz-box-shadow: 2px 0px 2px black; /* wm.TabLayers-Shadow */
     -webkit-box-shadow: 2px 0px 2px black;  /* wm.TabLayers-Shadow */
     box-shadow: 2px 0px 2px black;  /* wm.TabLayers-Shadow */
-    height: 20px; /* wm.TabLayers-Button_Height */
+    height: 21px; /* wm.TabLayers-Button_Height */
     font-size: 10pt; /* wm.TabLayers-Button_TextSize */
 }
 .wm_darkdawn .wmtablayers-tab:hover, .wm_darkdawn .wmtablayers-tab:focus {
@@ -1177,8 +1177,8 @@ body .wm_darkdawn ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected
 }
 body.tundra.wm_darkdawn  div.wmheader,
 body.tundra .wm_darkdawn  div.wmheader,
-.wm_darkdawn  .wmTabLayers-client, 
-.wm_darkdawn  .wmWizardLayers-client {
+.wm_darkdawn  .wmTabLayers-client > .wmlayer, 
+.wm_darkdawn  .wmWizardLayers-client > .wmlayer {
     /* Common-Panel_Border */
     -moz-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
     -webkit-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
@@ -1192,21 +1192,14 @@ body.tundra .wm_darkdawn  div.wmheader,
     border-radius-bottomleft: 4px;/* Common-Panel_BorderStyle_Radius */
     border-radius-bottomright: 4px;/* Common-Panel_BorderStyle_Radius */
 }    
-    .wm_darkdawn .wmTabLayers-client, 
-    .wm_darkdawn .wmWizardLayers-client {
-	/* Common-Panel_Border */
-	-moz-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
-	border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
-    }
 .wm_darkdawn .wmFancyPanel-labelWidget {
     /* Must always be 2-4px smaller than .wmfancypanel */
-       -moz-border-radius-topleft: 20px; /* wm.FancyPanel_Top-Radius */
-    -moz-border-radius-topright: 20px; /* wm.FancyPanel_Top-Radius */
-    -webkit-border-top-left-radius: 20px; /* wm.FancyPanel_Top-Radius */
-    -webkit-border-top-right-radius: 20px; /* wm.FancyPanel_Top-Radius */
-    border-radius-topleft: 20px; /* wm.FancyPanel_Top-Radius */
-    border-radius-topright: 20px; /* wm.FancyPanel_Top-Radius */
+       -moz-border-radius-topleft: 12px;   /* Common-Panel_BorderStyle_Radius */
+    -moz-border-radius-topright: 12px;/* Common-Panel_BorderStyle_Radius */
+    -webkit-border-top-left-radius: 12px;/* Common-Panel_BorderStyle_Radius */
+    -webkit-border-top-right-radius: 12px;/* Common-Panel_BorderStyle_Radius */
+    border-radius-topleft: 12px;/* Common-Panel_BorderStyle_Radius */
+    border-radius-topright: 12px;/* Common-Panel_BorderStyle_Radius */
 }    
     /* END Border Styles */
 /* BEGIN SECTION wm.AccorionLayers / wm.AccordionDecorator */

@@ -1126,7 +1126,7 @@ body .wm_graphite ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected
     -moz-box-shadow: 2px 0px 2px black; /* wm.TabLayers-Shadow */
     -webkit-box-shadow: 2px 0px 2px black;  /* wm.TabLayers-Shadow */
     box-shadow: 2px 0px 2px black;  /* wm.TabLayers-Shadow */
-    height: 25px; /* wm.TabLayers-Button_Height */
+    height: 26px; /* wm.TabLayers-Button_Height */
     font-size: 12pt; /* wm.TabLayers-Button_TextSize */
 }
 .wm_graphite .wmtablayers-tab:hover, .wm_graphite .wmtablayers-tab:focus {

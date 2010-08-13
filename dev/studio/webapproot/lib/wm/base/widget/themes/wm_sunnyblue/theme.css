@@ -1126,7 +1126,7 @@ body .wm_sunnyblue ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected
     -moz-box-shadow: 2px 0px 2px black; /* wm.TabLayers-Shadow */
     -webkit-box-shadow: 2px 0px 2px black;  /* wm.TabLayers-Shadow */
     box-shadow: 2px 0px 2px black;  /* wm.TabLayers-Shadow */
-    height: 20px; /* wm.TabLayers-Button_Height */
+    height: 21px; /* wm.TabLayers-Button_Height */
     font-size: 12px; /* wm.TabLayers-Button_TextSize */
 }
 .wm_sunnyblue .wmtablayers-tab:hover, .wm_sunnyblue .wmtablayers-tab:focus {
@@ -1177,8 +1177,8 @@ body .wm_sunnyblue ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected
 }
 body.tundra.wm_sunnyblue  div.wmheader,
 body.tundra .wm_sunnyblue  div.wmheader,
-.wm_sunnyblue  .wmTabLayers-client, 
-.wm_sunnyblue  .wmWizardLayers-client {
+.wm_sunnyblue  .wmTabLayers-client > .wmlayer, 
+.wm_sunnyblue  .wmWizardLayers-client > .wmlayer {
     /* Common-Panel_Border */
     -moz-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
     -webkit-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
@@ -1192,21 +1192,14 @@ body.tundra .wm_sunnyblue  div.wmheader,
     border-radius-bottomleft: 4px;/* Common-Panel_BorderStyle_Radius */
     border-radius-bottomright: 4px;/* Common-Panel_BorderStyle_Radius */
 }    
-    .wm_sunnyblue .wmTabLayers-client, 
-    .wm_sunnyblue .wmWizardLayers-client {
-	/* Common-Panel_Border */
-	-moz-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
-	border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
-    }
 .wm_sunnyblue .wmFancyPanel-labelWidget {
     /* Must always be 2-4px smaller than .wmfancypanel */
-       -moz-border-radius-topleft: 12px;   /* wm.FancyPanel_Top-Radius */
-    -moz-border-radius-topright: 12px;/* wm.FancyPanel_Top-Radius */
-    -webkit-border-top-left-radius: 12px;/* wm.FancyPanel_Top-Radius */
-    -webkit-border-top-right-radius: 12px;/* wm.FancyPanel_Top-Radius */
-    border-radius-topleft: 12px;/* wm.FancyPanel_Top-Radius */
-    border-radius-topright: 12px;/* wm.FancyPanel_Top-Radius */
+       -moz-border-radius-topleft: 12px;   /* Common-Panel_BorderStyle_Radius */
+    -moz-border-radius-topright: 12px;/* Common-Panel_BorderStyle_Radius */
+    -webkit-border-top-left-radius: 12px;/* Common-Panel_BorderStyle_Radius */
+    -webkit-border-top-right-radius: 12px;/* Common-Panel_BorderStyle_Radius */
+    border-radius-topleft: 12px;/* Common-Panel_BorderStyle_Radius */
+    border-radius-topright: 12px;/* Common-Panel_BorderStyle_Radius */
 }    
     /* END Border Styles */
 /* BEGIN SECTION wm.AccorionLayers / wm.AccordionDecorator */

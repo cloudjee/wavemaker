@@ -25,5 +25,9 @@
 	background: #ffffff none;
 }
 
+.wm_graphite button.wmtablayers-tab {
+    height: 26px; /* wm.TabLayers-Button_Height */
+}
+
 /* Custom CSS goes below this line */
 

@@ -47,7 +47,7 @@
 		"border": "0", 
 		"isMajorContent": 1, 
 		"clientBorderColor": "#333333", 
-		"headerHeight": "32pxpx"
+		"headerHeight": "31px"
 	}, 
 	"wm.WizardLayers": {
 		"margin": "0,2,0,2", 

@@ -1177,8 +1177,8 @@ body .wm_navy ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected
 }
 body.tundra.wm_navy  div.wmheader,
 body.tundra .wm_navy  div.wmheader,
-.wm_navy  .wmTabLayers-client, 
-.wm_navy  .wmWizardLayers-client {
+.wm_navy  .wmTabLayers-client > .wmlayer, 
+.wm_navy  .wmWizardLayers-client > .wmlayer {
     /* Common-Panel_Border */
     -moz-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
     -webkit-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
@@ -1192,21 +1192,14 @@ body.tundra .wm_navy  div.wmheader,
     border-radius-bottomleft: 4px;/* Common-Panel_BorderStyle_Radius */
     border-radius-bottomright: 4px;/* Common-Panel_BorderStyle_Radius */
 }    
-    .wm_navy .wmTabLayers-client, 
-    .wm_navy .wmWizardLayers-client {
-	/* Common-Panel_Border */
-	-moz-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
-	border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
-    }
 .wm_navy .wmFancyPanel-labelWidget {
     /* Must always be 2-4px smaller than .wmfancypanel */
-       -moz-border-radius-topleft: 20px; /* wm.FancyPanel_Top-Radius */
-    -moz-border-radius-topright: 20px; /* wm.FancyPanel_Top-Radius */
-    -webkit-border-top-left-radius: 20px; /* wm.FancyPanel_Top-Radius */
-    -webkit-border-top-right-radius: 20px; /* wm.FancyPanel_Top-Radius */
-    border-radius-topleft: 20px; /* wm.FancyPanel_Top-Radius */
-    border-radius-topright: 20px; /* wm.FancyPanel_Top-Radius */
+       -moz-border-radius-topleft: 12px;   /* Common-Panel_BorderStyle_Radius */
+    -moz-border-radius-topright: 12px;/* Common-Panel_BorderStyle_Radius */
+    -webkit-border-top-left-radius: 12px;/* Common-Panel_BorderStyle_Radius */
+    -webkit-border-top-right-radius: 12px;/* Common-Panel_BorderStyle_Radius */
+    border-radius-topleft: 12px;/* Common-Panel_BorderStyle_Radius */
+    border-radius-topright: 12px;/* Common-Panel_BorderStyle_Radius */
 }    
     /* END Border Styles */
 /* BEGIN SECTION wm.AccorionLayers / wm.AccordionDecorator */

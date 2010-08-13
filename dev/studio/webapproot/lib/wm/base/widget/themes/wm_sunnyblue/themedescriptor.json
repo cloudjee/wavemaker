@@ -368,7 +368,7 @@
 		"Radius": "2px"
 	}, 
 	"wm.TabLayers-Button": {
-		"Height": "20px", 
+		"Height": "21px", 
 		"TextSize": "12px"
 	}, 
 	"wm.Dialog": {
