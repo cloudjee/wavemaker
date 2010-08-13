@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Turbo09 Dialog</title>
+<style>
+	@import "/wavemaker/lib/wm/base/widget/themes/default/theme.css";
+	body, html {
+		margin: 0;
+		height: 100%;
+		overflow: hidden;
+	}
+	.wm-scrim {
+		background-color: silver;
+		opacity: 0.5;
+	}
+	.wmpage {
+		border: 1px solid orange;
+	}
+	#dialog_panel1 {
+		background-color: #F0F0F0;
+	}
+</style>
+<script type="text/javascript" src="/wavemaker/lib/modules/sysmodule/js/dojo/dojo.js"></script>
+<script type="text/javascript">
+	dojo.registerModulePath("wm", "../../../../wm");
+</script>
+<script type="text/javascript" src="/wavemaker/lib/wm/base/lib/util.js"></script>
+<script type="text/javascript" src="/wavemaker/lib/wm/base/Widget.js"></script>
+<script type="text/javascript" src="/wavemaker/lib/wm/base/layout/box.js"></script>
+<script type="text/javascript" src="/wavemaker/lib/wm/base/widget/Dialog.js"></script>
+<script type="text/javascript" src="/wavemaker/lib/wm/base/widget/PageContainer.js"></script>
+<script type="text/javascript" src="/wavemaker/lib/wm/base/widget/Spacer.js"></script>
+<script type="text/javascript" src="/wavemaker/lib/wm/base/widget/LayoutBox.js"></script>
+<script type="text/javascript" src="/wavemaker/lib/wm/base/widget/Pages.js"></script>
+<script type="text/javascript" src="/wavemaker/lib/wm/base/widget/Button.js"></script>
+<script type="text/javascript" src="/wavemaker/lib/wm/base/widget/Tree.js"></script>
+<script type="text/javascript">
+	dojo.addOnLoad(function() {
+		dialog = new wm.Dialog();
+		//
+		pageContainer = new wm.PageContainer({pageName: "Dialog", parent: dialog, flex: 1});
+		pageContainer.domNode.style.cssText += "background-color: white; padding: 0px; border: 4px solid lightblue;";
+		dojo.connect(pageContainer.page, "start", function() {
+			pageContainer.connect(pageContainer.page.button, "onclick", dialog, dismiss);
+			pageContainer.connect(pageContainer.page.button1, "onclick", dialog, dismiss);
+		});
+		dojo.connect(document.body, "onclick", function() { dialog.setShowing(true); });
+	});
+	dismiss = function(e) {
+		this.setShowing(false);
+		dojo.stopEvent(e);
+	}
+</script>
+</head>
+<body>
+<div style="overflow: auto; height: 100%">
+	<img alt="" src="" /><pre>
+			The Apache Software Foundation    The Tomcat Servlet/JSP Container
+	Tomcat Web Application Manager
+
+	Message:  	
+
+	OK
+
+
+	Manager
+	List Applications 	HTML Manager Help 	Manager Help 	Server Status
+
+	Applications
+	Path 	Display Name 	Running 	Sessions 	Commands
+	/ 	Welcome to Tomcat 	true 	0 	 Start   Stop   Reload   Undeploy 
+	/balancer 	Tomcat Simple Load Balancer Example App 	true 	0 	 Start   Stop   Reload   Undeploy 
+	/host-manager 	Tomcat Manager Application 	true 	0 	 Start   Stop   Reload   Undeploy 
+	/jsp-examples 	JSP 2.0 Examples 	true 	0 	 Start   Stop   Reload   Undeploy 
+	/manager 	Tomcat Manager Application 	true 	0 	 Start   Stop   Reload   Undeploy 
+	/servlets-examples 	Servlet 2.4 Examples 	true 	0 	 Start   Stop   Reload   Undeploy 
+	/studio 	ActiveGrid Studio 	true 	2 	 Start   Stop   Reload   Undeploy 
+	/tomcat-docs 	Tomcat Documentation 	true 	0 	 Start   Stop   Reload   Undeploy 
+	/webdav 	Webdav Content Management 	true 	0 	 Start   Stop   Reload   Undeploy 
+
+	Deploy
+	Deploy directory or WAR file located on server
+	Context Path (optional): 	
+	XML Configuration file URL: 	
+	WAR or Directory URL: 	
+	  	
+	WAR file to deploy
+	Select WAR file to upload 	
+	  	
+
+	Server Information
+	Tomcat Version 	JVM Version 	JVM Vendor 	OS Name 	OS Version 	OS Architecture
+	Apache Tomcat/5.5.25 	1.5.0_12-b04 	Sun Microsystems Inc. 	Windows Vista 	6.0 	x86
+
+	Copyright © 1999-2005, Apache Software Foundation
+	</pre>
+	<hr />
+	<pre>
+			The Apache Software Foundation    The Tomcat Servlet/JSP Container
+	Tomcat Web Application Manager
+
+	Message:  	
+
+	OK
+
+
+	Manager
+	List Applications 	HTML Manager Help 	Manager Help 	Server Status
+
+	Applications
+	Path 	Display Name 	Running 	Sessions 	Commands
+	/ 	Welcome to Tomcat 	true 	0 	 Start   Stop   Reload   Undeploy 
+	/balancer 	Tomcat Simple Load Balancer Example App 	true 	0 	 Start   Stop   Reload   Undeploy 
+	/host-manager 	Tomcat Manager Application 	true 	0 	 Start   Stop   Reload   Undeploy 
+	/jsp-examples 	JSP 2.0 Examples 	true 	0 	 Start   Stop   Reload   Undeploy 
+	/manager 	Tomcat Manager Application 	true 	0 	 Start   Stop   Reload   Undeploy 
+	/servlets-examples 	Servlet 2.4 Examples 	true 	0 	 Start   Stop   Reload   Undeploy 
+	/studio 	ActiveGrid Studio 	true 	2 	 Start   Stop   Reload   Undeploy 
+	/tomcat-docs 	Tomcat Documentation 	true 	0 	 Start   Stop   Reload   Undeploy 
+	/webdav 	Webdav Content Management 	true 	0 	 Start   Stop   Reload   Undeploy 
+
+	Deploy
+	Deploy directory or WAR file located on server
+	Context Path (optional): 	
+	XML Configuration file URL: 	
+	WAR or Directory URL: 	
+	  	
+	WAR file to deploy
+	Select WAR file to upload 	
+	  	
+
+	Server Information
+	Tomcat Version 	JVM Version 	JVM Vendor 	OS Name 	OS Version 	OS Architecture
+	Apache Tomcat/5.5.25 	1.5.0_12-b04 	Sun Microsystems Inc. 	Windows Vista 	6.0 	x86
+
+	Copyright © 1999-2005, Apache Software Foundation
+	</pre>
+</div>
+</body>
+</html>

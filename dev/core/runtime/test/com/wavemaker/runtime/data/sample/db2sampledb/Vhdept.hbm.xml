@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 7, 2008 1:47:54 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.db2sampledb.Vhdept" table="VHDEPT" schema="STOENS">
+        <composite-id name="id" class="com.wavemaker.runtime.data.sample.db2sampledb.VhdeptId">
+            <key-property name="deptno" type="string">
+                <column name="DEPTNO" length="3" />
+            </key-property>
+            <key-property name="deptname" type="string">
+                <column name="DEPTNAME" length="36" />
+            </key-property>
+            <key-property name="mgrno" type="string">
+                <column name="MGRNO" length="6" />
+            </key-property>
+            <key-property name="admrdept" type="string">
+                <column name="ADMRDEPT" length="3" />
+            </key-property>
+            <key-property name="location" type="string">
+                <column name="LOCATION" length="16" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

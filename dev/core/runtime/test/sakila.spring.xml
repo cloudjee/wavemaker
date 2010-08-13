@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+  <bean id="sakiladbspringService"
+        class="com.wavemaker.runtime.data.sample.sakila.Sakila"
+        scope="singleton"
+        lazy-init="true">
+    <property name="dataServiceManager">
+      <ref bean="sakilaDataService"/>
+    </property>
+    <property name="taskManager">
+        <ref bean="sakilaTaskMgr"/>
+    </property>
+  </bean>
+    
+  <bean id="sakilaActorAdvice" 
+        class="com.wavemaker.runtime.data.sample.sakila.SakilaAdvice"
+        lazy-init="true"/>
+
+  <bean id="sakiladbspring" 
+        class="org.springframework.aop.framework.ProxyFactoryBean"
+        lazy-init="true">
+    <property name="proxyTargetClass">
+      <value>true</value>
+    </property>
+    <property name="interceptorNames">
+      <value>sakilaPointcutAdvisor</value>
+    </property>
+    <property name="target">
+      <ref bean="sakiladbspringService"/>
+    </property>
+  </bean>
+    <bean id="sakiladbspringServiceWire" lazy-init="false"
+            scope="singleton"
+            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="sakiladbspring" name="serviceId"/>
+        <property name="serviceType" ref="DataService"/>
+    </bean>
+
+  <bean id="sakilaPointcutAdvisor" 
+        class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+    <property name="mappedNames">
+      <list>
+        <value>insertActor</value>
+        <value>updateActor</value>
+      </list>
+    </property>
+    <property name="advice">
+      <ref bean="sakilaActorAdvice"/>
+    </property>
+  </bean>
+
+  <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    <property name="locations">
+        <list>
+            <value>classpath:mysql.properties</value>
+            <value>classpath:mysql_sakila.properties</value>
+        </list>
+    </property>
+  </bean>
+
+  <bean id="sakilaDataSource" 
+        class="org.springframework.jdbc.datasource.DriverManagerDataSource" 
+        lazy-init="true">
+    <property name="driverClassName" value="${sakila.driverClassName}"/>
+    <property name="url" value="${sakila.connectionUrl}"/>
+    <property name="username" value="${sakila.username}"/>
+    <property name="password" value="${sakila.password}"/>
+  </bean>
+
+  <!-- Use this datasource bean to lookup a datasource in the jndi tree -->
+  <!--bean id="sakilaDataSource" 
+        class="org.springframework.jndi.JndiObjectFactoryBean"
+        lazy-init="true">
+    <property name="jndiName" value="java:comp/env/jdbc/mysql/sakila"/>
+  </bean-->
+
+  <bean id="sakilaTxMgr" 
+        class="org.springframework.orm.hibernate3.HibernateTransactionManager"
+        lazy-init="true">
+    <property name="sessionFactory">
+      <ref bean="sakilaSessionFactory"/>
+    </property>
+  </bean>
+
+  <bean id="sakilaHibernateTemplate"
+        class="org.springframework.orm.hibernate3.HibernateTemplate"
+        lazy-init="true">
+    <property name="sessionFactory"> 
+      <ref bean="sakilaSessionFactory"/>
+    </property>
+  </bean>  
+
+  <bean id="sakilaSessionFactory" 
+        class="com.wavemaker.runtime.data.spring.ConfigurationAndSessionFactoryBean"
+        lazy-init="true">
+
+    <!-- A unique name for this SessionFactory's configuration -->
+    <property name="name" value="sakila"/>
+    <property name="dataSource" ref="sakilaDataSource"/>
+
+    <property name="hibernateProperties">
+      <props>
+        <prop key="hibernate.dialect">
+            org.hibernate.dialect.MySQL5Dialect</prop>
+        <prop key="hibernate.transaction.factory_class">
+            org.hibernate.transaction.JDBCTransactionFactory</prop>
+        <prop key="hibernate.current_session_context_class">thread</prop>
+
+      </props> 
+    </property>
+
+    <property name="mappingResources">
+      <list>
+          <value>com/wavemaker/runtime/data/sample/sakila/City.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Payment.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Store.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Address.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Rental.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/NicerButSlowerFilmList.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/FilmText.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Inventory.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Film.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/StaffList.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/FilmList.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Actor.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/FilmCategory.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Customer.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Staff.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Category.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Country.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/ActorInfo.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/SalesByFilmCategory.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/CustomerListFixed.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/SalesByStore.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/FilmActor.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Language.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Table1Mav260.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Table1Mav260.ql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Table2Mav260.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Table2Mav260.ql.xml</value>
+
+          <value>com/wavemaker/runtime/data/sample/sakila/City.crud.hql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Payment.crud.hql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Store.crud.hql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Address.crud.hql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Rental.crud.hql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/NicerButSlowerFilmList.crud.hql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/FilmText.crud.hql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Inventory.crud.hql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Film.crud.hql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/StaffList.crud.hql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/FilmList.crud.hql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Actor.crud.hql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/FilmCategory.crud.hql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Customer.crud.hql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Staff.crud.hql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Category.crud.hql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Country.crud.hql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/ActorInfo.crud.hql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/SalesByFilmCategory.crud.hql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/CustomerListFixed.crud.hql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/SalesByStore.crud.hql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/FilmActor.crud.hql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Language.crud.hql.xml</value>
+
+          <value>com/wavemaker/runtime/data/sample/sakila/CustomerList.sp.hql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/default.crud.hql.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Varcharpk.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Compositepk.hbm.xml</value>
+          <value>com/wavemaker/runtime/data/sample/sakila/Defaults.hbm.xml</value>
+      </list>
+    </property>
+
+  </bean>
+
+
+  <!-- the data service bean instance is injected into the service bean -->
+  <bean id="sakilaDataService" 
+        class="com.wavemaker.runtime.data.spring.SpringDataServiceManager"
+        lazy-init="true">
+    <constructor-arg>
+      <!-- the value of the "name" property of the SessionFactory -->
+      <value>sakila</value>
+    </constructor-arg>
+    <constructor-arg>
+      <ref bean="sakilaHibernateTemplate"/>
+    </constructor-arg>
+    <constructor-arg>
+      <ref bean="sakilaTxMgr"/>
+    </constructor-arg>
+    <constructor-arg>
+      <ref bean="sakilaTaskMgr"/>
+    </constructor-arg>
+    <constructor-arg>
+        <map>
+            <entry key="useIndividualCRUDOperations" value="true"/> 
+            <entry key="refreshEntities" value="com.wavemaker.runtime.data.sample.sakila.Defaults"/>
+        </map>
+    </constructor-arg>
+  </bean>
+
+  <bean id="sakilaTaskMgr"
+        class="com.wavemaker.runtime.data.sample.sakila.SakilaTaskManager"
+        lazy-init="true"/>
+  
+</beans>

@@ -1,0 +1,130 @@
+/*
+ *  Copyright (C) 2010 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+.Start .Start-editorToolbar {
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	border-bottom:1px #363b44 solid;
+	color: #FFF;
+}
+
+.Start .Start-panel1 {
+	color: white;
+	background-color: #424a5a;
+}
+
+.Start .Start-tabLayers1 {
+	color: white;
+	background-color: #959dab;
+}
+
+.Start .wmtablayers-tabbar {
+	background-image: none;
+	background-color: #424a5a;
+}
+
+.Start .wmtablayers-tab {
+	font-size: 100%;
+  	font-weight: 600;
+	cursor: pointer;
+	border-top: 1px solid #424a5a;
+	border-right: none;
+	border-left: none;
+	border-bottom: 1px solid #424a5a;
+	margin: 0px 0px 0px 6px;
+	background-color: #424a5a;
+	background-image:none;
+	color: #FFF;
+}
+
+.Start .wmtablayers-selected {
+	border-top: 1px solid #c0c4ca;
+	border-right: 1px solid #363b44;
+	/*border-left: 1px solid #c0c4ca;*/
+	background-color: #959dab;
+	border-bottom: 1px solid #959dab;
+	background-image: none;
+	margin: 0px 0px 0px 0px;
+	color: #FFF;
+}
+
+.Start .Start-welcomeTitleLabel {
+	font-size: 250%;
+	font-weight: normal;
+	/*letter-spacing: 0.25em;*/
+}
+
+.Start .Start-screencast {
+	background: url(images/start_watch.png) no-repeat center;
+	cursor: pointer;
+}
+
+.Start .Start-demo {
+	background: url(images/start_explore.png) no-repeat center;
+	cursor: pointer;
+}
+
+.Start .Start-community {
+	background: url(images/start_community.png) no-repeat center;
+	cursor: pointer;
+}
+
+.Start .start_icon_label {
+	font-size: 120%;
+	font-weight: bold;
+	padding-bottom: 4px;
+}
+
+.Start .Start-newProject, .Start .Start-tutorial, .Start .Start-documentation, .Start .Start-register, .Start .Start-openProjectBtn {
+	cursor: pointer;
+}
+
+.Start .Start-newProject:hover, .Start .Start-tutorial:hover, .Start .Start-documentation:hover, .Start .Start-register:hover {
+	color: #add8e6/*#d3d3d3*/;
+}
+
+.Start .Start-openProject {
+	background: url(images/folder_out.png) no-repeat left center;
+	cursor: pointer;
+	font-weight: bold;
+	font-size: 120%;
+}
+
+.Start .Start-panel4, .Start .Start-panel6 {
+	font-weight: 600;
+	font-size: 120%;
+}
+
+.Start .Start-panel3, .Start .Start-panel2 {
+	background-color: #0D2744;
+}
+
+.Start .Start-panel8 {
+	background-color: #6F798A;
+}
+
+.Start .Start-openProjectBtn {
+	background-image:url(images/dark_btn_bg.gif);
+	background-repeat:repeat-x;
+	color: #FFF;
+	font-weight:bold;
+}
+
+.Start .Start-panel9 {
+	background-color: #959dab;
+}

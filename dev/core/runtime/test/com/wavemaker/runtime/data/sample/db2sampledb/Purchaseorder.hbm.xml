@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 7, 2008 1:47:54 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.db2sampledb.Purchaseorder" table="PURCHASEORDER" schema="STOENS">
+        <id name="poid" type="long">
+            <column name="POID" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="customer" class="com.wavemaker.runtime.data.sample.db2sampledb.Customer" fetch="select">
+            <column name="CUSTID" />
+        </many-to-one>
+        <property name="status" type="string">
+            <column name="STATUS" length="10" not-null="true" />
+        </property>
+        <property name="orderdate" type="date">
+            <column name="ORDERDATE" length="10" />
+        </property>
+        <property name="porder" type="serializable">
+            <column name="PORDER" />
+        </property>
+        <property name="comments" type="string">
+            <column name="COMMENTS" length="1000" />
+        </property>
+    </class>
+</hibernate-mapping>

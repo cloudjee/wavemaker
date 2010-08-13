@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 7, 2008 1:47:54 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.db2sampledb.Sales" table="SALES" schema="STOENS">
+        <composite-id name="id" class="com.wavemaker.runtime.data.sample.db2sampledb.SalesId">
+            <key-property name="salesDate" type="date">
+                <column name="SALES_DATE" length="10" />
+            </key-property>
+            <key-property name="salesPerson" type="string">
+                <column name="SALES_PERSON" length="15" />
+            </key-property>
+            <key-property name="region" type="string">
+                <column name="REGION" length="15" />
+            </key-property>
+            <key-property name="sales" type="java.lang.Integer">
+                <column name="SALES" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

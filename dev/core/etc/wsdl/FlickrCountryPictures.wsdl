@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:tns="http://service.openkapow.com/demo/flickrcountrypictures"
+  targetNamespace="http://service.openkapow.com/demo/flickrcountrypictures">
+  
+  <wsdl:documentation>
+    endpoint=http://service.openkapow.com/demo/flickrcountrypictures.xml?country={country}
+  </wsdl:documentation>
+
+  <wsdl:types>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      elementFormDefault="qualified">
+      <xs:element name="result">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="href" type="xs:string" minOccurs="0" maxOccurs="100" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:schema>
+  </wsdl:types>
+
+  <wsdl:message name="GetCountryPicturesRequestMsg">
+    <wsdl:part name="country" type="xs:string" />
+  </wsdl:message>
+  <wsdl:message name="GetCountryPicturesResponseMsg">
+    <wsdl:part name="body" element="result" />
+  </wsdl:message>
+
+  <wsdl:portType name="FlickrCountryPictures">
+    <wsdl:operation name="GetCountryPictures">
+      <wsdl:input message="tns:GetCountryPicturesRequestMsg" />
+      <wsdl:output message="tns:GetCountryPicturesResponseMsg" />
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

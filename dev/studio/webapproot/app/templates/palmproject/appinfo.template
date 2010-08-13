@@ -1,0 +1,10 @@
+{
+	"title": "{%PROJECT}",
+	"type": "web",
+	"main": "index.html",
+	"id": "com.palm.app.{%PROJECT}",
+	"version": "1.0", 
+	"removable": "true",
+    "icon": "icon.png"
+}
+

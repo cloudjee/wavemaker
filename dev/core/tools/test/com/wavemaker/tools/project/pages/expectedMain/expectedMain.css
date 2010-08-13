@@ -1,0 +1,17 @@
+.expectedMain .expectedMain-loginMainPanel {
+    padding: 20px;
+}
+
+.expectedMain .expectedMain-loginErrorMsg {
+    font-size: 14px; color: red
+}
+
+.expectedMain .expectedMain-loginInputPanel {
+    padding: 10px;
+    border: 4px solid #e6e6e6;
+    -moz-border-radius: 8px;
+}
+
+.expectedMain .expectedMain-panelMain { 
+	background-color: #BDCE48; 
+}

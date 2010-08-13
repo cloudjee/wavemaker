@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<!-- Generated Jul 5, 2007 6:21:54 PM by Hibernate Tools 3.2.0.b9 
+
+This file contains the standard set of HQL queries we generate for 
+each entity.   
+
+@single-result: means the query returns a single instance (instead of a List)
+
+@design.service-excluded: this query will not be exposed as a method in the 
+                   generated service class.  
+
+-->
+
+<hibernate-mapping>
+
+    <query 
+        name="getFilmTextById"
+        comment="Lookup a single FilmText instance by primary key value(s)
+                 @single-result">
+        
+        <query-param name="id" type="java.lang.Short"/>
+
+        <![CDATA[
+           from FilmText _a where _a.id=:id 
+        ]]>
+
+    </query>
+
+    
+</hibernate-mapping>
+
+
+
+
+

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 7, 2008 1:47:54 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.db2sampledb.Act" table="ACT" schema="STOENS">
+        <id name="actno" type="short">
+            <column name="ACTNO" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="act" class="com.wavemaker.runtime.data.sample.db2sampledb.Act" update="false" insert="false" fetch="select">
+            <column name="ACTNO" not-null="true" unique="true" />
+        </many-to-one>
+        <property name="actkwd" type="string">
+            <column name="ACTKWD" length="6" not-null="true" />
+        </property>
+        <property name="actdesc" type="string">
+            <column name="ACTDESC" length="20" not-null="true" />
+        </property>
+        <set name="acts" inverse="true">
+            <key>
+                <column name="ACTNO" not-null="true" unique="true" />
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.db2sampledb.Act" />
+        </set>
+    </class>
+</hibernate-mapping>

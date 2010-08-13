@@ -1,0 +1,7 @@
+#!/bin/sh
+osname=`uname -s`
+export osname
+. $ANT_HOME/bin/setup.sh
+BROWSER=firefox 
+export BROWSER
+ant -Dsquish_home="${SQUISH_HOME}" -DwmBrowser=${BROWSER} -Dregtest_home="${ANT_HOME}" -DpropertiesFile="${osname}.properties" "$@"

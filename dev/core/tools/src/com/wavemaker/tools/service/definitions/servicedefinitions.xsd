@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<!--
+    Schema for service definitions, including services, operations, and parameters.
+    See URL for specification and more information
+
+    Author: Matt Small
+	$Id$
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+        xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+        jaxb:extensionBindingPrefixes="xjc"
+        jaxb:version="2.0"
+        targetNamespace="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0"
+        xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0"
+        elementFormDefault="qualified">
+	
+	<xsd:annotation>
+		<xsd:appinfo>
+			<jaxb:globalBindings>
+				<jaxb:javaType name="com.wavemaker.runtime.service.OperationEnumeration"
+						xmlType="OperationEnumeration"
+						parseMethod="com.wavemaker.runtime.service.OperationEnumeration.fromValue"
+						printMethod="com.wavemaker.runtime.service.OperationEnumeration.toString" />
+			</jaxb:globalBindings>
+		</xsd:appinfo>
+	</xsd:annotation>
+    <xsd:element name="service">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:choice>
+                    <xsd:element name="operation" minOccurs="0"
+                            maxOccurs="unbounded" type="Operation" />
+                    <xsd:element name="dataobjects" minOccurs="0"
+                            maxOccurs="1" type="dataobjects" />
+                    <xsd:element name="eventnotifier" minOccurs="0"
+                            maxOccurs="unbounded" type="EventNotifier" />
+                </xsd:choice>
+            </xsd:sequence>
+            <xsd:attribute name="id" type="xsd:string" use="required" />
+            <xsd:attribute name="class" type="xsd:string" use="required" />
+			<xsd:attribute name="CRUDService"
+					type="xsd:boolean" use="optional" >
+			    <xsd:annotation>
+			        <xsd:documentation>
+			            Whether this service supports CRUDService aka
+			            QuickData aka LiveData
+			        </xsd:documentation>
+			    </xsd:annotation></xsd:attribute>
+			<xsd:attribute name="type" use="required" type="xsd:string" />
+            <xsd:attribute name="springFile" type="xsd:string" use="optional"/>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:complexType name="Operation">
+        <xsd:sequence>
+            <xsd:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:attribute name="name" type="xsd:string" use="required" />
+                    <xsd:attribute name="typeRef" type="xsd:string" use="required" />
+                    <xsd:attribute name="isList" type="xsd:boolean" default="false" />
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="return" minOccurs="0" maxOccurs="1">
+                <xsd:complexType>
+                    <xsd:attribute name="typeRef" type="xsd:string" use="required" />
+                    <xsd:attribute name="isList" type="xsd:boolean" default="false" />
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="name" type="xsd:string" use="required" />
+    </xsd:complexType>
+
+    <xsd:complexType name="dataobjects">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <jaxb:class name="DataObjects" />
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="dataobject" type="dataobject"
+                    minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="dataobject">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <jaxb:class name="DataObject" />
+            </xsd:appinfo>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:element name="element" minOccurs="0"
+					maxOccurs="unbounded">
+                <xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="require" type="OperationEnumeration"
+								minOccurs="0" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation>
+									Should be the operations this field is
+									required for.
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="noChange" type="OperationEnumeration"
+								minOccurs="0" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation>
+									Don't send user-generated changes for
+									the following operations.
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="exclude" type="OperationEnumeration"
+								minOccurs="0" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation>
+									Don't send to the server for the
+									specified operations.
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
+
+                    <xsd:attribute name="name" type="xsd:string"
+                        use="required" />
+                    <xsd:attribute name="typeRef" type="xsd:string"
+                        use="required" />
+                    <xsd:attribute name="isList" type="xsd:boolean"
+                        default="false" />
+                    <xsd:attribute name="allowNull" type="xsd:boolean"
+                        default="false" />
+                    <!--
+                        maybe for later
+                        <xsd:attribute name="serviceRef" type="xsd:string" />
+                    -->
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+
+        <xsd:attribute name="javaType" type="xsd:string" use="required" />
+        <xsd:attribute name="name" type="xsd:string" use="required" />
+        <xsd:attribute name="supportsQuickData" type="xsd:boolean"
+            default="false" >
+            <xsd:annotation>
+                <xsd:documentation>
+                    Whether or not this data type supports QuickData
+                    (now known as LiveData)
+                </xsd:documentation>
+            </xsd:annotation></xsd:attribute>
+        <xsd:attribute name="internal" type="xsd:boolean"
+            use="optional" default="false">
+            <xsd:annotation>
+                <xsd:documentation>
+                    True if this type is considered internal, and should
+                    usually not be shown to the user.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="jsType" type="xsd:string" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>
+                    Generic JavaScript-ish type (Number, String,
+                    Boolean, Date, etc.)
+                </xsd:documentation>
+            </xsd:annotation></xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:complexType name="EventNotifier">
+        <xsd:attribute name="name" type="xsd:string" use="required" />
+    </xsd:complexType>
+
+	<!-- when this is changed, change
+	com.wavemaker.runtime.service.OperationEnumeration, too.
+	-->
+    <xsd:simpleType name="OperationEnumeration">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="read"></xsd:enumeration>
+            <xsd:enumeration value="update"></xsd:enumeration>
+            <xsd:enumeration value="delete"></xsd:enumeration>
+            <xsd:enumeration value="insert"></xsd:enumeration>
+        </xsd:restriction>
+    </xsd:simpleType>
+</xsd:schema>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    this file provides a definition for all simple types
+
+    Author: Matt Small
+    $Id$
+-->
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.activegrid.com/namespaces/ServiceDefinitions http://www.activegrid.com/namespaces/ServiceDefinitions/1.0"
+        id="agSimpleTypes">
+    <dataobjects>
+        <dataobject name="BigDecimal" javaType="java.math.BigDecimal"
+                jsType="Number" />
+        <dataobject name="BigInteger" javaType="java.math.BigInteger"
+                jsType="Number" />
+        <dataobject name="Boolean" javaType="java.lang.Boolean"
+                jsType="Boolean" />
+        <dataobject name="Byte" javaType="java.lang.Byte" jsType="Number" />
+        <dataobject name="Character" javaType="java.lang.Character"
+                jsType="String" />
+        <dataobject name="Date" javaType="java.util.Date" jsType="Date" />
+        <dataobject name="Double" javaType="java.lang.Double" jsType="Number" />
+        <dataobject name="Float" javaType="java.lang.Float" jsType="Number" />
+        <dataobject name="Integer" javaType="java.lang.Integer"
+                jsType="Number" />
+        <dataobject name="Long" javaType="java.lang.Long" jsType="Number" />
+        <dataobject name="Short" javaType="java.lang.Short" jsType="Number" />
+        <dataobject name="String" javaType="java.lang.String"
+                jsType="String" />
+        <dataobject name="StringBuffer" javaType="java.lang.StringBuffer"
+                jsType="String" />
+        <dataobject name="boolean" javaType="boolean" internal="true"
+                jsType="Boolean" />
+        <dataobject name="byte" javaType="byte" internal="true"
+                jsType="Number" />
+        <dataobject name="char" javaType="char" internal="true"
+                jsType="String" />
+        <dataobject name="double" javaType="double" internal="true"
+                jsType="Number" />
+        <dataobject name="float" javaType="float" internal="true"
+                jsType="Number" />
+        <dataobject name="int" javaType="int" internal="true"
+                jsType="Number" />
+        <dataobject name="long" javaType="long" internal="true"
+                jsType="Number" />
+        <dataobject name="short" javaType="short" internal="true"
+                jsType="Number" />
+        
+        <!--  sql types -->
+        <dataobject name="sql.Date" javaType="java.sql.Date" jsType="Date" />
+        <dataobject name="Time" javaType="java.sql.Time" jsType="Date" />
+        <dataobject name="Timestamp" javaType="java.sql.Timestamp"
+                jsType="Date" />
+    </dataobjects>
+</service>

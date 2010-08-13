@@ -1,0 +1,307 @@
+/* BEGIN SECTION wm.AbstractEditor */
+
+/* Give editors the standard border color, and get rid of the outline styling which is unnecessary and looks bad in webkit */
+.wm_template .wmeditor .dijitTextBox.dijitFocused,
+.wm_template .wmeditor .dijitTextArea.dijitFocused,
+.wm_template .wmeditor .dijitComboBox.dijitFocused {
+	outline-width: 0 !important;    
+}
+
+.wm_template .wmeditor .wmeditor-caption {
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+/* Make all editors equally rounded */
+.wm_template  .wmeditor .dijitTextBox,
+.wm_template  .wmeditor .dijitTextArea,
+.wm_template  .wmeditor .dijitComboBox
+ {
+     /* Common-Editor_BorderStyle_Radius */
+     -moz-border-radius: 4px; /* Common-Editor_BorderStyle_Radius */
+     -webkit-border-radius: 4px; /* Common-Editor_BorderStyle_Radius */
+     border-radius: 4px; /* Common-Editor_BorderStyle_Radius */
+}
+
+.wm_template .wmeditor.wmrichtext {
+    /* Common-Editor_BorderStyle_Radius */
+    -moz-border-radius-bottomleft: 4px;  /* Common-Editor_BorderStyle_Radius */
+    -moz-border-radius-bottomright: 4px; /* Common-Editor_BorderStyle_Radius */
+    -webkit-border-bottom-left-radius: 4px; /* Common-Editor_BorderStyle_Radius */
+    -webkit-border-bottom-right-radius: 4px; /* Common-Editor_BorderStyle_Radius */
+    border-radius-bottomleft: 4px; /* Common-Editor_BorderStyle_Radius */
+    border-radius-bottomright: 4px; /* Common-Editor_BorderStyle_Radius */
+}
+
+
+
+/* ComboBox arrow button */
+.wm_template .wmeditor .dijitComboBox .dijitArrowButton {
+    background-color: #666666; /* Document-HeadersDefault-Background_Color */
+    background-image: none;
+}
+
+.wm_template .wmeditor .dijitComboBox .dijitArrowButton {
+    /* Auto calculate this at 2px less than the radius of all editors */
+    -moz-border-radius-bottomright: 2px; /* wm.SelectMenu-Inner_Radius */
+    -moz-border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
+    -webkit-border-bottom-right-radius: 2px;/* wm.SelectMenu-Inner_Radius */
+    -webkit-border-top-right-radius: 2px;/* wm.SelectMenu-Inner_Radius */
+    border-radius-bottomright: 2px;/* wm.SelectMenu-Inner_Radius */
+    border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
+}
+
+/* ComboBox arrow button: use our custom down arrow image, and complete the rounding on the right */
+.wm_template .wmeditor .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
+	background-image: url(images/comboArrowDown.png); /* wm.SelectMenu-Down-Arrow_Image */
+
+        /* Auto calculate this at 2px less than the radius of all editors */
+        -moz-border-radius-bottomright: 2px;/* wm.SelectMenu-Inner_Radius */
+        -moz-border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
+        -webkit-border-bottom-right-radius: 2px;/* wm.SelectMenu-Inner_Radius */
+        -webkit-border-top-right-radius: 2px;/* wm.SelectMenu-Inner_Radius */
+         border-radius-bottomright: 2px;/* wm.SelectMenu-Inner_Radius */
+         border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
+}
+
+
+.wm_template .dijitSlider .dijitProgressBarLabel {
+    color: white;
+}
+
+.wm_template .dijitSlider .dijitSliderImageHandleH {
+    background: url(images/preciseSliderThumb.png) no-repeat 50% 0%;
+    outline-width: 0;
+}
+
+
+@media screen { /* Document-Level */ 
+
+    .wm_template .wmeditor .dijitTextBox,
+    .wm_template .wmeditor .dijitTextArea,
+    .wm_template .wmeditor .dijitComboBox,
+    .wm_template .dijitTimePickerItem,
+    .wm_template .wmeditor .RichTextEditable iframe {
+	/* Document-EditorsDefault-Border */
+	border-color: #666666;  /* Document-EditorsDefault-Border_Color */
+	border-width: 1px; /* Document-EditorsDefault-Border_BorderSize */
+
+	/* Document-EditorsDefault-Font */
+	font-family: sans-serif; /* Document-EditorsDefault-Font_Family */
+	font-size: 12pt; /* Document-EditorsDefault-Font_TextSize */
+	color: #FFFFFF; /* Document-EditorsDefault-Font_Color */
+	font-weight: bold; /* Document-EditorsDefault-Font_Weight */
+
+	/* Document-EditorsDefault-Background */
+	background-color: #444444; /* Document-EditorsDefault-Background_Color */
+	background-image: url(images/threeD.png); /* Document-EditorsDefault-Background_Image */
+	background-position: left top;  /* Document-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-EditorsDefault-Background_Image-Repeat */
+
+    }
+
+
+    .wm_template .wmeditor .dijitTextBox.dijitHover,
+    .wm_template .wmeditor .dijitTextArea:hover,
+    .wm_template .wmeditor .dijitComboBox.dijitHover,
+    .wm_template .wmeditor .RichTextEditable:hover iframe,
+    .wm_template .dijitTimePickerMarker.dijitTimePickerMarkerHover,
+    .wm_template .dijitTimePickerItem.dijitTimePickerItemHover {
+	/* Document-EditorsHover-Font */
+	color: #FFFFFF; /* Document-EditorsHover-Font_Color */
+
+	border-color: #666666;  /* Document-EditorsHover-Border_Color */
+
+	/* Document-EditorsHover-Background */
+	background-color: #444444; /* Document-EditorsHover-Background_Color */
+	background-image: url(images/threeD.png); /* Document-EditorsHover-Background_Image */
+	background-position: left top;  /* Document-EditorsHover-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-EditorsHover-Background_Image-Repeat */
+    }
+
+    .wm_template .wmeditor .dijitTextBox.dijitFocused,
+    .wm_template .wmeditor .dijitTextBox.dijitFocused.dijitHover,
+    .wm_template .wmeditor .dijitTextArea.dijitFocused,
+    .wm_template .wmeditor .dijitTextArea.dijitFocused:hover,
+    .wm_template .wmeditor .dijitComboBox.dijitFocused,
+    .wm_template .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_template .wmeditor .RichTextEditable.Focused iframe {
+	/* Document-EditorsFocus-Font */
+	color: #FFFFFF; /* Document-EditorsFocus-Font_Color */
+
+	border-color: #666666;  /* Document-EditorsFocus-Border_Color */
+
+	/* Document-EditorsFocus-Background */
+	background-color: #444444; /* Document-EditorsFocus-Background_Color */
+	background-image: url(images/threeD.png); /* Document-EditorsFocus-Background_Image */
+	background-position: left top;  /* Document-EditorsFocus-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-EditorsFocus-Background_Image-Repeat */
+    }
+
+    /* END SECTION wm.AbstractEditor */
+    
+    
+    
+}
+
+
+@media screen { /* PageContent-Level */ 
+    .wm_template .wmcontentarea .wmeditor .dijitTextBox,
+    .wm_template .wmcontentarea .wmeditor .dijitTextArea,
+    .wm_template .wmcontentarea .wmeditor .dijitComboBox,
+    .wm_template .wmcontentarea .dijitTimePickerItem,
+    .wm_template .wmcontentarea .wmeditor .RichTextEditable iframe {
+	/* PageContent-EditorsDefault-Border */
+	border-color: #666666;  /* PageContent-EditorsDefault-Border_Color */
+	border-width: 1px; /* PageContent-EditorsDefault-Border_BorderSize */
+
+	/* PageContent-EditorsDefault-Font */
+	font-family: sans-serif; /* PageContent-EditorsDefault-Font_Family */
+	font-size: 12pt; /* PageContent-EditorsDefault-Font_TextSize */
+	color: #FFFFFF; /* PageContent-EditorsDefault-Font_Color */
+	font-weight: bold; /* PageContent-EditorsDefault-Font_Weight */
+
+	/* PageContent-EditorsDefault-Background */
+	background-color: #444444; /* PageContent-EditorsDefault-Background_Color */
+	background-image: url(images/threeD.png); /* PageContent-EditorsDefault-Background_Image */
+	background-position: left top;  /* PageContent-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* PageContent-EditorsDefault-Background_Image-Repeat */
+
+    }
+    .wm_template .wmeditor.wmrichtext {
+	/* PageContent-EditorsDefault-BorderStyle_Radius */
+	-moz-border-radius-bottomleft: 4px;  /* PageContent-EditorsDefault-BorderStyle_Radius */
+	-moz-border-radius-bottomright: 4px; /* PageContent-EditorsDefault-BorderStyle_Radius */
+	-webkit-border-bottom-left-radius: 4px; /* PageContent-EditorsDefault-BorderStyle_Radius */
+	-webkit-border-bottom-right-radius: 4px; /* PageContent-EditorsDefault-BorderStyle_Radius */
+	border-radius-bottomleft: 4px; /* PageContent-EditorsDefault-BorderStyle_Radius */
+	border-radius-bottomright: 4px; /* PageContent-EditorsDefault-BorderStyle_Radius */
+    }
+
+    .wm_template .wmcontentarea .wmeditor .dijitTextBox.dijitHover,
+    .wm_template .wmcontentarea .wmeditor .dijitTextArea:hover,
+    .wm_template .wmcontentarea .wmeditor .dijitComboBox.dijitHover,
+    .wm_template .wmcontentarea .wmeditor .RichTextEditable:hover iframe,
+    .wm_template .wmcontentarea .dijitTimePickerMarker.dijitTimePickerMarkerHover,
+    .wm_template .wmcontentarea .dijitTimePickerItem.dijitTimePickerItemHover {
+	/* PageContent-EditorsHover-Font */
+	color: #FFFFFF; /* PageContent-EditorsHover-Font_Color */
+
+	border-color: #666666;  /* PageContent-EditorsHover-Border_Color */
+
+	/* PageContent-EditorsHover-Background */
+	background-color: #444444; /* PageContent-EditorsHover-Background_Color */
+	background-image: url(images/threeD.png); /* PageContent-EditorsHover-Background_Image */
+	background-position: left top;  /* PageContent-EditorsHover-Background_Image-Position */
+	background-repeat: repeat-x; /* PageContent-EditorsHover-Background_Image-Repeat */
+    }
+
+    .wm_template .wmcontentarea .wmeditor .dijitTextBox.dijitFocused,
+    .wm_template .wmcontentarea .wmeditor .dijitTextBox.dijitFocused.dijitHover,
+    .wm_template .wmcontentarea .wmeditor .dijitTextArea.dijitFocused,
+    .wm_template .wmcontentarea .wmeditor .dijitTextArea.dijitFocused:hover,
+    .wm_template .wmcontentarea .wmeditor .dijitComboBox.dijitFocused,
+    .wm_template .wmcontentarea .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_template .wmcontentarea .wmeditor .RichTextEditable.Focused iframe {
+	/* PageContent-EditorsFocus-Font */
+	color: #FFFFFF; /* PageContent-EditorsFocus-Font_Color */
+
+	border-color: #666666;  /* PageContent-EditorsFocus-Border_Color */
+
+	/* PageContent-EditorsFocus-Background */
+	background-color: #444444; /* PageContent-EditorsFocus-Background_Color */
+	background-image: url(images/threeD.png); /* PageContent-EditorsFocus-Background_Image */
+	background-position: left top;  /* PageContent-EditorsFocus-Background_Image-Position */
+	background-repeat: repeat-x; /* PageContent-EditorsFocus-Background_Image-Repeat */
+    }
+
+    
+    
+}
+
+
+@media screen { /* ContentPanel-Level */ 
+    /* BEGIN inner content panel editors */
+
+    .wm_template .wmcontentarea .wmcontentarea .wmeditor .dijitTextBox,
+    .wm_template .wmcontentarea .wmcontentarea .wmeditor .dijitTextArea,
+    .wm_template .wmcontentarea .wmcontentarea .wmeditor .dijitComboBox,
+    .wm_template .wmcontentarea .wmcontentarea .dijitTimePickerItem,
+    .wm_template .wmcontentarea .wmcontentarea .wmeditor .RichTextEditable iframe {
+	/* ContentPanel-EditorsDefault-Border */
+	border-color: #666666;  /* ContentPanel-EditorsDefault-Border_Color */
+	border-width: 1px; /* ContentPanel-EditorsDefault-Border_BorderSize */
+
+	/* ContentPanel-EditorsDefault-Font */
+	font-family: sans-serif; /* ContentPanel-EditorsDefault-Font_Family */
+	font-size: 12pt; /* ContentPanel-EditorsDefault-Font_TextSize */
+	color: #FFFFFF; /* ContentPanel-EditorsDefault-Font_Color */
+	font-weight: bold; /* ContentPanel-EditorsDefault-Font_Weight */
+
+	/* ContentPanel-EditorsDefault-Background */
+	background-color: #444444; /* ContentPanel-EditorsDefault-Background_Color */
+	background-image: url(images/threeD.png); /* ContentPanel-EditorsDefault-Background_Image */
+	background-position: left top;  /* ContentPanel-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* ContentPanel-EditorsDefault-Background_Image-Repeat */
+
+    }
+
+    .wm_template .wmcontentarea .wmcontentarea .wmeditor .dijitTextBox.dijitHover,
+    .wm_template .wmcontentarea .wmcontentarea .wmeditor .dijitTextArea:hover,
+    .wm_template .wmcontentarea .wmcontentarea .wmeditor .dijitComboBox.dijitHover,
+    .wm_template .wmcontentarea .wmcontentarea .wmeditor .RichTextEditable:hover iframe,
+    .wm_template .wmcontentarea .wmcontentarea .dijitTimePickerMarker.dijitTimePickerMarkerHover,
+    .wm_template .wmcontentarea .wmcontentarea .dijitTimePickerItem.dijitTimePickerItemHover {
+	/* ContentPanel-EditorsHover-Font */
+	color: #FFFFFF; /* ContentPanel-EditorsHover-Font_Color */
+
+	border-color: #666666;  /* ContentPanel-EditorsHover-Border_Color */
+
+	/* ContentPanel-EditorsHover-Background */
+	background-color: #444444; /* ContentPanel-EditorsHover-Background_Color */
+	background-image: url(images/threeD.png); /* ContentPanel-EditorsHover-Background_Image */
+	background-position: left top;  /* ContentPanel-EditorsHover-Background_Image-Position */
+	background-repeat: repeat-x; /* ContentPanel-EditorsHover-Background_Image-Repeat */
+    }
+
+    .wm_template .wmcontentarea .wmcontentarea .wmeditor .dijitTextBox.dijitFocused,
+    .wm_template .wmcontentarea .wmcontentarea .wmeditor .dijitTextBox.dijitFocused.dijitHover,
+    .wm_template .wmcontentarea .wmcontentarea .wmeditor .dijitTextArea.dijitFocused,
+    .wm_template .wmcontentarea .wmcontentarea .wmeditor .dijitTextArea.dijitFocused:hover,
+    .wm_template .wmcontentarea .wmcontentarea .wmeditor .dijitComboBox.dijitFocused,
+    .wm_template .wmcontentarea .wmcontentarea .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_template .wmcontentarea .wmcontentarea .wmeditor .RichTextEditable.Focused iframe {
+	/* ContentPanel-EditorsFocus-Font */
+	color: #FFFFFF; /* ContentPanel-EditorsFocus-Font_Color */
+
+	border-color: #666666;  /* ContentPanel-EditorsFocus-Border_Color */
+
+	/* ContentPanel-EditorsFocus-Background */
+	background-color: #444444; /* ContentPanel-EditorsFocus-Background_Color */
+	background-image: url(images/threeD.png); /* ContentPanel-EditorsFocus-Background_Image */
+	background-position: left top;  /* ContentPanel-EditorsFocus-Background_Image-Position */
+	background-repeat: repeat-x; /* ContentPanel-EditorsFocus-Background_Image-Repeat */
+    }
+    /* END inner content panel editors */
+    
+}
+
+
+/* Checkbox */
+/*
+   .wm_template .wmeditor .dijitCheckBox, 
+   .wm_template .wmeditor .dijitRadio {
+   background-image: url(../../../../../dojo/dijit/themes/tundra/images/checkmarkNoBorder.png);
+}
+   .wm_template .wmeditor .dijitCheckBox {
+   border: solid 1px #333333;
+   margin: 5;
+}
+
+   .wm_template .wmeditor .dijitCheckBox input,
+   .wm_template .wmeditor .dijitRadio input {
+   cursor: pointer;
+}
+*/

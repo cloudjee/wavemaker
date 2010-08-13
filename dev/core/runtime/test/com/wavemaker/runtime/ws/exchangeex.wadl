@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <wadl:application
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xsi:schemaLocation="http://research.sun.com/wadl/2006/10 wadl.xsd"
+  xmlns:wadl="http://research.sun.com/wadl/2006/10">
+<wadl:grammars>
+  <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:element name="result">
+      <xsd:complexType>
+        <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+                <xsd:element name="exchangerate" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+</wadl:grammars>
+<wadl:resources base="http://service.openkapow.com/">
+    <wadl:resource path="exchangeex.xml">
+      <wadl:method name="GET">
+        <wadl:request>
+          <wadl:param name="currencyinput" type="xsd:string" style="query" required="true" default="EUR">
+            <wadl:doc xml:lang="en" title="currencyinput (Sample Value: EUR)">Type : [xsd:string]</wadl:doc>
+          </wadl:param>
+        </wadl:request>
+        <wadl:response>
+          <wadl:representation mediaType="application/xml" element="result" />
+        </wadl:response>
+       </wadl:method>
+    </wadl:resource>
+</wadl:resources>
+</wadl:application>

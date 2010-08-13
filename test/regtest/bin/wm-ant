@@ -1,0 +1,25 @@
+#!/bin/sh
+osname=`uname -s`
+export osname
+. $ANT_HOME/bin/setup.sh
+echo "================================="
+echo "Choose which browser to test:    "
+echo "================================="
+echo "1) Firefox" 
+echo "2) Safari"
+echo "3) All"
+printf "Choice [3]: "
+read choice
+case ${choice} in 
+    3) BROWSER=all
+       export BROWSER
+	;;
+    2) BROWSER=safari 
+       export BROWSER
+	;;
+    1|"") BROWSER=firefox 
+       export BROWSER
+	;;
+esac
+
+ant -Dsquish_home="${SQUISH_HOME}" -DwmBrowser=${BROWSER} -Dregtest_home="${ANT_HOME}" -DpropertiesFile="${osname}.properties" "$@"

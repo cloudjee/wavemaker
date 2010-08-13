@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 19, 2007 9:06:48 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.orahr.Departments" table="DEPARTMENTS" schema="HR">
+        <comment>Departments table that shows details of departments where employees work. Contains 27 rows; references with locations, employees, and job_history
+        tables.</comment>
+        <id name="departmentId" type="short">
+            <column name="DEPARTMENT_ID" precision="4" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="locations" class="com.wavemaker.runtime.data.sample.orahr.Locations" fetch="select">
+            <column name="LOCATION_ID" precision="4" scale="0">
+                <comment>Location id where a department is located. Foreign key to location_id column of locations table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="employees" class="com.wavemaker.runtime.data.sample.orahr.Employees" fetch="select">
+            <column name="MANAGER_ID" precision="6" scale="0">
+                <comment>Manager_id of a department. Foreign key to employee_id column of employees table. The manager_id column of the employee table references this
+                column.</comment>
+            </column>
+        </many-to-one>
+        <property name="departmentName" type="string">
+            <column name="DEPARTMENT_NAME" length="30" not-null="true">
+                <comment>A not null column that shows name of a department. Administration, Marketing, Purchasing, Human Resources, Shipping, IT, Executive, Public Relations,
+                Sales, Finance, and Accounting.</comment>
+            </column>
+        </property>
+        <set name="employeeses" inverse="true">
+            <key>
+                <column name="DEPARTMENT_ID" precision="4" scale="0">
+                    <comment>Department id where employee works; foreign key to department_id column of the departments table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.orahr.Employees" />
+        </set>
+        <set name="jobHistories" inverse="true">
+            <key>
+                <column name="DEPARTMENT_ID" precision="4" scale="0">
+                    <comment>Department id in which the employee worked in the past; foreign key to deparment_id column in the departments table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.orahr.JobHistory" />
+        </set>
+    </class>
+</hibernate-mapping>

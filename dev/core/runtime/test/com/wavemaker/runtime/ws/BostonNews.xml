@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
+  xmlns:cc="http://web.resource.org/cc/"
+  xmlns="http://purl.org/rss/1.0/">
+  <channel rdf:about="http://www.boston.com/news">
+    <title>Boston.com / News</title>
+    <link>http://www.boston.com/news</link>
+    <description>Latest news from Boston.com, top stories from the Boston Globe, and updated news from AP and Reuters.</description>
+    <image rdf:resource="http://cache.boston.com/bonzai-fba/File-Based_Image_Resource/bcom_logo_140w.gif" />
+    <dc:language>en-us</dc:language>
+    <dc:date>2007-07-20T01:39:10Z</dc:date>
+
+    <cc:license rdf:resource="http://www.boston.com/help/usage_rules/" />
+
+    <items>
+      <rdf:Seq>
+          <rdf:li rdf:resource="http://www.boston.com/news/local/new_hampshire/articles/2007/07/19/ap_interview_obama_says_romney_distorts_his_record?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/local/massachusetts/articles/2007/07/19/man_arrested_in_greenfield_slayings_of_two?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/local/massachusetts/articles/2007/07/19/north_carolina_teen_shot_and_killed_in_cape_cod?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/local/massachusetts/articles/2007/07/19/vistas_growing_pains_leave_room_for_xp?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/local/rhode_island/articles/2007/07/19/ri_governor_blocks_infertility_coverage_for_the_unmarried?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/local/connecticut/articles/2007/07/19/june_job_numbers_up_according_to_new_state_labor_figures?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/nation/articles/2007/07/19/weapons_export_arrest_made_in_new_york?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/nation/articles/2007/07/19/man_pleads_guilty_in_capitol_gate_crash?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/nation/articles/2007/07/19/woman_accused_of_breaking_bush_roadblock?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/nation/articles/2007/07/19/fla_e_voting_critic_to_run_again_in_08?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/nation/washington/articles/2007/07/20/sec_member_criticizes_terrorist_watch_list?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/nation/washington/articles/2007/07/20/pentagon_trims_armored_vehicles_due_in_07_for_iraq?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/world/middleeast/articles/2007/07/19/iran_tv_shows_detained_iranian_americans?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/world/asia/articles/2007/07/20/north_korea_to_seek_un_airing_of_japan_dispute?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/world/middleeast/articles/2007/07/19/us_military_deaths_in_iraq_at_3628?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/world/middleeast/articles/2007/07/19/sunni_bloc_ends_boycott_of_iraqi_parliament?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/world/asia/articles/2007/07/19/china_warns_us_against_smear_attacks_on_imports?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/world/asia/articles/2007/07/19/south_korean_accused_of_spying_on_nkorea_in_us?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/education/k_12/articles/2007/07/19/education_health_cited_for_budget_boost?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/education/k_12/articles/2007/07/19/romney_sharpens_appeal_to_conservatives?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/education/higher/articles/2007/07/19/saying_goodbye_to_potter_is_tough_for_those_who_grew_up_with_him?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/education/higher/articles/2007/07/19/smaller_cities_buck_housing_slump?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/education/k_12/articles/2007/07/19/mass_more_than_doubles_number_of_schools_with_an_expanded_day?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/education/higher/articles/2007/07/19/amherst_joins_growing_trend_of_eliminating_loans_in_financial_aid?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/yourlife/health/women/articles/2007/07/19/study_clinics_overuse_lab_technique?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/yourlife/health/mental/articles/2007/07/19/survey_finds_many_docs_stress_mistakes?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/yourlife/health/other/articles/2007/07/19/studies_restless_legs_syndrome_is_real?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/yourlife/health/other/articles/2007/07/19/taste_testing_new_school_foods?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/yourlife/health/fitness/articles/2007/07/19/vendors_pitch_healthier_foods_for_kids?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/yourlife/health/diseases/articles/2007/07/19/hot_dog_chili_sauce_in_botulism_recall?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/science/articles/2007/07/19/amphibian_populations_concern_scientists?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/science/articles/2007/07/19/researchers_map_crickets_gene_sequence?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/science/articles/2007/07/19/study_plug_in_hybrids_may_cut_emissions?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/science/articles/2007/07/19/archaeologists_dig_up_roman_bath_complex?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/science/articles/2007/07/19/brazil_fires_rocket_as_part_of_research?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/science/articles/2007/07/19/michoud_employment_to_drop?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/local/articles/2007/07/19/dimasi_rips_10m_grant_for_project?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/local/massachusetts/articles/2007/07/19/none_of_the_above?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/local/articles/2007/07/19/antigang_workers_face_uphill_climb?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/nation/articles/2007/07/19/candidates_spend_heavily_on_voter_lists?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/business/technology/articles/2007/07/19/high_tech_biotech_clashing_on_patent_bill?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/odd/articles/2007/07/19/family_searches_feces_of_cash_eating_dog?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/odd/articles/2007/07/19/captain_america_to_apologize_for_grope?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/odd/articles/2007/07/19/tall_horse_takes_shot_at_world_record?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/odd/articles/2007/07/19/woman_leaves_kids_to_pose_nude_in_woods?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/odd/articles/2007/07/19/83_cats_iguanas_found_in_stinky_home?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/yourlife/health/other/articles/2007/06/18/countdown_to_coverage?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/world/middleeast/articles/2007/06/17/lost_hopes_in_gaza?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/yourlife/health/diseases/articles/2007/05/27/no_place_like_home?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/world/middleeast/articles/2007/05/13/iran_is_a_hot_destination_for_iraqis_seeking_calm?rss_id=Boston.com+%2F+News" />
+          <rdf:li rdf:resource="http://www.boston.com/news/local/massachusetts/articles/2007/05/13/finding_her_way_in_the_clan?rss_id=Boston.com+%2F+News" />
+      </rdf:Seq>
+    </items>
+  </channel>
+  <image rdf:about="http://cache.boston.com/bonzai-fba/File-Based_Image_Resource/bcom_logo_140w.gif">
+    <title>Boston.com</title>
+    <link>http://www.boston.com/</link>
+    <url>http://cache.boston.com/bonzai-fba/File-Based_Image_Resource/bcom_logo_140w.gif</url>
+  </image>
+  <item rdf:about="http://www.boston.com/news/local/new_hampshire/articles/2007/07/19/ap_interview_obama_says_romney_distorts_his_record?rss_id=Boston.com+%2F+News">
+    <title>AP Interview: Obama says Romney distorts his record</title>
+    <link>http://www.boston.com/news/local/new_hampshire/articles/2007/07/19/ap_interview_obama_says_romney_distorts_his_record?rss_id=Boston.com+%2F+News</link>
+    <description>Democratic presidential hopeful Barack Obama said on Thursday that Republican Mitt Romney was only trying to "score cheap political points" when he told a Colorado audience Obama wanted sex education for kindergartners.</description>
+    <dc:creator>Philip Elliott, Associated Press Writer</dc:creator>
+    <dc:date>2007-07-20T00:13:23Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/local/massachusetts/articles/2007/07/19/man_arrested_in_greenfield_slayings_of_two?rss_id=Boston.com+%2F+News">
+    <title>Man arrested in Greenfield slayings of two</title>
+    <link>http://www.boston.com/news/local/massachusetts/articles/2007/07/19/man_arrested_in_greenfield_slayings_of_two?rss_id=Boston.com+%2F+News</link>
+    <description>A Greenfield man was held on murder charges in the deaths of two people found in an apartment on Wednesday.</description>
+    <dc:creator></dc:creator>
+    <dc:date>2007-07-20T00:11:08Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/local/massachusetts/articles/2007/07/19/north_carolina_teen_shot_and_killed_in_cape_cod?rss_id=Boston.com+%2F+News">
+    <title>North Carolina teen shot and killed in Cape Cod</title>
+    <link>http://www.boston.com/news/local/massachusetts/articles/2007/07/19/north_carolina_teen_shot_and_killed_in_cape_cod?rss_id=Boston.com+%2F+News</link>
+    <description>Police are investigating the shooting death of a North Carolina teenager on Cape Cod late Wednesday night.</description>
+    <dc:creator></dc:creator>
+    <dc:date>2007-07-19T23:58:24Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/local/massachusetts/articles/2007/07/19/vistas_growing_pains_leave_room_for_xp?rss_id=Boston.com+%2F+News">
+    <title>PluggedIn: Vista's growing pains leave room for XP</title>
+    <link>http://www.boston.com/news/local/massachusetts/articles/2007/07/19/vistas_growing_pains_leave_room_for_xp?rss_id=Boston.com+%2F+News</link>
+    <description>David Daoud ran into trouble when he started using Vista, the new version of Windows that Microsoft Corp. &amp;lt;MSFT.O&amp;gt; and PC makers have spent millions of dollars advertising since it came out six months ago.</description>
+    <dc:creator>Jim Finkle</dc:creator>
+    <dc:date>2007-07-19T23:27:59Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/local/rhode_island/articles/2007/07/19/ri_governor_blocks_infertility_coverage_for_the_unmarried?rss_id=Boston.com+%2F+News">
+    <title>R.I. governor blocks infertility coverage for the unmarried</title>
+    <link>http://www.boston.com/news/local/rhode_island/articles/2007/07/19/ri_governor_blocks_infertility_coverage_for_the_unmarried?rss_id=Boston.com+%2F+News</link>
+    <description>Gov. Don Carcieri has vetoed a bill requiring health insurance companies to cover infertility treatments for unmarried people, saying the state shouldn't force insurers to subsidize out-of-wedlock births.</description>
+    <dc:creator>Ray Henry, Associated Press Writer</dc:creator>
+    <dc:date>2007-07-19T23:22:54Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/local/connecticut/articles/2007/07/19/june_job_numbers_up_according_to_new_state_labor_figures?rss_id=Boston.com+%2F+News">
+    <title>June job numbers up, according to new state labor figures</title>
+    <link>http://www.boston.com/news/local/connecticut/articles/2007/07/19/june_job_numbers_up_according_to_new_state_labor_figures?rss_id=Boston.com+%2F+News</link>
+    <description>Connecticut gained 4,000 jobs in June, making up for the 1,000 jobs lost a month before and adding 3,000 more, the state Department of Labor reported Thursday.</description>
+    <dc:creator></dc:creator>
+    <dc:date>2007-07-19T23:01:20Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/nation/articles/2007/07/19/weapons_export_arrest_made_in_new_york?rss_id=Boston.com+%2F+News">
+    <title>Weapons export arrest made in New York</title>
+    <link>http://www.boston.com/news/nation/articles/2007/07/19/weapons_export_arrest_made_in_new_york?rss_id=Boston.com+%2F+News</link>
+    <description>A Pakistani national was arrested Thursday on allegations he illegally shipped weapons to Malaysia, including fighter jet parts likely to end up in Iran.</description>
+    <dc:creator>Larry Neumeister, Associated Press Writer</dc:creator>
+    <dc:date>2007-07-20T01:23:20Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/nation/articles/2007/07/19/man_pleads_guilty_in_capitol_gate_crash?rss_id=Boston.com+%2F+News">
+    <title>Man pleads guilty in Capitol gate crash</title>
+    <link>http://www.boston.com/news/nation/articles/2007/07/19/man_pleads_guilty_in_capitol_gate_crash?rss_id=Boston.com+%2F+News</link>
+    <description>A man accused of running into the U.S. Capitol with a loaded handgun pleaded guilty Thursday to several charges, including firearms offenses, cocaine possession and fleeing police.</description>
+    <dc:creator></dc:creator>
+    <dc:date>2007-07-20T01:11:20Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/nation/articles/2007/07/19/woman_accused_of_breaking_bush_roadblock?rss_id=Boston.com+%2F+News">
+    <title>Woman accused of breaking Bush roadblock</title>
+    <link>http://www.boston.com/news/nation/articles/2007/07/19/woman_accused_of_breaking_bush_roadblock?rss_id=Boston.com+%2F+News</link>
+    <description>A woman was arrested after she sped through a highway roadblock set up for President Bush's motorcade Thursday, authorities said. The president was about five miles away at the time and was not in danger.</description>
+    <dc:creator></dc:creator>
+    <dc:date>2007-07-20T01:05:44Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/nation/articles/2007/07/19/fla_e_voting_critic_to_run_again_in_08?rss_id=Boston.com+%2F+News">
+    <title>Fla. e-voting critic to run again in '08</title>
+    <link>http://www.boston.com/news/nation/articles/2007/07/19/fla_e_voting_critic_to_run_again_in_08?rss_id=Boston.com+%2F+News</link>
+    <description>A congressional candidate who challenged the accuracy of electronic voting machines that recorded her narrow loss announced Thursday that she will run again in 2008.</description>
+    <dc:creator></dc:creator>
+    <dc:date>2007-07-20T00:49:59Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/nation/washington/articles/2007/07/20/sec_member_criticizes_terrorist_watch_list?rss_id=Boston.com+%2F+News">
+    <title>SEC member criticizes "terrorist" watch list</title>
+    <link>http://www.boston.com/news/nation/washington/articles/2007/07/20/sec_member_criticizes_terrorist_watch_list?rss_id=Boston.com+%2F+News</link>
+    <description>The U.S. Securities and Exchange Commission should fix or drop a new online tool which identifies corporations with investments in "sponsors of terrorism" countries, an agency commissioner said.</description>
+    <dc:creator>Rachelle Younglai</dc:creator>
+    <dc:date>2007-07-20T00:35:51Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/nation/washington/articles/2007/07/20/pentagon_trims_armored_vehicles_due_in_07_for_iraq?rss_id=Boston.com+%2F+News">
+    <title>Pentagon trims armored vehicles due in '07 for Iraq</title>
+    <link>http://www.boston.com/news/nation/washington/articles/2007/07/20/pentagon_trims_armored_vehicles_due_in_07_for_iraq?rss_id=Boston.com+%2F+News</link>
+    <description>U.S. troops in Iraq should receive 2,500 to 3,000 special armored vehicles by year's end if Congress approves $1.2 billion in 2007 defense spending, a top Pentagon official said on Thursday, down from 3,400 vehicles announced just a day earlier.</description>
+    <dc:creator>Andrea Shalal-Esa</dc:creator>
+    <dc:date>2007-07-20T00:30:45Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/world/middleeast/articles/2007/07/19/iran_tv_shows_detained_iranian_americans?rss_id=Boston.com+%2F+News">
+    <title>Iran TV shows detained Iranian-Americans</title>
+    <link>http://www.boston.com/news/world/middleeast/articles/2007/07/19/iran_tv_shows_detained_iranian_americans?rss_id=Boston.com+%2F+News</link>
+    <description>Two Iranian-Americans accused of conspiring against the government were shown on state-run television for a second time Thursday with montages of separate quotes combined to form what could be interpreted as incriminating statements.</description>
+    <dc:creator>Nasser Karimi, Associated Press Writer</dc:creator>
+    <dc:date>2007-07-20T00:52:57Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/world/asia/articles/2007/07/20/north_korea_to_seek_un_airing_of_japan_dispute?rss_id=Boston.com+%2F+News">
+    <title>North Korea to seek U.N. airing of Japan dispute</title>
+    <link>http://www.boston.com/news/world/asia/articles/2007/07/20/north_korea_to_seek_un_airing_of_japan_dispute?rss_id=Boston.com+%2F+News</link>
+    <description>North Korea on Friday will ask the United Nations to take up its complaint over what it calls a "fascist search" of a pro-North Korean group in Tokyo, a Japanese diplomat said.</description>
+    <dc:creator>Claudia Parsons</dc:creator>
+    <dc:date>2007-07-20T00:32:27Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/world/middleeast/articles/2007/07/19/us_military_deaths_in_iraq_at_3628?rss_id=Boston.com+%2F+News">
+    <title>U.S. military deaths in Iraq at 3,628</title>
+    <link>http://www.boston.com/news/world/middleeast/articles/2007/07/19/us_military_deaths_in_iraq_at_3628?rss_id=Boston.com+%2F+News</link>
+    <description>As of Thursday, July 19, 2007, at least 3,628 members of the U.S. military have died since the beginning of the Iraq war in March 2003, according to an Associated Press count. The figure includes seven military civilians. At least 2,975 died as a result of hostile action, according to the military's numbers.</description>
+    <dc:creator>The Associated Press</dc:creator>
+    <dc:date>2007-07-19T23:29:00Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/world/middleeast/articles/2007/07/19/sunni_bloc_ends_boycott_of_iraqi_parliament?rss_id=Boston.com+%2F+News">
+    <title>Sunni bloc ends boycott of Iraqi parliament</title>
+    <link>http://www.boston.com/news/world/middleeast/articles/2007/07/19/sunni_bloc_ends_boycott_of_iraqi_parliament?rss_id=Boston.com+%2F+News</link>
+    <description>Iraq's main Sunni Arab bloc has ended its boycott of the Shi'ite-dominated parliament, officials said on Thursday, in a positive sign for the country's faltering attempts at national reconciliation.</description>
+    <dc:creator>Mariam Karouny</dc:creator>
+    <dc:date>2007-07-19T23:21:27Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/world/asia/articles/2007/07/19/china_warns_us_against_smear_attacks_on_imports?rss_id=Boston.com+%2F+News">
+    <title>China warns U.S. against "smear attacks" on imports</title>
+    <link>http://www.boston.com/news/world/asia/articles/2007/07/19/china_warns_us_against_smear_attacks_on_imports?rss_id=Boston.com+%2F+News</link>
+    <description>China warned the United States on Thursday against "groundless smear attacks" against Chinese products and said it was working responsibly to address concerns over a spate of recent food safety scares.</description>
+    <dc:creator></dc:creator>
+    <dc:date>2007-07-19T23:10:24Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/world/asia/articles/2007/07/19/south_korean_accused_of_spying_on_nkorea_in_us?rss_id=Boston.com+%2F+News">
+    <title>South Korean accused of spying on N.Korea in U.S.</title>
+    <link>http://www.boston.com/news/world/asia/articles/2007/07/19/south_korean_accused_of_spying_on_nkorea_in_us?rss_id=Boston.com+%2F+News</link>
+    <description>A South Korean man was arrested and accused of spying for South Korea and obtaining information from North Korea in return for payments, U.S. officials said on Thursday.</description>
+    <dc:creator>Christine Kearney</dc:creator>
+    <dc:date>2007-07-19T22:01:39Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/education/k_12/articles/2007/07/19/education_health_cited_for_budget_boost?rss_id=Boston.com+%2F+News">
+    <title>Education, health cited for budget boost</title>
+    <link>http://www.boston.com/news/education/k_12/articles/2007/07/19/education_health_cited_for_budget_boost?rss_id=Boston.com+%2F+News</link>
+    <description>A bill filled with money for job training, health and education faces a veto from President Bush, who complains that Democratic add-ons have made it too expensive.</description>
+    <dc:creator>Andrew Taylor, Associated Press Writer</dc:creator>
+    <dc:date>2007-07-19T20:37:53Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/education/k_12/articles/2007/07/19/romney_sharpens_appeal_to_conservatives?rss_id=Boston.com+%2F+News">
+    <title>Romney sharpens appeal to conservatives</title>
+    <link>http://www.boston.com/news/education/k_12/articles/2007/07/19/romney_sharpens_appeal_to_conservatives?rss_id=Boston.com+%2F+News</link>
+    <description>Republican Mitt Romney directly appealed to social conservatives in South Carolina on Thursday, criticizing Democratic rival Barack Obama for supporting age-appropriate sex education for children as young as kindergartners.</description>
+    <dc:creator>Jim Davenport, Associated Press Writer</dc:creator>
+    <dc:date>2007-07-19T20:34:47Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/education/higher/articles/2007/07/19/saying_goodbye_to_potter_is_tough_for_those_who_grew_up_with_him?rss_id=Boston.com+%2F+News">
+    <title>Saying goodbye to Potter is tough for those who grew up with him</title>
+    <link>http://www.boston.com/news/education/higher/articles/2007/07/19/saying_goodbye_to_potter_is_tough_for_those_who_grew_up_with_him?rss_id=Boston.com+%2F+News</link>
+    <description>They were just learning to instant-message their friends when Harry Potter got his first owl from Hogwarts School of Witchcraft and Wizardry.</description>
+    <dc:creator>Annie Flanzraich, Associated Press Writer</dc:creator>
+    <dc:date>2007-07-19T20:19:15Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/education/higher/articles/2007/07/19/smaller_cities_buck_housing_slump?rss_id=Boston.com+%2F+News">
+    <title>Smaller cities buck housing slump</title>
+    <link>http://www.boston.com/news/education/higher/articles/2007/07/19/smaller_cities_buck_housing_slump?rss_id=Boston.com+%2F+News</link>
+    <description>Aside from being Oregon's capital city, Salem doesn't have much to boast about. Most downtown restaurants close by 7:00 p.m. and Lefty's -- the only cool bar in town, according to local college students -- is known for its karaoke fundraisers.</description>
+    <dc:creator>Aaron Clark, Associated Press Writer</dc:creator>
+    <dc:date>2007-07-19T19:40:27Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/education/k_12/articles/2007/07/19/mass_more_than_doubles_number_of_schools_with_an_expanded_day?rss_id=Boston.com+%2F+News">
+    <title>Mass. more than doubles number of schools with an expanded day</title>
+    <link>http://www.boston.com/news/education/k_12/articles/2007/07/19/mass_more_than_doubles_number_of_schools_with_an_expanded_day?rss_id=Boston.com+%2F+News</link>
+    <description>Ten more schools will lengthen their days next year, more than doubling the number of Massachusetts schools that are adding class time in a bid to improve academics.</description>
+    <dc:creator>Jay Lindsay, Associated Press Writer</dc:creator>
+    <dc:date>2007-07-19T19:31:12Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/education/higher/articles/2007/07/19/amherst_joins_growing_trend_of_eliminating_loans_in_financial_aid?rss_id=Boston.com+%2F+News">
+    <title>Amherst joins growing trend of eliminating loans in financial aid</title>
+    <link>http://www.boston.com/news/education/higher/articles/2007/07/19/amherst_joins_growing_trend_of_eliminating_loans_in_financial_aid?rss_id=Boston.com+%2F+News</link>
+    <description>Amherst College will replace all student loans in financial aid packages with scholarships in an effort to eliminate its students' academic debt, the school announced Thursday.</description>
+    <dc:creator></dc:creator>
+    <dc:date>2007-07-19T18:10:41Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/yourlife/health/women/articles/2007/07/19/study_clinics_overuse_lab_technique?rss_id=Boston.com+%2F+News">
+    <title>Study: Clinics overuse lab technique</title>
+    <link>http://www.boston.com/yourlife/health/women/articles/2007/07/19/study_clinics_overuse_lab_technique?rss_id=Boston.com+%2F+News</link>
+    <description>Fertility clinics are overusing a laboratory technique and costing infertile couples and some insurers hundreds of extra dollars, a new study suggests. At issue is a procedure that injects a single sperm into an egg. The method is considered the best option for couples in which the man has defective sperm or extremely low sperm counts.</description>
+    <dc:creator>Mike Stobbe, AP Medical Writer</dc:creator>
+    <dc:date>2007-07-20T00:29:43Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/yourlife/health/mental/articles/2007/07/19/survey_finds_many_docs_stress_mistakes?rss_id=Boston.com+%2F+News">
+    <title>Survey finds many docs stress mistakes</title>
+    <link>http://www.boston.com/yourlife/health/mental/articles/2007/07/19/survey_finds_many_docs_stress_mistakes?rss_id=Boston.com+%2F+News</link>
+    <description>Patients aren't the only ones harmed by medical errors, according to a survey released Wednesday that found many doctors who make mistakes -- and even those who come close -- suffer stress, sleep problems and loss of confidence.</description>
+    <dc:creator>Lindsey Tanner, AP Medical Writer</dc:creator>
+    <dc:date>2007-07-20T00:29:42Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/yourlife/health/other/articles/2007/07/19/studies_restless_legs_syndrome_is_real?rss_id=Boston.com+%2F+News">
+    <title>Studies: Restless legs syndrome is real</title>
+    <link>http://www.boston.com/yourlife/health/other/articles/2007/07/19/studies_restless_legs_syndrome_is_real?rss_id=Boston.com+%2F+News</link>
+    <description>Scientists have linked certain genes to restless legs syndrome, suggesting the twitching condition described as "jimmy legs" in a "Seinfeld" episode is biologically based and not an imaginary disorder.</description>
+    <dc:creator>Mike Stobbe, AP Medical Writer</dc:creator>
+    <dc:date>2007-07-20T00:29:41Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/yourlife/health/other/articles/2007/07/19/taste_testing_new_school_foods?rss_id=Boston.com+%2F+News">
+    <title>Taste-testing new school foods</title>
+    <link>http://www.boston.com/yourlife/health/other/articles/2007/07/19/taste_testing_new_school_foods?rss_id=Boston.com+%2F+News</link>
+    <description>This year's School Nutrition Association annual convention offered a bonanza of new offerings. Here are some cafeteria-ready dishes sampled by The Associated Press.</description>
+    <dc:creator>The Associated Press</dc:creator>
+    <dc:date>2007-07-19T21:28:51Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/yourlife/health/fitness/articles/2007/07/19/vendors_pitch_healthier_foods_for_kids?rss_id=Boston.com+%2F+News">
+    <title>Vendors pitch healthier foods for kids</title>
+    <link>http://www.boston.com/yourlife/health/fitness/articles/2007/07/19/vendors_pitch_healthier_foods_for_kids?rss_id=Boston.com+%2F+News</link>
+    <description>Mark Smith is convinced he can turn a generation of junk-food eaters into die-hard devotees of what he calls "the salsa of this decade." The dynamo treat? Single-serve portions of hummus and it may be coming to a school cafeteria near you.</description>
+    <dc:creator>Ashley M. Heher, AP Business Writer</dc:creator>
+    <dc:date>2007-07-19T20:21:02Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/yourlife/health/diseases/articles/2007/07/19/hot_dog_chili_sauce_in_botulism_recall?rss_id=Boston.com+%2F+News">
+    <title>U.S. agencies probe botulism poisoning</title>
+    <link>http://www.boston.com/yourlife/health/diseases/articles/2007/07/19/hot_dog_chili_sauce_in_botulism_recall?rss_id=Boston.com+%2F+News</link>
+    <description>Botulism poisoning from commercially canned foods has been virtually eliminated in the United States, making the new cases linked to hot dog chili sauce all the more striking.</description>
+    <dc:creator>Andrew Bridges, Associated Press Writer</dc:creator>
+    <dc:date>2007-07-19T05:01:44Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/science/articles/2007/07/19/amphibian_populations_concern_scientists?rss_id=Boston.com+%2F+News">
+    <title>Amphibian populations concern scientists</title>
+    <link>http://www.boston.com/news/science/articles/2007/07/19/amphibian_populations_concern_scientists?rss_id=Boston.com+%2F+News</link>
+    <description>Missouri and Illinois conservationists are seeing troubling signs in amphibian populations, mirroring problems seen elsewhere in the world.</description>
+    <dc:creator></dc:creator>
+    <dc:date>2007-07-19T20:55:51Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/science/articles/2007/07/19/researchers_map_crickets_gene_sequence?rss_id=Boston.com+%2F+News">
+    <title>Researchers map crickets' gene sequence</title>
+    <link>http://www.boston.com/news/science/articles/2007/07/19/researchers_map_crickets_gene_sequence?rss_id=Boston.com+%2F+News</link>
+    <description>They're a pest and often a plague on farmers and ranchers. But Daniel Fenn regards the greasy thumb-sized Mormon cricket with fascination, collecting the choicest specimens for study.</description>
+    <dc:creator>Paul Foy, Associated Press Writer</dc:creator>
+    <dc:date>2007-07-19T20:41:07Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/science/articles/2007/07/19/study_plug_in_hybrids_may_cut_emissions?rss_id=Boston.com+%2F+News">
+    <title>Study: Plug-in hybrids may cut emissions</title>
+    <link>http://www.boston.com/news/science/articles/2007/07/19/study_plug_in_hybrids_may_cut_emissions?rss_id=Boston.com+%2F+News</link>
+    <description>If motorists used rechargeable "plug-in" hybrid-electric vehicles in large numbers, the U.S. could see a significant drop in greenhouse gas emissions by the middle of the century, says a study released Thursday.</description>
+    <dc:creator>Ken Thomas, Associated Press Writer</dc:creator>
+    <dc:date>2007-07-19T20:40:30Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/science/articles/2007/07/19/archaeologists_dig_up_roman_bath_complex?rss_id=Boston.com+%2F+News">
+    <title>Archaeologists dig up Roman bath complex</title>
+    <link>http://www.boston.com/news/science/articles/2007/07/19/archaeologists_dig_up_roman_bath_complex?rss_id=Boston.com+%2F+News</link>
+    <description>Archaeologists said Thursday they have partly dug up a second-century bath complex believed to be part of the vast, luxurious residence of a wealthy Roman.</description>
+    <dc:creator>Marta Falconi, Associated Press Writer</dc:creator>
+    <dc:date>2007-07-19T20:37:53Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/science/articles/2007/07/19/brazil_fires_rocket_as_part_of_research?rss_id=Boston.com+%2F+News">
+    <title>Brazil fires rocket as part of research</title>
+    <link>http://www.boston.com/news/science/articles/2007/07/19/brazil_fires_rocket_as_part_of_research?rss_id=Boston.com+%2F+News</link>
+    <description>Brazil on Thursday successfully launched a rocket on a 20-minute flight aimed at obtaining a better understanding on how gravity affects human enzymes and DNA.</description>
+    <dc:creator>Stan Lehman, Associated Press Writer</dc:creator>
+    <dc:date>2007-07-19T19:58:36Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/science/articles/2007/07/19/michoud_employment_to_drop?rss_id=Boston.com+%2F+News">
+    <title>Michoud employment to drop</title>
+    <link>http://www.boston.com/news/science/articles/2007/07/19/michoud_employment_to_drop?rss_id=Boston.com+%2F+News</link>
+    <description>With the shift of the U.S. space program from the shuttle to the Constellation program designed to send astronauts back to the moon and beyond, employment at NASA's Michoud Assembly Facility will drop, a top official with a space contractor said Thursday.</description>
+    <dc:creator>Alan Sayre, AP Business Writer</dc:creator>
+    <dc:date>2007-07-19T19:49:27Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/local/articles/2007/07/19/dimasi_rips_10m_grant_for_project?rss_id=Boston.com+%2F+News">
+    <title>DiMasi rips $10m grant for project</title>
+    <link>http://www.boston.com/news/local/articles/2007/07/19/dimasi_rips_10m_grant_for_project?rss_id=Boston.com+%2F+News</link>
+    <description>House Speaker Salvatore DiMasi called on Governor Deval Patrick yesterday to rescind the administration's award of $10 million to the controversial Columbus Center project in Boston, calling the grant corporate welfare in a letter that reflects renewed tension between the two Democratic leaders.</description>
+    <dc:creator>Andrea Estes, Globe Staff</dc:creator>
+    <dc:date>2007-07-19T04:00:00Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/local/massachusetts/articles/2007/07/19/none_of_the_above?rss_id=Boston.com+%2F+News">
+    <title>None of the above</title>
+    <link>http://www.boston.com/news/local/massachusetts/articles/2007/07/19/none_of_the_above?rss_id=Boston.com+%2F+News</link>
+    <description>Massachusetts voters sick of holding their noses on Election Day could get another option: none of the above.</description>
+    <dc:creator></dc:creator>
+    <dc:date>2007-07-19T04:00:00Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/local/articles/2007/07/19/antigang_workers_face_uphill_climb?rss_id=Boston.com+%2F+News">
+    <title>Antigang workers face uphill climb</title>
+    <link>http://www.boston.com/news/local/articles/2007/07/19/antigang_workers_face_uphill_climb?rss_id=Boston.com+%2F+News</link>
+    <description>A beat-up van with a City of Boston seal pulled into a Mattapan parking lot, and five people in matching navy T-shirts with "STREETWORKER" lettered on the back got out and began to walk the neighborhood. They are part of an elite crime-fighting force that Mayor Thomas M. Menino once hailed as the city's first line of defense against skyrocketing ...</description>
+    <dc:creator>Donovan Slack, Globe Staff</dc:creator>
+    <dc:date>2007-07-19T04:00:00Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/nation/articles/2007/07/19/candidates_spend_heavily_on_voter_lists?rss_id=Boston.com+%2F+News">
+    <title>Candidates spend heavily on voter lists</title>
+    <link>http://www.boston.com/news/nation/articles/2007/07/19/candidates_spend_heavily_on_voter_lists?rss_id=Boston.com+%2F+News</link>
+    <description>Of all the right-leaning publications and websites that have written upbeat pieces about Mitt Romney, few have been as effusive as NewsMax, a conservative magazine based in West Palm Beach, Fla., with a discernible soft spot for the former governor and his wife.</description>
+    <dc:creator>Scott Helman, Globe Staff</dc:creator>
+    <dc:date>2007-07-19T04:00:00Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/business/technology/articles/2007/07/19/high_tech_biotech_clashing_on_patent_bill?rss_id=Boston.com+%2F+News">
+    <title>High tech, biotech clashing on patent bill</title>
+    <link>http://www.boston.com/business/technology/articles/2007/07/19/high_tech_biotech_clashing_on_patent_bill?rss_id=Boston.com+%2F+News</link>
+    <description>Biotech and high technology, two key Massachusetts industries, are often seen as allies -- innovation-driven businesses that depend on a highly educated workforce. But this week they're on opposite sides of a fight playing out in Washington: How to overhaul the nation's patent system.</description>
+    <dc:creator>Stephen Heuser, Globe Staff</dc:creator>
+    <dc:date>2007-07-19T04:00:00Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/odd/articles/2007/07/19/family_searches_feces_of_cash_eating_dog?rss_id=Boston.com+%2F+News">
+    <title>Family searches feces of cash-eating dog</title>
+    <link>http://www.boston.com/news/odd/articles/2007/07/19/family_searches_feces_of_cash_eating_dog?rss_id=Boston.com+%2F+News</link>
+    <description>Debbie Hulleman's pet dog Pepper likes to chew things. She's gnawed on lipstick canisters, shampoo bottles, ball point pens, toothpaste and now the list includes nearly $750 in cash -- gobbled right down.</description>
+    <dc:creator></dc:creator>
+    <dc:date>2007-07-19T23:46:57Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/odd/articles/2007/07/19/captain_america_to_apologize_for_grope?rss_id=Boston.com+%2F+News">
+    <title>Superhero agrees to apologize for grope</title>
+    <link>http://www.boston.com/news/odd/articles/2007/07/19/captain_america_to_apologize_for_grope?rss_id=Boston.com+%2F+News</link>
+    <description>A doctor accused of groping a woman while he was dressed as comic book superhero Captain America has agreed to apologize to her as part of a bid to avoid trial, his lawyer said.</description>
+    <dc:creator></dc:creator>
+    <dc:date>2007-07-19T23:35:01Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/odd/articles/2007/07/19/tall_horse_takes_shot_at_world_record?rss_id=Boston.com+%2F+News">
+    <title>Tall horse takes shot at world record</title>
+    <link>http://www.boston.com/news/odd/articles/2007/07/19/tall_horse_takes_shot_at_world_record?rss_id=Boston.com+%2F+News</link>
+    <description>At only 3 years old, an English shire horse named Tina still has some room to grow. But the draft horse is already so big, her Tennessee owners are hoping she can break records. Officially named Jenson Diplomat Tina, she is still a teenager in horse years, said owner Jim Williams.</description>
+    <dc:creator></dc:creator>
+    <dc:date>2007-07-19T22:40:58Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/odd/articles/2007/07/19/woman_leaves_kids_to_pose_nude_in_woods?rss_id=Boston.com+%2F+News">
+    <title>Woman leaves kids to pose nude in woods</title>
+    <link>http://www.boston.com/news/odd/articles/2007/07/19/woman_leaves_kids_to_pose_nude_in_woods?rss_id=Boston.com+%2F+News</link>
+    <description>A 20-year-old Syracuse woman who left children in her care to go pose for nude photos is facing several charges of endangering the welfare of a child.</description>
+    <dc:creator></dc:creator>
+    <dc:date>2007-07-19T21:55:59Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/odd/articles/2007/07/19/83_cats_iguanas_found_in_stinky_home?rss_id=Boston.com+%2F+News">
+    <title>83 cats, iguanas found in stinky home</title>
+    <link>http://www.boston.com/news/odd/articles/2007/07/19/83_cats_iguanas_found_in_stinky_home?rss_id=Boston.com+%2F+News</link>
+    <description>Authorities found 83 cats, three dogs and two iguanas inside a Ben Lomond home reeking with the stench of urine and feces. "Imagine 83 cats living in a house with no litter boxes for two years, and you get the general idea," said Todd Stosuy, supervising field ranger for the Santa Cruz County Animal Services Authority.</description>
+    <dc:creator></dc:creator>
+    <dc:date>2007-07-19T21:53:19Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/yourlife/health/other/articles/2007/06/18/countdown_to_coverage?rss_id=Boston.com+%2F+News">
+    <title>Countdown to coverage</title>
+    <link>http://www.boston.com/yourlife/health/other/articles/2007/06/18/countdown_to_coverage?rss_id=Boston.com+%2F+News</link>
+    <description>More than 135,000 Massachusetts residents who were previously uninsured have gotten free or subsidized coverage under the state's landmark health insurance law. The initiative established Massachusetts as the first state to require every resident to have coverage. An estimated 250,000 to 350,000 people remain uninsured. The law mandated the expansion of Medicaid and the establishment of new state-subsidized insurance and ...</description>
+    <dc:creator>Alice Dembner, Globe Staff</dc:creator>
+    <dc:date>2007-06-18T04:00:00Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/world/middleeast/articles/2007/06/17/lost_hopes_in_gaza?rss_id=Boston.com+%2F+News">
+    <title>Lost hopes in Gaza</title>
+    <link>http://www.boston.com/news/world/middleeast/articles/2007/06/17/lost_hopes_in_gaza?rss_id=Boston.com+%2F+News</link>
+    <description>SHATI REFUGEE CAMP, Gaza Strip -- One warm, humid evening in the summer of 2005, Wasfiyeh Hassouneh and her husband, Hamdullah, dragged white plastic chairs onto the beach near their dilapidated cinder-block house. They gazed out at the Mediterranean surf, chewed on roasted ears of corn, and allowed themselves to hope that changes on the Palestinian horizon would soon make ...</description>
+    <dc:creator>Anne Barnard, Globe Staff</dc:creator>
+    <dc:date>2007-06-17T04:00:00Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/yourlife/health/diseases/articles/2007/05/27/no_place_like_home?rss_id=Boston.com+%2F+News">
+    <title>No place like home</title>
+    <link>http://www.boston.com/yourlife/health/diseases/articles/2007/05/27/no_place_like_home?rss_id=Boston.com+%2F+News</link>
+    <description>With the debate over the possible closure of the Fernald Development Center nearing its climax, Joan and Jean Hanlon are among 186 remaining residents who are virtually all silent spectators in the fight that will shape the rest of their lives.</description>
+    <dc:creator>Sally Jacobs, Globe Staff</dc:creator>
+    <dc:date>2007-05-27T04:00:00Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/world/middleeast/articles/2007/05/13/iran_is_a_hot_destination_for_iraqis_seeking_calm?rss_id=Boston.com+%2F+News">
+    <title>Iran is a hot destination for Iraqis seeking calm</title>
+    <link>http://www.boston.com/news/world/middleeast/articles/2007/05/13/iran_is_a_hot_destination_for_iraqis_seeking_calm?rss_id=Boston.com+%2F+News</link>
+    <description>MASHHAD, Iran -- Jalil Abbas prayed at the Shi'ite Muslim shrine he had dreamed of visiting all his life, relaxed and energetic even after a 19-hour bus ride across Iran. Free for the moment from the fear and tension of their home in southern Iraq, his young nieces explored the busy market, showing off matching pairs of pink-tinted sunglasses they ...</description>
+    <dc:creator>Anne Barnard, Globe Staff</dc:creator>
+    <dc:date>2007-05-13T04:00:00Z</dc:date>
+    
+  </item>
+  <item rdf:about="http://www.boston.com/news/local/massachusetts/articles/2007/05/13/finding_her_way_in_the_clan?rss_id=Boston.com+%2F+News">
+    <title>Finding her way in the clan</title>
+    <link>http://www.boston.com/news/local/massachusetts/articles/2007/05/13/finding_her_way_in_the_clan?rss_id=Boston.com+%2F+News</link>
+    <description>Twelve years after her death, Rose Kennedy's recently released diaries, letters, and personal papers reveal a more complex figure than "just an old-fashioned girl," as she sometimes styled herself.</description>
+    <dc:creator>Kevin Cullen, Globe Staff</dc:creator>
+    <dc:date>2007-05-13T04:00:00Z</dc:date>
+    
+  </item>
+</rdf:RDF>
+

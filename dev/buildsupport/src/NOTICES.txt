@@ -1,0 +1,294 @@
+   ======================================================================
+   == NOTICE file corresponding to section 4(d) of the Apache License, ==
+   == Version 2.0, in this case for the WaveMaker Rapid Deployment     ==
+   == Framework.                                                       ==
+   ======================================================================
+
+   WaveMaker Server
+   Copyright 2009-2010 WaveMaker Software, Inc.
+              
+   The end-user documentation included with a redistribution, if any,
+   must include the following acknowledgement:
+                
+     "This product includes software developed by WaveMaker Software,
+      Inc. (http://www.wavemaker.com)."
+ 
+   Alternately, this acknowledgement may appear in the software itself,
+   if and whereever such third-party acknowledgements normally appear.
+   
+   WaveMaker Software requests you use the attribution style provided in
+   WaveMaker Visual AJAX Studio, which will include the "Powered by
+   WaveMaker" logo within your application.  This attribution satisfies
+   all attribution requirements under this Notice.
+ 
+   The names "WaveMaker", "WaveMaker Visual AJAX Studio" and "WaveMaker
+   Rapid Deployment Framework" must not be used to endorse or promote
+   products derived from this software without prior written permission.
+
+=========================================================================
+
+The following software may be included in WaveMaker.
+
+Acegi
+   The end-user documentation included with a redistribution, if any,
+   must include the following acknowledgement:
+	
+     "This product includes software developed by the Acegi Security
+      System for Spring Project (http://acegisecurity.org)."
+
+   Alternately, this acknowledgement may appear in the software itself,
+   if and wherever such third-party acknowledgements normally appear.
+
+   The names "Acegi", "Acegi Security System" and "Acegi Security System
+   for Spring" must not be used to endorse or promote products derived
+   from this software without prior written permission. For written
+   permission, please contact ben.alex@acegi.com.au.
+
+
+Ant
+   Apache Ant
+   Copyright 1999-2006 The Apache Software Foundation
+
+   This product includes software developed by
+   The Apache Software Foundation (http://www.apache.org/).
+
+   This product includes also software developed by :
+     - the W3C consortium (http://www.w3c.org) ,
+     - the SAX project (http://www.saxproject.org)
+
+   The <sync> task is based on code Copyright (c) 2002, Landmark
+   Graphics Corp that has been kindly donated to the Apache Software
+   Foundation.
+
+Apache Commons - beanutils, collections
+   This product includes software developed by
+   The Apache Software Foundation (http://www.apache.org/).
+
+Apache Commons - io
+   Apache Jakarta Commons IO
+   Copyright 2001-2007 The Apache Software Foundation
+
+   This product includes software developed by
+   The Apache Software Foundation (http://www.apache.org/).
+
+Apache Commons - fileupload
+   Apache Jakarta Commons FileUpload
+   Copyright 2002-2006 The Apache Software Foundation
+
+   This product includes software developed by
+   The Apache Software Foundation (http://www.apache.org/).
+
+Apache Commons - lang
+   Apache Jakarta Commons Lang
+   Copyright 2001-2007 The Apache Software Foundation
+
+   This product includes software developed by
+   The Apache Software Foundation (http://www.apache.org/).
+
+Apache Commons - logging
+   Apache Commons Logging
+   Copyright 2003-2007 The Apache Software Foundation
+
+   This product includes software developed by
+   The Apache Software Foundation (http://www.apache.org/).
+
+JsonView.java 
+   The version distributed with WaveMaker is derived from the standard
+   distribution.  Source code is avaialble at dev.wavemaker.com.
+	
+Log4j
+   Apache log4j
+   Copyright 2007 The Apache Software Foundation
+
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
+
+Spring
+   This product includes software developed by
+   the Apache Software Foundation (http://www.apache.org).
+
+   The end-user documentation included with a redistribution, if any,
+   must include the following acknowledgement:
+
+     "This product includes software developed by the Spring Framework
+      Project (http://www.springframework.org)."
+
+   Alternatively, this acknowledgement may appear in the software itself,
+   if and wherever such third-party acknowledgements normally appear.
+
+   The names "Spring" and "Spring Framework" must not be used to
+   endorse or promote products derived from this software without
+   prior written permission. For written permission, please contact
+   rod.johnson@interface21.com or juergen.hoeller@interface21.com.
+
+Tomcat
+   This product includes software developed by
+   The Apache Software Foundation (http://www.apache.org/).
+	
+   Java Management Extensions (JMX) support is provided by
+   the MX4J package, which is open source software.  The
+   original software and related information is available
+   at http://mx4j.sourceforge.net.
+
+   The Windows Installer is built with the Nullsoft
+   Scriptable Install Sysem (NSIS), which is
+   open source software.  The original software and
+   related information is available at
+   http://nsis.sourceforge.net.
+
+   Java compilation software for JSP pages is provided by Eclipse, 
+   which is open source software.  The orginal software and 
+   related infomation is available at
+   http://www.eclipse.org.
+
+XML Resolver
+   Apache XML Commons Resolver
+   Copyright 2006 The Apache Software Foundation.
+
+   This product includes software developed at
+   The Apache Software Foundation http://www.apache.org/
+
+   Portions of this code are derived from classes placed in the
+   public domain by Arbortext on 10 Apr 2000. See:
+   http://www.arbortext.com/customer_support/updates_and_technical_notes/catalogs/docs/README.htm
+
+XmlSchema
+   This product includes software developed by
+   The Apache Software Foundation (http://www.apache.org/).
+
+   Please read the different LICENSE files present in the licenses directory of
+   this distribution.
+
+   Portions Copyright 2006 International Business Machines Corp.
+
+Antlr2
+   This product includes Antlr2, http://antlr2.org/.
+
+
+Dojo
+   Copyright (c) 2005-2007, The Dojo Foundation
+   All rights reserved.
+
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions are met:
+
+     * Redistributions of source code must retain the above copyright notice, this
+       list of conditions and the following disclaimer.
+     * Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
+       and/or other materials provided with the distribution.
+     * Neither the name of the Dojo Foundation nor the names of its contributors
+       may be used to endorse or promote products derived from this software
+       without specific prior written permission.
+
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+   DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+   SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+   CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+   OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Hibernate
+   This product includes Hibernate.  Source code is available at http://www.hibernate.org/.
+
+JAXB
+   Distributed under CDDL v1 or GPL v2, a copy of these license is provided with this distribution.
+
+   The version distributed with WaveMaker is derived from the standard
+   distribution.  Source code is available at dev.wavemaker.com.
+
+   The standard distribution is available at https://jaxb.dev.java.net/.
+
+JAX-WS
+   Distributed under CDDL v1 or GPL v2, a copy of these license is provided with this distribution.
+
+   The standard distribution is available at https://jax-ws.dev.java.net/.
+
+JDOM
+   This product includes software developed by the JDOM Project (http://www.jdom.org/)."
+   Copyright (C) 2000-2004 Jason Hunter & Brett McLaughlin.
+   All rights reserved.
+ 
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+ 
+   1. Redistributions of source code must retain the above copyright
+      notice, this list of conditions, and the following disclaimer.
+ 
+   2. Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions, and the disclaimer that follows 
+      these conditions in the documentation and/or other materials 
+      provided with the distribution.
+
+   3. The name "JDOM" must not be used to endorse or promote products
+      derived from this software without prior written permission.  For
+      written permission, please contact <request_AT_jdom_DOT_org>.
+ 
+   4. Products derived from this software may not be called "JDOM", nor
+      may "JDOM" appear in their name, without prior written permission
+      from the JDOM Project Management <request_AT_jdom_DOT_org>.
+ 
+   In addition, we request (but do not require) that you include in the 
+   end-user documentation provided with the redistribution and/or in the 
+   software itself an acknowledgement equivalent to the following:
+     "This product includes software developed by the
+      JDOM Project (http://www.jdom.org/)."
+   Alternatively, the acknowledgment may be graphical using the logos 
+   available at http://www.jdom.org/images/logos.
+
+   THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+   WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+   OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+   DISCLAIMED.  IN NO EVENT SHALL THE JDOM AUTHORS OR THE PROJECT
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+   USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+   ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+   OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+   OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+   SUCH DAMAGE.
+
+   This software consists of voluntary contributions made by many 
+   individuals on behalf of the JDOM Project and was originally 
+   created by Jason Hunter <jhunter_AT_jdom_DOT_org> and
+   Brett McLaughlin <brett_AT_jdom_DOT_org>.  For more information
+   on the JDOM Project, please see <http://www.jdom.org/>. 
+
+NSIS
+   The Windows Installer is built with the Nullsoft
+   Scriptable Install Sysem (NSIS), which is
+   open source software.  The original software and
+   related information is available at
+   http://nsis.sourceforge.net.
+
+HSQLDB
+   Copyright (c) 1995-2000 by the Hypersonic SQL Group.
+   All rights reserved. 
+   Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+   Neither the name of the Hypersonic SQL Group nor the names of its
+   contributors may be used to endorse or promote products derived from this
+   software without specific prior written permission.
+
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+   ARE DISCLAIMED. IN NO EVENT SHALL THE HYPERSONIC SQL GROUP, 
+   OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+   EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
+   PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+   LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+   ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+

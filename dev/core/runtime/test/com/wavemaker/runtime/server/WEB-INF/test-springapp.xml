@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  - Application context definition for "springapp" DispatcherServlet.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                http://www.springframework.org/schema/aop
+                http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+    <import resource="test-config.xml"/>
+    <import resource="test-services.xml"/>
+    <import resource="test-managers.xml"/>
+    <import resource="test-security.xml"/>
+    
+    <!-- copied from the template application -->
+    <bean id="urlMapping"
+            class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+            <value>
+                /**/*.json=agJSONController
+                /**/*.download=agFileDownloadController
+                /**/*.upload=agFileUploadController
+                /modules/**=wmModuleController
+            </value>
+        </property>
+        <property name="alwaysUseFullPath" value="true" />
+    </bean>
+</beans>

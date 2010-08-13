@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 18, 2007 5:20:12 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.adventure.ProductModelProductDescription" table="ProductModelProductDescription" schema="SalesLT" catalog="AdventureWorksLT">
+        <composite-id name="id" class="com.wavemaker.runtime.data.sample.adventure.ProductModelProductDescriptionId">
+            <key-property name="productModelId" type="int">
+                <column name="ProductModelID" />
+            </key-property>
+            <key-property name="productDescriptionId" type="int">
+                <column name="ProductDescriptionID" />
+            </key-property>
+            <key-property name="culture" type="string">
+                <column name="Culture" length="6" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="productDescription" class="com.wavemaker.runtime.data.sample.adventure.ProductDescription" update="false" insert="false" fetch="select">
+            <column name="ProductDescriptionID" not-null="true" />
+        </many-to-one>
+        <many-to-one name="productModel" class="com.wavemaker.runtime.data.sample.adventure.ProductModel" update="false" insert="false" fetch="select">
+            <column name="ProductModelID" not-null="true" />
+        </many-to-one>
+        <property name="rowguid" type="string">
+            <column name="rowguid" length="36" not-null="true" unique="true" />
+        </property>
+        <property name="modifiedDate" type="timestamp">
+            <column name="ModifiedDate" length="23" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

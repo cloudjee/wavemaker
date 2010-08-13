@@ -1,0 +1,112 @@
+###############################################################################
+#
+#                             JMX SOAP Connector Client Properties File
+#
+#  This file contains properties that are used by the JMX SOAP Connector Client
+#  of the WebSphere Application Server product. SOAP Connector executes on WebSphere
+#  java servers and client systems with java applications that access WebSphere servers.
+#
+#  ** Encoding Passwords in this File **
+#
+#  The PropFilePasswordEncoder utility may be used to encode passwords in a
+#  properties file. To edit an encoded password, replace the whole password
+#  string (including the encoding tag {...}) with the new password and then
+#  encode the password with the PropFilePasswordEncoder utility. Refer to
+#  product documentation for additional information.
+#
+###############################################################################
+
+#------------------------------------------------------------------------------
+# SOAP Client Security Enablement
+# - security enabled status  ( false[default], true  )
+#------------------------------------------------------------------------------
+com.ibm.SOAP.securityEnabled=true
+
+#------------------------------------------------------------------------------
+# - authenticationTarget     ( BasicAuth[default], KRB5. These are the only supported selection
+#                              on a pure client for JMX SOAP Connector Client. )
+#------------------------------------------------------------------------------
+com.ibm.SOAP.authenticationTarget=BasicAuth
+
+com.ibm.SOAP.loginUserid=
+com.ibm.SOAP.loginPassword=
+
+#------------------------------------------------------------------------------
+# SOAP Login Prompt
+#
+# The auto prompting will happen only if all of the following are met:
+#
+# - Running from a SOAP client
+# - Server is reachable and server security is enabled
+# - Username and password are not provided either on command line or in this
+#   file
+# - com.ibm.SOAP.loginSource below is set to one of the following:
+#
+#   + stdin: Prompt in command window
+#   + prompt: GUI dialog box; falls back to stdin if GUI not allowed
+#   + krb5Ccache: (valid only when authenticationTarget=KRB5) Retrieve login
+#     data from a cache file (see below)
+#
+#   (So to disable auto prompting, set loginSource to nothing)
+#------------------------------------------------------------------------------
+com.ibm.SOAP.loginSource=prompt
+
+#------------------------------------------------------------------------------
+# - krb5ConfigFile           ( authenticationTarget=KRB5, this optional property can be
+#                              set to specify a location of the Kerberos configuration file.
+#                              If the krb5ConfigFile is not specified, the Kerberos
+#                              configuration file at default location will be used.
+#                              example: com.ibm.SOAP.krb5ConfigFile=/utle/krb5.conf )
+#------------------------------------------------------------------------------
+com.ibm.SOAP.krb5ConfigFile=
+
+#------------------------------------------------------------------------------
+# - krb5CcacheFile           ( authenticationTarget=KRB5 and loginSource=krb5Ccache, this
+#                              optional property can be set to specify a location of the
+#                              Kerberos credential cache as an URL. )
+#
+# If loginSource=krb5ccache, following steps need to be done:
+#       1) Set krb5CcacheFile to an URL or leave it blank to use the default ccache location
+#               Example: com.ibm.SOAP.krb5CcacheFile=FILE:/utle/krb5cc_utle
+#       2) If the following options are existed in the wsjaas_client.conf file, set them to false
+#               useDefaultKeytab=false 
+#               useDefaultCcache=false 
+#               tryFirstPass=false 
+#               useFirstPass=false 
+#               forwardable=false 
+#               renewable=false 
+#               noaddress=false 
+# 
+# Note: For Microsoft Windows Kerberos native ccache, set the following properties to blank 
+#               com.ibm.SOAP.krb5CcacheFile=  
+#               com.ibm.SOAP.loginUserid=  
+#               com.ibm.SOAP.loginPassword=         
+#------------------------------------------------------------------------------
+com.ibm.SOAP.krb5CcacheFile=
+
+#------------------------------------------------------------------------------
+# - krb5Service              ( The Kerberos service name is the first part of a Kerberos 
+#                              Service Principal Name (SPN) of the target server.
+#                              example: the service name is WAS for the SPN 
+#                                        WAS/<hostname>@krbRealm )
+#------------------------------------------------------------------------------
+com.ibm.SOAP.krb5Service=
+
+#------------------------------------------------------------------------------
+# When this is set to true, retrieve a fresh ticket every time, instead of
+# relying on caching
+#------------------------------------------------------------------------------
+com.ibm.SOAP.krb5RefreshingTicket=false
+
+#------------------------------------------------------------------------------
+# SOAP Request Timeout
+#
+# - timeout (specified in seconds [default 180], 0 implies no timeout)
+#
+#------------------------------------------------------------------------------
+com.ibm.SOAP.requestTimeout=180
+
+#------------------------------------------------------------------------------
+# SSL configuration alias referenced in ssl.client.props
+#------------------------------------------------------------------------------
+com.ibm.ssl.alias=DefaultSSLSettings

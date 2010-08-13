@@ -1,0 +1,78 @@
+<project name="modules" default="build" basedir=".">
+
+    <property name="root.dir" location=".."/>
+    <import file="${root.dir}/common.build.xml"/>
+
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
+        <classpath>
+            <pathelement location="${ant.contrib.jar}"/>
+        </classpath>
+    </taskdef>
+
+    <path id="modules.dirset">
+        <dirset dir="${modules.dir}">
+            <patternset refid="common.modules.patternset"/>
+            <exclude name="*/*/**"/>
+        </dirset>
+    </path>
+
+    <target name="init"/>
+
+    <target name="build" depends="init">
+	  <echo>* Start of dev/modules/build.xml target="build"
+	    depends on "init"</echo>
+
+        <for param="module.dir">
+            <path refid="modules.dirset"/>
+            <sequential>
+                <echo>@{module.dir} ant build</echo>
+                <ant dir="@{module.dir}" target="build"/>
+            </sequential>
+        </for>
+    </target>
+
+    <target name="jar" depends="init">
+        <for param="module.dir">
+            <path refid="modules.dirset"/>
+            <sequential>
+                <echo>@{module.dir} ant jar</echo>
+                <ant dir="@{module.dir}" target="jar"/>
+            </sequential>
+        </for>
+    </target>
+
+    <target name="buildtest" depends="init">
+        <for param="module.dir">
+            <path refid="modules.dirset"/>
+            <sequential>
+                <echo>@{module.dir} ant buildtest</echo>
+                <ant dir="@{module.dir}" target="buildtest"/>
+            </sequential>
+        </for>
+    </target>
+
+    <target name="clean" depends="init">
+      <echo>Start of clean in modules/build.xml</echo>
+        <for param="module.dir">
+            <path refid="modules.dirset"/>
+            <sequential>
+                <echo>@{module.dir} ant clean</echo>
+                <ant dir="@{module.dir}" target="clean"/>
+            </sequential>
+        </for>
+    </target>
+
+    <target name="test" depends="init">
+        <for param="module.dir">
+            <path refid="modules.dirset"/>
+            <sequential>
+                <echo>@{module.dir} ant test</echo>
+                <ant dir="@{module.dir}" target="test"/>
+            </sequential>
+        </for>
+    </target>
+
+    <target name="javadoc">
+        <!-- none of the modules contribute to javadocs yet -->
+    </target>
+</project>

@@ -1,0 +1,15 @@
+{
+	"methods": [{
+		"name": "getInfo",
+		"parameters": [{
+			"name": "apiKey",
+			"type": "java.lang.String"
+		}, {
+			"name": "photoId",
+			"type": "java.lang.String"
+		}],
+		"returnType": "com.flickr.api.services.rest.flickrphotoinfo.Rsp"
+	}],
+	"serviceType": "JSON-RPC",
+	"serviceURL": "FlickrPhotoInfo.json"
+}

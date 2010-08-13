@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Turbo09 DataList</title>
+<style>
+	@import "../../../wm/base/widget/themes/default/theme.css";
+	body, html {
+		/*margin: 0;*/
+		height: 100%;
+		/*overflow: hidden;*/
+	}
+	.wmlist {
+		padding-top: 1px;
+	}
+	.wmlist-item {
+		padding: 0px;
+	}
+	.wmlist-item table {
+		table-layout:fixed;
+		border-collapse: collapse;
+		border: 1px solid black;
+		width: 100%;
+	}
+	.wmlist-item table td {
+		border: 1px solid black;
+		padding: 4px;
+	}
+
+</style>
+<script type="text/javascript" src="../../../modules/sysmodule/js/dojo/dojo.js"></script>
+<script type="text/javascript">
+	dojo.registerModulePath("wm", "../../../../wm");
+</script>
+<script type="text/javascript" src="../../../wm/base/lib/util.js"></script>
+<script type="text/javascript" src="../../../wm/base/Widget.js"></script>
+<script type="text/javascript" src="../../../wm/base/data/fields.js"></script>
+<script type="text/javascript" src="../../../wm/base/data/model.js"></script>
+<script type="text/javascript" src="../../../wm/base/layout/box.js"></script>
+<script type="text/javascript" src="../../../wm/base/widget/Box.js"></script>
+<script type="text/javascript" src="../../../wm/base/widget/Table/builder.js"></script>
+<script type="text/javascript" src="../../../wm/base/widget/VirtualList.js"></script>
+<script type="text/javascript" src="../../../wm/base/widget/List.js"></script>
+<script type="text/javascript" src="../../../wm/base/components/Data.js"></script>
+<script type="text/javascript">
+	dojo.addOnLoad(function() {
+		data = new wm.Data();
+		data.schema = {fruit: 'String', id: 'Number', desc: 'String'};
+		data.data = [
+			{fruit: 'Apple', id: 1, desc: 'They are tasty.'},
+			{fruit: 'Peach', id: 2, desc: 'Peaches have hair.'},
+			{fruit: 'Pair', id: 3, desc: 'Good for pies.'},
+			{fruit: 'Banana', id: 4, desc: 'Makes oatmeal taste better.'},
+			{fruit: 'Kiwi', id: 5, desc: 'Not from New Zealand.'}
+		];
+		
+		data.data = data.data.concat(data.data, data.data,data.data, data.data, data.data);
+
+		list = new wm.List({domNode: 'n', height: 500, width: 500, dataSource: data, dataFields: 'fruit,desc'});
+		data.changed();
+	});
+</script>
+</head>
+<body>
+	<p>wm.DataList</p>
+	<div id="n"></div>
+</body>
+</html>

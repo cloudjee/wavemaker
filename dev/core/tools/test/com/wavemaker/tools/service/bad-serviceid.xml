@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" type="DataService" class="com.activegrid.data.sakila.Sakila">
+    <dataobjects>
+    </dataobjects>
+</service>

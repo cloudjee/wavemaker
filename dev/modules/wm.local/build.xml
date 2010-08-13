@@ -1,0 +1,128 @@
+<!--
+
+Mostly generic module build file.
+
+To bundle in a new module, change the project name and the version.
+
+
+@author small
+@version $Rev: 24365 $ - $Date: 2008-10-02 16:45:50 -0700 (Thu, 02 Oct 2008) $
+
+-->
+<project name="wm.local" default="all" basedir=".">
+    <property name="module.version" value="1.0"/>
+
+    <property name="root.dir" location="../.."/>
+    <import file="${root.dir}/common.build.xml"/>
+
+    <property name="modules.root.dir" location=".."/>
+    <import file="${modules.root.dir}/modules.build.xml"/>
+
+    <property name="src.module.dir" value="${basedir}/src"/>
+    <property name="test.src.module.dir" value="${basedir}/test"/>
+    <property name="lib.module.dir" value="${basedir}/lib"/>
+    <property name="classes.module.dir"
+        value="${allmodules.build.dir}/${ant.project.name}/classes"/>
+    <property name="test.classes.module.dir"
+        value="${allmodules.build.dir}/${ant.project.name}/test"/>
+    <property name="jar.module.dir"
+        value="${allmodules.build.dir}/${ant.project.name}/lib"/>
+
+    <property name="module.jar.name"
+        value="${ant.project.name}-${module.version}.jar"/>
+    <property name="module.jar" value="${jar.module.dir}/${module.jar.name}"/>
+
+
+    <target name="init">
+    </target>
+
+    <target name="build" depends="init">
+        <mkdir dir="${classes.module.dir}"/>
+        <javac srcdir="${src.module.dir}"
+                destdir="${classes.module.dir}" 
+                target="${javac.target}"
+                encoding="${javac.encoding}"
+                debug="${javac.debug}"
+                >
+            <classpath>
+                <path refid="modules.build.classpath"/>
+                <fileset dir="${lib.module.dir}">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+        <copy todir="${classes.module.dir}">
+            <fileset dir="${src.module.dir}">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="jar" depends="build"
+            description="creates a jar file in the global lib directory, and copies any jars within this module to that location">
+        <mkdir dir="${jar.module.dir}"/>
+        <jar destfile="${module.jar}"
+            basedir="${classes.module.dir}"/>
+        <copy todir="${jar.module.dir}" flatten="true">
+            <fileset dir="${lib.module.dir}">
+                <include name="*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="clean" depends="init">
+        <delete dir="${classes.module.dir}"/>
+    </target>
+
+    <target name="buildtest" depends="init,build">
+        <mkdir dir="${test.classes.module.dir}"/>
+        <javac srcdir="${test.src.module.dir}"
+                destdir="${test.classes.module.dir}" 
+                target="${javac.target}"
+                encoding="${javac.encoding}"
+                debug="${javac.debug}"
+                >
+           <classpath>
+                <path refid="modules.test.build.classpath"/>
+                <fileset dir="${lib.module.dir}">
+                    <include name="**/*.jar"/>
+                </fileset>
+                <pathelement location="${classes.module.dir}"/>
+           </classpath>
+        </javac>
+    </target>
+
+    <target name="test" depends="init,buildtest">
+        <mkdir dir="${build.test.report.dir}"/>
+        <property name="test.include" value="**/Test*"/>
+        <property name="test.exclude" value=""/>
+        <junit printsummary="on"
+               fork="true"
+               forkmode="once"
+               haltonfailure="true"
+               showoutput="true">
+            <classpath>
+                <path refid="modules.test.build.classpath"/>
+                <fileset dir="${lib.module.dir}">
+                    <include name="**/*.jar"/>
+                </fileset>
+                <pathelement location="${classes.module.dir}"/>
+                <pathelement location="${test.classes.module.dir}"/>
+            </classpath>
+            <formatter type="plain" usefile="false"/>
+            <formatter type="xml" usefile="true"/>
+            <batchtest todir="${build.test.report.dir}">
+                <fileset dir="${test.classes.module.dir}">
+                    <include name="${test.include}"/>
+                    <exclude name="${test.exclude}"/>
+                    <exclude name="com/wavemaker/**/infra/**"/>
+                    <exclude name="**/*$*"/>
+                </fileset>
+            </batchtest>
+
+            <syspropertyset>
+                <propertyset refid="common.test.properties"/>
+            </syspropertyset>            
+        </junit>
+    </target>
+</project>

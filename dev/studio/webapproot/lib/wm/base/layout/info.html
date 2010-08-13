@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Untitled Document</title>
+</head>
+
+<body>
+<ul>
+  <li>We need to do javascript layout because CSS is designed for print.</li>
+  <li>It's unwieldy to have a Widget for every node that needs layout. Layout system straddles the DOM/Widget divide.</li>
+  <li>We can't rely on onresize events on arbitrary nodes (?), so we attach <code>onSizeChange</code> events to nodes of interest.</li>
+  <li>Any code that messes with node pos/size should invoke <code>onSizeChange</code>, so we can rely on it. </li>
+</ul>
+<p>update</p>
+<ul>
+  <li>layouts attach a custom <em>reflow</em> method to nodes that can reflow</li>
+  <li>layouts attach a custom <em>boundschange</em> method to nodes that can reflow  
+    <ul>
+      <li><em>boundschange</em> calls <em>reflow</em></li>
+    </ul>
+  </li>
+  <ul>
+    <li><em>boundschange</em> calls <em>onboundschange</em></li>
+    <li>layouts invoke <em>onboundschange</em> on a node after they change it's bounds</li>
+    <li>as needed, client code invokes <em>boundschange</em> (cause), but overrides <em>onboundschange</em> (effect)</li>
+  </ul>
+</ul>
+<p>&nbsp;</p>
+</body>
+</html>

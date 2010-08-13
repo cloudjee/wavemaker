@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 18, 2007 5:20:12 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.adventure.ProductCategory" table="ProductCategory" schema="SalesLT" catalog="AdventureWorksLT">
+        <id name="productCategoryId" type="int">
+            <column name="ProductCategoryID" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="productCategory" class="com.wavemaker.runtime.data.sample.adventure.ProductCategory" fetch="select">
+            <column name="ParentProductCategoryID" />
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="Name" length="50" not-null="true" unique="true" />
+        </property>
+        <property name="rowguid" type="string">
+            <column name="rowguid" length="36" not-null="true" unique="true" />
+        </property>
+        <property name="modifiedDate" type="timestamp">
+            <column name="ModifiedDate" length="23" not-null="true" />
+        </property>
+        <set name="products" inverse="true">
+            <key>
+                <column name="ProductCategoryID" />
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.adventure.Product" />
+        </set>
+        <set name="productCategories" inverse="true">
+            <key>
+                <column name="ParentProductCategoryID" />
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.adventure.ProductCategory" />
+        </set>
+    </class>
+</hibernate-mapping>

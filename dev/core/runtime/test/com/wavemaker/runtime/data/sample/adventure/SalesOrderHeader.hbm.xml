@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 18, 2007 5:20:12 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.adventure.SalesOrderHeader" table="SalesOrderHeader" schema="SalesLT" catalog="AdventureWorksLT">
+        <id name="salesOrderId" type="int">
+            <column name="SalesOrderID" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="addressByShipToAddressId" class="com.wavemaker.runtime.data.sample.adventure.Address" fetch="select">
+            <column name="ShipToAddressID" />
+        </many-to-one>
+        <many-to-one name="addressByBillToAddressId" class="com.wavemaker.runtime.data.sample.adventure.Address" fetch="select">
+            <column name="BillToAddressID" />
+        </many-to-one>
+        <many-to-one name="customer" class="com.wavemaker.runtime.data.sample.adventure.Customer" fetch="select">
+            <column name="CustomerID" not-null="true" />
+        </many-to-one>
+        <property name="revisionNumber" type="byte">
+            <column name="RevisionNumber" not-null="true" />
+        </property>
+        <property name="orderDate" type="timestamp">
+            <column name="OrderDate" length="23" not-null="true" />
+        </property>
+        <property name="dueDate" type="timestamp">
+            <column name="DueDate" length="23" not-null="true" />
+        </property>
+        <property name="shipDate" type="timestamp">
+            <column name="ShipDate" length="23" />
+        </property>
+        <property name="status" type="byte">
+            <column name="Status" not-null="true" />
+        </property>
+        <property name="onlineOrderFlag" type="boolean">
+            <column name="OnlineOrderFlag" not-null="true" />
+        </property>
+        <property name="salesOrderNumber" type="string">
+            <column name="SalesOrderNumber" length="25" not-null="true" unique="true" />
+        </property>
+        <property name="purchaseOrderNumber" type="string">
+            <column name="PurchaseOrderNumber" length="25" />
+        </property>
+        <property name="accountNumber" type="string">
+            <column name="AccountNumber" length="15" />
+        </property>
+        <property name="shipMethod" type="string">
+            <column name="ShipMethod" length="50" not-null="true" />
+        </property>
+        <property name="creditCardApprovalCode" type="string">
+            <column name="CreditCardApprovalCode" length="15" />
+        </property>
+        <property name="subTotal" type="big_decimal">
+            <column name="SubTotal" scale="4" not-null="true" />
+        </property>
+        <property name="taxAmt" type="big_decimal">
+            <column name="TaxAmt" scale="4" not-null="true" />
+        </property>
+        <property name="freight" type="big_decimal">
+            <column name="Freight" scale="4" not-null="true" />
+        </property>
+        <property name="totalDue" type="big_decimal">
+            <column name="TotalDue" scale="4" not-null="true" />
+        </property>
+        <property name="comment" type="clob">
+            <column name="Comment" />
+        </property>
+        <property name="rowguid" type="string">
+            <column name="rowguid" length="36" not-null="true" unique="true" />
+        </property>
+        <property name="modifiedDate" type="timestamp">
+            <column name="ModifiedDate" length="23" not-null="true" />
+        </property>
+        <set name="salesOrderDetails" inverse="true">
+            <key>
+                <column name="SalesOrderID" not-null="true" />
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.adventure.SalesOrderDetail" />
+        </set>
+    </class>
+</hibernate-mapping>

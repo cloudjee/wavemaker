@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 19, 2007 9:06:48 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.orahr.EmpDetailsView" table="EMP_DETAILS_VIEW" schema="HR">
+        <composite-id name="id" class="com.wavemaker.runtime.data.sample.orahr.EmpDetailsViewId">
+            <key-property name="employeeId" type="int">
+                <column name="EMPLOYEE_ID" precision="6" scale="0" />
+            </key-property>
+            <key-property name="jobId" type="string">
+                <column name="JOB_ID" length="10" />
+            </key-property>
+            <key-property name="managerId" type="java.lang.Integer">
+                <column name="MANAGER_ID" precision="6" scale="0" />
+            </key-property>
+            <key-property name="departmentId" type="java.lang.Short">
+                <column name="DEPARTMENT_ID" precision="4" scale="0" />
+            </key-property>
+            <key-property name="locationId" type="java.lang.Short">
+                <column name="LOCATION_ID" precision="4" scale="0" />
+            </key-property>
+            <key-property name="countryId" type="string">
+                <column name="COUNTRY_ID" length="2" />
+            </key-property>
+            <key-property name="firstName" type="string">
+                <column name="FIRST_NAME" length="20" />
+            </key-property>
+            <key-property name="lastName" type="string">
+                <column name="LAST_NAME" length="25" />
+            </key-property>
+            <key-property name="salary" type="big_decimal">
+                <column name="SALARY" precision="8" />
+            </key-property>
+            <key-property name="commissionPct" type="big_decimal">
+                <column name="COMMISSION_PCT" precision="2" />
+            </key-property>
+            <key-property name="departmentName" type="string">
+                <column name="DEPARTMENT_NAME" length="30" />
+            </key-property>
+            <key-property name="jobTitle" type="string">
+                <column name="JOB_TITLE" length="35" />
+            </key-property>
+            <key-property name="city" type="string">
+                <column name="CITY" length="30" />
+            </key-property>
+            <key-property name="stateProvince" type="string">
+                <column name="STATE_PROVINCE" length="25" />
+            </key-property>
+            <key-property name="countryName" type="string">
+                <column name="COUNTRY_NAME" length="40" />
+            </key-property>
+            <key-property name="regionName" type="string">
+                <column name="REGION_NAME" length="25" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

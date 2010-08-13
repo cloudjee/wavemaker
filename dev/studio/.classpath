@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="**/.svn/**" kind="src" path="services/dataService/src"/>
+	<classpathentry excluding="**/*.svn/**" kind="src" path="services/resourceFileService/src"/>
+	<classpathentry excluding="**/.svn/**|services/dataService/src/|services/deploymentService/src/|services/javaService/src/|services/pagesService/src/|services/registrationService/src/|services/securityConfigService/src/|services/servicesService/src/|services/studioService/src/|services/webService/src/|src/|test/|services/resourceFileService/src/" including="webapproot/WEB-INF/*" kind="src" path=""/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="services/CloudDB/src"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="services/deploymentService/src"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="services/javaService/src"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="services/pagesService/src"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="services/registrationService/src"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="services/securityConfigService/src"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="services/servicesService/src"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="services/studioService/src"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="services/webService/src"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="src"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="test"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/core"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

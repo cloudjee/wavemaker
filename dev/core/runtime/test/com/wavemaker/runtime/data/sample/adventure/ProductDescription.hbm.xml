@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 18, 2007 5:20:12 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.adventure.ProductDescription" table="ProductDescription" schema="SalesLT" catalog="AdventureWorksLT">
+        <id name="productDescriptionId" type="int">
+            <column name="ProductDescriptionID" />
+            <generator class="assigned" />
+        </id>
+        <property name="description" type="string">
+            <column name="Description" length="400" not-null="true" />
+        </property>
+        <property name="rowguid" type="string">
+            <column name="rowguid" length="36" not-null="true" unique="true" />
+        </property>
+        <property name="modifiedDate" type="timestamp">
+            <column name="ModifiedDate" length="23" not-null="true" />
+        </property>
+        <set name="productModelProductDescriptions" inverse="true">
+            <key>
+                <column name="ProductDescriptionID" not-null="true" />
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.adventure.ProductModelProductDescription" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,35 @@
+body, html {
+	height: 100%;
+	overflow: hidden;
+}
+
+html, body, button  {
+	margin: 0;
+}
+
+button, body {
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+}
+
+#_wm_loading {
+	height: 100%;
+	overflow: hidden;
+	position: relative;
+}
+#_wm_loading img {
+	vertical-align: middle;
+}
+
+#_wm_loading table {
+	font-family: Arial;
+	font-size: 12px;
+	font-weight: bold;
+	margin: auto;
+	text-align: center;
+	height: 100%;
+}
+
+#_wm_loading td {
+	vertical-align: middle;
+}

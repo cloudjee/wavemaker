@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Turbo09 Box Test</title>
+<style>
+	body, html {
+		margin: 0;
+		padding: 0;
+		height: 100%;
+		/*width: 100%;*/
+		overflow: hidden;
+	}
+	div {
+		border: 3px solid black;
+		height: 48px;
+	}
+	
+</style>
+<script type="text/javascript" src="/dojo.0.9.ssh/dojo/dojo.js"></script>
+<script type="text/javascript">
+	dojo.registerModulePath("wm", "../../wm");
+	dojo.require("wm.base.layout.box");
+</script>
+<script type="text/javascript">
+	reflowA = function(){ wm.layout.box.reflow(dojo.byId('a')); };
+	reflowB = function(){ wm.layout.box.reflow(dojo.byId('b')); };
+	dojo.connect(window, 'onresize', reflowA);
+	dojo.connect(window, 'onresize', reflowB);
+	dojo.addOnLoad(reflowA);
+	dojo.addOnLoad(reflowB);
+</script>
+</head>
+<body>
+This div has 'natural width' so it fits in window
+<div id="smug"></div>
+
+<br />
+
+<p>This div is a vbox with no width set</p>
+<div id="a" box="v"></div>
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+
+<p>This div is a vbox with 100% width (too wide). How do I make this div fit window and be a box?</p>
+<div id="b" box="v" style="width: 100%"></div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,42 @@
+These scripts apply and update licensing to the various portions of the studio
+and runtime.  The last time I ran this, the commands looked like this (and I've
+noted where I had to do post-run fixups).
+
+Note that the scripts may screw up if the eol-style isn't native.
+
+
+
+
+For the Java server runtime:
+
+> ./license-asl-server.py ../dev/core/
+> svn revert ../dev/core/runtime/src/org/springframework/web/servlet/view/JsonView.java
+> svn revert ../dev/core/runtime/lib/jaxb-ri-2.1.9/src/com/sun/tools/xjc/api/impl/s2j/SchemaCompilerImpl.java
+> svn revert ../dev/core/tools/test/com/wavemaker/tools/project/pages/expectedMain/expectedMain.widgets.js
+> svn revert ../dev/core/tools/test/com/wavemaker/tools/project/pages/expectedMain/expectedMain.js
+> svn revert ../dev/core/tools/test/com/wavemaker/tools/project/pages/Main/Main.js
+> svn revert ../dev/core/tools/test/com/wavemaker/tools/project/pages/Main/Main.widgets.js
+> svn revert ../dev/core/tools/test/com/wavemaker/tools/project/upgrade/swamis/currencyrename.widgets.js
+
+
+
+
+
+For the JS client runtime:
+
+> ./license-asl-client.py ../dev/studio/webapproot/lib/boot ../dev/studio/webapproot/lib/wm
+> svn revert ../dev/studio/webapproot/lib/wm/base/widget/ext/GridView.js
+> svn revert ../dev/studio/webapproot/lib/wm/base/widget/ext/GroupingView.js
+
+manually update ../dev/studio/webapproot/lib/{manifest,runtimeLoader}.js
+
+
+
+
+
+For the studio:
+
+> ./license-agpl-studio.py ../dev/studio/services/ ../dev/studio/webapproot/pages/ ../dev/studio/webapproot/app
+> svn revert -R ../dev/studio/webapproot/app/buildUtil
+> svn revert -R ../dev/studio/webapproot/app/edit_area
+> svn revert -R ../dev/studio/webapproot/app/templates

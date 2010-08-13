@@ -1,0 +1,19 @@
+{
+	"methods": [{
+		"name": "getWeatherByPlaceName",
+		"parameters": [{
+			"name": "parameters",
+			"type": "net.webservicex.weatherforecast.GetWeatherByPlaceName"
+		}],
+		"returnType": "net.webservicex.weatherforecast.GetWeatherByPlaceNameResponse"
+	}, {
+		"name": "getWeatherByZipCode",
+		"parameters": [{
+			"name": "parameters",
+			"type": "net.webservicex.weatherforecast.GetWeatherByZipCode"
+		}],
+		"returnType": "net.webservicex.weatherforecast.GetWeatherByZipCodeResponse"
+	}],
+	"serviceType": "JSON-RPC",
+	"serviceURL": "WeatherForecast.json"
+}

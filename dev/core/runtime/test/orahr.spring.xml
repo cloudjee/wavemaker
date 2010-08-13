@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
+<!-- Generated Aug 19, 2007 9:06:50 PM
+
+Configuration for 'orahr' database service
+
+-->
+
+<beans>
+
+  <bean id="orahr"
+        class="com.wavemaker.runtime.data.sample.orahr.Orahr"
+        scope="singleton"
+        lazy-init="true">
+    <constructor-arg>
+      <ref bean="orahrDataService"/>
+    </constructor-arg>
+  </bean>
+    <bean lazy-init="false"
+            scope="singleton"
+            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="orahr" name="serviceId"/>
+        <property name="serviceType" ref="DataService"/>
+    </bean>
+    
+  <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    <property name="locations">
+        <list>
+            <value>classpath:oracle_orahr.properties</value>
+        </list>
+    </property>
+  </bean>
+
+  <bean id="orahrDataSource" 
+        class="org.springframework.jdbc.datasource.DriverManagerDataSource" 
+        lazy-init="true">
+    <property name="driverClassName" value="${oracle.driverClassName}"/>
+    <property name="url" value="${oracle.connectionUrl}"/>
+    <property name="username" value="${oracle.username}"/>
+    <property name="password" value="${oracle.password}"/>
+  </bean>
+
+  <!-- Use this datasource bean to lookup a datasource in the jndi tree -->
+  <!--bean id="orahrDataSource" 
+        class="org.springframework.jndi.JndiObjectFactoryBean"
+        lazy-init="true">
+    <property name="jndiName" value="java:comp/env/jdbc/mysql/sakila"/>
+  </bean-->
+
+  <bean id="orahrTxMgr" 
+        class="org.springframework.orm.hibernate3.HibernateTransactionManager"
+        lazy-init="true">
+    <property name="sessionFactory">
+      <ref bean="orahrSessionFactory"/>
+    </property>
+  </bean>
+
+  <bean id="orahrHibernateTemplate"
+        class="org.springframework.orm.hibernate3.HibernateTemplate"
+        lazy-init="true">
+    <property name="sessionFactory"> 
+      <ref bean="orahrSessionFactory"/>
+    </property>
+  </bean>  
+
+  <bean id="orahrSessionFactory" 
+        class="com.wavemaker.runtime.data.spring.ConfigurationAndSessionFactoryBean"
+        lazy-init="true">
+
+    <!-- A unique name for this SessionFactory's configuration -->
+    <property name="name" value="orahr"/>
+    <property name="dataSource" ref="orahrDataSource"/>
+
+    <property name="hibernateProperties">
+      <props>
+        <prop key="hibernate.dialect">
+            org.hibernate.dialect.OracleDialect</prop>
+        <prop key="hibernate.transaction.factory_class">
+            org.hibernate.transaction.JDBCTransactionFactory</prop>
+        <prop key="hibernate.current_session_context_class">thread</prop>
+
+      </props> 
+    </property>
+
+    <property name="mappingResources">
+      <list>
+
+<value>com/wavemaker/runtime/data/sample/orahr/Countries.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/orahr/Departments.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/orahr/EmpDetailsView.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/orahr/Employees.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/orahr/JobHistory.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/orahr/Jobs.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/orahr/Locations.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/orahr/Regions.hbm.xml</value>
+
+<value>com/wavemaker/runtime/data/sample/orahr/Countries.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/orahr/Departments.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/orahr/EmpDetailsView.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/orahr/Employees.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/orahr/JobHistory.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/orahr/Jobs.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/orahr/Locations.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/orahr/Regions.ql.xml</value>
+
+      </list>
+    </property>
+
+  </bean>
+
+
+  <!-- the data service bean instance is injected into the service bean -->
+  <bean id="orahrDataService" 
+        class="com.wavemaker.runtime.data.spring.SpringDataServiceManager"
+        lazy-init="true">
+    <constructor-arg>
+      <!-- the value of the "name" property of the SessionFactory -->
+      <value>orahr</value>
+    </constructor-arg>
+    <constructor-arg>
+      <ref bean="orahrHibernateTemplate"/>
+    </constructor-arg>
+    <constructor-arg>
+      <ref bean="orahrTxMgr"/>
+    </constructor-arg>
+  </bean>
+
+</beans>

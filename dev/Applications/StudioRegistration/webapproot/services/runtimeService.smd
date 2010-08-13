@@ -1,0 +1,75 @@
+{
+	"methods": [{
+		"name": "delete",
+		"parameters": [{
+			"name": "serviceName",
+			"type": "java.lang.String"
+		}, {
+			"name": "typeName",
+			"type": "java.lang.String"
+		}, {
+			"name": "objectToDelete",
+			"type": "java.lang.Object"
+		}]
+	}, {
+		"name": "getLocalHostIP",
+		"returnType": "java.lang.String"
+	}, {
+		"name": "getProperty",
+		"parameters": [{
+			"name": "instance",
+			"type": "java.lang.Object"
+		}, {
+			"name": "type",
+			"type": "java.lang.String"
+		}, {
+			"name": "propertyName",
+			"type": "java.lang.String"
+		}],
+		"returnType": "java.lang.Object"
+	}, {
+		"name": "insert",
+		"parameters": [{
+			"name": "serviceName",
+			"type": "java.lang.String"
+		}, {
+			"name": "typeName",
+			"type": "java.lang.String"
+		}, {
+			"name": "objectToInsert",
+			"type": "java.lang.Object"
+		}]
+	}, {
+		"name": "read",
+		"parameters": [{
+			"name": "serviceName",
+			"type": "java.lang.String"
+		}, {
+			"name": "typeName",
+			"type": "java.lang.String"
+		}, {
+			"name": "instance",
+			"type": "java.lang.Object"
+		}, {
+			"name": "propertyOptions",
+			"type": "com.wavemaker.runtime.service.PropertyOptions"
+		}, {
+			"name": "pagingOptions",
+			"type": "com.wavemaker.runtime.service.PagingOptions"
+		}]
+	}, {
+		"name": "update",
+		"parameters": [{
+			"name": "serviceName",
+			"type": "java.lang.String"
+		}, {
+			"name": "typeName",
+			"type": "java.lang.String"
+		}, {
+			"name": "objectToUpdate",
+			"type": "java.lang.Object"
+		}]
+	}],
+	"serviceType": "JSON-RPC",
+	"serviceURL": "runtimeService.json"
+}

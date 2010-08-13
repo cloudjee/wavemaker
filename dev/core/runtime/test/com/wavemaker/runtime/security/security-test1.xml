@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
+<beans>
+
+	<!-- This is the bean that needs to be protected. -->
+	<bean id='book' class='com.wavemaker.runtime.security.Book' />
+
+	<!-- This bean defines a proxy for the protected bean. Notice that -->
+	<!-- the id defined above is specified. When an application asks Spring -->
+	<!-- for a book it will get this proxy instead. -->
+	<bean id='autoProxyCreator'
+		class='org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator'>
+		<property name='interceptorNames'>
+			<list>
+				<value>securityInterceptor</value>
+			</list>
+		</property>
+		<property name='beanNames'>
+			<list>
+				<value>book</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- This bean specifies which roles are authorized to execute which methods. -->
+	<bean id='securityInterceptor'
+		class='org.acegisecurity.intercept.method.aopalliance.MethodSecurityInterceptor'>
+		<property name='authenticationManager'
+			ref='authenticationManager' />
+		<property name='accessDecisionManager'
+			ref='accessDecisionManager' />
+		<property name='objectDefinitionSource'>
+			<value>
+				com.wavemaker.runtime.security.Book.setValue=ROLE_MANAGER
+				com.wavemaker.runtime.security.Book.changeValue=ROLE_WORKER,ROLE_MANAGER
+			</value>
+		</property>
+	</bean>
+
+	<!-- This bean specifies which roles are assigned to each user. You'll notice  -->
+	<!-- that I'm using an in-memory database implementation instead of using  -->
+	<!-- LDAP or a 'real' database. The ACEGI-provided in-memory implementation is great for testing! -->
+	<bean id='userDetailsService'
+		class='org.acegisecurity.userdetails.memory.InMemoryDaoImpl'>
+		<property name='userMap'>
+			<value>
+				manager=manager,ROLE_MANAGER 
+                worker=worker,ROLE_WORKER
+				anonymous=anonymous,
+				disabled=disabled,disabled,ROLE_WORKER
+			</value>
+		</property>
+	</bean>
+
+	<!-- This bean specifies that a user can access the protected methods -->
+	<!-- if they have any one of the roles specified in the objectDefinitionSource above. -->
+	<bean id='accessDecisionManager'
+		class='org.acegisecurity.vote.AffirmativeBased'>
+		<property name='decisionVoters'>
+			<list>
+				<ref bean='roleVoter' />
+			</list>
+		</property>
+	</bean>
+
+	<!-- The next three beans are boilerplate. They should be the same for nearly all applications. -->
+	<bean id='authenticationManager'
+		class='org.acegisecurity.providers.ProviderManager'>
+		<property name='providers'>
+			<list>
+				<ref bean='authenticationProvider' />
+			</list>
+		</property>
+	</bean>
+
+	<bean id='authenticationProvider'
+		class='org.acegisecurity.providers.dao.DaoAuthenticationProvider'>
+		<property name='userDetailsService' ref='userDetailsService' />
+	</bean>
+
+	<bean id='roleVoter' class='org.acegisecurity.vote.RoleVoter' />
+
+</beans>
+
+

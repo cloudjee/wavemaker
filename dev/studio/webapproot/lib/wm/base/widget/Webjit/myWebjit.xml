@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<widget>
+	<name>MyWebjit</name>
+	<title>my designer widget</title>
+	<icon>images/wm/template.png</icon>
+	<property name="username" value="fred"/>
+	<script>
+		<![CDATA[
+draw: function() {
+	return "Hi from XML";
+}
+]]>
+	</script>
+</widget>

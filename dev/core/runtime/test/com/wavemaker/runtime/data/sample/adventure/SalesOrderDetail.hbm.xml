@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 18, 2007 5:20:12 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.adventure.SalesOrderDetail" table="SalesOrderDetail" schema="SalesLT" catalog="AdventureWorksLT">
+        <composite-id name="id" class="com.wavemaker.runtime.data.sample.adventure.SalesOrderDetailId">
+            <key-property name="salesOrderId" type="int">
+                <column name="SalesOrderID" />
+            </key-property>
+            <key-property name="salesOrderDetailId" type="int">
+                <column name="SalesOrderDetailID" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="salesOrderHeader" class="com.wavemaker.runtime.data.sample.adventure.SalesOrderHeader" update="false" insert="false" fetch="select">
+            <column name="SalesOrderID" not-null="true" />
+        </many-to-one>
+        <many-to-one name="product" class="com.wavemaker.runtime.data.sample.adventure.Product" fetch="select">
+            <column name="ProductID" not-null="true" />
+        </many-to-one>
+        <property name="orderQty" type="short">
+            <column name="OrderQty" not-null="true" />
+        </property>
+        <property name="unitPrice" type="big_decimal">
+            <column name="UnitPrice" scale="4" not-null="true" />
+        </property>
+        <property name="unitPriceDiscount" type="big_decimal">
+            <column name="UnitPriceDiscount" scale="4" not-null="true" />
+        </property>
+        <property name="lineTotal" type="big_decimal">
+            <column name="LineTotal" precision="38" scale="6" not-null="true" />
+        </property>
+        <property name="rowguid" type="string">
+            <column name="rowguid" length="36" not-null="true" unique="true" />
+        </property>
+        <property name="modifiedDate" type="timestamp">
+            <column name="ModifiedDate" length="23" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

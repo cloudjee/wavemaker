@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 18, 2007 5:20:12 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.adventure.Customer" table="Customer" schema="SalesLT" catalog="AdventureWorksLT">
+        <id name="customerId" type="int">
+            <column name="CustomerID" />
+            <!-- changed from assigned to identity -->
+            <generator class="identity" />
+        </id>
+        <property name="nameStyle" type="boolean">
+            <column name="NameStyle" not-null="true" />
+        </property>
+        <property name="title" type="string">
+            <column name="Title" length="8" />
+        </property>
+        <property name="firstName" type="string">
+            <column name="FirstName" length="50" not-null="true" />
+        </property>
+        <property name="middleName" type="string">
+            <column name="MiddleName" length="50" />
+        </property>
+        <property name="lastName" type="string">
+            <column name="LastName" length="50" not-null="true" />
+        </property>
+        <property name="suffix" type="string">
+            <column name="Suffix" length="10" />
+        </property>
+        <property name="companyName" type="string">
+            <column name="CompanyName" length="128" />
+        </property>
+        <property name="salesPerson" type="string">
+            <column name="SalesPerson" length="256" />
+        </property>
+        <property name="emailAddress" type="string">
+            <column name="EmailAddress" length="50" />
+        </property>
+        <property name="phone" type="string">
+            <column name="Phone" length="25" />
+        </property>
+        <property name="passwordHash" type="string">
+            <column name="PasswordHash" length="128" not-null="true" />
+        </property>
+        <property name="passwordSalt" type="string">
+            <column name="PasswordSalt" length="10" not-null="true" />
+        </property>
+        <property name="rowguid" type="string" insert="false" update="false">
+            <column name="rowguid" length="36" not-null="true" unique="true" />
+        </property>
+        <property name="modifiedDate" type="timestamp">
+            <column name="ModifiedDate" length="23" not-null="true" />
+        </property>
+        <set name="salesOrderHeaders" inverse="true">
+            <key>
+                <column name="CustomerID" not-null="true" />
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.adventure.SalesOrderHeader" />
+        </set>
+        <set name="customerAddresses" inverse="true">
+            <key>
+                <column name="CustomerID" not-null="true" />
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.adventure.CustomerAddress" />
+        </set>
+    </class>
+</hibernate-mapping>

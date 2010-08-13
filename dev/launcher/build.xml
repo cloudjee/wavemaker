@@ -1,0 +1,103 @@
+<project name="launcher" default="dist" basedir=".">
+
+    <property name="root.dir" location=".."/>
+    <import file="${root.dir}/common.build.xml"/>
+
+    <property name="tomcat.version" value="6.0.29"/>
+
+    <property name="runtime.studio.lib.dir" value="../studio/WEB-INF/lib"/>
+
+    <path id="build.jars">
+        <filelist>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/catalina.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/catalina-optional.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/commons-el.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/commons-logging-api-1.1.1.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/commons-modeler-2.0.1.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/jasper-compiler.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/jasper-compiler-jdt.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/jasper-runtime.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/jsp-api.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/naming-factory.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/naming-resources.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/servlet-api.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/servlets-default.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/tomcat-coyote.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/tomcat-http.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/tomcat-util.jar"/>
+        </filelist>
+    </path>
+
+    <path id="runtime.jars">
+        <filelist>
+            <file name="mysql-connector-java-5.1.11-bin.jar"/>
+        </filelist>
+    </path>
+
+    <pathconvert refid="build.jars" pathsep=" " property="build.manifest.jars">
+        <chainedmapper>
+            <mapper type="flatten"/>
+            <mapper type="glob" from="*" to="lib/*"/>
+        </chainedmapper>
+    </pathconvert>
+    <pathconvert refid="runtime.jars" pathsep=" " property="runtime.manifest.jars">
+        <chainedmapper>
+            <mapper type="flatten"/>
+            <mapper type="glob" from="*" to="${runtime.studio.lib.dir}/*"/>
+        </chainedmapper>
+    </pathconvert>
+
+
+    <target name="init">
+        <mkdir dir="${build.launcher.dir}"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <mkdir dir="${classes.launcher.dir}"/>
+        <javac srcdir="src" destdir="${classes.launcher.dir}" debug="true">
+            <classpath refid="build.jars"/>
+        </javac>
+        <copy todir="${classes.launcher.dir}">
+            <fileset dir="src">
+                <include name="**/*.png"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="jar" depends="compile">
+        <mkdir dir="${lib.launcher.dir}"/>
+        <jar destfile="${lib.launcher.dir}/launcher.jar"
+                basedir="${classes.launcher.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="com.wavemaker.desktop.launcher.Main"/>
+                <attribute name="Class-Path" value="${build.manifest.jars} ${runtime.manifest.jars} ."/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="dist" depends="jar">
+        <mkdir dir="${dist.launcher.dir}"/>
+        <copy todir="${dist.launcher.dir}">
+            <fileset dir="apache-tomcat-${tomcat.version}-embed"/>
+        </copy>
+        <copy todir="${dist.launcher.dir}" file="${lib.launcher.dir}/launcher.jar"/>
+
+        <!-- overwrite entries in dist/conf with stuff from conf -->
+        <copy todir="${dist.launcher.dir}/conf" overwrite="true">
+            <fileset dir="conf">
+                <include name="*"/>
+            </fileset>
+        </copy>
+        <touch file="${dist.launcher.dir}/catalina.home.marker"/>
+    </target>
+
+    <target name="buildtest" depends="compile" />
+
+    <target name="javadoc"/>
+
+    <target name="test" depends="buildtest" />
+
+    <target name="clean">
+        <delete dir="${build.launcher.dir}"/>
+    </target>
+</project>

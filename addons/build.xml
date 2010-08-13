@@ -1,0 +1,14 @@
+<project name="addons" default="build" basedir=".">
+
+    <target name="clean" description="Remove websphere tar file">
+        <delete file="${basedir}/websphere.tar"/>
+    </target> 
+
+    <target name="build" description="Create tar file for websphere" depends="clean">
+		<tar destfile="${basedir}/websphere.tar"
+			 basedir="${basedir}/websphere"
+			 excludes="src/**, **/*.bak"
+		/>
+    </target>
+
+</project>

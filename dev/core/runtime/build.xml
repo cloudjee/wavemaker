@@ -1,0 +1,298 @@
+<project name="runtime" default="build" basedir=".">
+
+    <property name="root.dir" location="../.."/>
+    <import file="${root.dir}/common.build.xml"/>
+
+    <property file="build.properties"/>
+
+    <path id="build.classpath">
+        <filelist refid="common.api.jars"/>
+        <filelist refid="common.common.jars"/>
+        <filelist refid="common.json.jars"/>
+        <filelist refid="common.runtime.jars"/>
+        <pathelement location="${classes.common.dir}"/>
+        <pathelement location="${classes.json.dir}"/>
+    </path>
+
+    <path id="test.build.classpath">
+        <path refid="build.classpath"/>
+        <path location="${classes.runtime.dir}"/>
+        <path location="${classes.testsupport.dir}"/>
+        <path location="${test.classes.common.dir}"/>
+        <path location="${test.classes.json.dir}"/>
+        <filelist refid="common.testsupport.jars"/>
+    </path>
+
+    <path id="test.run.classpath">
+        <path refid="test.build.classpath"/>
+        <path location="${test.classes.runtime.dir}"/>
+        <!-- REVIEW 11-Sep-08 stoens@wavemaker.com -->
+        <!-- tools needs to be on cp because spring files ref it -->
+        <path location="${classes.tools.dir}"/>
+        <path location="${test.classes.tools.dir}"/>
+        <path location="${runtime.test.module_baz.jar}"/>
+        <path location="${runtime.test.module_foo.jar}"/>
+    </path>
+
+    <target name="help" depends="common.projecthelp" 
+            description="Information about available targets"/>
+
+    <target name="clean" description="Remove class files">
+        <delete dir="${build.runtime.dir}"/>
+        <delete file="${wmruntime.jar}"/>
+    </target> 
+
+    <target name="build" description="Compile runtime">
+        <echo>START dev/core/runtime/build.xml "build"</echo>
+		<mkdir dir="${src.temp.root.dir}/runtime"/>
+		<copy todir="${src.temp.root.dir}/runtime" overwrite="yes">
+			<fileset dir="${src.runtime.dir}">
+			</fileset>
+		</copy>
+		<antcall target="overwrite-with-dummies"/>
+        <mkdir dir="${classes.runtime.dir}"/>
+        <javac srcdir="${src.temp.root.dir}/runtime" 
+               destdir="${classes.runtime.dir}" 
+               target="${javac.target}"
+               encoding="${javac.encoding}"
+               debug="${javac.debug}">
+            <classpath refid="build.classpath"/>
+        </javac>
+        <copy todir="${classes.runtime.dir}">
+            <fileset dir="${src.runtime.dir}">
+                <include name="**/*.properties"/>
+                <include name="**/*.cfg"/>
+                <include name="**/*.xml"/>
+            </fileset>
+        </copy>
+    </target>
+
+	<target name="overwrite-with-dummies" unless="common.modules.isEnterprise"
+		description="Copy dummy java source to temp dir">
+		<copy todir="${src.temp.root.dir}/runtime" overwrite="yes">
+			<fileset dir="${src.runtime.dummy.dir}">
+			</fileset>
+		</copy>
+	</target>
+
+    <target name="buildtest" depends="build" description="Compile tests">
+        <mkdir dir="${test.classes.runtime.dir}"/>
+        <javac srcdir="${test.src.runtime.dir}" 
+               destdir="${test.classes.runtime.dir}" 
+               target="${javac.target}"
+               encoding="${javac.encoding}"
+               debug="${javac.debug}">
+            <classpath refid="test.build.classpath"/>
+        </javac>        
+        <copy file="${test.src.runtime.dir}/mysql.properties.template"
+              tofile="${test.src.runtime.dir}/mysql.properties"
+              overwrite="false"/>
+        <copy file="${test.src.runtime.dir}/oracle_orahr.properties.template"
+              tofile="${test.src.runtime.dir}/oracle_orahr.properties"
+              overwrite="false"/>
+        <copy file="${test.src.runtime.dir}/sqlserver_adventure.properties.template"
+              tofile="${test.src.runtime.dir}/sqlserver_adventure.properties"
+              overwrite="false"/>
+        <copy file="${test.src.runtime.dir}/db2sample.properties.template"
+              tofile="${test.src.runtime.dir}/db2sample.properties"
+              overwrite="false"/>
+
+        <copy todir="${test.classes.runtime.dir}">
+            <fileset dir="${test.src.runtime.dir}">
+                <include name="**/*.properties"/>
+                <include name="**/*.cfg"/>
+                <include name="**/*.xml"/>
+                <include name="**/*.wsdl"/>
+                <include name="**/*.wadl"/>
+                <include name="**/*.xjb"/>
+                <include name="**/*.xsd"/>
+                <include name="com/wavemaker/runtime/foojar.jar"/>
+                <include name="com/wavemaker/runtime/data/mike.pic"/>
+                <include name="bar-module-contents.txt"/>
+            </fileset>
+        </copy>
+
+        <mkdir dir="${jar.runtime.dir}"/>
+        <jar destfile="${test.runtime.infra.jar}"
+             basedir="${test.classes.runtime.dir}"
+             includes="com/wavemaker/infra/**"/>
+
+    </target>
+
+    <target name="test-all" depends="test, test-data" 
+            description="Run all tests"/>
+
+    <target name="test" depends="buildtest" description="Run unit tests">
+        <antcall target="junit"/>
+    </target>
+
+    <target name="test-data" depends="buildtest" description="Run data tests">
+        <taskdef name="lockSemaphore"
+                classname="com.wavemaker.testsupport.ant.LockSemaphoreAntTask"
+                classpathref="test.run.classpath"/>
+        <taskdef name="unlockSemaphore"
+                classname="com.wavemaker.testsupport.ant.UnlockSemaphoreAntTask"
+                classpathref="test.run.classpath"/>
+
+        <lockSemaphore semaphoreName="ant-runtime-test-data-semaphore"
+                propName="runtime.test-data.semaphore.value"
+                iterations="5000" sleepTime="500"/>
+        <echo>semaphore data locked; name ant-runtime-test-data-semaphore</echo>
+        <echo>\tsemaphore key ${runtime.test-data.semaphore.value}</echo>
+        <antcall target="junit">
+            <param name="test.include" value="com/wavemaker/runtime/data/**/Test*"/>
+            <param name="test.exclude" value="com/wavemaker/runtime/data/sample/**"/>
+        </antcall>
+        <unlockSemaphore semaphoreReturn="${runtime.test-data.semaphore.value}"/>
+    </target>
+
+    <target name="jar" depends="build">
+        <path id="manifestjars">
+            <filelist refid="common.common.jars"/>
+            <filelist refid="common.json.jars"/>
+            <filelist refid="common.runtime.jars"/>
+            <pathelement location="${wmcommon.jar}"/>
+            <pathelement location="${wmjson.jar}"/>
+        </path>
+        <pathconvert refid="manifestjars" pathsep=" " property="cp">
+            <mapper type="flatten"/>
+        </pathconvert>
+	<echo>MKDIR FOR JARS ${lib.dir}</echo>
+        <mkdir dir="${lib.dir}"/>
+	<echo>JAR DESTFILE: ${wmruntime.jar}</echo>
+        <jar destfile="${wmruntime.jar}"
+                 basedir="${classes.runtime.dir}"
+                 excludes="log4j.properties">
+             <manifest>
+                 <attribute name="Class-Path" value="${cp}"/>
+             </manifest>
+         </jar>
+    </target>
+
+    <target name="junit">
+        <property name="test.include" value="**/*Test*"/>
+        <property name="test.exclude" value="com/wavemaker/runtime/data/**"/>
+        <junit printsummary="on"
+               fork="false"
+               haltonfailure="true"
+               showoutput="true">
+            <classpath refid="test.run.classpath"/>
+            <formatter type="plain" usefile="false"/>
+            <formatter type="xml" usefile="true"/>
+            <batchtest todir="${build.test.report.dir}">
+                <fileset dir="${test.classes.runtime.dir}">
+                    <include name="${test.include}"/>
+                    <exclude name="${test.exclude}"/>
+                    <exclude name="com/wavemaker/**/infra/**"/>
+                    <exclude name="**/*$*"/>
+                </fileset>
+            </batchtest>
+
+            <syspropertyset>
+                <propertyset refid="common.test.properties"/>
+            </syspropertyset>            
+        </junit>    
+    </target>
+
+    <target name="javadoc" depends="build">
+        <mkdir dir="${build.javadoc.dir}"/>
+        <javadoc sourcefiles="
+
+${src.runtime.dir}/com/activegrid/runtime/AGRuntime.java,
+${src.runtime.dir}/com/activegrid/runtime/data/DataServiceManager.java,
+${src.runtime.dir}/com/activegrid/runtime/data/DataServiceManagerAccess.java,
+${src.runtime.dir}/com/activegrid/runtime/data/util/SystemUtils.java,
+
+
+${src.runtime.dir}/com/wavemaker/runtime/RuntimeAccess.java,
+${src.runtime.dir}/com/wavemaker/runtime/data/DataServiceManager.java,
+${src.runtime.dir}/com/wavemaker/runtime/data/DataServiceManagerAccess.java,
+${src.runtime.dir}/com/wavemaker/runtime/data/util/SystemUtils.java,
+
+${src.runtime.dir}/com/wavemaker/runtime/service/annotations/ExposeToClient.java,
+${src.runtime.dir}/com/wavemaker/runtime/service/annotations/HideFromClient.java,
+
+${src.runtime.dir}/com/wavemaker/runtime/service/response/LiveDataServiceResponse.java,
+${src.runtime.dir}/com/wavemaker/runtime/service/LiveDataService.java,
+${src.runtime.dir}/com/wavemaker/runtime/service/AbstractLiveDataService.java,
+
+${src.runtime.dir}/com/wavemaker/runtime/server/DownloadResponse.java
+
+"
+                 destdir="${build.javadoc.dir}"
+                 classpathref="test.build.classpath"
+                 encoding="${javac.encoding}"/>
+    </target>
+
+
+    <target name="setup-mysql" if="common.modules.isEnterprise"
+            depends="buildtest"
+            description="Setup MySQL for data tests.  Drops and re-creates the sakila and aghr schemas.  Uses connection settings from properties files in test/.">
+
+        <antcall target="-setup-mysql">
+            <param name="db.name" value="sakila-db"/>
+            <param name="db.schema-file" value="sakila-schema.sql"/>
+            <param name="db.data-file" value="sakila-data.sql"/>
+            <param name="db.base-properties" value="mysql.properties"/>
+            <param name="db.other-properties" value="mysql_sakila.properties"/>
+        </antcall>
+
+        <antcall target="-setup-mysql">
+            <param name="db.name" value="aghr-db"/>
+            <param name="db.schema-file" value="ag-schema.sql"/>
+            <param name="db.data-file" value="ag-data.sql"/>
+            <param name="db.base-properties" value="mysql.properties"/>
+            <param name="db.other-properties" value="mysql_aghr.properties"/>
+        </antcall>
+
+        <antcall target="-setup-mysql">
+            <param name="db.name" value="sakilalight-db"/>
+            <param name="db.schema-file" value="sakilalight.sql"/>
+            <param name="db.data-file" value=""/>
+            <param name="db.base-properties" value="mysql.properties"/>
+            <param name="db.other-properties" value="mysql_sakila.properties"/>
+        </antcall>
+
+        <echo>
+The error about failing to open "sakilalight-db" is expected
+        </echo>
+
+    </target>
+
+    <target name="-setup-mysql">
+        <taskdef name="jup" classname="com.wavemaker.infra.ant.JDBCUrlParser"
+                 classpathref="test.run.classpath"/>
+
+        <taskdef name="mysql" classname="com.wavemaker.infra.ant.MySQLClient"
+                 classpathref="test.run.classpath"/>
+
+        <property file="${test.src.runtime.dir}/${db.other-properties}"/>
+        <property file="${test.src.runtime.dir}/${db.base-properties}"/>
+
+        <jup
+            jdbcurl="${sakila.connectionUrl}"
+            hostproperty="sakila.host"
+            portproperty="sakila.port"/>
+
+        <echo>
+ ${db.name}:
+           sakila.host: ${sakila.host}
+           sakila.port: ${sakila.port}
+           sakila.user: ${sakila.username}
+        </echo>
+
+        <mysql input="${etc.dir}/mysql/${db.name}/${db.schema-file}"
+               host="${sakila.host}"
+               port="${sakila.port}"
+               user="${sakila.username}"
+               pass="${sakila.password}"/>
+
+        <mysql input="${etc.dir}/mysql/${db.name}/${db.data-file}"
+               host="${sakila.host}"
+               port="${sakila.port}"
+               user="${sakila.username}"
+               pass="${sakila.password}"/>
+
+    </target>
+
+</project>

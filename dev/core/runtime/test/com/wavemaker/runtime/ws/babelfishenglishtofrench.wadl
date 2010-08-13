@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <wadl:application
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xsi:schemaLocation="http://research.sun.com/wadl/2006/10 wadl.xsd"
+  xmlns:wadl="http://research.sun.com/wadl/2006/10">
+<wadl:grammars>
+  <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:element name="result">
+      <xsd:complexType>
+        <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+                <xsd:element name="text" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+</wadl:grammars>
+<wadl:resources base="http://service.openkapow.com/">
+    <wadl:resource path="hasin">
+    <wadl:resource path="babelfishenglishtofrench.xml">
+      <wadl:method name="GET">
+        <wadl:request>
+          <wadl:param name="text" type="xsd:string" style="query" required="true" default="Good Morning">
+            <wadl:doc xml:lang="en" title="text (Sample Value: Good Morning)">Type : [xsd:string]</wadl:doc>
+          </wadl:param>
+          <wadl:param name="Translate From English To" type="xsd:string" style="query" required="true" default="German">
+            <wadl:doc xml:lang="en" title="Translate From English To (Sample Value: German)">Type : [xsd:string]</wadl:doc>
+          </wadl:param>
+        </wadl:request>
+        <wadl:response>
+          <wadl:representation mediaType="application/xml" element="result" />
+        </wadl:response>
+       </wadl:method>
+    </wadl:resource>
+    </wadl:resource>
+</wadl:resources>
+</wadl:application>

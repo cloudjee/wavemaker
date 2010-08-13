@@ -1,0 +1,179 @@
+<project name="dist" default="build" basedir=".">
+    <description> 
+        Distribution builds.
+    </description>
+
+    <property name="root.dir" location="${basedir}"/>
+    <import file="${root.dir}/common.build.xml"/>
+
+    <!-- for faster build, use property skip_build_js -->
+    <target name="buildwar" depends="build">
+        <war basedir="${dist.studio.dir}" destfile="${root.dir}/wavemaker.war" webxml="${webinf.studio.dir}/web.xml" />
+	<echo>Writing war to ${root.dir}/wavemaker.war</echo>
+    </target>
+
+
+    <target name="build-js" description="Compiles js libraries into one compressed download" unless="skip.buildjs">
+        <ant dir="${studio.dir}" antfile="build-js.xml" target="build"/>
+    </target>
+
+    <target name="build" description="Build the studio for distribution" depends="build-js">
+    	  <!-- Set property for conditional build of source tar ball -->
+    	  <condition property="isLinux">
+            <os name="Linux"/>
+        </condition>
+    	  <condition property="buildSrc">
+    	  	<and>
+             <os family="unix" />
+             <not>
+             	 <os name="Mac OS X"/>
+             	</not>
+           </and>   
+        </condition>    	
+        <!--  Run our standard ant script in build.xml to build the project -->
+	 <echo>Step 1 (dev/build-dist.xml "build"):
+FINISHED: depends on build-js;
+NEXT: run (dev/build.xml "build")</echo>
+
+	 <!-- build depends on undeploy which depends on clean, so no reason for us to call it here; build.xml already calls it for "build" target.
+        <ant antfile="build.xml" target="clean"/>  -->
+        <ant antfile="build.xml" target="build"/>
+	<property name="build-complete" value="true" />
+
+	<echo>Step 2 (dev/build-dist.xml "build"): 
+FINISHED: run dev/build.xml "build";
+NEXT: run (dev/build.xml "javadoc")</echo>
+        <ant antfile="build.xml" target="javadoc"/>
+
+	 <echo>Step 3 (dev/build-dist.xml "build"):
+FINISHED: run dev/build.xml "javadoc",
+NEXT: Delete the username and password from CloudDB.properties unless this is the cloud version</echo>
+	<antcall target="fakeCloudDB" />
+
+	<echo>Step 4 (dev/build-dist.xml "build"):
+FINISHED: run dev/build.xml "fakeCloudDB";
+NEXT: build the launcher</echo>
+        <ant dir="${launcher.dir}" target="dist"/>
+
+	<echo>Step 5 (dev/build-dist.xml "build"): 
+FINISHED: building launcher
+NEXT: copy the build files into ${dist.studio.dir}</echo>
+        <mkdir dir="${dist.studio.dir}"/>
+        <copy todir="${dist.studio.dir}">
+            <fileset dir="${webapproot.studio.dir}">
+                <exclude name="/lib/dojo/util/**" />
+                <exclude name="**/.svn*" />
+                <exclude name="**/test*" />
+                <exclude name="**/tests*" />
+                <exclude name="**/php*" />
+                <exclude name="**/*.war"/>
+            </fileset>
+        </copy>
+
+	<echo>Step 6 (dev/build-dist.xml "build"): 
+FINISEHD: copy files into ${dist.studio.dir};
+NEXT: (build.xml "deploy") NOTE: THIS STEP SKIPPED UNTIL POST 5.2 GA RELEASE</echo>
+<!--
+        <ant antfile="build.xml" target="deploy"/>
+-->
+	<echo>Step 7 (dev/build-dist.xml "build"): 
+FINISEHD: (build.xml "deploy")
+NEXT: exit "build"</echo>
+    </target>
+
+    <target name="fakeCloudDB" unless="wm.isCloud.property">
+      <replaceregexp file="${classes.studio.dir}/CloudDB.properties" flags="g" match="CloudDB\.username=.*" replace="CloudDB\.username=fake" />
+      <replaceregexp file="${classes.studio.dir}/CloudDB.properties" flags="g" match="CloudDB\.password=.*" replace="CloudDB\.password=fake" />
+      <replaceregexp file="${classes.studio.dir}/CloudDB.properties" flags="g" match="CloudDB\.connectionUrl=.*" replace="CloudDB\.connectionUrl=fake" />
+      <echo>CloudDB Cleared ${classes.studio.dir}/CloudDB.properties</echo>
+    </target>
+
+    <target name="build-source" description="Creates a source tarball"
+        depends="common.generate-best-license"  if="buildSrc" unless="skip.build-source">
+		
+	<echo>DEBUG VERSION.TXT: build.dir == ${build.dir} PREFIX = ${tarroot}, version.file.name = ${version.file.name}</echo>
+		<property name="tempsrc.root" value="${build.dir}/tempsrcroot"/>
+        <property name="tarroot"
+                value="wavemaker-source-${project.type}-${version.number}"/>
+        <mkdir dir="${build.dir}"/>
+		<delete dir="${tempsrc.root}"/>
+		<mkdir dir="${tempsrc.root}"/>
+	<echo>Copying source directories to the temporary directory...</echo>
+		<copy todir="${tempsrc.root}">
+            <fileset dir="${root.dir}/..">
+            </fileset>
+        </copy>
+
+	<antcall target="copydummy"/>
+	<antcall target="prep-build-source"/>
+		
+        <tar destfile="${build.dir}/${tarroot}.tar.bz2"
+                longfile="gnu" compression="bzip2">
+            <tarfileset dir="${tempsrc.root}" prefix="${tarroot}">
+                <exclude name="**/.svn"/>
+                <exclude name="**/bin/**"/>
+                <exclude name="**/*.war"/>
+                <exclude name="infra/**"/>                             
+                <exclude name="foo/**"/>
+                <exclude name="test/**"/>
+                <exclude name="copyrights/**"/>
+                <exclude name="dev/build/**"/>
+                <exclude name="dev/cloud/**"/>
+                <exclude name="dev/modules/**"/>
+                <exclude name="dev/Applications/**"/>
+                <exclude name="dev/map.txt"/>
+                <exclude name="dev/studio/webapproot/*.war"/>
+                <exclude name="dev/studio/services/CloudDB/**"/>
+                <exclude name="dev/studio/services/registrationService/**"/>
+        	<exclude name="**/RbacPlugin.js" unless="common.modules.isEnterprise"/>
+                <!--exclude name="dev/core/runtime/src/com/wavemaker/runtime/security/JOSSOSecurityService.java"/>
+                <exclude name="dev/core/tools/src/com/wavemaker/tools/security/JOSSOSecurityServiceDefinition.java"/>
+                <exclude name="dev/core/runtime/src/com/wavemaker/runtime/data/util/QueryHandler.java"/-->
+            </tarfileset>
+            <tarfileset dir="${build.dir}" prefix="${tarroot}">
+		<include name="${version.file.name}"/>
+                <include name="${license.file.name}"/>
+            </tarfileset>
+            <tarfileset dir="${src.buildsupport.dir}" prefix="${tarroot}">
+                <exclude name="*_license.txt"/>
+            </tarfileset>
+            <tarfileset dir="${modules.dir}"
+                    prefix="${tarroot}/dev/modules">
+                <include name="*"/>
+                <patternset refid="common.modules.patternset"/>
+            </tarfileset>
+        </tar>
+
+	<delete dir="${tempsrc.root}"/>
+    </target>
+
+	<target name="copydummy" unless="common.modules.isEnterprise">
+	    <copy todir="${tempsrc.root}/dev/core" overwrite="yes">
+		<fileset dir="${tempsrc.root}/dev/core-dummy">
+		</fileset>
+	    </copy>
+	    <delete dir="${tempsrc.root}/dev/core-dummy"/>
+		
+		<!-- uncomment the followig 5 lines when needed-->
+		<!--copy todir="${tempsrc.root}/dev/studio" overwrite="yes">
+			<fileset dir="${tempsrc.root}/dev/core-studio">
+			</fileset>
+		</copy>
+		<delete dir="${tempsrc.root}/dev/studio-dummy"/-->
+	</target>
+	
+    <target name="prep-build-source" description="Preps dummy for build-source">
+	<echo>Prep Build Source</echo>
+	<!-- <copy file="/dev/modules/lib/ant-contrib-06.jar" todir="${tempsrc.root}/dev/modules/lib" /> -->
+	<mkdir dir="${tempsrc.root}/dev/core-dummy/common/src"/>
+	<mkdir dir="${tempsrc.root}/dev/core-dummy/json/src"/>
+	<mkdir dir="${tempsrc.root}/dev/core-dummy/runtime/src"/>
+	<mkdir dir="${tempsrc.root}/dev/core-dummy/tools/src"/>
+    </target>	
+    
+    <target name="clean" description="Cleans both regular and js builds">
+        <delete dir="${dist.studio.dir}"/>
+        <ant antfile="build.xml" target="cleanall"/>
+        <ant dir="${studio.dir}" antfile="build-js.xml" target="clean"/>
+    </target>
+</project>

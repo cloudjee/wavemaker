@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 5, 2007 6:21:51 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.sakila.SalesByStore" table="sales_by_store" catalog="sakila">
+        <comment></comment>
+        <composite-id name="id" class="com.wavemaker.runtime.data.sample.sakila.SalesByStoreId">
+            <key-property name="store" type="string">
+                <column name="store" length="101" />
+            </key-property>
+            <key-property name="manager" type="string">
+                <column name="manager" length="91" />
+            </key-property>
+            <key-property name="totalSales" type="big_decimal">
+                <column name="total_sales" precision="27" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

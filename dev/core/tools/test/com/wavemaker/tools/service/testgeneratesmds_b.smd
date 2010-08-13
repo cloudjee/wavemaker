@@ -1,0 +1,11 @@
+{
+    "methods":[
+        {
+            "name": "bar",
+            "returnType": "[java.lang.Integer]",
+            "parameters": [{"type": "[java.lang.Boolean]", "name": "param"}]
+        }
+    ],
+    "serviceURL":"service2.json",
+    "serviceType":"JSON-RPC"
+}

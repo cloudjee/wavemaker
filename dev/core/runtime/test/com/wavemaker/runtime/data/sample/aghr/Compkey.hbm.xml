@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 26, 2007 4:51:33 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.aghr.Compkey" table="compkey" catalog="aghr">
+        <comment></comment>
+        <composite-id name="id" class="com.wavemaker.runtime.data.sample.aghr.CompkeyId">
+            <key-property name="id1" type="short">
+                <column name="id1" />
+            </key-property>
+            <key-property name="id2" type="short">
+                <column name="id2" />
+            </key-property>
+        </composite-id>
+        <property name="name" type="string">
+            <column name="name" length="45">
+                <comment></comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,159 @@
+<project name="linux.installer" default="build" basedir=".">
+
+    <property name="root.dir" location="${basedir}/../../dev"/>
+    <import file="${root.dir}/common.build.xml"/>
+    <import file="${basedir}/../common.installer.build.xml"/>
+
+
+    <!-- must be inside of build.installer.dir -->
+    <property name="buildroot" value="${build.installer.dir}/buildroot"/>
+    <property name="wm.spec" value="${build.installer.dir}/wavemaker.spec"/>
+    <property name="prefix" value="/opt/wavemaker-${project.type}-${version.number}" />
+    <property name="installer.wm.root" value="${buildroot}/${prefix}"/>
+
+    <!-- Default properties -->
+    <property name="java.tar.file" value="${basedir}/java.tar" />
+
+    <target name="check">
+        <condition property="setupBAD">
+            <not>
+                <and>
+                    <available file="${java.tar.file}" />
+                    <available file="${dist.studio.dir}" />
+                    <available file="${dist.launcher.dir}" />
+                </and>
+            </not>
+        </condition>
+        <fail if="setupBAD" message="required files missing" />
+    </target>
+
+    <target name="init" depends="check">
+        <mkdir dir="${buildroot}"/>
+
+        <mkdir dir="${installer.wm.root}"/>
+        <mkdir dir="${installer.wm.root}/bin"/>
+
+        <property name="wm.sh.file" value="${installer.wm.root}/bin/wavemaker.sh"/>
+        <copy file="bin/wavemaker.sh.template" tofile="${wm.sh.file}">
+            <filterset>
+                <filter token="PREFIX" value="${prefix}" />
+            </filterset>
+        </copy>
+        <exec executable="chmod" failonerror="true">
+            <arg value="+x"/>
+            <arg value="${wm.sh.file}"/>
+        </exec>
+
+        <copy file="README.template" tofile="${installer.wm.root}/README">
+            <filterset>
+                <filter token="VERSION" value="${version.number}" />
+            </filterset>
+        </copy>
+
+        <exec executable="tar" dir="${installer.wm.root}" failonerror="true">
+            <arg line="xf"/>
+            <arg line="${java.tar.file}"/>
+        </exec>
+
+        <available file="/usr/bin/rpmbuild" property="rpm.build"/>
+        <available file="/usr/bin/dpkg" property="deb.build"/>
+    </target>
+
+    <target name="init-rpm" depends="init" if="rpm.build">
+    </target>
+
+    <target name="generate-spec" depends="init-rpm" if="rpm.build">
+        <exec executable="${basedir}/rpm/genspec.py" failonerror="true"
+                dir="${buildroot}" outputproperty="files.list">
+            <arg line="."/>
+        </exec>
+
+        <concat destfile="${build.installer.dir}/wavemaker.spec">
+            <path>
+                <pathelement location="rpm/wavemaker.spec.template"/>
+            </path>
+            <propertyset>
+                <propertyref name="files.list"/>
+            </propertyset>
+
+            <filterchain>
+                <replacetokens>
+                    <token key="VERSION" value="${version.number}" />
+                    <token key="BUILDROOT" value="${buildroot}" />
+                    <token key="TOPDIR" value="${build.installer.dir}" />
+                    <token key="FILES" value="${files.list}" />
+                    <token key="PROJECTTYPE" value="${project.type}" />
+                </replacetokens>
+            </filterchain>
+        </concat>
+    </target>
+
+    <target name="build-rpm" depends="generate-spec" if="rpm.build">
+        <mkdir dir="${build.installer.dir}/RPMS/i386"/>
+        <exec executable="rpmbuild" failonerror="true"
+                dir="${build.installer.dir}">
+            <arg line="-bb" />
+            <arg line="wavemaker.spec" />
+        </exec>
+    </target>
+
+    <target name="init-deb" depends="init" if="deb.build">
+        <mkdir dir="${buildroot}/amd64/DEBIAN"/>
+        <copy todir="${buildroot}/amd64/DEBIAN">
+            <fileset dir="DEBIAN">
+                <exclude name="**/.svn*"/>
+            </fileset>
+            <filterset>
+                <filter token="VERSION" value="${version.number}" />
+                <filter token="PROJECTTYPE" value="${project.type}" />
+            </filterset>
+        </copy>
+        <exec executable="cp"> 
+        	<arg value="-r" />
+        	<arg value="${buildroot}/opt" />
+          <arg value="${buildroot}/amd64/opt" />
+        </exec>
+    </target>
+
+    <target name="build-deb" depends="init-deb" if="deb.build">
+        <exec executable="dpkg" failonerror="true">
+            <arg line="--build" />
+            <arg line="${buildroot}/amd64" />
+            <arg line="${build.installer.dir}" />
+        </exec>
+    </target>
+
+    <target name="init-debi386" depends="init" if="deb.build">
+        <mkdir dir="${buildroot}/i386/DEBIAN"/>
+        <copy todir="${buildroot}/i386/DEBIAN">
+            <fileset dir="DEBIAN_i386">
+                <exclude name="**/.svn*"/>
+            </fileset>
+            <filterset>
+                <filter token="VERSION" value="${version.number}" />
+                <filter token="PROJECTTYPE" value="${project.type}" />
+            </filterset>
+        </copy>
+ 			 <exec executable="cp">
+ 			 	  <arg value="-r" /> 
+        	<arg value="${buildroot}/opt" />
+          <arg value="${buildroot}/i386/opt" />
+        </exec>
+
+    </target>
+
+    <target name="build-debi386" depends="init-debi386" if="deb.build">
+        <exec executable="dpkg" failonerror="true">
+            <arg line="--build" />
+            <arg line="${buildroot}/i386" />
+            <arg line="${build.installer.dir}" />
+        </exec>
+    </target>
+    <target name="build"
+            depends="init, common.generate-license, common.generate-full-version, common-installer.generate-dist, build-rpm, build-deb, build-debi386">
+    </target>
+
+    <target name="clean" depends="common-installer.clean">
+        <delete dir="${build.installer.dir}"/>
+    </target>
+</project>

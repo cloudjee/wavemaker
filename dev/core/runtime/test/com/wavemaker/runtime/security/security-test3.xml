@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
+<beans>
+
+    <bean id='authenticationManager'
+        class='org.acegisecurity.providers.ProviderManager'>
+        <property name='providers'>
+            <list>
+                <ref bean='ldapAuthProvider' />
+            </list>
+        </property>
+    </bean>
+
+    <bean id="initialDirContextFactory" class="org.acegisecurity.ldap.DefaultInitialDirContextFactory">
+      <constructor-arg value="ldap://localhost:389/dc=activegrid,dc=com"/>
+      <property name="managerDn"><value>cn=manager,dc=activegrid,dc=com</value></property>
+      <property name="managerPassword"><value>manager</value></property>
+    </bean>
+
+    <bean id="ldapAuthProvider" class="org.acegisecurity.providers.ldap.LdapAuthenticationProvider">
+      <constructor-arg>
+        <bean class="org.acegisecurity.providers.ldap.authenticator.BindAuthenticator">
+          <constructor-arg><ref local="initialDirContextFactory"/></constructor-arg>
+          <property name="userDnPatterns"><list><value>cn={0},ou=people</value></list></property>
+        </bean>
+      </constructor-arg>
+      <constructor-arg>
+        <bean class="org.acegisecurity.providers.ldap.populator.DefaultLdapAuthoritiesPopulator">
+          <constructor-arg><ref local="initialDirContextFactory"/></constructor-arg>
+          <constructor-arg><value>ou=groups</value></constructor-arg>
+          <property name="groupRoleAttribute"><value>ou</value></property>
+          <property name="defaultRole"><value>User</value></property>
+        </bean>
+      </constructor-arg>
+    </bean>
+
+</beans>

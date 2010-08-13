@@ -1,0 +1,124 @@
+<project name="installer" default="build" basedir=".">
+
+    <property name="root.dir" location="${basedir}/../../dev"/>
+    <import file="${root.dir}/common.build.xml"/>
+    <import file="${basedir}/../common.installer.build.xml"/>
+
+    <!-- Default properties -->
+    <property name="compiler.path" value="${basedir}/NSIS-unicode-2.42.4" />
+    <property name="buildroot" value="${build.installer.dir}/buildroot" />
+    <property name="installer.wm.root" value="${buildroot}" />
+
+    <property name="versionString" value="${project.type}-${version.number}" />
+    <property name="installerName" value="${build.installer.dir}/wavemaker-${versionString}.exe" />
+
+    <property name="java.zip.file" value="${basedir}/jdk1.6.0_21.zip"/>
+    <property name="signtool" value="C:\Program Files\Microsoft Platform SDK for Windows Server 2003 R2\Bin\signtool.exe"/>
+
+    <target name="check">
+        <condition property="setupBAD">
+            <not>
+                <and>
+                    <available file="${java.zip.file}"/>
+                </and>
+            </not>
+        </condition>
+        <fail if="setupBAD" message="required files missing"/>
+    </target>
+
+    <target name="init" depends="check">
+        <mkdir dir="${buildroot}"/>
+        <mkdir dir="${installer.wm.root}"/>
+
+        <unzip src="${java.zip.file}" dest="${installer.wm.root}"/>
+
+        <condition property="doSigning">
+            <and>
+                <available file="${signtool}"/>
+                <isset property="wm.signtool.pass"/>
+                <isset property="wm.signtool.sha"/>
+            </and>
+        </condition>
+    </target>
+
+    <target name="build-installer"
+            depends="init, common.generate-license, common.generate-full-version, common-installer.generate-dist">
+        <pathconvert targetos="windows" property="license.converted">
+            <path>
+                <pathelement location="${license.file}"/>
+            </path>
+        </pathconvert>
+        <pathconvert targetos="windows" property="installer.wm.root.converted">
+            <path>
+                <pathelement location="${installer.wm.root}"/>
+            </path>
+        </pathconvert>
+
+        <exec executable="${compiler.path}\makensis.exe" osfamily="Windows"
+                failonerror="true">
+            <arg line="/V1"/>
+            <arg line="/DVERSION=${version.number}" />
+            <arg line="/DLONGVERSION=${versionString}" />
+            <arg line="/DSOURCEDIR=&quot;\\?\${installer.wm.root.converted}&quot;" />
+            <arg line="/DLICENSEFILE=&quot;${license.converted}&quot;" />
+            <arg line="/DBUILDSUPPORTDIR=&quot;${src.buildsupport.dir}&quot;" />
+            <arg line="/X&quot;OutFile ${installerName}&quot;" />
+            <arg line="Mavericks.nsi" />
+        </exec>
+        <delete file="releasenotes.txt" failonerror="false" />
+    </target>
+
+    <target name="sign-installer" depends="build-installer" if="doSigning">
+
+        <!-- XXX debugging for signtool stuff -->
+        <echo>signtool.pass: ${wm.signtool.pass}</echo>
+        <echo>signtool.sha: ${wm.signtool.sha}</echo>
+        <condition property="footest">
+            <available file="C:\wavemakercredentials.pfx"/>
+        </condition>
+        <echo>footest: ${footest}</echo>
+        <condition property="footest2">
+            <available file="C:/wavemakercredentials.pfx"/>
+        </condition>
+        <echo>footest2: ${footest2}</echo>
+        <echo>${signtool} sign /f C:/wavemakercredentials.pfx /p ${wm.signtool.pass} /sha1 ${wm.signtool.sha} /d WaveMaker Studio /du http://www.wavemaker.com /t http://timestamp.verisign.com/scripts/timstamp.dll ${installerName}</echo>
+        <!-- end debugging for signtool -->
+
+
+        <!-- This is currently failing on Hudson.  The problem seems to be
+          that the Hudson build environment is different from running locally;
+          this command words fine from a cmd shell, running as the hudson
+          user, on the machine.  A couple of ways to proceed:
+
+          - try to get a different method of spawning hudson slaves working
+            (this could all be due to Cygwin's OpenSSH).
+          - try Mono's signtool:
+            https://developer.mozilla.org/En/Signing_an_executable_with_Authenticode
+          - or just try to fix it, maybe something with the user?  When you
+            login through ssh, then environment says the USER is SYSTEM, not
+            hudson
+        -->
+        <exec executable="${signtool}" failonerror="false">
+            <arg value="sign" />
+            <arg value="/f" />
+            <arg value="C:/wavemakercredentials.pfx" />
+            <arg value="/p" />
+            <arg value="${wm.signtool.pass}" />
+            <arg value="/sha1" />
+            <arg value="${wm.signtool.sha}" />
+            <arg value="/d" />
+            <arg value="WaveMaker Studio" />
+            <arg value="/du" />
+            <arg value="http://www.wavemaker.com" />
+            <arg value="/t" />
+            <arg value="http://timestamp.verisign.com/scripts/timstamp.dll" />
+            <arg value="${installerName}" />
+        </exec>
+    </target>
+
+    <target name="build" depends="build-installer, sign-installer"/>
+
+    <target name="clean" depends="common-installer.clean">
+        <delete dir="${build.installer.dir}"/>
+    </target>
+</project>

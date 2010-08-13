@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
+<beans>
+	<bean id="mapBean1"
+			class="com.wavemaker.runtime.server.testspring.BeanMap"
+			scope="singleton">
+		<property name="mapping">
+			<map merge="true">
+				<entry key="bean1" value-ref="objectBean1" />
+			</map>
+		</property>
+	</bean>
+</beans>

@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 19, 2007 9:06:48 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.orahr.Locations" table="LOCATIONS" schema="HR">
+        <comment>Locations table that contains specific address of a specific office, warehouse, and/or production site of a company. Does not store addresses / locations of
+        customers. Contains 23 rows; references with the departments and countries tables.</comment>
+        <id name="locationId" type="short">
+            <column name="LOCATION_ID" precision="4" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="countries" class="com.wavemaker.runtime.data.sample.orahr.Countries" fetch="select">
+            <column name="COUNTRY_ID" length="2">
+                <comment>Country where an office, warehouse, or production site of a company is located. Foreign key to country_id column of the countries table.</comment>
+            </column>
+        </many-to-one>
+        <property name="streetAddress" type="string">
+            <column name="STREET_ADDRESS" length="40">
+                <comment>Street address of an office, warehouse, or production site of a company. Contains building number and street name</comment>
+            </column>
+        </property>
+        <property name="postalCode" type="string">
+            <column name="POSTAL_CODE" length="12">
+                <comment>Postal code of the location of an office, warehouse, or production site of a company.</comment>
+            </column>
+        </property>
+        <property name="city" type="string">
+            <column name="CITY" length="30" not-null="true">
+                <comment>A not null column that shows city where an office, warehouse, or production site of a company is located.</comment>
+            </column>
+        </property>
+        <property name="stateProvince" type="string">
+            <column name="STATE_PROVINCE" length="25">
+                <comment>State or Province where an office, warehouse, or production site of a company is located.</comment>
+            </column>
+        </property>
+        <set name="departmentses" inverse="true">
+            <key>
+                <column name="LOCATION_ID" precision="4" scale="0">
+                    <comment>Location id where a department is located. Foreign key to location_id column of locations table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.orahr.Departments" />
+        </set>
+    </class>
+</hibernate-mapping>

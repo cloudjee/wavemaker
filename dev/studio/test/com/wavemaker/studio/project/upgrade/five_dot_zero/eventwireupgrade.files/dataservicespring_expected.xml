@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<beans
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.springframework.org/schema/beans">
+
+    <bean 
+        lazy-init="true"
+        scope="singleton"
+        class="com.sakila.Sakila"
+        id="sakila">
+        <property name="dataServiceManager">
+            <ref bean="sakilaDataService"/>
+        </property>
+        <property name="taskManager">
+            <ref bean="sakilaTaskMgr"/>
+        </property>
+    </bean>
+
+    <bean
+        lazy-init="false"
+        scope="singleton"
+        class="com.wavemaker.runtime.service.reflect.ReflectServiceWire"
+        id="dataServiceServiceWire"
+        >
+        <property value="sakila" name="serviceId" />
+        <property ref="DataService" name="serviceType"/>
+    </bean>
+
+
+    <bean class="com.wavemaker.runtime.service.events.EventWire">
+        <property name="eventListener">
+            <bean class="com.wavemaker.runtime.data.DataServiceEventListener"/>
+        </property>
+        <property ref="dataServiceServiceWire" name="serviceWire"/>
+    </bean>
+
+</beans>

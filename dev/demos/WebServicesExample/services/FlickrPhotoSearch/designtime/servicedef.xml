@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" springFile="FlickrPhotoSearch.spring.xml" type="WebService" CRUDService="false" class="com.flickr.api.services.rest.flickrphotosearch.FlickrPhotoSearch" id="FlickrPhotoSearch">
+    <operation name="search">
+        <parameter isList="false" typeRef="java.lang.String" name="apiKey"/>
+        <parameter isList="false" typeRef="java.lang.String" name="text"/>
+        <return isList="false" typeRef="com.flickr.api.services.rest.flickrphotosearch.Rsp"/>
+    </operation>
+    <dataobjects>
+        <dataobject supportsQuickData="false" name="Rsp" javaType="com.flickr.api.services.rest.flickrphotosearch.Rsp">
+            <element allowNull="false" isList="false" typeRef="com.flickr.api.services.rest.flickrphotosearch.PhotosTypeType" name="photos"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="stat"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="PhotosTypeType" javaType="com.flickr.api.services.rest.flickrphotosearch.PhotosTypeType">
+            <element allowNull="false" isList="true" typeRef="com.flickr.api.services.rest.flickrphotosearch.PhotoTypeType" name="photos"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="page"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="pages"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="perpage"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="total"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="PhotoTypeType" javaType="com.flickr.api.services.rest.flickrphotosearch.PhotoTypeType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="value"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="id"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="owner"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="secret"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="server"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="farm"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="title"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="ispublic"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="isfriend"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="isfamily"/>
+        </dataobject>
+    </dataobjects>
+</service>

@@ -1,0 +1,557 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" type="DataService" class="com.activegrid.data.sakila.Sakila" id="sakila">
+    <operation name="insertActor">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Actor" name="actor"/>
+    </operation>
+    <operation name="getActorById">
+        <parameter isList="false" typeRef="java.lang.Short" name="id"/>
+        <return isList="false" typeRef="com.activegrid.data.sakila.Actor"/>
+    </operation>
+    <operation name="getActorList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Actor" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="true" typeRef="com.activegrid.data.sakila.Actor"/>
+    </operation>
+    <operation name="getActorCount">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Actor" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="updateActor">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Actor" name="actor"/>
+    </operation>
+    <operation name="deleteActor">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Actor" name="actor"/>
+    </operation>
+    <operation name="insertActorInfo">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.ActorInfo" name="actorInfo"/>
+    </operation>
+    <operation name="getActorInfoById">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.ActorInfoId" name="id"/>
+        <return isList="false" typeRef="com.activegrid.data.sakila.ActorInfo"/>
+    </operation>
+    <operation name="getActorInfoList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.ActorInfo" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="true" typeRef="com.activegrid.data.sakila.ActorInfo"/>
+    </operation>
+    <operation name="getActorInfoCount">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.ActorInfo" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="updateActorInfo">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.ActorInfo" name="actorInfo"/>
+    </operation>
+    <operation name="deleteActorInfo">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.ActorInfo" name="actorInfo"/>
+    </operation>
+    <operation name="insertAddress">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Address" name="address"/>
+    </operation>
+    <operation name="getAddressById">
+        <parameter isList="false" typeRef="java.lang.Short" name="id"/>
+        <return isList="false" typeRef="com.activegrid.data.sakila.Address"/>
+    </operation>
+    <operation name="getAddressList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Address" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="true" typeRef="com.activegrid.data.sakila.Address"/>
+    </operation>
+    <operation name="getAddressCount">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Address" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="updateAddress">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Address" name="address"/>
+    </operation>
+    <operation name="deleteAddress">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Address" name="address"/>
+    </operation>
+    <operation name="insertCategory">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Category" name="category"/>
+    </operation>
+    <operation name="getCategoryById">
+        <parameter isList="false" typeRef="java.lang.Byte" name="id"/>
+        <return isList="false" typeRef="com.activegrid.data.sakila.Category"/>
+    </operation>
+    <operation name="getCategoryList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Category" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="true" typeRef="com.activegrid.data.sakila.Category"/>
+    </operation>
+    <operation name="getCategoryCount">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Category" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="updateCategory">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Category" name="category"/>
+    </operation>
+    <operation name="deleteCategory">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Category" name="category"/>
+    </operation>
+    <operation name="insertCity">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.City" name="city"/>
+    </operation>
+    <operation name="getCityById">
+        <parameter isList="false" typeRef="java.lang.Short" name="id"/>
+        <return isList="false" typeRef="com.activegrid.data.sakila.City"/>
+    </operation>
+    <operation name="getCityList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.City" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="true" typeRef="com.activegrid.data.sakila.City"/>
+    </operation>
+    <operation name="getCityCount">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.City" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="updateCity">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.City" name="city"/>
+    </operation>
+    <operation name="deleteCity">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.City" name="city"/>
+    </operation>
+    <operation name="insertCountry">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Country" name="country"/>
+    </operation>
+    <operation name="getCountryById">
+        <parameter isList="false" typeRef="java.lang.Short" name="id"/>
+        <return isList="false" typeRef="com.activegrid.data.sakila.Country"/>
+    </operation>
+    <operation name="getCountryList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Country" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="true" typeRef="com.activegrid.data.sakila.Country"/>
+    </operation>
+    <operation name="getCountryCount">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Country" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="updateCountry">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Country" name="country"/>
+    </operation>
+    <operation name="deleteCountry">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Country" name="country"/>
+    </operation>
+    <operation name="insertCustomer">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Customer" name="customer"/>
+    </operation>
+    <operation name="getCustomerById">
+        <parameter isList="false" typeRef="java.lang.Short" name="id"/>
+        <return isList="false" typeRef="com.activegrid.data.sakila.Customer"/>
+    </operation>
+    <operation name="getCustomerList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Customer" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="true" typeRef="com.activegrid.data.sakila.Customer"/>
+    </operation>
+    <operation name="getCustomerCount">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Customer" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="updateCustomer">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Customer" name="customer"/>
+    </operation>
+    <operation name="deleteCustomer">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Customer" name="customer"/>
+    </operation>
+    <operation name="insertCustomerList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.CustomerList" name="customerList"/>
+    </operation>
+    <operation name="getCustomerListById">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.CustomerListId" name="id"/>
+        <return isList="false" typeRef="com.activegrid.data.sakila.CustomerList"/>
+    </operation>
+    <operation name="getCustomerListList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.CustomerList" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="true" typeRef="com.activegrid.data.sakila.CustomerList"/>
+    </operation>
+    <operation name="getCustomerListCount">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.CustomerList" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="updateCustomerList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.CustomerList" name="customerList"/>
+    </operation>
+    <operation name="deleteCustomerList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.CustomerList" name="customerList"/>
+    </operation>
+    <operation name="insertFilm">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Film" name="film"/>
+    </operation>
+    <operation name="getFilmById">
+        <parameter isList="false" typeRef="java.lang.Short" name="id"/>
+        <return isList="false" typeRef="com.activegrid.data.sakila.Film"/>
+    </operation>
+    <operation name="getFilmList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Film" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="true" typeRef="com.activegrid.data.sakila.Film"/>
+    </operation>
+    <operation name="getFilmCount">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Film" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="updateFilm">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Film" name="film"/>
+    </operation>
+    <operation name="deleteFilm">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Film" name="film"/>
+    </operation>
+    <operation name="insertFilmActor">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.FilmActor" name="filmActor"/>
+    </operation>
+    <operation name="getFilmActorById">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.FilmActorId" name="id"/>
+        <return isList="false" typeRef="com.activegrid.data.sakila.FilmActor"/>
+    </operation>
+    <operation name="getFilmActorList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.FilmActor" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="true" typeRef="com.activegrid.data.sakila.FilmActor"/>
+    </operation>
+    <operation name="getFilmActorCount">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.FilmActor" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="updateFilmActor">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.FilmActor" name="filmActor"/>
+    </operation>
+    <operation name="deleteFilmActor">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.FilmActor" name="filmActor"/>
+    </operation>
+    <operation name="insertFilmCategory">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.FilmCategory" name="filmCategory"/>
+    </operation>
+    <operation name="getFilmCategoryById">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.FilmCategoryId" name="id"/>
+        <return isList="false" typeRef="com.activegrid.data.sakila.FilmCategory"/>
+    </operation>
+    <operation name="getFilmCategoryList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.FilmCategory" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="true" typeRef="com.activegrid.data.sakila.FilmCategory"/>
+    </operation>
+    <operation name="getFilmCategoryCount">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.FilmCategory" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="updateFilmCategory">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.FilmCategory" name="filmCategory"/>
+    </operation>
+    <operation name="deleteFilmCategory">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.FilmCategory" name="filmCategory"/>
+    </operation>
+    <operation name="insertFilmList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.FilmList" name="filmList"/>
+    </operation>
+    <operation name="getFilmListById">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.FilmListId" name="id"/>
+        <return isList="false" typeRef="com.activegrid.data.sakila.FilmList"/>
+    </operation>
+    <operation name="getFilmListList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.FilmList" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="true" typeRef="com.activegrid.data.sakila.FilmList"/>
+    </operation>
+    <operation name="getFilmListCount">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.FilmList" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="updateFilmList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.FilmList" name="filmList"/>
+    </operation>
+    <operation name="deleteFilmList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.FilmList" name="filmList"/>
+    </operation>
+    <operation name="insertFilmText">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.FilmText" name="filmText"/>
+    </operation>
+    <operation name="getFilmTextById">
+        <parameter isList="false" typeRef="java.lang.Short" name="id"/>
+        <return isList="false" typeRef="com.activegrid.data.sakila.FilmText"/>
+    </operation>
+    <operation name="getFilmTextList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.FilmText" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="true" typeRef="com.activegrid.data.sakila.FilmText"/>
+    </operation>
+    <operation name="getFilmTextCount">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.FilmText" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="updateFilmText">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.FilmText" name="filmText"/>
+    </operation>
+    <operation name="deleteFilmText">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.FilmText" name="filmText"/>
+    </operation>
+    <operation name="insertInventory">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Inventory" name="inventory"/>
+    </operation>
+    <operation name="getInventoryById">
+        <parameter isList="false" typeRef="java.lang.Integer" name="id"/>
+        <return isList="false" typeRef="com.activegrid.data.sakila.Inventory"/>
+    </operation>
+    <operation name="getInventoryList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Inventory" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="true" typeRef="com.activegrid.data.sakila.Inventory"/>
+    </operation>
+    <operation name="getInventoryCount">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Inventory" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="updateInventory">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Inventory" name="inventory"/>
+    </operation>
+    <operation name="deleteInventory">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Inventory" name="inventory"/>
+    </operation>
+    <operation name="insertLanguage">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Language" name="language"/>
+    </operation>
+    <operation name="getLanguageById">
+        <parameter isList="false" typeRef="java.lang.Byte" name="id"/>
+        <return isList="false" typeRef="com.activegrid.data.sakila.Language"/>
+    </operation>
+    <operation name="getLanguageList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Language" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="true" typeRef="com.activegrid.data.sakila.Language"/>
+    </operation>
+    <operation name="getLanguageCount">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Language" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="updateLanguage">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Language" name="language"/>
+    </operation>
+    <operation name="deleteLanguage">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Language" name="language"/>
+    </operation>
+    <operation name="insertNicerButSlowerFilmList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.NicerButSlowerFilmList" name="nicerButSlowerFilmList"/>
+    </operation>
+    <operation name="getNicerButSlowerFilmListById">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.NicerButSlowerFilmListId" name="id"/>
+        <return isList="false" typeRef="com.activegrid.data.sakila.NicerButSlowerFilmList"/>
+    </operation>
+    <operation name="getNicerButSlowerFilmListList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.NicerButSlowerFilmList" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="true" typeRef="com.activegrid.data.sakila.NicerButSlowerFilmList"/>
+    </operation>
+    <operation name="getNicerButSlowerFilmListCount">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.NicerButSlowerFilmList" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="updateNicerButSlowerFilmList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.NicerButSlowerFilmList" name="nicerButSlowerFilmList"/>
+    </operation>
+    <operation name="deleteNicerButSlowerFilmList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.NicerButSlowerFilmList" name="nicerButSlowerFilmList"/>
+    </operation>
+    <operation name="insertPayment">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Payment" name="payment"/>
+    </operation>
+    <operation name="getPaymentById">
+        <parameter isList="false" typeRef="java.lang.Short" name="id"/>
+        <return isList="false" typeRef="com.activegrid.data.sakila.Payment"/>
+    </operation>
+    <operation name="getPaymentList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Payment" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="true" typeRef="com.activegrid.data.sakila.Payment"/>
+    </operation>
+    <operation name="getPaymentCount">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Payment" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="updatePayment">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Payment" name="payment"/>
+    </operation>
+    <operation name="deletePayment">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Payment" name="payment"/>
+    </operation>
+    <operation name="insertRental">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Rental" name="rental"/>
+    </operation>
+    <operation name="getRentalById">
+        <parameter isList="false" typeRef="java.lang.Integer" name="id"/>
+        <return isList="false" typeRef="com.activegrid.data.sakila.Rental"/>
+    </operation>
+    <operation name="getRentalList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Rental" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="true" typeRef="com.activegrid.data.sakila.Rental"/>
+    </operation>
+    <operation name="getRentalCount">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Rental" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="updateRental">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Rental" name="rental"/>
+    </operation>
+    <operation name="deleteRental">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Rental" name="rental"/>
+    </operation>
+    <operation name="insertSalesByFilmCategory">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.SalesByFilmCategory" name="salesByFilmCategory"/>
+    </operation>
+    <operation name="getSalesByFilmCategoryById">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.SalesByFilmCategoryId" name="id"/>
+        <return isList="false" typeRef="com.activegrid.data.sakila.SalesByFilmCategory"/>
+    </operation>
+    <operation name="getSalesByFilmCategoryList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.SalesByFilmCategory" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="true" typeRef="com.activegrid.data.sakila.SalesByFilmCategory"/>
+    </operation>
+    <operation name="getSalesByFilmCategoryCount">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.SalesByFilmCategory" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="updateSalesByFilmCategory">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.SalesByFilmCategory" name="salesByFilmCategory"/>
+    </operation>
+    <operation name="deleteSalesByFilmCategory">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.SalesByFilmCategory" name="salesByFilmCategory"/>
+    </operation>
+    <operation name="insertSalesByStore">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.SalesByStore" name="salesByStore"/>
+    </operation>
+    <operation name="getSalesByStoreById">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.SalesByStoreId" name="id"/>
+        <return isList="false" typeRef="com.activegrid.data.sakila.SalesByStore"/>
+    </operation>
+    <operation name="getSalesByStoreList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.SalesByStore" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="true" typeRef="com.activegrid.data.sakila.SalesByStore"/>
+    </operation>
+    <operation name="getSalesByStoreCount">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.SalesByStore" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="updateSalesByStore">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.SalesByStore" name="salesByStore"/>
+    </operation>
+    <operation name="deleteSalesByStore">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.SalesByStore" name="salesByStore"/>
+    </operation>
+    <operation name="insertStaff">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Staff" name="staff"/>
+    </operation>
+    <operation name="getStaffById">
+        <parameter isList="false" typeRef="java.lang.Byte" name="id"/>
+        <return isList="false" typeRef="com.activegrid.data.sakila.Staff"/>
+    </operation>
+    <operation name="getStaffList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Staff" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="true" typeRef="com.activegrid.data.sakila.Staff"/>
+    </operation>
+    <operation name="getStaffCount">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Staff" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="updateStaff">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Staff" name="staff"/>
+    </operation>
+    <operation name="deleteStaff">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Staff" name="staff"/>
+    </operation>
+    <operation name="insertStaffList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.StaffList" name="staffList"/>
+    </operation>
+    <operation name="getStaffListById">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.StaffListId" name="id"/>
+        <return isList="false" typeRef="com.activegrid.data.sakila.StaffList"/>
+    </operation>
+    <operation name="getStaffListList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.StaffList" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="true" typeRef="com.activegrid.data.sakila.StaffList"/>
+    </operation>
+    <operation name="getStaffListCount">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.StaffList" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="updateStaffList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.StaffList" name="staffList"/>
+    </operation>
+    <operation name="deleteStaffList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.StaffList" name="staffList"/>
+    </operation>
+    <operation name="insertStore">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Store" name="store"/>
+    </operation>
+    <operation name="getStoreById">
+        <parameter isList="false" typeRef="java.lang.Byte" name="id"/>
+        <return isList="false" typeRef="com.activegrid.data.sakila.Store"/>
+    </operation>
+    <operation name="getStoreList">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Store" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="true" typeRef="com.activegrid.data.sakila.Store"/>
+    </operation>
+    <operation name="getStoreCount">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Store" name="searchInstance"/>
+        <parameter isList="false" typeRef="com.wavemaker.runtime.data.QueryOptions" name="options"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="updateStore">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Store" name="store"/>
+    </operation>
+    <operation name="deleteStore">
+        <parameter isList="false" typeRef="com.activegrid.data.sakila.Store" name="store"/>
+    </operation>
+    <dataobjects>
+        <dataobject javaType="com.activegrid.data.sakila.Actor"/>
+        <dataobject javaType="com.activegrid.data.sakila.ActorInfo"/>
+        <dataobject javaType="com.activegrid.data.sakila.Address"/>
+        <dataobject javaType="com.activegrid.data.sakila.Category"/>
+        <dataobject javaType="com.activegrid.data.sakila.City"/>
+        <dataobject javaType="com.activegrid.data.sakila.Country"/>
+        <dataobject javaType="com.activegrid.data.sakila.Customer"/>
+        <dataobject javaType="com.activegrid.data.sakila.CustomerList"/>
+        <dataobject javaType="com.activegrid.data.sakila.Film"/>
+        <dataobject javaType="com.activegrid.data.sakila.FilmActor"/>
+        <dataobject javaType="com.activegrid.data.sakila.FilmCategory"/>
+        <dataobject javaType="com.activegrid.data.sakila.FilmList"/>
+        <dataobject javaType="com.activegrid.data.sakila.FilmText"/>
+        <dataobject javaType="com.activegrid.data.sakila.Inventory"/>
+        <dataobject javaType="com.activegrid.data.sakila.Language"/>
+        <dataobject javaType="com.activegrid.data.sakila.NicerButSlowerFilmList"/>
+        <dataobject javaType="com.activegrid.data.sakila.Payment"/>
+        <dataobject javaType="com.activegrid.data.sakila.Rental"/>
+        <dataobject javaType="com.activegrid.data.sakila.SalesByFilmCategory"/>
+        <dataobject javaType="com.activegrid.data.sakila.SalesByStore"/>
+        <dataobject javaType="com.activegrid.data.sakila.Staff"/>
+        <dataobject javaType="com.activegrid.data.sakila.StaffList"/>
+        <dataobject javaType="com.activegrid.data.sakila.Store"/>
+    </dataobjects>
+</service>

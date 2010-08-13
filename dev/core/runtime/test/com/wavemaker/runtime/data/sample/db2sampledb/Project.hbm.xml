@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 7, 2008 1:47:54 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.db2sampledb.Project" table="PROJECT" schema="STOENS">
+        <id name="projno" type="string">
+            <column name="PROJNO" length="6" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="project" class="com.wavemaker.runtime.data.sample.db2sampledb.Project" fetch="select">
+            <column name="MAJPROJ" length="6" />
+        </many-to-one>
+        <many-to-one name="employee" class="com.wavemaker.runtime.data.sample.db2sampledb.Employee" fetch="select">
+            <column name="RESPEMP" length="6" not-null="true" />
+        </many-to-one>
+        <many-to-one name="department" class="com.wavemaker.runtime.data.sample.db2sampledb.Department" fetch="select">
+            <column name="DEPTNO" length="3" not-null="true" />
+        </many-to-one>
+        <property name="projname" type="string">
+            <column name="PROJNAME" length="24" not-null="true" />
+        </property>
+        <property name="prstaff" type="big_decimal">
+            <column name="PRSTAFF" precision="5" />
+        </property>
+        <property name="prstdate" type="date">
+            <column name="PRSTDATE" length="10" />
+        </property>
+        <property name="prendate" type="date">
+            <column name="PRENDATE" length="10" />
+        </property>
+        <set name="projects" inverse="true">
+            <key>
+                <column name="MAJPROJ" length="6" />
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.db2sampledb.Project" />
+        </set>
+        <set name="projacts" inverse="true">
+            <key>
+                <column name="PROJNO" length="6" not-null="true" />
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.db2sampledb.Projact" />
+        </set>
+    </class>
+</hibernate-mapping>

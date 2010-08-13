@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Scroller Test</title>
+<style>
+	.wm-scrollerpage {
+		border: 2px solid orange;
+	}
+</style>
+<!-- Dojo debugging -->
+<script type="text/javascript">
+	djConfig = { isDebug: true, baseUrl: "/dojo.0.9.ssh/dojo/", XdebugNode: "footer" };
+</script>
+<script type="text/javascript" src="/dojo.0.9.ssh/dojo/_base/_loader/bootstrap.js"></script>
+<script type="text/javascript" src="/dojo.0.9.ssh/dojo/_base/_loader/loader.js"></script>
+<script type="text/javascript" src="/dojo.0.9.ssh/dojo/_base/_loader/hostenv_browser.js"></script>
+<script type="text/javascript" src="/dojo.0.9.ssh/dojo/_base/lang.js"></script>
+<script type="text/javascript" src="/dojo.0.9.ssh/dojo/_base/declare.js"></script>
+<script type="text/javascript" src="/dojo.0.9.ssh/dojo/_base/connect.js"></script>
+<script type="text/javascript" src="/dojo.0.9.ssh/dojo/_base/Deferred.js"></script>
+<script type="text/javascript" src="/dojo.0.9.ssh/dojo/_base/json.js"></script>
+<script type="text/javascript" src="/dojo.0.9.ssh/dojo/_base/array.js"></script>
+<script type="text/javascript" src="/dojo.0.9.ssh/dojo/_base/event.js"></script>
+<script type="text/javascript" src="/dojo.0.9.ssh/dojo/_base/html.js"></script>
+<script type="text/javascript" src="/dojo.0.9.ssh/dojo/_base/NodeList.js"></script>
+<script type="text/javascript" src="/dojo.0.9.ssh/dojo/_base/query.js"></script>
+<script type="text/javascript" src="/dojo.0.9.ssh/dojo/_base/xhr.js"></script>
+<script type="text/javascript" src="/dojo.0.9.ssh/dojo/_base/fx.js"></script>
+<!-- Turbo -->
+<script type="text/javascript">
+	dojo.registerModulePath("wm", "../../wm");
+</script>
+<!-- Turbo debugging -->
+<script type="text/javascript" src="/wmajax/wm/lib/scroller.js"></script>
+<script type="text/javascript">
+	renderRow = function(inRowIndex, inPageNode) {
+		var d = document.createElement("div");
+		var s = ("########" + (inRowIndex + 1).toString()).slice(-9);
+		s = [ s.slice(0, 3), s.slice(3, 6), s.slice(6, 9) ];
+		if (s[0].charAt(2)!="#") s[0] += ',';
+		if (s[1].charAt(2)!="#") s[1] += ',';
+		s = s.join('').replace(/#/g, "&nbsp;");
+		d.style.cssText = "border-bottom: 1px dotted silver; padding: 4px;";
+		d.innerHTML = s;
+		inPageNode.appendChild(d);
+	}
+	removeRow = function(inRowIndex) {
+	}
+	dojo.addOnLoad(function(){
+		s = new wm.scroller();
+		s.renderRow = renderRow;
+		//s.removeRow = removeRow;
+		s.scrollboxNode = dojo.byId("scroller");
+		s.setRowCount(2000);
+		//s.setRowCount(7.15e06);
+		s.contentNode.style.width = "100%";
+	});
+</script>
+</head>
+
+<body>
+<div id="scroller" style="font-family: 'Courier New', Courier, monospace; height: 300px; border: 1px solid yellow; overflow: auto;"></div>
+</body>
+</html>

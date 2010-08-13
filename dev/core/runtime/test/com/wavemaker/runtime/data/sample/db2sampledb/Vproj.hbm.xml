@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 7, 2008 1:47:54 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.db2sampledb.Vproj" table="VPROJ" schema="STOENS">
+        <composite-id name="id" class="com.wavemaker.runtime.data.sample.db2sampledb.VprojId">
+            <key-property name="projno" type="string">
+                <column name="PROJNO" length="6" />
+            </key-property>
+            <key-property name="projname" type="string">
+                <column name="PROJNAME" length="24" />
+            </key-property>
+            <key-property name="deptno" type="string">
+                <column name="DEPTNO" length="3" />
+            </key-property>
+            <key-property name="respemp" type="string">
+                <column name="RESPEMP" length="6" />
+            </key-property>
+            <key-property name="prstaff" type="big_decimal">
+                <column name="PRSTAFF" precision="5" />
+            </key-property>
+            <key-property name="prstdate" type="date">
+                <column name="PRSTDATE" length="10" />
+            </key-property>
+            <key-property name="prendate" type="date">
+                <column name="PRENDATE" length="10" />
+            </key-property>
+            <key-property name="majproj" type="string">
+                <column name="MAJPROJ" length="6" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

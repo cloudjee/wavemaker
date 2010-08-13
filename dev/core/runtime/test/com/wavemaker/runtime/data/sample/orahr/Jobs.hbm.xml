@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 19, 2007 9:06:48 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.orahr.Jobs" table="JOBS" schema="HR">
+        <comment>jobs table with job titles and salary ranges. Contains 19 rows. References with employees and job_history table.</comment>
+        <id name="jobId" type="string">
+            <column name="JOB_ID" length="10" />
+            <generator class="assigned" />
+        </id>
+        <property name="jobTitle" type="string">
+            <column name="JOB_TITLE" length="35" not-null="true">
+                <comment>A not null column that shows job title, e.g. AD_VP, FI_ACCOUNTANT</comment>
+            </column>
+        </property>
+        <property name="minSalary" type="java.lang.Integer">
+            <column name="MIN_SALARY" precision="6" scale="0">
+                <comment>Minimum salary for a job title.</comment>
+            </column>
+        </property>
+        <property name="maxSalary" type="java.lang.Integer">
+            <column name="MAX_SALARY" precision="6" scale="0">
+                <comment>Maximum salary for a job title</comment>
+            </column>
+        </property>
+        <set name="jobHistories" inverse="true">
+            <key>
+                <column name="JOB_ID" length="10" not-null="true">
+                    <comment>Job role in which the employee worked in the past; foreign key to job_id column in the jobs table. A not null column.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.orahr.JobHistory" />
+        </set>
+        <set name="employeeses" inverse="true">
+            <key>
+                <column name="JOB_ID" length="10" not-null="true">
+                    <comment>Current job of the employee; foreign key to job_id column of the jobs table. A not null column.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.orahr.Employees" />
+        </set>
+    </class>
+</hibernate-mapping>

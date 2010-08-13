@@ -1,0 +1,8 @@
+# imported with:
+# java -Dimportdb.schemaFilter=HR -Dimportdb.outputDir=foo -Dimportdb.serviceCl
+# ass=foo.blah.Test importdb  runtime/sakila-gensrc/oracle.properties
+
+oracle.username=hr
+oracle.password=hr
+oracle.driverClassName=oracle.jdbc.driver.OracleDriver
+oracle.connectionUrl=jdbc:oracle:thin:@192.168.2.4:1521:ORCL

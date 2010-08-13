@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<beans xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans">
+    <bean lazy-init="true" scope="singleton" class="com.wavemaker.runtime.service.RuntimeService" id="updateType_SD_sensible"/>
+    <bean lazy-init="false"scope="singleton" class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="updateType_SD_sensible" name="serviceId"/>
+        <property ref="WebService" name="serviceType"/>
+    </bean>
+    <bean lazy-init="true" class="com.wavemaker.runtime.service.events.EventWire">
+        <property name="eventListener">
+            <bean class="foo.bar.HibernateEventNotifier"/>
+        </property>
+        <property ref="updateType_SD_sensible" name="bean"/>
+    </bean>
+    <bean lazy-init="true" class="com.wavemaker.runtime.service.events.EventWire">
+        <property name="eventListener">
+            <bean class="foo.bar.OtherEventNotifier"/>
+        </property>
+        <property ref="updateType_SD_sensible" name="bean"/>
+    </bean>
+    <bean lazy-init="true" class="com.wavemaker.runtime.service.events.EventWire">
+        <property ref="updateType_SD_sensible" name="eventListener"/>
+        <property ref="updateType_SD_sensible" name="bean"/>
+    </bean>
+</beans>

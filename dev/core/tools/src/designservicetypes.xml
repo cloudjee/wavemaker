@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+DesignServiceManager bean configuration.
+
+Once modules are done, the individual service DesignServiceType beans could be moved to
+individual files, the DSM moved back to studio-managers, and this file removed.
+
+Until then, though, this lets DesignTimeUtils access all the DSM configuration.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                http://www.springframework.org/schema/aop
+                http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+    <!-- define our DesignServiceType beans -->
+    <bean class="com.wavemaker.tools.javaservice.JavaDesignServiceType"
+            scope="singleton" lazy-init="false">
+        <property name="serviceType" value="JavaService"/>
+    </bean>
+    <bean class="com.wavemaker.tools.data.DataDesignServiceType"
+            scope="singleton" lazy-init="false">
+        <property name="serviceType" value="DataService"/>
+    </bean>
+    <bean class="com.wavemaker.tools.ws.WebDesignServiceType"
+            scope="singleton" lazy-init="false">
+        <property name="serviceType" value="WebService"/>
+    </bean>
+</beans>

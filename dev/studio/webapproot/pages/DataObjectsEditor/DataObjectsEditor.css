@@ -1,0 +1,329 @@
+/*
+ *  Copyright (C) 2010 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+
+.DataObjectsEditor-editorToolbar {
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	/*padding: 2px;*/
+}
+
+#studio_dataObjectsEditorContainer_dataObjectsEditor_logoBtmHolder {
+	/*background: url(images/wmbug_bot.gif) bottom no-repeat;*/
+}
+
+/*#studio_dataObjectsEditorContainer_dataObjectsEditor_panel3 button, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel103 button {
+	border: 1px solid #586981;
+	background-image: url(images/proj_btn_bg.gif);
+	background-repeat:repeat-x;
+	color: #FFFFFF;
+	font-size: 100%;
+}
+
+#studio_dataObjectsEditorContainer_dataObjectsEditor_panel3 button:hover, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel103 button:hover {
+	border: 1px solid #586981;
+	background-image: url(images/proj_btn_bg_hover.gif);
+	background-repeat:repeat-x;
+	color: #FFFFFF;
+	font-size: 100%;
+}*/
+
+.DataObjectsEditor-toolbarspacer1, .DataObjectsEditor-toolbarspacer2, .DataObjectsEditor-toolbarspacer3, .DataObjectsEditor-toolbarspacer4 {
+	background-image:url(images/toolbarspacer.gif);
+}
+
+.DataObjectsEditor-toolbarBtnHolder button, .DataObjectsEditor-panel3 button, .DataObjectsEditor-panel103 button {
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	height: 24px;
+	text-align: center;
+}
+
+.DataObjectsEditor-toolbarBtnHolder button:hover, .DataObjectsEditor-panel3 button:hover, .DataObjectsEditor-panel103 button:hover {
+	background-image:url(images/dark_toolbar_btn_sm_on.gif);
+	background-repeat:no-repeat;
+	height: 24px;
+}
+
+.wmChangeNamePanel {
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	padding: 2px;
+	border-bottom:1px #363b44 solid;
+}
+
+.DataObjectsEditor .DataObjectsEditor-tree {
+	overflow: auto;
+}
+
+.DataObjectsEditor .DataObjectsEditor-button2 {
+	position: absolute;
+}
+
+.DataObjectsEditor .DataObjectsEditor-button3 {
+	position: absolute;
+}
+
+.DataObjectsEditor .DataObjectsEditor-formCheckbox1 {
+	position: absolute;
+}
+
+.DataObjectsEditor .DataObjectsEditor-tableDetailPanel {
+	padding: 10px;
+}
+
+.DataObjectsEditor .DataObjectsEditor-tableSettingsPanel {
+	padding: 10px;
+}
+
+.DataObjectsEditor .dojoxGrid {
+	position: relative;
+	background-color: white;
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+	-moz-outline-style: none;
+	outline: none;
+}
+
+.DataObjectsEditor .dojoxGrid table {
+	padding: 0;
+}
+
+.DataObjectsEditor .dojoxGrid td {
+	-moz-outline: none;
+}
+
+.DataObjectsEditor .dojoxGrid-master-header {
+	position: relative;
+}
+
+.DataObjectsEditor .dojoxGrid-master-view  {
+	position: relative;
+}
+
+.DataObjectsEditor .dojoxGrid-view {
+	position: absolute;
+	overflow: hidden;
+}
+
+.DataObjectsEditor .dojoxGrid-header {
+	position: absolute;
+	overflow: hidden;
+}
+
+.DataObjectsEditor .dojoxGrid-header {
+	background-color:  #e9e9e9;
+}
+
+.DataObjectsEditor .dojoxGrid-header table {
+	text-align: center;
+}
+
+.DataObjectsEditor .dojoxGrid-header .dojoxGrid-cell-content {
+	text-align: center;
+}
+
+.DataObjectsEditor .dojoxGrid-header .dojoxGrid-cell { 
+	border: 1px solid transparent;
+	border-color: white #ACA899 #919191 white;
+	background: #e9e9e9 repeat-x top;
+	padding-bottom: 2px;
+	color: #000;
+}
+
+.DataObjectsEditor .dojoxGrid-header .dojoxGrid-cell-over {
+	background: #e9e9e9 repeat-x top;
+}
+
+.DataObjectsEditor .dojoxGrid-scrollbox {
+	position: relative;
+	overflow: auto;
+	background-color: #fefefe;
+	width: 100%;
+}
+
+.DataObjectsEditor .dojoxGrid-content {
+	position: relative;
+	overflow: hidden;
+	 -moz-outline-style: none;
+	outline: none;
+}
+
+.DataObjectsEditor .dojoxGrid-rowbar { 
+	border: none;
+	background: #e9e9e9 repeat-y right;
+	border-right: 1px solid #cccccc;
+	padding: 0px;
+}
+
+.DataObjectsEditor .dojoxGrid-rowbar-inner {
+	border: none;
+	border-bottom: 1px solid #cccccc;
+}
+
+.DataObjectsEditor .dojoxGrid-rowbar-over {
+	background: #e9e9e9 repeat-y right;
+}
+
+.DataObjectsEditor .dojoxGrid-rowbar-selected {
+	background-color: #D9E8F9;
+	background-image: none;
+	background: #dddddd repeat-x top;
+	border-right: 1px solid #cccccc;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+.DataObjectsEditor .dojoxGrid-row {
+	position: relative;
+	width: 9000em;
+}
+
+.DataObjectsEditor .dojoxGrid-row {
+	border: none;
+	border-left: none;
+	border-right: none;
+	background-color: white;
+	border-top: none;
+}
+
+.DataObjectsEditor .dojoxGrid-row-over {
+	border-top-color: #cccccc;
+	border-bottom-color: #cccccc;
+}
+
+.DataObjectsEditor .dojoxGrid-row-over .dojoxGrid-cell {
+	/*background: #e9e9e9 repeat-x top;*/
+}
+
+.DataObjectsEditor .dojoxGrid-row-odd {
+	background-color: #f2f5f9;
+}
+
+.DataObjectsEditor .dojoxGrid-row-selected {
+	background-color: #D9E8F9;
+}
+
+.DataObjectsEditor .dojoxGrid-row-table {
+	table-layout: fixed;
+	width: 0;
+}
+
+.DataObjectsEditor .dojoxGrid-invisible {
+	visibility: hidden;
+}		
+
+.DataObjectsEditor .Xdojo-ie .dojoxGrid-invisible {
+	display: none;
+}		
+
+.DataObjectsEditor .dojoxGrid-invisible td, .dojoxGrid-header .dojoxGrid-invisible td {
+	border-top-width: 0;
+	border-bottom-width: 0;
+	padding-top: 0;
+	padding-bottom: 0;
+	height: 0;
+	overflow: hidden;
+}
+
+.DataObjectsEditor .dojoxGrid-cell {
+	border: 1px solid transparent;
+	border-right: 1px solid #D5CDB5;
+	border-bottom: 1px solid #e6e6e6;
+	padding: 3px 3px 3px 3px;
+	text-align: left;
+	overflow: hidden;
+}
+
+.dj_ie6 .DataObjectsEditor .dojoxGrid-cell {
+	border: 1px solid white;
+	border-right: 1px solid #D5CDB5;
+}
+
+.DataObjectsEditor .dojoxGrid-cell-focus {
+	border: 1px dotted #a6a6a6;
+}
+
+.DataObjectsEditor .dojoxGrid-cell-over {
+	border: 1px dotted #a6a6a6;
+}
+
+.DataObjectsEditor .dojoxGrid-cell-focus.dojoxGrid-cell-over {
+	border: 1px dotted #595959;
+}
+
+.DataObjectsEditor .dojoxGrid-cell-clip {
+	width: 100%;
+	overflow: hidden;
+	white-space:nowrap;
+	text-overflow: ellipsis;
+}
+
+.DataObjectsEditor .dojoxGrid-row-editing td {
+	background: #D9E8F9 repeat-x bottom;
+}
+
+.DataObjectsEditor .dojoxGrid-row-inserting td {
+	background-color: #F4FFF4;
+}
+.DataObjectsEditor .dojoxGrid-row-inflight td {
+	background-color: #F2F7B7;
+}
+.DataObjectsEditor .dojoxGrid-row-error td {
+	background-color: #F8B8B6;
+}
+
+.DataObjectsEditor .dojoxGrid-input,
+.DataObjectsEditor .dojoxGrid-select,
+.DataObjectsEditor .dojoxGrid-textarea {
+	margin: 0;
+	padding: 0px;
+	border-style: none;
+	width: 100%;
+	font-size: 100%;
+	font-family: inherit;
+}
+
+#studio_dataObjectsEditorContainer_dataObjectsEditor_importPage input, #studio_dataObjectsEditorContainer_dataObjectsEditor_dbdropdown, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel100 input {
+	font-size: 100%;
+}
+
+#studio_dataObjectsEditorContainer_dataObjectsEditor_panel5 {
+	padding: 4px;
+	background-image:url(images/editor_toolbar_bg.gif);
+	background-repeat:repeat-x;
+}
+
+#studio_dataObjectsEditorContainer_dataObjectsEditor_panel501, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel601, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel602, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel6,  #studio_dataObjectsEditorContainer_dataObjectsEditor_panel603, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel701, #studio_dataObjectsEditorContainer_dataObjectsEditor_extra2Panel, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel110, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel19, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel18, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel1801, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel20, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel201, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel202, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel101, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel102, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel103, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel104, #studio_dataObjectsEditorContainer_dataObjectsEditor_conpanel501, #studio_dataObjectsEditorContainer_dataObjectsEditor_conpanel601, #studio_dataObjectsEditorContainer_dataObjectsEditor_conpanel602, #studio_dataObjectsEditorContainer_dataObjectsEditor_conpanel701, #studio_dataObjectsEditorContainer_dataObjectsEditor_conextra2Panel, #studio_dataObjectsEditorContainer_dataObjectsEditor_conpanel1801, #studio_dataObjectsEditorContainer_dataObjectsEditor_conpanel1802, #studio_dataObjectsEditorContainer_dataObjectsEditor_conpanel20, #studio_dataObjectsEditorContainer_dataObjectsEditor_conpanel201, #studio_dataObjectsEditorContainer_dataObjectsEditor_conpanel202 {
+	padding: 3px;
+}
+
+#studio_dataObjectsEditorContainer_dataObjectsEditor_layer1, #studio_dataObjectsEditorContainer_dataObjectsEditor_layer2 {
+	background-color: #FFFFFF;
+}
+
+#studio_dataObjectsEditorContainer_dataObjectsEditor_importPage {
+	background-color: #ebebeb;
+}
+
+#studio_dataObjectsEditorContainer_dataObjectsEditor_panel3, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel103 {
+	padding: 10px;
+}
+
+#studio_dataObjectsEditorContainer_dataObjectsEditor_inlineHelpText {
+	overflow:auto;
+}

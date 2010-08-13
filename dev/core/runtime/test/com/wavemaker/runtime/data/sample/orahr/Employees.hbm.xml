@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 19, 2007 9:06:48 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.orahr.Employees" table="EMPLOYEES" schema="HR">
+        <comment>employees table. Contains 107 rows. References with departments, jobs, job_history tables. Contains a self reference.</comment>
+        <id name="employeeId" type="int">
+            <column name="EMPLOYEE_ID" precision="6" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="departments" class="com.wavemaker.runtime.data.sample.orahr.Departments" fetch="select">
+            <column name="DEPARTMENT_ID" precision="4" scale="0">
+                <comment>Department id where employee works; foreign key to department_id column of the departments table</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="employees" class="com.wavemaker.runtime.data.sample.orahr.Employees" fetch="select">
+            <column name="MANAGER_ID" precision="6" scale="0">
+                <comment>Manager id of the employee; has same domain as manager_id in departments table. Foreign key to employee_id column of employees table. (useful for
+                reflexive joins and CONNECT BY query)</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="jobs" class="com.wavemaker.runtime.data.sample.orahr.Jobs" fetch="select">
+            <column name="JOB_ID" length="10" not-null="true">
+                <comment>Current job of the employee; foreign key to job_id column of the jobs table. A not null column.</comment>
+            </column>
+        </many-to-one>
+        <property name="firstName" type="string">
+            <column name="FIRST_NAME" length="20">
+                <comment>First name of the employee. A not null column.</comment>
+            </column>
+        </property>
+        <property name="lastName" type="string">
+            <column name="LAST_NAME" length="25" not-null="true">
+                <comment>Last name of the employee. A not null column.</comment>
+            </column>
+        </property>
+        <property name="email" type="string">
+            <column name="EMAIL" length="25" not-null="true" unique="true">
+                <comment>Email id of the employee</comment>
+            </column>
+        </property>
+        <property name="phoneNumber" type="string">
+            <column name="PHONE_NUMBER" length="20">
+                <comment>Phone number of the employee; includes country code and area code</comment>
+            </column>
+        </property>
+        <property name="hireDate" type="date">
+            <column name="HIRE_DATE" length="7" not-null="true">
+                <comment>Date when the employee started on this job. A not null column.</comment>
+            </column>
+        </property>
+        <property name="salary" type="big_decimal">
+            <column name="SALARY" precision="8">
+                <comment>Monthly salary of the employee. Must be greater than zero (enforced by constraint emp_salary_min)</comment>
+            </column>
+        </property>
+        <property name="commissionPct" type="big_decimal">
+            <column name="COMMISSION_PCT" precision="2">
+                <comment>Commission percentage of the employee; Only employees in sales department elgible for commission percentage</comment>
+            </column>
+        </property>
+        <set name="jobHistories" inverse="true">
+            <key>
+                <column name="EMPLOYEE_ID" precision="6" scale="0" not-null="true">
+                    <comment>A not null column in the complex primary key employee_id+start_date. Foreign key to employee_id column of the employee table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.orahr.JobHistory" />
+        </set>
+        <set name="employeeses" inverse="true">
+            <key>
+                <column name="MANAGER_ID" precision="6" scale="0">
+                    <comment>Manager id of the employee; has same domain as manager_id in departments table. Foreign key to employee_id column of employees table. (useful for
+                    reflexive joins and CONNECT BY query)</comment>
+                </column>
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.orahr.Employees" />
+        </set>
+        <set name="departmentses" inverse="true">
+            <key>
+                <column name="MANAGER_ID" precision="6" scale="0">
+                    <comment>Manager_id of a department. Foreign key to employee_id column of employees table. The manager_id column of the employee table references this
+                    column.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.orahr.Departments" />
+        </set>
+    </class>
+</hibernate-mapping>

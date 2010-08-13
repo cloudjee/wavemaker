@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 7, 2008 1:47:54 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.db2sampledb.Vphone" table="VPHONE" schema="STOENS">
+        <composite-id name="id" class="com.wavemaker.runtime.data.sample.db2sampledb.VphoneId">
+            <key-property name="lastname" type="string">
+                <column name="LASTNAME" length="15" />
+            </key-property>
+            <key-property name="firstname" type="string">
+                <column name="FIRSTNAME" length="12" />
+            </key-property>
+            <key-property name="middleinitial" type="java.lang.Character">
+                <column name="MIDDLEINITIAL" length="1" />
+            </key-property>
+            <key-property name="phonenumber" type="string">
+                <column name="PHONENUMBER" length="4" />
+            </key-property>
+            <key-property name="employeenumber" type="string">
+                <column name="EMPLOYEENUMBER" length="6" />
+            </key-property>
+            <key-property name="deptnumber" type="string">
+                <column name="DEPTNUMBER" length="3" />
+            </key-property>
+            <key-property name="deptname" type="string">
+                <column name="DEPTNAME" length="36" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

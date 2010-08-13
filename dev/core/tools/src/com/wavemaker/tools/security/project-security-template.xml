@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+    <bean id="filterChainProxy"
+        class="org.acegisecurity.util.FilterChainProxy">
+        <property name="filterInvocationDefinitionSource">
+            <value>
+                CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
+                PATTERN_TYPE_APACHE_ANT
+                /**=httpSessionContextIntegrationFilter,logoutFilter,formAuthenticationProcessingFilter,anonymousProcessingFilter,jsonExceptionTranslationFilter,filterSecurityInterceptor
+            </value>
+        </property>
+    </bean>
+
+    <!-- Maintains the Authentication object between various requests and passes
+     it around to the AuthenticationManager and the AccessDecisionManager when needed -->
+    <bean id="httpSessionContextIntegrationFilter"
+        class="com.wavemaker.runtime.security.WMHttpSessionContextIntegrationFilter">
+    </bean>
+    
+    <!-- Handles the logout request. -->
+    <bean id="logoutFilter" class="com.wavemaker.runtime.security.WMAcegiAjaxLogoutFilter">
+        <constructor-arg value="/index.html" />
+        <constructor-arg>
+            <list>
+                <bean class="org.acegisecurity.ui.logout.SecurityContextLogoutHandler" />
+            </list>
+        </constructor-arg>
+        <property name="filterProcessesUrl" value="/j_acegi_logout" />
+    </bean>
+
+    <!-- Handles the authentication request check. It uses the
+     AuthenticationManager to do its work. -->
+    <bean id="formAuthenticationProcessingFilter"
+        class="com.wavemaker.runtime.security.WMAuthenticationProcessingFilter">
+        <property name="filterProcessesUrl">
+            <value>/j_acegi_security_check</value>
+        </property>
+        <property name="authenticationFailureUrl">
+            <value>/login.html?login_error=1</value>
+        </property>
+        <property name="defaultTargetUrl">
+            <value>/</value>
+        </property>
+        <property name="authenticationManager">
+            <ref bean="authenticationManager" />
+        </property>
+    </bean>
+    
+    <!-- Handles security exceptions and takes the appropriate action. -->
+    <bean id="jsonExceptionTranslationFilter"
+        class="com.wavemaker.runtime.security.WMExceptionTranslationFilter">
+        <property name="authenticationEntryPoint">
+            <ref bean="formLoginAuthenticationEntryPoint" />
+        </property>
+    </bean>
+    
+    <bean id="formLoginAuthenticationEntryPoint"
+        class="com.wavemaker.runtime.security.AuthenticationProcessingFilterEntryPoint">
+        <property name="loginFormUrl">
+            <value>/login.html</value>
+        </property>
+        <property name="forceHttps">
+            <value>false</value>
+        </property>
+    </bean>
+
+    <bean id="anonymousProcessingFilter" class="com.wavemaker.runtime.security.WMAnonymousProcessingFilter">
+        <property name="key"><value>sharedsecret</value></property>
+        <property name="userAttribute"><value>anonymousUser,ROLE_ANONYMOUS</value></property>
+    </bean>
+    <bean id="anonymousAuthenticationProvider" class="org.acegisecurity.providers.anonymous.AnonymousAuthenticationProvider">
+        <property name="key"><value>sharedsecret</value></property>
+    </bean>
+
+    <!-- Manages the restricted acces check and the authorization check. It knows 
+     which resources are secure and which roles have access to them. 
+     FilterSecurityInterceptor uses the AuthenticationManager and 
+     AccessDecisionManager to do its work. -->
+    <bean id="filterSecurityInterceptor"
+        class="com.wavemaker.runtime.security.WMFilterSecurityInterceptor">
+        <property name="authenticationManager">
+            <ref bean="authenticationManager" />
+        </property>
+        <property name="accessDecisionManager">
+            <ref bean="accessDecisionManager" />
+        </property>
+        <property name="objectDefinitionSource">
+            <value>
+                CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
+                PATTERN_TYPE_APACHE_ANT
+            </value>
+        </property>
+    </bean>
+    
+    <bean id="authenticationManager"
+        class="org.acegisecurity.providers.ProviderManager">
+        <property name="providers">
+            <list>
+                <ref bean="daoAuthenticationProvider" />
+                <ref bean="anonymousAuthenticationProvider"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="daoAuthenticationProvider"
+        class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
+        <property name="userDetailsService">
+            <ref bean="inMemoryDaoImpl" />
+        </property>
+    </bean>
+
+    <!-- Authentication using In-memory Dao -->
+    <bean id="inMemoryDaoImpl"
+        class="org.acegisecurity.userdetails.memory.InMemoryDaoImpl">
+        <property name="userMap">
+            <value>
+                demo=demo,ROLE_DEFAULT_NO_ROLES
+            </value>
+        </property>
+    </bean>
+    
+    <!-- Authentication using JDBC Dao -->
+    <bean id="jdbcDaoImpl"
+        class="com.wavemaker.runtime.security.EnhancedJdbcDaoImpl">
+        <property name="dataSource"><ref bean="jdbcDataSource"/></property>
+        <property name="usersByUsernameQuery">
+            <value>SELECT first_name, last_name, 1 FROM employee WHERE first_name = ?</value>
+        </property>
+        <property name="authoritiesByUsernameQuery">
+            <value>SELECT first_name, "DEFAULT_NO_ROLES" FROM employee WHERE first_name = ?</value>
+        </property>
+        <property name="rolePrefix">
+            <value>ROLE_</value>
+        </property>
+        <property name="usernameBasedPrimaryKey">
+            <value>true</value>
+        </property>
+    </bean>
+
+    <bean id="jdbcDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    </bean>
+
+    <!-- Authentication using LDAP provider -->
+    <bean id="ldapAuthProvider" class="org.acegisecurity.providers.ldap.LdapAuthenticationProvider">
+      <constructor-arg>
+        <bean class="org.acegisecurity.providers.ldap.authenticator.BindAuthenticator">
+          <constructor-arg><ref local="initialDirContextFactory"/></constructor-arg>
+          <property name="userDnPatterns"><list><value>cn={0},ou=people</value></list></property>
+        </bean>
+      </constructor-arg>
+      <constructor-arg>
+        <bean class="com.wavemaker.runtime.security.LdapAuthoritiesPopulator">
+          <constructor-arg><ref local="initialDirContextFactory"/></constructor-arg>
+          <constructor-arg><value>ou=groups</value></constructor-arg>
+          <property name="groupSearchDisabled"><value>false</value></property>
+          <property name="groupRoleAttribute"><value>cn</value></property>
+          <property name="groupSearchFilter"><value>(member={0})</value></property>
+          <property name="defaultRole"><value>ROLE_DEFAULT_NO_ROLES</value></property>
+          <property name="rolePrefix"><value>ROLE_</value></property>
+          <property name="convertToUpperCase"><value>false</value></property>
+        </bean>
+      </constructor-arg>
+    </bean>
+
+    <bean id="initialDirContextFactory" class="com.wavemaker.runtime.security.PWEncryptedInitialDirContextFactory">
+      <constructor-arg value="ldap://localhost:389/dc=wavemaker,dc=com"/>
+    </bean>
+
+    <bean class="org.acegisecurity.vote.AffirmativeBased" id="accessDecisionManager">
+        <property name="allowIfAllAbstainDecisions"><value>false</value></property>
+        <property name="decisionVoters">
+            <list>
+                <bean class="org.acegisecurity.vote.RoleVoter"/>
+                <bean class="org.acegisecurity.vote.AuthenticatedVoter"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="roleVoter" class="org.acegisecurity.vote.RoleVoter">
+        <property name="rolePrefix">
+            <value>ROLE_</value>
+        </property>
+    </bean>
+    
+    <!--  MethodInvocation Security Interceptor -->
+    <bean id="autoProxyCreator" class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+        <property name="proxyTargetClass">
+            <value>true</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>securityInterceptor</value>
+            </list>
+        </property>
+    </bean>
+    <bean class="org.acegisecurity.intercept.method.aopalliance.MethodSecurityInterceptor" id="securityInterceptor">
+        <property ref="authenticationManager" name="authenticationManager"/>
+        <property ref="accessDecisionManager" name="accessDecisionManager"/>
+        <property name="objectDefinitionSource">
+            <value>
+            </value>
+        </property>
+    </bean>
+    
+    <!-- Setup Security Service -->
+    <bean id="securityService"
+        class="com.wavemaker.runtime.security.SecurityService"
+        scope="singleton">
+        <!-- SecurityService provides interface to perform operations such as 
+         simple username/password authentication. The AuthenticationManager
+         specified here would be used to perform such operation. -->
+        <property name="authenticationManager">
+            <ref bean="authenticationManager" />
+        </property>
+        <property name="rolePrefix">
+            <value>ROLE_</value>
+        </property>
+        <property name="noRolesMarkerRole">
+            <value>DEFAULT_NO_ROLES</value>
+        </property>
+        <!-- All the roles used in the system should be listed here. -->
+        <property name="roles">
+            <list>
+            </list>
+        </property>
+    </bean>
+</beans>

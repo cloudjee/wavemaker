@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<beans xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans">
+    <bean id="studioService"
+        class="com.wavemaker.studio.StudioService"
+        scope="singleton"
+        lazy-init="true">
+        <property name="runtimeAccess">
+            <ref bean="runtimeAccess" />
+        </property>
+        <property name="projectManager">
+            <ref bean="projectManager" />
+        </property>
+        <property name="deploymentManager">
+            <ref bean="deploymentManager" />
+        </property>
+        <property name="studioConfiguration">
+            <ref bean="studioConfiguration"/>
+        </property>
+        <property name="upgradeManager">
+            <ref bean="upgradeManager"/>
+        </property>
+    </bean>
+
+    <bean lazy-init="false"
+            scope="singleton"
+            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="studioService" name="serviceId"/>
+        <property name="serviceType" ref="JavaService"/>
+    </bean>
+</beans>

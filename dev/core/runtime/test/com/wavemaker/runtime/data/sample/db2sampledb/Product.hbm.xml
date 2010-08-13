@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 7, 2008 1:47:54 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.db2sampledb.Product" table="PRODUCT" schema="STOENS">
+        <id name="pid" type="string">
+            <column name="PID" length="10" />
+            <generator class="assigned" />
+        </id>
+        <property name="name" type="string">
+            <column name="NAME" length="128" />
+        </property>
+        <property name="price" type="big_decimal">
+            <column name="PRICE" precision="30" />
+        </property>
+        <property name="promoprice" type="big_decimal">
+            <column name="PROMOPRICE" precision="30" />
+        </property>
+        <property name="promostart" type="date">
+            <column name="PROMOSTART" length="10" />
+        </property>
+        <property name="promoend" type="date">
+            <column name="PROMOEND" length="10" />
+        </property>
+        <property name="description" type="serializable">
+            <column name="DESCRIPTION" />
+        </property>
+    </class>
+</hibernate-mapping>

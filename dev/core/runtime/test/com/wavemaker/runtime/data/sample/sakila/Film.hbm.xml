@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 5, 2007 6:21:51 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.sakila.Film" table="film" catalog="sakila">
+        <comment></comment>
+        <id name="filmId" type="java.lang.Short">
+            <column name="film_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="languageByOriginalLanguageId" class="com.wavemaker.runtime.data.sample.sakila.Language" fetch="select">
+            <column name="original_language_id">
+                <comment></comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="languageByLanguageId" class="com.wavemaker.runtime.data.sample.sakila.Language" fetch="select">
+            <column name="language_id" not-null="true">
+                <comment></comment>
+            </column>
+        </many-to-one>
+        <property name="title" type="string">
+            <column name="title" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="description" type="string">
+            <column name="description" length="65535" sql-type="blob">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="releaseYear" type="date">
+            <column name="release_year" length="4">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="rentalDuration" type="byte">
+            <column name="rental_duration" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="rentalRate" type="big_decimal">
+            <column name="rental_rate" precision="4" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="length" type="java.lang.Short">
+            <column name="length">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="replacementCost" type="big_decimal">
+            <column name="replacement_cost" precision="5" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="rating" type="string">
+            <column name="rating" length="5">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="specialFeatures" type="string">
+            <column name="special_features" length="17">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="lastUpdate" type="timestamp">
+            <column name="last_update" length="19" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+        <set name="filmCategories" inverse="true">
+            <key>
+                <column name="film_id" not-null="true">
+                    <comment></comment>
+                </column>
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.sakila.FilmCategory" />
+        </set>
+        <set name="inventories" inverse="true">
+            <key>
+                <column name="film_id" not-null="true">
+                    <comment></comment>
+                </column>
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.sakila.Inventory" />
+        </set>
+        <set name="filmActors" inverse="true">
+            <key>
+                <column name="film_id" not-null="true">
+                    <comment></comment>
+                </column>
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.sakila.FilmActor" />
+        </set>
+    </class>
+</hibernate-mapping>

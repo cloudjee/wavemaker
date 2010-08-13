@@ -1,0 +1,651 @@
+// !$*UTF8*$!
+{
+	089C165DFE840E0CC02AAC07 /* English */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {421, 50}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 45}";
+		};
+	};
+	29B97313FDCFA39411CA2CEA /* Project object */ = {
+		activeBuildConfigurationName = Release;
+		activeExecutable = 5078810B0DBE74FC00D1F75B /* WaveMaker */;
+		activeTarget = 8D1107260486CEB800E47090 /* WaveMaker */;
+		addToTargets = (
+			8D1107260486CEB800E47090 /* WaveMaker */,
+		);
+		breakpoints = (
+		);
+		codeSenseManager = 507881180DBE752100D1F75B /* Code sense */;
+		executables = (
+			5078810B0DBE74FC00D1F75B /* WaveMaker */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					243,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					203,
+					60,
+					20,
+					48,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 239319010;
+			PBXWorkspaceStateSaveDate = 239319010;
+		};
+		perUserProjectItems = {
+			500E082B0DD3B4BB00CED35A = 500E082B0DD3B4BB00CED35A /* PBXTextBookmark */;
+			500E082C0DD3B4BB00CED35A = 500E082C0DD3B4BB00CED35A /* PBXTextBookmark */;
+			500E082D0DD3B4BB00CED35A = 500E082D0DD3B4BB00CED35A /* PBXTextBookmark */;
+			5074CEE10DC7B759005E5F56 = 5074CEE10DC7B759005E5F56 /* PBXTextBookmark */;
+			5074CEF40DC7B9D0005E5F56 = 5074CEF40DC7B9D0005E5F56 /* PBXTextBookmark */;
+			5074CEF60DC7B9D0005E5F56 = 5074CEF60DC7B9D0005E5F56 /* PBXTextBookmark */;
+			5074CF140DC7BC5E005E5F56 = 5074CF140DC7BC5E005E5F56 /* PBXBookmark */;
+			5074CF150DC7BC5E005E5F56 = 5074CF150DC7BC5E005E5F56 /* PBXBookmark */;
+			5074D0B10DCA3635005E5F56 = 5074D0B10DCA3635005E5F56 /* PBXTextBookmark */;
+			5074D0B20DCA3635005E5F56 = 5074D0B20DCA3635005E5F56 /* PBXTextBookmark */;
+			5074D0B30DCA3635005E5F56 = 5074D0B30DCA3635005E5F56 /* PBXTextBookmark */;
+			50984E7D0DE6082300D4C68F = 50984E7D0DE6082300D4C68F /* PBXTextBookmark */;
+			50984E800DE6082300D4C68F = 50984E800DE6082300D4C68F /* PBXTextBookmark */;
+			50984E810DE6082300D4C68F = 50984E810DE6082300D4C68F /* PBXTextBookmark */;
+			50984E8A0DE6085B00D4C68F = 50984E8A0DE6085B00D4C68F /* PBXTextBookmark */;
+			50984E8B0DE6085B00D4C68F = 50984E8B0DE6085B00D4C68F /* PBXTextBookmark */;
+			50984E8C0DE6085B00D4C68F = 50984E8C0DE6085B00D4C68F /* PBXTextBookmark */;
+			50984E8F0DE63D3800D4C68F = 50984E8F0DE63D3800D4C68F /* PBXTextBookmark */;
+			50984E900DE63D3800D4C68F = 50984E900DE63D3800D4C68F /* PBXTextBookmark */;
+			50984E930DE63D3800D4C68F = 50984E930DE63D3800D4C68F /* PBXTextBookmark */;
+			50984E950DE63D3800D4C68F = 50984E950DE63D3800D4C68F /* PBXTextBookmark */;
+			50984E970DE63D3800D4C68F = 50984E970DE63D3800D4C68F /* PBXTextBookmark */;
+			50BBBFCE0E100595001F1A46 = 50BBBFCE0E100595001F1A46 /* PBXTextBookmark */;
+			50BBBFD10E100595001F1A46 = 50BBBFD10E100595001F1A46 /* PBXTextBookmark */;
+			50BBBFD20E100595001F1A46 = 50BBBFD20E100595001F1A46 /* PBXTextBookmark */;
+			50BBBFD40E101114001F1A46 = 50BBBFD40E101114001F1A46 /* PBXTextBookmark */;
+			50BBBFD50E101114001F1A46 = 50BBBFD50E101114001F1A46 /* PBXTextBookmark */;
+			50BBBFD60E101114001F1A46 = 50BBBFD60E101114001F1A46 /* PBXTextBookmark */;
+			50DF75000E143E7200EC03E9 = 50DF75000E143E7200EC03E9 /* PBXTextBookmark */;
+			50DF75030E143E7200EC03E9 = 50DF75030E143E7200EC03E9 /* PBXTextBookmark */;
+			50DF75040E143E7200EC03E9 = 50DF75040E143E7200EC03E9 /* PBXTextBookmark */;
+			50DF75060E143ECF00EC03E9 = 50DF75060E143ECF00EC03E9 /* PBXTextBookmark */;
+			50DF75070E143ECF00EC03E9 = 50DF75070E143ECF00EC03E9 /* PBXTextBookmark */;
+			50DF75080E143ECF00EC03E9 = 50DF75080E143ECF00EC03E9 /* PBXTextBookmark */;
+			50DF75090E143EF600EC03E9 = 50DF75090E143EF600EC03E9 /* PBXTextBookmark */;
+			50DF750A0E143EF600EC03E9 = 50DF750A0E143EF600EC03E9 /* PBXTextBookmark */;
+			50DF750B0E143EF600EC03E9 = 50DF750B0E143EF600EC03E9 /* PBXTextBookmark */;
+			50DF750C0E143F0500EC03E9 = 50DF750C0E143F0500EC03E9 /* PBXTextBookmark */;
+			50DF750D0E143F0500EC03E9 = 50DF750D0E143F0500EC03E9 /* PBXTextBookmark */;
+			50DF750E0E143F0500EC03E9 = 50DF750E0E143F0500EC03E9 /* PBXTextBookmark */;
+			50EA16320DE1ED9F00F89E18 = 50EA16320DE1ED9F00F89E18 /* PBXTextBookmark */;
+			50EA16350DE1ED9F00F89E18 = 50EA16350DE1ED9F00F89E18 /* PBXTextBookmark */;
+			50EA16360DE1ED9F00F89E18 = 50EA16360DE1ED9F00F89E18 /* PBXTextBookmark */;
+			50EA16400DE1EDE000F89E18 = 50EA16400DE1EDE000F89E18 /* PBXTextBookmark */;
+			50EA16410DE1EDE000F89E18 = 50EA16410DE1EDE000F89E18 /* PBXTextBookmark */;
+			50EA16420DE1EDE000F89E18 = 50EA16420DE1EDE000F89E18 /* PBXTextBookmark */;
+		};
+		sourceControlManager = 507881170DBE752100D1F75B /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	500E082B0DD3B4BB00CED35A /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 50";
+		rLen = 0;
+		rLoc = 751;
+		rType = 0;
+		vrLen = 215;
+		vrLoc = 2680;
+	};
+	500E082C0DD3B4BB00CED35A /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 39";
+		rLen = 0;
+		rLoc = 751;
+		rType = 0;
+		vrLen = 2705;
+		vrLoc = 0;
+	};
+	500E082D0DD3B4BB00CED35A /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C20DBE75CD003C82CC /* WaveMakerController.h */;
+		name = "WaveMakerController.h: 8";
+		rLen = 0;
+		rLoc = 227;
+		rType = 0;
+		vrLen = 426;
+		vrLoc = 0;
+	};
+	5074CEE10DC7B759005E5F56 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 12";
+		rLen = 0;
+		rLoc = 751;
+		rType = 0;
+		vrLen = 186;
+		vrLoc = 69;
+	};
+	5074CEF40DC7B9D0005E5F56 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 089C165DFE840E0CC02AAC07 /* English */;
+		name = "InfoPlist.strings: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 45;
+		vrLoc = 0;
+	};
+	5074CEF60DC7B9D0005E5F56 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 089C165DFE840E0CC02AAC07 /* English */;
+		name = "InfoPlist.strings: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 45;
+		vrLoc = 0;
+	};
+	5074CF140DC7BC5E005E5F56 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 50BAE6010DBE8E23003C82CC /* startWM.png */;
+	};
+	5074CF150DC7BC5E005E5F56 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 50BAE6010DBE8E23003C82CC /* startWM.png */;
+	};
+	5074D0B10DCA3635005E5F56 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 50";
+		rLen = 0;
+		rLoc = 751;
+		rType = 0;
+		vrLen = 219;
+		vrLoc = 2841;
+	};
+	5074D0B20DCA3635005E5F56 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 20";
+		rLen = 0;
+		rLoc = 724;
+		rType = 0;
+		vrLen = 2577;
+		vrLoc = 0;
+	};
+	5074D0B30DCA3635005E5F56 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C20DBE75CD003C82CC /* WaveMakerController.h */;
+		name = "WaveMakerController.h: 8";
+		rLen = 0;
+		rLoc = 227;
+		rType = 0;
+		vrLen = 426;
+		vrLoc = 0;
+	};
+	5078810B0DBE74FC00D1F75B /* WaveMaker */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 0;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = WaveMaker;
+		savedGlobals = {
+		};
+		sourceDirectories = (
+		);
+	};
+	507881170DBE752100D1F75B /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+		};
+	};
+	507881180DBE752100D1F75B /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	50984E7D0DE6082300D4C68F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 128";
+		rLen = 0;
+		rLoc = 4892;
+		rType = 0;
+		vrLen = 206;
+		vrLoc = 3759;
+	};
+	50984E800DE6082300D4C68F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 2794;
+		vrLoc = 0;
+	};
+	50984E810DE6082300D4C68F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C20DBE75CD003C82CC /* WaveMakerController.h */;
+		name = "WaveMakerController.h: 8";
+		rLen = 0;
+		rLoc = 227;
+		rType = 0;
+		vrLen = 426;
+		vrLoc = 0;
+	};
+	50984E8A0DE6085B00D4C68F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 128";
+		rLen = 0;
+		rLoc = 4892;
+		rType = 0;
+		vrLen = 169;
+		vrLoc = 3759;
+	};
+	50984E8B0DE6085B00D4C68F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 2749;
+		vrLoc = 0;
+	};
+	50984E8C0DE6085B00D4C68F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C20DBE75CD003C82CC /* WaveMakerController.h */;
+		name = "WaveMakerController.h: 8";
+		rLen = 0;
+		rLoc = 227;
+		rType = 0;
+		vrLen = 426;
+		vrLoc = 0;
+	};
+	50984E8F0DE63D3800D4C68F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 140";
+		rLen = 0;
+		rLoc = 4892;
+		rType = 0;
+		vrLen = 234;
+		vrLoc = 3908;
+	};
+	50984E900DE63D3800D4C68F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 139";
+		rLen = 0;
+		rLoc = 4891;
+		rType = 0;
+		vrLen = 2746;
+		vrLoc = 0;
+	};
+	50984E930DE63D3800D4C68F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50984E940DE63D3800D4C68F /* WaveMakerController.m */;
+		rLen = 0;
+		rLoc = 2147483647;
+		rType = 0;
+	};
+	50984E940DE63D3800D4C68F /* WaveMakerController.m */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.objc;
+		name = WaveMakerController.m;
+		path = /Volumes/shared_files/tmp/WaveMakerController.m;
+		sourceTree = "<absolute>";
+	};
+	50984E950DE63D3800D4C68F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50984E960DE63D3800D4C68F /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 1";
+		rLen = 4910;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 2745;
+		vrLoc = 0;
+	};
+	50984E960DE63D3800D4C68F /* WaveMakerController.m */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.objc;
+		name = WaveMakerController.m;
+		path = /Volumes/shared_files/tmp/WaveMakerController.m;
+		sourceTree = "<absolute>";
+	};
+	50984E970DE63D3800D4C68F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C20DBE75CD003C82CC /* WaveMakerController.h */;
+		name = "WaveMakerController.h: 8";
+		rLen = 0;
+		rLoc = 227;
+		rType = 0;
+		vrLen = 426;
+		vrLoc = 0;
+	};
+	50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1302, 1792}}";
+			sepNavSelRange = "{1692, 0}";
+			sepNavVisRange = "{0, 2746}";
+			sepNavWindowFrame = "{{598, 159}, {1037, 1006}}";
+		};
+	};
+	50BAE5C20DBE75CD003C82CC /* WaveMakerController.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {901, 640}}";
+			sepNavSelRange = "{227, 0}";
+			sepNavVisRange = "{0, 426}";
+			sepNavWindowFrame = "{{728, 212}, {960, 752}}";
+		};
+	};
+	50BAE6010DBE8E23003C82CC /* startWM.png */ = {
+		uiCtxt = {
+			sepNavWindowFrame = "{{15, 405}, {960, 768}}";
+		};
+	};
+	50BBBFCE0E100595001F1A46 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 140";
+		rLen = 0;
+		rLoc = 4892;
+		rType = 0;
+		vrLen = 308;
+		vrLoc = 3872;
+	};
+	50BBBFD10E100595001F1A46 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 139";
+		rLen = 0;
+		rLoc = 4891;
+		rType = 0;
+		vrLen = 2765;
+		vrLoc = 0;
+	};
+	50BBBFD20E100595001F1A46 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C20DBE75CD003C82CC /* WaveMakerController.h */;
+		name = "WaveMakerController.h: 8";
+		rLen = 0;
+		rLoc = 227;
+		rType = 0;
+		vrLen = 426;
+		vrLoc = 0;
+	};
+	50BBBFD40E101114001F1A46 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 140";
+		rLen = 0;
+		rLoc = 4892;
+		rType = 0;
+		vrLen = 221;
+		vrLoc = 3852;
+	};
+	50BBBFD50E101114001F1A46 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 32";
+		rLen = 0;
+		rLoc = 1692;
+		rType = 0;
+		vrLen = 2727;
+		vrLoc = 0;
+	};
+	50BBBFD60E101114001F1A46 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C20DBE75CD003C82CC /* WaveMakerController.h */;
+		name = "WaveMakerController.h: 8";
+		rLen = 0;
+		rLoc = 227;
+		rType = 0;
+		vrLen = 426;
+		vrLoc = 0;
+	};
+	50DF75000E143E7200EC03E9 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 140";
+		rLen = 0;
+		rLoc = 4892;
+		rType = 0;
+		vrLen = 240;
+		vrLoc = 3850;
+	};
+	50DF75030E143E7200EC03E9 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 32";
+		rLen = 0;
+		rLoc = 1692;
+		rType = 0;
+		vrLen = 2746;
+		vrLoc = 0;
+	};
+	50DF75040E143E7200EC03E9 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C20DBE75CD003C82CC /* WaveMakerController.h */;
+		name = "WaveMakerController.h: 8";
+		rLen = 0;
+		rLoc = 227;
+		rType = 0;
+		vrLen = 426;
+		vrLoc = 0;
+	};
+	50DF75060E143ECF00EC03E9 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 140";
+		rLen = 0;
+		rLoc = 4892;
+		rType = 0;
+		vrLen = 240;
+		vrLoc = 3850;
+	};
+	50DF75070E143ECF00EC03E9 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 32";
+		rLen = 0;
+		rLoc = 1692;
+		rType = 0;
+		vrLen = 2746;
+		vrLoc = 0;
+	};
+	50DF75080E143ECF00EC03E9 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C20DBE75CD003C82CC /* WaveMakerController.h */;
+		name = "WaveMakerController.h: 8";
+		rLen = 0;
+		rLoc = 227;
+		rType = 0;
+		vrLen = 426;
+		vrLoc = 0;
+	};
+	50DF75090E143EF600EC03E9 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 140";
+		rLen = 0;
+		rLoc = 4892;
+		rType = 0;
+		vrLen = 240;
+		vrLoc = 3850;
+	};
+	50DF750A0E143EF600EC03E9 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 32";
+		rLen = 0;
+		rLoc = 1692;
+		rType = 0;
+		vrLen = 2746;
+		vrLoc = 0;
+	};
+	50DF750B0E143EF600EC03E9 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C20DBE75CD003C82CC /* WaveMakerController.h */;
+		name = "WaveMakerController.h: 8";
+		rLen = 0;
+		rLoc = 227;
+		rType = 0;
+		vrLen = 426;
+		vrLoc = 0;
+	};
+	50DF750C0E143F0500EC03E9 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 140";
+		rLen = 0;
+		rLoc = 4892;
+		rType = 0;
+		vrLen = 240;
+		vrLoc = 3850;
+	};
+	50DF750D0E143F0500EC03E9 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 32";
+		rLen = 0;
+		rLoc = 1692;
+		rType = 0;
+		vrLen = 2746;
+		vrLoc = 0;
+	};
+	50DF750E0E143F0500EC03E9 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C20DBE75CD003C82CC /* WaveMakerController.h */;
+		name = "WaveMakerController.h: 8";
+		rLen = 0;
+		rLoc = 227;
+		rType = 0;
+		vrLen = 426;
+		vrLoc = 0;
+	};
+	50EA16320DE1ED9F00F89E18 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 50";
+		rLen = 0;
+		rLoc = 751;
+		rType = 0;
+		vrLen = 147;
+		vrLoc = 2680;
+	};
+	50EA16350DE1ED9F00F89E18 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 39";
+		rLen = 0;
+		rLoc = 751;
+		rType = 0;
+		vrLen = 2796;
+		vrLoc = 0;
+	};
+	50EA16360DE1ED9F00F89E18 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C20DBE75CD003C82CC /* WaveMakerController.h */;
+		name = "WaveMakerController.h: 8";
+		rLen = 0;
+		rLoc = 227;
+		rType = 0;
+		vrLen = 426;
+		vrLoc = 0;
+	};
+	50EA16400DE1EDE000F89E18 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 51";
+		rLen = 0;
+		rLoc = 751;
+		rType = 0;
+		vrLen = 147;
+		vrLoc = 2682;
+	};
+	50EA16410DE1EDE000F89E18 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C10DBE75CD003C82CC /* WaveMakerController.m */;
+		name = "WaveMakerController.m: 86";
+		rLen = 0;
+		rLoc = 751;
+		rType = 0;
+		vrLen = 2706;
+		vrLoc = 825;
+	};
+	50EA16420DE1EDE000F89E18 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 50BAE5C20DBE75CD003C82CC /* WaveMakerController.h */;
+		name = "WaveMakerController.h: 8";
+		rLen = 0;
+		rLoc = 227;
+		rType = 0;
+		vrLen = 426;
+		vrLoc = 0;
+	};
+	8D1107260486CEB800E47090 /* WaveMaker */ = {
+		activeExec = 0;
+		executables = (
+			5078810B0DBE74FC00D1F75B /* WaveMaker */,
+		);
+	};
+	8D1107310486CEB800E47090 /* Info.plist */ = {
+		uiCtxt = {
+			sepNavWindowFrame = "{{38, 384}, {960, 768}}";
+		};
+	};
+}

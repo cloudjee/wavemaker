@@ -1,0 +1,452 @@
+/*
+ *  Copyright (C) 2010 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+@charset "UTF-8";
+/* CSS Document */
+
+.wm_FontFamily_Arial {
+	font-family:Arial, Helvetica, sans-serif;
+}
+
+.wm_FontFamily_Verdana {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+}
+
+.wm_FontFamily_Geneva {
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+}
+
+.wm_FontFamily_Times {
+	font-family: "Times New Roman", Times, serif;
+}
+
+.wm_FontFamily_Courier {
+	font-family: "Courier New", Courier, monospace;
+}
+
+.wm_FontSizePx_10px {
+	font-size:10px;
+}
+
+.wm_FontSizePx_12px {
+	font-size: 12px;
+}
+
+.wm_FontSizePx_14px {
+	font-size: 14px;
+}
+
+.wm_FontSizePx_16px {
+	font-size: 16px;
+}
+
+.wm_FontSizePx_20px {
+	font-size: 20px;
+}
+
+.wm_FontSizePx_24px {
+	font-size: 24px;
+}
+
+.wm_FontSizePx_28px {
+	font-size: 28px;
+}
+
+.wm_FontSizePx_36px {
+	font-size: 36px;
+}
+
+.wm_FontColor_Red {
+	color: #581313;
+}
+
+.wm_FontColor_Evergreen {
+	color: #435c46;
+}
+
+.wm_FontColor_SteelBlue {
+	color: #5e7390;
+}
+
+.wm_FontColor_Graphite {
+	color: #555555;
+}
+
+.wm_FontColor_Yellow {
+	color: #e6dd65;
+}
+
+.wm_FontColor_Purple {
+	color: #5d5691;
+}
+
+.wm_FontColor_LightGray {
+	color: #c8c8c8;
+}
+
+.wm_FontColor_Blue {
+	color: #143563;
+}
+
+.wm_FontColor_Green {
+	color: #637213;
+}
+
+.wm_FontColor_LightBlue {
+	color: #8ba7cd;
+}
+
+.wm_FontColor_White {
+	color: #FFFFFF;
+}
+
+.wm_FontColor_Black {
+	color: #000000;
+}
+
+.wm_TextDecoration_Bold {
+	font-weight: bold;
+}
+
+.wm_TextDecoration_Underline {
+	text-decoration:underline;
+}
+
+.wm_TextDecoration_None {
+	text-decoration:none;
+}
+
+.wm_TextAlign_Right {
+	text-align: right;
+}
+
+.wm_TextAlign_Left {
+	text-align: left;
+}
+
+.wm_TextAlign_Center {
+	text-align: center;
+}
+
+.wm_TextAlign_Justify {
+	text-align: justify;
+}
+
+
+.wm_Border_TopStyleCurved4px {
+        -moz-border-radius-topleft: 4px;
+        -moz-border-radius-topright: 4px;
+        -webkit-border-top-left-radius: 4px;
+        -webkit-border-top-right-radius: 4px;
+         border-radius-topleft: 4px;
+         border-radius-topright: 4px;    
+}
+
+.wm_Border_TopStyleCurved8px {
+        -moz-border-radius-topleft: 8px;
+        -moz-border-radius-topright: 8px;
+        -webkit-border-top-left-radius: 8px;
+        -webkit-border-top-right-radius: 8px;
+         border-radius-topright: 8px;    
+}
+
+.wm_Border_TopStyleCurved12px {
+        -moz-border-radius-topleft: 12px;
+        -moz-border-radius-topright: 12px;
+        -webkit-border-top-left-radius: 12px;
+        -webkit-border-top-right-radius: 12px;
+         border-radius-topleft: 12px;
+         border-radius-topright: 12px;    
+}
+
+.wm_Border_BottomStyleCurved4px {
+        -moz-border-radius-bottomleft: 4px;
+        -moz-border-radius-bottomright: 4px;
+        -webkit-border-bottom-right-radius: 4px;
+        -webkit-border-bottom-left-radius: 4px;
+         border-radius-bottomleft: 4px;
+         border-radius-bottomright: 4px;    
+}
+
+.wm_Border_BottomStyleCurved8px {
+        -moz-border-radius-bottomleft: 8px;
+        -moz-border-radius-bottomright: 8px;
+        -webkit-border-bottom-right-radius: 8px;
+        -webkit-border-bottom-left-radius: 8px;
+         border-radius-bottomleft: 8px;
+         border-radius-bottomright: 8px;    
+}
+
+.wm_Border_BottomStyleCurved12px {
+        -moz-border-radius-bottomleft: 12px;
+        -moz-border-radius-bottomright: 12px;
+        -webkit-border-bottom-right-radius: 12px;
+        -webkit-border-bottom-left-radius: 12px;
+         border-radius-bottomleft: 12px;
+         border-radius-bottomright: 12px;    
+}
+
+.wm_Border_DropShadow {
+     -moz-box-shadow: 2px 2px 4px #888; /* FF3.5+ */
+     -webkit-box-shadow: 2px 2px 4px #888; /* Saf3.0+, Chrome */
+     box-shadow: 2px 2px 4px #888; /* Opera 10.5, IE 9.0 */
+}
+
+.wm_Border_StrongDropShadow {
+     -moz-box-shadow: 5px 5px 4px #888; /* FF3.5+ */
+     -webkit-box-shadow: 5px 5px 4px #888; /* Saf3.0+, Chrome */
+     box-shadow: 5px 5px 4px #888; /* Opera 10.5, IE 9.0 */
+}
+
+.wm_BackgroundColor_Red {
+	background: #581313;
+}
+
+.wm_BackgroundColor_Evergreen {
+	background: #435c46;
+}
+
+.wm_BackgroundColor_SteelBlue {
+	background: #5e7390;
+}
+
+.wm_BackgroundColor_Graphite, wmdialog-title {
+    background: #555555;	
+    color: white;
+}
+
+.wm_BackgroundColor_Yellow {
+	background: #e6dd65;
+}
+
+.wm_BackgroundColor_Purple {
+	background: #5d5691;
+}
+
+.wm_BackgroundColor_LightGray {
+	background: #c8c8c8;
+}
+
+.wm_BackgroundColor_Blue {
+	background: #143563;
+}
+
+.wm_BackgroundColor_Green {
+	background: #637213;
+}
+
+.wm_BackgroundColor_LightBlue {
+	background: #8ba7cd;
+}
+
+.wm_BackgroundColor_White {
+	background: #FFFFFF;
+}
+
+.wm_BackgroundColor_Black {
+	background: #000000;
+}
+
+.wm_BackgroundColor_VeryLightGray {
+	background: #EEEEEE;
+}
+
+.wm_BackgroundGradient_Blue {
+	background: #00357d url(images/panel-header.png) repeat-x center top;	
+}
+
+.wm_BackgroundChromeBar_Blue {	
+	background: #3274D0 url(images/chrome_blue.gif) repeat-x;
+}
+
+.wm_BackgroundChromeBar_Evergreen {
+	background: #778E79 url(images/chrome_evergreen.gif) repeat-x;
+}
+
+.wm_BackgroundChromeBar_Graphite {
+	background: #989899 url(images/chrome_graphite.gif) repeat-x;
+}
+
+.wm_BackgroundChromeBar_Green {
+	background: #A2C729 url(images/chrome_green.gif) repeat-x;
+}
+
+.wm_BackgroundChromeBar_LightBlue {
+	background: #CBD9EC url(images/chrome_lightblue.gif) repeat-x;
+}
+
+.wm_BackgroundChromeBar_LightGray {
+	background: #F1F1F1 url(images/chrome_lightgray.gif) repeat-x;
+}
+
+.wm_BackgroundChromeBar_Purple {
+	background: #9D98CD url(images/chrome_purple.gif) repeat-x;
+}
+
+.wm_BackgroundChromeBar_Red {
+	background: #BD8484 url(images/chrome_red.gif) repeat-x;
+}
+
+.wm_BackgroundChromeBar_SteelBlue {
+	background: #BFC9D6 url(images/chrome_steelblue.gif) repeat-x;
+}
+
+.wm_BackgroundChromeBar_Yellow {
+	background: #FEFAC9 url(images/chrome_yellow.gif) repeat-x;
+}
+
+
+.wm_SilverBlueTheme_ToolBar {
+	background: #acb9d0 url(images/sb_bar_bg.png) repeat-x;
+}
+
+.wm_SilverBlueTheme_LightBlueInsetPanel {
+	border: solid;
+	background-color: #f1f5fc;
+	border-top-color: #939fb6;
+	border-left-color: #939fb6;
+	border-right-color: #eaf0f9;
+	border-bottom-color: #eaf0f9;
+}
+
+.wm_SilverBlueTheme_LightBlueOutsetPanel {
+	border: solid;
+	background-color: #f1f5fc;
+	border-top-color: #eaf0f9;
+	border-left-color: #eaf0f9;
+	border-right-color: #939fb6;
+	border-bottom-color: #939fb6;
+}
+
+.wm_SilverBlueTheme_MainOutsetPanel {
+	background: #acb9d0 url(images/sb_gradient_bg.png) repeat-x;
+	border: solid;
+	border-top-color: #eaf0f9;
+	border-left-color: #eaf0f9;
+	border-right-color: #939fb6;
+	border-bottom-color: #939fb6;
+}
+
+.wm_SilverBlueTheme_MainInsetPanel {
+	background: #acb9d0 url(images/sb_gradient_bg.png) repeat-x;
+	border: solid;
+	border-top-color: #939fb6;
+	border-left-color: #939fb6;
+	border-right-color: #eaf0f9;
+	border-bottom-color: #eaf0f9;
+}
+
+.wm_SilverBlueTheme_WhiteInsetPanel {
+	border: solid;
+	background-color: #fff;
+	border-top-color: #939fb6;
+	border-left-color: #939fb6;
+	border-right-color: #eaf0f9;
+	border-bottom-color: #eaf0f9;
+}
+
+.wm_SilverBlueTheme_WhiteOutsetPanel {
+	border: solid;
+	background-color: #fff;
+	border-top-color: #eaf0f9;
+	border-left-color: #eaf0f9;
+	border-right-color: #939fb6;
+	border-bottom-color: #939fb6;
+}
+.wm_Attribution_new {
+	background-image: url(images/wavemakerLogo.png);
+	background-repeat: no-repeat;
+	background-position: center left;
+}
+
+.wm_Attribution_center {
+	background-image: url(images/wmpoweredby.gif);
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+.wm_Attribution_centerLeft {
+	background-image: url(images/wmpoweredby.gif);
+	background-repeat: no-repeat;
+	background-position: center left;
+}
+.wm_Attribution_centerRight {
+	background-image: url(images/wmpoweredby.gif);
+	background-repeat: no-repeat;
+	background-position: center right;
+}
+.wm_Attribution_topCenter {
+	background-image: url(images/wmpoweredby.gif);
+	background-repeat: no-repeat;
+	background-position: top center;
+}
+.wm_Attribution_topLeft {
+	background-image: url(images/wmpoweredby.gif);
+	background-repeat: no-repeat;
+	background-position: top left;
+}
+.wm_Attribution_topRight {
+	background-image: url(images/wmpoweredby.gif);
+	background-repeat: no-repeat;
+	background-position: top right;
+}
+.wm_Attribution_bottomCenter {
+	background-image: url(images/wmpoweredby.gif);
+	background-repeat: no-repeat;
+	background-position: bottom center;
+}
+.wm_Attribution_bottomLeft {
+	background-image: url(images/wmpoweredby.gif);
+	background-repeat: no-repeat;
+	background-position: bottom left;
+}
+.wm_Attribution_bottomRight {
+	background-image: url(images/wmpoweredby.gif);
+	background-repeat: no-repeat;
+	background-position: bottom right;
+}
+
+/* Dojo charts on IE 8 needs the following css because IE 8 uses VML to render charts and have removed the following which use to be in IE 7 */
+v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image, v\:shape, v\:group, v\:skew, v\:stroke, v\:fill { behavior:url(#default#VML); display:inline-block }
+/* Dojo charts on IE 8 needs the following css because IE 8 uses VML to render charts and have removed the following which use to be in IE 7  */
+
+/*	Dojo TextArea has a padding of 3px by default because of which the left and bottom lines of textarea get hidden, since we size our div seperately.
+	Therefore, removing padding from dojo's textArea.
+*/
+.tundra .dijitTextArea {
+	padding:0px;
+}
+/*	Dojo TextArea has a padding of 3px by default because of which the left and bottom lines of textarea get hidden, since we size our div seperately.
+	Therefore, removing padding from dojo's textArea.
+*/
+
+.dragAvatarCSS{
+	position: absolute;
+	z-index: 201; 
+	padding: 5px; 
+	color: #FFFFFF;
+	background-color: #424A5A;
+	font-family:Geneva,Arial,Helvetica,sans-serif;
+	font-size:8pt;
+	border-color:#DDDDDD #CCCCCC #BBBBBB;
+	border-style:solid;
+	border-width:1px 1px 2px;
+}
+
+.invalidDropCSS{
+	border-top: 4px solid red;
+}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="urn:yahoo:maps"
+  xmlns="urn:yahoo:maps"
+  elementFormDefault="qualified">
+
+	<xs:element name="ResultSet">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="LastUpdateDate" type="xs:string" />
+				<xs:element name="Warning" type="xs:string" minOccurs="0" />
+				<xs:element name="Result" type="ResultType" minOccurs="0" maxOccurs="50" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="ResultType">
+		<xs:sequence>
+			<xs:element name="Title" type="xs:string" />
+			<xs:element name="Description" type="xs:string" />
+			<xs:element name="Latitude" type="xs:decimal" />
+			<xs:element name="Longitude" type="xs:decimal" />
+			<xs:element name="Direction" type="xs:string" />
+			<xs:element name="Severity" type="xs:integer" />
+			<xs:element name="ReportDate" type="xs:string" />
+			<xs:element name="UpdateDate" type="xs:string" />
+			<xs:element name="EndDate" type="xs:string" />
+			<xs:element name="ImageUrl" type="xs:string" minOccurs="0" />
+		</xs:sequence>
+		<xs:attribute name="type" type="xs:string" />
+	</xs:complexType>
+	
+</xs:schema>
+<!-- ws02.search.scd.yahoo.com compressed/chunked Thu Dec  8 17:38:18 PST 2005 -->

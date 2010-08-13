@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Server-side manager bean definitions.  These are only to be used at runtime.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                http://www.springframework.org/schema/aop
+                http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+    <!-- extend beans to have the proper names; add in server-specific information -->
+    <bean id="serviceManager"
+              class="com.wavemaker.runtime.service.ServiceManager"
+              scope="singleton"
+              autowire="byType"
+              parent="serviceManagerBase">
+        <property name="services">
+            <list merge="true">
+                <value>a</value>
+                <value>b</value>
+            </list>
+        </property>
+    </bean>
+	<bean id="typeManager"
+			class="com.wavemaker.runtime.service.TypeManager"
+			scope="singleton"
+			parent="typeManagerBase">
+        <property name="types">
+            <map merge="true"/>
+        </property>
+    </bean>
+</beans>

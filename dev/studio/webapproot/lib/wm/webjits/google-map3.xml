@@ -1,0 +1,41 @@
+<widget>
+<title>Google Map</title>
+<script><![CDATA[DW={
+maps_api_loaded: false,
+init: function() {
+  if (typeof(google) == "undefined") {
+    __DW__.debug("loading the google loader...");
+    __DW__.loadScript("http://www.google.com/jsapi?"+
+               "key=ABQIAAAAxq97AW0x5_CNgn6-nLxSrxSbH_XUsNfZ929RqOTDmYe9potY6xQtLvx75TIAbdYhbvqpIYxEMA8FFA"+
+               "&callback="+this.MAKE_INTO_CALLBACK("init"));
+  } else {
+    __DW__.debug("loading maps API...");
+    // callback needed by google loader
+    var x = this;
+    function map_load(){
+      x.maps_api_loaded = true;
+      __DW__.debug("map loaded");
+    }
+    google.load('maps', '2', {callback:map_load});
+  }
+},
+draw: function() {
+  var html = "";
+  html += '<div id="container" style="overflow:auto; position: relative; padding: 0px; background-color: #eeeeee; width: 100%; height:100%;">';
+  html += '</div>';
+  return html;
+},
+
+ondraw: function() {
+  var w = this;
+  if (!w.maps_api_loaded) {
+    __DW__.debug("ondraw: waiting for maps API to load...");
+    setTimeout(function(){w.ondraw();}, 100);
+    return;
+  }
+
+  var map = new google.maps.Map2(document.getElementById(w.WIDGETNAME("container")));
+  map.setCenter(new google.maps.LatLng(37.4419, -122.1419), 13);
+},
+END:0}]]></script>
+</widget>

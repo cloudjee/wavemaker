@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 5, 2007 6:21:51 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.sakila.FilmCategory" table="film_category" catalog="sakila">
+        <comment></comment>
+        <composite-id name="id" class="com.wavemaker.runtime.data.sample.sakila.FilmCategoryId">
+            <key-property name="filmId" type="short">
+                <column name="film_id" />
+            </key-property>
+            <key-property name="categoryId" type="byte">
+                <column name="category_id" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="category" class="com.wavemaker.runtime.data.sample.sakila.Category" update="false" insert="false" fetch="select">
+            <column name="category_id" not-null="true">
+                <comment></comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="film" class="com.wavemaker.runtime.data.sample.sakila.Film" update="false" insert="false" fetch="select">
+            <column name="film_id" not-null="true">
+                <comment></comment>
+            </column>
+        </many-to-one>
+        <property name="lastUpdate" type="timestamp">
+            <column name="last_update" length="19" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

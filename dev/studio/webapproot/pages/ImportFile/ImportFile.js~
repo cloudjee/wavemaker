@@ -1,0 +1,45 @@
+/*
+ * Copyright (C) 2008 WaveMaker Software, Inc.
+ *
+ * This file is part of WaveMaker Studio.
+ *
+ * WaveMaker Studio is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, version 3 of the License, only.
+ *
+ * WaveMaker Studio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+
+dojo.provide("wm.studio.pages.ImportProject.ImportProject");
+
+dojo.declare("ImportProject", wm.Page, {
+	start: function() {
+	},
+	cancelButtonClick: function(inSender) {
+		wm.fire(this.owner, "dismiss");
+	},
+
+      startImportClick: function(inSender) {
+	    studio.beginWait("Importing Project...");
+	},			  
+	importClickCallback: function(inSource, inResponse) {
+		studio.endWait();
+		var d = studio.startEditor.page.refreshProjectList();
+		alert("Successfully imported project " + inResponse);		
+		wm.fire(this.owner, "dismiss");
+		studio.startEditor.page.openProjectTab();
+		studio.startEditor.page.selectProjectInList(inResponse);
+	},
+	importClickError: function(inSource,inError) {
+		studio.endWait();
+		alert("Error occurred while importing project!\n" + inError);
+	},
+
+	_end: 0
+});

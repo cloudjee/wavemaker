@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
+<!-- Generated Aug 18, 2007 5:20:14 PM
+
+Configuration for 'adventure' database service
+
+-->
+
+<beans>
+
+  <bean id="adventure"
+        class="com.wavemaker.runtime.data.sample.adventure.Adventure"
+        scope="singleton"
+        lazy-init="true">
+    <constructor-arg>
+      <ref bean="adventureDataService"/>
+    </constructor-arg>
+  </bean>
+      <bean lazy-init="false"
+            scope="singleton"
+            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="adventure" name="serviceId"/>
+        <property name="serviceType" ref="DataService"/>
+    </bean>
+
+  <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    <property name="locations">
+        <list>
+            <value>classpath:sqlserver_adventure.properties</value>
+        </list>
+    </property>
+  </bean>
+
+  <bean id="adventureDataSource" 
+        class="org.springframework.jdbc.datasource.DriverManagerDataSource" 
+        lazy-init="true">
+    <property name="driverClassName" value="${sqlserver.driverClassName}"/>
+    <property name="url" value="${sqlserver.connectionUrl}"/>
+    <property name="username" value="${sqlserver.username}"/>
+    <property name="password" value="${sqlserver.password}"/>
+  </bean>
+
+  <!-- Use this datasource bean to lookup a datasource in the jndi tree -->
+  <!--bean id="adventureDataSource" 
+        class="org.springframework.jndi.JndiObjectFactoryBean"
+        lazy-init="true">
+    <property name="jndiName" value="java:comp/env/jdbc/mysql/sakila"/>
+  </bean-->
+
+  <bean id="adventureTxMgr" 
+        class="org.springframework.orm.hibernate3.HibernateTransactionManager"
+        lazy-init="true">
+    <property name="sessionFactory">
+      <ref bean="adventureSessionFactory"/>
+    </property>
+  </bean>
+
+  <bean id="adventureHibernateTemplate"
+        class="org.springframework.orm.hibernate3.HibernateTemplate"
+        lazy-init="true">
+    <property name="sessionFactory"> 
+      <ref bean="adventureSessionFactory"/>
+    </property>
+  </bean>  
+
+  <bean id="adventureSessionFactory" 
+        class="com.wavemaker.runtime.data.spring.ConfigurationAndSessionFactoryBean"
+        lazy-init="true">
+
+    <!-- A unique name for this SessionFactory's configuration -->
+    <property name="name" value="adventure"/>
+    <property name="dataSource" ref="adventureDataSource"/>
+
+    <property name="hibernateProperties">
+      <props>
+        <prop key="hibernate.dialect">
+            org.hibernate.dialect.SQLServerDialect</prop>
+        <prop key="hibernate.transaction.factory_class">
+            org.hibernate.transaction.JDBCTransactionFactory</prop>
+        <prop key="hibernate.current_session_context_class">thread</prop>
+
+      </props> 
+    </property>
+
+    <property name="mappingResources">
+      <list>
+
+<value>com/wavemaker/runtime/data/sample/adventure/Address.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/adventure/Customer.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/adventure/CustomerAddress.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/adventure/Product.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/adventure/ProductCategory.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/adventure/ProductDescription.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/adventure/ProductModel.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/adventure/ProductModelProductDescription.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/adventure/SalesOrderDetail.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/adventure/SalesOrderHeader.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/adventure/VgetAllCategories.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/adventure/VproductAndDescription.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/adventure/VproductModelCatalogDescription.hbm.xml</value>
+
+<value>com/wavemaker/runtime/data/sample/adventure/Address.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/adventure/Customer.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/adventure/CustomerAddress.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/adventure/Product.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/adventure/ProductCategory.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/adventure/ProductDescription.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/adventure/ProductModel.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/adventure/ProductModelProductDescription.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/adventure/SalesOrderDetail.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/adventure/SalesOrderHeader.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/adventure/VgetAllCategories.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/adventure/VproductAndDescription.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/adventure/VproductModelCatalogDescription.ql.xml</value>
+
+      </list>
+    </property>
+
+  </bean>
+
+
+  <!-- the data service bean instance is injected into the service bean -->
+  <bean id="adventureDataService" 
+        class="com.wavemaker.runtime.data.spring.SpringDataServiceManager"
+        lazy-init="true">
+    <constructor-arg>
+      <!-- the value of the "name" property of the SessionFactory -->
+      <value>adventure</value>
+    </constructor-arg>
+    <constructor-arg>
+      <ref bean="adventureHibernateTemplate"/>
+    </constructor-arg>
+    <constructor-arg>
+      <ref bean="adventureTxMgr"/>
+    </constructor-arg>
+  </bean>
+
+</beans>

@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Turbo09 DataForm</title>
+<style>
+	@import "../../../wm/base/widget/themes/default/theme.css";
+	@import "../../../modules/sysmodule/js/dijit/themes/tundra/tundra.css";
+	body, html {
+		margin: 0;
+		height: 100%;
+		/*overflow: hidden;*/
+	}
+	
+	.wmform-item {
+		padding: 0;
+	}
+	.wmform-table {
+		table-layout:fixed;
+		/*border: 1px solid black;*/
+		border-collapse: collapse;
+		width: 400px;
+	}
+	.wmform-cell {
+		/*border: 1px solid black;*/
+		padding: 6px;
+		width: 120px;
+	}
+
+</style>
+<script type="text/javascript">djConfig = {parseOnLoad: true}</script>
+<script type="text/javascript" src="../../../modules/sysmodule/js/dojo/dojo.js"></script>
+<script type="text/javascript">
+	dojo.registerModulePath("wm", "../../../../wm");
+</script>
+<script type="text/javascript" src="../../../wm/base/lib/util.js"></script>
+<script type="text/javascript" src="../../../wm/base/Widget.js"></script>
+<script type="text/javascript" src="../../../wm/base/data/fields.js"></script>
+<script type="text/javascript" src="../../../wm/base/data/model.js"></script>
+<script type="text/javascript" src="../../../wm/base/layout/box.js"></script>
+<script type="text/javascript" src="../../../wm/base/widget/Box.js"></script>
+<script type="text/javascript" src="../../../wm/base/widget/Table/builder.js"></script>
+<script type="text/javascript" src="../../../wm/base/widget/VirtualList.js"></script>
+<script type="text/javascript" src="../../../wm/base/widget/List.js"></script>
+<script type="text/javascript" src="../../../wm/base/widget/Detail.js"></script>
+<script type="text/javascript" src="../../../wm/base/widget/Form.js"></script>
+<script type="text/javascript">
+	dojo.require('dijit.form.TextBox');
+	dojo.require('dijit.form.DateTextBox');
+	dojo.require('dojo.parser');
+	
+	dojo.addOnLoad(function() {
+		data = new wm.Data();
+		data.schema = {fruit: 'String', id: 'Number', desc: 'String'};
+		data.data = {fruit: 'Apple', id: 1, desc: 'They are tasty.'};
+		detail = new wm.Detail({domNode: 'n', height: 500, width: 500, dataSource: data, dataFields: 'fruit,desc, id'});
+		data.changed();
+	});
+	
+	changeLabelPosition = function() {
+		var s = dojo.byId('labelPosition'),
+		l = s.options[s.selectedIndex].value;
+		detail.labelalign = (l == 'left' ? 'right' : '');
+		detail.labelposition = l;
+		detail.render();
+	}
+
+</script>
+</head>
+<body class="tundra">
+	<p>wm.DataForm</p>
+	Label position: <select id="labelPosition" onchange="changeLabelPosition()">
+		<option value="left">Left</option>
+		<option value="right">Right</option>
+		<option value="top">Top</option>
+		<option value="bottom">Bottom</option>
+	</select>
+	<div id="n"></div>
+</body>
+</html>

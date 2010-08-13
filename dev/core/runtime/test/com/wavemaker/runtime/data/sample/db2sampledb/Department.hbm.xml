@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 7, 2008 1:47:54 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.db2sampledb.Department" table="DEPARTMENT" schema="STOENS">
+        <id name="deptno" type="string">
+            <column name="DEPTNO" length="3" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="department" class="com.wavemaker.runtime.data.sample.db2sampledb.Department" fetch="select">
+            <column name="ADMRDEPT" length="3" not-null="true" />
+        </many-to-one>
+        <many-to-one name="employee" class="com.wavemaker.runtime.data.sample.db2sampledb.Employee" fetch="select">
+            <column name="MGRNO" length="6" />
+        </many-to-one>
+        <property name="deptname" type="string">
+            <column name="DEPTNAME" length="36" not-null="true" />
+        </property>
+        <property name="location" type="string">
+            <column name="LOCATION" length="16" />
+        </property>
+        <set name="employees" inverse="true">
+            <key>
+                <column name="WORKDEPT" length="3" />
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.db2sampledb.Employee" />
+        </set>
+        <set name="departments" inverse="true">
+            <key>
+                <column name="ADMRDEPT" length="3" not-null="true" />
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.db2sampledb.Department" />
+        </set>
+        <set name="projects" inverse="true">
+            <key>
+                <column name="DEPTNO" length="3" not-null="true" />
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.db2sampledb.Project" />
+        </set>
+    </class>
+</hibernate-mapping>

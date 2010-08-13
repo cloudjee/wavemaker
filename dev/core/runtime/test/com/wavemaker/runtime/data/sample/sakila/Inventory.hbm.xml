@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 5, 2007 6:21:51 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.sakila.Inventory" table="inventory" catalog="sakila">
+        <comment></comment>
+        <id name="inventoryId" type="java.lang.Integer">
+            <column name="inventory_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="store" class="com.wavemaker.runtime.data.sample.sakila.Store" fetch="select">
+            <column name="store_id" not-null="true">
+                <comment></comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="film" class="com.wavemaker.runtime.data.sample.sakila.Film" fetch="select">
+            <column name="film_id" not-null="true">
+                <comment></comment>
+            </column>
+        </many-to-one>
+        <property name="lastUpdate" type="timestamp">
+            <column name="last_update" length="19" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+        <set name="rentals" inverse="true">
+            <key>
+                <column name="inventory_id" not-null="true">
+                    <comment></comment>
+                </column>
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.sakila.Rental" />
+        </set>
+    </class>
+</hibernate-mapping>

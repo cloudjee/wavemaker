@@ -1,0 +1,1 @@
+java -jar C:\WM\studio\WEB-INF\lib\ant-launcher.jar -buildfile app-deploy.xml -propertyfile app-deploy.properties undeploy

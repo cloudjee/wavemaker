@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 7, 2008 1:47:54 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.db2sampledb.Vstafac2" table="VSTAFAC2" schema="STOENS">
+        <composite-id name="id" class="com.wavemaker.runtime.data.sample.db2sampledb.Vstafac2Id">
+            <key-property name="projno" type="string">
+                <column name="PROJNO" length="6" />
+            </key-property>
+            <key-property name="actno" type="short">
+                <column name="ACTNO" />
+            </key-property>
+            <key-property name="actdesc" type="string">
+                <column name="ACTDESC" length="20" />
+            </key-property>
+            <key-property name="empno" type="string">
+                <column name="EMPNO" length="6" />
+            </key-property>
+            <key-property name="firstnme" type="string">
+                <column name="FIRSTNME" length="12" />
+            </key-property>
+            <key-property name="midinit" type="java.lang.Character">
+                <column name="MIDINIT" length="1" />
+            </key-property>
+            <key-property name="lastname" type="string">
+                <column name="LASTNAME" length="15" />
+            </key-property>
+            <key-property name="emptime" type="big_decimal">
+                <column name="EMPTIME" precision="5" />
+            </key-property>
+            <key-property name="stdate" type="date">
+                <column name="STDATE" length="10" />
+            </key-property>
+            <key-property name="endate" type="date">
+                <column name="ENDATE" length="10" />
+            </key-property>
+            <key-property name="type" type="string">
+                <column name="TYPE" length="1" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

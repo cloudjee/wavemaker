@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" springFile="CloudDB.spring.xml" type="DataService" CRUDService="true" class="com.wavemaker.studio.clouddb.CloudDB" id="CloudDB">
+    <operation name="getUserById">
+        <parameter isList="false" typeRef="java.lang.String" name="id"/>
+        <return isList="false" typeRef="com.wavemaker.studio.clouddb.data.User"/>
+    </operation>
+    <dataobjects>
+        <dataobject supportsQuickData="true" javaType="com.wavemaker.studio.clouddb.data.User">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="email">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <require>insert</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+            </element>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="password"/>
+            <element allowNull="false" isList="false" typeRef="java.util.Date" name="createDate"/>
+        </dataobject>
+    </dataobjects>
+</service>

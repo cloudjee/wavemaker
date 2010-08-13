@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 7, 2008 1:47:54 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.db2sampledb.Vprojact" table="VPROJACT" schema="STOENS">
+        <composite-id name="id" class="com.wavemaker.runtime.data.sample.db2sampledb.VprojactId">
+            <key-property name="projno" type="string">
+                <column name="PROJNO" length="6" />
+            </key-property>
+            <key-property name="actno" type="short">
+                <column name="ACTNO" />
+            </key-property>
+            <key-property name="acstaff" type="big_decimal">
+                <column name="ACSTAFF" precision="5" />
+            </key-property>
+            <key-property name="acstdate" type="date">
+                <column name="ACSTDATE" length="10" />
+            </key-property>
+            <key-property name="acendate" type="date">
+                <column name="ACENDATE" length="10" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

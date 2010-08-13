@@ -1,0 +1,47 @@
+/*
+ *  Copyright (C) 2010 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+.NavigationDialog {
+	border: 1px solid #c1c1c1;
+	background-color: #e6e6e6;
+}
+
+.NavigationDialog .NavigationDialog-label {
+	font-size: 115%;
+	font-weight: bold;
+	padding: 8px 8px 8px 10px;
+}
+
+.NavigationDialog .wmbutton {
+	margin: 1px 1px 1px 1px;
+	background-color: #ebebeb;
+	border: solid 1px #ebebeb;
+	height: 24px;
+}
+
+.NavigationDialog .wmbutton:hover {
+	margin: 1px 1px 1px 1px;
+	background-image:url(images/toolbar_btn_bg.gif);
+	background-repeat:repeat-x;
+	border: solid 1px #c1c1c1;
+	height: 24px;
+}
+.NavigationDialog .NavigationDialog-pageContainerList {
+	border: 1px solid #B3B3B3;
+}
+

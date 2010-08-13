@@ -1,0 +1,79 @@
+/*
+ *  Copyright (C) 2010 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+#studio_servicesContainer_services_editorToolbar {
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	/*border-top:1px #FFFFFF solid;*/
+	border-bottom:1px #363b44 solid;
+	/*padding: 2px;*/
+}
+
+#studio_servicesContainer_services_logoBtmHolder {
+	/*background: url(images/wmbug_bot.gif) bottom no-repeat;*/
+}
+
+#studio_servicesContainer_services_toolbarBtnHolder button {
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	height: 24px;
+	text-align: center;
+}
+
+#studio_servicesContainer_services_toolbarBtnHolder button:hover {
+	background-image:url(images/dark_toolbar_btn_sm_on.gif);
+	background-repeat:no-repeat;
+	height: 24px;
+}
+
+#studio_servicesContainer_services_splitter1 {
+	background:#959dab url(images/v_splitter_handle.gif) no-repeat scroll 1px center;
+	border-left: 1px solid #c0c4ca;
+	border-right: 1px solid #363b44;
+	cursor:e-resize;
+	overflow:hidden;
+	width:5px;
+	z-index:9;
+}
+
+#studio_servicesContainer_services_benchbevel4 {
+	background-color: #959dab;
+	border-top: 1px solid #c0c4ca;
+	border-bottom: 1px solid #363b44;
+}
+
+#studio_servicesContainer_services_webServicePropsPanel, #studio_servicesContainer_services_wsdlPanel, #studio_servicesContainer_services_panel2 {
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	background-color: #949cab;
+	border-left: solid 1px #c0c4ca;
+	border-top-width: 0px;
+	border-right: solid 1px #363b44;
+	border-bottom: solid 1px #363b44;
+	padding: 5px;
+}
+
+.Services .Services-webServiceSaveButton {
+	background: none;
+	border: none;
+	cursor: pointer;
+}
+
+.Services-toolbarspacer1{
+	background-image:url(images/toolbarspacer.gif);
+}

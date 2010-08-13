@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 7, 2008 1:47:54 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.db2sampledb.Catalog" table="CATALOG" schema="STOENS">
+        <id name="name" type="string">
+            <column name="NAME" length="128" />
+            <generator class="assigned" />
+        </id>
+        <property name="catlog" type="serializable">
+            <column name="CATLOG" />
+        </property>
+    </class>
+</hibernate-mapping>

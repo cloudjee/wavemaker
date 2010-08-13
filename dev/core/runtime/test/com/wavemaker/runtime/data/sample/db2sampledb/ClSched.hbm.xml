@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 7, 2008 1:47:54 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.db2sampledb.ClSched" table="CL_SCHED" schema="STOENS">
+        <composite-id name="id" class="com.wavemaker.runtime.data.sample.db2sampledb.ClSchedId">
+            <key-property name="classCode" type="string">
+                <column name="CLASS_CODE" length="7" />
+            </key-property>
+            <key-property name="day" type="java.lang.Short">
+                <column name="DAY" />
+            </key-property>
+            <key-property name="starting" type="time">
+                <column name="STARTING" length="8" />
+            </key-property>
+            <key-property name="ending" type="time">
+                <column name="ENDING" length="8" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,165 @@
+/* BEGIN SECTION wm.DojoMenu */
+
+.wm_template .dojoMenu .dijitMenu,
+.wm_template .dojoMenu .dijitMenuBar,
+.wm_template .dojoMenu .dijitMenuBar {
+    /* Document-HeadersDefault-Font */
+    font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
+/*    font-size: 12pt;  Headers-Default-Font_TextSize  don't edit this until we can control the size of the popup itself */ 
+    color: #FFFFFF; /* Document-HeadersDefault-Font_Color */
+    font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+
+    /* Document-HeadersDefault-Background */
+    background-color: #444444; /* Document-HeadersDefault-Background_Color */
+    background-image: url(images/threeD.png); /* Document-HeadersDefault-Background_Image */
+    background-position: left top;  /* Document-HeadersDefault-Background_Image-Position */
+    background-repeat: repeat-x; /* Document-HeadersDefault-Background_Image-Repeat */
+
+    border-width: 0px;
+    font-weight: bold;        
+}
+
+/* wm.DojoMenu popup menu */
+ .wm_template table.dijitMenuTable.dijitMenu.dijitReset {
+    /* Document-HeadersDefault-Font */
+    font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
+    color: #FFFFFF; /* Document-HeadersDefault-Font_Color */
+    font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+
+    /* Document-HeadersDefault-Background */
+    background-color: #444444; /* Document-HeadersDefault-Background_Color */
+
+
+    border: solid 1px black;
+    border-top: solid 1px #999999;
+
+    -moz-box-shadow: 3px 3px 4px black; /* Floating-Shadow */
+    -webkit-box-shadow: 3px 3px 4px black;/* Floating-Shadow */
+    box-shadow: 3px 3px 4px black; /* Floating-Shadow */
+}
+
+/* Spacing between menu items */
+.wm_template .dijitMenuBar .dijitMenuItem,
+.tundra .wm-darksnazzy .wm_template .dijitMenuBar .dijitMenuItem {
+    margin-right: 10px; /* wm.DojoMenu-Right_Margin */
+}
+
+body.wm_template .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
+body .wm_template .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
+body.wm_template .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+body .wm_template .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+body.wm_template .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+body .wm_template .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
+    /* Document-HeadersHover-Font */
+    color: #FFFFFF; /* Document-HeadersHover-Font_Color */
+
+    /* Document-HeadersHover-Background */
+    background-color: #444444; /* Document-HeadersHover-Background_Color */
+    background-image: url(images/threeD.png); /* Document-HeadersDefault-Background_Image */
+    background-position: left top;  /* Document-HeadersDefault-Background_Image-Position */
+    background-repeat: repeat-x; /* Document-HeadersDefault-Background_Image-Repeat */
+
+
+    outline-width: 0;
+}
+
+body.wm_template  .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemHover,
+body .wm_template .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemHover,
+body.wm_template  .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected,
+body .wm_template .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected
+ {
+    /* Document-HeadersHover-Font */
+    color: #FFFFFF; /* Document-HeadersHover-Font_Color */
+
+    /* Document-HeadersHover-Background */
+    background-color: #444444; /* Document-HeadersHover-Background_Color */
+    background-image: none;
+    outline-width: 0;
+}
+
+/* ComboBox PopupMenu */
+body.wm_template ul.dijitMenu .dijitMenuItem,
+body .wm_template ul.dijitMenu .dijitMenuItem
+{
+
+    /* Tables-EvenRows-Font */
+    color: #FFFFFF; /* Tables-EvenRows-Odd-Font_Color */
+
+    /* Tables-EvenRows-Background */
+    background-color: #444444; /* Tabls-OddRows-Background_Color */
+
+    border-bottom-size: 1px;      /* Tables-EvenRows-Border_Size */
+    border-bottom-style: solid;   
+    border-bottom-color: #AAAAAA; /* Tables-EvenRows-Border_Color */
+}
+
+/* Combobox Popup items with hover/selected */
+body.wm_template  ul.dijitMenu .dijitMenuItem.dijitMenuItemHover,
+body .wm_template ul.dijitMenu .dijitMenuItem.dijitMenuItemHover,
+body.wm_template  ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected,
+body .wm_template ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected
+ {
+    /* Document-HeadersHover-Font */
+    color: #FFFFFF; /* Document-HeadersHover-Font_Color */
+
+    /* Document-HeadersHover-Background */
+    background-color: #333333; /* Document-HeadersHover-Background_Color */    
+
+    outline-width: 0;
+}
+
+/* Border around the entire menu */
+ body.tundra.wm_template .dijitPopup ul.dijitMenu {
+    border-width: 1px;
+    border-style: solid;
+    border-color: black; 
+
+    -moz-box-shadow: 4px 4px 8px black; /* Floating-Shadow */
+    -webkit-box-shadow: 4px 4px 8px black;  /* Floating-Shadow */
+    box-shadow: 4px 4px 8px black;  /* Floating-Shadow */
+}
+
+
+/* BEGIN SECTION wm.Time */
+
+.wm_template .dijitTimePickerItem,
+.wm_template .dijitTimePickerMarker {
+    /* PageContent-EditorsFocus-Font_Color */
+    color: #FFFFFF; /* PageContent-EditorsFocus-Font_Color */
+
+    /* PageContent-EditorsFocus-Background_Color */
+    background-color: #444444; /* PageContent-EditorsFocus-Background_Color */
+}
+
+.wm_template .dijitTimePickerItem.dijitTimePickerItemSelected,
+.wm_template .dijitTimePickerMarker.dijitTimePickerMarkerSelected {
+    /* PageContent-EditorsDefault-Font_Color */
+    color: #FFFFFF; /* PageContent-EditorsDefault-Font_Color */
+
+    /* PageContent-EditorsDefault-Background_Color */
+    background-color: #444444; /* PageContent-EditorsDefault-Background_Color */
+}
+
+.wm_template .dijitTimePickerMarker.dijitTimePickerMarkerHover,
+.wm_template .dijitTimePickerItem.dijitTimePickerItemHover {
+    /* PageContent-EditorsHover-Font_Color */
+    color: #FFFFFF; /* PageContent-EditorsHover-Font_Color */
+
+    /* PageContent-EditorsHover-Background_Color */
+    background-color: #444444; /* PageContent-EditorsHover-Background_Color */
+}
+
+
+.wm_template .dijitTimePickerMarker.dijitTimePickerMarkerHover,
+.wm_template .dijitTimePickerItem.dijitTimePickerItemHover,
+.wm_template .dijitTimePickerItem.dijitTimePickerItemSelected,
+.wm_template .dijitTimePickerMarker.dijitTimePickerMarkerSelected {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: #666666; /* PageContent-EditorsDefault-Border_Color */
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-top-color: #666666; /* PageContent-EditorsDefault-Border_Color */
+}
+
+/* END SECTION wm.Time */

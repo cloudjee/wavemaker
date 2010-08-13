@@ -1,0 +1,434 @@
+<!-- NOTE: I had to stop tomcat, restart tomcat, run ant to deploy new studio before changes to this file could be seen; MK -->
+<project name="app-deploy" default="testrunstart" basedir=".">
+    <property name="project.dir" value="${basedir}" />
+    <property name="studio.webapproot.dir" value="${project.dir}/webapproot"/>
+    <property name="wavemaker.home" value="${project.dir}/.."/>
+	<basename property="appName" file="${project.dir}"/>
+
+    <property name="project.encoding" value="UTF-8"/>
+    <property name="tomcat.host" value="localhost"/>
+    <property name="tomcat.port" value="8080"/>
+    <property name="tomcat.manager.url" value="http://${tomcat.host}:${tomcat.port}/manager"/>
+    <property name="tomcat.manager.username" value="manager"/>
+    <property name="tomcat.manager.password" value="manager"/>
+
+    <property name="tomcat.config.xml" value="${project.dir}/${deploy.name}.xml"/>
+    
+    <property name="app.webapproot.dir" value="${project.dir}/webapproot" />
+
+    <property name="build.app.webapproot.dir" value="${app.webapproot.dir}"/>
+    <property name="build.app.webinf.dir" value="${build.app.webapproot.dir}/WEB-INF"/>
+    <property name="build.app.classes.dir" value="${build.app.webinf.dir}/classes"/>
+    <property name="build.app.lib.dir" value="${build.app.webinf.dir}/lib"/>
+
+    <property name="war.file.name" value="${wavemaker.home}/${deploy.name}.war"/>
+	<property name="ear.file.name" value="${wavemaker.home}/${deploy.name}.ear"/>
+
+    <condition property="build.inline">
+        <equals arg1="${build.app.webapproot.dir}" arg2="${app.webapproot.dir}"/>
+    </condition>
+    <available property="sources.available" type="dir" file="src">
+        <filepath>
+            <pathelement path="${project.dir}" />
+            <dirset dir="${project.dir}">
+                <include name="services/*" />
+            </dirset>
+        </filepath>
+    </available>
+
+    <path id="studio.classpath">
+        <pathelement location="${studio.webapproot.dir}/WEB-INF/classes"/>
+        <fileset dir="${project.dir}">
+            <include name="lib/*.jar"/>
+        </fileset>
+        <fileset dir="${studio.webapproot.dir}/WEB-INF">
+            <include name="lib/*.jar"/>
+        </fileset>
+    </path>
+
+    <path id="app.classpath">
+        <pathelement location="${build.app.webapproot.dir}/WEB-INF/classes"/>
+        <fileset dir="${build.app.lib.dir}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+	<available file="${orig.proj.dir}/webapproot/WEB-INF/application.xml" property="appXmlExists">
+		</available>
+
+    <target name="init" />
+    <target name="testrunclean" description="Clean build files"
+            depends="init,undeploy,clean">
+    </target>
+
+    <target name="-check-deploy-uptodate">
+        <property name="deploy.test.file.name"
+                value="${deploy.name}-deploy-test-file.txt"/>
+        <uptodate property="deploy-files-uptodate"
+                targetfile="${tomcat.config.xml}">
+            <srcfiles dir="${build.app.webapproot.dir}/WEB-INF"
+                    includes="**/*"/>
+        </uptodate>
+        <echo file="${app.webapproot.dir}/${deploy.test.file.name}">${deploy.name} deployed</echo>
+        <condition property="deploy-uptodate">
+            <and>
+                <istrue value="${deploy-files-uptodate}"/>
+<!--                <http url="http://localhost:${tomcat.port}/${wavemaker.user.name}/${deploy.name}/${deploy.test.file.name}"/> -->
+                <http url="http://localhost:${tomcat.port}/${deploy.name}/${deploy.test.file.name}"/>
+            </and>
+        </condition>
+        <delete file="${app.webapproot.dir}/${deploy.test.file.name}"/>
+    </target>
+
+    <target name="testrunstart" unless="deploy-uptodate"
+            depends="init, build, -check-deploy-uptodate"
+            description="Register this application with Tomcat">
+        <echo>tomcat.port=${tomcat.port}</echo>
+        <taskdef name="undeploy"
+            classname="org.apache.catalina.ant.UndeployTask"
+            classpathref="studio.classpath"/>
+<!--            path="/${wavemaker.user.name}/${deploy.name}" -->
+        <undeploy url="${tomcat.manager.url}"
+            username="${tomcat.manager.username}"
+            password="${tomcat.manager.password}"
+            path="/${deploy.name}"
+                failonerror="false" />
+        <taskdef name="xmltask"
+            classname="com.oopsconsultancy.xmltask.ant.XmlTask"
+            classpathref="studio.classpath"/>
+        <xmltask dest="${tomcat.config.xml}" outputter="simple">
+            <insert path="/">
+                <![CDATA[
+                    <Context docBase="${build.app.webapproot.dir}" privileged="true"
+                             antiResourceLocking="false" antiJARLocking="true">
+                    </Context>
+                ]]>
+            </insert>
+        </xmltask>
+        <taskdef name="deploy"
+            classname="org.apache.catalina.ant.DeployTask"
+            classpathref="studio.classpath"/>
+<!--            path="/${wavemaker.user.name}/${deploy.name}"-->
+        <deploy url="${tomcat.manager.url}"
+            username="${tomcat.manager.username}"
+            password="${tomcat.manager.password}"
+             path="/${deploy.name}"
+            config="${tomcat.config.xml}"
+            failonerror="true" />
+    </target>
+
+    <target name="undeploy" depends="init">
+        <taskdef name="undeploy"
+            classname="org.apache.catalina.ant.UndeployTask"
+            classpathref="studio.classpath"/>
+<!--            path="/${wavemaker.user.name}/${deploy.name}"-->
+        <undeploy url="${tomcat.manager.url}"
+            username="${tomcat.manager.username}"
+            password="${tomcat.manager.password}"
+            path="/${deploy.name}"
+			failonerror="false" />
+        <delete file="${tomcat.config.xml}" failonerror="false"/>
+    </target>
+
+    <target name="build"
+        description="Generate runtime files and compile java sources"
+        depends="init,
+                 copy-jars,
+                 copy-resources,
+                 generate-runtime-files,
+                 compile">
+    </target>
+
+    <target name="build-war" depends="init,build">
+        <!-- copy js files -->
+        <copy todir="${build.app.webapproot.dir}/lib">
+            <fileset dir="${studio.webapproot.dir}/lib">
+                <exclude name="wm/${custom.wm.dir}/**"/>
+                <exclude name="dojo/util/**"/>
+                <exclude name="dojo/**/tests/**"/>
+            </fileset>
+        </copy>
+
+        <!-- copy in user's custom widgets -->
+		<copy todir="${build.app.webapproot.dir}/lib/wm">
+			<fileset dir="${wavemaker.home}">
+                <include name="${custom.wm.dir}/**"/>
+            </fileset>
+        </copy>
+
+        <replace dir="${build.app.webapproot.dir}">
+            <include name="*.html"/>
+            <replacetoken>"/wavemaker/app/</replacetoken>
+            <replacevalue>"</replacevalue>
+        </replace>
+        <replace dir="${build.app.webapproot.dir}">
+            <include name="*.html"/>
+            <replacetoken>"/wavemaker/</replacetoken>
+            <replacevalue>"</replacevalue>
+        </replace>
+        <replace dir="${build.app.webapproot.dir}">
+          <include name="config.js"/>
+          <replacetoken>"../wavemaker/</replacetoken>
+          <replacevalue>"</replacevalue>
+        </replace>
+        <replace dir="${build.app.webapproot.dir}">
+            <include name="config.js"/>
+            <replacetoken>"/wavemaker/</replacetoken>
+            <replacevalue>"</replacevalue>
+        </replace>
+
+		<war basedir="${build.app.webapproot.dir}" destfile="${war.file.name}">
+			<exclude name="**/application.xml"/>
+		</war>
+    </target>
+
+	<target name="build-ear" if="appXmlExists">
+		<ear destfile="${ear.file.name}"
+			appxml="${orig.proj.dir}/webapproot/WEB-INF/application.xml">
+			<fileset dir="${orig.proj.dir}/dist">
+				<include name="*.war"/>
+			</fileset>
+		</ear>
+	</target>
+
+    <target name="deploy-war">
+        <taskdef name="deploy"
+            classname="org.apache.catalina.ant.DeployTask"
+            classpathref="studio.classpath"/>
+<!--	    path="/${wavemaker.user.name}/${deploy.name}"-->
+        <deploy url="${tomcat.manager.url}"
+            username="${tomcat.manager.username}"
+            password="${tomcat.manager.password}"
+	    path="/${deploy.name}"
+            war="${war.file.name}"
+            failonerror="true" />
+    </target>
+
+    <target name="prepare-webapproot" unless="build.inline" depends="init">
+        <copy todir="${build.app.webapproot.dir}">
+            <fileset dir="${app.webapproot.dir}">
+                <exclude name="**/.svn/**/*.*" />
+                <exclude name="WEB-INF/classes/**"/>
+                <exclude name="WEB-INF/lib/**"/>
+            </fileset>
+        </copy>
+        <mkdir dir="${build.app.webapproot.dir}/WEB-INF/classes"/>
+        <mkdir dir="${build.app.webapproot.dir}/WEB-INF/lib"/>
+        <mkdir dir="${build.app.webapproot.dir}/services"/>
+    </target>
+
+    <target name="copy-jars"
+            depends="prepare-webapproot">
+        <mkdir dir="${build.app.lib.dir}"/>
+        <mkdir dir="${build.app.classes.dir}"/>
+
+        <taskdef name="copyruntimejars"
+            classname="com.wavemaker.tools.ant.CopyRuntimeJarsTask"
+            classpathref="studio.classpath"/>
+        <copyruntimejars todir="${build.app.lib.dir}"
+            from="${studio.webapproot.dir}/WEB-INF/lib"
+            preserveLastModified="true"
+            overwrite="false"
+            verbose="false"
+    		classpathref="studio.classpath"
+            projectRoot="${project.dir}"
+        />
+    </target>
+
+    <target name="clean-build" depends="clean, build"/>
+
+    <target name="clean-compile" depends="clean, compile"/>
+
+    <target name="compile" description="Compile java services"
+            depends="init, copy-jars" if="sources.available">
+        <javac destdir="${build.app.classes.dir}"
+                target="1.5"
+                debug="true"
+                encoding="${project.encoding}"
+                fork="true">
+            <src>
+                <dirset dir="${project.dir}">
+                    <include name="services/*/src" />
+                </dirset>
+                <dirset dir="${project.dir}">
+                    <include name="src" />
+                </dirset>
+            </src>
+            <classpath refid="app.classpath"/>
+        </javac>
+    </target>
+
+    <target name="generate-runtime-files" depends="init, generate-webxml">
+        <taskdef name="configc"
+            classname="com.wavemaker.tools.ant.ConfigurationCompilerTask"
+            classpathref="studio.classpath"/>
+        <configc destWebAppRoot="${build.app.webapproot.dir}" verbose="true">
+            <resources>
+                <fileset dir="${project.dir}">
+                    <include name="services/*/designtime/servicedef.xml" />
+                </fileset>
+                <javaresource
+                        name="com/wavemaker/runtime/service/runtimeServiceDef.xml"
+                        classpathref="app.classpath" />
+            </resources>
+        </configc>
+
+        <taskdef name="servicec"
+                classname="com.wavemaker.tools.ant.ServiceCompilerTask"
+                classpathref="studio.classpath"/>
+        <servicec projectRoot="${project.dir}"/>
+    </target>
+
+    <!-- check to see if we should generate the web.xml -->
+    <target name="-webxml-uptodate" depends="init">
+        <uptodate property="webxml_is_uptodate"
+                targetfile="${build.app.webinf.dir}/web.xml">
+            <srcresources>
+                <javaresource
+                        name="com/wavemaker/tools/project/web.xml"
+                        classpathref="app.classpath" />
+                <file file="${build.app.webinf.dir}/user-web.xml"/>
+            </srcresources>
+
+            <mapper type="merge" to="${build.app.webinf.dir}/web.xml"/>
+        </uptodate>
+
+        <condition property="do_generate_webxml">
+            <or>
+                <not>
+                    <available file="${build.app.webinf.dir}/web.xml"/>
+                </not>
+                <equals arg1="${webxml_is_uptodate}"
+                        arg2="$${webxml_is_uptodate}"/>
+            </or>
+        </condition>
+
+        <condition property="do_generate_webxml_inc_userxml">
+            <and>
+                <available file="${build.app.webinf.dir}/user-web.xml"/>
+                <istrue value="${do_generate_webxml}"/>
+            </and>
+        </condition>
+
+        <condition property="do_generate_webxml_no_userxml">
+            <and>
+                <not>
+                    <available file="${build.app.webinf.dir}/user-web.xml"/>
+                </not>
+                <istrue value="${do_generate_webxml}"/>
+            </and>
+        </condition>
+    </target>
+
+    <target name="-generate-webxml-userxml" depends="init, -webxml-uptodate"
+            if="do_generate_webxml_inc_userxml">
+        <copy todir="${build.app.webinf.dir}" flatten="true" overwrite="true">
+            <resources>
+                <javaresource
+                        name="com/wavemaker/tools/project/web.xml"
+                        classpathref="app.classpath" />
+				<javaresource
+                        name="com/wavemaker/tools/project/application.xml"
+                        classpathref="app.classpath" />
+            </resources>
+        </copy>
+		
+		<replace file="${build.app.webinf.dir}/application.xml" token="{applicationName}"
+			value="${appName}"/>
+
+        <taskdef name="xmltask"
+                classname="com.oopsconsultancy.xmltask.ant.XmlTask"
+                classpathref="studio.classpath"/>
+        <xmltask source="${build.app.webinf.dir}/user-web.xml">
+            <copy path="/*/*" buffer="userWebBuffer" append="true"/>
+        </xmltask>
+        <xmltask source="${build.app.webinf.dir}/web.xml"
+                destbuffer="webxmlOutput">
+        </xmltask>
+        <xmltask sourcebuffer="webxmlOutput"
+                dest="${build.app.webinf.dir}/web.xml">
+            <insert path="/*/*[1]" position="before" buffer="userWebBuffer"/>
+        </xmltask>
+    </target>
+
+    <target name="-generate-webxml-no-userxml"
+            depends="init, -webxml-uptodate"
+            if="do_generate_webxml_no_userxml">
+        <copy todir="${build.app.webinf.dir}" flatten="true" overwrite="true">
+            <resources>
+                <javaresource
+                        name="com/wavemaker/tools/project/web.xml"
+                        classpathref="app.classpath" />
+            </resources>
+        </copy>
+        <taskdef name="xmltask"
+                classname="com.oopsconsultancy.xmltask.ant.XmlTask"
+                classpathref="studio.classpath"/>
+        <xmltask source="${build.app.webinf.dir}/web.xml"
+                destbuffer="webxmlOutput">
+        </xmltask>
+        <xmltask sourcebuffer="webxmlOutput"
+                dest="${build.app.webinf.dir}/web.xml">
+        </xmltask>
+    </target>
+
+    <target name="generate-webxml"
+            depends="init,-generate-webxml-userxml,-generate-webxml-no-userxml">
+    </target>
+
+
+    <!-- copy services resources -->
+    <target name="copy-resources" depends="init">
+        <copy todir="${build.app.classes.dir}">
+            <fileset dir="${project.dir}">
+                <include name="src/**" />
+                <exclude name="src/**/*.java" />
+            </fileset>
+            <mapper type="regexp" from="^src[/\\](.*)$$" to="\1" />
+        </copy>
+
+        <copy todir="${build.app.classes.dir}">
+            <fileset dir="${project.dir}">
+                <include name="services/*/src/**" />
+                <exclude name="**/*.java" />
+            </fileset>
+            <mapper type="regexp"
+                    from="^services[/\\](.*)[/\\]src[/\\](.*)$$" to="\2" />
+        </copy>
+    </target>
+
+    <target name="-clean-inline" if="build.inline">
+        <delete failonerror="false" includeemptydirs="true">
+            <fileset dir="${build.app.classes.dir}"/>
+            <fileset dir="${build.app.lib.dir}"/>
+            <fileset file="${tomcat.config.xml}"/>
+        </delete>
+    </target>
+
+    <target name="-clean-full-build" unless="build.inline">
+        <delete failonerror="false" includeemptydirs="true">
+            <fileset dir="${build.app.webapproot.dir}"/>
+        </delete>
+    </target>
+
+    <target name="clean" depends="init, -clean-inline, -clean-full-build">
+    </target>
+
+    <target name="export-project"
+            description="Zip project">
+        <copy todir="${zip.folder.name}/${project.new.name}">
+	  <fileset dir="${project.dir}" >
+            <include name="**"/>
+            <exclude name="**/.svn/**/*.*" />
+            <exclude name="export/**"/>
+            <exclude name="dist/**"/>
+            <exclude name="webapproot/WEB-INF/classes/**"/>
+            <exclude name="webapproot/WEB-INF/lib/**"/>
+            <exclude name="*.xml"/>
+	  </fileset>
+        </copy>
+
+        <zip destfile="${zip.file.name}" basedir="${zip.folder.name}" />
+	<delete dir="${zip.folder.name}" />
+    </target>
+</project>

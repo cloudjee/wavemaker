@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Turbo09 List</title>
+<style>
+	@import "../../../wm/base/widget/themes/default/theme.css";
+	body, html {
+		margin: 0;
+		height: 100%;
+		/*overflow: hidden;*/
+	}
+			
+	.itemTable {
+		border-collapse:collapse;
+	}
+	
+	.itemTable td {
+		border-right: 1px solid black;
+		border-bottom: 1px solid black;
+		text-align: right;
+		width: 100px;
+		padding: 4px;
+	}
+	
+	.list3 .wmlist-item {
+		padding: 0;
+	}
+
+</style>
+<script type="text/javascript" src="../../../modules/sysmodule/js/dojo/dojo.js"></script>
+<script type="text/javascript">
+	dojo.registerModulePath("wm", "../../../../wm");
+</script>
+<script type="text/javascript" src="../../../wm/base/lib/util.js"></script>
+<script type="text/javascript" src="../../../wm/base/Widget.js"></script>
+<script type="text/javascript" src="../../../wm/base/data/fields.js"></script>
+<script type="text/javascript" src="../../../wm/base/data/model.js"></script>
+<script type="text/javascript" src="../../../wm/base/layout/box.js"></script>
+<script type="text/javascript" src="../../../wm/base/widget/Box.js"></script>
+<script type="text/javascript" src="../../../wm/base/widget/VirtualList.js"></script>
+<script type="text/javascript" src="../../../wm/base/widget/ModelList.js"></script>
+<script type="text/javascript">
+	data = [ 
+		[ "0", "Happy", "Me", 3 ],
+		[ "1", "Sad", "You", 5 ],
+		[ "2", "Angry", "Him", 11 ],
+		[ "3", "Excited", "Everyone", 39 ],
+		[ "4", "Jazzed", "No one", 22 ],
+		[ "5", "Bored", "Some one", 15 ]
+	];
+	
+	// sample static model
+	model = new wm.data.table(null, data); 
+
+	checkImage = 'images/check.gif';
+	dojo.addOnLoad(function() {
+		list = new wm.VirtualList({domNode: 'n', height: 500, width: 500});
+		for (var i=1, l=10; i<=l; i++)
+			list.addItem('<img src="' + checkImage + '"><span>Item ' + i + '</span>');
+		dojo.connect(list, 'onclick', function(e) {
+			console.log('Clicked', e.listItem.domNode.lastChild.innerHTML);
+		})
+		
+		format = function(inData) {
+			return inData[1];
+		}
+		list2 = new wm.ModelList({domNode: 'n2', height: 500, width: 500, model: model, format: format});
+		
+		formatTable = function(inData) {
+			var html = ['<table cellpadding="0" cellspacing="0" class="itemTable"><tr>'];
+			dojo.forEach(inData, function(inDatum) {
+				html.push(['<td>', inDatum, '</td>'].join(''));
+			});
+			html.push('</table>');
+			return html.join('');
+		}
+		
+		list3 = new wm.ModelList({domNode: 'n3', height: 500, width: 500, model: model, format: formatTable});
+	});
+	
+	function addItem() {
+		list.addItem('<img src="' + checkImage + '"><span> ' + dojo.byId('itemText').value + '</span>');
+	}
+	
+	function removeItem() {
+		list.removeItem(list.count() -1);
+	}
+</script>
+</head>
+<body>
+	<p>wm.List</p>
+	Item: 
+	<input id="itemText" type="text" />
+	<input id="addItem" onclick="addItem()" type="button" value="Add" />
+	<input id="removeItem" onclick="removeItem()" type="button" value="Remove Last" />
+	<div id="n"></div>
+	<hr />
+	<p>wm.DataModelList</p>
+	<div id="n2"></div>
+	<p>wm.DataModelList with table rendering</p>
+	<hr />
+	<div id="n3" class="list3"></div>
+</body>
+</html>

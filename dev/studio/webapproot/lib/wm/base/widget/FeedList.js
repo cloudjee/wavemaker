@@ -1,0 +1,175 @@
+/*
+ *  Copyright (C) 2008-2010 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+dojo.provide("wm.base.widget.FeedList");
+dojo.require("wm.base.widget.List");
+dojo.require("wm.base.components.ServiceVariable");
+
+dojo.declare("wm.FeedList", wm.List, {
+	url: "",
+	dataFields: "title",
+	title: "",
+	expand: false,
+	headerVisible: true,
+	showLink: true,
+	selectedLink: "",
+	totalItems: "",
+	onselect: null,
+	ondeselect: null,
+	init: function() {
+		this.inherited(arguments);
+		dojo.addClass(this.domNode, "wmfeedlist");
+		if (!this.isDesignLoaded()) {
+			this.getFeed();
+		}
+	},
+	prepare: function() {
+		this.inherited(arguments);
+		this.className = 'wmfeedlist';
+		if (this.isDesignLoaded() && !wm.services.byName["FeedService"]) {
+			studio.webService.requestAsync("registerFeedService", null, 
+			dojo.hitch(this, "registerFeedServiceSuccess"));
+		} else {
+			this._createGetFeedServiceVariable();
+		}
+	},
+	createListNode: function() {
+		this.listNode = document.createElement('div');
+		this.listNode.flex = 1;
+		dojo.addClass(this.listNode, "wmfeedlist-list");
+	},
+	createHeaderNode: function() {
+		this.headerNode = document.createElement('div');
+		dojo.addClass(this.headerNode, "wmfeedlist-header");
+	},
+	getHeaderContent: function() {
+		return '<div>' + this.title + '</div>';
+	},
+	updateHeaderWidth: function() {
+		if (this.headerNode.firstChild) {
+			dojo.marginBox(this.headerNode.firstChild, {w: this.width});
+		}
+	},
+	getCellContent: function(inRow, inCol, inHeader) {
+		var d = this.getItemData(this.getCount());
+		var titleData = d.title;
+		var linkData = d.link;
+		var descriptionData = d.description ? d.description.value : "";
+
+		var info = {column: inCol, data: d, header: inHeader};
+		this.onformat(info, inCol, d, inHeader);
+		
+		var html = ['<img src="' + this._getImageSrc(this.expand) + '"/>'];
+		html.push(this.getFeedItemTitleContent(titleData, linkData));
+		html.push('<br>');
+		html.push('<div class="wmfeedlist-row-desc" style="display: ' + 
+			(this.expand ? '' : 'none') + ';">' + descriptionData + '</div>');
+		return html.join('');
+	},
+	getFeedItemTitleContent: function(inTitle, inLink) {
+		return '<a href="' + (this.showLink ? inLink : 'javascript:;') + '">' + inTitle + '</a>';
+	},
+	setUrl: function(inUrl) {
+		this.url = inUrl;
+		if (!this.isDesignLoaded()) {
+			this.getFeed();
+		}
+	},
+	setExpand: function(inExpand) {
+		this.expand = inExpand;
+		this._render();
+	},
+	setShowLink: function(inShowLink) {
+		this.showLink = inShowLink;
+		this._render();
+	},
+	setTotalItems: function(inNum) {
+		this.totalItems = parseInt(inNum) || '';
+		this._render();
+	},
+	getDataItemCount: function() {
+		var c = this.inherited(arguments);
+		if (c && parseInt(this.totalItems) && this.totalItems > -1 && c > this.totalItems) {
+			return this.totalItems;
+		} else {
+			return c;
+		}
+	},
+	_getImageSrc: function(isCollapsed) {
+		return wm.theme.getImagesPath() + (isCollapsed ? "feedlist_open.gif" : "feedlist_closed.gif");
+	},
+	_createGetFeedServiceVariable: function() {
+		this.getFeedServiceVariable = new wm.ServiceVariable(
+			{name: "getFeedServiceVariable", owner: this, service: "FeedService", operation: "getFeed"});
+		this.getFeedServiceVariable["setData"] = function() {};
+		this.getFeedServiceVariable["onSuccess"] = dojo.hitch(this, "getFeedServiceVariableSuccess");
+	},
+	registerFeedServiceSuccess: function(inResult) {
+		this._createGetFeedServiceVariable();
+		studio.updateServices();
+	},
+	update: function() {
+		if (this.isDesignLoaded() && !studio.isLiveLayoutReady()) {
+			studio.refreshLiveData();
+			if (studio._deploying && studio._deployer)
+				studio._deployer.addCallback(dojo.hitch(this, function(inResult) {
+					this.update();
+				}));
+		} else {
+			this.getFeed();
+		}
+	},
+	getFeed: function() {
+		if (this.url && this.url !== undefined) {
+			this.getFeedServiceVariable.request([this.url]);
+		} else
+			this.clear();
+	},
+	getFeedServiceVariableSuccess: function(inResult) {
+		this.title = inResult.title;
+		this.renderData(inResult.entries);
+	},
+	onclick: function(inEvent, inItem) {
+		if (inEvent.target.tagName == 'IMG') {
+			var isCollapsed = inEvent.target.src.match("feedlist_closed.gif");
+			inEvent.target.src = this._getImageSrc(isCollapsed);
+			inEvent.target.parentNode.lastChild.style.display = isCollapsed ? "" : "none";
+		} else {
+			this.setValue("selectedLink", inItem.getData().link);
+		}
+	},
+	_onmouseover: function(inEvent, inItem) {
+	}
+});
+
+// design only...
+wm.Object.extendSchema(wm.FeedList, {
+	dataSet: {ignore: 1},
+	disabled: {ignore: 1},
+	columnWidths: {ignore: 1},
+	dataFields: {ignore: 1},
+	title: {ignore: 1},
+	url: {type: "String", bindTarget: 1},
+	selectedLink: {ignore:1, bindSource: 1, type: "String"},
+	selectedItem: {ignore: 1}
+});
+
+wm.FeedList.description = "A feed list.";
+
+dojo.extend(wm.FeedList, {
+    themeable: false
+});

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                http://www.springframework.org/schema/aop
+                http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+    <bean id="filterChainProxy"
+        class="org.acegisecurity.util.FilterChainProxy">
+        <property name="filterInvocationDefinitionSource">
+            <value>
+                CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
+                PATTERN_TYPE_APACHE_ANT
+                /**=httpSessionContextIntegrationFilter,formAuthenticationProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor
+            </value>
+        </property>
+    </bean>
+
+    <!-- Maintains the Authentication object between various requests and passes
+     it around to the AuthenticationManager and the AccessDecisionManager when needed -->
+    <bean id="httpSessionContextIntegrationFilter"
+        class="org.acegisecurity.context.HttpSessionContextIntegrationFilter">
+    </bean>
+    
+    <!-- Handles the authentication request check. It uses the
+     AuthenticationManager to do its work. -->
+    <bean id="formAuthenticationProcessingFilter"
+        class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilter">
+        <property name="filterProcessesUrl">
+            <value>/j_acegi_security_check</value>
+        </property>
+        <property name="authenticationFailureUrl">
+            <value>/login.html?login_error=1</value>
+        </property>
+        <property name="defaultTargetUrl">
+            <value>/</value>
+        </property>
+        <property name="authenticationManager">
+            <ref bean="authenticationManager" />
+        </property>
+    </bean>
+    
+    <!-- Handles security exceptions and takes the appropriate action. -->
+    <bean id="exceptionTranslationFilter"
+        class="org.acegisecurity.ui.ExceptionTranslationFilter">
+        <property name="authenticationEntryPoint">
+            <ref bean="formLoginAuthenticationEntryPoint" />
+        </property>
+    </bean>
+    
+    <bean id="formLoginAuthenticationEntryPoint"
+        class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint">
+        <property name="loginFormUrl">
+            <value>/login.html</value>
+        </property>
+        <property name="forceHttps">
+            <value>false</value>
+        </property>
+    </bean>
+
+    <!-- Manages the restricted acces check and the authorization check. It knows 
+     which resources are secure and which roles have access to them. 
+     FilterSecurityInterceptor uses the AuthenticationManager and 
+     AccessDecisionManager to do its work. -->
+    <bean id="filterSecurityInterceptor"
+        class="org.acegisecurity.intercept.web.FilterSecurityInterceptor">
+        <property name="authenticationManager">
+            <ref bean="authenticationManager" />
+        </property>
+        <property name="accessDecisionManager">
+            <ref bean="accessDecisionManager" />
+        </property>
+        <property name="objectDefinitionSource">
+            <value>
+                CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
+                PATTERN_TYPE_APACHE_ANT
+                /protected.html=ROLE_Employee
+            </value>
+        </property>
+    </bean>
+    
+    <bean id="authenticationManager"
+        class="org.acegisecurity.providers.ProviderManager">
+        <property name="providers">
+            <list>
+                <ref bean="daoAuthenticationProvider" />
+            </list>
+        </property>
+    </bean>
+
+    <bean id="daoAuthenticationProvider"
+        class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
+        <property name="userDetailsService">
+            <ref bean="inMemoryDaoImpl" />
+        </property>
+    </bean>
+
+    <!-- Authentication using In-memory Dao -->
+    <bean id="inMemoryDaoImpl"
+        class="org.acegisecurity.userdetails.memory.InMemoryDaoImpl">
+        <property name="userMap">
+            <value>
+                demo=demo,ROLE_Employee
+				gcohen=gcohen,ROLE_Employee
+            </value>
+        </property>
+    </bean>
+    
+    <!-- Authentication using JDBC Dao -->
+    <bean id="jdbcDaoImpl"
+        class="org.acegisecurity.userdetails.jdbc.JdbcDaoImpl">
+        <property name="dataSource"><ref bean="jdbcDataSource"/></property>
+        <property name="usersByUsernameQuery">
+            <value>Select first_name, last_name, 1 FROM employee WHERE first_name = ?</value>
+        </property>
+        <property name="authoritiesByUsernameQuery">
+            <value>Select first_name, "ROLE_Employee" FROM employee WHERE first_name = ?</value>
+        </property>
+    </bean>
+
+    <bean id="jdbcDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName">
+            <value>com.mysql.jdbc.Driver</value>
+        </property>
+        <property name="url">
+            <value>jdbc:mysql://localhost:3306/aghr</value>
+        </property>
+        <property name="username">
+            <value>root</value>
+        </property>
+        <property name="password">
+            <value>root</value>
+        </property>
+    </bean>
+    
+    <bean id="accessDecisionManager"
+        class="org.acegisecurity.vote.UnanimousBased">
+        <property name="decisionVoters">
+            <list>
+                <ref bean="roleVoter" />
+            </list>
+        </property>
+    </bean>
+
+    <bean id="roleVoter" class="org.acegisecurity.vote.RoleVoter">
+        <property name="rolePrefix">
+            <value>ROLE_</value>
+        </property>
+    </bean>
+    
+    <!-- Setup Security Service. -->
+    <bean id="securityService"
+        class="com.wavemaker.runtime.security.SecurityService"
+        scope="singleton">
+        <!-- Security Service provides an interface to perform a simple
+         username/password authentication. The AuthenticationManager specified
+         here would be used to perform such operation. -->
+        <property name="authenticationManager">
+            <ref bean="authenticationManager" />
+        </property>
+        <!-- This will populate RBAC rules. -->
+        <property name="roleMap">
+            <map merge="true">
+                <entry key="ROLE_Employee">
+                    <list>
+                        <ref bean="rule1" />
+                    </list>
+                </entry>
+            </map>
+        </property>
+    </bean>
+    <bean lazy-init="false"
+            scope="singleton"
+            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="securityService" name="serviceId"/>
+        <property name="serviceType">
+            <bean class="com.wavemaker.runtime.javaservice.JavaServiceType"/>
+        </property>
+    </bean>
+    
+    <bean id="rule1" class="com.wavemaker.runtime.security.Rule">
+        <property name="name"><value>Rule1</value></property>
+        <property name="allowed"><value>false</value></property>
+        <property name="action"><value>visibility</value></property>
+        <property name="resources">
+            <list>
+                <ref bean="resource1"/>
+                <ref bean="resource2"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="resource1" class="com.wavemaker.runtime.security.SimpleResource">
+        <property name="resourceName"><value>salaryWidget</value></property>
+    </bean>
+    <bean id="resource2" class="com.wavemaker.runtime.security.SimpleResource">
+        <property name="resourceName"><value>expenseApprovalWidget</value></property>
+    </bean> 
+</beans>

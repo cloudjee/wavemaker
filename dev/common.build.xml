@@ -1,0 +1,274 @@
+<project name="shared" default="" basedir=".">
+    <description>
+
+        This ant script is a repository of common tasks and resource.  
+        It is imported by other ant files in the system.
+
+        Before importing this script, the ant property "root.dir" must be
+        set to point to the directory this script is in.  For example:
+
+        <!--
+        <property name="root.dir" location=".."/>
+        <import file="${root.dir}/common.build.xml"/>
+        -->
+
+        For better readability, all resource defined in this ant script 
+        start with the prefix "common.".
+
+    </description>
+
+    <property environment="env"/>
+    <property file="${root.dir}/common.env.build.properties"/>
+    <property file="${root.dir}/common.build.properties"/>
+
+    <condition property="wm.isCloud.property">
+        <equals arg1="${project.type}" arg2="${project.type.cloud}"/>
+    </condition>
+
+    <condition property="wm.isCloud.variable" value="true" else="false">
+        <equals arg1="${project.type}" arg2="${project.type.cloud}"/>
+    </condition>
+
+    <condition property="wm.isEnterprise.property">
+        <equals arg1="${project.type}" arg2="${project.type.enterprise}"/>
+    </condition>
+
+    <condition property="wm.isCommunity.property">
+        <equals arg1="${project.type}" arg2="${project.type.community}"/>
+    </condition>
+
+    <!-- jars that need to be in classpath during compile, but not at
+         runtime -->
+    <filelist id="common.api.jars">
+        <!-- REVIEW 10-Sep-08 stoens@activegrid.com -->
+        <!--mysql driver must be in common to avoid a memory leak-->
+        <!--file name="${mysql-connector.jar}"/-->
+        <file name="${servlet.api.jar}"/>
+    </filelist>
+
+    <filelist id="common.json.jars">
+        <file name="${antlr.jar}"/>
+        <file name="${antlr3.jar}"/>
+    </filelist>
+
+    <filelist id="common.common.jars">
+        <file name="${apache-beanutils.jar}"/>
+        <file name="${apache-io.jar}"/>
+        <file name="${apache-lang.jar}"/>
+        <file name="${apache-logging.jar}"/>
+        <file name="${junit.jar}"/>
+        <file name="${jsr173_api.jar}"/>
+        <file name="${jsr181-api.jar}"/>
+        <file name="${jsr250-api.jar}"/>
+        <file name="${log4j.jar}"/>
+        <file name="${spring.jar}"/>
+    </filelist>
+
+    <filelist id="common.testsupport.jars">
+        <file name="${spring-test.jar}"/>
+        <file name="${spring-webmvc.jar}"/>
+    </filelist>
+
+    <filelist id="common.runtime.jars">
+        <file name="${acegi.jar}"/>
+        <file name="${activation.jar}"/>
+        <file name="${apache-collections.jar}"/>
+        <file name="${apache-fileupload.jar}"/>
+        <file name="${asm.jar}"/>
+        <file name="${cglib.jar}"/>
+        <file name="${dom4j.jar}"/>
+        <file name="${FastInfoset.jar}"/>
+        <file name="${hibernate.jar}"/>
+        <file name="${hsql.jar}"/>
+        <file name="${jaxb-api.jar}"/>
+        <file name="${jaxb-impl.jar}"/>
+        <file name="${jaxws-api.jar}"/>
+        <file name="${jaxws-rt.jar}"/>
+        <file name="${jdom.jar}"/>
+        <file name="${jta.jar}"/>
+        <file name="${mysql-connector.jar}"/>
+        <file name="${postgresql.jar}"/>
+        <file name="${resolver.jar}"/>
+        <file name="${rome.jar}"/>
+        <file name="${saaj-api.jar}"/>
+        <file name="${saaj-impl.jar}"/>
+        <file name="${spring-webmvc.jar}"/>
+        <file name="${stax-ex.jar}"/>
+        <file name="${stax.jar}"/>
+        <file name="${streambuffer.jar}"/>
+        <file name="${wadl-core.jar}"/>
+        <file name="${wsdl4j.jar}"/>
+        <file name="${xmlschema.jar}"/>
+        <file name="${paranamer.jar}"/>
+    </filelist>
+
+    <filelist id="common.tools.jars">
+        <file name="${ant-launcher.jar}"/>
+        <file name="${ant-nodeps.jar}"/>
+        <file name="${ant.jar}"/>
+        <file name="${catalina-ant.jar}"/>
+        <file name="${collection-setter-injector.jar}"/>
+        <file name="${comresrcgen.jar}"/>
+        <file name="${freemaker.jar}"/>
+        <file name="${hibernate-ext.jar}"/>
+        <file name="${jaxb-xjc.jar}"/>
+        <file name="${jaxws-tools.jar}"/>
+        <file name="${jtidy.jar}"/>
+        <file name="${localizer.jar}"/>
+        <file name="${servlet.api.jar}"/>
+        <file name="${wadl-ant.jar}"/>
+        <file name="${wadl-cmdline.jar}"/>
+        <file name="${xbean.jar}"/>
+        <file name="${xmltask.jar}"/>
+		<file name="${amazonec2.jar}"/>
+		<file name="${amazons3.jar}"/>
+		<file name="${commons-codec.jar}"/>
+		<file name="${commons-httpclient.jar}"/>
+		<file name="${rs-jar1.jar}"/>
+		<file name="${rs-jar2.jar}"/>
+		<file name="${rs-jar3.jar}"/>
+		<file name="${rs-jar4.jar}"/>
+    </filelist>
+
+    <fileset id="common.modules.jars" dir="${allmodules.build.dir}">
+        <include name="**/*.jar"/>
+    </fileset>
+
+    <condition property="common.modules.isCloud">
+        <equals arg1="${project.type}" arg2="${project.type.cloud}"/>
+    </condition>
+    <condition property="common.modules.isCommunity">
+        <equals arg1="${project.type}" arg2="${project.type.community}"/>
+    </condition>
+    <condition property="common.modules.isEnterprise">
+        <equals arg1="${project.type}" arg2="${project.type.enterprise}"/>
+    </condition>
+
+    <patternset id="common.modules.patternset">
+        <!-- cloud modules -->
+        <include name="${module.wm.cloud.name}/**"
+                if="common.modules.isCloud"/>
+
+        <!-- local-only modules -->
+        <include name="${module.wm.local.name}/**"
+                if="common.modules.isCommunity"/>
+
+        <!-- enterprise-only modules -->
+        <include name="${module.wm.local.name}/**"
+                if="common.modules.isEnterprise"/>
+        <include name="${module.wm.rbac.name}/**"
+                if="common.modules.isEnterprise"/>
+        <include name="${module.wm.oracle.name}/**"
+                if="common.modules.isEnterprise"/>
+        <include name="${module.wm.db2.name}/**"
+                if="common.modules.isEnterprise"/>
+        <include name="${module.wm.mssql.name}/**"
+                if="common.modules.isEnterprise"/>
+        <include name="${module.wm.ldap.name}/**"
+                if="common.modules.isEnterprise"/>
+        <include name="${module.wm.josso.name}/**"
+                if="common.modules.isEnterprise"/>
+		<include name="${module.wm.multitenant.name}/**"
+                if="common.modules.isEnterprise"/>
+    </patternset>
+
+    <fileset id="common.modules.fileset" dir="${modules.dir}">
+        <patternset refid="common.modules.patternset"/>
+    </fileset>
+
+    <propertyset id="common.test.properties">
+        <propertyref prefix="wm."/>
+    </propertyset>
+
+    <target name="common.whichclass">
+        <property name="class" value=""/>
+        <whichresource property="location" class="${class}">
+            <classpath>
+                <filelist refid="common.api.jars"/>
+                <filelist refid="common.runtime.jars"/>
+                <filelist refid="common.tools.jars"/>
+            </classpath>
+        </whichresource>
+        <echo>location of ${class}: ${location}</echo>
+    </target>
+
+    <target name="common.projecthelp">
+        <java classname="org.apache.tools.ant.Main">
+            <arg value="-f"/>
+            <arg value="${basedir}/build.xml"/>
+            <arg value="-projecthelp"/>
+        </java>
+        <echo>
+$${build.dir} resolves to "${build.dir}"
+It can set using the environment variable BUILDDIR, 
+or the ant property build.dir</echo>
+    </target>
+
+    <target name="common.generate-best-license" depends="common.generate-full-version, common.generate-license" />
+
+    <target name="common.generate-license" unless="license.generated">
+        <copy file="${src.buildsupport.dir}/${project.type}_license.txt"
+                tofile="${license.file}"/>
+        <property name="license.generated" value="true"/>
+    </target>
+
+    <target name="-common.init.version">
+        <condition property="-common.init.version.svn-exists">
+            <available file="${root.dir}/../.svn"/>
+        </condition>
+        <mkdir dir="${build.dir}"/>
+    </target>
+
+    <target name="-common.version.do-svn"
+            depends="-common.init.version"
+            if="-common.init.version.svn-exists">
+        <exec outputproperty="gfv.svn.revision.range" executable="svnversion"
+                failonerror="false" failifexecutionfails="false">
+            <arg value="${root.dir}/.."/>
+        </exec>
+        <echo>XXX svnversion: ${gfv.svn.revision.range}</echo>
+        <exec outputproperty="gfv.svn.repository.url.temp" executable="svn"
+                failonerror="false" failifexecutionfails="false">
+            <arg value="info"/>
+            <arg value="${root.dir}/.."/>
+        </exec>
+        <echo>XXX svnversion: ${gfv.svn.repository.url.temp}</echo>
+        <exec outputproperty="gfv.svn.repository.url" executable="grep"
+                inputstring="${gfv.svn.repository.url.temp}" failonerror="false"
+                failifexecutionfails="false">
+            <arg value="^URL"/>
+            <arg value="-"/>
+        </exec>
+        <echo>XXX svnversion: ${gfv.svn.repository.url}</echo>
+
+        <property name="gfv.svn.revision.range" value="Not Found"/>
+        <property name="gfv.svn.repository.url" value="NON-SVN BUILD - or svn executable not found"/>
+    </target>
+    <target name="-common.version.do-non-svn"
+            depends="-common.init.version"
+            unless="-common.init.version.svn-exists">
+        <property name="gfv.svn.revision.range" value="NON-SVN BUILD"/>
+        <property name="gfv.svn.repository.url" value="NON-SVN BUILD"/>
+    </target>
+
+    <target name="common.generate-full-version" unless="version.full"
+            depends="-common.init.version,-common.version.do-svn,-common.version.do-non-svn">
+
+        <echo>Version: ${version.number} WRITTEN TO FILE: ${version.file}</echo>
+        <echo file="${version.file}">Version: ${version.number}
+Build type: ${project.type}
+SVN ${gfv.svn.repository.url}
+SVN version: ${gfv.svn.revision.range}
+Build number: ${env.BUILD_NUMBER}
+Job name: ${env.JOB_NAME}
+</echo>
+
+<echo>Version: ${version.number} WRITTEN TO FILE: ${version.project.file}</echo>
+<echo file="${version.project.file}">Version: ${version.number}
+Build type: ${project.type}
+SVN version: ${gfv.svn.revision.range}
+</echo>
+        <property name="version.full"
+                value="Version: ${version.number}\nSVN url: ${generate-full-version.svn.url}\nSVN version: ${generate-full-version.svn.rev}"/>
+    </target>
+</project>

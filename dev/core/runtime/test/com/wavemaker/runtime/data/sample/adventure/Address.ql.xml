@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<!-- Generated Aug 18, 2007 5:20:16 PM
+
+This file contains the standard set of HQL queries we generate for 
+each entity.   
+
+@single-result: means the query returns a single instance (instead of a List).
+
+@service-excluded: this query will not be exposed as a method in the 
+                   generated service class.  
+
+@group: in java, group the method for this query with other methods that 
+        return the specified type.
+
+-->
+
+<hibernate-mapping>
+
+    <query 
+        name="getAddressById"
+        comment="Lookup a single Address instance by primary key value(s)
+                 @single-result">
+        
+        <query-param name="id" type="java.lang.Integer"/>
+
+        <![CDATA[
+           from Address _a where _a.id=:id 
+        ]]>
+
+    </query>
+
+    
+    <query 
+        name="getAddressTotalCount"
+        comment="Get total number of Address rows
+                 @group com.wavemaker.runtime.data.sample.adventure.Address
+                 @service-excluded
+                 @single-result">
+        
+        <![CDATA[
+           select count(_a) from Address _a 
+        ]]>
+
+    </query>    
+    
+
+</hibernate-mapping>

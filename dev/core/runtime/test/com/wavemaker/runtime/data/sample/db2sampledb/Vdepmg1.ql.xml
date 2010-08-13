@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<!-- Generated Feb 7, 2008 1:47:56 PM
+
+Queries for entity: Vdepmg1.
+
+-->
+
+<hibernate-mapping>
+
+    <query 
+        name="getVdepmg1ById"
+        comment="Lookup a Vdepmg1 instance by primary key">
+                 
+        <query-param name="id" type="com.wavemaker.runtime.data.sample.db2sampledb.Vdepmg1Id"/>
+
+            from Vdepmg1 _a where _a.id=:id 
+
+    </query>
+
+</hibernate-mapping>

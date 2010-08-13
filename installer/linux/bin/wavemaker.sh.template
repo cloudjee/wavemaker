@@ -1,0 +1,50 @@
+#!/bin/sh
+#
+# Control script for WaveMaker software
+#
+# $Id$
+#
+
+WAVEMAKER_PATH=@PREFIX@
+
+# Setup JAVA_HOME
+export JAVA_HOME=${WAVEMAKER_PATH}/java
+export JRE_HOME=${JAVA_HOME}
+
+start() {
+    ${JAVA_HOME}/bin/java -Xms256m -Xmx512m -XX:MaxPermSize=256m ${WM_JAVA_OPTS} -jar ${WAVEMAKER_PATH}/launcher/launcher.jar &
+}
+
+usage() {
+	echo `basename $0`: ERROR: $* 1>&2
+	echo usage: `basename $0` '{start}' 1>&2
+	exit 1
+}
+
+set -- `getopt "dl :" "$@"` || usage
+
+OPTIONS=
+while :
+do
+        case "$1" in
+        --) break;;
+        esac
+        shift
+done
+shift # get rid of --
+# rest of script...
+
+if [ "$#" = "0" ]; then
+	start
+else
+	case "$1" in
+		"start")
+			start
+			;;
+		*)
+			usage
+			;;
+	esac
+fi
+
+exit $?

@@ -1,0 +1,14 @@
+WM Applications Client Loading Process:
+
+WM applications can be loaded in debug or build mode. Build mode is the default and uses a compressed client js library for efficient loading. Debug mode is used when the ?debug url flag is used. Debug mode is preferred for debugging with firebug and results in slower page loads.
+
+In the page head, 2 js files are loaded: config.js and boot.js. Config.js sets basic options and some path information. Boot.js loads Dojo (debug or not) and some basic library code to load other scripts. The rest of the js is loaded within the body section. This allows a loading screen to display while scripts are requested.
+
+runtimeLoader.js: This file loads all WM client scripts. Its primary purpose is to decide if a build should be loaded and load it if necessary. Then it loads a manifest.js sycnchronously via dojo.require. The design is such that any module not included in a build will be loaded via its inclusion in a manifest.
+
+manifest.js: There is a (a) master manifest.js file (lib/manifest.js) and (b) one for each client library. (a) The master manifest.js simply loads each client library, as well as user custom library (common); it uses dojo.require to load synchronously. (b) Each client library, of which wm is one, should be placed in lib/<libname> and contain a lib/<libname>/manifest.js file. manifest.js files primiarly use the wm.loadLibs method to load modules (both js and css) and load modules asynchronously.
+
+
+WM Studio client Loading Process:
+
+This is process is almost identical to the WM application loading process. Instead of runtimeLoader.js, studio uses app/studioLoader.js. This file manages loading the studio build and then loads the master manifest file lib/manifest.js. It also loads app/manifest.js, a list of design and support modules for studio specifically.

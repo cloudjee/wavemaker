@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<!-- Generated Aug 26, 2007 4:51:37 PM
+
+Queries for entity Compkey.
+
+The queries marked with @service-excluded are only examples and not exposed through a service operation.
+
+
+
+@single-result: means the query returns a single instance (instead of a List).
+
+@service-excluded: this query will not be exposed as a method in the 
+                   generated service class.  
+
+@group: in java, group the method for this query with other methods that 
+        return the specified type.
+
+-->
+
+<hibernate-mapping>
+
+    <query 
+        name="getCompkeyById"
+        comment="Lookup a single Compkey instance by primary key value(s)">
+        
+        <query-param name="id" type="com.wavemaker.runtime.data.sample.aghr.CompkeyId"/>
+
+        <![CDATA[
+           from Compkey _a where _a.id=:id 
+        ]]>
+
+    </query>
+
+    
+</hibernate-mapping>

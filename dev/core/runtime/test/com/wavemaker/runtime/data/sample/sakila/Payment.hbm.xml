@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 5, 2007 6:21:51 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.sakila.Payment" table="payment" catalog="sakila">
+        <comment></comment>
+        <id name="paymentId" type="java.lang.Short">
+            <column name="payment_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="customer" class="com.wavemaker.runtime.data.sample.sakila.Customer" fetch="select">
+            <column name="customer_id" not-null="true">
+                <comment></comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="staff" class="com.wavemaker.runtime.data.sample.sakila.Staff" fetch="select">
+            <column name="staff_id" not-null="true">
+                <comment></comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="rental" class="com.wavemaker.runtime.data.sample.sakila.Rental" fetch="select">
+            <column name="rental_id">
+                <comment></comment>
+            </column>
+        </many-to-one>
+        <property name="amount" type="big_decimal">
+            <column name="amount" precision="5" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="paymentDate" type="timestamp">
+            <column name="payment_date" length="19" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="lastUpdate" type="timestamp">
+            <column name="last_update" length="19" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

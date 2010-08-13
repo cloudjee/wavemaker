@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Turbo09 Box Test</title>
+<style>
+	body, html {
+		margin: 0;
+		height: 100%;
+		overflow: hidden;
+	}
+	#p {
+		position: absolute;
+		top: 100px;
+		height: 100px;
+		width: 100px;
+		background: blue;
+	}
+</style>
+<script type="text/javascript" src="/dojo.0.9.ssh/dojo/dojo.js" djConfig="isDebug: true"></script>
+<script type="text/javascript">
+	dojo.addOnLoad(function() {
+	
+	});
+	
+	function getDimensions() {
+		var p = dojo.byId('p');
+		
+		p.innerHTML = '<div id="toast1" style="background: red">Hello World</div><div id="toast2" style="background: red">Hello World</div><div id="toast3" style="background: red">Hello World</div>';
+		console.dir(dojo._getMarginBox(dojo.byId('toast2')));
+		setTimeout(function() {
+			console.dir(dojo._getMarginBox(dojo.byId('toast2')));
+		}, 1);
+	
+	}
+
+</script>
+</head>
+<body>
+<button onclick="getDimensions()">Get Dimensions</button>
+<div id="p>
+</div>
+</body>
+</html>

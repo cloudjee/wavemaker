@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" springFile="asdf.spring.xml" type="JavaService" CRUDService="false" class="Asdf" id="asdf">
+    <operation name="getBar">
+        <return isList="false" typeRef="Bar"/>
+    </operation>
+    <operation name="getFoo">
+        <return isList="false" typeRef="Asdf$Foo"/>
+    </operation>
+    <dataobjects>
+        <dataobject supportsQuickData="false" name="Bar" javaType="Bar">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="address"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="Foo" javaType="Asdf$Foo">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="name"/>
+        </dataobject>
+    </dataobjects>
+</service>

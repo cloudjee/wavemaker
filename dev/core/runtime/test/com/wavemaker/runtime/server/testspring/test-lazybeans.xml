@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/util
+           http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+    <bean id="badConstructor"
+        class="com.wavemaker.runtime.server.TestSpring$BadConstructor"
+        scope="singleton"
+        lazy-init="true"/>
+        
+    <bean id="dneClass"
+        class="com.wavemaker.runtime.server.TestSpring$DNEClass"
+        scope="singleton"
+        lazy-init="true"/>
+        
+    <bean id="fixableConstructor"
+        class="com.wavemaker.runtime.server.TestSpring$FixableConstructor"
+        scope="singleton"
+        lazy-init="true"/>
+    
+    <!-- include an autowire, to make sure that doesn't interfere with
+    	lazy-loading -->
+    <bean id="foo" class="com.wavemaker.runtime.service.ServiceManager"
+    	scope="singleton" autowire="byType" lazy-init="false"/>
+</beans>

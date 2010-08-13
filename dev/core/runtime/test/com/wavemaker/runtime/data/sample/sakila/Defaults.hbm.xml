@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.sakila.Defaults" 
+           table="defaults" catalog="sakila" dynamic-insert="true" dynamic-update="false">
+        <id name="id" type="integer"/>
+        <property name="firstName" type="string" generated="never">
+            <column name="first_name" length="20"/>
+        </property>
+        <property name="lastName" type="string" generated="never">
+            <column name="last_name" length="20"/>
+        </property>
+    </class>
+</hibernate-mapping>

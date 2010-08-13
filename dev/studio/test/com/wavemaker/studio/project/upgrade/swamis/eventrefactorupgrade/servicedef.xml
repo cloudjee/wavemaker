@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" springFile="updateType_SD_sensible.spring.xml" type="WebService" CRUDService="false" class="com.wavemaker.tools.service.UpdateService_SD" id="updateType_SD_sensible">
+    <operation name="add">
+        <parameter isList="false" typeRef="int" name="a"/>
+        <parameter isList="false" typeRef="com.wavemaker.test.Test1" name="b"/>
+        <parameter isList="true" typeRef="com.wavemaker.test.Test2" name="c"/>
+        <return isList="true" typeRef="com.wavemaker.test.Test2"/>
+    </operation>
+    <dataobjects>
+        <dataobject supportsQuickData="false" name="b" javaType="com.wavemaker.test.Test1"/>
+        <dataobject supportsQuickData="false" name="c" javaType="com.wavemaker.test.Test2"/>
+        <dataobject supportsQuickData="false" name="d" javaType="com.wavemaker.test.Test3">
+            <element allowNull="false" isList="false" typeRef="com.wavemaker.test.Test1" name="b"/>
+            <element allowNull="true" isList="true" typeRef="com.wavemaker.test.Test2" name="c">
+                <require>insert</require>
+                <exclude>read</exclude>
+            </element>
+        </dataobject>
+    </dataobjects>
+    <eventnotifier name="foo.bar.HibernateEventNotifier"/>
+    <eventnotifier name="foo.bar.OtherEventNotifier"/>
+    <eventnotifier name="com.wavemaker.tools.service.UpdateService_SD"/>
+</service>

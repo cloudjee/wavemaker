@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+
+<!-- Generated Sep 4, 2007 9:44:43 PM
+
+Configuration for 'aghr' database service
+
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+
+    <bean 
+        id="aghr"
+        class="com.wavemaker.runtime.data.sample.aghr.Aghr"
+        scope="singleton"
+        lazy-init="true">
+        <property name="dataServiceManager">
+            <ref bean="aghrDataService"/>
+        </property>
+        <property name="taskManager">
+            <ref bean="aghrTaskMgr"/>
+        </property>
+    </bean>
+
+    <bean lazy-init="false"
+            scope="singleton"
+            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="aghr" name="serviceId"/>
+        <property name="serviceType" ref="DataService"/>
+    </bean>
+
+    <bean 
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="locations">
+            <list>
+                <value>
+                    classpath:mysql.properties
+                </value>
+                <value>
+                    classpath:mysql_aghr.properties
+                </value>
+            </list>
+        </property>
+    </bean>
+
+
+    <bean 
+        id="aghrDataSource" 
+        class="org.springframework.jdbc.datasource.DriverManagerDataSource" 
+        lazy-init="true">
+        <property name="driverClassName" value="${sakila.driverClassName}"/>
+        <property name="url" value="${sakila.connectionUrl}"/>
+        <property name="username" value="${sakila.username}"/>
+        <property name="password" value="${sakila.password}"/>
+    </bean>
+
+
+    <bean 
+        id="aghrTxMgr" 
+        class="org.springframework.orm.hibernate3.HibernateTransactionManager"
+        lazy-init="true">
+        <property name="sessionFactory">
+            <ref bean="aghrSessionFactory"/>
+        </property>
+    </bean>
+
+
+    <bean 
+        id="aghrHibernateTemplate"
+        class="org.springframework.orm.hibernate3.HibernateTemplate"
+        lazy-init="true">
+        <property name="sessionFactory"> 
+            <ref bean="aghrSessionFactory"/>
+        </property>
+    </bean>  
+
+
+    <bean 
+        id="aghrSessionFactory" 
+        class="com.wavemaker.runtime.data.spring.ConfigurationAndSessionFactoryBean"
+        lazy-init="true">
+
+        <!-- A unique name for this SessionFactory's configuration -->
+        <property name="name" value="aghr"/>
+        <property name="dataSource" ref="aghrDataSource"/>
+
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+                <prop key="hibernate.transaction.factory_class">
+                    org.hibernate.transaction.JDBCTransactionFactory
+                </prop>
+                <prop key="hibernate.current_session_context_class">thread</prop>
+            </props> 
+        </property>
+
+        <property name="mappingResources">
+            <list>
+
+<value>com/wavemaker/runtime/data/sample/aghr/Compkey.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/aghr/Employee.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/aghr/Person.hbm.xml</value>
+
+<value>com/wavemaker/runtime/data/sample/aghr/Compkey.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/aghr/Employee.ql.xml</value>
+
+            </list>
+        </property>
+
+    </bean>
+
+
+    <!-- the data service bean instance is injected into the service bean -->
+    <bean 
+        id="aghrDataService" 
+        class="com.wavemaker.runtime.data.spring.SpringDataServiceManager"
+        lazy-init="true">
+        <constructor-arg>
+            <!-- the value of the "name" property of the SessionFactory -->
+            <value>aghr</value>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="aghrHibernateTemplate"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="aghrTxMgr"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="aghrTaskMgr"/>
+        </constructor-arg>
+        <constructor-arg>
+            <map>
+                <entry key="useIndividualCRUDOperations"> 
+                    <value>true</value>
+                </entry>
+                <entry key="refreshEntities"> 
+                    <value/>
+                </entry>
+            </map>
+        </constructor-arg>
+    </bean>
+
+
+    <bean 
+        id="aghrTaskMgr"
+        class="com.wavemaker.runtime.data.DefaultTaskManager"
+        lazy-init="true"/>
+</beans>

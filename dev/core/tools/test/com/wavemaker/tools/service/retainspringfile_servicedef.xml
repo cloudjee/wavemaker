@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" type="WebService" supportsRuntimeServiceAccess="false" class="com.wavemaker.tools.service.UpdateService_SD" id="updateService" springFile="someSpringFile.xml">
+    <dataobjects/>
+</service>

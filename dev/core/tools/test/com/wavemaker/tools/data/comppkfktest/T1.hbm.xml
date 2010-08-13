@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 7, 2007 3:23:24 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.dqq.data.T1" table="t1" catalog="foo">
+        <comment></comment>
+        <composite-id name="id" class="com.wavemaker.dqq.data.T1Id">
+            <key-property name="id1" type="int">
+                <column name="id1" />
+            </key-property>
+            <key-property name="id2" type="int">
+                <column name="id2" />
+            </key-property>
+        </composite-id>
+        <set name="t2s" inverse="true">
+            <key>
+                <column name="fk1">
+                    <comment></comment>
+                </column>
+                <column name="fk2">
+                    <comment></comment>
+                </column>
+            </key>
+            <one-to-many class="com.wavemaker.dqq.data.T2" />
+        </set>
+    </class>
+</hibernate-mapping>

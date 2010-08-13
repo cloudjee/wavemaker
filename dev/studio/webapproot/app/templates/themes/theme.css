@@ -1,0 +1,79 @@
+@import url("custom.css"); /* Edit this file if your editting by hand and don't want the themedesigner to overwrite your changes */
+
+
+  /**************************************************************************************************
+   * TYPE:        Button Focus for wm.Button and TabControls
+   *
+   * DESCRIPTION: get rid of focus outline whose color isn't at all in common with this theme,
+   *              and which some browsers make a bit harder to control (further work may make this 
+   *              unnecessary
+   ************************************************************************************************/
+body .wm_template input:focus,
+.wm_template button, .wm_template button:focus {
+    outline-width: 0 !important;
+}
+
+
+  /**************************************************************************************************
+   * TYPE:        Main document-level border
+   *
+   * DESCRIPTION: An optional set of styles for giving the document itself a square or rounded border
+   ************************************************************************************************/
+
+.wm_template  #wavemakerNode  .wmlayout,
+#studio_designer.wm_template .wmlayout, 
+#studio_themesPage_themeDesigner_demoPanel .wmlayout {
+    /* Document-Styles-Border */
+    -moz-border-radius: 4px; /* Document-Styles-BorderStyle_Radius */
+    -webkit-border-radius: 4px; /* Document-Styles-BorderStyle_Radius */
+    border-radius: 4px; /* Document-Styles-BorderStyle_Radius */
+    -moz-box-shadow: 4px 4px 4px black; /* Document-Styles-BorderStyle_Shadow */
+    -webkit-box-shadow: 4px 4px 4px black; /* Document-Styles-BorderStyle_Shadow */
+    box-shadow: 4px 4px 4px black; /* Document-Styles-BorderStyle_Shadow */
+}
+   
+
+  /**************************************************************************************************
+   * TYPE:        Links
+   *
+   * DESCRIPTION: The standard blue underline just isn't a good choice on arbitrary backgrounds.
+   *              To insure a good color, just go with the specified font color and use the underline
+   *              and bold to illustrate that its a link.
+   ************************************************************************************************/
+
+@media screen { /* Document-Level */ 
+    .wm_template #studio_themesPage_themeDesigner_demoPanel .wmlayout a,
+    .wm_template #studio_themesPage_themeDesigner_demoPanel .wmlayout a:visited,
+    .wm_template  #wavemakerNode  .wmlayout a,
+    .wm_template  #wavemakerNode  .wmlayout a:visited {
+	color: #FFFFFF !important; /* Document-Styles-Font_Color */
+	font-weight: bold;
+    }
+}
+
+@media screen { /* PageContent-Level */ 
+    #studio_themesPage_themeDesigner_demoPanel .wm_template .wmcontentarea .wmlayout a,
+    #studio_themesPage_themeDesigner_demoPanel .wm_template .wmlayout .wmcontentarea a:visited,
+    .wm_template  #wavemakerNode  .wmlayout .wmcontentarea a,
+    .wm_template  #wavemakerNode  .wmlayout .wmcontentarea a:visited {
+	color: #FFFFFF !important; /* PageContent-Styles-Font_Color */
+    }
+}
+
+@media screen { /* ContentPanel-Level */ 
+    #studio_themesPage_themeDesigner_demoPanel .wm_template .wmcontentarea .wmlayout a,
+    #studio_themesPage_themeDesigner_demoPanel .wm_template .wmlayout .wmcontentarea a:visited,
+    .wm_template  #wavemakerNode  .wmlayout .wmcontentarea a,
+    .wm_template  #wavemakerNode  .wmlayout .wmcontentarea a:visited {
+	color: #FFFFFF !important; /* ContentPanel-Styles-Font_Color */
+    }
+}
+
+
+/* END SECTION wm.Layout */
+
+
+
+
+
+/* Custom CSS goes below this line */

@@ -1,0 +1,117 @@
+#-------------------------------------------------------------------------
+# Global SSL Properties (applies to entire process)
+#-------------------------------------------------------------------------
+com.ibm.ssl.defaultAlias=DefaultSSLSettings
+com.ibm.ssl.performURLHostNameVerification=false
+com.ibm.ssl.validationEnabled=false
+com.ibm.security.useFIPS=false
+user.root=C:/JSR88
+
+#-------------------------------------------------------------------------
+# Default Self-Signed Certificate Properties
+# These properties are used to create a keystore when it does not exist with
+# a self-signed certificate.  The properties com.ibm.ssl.keyStoreFileBased=true
+# and com.ibm.ssl.trustStoreFileBased=true must be set to indicate a file-based
+# keystore and truststore before they are created.
+#-------------------------------------------------------------------------
+com.ibm.ssl.defaultCertReqAlias=default
+com.ibm.ssl.defaultCertReqSubjectDN=cn=${hostname},o=IBM,c=US
+com.ibm.ssl.defaultCertReqDays=365
+com.ibm.ssl.defaultCertReqKeySize=1024
+
+#-------------------------------------------------------------------------
+# Default Revocation Checking Properties
+# These properties are used for certificate revocation checking with the IBM
+# PKIX TrustManager. 
+# 
+# To enable CRL Distribution Points extension checking, use the system property
+# com.ibm.security.enableCRLDP.
+#
+# OCSP checking is not enabled by default. It is enabled by setting the 
+# ocsp.enable property to "true".  Use of the other ocsp properties is optional. 
+# 
+# Note: Both OCSP and CRLDP checking is only effective if revocation checking 
+# has also been enabled by setting com.ibm.jsse2.checkRevocation to "true".
+#
+#-------------------------------------------------------------------------
+com.ibm.jsse2.checkRevocation=false
+com.ibm.security.enableCRLDP=false
+#ocsp.enable=true
+#ocsp.responderURL=http://ocsp.example.net:80
+#ocsp.responderCertSubjectName=CN=OCSP Responder, O=XYZ Corp
+#ocsp.responderCertIssuerName=CN=Enterprise CA, O=XYZ Corp
+#ocsp.responderCertSerialNumber=2A:FF:00
+
+#-------------------------------------------------------------------------
+# The following are sets of SSL configurations that can be specified for
+# use by various protocols, components, and applications.
+# Each new SSL configuration should begin with the com.ibm.ssl.alias property.
+#-------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------
+# This SSL configuration is used for all client SSL connections, by default
+#-------------------------------------------------------------------------
+com.ibm.ssl.alias=DefaultSSLSettings
+com.ibm.ssl.protocol=SSL_TLS
+com.ibm.ssl.securityLevel=HIGH
+com.ibm.ssl.trustManager=IbmPKIX
+com.ibm.ssl.keyManager=IbmX509
+com.ibm.ssl.contextProvider=IBMJSSE2
+com.ibm.ssl.enableSignerExchangePrompt=gui
+#com.ibm.ssl.keyStoreClientAlias=default
+#com.ibm.ssl.customTrustManagers=
+#com.ibm.ssl.customKeyManager=
+#com.ibm.ssl.dynamicSelectionInfo=
+#com.ibm.ssl.enabledCipherSuites=
+
+# KeyStore information
+com.ibm.ssl.keyStoreName=ClientDefaultKeyStore
+com.ibm.ssl.keyStore=${user.root}/etc/key.p12
+com.ibm.ssl.keyStorePassword={xor}CDo9Hgw=
+com.ibm.ssl.keyStoreType=PKCS12
+com.ibm.ssl.keyStoreProvider=IBMJCE
+com.ibm.ssl.keyStoreFileBased=true
+
+# TrustStore information
+com.ibm.ssl.trustStoreName=ClientDefaultTrustStore
+com.ibm.ssl.trustStore=${user.root}/etc/trust.p12
+com.ibm.ssl.trustStorePassword={xor}CDo9Hgw=
+com.ibm.ssl.trustStoreType=PKCS12
+com.ibm.ssl.trustStoreProvider=IBMJCE
+com.ibm.ssl.trustStoreFileBased=true
+com.ibm.ssl.trustStoreReadOnly=false
+
+#-------------------------------------------------------------------------
+# Another SSL configuration (this is a template, uncomment and modify)
+# You can configure the dynamicSelectionInfo OR reference this alias
+# from another protocol (e.g., soap.client.props or sas.client.props)
+#-------------------------------------------------------------------------
+#com.ibm.ssl.alias=AnotherSSLSettings
+#com.ibm.ssl.protocol=SSL_TLS
+#com.ibm.ssl.securityLevel=HIGH
+#com.ibm.ssl.trustManager=IbmX509
+#com.ibm.ssl.keyManager=IbmX509
+#com.ibm.ssl.contextProvider=IBMJSSE2
+#com.ibm.ssl.enableSignerExchangePrompt=true
+#com.ibm.ssl.keyStoreClientAlias=default
+#com.ibm.ssl.customTrustManagers=
+#com.ibm.ssl.customKeyManager=
+#com.ibm.ssl.dynamicSelectionInfo=
+#com.ibm.ssl.enabledCipherSuites=
+
+# KeyStore information
+#com.ibm.ssl.keyStoreName=AnotherKeyStore
+#com.ibm.ssl.keyStore=${user.root}/etc/key.p12
+#com.ibm.ssl.keyStorePassword={xor}CDo9Hgw=
+#com.ibm.ssl.keyStoreType=PKCS12
+#com.ibm.ssl.keyStoreProvider=IBMJCE
+#com.ibm.ssl.keyStoreFileBased=true
+
+# TrustStore information
+#com.ibm.ssl.trustStoreName=AnotherTrustStore
+#com.ibm.ssl.trustStore=${user.root}/etc/trust.p12
+#com.ibm.ssl.trustStorePassword={xor}CDo9Hgw=
+#com.ibm.ssl.trustStoreType=PKCS12
+#com.ibm.ssl.trustStoreProvider=IBMJCE
+#com.ibm.ssl.trustStoreFileBased=true
+#com.ibm.ssl.trustStoreReadOnly=false

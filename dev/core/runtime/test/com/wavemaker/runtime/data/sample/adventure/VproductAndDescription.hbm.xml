@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 18, 2007 5:20:12 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.adventure.VproductAndDescription" table="vProductAndDescription" schema="SalesLT" catalog="AdventureWorksLT">
+        <composite-id name="id" class="com.wavemaker.runtime.data.sample.adventure.VproductAndDescriptionId">
+            <key-property name="productId" type="int">
+                <column name="ProductID" />
+            </key-property>
+            <key-property name="name" type="string">
+                <column name="Name" length="50" />
+            </key-property>
+            <key-property name="productModel" type="string">
+                <column name="ProductModel" length="50" />
+            </key-property>
+            <key-property name="culture" type="string">
+                <column name="Culture" length="6" />
+            </key-property>
+            <key-property name="description" type="string">
+                <column name="Description" length="400" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

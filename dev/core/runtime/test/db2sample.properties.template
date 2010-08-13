@@ -1,0 +1,9 @@
+#Properties for db2sample
+#Thu Feb 07 13:47:51 PST 2008
+db2sample.password=db2admin
+db2sample.tableFilter=.*
+db2sample.schemaFilter=STOENS
+db2sample.dialect=org.hibernate.dialect.DB2Dialect
+db2sample.driverClassName=com.ibm.db2.jcc.DB2Driver
+db2sample.username=db2admin
+db2sample.connectionUrl=jdbc\:db2\://localhost\:50000/SAMPLE

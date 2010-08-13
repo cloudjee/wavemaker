@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 7, 2008 1:47:54 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.db2sampledb.Employee" table="EMPLOYEE" schema="STOENS">
+        <id name="empno" type="string">
+            <column name="EMPNO" length="6" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="department" class="com.wavemaker.runtime.data.sample.db2sampledb.Department" fetch="select">
+            <column name="WORKDEPT" length="3" />
+        </many-to-one>
+        <property name="firstnme" type="string">
+            <column name="FIRSTNME" length="12" not-null="true" />
+        </property>
+        <property name="midinit" type="java.lang.Character">
+            <column name="MIDINIT" length="1" />
+        </property>
+        <property name="lastname" type="string">
+            <column name="LASTNAME" length="15" not-null="true" />
+        </property>
+        <property name="phoneno" type="string">
+            <column name="PHONENO" length="4" />
+        </property>
+        <property name="hiredate" type="date">
+            <column name="HIREDATE" length="10" />
+        </property>
+        <property name="job" type="string">
+            <column name="JOB" length="8" />
+        </property>
+        <property name="edlevel" type="short">
+            <column name="EDLEVEL" not-null="true" />
+        </property>
+        <property name="sex" type="java.lang.Character">
+            <column name="SEX" length="1" />
+        </property>
+        <property name="birthdate" type="date">
+            <column name="BIRTHDATE" length="10" />
+        </property>
+        <property name="salary" type="big_decimal">
+            <column name="SALARY" precision="9" />
+        </property>
+        <property name="bonus" type="big_decimal">
+            <column name="BONUS" precision="9" />
+        </property>
+        <property name="comm" type="big_decimal">
+            <column name="COMM" precision="9" />
+        </property>
+        <set name="departments" inverse="true">
+            <key>
+                <column name="MGRNO" length="6" />
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.db2sampledb.Department" />
+        </set>
+        <set name="empPhotos" inverse="true">
+            <key>
+                <column name="EMPNO" length="6" not-null="true" />
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.db2sampledb.EmpPhoto" />
+        </set>
+        <set name="empResumes" inverse="true">
+            <key>
+                <column name="EMPNO" length="6" not-null="true" />
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.db2sampledb.EmpResume" />
+        </set>
+        <set name="projects" inverse="true">
+            <key>
+                <column name="RESPEMP" length="6" not-null="true" />
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.db2sampledb.Project" />
+        </set>
+    </class>
+</hibernate-mapping>

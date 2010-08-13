@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Server-side manager bean definitions.  These are only to be used at runtime.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+        
+    <bean id="upgradeManager"
+            class="com.wavemaker.tools.project.upgrade.UpgradeManager"
+            scope="singleton"
+            lazy-init="true">
+        <property name="studioUpgrades">
+            <map merge="true">
+                <!-- 0.0 is the starting version; no upgrades should be
+                     present here. -->
+                <entry key="0.0">
+                    <list />
+                </entry>
+                <entry key="0.1">
+                    <list>
+                        <bean class="com.wavemaker.studio.project.upgrade.TestUpgradeManager_StudioUpgrade$StudioUpgradeFileCreationUpgradeTask" />
+                    </list>
+                </entry>
+            </map>
+        </property>
+        <property name="upgrades">
+            <map merge="true">
+                <entry key="0.2">
+                    <list>
+                        <bean class="com.wavemaker.studio.project.upgrade.TestUpgradeManager$FileCreationUpgradeTask">
+                            <property name="version" value="0.2" />
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.0">
+                    <list>
+                        <bean class="com.wavemaker.studio.project.upgrade.TestUpgradeManager$FileCreationUpgradeTask">
+                            <property name="version" value="0.0" />
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.11">
+                    <list>
+                        <bean class="com.wavemaker.studio.project.upgrade.TestUpgradeManager$CheckFileCreationTask_0_1_1" />
+                    </list>
+                </entry>
+                <entry key="0.1">
+                    <list>
+                        <bean class="com.wavemaker.studio.project.upgrade.TestUpgradeManager$FileCreationUpgradeTask">
+                            <property name="version" value="0.1" />
+                        </bean>
+                        <bean class="com.wavemaker.studio.project.upgrade.TestUpgradeManager$CheckFileCreationTask_0_1" />
+                        <bean class="com.wavemaker.studio.project.upgrade.TestUpgradeManager$DoNothingUpgradeTask" />
+                    </list>
+                </entry>
+            </map>
+        </property>
+        <property name="deploymentManager">
+            <ref bean="deploymentManager"/>
+        </property>
+    </bean>
+</beans>

@@ -1,0 +1,120 @@
+  /**************************************************************************************************
+   * TYPE:        wm.dijit.ProgressBar
+   *
+   * DESCRIPTION: Sets the styles for wm.ProgressBar at each of three levels.  
+   ************************************************************************************************/
+
+.wm_template .wmprogressbar .dijitProgressBar {
+    /* Common-Panel_BorderStyle_Radius */
+    -moz-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
+    -webkit-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
+    border-radius: 4px;  /* Common-Panel_BorderStyle_Radius */
+}
+.wm_template .wmprogressbar .dijitProgressBarTile {
+    /* Common-Panel-BorderStyle_Radius */
+    -moz-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
+    -webkit-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
+    border-radius: 4px;  /* Common-Panel_BorderStyle_Radius */
+}
+
+.wm_template .wmprogressbar .dijitProgressBarFull {
+    border-right-width: 0px;
+}
+
+@media screen { /* Document-Level */ 
+    .wm_template .wmprogressbar .dijitProgressBarTile {
+	/* Document-HeadersDefault-Font */
+	font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
+	font-size: 12pt; /* Document-HeadersDefault-Font_TextSize */
+	color: #FFFFFF; /* Document-HeadersDefault-Font_Color */
+	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+
+	/* Document-HeadersDefault-Background */
+	background-color: #444444; /* Document-HeadersDefault-Background_Color */
+	background-image: url(images/threeD.png); /* Document-HeadersDefault-Background_Image */
+	background-position: left top;  /* Document-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-HeadersDefault-Background_Image-Repeat */
+
+    }
+
+
+    .wm_template .wmprogressbar .dijitProgressBar {
+	/* Document-EditorsDefault-Font */
+	font-family: sans-serif; /* Document-EditorsDefault-Font_Family */
+	font-size: 12pt; /* Document-EditorsDefault-Font_TextSize */
+	color: #FFFFFF; /* Document-EditorsDefault-Font_Color */
+	font-weight: bold; /* Document-EditorsDefault-Font_Weight */
+
+	/* Document-EditorsDefault-Background */
+	background-color: #444444; /* Document-EditorsDefault-Background_Color */
+	background-image: url(images/threeD.png); /* Document-EditorsDefault-Background_Image */
+	background-position: left top;  /* Document-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-EditorsDefault-Background_Image-Repeat */
+    }
+}
+
+
+@media screen { /* PageContent-Level */ 
+    .wm_template .wmcontentarea .wmprogressbar .dijitProgressBarTile {
+	/* PageContent-HeadersDefault-Font */
+	font-family: sans-serif; /* PageContent-HeadersDefault-Font_Family */
+	font-size: 12pt; /* PageContent-HeadersDefault-Font_TextSize */
+	color: #FFFFFF; /* PageContent-HeadersDefault-Font_Color */
+	font-weight: bold; /* PageContent-HeadersDefault-Font_Weight */
+
+	/* PageContent-HeadersDefault-Background */
+	background-color: #444444; /* PageContent-HeadersDefault-Background_Color */
+	background-image: url(images/threeD.png); /* PageContent-HeadersDefault-Background_Image */
+	background-position: left top;  /* PageContent-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* PageContent-HeadersDefault-Background_Image-Repeat */
+    }
+
+
+    .wm_template .wmcontentarea .wmprogressbar .dijitProgressBar {
+	/* PageContent-EditorsDefault-Font */
+	font-family: sans-serif; /* PageContent-EditorsDefault-Font_Family */
+	font-size: 12pt; /* PageContent-EditorsDefault-Font_TextSize */
+	color: #FFFFFF; /* PageContent-EditorsDefault-Font_Color */
+	font-weight: bold; /* PageContent-EditorsDefault-Font_Weight */
+
+	/* PageContent-EditorsDefault-Background */
+	background-color: #444444; /* PageContent-EditorsDefault-Background_Color */
+	background-image: url(images/threeD.png); /* PageContent-EditorsDefault-Background_Image */
+	background-position: left top;  /* PageContent-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* PageContent-EditorsDefault-Background_Image-Repeat */
+    }
+
+}
+
+
+@media screen { /* ContentPanel-Level */ 
+    .wm_template .wmcontentarea .wmcontentarea .wmprogressbar .dijitProgressBarTile {
+	/* ContentPanel-HeadersDefault-Font */
+	font-family: sans-serif; /* ContentPanel-HeadersDefault-Font_Family */
+	font-size: 12pt; /* ContentPanel-HeadersDefault-Font_TextSize */
+	color: #FFFFFF; /* ContentPanel-HeadersDefault-Font_Color */
+	font-weight: bold; /* ContentPanel-HeadersDefault-Font_Weight */
+
+	/* ContentPanel-HeadersDefault-Background */
+	background-color: #444444; /* ContentPanel-HeadersDefault-Background_Color */
+	background-image: url(images/threeD.png); /* ContentPanel-HeadersDefault-Background_Image */
+	background-position: left top;  /* ContentPanel-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* ContentPanel-HeadersDefault-Background_Image-Repeat */
+    }
+
+
+    .wm_template .wmcontentarea .wmcontentarea .wmprogressbar .dijitProgressBar {
+	/* ContentPanel-EditorsDefault-Font */
+	font-family: sans-serif; /* ContentPanel-EditorsDefault-Font_Family */
+	font-size: 12pt; /* ContentPanel-EditorsDefault-Font_TextSize */
+	color: #FFFFFF; /* ContentPanel-EditorsDefault-Font_Color */
+	font-weight: bold; /* ContentPanel-EditorsDefault-Font_Weight */
+
+	/* ContentPanel-EditorsDefault-Background */
+	background-color: #444444; /* ContentPanel-EditorsDefault-Background_Color */
+	background-image: url(images/threeD.png); /* ContentPanel-EditorsDefault-Background_Image */
+	background-position: left top;  /* ContentPanel-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* ContentPanel-EditorsDefault-Background_Image-Repeat */
+    }
+
+}

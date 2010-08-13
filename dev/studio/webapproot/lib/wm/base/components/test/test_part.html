@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Turbo09 Page</title>
+<style type="text/css">
+	@import "../../widget/themes/default/theme.css";
+	#foo_header {
+		border: 2px solid green;
+	}
+	#foo_box0 div {
+		border: 2px solid red;
+	}
+</style>
+<script type="text/javascript" src="../../../dojo/dojo/dojo.js" djConfig="isDebug: true"></script>
+<script type="text/javascript">
+	dojo.registerModulePath("wm", "../../wm");
+</script>
+<script type="text/javascript" src="../../layout/window.js"></script>
+<script type="text/javascript" src="../../layout/console.js"></script>
+<script type="text/javascript" src="../../layout/box.js"></script>
+<script type="text/javascript" src="../../Component.js"></script>
+<script type="text/javascript" src="../../Widget.js"></script>
+<script type="text/javascript" src="../../widget/Box.js"></script>
+<script type="text/javascript" src="../../widget/LayoutBox.js"></script>
+<script type="text/javascript" src="../../widget/Content.js"></script>
+<script type="text/javascript" src="../../widget/Splitter.js"></script>
+<script type="text/javascript" src="../../components/Page.js"></script>
+<script type="text/javascript">
+	dojo.declare("Foo", wm.Page, {});
+
+	wm.Splitter.prototype.mode = 0;
+
+	Foo.widgets = {
+		box: [ 'wm.LayoutBox', { fit: true, box: 'v', flex: 1 }, {}, {
+			header: ["wm.Box", {height: "48px"}, {}, {}],
+			box0: ["wm.Box", {flex: 1, box: "h"}, {}, {
+				left: ["wm.Box", {width: "96px"}, {}, {}],
+				splitter1: [ 'wm.Splitter', { layout: "left"}, {}, {} ],
+				box1: ["wm.Box", {flex: 1, box: "v"}, {}, {
+					box2: ["wm.Box", {box: "h", height: "142px"}, {}, {
+						first: [ 'wm.Content', { flex: 1, source: "first" }, {}, {} ],
+						splitter2: [ 'wm.Splitter', { layout: "right"}, {}, {} ],
+						image: [ 'wm.Content', { flex: 0, source: "image" }, {}, {} ]
+					}],
+					splitter3: [ 'wm.Splitter', {}, {}, {} ],
+					text: [ 'wm.Content', { flex: 1, source: "text" }, {}, {} ]
+				}]
+			}],
+			console: ["wm.Box", { height: "100px" }, {}, {} ]
+		}]
+	}
+	
+	foo = new Foo("foo");
+	foo.start = function() {
+		adaptConsole(foo.console.domNode);
+		this.reflow();
+	}
+</script>
+</head>
+<body>
+</body>
+</html>

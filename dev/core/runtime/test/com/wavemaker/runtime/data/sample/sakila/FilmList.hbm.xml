@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 5, 2007 6:21:51 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.sakila.FilmList" table="film_list" catalog="sakila">
+        <comment></comment>
+        <composite-id name="id" class="com.wavemaker.runtime.data.sample.sakila.FilmListId">
+            <key-property name="fid" type="java.lang.Short">
+                <column name="FID" />
+            </key-property>
+            <key-property name="title" type="string">
+                <column name="title" />
+            </key-property>
+            <key-property name="description" type="string">
+                <column name="description" length="65535" />
+            </key-property>
+            <key-property name="category" type="string">
+                <column name="category" length="25" />
+            </key-property>
+            <key-property name="price" type="big_decimal">
+                <column name="price" precision="4" />
+            </key-property>
+            <key-property name="length" type="java.lang.Short">
+                <column name="length" />
+            </key-property>
+            <key-property name="rating" type="string">
+                <column name="rating" length="5" />
+            </key-property>
+            <key-property name="actors" type="string">
+                <column name="actors" length="341" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

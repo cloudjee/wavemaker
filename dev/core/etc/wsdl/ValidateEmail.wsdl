@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://www.webservicex.net" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="http://www.webservicex.net" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.webservicex.net">
+      <s:element name="IsValidEmail">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsValidEmailResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="IsValidEmailResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="boolean" type="s:boolean" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="IsValidEmailSoapIn">
+    <wsdl:part name="parameters" element="tns:IsValidEmail" />
+  </wsdl:message>
+  <wsdl:message name="IsValidEmailSoapOut">
+    <wsdl:part name="parameters" element="tns:IsValidEmailResponse" />
+  </wsdl:message>
+  <wsdl:message name="IsValidEmailHttpGetIn">
+    <wsdl:part name="Email" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="IsValidEmailHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="IsValidEmailHttpPostIn">
+    <wsdl:part name="Email" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="IsValidEmailHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:portType name="ValidateEmailSoap">
+    <wsdl:operation name="IsValidEmail">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">This method returns true or false for a given email address</documentation>
+      <wsdl:input message="tns:IsValidEmailSoapIn" />
+      <wsdl:output message="tns:IsValidEmailSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="ValidateEmailHttpGet">
+    <wsdl:operation name="IsValidEmail">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">This method returns true or false for a given email address</documentation>
+      <wsdl:input message="tns:IsValidEmailHttpGetIn" />
+      <wsdl:output message="tns:IsValidEmailHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="ValidateEmailHttpPost">
+    <wsdl:operation name="IsValidEmail">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">This method returns true or false for a given email address</documentation>
+      <wsdl:input message="tns:IsValidEmailHttpPostIn" />
+      <wsdl:output message="tns:IsValidEmailHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ValidateEmailSoap" type="tns:ValidateEmailSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    <wsdl:operation name="IsValidEmail">
+      <soap:operation soapAction="http://www.webservicex.net/IsValidEmail" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ValidateEmailHttpGet" type="tns:ValidateEmailHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="IsValidEmail">
+      <http:operation location="/IsValidEmail" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ValidateEmailHttpPost" type="tns:ValidateEmailHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="IsValidEmail">
+      <http:operation location="/IsValidEmail" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ValidateEmail">
+    <wsdl:port name="ValidateEmailSoap" binding="tns:ValidateEmailSoap">
+      <soap:address location="http://www.webservicex.net/ValidateEmail.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ValidateEmailHttpGet" binding="tns:ValidateEmailHttpGet">
+      <http:address location="http://www.webservicex.net/ValidateEmail.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ValidateEmailHttpPost" binding="tns:ValidateEmailHttpPost">
+      <http:address location="http://www.webservicex.net/ValidateEmail.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 7, 2008 1:47:54 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.db2sampledb.Vact" table="VACT" schema="STOENS">
+        <composite-id name="id" class="com.wavemaker.runtime.data.sample.db2sampledb.VactId">
+            <key-property name="actno" type="short">
+                <column name="ACTNO" />
+            </key-property>
+            <key-property name="actkwd" type="string">
+                <column name="ACTKWD" length="6" />
+            </key-property>
+            <key-property name="actdesc" type="string">
+                <column name="ACTDESC" length="20" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

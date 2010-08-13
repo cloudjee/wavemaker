@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:s1="http://ws.strikeiron.com" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:si="http://www.strikeiron.com" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="http://www.strikeiron.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.strikeiron.com">
+      <s:element name="VerifyAddressUSA">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="addressLine1" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="addressLine2" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="city_state_zip" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="firm" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="urbanization" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" default="Upper" name="casing" type="si:casingEnum" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:simpleType name="casingEnum">
+        <s:restriction base="s:string">
+          <s:enumeration value="Upper" />
+          <s:enumeration value="Lower" />
+          <s:enumeration value="Proper" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="VerifyAddressUSAResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="VerifyAddressUSAResult" type="si:USAddress" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="USAddress">
+        <s:complexContent mixed="false">
+          <s:extension base="si:Address">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="State" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Urbanization" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="ZipPlus4" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Zip" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="ZipAddOn" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CarrierRoute" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="PMB" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="PMBDesignator" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="DeliveryPoint" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="DPCheckDigit" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="LACS" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CMRA" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="DPV" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="DPVFootnote" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="RDI" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="RecordType" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CongressDistrict" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="County" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CountyNumber" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="StateNumber" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="GeoCode" type="si:USGeoCode" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="Address" abstract="true">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="AddressLine1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AddressLine2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="StreetNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Firm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PreDirection" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="StreetName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="StreetType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PostDirection" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Extension" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ExtensionNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Village" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="City" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AddressStatus" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="AddressErrorNumber" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="AddressErrorMessage" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="USGeoCode">
+        <s:complexContent mixed="false">
+          <s:extension base="si:GeoCode">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="CensusTract" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="StateNumber" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CountyNumber" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="BlockNumber" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="BlockGroup" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="GeoCode">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Latitude" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="Longitude" type="s:double" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ResponseInfo" type="si:ResponseInfo" />
+      <s:complexType name="ResponseInfo">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ResponseCode" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Response" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="VerifyAddressUSABatch">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="address" type="si:ArrayOfUSBatchAddress" />
+            <s:element minOccurs="0" maxOccurs="1" default="Upper" name="casing" type="si:casingEnum" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfUSBatchAddress">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="USBatchAddress" nillable="true" type="si:USBatchAddress" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="USBatchAddress">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="addressLine1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="addressLine2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="city_state_zip" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="firm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="urbanization" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="VerifyAddressUSABatchResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="VerifyAddressUSABatchResult" type="si:ArrayOfUSAddress" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfUSAddress">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="USAddress" nillable="true" type="si:USAddress" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <s:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns1="http://ws.strikeiron.com" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://ws.strikeiron.com">
+      <xs:element name="LicenseInfo" type="tns1:LicenseInfo" />
+      <xs:complexType name="LicenseInfo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="UnregisteredUser" type="tns1:UnregisteredUser" />
+          <xs:element minOccurs="0" name="RegisteredUser" type="tns1:RegisteredUser" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="UnregisteredUser">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="EmailAddress" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="RegisteredUser">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="UserID" type="xs:string" />
+          <xs:element minOccurs="0" name="Password" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="SubscriptionInfo" type="tns1:SubscriptionInfo" />
+      <xs:complexType name="SubscriptionInfo">
+        <xs:sequence>
+          <xs:element name="LicenseStatusCode" type="xs:int" />
+          <xs:element minOccurs="0" name="LicenseStatus" type="xs:string" />
+          <xs:element name="LicenseActionCode" type="xs:int" />
+          <xs:element minOccurs="0" name="LicenseAction" type="xs:string" />
+          <xs:element name="RemainingHits" type="xs:int" />
+          <xs:element name="Amount" type="xs:decimal" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="GetRemainingHits">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="GetRemainingHitsResponse">
+        <xs:complexType />
+      </xs:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="VerifyAddressUSASoapIn">
+    <wsdl:part name="parameters" element="si:VerifyAddressUSA" />
+  </wsdl:message>
+  <wsdl:message name="VerifyAddressUSASoapOut">
+    <wsdl:part name="parameters" element="si:VerifyAddressUSAResponse" />
+  </wsdl:message>
+  <wsdl:message name="VerifyAddressUSAResponseInfo">
+    <wsdl:part name="ResponseInfo" element="si:ResponseInfo" />
+  </wsdl:message>
+  <wsdl:message name="VerifyAddressUSABatchSoapIn">
+    <wsdl:part name="parameters" element="si:VerifyAddressUSABatch" />
+  </wsdl:message>
+  <wsdl:message name="VerifyAddressUSABatchSoapOut">
+    <wsdl:part name="parameters" element="si:VerifyAddressUSABatchResponse" />
+  </wsdl:message>
+  <wsdl:message name="VerifyAddressUSABatchResponseInfo">
+    <wsdl:part name="ResponseInfo" element="si:ResponseInfo" />
+  </wsdl:message>
+  <wsdl:message name="GetRemainingHitsSoapIn">
+    <wsdl:part name="parameters" element="s1:GetRemainingHits" />
+  </wsdl:message>
+  <wsdl:message name="GetRemainingHitsSoapOut">
+    <wsdl:part name="parameters" element="s1:GetRemainingHitsResponse" />
+  </wsdl:message>
+  <wsdl:message name="LicenseInfoMessage">
+    <wsdl:part name="LicenseInfo" element="s1:LicenseInfo" />
+  </wsdl:message>
+  <wsdl:message name="SubscriptionInfoMessage">
+    <wsdl:part name="SubscriptionInfo" element="s1:SubscriptionInfo" />
+  </wsdl:message>
+  <wsdl:portType name="USAddressVerificationSoap">
+    <wsdl:operation name="VerifyAddressUSA">
+      <wsdl:input message="si:VerifyAddressUSASoapIn" />
+      <wsdl:output message="si:VerifyAddressUSASoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="VerifyAddressUSABatch">
+      <wsdl:input message="si:VerifyAddressUSABatchSoapIn" />
+      <wsdl:output message="si:VerifyAddressUSABatchSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRemainingHits">
+      <wsdl:input message="si:GetRemainingHitsSoapIn" />
+      <wsdl:output message="si:GetRemainingHitsSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="USAddressVerificationSoap" type="si:USAddressVerificationSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    <wsdl:operation name="VerifyAddressUSA">
+      <soap:operation soapAction="http://www.strikeiron.com/VerifyAddressUSA" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="si:LicenseInfoMessage" part="LicenseInfo" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="si:VerifyAddressUSAResponseInfo" part="ResponseInfo" use="literal" />
+        <soap:header message="si:SubscriptionInfoMessage" part="SubscriptionInfo" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VerifyAddressUSABatch">
+      <soap:operation soapAction="http://www.strikeiron.com/VerifyAddressUSABatch" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="si:LicenseInfoMessage" part="LicenseInfo" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="si:VerifyAddressUSABatchResponseInfo" part="ResponseInfo" use="literal" />
+        <soap:header message="si:SubscriptionInfoMessage" part="SubscriptionInfo" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRemainingHits">
+      <soap:operation soapAction="http://ws.strikeiron.com/StrikeIron/USAddressVerification4_0/USAddressVerification/GetRemainingHits" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="si:LicenseInfoMessage" part="LicenseInfo" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="si:SubscriptionInfoMessage" part="SubscriptionInfo" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="USAddressVerification">
+    <wsdl:port name="USAddressVerificationSoap" binding="si:USAddressVerificationSoap">
+      <soap:address location="http://ws.strikeiron.com/StrikeIron/USAddressVerification4_0/USAddressVerification" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
+<beans>
+	<bean id="objectBean1"
+			class="com.wavemaker.runtime.server.testspring.BeanClass"
+			scope="singleton">
+		<property name="name" value="ObjectBean1" />
+	</bean>
+
+	<bean id="objectBean2"
+			class="com.wavemaker.runtime.server.testspring.BeanClass"
+			scope="singleton">
+		<property name="name" value="ObjectBean2" />
+	</bean>
+</beans>

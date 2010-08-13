@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
+<!--
+definition of configuration; this is shared between runtime and test-time.
+-->
+
+<beans>
+
+    <!-- this bean is not wired up, but it is ApplicationContextAware -->
+    <bean id="com.wavemaker.common.ResourceManager"
+          class="com.wavemaker.common.ResourceManager"
+          scope="singleton"/>
+
+    <bean id="messageSource"
+        class="org.springframework.context.support.ResourceBundleMessageSource">
+    <property name="basenames">
+      <list>
+        <value>wm_resource</value>
+      </list>
+    </property>
+  </bean>    
+
+</beans>

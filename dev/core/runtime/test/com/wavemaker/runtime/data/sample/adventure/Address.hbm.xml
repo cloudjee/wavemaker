@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 18, 2007 5:20:12 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.adventure.Address" table="Address" schema="SalesLT" catalog="AdventureWorksLT">
+        <id name="addressId" type="int">
+            <column name="AddressID" />
+            <generator class="assigned" />
+        </id>
+        <property name="addressLine1" type="string">
+            <column name="AddressLine1" length="60" not-null="true" />
+        </property>
+        <property name="addressLine2" type="string">
+            <column name="AddressLine2" length="60" />
+        </property>
+        <property name="city" type="string">
+            <column name="City" length="30" not-null="true" />
+        </property>
+        <property name="stateProvince" type="string">
+            <column name="StateProvince" length="50" not-null="true" />
+        </property>
+        <property name="countryRegion" type="string">
+            <column name="CountryRegion" length="50" not-null="true" />
+        </property>
+        <property name="postalCode" type="string">
+            <column name="PostalCode" length="15" not-null="true" />
+        </property>
+        <property name="rowguid" type="string">
+            <column name="rowguid" length="36" not-null="true" unique="true" />
+        </property>
+        <property name="modifiedDate" type="timestamp">
+            <column name="ModifiedDate" length="23" not-null="true" />
+        </property>
+        <set name="salesOrderHeadersForShipToAddressId" inverse="true">
+            <key>
+                <column name="ShipToAddressID" />
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.adventure.SalesOrderHeader" />
+        </set>
+        <set name="salesOrderHeadersForBillToAddressId" inverse="true">
+            <key>
+                <column name="BillToAddressID" />
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.adventure.SalesOrderHeader" />
+        </set>
+        <set name="customerAddresses" inverse="true">
+            <key>
+                <column name="AddressID" not-null="true" />
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.adventure.CustomerAddress" />
+        </set>
+    </class>
+</hibernate-mapping>

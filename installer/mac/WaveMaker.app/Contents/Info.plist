@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>WaveMaker Studio</string>
+	<key>CFBundleExecutable</key>
+	<string>wmstart.sh</string>
+	<key>CFBundleIconFile</key>
+	<string>wmicon.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.wavemaker</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>WaveMaker</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>@VERSION.NUMBER@</string>
+	<key>CFBundleSignature</key>
+	<string>WMSW</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>10.5</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright © 2007-2008, WaveMaker Software, Inc.
+All rights reserved.</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+</dict>
+</plist>

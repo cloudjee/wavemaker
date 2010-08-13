@@ -1,0 +1,17 @@
+.Main .Main-loginMainPanel {
+    padding: 20px;
+}
+
+.Main .Main-loginErrorMsg {
+    font-size: 14px; color: red
+}
+
+.Main .Main-loginInputPanel {
+    padding: 10px;
+    border: 4px solid #e6e6e6;
+    -moz-border-radius: 8px;
+}
+
+.Main .Main-panelMain { 
+	background-color: #BDCE48; 
+}

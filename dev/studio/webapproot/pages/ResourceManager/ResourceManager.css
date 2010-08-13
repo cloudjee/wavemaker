@@ -1,0 +1,1231 @@
+/*
+ *  Copyright (C) 2010 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+.ResourceManager-mainPanel li.dndHover > .wmtree-content {
+   background-color: rgb(200,220,220);
+   padding: solid 1px rgb(180,180,180);
+}
+.ResourceManager-mainPanel .wmtree-content {
+   border: solid 1px transparent;
+}
+
+#studio_resourcesPage_resourceManager_resourcesFileToolBar .wmpanel, #studio_resourcesPage_resourceManager_resourcesFolderToolBar .wmpanel {
+   cursor: pointer;   
+}
+
+
+.ResourceManager-resourcesFileToolBar, .ResourceManager-resourcesFolderToolBar {
+   background-color: rgb(138,146,159);
+}
+.ResourceManager-resourcesFileToolBar button, .ResourceManager-resourcesFolderToolBar button {
+   background: rgb(148,150,165);
+}
+.ResourceItem {
+   cursor: pointer;   
+}
+
+#resourceManager_resourceProperties .wmbutton {
+   color: black;
+   font-weight: bold;
+}
+
+/* For BC compat with typo in wavemaker.css  */
+
+.wm_BackgroundColor_Whilte {
+	background-color: #FFFFFF;
+}
+
+
+/* Studio */
+
+.Studio textarea, .Studio pre {
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+	font-size: 120%;
+	margin: 0;
+	padding: 8px;
+	padding-right: 0px;
+	overflow: auto;
+}
+
+.Studio-workspace {
+	background-color: #FFFFFF;
+}
+
+.Studio-toolbar {
+	margin-bottom: 1px;
+}
+
+.Studio-treeBox {
+	overflow: auto;
+	height: 196px;
+	background-color: white;
+}
+
+.Studio-tree {
+	width: 30em;
+}
+	
+.Studio-palette {
+}
+	
+
+.Studio-servicesTree {
+}
+
+/* designer */
+
+.Studio-designer {
+	border: 2px solid #3d80df;
+	/*border-color: silver;*/
+}
+
+/* outlining */
+
+/*
+.Studio-outline .wmpane {
+	padding: 0;
+}
+
+.Studio-outline .wmpane .wmbox {
+	border: 0;
+	padding: 0;
+}
+
+.Studio-outline .wmbox, .Studio-outline .wmlayoutbox, .Studio-outline .wmpanel {
+	border: 1px dotted #c1c1c1;
+}
+*/
+
+.wmdesign-marker {
+	display: none;
+}
+
+.Studio-outline .wmdesign-marker {
+	display: block;
+}
+
+.Studio-outline .wmspacer/*, .Studio-outline .wmpanel*/ {
+	background-image: url(images/hashl.png);
+}
+
+.Studio-outline .wmchrome-wrapper {
+	background-image: url(images/hash_transl.png);
+	
+}
+
+.dj_ie6 .Studio-outline .wmchrome-wrapper {
+	background-image: url(images/hashl.gif);
+}
+
+.Studio-outline .wmdesign-label {
+	visibility: visible;
+}
+
+.Studio-outline .wmpane .wmdesign-label {
+	display: none;
+}
+
+.Studio-exploded .wmpanel, .Studio-exploded .wmlayoutbox, .Studio-exploded .wmlayout, .Studio-exploded .wmlayers, .Studio-exploded .wmlayer {
+	padding: 10px;
+}
+
+.wm-darksnazzy .wmaccordion .wmlayer {
+	padding: 0px;
+}
+
+.wm-darksnazzy .wmeditor textarea {
+	color: black;
+}
+
+/* inspector */
+
+.Studio-inspected {
+	padding: 4px 4px 2px 4px;
+	border: none;
+	color: #FFF;
+}
+
+.prop-default {
+	color: green;
+}
+
+.prop-table td {
+	border: 0 none;
+}
+
+.prop-button {
+	width: 1.75em;
+}
+
+.prop-button button {
+	width: 1.75em;
+	padding: 0;
+	margin: 0;
+}
+
+.wmstyleinspector {
+}
+
+.wmstyleinspector textarea {
+	border: 0 none;
+}
+
+.wmstyleinspector-label {
+	font-weight: bold;
+	border-bottom: 1px solid silver;
+	padding: 4px;
+	text-align: center;
+	background: white url(images/toolbar_btn_bg.gif) repeat-x;
+}
+
+.wminspector {
+	background-color: #424a5a;
+}
+
+.wminspector table {
+	background-color: #424a5a;
+}
+
+.wminspector th {
+	border: 1px solid #5d6677;
+	border-top-color: #5d6677;
+	border-left-color: #5d6677;
+	border-left-width: 0px;
+}
+
+.wminspector td {
+	border: 1px solid #5d6677;
+	border-left-width: 0px;
+	border-top: none;
+	overflow: hidden;
+}
+
+.wminspector td table td {
+	border: none;
+}
+
+.wminspector td .dijitComboBox {
+	/*border: none;*/
+	margin: 0;
+}
+
+.wminspector td .dijitValidationIcon {
+	width: 0;
+}
+
+.wminspector select {
+	width: 100%;
+	border: 0;
+	background-color: #d0d1d3;
+}
+
+.wminspector textarea {
+	border: none;
+	width: 100%;
+}
+
+.wminspector input {
+	width: 100%;
+	height:100%;
+	background-color: #d0d1d3;
+	border: 0px solid white;
+	padding: 0 2px;
+	color: #000;
+}
+
+.wminspector-caption {
+	padding: 2px 2px 2px 6px;
+	background-color:#424a5a;
+	color: #FFF;
+}
+
+.wminspector-property {
+	background-color: #d0d1d3;
+	/*background-color: #F1F1F1;*/
+}
+
+.wminspector-header {
+	padding: 2px 4px;
+	background-color:#424a5a;
+	color: #FFF;
+}
+
+.wminspector-group {
+	padding: 2px 4px 2px 0px;
+	text-align: left;
+}
+
+.wminspector-binding, .wminspector-help  {
+	width: 16px;
+	background-color:#424a5a;
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+}
+
+.wminspector-header.wminspector-binding {
+	background-image: url(images/inspector_bound.gif);
+}
+
+
+.wminspector-header.wminspector-help {
+/*	background-image: url(images/inspector_bound.gif);*/
+}
+.wminspector .wminspector-help {
+   text-align: center;
+   font-weight: bold;
+   cursor: pointer;
+}
+
+
+.wminspector .wminspector-bindProp-disabled {
+	/*
+	background-image: url(images/inspector_bind_disabled.gif);
+	*/
+}
+
+.wminspector .wminspector-bindProp {
+	background-image: url(images/inspector_bind.gif);
+}
+
+.wminspector .wminspector-bindProp.wminspector-boundProp {
+	background-image: url(images/inspector_bound.gif);
+}
+
+.wminspector-grouprow {
+	cursor: pointer;
+}
+
+.wminspector-grouprow th {
+	background-color: #424a5a;
+	color:#FFF;
+}
+
+.wminspector-button {
+	vertical-align: middle;
+}
+
+.wminspector table {
+	table-layout: fixed;
+}
+
+.wminspector .wminspector-buttoncol {
+	border-right-width: 0px;
+	width: 14px;
+	text-align: left;
+	background-color:#424a5a;
+}
+
+.wminspector-spacer {
+	height: 1px;
+}
+
+.wminspector-filebox input {
+	border: none;
+	margin: 0;
+	padding: 0;
+	width: 50%;
+}
+
+.wminspector-fileinput {
+	font-size: 80%;
+}
+
+.wminspector-prop-default {
+	color: green;
+}
+
+.wminspector-prop-table td {
+	border: none;
+}
+
+.wminspector-prop-button {
+	width: 1.75em;
+}
+
+.wminspector-prop-button button {
+	width: 1.75em;
+	padding: 0;
+	margin: 0;
+}
+
+.wminspector-group img {
+	vertical-align: text-bottom;
+}
+
+.wminspector .bound-prop-table {
+	background-color:#424a5a;
+	border: 0;
+	padding: 0;
+	margin: 0;
+}
+
+.wminspector .bound-prop input {
+	padding: 0 2px;
+	font-weight: bold;
+	background-color:#ebebeb;
+	width: 100%;
+}
+
+.wminspector .bound-prop-table {
+	height: 1.5em;
+	width: 100%;
+}
+
+.wminspector .bound-prop-button {
+	padding: 0 2px;
+	width: 16px;
+	background: url(images/inspector_bind_disabled.gif) no-repeat 50% 50%;
+}
+
+#studio_splitter4 {
+	background:#737c8e url(images/h_splitter_handle.gif) no-repeat scroll 1px center;
+	border:none;
+	background-position: center;
+}
+
+.Studio-header {
+	background-image:url(images/topbar_bg.gif);
+	background-repeat:repeat-x;
+}
+
+.Studio-ribbon, .Studio-apiRibbon, .Studio-sourceRibbon, .Studio-leftToolbarButtons {
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	/*border-top:1px #FFFFFF solid;*/
+	border-bottom:1px #363b44 solid;
+	/*padding: 2px;*/
+}
+
+.Studio-navigationBar {
+	background: url(images/navbar_bg.gif) bottom repeat-x;
+}
+
+.Studio-logoTopHolder {
+	background: url(images/wmbug_top.gif) bottom no-repeat;
+}
+
+.Studio-logoBottomHolder, .Studio-apiLogoBottomHolder, .Studio-sourceLogoBottomHolder {
+	/*background: url(images/wmbug_bot.gif) no-repeat;*/
+}
+
+.Studio-studioToolbarButtons button, .Studio-componentsToolbar button, .Studio-servicesPane_services_servicesTopPanel button, .Studio-sourceRibbon button{
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	height: 24px;
+	text-align: center;
+}
+
+.Studio-studioToolbarButtons button:hover, .Studio-componentsToolbar button:hover, .Studio-sourceRibbon button:hover {
+	background-image:url(images/dark_toolbar_btn_sm_on.gif);
+	background-repeat: no-repeat;
+	height: 24px;
+}
+
+.Studio-ptoolbar button {
+	background-color: transparent;
+	background-image: none;
+	text-align: center;
+}
+
+.Studio-ptoolbar button:hover {
+	background-color: #6f798a;
+}
+
+.Studio-navBtnHolder button {
+	color: #fff;
+}
+
+.Studio-navBtnHolder button:hover {
+	/*color: #959dab;*/
+}
+
+/*
+.Studio-sourceToolbarButtons button {
+	margin: 1px 1px 1px 1px;
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	border: 0 none;
+	height: 24px;
+}
+*/
+
+.Studio-designerCanvasBtn {
+	background-color: transparent;
+	background-image: url(images/canvas_btn_on.gif);
+	border: 0 none;
+}
+
+.Studio-designerSourceBtn {
+	background-image: url(images/source_btn_off.gif);
+	border: 0 none
+}
+
+.Studio-designerResourcesBtn {
+/*	background-image: url(images/source_btn_off.gif);*/
+	border: 0 none
+}
+
+
+.Studio-sourceCanvasBtn {
+	background-image: url(images/canvas_btn_off.gif);
+	border: 0 none;
+}
+
+.Studio-sourceSourceBtn {
+	background-image: url(images/source_btn_on.gif);
+	border: 0 none;
+}
+
+.Studio-sourceResourcesBtn {
+/*	background-image: url(images/source_btn_on.gif);*/
+	border: 0 none;
+}
+
+
+.Studio-projectTasks {
+	padding: 0px 0px 2px 2px;
+}
+
+.Studio-projectTasks button {
+	background-image:url(images/proj_btn_bg.gif);
+	background-repeat:repeat-x;
+	border-top: 1px solid #586981;
+	border-bottom: 1px solid #586981;
+	height: 23px;
+	color: #FFFFFF;
+	padding: 0.2em;
+	white-space: nowrap;
+	vertical-align: top;
+	margin-top: 2px;
+}
+
+.Studio-projectTasks button:hover {
+	background-image:url(images/proj_btn_bg_hover.gif);
+}
+
+.Studio-projectDeployBtn {
+	border-right: 1px solid #586981;
+	border-left: 1px solid #92a4be;
+}
+
+.Studio-projectSaveAsBtn, .Studio-projectSaveBtn, .Studio-projectOpenBtn, .Studio-closeProjectBtn, .Studio-projectPreviewBtn, .Studio-liveDataBtn {
+	border-right: 1px solid #586981;
+	border-left: 1px solid #92a4be;
+}
+
+.Studio-saveProjectBtn {
+	border-right: 1px solid #586981;
+	border-left: 1px solid #586981;
+}
+
+.Studio-logoImage {
+	margin: 1px 0px 0px 3px;
+}
+
+.Studio-paletteLabel {
+	background-image:url(images/palette_label.gif);
+	background-repeat:no-repeat;
+}
+
+.Studio-dataPaletteLabel {
+	background-image:url(images/objects_label.gif);
+	background-repeat:no-repeat;
+}
+
+.Studio-objtree_label {
+	background-image:url(images/objects_label.gif);
+	border-bottom: 1px solid #c1c1c1;
+	background-repeat:no-repeat;
+}
+
+.Studio-props_label {
+	background-image:url(images/props_label.gif);
+	background-repeat:no-repeat;
+	border-bottom: 1px solid #c1c1c1;
+}
+
+.Studio-dashboardPane_dashboard_panel {
+	background-image:url(images/dash_bg_new.gif);
+	background-repeat:repeat-x;
+}
+
+.Studio-separator {
+	padding: 0px;
+}
+
+.Studio-dataObjectsPane_dataObjectsEditor_label1, .Studio-dataObjectsPane_dataObjectsEditor_label, .Studio-dataObjectsPane_dataObjectsEditor_label2, .Studio-dataObjectsPane_dataObjectsEditor_pageContainer_queryEditor_label6, .Studio-dataObjectsPane_dataObjectsEditor_pageContainer_queryEditor_label8, .Studio-dataObjectsPane_dataObjectsEditor_label100 {
+	background-image:url(images/topbar_bg.gif);
+	background-repeat:repeat-x;
+	border-bottom: 1px solid #c1c1c1;
+	padding: 6px 0px 5px 5px;
+	font-weight: normal;
+	font-size: 100%;
+}
+
+.Studio-dataObjectsPane_dataObjectsEditor_label1, .Studio-dataObjectsPane_dataObjectsEditor_label, .Studio-dataObjectsPane_dataObjectsEditor_pageContainer_queryEditor_label8 {
+	border-top: 1px solid #c1c1c1;
+}
+
+.Studio-dataObjectsPane_dataObjectsEditor_queryPage input, .Studio-dataObjectsPane_dataObjectsEditor_queryPage textarea, .Studio-dataObjectsPane_dataObjectsEditor_queryPage select {
+	border: solid 1px #c1c1c1;
+	font-size: 100%;
+}
+
+.Studio-dataObjectsPane_dataObjectsEditor_pageContainer_queryEditor_panel, .Studio-dataObjectsPane_dataObjectsEditor_pageContainer_queryEditor_panel3 {
+	background-image:url(images/editor_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	border-top:1px #FFFFFF solid;
+	border-bottom:1px #C1C1C1 solid;
+	padding: 2px;
+}
+
+.Studio-dataObjectsPane_dataObjectsEditor_pageContainer_queryEditor_panel button, .Studio-dataObjectsPane_dataObjectsEditor_pageContainer_queryEditor_panel3 button, .Studio-dataObjectsPane_dataObjectsEditor_pageContainer_queryEditor_addInput, .Studio-dataObjectsPane_dataObjectsEditor_pageContainer_queryEditor_removeInput {
+	margin: 1px 2px 1px 2px;
+	background-image:url(images/toolbar_btn_bg.gif);
+	background-repeat:repeat-x;
+	border: 1px solid #c1c1c1;
+}
+
+.Studio-dashboardPane_dashboard_bottomListsPanel button, .Studio-componentsToolbar button {
+	/*margin: 1px 2px 1px 2px;
+	background-image:url(images/toolbar_btn_bg.gif);
+	background-repeat:repeat-x;*/
+	padding: 0px;
+	border: 1px solid #e6e6e6;
+	background-color: #e6e6e6;
+}
+
+.Studio-dashboardPane_dashboard_bottomListsPanel button:hover {
+	
+	background-image:url(images/toolbar_btn_bg.gif);
+	background-repeat:repeat-x;
+	border: 1px solid #c1c1c1;
+	background-color: #e6e6e6;
+}
+
+.Studio-dataObjectsPane_dataObjectsEditor_pageContainer_queryEditor_queryInputsList {
+	border: 1px solid #c1c1c1;
+}
+
+.Studio-footer {
+	background-image:url(images/dark_tabbar_bg.gif);
+	background-repeat:repeat-x;
+	color:#FFF;
+	padding-top: 6px;
+	text-align: center;
+	/*border-top: 1px solid #c1c1c1;*/
+}
+
+
+/* FIXME: yay, remove dashboard / welcome stuff when ready... */
+/*
+.Studio-dashboardPane_dashboard_paneListToolbar, .Studio-dashboardPane_dashboard_serviceListToolbar, .Studio-dashboardPane_dashboard_datamodelListToolbar, .Studio-componentsToolbar {
+	background-color: #e6e6e6;
+}
+
+.Studio-dashboardPane_dashboard_bottomListsPanel input, .Studio-dashboardPane_dashboard_projectNameInput {
+	border: 1px solid #c1c1c1;
+	font-size: 100%;
+}
+
+
+.Studio-dashboardPane_dashboard_bottomListsPanel input {
+	background: #FFFFFF url(images/toolbar_search.png) center right no-repeat;
+}
+
+.Studio-dashboardPane_dashboard_topButtonsPanel button, .Studio-welcomePane_welcome_bottomPanel button {
+	border: 1px solid #586981;
+	background-image: url(images/proj_btn_bg.gif);
+	background-repeat:repeat-x;
+	color: #FFFFFF;
+	font-size: 100%;
+	margin:5px;
+}
+
+.Studio-dashboardPane_dashboard_topButtonsPanel button:hover, .Studio-welcomePane_welcome_bottomPanel button:hover {
+	border: 1px solid #586981;
+	background-image: url(images/proj_btn_bg_hover.gif);
+	background-repeat:repeat-x;
+	color: #FFFFFF;
+	font-size: 100%;
+	margin:5px;
+}
+
+.Studio-dashboardPane_dashboard_topButtonsPanel button:hover {
+	font-weight: bold;
+}*/
+
+
+/* Groovy, except on IE6 
+.Studio-tabs > .wmtablayers-tabbar {
+	background-image:url(images/topbar_bg.gif);
+	background-repeat:repeat-x;
+}
+*/
+
+/* IE6 compat, thx M$ */
+/*
+.Studio-tabs .wmtablayers-tabbar {
+	background-image:url(images/topbar_bg_ltblue.gif);
+	background-repeat:repeat-x;
+}
+*/
+
+.Studio-componentsToolbar {
+	border-bottom: 1px solid #363b44;
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+}
+
+.Studio-toolbarspacer1, 
+.Studio-toolbarspacer2, 
+.Studio-toolbarspacer3, 
+.Studio-toolbarspacer4, 
+.Studio-toolbarspacer5, 
+.Studio-toolbarspacer6, 
+.Studio-sourceToolbarspacer6, 
+.Studio-toolbarspacer9 {
+	background-image:url(images/toolbarspacer.gif);
+	/*border-left: solid 1px #3b3c3f;
+	border-right: solid 1px #c3c4c6;*/
+}
+
+.Studio-navBarSpacer6,
+.Studio-navBarSpacer1b {
+	background-image:url(images/navbarspacer.gif);
+	background-position:center;
+	background-repeat:no-repeat;
+}
+
+.Studio-pagePopupBtn, .Studio-sourcePagePopupBtn {
+	white-space: nowrap;
+}
+
+.Studio-widgets, .Studio-appsource {
+	background-color: #424a5a;
+	color: #FFF;
+	border-top: solid 6px #959dab;
+	/* FIXME: layout is overriding this without important
+		incredo annoying if these divs don't scroll
+	 */
+	overflow-y: auto !important;
+}
+
+.Studio-pageNameInputLabel {
+	padding-top: 5px;
+	padding-left: 5px;
+}
+
+.Studio-pageNameInput {
+	border: solid 1px #c1c1c1;
+	height: 20px;
+}
+
+.wmWaitDialog {
+	background-image:url(images/waitdialog_bg.gif);
+	background-repeat:repeat-x;
+	background-color: #d7d7d7;
+	vertical-align: middle;
+	color: #000;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	text-align: center;
+	padding: 10px;
+}
+
+.wmWaitDialog .wmWaitMessage {
+	font-weight: normal;
+	font-size: 12px;
+}
+
+.wmWaitDialog .wmWaitThrobber {
+	background: url(images/makewavesani_lg.gif) center no-repeat;
+	height: 40px;
+	padding-bottom: 8px;
+}
+
+.Studio-dialog {
+	cursor: wait;
+}
+
+.ext_toolbtn_icon {
+	width: 16px;
+}
+
+/**/
+
+
+.Studio-tabs .Studio-designer .wmtabbook-tabbar {
+	background-color: #fff;
+}
+
+.Studio-console {
+	height: 100px;
+	display: none;
+}
+
+.Studio-options, .Studio-inport {
+	padding: 8px;
+}
+
+#image {
+	text-align: center;
+	overflow: auto;
+}
+
+/* css */
+.Studio .Studio-cssPageLabel, .Studio .Studio-cssAppLabel {
+	padding: 4px;
+	font-weight: bold;
+}
+
+.Studio-navBtnHolder button {
+	border:none;
+	background: url(images/navbar_bg.gif) bottom repeat-x;
+	cursor: pointer;
+}
+
+/* popup */
+.Studio .wmpopup {
+	border: none;
+}
+
+.Studio .wmitempopup {
+	background-color: #6f798a;
+	color: #FFF;
+	font-size: 115%;
+	font-weight:bold;
+	filter:alpha(opacity=95);
+	-moz-opacity:.95;
+	opacity:.95;
+}
+
+.Studio .wmitem {
+	cursor: pointer;
+	padding: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
+	white-space:nowrap;
+}
+
+.Studio .wmitem-disabled {
+	color: #ccc;
+}
+
+.Studio .wmitem-over {
+	background: #6194e0;
+}
+
+.Studio .wmitem-popup {
+	background-image: url("images/menu_rightarrow.gif");
+	background-position: center right;
+	background-repeat: no-repeat;
+}
+
+#studio_splitter3 {
+	background:#959dab url(images/v_splitter_handle.gif) no-repeat scroll 1px center;
+	border-left: 1px solid #c0c4ca;
+	border-right: 1px solid #363b44;
+	cursor:e-resize;
+	overflow:hidden;
+	width:5px;
+	z-index:9;
+}
+
+#studio_splitter1 {
+	background: #959dab url(images/dark_toolbar_bg.gif) no-repeat scroll 0px top;
+	border-left: 1px solid #c0c4ca;
+	border-right: 1px solid #363b44;
+	cursor:e-resize;
+	overflow:hidden;
+	width:5px;
+	z-index:9;
+}
+
+.Studio-splitter3b {
+	background: #959dab url(images/h_splitter_handle.gif) no-repeat scroll 1px center;
+	border-top: 1px solid #c0c4ca;
+	border-bottom: 1px solid #363b44;
+	cursor:n-resize;
+	overflow:hidden;
+	height:5px;
+	z-index:9;
+	background-position: center;
+}
+
+#studio_benchbevel, #studio_benchbevel2, #studio_benchbevel3, #studio_benchbevel4, #studio_benchbevel12 {
+	background-color: #959dab;
+	border-top: 1px solid #c0c4ca;
+	border-bottom: 1px solid #363b44;
+}
+
+#studio_benchbevel11 {
+	background: #959dab url(images/dark_toolbar_bg.gif) no-repeat scroll 0px top;
+	border-top: 1px solid #c0c4ca;
+	border-bottom: 1px solid #363b44;
+}
+
+.statusNameBox, .statusSizeBox, .statusMsgBox, .statusLoadingBox {
+	background-color: #424a5a;
+	border-width: 1px;
+	border-left-color: #1c1f26;
+	border-bottom-color: #c0c4ca;
+	border-top-color: #1c1f26;
+	border-right-color: #c0c4ca;
+	color: #FFF;
+}
+
+.wm-darksnazzy .wmaccordion {
+	border: none;
+	/*border-bottom: 1px solid #3399FF;*/
+}
+
+.wm-darksnazzy .wmaccordion-header {
+	background: #9EBFEF url(images/accordion_bg_on.gif) top right no-repeat;
+	cursor: pointer;
+	white-space:nowrap;
+	padding: 4px;
+	border-top: 1px solid #c0c4ca;
+	border-bottom: 1px solid #363b44;
+	border-left: 1px solid #c0c4ca;
+	color: #FFF;
+}
+
+.wm-darksnazzy .wmaccordion .wmaccordion-collapsed {
+	background: #ebebeb url(images/accordion_bg_off.gif) top right no-repeat;
+	border-top: 1px solid #c0c4ca;
+	border-bottom: 1px solid #363b44;
+	border-left: 1px solid #c0c4ca;
+	color: #FFF;
+	/*
+	border-bottom: 1px solid #3399FF;
+	border-bottom-style: none;
+	*/
+}
+
+.wm-darksnazzy .wmaccordion-content {
+	overflow: auto;
+	overflow-x: hidden;
+	/*
+	border: 1px solid #999999;
+	border-top-style: none;
+	border-bottom-style: none;
+	*/
+}
+
+.wm-darksnazzy .wmlabel {
+	color: #FFF;
+}
+
+/*prop inspector*/
+
+.Studio-PIPanel {
+	padding: 5px;
+	background-color: #6f798a;
+}
+
+.Studio-PIContents {
+	background-color: #424a5a;
+}
+
+.Studio-PISpacer, .Studio-PILabelContainer, .Studio-PITreeLabelContainer {
+	background-color: #6f798a;
+}
+
+.Studio-PITreeTopBorderl, .Studio-PITopBorderl {
+	background-image: url(images/pi_ul.gif);
+}
+
+.Studio-PITreeTopBorderr, .Studio-PITopBorderr {
+	background-image: url(images/pi_ur.gif);
+}
+
+.Studio-PITreeBotBorderl, .Studio-PIBotBorderl {
+	background-image: url(images/pi_ll.gif);
+}
+
+.Studio-PITreeBotBorderr, .Studio-PIBotBorderr {
+	background-image: url(images/pi_lr.gif);
+}
+
+.Studio-inspectorLayers .wmtree-root-leaf, .Studio-inspectorLayers .wmtree-root-last-leaf, .Studio-inspectorLayers .wmtree-last-item { 
+	background-color: #fff; 
+}
+
+.Studio .wmdialog-content {
+	border:none;
+}
+
+.Studio-navBtnHolder button {
+	-moz-outline: none;
+}
+
+.wmDialogTitleBar {
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	border-bottom:1px #363b44 solid;
+	color: #FFF;
+	border-left: 1px solid #c0c4ca;
+	border-right: 1px solid #363b44;
+	font-size: 120%;
+	text-align: center;
+}
+
+.wmDialogFooter {
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	border-bottom:1px #363b44 solid;
+	color: #FFF;
+	padding: 4px;
+	border-left: 1px solid #c0c4ca;
+	border-right: 1px solid #363b44;
+}
+
+.wmDialogFooter button, .wmDialogBody button {
+	background-image:url(images/dark_btn_bg.gif);
+	background-repeat:repeat-x;
+	color: #FFF;
+	font-weight:bold;
+	border: solid 1px #353a44;
+}
+
+.wmDialogBody {
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	background-color: #949cab;
+	border-left: solid 1px #c0c4ca;
+	border-top-width: 0px;
+	border-right: solid 1px #363b44;
+	border-bottom: solid 1px #363b44;
+	padding: 5px;
+}
+
+.wm-darksnazzy .wmGroupBox {
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	background-color: #949cab;
+	border-left: solid 1px #c0c4ca;
+	border-top-width: 0px;
+	border-right: solid 1px #363b44;
+	border-bottom: solid 1px #363b44;
+	padding: 5px;
+}
+
+.wmDialogBody .wmlist-list {
+	background-color: #FFF;
+	border: 1px solid #000;
+	color: #000;
+}
+
+.wm-darksnazzy .wmToolbar {
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	border-bottom:1px #363b44 solid;
+}
+
+.wm-darksnazzy  button {
+	/*background-image:url(images/wmbutton_bg.png);
+	background-repeat:repeat-x;*/
+	background-color: transparent;
+	color: #FFF;
+	border-left: 1px solid #c0c4ca;
+	border-right: 1px solid #363b44;
+	border-top: 1px solid #c0c4ca;
+	border-bottom: 1px solid #363b44;
+	cursor: pointer;
+}
+
+.wm-darksnazzy .wmToolbar button {
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	height: 24px;
+}
+
+.wm-darksnazzy .wmToolbar button:hover {
+	background-image:url(images/dark_toolbar_btn_sm_on.gif);
+	background-repeat:no-repeat;
+	height: 24px;
+}
+
+/* design: dark theme */
+
+.wm-darksnazzy {
+	background-color: #424a5a;
+	color: #FFF;
+	border:none;
+}
+
+.wm-darksnazzy .wmtree {
+	background-color: #424a5a;
+}
+
+.wm-darksnazzy .wmtree .wmtree-root-leaf, .wm-darksnazzy .wmtree .wmtree-root-last-leaf, .wm-darksnazzy .wmtree .wmtree-last-item, 
+.wm-darksnazzy .wmtree .wmtree-root-leaf, .wm-darksnazzy .wmtree .wmtree-root-last-leaf, .wmtree .wm-darksnazzy .wmtree-last-item {  
+	background-color: #424a5a;
+}
+
+.wm-darksnazzy .wmsplitter {
+	background: #959dab center center no-repeat;
+	border-left: 1px solid #c0c4ca;
+	border-right: 1px solid #363b44;
+	border-top: 1px solid #c0c4ca;
+	border-bottom: 1px solid #363b44;
+	width:5px;
+}
+
+.wm-darksnazzy .wmsplitter-h {
+	background-image: url(images/v_splitter_handle.gif);
+}
+
+.wm-darksnazzy .wmsplitter-v {
+	background-image: url(images/h_splitter_handle.gif);
+}
+
+.wm-darksnazzy .wmbevel {
+	background:#959dab;
+}
+
+.wm-darksnazzy input {
+	color: black;
+}
+
+.wm-darksnazzy .dojoxGrid {
+	color: black;
+}
+
+.wm-darksnazzy .wmeditor-caption {
+	color: #FFF;
+}
+
+.wm-darksnazzy .wmtablayers-tabbar {
+	background-image:url(images/dark_tabbar_bg.gif);
+	border-bottom: 1px solid #c0c4ca;
+	background-repeat:repeat-x;
+	padding-top: 8px;
+}
+
+.wm-darksnazzy .wmtablayers .wmtablayers-tab {
+	cursor: pointer;
+}
+
+.wm-darksnazzy .wmtablayers-tab {
+	cursor: pointer;
+	border-top: 1px solid #5e6678;
+	border-right: none;
+	border-left: none;
+	border-bottom: 1px solid #5e6678 /*#c0c4ca*/;
+	margin: 0px 0px 0px 6px;
+	background-color: #5e6678;
+	background-image:none;
+	color: #FFF;
+}
+
+.wm-darksnazzy .wmtablayers-selected {
+	border-top: 1px solid #c0c4ca;
+	border-right: 1px solid #363b44;
+	border-left: 1px solid #c0c4ca;
+	background-color: #959dab;
+	border-bottom: 1px solid #959dab;
+	background-image: none;
+	margin: 0px 0px 0px 6px;
+	color: #FFF;
+}
+
+/* Palette */
+.palette_desc {
+	color: #CCC;
+}
+
+.palette_name {
+	font-size: 115%;
+}
+
+.Studio .wmpalette {
+	font-weight: bold;
+	padding-top: 0;
+	overflow-y: auto !important;
+}
+
+/* argh */
+.Studio .wmpalette ul .wmtree-root-leaf {
+	background: transparent;
+}
+
+/* Section Headers */
+.Studio .wmpalette ul li, .Studio .wmpalette ul .wmtree-last-item {
+	padding: .3em 0 0 18px;
+	font-size: 110%;
+	background: #9EBFEF url(images/palette_bg.gif) top right no-repeat;
+	white-space:nowrap;
+	line-height: 23px;
+	border-top: 1px solid #c0c4ca;
+	color: white;
+}
+
+.Studio .wmpalette ul li ul {
+	background-color: #424A5A;
+}
+
+	/* Section Items */
+.Studio .wmpalette ul li ul li, .Studio .wmpalette ul li ul .wmtree-last-item, .Studio .wmpalette ul li ul li.wmtree-open, .Studio .wmpalette ul li ul .wmtree-last-item.wmtree-open {
+	font-size: 95%;
+	margin-left: -18px;
+	padding: .2em 2px 0 2px;
+	background: #424A5A;
+	color: white;
+}
+
+.Studio .wmpalette ul li ul li, .Studio .wmpalette ul li ul .wmtree-last-item {
+	border-top: 0;
+	border-bottom: 1px solid #515762;
+	height: 2em;
+}
+
+.Studio .wmpalette-button {
+	font-size: 90%;
+	height: 2.3em; /*39px; */
+	text-align: left;
+	border:none;
+	border-bottom: 1px solid #515762;
+	background-color: #424a5a;
+	color: #FFF;
+}
+
+.Studio .wmpalette-button img {
+	width: 16px;
+	height: 16px;
+	padding-right: 4px;
+}
+
+.wm-darksnazzy .wmaccordion-content{
+	background-color: #424a5a;
+}
+.Studio .Studio-bench {
+	background-image: url(/wavemaker/images/hash.png);
+}
+
+
+#studio_inspectorLayers_applyStylesButton {
+	background-image:url(images/dark_btn_bg.gif);
+	background-repeat:repeat-x;
+	color: #FFF;
+	font-weight:bold;
+	border: solid 1px #353a44;
+}
+

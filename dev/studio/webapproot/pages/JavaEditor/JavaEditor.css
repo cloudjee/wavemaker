@@ -1,0 +1,90 @@
+/*
+ *  Copyright (C) 2010 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+#studio_javaEditorContainer_javaEditor_logViewer_logViewer_logArea {
+   background-color: white;
+}
+
+#studio_javaEditorContainer_javaEditor_editorToolbar, #studio_javaEditorContainer_javaEditor_javaServiceToolbar {
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	/*border-top:1px #FFFFFF solid;*/
+	border-bottom:1px #363b44 solid;
+	/*padding: 2px;*/
+	color: #FFF;
+}
+
+#studio_javaEditorContainer_javaEditor_logoBtmHolder {
+	/*background: url(images/wmbug_bot.gif) bottom no-repeat;*/
+}
+
+#studio_javaEditorContainer_javaEditor_toolbarBtnHolder button, #studio_javaEditorContainer_javaEditor_javaServiceToolbar button {
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	height: 24px;
+	text-align: center;
+}
+
+#studio_javaEditorContainer_javaEditor_toolbarBtnHolder button:hover, #studio_javaEditorContainer_javaEditor_javaServiceToolbar button:hover {
+	background-image:url(images/dark_toolbar_btn_sm_on.gif);
+	background-repeat:no-repeat;
+	height: 24px;
+}
+
+#studio_javaEditorContainer_javaEditor_javaServiceOutputLabel {
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	/*border-top:1px #FFFFFF solid;*/
+	border-bottom:1px #363b44 solid;
+	/*padding: 2px;*/
+	color: #FFF;
+	padding-top: 6px;
+	text-align: center;
+	font-weight: bold;
+}
+
+#studio_javaEditorContainer_javaEditor_splitter1 {
+	background:#959dab url(images/v_splitter_handle.gif) no-repeat scroll 1px center;
+	border-left: 1px solid #c0c4ca;
+	border-right: 1px solid #363b44;
+	cursor:e-resize;
+	overflow:hidden;
+	width:5px;
+	z-index:9;
+}
+
+#studio_javaEditorContainer_javaEditor_javaCodeSplitter {
+	background:#959dab url(images/h_splitter_handle.gif) no-repeat scroll 1px center;
+	border-top: 1px solid #c0c4ca;
+	border-bottom: 1px solid #363b44;
+	cursor:n-resize;
+	overflow:hidden;
+	height:5px;
+	z-index:9;
+	background-position: center;
+}
+
+#studio_javaEditorContainer_javaEditor_benchbevel4 {
+	background-color: #959dab;
+	border-top: 1px solid #c0c4ca;
+	border-bottom: 1px solid #363b44;
+}
+
+.JavaEditor-toolbarspacer1, .JavaEditor-toolbarspacer2 {
+	background-image:url(images/toolbarspacer.gif);
+}

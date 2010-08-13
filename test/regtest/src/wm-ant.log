@@ -1,0 +1,174 @@
+=================================
+Choose which browser to test:    
+=================================
+1) Firefox
+2) Safari
+3) All
+Choice [3]: Buildfile: build.xml
+
+setup:
+     [move] Moving 3 files to /Users/hcl/regtest/src/log/HTML_Archive
+     [move] Moving 3 files to /Users/hcl/regtest/src/log/XML_Archive
+     [exec] No matching processes belonging to you were found
+     [exec] Result: 1
+
+openRolodex:
+
+runTestie:
+
+runTestff:
+
+runTest:
+     [echo] ----------- Test Parameters ---------- 
+     [echo] TestSuite Name: /Users/hcl/regtest/src/suite_WaveMaker
+     [echo] TestCase Name: /Users/hcl/regtest/src/suite_WaveMaker
+     [echo] TestResult XML File: /Users/hcl/regtest/src/log/XML/200806040016_ff_openRolodex.xml
+     [echo] TestResult File: /Users/hcl/regtest/src/log/HTML/200806040016_ff_openRolodex.html
+     [echo] ------------------------------------------------ 
+     [exec] * This is an EVALUATION version of Squish. *
+     [exec] * This is an EVALUATION version of Squish. *
+     [exec] application registered /Applications/squish-20080502-web-mac/bin/webhook.app/Contents/MacOS/_webhook.app/Contents/MacOS/_webhook 911670002
+     [exec] Initializing AUT context ...... done.
+     [exec] RUNNERID: 911670001
+     [exec] AUTID: 911670002
+     [exec] AUTHOST: 127.0.0.1
+     [exec] AUTPORT: 4322
+     [exec] RUNNERID: 911670001
+
+KillProcess:
+
+KillSquish:
+
+runTestsa:
+
+runRolodex:
+
+setupWar:
+   [delete] Deleting directory /Applications/WaveMaker.app/Tomcat/webapps/RolodexSimple
+    [mkdir] Created dir: /Applications/WaveMaker.app/Tomcat/webapps/RolodexSimple
+    [unzip] Expanding: /Applications/WaveMaker.app/Samples/RolodexSimple/dist/RolodexSimple.war into /Applications/WaveMaker.app/Tomcat/webapps/RolodexSimple
+
+runTestie:
+
+runTestff:
+
+runTest:
+     [echo] ----------- Test Parameters ---------- 
+     [echo] TestSuite Name: /Users/hcl/regtest/src/suite_WaveMaker
+     [echo] TestCase Name: /Users/hcl/regtest/src/suite_WaveMaker
+     [echo] TestResult XML File: /Users/hcl/regtest/src/log/XML/200806040016_ff_runRolodex.xml
+     [echo] TestResult File: /Users/hcl/regtest/src/log/HTML/200806040016_ff_runRolodex.html
+     [echo] ------------------------------------------------ 
+     [exec] * This is an EVALUATION version of Squish. *
+     [exec] * This is an EVALUATION version of Squish. *
+     [exec] application registered /Applications/squish-20080502-web-mac/bin/webhook.app/Contents/MacOS/_webhook.app/Contents/MacOS/_webhook 911810002
+     [exec] Initializing AUT context ...... done.
+     [exec] RUNNERID: 911810001
+     [exec] AUTID: 911810002
+     [exec] AUTHOST: 127.0.0.1
+     [exec] AUTPORT: 4322
+     [exec] RUNNERID: 911810001
+
+KillProcess:
+
+KillSquish:
+
+runTestsa:
+
+openWebServices:
+
+runTestie:
+
+runTestff:
+
+runTest:
+     [echo] ----------- Test Parameters ---------- 
+     [echo] TestSuite Name: /Users/hcl/regtest/src/suite_WaveMaker
+     [echo] TestCase Name: /Users/hcl/regtest/src/suite_WaveMaker
+     [echo] TestResult XML File: /Users/hcl/regtest/src/log/XML/200806040016_ff_openWebServices.xml
+     [echo] TestResult File: /Users/hcl/regtest/src/log/HTML/200806040016_ff_openWebServices.html
+     [echo] ------------------------------------------------ 
+     [exec] * This is an EVALUATION version of Squish. *
+     [exec] * This is an EVALUATION version of Squish. *
+     [exec] application registered /Applications/squish-20080502-web-mac/bin/webhook.app/Contents/MacOS/_webhook.app/Contents/MacOS/_webhook 911930002
+     [exec] Initializing AUT context ...... done.
+     [exec] RUNNERID: 911930001
+     [exec] AUTID: 911930002
+     [exec] AUTHOST: 127.0.0.1
+     [exec] AUTPORT: 4322
+     [exec] RUNNERID: 911930001
+
+KillProcess:
+
+KillSquish:
+
+runTestsa:
+
+runWebServices:
+
+setupWar:
+   [delete] Deleting directory /Applications/WaveMaker.app/Tomcat/webapps/WebServicesSample
+    [mkdir] Created dir: /Applications/WaveMaker.app/Tomcat/webapps/WebServicesSample
+    [unzip] Expanding: /Applications/WaveMaker.app/Samples/WebServicesSample/dist/WebServicesSample.war into /Applications/WaveMaker.app/Tomcat/webapps/WebServicesSample
+
+runTestie:
+
+runTestff:
+
+runTest:
+     [echo] ----------- Test Parameters ---------- 
+     [echo] TestSuite Name: /Users/hcl/regtest/src/suite_WaveMaker
+     [echo] TestCase Name: /Users/hcl/regtest/src/suite_WaveMaker
+     [echo] TestResult XML File: /Users/hcl/regtest/src/log/XML/200806040016_ff_runWebServices.xml
+     [echo] TestResult File: /Users/hcl/regtest/src/log/HTML/200806040016_ff_runWebServices.html
+     [echo] ------------------------------------------------ 
+     [exec] * This is an EVALUATION version of Squish. *
+     [exec] * This is an EVALUATION version of Squish. *
+     [exec] application registered /Applications/squish-20080502-web-mac/bin/webhook.app/Contents/MacOS/_webhook.app/Contents/MacOS/_webhook 912050002
+     [exec] Initializing AUT context ...... done.
+     [exec] RUNNERID: 912050001
+     [exec] AUTID: 912050002
+     [exec] AUTHOST: 127.0.0.1
+     [exec] AUTPORT: 4322
+     [exec] RUNNERID: 912050001
+
+KillProcess:
+
+KillSquish:
+
+runTestsa:
+
+checkTestResult:
+     [echo] /Users/hcl/regtest/src/log/XML/
+[checkresult] Test passed successfully
+[checkresult] XML File Name : 200806040016_ff_openRolodex.xml
+[checkresult] fatals	Warnings	Tests	Errors	Fails	Passes
+[checkresult] 
+[checkresult] 0    	0       	4     	0    	0    	4
+[checkresult] 
+[checkresult] Test passed successfully
+[checkresult] XML File Name : 200806040016_ff_openWebServices.xml
+[checkresult] fatals	Warnings	Tests	Errors	Fails	Passes
+[checkresult] 
+[checkresult] 0    	0       	4     	0    	0    	4
+[checkresult] 
+[checkresult] Test passed successfully
+[checkresult] XML File Name : 200806040016_ff_runRolodex.xml
+[checkresult] fatals	Warnings	Tests	Errors	Fails	Passes
+[checkresult] 
+[checkresult] 0    	0       	5     	0    	0    	5
+[checkresult] 
+[checkresult] Test has failures
+[checkresult] XML File Name : 200806040016_ff_runWebServices.xml
+[checkresult] fatals	Warnings	Tests	Errors	Fails	Passes
+[checkresult] 
+[checkresult] 0    	0       	1     	0    	1   	0
+[checkresult] 
+
+outTestResultFailure:
+
+BUILD FAILED
+/Users/hcl/regtest/src/build.xml:299: The following error occurred while executing this line:
+/Users/hcl/regtest/src/build.xml:304: The test results have failures
+
+Total time: 4 minutes 40 seconds

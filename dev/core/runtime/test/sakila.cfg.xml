@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+               "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+               "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+        <property name="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
+        <property name="hibernate.current_session_context_class">thread</property>
+<mapping resource="com/wavemaker/runtime/data/sample/sakila/CityInfo.hbm.xml"/>
+<mapping resource="com/wavemaker/runtime/data/sample/sakila/TestActor.hbm.xml"/>
+<mapping resource="com/wavemaker/runtime/data/sample/sakila/TestAddress.hbm.xml"/>
+<mapping resource="com/wavemaker/runtime/data/sample/sakila/TestCity.hbm.xml"/>
+<mapping resource="com/wavemaker/runtime/data/sample/sakila/TestCountry.hbm.xml"/>
+<mapping resource="com/wavemaker/runtime/data/sample/sakila/TestCountry.crud.hql.xml"/>
+<mapping resource="com/wavemaker/runtime/data/sample/sakila/TestCustomer.hbm.xml"/>
+<mapping resource="com/wavemaker/runtime/data/sample/sakila/TestFilm.hbm.xml"/>
+<mapping resource="com/wavemaker/runtime/data/sample/sakila/TestFilmActor.hbm.xml"/>
+<mapping resource="com/wavemaker/runtime/data/sample/sakila/TestStaff.hbm.xml"/>
+<mapping resource="com/wavemaker/runtime/data/sample/sakila/TestStore.hbm.xml"/>
+    </session-factory>
+</hibernate-configuration>

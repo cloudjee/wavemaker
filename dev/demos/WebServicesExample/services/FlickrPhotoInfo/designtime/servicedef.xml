@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" springFile="FlickrPhotoInfo.spring.xml" type="WebService" CRUDService="false" class="com.flickr.api.services.rest.flickrphotoinfo.FlickrPhotoInfo" id="FlickrPhotoInfo">
+    <operation name="getInfo">
+        <parameter isList="false" typeRef="java.lang.String" name="apiKey"/>
+        <parameter isList="false" typeRef="java.lang.String" name="photoId"/>
+        <return isList="false" typeRef="com.flickr.api.services.rest.flickrphotoinfo.Rsp"/>
+    </operation>
+    <dataobjects>
+        <dataobject supportsQuickData="false" name="Rsp" javaType="com.flickr.api.services.rest.flickrphotoinfo.Rsp">
+            <element allowNull="false" isList="false" typeRef="com.flickr.api.services.rest.flickrphotoinfo.PhotoTypeType" name="photo"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="stat"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="PhotoTypeType" javaType="com.flickr.api.services.rest.flickrphotoinfo.PhotoTypeType">
+            <element allowNull="false" isList="false" typeRef="com.flickr.api.services.rest.flickrphotoinfo.OwnerTypeType" name="owner"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="title"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="description"/>
+            <element allowNull="false" isList="false" typeRef="com.flickr.api.services.rest.flickrphotoinfo.VisibilityTypeType" name="visibility"/>
+            <element allowNull="false" isList="false" typeRef="com.flickr.api.services.rest.flickrphotoinfo.DatesTypeType" name="dates"/>
+            <element allowNull="false" isList="false" typeRef="com.flickr.api.services.rest.flickrphotoinfo.EditabilityTypeType" name="editability"/>
+            <element allowNull="false" isList="false" typeRef="com.flickr.api.services.rest.flickrphotoinfo.UsageTypeType" name="usage"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="comments"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="notes"/>
+            <element allowNull="false" isList="false" typeRef="com.flickr.api.services.rest.flickrphotoinfo.TagsTypeType" name="tags"/>
+            <element allowNull="false" isList="false" typeRef="com.flickr.api.services.rest.flickrphotoinfo.LocationTypeType" name="location"/>
+            <element allowNull="false" isList="false" typeRef="com.flickr.api.services.rest.flickrphotoinfo.GeopermsTypeType" name="geoperms"/>
+            <element allowNull="false" isList="false" typeRef="com.flickr.api.services.rest.flickrphotoinfo.UrlsTypeType" name="urls"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="id"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="secret"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="server"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="farm"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="dateuploaded"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="isfavorite"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="license"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="rotation"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="originalsecret"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="originalformat"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="media"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="CountryTypeType" javaType="com.flickr.api.services.rest.flickrphotoinfo.CountryTypeType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="value"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="placeId"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="woeid"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="TagTypeType" javaType="com.flickr.api.services.rest.flickrphotoinfo.TagTypeType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="value"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="id"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="author"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="raw"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="machineTag"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="LocationTypeType" javaType="com.flickr.api.services.rest.flickrphotoinfo.LocationTypeType">
+            <element allowNull="false" isList="false" typeRef="com.flickr.api.services.rest.flickrphotoinfo.LocalityTypeType" name="locality"/>
+            <element allowNull="false" isList="false" typeRef="com.flickr.api.services.rest.flickrphotoinfo.RegionTypeType" name="region"/>
+            <element allowNull="false" isList="false" typeRef="com.flickr.api.services.rest.flickrphotoinfo.CountryTypeType" name="country"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="latitude"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="longitude"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="accuracy"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="placeId"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="woeid"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="UsageTypeType" javaType="com.flickr.api.services.rest.flickrphotoinfo.UsageTypeType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="value"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="candownload"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="canblog"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="canprint"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="EditabilityTypeType" javaType="com.flickr.api.services.rest.flickrphotoinfo.EditabilityTypeType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="value"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="cancomment"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="canaddmeta"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="GeopermsTypeType" javaType="com.flickr.api.services.rest.flickrphotoinfo.GeopermsTypeType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="value"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="ispublic"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="iscontact"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="isfriend"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="isfamily"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="LocalityTypeType" javaType="com.flickr.api.services.rest.flickrphotoinfo.LocalityTypeType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="value"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="placeId"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="woeid"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="UrlsTypeType" javaType="com.flickr.api.services.rest.flickrphotoinfo.UrlsTypeType">
+            <element allowNull="false" isList="false" typeRef="com.flickr.api.services.rest.flickrphotoinfo.UrlTypeType" name="url"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="OwnerTypeType" javaType="com.flickr.api.services.rest.flickrphotoinfo.OwnerTypeType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="value"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="nsid"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="username"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="realname"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="location"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="TagsTypeType" javaType="com.flickr.api.services.rest.flickrphotoinfo.TagsTypeType">
+            <element allowNull="false" isList="true" typeRef="com.flickr.api.services.rest.flickrphotoinfo.TagTypeType" name="tags"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="RegionTypeType" javaType="com.flickr.api.services.rest.flickrphotoinfo.RegionTypeType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="value"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="placeId"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="woeid"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="VisibilityTypeType" javaType="com.flickr.api.services.rest.flickrphotoinfo.VisibilityTypeType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="value"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="ispublic"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="isfriend"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="isfamily"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="DatesTypeType" javaType="com.flickr.api.services.rest.flickrphotoinfo.DatesTypeType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="value"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="posted"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="taken"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="takengranularity"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="lastupdate"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="UrlTypeType" javaType="com.flickr.api.services.rest.flickrphotoinfo.UrlTypeType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="value"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="type"/>
+        </dataobject>
+    </dataobjects>
+</service>

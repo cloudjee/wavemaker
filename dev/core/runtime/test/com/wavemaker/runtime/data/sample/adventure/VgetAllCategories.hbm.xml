@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 18, 2007 5:20:12 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.adventure.VgetAllCategories" table="vGetAllCategories" schema="SalesLT" catalog="AdventureWorksLT">
+        <composite-id name="id" class="com.wavemaker.runtime.data.sample.adventure.VgetAllCategoriesId">
+            <key-property name="parentProductCategoryName" type="string">
+                <column name="ParentProductCategoryName" length="50" />
+            </key-property>
+            <key-property name="productCategoryName" type="string">
+                <column name="ProductCategoryName" length="50" />
+            </key-property>
+            <key-property name="productCategoryId" type="java.lang.Integer">
+                <column name="ProductCategoryID" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

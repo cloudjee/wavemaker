@@ -1,0 +1,9 @@
+WM Applications Client Build Process:
+
+The client build process uses an ant script studio/build-js.xml that makes use of the Dojo build system. Build profiles must currently be *manually constructed* and exist at webapproot/app/buildUtil/profiles. There is one profile for studio and one for runtime.
+
+All client library code should be included in the runtime build. The build will produce one compressed file for Dojo (dojo_build.js) and one for the client library (lib_build.js).
+
+Client build resources output to webapproot/lib/build. However, dojo_build.js is placed at webapproot/lib/dojo/dojo/dojo_build.js so that the Dojo path info is consistent for build and debug environments.
+
+Studio has special build requirements and outputs to webapproot/build. Currently we depend on being able to read uncompressed argument names from library code for creating client event code. Therefore the build is broken into a few files and the build which contains widget code avoids variable compression.

@@ -1,0 +1,17 @@
+package foo.bar.baz;
+
+import foo.bar.baz.data.FooBarData;
+
+public class FooBar {
+
+	public void takesFooBarData(FooBarData a) {
+	}
+
+    public int someOp(int a) {
+        return a;
+    }
+    
+    public String someOtherOp(String b) {
+        return b;
+    }
+}

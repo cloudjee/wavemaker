@@ -1,0 +1,16 @@
+Name: wavemaker-@PROJECTTYPE@
+Version: @VERSION@
+Release: 0
+License: WaveMaker Inc, 2009
+Packager: Ed Callahan <community@wavemaker.com>
+Vendor: WaveMaker Inc
+BuildRoot: @BUILDROOT@
+%define _topdir @TOPDIR@
+Summary: AJAX RAD Studio
+Group: Applications
+AutoReqProv: no
+
+%description 
+WaveMaker provides for the Web-Fast development of CIO-Safe applications.
+
+%files

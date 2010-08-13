@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 18, 2007 5:20:12 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.adventure.VproductModelCatalogDescription" table="vProductModelCatalogDescription" schema="SalesLT" catalog="AdventureWorksLT">
+        <composite-id name="id" class="com.wavemaker.runtime.data.sample.adventure.VproductModelCatalogDescriptionId">
+            <key-property name="productModelId" type="int">
+                <column name="ProductModelID" />
+            </key-property>
+            <key-property name="name" type="string">
+                <column name="Name" length="50" />
+            </key-property>
+            <key-property name="summary" type="clob">
+                <column name="Summary" />
+            </key-property>
+            <key-property name="manufacturer" type="clob">
+                <column name="Manufacturer" />
+            </key-property>
+            <key-property name="copyright" type="string">
+                <column name="Copyright" length="30" />
+            </key-property>
+            <key-property name="productUrl" type="string">
+                <column name="ProductURL" length="256" />
+            </key-property>
+            <key-property name="warrantyPeriod" type="string">
+                <column name="WarrantyPeriod" length="256" />
+            </key-property>
+            <key-property name="warrantyDescription" type="string">
+                <column name="WarrantyDescription" length="256" />
+            </key-property>
+            <key-property name="noOfYears" type="string">
+                <column name="NoOfYears" length="256" />
+            </key-property>
+            <key-property name="maintenanceDescription" type="string">
+                <column name="MaintenanceDescription" length="256" />
+            </key-property>
+            <key-property name="wheel" type="string">
+                <column name="Wheel" length="256" />
+            </key-property>
+            <key-property name="saddle" type="string">
+                <column name="Saddle" length="256" />
+            </key-property>
+            <key-property name="pedal" type="string">
+                <column name="Pedal" length="256" />
+            </key-property>
+            <key-property name="bikeFrame" type="clob">
+                <column name="BikeFrame" />
+            </key-property>
+            <key-property name="crankset" type="string">
+                <column name="Crankset" length="256" />
+            </key-property>
+            <key-property name="pictureAngle" type="string">
+                <column name="PictureAngle" length="256" />
+            </key-property>
+            <key-property name="pictureSize" type="string">
+                <column name="PictureSize" length="256" />
+            </key-property>
+            <key-property name="productPhotoId" type="string">
+                <column name="ProductPhotoID" length="256" />
+            </key-property>
+            <key-property name="material" type="string">
+                <column name="Material" length="256" />
+            </key-property>
+            <key-property name="color" type="string">
+                <column name="Color" length="256" />
+            </key-property>
+            <key-property name="productLine" type="string">
+                <column name="ProductLine" length="256" />
+            </key-property>
+            <key-property name="style" type="string">
+                <column name="Style" length="256" />
+            </key-property>
+            <key-property name="riderExperience" type="string">
+                <column name="RiderExperience" length="1024" />
+            </key-property>
+            <key-property name="rowguid" type="string">
+                <column name="rowguid" length="36" />
+            </key-property>
+            <key-property name="modifiedDate" type="timestamp">
+                <column name="ModifiedDate" length="23" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

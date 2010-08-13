@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 19, 2007 9:06:48 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.orahr.Regions" table="REGIONS" schema="HR">
+        <id name="regionId" type="big_decimal">
+            <column name="REGION_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="regionName" type="string">
+            <column name="REGION_NAME" length="25" />
+        </property>
+        <set name="countrieses" inverse="true">
+            <key>
+                <column name="REGION_ID" precision="22" scale="0">
+                    <comment>Region ID for the country. Foreign key to region_id column in the departments table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.orahr.Countries" />
+        </set>
+    </class>
+</hibernate-mapping>

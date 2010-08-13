@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 7, 2008 1:47:54 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.db2sampledb.Vpstrde1" table="VPSTRDE1" schema="STOENS">
+        <composite-id name="id" class="com.wavemaker.runtime.data.sample.db2sampledb.Vpstrde1Id">
+            <key-property name="proj1no" type="string">
+                <column name="PROJ1NO" length="6" />
+            </key-property>
+            <key-property name="proj1name" type="string">
+                <column name="PROJ1NAME" length="24" />
+            </key-property>
+            <key-property name="resp1no" type="string">
+                <column name="RESP1NO" length="6" />
+            </key-property>
+            <key-property name="resp1fn" type="string">
+                <column name="RESP1FN" length="12" />
+            </key-property>
+            <key-property name="resp1mi" type="java.lang.Character">
+                <column name="RESP1MI" length="1" />
+            </key-property>
+            <key-property name="resp1ln" type="string">
+                <column name="RESP1LN" length="15" />
+            </key-property>
+            <key-property name="proj2no" type="string">
+                <column name="PROJ2NO" length="6" />
+            </key-property>
+            <key-property name="proj2name" type="string">
+                <column name="PROJ2NAME" length="24" />
+            </key-property>
+            <key-property name="resp2no" type="string">
+                <column name="RESP2NO" length="6" />
+            </key-property>
+            <key-property name="resp2fn" type="string">
+                <column name="RESP2FN" length="12" />
+            </key-property>
+            <key-property name="resp2mi" type="java.lang.Character">
+                <column name="RESP2MI" length="1" />
+            </key-property>
+            <key-property name="resp2ln" type="string">
+                <column name="RESP2LN" length="15" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

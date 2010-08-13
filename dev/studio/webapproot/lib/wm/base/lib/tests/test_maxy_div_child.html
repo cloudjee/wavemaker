@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+<script>
+	$ = function(id) {
+		return document.getElementById(id)		
+	}
+	set = function() {
+		var h = Number($('input').value);
+		$('div').style.height=h+'px';
+		alert("input: " + h + ", actual: " + $('div').offsetHeight);
+	}
+</script>
+</head>
+
+<body>
+Div Height: <input id="input" value="70e06"/><button onclick="set()">Set</button><br />
+<br />
+<div style="height: 200px; overflow: auto" onscroll="window.status=this.scrollTop">
+	<div id="div" style="border: 2px solid orange; height: 70000000px"></div>
+</div>
+</body>
+</html>

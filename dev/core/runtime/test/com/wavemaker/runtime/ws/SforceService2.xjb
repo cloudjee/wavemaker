@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jaxb:bindings
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    version="1.0">
+    <jaxb:bindings schemaLocation="salesforceEnterprise.wsdl#types?schema1" node="//xsd:schema">
+        <jaxb:schemaBindings>
+            <jaxb:package name="com.sforce.soap.enterprise.sforceservice"/>
+            <jaxb:nameXmlTransform>
+                <jaxb:typeName suffix="Type"/>
+            </jaxb:nameXmlTransform>
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+</jaxb:bindings>

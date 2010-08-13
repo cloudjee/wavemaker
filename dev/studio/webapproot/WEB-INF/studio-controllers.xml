@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                http://www.springframework.org/schema/aop
+                http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+    <bean id="agStaticFileController"
+            class="com.wavemaker.studio.StaticFileController">
+        <property name="projectManager">
+            <ref bean="projectManager" />
+        </property>
+        <property name="studioConfiguration">
+            <ref bean="studioConfiguration" />
+        </property>
+    </bean>
+
+    <bean id="urlMapping"
+        class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+            <value>
+                /**/*.json=agJSONController
+                /**/*.download=agFileDownloadController
+                /**/*.upload=agFileUploadController
+                /projects/**=agStaticFileController
+                /modules/**=wmModuleController
+                /lib/wm/common/**=agStaticFileController
+
+				/lib/build/Gzipped/*=fileController
+				/lib/build/themes/**=fileController
+				/lib/wm/base/widget/themes/**=fileController
+				/lib/dojo/**=fileController
+				/lib/runtimeLoader.js=fileController
+				/lib/boot/boot.js=fileController
+				/resources/images/**=fileController
+				/resources/gzipped/**=fileController
+
+            </value>
+        </property>
+        <property name="alwaysUseFullPath" value="true" />
+    </bean>
+</beans>

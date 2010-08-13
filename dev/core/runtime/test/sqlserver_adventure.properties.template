@@ -1,0 +1,6 @@
+#Connection properties for adventure
+#Sat Aug 18 17:20:16 PDT 2007
+sqlserver.password=12345678
+sqlserver.connectionUrl=jdbc\:jtds\:sqlserver\://localhost/AdventureWorksLT;instance\=SQLEXPRESS
+sqlserver.driverClassName=net.sourceforge.jtds.jdbc.Driver
+sqlserver.username=sa

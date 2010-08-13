@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 5, 2007 6:21:51 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.sakila.Country" table="country" catalog="sakila">
+        <comment></comment>
+        <id name="countryId" type="java.lang.Short">
+            <column name="country_id" />
+            <generator class="identity" />
+        </id>
+        <property name="country" type="string">
+            <column name="country" length="50" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="lastUpdate" type="timestamp">
+            <column name="last_update" length="19" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+        <set name="cities" inverse="true" cascade="save-update,delete">
+            <key>
+                <column name="country_id" not-null="true">
+                    <comment></comment>
+                </column>
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.sakila.City" />
+        </set>
+    </class>
+</hibernate-mapping>

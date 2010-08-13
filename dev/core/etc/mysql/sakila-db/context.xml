@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+    <Resource 
+        name="jdbc/mysql/sakila" 
+        auth="Container" 
+        type="javax.sql.DataSource" 
+        maxActive="100" 
+        maxIdle="30" 
+        maxWait="10000" 
+        username="root" 
+        driverClassName="com.mysql.jdbc.Driver" 
+        url="jdbc:mysql://localhost:3306/sakila"/>
+</Context>

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 7, 2008 1:47:54 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.db2sampledb.Vforpla" table="VFORPLA" schema="STOENS">
+        <composite-id name="id" class="com.wavemaker.runtime.data.sample.db2sampledb.VforplaId">
+            <key-property name="projno" type="string">
+                <column name="PROJNO" length="6" />
+            </key-property>
+            <key-property name="projname" type="string">
+                <column name="PROJNAME" length="24" />
+            </key-property>
+            <key-property name="respemp" type="string">
+                <column name="RESPEMP" length="6" />
+            </key-property>
+            <key-property name="projdep" type="string">
+                <column name="PROJDEP" length="3" />
+            </key-property>
+            <key-property name="frstinit" type="char">
+                <column name="FRSTINIT" length="1" />
+            </key-property>
+            <key-property name="midinit" type="java.lang.Character">
+                <column name="MIDINIT" length="1" />
+            </key-property>
+            <key-property name="lastname" type="string">
+                <column name="LASTNAME" length="15" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

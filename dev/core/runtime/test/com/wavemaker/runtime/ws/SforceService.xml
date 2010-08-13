@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jaxws:bindings
+    xmlns:jaxws="http://java.sun.com/xml/ns/jaxws"
+    xmlns:jws="http://java.sun.com/xml/ns/javaee"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    wsdlLocation="salesforceEnterprise.wsdl">
+    <jaxws:enableWrapperStyle>false</jaxws:enableWrapperStyle>
+    <jaxws:bindings node="wsdl:definitions/wsdl:service[@name='SforceService']">
+        <jaxws:class name="SforceServiceClient"/>
+    </jaxws:bindings>
+</jaxws:bindings>

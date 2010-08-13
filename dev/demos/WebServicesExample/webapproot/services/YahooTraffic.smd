@@ -1,0 +1,15 @@
+{
+	"methods": [{
+		"name": "getTraffic",
+		"parameters": [{
+			"name": "appid",
+			"type": "java.lang.String"
+		}, {
+			"name": "location",
+			"type": "java.lang.String"
+		}],
+		"returnType": "com.yahooapis.local.trafficdata.yahootraffic.ResultSet"
+	}],
+	"serviceType": "JSON-RPC",
+	"serviceURL": "YahooTraffic.json"
+}

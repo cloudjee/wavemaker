@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 7, 2008 1:47:54 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.db2sampledb.Vastrde2" table="VASTRDE2" schema="STOENS">
+        <composite-id name="id" class="com.wavemaker.runtime.data.sample.db2sampledb.Vastrde2Id">
+            <key-property name="dept1no" type="string">
+                <column name="DEPT1NO" length="3" />
+            </key-property>
+            <key-property name="dept1nam" type="string">
+                <column name="DEPT1NAM" length="36" />
+            </key-property>
+            <key-property name="emp1no" type="string">
+                <column name="EMP1NO" length="6" />
+            </key-property>
+            <key-property name="emp1fn" type="string">
+                <column name="EMP1FN" length="12" />
+            </key-property>
+            <key-property name="emp1mi" type="java.lang.Character">
+                <column name="EMP1MI" length="1" />
+            </key-property>
+            <key-property name="emp1ln" type="string">
+                <column name="EMP1LN" length="15" />
+            </key-property>
+            <key-property name="type2" type="string">
+                <column name="TYPE2" length="1" />
+            </key-property>
+            <key-property name="dept2no" type="string">
+                <column name="DEPT2NO" length="3" />
+            </key-property>
+            <key-property name="dept2nam" type="string">
+                <column name="DEPT2NAM" length="36" />
+            </key-property>
+            <key-property name="emp2no" type="string">
+                <column name="EMP2NO" length="6" />
+            </key-property>
+            <key-property name="emp2fn" type="string">
+                <column name="EMP2FN" length="12" />
+            </key-property>
+            <key-property name="emp2mi" type="java.lang.Character">
+                <column name="EMP2MI" length="1" />
+            </key-property>
+            <key-property name="emp2ln" type="string">
+                <column name="EMP2LN" length="15" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

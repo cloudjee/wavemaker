@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 5, 2007 6:21:51 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.sakila.CustomerList" table="customer_list" catalog="sakila">
+        <comment></comment>
+        <composite-id name="id" class="com.wavemaker.runtime.data.sample.sakila.CustomerListId">
+            <key-property name="id" type="short">
+                <column name="ID" />
+            </key-property>
+            <key-property name="name" type="string">
+                <column name="name" length="91" />
+            </key-property>
+            <key-property name="address" type="string">
+                <column name="address" length="50" />
+            </key-property>
+            <key-property name="zipCode" type="string">
+                <column name="`zip code`" length="10" />
+            </key-property>
+            <key-property name="phone" type="string">
+                <column name="phone" length="20" />
+            </key-property>
+            <key-property name="city" type="string">
+                <column name="city" length="50" />
+            </key-property>
+            <key-property name="country" type="string">
+                <column name="country" length="50" />
+            </key-property>
+            <key-property name="notes" type="string">
+                <column name="notes" length="6" />
+            </key-property>
+            <key-property name="sid" type="byte">
+                <column name="SID" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

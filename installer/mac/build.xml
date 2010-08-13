@@ -1,0 +1,74 @@
+<project name="mac.installer" default="build" basedir=".">
+
+    <property name="root.dir" location="${basedir}/../../dev"/>
+    <import file="${root.dir}/common.build.xml"/>
+    <import file="${basedir}/../common.installer.build.xml"/>
+
+    <property name="mac.app.name" value="WaveMaker.app"/>
+    <property name="mac.template.name" value="WaveMaker.app"/>
+
+
+    <!-- must be inside of build.installer.dir -->
+    <property name="buildroot" value="${build.installer.dir}/buildroot"/>
+    <property name="prefix" value="/Applications/${mac.app.name}" />
+    <property name="mac.template" value="${basedir}/${mac.template.name}"/>
+    <property name="installer.wm.root" value="${buildroot}/${mac.app.name}"/>
+    <property name="versionString"
+            value="wavemaker-${project.type}-${version.number}"/>
+    <property name="mac.dmg.file"
+            value="${build.installer.dir}/${versionString}.dmg"/>
+
+    <!-- Default properties -->
+    <property name="java.tar.file" value="${basedir}/java.tar" />
+
+    <target name="check">
+        <condition property="setupBAD">
+            <not>
+                <and>
+                    <available file="${mac.template}" />
+                </and>
+            </not>
+        </condition>
+        <fail if="setupBAD" message="required files missing" />
+    </target>
+
+    <target name="init" depends="check">
+        <mkdir dir="${buildroot}"/>
+        <copy todir="${buildroot}/${mac.app.name}">
+            <fileset dir="${mac.template}">
+                <exclude name="**/.svn*" />
+                <exclude name="**/Info.plist" />
+            </fileset>
+        </copy>
+        <copy todir="${buildroot}/${mac.app.name}">
+            <fileset dir="${mac.template}">
+                <include name="**/Info.plist" />
+            </fileset>
+            <filterset>
+                <filter token="VERSION.NUMBER" value="${version.number}"/>
+            </filterset>
+        </copy>
+        <exec executable="chmod" failonerror="true">
+            <arg value="+x"/>
+            <arg value="${buildroot}/${mac.app.name}/Contents/MacOS/wmstart.sh"/>
+        </exec>
+    </target>
+
+    <target name="build"
+            depends="init, common.generate-license, common.generate-full-version, common-installer.generate-dist">
+        <exec executable="hdiutil" failonerror="true">
+            <arg value="create"/>
+            <arg value="-ov"/>
+            <arg value="-anyowners"/>
+            <arg value="-srcfolder"/>
+            <arg value="${buildroot}"/>
+            <arg value="-volname"/>
+            <arg value="${versionString}"/>
+            <arg value="${mac.dmg.file}"/>
+        </exec>
+    </target>
+
+    <target name="clean" depends="common-installer.clean">
+        <delete dir="${build.installer.dir}"/>
+    </target>
+</project>

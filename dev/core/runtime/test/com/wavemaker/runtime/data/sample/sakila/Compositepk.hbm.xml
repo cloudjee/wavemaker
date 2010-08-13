@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 9, 2008 4:22:01 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.sakila.Compositepk" table="compositepk" catalog="sakila">
+        <composite-id name="id" class="com.wavemaker.runtime.data.sample.sakila.CompositepkId">
+            <key-property name="id" type="string"/>
+            <key-property name="id2" type="string"/>
+        </composite-id>
+    </class>
+</hibernate-mapping>

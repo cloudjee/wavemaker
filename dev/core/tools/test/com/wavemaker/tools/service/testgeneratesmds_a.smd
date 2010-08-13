@@ -1,0 +1,13 @@
+{
+    "methods": [
+        {
+            "name":"foo",
+            "parameters":[{"name":"foo", "type":"java.lang.Integer"},
+                {"name":"bar", "type":"java.lang.Integer"}],
+            "returnType":"java.lang.String"
+        }
+    ],
+    "serviceType":"JSON-RPC",
+    "serviceURL":"service1.json"
+}
+

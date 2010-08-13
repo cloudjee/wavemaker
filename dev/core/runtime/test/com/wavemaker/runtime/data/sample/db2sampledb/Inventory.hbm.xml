@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 7, 2008 1:47:54 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.db2sampledb.Inventory" table="INVENTORY" schema="STOENS">
+        <id name="pid" type="string">
+            <column name="PID" length="10" />
+            <generator class="assigned" />
+        </id>
+        <property name="quantity" type="java.lang.Integer">
+            <column name="QUANTITY" />
+        </property>
+        <property name="location" type="string">
+            <column name="LOCATION" length="128" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,84 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/*
+<span class='line'>  2</span>  *  Copyright (C) 2009 WaveMaker Software, Inc.
+<span class='line'>  3</span>  *
+<span class='line'>  4</span>  *  This file is part of the WaveMaker Client Runtime.
+<span class='line'>  5</span>  *
+<span class='line'>  6</span>  *  Licensed under the Apache License, Version 2.0 (the "License");
+<span class='line'>  7</span>  *  you may not use this file except in compliance with the License.
+<span class='line'>  8</span>  *  You may obtain a copy of the License at
+<span class='line'>  9</span>  *
+<span class='line'> 10</span>  *      http://www.apache.org/licenses/LICENSE-2.0
+<span class='line'> 11</span>  *
+<span class='line'> 12</span>  *  Unless required by applicable law or agreed to in writing, software
+<span class='line'> 13</span>  *  distributed under the License is distributed on an "AS IS" BASIS,
+<span class='line'> 14</span>  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+<span class='line'> 15</span>  *  See the License for the specific language governing permissions and
+<span class='line'> 16</span>  *  limitations under the License.
+<span class='line'> 17</span>  */</span><span class="WHIT">
+<span class='line'> 18</span> </span><span class="NAME">dojo.provide</span><span class="PUNC">(</span><span class="STRN">"wm.base.data.expression"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 19</span> 
+<span class='line'> 20</span> </span><span class="COMM">/**
+<span class='line'> 21</span> 	@class
+<span class='line'> 22</span> 	Static API for handling data expressions.
+<span class='line'> 23</span> 	Data expressions are strings can contain valid JavaScript and
+<span class='line'> 24</span> 	special macros.
+<span class='line'> 25</span> 	Macros are expanded via preprocessing, and use this syntax:
+<span class='line'> 26</span> 	&lt;pre class="code">${&lt;id&gt;}&lt;/pre>
+<span class='line'> 27</span> 	&lt;id&gt; supports dot notation, e.g. ${address.name.lastName}.&lt;br/>
+<span class='line'> 28</span> 	&lt;br/>
+<span class='line'> 29</span> 	&lt;b>Example:&lt;/b>
+<span class='line'> 30</span> 	&lt;pre class="code">
+<span class='line'> 31</span> "Half of " + ${editor1.dataValue} + " is " + ${editor1.dataValue}/2.
+<span class='line'> 32</span> 
+<span class='line'> 33</span> &lt;i>// Macros are replaced with quoted JSON and should not be inside of literal strings&lt;/i>
+<span class='line'> 34</span> "${lastName}, ${firstName}" &lt;i>// bad&lt;/i>
+<span class='line'> 35</span> ${lastName} + ", " + ${firstName} &lt;i>// good&lt;/i>
+<span class='line'> 36</span> &lt;/pre>
+<span class='line'> 37</span> */</span><span class="WHIT">
+<span class='line'> 38</span> </span><span class="NAME">wm.expression</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 39</span> </span><span class="WHIT">	</span><span class="COMM">/**
+<span class='line'> 40</span> 		Evaluate expression with given namespace root.
+<span class='line'> 41</span> 		@param {String} inExpression Valid javascript that is evaluated in global scope. The expression can contain 
+<span class='line'> 42</span> 			macros.
+<span class='line'> 43</span> 		@param {String} inRoot The root object under which id macros are evaluated.
+<span class='line'> 44</span> 		@example 
+<span class='line'> 45</span> var exp = '"Half of " + ${editor1.dataValue} + " is " + ${editor1.dataValue}/2.';
+<span class='line'> 46</span> wm.expression.getValue(exp, app.main);
+<span class='line'> 47</span> 	*/</span><span class="WHIT">
+<span class='line'> 48</span> </span><span class="WHIT">	</span><span class="NAME">getValue</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">inExpression</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">inRoot</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 49</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">v</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">wm.expression._getText</span><span class="PUNC">(</span><span class="NAME">inExpression</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">inRoot</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 50</span> </span><span class="WHIT">		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">wm.evalJs</span><span class="PUNC">(</span><span class="NAME">v</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 51</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 52</span> </span><span class="WHIT">	</span><span class="NAME">getSources</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">inExpression</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 53</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">re</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">wm.expression._getSourceRegEx</span><span class="WHIT">
+<span class='line'> 54</span> </span><span class="WHIT">		</span><span class="NAME">re.lastIndex</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 55</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">m</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">sources</span><span class="PUNC">=</span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 56</span> </span><span class="WHIT">		</span><span class="KEYW">while</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">m</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">re.exec</span><span class="PUNC">(</span><span class="NAME">inExpression</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 57</span> </span><span class="WHIT">			</span><span class="NAME">sources.push</span><span class="PUNC">(</span><span class="NAME">m</span><span class="PUNC">[</span><span class="NUMB">1</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 58</span> </span><span class="WHIT">		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">sources</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 59</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 60</span> </span><span class="WHIT">	</span><span class="NAME">_getText</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">inExpression</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">inRoot</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 61</span> </span><span class="WHIT">		</span><span class="COMM">//return inExpression.replace(wm.expression._getSourceRegEx(), function(){</span><span class="WHIT">
+<span class='line'> 62</span> </span><span class="WHIT">		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">inExpression.replace</span><span class="PUNC">(</span><span class="NAME">wm.expression._getSourceRegEx</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 63</span> </span><span class="WHIT">			</span><span class="KEYW">try</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 64</span> </span><span class="WHIT">				</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">v</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">inRoot.getValue</span><span class="PUNC">(</span><span class="NAME">arguments</span><span class="PUNC">[</span><span class="NUMB">1</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="WHIT">				</span><span class="COMM">// objects cannot be returned directly since they are eval'd.</span><span class="WHIT">
+<span class='line'> 66</span> </span><span class="WHIT">				</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">v</span><span class="WHIT"> </span><span class="KEYW">instanceof</span><span class="WHIT"> </span><span class="NAME">wm.Object</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">v</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 67</span> </span><span class="WHIT">					</span><span class="NAME">v</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">""</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 68</span> </span><span class="WHIT">				</span><span class="COMM">// do we want to automatically jsonify all values?</span><span class="WHIT">
+<span class='line'> 69</span> </span><span class="WHIT">				</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">dojo.toJson</span><span class="PUNC">(</span><span class="NAME">v</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 70</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">catch</span><span class="PUNC">(</span><span class="NAME">e</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 71</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 72</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 73</span> </span><span class="WHIT">	</span><span class="NAME">_getSourceRegEx</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">RegExp</span><span class="PUNC">(</span><span class="REGX">/\$\{([^\s\:\}]+)(?:\:([^\s\:\}]+))?\}/g</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 74</span> </span><span class="WHIT">	</span><span class="COMM">//_getSourceRegEx: function() {</span><span class="WHIT">
+<span class='line'> 75</span> </span><span class="WHIT">	</span><span class="COMM">//	return new RegExp(/\$\{([^\s\:\}]+)(?:\:([^\s\:\}]+))?\}/g);</span><span class="WHIT">
+<span class='line'> 76</span> </span><span class="WHIT">	</span><span class="COMM">//}</span><span class="WHIT">
+<span class='line'> 77</span> </span><span class="PUNC">}</span></pre></body></html>

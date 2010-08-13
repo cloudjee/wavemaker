@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+This file defines test-only services.  By default,
+ServerTestSupport.getTestServerContext() will return an application context
+with both the services defined here, and the services defined in the main
+services.xml.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                http://www.springframework.org/schema/aop
+                http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+    <import resource="classpath:com/wavemaker/runtime/service/runtimeServiceBean.xml" />
+
+    <bean id="sampleProductService"
+        class="com.wavemaker.runtime.data.sample.SampleProductService"
+        scope="singleton"
+        lazy-init="true">
+        <property name="productManager">
+            <ref bean="prodMan"/>
+        </property>
+    </bean>
+    <bean id="sampleProductService_ServiceWire" lazy-init="false"
+            scope="singleton"
+            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="sampleProductService" name="serviceId"/>
+        <property name="serviceType" ref="JavaService"/>
+    </bean>
+    
+
+    <bean id="sampleProductServiceEventListener"
+        class="com.wavemaker.runtime.data.sample.SampleProductServiceEventListener"
+        scope="singleton"/>
+
+    <bean lazy-init="true" scope="singleton"
+        class="com.wavemaker.runtime.data.DataServiceEventListener"
+        id="dataServiceEventListener"/>
+    
+    <!-- test static definition of a spring bean -->
+    <bean id="prodMan" class="com.wavemaker.runtime.data.sample.ProductManager">
+        <property name="products">
+            <list>
+                <ref bean="product1"/>
+                <ref bean="product2"/>
+                <ref bean="product3"/>
+            </list>
+        </property>
+    </bean>
+    <bean lazy-init="false"
+            scope="singleton"
+            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="prodMan" name="serviceId"/>
+        <property name="serviceType" ref="JavaService"/>
+    </bean>
+    <bean id="product1" class="com.wavemaker.runtime.data.sample.Product">
+        <property name="description"><value>Lamp</value></property>
+        <property name="price"><value>5.75</value></property>
+        <property name="id"><value>1</value></property>
+    </bean> 
+    <bean id="product2" class="com.wavemaker.runtime.data.sample.Product">
+        <property name="description"><value>Table</value></property>
+        <property name="price"><value>75.25</value></property>
+        <property name="id"><value>2</value></property>
+    </bean>
+    <bean id="product3" class="com.wavemaker.runtime.data.sample.Product">
+        <property name="description"><value>Chair</value></property>
+        <property name="price"><value>22.79</value></property>
+        <property name="id"><value>3</value></property>
+    </bean>
+
+
+    <bean id="lazyInitTestBean"
+        class="com.wavemaker.runtime.service.TestServiceManager$LazyInitTestBean"
+        scope="singleton"
+        lazy-init="true"/>
+    <bean lazy-init="false"
+            scope="singleton"
+            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="lazyInitTestBean" name="serviceId"/>
+        <property name="serviceType" ref="JavaService"/>
+    </bean>
+
+    <bean id="lifecycleTestBean"
+        class="com.wavemaker.runtime.service.TestServiceManager$LifecycleTestBean"
+        scope="singleton"
+	lazy-init="true"/>
+    <bean lazy-init="false"
+            scope="singleton"
+            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="lifecycleTestBean" name="serviceId"/>
+        <property name="serviceType" ref="JavaService"/>
+    </bean>
+
+    <bean id="duplicateServiceClassBean1"
+        class="com.wavemaker.runtime.service.TestServiceManager$DuplicateServiceClassBean"
+        scope="singleton"
+        lazy-init="true"/>
+    <bean lazy-init="false"
+            scope="singleton"
+            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="duplicateServiceClassBean1" name="serviceId"/>
+        <property name="serviceType" ref="JavaService"/>
+    </bean>
+    
+    <bean id="duplicateServiceClassBean2"
+        class="com.wavemaker.runtime.service.TestServiceManager$DuplicateServiceClassBean"
+        scope="singleton"
+        lazy-init="true"/>
+    <bean lazy-init="false"
+            scope="singleton"
+            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="duplicateServiceClassBean2" name="serviceId"/>
+        <property name="serviceType" ref="JavaService"/>
+    </bean>
+    
+    <bean id="fauxDuplicateServiceClassBean1"
+        class="com.wavemaker.runtime.service.TestServiceManager$FauxDuplicateServiceClassBean"
+        scope="singleton"
+        lazy-init="true"/>
+    <bean lazy-init="false"
+            scope="singleton"
+            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="fauxDuplicateServiceClassBean1" name="serviceId"/>
+        <property name="serviceType" ref="JavaService"/>
+    </bean>
+    
+    <bean id="fauxDuplicateServiceClassBean2"
+        class="com.wavemaker.runtime.service.TestServiceManager$FauxDuplicateServiceClassBean"
+        scope="singleton"
+        lazy-init="true"/>
+    <bean lazy-init="false"
+            scope="singleton"
+            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="fauxDuplicateServiceClassBean2" name="serviceId"/>
+        <property name="serviceType" ref="JavaService"/>
+    </bean>
+    
+    <bean id="methodOverloadTestBean"
+    	class="com.wavemaker.tools.service.reflect.TestReflectServiceType$OverloadedMethodsClass"
+    	scope="singleton"
+    	lazy-init="true"/>
+    <bean lazy-init="false"
+            scope="singleton"
+            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="methodOverloadTestBean" name="serviceId"/>
+        <property name="serviceType" ref="JavaService"/>
+    </bean>
+    	    
+    <bean id="sessionTestBean"
+			class="com.wavemaker.runtime.TestRuntimeAccess$SessionTest"
+			scope="singleton"
+			lazy-init="true">
+    	<property name="runtime">
+    		<ref bean="runtime" />
+    	</property>
+    	<property name="runtimeAccess">
+    		<ref bean="runtimeAccess" />
+    	</property>
+    </bean>
+    <bean lazy-init="false"
+            scope="singleton"
+            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="sessionTestBean" name="serviceId"/>
+        <property name="serviceType" ref="JavaService"/>
+    </bean>
+        	    
+    <bean id="complexReturnBean"
+    	class="com.wavemaker.tools.spring.ComplexReturnBean"
+    	scope="singleton"
+    	lazy-init="true"/>   
+    <bean lazy-init="false"
+            scope="singleton"
+            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="complexReturnBean" name="serviceId"/>
+        <property name="serviceType" ref="JavaService"/>
+    </bean>
+              
+    <bean id="dateReturnBean"
+        class="com.wavemaker.runtime.server.testspring.DateReturnBean"
+        scope="singleton"
+        lazy-init="true"/>
+    <bean lazy-init="false"
+            scope="singleton"
+            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="dateReturnBean" name="serviceId"/>
+        <property name="serviceType" ref="JavaService"/>
+    </bean>
+
+    <bean id="complexRuntimeServiceBean"
+        class="com.wavemaker.tools.spring.ComplexRuntimeServiceBean"
+        scope="singleton"
+        lazy-init="true"/>
+    <bean id="complexRuntimeServiceBeanServiceWire"
+            lazy-init="false"
+            scope="singleton"
+            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="complexRuntimeServiceBean" name="serviceId"/>
+        <property name="serviceType" ref="JavaService"/>
+    </bean>
+
+    <bean id="multipleReturnsRuntimeServiceBean"
+        class="com.wavemaker.tools.spring.MultipleReturnsRuntimeServiceBean"
+        scope="singleton"
+        lazy-init="true"/>
+    <bean id="multipleReturnsRuntimeServiceBeanServiceWire"
+            lazy-init="false"
+            scope="singleton"
+            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="multipleReturnsRuntimeServiceBean" name="serviceId"/>
+        <property name="serviceType" ref="JavaService"/>
+    </bean>
+
+    <bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+        <property name="beanNames"><value>aopAdvisedServiceBean</value></property>
+        <property name="interceptorNames">
+            <list>
+                <value>aopAdvisedInterceptor</value>
+            </list>
+        </property>
+    </bean>
+    <bean class="com.wavemaker.tools.spring.AopAdvisedInterceptor" id="aopAdvisedInterceptor"/>
+
+    <bean id="aopAdvisedServiceBean"
+            class="com.wavemaker.tools.spring.AopAdvised"
+            scope="singleton"/>
+    <bean id="aopAdvisedServiceBeanServiceWire"
+            lazy-init="false"
+            scope="singleton"
+            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="aopAdvisedServiceBean" name="serviceId"/>
+        <property name="serviceType" ref="JavaService"/>
+    </bean>
+
+    <!-- test services -->
+    <bean id="serviceEventBean"
+        class="com.wavemaker.runtime.server.testspring.ServiceEventBean"
+        scope="singleton"
+        lazy-init="true"/>
+    <bean id="serviceEventBean_ServiceWire" lazy-init="false"
+            scope="singleton"
+            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="serviceEventBean" name="serviceId"/>
+        <property name="serviceType" ref="JavaService"/>
+    </bean>
+    
+    <bean id="serviceEventBean2"
+        class="com.wavemaker.runtime.server.testspring.ServiceEventBean"
+        scope="singleton"
+        lazy-init="true"/>
+    <bean id="serviceEventBean2_ServiceWire" lazy-init="false"
+            scope="singleton"
+            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="serviceEventBean2" name="serviceId"/>
+        <property name="serviceType" ref="JavaService"/>
+    </bean>
+    
+    <bean id="serviceEventBeanListener"
+        class="com.wavemaker.runtime.server.testspring.ServiceEventBeanListener"
+        scope="singleton"
+        lazy-init="true"/>
+    <bean id="serviceEventBeanListener2"
+        class="com.wavemaker.runtime.server.testspring.ServiceEventBeanListener"
+        scope="singleton"
+        lazy-init="true"/>
+
+    <!-- and the service wires for those services -->
+    <bean class="com.wavemaker.runtime.service.events.EventWire">
+        <property name="serviceWire" ref="sampleProductService_ServiceWire" />
+        <property name="eventListener"
+                ref="sampleProductServiceEventListener" />
+    </bean>
+    <bean class="com.wavemaker.runtime.service.events.EventWire">
+        <property name="serviceWire" ref="serviceEventBean_ServiceWire" />
+        <property name="eventListener" ref="serviceEventBeanListener" />
+    </bean>
+    <bean class="com.wavemaker.runtime.service.events.EventWire">
+        <property name="serviceWire" ref="serviceEventBean2_ServiceWire" />
+        <property name="eventListener" ref="serviceEventBeanListener" />
+    </bean>
+    <bean class="com.wavemaker.runtime.service.events.EventWire">
+        <property name="serviceWire" ref="serviceEventBean2_ServiceWire" />
+        <property name="eventListener" ref="serviceEventBeanListener2" />
+    </bean>
+    <bean class="com.wavemaker.runtime.service.events.EventWire">
+        <property name="eventListener" ref="serviceEventBeanListener2" />
+    </bean>
+</beans>

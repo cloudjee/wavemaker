@@ -1,0 +1,20 @@
+/* Splitter and bevel ignore document/pagecontent/contentpanel levels; these are UI components that should have a consistent look wherever they appear
+   * (note: more true for splitter than for bevel)
+   */
+
+.wm_template div.wmsplitter-h,
+.wm_template div.wmsplitter-v,
+.wm_template .wmbevel {
+    /* Document-HeadersDefault-Background */
+    background-color: #444444; /* Document-HeadersDefault-Background_Color */
+
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+}
+
+.wm_template div.wmsplitter-h:hover,
+.wm_template div.wmsplitter-v:hover {
+    /* Document-HeadersHover-Background */
+    background-color: #444444; /* Document-HeadersHover-Background_Color */
+}

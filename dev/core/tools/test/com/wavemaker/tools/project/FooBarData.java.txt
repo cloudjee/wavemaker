@@ -1,0 +1,8 @@
+package foo.bar.baz.data;
+
+public class FooBarData {
+
+	private int intVal;
+	public int getIntVal() { return intVal; }
+	public void setIntVal(int intVal) { this.intVal = intVal; }
+}

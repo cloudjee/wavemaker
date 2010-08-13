@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.activegrid.com/namespaces/ServiceDefinitions http://www.activegrid.com/namespaces/ServiceDefinitions/1.0"
+       id="fooService"
+       class="foo.bar.FooService"
+       type="WebService">
+    <operation name="getFoo">
+        <parameter name="arg1" typeRef="string" />
+        <parameter name="arg2" typeRef="int" />
+        <return typeRef="string" />
+    </operation>
+    <operation name="getBar">
+        <parameter name="arg1" typeRef="float" isList="true" />
+        <return typeRef="string" isList="true" />
+    </operation>
+
+    <dataobjects>
+        <dataobject name="Account" javaType="package.name.Account">
+            <element name="firstName" typeRef="String">
+                <require>read</require>
+            </element>
+            <element name="lastName" typeRef="FooString" serviceRef="ab">
+                <exclude>insert</exclude>
+                <exclude>update</exclude>
+                <noChange>delete</noChange>
+            </element>
+        </dataobject>
+    </dataobjects>
+</service>

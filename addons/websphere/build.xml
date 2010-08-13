@@ -1,0 +1,25 @@
+<project name="websphere" default="build" basedir=".">
+
+    <property name="root.dir" location="${basedir}/../../dev"/>
+    <import file="${root.dir}/common.build.xml"/>
+
+    <path id="build.classpath">
+        <pathelement location="${basedir}/lib/com.ibm.ws.admin.client_7.0.0.jar"/>
+    </path>
+
+    <target name="clean" description="Remove class files">
+        <delete dir="${basedir}/classes"/>
+    </target> 
+
+    <target name="build" description="Compile JSR88 code" depends="clean">
+		<mkdir dir="${basedir}/classes"/>
+        <javac srcdir="${basedir}/src" 
+               destdir="${basedir}/classes" 
+               target="${javac.target}"
+               encoding="${javac.encoding}"
+               debug="${javac.debug}">
+            <classpath refid="build.classpath"/>
+        </javac>
+    </target>
+
+</project>

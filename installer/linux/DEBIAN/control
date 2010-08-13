@@ -1,0 +1,13 @@
+Package: wavemaker-@PROJECTTYPE@
+Version: @VERSION@
+Section: devel 
+Priority: optional
+Architecture: amd64
+Maintainer: Ed Callahan <community@wavemaker.com>
+Provides: wavemaker-@PROJECTTYPE@
+Pre-Depends: ia32-libs
+Suggests: lib32nss-mdns
+Homepage: http://dev.wavemaker.com/
+Description: Web 2.0 WSYWIG AJAX Development
+ WaveMaker provides for the Web-Fast development of CIO-Safe
+ applications. 

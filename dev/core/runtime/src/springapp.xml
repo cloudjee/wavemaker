@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  - Base application context definition for "springapp" DispatcherServlet.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                http://www.springframework.org/schema/aop
+                http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+    <import resource="config.xml"/>
+    <import resource="managers.xml"/>
+    <import resource="security.xml"/>
+    <import resource="services.xml"/>
+
+	<bean id="multipartResolver"
+			class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+
+    <bean id="agJSONController"
+            class="com.wavemaker.runtime.server.JSONRPCController">
+        <property name="serviceManager">
+            <ref bean="serviceManager"/>
+        </property>
+        <property name="servletEventNotifier">
+            <ref bean="servletEventNotifier"/>
+        </property>
+        <property name="serviceEventNotifier">
+            <ref bean="serviceEventNotifier"/>
+        </property>
+        <property name="runtime">
+            <ref bean="runtime"/>
+        </property>
+        <property name="runtimeAccess">
+            <ref bean="runtimeAccess"/>
+        </property>
+        <property name="internalRuntime">
+            <ref bean="internalRuntime"/>
+        </property>
+
+        <!-- controller configuration -->
+        <property name="supportedMethods" value="POST" />
+    </bean>
+
+	<bean id="agFileUploadController"
+			class="com.wavemaker.runtime.server.FileUploadController">
+        <property name="serviceManager">
+            <ref bean="serviceManager"/>
+        </property>
+        <property name="servletEventNotifier">
+            <ref bean="servletEventNotifier"/>
+        </property>
+        <property name="serviceEventNotifier">
+            <ref bean="serviceEventNotifier"/>
+        </property>
+        <property name="runtime">
+            <ref bean="runtime"/>
+        </property>
+        <property name="runtimeAccess">
+            <ref bean="runtimeAccess"/>
+        </property>
+        <property name="internalRuntime">
+            <ref bean="internalRuntime"/>
+        </property>
+
+        <!-- controller configuration -->
+        <property name="supportedMethods" value="POST" />
+	</bean>
+
+	<bean id="agFileDownloadController"
+			class="com.wavemaker.runtime.server.FileDownloadController">
+        <property name="serviceManager">
+            <ref bean="serviceManager"/>
+        </property>
+        <property name="servletEventNotifier">
+            <ref bean="servletEventNotifier"/>
+        </property>
+        <property name="serviceEventNotifier">
+            <ref bean="serviceEventNotifier"/>
+        </property>
+        <property name="runtime">
+            <ref bean="runtime"/>
+        </property>
+        <property name="runtimeAccess">
+            <ref bean="runtimeAccess"/>
+        </property>
+        <property name="internalRuntime">
+            <ref bean="internalRuntime"/>
+        </property>
+
+        <!-- controller configuration -->
+        <property name="supportedMethods" value="GET" />
+	</bean>
+
+	<bean id="wmModuleController"
+			class="com.wavemaker.runtime.module.ModuleController">
+        <property name="moduleManager">
+            <ref bean="moduleManager"/>
+        </property>
+
+        <!-- controller configuration -->
+        <property name="supportedMethods" value="GET" />
+	</bean>
+
+	<bean id="runtime" class="com.activegrid.runtime.AGRuntime">
+        <property name="runtimeAccess">
+            <ref bean="runtimeAccess"/>
+        </property>
+    </bean>
+
+	<bean id="runtimeAccess"
+			class="com.wavemaker.runtime.RuntimeAccess" scope="request">
+        <property name="serviceManager">
+            <ref bean="serviceManager"/>
+        </property>
+
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="internalRuntime"
+            class="com.wavemaker.runtime.server.InternalRuntime"
+            scope="request">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="viewResolver"
+            class="org.springframework.web.servlet.view.ResourceBundleViewResolver">
+        <property name="basename" value="views"/>
+    </bean>
+
+    <bean id="fileController"
+            class="com.wavemaker.runtime.FileController">
+
+		<property name="moduleManager">
+            <ref bean="moduleManager"/>
+        </property>
+
+        <!-- controller configuration -->
+        <property name="supportedMethods" value="GET" />
+    </bean>
+
+</beans>

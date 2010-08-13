@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<widget>
+	<name>DesignerWidget</name>
+	<title>my designer widget</title>
+	<icon>images/wm/template.png</icon>
+<script>
+<![CDATA[
+	username: "fred",
+	draw: function() {
+		var username = this.getProperty("username");
+		return 'hello <span id="username">' + username + '</span>';
+	},
+	change: function() {
+		this.nodes.username.innerHTML = this.getProperty("username");
+	},
+	setUsername: function(inUsername) {
+		this.username = inUsername;
+		this.change();
+	},
+	click: function() {
+		var username = this.getProperty("username");
+		alert('"' + username + '" is the best');
+	}
+]]>
+</script>
+</widget>

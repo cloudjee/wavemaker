@@ -1,0 +1,48 @@
+<project name="installers" default="build" basedir=".">
+
+    <property name="root.dir" location="${basedir}/../dev"/>
+    <import file="${root.dir}/common.build.xml"/>
+
+    <target name="init">
+        <condition property="os.mac">
+            <os family="mac"/>
+        </condition>
+        <condition property="os.windows">
+            <os family="windows"/>
+        </condition>
+        <condition property="os.linux">
+            <os name="Linux"/>
+        </condition>
+
+        <condition property="valid.platform">
+            <or>
+                <isset property="os.mac"/>
+                <isset property="os.windows"/>
+                <isset property="os.linux"/>
+            </or>
+        </condition>
+        <fail unless="valid.platform" message="no valid platform detected"/>
+    </target>
+
+    <target name="mac-build" if="os.mac">
+        <ant dir="mac" target="build"/>
+    </target>
+
+    <target name="linux-build" if="os.linux">
+        <ant dir="linux" target="build"/>
+    </target>
+
+    <target name="windows-build" if="os.windows">
+        <ant dir="windows" target="build"/>
+    </target>
+
+    <target name="build"
+            depends="init,mac-build,windows-build,linux-build">
+    </target>
+
+    <target name="clean">
+        <ant dir="linux" target="clean"/>
+        <ant dir="windows" target="clean"/>
+        <ant dir="mac" target="clean"/>
+    </target>
+</project>

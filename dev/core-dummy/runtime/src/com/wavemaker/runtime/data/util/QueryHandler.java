@@ -1,0 +1,52 @@
+/*
+ *  Copyright (C) 2008-2010 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Server Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package com.wavemaker.runtime.data.util;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import org.hibernate.cfg.Configuration;
+
+/**
+ * A dummy class for QueryHandler
+ *
+ * @author S Lee
+ *
+ */
+
+public class QueryHandler implements InvocationHandler {
+    public QueryHandler(Configuration cfg) {
+        System.out.println("\n*** Multi-Tenant feature is not avaliable in this package ***\n");
+    }
+
+    public QueryHandler (Object target, Configuration cfg) {
+        System.out.println("\n*** Multi-Tenant feature is not avaliable in this package ***\n");
+    }
+
+    public Object invoke(Object proxy, Method m, Object[] args) throws Throwable {
+        System.out.println("\n*** Multi-Tenant feature is not avaliable in this package ***\n");
+        return null;
+    }
+
+    public String modifySQL (Object o, String fieldName, int tid) {
+        System.out.println("\n*** Multi-Tenant feature is not avaliable in this package ***\n");
+        return null;
+    }
+
+    class SingleQuery {
+    }
+}

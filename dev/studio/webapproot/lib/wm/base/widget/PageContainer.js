@@ -1,0 +1,259 @@
+/*
+ *  Copyright (C) 2008-2010 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+dojo.provide("wm.base.widget.PageContainer");
+dojo.require("wm.base.components.Page");
+dojo.require("wm.base.widget.Panel");
+
+wm.pagesFolder = "pages/";
+
+dojo.declare("wm.PageContainer", wm.Box, {
+	width: "100%", 
+	height: "100%",
+	pageName: "",
+	deferLoad: false,
+	loadParentFirst: true,
+	pageProperties: null,
+	classNames: "wmpagecontainer",
+	init: function() {
+		this.pageLoadedList = [];
+		this.inherited(arguments);
+		this.createPageLoader();
+		this.pageLoadedDeferred = new dojo.Deferred();
+		if (!this.deferLoad)
+		  this.loadPage(this.pageName);
+		//this._connections.push(dojo.connect(window, "onbeforeunload", this, "destroy"));
+		dojo.addOnWindowUnload(this, 'destroy');
+	},
+        postInit: function() {
+	    this.inherited(arguments);
+	    if (this.isDesignedComponent() && this.designWrapper) {
+		dojo.addClass(this.designWrapper.domNode, "pageContainerDesignWrapper");
+                this.designWrapper.domNode.style.backgroundColor = "white";
+		var openPageButton = document.createElement("div");
+
+		openPageButton.className = "openPageContainerDesignWrapperButton" + ((this.pageName) ? " hasPageName" : ""); 
+		openPageButton.innerHTML = "Open Page";		
+		this.designWrapper.domNode.appendChild(openPageButton);		
+		this._designerOpenPageButton = openPageButton;
+		dojo.connect(openPageButton, "onclick", this, function() {
+		    if (!studio.isPageDirty() || window.confirm("Are you sure you want to close the current page and open " + this.pageName + "?"))
+			studio.project.openPage(this.pageName);
+		});
+	    }
+	},
+	createPageLoader: function() {
+		this._pageLoader = new wm.PageLoader({owner: this, domNode: this.domNode, isRelativePositioned: this.isRelativePositioned});
+		this._connections.push(this.connect(this._pageLoader, "onPageChanged", this, "pageChanged"));
+	},
+	getMainPage: function() {
+	  var owner = this.owner;
+	  while(owner.owner) {
+	    owner = owner.owner;
+	  }
+	  if (owner instanceof wm.Application)
+	    return owner;
+	},
+	/* Not sure if this gets called */
+	destroy: function() {
+		if (this.isDestroyed)
+			return;
+	  var owner = this.getMainPage();
+	  if (owner) owner.subPageUnloaded(this.page);	  
+	  try {
+		this.inherited(arguments);
+	  } catch(e) {}
+	  
+	  if (this._pageLoader)
+	  {
+		this.destroyPreviousPage();
+	  	this._pageLoader.destroy();
+		this._pageLoader = null;
+	  }
+	  owner = null;	
+	},
+	destroyPreviousPage: function(){
+	  	for (var i = 0; i < this.pageLoadedList.length; i++)
+		{
+			try
+			{
+		  		this._pageLoader.destroyPage(this.pageLoadedList[i]);
+			}
+			catch(e)
+			{
+				console.info('couldnt delete page <--------------');
+			}
+		}
+
+		this.pageLoadedList = [];
+	},
+	pageChanged: function(inPage, inPreviousPage) {
+		try
+		{
+			// establish page reference
+			this.destroyPreviousPage();
+			this.pageLoadedList.push(inPage);
+			this.page = inPage;
+			this[inPage.name] = inPage;
+	
+			var owner = this.getMainPage();
+			if (owner) owner.subPageLoaded(this.page);	  
+	
+			// FIXME: parent required for layout
+			if (this.page.root)
+				this.page.root.parent = this;
+			// change callback / event
+			if (this.pageLoadedDeferred)
+				this.pageLoadedDeferred.callback({page: inPage, previousPage: inPreviousPage});
+			this.onPageChanged(inPage, inPreviousPage);
+			// clean up previous page reference
+			var o = (inPreviousPage || 0).name
+			if (o && this[o])
+				delete this[o];
+		}
+		catch(e)
+		{
+			console.info('error in pageChanged in pagecontainer.js ......', e);			
+		}
+	},
+	loadPage: function(inName) {
+	    try {
+		var d = this.isDesignLoaded(), s = wm.studioConfig;
+		if (d && s && s.preventSubPages)
+			return;
+		// bc: name with initial letter lowercase is required
+		var pageName = inName.charAt(0).toLowerCase() + inName.slice(1);
+
+	        // If the design is loaded, then page loading of the container is handled elsewhere.
+		if (pageName) {
+		    if (!d && this.loadParentFirst && this.getParentPage()._loadingPage) {
+			// Prevent this from being connected multiple times
+			if (!this._pageLoaderConnectedToOwnerStart) {
+				if (this._currentPageConnect)
+					dojo.disconnect(this._currentPageConnect);
+			    this._currentPageConnect = this.owner.connect(this.owner, "start", dojo.hitch(this, 'pageLoaderOnOwnerStart', inName, pageName));
+			    this._pageLoaderConnectedToOwnerStart = true;
+			}
+		    } else {
+		      this._pageLoader.loadPage(inName, pageName);
+				if (this._currentPageConnect)
+					dojo.disconnect(this._currentPageConnect);
+		      this._currentPageConnect = this._pageLoader.page.connect(this._pageLoader.page, "onStart", this, "onStart");
+		    }
+		} else {
+			this.destroyPreviousPage();
+		}
+	    } catch(e) {
+		console.error("PageContainer page  '" + inName + "' failed to load: " + e);
+	    }
+	},
+	pageLoaderOnOwnerStart: function(inName, pageName) {
+		this._pageLoaderConnectedToOwnerStart = false;
+		this._pageLoader.loadPage(inName, pageName);
+		this._pageLoader.page.connect(this._pageLoader.page, "onStart", this, "onStart");
+    },
+	onStart: function() {
+	    if (this.parent && this.page && !dojo.coords(this.page.root.domNode).w) 
+			this.parent.reflow();
+	},
+	forEachWidget: function(inFunc) {
+		if (this.page)
+			return this.page.forEachWidget(inFunc);
+	},
+	setPageName: function(inPageName) {
+		if (this._pageLoading)
+			return;
+
+	        if (this._designerOpenPageButton)
+		    dojo[this.pageName ? "addClass" : "removeClass"](this._designerOpenPageButton, "hasPageName");
+
+		var o = this.pageName;
+		this.pageName = inPageName || "";
+		this.pageLoadedDeferred = new dojo.Deferred();
+		if (o != this.pageName)
+			this.loadPage(this.pageName);
+	},
+	onPageChanged: function(inNewPage, inPreviousPage) {
+	},
+	// optimization: page created when shown if doesn't exist.
+	_onShowParent: function() {
+		this.revealed();
+	},
+	revealed: function() {
+		if (!this.page)
+			this.loadPage(this.pageName);
+	},
+	flow: function() {
+		if (this._boundsDirty)
+			wm.fire(this.page, "reflow");
+	},
+	reflow: function() {
+		this._boundsDirty = true;
+		this.flow();
+	},
+	hasPageLoaded: function(optionalPageName) {
+	  if (!optionalPageName) return Boolean(this.page);
+	  return Boolean(this.page && this.page.name == optionalPageName);
+	}
+});
+
+// design only
+wm.PageContainer.extend({
+        themeable: false,
+	scrim: true,
+	_isBindSource: true,
+	designCreate: function() {
+		this.inherited(arguments);
+		if (this.designWrapper)
+			dojo.addClass(this.designWrapper.domNode, "wmchrome-wrapper");
+	},
+	writeChildren: function() {
+		return [];
+	},
+	// write only binding.
+	writeComponents: function(inIndent) {
+		var
+			s = [];
+			c = this.components.binding.write(inIndent);
+		if (c) 
+			s.push(c);
+		return s;
+	},
+	makePropEdit: function(inName, inValue, inDefault) {
+		switch (inName) {
+			case "pageName":
+				return new wm.propEdit.PagesSelect({component: this, name: inName, value: inValue});
+		}
+		return this.inherited(arguments);
+	},
+	afterPaletteDrop: function() {
+		// change default so deferLoad is false
+		// this.inherited(arguments);
+		this.deferLoad = true;
+	}
+})
+
+wm.Object.extendSchema(wm.PageContainer, {
+	pageLoadedDeferred: {ignore: 1},
+	pageName: {group: "common", bindable: 1, type: "string", order: 50},
+	deferLoad: {group: "common", order: 100},
+	loadParentFirst: {group: "common", order: 101},
+	box: {ignore: 1},
+	disabled: {ignore: 1},
+	page: {ignore: 1},
+	pageProperties: {ignore: 1, writeonly: 1}
+});

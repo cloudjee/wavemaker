@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" springFile="resourceManager.spring.xml" type="JavaService" CRUDService="false" class="com.wavemaker.studio.ResourceFileService" id="resourceFileService">
+    <operation name="uploadFile">
+        <parameter isList="false" typeRef="org.springframework.web.multipart.MultipartFile" name="file"/>
+        <return isList="false" typeRef="java.lang.String"/>
+    </operation>
+    <operation name="deleteFile">
+        <parameter isList="false" typeRef="java.lang.String" name="name"/>
+        <return isList="false" typeRef="boolean"/>
+    </operation>
+    <operation name="downloadFile">
+        <parameter isList="false" typeRef="java.lang.String" name="folder"/>
+        <parameter isList="false" typeRef="java.lang.String" name="filename"/>
+        <return isList="false" typeRef="com.wavemaker.runtime.server.DownloadResponse"/>
+    </operation>
+    <operation name="getResourceFolder">
+        <return isList="false"/>
+    </operation>
+    <operation name="createFolder">
+        <parameter isList="false" typeRef="java.lang.String" name="name"/>
+        <return isList="false" typeRef="boolean"/>
+    </operation>
+    <operation name="unzipFile">
+        <parameter isList="false" typeRef="java.lang.String" name="file"/>
+        <return isList="false" typeRef="boolean"/>
+    </operation>
+    <operation name="moveNewFile">
+        <parameter isList="false" typeRef="java.lang.String" name="from"/>
+        <parameter isList="false" typeRef="java.lang.String" name="to"/>
+        <return isList="false" typeRef="java.lang.String"/>
+    </operation>
+    <operation name="renameFile">
+        <parameter isList="false" typeRef="java.lang.String" name="from"/>
+        <parameter isList="false" typeRef="java.lang.String" name="to"/>
+        <parameter isList="false" typeRef="boolean" name="overwrite"/>
+        <return isList="false" typeRef="java.lang.String"/>
+    </operation>
+    <dataobjects/>
+</service>

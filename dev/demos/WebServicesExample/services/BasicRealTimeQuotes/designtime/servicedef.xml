@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" springFile="BasicRealTimeQuotes.spring.xml" type="WebService" CRUDService="false" class="com.strikeiron.basicrealtimequotes.BasicRealTimeQuotes" id="BasicRealTimeQuotes">
+    <operation name="getOneQuote">
+        <parameter isList="false" typeRef="com.strikeiron.basicrealtimequotes.GetOneQuote" name="parameters"/>
+        <parameter isList="false" typeRef="com.strikeiron.basicrealtimequotes.LicenseInfo" name="licenseInfo"/>
+        <return isList="false" typeRef="com.strikeiron.basicrealtimequotes.GetOneQuoteResponse"/>
+    </operation>
+    <operation name="getQuotes">
+        <parameter isList="false" typeRef="com.strikeiron.basicrealtimequotes.GetQuotes" name="parameters"/>
+        <parameter isList="false" typeRef="com.strikeiron.basicrealtimequotes.LicenseInfo" name="licenseInfo"/>
+        <return isList="false" typeRef="com.strikeiron.basicrealtimequotes.GetQuotesResponse"/>
+    </operation>
+    <operation name="getRemainingHits">
+        <parameter isList="false" typeRef="com.strikeiron.basicrealtimequotes.GetRemainingHits" name="parameters"/>
+        <parameter isList="false" typeRef="com.strikeiron.basicrealtimequotes.LicenseInfo" name="licenseInfo"/>
+        <return isList="false" typeRef="com.strikeiron.basicrealtimequotes.GetRemainingHitsResponse"/>
+    </operation>
+    <dataobjects>
+        <dataobject supportsQuickData="false" name="GetRemainingHitsResponse" javaType="com.strikeiron.basicrealtimequotes.GetRemainingHitsResponse"/>
+        <dataobject supportsQuickData="false" name="GetRemainingHits" javaType="com.strikeiron.basicrealtimequotes.GetRemainingHits"/>
+        <dataobject supportsQuickData="false" name="LicenseInfo" javaType="com.strikeiron.basicrealtimequotes.LicenseInfo">
+            <element allowNull="false" isList="false" typeRef="com.strikeiron.basicrealtimequotes.UnregisteredUserType" name="unregisteredUser"/>
+            <element allowNull="false" isList="false" typeRef="com.strikeiron.basicrealtimequotes.RegisteredUserType" name="registeredUser"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="UnregisteredUserType" javaType="com.strikeiron.basicrealtimequotes.UnregisteredUserType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="emailAddress"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="RegisteredUserType" javaType="com.strikeiron.basicrealtimequotes.RegisteredUserType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="userID"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="password"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="SubscriptionInfo" javaType="com.strikeiron.basicrealtimequotes.SubscriptionInfo">
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="licenseStatusCode"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="licenseStatus"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="licenseActionCode"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="licenseAction"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="remainingHits"/>
+            <element allowNull="false" isList="false" typeRef="java.math.BigDecimal" name="amount"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="GetOneQuote" javaType="com.strikeiron.basicrealtimequotes.GetOneQuote">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="tickerSymbol"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="ResponseInfo" javaType="com.strikeiron.basicrealtimequotes.ResponseInfo">
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="responseCode"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="response"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="GetOneQuoteResponse" javaType="com.strikeiron.basicrealtimequotes.GetOneQuoteResponse">
+            <element allowNull="false" isList="false" typeRef="com.strikeiron.basicrealtimequotes.RealQuoteType" name="getOneQuoteResult"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="RealQuoteType" javaType="com.strikeiron.basicrealtimequotes.RealQuoteType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="symbol"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="CUSIP"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="CIK"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="name"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="date"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="time"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Double" name="last"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="quantity"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Double" name="changeFromPrevious"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Double" name="percentChangeFromPrevious"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Double" name="open"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Double" name="changeFromOpen"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Double" name="percentChangeFromOpen"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Double" name="bid"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Double" name="ask"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Double" name="spread"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="bidQuantity"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="askQuantity"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="volume"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="ECNVolume"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Double" name="highest"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Double" name="lowest"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="rank"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="GetQuotesResponse" javaType="com.strikeiron.basicrealtimequotes.GetQuotesResponse">
+            <element allowNull="false" isList="false" typeRef="com.strikeiron.basicrealtimequotes.ArrayOfRealQuoteType" name="getQuotesResult"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="ArrayOfRealQuoteType" javaType="com.strikeiron.basicrealtimequotes.ArrayOfRealQuoteType">
+            <element allowNull="false" isList="true" typeRef="com.strikeiron.basicrealtimequotes.RealQuoteType" name="realQuotes"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="GetQuotes" javaType="com.strikeiron.basicrealtimequotes.GetQuotes">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="tickerSymbolList"/>
+        </dataobject>
+    </dataobjects>
+</service>

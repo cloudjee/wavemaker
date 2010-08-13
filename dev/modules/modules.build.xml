@@ -1,0 +1,22 @@
+<project name="modules-shared" default="" basedir=".">
+    <path id="modules.test.build.classpath">
+        <path refid="modules.build.classpath"/>
+        <filelist refid="common.testsupport.jars"/>
+        <pathelement location="${classes.testsupport.dir}"/>
+        <pathelement location="${classes.studio.dir}"/>
+        <pathelement location="${test.classes.common.dir}"/>
+        <pathelement location="${test.classes.runtime.dir}"/>
+        <pathelement location="${test.classes.tools.dir}"/>
+    </path>
+
+    <path id="modules.build.classpath">
+        <filelist refid="common.runtime.jars"/>
+        <filelist refid="common.tools.jars"/>
+        <filelist refid="common.common.jars"/>
+        <filelist refid="common.json.jars"/>
+        <path location="${classes.common.dir}"/>
+        <path location="${classes.json.dir}"/>
+        <path location="${classes.runtime.dir}"/>
+        <path location="${classes.tools.dir}"/>
+    </path>
+</project>

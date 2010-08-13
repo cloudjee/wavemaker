@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Turbo09 DataForm</title>
+<style>
+	@import "../../../wm/base/widget/themes/default/theme.css";
+	@import "../../../modules/sysmodule/js/dijit/themes/tundra/tundra.css";
+	body, html {
+		margin: 0;
+		height: 100%;
+		/*overflow: hidden;*/
+	}
+	
+	.container {
+		width: 100%;
+		height: 500px;
+		padding: 10px;
+		/*border: 1px solid red;*/
+		border-collapse: collapse;
+	}
+	.container td {
+		width: 50%;
+		vertical-align: top;
+		/*border: 1px solid red;*/
+	}
+
+</style>
+<script type="text/javascript" src="../../../modules/sysmodule/js/dojo/dojo.js"></script>
+<script type="text/javascript">
+	dojo.registerModulePath("wm", "../../../../wm");
+</script>
+<script type="text/javascript" src="../../../wm/base/lib/util.js"></script>
+<script type="text/javascript" src="../../../wm/base/Widget.js"></script>
+<script type="text/javascript" src="../../../wm/base/data/fields.js"></script>
+<script type="text/javascript" src="../../../wm/base/data/model.js"></script>
+<script type="text/javascript" src="../../../wm/base/layout/box.js"></script>
+<script type="text/javascript" src="../../../wm/base/widget/Box.js"></script>
+<script type="text/javascript" src="../../../wm/base/widget/Table/builder.js"></script>
+<script type="text/javascript" src="../../../wm/base/widget/VirtualList.js"></script>
+<script type="text/javascript" src="../../../wm/base/widget/List.js"></script>
+<script type="text/javascript" src="../../../wm/base/widget/Detail.js"></script>
+<script type="text/javascript" src="../../../wm/base/widget/Form.js"></script>
+<script type="text/javascript">
+	dojo.require('dijit.form.TextBox');
+	dojo.require('dijit.form.DateTextBox');
+	
+	dojo.addOnLoad(function() {
+		schema = {fruit: {label: 'Fruit', type: 'String'}, id: {label: 'Identification', type: 'Number'}, desc: {label: 'Description', type: 'String'}};
+
+		masterData = new wm.Data();
+		masterData.schema = schema;
+		data = [
+			{fruit: 'Apple', id: 1, desc: 'They are tasty.'},
+			{fruit: 'Peach', id: 2, desc: 'Peaches have hair.'},
+			{fruit: 'Pair', id: 3, desc: 'Good for pies.'},
+			{fruit: 'Banana', id: 4, desc: 'Makes oatmeal taste better.'},
+			{fruit: 'Kiwi', id: 5, desc: 'Not from New Zealand.'}
+		];
+		
+		detailData  = new wm.Data({name: 'fruitData'});
+		detailData.schema = schema;
+		//detailData.data = {fruit: 'Apple', id: 1, desc: 'They are tasty.'};
+		
+		
+		list = new wm.List({domNode: 'n1', width: 500, height: 250, dataSource: masterData, dataFields: 'fruit'});
+		
+		list.onselect = function(inItem) {
+			detailData.setData(list._dataSource.data[inItem.index]);
+		}
+		
+		detail = new wm.Detail({domNode: 'n2', width: 500, height: 250, dataSource: detailData, dataFields: 'fruit,desc,id'});
+		form = new wm.Form({domNode: 'n3', width: 500, height: 250, dataSource: detailData, dataFields: 'fruit,desc,id'});
+
+		masterData.setData(data);
+	});
+	
+	changeLabelPosition = function() {
+		var s = dojo.byId('labelPosition'),
+		l = s.options[s.selectedIndex].value;
+		form.labelalign = detail.labelalign = (l == 'left' ? 'right' : '');
+		form.labelposition = detail.labelposition = l;
+		detail.render();
+		form.render();
+	}
+	
+	deleteSelected = function() {
+		var s = list.selected;
+		(s)&&masterData.data.splice(s.index, 1);
+		masterData.changed();
+		detailData.setData();
+	}
+	
+	insert = function() {
+		d = form.getValues();
+		masterData.data.push(d);
+		masterData.changed();
+		detailData.setData();
+	}
+
+</script>
+</head>
+<body class="tundra">
+	<p>wm.DataForm</p>
+	Label position: <select id="labelPosition" onchange="changeLabelPosition()">
+		<option value="left">Left</option>
+		<option value="right">Right</option>
+		<option value="top">Top</option>
+		<option value="bottom">Bottom</option>
+	</select>
+	<button onclick="deleteSelected()">Delete Selected</button>
+	<table class="container">
+		<tr>
+			<td rowspan="2"><div id="n1"></div></td>
+			<td  style="text-align: right;"><div id="n2"></div></td>
+		</tr>
+		<tr>
+			<td style="text-align: right;">
+				<div id="n3"></div>
+				<button onclick="insert()">Insert</button>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

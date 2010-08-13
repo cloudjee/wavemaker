@@ -1,0 +1,103 @@
+/*
+ *  Copyright (C) 2008-2010 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Server Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package com.wavemaker.tools.project.upgrade;
+
+import java.io.File;
+import java.io.Writer;
+import java.io.IOException;
+import java.io.InputStream;
+
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
+import com.wavemaker.common.WMRuntimeException;
+
+import com.wavemaker.tools.project.Project;
+import com.wavemaker.tools.project.ProjectManager;
+
+import com.wavemaker.tools.project.upgrade.UpgradeInfo;
+import com.wavemaker.tools.project.upgrade.UpgradeTask;
+
+import org.apache.commons.io.IOUtils;
+
+
+/**
+ * Generic upgrade task; reads a file from the template, and writes it into
+ * the current project.  The file and any messages are provided through Spring
+ * properties.  No backup (beyond the automatic zip) is made of the project
+ * files.
+ * 
+ * @author small
+ * @version $Rev$ - $Date$
+ */
+public class UpgradeTemplateFile implements UpgradeTask {
+
+    /* (non-Javadoc)
+     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
+     */
+    public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
+
+        if (null==relativePath) {
+            throw new WMRuntimeException("No file provided");
+        }
+
+        File localFile = new File(project.getProjectRoot(), relativePath);
+
+        InputStream resourceStream = this.getClass().getClassLoader().
+                getResourceAsStream(ProjectManager._TEMPLATE_APP_RESOURCE_NAME);
+        ZipInputStream resourceZipStream = new ZipInputStream(resourceStream);
+
+        try {
+            ZipEntry zipEntry = null;
+
+            while ((zipEntry = resourceZipStream.getNextEntry()) != null) {
+                if (relativePath.equals(zipEntry.getName())) {
+                    Writer writer = project.getWriter(localFile);
+                    IOUtils.copy(resourceZipStream, writer);
+                    writer.close();
+                }
+            }
+
+            resourceZipStream.close();
+            resourceStream.close();
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
+        
+        
+        if (null!=message) {
+            upgradeInfo.addMessage(message);
+        }
+    }
+
+    // bean properties
+    private String relativePath;
+    private String message;
+
+    /**
+     * The relative path (relative to the project root) for the file to
+     * upgrade.
+     */
+    public void setFile(String file) {
+        this.relativePath = file;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+}

@@ -1,0 +1,215 @@
+<?xml version="1.0"?>
+
+<!-- Generated Feb 7, 2008 1:47:55 PM
+
+Configuration for 'db2sample' database service
+
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+
+    <bean 
+        id="db2sample"
+        class="com.wavemaker.runtime.data.sample.db2sampledb.DB2Sample"
+        scope="singleton"
+        lazy-init="true">
+        <property name="dataServiceManager">
+            <ref bean="db2sampleDataService"/>
+        </property>
+        <property name="taskManager">
+            <ref bean="db2sampleTaskMgr"/>
+        </property>
+    </bean>
+    <bean lazy-init="false"
+            scope="singleton"
+            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="db2sample" name="serviceId"/>
+        <property name="serviceType" ref="DataService"/>
+    </bean>
+
+    <bean 
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:db2sample.properties</value>
+            </list>
+        </property>
+    </bean>
+
+
+    <bean 
+        id="db2sampleDataSource" 
+        class="org.springframework.jdbc.datasource.DriverManagerDataSource" 
+        lazy-init="true">
+        <property name="driverClassName" value="${db2sample.driverClassName}"/>
+        <property name="url" value="${db2sample.connectionUrl}"/>
+        <property name="username" value="${db2sample.username}"/>
+        <property name="password" value="${db2sample.password}"/>
+    </bean>
+
+
+    <bean 
+        id="db2sampleTxMgr" 
+        class="org.springframework.orm.hibernate3.HibernateTransactionManager"
+        lazy-init="true">
+        <property name="sessionFactory">
+            <ref bean="db2sampleSessionFactory"/>
+        </property>
+    </bean>
+
+
+    <bean 
+        id="db2sampleHibernateTemplate"
+        class="org.springframework.orm.hibernate3.HibernateTemplate"
+        lazy-init="true">
+        <property name="sessionFactory"> 
+            <ref bean="db2sampleSessionFactory"/>
+        </property>
+    </bean>  
+
+
+    <bean 
+        id="db2sampleSessionFactory" 
+        class="com.wavemaker.runtime.data.spring.ConfigurationAndSessionFactoryBean"
+        lazy-init="true">
+
+        <!-- A unique name for this SessionFactory's configuration -->
+        <property name="name" value="db2sample"/>
+        <property name="dataSource" ref="db2sampleDataSource"/>
+
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">${db2sample.dialect}</prop>
+                <prop key="hibernate.transaction.factory_class">
+                    org.hibernate.transaction.JDBCTransactionFactory
+                </prop>
+                <prop key="hibernate.current_session_context_class">thread</prop>
+            </props> 
+        </property>
+
+        <property name="mappingResources">
+            <list>
+
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Act.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Catalog.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/ClSched.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Customer.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Department.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/EmpPhoto.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/EmpResume.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Employee.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Empmdc.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Empprojact.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Foo1.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/InTray.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Inventory.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Org.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Product.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Productsupplier.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Projact.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Project.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Purchaseorder.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Sales.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Staff.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Suppliers.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vact.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vastrde1.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vastrde2.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vdepmg1.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vdept.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vemp.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vempdpt1.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vemplp.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vempprojact.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vforpla.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vhdept.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vphone.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vproj.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vprojact.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vprojre1.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vpstrde1.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vpstrde2.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vstafac1.hbm.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vstafac2.hbm.xml</value>
+
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Act.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Catalog.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/ClSched.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Customer.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Department.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/EmpPhoto.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/EmpResume.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Employee.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Empmdc.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Empprojact.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Foo1.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/InTray.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Inventory.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Org.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Product.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Productsupplier.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Projact.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Project.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Purchaseorder.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Sales.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Staff.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Suppliers.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vact.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vastrde1.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vastrde2.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vdepmg1.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vdept.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vemp.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vempdpt1.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vemplp.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vempprojact.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vforpla.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vhdept.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vphone.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vproj.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vprojact.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vprojre1.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vpstrde1.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vpstrde2.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vstafac1.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/Vstafac2.ql.xml</value>
+<value>com/wavemaker/runtime/data/sample/db2sampledb/app-queries.ql.xml</value>
+
+            </list>
+        </property>
+
+    </bean>
+
+
+    <!-- the data service bean instance is injected into the service bean -->
+    <bean 
+        id="db2sampleDataService" 
+        class="com.wavemaker.runtime.data.spring.SpringDataServiceManager"
+        lazy-init="true">
+        <constructor-arg>
+            <!-- the value of the "name" property of the SessionFactory -->
+            <value>db2sample</value>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="db2sampleHibernateTemplate"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="db2sampleTxMgr"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="db2sampleTaskMgr"/>
+        </constructor-arg>
+    </bean>
+
+
+    <bean 
+        id="db2sampleTaskMgr"
+        class="com.wavemaker.runtime.data.DefaultTaskManager"
+        lazy-init="true"/>
+
+</beans>

@@ -1,0 +1,101 @@
+/*
+ *  Copyright (C) 2010 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+#studio_queryEditorContainer_queryEditor_editorToolbar, #studio_queryEditorContainer_queryEditor_editorToolbar2 {
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	/*border-top:1px #FFFFFF solid;*/
+	border-bottom:1px #363b44 solid;
+	/*padding: 2px;*/
+}
+
+#studio_queryEditorContainer_queryEditor_logoBtmHolder {
+	/*background: url(images/wmbug_bot.gif) bottom no-repeat;*/
+}
+
+.QueryEditor button {
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	height: 24px;
+	text-align: center;
+}
+
+.QueryEditor button:hover {
+	background-image:url(images/dark_toolbar_btn_sm_on.gif);
+	background-repeat:no-repeat;
+	height: 24px;
+}
+
+#studio_queryEditorContainer_queryEditor_splitter1 {
+	background:#959dab url(images/v_splitter_handle.gif) no-repeat scroll 1px center;
+	border-left: 1px solid #c0c4ca;
+	border-right: 1px solid #363b44;
+	cursor:e-resize;
+	overflow:hidden;
+	width:5px;
+	z-index:9;
+}
+
+#studio_queryEditorContainer_queryEditor_benchbevel4 {
+	background-color: #959dab;
+	border-top: 1px solid #c0c4ca;
+	border-bottom: 1px solid #363b44;
+}
+
+#studio_queryEditorContainer_queryEditor_splitter2 {
+	background:#959dab url(images/h_splitter_handle.gif) no-repeat scroll 1px center;
+	border-top: 1px solid #c0c4ca;
+	border-bottom: 1px solid #363b44;
+	cursor:n-resize;
+	overflow:hidden;
+	height:5px;
+	z-index:9;
+	background-position: center;
+}
+
+#studio_queryEditorContainer_queryEditor_queryTextArea {
+	padding: 2px;
+	overflow: auto;
+}
+
+
+#studio_queryEditorContainer_queryEditor_paramsPanel, #studio_queryEditorContainer_queryEditor_queryPanel, #studio_queryEditorContainer_queryEditor_queryPropsPanel, #studio_queryEditorContainer_queryEditor_queryTestPanel, #studio_queryEditorContainer_queryEditor_helpPanel {
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	background-color: #949cab;
+	border-left: solid 1px #c0c4ca;
+	border-top-width: 0px;
+	border-right: solid 1px #363b44;
+	border-bottom: solid 1px #363b44;
+	padding: 5px;
+}
+
+#studio_queryEditorContainer_queryEditor_queryInputsList, #studio_queryEditorContainer_queryEditor_queryOutputList {
+	background-color: #FFF;
+	color: #000;
+	border: solid 1px #000;
+}
+
+#studio_queryEditorContainer_queryEditor_addInputBtn, #studio_queryEditorContainer_queryEditor_deleteParamBtn, #studio_queryEditorContainer_queryEditor_runQueryBtn {
+	background: none;
+	border: none;
+}
+
+.QueryEditor-toolbarspacer1 {
+	background-image:url(images/toolbarspacer.gif);
+}

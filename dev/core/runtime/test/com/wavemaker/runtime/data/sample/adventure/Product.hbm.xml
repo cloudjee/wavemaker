@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 18, 2007 5:20:12 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.adventure.Product" table="Product" schema="SalesLT" catalog="AdventureWorksLT">
+        <id name="productId" type="int">
+            <column name="ProductID" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="productCategory" class="com.wavemaker.runtime.data.sample.adventure.ProductCategory" fetch="select">
+            <column name="ProductCategoryID" />
+        </many-to-one>
+        <many-to-one name="productModel" class="com.wavemaker.runtime.data.sample.adventure.ProductModel" fetch="select">
+            <column name="ProductModelID" />
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="Name" length="50" not-null="true" unique="true" />
+        </property>
+        <property name="productNumber" type="string">
+            <column name="ProductNumber" length="25" not-null="true" unique="true" />
+        </property>
+        <property name="color" type="string">
+            <column name="Color" length="15" />
+        </property>
+        <property name="standardCost" type="big_decimal">
+            <column name="StandardCost" scale="4" not-null="true" />
+        </property>
+        <property name="listPrice" type="big_decimal">
+            <column name="ListPrice" scale="4" not-null="true" />
+        </property>
+        <property name="size" type="string">
+            <column name="Size" length="5" />
+        </property>
+        <property name="weight" type="big_decimal">
+            <column name="Weight" precision="8" />
+        </property>
+        <property name="sellStartDate" type="timestamp">
+            <column name="SellStartDate" length="23" not-null="true" />
+        </property>
+        <property name="sellEndDate" type="timestamp">
+            <column name="SellEndDate" length="23" />
+        </property>
+        <property name="discontinuedDate" type="timestamp">
+            <column name="DiscontinuedDate" length="23" />
+        </property>
+        <property name="thumbNailPhoto" type="blob">
+            <column name="ThumbNailPhoto" />
+        </property>
+        <property name="thumbnailPhotoFileName" type="string">
+            <column name="ThumbnailPhotoFileName" length="50" />
+        </property>
+        <property name="rowguid" type="string">
+            <column name="rowguid" length="36" not-null="true" unique="true" />
+        </property>
+        <property name="modifiedDate" type="timestamp">
+            <column name="ModifiedDate" length="23" not-null="true" />
+        </property>
+        <set name="salesOrderDetails" inverse="true">
+            <key>
+                <column name="ProductID" not-null="true" />
+            </key>
+            <one-to-many class="com.wavemaker.runtime.data.sample.adventure.SalesOrderDetail" />
+        </set>
+    </class>
+</hibernate-mapping>

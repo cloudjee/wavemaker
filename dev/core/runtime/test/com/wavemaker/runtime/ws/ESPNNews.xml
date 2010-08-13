@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet href="http://sports.espn.go.com/rss/friendlyRSSDemo.xsl" type="text/xsl" media="screen"?>
+<rss version="2.0" 	xmlns:dc="http://purl.org/dc/elements/1.1/"	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"	xmlns:admin="http://webns.net/mvcb/"	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"	xmlns:atom="http://purl.org/atom/ns#"	xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<channel>
+	<title>ESPN.com</title>
+	<link>http://espn.go.com/</link>	<description>Latest news from ESPN.com</description>
+	<language>en-us</language>
+   <atom:link rel="self" href="http://sports.espn.go.com/espn/rss/news?null" />
+	<lastBuildDate>Tue, 24 Jul 2007 12:07:04 PDT</lastBuildDate>
+	<docs>http://backend.userland.com/rss</docs>
+	<managingEditor>webmaster@espn.go.com</managingEditor>
+ <image> 
+     <url>http://assets.espn.go.com/i/tvlistings/tv_espn_original.gif</url>
+	<title>ESPN logo</title>
+	<link>http://espn.go.com</link>
+	<width>84</width>
+	<height>34</height>
+ </image> 
+ <ttl>30</ttl> 
+	<dc:rights>Copyright 2007</dc:rights>
+	<admin:generatorAgent rdf:resource="http://espn.go.com/rss/?v=0.9beta"/>
+	<admin:errorReportsTo rdf:resource="mailto:customer.service@espn.go.com"/>
+	<sy:updatePeriod>hourly</sy:updatePeriod>
+	<sy:updateFrequency>1</sy:updateFrequency>
+	<sy:updateBase>2000-01-01T12:00+00:00</sy:updateBase>
+<item>
+<dc:creator><![CDATA[Marc Stein]]></dc:creator>
+<title><![CDATA[Stein: Big Donaghy questions ... and answers]]></title>
+<description><![CDATA[Marc Stein looks at the issues facing the NBA in the Donaghy scandal.]]></description>
+<pubDate>Tue, 24 Jul 2007 11:03:34 PDT</pubDate>
+<guid>http://sports.espn.go.com/nba/columns/story?columnist=stein_marc&amp;id=2947073&amp;campaign=rss&amp;source=ESPNHeadlines</guid>
+<link>http://sports.espn.go.com/nba/columns/story?columnist=stein_marc&amp;id=2947073&amp;campaign=rss&amp;source=ESPNHeadlines</link>
+</item>
+
+<item>
+<dc:creator><![CDATA[ESPN.com news services]]></dc:creator>
+<title><![CDATA[NFL commish orders Vick to stay away from camp]]></title>
+<description><![CDATA[NFL commissioner Roger Goodell told Michael Vick to stay away from Falcons camp until the league reviews dogfighting charges against him.]]></description>
+<pubDate>Tue, 24 Jul 2007 11:51:45 PDT</pubDate>
+<guid>http://sports.espn.go.com/nfl/news/story?id=2946832&amp;campaign=rss&amp;source=ESPNHeadlines</guid>
+<link>http://sports.espn.go.com/nfl/news/story?id=2946832&amp;campaign=rss&amp;source=ESPNHeadlines</link>
+</item>
+
+<item>
+<dc:creator><![CDATA[ESPN.com news services]]></dc:creator>
+<title><![CDATA[Vinokourov tests positive for banned transfusion]]></title>
+<description><![CDATA[Tour de France rider Alexandre Vinokourov tested positive for a banned blood transfusion after winning last weekend's time trial, prompting his Astana team to pull out of the race Tuesday.  ]]></description>
+<pubDate>Tue, 24 Jul 2007 12:03:51 PDT</pubDate>
+<guid>http://sports.espn.go.com/oly/tdf2007/news/story?id=2947358&amp;campaign=rss&amp;source=ESPNHeadlines</guid>
+<link>http://sports.espn.go.com/oly/tdf2007/news/story?id=2947358&amp;campaign=rss&amp;source=ESPNHeadlines</link>
+</item>
+
+<item>
+<dc:creator><![CDATA[Buster Olney]]></dc:creator>
+<title><![CDATA[MLB execs: Rangers intent on trading star Teixeira]]></title>
+<description><![CDATA[Executives with other teams believe that the Rangers are definitely intent on trading first baseman Mark Teixeira before the July 31 trade deadline.]]></description>
+<pubDate>Tue, 24 Jul 2007 11:18:29 PDT</pubDate>
+<guid>http://sports.espn.go.com/mlb/news/story?id=2947494&amp;campaign=rss&amp;source=ESPNHeadlines</guid>
+<link>http://sports.espn.go.com/mlb/news/story?id=2947494&amp;campaign=rss&amp;source=ESPNHeadlines</link>
+</item>
+
+<item>
+<dc:creator><![CDATA[ESPN.com news services]]></dc:creator>
+<title><![CDATA[Craig Biggio to retire after 20 seasons in baseball]]></title>
+<description><![CDATA[Craig Biggio will retire after this season, MLB.com reported Tuesday.]]></description>
+<pubDate>Tue, 24 Jul 2007 11:42:50 PDT</pubDate>
+<guid>http://sports.espn.go.com/mlb/news/story?id=2947484&amp;campaign=rss&amp;source=ESPNHeadlines</guid>
+<link>http://sports.espn.go.com/mlb/news/story?id=2947484&amp;campaign=rss&amp;source=ESPNHeadlines</link>
+</item>
+
+<item>
+<dc:creator><![CDATA[ESPN.com news services]]></dc:creator>
+<title><![CDATA[Martin to make it official, retire from Jets, NFL]]></title>
+<description><![CDATA[Jets running back Curtis Martin, the fourth leading rusher in NFL history who hasn't played since the 2005 season, will make it official this week and announce his retirement from the NFL.]]></description>
+<pubDate>Tue, 24 Jul 2007 08:19:20 PDT</pubDate>
+<guid>http://sports.espn.go.com/nfl/news/story?id=2947121&amp;campaign=rss&amp;source=ESPNHeadlines</guid>
+<link>http://sports.espn.go.com/nfl/news/story?id=2947121&amp;campaign=rss&amp;source=ESPNHeadlines</link>
+</item>
+
+<item>
+<dc:creator><![CDATA[Associated Press]]></dc:creator>
+<title><![CDATA[Jury finds against Notre Dame's Weis in lawsuit]]></title>
+<description><![CDATA[A jury found against Notre Dame football coach Charlie Weis in his malpractice lawsuit against two doctors he claimed botched his care after he had gastric bypass surgery five years ago.]]></description>
+<pubDate>Tue, 24 Jul 2007 12:02:17 PDT</pubDate>
+<guid>http://sports.espn.go.com/ncf/news/story?id=2947569&amp;campaign=rss&amp;source=ESPNHeadlines</guid>
+<link>http://sports.espn.go.com/ncf/news/story?id=2947569&amp;campaign=rss&amp;source=ESPNHeadlines</link>
+</item>
+
+<item>
+<dc:creator><![CDATA[Associated Press]]></dc:creator>
+<title><![CDATA[ACC says it performs background checks on refs]]></title>
+<description><![CDATA[The Atlantic Coast Conference has performed background checks for the past year on game officials in three sports in an effort to prevent gambling scandals like the one faced by the NBA.]]></description>
+<pubDate>Tue, 24 Jul 2007 10:14:26 PDT</pubDate>
+<guid>http://sports.espn.go.com/ncaa/news/story?id=2947414&amp;campaign=rss&amp;source=ESPNHeadlines</guid>
+<link>http://sports.espn.go.com/ncaa/news/story?id=2947414&amp;campaign=rss&amp;source=ESPNHeadlines</link>
+</item>
+
+<item>
+<dc:creator><![CDATA[ESPN.com news services]]></dc:creator>
+<title><![CDATA[Sens make Emery one of NHL's best-paid goalies]]></title>
+<description><![CDATA[Ray Emery and the Ottawa Senators avoided salary arbitration Tuesday by agreeing to a three-year deal worth $9.5 million moments before the two sides began their hearing.]]></description>
+<pubDate>Tue, 24 Jul 2007 08:08:26 PDT</pubDate>
+<guid>http://sports.espn.go.com/nhl/news/story?id=2947171&amp;campaign=rss&amp;source=ESPNHeadlines</guid>
+<link>http://sports.espn.go.com/nhl/news/story?id=2947171&amp;campaign=rss&amp;source=ESPNHeadlines</link>
+</item>
+
+<item>
+<dc:creator><![CDATA[Associated Press]]></dc:creator>
+<title><![CDATA[NTSB eyes cables in NASCAR fatal plane crash]]></title>
+<description><![CDATA[ Control cables were broken in the NASCAR plane that crashed into two suburban homes, killing five people earlier this month, federal investigators said Tuesday.]]></description>
+<pubDate>Tue, 24 Jul 2007 11:52:30 PDT</pubDate>
+<guid>http://sports.espn.go.com/rpm/news/story?seriesId=2&amp;id=2947141&amp;campaign=rss&amp;source=ESPNHeadlines</guid>
+<link>http://sports.espn.go.com/rpm/news/story?seriesId=2&amp;id=2947141&amp;campaign=rss&amp;source=ESPNHeadlines</link>
+</item>
+
+<item>
+<dc:creator><![CDATA[ESPN.com news services]]></dc:creator>
+<title><![CDATA[Devastated coaches, players fear for their safety]]></title>
+<description><![CDATA[They've all been hit, anybody who coaches the bases, and Mike Coolbaugh's death after being struck in the head by a line drive as he stood in the first-base box was a sobering reminder of what a dangerous job it is.]]></description>
+<pubDate>Tue, 24 Jul 2007 08:27:57 PDT</pubDate>
+<guid>http://sports.espn.go.com/mlb/news/story?id=2947100&amp;campaign=rss&amp;source=ESPNHeadlines</guid>
+<link>http://sports.espn.go.com/mlb/news/story?id=2947100&amp;campaign=rss&amp;source=ESPNHeadlines</link>
+</item>
+
+<item>
+<dc:creator><![CDATA[ESPN.com news services]]></dc:creator>
+<title><![CDATA[Marlins to let legal system run its course on Olsen]]></title>
+<description><![CDATA[The Marlins do not plan to immediately discipline left-hander Scott Olsen for his alleged scuffle with police and arrest on drunken-driving charges.]]></description>
+<pubDate>Tue, 24 Jul 2007 06:46:29 PDT</pubDate>
+<guid>http://sports.espn.go.com/mlb/news/story?id=2947072&amp;campaign=rss&amp;source=ESPNHeadlines</guid>
+<link>http://sports.espn.go.com/mlb/news/story?id=2947072&amp;campaign=rss&amp;source=ESPNHeadlines</link>
+</item>
+
+<item>
+<dc:creator><![CDATA[John Clayton]]></dc:creator>
+<title><![CDATA[Meachem last of Saints picks to get under contract]]></title>
+<description><![CDATA[To get his career off to a good start, Saints wide receiver Robert Meachem reached agreement on a five-year contract with New Orleans that allows him to report to training camp on time.]]></description>
+<pubDate>Tue, 24 Jul 2007 09:02:15 PDT</pubDate>
+<guid>http://sports.espn.go.com/nfl/news/story?id=2947333&amp;campaign=rss&amp;source=ESPNHeadlines</guid>
+<link>http://sports.espn.go.com/nfl/news/story?id=2947333&amp;campaign=rss&amp;source=ESPNHeadlines</link>
+</item>
+
+<item>
+<dc:creator><![CDATA[Associated Press]]></dc:creator>
+<title><![CDATA[Danny Nutt gets good news from medical reports]]></title>
+<description><![CDATA[Former Arkansas running backs coach Danny Nutt has received an encouraging report from doctors on the brain condition that led him to resign his position last week, Razorbacks head coach Houston Nutt said. ]]></description>
+<pubDate>Tue, 24 Jul 2007 08:51:34 PDT</pubDate>
+<guid>http://sports.espn.go.com/ncf/news/story?id=2947315&amp;campaign=rss&amp;source=ESPNHeadlines</guid>
+<link>http://sports.espn.go.com/ncf/news/story?id=2947315&amp;campaign=rss&amp;source=ESPNHeadlines</link>
+</item>
+
+<item>
+<dc:creator><![CDATA[ESPN.com news services]]></dc:creator>
+<title><![CDATA[Polamalu is now best-paid Steeler in team history]]></title>
+<description><![CDATA[The Steelers, the first NFL team to sign all of its rookies, opened training camp with a bang Monday by reaching a four-year contract extension with safety Troy Polamalu.]]></description>
+<pubDate>Mon, 23 Jul 2007 16:06:46 PDT</pubDate>
+<guid>http://sports.espn.go.com/nfl/news/story?id=2946532&amp;campaign=rss&amp;source=ESPNHeadlines</guid>
+<link>http://sports.espn.go.com/nfl/news/story?id=2946532&amp;campaign=rss&amp;source=ESPNHeadlines</link>
+</item>
+
+<item>
+<dc:creator><![CDATA[Associated Press]]></dc:creator>
+<title><![CDATA[Texans' Green fulfills home dream for single mom]]></title>
+<description><![CDATA[On Monday, Ahman Green made good on a promise to make the down payment on a home for a single parent in exchange for reclaiming his No. 30 from teammate Jason Simmons.]]></description>
+<pubDate>Mon, 23 Jul 2007 22:25:32 PDT</pubDate>
+<guid>http://sports.espn.go.com/nfl/news/story?id=2946722&amp;campaign=rss&amp;source=ESPNHeadlines</guid>
+<link>http://sports.espn.go.com/nfl/news/story?id=2946722&amp;campaign=rss&amp;source=ESPNHeadlines</link>
+</item>
+
+</channel></rss>

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 7, 2008 1:47:54 PM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.wavemaker.runtime.data.sample.db2sampledb.EmpPhoto" table="EMP_PHOTO" schema="STOENS">
+        <composite-id name="id" class="com.wavemaker.runtime.data.sample.db2sampledb.EmpPhotoId">
+            <key-property name="empno" type="string">
+                <column name="EMPNO" length="6" />
+            </key-property>
+            <key-property name="photoFormat" type="string">
+                <column name="PHOTO_FORMAT" length="10" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="employee" class="com.wavemaker.runtime.data.sample.db2sampledb.Employee" update="false" insert="false" fetch="select">
+            <column name="EMPNO" length="6" not-null="true" />
+        </many-to-one>
+        <property name="picture" type="blob">
+            <column name="PICTURE" />
+        </property>
+    </class>
+</hibernate-mapping>
