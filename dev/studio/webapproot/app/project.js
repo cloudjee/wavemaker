@@ -145,8 +145,15 @@ dojo.declare("wm.studio.Project", null, {
 		} else {
 		    var src = this.projectData.js;
 		    var extendIndex = src.indexOf(this.projectName + ".extend");
-		    this.projectData.js = src.substring(0,extendIndex).trim();
-		    this.projectData.jscustom = src.substring(extendIndex).trim();
+
+                    // project created prior to our enabling editting of the project.js file
+                    if (extendIndex == -1) {
+		        this.projectData.js = src;
+		        this.projectData.jscustom = this.projectName + ".extend({\n\n\t_end: 0});";
+                    } else {
+		        this.projectData.js = src.substring(0,extendIndex).trim();
+		        this.projectData.jscustom = src.substring(extendIndex).trim() || this.projectName + ".extend({\n\n\t_end: 0});";
+                    }
 		}
 		eval(this.projectData.js);
 	},
