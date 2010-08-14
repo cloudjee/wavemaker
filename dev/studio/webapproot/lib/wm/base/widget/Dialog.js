@@ -962,7 +962,7 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
 	this.show();
         this.message.doAutoSize(true, true);
         this.setHeight((this.message.bounds.h + this.padBorderMargin.t + this.padBorderMargin.b) + "px" );
-	dojo.anim(this.domNode, { opacity: 1}, 400);
+	dojo.anim(this.domNode, { opacity: 1}, 800);
 
     },
     fadeaway: function(fromClick) {
