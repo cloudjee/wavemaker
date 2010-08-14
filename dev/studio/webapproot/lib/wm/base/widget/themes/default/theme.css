@@ -1018,7 +1018,8 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 }
 
 .dojoxGrid-header .dojoxGrid-cell { 
-	border: 1px solid;
+/*	border: 1px solid;*/
+        border-bottom: 1px solid;
 	border-color: #fff #a2b6da #a2b6da #fff;
 	background: url(images/sb_grid_headbg.png) #d3def0 top repeat-x;
 	padding-bottom: 2px;
