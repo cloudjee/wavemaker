@@ -1509,3 +1509,35 @@ body.tundra div.wmtoast.wmtoastExtraSpecific .wmdialogcontainer {
 }
 
 /* END wm.FancyPanel */
+
+
+/* Dojo charts on IE 8 needs the following css because IE 8 uses VML to render charts and have removed the following which use to be in IE 7 */
+v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image, v\:shape, v\:group, v\:skew, v\:stroke, v\:fill { behavior:url(#default#VML) !important; display:inline-block }
+/* Dojo charts on IE 8 needs the following css because IE 8 uses VML to render charts and have removed the following which use to be in IE 7  */
+
+/*	Dojo TextArea has a padding of 3px by default because of which the left and bottom lines of textarea get hidden, since we size our div seperately.
+	Therefore, removing padding from dojo's textArea.
+*/
+.tundra .dijitTextArea {
+	padding:0px;
+}
+/*	Dojo TextArea has a padding of 3px by default because of which the left and bottom lines of textarea get hidden, since we size our div seperately.
+	Therefore, removing padding from dojo's textArea.
+*/
+
+.dragAvatarCSS{
+	position: absolute;
+	z-index: 201; 
+	padding: 5px; 
+	color: #FFFFFF;
+	background-color: #424A5A;
+	font-family:Geneva,Arial,Helvetica,sans-serif;
+	font-size:8pt;
+	border-color:#DDDDDD #CCCCCC #BBBBBB;
+	border-style:solid;
+	border-width:1px 1px 2px;
+}
+
+.invalidDropCSS{
+	border-top: 4px solid red;
+}

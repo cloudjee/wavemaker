@@ -20,433 +20,403 @@
 /* CSS Document */
 
 .wm_FontFamily_Arial {
-	font-family:Arial, Helvetica, sans-serif;
+	font-family:Arial, Helvetica, sans-serif !important;
 }
 
 .wm_FontFamily_Verdana {
-	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-family:Verdana, Arial, Helvetica, sans-serif !important;
 }
 
 .wm_FontFamily_Geneva {
-	font-family: Geneva, Arial, Helvetica, sans-serif;
+	font-family: Geneva, Arial, Helvetica, sans-serif !important;
 }
 
 .wm_FontFamily_Times {
-	font-family: "Times New Roman", Times, serif;
+	font-family: "Times New Roman", Times, serif !important;
 }
 
 .wm_FontFamily_Courier {
-	font-family: "Courier New", Courier, monospace;
+	font-family: "Courier New", Courier, monospace !important;
 }
 
 .wm_FontSizePx_10px {
-	font-size:10px;
+	font-size:10px !important;
 }
 
 .wm_FontSizePx_12px {
-	font-size: 12px;
+	font-size: 12px !important;
 }
 
 .wm_FontSizePx_14px {
-	font-size: 14px;
+	font-size: 14px !important;
 }
 
 .wm_FontSizePx_16px {
-	font-size: 16px;
+	font-size: 16px !important;
 }
 
 .wm_FontSizePx_20px {
-	font-size: 20px;
+	font-size: 20px !important;
 }
 
 .wm_FontSizePx_24px {
-	font-size: 24px;
+	font-size: 24px !important;
 }
 
 .wm_FontSizePx_28px {
-	font-size: 28px;
+	font-size: 28px !important;
 }
 
 .wm_FontSizePx_36px {
-	font-size: 36px;
+	font-size: 36px !important;
 }
 
 .wm_FontColor_Red {
-	color: #581313;
+	color: #581313 !important;
 }
 
 .wm_FontColor_Evergreen {
-	color: #435c46;
+	color: #435c46 !important;
 }
 
 .wm_FontColor_SteelBlue {
-	color: #5e7390;
+	color: #5e7390 !important;
 }
 
 .wm_FontColor_Graphite {
-	color: #555555;
+	color: #555555 !important;
 }
 
 .wm_FontColor_Yellow {
-	color: #e6dd65;
+	color: #e6dd65 !important;
 }
 
 .wm_FontColor_Purple {
-	color: #5d5691;
+	color: #5d5691 !important;
 }
 
 .wm_FontColor_LightGray {
-	color: #c8c8c8;
+	color: #c8c8c8 !important;
 }
 
 .wm_FontColor_Blue {
-	color: #143563;
+	color: #143563 !important;
 }
 
 .wm_FontColor_Green {
-	color: #637213;
+	color: #637213 !important;
 }
 
 .wm_FontColor_LightBlue {
-	color: #8ba7cd;
+	color: #8ba7cd !important;
 }
 
 .wm_FontColor_White {
-	color: #FFFFFF;
+	color: #FFFFFF !important;
 }
 
 .wm_FontColor_Black {
-	color: #000000;
+	color: #000000 !important;
 }
 
 .wm_TextDecoration_Bold {
-	font-weight: bold;
+	font-weight: bold !important;
 }
 
 .wm_TextDecoration_Underline {
-	text-decoration:underline;
+	text-decoration:underline !important;
 }
 
 .wm_TextDecoration_None {
-	text-decoration:none;
+	text-decoration:none !important;
 }
 
 .wm_TextAlign_Right {
-	text-align: right;
+	text-align: right !important;
 }
 
 .wm_TextAlign_Left {
-	text-align: left;
+	text-align: left !important;
 }
 
 .wm_TextAlign_Center {
-	text-align: center;
+	text-align: center !important;
 }
 
 .wm_TextAlign_Justify {
-	text-align: justify;
+	text-align: justify !important;
 }
 
 
 .wm_Border_TopStyleCurved4px {
-        -moz-border-radius-topleft: 4px;
-        -moz-border-radius-topright: 4px;
-        -webkit-border-top-left-radius: 4px;
-        -webkit-border-top-right-radius: 4px;
-         border-radius-topleft: 4px;
-         border-radius-topright: 4px;    
+        -moz-border-radius-topleft: 4px !important;
+        -moz-border-radius-topright: 4px !important;
+        -webkit-border-top-left-radius: 4px !important;
+        -webkit-border-top-right-radius: 4px !important;
+         border-radius-topleft: 4px !important;
+         border-radius-topright: 4px !important;    
 }
 
 .wm_Border_TopStyleCurved8px {
-        -moz-border-radius-topleft: 8px;
-        -moz-border-radius-topright: 8px;
-        -webkit-border-top-left-radius: 8px;
-        -webkit-border-top-right-radius: 8px;
-         border-radius-topright: 8px;    
+        -moz-border-radius-topleft: 8px !important;
+        -moz-border-radius-topright: 8px !important;
+        -webkit-border-top-left-radius: 8px !important;
+        -webkit-border-top-right-radius: 8px !important;
+         border-radius-topright: 8px !important;    
 }
 
 .wm_Border_TopStyleCurved12px {
-        -moz-border-radius-topleft: 12px;
-        -moz-border-radius-topright: 12px;
-        -webkit-border-top-left-radius: 12px;
-        -webkit-border-top-right-radius: 12px;
-         border-radius-topleft: 12px;
-         border-radius-topright: 12px;    
+        -moz-border-radius-topleft: 12px !important;
+        -moz-border-radius-topright: 12px !important;
+        -webkit-border-top-left-radius: 12px !important;
+        -webkit-border-top-right-radius: 12px !important;
+         border-radius-topleft: 12px !important;
+         border-radius-topright: 12px !important;    
 }
 
 .wm_Border_BottomStyleCurved4px {
-        -moz-border-radius-bottomleft: 4px;
-        -moz-border-radius-bottomright: 4px;
-        -webkit-border-bottom-right-radius: 4px;
-        -webkit-border-bottom-left-radius: 4px;
-         border-radius-bottomleft: 4px;
-         border-radius-bottomright: 4px;    
+        -moz-border-radius-bottomleft: 4px !important;
+        -moz-border-radius-bottomright: 4px !important;
+        -webkit-border-bottom-right-radius: 4px !important;
+        -webkit-border-bottom-left-radius: 4px !important;
+         border-radius-bottomleft: 4px !important;
+         border-radius-bottomright: 4px !important;    
 }
 
 .wm_Border_BottomStyleCurved8px {
-        -moz-border-radius-bottomleft: 8px;
-        -moz-border-radius-bottomright: 8px;
-        -webkit-border-bottom-right-radius: 8px;
-        -webkit-border-bottom-left-radius: 8px;
-         border-radius-bottomleft: 8px;
-         border-radius-bottomright: 8px;    
+        -moz-border-radius-bottomleft: 8px !important;
+        -moz-border-radius-bottomright: 8px !important;
+        -webkit-border-bottom-right-radius: 8px !important;
+        -webkit-border-bottom-left-radius: 8px !important;
+         border-radius-bottomleft: 8px !important;
+         border-radius-bottomright: 8px !important;    
 }
 
 .wm_Border_BottomStyleCurved12px {
-        -moz-border-radius-bottomleft: 12px;
-        -moz-border-radius-bottomright: 12px;
-        -webkit-border-bottom-right-radius: 12px;
-        -webkit-border-bottom-left-radius: 12px;
-         border-radius-bottomleft: 12px;
-         border-radius-bottomright: 12px;    
+        -moz-border-radius-bottomleft: 12px !important;
+        -moz-border-radius-bottomright: 12px !important;
+        -webkit-border-bottom-right-radius: 12px !important;
+        -webkit-border-bottom-left-radius: 12px !important;
+         border-radius-bottomleft: 12px !important;
+         border-radius-bottomright: 12px !important;    
 }
 
 .wm_Border_DropShadow {
-     -moz-box-shadow: 2px 2px 4px #888; /* FF3.5+ */
-     -webkit-box-shadow: 2px 2px 4px #888; /* Saf3.0+, Chrome */
-     box-shadow: 2px 2px 4px #888; /* Opera 10.5, IE 9.0 */
+     -moz-box-shadow: 2px 2px 4px #888 !important; /* FF3.5+ */
+     -webkit-box-shadow: 2px 2px 4px #888 !important; /* Saf3.0+, Chrome */
+     box-shadow: 2px 2px 4px #888 !important; /* Opera 10.5, IE 9.0 */
 }
 
 .wm_Border_StrongDropShadow {
-     -moz-box-shadow: 5px 5px 4px #888; /* FF3.5+ */
-     -webkit-box-shadow: 5px 5px 4px #888; /* Saf3.0+, Chrome */
-     box-shadow: 5px 5px 4px #888; /* Opera 10.5, IE 9.0 */
+     -moz-box-shadow: 5px 5px 4px #888 !important; /* FF3.5+ */
+     -webkit-box-shadow: 5px 5px 4px #888 !important; /* Saf3.0+, Chrome */
+     box-shadow: 5px 5px 4px #888 !important; /* Opera 10.5, IE 9.0 */
 }
 
 .wm_BackgroundColor_Red {
-	background: #581313;
+	background: #581313 !important;
 }
 
 .wm_BackgroundColor_Evergreen {
-	background: #435c46;
+	background: #435c46 !important;
 }
 
 .wm_BackgroundColor_SteelBlue {
-	background: #5e7390;
+	background: #5e7390 !important;
 }
 
 .wm_BackgroundColor_Graphite, wmdialog-title {
-    background: #555555;	
-    color: white;
+    background: #555555 !important;	
+    color: white !important;
 }
 
 .wm_BackgroundColor_Yellow {
-	background: #e6dd65;
+	background: #e6dd65 !important;
 }
 
 .wm_BackgroundColor_Purple {
-	background: #5d5691;
+	background: #5d5691 !important;
 }
 
 .wm_BackgroundColor_LightGray {
-	background: #c8c8c8;
+	background: #c8c8c8 !important;
 }
 
 .wm_BackgroundColor_Blue {
-	background: #143563;
+	background: #143563 !important;
 }
 
 .wm_BackgroundColor_Green {
-	background: #637213;
+	background: #637213 !important;
 }
 
 .wm_BackgroundColor_LightBlue {
-	background: #8ba7cd;
+	background: #8ba7cd !important;
 }
 
 .wm_BackgroundColor_White {
-	background: #FFFFFF;
+	background: #FFFFFF !important;
 }
 
 .wm_BackgroundColor_Black {
-	background: #000000;
+	background: #000000 !important;
 }
 
 .wm_BackgroundColor_VeryLightGray {
-	background: #EEEEEE;
+	background: #EEEEEE !important;
 }
 
 .wm_BackgroundGradient_Blue {
-	background: #00357d url(images/panel-header.png) repeat-x center top;	
+	background: #00357d url(images/panel-header.png) repeat-x center top !important;	
 }
 
 .wm_BackgroundChromeBar_Blue {	
-	background: #3274D0 url(images/chrome_blue.gif) repeat-x;
+	background: #3274D0 url(images/chrome_blue.gif) repeat-x !important;
 }
 
 .wm_BackgroundChromeBar_Evergreen {
-	background: #778E79 url(images/chrome_evergreen.gif) repeat-x;
+	background: #778E79 url(images/chrome_evergreen.gif) repeat-x !important;
 }
 
 .wm_BackgroundChromeBar_Graphite {
-	background: #989899 url(images/chrome_graphite.gif) repeat-x;
+	background: #989899 url(images/chrome_graphite.gif) repeat-x !important;
 }
 
 .wm_BackgroundChromeBar_Green {
-	background: #A2C729 url(images/chrome_green.gif) repeat-x;
+	background: #A2C729 url(images/chrome_green.gif) repeat-x !important;
 }
 
 .wm_BackgroundChromeBar_LightBlue {
-	background: #CBD9EC url(images/chrome_lightblue.gif) repeat-x;
+	background: #CBD9EC url(images/chrome_lightblue.gif) repeat-x !important;
 }
 
 .wm_BackgroundChromeBar_LightGray {
-	background: #F1F1F1 url(images/chrome_lightgray.gif) repeat-x;
+	background: #F1F1F1 url(images/chrome_lightgray.gif) repeat-x !important;
 }
 
 .wm_BackgroundChromeBar_Purple {
-	background: #9D98CD url(images/chrome_purple.gif) repeat-x;
+	background: #9D98CD url(images/chrome_purple.gif) repeat-x !important;
 }
 
 .wm_BackgroundChromeBar_Red {
-	background: #BD8484 url(images/chrome_red.gif) repeat-x;
+	background: #BD8484 url(images/chrome_red.gif) repeat-x !important;
 }
 
 .wm_BackgroundChromeBar_SteelBlue {
-	background: #BFC9D6 url(images/chrome_steelblue.gif) repeat-x;
+	background: #BFC9D6 url(images/chrome_steelblue.gif) repeat-x !important;
 }
 
 .wm_BackgroundChromeBar_Yellow {
-	background: #FEFAC9 url(images/chrome_yellow.gif) repeat-x;
+	background: #FEFAC9 url(images/chrome_yellow.gif) repeat-x !important;
 }
 
 
 .wm_SilverBlueTheme_ToolBar {
-	background: #acb9d0 url(images/sb_bar_bg.png) repeat-x;
+	background: #acb9d0 url(images/sb_bar_bg.png) repeat-x !important;
 }
 
 .wm_SilverBlueTheme_LightBlueInsetPanel {
-	border: solid;
-	background-color: #f1f5fc;
-	border-top-color: #939fb6;
-	border-left-color: #939fb6;
-	border-right-color: #eaf0f9;
-	border-bottom-color: #eaf0f9;
+	border: solid !important;
+	background-color: #f1f5fc !important;
+	border-top-color: #939fb6 !important;
+	border-left-color: #939fb6 !important;
+	border-right-color: #eaf0f9 !important;
+	border-bottom-color: #eaf0f9 !important;
 }
 
 .wm_SilverBlueTheme_LightBlueOutsetPanel {
-	border: solid;
-	background-color: #f1f5fc;
-	border-top-color: #eaf0f9;
-	border-left-color: #eaf0f9;
-	border-right-color: #939fb6;
-	border-bottom-color: #939fb6;
+	border: solid !important;
+	background-color: #f1f5fc !important;
+	border-top-color: #eaf0f9 !important;
+	border-left-color: #eaf0f9 !important;
+	border-right-color: #939fb6 !important;
+	border-bottom-color: #939fb6 !important;
 }
 
 .wm_SilverBlueTheme_MainOutsetPanel {
-	background: #acb9d0 url(images/sb_gradient_bg.png) repeat-x;
-	border: solid;
-	border-top-color: #eaf0f9;
-	border-left-color: #eaf0f9;
-	border-right-color: #939fb6;
-	border-bottom-color: #939fb6;
+	background: #acb9d0 url(images/sb_gradient_bg.png) repeat-x !important;
+	border: solid !important;
+	border-top-color: #eaf0f9 !important;
+	border-left-color: #eaf0f9 !important;
+	border-right-color: #939fb6 !important;
+	border-bottom-color: #939fb6 !important;
 }
 
 .wm_SilverBlueTheme_MainInsetPanel {
-	background: #acb9d0 url(images/sb_gradient_bg.png) repeat-x;
-	border: solid;
-	border-top-color: #939fb6;
-	border-left-color: #939fb6;
-	border-right-color: #eaf0f9;
-	border-bottom-color: #eaf0f9;
+	background: #acb9d0 url(images/sb_gradient_bg.png) repeat-x !important;
+	border: solid !important;
+	border-top-color: #939fb6 !important;
+	border-left-color: #939fb6 !important;
+	border-right-color: #eaf0f9 !important;
+	border-bottom-color: #eaf0f9 !important;
 }
 
 .wm_SilverBlueTheme_WhiteInsetPanel {
-	border: solid;
-	background-color: #fff;
-	border-top-color: #939fb6;
-	border-left-color: #939fb6;
-	border-right-color: #eaf0f9;
-	border-bottom-color: #eaf0f9;
+	border: solid !important;
+	background-color: #fff !important;
+	border-top-color: #939fb6 !important;
+	border-left-color: #939fb6 !important;
+	border-right-color: #eaf0f9 !important;
+	border-bottom-color: #eaf0f9 !important;
 }
 
 .wm_SilverBlueTheme_WhiteOutsetPanel {
-	border: solid;
-	background-color: #fff;
-	border-top-color: #eaf0f9;
-	border-left-color: #eaf0f9;
-	border-right-color: #939fb6;
-	border-bottom-color: #939fb6;
+	border: solid !important;
+	background-color: #fff !important;
+	border-top-color: #eaf0f9 !important;
+	border-left-color: #eaf0f9 !important;
+	border-right-color: #939fb6 !important;
+	border-bottom-color: #939fb6 !important;
 }
 .wm_Attribution_new {
-	background-image: url(images/wavemakerLogo.png);
-	background-repeat: no-repeat;
-	background-position: center left;
+	background-image: url(images/wavemakerLogo.png) !important;
+	background-repeat: no-repeat !important;
+	background-position: center left !important;
 }
 
 .wm_Attribution_center {
-	background-image: url(images/wmpoweredby.gif);
-	background-repeat: no-repeat;
-	background-position: center center;
+	background-image: url(images/wmpoweredby.gif) !important;
+	background-repeat: no-repeat !important;
+	background-position: center center !important;
 }
 .wm_Attribution_centerLeft {
-	background-image: url(images/wmpoweredby.gif);
-	background-repeat: no-repeat;
-	background-position: center left;
+	background-image: url(images/wmpoweredby.gif) !important;
+	background-repeat: no-repeat !important;
+	background-position: center left !important;
 }
 .wm_Attribution_centerRight {
-	background-image: url(images/wmpoweredby.gif);
-	background-repeat: no-repeat;
-	background-position: center right;
+	background-image: url(images/wmpoweredby.gif) !important;
+	background-repeat: no-repeat !important;
+	background-position: center right !important;
 }
 .wm_Attribution_topCenter {
-	background-image: url(images/wmpoweredby.gif);
-	background-repeat: no-repeat;
-	background-position: top center;
+	background-image: url(images/wmpoweredby.gif) !important;
+	background-repeat: no-repeat !important;
+	background-position: top center !important;
 }
 .wm_Attribution_topLeft {
-	background-image: url(images/wmpoweredby.gif);
-	background-repeat: no-repeat;
-	background-position: top left;
+	background-image: url(images/wmpoweredby.gif) !important;
+	background-repeat: no-repeat !important;
+	background-position: top left !important;
 }
 .wm_Attribution_topRight {
-	background-image: url(images/wmpoweredby.gif);
-	background-repeat: no-repeat;
-	background-position: top right;
+	background-image: url(images/wmpoweredby.gif) !important;
+	background-repeat: no-repeat !important;
+	background-position: top right !important;
 }
 .wm_Attribution_bottomCenter {
-	background-image: url(images/wmpoweredby.gif);
-	background-repeat: no-repeat;
-	background-position: bottom center;
+	background-image: url(images/wmpoweredby.gif) !important;
+	background-repeat: no-repeat !important;
+	background-position: bottom center !important;
 }
 .wm_Attribution_bottomLeft {
-	background-image: url(images/wmpoweredby.gif);
-	background-repeat: no-repeat;
-	background-position: bottom left;
+	background-image: url(images/wmpoweredby.gif) !important;
+	background-repeat: no-repeat !important;
+	background-position: bottom left !important;
 }
 .wm_Attribution_bottomRight {
-	background-image: url(images/wmpoweredby.gif);
-	background-repeat: no-repeat;
-	background-position: bottom right;
+	background-image: url(images/wmpoweredby.gif) !important;
+	background-repeat: no-repeat !important;
+	background-position: bottom right !important;
 }
 
-/* Dojo charts on IE 8 needs the following css because IE 8 uses VML to render charts and have removed the following which use to be in IE 7 */
-v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image, v\:shape, v\:group, v\:skew, v\:stroke, v\:fill { behavior:url(#default#VML); display:inline-block }
-/* Dojo charts on IE 8 needs the following css because IE 8 uses VML to render charts and have removed the following which use to be in IE 7  */
-
-/*	Dojo TextArea has a padding of 3px by default because of which the left and bottom lines of textarea get hidden, since we size our div seperately.
-	Therefore, removing padding from dojo's textArea.
-*/
-.tundra .dijitTextArea {
-	padding:0px;
-}
-/*	Dojo TextArea has a padding of 3px by default because of which the left and bottom lines of textarea get hidden, since we size our div seperately.
-	Therefore, removing padding from dojo's textArea.
-*/
-
-.dragAvatarCSS{
-	position: absolute;
-	z-index: 201; 
-	padding: 5px; 
-	color: #FFFFFF;
-	background-color: #424A5A;
-	font-family:Geneva,Arial,Helvetica,sans-serif;
-	font-size:8pt;
-	border-color:#DDDDDD #CCCCCC #BBBBBB;
-	border-style:solid;
-	border-width:1px 1px 2px;
-}
-
-.invalidDropCSS{
-	border-top: 4px solid red;
-}
