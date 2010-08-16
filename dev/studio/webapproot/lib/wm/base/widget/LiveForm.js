@@ -173,10 +173,12 @@ dojo.declare("wm.LiveFormBase", wm.Panel, {
 		var
 			s = this.dataSet,
 			o = s && s.owner;
-	    o = o && !(wm.isInstanceType(o, wm.Variable)) ? o : null;
-		// if source not owned by a variable but it has a dataSet, use it if it's a LiveVariable
-	        if (o && o.dataSet && wm.isInstanceType(o.dataSet, wm.LiveVariable)) {
-			return o.dataSet;
+		    o = o && !(wm.isInstanceType(o, wm.Variable)) ? o : null,
+			ds = o && o instanceof wm.DojoGrid ? o.variable : o.dataSet;
+			// if source not owned by a variable but it has a dataSet, use it if it's a LiveVariable
+	        
+			if (o && ds && wm.isInstanceType(ds, wm.LiveVariable)) {
+				return ds;
 		}
 		// otherwise walk owners to look for a LiveVariable
 		while (s) {

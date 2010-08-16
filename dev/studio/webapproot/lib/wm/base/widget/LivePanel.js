@@ -30,10 +30,11 @@ dojo.declare("wm.LivePanel", wm.Panel, {
 						     owner: this.owner,
 						     name: this.liveDataName + "GridPanel",
 						     title: wm.capitalize(this.liveDataName)});
-		this.dataGrid = new wm.DataGrid({
+		this.dataGrid = new wm.DojoGrid({
                                 border: "0", // wm.FancyPanel + theme change; fancy panel provides the border; ignore any default borders provided by theme
-				name: studio.page.getUniqueName(this.liveDataName + "DataGrid1"),
+				name: studio.page.getUniqueName(this.liveDataName + "DojoGrid"),
 				owner: this.owner,
+				height:'100%',
 				parent: fancyPanel1.containerWidget, // wm.FancyPanel change; revert to returning "this"
 				_classes: {"domNode":["omgDataGrid"]}
 			});

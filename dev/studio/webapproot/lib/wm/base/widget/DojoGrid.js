@@ -93,7 +93,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		}
 	},
 	dataSetToSelectedItem: function() {
-		this.selectedItem.setLiveView((this.dataSet|| 0).liveView);
+		this.selectedItem.setLiveView((this.variable|| 0).liveView);
 		this.selectedItem.setType(this.variable && this.variable.type ? this.variable.type : "any");
 	},
 	setSelectedRow: function(rowIndex, isSelected) {
@@ -135,7 +135,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		if (selectedIndex == -1) {
 			this.selectedItem.clearData();
 		} else {	    
-			var newdata = this.itemToJSONObject(this.store, this.getRowData(selectedIndex));		
+			var newdata = this.itemToJSONObject(this.store, this.getRowData(selectedIndex));
+			for (prop in newdata){
+				if (newdata[prop] instanceof Date)
+					newdata[prop] = newdata[prop].getTime();
+			}
 			this.selectedItem.setData(newdata);
 		}
 		this.setValue("emptySelection", !this.hasSelection());

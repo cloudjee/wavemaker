@@ -29,6 +29,15 @@ wm.DojoGrid.extend({
 		this.caption = this.caption || this.name;
 		this.renderDojoObj();
 	},
+	set_dataSet: function(inDataSet) {
+		// support setting dataSet via id from designer
+		if (inDataSet && !(inDataSet instanceof wm.Variable)) {
+			var ds = this.getValueById(inDataSet);
+			if (ds)
+				this.components.binding.addWire("", "dataSet", ds.getId());
+		} else
+			this.setDataSet(inDataSet);
+	},
 	designCreate: function() {
 		// if this is being created in studio, supply a default caption
 		if (this._studioCreating)
