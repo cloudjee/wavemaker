@@ -32,7 +32,7 @@ if (djConfig.isDebug) {
 wm = {};
 
 wm.studioConfig = {
-        studioVersion: '6.2.0DevBuild - community',
+        studioVersion: '6.2.1DevBuild - enterprise',
 	preventUnloadWarning: true,
 	previewPopup: false,
 	preventLiveData: (location.search.indexOf("nolive") >= 0),
