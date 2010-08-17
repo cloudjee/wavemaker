@@ -125,8 +125,13 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
 	cellEditted: function(inValue, inRowIndex, inFieldName) {
 		// values of the selectedItem must be updated, but do NOT call a selectionChange event, as its the same selected item, just different values
-		if (this.getSelectedIndex() != inRowIndex) {
+		var rowIdx = this.getSelectedIndex();
+		if (rowIdx != inRowIndex) {
 			this.setSelectedRow(inRowIndex, true);
+		} else {
+			var oldObj = this.selectedItem.getData();
+			if (oldObj[inFieldName] == inValue)
+				return;
 		}
 		this.updateSelectedItem( this.getSelectedIndex());
 		this.onCellEditted(inValue, inRowIndex, inFieldName);
