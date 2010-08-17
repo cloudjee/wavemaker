@@ -9,7 +9,7 @@
 	}, 
 	"wm.Layout": {
 		"border": "1", 
-		"borderColor": "#000000"
+		"borderColor": "#222222"
 	}, 
 	"wm.Bevel": {
 		"bevelSize": "10", 
@@ -44,10 +44,11 @@
 	"wm.TabLayers": {
 		"layersType": "Tabs", 
 		"margin": "0,2,0,2", 
-		"clientBorder": "1", 
+		"clientBorder": "2", 
 		"border": "0", 
 		"isMajorContent": 1, 
-		"clientBorderColor": "#948f88"
+		"clientBorderColor": "#948f88", 
+		"headerHeight": "26px"
 	}, 
 	"wm.WizardLayers": {
 		"margin": "0,2,0,2", 

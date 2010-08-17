@@ -78,9 +78,9 @@ body .wm_wavemaker1 input:focus,
     {
 	/* Document-HeadersDefault-Font */
 	font-family: Verdana; /* Document-HeadersDefault-Font_Family */
-	font-size: 9pt; /* Document-HeadersDefault-Font_TextSize */
-	color: #3c3d3e; /* Document-HeadersDefault-Font_Color */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+	font-size: 10pt; /* Document-HeadersDefault-Font_TextSize */
+	color: #555555; /* Document-HeadersDefault-Font_Color */
+	font-weight: normal; /* Document-HeadersDefault-Font_Weight */
 	/* Document-HeadersDefault-Border */
 	-moz-border-radius: 8px; /* Document-HeadersDefault-BorderStyle_Radius */
 	-webkit-border-radius: 8px; /* Document-HeadersDefault-BorderStyle_Radius */
@@ -103,13 +103,13 @@ body .wm_wavemaker1 input:focus,
 	/* Document-HeadersActive-Font */
 	font-family: sans-serif; /* Document-HeadersActive-Font_Family */
 	font-size: 12pt; /* Document-HeadersActive-Font_TextSize */
-	color: #333333; /* Document-HeadersActive-Font_Color */
+	color: #212121; /* Document-HeadersActive-Font_Color */
 	font-weight: bold; /* Document-HeadersActive-Font_Weight */
 	/* Document-HeadersActive-Background */
-	background-color: #e1a621; /* Document-HeadersActive-Background_Color */
-	background-image: url(images/repeatx/brightEdge0.png); /* Document-HeadersActive-Background_Image */
+	background-color: #3297C3; /* Document-HeadersActive-Background_Color */
+	background-image: none; /* Document-HeadersActive-Background_Image */
 	background-position: top left; /* Document-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-HeadersActive-Background_Image-Repeat */
+	background-repeat: no-repeat; /* Document-HeadersActive-Background_Image-Repeat */
 	-moz-box-shadow: 1px 1px 1px #444444; /* Document-HeadersActive-BorderStyle_Shadow */
 	-webkit-box-shadow: 1px 1px 1px #444444; /* Document-HeadersActive-BorderStyle_Shadow */
 	box-shadow: 1px 1px 1px #444444; /* Document-HeadersActive-BorderStyle_Shadow */
@@ -124,7 +124,7 @@ body .wm_wavemaker1 input:focus,
     .wm_wavemaker1   .wmroundedbutton:hover,
     .wm_wavemaker1   .wmroundedbutton:focus {
 	/* Document-HeadersHover-Font */
-	color: #ffffff; /* Document-HeadersHover-Font_Color */
+	color: #212121; /* Document-HeadersHover-Font_Color */
 	/* Document-HeadersHover-Background */
 	background-color: #a1c01a; /* Document-HeadersHover-Background_Color */
 	background-image: url(images/repeatx/brightEdge2.png); /* Document-HeadersHover-Background_Image */
@@ -284,9 +284,9 @@ body .wm_wavemaker1 input:focus,
 .wm_wavemaker1 tr.dijitCalendarMonthContainer th {
     /* Document-HeadersDefault-Font */
     font-family: Verdana; /* Document-HeadersDefault-Font_Family */
-    font-size: 9pt; /* Document-HeadersDefault-Font_TextSize */
-    color: #3c3d3e; /* Document-HeadersDefault-Font_Color */
-    font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+    font-size: 10pt; /* Document-HeadersDefault-Font_TextSize */
+    color: #555555; /* Document-HeadersDefault-Font_Color */
+    font-weight: normal; /* Document-HeadersDefault-Font_Weight */
     /* Document-HeadersDefault-Background */
     background-color: #b3d61d; /* Document-HeadersDefault-Background_Color */
     background-image: url(images/repeatx/brightEdge1.png); /* Document-HeadersDefault-Background_Image */
@@ -296,9 +296,9 @@ body .wm_wavemaker1 input:focus,
 .wm_wavemaker1 tr.dijitCalendarMonthContainer th .dijitCalendarMonthLabel {
     /* Document-HeadersDefault-Font */
     font-family: Verdana; /* Document-HeadersDefault-Font_Family */
-    font-size: 9pt; /* Document-HeadersDefault-Font_TextSize */
-    color: #3c3d3e; /* Document-HeadersDefault-Font_Color */
-    font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+    font-size: 10pt; /* Document-HeadersDefault-Font_TextSize */
+    color: #555555; /* Document-HeadersDefault-Font_Color */
+    font-weight: normal; /* Document-HeadersDefault-Font_Weight */
 }
 .wm_wavemaker1 .dijitCalendarContainer td {
     background-color: #ffffff; /* PageContent-Styles-Background_Color */
@@ -306,8 +306,8 @@ body .wm_wavemaker1 input:focus,
 }
 .wm_wavemaker1 .dijitCalendarContainer td.dijitCalendarSelectedDate,
 .wm_wavemaker1 .dijitCalendarContainer .dijitCalendarSelectedYear {
-    background-color: #e1a621 !important; /* Document-HeadersActive-Background_Color */
-    color: #333333 !important; /* Document-HeadersActive-Font_Color */
+    background-color: #3297C3 !important; /* Document-HeadersActive-Background_Color */
+    color: #212121 !important; /* Document-HeadersActive-Font_Color */
     -moz-border-radius: 4px; /* PageContent-Styles-Border_Radius */
     -webkit-border-radius: 4px; /* PageContent-Styles-Border_Radius */
     border-radius: 4px; /* PageContent-Styles-Border_Radius */
@@ -317,7 +317,7 @@ body .wm_wavemaker1 input:focus,
 .wm_wavemaker1 .dijitCalendarContainer .dijitCalendarNextYear:hover,
 .wm_wavemaker1 .dijitCalendarContainer .dijitCalendarPreviousYear:hover {
     background-color: #a1c01a !important; /* Document-HeadersHover-Background_Color */
-    color: #ffffff !important; /* Document-HeadersHover-Font_Color */
+    color: #212121 !important; /* Document-HeadersHover-Font_Color */
     -moz-border-radius: 4px; /* PageContent-Styles-Border_Radius */
     -webkit-border-radius: 4px; /* PageContent-Styles-Border_Radius */
     border-radius: 4px; /* PageContent-Styles-Border_Radius */
@@ -378,9 +378,9 @@ body .wm_wavemaker1 input:focus,
 .wm_wavemaker1 .dialogtitlebar {    
     /* Document-HeadersDefault-Font */
     font-family: Verdana; /* Document-HeadersDefault-Font_Family */
-    font-size: 9pt; /* Document-HeadersDefault-Font_TextSize */
-    color: #3c3d3e; /* Document-HeadersDefault-Font_Color */
-    font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+    font-size: 10pt; /* Document-HeadersDefault-Font_TextSize */
+    color: #555555; /* Document-HeadersDefault-Font_Color */
+    font-weight: normal; /* Document-HeadersDefault-Font_Weight */
     /* Document-HeadersDefault-Background */
     background-color: #b3d61d; /* Document-HeadersDefault-Background_Color */
     background-image: url(images/repeatx/brightEdge1.png); /* Document-HeadersDefault-Background_Image */
@@ -404,9 +404,9 @@ body .wm_wavemaker1 input:focus,
 .wm_wavemaker1 .wmpagedialog-controlspanel {
     /* Document-HeadersDefault-Font */
     font-family: Verdana; /* Document-HeadersDefault-Font_Family */
-    font-size: 9pt; /* Document-HeadersDefault-Font_TextSize */
-    color: #3c3d3e; /* Document-HeadersDefault-Font_Color */
-    font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+    font-size: 10pt; /* Document-HeadersDefault-Font_TextSize */
+    color: #555555; /* Document-HeadersDefault-Font_Color */
+    font-weight: normal; /* Document-HeadersDefault-Font_Weight */
     /* Document-HeadersDefault-Background */
     background-color: #b3d61d; /* Document-HeadersDefault-Background_Color */
     /*background-image: url(images/threeD.png); / * Document-HeadersDefault-Background_Image * / */
@@ -752,7 +752,7 @@ body .wm_wavemaker1 .dialogfooter .wmbutton:hover {
 .wm_wavemaker1 div.wmlist-item {
     /* Tables-EvenRows-Font */
     font-family: Verdana; /* Tables-EvenRows-Font_Family */
-    font-size: 7pt; /* Tables-EvenRows-Font_TextSize */
+    font-size: 9pt; /* Tables-EvenRows-Font_TextSize */
     color: #000000; /* Tables-EvenRows-Font_Color */
     font-weight: normal; /* Tables-EvenRows-Font_Weight */
     /* Tables-EvenRows-Background */
@@ -796,9 +796,9 @@ body .wm_wavemaker1 .dialogfooter .wmbutton:hover {
     .wm_wavemaker1 .wmlist-item.wmlist-item-selected,
     .wm_wavemaker1 .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* Document-HeadersActive-Background */
-	background-color: #e1a621 !important; /* Document-HeadersActive-Background_Color */
+	background-color: #3297C3 !important; /* Document-HeadersActive-Background_Color */
 	/* Document-HeadersActive-Font */
-	color: #333333; /* Document-HeadersActive-Font_Color */
+	color: #212121; /* Document-HeadersActive-Font_Color */
     }
     /* Custom mouse-over color for rows */
     .wm_wavemaker1 .wmlist-item.wmlist-item-over,
@@ -810,7 +810,7 @@ body .wm_wavemaker1 .dialogfooter .wmbutton:hover {
 	/* Document-HeadersHover-Background */
 	background-color: #a1c01a !important; /* Document-HeadersHover-Background_Color */
 	/* Document-HeadersHover-Font */
-	color: #ffffff; /* Document-HeadersHover-Font_Color */
+	color: #212121; /* Document-HeadersHover-Font_Color */
     }
     .wm_wavemaker1 div.dojoxGridContent .dojoxGridCell {
 	background: transparent;
@@ -827,9 +827,9 @@ body .wm_wavemaker1 .dialogfooter .wmbutton:hover {
 	/* Document-HeadersDefault-Font */
 	font-family: Verdana; /* Document-HeadersDefault-Font_Family */
 	/* Adjust size when we figure out a good way to adjust the height of the header */
-	font-size: 7pt; /* Tables-EvenRows-Font_TextSize */
+	font-size: 9pt; /* Tables-EvenRows-Font_TextSize */
 	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+	font-weight: normal; /* Document-HeadersDefault-Font_Weight */
     }
     .wm_wavemaker1 div.dojoxGridHeader .dojoxGridCell {
 	background-color: #b3d61d; /* Document-HeadersDefault-Background_Color */
@@ -839,14 +839,14 @@ body .wm_wavemaker1 .dialogfooter .wmbutton:hover {
 	/* Document-HeadersDefault-Font */
 	font-family: Verdana; /* Document-HeadersDefault-Font_Family */
 	/*font-size: 12pt;  Headers-Default-Font_TextSize */
-	color: #3c3d3e; /* Document-HeadersDefault-Font_Color */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+	color: #555555; /* Document-HeadersDefault-Font_Color */
+	font-weight: normal; /* Document-HeadersDefault-Font_Weight */
     }
     /* Header-Row-Background */
     .wm_wavemaker1 .dojoxGrid-header, 
     .wm_wavemaker1 .dojoxGridHeader,
     .wm_wavemaker1 .wmlist-header {
-	color: #3c3d3e; /* Document-HeadersDefault-Font_Color */
+	color: #555555; /* Document-HeadersDefault-Font_Color */
 	background-color: #b3d61d; /* Document-HeadersDefault-Background_Color */
 	background-image: url(images/threeD.png); /* Document-HeadersDefault-Background-Image */
 	background-position: left top;     /* Document-HeadersDefault-Image-Position */
@@ -863,9 +863,9 @@ body .wm_wavemaker1 .dialogfooter .wmbutton:hover {
     .wm_wavemaker1 .wmcontentarea .wmlist-item.wmlist-item-selected,
     .wm_wavemaker1 .wmcontentarea .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* Document-HeadersActive-Background */
-	background-color: #e1a621 !important; /* Document-HeadersActive-Background_Color */
+	background-color: #3297C3 !important; /* Document-HeadersActive-Background_Color */
 	/* Document-HeadersActive-Font */
-	color: #333333; /* Document-HeadersActive-Font_Color */
+	color: #212121; /* Document-HeadersActive-Font_Color */
     }
     /* Custom mouse-over color for rows */
     .wm_wavemaker1 .wmcontentarea .wmlist-item.wmlist-item-over,
@@ -877,7 +877,7 @@ body .wm_wavemaker1 .dialogfooter .wmbutton:hover {
 	/* Document-HeadersHover-Background */
 	background-color: #a1c01a !important; /* Document-HeadersHover-Background_Color */
 	/* Document-HeadersHover-Font */
-	color: #ffffff; /* Document-HeadersHover-Font_Color */
+	color: #212121; /* Document-HeadersHover-Font_Color */
     }
     .wm_wavemaker1 .wmcontentarea div.dojoxGridContent .dojoxGridCell {
 	background: transparent;
@@ -895,7 +895,7 @@ body .wm_wavemaker1 .dialogfooter .wmbutton:hover {
 	font-family: Verdana; /* Document-HeadersDefault-Font_Family */
 	/*    font-size: 12pt;  Headers-Default-Font_TextSize */
 	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+	font-weight: normal; /* Document-HeadersDefault-Font_Weight */
     }
     .wm_wavemaker1 .wmcontentarea div.dojoxGridHeader .dojoxGridCell {
 	background-color: #b3d61d; /* Document-HeadersDefault-Background_Color */
@@ -905,14 +905,14 @@ body .wm_wavemaker1 .dialogfooter .wmbutton:hover {
 	/* Document-HeadersDefault-Font */
 	font-family: Verdana; /* Document-HeadersDefault-Font_Family */
 	/*font-size: 12pt;  Headers-Default-Font_TextSize */
-	color: #3c3d3e; /* Document-HeadersDefault-Font_Color */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+	color: #555555; /* Document-HeadersDefault-Font_Color */
+	font-weight: normal; /* Document-HeadersDefault-Font_Weight */
     }
     /* Header-Row-Background */
     .wm_wavemaker1 .wmcontentarea .dojoxGrid-header, 
     .wm_wavemaker1 .wmcontentarea .dojoxGridHeader,
     .wm_wavemaker1 .wmcontentarea .wmlist-header {
-	color: #3c3d3e; /* Document-HeadersDefault-Font_Color */
+	color: #555555; /* Document-HeadersDefault-Font_Color */
 	background-color: #b3d61d; /* Document-HeadersDefault-Background_Color */
 	background-image: url(images/threeD.png); /* Document-HeadersDefault-Background-Image */
 	background-position: left top;     /* Document-HeadersDefault-Image-Position */
@@ -929,9 +929,9 @@ body .wm_wavemaker1 .dialogfooter .wmbutton:hover {
     .wm_wavemaker1 .wmcontentarea .wmcontentarea .wmlist-item.wmlist-item-selected,
     .wm_wavemaker1 .wmcontentarea .wmcontentarea .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* Document-HeadersActive-Background */
-	background-color: #e1a621 !important; /* Document-HeadersActive-Background_Color */
+	background-color: #3297C3 !important; /* Document-HeadersActive-Background_Color */
 	/* Document-HeadersActive-Font */
-	color: #333333; /* Document-HeadersActive-Font_Color */
+	color: #212121; /* Document-HeadersActive-Font_Color */
     }
     /* Custom mouse-over color for rows */
     .wm_wavemaker1 .wmcontentarea .wmcontentarea .wmlist-item.wmlist-item-over,
@@ -943,7 +943,7 @@ body .wm_wavemaker1 .dialogfooter .wmbutton:hover {
 	/* Document-HeadersHover-Background */
 	background-color: #a1c01a !important; /* Document-HeadersHover-Background_Color */
 	/* Document-HeadersHover-Font */
-	color: #ffffff; /* Document-HeadersHover-Font_Color */
+	color: #212121; /* Document-HeadersHover-Font_Color */
     }
     .wm_wavemaker1 .wmcontentarea .wmcontentarea div.dojoxGridContent .dojoxGridCell {
 	background: transparent;
@@ -961,7 +961,7 @@ body .wm_wavemaker1 .dialogfooter .wmbutton:hover {
 	font-family: Verdana; /* Document-HeadersDefault-Font_Family */
 	/*    font-size: 12pt;  Headers-Default-Font_TextSize */
 	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+	font-weight: normal; /* Document-HeadersDefault-Font_Weight */
     }
     .wm_wavemaker1 .wmcontentarea .wmcontentarea div.dojoxGridHeader .dojoxGridCell {
 	background-color: #b3d61d; /* Document-HeadersDefault-Background_Color */
@@ -971,14 +971,14 @@ body .wm_wavemaker1 .dialogfooter .wmbutton:hover {
 	/* Document-HeadersDefault-Font */
 	font-family: Verdana; /* Document-HeadersDefault-Font_Family */
 	/*font-size: 12pt;  Headers-Default-Font_TextSize */
-	color: #3c3d3e; /* Document-HeadersDefault-Font_Color */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+	color: #555555; /* Document-HeadersDefault-Font_Color */
+	font-weight: normal; /* Document-HeadersDefault-Font_Weight */
     }
     /* Header-Row-Background */
     .wm_wavemaker1 .wmcontentarea .wmcontentarea .dojoxGrid-header, 
     .wm_wavemaker1 .wmcontentarea .wmcontentarea .dojoxGridHeader,
     .wm_wavemaker1 .wmcontentarea .wmcontentarea .wmlist-header {
-	color: #3c3d3e; /* Document-HeadersDefault-Font_Color */
+	color: #555555; /* Document-HeadersDefault-Font_Color */
 	background-color: #b3d61d; /* Document-HeadersDefault-Background_Color */
 	background-image: url(images/threeD.png); /* Document-HeadersDefault-Background-Image */
 	background-position: left top;     /* Document-HeadersDefault-Image-Position */
@@ -992,8 +992,8 @@ body .wm_wavemaker1 .dialogfooter .wmbutton:hover {
     /* Document-HeadersDefault-Font */
     font-family: Verdana; /* Document-HeadersDefault-Font_Family */
 /*    font-size: 12pt;  Headers-Default-Font_TextSize  don't edit this until we can control the size of the popup itself */ 
-    color: #3c3d3e; /* Document-HeadersDefault-Font_Color */
-    font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+    color: #555555; /* Document-HeadersDefault-Font_Color */
+    font-weight: normal; /* Document-HeadersDefault-Font_Weight */
     /* Document-HeadersDefault-Background */
     background-color: #b3d61d; /* Document-HeadersDefault-Background_Color */
     background-image: url(images/repeatx/brightEdge1.png); /* Document-HeadersDefault-Background_Image */
@@ -1006,8 +1006,8 @@ body .wm_wavemaker1 .dialogfooter .wmbutton:hover {
  .wm_wavemaker1 table.dijitMenuTable.dijitMenu.dijitReset {
     /* Document-HeadersDefault-Font */
     font-family: Verdana; /* Document-HeadersDefault-Font_Family */
-    color: #3c3d3e; /* Document-HeadersDefault-Font_Color */
-    font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+    color: #555555; /* Document-HeadersDefault-Font_Color */
+    font-weight: normal; /* Document-HeadersDefault-Font_Weight */
     /* Document-HeadersDefault-Background */
     background-color: #b3d61d; /* Document-HeadersDefault-Background_Color */
     border: solid 1px black;
@@ -1028,7 +1028,7 @@ body .wm_wavemaker1 .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemS
 body.wm_wavemaker1 .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
 body .wm_wavemaker1 .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
     /* Document-HeadersHover-Font */
-    color: #ffffff; /* Document-HeadersHover-Font_Color */
+    color: #212121; /* Document-HeadersHover-Font_Color */
     /* Document-HeadersHover-Background */
     background-color: #a1c01a; /* Document-HeadersHover-Background_Color */
     background-image: url(images/repeatx/brightEdge1.png); /* Document-HeadersDefault-Background_Image */
@@ -1042,7 +1042,7 @@ body.wm_wavemaker1  .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelect
 body .wm_wavemaker1 .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected
  {
     /* Document-HeadersHover-Font */
-    color: #ffffff; /* Document-HeadersHover-Font_Color */
+    color: #212121; /* Document-HeadersHover-Font_Color */
     /* Document-HeadersHover-Background */
     background-color: #a1c01a; /* Document-HeadersHover-Background_Color */
     background-image: none;
@@ -1067,7 +1067,7 @@ body.wm_wavemaker1  ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected,
 body .wm_wavemaker1 ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected
  {
     /* Document-HeadersHover-Font */
-    color: #ffffff; /* Document-HeadersHover-Font_Color */
+    color: #212121; /* Document-HeadersHover-Font_Color */
     /* Document-HeadersHover-Background */
     background-color: #a1c01a; /* Document-HeadersHover-Background_Color */
     outline-width: 0;
@@ -1126,7 +1126,7 @@ body .wm_wavemaker1 ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected
     -moz-box-shadow: 2px 0px 2px black; /* wm.TabLayers-Shadow */
     -webkit-box-shadow: 2px 0px 2px black;  /* wm.TabLayers-Shadow */
     box-shadow: 2px 0px 2px black;  /* wm.TabLayers-Shadow */
-    height: 20px; /* wm.TabLayers-Button_Height */
+    height: 22px; /* wm.TabLayers-Button_Height */
     font-size: 12px; /* wm.TabLayers-Button_TextSize */
 }
 .wm_wavemaker1 .wmtablayers-tab:hover, .wm_wavemaker1 .wmtablayers-tab:focus {
@@ -1177,8 +1177,8 @@ body .wm_wavemaker1 ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected
 }
 body.tundra.wm_wavemaker1  div.wmheader,
 body.tundra .wm_wavemaker1  div.wmheader,
-.wm_wavemaker1  .wmTabLayers-client, 
-.wm_wavemaker1  .wmWizardLayers-client {
+.wm_wavemaker1  .wmTabLayers-client > .wmlayer, 
+.wm_wavemaker1  .wmWizardLayers-client > .wmlayer {
     /* Common-Panel_Border */
     -moz-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
     -webkit-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
@@ -1192,21 +1192,14 @@ body.tundra .wm_wavemaker1  div.wmheader,
     border-radius-bottomleft: 4px;/* Common-Panel_BorderStyle_Radius */
     border-radius-bottomright: 4px;/* Common-Panel_BorderStyle_Radius */
 }    
-    .wm_wavemaker1 .wmTabLayers-client, 
-    .wm_wavemaker1 .wmWizardLayers-client {
-	/* Common-Panel_Border */
-	-moz-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
-	border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
-    }
 .wm_wavemaker1 .wmFancyPanel-labelWidget {
     /* Must always be 2-4px smaller than .wmfancypanel */
-       -moz-border-radius-topleft: 12px;   /* wm.FancyPanel_Top-Radius */
-    -moz-border-radius-topright: 12px;/* wm.FancyPanel_Top-Radius */
-    -webkit-border-top-left-radius: 12px;/* wm.FancyPanel_Top-Radius */
-    -webkit-border-top-right-radius: 12px;/* wm.FancyPanel_Top-Radius */
-    border-radius-topleft: 12px;/* wm.FancyPanel_Top-Radius */
-    border-radius-topright: 12px;/* wm.FancyPanel_Top-Radius */
+       -moz-border-radius-topleft: 12px;   /* Common-Panel_BorderStyle_Radius */
+    -moz-border-radius-topright: 12px;/* Common-Panel_BorderStyle_Radius */
+    -webkit-border-top-left-radius: 12px;/* Common-Panel_BorderStyle_Radius */
+    -webkit-border-top-right-radius: 12px;/* Common-Panel_BorderStyle_Radius */
+    border-radius-topleft: 12px;/* Common-Panel_BorderStyle_Radius */
+    border-radius-topright: 12px;/* Common-Panel_BorderStyle_Radius */
 }    
     /* END Border Styles */
 /* BEGIN SECTION wm.AccorionLayers / wm.AccordionDecorator */
@@ -1237,14 +1230,14 @@ body.wm_wavemaker1 {
     .wm_wavemaker1 div.wmaccordion-header {
 	/* Document-HeadersActive-Font  + Headers-Default-Font */
 	font-family: Verdana; /* Document-HeadersDefault-Font_Family */
-	font-size: 9pt; /* Document-HeadersDefault-Font_TextSize */
-	color: #333333; /* Document-HeadersActive-Font_Color */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+	font-size: 10pt; /* Document-HeadersDefault-Font_TextSize */
+	color: #212121; /* Document-HeadersActive-Font_Color */
+	font-weight: normal; /* Document-HeadersDefault-Font_Weight */
 	/* Document-HeadersActive-Background */
-	background-color: #e1a621; /* Document-HeadersActive-Background_Color */
-	background-image: url(images/repeatx/brightEdge0.png); /* Document-HeadersActive-Background_Image */
+	background-color: #3297C3; /* Document-HeadersActive-Background_Color */
+	background-image: none; /* Document-HeadersActive-Background_Image */
 	background-position: top left; /* Document-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-HeadersActive-Background_Image-Repeat */
+	background-repeat: no-repeat; /* Document-HeadersActive-Background_Image-Repeat */
 	/* Document-HeadersDefault-BorderStyle_Radius */
 	-moz-border-radius: 8px; /* Document-HeadersDefault-BorderStyle_Radius */
 	-webkit-border-radius: 8px; /* Document-HeadersDefault-BorderStyle_Radius */
@@ -1253,10 +1246,10 @@ body.wm_wavemaker1 {
     }
     .wm_wavemaker1 div.wmaccordion .wmaccordion-collapsed {
 	/* Document-HeadersDefault-Font */
-	color: #3c3d3e; /* Document-HeadersDefault-Font_Color */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+	color: #555555; /* Document-HeadersDefault-Font_Color */
+	font-weight: normal; /* Document-HeadersDefault-Font_Weight */
 	font-family: Verdana; /* Document-HeadersDefault-Font_Family */
-	font-size: 9pt; /* Document-HeadersDefault-Font_TextSize */
+	font-size: 10pt; /* Document-HeadersDefault-Font_TextSize */
 	/* Document-HeadersDefault-Background */
 	background-color: #b3d61d; /* Document-HeadersDefault-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* Document-HeadersDefault-Background_Image */
@@ -1270,7 +1263,7 @@ body.wm_wavemaker1 {
     .wm_wavemaker1 div.wmaccordion-header:hover, 
     .wm_wavemaker1 div.wmaccordion wmaccordion-header.wmaccordion-collapsed:hover {
 	/* Document-HeadersHover-Font */
-	color: #ffffff; /* Document-HeadersHover-Font_Color */
+	color: #212121; /* Document-HeadersHover-Font_Color */
 	/* Document-HeadersHover-Background */
 	background-color: #a1c01a; /* Document-HeadersHover-Background_Color */
 	background-image: url(images/repeatx/brightEdge2.png); /* Document-HeadersHover-Background_Image */
@@ -1290,9 +1283,9 @@ body.wm_wavemaker1 {
 .wm_wavemaker1 .wmFancyPanel-labelWidget {
     /* Document-HeadersDefault-Font */
     font-family: Verdana; /* Document-HeadersDefault-Font_Family */
-    font-size: 9pt; /* Document-HeadersDefault-Font_TextSize */
-    color: #3c3d3e; /* Document-HeadersDefault-Font_Color */
-    font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+    font-size: 10pt; /* Document-HeadersDefault-Font_TextSize */
+    color: #555555; /* Document-HeadersDefault-Font_Color */
+    font-weight: normal; /* Document-HeadersDefault-Font_Weight */
     /* Document-HeadersDefault-Background */
     background-color: #b3d61d; /* Document-HeadersDefault-Background_Color */
     background-image: url(images/repeatx/brightEdge1.png); /* Document-HeadersDefault-Background_Image */
@@ -1303,8 +1296,8 @@ body.wm_wavemaker1 {
     .wm_wavemaker1 button.wmtablayers-tab {
 	/* Document-HeadersDefault-Font */
 	font-family: Verdana; /* Document-HeadersDefault-Font_Family */
-	color: #3c3d3e; /* Document-HeadersDefault-Font_Color */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+	color: #555555; /* Document-HeadersDefault-Font_Color */
+	font-weight: normal; /* Document-HeadersDefault-Font_Weight */
 	/* Document-HeadersDefault-Background */
 	background-color: #b3d61d; /* Document-HeadersDefault-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* Document-HeadersDefault-Background_Image */
@@ -1326,7 +1319,7 @@ body.wm_wavemaker1 {
     }
     .wm_wavemaker1 .wmtablayers-tab:hover, .wm_wavemaker1 .wmtablayers-tab:focus {
 	/* Document-HeadersHover-Font */
-	color: #ffffff; /* Document-HeadersHover-Font_Color */
+	color: #212121; /* Document-HeadersHover-Font_Color */
 	/* Document-HeadersHover-Background */
 	background-color: #a1c01a; /* Document-HeadersHover-Background_Color */
 	background-image: url(images/repeatx/brightEdge2.png); /* Document-HeadersHover-Background_Image */
@@ -1342,12 +1335,12 @@ body.wm_wavemaker1 {
     .wm_wavemaker1 .wmtablayers-tab.wmtablayers-selected:hover,
     .wm_wavemaker1 .wmtablayers-tab.wmtablayers-selected:focus {
 	/* Document-HeadersActive-Font */
-	color: #333333; /* Document-HeadersActive-Font_Color */
+	color: #212121; /* Document-HeadersActive-Font_Color */
 	/* Document-HeadersActive-Background */
-	background-color: #e1a621; /* Document-HeadersActive-Background_Color */
-	background-image: url(images/repeatx/brightEdge0.png); /* Document-HeadersActive-Background_Image */
+	background-color: #3297C3; /* Document-HeadersActive-Background_Color */
+	background-image: none; /* Document-HeadersActive-Background_Image */
 	background-position: top left; /* Document-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-HeadersActive-Background_Image-Repeat */
+	background-repeat: no-repeat; /* Document-HeadersActive-Background_Image-Repeat */
     }
     /* END SECTION wm.TabLayers / wm.TabDecorator */
     /* END ESCTION wm.TabLayers / wm.WizardLayers */
@@ -1363,9 +1356,9 @@ body.wm_wavemaker1 {
     body.tundra .wm_wavemaker1 div.wmheader {
 	/* Document-HeadersDefault-Font */
 	font-family: Verdana; /* Document-HeadersDefault-Font_Family */
-	font-size: 9pt; /* Document-HeadersDefault-Font_TextSize */
-	color: #3c3d3e; /* Document-HeadersDefault-Font_Color */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+	font-size: 10pt; /* Document-HeadersDefault-Font_TextSize */
+	color: #555555; /* Document-HeadersDefault-Font_Color */
+	font-weight: normal; /* Document-HeadersDefault-Font_Weight */
 	/* Document-HeadersDefault-Border */
 	-moz-border-radius: 8px; /* Document-HeadersDefault-BorderStyle_Radius */
 	-webkit-border-radius: 8px; /* Document-HeadersDefault-BorderStyle_Radius */
@@ -1383,9 +1376,9 @@ body.wm_wavemaker1 {
     .wm_wavemaker1 .TOC {
 	/* Document-HeadersDefault-Font */
 	font-family: Verdana; /* Document-HeadersDefault-Font_Family */
-	font-size: 9pt; /* Document-HeadersDefault-Font_TextSize */
-	color: #3c3d3e; /* Document-HeadersDefault-Font_Color */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+	font-size: 10pt; /* Document-HeadersDefault-Font_TextSize */
+	color: #555555; /* Document-HeadersDefault-Font_Color */
+	font-weight: normal; /* Document-HeadersDefault-Font_Weight */
 	/* Document-HeadersDefault-Background */
 	background-color: #b3d61d; /* Document-HeadersDefault-Background_Color */
     }
@@ -1711,9 +1704,9 @@ body.wm_wavemaker1 {
     .wm_wavemaker1 .wmprogressbar .dijitProgressBarTile {
 	/* Document-HeadersDefault-Font */
 	font-family: Verdana; /* Document-HeadersDefault-Font_Family */
-	font-size: 9pt; /* Document-HeadersDefault-Font_TextSize */
-	color: #3c3d3e; /* Document-HeadersDefault-Font_Color */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+	font-size: 10pt; /* Document-HeadersDefault-Font_TextSize */
+	color: #555555; /* Document-HeadersDefault-Font_Color */
+	font-weight: normal; /* Document-HeadersDefault-Font_Weight */
 	/* Document-HeadersDefault-Background */
 	background-color: #b3d61d; /* Document-HeadersDefault-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* Document-HeadersDefault-Background_Image */

@@ -37,7 +37,7 @@
 	}, 
 	"Document-Styles-Border": {
 		"BorderSize": "1", 
-		"Color": "#000000"
+		"Color": "#222222"
 	}, 
 	"Document-Styles-BorderStyle": {
 		"Radius": "0px", 
@@ -51,9 +51,9 @@
 	}, 
 	"Document-HeadersDefault-Font": {
 		"Family": "Verdana", 
-		"Weight": "bold", 
-		"TextSize": "9pt", 
-		"Color": "#3c3d3e"
+		"Weight": "normal", 
+		"TextSize": "10pt", 
+		"Color": "#555555"
 	}, 
 	"Document-HeadersDefault-Border": {
 		"BorderSize": "2"
@@ -93,7 +93,7 @@
 		"Image": "none"
 	}, 
 	"Document-HeadersHover-Font": {
-		"Color": "#ffffff"
+		"Color": "#212121"
 	}, 
 	"Document-HeadersHover-BorderStyle": {
 		"Shadow": "2px 2px 2px #444444"
@@ -105,16 +105,16 @@
 		"Image": "url(images/repeatx/brightEdge2.png)"
 	}, 
 	"Document-HeadersActive-Font": {
-		"Color": "#333333"
+		"Color": "#212121"
 	}, 
 	"Document-HeadersActive-BorderStyle": {
 		"Shadow": "1px 1px 1px #444444"
 	}, 
 	"Document-HeadersActive-Background": {
-		"Color": "#e1a621", 
-		"Image-Repeat": "repeat-x", 
+		"Color": "#3297C3", 
+		"Image-Repeat": "no-repeat", 
 		"Image-Position": "top left", 
-		"Image": "url(images/repeatx/brightEdge0.png)"
+		"Image": "none"
 	}, 
 	"Document-EditorsDefault-Border": {
 		"Color": "#666666"
@@ -338,7 +338,7 @@
 	"Tables-EvenRows-Font": {
 		"Family": "Verdana", 
 		"Weight": "normal", 
-		"TextSize": "7pt", 
+		"TextSize": "9pt", 
 		"Color": "#000000"
 	}, 
 	"Tables-EvenRows-Background": {
@@ -368,7 +368,7 @@
 		"Radius": "2px"
 	}, 
 	"wm.TabLayers-Button": {
-		"Height": "20px", 
+		"Height": "22px", 
 		"TextSize": "12px"
 	}, 
 	"wm.Dialog": {
