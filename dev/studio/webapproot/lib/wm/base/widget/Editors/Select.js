@@ -954,7 +954,7 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 	},
 	setDefaultOnInsert:function(){
 		if (this.editor && this.defaultInsert)
-			this.editor.attr('displayedValue', this.defaultInsert, false);
+			this.editor.attr('displayedValue', ''+this.defaultInsert, false);
 	}
 });
 
