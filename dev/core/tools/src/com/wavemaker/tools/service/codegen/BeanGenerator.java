@@ -272,11 +272,12 @@ public class BeanGenerator {
             members.add(jfv);
         }
 
-        addDefaultConstructor();
+        //The following lines of code are commented out because
+        /*addDefaultConstructor();
         if (addSimpleTypesOnlyCtor && !onlyHasSimpleTypes()) {
             addConstructor(members, true);
         }
-        addConstructor(members, false);
+        addConstructor(members, false);*/
 
         if (addEqualsHashCode) {
             addEquals();
@@ -411,7 +412,7 @@ public class BeanGenerator {
     }
 
     private void addConstructor(List<JVar> members,
-                                boolean onlyIncludeSimpleTypes) 
+                                boolean onlyIncludeSimpleTypes)
     {
         List<PropertyDescriptor> props = properties;
         List<JVar> memberVars = members;
