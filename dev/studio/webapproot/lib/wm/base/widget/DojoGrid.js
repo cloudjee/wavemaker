@@ -34,6 +34,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	addDialogName:'',
 	addFormName:'',
 	columns:[],
+	selectFirstRow: false,
 	
 	init: function() {
 		dojo['require']("dojox.grid.DataGrid");
@@ -319,9 +320,13 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		this.connectDojoEvents();
 		this.setSelectionMode(this.selectionMode);
 		this.dojoRenderer();
-		if (this.selectedItem && this.selectedItem.getData()){
+		
+		if (!this.selectedItem.getData() && this.selectFirstRow)
+			this.updateSelectedItem(0);
+
+		var selectedData = this.selectedItem.getData();
+		if (selectedData)
 			this.selectItemOnGrid(this.selectedItem);
-		}
 	},
 	dojoRenderer: function (){
 		if (!this.dojoObj)
@@ -353,12 +358,6 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		if (this.isDesignLoaded() && !this._loading)
 			this.setColumnData();
 		this.setDojoStore();
-		/*
-		if (this.isDesignLoaded()){
-			this.createRightClickMenu();
-			this.updateRightClickMenu();
-		}
-		*/
 
 		var thisObj = this;
 		dojo.addOnLoad(function(){thisObj.renderDojoObj();});
