@@ -182,7 +182,7 @@ wm.AccordionLayers.extend({
 wm.TabLayers.extend({
     themeable: true,
     themeableProps: ["border", "borderColor", "clientBorder", "clientBorderColor", "headerHeight"],
-    themeableStyles: ["wm.TabLayers-Button_Height", "wm.TabLayers-Button_TextSize"]
+    themeableStyles: ["wm.TabLayers-Button_Height", "wm.TabLayers-Button_TextSize", "wm.TabLayers-BorderStyle_Shadow"]
 });
 
 wm.WizardLayers.extend({

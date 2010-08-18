@@ -7,10 +7,10 @@
    * DESCRIPTION: Border radius and shadows for various Layers and panels; set via Control Freak mode
    ************************************************************************************************/
 .wm_template button.wmtablayers-tab {
-    /* wm.TabLayers-Shadow */
-    -moz-box-shadow: 2px 0px 2px black; /* wm.TabLayers-Shadow */
-    -webkit-box-shadow: 2px 0px 2px black;  /* wm.TabLayers-Shadow */
-    box-shadow: 2px 0px 2px black;  /* wm.TabLayers-Shadow */
+    /* wm.TabLayers-BorderStyle_Shadow */
+    -moz-box-shadow: 2px 0px 2px black; /* wm.TabLayers-BorderStyle_Shadow */
+    -webkit-box-shadow: 2px 0px 2px black;  /* wm.TabLayers-BorderStyle_Shadow */
+    box-shadow: 2px 0px 2px black;  /* wm.TabLayers-BorderStyle_Shadow */
 
     height: 12px; /* wm.TabLayers-Button_Height */
     font-size: 12px; /* wm.TabLayers-Button_TextSize */
