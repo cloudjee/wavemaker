@@ -836,8 +836,9 @@ dojo.declare("Studio", wm.Page, {
 			case "IDE":
 				this.widgetsHtml.setHtml('<pre style="padding: 0; width: 100%; height: 100%;">' + this.getWidgets() + "</pre>");
 		                var appsrc = this.project.generateApplicationSource();
-		                var match = appsrc.split(/\,\s*_END1:\s*true,\s*/m);
-		                appsrc = match[0] + "});";
+		                var match = appsrc.split(terminus)
+		               
+		    appsrc = (match) ? match[0] + "\n\t" + terminus + "\n});" : appsrc;
 		                this.appsourceHtml.setHtml('<pre style="padding: 0; width: 100%; height: 100%;">' + appsrc + "</pre>");
 				break;
 		}
