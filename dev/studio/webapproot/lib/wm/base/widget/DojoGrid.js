@@ -50,6 +50,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 						json: this.selectionMode == 'multiple' ? '[]' : '', 
 						type: this.variable ? this.variable.type : "any" };
 		this.selectedItem = new wm.Variable(varProps);
+		
 		this.updateSelectedItem(-1);
 		this.setSelectionMode(this.selectionMode);
 		this.updateDOMNode();
@@ -105,6 +106,35 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    this.dojoObj.selection.setSelected(rowIndex,isSelected);
 	  }
 	},
+	selectItemOnGrid: function(obj, pkList){
+		if (obj instanceof wm.Variable)
+			obj = obj.getData();
+
+		var dateFields = this.getDateFields();
+		if (!pkList)
+			pkList = wm.data.getIncludeFields(this.variable.type);
+		var q = {};
+		dojo.forEach(pkList, function(f){
+			q[f] = obj[f];
+			if (dateFields.indexOf(f) != -1)
+				q[f] = new Date(obj[f]);
+		});
+
+		var _this = this;
+		var sItem = function(items, request){
+			if (items.length < 1)
+				return;
+			var idx = _this.dojoObj.getItemIndex(items[0]);
+			if (idx == -1)
+				idx = _this.variable.getItemIndexByPrimaryKey(obj, pkList) || -1;
+			if (idx >= 0)
+				setTimeout(function(){
+					_this.setSelectedRow(idx);
+					_this.dojoObj.scrollToRow(idx);
+				},0);
+		};
+		this.store.fetch({query:q, onComplete: sItem});
+	},
 	deselect: function() {
 	  this.updateSelectedItem(-1);
 	  this.onSelectionChange();
@@ -139,7 +169,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	updateSelectedItem: function(selectedIndex) {
 		if (selectedIndex == -1) {
 			this.selectedItem.clearData();
-		} else {	    
+		} else {
 			var newdata = this.itemToJSONObject(this.store, this.getRowData(selectedIndex));
 			for (prop in newdata){
 				if (newdata[prop] instanceof Date)
@@ -289,6 +319,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		this.connectDojoEvents();
 		this.setSelectionMode(this.selectionMode);
 		this.dojoRenderer();
+		if (this.selectedItem && this.selectedItem.getData()){
+			this.selectItemOnGrid(this.selectedItem);
+		}
 	},
 	dojoRenderer: function (){
 		if (!this.dojoObj)

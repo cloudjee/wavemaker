@@ -515,6 +515,31 @@ dojo.declare("wm.Variable", wm.Component, {
 				return i;
 		}
 	},
+	getItemIndexByPrimaryKey: function(inVariable, pkList){
+		if (!this.isList || !pkList || pkList.length < 1)
+			return;
+		var obj = inVariable;
+		if (obj instanceof wm.Variable){
+			obj = inVariable.getData();			
+		}
+
+		var list = (this.data || 0).list || [];
+		for (var i=0, l = list.length; i < l; i++) {
+			obj2 = list[i] instanceof wm.Variable ? list[i].getData() : list[i];
+			var isEqual = true;
+			for (var j = 0; j < pkList.length; j++){
+				var f = pkList[j];
+				if (obj[f] != obj2[f]){
+					isEqual = false;
+					break;
+				}
+			}
+			
+			if (isEqual)
+				return i;
+		}
+		
+	},
 	//===========================================================================
 	// Update Messaging
 	//===========================================================================

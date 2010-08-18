@@ -701,8 +701,14 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 		if (op == "insert" || op == "delete")
 			this.dataSet.cursor = 0;
 		if (op == "insert" || op == "update") {
-			wm.fire(this.getItemData(), "setData", [inResult]);
-			wm.fire(this.dataSet, "notify");
+			var item = this.getItemData();
+			wm.fire(item, "setData", [inResult]);
+			// PV: If item is equal to this.dataSet that means by calling setData on it, setData will have already called notify.
+			// Therefore, there's no need to call an extra notify.
+			if (item != this.dataSet)
+				wm.fire(this.dataSet, "notify");
+			
+			//dojo.publish(this.dataSet.getRuntimeId()+'-liveform-'+op, [inResult]);
 		}
 		//
 		switch (op) {
