@@ -74,8 +74,17 @@ dojo.declare("wm.Application", wm.Component, {
             this._lastTheme = this.theme;
 	    this.theme = inTheme;
 	    dojo.addClass(node, this.theme);
-
-	    this.loadThemeCss(this.theme, isDesigned, optionalCss);
+	    try {
+		this.loadThemeCss(this.theme, isDesigned, optionalCss);
+	    } catch(e) {
+		if (inTheme != "wm_notheme")  {
+		    this.setTheme("wm_notheme", isInit, optionalCss, optionalPrototype, noRegen);
+		    app.alert("The theme '" + inTheme + "' was not found.  This can happen when importing a project that uses a theme that is not in your library.  You can download that theme and copy it into your WaveMaker/common/themes folder or go to your model, select 'Project', and pick a new theme");
+		} else  {
+		    app.alert("Fatal error loading theme wm_notheme.  If you see this, please contact WaveMaker support.");
+		}
+		return;
+	    }
 
 	   // write before we change the prototype so defaults are left blank
 	    if (isDesigned && !isInit) {
@@ -113,7 +122,7 @@ dojo.declare("wm.Application", wm.Component, {
 	    else
 		path = dojo.moduleUrl("common") + "themes/" + inThemeName + "/Theme.js";
 	    themeData = optionalThemeData || dojo.fromJson(dojo.xhrGet({url:path, sync:true, preventCache:true}).results[0]);
-            this._themeData[inThemeName] = themeData;
+            this._themeData[inThemeName] = themeData || {};
         }
 
         var propHash = themeData["wm.Control"];
@@ -188,7 +197,11 @@ dojo.declare("wm.Application", wm.Component, {
                 var imagepath = path.replace(/\/[^\/]*$/,"/images");
                 while (imagepath.match(/[^\/]+\/\.\.\//)) 
                     imagepath = imagepath.replace(/[^\/]+\/\.\.\//,"");
-		themecss = optionalCss || dojo.xhrGet({url:path, sync:true, preventCache:false}).results[0] || "";
+		var results = dojo.xhrGet({url:path, sync:true, preventCache:false}).results;
+		if (results[1])
+		    throw results[1];
+
+		themecss = optionalCss || results[0] || "";
 		themecss = themecss.replace(/url\s*\(\s*images/g,"url(" + imagepath);
 		setCss("theme_ss", themecss);
 	    } else {
