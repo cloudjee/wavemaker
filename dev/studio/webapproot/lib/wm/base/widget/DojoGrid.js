@@ -629,9 +629,25 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
 	onDeleteSuccess: function(inResult){},
 	saveActionCall: function(){},
-	onAddButtonClick: function(inEvent){}
+	onAddButtonClick: function(inEvent){},
 	/* Action buttons implementation*/
 	
+	
+	/* Helper functions for developers */
+	
+	getNumColumns: function(includeInvisibleColumns){
+		if (includeInvisibleColumns)
+			return this.columns.length;
+		return dojo.filter(this.columns, function(col){return col.show;}).length;
+	},
+	getNumRows: function(){
+		return this.getRowCount();
+	},
+	getRow: function(idx){
+		return this.itemToJSONObject(this.store, this.getRowData(idx) || {});
+	}
+	
+	/* Helper functions for developers */
 });
 
 wm.DojoGrid.description = "A dojo grid.";
