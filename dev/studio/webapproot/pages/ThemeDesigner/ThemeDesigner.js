@@ -42,7 +42,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
      */
     themeTypes: {"Family": ["wm.SelectMenu", {options: "Lucida Grande, Lucida Sans, Arial, Verdana, Arial, sans-serif, serif", width: "80px"}],
                  "Weight": ["wm.SelectMenu", {options: "normal, bold", width: "80px"}],
-                 "TextSize": ["wm.Number",  { width: "80px"}],
+                 "TextSize": ["wm.Number",  { width: "60px"}],
                  "Color": ["wm.ColorPicker", {width: "80px"}],
                  "Shadow": ["wm.SelectMenu", {dataField: "dataValue", displayValue: "name", allowNone: true, width: "80px"},{},{
                      binding: ["wm.Binding", {},{},{
