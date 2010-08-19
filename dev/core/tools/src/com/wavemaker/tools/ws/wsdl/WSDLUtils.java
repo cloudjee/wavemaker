@@ -33,6 +33,7 @@ import javax.wsdl.BindingFault;
 import javax.wsdl.BindingOperation;
 import javax.wsdl.Definition;
 import javax.wsdl.Operation;
+import javax.wsdl.OperationType;
 import javax.wsdl.Part;
 import javax.wsdl.Port;
 import javax.wsdl.PortType;
@@ -336,9 +337,16 @@ public class WSDLUtils {
     public static List<SoapHeader> getInputSoapHeaders(Definition definition,
             Operation operation) {
         Binding binding = getBindingForSOAP(definition, operation);
-        BindingOperation bindingOperation = binding.getBindingOperation(
+        BindingOperation bindingOperation;
+        if(operation.getStyle().equals(OperationType.ONE_WAY)){
+            bindingOperation = binding.getBindingOperation(
+                    operation.getName(), operation.getInput().getName(), null);        	  	
+        }
+        else {
+        	bindingOperation = binding.getBindingOperation(
                 operation.getName(), operation.getInput().getName(), operation
                         .getOutput().getName());
+        }
         if (bindingOperation == null) {
             // try to get the operation binding by using only the operation name
             bindingOperation = binding.getBindingOperation(operation.getName(),
@@ -384,9 +392,15 @@ public class WSDLUtils {
     public static List<Part> getFaults(Definition definition,
             Operation operation) {
         Binding binding = getBindingForSOAP(definition, operation);
-        BindingOperation bindingOperation = binding.getBindingOperation(
-                operation.getName(), operation.getInput().getName(), operation
-                        .getOutput().getName());
+        BindingOperation bindingOperation;
+        if(operation.getStyle().equals(OperationType.ONE_WAY)){
+        	bindingOperation = binding.getBindingOperation(operation.getName(), 
+        			operation.getInput().getName(), null);
+        }
+        else {
+        	bindingOperation = binding.getBindingOperation(operation.getName(), 
+        			operation.getInput().getName(), operation.getOutput().getName());
+        }
         if (bindingOperation == null) {
             // try to get the operation binding by using only the operation name
             bindingOperation = binding.getBindingOperation(operation.getName(),
