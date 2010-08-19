@@ -243,26 +243,29 @@ public class Wadl2Wsdl {
         
         Grammars grammars = application.getGrammars();
         List<Element> schemaElements = new ArrayList<Element>();
+        if(grammars != null) {
         for (Object any : grammars.getAny()) {
-            if (any instanceof Element) {
-                schemaElements.add(checkAndFixUnboundedSequence((Element) any));
-            }
+            	if (any instanceof Element) {
+            		schemaElements.add(checkAndFixUnboundedSequence((Element) any));
+            	}
+        	}
+        	for (Include include : grammars.getInclude()) {
+        		URI includeUri = wadlUri.resolve(include.getHref());
+        		InputSource input = new InputSource(includeUri.toURL().openStream());
+        		XmlSchemaCollection xmlSchemaColl = new XmlSchemaCollection();
+        		XmlSchema xmlSchema = xmlSchemaColl.read(input, null);
+        		for (Document schemaDocument : xmlSchema.getAllSchemas()) {
+        			schemaElements.add(schemaDocument.getDocumentElement());
+            	}
+        	}
         }
-        for (Include include : grammars.getInclude()) {
-            URI includeUri = wadlUri.resolve(include.getHref());
-            InputSource input = new InputSource(includeUri.toURL().openStream());
-            XmlSchemaCollection xmlSchemaColl = new XmlSchemaCollection();
-            XmlSchema xmlSchema = xmlSchemaColl.read(input, null);
-            for (Document schemaDocument : xmlSchema.getAllSchemas()) {
-                schemaElements.add(schemaDocument.getDocumentElement());
-            }
-        }
-
         RESTWsdlGenerator generator = new RESTWsdlGenerator(serviceName,
                 namespace, operationName, parameterizedURL);
         generator.setSchemaElements(schemaElements);
         generator.setInputParts(inputParts);
-        generator.setOutputElementType(outputElement);
+        if(outputElement != null){
+        	generator.setOutputElementType(outputElement);
+        }
         generator.write(wsdlFile);
         return wsdlFile;
     }
