@@ -408,7 +408,7 @@ Studio.widgets = {
 					sourceTabs: ["wm.TabLayers", {border: "0", width: "100%", height: "100%"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {
 					    scriptLayer: ["wm.Layer", {caption: "Script"}, {}, {
 						benchbevel8: ["wm.Bevel", {}, {}],
-						scriptRibbon: ["wm.Panel", {height: "29px", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4"}, {}, {
+						scriptRibbon: ["wm.Panel", {height: "29px", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#000000"}, {}, {
 						    scriptPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Save", imageIndex: 8}, {onclick: "saveScriptClick"}],
 						    scriptPageImportBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Import", imageIndex: 25}, {onclick: "importJavascriptLibrary"}],
 						    scriptToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
@@ -416,8 +416,14 @@ Studio.widgets = {
 						}],
 						editArea: ["wm.EditArea", {width: "100%", height: "100%"}, {}]
 					    }],
-                                            themeLayer: ["wm.Layer", {caption: "Themes", width: "100%", height: "100%"}, {}, {
+                                            themeLayer: ["wm.Layer", {_classes: {domNode: ["wm-darksnazzy"]}, caption: "Themes", width: "100%", height: "100%"}, {}, {
 						themesbevel: ["wm.Bevel", {}, {}],
+						themesRibbon: ["wm.Panel", {height: "29px", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4"}, {}, {
+						    themesPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Save", imageIndex: 8}, {onclick: "saveThemeClick"}],
+						    themesPageAddBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "New Theme (Copy Current Theme)", imageIndex: 25}, {onclick: "addNewThemeClick"}],
+						    themesPageDeleteBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Delete Theme", imageIndex: 0}, {onclick: "deleteThemeClick"}],
+						    themesPageRevertBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Revert Changes", imageIndex: 6, imageList: "canvasToolbarImageList16"}, {onclick: "revertThemeClick"}]
+						}],
                                                 themesPage: ["wm.PageContainer", {deferLoad: true, loadParentFirst: true, 
                                                                                   pageName: "ThemeDesigner"}]
                                             }],
@@ -456,7 +462,7 @@ Studio.widgets = {
 						}],
 						appsource: ["wm.Layer", {caption: "Application"}, {}, {
 						    appsrcbenchbevel9: ["wm.Bevel", {}, {}],
-						    appsrcRibbon: ["wm.Panel", {height: "29px", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4"}, {}, {
+						    appsrcRibbon: ["wm.Panel", {height: "29px", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#000000"}, {}, {
 							appsrcPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Save", imageIndex: 8}, {onclick: "saveAppSrcClick"}],
 							appsrcPageImportBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Import", imageIndex: 25}, {onclick: "importAppJavascriptLibrary"}],
 							appsrcToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],

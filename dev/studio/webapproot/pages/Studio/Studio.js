@@ -1036,6 +1036,21 @@ dojo.declare("Studio", wm.Page, {
 		if (inData.openLink)
 			wm.openUrl(inSender.openLink, inSender.openLinkTitle);
 	},
+
+    /* Theme toolbar buttons */
+    saveThemeClick: function(inSender) {
+	this.themesPage.page.saveTheme(inSender);
+    },
+    addNewThemeClick: function(inSender) {
+	this.themesPage.page.copyThemeClick(inSender);
+    },
+    deleteThemeClick: function(inSender) {
+	this.themesPage.page.removeThemeClick(inSender);
+    },
+    revertThemeClick: function(inSender) {
+	this.themesPage.page.removeTheme();
+    },
+
 	selectProperty: function(inSender, info, text) {
 		console.log("selectProperty");
 		var n = this._testn;
