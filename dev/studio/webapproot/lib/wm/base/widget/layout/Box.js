@@ -139,7 +139,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
                      *                 for all children.  
                      * If px sized: We aren't calculating this bounds axis, its a fixed size, so just set it to NaN
                      */
-		    b[inFlowAxis] = c._percEx[inFlowAxis] ? (flowEx.ratio * c._percEx[inFlowAxis]) : NaN;		
+		    b[inFlowAxis] = c._percEx[inFlowAxis] ? Math.round((flowEx.ratio * c._percEx[inFlowAxis])) : NaN;		
 
                     /* Step 7b: Calculate the bounds against the flow, and update the bounds and set cFitSize
                      * If its % sized: then set bounds and cFitSize to a size calculated from the parent's size * this widget's % size
