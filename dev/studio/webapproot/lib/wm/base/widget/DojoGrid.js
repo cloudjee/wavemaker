@@ -93,6 +93,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 				}
 			}
 		}
+	    if (this.variable && !this._pendingRenderDojoObj) {
+		this._pendingRenderDojoObj = true;
+		dojo.addOnLoad(function(){thisObj.renderDojoObj();});
+	    }
 	},
 	dataSetToSelectedItem: function() {
 		this.selectedItem.setLiveView((this.variable|| 0).liveView);
@@ -303,7 +307,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			this.dojoObj.resize();
 	},
 	renderDojoObj: function() {
-		if (this._cupdating)
+		if (this._cupdating && this.owner.)
 			return;
 		if (this.variable)
 			this.dataSetToSelectedItem();
@@ -360,7 +364,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		this.setDojoStore();
 
 		var thisObj = this;
+	    if (!this._pendingRenderDojoObj) {
+		this._pendingRenderDojoObj = true;
 		dojo.addOnLoad(function(){thisObj.renderDojoObj();});
+	    }
 	},
 	setDojoStore: function(){
 		if (!this.variable){
