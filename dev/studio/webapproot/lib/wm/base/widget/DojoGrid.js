@@ -93,6 +93,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 				}
 			}
 		}
+
 	    if (this.variable && !this._pendingRenderDojoObj) {
 		this._pendingRenderDojoObj = true;
 		dojo.addOnLoad(function(){thisObj.renderDojoObj();});
@@ -307,7 +308,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			this.dojoObj.resize();
 	},
 	renderDojoObj: function() {
-		if (this._cupdating && this.owner.)
+	        if (this._cupdating && this.getParentPage()._loadingPage)
 			return;
 		if (this.variable)
 			this.dataSetToSelectedItem();
