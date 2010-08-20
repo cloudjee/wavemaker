@@ -92,7 +92,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	    var h = this.editorNode.style.height.match(/\d+/)[0];
             
 		this.editorNode.style.lineHeight = '';
-		var arrowNode = dojo.query("#" + this.domNode.id + " .dijitArrowButtonInner")[0];
+	    var arrowNode = dojo.query(".dijitArrowButtonInner", this.domNode)[0];
 	        if (arrowNode) arrowNode.style.height = (h-2) + "px";
 	},
 	hasValues: function(){
