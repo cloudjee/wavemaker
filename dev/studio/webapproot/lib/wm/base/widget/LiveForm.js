@@ -492,21 +492,13 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 			this.setReadonly(this.readonly);
 	},
 	initLiveVariable: function() {
-		if (!this.lvName)
-			this.lvName = studio.page.getUniqueName(this.name+"LiveVariable");
-		
-		if (this.owner[this.lvName]) {
-			var lv = this.liveVariable = this.owner[this.lvName]
-		} else {
-			var lv = this.liveVariable = new wm.LiveVariable({
-				name: this.lvName,
-				owner: this.owner,
-				parent: this,
-				liveSource: (this.dataSet || 0).type,
-				autoUpdate: false
-			});
-		}
-		
+		var lv = this.liveVariable = new wm.LiveVariable({
+			name: "liveVariable",
+			owner: this,
+			liveSource: (this.dataSet || 0).type,
+			autoUpdate: false
+		});
+
 		this.connect(lv, "onBeforeUpdate", this, "beforeOperation");
 		this.connect(lv, "onSuccess", this, "operationSucceeded");
 		this.connect(lv, "onResult", this, "onResult");
