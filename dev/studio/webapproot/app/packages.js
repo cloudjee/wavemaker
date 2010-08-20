@@ -52,8 +52,6 @@
 [ "Dialogs", "PageDialog", "wm.PageDialog", "wm.base.widget.Dialog", "images/wm/button.png", "A simple button"],
 [ "Dialogs", "RichTextDialog", "wm.RichTextDialog", "wm.base.widget.Dialog", "images/wm/button.png", "A simple button"],
 
-
-[ "Dojo Widgets", "Grid", "wm.DojoGrid", "wm.base.widget.DojoGrid", "images/wm/data.png", "A Dojo grid"],
 [ "Dojo Widgets", "Chart", "wm.DojoChart", "wm.base.widget.DojoChart", "images/wm/bar_chart.png", "A Dojo chart"],
 [ "Dojo Widgets", "Dashboard", "wm.Dashboard", "wm.base.widget.Dashboard", "images/wm/lightbox_16.png", "Dashboard"],
 
