@@ -305,8 +305,6 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	renderDojoObj: function() {
 	    if (this._cupdating)
 			return;
-		if (this.variable)
-			this.dataSetToSelectedItem();
 		if (this.dojoObj != null){
 			this.dojoObj.destroy();
 		}
@@ -355,6 +353,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
 	setDataSet: function (inValue, inDefault){
 		this.variable = inValue;
+		if (this.variable)
+			this.dataSetToSelectedItem();
 		if (this.isDesignLoaded() && !this._loading)
 			this.setColumnData();
 		this.setDojoStore();
