@@ -64,7 +64,7 @@
 
     <target name="generate-spec" depends="init-rpm" if="rpm.build">
         <exec executable="${basedir}/rpm/genspec.py" failonerror="true"
-                dir="${buildroot}" outputproperty="files.list">
+                dir="${buildroot}"  logerror="true" outputproperty="files.list">
             <arg line="."/>
         </exec>
 
@@ -90,7 +90,7 @@
 
     <target name="build-rpm" depends="generate-spec" if="rpm.build">
         <mkdir dir="${build.installer.dir}/RPMS/i386"/>
-        <exec executable="rpmbuild" failonerror="true"
+        <exec executable="rpmbuild"  logerror="true" failonerror="true"
                 dir="${build.installer.dir}">
             <arg line="-bb" />
             <arg line="wavemaker.spec" />
@@ -116,7 +116,7 @@
     </target>
 
     <target name="build-deb" depends="init-deb" if="deb.build">
-        <exec executable="dpkg" failonerror="true">
+        <exec executable="dpkg"  logerror="true" failonerror="true">
             <arg line="--build" />
             <arg line="${buildroot}/amd64" />
             <arg line="${build.installer.dir}" />
@@ -143,7 +143,7 @@
     </target>
 
     <target name="build-debi386" depends="init-debi386" if="deb.build">
-        <exec executable="dpkg" failonerror="true">
+        <exec executable="dpkg"  logerror="true" failonerror="true">
             <arg line="--build" />
             <arg line="${buildroot}/i386" />
             <arg line="${build.installer.dir}" />
