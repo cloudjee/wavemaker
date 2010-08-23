@@ -281,6 +281,8 @@ public class ProjectManager {
             sourceJSStr = sourceJSStr.replace(serviceStr, dummyStr);
             String destJSStr = sourceJSStr.replace("\""+shortSourceName+"\"",
                     "\""+shortDestName+"\"");
+	    destJSStr = destJSStr.replace(shortSourceName+".extend(",
+						   shortDestName+".extend(");
             destJSStr = destJSStr.replace(dummyStr, serviceStr);
             FileUtils.writeStringToFile(destJS, destJSStr,
                     ServerConstants.DEFAULT_ENCODING);
