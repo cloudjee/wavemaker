@@ -1,5 +1,12 @@
-
-/* BEGIN SECTION wm.Calendar and wm.Date */
+  /**************************************************************************************************
+   * TYPE:        wm.Calendar and the popup from wm.Date
+   *
+   * DESCRIPTION: Sets colors and rounding for calendar, calendar hover and calendar selection
+   *
+   * NOTE:        Style of Date Popup is not affected by panel type because its
+   *              parent is always the body tag.  We may in the future want Calendar itself to depend 
+   *              on its parent...
+   ************************************************************************************************/
 
 .wm_template tr.dijitCalendarMonthContainer th {
     /* Document-HeadersDefault-Font */
@@ -23,8 +30,9 @@
     font-weight: bold; /* Document-HeadersDefault-Font_Weight */
 }
 
-.wm_template .dijitCalendarContainer td {
-    background-color: #444444; /* PageContent-Styles-Background_Color */
+.wm_template table.dijitCalendarContainer td,
+.wm_template table.dijitCalendarContainer td.dijitCalendarCurrentMonth {
+    background-color: #444444 !important; /* PageContent-Styles-Background_Color */
     color: #FFFFFF; /* PageContent-Styles-Font_Color */
 }
 

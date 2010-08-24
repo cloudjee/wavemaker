@@ -1,12 +1,11 @@
 
-
   /**************************************************************************************************
-   * TYPE:        Grid even rows 
+   * TYPE:        Grid rows (Even rows and odd rows)
    *
-   * DESCRIPTION: Matches all rows, but Odd row class will override these settings.  Sets font and
-   *              background styles.
+   * DESCRIPTION: The goal is to create alternating colors between even and odd rows.
+   *              Even rows are set by specifying the style for all rows; odd row styles override
+   *              the style for all rows.  Only vary the font and background-color.
    ************************************************************************************************/
-/* Grid/List Even rows: uses Tables-EvenRows */
 .wm_template div.dojoxGrid-row,
 .wm_template div.dojoxGridRow,
 .wm_template div.wmlist-item {
@@ -21,7 +20,7 @@
     background-color: #444444; /* Tables-EvenRows-Background_Color */
 }
 
-/* Grid/List Odd rows: uses Tabls-OddRows */
+/* Grid/List Odd rows: uses Tables-OddRows */
 .wm_template div.dojoxGrid-row.dojoxGrid-row-odd,
 .wm_template div.dojoxGridRow.dojoxGridRowOdd,
 .wm_template .wmlist-item.Odd {
@@ -32,28 +31,43 @@
     background-color: #444444; /* Tables-OddRows-Background_Color */
 }
 
-/* Grid Cells */
-.wm_template .dojoxGrid-cell,
-.wm_template .dojoxGridCell {
-    border-right-size: 1px;
+  /**************************************************************************************************
+   * TYPE:        Grid cell borders
+   *
+   * DESCRIPTION: Set the border styles for cells (or in the case of wm.List of a cell-equivalent).
+   *              Basically, we leave top/bottom border to the alternating even/odd row background color,
+   *              and we don't need a right and left border (would double the border size between two cells)
+   *              so just use the border-right-width: 1px, and let the user control the color of that border.
+   * 
+   * TODO:        These settings are not well tested.
+   ************************************************************************************************/
+.wm_template td.dojoxGrid-cell,
+.wm_template td.dojoxGridCell {
     border-left-width: 0px;
     border-top-width: 0px;
     border-bottom-width: 0px;
+    border-right-width: 1px !important; /* Tables-EvenRows-Border_BorderSize */
     border-style: solid;   
     border-color: #AAAAAA; /* Tables-EvenRows-Border_Color */
 }
 
-/* wm.List rows get a faint border as well */
 .wm_template .wmlist-item {
     border-style: solid;   
     border-color: #AAAAAA; /* Tables-EvenRows-Border_Color */
     border-left-width: 0px;
-    border-right-width: 1px;
+    border-right-width: 1px; /* Tables-EvenRows-Border_BorderSize */
     border-top-width: 0px;
     border-bottom-width: 0px;
 }
 
 
+  /**************************************************************************************************
+   * TYPE:        Header, Hover and Selected row styles
+   *
+   * DESCRIPTION: The style varies by what kind of panel its in.  If I want a single wm.List in my 
+   *              TOC, its going to look/feel different in its hover/selection/header than
+   *              a DojoGrid in my EmphasizedContent.
+   ************************************************************************************************/
 @media screen { /* Document-Level */ 
 
     /* Selected color for rows: uses Headers-Active */
@@ -101,117 +115,120 @@
     {
 	background: inherit; /* see Header.dojoxGrid-header below */
 
-	/* Document-HeadersDefault-Font */
-	font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
+	border-right-width: 1px; /* Tables-EvenRows-Border_BorderSize */
+	border-right-style: solid;
+	border-right-color: #AAAAAA; /* Tables-EvenRows-Border_Color */
+
+	/* Document-HeadersActive-Font */
+	font-family: sans-serif; /* Document-HeadersActive-Font_Family */
 	/* Adjust size when we figure out a good way to adjust the height of the header */
 	font-size: 12pt; /* Tables-EvenRows-Font_TextSize */
 	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+	font-weight: bold; /* Document-HeadersActive-Font_Weight */
     }
 
     .wm_template div.dojoxGridHeader .dojoxGridCell {
-	background-color: #333333; /* Document-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* Document-HeadersDefault-Background_Image */
-	background-position: left top;  /* Document-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-HeadersDefault-Background_Image-Repeat */
+	background-color: #333333; /* Document-HeadersActive-Background_Color */
+	background-image: url(images/threeD.png); /* Document-HeadersActive-Background_Image */
+	background-position: left top;  /* Document-HeadersActive-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-HeadersActive-Background_Image-Repeat */
 
-	/* Document-HeadersDefault-Font */
-	font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
-	/*font-size: 12pt;  Headers-Default-Font_TextSize */
-	color: #FFFFFF; /* Document-HeadersDefault-Font_Color */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+	/* Document-HeadersActive-Font */
+	font-family: sans-serif; /* Document-HeadersActive-Font_Family */
+	/*font-size: 12pt;  Headers-Active-Font_TextSize */
+	color: #FFFFFF; /* Document-HeadersActive-Font_Color */
+	font-weight: bold; /* Document-HeadersActive-Font_Weight */
     }
 
     /* Header-Row-Background */
     .wm_template .dojoxGrid-header, 
     .wm_template .dojoxGridHeader,
     .wm_template .wmlist-header {
-	color: #FFFFFF;	/* Document-HeadersDefault-Font_Color */
-	background-color: #444444; /* Document-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* Document-HeadersDefault-Background-Image */
-	background-position: left top;     /* Document-HeadersDefault-Image-Position */
-	background-repeat: repeat-x;    /* Document-HeadersDefault-Image-Repeat */
+	color: #FFFFFF;	/* Document-HeadersActive-Font_Color */
+	background-color: #444444; /* Document-HeadersActive-Background_Color */
+	background-image: url(images/threeD.png); /* Document-HeadersActive-Background-Image */
+	background-position: left top;     /* Document-HeadersActive-Image-Position */
+	background-repeat: repeat-x;    /* Document-HeadersActive-Image-Repeat */
 
     }
 
 }
 
-@media screen { /* PageContent-Level */ 
-
+@media screen { /* MainContent-Level */ 
     /* Selected color for rows: uses Headers-Active */
-    .wm_template .wmcontentarea div.dojoxGrid-row.dojoxGrid-row-selected, 
-    .wm_template .wmcontentarea div.dojoxGrid-row.dojoxGrid-row-selected.dojoxGrid-row-over, 
-    .wm_template .wmcontentarea div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
-    .wm_template .wmcontentarea div.dojoxGridRow.dojoxGridRowSelected, 
-    .wm_template .wmcontentarea div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
-    .wm_template .wmcontentarea .wmlist-item.wmlist-item-selected,
-    .wm_template .wmcontentarea .wmlist-item.wmlist-item-selected.wmlist-item-over {
-	/* Document-HeadersActive-Background */
-	background-color: #333333 !important; /* Document-HeadersActive-Background_Color */
+    .wm_template .MainContent div.dojoxGrid-row.dojoxGrid-row-selected, 
+    .wm_template .MainContent div.dojoxGrid-row.dojoxGrid-row-selected.dojoxGrid-row-over, 
+    .wm_template .MainContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
+    .wm_template .MainContent div.dojoxGridRow.dojoxGridRowSelected, 
+    .wm_template .MainContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_template .MainContent .wmlist-item.wmlist-item-selected,
+    .wm_template .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
+	/* MainContent-HeadersActive-Background */
+	background-color: #333333 !important; /* MainContent-HeadersActive-Background_Color */
 
-	/* Document-HeadersActive-Font */
-	color: #FFFFFF; /* Document-HeadersActive-Font_Color */
+	/* MainContent-HeadersActive-Font */
+	color: #FFFFFF; /* MainContent-HeadersActive-Font_Color */
     }
 
     /* Custom mouse-over color for rows */
-    .wm_template .wmcontentarea .wmlist-item.wmlist-item-over,
-    .wm_template .wmcontentarea div.dojoxGrid-row.dojoxGrid-row-over, 
-    .wm_template .wmcontentarea .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_template .wmcontentarea .dojoxGridRow.dojoxGridRowOver, 
-    .wm_template .wmcontentarea .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_template .MainContent .wmlist-item.wmlist-item-over,
+    .wm_template .MainContent div.dojoxGrid-row.dojoxGrid-row-over, 
+    .wm_template .MainContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
+    .wm_template .MainContent .dojoxGridRow.dojoxGridRowOver, 
+    .wm_template .MainContent .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
     {
-	/* Document-HeadersHover-Background */
-	background-color: #333333 !important; /* Document-HeadersHover-Background_Color */
+	/* MainContent-HeadersHover-Background */
+	background-color: #333333 !important; /* MainContent-HeadersHover-Background_Color */
 
-	/* Document-HeadersHover-Font */
-	color: #FFFFFF; /* Document-HeadersHover-Font_Color */
+	/* MainContent-HeadersHover-Font */
+	color: #FFFFFF; /* MainContent-HeadersHover-Font_Color */
 
     }
 
-    .wm_template .wmcontentarea div.dojoxGridContent .dojoxGridCell {
+    .wm_template .MainContent div.dojoxGridContent .dojoxGridCell {
 	background: transparent;
     }
 
-    .wm_template .wmcontentarea div.dojoxGridContent .dojoxGridCellFocus,
-    .wm_template .wmcontentarea div.dojoxGridContent .dojoxGrid-cell-focus {
+    .wm_template .MainContent div.dojoxGridContent .dojoxGridCellFocus,
+    .wm_template .MainContent div.dojoxGridContent .dojoxGrid-cell-focus {
 	border-width: 1px dashed transparent !important;
     }
 
     /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
-    .wm_template .wmcontentarea div.dojoxGrid-header .dojoxGrid-cell,
-    .wm_template .wmcontentarea div.dojoxGridHeader .dojoxGridCell
+    .wm_template .MainContent div.dojoxGrid-header .dojoxGrid-cell,
+    .wm_template .MainContent div.dojoxGridHeader .dojoxGridCell
     {
 	background: inherit; /* see Header.dojoxGrid-header below */
 
-	/* Document-HeadersDefault-Font */
-	font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
+	/* MainContent-HeadersActive-Font */
+	font-family: sans-serif; /* MainContent-HeadersActive-Font_Family */
 	/*    font-size: 12pt;  Headers-Default-Font_TextSize */
 	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+	font-weight: bold; /* MainContent-HeadersActive-Font_Weight */
     }
 
-    .wm_template .wmcontentarea div.dojoxGridHeader .dojoxGridCell {
-	background-color: #333333; /* Document-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* Document-HeadersDefault-Background_Image */
-	background-position: left top;  /* Document-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-HeadersDefault-Background_Image-Repeat */
+    .wm_template .MainContent div.dojoxGridHeader .dojoxGridCell {
+	background-color: #333333; /* MainContent-HeadersActive-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-HeadersActive-Background_Image */
+	background-position: left top;  /* MainContent-HeadersActive-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-HeadersActive-Background_Image-Repeat */
 
-	/* Document-HeadersDefault-Font */
-	font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
+	/* MainContent-HeadersActive-Font */
+	font-family: sans-serif; /* MainContent-HeadersActive-Font_Family */
 	/*font-size: 12pt;  Headers-Default-Font_TextSize */
-	color: #FFFFFF; /* Document-HeadersDefault-Font_Color */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+	color: #FFFFFF; /* MainContent-HeadersActive-Font_Color */
+	font-weight: bold; /* MainContent-HeadersActive-Font_Weight */
     }
 
     /* Header-Row-Background */
-    .wm_template .wmcontentarea .dojoxGrid-header, 
-    .wm_template .wmcontentarea .dojoxGridHeader,
-    .wm_template .wmcontentarea .wmlist-header {
-	color: #FFFFFF;	/* Document-HeadersDefault-Font_Color */
-	background-color: #444444; /* Document-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* Document-HeadersDefault-Background-Image */
-	background-position: left top;     /* Document-HeadersDefault-Image-Position */
-	background-repeat: repeat-x;    /* Document-HeadersDefault-Image-Repeat */
+    .wm_template .MainContent .dojoxGrid-header, 
+    .wm_template .MainContent .dojoxGridHeader,
+    .wm_template .MainContent .wmlist-header {
+	color: #FFFFFF;	/* MainContent-HeadersActive-Font_Color */
+	background-color: #444444; /* MainContent-HeadersActive-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-HeadersActive-Background-Image */
+	background-position: left top;     /* MainContent-HeadersActive-Image-Position */
+	background-repeat: repeat-x;    /* MainContent-HeadersActive-Image-Repeat */
 
     }
 
@@ -219,84 +236,249 @@
 
 
 
-@media screen { /* ContentPanel-Level */ 
-
+@media screen { /* EmphasizedContent-Level */ 
     /* Selected color for rows: uses Headers-Active */
-    .wm_template .wmcontentarea .wmcontentarea div.dojoxGrid-row.dojoxGrid-row-selected, 
-    .wm_template .wmcontentarea .wmcontentarea div.dojoxGrid-row.dojoxGrid-row-selected.dojoxGrid-row-over, 
-    .wm_template .wmcontentarea .wmcontentarea div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
-    .wm_template .wmcontentarea .wmcontentarea div.dojoxGridRow.dojoxGridRowSelected, 
-    .wm_template .wmcontentarea .wmcontentarea div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
-    .wm_template .wmcontentarea .wmcontentarea .wmlist-item.wmlist-item-selected,
-    .wm_template .wmcontentarea .wmcontentarea .wmlist-item.wmlist-item-selected.wmlist-item-over {
-	/* Document-HeadersActive-Background */
-	background-color: #333333 !important; /* Document-HeadersActive-Background_Color */
+    .wm_template .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-selected, 
+    .wm_template .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-selected.dojoxGrid-row-over, 
+    .wm_template .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
+    .wm_template .EmphasizedContent div.dojoxGridRow.dojoxGridRowSelected, 
+    .wm_template .EmphasizedContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_template .EmphasizedContent .wmlist-item.wmlist-item-selected,
+    .wm_template .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
+	/* EmphasizedContent-HeadersActive-Background */
+	background-color: #333333 !important; /* EmphasizedContent-HeadersActive-Background_Color */
 
-	/* Document-HeadersActive-Font */
-	color: #FFFFFF; /* Document-HeadersActive-Font_Color */
+	/* EmphasizedContent-HeadersActive-Font */
+	color: #FFFFFF; /* EmphasizedContent-HeadersActive-Font_Color */
     }
 
     /* Custom mouse-over color for rows */
-    .wm_template .wmcontentarea .wmcontentarea .wmlist-item.wmlist-item-over,
-    .wm_template .wmcontentarea .wmcontentarea div.dojoxGrid-row.dojoxGrid-row-over, 
-    .wm_template .wmcontentarea .wmcontentarea .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_template .wmcontentarea .wmcontentarea .dojoxGridRow.dojoxGridRowOver, 
-    .wm_template .wmcontentarea .wmcontentarea .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_template .EmphasizedContent .wmlist-item.wmlist-item-over,
+    .wm_template .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-over, 
+    .wm_template .EmphasizedContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
+    .wm_template .EmphasizedContent .dojoxGridRow.dojoxGridRowOver, 
+    .wm_template .EmphasizedContent .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
     {
-	/* Document-HeadersHover-Background */
-	background-color: #333333 !important; /* Document-HeadersHover-Background_Color */
+	/* EmphasizedContent-HeadersHover-Background */
+	background-color: #333333 !important; /* EmphasizedContent-HeadersHover-Background_Color */
 
-	/* Document-HeadersHover-Font */
-	color: #FFFFFF; /* Document-HeadersHover-Font_Color */
+	/* EmphasizedContent-HeadersHover-Font */
+	color: #FFFFFF; /* EmphasizedContent-HeadersHover-Font_Color */
 
     }
 
-    .wm_template .wmcontentarea .wmcontentarea div.dojoxGridContent .dojoxGridCell {
+    .wm_template .EmphasizedContent div.dojoxGridContent .dojoxGridCell {
 	background: transparent;
     }
 
-    .wm_template .wmcontentarea .wmcontentarea div.dojoxGridContent .dojoxGridCellFocus,
-    .wm_template .wmcontentarea .wmcontentarea div.dojoxGridContent .dojoxGrid-cell-focus {
+    .wm_template .EmphasizedContent div.dojoxGridContent .dojoxGridCellFocus,
+    .wm_template .EmphasizedContent div.dojoxGridContent .dojoxGrid-cell-focus {
 	border-width: 1px dashed transparent !important;
     }
 
     /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
-    .wm_template .wmcontentarea .wmcontentarea div.dojoxGrid-header .dojoxGrid-cell,
-    .wm_template .wmcontentarea .wmcontentarea div.dojoxGridHeader .dojoxGridCell
+    .wm_template .EmphasizedContent div.dojoxGrid-header .dojoxGrid-cell,
+    .wm_template .EmphasizedContent div.dojoxGridHeader .dojoxGridCell
     {
 	background: inherit; /* see Header.dojoxGrid-header below */
 
-	/* Document-HeadersDefault-Font */
-	font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
+	/* EmphasizedContent-HeadersActive-Font */
+	font-family: sans-serif; /* EmphasizedContent-HeadersActive-Font_Family */
 	/*    font-size: 12pt;  Headers-Default-Font_TextSize */
 	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+	font-weight: bold; /* EmphasizedContent-HeadersActive-Font_Weight */
     }
 
-    .wm_template .wmcontentarea .wmcontentarea div.dojoxGridHeader .dojoxGridCell {
-	background-color: #333333; /* Document-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* Document-HeadersDefault-Background_Image */
-	background-position: left top;  /* Document-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-HeadersDefault-Background_Image-Repeat */
+    .wm_template .EmphasizedContent div.dojoxGridHeader .dojoxGridCell {
+	background-color: #333333; /* EmphasizedContent-HeadersActive-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-HeadersActive-Background_Image */
+	background-position: left top;  /* EmphasizedContent-HeadersActive-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-HeadersActive-Background_Image-Repeat */
 
-	/* Document-HeadersDefault-Font */
-	font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
+	/* EmphasizedContent-HeadersActive-Font */
+	font-family: sans-serif; /* EmphasizedContent-HeadersActive-Font_Family */
 	/*font-size: 12pt;  Headers-Default-Font_TextSize */
-	color: #FFFFFF; /* Document-HeadersDefault-Font_Color */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+	color: #FFFFFF; /* EmphasizedContent-HeadersActive-Font_Color */
+	font-weight: bold; /* EmphasizedContent-HeadersActive-Font_Weight */
     }
 
     /* Header-Row-Background */
-    .wm_template .wmcontentarea .wmcontentarea .dojoxGrid-header, 
-    .wm_template .wmcontentarea .wmcontentarea .dojoxGridHeader,
-    .wm_template .wmcontentarea .wmcontentarea .wmlist-header {
-	color: #FFFFFF;	/* Document-HeadersDefault-Font_Color */
-	background-color: #444444; /* Document-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* Document-HeadersDefault-Background-Image */
-	background-position: left top;     /* Document-HeadersDefault-Image-Position */
-	background-repeat: repeat-x;    /* Document-HeadersDefault-Image-Repeat */
+    .wm_template .EmphasizedContent .dojoxGrid-header, 
+    .wm_template .EmphasizedContent .dojoxGridHeader,
+    .wm_template .EmphasizedContent .wmlist-header {
+	color: #FFFFFF;	/* EmphasizedContent-HeadersActive-Font_Color */
+	background-color: #444444; /* EmphasizedContent-HeadersActive-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-HeadersActive-Background-Image */
+	background-position: left top;     /* EmphasizedContent-HeadersActive-Image-Position */
+	background-repeat: repeat-x;    /* EmphasizedContent-HeadersActive-Image-Repeat */
 
     }
 
 }
+
+
+
+@media screen { /* TOCContent-Level */ 
+    /* Selected color for rows: uses Headers-Active */
+    .wm_template .TOCContent div.dojoxGrid-row.dojoxGrid-row-selected, 
+    .wm_template .TOCContent div.dojoxGrid-row.dojoxGrid-row-selected.dojoxGrid-row-over, 
+    .wm_template .TOCContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
+    .wm_template .TOCContent div.dojoxGridRow.dojoxGridRowSelected, 
+    .wm_template .TOCContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_template .TOCContent .wmlist-item.wmlist-item-selected,
+    .wm_template .TOCContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
+	/* TOCContent-HeadersActive-Background */
+	background-color: #333333 !important; /* TOCContent-HeadersActive-Background_Color */
+
+	/* TOCContent-HeadersActive-Font */
+	color: #FFFFFF; /* TOCContent-HeadersActive-Font_Color */
+    }
+
+    /* Custom mouse-over color for rows */
+    .wm_template .TOCContent .wmlist-item.wmlist-item-over,
+    .wm_template .TOCContent div.dojoxGrid-row.dojoxGrid-row-over, 
+    .wm_template .TOCContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
+    .wm_template .TOCContent .dojoxGridRow.dojoxGridRowOver, 
+    .wm_template .TOCContent .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
+    {
+	/* TOCContent-HeadersHover-Background */
+	background-color: #333333 !important; /* TOCContent-HeadersHover-Background_Color */
+
+	/* TOCContent-HeadersHover-Font */
+	color: #FFFFFF; /* TOCContent-HeadersHover-Font_Color */
+
+    }
+
+    .wm_template .TOCContent div.dojoxGridContent .dojoxGridCell {
+	background: transparent;
+    }
+
+    .wm_template .TOCContent div.dojoxGridContent .dojoxGridCellFocus,
+    .wm_template .TOCContent div.dojoxGridContent .dojoxGrid-cell-focus {
+	border-width: 1px dashed transparent !important;
+    }
+
+    /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
+    .wm_template .TOCContent div.dojoxGrid-header .dojoxGrid-cell,
+    .wm_template .TOCContent div.dojoxGridHeader .dojoxGridCell
+    {
+	background: inherit; /* see Header.dojoxGrid-header below */
+
+	/* TOCContent-HeadersActive-Font */
+	font-family: sans-serif; /* TOCContent-HeadersActive-Font_Family */
+	/*    font-size: 12pt;  Headers-Default-Font_TextSize */
+	color: inherit !important; /* Needed for wm.DojoGrid */
+	font-weight: bold; /* TOCContent-HeadersActive-Font_Weight */
+    }
+
+    .wm_template .TOCContent div.dojoxGridHeader .dojoxGridCell {
+	background-color: #333333; /* TOCContent-HeadersActive-Background_Color */
+	background-image: url(images/threeD.png); /* TOCContent-HeadersActive-Background_Image */
+	background-position: left top;  /* TOCContent-HeadersActive-Background_Image-Position */
+	background-repeat: repeat-x; /* TOCContent-HeadersActive-Background_Image-Repeat */
+
+	/* TOCContent-HeadersActive-Font */
+	font-family: sans-serif; /* TOCContent-HeadersActive-Font_Family */
+	/*font-size: 12pt;  Headers-Default-Font_TextSize */
+	color: #FFFFFF; /* TOCContent-HeadersActive-Font_Color */
+	font-weight: bold; /* TOCContent-HeadersActive-Font_Weight */
+    }
+
+    /* Header-Row-Background */
+    .wm_template .TOCContent .dojoxGrid-header, 
+    .wm_template .TOCContent .dojoxGridHeader,
+    .wm_template .TOCContent .wmlist-header {
+	color: #FFFFFF;	/* TOCContent-HeadersActive-Font_Color */
+	background-color: #444444; /* TOCContent-HeadersActive-Background_Color */
+	background-image: url(images/threeD.png); /* TOCContent-HeadersActive-Background-Image */
+	background-position: left top;     /* TOCContent-HeadersActive-Image-Position */
+	background-repeat: repeat-x;    /* TOCContent-HeadersActive-Image-Repeat */
+
+    }
+
+}
+
+
+
+@media screen { /* ToolbarContent-Level */ 
+    /* Selected color for rows: uses Headers-Active */
+    .wm_template .ToolbarContent div.dojoxGrid-row.dojoxGrid-row-selected, 
+    .wm_template .ToolbarContent div.dojoxGrid-row.dojoxGrid-row-selected.dojoxGrid-row-over, 
+    .wm_template .ToolbarContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
+    .wm_template .ToolbarContent div.dojoxGridRow.dojoxGridRowSelected, 
+    .wm_template .ToolbarContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_template .ToolbarContent .wmlist-item.wmlist-item-selected,
+    .wm_template .ToolbarContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
+	/* ToolbarContent-HeadersActive-Background */
+	background-color: #333333 !important; /* ToolbarContent-HeadersActive-Background_Color */
+
+	/* ToolbarContent-HeadersActive-Font */
+	color: #FFFFFF; /* ToolbarContent-HeadersActive-Font_Color */
+    }
+
+    /* Custom mouse-over color for rows */
+    .wm_template .ToolbarContent .wmlist-item.wmlist-item-over,
+    .wm_template .ToolbarContent div.dojoxGrid-row.dojoxGrid-row-over, 
+    .wm_template .ToolbarContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
+    .wm_template .ToolbarContent .dojoxGridRow.dojoxGridRowOver, 
+    .wm_template .ToolbarContent .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
+    {
+	/* ToolbarContent-HeadersHover-Background */
+	background-color: #333333 !important; /* ToolbarContent-HeadersHover-Background_Color */
+
+	/* ToolbarContent-HeadersHover-Font */
+	color: #FFFFFF; /* ToolbarContent-HeadersHover-Font_Color */
+
+    }
+
+    .wm_template .ToolbarContent div.dojoxGridContent .dojoxGridCell {
+	background: transparent;
+    }
+
+    .wm_template .ToolbarContent div.dojoxGridContent .dojoxGridCellFocus,
+    .wm_template .ToolbarContent div.dojoxGridContent .dojoxGrid-cell-focus {
+	border-width: 1px dashed transparent !important;
+    }
+
+    /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
+    .wm_template .ToolbarContent div.dojoxGrid-header .dojoxGrid-cell,
+    .wm_template .ToolbarContent div.dojoxGridHeader .dojoxGridCell
+    {
+	background: inherit; /* see Header.dojoxGrid-header below */
+
+	/* ToolbarContent-HeadersActive-Font */
+	font-family: sans-serif; /* ToolbarContent-HeadersActive-Font_Family */
+	/*    font-size: 12pt;  Headers-Default-Font_TextSize */
+	color: inherit !important; /* Needed for wm.DojoGrid */
+	font-weight: bold; /* ToolbarContent-HeadersActive-Font_Weight */
+    }
+
+    .wm_template .ToolbarContent div.dojoxGridHeader .dojoxGridCell {
+	background-color: #333333; /* ToolbarContent-HeadersActive-Background_Color */
+	background-image: url(images/threeD.png); /* ToolbarContent-HeadersActive-Background_Image */
+	background-position: left top;  /* ToolbarContent-HeadersActive-Background_Image-Position */
+	background-repeat: repeat-x; /* ToolbarContent-HeadersActive-Background_Image-Repeat */
+
+	/* ToolbarContent-HeadersActive-Font */
+	font-family: sans-serif; /* ToolbarContent-HeadersActive-Font_Family */
+	/*font-size: 12pt;  Headers-Default-Font_TextSize */
+	color: #FFFFFF; /* ToolbarContent-HeadersActive-Font_Color */
+	font-weight: bold; /* ToolbarContent-HeadersActive-Font_Weight */
+    }
+
+    /* Header-Row-Background */
+    .wm_template .ToolbarContent .dojoxGrid-header, 
+    .wm_template .ToolbarContent .dojoxGridHeader,
+    .wm_template .ToolbarContent .wmlist-header {
+	color: #FFFFFF;	/* ToolbarContent-HeadersActive-Font_Color */
+	background-color: #444444; /* ToolbarContent-HeadersActive-Background_Color */
+	background-image: url(images/threeD.png); /* ToolbarContent-HeadersActive-Background-Image */
+	background-position: left top;     /* ToolbarContent-HeadersActive-Image-Position */
+	background-repeat: repeat-x;    /* ToolbarContent-HeadersActive-Image-Repeat */
+
+    }
+
+}
+
+
 

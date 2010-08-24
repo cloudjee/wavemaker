@@ -2,6 +2,9 @@
    * TYPE:        wm.Dialog main styles
    *
    * DESCRIPTION: Sets the rounding, shadowing and background for the dialog
+   *
+   * NOTE:        Style of dialog main panel and button is not affected by panel type because its
+   *              parent is always the body tag
    ************************************************************************************************/
 .wm_template .wmdialog {
     /* Common-Panel_BorderStyle_Radius */
@@ -15,7 +18,7 @@
     -webkit-box-shadow: 3px 3px 3px black; /* Floating-Shadow */
     box-shadow: 3px 3px 3px black; /* Floating-Shadow */
 
-    background-color: #444444; /* PageContent-Styles-Background_Color */
+    background-color: #444444; /* MainContent-Styles-Background_Color */
 }
 
   /**************************************************************************************************
@@ -25,15 +28,15 @@
    ************************************************************************************************/
 .wm_template .wmdialog-content,
 .wm_template .wmdialogcontainer {
-    /* PageContent-Styles-Font */
-    font-family: sans-serif; /* PageContent-Styles-Font_Family */
-    font-size: 12pt; /* PageContent-Styles-Font_TextSize */
-    color: #FFFFFF; /* PageContent-Styles-Font_Color */
-    font-weight: bold; /* PageContent-Styles-Font_Weight */
+    /* MainContent-Styles-Font */
+    font-family: sans-serif; /* MainContent-Styles-Font_Family */
+    font-size: 12pt; /* MainContent-Styles-Font_TextSize */
+    color: #FFFFFF; /* MainContent-Styles-Font_Color */
+    font-weight: bold; /* MainContent-Styles-Font_Weight */
 
-    /* PageContent-Styles-Background */
-    background-position: left top;  /* PageContent-Styles-Background_Image-Position */
-    background-repeat: repeat-x; /* PageContent-Styles-Background_Image-Repeat */
+    /* MainContent-Styles-Background */
+    background-position: left top;  /* MainContent-Styles-Background_Image-Position */
+    background-repeat: repeat-x; /* MainContent-Styles-Background_Image-Repeat */
     background-color: transparent;
 }
 
@@ -56,7 +59,7 @@
     background-position: left top;  /* Document-HeadersDefault-Background_Image-Position */
     background-repeat: repeat-x; /* Document-HeadersDefault-Background_Image-Repeat */
 
-    /* Automatically calculated to be 2px less than PageContent-Styles-Border_Style-Radius */
+    /* Automatically calculated to be 2px less than MainContent-Styles-Border_Style-Radius */
     -moz-border-radius-topleft: 2px; /* wm.Dialog_Inner-Radius */
     -moz-border-radius-topright: 2px;/* wm.Dialog_Inner-Radius */
     -webkit-border-top-left-radius: 2px;/* wm.Dialog_Inner-Radius */
@@ -86,7 +89,7 @@
     background-position: left top;  /* Document-HeadersDefault-Background_Image-Position */
     background-repeat: repeat-x; /* Document-HeadersDefault-Background_Image-Repeat */
 
-    /* Automatically calculated to be 2px less than PageContent-Styles-Border_Style-Radius */
+    /* Automatically calculated to be 2px less than MainContent-Styles-Border_Style-Radius */
     -moz-border-radius-bottomleft: 2px; /* wm.Dialog_Inner-Radius */
     -moz-border-radius-bottomright: 2px;/* wm.Dialog_Inner-Radius */
     -webkit-border-bottom-left-radius: 2px;/* wm.Dialog_Inner-Radius */
@@ -117,11 +120,11 @@ body .wm_template .dialogtitlebar .wmbutton {
    ************************************************************************************************/
 body.wm_template .dialogfooter .wmbutton,
 body .wm_template .dialogfooter .wmbutton {
-    /* PageContent-EditorsDefault-Font */
-    font-family: sans-serif; /* PageContent-EditorsDefault-Font_Family */
-    font-size: 12pt; /* PageContent-EditorsDefault-Font_TextSize */
-    color: #FFFFFF; /* PageContent-EditorsDefault-Font_Color */
-    font-weight: bold; /* PageContent-EditorsDefault-Font_Weight */
+    /* MainContent-EditorsDefault-Font */
+    font-family: sans-serif; /* MainContent-EditorsDefault-Font_Family */
+    font-size: 12pt; /* MainContent-EditorsDefault-Font_TextSize */
+    color: #FFFFFF; /* MainContent-EditorsDefault-Font_Color */
+    font-weight: bold; /* MainContent-EditorsDefault-Font_Weight */
 }
 
   /**************************************************************************************************
@@ -134,11 +137,11 @@ body .wm_template .dialogtitlebar .wmbutton,
 body.wm_template .dialogfooter .wmbutton,
 body .wm_template .dialogfooter .wmbutton {
 
-    /* PageContent-EditorsDefault-Background */
-    background-color: #444444; /* PageContent-EditorsDefault-Background_Color */
-    background-image: url(images/threeD.png); /* PageContent-EditorsDefault-Background_Image */
-    background-position: left top;  /* PageContent-EditorsDefault-Background_Image-Position */
-    background-repeat: repeat-x; /* PageContent-EditorsDefault-Background_Image-Repeat */
+    /* MainContent-EditorsDefault-Background */
+    background-color: #444444; /* MainContent-EditorsDefault-Background_Color */
+    background-image: url(images/threeD.png); /* MainContent-EditorsDefault-Background_Image */
+    background-position: left top;  /* MainContent-EditorsDefault-Background_Image-Position */
+    background-repeat: repeat-x; /* MainContent-EditorsDefault-Background_Image-Repeat */
 }
 
   /**************************************************************************************************
@@ -151,17 +154,17 @@ body.wm_template .dialogtitlebar .wmbutton:hover,
 body .wm_template .dialogtitlebar .wmbutton:hover,
 body.wm_template .dialogfooter .wmbutton:hover,
 body .wm_template .dialogfooter .wmbutton:hover {
-    /* PageContent-EditorsHover-Font */
-    font-family: sans-serif; /* PageContent-EditorsHover-Font_Family */
-    font-size: 12pt; /* PageContent-EditorsHover-Font_TextSize */
-    color: #FFFFFF; /* PageContent-EditorsHover-Font_Color */
-    font-weight: bold; /* PageContent-EditorsHover-Font_Weight */
+    /* MainContent-EditorsHover-Font */
+    font-family: sans-serif; /* MainContent-EditorsHover-Font_Family */
+    font-size: 12pt; /* MainContent-EditorsHover-Font_TextSize */
+    color: #FFFFFF; /* MainContent-EditorsHover-Font_Color */
+    font-weight: bold; /* MainContent-EditorsHover-Font_Weight */
 
-    /* PageContent-EditorsHover-Background */
-    background-color: #444444; /* PageContent-EditorsHover-Background_Color */
-    background-image: url(images/threeD.png); /* PageContent-EditorsHover-Background_Image */
-    background-position: left top;  /* PageContent-EditorsHover-Background_Image-Position */
-    background-repeat: repeat-x; /* PageContent-EditorsHover-Background_Image-Repeat */
+    /* MainContent-EditorsHover-Background */
+    background-color: #444444; /* MainContent-EditorsHover-Background_Color */
+    background-image: url(images/threeD.png); /* MainContent-EditorsHover-Background_Image */
+    background-position: left top;  /* MainContent-EditorsHover-Background_Image-Position */
+    background-repeat: repeat-x; /* MainContent-EditorsHover-Background_Image-Repeat */
 }
 
   /**************************************************************************************************

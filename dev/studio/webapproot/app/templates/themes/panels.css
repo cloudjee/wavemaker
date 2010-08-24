@@ -4,13 +4,14 @@
   /**************************************************************************************************
    * TYPE:        Tab Buttons
    *
-   * DESCRIPTION: Border radius and shadows for various Layers and panels; set via Control Freak mode
+   * DESCRIPTION: Border radius and shadows for various Layers and panels; set via widget settings,
+   *              not affected by panel type... unless the developer wants to put in their own CSS
    ************************************************************************************************/
 .wm_template button.wmtablayers-tab {
     /* wm.TabLayers-BorderStyle_Shadow */
-    -moz-box-shadow: 2px 0px 2px black; /* wm.TabLayers-BorderStyle_Shadow */
-    -webkit-box-shadow: 2px 0px 2px black;  /* wm.TabLayers-BorderStyle_Shadow */
-    box-shadow: 2px 0px 2px black;  /* wm.TabLayers-BorderStyle_Shadow */
+    -moz-box-shadow: 2px 0px 2px black; /* wm.TabLayers-BorderStyle_UnselectedShadow */
+    -webkit-box-shadow: 2px 0px 2px black;  /* wm.TabLayers-BorderStyle_UnselectedShadow */
+    box-shadow: 2px 0px 2px black;  /* wm.TabLayers-BorderStyle_UnselectedShadow */
 
     height: 12px; /* wm.TabLayers-Button_Height */
     font-size: 12px; /* wm.TabLayers-Button_TextSize */
@@ -19,24 +20,38 @@
 .wm_template .wmtablayers-tab:hover, .wm_template .wmtablayers-tab:focus {
     
     /* wm.TabLayers-HoverShadow */
-    -moz-box-shadow: 1px 0px 1px black;  /* wm.TabLayers-Hover-Shadow */
-    -webkit-box-shadow: 1px 0px 1px black;   /* wm.TabLayers-Hover-Shadow */
-    box-shadow: 1px 0px 1px black;   /* wm.TabLayers-Hover-Shadow */
+    -moz-box-shadow: 1px 0px 1px #444444;  /* wm.TabLayers-BorderStyle_HoverShadow */
+    -webkit-box-shadow: 1px 0px 1px #444444;   /* wm.TabLayers-BorderStyle_HoverShadow */
+    box-shadow: 1px 0px 1px #444444;   /* wm.TabLayers-HoverShadow */
 }
 
 .wm_template .wmtablayers-tab.wmtablayers-selected,
 .wm_template .wmtablayers-tab.wmtablayers-selected:hover,
 .wm_template .wmtablayers-tab.wmtablayers-selected:focus {
-    -moz-box-shadow: 0px 0px 0px black;  /* wm.TabLayers-Selected-Shadow */
-    -webkit-box-shadow: 0px 0px 0px black;   /* wm.TabLayers-Selected-Shadow */
-    box-shadow: 0px 0px 0px black;   /* wm.TabLayers-Selected-Shadow */
+    -moz-box-shadow: 0px 0px 0px black;  /* wm.TabLayers-BorderStyle_SelectedShadow */
+    -webkit-box-shadow: 0px 0px 0px black;   /* wm.TabLayers-BorderStyle_SelectedShadow */
+    box-shadow: 0px 0px 0px black;   /* wm.TabLayers-BorderStyle_SelectedShadow */
 }
 
 /* Spacing between each tab */
 .wm_template .wmtablayers-tab.wmtablayers-selected,
 .wm_template .wmtablayers-tab.wmtablayers-tab {
     margin-left: 8px; /* wm.TabLayers-Margin-Width */
+
+	/* Document-HeadersDefault-BorderStyle_Radius */
+	-moz-border-radius-topleft: 8px; /* Document-HeadersDefault-BorderStyle_Radius */
+	-moz-border-radius-topright: 8px; /* Document-HeadersDefault-BorderStyle_Radius */
+	-webkit-border-top-left-radius: 8px; /* Document-HeadersDefault-BorderStyle_Radius */
+	-webkit-border-top-right-radius: 8px; /* Document-HeadersDefault-BorderStyle_Radius */
+	border-radius-topleft: 8px; /* Document-HeadersDefault-BorderStyle_Radius */
+	border-radius-topright: 8px; /* Document-HeadersDefault-BorderStyle_Radius */
 }
+
+
+    /* Tab <input type='button'> elements need to handle browser focus as any other button */
+    .wm_template .wmtablayers-tab:focus {
+	outline-width: 0;
+    }
 
   /************************************** END Tab Button ***************************************/
 
@@ -55,7 +70,9 @@
     -webkit-border-top-right-radius: 0px !important;
     border-radius-topleft: 0px !important;
     border-radius-topright: 0px !important;
-
+    -moz-box-shadow: 0px 0px 0px black !important;
+    -webkit-box-shadow: 0px 0px 0px black !important;
+    box-shadow: 0px 0px 0px black !important;
 }
 
 
@@ -113,18 +130,46 @@ body.tundra .wm_template  div.wmheader,
     /* END Border Styles */
 
 
+    .wm_template .wmaccordion .wmaccordion-content {
+	background-color: transparent;
+    }
+    .wm_template div.wmtablayers-tabbar {
+	background: transparent;
+    }
+
+
 
 /* BEGIN SECTION wm.AccorionLayers / wm.AccordionDecorator */
 
-@media screen { /* Document-Level */ 
+
   /**************************************************************************************************
    * TYPE:        Main Document Styles
    *
    * DESCRIPTION: Specify all font and background styles for the document level
    ************************************************************************************************/
+@media screen { /* Document-Level */ 
+
+  /**************************************************************************************************
+   * TYPE:        Main document-level border
+   *
+   * DESCRIPTION: An optional set of styles for giving the document itself a square or rounded border
+   ************************************************************************************************/
+
 .wm_template  #wavemakerNode  .wmlayout,
 #studio_designer.wm_template .wmlayout, 
 #studio_themesPage_themeDesigner_demoPanel .wmlayout {
+    /* Document-Styles-Border */
+    -moz-border-radius: 4px; /* Document-Styles-BorderStyle_Radius */
+    -webkit-border-radius: 4px; /* Document-Styles-BorderStyle_Radius */
+    border-radius: 4px; /* Document-Styles-BorderStyle_Radius */
+    -moz-box-shadow: 4px 4px 4px black; /* Document-Styles-BorderStyle_Shadow */
+    -webkit-box-shadow: 4px 4px 4px black; /* Document-Styles-BorderStyle_Shadow */
+    box-shadow: 4px 4px 4px black; /* Document-Styles-BorderStyle_Shadow */
+}
+
+.wm_template  #wavemakerNode  > .wmlayout,
+#studio_designer.wm_template > .wmlayout, 
+#studio_themesPage_themeDesigner_demoPanel > .wmlayout {
     /* Document-Styles-Font */
     font-family: sans-serif; /* Document-Styles-Font_Family */
     font-size: 12pt; /* Document-Styles-Font_TextSize */
@@ -137,6 +182,13 @@ body.tundra .wm_template  div.wmheader,
     background-image: url(images/threeD.png); /* Document-Styles-Background_Image */
     background-position: left top;  /* Document-Styles-Background_Image-Position */
     background-repeat: repeat-x; /* Document-Styles-Background_Image-Repeat */
+}
+.wm_template #studio_themesPage_themeDesigner_demoPanel .wmlabel {
+    /* Document-Styles-Font */
+    font-family: sans-serif; /* Document-Styles-Font_Family */
+    font-size: 12pt; /* Document-Styles-Font_TextSize */
+    color: #FFFFFF; /* Document-Styles-Font_Color */
+    font-weight: bold; /* Document-Styles-Font_Weight */
 }
 
 #studio_designer.wm_template, 
@@ -199,20 +251,9 @@ body.wm_template {
 	background-repeat: repeat-x; /* Document-HeadersHover-Background_Image-Repeat */
     }
 
-    .wm_template .wmaccordion .wmaccordion-content {
-	background-color: transparent;
-    }
     /* END SECTION wm.AccorionLayers / wm.AccordionDecorator */
 
-    /* BEGIN SECTION wm.FancyPanel */
 
-
-    /* END SECTION wm.FancyPanel */
-
-    /* BEGIN SECTION wm.TabLayers / wm.TabDecorator */
-    .wm_template div.wmtablayers-tabbar {
-	background: transparent;
-    }
 
 .wm_template .wmFancyPanel-labelWidget {
     /* Document-HeadersDefault-Font */
@@ -247,14 +288,6 @@ body.wm_template {
 	border-top-color: #444444; /* Document-HeadersDefault-Border_Color */
 	border-right-color:#444444; /* Document-HeadersDefault-Border_Color */
 	border-left-color:#444444; /* Document-HeadersDefault-Border_Color */
-
-	/* Document-HeadersDefault-BorderStyle_Radius */
-	-moz-border-radius-topleft: 8px; /* Document-HeadersDefault-BorderStyle_Radius */
-	-moz-border-radius-topright: 8px; /* Document-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-top-left-radius: 8px; /* Document-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-top-right-radius: 8px; /* Document-HeadersDefault-BorderStyle_Radius */
-	border-radius-topleft: 8px; /* Document-HeadersDefault-BorderStyle_Radius */
-	border-radius-topright: 8px; /* Document-HeadersDefault-BorderStyle_Radius */
     }
 
     .wm_template .wmtablayers-tab:hover, .wm_template .wmtablayers-tab:focus {
@@ -269,10 +302,6 @@ body.wm_template {
 
     }
 
-    /* Tab <input type='button'> elements need to handle browser focus as any other button */
-    .wm_template .wmtablayers-tab:focus {
-	outline-width: 0;
-    }
 
     /* Selected tab */
     .wm_template .wmtablayers-tab.wmtablayers-selected,
@@ -303,441 +332,713 @@ body.wm_template {
     }
 
     /* END SECTION wm.WizardLayers */
-
-
-
-    /* BEGIN SECTION Headers */
-    body.tundra.wm_template div.wmheader,
-    body.tundra .wm_template div.wmheader {
-	/* Document-HeadersDefault-Font */
-	font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
-	font-size: 12pt; /* Document-HeadersDefault-Font_TextSize */
-	color: #FFFFFF; /* Document-HeadersDefault-Font_Color */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
-
-	/* Document-HeadersDefault-Border */
-	-moz-border-radius: 4px; /* Document-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* Document-HeadersDefault-BorderStyle_Radius */
-	border-radius: 4px; /* Document-HeadersDefault-BorderStyle_Radius */
-
-	/* Document-HeadersDefault-Background */
-	background-color: #444444; /* Document-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* Document-HeadersDefault-Background_Image */
-	background-position: left top;  /* Document-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-HeadersDefault-Background_Image-Repeat */
-    }
-
-    /* END SECTION Headers */
-    
-    
-    /* Document Level Only */
-    .wm_template .titlebar,
-    .wm_template .toolbar, 
-    .wm_template .TOC {
-	/* Document-HeadersDefault-Font */
-	font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
-	font-size: 12pt; /* Document-HeadersDefault-Font_TextSize */
-	color: #FFFFFF; /* Document-HeadersDefault-Font_Color */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
-
-	/* Document-HeadersDefault-Background */
-	background-color: #444444; /* Document-HeadersDefault-Background_Color */
-    }
-
-
-    
-    
 }
 
 
+@media screen { /* MainContent-Level */ 
 
-@media screen { /* PageContent-Level */ 
-    /* Content Areas */
-    body.tundra.wm_template .wmcontentarea,
-    body.tundra .wm_template .wmcontentarea  {
-	/* PageContent-Styles-Font */
-	font-family: sans-serif; /* PageContent-Styles-Font_Family */
-	font-size: 12pt; /* PageContent-Styles-Font_TextSize */
-	color: #FFFFFF; /* PageContent-Styles-Font_Color */
-	font-weight: bold; /* PageContent-Styles-Font_Weight */
+  /**************************************************************************************************
+   * TYPE:        Main document-level border
+   *
+   * DESCRIPTION: An optional set of styles for giving the document itself a square or rounded border
+   ************************************************************************************************/
 
-	/* PageContent-Styles-Background */
-	background-color: #444444; /* PageContent-Styles-Background_Color */
-	background-image: url(images/threeD.png); /* PageContent-Styles-Background_Image */
-	background-position: left top;  /* PageContent-Styles-Background_Image-Position */
-	background-repeat: repeat-x; /* PageContent-Styles-Background_Image-Repeat */
+.wm_template .MainContent {
+    /* MainContent-Styles-Border */
+    -moz-border-radius: 4px; /* MainContent-Styles-BorderStyle_Radius */
+    -webkit-border-radius: 4px; /* MainContent-Styles-BorderStyle_Radius */
+    border-radius: 4px; /* MainContent-Styles-BorderStyle_Radius */
+    -moz-box-shadow: 4px 4px 4px black; /* MainContent-Styles-BorderStyle_Shadow */
+    -webkit-box-shadow: 4px 4px 4px black; /* MainContent-Styles-BorderStyle_Shadow */
+    box-shadow: 4px 4px 4px black; /* MainContent-Styles-BorderStyle_Shadow */
+}
 
-    }
+.wm_template  .MainContent,
+#studio_designer.wm_template .MainContent {
+    /* MainContent-Styles-Font */
+    font-family: sans-serif; /* MainContent-Styles-Font_Family */
+    font-size: 12pt; /* MainContent-Styles-Font_TextSize */
+    color: #FFFFFF; /* MainContent-Styles-Font_Color */
+    font-weight: bold; /* MainContent-Styles-Font_Weight */
 
 
-    .wm_template .wmcontentarea  div.wmaccordion-header {
+    /* MainContent-Styles-Background */
+    background-color: #444444; /* MainContent-Styles-Background_Color */
+    background-image: url(images/threeD.png); /* MainContent-Styles-Background_Image */
+    background-position: left top;  /* MainContent-Styles-Background_Image-Position */
+    background-repeat: repeat-x; /* MainContent-Styles-Background_Image-Repeat */
+}
 
-	/* PageContent-HeadersActive-Font  + Headers-Default-Font */
-	font-family: sans-serif; /* PageContent-HeadersDefault-Font_Family */
-	font-size: 12pt; /* PageContent-HeadersDefault-Font_TextSize */
-	color: #FFFFFF; /* PageContent-HeadersActive-Font_Color */
-	font-weight: bold; /* PageContent-HeadersDefault-Font_Weight */
+.wm_template #studio_themesPage_themeDesigner_demoPanel .MainContent .wmlabel {
+    /* MainContent-Styles-Font */
+    font-family: sans-serif; /* MainContent-Styles-Font_Family */
+    font-size: 12pt; /* MainContent-Styles-Font_TextSize */
+    color: #FFFFFF; /* MainContent-Styles-Font_Color */
+    font-weight: bold; /* MainContent-Styles-Font_Weight */
+}
 
-	/* PageContent-HeadersActive-Background */
-	background-color: #444444; /* PageContent-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* PageContent-HeadersActive-Background_Image */
-	background-position: left top;  /* PageContent-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* PageContent-HeadersActive-Background_Image-Repeat */
+    .wm_template .MainContent div.wmaccordion-header {
+	/* MainContent-HeadersActive-Font  + Headers-Default-Font */
+	font-family: sans-serif; /* MainContent-HeadersDefault-Font_Family */
+	font-size: 12pt; /* MainContent-HeadersDefault-Font_TextSize */
+	color: #FFFFFF; /* MainContent-HeadersActive-Font_Color */
+	font-weight: bold; /* MainContent-HeadersDefault-Font_Weight */
+
+	/* MainContent-HeadersActive-Background */
+	background-color: #444444; /* MainContent-HeadersActive-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-HeadersActive-Background_Image */
+	background-position: left top;  /* MainContent-HeadersActive-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-HeadersActive-Background_Image-Repeat */
+
+	/* MainContent-HeadersDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* MainContent-HeadersDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* MainContent-HeadersDefault-BorderStyle_Radius */
+	border-radius: 4px; /* MainContent-HeadersDefault-BorderStyle_Radius */
 
 	padding-left: 10px;
     }
 
-    .wm_template .wmcontentarea  div.wmaccordion .wmaccordion-collapsed {
-	/* PageContent-HeadersDefault-Font */
-	color: #FFFFFF; /* PageContent-HeadersDefault-Font_Color */
-	font-weight: bold; /* PageContent-HeadersDefault-Font_Weight */
-	font-family: sans-serif; /* PageContent-HeadersDefault-Font_Family */
-	font-size: 12pt; /* PageContent-HeadersDefault-Font_TextSize */
+    .wm_template .MainContent div.wmaccordion .wmaccordion-collapsed {
+	/* MainContent-HeadersDefault-Font */
+	color: #FFFFFF; /* MainContent-HeadersDefault-Font_Color */
+	font-weight: bold; /* MainContent-HeadersDefault-Font_Weight */
+	font-family: sans-serif; /* MainContent-HeadersDefault-Font_Family */
+	font-size: 12pt; /* MainContent-HeadersDefault-Font_TextSize */
 
 
-	/* PageContent-HeadersDefault-Background */
-	background-color: #444444; /* PageContent-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* PageContent-HeadersDefault-Background_Image */
-	background-position: left top;  /* PageContent-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* PageContent-HeadersDefault-Background_Image-Repeat */
+	/* MainContent-HeadersDefault-Background */
+	background-color: #444444; /* MainContent-HeadersDefault-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-HeadersDefault-Background_Image */
+	background-position: left top;  /* MainContent-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-HeadersDefault-Background_Image-Repeat */
 
-
+	/* MainContent-HeadersDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* MainContent-HeadersDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* MainContent-HeadersDefault-BorderStyle_Radius */
+	border-radius: 4px; /* MainContent-HeadersDefault-BorderStyle_Radius */
     }
 
-    .wm_template .wmcontentarea  div.wmaccordion-header:hover, 
-    .wm_template .wmcontentarea  div.wmaccordion wmaccordion-header.wmaccordion-collapsed:hover {
-	/* PageContent-HeadersHover-Font */
-	color: #FFFFFF; /* PageContent-HeadersHover-Font_Color */
+    .wm_template .MainContent div.wmaccordion-header:hover, 
+    .wm_template .MainContent div.wmaccordion wmaccordion-header.wmaccordion-collapsed:hover {
+	/* MainContent-HeadersHover-Font */
+	color: #FFFFFF; /* MainContent-HeadersHover-Font_Color */
 
-	/* PageContent-HeadersHover-Background */
-	background-color: #444444; /* PageContent-HeadersHover-Background_Color */
-	background-image: url(images/threeD.png); /* PageContent-HeadersHover-Background_Image */
-	background-position: left top;  /* PageContent-HeadersHover-Background_Image-Position */
-	background-repeat: repeat-x; /* PageContent-HeadersHover-Background_Image-Repeat */
+	/* MainContent-HeadersHover-Background */
+	background-color: #444444; /* MainContent-HeadersHover-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-HeadersHover-Background_Image */
+	background-position: left top;  /* MainContent-HeadersHover-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-HeadersHover-Background_Image-Repeat */
     }
 
-    .wm_template .wmcontentarea  .wmaccordion .wmaccordion-content {
-	background-color: transparent;
-    }
     /* END SECTION wm.AccorionLayers / wm.AccordionDecorator */
 
 
 
 
-    /* BEGIN SECTION wm.FancyPanel */
+.wm_template .MainContent .wmFancyPanel-labelWidget {
+    /* MainContent-HeadersDefault-Font */
+    font-family: sans-serif; /* MainContent-HeadersDefault-Font_Family */
+    font-size: 12pt; /* MainContent-HeadersDefault-Font_TextSize */
+    color: #FFFFFF; /* MainContent-HeadersDefault-Font_Color */
+    font-weight: bold; /* MainContent-HeadersDefault-Font_Weight */
 
-
-    /* END SECTION wm.FancyPanel */
+    /* MainContent-HeadersDefault-Background */
+    background-color: #444444; /* MainContent-HeadersDefault-Background_Color */
+    background-image: url(images/threeD.png); /* MainContent-HeadersDefault-Background_Image */
+    background-position: left top;  /* MainContent-HeadersDefault-Background_Image-Position */
+    background-repeat: repeat-x; /* MainContent-HeadersDefault-Background_Image-Repeat */
+}
 
     /* BEGIN SECTION wm.TabLayers / wm.TabDecorator */
-    .wm_template .wmcontentarea  div.wmtablayers-tabbar {
-	background: transparent;
-    }
-
     /* Tab buttons */
-    .wm_template .wmcontentarea  button.wmtablayers-tab {
-	/* PageContent-HeadersDefault-Font */
-	font-family: sans-serif; /* PageContent-HeadersDefault-Font_Family */
-	color: #FFFFFF; /* PageContent-HeadersDefault-Font_Color */
-	font-weight: bold; /* PageContent-HeadersDefault-Font_Weight */
+    .wm_template .MainContent button.wmtablayers-tab {
+	/* MainContent-HeadersDefault-Font */
+	font-family: sans-serif; /* MainContent-HeadersDefault-Font_Family */
+	color: #FFFFFF; /* MainContent-HeadersDefault-Font_Color */
+	font-weight: bold; /* MainContent-HeadersDefault-Font_Weight */
 
-	/* PageContent-HeadersDefault-Background */
-	background-color: #444444; /* PageContent-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* PageContent-HeadersDefault-Background_Image */
-	background-position: left top;  /* PageContent-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* PageContent-HeadersDefault-Background_Image-Repeat */
+	/* MainContent-HeadersDefault-Background */
+	background-color: #444444; /* MainContent-HeadersDefault-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-HeadersDefault-Background_Image */
+	background-position: left top;  /* MainContent-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-HeadersDefault-Background_Image-Repeat */
 
-	/* PageContent-HeadersDefault-Border */
+	/* MainContent-HeadersDefault-Border */
 	border-width: 2px; /* editting this is problematic without also editting headerHeight */
 	border-bottom-color: transparent;
-	border-top-color: #444444; /* PageContent-HeadersDefault-Border_Color */
-	border-right-color:#444444; /* PageContent-HeadersDefault-Border_Color */
-	border-left-color:#444444; /* PageContent-HeadersDefault-Border_Color */
+	border-top-color: #444444; /* MainContent-HeadersDefault-Border_Color */
+	border-right-color:#444444; /* MainContent-HeadersDefault-Border_Color */
+	border-left-color:#444444; /* MainContent-HeadersDefault-Border_Color */
+    }
+
+    .wm_template .MainContent .wmtablayers-tab:hover, .wm_template .wmtablayers-tab:focus {
+	/* MainContent-HeadersHover-Font */
+	color: #FFFFFF; /* MainContent-HeadersHover-Font_Color */
+
+	/* MainContent-HeadersHover-Background */
+	background-color: #444444; /* MainContent-HeadersHover-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-HeadersHover-Background_Image */
+	background-position: left top;  /* MainContent-HeadersHover-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-HeadersHover-Background_Image-Repeat */
 
     }
 
-    .wm_template .wmcontentarea  .wmtablayers-tab:hover, .wm_template .wmcontentarea  .wmtablayers-tab:focus {
-	/* PageContent-HeadersHover-Font */
-	color: #FFFFFF; /* PageContent-HeadersHover-Font_Color */
-
-	/* PageContent-HeadersHover-Background */
-	background-color: #444444; /* PageContent-HeadersHover-Background_Color */
-	background-image: url(images/threeD.png); /* PageContent-HeadersHover-Background_Image */
-	background-position: left top;  /* PageContent-HeadersHover-Background_Image-Position */
-	background-repeat: repeat-x; /* PageContent-HeadersHover-Background_Image-Repeat */
-
-    }
-
-    /* Tab <input type='button'> elements need to handle browser focus as any other button */
-    .wm_template .wmcontentarea  .wmtablayers-tab:focus {
-	outline-width: 0;
-    }
 
     /* Selected tab */
-    .wm_template .wmcontentarea  .wmtablayers-tab.wmtablayers-selected,
-    .wm_template .wmcontentarea  .wmtablayers-tab.wmtablayers-selected:hover,
-    .wm_template .wmcontentarea  .wmtablayers-tab.wmtablayers-selected:focus {
-	/* PageContent-HeadersActive-Font */
-	color: #FFFFFF; /* PageContent-HeadersActive-Font_Color */
+    .wm_template .MainContent .wmtablayers-tab.wmtablayers-selected,
+    .wm_template .MainContent .wmtablayers-tab.wmtablayers-selected:hover,
+    .wm_template .MainContent .wmtablayers-tab.wmtablayers-selected:focus {
+	/* MainContent-HeadersActive-Font */
+	color: #FFFFFF; /* MainContent-HeadersActive-Font_Color */
 
-	/* PageContent-HeadersActive-Background */
-	background-color: #444444; /* PageContent-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* PageContent-HeadersActive-Background_Image */
-	background-position: left top;  /* PageContent-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* PageContent-HeadersActive-Background_Image-Repeat */
+	/* MainContent-HeadersActive-Background */
+	background-color: #444444; /* MainContent-HeadersActive-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-HeadersActive-Background_Image */
+	background-position: left top;  /* MainContent-HeadersActive-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-HeadersActive-Background_Image-Repeat */
     }
 
 
     /* END SECTION wm.TabLayers / wm.TabDecorator */
 
+
+    /* END ESCTION wm.TabLayers / wm.WizardLayers */
+
     /* BEGIN SECTION wm.WizardLayers */
 
-    /* Custom formatting for wizard tab with focus or hover on the <input type='button'/> */
-    .wm_template .wmcontentarea  .wmwizardlayers-tab:focus,
-    .wm_template .wmcontentarea  .wmwizardlayers-tab:hover {
-	color: black; /* Custom mouseover color */
+    /* TODO: Enable this property */
+    .wm_template .MainContent .wmwizardlayers-tab:focus,
+    .wm_template .MainContent .wmwizardlayers-tab:hover {
+	color: black; /* wm.WizardLayers-Active_Color */
     }
 
     /* END SECTION wm.WizardLayers */
-
-
-    /* BEGIN SECTION Headers */
-    body.tundra.wm_template .wmcontentarea  div.wmheader,
-    body.tundra .wm_template .wmcontentarea  div.wmheader {
-	/* PageContent-HeadersDefault-Font */
-	font-family: sans-serif; /* PageContent-HeadersDefault-Font_Family */
-	font-size: 12pt; /* PageContent-HeadersDefault-Font_TextSize */
-	color: #FFFFFF; /* PageContent-HeadersDefault-Font_Color */
-	font-weight: bold; /* PageContent-HeadersDefault-Font_Weight */
-
-	/* PageContent-HeadersDefault-Background */
-	background-color: #444444; /* PageContent-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* PageContent-HeadersDefault-Background_Image */
-	background-position: left top;  /* PageContent-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* PageContent-HeadersDefault-Background_Image-Repeat */
-    }
-
-    /* END SECTION Headers */
-    
-    
-.wm_template .wmcontentarea .wmFancyPanel-labelWidget  {
-    /* Document-HeadersDefault-Font */
-    font-family: sans-serif; /* PageContent-HeadersDefault-Font_Family */
-    font-size: 12pt; /* PageContent-HeadersDefault-Font_TextSize */
-    color: #FFFFFF; /* PageContent-HeadersDefault-Font_Color */
-    font-weight: bold; /* PageContent-HeadersDefault-Font_Weight */
-
-    /* PageContent-HeadersDefault-Background */
-    background-color: #444444; /* PageContent-HeadersDefault-Background_Color */
-    background-image: url(images/threeD.png); /* PageContent-HeadersDefault-Background_Image */
-    background-position: left top;  /* PageContent-HeadersDefault-Background_Image-Position */
-    background-repeat: repeat-x; /* PageContent-HeadersDefault-Background_Image-Repeat */
-}    
-    
-    
 }
 
 
-@media screen { /* ContentPanel-Level */ 
-    /* Content Areas */
-    body.tundra.wm_template .wmcontentarea div.wmcontentarea,
-    body.tundra .wm_template .wmcontentarea div.wmcontentarea {
-	/* ContentPanel-Styles-Font */
-	font-family: sans-serif; /* ContentPanel-Styles-Font_Family */
-	font-size: 12pt; /* ContentPanel-Styles-Font_TextSize */
-	color: #FFFFFF; /* ContentPanel-Styles-Font_Color */
-	font-weight: bold; /* ContentPanel-Styles-Font_Weight */
 
-	/* ContentPanel-Styles-Background */
-	background-color: #444444; /* ContentPanel-Styles-Background_Color */
-	background-image: url(images/threeD.png); /* ContentPanel-Styles-Background_Image */
-	background-position: left top;  /* ContentPanel-Styles-Background_Image-Position */
-	background-repeat: repeat-x; /* ContentPanel-Styles-Background_Image-Repeat */
+@media screen { /* EmphasizedContent-Level */ 
 
-    }
+.wm_template .EmphasizedContent {
+    /* EmphasizedContent-Styles-Border */
+    -moz-border-radius: 4px; /* EmphasizedContent-Styles-BorderStyle_Radius */
+    -webkit-border-radius: 4px; /* EmphasizedContent-Styles-BorderStyle_Radius */
+    border-radius: 4px; /* EmphasizedContent-Styles-BorderStyle_Radius */
+    -moz-box-shadow: 4px 4px 4px black; /* EmphasizedContent-Styles-BorderStyle_Shadow */
+    -webkit-box-shadow: 4px 4px 4px black; /* EmphasizedContent-Styles-BorderStyle_Shadow */
+    box-shadow: 4px 4px 4px black; /* EmphasizedContent-Styles-BorderStyle_Shadow */
+}
+
+.wm_template  .EmphasizedContent,
+#studio_designer.wm_template .EmphasizedContent {
+    /* EmphasizedContent-Styles-Font */
+    font-family: sans-serif; /* EmphasizedContent-Styles-Font_Family */
+    font-size: 12pt; /* EmphasizedContent-Styles-Font_TextSize */
+    color: #FFFFFF; /* EmphasizedContent-Styles-Font_Color */
+    font-weight: bold; /* EmphasizedContent-Styles-Font_Weight */
 
 
+       
+    /* EmphasizedContent-Styles-Background */
+    background-color: #444444; /* EmphasizedContent-Styles-Background_Color */
+    background-image: url(images/threeD.png); /* EmphasizedContent-Styles-Background_Image */
+    background-position: left top;  /* EmphasizedContent-Styles-Background_Image-Position */
+    background-repeat: repeat-x; /* EmphasizedContent-Styles-Background_Image-Repeat */
+}
 
-    .wm_template .wmcontentarea .wmcontentarea div.wmaccordion-header {
+.wm_template #studio_themesPage_themeDesigner_demoPanel .EmphasizedContent .wmlabel {
+    /* EmphasizedContent-Styles-Font */
+    font-family: sans-serif; /* EmphasizedContent-Styles-Font_Family */
+    font-size: 12pt; /* EmphasizedContent-Styles-Font_TextSize */
+    color: #FFFFFF; /* EmphasizedContent-Styles-Font_Color */
+    font-weight: bold; /* EmphasizedContent-Styles-Font_Weight */
+}
 
-	/* ContentPanel-HeadersActive-Font  + Headers-Default-Font */
-	font-family: sans-serif; /* ContentPanel-HeadersDefault-Font_Family */
-	font-size: 12pt; /* ContentPanel-HeadersDefault-Font_TextSize */
-	color: #FFFFFF; /* ContentPanel-HeadersActive-Font_Color */
-	font-weight: bold; /* ContentPanel-HeadersDefault-Font_Weight */
+    .wm_template .EmphasizedContent div.wmaccordion-header {
+	/* EmphasizedContent-HeadersActive-Font  + Headers-Default-Font */
+	font-family: sans-serif; /* EmphasizedContent-HeadersDefault-Font_Family */
+	font-size: 12pt; /* EmphasizedContent-HeadersDefault-Font_TextSize */
+	color: #FFFFFF; /* EmphasizedContent-HeadersActive-Font_Color */
+	font-weight: bold; /* EmphasizedContent-HeadersDefault-Font_Weight */
 
-	/* ContentPanel-HeadersActive-Background */
-	background-color: #444444; /* ContentPanel-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* ContentPanel-HeadersActive-Background_Image */
-	background-position: left top;  /* ContentPanel-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* ContentPanel-HeadersActive-Background_Image-Repeat */
+	/* EmphasizedContent-HeadersActive-Background */
+	background-color: #444444; /* EmphasizedContent-HeadersActive-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-HeadersActive-Background_Image */
+	background-position: left top;  /* EmphasizedContent-HeadersActive-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-HeadersActive-Background_Image-Repeat */
 
-	/* ContentPanel-HeadersDefault-BorderStyle_Radius */
-	-moz-border-radius: 4px; /* ContentPanel-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* ContentPanel-HeadersDefault-BorderStyle_Radius */
-	border-radius: 4px; /* ContentPanel-HeadersDefault-BorderStyle_Radius */
+	/* EmphasizedContent-HeadersDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* EmphasizedContent-HeadersDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* EmphasizedContent-HeadersDefault-BorderStyle_Radius */
+	border-radius: 4px; /* EmphasizedContent-HeadersDefault-BorderStyle_Radius */
 
 	padding-left: 10px;
     }
 
-    .wm_template .wmcontentarea .wmcontentarea div.wmaccordion .wmaccordion-collapsed {
-	/* ContentPanel-HeadersDefault-Font */
-	color: #FFFFFF; /* ContentPanel-HeadersDefault-Font_Color */
-	font-weight: bold; /* ContentPanel-HeadersDefault-Font_Weight */
-	font-family: sans-serif; /* ContentPanel-HeadersDefault-Font_Family */
-	font-size: 12pt; /* ContentPanel-HeadersDefault-Font_TextSize */
+    .wm_template .EmphasizedContent div.wmaccordion .wmaccordion-collapsed {
+	/* EmphasizedContent-HeadersDefault-Font */
+	color: #FFFFFF; /* EmphasizedContent-HeadersDefault-Font_Color */
+	font-weight: bold; /* EmphasizedContent-HeadersDefault-Font_Weight */
+	font-family: sans-serif; /* EmphasizedContent-HeadersDefault-Font_Family */
+	font-size: 12pt; /* EmphasizedContent-HeadersDefault-Font_TextSize */
 
 
-	/* ContentPanel-HeadersDefault-Background */
-	background-color: #444444; /* ContentPanel-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* ContentPanel-HeadersDefault-Background_Image */
-	background-position: left top;  /* ContentPanel-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* ContentPanel-HeadersDefault-Background_Image-Repeat */
+	/* EmphasizedContent-HeadersDefault-Background */
+	background-color: #444444; /* EmphasizedContent-HeadersDefault-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-HeadersDefault-Background_Image */
+	background-position: left top;  /* EmphasizedContent-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-HeadersDefault-Background_Image-Repeat */
 
-	/* ContentPanel-HeadersDefault-BorderStyle_Radius */
-	-moz-border-radius: 4px; /* ContentPanel-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* ContentPanel-HeadersDefault-BorderStyle_Radius */
-	border-radius: 4px; /* ContentPanel-HeadersDefault-BorderStyle_Radius */
+	/* EmphasizedContent-HeadersDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* EmphasizedContent-HeadersDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* EmphasizedContent-HeadersDefault-BorderStyle_Radius */
+	border-radius: 4px; /* EmphasizedContent-HeadersDefault-BorderStyle_Radius */
     }
 
-    .wm_template .wmcontentarea .wmcontentarea div.wmaccordion-header:hover, 
-    .wm_template .wmcontentarea .wmcontentarea div.wmaccordion wmaccordion-header.wmaccordion-collapsed:hover {
-	/* ContentPanel-HeadersHover-Font */
-	color: #FFFFFF; /* ContentPanel-HeadersHover-Font_Color */
+    .wm_template .EmphasizedContent div.wmaccordion-header:hover, 
+    .wm_template .EmphasizedContent div.wmaccordion wmaccordion-header.wmaccordion-collapsed:hover {
+	/* EmphasizedContent-HeadersHover-Font */
+	color: #FFFFFF; /* EmphasizedContent-HeadersHover-Font_Color */
 
-	/* ContentPanel-HeadersHover-Background */
-	background-color: #444444; /* ContentPanel-HeadersHover-Background_Color */
-	background-image: url(images/threeD.png); /* ContentPanel-HeadersHover-Background_Image */
-	background-position: left top;  /* ContentPanel-HeadersHover-Background_Image-Position */
-	background-repeat: repeat-x; /* ContentPanel-HeadersHover-Background_Image-Repeat */
+	/* EmphasizedContent-HeadersHover-Background */
+	background-color: #444444; /* EmphasizedContent-HeadersHover-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-HeadersHover-Background_Image */
+	background-position: left top;  /* EmphasizedContent-HeadersHover-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-HeadersHover-Background_Image-Repeat */
     }
 
-    .wm_template .wmcontentarea .wmcontentarea .wmaccordion .wmaccordion-content {
-	background-color: transparent;
-    }
     /* END SECTION wm.AccorionLayers / wm.AccordionDecorator */
 
-    /* BEGIN SECTION wm.FancyPanel */
 
 
-    /* END SECTION wm.FancyPanel */
+
+.wm_template .EmphasizedContent .wmFancyPanel-labelWidget {
+    /* EmphasizedContent-HeadersDefault-Font */
+    font-family: sans-serif; /* EmphasizedContent-HeadersDefault-Font_Family */
+    font-size: 12pt; /* EmphasizedContent-HeadersDefault-Font_TextSize */
+    color: #FFFFFF; /* EmphasizedContent-HeadersDefault-Font_Color */
+    font-weight: bold; /* EmphasizedContent-HeadersDefault-Font_Weight */
+
+    /* EmphasizedContent-HeadersDefault-Background */
+    background-color: #444444; /* EmphasizedContent-HeadersDefault-Background_Color */
+    background-image: url(images/threeD.png); /* EmphasizedContent-HeadersDefault-Background_Image */
+    background-position: left top;  /* EmphasizedContent-HeadersDefault-Background_Image-Position */
+    background-repeat: repeat-x; /* EmphasizedContent-HeadersDefault-Background_Image-Repeat */
+}
 
     /* BEGIN SECTION wm.TabLayers / wm.TabDecorator */
-    .wm_template .wmcontentarea .wmcontentarea div.wmtablayers-tabbar {
-	background: transparent;
-    }
-
     /* Tab buttons */
-    .wm_template .wmcontentarea .wmcontentarea button.wmtablayers-tab {
-	/* ContentPanel-HeadersDefault-Font */
-	font-family: sans-serif; /* ContentPanel-HeadersDefault-Font_Family */
-	color: #FFFFFF; /* ContentPanel-HeadersDefault-Font_Color */
-	font-weight: bold; /* ContentPanel-HeadersDefault-Font_Weight */
+    .wm_template .EmphasizedContent button.wmtablayers-tab {
+	/* EmphasizedContent-HeadersDefault-Font */
+	font-family: sans-serif; /* EmphasizedContent-HeadersDefault-Font_Family */
+	color: #FFFFFF; /* EmphasizedContent-HeadersDefault-Font_Color */
+	font-weight: bold; /* EmphasizedContent-HeadersDefault-Font_Weight */
 
-	/* ContentPanel-HeadersDefault-Background */
-	background-color: #444444; /* ContentPanel-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* ContentPanel-HeadersDefault-Background_Image */
-	background-position: left top;  /* ContentPanel-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* ContentPanel-HeadersDefault-Background_Image-Repeat */
+	/* EmphasizedContent-HeadersDefault-Background */
+	background-color: #444444; /* EmphasizedContent-HeadersDefault-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-HeadersDefault-Background_Image */
+	background-position: left top;  /* EmphasizedContent-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-HeadersDefault-Background_Image-Repeat */
 
-	/* ContentPanel-HeadersDefault-Border */
+	/* EmphasizedContent-HeadersDefault-Border */
 	border-width: 2px; /* editting this is problematic without also editting headerHeight */
 	border-bottom-color: transparent;
-	border-top-color: #444444; /* ContentPanel-HeadersDefault-Border_Color */
-	border-right-color:#444444; /* ContentPanel-HeadersDefault-Border_Color */
-	border-left-color:#444444; /* ContentPanel-HeadersDefault-Border_Color */
-
-	/* ContentPanel-HeadersDefault-BorderStyle_Radius */
-	-moz-border-radius-topleft: 8px; /* ContentPanel-HeadersDefault-BorderStyle_Radius */
-	-moz-border-radius-topright: 8px; /* ContentPanel-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-top-left-radius: 8px; /* ContentPanel-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-top-right-radius: 8px; /* ContentPanel-HeadersDefault-BorderStyle_Radius */
-	border-radius-topleft: 8px; /* ContentPanel-HeadersDefault-BorderStyle_Radius */
-	border-radius-topright: 8px; /* ContentPanel-HeadersDefault-BorderStyle_Radius */
+	border-top-color: #444444; /* EmphasizedContent-HeadersDefault-Border_Color */
+	border-right-color:#444444; /* EmphasizedContent-HeadersDefault-Border_Color */
+	border-left-color:#444444; /* EmphasizedContent-HeadersDefault-Border_Color */
     }
 
-    .wm_template .wmcontentarea .wmcontentarea .wmtablayers-tab:hover, .wm_template .wmcontentarea .wmcontentarea .wmtablayers-tab:focus {
-	/* ContentPanel-HeadersHover-Font */
-	color: #FFFFFF; /* ContentPanel-HeadersHover-Font_Color */
+    .wm_template .EmphasizedContent .wmtablayers-tab:hover, .wm_template .wmtablayers-tab:focus {
+	/* EmphasizedContent-HeadersHover-Font */
+	color: #FFFFFF; /* EmphasizedContent-HeadersHover-Font_Color */
 
-	/* ContentPanel-HeadersHover-Background */
-	background-color: #444444; /* ContentPanel-HeadersHover-Background_Color */
-	background-image: url(images/threeD.png); /* ContentPanel-HeadersHover-Background_Image */
-	background-position: left top;  /* ContentPanel-HeadersHover-Background_Image-Position */
-	background-repeat: repeat-x; /* ContentPanel-HeadersHover-Background_Image-Repeat */
+	/* EmphasizedContent-HeadersHover-Background */
+	background-color: #444444; /* EmphasizedContent-HeadersHover-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-HeadersHover-Background_Image */
+	background-position: left top;  /* EmphasizedContent-HeadersHover-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-HeadersHover-Background_Image-Repeat */
 
     }
 
-    /* Tab <input type='button'> elements need to handle browser focus as any other button */
-    .wm_template .wmcontentarea .wmcontentarea .wmtablayers-tab:focus {
-	outline-width: 0;
-    }
 
     /* Selected tab */
-    .wm_template .wmcontentarea .wmcontentarea .wmtablayers-tab.wmtablayers-selected,
-    .wm_template .wmcontentarea .wmcontentarea .wmtablayers-tab.wmtablayers-selected:hover,
-    .wm_template .wmcontentarea .wmcontentarea .wmtablayers-tab.wmtablayers-selected:focus {
-	/* ContentPanel-HeadersActive-Font */
-	color: #FFFFFF; /* ContentPanel-HeadersActive-Font_Color */
+    .wm_template .EmphasizedContent .wmtablayers-tab.wmtablayers-selected,
+    .wm_template .EmphasizedContent .wmtablayers-tab.wmtablayers-selected:hover,
+    .wm_template .EmphasizedContent .wmtablayers-tab.wmtablayers-selected:focus {
+	/* EmphasizedContent-HeadersActive-Font */
+	color: #FFFFFF; /* EmphasizedContent-HeadersActive-Font_Color */
 
-	/* ContentPanel-HeadersActive-Background */
-	background-color: #444444; /* ContentPanel-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* ContentPanel-HeadersActive-Background_Image */
-	background-position: left top;  /* ContentPanel-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* ContentPanel-HeadersActive-Background_Image-Repeat */
+	/* EmphasizedContent-HeadersActive-Background */
+	background-color: #444444; /* EmphasizedContent-HeadersActive-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-HeadersActive-Background_Image */
+	background-position: left top;  /* EmphasizedContent-HeadersActive-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-HeadersActive-Background_Image-Repeat */
     }
 
 
     /* END SECTION wm.TabLayers / wm.TabDecorator */
 
+
+    /* END ESCTION wm.TabLayers / wm.WizardLayers */
+
     /* BEGIN SECTION wm.WizardLayers */
 
-    /* Custom formatting for wizard tab with focus or hover on the <input type='button'/> */
-    .wm_template .wmcontentarea .wmcontentarea .wmwizardlayers-tab:focus,
-    .wm_template .wmcontentarea .wmcontentarea .wmwizardlayers-tab:hover {
-	color: black; /* Custom mouseover color */
+    /* TODO: Enable this property */
+    .wm_template .EmphasizedContent .wmwizardlayers-tab:focus,
+    .wm_template .EmphasizedContent .wmwizardlayers-tab:hover {
+	color: black; /* wm.WizardLayers-Active_Color */
     }
 
     /* END SECTION wm.WizardLayers */
+}
 
-    /* BEGIN SECTION Headers */
-    body.tundra.wm_template .wmcontentarea .wmcontentarea div.wmheader,
-    body.tundra .wm_template .wmcontentarea .wmcontentarea div.wmheader {
-	/* ContentPanel-HeadersDefault-Font */
-	font-family: sans-serif; /* ContentPanel-HeadersDefault-Font_Family */
-	font-size: 12pt; /* ContentPanel-HeadersDefault-Font_TextSize */
-	color: #FFFFFF; /* ContentPanel-HeadersDefault-Font_Color */
-	font-weight: bold; /* ContentPanel-HeadersDefault-Font_Weight */
 
-	/* ContentPanel-HeadersDefault-Border */
-	-moz-border-radius: 4px; /* ContentPanel-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* ContentPanel-HeadersDefault-BorderStyle_Radius */
-	border-radius: 4px; /* ContentPanel-HeadersDefault-BorderStyle_Radius */
+@media screen { /* TOCContent-Level */ 
 
-	/* ContentPanel-HeadersDefault-Background */
-	background-color: #444444; /* ContentPanel-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* ContentPanel-HeadersDefault-Background_Image */
-	background-position: left top;  /* ContentPanel-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* ContentPanel-HeadersDefault-Background_Image-Repeat */
+.wm_template .TOCContent {
+    /* TOCContent-Styles-Border */
+    -moz-border-radius: 4px; /* TOCContent-Styles-BorderStyle_Radius */
+    -webkit-border-radius: 4px; /* TOCContent-Styles-BorderStyle_Radius */
+    border-radius: 4px; /* TOCContent-Styles-BorderStyle_Radius */
+    -moz-box-shadow: 4px 4px 4px black; /* TOCContent-Styles-BorderStyle_Shadow */
+    -webkit-box-shadow: 4px 4px 4px black; /* TOCContent-Styles-BorderStyle_Shadow */
+    box-shadow: 4px 4px 4px black; /* TOCContent-Styles-BorderStyle_Shadow */
+}
+
+.wm_template  .TOCContent,
+#studio_designer.wm_template .TOCContent {
+    /* TOCContent-Styles-Font */
+    font-family: sans-serif; /* TOCContent-Styles-Font_Family */
+    font-size: 12pt; /* TOCContent-Styles-Font_TextSize */
+    color: #FFFFFF; /* TOCContent-Styles-Font_Color */
+    font-weight: bold; /* TOCContent-Styles-Font_Weight */
+
+
+    /* TOCContent-Styles-Background */
+    background-color: #444444; /* TOCContent-Styles-Background_Color */
+    background-image: url(images/threeD.png); /* TOCContent-Styles-Background_Image */
+    background-position: left top;  /* TOCContent-Styles-Background_Image-Position */
+    background-repeat: repeat-x; /* TOCContent-Styles-Background_Image-Repeat */
+}
+
+.wm_template #studio_themesPage_themeDesigner_demoPanel .TOCContent .wmlabel {
+    /* TOCContent-Styles-Font */
+    font-family: sans-serif; /* TOCContent-Styles-Font_Family */
+    font-size: 12pt; /* TOCContent-Styles-Font_TextSize */
+    color: #FFFFFF; /* TOCContent-Styles-Font_Color */
+    font-weight: bold; /* TOCContent-Styles-Font_Weight */
+}
+
+    .wm_template .TOCContent div.wmaccordion-header {
+	/* TOCContent-HeadersActive-Font  + Headers-Default-Font */
+	font-family: sans-serif; /* TOCContent-HeadersDefault-Font_Family */
+	font-size: 12pt; /* TOCContent-HeadersDefault-Font_TextSize */
+	color: #FFFFFF; /* TOCContent-HeadersActive-Font_Color */
+	font-weight: bold; /* TOCContent-HeadersDefault-Font_Weight */
+
+	/* TOCContent-HeadersActive-Background */
+	background-color: #444444; /* TOCContent-HeadersActive-Background_Color */
+	background-image: url(images/threeD.png); /* TOCContent-HeadersActive-Background_Image */
+	background-position: left top;  /* TOCContent-HeadersActive-Background_Image-Position */
+	background-repeat: repeat-x; /* TOCContent-HeadersActive-Background_Image-Repeat */
+
+	/* TOCContent-HeadersDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* TOCContent-HeadersDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* TOCContent-HeadersDefault-BorderStyle_Radius */
+	border-radius: 4px; /* TOCContent-HeadersDefault-BorderStyle_Radius */
+
+	padding-left: 10px;
     }
 
-    /* END SECTION Headers */
-    
-.wm_template .wmcontentarea .wmFancyPanel-labelWidget  {
-    /* ContentPanel-HeadersDefault-Font */
-    font-family: sans-serif; /* ContentPanel-HeadersDefault-Font_Family */
-    font-size: 12pt; /* ContentPanel-HeadersDefault-Font_TextSize */
-    color: #FFFFFF; /* ContentPanel-HeadersDefault-Font_Color */
-    font-weight: bold; /* ContentPanel-HeadersDefault-Font_Weight */
+    .wm_template .TOCContent div.wmaccordion .wmaccordion-collapsed {
+	/* TOCContent-HeadersDefault-Font */
+	color: #FFFFFF; /* TOCContent-HeadersDefault-Font_Color */
+	font-weight: bold; /* TOCContent-HeadersDefault-Font_Weight */
+	font-family: sans-serif; /* TOCContent-HeadersDefault-Font_Family */
+	font-size: 12pt; /* TOCContent-HeadersDefault-Font_TextSize */
 
-    /* ContentPanel-HeadersDefault-Background */
-    background-color: #444444; /* ContentPanel-HeadersDefault-Background_Color */
-    background-image: url(images/threeD.png); /* ContentPanel-HeadersDefault-Background_Image */
-    background-position: left top;  /* ContentPanel-HeadersDefault-Background_Image-Position */
-    background-repeat: repeat-x; /* ContentPanel-HeadersDefault-Background_Image-Repeat */
-}    
 
+	/* TOCContent-HeadersDefault-Background */
+	background-color: #444444; /* TOCContent-HeadersDefault-Background_Color */
+	background-image: url(images/threeD.png); /* TOCContent-HeadersDefault-Background_Image */
+	background-position: left top;  /* TOCContent-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* TOCContent-HeadersDefault-Background_Image-Repeat */
+
+	/* TOCContent-HeadersDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* TOCContent-HeadersDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* TOCContent-HeadersDefault-BorderStyle_Radius */
+	border-radius: 4px; /* TOCContent-HeadersDefault-BorderStyle_Radius */
+    }
+
+    .wm_template .TOCContent div.wmaccordion-header:hover, 
+    .wm_template .TOCContent div.wmaccordion wmaccordion-header.wmaccordion-collapsed:hover {
+	/* TOCContent-HeadersHover-Font */
+	color: #FFFFFF; /* TOCContent-HeadersHover-Font_Color */
+
+	/* TOCContent-HeadersHover-Background */
+	background-color: #444444; /* TOCContent-HeadersHover-Background_Color */
+	background-image: url(images/threeD.png); /* TOCContent-HeadersHover-Background_Image */
+	background-position: left top;  /* TOCContent-HeadersHover-Background_Image-Position */
+	background-repeat: repeat-x; /* TOCContent-HeadersHover-Background_Image-Repeat */
+    }
+
+    /* END SECTION wm.AccorionLayers / wm.AccordionDecorator */
+
+
+
+
+.wm_template .TOCContent .wmFancyPanel-labelWidget {
+    /* TOCContent-HeadersDefault-Font */
+    font-family: sans-serif; /* TOCContent-HeadersDefault-Font_Family */
+    font-size: 12pt; /* TOCContent-HeadersDefault-Font_TextSize */
+    color: #FFFFFF; /* TOCContent-HeadersDefault-Font_Color */
+    font-weight: bold; /* TOCContent-HeadersDefault-Font_Weight */
+
+    /* TOCContent-HeadersDefault-Background */
+    background-color: #444444; /* TOCContent-HeadersDefault-Background_Color */
+    background-image: url(images/threeD.png); /* TOCContent-HeadersDefault-Background_Image */
+    background-position: left top;  /* TOCContent-HeadersDefault-Background_Image-Position */
+    background-repeat: repeat-x; /* TOCContent-HeadersDefault-Background_Image-Repeat */
+}
+
+    /* BEGIN SECTION wm.TabLayers / wm.TabDecorator */
+    /* Tab buttons */
+    .wm_template .TOCContent button.wmtablayers-tab {
+	/* TOCContent-HeadersDefault-Font */
+	font-family: sans-serif; /* TOCContent-HeadersDefault-Font_Family */
+	color: #FFFFFF; /* TOCContent-HeadersDefault-Font_Color */
+	font-weight: bold; /* TOCContent-HeadersDefault-Font_Weight */
+
+	/* TOCContent-HeadersDefault-Background */
+	background-color: #444444; /* TOCContent-HeadersDefault-Background_Color */
+	background-image: url(images/threeD.png); /* TOCContent-HeadersDefault-Background_Image */
+	background-position: left top;  /* TOCContent-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* TOCContent-HeadersDefault-Background_Image-Repeat */
+
+	/* TOCContent-HeadersDefault-Border */
+	border-width: 2px; /* editting this is problematic without also editting headerHeight */
+	border-bottom-color: transparent;
+	border-top-color: #444444; /* TOCContent-HeadersDefault-Border_Color */
+	border-right-color:#444444; /* TOCContent-HeadersDefault-Border_Color */
+	border-left-color:#444444; /* TOCContent-HeadersDefault-Border_Color */
+    }
+
+    .wm_template .TOCContent .wmtablayers-tab:hover, .wm_template .wmtablayers-tab:focus {
+	/* TOCContent-HeadersHover-Font */
+	color: #FFFFFF; /* TOCContent-HeadersHover-Font_Color */
+
+	/* TOCContent-HeadersHover-Background */
+	background-color: #444444; /* TOCContent-HeadersHover-Background_Color */
+	background-image: url(images/threeD.png); /* TOCContent-HeadersHover-Background_Image */
+	background-position: left top;  /* TOCContent-HeadersHover-Background_Image-Position */
+	background-repeat: repeat-x; /* TOCContent-HeadersHover-Background_Image-Repeat */
+
+    }
+
+
+    /* Selected tab */
+    .wm_template .TOCContent .wmtablayers-tab.wmtablayers-selected,
+    .wm_template .TOCContent .wmtablayers-tab.wmtablayers-selected:hover,
+    .wm_template .TOCContent .wmtablayers-tab.wmtablayers-selected:focus {
+	/* TOCContent-HeadersActive-Font */
+	color: #FFFFFF; /* TOCContent-HeadersActive-Font_Color */
+
+	/* TOCContent-HeadersActive-Background */
+	background-color: #444444; /* TOCContent-HeadersActive-Background_Color */
+	background-image: url(images/threeD.png); /* TOCContent-HeadersActive-Background_Image */
+	background-position: left top;  /* TOCContent-HeadersActive-Background_Image-Position */
+	background-repeat: repeat-x; /* TOCContent-HeadersActive-Background_Image-Repeat */
+    }
+
+
+    /* END SECTION wm.TabLayers / wm.TabDecorator */
+
+
+    /* END ESCTION wm.TabLayers / wm.WizardLayers */
+
+    /* BEGIN SECTION wm.WizardLayers */
+
+    /* TODO: Enable this property */
+    .wm_template .TOCContent .wmwizardlayers-tab:focus,
+    .wm_template .TOCContent .wmwizardlayers-tab:hover {
+	color: black; /* wm.WizardLayers-Active_Color */
+    }
+
+    /* END SECTION wm.WizardLayers */
 }
 
 
 
+@media screen { /* ToolbarContent-Level */ 
+
+.wm_template .ToolbarContent {
+    /* ToolbarContent-Styles-Border */
+    -moz-border-radius: 4px; /* ToolbarContent-Styles-BorderStyle_Radius */
+    -webkit-border-radius: 4px; /* ToolbarContent-Styles-BorderStyle_Radius */
+    border-radius: 4px; /* ToolbarContent-Styles-BorderStyle_Radius */
+    -moz-box-shadow: 4px 4px 4px black; /* ToolbarContent-Styles-BorderStyle_Shadow */
+    -webkit-box-shadow: 4px 4px 4px black; /* ToolbarContent-Styles-BorderStyle_Shadow */
+    box-shadow: 4px 4px 4px black; /* ToolbarContent-Styles-BorderStyle_Shadow */
+}
+
+.wm_template  .ToolbarContent,
+#studio_designer.wm_template .ToolbarContent {
+    /* ToolbarContent-Styles-Font */
+    font-family: sans-serif; /* ToolbarContent-Styles-Font_Family */
+    font-size: 12pt; /* ToolbarContent-Styles-Font_TextSize */
+    color: #FFFFFF; /* ToolbarContent-Styles-Font_Color */
+    font-weight: bold; /* ToolbarContent-Styles-Font_Weight */
+
+
+    /* ToolbarContent-Styles-Background */
+    background-color: #444444; /* ToolbarContent-Styles-Background_Color */
+    background-image: url(images/threeD.png); /* ToolbarContent-Styles-Background_Image */
+    background-position: left top;  /* ToolbarContent-Styles-Background_Image-Position */
+    background-repeat: repeat-x; /* ToolbarContent-Styles-Background_Image-Repeat */
+}
+
+.wm_template #studio_themesPage_themeDesigner_demoPanel .ToolbarContent .wmlabel {
+    /* ToolbarContent-Styles-Font */
+    font-family: sans-serif; /* ToolbarContent-Styles-Font_Family */
+    font-size: 12pt; /* ToolbarContent-Styles-Font_TextSize */
+    color: #FFFFFF; /* ToolbarContent-Styles-Font_Color */
+    font-weight: bold; /* ToolbarContent-Styles-Font_Weight */
+}
+
+    .wm_template .ToolbarContent div.wmaccordion-header {
+	/* ToolbarContent-HeadersActive-Font  + Headers-Default-Font */
+	font-family: sans-serif; /* ToolbarContent-HeadersDefault-Font_Family */
+	font-size: 12pt; /* ToolbarContent-HeadersDefault-Font_TextSize */
+	color: #FFFFFF; /* ToolbarContent-HeadersActive-Font_Color */
+	font-weight: bold; /* ToolbarContent-HeadersDefault-Font_Weight */
+
+	/* ToolbarContent-HeadersActive-Background */
+	background-color: #444444; /* ToolbarContent-HeadersActive-Background_Color */
+	background-image: url(images/threeD.png); /* ToolbarContent-HeadersActive-Background_Image */
+	background-position: left top;  /* ToolbarContent-HeadersActive-Background_Image-Position */
+	background-repeat: repeat-x; /* ToolbarContent-HeadersActive-Background_Image-Repeat */
+
+	/* ToolbarContent-HeadersDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* ToolbarContent-HeadersDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* ToolbarContent-HeadersDefault-BorderStyle_Radius */
+	border-radius: 4px; /* ToolbarContent-HeadersDefault-BorderStyle_Radius */
+
+	padding-left: 10px;
+    }
+
+    .wm_template .ToolbarContent div.wmaccordion .wmaccordion-collapsed {
+	/* ToolbarContent-HeadersDefault-Font */
+	color: #FFFFFF; /* ToolbarContent-HeadersDefault-Font_Color */
+	font-weight: bold; /* ToolbarContent-HeadersDefault-Font_Weight */
+	font-family: sans-serif; /* ToolbarContent-HeadersDefault-Font_Family */
+	font-size: 12pt; /* ToolbarContent-HeadersDefault-Font_TextSize */
+
+
+	/* ToolbarContent-HeadersDefault-Background */
+	background-color: #444444; /* ToolbarContent-HeadersDefault-Background_Color */
+	background-image: url(images/threeD.png); /* ToolbarContent-HeadersDefault-Background_Image */
+	background-position: left top;  /* ToolbarContent-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* ToolbarContent-HeadersDefault-Background_Image-Repeat */
+
+	/* ToolbarContent-HeadersDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* ToolbarContent-HeadersDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* ToolbarContent-HeadersDefault-BorderStyle_Radius */
+	border-radius: 4px; /* ToolbarContent-HeadersDefault-BorderStyle_Radius */
+    }
+
+    .wm_template .ToolbarContent div.wmaccordion-header:hover, 
+    .wm_template .ToolbarContent div.wmaccordion wmaccordion-header.wmaccordion-collapsed:hover {
+	/* ToolbarContent-HeadersHover-Font */
+	color: #FFFFFF; /* ToolbarContent-HeadersHover-Font_Color */
+
+	/* ToolbarContent-HeadersHover-Background */
+	background-color: #444444; /* ToolbarContent-HeadersHover-Background_Color */
+	background-image: url(images/threeD.png); /* ToolbarContent-HeadersHover-Background_Image */
+	background-position: left top;  /* ToolbarContent-HeadersHover-Background_Image-Position */
+	background-repeat: repeat-x; /* ToolbarContent-HeadersHover-Background_Image-Repeat */
+    }
+
+    /* END SECTION wm.AccorionLayers / wm.AccordionDecorator */
+
+
+
+
+.wm_template .ToolbarContent .wmFancyPanel-labelWidget {
+    /* ToolbarContent-HeadersDefault-Font */
+    font-family: sans-serif; /* ToolbarContent-HeadersDefault-Font_Family */
+    font-size: 12pt; /* ToolbarContent-HeadersDefault-Font_TextSize */
+    color: #FFFFFF; /* ToolbarContent-HeadersDefault-Font_Color */
+    font-weight: bold; /* ToolbarContent-HeadersDefault-Font_Weight */
+
+    /* ToolbarContent-HeadersDefault-Background */
+    background-color: #444444; /* ToolbarContent-HeadersDefault-Background_Color */
+    background-image: url(images/threeD.png); /* ToolbarContent-HeadersDefault-Background_Image */
+    background-position: left top;  /* ToolbarContent-HeadersDefault-Background_Image-Position */
+    background-repeat: repeat-x; /* ToolbarContent-HeadersDefault-Background_Image-Repeat */
+}
+
+    /* BEGIN SECTION wm.TabLayers / wm.TabDecorator */
+    /* Tab buttons */
+    .wm_template .ToolbarContent button.wmtablayers-tab {
+	/* ToolbarContent-HeadersDefault-Font */
+	font-family: sans-serif; /* ToolbarContent-HeadersDefault-Font_Family */
+	color: #FFFFFF; /* ToolbarContent-HeadersDefault-Font_Color */
+	font-weight: bold; /* ToolbarContent-HeadersDefault-Font_Weight */
+
+	/* ToolbarContent-HeadersDefault-Background */
+	background-color: #444444; /* ToolbarContent-HeadersDefault-Background_Color */
+	background-image: url(images/threeD.png); /* ToolbarContent-HeadersDefault-Background_Image */
+	background-position: left top;  /* ToolbarContent-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* ToolbarContent-HeadersDefault-Background_Image-Repeat */
+
+	/* ToolbarContent-HeadersDefault-Border */
+	border-width: 2px; /* editting this is problematic without also editting headerHeight */
+	border-bottom-color: transparent;
+	border-top-color: #444444; /* ToolbarContent-HeadersDefault-Border_Color */
+	border-right-color:#444444; /* ToolbarContent-HeadersDefault-Border_Color */
+	border-left-color:#444444; /* ToolbarContent-HeadersDefault-Border_Color */
+    }
+
+    .wm_template .ToolbarContent .wmtablayers-tab:hover, .wm_template .wmtablayers-tab:focus {
+	/* ToolbarContent-HeadersHover-Font */
+	color: #FFFFFF; /* ToolbarContent-HeadersHover-Font_Color */
+
+	/* ToolbarContent-HeadersHover-Background */
+	background-color: #444444; /* ToolbarContent-HeadersHover-Background_Color */
+	background-image: url(images/threeD.png); /* ToolbarContent-HeadersHover-Background_Image */
+	background-position: left top;  /* ToolbarContent-HeadersHover-Background_Image-Position */
+	background-repeat: repeat-x; /* ToolbarContent-HeadersHover-Background_Image-Repeat */
+
+    }
+
+
+    /* Selected tab */
+    .wm_template .ToolbarContent .wmtablayers-tab.wmtablayers-selected,
+    .wm_template .ToolbarContent .wmtablayers-tab.wmtablayers-selected:hover,
+    .wm_template .ToolbarContent .wmtablayers-tab.wmtablayers-selected:focus {
+	/* ToolbarContent-HeadersActive-Font */
+	color: #FFFFFF; /* ToolbarContent-HeadersActive-Font_Color */
+
+	/* ToolbarContent-HeadersActive-Background */
+	background-color: #444444; /* ToolbarContent-HeadersActive-Background_Color */
+	background-image: url(images/threeD.png); /* ToolbarContent-HeadersActive-Background_Image */
+	background-position: left top;  /* ToolbarContent-HeadersActive-Background_Image-Position */
+	background-repeat: repeat-x; /* ToolbarContent-HeadersActive-Background_Image-Repeat */
+    }
+
+
+    /* END SECTION wm.TabLayers / wm.TabDecorator */
+
+
+    /* END ESCTION wm.TabLayers / wm.WizardLayers */
+
+    /* BEGIN SECTION wm.WizardLayers */
+
+    /* TODO: Enable this property */
+    .wm_template .ToolbarContent .wmwizardlayers-tab:focus,
+    .wm_template .ToolbarContent .wmwizardlayers-tab:hover {
+	color: black; /* wm.WizardLayers-Active_Color */
+    }
+
+    /* END SECTION wm.WizardLayers */
+}

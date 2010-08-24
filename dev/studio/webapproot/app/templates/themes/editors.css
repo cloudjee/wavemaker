@@ -1,4 +1,10 @@
-/* BEGIN SECTION wm.AbstractEditor */
+  /**************************************************************************************************
+   * TYPE:        wm.AbstractEditor / wm._BaseEditor
+   *
+   * DESCRIPTION: Sets the styling of all editors, as well as a few things I've arbitrarily linked to 
+   *              editor style such as the progress bar.  The first section of this document
+   *              consists of common editors styles regardless of what kind of panel the editor is in.
+   ************************************************************************************************/
 
 /* Give editors the standard border color, and get rid of the outline styling which is unnecessary and looks bad in webkit */
 .wm_template .wmeditor .dijitTextBox.dijitFocused,
@@ -14,7 +20,9 @@
     font-weight: inherit;
 }
 
-/* Make all editors equally rounded */
+/* Make all editors equally rounded.  This is not for technical reasons.  It is my opinion that a theme should
+ * allow some things to vary, and other things should provide a consistent common look.
+ */
 .wm_template  .wmeditor .dijitTextBox,
 .wm_template  .wmeditor .dijitTextArea,
 .wm_template  .wmeditor .dijitComboBox
@@ -25,6 +33,7 @@
      border-radius: 4px; /* Common-Editor_BorderStyle_Radius */
 }
 
+/* Can't round the top edges of the richtext editor until we're ready to tackle rounding dojo's toolbar */
 .wm_template .wmeditor.wmrichtext {
     /* Common-Editor_BorderStyle_Radius */
     -moz-border-radius-bottomleft: 4px;  /* Common-Editor_BorderStyle_Radius */
@@ -37,14 +46,21 @@
 
 
 
-/* ComboBox arrow button */
+  /**************************************************************************************************
+   * TYPE:        dijit.form.ComboBox/FilteringSelect/Select popup button
+   *
+   * DESCRIPTION: We need to set the background color and background image for the menu's popup
+   *              button.  Much trickier is setting the right radius to match the outer radius
+   *              used for the editor.  It can't use the exact same radius value; has to be 
+   *              a bit smaller radius, but I don't yet have an automated rule for how much
+   *             smaller.
+   ************************************************************************************************/
 .wm_template .wmeditor .dijitComboBox .dijitArrowButton {
     background-color: #666666; /* Document-HeadersDefault-Background_Color */
     background-image: none;
 }
 
 .wm_template .wmeditor .dijitComboBox .dijitArrowButton {
-    /* Auto calculate this at 2px less than the radius of all editors */
     -moz-border-radius-bottomright: 2px; /* wm.SelectMenu-Inner_Radius */
     -moz-border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
     -webkit-border-bottom-right-radius: 2px;/* wm.SelectMenu-Inner_Radius */
@@ -53,11 +69,8 @@
     border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
 }
 
-/* ComboBox arrow button: use our custom down arrow image, and complete the rounding on the right */
 .wm_template .wmeditor .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
 	background-image: url(images/comboArrowDown.png); /* wm.SelectMenu-Down-Arrow_Image */
-
-        /* Auto calculate this at 2px less than the radius of all editors */
         -moz-border-radius-bottomright: 2px;/* wm.SelectMenu-Inner_Radius */
         -moz-border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
         -webkit-border-bottom-right-radius: 2px;/* wm.SelectMenu-Inner_Radius */
@@ -66,7 +79,14 @@
          border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
 }
 
-
+  /**************************************************************************************************
+   * TYPE:        Slider
+   *
+   * TODO:        I haven't really worked in support for slider into themes.  Color and Background
+   *              should show up when editting the slider widget in the theme designer or colors/images
+   *              should be automatically assigned. I don't think this gets so much use that I've 
+   *              put in the effort just yet.
+   ************************************************************************************************/
 .wm_template .dijitSlider .dijitProgressBarLabel {
     color: white;
 }
@@ -77,6 +97,13 @@
 }
 
 
+
+  /**************************************************************************************************
+   * TYPE:        wm.AbstractEditor / wm._BaseEditor (default settings)
+   *
+   * DESCRIPTION: All styles applied at the Document-Level are never disabled, and apply anywhere
+   *              that another panel class doesn't override the behavior.
+   ************************************************************************************************/
 @media screen { /* Document-Level */ 
 
     .wm_template .wmeditor .dijitTextBox,
@@ -147,74 +174,74 @@
 }
 
 
-@media screen { /* PageContent-Level */ 
-    .wm_template .wmcontentarea .wmeditor .dijitTextBox,
-    .wm_template .wmcontentarea .wmeditor .dijitTextArea,
-    .wm_template .wmcontentarea .wmeditor .dijitComboBox,
-    .wm_template .wmcontentarea .dijitTimePickerItem,
-    .wm_template .wmcontentarea .wmeditor .RichTextEditable iframe {
-	/* PageContent-EditorsDefault-Border */
-	border-color: #666666;  /* PageContent-EditorsDefault-Border_Color */
-	border-width: 1px; /* PageContent-EditorsDefault-Border_BorderSize */
+@media screen { /* MainContent-Level */ 
+    .wm_template .MainContent .wmeditor .dijitTextBox,
+    .wm_template .MainContent .wmeditor .dijitTextArea,
+    .wm_template .MainContent .wmeditor .dijitComboBox,
+    .wm_template .MainContent .dijitTimePickerItem,
+    .wm_template .MainContent .wmeditor .RichTextEditable iframe {
+	/* MainContent-EditorsDefault-Border */
+	border-color: #666666;  /* MainContent-EditorsDefault-Border_Color */
+	border-width: 1px; /* MainContent-EditorsDefault-Border_BorderSize */
 
-	/* PageContent-EditorsDefault-Font */
-	font-family: sans-serif; /* PageContent-EditorsDefault-Font_Family */
-	font-size: 12pt; /* PageContent-EditorsDefault-Font_TextSize */
-	color: #FFFFFF; /* PageContent-EditorsDefault-Font_Color */
-	font-weight: bold; /* PageContent-EditorsDefault-Font_Weight */
+	/* MainContent-EditorsDefault-Font */
+	font-family: sans-serif; /* MainContent-EditorsDefault-Font_Family */
+	font-size: 12pt; /* MainContent-EditorsDefault-Font_TextSize */
+	color: #FFFFFF; /* MainContent-EditorsDefault-Font_Color */
+	font-weight: bold; /* MainContent-EditorsDefault-Font_Weight */
 
-	/* PageContent-EditorsDefault-Background */
-	background-color: #444444; /* PageContent-EditorsDefault-Background_Color */
-	background-image: url(images/threeD.png); /* PageContent-EditorsDefault-Background_Image */
-	background-position: left top;  /* PageContent-EditorsDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* PageContent-EditorsDefault-Background_Image-Repeat */
+	/* MainContent-EditorsDefault-Background */
+	background-color: #444444; /* MainContent-EditorsDefault-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-EditorsDefault-Background_Image */
+	background-position: left top;  /* MainContent-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-EditorsDefault-Background_Image-Repeat */
 
     }
     .wm_template .wmeditor.wmrichtext {
-	/* PageContent-EditorsDefault-BorderStyle_Radius */
-	-moz-border-radius-bottomleft: 4px;  /* PageContent-EditorsDefault-BorderStyle_Radius */
-	-moz-border-radius-bottomright: 4px; /* PageContent-EditorsDefault-BorderStyle_Radius */
-	-webkit-border-bottom-left-radius: 4px; /* PageContent-EditorsDefault-BorderStyle_Radius */
-	-webkit-border-bottom-right-radius: 4px; /* PageContent-EditorsDefault-BorderStyle_Radius */
-	border-radius-bottomleft: 4px; /* PageContent-EditorsDefault-BorderStyle_Radius */
-	border-radius-bottomright: 4px; /* PageContent-EditorsDefault-BorderStyle_Radius */
+	/* MainContent-EditorsDefault-BorderStyle_Radius */
+	-moz-border-radius-bottomleft: 4px;  /* MainContent-EditorsDefault-BorderStyle_Radius */
+	-moz-border-radius-bottomright: 4px; /* MainContent-EditorsDefault-BorderStyle_Radius */
+	-webkit-border-bottom-left-radius: 4px; /* MainContent-EditorsDefault-BorderStyle_Radius */
+	-webkit-border-bottom-right-radius: 4px; /* MainContent-EditorsDefault-BorderStyle_Radius */
+	border-radius-bottomleft: 4px; /* MainContent-EditorsDefault-BorderStyle_Radius */
+	border-radius-bottomright: 4px; /* MainContent-EditorsDefault-BorderStyle_Radius */
     }
 
-    .wm_template .wmcontentarea .wmeditor .dijitTextBox.dijitHover,
-    .wm_template .wmcontentarea .wmeditor .dijitTextArea:hover,
-    .wm_template .wmcontentarea .wmeditor .dijitComboBox.dijitHover,
-    .wm_template .wmcontentarea .wmeditor .RichTextEditable:hover iframe,
-    .wm_template .wmcontentarea .dijitTimePickerMarker.dijitTimePickerMarkerHover,
-    .wm_template .wmcontentarea .dijitTimePickerItem.dijitTimePickerItemHover {
-	/* PageContent-EditorsHover-Font */
-	color: #FFFFFF; /* PageContent-EditorsHover-Font_Color */
+    .wm_template .MainContent .wmeditor .dijitTextBox.dijitHover,
+    .wm_template .MainContent .wmeditor .dijitTextArea:hover,
+    .wm_template .MainContent .wmeditor .dijitComboBox.dijitHover,
+    .wm_template .MainContent .wmeditor .RichTextEditable:hover iframe,
+    .wm_template .MainContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
+    .wm_template .MainContent .dijitTimePickerItem.dijitTimePickerItemHover {
+	/* MainContent-EditorsHover-Font */
+	color: #FFFFFF; /* MainContent-EditorsHover-Font_Color */
 
-	border-color: #666666;  /* PageContent-EditorsHover-Border_Color */
+	border-color: #666666;  /* MainContent-EditorsHover-Border_Color */
 
-	/* PageContent-EditorsHover-Background */
-	background-color: #444444; /* PageContent-EditorsHover-Background_Color */
-	background-image: url(images/threeD.png); /* PageContent-EditorsHover-Background_Image */
-	background-position: left top;  /* PageContent-EditorsHover-Background_Image-Position */
-	background-repeat: repeat-x; /* PageContent-EditorsHover-Background_Image-Repeat */
+	/* MainContent-EditorsHover-Background */
+	background-color: #444444; /* MainContent-EditorsHover-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-EditorsHover-Background_Image */
+	background-position: left top;  /* MainContent-EditorsHover-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-EditorsHover-Background_Image-Repeat */
     }
 
-    .wm_template .wmcontentarea .wmeditor .dijitTextBox.dijitFocused,
-    .wm_template .wmcontentarea .wmeditor .dijitTextBox.dijitFocused.dijitHover,
-    .wm_template .wmcontentarea .wmeditor .dijitTextArea.dijitFocused,
-    .wm_template .wmcontentarea .wmeditor .dijitTextArea.dijitFocused:hover,
-    .wm_template .wmcontentarea .wmeditor .dijitComboBox.dijitFocused,
-    .wm_template .wmcontentarea .wmeditor .dijitComboBox.dijitFocused.dijitHover,
-    .wm_template .wmcontentarea .wmeditor .RichTextEditable.Focused iframe {
-	/* PageContent-EditorsFocus-Font */
-	color: #FFFFFF; /* PageContent-EditorsFocus-Font_Color */
+    .wm_template .MainContent .wmeditor .dijitTextBox.dijitFocused,
+    .wm_template .MainContent .wmeditor .dijitTextBox.dijitFocused.dijitHover,
+    .wm_template .MainContent .wmeditor .dijitTextArea.dijitFocused,
+    .wm_template .MainContent .wmeditor .dijitTextArea.dijitFocused:hover,
+    .wm_template .MainContent .wmeditor .dijitComboBox.dijitFocused,
+    .wm_template .MainContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_template .MainContent .wmeditor .RichTextEditable.Focused iframe {
+	/* MainContent-EditorsFocus-Font */
+	color: #FFFFFF; /* MainContent-EditorsFocus-Font_Color */
 
-	border-color: #666666;  /* PageContent-EditorsFocus-Border_Color */
+	border-color: #666666;  /* MainContent-EditorsFocus-Border_Color */
 
-	/* PageContent-EditorsFocus-Background */
-	background-color: #444444; /* PageContent-EditorsFocus-Background_Color */
-	background-image: url(images/threeD.png); /* PageContent-EditorsFocus-Background_Image */
-	background-position: left top;  /* PageContent-EditorsFocus-Background_Image-Position */
-	background-repeat: repeat-x; /* PageContent-EditorsFocus-Background_Image-Repeat */
+	/* MainContent-EditorsFocus-Background */
+	background-color: #444444; /* MainContent-EditorsFocus-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-EditorsFocus-Background_Image */
+	background-position: left top;  /* MainContent-EditorsFocus-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-EditorsFocus-Background_Image-Repeat */
     }
 
     
@@ -222,86 +249,201 @@
 }
 
 
-@media screen { /* ContentPanel-Level */ 
+@media screen { /* EmphasizedContent-Level */ 
     /* BEGIN inner content panel editors */
 
-    .wm_template .wmcontentarea .wmcontentarea .wmeditor .dijitTextBox,
-    .wm_template .wmcontentarea .wmcontentarea .wmeditor .dijitTextArea,
-    .wm_template .wmcontentarea .wmcontentarea .wmeditor .dijitComboBox,
-    .wm_template .wmcontentarea .wmcontentarea .dijitTimePickerItem,
-    .wm_template .wmcontentarea .wmcontentarea .wmeditor .RichTextEditable iframe {
-	/* ContentPanel-EditorsDefault-Border */
-	border-color: #666666;  /* ContentPanel-EditorsDefault-Border_Color */
-	border-width: 1px; /* ContentPanel-EditorsDefault-Border_BorderSize */
+    .wm_template .EmphasizedContent .wmeditor .dijitTextBox,
+    .wm_template .EmphasizedContent .wmeditor .dijitTextArea,
+    .wm_template .EmphasizedContent .wmeditor .dijitComboBox,
+    .wm_template .EmphasizedContent .dijitTimePickerItem,
+    .wm_template .EmphasizedContent .wmeditor .RichTextEditable iframe {
+	/* EmphasizedContent-EditorsDefault-Border */
+	border-color: #666666;  /* EmphasizedContent-EditorsDefault-Border_Color */
+	border-width: 1px; /* EmphasizedContent-EditorsDefault-Border_BorderSize */
 
-	/* ContentPanel-EditorsDefault-Font */
-	font-family: sans-serif; /* ContentPanel-EditorsDefault-Font_Family */
-	font-size: 12pt; /* ContentPanel-EditorsDefault-Font_TextSize */
-	color: #FFFFFF; /* ContentPanel-EditorsDefault-Font_Color */
-	font-weight: bold; /* ContentPanel-EditorsDefault-Font_Weight */
+	/* EmphasizedContent-EditorsDefault-Font */
+	font-family: sans-serif; /* EmphasizedContent-EditorsDefault-Font_Family */
+	font-size: 12pt; /* EmphasizedContent-EditorsDefault-Font_TextSize */
+	color: #FFFFFF; /* EmphasizedContent-EditorsDefault-Font_Color */
+	font-weight: bold; /* EmphasizedContent-EditorsDefault-Font_Weight */
 
-	/* ContentPanel-EditorsDefault-Background */
-	background-color: #444444; /* ContentPanel-EditorsDefault-Background_Color */
-	background-image: url(images/threeD.png); /* ContentPanel-EditorsDefault-Background_Image */
-	background-position: left top;  /* ContentPanel-EditorsDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* ContentPanel-EditorsDefault-Background_Image-Repeat */
+	/* EmphasizedContent-EditorsDefault-Background */
+	background-color: #444444; /* EmphasizedContent-EditorsDefault-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-EditorsDefault-Background_Image */
+	background-position: left top;  /* EmphasizedContent-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-EditorsDefault-Background_Image-Repeat */
 
     }
 
-    .wm_template .wmcontentarea .wmcontentarea .wmeditor .dijitTextBox.dijitHover,
-    .wm_template .wmcontentarea .wmcontentarea .wmeditor .dijitTextArea:hover,
-    .wm_template .wmcontentarea .wmcontentarea .wmeditor .dijitComboBox.dijitHover,
-    .wm_template .wmcontentarea .wmcontentarea .wmeditor .RichTextEditable:hover iframe,
-    .wm_template .wmcontentarea .wmcontentarea .dijitTimePickerMarker.dijitTimePickerMarkerHover,
-    .wm_template .wmcontentarea .wmcontentarea .dijitTimePickerItem.dijitTimePickerItemHover {
-	/* ContentPanel-EditorsHover-Font */
-	color: #FFFFFF; /* ContentPanel-EditorsHover-Font_Color */
+    .wm_template .EmphasizedContent .wmeditor .dijitTextBox.dijitHover,
+    .wm_template .EmphasizedContent .wmeditor .dijitTextArea:hover,
+    .wm_template .EmphasizedContent .wmeditor .dijitComboBox.dijitHover,
+    .wm_template .EmphasizedContent .wmeditor .RichTextEditable:hover iframe,
+    .wm_template .EmphasizedContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
+    .wm_template .EmphasizedContent .dijitTimePickerItem.dijitTimePickerItemHover {
+	/* EmphasizedContent-EditorsHover-Font */
+	color: #FFFFFF; /* EmphasizedContent-EditorsHover-Font_Color */
 
-	border-color: #666666;  /* ContentPanel-EditorsHover-Border_Color */
+	border-color: #666666;  /* EmphasizedContent-EditorsHover-Border_Color */
 
-	/* ContentPanel-EditorsHover-Background */
-	background-color: #444444; /* ContentPanel-EditorsHover-Background_Color */
-	background-image: url(images/threeD.png); /* ContentPanel-EditorsHover-Background_Image */
-	background-position: left top;  /* ContentPanel-EditorsHover-Background_Image-Position */
-	background-repeat: repeat-x; /* ContentPanel-EditorsHover-Background_Image-Repeat */
+	/* EmphasizedContent-EditorsHover-Background */
+	background-color: #444444; /* EmphasizedContent-EditorsHover-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-EditorsHover-Background_Image */
+	background-position: left top;  /* EmphasizedContent-EditorsHover-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-EditorsHover-Background_Image-Repeat */
     }
 
-    .wm_template .wmcontentarea .wmcontentarea .wmeditor .dijitTextBox.dijitFocused,
-    .wm_template .wmcontentarea .wmcontentarea .wmeditor .dijitTextBox.dijitFocused.dijitHover,
-    .wm_template .wmcontentarea .wmcontentarea .wmeditor .dijitTextArea.dijitFocused,
-    .wm_template .wmcontentarea .wmcontentarea .wmeditor .dijitTextArea.dijitFocused:hover,
-    .wm_template .wmcontentarea .wmcontentarea .wmeditor .dijitComboBox.dijitFocused,
-    .wm_template .wmcontentarea .wmcontentarea .wmeditor .dijitComboBox.dijitFocused.dijitHover,
-    .wm_template .wmcontentarea .wmcontentarea .wmeditor .RichTextEditable.Focused iframe {
-	/* ContentPanel-EditorsFocus-Font */
-	color: #FFFFFF; /* ContentPanel-EditorsFocus-Font_Color */
+    .wm_template .EmphasizedContent .wmeditor .dijitTextBox.dijitFocused,
+    .wm_template .EmphasizedContent .wmeditor .dijitTextBox.dijitFocused.dijitHover,
+    .wm_template .EmphasizedContent .wmeditor .dijitTextArea.dijitFocused,
+    .wm_template .EmphasizedContent .wmeditor .dijitTextArea.dijitFocused:hover,
+    .wm_template .EmphasizedContent .wmeditor .dijitComboBox.dijitFocused,
+    .wm_template .EmphasizedContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_template .EmphasizedContent .wmeditor .RichTextEditable.Focused iframe {
+	/* EmphasizedContent-EditorsFocus-Font */
+	color: #FFFFFF; /* EmphasizedContent-EditorsFocus-Font_Color */
 
-	border-color: #666666;  /* ContentPanel-EditorsFocus-Border_Color */
+	border-color: #666666;  /* EmphasizedContent-EditorsFocus-Border_Color */
 
-	/* ContentPanel-EditorsFocus-Background */
-	background-color: #444444; /* ContentPanel-EditorsFocus-Background_Color */
-	background-image: url(images/threeD.png); /* ContentPanel-EditorsFocus-Background_Image */
-	background-position: left top;  /* ContentPanel-EditorsFocus-Background_Image-Position */
-	background-repeat: repeat-x; /* ContentPanel-EditorsFocus-Background_Image-Repeat */
+	/* EmphasizedContent-EditorsFocus-Background */
+	background-color: #444444; /* EmphasizedContent-EditorsFocus-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-EditorsFocus-Background_Image */
+	background-position: left top;  /* EmphasizedContent-EditorsFocus-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-EditorsFocus-Background_Image-Repeat */
     }
     /* END inner content panel editors */
     
 }
 
+@media screen { /* TOCContent-Level */ 
+    /* BEGIN inner content panel editors */
 
-/* Checkbox */
-/*
-   .wm_template .wmeditor .dijitCheckBox, 
-   .wm_template .wmeditor .dijitRadio {
-   background-image: url(../../../../../dojo/dijit/themes/tundra/images/checkmarkNoBorder.png);
-}
-   .wm_template .wmeditor .dijitCheckBox {
-   border: solid 1px #333333;
-   margin: 5;
+    .wm_template .TOCContent .wmeditor .dijitTextBox,
+    .wm_template .TOCContent .wmeditor .dijitTextArea,
+    .wm_template .TOCContent .wmeditor .dijitComboBox,
+    .wm_template .TOCContent .dijitTimePickerItem,
+    .wm_template .TOCContent .wmeditor .RichTextEditable iframe {
+	/* TOCContent-EditorsDefault-Border */
+	border-color: #666666;  /* TOCContent-EditorsDefault-Border_Color */
+	border-width: 1px; /* TOCContent-EditorsDefault-Border_BorderSize */
+
+	/* TOCContent-EditorsDefault-Font */
+	font-family: sans-serif; /* TOCContent-EditorsDefault-Font_Family */
+	font-size: 12pt; /* TOCContent-EditorsDefault-Font_TextSize */
+	color: #FFFFFF; /* TOCContent-EditorsDefault-Font_Color */
+	font-weight: bold; /* TOCContent-EditorsDefault-Font_Weight */
+
+	/* TOCContent-EditorsDefault-Background */
+	background-color: #444444; /* TOCContent-EditorsDefault-Background_Color */
+	background-image: url(images/threeD.png); /* TOCContent-EditorsDefault-Background_Image */
+	background-position: left top;  /* TOCContent-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* TOCContent-EditorsDefault-Background_Image-Repeat */
+
+    }
+
+    .wm_template .TOCContent .wmeditor .dijitTextBox.dijitHover,
+    .wm_template .TOCContent .wmeditor .dijitTextArea:hover,
+    .wm_template .TOCContent .wmeditor .dijitComboBox.dijitHover,
+    .wm_template .TOCContent .wmeditor .RichTextEditable:hover iframe,
+    .wm_template .TOCContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
+    .wm_template .TOCContent .dijitTimePickerItem.dijitTimePickerItemHover {
+	/* TOCContent-EditorsHover-Font */
+	color: #FFFFFF; /* TOCContent-EditorsHover-Font_Color */
+
+	border-color: #666666;  /* TOCContent-EditorsHover-Border_Color */
+
+	/* TOCContent-EditorsHover-Background */
+	background-color: #444444; /* TOCContent-EditorsHover-Background_Color */
+	background-image: url(images/threeD.png); /* TOCContent-EditorsHover-Background_Image */
+	background-position: left top;  /* TOCContent-EditorsHover-Background_Image-Position */
+	background-repeat: repeat-x; /* TOCContent-EditorsHover-Background_Image-Repeat */
+    }
+
+    .wm_template .TOCContent .wmeditor .dijitTextBox.dijitFocused,
+    .wm_template .TOCContent .wmeditor .dijitTextBox.dijitFocused.dijitHover,
+    .wm_template .TOCContent .wmeditor .dijitTextArea.dijitFocused,
+    .wm_template .TOCContent .wmeditor .dijitTextArea.dijitFocused:hover,
+    .wm_template .TOCContent .wmeditor .dijitComboBox.dijitFocused,
+    .wm_template .TOCContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_template .TOCContent .wmeditor .RichTextEditable.Focused iframe {
+	/* TOCContent-EditorsFocus-Font */
+	color: #FFFFFF; /* TOCContent-EditorsFocus-Font_Color */
+
+	border-color: #666666;  /* TOCContent-EditorsFocus-Border_Color */
+
+	/* TOCContent-EditorsFocus-Background */
+	background-color: #444444; /* TOCContent-EditorsFocus-Background_Color */
+	background-image: url(images/threeD.png); /* TOCContent-EditorsFocus-Background_Image */
+	background-position: left top;  /* TOCContent-EditorsFocus-Background_Image-Position */
+	background-repeat: repeat-x; /* TOCContent-EditorsFocus-Background_Image-Repeat */
+    }
+    /* END inner content panel editors */
+    
 }
 
-   .wm_template .wmeditor .dijitCheckBox input,
-   .wm_template .wmeditor .dijitRadio input {
-   cursor: pointer;
+@media screen { /* ToolbarContent-Level */ 
+    /* BEGIN inner content panel editors */
+
+    .wm_template .ToolbarContent .wmeditor .dijitTextBox,
+    .wm_template .ToolbarContent .wmeditor .dijitTextArea,
+    .wm_template .ToolbarContent .wmeditor .dijitComboBox,
+    .wm_template .ToolbarContent .dijitTimePickerItem,
+    .wm_template .ToolbarContent .wmeditor .RichTextEditable iframe {
+	/* ToolbarContent-EditorsDefault-Border */
+	border-color: #666666;  /* ToolbarContent-EditorsDefault-Border_Color */
+	border-width: 1px; /* ToolbarContent-EditorsDefault-Border_BorderSize */
+
+	/* ToolbarContent-EditorsDefault-Font */
+	font-family: sans-serif; /* ToolbarContent-EditorsDefault-Font_Family */
+	font-size: 12pt; /* ToolbarContent-EditorsDefault-Font_TextSize */
+	color: #FFFFFF; /* ToolbarContent-EditorsDefault-Font_Color */
+	font-weight: bold; /* ToolbarContent-EditorsDefault-Font_Weight */
+
+	/* ToolbarContent-EditorsDefault-Background */
+	background-color: #444444; /* ToolbarContent-EditorsDefault-Background_Color */
+	background-image: url(images/threeD.png); /* ToolbarContent-EditorsDefault-Background_Image */
+	background-position: left top;  /* ToolbarContent-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* ToolbarContent-EditorsDefault-Background_Image-Repeat */
+
+    }
+
+    .wm_template .ToolbarContent .wmeditor .dijitTextBox.dijitHover,
+    .wm_template .ToolbarContent .wmeditor .dijitTextArea:hover,
+    .wm_template .ToolbarContent .wmeditor .dijitComboBox.dijitHover,
+    .wm_template .ToolbarContent .wmeditor .RichTextEditable:hover iframe,
+    .wm_template .ToolbarContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
+    .wm_template .ToolbarContent .dijitTimePickerItem.dijitTimePickerItemHover {
+	/* ToolbarContent-EditorsHover-Font */
+	color: #FFFFFF; /* ToolbarContent-EditorsHover-Font_Color */
+
+	border-color: #666666;  /* ToolbarContent-EditorsHover-Border_Color */
+
+	/* ToolbarContent-EditorsHover-Background */
+	background-color: #444444; /* ToolbarContent-EditorsHover-Background_Color */
+	background-image: url(images/threeD.png); /* ToolbarContent-EditorsHover-Background_Image */
+	background-position: left top;  /* ToolbarContent-EditorsHover-Background_Image-Position */
+	background-repeat: repeat-x; /* ToolbarContent-EditorsHover-Background_Image-Repeat */
+    }
+
+    .wm_template .ToolbarContent .wmeditor .dijitTextBox.dijitFocused,
+    .wm_template .ToolbarContent .wmeditor .dijitTextBox.dijitFocused.dijitHover,
+    .wm_template .ToolbarContent .wmeditor .dijitTextArea.dijitFocused,
+    .wm_template .ToolbarContent .wmeditor .dijitTextArea.dijitFocused:hover,
+    .wm_template .ToolbarContent .wmeditor .dijitComboBox.dijitFocused,
+    .wm_template .ToolbarContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_template .ToolbarContent .wmeditor .RichTextEditable.Focused iframe {
+	/* ToolbarContent-EditorsFocus-Font */
+	color: #FFFFFF; /* ToolbarContent-EditorsFocus-Font_Color */
+
+	border-color: #666666;  /* ToolbarContent-EditorsFocus-Border_Color */
+
+	/* ToolbarContent-EditorsFocus-Background */
+	background-color: #444444; /* ToolbarContent-EditorsFocus-Background_Color */
+	background-image: url(images/threeD.png); /* ToolbarContent-EditorsFocus-Background_Image */
+	background-position: left top;  /* ToolbarContent-EditorsFocus-Background_Image-Position */
+	background-repeat: repeat-x; /* ToolbarContent-EditorsFocus-Background_Image-Repeat */
+    }
+    /* END inner content panel editors */
+    
 }
-*/
+

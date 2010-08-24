@@ -1,6 +1,10 @@
-/* Splitter and bevel ignore document/pagecontent/contentpanel levels; these are UI components that should have a consistent look wherever they appear
-   * (note: more true for splitter than for bevel)
-   */
+  /**************************************************************************************************
+   * TYPE:        wm.Splitter / wm.Bevel
+   *
+   * DESCRIPTION: Splitter and bevel ignore document/pagecontent/contentpanel levels; these are UI
+   *              components that should have a consistent look wherever they appear
+   *              (note: more true for splitter than for bevel)
+   ************************************************************************************************/
 
 .wm_template div.wmsplitter-h,
 .wm_template div.wmsplitter-v,

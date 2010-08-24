@@ -16,8 +16,7 @@
  *  limitations under the License.
  */
 
-.ThemeDesigner-optionsPanel .wmlabel {
-    font-weight: bold;
+
 }
 
 .ThemeDesigner .wmselectedlist {
@@ -39,10 +38,26 @@
 .ThemeDesigner  button.wmbutton.themeButton.wmbutton-disabled {
     opacity: 0.5;
 }
-
-
-.ThemeDesigner #studio_themesPage_themeDesigner_darkSnazzyPanel .wmlabel {
- background-color: black;   
-    
+.ThemeDesigner  button.wmbutton.themeButton.toggleButtonDown {
+	background-color: rgb(80,80,80);
 }
 
+.ThemeDesigner-optionsPanel .wmlabel {
+    font-weight: bold;
+    background-color: black;
+}
+
+.ThemeDesigner-optionsPanel .ThemeListHeader {
+   background-color: rgb(30,30,30);
+   color: white;
+    padding-left: 5px;
+    cursor: default;
+}
+
+.ThemeDesigner-optionsPanel .ThemeListItem {
+
+}
+
+.ThemeDesigner-optionsPanel #studio_themesPage_themeDesigner_themeGroupListPanel .ThemeListItem td {
+    padding-left: 20px;
+}

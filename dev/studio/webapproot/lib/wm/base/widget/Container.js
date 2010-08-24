@@ -588,20 +588,20 @@ wm.Container.extend({
 	},
         setThemeStyleType: function(inType) {
             // supported types: ContentPanel, HeaderPanel, ""
-            switch (inType) {
-            case "ContentPanel":
-		this.addUserClass("wmcontentarea");
-		this.removeUserClass("wmheader");
-                break;
-            case "HeaderPanel":
-		this.addUserClass("wmheader");
-		this.removeUserClass("wmcontentarea");
-                break;
-            default:
-		this.removeUserClass("wmheader");
-		this.removeUserClass("wmcontentarea");
-            }
+	    if (this.themeStyleType)
+		dojo.removeClass(this.domNode, wm.String.endStringWith(this.themeStyleType, "Content"));
+	    if (inType)
+		dojo.addClass(this.domNode, wm.String.endStringWith(inType, "Content"));
             this.themeStyleType = inType;
+/*
+	    var themeData = (this.isDesignLoaded()) ? studio.application._themeData : app._themeData;
+	    if (themeData) {
+		if  (themeData[inType + "Border"])
+		    this.setBorder(themeData[inType + "Border"]);
+		if  (themeData[inType + "BorderColor"])
+		    this.setBorderColor(themeData[inType + "BorderColor"]);
+	    }
+*/
         },
     getThemeStyleType: function() {
         return this.themeStyleType;
@@ -642,7 +642,7 @@ wm.Container.extend({
 			case "verticalAlign":
 				return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["top", "middle", "bottom"/*, "justified"*/]});
                 case "themeStyleType":
-		    return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["", "ContentPanel", "HeaderPanel"]});
+		    return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["", "MainContent", "EmphasizedContent", "Toolbar", "TOC", "Header"]});
 		}
 		return this.inherited(arguments);
 	},

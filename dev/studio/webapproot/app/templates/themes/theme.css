@@ -15,25 +15,6 @@ body .wm_template input:focus,
 
 
   /**************************************************************************************************
-   * TYPE:        Main document-level border
-   *
-   * DESCRIPTION: An optional set of styles for giving the document itself a square or rounded border
-   ************************************************************************************************/
-
-.wm_template  #wavemakerNode  .wmlayout,
-#studio_designer.wm_template .wmlayout, 
-#studio_themesPage_themeDesigner_demoPanel .wmlayout {
-    /* Document-Styles-Border */
-    -moz-border-radius: 4px; /* Document-Styles-BorderStyle_Radius */
-    -webkit-border-radius: 4px; /* Document-Styles-BorderStyle_Radius */
-    border-radius: 4px; /* Document-Styles-BorderStyle_Radius */
-    -moz-box-shadow: 4px 4px 4px black; /* Document-Styles-BorderStyle_Shadow */
-    -webkit-box-shadow: 4px 4px 4px black; /* Document-Styles-BorderStyle_Shadow */
-    box-shadow: 4px 4px 4px black; /* Document-Styles-BorderStyle_Shadow */
-}
-   
-
-  /**************************************************************************************************
    * TYPE:        Links
    *
    * DESCRIPTION: The standard blue underline just isn't a good choice on arbitrary backgrounds.
@@ -44,30 +25,60 @@ body .wm_template input:focus,
 @media screen { /* Document-Level */ 
     .wm_template #studio_themesPage_themeDesigner_demoPanel .wmlayout a,
     .wm_template #studio_themesPage_themeDesigner_demoPanel .wmlayout a:visited,
+    #studio_designer.wm_template .wmlayout a,
+    #studio_designer.wm_template .wmlayout a:visited,
     .wm_template  #wavemakerNode  .wmlayout a,
     .wm_template  #wavemakerNode  .wmlayout a:visited {
-	color: #FFFFFF !important; /* Document-Styles-Font_Color */
+	color: #FFFFFF; /* Document-Styles-Font_Color */
 	font-weight: bold;
     }
 }
 
-@media screen { /* PageContent-Level */ 
-    #studio_themesPage_themeDesigner_demoPanel .wm_template .wmcontentarea .wmlayout a,
-    #studio_themesPage_themeDesigner_demoPanel .wm_template .wmlayout .wmcontentarea a:visited,
-    .wm_template  #wavemakerNode  .wmlayout .wmcontentarea a,
-    .wm_template  #wavemakerNode  .wmlayout .wmcontentarea a:visited {
-	color: #FFFFFF !important; /* PageContent-Styles-Font_Color */
+@media screen { /* MainContent-Level */ 
+    .wm_template #studio_themesPage_themeDesigner_demoPanel .wmlayout .MainContent a,
+    .wm_template #studio_themesPage_themeDesigner_demoPanel .wmlayout .MainContent a:visited,
+    #studio_designer.wm_template .wmlayout .MainContent a,
+    #studio_designer.wm_template .wmlayout .MainContent a:visited,
+    .wm_template  .wmlayout .MainContent a,
+    .wm_template  .wmlayout .MainContent a:visited {
+	color: #FFFFFF; /* MainContent-Styles-Font_Color */
     }
 }
 
-@media screen { /* ContentPanel-Level */ 
-    #studio_themesPage_themeDesigner_demoPanel .wm_template .wmcontentarea .wmlayout a,
-    #studio_themesPage_themeDesigner_demoPanel .wm_template .wmlayout .wmcontentarea a:visited,
-    .wm_template  #wavemakerNode  .wmlayout .wmcontentarea a,
-    .wm_template  #wavemakerNode  .wmlayout .wmcontentarea a:visited {
-	color: #FFFFFF !important; /* ContentPanel-Styles-Font_Color */
+
+@media screen { /* EmphasizedContent-Level */ 
+    .wm_template #studio_themesPage_themeDesigner_demoPanel .wmlayout .EmphasizedContent a,
+    .wm_template #studio_themesPage_themeDesigner_demoPanel .wmlayout .EmphasizedContent a:visited,
+    #studio_designer.wm_template .wmlayout .EmphasizedContent a,
+    #studio_designer.wm_template .wmlayout .EmphasizedContent a:visited,
+    .wm_template  .wmlayout .EmphasizedContent a,
+    .wm_template  .wmlayout .MainContent a:visited {
+	color: #FFFFFF; /* EmphasizedContent-Styles-Font_Color */
     }
 }
+
+@media screen { /* TOCContent-Level */ 
+    .wm_template #studio_themesPage_themeDesigner_demoPanel .wmlayout .TOCContent a,
+    .wm_template #studio_themesPage_themeDesigner_demoPanel .wmlayout .TOCContent a:visited,
+    #studio_designer.wm_template .wmlayout .TOCContent a,
+    #studio_designer.wm_template .wmlayout .TOCContent a:visited,
+    .wm_template  .wmlayout .TOCContent a,
+    .wm_template  .wmlayout .TOCContent a:visited {
+	color: #FFFFFF; /* TOCContent-Styles-Font_Color */
+    }
+}
+
+@media screen { /* ToolbarContent-Level */ 
+    .wm_template #studio_themesPage_themeDesigner_demoPanel .wmlayout .ToolbarContent a,
+    .wm_template #studio_themesPage_themeDesigner_demoPanel .wmlayout .ToolbarContent a:visited,
+    #studio_designer.wm_template .wmlayout .ToolbarContent a,
+    #studio_designer.wm_template .wmlayout .ToolbarContent a:visited,
+    .wm_template  .wmlayout .ToolbarContent a,
+    .wm_template  .wmlayout .ToolbarContent a:visited {
+	color: #FFFFFF !important; /* ToolbarContent-Styles-Font_Color */
+    }
+}
+
 
 
 /* END SECTION wm.Layout */

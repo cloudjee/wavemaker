@@ -54,67 +54,136 @@
 }
 
 
-@media screen { /* PageContent-Level */ 
-    .wm_template .wmcontentarea .wmprogressbar .dijitProgressBarTile {
-	/* PageContent-HeadersDefault-Font */
-	font-family: sans-serif; /* PageContent-HeadersDefault-Font_Family */
-	font-size: 12pt; /* PageContent-HeadersDefault-Font_TextSize */
-	color: #FFFFFF; /* PageContent-HeadersDefault-Font_Color */
-	font-weight: bold; /* PageContent-HeadersDefault-Font_Weight */
+@media screen { /* MainContent-Level */ 
+    .wm_template .MainContent .wmprogressbar .dijitProgressBarTile {
+	/* MainContent-HeadersDefault-Font */
+	font-family: sans-serif; /* MainContent-HeadersDefault-Font_Family */
+	font-size: 12pt; /* MainContent-HeadersDefault-Font_TextSize */
+	color: #FFFFFF; /* MainContent-HeadersDefault-Font_Color */
+	font-weight: bold; /* MainContent-HeadersDefault-Font_Weight */
 
-	/* PageContent-HeadersDefault-Background */
-	background-color: #444444; /* PageContent-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* PageContent-HeadersDefault-Background_Image */
-	background-position: left top;  /* PageContent-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* PageContent-HeadersDefault-Background_Image-Repeat */
+	/* MainContent-HeadersDefault-Background */
+	background-color: #444444; /* MainContent-HeadersDefault-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-HeadersDefault-Background_Image */
+	background-position: left top;  /* MainContent-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-HeadersDefault-Background_Image-Repeat */
     }
 
 
-    .wm_template .wmcontentarea .wmprogressbar .dijitProgressBar {
-	/* PageContent-EditorsDefault-Font */
-	font-family: sans-serif; /* PageContent-EditorsDefault-Font_Family */
-	font-size: 12pt; /* PageContent-EditorsDefault-Font_TextSize */
-	color: #FFFFFF; /* PageContent-EditorsDefault-Font_Color */
-	font-weight: bold; /* PageContent-EditorsDefault-Font_Weight */
+    .wm_template .MainContent .wmprogressbar .dijitProgressBar {
+	/* MainContent-EditorsDefault-Font */
+	font-family: sans-serif; /* MainContent-EditorsDefault-Font_Family */
+	font-size: 12pt; /* MainContent-EditorsDefault-Font_TextSize */
+	color: #FFFFFF; /* MainContent-EditorsDefault-Font_Color */
+	font-weight: bold; /* MainContent-EditorsDefault-Font_Weight */
 
-	/* PageContent-EditorsDefault-Background */
-	background-color: #444444; /* PageContent-EditorsDefault-Background_Color */
-	background-image: url(images/threeD.png); /* PageContent-EditorsDefault-Background_Image */
-	background-position: left top;  /* PageContent-EditorsDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* PageContent-EditorsDefault-Background_Image-Repeat */
+	/* MainContent-EditorsDefault-Background */
+	background-color: #444444; /* MainContent-EditorsDefault-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-EditorsDefault-Background_Image */
+	background-position: left top;  /* MainContent-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-EditorsDefault-Background_Image-Repeat */
+    }
+
+}
+
+
+
+@media screen { /* EmphasizedContent-Level */ 
+    .wm_template .EmphasizedContent .wmprogressbar .dijitProgressBarTile {
+	/* EmphasizedContent-HeadersDefault-Font */
+	font-family: sans-serif; /* EmphasizedContent-HeadersDefault-Font_Family */
+	font-size: 12pt; /* EmphasizedContent-HeadersDefault-Font_TextSize */
+	color: #FFFFFF; /* EmphasizedContent-HeadersDefault-Font_Color */
+	font-weight: bold; /* EmphasizedContent-HeadersDefault-Font_Weight */
+
+	/* EmphasizedContent-HeadersDefault-Background */
+	background-color: #444444; /* EmphasizedContent-HeadersDefault-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-HeadersDefault-Background_Image */
+	background-position: left top;  /* EmphasizedContent-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-HeadersDefault-Background_Image-Repeat */
+    }
+
+
+    .wm_template .EmphasizedContent .wmprogressbar .dijitProgressBar {
+	/* EmphasizedContent-EditorsDefault-Font */
+	font-family: sans-serif; /* EmphasizedContent-EditorsDefault-Font_Family */
+	font-size: 12pt; /* EmphasizedContent-EditorsDefault-Font_TextSize */
+	color: #FFFFFF; /* EmphasizedContent-EditorsDefault-Font_Color */
+	font-weight: bold; /* EmphasizedContent-EditorsDefault-Font_Weight */
+
+	/* EmphasizedContent-EditorsDefault-Background */
+	background-color: #444444; /* EmphasizedContent-EditorsDefault-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-EditorsDefault-Background_Image */
+	background-position: left top;  /* EmphasizedContent-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-EditorsDefault-Background_Image-Repeat */
     }
 
 }
 
 
-@media screen { /* ContentPanel-Level */ 
-    .wm_template .wmcontentarea .wmcontentarea .wmprogressbar .dijitProgressBarTile {
-	/* ContentPanel-HeadersDefault-Font */
-	font-family: sans-serif; /* ContentPanel-HeadersDefault-Font_Family */
-	font-size: 12pt; /* ContentPanel-HeadersDefault-Font_TextSize */
-	color: #FFFFFF; /* ContentPanel-HeadersDefault-Font_Color */
-	font-weight: bold; /* ContentPanel-HeadersDefault-Font_Weight */
+@media screen { /* ToolbarContent-Level */ 
+    .wm_template .ToolbarContent .wmprogressbar .dijitProgressBarTile {
+	/* ToolbarContent-HeadersDefault-Font */
+	font-family: sans-serif; /* ToolbarContent-HeadersDefault-Font_Family */
+	font-size: 12pt; /* ToolbarContent-HeadersDefault-Font_TextSize */
+	color: #FFFFFF; /* ToolbarContent-HeadersDefault-Font_Color */
+	font-weight: bold; /* ToolbarContent-HeadersDefault-Font_Weight */
 
-	/* ContentPanel-HeadersDefault-Background */
-	background-color: #444444; /* ContentPanel-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* ContentPanel-HeadersDefault-Background_Image */
-	background-position: left top;  /* ContentPanel-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* ContentPanel-HeadersDefault-Background_Image-Repeat */
+	/* ToolbarContent-HeadersDefault-Background */
+	background-color: #444444; /* ToolbarContent-HeadersDefault-Background_Color */
+	background-image: url(images/threeD.png); /* ToolbarContent-HeadersDefault-Background_Image */
+	background-position: left top;  /* ToolbarContent-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* ToolbarContent-HeadersDefault-Background_Image-Repeat */
     }
 
 
-    .wm_template .wmcontentarea .wmcontentarea .wmprogressbar .dijitProgressBar {
-	/* ContentPanel-EditorsDefault-Font */
-	font-family: sans-serif; /* ContentPanel-EditorsDefault-Font_Family */
-	font-size: 12pt; /* ContentPanel-EditorsDefault-Font_TextSize */
-	color: #FFFFFF; /* ContentPanel-EditorsDefault-Font_Color */
-	font-weight: bold; /* ContentPanel-EditorsDefault-Font_Weight */
+    .wm_template .ToolbarContent .wmprogressbar .dijitProgressBar {
+	/* ToolbarContent-EditorsDefault-Font */
+	font-family: sans-serif; /* ToolbarContent-EditorsDefault-Font_Family */
+	font-size: 12pt; /* ToolbarContent-EditorsDefault-Font_TextSize */
+	color: #FFFFFF; /* ToolbarContent-EditorsDefault-Font_Color */
+	font-weight: bold; /* ToolbarContent-EditorsDefault-Font_Weight */
 
-	/* ContentPanel-EditorsDefault-Background */
-	background-color: #444444; /* ContentPanel-EditorsDefault-Background_Color */
-	background-image: url(images/threeD.png); /* ContentPanel-EditorsDefault-Background_Image */
-	background-position: left top;  /* ContentPanel-EditorsDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* ContentPanel-EditorsDefault-Background_Image-Repeat */
+	/* ToolbarContent-EditorsDefault-Background */
+	background-color: #444444; /* ToolbarContent-EditorsDefault-Background_Color */
+	background-image: url(images/threeD.png); /* ToolbarContent-EditorsDefault-Background_Image */
+	background-position: left top;  /* ToolbarContent-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* ToolbarContent-EditorsDefault-Background_Image-Repeat */
     }
 
 }
+
+
+@media screen { /* TOCContent-Level */ 
+    .wm_template .TOCContent .wmprogressbar .dijitProgressBarTile {
+	/* TOCContent-HeadersDefault-Font */
+	font-family: sans-serif; /* TOCContent-HeadersDefault-Font_Family */
+	font-size: 12pt; /* TOCContent-HeadersDefault-Font_TextSize */
+	color: #FFFFFF; /* TOCContent-HeadersDefault-Font_Color */
+	font-weight: bold; /* TOCContent-HeadersDefault-Font_Weight */
+
+	/* TOCContent-HeadersDefault-Background */
+	background-color: #444444; /* TOCContent-HeadersDefault-Background_Color */
+	background-image: url(images/threeD.png); /* TOCContent-HeadersDefault-Background_Image */
+	background-position: left top;  /* TOCContent-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* TOCContent-HeadersDefault-Background_Image-Repeat */
+    }
+
+
+    .wm_template .TOCContent .wmprogressbar .dijitProgressBar {
+	/* TOCContent-EditorsDefault-Font */
+	font-family: sans-serif; /* TOCContent-EditorsDefault-Font_Family */
+	font-size: 12pt; /* TOCContent-EditorsDefault-Font_TextSize */
+	color: #FFFFFF; /* TOCContent-EditorsDefault-Font_Color */
+	font-weight: bold; /* TOCContent-EditorsDefault-Font_Weight */
+
+	/* TOCContent-EditorsDefault-Background */
+	background-color: #444444; /* TOCContent-EditorsDefault-Background_Color */
+	background-image: url(images/threeD.png); /* TOCContent-EditorsDefault-Background_Image */
+	background-position: left top;  /* TOCContent-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* TOCContent-EditorsDefault-Background_Image-Repeat */
+    }
+
+}
+
+

@@ -1,25 +1,206 @@
-/* BEGIN SECTION wm.DojoMenu */
+  /**************************************************************************************************
+   * TYPE:        wm.DojoMenu
+   *
+   * DESCRIPTION: Sets styles for menu.  Some styles (font-size) are going to be shared across all 
+   *              panel types
+   *
+   ************************************************************************************************/
 
-.wm_template .dojoMenu .dijitMenu,
-.wm_template .dojoMenu .dijitMenuBar,
-.wm_template .dojoMenu .dijitMenuBar {
-    /* Document-HeadersDefault-Font */
-    font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
-/*    font-size: 12pt;  Headers-Default-Font_TextSize  don't edit this until we can control the size of the popup itself */ 
-    color: #FFFFFF; /* Document-HeadersDefault-Font_Color */
-    font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+@media screen { /* Document-Level */ 
+    .wm_template .dojoMenu .dijitMenu,
+    .wm_template .dojoMenu .dijitMenuBar,
+    .wm_template .dojoMenu .dijitMenuBar {
+	/* Document-HeadersDefault-Font */
+	font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
+	font-size: 12pt; /* Document-HeadersDefault-Font_TextSize */
+	color: #FFFFFF; /* Document-HeadersDefault-Font_Color */
+	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
 
-    /* Document-HeadersDefault-Background */
-    background-color: #444444; /* Document-HeadersDefault-Background_Color */
-    background-image: url(images/threeD.png); /* Document-HeadersDefault-Background_Image */
-    background-position: left top;  /* Document-HeadersDefault-Background_Image-Position */
-    background-repeat: repeat-x; /* Document-HeadersDefault-Background_Image-Repeat */
+	/* Document-HeadersDefault-Background */
+	background-color: #444444; /* Document-HeadersDefault-Background_Color */
+	background-image: url(images/threeD.png); /* Document-HeadersDefault-Background_Image */
+	background-position: left top;  /* Document-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-HeadersDefault-Background_Image-Repeat */
 
-    border-width: 0px;
-    font-weight: bold;        
+	border-width: 0px;
+	font-weight: bold;        
+    }
+
+    /* Spacing between menu items */
+    .wm_template .dijitMenuBar .dijitMenuItem,
+    .tundra .wm-darksnazzy .wm_template .dijitMenuBar .dijitMenuItem {
+	margin-right: 10px; /* wm.DojoMenu-Right_Margin */
+    }
+
+    body.wm_template .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
+    body .wm_template .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
+    body.wm_template .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_template .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body.wm_template .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_template .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
+	/* Document-HeadersHover-Font */
+	color: #FFFFFF; /* Document-HeadersHover-Font_Color */
+
+	/* Document-HeadersHover-Background */
+	background-color: #444444; /* Document-HeadersHover-Background_Color */
+	background-image: url(images/threeD.png); /* Document-HeadersDefault-Background_Image */
+	background-position: left top;  /* Document-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-HeadersDefault-Background_Image-Repeat */
+
+
+	outline-width: 0;
+    }
 }
 
-/* wm.DojoMenu popup menu */
+@media screen { /* MainContent-Level */ 
+    .wm_template .MainContent .dojoMenu .dijitMenu,
+    .wm_template .MainContent .dojoMenu .dijitMenuBar,
+    .wm_template .MainContent .dojoMenu .dijitMenuBar {
+	/* MainContent-HeadersDefault-Font */
+	font-family: sans-serif; /* MainContent-HeadersDefault-Font_Family */
+	font-size: 12pt; /* MainContent-HeadersDefault-Font_TextSize */
+	color: #FFFFFF; /* MainContent-HeadersDefault-Font_Color */
+	font-weight: bold; /* MainContent-HeadersDefault-Font_Weight */
+
+	/* MainContent-HeadersDefault-Background */
+	background-color: #444444; /* MainContent-HeadersDefault-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-HeadersDefault-Background_Image */
+	background-position: left top;  /* MainContent-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-HeadersDefault-Background_Image-Repeat */
+
+	border-width: 0px;
+	font-weight: bold;        
+    }
+
+    /* Spacing between menu items */
+    .wm_template .MainContent .dijitMenuBar .dijitMenuItem,
+    .tundra .wm-darksnazzy .wm_template .dijitMenuBar .dijitMenuItem {
+	margin-right: 10px; /* wm.DojoMenu-Right_Margin */
+    }
+
+    body.wm_template .MainContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
+    body .wm_template .MainContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
+    body.wm_template .MainContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_template .MainContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body.wm_template .MainContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_template .MainContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
+	/* MainContent-HeadersHover-Font */
+	color: #FFFFFF; /* MainContent-HeadersHover-Font_Color */
+
+	/* MainContent-HeadersHover-Background */
+	background-color: #444444; /* MainContent-HeadersHover-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-HeadersDefault-Background_Image */
+	background-position: left top;  /* MainContent-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-HeadersDefault-Background_Image-Repeat */
+
+
+	outline-width: 0;
+    }
+
+}
+
+
+@media screen { /* ToolbarContent-Level */ 
+    .wm_template .ToolbarContent .dojoMenu .dijitMenu,
+    .wm_template .ToolbarContent .dojoMenu .dijitMenuBar,
+    .wm_template .ToolbarContent .dojoMenu .dijitMenuBar {
+	/* ToolbarContent-HeadersDefault-Font */
+	font-family: sans-serif; /* ToolbarContent-HeadersDefault-Font_Family */
+	font-size: 12pt; /* ToolbarContent-HeadersDefault-Font_TextSize */
+	color: #FFFFFF; /* ToolbarContent-HeadersDefault-Font_Color */
+	font-weight: bold; /* ToolbarContent-HeadersDefault-Font_Weight */
+
+	/* ToolbarContent-HeadersDefault-Background */
+	background-color: #444444; /* ToolbarContent-HeadersDefault-Background_Color */
+	background-image: url(images/threeD.png); /* ToolbarContent-HeadersDefault-Background_Image */
+	background-position: left top;  /* ToolbarContent-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* ToolbarContent-HeadersDefault-Background_Image-Repeat */
+
+	border-width: 0px;
+	font-weight: bold;        
+    }
+
+    /* Spacing between menu items */
+    .wm_template .ToolbarContent .dijitMenuBar .dijitMenuItem,
+    .tundra .wm-darksnazzy .wm_template .dijitMenuBar .dijitMenuItem {
+	margin-right: 10px; /* wm.DojoMenu-Right_Margin */
+    }
+
+    body.wm_template .ToolbarContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
+    body .wm_template .ToolbarContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
+    body.wm_template .ToolbarContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_template .ToolbarContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body.wm_template .ToolbarContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_template .ToolbarContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
+	/* ToolbarContent-HeadersHover-Font */
+	color: #FFFFFF; /* ToolbarContent-HeadersHover-Font_Color */
+
+	/* ToolbarContent-HeadersHover-Background */
+	background-color: #444444; /* ToolbarContent-HeadersHover-Background_Color */
+	background-image: url(images/threeD.png); /* ToolbarContent-HeadersDefault-Background_Image */
+	background-position: left top;  /* ToolbarContent-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* ToolbarContent-HeadersDefault-Background_Image-Repeat */
+
+
+	outline-width: 0;
+    }
+
+}
+
+@media screen { /* TOCContent-Level */ 
+    .wm_template .TOCContent .dojoMenu .dijitMenu,
+    .wm_template .TOCContent .dojoMenu .dijitMenuBar,
+    .wm_template .TOCContent .dojoMenu .dijitMenuBar {
+	/* TOCContent-HeadersDefault-Font */
+	font-family: sans-serif; /* TOCContent-HeadersDefault-Font_Family */
+	font-size: 12pt; /* TOCContent-HeadersDefault-Font_TextSize */
+	color: #FFFFFF; /* TOCContent-HeadersDefault-Font_Color */
+	font-weight: bold; /* TOCContent-HeadersDefault-Font_Weight */
+
+	/* TOCContent-HeadersDefault-Background */
+	background-color: #444444; /* TOCContent-HeadersDefault-Background_Color */
+	background-image: url(images/threeD.png); /* TOCContent-HeadersDefault-Background_Image */
+	background-position: left top;  /* TOCContent-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* TOCContent-HeadersDefault-Background_Image-Repeat */
+
+	border-width: 0px;
+	font-weight: bold;        
+    }
+
+    /* Spacing between menu items */
+    .wm_template .TOCContent .dijitMenuBar .dijitMenuItem,
+    .tundra .wm-darksnazzy .wm_template .dijitMenuBar .dijitMenuItem {
+	margin-right: 10px; /* wm.DojoMenu-Right_Margin */
+    }
+
+    body.wm_template .TOCContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
+    body .wm_template .TOCContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
+    body.wm_template .TOCContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_template .TOCContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body.wm_template .TOCContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_template .TOCContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
+	/* TOCContent-HeadersHover-Font */
+	color: #FFFFFF; /* TOCContent-HeadersHover-Font_Color */
+
+	/* TOCContent-HeadersHover-Background */
+	background-color: #444444; /* TOCContent-HeadersHover-Background_Color */
+	background-image: url(images/threeD.png); /* TOCContent-HeadersDefault-Background_Image */
+	background-position: left top;  /* TOCContent-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* TOCContent-HeadersDefault-Background_Image-Repeat */
+
+
+	outline-width: 0;
+    }
+
+}
+
+  /**************************************************************************************************
+   * TYPE:        wm.DojoMenu Popup
+   *
+   * DESCRIPTION: Sets styles for menu.  Does not depend at this time on what kind of panel its in,
+   *              the popup is always under body; the menubar itself we may update to work anywhere.
+   *
+   ************************************************************************************************/
  .wm_template table.dijitMenuTable.dijitMenu.dijitReset {
     /* Document-HeadersDefault-Font */
     font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
@@ -38,37 +219,12 @@
     box-shadow: 3px 3px 4px black; /* Floating-Shadow */
 }
 
-/* Spacing between menu items */
-.wm_template .dijitMenuBar .dijitMenuItem,
-.tundra .wm-darksnazzy .wm_template .dijitMenuBar .dijitMenuItem {
-    margin-right: 10px; /* wm.DojoMenu-Right_Margin */
-}
-
-body.wm_template .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
-body .wm_template .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
-body.wm_template .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
-body .wm_template .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
-body.wm_template .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
-body .wm_template .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
-    /* Document-HeadersHover-Font */
-    color: #FFFFFF; /* Document-HeadersHover-Font_Color */
-
-    /* Document-HeadersHover-Background */
-    background-color: #444444; /* Document-HeadersHover-Background_Color */
-    background-image: url(images/threeD.png); /* Document-HeadersDefault-Background_Image */
-    background-position: left top;  /* Document-HeadersDefault-Background_Image-Position */
-    background-repeat: repeat-x; /* Document-HeadersDefault-Background_Image-Repeat */
-
-
-    outline-width: 0;
-}
-
 body.wm_template  .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemHover,
 body .wm_template .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemHover,
 body.wm_template  .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected,
 body .wm_template .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected
  {
-    /* Document-HeadersHover-Font */
+
     color: #FFFFFF; /* Document-HeadersHover-Font_Color */
 
     /* Document-HeadersHover-Background */
@@ -77,7 +233,13 @@ body .wm_template .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected
     outline-width: 0;
 }
 
-/* ComboBox PopupMenu */
+  /**************************************************************************************************
+   * TYPE:        wm.SelectMenu Popup
+   *
+   * DESCRIPTION: Sets styles for menu.  Does not depend at this time on what kind of panel its in,
+   *              the popup is always under body; the menubar itself we may update to work anywhere.
+   *
+   ************************************************************************************************/
 body.wm_template ul.dijitMenu .dijitMenuItem,
 body .wm_template ul.dijitMenu .dijitMenuItem
 {
@@ -120,46 +282,3 @@ body .wm_template ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected
 }
 
 
-/* BEGIN SECTION wm.Time */
-
-.wm_template .dijitTimePickerItem,
-.wm_template .dijitTimePickerMarker {
-    /* PageContent-EditorsFocus-Font_Color */
-    color: #FFFFFF; /* PageContent-EditorsFocus-Font_Color */
-
-    /* PageContent-EditorsFocus-Background_Color */
-    background-color: #444444; /* PageContent-EditorsFocus-Background_Color */
-}
-
-.wm_template .dijitTimePickerItem.dijitTimePickerItemSelected,
-.wm_template .dijitTimePickerMarker.dijitTimePickerMarkerSelected {
-    /* PageContent-EditorsDefault-Font_Color */
-    color: #FFFFFF; /* PageContent-EditorsDefault-Font_Color */
-
-    /* PageContent-EditorsDefault-Background_Color */
-    background-color: #444444; /* PageContent-EditorsDefault-Background_Color */
-}
-
-.wm_template .dijitTimePickerMarker.dijitTimePickerMarkerHover,
-.wm_template .dijitTimePickerItem.dijitTimePickerItemHover {
-    /* PageContent-EditorsHover-Font_Color */
-    color: #FFFFFF; /* PageContent-EditorsHover-Font_Color */
-
-    /* PageContent-EditorsHover-Background_Color */
-    background-color: #444444; /* PageContent-EditorsHover-Background_Color */
-}
-
-
-.wm_template .dijitTimePickerMarker.dijitTimePickerMarkerHover,
-.wm_template .dijitTimePickerItem.dijitTimePickerItemHover,
-.wm_template .dijitTimePickerItem.dijitTimePickerItemSelected,
-.wm_template .dijitTimePickerMarker.dijitTimePickerMarkerSelected {
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-    border-bottom-color: #666666; /* PageContent-EditorsDefault-Border_Color */
-    border-top-width: 1px;
-    border-top-style: solid;
-    border-top-color: #666666; /* PageContent-EditorsDefault-Border_Color */
-}
-
-/* END SECTION wm.Time */

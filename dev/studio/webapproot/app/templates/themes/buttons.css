@@ -47,10 +47,7 @@
        ************************************************************************************************/
     .wm_template   .wmbutton.toggleButtonDown {
 	/* Document-HeadersActive-Font */
-	font-family: sans-serif; /* Document-HeadersActive-Font_Family */
-	font-size: 12pt; /* Document-HeadersActive-Font_TextSize */
 	color: #FFFFFF; /* Document-HeadersActive-Font_Color */
-	font-weight: bold; /* Document-HeadersActive-Font_Weight */
 
 	/* Document-HeadersActive-Background */
 	background-color: #444444; /* Document-HeadersActive-Background_Color */
@@ -94,7 +91,7 @@
 }
 
 
-@media screen { /* PageContent-Level */ 
+@media screen { /* MainContent-Level */ 
 
     
     /**************************************************************************************************
@@ -104,31 +101,31 @@
        ************************************************************************************************/
 
 
-    .wm_template .wmcontentarea  .wmbutton,
-    .wm_template .wmcontentarea  .wmtogglebutton,
-    .wm_template .wmcontentarea  .wmroundedbutton,
-    .wm_template .wmcontentarea  .wmbutton.wmbutton-disabled:hover,
-    .wm_template .wmcontentarea  .wmbutton.wmbutton-disabled:focus
+    .wm_template .MainContent  .wmbutton,
+    .wm_template .MainContent  .wmtogglebutton,
+    .wm_template .MainContent  .wmroundedbutton,
+    .wm_template .MainContent  .wmbutton.wmbutton-disabled:hover,
+    .wm_template .MainContent  .wmbutton.wmbutton-disabled:focus
     {
-	/* PageContent-HeadersDefault-Font */
-	font-family: sans-serif; /* PageContent-HeadersDefault-Font_Family */
-	font-size: 12pt; /* PageContent-HeadersDefault-Font_TextSize */
-	color: #FFFFFF; /* PageContent-HeadersDefault-Font_Color */
-	font-weight: bold; /* PageContent-HeadersDefault-Font_Weight */
+	/* MainContent-HeadersDefault-Font */
+	font-family: sans-serif; /* MainContent-HeadersDefault-Font_Family */
+	font-size: 12pt; /* MainContent-HeadersDefault-Font_TextSize */
+	color: #FFFFFF; /* MainContent-HeadersDefault-Font_Color */
+	font-weight: bold; /* MainContent-HeadersDefault-Font_Weight */
 
-	/* PageContent-HeadersDefault-Border */
-	-moz-border-radius: 4px; /* PageContent-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* PageContent-HeadersDefault-BorderStyle_Radius */
-	border-radius: 4px; /* PageContent-HeadersDefault-BorderStyle_Radius */
-	-moz-box-shadow: 4px 4px 4px black; /* PageContent-HeadersDefault-BorderStyle_Shadow */
-	-webkit-box-shadow: 4px 4px 4px black; /* PageContent-HeadersDefault-BorderStyle_Shadow */
-	box-shadow: 4px 4px 4px black; /* PageContent-HeadersDefault-BorderStyle_Shadow */
+	/* MainContent-HeadersDefault-Border */
+	-moz-border-radius: 4px; /* MainContent-HeadersDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* MainContent-HeadersDefault-BorderStyle_Radius */
+	border-radius: 4px; /* MainContent-HeadersDefault-BorderStyle_Radius */
+	-moz-box-shadow: 4px 4px 4px black; /* MainContent-HeadersDefault-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* MainContent-HeadersDefault-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* MainContent-HeadersDefault-BorderStyle_Shadow */
 
-	/* PageContent-HeadersDefault-Background */
-	background-color: #444444; /* PageContent-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* PageContent-HeadersDefault-Background_Image */
-	background-position: left top;  /* PageContent-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* PageContent-HeadersDefault-Background_Image-Repeat */
+	/* MainContent-HeadersDefault-Background */
+	background-color: #444444; /* MainContent-HeadersDefault-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-HeadersDefault-Background_Image */
+	background-position: left top;  /* MainContent-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-HeadersDefault-Background_Image-Repeat */
     }
 
     /**************************************************************************************************
@@ -136,22 +133,19 @@
        *
        * DESCRIPTION: Sets font, shadowing and background for an active ToggleButton
        ************************************************************************************************/
-    .wm_template .wmcontentarea  .wmbutton.toggleButtonDown {
-	/* PageContent-HeadersActive-Font */
-	font-family: sans-serif; /* PageContent-HeadersActive-Font_Family */
-	font-size: 12pt; /* PageContent-HeadersActive-Font_TextSize */
-	color: #FFFFFF; /* PageContent-HeadersActive-Font_Color */
-	font-weight: bold; /* PageContent-HeadersActive-Font_Weight */
+    .wm_template .MainContent  .wmbutton.toggleButtonDown {
+	/* MainContent-HeadersActive-Font */
+	color: #FFFFFF; /* MainContent-HeadersActive-Font_Color */
 
-	/* PageContent-HeadersActive-Background */
-	background-color: #444444; /* PageContent-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* PageContent-HeadersActive-Background_Image */
-	background-position: left top;  /* PageContent-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* PageContent-HeadersActive-Background_Image-Repeat */
+	/* MainContent-HeadersActive-Background */
+	background-color: #444444; /* MainContent-HeadersActive-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-HeadersActive-Background_Image */
+	background-position: left top;  /* MainContent-HeadersActive-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-HeadersActive-Background_Image-Repeat */
 
-	-moz-box-shadow: 4px 4px 4px black; /* PageContent-HeadersActive-BorderStyle_Shadow */
-	-webkit-box-shadow: 4px 4px 4px black; /* PageContent-HeadersActive-BorderStyle_Shadow */
-	box-shadow: 4px 4px 4px black; /* PageContent-HeadersActive-BorderStyle_Shadow */
+	-moz-box-shadow: 4px 4px 4px black; /* MainContent-HeadersActive-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* MainContent-HeadersActive-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* MainContent-HeadersActive-BorderStyle_Shadow */
     }
 
     /**************************************************************************************************
@@ -159,23 +153,23 @@
        *
        * DESCRIPTION: Sets font, shadowing and background for a wm.Button with a mouseover
        ************************************************************************************************/
-    .wm_template .wmcontentarea  .wmbutton:hover,
-    .wm_template .wmcontentarea  .wmbutton:focus,
-    .wm_template .wmcontentarea  .wmroundedbutton:hover,
-    .wm_template .wmcontentarea  .wmroundedbutton:focus {
-	/* PageContent-HeadersHover-Font */
-	color: #FFFFFF; /* PageContent-HeadersHover-Font_Color */
+    .wm_template .MainContent  .wmbutton:hover,
+    .wm_template .MainContent  .wmbutton:focus,
+    .wm_template .MainContent  .wmroundedbutton:hover,
+    .wm_template .MainContent  .wmroundedbutton:focus {
+	/* MainContent-HeadersHover-Font */
+	color: #FFFFFF; /* MainContent-HeadersHover-Font_Color */
 
-	/* PageContent-HeadersHover-Background */
-	background-color: #444444; /* PageContent-HeadersHover-Background_Color */
-	background-image: url(images/threeD.png); /* PageContent-HeadersHover-Background_Image */
-	background-position: left top;  /* PageContent-HeadersHover-Background_Image-Position */
-	background-repeat: repeat-x; /* PageContent-HeadersHover-Background_Image-Repeat */
+	/* MainContent-HeadersHover-Background */
+	background-color: #444444; /* MainContent-HeadersHover-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-HeadersHover-Background_Image */
+	background-position: left top;  /* MainContent-HeadersHover-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-HeadersHover-Background_Image-Repeat */
 
-	/* PageContent-HeadersHover-BorderStyle_Shadow */
-	-moz-box-shadow: 4px 4px 4px black; /* PageContent-HeadersHover-BorderStyle_Shadow */
-	-webkit-box-shadow: 4px 4px 4px black; /* PageContent-HeadersHover-BorderStyle_Shadow */
-	box-shadow: 4px 4px 4px black; /* PageContent-HeadersHover-BorderStyle_Shadow */
+	/* MainContent-HeadersHover-BorderStyle_Shadow */
+	-moz-box-shadow: 4px 4px 4px black; /* MainContent-HeadersHover-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* MainContent-HeadersHover-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* MainContent-HeadersHover-BorderStyle_Shadow */
 
     }
     
@@ -183,37 +177,37 @@
 }
 
 
-@media screen { /* ContentPanel-Level */ 
+@media screen { /* EmphasizedContent-Level */ 
     /**************************************************************************************************
        * TYPE:        Default Styling
        *
        * DESCRIPTION: Sets font, rounding, shadowing and background for the standard button state
        ************************************************************************************************/
-    .wm_template .wmcontentarea .wmcontentarea  .wmbutton,
-    .wm_template .wmcontentarea .wmcontentarea  .wmtogglebutton,
-    .wm_template .wmcontentarea .wmcontentarea  .wmroundedbutton,
-    .wm_template .wmcontentarea .wmcontentarea  .wmbutton.wmbutton-disabled:hover,
-    .wm_template .wmcontentarea .wmcontentarea  .wmbutton.wmbutton-disabled:focus
+    .wm_template .EmphasizedContent  .wmbutton,
+    .wm_template .EmphasizedContent  .wmtogglebutton,
+    .wm_template .EmphasizedContent  .wmroundedbutton,
+    .wm_template .EmphasizedContent  .wmbutton.wmbutton-disabled:hover,
+    .wm_template .EmphasizedContent  .wmbutton.wmbutton-disabled:focus
     {
-	/* ContentPanel-HeadersDefault-Font */
-	font-family: sans-serif; /* ContentPanel-HeadersDefault-Font_Family */
-	font-size: 12pt; /* ContentPanel-HeadersDefault-Font_TextSize */
-	color: #FFFFFF; /* ContentPanel-HeadersDefault-Font_Color */
-	font-weight: bold; /* ContentPanel-HeadersDefault-Font_Weight */
+	/* EmphasizedContent-HeadersDefault-Font */
+	font-family: sans-serif; /* EmphasizedContent-HeadersDefault-Font_Family */
+	font-size: 12pt; /* EmphasizedContent-HeadersDefault-Font_TextSize */
+	color: #FFFFFF; /* EmphasizedContent-HeadersDefault-Font_Color */
+	font-weight: bold; /* EmphasizedContent-HeadersDefault-Font_Weight */
 
-	/* ContentPanel-HeadersDefault-Border */
-	-moz-border-radius: 4px; /* ContentPanel-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* ContentPanel-HeadersDefault-BorderStyle_Radius */
-	border-radius: 4px; /* ContentPanel-HeadersDefault-BorderStyle_Radius */
-	-moz-box-shadow: 4px 4px 4px black; /* ContentPanel-HeadersDefault-BorderStyle_Shadow */
-	-webkit-box-shadow: 4px 4px 4px black; /* ContentPanel-HeadersDefault-BorderStyle_Shadow */
-	box-shadow: 4px 4px 4px black; /* ContentPanel-HeadersDefault-BorderStyle_Shadow */
+	/* EmphasizedContent-HeadersDefault-Border */
+	-moz-border-radius: 4px; /* EmphasizedContent-HeadersDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* EmphasizedContent-HeadersDefault-BorderStyle_Radius */
+	border-radius: 4px; /* EmphasizedContent-HeadersDefault-BorderStyle_Radius */
+	-moz-box-shadow: 4px 4px 4px black; /* EmphasizedContent-HeadersDefault-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* EmphasizedContent-HeadersDefault-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* EmphasizedContent-HeadersDefault-BorderStyle_Shadow */
 
-	/* ContentPanel-HeadersDefault-Background */
-	background-color: #444444; /* ContentPanel-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* ContentPanel-HeadersDefault-Background_Image */
-	background-position: left top;  /* ContentPanel-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* ContentPanel-HeadersDefault-Background_Image-Repeat */
+	/* EmphasizedContent-HeadersDefault-Background */
+	background-color: #444444; /* EmphasizedContent-HeadersDefault-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-HeadersDefault-Background_Image */
+	background-position: left top;  /* EmphasizedContent-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-HeadersDefault-Background_Image-Repeat */
     }
 
     /**************************************************************************************************
@@ -221,22 +215,19 @@
        *
        * DESCRIPTION: Sets font, shadowing and background for an active ToggleButton
        ************************************************************************************************/
-    .wm_template .wmcontentarea .wmcontentarea  .wmbutton.toggleButtonDown {
-	/* ContentPanel-HeadersActive-Font */
-	font-family: sans-serif; /* ContentPanel-HeadersActive-Font_Family */
-	font-size: 12pt; /* ContentPanel-HeadersActive-Font_TextSize */
-	color: #FFFFFF; /* ContentPanel-HeadersActive-Font_Color */
-	font-weight: bold; /* ContentPanel-HeadersActive-Font_Weight */
+    .wm_template .EmphasizedContent  .wmbutton.toggleButtonDown {
+	/* EmphasizedContent-HeadersActive-Font */
+	color: #FFFFFF; /* EmphasizedContent-HeadersActive-Font_Color */
 
-	/* ContentPanel-HeadersActive-Background */
-	background-color: #444444; /* ContentPanel-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* ContentPanel-HeadersActive-Background_Image */
-	background-position: left top;  /* ContentPanel-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* ContentPanel-HeadersActive-Background_Image-Repeat */
+	/* EmphasizedContent-HeadersActive-Background */
+	background-color: #444444; /* EmphasizedContent-HeadersActive-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-HeadersActive-Background_Image */
+	background-position: left top;  /* EmphasizedContent-HeadersActive-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-HeadersActive-Background_Image-Repeat */
 
-	-moz-box-shadow: 4px 4px 4px black; /* ContentPanel-HeadersActive-BorderStyle_Shadow */
-	-webkit-box-shadow: 4px 4px 4px black; /* ContentPanel-HeadersActive-BorderStyle_Shadow */
-	box-shadow: 4px 4px 4px black; /* ContentPanel-HeadersActive-BorderStyle_Shadow */
+	-moz-box-shadow: 4px 4px 4px black; /* EmphasizedContent-HeadersActive-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* EmphasizedContent-HeadersActive-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* EmphasizedContent-HeadersActive-BorderStyle_Shadow */
 
 
     }
@@ -247,23 +238,193 @@
        * DESCRIPTION: Sets font, shadowing and background for a wm.Button with a mouseover
        ************************************************************************************************/
 
-    .wm_template .wmcontentarea .wmcontentarea  .wmbutton:hover,
-    .wm_template .wmcontentarea .wmcontentarea  .wmbutton:focus,
-    .wm_template .wmcontentarea .wmcontentarea  .wmroundedbutton:hover,
-    .wm_template .wmcontentarea .wmcontentarea  .wmroundedbutton:focus {
-	/* ContentPanel-HeadersHover-Font */
-	color: #FFFFFF; /* ContentPanel-HeadersHover-Font_Color */
+    .wm_template .EmphasizedContent  .wmbutton:hover,
+    .wm_template .EmphasizedContent  .wmbutton:focus,
+    .wm_template .EmphasizedContent  .wmroundedbutton:hover,
+    .wm_template .EmphasizedContent  .wmroundedbutton:focus {
+	/* EmphasizedContent-HeadersHover-Font */
+	color: #FFFFFF; /* EmphasizedContent-HeadersHover-Font_Color */
 
-	/* ContentPanel-HeadersHover-Background */
-	background-color: #444444; /* ContentPanel-HeadersHover-Background_Color */
-	background-image: url(images/threeD.png); /* ContentPanel-HeadersHover-Background_Image */
-	background-position: left top;  /* ContentPanel-HeadersHover-Background_Image-Position */
-	background-repeat: repeat-x; /* ContentPanel-HeadersHover-Background_Image-Repeat */
+	/* EmphasizedContent-HeadersHover-Background */
+	background-color: #444444; /* EmphasizedContent-HeadersHover-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-HeadersHover-Background_Image */
+	background-position: left top;  /* EmphasizedContent-HeadersHover-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-HeadersHover-Background_Image-Repeat */
 
-	/* ContentPanel-HeadersHover-BorderStyle_Shadow */
-	-moz-box-shadow: 4px 4px 4px black; /* ContentPanel-HeadersHover-BorderStyle_Shadow */
-	-webkit-box-shadow: 4px 4px 4px black; /* ContentPanel-HeadersHover-BorderStyle_Shadow */
-	box-shadow: 4px 4px 4px black; /* ContentPanel-HeadersHover-BorderStyle_Shadow */
+	/* EmphasizedContent-HeadersHover-BorderStyle_Shadow */
+	-moz-box-shadow: 4px 4px 4px black; /* EmphasizedContent-HeadersHover-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* EmphasizedContent-HeadersHover-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* EmphasizedContent-HeadersHover-BorderStyle_Shadow */
+
+    }
+
+}
+
+
+
+@media screen { /* TOCContent-Level */ 
+    /**************************************************************************************************
+       * TYPE:        Default Styling
+       *
+       * DESCRIPTION: Sets font, rounding, shadowing and background for the standard button state
+       ************************************************************************************************/
+    .wm_template .TOCContent  .wmbutton,
+    .wm_template .TOCContent  .wmtogglebutton,
+    .wm_template .TOCContent  .wmroundedbutton,
+    .wm_template .TOCContent  .wmbutton.wmbutton-disabled:hover,
+    .wm_template .TOCContent  .wmbutton.wmbutton-disabled:focus
+    {
+	/* TOCContent-HeadersDefault-Font */
+	font-family: sans-serif; /* TOCContent-HeadersDefault-Font_Family */
+	font-size: 12pt; /* TOCContent-HeadersDefault-Font_TextSize */
+	color: #FFFFFF; /* TOCContent-HeadersDefault-Font_Color */
+	font-weight: bold; /* TOCContent-HeadersDefault-Font_Weight */
+
+	/* TOCContent-HeadersDefault-Border */
+	-moz-border-radius: 4px; /* TOCContent-HeadersDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* TOCContent-HeadersDefault-BorderStyle_Radius */
+	border-radius: 4px; /* TOCContent-HeadersDefault-BorderStyle_Radius */
+	-moz-box-shadow: 4px 4px 4px black; /* TOCContent-HeadersDefault-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* TOCContent-HeadersDefault-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* TOCContent-HeadersDefault-BorderStyle_Shadow */
+
+	/* TOCContent-HeadersDefault-Background */
+	background-color: #444444; /* TOCContent-HeadersDefault-Background_Color */
+	background-image: url(images/threeD.png); /* TOCContent-HeadersDefault-Background_Image */
+	background-position: left top;  /* TOCContent-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* TOCContent-HeadersDefault-Background_Image-Repeat */
+    }
+
+    /**************************************************************************************************
+       * TYPE:        Active Styling
+       *
+       * DESCRIPTION: Sets font, shadowing and background for an active ToggleButton
+       ************************************************************************************************/
+    .wm_template .TOCContent  .wmbutton.toggleButtonDown {
+	/* TOCContent-HeadersActive-Font */
+	color: #FFFFFF; /* TOCContent-HeadersActive-Font_Color */
+
+	/* TOCContent-HeadersActive-Background */
+	background-color: #444444; /* TOCContent-HeadersActive-Background_Color */
+	background-image: url(images/threeD.png); /* TOCContent-HeadersActive-Background_Image */
+	background-position: left top;  /* TOCContent-HeadersActive-Background_Image-Position */
+	background-repeat: repeat-x; /* TOCContent-HeadersActive-Background_Image-Repeat */
+
+	-moz-box-shadow: 4px 4px 4px black; /* TOCContent-HeadersActive-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* TOCContent-HeadersActive-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* TOCContent-HeadersActive-BorderStyle_Shadow */
+
+
+    }
+
+    /**************************************************************************************************
+       * TYPE:        Hover Styling
+       *
+       * DESCRIPTION: Sets font, shadowing and background for a wm.Button with a mouseover
+       ************************************************************************************************/
+
+    .wm_template .TOCContent  .wmbutton:hover,
+    .wm_template .TOCContent  .wmbutton:focus,
+    .wm_template .TOCContent  .wmroundedbutton:hover,
+    .wm_template .TOCContent  .wmroundedbutton:focus {
+	/* TOCContent-HeadersHover-Font */
+	color: #FFFFFF; /* TOCContent-HeadersHover-Font_Color */
+
+	/* TOCContent-HeadersHover-Background */
+	background-color: #444444; /* TOCContent-HeadersHover-Background_Color */
+	background-image: url(images/threeD.png); /* TOCContent-HeadersHover-Background_Image */
+	background-position: left top;  /* TOCContent-HeadersHover-Background_Image-Position */
+	background-repeat: repeat-x; /* TOCContent-HeadersHover-Background_Image-Repeat */
+
+	/* TOCContent-HeadersHover-BorderStyle_Shadow */
+	-moz-box-shadow: 4px 4px 4px black; /* TOCContent-HeadersHover-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* TOCContent-HeadersHover-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* TOCContent-HeadersHover-BorderStyle_Shadow */
+
+    }
+
+}
+
+
+
+@media screen { /* ToolbarContent-Level */ 
+    /**************************************************************************************************
+       * TYPE:        Default Styling
+       *
+       * DESCRIPTION: Sets font, rounding, shadowing and background for the standard button state
+       ************************************************************************************************/
+    .wm_template .ToolbarContent  .wmbutton,
+    .wm_template .ToolbarContent  .wmtogglebutton,
+    .wm_template .ToolbarContent  .wmroundedbutton,
+    .wm_template .ToolbarContent  .wmbutton.wmbutton-disabled:hover,
+    .wm_template .ToolbarContent  .wmbutton.wmbutton-disabled:focus
+    {
+	/* ToolbarContent-HeadersDefault-Font */
+	font-family: sans-serif; /* ToolbarContent-HeadersDefault-Font_Family */
+	font-size: 12pt; /* ToolbarContent-HeadersDefault-Font_TextSize */
+	color: #FFFFFF; /* ToolbarContent-HeadersDefault-Font_Color */
+	font-weight: bold; /* ToolbarContent-HeadersDefault-Font_Weight */
+
+	/* ToolbarContent-HeadersDefault-Border */
+	-moz-border-radius: 4px; /* ToolbarContent-HeadersDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* ToolbarContent-HeadersDefault-BorderStyle_Radius */
+	border-radius: 4px; /* ToolbarContent-HeadersDefault-BorderStyle_Radius */
+	-moz-box-shadow: 4px 4px 4px black; /* ToolbarContent-HeadersDefault-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* ToolbarContent-HeadersDefault-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* ToolbarContent-HeadersDefault-BorderStyle_Shadow */
+
+	/* ToolbarContent-HeadersDefault-Background */
+	background-color: #444444; /* ToolbarContent-HeadersDefault-Background_Color */
+	background-image: url(images/threeD.png); /* ToolbarContent-HeadersDefault-Background_Image */
+	background-position: left top;  /* ToolbarContent-HeadersDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* ToolbarContent-HeadersDefault-Background_Image-Repeat */
+    }
+
+    /**************************************************************************************************
+       * TYPE:        Active Styling
+       *
+       * DESCRIPTION: Sets font, shadowing and background for an active ToggleButton
+       ************************************************************************************************/
+    .wm_template .ToolbarContent  .wmbutton.toggleButtonDown {
+	/* ToolbarContent-HeadersActive-Font */
+	color: #FFFFFF; /* ToolbarContent-HeadersActive-Font_Color */
+
+	/* ToolbarContent-HeadersActive-Background */
+	background-color: #444444; /* ToolbarContent-HeadersActive-Background_Color */
+	background-image: url(images/threeD.png); /* ToolbarContent-HeadersActive-Background_Image */
+	background-position: left top;  /* ToolbarContent-HeadersActive-Background_Image-Position */
+	background-repeat: repeat-x; /* ToolbarContent-HeadersActive-Background_Image-Repeat */
+
+	-moz-box-shadow: 4px 4px 4px black; /* ToolbarContent-HeadersActive-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* ToolbarContent-HeadersActive-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* ToolbarContent-HeadersActive-BorderStyle_Shadow */
+
+
+    }
+
+    /**************************************************************************************************
+       * TYPE:        Hover Styling
+       *
+       * DESCRIPTION: Sets font, shadowing and background for a wm.Button with a mouseover
+       ************************************************************************************************/
+
+    .wm_template .ToolbarContent  .wmbutton:hover,
+    .wm_template .ToolbarContent  .wmbutton:focus,
+    .wm_template .ToolbarContent  .wmroundedbutton:hover,
+    .wm_template .ToolbarContent  .wmroundedbutton:focus {
+	/* ToolbarContent-HeadersHover-Font */
+	color: #FFFFFF; /* ToolbarContent-HeadersHover-Font_Color */
+
+	/* ToolbarContent-HeadersHover-Background */
+	background-color: #444444; /* ToolbarContent-HeadersHover-Background_Color */
+	background-image: url(images/threeD.png); /* ToolbarContent-HeadersHover-Background_Image */
+	background-position: left top;  /* ToolbarContent-HeadersHover-Background_Image-Position */
+	background-repeat: repeat-x; /* ToolbarContent-HeadersHover-Background_Image-Repeat */
+
+	/* ToolbarContent-HeadersHover-BorderStyle_Shadow */
+	-moz-box-shadow: 4px 4px 4px black; /* ToolbarContent-HeadersHover-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* ToolbarContent-HeadersHover-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* ToolbarContent-HeadersHover-BorderStyle_Shadow */
 
     }
 

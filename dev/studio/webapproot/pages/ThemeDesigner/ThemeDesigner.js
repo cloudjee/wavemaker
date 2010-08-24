@@ -76,22 +76,23 @@ dojo.declare("ThemeDesigner", wm.Page, {
      */
     themeGroupData: {
         "Common": {
-	    demo: "themeGroupDemoHeaderWidgets",
+	    demo: "themeGroupDemoAllPanelsWidgets",
             styles: ["Editor_BorderStyle-Radius", "Panel_Border", "Panel_BorderStyle-Radius"],
 	    borders: [{borderClass: "wm.TabLayers", borderProperty: "clientBorder"},
 			      {borderClass: "wm.AccordionLayers", borderProperty: "layerBorder", borderColorProperty: "borderColor"},
 			      {borderClass: "wm.WizardLayers", borderProperty: "clientBorder"},
 			      {borderClass: "wm.Dialog", borderProperty: "border"},
-			      {borderClass: "wm.FancyPanel", borderProperty: "innerBorder"}
+		              {borderClass: "wm.FancyPanel", borderProperty: "innerBorder"},
+			      {borderClass: "wm.Panel", borderProperty: "border"}
 			     ]},
         "Document": {
 	    subcategories: {
 		"Styles": {
-		    demo: "themeGroupDemoDocumentWidgets",
+		    demo: "themeGroupDemoAllPanelsWidgets",
 		    styles: ["Font", "Border", "BorderStyle", "Background"],
 		    borders: [{borderClass: "wm.Layout", borderProperty: "border"}]},
 		"HeadersDefault": {
-		    demo: "themeGroupDemoDocumentWidgets",
+		    demo: "themeGroupDemoAllPanelsWidgets",
 		    styles: ["Font", "Border-BorderSize", "BorderStyle", "Background"],
 		    borders: [{borderClass: "wm.Button", borderProperty: "border"},
 			      {borderClass: "wm.ToggleButton", borderProperty: "border"},
@@ -105,72 +106,124 @@ dojo.declare("ThemeDesigner", wm.Page, {
 			      {borderClass: "wm.PageDialog", borderProperty: "footerBorder", borderTemplate: "?,0,0,0"}
 			     ]},               
 		"HeadersHover":   {
-		    demo: "themeGroupDemoDocumentWidgets",
+		    demo: "themeGroupDemoAllPanelsWidgets",
 		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
 		"HeadersActive":  {
-		    demo: "themeGroupDemoDocumentWidgets",
+		    demo: "themeGroupDemoAllPanelsWidgets",
 		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
 
 		"EditorsDefault": {
-		    demo: "themeGroupDemoDocumentWidgets",
+		    demo: "themeGroupDemoAllPanelsWidgets",
 		    styles:     ["Border-Color", "Background", "Font"]},
 		"EditorsHover":   {
-		    demo: "themeGroupDemoDocumentWidgets",
+		    demo: "themeGroupDemoAllPanelsWidgets",
 		    styles:     ["Border-Color", "Background", "Font-Color"]},
 		"EditorsFocus":   {
-		    demo: "themeGroupDemoDocumentWidgets",
+		    demo: "themeGroupDemoAllPanelsWidgets",
 		    styles:     ["Border-Color", "Background", "Font-Color"]}}},
 	
 
-        "PageContent":  {
+        "MainContent":  {
 	    subcategories: {
 		"Styles": {
-		    demo: "themeGroupDemoPageAndEditorWidgets",
-		    styles: ["Font", "Background"]},
+		    demo: "themeGroupDemoAllPanelsWidgets",
+		    styles: ["Font",  "BorderStyle", "Background"]},
 		"HeadersDefault": {
-		    demo: "themeGroupDemoPageAndEditorWidgets",
+		    demo: "themeGroupDemoAllPanelsWidgets",
 		    styles: ["Font", "BorderStyle", "Background"]},               
 		"HeadersHover":   {
-		    demo: "themeGroupDemoPageAndEditorWidgets",
+		    demo: "themeGroupDemoAllPanelsWidgets",
 		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
 		"HeadersActive":  {
-		    demo: "themeGroupDemoPageAndEditorWidgets",
+		    demo: "themeGroupDemoAllPanelsWidgets",
 		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
 
 		/* For Editors, the border in question is for the dijit (css) not the widget (border property) */
 		"EditorsDefault": {
-		    demo: "themeGroupDemoPageAndEditorWidgets",
+		    demo: "themeGroupDemoAllPanelsWidgets",
 		    styles: ["Border-Color", "Background", "Font"]},
 		"EditorsHover":   {
-		    demo: "themeGroupDemoPageAndEditorWidgets",
+		    demo: "themeGroupDemoAllPanelsWidgets",
 		    styles: ["Border-Color", "Background", "Font-Color"]},
 		"EditorsFocus":   {
-		    demo: "themeGroupDemoPageAndEditorWidgets",
+		    demo: "themeGroupDemoAllPanelsWidgets",
 		    styles: ["Border-Color", "Background", "Font-Color"]}}},
 		
 
-        "ContentPanel":  {
+        "EmphasizedContent":  {
 	    subcategories: {
 		"Styles": {
-		    demo: "themeGroupDemoContentPanelWidgets",
-		    styles: ["Font", "Background"]},
+		    demo: "themeGroupDemoAllPanelsWidgets",
+		    styles: ["Font",  "BorderStyle", "Background"]},
 		"HeadersDefault": {
-		    demo: "themeGroupDemoContentPanelWidgets",
+		    demo: "themeGroupDemoAllPanelsWidgets",
 		    styles: ["Font", "BorderStyle", "Background"]},               
 		"HeadersHover":   {
-		    demo: "themeGroupDemoContentPanelWidgets",
+		    demo: "themeGroupDemoAllPanelsWidgets",
 		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
 		"HeadersActive":  {
-		    demo: "themeGroupDemoContentPanelWidgets",
+		    demo: "themeGroupDemoAllPanelsWidgets",
 		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
 		"EditorsDefault": {
-		    demo: "themeGroupDemoContentPanelWidgets",
+		    demo: "themeGroupDemoAllPanelsWidgets",
 		    styles: ["Border-Color", "Background", "Font"]},
 		"EditorsHover":   {
-		    demo: "themeGroupDemoContentPanelWidgets",
+		    demo: "themeGroupDemoAllPanelsWidgets",
 		    styles: ["Border-Color", "Background", "Font-Color"]},
 		"EditorsFocus":   {
-		    demo: "themeGroupDemoContentPanelWidgets",
+		    demo: "themeGroupDemoAllPanelsWidgets",
+		    styles: ["Border-Color", "Background", "Font-Color"]}
+	    }
+	},
+
+        "ToolbarContent":  {
+	    subcategories: {
+		"Styles": {
+		    demo: "themeGroupDemoAllPanelsWidgets",
+		    styles: ["Font",  "BorderStyle", "Background"]},
+		"HeadersDefault": {
+		    demo: "themeGroupDemoAllPanelsWidgets",
+		    styles: ["Font", "BorderStyle", "Background"]},               
+		"HeadersHover":   {
+		    demo: "themeGroupDemoAllPanelsWidgets",
+		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
+		"HeadersActive":  {
+		    demo: "themeGroupDemoAllPanelsWidgets",
+		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
+		"EditorsDefault": {
+		    demo: "themeGroupDemoAllPanelsWidgets",
+		    styles: ["Border-Color", "Background", "Font"]},
+		"EditorsHover":   {
+		    demo: "themeGroupDemoAllPanelsWidgets",
+		    styles: ["Border-Color", "Background", "Font-Color"]},
+		"EditorsFocus":   {
+		    demo: "themeGroupDemoAllPanelsWidgets",
+		    styles: ["Border-Color", "Background", "Font-Color"]}
+	    }
+	},
+
+        "TOCContent":  {
+	    subcategories: {
+		"Styles": {
+		    demo: "themeGroupDemoAllPanelsWidgets",
+		    styles: ["Font",  "BorderStyle", "Background"]},
+		"HeadersDefault": {
+		    demo: "themeGroupDemoAllPanelsWidgets",
+		    styles: ["Font", "BorderStyle", "Background"]},               
+		"HeadersHover":   {
+		    demo: "themeGroupDemoAllPanelsWidgets",
+		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
+		"HeadersActive":  {
+		    demo: "themeGroupDemoAllPanelsWidgets",
+		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
+		"EditorsDefault": {
+		    demo: "themeGroupDemoAllPanelsWidgets",
+		    styles: ["Border-Color", "Background", "Font"]},
+		"EditorsHover":   {
+		    demo: "themeGroupDemoAllPanelsWidgets",
+		    styles: ["Border-Color", "Background", "Font-Color"]},
+		"EditorsFocus":   {
+		    demo: "themeGroupDemoAllPanelsWidgets",
 		    styles: ["Border-Color", "Background", "Font-Color"]}
 	    }
 	},
@@ -180,11 +233,11 @@ dojo.declare("ThemeDesigner", wm.Page, {
         "Tables": {
 	    subcategories: {
 		"EvenRows": {
-		    demo: "themeGroupDemoHeaderWidgets",
-		    styles: ["Font", "Background", "Border-Color"]},
+		    demo: "themeGroupDemoAllPanelsWidgets",
+		    styles: ["Font", "Background-Color", "Border"]},
 		"OddRows":   {
-		    demo: "themeGroupDemoHeaderWidgets",
-		    styles: ["Font-Color", "Background"]}}}
+		    demo: "themeGroupDemoAllPanelsWidgets",
+		    styles: ["Font-Color", "Background-Color"]}}}
     },
 
 
@@ -209,11 +262,31 @@ dojo.declare("ThemeDesigner", wm.Page, {
         this.initThemeGroupList();
 
         // Select the theme in use by the user's application
+/*
         var listitem = this.themeList.getItemByFieldName("dataValue", studio.application.theme);
         this.themeList.eventSelect(listitem);
+*/
+	this.themeSelect.setDataValue(studio.application.theme);
     },
 
     initThemeGroupList: function() {
+	var items = this.themeGroupList.items;
+	var values = this.themeGroupListVar.getData();
+	for (var i = 0; i < values.length; i++) {
+	    if (!values[i].dataValue)
+		dojo.addClass(items[i].domNode, "ThemeListHeader");
+	    else
+		dojo.addClass(items[i].domNode, "ThemeListItem");
+	}
+	var inputs = [dojo.byId("MainContentEnabled"),dojo.byId("EmphasizedContentEnabled"), dojo.byId("ToolbarContentEnabled"), dojo.byId("TOCContentEnabled")];
+	dojo.forEach(inputs, dojo.hitch(this,function(input) {
+		dojo.connect(input, "onchange", this, function(e) {
+		    dojo.stopEvent(e);
+		    this.setSectionEnabled(input.id.replace(/Enabled/,""), input.checked);
+		});
+	}));
+
+/*
             var groupList = [];
             for (var i in this.themeGroupData) {
 		var checkbox = (i == "ContentPanel" || i == "PageContent") ? "<input type='checkbox' name='" + i + "' id='" + i +"Enabled' />" : "";
@@ -226,13 +299,14 @@ dojo.declare("ThemeDesigner", wm.Page, {
 		dojo.connect(input, "onchange", this, function(e) {
 		    dojo.stopEvent(e);
 		    this.setSectionEnabled(input.id.replace(/Enabled/,""), input.checked);
-/*
+/ *
 		    this.themeData[input.id + "-Enabled"] = input.checked;
 		    this.cssText = this.cssText.replace(/(\@media )(screen|disabled)/, "$1" + ((input.checked) ? "screen" : "disabled"));
 		    studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
-		    */
+		    * /
 		});
 	}));
+    */
     },
 
     // Populate this.widgetListVar
@@ -258,10 +332,11 @@ dojo.declare("ThemeDesigner", wm.Page, {
      */
     themeselect: function(inSender) {
         /* Step 1: Find out what theme was selected! */
-        this.currentTheme = inSender.selectedItem.getData().dataValue;
+        this.currentTheme = inSender.getDataValue();
 
         /* Step 2: Set the class of the demo panel to the new theme so the demo widgets will get the proper classpath */
-        this.demoPanelOuter.domNode.className = this.currentTheme;
+	for (var i = 0; i < this.demoPanelTabLayers.layers.length; i++) 
+            this.demoPanelTabLayers.layers[i].domNode.className = this.currentTheme;
 
         /* Step 3: Get a list of images available for this theme so they're avialable for image pulldown menus */
 	var path;
@@ -284,7 +359,9 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	var templateCssText =  "";
 	var stylesheets = ["theme.css", "buttons.css", "calendar.css", "dialog.css", "editors.css", "grid.css", "menus.css", "panels.css", "progressbar.css", "splitterbevel.css"];
 	for (var i = 0; i < stylesheets.length; i++) {
-	    templateCssText += dojo.xhrGet({url:dojo.moduleUrl("wm.studio.app") + "templates/themes/" + stylesheets[i], sync:true, preventCache:true}).results[0];
+	    templateCssText += "/*****************************************\n * FILE: " + stylesheets[i] + "\n *****************************************/\n" + 
+		dojo.xhrGet({url:dojo.moduleUrl("wm.studio.app") + "templates/themes/" + stylesheets[i], sync:true, preventCache:true}).results[0] +
+		"/*****************************************\n * EOF: " + stylesheets[i] + "\n *****************************************/\n";
 	}
     
         templateCssText = templateCssText.replace(/\.wm_template/g, "." + this.currentTheme);
@@ -317,10 +394,15 @@ dojo.declare("ThemeDesigner", wm.Page, {
         this.cssText = lines.join("\n");
 
 	/* this.cssText must be set before calling these */
-	this.setSectionEnabled("PageContent", this.themeData["PageContent-Enabled"]);
-	this.setSectionEnabled("ContentPanel", this.themeData["ContentPanel-Enabled"]);
-	dojo.byId("ContentPanelEnabled").checked = this.themeData["ContentPanel-Enabled"];
-	dojo.byId("PageContentEnabled").checked = this.themeData["PageContent-Enabled"];    
+	this.setSectionEnabled("MainContent", this.themeData["MainContent-Enabled"]);
+	this.setSectionEnabled("EmphasizedContent", this.themeData["EmphasizedContent-Enabled"]);
+	this.setSectionEnabled("TOCContent", this.themeData["TOCContent-Enabled"]);
+	this.setSectionEnabled("ToolbarContent", this.themeData["ToolbarContent-Enabled"]);
+
+	dojo.byId("MainContentEnabled").checked = this.themeData["MainContent-Enabled"];
+	dojo.byId("EmphasizedContentEnabled").checked = this.themeData["EmphasizedContent-Enabled"];    
+	dojo.byId("TOCContentEnabled").checked = this.themeData["TOCContent-Enabled"];
+	dojo.byId("ToolbarContentEnabled").checked = this.themeData["ToolbarContent-Enabled"];
 	    
         /* Step 8: Load the Theme.js file and store it in this.themePrototype */
 	this.themePrototype =  dojo.fromJson(dojo.xhrGet({url:path + "Theme.js", sync:true, preventCache:true}).results[0]);
@@ -340,25 +422,12 @@ dojo.declare("ThemeDesigner", wm.Page, {
         studio.application.cacheWidgets();
         this.setDirty(false);
 
-	if (this.currentTheme.match(/^wm_/)) {
-            this.userLevelListPanel.hide();
-            this.themeGroupListPanel.hide();
-            this.themeSubGroupListPanel.hide();
-            this.widgetListPanel.hide();
-            this.widgetEditPanel.removeAllControls();
-            var label = new wm.Label({owner: this, parent: this.widgetEditPanel, caption: "To edit this theme click copy, and edit your local copy of the theme", width: "100%", height: "50px"});
-            this.widgetEditPanel.reflow();
-            this.regenerateDemoPanel();            
-        } else {
-            if (!this.userLevelListPanel.showing) {
-                this.userLevelListPanel.show();
-            }
 
-            /* Step 9: Make sure the theme group list has something selected so that the user can see a response to their theme selection */
-            this.userLevelList.eventSelect((this.userLevelList.selectedItem.getData()) ? this.userLevelList.items[this.userLevelList.getSelectedIndex()] : this.userLevelList.items[0]);
-        }
+        /* Step 9: Make sure the theme group list has something selected so that the user can see a response to their theme selection */
+            this.themeGroupList.eventSelect((this.themeGroupList.selectedItem.getData()) ? this.themeGroupList.items[this.themeGroupList.getSelectedIndex()] : this.themeGroupList.items[0]);
     },
 
+    /* Obsolete */
     difficultySelect: function(inSender) {
         var index = this.userLevelList.getSelectedIndex();
         if (index <= 0) {       
@@ -370,7 +439,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
             this.widgetListPanel.hide();
             //this.themeGroupListPanel.parent.setWidth("250px");
             this.generateBasicEditor();
-            this.regenerateDemoPanel(this.themeGroupDemoHeaderWidgets);
+            this.regenerateDemoPanel();
         } else if (index == this.userLevelList.getCount()-1) {
             /* Highest difficulty: show  the widget list in case its hidden, adjust the width, 
              * and fire off a select event on the widget list, reselecting the current item or selecting the first item
@@ -402,8 +471,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
     /* Generate the editors/panels for accessing the basic settings */
     generateBasicEditor: function() {
+	
         this.widgetEditPanel.removeAllControls();
-
                     var props = {captionSize: "15px", 
                                  captionPosition: "bottom",
                                  captionAlign: "left",
@@ -412,13 +481,19 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                  readonly: Boolean(this.currentTheme.match(/^wm_/))};
 
 
-        new wm.Label({name: "editorsHeading", caption: "Primary Colors", width: "100%", height: "24px", parent: this.widgetEditPanel, owner: this, backgroundColor: "black"});
+        new wm.Label({name: "editorsHeading", caption: "Quick Theme Creator", width: "100%", height: "24px", parent: this.widgetEditPanel, owner: this, backgroundColor: "black"});
 
         var container;
         var editors = [];
-        container = new wm.Panel({layoutKind: "left-to-right", height: "50px", width: "100%", owner: this, parent: this.widgetEditPanel, verticalAlign: "top", horizontalAlign: "left", margin: "0,0,15,0"});
-        new wm.Label({caption: "Border",
+        new wm.Label({caption: "Borders",
                       width: "75px",
+                      height: "20px",
+		      margin: "5,0,0,0",
+                      owner: this,
+                      parent: this.widgetEditPanel});
+        container = new wm.Panel({layoutKind: "left-to-right", height: "35px", width: "100%", owner: this, parent: this.widgetEditPanel, verticalAlign: "top", horizontalAlign: "left", margin: "0"});
+        new wm.Spacer({
+                      width: "20px",
                       height: "100%",
                       owner: this,
                       parent: container});
@@ -426,8 +501,9 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          captionSize: "15px",
                                          caption: "Color",
                                          captionPosition: "bottom",
+					 captionAlign: "left",
                                          dataValue: wm.FancyPanel.prototype.borderColor,
-                                         width: "100px",
+                                         width: "65px",
                                          height: "100%",
                                          owner: this,
                                          parent: container,
@@ -437,8 +513,11 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          captionSize: "15px",
                                          caption: "Radius",
                                          captionPosition: "bottom",
+					 captionAlign: "left",
                                     dataValue: this.getThemeDataValue("Document-HeadersDefault-BorderStyle", "Radius","0px").replace(/\D/g,""),
-                                         width: "100px",
+				         minimum: 0,
+				         maximum: 40,
+                                         width: "80px",
                                          height: "100%",
                                          owner: this,
                                          parent: container,
@@ -448,26 +527,36 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                     captionSize: "15px",
                                     caption: "Width",
                                     captionPosition: "bottom",
+				    captionAlign: "left",
                                     dataValue:  wm.FancyPanel.prototype.innerBorder,
-                                    width: "100px",
+				         minimum: 0,
+				         maximum: 20,
+                                    width: "80px",
                                     height: "100%",
                                     owner: this,
                                     parent: container,
                                     readonly: Boolean(this.currentTheme.match(/^wm_/))}));
 
-
-        container = new wm.Panel({layoutKind: "left-to-right", height: "50px", width: "100%", owner: this, parent: this.widgetEditPanel, verticalAlign: "top", horizontalAlign: "left", margin: "0,0,15,0"});
         new wm.Label({caption: "Page Style",
                       width: "75px",
+                      height: "20px",
+		      margin: "5,0,0,0",
+                      owner: this,
+                      parent: this.widgetEditPanel});
+
+        container = new wm.Panel({layoutKind: "left-to-right", height: "35px", width: "100%", owner: this, parent: this.widgetEditPanel, verticalAlign: "top", horizontalAlign: "left", margin: "0"});
+        new wm.Spacer({
+                      width: "20px",
                       height: "100%",
                       owner: this,
                       parent: container});
         editors.push(new wm.ColorPicker({name: "pageBackgroundColor",
                                          captionSize: "15px",
-                                         caption: "Background",
+                                         caption: "Bkgr Color",
                                          captionPosition: "bottom",
+					 captionAlign: "left",
                                          dataValue: this.getThemeDataValue("Document-Styles-Background", "Color","#FFFFFF"),
-                                         width: "100px",
+                                         width: "65px",
                                          height: "100%",
                                          owner: this,
                                          parent: container,
@@ -475,28 +564,63 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
         editors.push(new wm.ColorPicker({name: "pageFontColor",
                                          captionSize: "15px",
-                                         caption: "Font Color",
+                                         caption: "Fnt Color",
                                          captionPosition: "bottom",
+					 captionAlign: "left",
                                          dataValue: this.getThemeDataValue("Document-Styles-Font", "Color","#000000"),
-                                         width: "100px",
+                                         width: "65px",
                                          height: "100%",
                                          owner: this,
                                          parent: container,
                                          readonly: Boolean(this.currentTheme.match(/^wm_/))}));
 
+        editors.push(new wm.Number({name: "pageFontSize",
+                                         captionSize: "15px",
+                                         caption: "Fnt Size",
+                                         captionPosition: "bottom",
+					 captionAlign: "left",
+				         minimum: 6,
+				         maximum: 30,
+                                    dataValue: this.getThemeDataValue("Document-Styles-Font", "TextSize","12").replace(/\D/g,""),
+                                         width: "50px",
+                                         height: "100%",
+                                         owner: this,
+                                         parent: container,
+                                         readonly: Boolean(this.currentTheme.match(/^wm_/))}));
 
-        container = new wm.Panel({layoutKind: "left-to-right", height: "50px", width: "100%", owner: this, parent: this.widgetEditPanel, verticalAlign: "top", horizontalAlign: "left", margin: "0,0,15,0"});
-        new wm.Label({caption: "Header Style",
+	editors.push(new wm.SelectMenu({name: "headerFontFamily",
+                                         captionSize: "15px",
+                                         caption: "Fnt Face",
+                                         captionPosition: "bottom",
+					 captionAlign: "left",
+                                         dataValue: this.getThemeDataValue("Document-Styles-Font", "Family","Arial"),
+					 options: this.themeTypes.Family[1].options,
+                                         width: "90px",
+                                         height: "100%",
+                                         owner: this,
+                                         parent: container,
+                                        readonly: Boolean(this.currentTheme.match(/^wm_/))}));
+
+
+        new wm.Label({caption: "Header/Clickable Styles",
                       width: "75px",
+                      height: "20px",
+		      margin: "5,0,0,0",
+                      owner: this,
+                      parent: this.widgetEditPanel});
+        container = new wm.Panel({layoutKind: "left-to-right", height: "35px", width: "100%", owner: this, parent: this.widgetEditPanel, verticalAlign: "top", horizontalAlign: "left", margin: "0"});
+        new wm.Spacer({
+                      width: "20px",
                       height: "100%",
                       owner: this,
                       parent: container});
         editors.push(new wm.ColorPicker({name: "headerBackgroundColor",
                                          captionSize: "15px",
-                                         caption: "Background Color",
+                                         caption: "Bkgr Color",
                                          captionPosition: "bottom",
+					 captionAlign: "left",
                                          dataValue: this.getThemeDataValue("Document-HeadersDefault-Background", "Color","#555555"),
-                                         width: "100px",
+                                         width: "65px",
                                          height: "100%",
                                          owner: this,
                                          parent: container,
@@ -509,22 +633,47 @@ dojo.declare("ThemeDesigner", wm.Page, {
         var imageSelect = container.createComponent("headerImage",
 						    widget_json[0], 
 						    dojo.mixin({caption: "Header Image", 
-                                                                dataValue: val}, dojo.mixin(props, widget_json[1])),
+								captionPosition: "bottom",
+                                                                dataValue: val}, dojo.mixin(props, widget_json[1]), {width: "100px"}),
 						    {},
 						    widget_json[3], this);
-
+						   
 	editors.push(imageSelect);
         var val =  this.getThemeDataValue("Document-HeadersDefault-Font", "Color","#FFFFFF");
         editors.push(new wm.ColorPicker({name: "headerFontColor",
                                          captionSize: "15px",
-                                         caption: "Font Color",
+                                         caption: "Fnt Color",
                                          captionPosition: "bottom",
+					 captionAlign: "left",
                                          dataValue: val,
-                                         width: "100px",
+                                         width: "65px",
                                          height: "100%",
                                          owner: this,
                                          parent: container,
                                          readonly: Boolean(this.currentTheme.match(/^wm_/))}));
+
+        editors.push(new wm.Number({name: "headerFontSize",
+                                         captionSize: "15px",
+                                         caption: "Fnt Size",
+				         minimum: 6,
+				         maximum: 30,
+                                         captionPosition: "bottom",
+					 captionAlign: "left",
+                                    dataValue: this.getThemeDataValue("Document-HeadersDefault-Font", "TextSize","12").replace(/\D/g,""),
+                                         width: "50px",
+                                         height: "100%",
+                                         owner: this,
+                                         parent: container,
+                                         readonly: Boolean(this.currentTheme.match(/^wm_/))}));
+
+
+        new wm.Label({caption: "Everything you need to create a basic theme can be found here. To create a more sophisticated theme, you'll need to try the settings in 'Full Theme Settings' and 'Advanced Settings'.  If you change font sizes for headers and Accordions and FancyPanels stop fitting, you may need to go to 'Widget Settings' to adjust the size of your Accordions and FancyPanel titles.",
+		      singleLine: false,
+                      width: "100%",
+                      height: "100%",
+		      margin: "25,10,0,10",
+                      owner: this,
+                      parent: this.widgetEditPanel});
 
         dojo.forEach(editors, dojo.hitch(this, function(e) {
             var originalValue = e.getDataValue();
@@ -538,8 +687,11 @@ dojo.declare("ThemeDesigner", wm.Page, {
                     this.basicEditorChange(e);
             })}));
 
-        this.createSaveThemeButtonPanel();
+        //this.createSaveThemeButtonPanel();
         this.widgetEditPanel.reflow();                    
+        this.regenerateDemoPanel();
+	this.themeSubGroupList.hide();
+	this.widgetList.hide();
     },
 
     /* Handle changes to the basic settings editors */
@@ -567,6 +719,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
             for (var i = 0; i < borders.length; i++) {
                 var widgetClassName = borders[i].borderClass;
                 var borderProperty = borders[i].borderProperty;
+		if (borderProperty.match(/Color/)) continue;
                 var borderTemplate = borders[i].borderTemplate;
                 var newValue = (borderTemplate && borderProperty.match(/border$/i)) ? borderTemplate.replace(/\?/g, value) : value;
                 if (!this.themePrototype[widgetClassName]) 
@@ -686,14 +839,47 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    this.setCssSymbol("Document-HeadersDefault-Font", "Color", value);
 	    this.setCssSymbol("Document-HeadersHover-Font", "Color", value);
 	    this.setCssSymbol("Document-HeadersActive-Font", "Color", value);
-	    this.setCssSymbol("Document-HeadersDefault-Font", "Color", value);
-	    this.setCssSymbol("Document-HeadersHover-Font", "Color", value);
-	    this.setCssSymbol("Document-HeadersActive-Font", "Color", value);
+	    this.setCssSymbol("PageContent-HeadersDefault-Font", "Color", value);
+	    this.setCssSymbol("PageContent-HeadersHover-Font", "Color", value);
+	    this.setCssSymbol("PageContent-HeadersActive-Font", "Color", value);
 	    this.setCssSymbol("ContentPanel-HeadersDefault-Font", "Color", value);
 	    this.setCssSymbol("ContentPanel-HeadersHover-Font", "Color", value);
 	    this.setCssSymbol("ContentPanel-HeadersActive-Font", "Color", value);
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
             return;
+
+        case "headerFontSize":
+	    value += "pt";
+	    this.setCssSymbol("Document-HeadersDefault-Font", "TextSize", value);
+	    this.setCssSymbol("Document-HeadersHover-Font", "TextSize", value);
+	    this.setCssSymbol("Document-HeadersActive-Font", "TextSize", value);
+	    this.setCssSymbol("PageContent-HeadersDefault-Font", "TextSize", value);
+	    this.setCssSymbol("PageContent-HeadersHover-Font", "TextSize", value);
+	    this.setCssSymbol("PageContent-HeadersActive-Font", "TextSize", value);
+	    this.setCssSymbol("ContentPanel-HeadersDefault-Font", "TextSize", value);
+	    this.setCssSymbol("ContentPanel-HeadersHover-Font", "TextSize", value);
+	    this.setCssSymbol("ContentPanel-HeadersActive-Font", "TextSize", value);
+            studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
+            return;
+
+        case "headerFontFamily":
+	    this.setCssSymbol("Document-HeadersDefault-Font", "Family", value);
+	    this.setCssSymbol("Document-HeadersHover-Font", "Family", value);
+	    this.setCssSymbol("Document-HeadersActive-Font", "Family", value);
+	    this.setCssSymbol("PageContent-HeadersDefault-Font", "Family", value);
+	    this.setCssSymbol("PageContent-HeadersHover-Font", "Family", value);
+	    this.setCssSymbol("PageContent-HeadersActive-Font", "Family", value);
+	    this.setCssSymbol("ContentPanel-HeadersDefault-Font", "Family", value);
+	    this.setCssSymbol("ContentPanel-HeadersHover-Font", "Family", value);
+	    this.setCssSymbol("ContentPanel-HeadersActive-Font", "Family", value);
+
+	    // Also sets the page font face; if the user wants something other than a single font face for their app
+	    this.setCssSymbol("Document-Styles-Font", "Family", value);
+	    this.setCssSymbol("PageContent-Styles-Font", "Family", value);
+	    this.setCssSymbol("ContentPanel-Styles-Font", "Family", value);
+            studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
+            return;
+
 
         case "pageBackgroundColor":
 	    this.setCssSymbol("Document-Styles-Background", "Color", value);
@@ -730,6 +916,18 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    this.setCssSymbol("Table-OddRow-Font", "Color", value);
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
             return;
+        case "pageFontSize":
+	    value += "pt";
+	    this.setCssSymbol("Document-Styles-Font", "TextSize", value);
+	    this.setCssSymbol("PageContent-Styles-Font", "TextSize", value);
+	    this.setCssSymbol("ContentPanel-Styles-Font", "TextSize", value);
+	    this.setCssSymbol("ContentPanel-EditorsDefault-Font", "TextSize", value);
+	    this.setCssSymbol("PageContent-EditorsDefault-Font", "TextSize", value);
+	    this.setCssSymbol("Document-Editors-Default-Font", "TextSize", value);
+	    this.setCssSymbol("Table-EvenRow-Font", "TextSize", value);
+	    this.setCssSymbol("Table-OddRow-Font", "TextSize", value);
+            studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
+            return;
         }
     },
 
@@ -737,6 +935,20 @@ dojo.declare("ThemeDesigner", wm.Page, {
         this.widgetEditPanel.removeAllControls();
 
         var groupName = inSender.selectedItem.getData().dataValue;
+	if (!groupName) return;
+	if (groupName == "Basic") 
+	    return this.generateBasicEditor();
+	else if (groupName == "Widgets") {
+ 	    this.themeSubGroupList.hide();
+	    this.widgetList.show();
+	    if (this.widgetList.getSelectedIndex() == -1)
+		this.widgetList.eventSelect(this.widgetList.getItem(0));
+	    else
+		this.widgetselect(inSender);
+	    return;
+	}
+	this.widgetList.hide();
+
 	var fullGroupName = groupName;
 	var groupObj = (inSender == this.themeGroupList) ? this.themeGroupData[groupName] : this.themeGroupData[this.themeGroupList.selectedItem.getData().dataValue].subcategories[groupName];
 
@@ -753,26 +965,39 @@ dojo.declare("ThemeDesigner", wm.Page, {
             }	    
 	    this.themeSubGroupListVar.setData(subgroupList);
             this.themeSubGroupList.eventSelect( this.themeSubGroupList.items[selectedSubGroupIndex]);
-            this.themeSubGroupListPanel.show();
 	    this.themeSubGroupListCurrentGroup = this.themeGroupList.getSelectedIndex();
+
+	    this.themeSubGroupList.show();
 
             if (this.themeSubGroupList.getSelectedIndex() < 0) { 
 		this.themeSubGroupList.eventSelect( this.themeSubGroupList.items[0]);
 	    }
 	    return;
 	} 
-
+    /*
 	if (this._lastDemoPanel != groupObj.demo) {	    
            this.regenerateDemoPanel(this[groupObj.demo]);
 	    this._lastDemoPanel = groupObj.demo;
 	}
+*/
+        this.regenerateDemoPanel(this[groupObj.demo]);
+
 
 	if (inSender != this.themeSubGroupList)
-            this.themeSubGroupListPanel.hide();
+	    this.themeSubGroupList.hide();
 	else
 	    fullGroupName = groupObj.parentName +"-" + groupName;
 
-        new wm.Label({name: "editorsHeading", caption: fullGroupName, width: "100%", height: "24px", parent: this.widgetEditPanel, owner: this, backgroundColor: "black"});
+	var labelHeading = "";
+	var settingList = this.themeGroupListVar.getData();
+	var settingListIndex = this.themeGroupList.getSelectedIndex();
+	for (var i = settingListIndex-1; i >= 0; i--) {
+	    if (!settingList[i].dataValue) {
+		labelHeading = settingList[i].name + ": ";
+		break;
+	    }
+	}
+        new wm.Label({name: "editorsHeading", caption: labelHeading + fullGroupName, width: "100%", height: "24px", parent: this.widgetEditPanel, owner: this, backgroundColor: "black"});
 
         var styleGroupList = groupObj.styles;
         for (var j = 0; j < styleGroupList.length; j++) {
@@ -784,8 +1009,9 @@ dojo.declare("ThemeDesigner", wm.Page, {
             }
             var styleList = this.themeGroupTypes[subGroupName.replace(/^.*_/,"")];
 
+            new wm.Label({width: "100%", height: "20px", margin: "5,0,0,0", caption: subGroupName.replace(/_/g," "), parent: this.widgetEditPanel, owner: this});
             var container = new wm.Panel({layoutKind: "left-to-right", height: "50px", margin: "0,0,15,0", width: "100%", parent: this.widgetEditPanel, owner: this});
-            new wm.Label({width: "110px", height: "100%", caption: subGroupName, parent: container, owner: this});
+	    new wm.Spacer({width: "20px", height: "100%", owner: this, parent: container});
             dojo.forEach(styleList, dojo.hitch(this, function(styleName) {
                 if (!styleFilter || styleFilter == styleName) {
                     var value;
@@ -796,7 +1022,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                     } else {
                          value = this.getThemeDataValue((groupObj.styleName || fullGroupName) + "-" + subGroupName, styleName,"");
                     }
-                    if (styleName != "Shadow" && dojo.isString(value))
+	            if (styleName != "Shadow" && dojo.isString(value))
                         value = value.replace(/(px|pt)/g,"");
                     var props = {captionSize: "15px", 
                                  captionPosition: "bottom",
@@ -830,16 +1056,32 @@ dojo.declare("ThemeDesigner", wm.Page, {
             }));
         }
 
-        var buttonpanel = this.createSaveThemeButtonPanel();
+
+        //var buttonpanel = this.createSaveThemeButtonPanel();
 
 	var selectedLevel = this.themeGroupList.selectedItem.getData().dataValue;
-	if (selectedLevel == "ContentPanel" || selectedLevel == "PageContent") {
-	    var copyButton = new wm.Button({_classes: {domNode: ["themeButton"]}, owner: this, parent: buttonpanel, caption: "Copy " + (selectedLevel == "PageContent" ? "Document" : "PageContent") + " Settings", width: "100px", height: "100%",disabled: this.currentTheme.match(/^wm_/), border: 2, borderColor: "#262b34"});
-	    copyButton.connect(copyButton, "onclick", this, "copy" + (selectedLevel == "PageContent" ? "Document" : "PageContent") + "Settings");
+	if (selectedLevel.match(/Content$/)) {
+	    var buttonpanel = new wm.Panel({layoutKind: "left-to-right", width: "100%", height: "80px", owner: this, parent: this.widgetEditPanel, margin: "10,5,10,5", verticalAlign: "top", horizontalAlign: "right"});
+
+	    var contentOptions = new wm.SelectMenu({owner: this,
+						    parent: buttonpanel,
+						    caption: "",
+						    width: "100px",
+						    height: "20px",
+						    dataValue: "Document",
+						    options: wm.Array.removeElement(["Document", "MainContent", "EmphasizedContent", "TOCContent", "ToolbarContent"], selectedLevel).join(",")});
+	    var copyButton = new wm.Button({_classes: {domNode: ["themeButton"]}, owner: this, parent: buttonpanel, caption: "Copy " + (selectedLevel == "PageContent" ? "Document" : "PageContent") + " Settings", width: "100%", margin: "0,20,0,20", height: "40px",disabled: this.currentTheme.match(/^wm_/), border: 2, borderColor: "#262b34"});
+	    copyButton.connect(copyButton, "onclick", this, function() {
+		this.copyStyleSettings(contentOptions.getDataValue(), this.themeGroupList.selectedItem.getData().dataValue);
+	    });
+	    contentOptions.connect(contentOptions, "onchange", this, function() {
+		copyButton.setCaption("Copy " + contentOptions.getDataValue() + " Settings");
+	    });
 	}
 
         wm.onidle(this.widgetEditPanel,"reflow");
     },
+/*
     copyPageContentSettings: function() {
 	var name = this.themeSubGroupList.selectedItem.getData().dataValue;
 	var data = this.themeData;
@@ -855,21 +1097,23 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	this.themegroupselect(this.themeSubGroupList); // regenerate the editors with new values -- could just call setDataValue
         studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
     },
-    copyDocumentSettings: function() {
+*/
+    copyStyleSettings: function(copyFromGroup, copyToGroup) {
 	var name = this.themeSubGroupList.selectedItem.getData().dataValue;
 	var data = this.themeData;
 	for (var i in data) {
 	    var items = i.split("-");
 	    var group = items.shift();
-	    if (group == "Document" && items[0] == name) {
+	    if (group == copyFromGroup && items[0] == name) {
 		for (var j in data[i]) {
-		    this.setCssSymbol("PageContent-" + items.join("-"), j,data[i][j]);
+		    this.setCssSymbol(copyToGroup + "-" + items.join("-"), j,data[i][j]);
 		}
 	    }
 	}
 	this.themegroupselect(this.themeSubGroupList); // regenerate the editors with new values -- could just call setDataValue
         studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
     },
+
     advancedEditorChange: function(inSender) {
         studio._themeDesignerChange = true;
         studio._reflowPageDesigner = true;
@@ -892,7 +1136,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
         if (styleName.match(/(Radius|Margin)$/)) value += "px";
         else if (styleName == "TextSize") value += "pt";
-
+	else if (styleName == "BorderSize" && groupName == "Tables-EvenRows")
+	    value += "px";
 
         if (styleName != "Image") {
 	    this.setCssSymbol(groupName + "-" + subGroupName, styleName, value);
@@ -947,17 +1192,17 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	this.generatePrototypeEditor(name, ctor);
 	this.generateWidgetStylesEditor(name, ctor);
 
-        this.createSaveThemeButtonPanel();
+        //this.createSaveThemeButtonPanel();
         this.widgetEditPanel.reflow();
     },
 
     generatePrototypeEditor: function(name, ctor) {
-        new wm.Label({name: "mainPanel1Label", caption: "Main styles/properties", width: "100%", height: "24px", parent: this.widgetEditPanel, owner: this, backgroundColor: "black"});
+        new wm.Label({name: "mainPanel1Label", caption: "Widget Settings: " + name, width: "100%", height: "24px", parent: this.widgetEditPanel, owner: this, backgroundColor: "black"});
         if (!this.themePrototype[name]) this.themePrototype[name] = {};
         var editableProps = ctor.prototype.themeableProps || [];
         if (editableProps.length)
             dojo.forEach(editableProps, dojo.hitch(this, function(p) {
-		var props = {captionSize: "220px", caption: p, dataValue: this.themePrototype[name][p] || ctor.prototype[p], width: "100%", height: "20px", owner: this, parent: this.widgetEditPanel, name: p, readonly: Boolean(this.currentTheme.match(/^wm_/))};
+		var props = {captionSize: "120px", captionAlign: "left",  padding: "2,5,2,5", caption: p, dataValue: this.themePrototype[name][p] || ctor.prototype[p], width: "100%", height: "20px", owner: this, parent: this.widgetEditPanel, name: p, readonly: Boolean(this.currentTheme.match(/^wm_/))};
 		var e;
 		switch(p) {
 		case "borderColor":
@@ -1017,6 +1262,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
             }
         }
     },
+/*
     createSaveThemeButtonPanel: function() {
         var buttonPanel = new wm.Panel({layoutKind: "left-to-right", width: "100%", height: "80px", owner: this, parent: this.widgetEditPanel, margin: "10,5,10,5"});
         var savebutton = new wm.Button({_classes: {domNode: ["themeButton"]}, caption: "Save " + this.currentTheme, width: "50%", height: "100%", owner: this, parent: buttonPanel, disabled: this.currentTheme.match(/^wm_/), border: 2, borderColor: "#262b34"});
@@ -1026,12 +1272,26 @@ dojo.declare("ThemeDesigner", wm.Page, {
         revertbutton.connect(revertbutton, "onclick", this, "revertTheme");
 	return buttonPanel;
     },
-
+    */
+    regenerateADemo: function(inSender) {
+	if (this.themeGroupList.selectedItem.getData().dataValue == "Widgets")
+	    this.widgetselect(inSender);
+	else 
+	    this.regenerateDemoPanel();
+    },
     showDemoWidget: function(name, ctor) {
-        this.demoPanel.removeAllControls();
+	this.overviewLayer.hide();
+	this.viewDialogsLayer.hide();
+	this.viewWidgetsLayer.hide();
+	this.viewOneWidgetLayer.setCaption(name);
+	this.viewOneWidgetLayer.show();
+	this.viewOneWidgetLayer.activate();
+
+	var demoPanel = this.demoPanel4;
+        demoPanel.removeAllControls();
 	this.owner = studio.page; // block Application.loadThemePrototypeForClass from using wm_studio to generate the widget
-        this.demoPanel.domNode.innerHTML = "";
-        var o = this._create(ctor, {margin: (name == "wm.Layout") ? "0" : "0,20,0,20", owner: this, parent: this.demoPanel, width: "100%", height: "200px", caption: "Caption"});
+        demoPanel.domNode.innerHTML = "";
+        var o = this._create(ctor, {margin: (name == "wm.Layout") ? "0" : "0,20,0,20", owner: this, parent: demoPanel, width: "100%", height: "200px", caption: "Caption"});
         var props = o.themeableDemoProps;
         if (props) {
             for (var i in props)
@@ -1069,14 +1329,14 @@ dojo.declare("ThemeDesigner", wm.Page, {
         if (wm.isInstanceType(o, wm.Dialog)) {
             o.setHeight("300px");
             o.setWidth("500px");
-            this.demoPanel.domNode.appendChild(o.domNode);
+            demoPanel.domNode.appendChild(o.domNode);
             o.show();
         } else
-            this.demoPanel.reflow();
+            demoPanel.reflow();
     },
 
     addThemeEditor: function(inName, inValue, inGroupName, parent, showGroupName) {
-        var props = {captionSize: "220px", caption: ((showGroupName) ? inGroupName + "-" : "") + inName, dataValue: inValue, width: "100%", height: "20px", owner: this, parent: parent, name: inGroupName + "__" + inName, readonly: this.currentTheme.match(/^wm_/)};
+        var props = {captionSize: "120px", captionAlign: "left", padding: "2,5,2,5", caption: ((showGroupName) ? inGroupName + "-" : "") + inName, dataValue: inValue, width: "100%", height: "20px", owner: this, parent: parent, name: inGroupName + "__" + inName, readonly: this.currentTheme.match(/^wm_/)};
         var e;
         var shortname = inName.replace(/^.*\-/, "");
         switch(shortname) {
@@ -1123,6 +1383,9 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
             break;
         case "Shadow":
+        case "HoverShadow":
+        case "SelectedShadow":
+        case "UnselectedShadow":
             props.dataField    = "dataValue";
             props.displayField = "name";
             props.dataSet = this.shadowListVar;
@@ -1154,7 +1417,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	        this.setCssSymbol(inGroupName, "Image-Repeat", repeat);
             } else {
                 if (shortname == "Radius" || shortname == "Width" || shortname == "Margin" || shortname == "Height") 
-                    if (!value.match(/px/))
+                    if (!String(value).match(/px/))
                         value += "px";
                 else if (shortname == "TextSize") value += "pt";
                 // replace "some-css-name: some-css-value; /* some-symbolic-name */
@@ -1180,12 +1443,16 @@ dojo.declare("ThemeDesigner", wm.Page, {
     setSectionEnabled: function(name, value) {
 	this.themeData[name + "-Enabled"] = value;
 	var matchstr = "^\\s*@media (screen|disabled)\\s*{\\s/\\* " + name + "-Level \\*/";
+	var matchstr2 = "^\\s*@media (screen|disabled)\\s*{\\s/\\* !" + name + "-Level \\*/";
 	console.log(matchstr);
 	var replacestr = '@media ' + (value ? "screen" : "disabled") + " { /* " + name + "-Level */";
+	var replacestr2 = '@media ' + (!value ? "screen" : "disabled") + " { /* !" + name + "-Level */";
 	console.log("REPLACE WITH: " + replacestr);
 	var r = new RegExp(matchstr, "gm");
+	var r2 = new RegExp(matchstr2, "gm");
 	
         this.cssText = this.cssText.replace(r, replacestr);
+        this.cssText = this.cssText.replace(r2, replacestr2);
 	studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
     },
     setCssSymbol: function(inGroupName, inName, inValue) {
@@ -1230,6 +1497,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
 			if (borderProperty == "innerBorderColor")
 			    borderProperty = "borderColor";
 		    }
+		    if (widgetClassName == "wm.Panel" && borderProperty == "border") return;
+
 		    if (borderProperty.match(/Border^/))
 			newValue = parseInt(newValue); // no px in value 
                     var borderTemplate = borderList[i].borderTemplate;
@@ -1254,12 +1523,12 @@ dojo.declare("ThemeDesigner", wm.Page, {
 /*
 	case "Common-Panel_BorderStyle_Radius":
             var newValue = Math.floor(parseInt(inValue) * 0.6) + "px";
-            this.setCssSymbol("Common-Panel_Inner_Border", "Inner-Radius", newValue);
+            this.setCssSymbol("Common-Panel_Inner_BorderStyle", "Inner-Radius", newValue);
 	    */
         }
     },
     revertTheme: function() {
-        this.themeList.eventSelect(this.themeList.items[this.themeList.getSelectedIndex()]);
+	this.themeselect(this.themeSelect);
         app.toastDialog.showToast("Reverted", 2000, "Success");
         this.setDirty(false);
     },
@@ -1279,9 +1548,11 @@ dojo.declare("ThemeDesigner", wm.Page, {
         this.setDirty(false);
 
         // force an update in the applicaton's theme if we've modified its current theme
+/* no longer needed; we update theme as we edit
         if (studio.application.theme == this.currentTheme) {
             studio.application.setTheme(this.currentTheme);
         }
+*/
     },
     copyThemeClick: function(inSender) {
         if (this.currentTheme == "wm_notheme") {
@@ -1532,36 +1803,65 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
 
 
-    regenerateDemoPanel: function(optionalObj) {
-        this.demoPanel.removeAllControls();
-	this.owner = studio.page; // block Application.loadThemePrototypeForClass from using wm_studio to generate the widget
-        this.demoPanel.domNode.innerHTML = "";
+    regenerateDemoPanel: function(widgetTab) {
 
+	//this.viewWidgetsLayer.setShowing(!wm.isEmpty(widgetTab));
+	this.overviewLayer.show();
+	this.viewDialogsLayer.show();
+
+	if (this.viewOneWidgetLayer.isActive())
+	    this.overviewLayer.activate();
+	this.viewOneWidgetLayer.hide();
+
+	var demoPanel = this.demoPanelTabLayers.getActiveLayer().c$[0];
+        demoPanel.removeAllControls();
+	this.owner = studio.page; // block Application.loadThemePrototypeForClass from using wm_studio to generate the widget
+        demoPanel.domNode.innerHTML = "";
+
+	var selectedGroup = this.themeGroupList.selectedItem.getData().dataValue;
+	var selectedGroupMatchesPanelContent = selectedGroup.match(/Content$/) || selectedGroup == "Document";
+	if (!selectedGroupMatchesPanelContent && this.viewWidgetsLayer.isActive())
+	    this.overviewLayer.activate();
+	this.viewWidgetsLayer.setShowing(selectedGroupMatchesPanelContent);
+	if (demoPanel == this.demoPanel2) {
+	    demoPanel.domNode.className = selectedGroup;
+	    demoPanel.setBorder(this.themeData["Common-Panel_Border"].BorderSize);
+	    demoPanel.setBorderColor(this.themeData["Common-Panel_Border"].Color);
+	}
 /*
 	if (this.userLevelList.selectedItem.getData().dataValue == "Advanced") {
 	    var demoWidgets = this.themeGroupData[this.themeGroupList.selectedItem.getData().dataValue].demo;
-            this.demoPanel.createComponents(this[demoWidgets], this);
+            demoPanel.createComponents(this[demoWidgets], this);
 	} else {
-            this.demoPanel.createComponents(this.themeGroupDemoHeaderWidgets, this);
+            demoPanel.createComponents(this.themeGroupDemoHeaderWidgets, this);
 	}
         */
-	this._currentTheme = optionalObj || this._currentTheme || this.themeGroupDemoHeaderWidgets;
-        this.demoPanel.createComponents(this._currentTheme, this);
 
-        if (this.$.openDialogButton)
-            this.$.openDialogButton.connect(this.$.openDialogButton, "onclick", this, function() {
-                this.demoDialog = new wm.GenericDialog({owner: studio.page, "height":"145px","showInput":true,"noEscape":false,"title":"Sample Dialog","button1Caption":"OK","button1Close":true,"button2Close":true,"userPrompt":"This is a sample of a wm.GenericDialog"});
-                this.demoDialog.setOwner(this);
-                this.demoPanel.domNode.appendChild(this.demoDialog.domNode);               
-                this.demoDialog.show();
+	//this._currentTheme = optionalObj || this._currentTheme || this.themeGroupDemoHeaderWidgets;
+	var widgets;
+	if (demoPanel == this.demoPanel)
+	    widgets = this.themeGroupDemoAllPanelsWidgets;
+	else if (demoPanel == this.demoPanel2)
+	    widgets = this.themeGroupWidgets;
+	else 
+	    widgets = null;
+
+	if (widgets) {
+            demoPanel.createComponents(widgets);
+	    if (this.demoDialog)
+		this.demoDialog.destroy();
+	} else {
+            this.demoDialog = new wm.GenericDialog({owner: studio.page, "height":"145px","showInput":true,"noEscape":false,"title":"Sample Dialog","button1Caption":"OK","button1Close":true,"button2Close":true,"userPrompt":"This is a sample of a wm.GenericDialog"});
+            this.demoDialog.setOwner(this);
+            demoPanel.domNode.appendChild(this.demoDialog.domNode);               
+            this.demoDialog.show();
                 
-                this.demoDialog.connect(this.demoDialog.$.button1, "onclick", this, function(inShowing) {
-                    this.demoDialog.destroy();
-                });
-                
+            this.demoDialog.connect(this.demoDialog.$.button1, "onclick", this, function(inShowing) {
+                this.demoDialog.destroy();
             });
+	}
 	this.owner = app;
-        wm.onidle(this.demoPanel,"reflow");
+        wm.onidle(demoPanel,"reflow");
         this._prototypeChanged = false;
     },
     getThemeDataValue: function(groupname, stylename, defaultVal) {
@@ -1571,7 +1871,6 @@ dojo.declare("ThemeDesigner", wm.Page, {
             this.themeData[groupname][stylename] =  defaultVal;
         return this.themeData[groupname][stylename];
     },
-
 
     isDesignLoaded: function() {
 	return (this.owner == studio.page);
@@ -1679,7 +1978,46 @@ dojo.declare("ThemeDesigner", wm.Page, {
     },
 
 
-    themeGroupDemoDocumentWidgets: {
+
+
+
+
+
+    themeGroupWidgets: {
+	layoutBox1: ["wm.Layout", {"height":"100%","width":"100%","horizontalAlign":"left","verticalAlign":"top"}, {}, {
+		fancyPanel1: ["wm.FancyPanel", {"verticalAlign":"top","horizontalAlign":"left"}, {}, {
+			text1: ["wm.Text", {"displayValue":"","caption":"text1"}, {}],
+			selectMenu1: ["wm.SelectMenu", {"caption":"selectMenu1","options":"this, is, a, select, menu","displayField":"name","dataField":"dataValue"}, {}],
+			panel1: ["wm.Panel", {"width":"100%","height":"48px","horizontalAlign":"left","verticalAlign":"top","layoutKind":"left-to-right"}, {}, {
+				button1: ["wm.Button", {"height":"48px","width":"96px"}, {}],
+				toggleButton1: ["wm.ToggleButton", {"height":"48px","width":"96px"}, {}]
+			}],
+		    tabLayers1: ["wm.TabLayers", {margin: "10"}, {}, {
+				layer1: ["wm.Layer", {"caption":"Grid","horizontalAlign":"left","verticalAlign":"top","themeStyleType":"ContentPanel","border":"2","transitionNext":true}, {}, {
+				    dojoGrid: ["wm.DojoGrid", {dsType: "EntryData", width: "100%", height: "100%","columns":[{"show":true,"id":"name","title":"Name","width":"auto","displayType":undefined,"noDelete":true},{"show":true,"id":"dataValue","title":"DataValue","width":"auto","displayType":undefined,"noDelete":true}]},{},{
+					binding: ["wm.Binding", {}, {}, {
+					    wire: ["wm.Wire", {"targetProperty":"dataSet","source":"shadowListVar"}, {}],
+					}]
+				    }]
+				}],
+				layer2: ["wm.Layer", {"caption":"Accordion","horizontalAlign":"left","verticalAlign":"top","themeStyleType":"ContentPanel","border":"2","transitionNext":true}, {}, {
+					accordionLayers1: ["wm.AccordionLayers", {}, {}, {
+						layer4: ["wm.Layer", {"caption":"Empty Layer 1","horizontalAlign":"left","verticalAlign":"top","themeStyleType":"ContentPanel","border":"2","transitionNext":true}, {}],
+						layer5: ["wm.Layer", {"caption":"Empty Layer 2","horizontalAlign":"left","verticalAlign":"top","themeStyleType":"ContentPanel","border":"2","transitionNext":true}, {}],
+						layer6: ["wm.Layer", {"caption":"Empty Layer 3","horizontalAlign":"left","verticalAlign":"top","themeStyleType":"ContentPanel","border":"2","transitionNext":true}, {}]
+					}]
+				}],
+			    layer3: ["wm.Layer", {"caption":"Calendar","horizontalAlign":"left","verticalAlign":"top","themeStyleType":"ContentPanel","border":"2","transitionNext":true, height: "190px"}, {}, {
+					calendar1: ["wm.dijit.Calendar", {}, {}]
+				}]
+			}],
+
+		}]
+	}]
+    },
+
+
+    themeGroupDemoAllPanelsWidgets: {
 	layoutBox1: ["wm.Layout", {"height":"100%","width":"100%","horizontalAlign":"left","verticalAlign":"top"}, {}, {
 	    dojoMenu1: ["wm.DojoMenu", {"structure":"{\"items\":[{\"label\":\"File\",\"children\":[{\"label\":\"New\"},{\"label\":\"Open\"},{\"label\":\"Save\"},{\"label\":\"Close\"}]},{\"label\":\"Edit\",\"children\":[{\"label\":\"Cut\"},{\"label\":\"Copy\"},{\"label\":\"Paste\"}]},{\"label\":\"Zoom\",\"children\":[{\"label\":\"25%\"},{\"label\":\"50%\"},{\"label\":\"100%\"},{\"label\":\"150%\"}]},{\"label\":\"Help\"}]}",
 					"menu":"File > New, Open, Save, Close\nEdit > Cut, Copy, Paste\nZoom > 25%, 50%, 100%, 150%\nHelp",
@@ -1700,29 +2038,78 @@ dojo.declare("ThemeDesigner", wm.Page, {
 		searchButton: ["wm.Button", {caption: "Go", width: "50px", height: "33px"}],
 		searchToggleButton: ["wm.ToggleButton", {captionUp: "Off", captionDown: "On", width: "60px", height: "33px"}]
 		}],
-	    accordionLayers1: ["wm.AccordionLayers", {"height":"200px", "margin": "10,40,0,40"}, {}, {
-					layer1: ["wm.Layer", {"caption":"Accordion 1","horizontalAlign":"left","verticalAlign":"top","isMajorContent":undefined}, {}, {
-						label5: ["wm.Label", {"height":"30px","width":"100%","border":"0","caption":"Contents of accordion 1","singleLine":false}, {}, {
-							format: ["wm.DataFormatter", {}, {}]
-						}],
-					    text12: ["wm.Text", {height: "25px", width: "100%", caption: "text input"}],
-					    button12345: ["wm.Button", {height: "40px", width: "80px", caption: "Save"}]
-					}],
-					layer2: ["wm.Layer", {"caption":"Accordion 2","horizontalAlign":"left","verticalAlign":"top","isMajorContent":undefined}, {}, {
-						label3: ["wm.Label", {"height":"100%","width":"100%","border":"0","caption":"Contents of accordion 2","singleLine":false}, {}, {
-							format: ["wm.DataFormatter", {}, {}]
-						}]
-					}]
-				}],
-	    panel4: ["wm.FancyPanel", {"layoutKind":"top-to-bottom","horizontalAlign":"left","verticalAlign":"top","width":"100%","height":"100%","margin":"10,40,10,40"}, {}, {
-		pageContentLabel1: ["wm.Label", {width: "100%", height: "30px", caption: "Page Content Area"}],
- 		panel4: ["wm.FancyPanel", {"_classes":{"domNode":["wmcontentarea"]},title: "Content Panel Area", "layoutKind":"left-to-right","horizontalAlign":"left","verticalAlign":"top","width":"100%","height":"100%","margin":"40", autoScroll: true}, {}, {
+	    toolbarPanel: ["wm.Panel", {_classes: {domNode: ["ToolbarContent"]},width: "100%", height: "50px", layoutKind: "left-to-right", margin: "3,20,3,20", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+		toolbarLabel: ["wm.Label", {caption: "Toolbar:", width: "80px", height: "25px"}],
+		toolbarEditor: ["wm.Text", {caption: "Enter Lookup Name", height: "25px", width: "350px", captionSize: "150px"}],
+		toolbarButton: ["wm.Button", {caption: "Lookup", width: "80px", height: "100%"}],
+		toolbarToggleButton: ["wm.ToggleButton", {captionUp: "Ignore?", captionDown: "Ignore!!", width: "80px", height: "100%"}],
 
-		}], 
-		pageContentLabel2: ["wm.Label", {width: "100%", height: "30px", caption: "Page Content Area"}],
- 		panel5: ["wm.FancyPanel", {title: "Content Panel Area", "layoutKind":"left-to-right","horizontalAlign":"left","verticalAlign":"top","width":"100%","height":"100%","margin":"40", autoScroll: true}, {}, {
+	    }],
+	    MainLabel: ["wm.Label", {caption: "MainContent Panel Below", width: "100%", margin: "0,0,0,100", height: "15px"}],
+	    mainLayoutPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right"},{},{
+		TOCPanel: ["wm.Panel", {_classes: {domNode: ["TOCContent"]}, width: "100px", height: "100%", layoutKind: "top-to-bottom", border: "1"},{},{
+		    tocLabel: ["wm.Label", {caption: "TOC", width: "100%", height: "30px"}],
+		    tocLinks: ["wm.Html", {html: "<a href='#'>page1</a><br/><a href='#'>page2</a><br/><a href='#'>page3</a><br/><a href='#'>page4</a><br/>", width: "100%", height: "80px"}],
+		    tocSpacer: ["wm.Spacer", {height: "20px"}],
+		    tocSearchBox: ["wm.Text", {caption: "Page Name:", captionPosition: "top", width: "100%", captionSize: "15px", height: "40px"}],
+		    tocSearchButton: ["wm.Button", {caption: "Goto Page", width: "100px", height: "60px"}],
+		    tocSearchToggleButton: ["wm.ToggleButton", {captionUp: "Toggle??", captionDown: "Toggle!!",  width: "100px", height: "60px"}]
+		}],
+		MainPanels: ["wm.TabLayers", {_classes: {domNode: ["MainContent"]}, width: "100%", height: "100%"}, {}, {
+		    MainLayer1: ["wm.Layer", {caption: "Headers", autoScroll: true}, {}, {
+		        hpanel1: ["wm.Panel", {"layoutKind":"left-to-right","horizontalAlign":"left","verticalAlign":"top","width":"100%","height":"81px"}, {}, {
+			    hlabel1: ["wm.Label", {"height":"48px","width":"96px","border":"0","caption":"Buttons:"}, {}, {
+				format: ["wm.DataFormatter", {}, {}]
+			    }],
+			    hbutton1: ["wm.Button", {"height":"48px","width":"153px"}, {}],
+			    htoggleButton1: ["wm.ToggleButton", {"height":"48px","width":"150px","captionUp":"Toggle Button","captionDown":"Toggle Down"}, {}]			
+			}],
+			haccordionLayers1: ["wm.AccordionLayers", {"height":"150px", "margin": "10,40,0,40"}, {}, {
+			    layer1: ["wm.Layer", {"caption":"Accordion 1","horizontalAlign":"left","verticalAlign":"top","isMajorContent":undefined}, {}, {}],
+			    layer2: ["wm.Layer", {"caption":"Accordion 2","horizontalAlign":"left","verticalAlign":"top","isMajorContent":undefined}, {}, {}]
+			}],
+			hFancyPanel: ["wm.FancyPanel", {height: "150px", width: "100%", margin: "10,40,0,40", title: "Fancy Panel Title"}]
+		    }],
+		    MainLayer2: ["wm.Layer", {caption: "Editors"}, {}, {
+			text1: ["wm.Text", {"displayValue":"","caption":"text1"}, {}],
+			selectMenu1: ["wm.SelectMenu", {"caption":"selectMenu1","options":"option 1, option 2, option 3","displayField":"name","dataField":"dataValue"}, {}],
+			checkbox1: ["wm.Checkbox", {"displayValue":"","caption":"checkbox1"}, {}],
+			slider1: ["wm.Slider", {"displayValue":"","caption":"slider1"}, {}],
+			largeTextArea1: ["wm.LargeTextArea", {"displayValue":"","caption":"largeTextArea1"}, {}],
+		        richText1: ["wm.RichText", {"height":"119px"}, {}],
+		        panel1: ["wm.Panel", {"layoutKind":"left-to-right","horizontalAlign":"left","verticalAlign":"top","width":"100%","height":"81px"}, {}, {
+			    label1: ["wm.Label", {"height":"48px","width":"96px","border":"0","caption":"Buttons:"}, {}, {
+				format: ["wm.DataFormatter", {}, {}]
+			    }],
+			    button1: ["wm.Button", {"height":"48px","width":"153px"}, {}],
+			    toggleButton1: ["wm.ToggleButton", {"height":"48px","width":"150px","captionUp":"Toggle Button","captionDown":"Toggle Down"}, {}]
+			}]
+		    }],
+		    MainLayer3: ["wm.Layer", {caption: "Grids"}, {}, {
+			dojoGrid: ["wm.DojoGrid", {dsType: "EntryData", width: "100%", height: "100%","columns":[{"show":true,"id":"name","title":"Name","width":"auto","displayType":undefined,"noDelete":true},{"show":true,"id":"dataValue","title":"DataValue","width":"auto","displayType":undefined,"noDelete":true}]},{},{
+			    binding: ["wm.Binding", {}, {}, {
+				wire: ["wm.Wire", {"targetProperty":"dataSet","source":"shadowListVar"}, {}],
+			    }]
+			}]
+		    }],
+		    MainLayer4: ["wm.Layer", {caption: "EmphasizedContent"}, {}, {
+			pageContentLabel1: ["wm.Label", {width: "100%", height: "40px", caption: "Page Content Area"}],
+ 			panel4: ["wm.Panel", {"_classes":{"domNode":["EmphasizedContent"]},title: "Content Panel Area", "layoutKind":"top-to-bottom","horizontalAlign":"left","verticalAlign":"top","width":"100%","height":"100%","margin":"40", autoScroll: true, border: "2"}, {}, {
+			    emphasizedContentLabel1: ["wm.Label", {singleLine: false, width: "100%", height: "30px", caption: "Content in the emphasized area stands out nicely from the background..."}],
+			    emphasizedText: ["wm.Text", {caption: "Enter your thoughts", width: "100%", height: "25px"}],
+			    emphPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "100%"}, {}, {
+				emphasizedButton1: ["wm.Button", {caption: "Done", width: "80px", height: "100%"}],
+				emphasizedToggleButton1: ["wm.ToggleButton", {captionUp: "Ignore??", captionDown: "Ignore!!", width: "80px", height: "100%"}]
+			    }]
+			}], 
+			pageContentLabel2: ["wm.Label", {width: "100%", height: "20px", caption: "Page Content Area"}],
+ 			panel5: ["wm.FancyPanel", {"_classes":{"domNode":["EmphasizedContent"]},title: "Content Panel Area", "layoutKind":"left-to-right","horizontalAlign":"left","verticalAlign":"top","width":"100%","height":"100%","margin":"40", autoScroll: true}, {}, {
+			    emphasizedContentLabel2: ["wm.Label", {width: "100%", height: "20px", caption: "Content in the emphasized area stands out nicely from the background..."}],			    			    
+			    emphasizedButton2: ["wm.Button", {caption: "Done", width: "80px", height: "100%"}]
+			}]
 
-		}]
+		    }]
+	    }]
 	    }],
 	    footerpanel2: ["wm.Panel", {"layoutKind":"left-to-right","horizontalAlign":"center","verticalAlign":"top","width":"100%","height":"48px"}, {}, {
 		footerlabel6: ["wm.Label", {"height":"27px","width":"100px","border":"0","caption":"About Us", link:"javascript:alert('about us')"}, {}, {
@@ -1736,6 +2123,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    }]
 	}]
     },
+
+
 
 
     themeGroupDemoPageAndEditorWidgets: {
