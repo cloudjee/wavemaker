@@ -133,6 +133,14 @@ wm.forEachProperty = function(inObject, inFunc) {
 	}
 }
 
+wm.isDomShowing = function(inNode) {
+    var n = inNode;
+    while(n && n != window.document.body && n.style.display != "none") {
+	n = n.parentNode;
+    }
+    return !n || n.style.display != "none";
+}
+
 wm.evalJs = function(inJavascript, inDefault) {
 	var r = inDefault || "";
 	try {
@@ -509,5 +517,28 @@ wm.getWidgetByDomNode = function(element) {
                 }
         }
         return widget;
+}
+
+if (!wm.Array) wm.Array = {};
+
+/* Side effect: alters input inArray Object.  Returns inArray Object; Return is mostly used for chaining operations together */
+wm.Array.removeElementAt = function(inArray, inIndex) {
+    inArray.splice(inIndex, 1);
+    return inArray;
+}
+
+/* Side effect: alters input inArray Object.  Returns inArray Object; Return is mostly used for chaining operations together */
+wm.Array.removeElement = function(inArray, inElement) {
+    var index = inArray.indexOf(inElement);
+    inArray.splice(index, 1);
+    return inArray;
+}
+
+if (!wm.String) wm.String = {};
+wm.String.endStringWith = function(inString, inEnd) {
+    if (!inString.match(new RegExp(inEnd + "$")))
+	return inString + inEnd;
+    else
+	return inString;
 }
 
