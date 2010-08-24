@@ -219,7 +219,7 @@ dojo.declare("wm.ToggleButton", wm.ToolButton, {
 	border: 1,
 	borderColor: "#ABB8CF",
 	margin: 4,
-	captionUp: "Button",
+	captionUp: "Button Up",
         captionDown: "Button Down",
         classNames: "wmbutton wmtogglebutton",
         init: function() {
@@ -229,9 +229,16 @@ dojo.declare("wm.ToggleButton", wm.ToolButton, {
         click: function() {
 	    this.onclick();
 	    this.setProp("clicked", !this.clicked);
+	},
+    /* Sets the state, updates the css, does not fire events; useful in a set of toggle buttons where clicking one updates the states of the others, but firing events on each one would be bad */
+    setClicked: function(inClicked) {
+	if (inClicked != this.clicked) {
+	    this.clicked = inClicked;
+	    this.valueChanged("clicked", inClicked);
 	    this.setCaption(this.clicked ? this.captionDown : this.captionUp);
 	    dojo[this.clicked ? "addClass" : "removeClass"](this.domNode, "toggleButtonDown");
-	},
+	}
+    },
     setCaptionUp: function(inCaption) {
         this.setCaption(inCaption);
     }
