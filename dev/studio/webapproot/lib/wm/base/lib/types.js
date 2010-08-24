@@ -181,8 +181,11 @@ wm.typeManager = {
 			return;
 		inTypeInfo.userType = true;
 		this.types[inName] = inTypeInfo;
-		if (this.isPublicType(inTypeInfo) && !wm.isEmpty(this._publicTypes))
+		if (this.isPublicType(inName) && !wm.isEmpty(this._publicTypes))
 			this._publicTypes[inName] = inTypeInfo;
+	},
+	removeType: function(inName) {
+	    delete this._publicTypes[inName];
 	},
 	addDefaultTypes: function() {
 		var d = wm.defaultTypes || {};

@@ -74,6 +74,7 @@
 [ "More Widgets", "HTML", "wm.Html", "wm.base.widget.Html", "images/wm/content.png", "A display for static markup"],
 [ "More Widgets", "IFrame", "wm.IFrame", "wm.base.widget.IFrame", "images/wm/pane.png", "An IFrame for external content"],
 [ "More Widgets", "List", "wm.List", "wm.base.widget.List", "images/wm/content.png", "A simple list control"],
+[ "More Widgets", "WidgetList", "wm.WidgetList", "wm.base.widget.List", "images/wm/content.png", "A simple list control"],
 [ "More Widgets", "ProgressBar", "wm.dijit.ProgressBar", "wm.base.widget.dijit.ProgressBar", "images/wm.dijit/ProgressBar.png", "Dojo progress bar"],
 
 [ "Templates", "FancyCentered", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "Template for OMG", wm.widgetTemplates.fancyCenteredTemplate],
@@ -131,6 +132,7 @@
 [ "Non-Visual Components", "ImageList", "wm.ImageList", "wm.base.components.ImageList", "images/wm/picture.png", ""],
 [ "Non-Visual Components", "NavigationCall", "wm.NavigationCall", "wm.base.components.NavigationCall", "images/wm/navigation_24.png"],
 [ "Non-Visual Components", "LogoutVariable", "wm.LogoutVariable", "wm.base.components.LogoutVariable", "images/wm/servicevar_24.png"],
+[ "Non-Visual Components", "TypeDefinition", "wm.TypeDefinition", "wm.base.components.TypeDefinition", "images/wm/variable_24.png"],
 
 [ "Services", "Database Service", "wm.DataModel", "wm.base.components.DataModel", "images/wm/data_blue.png"],
 [ "Services", "Java Service", "wm.JavaService", "wm.base.components.JavaService", "images/wm/component.png"],

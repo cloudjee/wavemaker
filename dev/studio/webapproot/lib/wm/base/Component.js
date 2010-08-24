@@ -450,8 +450,18 @@ dojo.declare("wm.Component", wm.Object, {
 	  });
 	},
 	subscribe: function() {
-		this._subscriptions.push(dojo.subscribe.apply(dojo, arguments));
+            var s = dojo.subscribe.apply(dojo, arguments);
+	    this._subscriptions.push(s);
+            return s;
 	},
+        unsubscribe: function(subname) {
+            for (var i = this._subscriptions.length-1; i >= 0; i--) {
+                if (this._subscriptions[i][0] == subname) {
+                    dojo.unsubscribe(this._subscriptions[i]);
+                    wm.Array.removeElementAt(this._subscriptions,i);
+                }
+            }
+        },
 	_unsubscribe: function() {
 		dojo.forEach(this._subscriptions, dojo.unsubscribe);
 		this._subscriptions = [];

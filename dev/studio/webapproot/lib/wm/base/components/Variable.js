@@ -88,6 +88,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		return true;
 	},
 	setType: function(inType) {
+                this.unsubscribe("TypeChange-" + this.type);
 		if (!this.canSetType(inType))
 			return;
 		
@@ -104,6 +105,14 @@ dojo.declare("wm.Variable", wm.Component, {
 		if (this._proxy)
 			this._proxy.setType(this.type);
 		this.typeChanged(this.type);
+            if (this.isDesignLoaded()) {
+                this.subscribe("TypeChange-" + inType, dojo.hitch(this, function() {
+                    this.setType(inType); // reset the type if the type definition has changed
+                    // Reevaluate the json for the new type
+                    if (this.json)
+                        this.setJson(this.json);
+                }));
+            }
 	},
 	typeChanged: function(inType) {
 		var t = inType;

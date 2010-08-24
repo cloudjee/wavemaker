@@ -122,7 +122,7 @@ Studio.extend({
 			o = inComponent && inComponent._studioTreeNode,
 			closed = o ? o.closed : (inProps && inProps.closed),
 			img = inImage || this.getComponentImage(inComponent),
-			name = inName || inComponent.name,
+			name = inName || inComponent._treeNodeName || inComponent.name,
 			n = this.newTreeNode(inParent, img, name, closed, inProps);
 		if (inComponent) {
 			n.component = inComponent;
@@ -139,7 +139,7 @@ Studio.extend({
 		}
 	},
 	subWidgetsToTree: function(inNode, inWidget) {
-		this.widgetsToTree(inNode, inWidget.getOrderedWidgets());
+	    this.widgetsToTree(inNode, (inWidget instanceof wm.Control) ? inWidget.getOrderedWidgets() : []);
 		var c = inWidget.collection;
 		if (c && !inWidget.flags.notInspectable) {
 			this.collectionToTree(inNode, inWidget.getCollection(c));
@@ -154,7 +154,8 @@ Studio.extend({
 		if (inComponent && !inComponent.flags.notInspectable && (!inType || inComponent instanceof inType)) {
 			var props = {};
 			inNode = wm.fire(inComponent, "preNewComponentNode", [inNode, props]) || inNode;
-			var newNode = this.newComponentNode(inNode, inComponent, null, null, props);
+			var n = this.newComponentNode(inNode, inComponent, null, null, props);
+			this.subWidgetsToTree(n, inComponent);
 		}
 	},
 	collectionToTree: function(inNode, inCollection, inType) {

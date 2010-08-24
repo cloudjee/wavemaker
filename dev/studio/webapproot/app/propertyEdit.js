@@ -193,6 +193,30 @@ dojo.declare("wm.propEdit.DataTypesSelect", wm.propEdit.Select, {
 	}
 });
 
+dojo.declare("wm.propEdit.AllDataTypesSelect", wm.propEdit.DataTypesSelect, {
+	addOptionValues: function(inOptionValues, inSort) {
+		if (inSort)
+			inOptionValues.sort(function(a, b) { 
+                            if (a.option.match(/Literal$/) && b.option.match(/Literal$/))
+                                return wm.data.compare(a.option, b.option); 
+                            else if (a.option.match(/Literal$/))
+                                     return -1;
+                            else if (b.option.match(/Literal$/))
+                                     return -1;
+                            else
+                                return wm.data.compare(a.option, b.option); 
+                        });
+		this.options = (this.options || []).concat(dojo.map(inOptionValues, function(d) { return d.option; }));
+		this.values = (this.values || []).concat(dojo.map(inOptionValues, function(d) { return d.value; }));
+	},
+	getDataTypes: function() {
+            var list = this.inherited(arguments);
+            var extras = [{option: "String Literal", value: "String"}, {option: "Number Literal", value: "Number"}, {option: "Boolean Literal", value: "Boolean"}, {option: "Date Literal", value: "Date"}];
+            return extras.concat(list);
+	}
+});
+
+
 dojo.declare("wm.propEdit.LiveSourcesSelect", wm.propEdit.DataTypesSelect, {
 	liveTypes: true,
 	init: function() {

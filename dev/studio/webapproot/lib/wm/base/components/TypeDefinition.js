@@ -19,28 +19,130 @@ dojo.provide("wm.base.components.TypeDefinition");
 dojo.require("wm.base.Component");
 
 dojo.declare("wm.TypeDefinitionField", wm.Component, {
-    type: "StringData",
-    isObject: false,
-    isList: false,
+    fieldType: "String", // options are "string/String", "Date", "Boolean", "any", "Number", as well as any more complex types.  Note that String/Number are not the same as StringType and NumberType; they are literals not objects.
+    isObject: false, // boolean
+    isList: false, // boolean 
     fieldName: "",
+    init: function() {
+        this.inherited(arguments);
+        this.setFieldName(this.fieldName);
+    },
     toTypeObj: function() {
-        return {type: this.type, isObject: this.isObject, isList: this.isList};
+        return {type: this.fieldType, isObject: this.isObject, isList: this.isList};
+    },
+    setFieldName: function(inFieldName) {
+        this.fieldName = inFieldName;
+        this._treeNodeName = inFieldName; // used by studio to show node in model tree
+        if (!this._cupdating) {
+            this.owner.doRemoveType();
+            this.owner.doAddType();
+        }
+    },
+    setFieldType: function(inType) {
+        this.fieldType = inType || "String";
+        if (!this._cupdating) {
+            this.owner.doRemoveType();
+            this.owner.doAddType();
+        }
+    },
+    setIsObject: function(inIsObject) {
+        this.isObject = inIsObject;
+        if (!this._cupdating) {
+            this.owner.doRemoveType();
+            this.owner.doAddType();
+        }
+    },
+    setIsList: function(inIsList) {
+        this.isList = inIsList;
+        if (!this._cupdating) {
+            this.owner.doRemoveType();
+            this.owner.doAddType();
+        }
+    }
+
+
+});
+wm.TypeDefinitionField.extend({
+	makePropEdit: function(inName, inValue, inDefault) {
+		switch (inName) {
+			case "fieldType":
+				return new wm.propEdit.AllDataTypesSelect({component: this, name: inName, value: inValue});
+                }
+            return this.inherited(arguments);
+        }
+});
+
+dojo.declare("wm.TypeDefinition", wm.Component, {
+    internal: false,
+    collection: "Fields",
+    fields: null,
+    // not init; must wait for page loader to load all subcomponents (typedefinitionfields) which postInit waits for
+    postInit: function() {
+/*
+        for (var i in this.$) {
+            this.$[i].parent = this;
+        }
+        */
+        this.doAddType();
+    },
+    doRemoveType: function() {
+        wm.typeManager.removeType(this.name);
+    },
+    doAddType: function() {
+        this.fieldsAsTypes = {};
+        for (var i in this.$) {
+            this.fieldsAsTypes[this.$[i].fieldName] = this.$[i].toTypeObj();
+        }
+        wm.typeManager.addType(this.name, {internal: this.internal, fields: this.fieldsAsTypes});        
+        dojo.publish("TypeChange-" + this.name);
+    },
+    getCollection: function(inName) {
+        if (!this.fields) {
+            this.fields = [];
+            for (var i in this.$) {
+                this.fields.push(this.$[i]);
+            }
+        }
+        return this.fields;
+    },
+    setName: function(inName) {
+        this.doRemoveType();
+        this.inherited(arguments);
+        this.doAddType();
     }
 
 });
 
-dojo.declare("wm.TypeDefinition", wm.Component, {
-    
-    fields: null,
-    // not init; must wait for page loader to load all subcomponents (typedefinitionfields) which postInit waits for
-    postInit: function() {
-        this.fields = [];
-        this.fieldsAsTypes = {};
-        for (var i in this.$) {
-            this.fields.push(this.$[i]);
-            this.fieldsAsTypes[this.$[i].fieldName] = this.$[i].toTypeObj();
-        }
-        wm.typeManager.addType(this.name, {internal: true, fields: this.fieldsAsTypes});        
-    }
+wm.Object.extendSchema(wm.TypeDefinition, {
+    addField: {group: "operation", order: 1},
+    internal: {ignore: true} // only way to set something as internal is to hardcode it into widgets.js; should only be internal if in use by studio to define a type for use by studio but not by the user
+});
 
+wm.TypeDefinition.extend({
+    addField: "(add field)",
+	makePropEdit: function(inName, inValue, inDefault) {
+		switch (inName) {
+			case "addField":
+				return makeReadonlyButtonEdit(inName, inValue, inDefault);
+                }
+            return this.inherited(arguments);
+        },
+	editProp: function(inName, inValue, inInspector) {
+	    switch (inName) {
+	    case "addField":
+                this.addField();
+                return;
+            }
+            return this.inherited(arguments);
+        },
+        addField: function() {
+            this.fields = null; // force this to be recalculated
+            this.fieldsAsTypes = null;
+	    var	defName = this.getUniqueName("field1");
+            var field = new wm.TypeDefinitionField({name: defName, owner: this});
+	    studio.refreshComponentOnTree(this);
+	    studio.select(field);
+            this.doRemoveType(); // old type def is missing this field
+            this.doAddType(); // now we update the type def
+        }
 });
