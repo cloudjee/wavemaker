@@ -85,6 +85,7 @@ wm.loadLibs([
 	"wm.base.components.NavigationCall",
 	"wm.base.components.NavigationService",
 	"wm.base.components.FunctionService",
+	"wm.base.components.TypeDefinition",
 	//"wm.base.components.FileTransferService",
 	"wm.base.components.JsonRpcService",
 	"wm.base.components.Security",
