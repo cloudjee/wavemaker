@@ -690,6 +690,8 @@ dojo.declare("wm.WidgetList", wm.Container, {
     scrollY: true,
     dataSet: null,
     pageName: "",
+    width: "100%",
+    height: "100%",
     avgHeight: 150,
 /*
     dataSet: [{hey: "there", you: "guys"},
@@ -710,7 +712,8 @@ dojo.declare("wm.WidgetList", wm.Container, {
 	this.currentRenderer = this.rowRenderers[0];
 
 	this.setDataSet(this.dataSet);
-	this.setPageName(this.pageName);
+        if (this.pageName)
+	    this.setPageName(this.pageName);
 	this.connect(this.domNode, "onscroll", this, "renderRows");
     },
     setPageName: function(inPage) {
@@ -892,7 +895,16 @@ wm.WidgetList.extend({
 				return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.dataSet ? this.dataSet.getId() : "", allowAllTypes: true, listMatch: true});
 		}
 		return this.inherited(arguments);
-	}
+	},
+	set_dataSet: function(inDataSet) {
+		// support setting dataSet via id from designer
+		if (inDataSet && !(inDataSet instanceof wm.Variable)) {
+			var ds = this.getValueById(inDataSet);
+			if (ds)
+				this.components.binding.addWire("", "dataSet", ds.getId());
+		} else
+			this.setDataSet(inDataSet);
+	},
 });
 
 wm.Object.extendSchema(wm.WidgetList, {
