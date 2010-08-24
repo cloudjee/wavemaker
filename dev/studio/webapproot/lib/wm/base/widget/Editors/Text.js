@@ -519,6 +519,7 @@ dojo.declare("wm.ColorPicker", wm.Text, {
     _editorBackgroundColor: true,
     colorPickerDialog: null,
     cancelValue: null,
+    _empty: true,
     init: function() {
         this.inherited(arguments);
         this.colorPickerDialog = new wm.ColorPickerDialog({owner: this});
@@ -555,6 +556,7 @@ dojo.declare("wm.ColorPicker", wm.Text, {
     },
     setEditorValue: function(inValue) {
         this.inherited(arguments);
+	this._empty = !Boolean(inValue);
         this.setNodeColors(inValue);
     },
     setNodeColors: function(inValue) {
@@ -570,7 +572,8 @@ dojo.declare("wm.ColorPicker", wm.Text, {
 	return this.inherited(arguments) || "#ffffff";
     },
     onblur: function() {
-        if (this.colorPickerDialog && (this.colorPickerDialog.getValue().toLowerCase() != this.getDataValue().toLowerCase() && this.getDataValue())) {
+        if (this.colorPickerDialog && this.getDataValue() && (this._empty || this.colorPickerDialog.getValue().toLowerCase() != this.getDataValue().toLowerCase())) {
+	    this._empty = false;
             this.changed();
             this.colorPickerDialog.setShowing(false);
         }
