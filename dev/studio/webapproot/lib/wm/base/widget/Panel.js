@@ -54,6 +54,8 @@ dojo.declare("wm.FancyPanel", wm.Panel, {
     labelHeight: 30,
     themeStyleType: "ContentPanel",
     init: function() {
+	var classes = this._classes;
+	this._classes = {domNode:[]};
         try {
 	    //var classes = this.captionClasses.split(/\s+/);
 	    this.layout = wm.layout.cache["top-to-bottom"];
@@ -73,6 +75,7 @@ dojo.declare("wm.FancyPanel", wm.Panel, {
             innerBorder = this._parseExtents(innerBorder);
 	    this.containerWidget = new wm.Container({
                                                      name:           "containerWidget",
+		                                     _classes:       classes,
                                                      layoutKind:     this.innerLayoutKind,
                                                      width:          "100%",
                                                      height:         "100%",
@@ -85,6 +88,7 @@ dojo.declare("wm.FancyPanel", wm.Panel, {
                                                      /* margin: "0,0,7,0",*/
                                                      border:         "0,"+innerBorder.r+","+innerBorder.b+","+innerBorder.l,
                                                      borderColor: this.borderColor});
+
 	    this.containerWidget.setLayoutKind(this.innerLayoutKind);
 	    this.widgets.labelWidget = this.labelWidget;
 	    this.widgets.containerWidget = this.containerWidget;
@@ -299,7 +303,7 @@ dojo.declare("wm.FancyPanel", wm.Panel, {
     setLayoutKind: function(inKind) {
 	wm.Panel.prototype.setLayoutKind.call(this,"top-to-bottom");
 	if (this.containerWidget) {
-	    this.containerWidget.setLayoutKind(inKind);
+	    this.setInnerLayoutKind(inKind);
 	}
 	
 	// noop
@@ -428,24 +432,12 @@ dojo.declare("wm.FancyPanel", wm.Panel, {
 
 wm.Panel.extend({
     themeable: false,
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "innerLayoutKind":
-				return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: wm.layout.listLayouts()});
-			case "innerHorizontalAlign":
-				return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["left", "center", "right"/*, "justified"*/]});
-			case "innerVerticalAlign":
-				return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["top", "middle", "bottom"/*, "justified"*/]});
-		}
-		return this.inherited(arguments);
-	},
-
-
     // backward-compatibility fixups
 	afterPaletteDrop: function() {
 		this.inherited(arguments);
-		var v = "top-to-bottom", h = "left-to-right", pv = (this.parent.layoutKind == v);
-		this.setLayoutKind(pv ? h : v);
+	    if (this instanceof wm.FancyPanel) return;
+	    var v = "top-to-bottom", h = "left-to-right", pv = (this.parent.layoutKind == v);
+	    this.setLayoutKind(pv ? h : v);
 		if (pv)
 			this.setWidth("100%");
 		else
@@ -458,7 +450,18 @@ wm.Panel.extend({
  
 wm.FancyPanel.extend({
     themeable: true,
-    themeableProps: ["innerBorder","borderColor","labelHeight"]
+    themeableProps: ["innerBorder","borderColor","labelHeight"],
+	makePropEdit: function(inName, inValue, inDefault) {
+		switch (inName) {
+			case "innerLayoutKind":
+				return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: wm.layout.listLayouts()});
+			case "innerHorizontalAlign":
+				return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["left", "center", "right"/*, "justified"*/]});
+			case "innerVerticalAlign":
+				return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["top", "middle", "bottom"/*, "justified"*/]});
+		}
+		return this.inherited(arguments);
+	}
 });
 
 wm.Object.extendSchema(wm.FancyPanel, {
