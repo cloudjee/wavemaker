@@ -61,13 +61,13 @@ dojo.declare("wm.InspectorBase", null, {
 		this.connect(this.domNode, "_onchange", this, "propChange", true);
 		this.connect(this.domNode, "onkeypress", this, "propKey");
 
-		studio.helpDialog = this.getHelpDialog();
+		studio.helpPopup = this.getHelpDialog();
 	},
 	reinspect: function() {
 		this.owner.reinspect();
 	},
 	getHelpDialog: function() {
-		if (!studio.helpDialog) {
+		if (!studio.helpPopup) {
 			var
 				props = {
 					owner: this,
@@ -76,10 +76,10 @@ dojo.declare("wm.InspectorBase", null, {
 					hideOnClick: false,
 					positionLocation: " l"
 				},
-				d = studio.helpDialog = new wm.PagePopup(props);
+				d = studio.helpPopup = new wm.PagePopup(props);
 			d.setContainerOptions(true, 500, 275);
 		}
-		var b = studio.helpDialog;
+		var b = studio.helpPopup;
 		return b;
 	},
 	finishProp: function() {
@@ -390,7 +390,7 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 		}
 	},
 	beginHelp: function(inPropName, inNode, inType) {
-	      var bd = studio.helpDialog;
+	      var bd = studio.helpPopup;
 	      bd.page.setHeader(inType,inPropName);
 
 	      bd.sourceNode = inNode;
