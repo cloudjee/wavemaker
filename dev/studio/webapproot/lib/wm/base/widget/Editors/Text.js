@@ -520,6 +520,8 @@ dojo.declare("wm.ColorPicker", wm.Text, {
     colorPickerDialog: null,
     cancelValue: null,
     _empty: true,
+    regExp: "\#[0-9a-fA-F]{6}",
+    showMessages: false, // seems to mess up our color picker dialog when both are showing
     init: function() {
         this.inherited(arguments);
         this.colorPickerDialog = new wm.ColorPickerDialog({owner: this});
@@ -569,6 +571,8 @@ dojo.declare("wm.ColorPicker", wm.Text, {
         }
     },
     getDataValue: function() {
+        if (this.getInvalid())
+            return "";
 	return this.inherited(arguments) || "#ffffff";
     },
     onblur: function() {
@@ -576,6 +580,7 @@ dojo.declare("wm.ColorPicker", wm.Text, {
 	    this._empty = false;
             this.changed();
             this.colorPickerDialog.setShowing(false);
+            this.setNodeColors(inValue);
         }
     },
     changed: function() {
@@ -614,3 +619,6 @@ wm.LargeTextArea.extend({
      themeableDemoProps: {height: "100%"}
 });
 
+wm.Object.extendSchema(wm.ColorPicker, {
+    regExp: {ignore: true}
+});
