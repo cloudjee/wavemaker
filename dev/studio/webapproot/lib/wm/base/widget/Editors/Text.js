@@ -572,15 +572,14 @@ dojo.declare("wm.ColorPicker", wm.Text, {
     },
     getDataValue: function() {
         if (this.getInvalid())
-            return "";
+            return "#ffffff";
 	return this.inherited(arguments) || "#ffffff";
     },
     onblur: function() {
         if (this.colorPickerDialog && this.getDataValue() && (this._empty || this.colorPickerDialog.getValue().toLowerCase() != this.getDataValue().toLowerCase())) {
 	    this._empty = false;
             this.changed();
-            this.colorPickerDialog.setShowing(false);
-            this.setNodeColors(inValue);
+            this.setNodeColors(this.getDataValue());
         }
     },
     changed: function() {
