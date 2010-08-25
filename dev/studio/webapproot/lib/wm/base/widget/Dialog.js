@@ -80,6 +80,7 @@ dojo.addOnLoad(function() {
 });
 
 dojo.declare("wm.Dialog", wm.Container, {
+    corner: "cc", // center vertical, center horizontal; this is almost always the desired default... but for some nonmodal dialogs, its useful to have other options
     scrim: true,
     _minified: false,
     _maxified: false,
@@ -231,15 +232,20 @@ dojo.declare("wm.Dialog", wm.Container, {
 			var parentBox = dojo.contentBox(window.document.body);
 			this.setBounds(20,20,parentBox.w-40,parentBox.h-40);
 		    } else {
-			// center within parent
-			var parentBox = dojo.contentBox(this.domNode.parentNode);
-			var bounds = this.getBounds();
+			//// center within parent
+			//var parentBox = dojo.contentBox(this.domNode.parentNode);
+			//var bounds = this.getBounds();
                         if (!this._fixPosition) {
+                            this.renderBoundsByCorner();
+/*
 			    var t = (parentBox.h - bounds.h) / 2;
 			    var l = (parentBox.w - bounds.w) / 2;
 			    this.setBounds(l, t);
 			    this.domNode.style.top = t + "px";
 			    this.domNode.style.left = l + "px";
+                            */
+                        } else {
+                            this.insureDialogVisible();
                         }
 		        wm.bgIframe.size();
 		    }
@@ -250,6 +256,70 @@ dojo.declare("wm.Dialog", wm.Container, {
 		    return this.inherited(arguments);
 		}            
 	},
+        // This should be able to take both the human readable value "top right", and also the streamlined "tr" and have it work regardless.
+    // Note that vertical axis must always come before horizontal axis
+    setCorner: function(inCorner) {
+        this.corner = inCorner.replace(/top/, "t").replace(/bottom/,"b").replace(/left/,"l").replace(/right/,"r").replace(/center/,"c").replace(/ /,"");
+        this.renderBoundsByCorner();
+    },
+    insureDialogVisible: function() {
+	if (!this.showing) return;
+        var w = this.bounds.w;
+        var h = this.bounds.h;
+        var isDesigned =  (this.domNode.parentNode != document.body);
+        var W = (isDesigned) ? studio.designer.bounds.w : app._page.root.bounds.w;
+        var H = (isDesigned) ? studio.designer.bounds.h : app._page.root.bounds.h;
+        if (this.bounds.t + this.bounds.h > H)
+            this.bounds.t = H - this.bounds.h;
+        if (this.bounds.l + this.bounds.w > W)
+            this.bounds.l = W - this.bounds.w;
+        if (this.bounds.t < 0)
+            this.bounds.t = 0;
+        if (this.bounds.l < 0)
+            this.bounds.l = 0;
+
+	wm.Control.prototype.renderBounds.call(this);        
+    },
+    renderBoundsByCorner: function() {
+	if (!this.showing) return;
+        var w = this.bounds.w;
+        var h = this.bounds.h;
+        var isDesigned =  (this.domNode.parentNode != document.body);
+        var W = (isDesigned) ? studio.designer.bounds.w : app._page.root.bounds.w;
+        var H = (isDesigned) ? studio.designer.bounds.h : app._page.root.bounds.h;
+        var buffer = 10;
+        var t,l;
+        
+        var top  = this.corner.substring(0,1);
+        var left = this.corner.substring(1,2);
+
+        switch(left) {
+        case "l":
+            l = buffer;
+            break;
+        case "r":
+            l = W - w - buffer;
+            break;
+        case "c":
+            l = Math.floor((W - w)/2);
+            break;
+        }
+
+        switch(top) {
+        case "t":
+            t = buffer;
+            break;
+        case "b":
+            t = H - h - buffer;
+            break;
+        case "c":
+            t = Math.floor((H - h)/2);
+            break;
+        }
+
+	this.setBounds(l, t, w, h);
+	wm.Control.prototype.renderBounds.call(this);
+    },
 	setContent: function(inContent) {
 		this.containerNode.innerHTML = inContent;
 	},
@@ -410,7 +480,15 @@ wm.Dialog.extend({
 	    this.setParent(null);
 	    studio.designer.domNode.appendChild(this.domNode);
 	    this.show();
+	},
+    makePropEdit: function(inName, inValue, inDefault) {
+	switch (inName) {
+        case "corner":
+            inValue = inValue.replace(/^c/, "center ").replace(/^t/, "top ").replace(/^b/, "bottom ").replace(/l$/, "left").replace(/r$/, "right").replace(/c$/, "center");
+            return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["top left", "top center", "top right", "center left", "center center", "center right", "bottom left", "bottom center", "bottom right"]});
 	}
+	return this.inherited(arguments);
+    },
 
 });
 
@@ -854,7 +932,7 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
     content: "Toast",
     height: "100px",
     width: "350px",
-    corner: "br",
+    corner: "br", // bottom right
     border: "5",
     margin: "0",
     prepare: function() {
@@ -885,43 +963,7 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
             this.renderBounds();
     },
     renderBounds: function() {
-	if (!this.showing) return;
-        var w = parseInt(this.width); // assumes px
-        var h = parseInt(this.height); // assumes px
-        var W = app._page.root.bounds.w;
-        var H = app._page.root.bounds.h;
-        var buffer = 10;
-        var t,l;
-        
-        var top  = this.corner.substring(0,1);
-        var left = this.corner.substring(1,2);
-
-        switch(left) {
-        case "l":
-            l = buffer;
-            break;
-        case "r":
-            l = W - w - buffer;
-            break;
-        case "c":
-            l = Math.floor((W - w)/2);
-            break;
-        }
-
-        switch(top) {
-        case "t":
-            t = buffer;
-            break;
-        case "b":
-            t = H - h - buffer;
-            break;
-        case "c":
-            t = Math.floor((H - h)/2);
-            break;
-        }
-
-	this.setBounds(l, t, w, h);
-	wm.Control.prototype.renderBounds.call(this);
+        this.renderBoundsByCorner();
     },
     setContent: function(inContent) {
 	this.content = inContent;
