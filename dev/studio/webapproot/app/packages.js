@@ -47,10 +47,12 @@
 [ "Editors", "TextArea", "wm.LargeTextArea", "wm.base.widget.Editors.Text", "images/wm/edit.png", "An editor for multiline text"],
 [ "Editors", "Time", "wm.Time", "wm.base.widget.Editors.Date", "images/wm/edit.png", "An editor for time"],
 [ "Editors", "RichText", "wm.RichText", "wm.base.widget.Editors.RichText", "images/wm/edit.png", "An rich text editor"],
+[ "Editors", "ColorPicker", "wm.ColorPicker", "wm.base.widget.Editors.Text", "images/wm/edit.png", "A text editor that pops up a color picker dialog"],
 
 [ "Dialogs", "GenericDialog", "wm.GenericDialog", "wm.base.widget.Dialog", "images/wm/button.png", "A simple button"],
 [ "Dialogs", "PageDialog", "wm.PageDialog", "wm.base.widget.Dialog", "images/wm/button.png", "A simple button"],
 [ "Dialogs", "RichTextDialog", "wm.RichTextDialog", "wm.base.widget.Dialog", "images/wm/button.png", "A simple button"],
+
 
 [ "Dojo Widgets", "Chart", "wm.DojoChart", "wm.base.widget.DojoChart", "images/wm/bar_chart.png", "A Dojo chart"],
 [ "Dojo Widgets", "Dashboard", "wm.Dashboard", "wm.base.widget.Dashboard", "images/wm/lightbox_16.png", "Dashboard"],
