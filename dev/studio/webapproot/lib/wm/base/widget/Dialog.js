@@ -1373,10 +1373,10 @@ dojo.declare("wm.ColorPickerDialog", wm.Dialog, {
         }
         this.colorPickerControl = new wm.Control({name: "colorPickerControl", width: "325px", height: "170px", owner: this, parent: this});
         this.buttonPanel = new wm.Panel({name: "buttonPanel", width: "100%", height: "100%", layoutKind: "left-to-right", owner: this, parent: this, horizontalAlign: "right"});
-        this.BrightenButton = new wm.Button({caption: "Bright", width: "60px", height: "30px", parent: this.buttonPanel});
-        this.DarkenButton = new wm.Button({caption: "Dark", width: "60px", height: "30px", parent: this.buttonPanel});
-        this.CancelButton = new wm.Button({caption: "Cancel", width: "60px", height: "30px", parent: this.buttonPanel});
-        this.OKButton = new wm.Button({caption: "OK", width: "60px", height: "30px", parent: this.buttonPanel});
+        this.BrightenButton = new wm.Button({caption: "Bright", width: "80px", height: "30px", parent: this.buttonPanel});
+        this.DarkenButton = new wm.Button({caption: "Dark", width: "80px", height: "30px", parent: this.buttonPanel});
+        this.CancelButton = new wm.Button({caption: "Cancel", width: "80px", height: "30px", parent: this.buttonPanel});
+        this.OKButton = new wm.Button({caption: "OK", width: "80px", height: "30px", parent: this.buttonPanel});
 
         this.connect(this.BrightenButton, "onclick", this, "brighten");
         this.connect(this.DarkenButton, "onclick", this, "darken");
