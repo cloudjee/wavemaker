@@ -33,7 +33,7 @@ dojo.require("dijit._editor.plugins.LinkDialog");
  dojo.declare("wm.RichText", wm.LargeTextArea, {
         height: "200px",
      padding: "0",
-        ready: false,
+     _ready: false,
         emptyValue: "emptyString",
         dataValue: "",
          displayValue: "",
@@ -132,40 +132,44 @@ dojo.require("dijit._editor.plugins.LinkDialog");
             //LinkDialog        Provides a dialog for inserting URLs
             //TextColor
          sizeEditor: function() {
-            if (!this.ready) return;
-            this.inherited(arguments);
-            if (this._waitingForSizeEditor) return;
-            this._waitingForSizeEditor = true;
-            wm.onidle(this, "postSizeEditor");
-        },
-        postSizeEditor: function() {
-            if (!this.editor || !this.editor.iframe)
-                return wm.onidle(this, "postSizeEditor");
+            if (!this._ready) return;
+             this.inherited(arguments);
             var h = parseInt(this.editorNode.style.height);
             var toolh = this.editorNode.childNodes[0].clientHeight;
             this.editor.iframe.style.height = (h-toolh) + "px";
-            if (this.editor.focusNode)
+             if (this.editor.focusNode) {
                 this.editor.focusNode.style.height =  (h-toolh) + "px";
-	    this.editor.editNode.style.overflow = "auto";
-            this._waitingForSizeEditor = false;
+                 console.log("Editor Height: " + this.editor.focusNode.style.height);
+             }
         },
         _createEditor: function(inNode, inProps) {
-            this.ready = false;
+            this._ready = false;
             this.editorNode = document.createElement("div");
             this.domNode.appendChild(this.editorNode);
-                wm.onidle(this,function() {
-                        this.ready = true;
-                        this._cupdating = false;
-                        this.sizeEditor();
+
+            this.editor = new dijit.Editor({height: '',
+                                           plugins: this.plugins},// ['dijit._editor.plugins.AlwaysShowToolbar']},
+                                          this.editorNode);
+            if (this.editor.focusNode) {
+                this.onLoad();
+            } else {
+                this.connect(this.editor, "onLoad", this, "onLoad");
+            }
+            return this.editor;
+        },
+     onLoad: function() {
+                    console.log("onLoad:" + this.editor.focusNode);
+                    this._ready = true;
+                    this._cupdating = false;
+                    this.sizeEditor();
 		    this.connect(this.editor, "onFocus", this, function() {dojo.addClass(this.editorNode, "Focused");});
 		    this.connect(this.editor, "onBlur", this, function() {dojo.removeClass(this.editorNode, "Focused");});
-                    });
-                return new dijit.Editor({height: '',
-                            plugins: this.plugins},// ['dijit._editor.plugins.AlwaysShowToolbar']},
-                    this.editorNode);
-        },
+                    this.editor.focusNode.style.lineHeight = "12px"; // needed for safari... 
+	            this.editor.focusNode.style.overflow = "auto";
+                    this.editor.attr("value", this.dataValue);
+     },
          isReady: function() {
-            return Boolean(this.ready && this.editor && this.editor.iframe);
+            return Boolean(this._ready && this.editor && this.editor.focusNode);
          },
          setDisabled: function() {
              console.warn("wm.RichText.setDisabled is not supported");
@@ -179,23 +183,19 @@ dojo.require("dijit._editor.plugins.LinkDialog");
         },
      _setEditorAttempts: 0,
 	setEditorValue: function(inValue) {
-            if (inValue === null || inValue === undefined) inValue = "\n\n";
-	    if (dojo.isString(inValue)) inValue += "";
-            try {
-                this.editor.attr('value',inValue);
-                this.updateReadonlyValue();
-            } catch(e) {
-                console.warn("setEditorValue Failed: " + e);
-            }
-            return;
-            this._setEditorAttempts++;
-            if (this._setEditorAttempts > 100) {
-                this.createEditor();
-                this._setEditorAttempts = 0;
-            }
-            this.dataValue = inValue;
-            return wm.onidle(this, function() {this.setEditorValue(this.dataValue);});
-	}
+            if (!this._ready)
+                this.dataValue = inValue;
+            else {
+                if (inValue === null || inValue === undefined) inValue = "\n\n";
+	        if (dojo.isString(inValue)) inValue += "";
+                try {
+                    this.editor.attr('value',inValue);
+                    this.updateReadonlyValue();
+                } catch(e) {
+                    console.warn("setEditorValue Failed: " + e);
+                }
+	    }
+        }
 
  });
  
@@ -206,7 +206,6 @@ dojo.require("dijit._editor.plugins.LinkDialog");
         changeOnKey: { ignore: 1 },
             password: {ignore: 1},
             emptyValue: {ignore: 1},
-            ready: {ignore: 1},
             regExp: {ignore: 1},
             invalidMessage: {ignore: 1},
             maxChars: {ignore: 1},
@@ -268,19 +267,5 @@ dojo.require("dijit._editor.plugins.LinkDialog");
             this.toolbarColor = val;
             this.updatePlugins();
             this.createEditor();
-        },
-        createEditor: function(inProps) {
-            if (!this.isAncestorHidden()) {
-                this.inherited(arguments);
-                wm.onidle(this, function() {
-                    this.editor.focusNode.style.lineHeight = "12px"; // needed for safari... 
-                });
-            }
-        },
-     setShowing: function(inShowing) {
-         this.inherited(arguments);
-         if (!this._cupdating && inShowing && !this.editor) {
-             this.createEditor();
-         }
-     }
+        }
  });
