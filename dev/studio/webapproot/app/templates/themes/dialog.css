@@ -7,10 +7,10 @@
    *              parent is always the body tag
    ************************************************************************************************/
 .wm_template .wmdialog {
-    /* Common-Panel_BorderStyle_Radius */
-    -moz-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
-    -webkit-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
-    border-radius: 4px;  /* Common-Panel_BorderStyle_Radius */
+    /* BordersPanel_BorderStyle_Radius */
+    -moz-border-radius: 4px; /* BordersPanel_BorderStyle_Radius */
+    -webkit-border-radius: 4px; /* BordersPanel_BorderStyle_Radius */
+    border-radius: 4px;  /* BordersPanel_BorderStyle_Radius */
 
     /* Floating-Shadow should automatically be calculated as min 2px 2px 2px black and preferred
      * 1.5 times the value of wm.Content-BorderStyle_Shadow */
@@ -28,7 +28,7 @@
    ************************************************************************************************/
 .wm_template .wmdialog-content,
 .wm_template .wmdialogcontainer {
-    /* MainContent-Styles-Font */
+    /* Document-Styles-Font */
     font-family: sans-serif; /* MainContent-Styles-Font_Family */
     font-size: 12pt; /* MainContent-Styles-Font_TextSize */
     color: #FFFFFF; /* MainContent-Styles-Font_Color */

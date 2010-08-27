@@ -1087,6 +1087,9 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 	border-top: 1px solid #c0c4ca;
 	border-bottom: 1px solid #363b44;
 }
+#studio_themesPageHelpBtn {
+    font-size: 14px;
+}
 
 
 #studio_benchbevel11 {

@@ -88,10 +88,10 @@
    ************************************************************************************************/
 
 .wm_template .wmaccordion .wmlayer {
-    /* Common-Panel_BorderStyle */
-    -moz-border-radius: 2px; /* Common-Panel_BorderStyle_Radius */
-    -webkit-border-radius: 2px; /* Common-Panel_BorderStyle_Radius */
-    border-radius: 2px; /* Common-Panel_BorderStyle_Radius */
+    /* Borders-Panel_BorderStyle */
+    -moz-border-radius: 2px; /* Borders-Panel_BorderStyle_Radius */
+    -webkit-border-radius: 2px; /* Borders-Panel_BorderStyle_Radius */
+    border-radius: 2px; /* Borders-Panel_BorderStyle_Radius */
 }
 
 
@@ -99,30 +99,30 @@ body.tundra.wm_template  div.wmheader,
 body.tundra .wm_template  div.wmheader,
 .wm_template  .wmTabLayers-client > .wmlayer, 
 .wm_template  .wmWizardLayers-client > .wmlayer {
-    /* Common-Panel_Border */
-    -moz-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
-    -webkit-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
-    border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
+    /* Borders-Panel_Border */
+    -moz-border-radius: 4px; /* Borders-Panel_BorderStyle_Radius */
+    -webkit-border-radius: 4px; /* Borders-Panel_BorderStyle_Radius */
+    border-radius: 4px; /* Borders-Panel_BorderStyle_Radius */
 }
 
 .wm_template .wmFancyPanel-containerWidget {
-    -moz-border-radius-bottomleft: 4px; /* Common-Panel_BorderStyle_Radius */
-    -moz-border-radius-bottomright: 4px;/* Common-Panel_BorderStyle_Radius */
-    -webkit-border-bottom-left-radius: 4px;/* Common-Panel_BorderStyle_Radius */
-    -webkit-border-bottom-right-radius: 4px;/* Common-Panel_BorderStyle_Radius */
-    border-radius-bottomleft: 4px;/* Common-Panel_BorderStyle_Radius */
-    border-radius-bottomright: 4px;/* Common-Panel_BorderStyle_Radius */
+    -moz-border-radius-bottomleft: 4px; /* Borders-Panel_BorderStyle_Radius */
+    -moz-border-radius-bottomright: 4px;/* Borders-Panel_BorderStyle_Radius */
+    -webkit-border-bottom-left-radius: 4px;/* Borders-Panel_BorderStyle_Radius */
+    -webkit-border-bottom-right-radius: 4px;/* Borders-Panel_BorderStyle_Radius */
+    border-radius-bottomleft: 4px;/* Borders-Panel_BorderStyle_Radius */
+    border-radius-bottomright: 4px;/* Borders-Panel_BorderStyle_Radius */
 
 }    
 
 .wm_template .wmFancyPanel-labelWidget {
     /* Must always be 2-4px smaller than .wmfancypanel */
-       -moz-border-radius-topleft: 12px;   /* Common-Panel_BorderStyle_Radius */
-    -moz-border-radius-topright: 12px;/* Common-Panel_BorderStyle_Radius */
-    -webkit-border-top-left-radius: 12px;/* Common-Panel_BorderStyle_Radius */
-    -webkit-border-top-right-radius: 12px;/* Common-Panel_BorderStyle_Radius */
-    border-radius-topleft: 12px;/* Common-Panel_BorderStyle_Radius */
-    border-radius-topright: 12px;/* Common-Panel_BorderStyle_Radius */
+       -moz-border-radius-topleft: 12px;   /* Borders-Panel_BorderStyle_Radius */
+    -moz-border-radius-topright: 12px;/* Borders-Panel_BorderStyle_Radius */
+    -webkit-border-top-left-radius: 12px;/* Borders-Panel_BorderStyle_Radius */
+    -webkit-border-top-right-radius: 12px;/* Borders-Panel_BorderStyle_Radius */
+    border-radius-topleft: 12px;/* Borders-Panel_BorderStyle_Radius */
+    border-radius-topright: 12px;/* Borders-Panel_BorderStyle_Radius */
 
 }    
 
@@ -165,6 +165,7 @@ body.tundra .wm_template  div.wmheader,
     -moz-box-shadow: 4px 4px 4px black; /* Document-Styles-BorderStyle_Shadow */
     -webkit-box-shadow: 4px 4px 4px black; /* Document-Styles-BorderStyle_Shadow */
     box-shadow: 4px 4px 4px black; /* Document-Styles-BorderStyle_Shadow */
+
 }
 
 .wm_template  #wavemakerNode  > .wmlayout,
@@ -182,14 +183,14 @@ body.tundra .wm_template  div.wmheader,
     background-image: url(images/threeD.png); /* Document-Styles-Background_Image */
     background-position: left top;  /* Document-Styles-Background_Image-Position */
     background-repeat: repeat-x; /* Document-Styles-Background_Image-Repeat */
-}
-.wm_template #studio_themesPage_themeDesigner_demoPanel .wmlabel {
+
     /* Document-Styles-Font */
     font-family: sans-serif; /* Document-Styles-Font_Family */
     font-size: 12pt; /* Document-Styles-Font_TextSize */
     color: #FFFFFF; /* Document-Styles-Font_Color */
     font-weight: bold; /* Document-Styles-Font_Weight */
 }
+
 
 #studio_designer.wm_template, 
 body.wm_template {
@@ -255,7 +256,8 @@ body.wm_template {
 
 
 
-.wm_template .wmFancyPanel-labelWidget {
+.wm_template .wmfancypanel .wmFancyPanel-labelWidget,
+.wm_template #studio_themesPage_themeDesigner_demoPanel .wmfancypanel .wmFancyPanel-labelWidget  {
     /* Document-HeadersDefault-Font */
     font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
     font-size: 12pt; /* Document-HeadersDefault-Font_TextSize */
@@ -285,9 +287,9 @@ body.wm_template {
 	/* Document-HeadersDefault-Border */
 	border-width: 2px; /* editting this is problematic without also editting headerHeight */
 	border-bottom-color: transparent;
-	border-top-color: #444444; /* Document-HeadersDefault-Border_Color */
-	border-right-color:#444444; /* Document-HeadersDefault-Border_Color */
-	border-left-color:#444444; /* Document-HeadersDefault-Border_Color */
+	border-top-color: #444444; /* Borders-Header_Border_Color */
+	border-right-color:#444444; /* Borders-Header_Border_Color */
+	border-left-color:#444444; /* Borders-Header_Border_Color */
     }
 
     .wm_template .wmtablayers-tab:hover, .wm_template .wmtablayers-tab:focus {
@@ -462,13 +464,6 @@ body.wm_template {
 	background-image: url(images/threeD.png); /* MainContent-HeadersDefault-Background_Image */
 	background-position: left top;  /* MainContent-HeadersDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-HeadersDefault-Background_Image-Repeat */
-
-	/* MainContent-HeadersDefault-Border */
-	border-width: 2px; /* editting this is problematic without also editting headerHeight */
-	border-bottom-color: transparent;
-	border-top-color: #444444; /* MainContent-HeadersDefault-Border_Color */
-	border-right-color:#444444; /* MainContent-HeadersDefault-Border_Color */
-	border-left-color:#444444; /* MainContent-HeadersDefault-Border_Color */
     }
 
     .wm_template .MainContent .wmtablayers-tab:hover, .wm_template .wmtablayers-tab:focus {
@@ -640,12 +635,6 @@ body.wm_template {
 	background-position: left top;  /* EmphasizedContent-HeadersDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-HeadersDefault-Background_Image-Repeat */
 
-	/* EmphasizedContent-HeadersDefault-Border */
-	border-width: 2px; /* editting this is problematic without also editting headerHeight */
-	border-bottom-color: transparent;
-	border-top-color: #444444; /* EmphasizedContent-HeadersDefault-Border_Color */
-	border-right-color:#444444; /* EmphasizedContent-HeadersDefault-Border_Color */
-	border-left-color:#444444; /* EmphasizedContent-HeadersDefault-Border_Color */
     }
 
     .wm_template .EmphasizedContent .wmtablayers-tab:hover, .wm_template .wmtablayers-tab:focus {
@@ -815,12 +804,6 @@ body.wm_template {
 	background-position: left top;  /* TOCContent-HeadersDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* TOCContent-HeadersDefault-Background_Image-Repeat */
 
-	/* TOCContent-HeadersDefault-Border */
-	border-width: 2px; /* editting this is problematic without also editting headerHeight */
-	border-bottom-color: transparent;
-	border-top-color: #444444; /* TOCContent-HeadersDefault-Border_Color */
-	border-right-color:#444444; /* TOCContent-HeadersDefault-Border_Color */
-	border-left-color:#444444; /* TOCContent-HeadersDefault-Border_Color */
     }
 
     .wm_template .TOCContent .wmtablayers-tab:hover, .wm_template .wmtablayers-tab:focus {
@@ -991,12 +974,6 @@ body.wm_template {
 	background-position: left top;  /* ToolbarContent-HeadersDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* ToolbarContent-HeadersDefault-Background_Image-Repeat */
 
-	/* ToolbarContent-HeadersDefault-Border */
-	border-width: 2px; /* editting this is problematic without also editting headerHeight */
-	border-bottom-color: transparent;
-	border-top-color: #444444; /* ToolbarContent-HeadersDefault-Border_Color */
-	border-right-color:#444444; /* ToolbarContent-HeadersDefault-Border_Color */
-	border-left-color:#444444; /* ToolbarContent-HeadersDefault-Border_Color */
     }
 
     .wm_template .ToolbarContent .wmtablayers-tab:hover, .wm_template .wmtablayers-tab:focus {

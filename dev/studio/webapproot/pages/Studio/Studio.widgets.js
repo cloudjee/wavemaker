@@ -37,6 +37,7 @@ Studio.widgets = {
 	smallToolbarImageList: ["wm.ImageList", {width: 16, height: 16, colCount: 32, url: "images/smallToolbarBtns.png"}, {}],
 	canvasToolbarImageList16: ["wm.ImageList", {width: "16", height: "16", colCount: 22, url: "images/canvasToolbarBtns16.png"}, {}],        
         genericDialog: ["wm.GenericDialog", {}],
+    helpDialog: ["wm.GenericDialog", {"height":"77px","modal":false,"noEscape":false,"title":"Help","userPrompt":"","width":"300px", modal: false,button1Caption: "OK", button1Close: true, corner: "tr"}, {}],
 	layout: ["wm.Layout", {height: "100%"}, {}, {
 		dialog: ["wm.Dialog", {height: "400px", border: "1", borderColor: "#666E80"}, {}],
 		
@@ -422,7 +423,8 @@ Studio.widgets = {
 						    themesPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Save", imageIndex: 8}, {onclick: "saveThemeClick"}],
 						    themesPageAddBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "New Theme (Copy Current Theme)", imageIndex: 25}, {onclick: "addNewThemeClick"}],
 						    themesPageDeleteBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Delete Theme", imageIndex: 0}, {onclick: "deleteThemeClick"}],
-						    themesPageRevertBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Revert Changes", imageIndex: 6, imageList: "canvasToolbarImageList16"}, {onclick: "revertThemeClick"}]
+						    themesPageRevertBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Revert Changes", imageIndex: 6, imageList: "canvasToolbarImageList16"}, {onclick: "revertThemeClick"}],
+                                                    themesPageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Open Help Dialog", caption: "?"}, {onclick: "helpThemeClick"}]
 						}],
                                                 themesPage: ["wm.PageContainer", {deferLoad: true, loadParentFirst: true, 
                                                                                   pageName: "ThemeDesigner"}]

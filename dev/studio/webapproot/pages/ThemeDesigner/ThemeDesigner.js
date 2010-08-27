@@ -40,7 +40,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
     /* themeTypes provides the editor to use when editting somethign with the given name.
      * Note: Don't yet support putting event handlers in here so don't try it without fixing that 
      */
-    themeTypes: {"Family": ["wm.SelectMenu", {options: "Lucida Grande, Lucida Sans, Arial, Verdana, Arial, sans-serif, serif", width: "80px"}],
+    themeTypes: {"Family": ["wm.SelectMenu", {options: "Lucida Grande, Lucida Sans, Arial, Verdana,  sans-serif, serif", width: "80px"}],
                  "Weight": ["wm.SelectMenu", {options: "normal, bold", width: "80px"}],
                  "TextSize": ["wm.Number",  { width: "60px"}],
                  "Color": ["wm.ColorPicker", {width: "80px"}],
@@ -75,51 +75,70 @@ dojo.declare("ThemeDesigner", wm.Page, {
      * borders: Optional array of borders that will be updated when/if the user changes a Border-BorderSize or Border-Color property
      */
     themeGroupData: {
-        "Common": {
+        "Borders": {
 	    demo: "themeGroupDemoAllPanelsWidgets",
-            styles: ["Editor_BorderStyle-Radius", "Panel_Border", "Panel_BorderStyle-Radius"],
-	    borders: [{borderClass: "wm.TabLayers", borderProperty: "clientBorder"},
-			      {borderClass: "wm.AccordionLayers", borderProperty: "layerBorder", borderColorProperty: "borderColor"},
-			      {borderClass: "wm.WizardLayers", borderProperty: "clientBorder"},
-			      {borderClass: "wm.Dialog", borderProperty: "border"},
-		              {borderClass: "wm.FancyPanel", borderProperty: "innerBorder"},
-			      {borderClass: "wm.Panel", borderProperty: "border"}
-			     ]},
-        "Document": {
-	    subcategories: {
-		"Styles": {
-		    demo: "themeGroupDemoAllPanelsWidgets",
-		    styles: ["Font", "Border", "BorderStyle", "Background"],
-		    borders: [{borderClass: "wm.Layout", borderProperty: "border"}]},
-		"HeadersDefault": {
-		    demo: "themeGroupDemoAllPanelsWidgets",
-		    styles: ["Font", "Border-BorderSize", "BorderStyle", "Background"],
-		    borders: [{borderClass: "wm.Button", borderProperty: "border"},
+            styles: [{name: "Editor_BorderStyle-Radius", 
+                      description: "Change the radius (roundedness) of editor borders for all editors in your document.  Enter an integer between 0 and 24"},
+                     {name: "Panel_BorderStyle-Radius", 
+                      description: "Change the radius (roundedness) of panel borders for all TabLayers, AccordionLayers, FancyPanel and other non-layout panels in your document.  Enter an integer between 0 and 24"}, 
+                     {name: "Panel_Border", 
+                      symbol: "Borders-Panel_Border",
+                      description: "Change the border width and color of containers such as Accordions, TabLayers, Dialogs and FancyPanels",
+                      borders: [{borderClass: "wm.TabLayers", borderProperty: "clientBorder"},
+			        {borderClass: "wm.AccordionLayers", borderProperty: "layerBorder", borderColorProperty: "borderColor"},
+			        {borderClass: "wm.WizardLayers", borderProperty: "clientBorder"},
+			        {borderClass: "wm.Dialog", borderProperty: "border"},
+		                {borderClass: "wm.FancyPanel", borderProperty: "innerBorder"},
+			        {borderClass: "wm.Panel", borderProperty: "border"}
+			       ]},
+                     {name: "Header_Border", 
+                      symbol: "Borders-Header_Border",
+                      description: "Change the border width and color of Headers and clickable elements such as wm.Buttons, accordion headers, dialog titlebars, and TabLayer tab buttons",
+                      borders: [{borderClass: "wm.Button", borderProperty: "border"},
 			      {borderClass: "wm.ToggleButton", borderProperty: "border"},
 			      {borderClass: "wm.RoundedButton", borderProperty: "border"},
 			      {borderClass: "wm.BusyButton", borderProperty: "border"},
-			      {borderClass: "wm.AccordionDecorator", borderProperty: "captionBorder"},
-
+			        {borderClass: "wm.AccordionDecorator", borderProperty: "captionBorder"},
 			      {borderClass: "wm.Dialog", borderProperty: "titlebarBorder", borderTemplate: "0,0,?,0"},
 			      {borderClass: "wm.GenericDialog", borderProperty: "footerBorder", borderTemplate: "?,0,0,0"},
 			      {borderClass: "wm.RichTextDialog", borderProperty: "footerBorder", borderTemplate: "?,0,0,0"},
 			      {borderClass: "wm.PageDialog", borderProperty: "footerBorder", borderTemplate: "?,0,0,0"}
-			     ]},               
+                               ]
+                     }
+                    ]
+        },
+        "Document": {
+	    subcategories: {
+		"Styles": {
+		    demo: "themeGroupDemoAllPanelsWidgets",
+		    styles: ["Font", {name: "Border", description: "Change the default border for your wm.Layout widgets"}, {name: "BorderStyle", description: "Give your wm.Layout border some rounding (not a standard practice)"}, {name: "Background", description: "Set the background color for your document"}],
+                    description: "Set the basic styling of the document panel (i.e. your wm.Layout) and everything within it.  Font lets you set the basic font to use within your document; border and background let you set the border style for your document (its not a common design, but putting a border around your document, possibly even rounding it a bit could just be your thing).  Note that border settings are for your wm.Layout, and NOT for the contents of your wm.Layout",
+		    borders: [{borderClass: "wm.Layout", borderProperty: "border"}]},
+		"HeadersDefault": {
+		    demo: "themeGroupDemoAllPanelsWidgets",
+		    styles: ["Font", "BorderStyle", "Background"],
+                    description: "<p>Header settings affects the following widgets<ul><li>wm.Button</li><li>wm.AccordionLayer</li><li>wm.TabLayer</li><li>wm.FancyPanel</li><li>wm.Dialog (title bar and buttons)</li><li>wm.Splitter</li><li>wm.Bevel</li></ul> It represents both clickable elements and headers. Why both? because in most cases, headers are clickable elements; for example, consider the wm.AccordionLayer header and the wm.TabLayer buttons.</p><p>In this form, you will set the font and background colors for your headers and buttons.  This affects all buttons and headers within your document except where the theme or a project specifically override these styles</p>"
+		},               
 		"HeadersHover":   {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "<p>Any header that is clickable should have a mouse-over effect that emphasizes its clickability.  A header that is NOT clickable will ignore mouseover effects.</p><p>In this form, you will set the changes to font, shadowing and background colors that are displayed when the mouse hovers over your headers/buttons.  Shadowing is particularly useful for making a button look pressable as it gives it a more three dimensional look.</p>",
 		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
 		"HeadersActive":  {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "<p>Any header that has an active state will want a special set of styling to indicate that its active.  Examples of this include a wm.TabLayers button that indicates the currently selected tab; wm.AccordionLayers header that indicates the currently selected layer, and a wm.ToggleButton which is currently pressed.</p><p>Set the font, shadowing and background colors to emphasize that this clickable header is currently active.</p>",
 		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
 
 		"EditorsDefault": {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "You of course have the option of having a plain and functional editor. If you'd rather spice them up a bit, you can set the border color, background and font. Note that you can also control the rounding of the borders, but this is currently set under <b>Full Theme Settings</b> -> <b>Borders</b>",
 		    styles:     ["Border-Color", "Background", "Font"]},
 		"EditorsHover":   {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "When the mouse hovers over your editor, you can just do nothing (mouse cursor changes to insertion point). If you'd rather spice things up a bit, you might brighten or darken the background a bit. You can set the colors for border, background and font.",
 		    styles:     ["Border-Color", "Background", "Font-Color"]},
 		"EditorsFocus":   {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "When the insertion point is in the editor, and the user can start typing in, you can setup a style to indicate that the editor is active. Wavemaker themes tend to cause these editors to go to solid white background and black text.  But this is entirely under the control of the theme designer; you can set the colors for border, background and font.",
 		    styles:     ["Border-Color", "Background", "Font-Color"]}}},
 	
 
@@ -127,26 +146,33 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    subcategories: {
 		"Styles": {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "Set the basic styling of the MainContent panel and everything within it.  Font lets you set the basic font to use within your document; border and background let you set the border style for your document.  Note that border settings are for panels marked as MainContent, and NOT for the contents of thisis panel.  Also note that setting the border size and border color must be done by hand as these are properties of your panel.",
 		    styles: ["Font",  "BorderStyle", "Background"]},
 		"HeadersDefault": {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "<p>Header settings affects the following widgets <ul><li>wm.Button</li><li>wm.AccordionLayer</li><li>wm.TabLayer</li><li>wm.FancyPanel</li><li>wm.Dialog (title bar and buttons)</li><li>wm.Splitter</li><li>wm.Bevel</li></ul>  It represents both clickable elements and headers. Why both? because in most cases, headers are clickable elements; for example, consider the wm.AccordionLayer header and the wm.TabLayer buttons.</p><p>In this form, you will set the font, border and background colors for your headers and buttons.  This affects all buttons and headers within any panel marked as <b>MainContent</b> except where the theme or a project specifically override these styles</p>",
 		    styles: ["Font", "BorderStyle", "Background"]},               
 		"HeadersHover":   {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "<p>Any header that is clickable should have a mouse-over effect that emphasizes its clickability.  A header that is NOT clickable will ignore mouseover effects.</p><p>In this form, you will set the changes to font, shadowing and background colors that are displayed when the mouse hovers over your headers/buttons.  Shadowing is particularly useful for making a button look pressable as it gives it a more three dimensional look.</p>",
 		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
 		"HeadersActive":  {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "<p>Any header that has an active state will want a special set of styling to indicate that its active.  Examples of this include a wm.TabLayers button that indicates the currently selected tab; wm.AccordionLayers header that indicates the currently selected layer, and a wm.ToggleButton which is currently pressed.</p><p>Set the font, shadowing and background colors to emphasize that this clickable header is currently active.</p>",
 		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
 
 		/* For Editors, the border in question is for the dijit (css) not the widget (border property) */
 		"EditorsDefault": {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "You of course have the option of having a plain and functional editor. If you'd rather spice them up a bit, you can set the border color, background and font. Note that you can also control the rounding of the borders, but this is currently set under <b>Full Theme Settings</b> -> <b>Borders</b>",
 		    styles: ["Border-Color", "Background", "Font"]},
 		"EditorsHover":   {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "When the mouse hovers over your editor, you can just do nothing (mouse cursor changes to insertion point). If you'd rather spice things up a bit, you might brighten or darken the background a bit. You can set the colors for border, background and font.",
 		    styles: ["Border-Color", "Background", "Font-Color"]},
 		"EditorsFocus":   {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "When the insertion point is in the editor, and the user can start typing in, you can setup a style to indicate that the editor is active. Wavemaker themes tend to cause these editors to go to solid white background and black text.  But this is entirely under the control of the theme designer; you can set the colors for border, background and font.",
 		    styles: ["Border-Color", "Background", "Font-Color"]}}},
 		
 
@@ -154,24 +180,31 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    subcategories: {
 		"Styles": {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "Set the basic styling of the EmphasizedContent panel and everything within it.  Font lets you set the basic font to use within your document; border and background let you set the border style for your document.  Note that border settings are for panels marked as EmphasizedContent, and NOT for the contents of thisis panel.  Also note that setting the border size and border color must be done by hand as these are properties of your panel.",
 		    styles: ["Font",  "BorderStyle", "Background"]},
 		"HeadersDefault": {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "<p>Header settings affects the following widgets <ul><li>wm.Button</li><li>wm.AccordionLayer</li><li>wm.TabLayer</li><li>wm.FancyPanel</li><li>wm.Dialog (title bar and buttons)</li><li>wm.Splitter</li><li>wm.Bevel</li></ul> It represents both clickable elements and headers. Why both? because in most cases, headers are clickable elements; for example, consider the wm.AccordionLayer header and the wm.TabLayer buttons.</p><p>In this form, you will set the font, border and background colors for your headers and buttons.  This affects all buttons and headers within any panel marked as <b>EmphasizedContent</b> except where the theme or a project specifically override these styles</p>",
 		    styles: ["Font", "BorderStyle", "Background"]},               
 		"HeadersHover":   {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "<p>Any header that is clickable should have a mouse-over effect that emphasizes its clickability.  A header that is NOT clickable will ignore mouseover effects.</p><p>In this form, you will set the changes to font, shadowing and background colors that are displayed when the mouse hovers over your headers/buttons.  Shadowing is particularly useful for making a button look pressable as it gives it a more three dimensional look.</p>",
 		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
 		"HeadersActive":  {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "<p>Any header that has an active state will want a special set of styling to indicate that its active.  Examples of this include a wm.TabLayers button that indicates the currently selected tab; wm.AccordionLayers header that indicates the currently selected layer, and a wm.ToggleButton which is currently pressed.</p><p>Set the font, shadowing and background colors to emphasize that this clickable header is currently active.</p>",
 		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
 		"EditorsDefault": {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "You of course have the option of having a plain and functional editor. If you'd rather spice them up a bit, you can set the border color, background and font. Note that you can also control the rounding of the borders, but this is currently set under <b>Full Theme Settings</b> -> <b>Borders</b>",
 		    styles: ["Border-Color", "Background", "Font"]},
 		"EditorsHover":   {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "When the mouse hovers over your editor, you can just do nothing (mouse cursor changes to insertion point). If you'd rather spice things up a bit, you might brighten or darken the background a bit. You can set the colors for border, background and font.",
 		    styles: ["Border-Color", "Background", "Font-Color"]},
 		"EditorsFocus":   {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "When the insertion point is in the editor, and the user can start typing in, you can setup a style to indicate that the editor is active. Wavemaker themes tend to cause these editors to go to solid white background and black text.  But this is entirely under the control of the theme designer; you can set the colors for border, background and font.",
 		    styles: ["Border-Color", "Background", "Font-Color"]}
 	    }
 	},
@@ -180,24 +213,31 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    subcategories: {
 		"Styles": {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "Set the basic styling of the ToolbarContent panel and everything within it.  Font lets you set the basic font to use within your document; border and background let you set the border style for your document.  Note that border settings are for panels marked as ToolbarContent, and NOT for the contents of thisis panel.  Also note that setting the border size and border color must be done by hand as these are properties of your panel.",
 		    styles: ["Font",  "BorderStyle", "Background"]},
 		"HeadersDefault": {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "<p>Header settings affects the following widgets <ul><li>wm.Button</li><li>wm.AccordionLayer</li><li>wm.TabLayer</li><li>wm.FancyPanel</li><li>wm.Dialog (title bar and buttons)</li><li>wm.Splitter</li><li>wm.Bevel</li></ul> It represents both clickable elements and headers. Why both? because in most cases, headers are clickable elements; for example, consider the wm.AccordionLayer header and the wm.TabLayer buttons.</p><p>In this form, you will set the font, border and background colors for your headers and buttons.  This affects all buttons and headers within any panel marked as <b>ToolbarContent</b> except where the theme or a project specifically override these styles</p>",
 		    styles: ["Font", "BorderStyle", "Background"]},               
 		"HeadersHover":   {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "<p>Any header that is clickable should have a mouse-over effect that emphasizes its clickability.  A header that is NOT clickable will ignore mouseover effects.</p><p>In this form, you will set the changes to font, shadowing and background colors that are displayed when the mouse hovers over your headers/buttons.  Shadowing is particularly useful for making a button look pressable as it gives it a more three dimensional look.</p>",
 		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
 		"HeadersActive":  {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "<p>Any header that has an active state will want a special set of styling to indicate that its active.  Examples of this include a wm.TabLayers button that indicates the currently selected tab; wm.AccordionLayers header that indicates the currently selected layer, and a wm.ToggleButton which is currently pressed.</p><p>Set the font, shadowing and background colors to emphasize that this clickable header is currently active.</p>",
 		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
 		"EditorsDefault": {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "You of course have the option of having a plain and functional editor. If you'd rather spice them up a bit, you can set the border color, background and font. Note that you can also control the rounding of the borders, but this is currently set under <b>Full Theme Settings</b> -> <b>Borders</b>",
 		    styles: ["Border-Color", "Background", "Font"]},
 		"EditorsHover":   {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "When the mouse hovers over your editor, you can just do nothing (mouse cursor changes to insertion point). If you'd rather spice things up a bit, you might brighten or darken the background a bit. You can set the colors for border, background and font.",
 		    styles: ["Border-Color", "Background", "Font-Color"]},
 		"EditorsFocus":   {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "When the insertion point is in the editor, and the user can start typing in, you can setup a style to indicate that the editor is active. Wavemaker themes tend to cause these editors to go to solid white background and black text.  But this is entirely under the control of the theme designer; you can set the colors for border, background and font.",
 		    styles: ["Border-Color", "Background", "Font-Color"]}
 	    }
 	},
@@ -206,24 +246,31 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    subcategories: {
 		"Styles": {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "Set the basic styling of the TOCContent panel and everything within it.  Font lets you set the basic font to use within your document; border and background let you set the border style for your document.  Note that border settings are for panels marked as TOCContent, and NOT for the contents of thisis panel.  Also note that setting the border size and border color must be done by hand as these are properties of your panel.",
 		    styles: ["Font",  "BorderStyle", "Background"]},
 		"HeadersDefault": {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "<p>Header settings affects the following widgets <ul><li>wm.Button</li><li>wm.AccordionLayer</li><li>wm.TabLayer</li><li>wm.FancyPanel</li><li>wm.Dialog (title bar and buttons)</li><li>wm.Splitter</li><li>wm.Bevel</li></ul> It represents both clickable elements and headers. Why both? because in most cases, headers are clickable elements; for example, consider the wm.AccordionLayer header and the wm.TabLayer buttons.</p><p>In this form, you will set the font, border and background colors for your headers and buttons.  This affects all buttons and headers within any panel marked as <b>TOCContent</b> except where the theme or a project specifically override these styles</p>",
 		    styles: ["Font", "BorderStyle", "Background"]},               
 		"HeadersHover":   {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "<p>Any header that is clickable should have a mouse-over effect that emphasizes its clickability.  A header that is NOT clickable will ignore mouseover effects.</p><p>In this form, you will set the changes to font, shadowing and background colors that are displayed when the mouse hovers over your headers/buttons.  Shadowing is particularly useful for making a button look pressable as it gives it a more three dimensional look.</p>",
 		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
 		"HeadersActive":  {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "<p>Any header that has an active state will want a special set of styling to indicate that its active.  Examples of this include a wm.TabLayers button that indicates the currently selected tab; wm.AccordionLayers header that indicates the currently selected layer, and a wm.ToggleButton which is currently pressed.</p><p>Set the font, shadowing and background colors to emphasize that this clickable header is currently active.</p>",
 		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
 		"EditorsDefault": {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "You of course have the option of having a plain and functional editor. If you'd rather spice them up a bit, you can set the border color, background and font. Note that you can also control the rounding of the borders, but this is currently set under <b>Full Theme Settings</b> -> <b>Borders</b>",
 		    styles: ["Border-Color", "Background", "Font"]},
 		"EditorsHover":   {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "When the mouse hovers over your editor, you can just do nothing (mouse cursor changes to insertion point). If you'd rather spice things up a bit, you might brighten or darken the background a bit. You can set the colors for border, background and font.",
 		    styles: ["Border-Color", "Background", "Font-Color"]},
 		"EditorsFocus":   {
 		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "When the insertion point is in the editor, and the user can start typing in, you can setup a style to indicate that the editor is active. Wavemaker themes tend to cause these editors to go to solid white background and black text.  But this is entirely under the control of the theme designer; you can set the colors for border, background and font.",
 		    styles: ["Border-Color", "Background", "Font-Color"]}
 	    }
 	},
@@ -267,6 +314,16 @@ dojo.declare("ThemeDesigner", wm.Page, {
         this.themeList.eventSelect(listitem);
 */
 	this.themeSelect.setDataValue(studio.application.theme);
+
+        dojo.query("a", this.themeGroupList.domNode).forEach(dojo.hitch(this,function(node, index, arr) {
+            this.connect(node, "onclick", this, function(event) {
+                if (this.themeGroupListVar.getItem(index).getData().description) {
+                    studio.helpDialog.setUserPrompt(this.themeGroupListVar.getItem(index).getData().description);
+                    studio.helpDialog.show();
+                }
+                dojo.stopEvent(event);
+            });
+        }));
     },
 
     initThemeGroupList: function() {
@@ -349,6 +406,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
         this.imageListVar.setData(imageList);
 
         /* Step 4: Find the path to the theme folder */
+        console.log("THEME:" + this.currentTheme);
 	if (this.currentTheme.match(/^wm_/))
 	    path = dojo.moduleUrl("wm") + "base/widget/themes/" + this.currentTheme + "/";
 	else
@@ -416,7 +474,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	}
 	    
         /* Step 8: Load the new css values into the document */
-            studio.application.setTheme(this.currentTheme, false, this.cssText, this.themePrototype, true);
+        studio.application.setTheme(this.currentTheme, false, this.cssText, this.themePrototype, true);
         studio._themeDesignerChange = true;
         studio._reflowPageDesigner = true;
         studio.application.cacheWidgets();
@@ -491,7 +549,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 		      margin: "5,0,0,0",
                       owner: this,
                       parent: this.widgetEditPanel});
-        container = new wm.Panel({layoutKind: "left-to-right", height: "35px", width: "100%", owner: this, parent: this.widgetEditPanel, verticalAlign: "top", horizontalAlign: "left", margin: "0"});
+        container = new wm.Panel({layoutKind: "left-to-right", height: "50px", margin: "0,0,15,0", width: "100%", owner: this, parent: this.widgetEditPanel, verticalAlign: "top", horizontalAlign: "left"});
         new wm.Spacer({
                       width: "20px",
                       height: "100%",
@@ -544,7 +602,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                       owner: this,
                       parent: this.widgetEditPanel});
 
-        container = new wm.Panel({layoutKind: "left-to-right", height: "35px", width: "100%", owner: this, parent: this.widgetEditPanel, verticalAlign: "top", horizontalAlign: "left", margin: "0"});
+        container = new wm.Panel({layoutKind: "left-to-right", height: "50px", margin: "0,0,15,0", width: "100%", owner: this, parent: this.widgetEditPanel, verticalAlign: "top", horizontalAlign: "left"});
         new wm.Spacer({
                       width: "20px",
                       height: "100%",
@@ -608,7 +666,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 		      margin: "5,0,0,0",
                       owner: this,
                       parent: this.widgetEditPanel});
-        container = new wm.Panel({layoutKind: "left-to-right", height: "35px", width: "100%", owner: this, parent: this.widgetEditPanel, verticalAlign: "top", horizontalAlign: "left", margin: "0"});
+        container = new wm.Panel({layoutKind: "left-to-right", height: "50px", margin: "0,0,15,0", width: "100%", owner: this, parent: this.widgetEditPanel, verticalAlign: "top", horizontalAlign: "left"});
         new wm.Spacer({
                       width: "20px",
                       height: "100%",
@@ -696,6 +754,11 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
     /* Handle changes to the basic settings editors */
     basicEditorChange: function(inSender) {
+        studio.beginWait("Updating Stylesheets...");
+
+        // wrap everything in wm.onidle so that the wait dialog has a moment to render before we begin
+        wm.onidle(this, function() {
+        try {
         studio._themeDesignerChange = true;
         studio._reflowPageDesigner = true;
         studio.application.cacheWidgets();
@@ -708,11 +771,13 @@ dojo.declare("ThemeDesigner", wm.Page, {
             this.editAllBorderColors(value);
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
             this.regenerateDemoPanel();
-            return;
+            break;
+
         case "borderWidth":
             var borders = [];
-            var borders1 = this.themeGroupData.Document.subcategories.HeadersDefault.borders;
-            var borders2 = this.themeGroupData.Common.borders;
+             
+            var borders1 = this.themeGroupData.Borders.styles[2].borders
+            var borders2 = this.themeGroupData.Borders.styles[3].borders
             
             for (var i = 0; i < borders1.length; i++) borders.push(borders1[i]);
             for (var i = 0; i < borders2.length; i++) borders.push(borders2[i]);
@@ -727,16 +792,18 @@ dojo.declare("ThemeDesigner", wm.Page, {
                 this.themePrototype[widgetClassName][borderProperty] = newValue;
                 var ctor = dojo.getObject(widgetClassName);
                 if (ctor && ctor.prototype) {
-                    ctor.prototype[borderProperty] = newValue;
+                    if (widgetClassName != "wm.Panel" || borderProperty != "border") // never set the border for wm.Panel! borderColor is ok...
+                        ctor.prototype[borderProperty] = newValue;
                 }
             }
 
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
             this.regenerateDemoPanel();
-            return;
+            break;
+
         case "borderRadius":
             var newValue = value + "px";
-	    this.setCssSymbol("Common-Panel_BorderStyle", "Radius", newValue);
+	    this.setCssSymbol("Borders-Panel_BorderStyle", "Radius", newValue);
 	    this.setCssSymbol("Document-HeadersDefault-BorderStyle", "Radius",newValue);
 	    this.setCssSymbol("PageContent-HeadersDefault-BorderStyle", "Radius",newValue);
 	    this.setCssSymbol("ContentPanel-HeadersDefault-BorderStyle", "Radius",newValue);
@@ -746,7 +813,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
             
-            return;
+            break;
+
         case "headerBackgroundColor":
 	    this.setCssSymbol("Document-HeadersDefault-Background", "Color", value);
 	    this.setCssSymbol("PageContent-HeadersDefault-Background", "Color", value);
@@ -759,7 +827,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    this.setCssSymbol("ContentPanel-HeadersHover-Background", "Color", newvalues[0]);
 	    this.setCssSymbol("ContentPanel-HeadersActive-Background", "Color", newvalues[2]);
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
-            return;
+            break;
+
         case "headerFontColor":
 	    this.setCssSymbol("Document-HeadersDefault-Font", "Color", value);
 	    this.setCssSymbol("Document-HeadersHover-Font", "Color", value);
@@ -772,7 +841,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    this.setCssSymbol("ContentPanel-HeadersActive-Font", "Color", value)
 
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
-            return;
+            break;
+
         case "headerImage":
             var url = "none";
             var position = "top left";
@@ -832,7 +902,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
 
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
-            return;
+            break;
 
         case "headerFontColor":
 
@@ -846,7 +916,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    this.setCssSymbol("ContentPanel-HeadersHover-Font", "Color", value);
 	    this.setCssSymbol("ContentPanel-HeadersActive-Font", "Color", value);
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
-            return;
+            break;
 
         case "headerFontSize":
 	    value += "pt";
@@ -860,7 +930,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    this.setCssSymbol("ContentPanel-HeadersHover-Font", "TextSize", value);
 	    this.setCssSymbol("ContentPanel-HeadersActive-Font", "TextSize", value);
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
-            return;
+            break;
 
         case "headerFontFamily":
 	    this.setCssSymbol("Document-HeadersDefault-Font", "Family", value);
@@ -878,8 +948,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    this.setCssSymbol("PageContent-Styles-Font", "Family", value);
 	    this.setCssSymbol("ContentPanel-Styles-Font", "Family", value);
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
-            return;
-
+            break;
 
         case "pageBackgroundColor":
 	    this.setCssSymbol("Document-Styles-Background", "Color", value);
@@ -898,7 +967,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    this.setCssSymbol("Tables-EvenRow-Background", "Color", value);
 	    this.setCssSymbol("Table-OddRow-Background", "Color", newvalues[0]);
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
-            return;
+            break;
         case "pageFontColor":
 	    this.setCssSymbol("Document-Styles-Font", "Color", value);
 	    this.setCssSymbol("PageContent-Styles-Font", "Color", value);
@@ -915,7 +984,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    this.setCssSymbol("Table-EvenRow-Font", "Color", value);
 	    this.setCssSymbol("Table-OddRow-Font", "Color", value);
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
-            return;
+            break;
         case "pageFontSize":
 	    value += "pt";
 	    this.setCssSymbol("Document-Styles-Font", "TextSize", value);
@@ -927,12 +996,19 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    this.setCssSymbol("Table-EvenRow-Font", "TextSize", value);
 	    this.setCssSymbol("Table-OddRow-Font", "TextSize", value);
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
-            return;
+            break;
         }
+        } catch(e){}
+        studio.endWait();
+        });
     },
 
     themegroupselect: function(inSender) {
         this.widgetEditPanel.removeAllControls();
+        if (this._descConnections) {
+            dojo.forEach(this._descConnections, dojo.disconnect);
+        }
+        this._descConnections = [];
 
         var groupName = inSender.selectedItem.getData().dataValue;
 	if (!groupName) return;
@@ -961,9 +1037,27 @@ dojo.declare("ThemeDesigner", wm.Page, {
             for (var i in subcategories) {
 		subcategories[i].parentName = this.themeGroupList.selectedItem.getData().dataValue;
                 subgroupList.push({dataValue: i,
-                                name: i.replace(/-/g," ")});
+                                   name: i.replace(/-/g," "),
+                                   help: "<a>?</a>",
+                                   description: subcategories[i].description});
             }	    
 	    this.themeSubGroupListVar.setData(subgroupList);
+
+            if (this._subgroupConnections) 
+                dojo.forEach(this._subgroupConnections, dojo.disconnect);
+            this._subgroupConnections = [];
+
+            dojo.query("a", this.themeSubGroupList.domNode).forEach(dojo.hitch(this,function(node, index, arr) {
+                this._subgroupConnections.push(dojo.connect(node, "onclick", this, function(event) {
+                    if (this.themeSubGroupListVar.getItem(index).getData().description) {
+                        studio.helpDialog.setUserPrompt(this.themeSubGroupListVar.getItem(index).getData().description);
+                        studio.helpDialog.show();
+                    }
+                    dojo.stopEvent(event);
+                }));
+            }));
+            
+
             this.themeSubGroupList.eventSelect( this.themeSubGroupList.items[selectedSubGroupIndex]);
 	    this.themeSubGroupListCurrentGroup = this.themeGroupList.getSelectedIndex();
 
@@ -999,9 +1093,17 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	}
         new wm.Label({name: "editorsHeading", caption: labelHeading + fullGroupName, width: "100%", height: "24px", parent: this.widgetEditPanel, owner: this, backgroundColor: "black"});
 
-        var styleGroupList = groupObj.styles;
-        for (var j = 0; j < styleGroupList.length; j++) {
-            var subGroupName = styleGroupList[j];
+
+        dojo.forEach(groupObj.styles, dojo.hitch(this,function(styleGroupElement) {
+            var subGroupName;
+            var description = "";
+            if (dojo.isString(styleGroupElement)) {
+                subGroupName = styleGroupElement;
+            } else {
+                subGroupName = styleGroupElement.name;
+                description = styleGroupElement.description;
+            }
+
             var styleFilter = "";
             if (subGroupName.indexOf("-") != -1) {
                 styleFilter = subGroupName.substring(1 + subGroupName.indexOf("-"));
@@ -1009,10 +1111,18 @@ dojo.declare("ThemeDesigner", wm.Page, {
             }
             var styleList = this.themeGroupTypes[subGroupName.replace(/^.*_/,"")];
 
-            new wm.Label({width: "100%", height: "20px", margin: "5,0,0,0", caption: subGroupName.replace(/_/g," "), parent: this.widgetEditPanel, owner: this});
+            var label = new wm.Label({width: "100%", height: "20px", margin: "5,0,0,0", caption: subGroupName.replace(/_/g," ") + (description ? " <a>?</a>" : ""), parent: this.widgetEditPanel, owner: this});
+            if (description) {
+                this._descConnections.push(dojo.connect(dojo.query("a",label.domNode)[0], "onclick", this, function() {
+                    studio.helpDialog.setUserPrompt(description);
+                    studio.helpDialog.show();
+                }));
+            }
             var container = new wm.Panel({layoutKind: "left-to-right", height: "50px", margin: "0,0,15,0", width: "100%", parent: this.widgetEditPanel, owner: this});
 	    new wm.Spacer({width: "20px", height: "100%", owner: this, parent: container});
             dojo.forEach(styleList, dojo.hitch(this, function(styleName) {
+
+
                 if (!styleFilter || styleFilter == styleName) {
                     var value;
                     if (styleName == "Image") {
@@ -1026,21 +1136,20 @@ dojo.declare("ThemeDesigner", wm.Page, {
                         value = value.replace(/(px|pt)/g,"");
                     var props = {captionSize: "15px", 
                                  captionPosition: "bottom",
-                                 caption: styleName, 
+                                 caption: styleName,
                                  captionAlign: "left",
                                  dataValue: value,
                                  width: "100%",
                                  height: "100%",
-                                 readonly: Boolean(this.currentTheme.match(/^wm_/))};
+                                 readonly: Boolean(this.currentTheme.match(/^wm_/))};                                 
                     var widget_json = this.themeTypes[styleName];
-
+                                 
                     var e = 
                         container.createComponent((groupObj.styleName || fullGroupName) + "_" + subGroupName + "_" + styleName, 
                                                   widget_json[0], 
                                                   dojo.mixin(props, widget_json[1]),
                                                   {},//{"onchange": "advancedEditorChange"}, 
                                                   widget_json[3], this);
-
                     var originalValue = e.getDataValue();
                     var hasChanged = false;
                     e.connect(e,"onchange", this, function(inValue) {
@@ -1054,7 +1163,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
                 }
             }));
-        }
+
+        }));
 
 
         //var buttonpanel = this.createSaveThemeButtonPanel();
@@ -1459,14 +1569,14 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	var symbolicName = inGroupName + "_" + inName;
 
         // ADJUSTMENTS TO VALUES
-/*
-        switch(inName) {
-            case "Shadow":
-            var tmp = inGroupName.replace(/Style$/,"");
-            if (this.themeData[tmp] && this.themeData[tmp].Color)
-                inValue = inValue.replace(/\#888888/, this.themeData[tmp].Color);
-            break;
-        }
+        /*
+          switch(inName) {
+          case "Shadow":
+          var tmp = inGroupName.replace(/Style$/,"");
+          if (this.themeData[tmp] && this.themeData[tmp].Color)
+          inValue = inValue.replace(/\#888888/, this.themeData[tmp].Color);
+          break;
+          }
         */
 
         console.log("SET SYMBOL: " + symbolicName + " TO " + inValue);
@@ -1477,13 +1587,21 @@ dojo.declare("ThemeDesigner", wm.Page, {
         this.cssText = this.cssText.replace(r, "$1" + inValue + "$2$3");
 
         // If updating the border, we must set the prototype as well (redundant in some cases)
-        if (inGroupName.match(/^(.*)(\-|_)Border$/)) {
+        if (inGroupName.match(/^(.*)_Border$/)) {
             // used px for css but now we need to get rid of it
             var newValue = (inName == "Radius") ? inValue.replace(/\D/g,"") : inValue;
 
             var themeGroupName = inGroupName.match(/^(.*)(\-|_)Border$/)[1];
-	    var borderList = this.getThemeGroup(symbolicName, this.themeGroupData).borders;
-            if (borderList)
+            var groupDesc = this.getThemeGroup(symbolicName, this.themeGroupData);
+            var borderList;
+            for (var i = 0; i < groupDesc.styles.length; i++) {
+                var symbol = groupDesc.styles[i].symbol;
+                if (!dojo.isString(groupDesc.styles[i]) && symbol == inGroupName.replace(/-(BorderSize|Color)$/,""))
+                    borderList = groupDesc.styles[i].borders;
+            }
+	    //var borderList = this.getThemeGroup(symbolicName, this.themeGroupData).borders;
+            
+            if (borderList) {
                 for (var i = 0; i < borderList.length; i++) {
                     var widgetClassName = borderList[i].borderClass;
                     var borderProperty;
@@ -1497,7 +1615,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 			if (borderProperty == "innerBorderColor")
 			    borderProperty = "borderColor";
 		    }
-		    if (widgetClassName == "wm.Panel" && borderProperty == "border") return;
+		    if (widgetClassName == "wm.Panel" && borderProperty == "border") continue;
 
 		    if (borderProperty.match(/Border^/))
 			newValue = parseInt(newValue); // no px in value 
@@ -1511,7 +1629,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
 			console.log("Set prototype " + widgetClassName + ".prototype." + borderProperty + " = " + newValue);
                     }
                 }
-	    this.regenerateDemoPanel();
+	        this.regenerateDemoPanel();
+            }
         }
 
         /* AFTER EFFECTS OF THE CHANGE */
@@ -1520,10 +1639,10 @@ dojo.declare("ThemeDesigner", wm.Page, {
             var newValue = Math.floor(parseInt(inValue) * 0.6) + "px";
             this.setCssSymbol("wm.SelectMenu", "Inner-Radius", newValue);
             break;
-/*
-	case "Common-Panel_BorderStyle_Radius":
-            var newValue = Math.floor(parseInt(inValue) * 0.6) + "px";
-            this.setCssSymbol("Common-Panel_Inner_BorderStyle", "Inner-Radius", newValue);
+            /*
+	      case "Borders-Panel_BorderStyle_Radius":
+              var newValue = Math.floor(parseInt(inValue) * 0.6) + "px";
+              this.setCssSymbol("Borders-Panel_Inner_BorderStyle", "Inner-Radius", newValue);
 	    */
         }
     },
@@ -1577,7 +1696,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
         dialog.button2Close = true;
         dialog.setUserPrompt("Enter name for your new theme");
         dialog.setShowInput(true);
-        var selectedName = this.themeList.selectedItem.getData().dataValue;
+        //var selectedName = this.themeList.selectedItem.getData().dataValue;
+        var selectedName = this.themeSelect.getDataValue();
         var newname = selectedName;
         newname = newname.replace(/^wm_/, "custom_");
         var list = [];
@@ -1647,8 +1767,12 @@ dojo.declare("ThemeDesigner", wm.Page, {
         
             var d = studio.deploymentService.requestAsync("copyTheme", [selectedName, inText]);
             d.addCallback(dojo.hitch(this, function(inData) {
-                app.toastDialog.showToast("Theme Copied!", 5000, "Success");
+                app.toastDialog.showToast(inText + " created from " + selectedName, 5000, "Success");
                 studio.loadThemeList(dojo.hitch(this, function() {
+                    this.themeSelect.setDataSet(studio.themesListVar);
+                    this.themeSelect.setDataValue(inText);
+
+                    /* from when themeList was a wm.List instead of wm.SelectMenu
                     this.themeList.setDataSet(studio.themesListVar);
                     var themelist = studio.themesListVar.getData();
                     for (var j = 0; j < themelist.length; j++) {
@@ -1657,6 +1781,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                             break;
                         }
                     }
+                    */
                 }));
             }));
             d.addErrback(dojo.hitch(this, function(result) {
@@ -1703,7 +1828,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
         wm.Control.borderColor = inColor;
     },
     removeThemeClick: function(inSender) {
-        var selectedName = this.themeList.selectedItem.getData().dataValue;
+        //var selectedName = this.themeList.selectedItem.getData().dataValue;
+        var selectedName = this.themeSelect.getDataValue();
         if (!selectedName) return;
 
         if (selectedName.match(/^wm_/)) {
@@ -1737,8 +1863,9 @@ dojo.declare("ThemeDesigner", wm.Page, {
             d.addCallback(dojo.hitch(this, function(inData) {
                 app.toastDialog.showToast("Theme Deleted!", 5000, "Success");
                 studio.loadThemeList(dojo.hitch(this, function() {
-                    this.themeList.setDataSet(studio.themesListVar);
-                    this.selectTheme("wm_notheme");
+                    //this.themeList.setDataSet(studio.themesListVar);
+                    this.themeSelect.setDataSet(studio.themesListVar);
+                    this.themeSelect.setDataValue(studio.themesListVar.getData()[0].dataValue);
                 }));
             }));
             d.addErrback(dojo.hitch(this, function(result) {
@@ -1804,65 +1931,70 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
 
     regenerateDemoPanel: function(widgetTab) {
+        studio.beginWait("Regenerating Preview");
+        wm.onidle(this, function() {
+        try {
+	    //this.viewWidgetsLayer.setShowing(!wm.isEmpty(widgetTab));
+	    this.overviewLayer.show();
+	    this.viewDialogsLayer.show();
 
-	//this.viewWidgetsLayer.setShowing(!wm.isEmpty(widgetTab));
-	this.overviewLayer.show();
-	this.viewDialogsLayer.show();
+	    if (this.viewOneWidgetLayer.isActive())
+	        this.overviewLayer.activate();
+	    this.viewOneWidgetLayer.hide();
 
-	if (this.viewOneWidgetLayer.isActive())
-	    this.overviewLayer.activate();
-	this.viewOneWidgetLayer.hide();
+	    var demoPanel = this.demoPanelTabLayers.getActiveLayer().c$[0];
+            demoPanel.removeAllControls();
+	    this.owner = studio.page; // block Application.loadThemePrototypeForClass from using wm_studio to generate the widget
+            demoPanel.domNode.innerHTML = "";
 
-	var demoPanel = this.demoPanelTabLayers.getActiveLayer().c$[0];
-        demoPanel.removeAllControls();
-	this.owner = studio.page; // block Application.loadThemePrototypeForClass from using wm_studio to generate the widget
-        demoPanel.domNode.innerHTML = "";
+	    var selectedGroup = this.themeGroupList.selectedItem.getData().dataValue;
+	    var selectedGroupMatchesPanelContent = selectedGroup.match(/Content$/) || selectedGroup == "Document";
+	    if (!selectedGroupMatchesPanelContent && this.viewWidgetsLayer.isActive())
+	        this.overviewLayer.activate();
+	    this.viewWidgetsLayer.setShowing(selectedGroupMatchesPanelContent);
+	    if (demoPanel == this.demoPanel2) {
+	        demoPanel.domNode.className = selectedGroup;
+	        demoPanel.setBorder(this.themeData["Borders-Panel_Border"].BorderSize);
+	        demoPanel.setBorderColor(this.themeData["Borders-Panel_Border"].Color);
+	    }
+            /*
+	      if (this.userLevelList.selectedItem.getData().dataValue == "Advanced") {
+	      var demoWidgets = this.themeGroupData[this.themeGroupList.selectedItem.getData().dataValue].demo;
+              demoPanel.createComponents(this[demoWidgets], this);
+	      } else {
+              demoPanel.createComponents(this.themeGroupDemoHeaderWidgets, this);
+	      }
+            */
 
-	var selectedGroup = this.themeGroupList.selectedItem.getData().dataValue;
-	var selectedGroupMatchesPanelContent = selectedGroup.match(/Content$/) || selectedGroup == "Document";
-	if (!selectedGroupMatchesPanelContent && this.viewWidgetsLayer.isActive())
-	    this.overviewLayer.activate();
-	this.viewWidgetsLayer.setShowing(selectedGroupMatchesPanelContent);
-	if (demoPanel == this.demoPanel2) {
-	    demoPanel.domNode.className = selectedGroup;
-	    demoPanel.setBorder(this.themeData["Common-Panel_Border"].BorderSize);
-	    demoPanel.setBorderColor(this.themeData["Common-Panel_Border"].Color);
-	}
-/*
-	if (this.userLevelList.selectedItem.getData().dataValue == "Advanced") {
-	    var demoWidgets = this.themeGroupData[this.themeGroupList.selectedItem.getData().dataValue].demo;
-            demoPanel.createComponents(this[demoWidgets], this);
-	} else {
-            demoPanel.createComponents(this.themeGroupDemoHeaderWidgets, this);
-	}
-        */
+	    //this._currentTheme = optionalObj || this._currentTheme || this.themeGroupDemoHeaderWidgets;
+	    var widgets;
+	    if (demoPanel == this.demoPanel)
+	        widgets = this.themeGroupDemoAllPanelsWidgets;
+	    else if (demoPanel == this.demoPanel2)
+	        widgets = this.themeGroupWidgets;
+	    else 
+	        widgets = null;
 
-	//this._currentTheme = optionalObj || this._currentTheme || this.themeGroupDemoHeaderWidgets;
-	var widgets;
-	if (demoPanel == this.demoPanel)
-	    widgets = this.themeGroupDemoAllPanelsWidgets;
-	else if (demoPanel == this.demoPanel2)
-	    widgets = this.themeGroupWidgets;
-	else 
-	    widgets = null;
-
-	if (widgets) {
-            demoPanel.createComponents(widgets);
-	    if (this.demoDialog)
-		this.demoDialog.destroy();
-	} else {
-            this.demoDialog = new wm.GenericDialog({owner: studio.page, "height":"145px","showInput":true,"noEscape":false,"title":"Sample Dialog","button1Caption":"OK","button1Close":true,"button2Close":true,"userPrompt":"This is a sample of a wm.GenericDialog"});
-            this.demoDialog.setOwner(this);
-            demoPanel.domNode.appendChild(this.demoDialog.domNode);               
-            this.demoDialog.show();
+	    if (widgets) {
+                demoPanel.createComponents(widgets);
+	        if (this.demoDialog)
+		    this.demoDialog.destroy();
+	    } else {
+                this.demoDialog = new wm.GenericDialog({owner: studio.page, "height":"145px","showInput":true,"noEscape":false,"title":"Sample Dialog","button1Caption":"OK","button1Close":true,"button2Close":true,"userPrompt":"This is a sample of a wm.GenericDialog"});
+                this.demoDialog.setOwner(this);
+                demoPanel.domNode.appendChild(this.demoDialog.domNode);               
+                this.demoDialog.show();
                 
-            this.demoDialog.connect(this.demoDialog.$.button1, "onclick", this, function(inShowing) {
-                this.demoDialog.destroy();
-            });
-	}
-	this.owner = app;
-        wm.onidle(demoPanel,"reflow");
-        this._prototypeChanged = false;
+                this.demoDialog.connect(this.demoDialog.$.button1, "onclick", this, function(inShowing) {
+                    this.demoDialog.destroy();
+                });
+	    }
+	    this.owner = app;
+            wm.onidle(demoPanel,"reflow");
+            this._prototypeChanged = false;
+        } catch(e) {}
+        studio.endWait();
+        });
     },
     getThemeDataValue: function(groupname, stylename, defaultVal) {
         if (!this.themeData[groupname])
@@ -1875,7 +2007,6 @@ dojo.declare("ThemeDesigner", wm.Page, {
     isDesignLoaded: function() {
 	return (this.owner == studio.page);
     },
-
 
     /* Demos to show while the user is editting */
     themeGroupDemoHeaderWidgets: {

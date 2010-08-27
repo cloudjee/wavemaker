@@ -27,21 +27,21 @@
 .wm_template  .wmeditor .dijitTextArea,
 .wm_template  .wmeditor .dijitComboBox
  {
-     /* Common-Editor_BorderStyle_Radius */
-     -moz-border-radius: 4px; /* Common-Editor_BorderStyle_Radius */
-     -webkit-border-radius: 4px; /* Common-Editor_BorderStyle_Radius */
-     border-radius: 4px; /* Common-Editor_BorderStyle_Radius */
+     /* Borders-Editor_BorderStyle_Radius */
+     -moz-border-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
+     -webkit-border-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
+     border-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
 }
 
 /* Can't round the top edges of the richtext editor until we're ready to tackle rounding dojo's toolbar */
 .wm_template .wmeditor.wmrichtext {
-    /* Common-Editor_BorderStyle_Radius */
-    -moz-border-radius-bottomleft: 4px;  /* Common-Editor_BorderStyle_Radius */
-    -moz-border-radius-bottomright: 4px; /* Common-Editor_BorderStyle_Radius */
-    -webkit-border-bottom-left-radius: 4px; /* Common-Editor_BorderStyle_Radius */
-    -webkit-border-bottom-right-radius: 4px; /* Common-Editor_BorderStyle_Radius */
-    border-radius-bottomleft: 4px; /* Common-Editor_BorderStyle_Radius */
-    border-radius-bottomright: 4px; /* Common-Editor_BorderStyle_Radius */
+    /* Borders-Editor_BorderStyle_Radius */
+    -moz-border-radius-bottomleft: 4px;  /* Borders-Editor_BorderStyle_Radius */
+    -moz-border-radius-bottomright: 4px; /* Borders-Editor_BorderStyle_Radius */
+    -webkit-border-bottom-left-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
+    -webkit-border-bottom-right-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
+    border-radius-bottomleft: 4px; /* Borders-Editor_BorderStyle_Radius */
+    border-radius-bottomright: 4px; /* Borders-Editor_BorderStyle_Radius */
 }
 
 

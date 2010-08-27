@@ -1048,8 +1048,9 @@ dojo.declare("Studio", wm.Page, {
 	this.themesPage.page.removeThemeClick(inSender);
     },
     revertThemeClick: function(inSender) {
-	this.themesPage.page.removeTheme();
+	this.themesPage.page.revertTheme();
     },
+
 
 	selectProperty: function(inSender, info, text) {
 		console.log("selectProperty");
