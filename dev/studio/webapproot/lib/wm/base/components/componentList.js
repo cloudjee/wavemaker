@@ -84,7 +84,8 @@ wm.componentList = {
 	'wm.ServiceCall':['wm.base.components.ServiceCall'],
 	'wm.ServiceInput':['wm.base.components.ServiceCall'],
 	'wm.FunctionService':['wm.base.components.FunctionService'],
-	'wm.List':["wm.base.widget.List"],
+	'wm.List':["lib.build.Gzipped.wm_list"],
+	'wm.WidgetList':["lib.build.Gzipped.wm_list"],
 	'wm.IFrame':['wm.base.widget.IFrame'],
 	'wm.FeedList':['wm.base.widget.FeedList'],
 	
