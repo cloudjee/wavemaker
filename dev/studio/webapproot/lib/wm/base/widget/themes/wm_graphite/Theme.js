@@ -8,7 +8,7 @@
 		"borderColor": "#333333"
 	}, 
 	"wm.Layout": {
-		"border": "0", 
+		"border": "1", 
 		"borderColor": "#333333"
 	}, 
 	"wm.Bevel": {
@@ -30,19 +30,18 @@
 		"borderColor": "#333333", 
 		"captionBorder": "2", 
 		"layerBorder": "2", 
-		"captionHeight": "30"
+		"captionHeight": "28"
 	}, 
 	"wm.FancyPanel": {
 		"margin": "2", 
 		"border": "0", 
 		"borderColor": "#333333", 
 		"innerBorder": "2", 
-		"labelHeight": "30", 
+		"labelHeight": "28", 
 		"innerBorderColor": "#333333"
 	}, 
 	"wm.TabLayers": {
 		"layersType": "Tabs", 
-		"margin": "0,2,0,2", 
 		"clientBorder": "2", 
 		"border": "0", 
 		"isMajorContent": 1, 
@@ -50,14 +49,12 @@
 		"headerHeight": "31px"
 	}, 
 	"wm.WizardLayers": {
-		"margin": "0,2,0,2", 
 		"border": "0", 
 		"clientBorder": "2", 
 		"isMajorContent": 1, 
 		"clientBorderColor": "#333333"
 	}, 
 	"wm.Layer": {
-		"margin": "2,0,2,0"
 	}, 
 	"wm.Dialog": {
 		"border": "2", 
@@ -96,7 +93,6 @@
 		"borderColor": "#333333"
 	}, 
 	"wm.List": {
-		"margin": "0,2,0,2", 
 		"border": "2", 
 		"borderColor": "#333333"
 	}, 
@@ -128,6 +124,8 @@
 	"wm.PageContainer": {
 	}, 
 	"wm.Panel": {
+		"border": "0", 
+		"borderColor": "#333333"
 	}, 
 	"wm.CheckBoxEditor": {
 	}, 
@@ -151,7 +149,8 @@
 		"borderColor": "#333333"
 	}, 
 	"wm.BusyButton": {
-		"border": "2"
+		"border": "2", 
+		"borderColor": "#333333"
 	}, 
 	"wm.Checkbox": {
 		"border": "0"

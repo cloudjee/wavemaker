@@ -18,6 +18,7 @@
 
 /* Custom CSS goes below this line */
 
-.wm_studio .wmeditor .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
-	background-image: url(images/comboArrowDownDark.png);
+
+.wm_studio .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
+	background-image: url(images/comboArrowDownDark.png); /* wm.SelectMenu-Down-Arrow_Image */
 }

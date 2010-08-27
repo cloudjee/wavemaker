@@ -27,43 +27,43 @@
 	}, 
 	"wm.AccordionLayers": {
 		"border": "0", 
-		"borderColor": "#666666", 
+		"borderColor": "#333333", 
 		"isMajorContent": undefined, 
 		"captionBorder": "2", 
-		"layerBorder": "2", 
+		"layerBorder": "1", 
 		"captionHeight": "30", 
 		"layerBorderColor": "#666666"
 	}, 
 	"wm.FancyPanel": {
 		"margin": "2", 
 		"border": "0", 
-		"borderColor": "#666666", 
-		"innerBorder": "2", 
+		"borderColor": "#333333", 
+		"innerBorder": "1", 
 		"labelHeight": "30", 
 		"innerBorderColor": "#333333"
 	}, 
 	"wm.TabLayers": {
 		"layersType": "Tabs", 
 		"margin": "0,2,0,2", 
-		"clientBorder": "2", 
+		"clientBorder": "1", 
 		"border": "0", 
 		"isMajorContent": 1, 
-		"clientBorderColor": "#666666", 
+		"clientBorderColor": "#333333", 
 		"headerHeight": "26px"
 	}, 
 	"wm.WizardLayers": {
 		"margin": "0,2,0,2", 
 		"border": "0", 
-		"clientBorder": "2", 
+		"clientBorder": "1", 
 		"isMajorContent": 1, 
-		"clientBorderColor": "#666666"
+		"clientBorderColor": "#333333"
 	}, 
 	"wm.Layer": {
 		"margin": "2,0,2,0"
 	}, 
 	"wm.Dialog": {
-		"border": "2", 
-		"borderColor": "#666666", 
+		"border": "1", 
+		"borderColor": "#333333", 
 		"titlebarBorder": "0,0,1,0", 
 		"titlebarBorderColor": "#666666"
 	}, 
@@ -130,6 +130,7 @@
 	"wm.PageContainer": {
 	}, 
 	"wm.Panel": {
+		"borderColor": "#333333"
 	}, 
 	"wm.CheckBoxEditor": {
 	}, 
@@ -153,7 +154,8 @@
 		"borderColor": "#666666"
 	}, 
 	"wm.BusyButton": {
-		"border": "1"
+		"border": "1", 
+		"borderColor": "#666666"
 	}, 
 	"wm.Checkbox": {
 		"border": "0"
