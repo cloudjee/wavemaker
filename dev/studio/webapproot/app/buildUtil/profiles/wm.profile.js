@@ -94,6 +94,7 @@ dependencies = {
 				"wm.base.components.JsonRpcService",
 				"wm.base.components.NavigationCall",
 				"wm.base.components.NavigationService",
+				"wm.base.components.TypeDefinition",
 				/*
 				"wm.base.components.Variable",
 				"wm.base.components.Service",
@@ -256,6 +257,17 @@ dependencies = {
 				"dojo.string",
 				"wm.base.widget.DataGrid",
 				"wm.base.widget.DojoGrid"
+			]
+		},
+                {
+			name: "wm_list.js",
+			resourceName: "wm.compressed.wm_list",
+			layerDependencies: ["lib_build.js"],
+			dependencies: [
+				"wm.base.widget.VirtualList",
+			        "wm.base.widget.Table.builder",
+			        "wm.base.widget.List",
+				"wm.base.widget.WidgetList"
 			]
 		},
 		{
