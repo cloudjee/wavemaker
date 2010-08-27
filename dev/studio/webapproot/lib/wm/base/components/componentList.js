@@ -16,6 +16,17 @@
  *  limitations under the License.
  */
 dojo.provide('wm.base.components.componentList');
+
+
+/************************************************************************************
+ * MICHAEL'S ATTEMPT TO DESCRIBE THIS:
+ *
+ * Component.js only tries to access this list if the class isn't already loaded.
+ * Any class we try to load and is NOT in this list is assumed to be in common/packages.
+ * Therefore: any class you load must either already be loaded or listed here.
+ * If that class is NOT a part of any existing layer, then enter in its standard package name
+ * so dojo.require can run normally.  Still working out details of how to create new build layers.
+ ************************************************************************************/
 wm.componentList = {
 	'wm.DataGrid': ['lib.build.Gzipped.wm_dojo_grid'],
 	'wm.DojoGrid': ['lib.build.Gzipped.wm_dojo_grid', 'wm.base.widget.DojoGrid'],
@@ -84,8 +95,10 @@ wm.componentList = {
 	'wm.ServiceCall':['wm.base.components.ServiceCall'],
 	'wm.ServiceInput':['wm.base.components.ServiceCall'],
 	'wm.FunctionService':['wm.base.components.FunctionService'],
-	'wm.List':["lib.build.Gzipped.wm_list"],
-	'wm.WidgetList':["lib.build.Gzipped.wm_list"],
+        'wm.List': ['wm.base.widget.List'],
+        'wm.WidgetList':['wm.base.widget.WidgetList'],
+//	'wm.List':["lib.build.Gzipped.wm_list"],
+//	'wm.WidgetList':["lib.build.Gzipped.wm_list"],
 	'wm.IFrame':['wm.base.widget.IFrame'],
 	'wm.FeedList':['wm.base.widget.FeedList'],
 	
