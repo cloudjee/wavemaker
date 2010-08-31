@@ -241,7 +241,7 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 	var i = this.decoree.layerIndex;
 	var layer = this.decoree.getActiveLayer();
 	this.validateCurrentLayer();
-	if (layer.layerHasBeenValidated) 
+	if (!layer.invalid) {
 	    if (i == this.decoree.layers.length-1) {
 		this.decoree.onDoneClick();
 	    } else {
@@ -249,13 +249,16 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 		var layer = this.decoree.getActiveLayer();
 		layer.focusFirstEditor();
 	    }
+	} else {
+	    this.validateCurrentLayer(); // Notify user of the problem
+	}
     },
     validateCurrentLayer: function(noWarn) {
 	var i = this.decoree.layerIndex;
 	var layer = this.decoree.getActiveLayer();
 
 	// Mark as invalid before we start
-	layer.layerHasBeenValidated = false; 
+	//layer.layerHasBeenValidated = false; 
 	dojo.removeClass(this.btns[i], "done");
 
 	var invalidWidget = layer.getInvalidWidget();
@@ -265,7 +268,7 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 	    invalidWidget.focus();
 	    invalidWidget.editor.displayMessage(invalidWidget.invalidMessage || "Invalid Input", true);
 
-	    app.alert("Invalid value for " + (invalidWidget.caption || invalidWidget.name) + "; can't go to next step");
+	    app.toastDialog.showToast("Invalid value for " + (invalidWidget.caption || invalidWidget.name), 3000, "Warning", "cc");
 	    return false;
 	}
 
@@ -279,8 +282,8 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 	    return false;
 	}
 
-	layer.layerHasBeenValidated = true;
-	dojo.addClass(this.btns[i], "done");
+	//layer.layerHasBeenValidated = true;
+	//dojo.addClass(this.btns[i], "done");
 	return true;
     },
     backClick: function() {
@@ -295,18 +298,13 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 	if (this.decoree.isDesignLoaded()) return this.inherited(arguments);
 	var layer = this.decoree.getActiveLayer();
 
-	var curindex = this.decoree.layerIndex;
 	var newindex = inLayer.getIndex();
-	for (var i = 0; i < newindex; i++) 
-	    if (i != curindex && !this.decoree.getLayer(i).layerHasBeenValidated) 
+	for (var i = 0; i < newindex; i++) {
+	    if (this.decoree.layers[i].invalid) {
+		app.toastDialog.showToast("Please fill out \"" + this.decoree.layers[i].caption + "\" first", 3000, "Warning", "cc");
 		return;
-
-
-
-	// don't block user if the user is going to previous tab/step, just update the tab's "done" class.
-	this.validateCurrentLayer(newindex < curindex); 
-	if (!layer.layerHasBeenValidated && newindex > curindex) 
-	    return;
+	    }
+	}
 
 	this.inherited(arguments);
     }
