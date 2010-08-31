@@ -421,7 +421,8 @@ Studio.widgets = {
 						themesbevel: ["wm.Bevel", {}, {}],
 						themesRibbon: ["wm.Panel", {height: "29px", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4"}, {}, {
 						    themesPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Save", imageIndex: 8}, {onclick: "saveThemeClick"}],
-						    themesPageAddBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "New Theme (Copy Current Theme)", imageIndex: 25}, {onclick: "addNewThemeClick"}],
+						    themesPageAddBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "New Theme (Copies wm_basic theme)", imageIndex: 25}, {onclick: "addNewThemeClick"}],
+						    themesPageCopyBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Copy Current Theme", imageIndex: 1}, {onclick: "copyThemeClick"}],
 						    themesPageDeleteBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Delete Theme", imageIndex: 0}, {onclick: "deleteThemeClick"}],
 						    themesPageRevertBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Revert Changes", imageIndex: 6, imageList: "canvasToolbarImageList16"}, {onclick: "revertThemeClick"}],
                                                     themesPageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Open Help Dialog", caption: "?"}, {onclick: "helpThemeClick"}]

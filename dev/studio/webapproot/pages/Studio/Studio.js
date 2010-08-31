@@ -599,13 +599,17 @@ dojo.declare("Studio", wm.Page, {
 			this._lastBindSelect = null;
 		    } else {
 		    */
-			this.bindDialog.page.binderSource.searchBar.setDataValue(inComponent.name);
+		    this.bindDialog.page.binderSource.searchBar.setDataValue("#" + inComponent.name);
 			this._lastBindSelect = inComponent;
 /*		    }*/
 		    return;
 		}
+
+	    // if there is a bindSelect, then set selected to null so that we can force a reselect
+	    if (this._lastBindSelect) {
                 this._lastBindSelect = null;
-		
+		this.selected = null;
+	    }
 		if (this.selected == inComponent)
 			return;
 
@@ -965,17 +969,21 @@ dojo.declare("Studio", wm.Page, {
 	outlinedClick: function() {
 		this.removeStudioClass(this._explodeClass);
 		this.toggleStudioClass(this._outlineClass);
-/*
+
 		var on = dojo.hasClass(this.designer.domNode, this._outlineClass);
 		this.useDesignBorder = on;
 		if (studio.page) {
 			wm.forEachWidget(studio.page.root, function(w) {
-				if (w.owner == studio.page)
-					w.applyDesignBorder();
+			    if (w.owner == studio.page) {
+				    //w.designWrapper.setBorder(on ? "1" : "0");
+                                w.getDesignBorder();
+                                w.invalidCss = true;
+                                w.renderCss();
+                            }
 			});
 		}
 		wm.fire(this.page, "reflow");
-                */
+
 	},
 	explodedClick: function() {
 		this.addStudioClass(this._outlineClass);
@@ -1042,6 +1050,9 @@ dojo.declare("Studio", wm.Page, {
 	this.themesPage.page.saveTheme(inSender);
     },
     addNewThemeClick: function(inSender) {
+	this.themesPage.page.copyThemeClick(inSender, "wm_basic");
+    },
+    copyThemeClick: function(inSender) {
 	this.themesPage.page.copyThemeClick(inSender);
     },
     deleteThemeClick: function(inSender) {
