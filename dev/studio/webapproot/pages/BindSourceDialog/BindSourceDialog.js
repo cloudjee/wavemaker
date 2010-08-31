@@ -22,11 +22,14 @@ dojo.require("wm.studio.app.binding");
 
 dojo.declare("BindSourceDialog", wm.Page, {
 	start: function() {
-
+	    this.connect(this.owner.parent, "onClose", this, "onClose");
 	},
 	initBinding: function() {
 		this.binderSource.initBinding();
 	},
+    onClose: function(inWhy) {
+	studio.select(studio.selected); // if the user clicked on any other components while binding, reselect the component that we're binding onClose
+    },
     update: function(inTargetProps, noRegen) {
 		this.targetType = this._getTargetType(inTargetProps);
 		var
