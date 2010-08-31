@@ -63,7 +63,7 @@ dojo.declare("wm.PageListRow", wm.Container, {
 	this.domNode.innerHTML = "";
 	this.variable.setData(inData);
 	this.itemNumber.setData({dataValue: index+1});
-
+	
 	var widgetsJson = dojo.clone(this.owner._widgetsJson);
 	this.fixWireIds(widgetsJson);
 
@@ -104,10 +104,11 @@ dojo.declare("wm.PageListRow", wm.Container, {
 	    this.destroyWires(inComponent.c$[i]);
 	}
     },
-    */
+
     makeEvents: function(inEvents, inComponent) {
 	this.owner.owner.makeEvents(inEvents, inComponent); // pass event binding up to something whose owner is the page, as the page is where the functions and other handlers are
     }
+    */
 });
 
 
@@ -148,13 +149,52 @@ dojo.declare("wm.WidgetList", wm.Container, {
 	    this.setPageName(this.pageName);
 	this.connect(this.domNode, "onscroll", this, "renderRows");
     },
+    createNewPage: function() {
+	var pages = studio.project.getPageList();
+	studio.project.variableType = this.dataSet.type;
+
+	var l = {};
+	dojo.forEach(pages, function(p) {
+	    l[p] = true;
+	});
+        studio.promptForName("page", wm.findUniqueName("Row", [l]), pages,
+                             dojo.hitch(this, function(n) {
+				 n = wm.capitalize(n);
+				 this.pageName = n;
+				 app.confirm("Can we save this page before moving on to the next page?", 
+					     false,
+					     dojo.hitch(this,function() {
+						 studio.project.saveProject();
+						 studio.project.newPage(n,"wm.PageListRow", {type:this.dataSet.type});
+					     }),
+					     dojo.hitch(this,function() {
+						 studio.project.newPage(n,"wm.PageListRow", {type:this.dataSet.type});
+					     }));
+			     }));						 
+    },
     setPageName: function(inPage) {
+	if (inPage == "-New Page" && this.isDesignLoaded()) {
+	    return this.createNewPage();
+
+	}
 	this.pageName = inPage;
 	var path = this.getPath() + wm.pagesFolder + inPage + "/" + inPage + ".widgets.js";
-	if (!dojo.getObject(inPage))
-	    window[inPage] = {};
-		
+	try {
+	    if (!dojo.getObject(inPage))
+		window[inPage] = {};
+
 	this._widgetsJson = dojo.fromJson(dojo._getText(path));
+	path = this.getPath() + wm.pagesFolder + inPage + "/" + inPage + ".js";
+	this._js = dojo._getText(path).replace(/dojo.declare\(\".*?\"\s*,\s*wm\.Page\s*,/,"(").replace(/;\s*$/,"");
+	console.log(this._js);
+
+	    this._js = dojo.fromJson(this._js);
+	    delete this._js.start;
+	} catch(e) {
+	    console.error(e);
+	    delete window[inPage]; // if we failed to assign it, the existence of this object will block project.findUniqueName from working. Especially if we're trying to recreate a page
+	}
+	
 	this.cleanupWidgets(this._widgetsJson);
 	this.renderRows(); 
     },
@@ -259,7 +299,7 @@ dojo.declare("wm.WidgetList", wm.Container, {
 	    this.currentRenderer = this.rowRenderers[i];	    
 	    if (!this.currentRenderer) {
 		var name = "rowRenderer" + i;
-		this.currentRenderer = this[name] = this.rowRenderers[i] = new wm.PageListRow({name: name, owner: this, parent: this});
+		this.currentRenderer = this[name] = this.rowRenderers[i] = dojo.mixin(new wm.PageListRow({name: name, owner: this, parent: this}), this._js);
 		this.currentRenderer.variable.setType(this.dataSet.type);
 		this.nodes[i].id = this.currentRenderer.getId() + "_row" + i;
 		this.currentRenderer.bounds.h = curAvg;
@@ -322,7 +362,7 @@ wm.WidgetList.extend({
 	makePropEdit: function(inName, inValue, inDefault) {
 		switch (inName) {
 			case "pageName":
-				return new wm.propEdit.PagesSelect({component: this, name: inName, value: inValue});
+		    return new wm.propEdit.PagesSelect({component: this, name: inName, value: inValue, newPage: true});
 			case "dataSet":
 				return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.dataSet ? this.dataSet.getId() : "", allowAllTypes: true, listMatch: true});
 		}
@@ -336,10 +376,11 @@ wm.WidgetList.extend({
 				this.components.binding.addWire("", "dataSet", ds.getId());
 		} else
 			this.setDataSet(inDataSet);
-	},
+	}
 });
 
 wm.Object.extendSchema(wm.WidgetList, {
 	dataSet: { readonly: true, group: "data", order: 1, bindTarget: 1, type: "wm.Variable", isList: true},
 	pageName: {group: "common", bindable: 1, type: "string", order: 50}
 });
+
