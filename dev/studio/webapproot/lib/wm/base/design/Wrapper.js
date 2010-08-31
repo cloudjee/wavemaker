@@ -145,7 +145,7 @@ wm.wrapperResizer = new wm.WrapperResizer();
 
 dojo.declare("wm.DesignWrapper", wm.Designable, {
 	//buffer: 6,
-	border: 1,
+	border: 0,
         borderColor: "#F0F0F0",
 	handles: null,
 	surface: null,
@@ -262,12 +262,22 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 			this.handles.setBounds(b);
 		// FIXME: hacky
 		// hides only the label, leaving the slant
-		this.label.parentNode.style.display = (b.h > 22 && b.w > 64) ? '' : 'none';
+	    this.label.innerHTML = (b.h > 22 && b.w > 64) ? this.control.name : ".";
+	    //this.label.parentNode.style.display = (b.h > 22 && b.w > 64) ? '' : 'none';
 		//this.label.style.width = b.w > 200 ? 64 + (b.w / 4) + "px" : "";
-		//this.label.parentNode.style.display = (this.domNode.offsetHeight > 22 && this.domNode.offsetWidth > 64) ? '' : 'none';
+	    wm.onidle(this, "setLabelPosition");
 		b.l = b.t = 0;
 		//this.marker.setBounds(b);
 	},
+    setLabelPosition: function() {
+	    if (studio.selected == this.control) {
+		this.label.parentNode.style.right = 
+		    this.label.parentNode.style.top = "0px";
+	    } else {
+		this.label.parentNode.style.right = (this.control.marginExtents.r-2) + "px";
+		this.label.parentNode.style.top   = this.control.marginExtents.t + "px";
+	    }
+    },
 	canSize: function(box, next) { 
 	    if (!this.control.canResize(box))
 			return false;
@@ -345,9 +355,22 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 	},
 	onselected: function(){
 		this._selected(true);
+	    wm.onidle(this, function() {
+		this.control.getDesignBorder();
+		this.control.invalidCss = true;
+		this.control.render();
+		this.setLabelPosition();
+	    });
+		
 	},
 	ondeselected: function(){
 		this._selected(false);
+	    wm.onidle(this, function() {
+		this.control.getDesignBorder();
+		this.control.invalidCss = true;
+		this.control.render();
+		this.setLabelPosition();
+	    });
 	},
 	getId: function() {
 		// we don't want id's for wrappers so they don't pollute widget registry
