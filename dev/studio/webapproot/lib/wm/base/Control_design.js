@@ -99,8 +99,8 @@ wm.Control.extend({
 	},
 	designCreate: function() {
 		this.inherited(arguments);
-		this.runtimeBorder = this.border;
-		//this.setBorder(this.getDesignBorder());
+	        //this.runtimeBorder = this.border;
+	        //this.setBorder(this.getDesignBorder());
 		if (wm.isDesignable(this))
 			new wm.DesignWrapper({ surface: this._designer, control: this });
 		if (this._studioCreating && this._defaultClasses)
@@ -123,21 +123,31 @@ wm.Control.extend({
 			this.render();
 		}
 	},
-	getDesignBorder: function() {
-		var useDesignBorder = studio.useDesignBorder && this.useDesignBorder && wm.isDesignable(this);
-                var border = this._parseExtents(this.runtimeBorder);
+	*/
+	getDesignBorder: function(optionalBorder) {
+		var useDesignBorder = studio.useDesignBorder && this.useDesignBorder && wm.isDesignable(this) && studio.selected != this;
+            //var border = this._parseExtents(this.runtimeBorder);
+	    var border = this._parseExtents(optionalBorder || this.border);
+
             if (useDesignBorder) {
+	    this.designBorderState = {t: !Boolean(border.t),
+				   b: !Boolean(border.b),
+				   l: !Boolean(border.l),
+				   r: !Boolean(border.r)};
+/*
                 if (!border.t) border.t = 1;
                 if (!border.b) border.b = 1;
                 if (!border.l) border.l = 1;
                 if (!border.r) border.r = 1;
                 return border.t + "," + border.r + "," + border.b + "," + border.l;
+		*/
             } else {
-                return this.runtimeBorder; // What the???
+		delete this.designBorderState;
+                //return this.runtimeBorder; // What the???
             }
 	    //return useDesignBorder ? (Number(this.runtimeBorder) ? this.runtimeBorder : "1") : this.runtimeBorder;
 	},
-        */
+
     set_margin: function(inMargin) {
 	    inMargin = dojo.trim(String(inMargin));
 	    inMargin = inMargin.replace(/\s*,\s*/g, ",");
@@ -157,19 +167,19 @@ wm.Control.extend({
 	    inBorder = inBorder.replace(/\s*,\s*/g, ",");
 	    inBorder = inBorder.replace(/px/g,"");
 	    inBorder = inBorder.replace(/\s+/g,",");
-            /*
 	    if (this.isDesignLoaded()) {
-		this.runtimeBorder = inBorder;
-		inBorder = this.getDesignBorder();
+		//this.runtimeBorder = inBorder;
+		//inBorder = this.getDesignBorder();
+		this.getDesignBorder(inBorder); // calculates the designBorderState property
 	    }
-            */
+
 	    this.setBorder(inBorder);
 	},
 /*
 	get_border: function() {
 		return this.isDesignLoaded() ? this.runtimeBorder : this.border;
 	},
-        */
+	*/
 /*
 	writeProps: function() {
 		var p = this.inherited(arguments);
@@ -361,7 +371,7 @@ wm.Object.extendSchema(wm.Control, {
         autoSizeHeight:  { ignore: 1 },
 	sizeable: { ignore: 1 }, // Property tells designer if a given class of widgets can be resized; splitter is an example of a widget where you might want this set to false
 	styles: { ignore: 1 },
-	runtimeBorder: { ignore: 1 },
+    //runtimeBorder: { ignore: 1 },
 	width: { group: "layout", order: 20},
 	height: { group: "layout", order: 30},
         minWidth: { group: "advanced layout", order: 40},

@@ -293,9 +293,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		backgroundColor: {ignore: 1},
 		margin: {group: "style"},
 		padding: {group: "style"},
-	        autoScroll: {group: "style", order: 100, ignore: 1},
-	        scrollX: {group: "style", order: 101},
-	        scrollY: {group: "style", order: 102},
+	        autoScroll: {group: "scrolling", order: 100, ignore: 1},
+	        scrollX: {group: "scrolling", order: 101},
+	        scrollY: {group: "scrolling", order: 102},
 		left: {writeonly: 1, ignore: 1},
 		top: {writeonly: 1, ignore: 1}
 	},
@@ -433,9 +433,14 @@ this.label.enable();
 		this.setMargin(this.margin);
 		this.setPadding(this.padding);
 */
-
+	    if (this.isDesignLoaded())
+		// enable design borders
+		this.set_border((this.border) ? String(this.border) : "0");
+	    else {
 	        this.border = (this.border) ? String(this.border) : "0";
-	        this.borderExtents = this._parseExtents(this.border); 
+	    }
+	    this.borderExtents = this._parseExtents(this.border); 
+
 		this.padding = String(this.padding);
 		this.paddingExtents = this._parseExtents(this.padding);
 		this.setMargin(this.margin);
@@ -1005,27 +1010,53 @@ this.label.enable();
 
 		var paddArr = this.padding.split(paddingSplitter);
 
+	    if (this.designBorderState) {
+		return {
+		margin:  (this.margin.split(marginSplitter).join("px ") || 0) + "px",
+		padding: (paddArr.join("px ") || 0) + "px",
+		borderLeftStyle: (this.designBorderState && this.designBorderState.l) ? "dashed" : "solid",
+		borderRightStyle: (this.designBorderState && this.designBorderState.r) ? "dashed" : "solid",
+		borderTopStyle: (this.designBorderState && this.designBorderState.t) ? "dashed" :  "solid",
+		borderBottomStyle: (this.designBorderState && this.designBorderState.b) ? "dashed" : "solid" ,
+		borderLeftColor: (this.designBorderState && this.designBorderState.l) ? "#C1C1C1" : this.borderColor,
+		borderRightColor: (this.designBorderState && this.designBorderState.r) ? "#C1C1C1" : this.borderColor,
+		borderTopColor: (this.designBorderState && this.designBorderState.t) ? "#C1C1C1" :  this.borderColor,
+		borderBottomColor: (this.designBorderState && this.designBorderState.b) ? "#C1C1C1" : this.borderColor,
+		borderLeftWidth:  ((this.designBorderState && this.designBorderState.l) ? "1" : this.borderExtents.l) + "px",
+		borderRightWidth:  ((this.designBorderState && this.designBorderState.r) ? "1" : this.borderExtents.r) + "px",
+		borderTopWidth: ((this.designBorderState && this.designBorderState.t) ? "1" : this.borderExtents.t) + "px",
+		borderBottomWidth: ((this.designBorderState && this.designBorderState.b) ? "1" : this.borderExtents.b) + "px",
+		backgroundColor: this.backgroundColor,
+		overflow:  (this.autoScroll || this._xscrollX || this._xscrollY ? "auto" : "hidden"),
+		overflowX: (this.scrollX ? "scroll" : "hidden"),
+		overflowY: (this.scrollY ? "scroll" : "hidden")};
+
+	    } else {
 	    return {
 		margin:  (this.margin.split(marginSplitter).join("px ") || 0) + "px",
 		padding: (paddArr.join("px ") || 0) + "px",
-		border:  "0 solid",
+		borderStyle:  "solid",
 		borderWidth:  (this.border.split(borderSplitter).join("px ") || 0) + "px",
 		borderColor:  this.borderColor,
 		backgroundColor: this.backgroundColor,
 		overflow:  (this.autoScroll || this._xscrollX || this._xscrollY ? "auto" : "hidden"),
 		overflowX: (this.scrollX ? "scroll" : "hidden"),
 		overflowY: (this.scrollY ? "scroll" : "hidden")};
+	    }
 	},
 	setCssViaCssText: function(cssObj) {
-	    
+	    if (!this.domNode) return;
 	    // why is it +=?  So that position: absolute isn't blown away; so that any custom widget styles aren't blown away.
 	    // How efficient is resetting cssText (cssText is "border:5", how efficient is cssText += ";border:10" handled?)
+	    if (this.designBorderState) {
 	    this.domNode.style.cssText += 
-		     "margin:" + cssObj.margin + ";"  
-	  	+ "padding:" + cssObj.padding + ";"
-		+ "border:" + cssObj.border + ";"
-		+ "border-width:" + cssObj.borderWidth + ";"
-		+ "border-color:" + cssObj.borderColor + ";"
+		"margin:" + cssObj.margin + ";"  
+	  	    + "padding:" + cssObj.padding + ";"
+		    + "border-top:" + cssObj.borderTopStyle + " " + cssObj.borderTopWidth + " " + cssObj.borderTopColor + ";"
+		    + "border-bottom:" + cssObj.borderBottomStyle + " " + cssObj.borderBottomWidth + " " + cssObj.borderBottomColor + ";"
+		    + "border-right:" + cssObj.borderRightStyle + " " + cssObj.borderRightWidth + " " + cssObj.borderRightColor + ";"
+		    + "border-left:" + cssObj.borderLeftStyle + " " + cssObj.borderLeftWidth + " " + cssObj.borderLeftColor + ";"
+
 		+ (cssObj.backgroundColor ? "background-color:" + cssObj.backgroundColor + ";" : "")
 		    //+ "overflow:" + (this.autoScroll ? "auto" : "hidden") + ";"
 		    // Frankies one line change for scrolling
@@ -1033,20 +1064,48 @@ this.label.enable();
 		+ "overflow-x:" + ((cssObj.overflow != "auto") ? cssObj.overflowX : cssObj.overflow) + ";"
 		+ "overflow-y:" + ((cssObj.overflow != "auto") ? cssObj.overflowY : cssObj.overflow) + ";"
 		;
+
+	    } else {
+	    this.domNode.style.cssText += 
+		     "margin:" + cssObj.margin + ";"  
+	  	    + "padding:" + cssObj.padding + ";"
+		    + "border-style:" + cssObj.borderStyle + ";" 
+		    + "border-width:" + cssObj.borderWidth + ";"
+		    + "border-color:" + cssObj.borderColor + ";"
+		    + (cssObj.backgroundColor ? "background-color:" + cssObj.backgroundColor + ";" : "")
+		    //+ "overflow:" + (this.autoScroll ? "auto" : "hidden") + ";"
+		    // Frankies one line change for scrolling
+		//+ "overflow:" + cssObj.overflow +";" 
+		    + "overflow-x:" + ((cssObj.overflow != "auto") ? cssObj.overflowX : cssObj.overflow) + ";"
+		    + "overflow-y:" + ((cssObj.overflow != "auto") ? cssObj.overflowY : cssObj.overflow) + ";"
+		;
+
+	    }
+
 	},
 	setCssViaDom: function(cssObj) {
+	    if (!this.domNode) return;
 	    var s = this.domNode.style;
 	    try {
 			if (s.margin != cssObj.margin && !(s.margin == '' && cssObj.margin == '0px'))	
 				s.margin    = cssObj.margin;
 			if (s.padding != cssObj.padding)	
-				s.padding   = cssObj.padding;
-			if (s.border != cssObj.border)	
-				s.border    = cssObj.border;
-			if (s.borderWidth != cssObj.borderWidth)	
+				s.padding   = cssObj.padding;		       
+		        if (!this.designBorderState) {
+			    if (s.borderStyle != cssObj.borderStyle)	
+				s.borderStyle    = cssObj.borderStyle;
+			    if (s.borderWidth != cssObj.borderWidth)	
 				s.borderWidth = cssObj.borderWidth;
-			if (s.borderColor != cssObj.borderColor)	
+			    if (s.borderColor != cssObj.borderColor)	
 				s.borderColor = cssObj.borderColor;
+
+			} else {
+			    s.borderLeft = cssObj.borderLeftStyle + " " + cssObj.borderLeftWidth + " " + cssObj.borderLeftColor;
+			    s.borderRight = cssObj.borderRightStyle + " " + cssObj.borderRightWidth + " " + cssObj.borderRightColor;
+			    s.borderTop = cssObj.borderTopStyle + " " + cssObj.borderTopWidth + " " + cssObj.borderTopColor;
+			    s.borderBottom = cssObj.borderBottomStyle + " " + cssObj.borderBottomWidth + " " + cssObj.borderBottomColor;
+
+			}
 			if (cssObj.backgroundColor)
 			        s.backgroundColor = cssObj.backgroundColor;
 			var o =  (cssObj.overflow != "auto") ? cssObj.overflowX : cssObj.overflow;
