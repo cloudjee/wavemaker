@@ -183,8 +183,12 @@ wm.DojoGrid.extend({
 		this.contextMenu.setDataSet(sArray);
 		wm.fire(studio.inspector, "reinspect");
 	},
+
+
 	makePropEdit: function(inName, inValue, inDefault) {
 		switch (inName) {
+			case "dataSet":
+				return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.dataSet ? this.dataSet.getId() : "", allowAllTypes: true, listMatch: true});
 		case "selectionMode":
 			return makeSelectPropEdit(inName, inValue, ["single", "multiple", "extended", "none"], inDefault);
 		case "editColumns":
