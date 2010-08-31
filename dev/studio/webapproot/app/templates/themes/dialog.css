@@ -46,7 +46,8 @@
    * DESCRIPTION: Sets the font and backgound colors, and rounding for
    *              the titlebar
    ************************************************************************************************/
-.wm_template .dialogtitlebar {    
+.wm_template .dialogtitlebar,
+.wm_template .dialogtitlebar .wmlabel{    
     /* Document-HeadersDefault-Font */
     font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
     font-size: 12pt; /* Document-HeadersDefault-Font_TextSize */
@@ -58,7 +59,8 @@
     background-image: url(images/threeD.png); /* Document-HeadersDefault-Background_Image */
     background-position: left top;  /* Document-HeadersDefault-Background_Image-Position */
     background-repeat: repeat-x; /* Document-HeadersDefault-Background_Image-Repeat */
-
+}
+.wm_template .dialogtitlebar {
     /* Automatically calculated to be 2px less than MainContent-Styles-Border_Style-Radius */
     -moz-border-radius-topleft: 2px; /* wm.Dialog_Inner-Radius */
     -moz-border-radius-topright: 2px;/* wm.Dialog_Inner-Radius */
@@ -111,6 +113,11 @@ body .wm_template .dialogtitlebar .wmbutton {
     font-weight: normal;
     padding: 2px 0px 0px 2px;
     font-family: sans-serif;
+
+    /* I may change my mind in the future, but using the button default radius here seems a mistake */
+    -moz-border-radius: 0px !important;
+    -webkit-border-radius: 0px !important;
+    border-radius: 0px !important;
 }
 
   /**************************************************************************************************
@@ -120,11 +127,11 @@ body .wm_template .dialogtitlebar .wmbutton {
    ************************************************************************************************/
 body.wm_template .dialogfooter .wmbutton,
 body .wm_template .dialogfooter .wmbutton {
-    /* MainContent-EditorsDefault-Font */
-    font-family: sans-serif; /* MainContent-EditorsDefault-Font_Family */
-    font-size: 12pt; /* MainContent-EditorsDefault-Font_TextSize */
-    color: #FFFFFF; /* MainContent-EditorsDefault-Font_Color */
-    font-weight: bold; /* MainContent-EditorsDefault-Font_Weight */
+    /* MainContent-HeadersDefault-Font */
+    font-family: sans-serif; /* MainContent-HeadersDefault-Font_Family */
+    font-size: 12pt; /* MainContent-HeadersDefault-Font_TextSize */
+    color: #FFFFFF; /* MainContent-Styles-Background_Color */
+    font-weight: bold; /* MainContent-HeadersDefault-Font_Weight */
 }
 
   /**************************************************************************************************
@@ -137,11 +144,11 @@ body .wm_template .dialogtitlebar .wmbutton,
 body.wm_template .dialogfooter .wmbutton,
 body .wm_template .dialogfooter .wmbutton {
 
-    /* MainContent-EditorsDefault-Background */
-    background-color: #444444; /* MainContent-EditorsDefault-Background_Color */
-    background-image: url(images/threeD.png); /* MainContent-EditorsDefault-Background_Image */
-    background-position: left top;  /* MainContent-EditorsDefault-Background_Image-Position */
-    background-repeat: repeat-x; /* MainContent-EditorsDefault-Background_Image-Repeat */
+    /* MainContent-HeadersDefault-Background */
+    background-color: #444444; /* MainContent-HeadersDefault-Font_Color */
+    background-image: url(images/threeD.png); /* MainContent-HeadersDefault-Background_Image */
+    background-position: left top;  /* MainContent-HeadersDefault-Background_Image-Position */
+    background-repeat: repeat-x; /* MainContent-HeadersDefault-Background_Image-Repeat */
 }
 
   /**************************************************************************************************
@@ -154,17 +161,17 @@ body.wm_template .dialogtitlebar .wmbutton:hover,
 body .wm_template .dialogtitlebar .wmbutton:hover,
 body.wm_template .dialogfooter .wmbutton:hover,
 body .wm_template .dialogfooter .wmbutton:hover {
-    /* MainContent-EditorsHover-Font */
-    font-family: sans-serif; /* MainContent-EditorsHover-Font_Family */
-    font-size: 12pt; /* MainContent-EditorsHover-Font_TextSize */
-    color: #FFFFFF; /* MainContent-EditorsHover-Font_Color */
-    font-weight: bold; /* MainContent-EditorsHover-Font_Weight */
+    /* MainContent-HeadersHover-Font */
+    font-family: sans-serif; /* MainContent-HeadersHover-Font_Family */
+    font-size: 12pt; /* MainContent-HeadersHover-Font_TextSize */
+    color: #FFFFFF; /* MainContent-HeadersHover-Background_Color */
+    font-weight: bold; /* MainContent-HeadersHover-Font_Weight */
 
-    /* MainContent-EditorsHover-Background */
-    background-color: #444444; /* MainContent-EditorsHover-Background_Color */
-    background-image: url(images/threeD.png); /* MainContent-EditorsHover-Background_Image */
-    background-position: left top;  /* MainContent-EditorsHover-Background_Image-Position */
-    background-repeat: repeat-x; /* MainContent-EditorsHover-Background_Image-Repeat */
+    /* MainContent-HeadersHover-Background */
+    background-color: #444444; /* MainContent-HeadersHover-Font_Color */
+    background-image: url(images/threeD.png); /* MainContent-HeadersHover-Background_Image */
+    background-position: left top;  /* MainContent-HeadersHover-Background_Image-Position */
+    background-repeat: repeat-x; /* MainContent-HeadersHover-Background_Image-Repeat */
 }
 
   /**************************************************************************************************

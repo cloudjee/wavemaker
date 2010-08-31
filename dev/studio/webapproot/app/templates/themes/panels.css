@@ -1019,3 +1019,48 @@ body.wm_template {
 
     /* END SECTION wm.WizardLayers */
 }
+
+
+.wm_template #wavemakerNode .HeaderContent,
+#studio_designer.wm_template .HeaderContent,
+#studio_themesPage_themeDesigner_demoPanel .HeaderContent {
+	/* Document-HeadersActive-Font  + Headers-Default-Font */
+	font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
+	font-size: 12pt; /* Document-HeadersDefault-Font_TextSize */
+	color: #FFFFFF; /* Document-HeadersActive-Font_Color */
+	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+
+	/* Document-HeadersActive-Background */
+	background-color: #444444; /* Document-HeadersActive-Background_Color */
+	background-image: url(images/threeD.png); /* Document-HeadersActive-Background_Image */
+	background-position: left top;  /* Document-HeadersActive-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-HeadersActive-Background_Image-Repeat */
+
+	/* Document-HeadersDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* Document-HeadersDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* Document-HeadersDefault-BorderStyle_Radius */
+	border-radius: 4px; /* Document-HeadersDefault-BorderStyle_Radius */
+
+	padding-left: 10px;
+    
+}
+
+
+#wmMinifiedDialogPanel {
+    opacity: 0.6;
+    background-color: #444444; /* Document-HeadersActive-Background_Color */
+
+    -moz-box-shadow: 0px -2px 4px black; /* wm.TabLayers-BorderStyle_UnselectedShadow */
+    -webkit-box-shadow: 0px -2px 4px black;  /* wm.TabLayers-BorderStyle_UnselectedShadow */
+    box-shadow: 0px -2px 4px black;  /* wm.TabLayers-BorderStyle_UnselectedShadow */
+}
+#wmMinifiedDialogPanel:hover {
+    opacity: 1;
+}
+#wmMinifiedDialogPanel .wmbutton {
+	-moz-border-radius: 0px !important; 
+	-webkit-border-radius: 0px !important;
+	border-radius: 0px !important;
+        font-size: 8pt;
+    
+}
