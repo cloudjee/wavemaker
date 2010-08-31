@@ -26,7 +26,14 @@
 dojo.provide("wm.base.widget.Dialog");
 dojo.require("wm.base.widget.Box");
 
-wm.dialog = {};
+wm.dialog = {showingList: []};
+
+wm.dialog.getNextZIndex = function() {
+    var index = 30;
+    for (var i = 0; i < wm.dialog.showingList.length; i++) 
+	index = Math.max(index, wm.dialog.showingList[i].domNode.style.zIndex);
+    return index+1;
+}
 
 wm.dismiss = function(inWidget, inWhy) {
 	var o = inWidget;
@@ -53,7 +60,7 @@ wm.bgIframe = {
 		}
 		dojo.subscribe("window-resize", this, "size")
 	},
-    setShowing: function(inShowing,forceChange) {
+        setShowing: function(inShowing,forceChange) {
 		if (!this.domNode)
 			return;
 		if (forceChange || inShowing != this.showing) {
@@ -62,6 +69,7 @@ wm.bgIframe = {
 		}
 		if (inShowing)
 			this.size();
+
 	},
 	size: function(inNode) {
 		if (!this.domNode || !this.showing)
@@ -114,7 +122,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		this.setContentHeight(this.contentHeight);
 		*/
 		this.domNode.style.position = "absolute";
-		this.domNode.style.zIndex = 30;
+	    this.domNode.style.zIndex = wm.dialog.getNextZIndex();
 		this.domNode.style.display = "none";		
 		this._connections.push(this.connect(document, "onkeypress", this, "keyPress"));
 		this._subscriptions.push(dojo.subscribe("window-resize", this, "reflow"));	    
@@ -163,27 +171,32 @@ dojo.declare("wm.Dialog", wm.Container, {
     },	
     minify: function() {
 	this._minified = true;
-	this.titleMinify.hide();
-	this.titleMaxify.hide();
-	this.titleClose.hide();
-	this.renderBounds();
+	this.setShowing(false);
+	if (!app.wmMinifiedDialogPanel) {
+	    app.createMinifiedDialogPanel();
+	}
+	this.minifiedLabel = app.createMinifiedDialogLabel(this.title);
+	this.minifiedLabel.connect(this.minifiedLabel, "onclick", this, function() {
+	    app.removeMinifiedDialogLabel(this.minifiedLabel);
+	    delete this.minifiedLabel;
+	    app.wmMinifiedDialogPanel.reflow();
+	    this._minified = false;
+	    this.setShowing(true);
+	});
+	app.wmMinifiedDialogPanel.reflow();
     },
     unminifyormove: function(inEvent) {
 	this._unminifyMouseX = inEvent.x;
 	this._unminifyMouseY = inEvent.y;
     },
-    unminify: function(inEvent) {
+    unminify: function(inEvent, dontCallSetShowing) {
 	if (!this._minified) return;
-	if (inEvent && (Math.abs(this._unminifyMouseX - inEvent.x) > 5 ||
-			Math.abs(this._unminifyMouseY != inEvent.y) > 5)) return;
-
+	app.removeMinifiedDialogLabel(this.minifiedLabel);
+	delete this.minifiedLabel;
+	    app.wmMinifiedDialogPanel.reflow();
 	this._minified = false;
-	this.bounds.h = parseInt(this.height);
-	this.bounds.w = parseInt(this.width);
-	this.titleMinify.show();
-	this.titleMaxify.show();
-	this.titleClose.setShowing(!this.noEscape);
-	this.renderBounds();
+	if (!dontCallSetShowing) 
+	    this.show();
     },
     maxify: function() {
 	if (this._maxified) {
@@ -202,7 +215,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	reflowParent: function() {
 	},
 	dismiss: function(e) {
-		this.setShowing(false);
+	        this.setShowing(false, false, true);
 		var why = "" || dojo.isString(e) ? e : e && e.target && e.target.innerHTML;
 		this.onClose(why);
 		why = null;
@@ -211,6 +224,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    this.dismiss();
 	    if (this.dialogScrim)
                 this.dialogScrim.destroy();
+	    if (this.minifiedLabel)
+		this.minfiedLabel.destroy();
 	    this.inherited(arguments);
 	},
 	flow: function() {
@@ -262,6 +277,7 @@ dojo.declare("wm.Dialog", wm.Container, {
         this.corner = inCorner.replace(/top/, "t").replace(/bottom/,"b").replace(/left/,"l").replace(/right/,"r").replace(/center/,"c").replace(/ /,"");
         this.renderBoundsByCorner();
     },
+/* if the dialog is off the edge of the screen, attempt to compensate */
     insureDialogVisible: function() {
 	if (!this.showing) return;
         var w = this.bounds.w;
@@ -292,6 +308,9 @@ dojo.declare("wm.Dialog", wm.Container, {
         
         var top  = this.corner.substring(0,1);
         var left = this.corner.substring(1,2);
+	for (var i = wm.dialog.showingList.length - 1; i >= 0 && wm.dialog.showingList[i] == this; i--)
+	    ;
+	var last = (i >= 0) ? wm.dialog.showingList[i] : null;
 
         switch(left) {
         case "l":
@@ -301,7 +320,11 @@ dojo.declare("wm.Dialog", wm.Container, {
             l = W - w - buffer;
             break;
         case "c":
-            l = Math.floor((W - w)/2);
+	    if (last && last.corner == this.corner)
+		l = last.bounds.l + 15;
+	    else
+		l = Math.floor((W - w)/2);
+
             break;
         }
 
@@ -313,7 +336,10 @@ dojo.declare("wm.Dialog", wm.Container, {
             t = H - h - buffer;
             break;
         case "c":
-            t = Math.floor((H - h)/2);
+	    if (last && last.corner == this.corner)
+		t = last.bounds.t + 15;
+	    else
+		t = Math.floor((H - h)/2);
             break;
         }
 
@@ -323,22 +349,29 @@ dojo.declare("wm.Dialog", wm.Container, {
 	setContent: function(inContent) {
 		this.containerNode.innerHTML = inContent;
 	},
-        setShowing: function(inShowing, forceChange) {
+        setShowing: function(inShowing, forceChange, skipOnClose) {
 		if (inShowing != this.showing && this.modal)
 			this.dialogScrim.setShowing(inShowing);
 		this.inherited(arguments);
-		// global flag for easily telling if a dialog is showing.
-		wm.dialog.showing = this.showing;
+		// global flag for easily finding the most recently shown dialog
+	        wm.Array.removeElement(wm.dialog.showingList, this);
+	        if (inShowing)
+		    wm.dialog.showingList.push(this);
+	        this.domNode.style.zIndex = wm.dialog.getNextZIndex();
+
 		if (this.showing) {
 		    if (this._minified)
-			this.unminify();
+			this.unminify(null, true);
 			this.reflow();
 		}/* else
 			// FIXME: hide any tooltips that may be showing
 			wm.hideToolTip(true);*/
 	    wm.bgIframe.setShowing(inShowing && this.modal && !this.isDesignedComponent());
+
 		if (this.showing)
 			this.onShow();
+	        else if (!skipOnClose) 
+		    this.onClose("");
 	},
 /*
 	setContentWidth: function(inWidth) {
@@ -650,14 +683,10 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
     button2Caption: "",
     button3Caption: "",
     button4Caption: "",
-    button5Caption: "",
-    button6Caption: "",
     button1Close: false,
     button2Close: false,
     button3Close: false,
     button4Close: false,
-    button5Close: false,
-    button6Close: false,
     userPrompt: "Testing...",
     showInput: false,
     prepare: function() {
@@ -676,8 +705,6 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
 				    horizontalAlign: "right",
 				    height: "34px",
 				    width: "100%"}, {}, {
-		                        button6: ["wm.Button", {"height":"100%","width":"130px","showing":false}, {"onclick":"buttonClick"}],
-		                        button5: ["wm.Button", {"height":"100%","width":"130px","showing":false}, {"onclick":"buttonClick"}],
 		                        button4: ["wm.Button", {"height":"100%","width":"130px","showing":false}, {"onclick":"buttonClick"}],
 		                        button3: ["wm.Button", {"height":"100%","width":"130px","showing":false}, {"onclick":"buttonClick"}],
 		                        button2: ["wm.Button", {"height":"100%","width":"130px","showing":false}, {"onclick":"buttonClick"}],
@@ -765,8 +792,6 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
     setButton2Caption: function(inCap) {this.setButtonCaption(2,inCap);},
     setButton3Caption: function(inCap) {this.setButtonCaption(3,inCap);},
     setButton4Caption: function(inCap) {this.setButtonCaption(4,inCap);},
-    setButton5Caption: function(inCap) {this.setButtonCaption(5,inCap);},
-    setButton6Caption: function(inCap) {this.setButtonCaption(6,inCap);},
     
     setButtonCaption: function(inButtonNumber, inButtonCaption) {
 	var button = this.$["button" + inButtonNumber];
@@ -778,7 +803,7 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
 	} else {
 	    button.hide();
 	}	
-	this.$.dialogFooter.setShowing(this.button1Caption || this.button2Caption || this.button3Caption || this.button4Caption || this.button5Caption || this.button6Caption);
+	this.$.dialogFooter.setShowing(this.button1Caption || this.button2Caption || this.button3Caption || this.button4Caption);
     },
     onEnterKeyPress: function(inText) {
         if (this.enterKeyIsButton1) {
@@ -797,16 +822,12 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
 	case 2:  this.onButton2Click(inSender, text);break;
 	case 3:  this.onButton3Click(inSender, text);break;
 	case 4:  this.onButton4Click(inSender, text);break;
-	case 5:  this.onButton5Click(inSender, text);break;
-	case 6:  this.onButton6Click(inSender, text); break;
 	}
     },
     onButton1Click: function(inButton, inText) {},
     onButton2Click: function(inButton, inText) {},
     onButton3Click: function(inButton, inText) {},
     onButton4Click: function(inButton, inText) {},
-    onButton5Click: function(inButton, inText) {},
-    onButton6Click: function(inButton, inText) {}
 });
 
 
@@ -821,10 +842,6 @@ wm.Object.extendSchema(wm.GenericDialog, {
     button3Close: {group: "Buttons", order: 6},
     button4Caption: {group: "Buttons", order: 7},
     button4Close: {group: "Buttons", order: 8},
-    button5Caption: {group: "Buttons", order: 9},
-    button5Close: {group: "Buttons", order: 10},
-    button6Caption: {group: "Buttons", order: 11},
-    button6Close: {group: "Buttons", order: 12},
     footerBorder: {group: "Header and Footer", order: 10},
     footerBorderColor: {group: "Header and Footer", order: 11},
     userPrompt: {group: "Dialog Options", order: 2},
