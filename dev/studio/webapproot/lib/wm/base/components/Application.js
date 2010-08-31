@@ -34,7 +34,7 @@ dojo.declare("wm.Application", wm.Component, {
         theme: "wm_notheme",
         toastPosition: "br",
         _lastTheme: "",
-        IERoundedCorners: false,
+    //IERoundedCorners: false,
 	init: function() {
 		app = wm.application = wm.application || this;
 		this.connectList = [];
@@ -392,6 +392,7 @@ dojo.declare("wm.Application", wm.Component, {
 		this.onPageChanged(inPage, inPreviousPage);
 	},
 	loadPage: function(inName) {
+            this._pageName = inName;
 		//this._pageLoader.unloadSupport();
 		try 
 		{
@@ -408,6 +409,10 @@ dojo.declare("wm.Application", wm.Component, {
 			this.hideLoadingIndicator();
 		}
 	},
+        // Provided for use in debugging. Note that when we do a better job of caching pages from server, we will need to deallocate them in this call
+        forceReloadPage: function() {
+            this.loadPage(this._pageName);
+        },
 	onPageChanged: function(inNewPage, inPreviousPage) {
 	},
         getFullVersionNumber: function() {
@@ -478,6 +483,29 @@ dojo.declare("wm.Application", wm.Component, {
     },
     toastSuccess: function(inMsg) {
         this.toastDialog.showToast(inMsg, 5000, "Success");
+    },
+    createMinifiedDialogPanel: function() {
+	this.wmMinifiedDialogPanel = new wm.Panel({name: "wmMinifiedDialogPanel", width: this._page.root.bounds.w + "px", height: "25px", border: "2,0,0,0", padding: "2", autoScroll: true, verticalAlign: "top", horizontalAlign: "left", layoutKind: "left-to-right"});
+	document.body.appendChild(this.wmMinifiedDialogPanel.domNode);
+	this.wmMinifiedDialogPanel.subscribe("window-resize", this, "resizeMinifiedDialogPanel");
+	this.resizeMinifiedDialogPanel();
+    },
+    createMinifiedDialogLabel: function(title) {
+	var l = new wm.Button({caption: title, parent: app.wmMinifiedDialogPanel, owner: this, width: "100px", height: "100%", margin: "0", padding: "0"});
+	app.wmMinifiedDialogPanel.show();
+	return l;
+    },
+    removeMinifiedDialogLabel: function(minifiedLabel) {
+	minifiedLabel.destroy();
+	this.wmMinifiedDialogPanel.setShowing(Boolean(this.wmMinifiedDialogPanel.c$.length));
+    },
+    resizeMinifiedDialogPanel: function() {
+	var b = {l: 0,
+		 t: this._page.root.bounds.h - this.wmMinifiedDialogPanel.bounds.h,
+		 w: this._page.root.bounds.w,
+		 h: 25};
+	this.wmMinifiedDialogPanel.setBounds(b);
+	this.wmMinifiedDialogPanel.renderBounds();
     }
 });
 
@@ -495,8 +523,28 @@ wm.Application.extend({
 	write: function(inIndent) {
 	    var props = dojo.toJson(this.writeProps(),true);
 	    props = props.substring(1,props.length-2);
-	    var comps = this.writeComponents(inIndent).join(", " + sourcer_nl);
 
+
+	    var compsArray = this.writeComponents(inIndent);
+
+	    /* We should always put wm.TypeDefinitions before all other components as those components may 
+	     * depend upon the type being defined.
+	     */
+	    compsArray = compsArray.sort(function(a,b) {
+		var alist = a.match(/^(.*?)\:\s*\[\"(.*)?\"/);
+		var blist = b.match(/^(.*?)\:\s*\[\"(.*)?\"/);		
+		if (alist[2] == "wm.TypeDefinition" && blist[2] == "wm.TypeDefinition")
+		    return (alist[1] <= blist[1]) ? -1 : 1;
+		else if (alist[2] == "wm.TypeDefinition")
+		    return -1;
+		else if (blist[2] == "wm.TypeDefinition")
+		    return 1;
+		else
+		    return (alist[1] <= blist[1]) ? -1 : 1;
+	    });
+
+	    var comps = compsArray.join(", " + sourcer_nl);
+	
 	    var customsrc = String(studio.getAppScript()).trim() || studio.project.projectName + ".extend({\n\n\t" + terminus + "\n});";
 	    var src = 'dojo.declare("' + this.declaredClass + '", wm.Application, {' +
 		props + ",\n\t" + 
@@ -519,6 +567,7 @@ wm.Application.extend({
             dojo.forEach(data, function(item) {options.push(item.dataValue);});
 	    return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: options});
         case "toastPosition":
+            inValue = inValue.replace(/^c/, "center ").replace(/^t/, "top ").replace(/^b/, "bottom ").replace(/l$/, "left").replace(/r$/, "right").replace(/c$/, "center");
             return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["top left", "top center", "top right", "center left", "center center", "center right", "bottom left", "bottom center", "bottom right"]});
 	}
 	return this.inherited(arguments);
@@ -548,9 +597,9 @@ wm.Application.extend({
 wm.Object.extendSchema(wm.Application, {
     name: {ignore: 1}, // at some point, we might provide this as a way to rename the project... but renaming is really a server side op, so requires confirmation. 
     main: {shortname: "mainPageName"},
-    promptChromeFrame: {},
+    promptChromeFrame: {shorname: "chromeFrame (NA)"},
     theme: {type: "string"},
-    IERoundedCorners: {type: "boolean"},
+    //IERoundedCorners: {type: "boolean"},
     studioVersion: {writeonly: true, type: "string"},
     projectVersion: {type: "string"},
     projectSubVersion: {type: "string"},
