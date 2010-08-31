@@ -530,8 +530,13 @@ wm.Array.removeElementAt = function(inArray, inIndex) {
 /* Side effect: alters input inArray Object.  Returns inArray Object; Return is mostly used for chaining operations together */
 wm.Array.removeElement = function(inArray, inElement) {
     var index = inArray.indexOf(inElement);
-    inArray.splice(index, 1);
+    if (index >= 0)
+	inArray.splice(index, 1);
     return inArray;
+}
+
+wm.Array.last = function(inArray) {
+    return inArray[inArray.length-1];
 }
 
 if (!wm.String) wm.String = {};
