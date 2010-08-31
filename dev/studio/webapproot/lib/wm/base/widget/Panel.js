@@ -26,12 +26,51 @@ dojo.provide("wm.base.widget.Panel");
 dojo.declare("wm.Panel", wm.Container, {
 	/** @lends wm.Panel.prototype */
 	//border: 1,
-    classNames: "wmcontainer wmpanel"
+    classNames: "wmcontainer wmpanel",    
+    setThemeStyleType: function(inType) {        
+        var widgetsjs = this.write("");
+	widgetsjs = dojo.fromJson(widgetsjs.replace(/^.*?\:/,""));
+	var name = this.name;	
+        var parent = this.parent;
+	var owner = this.owner;
+        var indexInParent = dojo.indexOf(this.parent.c$, this);
+        this.destroy();
+	
+        var clone = parent.createComponent(name, "wm." + inType + "Panel", widgetsjs[1], widgetsjs[2], widgetsjs[3], owner);
+        parent.moveControl(clone, indexInParent);
+        parent.reflow();
+	studio.refreshWidgetsTree();
+	studio.select(clone);
+    },
+    getThemeStyleType: function() {
+        return this.declaredClass.replace(/^wm\.(.*)Panel/,"$1");
+    }
+
 });
 
 
+dojo.declare("wm.MainContentPanel", wm.Panel, {
+    classNames: "wmcontainer wmpanel MainContent"
+});
+
+dojo.declare("wm.EmphasizedContentPanel", wm.Panel, {
+    classNames: "wmcontainer wmpanel EmphasizedContent"
+});
+
+dojo.declare("wm.TOCContentPanel", wm.Panel, {
+    classNames: "wmcontainer wmpanel TOCContent"
+});
+
+dojo.declare("wm.ToolbarContentPanel", wm.Panel, {
+    classNames: "wmcontainer wmpanel ToolbarContent"
+});
+
+dojo.declare("wm.HeaderPanel", wm.Panel, {
+    classNames: "wmcontainer wmpanel HeaderContent"
+});
+
 dojo.declare("wm.FancyPanel", wm.Panel, {
-    useDesignBorder: 0, // move this to a _design file if we ever create one
+    //useDesignBorder: 0, // move this to a _design file if we ever create one
     freeze: true,
     classNames: "wmcontainer wmfancypanel",
     //_classes: 	{"domNode": ["wm_FontSizePx_16px", "wm_BackgroundGradient_Blue", "wm_Border_TopStyleCurved12px", "wm_Border_BottomStyleCurved4px", "wm_FontColor_White", "wm_TextDecoration_Bold", "wm_Border_DropShadow"]},
@@ -126,9 +165,6 @@ dojo.declare("wm.FancyPanel", wm.Panel, {
 
     setBorder: function(inBorder) {
         wm.Control.prototype.setBorder.call(this, "0");
-        var b = this._parseExtents(inBorder);
-        this.labelWidget.setBorder(inBorder);
-        this.containerWidget.setBorder("0," + inBorder + "," + inBorder + "," + inBorder);
     },
 
     setShowing: function(inShowing) {
@@ -467,6 +503,7 @@ wm.FancyPanel.extend({
 wm.Object.extendSchema(wm.FancyPanel, {
     title: { type: "String", bindable: 1, group: "display", order: 100, focus: true },
     labelWidget: {ignore: 1},
+    themeStyleType:  {ignore: 1},
     containerWidget: {ignore: 1},
     layoutKind: {ignore: 1},
     innerLayoutKind: {group: "layout", order: 100, shortname: "layoutKind"},
