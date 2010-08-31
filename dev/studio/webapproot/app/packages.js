@@ -76,7 +76,7 @@
 [ "More Widgets", "HTML", "wm.Html", "wm.base.widget.Html", "images/wm/content.png", "A display for static markup"],
 [ "More Widgets", "IFrame", "wm.IFrame", "wm.base.widget.IFrame", "images/wm/pane.png", "An IFrame for external content"],
 [ "More Widgets", "List", "wm.List", "wm.base.widget.List", "images/wm/content.png", "A simple list control"],
-[ "More Widgets", "WidgetList", "wm.WidgetList", "wm.base.widget.List", "images/wm/content.png", "A simple list control"],
+[ "More Widgets", "WidgetList", "wm.WidgetList", "wm.base.widget.WidgetList", "images/wm/content.png", "A simple list control"],
 [ "More Widgets", "ProgressBar", "wm.dijit.ProgressBar", "wm.base.widget.dijit.ProgressBar", "images/wm.dijit/ProgressBar.png", "Dojo progress bar"],
 
 [ "Templates", "FancyCentered", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "Template for OMG", wm.widgetTemplates.fancyCenteredTemplate],
