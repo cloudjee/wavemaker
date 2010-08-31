@@ -351,7 +351,7 @@ wm.Component.extend({
 		html += "<h3>This object has the following bindings</h3><div style='margin-left: 40px;'><ul>\n";
 		var wires = this.components.binding.components;
 		for (var i in wires) {
-		    html += "<li><b>this." + wires[i].targetProperty + "</b> is bound to " + wires[i].source + "</li>\n";
+		    html += "<li><b>this." + wires[i].targetProperty + "</b> is bound to <i>" + (wires[i].source || wires[i].expression) + "</i></li>\n";
 		}
 		html += "</ul></div>";
 	    }
@@ -363,7 +363,7 @@ wm.Component.extend({
 	    var wire;
 	    for (var i in bindingHash) {
 		wire = bindingHash[i];
-		html += "<li>" + wire.target.getId() + "." + wire.targetProperty + " is bound to this." + wire.source.replace(/^.*\./,"") + "</li>\n";
+		html += "<li>" + wire.target.getId() + "." + wire.targetProperty + " is bound to <i>" + (wire.source || wire.expression) + "</i></li>\n";
 	    }
 	    html += "</ul></div>";
 	    return html;
@@ -373,8 +373,25 @@ wm.Component.extend({
 		var wires = this.components.binding.components;
 		for (var i in wires) {
 		    var source = wires[i].source;
-		    var componentId = source.replace(/\.[^\.]*/,"");
-		    if (componentId == comparisonObj.getId())
+		    var componentIds = [];
+		    if (source) {
+			componentIds.push(source.replace(/\.[^\.]*/,""));
+		    } else {
+			var expression = wires[i].expression;
+			var ids = expression.match(/\{(.*?)\}/g);
+			for (var j = 0; j < ids.length; j++) {
+			    ids[j] = ids[j].substring(1,ids[j].length-1)
+			    var idparts = ids[j].split(/\./);
+			    idparts.pop(); // get rid of the property name, keep the ids that got us to that property.
+			    if (idparts[0] == "app") idparts.shift();
+			    // add to our list all components in the path: liveform.livevariable.customer should result in liveform and liveform.livevariable being added to our list
+			    while (idparts.length) {
+				componentIds.push(idparts.join("."));
+				idparts.pop();
+			    }
+			}
+		    }
+		    if (componentIds.indexOf(comparisonObj.getId()) != -1)
 			inHash[wires[i].target.getId()] = wires[i];
 		}
 	    }
