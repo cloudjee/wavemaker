@@ -29,6 +29,7 @@ wm.addPropertyGroups({
 	layout: {displayName: "Layout", order: 20},
 	"advanced layout": {displayName: "Advanced Layout", order: 180},
 	style: {displayName: "Style", order: 30},
+        scrolling: {displayName: "Scrollbars", order: 32},
 	dataobjects: {displayName: "Data Objects", order: 35},
 	format: {displayName: "Formatting", order: 40},
 	Labeling: {displayName: "Labeling", order: 45},
