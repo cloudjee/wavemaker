@@ -18,12 +18,13 @@
 dojo.provide("wm.studio.app.events");
 
 terminus = "_end: 0";
-pageScript = function(name) {
+pageScript = function(name, defaultFunctions) {
 	return [
 		'dojo.declare("' + name + '", wm.Page, {',
 		'\tstart: function() {',
 		'\t\t',
 		'\t},',
+	         (defaultFunctions ? "\t" + defaultFunctions + "," : ""),
 		'\t' + terminus,
 		'});'
 	].join('\n');
