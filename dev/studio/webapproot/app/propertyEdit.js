@@ -114,7 +114,10 @@ dojo.declare("wm.propEdit.UnitValue", wm.propEdit.Select, {
 
 dojo.declare("wm.propEdit.PagesSelect", wm.propEdit.Select, {
 	getOptions: function() {
-		return wm.getPageList(this.currentPageOK);
+	    var pagelist = wm.getPageList(this.currentPageOK);
+            if (this.newPage)
+	        pagelist.push("-New Page");
+	    return pagelist;
 	}
 });
 
