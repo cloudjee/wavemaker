@@ -102,7 +102,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
 			      {borderClass: "wm.Dialog", borderProperty: "titlebarBorder", borderTemplate: "0,0,?,0"},
 			      {borderClass: "wm.GenericDialog", borderProperty: "footerBorder", borderTemplate: "?,0,0,0"},
 			      {borderClass: "wm.RichTextDialog", borderProperty: "footerBorder", borderTemplate: "?,0,0,0"},
-			      {borderClass: "wm.PageDialog", borderProperty: "footerBorder", borderTemplate: "?,0,0,0"}
+				{borderClass: "wm.PageDialog", borderProperty: "footerBorder", borderTemplate: "?,0,0,0"},
+				{borderClass: "wm.HeaderPanel", borderProperty: "border"}
                                ]
                      }
                     ]
@@ -146,8 +147,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    subcategories: {
 		"Styles": {
 		    demo: "themeGroupDemoAllPanelsWidgets",
-                    description: "Set the basic styling of the MainContent panel and everything within it.  Font lets you set the basic font to use within your document; border and background let you set the border style for your document.  Note that border settings are for panels marked as MainContent, and NOT for the contents of thisis panel.  Also note that setting the border size and border color must be done by hand as these are properties of your panel.",
-		    styles: ["Font",  "BorderStyle", "Background"]},
+                    description: "Set the basic styling of the MainContent panel and everything within it.  Dialogs use the MainContent styles, so anything you set here also applies to your dialogs (even if the checkbox is unchecked).  Font lets you set the basic font to use within your document; border and background let you set the border style for your document.  Note that border settings are for panels marked as MainContent, and NOT for the contents of thisis panel.  Also note that setting the border size and border color must be done by hand as these are properties of your panel.",
+		    styles: ["Font",  {name: "Border", borders: [{borderClass: "wm.MainContentPanel", borderProperty: "border"}]}, "BorderStyle", "Background"]},
 		"HeadersDefault": {
 		    demo: "themeGroupDemoAllPanelsWidgets",
                     description: "<p>Header settings affects the following widgets <ul><li>wm.Button</li><li>wm.AccordionLayer</li><li>wm.TabLayer</li><li>wm.FancyPanel</li><li>wm.Dialog (title bar and buttons)</li><li>wm.Splitter</li><li>wm.Bevel</li></ul>  It represents both clickable elements and headers. Why both? because in most cases, headers are clickable elements; for example, consider the wm.AccordionLayer header and the wm.TabLayer buttons.</p><p>In this form, you will set the font, border and background colors for your headers and buttons.  This affects all buttons and headers within any panel marked as <b>MainContent</b> except where the theme or a project specifically override these styles</p>",
@@ -181,7 +182,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 		"Styles": {
 		    demo: "themeGroupDemoAllPanelsWidgets",
                     description: "Set the basic styling of the EmphasizedContent panel and everything within it.  Font lets you set the basic font to use within your document; border and background let you set the border style for your document.  Note that border settings are for panels marked as EmphasizedContent, and NOT for the contents of thisis panel.  Also note that setting the border size and border color must be done by hand as these are properties of your panel.",
-		    styles: ["Font",  "BorderStyle", "Background"]},
+		    styles: ["Font",  {name: "Border", borders: [{borderClass: "wm.EmphasizedContentPanel", borderProperty: "border"}]}, "BorderStyle", "Background"]},
 		"HeadersDefault": {
 		    demo: "themeGroupDemoAllPanelsWidgets",
                     description: "<p>Header settings affects the following widgets <ul><li>wm.Button</li><li>wm.AccordionLayer</li><li>wm.TabLayer</li><li>wm.FancyPanel</li><li>wm.Dialog (title bar and buttons)</li><li>wm.Splitter</li><li>wm.Bevel</li></ul> It represents both clickable elements and headers. Why both? because in most cases, headers are clickable elements; for example, consider the wm.AccordionLayer header and the wm.TabLayer buttons.</p><p>In this form, you will set the font, border and background colors for your headers and buttons.  This affects all buttons and headers within any panel marked as <b>EmphasizedContent</b> except where the theme or a project specifically override these styles</p>",
@@ -214,7 +215,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 		"Styles": {
 		    demo: "themeGroupDemoAllPanelsWidgets",
                     description: "Set the basic styling of the ToolbarContent panel and everything within it.  Font lets you set the basic font to use within your document; border and background let you set the border style for your document.  Note that border settings are for panels marked as ToolbarContent, and NOT for the contents of thisis panel.  Also note that setting the border size and border color must be done by hand as these are properties of your panel.",
-		    styles: ["Font",  "BorderStyle", "Background"]},
+		    styles: ["Font",  {name: "Border", borders: [{borderClass: "wm.ToolbarContentPanel", borderProperty: "border"}]}, "BorderStyle", "Background"]},
 		"HeadersDefault": {
 		    demo: "themeGroupDemoAllPanelsWidgets",
                     description: "<p>Header settings affects the following widgets <ul><li>wm.Button</li><li>wm.AccordionLayer</li><li>wm.TabLayer</li><li>wm.FancyPanel</li><li>wm.Dialog (title bar and buttons)</li><li>wm.Splitter</li><li>wm.Bevel</li></ul> It represents both clickable elements and headers. Why both? because in most cases, headers are clickable elements; for example, consider the wm.AccordionLayer header and the wm.TabLayer buttons.</p><p>In this form, you will set the font, border and background colors for your headers and buttons.  This affects all buttons and headers within any panel marked as <b>ToolbarContent</b> except where the theme or a project specifically override these styles</p>",
@@ -247,7 +248,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 		"Styles": {
 		    demo: "themeGroupDemoAllPanelsWidgets",
                     description: "Set the basic styling of the TOCContent panel and everything within it.  Font lets you set the basic font to use within your document; border and background let you set the border style for your document.  Note that border settings are for panels marked as TOCContent, and NOT for the contents of thisis panel.  Also note that setting the border size and border color must be done by hand as these are properties of your panel.",
-		    styles: ["Font",  "BorderStyle", "Background"]},
+		    styles: ["Font",  {name: "Border", borders: [{borderClass: "wm.TOCContentPanel", borderProperty: "border"}]}, "BorderStyle", "Background"]},
 		"HeadersDefault": {
 		    demo: "themeGroupDemoAllPanelsWidgets",
                     description: "<p>Header settings affects the following widgets <ul><li>wm.Button</li><li>wm.AccordionLayer</li><li>wm.TabLayer</li><li>wm.FancyPanel</li><li>wm.Dialog (title bar and buttons)</li><li>wm.Splitter</li><li>wm.Bevel</li></ul> It represents both clickable elements and headers. Why both? because in most cases, headers are clickable elements; for example, consider the wm.AccordionLayer header and the wm.TabLayer buttons.</p><p>In this form, you will set the font, border and background colors for your headers and buttons.  This affects all buttons and headers within any panel marked as <b>TOCContent</b> except where the theme or a project specifically override these styles</p>",
@@ -572,7 +573,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          caption: "Radius",
                                          captionPosition: "bottom",
 					 captionAlign: "left",
-                                    dataValue: this.getThemeDataValue("Document-HeadersDefault-BorderStyle", "Radius","0px").replace(/\D/g,""),
+                                    dataValue: this.getThemeDataValue("Document-HeadersDefault-BorderStyle", "Radius","").replace(/\D/g,""),
 				         minimum: 0,
 				         maximum: 40,
                                          width: "80px",
@@ -613,7 +614,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          caption: "Bkgr Color",
                                          captionPosition: "bottom",
 					 captionAlign: "left",
-                                         dataValue: this.getThemeDataValue("Document-Styles-Background", "Color","#FFFFFF"),
+                                         dataValue: this.getThemeDataValue("Document-Styles-Background", "Color",""),
                                          width: "65px",
                                          height: "100%",
                                          owner: this,
@@ -625,7 +626,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          caption: "Fnt Color",
                                          captionPosition: "bottom",
 					 captionAlign: "left",
-                                         dataValue: this.getThemeDataValue("Document-Styles-Font", "Color","#000000"),
+                                         dataValue: this.getThemeDataValue("Document-Styles-Font", "Color",""),
                                          width: "65px",
                                          height: "100%",
                                          owner: this,
@@ -639,7 +640,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 					 captionAlign: "left",
 				         minimum: 6,
 				         maximum: 30,
-                                    dataValue: this.getThemeDataValue("Document-Styles-Font", "TextSize","12").replace(/\D/g,""),
+                                    dataValue: this.getThemeDataValue("Document-Styles-Font", "TextSize","").replace(/\D/g,""),
                                          width: "50px",
                                          height: "100%",
                                          owner: this,
@@ -651,7 +652,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          caption: "Fnt Face",
                                          captionPosition: "bottom",
 					 captionAlign: "left",
-                                         dataValue: this.getThemeDataValue("Document-Styles-Font", "Family","Arial"),
+                                         dataValue: this.getThemeDataValue("Document-Styles-Font", "Family",""),
 					 options: this.themeTypes.Family[1].options,
                                          width: "90px",
                                          height: "100%",
@@ -677,7 +678,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          caption: "Bkgr Color",
                                          captionPosition: "bottom",
 					 captionAlign: "left",
-                                         dataValue: this.getThemeDataValue("Document-HeadersDefault-Background", "Color","#555555"),
+                                         dataValue: this.getThemeDataValue("Document-HeadersDefault-Background", "Color",""),
                                          width: "65px",
                                          height: "100%",
                                          owner: this,
@@ -697,7 +698,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 						    widget_json[3], this);
 						   
 	editors.push(imageSelect);
-        var val =  this.getThemeDataValue("Document-HeadersDefault-Font", "Color","#FFFFFF");
+        var val =  this.getThemeDataValue("Document-HeadersDefault-Font", "Color","");
         editors.push(new wm.ColorPicker({name: "headerFontColor",
                                          captionSize: "15px",
                                          caption: "Fnt Color",
@@ -717,7 +718,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 				         maximum: 30,
                                          captionPosition: "bottom",
 					 captionAlign: "left",
-                                    dataValue: this.getThemeDataValue("Document-HeadersDefault-Font", "TextSize","12").replace(/\D/g,""),
+                                    dataValue: this.getThemeDataValue("Document-HeadersDefault-Font", "TextSize","").replace(/\D/g,""),
                                          width: "50px",
                                          height: "100%",
                                          owner: this,
@@ -778,9 +779,13 @@ dojo.declare("ThemeDesigner", wm.Page, {
              
             var borders1 = this.themeGroupData.Borders.styles[2].borders
             var borders2 = this.themeGroupData.Borders.styles[3].borders
-            
+
             for (var i = 0; i < borders1.length; i++) borders.push(borders1[i]);
             for (var i = 0; i < borders2.length; i++) borders.push(borders2[i]);
+	    borders.push(this.themeGroupData.MainContent.subcategories.Styles.styles[1].borders[0]);
+	    borders.push(this.themeGroupData.EmphasizedContent.subcategories.Styles.styles[1].borders[0]);
+	    borders.push(this.themeGroupData.TOCContent.subcategories.Styles.styles[1].borders[0]);
+	    borders.push(this.themeGroupData.ToolbarContent.subcategories.Styles.styles[1].borders[0]);
             for (var i = 0; i < borders.length; i++) {
                 var widgetClassName = borders[i].borderClass;
                 var borderProperty = borders[i].borderProperty;
@@ -805,8 +810,15 @@ dojo.declare("ThemeDesigner", wm.Page, {
             var newValue = value + "px";
 	    this.setCssSymbol("Borders-Panel_BorderStyle", "Radius", newValue);
 	    this.setCssSymbol("Document-HeadersDefault-BorderStyle", "Radius",newValue);
-	    this.setCssSymbol("PageContent-HeadersDefault-BorderStyle", "Radius",newValue);
-	    this.setCssSymbol("ContentPanel-HeadersDefault-BorderStyle", "Radius",newValue);
+	    this.setCssSymbol("MainContent-HeadersDefault-BorderStyle", "Radius",newValue);
+	    this.setCssSymbol("MainContent-Styles-BorderStyle", "Radius",newValue);
+	    this.setCssSymbol("EmphasizedContent-HeadersDefault-BorderStyle", "Radius",newValue);
+	    this.setCssSymbol("EmphasizedContent-Styles-BorderStyle", "Radius",newValue);
+	    this.setCssSymbol("TOCContent-HeadersDefault-BorderStyle", "Radius",newValue);
+	    this.setCssSymbol("TOCContent-Styles-BorderStyle", "Radius",newValue);
+	    this.setCssSymbol("ToolbarContent-HeadersDefault-BorderStyle", "Radius",newValue);
+	    this.setCssSymbol("ToolbarContent-Styles-BorderStyle", "Radius",newValue);
+
 
             newValue = Math.floor(value * 0.6) + "px";
             
@@ -817,15 +829,23 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
         case "headerBackgroundColor":
 	    this.setCssSymbol("Document-HeadersDefault-Background", "Color", value);
-	    this.setCssSymbol("PageContent-HeadersDefault-Background", "Color", value);
-	    this.setCssSymbol("ContentPanel-HeadersDefault-Background", "Color", value);
+	    this.setCssSymbol("MainContent-HeadersDefault-Background", "Color",newValue);
+	    this.setCssSymbol("EmphasizedContent-HeadersDefault-Background", "Color",newValue);
+	    this.setCssSymbol("TOCContent-HeadersDefault-Background", "Color",newValue);
+	    this.setCssSymbol("ToolbarContent-HeadersDefault-Background", "Color",newValue);
+
             var newvalues = this.offsetColor(value);
 	    this.setCssSymbol("Document-HeadersHover-Background", "Color", newvalues[0]);
 	    this.setCssSymbol("Document-HeadersActive-Background", "Color", newvalues[2]);
-	    this.setCssSymbol("PageContent-HeadersHover-Background", "Color", newvalues[0]);
-	    this.setCssSymbol("PageContent-HeadersActive-Background", "Color", newvalues[2]);
-	    this.setCssSymbol("ContentPanel-HeadersHover-Background", "Color", newvalues[0]);
-	    this.setCssSymbol("ContentPanel-HeadersActive-Background", "Color", newvalues[2]);
+	    this.setCssSymbol("MainContent-HeadersHover-Background", "Color", newvalues[0]);
+	    this.setCssSymbol("MainContent-HeadersActive-Background", "Color", newvalues[2]);
+	    this.setCssSymbol("EmphasizedContent-HeadersHover-Background", "Color", newvalues[0]);
+	    this.setCssSymbol("EmphasizedContent-HeadersActive-Background", "Color", newvalues[2]);
+	    this.setCssSymbol("TOCContent-HeadersHover-Background", "Color", newvalues[0]);
+	    this.setCssSymbol("TOCContent-HeadersActive-Background", "Color", newvalues[2]);
+	    this.setCssSymbol("ToolbarContent-HeadersHover-Background", "Color", newvalues[0]);
+	    this.setCssSymbol("ToolbarContent-HeadersActive-Background", "Color", newvalues[2]);
+
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
             break;
 
@@ -833,12 +853,22 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    this.setCssSymbol("Document-HeadersDefault-Font", "Color", value);
 	    this.setCssSymbol("Document-HeadersHover-Font", "Color", value);
 	    this.setCssSymbol("Document-HeadersActive-Font", "Color", value);
-	    this.setCssSymbol("PageContent-HeadersDefault-Font", "Color", value);
-	    this.setCssSymbol("PageContent-HeadersHover-Font", "Color", value);
-	    this.setCssSymbol("PageContent-HeadersActive-Font", "Color", value);
-	    this.setCssSymbol("ContentPanel-HeadersDefault-Font", "Color", value);
-	    this.setCssSymbol("ContentPanel-HeadersHover-Font", "Color", value);
-	    this.setCssSymbol("ContentPanel-HeadersActive-Font", "Color", value)
+	    this.setCssSymbol("MainContent-HeadersDefault-Font", "Color", value);
+	    this.setCssSymbol("MainContent-HeadersHover-Font", "Color", value);
+	    this.setCssSymbol("MainContent-HeadersActive-Font", "Color", value);
+
+	    this.setCssSymbol("EmphasizedContent-HeadersDefault-Font", "Color", value);
+	    this.setCssSymbol("EmphasizedContent-HeadersHover-Font", "Color", value);
+	    this.setCssSymbol("EmphasizedContent-HeadersActive-Font", "Color", value);
+
+	    this.setCssSymbol("TOCContent-HeadersDefault-Font", "Color", value);
+	    this.setCssSymbol("TOCContent-HeadersHover-Font", "Color", value);
+	    this.setCssSymbol("TOCContent-HeadersActive-Font", "Color", value);
+
+	    this.setCssSymbol("ToolbarContent-HeadersDefault-Font", "Color", value);
+	    this.setCssSymbol("ToolbarContent-HeadersHover-Font", "Color", value);
+	    this.setCssSymbol("ToolbarContent-HeadersActive-Font", "Color", value);
+
 
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
             break;
@@ -857,12 +887,24 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    this.setCssSymbol("Document-HeadersDefault-Background", "Image", url);
 	    this.setCssSymbol("Document-HeadersDefault-Background", "Image-Repeat", repeat);
 	    this.setCssSymbol("Document-HeadersDefault-Background", "Image-Position", position);
-	    this.setCssSymbol("PageContent-HeadersDefault-Background", "Image", url);
-	    this.setCssSymbol("PageContent-HeadersDefault-Background", "Image-Repeat", repeat);
-	    this.setCssSymbol("PageContent-HeadersDefault-Background", "Image-Position", position);
-	    this.setCssSymbol("ContentPanel-HeadersDefault-Background", "Image", url);
-	    this.setCssSymbol("ContentPanel-HeadersDefault-Background", "Image-Repeat", repeat);
-	    this.setCssSymbol("ContentPanel-HeadersDefault-Background", "Image-Position", position);
+
+	    this.setCssSymbol("MainContent-HeadersDefault-Background", "Image", url);
+	    this.setCssSymbol("MainContent-HeadersDefault-Background", "Image-Repeat", repeat);
+	    this.setCssSymbol("MainContent-HeadersDefault-Background", "Image-Position", position);
+
+	    this.setCssSymbol("EmphasizedContent-HeadersDefault-Background", "Image", url);
+	    this.setCssSymbol("EmphasizedContent-HeadersDefault-Background", "Image-Repeat", repeat);
+	    this.setCssSymbol("EmphasizedContent-HeadersDefault-Background", "Image-Position", position);
+
+	    this.setCssSymbol("TOCContent-HeadersDefault-Background", "Image", url);
+	    this.setCssSymbol("TOCContent-HeadersDefault-Background", "Image-Repeat", repeat);
+	    this.setCssSymbol("TOCContent-HeadersDefault-Background", "Image-Position", position);
+
+	    this.setCssSymbol("ToolbarContent-HeadersDefault-Background", "Image", url);
+	    this.setCssSymbol("ToolbarContent-HeadersDefault-Background", "Image-Repeat", repeat);
+	    this.setCssSymbol("ToolbarContent-HeadersDefault-Background", "Image-Position", position);
+
+
 	    if  (url.match(/\d/)) {
 		var numb = parseInt(url.match(/\d/)[0]);
 		if (numb > 0) {
@@ -875,12 +917,23 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    this.setCssSymbol("Document-HeadersHover-Background", "Image", url);
 	    this.setCssSymbol("Document-HeadersHover-Background", "Image-Repeat", repeat);
 	    this.setCssSymbol("Document-HeadersHover-Background", "Image-Position", position);
-	    this.setCssSymbol("PageContent-HeadersHover-Background", "Image", url);
-	    this.setCssSymbol("PageContent-HeadersHover-Background", "Image-Repeat", repeat);
-	    this.setCssSymbol("PageContent-HeadersHover-Background", "Image-Position", position);
-	    this.setCssSymbol("ContentPanel-HeadersHover-Background", "Image", url);
-	    this.setCssSymbol("ContentPanel-HeadersHover-Background", "Image-Repeat", repeat);
-	    this.setCssSymbol("ContentPanel-HeadersHover-Background", "Image-Position", position);
+
+	    this.setCssSymbol("MainContent-HeadersHover-Background", "Image", url);
+	    this.setCssSymbol("MainContent-HeadersHover-Background", "Image-Repeat", repeat);
+	    this.setCssSymbol("MainContent-HeadersHover-Background", "Image-Position", position);
+
+	    this.setCssSymbol("EmphasizedContent-HeadersHover-Background", "Image", url);
+	    this.setCssSymbol("EmphasizedContent-HeadersHover-Background", "Image-Repeat", repeat);
+	    this.setCssSymbol("EmphasizedContent-HeadersHover-Background", "Image-Position", position);
+
+	    this.setCssSymbol("TOCContent-HeadersHover-Background", "Image", url);
+	    this.setCssSymbol("TOCContent-HeadersHover-Background", "Image-Repeat", repeat);
+	    this.setCssSymbol("TOCContent-HeadersHover-Background", "Image-Position", position);
+
+	    this.setCssSymbol("ToolbarContent-HeadersHover-Background", "Image", url);
+	    this.setCssSymbol("ToolbarContent-HeadersHover-Background", "Image-Repeat", repeat);
+	    this.setCssSymbol("ToolbarContent-HeadersHover-Background", "Image-Position", position);
+
 
 	    if  (url.match(/\d/)) {
 		var numb = parseInt(url.match(/\d/)[0]);
@@ -893,12 +946,23 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    this.setCssSymbol("Document-HeadersActive-Background", "Image", url);
 	    this.setCssSymbol("Document-HeadersActive-Background", "Image-Repeat", repeat);
 	    this.setCssSymbol("Document-HeadersActive-Background", "Image-Position", position);
-	    this.setCssSymbol("PageContent-HeadersActive-Background", "Image", url);
-	    this.setCssSymbol("PageContent-HeadersActive-Background", "Image-Repeat", repeat);
-	    this.setCssSymbol("PageContent-HeadersActive-Background", "Image-Position", position);
-	    this.setCssSymbol("ContentPanel-HeadersActive-Background", "Image", url);
-	    this.setCssSymbol("ContentPanel-HeadersActive-Background", "Image-Repeat", repeat);
-	    this.setCssSymbol("ContentPanel-HeadersActive-Background", "Image-Position", position);
+
+	    this.setCssSymbol("MainContent-HeadersActive-Background", "Image", url);
+	    this.setCssSymbol("MainContent-HeadersActive-Background", "Image-Repeat", repeat);
+	    this.setCssSymbol("MainContent-HeadersActive-Background", "Image-Position", position);
+
+	    this.setCssSymbol("EmphasizedContent-HeadersActive-Background", "Image", url);
+	    this.setCssSymbol("EmphasizedContent-HeadersActive-Background", "Image-Repeat", repeat);
+	    this.setCssSymbol("EmphasizedContent-HeadersActive-Background", "Image-Position", position);
+
+	    this.setCssSymbol("TOCContent-HeadersActive-Background", "Image", url);
+	    this.setCssSymbol("TOCContent-HeadersActive-Background", "Image-Repeat", repeat);
+	    this.setCssSymbol("TOCContent-HeadersActive-Background", "Image-Position", position);
+
+	    this.setCssSymbol("ToolbarContent-HeadersActive-Background", "Image", url);
+	    this.setCssSymbol("ToolbarContent-HeadersActive-Background", "Image-Repeat", repeat);
+	    this.setCssSymbol("ToolbarContent-HeadersActive-Background", "Image-Position", position);
+
 
 
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
@@ -909,12 +973,25 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    this.setCssSymbol("Document-HeadersDefault-Font", "Color", value);
 	    this.setCssSymbol("Document-HeadersHover-Font", "Color", value);
 	    this.setCssSymbol("Document-HeadersActive-Font", "Color", value);
-	    this.setCssSymbol("PageContent-HeadersDefault-Font", "Color", value);
-	    this.setCssSymbol("PageContent-HeadersHover-Font", "Color", value);
-	    this.setCssSymbol("PageContent-HeadersActive-Font", "Color", value);
-	    this.setCssSymbol("ContentPanel-HeadersDefault-Font", "Color", value);
-	    this.setCssSymbol("ContentPanel-HeadersHover-Font", "Color", value);
-	    this.setCssSymbol("ContentPanel-HeadersActive-Font", "Color", value);
+
+	    this.setCssSymbol("MainContent-HeadersDefault-Font", "Color", value);
+	    this.setCssSymbol("MainContent-HeadersHover-Font", "Color", value);
+	    this.setCssSymbol("MainContent-HeadersActive-Font", "Color", value);
+
+	    this.setCssSymbol("EmphasizedContent-HeadersDefault-Font", "Color", value);
+	    this.setCssSymbol("EmphasizedContent-HeadersHover-Font", "Color", value);
+	    this.setCssSymbol("EmphasizedContent-HeadersActive-Font", "Color", value);
+
+	    this.setCssSymbol("TOCContent-HeadersDefault-Font", "Color", value);
+	    this.setCssSymbol("TOCContent-HeadersHover-Font", "Color", value);
+	    this.setCssSymbol("TOCContent-HeadersActive-Font", "Color", value);
+
+	    this.setCssSymbol("ToolbarContent-HeadersDefault-Font", "Color", value);
+	    this.setCssSymbol("ToolbarContent-HeadersHover-Font", "Color", value);
+	    this.setCssSymbol("ToolbarContent-HeadersActive-Font", "Color", value);
+
+
+
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
             break;
 
@@ -923,12 +1000,24 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    this.setCssSymbol("Document-HeadersDefault-Font", "TextSize", value);
 	    this.setCssSymbol("Document-HeadersHover-Font", "TextSize", value);
 	    this.setCssSymbol("Document-HeadersActive-Font", "TextSize", value);
-	    this.setCssSymbol("PageContent-HeadersDefault-Font", "TextSize", value);
-	    this.setCssSymbol("PageContent-HeadersHover-Font", "TextSize", value);
-	    this.setCssSymbol("PageContent-HeadersActive-Font", "TextSize", value);
-	    this.setCssSymbol("ContentPanel-HeadersDefault-Font", "TextSize", value);
-	    this.setCssSymbol("ContentPanel-HeadersHover-Font", "TextSize", value);
-	    this.setCssSymbol("ContentPanel-HeadersActive-Font", "TextSize", value);
+
+	    this.setCssSymbol("MainContent-HeadersDefault-Font", "TextSize", value);
+	    this.setCssSymbol("MainContent-HeadersHover-Font", "TextSize", value);
+	    this.setCssSymbol("MainContent-HeadersActive-Font", "TextSize", value);
+
+	    this.setCssSymbol("EmphasizedContent-HeadersDefault-Font", "TextSize", value);
+	    this.setCssSymbol("EmphasizedContent-HeadersHover-Font", "TextSize", value);
+	    this.setCssSymbol("EmphasizedContent-HeadersActive-Font", "TextSize", value);
+
+	    this.setCssSymbol("TOCContent-HeadersDefault-Font", "TextSize", value);
+	    this.setCssSymbol("TOCContent-HeadersHover-Font", "TextSize", value);
+	    this.setCssSymbol("TOCContent-HeadersActive-Font", "TextSize", value);
+
+	    this.setCssSymbol("ToolbarContent-HeadersDefault-Font", "TextSize", value);
+	    this.setCssSymbol("ToolbarContent-HeadersHover-Font", "TextSize", value);
+	    this.setCssSymbol("ToolbarContent-HeadersActive-Font", "TextSize", value);
+
+
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
             break;
 
@@ -936,51 +1025,91 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    this.setCssSymbol("Document-HeadersDefault-Font", "Family", value);
 	    this.setCssSymbol("Document-HeadersHover-Font", "Family", value);
 	    this.setCssSymbol("Document-HeadersActive-Font", "Family", value);
-	    this.setCssSymbol("PageContent-HeadersDefault-Font", "Family", value);
-	    this.setCssSymbol("PageContent-HeadersHover-Font", "Family", value);
-	    this.setCssSymbol("PageContent-HeadersActive-Font", "Family", value);
-	    this.setCssSymbol("ContentPanel-HeadersDefault-Font", "Family", value);
-	    this.setCssSymbol("ContentPanel-HeadersHover-Font", "Family", value);
-	    this.setCssSymbol("ContentPanel-HeadersActive-Font", "Family", value);
+
+	    this.setCssSymbol("MainContent-HeadersDefault-Font", "Family", value);
+	    this.setCssSymbol("MainContent-HeadersHover-Font", "Family", value);
+	    this.setCssSymbol("MainContent-HeadersActive-Font", "Family", value);
+
+	    this.setCssSymbol("EmphasizedContent-HeadersDefault-Font", "Family", value);
+	    this.setCssSymbol("EmphasizedContent-HeadersHover-Font", "Family", value);
+	    this.setCssSymbol("EmphasizedContent-HeadersActive-Font", "Family", value);
+
+	    this.setCssSymbol("TOCContent-HeadersDefault-Font", "Family", value);
+	    this.setCssSymbol("TOCContent-HeadersHover-Font", "Family", value);
+	    this.setCssSymbol("TOCContent-HeadersActive-Font", "Family", value);
+
+	    this.setCssSymbol("ToolbarContent-HeadersDefault-Font", "Family", value);
+	    this.setCssSymbol("ToolbarContent-HeadersHover-Font", "Family", value);
+	    this.setCssSymbol("ToolbarContent-HeadersActive-Font", "Family", value);
 
 	    // Also sets the page font face; if the user wants something other than a single font face for their app
 	    this.setCssSymbol("Document-Styles-Font", "Family", value);
-	    this.setCssSymbol("PageContent-Styles-Font", "Family", value);
-	    this.setCssSymbol("ContentPanel-Styles-Font", "Family", value);
+	    this.setCssSymbol("MainContent-Styles-Font", "Family", value);
+	    this.setCssSymbol("EmphasizedContent-Styles-Font", "Family", value);
+	    this.setCssSymbol("TOCContent-Styles-Font", "Family", value);
+	    this.setCssSymbol("ToolbarContent-Styles-Font", "Family", value);
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
             break;
 
         case "pageBackgroundColor":
 	    this.setCssSymbol("Document-Styles-Background", "Color", value);
-	    this.setCssSymbol("PageContent-Styles-Background", "Color", value);
-	    this.setCssSymbol("ContentPanel-Styles-Background", "Color", value);
+	    this.setCssSymbol("MainContent-Styles-Background", "Color", value);
+	    this.setCssSymbol("EmphasizedContent-Styles-Background", "Color", value);
+	    this.setCssSymbol("TOCContent-Styles-Background", "Color", value);
+	    this.setCssSymbol("ToolbarContent-Styles-Background", "Color", value);
+
             var newvalues = this.offsetColor(value);
-	    this.setCssSymbol("ContentPanel-EditorsDefault-Background", "Color", newvalues[0]);
-	    this.setCssSymbol("ContentPanel-EditorsHover-Background", "Color", newvalues[1]);
-	    this.setCssSymbol("ContentPanel-EditorsFocus-Background", "Color", "#FFFFFF");
-	    this.setCssSymbol("PageContent-EditorsDefault-Background", "Color", newvalues[0]);
-	    this.setCssSymbol("PageContent-EditorsHover-Background", "Color", newvalues[1]);
-	    this.setCssSymbol("PageContent-EditorsFocus-Background", "Color", "#FFFFFF");
 	    this.setCssSymbol("Document-EditorsDefault-Background", "Color", newvalues[0]);
 	    this.setCssSymbol("Document-EditorsHover-Background", "Color", newvalues[1]);
 	    this.setCssSymbol("Document-EditorsFocus-Background", "Color", "#FFFFFF");
+
+	    this.setCssSymbol("MainContent-EditorsDefault-Background", "Color", newvalues[0]);
+	    this.setCssSymbol("MainContent-EditorsHover-Background", "Color", newvalues[1]);
+	    this.setCssSymbol("MainContent-EditorsFocus-Background", "Color", "#FFFFFF");
+
+	    this.setCssSymbol("EmphasizedContent-EditorsDefault-Background", "Color", newvalues[0]);
+	    this.setCssSymbol("EmphasizedContent-EditorsHover-Background", "Color", newvalues[1]);
+	    this.setCssSymbol("EmphasizedContent-EditorsFocus-Background", "Color", "#FFFFFF");
+
+	    this.setCssSymbol("TOCContent-EditorsDefault-Background", "Color", newvalues[0]);
+	    this.setCssSymbol("TOCContent-EditorsHover-Background", "Color", newvalues[1]);
+	    this.setCssSymbol("TOCContent-EditorsFocus-Background", "Color", "#FFFFFF");
+
+	    this.setCssSymbol("ToolbarContent-EditorsDefault-Background", "Color", newvalues[0]);
+	    this.setCssSymbol("ToolbarContent-EditorsHover-Background", "Color", newvalues[1]);
+	    this.setCssSymbol("ToolbarContent-EditorsFocus-Background", "Color", "#FFFFFF");
+
 	    this.setCssSymbol("Tables-EvenRow-Background", "Color", value);
 	    this.setCssSymbol("Table-OddRow-Background", "Color", newvalues[0]);
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
             break;
         case "pageFontColor":
 	    this.setCssSymbol("Document-Styles-Font", "Color", value);
-	    this.setCssSymbol("PageContent-Styles-Font", "Color", value);
-	    this.setCssSymbol("ContentPanel-Styles-Font", "Color", value);
-	    this.setCssSymbol("ContentPanel-EditorsDefault-Font", "Color", value);
-	    this.setCssSymbol("ContentPanel-EditorsHover-Font", "Color", value);
-	    this.setCssSymbol("PageContent-EditorsFocus-Font", "Color", "#000000");
-	    this.setCssSymbol("PageContent-EditorsDefault-Font", "Color", value);
-	    this.setCssSymbol("PageContent-EditorsHover-Font", "Color", value);
-	    this.setCssSymbol("PageContent-EditorsFocus-Font", "Color", "#000000");
+	    this.setCssSymbol("MainContent-Styles-Font", "Color", value);
+	    this.setCssSymbol("EmphasizedContent-Styles-Font", "Color", value);
+	    this.setCssSymbol("TOCContent-Styles-Font", "Color", value);
+	    this.setCssSymbol("ToolbarContent-Styles-Font", "Color", value);
+
 	    this.setCssSymbol("Document-Editors-Default-Font", "Color", value);
 	    this.setCssSymbol("Document-Editors-Hover-Font", "Color", value);
 	    this.setCssSymbol("Document-Editors-Focus-Font", "Color", "#000000");
+
+	    this.setCssSymbol("MainContent-EditorsDefault-Font", "Color", value);
+	    this.setCssSymbol("MainContent-EditorsHover-Font", "Color", value);
+	    this.setCssSymbol("MainContent-EditorsFocus-Font", "Color", "#000000");
+
+	    this.setCssSymbol("EmphasizedContent-EditorsDefault-Font", "Color", value);
+	    this.setCssSymbol("EmphasizedContent-EditorsHover-Font", "Color", value);
+	    this.setCssSymbol("EmphasizedContent-EditorsFocus-Font", "Color", "#000000");
+
+	    this.setCssSymbol("TOCContent-EditorsDefault-Font", "Color", value);
+	    this.setCssSymbol("TOCContent-EditorsHover-Font", "Color", value);
+	    this.setCssSymbol("TOCContent-EditorsFocus-Font", "Color", "#000000");
+
+	    this.setCssSymbol("ToolbarContent-EditorsDefault-Font", "Color", value);
+	    this.setCssSymbol("ToolbarContent-EditorsHover-Font", "Color", value);
+	    this.setCssSymbol("ToolbarContent-EditorsFocus-Font", "Color", "#000000");
+
 	    this.setCssSymbol("Table-EvenRow-Font", "Color", value);
 	    this.setCssSymbol("Table-OddRow-Font", "Color", value);
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
@@ -988,11 +1117,20 @@ dojo.declare("ThemeDesigner", wm.Page, {
         case "pageFontSize":
 	    value += "pt";
 	    this.setCssSymbol("Document-Styles-Font", "TextSize", value);
-	    this.setCssSymbol("PageContent-Styles-Font", "TextSize", value);
-	    this.setCssSymbol("ContentPanel-Styles-Font", "TextSize", value);
-	    this.setCssSymbol("ContentPanel-EditorsDefault-Font", "TextSize", value);
-	    this.setCssSymbol("PageContent-EditorsDefault-Font", "TextSize", value);
 	    this.setCssSymbol("Document-Editors-Default-Font", "TextSize", value);
+
+	    this.setCssSymbol("MainContent-Styles-Font", "TextSize", value);
+	    this.setCssSymbol("MainContent-EditorsDefault-Font", "TextSize", value);
+
+	    this.setCssSymbol("EmphasizedContent-Styles-Font", "TextSize", value);
+	    this.setCssSymbol("EmphasizedContent-EditorsDefault-Font", "TextSize", value);
+
+	    this.setCssSymbol("TOCContent-Styles-Font", "TextSize", value);
+	    this.setCssSymbol("TOCContent-EditorsDefault-Font", "TextSize", value);
+
+	    this.setCssSymbol("ToolbarContent-Styles-Font", "TextSize", value);
+	    this.setCssSymbol("ToolbarContent-EditorsDefault-Font", "TextSize", value);
+
 	    this.setCssSymbol("Table-EvenRow-Font", "TextSize", value);
 	    this.setCssSymbol("Table-OddRow-Font", "TextSize", value);
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
@@ -1170,7 +1308,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
         //var buttonpanel = this.createSaveThemeButtonPanel();
 
 	var selectedLevel = this.themeGroupList.selectedItem.getData().dataValue;
-	if (selectedLevel.match(/Content$/)) {
+	if (selectedLevel.match(/Content$/) && this.currentTheme.match(/^wm_/)) {
+	    new wm.Label({width: "100%", height: "20px", parent: this.widgetEditPanel, owner: this, caption: "Use the controls below to copy styles from another panel type; select the panel type to copy from and hit the button"});
 	    var buttonpanel = new wm.Panel({layoutKind: "left-to-right", width: "100%", height: "80px", owner: this, parent: this.widgetEditPanel, margin: "10,5,10,5", verticalAlign: "top", horizontalAlign: "right"});
 
 	    var contentOptions = new wm.SelectMenu({owner: this,
@@ -1587,16 +1726,18 @@ dojo.declare("ThemeDesigner", wm.Page, {
         this.cssText = this.cssText.replace(r, "$1" + inValue + "$2$3");
 
         // If updating the border, we must set the prototype as well (redundant in some cases)
-        if (inGroupName.match(/^(.*)_Border$/)) {
+        if (inGroupName.match(/^(.*)[-_]Border$/)) {
             // used px for css but now we need to get rid of it
             var newValue = (inName == "Radius") ? inValue.replace(/\D/g,"") : inValue;
 
-            var themeGroupName = inGroupName.match(/^(.*)(\-|_)Border$/)[1];
+            var matches = inGroupName.match(/^(.*)(\-|_)Border$/)[1];
+	    var themeGroupName = matches[1];
             var groupDesc = this.getThemeGroup(symbolicName, this.themeGroupData);
             var borderList;
             for (var i = 0; i < groupDesc.styles.length; i++) {
-                var symbol = groupDesc.styles[i].symbol;
-                if (!dojo.isString(groupDesc.styles[i]) && symbol == inGroupName.replace(/-(BorderSize|Color)$/,""))
+                var name = groupDesc.styles[i].symbol || groupDesc.styles[i].name;
+		var comparison = inGroupName.replace(/-(BorderSize|Color)$/,"");
+                if (name == "Border" || name == "Border-BorderSize" || name == "Border-Color" || name == comparison) 
                     borderList = groupDesc.styles[i].borders;
             }
 	    //var borderList = this.getThemeGroup(symbolicName, this.themeGroupData).borders;
@@ -1604,6 +1745,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
             if (borderList) {
                 for (var i = 0; i < borderList.length; i++) {
                     var widgetClassName = borderList[i].borderClass;
+		    console.log("Updating " + widgetClassName);
                     var borderProperty;
                     if (inName == "Color") {
                         borderProperty = (borderList[i].borderColorProperty) ? borderList[i].borderColorProperty :
@@ -1673,8 +1815,9 @@ dojo.declare("ThemeDesigner", wm.Page, {
         }
 */
     },
-    copyThemeClick: function(inSender) {
-        if (this.currentTheme == "wm_notheme") {
+    copyThemeClick: function(inSender, inTheme) {
+	this.copyTheme = inTheme || this.currentTheme;
+        if (inTheme == "wm_notheme") {
 /*
             var dialog = studio.genericDialog; // defined in Studio.widgets.js
             dialog.setTitle("Copy Theme");
@@ -1697,9 +1840,9 @@ dojo.declare("ThemeDesigner", wm.Page, {
         dialog.setUserPrompt("Enter name for your new theme");
         dialog.setShowInput(true);
         //var selectedName = this.themeList.selectedItem.getData().dataValue;
-        var selectedName = this.themeSelect.getDataValue();
+        var selectedName = this.copyTheme;
         var newname = selectedName;
-        newname = newname.replace(/^wm_/, "custom_");
+        newname = newname.replace(/^wm_/, "");
         var list = [];
         var tmplist = studio.themesListVar.getData();
         for (var i = 0; i < tmplist.length; i++) list.push(tmplist[i].dataValue);
@@ -1753,12 +1896,12 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
 
         if (!inText) {
-            app.toastDialog.showToast("Please enter a name for your theme before hitting OK...", 5000, "Warning");
+            app.alert("Please enter a name for your theme before hitting OK...");
             return;
         } else if (dojo.indexOf(list, inText) != -1) {
-            app.toastDialog.showToast("Unfortunately, " + inText + " is already in use", 5000, "Warning");
-        } else if (!inText.match(/^custom_/) || inText == "custom_") {
-            app.toastDialog.showToast("Please use the 'custom_' prefix in your theme names", 5000, "Warning");
+            app.alert("Unfortunately, " + inText + " is already in use");
+        } else if (inText.match(/^wm_/)) {
+            app.alert("Only built-in themes can use the wm_ prefix");
             return;
         }
         dialog.dismiss();
@@ -1999,8 +2142,9 @@ dojo.declare("ThemeDesigner", wm.Page, {
     getThemeDataValue: function(groupname, stylename, defaultVal) {
         if (!this.themeData[groupname])
             this.themeData[groupname] = {};
-        if (!this.themeData[groupname][stylename])
+        if (!this.themeData[groupname][stylename]) {
             this.themeData[groupname][stylename] =  defaultVal;
+	}
         return this.themeData[groupname][stylename];
     },
 
@@ -2169,16 +2313,16 @@ dojo.declare("ThemeDesigner", wm.Page, {
 		searchButton: ["wm.Button", {caption: "Go", width: "50px", height: "33px"}],
 		searchToggleButton: ["wm.ToggleButton", {captionUp: "Off", captionDown: "On", width: "60px", height: "33px"}]
 		}],
-	    toolbarPanel: ["wm.Panel", {_classes: {domNode: ["ToolbarContent"]},width: "100%", height: "50px", layoutKind: "left-to-right", margin: "3,20,3,20", verticalAlign: "top", horizontalAlign: "left"}, {}, {
-		toolbarLabel: ["wm.Label", {caption: "Toolbar:", width: "80px", height: "25px"}],
-		toolbarEditor: ["wm.Text", {caption: "Enter Lookup Name", height: "25px", width: "350px", captionSize: "150px"}],
+	    toolbarPanel: ["wm.ToolbarContentPanel", {width: "100%", height: "50px", layoutKind: "left-to-right", margin: "3,20,3,20", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+		toolbarLabel: ["wm.Label", {caption: "Toolbar:", width: "50px", height: "25px"}],
+		toolbarEditor: ["wm.Text", {caption: "Enter Lookup Name", height: "25px", width: "100%", captionSize: "150px"}],
 		toolbarButton: ["wm.Button", {caption: "Lookup", width: "80px", height: "100%"}],
 		toolbarToggleButton: ["wm.ToggleButton", {captionUp: "Ignore?", captionDown: "Ignore!!", width: "80px", height: "100%"}],
 
 	    }],
 	    MainLabel: ["wm.Label", {caption: "MainContent Panel Below", width: "100%", margin: "0,0,0,100", height: "15px"}],
 	    mainLayoutPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right"},{},{
-		TOCPanel: ["wm.Panel", {_classes: {domNode: ["TOCContent"]}, width: "100px", height: "100%", layoutKind: "top-to-bottom", border: "1"},{},{
+		TOCPanel: ["wm.TOCContentPanel", { width: "100px", height: "100%", layoutKind: "top-to-bottom"},{},{
 		    tocLabel: ["wm.Label", {caption: "TOC", width: "100%", height: "30px"}],
 		    tocLinks: ["wm.Html", {html: "<a href='#'>page1</a><br/><a href='#'>page2</a><br/><a href='#'>page3</a><br/><a href='#'>page4</a><br/>", width: "100%", height: "80px"}],
 		    tocSpacer: ["wm.Spacer", {height: "20px"}],
@@ -2186,7 +2330,9 @@ dojo.declare("ThemeDesigner", wm.Page, {
 		    tocSearchButton: ["wm.Button", {caption: "Goto Page", width: "100px", height: "60px"}],
 		    tocSearchToggleButton: ["wm.ToggleButton", {captionUp: "Toggle??", captionDown: "Toggle!!",  width: "100px", height: "60px"}]
 		}],
-		MainPanels: ["wm.TabLayers", {_classes: {domNode: ["MainContent"]}, width: "100%", height: "100%"}, {}, {
+		
+		MainPanels: ["wm.MainContentPanel", {width: "100%", height: "100%"}, {}, {
+		    MainLayers: ["wm.TabLayers", { width: "100%", height: "100%"}, {}, {
 		    MainLayer1: ["wm.Layer", {caption: "Headers", autoScroll: true}, {}, {
 		        hpanel1: ["wm.Panel", {"layoutKind":"left-to-right","horizontalAlign":"left","verticalAlign":"top","width":"100%","height":"81px"}, {}, {
 			    hlabel1: ["wm.Label", {"height":"48px","width":"96px","border":"0","caption":"Buttons:"}, {}, {
@@ -2225,8 +2371,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
 		    }],
 		    MainLayer4: ["wm.Layer", {caption: "EmphasizedContent"}, {}, {
 			pageContentLabel1: ["wm.Label", {width: "100%", height: "40px", caption: "Page Content Area"}],
- 			panel4: ["wm.Panel", {"_classes":{"domNode":["EmphasizedContent"]},title: "Content Panel Area", "layoutKind":"top-to-bottom","horizontalAlign":"left","verticalAlign":"top","width":"100%","height":"100%","margin":"40", autoScroll: true, border: "2"}, {}, {
-			    emphasizedContentLabel1: ["wm.Label", {singleLine: false, width: "100%", height: "30px", caption: "Content in the emphasized area stands out nicely from the background..."}],
+ 			panel4: ["wm.EmphasizedContentPanel", {"layoutKind":"top-to-bottom","horizontalAlign":"left","verticalAlign":"top","width":"100%","height":"100%","margin":"15,40", autoScroll: true}, {}, {
+			    emphasizedContentLabel1: ["wm.Label", {singleLine: false, width: "100%", height: "34px", caption: "Content in the emphasized area stands out nicely from the background..."}],
 			    emphasizedText: ["wm.Text", {caption: "Enter your thoughts", width: "100%", height: "25px"}],
 			    emphPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "100%"}, {}, {
 				emphasizedButton1: ["wm.Button", {caption: "Done", width: "80px", height: "100%"}],
@@ -2234,11 +2380,13 @@ dojo.declare("ThemeDesigner", wm.Page, {
 			    }]
 			}], 
 			pageContentLabel2: ["wm.Label", {width: "100%", height: "20px", caption: "Page Content Area"}],
- 			panel5: ["wm.FancyPanel", {"_classes":{"domNode":["EmphasizedContent"]},title: "Content Panel Area", "layoutKind":"left-to-right","horizontalAlign":"left","verticalAlign":"top","width":"100%","height":"100%","margin":"40", autoScroll: true}, {}, {
-			    emphasizedContentLabel2: ["wm.Label", {width: "100%", height: "20px", caption: "Content in the emphasized area stands out nicely from the background..."}],			    			    
-			    emphasizedButton2: ["wm.Button", {caption: "Done", width: "80px", height: "100%"}]
+			panel55: ["wm.EmphasizedContentPanel", {width: "100%", height: "100%", margin: "15,40", layoutKind: "left-to-right"}, {}, {
+
+				emphasizedContentLabel2: ["wm.Label", {width: "100%", height: "20px", caption: "Content in the emphasized area stands out nicely from the background..."}],			    			    
+				emphasizedButton2: ["wm.Button", {caption: "Done", width: "80px", height: "100%"}]
 			}]
 
+		    }]
 		    }]
 	    }]
 	    }],
