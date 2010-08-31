@@ -34,19 +34,22 @@ dojo.declare("wm.studio.Project", null, {
 	finishNewProject: function(inResult) {
 		this.projectChanging();
 		this.createApplicationArtifacts();
-	        this.makeApplication({theme: "wm_graphite"});
+	        this.makeApplication({theme: "wm_basic"});
 		this.newPage(this.pageName);
 		this.saveProject(this.projectName);
 		this.projectChanged();
 		this.projectsChanged();
 		//studio.deploy("Configuring Project...");
 	},
-	newPage: function(inName) {
+    // pageType and argHash are typically empty
+    // argHash is a way to pass in custom parameters when creating a non-basic
+    // page type
+        newPage: function(inName, pageType, argHash) {
 		if (!this.projectName)
 			return;
 		this.pageChanging();
 		this.pageName = inName;
-		this.createPageArtifacts();
+	        this.createPageArtifacts(pageType, argHash);
 		this.makePage();
 		this.savePage();
 		this.pageChanged();
@@ -57,17 +60,46 @@ dojo.declare("wm.studio.Project", null, {
 	    this.projectData = {css: "",
 				jscustom: this.projectName + ".extend({\n\n\t" + terminus + "\n});"};
 	},
-	createPageArtifacts: function() {
+        createPageArtifacts: function(pageType, argHash) {
 		var ctor = dojo.declare(this.pageName, wm.Page);
 		this.pageData = {};
-	        this.pageData.widgets = ctor.widgets = this.getPageTemplate();
-	        studio.setScript(this.pageData.js = pageScript(this.pageName));
+	    this.pageData.widgets = ctor.widgets = this.getPageTemplate(pageType, argHash);
+	    var functionTemplate = this.getScriptTemplate(pageType, argHash);
+	        studio.setScript(this.pageData.js = pageScript(this.pageName, functionTemplate));
 		this.pageData.css = this.pageData.html = "";
 	},
-	getPageTemplate: function() {
+    getPageTemplate: function(pageType, argHash) {
 		// NOTE: could present list of choices here
+	    switch(pageType) {
+	    case "wm.PageListRow":
+		return {
+		    variable: ["wm.Variable", {type: argHash.type}],
+		    layoutBox1: ["wm.Layout", {height: "100%", width: "100%", horizontalAlign: "left", verticalAlign: "top"}, {}, {
+			sampleRow: ["wm.FancyPanel", {title: "Sample Row", layoutKind: "left-to-right", width: "100%", height: "80px"},{}, {
+			    panel1: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"},{}, {
+				label1: ["wm.Label", {width: "200px", height: "100%", caption: "Bind me to a field in 'variable'", singleLine: false}],
+				label2: ["wm.Label", {width: "100%", height: "100%", caption: "Bind me to another field in 'variable'. Or just delete me and create your own row!", singleLine: false}]
+			    }]
+			}]
+		    }]};
+	    default:
 		return {layoutBox1: ["wm.Layout", {height: "100%", width: "100%", horizontalAlign: "left", verticalAlign: "top"}, {}, {}]};
+	    }
 	},
+        getScriptTemplate: function(pageType, argHash) {
+		// NOTE: could present list of choices here
+	    switch(pageType) {
+	    case "wm.PageListRow":
+		return "button1Click: function(inSender) {\n" +
+		    "\t\t/* Example of finding and triggering an action based on a button click */\n" +
+		    "\t\tvar data = this.variable.getData();\n" +
+		    "\t\tconsole.log(\"You have just clicked on a button in the row showing the following data:\");\n" +
+		    "\t\tconsole.log(data);\n" +
+		    "\t}";
+	    default: 
+		return "";
+	    }
+    },
 	//=========================================================================
 	// Open
 	//=========================================================================		 
@@ -458,7 +490,8 @@ Studio.extend({
 // Project UI
 //=========================================================================
 Studio.extend({
-	newPageClick: function() {
+       newPageClick: function(optionalPageType, optionalPageName) {
+	   var pageName = optionalPageName || "Page";
 		if (!this.project.projectName)
 			return;
 		if (!this.isShowingWorkspace())
@@ -471,10 +504,10 @@ Studio.extend({
 		                       dojo.forEach(pages, function(p) {
 			                   l[p] = true;
 		                       });
-                                       this.promptForName("page", wm.findUniqueName('Page', [l]), pages,
+                                       this.promptForName("page", wm.findUniqueName(pageName, [l]), pages,
                                                           dojo.hitch(this, function(n) {
 	                                                      n = wm.capitalize(n);
-			                                      this.waitForCallback("Creating page: "+ n, dojo.hitch(this.project, "newPage", n));
+			                                      this.waitForCallback("Creating page: "+ n, dojo.hitch(this.project, "newPage", n, optionalPageType));
                                                           }));
                                    }));
 	},
@@ -768,7 +801,7 @@ Studio.extend({
 			       }
 			   if (exists) {
                                app.toastDialog.showToast(dojo.string.substitute(warnExists, {target: inTarget, name: name}),
-                                                         5000, "Warning");
+                                                         5000, "Warning", "cc");
 			       return wm.onidle(this, function() {
                                    this.promptForName(inTarget, name, inExistingList, onSuccess);
                                });
@@ -902,3 +935,4 @@ Studio.extend({
 	    this.projectDeleteButton.setDisabled(true);
 	}
 });
+
