@@ -76,6 +76,11 @@ dojo.declare("wm.TypeDefinition", wm.Component, {
     internal: false,
     collection: "Fields",
     fields: null,
+    init: function() {
+	this.inherited(arguments);
+	if (this.isDesignLoaded())
+	    this.setOwner(studio.application);
+    },
     // not init; must wait for page loader to load all subcomponents (typedefinitionfields) which postInit waits for
     postInit: function() {
 /*
@@ -115,7 +120,8 @@ dojo.declare("wm.TypeDefinition", wm.Component, {
 
 wm.Object.extendSchema(wm.TypeDefinition, {
     addField: {group: "operation", order: 1},
-    internal: {ignore: true} // only way to set something as internal is to hardcode it into widgets.js; should only be internal if in use by studio to define a type for use by studio but not by the user
+    internal: {ignore: true}, // only way to set something as internal is to hardcode it into widgets.js; should only be internal if in use by studio to define a type for use by studio but not by the user
+    owner: {ignore: true}
 });
 
 wm.TypeDefinition.extend({
