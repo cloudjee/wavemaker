@@ -460,7 +460,7 @@ dojo.declare("wm.Layers", wm.Container, {
 
 
 dojo.declare("wm.TabLayers", wm.Layers, {
-        useDesignBorder: 0,
+        //useDesignBorder: 0,
        themeStyleType: "ContentPanel",
        layersType: 'Tabs'/*,
 	   afterPaletteDrop: function(){
@@ -516,7 +516,7 @@ dojo.declare("wm.WizardLayers", wm.Layers, {
     themeStyleType: "ContentPanel",
     layersType: 'Wizard',
     transition: "fade",
-        useDesignBorder: 0,
+    //useDesignBorder: 0,
     init: function() {
 	this.inherited(arguments);
 	this.decorator.addFooter();
