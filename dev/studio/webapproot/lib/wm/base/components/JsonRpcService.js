@@ -169,8 +169,8 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		this._service.sync = this.sync;
 		this.ensureArgs(inMethod, inArgs);
 		//if (wm.logging)
+	        this.debugLastMethod = inMethod;
 		if (djConfig.isDebug && !dojo.isFF) {
-		    this.debugLastMethod = inMethod;
 		    console.group("JsonRpcService.invoke method:", inMethod);
 		    if (inArgs && inArgs.length) {
 		      console.log("Arguments:");
