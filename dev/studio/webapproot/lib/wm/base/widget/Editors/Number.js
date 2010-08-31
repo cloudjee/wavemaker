@@ -212,6 +212,7 @@ dojo.declare("wm.Number", wm.Text, {
 		rangeMax: "Maximum number must be greater than the minimum setting of ${0}."
 	},
 	rangeMessage: "",
+        validationEnabled: function() { return true;},
 	getEditorProps: function(inNode, inProps) {
 		var constraints = {}, v = this.displayValue;
 		if (this.minimum)
