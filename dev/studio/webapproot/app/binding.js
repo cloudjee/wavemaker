@@ -481,6 +481,10 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	    if (this.simpleRb.getGroupValue() == "simple") {
 		addWidgetBinderNodes(inParent, appcomps);
 		addWidgetBinderNodes(inParent, pagecomps);
+		if (this.tree.root.kids.length <= 2) {
+		    for (var i = 0; i < this.tree.root.kids.length; i++)
+			this.tree.root.kids[i].setOpen(true);
+		}
 	    } else {
 	        var count = appcomps.length + pagecomps.length;	    
 		dojo.forEach(appcomps, function(c) {
@@ -701,6 +705,11 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
         doSearch: function(owner) {
 
 	    var search = this.searchBar.getDataValue();
+	    var searchByExactName = false;
+	    if (search.indexOf("#") == 0) {
+		search = search.substring(1);
+		searchByExactName = true;
+	    }
 	    var searchRegex = new RegExp(search, "i");
 	    var data = [];
 	    var comps = owner.components;
@@ -708,7 +717,10 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		if (comp) 
 		    c = comps[comp];
 		if (c) {
-		    if (c.declaredClass.match(searchRegex) || c.name.match(searchRegex)) {
+		    if (searchByExactName) {
+			if (c.name == search)
+			    data.push(c);
+		    } else if (c.declaredClass.match(searchRegex) || c.name.match(searchRegex)) {
 			if (wm.widgetIsBindSource(c))
 			    data.push(c);
 		    } else {
