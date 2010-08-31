@@ -92,10 +92,11 @@ Studio.extend({
 		var n = this.newTreeNode(inTree.root, "images/project_16t.png", "Project (" + studio.project.projectName + ")");
 	        n.component = n.owner = this.application
 	        this.application._studioTreeNode = n;
-		this.excTypes = [wm.Query, wm.LiveView];
+	    this.excTypes = [wm.Query, wm.LiveView];
 		if (this.application) {
 			this.svrComps = this.application.getServerComponents();
 			this.otherComps = this.application.components;
+
 			this.componentsToTree(n, this.getTreeComponents(this.svrComps, this.excTypes));
 			this.componentsToTree(n, this.getTreeComponents(this.otherComps, this.excTypes));
 		}
@@ -155,7 +156,8 @@ Studio.extend({
 			var props = {};
 			inNode = wm.fire(inComponent, "preNewComponentNode", [inNode, props]) || inNode;
 			var n = this.newComponentNode(inNode, inComponent, null, null, props);
-			this.subWidgetsToTree(n, inComponent);
+  		        if (inComponent instanceof wm.TypeDefinition)
+			    this.subWidgetsToTree(n, inComponent);
 		}
 	},
 	collectionToTree: function(inNode, inCollection, inType) {
