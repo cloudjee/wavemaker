@@ -29,7 +29,7 @@ NewJavaService.widgets = {
 						newJavaServiceIdInput: ["wm.Editor", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "150px", caption: "Service Name"}, {}, {
 							editor: ["wm._TextEditor", {}, {}]
 						}],
-						newJavaClassNameInput: ["wm.Editor", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "150px", caption: "Class Name"}, {}, {
+						newJavaClassNameInput: ["wm.Editor", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "150px", caption: "Package and Class Name"}, {}, {
 							editor: ["wm._TextEditor", {}, {}]
 						}]
 					}]
