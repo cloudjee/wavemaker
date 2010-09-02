@@ -1,11 +1,11 @@
 {
 	"wm.ToggleButton": {
 		"border": "1", 
-		"borderColor": "#0d0897"
+		"borderColor": "#444444"
 	}, 
 	"wm.Button": {
 		"border": "1", 
-		"borderColor": "#0d0897"
+		"borderColor": "#444444"
 	}, 
 	"wm.Layout": {
 		"border": "0", 
@@ -23,7 +23,7 @@
 	}, 
 	"wm.AccordionDecorator": {
 		"captionBorder": "1", 
-		"captionBorderColor": "#0d0897"
+		"captionBorderColor": "#444444"
 	}, 
 	"wm.AccordionLayers": {
 		"border": "0", 
@@ -60,39 +60,43 @@
 		"margin": "2,0,2,0"
 	}, 
 	"wm.Dialog": {
-		"border": 1, 
+		"border": "2", 
 		"borderColor": "#333333", 
 		"titlebarBorder": "0,0,1,0", 
-		"titlebarBorderColor": "#0d0897"
+		"titlebarBorderColor": "#0d0897", 
+		"containerClass": "MainContent"
 	}, 
 	"wm.GenericDialog": {
 		"border": "2", 
-		"borderColor": "#0d0897", 
+		"borderColor": "#333333", 
 		"titlebarBorder": "0,0,1,0", 
 		"titlebarBorderColor": "#0d0897", 
 		"footerBorder": "1,0,0,0", 
-		"footerBorderColor": "#0d0897"
+		"footerBorderColor": "#444444", 
+		"containerClass": "MainContent"
 	}, 
 	"wm.RichTextDialog": {
-		"border": 2, 
-		"borderColor": "#0d0897", 
+		"border": "2", 
+		"borderColor": "#333333", 
 		"titlebarBorder": "0,0,1,0", 
 		"titlebarBorderColor": "#0d0897", 
 		"footerBorder": "1,0,0,0", 
-		"footerBorderColor": "#0d0897"
+		"footerBorderColor": "#444444", 
+		"containerClass": "MainContent"
 	}, 
 	"wm.PageDialog": {
-		"border": 2, 
-		"borderColor": "#0d0897", 
+		"border": "2", 
+		"borderColor": "#333333", 
 		"titlebarBorder": "0,0,1,0", 
 		"titlebarBorderColor": "#0d0897", 
 		"footerBorder": "1,0,0,0", 
-		"footerBorderColor": "#0d0897", 
-		"noBevel": true
+		"footerBorderColor": "#444444", 
+		"noBevel": true, 
+		"containerClass": "MainContent"
 	}, 
 	"wm.DojoMenu": {
 		"padding": "0", 
-		"border": "1", 
+		"border": "0", 
 		"borderColor": "#0d0897"
 	}, 
 	"wm.List": {
@@ -110,7 +114,7 @@
 	}, 
 	"wm.RoundedButton": {
 		"border": "1", 
-		"borderColor": "#0d0897"
+		"borderColor": "#444444"
 	}, 
 	"wm.DataGrid": {
 		"border": "2", 
@@ -129,7 +133,7 @@
 	}, 
 	"wm.Panel": {
 		"borderColor": "#333333", 
-		"border": 1
+		"border": 0
 	}, 
 	"wm.CheckBoxEditor": {
 	}, 
@@ -154,7 +158,7 @@
 	}, 
 	"wm.BusyButton": {
 		"border": "1", 
-		"borderColor": "#0d0897"
+		"borderColor": "#444444"
 	}, 
 	"wm.Checkbox": {
 		"border": "0"
@@ -182,5 +186,31 @@
 	}, 
 	"wm.Time": {
 		"border": "0"
+	}, 
+	"wm.WidgetsJsDialog": {
+		"containerClass": "MainContent", 
+		"border": "2", 
+		"borderColor": "#333333"
+	}, 
+	"wm.FileUploadDialog": {
+		"containerClass": "MainContent", 
+		"border": "2", 
+		"borderColor": "#333333"
+	}, 
+	"wm.ColorPickerDialog": {
+		"border": "2", 
+		"borderColor": "#333333"
+	}, 
+	"wm.MainContentPanel": {
+		"border": "1", 
+		"borderColor": "#ffffff"
+	}, 
+	"wm.HeaderContentPanel": {
+		"border": "3", 
+		"borderColor": "#222222"
+	}, 
+	"wm.EmphasizedContentPanel": {
+		"border": "1", 
+		"borderColor": "#333333"
 	}
 }
