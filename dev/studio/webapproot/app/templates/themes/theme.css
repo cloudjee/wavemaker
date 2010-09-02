@@ -1,6 +1,5 @@
 @import url("custom.css"); /* Edit this file if your editting by hand and don't want the themedesigner to overwrite your changes */
 
-
   /**************************************************************************************************
    * TYPE:        Button Focus for wm.Button and TabControls
    *
@@ -22,60 +21,50 @@ body .wm_template input:focus,
    *              and bold to illustrate that its a link.
    ************************************************************************************************/
 
+@media screen { /* EmphasizedContent-Level */ 
+    #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_template .wmlayout .EmphasizedContent a,
+    #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_template .wmlayout .EmphasizedContent a:visited,
+    #studio_designer.wm_template .wmlayout .EmphasizedContent a,
+    #studio_designer.wm_template .wmlayout .EmphasizedContent a:visited,
+    .wm_template #wavemakerNode .wmlayout .EmphasizedContent a,
+    .wm_template #wavemakerNode .wmlayout .MainContent a:visited {
+	color: #FFFFFF; /* EmphasizedContent-Styles-Font_Color */
+    }
+}
+
+@media screen { /* HeaderContent-Level */ 
+    #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_template .wmlayout .HeaderContent a,
+    #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_template .wmlayout .HeaderContent a:visited,
+    #studio_designer.wm_template .wmlayout .HeaderContent a,
+    #studio_designer.wm_template .wmlayout .HeaderContent a:visited,
+    .wm_template #wavemakerNode .wmlayout .HeaderContent a,
+    .wm_template #wavemakerNode .wmlayout .HeaderContent a:visited {
+	color: #FFFFFF; /* HeaderContent-Styles-Font_Color */
+    }
+}
+
+@media screen { /* MainContent-Level */ 
+    #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_template .wmlayout .MainContent a,
+    #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_template .wmlayout .MainContent a:visited,
+    #studio_designer.wm_template .wmlayout .MainContent a,
+    #studio_designer.wm_template .wmlayout .MainContent a:visited,
+    .wm_template #wavemakerNode .wmlayout .MainContent a,
+    .wm_template #wavemakerNode  .wmlayout .MainContent a:visited {
+
+	color: #FFFFFF; /* MainContent-Styles-Font_Color */
+    }
+}
+
+
 @media screen { /* Document-Level */ 
-    .wm_template #studio_themesPage_themeDesigner_demoPanel .wmlayout a,
-    .wm_template #studio_themesPage_themeDesigner_demoPanel .wmlayout a:visited,
+    #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wmlayout a,
+    #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wmlayout a:visited,
     #studio_designer.wm_template .wmlayout a,
     #studio_designer.wm_template .wmlayout a:visited,
     .wm_template  #wavemakerNode  .wmlayout a,
     .wm_template  #wavemakerNode  .wmlayout a:visited {
 	color: #FFFFFF; /* Document-Styles-Font_Color */
 	font-weight: bold;
-    }
-}
-
-@media screen { /* MainContent-Level */ 
-    .wm_template #studio_themesPage_themeDesigner_demoPanel .wmlayout .MainContent a,
-    .wm_template #studio_themesPage_themeDesigner_demoPanel .wmlayout .MainContent a:visited,
-    #studio_designer.wm_template .wmlayout .MainContent a,
-    #studio_designer.wm_template .wmlayout .MainContent a:visited,
-    .wm_template  .wmlayout .MainContent a,
-    .wm_template  .wmlayout .MainContent a:visited {
-	color: #FFFFFF; /* MainContent-Styles-Font_Color */
-    }
-}
-
-
-@media screen { /* EmphasizedContent-Level */ 
-    .wm_template #studio_themesPage_themeDesigner_demoPanel .wmlayout .EmphasizedContent a,
-    .wm_template #studio_themesPage_themeDesigner_demoPanel .wmlayout .EmphasizedContent a:visited,
-    #studio_designer.wm_template .wmlayout .EmphasizedContent a,
-    #studio_designer.wm_template .wmlayout .EmphasizedContent a:visited,
-    .wm_template  .wmlayout .EmphasizedContent a,
-    .wm_template  .wmlayout .MainContent a:visited {
-	color: #FFFFFF; /* EmphasizedContent-Styles-Font_Color */
-    }
-}
-
-@media screen { /* TOCContent-Level */ 
-    .wm_template #studio_themesPage_themeDesigner_demoPanel .wmlayout .TOCContent a,
-    .wm_template #studio_themesPage_themeDesigner_demoPanel .wmlayout .TOCContent a:visited,
-    #studio_designer.wm_template .wmlayout .TOCContent a,
-    #studio_designer.wm_template .wmlayout .TOCContent a:visited,
-    .wm_template  .wmlayout .TOCContent a,
-    .wm_template  .wmlayout .TOCContent a:visited {
-	color: #FFFFFF; /* TOCContent-Styles-Font_Color */
-    }
-}
-
-@media screen { /* ToolbarContent-Level */ 
-    .wm_template #studio_themesPage_themeDesigner_demoPanel .wmlayout .ToolbarContent a,
-    .wm_template #studio_themesPage_themeDesigner_demoPanel .wmlayout .ToolbarContent a:visited,
-    #studio_designer.wm_template .wmlayout .ToolbarContent a,
-    #studio_designer.wm_template .wmlayout .ToolbarContent a:visited,
-    .wm_template  .wmlayout .ToolbarContent a,
-    .wm_template  .wmlayout .ToolbarContent a:visited {
-	color: #FFFFFF !important; /* ToolbarContent-Styles-Font_Color */
     }
 }
 

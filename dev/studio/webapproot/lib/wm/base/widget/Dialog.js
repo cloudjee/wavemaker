@@ -88,6 +88,7 @@ dojo.addOnLoad(function() {
 });
 
 dojo.declare("wm.Dialog", wm.Container, {
+    containerClass: "MainContent",
     corner: "cc", // center vertical, center horizontal; this is almost always the desired default... but for some nonmodal dialogs, its useful to have other options
     scrim: true,
     _minified: false,
@@ -97,6 +98,7 @@ dojo.declare("wm.Dialog", wm.Container, {
     horizontalAlign: "left",
     verticalAlign: "top",
 	border: 2,
+    borderColor: "rgb(80,80,80)",
     titlebarBorder: 0,
     titlebarBorderColor: "black",
 /*
@@ -129,7 +131,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	        this.createTitle();
 	        if (this.useContainerNode) {
                     var owner = (this.declaredClass == "wm.Dialog") ? this.owner : this; // set the owner to wm.Page to allow othis to be written... IF its an instance not a subclass of wm.Dialog
-	            this.containerWidget = new wm.Container({_classes: {domNode: ["wmdialogcontainer"]}, name: "containerWidget", parent: this, owner: owner, layoutKind: "top-to-bottom", padding: "0", margin: "0", border: "0", width: "100%", height: "100%", horizontalAlign: "left", verticalAlign: "top", autoScroll: true});
+	            this.containerWidget = new wm.Container({_classes: {domNode: ["wmdialogcontainer", this.containerClass]}, name: "containerWidget", parent: this, owner: owner, layoutKind: "top-to-bottom", padding: "0", margin: "0", border: "0", width: "100%", height: "100%", horizontalAlign: "left", verticalAlign: "top", autoScroll: true});
 		    this.containerNode = this.containerWidget.domNode;
 		} else {
 	            this.containerNode = this.domNode;//this.container.domNode;
@@ -300,9 +302,13 @@ dojo.declare("wm.Dialog", wm.Container, {
 	if (!this.showing) return;
         var w = this.bounds.w;
         var h = this.bounds.h;
+/*
         var isDesigned =  (this.domNode.parentNode != document.body);
         var W = (isDesigned) ? studio.designer.bounds.w : app._page.root.bounds.w;
         var H = (isDesigned) ? studio.designer.bounds.h : app._page.root.bounds.h;
+        */
+        var W = this.domNode.parentNode.clientWidth;
+        var H = this.domNode.parentNode.clientHeight;
         var buffer = 10;
         var t,l;
         
@@ -310,7 +316,7 @@ dojo.declare("wm.Dialog", wm.Container, {
         var left = this.corner.substring(1,2);
 	for (var i = wm.dialog.showingList.length - 1; i >= 0 && wm.dialog.showingList[i] == this; i--)
 	    ;
-	var last = (i >= 0) ? wm.dialog.showingList[i] : null;
+	var last = (i >= 0 && (!window["studio"] || this != window["studio"].dialog)) ? wm.dialog.showingList[i] : null;
 
         switch(left) {
         case "l":
@@ -355,7 +361,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		this.inherited(arguments);
 		// global flag for easily finding the most recently shown dialog
 	        wm.Array.removeElement(wm.dialog.showingList, this);
-	        if (inShowing)
+	    if (inShowing && (!window["studio"] || this != window["studio"].dialog))
 		    wm.dialog.showingList.push(this);
 	        this.domNode.style.zIndex = wm.dialog.getNextZIndex();
 
@@ -431,7 +437,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 					  border: this.titlebarBorder,
 					  borderColor: this.titlebarBorderColor,
 					  layoutKind: "left-to-right"});
-	this.titleClose = new wm.Button({_classes: {domNode: ["wm_FontSizePx_16px","wm_TextDecoration_Bold"]},
+	this.titleClose = new wm.Button({
 					 name: "titleClose",
 					 caption: "X",
 					 width: "30px",
@@ -439,7 +445,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 					 parent: this.titleBar,
 					 owner: this,
 					 showing: !this.modal && !this.noEscape });
-	this.titleMinify = new wm.Button({_classes: {domNode: ["wm_FontSizePx_16px","wm_TextDecoration_Bold"]},
+	this.titleMinify = new wm.Button({
 					  name: "titleMinify",
 					  caption: "&ndash;",
 					  width: "30px",
@@ -448,7 +454,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 					  owner: this,
 					  showing: !this.modal});	
 
-	this.titleMaxify = new wm.Button({_classes: {domNode: ["wm_FontSizePx_16px","wm_TextDecoration_Bold"]},
+	this.titleMaxify = new wm.Button({
 					  name: "titleMinify",
 					  caption: " ",
 					  width: "30px",
@@ -456,7 +462,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 					  parent: this.titleBar,
 					  owner: this,
 					  showing: !this.modal});	
-	this.titleLabel = new wm.Label({_classes: {domNode: ["wmdialog-title", "wm_FontSizePx_16px","wm_TextDecoration_Bold"]},
+	this.titleLabel = new wm.Label({
 					parent: this.titleBar,
 					owner: this,
 					caption: this.title,
@@ -552,9 +558,7 @@ wm.Object.extendSchema(wm.Dialog, {
 
 
 
-dojo.declare("wm.WidgetsJsDialog", wm.Dialog, {
-    border: "2",
-    borderColor: "rgb(80,80,80)",
+dojo.declare("wm.WidgetsJsDialog", wm.Dialog, { 
     margin: "0,4,4,0",
     useContainerNode: true,
     widgets_data: null,
@@ -1422,9 +1426,14 @@ dojo.declare("wm.ColorPickerDialog", wm.Dialog, {
     },
     setShowing: function(inShowing, forceShow) {
         if (!this.colorPicker && inShowing && this.domNode) 
-            this.colorPicker = new dojox.widget.ColorPicker({animatePoint: false, showHsv: false, showRtb: true, webSave: false, onChange: dojo.hitch(this, "valueChange")}, this.domNode);
+            this.colorPicker = new dojox.widget.ColorPicker({animatePoint: false, showHsv: false, showRtb: true, webSave: false, onChange: dojo.hitch(this, "valueChange")}, this.domNode);       
         
         if (inShowing) {
+
+            // If it isn't currently showing, and we're now showing it, set _changed to false
+            if (!this.showing)
+                this._changed = false;
+
             if (this._tmpValue) {
                 this.setValue(this._tmpValue);
                 delete this._tmpValue;
@@ -1444,6 +1453,7 @@ dojo.declare("wm.ColorPickerDialog", wm.Dialog, {
         this.inherited(arguments);
     },
     valueChange: function(inValue) {        
+        this._changed = true;
         this.onChange(inValue);
     },
     onChange: function(inValue) {

@@ -70,7 +70,7 @@
    ************************************************************************************************/
 @media screen { /* Document-Level */ 
 
-    /* Selected color for rows: uses Headers-Active */
+    /* Selected color for rows: uses Clickables-Active */
     .wm_template div.dojoxGrid-row.dojoxGrid-row-selected, 
     .wm_template div.dojoxGrid-row.dojoxGrid-row-selected.dojoxGrid-row-over, 
     .wm_template div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
@@ -78,11 +78,11 @@
     .wm_template div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
     .wm_template .wmlist-item.wmlist-item-selected,
     .wm_template .wmlist-item.wmlist-item-selected.wmlist-item-over {
-	/* Document-HeadersActive-Background */
-	background-color: #333333 !important; /* Document-HeadersActive-Background_Color */
+	/* Document-ClickablesActive-Background */
+	background-color: #333333 !important; /* Document-ClickablesActive-Background_Color */
 
-	/* Document-HeadersActive-Font */
-	color: #FFFFFF; /* Document-HeadersActive-Font_Color */
+	/* Document-ClickablesActive-Font */
+	color: #FFFFFF; /* Document-ClickablesActive-Font_Color */
     }
 
     /* Custom mouse-over color for rows */
@@ -92,11 +92,11 @@
     .wm_template .dojoxGridRow.dojoxGridRowOver, 
     .wm_template .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
     {
-	/* Document-HeadersHover-Background */
-	background-color: #333333 !important; /* Document-HeadersHover-Background_Color */
+	/* Document-ClickablesHover-Background */
+	background-color: #333333 !important; /* Document-ClickablesHover-Background_Color */
 
-	/* Document-HeadersHover-Font */
-	color: #FFFFFF; /* Document-HeadersHover-Font_Color */
+	/* Document-ClickablesHover-Font */
+	color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
 
     }
 
@@ -119,43 +119,43 @@
 	border-right-style: solid;
 	border-right-color: #AAAAAA; /* Tables-EvenRows-Border_Color */
 
-	/* Document-HeadersActive-Font */
-	font-family: sans-serif; /* Document-HeadersActive-Font_Family */
+	/* Document-ClickablesActive-Font */
+	font-family: sans-serif; /* Document-ClickablesActive-Font_Family */
 	/* Adjust size when we figure out a good way to adjust the height of the header */
 	font-size: 12pt; /* Tables-EvenRows-Font_TextSize */
 	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* Document-HeadersActive-Font_Weight */
+	font-weight: bold; /* Document-ClickablesActive-Font_Weight */
     }
 
     .wm_template div.dojoxGridHeader .dojoxGridCell {
-	background-color: #333333; /* Document-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* Document-HeadersActive-Background_Image */
-	background-position: left top;  /* Document-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-HeadersActive-Background_Image-Repeat */
+	background-color: #333333; /* Document-ClickablesActive-Background_Color */
+	background-image: url(images/threeD.png); /* Document-ClickablesActive-Background_Image */
+	background-position: left top;  /* Document-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
 
-	/* Document-HeadersActive-Font */
-	font-family: sans-serif; /* Document-HeadersActive-Font_Family */
-	/*font-size: 12pt;  Headers-Active-Font_TextSize */
-	color: #FFFFFF; /* Document-HeadersActive-Font_Color */
-	font-weight: bold; /* Document-HeadersActive-Font_Weight */
+	/* Document-ClickablesActive-Font */
+	font-family: sans-serif; /* Document-ClickablesActive-Font_Family */
+	/*font-size: 12pt;  Clickables-Active-Font_TextSize */
+	color: #FFFFFF; /* Document-ClickablesActive-Font_Color */
+	font-weight: bold; /* Document-ClickablesActive-Font_Weight */
     }
 
     /* Header-Row-Background */
     .wm_template .dojoxGrid-header, 
     .wm_template .dojoxGridHeader,
     .wm_template .wmlist-header {
-	color: #FFFFFF;	/* Document-HeadersActive-Font_Color */
-	background-color: #444444; /* Document-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* Document-HeadersActive-Background-Image */
-	background-position: left top;     /* Document-HeadersActive-Image-Position */
-	background-repeat: repeat-x;    /* Document-HeadersActive-Image-Repeat */
+	color: #FFFFFF;	/* Document-ClickablesActive-Font_Color */
+	background-color: #444444; /* Document-ClickablesActive-Background_Color */
+	background-image: url(images/threeD.png); /* Document-ClickablesActive-Background-Image */
+	background-position: left top;     /* Document-ClickablesActive-Image-Position */
+	background-repeat: repeat-x;    /* Document-ClickablesActive-Image-Repeat */
 
     }
 
 }
 
 @media screen { /* MainContent-Level */ 
-    /* Selected color for rows: uses Headers-Active */
+    /* Selected color for rows: uses Clickables-Active */
     .wm_template .MainContent div.dojoxGrid-row.dojoxGrid-row-selected, 
     .wm_template .MainContent div.dojoxGrid-row.dojoxGrid-row-selected.dojoxGrid-row-over, 
     .wm_template .MainContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
@@ -163,11 +163,11 @@
     .wm_template .MainContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
     .wm_template .MainContent .wmlist-item.wmlist-item-selected,
     .wm_template .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
-	/* MainContent-HeadersActive-Background */
-	background-color: #333333 !important; /* MainContent-HeadersActive-Background_Color */
+	/* MainContent-ClickablesActive-Background */
+	background-color: #333333 !important; /* MainContent-ClickablesActive-Background_Color */
 
-	/* MainContent-HeadersActive-Font */
-	color: #FFFFFF; /* MainContent-HeadersActive-Font_Color */
+	/* MainContent-ClickablesActive-Font */
+	color: #FFFFFF; /* MainContent-ClickablesActive-Font_Color */
     }
 
     /* Custom mouse-over color for rows */
@@ -177,11 +177,11 @@
     .wm_template .MainContent .dojoxGridRow.dojoxGridRowOver, 
     .wm_template .MainContent .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
     {
-	/* MainContent-HeadersHover-Background */
-	background-color: #333333 !important; /* MainContent-HeadersHover-Background_Color */
+	/* MainContent-ClickablesHover-Background */
+	background-color: #333333 !important; /* MainContent-ClickablesHover-Background_Color */
 
-	/* MainContent-HeadersHover-Font */
-	color: #FFFFFF; /* MainContent-HeadersHover-Font_Color */
+	/* MainContent-ClickablesHover-Font */
+	color: #FFFFFF; /* MainContent-ClickablesHover-Font_Color */
 
     }
 
@@ -200,35 +200,35 @@
     {
 	background: inherit; /* see Header.dojoxGrid-header below */
 
-	/* MainContent-HeadersActive-Font */
-	font-family: sans-serif; /* MainContent-HeadersActive-Font_Family */
-	/*    font-size: 12pt;  Headers-Default-Font_TextSize */
+	/* MainContent-ClickablesActive-Font */
+	font-family: sans-serif; /* MainContent-ClickablesActive-Font_Family */
+	/*    font-size: 12pt;  Clickables-Default-Font_TextSize */
 	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* MainContent-HeadersActive-Font_Weight */
+	font-weight: bold; /* MainContent-ClickablesActive-Font_Weight */
     }
 
     .wm_template .MainContent div.dojoxGridHeader .dojoxGridCell {
-	background-color: #333333; /* MainContent-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-HeadersActive-Background_Image */
-	background-position: left top;  /* MainContent-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* MainContent-HeadersActive-Background_Image-Repeat */
+	background-color: #333333; /* MainContent-ClickablesActive-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-ClickablesActive-Background_Image */
+	background-position: left top;  /* MainContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
 
-	/* MainContent-HeadersActive-Font */
-	font-family: sans-serif; /* MainContent-HeadersActive-Font_Family */
-	/*font-size: 12pt;  Headers-Default-Font_TextSize */
-	color: #FFFFFF; /* MainContent-HeadersActive-Font_Color */
-	font-weight: bold; /* MainContent-HeadersActive-Font_Weight */
+	/* MainContent-ClickablesActive-Font */
+	font-family: sans-serif; /* MainContent-ClickablesActive-Font_Family */
+	/*font-size: 12pt;  Clickables-Default-Font_TextSize */
+	color: #FFFFFF; /* MainContent-ClickablesActive-Font_Color */
+	font-weight: bold; /* MainContent-ClickablesActive-Font_Weight */
     }
 
     /* Header-Row-Background */
     .wm_template .MainContent .dojoxGrid-header, 
     .wm_template .MainContent .dojoxGridHeader,
     .wm_template .MainContent .wmlist-header {
-	color: #FFFFFF;	/* MainContent-HeadersActive-Font_Color */
-	background-color: #444444; /* MainContent-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-HeadersActive-Background-Image */
-	background-position: left top;     /* MainContent-HeadersActive-Image-Position */
-	background-repeat: repeat-x;    /* MainContent-HeadersActive-Image-Repeat */
+	color: #FFFFFF;	/* MainContent-ClickablesActive-Font_Color */
+	background-color: #444444; /* MainContent-ClickablesActive-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-ClickablesActive-Background-Image */
+	background-position: left top;     /* MainContent-ClickablesActive-Image-Position */
+	background-repeat: repeat-x;    /* MainContent-ClickablesActive-Image-Repeat */
 
     }
 
@@ -237,7 +237,7 @@
 
 
 @media screen { /* EmphasizedContent-Level */ 
-    /* Selected color for rows: uses Headers-Active */
+    /* Selected color for rows: uses Clickables-Active */
     .wm_template .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-selected, 
     .wm_template .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-selected.dojoxGrid-row-over, 
     .wm_template .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
@@ -245,11 +245,11 @@
     .wm_template .EmphasizedContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
     .wm_template .EmphasizedContent .wmlist-item.wmlist-item-selected,
     .wm_template .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
-	/* EmphasizedContent-HeadersActive-Background */
-	background-color: #333333 !important; /* EmphasizedContent-HeadersActive-Background_Color */
+	/* EmphasizedContent-ClickablesActive-Background */
+	background-color: #333333 !important; /* EmphasizedContent-ClickablesActive-Background_Color */
 
-	/* EmphasizedContent-HeadersActive-Font */
-	color: #FFFFFF; /* EmphasizedContent-HeadersActive-Font_Color */
+	/* EmphasizedContent-ClickablesActive-Font */
+	color: #FFFFFF; /* EmphasizedContent-ClickablesActive-Font_Color */
     }
 
     /* Custom mouse-over color for rows */
@@ -259,11 +259,11 @@
     .wm_template .EmphasizedContent .dojoxGridRow.dojoxGridRowOver, 
     .wm_template .EmphasizedContent .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
     {
-	/* EmphasizedContent-HeadersHover-Background */
-	background-color: #333333 !important; /* EmphasizedContent-HeadersHover-Background_Color */
+	/* EmphasizedContent-ClickablesHover-Background */
+	background-color: #333333 !important; /* EmphasizedContent-ClickablesHover-Background_Color */
 
-	/* EmphasizedContent-HeadersHover-Font */
-	color: #FFFFFF; /* EmphasizedContent-HeadersHover-Font_Color */
+	/* EmphasizedContent-ClickablesHover-Font */
+	color: #FFFFFF; /* EmphasizedContent-ClickablesHover-Font_Color */
 
     }
 
@@ -282,35 +282,35 @@
     {
 	background: inherit; /* see Header.dojoxGrid-header below */
 
-	/* EmphasizedContent-HeadersActive-Font */
-	font-family: sans-serif; /* EmphasizedContent-HeadersActive-Font_Family */
-	/*    font-size: 12pt;  Headers-Default-Font_TextSize */
+	/* EmphasizedContent-ClickablesActive-Font */
+	font-family: sans-serif; /* EmphasizedContent-ClickablesActive-Font_Family */
+	/*    font-size: 12pt;  Clickables-Default-Font_TextSize */
 	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* EmphasizedContent-HeadersActive-Font_Weight */
+	font-weight: bold; /* EmphasizedContent-ClickablesActive-Font_Weight */
     }
 
     .wm_template .EmphasizedContent div.dojoxGridHeader .dojoxGridCell {
-	background-color: #333333; /* EmphasizedContent-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* EmphasizedContent-HeadersActive-Background_Image */
-	background-position: left top;  /* EmphasizedContent-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* EmphasizedContent-HeadersActive-Background_Image-Repeat */
+	background-color: #333333; /* EmphasizedContent-ClickablesActive-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesActive-Background_Image */
+	background-position: left top;  /* EmphasizedContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesActive-Background_Image-Repeat */
 
-	/* EmphasizedContent-HeadersActive-Font */
-	font-family: sans-serif; /* EmphasizedContent-HeadersActive-Font_Family */
-	/*font-size: 12pt;  Headers-Default-Font_TextSize */
-	color: #FFFFFF; /* EmphasizedContent-HeadersActive-Font_Color */
-	font-weight: bold; /* EmphasizedContent-HeadersActive-Font_Weight */
+	/* EmphasizedContent-ClickablesActive-Font */
+	font-family: sans-serif; /* EmphasizedContent-ClickablesActive-Font_Family */
+	/*font-size: 12pt;  Clickables-Default-Font_TextSize */
+	color: #FFFFFF; /* EmphasizedContent-ClickablesActive-Font_Color */
+	font-weight: bold; /* EmphasizedContent-ClickablesActive-Font_Weight */
     }
 
     /* Header-Row-Background */
     .wm_template .EmphasizedContent .dojoxGrid-header, 
     .wm_template .EmphasizedContent .dojoxGridHeader,
     .wm_template .EmphasizedContent .wmlist-header {
-	color: #FFFFFF;	/* EmphasizedContent-HeadersActive-Font_Color */
-	background-color: #444444; /* EmphasizedContent-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* EmphasizedContent-HeadersActive-Background-Image */
-	background-position: left top;     /* EmphasizedContent-HeadersActive-Image-Position */
-	background-repeat: repeat-x;    /* EmphasizedContent-HeadersActive-Image-Repeat */
+	color: #FFFFFF;	/* EmphasizedContent-ClickablesActive-Font_Color */
+	background-color: #444444; /* EmphasizedContent-ClickablesActive-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesActive-Background-Image */
+	background-position: left top;     /* EmphasizedContent-ClickablesActive-Image-Position */
+	background-repeat: repeat-x;    /* EmphasizedContent-ClickablesActive-Image-Repeat */
 
     }
 
@@ -318,163 +318,81 @@
 
 
 
-@media screen { /* TOCContent-Level */ 
-    /* Selected color for rows: uses Headers-Active */
-    .wm_template .TOCContent div.dojoxGrid-row.dojoxGrid-row-selected, 
-    .wm_template .TOCContent div.dojoxGrid-row.dojoxGrid-row-selected.dojoxGrid-row-over, 
-    .wm_template .TOCContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
-    .wm_template .TOCContent div.dojoxGridRow.dojoxGridRowSelected, 
-    .wm_template .TOCContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
-    .wm_template .TOCContent .wmlist-item.wmlist-item-selected,
-    .wm_template .TOCContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
-	/* TOCContent-HeadersActive-Background */
-	background-color: #333333 !important; /* TOCContent-HeadersActive-Background_Color */
+@media screen { /* HeaderContent-Level */ 
+    /* Selected color for rows: uses Clickables-Active */
+    .wm_template .HeaderContent div.dojoxGrid-row.dojoxGrid-row-selected, 
+    .wm_template .HeaderContent div.dojoxGrid-row.dojoxGrid-row-selected.dojoxGrid-row-over, 
+    .wm_template .HeaderContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
+    .wm_template .HeaderContent div.dojoxGridRow.dojoxGridRowSelected, 
+    .wm_template .HeaderContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_template .HeaderContent .wmlist-item.wmlist-item-selected,
+    .wm_template .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
+	/* HeaderContent-ClickablesActive-Background */
+	background-color: #333333 !important; /* HeaderContent-ClickablesActive-Background_Color */
 
-	/* TOCContent-HeadersActive-Font */
-	color: #FFFFFF; /* TOCContent-HeadersActive-Font_Color */
+	/* HeaderContent-ClickablesActive-Font */
+	color: #FFFFFF; /* HeaderContent-ClickablesActive-Font_Color */
     }
 
     /* Custom mouse-over color for rows */
-    .wm_template .TOCContent .wmlist-item.wmlist-item-over,
-    .wm_template .TOCContent div.dojoxGrid-row.dojoxGrid-row-over, 
-    .wm_template .TOCContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_template .TOCContent .dojoxGridRow.dojoxGridRowOver, 
-    .wm_template .TOCContent .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_template .HeaderContent .wmlist-item.wmlist-item-over,
+    .wm_template .HeaderContent div.dojoxGrid-row.dojoxGrid-row-over, 
+    .wm_template .HeaderContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
+    .wm_template .HeaderContent .dojoxGridRow.dojoxGridRowOver, 
+    .wm_template .HeaderContent .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
     {
-	/* TOCContent-HeadersHover-Background */
-	background-color: #333333 !important; /* TOCContent-HeadersHover-Background_Color */
+	/* HeaderContent-ClickablesHover-Background */
+	background-color: #333333 !important; /* HeaderContent-ClickablesHover-Background_Color */
 
-	/* TOCContent-HeadersHover-Font */
-	color: #FFFFFF; /* TOCContent-HeadersHover-Font_Color */
+	/* HeaderContent-ClickablesHover-Font */
+	color: #FFFFFF; /* HeaderContent-ClickablesHover-Font_Color */
 
     }
 
-    .wm_template .TOCContent div.dojoxGridContent .dojoxGridCell {
+    .wm_template .HeaderContent div.dojoxGridContent .dojoxGridCell {
 	background: transparent;
     }
 
-    .wm_template .TOCContent div.dojoxGridContent .dojoxGridCellFocus,
-    .wm_template .TOCContent div.dojoxGridContent .dojoxGrid-cell-focus {
+    .wm_template .HeaderContent div.dojoxGridContent .dojoxGridCellFocus,
+    .wm_template .HeaderContent div.dojoxGridContent .dojoxGrid-cell-focus {
 	border-width: 1px dashed transparent !important;
     }
 
     /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
-    .wm_template .TOCContent div.dojoxGrid-header .dojoxGrid-cell,
-    .wm_template .TOCContent div.dojoxGridHeader .dojoxGridCell
+    .wm_template .HeaderContent div.dojoxGrid-header .dojoxGrid-cell,
+    .wm_template .HeaderContent div.dojoxGridHeader .dojoxGridCell
     {
 	background: inherit; /* see Header.dojoxGrid-header below */
 
-	/* TOCContent-HeadersActive-Font */
-	font-family: sans-serif; /* TOCContent-HeadersActive-Font_Family */
-	/*    font-size: 12pt;  Headers-Default-Font_TextSize */
+	/* HeaderContent-ClickablesActive-Font */
+	font-family: sans-serif; /* HeaderContent-ClickablesActive-Font_Family */
+	/*    font-size: 12pt;  Clickables-Default-Font_TextSize */
 	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* TOCContent-HeadersActive-Font_Weight */
+	font-weight: bold; /* HeaderContent-ClickablesActive-Font_Weight */
     }
 
-    .wm_template .TOCContent div.dojoxGridHeader .dojoxGridCell {
-	background-color: #333333; /* TOCContent-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* TOCContent-HeadersActive-Background_Image */
-	background-position: left top;  /* TOCContent-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* TOCContent-HeadersActive-Background_Image-Repeat */
+    .wm_template .HeaderContent div.dojoxGridHeader .dojoxGridCell {
+	background-color: #333333; /* HeaderContent-ClickablesActive-Background_Color */
+	background-image: url(images/threeD.png); /* HeaderContent-ClickablesActive-Background_Image */
+	background-position: left top;  /* HeaderContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
 
-	/* TOCContent-HeadersActive-Font */
-	font-family: sans-serif; /* TOCContent-HeadersActive-Font_Family */
-	/*font-size: 12pt;  Headers-Default-Font_TextSize */
-	color: #FFFFFF; /* TOCContent-HeadersActive-Font_Color */
-	font-weight: bold; /* TOCContent-HeadersActive-Font_Weight */
+	/* HeaderContent-ClickablesActive-Font */
+	font-family: sans-serif; /* HeaderContent-ClickablesActive-Font_Family */
+	/*font-size: 12pt;  Clickables-Default-Font_TextSize */
+	color: #FFFFFF; /* HeaderContent-ClickablesActive-Font_Color */
+	font-weight: bold; /* HeaderContent-ClickablesActive-Font_Weight */
     }
 
     /* Header-Row-Background */
-    .wm_template .TOCContent .dojoxGrid-header, 
-    .wm_template .TOCContent .dojoxGridHeader,
-    .wm_template .TOCContent .wmlist-header {
-	color: #FFFFFF;	/* TOCContent-HeadersActive-Font_Color */
-	background-color: #444444; /* TOCContent-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* TOCContent-HeadersActive-Background-Image */
-	background-position: left top;     /* TOCContent-HeadersActive-Image-Position */
-	background-repeat: repeat-x;    /* TOCContent-HeadersActive-Image-Repeat */
-
-    }
-
-}
-
-
-
-@media screen { /* ToolbarContent-Level */ 
-    /* Selected color for rows: uses Headers-Active */
-    .wm_template .ToolbarContent div.dojoxGrid-row.dojoxGrid-row-selected, 
-    .wm_template .ToolbarContent div.dojoxGrid-row.dojoxGrid-row-selected.dojoxGrid-row-over, 
-    .wm_template .ToolbarContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
-    .wm_template .ToolbarContent div.dojoxGridRow.dojoxGridRowSelected, 
-    .wm_template .ToolbarContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
-    .wm_template .ToolbarContent .wmlist-item.wmlist-item-selected,
-    .wm_template .ToolbarContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
-	/* ToolbarContent-HeadersActive-Background */
-	background-color: #333333 !important; /* ToolbarContent-HeadersActive-Background_Color */
-
-	/* ToolbarContent-HeadersActive-Font */
-	color: #FFFFFF; /* ToolbarContent-HeadersActive-Font_Color */
-    }
-
-    /* Custom mouse-over color for rows */
-    .wm_template .ToolbarContent .wmlist-item.wmlist-item-over,
-    .wm_template .ToolbarContent div.dojoxGrid-row.dojoxGrid-row-over, 
-    .wm_template .ToolbarContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_template .ToolbarContent .dojoxGridRow.dojoxGridRowOver, 
-    .wm_template .ToolbarContent .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
-    {
-	/* ToolbarContent-HeadersHover-Background */
-	background-color: #333333 !important; /* ToolbarContent-HeadersHover-Background_Color */
-
-	/* ToolbarContent-HeadersHover-Font */
-	color: #FFFFFF; /* ToolbarContent-HeadersHover-Font_Color */
-
-    }
-
-    .wm_template .ToolbarContent div.dojoxGridContent .dojoxGridCell {
-	background: transparent;
-    }
-
-    .wm_template .ToolbarContent div.dojoxGridContent .dojoxGridCellFocus,
-    .wm_template .ToolbarContent div.dojoxGridContent .dojoxGrid-cell-focus {
-	border-width: 1px dashed transparent !important;
-    }
-
-    /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
-    .wm_template .ToolbarContent div.dojoxGrid-header .dojoxGrid-cell,
-    .wm_template .ToolbarContent div.dojoxGridHeader .dojoxGridCell
-    {
-	background: inherit; /* see Header.dojoxGrid-header below */
-
-	/* ToolbarContent-HeadersActive-Font */
-	font-family: sans-serif; /* ToolbarContent-HeadersActive-Font_Family */
-	/*    font-size: 12pt;  Headers-Default-Font_TextSize */
-	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* ToolbarContent-HeadersActive-Font_Weight */
-    }
-
-    .wm_template .ToolbarContent div.dojoxGridHeader .dojoxGridCell {
-	background-color: #333333; /* ToolbarContent-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* ToolbarContent-HeadersActive-Background_Image */
-	background-position: left top;  /* ToolbarContent-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* ToolbarContent-HeadersActive-Background_Image-Repeat */
-
-	/* ToolbarContent-HeadersActive-Font */
-	font-family: sans-serif; /* ToolbarContent-HeadersActive-Font_Family */
-	/*font-size: 12pt;  Headers-Default-Font_TextSize */
-	color: #FFFFFF; /* ToolbarContent-HeadersActive-Font_Color */
-	font-weight: bold; /* ToolbarContent-HeadersActive-Font_Weight */
-    }
-
-    /* Header-Row-Background */
-    .wm_template .ToolbarContent .dojoxGrid-header, 
-    .wm_template .ToolbarContent .dojoxGridHeader,
-    .wm_template .ToolbarContent .wmlist-header {
-	color: #FFFFFF;	/* ToolbarContent-HeadersActive-Font_Color */
-	background-color: #444444; /* ToolbarContent-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* ToolbarContent-HeadersActive-Background-Image */
-	background-position: left top;     /* ToolbarContent-HeadersActive-Image-Position */
-	background-repeat: repeat-x;    /* ToolbarContent-HeadersActive-Image-Repeat */
+    .wm_template .HeaderContent .dojoxGrid-header, 
+    .wm_template .HeaderContent .dojoxGridHeader,
+    .wm_template .HeaderContent .wmlist-header {
+	color: #FFFFFF;	/* HeaderContent-ClickablesActive-Font_Color */
+	background-color: #444444; /* HeaderContent-ClickablesActive-Background_Color */
+	background-image: url(images/threeD.png); /* HeaderContent-ClickablesActive-Background-Image */
+	background-position: left top;     /* HeaderContent-ClickablesActive-Image-Position */
+	background-repeat: repeat-x;    /* HeaderContent-ClickablesActive-Image-Repeat */
 
     }
 

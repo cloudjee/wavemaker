@@ -516,6 +516,7 @@ dojo.declare("wm.LargeTextArea", wm.Text, {
 
 
 dojo.declare("wm.ColorPicker", wm.Text, {
+    className: "wmeditor wmcolorpickereditor",
     _editorBackgroundColor: true,
     colorPickerDialog: null,
     cancelValue: null,
@@ -524,6 +525,19 @@ dojo.declare("wm.ColorPicker", wm.Text, {
     showMessages: false, // seems to mess up our color picker dialog when both are showing
     init: function() {
         this.inherited(arguments);
+        this.subscribe("wm.AbstractEditor-focused", this, function(inEditor) {
+            if (this != inEditor) {
+                if (this.colorPickerDialog)
+                    this.colorPickerDialog.dismiss();
+            }
+        });
+    },
+    postInit: function() {
+        this.inherited(arguments);
+        var v = this.getDataValue() || "#FFFFFF";
+        this.setNodeColors(v);
+    },
+    createColorPicker: function() {
         this.colorPickerDialog = new wm.ColorPickerDialog({owner: this});
         this.colorPickerDialog.connect(this.colorPickerDialog, "onChange", this, function(inValue) {
 	    if (this.colorPickerDialog.showing)
@@ -533,25 +547,17 @@ dojo.declare("wm.ColorPicker", wm.Text, {
             var val = this.getDataValue();
             if (val != this.cancelValue) {
                 this.setDataValue(this.cancelValue);
-                this.setNodeColors(this.cancelValue);
                 this.changed();
             }
             this.colorPickerDialog.dismiss();
         });
-        this.subscribe("wm.AbstractEditor-focused", this, function(inEditor) {
-            if (this != inEditor)
-                this.colorPickerDialog.dismiss();
-        });
-    },
-    postInit: function() {
-        this.inherited(arguments);
-        var v = this.getDataValue() || "#FFFFFF";
-        this.setNodeColors(v);
     },
     onfocus: function() {
-        if (!this.colorPickerDialog.showing) {
+        if (!this.colorPickerDialog || !this.colorPickerDialog.showing) {
             var v = this.getDataValue() || "#FFFFFF";
             this.cancelValue = this.getDataValue();
+            if (!this.colorPickerDialog)
+                this.createColorPicker();
             this.colorPickerDialog.setValue(v);
             this.colorPickerDialog.setShowing(true);
         }
@@ -576,15 +582,16 @@ dojo.declare("wm.ColorPicker", wm.Text, {
 	return this.inherited(arguments) || "#ffffff";
     },
     onblur: function() {
-        if (this.colorPickerDialog && this.getDataValue() && (this._empty || this.colorPickerDialog.getValue().toLowerCase() != this.getDataValue().toLowerCase())) {
+        if (this.colorPickerDialog && this.getDataValue() && (this._empty || this.colorPickerDialog.getValue().toLowerCase() != this.getDataValue().toLowerCase() && this.colorPickerDialog._changed)) {
 	    this._empty = false;
             this.changed();
-            this.setNodeColors(this.getDataValue());
         }
     },
     changed: function() {
-        if (this.colorPickerDialog.showing)
+        if (this.colorPickerDialog) {
+            this.setNodeColors(this.getDataValue());
             return this.inherited(arguments);
+        }
     }
 
 });

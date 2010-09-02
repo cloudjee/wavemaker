@@ -57,15 +57,7 @@ dojo.declare("wm.EmphasizedContentPanel", wm.Panel, {
     classNames: "wmcontainer wmpanel EmphasizedContent"
 });
 
-dojo.declare("wm.TOCContentPanel", wm.Panel, {
-    classNames: "wmcontainer wmpanel TOCContent"
-});
-
-dojo.declare("wm.ToolbarContentPanel", wm.Panel, {
-    classNames: "wmcontainer wmpanel ToolbarContent"
-});
-
-dojo.declare("wm.HeaderPanel", wm.Panel, {
+dojo.declare("wm.HeaderContentPanel", wm.Panel, {
     classNames: "wmcontainer wmpanel HeaderContent"
 });
 

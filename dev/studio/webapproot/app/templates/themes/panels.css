@@ -9,9 +9,9 @@
    ************************************************************************************************/
 .wm_template button.wmtablayers-tab {
     /* wm.TabLayers-BorderStyle_Shadow */
-    -moz-box-shadow: 2px 0px 2px black; /* wm.TabLayers-BorderStyle_UnselectedShadow */
-    -webkit-box-shadow: 2px 0px 2px black;  /* wm.TabLayers-BorderStyle_UnselectedShadow */
-    box-shadow: 2px 0px 2px black;  /* wm.TabLayers-BorderStyle_UnselectedShadow */
+    -moz-box-shadow: 2px 0px 2px black; /* wm.TabLayers-BorderStyle_Shadow */
+    -webkit-box-shadow: 2px 0px 2px black;  /* wm.TabLayers-BorderStyle_Shadow */
+    box-shadow: 2px 0px 2px black;  /* wm.TabLayers-BorderStyle_Shadow */
 
     height: 12px; /* wm.TabLayers-Button_Height */
     font-size: 12px; /* wm.TabLayers-Button_TextSize */
@@ -20,17 +20,17 @@
 .wm_template .wmtablayers-tab:hover, .wm_template .wmtablayers-tab:focus {
     
     /* wm.TabLayers-HoverShadow */
-    -moz-box-shadow: 1px 0px 1px #444444;  /* wm.TabLayers-BorderStyle_HoverShadow */
-    -webkit-box-shadow: 1px 0px 1px #444444;   /* wm.TabLayers-BorderStyle_HoverShadow */
-    box-shadow: 1px 0px 1px #444444;   /* wm.TabLayers-HoverShadow */
+    -moz-box-shadow: 1px 0px 1px #444444;  /* wm.TabLayers-BorderStyle_Shadow */
+    -webkit-box-shadow: 1px 0px 1px #444444;   /* wm.TabLayers-Hover-BorderStyle_Shadow */
+    box-shadow: 1px 0px 1px #444444;   /* wm.TabLayers-Hover-BorderStyle-Shadow */
 }
 
 .wm_template .wmtablayers-tab.wmtablayers-selected,
 .wm_template .wmtablayers-tab.wmtablayers-selected:hover,
 .wm_template .wmtablayers-tab.wmtablayers-selected:focus {
-    -moz-box-shadow: 0px 0px 0px black;  /* wm.TabLayers-BorderStyle_SelectedShadow */
-    -webkit-box-shadow: 0px 0px 0px black;   /* wm.TabLayers-BorderStyle_SelectedShadow */
-    box-shadow: 0px 0px 0px black;   /* wm.TabLayers-BorderStyle_SelectedShadow */
+    -moz-box-shadow: 0px 0px 0px black;  /* wm.TabLayers-Active-BorderStyle_Shadow */
+    -webkit-box-shadow: 0px 0px 0px black;   /* wm.TabLayers-Active-BorderStyle_Shadow */
+    box-shadow: 0px 0px 0px black;   /* wm.TabLayers-Active-BorderStyle_Shadow */
 }
 
 /* Spacing between each tab */
@@ -38,13 +38,13 @@
 .wm_template .wmtablayers-tab.wmtablayers-tab {
     margin-left: 8px; /* wm.TabLayers-Margin-Width */
 
-	/* Document-HeadersDefault-BorderStyle_Radius */
-	-moz-border-radius-topleft: 8px; /* Document-HeadersDefault-BorderStyle_Radius */
-	-moz-border-radius-topright: 8px; /* Document-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-top-left-radius: 8px; /* Document-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-top-right-radius: 8px; /* Document-HeadersDefault-BorderStyle_Radius */
-	border-radius-topleft: 8px; /* Document-HeadersDefault-BorderStyle_Radius */
-	border-radius-topright: 8px; /* Document-HeadersDefault-BorderStyle_Radius */
+	/* Document-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius-topleft: 8px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius-topright: 8px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-top-left-radius: 8px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-top-right-radius: 8px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	border-radius-topleft: 8px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	border-radius-topright: 8px; /* Document-ClickablesDefault-BorderStyle_Radius */
 }
 
 
@@ -157,7 +157,7 @@ body.tundra .wm_template  div.wmheader,
 
 .wm_template  #wavemakerNode  .wmlayout,
 #studio_designer.wm_template .wmlayout, 
-#studio_themesPage_themeDesigner_demoPanel .wmlayout {
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .wmlayout {
     /* Document-Styles-Border */
     -moz-border-radius: 4px; /* Document-Styles-BorderStyle_Radius */
     -webkit-border-radius: 4px; /* Document-Styles-BorderStyle_Radius */
@@ -168,9 +168,13 @@ body.tundra .wm_template  div.wmheader,
 
 }
 
+/* .Document is what the dialog gets when its mapped to the document style*/
 .wm_template  #wavemakerNode  > .wmlayout,
 #studio_designer.wm_template > .wmlayout, 
-#studio_themesPage_themeDesigner_demoPanel > .wmlayout {
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .wmlayout,
+.wm_template  #wavemakerNode  > .Document, 
+#studio_designer.wm_template > .Document, 
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .Document {
     /* Document-Styles-Font */
     font-family: sans-serif; /* Document-Styles-Font_Family */
     font-size: 12pt; /* Document-Styles-Font_TextSize */
@@ -200,56 +204,56 @@ body.wm_template {
 
     .wm_template div.wmaccordion-header {
 
-	/* Document-HeadersActive-Font  + Headers-Default-Font */
-	font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
-	font-size: 12pt; /* Document-HeadersDefault-Font_TextSize */
-	color: #FFFFFF; /* Document-HeadersActive-Font_Color */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+	/* Document-ClickablesActive-Font  + Clickables-Default-Font */
+	font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
+	font-size: 12pt; /* Document-ClickablesDefault-Font_TextSize */
+	color: #FFFFFF; /* Document-ClickablesActive-Font_Color */
+	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
 
-	/* Document-HeadersActive-Background */
-	background-color: #444444; /* Document-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* Document-HeadersActive-Background_Image */
-	background-position: left top;  /* Document-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-HeadersActive-Background_Image-Repeat */
+	/* Document-ClickablesActive-Background */
+	background-color: #444444; /* Document-ClickablesActive-Background_Color */
+	background-image: url(images/threeD.png); /* Document-ClickablesActive-Background_Image */
+	background-position: left top;  /* Document-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
 
-	/* Document-HeadersDefault-BorderStyle_Radius */
-	-moz-border-radius: 4px; /* Document-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* Document-HeadersDefault-BorderStyle_Radius */
-	border-radius: 4px; /* Document-HeadersDefault-BorderStyle_Radius */
+	/* Document-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
 
 	padding-left: 10px;
     }
 
     .wm_template div.wmaccordion .wmaccordion-collapsed {
-	/* Document-HeadersDefault-Font */
-	color: #FFFFFF; /* Document-HeadersDefault-Font_Color */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
-	font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
-	font-size: 12pt; /* Document-HeadersDefault-Font_TextSize */
+	/* Document-ClickablesDefault-Font */
+	color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
+	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+	font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
+	font-size: 12pt; /* Document-ClickablesDefault-Font_TextSize */
 
 
-	/* Document-HeadersDefault-Background */
-	background-color: #444444; /* Document-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* Document-HeadersDefault-Background_Image */
-	background-position: left top;  /* Document-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-HeadersDefault-Background_Image-Repeat */
+	/* Document-ClickablesDefault-Background */
+	background-color: #444444; /* Document-ClickablesDefault-Background_Color */
+	background-image: url(images/threeD.png); /* Document-ClickablesDefault-Background_Image */
+	background-position: left top;  /* Document-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
 
-	/* Document-HeadersDefault-BorderStyle_Radius */
-	-moz-border-radius: 4px; /* Document-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* Document-HeadersDefault-BorderStyle_Radius */
-	border-radius: 4px; /* Document-HeadersDefault-BorderStyle_Radius */
+	/* Document-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
     }
 
     .wm_template div.wmaccordion-header:hover, 
     .wm_template div.wmaccordion wmaccordion-header.wmaccordion-collapsed:hover {
-	/* Document-HeadersHover-Font */
-	color: #FFFFFF; /* Document-HeadersHover-Font_Color */
+	/* Document-ClickablesHover-Font */
+	color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
 
-	/* Document-HeadersHover-Background */
-	background-color: #444444; /* Document-HeadersHover-Background_Color */
-	background-image: url(images/threeD.png); /* Document-HeadersHover-Background_Image */
-	background-position: left top;  /* Document-HeadersHover-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-HeadersHover-Background_Image-Repeat */
+	/* Document-ClickablesHover-Background */
+	background-color: #444444; /* Document-ClickablesHover-Background_Color */
+	background-image: url(images/threeD.png); /* Document-ClickablesHover-Background_Image */
+	background-position: left top;  /* Document-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesHover-Background_Image-Repeat */
     }
 
     /* END SECTION wm.AccorionLayers / wm.AccordionDecorator */
@@ -257,50 +261,50 @@ body.wm_template {
 
 
 .wm_template .wmfancypanel .wmFancyPanel-labelWidget,
-.wm_template #studio_themesPage_themeDesigner_demoPanel .wmfancypanel .wmFancyPanel-labelWidget  {
-    /* Document-HeadersDefault-Font */
-    font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
-    font-size: 12pt; /* Document-HeadersDefault-Font_TextSize */
-    color: #FFFFFF; /* Document-HeadersDefault-Font_Color */
-    font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .wmfancypanel .wmFancyPanel-labelWidget  {
+    /* Document-ClickablesDefault-Font */
+    font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
+    font-size: 12pt; /* Document-ClickablesDefault-Font_TextSize */
+    color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
+    font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
 
-    /* Document-HeadersDefault-Background */
-    background-color: #444444; /* Document-HeadersDefault-Background_Color */
-    background-image: url(images/threeD.png); /* Document-HeadersDefault-Background_Image */
-    background-position: left top;  /* Document-HeadersDefault-Background_Image-Position */
-    background-repeat: repeat-x; /* Document-HeadersDefault-Background_Image-Repeat */
+    /* Document-ClickablesDefault-Background */
+    background-color: #444444; /* Document-ClickablesDefault-Background_Color */
+    background-image: url(images/threeD.png); /* Document-ClickablesDefault-Background_Image */
+    background-position: left top;  /* Document-ClickablesDefault-Background_Image-Position */
+    background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
 }
 
     /* Tab buttons */
     .wm_template button.wmtablayers-tab {
-	/* Document-HeadersDefault-Font */
-	font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
-	color: #FFFFFF; /* Document-HeadersDefault-Font_Color */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+	/* Document-ClickablesDefault-Font */
+	font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
+	color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
+	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
 
-	/* Document-HeadersDefault-Background */
-	background-color: #444444; /* Document-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* Document-HeadersDefault-Background_Image */
-	background-position: left top;  /* Document-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-HeadersDefault-Background_Image-Repeat */
+	/* Document-ClickablesDefault-Background */
+	background-color: #444444; /* Document-ClickablesDefault-Background_Color */
+	background-image: url(images/threeD.png); /* Document-ClickablesDefault-Background_Image */
+	background-position: left top;  /* Document-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
 
-	/* Document-HeadersDefault-Border */
+	/* Document-ClickablesDefault-Border */
 	border-width: 2px; /* editting this is problematic without also editting headerHeight */
 	border-bottom-color: transparent;
-	border-top-color: #444444; /* Borders-Header_Border_Color */
-	border-right-color:#444444; /* Borders-Header_Border_Color */
-	border-left-color:#444444; /* Borders-Header_Border_Color */
+	border-top-color: #444444; /* Borders-Clickable_Border_Color */
+	border-right-color:#444444; /* Borders-Clickable_Border_Color */
+	border-left-color:#444444; /* Borders-Clickable_Border_Color */
     }
 
     .wm_template .wmtablayers-tab:hover, .wm_template .wmtablayers-tab:focus {
-	/* Document-HeadersHover-Font */
-	color: #FFFFFF; /* Document-HeadersHover-Font_Color */
+	/* Document-ClickablesHover-Font */
+	color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
 
-	/* Document-HeadersHover-Background */
-	background-color: #444444; /* Document-HeadersHover-Background_Color */
-	background-image: url(images/threeD.png); /* Document-HeadersHover-Background_Image */
-	background-position: left top;  /* Document-HeadersHover-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-HeadersHover-Background_Image-Repeat */
+	/* Document-ClickablesHover-Background */
+	background-color: #444444; /* Document-ClickablesHover-Background_Color */
+	background-image: url(images/threeD.png); /* Document-ClickablesHover-Background_Image */
+	background-position: left top;  /* Document-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesHover-Background_Image-Repeat */
 
     }
 
@@ -309,14 +313,14 @@ body.wm_template {
     .wm_template .wmtablayers-tab.wmtablayers-selected,
     .wm_template .wmtablayers-tab.wmtablayers-selected:hover,
     .wm_template .wmtablayers-tab.wmtablayers-selected:focus {
-	/* Document-HeadersActive-Font */
-	color: #FFFFFF; /* Document-HeadersActive-Font_Color */
+	/* Document-ClickablesActive-Font */
+	color: #FFFFFF; /* Document-ClickablesActive-Font_Color */
 
-	/* Document-HeadersActive-Background */
-	background-color: #444444; /* Document-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* Document-HeadersActive-Background_Image */
-	background-position: left top;  /* Document-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-HeadersActive-Background_Image-Repeat */
+	/* Document-ClickablesActive-Background */
+	background-color: #444444; /* Document-ClickablesActive-Background_Color */
+	background-image: url(images/threeD.png); /* Document-ClickablesActive-Background_Image */
+	background-position: left top;  /* Document-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
     }
 
 
@@ -371,7 +375,8 @@ body.wm_template {
     background-repeat: repeat-x; /* MainContent-Styles-Background_Image-Repeat */
 }
 
-.wm_template #studio_themesPage_themeDesigner_demoPanel .MainContent .wmlabel {
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .MainContent,
+.wm_template #studio_themesPage_themeDesigner_demoPanel .MainContent {
     /* MainContent-Styles-Font */
     font-family: sans-serif; /* MainContent-Styles-Font_Family */
     font-size: 12pt; /* MainContent-Styles-Font_TextSize */
@@ -380,56 +385,56 @@ body.wm_template {
 }
 
     .wm_template .MainContent div.wmaccordion-header {
-	/* MainContent-HeadersActive-Font  + Headers-Default-Font */
-	font-family: sans-serif; /* MainContent-HeadersDefault-Font_Family */
-	font-size: 12pt; /* MainContent-HeadersDefault-Font_TextSize */
-	color: #FFFFFF; /* MainContent-HeadersActive-Font_Color */
-	font-weight: bold; /* MainContent-HeadersDefault-Font_Weight */
+	/* MainContent-ClickablesActive-Font  + Clickables-Default-Font */
+	font-family: sans-serif; /* MainContent-ClickablesDefault-Font_Family */
+	font-size: 12pt; /* MainContent-ClickablesDefault-Font_TextSize */
+	color: #FFFFFF; /* MainContent-ClickablesActive-Font_Color */
+	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
 
-	/* MainContent-HeadersActive-Background */
-	background-color: #444444; /* MainContent-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-HeadersActive-Background_Image */
-	background-position: left top;  /* MainContent-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* MainContent-HeadersActive-Background_Image-Repeat */
+	/* MainContent-ClickablesActive-Background */
+	background-color: #444444; /* MainContent-ClickablesActive-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-ClickablesActive-Background_Image */
+	background-position: left top;  /* MainContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
 
-	/* MainContent-HeadersDefault-BorderStyle_Radius */
-	-moz-border-radius: 4px; /* MainContent-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* MainContent-HeadersDefault-BorderStyle_Radius */
-	border-radius: 4px; /* MainContent-HeadersDefault-BorderStyle_Radius */
+	/* MainContent-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
 
 	padding-left: 10px;
     }
 
     .wm_template .MainContent div.wmaccordion .wmaccordion-collapsed {
-	/* MainContent-HeadersDefault-Font */
-	color: #FFFFFF; /* MainContent-HeadersDefault-Font_Color */
-	font-weight: bold; /* MainContent-HeadersDefault-Font_Weight */
-	font-family: sans-serif; /* MainContent-HeadersDefault-Font_Family */
-	font-size: 12pt; /* MainContent-HeadersDefault-Font_TextSize */
+	/* MainContent-ClickablesDefault-Font */
+	color: #FFFFFF; /* MainContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
+	font-family: sans-serif; /* MainContent-ClickablesDefault-Font_Family */
+	font-size: 12pt; /* MainContent-ClickablesDefault-Font_TextSize */
 
 
-	/* MainContent-HeadersDefault-Background */
-	background-color: #444444; /* MainContent-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-HeadersDefault-Background_Image */
-	background-position: left top;  /* MainContent-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* MainContent-HeadersDefault-Background_Image-Repeat */
+	/* MainContent-ClickablesDefault-Background */
+	background-color: #444444; /* MainContent-ClickablesDefault-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-position: left top;  /* MainContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
 
-	/* MainContent-HeadersDefault-BorderStyle_Radius */
-	-moz-border-radius: 4px; /* MainContent-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* MainContent-HeadersDefault-BorderStyle_Radius */
-	border-radius: 4px; /* MainContent-HeadersDefault-BorderStyle_Radius */
+	/* MainContent-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
     }
 
     .wm_template .MainContent div.wmaccordion-header:hover, 
     .wm_template .MainContent div.wmaccordion wmaccordion-header.wmaccordion-collapsed:hover {
-	/* MainContent-HeadersHover-Font */
-	color: #FFFFFF; /* MainContent-HeadersHover-Font_Color */
+	/* MainContent-ClickablesHover-Font */
+	color: #FFFFFF; /* MainContent-ClickablesHover-Font_Color */
 
-	/* MainContent-HeadersHover-Background */
-	background-color: #444444; /* MainContent-HeadersHover-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-HeadersHover-Background_Image */
-	background-position: left top;  /* MainContent-HeadersHover-Background_Image-Position */
-	background-repeat: repeat-x; /* MainContent-HeadersHover-Background_Image-Repeat */
+	/* MainContent-ClickablesHover-Background */
+	background-color: #444444; /* MainContent-ClickablesHover-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-ClickablesHover-Background_Image */
+	background-position: left top;  /* MainContent-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesHover-Background_Image-Repeat */
     }
 
     /* END SECTION wm.AccorionLayers / wm.AccordionDecorator */
@@ -437,44 +442,44 @@ body.wm_template {
 
 
 
-.wm_template .MainContent .wmFancyPanel-labelWidget {
-    /* MainContent-HeadersDefault-Font */
-    font-family: sans-serif; /* MainContent-HeadersDefault-Font_Family */
-    font-size: 12pt; /* MainContent-HeadersDefault-Font_TextSize */
-    color: #FFFFFF; /* MainContent-HeadersDefault-Font_Color */
-    font-weight: bold; /* MainContent-HeadersDefault-Font_Weight */
+.wm_template .MainContent .wmfancypanel .wmFancyPanel-labelWidget {
+    /* MainContent-ClickablesDefault-Font */
+    font-family: sans-serif; /* MainContent-ClickablesDefault-Font_Family */
+    font-size: 12pt; /* MainContent-ClickablesDefault-Font_TextSize */
+    color: #FFFFFF; /* MainContent-ClickablesDefault-Font_Color */
+    font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
 
-    /* MainContent-HeadersDefault-Background */
-    background-color: #444444; /* MainContent-HeadersDefault-Background_Color */
-    background-image: url(images/threeD.png); /* MainContent-HeadersDefault-Background_Image */
-    background-position: left top;  /* MainContent-HeadersDefault-Background_Image-Position */
-    background-repeat: repeat-x; /* MainContent-HeadersDefault-Background_Image-Repeat */
+    /* MainContent-ClickablesDefault-Background */
+    background-color: #444444; /* MainContent-ClickablesDefault-Background_Color */
+    background-image: url(images/threeD.png); /* MainContent-ClickablesDefault-Background_Image */
+    background-position: left top;  /* MainContent-ClickablesDefault-Background_Image-Position */
+    background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
 }
 
     /* BEGIN SECTION wm.TabLayers / wm.TabDecorator */
     /* Tab buttons */
     .wm_template .MainContent button.wmtablayers-tab {
-	/* MainContent-HeadersDefault-Font */
-	font-family: sans-serif; /* MainContent-HeadersDefault-Font_Family */
-	color: #FFFFFF; /* MainContent-HeadersDefault-Font_Color */
-	font-weight: bold; /* MainContent-HeadersDefault-Font_Weight */
+	/* MainContent-ClickablesDefault-Font */
+	font-family: sans-serif; /* MainContent-ClickablesDefault-Font_Family */
+	color: #FFFFFF; /* MainContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
 
-	/* MainContent-HeadersDefault-Background */
-	background-color: #444444; /* MainContent-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-HeadersDefault-Background_Image */
-	background-position: left top;  /* MainContent-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* MainContent-HeadersDefault-Background_Image-Repeat */
+	/* MainContent-ClickablesDefault-Background */
+	background-color: #444444; /* MainContent-ClickablesDefault-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-position: left top;  /* MainContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
     }
 
     .wm_template .MainContent .wmtablayers-tab:hover, .wm_template .wmtablayers-tab:focus {
-	/* MainContent-HeadersHover-Font */
-	color: #FFFFFF; /* MainContent-HeadersHover-Font_Color */
+	/* MainContent-ClickablesHover-Font */
+	color: #FFFFFF; /* MainContent-ClickablesHover-Font_Color */
 
-	/* MainContent-HeadersHover-Background */
-	background-color: #444444; /* MainContent-HeadersHover-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-HeadersHover-Background_Image */
-	background-position: left top;  /* MainContent-HeadersHover-Background_Image-Position */
-	background-repeat: repeat-x; /* MainContent-HeadersHover-Background_Image-Repeat */
+	/* MainContent-ClickablesHover-Background */
+	background-color: #444444; /* MainContent-ClickablesHover-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-ClickablesHover-Background_Image */
+	background-position: left top;  /* MainContent-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesHover-Background_Image-Repeat */
 
     }
 
@@ -483,14 +488,14 @@ body.wm_template {
     .wm_template .MainContent .wmtablayers-tab.wmtablayers-selected,
     .wm_template .MainContent .wmtablayers-tab.wmtablayers-selected:hover,
     .wm_template .MainContent .wmtablayers-tab.wmtablayers-selected:focus {
-	/* MainContent-HeadersActive-Font */
-	color: #FFFFFF; /* MainContent-HeadersActive-Font_Color */
+	/* MainContent-ClickablesActive-Font */
+	color: #FFFFFF; /* MainContent-ClickablesActive-Font_Color */
 
-	/* MainContent-HeadersActive-Background */
-	background-color: #444444; /* MainContent-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-HeadersActive-Background_Image */
-	background-position: left top;  /* MainContent-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* MainContent-HeadersActive-Background_Image-Repeat */
+	/* MainContent-ClickablesActive-Background */
+	background-color: #444444; /* MainContent-ClickablesActive-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-ClickablesActive-Background_Image */
+	background-position: left top;  /* MainContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
     }
 
 
@@ -541,7 +546,8 @@ body.wm_template {
     background-repeat: repeat-x; /* EmphasizedContent-Styles-Background_Image-Repeat */
 }
 
-.wm_template #studio_themesPage_themeDesigner_demoPanel .EmphasizedContent .wmlabel {
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .EmphasizedContent,
+.wm_template #studio_themesPage_themeDesigner_demoPanel .EmphasizedContent {
     /* EmphasizedContent-Styles-Font */
     font-family: sans-serif; /* EmphasizedContent-Styles-Font_Family */
     font-size: 12pt; /* EmphasizedContent-Styles-Font_TextSize */
@@ -550,56 +556,56 @@ body.wm_template {
 }
 
     .wm_template .EmphasizedContent div.wmaccordion-header {
-	/* EmphasizedContent-HeadersActive-Font  + Headers-Default-Font */
-	font-family: sans-serif; /* EmphasizedContent-HeadersDefault-Font_Family */
-	font-size: 12pt; /* EmphasizedContent-HeadersDefault-Font_TextSize */
-	color: #FFFFFF; /* EmphasizedContent-HeadersActive-Font_Color */
-	font-weight: bold; /* EmphasizedContent-HeadersDefault-Font_Weight */
+	/* EmphasizedContent-ClickablesActive-Font  + Clickables-Default-Font */
+	font-family: sans-serif; /* EmphasizedContent-ClickablesDefault-Font_Family */
+	font-size: 12pt; /* EmphasizedContent-ClickablesDefault-Font_TextSize */
+	color: #FFFFFF; /* EmphasizedContent-ClickablesActive-Font_Color */
+	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
 
-	/* EmphasizedContent-HeadersActive-Background */
-	background-color: #444444; /* EmphasizedContent-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* EmphasizedContent-HeadersActive-Background_Image */
-	background-position: left top;  /* EmphasizedContent-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* EmphasizedContent-HeadersActive-Background_Image-Repeat */
+	/* EmphasizedContent-ClickablesActive-Background */
+	background-color: #444444; /* EmphasizedContent-ClickablesActive-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesActive-Background_Image */
+	background-position: left top;  /* EmphasizedContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesActive-Background_Image-Repeat */
 
-	/* EmphasizedContent-HeadersDefault-BorderStyle_Radius */
-	-moz-border-radius: 4px; /* EmphasizedContent-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* EmphasizedContent-HeadersDefault-BorderStyle_Radius */
-	border-radius: 4px; /* EmphasizedContent-HeadersDefault-BorderStyle_Radius */
+	/* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
 
 	padding-left: 10px;
     }
 
     .wm_template .EmphasizedContent div.wmaccordion .wmaccordion-collapsed {
-	/* EmphasizedContent-HeadersDefault-Font */
-	color: #FFFFFF; /* EmphasizedContent-HeadersDefault-Font_Color */
-	font-weight: bold; /* EmphasizedContent-HeadersDefault-Font_Weight */
-	font-family: sans-serif; /* EmphasizedContent-HeadersDefault-Font_Family */
-	font-size: 12pt; /* EmphasizedContent-HeadersDefault-Font_TextSize */
+	/* EmphasizedContent-ClickablesDefault-Font */
+	color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
+	font-family: sans-serif; /* EmphasizedContent-ClickablesDefault-Font_Family */
+	font-size: 12pt; /* EmphasizedContent-ClickablesDefault-Font_TextSize */
 
 
-	/* EmphasizedContent-HeadersDefault-Background */
-	background-color: #444444; /* EmphasizedContent-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* EmphasizedContent-HeadersDefault-Background_Image */
-	background-position: left top;  /* EmphasizedContent-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* EmphasizedContent-HeadersDefault-Background_Image-Repeat */
+	/* EmphasizedContent-ClickablesDefault-Background */
+	background-color: #444444; /* EmphasizedContent-ClickablesDefault-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
+	background-position: left top;  /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
 
-	/* EmphasizedContent-HeadersDefault-BorderStyle_Radius */
-	-moz-border-radius: 4px; /* EmphasizedContent-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* EmphasizedContent-HeadersDefault-BorderStyle_Radius */
-	border-radius: 4px; /* EmphasizedContent-HeadersDefault-BorderStyle_Radius */
+	/* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
     }
 
     .wm_template .EmphasizedContent div.wmaccordion-header:hover, 
     .wm_template .EmphasizedContent div.wmaccordion wmaccordion-header.wmaccordion-collapsed:hover {
-	/* EmphasizedContent-HeadersHover-Font */
-	color: #FFFFFF; /* EmphasizedContent-HeadersHover-Font_Color */
+	/* EmphasizedContent-ClickablesHover-Font */
+	color: #FFFFFF; /* EmphasizedContent-ClickablesHover-Font_Color */
 
-	/* EmphasizedContent-HeadersHover-Background */
-	background-color: #444444; /* EmphasizedContent-HeadersHover-Background_Color */
-	background-image: url(images/threeD.png); /* EmphasizedContent-HeadersHover-Background_Image */
-	background-position: left top;  /* EmphasizedContent-HeadersHover-Background_Image-Position */
-	background-repeat: repeat-x; /* EmphasizedContent-HeadersHover-Background_Image-Repeat */
+	/* EmphasizedContent-ClickablesHover-Background */
+	background-color: #444444; /* EmphasizedContent-ClickablesHover-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesHover-Background_Image */
+	background-position: left top;  /* EmphasizedContent-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesHover-Background_Image-Repeat */
     }
 
     /* END SECTION wm.AccorionLayers / wm.AccordionDecorator */
@@ -607,45 +613,45 @@ body.wm_template {
 
 
 
-.wm_template .EmphasizedContent .wmFancyPanel-labelWidget {
-    /* EmphasizedContent-HeadersDefault-Font */
-    font-family: sans-serif; /* EmphasizedContent-HeadersDefault-Font_Family */
-    font-size: 12pt; /* EmphasizedContent-HeadersDefault-Font_TextSize */
-    color: #FFFFFF; /* EmphasizedContent-HeadersDefault-Font_Color */
-    font-weight: bold; /* EmphasizedContent-HeadersDefault-Font_Weight */
+.wm_template .EmphasizedContent .wmfancypanel .wmFancyPanel-labelWidget {
+    /* EmphasizedContent-ClickablesDefault-Font */
+    font-family: sans-serif; /* EmphasizedContent-ClickablesDefault-Font_Family */
+    font-size: 12pt; /* EmphasizedContent-ClickablesDefault-Font_TextSize */
+    color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
+    font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
 
-    /* EmphasizedContent-HeadersDefault-Background */
-    background-color: #444444; /* EmphasizedContent-HeadersDefault-Background_Color */
-    background-image: url(images/threeD.png); /* EmphasizedContent-HeadersDefault-Background_Image */
-    background-position: left top;  /* EmphasizedContent-HeadersDefault-Background_Image-Position */
-    background-repeat: repeat-x; /* EmphasizedContent-HeadersDefault-Background_Image-Repeat */
+    /* EmphasizedContent-ClickablesDefault-Background */
+    background-color: #444444; /* EmphasizedContent-ClickablesDefault-Background_Color */
+    background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
+    background-position: left top;  /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
+    background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
 }
 
     /* BEGIN SECTION wm.TabLayers / wm.TabDecorator */
     /* Tab buttons */
     .wm_template .EmphasizedContent button.wmtablayers-tab {
-	/* EmphasizedContent-HeadersDefault-Font */
-	font-family: sans-serif; /* EmphasizedContent-HeadersDefault-Font_Family */
-	color: #FFFFFF; /* EmphasizedContent-HeadersDefault-Font_Color */
-	font-weight: bold; /* EmphasizedContent-HeadersDefault-Font_Weight */
+	/* EmphasizedContent-ClickablesDefault-Font */
+	font-family: sans-serif; /* EmphasizedContent-ClickablesDefault-Font_Family */
+	color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
 
-	/* EmphasizedContent-HeadersDefault-Background */
-	background-color: #444444; /* EmphasizedContent-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* EmphasizedContent-HeadersDefault-Background_Image */
-	background-position: left top;  /* EmphasizedContent-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* EmphasizedContent-HeadersDefault-Background_Image-Repeat */
+	/* EmphasizedContent-ClickablesDefault-Background */
+	background-color: #444444; /* EmphasizedContent-ClickablesDefault-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
+	background-position: left top;  /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
 
     }
 
     .wm_template .EmphasizedContent .wmtablayers-tab:hover, .wm_template .wmtablayers-tab:focus {
-	/* EmphasizedContent-HeadersHover-Font */
-	color: #FFFFFF; /* EmphasizedContent-HeadersHover-Font_Color */
+	/* EmphasizedContent-ClickablesHover-Font */
+	color: #FFFFFF; /* EmphasizedContent-ClickablesHover-Font_Color */
 
-	/* EmphasizedContent-HeadersHover-Background */
-	background-color: #444444; /* EmphasizedContent-HeadersHover-Background_Color */
-	background-image: url(images/threeD.png); /* EmphasizedContent-HeadersHover-Background_Image */
-	background-position: left top;  /* EmphasizedContent-HeadersHover-Background_Image-Position */
-	background-repeat: repeat-x; /* EmphasizedContent-HeadersHover-Background_Image-Repeat */
+	/* EmphasizedContent-ClickablesHover-Background */
+	background-color: #444444; /* EmphasizedContent-ClickablesHover-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesHover-Background_Image */
+	background-position: left top;  /* EmphasizedContent-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesHover-Background_Image-Repeat */
 
     }
 
@@ -654,14 +660,14 @@ body.wm_template {
     .wm_template .EmphasizedContent .wmtablayers-tab.wmtablayers-selected,
     .wm_template .EmphasizedContent .wmtablayers-tab.wmtablayers-selected:hover,
     .wm_template .EmphasizedContent .wmtablayers-tab.wmtablayers-selected:focus {
-	/* EmphasizedContent-HeadersActive-Font */
-	color: #FFFFFF; /* EmphasizedContent-HeadersActive-Font_Color */
+	/* EmphasizedContent-ClickablesActive-Font */
+	color: #FFFFFF; /* EmphasizedContent-ClickablesActive-Font_Color */
 
-	/* EmphasizedContent-HeadersActive-Background */
-	background-color: #444444; /* EmphasizedContent-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* EmphasizedContent-HeadersActive-Background_Image */
-	background-position: left top;  /* EmphasizedContent-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* EmphasizedContent-HeadersActive-Background_Image-Repeat */
+	/* EmphasizedContent-ClickablesActive-Background */
+	background-color: #444444; /* EmphasizedContent-ClickablesActive-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesActive-Background_Image */
+	background-position: left top;  /* EmphasizedContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesActive-Background_Image-Repeat */
     }
 
 
@@ -682,93 +688,94 @@ body.wm_template {
 }
 
 
-@media screen { /* TOCContent-Level */ 
+@media screen { /* HeaderContent-Level */ 
 
-.wm_template .TOCContent {
-    /* TOCContent-Styles-Border */
-    -moz-border-radius: 4px; /* TOCContent-Styles-BorderStyle_Radius */
-    -webkit-border-radius: 4px; /* TOCContent-Styles-BorderStyle_Radius */
-    border-radius: 4px; /* TOCContent-Styles-BorderStyle_Radius */
-    -moz-box-shadow: 4px 4px 4px black; /* TOCContent-Styles-BorderStyle_Shadow */
-    -webkit-box-shadow: 4px 4px 4px black; /* TOCContent-Styles-BorderStyle_Shadow */
-    box-shadow: 4px 4px 4px black; /* TOCContent-Styles-BorderStyle_Shadow */
+.wm_template .HeaderContent {
+    /* HeaderContent-Styles-Border */
+    -moz-border-radius: 4px; /* HeaderContent-Styles-BorderStyle_Radius */
+    -webkit-border-radius: 4px; /* HeaderContent-Styles-BorderStyle_Radius */
+    border-radius: 4px; /* HeaderContent-Styles-BorderStyle_Radius */
+    -moz-box-shadow: 4px 4px 4px black; /* HeaderContent-Styles-BorderStyle_Shadow */
+    -webkit-box-shadow: 4px 4px 4px black; /* HeaderContent-Styles-BorderStyle_Shadow */
+    box-shadow: 4px 4px 4px black; /* HeaderContent-Styles-BorderStyle_Shadow */
 }
 
-.wm_template  .TOCContent,
-#studio_designer.wm_template .TOCContent {
-    /* TOCContent-Styles-Font */
-    font-family: sans-serif; /* TOCContent-Styles-Font_Family */
-    font-size: 12pt; /* TOCContent-Styles-Font_TextSize */
-    color: #FFFFFF; /* TOCContent-Styles-Font_Color */
-    font-weight: bold; /* TOCContent-Styles-Font_Weight */
+.wm_template  .HeaderContent,
+#studio_designer.wm_template .HeaderContent {
+    /* HeaderContent-Styles-Font */
+    font-family: sans-serif; /* HeaderContent-Styles-Font_Family */
+    font-size: 12pt; /* HeaderContent-Styles-Font_TextSize */
+    color: #FFFFFF; /* HeaderContent-Styles-Font_Color */
+    font-weight: bold; /* HeaderContent-Styles-Font_Weight */
 
 
-    /* TOCContent-Styles-Background */
-    background-color: #444444; /* TOCContent-Styles-Background_Color */
-    background-image: url(images/threeD.png); /* TOCContent-Styles-Background_Image */
-    background-position: left top;  /* TOCContent-Styles-Background_Image-Position */
-    background-repeat: repeat-x; /* TOCContent-Styles-Background_Image-Repeat */
+    /* HeaderContent-Styles-Background */
+    background-color: #444444; /* HeaderContent-Styles-Background_Color */
+    background-image: url(images/threeD.png); /* HeaderContent-Styles-Background_Image */
+    background-position: left top;  /* HeaderContent-Styles-Background_Image-Position */
+    background-repeat: repeat-x; /* HeaderContent-Styles-Background_Image-Repeat */
 }
 
-.wm_template #studio_themesPage_themeDesigner_demoPanel .TOCContent .wmlabel {
-    /* TOCContent-Styles-Font */
-    font-family: sans-serif; /* TOCContent-Styles-Font_Family */
-    font-size: 12pt; /* TOCContent-Styles-Font_TextSize */
-    color: #FFFFFF; /* TOCContent-Styles-Font_Color */
-    font-weight: bold; /* TOCContent-Styles-Font_Weight */
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .HeaderContent,
+.wm_template #studio_themesPage_themeDesigner_demoPanel .HeaderContent {
+    /* HeaderContent-Styles-Font */
+    font-family: sans-serif; /* HeaderContent-Styles-Font_Family */
+    font-size: 12pt; /* HeaderContent-Styles-Font_TextSize */
+    color: #FFFFFF; /* HeaderContent-Styles-Font_Color */
+    font-weight: bold; /* HeaderContent-Styles-Font_Weight */
 }
 
-    .wm_template .TOCContent div.wmaccordion-header {
-	/* TOCContent-HeadersActive-Font  + Headers-Default-Font */
-	font-family: sans-serif; /* TOCContent-HeadersDefault-Font_Family */
-	font-size: 12pt; /* TOCContent-HeadersDefault-Font_TextSize */
-	color: #FFFFFF; /* TOCContent-HeadersActive-Font_Color */
-	font-weight: bold; /* TOCContent-HeadersDefault-Font_Weight */
+    .wm_template .HeaderContent div.wmaccordion-header {
+	/* HeaderContent-ClickablesActive-Font  + Clickables-Default-Font */
+	font-family: sans-serif; /* HeaderContent-ClickablesDefault-Font_Family */
+	font-size: 12pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
+	color: #FFFFFF; /* HeaderContent-ClickablesActive-Font_Color */
+	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
 
-	/* TOCContent-HeadersActive-Background */
-	background-color: #444444; /* TOCContent-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* TOCContent-HeadersActive-Background_Image */
-	background-position: left top;  /* TOCContent-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* TOCContent-HeadersActive-Background_Image-Repeat */
+	/* HeaderContent-ClickablesActive-Background */
+	background-color: #444444; /* HeaderContent-ClickablesActive-Background_Color */
+	background-image: url(images/threeD.png); /* HeaderContent-ClickablesActive-Background_Image */
+	background-position: left top;  /* HeaderContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
 
-	/* TOCContent-HeadersDefault-BorderStyle_Radius */
-	-moz-border-radius: 4px; /* TOCContent-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* TOCContent-HeadersDefault-BorderStyle_Radius */
-	border-radius: 4px; /* TOCContent-HeadersDefault-BorderStyle_Radius */
+	/* HeaderContent-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
 
 	padding-left: 10px;
     }
 
-    .wm_template .TOCContent div.wmaccordion .wmaccordion-collapsed {
-	/* TOCContent-HeadersDefault-Font */
-	color: #FFFFFF; /* TOCContent-HeadersDefault-Font_Color */
-	font-weight: bold; /* TOCContent-HeadersDefault-Font_Weight */
-	font-family: sans-serif; /* TOCContent-HeadersDefault-Font_Family */
-	font-size: 12pt; /* TOCContent-HeadersDefault-Font_TextSize */
+    .wm_template .HeaderContent div.wmaccordion .wmaccordion-collapsed {
+	/* HeaderContent-ClickablesDefault-Font */
+	color: #FFFFFF; /* HeaderContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
+	font-family: sans-serif; /* HeaderContent-ClickablesDefault-Font_Family */
+	font-size: 12pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
 
 
-	/* TOCContent-HeadersDefault-Background */
-	background-color: #444444; /* TOCContent-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* TOCContent-HeadersDefault-Background_Image */
-	background-position: left top;  /* TOCContent-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* TOCContent-HeadersDefault-Background_Image-Repeat */
+	/* HeaderContent-ClickablesDefault-Background */
+	background-color: #444444; /* HeaderContent-ClickablesDefault-Background_Color */
+	background-image: url(images/threeD.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-position: left top;  /* HeaderContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
 
-	/* TOCContent-HeadersDefault-BorderStyle_Radius */
-	-moz-border-radius: 4px; /* TOCContent-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* TOCContent-HeadersDefault-BorderStyle_Radius */
-	border-radius: 4px; /* TOCContent-HeadersDefault-BorderStyle_Radius */
+	/* HeaderContent-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
     }
 
-    .wm_template .TOCContent div.wmaccordion-header:hover, 
-    .wm_template .TOCContent div.wmaccordion wmaccordion-header.wmaccordion-collapsed:hover {
-	/* TOCContent-HeadersHover-Font */
-	color: #FFFFFF; /* TOCContent-HeadersHover-Font_Color */
+    .wm_template .HeaderContent div.wmaccordion-header:hover, 
+    .wm_template .HeaderContent div.wmaccordion wmaccordion-header.wmaccordion-collapsed:hover {
+	/* HeaderContent-ClickablesHover-Font */
+	color: #FFFFFF; /* HeaderContent-ClickablesHover-Font_Color */
 
-	/* TOCContent-HeadersHover-Background */
-	background-color: #444444; /* TOCContent-HeadersHover-Background_Color */
-	background-image: url(images/threeD.png); /* TOCContent-HeadersHover-Background_Image */
-	background-position: left top;  /* TOCContent-HeadersHover-Background_Image-Position */
-	background-repeat: repeat-x; /* TOCContent-HeadersHover-Background_Image-Repeat */
+	/* HeaderContent-ClickablesHover-Background */
+	background-color: #444444; /* HeaderContent-ClickablesHover-Background_Color */
+	background-image: url(images/threeD.png); /* HeaderContent-ClickablesHover-Background_Image */
+	background-position: left top;  /* HeaderContent-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesHover-Background_Image-Repeat */
     }
 
     /* END SECTION wm.AccorionLayers / wm.AccordionDecorator */
@@ -776,61 +783,61 @@ body.wm_template {
 
 
 
-.wm_template .TOCContent .wmFancyPanel-labelWidget {
-    /* TOCContent-HeadersDefault-Font */
-    font-family: sans-serif; /* TOCContent-HeadersDefault-Font_Family */
-    font-size: 12pt; /* TOCContent-HeadersDefault-Font_TextSize */
-    color: #FFFFFF; /* TOCContent-HeadersDefault-Font_Color */
-    font-weight: bold; /* TOCContent-HeadersDefault-Font_Weight */
+.wm_template .HeaderContent .wmfancypanel .wmFancyPanel-labelWidget {
+    /* HeaderContent-ClickablesDefault-Font */
+    font-family: sans-serif; /* HeaderContent-ClickablesDefault-Font_Family */
+    font-size: 12pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
+    color: #FFFFFF; /* HeaderContent-ClickablesDefault-Font_Color */
+    font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
 
-    /* TOCContent-HeadersDefault-Background */
-    background-color: #444444; /* TOCContent-HeadersDefault-Background_Color */
-    background-image: url(images/threeD.png); /* TOCContent-HeadersDefault-Background_Image */
-    background-position: left top;  /* TOCContent-HeadersDefault-Background_Image-Position */
-    background-repeat: repeat-x; /* TOCContent-HeadersDefault-Background_Image-Repeat */
+    /* HeaderContent-ClickablesDefault-Background */
+    background-color: #444444; /* HeaderContent-ClickablesDefault-Background_Color */
+    background-image: url(images/threeD.png); /* HeaderContent-ClickablesDefault-Background_Image */
+    background-position: left top;  /* HeaderContent-ClickablesDefault-Background_Image-Position */
+    background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
 }
 
     /* BEGIN SECTION wm.TabLayers / wm.TabDecorator */
     /* Tab buttons */
-    .wm_template .TOCContent button.wmtablayers-tab {
-	/* TOCContent-HeadersDefault-Font */
-	font-family: sans-serif; /* TOCContent-HeadersDefault-Font_Family */
-	color: #FFFFFF; /* TOCContent-HeadersDefault-Font_Color */
-	font-weight: bold; /* TOCContent-HeadersDefault-Font_Weight */
+    .wm_template .HeaderContent button.wmtablayers-tab {
+	/* HeaderContent-ClickablesDefault-Font */
+	font-family: sans-serif; /* HeaderContent-ClickablesDefault-Font_Family */
+	color: #FFFFFF; /* HeaderContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
 
-	/* TOCContent-HeadersDefault-Background */
-	background-color: #444444; /* TOCContent-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* TOCContent-HeadersDefault-Background_Image */
-	background-position: left top;  /* TOCContent-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* TOCContent-HeadersDefault-Background_Image-Repeat */
+	/* HeaderContent-ClickablesDefault-Background */
+	background-color: #444444; /* HeaderContent-ClickablesDefault-Background_Color */
+	background-image: url(images/threeD.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-position: left top;  /* HeaderContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
 
     }
 
-    .wm_template .TOCContent .wmtablayers-tab:hover, .wm_template .wmtablayers-tab:focus {
-	/* TOCContent-HeadersHover-Font */
-	color: #FFFFFF; /* TOCContent-HeadersHover-Font_Color */
+    .wm_template .HeaderContent .wmtablayers-tab:hover, .wm_template .wmtablayers-tab:focus {
+	/* HeaderContent-ClickablesHover-Font */
+	color: #FFFFFF; /* HeaderContent-ClickablesHover-Font_Color */
 
-	/* TOCContent-HeadersHover-Background */
-	background-color: #444444; /* TOCContent-HeadersHover-Background_Color */
-	background-image: url(images/threeD.png); /* TOCContent-HeadersHover-Background_Image */
-	background-position: left top;  /* TOCContent-HeadersHover-Background_Image-Position */
-	background-repeat: repeat-x; /* TOCContent-HeadersHover-Background_Image-Repeat */
+	/* HeaderContent-ClickablesHover-Background */
+	background-color: #444444; /* HeaderContent-ClickablesHover-Background_Color */
+	background-image: url(images/threeD.png); /* HeaderContent-ClickablesHover-Background_Image */
+	background-position: left top;  /* HeaderContent-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesHover-Background_Image-Repeat */
 
     }
 
 
     /* Selected tab */
-    .wm_template .TOCContent .wmtablayers-tab.wmtablayers-selected,
-    .wm_template .TOCContent .wmtablayers-tab.wmtablayers-selected:hover,
-    .wm_template .TOCContent .wmtablayers-tab.wmtablayers-selected:focus {
-	/* TOCContent-HeadersActive-Font */
-	color: #FFFFFF; /* TOCContent-HeadersActive-Font_Color */
+    .wm_template .HeaderContent .wmtablayers-tab.wmtablayers-selected,
+    .wm_template .HeaderContent .wmtablayers-tab.wmtablayers-selected:hover,
+    .wm_template .HeaderContent .wmtablayers-tab.wmtablayers-selected:focus {
+	/* HeaderContent-ClickablesActive-Font */
+	color: #FFFFFF; /* HeaderContent-ClickablesActive-Font_Color */
 
-	/* TOCContent-HeadersActive-Background */
-	background-color: #444444; /* TOCContent-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* TOCContent-HeadersActive-Background_Image */
-	background-position: left top;  /* TOCContent-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* TOCContent-HeadersActive-Background_Image-Repeat */
+	/* HeaderContent-ClickablesActive-Background */
+	background-color: #444444; /* HeaderContent-ClickablesActive-Background_Color */
+	background-image: url(images/threeD.png); /* HeaderContent-ClickablesActive-Background_Image */
+	background-position: left top;  /* HeaderContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
     }
 
 
@@ -842,8 +849,8 @@ body.wm_template {
     /* BEGIN SECTION wm.WizardLayers */
 
     /* TODO: Enable this property */
-    .wm_template .TOCContent .wmwizardlayers-tab:focus,
-    .wm_template .TOCContent .wmwizardlayers-tab:hover {
+    .wm_template .HeaderContent .wmwizardlayers-tab:focus,
+    .wm_template .HeaderContent .wmwizardlayers-tab:hover {
 	color: black; /* wm.WizardLayers-Active_Color */
     }
 
@@ -851,204 +858,11 @@ body.wm_template {
 }
 
 
-
-@media screen { /* ToolbarContent-Level */ 
-
-.wm_template .ToolbarContent {
-    /* ToolbarContent-Styles-Border */
-    -moz-border-radius: 4px; /* ToolbarContent-Styles-BorderStyle_Radius */
-    -webkit-border-radius: 4px; /* ToolbarContent-Styles-BorderStyle_Radius */
-    border-radius: 4px; /* ToolbarContent-Styles-BorderStyle_Radius */
-    -moz-box-shadow: 4px 4px 4px black; /* ToolbarContent-Styles-BorderStyle_Shadow */
-    -webkit-box-shadow: 4px 4px 4px black; /* ToolbarContent-Styles-BorderStyle_Shadow */
-    box-shadow: 4px 4px 4px black; /* ToolbarContent-Styles-BorderStyle_Shadow */
-}
-
-.wm_template  .ToolbarContent,
-#studio_designer.wm_template .ToolbarContent {
-    /* ToolbarContent-Styles-Font */
-    font-family: sans-serif; /* ToolbarContent-Styles-Font_Family */
-    font-size: 12pt; /* ToolbarContent-Styles-Font_TextSize */
-    color: #FFFFFF; /* ToolbarContent-Styles-Font_Color */
-    font-weight: bold; /* ToolbarContent-Styles-Font_Weight */
-
-
-    /* ToolbarContent-Styles-Background */
-    background-color: #444444; /* ToolbarContent-Styles-Background_Color */
-    background-image: url(images/threeD.png); /* ToolbarContent-Styles-Background_Image */
-    background-position: left top;  /* ToolbarContent-Styles-Background_Image-Position */
-    background-repeat: repeat-x; /* ToolbarContent-Styles-Background_Image-Repeat */
-}
-
-.wm_template #studio_themesPage_themeDesigner_demoPanel .ToolbarContent .wmlabel {
-    /* ToolbarContent-Styles-Font */
-    font-family: sans-serif; /* ToolbarContent-Styles-Font_Family */
-    font-size: 12pt; /* ToolbarContent-Styles-Font_TextSize */
-    color: #FFFFFF; /* ToolbarContent-Styles-Font_Color */
-    font-weight: bold; /* ToolbarContent-Styles-Font_Weight */
-}
-
-    .wm_template .ToolbarContent div.wmaccordion-header {
-	/* ToolbarContent-HeadersActive-Font  + Headers-Default-Font */
-	font-family: sans-serif; /* ToolbarContent-HeadersDefault-Font_Family */
-	font-size: 12pt; /* ToolbarContent-HeadersDefault-Font_TextSize */
-	color: #FFFFFF; /* ToolbarContent-HeadersActive-Font_Color */
-	font-weight: bold; /* ToolbarContent-HeadersDefault-Font_Weight */
-
-	/* ToolbarContent-HeadersActive-Background */
-	background-color: #444444; /* ToolbarContent-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* ToolbarContent-HeadersActive-Background_Image */
-	background-position: left top;  /* ToolbarContent-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* ToolbarContent-HeadersActive-Background_Image-Repeat */
-
-	/* ToolbarContent-HeadersDefault-BorderStyle_Radius */
-	-moz-border-radius: 4px; /* ToolbarContent-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* ToolbarContent-HeadersDefault-BorderStyle_Radius */
-	border-radius: 4px; /* ToolbarContent-HeadersDefault-BorderStyle_Radius */
-
-	padding-left: 10px;
-    }
-
-    .wm_template .ToolbarContent div.wmaccordion .wmaccordion-collapsed {
-	/* ToolbarContent-HeadersDefault-Font */
-	color: #FFFFFF; /* ToolbarContent-HeadersDefault-Font_Color */
-	font-weight: bold; /* ToolbarContent-HeadersDefault-Font_Weight */
-	font-family: sans-serif; /* ToolbarContent-HeadersDefault-Font_Family */
-	font-size: 12pt; /* ToolbarContent-HeadersDefault-Font_TextSize */
-
-
-	/* ToolbarContent-HeadersDefault-Background */
-	background-color: #444444; /* ToolbarContent-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* ToolbarContent-HeadersDefault-Background_Image */
-	background-position: left top;  /* ToolbarContent-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* ToolbarContent-HeadersDefault-Background_Image-Repeat */
-
-	/* ToolbarContent-HeadersDefault-BorderStyle_Radius */
-	-moz-border-radius: 4px; /* ToolbarContent-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* ToolbarContent-HeadersDefault-BorderStyle_Radius */
-	border-radius: 4px; /* ToolbarContent-HeadersDefault-BorderStyle_Radius */
-    }
-
-    .wm_template .ToolbarContent div.wmaccordion-header:hover, 
-    .wm_template .ToolbarContent div.wmaccordion wmaccordion-header.wmaccordion-collapsed:hover {
-	/* ToolbarContent-HeadersHover-Font */
-	color: #FFFFFF; /* ToolbarContent-HeadersHover-Font_Color */
-
-	/* ToolbarContent-HeadersHover-Background */
-	background-color: #444444; /* ToolbarContent-HeadersHover-Background_Color */
-	background-image: url(images/threeD.png); /* ToolbarContent-HeadersHover-Background_Image */
-	background-position: left top;  /* ToolbarContent-HeadersHover-Background_Image-Position */
-	background-repeat: repeat-x; /* ToolbarContent-HeadersHover-Background_Image-Repeat */
-    }
-
-    /* END SECTION wm.AccorionLayers / wm.AccordionDecorator */
-
-
-
-
-.wm_template .ToolbarContent .wmFancyPanel-labelWidget {
-    /* ToolbarContent-HeadersDefault-Font */
-    font-family: sans-serif; /* ToolbarContent-HeadersDefault-Font_Family */
-    font-size: 12pt; /* ToolbarContent-HeadersDefault-Font_TextSize */
-    color: #FFFFFF; /* ToolbarContent-HeadersDefault-Font_Color */
-    font-weight: bold; /* ToolbarContent-HeadersDefault-Font_Weight */
-
-    /* ToolbarContent-HeadersDefault-Background */
-    background-color: #444444; /* ToolbarContent-HeadersDefault-Background_Color */
-    background-image: url(images/threeD.png); /* ToolbarContent-HeadersDefault-Background_Image */
-    background-position: left top;  /* ToolbarContent-HeadersDefault-Background_Image-Position */
-    background-repeat: repeat-x; /* ToolbarContent-HeadersDefault-Background_Image-Repeat */
-}
-
-    /* BEGIN SECTION wm.TabLayers / wm.TabDecorator */
-    /* Tab buttons */
-    .wm_template .ToolbarContent button.wmtablayers-tab {
-	/* ToolbarContent-HeadersDefault-Font */
-	font-family: sans-serif; /* ToolbarContent-HeadersDefault-Font_Family */
-	color: #FFFFFF; /* ToolbarContent-HeadersDefault-Font_Color */
-	font-weight: bold; /* ToolbarContent-HeadersDefault-Font_Weight */
-
-	/* ToolbarContent-HeadersDefault-Background */
-	background-color: #444444; /* ToolbarContent-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* ToolbarContent-HeadersDefault-Background_Image */
-	background-position: left top;  /* ToolbarContent-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* ToolbarContent-HeadersDefault-Background_Image-Repeat */
-
-    }
-
-    .wm_template .ToolbarContent .wmtablayers-tab:hover, .wm_template .wmtablayers-tab:focus {
-	/* ToolbarContent-HeadersHover-Font */
-	color: #FFFFFF; /* ToolbarContent-HeadersHover-Font_Color */
-
-	/* ToolbarContent-HeadersHover-Background */
-	background-color: #444444; /* ToolbarContent-HeadersHover-Background_Color */
-	background-image: url(images/threeD.png); /* ToolbarContent-HeadersHover-Background_Image */
-	background-position: left top;  /* ToolbarContent-HeadersHover-Background_Image-Position */
-	background-repeat: repeat-x; /* ToolbarContent-HeadersHover-Background_Image-Repeat */
-
-    }
-
-
-    /* Selected tab */
-    .wm_template .ToolbarContent .wmtablayers-tab.wmtablayers-selected,
-    .wm_template .ToolbarContent .wmtablayers-tab.wmtablayers-selected:hover,
-    .wm_template .ToolbarContent .wmtablayers-tab.wmtablayers-selected:focus {
-	/* ToolbarContent-HeadersActive-Font */
-	color: #FFFFFF; /* ToolbarContent-HeadersActive-Font_Color */
-
-	/* ToolbarContent-HeadersActive-Background */
-	background-color: #444444; /* ToolbarContent-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* ToolbarContent-HeadersActive-Background_Image */
-	background-position: left top;  /* ToolbarContent-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* ToolbarContent-HeadersActive-Background_Image-Repeat */
-    }
-
-
-    /* END SECTION wm.TabLayers / wm.TabDecorator */
-
-
-    /* END ESCTION wm.TabLayers / wm.WizardLayers */
-
-    /* BEGIN SECTION wm.WizardLayers */
-
-    /* TODO: Enable this property */
-    .wm_template .ToolbarContent .wmwizardlayers-tab:focus,
-    .wm_template .ToolbarContent .wmwizardlayers-tab:hover {
-	color: black; /* wm.WizardLayers-Active_Color */
-    }
-
-    /* END SECTION wm.WizardLayers */
-}
-
-
-.wm_template #wavemakerNode .HeaderContent,
-#studio_designer.wm_template .HeaderContent,
-#studio_themesPage_themeDesigner_demoPanel .HeaderContent {
-	/* Document-HeadersActive-Font  + Headers-Default-Font */
-	font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
-	font-size: 12pt; /* Document-HeadersDefault-Font_TextSize */
-	color: #FFFFFF; /* Document-HeadersActive-Font_Color */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
-
-	/* Document-HeadersActive-Background */
-	background-color: #444444; /* Document-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* Document-HeadersActive-Background_Image */
-	background-position: left top;  /* Document-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-HeadersActive-Background_Image-Repeat */
-
-	/* Document-HeadersDefault-BorderStyle_Radius */
-	-moz-border-radius: 4px; /* Document-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* Document-HeadersDefault-BorderStyle_Radius */
-	border-radius: 4px; /* Document-HeadersDefault-BorderStyle_Radius */
-
-	padding-left: 10px;
-    
-}
 
 
 #wmMinifiedDialogPanel {
     opacity: 0.6;
-    background-color: #444444; /* Document-HeadersActive-Background_Color */
+    background-color: #444444; /* Document-ClickablesActive-Background_Color */
 
     -moz-box-shadow: 0px -2px 4px black; /* wm.TabLayers-BorderStyle_UnselectedShadow */
     -webkit-box-shadow: 0px -2px 4px black;  /* wm.TabLayers-BorderStyle_UnselectedShadow */

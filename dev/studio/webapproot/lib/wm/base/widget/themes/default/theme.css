@@ -1468,7 +1468,6 @@ display: block;
 
 body.tundra div.wmtoast.wmtoastExtraSpecific {
     font-size: 12pt;
-    text-align: center;
     background-color: rgb(40,40,40);
     color: white;    
     opacity: .88;
@@ -1541,3 +1540,6 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
 .invalidDropCSS{
 	border-top: 4px solid red;
 }
+
+.wmcolorpickereditor {
+    backg

@@ -19,25 +19,25 @@
     .wm_template   .wmbutton.wmbutton-disabled:hover,
     .wm_template   .wmbutton.wmbutton-disabled:focus
     {
-	/* Document-HeadersDefault-Font */
-	font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
-	font-size: 12pt; /* Document-HeadersDefault-Font_TextSize */
-	color: #FFFFFF; /* Document-HeadersDefault-Font_Color */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+	/* Document-ClickablesDefault-Font */
+	font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
+	font-size: 12pt; /* Document-ClickablesDefault-Font_TextSize */
+	color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
+	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
 
-	/* Document-HeadersDefault-Border */
-	-moz-border-radius: 4px; /* Document-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* Document-HeadersDefault-BorderStyle_Radius */
-	border-radius: 4px; /* Document-HeadersDefault-BorderStyle_Radius */
-	-moz-box-shadow: 4px 4px 4px black; /* Document-HeadersDefault-BorderStyle_Shadow */
-	-webkit-box-shadow: 4px 4px 4px black; /* Document-HeadersDefault-BorderStyle_Shadow */
-	box-shadow: 4px 4px 4px black; /* Document-HeadersDefault-BorderStyle_Shadow */
+	/* Document-ClickablesDefault-Border */
+	-moz-border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-moz-box-shadow: 4px 4px 4px black; /* Document-ClickablesDefault-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* Document-ClickablesDefault-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* Document-ClickablesDefault-BorderStyle_Shadow */
 
-	/* Document-HeadersDefault-Background */
-	background-color: #444444; /* Document-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* Document-HeadersDefault-Background_Image */
-	background-position: left top;  /* Document-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-HeadersDefault-Background_Image-Repeat */
+	/* Document-ClickablesDefault-Background */
+	background-color: #444444; /* Document-ClickablesDefault-Background_Color */
+	background-image: url(images/threeD.png); /* Document-ClickablesDefault-Background_Image */
+	background-position: left top;  /* Document-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
     }
 
     /**************************************************************************************************
@@ -46,18 +46,18 @@
        * DESCRIPTION: Sets font, shadowing and background for an active ToggleButton
        ************************************************************************************************/
     .wm_template   .wmbutton.toggleButtonDown {
-	/* Document-HeadersActive-Font */
-	color: #FFFFFF; /* Document-HeadersActive-Font_Color */
+	/* Document-ClickablesActive-Font */
+	color: #FFFFFF; /* Document-ClickablesActive-Font_Color */
 
-	/* Document-HeadersActive-Background */
-	background-color: #444444; /* Document-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* Document-HeadersActive-Background_Image */
-	background-position: left top;  /* Document-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-HeadersActive-Background_Image-Repeat */
+	/* Document-ClickablesActive-Background */
+	background-color: #444444; /* Document-ClickablesActive-Background_Color */
+	background-image: url(images/threeD.png); /* Document-ClickablesActive-Background_Image */
+	background-position: left top;  /* Document-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
 
-	-moz-box-shadow: 4px 4px 4px black; /* Document-HeadersActive-BorderStyle_Shadow */
-	-webkit-box-shadow: 4px 4px 4px black; /* Document-HeadersActive-BorderStyle_Shadow */
-	box-shadow: 4px 4px 4px black; /* Document-HeadersActive-BorderStyle_Shadow */
+	-moz-box-shadow: 4px 4px 4px black; /* Document-ClickablesActive-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* Document-ClickablesActive-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* Document-ClickablesActive-BorderStyle_Shadow */
 
 
     }
@@ -71,19 +71,19 @@
     .wm_template   .wmbutton:focus,
     .wm_template   .wmroundedbutton:hover,
     .wm_template   .wmroundedbutton:focus {
-	/* Document-HeadersHover-Font */
-	color: #FFFFFF; /* Document-HeadersHover-Font_Color */
+	/* Document-ClickablesHover-Font */
+	color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
 
-	/* Document-HeadersHover-Background */
-	background-color: #444444; /* Document-HeadersHover-Background_Color */
-	background-image: url(images/threeD.png); /* Document-HeadersHover-Background_Image */
-	background-position: left top;  /* Document-HeadersHover-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-HeadersHover-Background_Image-Repeat */
+	/* Document-ClickablesHover-Background */
+	background-color: #444444; /* Document-ClickablesHover-Background_Color */
+	background-image: url(images/threeD.png); /* Document-ClickablesHover-Background_Image */
+	background-position: left top;  /* Document-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesHover-Background_Image-Repeat */
 
-	/* Document-HeadersHover-BorderStyle_Shadow */
-	-moz-box-shadow: 4px 4px 4px black; /* Document-HeadersHover-BorderStyle_Shadow */
-	-webkit-box-shadow: 4px 4px 4px black; /* Document-HeadersHover-BorderStyle_Shadow */
-	box-shadow: 4px 4px 4px black; /* Document-HeadersHover-BorderStyle_Shadow */
+	/* Document-ClickablesHover-BorderStyle_Shadow */
+	-moz-box-shadow: 4px 4px 4px black; /* Document-ClickablesHover-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* Document-ClickablesHover-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* Document-ClickablesHover-BorderStyle_Shadow */
 
     }
     
@@ -107,25 +107,25 @@
     .wm_template .MainContent  .wmbutton.wmbutton-disabled:hover,
     .wm_template .MainContent  .wmbutton.wmbutton-disabled:focus
     {
-	/* MainContent-HeadersDefault-Font */
-	font-family: sans-serif; /* MainContent-HeadersDefault-Font_Family */
-	font-size: 12pt; /* MainContent-HeadersDefault-Font_TextSize */
-	color: #FFFFFF; /* MainContent-HeadersDefault-Font_Color */
-	font-weight: bold; /* MainContent-HeadersDefault-Font_Weight */
+	/* MainContent-ClickablesDefault-Font */
+	font-family: sans-serif; /* MainContent-ClickablesDefault-Font_Family */
+	font-size: 12pt; /* MainContent-ClickablesDefault-Font_TextSize */
+	color: #FFFFFF; /* MainContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
 
-	/* MainContent-HeadersDefault-Border */
-	-moz-border-radius: 4px; /* MainContent-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* MainContent-HeadersDefault-BorderStyle_Radius */
-	border-radius: 4px; /* MainContent-HeadersDefault-BorderStyle_Radius */
-	-moz-box-shadow: 4px 4px 4px black; /* MainContent-HeadersDefault-BorderStyle_Shadow */
-	-webkit-box-shadow: 4px 4px 4px black; /* MainContent-HeadersDefault-BorderStyle_Shadow */
-	box-shadow: 4px 4px 4px black; /* MainContent-HeadersDefault-BorderStyle_Shadow */
+	/* MainContent-ClickablesDefault-Border */
+	-moz-border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
+	-moz-box-shadow: 4px 4px 4px black; /* MainContent-ClickablesDefault-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* MainContent-ClickablesDefault-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* MainContent-ClickablesDefault-BorderStyle_Shadow */
 
-	/* MainContent-HeadersDefault-Background */
-	background-color: #444444; /* MainContent-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-HeadersDefault-Background_Image */
-	background-position: left top;  /* MainContent-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* MainContent-HeadersDefault-Background_Image-Repeat */
+	/* MainContent-ClickablesDefault-Background */
+	background-color: #444444; /* MainContent-ClickablesDefault-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-position: left top;  /* MainContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
     }
 
     /**************************************************************************************************
@@ -134,18 +134,18 @@
        * DESCRIPTION: Sets font, shadowing and background for an active ToggleButton
        ************************************************************************************************/
     .wm_template .MainContent  .wmbutton.toggleButtonDown {
-	/* MainContent-HeadersActive-Font */
-	color: #FFFFFF; /* MainContent-HeadersActive-Font_Color */
+	/* MainContent-ClickablesActive-Font */
+	color: #FFFFFF; /* MainContent-ClickablesActive-Font_Color */
 
-	/* MainContent-HeadersActive-Background */
-	background-color: #444444; /* MainContent-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-HeadersActive-Background_Image */
-	background-position: left top;  /* MainContent-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* MainContent-HeadersActive-Background_Image-Repeat */
+	/* MainContent-ClickablesActive-Background */
+	background-color: #444444; /* MainContent-ClickablesActive-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-ClickablesActive-Background_Image */
+	background-position: left top;  /* MainContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
 
-	-moz-box-shadow: 4px 4px 4px black; /* MainContent-HeadersActive-BorderStyle_Shadow */
-	-webkit-box-shadow: 4px 4px 4px black; /* MainContent-HeadersActive-BorderStyle_Shadow */
-	box-shadow: 4px 4px 4px black; /* MainContent-HeadersActive-BorderStyle_Shadow */
+	-moz-box-shadow: 4px 4px 4px black; /* MainContent-ClickablesActive-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* MainContent-ClickablesActive-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* MainContent-ClickablesActive-BorderStyle_Shadow */
     }
 
     /**************************************************************************************************
@@ -157,19 +157,19 @@
     .wm_template .MainContent  .wmbutton:focus,
     .wm_template .MainContent  .wmroundedbutton:hover,
     .wm_template .MainContent  .wmroundedbutton:focus {
-	/* MainContent-HeadersHover-Font */
-	color: #FFFFFF; /* MainContent-HeadersHover-Font_Color */
+	/* MainContent-ClickablesHover-Font */
+	color: #FFFFFF; /* MainContent-ClickablesHover-Font_Color */
 
-	/* MainContent-HeadersHover-Background */
-	background-color: #444444; /* MainContent-HeadersHover-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-HeadersHover-Background_Image */
-	background-position: left top;  /* MainContent-HeadersHover-Background_Image-Position */
-	background-repeat: repeat-x; /* MainContent-HeadersHover-Background_Image-Repeat */
+	/* MainContent-ClickablesHover-Background */
+	background-color: #444444; /* MainContent-ClickablesHover-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-ClickablesHover-Background_Image */
+	background-position: left top;  /* MainContent-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesHover-Background_Image-Repeat */
 
-	/* MainContent-HeadersHover-BorderStyle_Shadow */
-	-moz-box-shadow: 4px 4px 4px black; /* MainContent-HeadersHover-BorderStyle_Shadow */
-	-webkit-box-shadow: 4px 4px 4px black; /* MainContent-HeadersHover-BorderStyle_Shadow */
-	box-shadow: 4px 4px 4px black; /* MainContent-HeadersHover-BorderStyle_Shadow */
+	/* MainContent-ClickablesHover-BorderStyle_Shadow */
+	-moz-box-shadow: 4px 4px 4px black; /* MainContent-ClickablesHover-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* MainContent-ClickablesHover-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* MainContent-ClickablesHover-BorderStyle_Shadow */
 
     }
     
@@ -189,25 +189,25 @@
     .wm_template .EmphasizedContent  .wmbutton.wmbutton-disabled:hover,
     .wm_template .EmphasizedContent  .wmbutton.wmbutton-disabled:focus
     {
-	/* EmphasizedContent-HeadersDefault-Font */
-	font-family: sans-serif; /* EmphasizedContent-HeadersDefault-Font_Family */
-	font-size: 12pt; /* EmphasizedContent-HeadersDefault-Font_TextSize */
-	color: #FFFFFF; /* EmphasizedContent-HeadersDefault-Font_Color */
-	font-weight: bold; /* EmphasizedContent-HeadersDefault-Font_Weight */
+	/* EmphasizedContent-ClickablesDefault-Font */
+	font-family: sans-serif; /* EmphasizedContent-ClickablesDefault-Font_Family */
+	font-size: 12pt; /* EmphasizedContent-ClickablesDefault-Font_TextSize */
+	color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
 
-	/* EmphasizedContent-HeadersDefault-Border */
-	-moz-border-radius: 4px; /* EmphasizedContent-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* EmphasizedContent-HeadersDefault-BorderStyle_Radius */
-	border-radius: 4px; /* EmphasizedContent-HeadersDefault-BorderStyle_Radius */
-	-moz-box-shadow: 4px 4px 4px black; /* EmphasizedContent-HeadersDefault-BorderStyle_Shadow */
-	-webkit-box-shadow: 4px 4px 4px black; /* EmphasizedContent-HeadersDefault-BorderStyle_Shadow */
-	box-shadow: 4px 4px 4px black; /* EmphasizedContent-HeadersDefault-BorderStyle_Shadow */
+	/* EmphasizedContent-ClickablesDefault-Border */
+	-moz-border-radius: 4px; /* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
+	-moz-box-shadow: 4px 4px 4px black; /* EmphasizedContent-ClickablesDefault-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* EmphasizedContent-ClickablesDefault-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* EmphasizedContent-ClickablesDefault-BorderStyle_Shadow */
 
-	/* EmphasizedContent-HeadersDefault-Background */
-	background-color: #444444; /* EmphasizedContent-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* EmphasizedContent-HeadersDefault-Background_Image */
-	background-position: left top;  /* EmphasizedContent-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* EmphasizedContent-HeadersDefault-Background_Image-Repeat */
+	/* EmphasizedContent-ClickablesDefault-Background */
+	background-color: #444444; /* EmphasizedContent-ClickablesDefault-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
+	background-position: left top;  /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
     }
 
     /**************************************************************************************************
@@ -216,18 +216,18 @@
        * DESCRIPTION: Sets font, shadowing and background for an active ToggleButton
        ************************************************************************************************/
     .wm_template .EmphasizedContent  .wmbutton.toggleButtonDown {
-	/* EmphasizedContent-HeadersActive-Font */
-	color: #FFFFFF; /* EmphasizedContent-HeadersActive-Font_Color */
+	/* EmphasizedContent-ClickablesActive-Font */
+	color: #FFFFFF; /* EmphasizedContent-ClickablesActive-Font_Color */
 
-	/* EmphasizedContent-HeadersActive-Background */
-	background-color: #444444; /* EmphasizedContent-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* EmphasizedContent-HeadersActive-Background_Image */
-	background-position: left top;  /* EmphasizedContent-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* EmphasizedContent-HeadersActive-Background_Image-Repeat */
+	/* EmphasizedContent-ClickablesActive-Background */
+	background-color: #444444; /* EmphasizedContent-ClickablesActive-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesActive-Background_Image */
+	background-position: left top;  /* EmphasizedContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesActive-Background_Image-Repeat */
 
-	-moz-box-shadow: 4px 4px 4px black; /* EmphasizedContent-HeadersActive-BorderStyle_Shadow */
-	-webkit-box-shadow: 4px 4px 4px black; /* EmphasizedContent-HeadersActive-BorderStyle_Shadow */
-	box-shadow: 4px 4px 4px black; /* EmphasizedContent-HeadersActive-BorderStyle_Shadow */
+	-moz-box-shadow: 4px 4px 4px black; /* EmphasizedContent-ClickablesActive-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* EmphasizedContent-ClickablesActive-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* EmphasizedContent-ClickablesActive-BorderStyle_Shadow */
 
 
     }
@@ -242,19 +242,19 @@
     .wm_template .EmphasizedContent  .wmbutton:focus,
     .wm_template .EmphasizedContent  .wmroundedbutton:hover,
     .wm_template .EmphasizedContent  .wmroundedbutton:focus {
-	/* EmphasizedContent-HeadersHover-Font */
-	color: #FFFFFF; /* EmphasizedContent-HeadersHover-Font_Color */
+	/* EmphasizedContent-ClickablesHover-Font */
+	color: #FFFFFF; /* EmphasizedContent-ClickablesHover-Font_Color */
 
-	/* EmphasizedContent-HeadersHover-Background */
-	background-color: #444444; /* EmphasizedContent-HeadersHover-Background_Color */
-	background-image: url(images/threeD.png); /* EmphasizedContent-HeadersHover-Background_Image */
-	background-position: left top;  /* EmphasizedContent-HeadersHover-Background_Image-Position */
-	background-repeat: repeat-x; /* EmphasizedContent-HeadersHover-Background_Image-Repeat */
+	/* EmphasizedContent-ClickablesHover-Background */
+	background-color: #444444; /* EmphasizedContent-ClickablesHover-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesHover-Background_Image */
+	background-position: left top;  /* EmphasizedContent-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesHover-Background_Image-Repeat */
 
-	/* EmphasizedContent-HeadersHover-BorderStyle_Shadow */
-	-moz-box-shadow: 4px 4px 4px black; /* EmphasizedContent-HeadersHover-BorderStyle_Shadow */
-	-webkit-box-shadow: 4px 4px 4px black; /* EmphasizedContent-HeadersHover-BorderStyle_Shadow */
-	box-shadow: 4px 4px 4px black; /* EmphasizedContent-HeadersHover-BorderStyle_Shadow */
+	/* EmphasizedContent-ClickablesHover-BorderStyle_Shadow */
+	-moz-box-shadow: 4px 4px 4px black; /* EmphasizedContent-ClickablesHover-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* EmphasizedContent-ClickablesHover-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* EmphasizedContent-ClickablesHover-BorderStyle_Shadow */
 
     }
 
@@ -262,37 +262,37 @@
 
 
 
-@media screen { /* TOCContent-Level */ 
+@media screen { /* HeaderContent-Level */ 
     /**************************************************************************************************
        * TYPE:        Default Styling
        *
        * DESCRIPTION: Sets font, rounding, shadowing and background for the standard button state
        ************************************************************************************************/
-    .wm_template .TOCContent  .wmbutton,
-    .wm_template .TOCContent  .wmtogglebutton,
-    .wm_template .TOCContent  .wmroundedbutton,
-    .wm_template .TOCContent  .wmbutton.wmbutton-disabled:hover,
-    .wm_template .TOCContent  .wmbutton.wmbutton-disabled:focus
+    .wm_template .HeaderContent  .wmbutton,
+    .wm_template .HeaderContent  .wmtogglebutton,
+    .wm_template .HeaderContent  .wmroundedbutton,
+    .wm_template .HeaderContent  .wmbutton.wmbutton-disabled:hover,
+    .wm_template .HeaderContent  .wmbutton.wmbutton-disabled:focus
     {
-	/* TOCContent-HeadersDefault-Font */
-	font-family: sans-serif; /* TOCContent-HeadersDefault-Font_Family */
-	font-size: 12pt; /* TOCContent-HeadersDefault-Font_TextSize */
-	color: #FFFFFF; /* TOCContent-HeadersDefault-Font_Color */
-	font-weight: bold; /* TOCContent-HeadersDefault-Font_Weight */
+	/* HeaderContent-ClickablesDefault-Font */
+	font-family: sans-serif; /* HeaderContent-ClickablesDefault-Font_Family */
+	font-size: 12pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
+	color: #FFFFFF; /* HeaderContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
 
-	/* TOCContent-HeadersDefault-Border */
-	-moz-border-radius: 4px; /* TOCContent-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* TOCContent-HeadersDefault-BorderStyle_Radius */
-	border-radius: 4px; /* TOCContent-HeadersDefault-BorderStyle_Radius */
-	-moz-box-shadow: 4px 4px 4px black; /* TOCContent-HeadersDefault-BorderStyle_Shadow */
-	-webkit-box-shadow: 4px 4px 4px black; /* TOCContent-HeadersDefault-BorderStyle_Shadow */
-	box-shadow: 4px 4px 4px black; /* TOCContent-HeadersDefault-BorderStyle_Shadow */
+	/* HeaderContent-ClickablesDefault-Border */
+	-moz-border-radius: 4px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
+	-moz-box-shadow: 4px 4px 4px black; /* HeaderContent-ClickablesDefault-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* HeaderContent-ClickablesDefault-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* HeaderContent-ClickablesDefault-BorderStyle_Shadow */
 
-	/* TOCContent-HeadersDefault-Background */
-	background-color: #444444; /* TOCContent-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* TOCContent-HeadersDefault-Background_Image */
-	background-position: left top;  /* TOCContent-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* TOCContent-HeadersDefault-Background_Image-Repeat */
+	/* HeaderContent-ClickablesDefault-Background */
+	background-color: #444444; /* HeaderContent-ClickablesDefault-Background_Color */
+	background-image: url(images/threeD.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-position: left top;  /* HeaderContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
     }
 
     /**************************************************************************************************
@@ -300,19 +300,19 @@
        *
        * DESCRIPTION: Sets font, shadowing and background for an active ToggleButton
        ************************************************************************************************/
-    .wm_template .TOCContent  .wmbutton.toggleButtonDown {
-	/* TOCContent-HeadersActive-Font */
-	color: #FFFFFF; /* TOCContent-HeadersActive-Font_Color */
+    .wm_template .HeaderContent  .wmbutton.toggleButtonDown {
+	/* HeaderContent-ClickablesActive-Font */
+	color: #FFFFFF; /* HeaderContent-ClickablesActive-Font_Color */
 
-	/* TOCContent-HeadersActive-Background */
-	background-color: #444444; /* TOCContent-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* TOCContent-HeadersActive-Background_Image */
-	background-position: left top;  /* TOCContent-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* TOCContent-HeadersActive-Background_Image-Repeat */
+	/* HeaderContent-ClickablesActive-Background */
+	background-color: #444444; /* HeaderContent-ClickablesActive-Background_Color */
+	background-image: url(images/threeD.png); /* HeaderContent-ClickablesActive-Background_Image */
+	background-position: left top;  /* HeaderContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
 
-	-moz-box-shadow: 4px 4px 4px black; /* TOCContent-HeadersActive-BorderStyle_Shadow */
-	-webkit-box-shadow: 4px 4px 4px black; /* TOCContent-HeadersActive-BorderStyle_Shadow */
-	box-shadow: 4px 4px 4px black; /* TOCContent-HeadersActive-BorderStyle_Shadow */
+	-moz-box-shadow: 4px 4px 4px black; /* HeaderContent-ClickablesActive-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* HeaderContent-ClickablesActive-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* HeaderContent-ClickablesActive-BorderStyle_Shadow */
 
 
     }
@@ -323,109 +323,27 @@
        * DESCRIPTION: Sets font, shadowing and background for a wm.Button with a mouseover
        ************************************************************************************************/
 
-    .wm_template .TOCContent  .wmbutton:hover,
-    .wm_template .TOCContent  .wmbutton:focus,
-    .wm_template .TOCContent  .wmroundedbutton:hover,
-    .wm_template .TOCContent  .wmroundedbutton:focus {
-	/* TOCContent-HeadersHover-Font */
-	color: #FFFFFF; /* TOCContent-HeadersHover-Font_Color */
+    .wm_template .HeaderContent  .wmbutton:hover,
+    .wm_template .HeaderContent  .wmbutton:focus,
+    .wm_template .HeaderContent  .wmroundedbutton:hover,
+    .wm_template .HeaderContent  .wmroundedbutton:focus {
+	/* HeaderContent-ClickablesHover-Font */
+	color: #FFFFFF; /* HeaderContent-ClickablesHover-Font_Color */
 
-	/* TOCContent-HeadersHover-Background */
-	background-color: #444444; /* TOCContent-HeadersHover-Background_Color */
-	background-image: url(images/threeD.png); /* TOCContent-HeadersHover-Background_Image */
-	background-position: left top;  /* TOCContent-HeadersHover-Background_Image-Position */
-	background-repeat: repeat-x; /* TOCContent-HeadersHover-Background_Image-Repeat */
+	/* HeaderContent-ClickablesHover-Background */
+	background-color: #444444; /* HeaderContent-ClickablesHover-Background_Color */
+	background-image: url(images/threeD.png); /* HeaderContent-ClickablesHover-Background_Image */
+	background-position: left top;  /* HeaderContent-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesHover-Background_Image-Repeat */
 
-	/* TOCContent-HeadersHover-BorderStyle_Shadow */
-	-moz-box-shadow: 4px 4px 4px black; /* TOCContent-HeadersHover-BorderStyle_Shadow */
-	-webkit-box-shadow: 4px 4px 4px black; /* TOCContent-HeadersHover-BorderStyle_Shadow */
-	box-shadow: 4px 4px 4px black; /* TOCContent-HeadersHover-BorderStyle_Shadow */
-
-    }
-
-}
-
-
-
-@media screen { /* ToolbarContent-Level */ 
-    /**************************************************************************************************
-       * TYPE:        Default Styling
-       *
-       * DESCRIPTION: Sets font, rounding, shadowing and background for the standard button state
-       ************************************************************************************************/
-    .wm_template .ToolbarContent  .wmbutton,
-    .wm_template .ToolbarContent  .wmtogglebutton,
-    .wm_template .ToolbarContent  .wmroundedbutton,
-    .wm_template .ToolbarContent  .wmbutton.wmbutton-disabled:hover,
-    .wm_template .ToolbarContent  .wmbutton.wmbutton-disabled:focus
-    {
-	/* ToolbarContent-HeadersDefault-Font */
-	font-family: sans-serif; /* ToolbarContent-HeadersDefault-Font_Family */
-	font-size: 12pt; /* ToolbarContent-HeadersDefault-Font_TextSize */
-	color: #FFFFFF; /* ToolbarContent-HeadersDefault-Font_Color */
-	font-weight: bold; /* ToolbarContent-HeadersDefault-Font_Weight */
-
-	/* ToolbarContent-HeadersDefault-Border */
-	-moz-border-radius: 4px; /* ToolbarContent-HeadersDefault-BorderStyle_Radius */
-	-webkit-border-radius: 4px; /* ToolbarContent-HeadersDefault-BorderStyle_Radius */
-	border-radius: 4px; /* ToolbarContent-HeadersDefault-BorderStyle_Radius */
-	-moz-box-shadow: 4px 4px 4px black; /* ToolbarContent-HeadersDefault-BorderStyle_Shadow */
-	-webkit-box-shadow: 4px 4px 4px black; /* ToolbarContent-HeadersDefault-BorderStyle_Shadow */
-	box-shadow: 4px 4px 4px black; /* ToolbarContent-HeadersDefault-BorderStyle_Shadow */
-
-	/* ToolbarContent-HeadersDefault-Background */
-	background-color: #444444; /* ToolbarContent-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* ToolbarContent-HeadersDefault-Background_Image */
-	background-position: left top;  /* ToolbarContent-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* ToolbarContent-HeadersDefault-Background_Image-Repeat */
-    }
-
-    /**************************************************************************************************
-       * TYPE:        Active Styling
-       *
-       * DESCRIPTION: Sets font, shadowing and background for an active ToggleButton
-       ************************************************************************************************/
-    .wm_template .ToolbarContent  .wmbutton.toggleButtonDown {
-	/* ToolbarContent-HeadersActive-Font */
-	color: #FFFFFF; /* ToolbarContent-HeadersActive-Font_Color */
-
-	/* ToolbarContent-HeadersActive-Background */
-	background-color: #444444; /* ToolbarContent-HeadersActive-Background_Color */
-	background-image: url(images/threeD.png); /* ToolbarContent-HeadersActive-Background_Image */
-	background-position: left top;  /* ToolbarContent-HeadersActive-Background_Image-Position */
-	background-repeat: repeat-x; /* ToolbarContent-HeadersActive-Background_Image-Repeat */
-
-	-moz-box-shadow: 4px 4px 4px black; /* ToolbarContent-HeadersActive-BorderStyle_Shadow */
-	-webkit-box-shadow: 4px 4px 4px black; /* ToolbarContent-HeadersActive-BorderStyle_Shadow */
-	box-shadow: 4px 4px 4px black; /* ToolbarContent-HeadersActive-BorderStyle_Shadow */
-
-
-    }
-
-    /**************************************************************************************************
-       * TYPE:        Hover Styling
-       *
-       * DESCRIPTION: Sets font, shadowing and background for a wm.Button with a mouseover
-       ************************************************************************************************/
-
-    .wm_template .ToolbarContent  .wmbutton:hover,
-    .wm_template .ToolbarContent  .wmbutton:focus,
-    .wm_template .ToolbarContent  .wmroundedbutton:hover,
-    .wm_template .ToolbarContent  .wmroundedbutton:focus {
-	/* ToolbarContent-HeadersHover-Font */
-	color: #FFFFFF; /* ToolbarContent-HeadersHover-Font_Color */
-
-	/* ToolbarContent-HeadersHover-Background */
-	background-color: #444444; /* ToolbarContent-HeadersHover-Background_Color */
-	background-image: url(images/threeD.png); /* ToolbarContent-HeadersHover-Background_Image */
-	background-position: left top;  /* ToolbarContent-HeadersHover-Background_Image-Position */
-	background-repeat: repeat-x; /* ToolbarContent-HeadersHover-Background_Image-Repeat */
-
-	/* ToolbarContent-HeadersHover-BorderStyle_Shadow */
-	-moz-box-shadow: 4px 4px 4px black; /* ToolbarContent-HeadersHover-BorderStyle_Shadow */
-	-webkit-box-shadow: 4px 4px 4px black; /* ToolbarContent-HeadersHover-BorderStyle_Shadow */
-	box-shadow: 4px 4px 4px black; /* ToolbarContent-HeadersHover-BorderStyle_Shadow */
+	/* HeaderContent-ClickablesHover-BorderStyle_Shadow */
+	-moz-box-shadow: 4px 4px 4px black; /* HeaderContent-ClickablesHover-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* HeaderContent-ClickablesHover-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* HeaderContent-ClickablesHover-BorderStyle_Shadow */
 
     }
 
 }
+
+
+

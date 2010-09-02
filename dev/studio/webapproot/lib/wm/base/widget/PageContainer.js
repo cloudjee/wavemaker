@@ -187,6 +187,13 @@ dojo.declare("wm.PageContainer", wm.Box, {
 		if (o != this.pageName)
 			this.loadPage(this.pageName);
 	},
+        // Provided for use in debugging. Note that when we do a better job of caching pages from server, we will need to deallocate them in this call
+        forceReloadPage: function() {
+            var pageName = this.pageName;
+            this.setPageName(null);
+            delete window[pageName];
+            this.setPageName(pageName);
+        },
 	onPageChanged: function(inNewPage, inPreviousPage) {
 	},
 	// optimization: page created when shown if doesn't exist.

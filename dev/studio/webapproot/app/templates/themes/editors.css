@@ -46,20 +46,6 @@
 
 
 
-  /**************************************************************************************************
-   * TYPE:        dijit.form.ComboBox/FilteringSelect/Select popup button
-   *
-   * DESCRIPTION: We need to set the background color and background image for the menu's popup
-   *              button.  Much trickier is setting the right radius to match the outer radius
-   *              used for the editor.  It can't use the exact same radius value; has to be 
-   *              a bit smaller radius, but I don't yet have an automated rule for how much
-   *             smaller.
-   ************************************************************************************************/
-.wm_template .wmeditor .dijitComboBox .dijitArrowButton {
-    background-color: #666666; /* Document-HeadersDefault-Background_Color */
-    background-image: none;
-}
-
 .wm_template .wmeditor .dijitComboBox .dijitArrowButton {
     -moz-border-radius-bottomright: 2px; /* wm.SelectMenu-Inner_Radius */
     -moz-border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
@@ -105,6 +91,17 @@
    *              that another panel class doesn't override the behavior.
    ************************************************************************************************/
 @media screen { /* Document-Level */ 
+
+  /**************************************************************************************************
+   * TYPE:        dijit.form.ComboBox/FilteringSelect/Select popup button
+   *
+   * DESCRIPTION: We need to set the background color and background image for the menu's popup
+   *              button. 
+   ************************************************************************************************/
+.wm_template .wmeditor .dijitComboBox .dijitArrowButton {
+    background-color: #666666; /* Document-ClickablesDefault-Background_Color */
+    background-image: none;
+}
 
     .wm_template .wmeditor .dijitTextBox,
     .wm_template .wmeditor .dijitTextArea,
@@ -175,6 +172,17 @@
 
 
 @media screen { /* MainContent-Level */ 
+  /**************************************************************************************************
+   * TYPE:        dijit.form.ComboBox/FilteringSelect/Select popup button
+   *
+   * DESCRIPTION: We need to set the background color and background image for the menu's popup
+   *              button. 
+   ************************************************************************************************/
+.wm_template .wmeditor .dijitComboBox .dijitArrowButton {
+    background-color: #666666; /* MainContent-ClickablesDefault-Background_Color */
+    background-image: none;
+}
+
     .wm_template .MainContent .wmeditor .dijitTextBox,
     .wm_template .MainContent .wmeditor .dijitTextArea,
     .wm_template .MainContent .wmeditor .dijitComboBox,
@@ -250,6 +258,17 @@
 
 
 @media screen { /* EmphasizedContent-Level */ 
+  /**************************************************************************************************
+   * TYPE:        dijit.form.ComboBox/FilteringSelect/Select popup button
+   *
+   * DESCRIPTION: We need to set the background color and background image for the menu's popup
+   *              button. 
+   ************************************************************************************************/
+.wm_template .wmeditor .dijitComboBox .dijitArrowButton {
+    background-color: #666666; /* EmphasizedContent-ClickablesDefault-Background_Color */
+    background-image: none;
+}
+
     /* BEGIN inner content panel editors */
 
     .wm_template .EmphasizedContent .wmeditor .dijitTextBox,
@@ -315,133 +334,78 @@
     
 }
 
-@media screen { /* TOCContent-Level */ 
-    /* BEGIN inner content panel editors */
-
-    .wm_template .TOCContent .wmeditor .dijitTextBox,
-    .wm_template .TOCContent .wmeditor .dijitTextArea,
-    .wm_template .TOCContent .wmeditor .dijitComboBox,
-    .wm_template .TOCContent .dijitTimePickerItem,
-    .wm_template .TOCContent .wmeditor .RichTextEditable iframe {
-	/* TOCContent-EditorsDefault-Border */
-	border-color: #666666;  /* TOCContent-EditorsDefault-Border_Color */
-	border-width: 1px; /* TOCContent-EditorsDefault-Border_BorderSize */
-
-	/* TOCContent-EditorsDefault-Font */
-	font-family: sans-serif; /* TOCContent-EditorsDefault-Font_Family */
-	font-size: 12pt; /* TOCContent-EditorsDefault-Font_TextSize */
-	color: #FFFFFF; /* TOCContent-EditorsDefault-Font_Color */
-	font-weight: bold; /* TOCContent-EditorsDefault-Font_Weight */
-
-	/* TOCContent-EditorsDefault-Background */
-	background-color: #444444; /* TOCContent-EditorsDefault-Background_Color */
-	background-image: url(images/threeD.png); /* TOCContent-EditorsDefault-Background_Image */
-	background-position: left top;  /* TOCContent-EditorsDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* TOCContent-EditorsDefault-Background_Image-Repeat */
-
-    }
-
-    .wm_template .TOCContent .wmeditor .dijitTextBox.dijitHover,
-    .wm_template .TOCContent .wmeditor .dijitTextArea:hover,
-    .wm_template .TOCContent .wmeditor .dijitComboBox.dijitHover,
-    .wm_template .TOCContent .wmeditor .RichTextEditable:hover iframe,
-    .wm_template .TOCContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
-    .wm_template .TOCContent .dijitTimePickerItem.dijitTimePickerItemHover {
-	/* TOCContent-EditorsHover-Font */
-	color: #FFFFFF; /* TOCContent-EditorsHover-Font_Color */
-
-	border-color: #666666;  /* TOCContent-EditorsHover-Border_Color */
-
-	/* TOCContent-EditorsHover-Background */
-	background-color: #444444; /* TOCContent-EditorsHover-Background_Color */
-	background-image: url(images/threeD.png); /* TOCContent-EditorsHover-Background_Image */
-	background-position: left top;  /* TOCContent-EditorsHover-Background_Image-Position */
-	background-repeat: repeat-x; /* TOCContent-EditorsHover-Background_Image-Repeat */
-    }
-
-    .wm_template .TOCContent .wmeditor .dijitTextBox.dijitFocused,
-    .wm_template .TOCContent .wmeditor .dijitTextBox.dijitFocused.dijitHover,
-    .wm_template .TOCContent .wmeditor .dijitTextArea.dijitFocused,
-    .wm_template .TOCContent .wmeditor .dijitTextArea.dijitFocused:hover,
-    .wm_template .TOCContent .wmeditor .dijitComboBox.dijitFocused,
-    .wm_template .TOCContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
-    .wm_template .TOCContent .wmeditor .RichTextEditable.Focused iframe {
-	/* TOCContent-EditorsFocus-Font */
-	color: #FFFFFF; /* TOCContent-EditorsFocus-Font_Color */
-
-	border-color: #666666;  /* TOCContent-EditorsFocus-Border_Color */
-
-	/* TOCContent-EditorsFocus-Background */
-	background-color: #444444; /* TOCContent-EditorsFocus-Background_Color */
-	background-image: url(images/threeD.png); /* TOCContent-EditorsFocus-Background_Image */
-	background-position: left top;  /* TOCContent-EditorsFocus-Background_Image-Position */
-	background-repeat: repeat-x; /* TOCContent-EditorsFocus-Background_Image-Repeat */
-    }
-    /* END inner content panel editors */
-    
+@media screen { /* HeaderContent-Level */ 
+  /**************************************************************************************************
+   * TYPE:        dijit.form.ComboBox/FilteringSelect/Select popup button
+   *
+   * DESCRIPTION: We need to set the background color and background image for the menu's popup
+   *              button. 
+   ************************************************************************************************/
+.wm_template .wmeditor .dijitComboBox .dijitArrowButton {
+    background-color: #666666; /* HeaderContent-ClickablesDefault-Background_Color */
+    background-image: none;
 }
 
-@media screen { /* ToolbarContent-Level */ 
     /* BEGIN inner content panel editors */
 
-    .wm_template .ToolbarContent .wmeditor .dijitTextBox,
-    .wm_template .ToolbarContent .wmeditor .dijitTextArea,
-    .wm_template .ToolbarContent .wmeditor .dijitComboBox,
-    .wm_template .ToolbarContent .dijitTimePickerItem,
-    .wm_template .ToolbarContent .wmeditor .RichTextEditable iframe {
-	/* ToolbarContent-EditorsDefault-Border */
-	border-color: #666666;  /* ToolbarContent-EditorsDefault-Border_Color */
-	border-width: 1px; /* ToolbarContent-EditorsDefault-Border_BorderSize */
+    .wm_template .HeaderContent .wmeditor .dijitTextBox,
+    .wm_template .HeaderContent .wmeditor .dijitTextArea,
+    .wm_template .HeaderContent .wmeditor .dijitComboBox,
+    .wm_template .HeaderContent .dijitTimePickerItem,
+    .wm_template .HeaderContent .wmeditor .RichTextEditable iframe {
+	/* HeaderContent-EditorsDefault-Border */
+	border-color: #666666;  /* HeaderContent-EditorsDefault-Border_Color */
+	border-width: 1px; /* HeaderContent-EditorsDefault-Border_BorderSize */
 
-	/* ToolbarContent-EditorsDefault-Font */
-	font-family: sans-serif; /* ToolbarContent-EditorsDefault-Font_Family */
-	font-size: 12pt; /* ToolbarContent-EditorsDefault-Font_TextSize */
-	color: #FFFFFF; /* ToolbarContent-EditorsDefault-Font_Color */
-	font-weight: bold; /* ToolbarContent-EditorsDefault-Font_Weight */
+	/* HeaderContent-EditorsDefault-Font */
+	font-family: sans-serif; /* HeaderContent-EditorsDefault-Font_Family */
+	font-size: 12pt; /* HeaderContent-EditorsDefault-Font_TextSize */
+	color: #FFFFFF; /* HeaderContent-EditorsDefault-Font_Color */
+	font-weight: bold; /* HeaderContent-EditorsDefault-Font_Weight */
 
-	/* ToolbarContent-EditorsDefault-Background */
-	background-color: #444444; /* ToolbarContent-EditorsDefault-Background_Color */
-	background-image: url(images/threeD.png); /* ToolbarContent-EditorsDefault-Background_Image */
-	background-position: left top;  /* ToolbarContent-EditorsDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* ToolbarContent-EditorsDefault-Background_Image-Repeat */
+	/* HeaderContent-EditorsDefault-Background */
+	background-color: #444444; /* HeaderContent-EditorsDefault-Background_Color */
+	background-image: url(images/threeD.png); /* HeaderContent-EditorsDefault-Background_Image */
+	background-position: left top;  /* HeaderContent-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-EditorsDefault-Background_Image-Repeat */
 
     }
 
-    .wm_template .ToolbarContent .wmeditor .dijitTextBox.dijitHover,
-    .wm_template .ToolbarContent .wmeditor .dijitTextArea:hover,
-    .wm_template .ToolbarContent .wmeditor .dijitComboBox.dijitHover,
-    .wm_template .ToolbarContent .wmeditor .RichTextEditable:hover iframe,
-    .wm_template .ToolbarContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
-    .wm_template .ToolbarContent .dijitTimePickerItem.dijitTimePickerItemHover {
-	/* ToolbarContent-EditorsHover-Font */
-	color: #FFFFFF; /* ToolbarContent-EditorsHover-Font_Color */
+    .wm_template .HeaderContent .wmeditor .dijitTextBox.dijitHover,
+    .wm_template .HeaderContent .wmeditor .dijitTextArea:hover,
+    .wm_template .HeaderContent .wmeditor .dijitComboBox.dijitHover,
+    .wm_template .HeaderContent .wmeditor .RichTextEditable:hover iframe,
+    .wm_template .HeaderContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
+    .wm_template .HeaderContent .dijitTimePickerItem.dijitTimePickerItemHover {
+	/* HeaderContent-EditorsHover-Font */
+	color: #FFFFFF; /* HeaderContent-EditorsHover-Font_Color */
 
-	border-color: #666666;  /* ToolbarContent-EditorsHover-Border_Color */
+	border-color: #666666;  /* HeaderContent-EditorsHover-Border_Color */
 
-	/* ToolbarContent-EditorsHover-Background */
-	background-color: #444444; /* ToolbarContent-EditorsHover-Background_Color */
-	background-image: url(images/threeD.png); /* ToolbarContent-EditorsHover-Background_Image */
-	background-position: left top;  /* ToolbarContent-EditorsHover-Background_Image-Position */
-	background-repeat: repeat-x; /* ToolbarContent-EditorsHover-Background_Image-Repeat */
+	/* HeaderContent-EditorsHover-Background */
+	background-color: #444444; /* HeaderContent-EditorsHover-Background_Color */
+	background-image: url(images/threeD.png); /* HeaderContent-EditorsHover-Background_Image */
+	background-position: left top;  /* HeaderContent-EditorsHover-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-EditorsHover-Background_Image-Repeat */
     }
 
-    .wm_template .ToolbarContent .wmeditor .dijitTextBox.dijitFocused,
-    .wm_template .ToolbarContent .wmeditor .dijitTextBox.dijitFocused.dijitHover,
-    .wm_template .ToolbarContent .wmeditor .dijitTextArea.dijitFocused,
-    .wm_template .ToolbarContent .wmeditor .dijitTextArea.dijitFocused:hover,
-    .wm_template .ToolbarContent .wmeditor .dijitComboBox.dijitFocused,
-    .wm_template .ToolbarContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
-    .wm_template .ToolbarContent .wmeditor .RichTextEditable.Focused iframe {
-	/* ToolbarContent-EditorsFocus-Font */
-	color: #FFFFFF; /* ToolbarContent-EditorsFocus-Font_Color */
+    .wm_template .HeaderContent .wmeditor .dijitTextBox.dijitFocused,
+    .wm_template .HeaderContent .wmeditor .dijitTextBox.dijitFocused.dijitHover,
+    .wm_template .HeaderContent .wmeditor .dijitTextArea.dijitFocused,
+    .wm_template .HeaderContent .wmeditor .dijitTextArea.dijitFocused:hover,
+    .wm_template .HeaderContent .wmeditor .dijitComboBox.dijitFocused,
+    .wm_template .HeaderContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_template .HeaderContent .wmeditor .RichTextEditable.Focused iframe {
+	/* HeaderContent-EditorsFocus-Font */
+	color: #FFFFFF; /* HeaderContent-EditorsFocus-Font_Color */
 
-	border-color: #666666;  /* ToolbarContent-EditorsFocus-Border_Color */
+	border-color: #666666;  /* HeaderContent-EditorsFocus-Border_Color */
 
-	/* ToolbarContent-EditorsFocus-Background */
-	background-color: #444444; /* ToolbarContent-EditorsFocus-Background_Color */
-	background-image: url(images/threeD.png); /* ToolbarContent-EditorsFocus-Background_Image */
-	background-position: left top;  /* ToolbarContent-EditorsFocus-Background_Image-Position */
-	background-repeat: repeat-x; /* ToolbarContent-EditorsFocus-Background_Image-Repeat */
+	/* HeaderContent-EditorsFocus-Background */
+	background-color: #444444; /* HeaderContent-EditorsFocus-Background_Color */
+	background-image: url(images/threeD.png); /* HeaderContent-EditorsFocus-Background_Image */
+	background-position: left top;  /* HeaderContent-EditorsFocus-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-EditorsFocus-Background_Image-Repeat */
     }
     /* END inner content panel editors */
     

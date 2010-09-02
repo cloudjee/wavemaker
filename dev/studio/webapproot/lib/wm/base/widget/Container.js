@@ -624,7 +624,7 @@ wm.Container.extend({
 			case "verticalAlign":
 				return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["top", "middle", "bottom"/*, "justified"*/]});
                 case "themeStyleType":
-		    return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["", "MainContent", "EmphasizedContent", "ToolbarContent", "TOCContent", "Header"]});
+		    return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["", "MainContent", "EmphasizedContent", "HeaderContent"]});
 		}
 		return this.inherited(arguments);
 	},

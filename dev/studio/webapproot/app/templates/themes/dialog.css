@@ -7,10 +7,10 @@
    *              parent is always the body tag
    ************************************************************************************************/
 .wm_template .wmdialog {
-    /* BordersPanel_BorderStyle_Radius */
-    -moz-border-radius: 4px; /* BordersPanel_BorderStyle_Radius */
-    -webkit-border-radius: 4px; /* BordersPanel_BorderStyle_Radius */
-    border-radius: 4px;  /* BordersPanel_BorderStyle_Radius */
+    /* Borders-Panel_BorderStyle_Radius */
+    -moz-border-radius: 4px; /* Borders-Panel_BorderStyle_Radius */
+    -webkit-border-radius: 4px; /* Borders-Panel_BorderStyle_Radius */
+    border-radius: 4px;  /* Borders-Panel_BorderStyle_Radius */
 
     /* Floating-Shadow should automatically be calculated as min 2px 2px 2px black and preferred
      * 1.5 times the value of wm.Content-BorderStyle_Shadow */
@@ -18,29 +18,10 @@
     -webkit-box-shadow: 3px 3px 3px black; /* Floating-Shadow */
     box-shadow: 3px 3px 3px black; /* Floating-Shadow */
 
-    background-color: #444444; /* MainContent-Styles-Background_Color */
 }
 
-  /**************************************************************************************************
-   * TYPE:        wm.Dialog content area styles
-   *
-   * DESCRIPTION: Sets the font and backgound colors for the content area of the dialog
-   ************************************************************************************************/
-.wm_template .wmdialog-content,
-.wm_template .wmdialogcontainer {
-    /* Document-Styles-Font */
-    font-family: sans-serif; /* MainContent-Styles-Font_Family */
-    font-size: 12pt; /* MainContent-Styles-Font_TextSize */
-    color: #FFFFFF; /* MainContent-Styles-Font_Color */
-    font-weight: bold; /* MainContent-Styles-Font_Weight */
 
-    /* MainContent-Styles-Background */
-    background-position: left top;  /* MainContent-Styles-Background_Image-Position */
-    background-repeat: repeat-x; /* MainContent-Styles-Background_Image-Repeat */
-    background-color: transparent;
-}
-
-  /**************************************************************************************************
+ /**************************************************************************************************
    * TYPE:        wm.Dialog Title Bar
    *
    * DESCRIPTION: Sets the font and backgound colors, and rounding for
@@ -48,17 +29,17 @@
    ************************************************************************************************/
 .wm_template .dialogtitlebar,
 .wm_template .dialogtitlebar .wmlabel{    
-    /* Document-HeadersDefault-Font */
-    font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
-    font-size: 12pt; /* Document-HeadersDefault-Font_TextSize */
-    color: #FFFFFF; /* Document-HeadersDefault-Font_Color */
-    font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+    /* Dialogs-Styles-Font */
+    font-family: sans-serif; /* Dialogs-Styles-Font_Family */
+    font-size: 12pt; /* Dialogs-Styles-Font_TextSize */
+    color: #FFFFFF; /* Dialogs-Styles-Font_Color */
+    font-weight: bold; /* Dialogs-Styles-Font_Weight */
 
-    /* Document-HeadersDefault-Background */
-    background-color: #444444; /* Document-HeadersDefault-Background_Color */
-    background-image: url(images/threeD.png); /* Document-HeadersDefault-Background_Image */
-    background-position: left top;  /* Document-HeadersDefault-Background_Image-Position */
-    background-repeat: repeat-x; /* Document-HeadersDefault-Background_Image-Repeat */
+    /* Dialogs-Styles-Background */
+    background-color: #444444; /* Dialogs-Styles-Background_Color */
+    background-image: url(images/threeD.png); /* Dialogs-Styles-Background_Image */
+    background-position: left top;  /* Dialogs-Styles-Background_Image-Position */
+    background-repeat: repeat-x; /* Dialogs-Styles-Background_Image-Repeat */
 }
 .wm_template .dialogtitlebar {
     /* Automatically calculated to be 2px less than MainContent-Styles-Border_Style-Radius */
@@ -79,17 +60,17 @@
    ************************************************************************************************/
 .wm_template .dialogfooter, 
 .wm_template .wmpagedialog-controlspanel {
-    /* Document-HeadersDefault-Font */
-    font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
-    font-size: 12pt; /* Document-HeadersDefault-Font_TextSize */
-    color: #FFFFFF; /* Document-HeadersDefault-Font_Color */
-    font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+    /* Dialogs-Styles-Font */
+    font-family: sans-serif; /* Dialogs-Styles-Font_Family */
+    font-size: 12pt; /* Dialogs-Styles-Font_TextSize */
+    color: #FFFFFF; /* Dialogs-Styles-Font_Color */
+    font-weight: bold; /* Dialogs-Styles-Font_Weight */
 
-    /* Document-HeadersDefault-Background */
-    background-color: #444444; /* Document-HeadersDefault-Background_Color */
-    /*background-image: url(images/threeD.png); / * Document-HeadersDefault-Background_Image * / */
-    background-position: left top;  /* Document-HeadersDefault-Background_Image-Position */
-    background-repeat: repeat-x; /* Document-HeadersDefault-Background_Image-Repeat */
+    /* Dialogs-Styles-Background */
+    background-color: #444444; /* Dialogs-Styles-Background_Color */
+    /*background-image: url(images/threeD.png); / * Dialogs-Styles-Background_Image * / */
+    background-position: left top;  /* Dialogs-Styles-Background_Image-Position */
+    background-repeat: repeat-x; /* Dialogs-Styles-Background_Image-Repeat */
 
     /* Automatically calculated to be 2px less than MainContent-Styles-Border_Style-Radius */
     -moz-border-radius-bottomleft: 2px; /* wm.Dialog_Inner-Radius */
@@ -109,15 +90,29 @@
    ************************************************************************************************/
 body.wm_template .dialogtitlebar .wmbutton,
 body .wm_template .dialogtitlebar .wmbutton {
-    font-size: 12pt;
-    font-weight: normal;
-    padding: 2px 0px 0px 2px;
-    font-family: sans-serif;
+    /* Dialogs-TitleButtonsDefault-Background */
+    background-color: #444444; /* Dialogs-TitleButtonsDefault-Background_Color */
+    background-image: url(images/threeD.png); /* Dialogs-TitleButtonsDefault-Background_Image */
+    background-position: left top;  /* Dialogs-TitleButtonsDefault-Background_Image-Position */
+    background-repeat: repeat-x; /* Dialogs-TitleButtonsDefault-Background_Image-Repeat */
+
+    color: #444444; /* Dialogs-TitleButtonsDefault-Font_Color */
+
+    /* Not customizable yet; the "X" and "-" must fit somewhat precisely, so I don't like users messing with this unless
+     * they are ready to muck about with the css themselves */
+    font-size: 12pt !important;
+    font-weight: normal !important;
+    padding: 2px 0px 0px 2px !important;
+    font-family: sans-serif !important;
 
     /* I may change my mind in the future, but using the button default radius here seems a mistake */
     -moz-border-radius: 0px !important;
     -webkit-border-radius: 0px !important;
     border-radius: 0px !important;
+
+    -moz-box-shadow: 4px 4px 4px black; /* Dialogs-TitleButtonsDefault-BorderStyle_Shadow */
+    -webkit-box-shadow: 4px 4px 4px black; /* Dialogs-TitleButtonsDefault-BorderStyle_Shadow */
+    box-shadow: 4px 4px 4px black; /* Dialogs-TitleButtonsDefault-BorderStyle_Shadow */
 }
 
   /**************************************************************************************************
@@ -127,29 +122,25 @@ body .wm_template .dialogtitlebar .wmbutton {
    ************************************************************************************************/
 body.wm_template .dialogfooter .wmbutton,
 body .wm_template .dialogfooter .wmbutton {
-    /* MainContent-HeadersDefault-Font */
-    font-family: sans-serif; /* MainContent-HeadersDefault-Font_Family */
-    font-size: 12pt; /* MainContent-HeadersDefault-Font_TextSize */
-    color: #FFFFFF; /* MainContent-Styles-Background_Color */
-    font-weight: bold; /* MainContent-HeadersDefault-Font_Weight */
+    /* Dialogs-FooterButtonsDefault-Font */
+    font-family: sans-serif; /* Dialogs-FooterButtonsDefault-Font_Family */
+    font-size: 12pt; /* Dialogs-FooterButtonsDefault-Font_TextSize */
+    color: #FFFFFF; /* Dialogs-FooterButtonsDefault-Font_Color */
+    font-weight: bold; /* Dialogs-FooterButtonsDefault-Font_Weight */
+
+    /* Dialogs-FooterButtonsDefault-Background */
+    background-color: #444444; /* Dialogs-FooterButtonsDefault-Background_Color */
+    background-image: url(images/threeD.png); /* Dialogs-FooterButtonsDefault-Background_Image */
+    background-position: left top;  /* Dialogs-FooterButtonsDefault-Background_Image-Position */
+    background-repeat: repeat-x; /* Dialogs-FooterButtonsDefault-Background_Image-Repeat */
+
+
+    -moz-box-shadow: 4px 4px 4px black; /* Dialogs-FooterButtonsDefault-BorderStyle_Shadow */
+    -webkit-box-shadow: 4px 4px 4px black; /* Dialogs-FooterButtonsDefault-BorderStyle_Shadow */
+    box-shadow: 4px 4px 4px black; /* Dialogs-FooterButtonsDefault-BorderStyle_Shadow */
 }
 
-  /**************************************************************************************************
-   * TYPE:        wm.Dialog button panel and titlebar buttons
-   *
-   * DESCRIPTION: Sets background for buttons
-   ************************************************************************************************/
-body.wm_template .dialogtitlebar .wmbutton,
-body .wm_template .dialogtitlebar .wmbutton,
-body.wm_template .dialogfooter .wmbutton,
-body .wm_template .dialogfooter .wmbutton {
 
-    /* MainContent-HeadersDefault-Background */
-    background-color: #444444; /* MainContent-HeadersDefault-Font_Color */
-    background-image: url(images/threeD.png); /* MainContent-HeadersDefault-Background_Image */
-    background-position: left top;  /* MainContent-HeadersDefault-Background_Image-Position */
-    background-repeat: repeat-x; /* MainContent-HeadersDefault-Background_Image-Repeat */
-}
 
   /**************************************************************************************************
    * TYPE:        wm.Dialog button panel and titlebar buttons HOVER
@@ -158,32 +149,36 @@ body .wm_template .dialogfooter .wmbutton {
    ************************************************************************************************/
 
 body.wm_template .dialogtitlebar .wmbutton:hover,
-body .wm_template .dialogtitlebar .wmbutton:hover,
+body .wm_template .dialogtitlebar .wmbutton:hover {
+    /* Dialogs-TitleButtonsHover-Font */
+    color: #FFFFFF; /* Dialogs-TitleButtonsHover-Font_Color */
+
+    /* Dialogs-TitleButtonsHover-Background */
+    background-color: #444444; /* Dialogs-TitleButtonsHover-Background_Color */
+    background-image: url(images/threeD.png); /* Dialogs-TitleButtonsHover-Background_Image */
+    background-position: left top;  /* Dialogs-TitleButtonsHover-Background_Image-Position */
+    background-repeat: repeat-x; /* Dialogs-TitleButtonsHover-Background_Image-Repeat */
+
+
+    -moz-box-shadow: 4px 4px 4px black; /* Dialogs-TitleButtonsHover-BorderStyle_Shadow */
+    -webkit-box-shadow: 4px 4px 4px black; /* Dialogs-TitleButtonsHover-BorderStyle_Shadow */
+    box-shadow: 4px 4px 4px black; /* Dialogs-TitleButtonsHover-BorderStyle_Shadow */
+}
+
 body.wm_template .dialogfooter .wmbutton:hover,
 body .wm_template .dialogfooter .wmbutton:hover {
-    /* MainContent-HeadersHover-Font */
-    font-family: sans-serif; /* MainContent-HeadersHover-Font_Family */
-    font-size: 12pt; /* MainContent-HeadersHover-Font_TextSize */
-    color: #FFFFFF; /* MainContent-HeadersHover-Background_Color */
-    font-weight: bold; /* MainContent-HeadersHover-Font_Weight */
+    /* Dialogs-FooterButtonsHover-Font */
+    color: #FFFFFF; /* Dialogs-FooterButtonsHover-Font_Color */
 
-    /* MainContent-HeadersHover-Background */
-    background-color: #444444; /* MainContent-HeadersHover-Font_Color */
-    background-image: url(images/threeD.png); /* MainContent-HeadersHover-Background_Image */
-    background-position: left top;  /* MainContent-HeadersHover-Background_Image-Position */
-    background-repeat: repeat-x; /* MainContent-HeadersHover-Background_Image-Repeat */
+    /* Dialogs-FooterButtonsHover-Background */
+    background-color: #444444; /* Dialogs-FooterButtonsHover-Background_Color */
+    background-image: url(images/threeD.png); /* Dialogs-FooterButtonsHover-Background_Image */
+    background-position: left top;  /* Dialogs-FooterButtonsHover-Background_Image-Position */
+    background-repeat: repeat-x; /* Dialogs-FooterButtonsHover-Background_Image-Repeat */
+`
+    -moz-box-shadow: 4px 4px 4px black; /* Dialogs-FooterButtonsHover-BorderStyle_Shadow */
+    -webkit-box-shadow: 4px 4px 4px black; /* Dialogs-FooterButtonsHover-BorderStyle_Shadow */
+    box-shadow: 4px 4px 4px black; /* Dialogs-FooterButtonsHover-BorderStyle_Shadow */
 }
 
-  /**************************************************************************************************
-   * TYPE:        wm.Dialog titlebar buttons
-   *
-   * DESCRIPTION: No shadowing for dialog buttons (maybe this can be
-   *              eliminated with some style reviews)
-   ************************************************************************************************/
-.wm_template .dialogtitlebar .wmbutton,
-.wm_template .dialogtitlebar .wmbutton:hover {
-    -moz-box-shadow: 0px 0px 0px black; /* FF3.5+ */
-    -webkit-box-shadow: 0px 0px 0px black; /* Saf3.0+, Chrome */
-    box-shadow: 0px 0px 0px black; /* Opera 10.5, IE 9.0 */
-}
 
