@@ -26,7 +26,7 @@ dojo.declare("wm.Label", wm.Control, {
 	//resizeToFit: "(Resize to Fit)",
 	padding: 4,
 	singleLine: true,
-	align: "left",
+	align: "none",
 	init: function() {
 		dojo.addClass(this.domNode, "wmlabel");
 		this.inherited(arguments);
@@ -65,8 +65,9 @@ dojo.declare("wm.Label", wm.Control, {
 		var whitespace = (this.singleLine || this.autoSizeWidth) ? "nowrap" : "normal";
 		if (this.domNode.style.whiteSpace != whitespace)
 		        this.domNode.style.whiteSpace = whitespace;
-		if (this.domNode.style.textAlign != this.align)
-			this.domNode.style.textAlign = this.align;
+                var align = (this.align == "none") ? "" : this.align;
+		if (this.domNode.style.textAlign != align)
+			this.domNode.style.textAlign = align;
 		//this.reflowParent();
 		//this.doAutoSize();
 	},
