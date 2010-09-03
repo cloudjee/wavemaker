@@ -15,17 +15,17 @@
     .wm_template .dojoMenu .dijitMenu,
     .wm_template .dojoMenu .dijitMenuBar,
     .wm_template .dojoMenu .dijitMenuBar {
-	/* Document-HeadersDefault-Font */
-	font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
-	font-size: 12pt; /* Document-HeadersDefault-Font_TextSize */
-	color: #FFFFFF; /* Document-HeadersDefault-Font_Color */
-	font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+	/* Document-ClickablesDefault-Font */
+	font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
+	font-size: 12pt; /* Document-ClickablesDefault-Font_TextSize */
+	color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
+	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
 
-	/* Document-HeadersDefault-Background */
-	background-color: #444444; /* Document-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* Document-HeadersDefault-Background_Image */
-	background-position: left top;  /* Document-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-HeadersDefault-Background_Image-Repeat */
+	/* Document-ClickablesDefault-Background */
+	background-color: #444444; /* Document-ClickablesDefault-Background_Color */
+	background-image: url(images/threeD.png); /* Document-ClickablesDefault-Background_Image */
+	background-position: left top;  /* Document-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
 
 	border-width: 0px;
 	font-weight: bold;        
@@ -43,14 +43,14 @@
     body .wm_template .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
     body.wm_template .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
     body .wm_template .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
-	/* Document-HeadersHover-Font */
-	color: #FFFFFF; /* Document-HeadersHover-Font_Color */
+	/* Document-ClickablesHover-Font */
+	color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
 
-	/* Document-HeadersHover-Background */
-	background-color: #444444; /* Document-HeadersHover-Background_Color */
-	background-image: url(images/threeD.png); /* Document-HeadersDefault-Background_Image */
-	background-position: left top;  /* Document-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-HeadersDefault-Background_Image-Repeat */
+	/* Document-ClickablesHover-Background */
+	background-color: #444444; /* Document-ClickablesHover-Background_Color */
+	background-image: url(images/threeD.png); /* Document-ClickablesDefault-Background_Image */
+	background-position: left top;  /* Document-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
 
 
 	outline-width: 0;
@@ -61,17 +61,17 @@
     .wm_template .MainContent .dojoMenu .dijitMenu,
     .wm_template .MainContent .dojoMenu .dijitMenuBar,
     .wm_template .MainContent .dojoMenu .dijitMenuBar {
-	/* MainContent-HeadersDefault-Font */
-	font-family: sans-serif; /* MainContent-HeadersDefault-Font_Family */
-	font-size: 12pt; /* MainContent-HeadersDefault-Font_TextSize */
-	color: #FFFFFF; /* MainContent-HeadersDefault-Font_Color */
-	font-weight: bold; /* MainContent-HeadersDefault-Font_Weight */
+	/* MainContent-ClickablesDefault-Font */
+	font-family: sans-serif; /* MainContent-ClickablesDefault-Font_Family */
+	font-size: 12pt; /* MainContent-ClickablesDefault-Font_TextSize */
+	color: #FFFFFF; /* MainContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
 
-	/* MainContent-HeadersDefault-Background */
-	background-color: #444444; /* MainContent-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-HeadersDefault-Background_Image */
-	background-position: left top;  /* MainContent-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* MainContent-HeadersDefault-Background_Image-Repeat */
+	/* MainContent-ClickablesDefault-Background */
+	background-color: #444444; /* MainContent-ClickablesDefault-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-position: left top;  /* MainContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
 
 	border-width: 0px;
 	font-weight: bold;        
@@ -89,14 +89,14 @@
     body .wm_template .MainContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
     body.wm_template .MainContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
     body .wm_template .MainContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
-	/* MainContent-HeadersHover-Font */
-	color: #FFFFFF; /* MainContent-HeadersHover-Font_Color */
+	/* MainContent-ClickablesHover-Font */
+	color: #FFFFFF; /* MainContent-ClickablesHover-Font_Color */
 
-	/* MainContent-HeadersHover-Background */
-	background-color: #444444; /* MainContent-HeadersHover-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-HeadersDefault-Background_Image */
-	background-position: left top;  /* MainContent-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* MainContent-HeadersDefault-Background_Image-Repeat */
+	/* MainContent-ClickablesHover-Background */
+	background-color: #444444; /* MainContent-ClickablesHover-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-position: left top;  /* MainContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
 
 
 	outline-width: 0;
@@ -109,17 +109,17 @@
     .wm_template .HeaderContent .dojoMenu .dijitMenu,
     .wm_template .HeaderContent .dojoMenu .dijitMenuBar,
     .wm_template .HeaderContent .dojoMenu .dijitMenuBar {
-	/* HeaderContent-HeadersDefault-Font */
-	font-family: sans-serif; /* HeaderContent-HeadersDefault-Font_Family */
-	font-size: 12pt; /* HeaderContent-HeadersDefault-Font_TextSize */
-	color: #FFFFFF; /* HeaderContent-HeadersDefault-Font_Color */
-	font-weight: bold; /* HeaderContent-HeadersDefault-Font_Weight */
+	/* HeaderContent-ClickablesDefault-Font */
+	font-family: sans-serif; /* HeaderContent-ClickablesDefault-Font_Family */
+	font-size: 12pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
+	color: #FFFFFF; /* HeaderContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
 
-	/* HeaderContent-HeadersDefault-Background */
-	background-color: #444444; /* HeaderContent-HeadersDefault-Background_Color */
-	background-image: url(images/threeD.png); /* HeaderContent-HeadersDefault-Background_Image */
-	background-position: left top;  /* HeaderContent-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* HeaderContent-HeadersDefault-Background_Image-Repeat */
+	/* HeaderContent-ClickablesDefault-Background */
+	background-color: transparent;
+	background-image: none; 
+	background-position: left top;
+	background-repeat: repeat-x; 
 
 	border-width: 0px;
 	font-weight: bold;        
@@ -137,14 +137,14 @@
     body .wm_template .HeaderContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
     body.wm_template .HeaderContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
     body .wm_template .HeaderContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
-	/* HeaderContent-HeadersHover-Font */
-	color: #FFFFFF; /* HeaderContent-HeadersHover-Font_Color */
+	/* HeaderContent-ClickablesHover-Font */
+	color: #FFFFFF; /* HeaderContent-ClickablesHover-Font_Color */
 
-	/* HeaderContent-HeadersHover-Background */
-	background-color: #444444; /* HeaderContent-HeadersHover-Background_Color */
-	background-image: url(images/threeD.png); /* HeaderContent-HeadersDefault-Background_Image */
-	background-position: left top;  /* HeaderContent-HeadersDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* HeaderContent-HeadersDefault-Background_Image-Repeat */
+	/* HeaderContent-ClickablesHover-Background */
+	background-color: transparent;
+	background-image: none; 
+	background-position: left top;  /* HeaderContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
 
 
 	outline-width: 0;
@@ -161,13 +161,13 @@
    *
    ************************************************************************************************/
  .wm_template table.dijitMenuTable.dijitMenu.dijitReset {
-    /* Document-HeadersDefault-Font */
-    font-family: sans-serif; /* Document-HeadersDefault-Font_Family */
-    color: #FFFFFF; /* Document-HeadersDefault-Font_Color */
-    font-weight: bold; /* Document-HeadersDefault-Font_Weight */
+    /* Document-ClickablesDefault-Font */
+    font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
+    color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
+    font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
 
-    /* Document-HeadersDefault-Background */
-    background-color: #444444; /* Document-HeadersDefault-Background_Color */
+    /* Document-ClickablesDefault-Background */
+    background-color: #444444; /* Document-ClickablesDefault-Background_Color */
 
 
     border: solid 1px black;
@@ -184,10 +184,10 @@ body.wm_template  .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected
 body .wm_template .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected
  {
 
-    color: #FFFFFF; /* Document-HeadersHover-Font_Color */
+    color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
 
-    /* Document-HeadersHover-Background */
-    background-color: #444444; /* Document-HeadersHover-Background_Color */
+    /* Document-ClickablesHover-Background */
+    background-color: #444444; /* Document-ClickablesHover-Background_Color */
     background-image: none;
     outline-width: 0;
 }
@@ -220,11 +220,11 @@ body .wm_template ul.dijitMenu .dijitMenuItem.dijitMenuItemHover,
 body.wm_template  ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected,
 body .wm_template ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected
  {
-    /* Document-HeadersHover-Font */
-    color: #FFFFFF; /* Document-HeadersHover-Font_Color */
+    /* Document-ClickablesHover-Font */
+    color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
 
-    /* Document-HeadersHover-Background */
-    background-color: #333333; /* Document-HeadersHover-Background_Color */    
+    /* Document-ClickablesHover-Background */
+    background-color: #333333; /* Document-ClickablesHover-Background_Color */    
 
     outline-width: 0;
 }
