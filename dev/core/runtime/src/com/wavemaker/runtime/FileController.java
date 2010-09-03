@@ -55,7 +55,7 @@ import com.wavemaker.runtime.module.ModuleManager;
  */
 public final class FileController extends AbstractController {
 
-    private static final String WM_BUILD_GZIPPED_URL = "/lib//build/Gzipped/";
+    private static final String WM_BUILD_GZIPPED_URL = "/lib/build/Gzipped/";
     private static final String WM_BUILD_DOJO_THEMES_URL = "/lib/build/themes/";
     private static final String WM_BUILD_WM_THEMES_URL = "/lib/wm/base/widget/themes/";
     private static final String WM_BUILD_DOJO_FOLDER_URL = "/lib/dojo/";
