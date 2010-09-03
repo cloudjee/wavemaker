@@ -690,7 +690,7 @@ wm.Object.extendSchema(wm.Container, {
     fitToContent:       {ignore: true},
     fitToContentWidth:  {group: "advanced layout", order: 90, shortname: "Auto Width"},
     fitToContentHeight: {group: "advanced layout", order: 91, shortname: "Auto Height"},
-    autoScroll: {group: "style", order: 100, ignore: 0},
+    autoScroll: {group: "scrolling", order: 100, ignore: 0},
     isMajorContent: {group: "style", order: 150, ignore: 1},
     themeStyleType: {group: "style", order: 150}
 });
