@@ -490,7 +490,7 @@ Studio.extend({
 // Project UI
 //=========================================================================
 Studio.extend({
-       newPageClick: function(optionalPageType, optionalPageName) {
+    newPageClick: function(inSender, inEvent, optionalPageType, optionalPageName) {
 	   var pageName = optionalPageName || "Page";
 		if (!this.project.projectName)
 			return;
