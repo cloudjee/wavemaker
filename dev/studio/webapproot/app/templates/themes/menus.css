@@ -112,7 +112,7 @@
 	/* HeaderContent-ClickablesDefault-Font */
 	font-family: sans-serif; /* HeaderContent-ClickablesDefault-Font_Family */
 	font-size: 12pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
-	color: #FFFFFF; /* HeaderContent-ClickablesDefault-Font_Color */
+	color: #FFFFFF; /* HeaderContent-Style-Font_Color */
 	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
 
 	/* HeaderContent-ClickablesDefault-Background */
@@ -138,10 +138,11 @@
     body.wm_template .HeaderContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
     body .wm_template .HeaderContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
 	/* HeaderContent-ClickablesHover-Font */
-	color: #FFFFFF; /* HeaderContent-ClickablesHover-Font_Color */
+	color: #FFFFFF; /* HeaderContent-Style-Font_Color */
 
 	/* HeaderContent-ClickablesHover-Background */
 	background-color: transparent;
+        opacity: 0.8;
 	background-image: none; 
 	background-position: left top;  /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
@@ -204,10 +205,10 @@ body .wm_template ul.dijitMenu .dijitMenuItem
 {
 
     /* Tables-EvenRows-Font */
-    color: #FFFFFF; /* Tables-EvenRows-Odd-Font_Color */
+    color: #FFFFFF; /* Tables-EvenRows-Font_Color */
 
     /* Tables-EvenRows-Background */
-    background-color: #444444; /* Tabls-OddRows-Background_Color */
+    background-color: #444444; /* Tables-EvenRows-Background_Color */
 
     border-bottom-size: 1px;      /* Tables-EvenRows-Border_Size */
     border-bottom-style: solid;   
