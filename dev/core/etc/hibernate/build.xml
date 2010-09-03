@@ -71,8 +71,29 @@
         <copy file="${log4j.jar}" todir="${tmp}"/>
         <copy file="${ant.jar}" todir="${tmp}"/>
         <copy file="${ant-nodeps.jar}" todir="${tmp}"/>
-        <copy file="${spring.jar}" todir="${tmp}"/>
-        <copy file="${spring-webmvc.jar}" todir="${tmp}"/>
+
+		<copy file="${spring01.jar}" todir="${tmp}"/>
+		<copy file="${spring02.jar}" todir="${tmp}"/>
+		<copy file="${spring03.jar}" todir="${tmp}"/>
+		<copy file="${spring04.jar}" todir="${tmp}"/>
+		<copy file="${spring05.jar}" todir="${tmp}"/>
+		<copy file="${spring06.jar}" todir="${tmp}"/>
+		<copy file="${spring07.jar}" todir="${tmp}"/>
+		<copy file="${spring08.jar}" todir="${tmp}"/>
+		<copy file="${spring09.jar}" todir="${tmp}"/>
+		<copy file="${spring10.jar}" todir="${tmp}"/>
+		<copy file="${spring11.jar}" todir="${tmp}"/>
+		<copy file="${spring12.jar}" todir="${tmp}"/>
+		<copy file="${spring13.jar}" todir="${tmp}"/>
+		<copy file="${spring14.jar}" todir="${tmp}"/>
+		<copy file="${spring15.jar}" todir="${tmp}"/>
+		<copy file="${spring16.jar}" todir="${tmp}"/>
+		<copy file="${spring17.jar}" todir="${tmp}"/>
+		<copy file="${spring18.jar}" todir="${tmp}"/>
+		<copy file="${spring19.jar}" todir="${tmp}"/>
+		<copy file="${spring20.jar}" todir="${tmp}"/>
+		<copy file="${aopalliance.jar}" todir="${tmp}"/>
+
         <copy file="${jta.jar}" todir="${tmp}"/>
         <copy file="${stax.jar}" todir="${tmp}"/>
         <copy file="${jsr173_api.jar}" todir="${tmp}"/>
@@ -83,8 +104,8 @@
         <copy file="${wmtools.jar}" todir="${tmp}"/>
 
         <jar destfile="${testruntime.jar}" basedir="${src.runtime.dir}">
-            <manifest>
-                <attribute name="Class-Path" value="${wmcommon.jar.name} ${wmruntime.jar.name} ${wmtools.jar.name} ${spring.jar.name} ${spring-webmvc.jar.name} ${hibernate.jar.name} ${hibernate-ext.jar.name} ${jtidy.jar.name} ${apache-logging.jar.name} ${apache-lang.jar.name} ${apache-io.jar.name} ${dom4j.jar.name} ${cglib.jar.name} ${asm.jar.name} ${apache-collections.jar.name} ${antlr.jar.name} ${jaxb-xjc.jar.name} ${jaxb-api.jar.name} ${jaxb-impl.jar.name} ${activation.jar.name} ${mysql-connector.jar.name} ${postgresql.jar.name} ${db2.jar.name} ${jtds.jar.name} ${hsql.jar.name} ${log4j.jar.name} ${ant.jar.name} ${ant-nodeps.jar.name} ${freemaker.jar.name} ${jta.jar.name} ${jsr173_api.jar.name} ${stax.jar.name} ${apache-fileupload.jar.name}"/>
+            <attribute name="Class-Path" value="${wmcommon.jar.name} ${wmruntime.jar.name} ${wmtools.jar.name} 
+				${spring01.name} ${spring02.name} ${spring03.name} ${spring04.name} ${spring05.name} ${spring06.name} ${spring07.name} ${spring08.name} ${spring09.name} ${spring10.name} ${spring11.name} ${spring12.name} ${spring13.name} ${spring14.name} ${spring15.name} ${spring16.name} ${spring17.name} ${spring18.name} ${spring19.name} ${spring20.name} ${aopalliance.jar} ${hibernate.jar.name} ${hibernate-ext.jar.name} ${jtidy.jar.name} ${apache-logging.jar.name} ${apache-lang.jar.name} ${apache-io.jar.name} ${dom4j.jar.name} ${cglib.jar.name} ${asm.jar.name} ${apache-collections.jar.name} ${antlr.jar.name} ${jaxb-xjc.jar.name} ${jaxb-api.jar.name} ${jaxb-impl.jar.name} ${activation.jar.name} ${mysql-connector.jar.name} ${postgresql.jar.name} ${db2.jar.name} ${jtds.jar.name} ${hsql.jar.name} ${log4j.jar.name} ${ant.jar.name} ${ant-nodeps.jar.name} ${freemaker.jar.name} ${jta.jar.name} ${jsr173_api.jar.name} ${stax.jar.name} ${apache-fileupload.jar.name}"/>
             </manifest>
             <include name="log4j.properties"/>
         </jar>
