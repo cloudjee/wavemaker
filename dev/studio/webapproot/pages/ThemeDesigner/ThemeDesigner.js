@@ -1219,17 +1219,20 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
 	var selectedLevel = this.themeGroupList.selectedItem.getData().dataValue;
 	if (selectedLevel.match(/Content$/) && !this.currentTheme.match(/^wm_/)) {
-	    new wm.Label({width: "100%", height: "20px", parent: this.widgetEditPanel, owner: this, caption: "Use the controls below to copy styles from another panel type; select the panel type to copy from and hit the button"});
+	    new wm.Label({width: "100%", height: "30px", parent: this.widgetEditPanel, owner: this, singleLine: false, caption: "Use the controls below to copy styles from another panel type; select the panel type to copy from and hit the button"});
 	    var buttonpanel = new wm.Panel({layoutKind: "left-to-right", width: "100%", height: "80px", owner: this, parent: this.widgetEditPanel, margin: "10,5,10,5", verticalAlign: "top", horizontalAlign: "right"});
 
 	    var contentOptions = new wm.SelectMenu({owner: this,
 						    parent: buttonpanel,
-						    caption: "",
-						    width: "100px",
-						    height: "20px",
+						    caption: "Copy settings from",
+                                                    captionPosition: "top",
+                                                    captionAlign: "left",
+                                                    captionSize: "15px",
+						    width: "150px",
+						    height: "40px",
 						    dataValue: "Document",
 						    options: wm.Array.removeElement(["Document", "MainContent", "EmphasizedContent", "HeaderContent"], selectedLevel).join(",")});
-	    var copyButton = new wm.Button({_classes: {domNode: ["themeButton"]}, owner: this, parent: buttonpanel, caption: "Copy " + (selectedLevel == "PageContent" ? "Document" : "PageContent") + " Settings", width: "100%", margin: "0,20,0,20", height: "40px",disabled: this.currentTheme.match(/^wm_/), border: 2, borderColor: "#262b34"});
+	    var copyButton = new wm.Button({_classes: {domNode: ["themeButton"]}, owner: this, parent: buttonpanel, caption: "Copy", width: "100%", margin: "0,20,0,20", height: "40px",disabled: this.currentTheme.match(/^wm_/), border: 2, borderColor: "#262b34"});
 	    copyButton.connect(copyButton, "onclick", this, function() {
 		this.copyStyleSettings(contentOptions.getDataValue(), this.themeGroupList.selectedItem.getData().dataValue);
 	    });
