@@ -37,6 +37,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.thoughtworks.paranamer.AdaptiveParanamer;
 import com.thoughtworks.paranamer.ParameterNamesNotFoundException;
@@ -245,7 +246,8 @@ public/* static */class ServerUtils {
     public static Map<String, Object[]> mergeParams(HttpServletRequest request) {
         
         Map<String, Object[]> params = new HashMap<String, Object[]>();
-        Set<Map.Entry<?, ?>> entries;
+        //Set<Map.Entry<?, ?>> entries;
+        Set<Map.Entry<String, MultipartFile>> entries;
         
         if (request instanceof MultipartHttpServletRequest) {
             MultipartHttpServletRequest mrequest = (MultipartHttpServletRequest) request;
