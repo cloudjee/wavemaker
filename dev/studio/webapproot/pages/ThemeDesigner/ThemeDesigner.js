@@ -826,11 +826,12 @@ dojo.declare("ThemeDesigner", wm.Page, {
         case "borderWidth":
             var borders = [];
              
-            var borders1 = this.themeGroupData.Borders.styles[2].borders
-            var borders2 = this.themeGroupData.Borders.styles[3].borders
-
-            for (var i = 0; i < borders1.length; i++) borders.push(borders1[i]);
-            for (var i = 0; i < borders2.length; i++) borders.push(borders2[i]);
+            borders = borders.concat(this.themeGroupData.Borders.styles[2].borders);
+            borders = borders.concat(this.themeGroupData.Borders.styles[3].borders);
+            borders = borders.concat(this.themeGroupData.Dialogs.subcategories.Styles.styles[1].borders);
+            borders.push({borderClass: "wm.HeaderContentPanel", borderProperty: "border"});
+            borders.push({borderClass: "wm.EmphasizedContentPanel", borderProperty: "border"});
+            borders.push({borderClass: "wm.EmphasizedContentPanel", borderProperty: "border"});
 
             for (var i = 0; i < borders.length; i++) {
                 var widgetClassName = borders[i].borderClass;
@@ -843,6 +844,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                 this.themePrototype[widgetClassName][borderProperty] = newValue;
                 var ctor = dojo.getObject(widgetClassName);
                 if (ctor && ctor.prototype) {
+                    studio.application.loadThemePrototypeForClass(ctor); // make sure the prototype is loaded before we start editting it
                     if (widgetClassName != "wm.Panel" || borderProperty != "border") // never set the border for wm.Panel! borderColor is ok...
                         ctor.prototype[borderProperty] = newValue;
                 }
@@ -855,10 +857,11 @@ dojo.declare("ThemeDesigner", wm.Page, {
         case "borderRadius":
             var newValue = value + "px";
 	    this.setCssSymbol("Borders-Panel_BorderStyle", "Radius", newValue);
-	    this.setCssSymbol("Document-ClickablesDefault-BorderStyle", "Radius",newValue);
+	    this.setCssSymbol("Document-ClickablesDefault_BorderStyle", "Radius", newValue);
+
             for (var i = 1; i < this.panelTypes.length; i++) {
-	        this.setCssSymbol(this.panels[i] + "-ClickablesDefault-BorderStyle", "Radius",newValue);
-	        this.setCssSymbol(this.panels[i] + "-Styles-BorderStyle", "Radius",newValue);
+	        this.setCssSymbol(this.panelTypes[i] + "-ClickablesDefault-BorderStyle", "Radius",newValue);
+	        this.setCssSymbol(this.panelTypes[i] + "-Styles-BorderStyle", "Radius",newValue);
             }
 
             newValue = Math.floor(value * 0.6) + "px";
@@ -872,8 +875,16 @@ dojo.declare("ThemeDesigner", wm.Page, {
             for (var i = 0; i < this.panelTypes.length; i++) {
 	        this.setCssSymbol(this.panelTypes[i] + "-ClickablesDefault-Background", "Color", value);
             }
-
             var newvalues = this.offsetColor(value);
+
+	    this.setCssSymbol("Dialogs-FooterButtonsDefault-Background", "Color", value);
+	    this.setCssSymbol("Dialogs-FooterButtonsHover-Background", "Color", newvalues[0]);
+
+            // title buttons will always be just white
+	    this.setCssSymbol("Dialogs-TitleButtonsDefault-Background", "Color", "#ffffff");
+	    this.setCssSymbol("Dialogs-TitleButtonsHover-Background", "Color", "#dddddd");
+
+
             for (var i = 0; i < this.panelTypes.length; i++) {
 	        this.setCssSymbol(this.panelTypes[i] + "-ClickablesHover-Background", "Color", newvalues[0]);
 	        this.setCssSymbol(this.panelTypes[i] + "-ClickablesActive-Background", "Color", newvalues[2]);
@@ -889,6 +900,12 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	        this.setCssSymbol(this.panelTypes[i] + "-ClickablesActive-Font", "Color", value);
             }
 
+	    this.setCssSymbol("Dialogs-FooterButtonsDefault-Font", "Color", value);
+	    this.setCssSymbol("Dialogs-FooterButtonsHover-Font", "Color", value);
+
+            // Title buttons will always just be black font
+	    this.setCssSymbol("Dialogs-TitleButtonsDefault-Font", "Color", "#000000");
+	    this.setCssSymbol("Dialogs-TitleButtonsHover-Font", "Color", "#000000");
 
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
             break;
@@ -909,6 +926,14 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	        this.setCssSymbol(this.panelTypes[i] + "-ClickablesDefault-Background", "Image-Repeat", repeat);
 	        this.setCssSymbol(this.panelTypes[i] + "-ClickablesDefault-Background", "Image-Position", position);
             }
+	    this.setCssSymbol("Dialogs-FooterButtonsDefault-Background", "Image", url);
+	    this.setCssSymbol("Dialogs-FooterButtonsDefault-Background", "Image-Repeat", repeat);
+	    this.setCssSymbol("Dialogs-FooterButtonsDefault-Background", "Image-Position", position);
+
+            // No background image for the  titlebar buttons
+	    this.setCssSymbol("Dialogs-TitleButtonsDefault-Background", "Image", "none");
+	    this.setCssSymbol("Dialogs-TitleButtonsDefault-Background", "Image-Repeat", repeat);
+	    this.setCssSymbol("Dialogs-TitleButtonsDefault-Background", "Image-Position", position);
 
 	    if  (url.match(/\d/)) {
 		var numb = parseInt(url.match(/\d/)[0]);
@@ -923,6 +948,11 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	        this.setCssSymbol(this.panelTypes[i] + "-ClickablesHover-Background", "Image-Repeat", repeat);
 	        this.setCssSymbol(this.panelTypes[i] + "-ClickablesHover-Background", "Image-Position", position);
             }
+
+	    this.setCssSymbol("Dialogs-FooterButtonsHover-Background", "Image", url);
+	    this.setCssSymbol("Dialogs-FooterButtonsHover-Background", "Image-Repeat", repeat);
+	    this.setCssSymbol("Dialogs-FooterButtonsHover-Background", "Image-Position", position);
+
 
 	    if  (url.match(/\d/)) {
 		var numb = parseInt(url.match(/\d/)[0]);
@@ -941,38 +971,38 @@ dojo.declare("ThemeDesigner", wm.Page, {
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
             break;
 
-        case "headerFontColor":
-
-            for (var i = 0; i < this.panelTypes.length; i++) {
-	    this.setCssSymbol(this.panelTypes[i] + "-ClickablesDefault-Font", "Color", value);
-	    this.setCssSymbol(this.panelTypes[i] + "-ClickablesHover-Font", "Color", value);
-	    this.setCssSymbol(this.panelTypes[i] + "-ClickablesActive-Font", "Color", value);
-            }
-
-            studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
-            break;
-
         case "headerFontSize":
 	    value += "pt";
             for (var i = 0; i < this.panelTypes.length; i++) {
-	    this.setCssSymbol(this.panelTypes[i] + "-ClickablesDefault-Font", "TextSize", value);
-	    this.setCssSymbol(this.panelTypes[i] + "-ClickablesHover-Font", "TextSize", value);
-	    this.setCssSymbol(this.panelTypes[i] + "-ClickablesActive-Font", "TextSize", value);
-        }
+	        this.setCssSymbol(this.panelTypes[i] + "-ClickablesDefault-Font", "TextSize", value);
+	        this.setCssSymbol(this.panelTypes[i] + "-ClickablesHover-Font", "TextSize", value);
+	        this.setCssSymbol(this.panelTypes[i] + "-ClickablesActive-Font", "TextSize", value);
+            }
+	    this.setCssSymbol("Dialogs-FooterButtonsDefault-Font", "TextSize", value);
+	    this.setCssSymbol("Dialogs-FooterButtonsHover-Font", "TextSize", value);
+
+	    this.setCssSymbol("Dialogs-Styles-Font", "TextSize", value);
+
+            // don't set the font size for the titlebar buttons; tends to mess with the position of the "x" and "-" in the buttons
 
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
             break;
 
         case "headerFontFamily":
             for (var i = 0; i < this.panelTypes.length; i++) {
-	    this.setCssSymbol(this.panelTypes[i] + "-ClickablesDefault-Font", "Family", value);
-	    this.setCssSymbol(this.panelTypes[i] + "-ClickablesHover-Font", "Family", value);
-	    this.setCssSymbol(this.panelTypes[i] + "-ClickablesActive-Font", "Family", value);
+	        this.setCssSymbol(this.panelTypes[i] + "-ClickablesDefault-Font", "Family", value);
+	        this.setCssSymbol(this.panelTypes[i] + "-ClickablesHover-Font", "Family", value);
+	        this.setCssSymbol(this.panelTypes[i] + "-ClickablesActive-Font", "Family", value);
             }
+	    this.setCssSymbol("Dialogs-FooterButtonsDefault-Font", "Family", value);
+	    this.setCssSymbol("Dialogs-FooterButtonsHover-Font", "Family", value);
 
-	    // Also sets the page font face; if the user wants something other than a single font face for their app
+            // don't mess with the font for the titlebar buttons
+
+	    // Also sets the page font face; if the user wants something other than a single font face for their app, go advanced
             for (var i = 0; i < this.panelTypes.length; i++) 
 	        this.setCssSymbol(this.panelTypes[i] + "-Styles-Font", "Family", value);
+	    this.setCssSymbol("Dialogs-Styles-Font", "Family", value);
 
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
             break;
@@ -1370,6 +1400,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
                     var value = e.getDataValue();
                     if (p == "headerHeight" && !value.match(/px/)) value += "px";
+                    studio.application.loadThemePrototypeForClass(ctor); // make sure the prototype is loaded before we start editting it
                     ctor.prototype[p] = value;
                     this.themePrototype[name][p] = value;                    
 		    //this.regenerateDemoPanel();
@@ -1666,6 +1697,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                     this.themePrototype[widgetClassName][borderProperty] = newValue;
                     var ctor = dojo.getObject(widgetClassName);
                     if (ctor && ctor.prototype) {
+                        studio.application.loadThemePrototypeForClass(ctor); // make sure the prototype is loaded before we start editting it
                         ctor.prototype[borderProperty] = newValue;
 			console.log("Set prototype " + widgetClassName + ".prototype." + borderProperty + " = " + newValue);
                     }
@@ -1964,9 +1996,11 @@ dojo.declare("ThemeDesigner", wm.Page, {
                         Math.floor(values[2] * (brighten ? 1.6 : 0.7))];
         result3 = this.sanitizeColorArray(result3);
 
+        var blackandwhite = (max < 120) ? "#ffffff" : "#000000";
         return ["#" + result1.join(""),
                 "#" + result2.join(""),
-                "#" + result3.join("")];
+                "#" + result3.join(""),
+               blackandwhite];
     },
 
 
