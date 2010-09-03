@@ -24,7 +24,7 @@ try
 		["wm.packages", wm.libPath + "wm/common/packages"],
 		["common", wm.libPath + "wm/common"],
 		["wm.modules", wm.basePath + "modules/ep"]
-	);
+	);	
 
 	// Load minified built version of libraries when not booting in debug mode
 	if (!djConfig.debugBoot) 
@@ -32,8 +32,16 @@ try
 		// Register paths for compressed parts of dojo
 		dojo.registerModulePath("dojo.nls", wm.libPath + "build/nls");
 		dojo.registerModulePath("dijit.themes.tundra", wm.libPath + "build/themes/tundra");
-		dojo.require("lib.build.Gzipped.lib_build", true);
-		//dojo.require("lib.build.lib_build_uncompressed", true);  
+		dojo.registerModulePath("build", wm.libPath + "build");
+
+		dojo.require("build.Gzipped.lib_build", true);	
+		dojo.require("build.Gzipped.wm_dojo_grid", true);
+		dojo.require("build.Gzipped.wm_editors", true);
+		dojo.require("build.Gzipped.wm_richTextEditor", true);
+		dojo.require("build.Gzipped.wm_menus", true);
+		dojo.require("build.Gzipped.wm_charts", true);
+		dojo.require("build.Gzipped.wm_gadgets", true);
+
 		dojo.require("lib.runtime_manifest", true);
 	}
 	else
