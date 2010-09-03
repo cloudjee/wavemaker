@@ -424,8 +424,7 @@ Studio.widgets = {
 						    themesPageAddBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "New Theme (Copies wm_basic theme)", imageIndex: 25}, {onclick: "addNewThemeClick"}],
 						    themesPageCopyBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Copy Current Theme", imageIndex: 1}, {onclick: "copyThemeClick"}],
 						    themesPageDeleteBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Delete Theme", imageIndex: 0}, {onclick: "deleteThemeClick"}],
-						    themesPageRevertBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Revert Changes", imageIndex: 6, imageList: "canvasToolbarImageList16"}, {onclick: "revertThemeClick"}],
-                                                    themesPageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Open Help Dialog", caption: "?"}, {onclick: "helpThemeClick"}]
+						    themesPageRevertBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Revert Changes", imageIndex: 6, imageList: "canvasToolbarImageList16"}, {onclick: "revertThemeClick"}]
 						}],
                                                 themesPage: ["wm.PageContainer", {deferLoad: true, loadParentFirst: true, 
                                                                                   pageName: "ThemeDesigner"}]
