@@ -866,6 +866,10 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	background-position: top !important;
 }
 
+.wmeditor .dijitValidationIcon {
+        height: 16px;
+}
+
 .wmbox .dijitProgressBarEmpty {
 	background: white;
 }
