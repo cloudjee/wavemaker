@@ -53,7 +53,7 @@ getCssDeclaration = function(inName, inNodeName) {
 	var pageName = studio.project.pageName;
         var obj = studio.page[inName];
     var isLayout =  (obj && obj instanceof wm.Layout);
-    return "body.tundra " + (isLayout ? "" : ".wmlayout") + " #wavemakerNode." + pageName + " ." + pageName + "-" + inName + inNodeName + (isLayout ? ".wmlayout":"") + ",\n" +
+    return "body.tundra " + " #wavemakerNode." + pageName + (isLayout ? "" : " .wmlayout") + " ." + pageName + "-" + inName + inNodeName + (isLayout ? ".wmlayout":"") + ",\n" +
 "body.tundra " + (isLayout ? "" : ".wmlayout") + " #studio_designer." + pageName + " ." + pageName + "-" + inName + inNodeName + (isLayout ? ".wmlayout":"") ;
 }
 
