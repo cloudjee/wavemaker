@@ -9,8 +9,8 @@
 .wm_template div.wmsplitter-h,
 .wm_template div.wmsplitter-v,
 .wm_template .wmbevel {
-    /* Document-HeadersDefault-Background */
-    background-color: #444444; /* Document-HeadersDefault-Background_Color */
+    /* Document-ClickablesDefault-Background */
+    background-color: #444444; /* Document-ClickablesDefault-Background_Color */
 
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
@@ -19,6 +19,6 @@
 
 .wm_template div.wmsplitter-h:hover,
 .wm_template div.wmsplitter-v:hover {
-    /* Document-HeadersHover-Background */
-    background-color: #444444; /* Document-HeadersHover-Background_Color */
+    /* Document-ClickablesHover-Background */
+    background-color: #444444; /* Document-ClickablesHover-Background_Color */
 }
