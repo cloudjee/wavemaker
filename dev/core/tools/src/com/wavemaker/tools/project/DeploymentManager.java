@@ -743,6 +743,11 @@ public class DeploymentManager {
     public String[] listThemes() throws IOException {
 
         File themesDir = new File(studioConfiguration.getCommonDir(),THEMES_DIR);        
+        if (!themesDir.exists()) {
+            themesDir.mkdir();
+        }
+        
+
         File files[] = themesDir.listFiles();
         File themesFolder = new File(studioConfiguration.getStudioWebAppRootFile() + "/lib/wm/base/widget", "themes");
 
