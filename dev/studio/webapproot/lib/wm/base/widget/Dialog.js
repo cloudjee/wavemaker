@@ -131,7 +131,21 @@ dojo.declare("wm.Dialog", wm.Container, {
 	        this.createTitle();
 	        if (this.useContainerNode) {
                     var owner = (this.declaredClass == "wm.Dialog") ? this.owner : this; // set the owner to wm.Page to allow othis to be written... IF its an instance not a subclass of wm.Dialog
-	            this.containerWidget = new wm.Container({_classes: {domNode: ["wmdialogcontainer", this.containerClass]}, name: "containerWidget", parent: this, owner: owner, layoutKind: "top-to-bottom", padding: "0", margin: "0", border: "0", width: "100%", height: "100%", horizontalAlign: "left", verticalAlign: "top", autoScroll: true});
+	            this.containerWidget = new wm.Container({
+			_classes: {domNode: ["wmdialogcontainer", this.containerClass]}, 
+			name: "containerWidget",
+			parent: this,
+			owner: owner,
+			layoutKind: "top-to-bottom",
+			padding: "0",
+			margin: "0",
+			border: "0",
+			width: "100%",
+			height: "100%",
+			horizontalAlign: "left",
+			verticalAlign: "top",
+			autoScroll: true,
+			noInspector: true});
 		    this.containerNode = this.containerWidget.domNode;
 		} else {
 	            this.containerNode = this.domNode;//this.container.domNode;
@@ -139,6 +153,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	        this.setModal(this.modal);
             this.setTitlebarBorder(this.titlebarBorder);
             this.setTitlebarBorderColor(this.titlebarBorderColor);
+
 	},
     setTitlebarBorder: function(inBorder) {
         this.titlebarBorder = inBorder;
@@ -426,6 +441,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	},
     createTitle: function() {
 	this.titleBar = new wm.Container({_classes: {domNode: ["dialogtitlebar"]}, 
+					  noInspector: true,
 					  showing: this.title,
 					  name: "titleBar", 
 					  parent: this,
@@ -438,6 +454,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 					  borderColor: this.titlebarBorderColor,
 					  layoutKind: "left-to-right"});
 	this.titleClose = new wm.Button({
+					  noInspector: true,
 					 name: "titleClose",
 					 caption: "X",
 					 width: "30px",
@@ -446,6 +463,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 					 owner: this,
 					 showing: !this.modal && !this.noEscape });
 	this.titleMinify = new wm.Button({
+					  noInspector: true,
 					  name: "titleMinify",
 					  caption: "&ndash;",
 					  width: "30px",
@@ -455,6 +473,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 					  showing: !this.modal});	
 
 	this.titleMaxify = new wm.Button({
+					  noInspector: true,
 					  name: "titleMinify",
 					  caption: " ",
 					  width: "30px",
@@ -463,6 +482,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 					  owner: this,
 					  showing: !this.modal});	
 	this.titleLabel = new wm.Label({
+					  noInspector: true,
+	                                name: "dialogTitleLabel",
 					parent: this.titleBar,
 					owner: this,
 					caption: this.title,
@@ -1512,3 +1533,31 @@ dojo.declare("wm.ColorPickerDialog", wm.Dialog, {
 });
 
 wm.ColorPickerDialog.cssLoaded = false;
+
+
+dojo.declare("wm.DesignableDialog", wm.Dialog, {
+    useContainerNode: true,
+    init: function() {
+	this.inherited(arguments);
+	delete this.containerNode; // containerNode is where child nodes get added to when appending children; just let the normal parent/child relationships prevail...
+    },
+    postInit: function() {
+	this.inherited(arguments);
+	if (!this.containerWidget.c$.length)
+	    new wm.Panel({name: "designablePanel",
+			  parent: this.containerWidget,
+			  owner: this.owner,
+			  verticalAlign: "top",
+			  horizontalAlign: "left",
+			  width: "100%",
+			  height: "100%",
+			  layoutKind: "top-to-bottom"});
+    },
+    writeComponents: function(inIndent, inOptions) {
+	return this.containerWidget.writeComponents(inIndent, inOptions);
+    }
+});
+
+wm.Object.extendSchema(wm.DesignableDialog, {
+    owner: {ignore: true}
+});

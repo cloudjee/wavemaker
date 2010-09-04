@@ -52,6 +52,7 @@
 [ "Dialogs", "GenericDialog", "wm.GenericDialog", "wm.base.widget.Dialog", "images/wm/button.png", "A simple button"],
 [ "Dialogs", "PageDialog", "wm.PageDialog", "wm.base.widget.Dialog", "images/wm/button.png", "A simple button"],
 [ "Dialogs", "RichTextDialog", "wm.RichTextDialog", "wm.base.widget.Dialog", "images/wm/button.png", "A simple button"],
+[ "Dialogs", "DesignableDialog", "wm.DesignableDialog", "wm.base.widget.Dialog", "images/wm/button.png", "A simple button"],
 
 
 [ "Dojo Widgets", "Chart", "wm.DojoChart", "wm.base.widget.DojoChart", "images/wm/bar_chart.png", "A Dojo chart"],

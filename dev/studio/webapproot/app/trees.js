@@ -156,7 +156,7 @@ Studio.extend({
 			var props = {};
 			inNode = wm.fire(inComponent, "preNewComponentNode", [inNode, props]) || inNode;
 			var n = this.newComponentNode(inNode, inComponent, null, null, props);
-  		        if (inComponent instanceof wm.TypeDefinition)
+  		        if (inComponent instanceof wm.TypeDefinition || inComponent instanceof wm.DesignableDialog)
 			    this.subWidgetsToTree(n, inComponent);
 		}
 	},

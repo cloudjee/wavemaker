@@ -612,9 +612,16 @@ dojo.declare("Studio", wm.Page, {
 	    }
 		if (this.selected == inComponent)
 			return;
+ 
+	    // if its a dialog or a widget within a dialog dismiss the dialog
+	    // unless the new selection IS in the dialog as wel
+            if (this.selected && !this.selected.isDestroyed && this.selected instanceof wm.Control) {
+		var dialog1 = this.selected.getParentDialog();
+		var dialog2 = (inComponent instanceof wm.Control) ? inComponent.getParentDialog() : null;
+		if (dialog1 && dialog1 != dialog2)
+		    dialog1.dismiss();
+	    }
 
-                if (this.selected && !this.selected.isDestroyed)
-                  wm.fire(this.selected, "deactivate");
 		while (inComponent && inComponent.isParentLocked && inComponent.isParentLocked())
 			inComponent = inComponent.parent;
 		try {

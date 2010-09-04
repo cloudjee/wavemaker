@@ -1232,6 +1232,10 @@ this.label.enable();
 		var oldParent = this.parent;
 		var newParent = this.parent = inParent;
 
+	    // Tricky new addition: if the parent has a containerWidget AND the parent OWNS that containerWidget, then switch parents!
+	    if (inParent && inParent.containerWidget && inParent.containerWidget.owner == inParent)
+		newParent = this.parent = inParent.containerWidget;
+
 		// If the new parent is not the same as the old parent, remove the widget from the old parent
 		// and remove the control from the old parent (Note: lookup difference between widget and control)
 		if (oldParent && oldParent != newParent) {

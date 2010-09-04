@@ -121,9 +121,14 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 	},
 	findTarget: function(inHit) {
 		var t;
-		if (this.targetInRoot(inHit)) {
+	    var d = this.getDesignableDialog();
+	    if (d) {
+		if (this.targetInDialog(inHit, d)) {
+			t = (this.designable ? this._findTarget(inHit, d.containerWidget) : d.containerWidget);
+		    }
+		} else if (this.targetInRoot(inHit)) {
 			t = (this.designable ? this._findTarget(inHit, this.root) : this.root);
-		}
+		} 
 		if (!t)
 			kit._setMarginBox(this.markNode, 0, 0, 0, 0);
 		if (t != this.target) {
@@ -168,6 +173,21 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 	targetInRoot: function(inHit) {
 		var h = inHit, b = kit._getMarginBox(this.root.domNode);
 		return !(h.l < 0 || h.t < 0 || h.l > b.w || h.t > b.h);
+	},
+    targetInDialog: function(inHit, inDialog) {
+		var h = inHit, b = kit._getMarginBox(inDialog.containerWidget.domNode);
+		return !(h.l < 0 || h.t < 0 || h.l > b.w || h.t > b.h);
+	},
+    isDesignableDialogShowing: function() {
+	return Boolean(this.getDesignableDialog());
+    },
+	getDesignableDialog: function() {
+	    for (var i = wm.dialog.showingList.length-1; i >= 0; i--) {
+		var d = wm.dialog.showingList[i];
+		if (d.owner == studio.wip && d instanceof wm.DesignableDialog)
+		    return d;
+	    }
+	    return;
 	},
 	isDesignable: function() {
 		var c = this.info.control || (dojo.getObject(this.info.type)).prototype;

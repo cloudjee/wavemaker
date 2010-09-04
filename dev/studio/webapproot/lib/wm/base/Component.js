@@ -61,6 +61,17 @@ dojo.declare("wm.Component", wm.Object, {
 		@param {Object} inProperties Properties to initialize on the new instance.
 		May be ommitted.
 	*/
+    getParentDialog: function() {
+	var w = this;
+	while (w) {
+	    if (w instanceof wm.Dialog) {
+		return w;
+	    } else {
+		w = w.parent;
+	    }
+	}
+	return null;
+    },
     getParentPage: function() {
 	if (this instanceof wm.Page || this instanceof wm.PageDialog) 
 	    return this;
@@ -68,6 +79,7 @@ dojo.declare("wm.Component", wm.Object, {
 	    return this.owner.getParentPage();
 	return null;
     },
+
     getOwnerApp: function() {
         if (wm.isInstanceType(this, wm.Application)) return this;
 
@@ -334,13 +346,6 @@ dojo.declare("wm.Component", wm.Object, {
 	    else
 		return null;
 	},
-    getParentPage: function() {
-	if (this instanceof wm.Page || this instanceof wm.PageDialog) 
-	    return this;
-	if (this.owner)
-	    return this.owner.getParentPage();
-	return null;
-    },
 	// get the root portion of the runtime id
 	getRootId: function() {
 	    if (!this.rootId || this.isDesignLoaded()) {
@@ -567,6 +572,7 @@ this.panel1.createComponent("custom", "wm.Panel", {
 			//console.info('trying to get component from componentList');
 			try
 			{
+                            /* wm.componentList accessed here */
 				wm.getComponentStructure(inType);
 				ctor = dojo.getObject(inType);
 			}
