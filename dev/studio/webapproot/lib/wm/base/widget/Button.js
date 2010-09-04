@@ -240,6 +240,7 @@ dojo.declare("wm.ToggleButton", wm.ToolButton, {
 	}
     },
     setCaptionUp: function(inCaption) {
+        this.captionUp = inCaption;
         this.setCaption(inCaption);
     }
 });
