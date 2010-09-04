@@ -118,6 +118,7 @@ dojo.declare("wm.PageListRow", wm.Container, {
  * auto loading new rows from server?
  */
 dojo.declare("wm.WidgetList", wm.Container, {
+    lock: true,
     manageLiveVar: false,
     scrollX: false,
     scrollY: true,
