@@ -119,7 +119,9 @@
         <file name="${FastInfoset.jar}"/>
         <file name="${hibernate.jar}"/>
         <file name="${hsql.jar}"/>
+        <!-- Use JAXV from JDK6
         <file name="${jaxb-api.jar}"/>
+        -->
         <file name="${jaxb-impl.jar}"/>
         <file name="${jaxws-api.jar}"/>
         <file name="${jaxws-rt.jar}"/>
