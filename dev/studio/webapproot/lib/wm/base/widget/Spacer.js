@@ -21,8 +21,8 @@ dojo.require("wm.base.widget.Box");
 dojo.declare("wm.Spacer", wm.Control, {
 	classNames: "wmspacer",
         border: 0,
-    getMinWidthProp: function() {return 0;},
-    getMinHeightProp: function() {return 0;}
+    getMinWidthProp: function() {return this.minWidth || 0;},
+    getMinHeightProp: function() {return this.minHeight || 0;}
 });
 
 wm.Object.extendSchema(wm.Spacer, {
@@ -31,8 +31,6 @@ wm.Object.extendSchema(wm.Spacer, {
 	scrollY:  { ignore: 1 },
 	margin:   { ignore: 1 },
 	padding:  { ignore: 1 },
-	minWidth:   { ignore: 1 },
-	minHeight:   { ignore: 1 },
 	border:   { ignore: 1 },
 	borderColor:  { ignore: 1 }
 });
