@@ -37,6 +37,7 @@ wm.componentList = {
 	'wm.DojoLightbox': ['wm.base.widget.DojoLightbox'],
 	'wm.TwitterFeed':['wm.base.widget.TwitterFeed'],
 	
+	'wm.Tree': ['wm.base.widget.Tree'],
 	'wm.LivePanel': ['wm.base.widget.LivePanel'],
 	'wm.EditPanel': ['wm.base.widget.EditPanel'],
 	'wm.Gadget': ['lib.build.Gzipped.wm_gadgets'],
