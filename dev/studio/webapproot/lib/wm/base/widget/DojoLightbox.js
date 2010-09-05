@@ -140,6 +140,9 @@ dojo.declare("wm.DojoLightbox", wm.Component, {
 	empty: function(){
 		if (this.dojoObj)
 			this.dojoObj.clearGroup(this.name);
+	},
+	update: function(){
+		this.show();
 	}
 });
 

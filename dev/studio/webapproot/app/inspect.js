@@ -162,8 +162,9 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 	    newNavigation: {caption:" - New Navigation..."},
 	    serviceVariables: {caption: "Service Variables:", list: "serviceVariable"},
 	    navigations: {caption: "Navigations:", list: "navigationCall"},
-            existingCalls: {caption: "Shared Event Handlers:", list: "sharedEventHandlers"},
-            dialogs: {caption: "Show Dialogs:", list: "dialogs"},
+     	existingCalls: {caption: "Shared Event Handlers:", list: "sharedEventHandlers"},
+      dialogs: {caption: "Show Dialogs:", list: "dialogs"},
+      dialogs: {caption: "Show LightBox:", list: "lightboxes"},
 	    liveForms: {caption: "Live Forms:", list: "liveForms"}
 	},
 	isEventAction: function(inValue) {
@@ -175,8 +176,9 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 	//FIXME: cache this
 	generateStore: function() {
 	    var sc = wm.listComponents([studio.application, studio.page], wm.ServiceVariable);
+			var lightboxList = wm.listComponents([studio.application, studio.page], wm.DojoLightbox);
 	    var nc = wm.listComponents([studio.application, studio.page], wm.NavigationCall);
-            var sharedEventHandlers = eventList(this.inspected.getSharedEventLookupName(this.propName), wm.isInstanceType(studio.selected.owner, wm.Application) ? studio.appsourceEditor : studio.editArea);
+      var sharedEventHandlers = eventList(this.inspected.getSharedEventLookupName(this.propName), wm.isInstanceType(studio.selected.owner, wm.Application) ? studio.appsourceEditor : studio.editArea);
 	    var dialogList = wm.listComponents([studio.application, studio.page], wm.Dialog);
 	    var lf = wm.listComponents([studio.application, studio.page], wm.LiveForm);
 	    var items=[];
@@ -200,13 +202,17 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 		        	        a = sharedEventHandlers;
 							break;
 					    case "dialogs":
-							if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "dialog") == -1) return;
-							a = dialogList;
-							break;
+								if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "dialog") == -1) return;
+								a = dialogList;
+								break;
+					    case "lightboxes":
+								if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "lightbox") == -1) return;
+								a = lightboxList;
+								break;
 					    case "liveForms":
-							if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "liveForm") == -1) return;
-							a = lf;
-							break;
+								if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "liveForm") == -1) return;
+								a = lf;
+								break;
 				    }	
 					
 					if (a && a.length) {
