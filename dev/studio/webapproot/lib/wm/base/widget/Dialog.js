@@ -370,29 +370,30 @@ dojo.declare("wm.Dialog", wm.Container, {
 	setContent: function(inContent) {
 		this.containerNode.innerHTML = inContent;
 	},
-        setShowing: function(inShowing, forceChange, skipOnClose) {
+  setShowing: function(inShowing, forceChange, skipOnClose) {
 		if (inShowing != this.showing && this.modal)
 			this.dialogScrim.setShowing(inShowing);
 		this.inherited(arguments);
 		// global flag for easily finding the most recently shown dialog
-	        wm.Array.removeElement(wm.dialog.showingList, this);
-	    if (inShowing && (!window["studio"] || this != window["studio"].dialog))
-		    wm.dialog.showingList.push(this);
-	        this.domNode.style.zIndex = wm.dialog.getNextZIndex();
+	  wm.Array.removeElement(wm.dialog.showingList, this);
+	  if (inShowing && (!window["studio"] || this != window["studio"].dialog))
+			wm.dialog.showingList.push(this);
+	 	if (this.domNode)
+			this.domNode.style.zIndex = wm.dialog.getNextZIndex();
 
 		if (this.showing) {
-		    if (this._minified)
-			this.unminify(null, true);
+		  if (this._minified)
+				this.unminify(null, true);
 			this.reflow();
 		}/* else
 			// FIXME: hide any tooltips that may be showing
 			wm.hideToolTip(true);*/
-	    wm.bgIframe.setShowing(inShowing && this.modal && !this.isDesignedComponent());
+	  wm.bgIframe.setShowing(inShowing && this.modal && !this.isDesignedComponent());
 
 		if (this.showing)
 			this.onShow();
-	        else if (!skipOnClose) 
-		    this.onClose("");
+	  else if (!skipOnClose) 
+			this.onClose("");
 	},
 /*
 	setContentWidth: function(inWidth) {
