@@ -1126,5 +1126,5 @@ wm.Object.extendSchema(wm.AbstractEditor, {
     changeOnEnter: {ignore: 1},
     changeOnKey: {ignore: 1},
     onEnterKeyPress: {ignore: 1},
-	defaultInsert:{group: "editData", bindable: 1, order: 10, dependency: '${parent.declaredClass} == "wm.LiveForm" || ${parent.declaredClass} == "wm.RelatedEditor"'}
+		defaultInsert:{type: "String", bindable: 1, group: "editData", order: 10, dependency: '${parent.declaredClass} == "wm.LiveForm" || ${parent.declaredClass} == "wm.RelatedEditor"'}
 });

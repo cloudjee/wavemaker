@@ -259,10 +259,12 @@ dojo.declare("wm.LiveFormBase", wm.Panel, {
 		dojo.forEach(this.getFormEditorsArray(), function(e) {
 			wm.fire(e, "setDefaultOnInsert");
 		});
+		/*
 		// FIXME: handle related editors specially
 		dojo.forEach(this.getRelatedEditorsArray(), function(e) {
 			wm.fire(e, "setDefaultOnInsert");
 		});
+		*/
 	},
 	getEditorsArray: function() {
 		return wm.getMatchingFormWidgets(this, function(w) {
@@ -533,9 +535,9 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 		this.clearDataOutput();
 		this.beginEditUpdate();
 		this.clearData();
-		this.setDefaultOnInsert();
 		this.endEditUpdate();
 		this.beginEdit("insert");
+		this.setDefaultOnInsert();
 		this.onBeginInsert();
 		this.validate();
 		return true;

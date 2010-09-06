@@ -157,7 +157,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 			if (wm.isInstanceType(inValue, wm.Variable)) {
 				if (this.isAllDataFields()) {
 					var v = this._getDisplayData(inValue);
-					i = this.getStoreItem(v, "name");
+					i = this.getStoreItem(v, this._displayField);
 				} else {
 					var v = inValue;
 					var lookupVal = v.getValue(lookupFieldName);
@@ -953,8 +953,10 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		}
 	},
 	setDefaultOnInsert:function(){
-		if (this.editor && this.defaultInsert)
-			this.editor.attr('displayedValue', ''+this.defaultInsert, false);
+		if (this.editor && this.defaultInsert){
+			this.setEditorValue(this.defaultInsert);
+			this.changed();
+		}
 	}
 });
 
@@ -1031,25 +1033,26 @@ wm.Object.extendSchema(wm._SelectEditor, {
 });
 
 wm.Object.extendSchema(wm.SelectMenu, {
-    restrictValues: {type: "wm.Boolean", group: "editor", order: 40},
+  restrictValues: {type: "wm.Boolean", group: "editor", order: 40},
 	changeOnKey: { ignore: 1 },
 	changeOnEnter: { ignore: 1 },
 	selectedItem: { ignore: true, isObject: true, bindSource: true},
 	dataSet: { readonly: true, group: "editor", order: 4, type: "wm.Variable", isList: true, bindTarget: true},
 	startUpdate: { group: "editor", order: 5},
-    pageSize: { order: 6, group: "editor"},
+  pageSize: { order: 6, group: "editor"},
 	liveVariable: {ignore: 1 },
 	options: {group: "editor", order: 7},
 	dataField: {group: "editor", order: 10},
 	displayField: {group: "editor", order: 15},
 	displayExpression: {group: "editor", order: 20},
-    autoComplete: {group: "editor", order: 25},
+  autoComplete: {group: "editor", order: 25},
 	hasDownArrow: {group: "editor", order: 26},
-    allowNone: {group: "editor", order: 30},
+  allowNone: {group: "editor", order: 30},
 	updateNow: {group: "operation"},
-    dataFieldWire: { ignore: 1},
-    optionsVar: {ignore:1},
-	_allFields: {ignore:1}
+  dataFieldWire: { ignore: 1},
+  optionsVar: {ignore:1},
+	_allFields: {ignore:1},
+	defaultInsert:{ignore:1, bindTarget: 1, type:'wm.Variable', group: "editData", order: 10, dependency: '${parent.declaredClass} == "wm.LiveForm" || ${parent.declaredClass} == "wm.RelatedEditor"'}
 });
 
 wm.Object.extendSchema(wm._LookupEditor, {
