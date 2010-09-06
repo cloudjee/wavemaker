@@ -135,8 +135,8 @@ Studio.extend({
 		if (inWidget) {
 		    if (inWidget.flags.notInspectable || inWidget.isParentLocked() || inWidget instanceof wm.Dialog)
 				return;
-			var n = this.newComponentNode(inNode, inWidget);
-			this.subWidgetsToTree(n, inWidget);
+		    var n = this.newComponentNode(inNode, inWidget);
+		    this.subWidgetsToTree(n, inWidget);
 		}
 	},
 	subWidgetsToTree: function(inNode, inWidget) {
@@ -154,6 +154,7 @@ Studio.extend({
 	componentToTree: function(inNode, inComponent, inType) {
 		if (inComponent && !inComponent.flags.notInspectable && (!inType || inComponent instanceof inType)) {
 			var props = {};
+		    props.closed = inComponent instanceof wm.Dialog;
 			inNode = wm.fire(inComponent, "preNewComponentNode", [inNode, props]) || inNode;
 			var n = this.newComponentNode(inNode, inComponent, null, null, props);
   		        if (inComponent instanceof wm.TypeDefinition || inComponent instanceof wm.DesignableDialog)
