@@ -104,6 +104,7 @@ dojo.declare("wm.Dialog", wm.Container, {
     borderColor: "rgb(80,80,80)",
     titlebarBorder: "1",
     titlebarBorderColor: "black",
+    titlebarHeight: "30",
 /*
 	contentWidth: 640,
 	contentHeight: 400,
@@ -195,7 +196,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	},
     setTitlebarBorder: function(inBorder) {
         this.titlebarBorder = inBorder;
-        this.titleBar.setBorder(inBorder);
+        this.titleBar.setBorder("0,0," + inBorder + ",0");
         this.titleBar.setHeight((34 + this.titleBar.padBorderMargin.t + this.titleBar.padBorderMargin.b) + "px");
     },
     setTitlebarBorderColor: function(inBorderColor) {
@@ -205,7 +206,7 @@ dojo.declare("wm.Dialog", wm.Container, {
     setFooterBorder: function(inBorder) {
         this.footerBorder = inBorder;
         if (this.$.buttonBar) {
-            this.$.buttonBar.setBorder(inBorder);
+            this.$.buttonBar.setBorder(inBorder + ",0,0,0");
             //this.$.buttonBar.setHeight((34 + this.$.buttonBar.padBorderMargin.t + this.$.buttonBar.padBorderMargin.b) + "px");
         }
     },
@@ -492,6 +493,10 @@ dojo.declare("wm.Dialog", wm.Container, {
 	},
 	onClose: function(inWhy) {
 	},
+    setTitlebarHeight: function(inHeight) {
+        this.titlebarHeight = inHeight;
+        if (this.titleBar) this.titleBar.setHeight(inHeight + "px");
+    },
     createTitle: function() {
 	this.titleBar = new wm.Container({_classes: {domNode: ["dialogtitlebar"]}, 
 					  noInspector: true,
@@ -500,7 +505,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 					  parent: this,
 					  owner: this,
 					  width: "100%",
-					  height: "30px",
+					  height: this.titlebarHeight + "px",
 					  margin: "0",
 					  padding: "0",
 					  border: this.titlebarBorder,
@@ -690,7 +695,7 @@ dojo.declare("wm.RichTextDialog", wm.WidgetsJsDialog, {
     prepare: function() {
         this.inherited(arguments);
         this.widgets_data = {documentation: ["wm.RichText", {width: "100%", height: "100%", "toolbarAlign":false,"toolbarLink":true,"toolbarColor":true, dataValue: this.html, displayValue: this.html}, {}],
-		             buttonBar: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, name: "buttonBar", layoutKind: "left-to-right",  padding: "2,0,2,0", horizontalAlign: "right", height: "34px", width: "100%"}, {}, {
+		             buttonBar: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, name: "buttonBar", layoutKind: "left-to-right",  padding: "2,0,2,0", horizontalAlign: "right", height: "34px", width: "100%", borderColor: this.footerBorderColor, border: this.footerBorder + ",0,0,0"}, {}, {
 		                 okButton: ["wm.Button", {"height":"100%","width":"150px","caption": "OK"}, {"onclick":"onOkClick"}],
 		                 cancelButton: ["wm.Button", {"height":"100%","width":"150px","caption": "Cancel"}, {"onclick":"onCancelClick"}]
 	                     }]};
@@ -755,11 +760,12 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
 		    editor: ["wm._TextEditor", {}, {}]
 		}]
 	    }],
-	buttonBar: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]},
+	    buttonBar: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]},
 				    name: "buttonBar",
 				    layoutKind: "left-to-right",
 				    padding: "2,6,2,6", 
 				    horizontalAlign: "right",
+                                     borderColor: this.footerBorderColor, border: this.footerBorder + ",0,0,0",
 				    height: "34px",
 				    width: "100%"}, {}, {
 		                        button4: ["wm.Button", {"height":"100%","width":"130px","showing":false}, {"onclick":"buttonClick"}],
