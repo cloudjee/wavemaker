@@ -91,6 +91,9 @@ dojo.declare("wm.Dialog", wm.Container, {
     containerClass: "MainContent",
     corner: "cc", // center vertical, center horizontal; this is almost always the desired default... but for some nonmodal dialogs, its useful to have other options
     scrim: true,
+
+    useContainerWidget: false,  // if true, we create a container widget, if false we just use the dom node directly.  dom node is fine if you just want to set innerHTML or stick a 3rd party widget into the dialog.
+    useButtonBar: true,
     _minified: false,
     _maxified: false,
     noEscape: false,
@@ -99,7 +102,7 @@ dojo.declare("wm.Dialog", wm.Container, {
     verticalAlign: "top",
 	border: 2,
     borderColor: "rgb(80,80,80)",
-    titlebarBorder: 0,
+    titlebarBorder: "1",
     titlebarBorderColor: "black",
 /*
 	contentWidth: 640,
@@ -111,7 +114,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	showing: false,
         dialogScrim: null,
 	modal: true,
-	init: function() {
+	postInit: function() {
 		this.dialogScrim = new wm.Scrim({owner: this, _classes: {domNode: ["wmdialog-scrim"]}, waitCursor: false});
 		this.inherited(arguments);
 	    if (this.isDesignedComponent())
@@ -129,31 +132,66 @@ dojo.declare("wm.Dialog", wm.Container, {
 		this._connections.push(this.connect(document, "onkeypress", this, "keyPress"));
 		this._subscriptions.push(dojo.subscribe("window-resize", this, "reflow"));	    
 	        this.createTitle();
-	        if (this.useContainerNode) {
-                    var owner = (this.declaredClass == "wm.Dialog") ? this.owner : this; // set the owner to wm.Page to allow othis to be written... IF its an instance not a subclass of wm.Dialog
-	            this.containerWidget = new wm.Container({
+	    var containerWidget, containerNode;
+	    
+	    if (this.$.containerWidget)
+		this.containerWidget = this.$.containerWidget;
+
+                    var owner = (this.declaredClass == "wm.Dialog" || this instanceof wm.DesignableDialog) ? this.owner : this; // set the owner to wm.Page to allow othis to be written... IF its an instance not a subclass of wm.Dialog
+
+	    if (this.useContainerWidget) {
+		if (!this.containerWidget) {
+	            containerWidget = new wm.Container({
 			_classes: {domNode: ["wmdialogcontainer", this.containerClass]}, 
 			name: "containerWidget",
 			parent: this,
 			owner: owner,
 			layoutKind: "top-to-bottom",
-			padding: "0",
+			padding: "5",
+			fitToContentHeight: this.fitToContentHeight,
 			margin: "0",
 			border: "0",
 			width: "100%",
 			height: "100%",
 			horizontalAlign: "left",
 			verticalAlign: "top",
-			autoScroll: true,
-			noInspector: true});
-		    this.containerNode = this.containerWidget.domNode;
+			autoScroll: true});
 		} else {
-	            this.containerNode = this.domNode;//this.container.domNode;
+		    containerWidget = this.containerWidget;
 		}
-	        this.setModal(this.modal);
-            this.setTitlebarBorder(this.titlebarBorder);
+		containerNode = containerWidget.domNode;
+	    } else {
+	        containerNode = this.domNode;//this.container.domNode;
+	    }
+	    this.setModal(this.modal);
+            this.setTitlebarBorder("0,0," + this.titlebarBorder + ",0");
             this.setTitlebarBorderColor(this.titlebarBorderColor);
 
+	    if (this.useButtonBar) {
+		if (this.$.buttonBar)
+		    this.buttonBar = this.$.buttonBar;
+		else if (this.useContainerWidget) {
+		    this.buttonBar = new wm.Panel({_classes: {domNode: ["dialogfooter"]},
+						   name: "buttonBar",
+						   owner: owner,
+						   parent: this,
+						   width: "100%",
+						   height: "0px",
+						   fitToContentHeight: true,
+						   minHeight: 1,
+						   horizontalAlign: "right",
+						   verticalAlign: "top",
+						   layoutKind: "left-to-right",
+						   border: this.footerBorder + ",0,0,0",
+						   borderColor: this.titlebarBorderColor});
+		}
+	    }
+	    // must set this AFTER creating the button bar, or the button
+	    // bar will be ADDED to the containerWidget
+	    if (containerWidget) {
+		this.containerWidget = containerWidget;
+	    }
+	    this.containerNode = containerNode;
 	},
     setTitlebarBorder: function(inBorder) {
         this.titlebarBorder = inBorder;
@@ -163,6 +201,18 @@ dojo.declare("wm.Dialog", wm.Container, {
     setTitlebarBorderColor: function(inBorderColor) {
         this.titlebarBorderColor = inBorderColor;
         this.titleBar.setBorderColor(inBorderColor);
+    },
+    setFooterBorder: function(inBorder) {
+        this.footerBorder = inBorder;
+        if (this.$.buttonBar) {
+            this.$.buttonBar.setBorder(inBorder);
+            //this.$.buttonBar.setHeight((34 + this.$.buttonBar.padBorderMargin.t + this.$.buttonBar.padBorderMargin.b) + "px");
+        }
+    },
+    setFooterBorderColor: function(inBorderColor) {
+        this.footerBorderColor = inBorderColor;
+        if (this.$.buttonBar)
+            this.$.buttonBar.setBorderColor(inBorderColor);
     },
 
     setModal: function(inModal) {
@@ -255,6 +305,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 	},
  	renderBounds: function() {
 		if (this.showing) {
+		    if (this.fitToContentHeight) 
+			this.bounds.h = this.getPreferredFitToContentHeight();
+
 		    if (this._minified) {
 			var parentBox = dojo.contentBox(window.document.body);
 			var t = parentBox.h - 30;
@@ -370,30 +423,29 @@ dojo.declare("wm.Dialog", wm.Container, {
 	setContent: function(inContent) {
 		this.containerNode.innerHTML = inContent;
 	},
-  setShowing: function(inShowing, forceChange, skipOnClose) {
+        setShowing: function(inShowing, forceChange, skipOnClose) {
 		if (inShowing != this.showing && this.modal)
 			this.dialogScrim.setShowing(inShowing);
 		this.inherited(arguments);
 		// global flag for easily finding the most recently shown dialog
-	  wm.Array.removeElement(wm.dialog.showingList, this);
-	  if (inShowing && (!window["studio"] || this != window["studio"].dialog))
-			wm.dialog.showingList.push(this);
-	 	if (this.domNode)
-			this.domNode.style.zIndex = wm.dialog.getNextZIndex();
+	        wm.Array.removeElement(wm.dialog.showingList, this);
+	    if (inShowing && (!window["studio"] || this != window["studio"].dialog))
+		    wm.dialog.showingList.push(this);
+	        this.domNode.style.zIndex = wm.dialog.getNextZIndex();
 
 		if (this.showing) {
-		  if (this._minified)
-				this.unminify(null, true);
+		    if (this._minified)
+			this.unminify(null, true);
 			this.reflow();
 		}/* else
 			// FIXME: hide any tooltips that may be showing
 			wm.hideToolTip(true);*/
-	  wm.bgIframe.setShowing(inShowing && this.modal && !this.isDesignedComponent());
+	    wm.bgIframe.setShowing(inShowing && this.modal && !this.isDesignedComponent());
 
 		if (this.showing)
 			this.onShow();
-	  else if (!skipOnClose) 
-			this.onClose("");
+	        else if (!skipOnClose) 
+		    this.onClose("");
 	},
 /*
 	setContentWidth: function(inWidth) {
@@ -563,7 +615,8 @@ wm.Object.extendSchema(wm.Dialog, {
     modal: {group: "Dialog Options", order: 1},
     fitToContentWidth: {ignore: 1},
     fitToContentHeight: {ignore: 1},
-    useContainerNode: {ignore: 1},
+    useContainerWidget: {ignore: 1},
+    useButtonBar: {ignore: 1}, // user doesn't decide this; buttonbar is autosizing; if nothing in there, then it doesn't show.
     lock: {ignore: 1},
     freeze: {ignore: 1},
     padding: {ignore: 1},
@@ -582,23 +635,13 @@ wm.Object.extendSchema(wm.Dialog, {
 
 dojo.declare("wm.WidgetsJsDialog", wm.Dialog, { 
     margin: "0,4,4,0",
-    useContainerNode: true,
+    useContainerWidget: true,
+    useButtonBar: false,
     widgets_data: null,
     widgets_json: "",
     width: "400px",
     height: "150px",
-    init: function() {
-/*
-	this.contentWidth = parseInt(this.width);
-	this.contentHeight = parseInt(this.height);
-	*/
-	this.inherited(arguments);
-	if (!this.widgets_data)
-	    this.setWidgetsJson(this.widgets_json);
-	this.generateContents();
-	this.renderBounds();
 
-    },
     setShowing: function(inShowing, forceChange) {
 	this.inherited(arguments);
 	if (this.isReflowEnabled() && !this._rendered) {
@@ -608,6 +651,10 @@ dojo.declare("wm.WidgetsJsDialog", wm.Dialog, {
     },
     postInit: function() {
 	this.inherited(arguments);
+	if (!this.widgets_data)
+	    this.setWidgetsJson(this.widgets_json);
+	this.generateContents();
+	this.renderBounds();
 	this.reflow();
     },
 
@@ -642,29 +689,12 @@ dojo.declare("wm.RichTextDialog", wm.WidgetsJsDialog, {
     prepare: function() {
         this.inherited(arguments);
         this.widgets_data = {documentation: ["wm.RichText", {width: "100%", height: "100%", "toolbarAlign":false,"toolbarLink":true,"toolbarColor":true, dataValue: this.html, displayValue: this.html}, {}],
-		             dialogFooter: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, name: "dialogfooter", layoutKind: "left-to-right",  padding: "2,0,2,0", horizontalAlign: "right", height: "34px", width: "100%"}, {}, {
+		             buttonBar: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, name: "buttonBar", layoutKind: "left-to-right",  padding: "2,0,2,0", horizontalAlign: "right", height: "34px", width: "100%"}, {}, {
 		                 okButton: ["wm.Button", {"height":"100%","width":"150px","caption": "OK"}, {"onclick":"onOkClick"}],
 		                 cancelButton: ["wm.Button", {"height":"100%","width":"150px","caption": "Cancel"}, {"onclick":"onCancelClick"}]
 	                     }]};
     },
-    init: function() {
-	this.inherited(arguments);
-        this.setFooterBorder(this.footerBorder);
-        this.setFooterBorderColor(this.footerBorderColor);
-    },
-    setFooterBorder: function(inBorder) {
-        this.footerBorder = inBorder;
-        if (this.$.dialogFooter) {
-            this.$.dialogFooter.setBorder(inBorder);
-            this.$.dialogFooter.setHeight((34 + this.$.dialogFooter.padBorderMargin.t + this.$.dialogFooter.padBorderMargin.b) + "px");
-        }
-    },
-    setFooterBorderColor: function(inBorderColor) {
-        this.footerBorderColor = inBorderColor;
-        if (this.$.dialogFooter)
-            this.$.dialogFooter.setBorderColor(inBorderColor);
-    },
-
+ 
     setHtml: function(inHtml) {
         this.html = inHtml; // for design mode use only
         if (this.$.documentation)
@@ -724,8 +754,8 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
 		    editor: ["wm._TextEditor", {}, {}]
 		}]
 	    }],
-	dialogFooter: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]},
-				    name: "dialogFooter",
+	buttonBar: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]},
+				    name: "buttonBar",
 				    layoutKind: "left-to-right",
 				    padding: "2,6,2,6", 
 				    horizontalAlign: "right",
@@ -739,7 +769,7 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
         };
 
     },
-    init: function() {
+    postInit: function() {
 	this.inherited(arguments);
         this.setFooterBorder(this.footerBorder);
         this.setFooterBorderColor(this.footerBorderColor);
@@ -753,8 +783,8 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
 		button.setCaption(caption);
 		button.show();
 	    }
-            if (this.$.dialogFooter)
-	        this.$.dialogFooter.setShowing(captionFound);
+            if (this.$.buttonBar)
+	        this.$.buttonBar.setShowing(captionFound);
 	    this.setShowInput(this.showInput);
 	}
         if (this.$.userQuestionLabel)
@@ -763,15 +793,15 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
     },
     setFooterBorder: function(inBorder) {
         this.footerBorder = inBorder;
-        if (this.$.dialogFooter) {
-            this.$.dialogFooter.setBorder(inBorder);
-            this.$.dialogFooter.setHeight((34 + this.$.dialogFooter.padBorderMargin.t + this.$.dialogFooter.padBorderMargin.b) + "px");
+        if (this.$.buttonBar) {
+            this.$.buttonBar.setBorder(inBorder);
+            this.$.buttonBar.setHeight((34 + this.$.buttonBar.padBorderMargin.t + this.$.buttonBar.padBorderMargin.b) + "px");
         }
     },
     setFooterBorderColor: function(inBorderColor) {
         this.footerBorderColor = inBorderColor;
-        if (this.$.dialogFooter)
-            this.$.dialogFooter.setBorderColor(inBorderColor);
+        if (this.$.buttonBar)
+            this.$.buttonBar.setBorderColor(inBorderColor);
     },
     // handle fitToContentHeight adjustments
     reflow: function() {
@@ -829,7 +859,7 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
 	} else {
 	    button.hide();
 	}	
-	this.$.dialogFooter.setShowing(this.button1Caption || this.button2Caption || this.button3Caption || this.button4Caption);
+	this.$.buttonBar.setShowing(this.button1Caption || this.button2Caption || this.button3Caption || this.button4Caption);
     },
     onEnterKeyPress: function(inText) {
         if (this.enterKeyIsButton1) {
@@ -892,7 +922,7 @@ dojo.declare("wm.FileUploadDialog", wm.GenericDialog, {
     button2Caption: "Cancel",
     button1Close: true,
     button2Close: true,
-    init: function() {
+    postInit: function() {
         this.widgets_data.genericInfoPanel[3].textInput = ["wm.FileUpload", {  caption: "",
                                                                                uploadButton: false,
 						   padding: "0,20,0,20",
@@ -969,7 +999,7 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
     classNames: "wmtoast wmtoastExtraSpecific",
     title: "",
     modal: false,
-    useContainerNode: true,
+    useContainerWidget: true,
     _timeoutId: 0,
     duration: 5000,
     content: "Toast",
@@ -983,7 +1013,7 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
         this.widgets_data = {img: ["wm.Picture", {_classes: {domNode: ["ToastLeft"]}, width: "30px", height: "30px"}, {}],
 		             message: ["wm.Label", { height: "100px", width: "100%", singleLine: false, autoSizeHeight: true, margin: "5,10,5,10"}]};
     },
-    init: function() {
+    postInit: function() {
 	this.inherited(arguments);
         this.containerWidget.setLayoutKind("left-to-right");
         this.containerWidget.setVerticalAlign("middle");
@@ -997,9 +1027,6 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
         this.onToastClick();
     },
     onToastClick: function() {},
-    postInit: function() {
-	this.inherited(arguments);
-    },
     setShowing: function(inShow, forceChange) {
         this.inherited(arguments);
         if (inShow)
@@ -1073,7 +1100,7 @@ dojo.declare("wm.ToastFirstDraft", wm.Dialog, {
     classNames: "wmtoast wmtoastExtraSpecific",
     title: "",
     modal: false,
-    useContainerNode: true,
+    useContainerWidget: true,
     _timeoutId: 0,
     duration: 5000,
     content: "Toast",
@@ -1405,6 +1432,9 @@ dojo.declare("wm.ColorPickerDialog", wm.Dialog, {
     init: function() {
 	this.inherited(arguments);
         dojo.require("dojox.widget.ColorPicker");
+    },
+    postInit: function() {
+	this.inherited(arguments);
 
         if (!wm.ColorPickerDialog.cssLoaded) {
             var link = document.createElement("link");
@@ -1537,25 +1567,18 @@ wm.ColorPickerDialog.cssLoaded = false;
 
 
 dojo.declare("wm.DesignableDialog", wm.Dialog, {
-    useContainerNode: true,
-    init: function() {
-	this.inherited(arguments);
-	delete this.containerNode; // containerNode is where child nodes get added to when appending children; just let the normal parent/child relationships prevail...
-    },
+    border: "1",
+    borderColor: "black",
+    titlebarBorder: "1",
+    titlebarBorderColor: "black",
+    footerBorder: "1",
+    footerBorderColor: "black",
+    scrim: false,
+    useContainerWidget: true,
+    title: "Dialog",
     postInit: function() {
 	this.inherited(arguments);
-	if (!this.containerWidget.c$.length)
-	    new wm.Panel({name: "designablePanel",
-			  parent: this.containerWidget,
-			  owner: this.owner,
-			  verticalAlign: "top",
-			  horizontalAlign: "left",
-			  width: "100%",
-			  height: "100%",
-			  layoutKind: "top-to-bottom"});
-    },
-    writeComponents: function(inIndent, inOptions) {
-	return this.containerWidget.writeComponents(inIndent, inOptions);
+	delete this.containerNode; // containerNode is where child nodes get added to when appending children; just let the normal parent/child relationships prevail...
     }
 });
 
