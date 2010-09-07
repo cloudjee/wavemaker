@@ -459,17 +459,16 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 		this.setCaption(this.name);
 	},
 
-    setCaption: function(inCaption) {
-	var oldCap = this.caption;
-	this.caption = inCaption;
-	var cap = inCaption + ((this.required && !this.readonly) ? '&nbsp;<span class="wmeditor-required">*</span>' : "");
-	this.captionNode.innerHTML = cap;
-	if (oldCap && !inCaption || !oldCap && inCaption) {
-	    dojo.style(this.captionNode, "display", (inCaption) ? "block" : "none");
-	    this.sizeEditor();
-	}
-
-    },
+	setCaption: function(inCaption) {
+		var oldCap = this.caption;
+		this.caption = inCaption;
+		var cap = inCaption + ((this.required && !this.readonly) ? '&nbsp;<span class="wmeditor-required">*</span>' : "");
+		this.captionNode.innerHTML = cap;
+		if (oldCap && !inCaption || !oldCap && inCaption) {
+			dojo.style(this.captionNode, "display", (inCaption) ? "block" : "none");
+			this.sizeEditor();
+		}
+	},
 	setCaptionSize: function(inCaptionSize) {
 	    this.captionSize = inCaptionSize;
 	    this.sizeEditor();
@@ -837,37 +836,40 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 
     // TODO: If editor gets resized, what will the readOnlyNode do?
 	setReadonly: function(inReadonly) {
-	    this.readonly = inReadonly;
-	    var domNode = this.domNode;
-
-	    // Insure we have a readonly node, let each subclass override what the readonly node actually consists of
-	    if (!this.readOnlyNode && this.readonly)
-		    this.readOnlyNode = this.createReadOnlyNode();
-
-	    // If there is a readOnlyNode, then take care of adding/removing it from our domNode.
-	    if (this.readOnlyNode) {
-		// If we're in readonly mode, and the readonly node is not in our domNode, add it in.
-		if (this.readonly && this.readOnlyNode.parentNode != domNode)
-		    dojo.place(this.readOnlyNode, domNode,  "last");
-
-		// If we are NOT in readonly mode, and the readonly node is within our domNode, remove it.
-		else if (!this.readonly && this.readOnlyNode.parentNode == domNode)
-		    domNode.removeChild(this.readOnlyNode);
-	    } 
-
-	    // Add or remove the editorNode from our domNode
-	    if (!this.readonly && this.editorNode.parentNode != domNode) 
-		    dojo.place(this.editorNode, domNode,  "last");
-	    else if (this.readonly && this.editorNode.parentNode == domNode) 
-		    domNode.removeChild(this.editorNode);
-
-	    this.invalidCss = true;
-	    this.render();
-
-	    if (this.readonly)
-		    wm.fire(this.editor,"_hideTooltip");
-
-	    this.updateReadonlyValue();
+		var r = this.readonly;
+		this.readonly = inReadonly;
+		if (r != this.readonly)
+			this.setCaption(this.caption);
+			
+		var domNode = this.domNode;
+		
+		// Insure we have a readonly node, let each subclass override what the readonly node actually consists of
+		if (!this.readOnlyNode && this.readonly)
+			this.readOnlyNode = this.createReadOnlyNode();
+		
+		// If there is a readOnlyNode, then take care of adding/removing it from our domNode.
+		if (this.readOnlyNode) {
+			// If we're in readonly mode, and the readonly node is not in our domNode, add it in.
+			if (this.readonly && this.readOnlyNode.parentNode != domNode)
+				dojo.place(this.readOnlyNode, domNode,  "last");
+			// If we are NOT in readonly mode, and the readonly node is within our domNode, remove it.
+			else if (!this.readonly && this.readOnlyNode.parentNode == domNode)
+				domNode.removeChild(this.readOnlyNode);
+		} 
+		
+		// Add or remove the editorNode from our domNode
+		if (!this.readonly && this.editorNode.parentNode != domNode) 
+			dojo.place(this.editorNode, domNode,  "last");
+		else if (this.readonly && this.editorNode.parentNode == domNode) 
+			domNode.removeChild(this.editorNode);
+		
+		this.invalidCss = true;
+		this.render();
+		
+		if (this.readonly)
+			wm.fire(this.editor,"_hideTooltip");
+		
+		this.updateReadonlyValue();
 	},
 	updateReadonlyValue: function() {
 	    if (this.readonly && this.readOnlyNode)
