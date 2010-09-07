@@ -139,7 +139,7 @@
 
 [ "Services", "Database Service", "wm.DataModel", "wm.base.components.DataModel", "images/wm/data_blue.png"],
 [ "Services", "Java Service", "wm.JavaService", "wm.base.components.JavaService", "images/wm/component.png"],
-[ "Services", "Upload/Download Service", "wm.JavaService", "wm.base.components.JavaService", "images/wm/component.png", "Creates a java service for handling file downloads", {initialCode: "public String download() {return 'Ouch!';}", serviceId: "Download", initialClassId: "Download"}],
+//[ "Services", "Upload/Download Service", "wm.JavaService", "wm.base.components.JavaService", "images/wm/component.png", "Creates a java service for handling file downloads", {initialCode: "", javaTemplate: "FileUploadDownload.java", serviceId: "Download", initialClassId: "Download"}],
 [ "Services", "LiveView", "wm.LiveView", "wm.base.components.LiveView", "images/wm/liveview_16.png"],
 [ "Services", "Query", "wm.Query", "wm.base.components.Query", "images/wm/operation.png"],
 [ "Services", "Security", "wm.Security", "wm.base.components.Security", "images/lock_16.png"],
