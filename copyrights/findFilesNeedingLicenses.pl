@@ -34,7 +34,7 @@ sub searchFolder{
     $file = $folder . "/" . $file;
     if (-d $file) {
       &searchFolder($file, $copyright);
-    } elsif ($file =~ /\.(js|java)$/ && $file !~ /\/dojo\// && $file !~ /\/test\// && $file !~ /\/build\//) {
+    } elsif ($file =~ /\.(js|java|css)$/ && $file !~ /\/dojo\// && $file !~ /\/test\// && $file !~ /\/build\//) {
       &searchFile($file, $copyright);
     }
   }
