@@ -82,11 +82,10 @@ public final class FileController extends AbstractController {
         	reqPath = reqPath.substring(reqPath.indexOf('/', 1));
 
         
-    	File sendFile = new File(path, reqPath);
-
         if(reqPath.startsWith(WM_BUILD_GZIPPED_URL) || reqPath.startsWith(WM_GZIPPED_URL) || reqPath.equals(WM_BUILD_DOJO_JS_URL)){
         	isGzipped = true;
         	addExpiresTag = true;
+        	reqPath += ".gz";
         }else if (reqPath.startsWith(WM_BUILD_DOJO_THEMES_URL) || 
         		reqPath.startsWith(WM_BUILD_WM_THEMES_URL) || 
         		reqPath.startsWith(WM_BUILD_DOJO_FOLDER_URL) || 
@@ -99,7 +98,7 @@ public final class FileController extends AbstractController {
                     reqPath, request.getRequestURI());
         }
         
-
+    	File sendFile = new File(path, reqPath);
         if (null!=sendFile && !sendFile.exists()) {
             handleError(response, "File " + reqPath
                     + " not found in expected path: " + sendFile,

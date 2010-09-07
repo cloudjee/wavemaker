@@ -108,9 +108,10 @@ public final class StaticFileController extends AbstractController {
         File sendFile = null;
 
         if(reqPath.startsWith(WM_BUILD_GZIPPED_URL) || reqPath.equals(WM_BUILD_DOJO_JS_URL)){
-        	sendFile = new File(getStudioConfiguration().getStudioWebAppRootFile(), reqPath);
         	isGzipped = true;
         	addExpiresTag = true;
+        	reqPath += ".gz";
+        	sendFile = new File(getStudioConfiguration().getStudioWebAppRootFile(), reqPath);
         }else if (reqPath.startsWith(WM_BUILD_DOJO_THEMES_URL) || 
         		reqPath.startsWith(WM_BUILD_WM_THEMES_URL) || 
         		reqPath.startsWith(WM_BUILD_DOJO_FOLDER_URL) || 

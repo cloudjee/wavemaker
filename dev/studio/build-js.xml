@@ -26,7 +26,7 @@
     	<delete dir="${compressed.modules}"/>
         <delete dir="${build.webapproot.studio.dir}"/>
         <delete dir="${jslint.statusfile}"/>
-        <delete file="${lib.webapproot.studio.dir}/dojo/dojo/dojo_build.js"/>
+        <delete file="${lib.webapproot.studio.dir}/dojo/dojo/dojo_build.js.gz"/>
     </target>
 
     <target name="build" depends="check_uptodate, -do-build"/>
@@ -109,12 +109,12 @@
         </copy>
 
         <mkdir dir="${dojo.release-temp.dir}/wm_build/Gzipped"/>
-        <gzip src="${dojo.release-temp.dir}/wm_build/lib_build.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/lib_build.js"/>    	
-        <gzip src="${dojo.release.dir}/dojo/dojo/wm_charts.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_charts.js"/>    	
-        <gzip src="${dojo.release.dir}/dojo/dojo/wm_menus.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_menus.js"/>    	
-        <gzip src="${dojo.release.dir}/dojo/dojo/wm_dojo_grid.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_dojo_grid.js"/>    	
-        <gzip src="${dojo.release.dir}/dojo/dojo/wm_editors.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_editors.js"/>    	
-        <gzip src="${dojo.release.dir}/dojo/dojo/wm_richTextEditor.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_richTextEditor.js"/>    	
+        <gzip src="${dojo.release-temp.dir}/wm_build/lib_build.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/lib_build.js.gz"/>    	
+        <gzip src="${dojo.release.dir}/dojo/dojo/wm_charts.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_charts.js.gz"/>    	
+        <gzip src="${dojo.release.dir}/dojo/dojo/wm_menus.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_menus.js.gz"/>    	
+        <gzip src="${dojo.release.dir}/dojo/dojo/wm_dojo_grid.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_dojo_grid.js.gz"/>    	
+        <gzip src="${dojo.release.dir}/dojo/dojo/wm_editors.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_editors.js.gz"/>    	
+        <gzip src="${dojo.release.dir}/dojo/dojo/wm_richTextEditor.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_richTextEditor.js.gz"/>    	
         <gzip src="${dojo.release.dir}/dojo/dojo/wm_gadgets.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_gadgets.js"/>    	
         	
         <!-- copy files in; required for the studio build -->
@@ -179,7 +179,7 @@
               file="${build.lib.webapproot.studio.dir}/dojo.js"
               tofile="${dojo.build.file}"/>
         -->
-        <gzip src="${build.lib.webapproot.studio.dir}/dojo.js" destfile="${dojo.build.file}"/>    	
+        <gzip src="${build.lib.webapproot.studio.dir}/dojo.js" destfile="${dojo.build.file}.gz"/>    	
     </target>
 
     <target name="jslint">
