@@ -654,6 +654,7 @@ dojo.declare("wm.WidgetsJsDialog", wm.Dialog, {
 	if (!this.widgets_data)
 	    this.setWidgetsJson(this.widgets_json);
 	this.generateContents();
+	this.containerWidget.setPadding("0");
 	this.renderBounds();
 	this.reflow();
     },
@@ -1477,8 +1478,17 @@ dojo.declare("wm.ColorPickerDialog", wm.Dialog, {
         }
     },
     setShowing: function(inShowing, forceShow) {
-        if (!this.colorPicker && inShowing && this.domNode) 
-            this.colorPicker = new dojox.widget.ColorPicker({animatePoint: false, showHsv: false, showRtb: true, webSave: false, onChange: dojo.hitch(this, "valueChange")}, this.domNode);       
+        if (!this.colorPicker && inShowing && this.domNode) {
+            this.colorPicker = new dojox.widget.ColorPicker({animatePoint: true, showHsv: false, showRtb: true, webSave: false, onChange: dojo.hitch(this, "valueChange")}, this.domNode);       
+            /* Hack because the colorpicker is beta and has problems getting these values correctly.  As the picker always appears in exactly the same place
+             * in our dialog, we can always have these values be the same
+             */
+	    this.colorPicker.PICKER_SAT_VAL_H = 152;
+	    this.colorPicker.PICKER_SAT_VAL_W = 152;
+	    this.colorPicker.PICKER_HUE_H = 150;
+            this.colorPicker._shift.picker.x = 5;
+            this.colorPicker._shift.picker.y = 5;
+        }
         
         if (inShowing) {
 

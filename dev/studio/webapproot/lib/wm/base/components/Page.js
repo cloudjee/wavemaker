@@ -195,7 +195,8 @@ dojo.declare("wm.Page", wm.Component, {
 	},
 	// design support
 	isDesignLoaded: function() {
-		return Boolean(this._designer);
+	    //return Boolean(this._designer);
+            return this.name == "wip";
 	},
 	getRoot: function() {
 		return this;

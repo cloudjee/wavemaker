@@ -74,29 +74,39 @@
             "padding": "0"
 	}, 
 	"wm.Dialog": {
-		"border": 0, 
-		"titlebarBorder": "0,0,1,0", 
-		"titlebarBorderColor": "#FBFBFB"
+		"border": 1, 
+		"titlebarBorder": "1", 
+	    "titlebarBorderColor": "#FBFBFB",
+		"footerBorder": "1", 
+		"footerBorderColor": "#FBFBFB"
 	}, 
 	"wm.GenericDialog": {
-		"border": 0, 
-		"titlebarBorder": "0,0,1,0", 
+		"border": 1, 
+		"titlebarBorder": "1", 
 		"titlebarBorderColor": "#FBFBFB", 
-		"footerBorder": "1,0,0,0", 
+		"footerBorder": "1", 
 		"footerBorderColor": "#FBFBFB"
 	}, 
 	"wm.RichTextDialog": {
-		"border": 0, 
-		"titlebarBorder": "0,0,1,0", 
+		"border": 1, 
+		"titlebarBorder": "1", 
 		"titlebarBorderColor": "#FBFBFB", 
-		"footerBorder": "1,0,0,0", 
+		"footerBorder": "1", 
 		"footerBorderColor": "#FBFBFB"
 	}, 
 	"wm.PageDialog": {
-		"border": 0, 
-		"titlebarBorder": "0,0,1,0", 
+		"border": 1, 
+		"titlebarBorder": "1", 
 		"titlebarBorderColor": "#FBFBFB", 
-		"footerBorder": "1,0,0,0", 
+		"footerBorder": "1", 
+		"footerBorderColor": "#FBFBFB", 
+		"noBevel": true
+	}, 
+	"wm.DesignableDialog": {
+		"border": 1, 
+		"titlebarBorder": "1", 
+		"titlebarBorderColor": "#FBFBFB", 
+		"footerBorder": "1", 
 		"footerBorderColor": "#FBFBFB", 
 		"noBevel": true
 	}, 

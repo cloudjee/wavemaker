@@ -101,9 +101,11 @@ dojo.declare("ThemeDesigner", wm.Page, {
 			      {borderClass: "wm.RoundedButton", borderProperty: "border"},
 			      {borderClass: "wm.BusyButton", borderProperty: "border"},
 			        {borderClass: "wm.AccordionDecorator", borderProperty: "captionBorder"},
-			      {borderClass: "wm.GenericDialog", borderProperty: "footerBorder", borderTemplate: "?,0,0,0"},
-			      {borderClass: "wm.RichTextDialog", borderProperty: "footerBorder", borderTemplate: "?,0,0,0"},
-				{borderClass: "wm.PageDialog", borderProperty: "footerBorder", borderTemplate: "?,0,0,0"},
+			      {borderClass: "wm.Dialog", borderProperty: "footerBorder"},
+			      {borderClass: "wm.GenericDialog", borderProperty: "footerBorder"},
+			      {borderClass: "wm.RichTextDialog", borderProperty: "footerBorder"},
+				{borderClass: "wm.PageDialog", borderProperty: "footerBorder"},
+				{borderClass: "wm.DesignableDialog", borderProperty: "footerBorder"},
 				{borderClass: "wm.HeaderPanel", borderProperty: "border"}
                                ]
                      }
@@ -164,6 +166,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                         {borderClass: "wm.RichTextDialog", borderProperty: "border"},
                                         {borderClass: "wm.FileUploadDialog", borderProperty: "border"},
                                         {borderClass: "wm.PageDialog", borderProperty: "border"},
+                                        {borderClass: "wm.DesignableDialog", borderProperty: "border"},
                                         {borderClass: "wm.ColorPickerDialog", borderProperty: "border"}
                                        ]},
                              "Background", 
@@ -1305,7 +1308,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    value += "px";
 
         if (styleName == "PanelStylePicker") {
-            var dialogTypes = ["wm.Dialog", "wm.WidgetsJsDialog", "wm.RichTextDialog", "wm.GenericDialog", "wm.FileUploadDialog", "wm.PageDialog"];
+            var dialogTypes = ["wm.Dialog", "wm.WidgetsJsDialog", "wm.RichTextDialog", "wm.GenericDialog", "wm.FileUploadDialog", "wm.PageDialog", "wm.DesignableDialog"];
             for (i = 0; i < dialogTypes.length; i++) {
                 if (!this.themePrototype[dialogTypes[i]])
                     this.themePrototype[dialogTypes[i]] = {};
@@ -2033,7 +2036,10 @@ dojo.declare("ThemeDesigner", wm.Page, {
                 
                 if (this.demoDialog) this.demoDialog.destroy();
                 console.log("Create Dialog");
+                var designer = studio.page._designer;
+                studio.page._designer = null;
                 this.demoDialog = new wm.GenericDialog({owner: studio.page, "height":"145px","showInput":true,"noEscape":false,"title":"Sample Dialog","button1Caption":"OK","button1Close":true,"button2Close":true,"userPrompt":"This is a sample of a wm.GenericDialog", modal: false});
+                studio.page._designer = designer;
                 this.demoDialog.setOwner(this);
                 this.viewWidgetsLayer.domNode.appendChild(this.demoDialog.domNode);               
                 this.demoDialog.show();
