@@ -93,7 +93,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 				}
 			}
 		}
-                if (this.variable) 
+            if (this.variable && this.variable.getData()) 
             	    this.renderDojoObj();
 	},
 	dataSetToSelectedItem: function() {
