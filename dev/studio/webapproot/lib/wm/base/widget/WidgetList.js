@@ -19,6 +19,7 @@ dojo.provide("wm.base.widget.WidgetList");
 
 
 dojo.declare("wm.PageListRow", wm.Container, {
+    lock: true,
     layoutKind: "left-to-right",
     horizontalAlign: "left",
     verticalAlign: "top",
