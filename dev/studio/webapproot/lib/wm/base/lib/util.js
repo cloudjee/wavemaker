@@ -529,12 +529,10 @@ wm.Array.removeElementAt = function(inArray, inIndex) {
 
 /* Side effect: alters input inArray Object.  Returns inArray Object; Return is mostly used for chaining operations together */
 wm.Array.removeElement = function(inArray, inElement) {
-		if (inArray.length < 1)
-			return inArray;
-    var index = inArray.indexOf(inElement);
+    var index = dojo.indexOf(inArray, inElement);
     if (index >= 0)
-			inArray.splice(index, 1);
-    return inArray;
+	inArray.splice(index, 1);
+    return inArray; 
 }
 
 wm.Array.last = function(inArray) {
