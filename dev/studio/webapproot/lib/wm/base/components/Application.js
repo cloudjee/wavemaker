@@ -158,7 +158,8 @@ dojo.declare("wm.Application", wm.Component, {
         if (declaredClass == "wm.Template") declaredClass = "wm.Panel";
         if (!wm.Application.themePrototypeData[declaredClass] || wm.Application.themePrototypeData[declaredClass] != this.theme) {
             var p = ctor.prototype;
-            var oldThemeData = this._themeData[this._lastTheme];
+            var lastTheme = wm.Application.themePrototypeData[declaredClass];
+            var oldThemeData = this._themeData[lastTheme];
 
             // undo all changes from the last theme for this class
             if (oldThemeData) {
@@ -169,7 +170,7 @@ dojo.declare("wm.Application", wm.Component, {
                         // however, for purposes of reflection/property inspection, if there is no parent class value coming through, lets give it some value.  TODO: Check its type and assign it something based on the property's type.
                         if (p[j] === undefined) 
                             p[j] = "";
-			if (optionalWidget) optionalWidget[j] = p[j];
+			//if (optionalWidget) optionalWidget[j] = "";
                     }
             }
 
