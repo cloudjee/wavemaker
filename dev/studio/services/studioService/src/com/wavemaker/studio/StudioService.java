@@ -28,6 +28,8 @@ import java.util.SortedSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.FileUtils;
+
 import org.apache.tools.ant.BuildException;
 
 import com.wavemaker.common.WMRuntimeException;
@@ -424,6 +426,16 @@ public class StudioService {
 
 	  return s;
     }
+
+    /* Note this should probably be moved to javaServices.java,
+       but I didn't want to spend the time to figure out how to
+       access studioConfiguration from that file */  
+    @ExposeToClient
+    public String getJavaServiceTemplate(String templateName) throws IOException {
+        return FileUtils.readFileToString(new File(studioConfiguration.getStudioWebAppRootFile() + "/app/templates/javaservices", templateName));
+    }
+
+
 
     // bean properties
     private RuntimeAccess runtimeAccess;
