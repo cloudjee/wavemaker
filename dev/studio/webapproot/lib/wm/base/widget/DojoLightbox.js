@@ -117,6 +117,10 @@ dojo.declare("wm.DojoLightbox", wm.Component, {
 			this.dojoObj._attachedDialog.addImage(item,this.name);
 		}, this);
 	},
+    // This rather than show is called when you select a lightbox from the events menu, and then fire the event.
+    activate: function() {
+	this.show();
+    },
 	show: function(startFromUrl){
 		if (startFromUrl)
 			this.dojoObj.href = startFromUrl;

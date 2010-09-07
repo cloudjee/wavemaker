@@ -162,9 +162,8 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 	    newNavigation: {caption:" - New Navigation..."},
 	    serviceVariables: {caption: "Service Variables:", list: "serviceVariable"},
 	    navigations: {caption: "Navigations:", list: "navigationCall"},
-     	existingCalls: {caption: "Shared Event Handlers:", list: "sharedEventHandlers"},
-      dialogs: {caption: "Show Dialogs:", list: "dialogs"},
-      dialogs: {caption: "Show LightBox:", list: "lightboxes"},
+     	    existingCalls: {caption: "Shared Event Handlers:", list: "sharedEventHandlers"},
+            dialogs: {caption: "Show Dialogs:", list: "dialogs"},
 	    liveForms: {caption: "Live Forms:", list: "liveForms"}
 	},
 	isEventAction: function(inValue) {
@@ -180,6 +179,7 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 	    var nc = wm.listComponents([studio.application, studio.page], wm.NavigationCall);
       var sharedEventHandlers = eventList(this.inspected.getSharedEventLookupName(this.propName), wm.isInstanceType(studio.selected.owner, wm.Application) ? studio.appsourceEditor : studio.editArea);
 	    var dialogList = wm.listComponents([studio.application, studio.page], wm.Dialog);
+            dialogList = dialogList.concat(wm.listComponents([studio.application, studio.page], wm.DojoLightbox));
 	    var lf = wm.listComponents([studio.application, studio.page], wm.LiveForm);
 	    var items=[];
 	    var eventSchema = this.inspected.schema[this.propName];
