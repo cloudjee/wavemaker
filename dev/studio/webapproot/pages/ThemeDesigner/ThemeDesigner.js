@@ -100,13 +100,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
 			      {borderClass: "wm.ToggleButton", borderProperty: "border"},
 			      {borderClass: "wm.RoundedButton", borderProperty: "border"},
 			      {borderClass: "wm.BusyButton", borderProperty: "border"},
-			        {borderClass: "wm.AccordionDecorator", borderProperty: "captionBorder"},
-			      {borderClass: "wm.Dialog", borderProperty: "footerBorder"},
-			      {borderClass: "wm.GenericDialog", borderProperty: "footerBorder"},
-			      {borderClass: "wm.RichTextDialog", borderProperty: "footerBorder"},
-				{borderClass: "wm.PageDialog", borderProperty: "footerBorder"},
-				{borderClass: "wm.DesignableDialog", borderProperty: "footerBorder"},
-				{borderClass: "wm.HeaderPanel", borderProperty: "border"}
+			        {borderClass: "wm.AccordionDecorator", borderProperty: "captionBorder"}
+
                                ]
                      }
                     ]
