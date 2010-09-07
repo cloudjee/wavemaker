@@ -111,9 +111,9 @@ dojo.declare("ThemeDesigner", wm.Page, {
 		"Styles": {
                     displayName: "Basic Panel Styles",
 		    demo: "themeGroupDemoAllPanelsWidgets",
-		    styles: ["Font", {name: "Border", description: "Change the default border for your wm.Layout widgets"}, {name: "BorderStyle", description: "Give your wm.Layout border some rounding (not a standard practice)"}, {name: "Background", description: "Set the background color for your document"}],
-                    description: "Set the basic styling of the document panel (i.e. your wm.Layout) and everything within it.  Font lets you set the basic font to use within your document; border and background let you set the border style for your document (its not a common design, but putting a border around your document, possibly even rounding it a bit could just be your thing).  Note that border settings are for your wm.Layout, and NOT for the contents of your wm.Layout",
-		    borders: [{borderClass: "wm.Layout", borderProperty: "border"}]},
+		    styles: ["Font", {name: "Border", description: "Change the default border for your wm.Layout widgets", borders: [{borderClass: "wm.Layout", borderProperty: "border"}]}, {name: "BorderStyle", description: "Give your wm.Layout border some rounding (not a standard practice)"}, {name: "Background", description: "Set the background color for your document"}],
+                    description: "Set the basic styling of the document panel (i.e. your wm.Layout) and everything within it.  Font lets you set the basic font to use within your document; border and background let you set the border style for your document (its not a common design, but putting a border around your document, possibly even rounding it a bit could just be your thing).  Note that border settings are for your wm.Layout, and NOT for the contents of your wm.Layout"
+		},
 		"ClickablesDefault": {
                     displayName: "Clickables (Default)",
 		    demo: "themeGroupDemoAllPanelsWidgets",
@@ -2046,7 +2046,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                     this.viewWidgetsLayer.hide();
                     dojo.forEach(overviewLayers, function(l) {l.show();});
                     if (!this.demoPanelTabLayers.getActiveLayer().showing)
-                        !this.demoPanelTabLayers.layers[0].activate();
+                        this.demoPanelTabLayers.layers[0].activate();
 	            demoPanel = this.demoPanelTabLayers.getActiveLayer().c$[0];
 	            widgets = this.demoPanelTabLayers.getActiveLayer().themeWidgets
                     widgets = this[widgets];
@@ -2059,7 +2059,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
                     // Activate the widgetlayer if we're just showing it, else leave the selected layer alone.
                     if (!viewWidgetsLayerShowing)
                         this.viewWidgetsLayer.activate();
-
+                    else if (this.themeSubGroupList.selectedItem.getData().dataValue.match(/Editor/))
+                        this.viewWidgetsLayer.activate();
                     demoPanel = this.demoPanelTabLayers.getActiveLayer().c$[0];
                     if (!this.viewWidgetsLayer.isActive()) {
 	                widgets = this.demoPanelTabLayers.getActiveLayer().themeWidgets
@@ -2252,10 +2253,10 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
 		CenteredLayout: ["wm.Template", {"autoScroll":true,"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 			spacer1: ["wm.Spacer", {"height":"0px","minWidth":10,"width":"100%"}, {}],
-			contentPanel: ["wm.Panel", {"borderColor":"#888888","height":"100%","themeStyleType":"ContentPanel","width":"670px"}, {}, {
+			contentPanel: ["wm.Panel", {"borderColor":"#888888","height":"100%","themeStyleType":"ContentPanel","width":"770px"}, {}, {
 				HeaderPanel: ["wm.Panel", {"height":"50px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 					headerLogoPicture: ["wm.Picture", {"border":"0","height":"60px","source":"/wavemaker/lib/wm/base/styles/images/wavemakerLogo.png","width":"273px"}, {}],
-					headerTitleLabel: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_20px"]},"align":"center","border":"0","caption":"The Project Starter Template","height":"100%","width":"100%"}, {}, {
+					headerTitleLabel: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_20px"]},"align":"center","border":"0","caption":"Template","height":"100%","width":"100%"}, {}, {
 						format: ["wm.DataFormatter", {}, {}]
 					}],
 					headerLinksPanel: ["wm.Panel", {"height":"100%","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"183px"}, {}, {
@@ -2362,10 +2363,10 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
 		CenteredLayout: ["wm.Template", {"autoScroll":true,"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 			spacer1: ["wm.Spacer", {"height":"0px","minWidth":10,"width":"100%"}, {}],
-			contentPanel: ["wm.Panel", {"borderColor":"#888888","height":"100%","themeStyleType":"ContentPanel","width":"670px"}, {}, {
+			contentPanel: ["wm.Panel", {"borderColor":"#888888","height":"100%","themeStyleType":"ContentPanel","width":"770px"}, {}, {
 				HeaderPanel: ["wm.Panel", {"height":"50px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 					headerLogoPicture: ["wm.Picture", {"border":"0","height":"60px","source":"/wavemaker/lib/wm/base/styles/images/wavemakerLogo.png","width":"273px"}, {}],
-					headerTitleLabel: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_20px"]},"align":"center","border":"0","caption":"The Project Starter Template","height":"100%","width":"100%"}, {}, {
+					headerTitleLabel: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_20px"]},"align":"center","border":"0","caption":"Template","height":"100%","width":"100%"}, {}, {
 						format: ["wm.DataFormatter", {}, {}]
 					}],
 					headerLinksPanel: ["wm.Panel", {"height":"100%","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"183px"}, {}, {
@@ -2473,10 +2474,10 @@ themeGroupWidgets_SideNav: {
 	layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
 		CenteredLayout: ["wm.Template", {"autoScroll":true,"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 			spacer1: ["wm.Spacer", {"height":"0px","minWidth":10,"width":"100%"}, {}],
-			contentPanel: ["wm.Panel", {"borderColor":"#888888","height":"100%","themeStyleType":"ContentPanel","width":"670px"}, {}, {
+			contentPanel: ["wm.Panel", {"borderColor":"#888888","height":"100%","themeStyleType":"ContentPanel","width":"770px"}, {}, {
 				HeaderPanel: ["wm.Panel", {"height":"50px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 					headerLogoPicture: ["wm.Picture", {"border":"0","height":"60px","source":"/wavemaker/lib/wm/base/styles/images/wavemakerLogo.png","width":"273px"}, {}],
-					headerTitleLabel: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_20px"]},"align":"center","border":"0","caption":"The Project Starter Template","height":"100%","width":"100%"}, {}, {
+					headerTitleLabel: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_20px"]},"align":"center","border":"0","caption":"Template","height":"100%","width":"100%"}, {}, {
 						format: ["wm.DataFormatter", {}, {}]
 					}],
 					headerLinksPanel: ["wm.Panel", {"height":"100%","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"183px"}, {}, {
