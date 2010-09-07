@@ -1220,7 +1220,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
 	var selectedLevel = this.themeGroupList.selectedItem.getData().dataValue;
 	if (selectedLevel.match(/Content$/) && !this.currentTheme.match(/^wm_/)) {
-	    new wm.Label({width: "100%", height: "30px", parent: this.widgetEditPanel, owner: this, singleLine: false, caption: "Use the controls below to copy styles from another panel type; select the panel type to copy from and hit the button"});
+	    new wm.Label({width: "100%", height: "50px", parent: this.widgetEditPanel, owner: this, singleLine: false, caption: "Use the controls below to copy styles from another panel type; select the panel type to copy from and either copy all styles for that group, or just update just the values shown above."});
 	    var buttonpanel = new wm.Panel({layoutKind: "left-to-right", width: "100%", height: "80px", owner: this, parent: this.widgetEditPanel, margin: "10,5,10,5", verticalAlign: "top", horizontalAlign: "right"});
 
 	    var contentOptions = new wm.SelectMenu({owner: this,
@@ -1233,13 +1233,26 @@ dojo.declare("ThemeDesigner", wm.Page, {
 						    height: "40px",
 						    dataValue: "Document",
 						    options: wm.Array.removeElement(["Document", "MainContent", "EmphasizedContent", "HeaderContent"], selectedLevel).join(",")});
-	    var copyButton = new wm.Button({_classes: {domNode: ["themeButton"]}, owner: this, parent: buttonpanel, caption: "Copy", width: "100%", margin: "0,20,0,20", height: "40px",disabled: this.currentTheme.match(/^wm_/), border: 2, borderColor: "#262b34"});
+	    var copyButton = new wm.Button({_classes: {domNode: ["themeButton"]}, owner: this, parent: buttonpanel, caption: "Copy", width: "100%", margin: "3", height: "40px",disabled: this.currentTheme.match(/^wm_/), border: 2, borderColor: "#262b34"});
+	    var copyAllButton = new wm.Button({_classes: {domNode: ["themeButton"]}, owner: this, parent: buttonpanel, caption: "Copy All", width: "100%", margin: "3", height: "40px",disabled: this.currentTheme.match(/^wm_/), border: 2, borderColor: "#262b34"});
+            
 	    copyButton.connect(copyButton, "onclick", this, function() {
-		this.copyStyleSettings(contentOptions.getDataValue(), this.themeGroupList.selectedItem.getData().dataValue);
+                studio.beginWait("Copying...");
+                wm.onidle(this, function() {
+		    this.copyStyleSettings(contentOptions.getDataValue(), this.themeGroupList.selectedItem.getData().dataValue);
+                });
 	    });
+	    copyAllButton.connect(copyAllButton, "onclick", this, function() {
+                studio.beginWait("Copying...");
+                wm.onidle(this, function() {
+		    this.copyAllStyleSettings(contentOptions.getDataValue(), this.themeGroupList.selectedItem.getData().dataValue);
+                });
+	    });
+/*
 	    contentOptions.connect(contentOptions, "onchange", this, function() {
 		copyButton.setCaption("Copy " + contentOptions.getDataValue() + " Settings");
 	    });
+            */
 	}
 
         wm.onidle(this.widgetEditPanel,"reflow");
@@ -1261,8 +1274,9 @@ dojo.declare("ThemeDesigner", wm.Page, {
         studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
     },
 */
-    copyStyleSettings: function(copyFromGroup, copyToGroup) {
-	var name = this.themeSubGroupList.selectedItem.getData().dataValue;
+    copyStyleSettings: function(copyFromGroup, copyToGroup, optionalSubGroup) {
+        try {
+	var name = optionalSubGroup || this.themeSubGroupList.selectedItem.getData().dataValue;
 	var data = this.themeData;
 	for (var i in data) {
 	    var items = i.split("-");
@@ -1275,8 +1289,32 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	}
 	this.themegroupselect(this.themeSubGroupList); // regenerate the editors with new values -- could just call setDataValue
         studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
+    }
+        catch(e) {}
+        finally {
+            studio.endWat();
+        }
     },
-
+    copyAllStyleSettings: function(copyFromGroup, copyToGroup) {
+        try {
+	var data = this.themeData;
+	for (var i in data) {
+	    var items = i.split("-");
+	    var group = items.shift();
+            if (group == copyFromGroup) {
+		for (var j in data[i]) {
+		    this.setCssSymbol(copyToGroup + "-" + items.join("-"), j,data[i][j]);
+		}
+	    }
+	}
+	this.themegroupselect(this.themeSubGroupList); // regenerate the editors with new values -- could just call setDataValue
+        studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
+        } 
+        catch(e) {}
+        finally {
+            studio.endWat();
+        }
+    },
     advancedEditorChange: function(inSender) {
         studio._themeDesignerChange = true;
         studio._reflowPageDesigner = true;
@@ -2227,7 +2265,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 				layer1: ["wm.Layer", {"caption":"Grid","horizontalAlign":"left","verticalAlign":"top","themeStyleType":"ContentPanel","border":"2","transitionNext":true}, {}, {
 				    dojoGrid: ["wm.DojoGrid", {dsType: "EntryData", width: "100%", height: "100%","columns":[{"show":true,"id":"name","title":"Name","width":"auto","displayType":undefined,"noDelete":true},{"show":true,"id":"dataValue","title":"DataValue","width":"auto","displayType":undefined,"noDelete":true}]},{},{
 					binding: ["wm.Binding", {}, {}, {
-					    wire: ["wm.Wire", {"targetProperty":"dataSet","source":"shadowListVar"}, {}],
+					    wire: ["wm.Wire", {"targetProperty":"dataSet","source":"shadowListVar"}, {}]
 					}]
 				    }]
 				}],
@@ -2337,7 +2375,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 										binding: ["wm.Binding", {}, {}, {
 											wire: ["wm.Wire", {"expression":undefined,"source":"shadowListVar","targetProperty":"dataSet"}, {}]
 										}]
-									}],
+									}]
 
 								}]
 							}]
@@ -2449,7 +2487,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 										binding: ["wm.Binding", {}, {}, {
 											wire: ["wm.Wire", {"expression":undefined,"source":"shadowListVar","targetProperty":"dataSet"}, {}]
 										}]
-									}],
+									}]
 
 								}]
 							}]
@@ -2558,7 +2596,7 @@ themeGroupWidgets_SideNav: {
 										binding: ["wm.Binding", {}, {}, {
 											wire: ["wm.Wire", {"expression":undefined,"source":"shadowListVar","targetProperty":"dataSet"}, {}]
 										}]
-									}],
+									}]
 
 								}]
 							}]
