@@ -57,21 +57,21 @@
       <copy tofile="${webinf.studio.dir}/web.xml" file="${src.root.dir}/tools/templates/web.xml" overwrite="true" />
       <replaceregexp match="isCloud(\S*)(false|true)" replace="isCloud\1${wm.isCloud.variable}" file="${webinf.studio.dir}/web.xml" />
 
-        <condition
-	   property="wm.security.enabled.string" 
-	   value="studio-security.xml"
-	   else="studio-security-empty.xml">
-	  <equals arg1="${project.type}" arg2="${project.type.cloud}" />
-        </condition>
+    <condition
+	 	   property="wm.security.enabled.string" 
+	  	 value="studio-security.xml"
+	  	 else="studio-security-empty.xml">
+	  	 <equals arg1="${project.type}" arg2="${project.type.cloud}" />
+    </condition>
 				   
-      <replaceregexp file="${webinf.studio.dir}/studio-springapp.xml" 
+    <replaceregexp file="${webinf.studio.dir}/studio-springapp.xml" 
 		     match="(studio\-security\.xml|studio\-security\-empty\.xml)" 
 		     replace="${wm.security.enabled.string}" />
 
-	<!-- Start section for updating session-expiration in web.xml -->
+	      <!-- Start section for updating session-expiration in web.xml -->
         <condition property="session.timeout" value="60" else="20160">
-	  <equals arg1="${project.type}" arg2="${project.type.cloud}" />
-        </condition>
+	      <equals arg1="${project.type}" arg2="${project.type.cloud}" />
+      </condition>
 
 	<echo>REPLACE ${webinf.studio.dir}/web.xml, SET VALUE ${session.timeout}</echo>
         <replaceregexp file="${webinf.studio.dir}/web.xml" match="(.session-timeout.)\d+(./session-timeout.)" replace="\1${session.timeout}\2" />
@@ -116,11 +116,11 @@
         <!-- REVIEW 12-Sep-08 stoens@wavemaker.com
         this is the least efficient way of doing this, fix with single 
         invocations of javac/servicedefc -->
-         <buildservice servicename="CloudDB" 
+        <buildservice servicename="CloudDB" 
                       serviceclass="com.wavemaker.studio.clouddb.CloudDB"/>
-		<buildservice servicename="cloudServerService" 
+    		<buildservice servicename="cloudServerService" 
                       serviceclass="com.wavemaker.studio.CloudServerService"/>
-		<buildservice servicename="cloudStorageService" 
+	    	<buildservice servicename="cloudStorageService" 
                       serviceclass="com.wavemaker.studio.CloudStorageService"/>
         <buildservice servicename="deploymentService" 
                       serviceclass="com.wavemaker.studio.DeploymentService"/>
