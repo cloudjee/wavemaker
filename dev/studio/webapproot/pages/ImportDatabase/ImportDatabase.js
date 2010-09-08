@@ -160,6 +160,7 @@ dojo.declare("ImportDatabase", wm.Page, {
 	},
 	_updateServiceName: function() {
 		var e = this.extraInput.getInputValue();
+		this.serviceNameChanged();
 		this.serviceNameInput.setInputValue(e);
 	},
 	_testConnection: function(url, username, password, driverClassName) {
