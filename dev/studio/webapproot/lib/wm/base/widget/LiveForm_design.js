@@ -159,6 +159,8 @@ wm.LiveFormBase.extend({
 		dojo.forEach(fields, dojo.hitch(this, "makeEditor"));
 		// make a related editor for each relationship in relevant liveView
 		if (lv) {
+			if (lv.liveView)
+				lv.liveView.getRequiredRelatedFields();
 			dojo.forEach(lv.getViewRelated(), function(r) {
 				var formField = this._getFormField(r);
 				if (formField) {

@@ -84,7 +84,7 @@ dojo.declare("wm.LiveView", wm.Component, {
 		dojo.publish(this.getRuntimeId() + "-viewChanged", [this.getId()]);
 	},
 	createDefaultView: function() {
-		this.setFields(this.getRelatedFields(), wm.getDefaultView(this.dataType));
+		this.setFields(this.related || [], wm.getDefaultView(this.dataType));
 	},
 	getRelatedFields: function(){
 		if (!this.related || this.related.length == 0)
