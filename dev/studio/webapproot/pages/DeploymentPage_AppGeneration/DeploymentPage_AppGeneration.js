@@ -55,13 +55,15 @@ dojo.declare("DeploymentPage_AppGeneration", wm.Part, {
 
    /* Event handler for this.Generate_WAR; generates the war file and optionally downloads it after completion */  
   generateAppButtonClick: function(inSender) {
-    //this._saveJNDIName();
-
       var _this = this;
+      if (!this.useJNDICheckbox.getChecked()) {
+    	  studio.JNDIDialog.page._reset();
+      }
       studio.onDeployOkClicked(this._prepareJNDINames(),
 			       function() {
 				   _this.generateAppButtonClickComplete();
 			       });
+      
   },
   useOldAppButtonClick: function() {
       this.generateAppButtonClickComplete();
@@ -104,6 +106,8 @@ dojo.declare("DeploymentPage_AppGeneration", wm.Part, {
 	},
 	d = studio.JNDIDialog = new wm.PagePopup(props);
 	d.setContainerOptions(true, 500, 450);
+	d.setPositionLeft(400);
+	d.setPositionTop(200);
 	this.dataModelList = d.page.dataModelList;
 	this.dataModelNameEditor = d.page.dataModelNameEditor;
 	this.jndiEditor = d.page.jndiEditor;
@@ -124,7 +128,9 @@ dojo.declare("DeploymentPage_AppGeneration", wm.Part, {
    /* Event handler for this.useJNDICheckbox */
   useJNDICheckboxChange: function(inSender, inDisplayValue, inDataValue) {
     this.jndiButton.setDisabled(!inDataValue);
-  },
+    if(inDataValue) this.setupJNDIButtonClick(this.jndiButton);
+    },
+    
   _prepareJNDINames: function() {
     var rtn = {};
       var names = (!studio.JNDIDialog || !studio.JNDIDialog.page) ? {} : studio.JNDIDialog.page.jndiNames;

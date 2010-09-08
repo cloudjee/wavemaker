@@ -66,6 +66,9 @@ DeploymentJNDIDialog.widgets = {
 											}],
 											extraEditor2: ["wm.Editor", {caption: "Extra2", height: "20px", readonly: true, border: "0", showing: false}, {}, {
 												editor: ["wm._TextEditor", {border: "0"}, {}]
+											}],
+											labJndiHelp: ["wm.Label", {"align":"center","border":"0","caption":"<br>JNDI Name is \"java:comp/env/\" and the resource name. <br> For a resource named \"jdbc/myDB\" use:<br> \"java:comp/env/jdbc/myDB\"","height":"104px","singleLine":false,"width":"96px"}, {}, {
+												format: ["wm.DataFormatter", {}, {}]
 											}]
 										}]
 									}]

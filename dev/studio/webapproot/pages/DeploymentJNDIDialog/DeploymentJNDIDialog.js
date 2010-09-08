@@ -35,7 +35,6 @@ dojo.declare("DeploymentJNDIDialog", wm.Part, {
 	setup: function() {
 		this._setDataTypes();
 		this._reset();
-		//this.useJNDICheckbox.components.editor.setChecked(false);
 		this.jndiEditor.setDataValue("");
 
 		studio.dataService.requestAsync(LOAD_DATA_MODEL_NAMES_OP, [], 
@@ -50,18 +49,6 @@ dojo.declare("DeploymentJNDIDialog", wm.Part, {
 			dojo.hitch(this, "_getDeploymentTargetNamesResult"));
 			
 	},
-/*
-	useJNDICheckboxChange: function(inSender, inDisplayValue, inDataValue) {
-		this.jndiEditor.setDisabled(!inDataValue);
-		this.dbtypeEditor.setDisabled(inDataValue);
-		this.hostEditor.setDisabled(inDataValue);
-		this.portEditor.setDisabled(inDataValue);
-
-		if (!inDataValue) {
-			this.jndiEditor.setDataValue("");
-		}
-	},
-        */
 	dataModelListSelect: function(inSender, inItem) {
 		this._dataModelListSelect(true);
 	},
@@ -142,6 +129,7 @@ dojo.declare("DeploymentJNDIDialog", wm.Part, {
 			this.jndiEditor.setDataValue(this.jndiNames[key]);
 		}
 	},
+	//sets key pair names for BuildWar call only
 	_saveJNDIName: function() {
 		var key = this._getKey(this.dataModelNameEditor.getDataValue());
 		var j = this.jndiEditor.getDataValue();
@@ -151,17 +139,11 @@ dojo.declare("DeploymentJNDIDialog", wm.Part, {
 			j = dojo.string.trim(j);
 		}
 
-		//if (this.useJNDICheckbox.components.editor.getChecked()) {
 			if (j == "") {
 				this.jndiNames[key] = null;
 			} else {
 				this.jndiNames[key] = j;
 			}
-/*
-		} else {
-			this.jndiNames[key] = null;
-		}
-                */
 	},
 	_getKey: function(dataModelName) {
 		return dataModelName + this.JNDI_NAME_PROPERTY;
@@ -198,7 +180,6 @@ dojo.declare("DeploymentJNDIDialog", wm.Part, {
 		this._addEditors(editorInfo);
 		studio.endWait(); 
 	},
-
 	_setDataTypes: function() {
 		wm.typeManager.addType("com.wavemaker.tools.deployment.AppInfo", {internal: true, fields: {
 			name: {type: "java.lang.String", isObject: false, isList: false},
