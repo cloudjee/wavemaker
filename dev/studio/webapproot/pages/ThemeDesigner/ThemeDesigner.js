@@ -81,12 +81,12 @@ dojo.declare("ThemeDesigner", wm.Page, {
         "Borders": {
 	    demo: "themeGroupDemoAllPanelsWidgets",
             styles: [{name: "Editor_BorderStyle-Radius", 
-                      description: "Change the radius (roundedness) of editor borders for all editors in your document.  Enter an integer between 0 and 24"},
+                      description: "Change the radius (roundedness) of editor borders for all editors in your document.  Enter an integer between 0 (square) and 24 (very round)"},
                      {name: "Panel_BorderStyle-Radius", 
-                      description: "Change the radius (roundedness) of panel borders for all TabLayers, AccordionLayers, FancyPanel and other non-layout panels in your document.  Enter an integer between 0 and 24"}, 
+                      description: "Change the radius (roundedness) of panel borders for all TabLayers, AccordionLayers, FancyPanel and other non-layout panels in your document.  Enter an integer between 0 (square) and 24 (very round)"}, 
                      {name: "Panel_Border", 
                       symbol: "Borders-Panel_Border",
-                      description: "Change the border width and color of containers such as Accordions, TabLayers, Dialogs and FancyPanels",
+                      description: "Change the border width and color of containers such as Accordions, TabLayers, Dialogs and FancyPanels. This also sets the default color for all of your wm.Panels, but does NOT change the border size for wm.Panels.",
                       borders: [{borderClass: "wm.TabLayers", borderProperty: "clientBorder"},
 			        {borderClass: "wm.AccordionLayers", borderProperty: "layerBorder", borderColorProperty: "borderColor"},
 			        {borderClass: "wm.WizardLayers", borderProperty: "clientBorder"},
@@ -95,11 +95,11 @@ dojo.declare("ThemeDesigner", wm.Page, {
 			       ]},
                      {name: "Clickable_Border", 
                       symbol: "Borders-Clickable_Border",
-                      description: "Change the border width and color of Clickables and clickable elements such as wm.Buttons, accordion headers, dialog titlebars, and TabLayer tab buttons",
+                      description: "Change the border width and color Clickables such as wm.Buttons, wm.AccordionLayer's headings, wm.TabLayer's buttons.  Also changes titlebars for Dialogs and RoundedPanel/FancyPanel",
                       borders: [{borderClass: "wm.Button", borderProperty: "border"},
 			      {borderClass: "wm.ToggleButton", borderProperty: "border"},
 			      {borderClass: "wm.RoundedButton", borderProperty: "border"},
-			      {borderClass: "wm.BusyButton", borderProperty: "border"},
+			        {borderClass: "wm.BusyButton", borderProperty: "border"},
 			        {borderClass: "wm.AccordionDecorator", borderProperty: "captionBorder"}
 
                                ]
@@ -111,30 +111,35 @@ dojo.declare("ThemeDesigner", wm.Page, {
 		"Styles": {
                     displayName: "Basic Panel Styles",
 		    demo: "themeGroupDemoAllPanelsWidgets",
-		    styles: ["Font", {name: "Border", description: "Change the default border for your wm.Layout widgets", borders: [{borderClass: "wm.Layout", borderProperty: "border"}]}, {name: "BorderStyle", description: "Give your wm.Layout border some rounding (not a standard practice)"}, {name: "Background", description: "Set the background color for your document"}],
-                    description: "Set the basic styling of the document panel (i.e. your wm.Layout) and everything within it.  Font lets you set the basic font to use within your document; border and background let you set the border style for your document (its not a common design, but putting a border around your document, possibly even rounding it a bit could just be your thing).  Note that border settings are for your wm.Layout, and NOT for the contents of your wm.Layout"
+		    styles: ["Font", 
+                             {name: "Border", description: "Change the default border for your wm.Layout widgets. This will put a border around your document; it will also put a border around your PageContainers and PageDialogs.  This can be used to create interesting effects, but probably best to stay away from it.", 
+                                      borders: [{borderClass: "wm.Layout", borderProperty: "border"}]}, 
+                             {name: "BorderStyle", description: "Give your wm.Layout border some rounding (not a standard practice).  As this may also affect PageDialogs and PageContainers, probably best to leave this one alone until someone finds a nice way to use it."},
+                             {name: "Background", description: "Set the background color for the main pages of your product."}
+                            ],
+                    description: "Set the basic styling of your document panel (i.e. the wm.Layout for your main pages) and everything within it.  Font lets you set the basic font to use within your document; border and background let you set the border style for your document (its not a common design, but putting a border around your document, possibly even rounding it a bit could just be your thing).  Note that border settings are for your wm.Layout, and NOT for the contents of your wm.Layout"
 		},
 		"ClickablesDefault": {
                     displayName: "Clickables (Default)",
 		    demo: "themeGroupDemoAllPanelsWidgets",
 		    styles: ["Font", "BorderStyle", "Background"],
-                    description: "<p>Clickable settings affects the following widgets<ul><li>wm.Button</li><li>wm.AccordionLayer</li><li>wm.TabLayer</li><li>wm.FancyPanel</li><li>wm.Dialog (title bar and buttons)</li><li>wm.Splitter</li><li>wm.Bevel</li></ul> It represents both clickable elements and headers. Why both? because in most cases, headers are clickable elements; for example, consider the wm.AccordionLayer header and the wm.TabLayer buttons.</p><p>In this form, you will set the font and background colors for your headers and buttons.  This affects all buttons and headers within your document except where the theme or a project specifically override these styles</p>"
+                    description: "<p>Clickable settings affects the following widgets<ul><li>wm.Button</li><li>wm.AccordionLayer Headers</li><li>wm.TabLayer Tab Buttons</li><li>wm.FancyPanel/RoundedPanel Titlebar</li><li>wm.Dialog Titlebar and buttonbar</li><li>wm.Splitter</li><li>wm.Bevel</li></ul> It represents both clickable elements and minor headers. Why both? because in most cases, clickable elements Are headers; for example, consider the wm.AccordionLayer header and the wm.TabLayer buttons.</p><p>In this form, you will set the font and background colors for your headers and buttons.  This affects all buttons and headers within your document except where the theme or a project specifically override these styles</p>"
 		},               
 		"ClickablesHover":   {
                     displayName: "Clickables (Hover)",
 		    demo: "themeGroupDemoAllPanelsWidgets",
-                    description: "<p>Any header that is clickable should have a mouse-over effect that emphasizes its clickability.  A header that is NOT clickable will ignore mouseover effects.</p><p>In this form, you will set the changes to font, shadowing and background colors that are displayed when the mouse hovers over your headers/buttons.  Shadowing is particularly useful for making a button look pressable as it gives it a more three dimensional look.</p>",
+                    description: "<p>Clickable elements should have a mouse-over effect that emphasizes its clickability.</p><p>In this form, you will set the changes to font, shadowing and background colors that are displayed when the mouse hovers over your headers/buttons.  Shadowing is particularly useful for making a button look pressable as it gives it a more three dimensional look.</p>",
 		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
 		"ClickablesActive":  {
                     displayName: "Clickables (Active)",
 		    demo: "themeGroupDemoAllPanelsWidgets",
-                    description: "<p>Any header that has an active state will want a special set of styling to indicate that its active.  Examples of this include a wm.TabLayers button that indicates the currently selected tab; wm.AccordionLayers header that indicates the currently selected layer, and a wm.ToggleButton which is currently pressed.</p><p>Set the font, shadowing and background colors to emphasize that this clickable header is currently active.</p>",
+                    description: "<p>Any clickable element that has an active state will want a special set of styling to indicate that its active.  Clickables with active state include <ul><li>wm.ToggleButton</li><li>wm.TabLayers Tab Buttons</li><li>wm.AccordionLayer Headers</li></ul></p><p>Set the font, shadowing and background colors to emphasize that this clickable header is currently active.</p>",
 		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
 
 		"EditorsDefault": {
                     displayName: "Editors (Default)",
 		    demo: "themeGroupDemoAllPanelsWidgets",
-                    description: "You of course have the option of having a plain and functional editor. If you'd rather spice them up a bit, you can set the border color, background and font. Note that you can also control the rounding of the borders, but this is currently set under <b>Full Theme Settings</b> -> <b>Borders</b>",
+                    description: "You of course have the option of having a plain and functional editor. If you'd rather spice them up a bit, you can set the border color, background and font. Note that you can also control the rounding of the borders, but this is currently set under <b>Full Theme Settings</b> - <b>Borders</b>",
 		    styles:     ["Border-Color", "Background", "Font"]},
 		"EditorsHover":   {
                     displayName: "Editors (Hover)",
@@ -166,30 +171,30 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                        ]},
                              "Background", 
                              "Font"],
-                    description: "Set the basic styling of the document panel (i.e. your wm.Layout) and everything within it.  Font lets you set the basic font to use within your document; border and background let you set the border style for your document (its not a common design, but putting a border around your document, possibly even rounding it a bit could just be your thing).  Note that border settings are for your wm.Layout, and NOT for the contents of your wm.Layout"
+                    description: "Styling your dialogs is done by determining which panel-type styles the contents of your dialog should use (should your dialogs be displayed using Main Content styles? Emphasized styles?  Plain Document styles?), and then setting up how your dialog's header and footer buttons should look."
                 },
 		"FooterButtonsDefault": {
                     displayName: "Bottom Buttons (Default)",
 		    demo: "themeGroupDemoAllPanelsWidgets",
 		    styles: ["Font", "BorderStyle-Shadow", "Background"],
-                    description: "<p>Clickable settings affects the following widgets<ul><li>wm.Button</li><li>wm.AccordionLayer</li><li>wm.TabLayer</li><li>wm.FancyPanel</li><li>wm.Dialog (title bar and buttons)</li><li>wm.Splitter</li><li>wm.Bevel</li></ul> It represents both clickable elements and headers. Why both? because in most cases, headers are clickable elements; for example, consider the wm.AccordionLayer header and the wm.TabLayer buttons.</p><p>In this form, you will set the font and background colors for your headers and buttons.  This affects all buttons and headers within your document except where the theme or a project specifically override these styles</p>"
+                    description: "Buttons that are in the button bar on the bottom of a dialog are on a different background from other buttons in your theme.  Special background colors may be needed; and this is where you set them"
 		},               
 		"FooterButtonsHover": {
                     displayName: "Bottom Buttons (Hover)",
 		    demo: "themeGroupDemoAllPanelsWidgets",
-                    description: "<p>Any header that is clickable should have a mouse-over effect that emphasizes its clickability.  A header that is NOT clickable will ignore mouseover effects.</p><p>In this form, you will set the changes to font, shadowing and background colors that are displayed when the mouse hovers over your headers/buttons.  Shadowing is particularly useful for making a button look pressable as it gives it a more three dimensional look.</p>",
+                    description: "Buttons that are in the button bar on the bottom of a dialog are on a different hover background from other buttons in your theme.  Special background colors may be needed; and this is where you set them",
 		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
 
 		"TitleButtonsDefault": {
                     displayName: "Top Buttons (Default)",
 		    demo: "themeGroupDemoAllPanelsWidgets",
 		    styles: ["Font-Color",  "BorderStyle-Shadow", "Background"],
-                    description: "<p>Clickable settings affects the following widgets<ul><li>wm.Button</li><li>wm.AccordionLayer</li><li>wm.TabLayer</li><li>wm.FancyPanel</li><li>wm.Dialog (title bar and buttons)</li><li>wm.Splitter</li><li>wm.Bevel</li></ul> It represents both clickable elements and headers. Why both? because in most cases, headers are clickable elements; for example, consider the wm.AccordionLayer header and the wm.TabLayer buttons.</p><p>In this form, you will set the font and background colors for your headers and buttons.  This affects all buttons and headers within your document except where the theme or a project specifically override these styles</p>"
+                    description: "There are buttons in the title bar that show up for non-modal dialogs (create a dialog and uncheck the modal property).  Often, you will want these to look just like your footer buttons, but these buttons are much smaller and may need some different settings."
 		},               
 		"TitleButtonsHover": {
                     displayName: "Top Buttons (Hover)",
 		    demo: "themeGroupDemoAllPanelsWidgets",
-                    description: "<p>Any header that is clickable should have a mouse-over effect that emphasizes its clickability.  A header that is NOT clickable will ignore mouseover effects.</p><p>In this form, you will set the changes to font, shadowing and background colors that are displayed when the mouse hovers over your headers/buttons.  Shadowing is particularly useful for making a button look pressable as it gives it a more three dimensional look.</p>",
+                    description: "There are buttons in the title bar that show up for non-modal dialogs (create a dialog and uncheck the modal property).  Specify the hover behaviors of these buttons..",
 		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]}}},
 
 	
@@ -199,38 +204,38 @@ dojo.declare("ThemeDesigner", wm.Page, {
 		"Styles": {
                     displayName: "Basic Panel Styles",
 		    demo: "themeGroupDemoAllPanelsWidgets",
-                    description: "Set the basic styling of the MainContent panel and everything within it.  Dialogs use the MainContent styles, so anything you set here also applies to your dialogs (even if the checkbox is unchecked).  Font lets you set the basic font to use within your document; border and background let you set the border style for your document.  Note that border settings are for panels marked as MainContent, and NOT for the contents of thisis panel.  Also note that setting the border size and border color must be done by hand as these are properties of your panel.",
+                    description: "Set the basic styling of the MainContent panel and everything within it.  Font lets you set the basic font to use within your Main Content panel; border and background let you set the border style for your Main Content panel.  Note that border settings are for panels marked as MainContent, and NOT for the contents of thisis panel.",
 		    styles: ["Font",  {name: "Border", borders: [{borderClass: "wm.MainContentPanel", borderProperty: "border"}]}, "BorderStyle", "Background"]},
 		"ClickablesDefault": {
                     displayName: "Clickables (Default)",
 		    demo: "themeGroupDemoAllPanelsWidgets",
-                    description: "<p>Clickable settings affects the following widgets <ul><li>wm.Button</li><li>wm.AccordionLayer</li><li>wm.TabLayer</li><li>wm.FancyPanel</li><li>wm.Dialog (title bar and buttons)</li><li>wm.Splitter</li><li>wm.Bevel</li></ul>  It represents both clickable elements and headers. Why both? because in most cases, headers are clickable elements; for example, consider the wm.AccordionLayer header and the wm.TabLayer buttons.</p><p>In this form, you will set the font, border and background colors for your headers and buttons.  This affects all buttons and headers within any panel marked as <b>MainContent</b> except where the theme or a project specifically override these styles</p>",
+                    description: "<p>Clickable settings affects the following widgets<ul><li>wm.Button</li><li>wm.AccordionLayer Headers</li><li>wm.TabLayer Tab Buttons</li><li>wm.FancyPanel/RoundedPanel Titlebar</li><li>wm.Dialog Titlebar and buttonbar</li><li>wm.Splitter</li><li>wm.Bevel</li></ul> It represents both clickable elements and minor headers. Why both? because in most cases, clickable elements Are headers; for example, consider the wm.AccordionLayer header and the wm.TabLayer buttons.</p><p>In this form, you will set the font and background colors for your headers and buttons.  This affects all buttons and headers within your MainContent panel.</p>",
 		    styles: ["Font", "BorderStyle", "Background"]},               
 		"ClickablesHover":   {
                     displayName: "Clickables (Hover)",
 		    demo: "themeGroupDemoAllPanelsWidgets",
-                    description: "<p>Any header that is clickable should have a mouse-over effect that emphasizes its clickability.  A header that is NOT clickable will ignore mouseover effects.</p><p>In this form, you will set the changes to font, shadowing and background colors that are displayed when the mouse hovers over your headers/buttons.  Shadowing is particularly useful for making a button look pressable as it gives it a more three dimensional look.</p>",
+                    description: "<p>Set the hover styling for any clickable widgets in your Main Content panel</p>",
 		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
 		"ClickablesActive":  {
                     displayName: "Clickables (Active)",
 		    demo: "themeGroupDemoAllPanelsWidgets",
-                    description: "<p>Any header that has an active state will want a special set of styling to indicate that its active.  Examples of this include a wm.TabLayers button that indicates the currently selected tab; wm.AccordionLayers header that indicates the currently selected layer, and a wm.ToggleButton which is currently pressed.</p><p>Set the font, shadowing and background colors to emphasize that this clickable header is currently active.</p>",
+                    description: "<p>Set the active state styling for widgets in your Main Content panel that have active states.  These include wm.ToggleButton, and Accordion and TabLayer buttons.</p>",
 		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
 
 		/* For Editors, the border in question is for the dijit (css) not the widget (border property) */
 		"EditorsDefault": {
 		    demo: "themeGroupDemoAllPanelsWidgets",
-                    description: "You of course have the option of having a plain and functional editor. If you'd rather spice them up a bit, you can set the border color, background and font. Note that you can also control the rounding of the borders, but this is currently set under <b>Full Theme Settings</b> -> <b>Borders</b>",
+                    description: "You of course have the option of having a plain and functional editor. If you'd rather spice up the editors in your Main Content Panel, you can set the border color, background and font.",
 		    styles: ["Border-Color", "Background", "Font"]},
 		"EditorsHover":   {
                     displayName: "Editors (Hover)",
 		    demo: "themeGroupDemoAllPanelsWidgets",
-                    description: "When the mouse hovers over your editor, you can just do nothing (mouse cursor changes to insertion point). If you'd rather spice things up a bit, you might brighten or darken the background a bit. You can set the colors for border, background and font.",
+                    description: "Set the hover styling for your editors when they are in the Main Content Panel",
 		    styles: ["Border-Color", "Background", "Font-Color"]},
 		"EditorsFocus":   {
                     displayName: "Editors (Focus)",
 		    demo: "themeGroupDemoAllPanelsWidgets",
-                    description: "When the insertion point is in the editor, and the user can start typing in, you can setup a style to indicate that the editor is active. Wavemaker themes tend to cause these editors to go to solid white background and black text.  But this is entirely under the control of the theme designer; you can set the colors for border, background and font.",
+                    description: "When the insertion point is in a Main Content Panel editor, and the user can start typing in, you can setup a style to indicate that the editor is active. Wavemaker themes tend to cause these editors to go to solid white background and black text.  But this is entirely under the control of the theme designer; you can set the colors for border, background and font.",
 		    styles: ["Border-Color", "Background", "Font-Color"]}}},
 		
 
@@ -269,7 +274,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 		"EditorsFocus":   {
                     displayName: "Editors (Focus)",
 		    demo: "themeGroupDemoAllPanelsWidgets",
-                    description: "When the insertion point is in the editor, and the user can start typing in, you can setup a style to indicate that the editor is active. Wavemaker themes tend to cause these editors to go to solid white background and black text.  But this is entirely under the control of the theme designer; you can set the colors for border, background and font.",
+                    description: "When the insertion point is in a Emphasized Content Panel editor, and the user can start typing in, you can setup a style to indicate that the editor is active. Wavemaker themes tend to cause these editors to go to solid white background and black text.  But this is entirely under the control of the theme designer; you can set the colors for border, background and font.",
 		    styles: ["Border-Color", "Background", "Font-Color"]}
 	    }
 	},
@@ -309,7 +314,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 		"EditorsFocus":   {
                     displayName: "Editors (Focus)",
 		    demo: "themeGroupDemoAllPanelsWidgets",
-                    description: "When the insertion point is in the editor, and the user can start typing in, you can setup a style to indicate that the editor is active. Wavemaker themes tend to cause these editors to go to solid white background and black text.  But this is entirely under the control of the theme designer; you can set the colors for border, background and font.",
+                    description: "When the insertion point is in a Header Content Panel editor, and the user can start typing in, you can setup a style to indicate that the editor is active. Wavemaker themes tend to cause these editors to go to solid white background and black text.  But this is entirely under the control of the theme designer; you can set the colors for border, background and font.",
 		    styles: ["Border-Color", "Background", "Font-Color"]}
 	    }
 	},
@@ -548,7 +553,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
             this.widgetListPanel.hide();
             //this.themeGroupListPanel.parent.setWidth("250px");
             this.generateBasicEditor();
-            this.regenerateDemoPanel();
+            this.regenerateDemoPanel(null,null,true);
         } else if (index == this.userLevelList.getCount()-1) {
             /* Highest difficulty: show  the widget list in case its hidden, adjust the width, 
              * and fire off a select event on the widget list, reselecting the current item or selecting the first item
@@ -574,7 +579,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
             var selectedThemeIndex = this.themeGroupList.getSelectedIndex();
             if (selectedThemeIndex < 0) selectedThemeIndex = 0;
 	    this.themeGroupList.eventSelect( this.themeGroupList.items[selectedThemeIndex]);
-            this.regenerateDemoPanel();
+            this.regenerateDemoPanel(null,null,true);
         }
     },
 
@@ -798,7 +803,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
         //this.createSaveThemeButtonPanel();
         this.widgetEditPanel.reflow();                    
-        this.regenerateDemoPanel();
+        this.regenerateDemoPanel(null,null,true);
 	this.themeSubGroupList.hide();
 	this.widgetList.hide();
     },
@@ -821,7 +826,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
         case "borderColor":
             this.editAllBorderColors(value);
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
-            this.regenerateDemoPanel();
+            this.regenerateDemoPanel(null,null,false);
             break;
 
         case "borderWidth":
@@ -852,7 +857,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
             }
 
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
-            this.regenerateDemoPanel();
+            this.regenerateDemoPanel(null,null,false);
             break;
 
         case "borderRadius":
@@ -1123,7 +1128,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    this._lastDemoPanel = groupObj.demo;
 	}
 */
-        this.regenerateDemoPanel(this[groupObj.demo]);
+            this.regenerateDemoPanel(null,null,true);
 
 
 	if (inSender != this.themeSubGroupList)
@@ -1369,7 +1374,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
         studio.application.loadThemeCss(this.currentTheme, true, this.cssText);        
        if (this._prototypeChanged) 
-           this.regenerateDemoPanel();
+            this.regenerateDemoPanel(null,null,false);
     },
     copyStylesFromGroup: function(fromGroup, toGroup) {
         var styleGroups = this.themeGroupData[toGroup].styles;
@@ -1498,7 +1503,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	if (this.themeGroupList.selectedItem.getData().dataValue == "Widgets")
 	    this.widgetselect(inSender);
 	else 
-	    this.regenerateDemoPanel();
+            this.regenerateDemoPanel(null,null,false);
     },
     showDemoWidget: function(name, ctor) {
         var overviewLayers = [this.pageWithTopNavLayer, this.pageWithSideNavLayer, this.pageWithNoNavLayer];
@@ -1744,7 +1749,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 			console.log("Set prototype " + widgetClassName + ".prototype." + borderProperty + " = " + newValue);
                     }
                 }
-	        this.regenerateDemoPanel();
+            this.regenerateDemoPanel(null,null,false);
             }
         }
 
@@ -2048,7 +2053,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
 
 
-    regenerateDemoPanel: function(widgetTab) {
+    regenerateDemoPanel: function(inSender,inEvent,inChangeActiveTab) {
         studio.beginWait("Regenerating Preview");
         wm.onidle(this, function() {
         try {
@@ -2097,7 +2102,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                     // Activate the widgetlayer if we're just showing it, else leave the selected layer alone.
                     if (!viewWidgetsLayerShowing)
                         this.viewWidgetsLayer.activate();
-                    else if (this.themeSubGroupList.selectedItem.getData().dataValue.match(/Editor/))
+                    else if (inChangeActiveTab && this.themeSubGroupList.selectedItem.getData().dataValue.match(/Editor/))
                         this.viewWidgetsLayer.activate();
                     demoPanel = this.demoPanelTabLayers.getActiveLayer().c$[0];
                     if (!this.viewWidgetsLayer.isActive()) {
@@ -2384,6 +2389,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 				}],
 				FooterPanel: ["wm.Panel", {"border":"1,0,0,0","height":"48px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 					footerPoweredByImage: ["wm.Picture", {"_classes":{"domNode":["wm_Attribution_center"]},"border":"0","height":"100%","width":"279px"}, {}],
+				    footerInstrLabel: ["wm.Label", {"align":"right","border":"0","caption":"If you don't see your change here, go to 'Preview Widget Set' Tab", singleLine: false,"height":"48px","width":"300px", align: "center"}],
 					footerCopyrightLabel: ["wm.Label", {"align":"right","border":"0","caption":"Copyright 2010","height":"48px","width":"100%"}, {}, {
 						format: ["wm.DataFormatter", {}, {}]
 					}]
@@ -2496,6 +2502,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 				}],
 				FooterPanel: ["wm.Panel", {"border":"1,0,0,0","height":"48px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 					footerPoweredByImage: ["wm.Picture", {"_classes":{"domNode":["wm_Attribution_center"]},"border":"0","height":"100%","width":"279px"}, {}],
+				    footerInstrLabel: ["wm.Label", {"align":"right","border":"0","caption":"If you don't see your change here, go to 'Preview Widget Set' Tab", singleLine: false,"height":"48px","width":"300px", align: "center"}],
 					footerCopyrightLabel: ["wm.Label", {"align":"right","border":"0","caption":"Copyright 2010","height":"48px","width":"100%"}, {}, {
 						format: ["wm.DataFormatter", {}, {}]
 					}]
@@ -2533,7 +2540,7 @@ themeGroupWidgets_SideNav: {
 						}]
 					}]
 				}],
-				MainContentOuter: ["wm.Panel", {"border":"2","height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","margin":"15,0","verticalAlign":"top","width":"100%"}, {}, {
+				MainContentOuter: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","margin":"15,0","verticalAlign":"top","width":"100%"}, {}, {
 					panel1: ["wm.HeaderContentPanel", {"height":"100%","horizontalAlign":"left","margin":"0,3,0,0","padding":"5","verticalAlign":"top","width":"100px"}, {}, {
 						dojoMenu1: ["wm.DojoMenu", {"eventList":[{"label":"File","children":[{"label":"New"},{"label":"Open"},{"label":"Save"},{"label":"Close"}]},{"label":"New"},{"label":"Open"},{"label":"Save"},{"label":"Close"},{"label":"Edit","children":[{"label":"Cut"},{"label":"Copy"},{"label":"Paste"}]},{"label":"Cut"},{"label":"Copy"},{"label":"Paste"},{"label":"Zoom","children":[{"label":"25%"},{"label":"50%"},{"label":"100%"},{"label":"150%"}]},{"label":"25%"},{"label":"50%"},{"label":"100%"},{"label":"150%"},{"label":"Help"}],"height":"156px","menu":"File > New, Open, Save, Close\nEdit > Cut, Copy, Paste\nZoom > 25%, 50%, 100%, 150%\nHelp","structure":"{\"items\":[{\"label\":\"File\",\"children\":[{\"label\":\"New\"},{\"label\":\"Open\"},{\"label\":\"Save\"},{\"label\":\"Close\"}]},{\"label\":\"Edit\",\"children\":[{\"label\":\"Cut\"},{\"label\":\"Copy\"},{\"label\":\"Paste\"}]},{\"label\":\"Zoom\",\"children\":[{\"label\":\"25%\"},{\"label\":\"50%\"},{\"label\":\"100%\"},{\"label\":\"150%\"}]},{\"label\":\"Help\"}]}","vertical":true,"width":"95px"}, {}],
 						spacer3: ["wm.Spacer", {"height":"0px","width":"100%"}, {}],
@@ -2605,6 +2612,8 @@ themeGroupWidgets_SideNav: {
 				}],
 				FooterPanel: ["wm.Panel", {"border":"1,0,0,0","height":"48px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 					footerPoweredByImage: ["wm.Picture", {"_classes":{"domNode":["wm_Attribution_center"]},"border":"0","height":"100%","width":"279px"}, {}],
+				    footerInstrLabel: ["wm.Label", {"align":"right","border":"0","caption":"If you don't see your change here, go to 'Preview Widget Set' Tab", singleLine: false,"height":"48px","width":"300px", align: "center"}],
+
 					footerCopyrightLabel: ["wm.Label", {"align":"right","border":"0","caption":"Copyright 2010","height":"48px","width":"100%"}, {}, {
 						format: ["wm.DataFormatter", {}, {}]
 					}]
