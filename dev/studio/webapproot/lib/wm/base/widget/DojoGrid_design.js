@@ -11,11 +11,15 @@ wm.DojoGrid.extend({
 				{id:'id', title: 'Field',width:'20%', type:'text', readOnly:true}, 
 				{id:'title', title: 'Title',width:'20%', type:'text'}, 
 				{id:'width', title: 'Width',width:'5%', type:'text'}, 
-				{id:'align', title: 'Alignment',width:'10%', type:'dropdown'},
-				{id:'formatFunc', title: 'Formatter',width:'10%', type:'dropdown'},
+				{id:'align', title: 'Alignment',width:'5%', type:'dropdown'},
+				{id:'formatFunc', title: 'Format',width:'5%', type:'dropdown'},
 				{id:'fieldType', title: 'Edit Field Type',width:'10%', type:'dropdown'},
-				{id:'editable', title:'Edit',width:'2%', type:'checkbox'}, 
+				{id:'editable', title:'Editable',width:'2%', type:'checkbox'}, 
 				{id:'expression', title: 'Data Expression',width:'20%', type:'text'}],
+	defaultFormatters:[	{name:'', value:''},
+											{name:'Date (WaveMaker)', value:'wm_date_formatter'},
+											{name:'Number (WaveMaker)', value:'wm_number_formatter'},
+											{name:'Image (WaveMaker)', value:'wm_image_formatter'}],
 	showAddButton: false,
 	showDeleteButton:false,
     themeableStyles: [],
@@ -72,7 +76,7 @@ wm.DojoGrid.extend({
 		this.updateGridStructure();		
 	},
 	updateFormatterList: function(){
-		var fArray = [{name:'', value:''},{name:'Date (WaveMaker)', value:'wm_date_formatter'},{name:'Number (WaveMaker)', value:'wm_number_formatter'}];
+		var fArray = dojo.clone(this.defaultFormatters);
 		dojo.forEach(getAllEventsInCode(), function(f){
 			fArray.push({name:f, value:f});			
 		});

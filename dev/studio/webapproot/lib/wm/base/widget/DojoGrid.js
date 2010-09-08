@@ -407,6 +407,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 					case 'wm_number_formatter':
 						obj.formatter = dojo.hitch(this, 'numberFormatter');
 						break;
+					case 'wm_image_formatter':
+						obj.formatter = dojo.hitch(this, 'imageFormatter');
+						break;
+					
 					default:
 						if (!this.isDesignLoaded())
 							obj.formatter = dojo.hitch(this.owner, col.formatFunc);
@@ -537,6 +541,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 						case 'wm_number_formatter':
 							value = this.numberFormatter(value);	
 							break;
+						case 'wm_image_formatter':
+							value = this.imageFormatter(value);	
+							break;
 						default:
 							if (!this.isDesignLoaded())
 								value = dojo.hitch(this.owner, col.formatFunc)(value);
@@ -577,6 +584,12 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
 	numberFormatter: function(inValue){
 		return isNaN(inValue) ? 0 : inValue;
+	},
+	imageFormatter: function(inValue){
+		console.info('image inValue = ', inValue);
+		if (inValue && inValue != '')
+			return '<img src="'+ inValue +'">';
+		return inValue;
 	},
 	
 	/* Action buttons implementation*/
