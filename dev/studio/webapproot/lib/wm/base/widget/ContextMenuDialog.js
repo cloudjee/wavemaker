@@ -1,7 +1,8 @@
 dojo.provide("wm.base.widget.ContextMenuDialog");
 
 dojo.declare("wm.ContextMenuDialog", null, {
-	constructor: function(dialogTitle, addButtonLabel, onAddButtonClick, headerAttr, dataSet, newRowDefault, domNode, addDeleteColumn){
+	constructor: function(dialogTitle, addButtonLabel, onAddButtonClick, headerAttr, dataSet, newRowDefault, domNode, addDeleteColumn, helpText){
+		this.helpText = helpText;
 		this.dialogTitle = dialogTitle;
 		this.addButtonLabel = addButtonLabel;
 		this.dataSet = dataSet;
@@ -70,6 +71,10 @@ dojo.declare("wm.ContextMenuDialog", null, {
 	
 	createRightClickMenu: function(){
 		this.menu = new dijit.Dialog({title:this.dialogTitle},dojo.doc.createElement('div'));
+		if (this.helpText){
+			dojo.create('div', {innerHTML:this.helpText, style:'padding-left:5px;margin:5px;background:#FFF1A8;border:1px solid #DCDCDC;'}, this.menu.containerNode);
+		}
+		
 		this.createMenuHTML(this.headerAttr, this.dataSet);
 	},
 	createMenuHTML: function(headerAttr, rows){
