@@ -256,7 +256,7 @@ wm.RelatedEditor.extend({
 	},
 	hasGrid: function() {
 		return wm.getMatchingFormWidgets(this, dojo.hitch(this, function(w) {
-			return ((w instanceof wm.DataGrid) && w.dataSet.getId() == this.dataSet.getId());
+			return ((w instanceof wm.DojoGrid) && w.getDataSet().getId() == this.dataSet.getId());
 		})).length;
 	},
 	// return a grid with same dataSet id as the relatedEditor
@@ -270,10 +270,10 @@ wm.RelatedEditor.extend({
 			return;
 		var
 			p = this.getEditorParent(),
-			g = this.owner.loadComponent("dataGrid1", p, "wm.DataGrid", {height: "100px"}),
+			g = this.owner.loadComponent("dataGrid1", p, "wm.DojoGrid", {height: "100px"}),
 			dsId = (this.dataSet || 0).getId();
 		if (g && dsId)
-			g.$.binding.addWire("", "dataSet", dsId);
+			g.set_dataSet(dsId);
 	},
 	removeGrid: function(){
 		this.inherited(arguments);
