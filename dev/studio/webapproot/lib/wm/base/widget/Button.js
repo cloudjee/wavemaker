@@ -225,6 +225,8 @@ dojo.declare("wm.ToggleButton", wm.ToolButton, {
         init: function() {
 	    this.caption = this.captionUp;
 	    this.inherited(arguments);
+            if (this.clicked)
+                this.setClicked(true);
 	},
         click: function() {
 	    this.onclick();
@@ -247,7 +249,8 @@ dojo.declare("wm.ToggleButton", wm.ToolButton, {
 
 wm.Object.extendSchema(wm.ToggleButton, {
         captionUp: { group: "display", bindTarget: 1, order: 10, focus: 1 },
-	captionDown: { group: "display", bindTarget: 1, order: 11, focus: 1 },
+	captionDown: { group: "display", bindTarget: 1, order: 11},
+        clicked: { group: "display", bindTarget: 1, bindSource: 1, order: 12 },
         caption: {ignore: 1}
 });
 dojo.declare("wm.RoundedButton", wm.Button, {
