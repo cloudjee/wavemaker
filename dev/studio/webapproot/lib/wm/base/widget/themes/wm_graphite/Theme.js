@@ -46,7 +46,7 @@
 		"border": "0", 
 		"isMajorContent": 1, 
 		"clientBorderColor": "#333333", 
-		"headerHeight": "31px"
+		"headerHeight": "30px"
 	}, 
 	"wm.WizardLayers": {
 		"border": "0", 
@@ -58,34 +58,38 @@
 	}, 
 	"wm.Dialog": {
 		"border": "2", 
-		"borderColor": "#333333", 
+		"borderColor": "#222222", 
 		"titlebarBorder": "0,0,2,0", 
-		"titlebarBorderColor": "#333333"
+		"titlebarBorderColor": "#333333", 
+		"containerClass": "MainContent"
 	}, 
 	"wm.GenericDialog": {
 		"border": "2", 
-		"borderColor": "#333333", 
-		"titlebarBorder": "0,0,1,0", 
-		"titlebarBorderColor": "#333333", 
-		"footerBorder": "2,0,0,0", 
-		"footerBorderColor": "#333333"
-	}, 
-	"wm.RichTextDialog": {
-		"border": 2, 
-		"borderColor": "#333333", 
-		"titlebarBorder": "0,0,1,0", 
-		"titlebarBorderColor": "#333333", 
-		"footerBorder": "2,0,0,0", 
-		"footerBorderColor": "#333333"
-	}, 
-	"wm.PageDialog": {
-		"border": 2, 
-		"borderColor": "#333333", 
+		"borderColor": "#222222", 
 		"titlebarBorder": "0,0,1,0", 
 		"titlebarBorderColor": "#333333", 
 		"footerBorder": "2,0,0,0", 
 		"footerBorderColor": "#333333", 
-		"noBevel": true
+		"containerClass": "MainContent"
+	}, 
+	"wm.RichTextDialog": {
+		"border": "2", 
+		"borderColor": "#222222", 
+		"titlebarBorder": "0,0,1,0", 
+		"titlebarBorderColor": "#333333", 
+		"footerBorder": "2,0,0,0", 
+		"footerBorderColor": "#333333", 
+		"containerClass": "MainContent"
+	}, 
+	"wm.PageDialog": {
+		"border": "2", 
+		"borderColor": "#222222", 
+		"titlebarBorder": "0,0,1,0", 
+		"titlebarBorderColor": "#333333", 
+		"footerBorder": "2,0,0,0", 
+		"footerBorderColor": "#333333", 
+		"noBevel": true, 
+		"containerClass": "MainContent"
 	}, 
 	"wm.DojoMenu": {
 		"padding": "0", 
@@ -178,5 +182,36 @@
 	}, 
 	"wm.Time": {
 		"border": "0"
+	}, 
+	"wm.WidgetsJsDialog": {
+		"containerClass": "MainContent", 
+		"border": "2", 
+		"borderColor": "#222222"
+	}, 
+	"wm.FileUploadDialog": {
+		"containerClass": "MainContent", 
+		"border": "2", 
+		"borderColor": "#222222"
+	}, 
+	"wm.DesignableDialog": {
+		"containerClass": "MainContent", 
+		"border": "2", 
+		"borderColor": "#222222"
+	}, 
+	"wm.ColorPickerDialog": {
+		"border": "2", 
+		"borderColor": "#222222"
+	}, 
+	"wm.MainContentPanel": {
+		"border": "2", 
+		"borderColor": "#333333"
+	}, 
+	"wm.EmphasizedContentPanel": {
+		"border": "2", 
+		"borderColor": "#333333"
+	}, 
+	"wm.HeaderContentPanel": {
+		"border": "2", 
+		"borderColor": "#333333"
 	}
 }

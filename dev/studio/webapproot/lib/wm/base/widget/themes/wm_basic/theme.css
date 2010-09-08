@@ -9,7 +9,7 @@
    *              and which some browsers make a bit harder to control (further work may make this 
    *              unnecessary
    ************************************************************************************************/
-body .basic input:focus,
+body .wm_basic input:focus,
 .wm_basic button, .wm_basic button:focus {
     outline-width: 0 !important;
 }
