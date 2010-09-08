@@ -27,7 +27,14 @@ body .wm_template input:focus,
     #studio_designer.wm_template .wmlayout .EmphasizedContent a,
     #studio_designer.wm_template .wmlayout .EmphasizedContent a:visited,
     .wm_template #wavemakerNode .wmlayout .EmphasizedContent a,
-    .wm_template #wavemakerNode .wmlayout .MainContent a:visited {
+    .wm_template #wavemakerNode .wmlayout .EmphasizedContent a:visited,
+
+    #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_template .wmlayout .MainContent .EmphasizedContent a,
+    #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_template .wmlayout .MainContent .EmphasizedContent a:visited,
+    #studio_designer.wm_template .wmlayout .MainContent .EmphasizedContent a,
+    #studio_designer.wm_template .wmlayout .MainContent .EmphasizedContent a:visited,
+    .wm_template #wavemakerNode .wmlayout .MainContent .EmphasizedContent a,
+    .wm_template #wavemakerNode .wmlayout .MainContent .EmphasizedContent a:visited {
 	color: #FFFFFF; /* EmphasizedContent-Styles-Font_Color */
     }
 }
