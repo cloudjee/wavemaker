@@ -57,6 +57,7 @@
 		</available>
 
     <target name="init" />
+
     <target name="testrunclean" description="Clean build files"
             depends="init,undeploy,clean">
     </target>
@@ -282,15 +283,15 @@
     <!-- check to see if we should generate the web.xml -->
     <target name="-webxml-uptodate" depends="init">
         <uptodate property="webxml_is_uptodate"
-                targetfile="${build.app.webinf.dir}/web.xml">
+                targetfile="${orig.proj.dir}/webapproot/WEB-INF/web.xml">
             <srcresources>
                 <javaresource
                         name="com/wavemaker/tools/project/web.xml"
                         classpathref="app.classpath" />
-                <file file="${build.app.webinf.dir}/user-web.xml"/>
+                <file file="${orig.proj.dir}/webapproot/WEB-INF/user-web.xml"/>
             </srcresources>
 
-            <mapper type="merge" to="${build.app.webinf.dir}/web.xml"/>
+            <mapper type="merge" to="${orig.proj.dir}/webapproot/WEB-INF/web.xml"/>
         </uptodate>
 
         <condition property="do_generate_webxml">
@@ -303,15 +304,39 @@
             </or>
         </condition>
 
-        <condition property="do_generate_webxml_inc_userxml">
-            <and>
+		<condition property="do_generate_webxml_inc_userxml">
+            <and>				
+                <available file="${build.app.webinf.dir}/web.xml"/>                
                 <available file="${build.app.webinf.dir}/user-web.xml"/>
                 <istrue value="${do_generate_webxml}"/>
             </and>
         </condition>
 
         <condition property="do_generate_webxml_no_userxml">
+            <and>			    
+                <available file="${build.app.webinf.dir}/web.xml"/>                
+                <not>
+                    <available file="${build.app.webinf.dir}/user-web.xml"/>
+                </not>
+                <istrue value="${do_generate_webxml}"/>
+            </and>
+        </condition>
+
+        <condition property="do_generate_webxml_inc_userxml_from_orig">
             <and>
+				<not>
+                    <available file="${build.app.webinf.dir}/web.xml"/>
+                </not>
+                <available file="${build.app.webinf.dir}/user-web.xml"/>
+                <istrue value="${do_generate_webxml}"/>
+            </and>
+        </condition>
+
+        <condition property="do_generate_webxml_no_userxml_from_orig">
+            <and>
+			    <not>
+                    <available file="${build.app.webinf.dir}/web.xml"/>
+                </not>
                 <not>
                     <available file="${build.app.webinf.dir}/user-web.xml"/>
                 </not>
@@ -321,7 +346,41 @@
     </target>
 
     <target name="-generate-webxml-userxml" depends="init, -webxml-uptodate"
-            if="do_generate_webxml_inc_userxml">
+            if="do_generate_webxml_inc_userxml">		
+		<replace file="${build.app.webinf.dir}/application.xml" token="{applicationName}"
+			value="${appName}"/>
+
+        <taskdef name="xmltask"
+                classname="com.oopsconsultancy.xmltask.ant.XmlTask"
+                classpathref="studio.classpath"/>
+        <xmltask source="${build.app.webinf.dir}/user-web.xml">
+            <copy path="/*/*" buffer="userWebBuffer" append="true"/>
+        </xmltask>
+        <xmltask source="${build.app.webinf.dir}/web.xml"
+                destbuffer="webxmlOutput">
+        </xmltask>
+        <xmltask sourcebuffer="webxmlOutput"
+                dest="${build.app.webinf.dir}/web.xml">
+            <insert path="/*/*[1]" position="before" buffer="userWebBuffer"/>
+        </xmltask>
+    </target>
+
+    <target name="-generate-webxml-no-userxml"
+            depends="init, -webxml-uptodate"
+            if="do_generate_webxml_no_userxml">
+        <taskdef name="xmltask"
+                classname="com.oopsconsultancy.xmltask.ant.XmlTask"
+                classpathref="studio.classpath"/>
+        <xmltask source="${build.app.webinf.dir}/web.xml"
+                destbuffer="webxmlOutput">
+        </xmltask>
+        <xmltask sourcebuffer="webxmlOutput"
+                dest="${build.app.webinf.dir}/web.xml">
+        </xmltask>
+    </target>
+
+	<target name="-generate-webxml-userxml-from-orig" depends="init, -webxml-uptodate"
+            if="do_generate_webxml_inc_userxml_from_orig">
         <copy todir="${build.app.webinf.dir}" flatten="true" overwrite="true">
             <resources>
                 <javaresource
@@ -351,13 +410,16 @@
         </xmltask>
     </target>
 
-    <target name="-generate-webxml-no-userxml"
+    <target name="-generate-webxml-no-userxml-from-orig"
             depends="init, -webxml-uptodate"
-            if="do_generate_webxml_no_userxml">
+            if="do_generate_webxml_no_userxml_from_orig">
         <copy todir="${build.app.webinf.dir}" flatten="true" overwrite="true">
             <resources>
                 <javaresource
                         name="com/wavemaker/tools/project/web.xml"
+                        classpathref="app.classpath" />
+				<javaresource
+                        name="com/wavemaker/tools/project/application.xml"
                         classpathref="app.classpath" />
             </resources>
         </copy>
@@ -373,7 +435,9 @@
     </target>
 
     <target name="generate-webxml"
-            depends="init,-generate-webxml-userxml,-generate-webxml-no-userxml">
+            depends="init,-generate-webxml-userxml,-generate-webxml-no-userxml,
+					-generate-webxml-userxml-from-orig,-generate-webxml-no-userxml-from-orig"
+			if="do_generate_webxml">
     </target>
 
 
