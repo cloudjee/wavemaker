@@ -1,0 +1,2328 @@
+/*****************************************
+ * FILE: theme.css
+ *****************************************/
+@import url("custom.css"); /* Edit this file if your editting by hand and don't want the themedesigner to overwrite your changes */
+  /**************************************************************************************************
+   * TYPE:        Button Focus for wm.Button and TabControls
+   *
+   * DESCRIPTION: get rid of focus outline whose color isn't at all in common with this theme,
+   *              and which some browsers make a bit harder to control (further work may make this 
+   *              unnecessary
+   ************************************************************************************************/
+body .wm_default input:focus,
+.wm_default button, .wm_default button:focus {
+    outline-width: 0 !important;
+}
+  /**************************************************************************************************
+   * TYPE:        Links
+   *
+   * DESCRIPTION: The standard blue underline just isn't a good choice on arbitrary backgrounds.
+   *              To insure a good color, just go with the specified font color and use the underline
+   *              and bold to illustrate that its a link.
+   ************************************************************************************************/
+@media screen { /* EmphasizedContent-Level */ 
+    #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_default .wmlayout .EmphasizedContent a,
+    #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_default .wmlayout .EmphasizedContent a:visited,
+    #studio_designer.wm_default .wmlayout .EmphasizedContent a,
+    #studio_designer.wm_default .wmlayout .EmphasizedContent a:visited,
+    .wm_default #wavemakerNode .wmlayout .EmphasizedContent a,
+    .wm_default #wavemakerNode .wmlayout .EmphasizedContent a:visited,
+    #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_default .wmlayout .MainContent .EmphasizedContent a,
+    #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_default .wmlayout .MainContent .EmphasizedContent a:visited,
+    #studio_designer.wm_default .wmlayout .MainContent .EmphasizedContent a,
+    #studio_designer.wm_default .wmlayout .MainContent .EmphasizedContent a:visited,
+    .wm_default #wavemakerNode .wmlayout .MainContent .EmphasizedContent a,
+    .wm_default #wavemakerNode .wmlayout .MainContent .EmphasizedContent a:visited {
+	color: #000000; /* EmphasizedContent-Styles-Font_Color */
+    }
+}
+@media screen { /* HeaderContent-Level */ 
+    #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_default .wmlayout .HeaderContent a,
+    #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_default .wmlayout .HeaderContent a:visited,
+    #studio_designer.wm_default .wmlayout .HeaderContent a,
+    #studio_designer.wm_default .wmlayout .HeaderContent a:visited,
+    .wm_default #wavemakerNode .wmlayout .HeaderContent a,
+    .wm_default #wavemakerNode .wmlayout .HeaderContent a:visited {
+	color: #444444; /* HeaderContent-Styles-Font_Color */
+    }
+}
+@media screen { /* MainContent-Level */ 
+    #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_default .wmlayout .MainContent a,
+    #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_default .wmlayout .MainContent a:visited,
+    #studio_designer.wm_default .wmlayout .MainContent a,
+    #studio_designer.wm_default .wmlayout .MainContent a:visited,
+    .wm_default #wavemakerNode .wmlayout .MainContent a,
+    .wm_default #wavemakerNode  .wmlayout .MainContent a:visited {
+	color: #000000; /* MainContent-Styles-Font_Color */
+    }
+}
+@media screen { /* Document-Level */ 
+    #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wmlayout a,
+    #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wmlayout a:visited,
+    #studio_designer.wm_default .wmlayout a,
+    #studio_designer.wm_default .wmlayout a:visited,
+    .wm_default  #wavemakerNode  .wmlayout a,
+    .wm_default  #wavemakerNode  .wmlayout a:visited {
+	color: #000000; /* Document-Styles-Font_Color */
+	font-weight: bold;
+    }
+}
+/* END SECTION wm.Layout */
+/* Custom CSS goes below this line *//*****************************************
+ * EOF: theme.css
+ *****************************************/
+/*****************************************
+ * FILE: buttons.css
+ *****************************************/
+  /**************************************************************************************************
+   * TYPE:        wm.Button
+   *
+   * DESCRIPTION: Sets the styles for wm.Button at each of three levels.  
+   ************************************************************************************************/
+@media screen { /* Document-Level */ 
+    /**************************************************************************************************
+       * TYPE:        Default Styling
+       *
+       * DESCRIPTION: Sets font, rounding, shadowing and background for the standard button state
+       ************************************************************************************************/
+    .wm_default   .wmbutton,
+    .wm_default   .wmtogglebutton,
+    .wm_default   .wmroundedbutton,
+    .wm_default   .wmbutton.wmbutton-disabled:hover,
+    .wm_default   .wmbutton.wmbutton-disabled:focus
+    {
+	/* Document-ClickablesDefault-Font */
+	font-family: Verdana; /* Document-ClickablesDefault-Font_Family */
+	font-size: 10pt; /* Document-ClickablesDefault-Font_TextSize */
+	color: #ffffff; /* Document-ClickablesDefault-Font_Color */
+	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+	/* Document-ClickablesDefault-Border */
+	-moz-border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-moz-box-shadow: 3px 3px 3px #444444; /* Document-ClickablesDefault-BorderStyle_Shadow */
+	-webkit-box-shadow: 3px 3px 3px #444444; /* Document-ClickablesDefault-BorderStyle_Shadow */
+	box-shadow: 3px 3px 3px #444444; /* Document-ClickablesDefault-BorderStyle_Shadow */
+	/* Document-ClickablesDefault-Background */
+	background-color: #1f497d; /* Document-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge1.png); /* Document-ClickablesDefault-Background_Image */
+	background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
+    }
+    /**************************************************************************************************
+       * TYPE:        Active Styling
+       *
+       * DESCRIPTION: Sets font, shadowing and background for an active ToggleButton
+       ************************************************************************************************/
+    .wm_default   .wmbutton.toggleButtonDown {
+	/* Document-ClickablesActive-Font */
+	color: #000000; /* Document-ClickablesActive-Font_Color */
+	/* Document-ClickablesActive-Background */
+	background-color: #9fcbd8; /* Document-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge0.png); /* Document-ClickablesActive-Background_Image */
+	background-position: top left; /* Document-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
+	-moz-box-shadow: 0px 0px 0px #444444; /* Document-ClickablesActive-BorderStyle_Shadow */
+	-webkit-box-shadow: 0px 0px 0px #444444; /* Document-ClickablesActive-BorderStyle_Shadow */
+	box-shadow: 0px 0px 0px #444444; /* Document-ClickablesActive-BorderStyle_Shadow */
+    }
+    /**************************************************************************************************
+       * TYPE:        Hover Styling
+       *
+       * DESCRIPTION: Sets font, shadowing and background for a wm.Button with a mouseover
+       ************************************************************************************************/
+    .wm_default   .wmbutton:hover,
+    .wm_default   .wmbutton:focus,
+    .wm_default   .wmroundedbutton:hover,
+    .wm_default   .wmroundedbutton:focus {
+	/* Document-ClickablesHover-Font */
+	color: #000000; /* Document-ClickablesHover-Font_Color */
+	/* Document-ClickablesHover-Background */
+	background-color: #addbe9; /* Document-ClickablesHover-Background_Color */
+	background-image: url(images/repeatx/greyThickEdge0.png); /* Document-ClickablesHover-Background_Image */
+	background-position: top left; /* Document-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesHover-Background_Image-Repeat */
+	/* Document-ClickablesHover-BorderStyle_Shadow */
+	-moz-box-shadow: 1px 1px 1px #444444; /* Document-ClickablesHover-BorderStyle_Shadow */
+	-webkit-box-shadow: 1px 1px 1px #444444; /* Document-ClickablesHover-BorderStyle_Shadow */
+	box-shadow: 1px 1px 1px #444444; /* Document-ClickablesHover-BorderStyle_Shadow */
+    }
+}
+@media screen { /* MainContent-Level */ 
+    /**************************************************************************************************
+       * TYPE:        Default Styling
+       *
+       * DESCRIPTION: Sets font, rounding, shadowing and background for the standard button state
+       ************************************************************************************************/
+    .wm_default .MainContent  .wmbutton,
+    .wm_default .MainContent  .wmtogglebutton,
+    .wm_default .MainContent  .wmroundedbutton,
+    .wm_default .MainContent  .wmbutton.wmbutton-disabled:hover,
+    .wm_default .MainContent  .wmbutton.wmbutton-disabled:focus
+    {
+	/* MainContent-ClickablesDefault-Font */
+	font-family: Verdana; /* MainContent-ClickablesDefault-Font_Family */
+	font-size: 10pt; /* MainContent-ClickablesDefault-Font_TextSize */
+	color: #333333; /* MainContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
+	/* MainContent-ClickablesDefault-Border */
+	-moz-border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
+	-moz-box-shadow: 3px 3px 3px #444444; /* MainContent-ClickablesDefault-BorderStyle_Shadow */
+	-webkit-box-shadow: 3px 3px 3px #444444; /* MainContent-ClickablesDefault-BorderStyle_Shadow */
+	box-shadow: 3px 3px 3px #444444; /* MainContent-ClickablesDefault-BorderStyle_Shadow */
+	/* MainContent-ClickablesDefault-Background */
+	background-color: #9dca49; /* MainContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
+    }
+    /**************************************************************************************************
+       * TYPE:        Active Styling
+       *
+       * DESCRIPTION: Sets font, shadowing and background for an active ToggleButton
+       ************************************************************************************************/
+    .wm_default .MainContent  .wmbutton.toggleButtonDown {
+	/* MainContent-ClickablesActive-Font */
+	color: #ffffff; /* MainContent-ClickablesActive-Font_Color */
+	/* MainContent-ClickablesActive-Background */
+	background-color: #639410; /* MainContent-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge0.png); /* MainContent-ClickablesActive-Background_Image */
+	background-position: top left; /* MainContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
+	-moz-box-shadow: 0px 0px 0px #444444; /* MainContent-ClickablesActive-BorderStyle_Shadow */
+	-webkit-box-shadow: 0px 0px 0px #444444; /* MainContent-ClickablesActive-BorderStyle_Shadow */
+	box-shadow: 0px 0px 0px #444444; /* MainContent-ClickablesActive-BorderStyle_Shadow */
+    }
+    /**************************************************************************************************
+       * TYPE:        Hover Styling
+       *
+       * DESCRIPTION: Sets font, shadowing and background for a wm.Button with a mouseover
+       ************************************************************************************************/
+    .wm_default .MainContent  .wmbutton:hover,
+    .wm_default .MainContent  .wmbutton:focus,
+    .wm_default .MainContent  .wmroundedbutton:hover,
+    .wm_default .MainContent  .wmroundedbutton:focus {
+	/* MainContent-ClickablesHover-Font */
+	color: #ffffff; /* MainContent-ClickablesHover-Font_Color */
+	/* MainContent-ClickablesHover-Background */
+	background-color: #77ae18; /* MainContent-ClickablesHover-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge0.png); /* MainContent-ClickablesHover-Background_Image */
+	background-position: top left; /* MainContent-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesHover-Background_Image-Repeat */
+	/* MainContent-ClickablesHover-BorderStyle_Shadow */
+	-moz-box-shadow: 1px 1px 1px #444444; /* MainContent-ClickablesHover-BorderStyle_Shadow */
+	-webkit-box-shadow: 1px 1px 1px #444444; /* MainContent-ClickablesHover-BorderStyle_Shadow */
+	box-shadow: 1px 1px 1px #444444; /* MainContent-ClickablesHover-BorderStyle_Shadow */
+    }
+}
+@media screen { /* EmphasizedContent-Level */ 
+    /**************************************************************************************************
+       * TYPE:        Default Styling
+       *
+       * DESCRIPTION: Sets font, rounding, shadowing and background for the standard button state
+       ************************************************************************************************/
+    .wm_default .EmphasizedContent  .wmbutton,
+    .wm_default .EmphasizedContent  .wmtogglebutton,
+    .wm_default .EmphasizedContent  .wmroundedbutton,
+    .wm_default .EmphasizedContent  .wmbutton.wmbutton-disabled:hover,
+    .wm_default .EmphasizedContent  .wmbutton.wmbutton-disabled:focus
+    {
+	/* EmphasizedContent-ClickablesDefault-Font */
+	font-family: Verdana; /* EmphasizedContent-ClickablesDefault-Font_Family */
+	font-size: 10pt; /* EmphasizedContent-ClickablesDefault-Font_TextSize */
+	color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
+	/* EmphasizedContent-ClickablesDefault-Border */
+	-moz-border-radius: 4px; /* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
+	-moz-box-shadow: 3px 3px 3px #444444; /* EmphasizedContent-ClickablesDefault-BorderStyle_Shadow */
+	-webkit-box-shadow: 3px 3px 3px #444444; /* EmphasizedContent-ClickablesDefault-BorderStyle_Shadow */
+	box-shadow: 3px 3px 3px #444444; /* EmphasizedContent-ClickablesDefault-BorderStyle_Shadow */
+	/* EmphasizedContent-ClickablesDefault-Background */
+	background-color: #333333; /* EmphasizedContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge1.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
+    }
+    /**************************************************************************************************
+       * TYPE:        Active Styling
+       *
+       * DESCRIPTION: Sets font, shadowing and background for an active ToggleButton
+       ************************************************************************************************/
+    .wm_default .EmphasizedContent  .wmbutton.toggleButtonDown {
+	/* EmphasizedContent-ClickablesActive-Font */
+	color: #ffffff; /* EmphasizedContent-ClickablesActive-Font_Color */
+	/* EmphasizedContent-ClickablesActive-Background */
+	background-color: #333333; /* EmphasizedContent-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge0.png); /* EmphasizedContent-ClickablesActive-Background_Image */
+	background-position: top left; /* EmphasizedContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesActive-Background_Image-Repeat */
+	-moz-box-shadow: 0px 0px 0px #444444; /* EmphasizedContent-ClickablesActive-BorderStyle_Shadow */
+	-webkit-box-shadow: 0px 0px 0px #444444; /* EmphasizedContent-ClickablesActive-BorderStyle_Shadow */
+	box-shadow: 0px 0px 0px #444444; /* EmphasizedContent-ClickablesActive-BorderStyle_Shadow */
+    }
+    /**************************************************************************************************
+       * TYPE:        Hover Styling
+       *
+       * DESCRIPTION: Sets font, shadowing and background for a wm.Button with a mouseover
+       ************************************************************************************************/
+    .wm_default .EmphasizedContent  .wmbutton:hover,
+    .wm_default .EmphasizedContent  .wmbutton:focus,
+    .wm_default .EmphasizedContent  .wmroundedbutton:hover,
+    .wm_default .EmphasizedContent  .wmroundedbutton:focus {
+	/* EmphasizedContent-ClickablesHover-Font */
+	color: #ffffff; /* EmphasizedContent-ClickablesHover-Font_Color */
+	/* EmphasizedContent-ClickablesHover-Background */
+	background-color: #666666; /* EmphasizedContent-ClickablesHover-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge0.png); /* EmphasizedContent-ClickablesHover-Background_Image */
+	background-position: top left; /* EmphasizedContent-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesHover-Background_Image-Repeat */
+	/* EmphasizedContent-ClickablesHover-BorderStyle_Shadow */
+	-moz-box-shadow: 1px 1px 1px #444444; /* EmphasizedContent-ClickablesHover-BorderStyle_Shadow */
+	-webkit-box-shadow: 1px 1px 1px #444444; /* EmphasizedContent-ClickablesHover-BorderStyle_Shadow */
+	box-shadow: 1px 1px 1px #444444; /* EmphasizedContent-ClickablesHover-BorderStyle_Shadow */
+    }
+}
+@media screen { /* HeaderContent-Level */ 
+    /**************************************************************************************************
+       * TYPE:        Default Styling
+       *
+       * DESCRIPTION: Sets font, rounding, shadowing and background for the standard button state
+       ************************************************************************************************/
+    .wm_default .HeaderContent  .wmbutton,
+    .wm_default .HeaderContent  .wmtogglebutton,
+    .wm_default .HeaderContent  .wmroundedbutton,
+    .wm_default .HeaderContent  .wmbutton.wmbutton-disabled:hover,
+    .wm_default .HeaderContent  .wmbutton.wmbutton-disabled:focus
+    {
+	/* HeaderContent-ClickablesDefault-Font */
+	font-family: Verdana; /* HeaderContent-ClickablesDefault-Font_Family */
+	font-size: 10pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
+	color: #FFFFFF; /* HeaderContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
+	/* HeaderContent-ClickablesDefault-Border */
+	-moz-border-radius: 4px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
+	-moz-box-shadow: 3px 3px 3px #444444; /* HeaderContent-ClickablesDefault-BorderStyle_Shadow */
+	-webkit-box-shadow: 3px 3px 3px #444444; /* HeaderContent-ClickablesDefault-BorderStyle_Shadow */
+	box-shadow: 3px 3px 3px #444444; /* HeaderContent-ClickablesDefault-BorderStyle_Shadow */
+	/* HeaderContent-ClickablesDefault-Background */
+	background-color: #666666; /* HeaderContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
+    }
+    /**************************************************************************************************
+       * TYPE:        Active Styling
+       *
+       * DESCRIPTION: Sets font, shadowing and background for an active ToggleButton
+       ************************************************************************************************/
+    .wm_default .HeaderContent  .wmbutton.toggleButtonDown {
+	/* HeaderContent-ClickablesActive-Font */
+	color: #000000; /* HeaderContent-ClickablesActive-Font_Color */
+	/* HeaderContent-ClickablesActive-Background */
+	background-color: #999999; /* HeaderContent-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/greyThickEdge1.png); /* HeaderContent-ClickablesActive-Background_Image */
+	background-position: top left; /* HeaderContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
+	-moz-box-shadow: 0px 0px 0px #444444; /* HeaderContent-ClickablesActive-BorderStyle_Shadow */
+	-webkit-box-shadow: 0px 0px 0px #444444; /* HeaderContent-ClickablesActive-BorderStyle_Shadow */
+	box-shadow: 0px 0px 0px #444444; /* HeaderContent-ClickablesActive-BorderStyle_Shadow */
+    }
+    /**************************************************************************************************
+       * TYPE:        Hover Styling
+       *
+       * DESCRIPTION: Sets font, shadowing and background for a wm.Button with a mouseover
+       ************************************************************************************************/
+    .wm_default .HeaderContent  .wmbutton:hover,
+    .wm_default .HeaderContent  .wmbutton:focus,
+    .wm_default .HeaderContent  .wmroundedbutton:hover,
+    .wm_default .HeaderContent  .wmroundedbutton:focus {
+	/* HeaderContent-ClickablesHover-Font */
+	color: #ffffff; /* HeaderContent-ClickablesHover-Font_Color */
+	/* HeaderContent-ClickablesHover-Background */
+	background-color: #333333; /* HeaderContent-ClickablesHover-Background_Color */
+	background-image: url(images/repeatx/brightSliverEdge4.png); /* HeaderContent-ClickablesHover-Background_Image */
+	background-position: top left; /* HeaderContent-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesHover-Background_Image-Repeat */
+	/* HeaderContent-ClickablesHover-BorderStyle_Shadow */
+	-moz-box-shadow: 0px 0px 0px #444444; /* HeaderContent-ClickablesHover-BorderStyle_Shadow */
+	-webkit-box-shadow: 0px 0px 0px #444444; /* HeaderContent-ClickablesHover-BorderStyle_Shadow */
+	box-shadow: 0px 0px 0px #444444; /* HeaderContent-ClickablesHover-BorderStyle_Shadow */
+    }
+}
+/*****************************************
+ * EOF: buttons.css
+ *****************************************/
+/*****************************************
+ * FILE: calendar.css
+ *****************************************/
+  /**************************************************************************************************
+   * TYPE:        wm.Calendar and the popup from wm.Date
+   *
+   * DESCRIPTION: Sets colors and rounding for calendar, calendar hover and calendar selection
+   *
+   * NOTE:        Style of Date Popup is not affected by panel type because its
+   *              parent is always the body tag.  We may in the future want Calendar itself to depend 
+   *              on its parent...
+   ************************************************************************************************/
+.wm_default tr.dijitCalendarMonthContainer th {
+    /* Document-ClickablesDefault-Font */
+    font-family: Verdana; /* Document-ClickablesDefault-Font_Family */
+    font-size: 10pt; /* Document-ClickablesDefault-Font_TextSize */
+    color: #ffffff; /* Document-ClickablesDefault-Font_Color */
+    font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+    /* Document-ClickablesDefault-Background */
+    background-color: #1f497d; /* Document-ClickablesDefault-Background_Color */
+    background-image: url(images/repeatx/brightThickEdge1.png); /* Document-ClickablesDefault-Background_Image */
+    background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
+    background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
+}
+.wm_default tr.dijitCalendarMonthContainer th .dijitCalendarMonthLabel {
+    /* Document-ClickablesDefault-Font */
+    font-family: Verdana; /* Document-ClickablesDefault-Font_Family */
+    font-size: 10pt; /* Document-ClickablesDefault-Font_TextSize */
+    color: #ffffff; /* Document-ClickablesDefault-Font_Color */
+    font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+}
+.wm_default table.dijitCalendarContainer td,
+.wm_default table.dijitCalendarContainer td.dijitCalendarCurrentMonth {
+    background-color: #ffffff !important; /* PageContent-Styles-Background_Color */
+    color: #000000 !important; /* PageContent-Styles-Font_Color */
+}
+.wm_default .dijitCalendarContainer td.dijitCalendarSelectedDate,
+.wm_default .dijitCalendarContainer td.dijitCalendarSelectedDate.dijitCalendarCurrentMonth,
+.wm_default .dijitCalendarContainer .dijitCalendarSelectedYear {
+    background-color: #9fcbd8 !important; /* Document-ClickablesActive-Background_Color */
+    color: #000000 !important; /* Document-ClickablesActive-Font_Color */
+    -moz-border-radius: 4px; /* PageContent-Styles-Border_Radius */
+    -webkit-border-radius: 4px; /* PageContent-Styles-Border_Radius */
+    border-radius: 4px; /* PageContent-Styles-Border_Radius */
+}
+.wm_default .dijitCalendarContainer td.dijitCalendarHoveredDate,
+.wm_default .dijitCalendarContainer td.dijitCalendarHoveredDate.dijitCalendarCurrentMonth,
+.wm_default .dijitCalendarContainer .dijitCalendarHoveredYear,
+.wm_default .dijitCalendarContainer .dijitCalendarNextYear:hover,
+.wm_default .dijitCalendarContainer .dijitCalendarPreviousYear:hover {
+    background-color: #addbe9 !important; /* Document-ClickablesHover-Background_Color */
+    color: #000000 !important; /* Document-ClickablesHover-Font_Color */
+    -moz-border-radius: 4px; /* PageContent-Styles-Border_Radius */
+    -webkit-border-radius: 4px; /* PageContent-Styles-Border_Radius */
+    border-radius: 4px; /* PageContent-Styles-Border_Radius */
+}
+.wm_default .dijitCalendarContainer {
+    background-color: #ffffff; /* PageContent-Styles-Background_Color */
+}
+.wm_default .dijitCalendarContainer .dijitCalendarPreviousMonth,
+.wm_default .dijitCalendarContainer .dijitCalendarNextMonth,
+.wm_default .dijitCalendarContainer .dijitCalendarDayLabelTemplate {
+    background-color: #ffffff !important; /* Document-Styles-Background_Color */
+    background-image: none;
+    color: #000000; /* Document-Styles-Font_Color */
+}
+/*****************************************
+ * EOF: calendar.css
+ *****************************************/
+/*****************************************
+ * FILE: dialog.css
+ *****************************************/
+  /**************************************************************************************************
+   * TYPE:        wm.Dialog main styles
+   *
+   * DESCRIPTION: Sets the rounding, shadowing and background for the dialog
+   *
+   * NOTE:        Style of dialog main panel and button is not affected by panel type because its
+   *              parent is always the body tag
+   ************************************************************************************************/
+.wm_default .wmdialog {
+    /* Borders-Panel_BorderStyle_Radius */
+    -moz-border-radius: 4px; /* Borders-Panel_BorderStyle_Radius */
+    -webkit-border-radius: 4px; /* Borders-Panel_BorderStyle_Radius */
+    border-radius: 4px;  /* Borders-Panel_BorderStyle_Radius */
+    /* Floating-Shadow should automatically be calculated as min 2px 2px 2px black and preferred
+     * 1.5 times the value of wm.Content-BorderStyle_Shadow */
+    -moz-box-shadow: 3px 3px 3px black;   /* Floating-Shadow */
+    -webkit-box-shadow: 3px 3px 3px black; /* Floating-Shadow */
+    box-shadow: 3px 3px 3px black; /* Floating-Shadow */
+}
+ /**************************************************************************************************
+   * TYPE:        wm.Dialog Title Bar
+   *
+   * DESCRIPTION: Sets the font and backgound colors, and rounding for
+   *              the titlebar
+   ************************************************************************************************/
+.wm_default .dialogtitlebar,
+.wm_default .dialogtitlebar .wmlabel{    
+    /* Dialogs-Styles-Font */
+    font-family: Verdana; /* Dialogs-Styles-Font_Family */
+    font-size: 10pt; /* Dialogs-Styles-Font_TextSize */
+    color: #ffffff; /* Dialogs-Styles-Font_Color */
+    font-weight: bold; /* Dialogs-Styles-Font_Weight */
+    /* Dialogs-Styles-Background */
+    background-color: #666666; /* Dialogs-Styles-Background_Color */
+    background-image: url(images/repeatx/brightThickEdge0.png); /* Dialogs-Styles-Background_Image */
+    background-position: top left; /* Dialogs-Styles-Background_Image-Position */
+    background-repeat: repeat-x; /* Dialogs-Styles-Background_Image-Repeat */
+}
+.wm_default .dialogtitlebar {
+    /* Automatically calculated to be 2px less than MainContent-Styles-Border_Style-Radius */
+    -moz-border-radius-topleft: 2px; /* wm.Dialog_Inner-Radius */
+    -moz-border-radius-topright: 2px;/* wm.Dialog_Inner-Radius */
+    -webkit-border-top-left-radius: 2px;/* wm.Dialog_Inner-Radius */
+    -webkit-border-top-right-radius: 2px;/* wm.Dialog_Inner-Radius */
+    border-radius-topleft: 2px;/* wm.Dialog_Inner-Radius */
+    border-radius-topright: 2px;/* wm.Dialog_Inner-Radius */
+}
+  /**************************************************************************************************
+   * TYPE:        wm.Dialog button panel
+   *
+   * DESCRIPTION: Sets the font and backgound colors, and rounding for
+   *              the button panel at the bottom of the dialog
+   ************************************************************************************************/
+.wm_default .dialogfooter, 
+.wm_default .wmpagedialog-controlspanel {
+    /* Dialogs-Styles-Font */
+    font-family: Verdana; /* Dialogs-Styles-Font_Family */
+    font-size: 10pt; /* Dialogs-Styles-Font_TextSize */
+    color: #ffffff; /* Dialogs-Styles-Font_Color */
+    font-weight: bold; /* Dialogs-Styles-Font_Weight */
+    /* Dialogs-Styles-Background */
+    background-color: #666666; /* Dialogs-Styles-Background_Color */
+    /*background-image: url(images/threeD.png); / * Dialogs-Styles-Background_Image * / */
+    background-position: top left; /* Dialogs-Styles-Background_Image-Position */
+    background-repeat: repeat-x; /* Dialogs-Styles-Background_Image-Repeat */
+    /* Automatically calculated to be 2px less than MainContent-Styles-Border_Style-Radius */
+    -moz-border-radius-bottomleft: 2px; /* wm.Dialog_Inner-Radius */
+    -moz-border-radius-bottomright: 2px;/* wm.Dialog_Inner-Radius */
+    -webkit-border-bottom-left-radius: 2px;/* wm.Dialog_Inner-Radius */
+    -webkit-border-bottom-right-radius: 2px;/* wm.Dialog_Inner-Radius */
+    border-radius-bottomleft: 2px;/* wm.Dialog_Inner-Radius */
+    border-radius-bottomright: 2px;/* wm.Dialog_Inner-Radius */
+}
+  /**************************************************************************************************
+   * TYPE:        wm.Dialog titlebar buttons
+   *
+   * DESCRIPTION: Fixes the font size and padding etc to insure proper
+   *              fit/alignment of button text/images
+   ************************************************************************************************/
+body.wm_default .dialogtitlebar .wmbutton,
+body .wm_default .dialogtitlebar .wmbutton {
+    /* Dialogs-TitleButtonsDefault-Background */
+    background-color: #c6d3d7; /* Dialogs-TitleButtonsDefault-Background_Color */
+    background-image: url(images/repeatx/brightEdge2.png); /* Dialogs-TitleButtonsDefault-Background_Image */
+    background-position: top left; /* Dialogs-TitleButtonsDefault-Background_Image-Position */
+    background-repeat: repeat-x; /* Dialogs-TitleButtonsDefault-Background_Image-Repeat */
+    color: #000000; /* Dialogs-TitleButtonsDefault-Font_Color */
+    /* Not customizable yet; the "X" and "-" must fit somewhat precisely, so I don't like users messing with this unless
+     * they are ready to muck about with the css themselves */
+    font-size: 12pt !important;
+    font-weight: normal !important;
+    padding: 2px 0px 0px 2px !important;
+    font-family: sans-serif !important;
+    /* I may change my mind in the future, but using the button default radius here seems a mistake */
+    -moz-border-radius: 0px !important;
+    -webkit-border-radius: 0px !important;
+    border-radius: 0px !important;
+    -moz-box-shadow: 2px 2px 2px #444444; /* Dialogs-TitleButtonsDefault-BorderStyle_Shadow */
+    -webkit-box-shadow: 2px 2px 2px #444444; /* Dialogs-TitleButtonsDefault-BorderStyle_Shadow */
+    box-shadow: 2px 2px 2px #444444; /* Dialogs-TitleButtonsDefault-BorderStyle_Shadow */
+}
+  /**************************************************************************************************
+   * TYPE:        wm.Dialog button panel buttons
+   *
+   * DESCRIPTION: Sets font for buttons in the button panel
+   ************************************************************************************************/
+body.wm_default .dialogfooter .wmbutton,
+body .wm_default .dialogfooter .wmbutton {
+    /* Dialogs-FooterButtonsDefault-Font */
+    font-family: Verdana; /* Dialogs-FooterButtonsDefault-Font_Family */
+    font-size: 10pt; /* Dialogs-FooterButtonsDefault-Font_TextSize */
+    color: #000000; /* Dialogs-FooterButtonsDefault-Font_Color */
+    font-weight: bold; /* Dialogs-FooterButtonsDefault-Font_Weight */
+    /* Dialogs-FooterButtonsDefault-Background */
+    background-color: #86a2ac; /* Dialogs-FooterButtonsDefault-Background_Color */
+    background-image: url(images/repeatx/brightEdge2.png); /* Dialogs-FooterButtonsDefault-Background_Image */
+    background-position: top left; /* Dialogs-FooterButtonsDefault-Background_Image-Position */
+    background-repeat: repeat-x; /* Dialogs-FooterButtonsDefault-Background_Image-Repeat */
+    -moz-box-shadow: 3px 3px 3px #000000; /* Dialogs-FooterButtonsDefault-BorderStyle_Shadow */
+    -webkit-box-shadow: 3px 3px 3px #000000; /* Dialogs-FooterButtonsDefault-BorderStyle_Shadow */
+    box-shadow: 3px 3px 3px #000000; /* Dialogs-FooterButtonsDefault-BorderStyle_Shadow */
+}
+  /**************************************************************************************************
+   * TYPE:        wm.Dialog button panel and titlebar buttons HOVER
+   *
+   * DESCRIPTION: Sets background for buttons with mouseover
+   ************************************************************************************************/
+body.wm_default .dialogtitlebar .wmbutton:hover,
+body .wm_default .dialogtitlebar .wmbutton:hover {
+    /* Dialogs-TitleButtonsHover-Font */
+    color: #000000; /* Dialogs-TitleButtonsHover-Font_Color */
+    /* Dialogs-TitleButtonsHover-Background */
+    background-color: #86a2ac; /* Dialogs-TitleButtonsHover-Background_Color */
+    background-image: url(images/repeatx/brightEdge4.png); /* Dialogs-TitleButtonsHover-Background_Image */
+    background-position: top left; /* Dialogs-TitleButtonsHover-Background_Image-Position */
+    background-repeat: repeat-x; /* Dialogs-TitleButtonsHover-Background_Image-Repeat */
+    -moz-box-shadow: 1px 1px 1px #000000; /* Dialogs-TitleButtonsHover-BorderStyle_Shadow */
+    -webkit-box-shadow: 1px 1px 1px #000000; /* Dialogs-TitleButtonsHover-BorderStyle_Shadow */
+    box-shadow: 1px 1px 1px #000000; /* Dialogs-TitleButtonsHover-BorderStyle_Shadow */
+}
+body.wm_default .dialogfooter .wmbutton:hover,
+body .wm_default .dialogfooter .wmbutton:hover {
+    /* Dialogs-FooterButtonsHover-Font */
+    color: #000000; /* Dialogs-FooterButtonsHover-Font_Color */
+    /* Dialogs-FooterButtonsHover-Background */
+    background-color: #86a2ac; /* Dialogs-FooterButtonsHover-Background_Color */
+    background-image: url(images/repeatx/brightEdge4.png); /* Dialogs-FooterButtonsHover-Background_Image */
+    background-position: top left; /* Dialogs-FooterButtonsHover-Background_Image-Position */
+    background-repeat: repeat-x; /* Dialogs-FooterButtonsHover-Background_Image-Repeat */
+`
+    -moz-box-shadow: 1px 1px 1px #000000; /* Dialogs-FooterButtonsHover-BorderStyle_Shadow */
+    -webkit-box-shadow: 1px 1px 1px #000000; /* Dialogs-FooterButtonsHover-BorderStyle_Shadow */
+    box-shadow: 1px 1px 1px #000000; /* Dialogs-FooterButtonsHover-BorderStyle_Shadow */
+}
+/*****************************************
+ * EOF: dialog.css
+ *****************************************/
+/*****************************************
+ * FILE: editors.css
+ *****************************************/
+  /**************************************************************************************************
+   * TYPE:        wm.AbstractEditor / wm._BaseEditor
+   *
+   * DESCRIPTION: Sets the styling of all editors, as well as a few things I've arbitrarily linked to 
+   *              editor style such as the progress bar.  The first section of this document
+   *              consists of common editors styles regardless of what kind of panel the editor is in.
+   ************************************************************************************************/
+/* Give editors the standard border color, and get rid of the outline styling which is unnecessary and looks bad in webkit */
+.wm_default .wmeditor .dijitTextBox.dijitFocused,
+.wm_default .wmeditor .dijitTextArea.dijitFocused,
+.wm_default .wmeditor .dijitComboBox.dijitFocused {
+	outline-width: 0 !important;    
+}
+.wm_default .wmeditor .wmeditor-caption {
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+}
+/* Make all editors equally rounded.  This is not for technical reasons.  It is my opinion that a theme should
+ * allow some things to vary, and other things should provide a consistent common look.
+ */
+.wm_default  .wmeditor .dijitTextBox,
+.wm_default  .wmeditor .dijitTextArea,
+.wm_default  .wmeditor .dijitComboBox
+ {
+     /* Borders-Editor_BorderStyle_Radius */
+     -moz-border-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
+     -webkit-border-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
+     border-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
+}
+/* Can't round the top edges of the richtext editor until we're ready to tackle rounding dojo's toolbar */
+.wm_default .wmeditor.wmrichtext {
+    /* Borders-Editor_BorderStyle_Radius */
+    -moz-border-radius-bottomleft: 4px;  /* Borders-Editor_BorderStyle_Radius */
+    -moz-border-radius-bottomright: 4px; /* Borders-Editor_BorderStyle_Radius */
+    -webkit-border-bottom-left-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
+    -webkit-border-bottom-right-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
+    border-radius-bottomleft: 4px; /* Borders-Editor_BorderStyle_Radius */
+    border-radius-bottomright: 4px; /* Borders-Editor_BorderStyle_Radius */
+}
+.wm_default .wmeditor .dijitComboBox .dijitArrowButton {
+    -moz-border-radius-bottomright: 2px; /* wm.SelectMenu-Inner_Radius */
+    -moz-border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
+    -webkit-border-bottom-right-radius: 2px;/* wm.SelectMenu-Inner_Radius */
+    -webkit-border-top-right-radius: 2px;/* wm.SelectMenu-Inner_Radius */
+    border-radius-bottomright: 2px;/* wm.SelectMenu-Inner_Radius */
+    border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
+}
+.wm_default .wmeditor .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
+	background-image: url(images/comboArrowDownLight.png); /* wm.SelectMenu-Down-Arrow_Image */
+        -moz-border-radius-bottomright: 2px;/* wm.SelectMenu-Inner_Radius */
+        -moz-border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
+        -webkit-border-bottom-right-radius: 2px;/* wm.SelectMenu-Inner_Radius */
+        -webkit-border-top-right-radius: 2px;/* wm.SelectMenu-Inner_Radius */
+         border-radius-bottomright: 2px;/* wm.SelectMenu-Inner_Radius */
+         border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
+}
+  /**************************************************************************************************
+   * TYPE:        Slider
+   *
+   * TODO:        I haven't really worked in support for slider into themes.  Color and Background
+   *              should show up when editting the slider widget in the theme designer or colors/images
+   *              should be automatically assigned. I don't think this gets so much use that I've 
+   *              put in the effort just yet.
+   ************************************************************************************************/
+.wm_default .dijitSlider .dijitProgressBarLabel {
+    color: white;
+}
+.wm_default .dijitSlider .dijitSliderImageHandleH {
+    background: url(images/preciseSliderThumb.png) no-repeat 50% 0%;
+    outline-width: 0;
+}
+  /**************************************************************************************************
+   * TYPE:        wm.AbstractEditor / wm._BaseEditor (default settings)
+   *
+   * DESCRIPTION: All styles applied at the Document-Level are never disabled, and apply anywhere
+   *              that another panel class doesn't override the behavior.
+   ************************************************************************************************/
+@media screen { /* Document-Level */ 
+  /**************************************************************************************************
+   * TYPE:        dijit.form.ComboBox/FilteringSelect/Select popup button
+   *
+   * DESCRIPTION: We need to set the background color and background image for the menu's popup
+   *              button. 
+   ************************************************************************************************/
+.wm_default .wmeditor .dijitComboBox .dijitArrowButton {
+    background-color: #1f497d; /* Document-ClickablesDefault-Background_Color */
+    background-image: none;
+}
+    .wm_default .wmeditor .dijitTextBox,
+    .wm_default .wmeditor .dijitTextArea,
+    .wm_default .wmeditor .dijitComboBox,
+    .wm_default .dijitTimePickerItem,
+    .wm_default .wmeditor .RichTextEditable iframe {
+	/* Document-EditorsDefault-Border */
+	border-color: #333333; /* Document-EditorsDefault-Border_Color */
+	border-width: 1px; /* Document-EditorsDefault-Border_BorderSize */
+	/* Document-EditorsDefault-Font */
+	font-family: Verdana; /* Document-EditorsDefault-Font_Family */
+	font-size: 8pt; /* Document-EditorsDefault-Font_TextSize */
+	color: #000000; /* Document-EditorsDefault-Font_Color */
+	font-weight: normal; /* Document-EditorsDefault-Font_Weight */
+	/* Document-EditorsDefault-Background */
+	background-color: #eeeeee; /* Document-EditorsDefault-Background_Color */
+	background-image: url(images/repeatx/greyEdge2.png); /* Document-EditorsDefault-Background_Image */
+	background-position: top left; /* Document-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-EditorsDefault-Background_Image-Repeat */
+    }
+    .wm_default .wmeditor .dijitTextBox.dijitHover,
+    .wm_default .wmeditor .dijitTextArea:hover,
+    .wm_default .wmeditor .dijitComboBox.dijitHover,
+    .wm_default .wmeditor .RichTextEditable:hover iframe,
+    .wm_default .dijitTimePickerMarker.dijitTimePickerMarkerHover,
+    .wm_default .dijitTimePickerItem.dijitTimePickerItemHover {
+	/* Document-EditorsHover-Font */
+	color: #000000; /* Document-EditorsHover-Font_Color */
+	border-color: #333333; /* Document-EditorsHover-Border_Color */
+	/* Document-EditorsHover-Background */
+	background-color: #dddddd; /* Document-EditorsHover-Background_Color */
+	background-image: url(images/repeatx/greyEdge4.png); /* Document-EditorsHover-Background_Image */
+	background-position: top left; /* Document-EditorsHover-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-EditorsHover-Background_Image-Repeat */
+    }
+    .wm_default .wmeditor .dijitTextBox.dijitFocused,
+    .wm_default .wmeditor .dijitTextBox.dijitFocused.dijitHover,
+    .wm_default .wmeditor .dijitTextArea.dijitFocused,
+    .wm_default .wmeditor .dijitTextArea.dijitFocused:hover,
+    .wm_default .wmeditor .dijitComboBox.dijitFocused,
+    .wm_default .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_default .wmeditor .RichTextEditable.Focused iframe {
+	/* Document-EditorsFocus-Font */
+	color: #000000; /* Document-EditorsFocus-Font_Color */
+	border-color: #000000; /* Document-EditorsFocus-Border_Color */
+	/* Document-EditorsFocus-Background */
+	background-color: #FFFFFF; /* Document-EditorsFocus-Background_Color */
+	background-image: none; /* Document-EditorsFocus-Background_Image */
+	background-position: top left; /* Document-EditorsFocus-Background_Image-Position */
+	background-repeat: no-repeat; /* Document-EditorsFocus-Background_Image-Repeat */
+    }
+    /* END SECTION wm.AbstractEditor */
+}
+@media screen { /* MainContent-Level */ 
+  /**************************************************************************************************
+   * TYPE:        dijit.form.ComboBox/FilteringSelect/Select popup button
+   *
+   * DESCRIPTION: We need to set the background color and background image for the menu's popup
+   *              button. 
+   ************************************************************************************************/
+.wm_default .wmeditor .dijitComboBox .dijitArrowButton {
+    background-color: #9dca49; /* MainContent-ClickablesDefault-Background_Color */
+    background-image: none;
+}
+    .wm_default .MainContent .wmeditor .dijitTextBox,
+    .wm_default .MainContent .wmeditor .dijitTextArea,
+    .wm_default .MainContent .wmeditor .dijitComboBox,
+    .wm_default .MainContent .dijitTimePickerItem,
+    .wm_default .MainContent .wmeditor .RichTextEditable iframe {
+	/* MainContent-EditorsDefault-Border */
+	border-color: #333333; /* MainContent-EditorsDefault-Border_Color */
+	border-width: 1px; /* MainContent-EditorsDefault-Border_BorderSize */
+	/* MainContent-EditorsDefault-Font */
+	font-family: Verdana; /* MainContent-EditorsDefault-Font_Family */
+	font-size: 8pt; /* MainContent-EditorsDefault-Font_TextSize */
+	color: #000000; /* MainContent-EditorsDefault-Font_Color */
+	font-weight: normal; /* MainContent-EditorsDefault-Font_Weight */
+	/* MainContent-EditorsDefault-Background */
+	background-color: #eeeeee; /* MainContent-EditorsDefault-Background_Color */
+	background-image: url(images/repeatx/greyEdge2.png); /* MainContent-EditorsDefault-Background_Image */
+	background-position: top left; /* MainContent-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-EditorsDefault-Background_Image-Repeat */
+    }
+    .wm_default .wmeditor.wmrichtext {
+	/* MainContent-EditorsDefault-BorderStyle_Radius */
+	-moz-border-radius-bottomleft: 4px;  /* MainContent-EditorsDefault-BorderStyle_Radius */
+	-moz-border-radius-bottomright: 4px; /* MainContent-EditorsDefault-BorderStyle_Radius */
+	-webkit-border-bottom-left-radius: 4px; /* MainContent-EditorsDefault-BorderStyle_Radius */
+	-webkit-border-bottom-right-radius: 4px; /* MainContent-EditorsDefault-BorderStyle_Radius */
+	border-radius-bottomleft: 4px; /* MainContent-EditorsDefault-BorderStyle_Radius */
+	border-radius-bottomright: 4px; /* MainContent-EditorsDefault-BorderStyle_Radius */
+    }
+    .wm_default .MainContent .wmeditor .dijitTextBox.dijitHover,
+    .wm_default .MainContent .wmeditor .dijitTextArea:hover,
+    .wm_default .MainContent .wmeditor .dijitComboBox.dijitHover,
+    .wm_default .MainContent .wmeditor .RichTextEditable:hover iframe,
+    .wm_default .MainContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
+    .wm_default .MainContent .dijitTimePickerItem.dijitTimePickerItemHover {
+	/* MainContent-EditorsHover-Font */
+	color: #000000; /* MainContent-EditorsHover-Font_Color */
+	border-color: #333333; /* MainContent-EditorsHover-Border_Color */
+	/* MainContent-EditorsHover-Background */
+	background-color: #dddddd; /* MainContent-EditorsHover-Background_Color */
+	background-image: url(images/repeatx/greyEdge4.png); /* MainContent-EditorsHover-Background_Image */
+	background-position: top left; /* MainContent-EditorsHover-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-EditorsHover-Background_Image-Repeat */
+    }
+    .wm_default .MainContent .wmeditor .dijitTextBox.dijitFocused,
+    .wm_default .MainContent .wmeditor .dijitTextBox.dijitFocused.dijitHover,
+    .wm_default .MainContent .wmeditor .dijitTextArea.dijitFocused,
+    .wm_default .MainContent .wmeditor .dijitTextArea.dijitFocused:hover,
+    .wm_default .MainContent .wmeditor .dijitComboBox.dijitFocused,
+    .wm_default .MainContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_default .MainContent .wmeditor .RichTextEditable.Focused iframe {
+	/* MainContent-EditorsFocus-Font */
+	color: #000000; /* MainContent-EditorsFocus-Font_Color */
+	border-color: #000000; /* MainContent-EditorsFocus-Border_Color */
+	/* MainContent-EditorsFocus-Background */
+	background-color: #FFFFFF; /* MainContent-EditorsFocus-Background_Color */
+	background-image: none; /* MainContent-EditorsFocus-Background_Image */
+	background-position: top left; /* MainContent-EditorsFocus-Background_Image-Position */
+	background-repeat: no-repeat; /* MainContent-EditorsFocus-Background_Image-Repeat */
+    }
+}
+@media screen { /* EmphasizedContent-Level */ 
+  /**************************************************************************************************
+   * TYPE:        dijit.form.ComboBox/FilteringSelect/Select popup button
+   *
+   * DESCRIPTION: We need to set the background color and background image for the menu's popup
+   *              button. 
+   ************************************************************************************************/
+.wm_default .wmeditor .dijitComboBox .dijitArrowButton {
+    background-color: #333333; /* EmphasizedContent-ClickablesDefault-Background_Color */
+    background-image: none;
+}
+    /* BEGIN inner content panel editors */
+    .wm_default .EmphasizedContent .wmeditor .dijitTextBox,
+    .wm_default .EmphasizedContent .wmeditor .dijitTextArea,
+    .wm_default .EmphasizedContent .wmeditor .dijitComboBox,
+    .wm_default .EmphasizedContent .dijitTimePickerItem,
+    .wm_default .EmphasizedContent .wmeditor .RichTextEditable iframe {
+	/* EmphasizedContent-EditorsDefault-Border */
+	border-color: #333333; /* EmphasizedContent-EditorsDefault-Border_Color */
+	border-width: 1px; /* EmphasizedContent-EditorsDefault-Border_BorderSize */
+	/* EmphasizedContent-EditorsDefault-Font */
+	font-family: Verdana; /* EmphasizedContent-EditorsDefault-Font_Family */
+	font-size: 8pt; /* EmphasizedContent-EditorsDefault-Font_TextSize */
+	color: #000000; /* EmphasizedContent-EditorsDefault-Font_Color */
+	font-weight: normal; /* EmphasizedContent-EditorsDefault-Font_Weight */
+	/* EmphasizedContent-EditorsDefault-Background */
+	background-color: #eeeeee; /* EmphasizedContent-EditorsDefault-Background_Color */
+	background-image: url(images/repeatx/greyEdge2.png); /* EmphasizedContent-EditorsDefault-Background_Image */
+	background-position: top left; /* EmphasizedContent-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-EditorsDefault-Background_Image-Repeat */
+    }
+    .wm_default .EmphasizedContent .wmeditor .dijitTextBox.dijitHover,
+    .wm_default .EmphasizedContent .wmeditor .dijitTextArea:hover,
+    .wm_default .EmphasizedContent .wmeditor .dijitComboBox.dijitHover,
+    .wm_default .EmphasizedContent .wmeditor .RichTextEditable:hover iframe,
+    .wm_default .EmphasizedContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
+    .wm_default .EmphasizedContent .dijitTimePickerItem.dijitTimePickerItemHover {
+	/* EmphasizedContent-EditorsHover-Font */
+	color: #000000; /* EmphasizedContent-EditorsHover-Font_Color */
+	border-color: #333333; /* EmphasizedContent-EditorsHover-Border_Color */
+	/* EmphasizedContent-EditorsHover-Background */
+	background-color: #dddddd; /* EmphasizedContent-EditorsHover-Background_Color */
+	background-image: url(images/repeatx/greyEdge4.png); /* EmphasizedContent-EditorsHover-Background_Image */
+	background-position: top left; /* EmphasizedContent-EditorsHover-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-EditorsHover-Background_Image-Repeat */
+    }
+    .wm_default .EmphasizedContent .wmeditor .dijitTextBox.dijitFocused,
+    .wm_default .EmphasizedContent .wmeditor .dijitTextBox.dijitFocused.dijitHover,
+    .wm_default .EmphasizedContent .wmeditor .dijitTextArea.dijitFocused,
+    .wm_default .EmphasizedContent .wmeditor .dijitTextArea.dijitFocused:hover,
+    .wm_default .EmphasizedContent .wmeditor .dijitComboBox.dijitFocused,
+    .wm_default .EmphasizedContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_default .EmphasizedContent .wmeditor .RichTextEditable.Focused iframe {
+	/* EmphasizedContent-EditorsFocus-Font */
+	color: #000000; /* EmphasizedContent-EditorsFocus-Font_Color */
+	border-color: #000000; /* EmphasizedContent-EditorsFocus-Border_Color */
+	/* EmphasizedContent-EditorsFocus-Background */
+	background-color: #FFFFFF; /* EmphasizedContent-EditorsFocus-Background_Color */
+	background-image: none; /* EmphasizedContent-EditorsFocus-Background_Image */
+	background-position: top left; /* EmphasizedContent-EditorsFocus-Background_Image-Position */
+	background-repeat: no-repeat; /* EmphasizedContent-EditorsFocus-Background_Image-Repeat */
+    }
+    /* END inner content panel editors */
+}
+@media screen { /* HeaderContent-Level */ 
+  /**************************************************************************************************
+   * TYPE:        dijit.form.ComboBox/FilteringSelect/Select popup button
+   *
+   * DESCRIPTION: We need to set the background color and background image for the menu's popup
+   *              button. 
+   ************************************************************************************************/
+.wm_default .wmeditor .dijitComboBox .dijitArrowButton {
+    background-color: #666666; /* HeaderContent-ClickablesDefault-Background_Color */
+    background-image: none;
+}
+    /* BEGIN inner content panel editors */
+    .wm_default .HeaderContent .wmeditor .dijitTextBox,
+    .wm_default .HeaderContent .wmeditor .dijitTextArea,
+    .wm_default .HeaderContent .wmeditor .dijitComboBox,
+    .wm_default .HeaderContent .dijitTimePickerItem,
+    .wm_default .HeaderContent .wmeditor .RichTextEditable iframe {
+	/* HeaderContent-EditorsDefault-Border */
+	border-color: #333333; /* HeaderContent-EditorsDefault-Border_Color */
+	border-width: 1px; /* HeaderContent-EditorsDefault-Border_BorderSize */
+	/* HeaderContent-EditorsDefault-Font */
+	font-family: Verdana; /* HeaderContent-EditorsDefault-Font_Family */
+	font-size: 8pt; /* HeaderContent-EditorsDefault-Font_TextSize */
+	color: #000000; /* HeaderContent-EditorsDefault-Font_Color */
+	font-weight: normal; /* HeaderContent-EditorsDefault-Font_Weight */
+	/* HeaderContent-EditorsDefault-Background */
+	background-color: #eeeeee; /* HeaderContent-EditorsDefault-Background_Color */
+	background-image: url(images/repeatx/greyEdge2.png); /* HeaderContent-EditorsDefault-Background_Image */
+	background-position: top left; /* HeaderContent-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-EditorsDefault-Background_Image-Repeat */
+    }
+    .wm_default .HeaderContent .wmeditor .dijitTextBox.dijitHover,
+    .wm_default .HeaderContent .wmeditor .dijitTextArea:hover,
+    .wm_default .HeaderContent .wmeditor .dijitComboBox.dijitHover,
+    .wm_default .HeaderContent .wmeditor .RichTextEditable:hover iframe,
+    .wm_default .HeaderContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
+    .wm_default .HeaderContent .dijitTimePickerItem.dijitTimePickerItemHover {
+	/* HeaderContent-EditorsHover-Font */
+	color: #000000; /* HeaderContent-EditorsHover-Font_Color */
+	border-color: #333333; /* HeaderContent-EditorsHover-Border_Color */
+	/* HeaderContent-EditorsHover-Background */
+	background-color: #dddddd; /* HeaderContent-EditorsHover-Background_Color */
+	background-image: url(images/repeatx/greyEdge4.png); /* HeaderContent-EditorsHover-Background_Image */
+	background-position: top left; /* HeaderContent-EditorsHover-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-EditorsHover-Background_Image-Repeat */
+    }
+    .wm_default .HeaderContent .wmeditor .dijitTextBox.dijitFocused,
+    .wm_default .HeaderContent .wmeditor .dijitTextBox.dijitFocused.dijitHover,
+    .wm_default .HeaderContent .wmeditor .dijitTextArea.dijitFocused,
+    .wm_default .HeaderContent .wmeditor .dijitTextArea.dijitFocused:hover,
+    .wm_default .HeaderContent .wmeditor .dijitComboBox.dijitFocused,
+    .wm_default .HeaderContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_default .HeaderContent .wmeditor .RichTextEditable.Focused iframe {
+	/* HeaderContent-EditorsFocus-Font */
+	color: #000000; /* HeaderContent-EditorsFocus-Font_Color */
+	border-color: #000000; /* HeaderContent-EditorsFocus-Border_Color */
+	/* HeaderContent-EditorsFocus-Background */
+	background-color: #FFFFFF; /* HeaderContent-EditorsFocus-Background_Color */
+	background-image: none; /* HeaderContent-EditorsFocus-Background_Image */
+	background-position: top left; /* HeaderContent-EditorsFocus-Background_Image-Position */
+	background-repeat: no-repeat; /* HeaderContent-EditorsFocus-Background_Image-Repeat */
+    }
+    /* END inner content panel editors */
+}
+/*****************************************
+ * EOF: editors.css
+ *****************************************/
+/*****************************************
+ * FILE: grid.css
+ *****************************************/
+  /**************************************************************************************************
+   * TYPE:        Grid rows (Even rows and odd rows)
+   *
+   * DESCRIPTION: The goal is to create alternating colors between even and odd rows.
+   *              Even rows are set by specifying the style for all rows; odd row styles override
+   *              the style for all rows.  Only vary the font and background-color.
+   ************************************************************************************************/
+.wm_default div.dojoxGrid-row,
+.wm_default div.dojoxGridRow,
+.wm_default div.wmlist-item {
+    /* Tables-EvenRows-Font */
+    font-family: Verdana; /* Tables-EvenRows-Font_Family */
+    font-size: 8pt; /* Tables-EvenRows-Font_TextSize */
+    color: #000000; /* Tables-EvenRows-Font_Color */
+    font-weight: normal; /* Tables-EvenRows-Font_Weight */
+    /* Tables-EvenRows-Background */
+    background-color: #eeeeee; /* Tables-EvenRows-Background_Color */
+}
+/* Grid/List Odd rows: uses Tables-OddRows */
+.wm_default div.dojoxGrid-row.dojoxGrid-row-odd,
+.wm_default div.dojoxGridRow.dojoxGridRowOdd,
+.wm_default .wmlist-item.Odd {
+    /* Tables-OddRows-Font */
+    color: #000000; /* Tables-OddRows-Font_Color */
+    /* Tables-OddRows-Background */
+    background-color: #dddddd; /* Tables-OddRows-Background_Color */
+}
+  /**************************************************************************************************
+   * TYPE:        Grid cell borders
+   *
+   * DESCRIPTION: Set the border styles for cells (or in the case of wm.List of a cell-equivalent).
+   *              Basically, we leave top/bottom border to the alternating even/odd row background color,
+   *              and we don't need a right and left border (would double the border size between two cells)
+   *              so just use the border-right-width: 1px, and let the user control the color of that border.
+   * 
+   * TODO:        These settings are not well tested.
+   ************************************************************************************************/
+.wm_default td.dojoxGrid-cell,
+.wm_default td.dojoxGridCell {
+    border-left-width: 0px;
+    border-top-width: 0px;
+    border-bottom-width: 0px;
+    border-right-width: 1px !important; /* Tables-EvenRows-Border_BorderSize */
+    border-style: solid;   
+    border-color: #cccccc; /* Tables-EvenRows-Border_Color */
+}
+.wm_default .wmlist-item {
+    border-style: solid;   
+    border-color: #cccccc; /* Tables-EvenRows-Border_Color */
+    border-left-width: 0px;
+    border-right-width: 1px; /* Tables-EvenRows-Border_BorderSize */
+    border-top-width: 0px;
+    border-bottom-width: 0px;
+}
+  /**************************************************************************************************
+   * TYPE:        Header, Hover and Selected row styles
+   *
+   * DESCRIPTION: The style varies by what kind of panel its in.  If I want a single wm.List in my 
+   *              TOC, its going to look/feel different in its hover/selection/header than
+   *              a DojoGrid in my EmphasizedContent.
+   ************************************************************************************************/
+@media screen { /* Document-Level */ 
+    /* Selected color for rows: uses Clickables-Active */
+    .wm_default div.dojoxGrid-row.dojoxGrid-row-selected, 
+    .wm_default div.dojoxGrid-row.dojoxGrid-row-selected.dojoxGrid-row-over, 
+    .wm_default div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
+    .wm_default div.dojoxGridRow.dojoxGridRowSelected, 
+    .wm_default div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_default .wmlist-item.wmlist-item-selected,
+    .wm_default .wmlist-item.wmlist-item-selected.wmlist-item-over {
+	/* Document-ClickablesActive-Background */
+	background-color: #9fcbd8 !important; /* Document-ClickablesActive-Background_Color */
+	/* Document-ClickablesActive-Font */
+	color: #000000; /* Document-ClickablesActive-Font_Color */
+    }
+    /* Custom mouse-over color for rows */
+    .wm_default .wmlist-item.wmlist-item-over,
+    .wm_default div.dojoxGrid-row.dojoxGrid-row-over, 
+    .wm_default .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
+    .wm_default .dojoxGridRow.dojoxGridRowOver, 
+    .wm_default .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
+    {
+	/* Document-ClickablesHover-Background */
+	background-color: #addbe9 !important; /* Document-ClickablesHover-Background_Color */
+	/* Document-ClickablesHover-Font */
+	color: #000000; /* Document-ClickablesHover-Font_Color */
+    }
+    .wm_default div.dojoxGridContent .dojoxGridCell {
+	background: transparent;
+    }
+    .wm_default div.dojoxGridContent .dojoxGridCellFocus,
+    .wm_default div.dojoxGridContent .dojoxGrid-cell-focus {
+	border-width: 1px dashed transparent !important;
+    }
+    /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
+    .wm_default div.dojoxGrid-header .dojoxGrid-cell,
+    .wm_default div.dojoxGridHeader .dojoxGridCell
+    {
+	background: inherit; /* see Header.dojoxGrid-header below */
+	border-right-width: 1px; /* Tables-EvenRows-Border_BorderSize */
+	border-right-style: solid;
+	border-right-color: #cccccc; /* Tables-EvenRows-Border_Color */
+	/* Document-ClickablesActive-Font */
+	font-family: Verdana; /* Document-ClickablesActive-Font_Family */
+	/* Adjust size when we figure out a good way to adjust the height of the header */
+	font-size: 8pt; /* Tables-EvenRows-Font_TextSize */
+	color: inherit !important; /* Needed for wm.DojoGrid */
+	font-weight: bold; /* Document-ClickablesActive-Font_Weight */
+    }
+    .wm_default div.dojoxGridHeader .dojoxGridCell {
+	background-color: #9fcbd8; /* Document-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge0.png); /* Document-ClickablesActive-Background_Image */
+	background-position: top left; /* Document-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
+	/* Document-ClickablesActive-Font */
+	font-family: Verdana; /* Document-ClickablesActive-Font_Family */
+	/*font-size: 12pt;  Clickables-Active-Font_TextSize */
+	color: #000000; /* Document-ClickablesActive-Font_Color */
+	font-weight: bold; /* Document-ClickablesActive-Font_Weight */
+    }
+    /* Header-Row-Background */
+    .wm_default .dojoxGrid-header, 
+    .wm_default .dojoxGridHeader,
+    .wm_default .wmlist-header {
+	color: #000000; /* Document-ClickablesActive-Font_Color */
+	background-color: #9fcbd8; /* Document-ClickablesActive-Background_Color */
+	background-image: url(images/threeD.png); /* Document-ClickablesActive-Background-Image */
+	background-position: left top;     /* Document-ClickablesActive-Image-Position */
+	background-repeat: repeat-x;    /* Document-ClickablesActive-Image-Repeat */
+    }
+}
+@media screen { /* MainContent-Level */ 
+    /* Selected color for rows: uses Clickables-Active */
+    .wm_default .MainContent div.dojoxGrid-row.dojoxGrid-row-selected, 
+    .wm_default .MainContent div.dojoxGrid-row.dojoxGrid-row-selected.dojoxGrid-row-over, 
+    .wm_default .MainContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
+    .wm_default .MainContent div.dojoxGridRow.dojoxGridRowSelected, 
+    .wm_default .MainContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_default .MainContent .wmlist-item.wmlist-item-selected,
+    .wm_default .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
+	/* MainContent-ClickablesActive-Background */
+	background-color: #639410 !important; /* MainContent-ClickablesActive-Background_Color */
+	/* MainContent-ClickablesActive-Font */
+	color: #ffffff; /* MainContent-ClickablesActive-Font_Color */
+    }
+    /* Custom mouse-over color for rows */
+    .wm_default .MainContent .wmlist-item.wmlist-item-over,
+    .wm_default .MainContent div.dojoxGrid-row.dojoxGrid-row-over, 
+    .wm_default .MainContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
+    .wm_default .MainContent .dojoxGridRow.dojoxGridRowOver, 
+    .wm_default .MainContent .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
+    {
+	/* MainContent-ClickablesHover-Background */
+	background-color: #77ae18 !important; /* MainContent-ClickablesHover-Background_Color */
+	/* MainContent-ClickablesHover-Font */
+	color: #ffffff; /* MainContent-ClickablesHover-Font_Color */
+    }
+    .wm_default .MainContent div.dojoxGridContent .dojoxGridCell {
+	background: transparent;
+    }
+    .wm_default .MainContent div.dojoxGridContent .dojoxGridCellFocus,
+    .wm_default .MainContent div.dojoxGridContent .dojoxGrid-cell-focus {
+	border-width: 1px dashed transparent !important;
+    }
+    /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
+    .wm_default .MainContent div.dojoxGrid-header .dojoxGrid-cell,
+    .wm_default .MainContent div.dojoxGridHeader .dojoxGridCell
+    {
+	background: inherit; /* see Header.dojoxGrid-header below */
+	/* MainContent-ClickablesActive-Font */
+	font-family: Verdana; /* MainContent-ClickablesActive-Font_Family */
+	/*    font-size: 12pt;  Clickables-Default-Font_TextSize */
+	color: inherit !important; /* Needed for wm.DojoGrid */
+	font-weight: bold; /* MainContent-ClickablesActive-Font_Weight */
+    }
+    .wm_default .MainContent div.dojoxGridHeader .dojoxGridCell {
+	background-color: #639410; /* MainContent-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge0.png); /* MainContent-ClickablesActive-Background_Image */
+	background-position: top left; /* MainContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
+	/* MainContent-ClickablesActive-Font */
+	font-family: Verdana; /* MainContent-ClickablesActive-Font_Family */
+	/*font-size: 12pt;  Clickables-Default-Font_TextSize */
+	color: #ffffff; /* MainContent-ClickablesActive-Font_Color */
+	font-weight: bold; /* MainContent-ClickablesActive-Font_Weight */
+    }
+    /* Header-Row-Background */
+    .wm_default .MainContent .dojoxGrid-header, 
+    .wm_default .MainContent .dojoxGridHeader,
+    .wm_default .MainContent .wmlist-header {
+	color: #ffffff; /* MainContent-ClickablesActive-Font_Color */
+	background-color: #639410; /* MainContent-ClickablesActive-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-ClickablesActive-Background-Image */
+	background-position: left top;     /* MainContent-ClickablesActive-Image-Position */
+	background-repeat: repeat-x;    /* MainContent-ClickablesActive-Image-Repeat */
+    }
+}
+@media screen { /* EmphasizedContent-Level */ 
+    /* Selected color for rows: uses Clickables-Active */
+    .wm_default .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-selected, 
+    .wm_default .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-selected.dojoxGrid-row-over, 
+    .wm_default .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
+    .wm_default .EmphasizedContent div.dojoxGridRow.dojoxGridRowSelected, 
+    .wm_default .EmphasizedContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_default .EmphasizedContent .wmlist-item.wmlist-item-selected,
+    .wm_default .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
+	/* EmphasizedContent-ClickablesActive-Background */
+	background-color: #333333 !important; /* EmphasizedContent-ClickablesActive-Background_Color */
+	/* EmphasizedContent-ClickablesActive-Font */
+	color: #ffffff; /* EmphasizedContent-ClickablesActive-Font_Color */
+    }
+    /* Custom mouse-over color for rows */
+    .wm_default .EmphasizedContent .wmlist-item.wmlist-item-over,
+    .wm_default .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-over, 
+    .wm_default .EmphasizedContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
+    .wm_default .EmphasizedContent .dojoxGridRow.dojoxGridRowOver, 
+    .wm_default .EmphasizedContent .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
+    {
+	/* EmphasizedContent-ClickablesHover-Background */
+	background-color: #666666 !important; /* EmphasizedContent-ClickablesHover-Background_Color */
+	/* EmphasizedContent-ClickablesHover-Font */
+	color: #ffffff; /* EmphasizedContent-ClickablesHover-Font_Color */
+    }
+    .wm_default .EmphasizedContent div.dojoxGridContent .dojoxGridCell {
+	background: transparent;
+    }
+    .wm_default .EmphasizedContent div.dojoxGridContent .dojoxGridCellFocus,
+    .wm_default .EmphasizedContent div.dojoxGridContent .dojoxGrid-cell-focus {
+	border-width: 1px dashed transparent !important;
+    }
+    /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
+    .wm_default .EmphasizedContent div.dojoxGrid-header .dojoxGrid-cell,
+    .wm_default .EmphasizedContent div.dojoxGridHeader .dojoxGridCell
+    {
+	background: inherit; /* see Header.dojoxGrid-header below */
+	/* EmphasizedContent-ClickablesActive-Font */
+	font-family: Verdana; /* EmphasizedContent-ClickablesActive-Font_Family */
+	/*    font-size: 12pt;  Clickables-Default-Font_TextSize */
+	color: inherit !important; /* Needed for wm.DojoGrid */
+	font-weight: bold; /* EmphasizedContent-ClickablesActive-Font_Weight */
+    }
+    .wm_default .EmphasizedContent div.dojoxGridHeader .dojoxGridCell {
+	background-color: #333333; /* EmphasizedContent-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge0.png); /* EmphasizedContent-ClickablesActive-Background_Image */
+	background-position: top left; /* EmphasizedContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesActive-Background_Image-Repeat */
+	/* EmphasizedContent-ClickablesActive-Font */
+	font-family: Verdana; /* EmphasizedContent-ClickablesActive-Font_Family */
+	/*font-size: 12pt;  Clickables-Default-Font_TextSize */
+	color: #ffffff; /* EmphasizedContent-ClickablesActive-Font_Color */
+	font-weight: bold; /* EmphasizedContent-ClickablesActive-Font_Weight */
+    }
+    /* Header-Row-Background */
+    .wm_default .EmphasizedContent .dojoxGrid-header, 
+    .wm_default .EmphasizedContent .dojoxGridHeader,
+    .wm_default .EmphasizedContent .wmlist-header {
+	color: #ffffff; /* EmphasizedContent-ClickablesActive-Font_Color */
+	background-color: #333333; /* EmphasizedContent-ClickablesActive-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesActive-Background-Image */
+	background-position: left top;     /* EmphasizedContent-ClickablesActive-Image-Position */
+	background-repeat: repeat-x;    /* EmphasizedContent-ClickablesActive-Image-Repeat */
+    }
+}
+@media screen { /* HeaderContent-Level */ 
+    /* Selected color for rows: uses Clickables-Active */
+    .wm_default .HeaderContent div.dojoxGrid-row.dojoxGrid-row-selected, 
+    .wm_default .HeaderContent div.dojoxGrid-row.dojoxGrid-row-selected.dojoxGrid-row-over, 
+    .wm_default .HeaderContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
+    .wm_default .HeaderContent div.dojoxGridRow.dojoxGridRowSelected, 
+    .wm_default .HeaderContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_default .HeaderContent .wmlist-item.wmlist-item-selected,
+    .wm_default .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
+	/* HeaderContent-ClickablesActive-Background */
+	background-color: #999999 !important; /* HeaderContent-ClickablesActive-Background_Color */
+	/* HeaderContent-ClickablesActive-Font */
+	color: #000000; /* HeaderContent-ClickablesActive-Font_Color */
+    }
+    /* Custom mouse-over color for rows */
+    .wm_default .HeaderContent .wmlist-item.wmlist-item-over,
+    .wm_default .HeaderContent div.dojoxGrid-row.dojoxGrid-row-over, 
+    .wm_default .HeaderContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
+    .wm_default .HeaderContent .dojoxGridRow.dojoxGridRowOver, 
+    .wm_default .HeaderContent .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
+    {
+	/* HeaderContent-ClickablesHover-Background */
+	background-color: #333333 !important; /* HeaderContent-ClickablesHover-Background_Color */
+	/* HeaderContent-ClickablesHover-Font */
+	color: #ffffff; /* HeaderContent-ClickablesHover-Font_Color */
+    }
+    .wm_default .HeaderContent div.dojoxGridContent .dojoxGridCell {
+	background: transparent;
+    }
+    .wm_default .HeaderContent div.dojoxGridContent .dojoxGridCellFocus,
+    .wm_default .HeaderContent div.dojoxGridContent .dojoxGrid-cell-focus {
+	border-width: 1px dashed transparent !important;
+    }
+    /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
+    .wm_default .HeaderContent div.dojoxGrid-header .dojoxGrid-cell,
+    .wm_default .HeaderContent div.dojoxGridHeader .dojoxGridCell
+    {
+	background: inherit; /* see Header.dojoxGrid-header below */
+	/* HeaderContent-ClickablesActive-Font */
+	font-family: Verdana; /* HeaderContent-ClickablesActive-Font_Family */
+	/*    font-size: 12pt;  Clickables-Default-Font_TextSize */
+	color: inherit !important; /* Needed for wm.DojoGrid */
+	font-weight: bold; /* HeaderContent-ClickablesActive-Font_Weight */
+    }
+    .wm_default .HeaderContent div.dojoxGridHeader .dojoxGridCell {
+	background-color: #999999; /* HeaderContent-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/greyThickEdge1.png); /* HeaderContent-ClickablesActive-Background_Image */
+	background-position: top left; /* HeaderContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
+	/* HeaderContent-ClickablesActive-Font */
+	font-family: Verdana; /* HeaderContent-ClickablesActive-Font_Family */
+	/*font-size: 12pt;  Clickables-Default-Font_TextSize */
+	color: #000000; /* HeaderContent-ClickablesActive-Font_Color */
+	font-weight: bold; /* HeaderContent-ClickablesActive-Font_Weight */
+    }
+    /* Header-Row-Background */
+    .wm_default .HeaderContent .dojoxGrid-header, 
+    .wm_default .HeaderContent .dojoxGridHeader,
+    .wm_default .HeaderContent .wmlist-header {
+	color: #000000; /* HeaderContent-ClickablesActive-Font_Color */
+	background-color: #999999; /* HeaderContent-ClickablesActive-Background_Color */
+	background-image: url(images/threeD.png); /* HeaderContent-ClickablesActive-Background-Image */
+	background-position: left top;     /* HeaderContent-ClickablesActive-Image-Position */
+	background-repeat: repeat-x;    /* HeaderContent-ClickablesActive-Image-Repeat */
+    }
+}
+/*****************************************
+ * EOF: grid.css
+ *****************************************/
+/*****************************************
+ * FILE: menus.css
+ *****************************************/
+  /**************************************************************************************************
+   * TYPE:        wm.DojoMenu
+   *
+   * DESCRIPTION: Sets styles for menu.  Some styles (font-size) are going to be shared across all 
+   *              panel types
+   *
+   ************************************************************************************************/
+#studio_designer.wm_default .dojoMenu, 
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .dojoMenu {
+    background-image: none !important;
+}
+@media screen { /* Document-Level */ 
+    .wm_default .dojoMenu .dijitMenu,
+    .wm_default .dojoMenu .dijitMenuBar,
+    .wm_default .dojoMenu .dijitMenuBar {
+	/* Document-ClickablesDefault-Font */
+	font-family: Verdana; /* Document-ClickablesDefault-Font_Family */
+	font-size: 10pt; /* Document-ClickablesDefault-Font_TextSize */
+	color: #ffffff; /* Document-ClickablesDefault-Font_Color */
+	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+	/* Document-ClickablesDefault-Background */
+	background-color: #1f497d; /* Document-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge1.png); /* Document-ClickablesDefault-Background_Image */
+	background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
+	border-width: 0px;
+	font-weight: bold;        
+    }
+    /* Spacing between menu items */
+    .wm_default .dijitMenuBar .dijitMenuItem,
+    .tundra .wm-darksnazzy .wm_default .dijitMenuBar .dijitMenuItem {
+	margin-right: 10px; /* wm.DojoMenu-Right_Margin */
+    }
+    body.wm_default .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
+    body .wm_default .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
+    body.wm_default .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_default .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body.wm_default .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_default .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
+	/* Document-ClickablesHover-Font */
+	color: #000000; /* Document-ClickablesHover-Font_Color */
+	/* Document-ClickablesHover-Background */
+	background-color: #addbe9; /* Document-ClickablesHover-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge1.png); /* Document-ClickablesDefault-Background_Image */
+	background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
+	outline-width: 0;
+    }
+}
+@media screen { /* MainContent-Level */ 
+    .wm_default .MainContent .dojoMenu .dijitMenu,
+    .wm_default .MainContent .dojoMenu .dijitMenuBar,
+    .wm_default .MainContent .dojoMenu .dijitMenuBar {
+	/* MainContent-ClickablesDefault-Font */
+	font-family: Verdana; /* MainContent-ClickablesDefault-Font_Family */
+	font-size: 10pt; /* MainContent-ClickablesDefault-Font_TextSize */
+	color: #333333; /* MainContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
+	/* MainContent-ClickablesDefault-Background */
+	background-color: #9dca49; /* MainContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
+	border-width: 0px;
+	font-weight: bold;        
+    }
+    /* Spacing between menu items */
+    .wm_default .MainContent .dijitMenuBar .dijitMenuItem,
+    .tundra .wm-darksnazzy .wm_default .dijitMenuBar .dijitMenuItem {
+	margin-right: 10px; /* wm.DojoMenu-Right_Margin */
+    }
+    body.wm_default .MainContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
+    body .wm_default .MainContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
+    body.wm_default .MainContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_default .MainContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body.wm_default .MainContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_default .MainContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
+	/* MainContent-ClickablesHover-Font */
+	color: #ffffff; /* MainContent-ClickablesHover-Font_Color */
+	/* MainContent-ClickablesHover-Background */
+	background-color: #77ae18; /* MainContent-ClickablesHover-Background_Color */
+	background-image: url(images/repeatx/brightEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
+	outline-width: 0;
+    }
+}
+@media screen { /* HeaderContent-Level */ 
+    .wm_default .HeaderContent .dojoMenu .dijitMenu,
+    .wm_default .HeaderContent .dojoMenu .dijitMenuBar,
+    .wm_default .HeaderContent .dojoMenu .dijitMenuBar {
+	/* HeaderContent-ClickablesDefault-Font */
+	font-family: Verdana; /* HeaderContent-ClickablesDefault-Font_Family */
+	font-size: 10pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
+	color: #444444; /* HeaderContent-Styles-Font_Color */
+	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
+	/* HeaderContent-ClickablesDefault-Background */
+	background-color: transparent;
+	background-image: none; 
+	background-position: left top;
+	background-repeat: repeat-x; 
+	border-width: 0px;
+	font-weight: bold;        
+    }
+    /* Spacing between menu items */
+    .wm_default .HeaderContent .dijitMenuBar .dijitMenuItem,
+    .tundra .wm-darksnazzy .wm_default .dijitMenuBar .dijitMenuItem {
+	margin-right: 10px; /* wm.DojoMenu-Right_Margin */
+    }
+    body.wm_default .HeaderContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
+    body .wm_default .HeaderContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
+    body.wm_default .HeaderContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_default .HeaderContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body.wm_default .HeaderContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_default .HeaderContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
+	/* HeaderContent-ClickablesHover-Font */
+	color: #444444; /* HeaderContent-Styles-Font_Color */
+	/* HeaderContent-ClickablesHover-Background */
+	background-color: transparent;
+        opacity: 0.8;
+	background-image: none; 
+	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
+	outline-width: 0;
+    }
+ .wm_default .HeaderContent table.dijitMenuTable.dijitMenu.dijitReset {
+    /* HeaderContent-ClickablesDefault-Font */
+    font-family: Verdana; /* HeaderContent-ClickablesDefault-Font_Family */
+    color: #444444; /* HeaderContent-Styles-Font_Color */
+    font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
+    /* HeaderContent-ClickablesDefault-Background */
+    background-color: transparent; 
+    border: solid 0px black;
+    border-top: solid 0px #999999;
+    -moz-box-shadow: 0px 0px 0px black; /* Floating-Shadow */
+    -webkit-box-shadow: 0px 0px 0px black;/* Floating-Shadow */
+    box-shadow: 0px 0px 0px black; /* Floating-Shadow */
+}
+}
+  /**************************************************************************************************
+   * TYPE:        wm.DojoMenu Popup
+   *
+   * DESCRIPTION: Sets styles for menu.  Does not depend at this time on what kind of panel its in,
+   *              the popup is always under body; the menubar itself we may update to work anywhere.
+   *
+   ************************************************************************************************/
+ .wm_default table.dijitMenuTable.dijitMenu.dijitReset {
+    /* Document-ClickablesDefault-Font */
+    font-family: Verdana; /* Document-ClickablesDefault-Font_Family */
+    color: #ffffff; /* Document-ClickablesDefault-Font_Color */
+    font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+    /* Document-ClickablesDefault-Background */
+    background-color: #1f497d; /* Document-ClickablesDefault-Background_Color */
+    border: solid 1px black;
+    border-top: solid 1px #999999;
+    -moz-box-shadow: 3px 3px 4px black; /* Floating-Shadow */
+    -webkit-box-shadow: 3px 3px 4px black;/* Floating-Shadow */
+    box-shadow: 3px 3px 4px black; /* Floating-Shadow */
+}
+body.wm_default  .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemHover,
+body .wm_default .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemHover,
+body.wm_default  .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected,
+body .wm_default .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected
+ {
+    color: #000000; /* Document-ClickablesHover-Font_Color */
+    /* Document-ClickablesHover-Background */
+    background-color: #addbe9; /* Document-ClickablesHover-Background_Color */
+    background-image: none;
+    outline-width: 0;
+}
+  /**************************************************************************************************
+   * TYPE:        wm.SelectMenu Popup
+   *
+   * DESCRIPTION: Sets styles for menu.  Does not depend at this time on what kind of panel its in,
+   *              the popup is always under body; the menubar itself we may update to work anywhere.
+   *
+   ************************************************************************************************/
+body.wm_default ul.dijitMenu .dijitMenuItem,
+body .wm_default ul.dijitMenu .dijitMenuItem
+{
+    /* Tables-EvenRows-Font */
+    color: #000000; /* Tables-EvenRows-Font_Color */
+    /* Tables-EvenRows-Background */
+    background-color: #eeeeee; /* Tables-EvenRows-Background_Color */
+    border-bottom-size: 1px;      /* Tables-EvenRows-Border_Size */
+    border-bottom-style: solid;   
+    border-bottom-color: #cccccc; /* Tables-EvenRows-Border_Color */
+}
+/* Combobox Popup items with hover/selected */
+body.wm_default  ul.dijitMenu .dijitMenuItem.dijitMenuItemHover,
+body .wm_default ul.dijitMenu .dijitMenuItem.dijitMenuItemHover,
+body.wm_default  ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected,
+body .wm_default ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected
+ {
+    /* Document-ClickablesHover-Font */
+    color: #000000; /* Document-ClickablesHover-Font_Color */
+    /* Document-ClickablesHover-Background */
+    background-color: #addbe9; /* Document-ClickablesHover-Background_Color */
+    outline-width: 0;
+}
+/* Border around the entire menu */
+ body.tundra.wm_default .dijitPopup ul.dijitMenu {
+    border-width: 1px;
+    border-style: solid;
+    border-color: black; 
+    -moz-box-shadow: 4px 4px 8px black; /* Floating-Shadow */
+    -webkit-box-shadow: 4px 4px 8px black;  /* Floating-Shadow */
+    box-shadow: 4px 4px 8px black;  /* Floating-Shadow */
+}
+/*****************************************
+ * EOF: menus.css
+ *****************************************/
+/*****************************************
+ * FILE: panels.css
+ *****************************************/
+/* NOTE: Shadows don't currently work on fancy panel or Layers */
+  /**************************************************************************************************
+   * TYPE:        Tab Buttons
+   *
+   * DESCRIPTION: Border radius and shadows for various Layers and panels; set via widget settings,
+   *              not affected by panel type... unless the developer wants to put in their own CSS
+   ************************************************************************************************/
+.wm_default button.wmtablayers-tab {
+    /* wm.TabLayers-BorderStyle_Shadow */
+    -moz-box-shadow: 2px 0px 2px #444444; /* wm.TabLayers-BorderStyle_Shadow */
+    -webkit-box-shadow: 2px 0px 2px #444444; /* wm.TabLayers-BorderStyle_Shadow */
+    box-shadow: 2px 0px 2px #444444; /* wm.TabLayers-BorderStyle_Shadow */
+    height: 24px; /* wm.TabLayers-Button_Height */
+    font-size: 9; /* wm.TabLayers-Button_TextSize */
+}
+.wm_default .wmtablayers-tab:hover, .wm_default .wmtablayers-tab:focus {
+    /* wm.TabLayers-HoverShadow */
+    -moz-box-shadow: 2px 0px 2px #444444; /* wm.TabLayers-BorderStyle_Shadow */
+    -webkit-box-shadow: 0px 0px 0px #444444; /* wm.TabLayers-Hover-BorderStyle_Shadow */
+    box-shadow: 1px 0px 1px #444444;   /* wm.TabLayers-Hover-BorderStyle-Shadow */
+}
+.wm_default .wmtablayers-tab.wmtablayers-selected,
+.wm_default .wmtablayers-tab.wmtablayers-selected:hover,
+.wm_default .wmtablayers-tab.wmtablayers-selected:focus {
+    -moz-box-shadow: 2px 0px 2px #444444; /* wm.TabLayers-Active-BorderStyle_Shadow */
+    -webkit-box-shadow: 2px 0px 2px #444444; /* wm.TabLayers-Active-BorderStyle_Shadow */
+    box-shadow: 2px 0px 2px #444444; /* wm.TabLayers-Active-BorderStyle_Shadow */
+}
+/* Spacing between each tab */
+.wm_default .wmtablayers-tab.wmtablayers-selected,
+.wm_default .wmtablayers-tab.wmtablayers-tab {
+    margin-left: 8px; /* wm.TabLayers-Margin-Width */
+	/* Document-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius-topleft: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius-topright: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-top-left-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-top-right-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	border-radius-topleft: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	border-radius-topright: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+}
+    /* Tab <input type='button'> elements need to handle browser focus as any other button */
+    .wm_default .wmtablayers-tab:focus {
+	outline-width: 0;
+    }
+  /************************************** END Tab Button ***************************************/
+  /**************************************************************************************************
+   * TYPE:        Fancy Panel container
+   *
+   * DESCRIPTION: top radius of the container should always be zero 
+   *              
+   * TODO:        if no title, it should NOT be zero
+   ************************************************************************************************/
+.wm_default .wmFancyPanel-containerWidget {
+    -moz-border-radius-topright: 0px !important;
+    -webkit-border-top-left-radius: 0px !important;
+    -webkit-border-top-right-radius: 0px !important;
+    border-radius-topleft: 0px !important;
+    border-radius-topright: 0px !important;
+    -moz-box-shadow: 0px 0px 0px black !important;
+    -webkit-box-shadow: 0px 0px 0px black !important;
+    box-shadow: 0px 0px 0px black !important;
+}
+    /* BEGIN SECTION wm.TabLayers / wm.WizardLayers */
+    /* Content panel for tab layers */
+  /**************************************************************************************************
+   * TYPE:        Panel Border Styles
+   *
+   * DESCRIPTION: Border radius and shadows for various Layers and panels
+   ************************************************************************************************/
+.wm_default .wmaccordion .wmlayer {
+    /* Borders-Panel_BorderStyle */
+    -moz-border-radius: 2px; /* Borders-Panel_BorderStyle_Radius */
+    -webkit-border-radius: 2px; /* Borders-Panel_BorderStyle_Radius */
+    border-radius: 2px; /* Borders-Panel_BorderStyle_Radius */
+}
+body.tundra.wm_default  div.wmheader,
+body.tundra .wm_default  div.wmheader,
+.wm_default  .wmTabLayers-client > .wmlayer, 
+.wm_default  .wmWizardLayers-client > .wmlayer {
+    /* Borders-Panel_Border */
+    -moz-border-radius: 4px; /* Borders-Panel_BorderStyle_Radius */
+    -webkit-border-radius: 4px; /* Borders-Panel_BorderStyle_Radius */
+    border-radius: 4px; /* Borders-Panel_BorderStyle_Radius */
+}
+.wm_default .wmFancyPanel-containerWidget {
+    -moz-border-radius-bottomleft: 4px; /* Borders-Panel_BorderStyle_Radius */
+    -moz-border-radius-bottomright: 4px;/* Borders-Panel_BorderStyle_Radius */
+    -webkit-border-bottom-left-radius: 4px;/* Borders-Panel_BorderStyle_Radius */
+    -webkit-border-bottom-right-radius: 4px;/* Borders-Panel_BorderStyle_Radius */
+    border-radius-bottomleft: 4px;/* Borders-Panel_BorderStyle_Radius */
+    border-radius-bottomright: 4px;/* Borders-Panel_BorderStyle_Radius */
+}    
+.wm_default .wmFancyPanel-labelWidget {
+    /* Must always be 2-4px smaller than .wmfancypanel */
+       -moz-border-radius-topleft: 12px;   /* Borders-Panel_BorderStyle_Radius */
+    -moz-border-radius-topright: 12px;/* Borders-Panel_BorderStyle_Radius */
+    -webkit-border-top-left-radius: 12px;/* Borders-Panel_BorderStyle_Radius */
+    -webkit-border-top-right-radius: 12px;/* Borders-Panel_BorderStyle_Radius */
+    border-radius-topleft: 12px;/* Borders-Panel_BorderStyle_Radius */
+    border-radius-topright: 12px;/* Borders-Panel_BorderStyle_Radius */
+}    
+    /* END Border Styles */
+    .wm_default .wmaccordion .wmaccordion-content {
+	background-color: transparent;
+    }
+    .wm_default div.wmtablayers-tabbar {
+	background: transparent;
+    }
+/* BEGIN SECTION wm.AccorionLayers / wm.AccordionDecorator */
+  /**************************************************************************************************
+   * TYPE:        Main Document Styles
+   *
+   * DESCRIPTION: Specify all font and background styles for the document level
+   ************************************************************************************************/
+@media screen { /* Document-Level */ 
+  /**************************************************************************************************
+   * TYPE:        Main document-level border
+   *
+   * DESCRIPTION: An optional set of styles for giving the document itself a square or rounded border
+   ************************************************************************************************/
+.wm_default  #wavemakerNode  .wmlayout,
+#studio_designer.wm_default .wmlayout, 
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .wmlayout {
+    /* Document-Styles-Border */
+    -moz-border-radius: 0px; /* Document-Styles-BorderStyle_Radius */
+    -webkit-border-radius: 0px; /* Document-Styles-BorderStyle_Radius */
+    border-radius: 0px; /* Document-Styles-BorderStyle_Radius */
+    -moz-box-shadow: 3px 3px 3px #000000; /* Document-Styles-BorderStyle_Shadow */
+    -webkit-box-shadow: 3px 3px 3px #000000; /* Document-Styles-BorderStyle_Shadow */
+    box-shadow: 3px 3px 3px #000000; /* Document-Styles-BorderStyle_Shadow */
+}
+/* .Document is what the dialog gets when its mapped to the document style*/
+.wm_default  #wavemakerNode  > .wmlayout,
+#studio_designer.wm_default > .wmlayout, 
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .wmlayout,
+.wm_default  #wavemakerNode  > .Document, 
+#studio_designer.wm_default > .Document, 
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .Document {
+    /* Document-Styles-Font */
+    font-family: Verdana; /* Document-Styles-Font_Family */
+    font-size: 8pt; /* Document-Styles-Font_TextSize */
+    color: #000000; /* Document-Styles-Font_Color */
+    font-weight: bold; /* Document-Styles-Font_Weight */
+    /* Document-Styles-Background */
+    background-color: #ffffff; /* Document-Styles-Background_Color */
+    background-image: none; /* Document-Styles-Background_Image */
+    background-position: top left; /* Document-Styles-Background_Image-Position */
+    background-repeat: no-repeat; /* Document-Styles-Background_Image-Repeat */
+    /* Document-Styles-Font */
+    font-family: Verdana; /* Document-Styles-Font_Family */
+    font-size: 8pt; /* Document-Styles-Font_TextSize */
+    color: #000000; /* Document-Styles-Font_Color */
+    font-weight: bold; /* Document-Styles-Font_Weight */
+}
+#studio_designer.wm_default, 
+body.wm_default {
+    background-color: #ffffff; /* Document-Styles-Background_Color */
+}
+    .wm_default div.wmaccordion-header {
+	/* Document-ClickablesActive-Font  + Clickables-Default-Font */
+	font-family: Verdana; /* Document-ClickablesDefault-Font_Family */
+	font-size: 10pt; /* Document-ClickablesDefault-Font_TextSize */
+	color: #000000; /* Document-ClickablesActive-Font_Color */
+	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+	/* Document-ClickablesActive-Background */
+	background-color: #9fcbd8; /* Document-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge0.png); /* Document-ClickablesActive-Background_Image */
+	background-position: top left; /* Document-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
+	/* Document-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	padding-left: 10px;
+    }
+    .wm_default div.wmaccordion .wmaccordion-collapsed {
+	/* Document-ClickablesDefault-Font */
+	color: #ffffff; /* Document-ClickablesDefault-Font_Color */
+	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+	font-family: Verdana; /* Document-ClickablesDefault-Font_Family */
+	font-size: 10pt; /* Document-ClickablesDefault-Font_TextSize */
+	/* Document-ClickablesDefault-Background */
+	background-color: #1f497d; /* Document-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge1.png); /* Document-ClickablesDefault-Background_Image */
+	background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
+	/* Document-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+    }
+    .wm_default div.wmaccordion-header:hover, 
+    .wm_default div.wmaccordion wmaccordion-header.wmaccordion-collapsed:hover {
+	/* Document-ClickablesHover-Font */
+	color: #000000; /* Document-ClickablesHover-Font_Color */
+	/* Document-ClickablesHover-Background */
+	background-color: #addbe9; /* Document-ClickablesHover-Background_Color */
+	background-image: url(images/repeatx/greyThickEdge0.png); /* Document-ClickablesHover-Background_Image */
+	background-position: top left; /* Document-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesHover-Background_Image-Repeat */
+    }
+    /* END SECTION wm.AccorionLayers / wm.AccordionDecorator */
+.wm_default .wmfancypanel .wmFancyPanel-labelWidget,
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .wmfancypanel .wmFancyPanel-labelWidget  {
+    /* Document-ClickablesDefault-Font */
+    font-family: Verdana; /* Document-ClickablesDefault-Font_Family */
+    font-size: 10pt; /* Document-ClickablesDefault-Font_TextSize */
+    color: #ffffff; /* Document-ClickablesDefault-Font_Color */
+    font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+    /* Document-ClickablesDefault-Background */
+    background-color: #1f497d; /* Document-ClickablesDefault-Background_Color */
+    background-image: url(images/repeatx/brightThickEdge1.png); /* Document-ClickablesDefault-Background_Image */
+    background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
+    background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
+}
+    /* Tab buttons */
+    .wm_default button.wmtablayers-tab {
+	/* Document-ClickablesDefault-Font */
+	font-family: Verdana; /* Document-ClickablesDefault-Font_Family */
+	color: #ffffff; /* Document-ClickablesDefault-Font_Color */
+	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+	/* Document-ClickablesDefault-Background */
+	background-color: #1f497d; /* Document-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge1.png); /* Document-ClickablesDefault-Background_Image */
+	background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
+	/* Document-ClickablesDefault-Border */
+	border-bottom-color: transparent;
+	border-top-color: #444444; /* Borders-Clickable_Border_Color */
+	border-right-color:#444444; /* Borders-Clickable_Border_Color */
+	border-left-color:#444444; /* Borders-Clickable_Border_Color */
+        /* editting this is problematic without also editting headerHeight */
+    border-width: 2px;
+    border-style: solid;
+    }
+    .wm_default .wmtablayers-tab:hover, .wm_default .wmtablayers-tab:focus {
+	/* Document-ClickablesHover-Font */
+	color: #000000; /* Document-ClickablesHover-Font_Color */
+	/* Document-ClickablesHover-Background */
+	background-color: #addbe9; /* Document-ClickablesHover-Background_Color */
+	background-image: url(images/repeatx/greyThickEdge0.png); /* Document-ClickablesHover-Background_Image */
+	background-position: top left; /* Document-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesHover-Background_Image-Repeat */
+    }
+    /* Selected tab */
+    .wm_default .wmtablayers-tab.wmtablayers-selected,
+    .wm_default .wmtablayers-tab.wmtablayers-selected:hover,
+    .wm_default .wmtablayers-tab.wmtablayers-selected:focus {
+	/* Document-ClickablesActive-Font */
+	color: #000000; /* Document-ClickablesActive-Font_Color */
+	/* Document-ClickablesActive-Background */
+	background-color: #9fcbd8; /* Document-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge0.png); /* Document-ClickablesActive-Background_Image */
+	background-position: top left; /* Document-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
+    }
+    /* END SECTION wm.TabLayers / wm.TabDecorator */
+    /* END ESCTION wm.TabLayers / wm.WizardLayers */
+    /* BEGIN SECTION wm.WizardLayers */
+    /* Custom formatting for wizard tab with focus or hover on the <input type='button'/> */
+    .wm_default .wmwizardlayers-tab:focus,
+    .wm_default .wmwizardlayers-tab:hover {
+	color: black; /* Custom mouseover color */
+    }
+    /* END SECTION wm.WizardLayers */
+}
+@media screen { /* MainContent-Level */ 
+  /**************************************************************************************************
+   * TYPE:        Main document-level border
+   *
+   * DESCRIPTION: An optional set of styles for giving the document itself a square or rounded border
+   ************************************************************************************************/
+.wm_default .MainContent {
+    /* MainContent-Styles-Border */
+    -moz-border-radius: 0px; /* MainContent-Styles-BorderStyle_Radius */
+    -webkit-border-radius: 0px; /* MainContent-Styles-BorderStyle_Radius */
+    border-radius: 0px; /* MainContent-Styles-BorderStyle_Radius */
+    -moz-box-shadow: 0px 0px 0px #444444; /* MainContent-Styles-BorderStyle_Shadow */
+    -webkit-box-shadow: 0px 0px 0px #444444; /* MainContent-Styles-BorderStyle_Shadow */
+    box-shadow: 0px 0px 0px #444444; /* MainContent-Styles-BorderStyle_Shadow */
+}
+.wm_default  .MainContent,
+#studio_designer.wm_default .MainContent {
+    /* MainContent-Styles-Font */
+    font-family: Verdana; /* MainContent-Styles-Font_Family */
+    font-size: 8pt; /* MainContent-Styles-Font_TextSize */
+    color: #000000; /* MainContent-Styles-Font_Color */
+    font-weight: normal; /* MainContent-Styles-Font_Weight */
+    /* MainContent-Styles-Background */
+    background-color: #ffffff; /* MainContent-Styles-Background_Color */
+    background-image: none; /* MainContent-Styles-Background_Image */
+    background-position: top left; /* MainContent-Styles-Background_Image-Position */
+    background-repeat: no-repeat; /* MainContent-Styles-Background_Image-Repeat */
+}
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .MainContent,
+.wm_default #studio_themesPage_themeDesigner_demoPanel .MainContent {
+    /* MainContent-Styles-Font */
+    font-family: Verdana; /* MainContent-Styles-Font_Family */
+    font-size: 8pt; /* MainContent-Styles-Font_TextSize */
+    color: #000000; /* MainContent-Styles-Font_Color */
+    font-weight: normal; /* MainContent-Styles-Font_Weight */
+}
+    .wm_default .MainContent div.wmaccordion-header {
+	/* MainContent-ClickablesActive-Font  + Clickables-Default-Font */
+	font-family: Verdana; /* MainContent-ClickablesDefault-Font_Family */
+	font-size: 10pt; /* MainContent-ClickablesDefault-Font_TextSize */
+	color: #ffffff; /* MainContent-ClickablesActive-Font_Color */
+	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
+	/* MainContent-ClickablesActive-Background */
+	background-color: #639410; /* MainContent-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge0.png); /* MainContent-ClickablesActive-Background_Image */
+	background-position: top left; /* MainContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
+	/* MainContent-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
+	padding-left: 10px;
+    }
+    .wm_default .MainContent div.wmaccordion .wmaccordion-collapsed {
+	/* MainContent-ClickablesDefault-Font */
+	color: #333333; /* MainContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
+	font-family: Verdana; /* MainContent-ClickablesDefault-Font_Family */
+	font-size: 10pt; /* MainContent-ClickablesDefault-Font_TextSize */
+	/* MainContent-ClickablesDefault-Background */
+	background-color: #9dca49; /* MainContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
+	/* MainContent-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
+    }
+    .wm_default .MainContent div.wmaccordion-header:hover, 
+    .wm_default .MainContent div.wmaccordion wmaccordion-header.wmaccordion-collapsed:hover {
+	/* MainContent-ClickablesHover-Font */
+	color: #ffffff; /* MainContent-ClickablesHover-Font_Color */
+	/* MainContent-ClickablesHover-Background */
+	background-color: #77ae18; /* MainContent-ClickablesHover-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge0.png); /* MainContent-ClickablesHover-Background_Image */
+	background-position: top left; /* MainContent-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesHover-Background_Image-Repeat */
+    }
+    /* END SECTION wm.AccorionLayers / wm.AccordionDecorator */
+.wm_default .MainContent .wmfancypanel .wmFancyPanel-labelWidget {
+    /* MainContent-ClickablesDefault-Font */
+    font-family: Verdana; /* MainContent-ClickablesDefault-Font_Family */
+    font-size: 10pt; /* MainContent-ClickablesDefault-Font_TextSize */
+    color: #333333; /* MainContent-ClickablesDefault-Font_Color */
+    font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
+    /* MainContent-ClickablesDefault-Background */
+    background-color: #9dca49; /* MainContent-ClickablesDefault-Background_Color */
+    background-image: url(images/repeatx/brightEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
+    background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
+    background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
+}
+    /* BEGIN SECTION wm.TabLayers / wm.TabDecorator */
+    /* Tab buttons */
+    .wm_default .MainContent button.wmtablayers-tab {
+	/* MainContent-ClickablesDefault-Font */
+	font-family: Verdana; /* MainContent-ClickablesDefault-Font_Family */
+	color: #333333; /* MainContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
+	/* MainContent-ClickablesDefault-Background */
+	background-color: #9dca49; /* MainContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_default .MainContent .wmtablayers-tab:hover, .wm_default .wmtablayers-tab:focus {
+	/* MainContent-ClickablesHover-Font */
+	color: #ffffff; /* MainContent-ClickablesHover-Font_Color */
+	/* MainContent-ClickablesHover-Background */
+	background-color: #77ae18; /* MainContent-ClickablesHover-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge0.png); /* MainContent-ClickablesHover-Background_Image */
+	background-position: top left; /* MainContent-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesHover-Background_Image-Repeat */
+    }
+    /* Selected tab */
+    .wm_default .MainContent .wmtablayers-tab.wmtablayers-selected,
+    .wm_default .MainContent .wmtablayers-tab.wmtablayers-selected:hover,
+    .wm_default .MainContent .wmtablayers-tab.wmtablayers-selected:focus {
+	/* MainContent-ClickablesActive-Font */
+	color: #ffffff; /* MainContent-ClickablesActive-Font_Color */
+	/* MainContent-ClickablesActive-Background */
+	background-color: #639410; /* MainContent-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge0.png); /* MainContent-ClickablesActive-Background_Image */
+	background-position: top left; /* MainContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
+    }
+    /* END SECTION wm.TabLayers / wm.TabDecorator */
+    /* END ESCTION wm.TabLayers / wm.WizardLayers */
+    /* BEGIN SECTION wm.WizardLayers */
+    /* TODO: Enable this property */
+    .wm_default .MainContent .wmwizardlayers-tab:focus,
+    .wm_default .MainContent .wmwizardlayers-tab:hover {
+	color: black; /* wm.WizardLayers-Active_Color */
+    }
+    /* END SECTION wm.WizardLayers */
+}
+@media screen { /* EmphasizedContent-Level */ 
+.wm_default .EmphasizedContent {
+    /* EmphasizedContent-Styles-Border */
+    -moz-border-radius: 16px; /* EmphasizedContent-Styles-BorderStyle_Radius */
+    -webkit-border-radius: 16px; /* EmphasizedContent-Styles-BorderStyle_Radius */
+    border-radius: 16px; /* EmphasizedContent-Styles-BorderStyle_Radius */
+    -moz-box-shadow: 0px 0px 0px #444444; /* EmphasizedContent-Styles-BorderStyle_Shadow */
+    -webkit-box-shadow: 0px 0px 0px #444444; /* EmphasizedContent-Styles-BorderStyle_Shadow */
+    box-shadow: 0px 0px 0px #444444; /* EmphasizedContent-Styles-BorderStyle_Shadow */
+}
+.wm_default  .EmphasizedContent,
+#studio_designer.wm_default .EmphasizedContent {
+    /* EmphasizedContent-Styles-Font */
+    font-family: Verdana; /* EmphasizedContent-Styles-Font_Family */
+    font-size: 8pt; /* EmphasizedContent-Styles-Font_TextSize */
+    color: #000000; /* EmphasizedContent-Styles-Font_Color */
+    font-weight: bold; /* EmphasizedContent-Styles-Font_Weight */
+    /* EmphasizedContent-Styles-Background */
+    background-color: #c0d0d6; /* EmphasizedContent-Styles-Background_Color */
+    background-image: none; /* EmphasizedContent-Styles-Background_Image */
+    background-position: top left; /* EmphasizedContent-Styles-Background_Image-Position */
+    background-repeat: no-repeat; /* EmphasizedContent-Styles-Background_Image-Repeat */
+}
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .EmphasizedContent,
+.wm_default #studio_themesPage_themeDesigner_demoPanel .EmphasizedContent {
+    /* EmphasizedContent-Styles-Font */
+    font-family: Verdana; /* EmphasizedContent-Styles-Font_Family */
+    font-size: 8pt; /* EmphasizedContent-Styles-Font_TextSize */
+    color: #000000; /* EmphasizedContent-Styles-Font_Color */
+    font-weight: bold; /* EmphasizedContent-Styles-Font_Weight */
+}
+    .wm_default .EmphasizedContent div.wmaccordion-header {
+	/* EmphasizedContent-ClickablesActive-Font  + Clickables-Default-Font */
+	font-family: Verdana; /* EmphasizedContent-ClickablesDefault-Font_Family */
+	font-size: 10pt; /* EmphasizedContent-ClickablesDefault-Font_TextSize */
+	color: #ffffff; /* EmphasizedContent-ClickablesActive-Font_Color */
+	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
+	/* EmphasizedContent-ClickablesActive-Background */
+	background-color: #333333; /* EmphasizedContent-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge0.png); /* EmphasizedContent-ClickablesActive-Background_Image */
+	background-position: top left; /* EmphasizedContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesActive-Background_Image-Repeat */
+	/* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
+	padding-left: 10px;
+    }
+    .wm_default .EmphasizedContent div.wmaccordion .wmaccordion-collapsed {
+	/* EmphasizedContent-ClickablesDefault-Font */
+	color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
+	font-family: Verdana; /* EmphasizedContent-ClickablesDefault-Font_Family */
+	font-size: 10pt; /* EmphasizedContent-ClickablesDefault-Font_TextSize */
+	/* EmphasizedContent-ClickablesDefault-Background */
+	background-color: #333333; /* EmphasizedContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge1.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
+	/* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
+    }
+    .wm_default .EmphasizedContent div.wmaccordion-header:hover, 
+    .wm_default .EmphasizedContent div.wmaccordion wmaccordion-header.wmaccordion-collapsed:hover {
+	/* EmphasizedContent-ClickablesHover-Font */
+	color: #ffffff; /* EmphasizedContent-ClickablesHover-Font_Color */
+	/* EmphasizedContent-ClickablesHover-Background */
+	background-color: #666666; /* EmphasizedContent-ClickablesHover-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge0.png); /* EmphasizedContent-ClickablesHover-Background_Image */
+	background-position: top left; /* EmphasizedContent-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesHover-Background_Image-Repeat */
+    }
+    /* END SECTION wm.AccorionLayers / wm.AccordionDecorator */
+.wm_default .EmphasizedContent .wmfancypanel .wmFancyPanel-labelWidget {
+    /* EmphasizedContent-ClickablesDefault-Font */
+    font-family: Verdana; /* EmphasizedContent-ClickablesDefault-Font_Family */
+    font-size: 10pt; /* EmphasizedContent-ClickablesDefault-Font_TextSize */
+    color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
+    font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
+    /* EmphasizedContent-ClickablesDefault-Background */
+    background-color: #333333; /* EmphasizedContent-ClickablesDefault-Background_Color */
+    background-image: url(images/repeatx/brightThickEdge1.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
+    background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
+    background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
+}
+    /* BEGIN SECTION wm.TabLayers / wm.TabDecorator */
+    /* Tab buttons */
+    .wm_default .EmphasizedContent button.wmtablayers-tab {
+	/* EmphasizedContent-ClickablesDefault-Font */
+	font-family: Verdana; /* EmphasizedContent-ClickablesDefault-Font_Family */
+	color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
+	/* EmphasizedContent-ClickablesDefault-Background */
+	background-color: #333333; /* EmphasizedContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge1.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_default .EmphasizedContent .wmtablayers-tab:hover, .wm_default .wmtablayers-tab:focus {
+	/* EmphasizedContent-ClickablesHover-Font */
+	color: #ffffff; /* EmphasizedContent-ClickablesHover-Font_Color */
+	/* EmphasizedContent-ClickablesHover-Background */
+	background-color: #666666; /* EmphasizedContent-ClickablesHover-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge0.png); /* EmphasizedContent-ClickablesHover-Background_Image */
+	background-position: top left; /* EmphasizedContent-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesHover-Background_Image-Repeat */
+    }
+    /* Selected tab */
+    .wm_default .EmphasizedContent .wmtablayers-tab.wmtablayers-selected,
+    .wm_default .EmphasizedContent .wmtablayers-tab.wmtablayers-selected:hover,
+    .wm_default .EmphasizedContent .wmtablayers-tab.wmtablayers-selected:focus {
+	/* EmphasizedContent-ClickablesActive-Font */
+	color: #ffffff; /* EmphasizedContent-ClickablesActive-Font_Color */
+	/* EmphasizedContent-ClickablesActive-Background */
+	background-color: #333333; /* EmphasizedContent-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge0.png); /* EmphasizedContent-ClickablesActive-Background_Image */
+	background-position: top left; /* EmphasizedContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesActive-Background_Image-Repeat */
+    }
+    /* END SECTION wm.TabLayers / wm.TabDecorator */
+    /* END ESCTION wm.TabLayers / wm.WizardLayers */
+    /* BEGIN SECTION wm.WizardLayers */
+    /* TODO: Enable this property */
+    .wm_default .EmphasizedContent .wmwizardlayers-tab:focus,
+    .wm_default .EmphasizedContent .wmwizardlayers-tab:hover {
+	color: black; /* wm.WizardLayers-Active_Color */
+    }
+    /* END SECTION wm.WizardLayers */
+}
+@media screen { /* HeaderContent-Level */ 
+.wm_default .HeaderContent {
+    /* HeaderContent-Styles-Border */
+    -moz-border-radius: 4px; /* HeaderContent-Styles-BorderStyle_Radius */
+    -webkit-border-radius: 4px; /* HeaderContent-Styles-BorderStyle_Radius */
+    border-radius: 4px; /* HeaderContent-Styles-BorderStyle_Radius */
+    -moz-box-shadow: 2px 2px 2px #444444; /* HeaderContent-Styles-BorderStyle_Shadow */
+    -webkit-box-shadow: 2px 2px 2px #444444; /* HeaderContent-Styles-BorderStyle_Shadow */
+    box-shadow: 2px 2px 2px #444444; /* HeaderContent-Styles-BorderStyle_Shadow */
+}
+.wm_default  .HeaderContent,
+#studio_designer.wm_default .HeaderContent {
+    /* HeaderContent-Styles-Font */
+    font-family: Verdana; /* HeaderContent-Styles-Font_Family */
+    font-size: 8pt; /* HeaderContent-Styles-Font_TextSize */
+    color: #444444; /* HeaderContent-Styles-Font_Color */
+    font-weight: bold; /* HeaderContent-Styles-Font_Weight */
+    /* HeaderContent-Styles-Background */
+    background-color: #dddddd; /* HeaderContent-Styles-Background_Color */
+    background-image: url(images/repeatx/greyEdge3.png); /* HeaderContent-Styles-Background_Image */
+    background-position: top left; /* HeaderContent-Styles-Background_Image-Position */
+    background-repeat: repeat-x; /* HeaderContent-Styles-Background_Image-Repeat */
+}
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .HeaderContent,
+.wm_default #studio_themesPage_themeDesigner_demoPanel .HeaderContent {
+    /* HeaderContent-Styles-Font */
+    font-family: Verdana; /* HeaderContent-Styles-Font_Family */
+    font-size: 8pt; /* HeaderContent-Styles-Font_TextSize */
+    color: #444444; /* HeaderContent-Styles-Font_Color */
+    font-weight: bold; /* HeaderContent-Styles-Font_Weight */
+}
+    .wm_default .HeaderContent div.wmaccordion-header {
+	/* HeaderContent-ClickablesActive-Font  + Clickables-Default-Font */
+	font-family: Verdana; /* HeaderContent-ClickablesDefault-Font_Family */
+	font-size: 10pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
+	color: #000000; /* HeaderContent-ClickablesActive-Font_Color */
+	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
+	/* HeaderContent-ClickablesActive-Background */
+	background-color: #999999; /* HeaderContent-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/greyThickEdge1.png); /* HeaderContent-ClickablesActive-Background_Image */
+	background-position: top left; /* HeaderContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
+	/* HeaderContent-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
+	padding-left: 10px;
+    }
+    .wm_default .HeaderContent div.wmaccordion .wmaccordion-collapsed {
+	/* HeaderContent-ClickablesDefault-Font */
+	color: #FFFFFF; /* HeaderContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
+	font-family: Verdana; /* HeaderContent-ClickablesDefault-Font_Family */
+	font-size: 10pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
+	/* HeaderContent-ClickablesDefault-Background */
+	background-color: #666666; /* HeaderContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
+	/* HeaderContent-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius: 4px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
+    }
+    .wm_default .HeaderContent div.wmaccordion-header:hover, 
+    .wm_default .HeaderContent div.wmaccordion wmaccordion-header.wmaccordion-collapsed:hover {
+	/* HeaderContent-ClickablesHover-Font */
+	color: #ffffff; /* HeaderContent-ClickablesHover-Font_Color */
+	/* HeaderContent-ClickablesHover-Background */
+	background-color: #333333; /* HeaderContent-ClickablesHover-Background_Color */
+	background-image: url(images/repeatx/brightSliverEdge4.png); /* HeaderContent-ClickablesHover-Background_Image */
+	background-position: top left; /* HeaderContent-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesHover-Background_Image-Repeat */
+    }
+    /* END SECTION wm.AccorionLayers / wm.AccordionDecorator */
+.wm_default .HeaderContent .wmfancypanel .wmFancyPanel-labelWidget {
+    /* HeaderContent-ClickablesDefault-Font */
+    font-family: Verdana; /* HeaderContent-ClickablesDefault-Font_Family */
+    font-size: 10pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
+    color: #FFFFFF; /* HeaderContent-ClickablesDefault-Font_Color */
+    font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
+    /* HeaderContent-ClickablesDefault-Background */
+    background-color: #666666; /* HeaderContent-ClickablesDefault-Background_Color */
+    background-image: url(images/repeatx/brightThickEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
+    background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
+    background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
+}
+    /* BEGIN SECTION wm.TabLayers / wm.TabDecorator */
+    /* Tab buttons */
+    .wm_default .HeaderContent button.wmtablayers-tab {
+	/* HeaderContent-ClickablesDefault-Font */
+	font-family: Verdana; /* HeaderContent-ClickablesDefault-Font_Family */
+	color: #FFFFFF; /* HeaderContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
+	/* HeaderContent-ClickablesDefault-Background */
+	background-color: #666666; /* HeaderContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_default .HeaderContent .wmtablayers-tab:hover, .wm_default .wmtablayers-tab:focus {
+	/* HeaderContent-ClickablesHover-Font */
+	color: #ffffff; /* HeaderContent-ClickablesHover-Font_Color */
+	/* HeaderContent-ClickablesHover-Background */
+	background-color: #333333; /* HeaderContent-ClickablesHover-Background_Color */
+	background-image: url(images/repeatx/brightSliverEdge4.png); /* HeaderContent-ClickablesHover-Background_Image */
+	background-position: top left; /* HeaderContent-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesHover-Background_Image-Repeat */
+    }
+    /* Selected tab */
+    .wm_default .HeaderContent .wmtablayers-tab.wmtablayers-selected,
+    .wm_default .HeaderContent .wmtablayers-tab.wmtablayers-selected:hover,
+    .wm_default .HeaderContent .wmtablayers-tab.wmtablayers-selected:focus {
+	/* HeaderContent-ClickablesActive-Font */
+	color: #000000; /* HeaderContent-ClickablesActive-Font_Color */
+	/* HeaderContent-ClickablesActive-Background */
+	background-color: #999999; /* HeaderContent-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/greyThickEdge1.png); /* HeaderContent-ClickablesActive-Background_Image */
+	background-position: top left; /* HeaderContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
+    }
+    /* END SECTION wm.TabLayers / wm.TabDecorator */
+    /* END ESCTION wm.TabLayers / wm.WizardLayers */
+    /* BEGIN SECTION wm.WizardLayers */
+    /* TODO: Enable this property */
+    .wm_default .HeaderContent .wmwizardlayers-tab:focus,
+    .wm_default .HeaderContent .wmwizardlayers-tab:hover {
+	color: black; /* wm.WizardLayers-Active_Color */
+    }
+    /* END SECTION wm.WizardLayers */
+}
+#wmMinifiedDialogPanel {
+    opacity: 0.6;
+    background-color: #9fcbd8; /* Document-ClickablesActive-Background_Color */
+    -moz-box-shadow: 0px -2px 4px black; /* wm.TabLayers-BorderStyle_UnselectedShadow */
+    -webkit-box-shadow: 0px -2px 4px black;  /* wm.TabLayers-BorderStyle_UnselectedShadow */
+    box-shadow: 0px -2px 4px black;  /* wm.TabLayers-BorderStyle_UnselectedShadow */
+}
+#wmMinifiedDialogPanel:hover {
+    opacity: 1;
+}
+#wmMinifiedDialogPanel .wmbutton {
+	-moz-border-radius: 0px !important; 
+	-webkit-border-radius: 0px !important;
+	border-radius: 0px !important;
+        font-size: 8pt;
+}/*****************************************
+ * EOF: panels.css
+ *****************************************/
+/*****************************************
+ * FILE: progressbar.css
+ *****************************************/
+  /**************************************************************************************************
+   * TYPE:        wm.dijit.ProgressBar
+   *
+   * DESCRIPTION: Sets the styles for wm.ProgressBar at each of three levels.  
+   ************************************************************************************************/
+.wm_default .wmprogressbar .dijitProgressBar {
+    /* Common-Panel_BorderStyle_Radius */
+    -moz-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
+    -webkit-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
+    border-radius: 4px;  /* Common-Panel_BorderStyle_Radius */
+}
+.wm_default .wmprogressbar .dijitProgressBarTile {
+    /* Common-Panel-BorderStyle_Radius */
+    -moz-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
+    -webkit-border-radius: 4px; /* Common-Panel_BorderStyle_Radius */
+    border-radius: 4px;  /* Common-Panel_BorderStyle_Radius */
+}
+.wm_default .wmprogressbar .dijitProgressBarFull {
+    border-right-width: 0px;
+}
+@media screen { /* Document-Level */ 
+    .wm_default .wmprogressbar .dijitProgressBarTile {
+	/* Document-ClickablesDefault-Font */
+	font-family: Verdana; /* Document-ClickablesDefault-Font_Family */
+	font-size: 10pt; /* Document-ClickablesDefault-Font_TextSize */
+	color: #ffffff; /* Document-ClickablesDefault-Font_Color */
+	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+	/* Document-ClickablesDefault-Background */
+	background-color: #1f497d; /* Document-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge1.png); /* Document-ClickablesDefault-Background_Image */
+	background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_default .wmprogressbar .dijitProgressBar {
+	/* Document-EditorsDefault-Font */
+	font-family: Verdana; /* Document-EditorsDefault-Font_Family */
+	font-size: 8pt; /* Document-EditorsDefault-Font_TextSize */
+	color: #000000; /* Document-EditorsDefault-Font_Color */
+	font-weight: normal; /* Document-EditorsDefault-Font_Weight */
+	/* Document-EditorsDefault-Background */
+	background-color: #eeeeee; /* Document-EditorsDefault-Background_Color */
+	background-image: url(images/repeatx/greyEdge2.png); /* Document-EditorsDefault-Background_Image */
+	background-position: top left; /* Document-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-EditorsDefault-Background_Image-Repeat */
+    }
+}
+@media screen { /* MainContent-Level */ 
+    .wm_default .MainContent .wmprogressbar .dijitProgressBarTile {
+	/* MainContent-ClickablesDefault-Font */
+	font-family: Verdana; /* MainContent-ClickablesDefault-Font_Family */
+	font-size: 10pt; /* MainContent-ClickablesDefault-Font_TextSize */
+	color: #333333; /* MainContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
+	/* MainContent-ClickablesDefault-Background */
+	background-color: #9dca49; /* MainContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_default .MainContent .wmprogressbar .dijitProgressBar {
+	/* MainContent-EditorsDefault-Font */
+	font-family: Verdana; /* MainContent-EditorsDefault-Font_Family */
+	font-size: 8pt; /* MainContent-EditorsDefault-Font_TextSize */
+	color: #000000; /* MainContent-EditorsDefault-Font_Color */
+	font-weight: normal; /* MainContent-EditorsDefault-Font_Weight */
+	/* MainContent-EditorsDefault-Background */
+	background-color: #eeeeee; /* MainContent-EditorsDefault-Background_Color */
+	background-image: url(images/repeatx/greyEdge2.png); /* MainContent-EditorsDefault-Background_Image */
+	background-position: top left; /* MainContent-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-EditorsDefault-Background_Image-Repeat */
+    }
+}
+@media screen { /* EmphasizedContent-Level */ 
+    .wm_default .EmphasizedContent .wmprogressbar .dijitProgressBarTile {
+	/* EmphasizedContent-ClickablesDefault-Font */
+	font-family: Verdana; /* EmphasizedContent-ClickablesDefault-Font_Family */
+	font-size: 10pt; /* EmphasizedContent-ClickablesDefault-Font_TextSize */
+	color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
+	/* EmphasizedContent-ClickablesDefault-Background */
+	background-color: #333333; /* EmphasizedContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge1.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_default .EmphasizedContent .wmprogressbar .dijitProgressBar {
+	/* EmphasizedContent-EditorsDefault-Font */
+	font-family: Verdana; /* EmphasizedContent-EditorsDefault-Font_Family */
+	font-size: 8pt; /* EmphasizedContent-EditorsDefault-Font_TextSize */
+	color: #000000; /* EmphasizedContent-EditorsDefault-Font_Color */
+	font-weight: normal; /* EmphasizedContent-EditorsDefault-Font_Weight */
+	/* EmphasizedContent-EditorsDefault-Background */
+	background-color: #eeeeee; /* EmphasizedContent-EditorsDefault-Background_Color */
+	background-image: url(images/repeatx/greyEdge2.png); /* EmphasizedContent-EditorsDefault-Background_Image */
+	background-position: top left; /* EmphasizedContent-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-EditorsDefault-Background_Image-Repeat */
+    }
+}
+@media screen { /* HeaderContent-Level */ 
+    .wm_default .HeaderContent .wmprogressbar .dijitProgressBarTile {
+	/* HeaderContent-ClickablesDefault-Font */
+	font-family: Verdana; /* HeaderContent-ClickablesDefault-Font_Family */
+	font-size: 10pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
+	color: #FFFFFF; /* HeaderContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
+	/* HeaderContent-ClickablesDefault-Background */
+	background-color: #666666; /* HeaderContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_default .HeaderContent .wmprogressbar .dijitProgressBar {
+	/* HeaderContent-EditorsDefault-Font */
+	font-family: Verdana; /* HeaderContent-EditorsDefault-Font_Family */
+	font-size: 8pt; /* HeaderContent-EditorsDefault-Font_TextSize */
+	color: #000000; /* HeaderContent-EditorsDefault-Font_Color */
+	font-weight: normal; /* HeaderContent-EditorsDefault-Font_Weight */
+	/* HeaderContent-EditorsDefault-Background */
+	background-color: #eeeeee; /* HeaderContent-EditorsDefault-Background_Color */
+	background-image: url(images/repeatx/greyEdge2.png); /* HeaderContent-EditorsDefault-Background_Image */
+	background-position: top left; /* HeaderContent-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-EditorsDefault-Background_Image-Repeat */
+    }
+}
+/*****************************************
+ * EOF: progressbar.css
+ *****************************************/
+/*****************************************
+ * FILE: splitterbevel.css
+ *****************************************/
+  /**************************************************************************************************
+   * TYPE:        wm.Splitter / wm.Bevel
+   *
+   * DESCRIPTION: Splitter and bevel ignore document/pagecontent/contentpanel levels; these are UI
+   *              components that should have a consistent look wherever they appear
+   *              (note: more true for splitter than for bevel)
+   ************************************************************************************************/
+.wm_default div.wmsplitter-h,
+.wm_default div.wmsplitter-v,
+.wm_default .wmbevel {
+    /* Document-ClickablesDefault-Background */
+    background-color: #1f497d; /* Document-ClickablesDefault-Background_Color */
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+}
+.wm_default div.wmsplitter-h:hover,
+.wm_default div.wmsplitter-v:hover {
+    /* Document-ClickablesHover-Background */
+    background-color: #addbe9; /* Document-ClickablesHover-Background_Color */
+}
+/*****************************************
+ * EOF: splitterbevel.css
+ *****************************************/
