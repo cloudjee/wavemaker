@@ -71,7 +71,7 @@ dojo.declare("wm.studio.Project", null, {
     getPageTemplate: function(pageType, argHash) {
 		// NOTE: could present list of choices here
 	    switch(pageType) {
-	    case "wm.PageListRow":
+	    case "wm.ListViewerRow":
 		return {
 		    variable: ["wm.Variable", {type: argHash.type}],
 		    layoutBox1: ["wm.Layout", {height: "100%", width: "100%", horizontalAlign: "left", verticalAlign: "top"}, {}, {
@@ -89,7 +89,7 @@ dojo.declare("wm.studio.Project", null, {
         getScriptTemplate: function(pageType, argHash) {
 		// NOTE: could present list of choices here
 	    switch(pageType) {
-	    case "wm.PageListRow":
+	    case "wm.ListViewerRow":
 		return "button1Click: function(inSender) {\n" +
 		    "\t\t/* Example of finding and triggering an action based on a button click */\n" +
 		    "\t\tvar data = this.variable.getData();\n" +
@@ -207,7 +207,10 @@ dojo.declare("wm.studio.Project", null, {
 	    if (ctor) {
 		        studio.application = new ctor(dojo.mixin({ _designer: studio.designer }, inProps));
 		        for (var i in this.projectData.documentation) {
-			    studio.application.components[i].documentation = this.projectData.documentation[i];
+                            if (studio.application.components[i])
+			        studio.application.components[i].documentation = this.projectData.documentation[i];
+                            else
+                                console.error("studio.application.components[" + i + "] not found for setting documentation: " + this.projectData.documentation[i]);
 			}
 	    }
 	},
@@ -794,6 +797,7 @@ Studio.extend({
 	app.prompt(dojo.string.substitute(newPrompt, {target: inTarget}), inDefault, 
                    dojo.hitch(this, function(name) {
 		       if (name !== null) {
+                           name = dojo.trim(name);
 			   for (var i= 0, exists = false, lcn = name.toLowerCase(), n; (n=inExistingList[i]); i++)
 			       if (n.toLowerCase() == lcn) {
 				   exists = true;

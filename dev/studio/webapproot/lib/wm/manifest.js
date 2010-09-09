@@ -131,7 +131,7 @@ wm.loadLibs([
 	"wm.base.widget.Table.builder",
 	"wm.base.widget.VirtualList",
 	"wm.base.widget.List",
-	"wm.base.widget.WidgetList",
+	"wm.base.widget.ListViewer",
 	"wm.base.widget.FeedList",
 	"wm.base.widget.TwitterFeed",
 	"wm.base.widget.Detail",
