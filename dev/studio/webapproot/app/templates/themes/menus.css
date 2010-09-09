@@ -112,7 +112,7 @@
 	/* HeaderContent-ClickablesDefault-Font */
 	font-family: sans-serif; /* HeaderContent-ClickablesDefault-Font_Family */
 	font-size: 12pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
-	color: #FFFFFF; /* HeaderContent-Style-Font_Color */
+	color: #FFFFFF; /* HeaderContent-Styles-Font_Color */
 	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
 
 	/* HeaderContent-ClickablesDefault-Background */
@@ -138,7 +138,7 @@
     body.wm_template .HeaderContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
     body .wm_template .HeaderContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
 	/* HeaderContent-ClickablesHover-Font */
-	color: #FFFFFF; /* HeaderContent-Style-Font_Color */
+	color: #FFFFFF; /* HeaderContent-Styles-Font_Color */
 
 	/* HeaderContent-ClickablesHover-Background */
 	background-color: transparent;

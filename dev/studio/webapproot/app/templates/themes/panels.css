@@ -12,7 +12,6 @@
     -moz-box-shadow: 2px 0px 2px black; /* wm.TabLayers-BorderStyle_Shadow */
     -webkit-box-shadow: 2px 0px 2px black;  /* wm.TabLayers-BorderStyle_Shadow */
     box-shadow: 2px 0px 2px black;  /* wm.TabLayers-BorderStyle_Shadow */
-
     height: 12px; /* wm.TabLayers-Button_Height */
     font-size: 12px; /* wm.TabLayers-Button_TextSize */
 }
@@ -289,11 +288,15 @@ body.wm_template {
 	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
 
 	/* Document-ClickablesDefault-Border */
-	border-width: 2px; /* editting this is problematic without also editting headerHeight */
 	border-bottom-color: transparent;
 	border-top-color: #444444; /* Borders-Clickable_Border_Color */
 	border-right-color:#444444; /* Borders-Clickable_Border_Color */
 	border-left-color:#444444; /* Borders-Clickable_Border_Color */
+
+        /* editting this is problematic without also editting headerHeight */
+    border-width: 2px;
+    border-style: solid;
+
     }
 
     .wm_template .wmtablayers-tab:hover, .wm_template .wmtablayers-tab:focus {

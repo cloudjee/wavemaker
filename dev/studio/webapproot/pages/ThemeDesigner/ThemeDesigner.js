@@ -2322,11 +2322,11 @@ layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAli
 					}]
 				}],
 				panel1: ["wm.HeaderContentPanel", {"height":"48px","horizontalAlign":"left","layoutKind":"left-to-right","padding":"5","verticalAlign":"top","width":"100%"}, {}, {
-					dojoMenu1: ["wm.DojoMenu", {"eventList":[{"label":"File","children":[{"label":"New"},{"label":"Open"},{"label":"Save"},{"label":"Close"}]},{"label":"New"},{"label":"Open"},{"label":"Save"},{"label":"Close"},{"label":"Edit","children":[{"label":"Cut"},{"label":"Copy"},{"label":"Paste"}]},{"label":"Cut"},{"label":"Copy"},{"label":"Paste"},{"label":"Zoom","children":[{"label":"25%"},{"label":"50%"},{"label":"100%"},{"label":"150%"}]},{"label":"25%"},{"label":"50%"},{"label":"100%"},{"label":"150%"},{"label":"Help"}],"height":"37px","menu":"File > New, Open, Save, Close\nEdit > Cut, Copy, Paste\nZoom > 25%, 50%, 100%, 150%\nHelp","structure":"{\"items\":[{\"label\":\"File\",\"children\":[{\"label\":\"New\"},{\"label\":\"Open\"},{\"label\":\"Save\"},{\"label\":\"Close\"}]},{\"label\":\"Edit\",\"children\":[{\"label\":\"Cut\"},{\"label\":\"Copy\"},{\"label\":\"Paste\"}]},{\"label\":\"Zoom\",\"children\":[{\"label\":\"25%\"},{\"label\":\"50%\"},{\"label\":\"100%\"},{\"label\":\"150%\"}]},{\"label\":\"Help\"}]}","width":"291px"}, {}],
+					dojoMenu1: ["wm.DojoMenu", {"eventList":[{"label":"File","children":[{"label":"New"},{"label":"Open"},{"label":"Save"},{"label":"Close"}]},{"label":"New"},{"label":"Open"},{"label":"Save"},{"label":"Close"},{"label":"Edit","children":[{"label":"Cut"},{"label":"Copy"},{"label":"Paste"}]},{"label":"Cut"},{"label":"Copy"},{"label":"Paste"},{"label":"Zoom","children":[{"label":"25%"},{"label":"50%"},{"label":"100%"},{"label":"150%"}]},{"label":"25%"},{"label":"50%"},{"label":"100%"},{"label":"150%"}],"height":"37px","menu":"File > New, Open, Save, Close\nEdit > Cut, Copy, Paste\nZoom > 25%, 50%, 100%, 150%","structure":"{\"items\":[{\"label\":\"File\",\"children\":[{\"label\":\"New\"},{\"label\":\"Open\"},{\"label\":\"Save\"},{\"label\":\"Close\"}]},{\"label\":\"Edit\",\"children\":[{\"label\":\"Cut\"},{\"label\":\"Copy\"},{\"label\":\"Paste\"}]},{\"label\":\"Zoom\",\"children\":[{\"label\":\"25%\"},{\"label\":\"50%\"},{\"label\":\"100%\"},{\"label\":\"150%\"}]}]}","width":"291px"}, {}],
 					spacer3: ["wm.Spacer", {"height":"0px","width":"100%"}, {}],
 					text1: ["wm.Text", {"caption":"Search","displayValue":"","height":"30px","width":"257px"}, {}],
-					button1: ["wm.Button", {"caption":"Search","height":"30px","margin":"2,10,2,10","width":"90px"}, {}],
-					toggleButton3: ["wm.ToggleButton", {"captionDown":"Untoggle","captionUp":"Toggle","clicked":true,"height":"100%","width":"96px"}, {}]
+					button1: ["wm.Button", {"caption":"Search","height":"30px","margin":"","width":"90px"}, {}],
+					toggleButton3: ["wm.ToggleButton", {"captionDown":"Untoggle","captionUp":"Toggle","clicked":true,"height":"30px","margin":"0,10,0,10","width":"96px"}, {}]
 				}],
 				MainContentOuter: ["wm.Panel", {"border":"2","height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","margin":"15,0","verticalAlign":"top","width":"100%"}, {}, {
 					MainContentPanel: ["wm.MainContentPanel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","padding":"5","themeStyleType":"MainContent","verticalAlign":"top","width":"100%"}, {}, {
@@ -2339,32 +2339,31 @@ layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAli
 									panel5: ["wm.Panel", {"height":"100%","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 										text6: ["wm.Text", {"caption":"Search","displayValue":"","height":"30px","width":"257px"}, {}],
 										button5: ["wm.Button", {"caption":"Search","height":"30px","margin":"","width":"90px"}, {}],
-										toggleButton5: ["wm.ToggleButton", {"captionDown":"Untoggle","captionUp":"Toggle","clicked":true,"height":"30px","margin":"0,0,0,10","width":"110px"}, {}]
+										toggleButton5: ["wm.ToggleButton", {"captionDown":"Untoggle","captionUp":"Toggle","clicked":true,"height":"30px","margin":"0,10,0,10","width":"110px"}, {}]
 									}]
 								}],
 								panel2: ["wm.EmphasizedContentPanel", {"height":"120px","horizontalAlign":"center","margin":"20","padding":"5","verticalAlign":"middle","width":"100%"}, {}, {
-									panel6: ["wm.Panel", {"height":"30px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-										panel7: ["wm.Panel", {"height":"30px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-											label2: ["wm.Label", {"border":"0","caption":"Emphasized Content Panel:","height":"30px","width":"209px"}, {}, {
+									panel6: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+										panel7: ["wm.Panel", {"height":"100%","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
+											label2: ["wm.Label", {"border":"0","caption":"Emphasized Content Panel:","height":"30px","width":"100%"}, {}, {
 												format: ["wm.DataFormatter", {}, {}]
 											}],
-											spacer5: ["wm.Spacer", {"height":"48px","width":"100%"}, {}],
-											text7: ["wm.Text", {"caption":"Search","displayValue":"","height":"30px","width":"257px"}, {}],
+											text7: ["wm.Text", {"caption":"Search","displayValue":"","height":"30px","width":"248px"}, {}],
 											button6: ["wm.Button", {"caption":"Search","height":"30px","margin":"","width":"90px"}, {}],
-											toggleButton6: ["wm.ToggleButton", {"captionDown":"Untoggle","captionUp":"Toggle","clicked":true,"height":"30px","margin":"0,0,0,10","width":"110px"}, {}]
+											toggleButton6: ["wm.ToggleButton", {"captionDown":"Untoggle","captionUp":"Toggle","clicked":true,"height":"30px","margin":"0,10,0,10","width":"110px"}, {}]
 										}]
 									}]
 								}],
 								panel8: ["wm.HeaderContentPanel", {"height":"120px","horizontalAlign":"center","margin":"20","padding":"5","verticalAlign":"middle","width":"100%"}, {}, {
-									panel9: ["wm.Panel", {"height":"30px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-										panel10: ["wm.Panel", {"height":"30px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+									panel9: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
+										panel10: ["wm.Panel", {"height":"100%","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
 											label3: ["wm.Label", {"border":"0","caption":"Header Content Panel:","height":"30px","width":"209px"}, {}, {
 												format: ["wm.DataFormatter", {}, {}]
 											}],
 											spacer6: ["wm.Spacer", {"height":"48px","width":"100%"}, {}],
 											text8: ["wm.Text", {"caption":"Search","displayValue":"","height":"30px","width":"257px"}, {}],
 											button7: ["wm.Button", {"caption":"Search","height":"30px","margin":"","width":"90px"}, {}],
-											toggleButton7: ["wm.ToggleButton", {"captionDown":"Untoggle","captionUp":"Toggle","clicked":true,"height":"30px","margin":"0,0,0,10","width":"110px"}, {}]
+											toggleButton7: ["wm.ToggleButton", {"captionDown":"Untoggle","captionUp":"Toggle","clicked":true,"height":"30px","margin":"0,10,0,10","width":"110px"}, {}]
 										}]
 									}]
 								}]
@@ -2495,7 +2494,7 @@ layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAli
 								panel25: ["wm.Panel", {"height":"100%","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 									text9: ["wm.Text", {"caption":"Search","displayValue":"","height":"30px","width":"257px"}, {}],
 									button8: ["wm.Button", {"caption":"Search","height":"30px","margin":"","width":"90px"}, {}],
-									toggleButton8: ["wm.ToggleButton", {"captionDown":"Untoggle","captionUp":"Toggle","clicked":true,"height":"30px","margin":"0,0,0,10","width":"110px"}, {}]
+									toggleButton8: ["wm.ToggleButton", {"captionDown":"Untoggle","captionUp":"Toggle","clicked":true,"height":"30px","margin":"0,10,0,10","width":"110px"}, {}]
 								}]
 							}]
 						}],
