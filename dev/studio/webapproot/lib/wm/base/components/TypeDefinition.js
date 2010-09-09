@@ -72,13 +72,18 @@ wm.TypeDefinitionField.extend({
         }
 });
 
+wm.Object.extendSchema(wm.TypeDefinitionField, {
+    documentation: {ignore: true},
+    generateDocumentation: {ignore: true}
+});
+
 dojo.declare("wm.TypeDefinition", wm.Component, {
     internal: false,
     collection: "Fields",
     fields: null,
     init: function() {
 	this.inherited(arguments);
-	if (this.isDesignLoaded())
+	if (this.isDesignLoaded() && studio.application)
 	    this.setOwner(studio.application);
     },
     // not init; must wait for page loader to load all subcomponents (typedefinitionfields) which postInit waits for
