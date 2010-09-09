@@ -847,12 +847,13 @@ dojo.declare("ThemeDesigner", wm.Page, {
                 var newValue = (borderTemplate && borderProperty.match(/border$/i)) ? borderTemplate.replace(/\?/g, value) : value;
                 if (!this.themePrototype[widgetClassName]) 
                     this.themePrototype[widgetClassName] = {};
-                this.themePrototype[widgetClassName][borderProperty] = newValue;
-                var ctor = dojo.getObject(widgetClassName);
-                if (ctor && ctor.prototype) {
-                    studio.application.loadThemePrototypeForClass(ctor); // make sure the prototype is loaded before we start editting it
-                    if (widgetClassName != "wm.Panel" || borderProperty != "border") // never set the border for wm.Panel! borderColor is ok...
+                if (widgetClassName != "wm.Panel") {
+                    this.themePrototype[widgetClassName][borderProperty] = newValue;
+                    var ctor = dojo.getObject(widgetClassName);
+                    if (ctor && ctor.prototype) {
+                        studio.application.loadThemePrototypeForClass(ctor); // make sure the prototype is loaded before we start editting it
                         ctor.prototype[borderProperty] = newValue;
+                    }
                 }
             }
 

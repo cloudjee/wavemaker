@@ -17,7 +17,7 @@
  */ 
 
 ThemeDesigner.widgets = {  
-    "wm.Themes.EntryDataWithDescription": ["wm.TypeDefinition", {}, {}, {
+    "wm.Themes.EntryDataWithDescription": ["wm.TypeDefinition", {internal: true}, {}, {
         field1: ["wm.TypeDefinitionField", {type: "String", fieldName: "name"}],
         field2: ["wm.TypeDefinitionField", {type: "String", fieldName: "help"}],
         field3: ["wm.TypeDefinitionField", {type: "any", fieldName: "dataValue"}],
