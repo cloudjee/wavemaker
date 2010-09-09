@@ -34,7 +34,7 @@ dojo.declare("wm.studio.Project", null, {
 	finishNewProject: function(inResult) {
 		this.projectChanging();
 		this.createApplicationArtifacts();
-	        this.makeApplication({theme: "wm_basic"});
+	        this.makeApplication({theme: "wm_default"});
 		this.newPage(this.pageName);
 		this.saveProject(this.projectName);
 		this.projectChanged();
