@@ -580,6 +580,18 @@ dojo.declare("wm.Tree", wm.Box, {
 			}
 		}
 	},
+  findTreeNode: function(dataValue, inStartNode) { 
+      var n = inStartNode || this.root;
+      for (var i=0, k, c; (k=n.kids[i]); i++) {
+          if (dataValue == k.data)
+          return k;
+      else {
+          c = this.findTreeNode(dataValue, k);
+          if (c)
+            return c;
+          }
+      }                
+  },
 	findDomNode: function(inDomNode) {
 	  return this.root.findDomNode(inDomNode);
 	},
