@@ -115,8 +115,12 @@ dojo.declare("wm.Dialog", wm.Container, {
 	showing: false,
         dialogScrim: null,
 	modal: true,
+    init: function() {
+        this.inherited(arguments);
+	this.dialogScrim = new wm.Scrim({owner: this, _classes: {domNode: ["wmdialog-scrim"]}, waitCursor: false});
+	this.createTitle();
+    },
 	postInit: function() {
-		this.dialogScrim = new wm.Scrim({owner: this, _classes: {domNode: ["wmdialog-scrim"]}, waitCursor: false});
 		this.inherited(arguments);
 	    if (this.isDesignedComponent())
 		studio.designer.domNode.appendChild(this.domNode);
@@ -132,7 +136,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		this.domNode.style.display = "none";		
 		this._connections.push(this.connect(document, "onkeypress", this, "keyPress"));
 		this._subscriptions.push(dojo.subscribe("window-resize", this, "reflow"));	    
-	        this.createTitle();
+
 	    var containerWidget, containerNode;
 	    
 	    if (this.$.containerWidget)
@@ -142,9 +146,17 @@ dojo.declare("wm.Dialog", wm.Container, {
 
 	    if (this.useContainerWidget) {
 		if (!this.containerWidget) {
+                    for (var i = 0; i < this.c$.length; i++) {
+                        if (this.c$[i].name.match(/containerWidget/)) {
+                            this.containerWidget = c$[i];
+                            break;
+                        }
+                    }
+                }
+                if (!this.containerWidget) {
 	            containerWidget = new wm.Container({
 			_classes: {domNode: ["wmdialogcontainer", this.containerClass]}, 
-			name: "containerWidget",
+			name: owner.getUniqueName("containerWidget"),
 			parent: this,
 			owner: owner,
 			layoutKind: "top-to-bottom",
@@ -157,8 +169,6 @@ dojo.declare("wm.Dialog", wm.Container, {
 			horizontalAlign: "left",
 			verticalAlign: "top",
 			autoScroll: true});
-		} else {
-		    containerWidget = this.containerWidget;
 		}
 		containerNode = containerWidget.domNode;
 	    } else {
@@ -179,7 +189,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 						   width: "100%",
 						   height: "0px",
 						   fitToContentHeight: true,
-						   minHeight: 1,
+						   minHeight: (this.isDesignLoaded()) ? 5 : 1,
 						   horizontalAlign: "right",
 						   verticalAlign: "top",
 						   layoutKind: "left-to-right",
