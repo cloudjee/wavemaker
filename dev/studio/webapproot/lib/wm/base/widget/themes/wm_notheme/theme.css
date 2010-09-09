@@ -25,9 +25,20 @@
 	background: #ffffff none;
 }
 
-.wm_graphite button.wmtablayers-tab {
+.wm_notheme button.wmtablayers-tab {
     height: 26px; /* wm.TabLayers-Button_Height */
 }
 
 /* Custom CSS goes below this line */
 
+.wm_notheme .wmbutton {
+	background: #dfe5f1 repeat-x url(images/wmsb_btn_bg.png); 
+}
+
+.wm_notheme .wmsplitter-h {
+	background-image: url(images/splitter_bg_h.png);
+}
+
+.wm_notheme .wmsplitter-v {
+	background-image: url(images/splitter_bg_v.png);
+}
