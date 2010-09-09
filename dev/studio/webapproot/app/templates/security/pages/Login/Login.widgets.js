@@ -25,7 +25,7 @@ Login.widgets = {
 		    usernameInput: ["wm.Text", {caption: "Username", captionSize: "120px", layoutKind: "left-to-right", height: "28px"}],
 		    passwordInput: ["wm.Text", {caption: "Password", captionSize: "120px", layoutKind: "left-to-right", height: "28px", password: true}],
 		    loginButtonPanel: ["wm.Panel", {height: "50px", layoutKind: "left-to-right", border: "0", padding: "4", horizontalAlign: "right"}, {}, {
-		        loginErrorMsg: ["wm.Label", {align: "center", height: "100%", caption: " ", border: "0", singleLine: false}, {}, {
+		        loginErrorMsg: ["wm.Label", {align: "center", width: "100%", height: "100%", caption: " ", border: "0", singleLine: false}, {}, {
 			    format: ["wm.DataFormatter", {}, {}]
 			}],
                         loginButton: ["wm.Button", {caption: "Login", height: "100%", width: "90px"}, {onclick: "loginButtonClick"}]
