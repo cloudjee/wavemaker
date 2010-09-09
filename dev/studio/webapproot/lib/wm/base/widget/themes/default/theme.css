@@ -35,13 +35,20 @@
 
 .wmbutton {
         cursor: pointer;
-	background: #dfe5f1 repeat-x url(images/wmsb_btn_bg.png);
+/*	background: #dfe5f1 repeat-x url(images/wmsb_btn_bg.png); */
 	border: 1px solid #939fb6;
 	color: #294473;	
 }
 
 .wmbutton:hover {
     background: #cfd5e1 none;
+}
+
+.wmbutton.wmbutton-disabled {
+    opacity: 0.7;
+    -moz-box-shadow: 0px 0px 0px black !important; 
+    -webkit-box-shadow: 0px 0px 0px black !important;
+    box-shadow: 0px 0px 0px black !important;  
 }
 
 .wmtoolbutton {
@@ -105,7 +112,7 @@ th {
 }
 
 .wmsplitter-h {
-	background-image: url(images/splitter_bg_h.png);
+/*	background-image: url(images/splitter_bg_h.png);*/
 	border-top: none;
 	border-bottom: none;
 	cursor: e-resize;
@@ -114,7 +121,7 @@ th {
 }
 
 .wmsplitter-v {
-	background-image: url(images/splitter_bg_v.png);
+/*	background-image: url(images/splitter_bg_v.png);*/
 	border-left: none;
 	border-right: none;
 	cursor: n-resize;
