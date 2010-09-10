@@ -9,14 +9,14 @@ wm.DojoGrid.extend({
 	                {name:'Date',value:'dojox.grid.cells.DateTextBox'},
 	                {name:'Checkbox',value:'dojox.grid.cells.Bool'}	],
 	headerAttr: [{id:'show', title:' ',width:'2%', type:'checkbox'}, 
-				{id:'id', title: 'Field',width:'20%', type:'text', readOnly:true}, 
-				{id:'title', title: 'Title',width:'20%', type:'text'}, 
+				{id:'id', title: 'Field',width:'15%', type:'text', readOnly:true}, 
+				{id:'title', title: 'Title',width:'15%', type:'text'}, 
 				{id:'width', title: 'Width',width:'5%', type:'text'}, 
-				{id:'align', title: 'Alignment',width:'5%', type:'dropdown'},
-				{id:'formatFunc', title: 'Format',width:'5%', type:'dropdown'},
-				{id:'fieldType', title: 'Edit Field Type',width:'10%', type:'dropdown'},
-				{id:'editable', title:'Editable',width:'2%', type:'checkbox'}, 
-				{id:'expression', title: 'Data Expression',width:'20%', type:'text'}],
+				{id:'align', title: 'Alignment',width:'10%', type:'dropdown'},
+				{id:'formatFunc', title: 'Format',width:'15%', type:'dropdown'},
+				{id:'fieldType', title: 'Edit Field Type',width:'12%', type:'dropdown', isAdvanced:true},
+				{id:'editable', title:'Editable',width:'2%', type:'checkbox', isAdvanced:true}, 
+				{id:'expression', title: 'Data Expression',width:'20%', type:'text', isAdvanced:true}],
 	defaultFormatters:[	{name:'', value:''},
 											{name:'Date (WaveMaker)', value:'wm_date_formatter'},
 											{name:'Number (WaveMaker)', value:'wm_number_formatter'},
@@ -67,7 +67,11 @@ wm.DojoGrid.extend({
 		this.updateFormatterList();
 		this.contextMenu.show();
 	},
-	columnPropChanged: function(){
+	columnPropChanged: function(obj, columnId, inValue){
+		if (columnId && columnId == 'width' && !isNaN(dojo.number.parse(inValue))){
+				obj.width = inValue+'px';
+		}
+		
 		this.updateGridStructure();		
 	},
 	destroyColumn: function(){

@@ -72,12 +72,15 @@ dojo.declare("wm.ContextMenuDialog", null, {
 	createRightClickMenu: function(){
 		this.menu = new dijit.Dialog({title:this.dialogTitle},dojo.doc.createElement('div'));
 		if (this.helpText){
-			dojo.create('div', {innerHTML:this.helpText, style:'padding-left:5px;margin:5px;background:#FFF1A8;border:1px solid #DCDCDC;'}, this.menu.containerNode);
+			this.helpTextDiv = dojo.create('div', {innerHTML:this.helpText, style:'padding-left:5px;margin:5px;background:#FFF1A8;border:1px solid #DCDCDC;'}, this.menu.containerNode);
 		}
 		
 		this.createMenuHTML(this.headerAttr, this.dataSet);
 	},
 	createMenuHTML: function(headerAttr, rows){
+		this.hasAdvancedColumn = false;
+		this.isAdvancedHidden = true;
+		this.advancedColumns = [];
 		this.menuTable = dojo.doc.createElement('table');
 		this.menuTable.style.display = 'none';
 		var thead = dojo.doc.createElement('thead');
@@ -87,9 +90,13 @@ dojo.declare("wm.ContextMenuDialog", null, {
 		thead.appendChild(tr);
 		dojo.forEach(headerAttr, function(attr){
 			this.addHeaderColumn(tr, attr);
+			if (attr.isAdvanced)
+				this.hasAdvancedColumn = true;
 		}, this);
 
 		if (this.addDeleteColumn){
+			if (this.hasAdvancedColumn)
+				this.deleteButtonProps.isAdvanced = true;
 			this.addHeaderColumn(tr, this.deleteButtonProps);
 		}
 
@@ -102,6 +109,31 @@ dojo.declare("wm.ContextMenuDialog", null, {
 		}, this);
 
 		this.paintNewColumnButton();
+		if (this.hasAdvancedColumn)
+			this.addAdvancedProperties();
+	},
+	addAdvancedProperties: function(){
+		this.advancedButtonDiv = dojo.create('div', {style:'text-align:right;'}, this.menu.containerNode);
+		dojo.place(this.advancedButtonDiv, this.helpTextDiv, 'after');
+		this.advancedButton = new dijit.form.Button({label:'Show Advanced Properties >>'},dojo.create('div',{},this.advancedButtonDiv));
+		dojo.connect(this.advancedButton, 'onClick', this, 'toggleAdvancedProps');
+	},
+	toggleAdvancedProps: function(){
+		if (this.isAdvancedHidden) {
+			this.isAdvancedHidden = false;
+			dojo.forEach(this.advancedColumns, function(td){
+				td.style.display = '';
+			});
+			this.advancedButton.attr('label', '<< Hide Advanced Properties');
+		} else {
+			this.isAdvancedHidden = true;
+			dojo.forEach(this.advancedColumns, function(td){
+				td.style.display = 'none';
+			});
+			this.advancedButton.attr('label', 'Show Advanced Properties >>');
+		}
+		
+		this.menu._position();
 	},
 	addHeaderColumn: function(tr, attr){
 		var td = dojo.doc.createElement('td');
@@ -109,6 +141,10 @@ dojo.declare("wm.ContextMenuDialog", null, {
 		dojo.attr(td,'align','center');
 		td.innerHTML = attr.title;
 		tr.appendChild(td);
+		if (attr.isAdvanced){
+			td.style.display = 'none';
+			this.advancedColumns.push(td);
+		}
 	},
 	addNewRow: function(obj, headerAttr, tbody){
 		var tr = dojo.doc.createElement('tr');
@@ -158,6 +194,8 @@ dojo.declare("wm.ContextMenuDialog", null, {
 					break;
 				case 'dropdown':
 					var params = {value: obj[column.id] || '', autoComplete: false,store: column.dataStore, onChange: dojo.hitch(this, 'rowPropChanged', obj, column.id, tr), query:{}};
+					if (column.width) 
+						params.style = {width: '100%'};
 					widget = new dijit.form.FilteringSelect(params);
 				  	break;
 				default:
@@ -178,6 +216,10 @@ dojo.declare("wm.ContextMenuDialog", null, {
 			}
 			
 			tr.appendChild(td);
+			if (column.isAdvanced){
+				td.style.display = 'none';
+				this.advancedColumns.push(td);
+			}
 		} catch(e) {
 			console.info('Error while adding column: ', column, obj, e );
 		}
