@@ -78,7 +78,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	xMinorTickStep:1,
 
 	yAxis:'wmDefaultY',
-	yUpperRange:100,
+	yUpperRange:'',
 	chartColor:'',
 	includeX: true,
 	includeY:true,
@@ -360,7 +360,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 				dojo.mixin(yProp, fontProp);
 			if (this.yLowerRange)
 				yProp.min = this.yLowerRange;
-			if (this.yUpperRange)
+			if (this.yUpperRange && this.yUpperRange != '')
 				yProp.max = this.yUpperRange;
 			if (this.yMajorTickStep)
 				yProp.majorTickStep = this.yMajorTickStep;
@@ -634,23 +634,22 @@ wm.DojoChart.extend({
 	},
 	setXAxis: function(inValue){
 		this.xAxis = inValue;
-		this.addXAxis();
-		this.addSeries();
-		this.dojoRenderer();
+		this.renderDojoObj();
 	},
 	setYAxis: function(inValue){
 		this.yAxis = inValue;
-		this.addXAxis();
-		this.addSeries();
-		this.dojoRenderer();
+		this.renderDojoObj();
+	},
+	setYUpperRange: function(inValue){
+		this.yUpperRange = inValue;
+		this.renderDojoObj();
 	},
 	setChartColor: function(inValue){
 		if (inValue.indexOf(',') != -1 || this.chartType != 'Pie')
 			this.chartColor = inValue.split(',');
 		else
 			this.chartColor = inValue;
-		this.addSeries();
-		this.dojoRenderer();
+		this.renderDojoObj();
 	},
 	setTheme:function(inValue){
 		this.theme = inValue;
