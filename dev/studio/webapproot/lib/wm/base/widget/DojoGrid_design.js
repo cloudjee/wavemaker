@@ -3,6 +3,7 @@ dojo.require("wm.base.widget.DojoGrid");
 
 wm.DojoGrid.extend({
 	editColumns: "(Edit Columns)",
+    showAddDialog: "(Show Dialog)",
 	fieldOptions: [	{name:'Text',value:'dojox.grid.cells._Widget'},
 		           	{name:'Number',value:'dojox.grid.cells.NumberTextBox'},
 	                {name:'Date',value:'dojox.grid.cells.DateTextBox'},
@@ -198,6 +199,8 @@ wm.DojoGrid.extend({
 			return makeSelectPropEdit(inName, inValue, ["single", "multiple", "extended", "none"], inDefault);
 		case "editColumns":
 			return makeReadonlyButtonEdit(inName, inValue, inDefault);
+		   case "showAddDialog":
+		       return makeReadonlyButtonEdit(inName, inValue, inDefault);
 		}
 		return this.inherited(arguments);
 	},
@@ -205,6 +208,12 @@ wm.DojoGrid.extend({
 		switch (inName) {
 			case "editColumns":
 				return this.showMenuDialog();
+		        case "showAddDialog":
+		    if (this.addDialog)
+			this.addDialog.show();
+		    else
+			this.addDialogForInsert();
+		    return;
 		}
 		return this.inherited(arguments);
 	},
@@ -228,6 +237,7 @@ wm.Object.extendSchema(wm.DojoGrid, {
 	disabled:{ignore:1},
 	query: {ignore:1},
 	editColumns:{group: "edit", order:40},
+    showAddDialog:{group: "edit", order:40},
 	store:{ignore:1},
 	menu:{ignore:1},
 	storeGUID:{ignore:1},
@@ -240,5 +250,5 @@ wm.Object.extendSchema(wm.DojoGrid, {
 	addDialogName:{hidden:true},
 	addFormName:{hidden:true},
 	dsType:{hidden:true},
-	columns:{ignore:1}
+    columns:{ignore:1}
 });
