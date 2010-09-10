@@ -148,7 +148,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		if (!this.containerWidget) {
                     for (var i = 0; i < this.c$.length; i++) {
                         if (this.c$[i].name.match(/containerWidget/)) {
-                            this.containerWidget = c$[i];
+                            this.containerWidget = this.c$[i];
                             break;
                         }
                     }
