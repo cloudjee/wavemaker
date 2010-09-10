@@ -150,7 +150,8 @@ wm.DojoGrid.extend({
 				
 			if (!this.addDialog){
 				this.addDialogName = studio.page.getUniqueName(this.name+"_AddDialog");
-				this.addDialog = new wm.Dialog({width:320, height:95, name: this.addDialogName, 
+				this.addDialog = new wm.DesignableDialog({width:320, height:95, name: this.addDialogName, 
+									  fitToContentHeight: true,
 												border:2, borderColor: "rgb(80,80,80)", 
 												parent: this, owner: this, 
 												modal: false, animateSlide:true});
