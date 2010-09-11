@@ -108,8 +108,10 @@ wm.DojoGrid.extend({
 	getNewColumnId: function(cId){
 		if (!this.columnIds){
 			this.columnIds = {};
-			this.columnIds[cId] = true;
-			return cId;
+			dojo.forEach(this.columns, function(col){
+				if(col.id.indexOf(cId) != -1)
+					this.columnIds[col.id] = true;				
+			}, this);
 		}
 
 		if (!this.columnIds[cId]){

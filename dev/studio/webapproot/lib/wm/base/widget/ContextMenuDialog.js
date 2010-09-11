@@ -113,10 +113,17 @@ dojo.declare("wm.ContextMenuDialog", null, {
 			this.addAdvancedProperties();
 	},
 	addAdvancedProperties: function(){
+		this.destoryAdvancedPropertiesDiv();
 		this.advancedButtonDiv = dojo.create('div', {style:'text-align:right;'}, this.menu.containerNode);
 		dojo.place(this.advancedButtonDiv, this.helpTextDiv, 'after');
 		this.advancedButton = new dijit.form.Button({label:'Show Advanced Properties >>'},dojo.create('div',{},this.advancedButtonDiv));
 		dojo.connect(this.advancedButton, 'onClick', this, 'toggleAdvancedProps');
+	},
+	destoryAdvancedPropertiesDiv: function(){
+		if (!this.advancedButton)
+			return;
+		dojo.destroy(this.advancedButton);
+		dojo.destroy(this.advancedButtonDiv);
 	},
 	toggleAdvancedProps: function(){
 		if (this.isAdvancedHidden) {
@@ -217,8 +224,9 @@ dojo.declare("wm.ContextMenuDialog", null, {
 			
 			tr.appendChild(td);
 			if (column.isAdvanced){
-				td.style.display = 'none';
 				this.advancedColumns.push(td);
+				if (this.isAdvancedHidden)
+					td.style.display = 'none';
 			}
 		} catch(e) {
 			console.info('Error while adding column: ', column, obj, e );
