@@ -455,7 +455,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		this.columns = [];
 		var viewFields = this.getViewFields();
 		dojo.forEach(viewFields, function(f){
-			this.columns.push({show:true, id: f.dataIndex, title:wm.capitalize(f.dataIndex), width:'auto', displayType:f.displayType, noDelete:true});
+			this.columns.push({show:true, id: f.dataIndex, title:wm.capitalize(f.dataIndex), width:'auto', displayType:f.displayType, noDelete:true, align: f.displayType == 'Number' ? 'right':'left'});
 		}, this);
 		
 		if (this.isDesignLoaded())
