@@ -35,6 +35,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	addFormName:'',
 	columns:[],
 	selectFirstRow: false,
+	caseSensitiveSort:true,
 	
 	init: function() {
 		dojo['require']("dojox.grid.DataGrid");
@@ -389,7 +390,24 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			storeData.items[storeData.items.length] = dojo.mixin({},obj, dates);
 		}, this);
 		this.store = new dojo.data.ItemFileWriteStore({data: storeData});
+		if (!this.caseSensitiveSort)
+			this.makeSortingInsensitive();
 	},
+	makeSortingInsensitive: function(){
+		this.store.comparatorMap = {};
+		dojo.forEach(this.columns, function(col){
+			if (col.displayType == 'Text')
+				this.store.comparatorMap[col.id] = dojo.hitch(this, 'sortNoCase');
+		}, this);
+	},
+	sortNoCase: function(a,b){
+	  var a = a.toLowerCase();
+	  var b = b.toLowerCase();
+	                                        
+	  if (a>b) return 1;
+	  if (a<b) return -1;
+	  return 0;
+	},		
 	setQuery: function(q){
 		this.query = q;
 		if (this.dojoObj)
