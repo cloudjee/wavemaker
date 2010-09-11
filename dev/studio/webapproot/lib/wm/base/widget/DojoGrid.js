@@ -93,8 +93,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 				}
 			}
 		}
-            if (this.variable && this.variable.getData()) 
-            	    this.renderDojoObj();
+
+		if (this.variable && this.variable.getData()) 
+			this.renderDojoObj();
 	},
 	dataSetToSelectedItem: function() {
 		this.selectedItem.setLiveView((this.variable|| 0).liveView);
@@ -110,6 +111,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	  }
 	},
 	selectItemOnGrid: function(obj, pkList){
+		if (!this.store)
+			return;
 		if (obj instanceof wm.Variable)
 			obj = obj.getData();
 
@@ -305,12 +308,15 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			this.dojoObj.resize();
 	},
 	renderDojoObj: function() {
-	    if (this._cupdating)
+	  if (this._cupdating)
 			return;
 		if (this.dojoObj != null){
 			this.dojoObj.destroy();
+			this.dojoObj = null;
 		}
 
+		if (!this.variable)
+			return;
 		var structure = this.getStructure();
 		if (structure[0].length == 0)
 			structure = {};
