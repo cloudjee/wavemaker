@@ -125,7 +125,7 @@ public class EnhancedJdbcDaoImpl extends JdbcDaoImpl {
                 int tenantId = -1;
                 WMAppContext wmApp = WMAppContext.getInstance();
                 if (wmApp != null && wmApp.isMultiTenant()) {
-                    tenantId = rs.getInt(4);
+                    tenantId = rs.getInt(5);
                     wmApp.setTenantIdForUser(username, tenantId);
                 }
             } catch (WMRuntimeInitException ex) {}
