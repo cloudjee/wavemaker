@@ -185,7 +185,6 @@
           <file name="${hibernate.jar}"/>
           <file name="${hsql.jar}"/>
           <file name="${jaxb-impl.jar}"/>
-          <file name="${jaxws-api.jar}"/>
           <file name="${jaxws-rt.jar}"/>
           <file name="${jdom.jar}"/>
           <file name="${jta.jar}"/>
