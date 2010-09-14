@@ -172,7 +172,7 @@ dojo.require("dijit._editor.plugins.LinkDialog");
             return Boolean(this._ready && this.editor && this.editor.focusNode);
          },
          setDisabled: function() {
-             console.warn("wm.RichText.setDisabled is not supported");
+             wm.logging && console.warn("wm.RichText.setDisabled is not supported");
          },
 	getEditorValue: function() {
             try {
