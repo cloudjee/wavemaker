@@ -276,7 +276,10 @@ public class SecurityConfigService {
         if (uidProp != null) {
             options.setUidPropertyName(uidProp.getName());
         }
-        PropertyInfo pwProp = getProperty(properties, options.getPwColumnName());
+        System.out.println("PW:" + options.getPwColumnName());
+        String pw = options.getPwColumnName().replace(", 1","");
+        System.out.println("PW2:" + pw);
+        PropertyInfo pwProp = getProperty(properties, pw);
         if (pwProp != null) {
             options.setPwPropertyName(pwProp.getName());
         }

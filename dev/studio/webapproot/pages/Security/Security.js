@@ -26,16 +26,24 @@ dojo.declare("Security", wm.Page, {
 		this.populatingOptions = false;
 		this.subscribe("wm-project-changed", this, "studioProjectChanged");
 		this.update();
-		dojo.connect(dojo.byId("HelpUID"), "onclick", this, "showUIDHelp");
+		dojo.connect(dojo.byId("HelpUID1"), "onclick", this, "showUIDHelp1");
+		dojo.connect(dojo.byId("HelpUID2"), "onclick", this, "showUIDHelp2");
 	},
-	showUIDHelp: function() {
+	showUIDHelp1: function() {
 	    var bd = this.getHelpDialog();
-	    bd.page.setHeader("","Username (ID) Field");
+	    bd.page.setHeader("","Username Field");
 	    bd.sourceNode = this.databaseLayer.domNode;
 	    bd.positionNode = this.databaseLayer.domNode;
-	    bd.page.setContent("The field you select for 'Username ID Field' is what gets returned when you:<ol><li>create a new ServiceVariable</li><li>set its 'service' to 'securityService'</li><li>select the operation 'getUserName'</li></ol>  In other words, you can specify that your security service variable can get the user's username or email or unique id/foreign key, age, etc... based on your application's needs.");
+	    bd.page.setContent("Select the user name that the user will type in to log in.  Typically an email address or identifier that is based on the user's personal name.  You can find the value of the logged in user's username in your application by <ol><li>creating a new ServiceVariable</li><li>set its 'service' to 'securityService'</li><li>select the operation 'getUserName'</li></ol>");
 	    bd.show();
-
+	},
+	showUIDHelp2: function() {
+	    var bd = this.getHelpDialog();
+	    bd.page.setHeader("","User ID Field");
+	    bd.sourceNode = this.databaseLayer.domNode;
+	    bd.positionNode = this.databaseLayer.domNode;
+	    bd.page.setContent("Select the user ID that uniquely identifies the user in the database.  This is typically a number that the database has assigned to the user's entry in the database.  While you can use an email address, this tends to result in a database that bogs down badly as the size of your database goes up as this value is used by other database tables to identify the user account the data is associated with. You can  find out the ID when your project is running by <ol><li>creating a new ServiceVariable</li><li>set its 'service' to 'securityService'</li><li>select the operation 'getUserId'</li></ol>");
+	    bd.show();
 	},
 	getHelpDialog: function() {
 		if (!this.helpDialog) {
@@ -232,6 +240,7 @@ dojo.declare("Security", wm.Page, {
 	getDatabaseOptionsResult: function(inResponse) {
 		this.databaseOptions = inResponse;
 		this.dbDataModelInput.setDataValue(inResponse.modelName);
+                this.dbDataModelInput.editor.changed();
 	},
 	populateLDAPOptions: function() {
 		studio.securityConfigService.requestSync("getLDAPOptions", null, 
@@ -499,7 +508,7 @@ dojo.declare("Security", wm.Page, {
 			this.updateSelect(this.tenantIdField, pnames);
 			this.dbUsernameInput.setDataValue(this.databaseOptions.unamePropertyName);
 			this.dbUseridInput.setDataValue(this.databaseOptions.uidPropertyName);
-			this.dbPasswordInput.setDataValue(this.databaseOptions.pwPropertyName);
+		    this.dbPasswordInput.setDataValue(this.databaseOptions.pwPropertyName || this.databaseOptions.pwColumnName.replace(/,.*$/,""));
 			this.dbRoleInput.setDataValue(this.databaseOptions.rolePropertyName);
 			this.tenantIdField.setDataValue(this.databaseOptions.tenantIdField); //xxx
 			this.defTenantId.setDataValue(this.databaseOptions.defTenantId || ""); //xxx

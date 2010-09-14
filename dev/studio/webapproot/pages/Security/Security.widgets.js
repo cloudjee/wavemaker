@@ -86,10 +86,10 @@ Security.widgets = {
 							dbEntityInput: ["wm.Editor", {"caption":"Entity","emptyValue":"null","height":"20px","display":"Select"}, {"onchange":"dbEntityInputChange"}, {
 								editor: ["wm._SelectEditor", {}, {}]
 							}],
-							dbUsernameInput: ["wm.Editor", {"caption":"Username Field","emptyValue":"null","height":"20px","display":"Select"}, {}, {
+							dbUsernameInput: ["wm.Editor", {"caption":"Username Field <span style='cursor:pointer;font-weight:bold;color: black;' id='HelpUID1'>?</a>","emptyValue":"null","height":"20px","display":"Select"}, {}, {
 								editor: ["wm._SelectEditor", {}, {}]
 							}],
-							dbUseridInput: ["wm.Editor", {"caption":"Username ID Field <span style='cursor:pointer;font-weight:bold;color: black;' id='HelpUID'>?</a>","emptyValue":"null","height":"20px","display":"Select"}, {}, {
+							dbUseridInput: ["wm.Editor", {"caption":"User ID Field <span style='cursor:pointer;font-weight:bold;color: black;' id='HelpUID2'>?</a>","emptyValue":"null","height":"20px","display":"Select"}, {}, {
 								editor: ["wm._SelectEditor", {}, {}]
 							}],
 							dbPasswordInput: ["wm.Editor", {"caption":"Password Field","emptyValue":"null","height":"20px","display":"Select"}, {}, {
