@@ -513,6 +513,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		return fields;
 	},
 	_onClick: function(evt){
+		if (!evt.grid)
+			return;
 		var cellNode = evt.cellNode;
 		var rowNode = evt.rowNode;
 		var selectedItem = this.selectedItem;
