@@ -268,10 +268,10 @@ body.wm_template {
     font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
 
     /* Document-ClickablesDefault-Background */
-    background-color: #444444; /* Document-ClickablesDefault-Background_Color */
-    background-image: url(images/threeD.png); /* Document-ClickablesDefault-Background_Image */
-    background-position: left top;  /* Document-ClickablesDefault-Background_Image-Position */
-    background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
+    background-color: #444444; /* Document-ClickablesActive-Background_Color */
+    background-image: url(images/threeD.png); /* Document-ClickablesActive-Background_Image */
+    background-position: left top;  /* Document-ClickablesActive-Background_Image-Position */
+    background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
 }
 
     /* Tab buttons */
@@ -445,18 +445,19 @@ body.wm_template {
 
 
 
-.wm_template .MainContent .wmfancypanel .wmFancyPanel-labelWidget {
+.wm_template .MainContent .wmfancypanel .wmFancyPanel-labelWidget,
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .MainContent .wmfancypanel .wmFancyPanel-labelWidget  {
     /* MainContent-ClickablesDefault-Font */
     font-family: sans-serif; /* MainContent-ClickablesDefault-Font_Family */
     font-size: 12pt; /* MainContent-ClickablesDefault-Font_TextSize */
     color: #FFFFFF; /* MainContent-ClickablesDefault-Font_Color */
     font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
 
-    /* MainContent-ClickablesDefault-Background */
-    background-color: #444444; /* MainContent-ClickablesDefault-Background_Color */
-    background-image: url(images/threeD.png); /* MainContent-ClickablesDefault-Background_Image */
-    background-position: left top;  /* MainContent-ClickablesDefault-Background_Image-Position */
-    background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
+    /* MainContent-ClickablesActive-Background */
+    background-color: #444444; /* MainContent-ClickablesActive-Background_Color */
+    background-image: url(images/threeD.png); /* MainContent-ClickablesActive-Background_Image */
+    background-position: left top;  /* MainContent-ClickablesActive-Background_Image-Position */
+    background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
 }
 
     /* BEGIN SECTION wm.TabLayers / wm.TabDecorator */
@@ -616,18 +617,19 @@ body.wm_template {
 
 
 
-.wm_template .EmphasizedContent .wmfancypanel .wmFancyPanel-labelWidget {
+.wm_template .EmphasizedContent .wmfancypanel .wmFancyPanel-labelWidget,
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .EmphasizedContent .wmfancypanel .wmFancyPanel-labelWidget  {
     /* EmphasizedContent-ClickablesDefault-Font */
     font-family: sans-serif; /* EmphasizedContent-ClickablesDefault-Font_Family */
     font-size: 12pt; /* EmphasizedContent-ClickablesDefault-Font_TextSize */
     color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
     font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
 
-    /* EmphasizedContent-ClickablesDefault-Background */
-    background-color: #444444; /* EmphasizedContent-ClickablesDefault-Background_Color */
-    background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
-    background-position: left top;  /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
-    background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
+    /* EmphasizedContent-ClickablesActive-Background */
+    background-color: #444444; /* EmphasizedContent-ClickablesActive-Background_Color */
+    background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesActive-Background_Image */
+    background-position: left top;  /* EmphasizedContent-ClickablesActive-Background_Image-Position */
+    background-repeat: repeat-x; /* EmphasizedContent-ClickablesActive-Background_Image-Repeat */
 }
 
     /* BEGIN SECTION wm.TabLayers / wm.TabDecorator */
@@ -786,18 +788,19 @@ body.wm_template {
 
 
 
-.wm_template .HeaderContent .wmfancypanel .wmFancyPanel-labelWidget {
+.wm_template .HeaderContent .wmfancypanel .wmFancyPanel-labelWidget,
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .HeaderContent .wmfancypanel .wmFancyPanel-labelWidget  {
     /* HeaderContent-ClickablesDefault-Font */
     font-family: sans-serif; /* HeaderContent-ClickablesDefault-Font_Family */
     font-size: 12pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
     color: #FFFFFF; /* HeaderContent-ClickablesDefault-Font_Color */
     font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
 
-    /* HeaderContent-ClickablesDefault-Background */
-    background-color: #444444; /* HeaderContent-ClickablesDefault-Background_Color */
-    background-image: url(images/threeD.png); /* HeaderContent-ClickablesDefault-Background_Image */
-    background-position: left top;  /* HeaderContent-ClickablesDefault-Background_Image-Position */
-    background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
+    /* HeaderContent-ClickablesActive-Background */
+    background-color: #444444; /* HeaderContent-ClickablesActive-Background_Color */
+    background-image: url(images/threeD.png); /* HeaderContent-ClickablesActive-Background_Image */
+    background-position: left top;  /* HeaderContent-ClickablesActive-Background_Image-Position */
+    background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
 }
 
     /* BEGIN SECTION wm.TabLayers / wm.TabDecorator */

@@ -313,7 +313,7 @@ body .wm_graphite input:focus,
 	/* HeaderContent-ClickablesDefault-Background */
 	background-color: #999999; /* HeaderContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
-	background-position: top left;  /* HeaderContent-ClickablesDefault-Background_Image-Position */
+	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
     }
     /**************************************************************************************************
@@ -327,7 +327,7 @@ body .wm_graphite input:focus,
 	/* HeaderContent-ClickablesActive-Background */
 	background-color: #ffffff; /* HeaderContent-ClickablesActive-Background_Color */
 	background-image: url(images/repeatx/greyEdge2.png); /* HeaderContent-ClickablesActive-Background_Image */
-	background-position: top left;  /* HeaderContent-ClickablesActive-Background_Image-Position */
+	background-position: top left; /* HeaderContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
 	-moz-box-shadow: 0px 0px 0px #444444; /* HeaderContent-ClickablesActive-BorderStyle_Shadow */
 	-webkit-box-shadow: 0px 0px 0px #444444; /* HeaderContent-ClickablesActive-BorderStyle_Shadow */
@@ -347,7 +347,7 @@ body .wm_graphite input:focus,
 	/* HeaderContent-ClickablesHover-Background */
 	background-color: #cccccc; /* HeaderContent-ClickablesHover-Background_Color */
 	background-image: url(images/repeatx/brightEdge4.png); /* HeaderContent-ClickablesHover-Background_Image */
-	background-position: top left;  /* HeaderContent-ClickablesHover-Background_Image-Position */
+	background-position: top left; /* HeaderContent-ClickablesHover-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesHover-Background_Image-Repeat */
 	/* HeaderContent-ClickablesHover-BorderStyle_Shadow */
 	-moz-box-shadow: 1px 1px 1px #000000; /* HeaderContent-ClickablesHover-BorderStyle_Shadow */
@@ -465,7 +465,7 @@ body .wm_graphite input:focus,
     /* Dialogs-Styles-Background */
     background-color: #333333; /* Dialogs-Styles-Background_Color */
     background-image: url(images/repeatx/brightEdge0.png); /* Dialogs-Styles-Background_Image */
-    background-position: top left;  /* Dialogs-Styles-Background_Image-Position */
+    background-position: top left; /* Dialogs-Styles-Background_Image-Position */
     background-repeat: repeat-x; /* Dialogs-Styles-Background_Image-Repeat */
 }
 .wm_graphite .dialogtitlebar {
@@ -493,7 +493,7 @@ body .wm_graphite input:focus,
     /* Dialogs-Styles-Background */
     background-color: #333333; /* Dialogs-Styles-Background_Color */
     /*background-image: url(images/threeD.png); / * Dialogs-Styles-Background_Image * / */
-    background-position: top left;  /* Dialogs-Styles-Background_Image-Position */
+    background-position: top left; /* Dialogs-Styles-Background_Image-Position */
     background-repeat: repeat-x; /* Dialogs-Styles-Background_Image-Repeat */
     /* Automatically calculated to be 2px less than MainContent-Styles-Border_Style-Radius */
     -moz-border-radius-bottomleft: 2px; /* wm.Dialog_Inner-Radius */
@@ -514,7 +514,7 @@ body .wm_graphite .dialogtitlebar .wmbutton {
     /* Dialogs-TitleButtonsDefault-Background */
     background-color: #666666; /* Dialogs-TitleButtonsDefault-Background_Color */
     background-image: url(images/repeatx/brightEdge1.png); /* Dialogs-TitleButtonsDefault-Background_Image */
-    background-position: top left;  /* Dialogs-TitleButtonsDefault-Background_Image-Position */
+    background-position: top left; /* Dialogs-TitleButtonsDefault-Background_Image-Position */
     background-repeat: repeat-x; /* Dialogs-TitleButtonsDefault-Background_Image-Repeat */
     color: #ffffff; /* Dialogs-TitleButtonsDefault-Font_Color */
     /* Not customizable yet; the "X" and "-" must fit somewhat precisely, so I don't like users messing with this unless
@@ -546,7 +546,7 @@ body .wm_graphite .dialogfooter .wmbutton {
     /* Dialogs-FooterButtonsDefault-Background */
     background-color: #666666; /* Dialogs-FooterButtonsDefault-Background_Color */
     background-image: url(images/repeatx/brightEdge1.png); /* Dialogs-FooterButtonsDefault-Background_Image */
-    background-position: top left;  /* Dialogs-FooterButtonsDefault-Background_Image-Position */
+    background-position: top left; /* Dialogs-FooterButtonsDefault-Background_Image-Position */
     background-repeat: repeat-x; /* Dialogs-FooterButtonsDefault-Background_Image-Repeat */
     -moz-box-shadow: 3px 3px 3px #000000; /* Dialogs-FooterButtonsDefault-BorderStyle_Shadow */
     -webkit-box-shadow: 3px 3px 3px #000000; /* Dialogs-FooterButtonsDefault-BorderStyle_Shadow */
@@ -564,7 +564,7 @@ body .wm_graphite .dialogtitlebar .wmbutton:hover {
     /* Dialogs-TitleButtonsHover-Background */
     background-color: #7a7a7a; /* Dialogs-TitleButtonsHover-Background_Color */
     background-image: url(images/repeatx/brightEdge2.png); /* Dialogs-TitleButtonsHover-Background_Image */
-    background-position: top left;  /* Dialogs-TitleButtonsHover-Background_Image-Position */
+    background-position: top left; /* Dialogs-TitleButtonsHover-Background_Image-Position */
     background-repeat: repeat-x; /* Dialogs-TitleButtonsHover-Background_Image-Repeat */
     -moz-box-shadow: 0px 0px 0px #444444; /* Dialogs-TitleButtonsHover-BorderStyle_Shadow */
     -webkit-box-shadow: 0px 0px 0px #444444; /* Dialogs-TitleButtonsHover-BorderStyle_Shadow */
@@ -577,7 +577,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     /* Dialogs-FooterButtonsHover-Background */
     background-color: #7a7a7a; /* Dialogs-FooterButtonsHover-Background_Color */
     background-image: url(images/repeatx/brightEdge1.png); /* Dialogs-FooterButtonsHover-Background_Image */
-    background-position: top left;  /* Dialogs-FooterButtonsHover-Background_Image-Position */
+    background-position: top left; /* Dialogs-FooterButtonsHover-Background_Image-Position */
     background-repeat: repeat-x; /* Dialogs-FooterButtonsHover-Background_Image-Repeat */
 `
     -moz-box-shadow: 1px 1px 1px #000000; /* Dialogs-FooterButtonsHover-BorderStyle_Shadow */
@@ -885,7 +885,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     .wm_graphite .HeaderContent .dijitTimePickerItem,
     .wm_graphite .HeaderContent .wmeditor .RichTextEditable iframe {
 	/* HeaderContent-EditorsDefault-Border */
-	border-color: #333333;  /* HeaderContent-EditorsDefault-Border_Color */
+	border-color: #333333; /* HeaderContent-EditorsDefault-Border_Color */
 	border-width: 1px; /* HeaderContent-EditorsDefault-Border_BorderSize */
 	/* HeaderContent-EditorsDefault-Font */
 	font-family: Arial; /* HeaderContent-EditorsDefault-Font_Family */
@@ -895,7 +895,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
 	/* HeaderContent-EditorsDefault-Background */
 	background-color: #888888; /* HeaderContent-EditorsDefault-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-EditorsDefault-Background_Image */
-	background-position: top left;  /* HeaderContent-EditorsDefault-Background_Image-Position */
+	background-position: top left; /* HeaderContent-EditorsDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-EditorsDefault-Background_Image-Repeat */
     }
     .wm_graphite .HeaderContent .wmeditor .dijitTextBox.dijitHover,
@@ -906,11 +906,11 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     .wm_graphite .HeaderContent .dijitTimePickerItem.dijitTimePickerItemHover {
 	/* HeaderContent-EditorsHover-Font */
 	color: #000000; /* HeaderContent-EditorsHover-Font_Color */
-	border-color: #333333;  /* HeaderContent-EditorsHover-Border_Color */
+	border-color: #333333; /* HeaderContent-EditorsHover-Border_Color */
 	/* HeaderContent-EditorsHover-Background */
 	background-color: #bbbbbb; /* HeaderContent-EditorsHover-Background_Color */
 	background-image: url(images/repeatx/brightEdge3.png); /* HeaderContent-EditorsHover-Background_Image */
-	background-position: top left;  /* HeaderContent-EditorsHover-Background_Image-Position */
+	background-position: top left; /* HeaderContent-EditorsHover-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-EditorsHover-Background_Image-Repeat */
     }
     .wm_graphite .HeaderContent .wmeditor .dijitTextBox.dijitFocused,
@@ -922,11 +922,11 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     .wm_graphite .HeaderContent .wmeditor .RichTextEditable.Focused iframe {
 	/* HeaderContent-EditorsFocus-Font */
 	color: #000000; /* HeaderContent-EditorsFocus-Font_Color */
-	border-color: #000000;  /* HeaderContent-EditorsFocus-Border_Color */
+	border-color: #000000; /* HeaderContent-EditorsFocus-Border_Color */
 	/* HeaderContent-EditorsFocus-Background */
 	background-color: #ffffff; /* HeaderContent-EditorsFocus-Background_Color */
 	background-image: none; /* HeaderContent-EditorsFocus-Background_Image */
-	background-position: top left;  /* HeaderContent-EditorsFocus-Background_Image-Position */
+	background-position: top left; /* HeaderContent-EditorsFocus-Background_Image-Position */
 	background-repeat: no-repeat; /* HeaderContent-EditorsFocus-Background_Image-Repeat */
     }
     /* END inner content panel editors */
@@ -1039,33 +1039,33 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
 	border-right-width: 1px; /* Tables-EvenRows-Border_BorderSize */
 	border-right-style: solid;
 	border-right-color: #aaaaaa; /* Tables-EvenRows-Border_Color */
-	/* Document-ClickablesActive-Font */
-	font-family: sans-serif; /* Document-ClickablesActive-Font_Family */
+	/* Document-ClickablesDefault-Font */
+	font-family: Arial; /* Document-ClickablesDefault-Font_Family */
 	/* Adjust size when we figure out a good way to adjust the height of the header */
 	font-size: 10pt; /* Tables-EvenRows-Font_TextSize */
 	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* Document-ClickablesActive-Font_Weight */
+	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
     }
     .wm_graphite div.dojoxGridHeader .dojoxGridCell {
-	background-color: #666666; /* Document-ClickablesActive-Background_Color */
-	background-image: url(images/repeatx/greyEdge4.png); /* Document-ClickablesActive-Background_Image */
-	background-position: top left; /* Document-ClickablesActive-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
-	/* Document-ClickablesActive-Font */
-	font-family: sans-serif; /* Document-ClickablesActive-Font_Family */
-	/*font-size: 12pt;  Clickables-Active-Font_TextSize */
-	color: #ffffff; /* Document-ClickablesActive-Font_Color */
-	font-weight: bold; /* Document-ClickablesActive-Font_Weight */
+	background-color: #444444; /* Document-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/greyEdge3.png); /* Document-ClickablesDefault-Background_Image */
+	background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
+	/* Document-ClickablesDefault-Font */
+	font-family: Arial; /* Document-ClickablesDefault-Font_Family */
+	/*font-size: 12pt;  Clickables-Default-Font_TextSize */
+	color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
+	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
     }
     /* Header-Row-Background */
     .wm_graphite .dojoxGrid-header, 
     .wm_graphite .dojoxGridHeader,
     .wm_graphite .wmlist-header {
-	color: #ffffff; /* Document-ClickablesActive-Font_Color */
-	background-color: #666666; /* Document-ClickablesActive-Background_Color */
-	background-image: url(images/threeD.png); /* Document-ClickablesActive-Background-Image */
-	background-position: left top;     /* Document-ClickablesActive-Image-Position */
-	background-repeat: repeat-x;    /* Document-ClickablesActive-Image-Repeat */
+	color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
+	background-color: #444444; /* Document-ClickablesDefault-Background_Color */
+	background-image: url(images/threeD.png); /* Document-ClickablesDefault-Background-Image */
+	background-position: left top;     /* Document-ClickablesDefault-Image-Position */
+	background-repeat: repeat-x;    /* Document-ClickablesDefault-Image-Repeat */
     }
 }
 @media screen { /* MainContent-Level */ 
@@ -1106,32 +1106,32 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     .wm_graphite .MainContent div.dojoxGridHeader .dojoxGridCell
     {
 	background: inherit; /* see Header.dojoxGrid-header below */
-	/* MainContent-ClickablesActive-Font */
-	font-family: sans-serif; /* MainContent-ClickablesActive-Font_Family */
+	/* MainContent-ClickablesDefault-Font */
+	font-family: Arial; /* MainContent-ClickablesDefault-Font_Family */
 	/*    font-size: 12pt;  Clickables-Default-Font_TextSize */
 	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* MainContent-ClickablesActive-Font_Weight */
+	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
     }
     .wm_graphite .MainContent div.dojoxGridHeader .dojoxGridCell {
-	background-color: #666666; /* MainContent-ClickablesActive-Background_Color */
-	background-image: url(images/repeatx/greyEdge4.png); /* MainContent-ClickablesActive-Background_Image */
-	background-position: top left; /* MainContent-ClickablesActive-Background_Image-Position */
-	background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
-	/* MainContent-ClickablesActive-Font */
-	font-family: sans-serif; /* MainContent-ClickablesActive-Font_Family */
+	background-color: #444444; /* MainContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/greyEdge3.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
+	/* MainContent-ClickablesDefault-Font */
+	font-family: Arial; /* MainContent-ClickablesDefault-Font_Family */
 	/*font-size: 12pt;  Clickables-Default-Font_TextSize */
-	color: #ffffff; /* MainContent-ClickablesActive-Font_Color */
-	font-weight: bold; /* MainContent-ClickablesActive-Font_Weight */
+	color: #FFFFFF; /* MainContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
     }
     /* Header-Row-Background */
     .wm_graphite .MainContent .dojoxGrid-header, 
     .wm_graphite .MainContent .dojoxGridHeader,
     .wm_graphite .MainContent .wmlist-header {
-	color: #ffffff; /* MainContent-ClickablesActive-Font_Color */
-	background-color: #666666; /* MainContent-ClickablesActive-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-ClickablesActive-Background-Image */
-	background-position: left top;     /* MainContent-ClickablesActive-Image-Position */
-	background-repeat: repeat-x;    /* MainContent-ClickablesActive-Image-Repeat */
+	color: #FFFFFF; /* MainContent-ClickablesDefault-Font_Color */
+	background-color: #444444; /* MainContent-ClickablesDefault-Background_Color */
+	background-image: url(images/threeD.png); /* MainContent-ClickablesDefault-Background-Image */
+	background-position: left top;     /* MainContent-ClickablesDefault-Image-Position */
+	background-repeat: repeat-x;    /* MainContent-ClickablesDefault-Image-Repeat */
     }
 }
 @media screen { /* EmphasizedContent-Level */ 
@@ -1172,32 +1172,32 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     .wm_graphite .EmphasizedContent div.dojoxGridHeader .dojoxGridCell
     {
 	background: inherit; /* see Header.dojoxGrid-header below */
-	/* EmphasizedContent-ClickablesActive-Font */
-	font-family: sans-serif; /* EmphasizedContent-ClickablesActive-Font_Family */
+	/* EmphasizedContent-ClickablesDefault-Font */
+	font-family: Arial; /* EmphasizedContent-ClickablesDefault-Font_Family */
 	/*    font-size: 12pt;  Clickables-Default-Font_TextSize */
 	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* EmphasizedContent-ClickablesActive-Font_Weight */
+	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
     }
     .wm_graphite .EmphasizedContent div.dojoxGridHeader .dojoxGridCell {
-	background-color: #666666; /* EmphasizedContent-ClickablesActive-Background_Color */
-	background-image: url(images/repeatx/greyEdge4.png); /* EmphasizedContent-ClickablesActive-Background_Image */
-	background-position: top left; /* EmphasizedContent-ClickablesActive-Background_Image-Position */
-	background-repeat: repeat-x; /* EmphasizedContent-ClickablesActive-Background_Image-Repeat */
-	/* EmphasizedContent-ClickablesActive-Font */
-	font-family: sans-serif; /* EmphasizedContent-ClickablesActive-Font_Family */
+	background-color: #444444; /* EmphasizedContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/greyEdge3.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
+	/* EmphasizedContent-ClickablesDefault-Font */
+	font-family: Arial; /* EmphasizedContent-ClickablesDefault-Font_Family */
 	/*font-size: 12pt;  Clickables-Default-Font_TextSize */
-	color: #ffffff; /* EmphasizedContent-ClickablesActive-Font_Color */
-	font-weight: bold; /* EmphasizedContent-ClickablesActive-Font_Weight */
+	color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
     }
     /* Header-Row-Background */
     .wm_graphite .EmphasizedContent .dojoxGrid-header, 
     .wm_graphite .EmphasizedContent .dojoxGridHeader,
     .wm_graphite .EmphasizedContent .wmlist-header {
-	color: #ffffff; /* EmphasizedContent-ClickablesActive-Font_Color */
-	background-color: #666666; /* EmphasizedContent-ClickablesActive-Background_Color */
-	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesActive-Background-Image */
-	background-position: left top;     /* EmphasizedContent-ClickablesActive-Image-Position */
-	background-repeat: repeat-x;    /* EmphasizedContent-ClickablesActive-Image-Repeat */
+	color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
+	background-color: #444444; /* EmphasizedContent-ClickablesDefault-Background_Color */
+	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesDefault-Background-Image */
+	background-position: left top;     /* EmphasizedContent-ClickablesDefault-Image-Position */
+	background-repeat: repeat-x;    /* EmphasizedContent-ClickablesDefault-Image-Repeat */
     }
 }
 @media screen { /* HeaderContent-Level */ 
@@ -1238,32 +1238,32 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     .wm_graphite .HeaderContent div.dojoxGridHeader .dojoxGridCell
     {
 	background: inherit; /* see Header.dojoxGrid-header below */
-	/* HeaderContent-ClickablesActive-Font */
-	font-family: sans-serif; /* HeaderContent-ClickablesActive-Font_Family */
+	/* HeaderContent-ClickablesDefault-Font */
+	font-family: Arial; /* HeaderContent-ClickablesDefault-Font_Family */
 	/*    font-size: 12pt;  Clickables-Default-Font_TextSize */
 	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* HeaderContent-ClickablesActive-Font_Weight */
+	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
     }
     .wm_graphite .HeaderContent div.dojoxGridHeader .dojoxGridCell {
-	background-color: #ffffff; /* HeaderContent-ClickablesActive-Background_Color */
-	background-image: url(images/repeatx/greyEdge2.png); /* HeaderContent-ClickablesActive-Background_Image */
-	background-position: top left;  /* HeaderContent-ClickablesActive-Background_Image-Position */
-	background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
-	/* HeaderContent-ClickablesActive-Font */
-	font-family: sans-serif; /* HeaderContent-ClickablesActive-Font_Family */
+	background-color: #999999; /* HeaderContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
+	/* HeaderContent-ClickablesDefault-Font */
+	font-family: Arial; /* HeaderContent-ClickablesDefault-Font_Family */
 	/*font-size: 12pt;  Clickables-Default-Font_TextSize */
-	color: #000000; /* HeaderContent-ClickablesActive-Font_Color */
-	font-weight: bold; /* HeaderContent-ClickablesActive-Font_Weight */
+	color: #000000; /* HeaderContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
     }
     /* Header-Row-Background */
     .wm_graphite .HeaderContent .dojoxGrid-header, 
     .wm_graphite .HeaderContent .dojoxGridHeader,
     .wm_graphite .HeaderContent .wmlist-header {
-	color: #000000;	/* HeaderContent-ClickablesActive-Font_Color */
-	background-color: #ffffff; /* HeaderContent-ClickablesActive-Background_Color */
-	background-image: url(images/threeD.png); /* HeaderContent-ClickablesActive-Background-Image */
-	background-position: left top;     /* HeaderContent-ClickablesActive-Image-Position */
-	background-repeat: repeat-x;    /* HeaderContent-ClickablesActive-Image-Repeat */
+	color: #000000; /* HeaderContent-ClickablesDefault-Font_Color */
+	background-color: #999999; /* HeaderContent-ClickablesDefault-Background_Color */
+	background-image: url(images/threeD.png); /* HeaderContent-ClickablesDefault-Background-Image */
+	background-position: left top;     /* HeaderContent-ClickablesDefault-Image-Position */
+	background-repeat: repeat-x;    /* HeaderContent-ClickablesDefault-Image-Repeat */
     }
 }
 /*****************************************
@@ -1366,7 +1366,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
 	/* HeaderContent-ClickablesDefault-Font */
 	font-family: Arial; /* HeaderContent-ClickablesDefault-Font_Family */
 	font-size: 10pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
-	color: #FFFFFF; /* HeaderContent-Style-Font_Color */
+	color: #ffffff; /* HeaderContent-Styles-Font_Color */
 	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
 	/* HeaderContent-ClickablesDefault-Background */
 	background-color: transparent;
@@ -1388,12 +1388,12 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     body.wm_graphite .HeaderContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
     body .wm_graphite .HeaderContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
 	/* HeaderContent-ClickablesHover-Font */
-	color: #FFFFFF; /* HeaderContent-Style-Font_Color */
+	color: #ffffff; /* HeaderContent-Styles-Font_Color */
 	/* HeaderContent-ClickablesHover-Background */
 	background-color: transparent;
         opacity: 0.8;
 	background-image: none; 
-	background-position: top left;  /* HeaderContent-ClickablesDefault-Background_Image-Position */
+	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
 	outline-width: 0;
     }
@@ -1505,15 +1505,15 @@ body .wm_graphite ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected
 .wm_graphite .wmtablayers-tab:hover, .wm_graphite .wmtablayers-tab:focus {
     /* wm.TabLayers-HoverShadow */
     -moz-box-shadow: 3px 0px 3px #444444; /* wm.TabLayers-BorderStyle_Shadow */
-    -webkit-box-shadow: 1px 0px 1px #444444;   /* wm.TabLayers-Hover-BorderStyle_Shadow */
+    -webkit-box-shadow: 1px 0px 1px #444444; /* wm.TabLayers-Hover-BorderStyle_Shadow */
     box-shadow: 1px 0px 1px #444444;   /* wm.TabLayers-Hover-BorderStyle-Shadow */
 }
 .wm_graphite .wmtablayers-tab.wmtablayers-selected,
 .wm_graphite .wmtablayers-tab.wmtablayers-selected:hover,
 .wm_graphite .wmtablayers-tab.wmtablayers-selected:focus {
-    -moz-box-shadow: 3px 0px 3px #444444;  /* wm.TabLayers-Active-BorderStyle_Shadow */
-    -webkit-box-shadow: 3px 0px 3px #444444;   /* wm.TabLayers-Active-BorderStyle_Shadow */
-    box-shadow: 3px 0px 3px #444444;   /* wm.TabLayers-Active-BorderStyle_Shadow */
+    -moz-box-shadow: 3px 0px 3px #444444; /* wm.TabLayers-Active-BorderStyle_Shadow */
+    -webkit-box-shadow: 3px 0px 3px #444444; /* wm.TabLayers-Active-BorderStyle_Shadow */
+    box-shadow: 3px 0px 3px #444444; /* wm.TabLayers-Active-BorderStyle_Shadow */
 }
 /* Spacing between each tab */
 .wm_graphite .wmtablayers-tab.wmtablayers-selected,
@@ -1697,10 +1697,10 @@ body.wm_graphite {
     color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
     font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
     /* Document-ClickablesDefault-Background */
-    background-color: #444444; /* Document-ClickablesDefault-Background_Color */
-    background-image: url(images/repeatx/greyEdge3.png); /* Document-ClickablesDefault-Background_Image */
-    background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
-    background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
+    background-color: #666666; /* Document-ClickablesActive-Background_Color */
+    background-image: url(images/repeatx/greyEdge4.png); /* Document-ClickablesActive-Background_Image */
+    background-position: top left; /* Document-ClickablesActive-Background_Image-Position */
+    background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
 }
     /* Tab buttons */
     .wm_graphite button.wmtablayers-tab {
@@ -1714,11 +1714,13 @@ body.wm_graphite {
 	background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
 	/* Document-ClickablesDefault-Border */
-	border-width: 2px; /* editting this is problematic without also editting headerHeight */
 	border-bottom-color: transparent;
 	border-top-color: #444444; /* Borders-Clickable_Border_Color */
 	border-right-color:#444444; /* Borders-Clickable_Border_Color */
 	border-left-color:#444444; /* Borders-Clickable_Border_Color */
+        /* editting this is problematic without also editting headerHeight */
+    border-width: 2px;
+    border-style: solid;
     }
     .wm_graphite .wmtablayers-tab:hover, .wm_graphite .wmtablayers-tab:focus {
 	/* Document-ClickablesHover-Font */
@@ -1831,17 +1833,18 @@ body.wm_graphite {
 	background-repeat: repeat-x; /* MainContent-ClickablesHover-Background_Image-Repeat */
     }
     /* END SECTION wm.AccorionLayers / wm.AccordionDecorator */
-.wm_graphite .MainContent .wmfancypanel .wmFancyPanel-labelWidget {
+.wm_graphite .MainContent .wmfancypanel .wmFancyPanel-labelWidget,
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .MainContent .wmfancypanel .wmFancyPanel-labelWidget  {
     /* MainContent-ClickablesDefault-Font */
     font-family: Arial; /* MainContent-ClickablesDefault-Font_Family */
     font-size: 10pt; /* MainContent-ClickablesDefault-Font_TextSize */
     color: #FFFFFF; /* MainContent-ClickablesDefault-Font_Color */
     font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
-    /* MainContent-ClickablesDefault-Background */
-    background-color: #444444; /* MainContent-ClickablesDefault-Background_Color */
-    background-image: url(images/repeatx/greyEdge3.png); /* MainContent-ClickablesDefault-Background_Image */
-    background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
-    background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
+    /* MainContent-ClickablesActive-Background */
+    background-color: #666666; /* MainContent-ClickablesActive-Background_Color */
+    background-image: url(images/repeatx/greyEdge4.png); /* MainContent-ClickablesActive-Background_Image */
+    background-position: top left; /* MainContent-ClickablesActive-Background_Image-Position */
+    background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
 }
     /* BEGIN SECTION wm.TabLayers / wm.TabDecorator */
     /* Tab buttons */
@@ -1962,17 +1965,18 @@ body.wm_graphite {
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesHover-Background_Image-Repeat */
     }
     /* END SECTION wm.AccorionLayers / wm.AccordionDecorator */
-.wm_graphite .EmphasizedContent .wmfancypanel .wmFancyPanel-labelWidget {
+.wm_graphite .EmphasizedContent .wmfancypanel .wmFancyPanel-labelWidget,
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .EmphasizedContent .wmfancypanel .wmFancyPanel-labelWidget  {
     /* EmphasizedContent-ClickablesDefault-Font */
     font-family: Arial; /* EmphasizedContent-ClickablesDefault-Font_Family */
     font-size: 10pt; /* EmphasizedContent-ClickablesDefault-Font_TextSize */
     color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
     font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
-    /* EmphasizedContent-ClickablesDefault-Background */
-    background-color: #444444; /* EmphasizedContent-ClickablesDefault-Background_Color */
-    background-image: url(images/repeatx/greyEdge3.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
-    background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
-    background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
+    /* EmphasizedContent-ClickablesActive-Background */
+    background-color: #666666; /* EmphasizedContent-ClickablesActive-Background_Color */
+    background-image: url(images/repeatx/greyEdge4.png); /* EmphasizedContent-ClickablesActive-Background_Image */
+    background-position: top left; /* EmphasizedContent-ClickablesActive-Background_Image-Position */
+    background-repeat: repeat-x; /* EmphasizedContent-ClickablesActive-Background_Image-Repeat */
 }
     /* BEGIN SECTION wm.TabLayers / wm.TabDecorator */
     /* Tab buttons */
@@ -2038,7 +2042,7 @@ body.wm_graphite {
     /* HeaderContent-Styles-Background */
     background-color: #444444; /* HeaderContent-Styles-Background_Color */
     background-image: url(images/repeatx/brightEdge0.png); /* HeaderContent-Styles-Background_Image */
-    background-position: top left;  /* HeaderContent-Styles-Background_Image-Position */
+    background-position: top left; /* HeaderContent-Styles-Background_Image-Position */
     background-repeat: repeat-x; /* HeaderContent-Styles-Background_Image-Repeat */
 }
 #studio_themesPage_themeDesigner_demoPanelTabLayers_client .HeaderContent,
@@ -2058,7 +2062,7 @@ body.wm_graphite {
 	/* HeaderContent-ClickablesActive-Background */
 	background-color: #ffffff; /* HeaderContent-ClickablesActive-Background_Color */
 	background-image: url(images/repeatx/greyEdge2.png); /* HeaderContent-ClickablesActive-Background_Image */
-	background-position: top left;  /* HeaderContent-ClickablesActive-Background_Image-Position */
+	background-position: top left; /* HeaderContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
 	/* HeaderContent-ClickablesDefault-BorderStyle_Radius */
 	-moz-border-radius: 12px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
@@ -2075,7 +2079,7 @@ body.wm_graphite {
 	/* HeaderContent-ClickablesDefault-Background */
 	background-color: #999999; /* HeaderContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
-	background-position: top left;  /* HeaderContent-ClickablesDefault-Background_Image-Position */
+	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
 	/* HeaderContent-ClickablesDefault-BorderStyle_Radius */
 	-moz-border-radius: 12px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
@@ -2089,21 +2093,22 @@ body.wm_graphite {
 	/* HeaderContent-ClickablesHover-Background */
 	background-color: #cccccc; /* HeaderContent-ClickablesHover-Background_Color */
 	background-image: url(images/repeatx/brightEdge4.png); /* HeaderContent-ClickablesHover-Background_Image */
-	background-position: top left;  /* HeaderContent-ClickablesHover-Background_Image-Position */
+	background-position: top left; /* HeaderContent-ClickablesHover-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesHover-Background_Image-Repeat */
     }
     /* END SECTION wm.AccorionLayers / wm.AccordionDecorator */
-.wm_graphite .HeaderContent .wmfancypanel .wmFancyPanel-labelWidget {
+.wm_graphite .HeaderContent .wmfancypanel .wmFancyPanel-labelWidget,
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .HeaderContent .wmfancypanel .wmFancyPanel-labelWidget  {
     /* HeaderContent-ClickablesDefault-Font */
     font-family: Arial; /* HeaderContent-ClickablesDefault-Font_Family */
     font-size: 10pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
     color: #000000; /* HeaderContent-ClickablesDefault-Font_Color */
     font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
-    /* HeaderContent-ClickablesDefault-Background */
-    background-color: #999999; /* HeaderContent-ClickablesDefault-Background_Color */
-    background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
-    background-position: top left;  /* HeaderContent-ClickablesDefault-Background_Image-Position */
-    background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
+    /* HeaderContent-ClickablesActive-Background */
+    background-color: #ffffff; /* HeaderContent-ClickablesActive-Background_Color */
+    background-image: url(images/repeatx/greyEdge2.png); /* HeaderContent-ClickablesActive-Background_Image */
+    background-position: top left; /* HeaderContent-ClickablesActive-Background_Image-Position */
+    background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
 }
     /* BEGIN SECTION wm.TabLayers / wm.TabDecorator */
     /* Tab buttons */
@@ -2115,7 +2120,7 @@ body.wm_graphite {
 	/* HeaderContent-ClickablesDefault-Background */
 	background-color: #999999; /* HeaderContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
-	background-position: top left;  /* HeaderContent-ClickablesDefault-Background_Image-Position */
+	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
     }
     .wm_graphite .HeaderContent .wmtablayers-tab:hover, .wm_graphite .wmtablayers-tab:focus {
@@ -2124,7 +2129,7 @@ body.wm_graphite {
 	/* HeaderContent-ClickablesHover-Background */
 	background-color: #cccccc; /* HeaderContent-ClickablesHover-Background_Color */
 	background-image: url(images/repeatx/brightEdge4.png); /* HeaderContent-ClickablesHover-Background_Image */
-	background-position: top left;  /* HeaderContent-ClickablesHover-Background_Image-Position */
+	background-position: top left; /* HeaderContent-ClickablesHover-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesHover-Background_Image-Repeat */
     }
     /* Selected tab */
@@ -2136,7 +2141,7 @@ body.wm_graphite {
 	/* HeaderContent-ClickablesActive-Background */
 	background-color: #ffffff; /* HeaderContent-ClickablesActive-Background_Color */
 	background-image: url(images/repeatx/greyEdge2.png); /* HeaderContent-ClickablesActive-Background_Image */
-	background-position: top left;  /* HeaderContent-ClickablesActive-Background_Image-Position */
+	background-position: top left; /* HeaderContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
     }
     /* END SECTION wm.TabLayers / wm.TabDecorator */
@@ -2278,7 +2283,7 @@ body.wm_graphite {
 	/* HeaderContent-ClickablesDefault-Background */
 	background-color: #999999; /* HeaderContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
-	background-position: top left;  /* HeaderContent-ClickablesDefault-Background_Image-Position */
+	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
     }
     .wm_graphite .HeaderContent .wmprogressbar .dijitProgressBar {
@@ -2290,7 +2295,7 @@ body.wm_graphite {
 	/* HeaderContent-EditorsDefault-Background */
 	background-color: #888888; /* HeaderContent-EditorsDefault-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-EditorsDefault-Background_Image */
-	background-position: top left;  /* HeaderContent-EditorsDefault-Background_Image-Position */
+	background-position: top left; /* HeaderContent-EditorsDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-EditorsDefault-Background_Image-Repeat */
     }
 }
