@@ -38,6 +38,7 @@ wm.login = function(args, loginSuccessCallback, loginFailedCallback, properties,
 		handleAs: "json",
 		load: function(response, ioArgs) {
 			if (response.url) {
+                            var pathname = location.protocol + "//" + location.host + location.pathname + location.search; // sometimes using search helps and sometimes it breaks this test; still working out what is going on
 				if (dojo.cookie.isSupported() && !wm.disableUserPrincipalCookie) {
 					var p = {username: properties.j_username, roles: wm.getUserRoles(true)};
 					wm.setUserPrincipal(p);
@@ -52,9 +53,15 @@ wm.login = function(args, loginSuccessCallback, loginFailedCallback, properties,
 					    studio.navGotoDesignerClick();
 					} else 
 					    studio.startLayer.activate();
-				    } else if (location.pathname != response.url) {
+                                        // Typically this tests to see if we're on login.html and being directed to index.html
+				    } else if (pathname != response.url) {
 					location.href = response.url;
-				    }
+
+                                        // If the page name is login, but app.main is not login, then we're on the real project,
+                                        // not the special project used for logging in.  If we're on the real project, a wm page nav is all that is needed
+				    } else if (app._page.name == "login" && app.main != "login") {
+                                        app.loadPage(app.main);
+                                    }
 				}
 			} else if (response.error) {
 				if (loginFailedCallback) {

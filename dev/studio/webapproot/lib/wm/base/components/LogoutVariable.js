@@ -33,17 +33,32 @@ dojo.declare("wm.LogoutVariable", wm.ServiceVariable, {
       operation: "logout",
       autoUpdate: 0,
       startUpdate: 0,
+      clearDataOnLogout: true,
       logoutNavCall: null,
       init: function() {
-         this.logoutNavCall = new wm.NavigationCall({
-	       name: "logoutNavCall",
-	       owner: this,
-	       operation: "gotoPage"
-	       });
-      this.logoutNavCall.input.setData({pageName: "Login"});
+          if (!this.clearDataOnLogout) {
+              this.logoutNavCall = new wm.NavigationCall({
+	          name: "logoutNavCall",
+	          owner: this,
+	          operation: "gotoPage"
+	      });
+              this.logoutNavCall.input.setData({pageName: "Login"});
+          }
     },
       onSuccess: function(inData) {
-          this.logoutNavCall.update();
+          if (!this.clearDataOnLogout) {
+              this.logoutNavCall.update();
+          } else {
+              var path = window.location.pathname;
+              if (path.match(/[^\/]*\.html/)) {
+                  path = path.replace(/[^\/]*\.html/, "login.html");
+              } else {
+                  if (!path.match(/\/$/)) path += "/";
+                  path += "login.html";
+              }
+              
+              window.location = window.location.protocol + "//" + window.location.host + path + window.location.search;
+          }
       },
       onError: function(inError) {
          this.inherited(arguments);
