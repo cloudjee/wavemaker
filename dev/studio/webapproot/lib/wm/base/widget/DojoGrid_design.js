@@ -251,6 +251,7 @@ wm.Object.extendSchema(wm.DojoGrid, {
 	dataValue:{ignore:1},
 	selectedItem: {ignore:1, bindSource: 1, simpleBindProp: true },
 	emptySelection: { ignore: true, bindSource: 1, type: "Boolean" },
+	isRowSelected: { ignore: true, bindSource: 1, type: "Boolean" },
 	dataSet: {bindTarget: 1, group: "edit", order: 30, isList: true},
 	selectionMode: {group: "edit", order: 31},
 	rightClickTBody: {ignore:1},

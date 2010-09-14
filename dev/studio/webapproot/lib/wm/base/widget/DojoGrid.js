@@ -30,6 +30,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	singleClickEdit:false,
 	selectedItem: null,
 	emptySelection: true,
+	isRowSelected: false,
 	selectionMode: "single",
 	addDialogName:'',
 	addFormName:'',
@@ -185,6 +186,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			this.selectedItem.setData(newdata);
 		}
 		this.setValue("emptySelection", !this.hasSelection());
+		this.setValue("isRowSelected", this.hasSelection());
 	},
 	updateAllSelectedItem: function(){
 		if (!this.dojoObj) return;
@@ -295,7 +297,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	  var result = Boolean(!this.selectedItem.getData() || this.getSelectedIndex() == -1);
 	  return result;
 	},
-    renderBounds: function() {
+	getIsRowSelected: function(){
+		return !this.getEmptySelection();
+	},
+  renderBounds: function() {
 	    this.inherited(arguments);
 		if (this.showAddButton || this.showDeleteButton) {
 			var position = this.getStyleBounds();
