@@ -220,7 +220,8 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 		}
 	},
 	isSchemaFileRadioSelected: function() {
-		return (this.schemaFileRadioInput.displayValue == this.schemaFileRadioInput.dataValue);
+		//return (this.schemaFileRadioInput.displayValue == this.schemaFileRadioInput.dataValue);
+		return (this.schemaFileRadioInput.getGroupValue() == 1);
 	},
 	schemaFileRadioInputChange: function(inSender, inDisplayValue, inDataValue) {
 		var b = this.isSchemaFileRadioSelected();
