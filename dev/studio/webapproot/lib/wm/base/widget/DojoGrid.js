@@ -346,8 +346,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		this.dojoObj.startup();
 	},
 	connectDojoEvents: function(){
-		dojo.connect(this.dojoObj, 'onCellClick', this, 'onCellClick');
-		dojo.connect(this.dojoObj, 'onClick', this, 'onClick');
+		//dojo.connect(this.dojoObj, 'onCellClick', this, 'onCellClick');
+		dojo.connect(this.dojoObj, 'onClick', this, '_onClick');
 		dojo.connect(this.dojoObj,'onCellDblClick', this,'onCellDblClick');
 		dojo.connect(this.dojoObj,'onCellContextMenu', this, 'onCellRightClick');
 		//dojo.connect(this.dojoObj, "onDeselect", this, "deselect");
@@ -512,9 +512,19 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		}
 		return fields;
 	},
-	onClick: function(evt){
+	_onClick: function(evt){
+		var cellNode = evt.cellNode;
+		var rowNode = evt.rowNode;
+		var selectedItem = this.selectedItem;
+		var selection = evt.grid.selection;
+		if (dojo.isArray(selection))
+			var rowId = selection[selection.length - 1];
+		else
+			var rowId = evt.grid.selection.selectedIndex;
+		var fieldId = evt.cell.field;
+		this.onClick(evt, selectedItem, rowId, fieldId, rowNode, cellNode);
 	},
-	onCellClick: function(evt){
+	onClick: function(evt, selectedItem, rowId, fieldId, rowNode, cellNode){
 	},
 	onCellDblClick: function(evt){
 	},
