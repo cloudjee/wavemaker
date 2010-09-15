@@ -26,6 +26,14 @@ wm.propertyIsChanged = function(inValue, inProp, inCtor) {
 	return p && p[inProp] !== inValue;
 }
 
+wm.defaultEmptyValue = function(inType){
+	switch(inType){
+		case 'Text': return '';
+		case 'Number': return 0;
+		
+	}
+}
+
 //===========================================================================
 // Base Editor
 //===========================================================================
@@ -879,6 +887,10 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 		return this.editor && this.editor.declaredClass &&  this.editor.attr && this.editor.attr('displayedValue') ? this.editor.attr('displayedValue') || "" : this.getEditorValue() || "";
 	},
 	makeEmptyValue: function() {
+		// this.display is only set by LiveForm therefore will only work for fields in LiveForm and their emptyValue is not set yet.
+		if (this.emptyValue == 'unset' && this.display)
+			return wm.defaultEmptyValue(this.display);
+		
 		switch (this.emptyValue) {
 			case "null": return null;
 			case "false": return false;
