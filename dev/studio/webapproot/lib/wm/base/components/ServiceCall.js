@@ -362,7 +362,8 @@ wm.ServiceCall.extend({
 	}
 });
 wm.Object.extendSchema(wm.ServiceCall, {
-      startUpdateComplete: { ignore: 1}
+    startUpdateComplete: { ignore: 1},
+    designTime: {ignore: 1}
 });
 
 
