@@ -853,8 +853,13 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
 	    this.$.textInput.setDataValue(inValue);
     },
     getInputDataValue: function(inValue) {
-        if (this.$.textInput)
-	    return this.$.textInput.getDataValue();
+        var result;
+        if (this.$.textInput) {
+	    result = this.$.textInput.getDataValue();
+            if (dojo.isString(result))
+                result = dojo.trim(result);
+            return result;
+        }
     },
     setUserPrompt: function(inPrompt) {
 	this.userPrompt = inPrompt;
