@@ -122,9 +122,9 @@ public class SecurityService {
     }
 
     /**
-     * Returns the user id of the principal in the current security context.
-     * Will be corrected to return username in future release.
-     * @return The user id .
+     * Returns the user name of the principal in the current security context.
+     * 
+     * @return The user name.
      */
     @ExposeToClient
     public String getUserName() {
@@ -183,7 +183,7 @@ public class SecurityService {
 
         WMAppContext wmApp = WMAppContext.getInstance();
         if (wmApp != null && wmApp.isMultiTenant()) {
-            Integer tid = wmApp.getTenantIdForUser(getUserId());
+            Integer tid = wmApp.getTenantIdForUser(getUserName());
             RuntimeAccess.getInstance().setTenantId(tid);
         }
 
