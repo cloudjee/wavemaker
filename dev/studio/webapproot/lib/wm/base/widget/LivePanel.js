@@ -58,6 +58,7 @@ dojo.declare("wm.LivePanel", wm.Panel, {
 		this.dataGrid.set_dataSet(lvar);
 		this.liveForm.set_dataSet(this.dataGrid.name + ".selectedItem");
 		this.liveForm.eventBindings.onSuccess = lvar;
+		fancyPanel2.setFitToContentHeight(true);
 	}
 });
 
