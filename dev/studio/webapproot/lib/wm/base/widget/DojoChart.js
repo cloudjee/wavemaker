@@ -86,7 +86,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	chartType: 'Columns',
 	includeGrid:false,
 	gap:2,
-	defaultXY:[{x:'Jan', y:3}, {x:'Feb', y:5}, {x:'Mar', y:8}, {x:'Apr', y:2}],
+	defaultXY:[{'wmDefaultX':'Jan', 'wmDefaultY':3}, {'wmDefaultX':'Feb', 'wmDefaultY':5}, {'wmDefaultX':'Mar', 'wmDefaultY':8}, {'wmDefaultX':'Apr', 'wmDefaultY':2}],
 	addedSeries:{},
 	aniHighlight:null,
 	aniShake:null,
@@ -201,6 +201,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 			dojo.addOnLoad(function(){thisObj.renderDojoObj();});
 	},
 	addChartSeries: function(isUpdate){
+		this.updateXLabelSet();
 		dojo.forEach(this.yAxis.split(','), function(columnName, idx){
 			try{
 				columnName = dojo.trim(columnName);
@@ -230,13 +231,25 @@ dojo.declare("wm.DojoChart", wm.Control, {
  
 		}, this);
 	},
-	getXLabelSet: function (){
-		var dataSet = this.getColumnDataSet(this.xAxis);
-		this.xLabels = [];
-		var thisObj = this;
-		dojo.forEach(dataSet, function(value,idx){
-			thisObj.xLabels[thisObj.xLabels.length] = {value: idx+1, text: value};
-		});
+	getChartDataSet: function(){
+		if ((this.xAxis == 'wmDefaultX' || this.yAxis == 'wmDefaultY') && this.isDesignLoaded())
+			return this.defaultXY;
+		if (!this.variable || this.variable == '')
+			return [];
+		var ds = this.variable.getData();
+		if (ds && !(ds instanceof Array))
+			ds = [ds];
+		return ds;
+	},
+	updateXLabelSet: function (){
+		if (this.isTimeXAxis)
+			return [];
+		this.xLabels = {};
+		var ds = this.getChartDataSet();
+		dojo.forEach(ds, function(obj,idx){
+			var label = obj[this.xAxis];
+			this.xLabels[label] = this.addXLabel(label);
+		}, this);
 
 		return this.xLabels;
 	},
@@ -244,25 +257,8 @@ dojo.declare("wm.DojoChart", wm.Control, {
 		return this.chartType == 'Pie';
 	},
 	getColumnDataSet: function(columnName){
-		if ((columnName == 'wmDefaultX' || columnName == 'wmDefaultY') && this.isDesignLoaded()) {
-			var ds = [];
-			dojo.forEach(this.defaultXY, function(obj){
-				if (this.isPieChart())
-					ds.push({legend:this.addXLabel(obj.x), y:obj.y});
-				else
-					ds.push({x:this.addXLabel(obj.x), y:obj.y});
-			}, this);
-			return ds;
-		}
-		
-		if (this.variable == null || this.variable == ''){
-			return [];
-		}
-
 		var data = [], x = '';
-		var ds = this.variable.getData();
-		if (ds && !(ds instanceof Array))
-			ds = [ds];
+		var ds = this.getChartDataSet();
 		dojo.forEach(ds, function(dataObj, i){
 			var obj = {y: dataObj[columnName]};
 			if (this.isPieChart()) {
@@ -281,7 +277,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 				if (this.isTimeXAxis)
 					x = this.getTimeX();
 				else if(this.xAxis)
-					x = this.addXLabel(dataObj[this.xAxis]);
+					x = this.xLabels[dataObj[this.xAxis]];
 				if (x != '')
 					obj.x = x;
 			}
