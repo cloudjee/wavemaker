@@ -465,10 +465,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		}, this);
 
 		structure = [structure];
-		this.onGetStructure(structure);
+	        //this.onGetStructure(structure);
 		return structure; 
 	},
-	onGetStructure: function(inStructure) {},
+        //onGetStructure: function(inStructure) {},
 	setColumnData: function(){
 		if (!this.variable || (this.variable.type == this.dsType && this.columns.length > 0)){
 			return;
