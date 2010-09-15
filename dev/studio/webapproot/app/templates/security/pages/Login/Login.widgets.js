@@ -17,20 +17,22 @@
  */
 
 
+
 Login.widgets = {
-	layoutBox: ["wm.Layout", {height: "100%"}, {}, {
-	    loginMainPanel: ["wm.Panel", {verticalAlign: "center", horizontalAlign: "center", height: "100%", width: "100%", layoutKind: "top-to-bottom", border: "0", padding: "10"}, {}, {
-                wmTitle: ["wm.Label", {align: "center", width: "350px", height: "20px"}],
-		loginInputPanel: ["wm.Panel", {_classes: {domNode: ["wm_Border_StyleFirefoxCurved4px", "wm_Border_StyleSolid", "wm_Border_Size1px", "wm_Border_ColorLightGray"]}, padding: "10", width: "350px", height: "140px", isMajorContent: true, border: "2"}, {}, {
-		    usernameInput: ["wm.Text", {caption: "Username", captionSize: "120px", layoutKind: "left-to-right", height: "28px"}],
-		    passwordInput: ["wm.Text", {caption: "Password", captionSize: "120px", layoutKind: "left-to-right", height: "28px", password: true}],
-		    loginButtonPanel: ["wm.Panel", {height: "50px", layoutKind: "left-to-right", border: "0", padding: "4", horizontalAlign: "right"}, {}, {
-		        loginErrorMsg: ["wm.Label", {align: "center", width: "100%", height: "100%", caption: " ", border: "0", singleLine: false}, {}, {
-			    format: ["wm.DataFormatter", {}, {}]
-			}],
-                        loginButton: ["wm.Button", {caption: "Login", height: "100%", width: "90px"}, {onclick: "loginButtonClick"}]
-		    }]
+    layoutBox: ["wm.Layout", {height: "100%"}, {}, {
+	loginMainPanel: ["wm.Panel", {verticalAlign: "center", horizontalAlign: "center", height: "100%", width: "100%", layoutKind: "top-to-bottom", border: "0", padding: "10", verticalAlign: "center", horizontalAlign: "center"}, {}, {
+            wmTitle: ["wm.Label", {align: "center", width: "350px", height: "20px"}],
+	    loginInputPanel: ["wm.EmphasizedContentPanel", {padding: "10", width: "350px", height: "140px", border: "2", verticalAlign: "center", horizontalAlign: "center"}, {}, {
+		usernameInput: ["wm.Text", {caption: "Username", captionSize: "120px", layoutKind: "left-to-right", height: "28px"}], 
+		passwordInput: ["wm.Text", {caption: "Password", captionSize: "120px", layoutKind: "left-to-right", height: "28px", password: true}],
+		loginButtonPanel: ["wm.Panel", {height: "50px", width: "100%", layoutKind: "left-to-right", border: "0", padding: "4", horizontalAlign: "right"}, {}, {
+		    loginErrorMsg: ["wm.Label", {align: "center", width: "100%", height: "100%", caption: " ", border: "0", singleLine: false}, {}, {
+			format: ["wm.DataFormatter", {}, {}]
+		    }],
+                    loginButton: ["wm.Button", {caption: "Login", height: "100%", width: "90px"}, {onclick: "loginButtonClick"}]
 		}]
-	}]
+	    }]
+
         }]
+    }]
 }
