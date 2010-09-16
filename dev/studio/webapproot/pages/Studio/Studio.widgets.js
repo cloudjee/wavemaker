@@ -31,8 +31,6 @@ Studio.widgets = {
 	//registrationService: ["wm.JsonRpcService", {service: "registrationService", sync: true}, {}],
 	UserService: ["wm.JsonRpcService", {service: "UserService", sync: true}, {}],
 	resourceManagerService: ["wm.JsonRpcService", {service: "resourceFileService", sync: true}, {}],
-	// BELOW - // Sample data that is used to populate grids in templates because wm.Templates do not have their own datasource
-	varTemplateData: ["wm.Variable", {"json":"[{deptCode:\"HR\", deptName:\"Human Resource\", employeeNo:50, revenue:100},\n{deptCode:\"FI\", deptName:\"Finance\", employeeNo:50, revenue:100},\n{deptCode:\"SA\", deptName:\"Sales\", employeeNo:50, revenue:100},\n{deptCode:\"PS\", deptName:\"Professional Services\", employeeNo:50, revenue:100}\n]","type":"templateDataType"}, {}],
 
 	navImageList: ["wm.ImageList", {width: 24, height: 28, colCount: 10, url: "images/navBtns.png"}, {}],
 //	canvasToolbarImageList: ["wm.ImageList", {width: 24, height: 24, colCount: 20, url: "images/canvasToolbarBtns.png"}, {}],

@@ -63,7 +63,7 @@ body .wm_default input:focus,
     #studio_designer.wm_default .wmlayout a:visited,
     .wm_default  #wavemakerNode  .wmlayout a,
     .wm_default  #wavemakerNode  .wmlayout a:visited {
-	color: #FFFFFF; /* Document-Styles-Font_Color */
+	color: #000000; /* Document-Styles-Font_Color */
 	font-weight: bold;
     }
 }
@@ -420,9 +420,9 @@ body .wm_default input:focus,
 .wm_default .dijitCalendarContainer .dijitCalendarPreviousMonth,
 .wm_default .dijitCalendarContainer .dijitCalendarNextMonth,
 .wm_default .dijitCalendarContainer .dijitCalendarDayLabelTemplate {
-    background-color: #333333 !important; /* Document-Styles-Background_Color */
+    background-color: #ffffff !important; /* Document-Styles-Background_Color */
     background-image: none;
-    color: #FFFFFF; /* Document-Styles-Font_Color */
+    color: #000000; /* Document-Styles-Font_Color */
 }
 /*****************************************
  * EOF: calendar.css
@@ -1628,7 +1628,7 @@ body.tundra .wm_default  div.wmheader,
     /* Document-Styles-Font */
     font-family: Verdana; /* Document-Styles-Font_Family */
     font-size: 8pt; /* Document-Styles-Font_TextSize */
-    color: #FFFFFF; /* Document-Styles-Font_Color */
+    color: #000000; /* Document-Styles-Font_Color */
     font-weight: bold; /* Document-Styles-Font_Weight */
     /* Document-Styles-Background */
     background-color: #ffffff; /* Document-Styles-Background_Color */
@@ -1638,7 +1638,7 @@ body.tundra .wm_default  div.wmheader,
     /* Document-Styles-Font */
     font-family: Verdana; /* Document-Styles-Font_Family */
     font-size: 8pt; /* Document-Styles-Font_TextSize */
-    color: #FFFFFF; /* Document-Styles-Font_Color */
+    color: #000000; /* Document-Styles-Font_Color */
     font-weight: bold; /* Document-Styles-Font_Weight */
 }
 #studio_designer.wm_default, 

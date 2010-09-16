@@ -25,33 +25,34 @@ dojo.declare("wm.LivePanel", wm.Panel, {
 	afterPaletteDrop: function() {
 		wm.Container.prototype.afterPaletteDrop.call(this);
 	        var fancyPanel1 = new wm.FancyPanel({parent: this,
-                 horizontalAlign: "left",
-                 verticalAlign: "top",
+                                                     horizontalAlign: "left",
+                                                     verticalAlign: "top",
 						     owner: this.owner,
-						     height: '335px',
 						     name: this.liveDataName + "GridPanel",
 						     title: wm.capitalize(this.liveDataName)});
-		      this.dataGrid = new wm.DojoGrid({
-                 border: "0", // wm.FancyPanel + theme change; fancy panel provides the border; ignore any default borders provided by theme
-				         name: studio.page.getUniqueName(this.liveDataName + "DojoGrid"),
-				         owner: this.owner,
-				         height:'300px',
-				         parent: fancyPanel1.containerWidget, // wm.FancyPanel change; revert to returning "this"
-				         _classes: {"domNode":["omgDataGrid"]}});
+		this.dataGrid = new wm.DojoGrid({
+                                border: "0", // wm.FancyPanel + theme change; fancy panel provides the border; ignore any default borders provided by theme
+				name: studio.page.getUniqueName(this.liveDataName + "DojoGrid"),
+				owner: this.owner,
+				height:'100%',
+				parent: fancyPanel1.containerWidget, // wm.FancyPanel change; revert to returning "this"
+				_classes: {"domNode":["omgDataGrid"]}
+			});
 	        var fancyPanel2 = new wm.FancyPanel({parent: this,
-                 horizontalAlign: "left",
-                 verticalAlign: "top",
+                                                     horizontalAlign: "left",
+                                                     verticalAlign: "top",
 						     owner: this.owner,
 						     name: this.liveDataName + "DetailsPanel",
-						     title: "Details"});
-  		    this.liveForm = new wm.LiveForm({
-				         name: studio.page.getUniqueName(this.liveDataName + "LiveForm1"),
-				         owner: this.owner,
-		             parent: fancyPanel2.containerWidget, // wm.FancyPanel change; revert to returning "this"
-				         verticalAlign: "top",
-				         horizontalAlign: "left",
-				         _liveSource: this.liveSource});
-	  this.reflow(); // added for fancypanel support
+						    title: "Details"});
+		this.liveForm = new wm.LiveForm({
+				name: studio.page.getUniqueName(this.liveDataName + "LiveForm1"),
+				owner: this.owner,
+		                parent: fancyPanel2.containerWidget, // wm.FancyPanel change; revert to returning "this"
+				verticalAlign: "top",
+				horizontalAlign: "left",
+				_liveSource: this.liveSource
+			});
+	        this.reflow(); // added for fancypanel support
 		this.liveForm.createLiveSource(this.liveSource);
 		var lvar = this.liveForm.dataSet.name;
 		this.dataGrid.set_dataSet(lvar);

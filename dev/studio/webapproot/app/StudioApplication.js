@@ -21,12 +21,6 @@ dojo.declare("StudioApplication", wm.Application, {
 	main: "Main",
         theme: "wm_studio",
 	widgets: {
-		templateDataType: ["wm.TypeDefinition", {}, {}, { // TypeDef for sample data that is used to populate grids in templates because wm.Templates do not have their own datasource
-			field1: ["wm.TypeDefinitionField", {"fieldName":"deptCode"}, {}],
-			field2: ["wm.TypeDefinitionField", {"fieldName":"deptName"}, {}],
-			field3: ["wm.TypeDefinitionField", {"fieldName":"employeeNo"}, {}],
-			field4: ["wm.TypeDefinitionField", {"fieldName":"revenue","fieldType":"Number"}, {}]
-		}]	
 	},
     confirm: function() {
         this.inherited(arguments);
