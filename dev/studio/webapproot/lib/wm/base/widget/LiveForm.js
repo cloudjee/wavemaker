@@ -583,7 +583,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	},
 	// editors that should not be changed during an edit should remain readonly
 	_canChangeEditorReadonly: function(inOperations, inEditor, inForm, inReadonly) {
-		if (wm.isInstanceType(inEditor, wm.Editor) && inEditor.formField) {
+	    if ((wm.isInstanceType(inEditor, wm.Editor) || wm.isInstanceType(inEditor, wm.AbstractEditor)) && inEditor.formField) {
 			var
 				f = inEditor.formField,
 				dt = inForm.dataSet.type,
