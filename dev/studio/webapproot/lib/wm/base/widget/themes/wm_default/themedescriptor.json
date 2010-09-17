@@ -8,13 +8,13 @@
 		"Shadow": "3px 3px 3px #444444"
 	}, 
 	"Document-Styles-Background": {
-		"Color": "#333333", 
+		"Color": "#ffffff", 
 		"Image-Repeat": "no-repeat", 
 		"Image-Position": "top left", 
 		"Image": "none"
 	}, 
 	"Document-Styles-Font": {
-		"Color": "#ffffff", 
+		"Color": "#000000", 
 		"TextSize": "8pt", 
 		"Family": "Verdana", 
 		"Weight": "bold"
