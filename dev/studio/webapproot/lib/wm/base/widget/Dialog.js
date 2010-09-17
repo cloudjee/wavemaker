@@ -440,9 +440,10 @@ dojo.declare("wm.Dialog", wm.Container, {
 		this.inherited(arguments);
 		// global flag for easily finding the most recently shown dialog
 	        wm.Array.removeElement(wm.dialog.showingList, this);
-	    if (inShowing && (!window["studio"] || this != window["studio"].dialog))
+	    if (inShowing && (!window["studio"] || this != window["studio"].dialog)) {
 		    wm.dialog.showingList.push(this);
 	        this.domNode.style.zIndex = wm.dialog.getNextZIndex();
+            }
 
 		if (this.showing) {
 		    if (this._minified)
