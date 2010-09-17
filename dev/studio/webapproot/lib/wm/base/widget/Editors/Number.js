@@ -278,11 +278,9 @@ dojo.declare("wm.Number", wm.Text, {
 		} else if (this.isDesignLoaded())
 			alert(dojo.string.substitute(this._messages.rangeMin, [this.maximum]));
 	},
-	/*
 	_getReadonlyValue: function() {
 		return dojo.number.format(this.dataValue, this.getFormatProps());
 	},
-	*/
 	getFormatProps: function() {
 		var formatProps = {};
 		if (this.places && this.places != '')
