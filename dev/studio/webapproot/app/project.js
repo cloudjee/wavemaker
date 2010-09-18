@@ -59,6 +59,7 @@ dojo.declare("wm.studio.Project", null, {
 		var ctor = dojo.declare(this.projectName, wm.Application);
 	    this.projectData = {css: "",
 				jscustom: this.projectName + ".extend({\n\n\t" + terminus + "\n});"};
+	    studio.setAppScript(this.projectData.jscustom); // this gets set elsewhere; but if not set here, then a project may get the previously open project's jscustom section because writeApplication takes whatever is currently in the script editor
 	},
         createPageArtifacts: function(pageType, argHash) {
 		var ctor = dojo.declare(this.pageName, wm.Page);
