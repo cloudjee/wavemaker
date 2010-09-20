@@ -585,7 +585,7 @@ dojo.declare("Studio", wm.Page, {
 	},
         _lastBindSelect: null,
 	select: function(inComponent) {
-	        if (studio.bindDialog.showing) {
+	        if (studio.bindDialog && studio.bindDialog.showing) {
 /*
 		    if (this._lastBindSelect == inComponent) {
 			var propList = inComponent.listDataProperties("bindTarget");
