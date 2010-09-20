@@ -366,6 +366,7 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 	ondeselected: function(){
 		this._selected(false);
 	    wm.onidle(this, function() {
+                if (this.control.isDestroyed) return;
 		this.control.getDesignBorder();
 		this.control.invalidCss = true;
 		this.control.render();
