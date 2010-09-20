@@ -76,7 +76,11 @@ dojo.declare("wm.PageLoader", wm.Component, {
 		var ctor = dojo.getObject(inName);
 		if (!ctor) {
 			wm.dojoScriptLoader(inPath + ".js?dojo.preventCache="+ new Date().valueOf());
-		    ctor = dojo.getObject(inName);
+		        ctor = dojo.getObject(inName);
+                }
+                if (!ctor) {
+                    app.alert("Error parsing " + inPath + ".js");
+                    ctor = dojo.declare(inName, wm.Page); // so at least we can display widgets.js
 		}
 		return ctor;
 	},
