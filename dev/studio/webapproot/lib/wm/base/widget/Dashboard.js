@@ -47,12 +47,31 @@ dojo.declare("wm.Dashboard", wm.Control, {
 	postInit: function() {
 		this.inherited(arguments);
 		this.initAddWidgetDialog();
-		var thisObj = this;
-		dojo.addOnLoad(function(){thisObj.renderDojoObj();});
+	    dojo.addOnLoad(dojo.hitch(this, "renderDojoObj"));
+	},
+	createAddWidgetDialog: function(){
+            
+	    this.addDialogName = (this.isDesignLoaded()) ? studio.page.getUniqueName(this.name+"_AddDialog") : this.name + "_AddDialog";
+            
+		var seName = this.name+'_selectEditor';
+		var spacer = this.name + '_spacer';
+
+		var props = {width:320, height:150, name: this.addDialogName, border:2, borderColor: "rgb(80,80,80)", title: 'Add Widget', parent: this, owner: this.owner};
+		var dialogWidgets = {};
+		dialogWidgets[seName] = ["wm.Editor", {"caption":"Widget","display":"Select","readonly":undefined,"width":"100%"}, {}, {editor: ["wm._SelectEditor", {"required":true}, {}]}];
+		dialogWidgets[spacer] = ["wm.Spacer", {height: "100%", width: "10px"}, {}, {}];
+		dialogWidgets.dialogFooter = ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, name: "dialogfooter", layoutKind: "left-to-right",  padding: "2,0,2,0", horizontalAlign: "right", height: "34px", width: "100%"}, {}, {
+		                 	 okButton: ["wm.Button", {"height":"100%","width":"150px","caption": "Add"}, {"onclick":'onOkClick'}],
+		                 	 cancelButton: ["wm.Button", {"height":"100%","width":"150px","caption": "Cancel"}, {"onclick":'onCancelClick'}]
+	                     }];
+                props.widgets_data = dialogWidgets;
+		this.addDialog = new wm.WidgetsJsDialog(props);
+		//this.addDialog.setWidgetsJson(dojo.toJson(dialogWidgets));
+            return this.addDialog;
 	},
 	initAddWidgetDialog: function(){
+	    this.addDialog = this.owner[this.addDialogName] || this.createAddWidgetDialog();
 		if (this.addDialogName){
-			this.addDialog = this.owner[this.addDialogName];
 			this.selectEditor = this.addDialog.components[this.name+'_selectEditor'];
 			this.okButton = this.addDialog.components['okButton'];
 			this.cancelButton = this.addDialog.components['cancelButton'];
@@ -110,8 +129,8 @@ dojo.declare("wm.Dashboard", wm.Control, {
 			withHandles:this.withHandles,
 			minChildWidth:this.minChildWidth,
 			minColWidth:this.minColWidth,
-			style:"width:100%;height:100%;",
-			"class":"soria"
+			style:"width:100%;height:100%;"/*,
+			"class":"soria"*/
 		};
 
 		this.dojoObj = new dojox.layout.GridContainer(props, dojo.create('div', {}, this.domNode));
@@ -175,7 +194,8 @@ dojo.declare("wm.Dashboard", wm.Control, {
 			portlet.addChild(s);
 		}
 		*/
-		
+	    if (!this.dojoObj)
+                this.renderDojoObj();
 		this.dojoObj.addService(portlet,props.x || 0, props.y || 0);
 	    portlet.wm_pageContainer = new wm.PageContainer({loadParentFirst: false, owner: this, parentNode: portlet.containerNode, isRelativePositioned:true});
         if (props.page)
@@ -188,6 +208,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 		}	
 		
 		this.dijitPortlets.push(portlet);		
+                this._onDashboardChange();
 		return props;
 	},
 	getNewPortletTitle: function(inTitle){
