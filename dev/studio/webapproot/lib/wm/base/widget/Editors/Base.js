@@ -213,11 +213,13 @@ dojo.declare("wm._BaseEditor", wm.Widget, {
 			this.validatorNode.style.display = this.editor.state == "Error" ? "" : "none";
 	},
 	validate: function() {
-                if (!this.validationEnabled()) return ;
+            if (this.validationEnabled()) 
 		this.invalidate();
-		wm.job(this.getRuntimeId(), 25, dojo.hitch(this, function() {
-			wm.fire(this.owner, "validate");
-		}));
+
+            // just because the editor doesn't have validation doesn't mean that the container won't need to validate the sum of all inputs
+	    wm.job(this.getRuntimeId(), 25, dojo.hitch(this, function() {
+		wm.fire(this.owner, "validate");
+	    }));
 	},
 	getEditorProps: function(inNode, inProps) {
 		return dojo.mixin({srcNodeRef: inNode, owner: this, disabled: this.owner.disabled}, inProps || {});
@@ -808,8 +810,10 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 			this.validatorNode.style.display = this.editor.state == "Error" ? "" : "none";
 	},
 	validate: function() {
-		if (!this.validationEnabled()) return ;
-		this.invalidate();
+		if (this.validationEnabled())
+		    this.invalidate();
+
+            // just because the editor doesn't have validation doesn't mean that the container won't need to validate the sum of all inputs
 		wm.job(this.getRuntimeId(), 25, dojo.hitch(this, function() {
 			if (this.parent) 
 				wm.fire(this.parent, "validate");
