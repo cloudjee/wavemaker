@@ -1450,12 +1450,12 @@ body .wm_default .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected
    *
    ************************************************************************************************/
 body.wm_default ul.dijitMenu .dijitMenuItem,
-body .wm_default ul.dijitMenu .dijitMenuItem
-{
+body .wm_default ul.dijitMenu .dijitMenuItem,
+body.wm_default div.dijitMenu .dijitCalendarMonthLabel {
     /* Tables-EvenRows-Font */
     color: #000000; /* Tables-EvenRows-Font_Color */
     /* Tables-EvenRows-Background */
-    background-color: #eeeeee; /* Tables-EvenRows-Background_Color */
+    background-color: #eeeeee /* Tables-EvenRows-Background_Color */
     border-bottom-size: 1px;      /* Tables-EvenRows-Border_Size */
     border-bottom-style: solid;   
     border-bottom-color: #cccccc; /* Tables-EvenRows-Border_Color */
@@ -1464,7 +1464,9 @@ body .wm_default ul.dijitMenu .dijitMenuItem
 body.wm_default  ul.dijitMenu .dijitMenuItem.dijitMenuItemHover,
 body .wm_default ul.dijitMenu .dijitMenuItem.dijitMenuItemHover,
 body.wm_default  ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected,
-body .wm_default ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected
+body .wm_default ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected,
+body.wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover,
+body .wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover
  {
     /* Document-ClickablesHover-Font */
     color: #000000; /* Document-ClickablesHover-Font_Color */
