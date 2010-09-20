@@ -821,7 +821,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 			if (e.subType == "picklist") {
 				var dataSet = inResult[e.formField];
 				e.editor.setOptionSet(dataSet.options);
-				e.setDataValue(dataSet.default.dataValue);
+				e.setDataValue(dataSet["default"].dataValue);
 			}
 		});
 	},
