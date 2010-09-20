@@ -34,7 +34,7 @@ dojo.declare("wm.PageContainer", wm.Box, {
 		this.inherited(arguments);
 		this.createPageLoader();
 		this.pageLoadedDeferred = new dojo.Deferred();
-		if (!this.deferLoad)
+	        if (!this.deferLoad || !this.isAncestorHidden())
 		  this.loadPage(this.pageName);
 		//this._connections.push(dojo.connect(window, "onbeforeunload", this, "destroy"));
 		dojo.addOnWindowUnload(this, 'destroy');
@@ -44,18 +44,30 @@ dojo.declare("wm.PageContainer", wm.Box, {
 	    if (this.isDesignedComponent() && this.designWrapper) {
 		dojo.addClass(this.designWrapper.domNode, "pageContainerDesignWrapper");
                 this.designWrapper.domNode.style.backgroundColor = "white";
-		var openPageButton = document.createElement("div");
-
-		openPageButton.className = "openPageContainerDesignWrapperButton" + ((this.pageName) ? " hasPageName" : ""); 
-		openPageButton.innerHTML = "Open Page";		
-		this.designWrapper.domNode.appendChild(openPageButton);		
-		this._designerOpenPageButton = openPageButton;
-		dojo.connect(openPageButton, "onclick", this, function() {
-		    if (!studio.isPageDirty() || window.confirm("Are you sure you want to close the current page and open " + this.pageName + "?"))
-			studio.project.openPage(this.pageName);
-		});
+                this.createOpenPageButton();
 	    }
 	},
+    createOpenPageButton: function() {
+        if (this.openPageButton) {
+            dojo.destroy(this.openPageButton);
+            dojo.disconnect(this.openPageButtonConnect);
+        }
+	var openPageButton = this.openPageButton = document.createElement("div");
+                
+	openPageButton.className = "openPageContainerDesignWrapperButton" + ((this.pageName) ? " hasPageName" : ""); 
+	openPageButton.innerHTML = (this.pageName) ? "Open Page" : "New Page";
+	this.designWrapper.domNode.appendChild(openPageButton);	
+	this._designerOpenPageButton = openPageButton;
+	this.openPageButtonConnect = dojo.connect(openPageButton, "onclick", this, function() {
+            if (this.pageName) {
+	        if (!studio.isPageDirty() || window.confirm("Are you sure you want to close the current page and open " + this.pageName + "?"))
+		    studio.project.openPage(this.pageName);
+            } else {
+                this.createNewPage();
+            }
+	});
+
+    },
 	createPageLoader: function() {
 		this._pageLoader = new wm.PageLoader({owner: this, domNode: this.domNode, isRelativePositioned: this.isRelativePositioned});
 		this._connections.push(this.connect(this._pageLoader, "onPageChanged", this, "pageChanged"));
@@ -177,16 +189,24 @@ dojo.declare("wm.PageContainer", wm.Box, {
 	setPageName: function(inPageName) {
 		if (this._pageLoading)
 			return;
+	    if (inPageName == "-New Page" && this.isDesignLoaded()) {
+	        return this.createNewPage();
+	    }
 
-	        if (this._designerOpenPageButton)
-		    dojo[this.pageName ? "addClass" : "removeClass"](this._designerOpenPageButton, "hasPageName");
+	    if (this._designerOpenPageButton)
+		dojo[this.pageName ? "addClass" : "removeClass"](this._designerOpenPageButton, "hasPageName");
 
 		var o = this.pageName;
 		this.pageName = inPageName || "";
-		this.pageLoadedDeferred = new dojo.Deferred();
-		if (o != this.pageName)
-			this.loadPage(this.pageName);
+	    if (this.isDesignedComponent() && this.designWrapper) {
+                this.createOpenPageButton();
+            }
+
+	    this.pageLoadedDeferred = new dojo.Deferred();
+            if (o != this.pageName)
+		this.loadPage(this.pageName);
 	},
+
         // Provided for use in debugging. Note that when we do a better job of caching pages from server, we will need to deallocate them in this call
         forceReloadPage: function() {
             var pageName = this.pageName;
@@ -223,6 +243,28 @@ wm.PageContainer.extend({
         themeable: false,
 	scrim: true,
 	_isBindSource: true,
+    createNewPage: function() {
+	var pages = studio.project.getPageList();
+
+	var l = {};
+	dojo.forEach(pages, function(p) {
+	    l[p] = true;
+	});
+        studio.promptForName("page", wm.findUniqueName("Page", [l]), pages,
+                             dojo.hitch(this, function(n) {
+				 n = wm.capitalize(n);
+				 this.pageName = n;
+				 app.confirm("Can we save your current page before moving on to the next page? This will save your pageContainer's pageName.", 
+					     false,
+					     dojo.hitch(this,function() {
+						 studio.project.saveProject();
+						 studio.project.newPage(n);
+					     }),
+					     dojo.hitch(this,function() {
+						 studio.project.newPage(n);
+					     }));
+			     }));
+    },
 	designCreate: function() {
 		this.inherited(arguments);
 		if (this.designWrapper)
@@ -243,7 +285,7 @@ wm.PageContainer.extend({
 	makePropEdit: function(inName, inValue, inDefault) {
 		switch (inName) {
 			case "pageName":
-				return new wm.propEdit.PagesSelect({component: this, name: inName, value: inValue});
+		    return new wm.propEdit.PagesSelect({component: this, name: inName, value: inValue, newPage: true});
 		}
 		return this.inherited(arguments);
 	},
