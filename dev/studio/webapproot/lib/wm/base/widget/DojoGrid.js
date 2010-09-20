@@ -477,8 +477,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		this.dsType = this.variable.type;
 		this.columns = [];
 		var viewFields = this.getViewFields();
-		dojo.forEach(viewFields, function(f){
-			this.columns.push({show:true, id: f.dataIndex, title:wm.capitalize(f.dataIndex), width:'auto', displayType:f.displayType, noDelete:true, align: f.displayType == 'Number' ? 'right':'left'});
+	        dojo.forEach(viewFields, function(f,i){
+			this.columns.push({show:i < 15, id: f.dataIndex, title:wm.capitalize(f.dataIndex), width:'auto', displayType:f.displayType, noDelete:true, align: f.displayType == 'Number' ? 'right':'left'});
 		}, this);
 		
 		if (this.isDesignLoaded())
