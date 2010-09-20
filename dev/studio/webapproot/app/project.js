@@ -74,7 +74,7 @@ dojo.declare("wm.studio.Project", null, {
 	    switch(pageType) {
 	    case "wm.ListViewerRow":
 		return {
-		    variable: ["wm.Variable", {type: argHash.type}],
+		    variable: ["wm.Variable", {type: argHash.type, json: argHash.json}],
 		    layoutBox1: ["wm.Layout", {height: "100%", width: "100%", horizontalAlign: "left", verticalAlign: "top"}, {}, {
 			sampleRow: ["wm.FancyPanel", {title: "Sample Row", layoutKind: "left-to-right", width: "100%", height: "80px"},{}, {
 			    panel1: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"},{}, {
