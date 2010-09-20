@@ -293,13 +293,18 @@ wm.define("wm.Container", wm.Control, {
 		wm.fire(this.parent, "validate");
 	},
 	getInvalid: function() {
-		for (var i in this.widgets) {
-			var w = this.widgets[i];
-			if (w.getInvalid && w.getInvalid())
-				return true;
-		}
-		return false;
+	    for (var i in this.widgets) {
+		var w = this.widgets[i];
+		if (w.invalid)
+		    return true;
+                else if (w.invalid === undefined && w.getInvalid && w.getInvalid())
+                    return true;
+	    }
+            if (!this.onValidate())
+                return true;
+	    return false;
 	},
+        onValidate: function() {return true;},
 	getInvalidWidget: function() {
 	    for (var i in this.widgets) {
 		var w = this.widgets[i];
