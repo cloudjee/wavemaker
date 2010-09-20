@@ -771,7 +771,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		} else {*/
 			var types = this.getDataModelTypeNodes();
 			var newEntityName = this.findUniqueEntityName();
-	                app.prompt('New table name', this.getTableNameFromEntityName(this.findUniqueEntityName()), false,
+	                app.prompt('New table name', this.getTableNameFromEntityName(this.findUniqueEntityName()), 
                                    dojo.hitch(this, function(t) {
 			               var entity = this.constructEntity(
 				           this.getEntityNameFromTableName(t), t);
