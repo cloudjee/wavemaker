@@ -890,11 +890,14 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 }
 
 /* fix dijit disabled classes */
-.tundra .dijitTextBoxDisabled {
+.tundra .dijitTextBoxDisabled,
+.tundra .dijitComboBoxDisabled {
+/*
 	background:#E4E4E4 url(images/buttonDisabled.png) repeat-x scroll center top !important;
 	border-color:#D5D5D5;
 	color: Black;
-	opacity:0.8;
+*/
+	opacity:0.5;
 }
 
 /**/
