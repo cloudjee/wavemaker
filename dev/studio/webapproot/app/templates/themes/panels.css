@@ -264,10 +264,11 @@ body.wm_template {
     /* Document-ClickablesDefault-Font */
     font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
     font-size: 12pt; /* Document-ClickablesDefault-Font_TextSize */
-    color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
     font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
 
-    /* Document-ClickablesDefault-Background */
+    color: #FFFFFF; /* Document-ClickablesActive-Font_Color */
+
+    /* Document-ClickablesActive-Background */
     background-color: #444444; /* Document-ClickablesActive-Background_Color */
     background-image: url(images/threeD.png); /* Document-ClickablesActive-Background_Image */
     background-position: left top;  /* Document-ClickablesActive-Background_Image-Position */
@@ -341,6 +342,45 @@ body.wm_template {
     }
 
     /* END SECTION wm.WizardLayers */
+
+    /* START PORTLETS */
+    .wm_template .dojoxPortlet div.dijitTitlePaneTitle {
+        /* Document-ClickablesDefault-Font */
+        font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
+        font-size: 12pt; /* Document-ClickablesDefault-Font_TextSize */
+        color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
+        font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+
+        /* Document-ClickablesDefault-Background */
+        background-color: #444444; /* Document-ClickablesDefault-Background_Color */
+        background-image: url(images/threeD.png); /* Document-ClickablesDefault-Background_Image */
+        background-position: left top;  /* Document-ClickablesDefault-Background_Image-Position */
+        background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_template .dojoxPortlet div.dijitTitlePaneTitle .dijitTitlePaneTextNode {
+        color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
+    }
+    .wm_template .dojoxPortlet div.dijitTitlePaneTitle-hover {
+        /* Document-ClickablesDefault-Font */
+        font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
+        font-size: 12pt; /* Document-ClickablesDefault-Font_TextSize */
+        color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
+        font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+
+        /* Document-ClickablesDefault-Background */
+        background-color: #444444; /* Document-ClickablesHover-Background_Color */
+        background-image: url(images/threeD.png); /* Document-ClickablesHover-Background_Image */
+        background-position: left top;  /* Document-ClickablesHover-Background_Image-Position */
+        background-repeat: repeat-x; /* Document-ClickablesHover-Background_Image-Repeat */
+    }
+    .wm_template .dojoxPortlet div.dijitTitlePaneTitle-hover .dijitTitlePaneTextNode {
+        color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
+    }
+    .wm_template .dojoxPortlet div.dijitTitlePaneTitle .dojoxPortletIcon {
+        background-color: white;
+        border-color: #333333;
+        margin-left: 5px;
+    }
 }
 
 
@@ -517,6 +557,40 @@ body.wm_template {
     }
 
     /* END SECTION wm.WizardLayers */
+
+    /* START PORTLETS */
+    .wm_template .MainContent div.dijitTitlePaneTitle {
+        /* MainContentClickablesDefault-Font */
+        font-family: sans-serif; /* MainContentClickablesDefault-Font_Family */
+        font-size: 12pt; /* MainContentClickablesDefault-Font_TextSize */
+        color: #FFFFFF; /* MainContentClickablesActive-Font_Color */
+        font-weight: bold; /* MainContentClickablesDefault-Font_Weight */
+
+        /* MainContentClickablesDefault-Background */
+        background-color: #444444; /* MainContentClickablesActive-Background_Color */
+        background-image: url(images/threeD.png); /* MainContentClickablesActive-Background_Image */
+        background-position: left top;  /* MainContentClickablesActive-Background_Image-Position */
+        background-repeat: repeat-x; /* MainContentClickablesActive-Background_Image-Repeat */
+    }
+    .wm_template .MainContent .dojoxPortlet div.dijitTitlePaneTitle .dijitTitlePaneTextNode {
+        color: #FFFFFF; /* MainContentClickablesDefault-Font_Color */
+    }
+    .wm_template .MainContent div.dijitTitlePaneTitle-hover {
+        /* MainContentClickablesDefault-Font */
+        font-family: sans-serif; /* MainContentClickablesDefault-Font_Family */
+        font-size: 12pt; /* MainContentClickablesDefault-Font_TextSize */
+        color: #FFFFFF; /* MainContentClickablesHover-Font_Color */
+        font-weight: bold; /* MainContentClickablesDefault-Font_Weight */
+
+        /* MainContentClickablesDefault-Background */
+        background-color: #444444; /* MainContentClickablesHover-Background_Color */
+        background-image: url(images/threeD.png); /* MainContentClickablesHover-Background_Image */
+        background-position: left top;  /* MainContentClickablesHover-Background_Image-Position */
+        background-repeat: repeat-x; /* MainContentClickablesHover-Background_Image-Repeat */
+    }
+    .wm_template .MainContent .dojoxPortlet div.dijitTitlePaneTitle-hover .dijitTitlePaneTextNode {
+        color: #FFFFFF; /* MainContentClickablesHover-Font_Color */
+    }
 }
 
 
@@ -690,6 +764,40 @@ body.wm_template {
     }
 
     /* END SECTION wm.WizardLayers */
+
+    /* START PORTLETS */
+    .wm_template .EmphasizedContent div.dijitTitlePaneTitle {
+        /* EmphasizedContent-ClickablesDefault-Font */
+        font-family: sans-serif; /* EmphasizedContent-ClickablesDefault-Font_Family */
+        font-size: 12pt; /* EmphasizedContent-ClickablesDefault-Font_TextSize */
+        color: #FFFFFF; /* EmphasizedContent-ClickablesActive-Font_Color */
+        font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
+
+        /* EmphasizedContent-ClickablesDefault-Background */
+        background-color: #444444; /* EmphasizedContent-ClickablesActive-Background_Color */
+        background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesActive-Background_Image */
+        background-position: left top;  /* EmphasizedContent-ClickablesActive-Background_Image-Position */
+        background-repeat: repeat-x; /* EmphasizedContent-ClickablesActive-Background_Image-Repeat */
+    }
+    .wm_template .EmphasizedContent .dojoxPortlet div.dijitTitlePaneTitle .dijitTitlePaneTextNode {
+        color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
+    }
+    .wm_template .EmphasizedContent div.dijitTitlePaneTitle-hover {
+        /* EmphasizedContent-ClickablesDefault-Font */
+        font-family: sans-serif; /* EmphasizedContent-ClickablesDefault-Font_Family */
+        font-size: 12pt; /* EmphasizedContent-ClickablesDefault-Font_TextSize */
+        color: #FFFFFF; /* EmphasizedContent-ClickablesHover-Font_Color */
+        font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
+
+        /* EmphasizedContent-ClickablesDefault-Background */
+        background-color: #444444; /* EmphasizedContent-ClickablesHover-Background_Color */
+        background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesHover-Background_Image */
+        background-position: left top;  /* EmphasizedContent-ClickablesHover-Background_Image-Position */
+        background-repeat: repeat-x; /* EmphasizedContent-ClickablesHover-Background_Image-Repeat */
+    }
+    .wm_template .EmphasizedContent .dojoxPortlet div.dijitTitlePaneTitle-hover .dijitTitlePaneTextNode {
+        color: #FFFFFF; /* EmphasizedContent-ClickablesHover-Font_Color */
+    }
 }
 
 
@@ -861,9 +969,41 @@ body.wm_template {
     }
 
     /* END SECTION wm.WizardLayers */
+
+    /* START PORTLETS */
+    .wm_template .HeaderContent div.dijitTitlePaneTitle {
+        /* HeaderContent-ClickablesDefault-Font */
+        font-family: sans-serif; /* HeaderContent-ClickablesDefault-Font_Family */
+        font-size: 12pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
+        color: #FFFFFF; /* HeaderContent-ClickablesActive-Font_Color */
+        font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
+
+        /* HeaderContent-ClickablesDefault-Background */
+        background-color: #444444; /* HeaderContent-ClickablesActive-Background_Color */
+        background-image: url(images/threeD.png); /* HeaderContent-ClickablesActive-Background_Image */
+        background-position: left top;  /* HeaderContent-ClickablesActive-Background_Image-Position */
+        background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
+    }
+    .wm_template .HeaderContent .dojoxPortlet div.dijitTitlePaneTitle .dijitTitlePaneTextNode {
+        color: #FFFFFF; /* HeaderContent-ClickablesDefault-Font_Color */
+    }
+    .wm_template .HeaderContent div.dijitTitlePaneTitle-hover {
+        /* HeaderContent-ClickablesDefault-Font */
+        font-family: sans-serif; /* HeaderContent-ClickablesDefault-Font_Family */
+        font-size: 12pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
+        color: #FFFFFF; /* HeaderContent-ClickablesHover-Font_Color */
+        font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
+
+        /* HeaderContent-ClickablesDefault-Background */
+        background-color: #444444; /* HeaderContent-ClickablesHover-Background_Color */
+        background-image: url(images/threeD.png); /* HeaderContent-ClickablesHover-Background_Image */
+        background-position: left top;  /* HeaderContent-ClickablesHover-Background_Image-Position */
+        background-repeat: repeat-x; /* HeaderContent-ClickablesHover-Background_Image-Repeat */
+    }
+    .wm_template .HeaderContent .dojoxPortlet div.dijitTitlePaneTitle-hover .dijitTitlePaneTextNode {
+        color: #FFFFFF; /* HeaderContent-ClickablesHover-Font_Color */
+    }
 }
-
-
 
 
 #wmMinifiedDialogPanel {

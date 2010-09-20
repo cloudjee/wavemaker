@@ -213,15 +213,15 @@ body .wm_template .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected
 }
 
   /**************************************************************************************************
-   * TYPE:        wm.SelectMenu Popup
+   * TYPE:        wm.SelectMenu Popup, wm.Calendar Month list popup
    *
    * DESCRIPTION: Sets styles for menu.  Does not depend at this time on what kind of panel its in,
    *              the popup is always under body; the menubar itself we may update to work anywhere.
    *
    ************************************************************************************************/
 body.wm_template ul.dijitMenu .dijitMenuItem,
-body .wm_template ul.dijitMenu .dijitMenuItem
-{
+body .wm_template ul.dijitMenu .dijitMenuItem,
+body.wm_default div.dijitMenu .dijitCalendarMonthLabel {
 
     /* Tables-EvenRows-Font */
     color: #FFFFFF; /* Tables-EvenRows-Font_Color */
@@ -234,12 +234,13 @@ body .wm_template ul.dijitMenu .dijitMenuItem
     border-bottom-color: #AAAAAA; /* Tables-EvenRows-Border_Color */
 }
 
-/* Combobox Popup items with hover/selected */
+/* Combobox and Calendar Month Popup  items with hover/selected */
 body.wm_template  ul.dijitMenu .dijitMenuItem.dijitMenuItemHover,
 body .wm_template ul.dijitMenu .dijitMenuItem.dijitMenuItemHover,
 body.wm_template  ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected,
-body .wm_template ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected
- {
+body .wm_template ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected,
+body.wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover,
+body .wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
     /* Document-ClickablesHover-Font */
     color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
 
