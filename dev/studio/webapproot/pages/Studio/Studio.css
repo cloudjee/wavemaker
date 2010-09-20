@@ -1485,12 +1485,12 @@ body.wm-darksnazzy .wmToolbar button:hover {
     text-align: center;
     padding-top: 5px;
 }
-.wmdesign-wrapper-selected .openPageContainerDesignWrapperButton.hasPageName {
+.wmdesign-wrapper-selected .openPageContainerDesignWrapperButton {
     display: block;
     cursor: pointer;
 }
 
-.openPageContainerDesignWrapperButton.hasPageName:hover {
+.openPageContainerDesignWrapperButton:hover {
     background-color: rgb(80,80,80);
 }
 
