@@ -167,7 +167,7 @@ dojo.declare("wm.ListViewer", wm.Container, {
 					     false,
 					     dojo.hitch(this,function() {
 						 studio.project.saveProject();
-						 studio.project.newPage(n,"wm.ListViewerRow", {type:this.dataSet.type});
+						 studio.project.newPage(n,"wm.ListViewerRow", {type:this.dataSet.type, json: dojo.toJson(this.dataSet.getData()[0])});
 					     }),
 					     dojo.hitch(this,function() {
 						 studio.project.newPage(n,"wm.ListViewerRow", {type:this.dataSet.type});
@@ -177,7 +177,6 @@ dojo.declare("wm.ListViewer", wm.Container, {
     setPageName: function(inPage) {
 	if (inPage == "-New Page" && this.isDesignLoaded()) {
 	    return this.createNewPage();
-
 	}
 	this.pageName = inPage;
 	var path = this.getPath() + wm.pagesFolder + inPage + "/" + inPage + ".widgets.js";
