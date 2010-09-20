@@ -20,22 +20,6 @@ wm.Dashboard.extend({
 	showMenuDialog: function(e){
 		this.contextMenu.show();
 	},
-	createAddWidgetDialog: function(){
-		this.addDialogName = studio.page.getUniqueName(this.name+"_AddDialog");
-		var seName = this.name+'_selectEditor';
-		var spacer = this.name + '_spacer';
-
-		var props = {width:320, height:150, name: this.addDialogName, border:2, borderColor: "rgb(80,80,80)", title: 'Add Widget', parent: this, owner: this.owner};
-		this.addDialog = new wm.WidgetsJsDialog(props);
-		var dialogWidgets = {};
-		dialogWidgets[seName] = ["wm.Editor", {"caption":"Widget","display":"Select","readonly":undefined,"width":"100%"}, {}, {editor: ["wm._SelectEditor", {"required":true}, {}]}];
-		dialogWidgets[spacer] = ["wm.Spacer", {height: "100%", width: "10px"}, {}, {}];
-		dialogWidgets.dialogFooter = ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, name: "dialogfooter", layoutKind: "left-to-right",  padding: "2,0,2,0", horizontalAlign: "right", height: "34px", width: "100%"}, {}, {
-		                 	 okButton: ["wm.Button", {"height":"100%","width":"150px","caption": "Add"}, {"onclick":'onOkClick'}],
-		                 	 cancelButton: ["wm.Button", {"height":"100%","width":"150px","caption": "Cancel"}, {"onclick":'onCancelClick'}]
-	                     }];
-		this.addDialog.setWidgetsJson(dojo.toJson(dialogWidgets));
-	},
 	portletPropChanged: function(Obj, prop, inValue, trObj){
 		switch(prop){
 			case 'isOpen':
