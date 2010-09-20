@@ -54,12 +54,13 @@ public interface TypeMapper {
      * @return <code>true</code> if the <code>QName</code> is a simple type.
      */
     public boolean isSimpleType(QName schemaType);
-    
+
     /**
      * Returns a list of all types in this mapper.  The returned list should
      * not include simple types like int, String...
-     * 
+     *
+     * @param serviceId The service Id. //xxx
      * @return A list of all types.
      */
-    public List<ElementType> getAllTypes();
+    public List<ElementType> getAllTypes(String serviceId);
 }

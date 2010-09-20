@@ -86,3 +86,5 @@ RUN_QUERY_OP = "runQuery";
 SAVE_CONNECTION_PROPS_OP = "writeConnectionProperties";
 SAVE_QUERY_OP = "updateQuery";
 TEST_CONNECTION_OP = "testConnection";
+
+SALESFORCE_SERVICE = "salesforceService"; //xxx

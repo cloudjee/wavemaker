@@ -23,17 +23,20 @@ dojo.require('wm.base.lib.data');
 wm.getViewField = function(inTypeSchema, inPropName) {
 	if (inTypeSchema) {
 		var propInfo = wm.typeManager.getPropertyInfoFromSchema(inTypeSchema, inPropName);
+
 		return {
 			caption: wm.capitalize(inPropName.split(".").pop()),
 			sortable: true,
 			dataIndex: inPropName,
 			type: propInfo.type,
-			displayType: wm.getPrimitiveDisplayType(propInfo.type),
+			//displayType: wm.getPrimitiveDisplayType(propInfo.type), //xxx
+			displayType: wm.getDisplayType(propInfo), //xxx
 			required: propInfo.required,
 			readonly: dojo.indexOf(propInfo.noChange, "read") >= 0,
 			includeLists: true,
 			includeForms: true,
-			order: propInfo.fieldOrder
+			order: propInfo.fieldOrder,
+			subType: propInfo.fieldSubType
 		};
 	}
 }
@@ -283,6 +286,22 @@ dojo.declare("wm.LiveView", wm.Component, {
 			return list;
 		} else
 			return view;
+	},
+
+	//check if any picklist(for salesforce for now) exists
+	pickListExists: function() { //xxx
+		var exists = false;
+		if (SALESFORCE_SERVICE == this.service) {
+			for (var i=0; i<this.view.length; i++) {
+				var e = this.view[i];
+				if ("picklist" == e.subType) {
+					exists = true;
+					break;
+				}
+			}
+		}
+
+		return exists;
 	}
 });
 

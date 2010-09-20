@@ -44,6 +44,7 @@ import com.wavemaker.runtime.data.ExternalDataModelConfig;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.data.util.JDBCUtils;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
+import com.wavemaker.runtime.ws.WebServiceType;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.project.DeploymentManager;
@@ -537,7 +538,13 @@ public class DataModelManager {
         return rtn;
     }
 
-    public Collection<String> getDataModelNames() {
+    public Collection<String> getDataModelNames() { //xxx0909
+        Collection<String> names = getDataModelNamesAll();
+        names.remove("salesforceService");
+        return names;
+    }
+
+    public Collection<String> getDataModelNamesAll() { //xxx0909
         initialize(false);
         if (dataModelNames.containsKey(getProjectName())) {
             return new TreeSet<String>(dataModelNames.get(getProjectName()));
@@ -707,8 +714,10 @@ public class DataModelManager {
 
     private void initialize(boolean force) {
 
+        String[] types = {DataServiceType.TYPE_NAME, WebServiceType.TYPE_NAME}; //xxx
+
         Set<Service> services = serviceManager
-                .getServicesByType(DataServiceType.TYPE_NAME);
+                .getServicesByType(types); //xxx
 
         for (Service service : services) {
             initialize(service.getId(), force);
@@ -779,8 +788,12 @@ public class DataModelManager {
                 }
             };
 
-            rtn = new DataModelConfiguration(cfg, projectManager
-                    .getCurrentProject(), serviceId, externalConfig, clf, cs);
+            //if (serviceId.equals("salesforceService")) { //xxx
+               // rtn = new DataModelConfiguration();
+            //} else {
+                rtn = new DataModelConfiguration(cfg, projectManager
+                        .getCurrentProject(), serviceId, externalConfig, clf, cs);
+            //}
 
             dataModels.put(getKey(serviceId), rtn);
             dataModelNames.put(getProjectName(), serviceId);

@@ -19,6 +19,7 @@ package com.wavemaker.runtime;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.ServletContext;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.CommonConstants;
@@ -26,6 +27,8 @@ import com.wavemaker.common.WMRuntimeInitException;
 import com.wavemaker.runtime.service.ServiceManager;
 import com.wavemaker.runtime.service.ServiceWire;
 import com.wavemaker.runtime.service.reflect.ReflectServiceWire;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * Runtime bean.  Provides an interface to the session, request and response
@@ -172,5 +175,12 @@ public class RuntimeAccess {
         if (o == null) return -1;
 
         return (Integer)o;
+    }
+
+    public Object getSpringBean(String beanId) { //xxx
+        ServletContext context = request.getSession().getServletContext();
+        WebApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(context);
+
+        return applicationContext.getBean(beanId);
     }
 }

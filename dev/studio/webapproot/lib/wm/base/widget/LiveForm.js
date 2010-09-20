@@ -462,6 +462,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	liveEditing: true,
 	liveSaving: true,
 	liveVariable: null,
+	liveDataSourceClass: null, //xxx
 	noButtonPanel: false,
         editPanelStyle: "wm.RoundedButton",
 	_confirmDelete: true,
@@ -493,6 +494,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 		if (this.liveEditing && !this.isDesignLoaded())
 			this.setReadonly(this.readonly);
 	},
+
 	initLiveVariable: function() {
 		var lv = this.liveVariable = new wm.LiveVariable({
 			name: "liveVariable",
@@ -535,6 +537,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 		this.clearDataOutput();
 		this.beginEditUpdate();
 		this.clearData();
+		this.populatePickList(); //xxx
 		this.endEditUpdate();
 		this.beginEdit("insert");
 		this.setDefaultOnInsert();
@@ -548,6 +551,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	*/
 	beginDataUpdate: function() {
 		this.beginEdit("update");
+		this.populatePickList(); //xxx
 		this.onBeginUpdate();
 		return true;
 	},
@@ -783,6 +787,49 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 			this._defaultButtonHandle = null;
 		}
 	},
+
+	//===========================================================================
+	// functions to support Salesforce
+	//===========================================================================
+
+	//populate options for pick list type fields for Salesforce
+	populatePickList: function() { //xxx
+		var targets = {};
+		var targetElements = [];
+		wm.forEach(this.widgets, function(e) {
+			if (e.subType != null && e.subType != undefined && (e.subType == "picklist" || e.subType == "boolean")) {
+				targetElements.push(e);
+				var val = e.getDataValue();
+				targets[e.formField] = val;
+			}
+		});	
+
+		if (!wm.isEmpty(targets)) {
+			var page = this.getParentPage();
+			try {
+				page.sforceRuntimeService.requestSync("getPickLists", [this.liveDataSourceClass, targets], 
+											dojo.hitch(this, "updatePickList", targetElements),
+											dojo.hitch(this, "sforceRuntimeServiceError"));         
+			} catch(e) {
+				console.error('ERROR IN populatePickList: ' + e); 
+			} 			
+		}
+	},
+
+	updatePickList: function(elements, inResult) { //xxx
+		dojo.forEach(elements, function(e) {
+			if (e.subType == "picklist") {
+				var dataSet = inResult[e.formField];
+				e.editor.setOptionSet(dataSet.options);
+				e.setDataValue(dataSet.default.dataValue);
+			}
+		});
+	},
+
+	sforceRuntimeServiceError: function(inError) { //xxx
+		alert("sforceRuntimeServiceError error = " + inError);
+	},
+
 	//===========================================================================
 	// Events
 	//===========================================================================

@@ -197,7 +197,7 @@ public class DataModelConfiguration {
         this.springConfiguration = new DataServiceSpringConfiguration(
                 fileService, this.cfgPath, this.cfgFile, serviceId);
 
-        setup();
+        if (!serviceId.equals("salesforceService")) setup(); //xxx
     }
 
     public DataModelConfiguration(File springConfig) {
@@ -877,6 +877,7 @@ public class DataModelConfiguration {
                 Object rtn = null;
 
                 try {
+                    queryRunner.setName(name);
                     rtn = queryRunner.run(query);
                 } catch (Throwable th) {
                     throw DataServiceUtils.unwrap(th);
@@ -1973,7 +1974,7 @@ public class DataModelConfiguration {
         return rtn;
     }
 
-    private void setBindParameters(QueryRunner queryRunner, 
+    private void setBindParameters(QueryRunner queryRunner,
                                    Input[] inputs, String values, 
                                    boolean includeNullValues) 
     {

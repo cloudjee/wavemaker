@@ -62,9 +62,16 @@ public interface FieldDefinition {
     /**
      * True iff this field allows null values.
      * 
-     * @return True iff this field allows null values.
+     * @return True if this field allows null values.
      */
     public boolean isAllowNull();
+
+    /**
+     * Sub type for Salesforce.
+     *
+     * @return Sub type.
+     */
+    public String getSubType(); //xxx
 
     /**
      * Get the list of operations this field is required for. See the

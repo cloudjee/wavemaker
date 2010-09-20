@@ -132,6 +132,8 @@
                         default="false" />
                     <xsd:attribute name="allowNull" type="xsd:boolean"
                         default="false" />
+		    <xsd:attribute name="subType" type="xsd:string"
+                         />
                     <!--
                         maybe for later
                         <xsd:attribute name="serviceRef" type="xsd:string" />
