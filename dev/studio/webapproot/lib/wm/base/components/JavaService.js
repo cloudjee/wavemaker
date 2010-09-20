@@ -26,19 +26,128 @@ dojo.require("wm.base.components.ServerComponent");
 */
 dojo.declare("wm.JavaService", wm.ServerComponent, {
 	serviceId: "",
-    initialCode: "", // only used when creating a javaservice with prespecified java code; used only as an initialization property, do not expect to see actual code here any other time.
+
+    // initialCode or javaTemplate only used when creating a javaservice with prespecified java code; used only as an initialization property, do not expect to see actual code here any other time.
+    initialCode: "", 
+    javaTemplate: "",
+
+
     initialClassId: "",
     initialNoEdit: "",
 	afterPaletteDrop: function() {
 	    if (this.initialCode) {
-		this.newJavaServiceSkipDialog(this.serviceId, this.initialClassId, this.initialCode);		
+		this.newJavaServiceWithFunc(this.serviceId, this.initialClassId, this.initialCode);		
+	    } else if (this.javaTemplate) {
+		var result = studio.studioService.requestSync("getJavaServiceTemplate", [this.javaTemplate]).results[0];
+		this.newJavaServiceWithFunc(this.serviceId, this.initialClassId, result);		
 	    } else {
 		this.newJavaServiceDialog();
 	    }
 		return true;
 	},
-    newJavaServiceSkipDialog: function(serviceId, classId, javaFunctions) {
+    getUniqueServiceId: function(serviceId) {
+	var components = studio.application.getServerComponents();
+	for (var i = 0; i < components.length; i++) {
+	    if (components[i].name == serviceId) {
+		if (serviceId.match(/\d+$/)) {
+		    var numb = parseInt(serviceId.match(/\d+$/)[0]);
+		    numb++;
+		    return this.getUniqueServiceId(serviceId.replace(/\d+$/,numb));
+		} else {
+		    return this.getUniqueServiceId(serviceId + "1");
+		}
+	    }
+	}
+	return serviceId;
+    },
+    newJavaServiceWithFunc: function(serviceId, classId, javaFunctions) {
+
+	var params = javaFunctions.match(/\$\{.*?\}/g);
+	if (params) {
+	    for(var i = 0; i < params.length; i++) {
+		var param = params[i].substring(2,params[i].length-1);
+		var paramParts = param.split(":");
+		params[i] = {type: paramParts[0],
+			     name: paramParts[1],
+			     description: paramParts[2]};
+	    }
+
+	    var onOKFunc = dojo.hitch(this, function() {
+		for (var i = 0; i < params.length; i++) {
+		    javaFunctions = javaFunctions.replace(new RegExp("\\$\\{" + params[i].type + ":" + params[i].name + ":.*?\\}"), params[i].editor.getDataValue());
+		}
+		this.newJavaServiceWithFunc2(serviceId, classId, javaFunctions);
+	    });
+	    var onDoneFunc = dojo.hitch(this, function() {
+		d.destroy();
+		for (var i = 0; i < params.length; i++)
+		    delete params[i].editor;
+		params = null;
+	    });
+				      
+	    var d = new wm.Dialog({owner: app, 
+				   width: "400px",
+				   height: "400px",
+				   modal: true,
+				   useContainerWidget: true,
+				   fitToContentHeight: true,
+				   title: "Create a Java Service"});
+	    for(var i = 0; i < params.length; i++) {
+		params[i].editor = 
+		    new wm.Text({owner: d,
+				 parent: d.containerWidget,
+				 captionSize: "100px",
+				 captionAlign: "left",
+				 padding: "4,10,4,10",
+				 height: "30px",
+				 width: "100%",
+				 emptyValue: "emptyString",
+				 caption: params[i].name,
+				 promptMessage: params[i].type + ": "+ params[i].description});
+		params[i].editor.connect(params[i].editor, "onEnterKeyPress", this, function() {
+		    onOKFunc();
+		    onDoneFunc();
+		});
+	    }
+	    var okButton = new wm.Button({owner:  d,
+					  parent: d.buttonBar,
+					  width: "100px",
+					  height: "40px",
+					  caption: "OK"});
+	    var cancelButton = new wm.Button({owner:  d,
+					  parent: d.buttonBar,
+					  width: "100px",
+					  height: "40px",
+					  caption: "Cancel"});
+	    d.show();
+	    params[0].editor.focus();
+	    d.connect(okButton, "onclick", this, function() {
+		onOKFunc();
+		onDoneFunc();
+	    });
+
+	    d.connect(cancelButton, "onclick", this, function() {
+		onDoneFunc();
+	    });
+
+	    
+	} else {
+	    this.newJavaServiceWithFunc2(serviceId, classId, javaFunctions);
+	}
+    },
+    newJavaServiceWithFunc2: function(serviceId, classId, javaFunctions) {
 	studio.beginWait("Creating service");
+	var newServiceId = this.getUniqueServiceId(serviceId);
+
+	// if the service id has changed, also update the class name to match
+	if (newServiceId != serviceId) {
+	    var numb = newServiceId.match(/\d$/)[0];
+	    if (classId.match(/\d+$/))
+		classId = classId.replace(/\d+$/, numb);
+	    else
+		classId += numb;
+	}
+	serviceId = newServiceId;
 
 	var onError = dojo.hitch(this, function(inError) {
 	    app.toastWarning("Failed to create java service " + serviceId +": " + inError);
@@ -51,12 +160,13 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 	    var c = new wm.JavaService({name: serviceId, serviceId: serviceId})
 	    studio.application.addServerComponent(c);
 	    studio.refreshWidgetsTree();
-	    if (!this.initialNoEdit) {
+	    if (!this.initialNoEdit || studio.javaEditor.isActive()) {
 		studio.select(c);
-		this.editView();
+		c.editView();
 		studio.navGotoModelTreeClick();
 	    }
-
+	    delete this.iintialNoEdit;
+	    
 	    studio.endWait("Creating service");
 	});
 
@@ -70,8 +180,6 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 						[serviceId, inData], 
 						onSaveSuccess,
 						onError);
-
-
 	});
 
 	// STEP 2: After creating a new class, load the class file from the server
@@ -85,7 +193,7 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 	studio.javaService.requestAsync(
 	    "newClass", [serviceId, classId], onNewSuccess, onError);
 
-    },
+        },
 	newJavaServiceDialog: function(inSender) {
 		var d = this.getCreateJavaServiceDialog();
 		if (d.page)
