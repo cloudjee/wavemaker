@@ -91,12 +91,14 @@
 	padding: 10px;
 }
 
-.DataObjectsEditor .dojoxGrid {
+.DataObjectsEditor .dojoxGrid,
+.tundra .DataObjectsEditor .dojoxGrid {
 	position: relative;
 	background-color: white;
 	font-family: Geneva, Arial, Helvetica, sans-serif;
 	-moz-outline-style: none;
 	outline: none;
+        font-size: 1.0em;
 }
 
 .DataObjectsEditor .dojoxGrid table {
