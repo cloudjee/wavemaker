@@ -268,7 +268,7 @@ dojo.declare("wm.LiveFormBase", wm.Panel, {
 	},
 	getEditorsArray: function() {
 		return wm.getMatchingFormWidgets(this, function(w) {
-			return (wm.isInstanceType(w, wm.Editor));
+		    return (wm.isInstanceType(w, wm.Editor) || wm.isInstanceType(w, wm.AbstractEditor));
 		});
 	},
 	// FIXME: handle related editors specially
