@@ -41,23 +41,32 @@ wm.RelatedEditor.extend({
 	initializeFormField: function(){
 		if (!this.formField)
 		{
-			var arr = this.getOptions();
-			if (arr.length > 1)
-			{
-				this.set_formField(arr[1]);
-			}
+			var ff = this.getUniqueFormField();
+			if (ff && ff != '')
+				this.set_formField(ff);
 		}
 
 		var fieldSchema = this._getFieldSchema();
-		if (fieldSchema && fieldSchema.isList)
-		{
+		if (fieldSchema && fieldSchema.isList){
 			this._editingModes = ["readonly"];
 			this.editingMode = "readonly";
-		}	
-		else 
-		{
+		}	else {
 			this.set_editingMode("lookup");
 		}	
+	},
+	getUniqueFormField: function(){
+			var lf = wm.getParentForm(this);
+			if (!lf)
+				return '';
+			var arr = this.getOptions();
+			if (arr.length < 2)
+				return arr[0];
+			for (var i = 1; i < arr.length; i++){
+				if (!lf.isFormFieldInForm(arr[i]))
+					return arr[i];
+			}
+			
+			return arr[1];
 	},
 	listProperties: function() {
 		var

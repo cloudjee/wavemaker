@@ -568,6 +568,16 @@ wm.LiveForm.extend({
 		}
 	    }
             this.setHeight("500px"); // assuming fitToContentHeight is enabled, this will ignore the 500px and set to the preferred fitToContentHeight.
+	},
+	isFormFieldInForm: function(ff){
+		var arr = this.getRelatedEditorsArray() || [];
+		for(var i = 0; i < arr.length; i++){
+			var e = arr[i];
+			if (e.formField == ff)
+				return true;
+		}
+		
+		return false;
 	}
 });
 
