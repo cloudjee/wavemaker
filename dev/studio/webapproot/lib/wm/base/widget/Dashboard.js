@@ -198,8 +198,14 @@ dojo.declare("wm.Dashboard", wm.Control, {
                 this.renderDojoObj();
 		this.dojoObj.addService(portlet,props.x || 0, props.y || 0);
 	    portlet.wm_pageContainer = new wm.PageContainer({loadParentFirst: false, owner: this, parentNode: portlet.containerNode, isRelativePositioned:true});
-        if (props.page)
+            if (props.page) {
 			portlet.wm_pageContainer.setPageName(props.page);
+                window.setTimeout(dojo.hitch(this, function() {
+                    var c = dojo.coords(portlet.wm_pageContainer.domNode.parentNode);
+                    portlet.wm_pageContainer.setBounds(null,null,c.w, c.h);
+                    portlet.wm_pageContainer.reflow();
+                }), 100);
+            }
 
 		if (!this.isDesignLoaded()){
 		    dojo.connect(portlet, 'onClose', this, 'portletClosed');
@@ -209,6 +215,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 		
 		this.dijitPortlets.push(portlet);		
                 this._onDashboardChange();
+                
 		return props;
 	},
 	getNewPortletTitle: function(inTitle){
