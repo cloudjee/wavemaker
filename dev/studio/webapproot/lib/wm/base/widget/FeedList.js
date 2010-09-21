@@ -81,7 +81,7 @@ dojo.declare("wm.FeedList", wm.List, {
 		return html.join('');
 	},
 	getFeedItemTitleContent: function(inTitle, inLink) {
-		return '<a href="' + (this.showLink ? inLink : 'javascript:;') + '">' + inTitle + '</a>';
+		return '<a target="newpage" href="' + (this.showLink ? inLink : 'javascript:;') + '">' + inTitle + '</a>';
 	},
 	setUrl: function(inUrl) {
 		this.url = inUrl;
