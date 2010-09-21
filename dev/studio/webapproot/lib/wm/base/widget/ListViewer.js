@@ -245,14 +245,19 @@ dojo.declare("wm.ListViewer", wm.Container, {
 		    s.position = "absolute";
 		    s.top = (h * i) + "px";
 		    s.height = h + "px";
+                    s.width = this.bounds.w + "px";
 		    this.domNode.appendChild(this.nodes[i]);
-		}
-		// if the list has shrunk, delete the excess dom nodes
-		for (i = this.nodes.length-1; i >= length; i--) {
-		    dojo.destroy(this.nodes.pop());
+                    if (this.rowRenderers[i]) {
+                        dojo.destroy(this.rowRenderers[i].domNode);
+                        this.rowRenderers[i].domNode = this.nodes[i];
+                    }
 		}
 	    }
-
+		// if the list has shrunk, delete the excess dom nodes
+		for (i = this.nodes.length-1; i >= length; i--) {
+		    this.rowRenderers.pop().destroy();
+                    dojo.destroy(this.nodes.pop());
+		}
 	    if (!this._cupdating)
 		this.renderRows();
 	}
