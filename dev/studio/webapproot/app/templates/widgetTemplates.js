@@ -70,7 +70,7 @@ wm.widgetTemplates.fancyCenteredTemplate = {
 			templateBottom: ["wm.Panel", {"_classes":{"domNode":["fancytemplate-bottom-center"]},"height":"100%","width":"100%","verticalAlign":"top","horizontalAlign":"left","freeze":true}, {}],
 			templateBottomRight: ["wm.Panel", {"_classes":{"domNode":["fancytemplate-bottom-right"]},"height":"100%","width":"24px","verticalAlign":"top","horizontalAlign":"left","freeze":true}, {}]
 		    }],
-		    panelFooter: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","height":"48px","width":"100%","caption":"Copyright 2010 Wavemaker Software<br>301 Howard St Suite 2200 San Francisco, CA 94105","border":"0","padding":"10,20","margin":"0","singleLine":false}, {}, {}]
+		    panelFooter: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","height":"48px","width":"100%","caption":"Copyright 2010 Wavemaker Software<br>1000 Sansome Street, Suite 250 San Francisco, CA 94111","border":"0","padding":"10,20","margin":"0","singleLine":false}, {}, {}]
 		}]
 	    }]
         }]
