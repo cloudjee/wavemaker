@@ -47,6 +47,12 @@ dojo.declare("wm.Dashboard", wm.Control, {
 	postInit: function() {
 		this.inherited(arguments);
 		this.initAddWidgetDialog();
+            dojo.connect(this.domNode, "ondblclick", this, function() {
+                if (this.isDesignLoaded())
+                    this.contextMenu.show();
+                else
+                    this.addDialog.show();
+            });
 	    dojo.addOnLoad(dojo.hitch(this, "renderDojoObj"));
 	},
 	createAddWidgetDialog: function(){
@@ -56,15 +62,16 @@ dojo.declare("wm.Dashboard", wm.Control, {
 		var seName = this.name+'_selectEditor';
 		var spacer = this.name + '_spacer';
 
-		var props = {width:320, height:150, name: this.addDialogName, border:2, borderColor: "rgb(80,80,80)", title: 'Add Widget', parent: this, owner: this.owner};
-		var dialogWidgets = {};
-		dialogWidgets[seName] = ["wm.Editor", {"caption":"Widget","display":"Select","readonly":undefined,"width":"100%"}, {}, {editor: ["wm._SelectEditor", {"required":true}, {}]}];
+		var props = {width:320, height:150, name: this.addDialogName, border:2, borderColor: "rgb(80,80,80)", title: 'Add Widget', parent: this, owner: this};
+                var dialogWidgets = {};
+	        dialogWidgets[seName] = ["wm.SelectMenu", {"caption":"Widget","display":"Select","readonly":false,"width":"100%", required: true}];
 		dialogWidgets[spacer] = ["wm.Spacer", {height: "100%", width: "10px"}, {}, {}];
 		dialogWidgets.dialogFooter = ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, name: "dialogfooter", layoutKind: "left-to-right",  padding: "2,0,2,0", horizontalAlign: "right", height: "34px", width: "100%"}, {}, {
 		                 	 okButton: ["wm.Button", {"height":"100%","width":"150px","caption": "Add"}, {"onclick":'onOkClick'}],
 		                 	 cancelButton: ["wm.Button", {"height":"100%","width":"150px","caption": "Cancel"}, {"onclick":'onCancelClick'}]
 	                     }];
-                props.widgets_data = dialogWidgets;
+            props.widgets_data = {containerWidget: ["wm.Panel", {"name": "containerWidget", width: "100%", height: "100%", layoutKind: "top-to-bottom", horizontalAlign: "left", verticalAlign: "top"},{}, dialogWidgets]};
+
 		this.addDialog = new wm.WidgetsJsDialog(props);
 		//this.addDialog.setWidgetsJson(dojo.toJson(dialogWidgets));
             return this.addDialog;
@@ -79,7 +86,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 
 		if (this.isDesignLoaded() || !this.selectEditor)
 			return;
-		var e = this.selectEditor.editor;
+		var e = this.selectEditor;
 		var eData = [];
 		dojo.forEach(this.portlets, function(obj){
 			eData.push({name: obj.title,dataValue: obj});
