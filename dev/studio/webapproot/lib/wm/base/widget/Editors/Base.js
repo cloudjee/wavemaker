@@ -411,7 +411,7 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
     /* Caption */
 	caption: "",
         captionPosition: "left",
-	captionSize: "150px",
+	captionSize: "50%",
          captionNode: null,
 	captionAlign: "right",
 	singleLine: true,
