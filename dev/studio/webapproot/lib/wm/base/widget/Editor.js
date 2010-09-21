@@ -1,3 +1,7 @@
+                                                                     
+                                                                     
+                                                                     
+                                             
 /*
  *  Copyright (C) 2008-2010 WaveMaker Software, Inc.
  *
@@ -54,7 +58,8 @@ wm.getFieldEditorProps = function(inFieldInfo) {
 			display: wm.getEditorType(f.displayType || f.type),
 			readonly: f.readonly,
 			editorInitProps: {required: f.required},
-			required: f.required
+                        required: true,
+			subType: f.subType //xxx
 		};
 	// fixup: ensure checkbox is boolean type
 	if (props.display == "CheckBox") {
@@ -107,6 +112,7 @@ dojo.declare("wm.Editor", wm.Container, {
 	singleLine: true,
 	display: "Text",
 	readonly: false,
+	subType: "", //xxx
 	_updating: 0,
 	editingProps: {displayValue: 1, dataValue: 1, groupValue: 1},
 	init: function() {
