@@ -57,12 +57,12 @@ dojo.declare("wm.Dashboard", wm.Control, {
 	},
 	createAddWidgetDialog: function(){
             
-	    this.addDialogName = (this.isDesignLoaded()) ? studio.page.getUniqueName(this.name+"_AddDialog") : this.name + "_AddDialog";
+	    //this.addDialogName = (this.isDesignLoaded()) ? studio.page.getUniqueName(this.name+"_AddDialog") : this.name + "_AddDialog";
             
 		var seName = this.name+'_selectEditor';
 		var spacer = this.name + '_spacer';
 
-		var props = {width:320, height:150, name: this.addDialogName, border:2, borderColor: "rgb(80,80,80)", title: 'Add Widget', parent: this, owner: this};
+		var props = {width:320, height:150, name: "addDialog", border:2, borderColor: "rgb(80,80,80)", title: 'Add Widget', parent: this, owner: this};
                 var dialogWidgets = {};
 	        dialogWidgets[seName] = ["wm.SelectMenu", {"caption":"Widget","display":"Select","readonly":false,"width":"100%", required: true}];
 		dialogWidgets[spacer] = ["wm.Spacer", {height: "100%", width: "10px"}, {}, {}];
@@ -77,12 +77,11 @@ dojo.declare("wm.Dashboard", wm.Control, {
             return this.addDialog;
 	},
 	initAddWidgetDialog: function(){
-	    this.addDialog = this.owner[this.addDialogName] || this.createAddWidgetDialog();
-		if (this.addDialogName){
-			this.selectEditor = this.addDialog.components[this.name+'_selectEditor'];
-			this.okButton = this.addDialog.components['okButton'];
-			this.cancelButton = this.addDialog.components['cancelButton'];
-		}
+	    this.addDialog =  this.createAddWidgetDialog();
+	    this.selectEditor = this.addDialog.components[this.name+'_selectEditor'];
+	    this.okButton = this.addDialog.components['okButton'];
+	    this.cancelButton = this.addDialog.components['cancelButton'];
+
 
 		if (this.isDesignLoaded() || !this.selectEditor)
 			return;
@@ -209,7 +208,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 			portlet.wm_pageContainer.setPageName(props.page);
                 window.setTimeout(dojo.hitch(this, function() {
                     var c = dojo.coords(portlet.wm_pageContainer.domNode.parentNode);
-                    portlet.wm_pageContainer.setBounds(null,null,c.w-2, c.h-2);
+                    portlet.wm_pageContainer.setBounds(null,null,c.w-2, c.h-4);
                     portlet.wm_pageContainer.reflow();
                 }), 100);
             }
