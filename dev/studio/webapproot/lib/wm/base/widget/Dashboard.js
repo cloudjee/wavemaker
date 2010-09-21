@@ -202,7 +202,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 			portlet.wm_pageContainer.setPageName(props.page);
                 window.setTimeout(dojo.hitch(this, function() {
                     var c = dojo.coords(portlet.wm_pageContainer.domNode.parentNode);
-                    portlet.wm_pageContainer.setBounds(null,null,c.w, c.h);
+                    portlet.wm_pageContainer.setBounds(null,null,c.w-2, c.h-2);
                     portlet.wm_pageContainer.reflow();
                 }), 100);
             }
