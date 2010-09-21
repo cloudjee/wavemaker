@@ -45,6 +45,8 @@ wm.getEditorClassName = function(type){
 		type = 'Text';
 	if (type.toLowerCase() == 'checkbox')
 		type = 'Checkbox';
+	if (type.toLowerCase() == 'select')
+            type = 'SelectMenu';
 	return 'wm.'+type;
 }
 
