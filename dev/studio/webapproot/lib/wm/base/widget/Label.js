@@ -80,10 +80,14 @@ dojo.declare("wm.Label", wm.Control, {
 	    this.caption = inCaption;
 	    this.renderLabel();
             if ( innerHTML != this.domNode.innerHTML && (this.autoSizeHeight || this.autoSizeWidth)) {
-		this.doAutoSize(1,1);
+		this.scheduleAutoSize();
             }
 	},
 
+    scheduleAutoSize: function() {
+        this._needsAutoSize = true;
+        return wm.job(this.getId() + ": doAutoSize", 10,  dojo.hitch(this, function() {this.doAutoSize(true,false);}));
+    },
         doAutoSize: function(setSize, force) {
             if (this._doingAutoSize || !this.autoSizeHeight && !this.autoSizeWidth) return;
 	    if (!force && !this._needsAutoSize) return;
@@ -161,7 +165,7 @@ dojo.declare("wm.Label", wm.Control, {
 		this.autoSizeHeight = false;
 
 	    if (inSingleLine != oldSingleLine && (this.autoSizeHeight || this.autoSizeWidth)) {
-		this.doAutoSize(1,1);
+		this.scheduleAutoSize();
             }
 	},
 	setAlign: function(inAlign) {
@@ -267,7 +271,7 @@ wm.Label.extend({
     addUserClass: function(inClass, inNodeName) {
 	this.inherited(arguments);
         if (this.autoSizeHeight || this.autoSizeWidth) {
-	    this.doAutoSize(1,1);
+	    this.scheduleAutoSize();
         }
     }
 });
