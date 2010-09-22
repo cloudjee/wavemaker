@@ -28,7 +28,6 @@ dojo.declare("wm.ListViewerRow", wm.Container, {
     padding: "4",
     width: "100%",
     height: "40px",
-
 /*
     widgetsJson: {	
 	label1: ["wm.Label", {width: "100px", height: "20px"}, {}, {
@@ -49,6 +48,7 @@ dojo.declare("wm.ListViewerRow", wm.Container, {
 	this.variable = new wm.Variable({name: "variable", owner: this});
 	this.itemNumber = new wm.Variable({name: "itemNumber", owner: this, type: "NumberData"});
 	this._first = true;
+        this.border = this.parent.rowBorder;
     },
     renderRow: function(inData, inNode, index) {
 	if (this._first) {
@@ -137,6 +137,7 @@ dojo.declare("wm.ListViewer", wm.Container, {
     width: "100%",
     height: "100%",
     avgHeight: 150,
+    rowBorder: "0,0,0,0",
 /*
     dataSet: [{hey: "there", you: "guys"},
 	      {hey: "there2", you: "guys2"},
@@ -159,6 +160,10 @@ dojo.declare("wm.ListViewer", wm.Container, {
         if (this.pageName)
 	    this.setPageName(this.pageName);
 	this.connect(this.domNode, "onscroll", this, "renderRows");
+    },
+    setRowBorder: function(inBorder) {
+        this.rowBorder = inBorder;
+        dojo.forEach(this.rowRenderers, function(r) {r.setBorder(inBorder);});
     },
     createNewPage: function() {
 	var pages = studio.project.getPageList();
