@@ -116,6 +116,8 @@ dojo.declare("wm.FancyPanel", wm.Panel, {
                                                      autoScroll:     true,
                                                      horizontalAlign:this.innerHorizontalAlign,
                                                      verticalAlign:  this.innerVerticalAlign,
+                                                     fitToContentHeight: this.fitToContentHeight,
+                                                     fitToContentWidth: this.fitToContentWidth,
                                                      /* margin: "0,0,7,0",*/
                                                      border:         "0,"+innerBorder.r+","+innerBorder.b+","+innerBorder.l,
                                                      borderColor: this.borderColor});
@@ -154,7 +156,16 @@ dojo.declare("wm.FancyPanel", wm.Panel, {
             alert("PANEL:" + e);
         }
     },
-
+    setFitToContentHeight: function(inValue) {
+        this.inherited(arguments);
+        if (this.containerWidget)
+            this.containerWidget.setFitToContentHeight(inValue);
+    },
+    setFitToContentWidth: function(inValue) {
+        this.inherited(arguments);
+        if (this.containerWidget)
+            this.containerWidget.setFitToContentWidth(inValue);
+    },
     setBorder: function(inBorder) {
         wm.Control.prototype.setBorder.call(this, "0");
     },
