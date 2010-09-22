@@ -30,6 +30,13 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 			this._flow(inContainer, "t", "l", "h", "w", inContainer.verticalAlign, inContainer.horizontalAlign, reflowTest);
 		if (!reflowTest)
 			inContainer.renderControls();
+            
+            if (inContainer._autoSizeList) {
+                var c;
+                while(c = inContainer._autoSizeList.pop()) {
+                    c.doAutoSize(1,1);
+                }
+            }
 
 	},
 
@@ -189,6 +196,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 
                     /* Step 7e:  Update the bounds for the control; any bounds that were deleted or set to NaN will be left as is */
  		    c.setBounds(b.l, b.t, b.w, b.h);
+                    c._renderEngineBoundsSet = true;
 
                     /* Step 7f: If the widget has a flow method (typically means its a wm.Container), call flow on it */
 		    if (c.flow) {
@@ -258,20 +266,33 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
     
     handleAutoSizingWidgets: function(inContainer) {
 	if (!inContainer.isAncestorHiddenLayer() && inContainer.showing && (!wm.isInstanceType(inContainer, wm.Layer) || inContainer.active)) {
+            var hasAutoHeight;
+            var hasAutoWidth;
 	    for (var i = 0; i < inContainer.c$.length; i++) {			
 		var c = inContainer.c$[i];
 		if (c.showing) {
+
                     if (c._needsAutoSize && (c.autoSizeWidth || c.autoSizeHeight)) {
+                        var topParent = (c.owner instanceof wm.Page) ? c.owner.root : c.owner;
+                        if (!topParent._autoSizeList)
+                            topParent._autoSizeList = [];
+                        topParent._autoSizeList.push(c);
+/*
 		        var cupdatingwas = c._cupdating;
 		        c._cupdating = true;				
                         c.doAutoSize(false,false);
 		        c._cupdating = cupdatingwas;
-                    } else if (c.fitToContent) {
+                        if (c.autoSizeWidth) hasAutoWidth = true;
+                        if (c.autoSizeHeight) hasAutoHeight = true;
+                        */
+                    } else  if (c.fitToContent) {
                         if (c.fitToContentHeight) 
                             c.bounds.h = c.getPreferredFitToContentHeight();
                         if (c.fitToContentWidth)
                             c.bounds.w = c.getPreferredFitToContentWidth();
                         c.calcFitToContent();
+                        if (c.fitToContentWidth) hasAutoWidth = true;
+                        if (c.fitToContentHeight) hasAutoHeight = true;
                     }
 		}
 	    }
