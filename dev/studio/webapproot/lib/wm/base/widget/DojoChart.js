@@ -160,8 +160,9 @@ dojo.declare("wm.DojoChart", wm.Control, {
 		this.legendDiv = dojo.doc.createElement('div');
 		dojo.attr(this.legendDiv,'align','center');
 		this.domNode.appendChild(this.legendDiv);
-
+            try {
 		this.legend = new dojox.charting.widget.Legend({chart: this.dojoObj}, this.legendDiv);
+            } catch(e) {}
 	},
 	updateChartDivHeight: function(){
 		if (!this.dojoDiv)
