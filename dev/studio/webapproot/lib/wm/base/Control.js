@@ -413,16 +413,14 @@ this.label.enable();
 			this.dom = new wm.DomNode(this.domNode, this.isRelativePositioned);
 			if (!this.isRelativePositioned)
 				this.domNode.style.position = "absolute";
-				
+                        else
+				this.domNode.style.position = "relative";				
 			this.setParent(this.parent);
 			this.setDomNode(this.domNode);
 		}
 	},
 	init: function() {
-		if (!this.isRelativePositioned && this.parent && this.parent.isRelativePositioned){
-			this.isRelativePositioned = true;	
-		}
-		
+
 		this.initDomNode();
 		this.inherited(arguments);
 	        this.bc(); // mostly in here to support wm.Container's bc method
