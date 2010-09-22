@@ -348,8 +348,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	connectDojoEvents: function(){
 		//dojo.connect(this.dojoObj, 'onCellClick', this, 'onCellClick');
 		dojo.connect(this.dojoObj, 'onClick', this, '_onClick');
-		dojo.connect(this.dojoObj,'onCellDblClick', this,'onCellDblClick');
-		dojo.connect(this.dojoObj,'onCellContextMenu', this, 'onCellRightClick');
+		dojo.connect(this.dojoObj,'onCellDblClick', this,'_onCellDblClick');
+		dojo.connect(this.dojoObj,'onCellContextMenu', this, '_onCellRightClick');
 		//dojo.connect(this.dojoObj, "onDeselect", this, "deselect");
 		//dojo.connect(this.dojoObj, "onSelected", this, "select");
 		dojo.connect(this.dojoObj, "onSelectionChanged", this, "selectionChange");
@@ -512,25 +512,34 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		}
 		return fields;
 	},
-	_onClick: function(evt){
+	_onGridEvent: function(evt){
+		var params = {};
 		if (!evt.grid)
-			return;
-		var cellNode = evt.cellNode;
-		var rowNode = evt.rowNode;
-		var selectedItem = this.selectedItem;
-		var selection = evt.grid.selection;
-		if (dojo.isArray(selection))
-			var rowId = selection[selection.length - 1];
-		else
-			var rowId = evt.grid.selection.selectedIndex;
-		var fieldId = evt.cell.field;
-		this.onClick(evt, selectedItem, rowId, fieldId, rowNode, cellNode);
+			return params;
+		params.cellNode = evt.cellNode;
+		params.rowNode = evt.rowNode;
+		params.rowId = evt.rowIndex;
+		params.selectedItem = this.selectedItem;
+		params.fieldId = evt.cell.field;
+		return params;
+	},
+	_onClick: function(evt){
+		var params = this._onGridEvent(evt);
+		this.onClick(evt, params.selectedItem, params.rowId, params.fieldId, params.rowNode, params.cellNode);
+	},
+	_onCellDblClick: function(evt){
+		var params = this._onGridEvent(evt);
+		this.onCellDblClick(evt, params.selectedItem, params.rowId, params.fieldId, params.rowNode, params.cellNode);
+	},
+	_onCellRightClick: function(evt){
+		var params = this._onGridEvent(evt);
+		this.onCellRightClick(evt, params.selectedItem, params.rowId, params.fieldId, params.rowNode, params.cellNode);
 	},
 	onClick: function(evt, selectedItem, rowId, fieldId, rowNode, cellNode){
 	},
-	onCellDblClick: function(evt){
+	onCellDblClick: function(evt, selectedItem, rowId, fieldId, rowNode, cellNode){
 	},
-	onCellRightClick: function(evt){
+	onCellRightClick: function(evt, selectedItem, rowId, fieldId, rowNode, cellNode){
 	},
 	addColumnToCSV: function(csvArray, value){
 		if (dojo.isString(value))
