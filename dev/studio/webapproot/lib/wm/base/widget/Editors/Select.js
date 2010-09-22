@@ -1008,6 +1008,13 @@ wm.SelectMenu.extend({
 			case "updateNow":
 				return this.update();
 		}
+	},
+	setHasDownArrow: function(inValue){
+		this.hasDownArrow = inValue;
+		//this.editor.attr('hasDownArrow', this.hasDownArrow);
+		if (this.editor.downArrowNode){
+			this.editor.downArrowNode.style.display = this.hasDownArrow ? "" : "none";
+		}
 	}
 });
 
