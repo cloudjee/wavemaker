@@ -1011,7 +1011,7 @@ wm.SelectMenu.extend({
 	},
 	setHasDownArrow: function(inValue){
 		this.hasDownArrow = inValue;
-		//this.editor.attr('hasDownArrow', this.hasDownArrow);
+		//this.editor.attr('hasDownArrow', this.hasDownArrow); does not work updates the editor instantly. Therefore wrote a hack to hide downArrowNode by updating style prop.
 		if (this.editor.downArrowNode){
 			this.editor.downArrowNode.style.display = this.hasDownArrow ? "" : "none";
 		}
