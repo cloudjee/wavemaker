@@ -17,7 +17,8 @@
  */ 
 dojo.provide("wm.studio.app.templates.widgetTemplates");
 
-wm.widgetTemplates = {};
+if (!wm.widgetTemplates) wm.widgetTemplates = {};
+if (!wm.fullTemplates) wm.fullTemplates = {};
 
 wm.widgetTemplates.twoColumn = {
 	layoutKind: "top-to-bottom",
@@ -37,7 +38,7 @@ wm.widgetTemplates.twoColumn = {
 	}
 }
 
-wm.widgetTemplates.fancyCenteredTemplate = {
+wm.fullTemplates.fancyCenteredTemplate = {
     layoutKind: "top-to-bottom",
     width: "100%",
     height: "100%",
@@ -77,7 +78,7 @@ wm.widgetTemplates.fancyCenteredTemplate = {
     }
 }
 
-wm.widgetTemplates.CenteredPageContainerWithHeaderFooter = {
+wm.fullTemplates.CenteredPageContainerWithHeaderFooter = {
 	 height:"100%",
 	 width:"100%",
 	 horizontalAlign:"left",
@@ -169,7 +170,7 @@ wm.widgetTemplates.toolbarWithGroupBox = {
 	}
 }
 
-wm.widgetTemplates.complexLayout = {
+wm.fullTemplates.complexLayout = {
 	layoutKind: "top-to-bottom",
 	width: "100%",
 	height: "100%",
@@ -240,7 +241,7 @@ wm.widgetTemplates.titleBar = {
 	}
 }
 
-wm.widgetTemplates.centeredFixedLayout = {
+wm.fullTemplates.centeredFixedLayout = {
 	width: "100%",
 	height: "100%",
 	verticalAlign: "top",

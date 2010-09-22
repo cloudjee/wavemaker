@@ -170,13 +170,15 @@ wm.registerPackage(["Components", "Composite Publisher", "wm.CompositePublisher"
 */
 
 dojo.declare("wm.TemplatePublisher", wm.ComponentPublisher, {
+        isFullPageTemplate: false,
 	width: "100%",
 	height: "100%",
 	getComponentJson: function() {
 		if (!this.publishName || !studio.page)
 			return;
 		//
-		var template = this.publishName + "_template";
+	    //var template = this.publishName + "_template";
+            var template = ((!this.isFullPageTemplate) ? "wm.widgetTemplates." : "wm.fullTemplates.") + this.publishName;
 		var root = studio.page.root;
 		var widgets = template + " = {\n" +
 			'\tlayoutKind: "' + root.layoutKind + '",\n' +
@@ -205,6 +207,7 @@ dojo.declare("wm.TemplatePublisher", wm.ComponentPublisher, {
 		//
 		var r = [
 			'dojo.provide("' + resource + '");', '\n \n',
+                    (this.isFullPageTemplate) ? "if (!wm.fullTemplates) wm.fullTemplates = {};\n" : "if (!wm.widgetTemplates) wm.widgetTemplates = {};\n",
 			widgets, '\n \n',
 			reg
 		].join('');

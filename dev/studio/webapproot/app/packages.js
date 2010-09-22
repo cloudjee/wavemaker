@@ -80,17 +80,17 @@
 [ "More Widgets", "ListViewer", "wm.ListViewer", "wm.base.widget.ListViewer", "images/wm/content.png", "A simple list control"],
 [ "More Widgets", "ProgressBar", "wm.dijit.ProgressBar", "wm.base.widget.dijit.ProgressBar", "images/wm.dijit/ProgressBar.png", "Dojo progress bar"],
 
-[ "Templates", "FancyCentered", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "Template for OMG", wm.widgetTemplates.fancyCenteredTemplate],
-[ "Templates", "CenteredPageContainer", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A 800px wide centered page container with header and footer", wm.widgetTemplates.CenteredPageContainerWithHeaderFooter],
-[ "Templates", "TitleBar", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "An App Title Bar", wm.widgetTemplates.titleBar],
-[ "Templates", "CenteredLayout", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A 600px wide fixed centered layout", wm.widgetTemplates.centeredFixedLayout],
-[ "Templates", "Footer", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A footer template.", wm.widgetTemplates.footer],
-//
-[ "Templates", "ComplexLayout", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A complicated layout template.", wm.widgetTemplates.complexLayout],
-[ "Templates", "SearchListDetail", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A simple CRUD template.", wm.widgetTemplates.searchListDetail],
-[ "Templates", "Toolbar", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A toolbar with buttons", wm.widgetTemplates.toolbar],
-[ "Templates", "TwoColumns", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A simple template.", wm.widgetTemplates.twoColumn],
-[ "Templates", "TabbedTwoCol", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "Tabbed two column interface.", wm.widgetTemplates.tabbedTwoColumn],
+[ "Templates", "FancyCentered", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "Template for OMG", wm.fullTemplates.fancyCenteredTemplate],
+[ "Templates", "CenteredPageContainer", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A 800px wide centered page container with header and footer", wm.fullTemplates.CenteredPageContainerWithHeaderFooter],
+[ "Templates", "ComplexLayout", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A complicated layout template.", wm.fullTemplates.complexLayout],
+[ "Templates", "CenteredLayout", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A 600px wide fixed centered layout", wm.fullTemplates.centeredFixedLayout],
+
+[ "Sub Templates", "TitleBar", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "An App Title Bar", wm.widgetTemplates.titleBar],
+[ "Sub Templates", "Footer", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A footer template.", wm.widgetTemplates.footer],
+[ "Sub Templates", "SearchListDetail", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A simple CRUD template.", wm.widgetTemplates.searchListDetail],
+[ "Sub Templates", "Toolbar", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A toolbar with buttons", wm.widgetTemplates.toolbar],
+[ "Sub Templates", "TwoColumns", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A simple template.", wm.widgetTemplates.twoColumn],
+[ "Sub Templates", "TabbedTwoCol", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "Tabbed two column interface.", wm.widgetTemplates.tabbedTwoColumn],
 //[ "Templates", "ToolbarAndForm", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A toolbar and simple form template.", wm.widgetTemplates.toolbarWithGroupBox],
 
 [ "Web Content", "Feed List", "wm.FeedList", "wm.base.widget.FeedList", "images/rss.png", "Feed List"],
