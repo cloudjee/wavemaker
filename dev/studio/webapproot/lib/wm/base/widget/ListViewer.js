@@ -23,7 +23,7 @@ dojo.declare("wm.ListViewerRow", wm.Container, {
     layoutKind: "left-to-right",
     horizontalAlign: "left",
     verticalAlign: "top",
-    border: "0,0,1,0",
+    border: "0,0,0,0",
     margin: "2,0,2,0",
     padding: "4",
     width: "100%",
@@ -74,8 +74,17 @@ dojo.declare("wm.ListViewerRow", wm.Container, {
 	this.render();
 
 	this.reflow();
-	this.bounds.h = this.c$[0].bounds.h + this.padBorderMargin.h;
 	this.renderBounds();
+
+    },
+    renderBounds: function() {
+        this.inherited(arguments);
+        this.parent.updateRowTops();
+    },
+    reflow: function() {
+        this.inherited(arguments);
+        this.bounds.h = this.getPreferredFitToContentHeight();
+        this.renderBounds();
     },
     fixWireIds: function(inComponents) {
 	for (var i in inComponents) {
@@ -277,6 +286,17 @@ dojo.declare("wm.ListViewer", wm.Container, {
 	this._hasBounds = true;
 	this.renderRows(); // can't properly render the rows until we have a size of our own. keep in mind we can't just call reflow on all rows; all rows are rendered by a single renderer object
     },
+    updateRowTops: function() {
+        if (!this._renderingRows) {
+	    var heightSum = 0;
+	    for (var i = 0; i < length; i++) {
+	        var r = this.rowRenderers[i];
+                r.domNode.style.top = heightSum + "px";
+                heightSum += r.bounds.h;
+            }
+        }
+            
+    },
     renderRows: function() {
 	if (!this._hasBounds) return;
 	if (!this.dataSet || this.dataSet instanceof wm.Variable == false || !this._widgetsJson) return;
@@ -288,7 +308,7 @@ dojo.declare("wm.ListViewer", wm.Container, {
 	    for (var k = 0; k< this.dataSet.firstRow; k++) placeholder.push("");
 	    data = placeholder.concat(data);
 	}
-	
+        this._renderingRows = true;	
 	
 	var heightSum = 0;
 	var heightCount = 0;
@@ -340,10 +360,12 @@ dojo.declare("wm.ListViewer", wm.Container, {
 	    this.currentRenderer.bounds.w = bounds.w;
 	    this.currentRenderer.bounds.t = heightSum;
 	    this.currentRenderer.domNode.style.top = heightSum + "px";
-	    heightSum += this.currentRenderer.bounds.h;
+            console.log(i + ": " + heightSum + ", INC:" + this.currentRenderer.getPreferredFitToContentHeight());
+	    heightSum += this.currentRenderer.getPreferredFitToContentHeight();
 	    heightCount++;
 	    curAvg = Math.floor(heightSum/heightCount);
 	}
+        delete this._renderingRows;
 
     },
     isScrolledIntoView: function(nodeTop, nodeHeight, bounds) {
