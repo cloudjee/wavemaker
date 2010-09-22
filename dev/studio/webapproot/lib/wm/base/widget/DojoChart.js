@@ -150,8 +150,11 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	    this.resizeDijit();
 	},
 	resizeDijit: function() {
+		/*
 		if (this.dojoObj)
 			this.dojoObj.resize();
+		*/
+		this.renderDojoObj();
 	},
 	createLegend: function(){
 		if (this.legend && this.legend != null)
