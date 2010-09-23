@@ -131,8 +131,8 @@ dojo.declare("ResourceManager", wm.Page, {
 		    var page = this.fileDialog.importFile;
 		    page.setUploadService("resourceFileService");
 		    page.setUploadOperation("uploadFile");
-		    page.setTitle("Upload a File");
-		    page.setCaption("Select a File");
+		    page.setTitle(bundleStudio.R_UploadFile);
+		    page.setCaption(bundleStudio.R_SelectFile);
 		    this.fileDialog.setContainerOptions(true, 500, 120);
 		    window.debugThis = this.fileDialog;
 		    this.connect(this.fileDialog.page, "importClickCallback", this, "fileUploadCompleted");
@@ -245,7 +245,7 @@ dojo.declare("ResourceManager", wm.Page, {
 	}
 
 	if (targetItem.hasFileWithName(moveItem.getItemName())) {
-	    app.alert("A file with that name already exists");
+	    app.alert(bundleStudio.R_FileNameAlreadyExists);
 	    return;
 	}
 	var _this = this;
@@ -254,7 +254,7 @@ dojo.declare("ResourceManager", wm.Page, {
 						   function(response) {
 						     try {
 						       if (!response) {
-							   app.alert("Failed to rename file");
+							   app.alert(bundleStudio.R_FailedToRenameFile);
 						       } else {
 							 var oldparent = moveNode.parent;
 							 oldparent._remove(moveNode);
@@ -396,7 +396,7 @@ dojo.declare("ResourceManager", wm.Page, {
 	    this.resourcePropertiesHeaderLabel.setCaption(this.selectedItem.type);
 
 	    new wm.Label({parent: this.propertiesPanel,
-			  caption: "Relative URL:",
+			  caption: bundleStudio.R_RelativeURL,
 			  width: "100%",
 			  height: "24px"});
 	    new wm.Label({parent: this.propertiesPanel,
@@ -578,7 +578,7 @@ wm.ResourceItem.extend({
     // then shows properties.  
     finishFileUploadOnSuccess: function(result,isNewFile) {  
 	if (!result) {
-	    app.alert("Failed to place file");
+	    app.alert(bundleStudio.R_FailedToPlaceFile);
 	    return;
 	}
 	this.setItemName(result,true);
@@ -587,7 +587,7 @@ wm.ResourceItem.extend({
 	// Force the properties panel to regenerate with any new data
 	manager.forceShowPropertiesPanel();
 	if (!isNewFile) {
-	    app.alert(this.getItemName() + " has been updated");
+	    app.alert(this.getItemName() + bundleStudio.R_HasBeenUpdated);
 	}
     },
 
@@ -626,14 +626,14 @@ wm.ResourceItem.extend({
     deleteItem: function() {
 	var manager = studio.resourcesPage.getComponent("resourceManager");
 
-	app.confirm("Are you sure you want to delete the " + ((this instanceof wm.FolderResourceItem) ? "folder" : "file") + " named '" + this.getItemName() + "'?", false,
+	app.confirm(bundleStudio.R_AreYouSureDelete + ((this instanceof wm.FolderResourceItem) ? "folder" : "file") + " named '" + this.getItemName() + "'?", false,
                     dojo.hitch(this, function() {
 
 	                studio.resourceManagerService.requestAsync("deleteFile", [ this.getFilePath()],
                              dojo.hitch(this, function(result) { 
 		                 try {
 		                     if (!result) {
-			                 app.alert("Failed to delete " + this.getItemName()); 
+			                 app.alert(bundleStudio.R_FailedToDelete + this.getItemName()); 
 			                 return;
 		                     }
 		                     var parent = this.treeNode.parent;
@@ -662,10 +662,10 @@ wm.ResourceItem.extend({
 						   function(result) {
 						     try {
 						       if (!result) {
-							   app.alert("Failed to change name");
+							   app.alert(bundleStudio.R_FailedToChangeName);
 							   return;
 						       } else if (result != inName)
-							   app.alert("Your file has been renamed to " + result);
+							   app.alert(bundleStudio.R_YourFileRenamed + result);
 						       _this.setItemName(result,true);
 						       manager.forceShowPropertiesPanel();
 						       manager.updateModifiedDate();
@@ -739,7 +739,7 @@ wm.ZipResourceItem.extend({
 						   function(result) {
 						     try {
 						       if (!result) {
-							   app.alert("Failed to unzip the file");
+							   app.alert(bundleStudio.R_FailedToUnzip);
 							   return;
 						       }
 						       manager.loadResourcesData(true);
@@ -757,7 +757,7 @@ wm.ZipResourceItem.extend({
 wm.JarResourceItem.extend({
     checkbox: null,
     addCustomDataToPropertiesPanel: function(propertiesPanel) {
-       this.checkbox = new wm.CheckBoxEditor({caption: "In ClassPath?",
+       this.checkbox = new wm.CheckBoxEditor({caption: bundleStudio.R_InClassPath,
 					    name: "inClassPathCheckbox",
 					    width: "100px",
 					    captionSize: "80px",
@@ -774,14 +774,14 @@ wm.JarResourceItem.extend({
 						       function(result) {
 							   if (!result) {
 							     if (isChecked)
-							       app.alert("Failed to add jar to classpath");
+							       app.alert(bundleStudio.R_FailedToAddJar);
 							     else
-							       app.alert("Failed  to remove jar from classpath");
+							       app.alert(bundleStudio.R_FailedToRemoveJar);
 							   } else {
 							     if (isChecked)
-							       app.alert("File added to classpath");
+							       app.alert(bundleStudio.R_FileAddedToClasspath);
 							     else
-							       app.alert("File removed from classpath");
+							       app.alert(bundleStudio.R_FileRemovedFromClasspath);
 							   }
 						       },
                                                  dojo.hitch(app, "toastWarning"));
@@ -792,7 +792,7 @@ wm.FolderResourceItem.extend({
     addNewFolder: function(inName) {
       var manager = studio.resourcesPage.getComponent("resourceManager");
       if (this.hasFileWithName(inName)) {
-	app.alert("That name already exists");
+	app.alert(bundleStudio.R_ThatNameAlreadyExists);
 	return manager.addNewFolder();
       }
 
@@ -801,7 +801,7 @@ wm.FolderResourceItem.extend({
 							      content: inName,
 							      data: this,
 							      closed: false,
-							      image: this.iconSrc});	
+							      image: this.iconSrc});
       manager.setSelectedItem(newFolder);
       newFolder.mkdir();
       
@@ -811,11 +811,11 @@ wm.FolderResourceItem.extend({
 	var manager = studio.resourcesPage.getComponent("resourceManager");
 
 	var newfolder = this;
-	studio.resourceManagerService.requestAsync("createFolder", [ this.getFilePath()],	
+	studio.resourceManagerService.requestAsync("createFolder", [ this.getFilePath()],
 						       function(result) {
 							 try {
 							   if (!result) {
-							       app.alert("Failed to create folder");
+							       app.alert(bundleStudio.R_FailedToCreateFolder);
 							       return;
 							   }
 							   manager.forceShowPropertiesPanel();
@@ -823,7 +823,7 @@ wm.FolderResourceItem.extend({
 						     } catch(e) {
 						       console.error("New Folder Failed:" + e);
 						       _this.loadResourcesData(true);
-						     }					
+						     }
 						       },
                                                    dojo.hitch(app, "toastWarning"));	
 
@@ -848,7 +848,7 @@ wm.FolderResourceItem.extend({
 	for (var childname in stateHash.children) {
 	    var child = stateHash.children[childname];
 	    if (child.isOpen) {
-		var childNode = this.findChildByName(child.name);		
+		var childNode = this.findChildByName(child.name);
 		if (childNode) {
 		    childNode.setOpen(true);
 		    childNode.data.useOpenFolderStateHash(child);

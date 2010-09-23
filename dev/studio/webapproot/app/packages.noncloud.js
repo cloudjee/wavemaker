@@ -16,6 +16,6 @@
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */ 
 
-[ "Non-Visual Components", "Composite Publisher", "wm.CompositePublisher", "wm.base.components.Publisher", "images/flash.png"],
-[ "Non-Visual Components", "Property", "wm.Property", "wm.base.components.Property", "images/flash.png" ],
-[ "Non-Visual Components", "Template Publisher", "wm.TemplatePublisher", "wm.base.components.Publisher", "images/flash.png"]
+[ bundlePackage.Non_Visual_Components, bundlePackage.Composite_Publisher, "wm.CompositePublisher", "wm.base.components.Publisher", "images/flash.png"],
+[ bundlePackage.Non_Visual_Components, bundlePackage.Property, "wm.Property", "wm.base.components.Property", "images/flash.png" ],
+[ bundlePackage.Non_Visual_Components, bundlePackage.Template_Publisher, "wm.TemplatePublisher", "wm.base.components.Publisher", "images/flash.png"]

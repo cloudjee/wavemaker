@@ -63,7 +63,7 @@ dojo.declare("Start", wm.Page, {
 	openProject: function(inSender) {
 		var p = this.getSelectedProject();
 		if (p)
-			studio.waitForCallback("Opening project: " + p, dojo.hitch(studio.project, "openProject", p));
+			studio.waitForCallback(bundleDialog.M_OpeningProject + p, dojo.hitch(studio.project, "openProject", p));
 	},
 	selectProjectInList: function(projectName) {
 	    var items = this.existingProjectList.items;

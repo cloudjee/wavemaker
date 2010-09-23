@@ -17,26 +17,26 @@
  */ 
 
 ResourceManager.widgets = {  
-	layoutBox1: ["wm.Layout", {height: "100%", width: "100%", horizontalAlign: "left", verticalAlign: "top", layoutKind: "top-to-bottom"}, {}, {	    
+	layoutBox1: ["wm.Layout", {height: "100%", width: "100%", horizontalAlign: "left", verticalAlign: "top", layoutKind: "top-to-bottom"}, {}, {
 	    resourcesFolderToolBar: ["wm.Panel", {padding: "2,10,2,10", height: "46px", width: "100%", border: "", layoutKind: "left-to-right"}, {}, {
-	      renameFolderButton: ["wm.Button", {disabled: true, caption: "<img src='/wavemaker/images/resourceManagerIcons/rename32.png'> Rename", height: "36px", width: "120px"},{onclick: "renameItem"}],
-	      deleteFolderButton: ["wm.Button", {disabled: true, caption: "<img src='/wavemaker/images/resourceManagerIcons/f_delete32.png'> Delete", height: "36px", width: "120px"},{onclick: "deleteItem"}],
-	      downloadFolderButton: ["wm.Button", {disabled: true, caption: "<img src='/wavemaker/images/resourceManagerIcons/f_download32.png'> Download", height: "36px", width: "120px"},{onclick: "downloadItem"}],
-	      addFileButton: ["wm.Button", {disabled: true, caption: "<img src='/wavemaker/images/resourceManagerIcons/d_add32.png'> Add File", height: "36px", width: "120px"},{onclick: "addNewFile"}],
-	      addFolderButton: ["wm.Button", {disabled: true, caption: "<img src='/wavemaker/images/resourceManagerIcons/f_add32.png'> Add Folder", height: "36px", width: "120px"},{onclick: "addNewFolder"}]
+	      renameFolderButton: ["wm.Button", {disabled: true, caption: "<img src='/wavemaker/images/resourceManagerIcons/rename32.png'> " + bundleStudio.T_Rename, height: "36px", width: "150px"},{onclick: "renameItem"}],
+	      deleteFolderButton: ["wm.Button", {disabled: true, caption: "<img src='/wavemaker/images/resourceManagerIcons/f_delete32.png'> " + bundleStudio.T_Delete, height: "36px", width: "150px"},{onclick: "deleteItem"}],
+	      downloadFolderButton: ["wm.Button", {disabled: true, caption: "<img src='/wavemaker/images/resourceManagerIcons/f_download32.png'> " + bundleStudio.T_Download, height: "36px", width: "150px"},{onclick: "downloadItem"}],
+	      addFileButton: ["wm.Button", {disabled: true, caption: "<img src='/wavemaker/images/resourceManagerIcons/d_add32.png'> " + bundleStudio.T_Add_File, height: "36px", width: "150px"},{onclick: "addNewFile"}],
+	      addFolderButton: ["wm.Button", {disabled: true, caption: "<img src='/wavemaker/images/resourceManagerIcons/f_add32.png'> " + bundleStudio.T_Add_Folder, height: "36px", width: "150px"},{onclick: "addNewFolder"}]
   	    }],
 	    resourcesFileToolBar: ["wm.Panel", {showing: false, padding: "2,10,2,10", height: "46px", width: "100%", border: "", layoutKind: "left-to-right"}, {}, {
-	      renameFileButton: ["wm.Button", {caption: "<img src='/wavemaker/images/resourceManagerIcons/rename32.png'> Rename", height: "36px", width: "120px"},{onclick: "renameItem"}],
-	      deleteFileButton: ["wm.Button", {caption: "<img src='/wavemaker/images/resourceManagerIcons/d_delete32.png'> Delete", height: "36px", width: "120px"},{onclick: "deleteItem"}],
-	      downloadFileButton: ["wm.Button", {caption: "<img src='/wavemaker/images/resourceManagerIcons/d_download32.png'> Download", height: "36px", width: "120px"},{onclick: "downloadItem"}],
-	      updateFileButton: ["wm.Button", {caption: "<img src='/wavemaker/images/resourceManagerIcons/d_update32.png'> Replace", height: "36px", width: "120px"},{onclick: "updateItem"}]
+	      renameFileButton: ["wm.Button", {caption: "<img src='/wavemaker/images/resourceManagerIcons/rename32.png'> " + bundleStudio.T_Rename, height: "36px", width: "150px"},{onclick: "renameItem"}],
+	      deleteFileButton: ["wm.Button", {caption: "<img src='/wavemaker/images/resourceManagerIcons/d_delete32.png'> " + bundleStudio.T_Delete, height: "36px", width: "150px"},{onclick: "deleteItem"}],
+	      downloadFileButton: ["wm.Button", {caption: "<img src='/wavemaker/images/resourceManagerIcons/d_download32.png'> " + bundleStudio.T_Download, height: "36px", width: "150px"},{onclick: "downloadItem"}],
+	      updateFileButton: ["wm.Button", {caption: "<img src='/wavemaker/images/resourceManagerIcons/d_update32.png'> " + bundleStudio.T_Replace, height: "36px", width: "150px"},{onclick: "updateItem"}]
   	    }],
 	    mainPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "100%"}, {}, {
 	      tree: ["wm.Tree", {width: "100%", height: "100%", scrollY: true, scrollX: true, margin: "0,5,10,5"}, {onselect: "itemSelected", ondeselect: "clearSelectedItem", onmousedown: "itemMouseDown"}, {}],
 		resourcePropertiesContainer: ["wm.Panel", {_classes: {domNode: ["wm_BackgroundColor_Black"]}, height: "100%", width: "260px", verticalAlign: "top", margin: 0, layoutKind: "top-to-bottom"}, {}, {
 		    resourcePropertiesHeader: ["wm.Panel", {height: "17px", width: "100%", verticalAlign: "bottom", layoutKind: "left-to-right", padding: "2,6,0,6", margin: "0,4,0,4"},{},{ 
 			resourcePropertiesHeaderIcon: ["wm.Picture", {height: "15px", width: "15px", source: "", aspect: "h"}],
-			resourcePropertiesHeaderLabel: ["wm.Label", {_classes: {domNode: ["wm_FontColor_White"]}, height: "15px", width: "100%", caption: "Properties"}]
+			resourcePropertiesHeaderLabel: ["wm.Label", {_classes: {domNode: ["wm_FontColor_White"]}, height: "15px", width: "100%", caption: bundleStudio.T_Properties}]
 		    }],
 		    resourceProperties: ["wm.Panel", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", width: "100%", verticalAlign: "top", horizontalAlign: "left", margin: 4, padding: 6, layoutKind: "top-to-bottom"}, {}, {}]
 		}]

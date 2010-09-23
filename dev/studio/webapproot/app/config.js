@@ -23,6 +23,7 @@ djConfig.debugBoot = location.search.indexOf("debug") >=0;
 djConfig.popup = djConfig.debugBoot;//location.search.indexOf("popup") >= 0;
 djConfig.isDebug = djConfig.debugBoot;
 djConfig.gfxRenderer = 'svg,silverlight';
+djConfig.modulePaths = {language : '../../../language'};
 
 if (djConfig.isDebug) {
 	djConfig.debugBase = true;

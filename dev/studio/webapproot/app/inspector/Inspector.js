@@ -23,27 +23,27 @@ wm.addPropertyGroups = function(propGroups) {
 
 // registry of groups to show in inspector
 wm.addPropertyGroups({
-	common: {displayName: "Common", order: 10},
-	data: {displayName: "Data", order: 13},
-	display: {displayName: "Display", order: 15},
-	layout: {displayName: "Layout", order: 20},
-	"advanced layout": {displayName: "Advanced Layout", order: 180},
-	style: {displayName: "Style", order: 30},
-        scrolling: {displayName: "Scrollbars", order: 32},
-	dataobjects: {displayName: "Data Objects", order: 35},
-	format: {displayName: "Formatting", order: 40},
-	Labeling: {displayName: "Labeling", order: 45},
-	edit: {displayName: "Editing", order: 50},
-	editor: {displayName: "Editor Options", order: 50},
-	editData: {displayName: "Editor Data", order: 55},
-	events: {displayName: "Events", order: 100},
-	Events: {displayName: "General", order: 100},
-	Properties: {displayName: "Other", order: 100},
-	validation: {displayName: "Validation", order: 150},
-	columns: {displayName: "Columns", order: 999},
-	ungrouped: {displayName: "Other", order: 1000},
-        operation: {displayName: "Operations", order: 2000},
-        docs: {displayName: "Documentation", order: 3000}
+	common: {displayName: bundleStudio.I_Common, order: 10},
+	data: {displayName: bundleStudio.I_Data, order: 13},
+	display: {displayName: bundleStudio.I_Display, order: 15},
+	layout: {displayName: bundleStudio.I_Layout, order: 20},
+	"advanced layout": {displayName: bundleStudio.I_Advanced_Layout, order: 180},
+	style: {displayName: bundleStudio.I_Style, order: 30},
+	scrolling: {displayName: bundleStudio.I_Scrolling, order: 32},
+	dataobjects: {displayName: bundleStudio.I_Data_Objects, order: 35},
+	format: {displayName: bundleStudio.I_Formatting, order: 40},
+	Labeling: {displayName: bundleStudio.I_Labeling, order: 45},
+	edit: {displayName: bundleStudio.I_Editing, order: 50},
+	editor: {displayName: bundleStudio.I_Editor_Options, order: 50},
+	editData: {displayName: bundleStudio.I_Editor_Data, order: 55},
+	events: {displayName: bundleStudio.I_Events, order: 100},
+	Events: {displayName: bundleStudio.I_General, order: 100},
+	Properties: {displayName: bundleStudio.I_Other, order: 100},
+	validation: {displayName: bundleStudio.I_Validation, order: 150},
+	columns: {displayName: bundleStudio.I_Columns, order: 999},
+	ungrouped: {displayName: bundleStudio.I_Other, order: 1000},
+	operation: {displayName: bundleStudio.I_Operations, order: 2000},
+	docs: {displayName: bundleStudio.I_Docs, order: 3000}
 });
 
 dojo.declare("wm.InspectorBase", null, {
@@ -298,8 +298,8 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 	*/
 	generateHeaderCells: function() {
 		return [
-			'<th class="wminspector-header" style="width: 30%;">Property</th>',
-			'<th class="wminspector-header">Value</th>'
+			'<th class="wminspector-header" style="width: 30%;">' + bundleStudio.I_Property + '</th>',
+			'<th class="wminspector-header">' + bundleStudio.I_Value + '</th>'			
 		];
 	},
 	generateTableContent: function() {

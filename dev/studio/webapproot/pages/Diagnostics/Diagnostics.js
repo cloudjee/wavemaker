@@ -30,9 +30,9 @@ dojo.declare("Diagnostics", wm.Page, {
 		for (var i=0, w; w = ws[i]; i++) {
 			h.push(
 				'<span class="diag-wire-target">', w.tid, "</span>", 
-				" bound to ", 
+				bundleStudio.D_BoundTo,
 				'<span class="diag-wire-source">', w.sid, "</span>",
-				!w.ttype || !w.stype ? "" : w.ttype == w.stype ? ' with matched type <i>' + w.ttype + "</i>" : 
+				!w.ttype || !w.stype ? "" : w.ttype == w.stype ? D_WithMatchedType + w.ttype + "</i>" : 
 					'<br/><span class="diag-type-error">! type mismatch</span>' + w.ttype + '!=' + w.stype,
 				"<br/>"
 			);

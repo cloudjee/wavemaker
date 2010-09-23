@@ -22,7 +22,7 @@ Studio.extend({
 		  // called by packageLoader.js for anything that is not an instanceof wm.Control
 	addComponentMenuItem: function(inTab, inName, inDescription, inImage, inClass, inProps) {
 	  try {
-	  var menu = (inTab == "Services") ? this.servicesPopupBtn : this.insertPopupBtn;
+	  var menu = (inTab == bundleStudio.M_Services) ? this.servicesPopupBtn : this.insertPopupBtn;
 	  var menuBar = this.navigationMenu;
 	  var newId = inName + "MenuItem";
 

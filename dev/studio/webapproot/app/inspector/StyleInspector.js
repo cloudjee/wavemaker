@@ -23,17 +23,17 @@ dojo.declare("wm.StyleInspector", [wm.Layers, wm.InspectorBase], {
 	flex: 1,
 	box: 'v',
 	_source: {
-		classes: ["wm.Layer", {flex: 1, title: "Classes", box: "v"}, {}, {
+		classes: ["wm.Layer", {flex: 1, title: bundleStudio.I_Classes, box: "v"}, {}, {
 			classTree: ["wm.Tree", {flex: 1}, {}, {}],
 			bevel1: ["wm.Bevel", {}, {}, {}],
-			classEdit: ["wm.Editor", {caption: "Custom", captionSize: 40, captionUnits: "px", height: "22px"}, {}, {
+			classEdit: ["wm.Editor", {caption: bundleStudio.I_Custom, captionSize: 40, captionUnits: "px", height: "22px"}, {}, {
 				editor: ["wm._TextEditor", {changeOnEnter: true}, {}]
 			}]
 		}],
-		custom: ["wm.Layer", {flex: 1, title: "Custom Styles", box: "v"}, {}, {
+		custom: ["wm.Layer", {flex: 1, title: bundleStudio.I_Custom_Styles, box: "v"}, {}, {
 			textArea: ["wm.TextArea", {width: "100%", height: "100%", border: 0}, {}, {}],
 			panel1: ["wm.Panel", {_classes: {domNode: [ "wm-darksnazzy"]}, layoutKind: "left-to-right", height: "34", boxPosition: "bottomRight", border: 0, padding: 2}, {}, {
-				applyStylesButton: ["wm.Button", {caption: "Apply", border: 1, width: "60"}, {}]
+				applyStylesButton: ["wm.Button", {caption: bundleStudio.I_Apply, border: 1, width: "60"}, {}]
 			}]
 		}]
 	},

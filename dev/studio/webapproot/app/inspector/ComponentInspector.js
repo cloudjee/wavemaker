@@ -149,8 +149,8 @@ dojo.declare("wm.ComponentInspectorPanel", wm.Panel, {
 	initTree: function(inComponent) {
 		this.clearTree();
 		this.props = inComponent && inComponent.listProperties();
-		this.addTreeNode("Properties", {image: "images/properties_16.png", inspector: "Properties"});
-		this.addTreeNode("Events", {image: "images/star_16.png", inspector: "Events"});
+		this.addTreeNode("Properties", {content: bundleStudio.I_Properties, image: "images/properties_16.png", inspector: "Properties"});
+		this.addTreeNode("Events", {content: bundleStudio.I_Events, image: "images/star_16.png", inspector: "Events"});
 		// component props
 		var props = this.props, p;
 		for (var i in props) {

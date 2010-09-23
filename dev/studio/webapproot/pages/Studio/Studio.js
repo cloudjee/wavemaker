@@ -174,8 +174,8 @@ dojo.declare("Studio", wm.Page, {
 		if (this._isLogout)
 			return;
 		var 
-			u = "Please note that any unpublished changes will be lost.",
-			s = "Please note, there are no unsaved changes.",
+			u = bundleStudio.MSG_PleaseNoteUnpublishedChanges,
+			s = bundleStudio.MSG_PleaseNoteUnsavedChanges,
 			m = this.isProjectDirty() ? u : s;
 		e.returnValue = m;
 		if (!m)
@@ -877,7 +877,7 @@ dojo.declare("Studio", wm.Page, {
 	},
 	leftTabsChange: function(inSender) {
 		var caption = inSender.getLayerCaption();
-		if (caption == "Palette" && this.page)
+		if (caption == bundleStudio.Palette && this.page)
 			this.navGotoDesignerClick();
 	},
 	objectTabsChange: function(inSender) {
@@ -896,10 +896,10 @@ dojo.declare("Studio", wm.Page, {
 		var caption = inSender.getLayerCaption();
 
             // darksnazzy messes with users ability to edit themes
-                dojo[(caption == "Themes") ? "removeClass" : "addClass"](this.sourceTab.domNode, "wm-darksnazzy");
-		if (caption == "Diagnostics") {
+                dojo[(caption == bundleStudio.R_Themes) ? "removeClass" : "addClass"](this.sourceTab.domNode, "wm-darksnazzy");
+		if (caption == bundleStudio.Diagnostics) {
 			this.diagnosticsPane.page.update();
-		} else if (caption == "Server Logs") {
+		} else if (caption == bundleStudio.ServerLogs) {
 		    this.logViewer.page.showLogs();
                 }
 	},

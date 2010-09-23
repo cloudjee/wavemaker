@@ -32,7 +32,7 @@ dojo.declare("wm.studio.Project", null, {
                         this.finishNewProject(inResult,optionalInTheme, optionalInTemplate);
                     }),
                     function(inResult) {
-			console.log("New Project Failed: ", inResult);
+			console.log(bundleDialog.M_NewProjectFailed, inResult);
 		    }
                 );
 		return d;
@@ -163,7 +163,7 @@ dojo.declare("wm.studio.Project", null, {
 				this.openPage(this.pageName);
 			} catch(e) {
 				console.debug(e);
-				this.loadError("Failed to open project " + this.projectName + ". Error: " + e);
+				this.loadError(bundleDialog.M_FailedToOpenProject + this.projectName + ". Error: " + e);
 				this.projectName = "";
 				this.pageName = "";
 				studio.application = studio.page = null;
@@ -187,7 +187,7 @@ dojo.declare("wm.studio.Project", null, {
 			this.makePage();
 		} catch(e) {
 			console.debug(e);
-			this.loadError("Failed to open page " + this.pageName + ". Error: " + e);
+			this.loadError(bundleDialog.M_FailedToOpenPage + this.pageName + ". Error: " + e);
 			this.pageName = "";
 			studio.page = null;
 		} finally {
@@ -205,7 +205,7 @@ dojo.declare("wm.studio.Project", null, {
 		        documentation: dojo.fromJson(this.loadProjectData(this.projectName + ".documentation.json"))
 		};
 		if (!this.projectData.js) {
-		    alert("Warning: Could not find projects/" + this.projectName + "/" + this.projectName + ".js");
+		    alert(bundleDialog.M_WarningCouldNotFind + " projects/" + this.projectName + "/" + this.projectName + ".js");
 		} else {
 		    var src = this.projectData.js;
 		    var extendIndex = src.indexOf(this.projectName + ".extend");
@@ -409,7 +409,7 @@ dojo.declare("wm.studio.Project", null, {
 				this.pagesChanged();
 			}),
 			function(inError) {
-				alert(inName + " could not be deleted, error: " + inError);
+				alert(inName + bundleDialog.M_CouldNotBeDeleted + ", error: " + inError);
 			}
 		);
 	},
@@ -430,12 +430,12 @@ dojo.declare("wm.studio.Project", null, {
 	// Project info / util
 	//=========================================================================
 	showUpgradeMessage: function(inMessages) {
-		var message = "Your project has been upgraded.  A backup of your old project is available at:\n"+inMessages.backupExportFile;
+		var message = bundleDialog.M_BackupOld + inMessages.backupExportFile;
 		if (inMessages.messages) {
 			var firstElem = true;
 			for (var key in inMessages.messages) {
 				if (firstElem) {
-					message += "\n\nImportant messages regarding your upgrade:\n";
+					message += bundleDialog.M_Important;
 					firstElem = false;
 				}
 				message += "\t" + inMessages.messages[key] + "\n";
@@ -531,7 +531,7 @@ Studio.extend({
 			return;
 		if (!this.isShowingWorkspace())
 			this.tabs.setLayer("workspace");
-	    this.confirmPageChange("Are you sure you want to add a new page? Unsaved changes to ${page} will be lost.",
+	    this.confirmPageChange(bundleDialog.M_AreYouSureAddNewPage,
                                    undefined,
                                    dojo.hitch(this, function() {
 		                       var pages = this.project.getPageList();
@@ -542,13 +542,13 @@ Studio.extend({
                                        this.promptForName("page", wm.findUniqueName(pageName, [l]), pages,
                                                           dojo.hitch(this, function(n) {
 	                                                      n = wm.capitalize(n);
-			                                      this.waitForCallback("Creating page: "+ n, dojo.hitch(this.project, "newPage", n, optionalPageType));
+			                                      this.waitForCallback(bundleDialog.M_CreatePage + n, dojo.hitch(this.project, "newPage", n, optionalPageType));
                                                           }));
                                    }));
 	},
 	newProjectClick: function() {
 		if (this.project.projectName) {
-		    this.confirmAppChange("Are you sure you want to close project ${project}? Unsaved changes will be lost.", undefined, dojo.hitch(this, "_newProjectClick"));
+		    this.confirmAppChange(bundleDialog.M_AreYouSureCloseProject, undefined, dojo.hitch(this, "_newProjectClick"));
 		} else {
                     this._newProjectClick();
                 }
@@ -568,7 +568,7 @@ Studio.extend({
                                dojo.hitch(this, function(n) {
 		                   if (n) {
 			               studio.studioService.requestSync("closeProject");
-			               this.waitForCallback("Creating project: "+ n, dojo.hitch(this.project, "newProject", n));
+			               this.waitForCallback(bundleDialog.M_CreatingProject + n, dojo.hitch(this.project, "newProject", n));
 		                   }
                                }));
                                */
@@ -577,25 +577,25 @@ Studio.extend({
 		this.projects.activate();
 	},
 	saveProjectClick: function() {
-		this.waitForCallback("Saving project: "+ this.project.projectName, dojo.hitch(this.project, "saveProject"));
+		this.waitForCallback(bundleDialog.M_SavingProject + this.project.projectName, dojo.hitch(this.project, "saveProject"));
 	},
 	saveScriptClick: function() {
-		this.waitForCallback("Saving script: "+ this.project.projectName, dojo.hitch(this.project, "saveScript"));
+		this.waitForCallback(bundleDialog.M_SavingScript + this.project.projectName, dojo.hitch(this.project, "saveScript"));
 	},
 	saveCssClick: function() {
-		this.waitForCallback("Saving CSS: "+ this.project.projectName, dojo.hitch(this.project, "saveCss"));
+		this.waitForCallback(bundleDialog.M_SavingCSS + this.project.projectName, dojo.hitch(this.project, "saveCss"));
 	},
 	saveMarkupClick: function() {
-		this.waitForCallback("Saving Markup: "+ this.project.projectName, dojo.hitch(this.project, "saveMarkup"));
+		this.waitForCallback(bundleDialog.M_SavingMarkup + this.project.projectName, dojo.hitch(this.project, "saveMarkup"));
 	},
         saveAppSrcClick: function() {
-		this.waitForCallback("Saving Application scripts: "+ this.project.projectName, dojo.hitch(this.project, "saveAppScript"));
+		this.waitForCallback(bundleDialog.M_SavingAppScript + this.project.projectName, dojo.hitch(this.project, "saveAppScript"));
 	},
 	savePageAsClick: function() {
 	    this.promptForName("page", this.page.declaredClass, this.project.getPageList(), 
                                dojo.hitch(this, function(n) {
 		                   if (n)
-			               this.waitForCallback("Saving page as: "+ n, dojo.hitch(this.project, "savePageAs", n));
+			               this.waitForCallback(bundleDialog.M_SavingPageAs + n, dojo.hitch(this.project, "savePageAs", n));
                                }));
                                          
 	},
@@ -687,17 +687,17 @@ Studio.extend({
 			return;
 		var
 			page = n.page, project = n.project,
-			warnPage = "Are you sure you want to open page \"${newPage}\"? Unsaved changes to ${page} will be lost.",
-			warnProject = "Are you sure you want to close project ${project}? Unsaved changes will be lost.";
+			warnPage = bundleDialog.M_AreYouSureOpenPage,
+			warnProject = bundleDialog.M_AreYouSureCloseProject;
 		if (project == this.project.projectName) {
 		    if (page && page != this.project.pageName)
                         this.confirmPageChange(warnPage, page, dojo.hitch(this, function() {
-			    this.waitForCallback("Opening page: " + page + ".", dojo.hitch(this.project, "openPage", page));
+			    this.waitForCallback(bundleDialog.M_OpeningPage + page + ".", dojo.hitch(this.project, "openPage", page));
                         }));
 		} else if (project) {
                     this.confirmAppChange(warnProject, undefined, dojo.hitch(this, function() {
 			studio.studioService.requestSync("closeProject");
-			var p = "Opening project: " + project + (page ? ", and page " + page : "") + ".";
+			var p = bundleDialog.M_OpeningProject + project + (page ? bundleDialog.M_AndPage + page : "") + ".";
 			this.waitForCallback(p, dojo.hitch(this.project, "openProject", project, page));
                     }));
 		}
@@ -714,7 +714,7 @@ Studio.extend({
 	deleteProject: function(inName) {
 	    var p = inName;
 	    if (p) {
-                app.confirm('Are you sure you want to delete ' + p + '?', false,
+                app.confirm(bundleDialog.M_AreYouSureDeleteProject + p + '?', false,
                             dojo.hitch(this, function() {
 		                if (studio.project.projectName == inName)
 			            this.project.closeProject();
@@ -725,16 +725,16 @@ Studio.extend({
 	},
 	deletePage: function(inName) {
 		if (this.application.main == inName) {
-			alert(inName + " is the project home page. You cannot delete the home page.");
+			alert(inName + bundleDialog.M_DeleteHomePage);
 			return;
 		}
-	    app.confirm('Are you sure you want to delete ' + inName + '?', false,
+	    app.confirm(bundleDialog.M_AreYouSureDeletePage + inName + '?', false,
 			dojo.hitch(this, function() {
                             this.project.deletePage(inName);
                         }));
 	},
 	closeClick: function() {
-	    this.confirmAppChange("Are you sure you want to close project ${project}? Unsaved changes will be lost.", 
+	    this.confirmAppChange(bundleDialog.M_AreYouSureCloseProject, 
                                   undefined, dojo.hitch(this, function() {
 		                      this.project.closeProject();
                                   }));
@@ -744,7 +744,7 @@ Studio.extend({
 	      this.getNewProjectName(studio.project.projectName, 
                                      dojo.hitch(this, function(n) {
 			                 if (n)
-				             this.waitForCallback("Copying project: " + studio.project.projectName + " to " + n, dojo.hitch(this.project, "copyProject", studio.project.projectName, n));
+					     this.waitForCallback(bundleDialog.M_CopyingProject + studio.project.projectName + bundleDialog.M_CopyProjectTo + n, dojo.hitch(this.project, "copyProject", studio.project.projectName, n));
                                      }));
 		}
 	},
@@ -829,9 +829,9 @@ Studio.extend({
                 onConfirm();
 	},
     promptForName: function(inTarget, inDefault, inExistingList, onSuccess) {
-	var newPrompt = 'Enter a new ${target} name: ';
-	var warnExists = 'The ${target} named "${name}" already exists. Please choose a different name.';
-	var warnNotValid = 'The name "${name}" is not valid. Names can contain only letters, numbers, underscores, must not begin with a number, and must not be a reserved word.';
+	var newPrompt = bundleDialog.M_EnterNewName;
+	var warnExists = bundleDialog.M_WarnAlreadExist;
+	var warnNotValid = bundleDialog.M_WarnInvalidName;
 	app.prompt(dojo.string.substitute(newPrompt, {target: inTarget}), inDefault, 
                    dojo.hitch(this, function(name) {
 		       if (name !== null) {
@@ -883,7 +883,7 @@ Studio.extend({
 	  this._runRequested = inSender.name;
 	    var isTest = (inSender.name == "navTestBtn");
 		this.saveProjectClick();
-		this.deploy("Building Preview...", dojo.hitch(this, function(result) {
+		this.deploy(bundleDialog.M_BuildingPreview, dojo.hitch(this, function(result) {
 		      this._runRequested = false;
 		      wm.openUrl(this.getPreviewUrl(isTest), this.project.projectName, "_wmPreview");
                       studio.endWait();

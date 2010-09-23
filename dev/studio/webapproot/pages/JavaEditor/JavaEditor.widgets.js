@@ -46,7 +46,7 @@ JavaEditor.widgets = {
 							    */
 						    javaCompilerOutputEditor: ["wm.TextArea", {height: "100%", width: "100%", readonly: true, readOnly: true, border: "0", scrollY: true}, {}]
 						}],
-					    serverTab: ["wm.Layer", {caption: "Server Logs"}, {onclick: "updateLogs"}, {
+					    serverTab: ["wm.Layer", {caption: bundleStudio.ServerLogs}, {onclick: "updateLogs"}, {
 						logViewer: ["wm.PageContainer", {pageName: "LogViewer",  width: "100%", height: "100%"}]
 					    }]
 					}]

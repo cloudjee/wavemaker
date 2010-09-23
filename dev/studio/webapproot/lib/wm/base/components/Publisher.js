@@ -166,7 +166,7 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 });
 
 /*
-wm.registerPackage(["Components", "Composite Publisher", "wm.CompositePublisher", "wm.base.components.Publisher", "images/flash.png"]);
+wm.registerPackage([bundlePackage.Non_Visual_Components, bundlePackage.Composite_Publisher, "wm.CompositePublisher", "wm.base.components.Publisher", "images/flash.png"]);
 */
 
 dojo.declare("wm.TemplatePublisher", wm.ComponentPublisher, {

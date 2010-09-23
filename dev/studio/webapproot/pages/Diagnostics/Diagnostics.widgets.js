@@ -20,7 +20,7 @@ Diagnostics.widgets = {
 	layoutBox1: ["wm.Layout", {height: "100%", width: "100%"}, {}, {
 		bevel1: ["wm.Bevel", {width: "100%", height: "4px"}, {}],
 		panel1: ["wm.Panel", {_classes: {domNode: ["wm_Padding_4px"]}, height: "30px", layoutKind: "left-to-right"}, {}, {
-			button1: ["wm.Button", {caption: "Refresh", width: "80px"}, {onclick: "update"}]
+			button1: ["wm.Button", {caption: bundleStudio.M_Refresh, width: "80px"}, {onclick: "update"}]
 		}],
 		label1: ["wm.Label", {_classes: {domNode: ["wmToolbar", "wm_TextDecoration_Bold", "wm_FontSize_150percent", "wm_BackgroundChromeBar_LightGray"]}, padding: "10", height: "24px", caption: "Wires"}, {}, {
 			format: ["wm.DataFormatter", {}, {}]
