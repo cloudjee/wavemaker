@@ -148,7 +148,7 @@ dojo.declare("wm.Page", wm.Component, {
 			this.reflow();
 		    }
 		    this.start();
-
+                    this._startCalled = true;
 	        if (wm.debugPerformance) {
 	            var timeToLoad = this.stopTimerWithName("LoadPage", "wm.Layout");
 
@@ -267,9 +267,16 @@ dojo.declare("wm.Page", wm.Component, {
 		}
 	    
         // props.name should overwrite getUniqueName(inName), which should overwrite inProps.
+            var newOwner;
+            if (inParent && inParent instanceof wm.Layout)
+                newOwner = inParent.owner;
+            else if (inParent)
+                newOwner = inParent;
+            else
+                newOwner = this;
         props = dojo.mixin({}, inProps, {
 			name: this.getUniqueName(inName),
-			owner: inParent || this,
+	                owner: newOwner,
 			_designer: this._designer,
 			_loading: true
 		}, props);
