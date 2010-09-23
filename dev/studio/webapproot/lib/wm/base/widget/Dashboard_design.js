@@ -81,6 +81,9 @@ wm.Dashboard.extend({
 		}
 		return this.inherited(arguments);
 	},
+	writeComponents: function() {
+		return ""; // don't write the addDialog at a minimum...
+	},
 	writeProps: function(){
 		try{
 			var props = this.inherited(arguments);
