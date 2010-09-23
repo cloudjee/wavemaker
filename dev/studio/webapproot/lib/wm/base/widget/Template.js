@@ -30,7 +30,13 @@ dojo.declare("wm.Template", wm.Container, {
 				this._template = dojo.toJson(this._template);
 			this.readComponents(this._template);
 		}
-	}
+	},
+        adjustChildProps: function(inCtor, inProps) {
+	    if (wm.isClassInstanceType(inCtor, wm.Control))
+                this.inherited(arguments);
+            else
+		dojo.mixin(inProps, {owner: this.owner});                
+        }
 });
 wm.Template.extend({
     themeable: false
