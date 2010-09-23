@@ -21,21 +21,27 @@ dojo.declare("wm.studio.Project", null, {
 	//=========================================================================
 	// New
 	//=========================================================================
-	newProject: function(inName) {
+    newProject: function(inName, optionalInTheme, optionalInTemplate) {
+        
 		var n = inName || this.projectName || "Project";
 		this.projectName = wm.getValidJsName(n);
 		this.pageName = "Main";
 		var d = studio.studioService.requestAsync("newProject", [this.projectName]);
-		d.addCallbacks(dojo.hitch(this, this.finishNewProject), function(inResult) {
+	        d.addCallbacks(
+                    dojo.hitch(this, function(inResult) {
+                        this.finishNewProject(inResult,optionalInTheme, optionalInTemplate);
+                    }),
+                    function(inResult) {
 			console.log("New Project Failed: ", inResult);
-		});
+		    }
+                );
 		return d;
 	},
-	finishNewProject: function(inResult) {
+        finishNewProject: function(inResult, optionalInTheme, optionalInTemplate) {
 		this.projectChanging();
 		this.createApplicationArtifacts();
-	        this.makeApplication({theme: "wm_default"});
-		this.newPage(this.pageName);
+	        this.makeApplication({theme: optionalInTheme || "wm_default"});
+	        this.newPage(this.pageName, "", {template: optionalInTemplate});
 		this.saveProject(this.projectName);
 		this.projectChanged();
 		this.projectsChanged();
@@ -62,17 +68,44 @@ dojo.declare("wm.studio.Project", null, {
 	    studio.setAppScript(this.projectData.jscustom); // this gets set elsewhere; but if not set here, then a project may get the previously open project's jscustom section because writeApplication takes whatever is currently in the script editor
 	},
         createPageArtifacts: function(pageType, argHash) {
+                if (!argHash) argHash = {};
 		var ctor = dojo.declare(this.pageName, wm.Page);
 		this.pageData = {};
-	    this.pageData.widgets = ctor.widgets = this.getPageTemplate(pageType, argHash);
-	    var functionTemplate = this.getScriptTemplate(pageType, argHash);
+	        this.pageData.widgets = ctor.widgets = this.getPageTemplate(pageType, argHash);
+	        var functionTemplate = this.getScriptTemplate(pageType, argHash);
 	        studio.setScript(this.pageData.js = pageScript(this.pageName, functionTemplate));
 		this.pageData.css = this.pageData.html = "";
 	},
-    getPageTemplate: function(pageType, argHash) {
-		// NOTE: could present list of choices here
-	    switch(pageType) {
-	    case "wm.ListViewerRow":
+        getPageTemplate: function(pageType, argHash) {
+            var template_def = argHash.template;
+            if (template_def) {
+                var template = dojo.clone(template_def);
+
+                var widgets = template._template;
+                delete template._template;
+                var hasLayout = false;
+                for (var i in widgets)
+                    if (widgets[i][0] == "wm.Layout")
+                        hasLayout = true;
+
+                var widgets_js;
+                if (hasLayout) {
+                    widgets_js = widgets;
+                } else {
+                    widgets_js =  {layoutBox1: ["wm.Layout", {name: "layout1"}, {}, {}]};
+                    for (var i in template) {
+                        widgets_js.layoutBox1[1][i] = template[i];
+                    }
+                    widgets_js.layoutBox1[3] = widgets;
+                }
+                if (argHash.editTemplate)
+                    argHash.editTemplate(widgets_js);
+                return widgets_js;
+            } else {
+	        return {layoutBox1: ["wm.Layout", {height: "100%", width: "100%", horizontalAlign: "left", verticalAlign: "top"}, {}, {}]};
+	    }
+	},
+/*
 		return {
 		    variable: ["wm.Variable", {type: argHash.type, json: argHash.json}],
 		    layoutBox1: ["wm.Layout", {height: "100%", width: "100%", horizontalAlign: "left", verticalAlign: "top"}, {}, {
@@ -83,10 +116,8 @@ dojo.declare("wm.studio.Project", null, {
 			    }]
 			}]
 		    }]};
-	    default:
-		return {layoutBox1: ["wm.Layout", {height: "100%", width: "100%", horizontalAlign: "left", verticalAlign: "top"}, {}, {}]};
-	    }
-	},
+                    */
+
         getScriptTemplate: function(pageType, argHash) {
 		// NOTE: could present list of choices here
 	    switch(pageType) {
@@ -528,6 +559,11 @@ Studio.extend({
 		dojo.forEach(projects, function(p) {
 			l[p] = true;
 		});
+            if (!studio.newProjectDialog.pageName)
+                studio.newProjectDialog.setPageName("NewProjectDialog");
+            studio.newProjectDialog.page.projectName.setDataValue("Project");
+            studio.newProjectDialog.show();
+/*            
 	    this.promptForName("project", wm.findUniqueName('Project', [l]), projects,
                                dojo.hitch(this, function(n) {
 		                   if (n) {
@@ -535,6 +571,7 @@ Studio.extend({
 			               this.waitForCallback("Creating project: "+ n, dojo.hitch(this.project, "newProject", n));
 		                   }
                                }));
+                               */
 	},
 	welcomeOpenClick: function() {
 		this.projects.activate();

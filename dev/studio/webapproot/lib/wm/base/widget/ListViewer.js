@@ -177,22 +177,39 @@ dojo.declare("wm.ListViewer", wm.Container, {
                              dojo.hitch(this, function(n) {
 				 n = wm.capitalize(n);
 				 this.pageName = n;
+                                 this._type = this.dataSet.type;
+                                 var data = this.dataSet.getData();
+                                 if (data && data.length)
+                                     this._sample = dojo.toJson(data[0]);
 				 app.confirm("Can we save this page before moving on to the next page?", 
 					     false,
 					     dojo.hitch(this,function() {
 						 studio.project.saveProject();
-						 studio.project.newPage(n,"wm.ListViewerRow", {type:this.dataSet.type, json: dojo.toJson(this.dataSet.getData()[0])});
+						 studio.project.newPage(n,"wm.ListViewerRow", {template: wm.widgetSpecificTemplate.ListViewerRow, editTemplate: dojo.hitch(this, "editTemplate")});
 					     }),
 					     dojo.hitch(this,function() {
-						 studio.project.newPage(n,"wm.ListViewerRow", {type:this.dataSet.type});
+						 studio.project.newPage(n,"wm.ListViewerRow", {template: wm.widgetSpecificTemplate.ListViewerRow, editTemplate: dojo.hitch(this, "editTemplate")});
 					     }));
 			     }));						 
+    },
+    editTemplate: function(inWidgets) {
+        // WARNING: This widget has already been destroyed before this call is made; be VERY careful what you put in here!
+        var variable = inWidgets.variable;
+        if (this.dataSet) {
+            variable[1].type = this._type;
+            variable[1].json = this._sample;
+        }
     },
     setPageName: function(inPage) {
 	if (inPage == "-New Page" && this.isDesignLoaded()) {
 	    return this.createNewPage();
 	}
 	this.pageName = inPage;
+        if (!inPage) {
+            for (var i = 0; i < this.rowRenderers.length; i++)
+                dojo.forEach(this.rowRenderers[i].c$, function(e) {e.destroy();});
+            return;
+        }
 	var path = this.getPath() + wm.pagesFolder + inPage + "/" + inPage + ".widgets.js";
 	try {
 	    if (!dojo.getObject(inPage))

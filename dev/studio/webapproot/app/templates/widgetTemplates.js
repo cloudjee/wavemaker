@@ -19,7 +19,17 @@ dojo.provide("wm.studio.app.templates.widgetTemplates");
 
 if (!wm.widgetTemplates) wm.widgetTemplates = {};
 if (!wm.fullTemplates) wm.fullTemplates = {};
+if (!wm.widgetSpecificTemplate) wm.widgetSpecificTemplate = {};
 
+
+/*********************************************************************************************************************************************************************
+ * NOTES: 
+ *    Michael: Looks like the people who designed this originally intended for the wm.Template to have high level properties of contaner such as layoutKind,
+ *             width, height, border, etc... but these now appear to be ignored.  Anything not in _template is NOT dropped onto the canvas when you drag
+ *             a template from palette to canvas.
+ *    Michael: While templates shown here sometimes have a wm.Template in _template, this seems to be completely unnecessary; all it does is place
+ *             specially named panels into the canvas when dropped onto the canvas.
+ *********************************************************************************************************************************************************************/
 wm.widgetTemplates.twoColumn = {
 	layoutKind: "top-to-bottom",
 	width: "100%",
@@ -40,6 +50,8 @@ wm.widgetTemplates.twoColumn = {
 
 wm.fullTemplates.fancyCenteredTemplate = {
     layoutKind: "top-to-bottom",
+    thumbnail: "/wavemaker/app/templates/widgetTemplateImages/template1.png",
+    displayName: "Fancy Centered", // currently only used in new project dialog
     width: "100%",
     height: "100%",
     verticalAlign: "top",
@@ -298,3 +310,23 @@ wm.widgetTemplates.basic = {
 		}]
 	}
 }
+
+
+
+wm.widgetSpecificTemplate.ListViewerRow = {
+    layoutKind: "top-to-bottom",
+    height: "100%",
+    width: "100%",
+    horizontalAlign: "left",
+    verticalAlign: "top",
+    _template: {
+	variable: ["wm.Variable", {}],
+	layoutBox1: ["wm.Layout", {height: "100%", width: "100%", horizontalAlign: "left", verticalAlign: "top"}, {}, {
+	    sampleRow: ["wm.FancyPanel", {title: "Sample Row", layoutKind: "left-to-right", width: "100%", height: "80px"},{}, {
+		panel1: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"},{}, {
+		    label1: ["wm.Label", {width: "200px", height: "100%", caption: "Bind me to a field in 'variable'", singleLine: false}],
+		    label2: ["wm.Label", {width: "100%", height: "100%", caption: "Bind me to another field in 'variable'. Or just delete me and create your own row!", singleLine: false}]
+		}]
+	    }]
+	}]}
+};
