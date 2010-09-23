@@ -497,6 +497,9 @@ wm.getWidgetByDomNode = function(element) {
         var name = "";
         var widget = (originalId.match(/^app_/)) ? app : app._page;
         for (var i = 0; i < elements.length; i++) {
+            if (wm.isInstanceType(widget, wm.PageDialog)) {
+                widget = widget.pageContainer;
+            }
                 if (wm.isInstanceType(widget, wm.PageContainer) || wm.isInstanceType(widget, wm.pageContainerMixin)) {
                         widget = widget.page;
                         name = "";
