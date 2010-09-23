@@ -164,7 +164,10 @@ dojo.declare("wm.PageContainer", wm.Box, {
 		      this._pageLoader.loadPage(inName, pageName);
 				if (this._currentPageConnect)
 					dojo.disconnect(this._currentPageConnect);
-		      this._currentPageConnect = this._pageLoader.page.connect(this._pageLoader.page, "onStart", this, "onStart");
+                        if (this._pageLoader.page._startCalled)
+                            this.onStart();
+                        else
+		            this._currentPageConnect = this._pageLoader.page.connect(this._pageLoader.page, "onStart", this, "onStart");
 		    }
 		} else {
 			this.destroyPreviousPage();
