@@ -263,9 +263,9 @@ public class Main {
 
 		File catalinaHome = init(noStdoutRedirect, config);
 
-		System.out.println("WaveMaker starting Tomcat");
-		System.out
-				.println("Java version " + System.getProperty("java.version"));
+		printlnToLog("Studio Version is " + getCurrentVersionString());
+		printlnToLog("Java version is " + System.getProperty("java.version"));
+		printlnToLog("Starting Tomcat");
 
 		// create context dir
 		File catalinaDir = new File(new File(catalinaHome, "conf"), "Catalina");
@@ -281,7 +281,7 @@ public class Main {
 		if (studioDir.exists()) {
 			createContextXml(localhostDir, studioDir, studioWebApp);
 		}
-
+		
 		File oldCatalinaWebApps = new File(getCatalinaHome(), "webapps");
 		createContextXml(localhostDir, new File(oldCatalinaWebApps, "ROOT"),
 				"ROOT");
@@ -302,8 +302,7 @@ public class Main {
 	}
 
 	private static AppServer createLauncher(String[] args, File catalinaHome) {
-		System.out.println("launcher(" + Arrays.toString(args) + ", "
-				+ catalinaHome + ")");
+		printlnToLog("Catalina Home is: "	+ catalinaHome);
 		final Launcher launcher = new Launcher();
 		launcher.setCatalinaHome(catalinaHome.getAbsolutePath());
 		AppServer server = new AppServer(launcher, args);
@@ -473,7 +472,7 @@ public class Main {
 			} catch (URISyntaxException e) {
 			}
 		}
-		line = "WAVEMAKER: " + line;
+		line = "WaveMaker: " + line;
 		PrintStream ps = logOut;
 		if (ps != null) {
 			ps.println(line);
@@ -508,7 +507,7 @@ public class Main {
             ClassLoader old = Thread.currentThread().getContextClassLoader();
             try {
                 ClassLoader cl = getToolsClassLoader();
-                Thread.currentThread().setContextClassLoader(cl);
+            	Thread.currentThread().setContextClassLoader(cl);
 
                 Class<?> klass = cl
                         .loadClass("com.wavemaker.tools.project.LauncherHelper");

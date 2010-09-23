@@ -9,22 +9,27 @@
 
     <path id="build.jars">
         <filelist>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/annotation-api.jar"/>
             <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/catalina.jar"/>
-            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/catalina-optional.jar"/>
-            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/commons-el.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/catalina-ha.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/catalina-tribes.jar"/>
             <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/commons-logging-api-1.1.1.jar"/>
-            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/commons-modeler-2.0.1.jar"/>
-            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/jasper-compiler.jar"/>
-            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/jasper-compiler-jdt.jar"/>
-            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/jasper-runtime.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/ejb-api-3.0.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/el-api.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/jasper.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/jasper-el.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/jasper-jdt.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/jaxws-api-2.2.1.jar"/>
             <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/jsp-api.jar"/>
-            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/naming-factory.jar"/>
-            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/naming-resources.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/jsr250-api-1.0.jar"/>       
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/persistence-api-1.0.2.jar"/>
             <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/servlet-api.jar"/>
-            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/servlets-default.jar"/>
             <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/tomcat-coyote.jar"/>
-            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/tomcat-http.jar"/>
-            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/tomcat-util.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/tomcat-dbcp.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/tomcat-i18n-es.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/tomcat-i18n-fr.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/tomcat-i18n-ja.jar"/>
+            <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/tomcat-juli.jar"/>
         </filelist>
     </path>
 

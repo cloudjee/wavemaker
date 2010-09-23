@@ -73,7 +73,6 @@ public class Server {
 
 	public static void ValidateConfig(TomcatConfig config, int firstPort,
 			int lastPort) throws InvalidServerConfigurationException {
-		Main.printlnToLog("Starting Configuration Validation:");
 		// Validate Server Ports
 		// shutdown port
 		Main.printlnToLog("\tScanning for Shutdown Port:");

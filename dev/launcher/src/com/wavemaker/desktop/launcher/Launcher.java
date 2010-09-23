@@ -48,7 +48,7 @@ public class Launcher extends Catalina {
 				((Lifecycle) server).addLifecycleListener(listener);
 			}
 		}
-		Main.printlnToLog("Shutdown(" + server.getPort() + "): " + server.getShutdown());
+		//Main.printlnToLog("Shutdown Port: " + server.getPort() + " - " + server.getShutdown());
 		super.setServer(server);
 	}
 

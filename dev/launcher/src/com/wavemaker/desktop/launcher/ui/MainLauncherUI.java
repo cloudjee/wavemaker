@@ -302,10 +302,8 @@ public class MainLauncherUI extends JFrame {
 				stopButton.setEnabled(true);
 				if (appServer == null) {
 					try {
-						Main
-								.printlnToLog("Launcher: Calling ValidateConfig().");
-						com.wavemaker.desktop.launcher.Server
-								.ValidateConfig(config);
+						Main.printlnToLog("Starting WaveMaker ");
+						com.wavemaker.desktop.launcher.Server.ValidateConfig(config);
 						appServer = Main.getServerInstance(config, false);
 						appServer.getLauncher().addLifecycleListener(
 								new LifecycleListener() {
