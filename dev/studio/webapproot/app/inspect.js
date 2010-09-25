@@ -221,9 +221,9 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 							var aa = (wm.isInstanceType(obj, wm.Component)) ? obj.getId() : obj;
 							if (obj instanceof wm.LiveForm){
 								items.push({name: aa + '.beginDataInsert', value: aa + '.beginDataInsert'});
-								items.push({name: aa + '.insertData', value: aa + '.insertData'});
+								items.push({name: aa + '.saveData', value: aa + '.saveData'});
 								items.push({name: aa + '.beginDataUpdate', value: aa + '.beginDataUpdate'});
-								items.push({name: aa + '.updateData', value: aa + '.updateData'});
+							    //items.push({name: aa + '.updateData', value: aa + '.updateData'});
 								items.push({name: aa + '.cancelEdit', value: aa + '.cancelEdit'});
 								items.push({name: aa + '.deleteData', value: aa + '.deleteData'});
 							} else {
