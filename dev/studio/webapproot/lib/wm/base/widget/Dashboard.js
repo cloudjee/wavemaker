@@ -47,7 +47,11 @@ dojo.declare("wm.Dashboard", wm.Control, {
 	postInit: function() {
 		this.inherited(arguments);
 		this.initAddWidgetDialog();
-            dojo.connect(this.domNode, "ondblclick", this, function() {
+            dojo.connect(this.domNode, "ondblclick", this, function(event) {
+                // clicked on something inside of a portlet? exit; only care if they double click on the dashboard itself
+                if (!dojo.hasClass(event.target, "gridContainerZone")) {
+                    return;
+                }
                 if (this.isDesignLoaded())
                     this.contextMenu.show();
                 else
@@ -55,6 +59,19 @@ dojo.declare("wm.Dashboard", wm.Control, {
             });
 	    dojo.addOnLoad(dojo.hitch(this, "renderDojoObj"));
 	},
+        renderBounds: function() {
+            this.inherited(arguments);
+
+            // non-0 delay so that resizing a window isn't overly painful
+            wm.job(this.getId() + ": DashboardResize", 40, dojo.hitch(this, function() {
+                for (var i = 0; i < this.dijitPortlets.length; i++) {
+                    var portlet = this.dijitPortlets[i];
+                    var c = dojo.coords(portlet.wm_pageContainer.domNode.parentNode);
+                    portlet.wm_pageContainer.setBounds(null,null,c.w-2, c.h-4);
+                    portlet.wm_pageContainer.reflow();
+                }
+            }));
+        },
 	createAddWidgetDialog: function(){
             
 	    //this.addDialogName = (this.isDesignLoaded()) ? studio.page.getUniqueName(this.name+"_AddDialog") : this.name + "_AddDialog";
@@ -62,7 +79,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 		var seName = this.name+'_selectEditor';
 		var spacer = this.name + '_spacer';
 
-		var props = {width:320, height:150, name: "addDialog", border:2, borderColor: "rgb(80,80,80)", title: 'Add Widget', parent: this, owner: this};
+		var props = {width:320, height:120, name: "addDialog", border:2, borderColor: "rgb(80,80,80)", title: 'Add Widget', parent: this, owner: this};
                 var dialogWidgets = {};
 	        dialogWidgets[seName] = ["wm.SelectMenu", {"caption":"Widget","display":"Select","readonly":false,"width":"100%", required: true}];
 		dialogWidgets[spacer] = ["wm.Spacer", {height: "100%", width: "10px"}, {}, {}];
@@ -152,7 +169,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 	renderPortlets: function(){
 		var visiblePortlets = [];
 		if (!this.isDesignLoaded() && this.saveInCookie){
-			strPortletList = dojo.cookie(this.name + '_portlets');
+		    strPortletList = dojo.cookie(this.getId() + '_portlets');
 			if (strPortletList && strPortletList != '')
 				visiblePortlets = dojo.fromJson(strPortletList);
 		}
@@ -255,7 +272,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 		var pList = this.updatePortletXY();
 		console.info('saving in cookie....', pList);
 		if (this.saveInCookie)
-			dojo.cookie(this.name + '_portlets', dojo.toJson(pList), {expires:5});
+		    dojo.cookie(this.getId() + '_portlets', dojo.toJson(pList), {expires:5});
 		this.onDashboardChange(pList);
 	},
 	onDashboardChange: function(activePortlets){
