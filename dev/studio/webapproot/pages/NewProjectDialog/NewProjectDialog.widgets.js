@@ -20,8 +20,8 @@ NewProjectDialog.widgets = {
     themesListVar: ["wm.Variable", {type: "StringData"}],
     layoutBox1: ["wm.Layout", {layoutKind: "top-to-bottom", width: "100%", height: "100%"}, {}, {
         mainPanel: ["wm.Panel", {layoutKind: "top-to-bottom", width: "100%", height: "100%", horizontalAlign: "left", verticalAlign: "top", padding: "15", border: "10", borderColor: "#313743", backgroundColor: "#848c99"},{}, {
-            projectName: ["wm.Text", {width: "100%", height: "24px", captionSize: "90px", caption: "Project Name", displayValue: "Project", regExp: '^[a-zA-Z][\\w\\d]+$', invalidMessage: "Only letters/numbers.  Must start with letter", tooltipDisplayTime: "6000"}],
-            themeName: ["wm.SelectMenu", {width: "100%", height: "24px",  captionSize: "90px", caption: "Theme", displayField: "dataValue", dataField: "dataValue", }, {}, {
+            projectName: ["wm.Text", {width: "100%", height: "24px", captionSize: "90px", caption: "Project Name", displayValue: "Project", regExp: '^[a-zA-Z][\\w\\d]+$', invalidMessage: "Only letters/numbers.  Must start with letter", tooltipDisplayTime: "6000"}, {"onEnterKeyPress":"onOkClick"}],
+            themeName: ["wm.SelectMenu", {width: "100%", height: "24px",  captionSize: "90px", caption: "Theme", displayField: "dataValue", dataField: "dataValue" }, {"onEnterKeyPress":"onOkClick"}, {
 		binding: ["wm.Binding", {}, {}, {
 		    wire: ["wm.Wire", {"targetProperty":"dataSet","source":"themesListVar"}, {}]
 		}]
