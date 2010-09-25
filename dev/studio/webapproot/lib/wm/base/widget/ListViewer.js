@@ -25,7 +25,7 @@ dojo.declare("wm.ListViewerRow", wm.Container, {
     verticalAlign: "top",
     border: "0,0,0,0",
     margin: "2,0,2,0",
-    padding: "4",
+    padding: "0",
     width: "100%",
     height: "40px",
 /*
@@ -49,6 +49,7 @@ dojo.declare("wm.ListViewerRow", wm.Container, {
 	this.itemNumber = new wm.Variable({name: "itemNumber", owner: this, type: "NumberData"});
 	this._first = true;
         this.border = this.parent.rowBorder;
+        this.borderColor = this.parent.borderColor;
     },
     renderRow: function(inData, inNode, index) {
 	if (this._first) {
@@ -382,7 +383,7 @@ dojo.declare("wm.ListViewer", wm.Container, {
 	    this.currentRenderer.bounds.w = bounds.w;
 	    this.currentRenderer.bounds.t = heightSum;
 	    this.currentRenderer.domNode.style.top = heightSum + "px";
-            console.log(i + ": " + heightSum + ", INC:" + this.currentRenderer.getPreferredFitToContentHeight());
+            //console.log(i + ": " + heightSum + ", INC:" + this.currentRenderer.getPreferredFitToContentHeight());
 	    heightSum += this.currentRenderer.getPreferredFitToContentHeight();
 	    heightCount++;
 	    curAvg = Math.floor(heightSum/heightCount);
