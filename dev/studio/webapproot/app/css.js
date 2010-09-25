@@ -53,8 +53,11 @@ getCssDeclaration = function(inName, inNodeName) {
 	var pageName = studio.project.pageName;
         var obj = studio.page[inName];
     var isLayout =  (obj && obj instanceof wm.Layout);
-    return "body.tundra " + " #wavemakerNode." + pageName + (isLayout ? "" : " .wmlayout") + " ." + pageName + "-" + inName + inNodeName + (isLayout ? ".wmlayout":"") + ",\n" +
-"body.tundra " + (isLayout ? "" : ".wmlayout") + " #studio_designer." + pageName + " ." + pageName + "-" + inName + inNodeName + (isLayout ? ".wmlayout":"") ;
+    var result = ["body.tundra #wavemakerNode." + pageName + (isLayout ? "" : " .wmlayout") + " ." + pageName + "-" + inName + inNodeName + (isLayout ? ".wmlayout":""),
+                  "body.tundra #wavemakerNode ." + pageName + (isLayout ? "" : " .wmlayout") + " ." + pageName + "-" + inName + inNodeName + (isLayout ? ".wmlayout":""),
+                  "body.tundra " + (isLayout ? "" : ".wmlayout") + " #studio_designer." + pageName + " ." + pageName + "-" + inName + inNodeName + (isLayout ? ".wmlayout":"")];
+    return result.join(",\n");
+
 }
 
 addCssTemplate = function(inName) {
