@@ -164,6 +164,7 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 	    navigations: {caption: "Navigations:", list: "navigationCall"},
      	    existingCalls: {caption: "Shared Event Handlers:", list: "sharedEventHandlers"},
             dialogs: {caption: "Show Dialogs:", list: "dialogs"},
+            timers: {caption: "Timers:", list: "timers"},
 	    liveForms: {caption: "Live Forms:", list: "liveForms"}
 	},
 	isEventAction: function(inValue) {
@@ -181,6 +182,7 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 	    var dialogList = wm.listComponents([studio.application, studio.page], wm.Dialog);
             dialogList = dialogList.concat(wm.listComponents([studio.application, studio.page], wm.DojoLightbox));
 	    var lf = wm.listComponents([studio.application, studio.page], wm.LiveForm);
+	    var timers = wm.listComponents([studio.application, studio.page], wm.Timer);
 	    var items=[];
 	    var eventSchema = this.inspected.schema[this.propName];
 
@@ -213,6 +215,11 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 								if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "liveForm") == -1) return;
 								a = lf;
 								break;
+
+					    case "timers":
+								if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "timers") == -1) return;
+								a = timers;
+								break;
 				    }	
 					
 					if (a && a.length) {
@@ -226,6 +233,9 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 							    //items.push({name: aa + '.updateData', value: aa + '.updateData'});
 								items.push({name: aa + '.cancelEdit', value: aa + '.cancelEdit'});
 								items.push({name: aa + '.deleteData', value: aa + '.deleteData'});
+							} else if (obj instanceof wm.Timer){
+							    items.push({name: aa + ".startTimer", value: aa + ".startTimer"});
+							    items.push({name: aa + ".stopTimer", value: aa + ".stopTimer"});
 							} else {
 								items.push({name: aa, value: aa});
 							}

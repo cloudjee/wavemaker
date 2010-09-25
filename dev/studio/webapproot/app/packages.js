@@ -126,6 +126,7 @@
 */
 
 
+
 [ bundlePackage.Non_Visual_Components, bundlePackage.Variable, "wm.Variable", "wm.base.components.Variable", "images/wm/variable_24.png"],
 [ bundlePackage.Non_Visual_Components, bundlePackage.ServiceVariable, "wm.ServiceVariable", "wm.base.components.ServiceVariable", "images/wm/servicevar_24.png"],
 [ bundlePackage.Non_Visual_Components, bundlePackage.LiveVariable, "wm.LiveVariable", "wm.base.components.LiveVariable", "images/wm/livevar_24.png"],
@@ -133,6 +134,7 @@
 [ bundlePackage.Non_Visual_Components, bundlePackage.ImageList, "wm.ImageList", "wm.base.components.ImageList", "images/wm/picture.png", ""],
 [ bundlePackage.Non_Visual_Components, bundlePackage.NavigationCall, "wm.NavigationCall", "wm.base.components.NavigationCall", "images/wm/navigation_24.png"],
 [ bundlePackage.Non_Visual_Components, bundlePackage.LogoutVariable, "wm.LogoutVariable", "wm.base.components.LogoutVariable", "images/wm/servicevar_24.png"],
+[ bundlePackage.Non_Visual_Components, bundlePackage.Timer, "wm.Timer", "wm.base.components.Timer", "images/wm/variable_24.png"],
 [ bundlePackage.Non_Visual_Components, bundlePackage.TypeDefinition, "wm.TypeDefinition", "wm.base.components.TypeDefinition", "images/wm/variable_24.png"],
 
 

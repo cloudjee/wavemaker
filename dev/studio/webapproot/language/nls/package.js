@@ -114,6 +114,7 @@
 	"ImageList" : "ImageList",
 	"NavigationCall" : "NavigationCall",
 	"LogoutVariable" : "LogoutVariable",
+	"Timer" : "Timer",
 	"TypeDefinition" : "TypeDefinition",
 	"Composite_Publisher" : "Composite Publisher",
 	"Property" : "Property",
