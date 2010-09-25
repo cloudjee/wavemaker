@@ -175,6 +175,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	        containerNode = this.domNode;//this.container.domNode;
 	    }
 	    this.setModal(this.modal);
+
             this.setTitlebarBorder("0,0," + this.titlebarBorder + ",0");
             this.setTitlebarBorderColor(this.titlebarBorderColor);
 
@@ -206,7 +207,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	},
     setTitlebarBorder: function(inBorder) {
         this.titlebarBorder = inBorder;
-        this.titleBar.setBorder("0,0," + inBorder + ",0");
+        this.titleBar.setBorder(inBorder);
         this.titleBar.setHeight((34 + this.titleBar.padBorderMargin.t + this.titleBar.padBorderMargin.b) + "px");
     },
     setTitlebarBorderColor: function(inBorderColor) {
