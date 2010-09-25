@@ -79,6 +79,7 @@ wm.loadLibs([
 	"wm.base.components.ServiceCall",
 	"wm.base.components.ServiceQueue",
 	"wm.base.components.ServiceVariable",
+	"wm.base.components.SalesForceMonitorVariable",
 	"wm.base.components.LiveView",
 	"wm.base.components.LiveVariable",
 	"wm.base.components.LogoutVariable",
