@@ -33,6 +33,7 @@
 
 .wm_notheme .wmbutton {
 	background: #dfe5f1 repeat-x url(images/wmsb_btn_bg.png); 
+	color: #294473;	
 }
 
 .wm_notheme .wmsplitter-h {
@@ -41,4 +42,54 @@
 
 .wm_notheme .wmsplitter-v {
 	background-image: url(images/splitter_bg_v.png);
+}
+
+.wm_notheme .wmbevel {
+    background-color: #abb8cf;
+}
+
+.wm_notheme .wmbevel-v {
+	background-image: url(images/split_gradient_v.gif); 
+	background-repeat: repeat-x;
+}
+
+.wm_notheme .wmbevel-h {
+	background-image: url(images/split_gradient_h.gif); 
+	background-repeat: repeat-y;
+}
+
+
+.wm_notheme .wmsplitter {
+	background: #abb8cf center center no-repeat;
+}
+
+.wm_notheme .wmsplitter-h {
+	background-image: url(images/splitter_bg_h.png);
+}
+
+.wm_notheme .wmsplitter-v {
+	background-image: url(images/splitter_bg_v.png);
+}
+
+.wm_notheme .wmtablayers-tabbar {
+    background: #acb9d0 url(images/sb_bar_bg.png) repeat-x;   
+    border-bottom: 1px solid #939fb6;    
+}
+
+.wm_notheme .wmtablayers-tab {
+ 	border-top: 1px solid #939fb6;
+	border-right: 1px solid #939fb6;
+	border-left: 1px solid #939fb6;
+	border-bottom: 1px solid #939fb6;
+	background: #acb9d0 url(images/sb_tabbar_bg.png) repeat-x;
+	color: #000;   
+}
+
+.wm_notheme .wmtablayers-selected {
+	border-top: 1px solid #939fb6;
+	border-right: 1px solid #939fb6;
+	border-left: 1px solid #939fb6;
+	background-color: #FFF;
+	border-bottom: 1px solid #FFF;
+	color: #000;
 }

@@ -35,9 +35,6 @@
 
 .wmbutton {
         cursor: pointer;
-/*	background: #dfe5f1 repeat-x url(images/wmsb_btn_bg.png); */
-	border: 1px solid #939fb6;
-	color: #294473;	
 }
 
 .wmbutton:hover {
@@ -77,53 +74,25 @@ th {
 /**/
 
 .wmbevel {
-	background-color: #abb8cf;
-	padding: 0;
-	margin: 0;
 	overflow: hidden;
 	z-index: 9;
-	height: 6px;
-	width: 6px;
 }
 
-.wmbevel-v {
-	/*background-image: url(images/split_gradient_v.gif); 
-	background-repeat: repeat-x;*/
-	/*border-top: 1px solid #939fb6;
-	border-bottom: 1px solid #939fb6;*/
-}
-
-.wmbevel-h {
-	/*background-image: url(images/split_gradient_h.gif); 
-	background-repeat: repeat-y;*/
-	/*border-left: 1px solid #939fb6;
-	border-right: 1px solid #939fb6;*/
-}
 
 /**/
 
 .wmsplitter {
 	z-index: 9;
-	height: 6px;
-	width: 6px;
-	/*border: 1px solid #939fb6;*/
-	background: #abb8cf center center no-repeat;
 	overflow: hidden;
 }
 
 .wmsplitter-h {
-/*	background-image: url(images/splitter_bg_h.png);*/
-	border-top: none;
-	border-bottom: none;
 	cursor: e-resize;
 	/* for IE6 only */
 	background-position: 1px center;
 }
 
 .wmsplitter-v {
-/*	background-image: url(images/splitter_bg_v.png);*/
-	border-left: none;
-	border-right: none;
 	cursor: n-resize;
 	/* for IE6 only */
 	background-position: center 1px;
@@ -132,8 +101,6 @@ th {
 /**/
 
 .wmtablayers-tabbar {
-	background: #acb9d0 url(images/sb_bar_bg.png) repeat-x;
-	border-bottom: 1px solid #939fb6;
 	background-repeat:repeat-x;
 	overflow: visible !important;
 	/*padding-top: 6px;*/
@@ -145,26 +112,14 @@ th {
 
 .wmtablayers-tab {
 	cursor: pointer;
-	border-top: 1px solid #939fb6;
-	border-right: 1px solid #939fb6;
-	border-left: 1px solid #939fb6;
-	border-bottom: 1px solid #939fb6;
 	height: 20px;
 	margin: 0px 0px 0px 3px;
-	background: #acb9d0 url(images/sb_tabbar_bg.png) repeat-x;
-	color: #000;
 }
 
 .wmtablayers-selected {
 	/*border: 1px solid #939fb6;*/
-	border-top: 1px solid #939fb6;
-	border-right: 1px solid #939fb6;
-	border-left: 1px solid #939fb6;
-	background-color: #FFF;
-	border-bottom: 1px solid #FFF;
 	background-image: none;
 	margin: 0px 0px 0px 3px;
-	color: #000;
 }
 
 /* ROUNDED TEMPLATE */
@@ -421,10 +376,10 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 /* END GREEN BUTTONS */
 
 /* ROUNDED PANEL */
-
+/*
 .wmroundedpanel-header{	
 	height: 28px;
-	/*background: url(images/omg/panel-header.png) repeat-x top;*/
+	/ *background: url(images/omg/panel-header.png) repeat-x top;* /
 	font-weight:bold;
 	color: #FFF;
 	font-size: 12px;	
@@ -438,7 +393,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	height:18px;	
 	float:left;
 	background: url(images/omg/panel-gray-left.png) no-repeat;
-	/*margin-left: -100%;*/
+	/ *margin-left: -100%;* /
 	width: 12px;
 	right:12px;
 	padding-top: 10px;
@@ -450,7 +405,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	background: url(images/omg/panel-gray-center.png) repeat-x;
 	padding-top: 10px;
 	height:18px;
-/*	width: 100%;*/
+/ *	width: 100%;* /
 }
 
 .wmroundedpanel-header-right{
@@ -507,7 +462,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	height:100%;	
 }
 
-
+*/
 /* END ROUNDED PANEL */
 
 /**/
@@ -1555,5 +1510,3 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
 	border-top: 4px solid red;
 }
 
-.wmcolorpickereditor {
-    backg
