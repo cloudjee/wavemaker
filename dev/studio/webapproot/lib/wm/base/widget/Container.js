@@ -300,12 +300,10 @@ wm.define("wm.Container", wm.Control, {
                 else if (w.invalid === undefined && w.getInvalid && w.getInvalid())
                     return true;
 	    }
-            var result = {isValid: true};
-            this.onValidate(result);
-            return !result.isValid;
+            return !this.customGetValidate();
 	},
-        onValidate: function(isValid) {
-            // user should set isValid.isValid = false if its invalid, else they should do nothing.  I was unable to get return values to work due to how dojo.connect works.
+        customGetValidate: function() {
+	    return true;
         },
 	getInvalidWidget: function() {
 	    for (var i in this.widgets) {
