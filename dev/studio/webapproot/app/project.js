@@ -308,9 +308,9 @@ dojo.declare("wm.studio.Project", null, {
 	},
 	saveApplication: function() {
 	        studio.application.incSubversionNumber();
-	    try {
-		studio.application.setValue("studioVersion", dojo.byId("studio_startContainer_start_content1").innerHTML.match(/Studio Version\: (.*)\</)[1]);
-	    }catch(e) {console.error("Failed to write studio version to project file");}
+	        try {
+		    studio.application.setValue("studioVersion", dojo.byId("studio_startContainer_start_content1").innerHTML.match(/Studio Version\: (.*)\</)[1]);
+		}catch(e) {console.error("Failed to write studio version to project file");}
 	        if (studio.tree.selected && studio.tree.selected.component == studio.application)
 		    studio.inspector.reinspect();
 
@@ -320,7 +320,7 @@ dojo.declare("wm.studio.Project", null, {
 	        this.saveProjectData(this.projectName + ".documentation.json", dojo.toJson(appdocumentation, true));
 		// save html file, config file, and debug loader + css
 		var c = wm.studioConfig;
-		this.saveProjectData(c.appIndexFileName, makeIndexHtml(this.projectName), true);
+		    this.saveProjectData(c.appIndexFileName, makeIndexHtml(this.projectName, studio.application.theme), false);
 
 		/* 
 		// Fix config.js if there is a username associated with this project (projectdir contains username or is empty string)

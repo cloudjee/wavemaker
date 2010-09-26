@@ -67,21 +67,23 @@ dojo.declare("wm.Application", wm.Component, {
 
 		this.loadComponents(this.constructor.widgets || this.widgets);
 	},
-        setTheme: function(inTheme, isInit, optionalCss, optionalPrototype, noRegen) {
+    setTheme: function(inTheme, isInit, optionalCss, optionalPrototype, noRegen, forceUpdate) {
 	    var isDesigned = (window["studio"] && this != app);
 	    var node = isDesigned ? studio.designer.domNode : document.body;
 	    dojo.removeClass(node, this.theme);
             this._lastTheme = this.theme;
 	    this.theme = inTheme;
 	    dojo.addClass(node, this.theme);
-	    try {
-		this.loadThemeCss(this.theme, isDesigned, optionalCss);
-	    } catch(e) {
-		if (inTheme != "wm_notheme")  {
-		    this.setTheme("wm_notheme", isInit, optionalCss, optionalPrototype, noRegen);
-		    app.alert("The theme '" + inTheme + "' was not found.  This can happen when importing a project that uses a theme that is not in your library.  You can download that theme and copy it into your WaveMaker/common/themes folder or go to your model, select 'Project', and pick a new theme");
-		} else  {
-		    app.alert("Fatal error loading theme wm_notheme.  If you see this, please contact WaveMaker support.");
+	    if (this.isDesignLoaded() || !isInit) {
+		try {
+		    this.loadThemeCss(this.theme, isDesigned, optionalCss);
+		} catch(e) {
+		    if (inTheme != "wm_notheme")  {
+			this.setTheme("wm_notheme", isInit, optionalCss, optionalPrototype, noRegen);
+			app.alert("The theme '" + inTheme + "' was not found.  This can happen when importing a project that uses a theme that is not in your library.  You can download that theme and copy it into your WaveMaker/common/themes folder or go to your model, select 'Project', and pick a new theme");
+		    } else  {
+			app.alert("Fatal error loading theme wm_notheme.  If you see this, please contact WaveMaker support.");
+		    }
 		}
 		return;
 	    }
