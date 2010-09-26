@@ -30,7 +30,6 @@ dojo.declare("wm.Application", wm.Component, {
         projectSubVersion: 1,
         projectVersion: 1,
         studioVersion: "",
-        _themeData: {}, // static variable shared with StudioApplication when loaded in designer
         theme: "wm_notheme",
         toastPosition: "br",
         _lastTheme: "",
@@ -74,7 +73,7 @@ dojo.declare("wm.Application", wm.Component, {
             this._lastTheme = this.theme;
 	    this.theme = inTheme;
 	    dojo.addClass(node, this.theme);
-	    if (this.isDesignLoaded() || !isInit) {
+	    if (isDesigned || !isInit) {
 		try {
 		    this.loadThemeCss(this.theme, isDesigned, optionalCss);
 		} catch(e) {
@@ -84,8 +83,8 @@ dojo.declare("wm.Application", wm.Component, {
 		    } else  {
 			app.alert("Fatal error loading theme wm_notheme.  If you see this, please contact WaveMaker support.");
 		    }
-		}
 		return;
+		}
 	    }
 
 	   // write before we change the prototype so defaults are left blank
@@ -116,7 +115,7 @@ dojo.declare("wm.Application", wm.Component, {
 	studio.refreshWidgetsTree();
     },
     loadThemePrototype: function(inThemeName, optionalThemeData) {
-        var themeData = this._themeData[inThemeName];
+        var themeData = wm.Application.themeData[inThemeName];
         if (!themeData || optionalThemeData) {
 	    var path;
 	    if (inThemeName.match(/^wm_/))
@@ -124,7 +123,7 @@ dojo.declare("wm.Application", wm.Component, {
 	    else
 		path = dojo.moduleUrl("common") + "themes/" + inThemeName + "/Theme.js";
 	    themeData = optionalThemeData || dojo.fromJson(dojo.xhrGet({url:path, sync:true, preventCache:true}).results[0]);
-            this._themeData[inThemeName] = themeData || {};
+            wm.Application.themeData[inThemeName] = themeData || {};
         }
 
         var propHash = themeData["wm.Control"];
@@ -161,7 +160,7 @@ dojo.declare("wm.Application", wm.Component, {
         if (!wm.Application.themePrototypeData[declaredClass] || wm.Application.themePrototypeData[declaredClass] != this.theme) {
             var p = ctor.prototype;
             var lastTheme = wm.Application.themePrototypeData[declaredClass];
-            var oldThemeData = this._themeData[lastTheme];
+            var oldThemeData = wm.Application.themeData[lastTheme]; // app not this; if studio is loaded, we have multiple apps; just have one of them manage this global
 
             // undo all changes from the last theme for this class
             if (oldThemeData) {
@@ -177,7 +176,7 @@ dojo.declare("wm.Application", wm.Component, {
             }
 
             // make all changes need for this theme for this class
-            var themeData = this._themeData[this.theme];
+            var themeData = wm.Application.themeData[this.theme];
             var ctorData = themeData[ctor.prototype.declaredClass];
             if (ctorData) {
 	        for (var j in ctorData) {
@@ -613,4 +612,4 @@ wm.Object.extendSchema(wm.Application, {
 
 
 wm.Application.themePrototypeData = {};
-			    
+wm.Application.themeData = {};			    
