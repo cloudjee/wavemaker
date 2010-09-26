@@ -287,8 +287,10 @@ dojo.declare("wm.Page", wm.Component, {
 
 	    if (!this.isDesignLoaded()) {
 		for (var p in props) {
-		    if (p.indexOf("custom") == 0 && dojo.isFunction(ctor.prototype[p]))
-			props[p] = props.owner[props[p]];
+		    if (p.indexOf("custom") == 0 && dojo.isFunction(ctor.prototype[p])) {
+			var owner = props.owner;
+			props[p] = dojo.hitch(owner, owner[props[p]]);
+		    }
 		}
 	    }
 
