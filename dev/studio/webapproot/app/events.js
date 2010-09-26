@@ -67,6 +67,7 @@ removeCodeFragment = function(start, end) {
 	studio.setScript(t);
 }
 
+
 eventList = function(eventname, editor) {
   var tmpEventName = eventname.replace(/^on/,"");
   var code = editor.getText();
@@ -91,6 +92,7 @@ getAllEventsInCode = function() {
   for (var i = 0; i < results.length; i++) {
     results[i] = results[i].replace(/\s*\:.*$/, "");
   }
+  results = wm.Array.removeElement(results, "start"); // pretty rare we'll want to list this
   return results;
 }
 

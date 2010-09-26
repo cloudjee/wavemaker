@@ -631,6 +631,30 @@ dojo.declare("wm.EventInspector", wm.Inspector, {
 	}
 });
 
+dojo.declare("wm.CustomMethodInspector", wm.Inspector, {
+	getProps: function(inInspectorProps) {
+		var props = this.inherited(arguments);
+		for (var i in props)
+			if (!props[i].isCustomMethod || props[i].ignore)
+				delete props[i];
+		return props;
+	},
+	hasCustomMethod: function(inProps) {
+		var list = inProps;
+		for (var i in list)
+			if (list[i].isCustomMethod)
+				return true;
+	},
+	canInspect: function(inInspected, inProps) {
+/* MICHAEL 8/10/2010 (WM-1869): Commented out to enable application level event handlers 
+		var appOwned = (inInspected && inInspected.isOwnedBy(studio.application));
+		return !appOwned && this.hasEvents(inProps);
+		*/
+	    return this.hasCustomMethod(inProps);
+	}
+});
+
+
 getPropNode = function(inTable, inProp, inCellIndex) {
 	for (var i=1, rows=inTable.rows, tr, n; inProp && (tr=rows[i]); i++)
 		if (tr.getAttribute("propName") == inProp)

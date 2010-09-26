@@ -376,6 +376,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		var thisObj = this;
 		dojo.addOnLoad(function(){thisObj.renderDojoObj();});
 	},
+        customSort: function(a,b) {return "";},
 	setDojoStore: function(){
 		if (!this.variable){
 			this.store = null;
@@ -385,6 +386,12 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 		var storeData = {'items':[]};
 		var dataList = this.variable.getData();
+
+	    // If the user has provided a customSort method, use it
+	    if (this.customSort != this.constructor.prototype.customSort)
+		dataList = dataList.sort(this.customSort);
+
+
 		var dateFields = this.getDateFields();
 		dojo.forEach(dataList, function(obj){
 			var dates = {};
@@ -395,9 +402,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			storeData.items[storeData.items.length] = dojo.mixin({},obj, dates);
 		}, this);
 		this.store = new dojo.data.ItemFileWriteStore({data: storeData});
+
 		if (!this.caseSensitiveSort)
 			this.makeSortingInsensitive();
 	},
+
 	makeSortingInsensitive: function(){
 		this.store.comparatorMap = {};
 		dojo.forEach(this.columns, function(col){

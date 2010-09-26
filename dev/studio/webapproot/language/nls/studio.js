@@ -158,6 +158,7 @@
 	"I_Editor_Options" : "Editor Options",
 	"I_Editor_Data" : "Editor Data",
 	"I_Events" : "Events",
+	"I_CustomMethods" : "Custom Methods",
 	"I_General" : "General",
 	"I_Other" : "Other",
 	"I_Validation" : "Validation",

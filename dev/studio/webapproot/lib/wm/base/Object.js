@@ -302,7 +302,7 @@ wm.Object.extend({
 		}
 		this.getPropFlags(inName, t);
 		var s = this.schema[inName] || {
-			noprop: Boolean((v === undefined) || (v === null) || inName.charAt(0)=='_' || dojo.isFunction(v) || dojo.isObject(v))
+		    noprop: Boolean((v === undefined) || (v === null) || inName.charAt(0)=='_' || (dojo.isFunction(v) || dojo.isObject(v)) && !t.isCustomMethod)
 		};
 		return dojo.mixin(t, s);
 	},

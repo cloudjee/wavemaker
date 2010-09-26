@@ -285,6 +285,12 @@ dojo.declare("wm.Page", wm.Component, {
 			props.isRelativePositioned = true;	
 		}
 
+	    if (!this.isDesignLoaded()) {
+		for (var p in props) {
+		    if (p.indexOf("custom") == 0 && dojo.isFunction(ctor.prototype[p]))
+			props[p] = props.owner[props[p]];
+		}
+	    }
 
 
 

@@ -64,7 +64,9 @@ wm.Component.extend({
 	// Reflection
 	//=======================================================
 	getPropFlags: function(inName, inTypeInfo) {
+	    console.log("getPropFlags:" + inName);
 		inTypeInfo.isEvent = this.isEventProp(inName);
+		inTypeInfo.isCustomMethod = this.isCustomMethodProp(inName);	    
 	},
 	listProperties: function() {
 		var props = this.inherited(arguments);
@@ -102,7 +104,7 @@ wm.Component.extend({
 	},
 	isWriteableProp: function(inPropSchema) {
 		var ps = inPropSchema;
-		return !ps || ((ps.writeonly || !(ps.ignore || ps.readonly)) && !ps.isEvent && !ps.componentonly);
+		return !ps || ((ps.writeonly || !(ps.ignore || ps.readonly)) && !ps.isEvent &&  !ps.componentonly);
 	},
 	writeProps: function() {
 	    // iterates over all props and checks it's writeable via isWriteableProp
@@ -130,7 +132,7 @@ wm.Component.extend({
 	    if (!inName || (this.components[inName] instanceof wm.Widget && !wm.isInstanceType(this.components[inName], wm.Dialog)))
 			return false;
 		var ps = inProperties[inName];
-		return !ps || ((ps.writeonly || !(ps.ignore || ps.readonly)) && !ps.isEvent);
+		return !ps || ((ps.writeonly || !(ps.ignore || ps.readonly)) && !ps.isEvent && !ps.isCustomMethod);
 	},
 	writeComponents: function(inIndent, inOptions) {
 		// iterates over all props and checks it's writeable via isWriteableComponent
@@ -265,6 +267,11 @@ wm.Component.extend({
 		       return makeReadonlyButtonEdit(inName, inValue, inDefault);
 		}
 
+	        if (inName.match(/^custom/) && dojo.isFunction(this.constructor.prototype[inName])) {
+		    var funclist =  getAllEventsInCode();
+		    funclist.unshift("");
+		    return new wm.propEdit.Select({component: this, value: inValue, name: inName, defaultValue: inDefault, options:funclist});
+		}
 		//
 		var s = this.schema[inName] || 0;
 		var c = (this[inName] || 0).declaredClass;

@@ -477,6 +477,9 @@ dojo.declare("wm.Component", wm.Object, {
 	isEventProp: function(n) {
 		return dojo.isFunction(this._designee[n]) && (n.slice(0,2)=="on");
 	},
+	isCustomMethodProp: function(n) {
+		return dojo.isFunction(this.constructor.prototype[n]) && (n.slice(0,6)=="custom");
+	},
 	_getProp: function(n) {
 		if (this.isEventProp(n))
 			return this.eventBindings ? (this.eventBindings[n] || "") : "";
@@ -597,6 +600,12 @@ this.panel1.createComponent("custom", "wm.Panel", {
 
 		props.name = props.owner.getRoot()._loading || props.owner._loading ? inName : props.owner.getUniqueName(inName);
 
+	    if (!this.isDesignLoaded()) {
+		for (var p in props) {
+		    if (p.indexOf("custom") == 0 && dojo.isFunction(ctor.prototype[p]))
+			props[p] = props.owner[props[p]];
+		}
+	    }
 
 		//
 		var w = this._create(ctor, props);

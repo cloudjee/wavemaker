@@ -26,6 +26,7 @@ dojo.declare("wm.ComponentInspector", wm.Layers, {
 	inspectors: {
 		Properties: wm.BindInspector,
 		"Events": wm.EventInspector,
+		"CustomMethods": wm.CustomMethodInspector,
 		Styles: wm.StyleInspector,
 		Security: wm.SecurityInspector,
 		Data: wm.DataInspector,
@@ -151,6 +152,7 @@ dojo.declare("wm.ComponentInspectorPanel", wm.Panel, {
 		this.props = inComponent && inComponent.listProperties();
 		this.addTreeNode("Properties", {content: bundleStudio.I_Properties, image: "images/properties_16.png", inspector: "Properties"});
 		this.addTreeNode("Events", {content: bundleStudio.I_Events, image: "images/star_16.png", inspector: "Events"});
+		this.addTreeNode("CustomMethods", {content: bundleStudio.I_CustomMethods, image: "images/star_16.png", inspector: "CustomMethods"});
 		// component props
 		var props = this.props, p;
 		for (var i in props) {
