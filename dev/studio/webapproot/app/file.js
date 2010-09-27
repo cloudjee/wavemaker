@@ -134,17 +134,13 @@ makeDebugLoaderJs = function() {
 		].join('\n');
 }
 
-makeIndexHtml = function(inProjectName,themename) {
+makeIndexHtml = function(inProjectName) {
 	var macros = ['PROJECT'], data=[inProjectName], t = wm.studioConfig.appIndexTemplate;
 	// change template to index
 	for (var i=0, m, d; (m=macros[i]); i++){
 		d=data[i] || "";
 		t = t.replace(new RegExp(['{%', m, '}'].join(''), 'g'), d);
 	}
-
-
-    var path = (themename.match(/^wm_/)) ? "/wavemaker/lib/wm/base/widget/themes/" + themename + "/theme.css" : "/wavemaker/lib/wm/common/themes/" + themename + "/theme.css";
-	t = t.replace(/\@import \"(.*)theme\.css\"/, "@import \""+ path + "\";");
 
     return t;
 }

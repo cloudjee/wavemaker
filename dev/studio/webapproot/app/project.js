@@ -201,7 +201,7 @@ dojo.declare("wm.studio.Project", null, {
 	loadApplication: function() {
 		this.projectData = {
 			js: this.loadProjectData(this.projectName + ".js"),
-		        css: this.loadProjectData("app.css"),
+		    css: this.loadProjectData("app.css").replace(/^\@import.*theme.css.*/,"").replace(/^\n*/,""), // remove theme import from editable part of app.css
 		        documentation: dojo.fromJson(this.loadProjectData(this.projectName + ".documentation.json"))
 		};
 		if (!this.projectData.js) {
@@ -320,7 +320,7 @@ dojo.declare("wm.studio.Project", null, {
 	        this.saveProjectData(this.projectName + ".documentation.json", dojo.toJson(appdocumentation, true));
 		// save html file, config file, and debug loader + css
 		var c = wm.studioConfig;
-		    this.saveProjectData(c.appIndexFileName, makeIndexHtml(this.projectName, studio.application.theme), false);
+		    this.saveProjectData(c.appIndexFileName, makeIndexHtml(this.projectName, studio.application.theme), true);
 
 		/* 
 		// Fix config.js if there is a username associated with this project (projectdir contains username or is empty string)
@@ -330,7 +330,9 @@ dojo.declare("wm.studio.Project", null, {
 		*/	
 		this.saveProjectData(c.appConfigFileName, c.appConfigTemplate, true);
 
-		this.saveProjectData(c.appCssFileName, studio.getAppCss());
+            var themename = studio.application.theme;
+            var path = (themename.match(/^wm_/)) ? "/wavemaker/lib/wm/base/widget/themes/" + themename + "/theme.css" : "/wavemaker/lib/wm/common/themes/" + themename + "/theme.css";
+	        this.saveProjectData(c.appCssFileName, '@import "' + path + '";\n' +  studio.getAppCss());
 		this.saveProjectData(c.appDebugBootFileName, '', true);
 		if (wm.studioConfig.isPalmApp) {
 			this.saveProjectData(c.appPalmAppInfoFileName, makePalmAppInfo(this.projectName), true);
