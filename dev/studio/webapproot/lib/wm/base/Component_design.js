@@ -64,7 +64,6 @@ wm.Component.extend({
 	// Reflection
 	//=======================================================
 	getPropFlags: function(inName, inTypeInfo) {
-	    console.log("getPropFlags:" + inName);
 		inTypeInfo.isEvent = this.isEventProp(inName);
 		inTypeInfo.isCustomMethod = this.isCustomMethodProp(inName);	    
 	},
