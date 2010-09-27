@@ -459,6 +459,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 			this.onShow();
 	        else if (!skipOnClose) 
 		    this.onClose("");
+	    if (this.designWrapper)
+		this.designWrapper.setShowing(inShowing);
 	},
 /*
 	setContentWidth: function(inWidth) {
