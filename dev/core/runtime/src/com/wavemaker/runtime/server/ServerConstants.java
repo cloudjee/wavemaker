@@ -45,6 +45,7 @@ public /*static*/ class ServerConstants {
     
     public static final String JSON_EXTENSION = "json";
     public static final String UPLOAD_EXTENSION = "upload";
+    public static final String FLASH_UPLOAD_EXTENSION = "flashUploader";
     public static final String DOWNLOAD_EXTENSION = "download";
     
     public static final String DEFAULT_ENCODING = "UTF-8";

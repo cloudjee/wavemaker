@@ -71,7 +71,7 @@ public/* static */class ServerUtils {
     
     static final Pattern extensionPattern;
     static {
-        extensionPattern = Pattern.compile("^(.*)\\.("+ServerConstants.DOWNLOAD_EXTENSION+"|"+ServerConstants.UPLOAD_EXTENSION+"|"+ServerConstants.JSON_EXTENSION+")$");
+        extensionPattern = Pattern.compile("^(.*)\\.("+ServerConstants.DOWNLOAD_EXTENSION+"|"+ServerConstants.UPLOAD_EXTENSION+"|"+ServerConstants.FLASH_UPLOAD_EXTENSION+"|"+ServerConstants.JSON_EXTENSION+")$");
     }
 
     private ServerUtils() {
