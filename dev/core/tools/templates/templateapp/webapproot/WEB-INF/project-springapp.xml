@@ -20,6 +20,7 @@
             <value>
                 /**/*.json=agJSONController
 				/**/*.download=agFileDownloadController
+                                /**/*.flashUploader=agFlashFileUploadController
 				/**/*.upload=agFileUploadController
 				/modules/**=wmModuleController
 
