@@ -3,19 +3,22 @@ dojo.require("wm.base.widget.Dashboard");
 dojo.require("wm.base.widget.ContextMenuDialog");
 
 wm.Dashboard.extend({
-    themeable: false,
+  themeable: false,
 	configPortlets: "(Configure Portlets)",
+	headerAttr: [{id:'isOpen', title:'Default',width:'10%', type:'checkbox'}, 
+				{id:'title', title: 'Title',width:'30%', type:'text'}, 
+				{id:'page', title: 'Page',width:'30%', type:'dropdown'}, 
+				{id:'isClosable', title: 'Closable',width:'10%', type:'checkbox'}],
+
 	designCreate: function(){
 		this.inherited(arguments);
-		var defaultPortletParams = {isOpen:true, title:'Portlet', page:'', isClosable:true, x:0, y:0};
+		var defaultPortletParams = {id:'portlet', title:'Portlet', page:'', isOpen:true, isClosable:true, x:0, y:0};
 		this.updatePageList();
 		this.headerAttr[2].dataStore = this.pageStore;
 		this.contextMenu = new wm.ContextMenuDialog('Configure Portlets', 'Add Portlet', dojo.hitch(this, 'addNewPortlet'), 
 													this.headerAttr, this.portlets, defaultPortletParams, this.domNode, true);
 		dojo.connect(this.contextMenu, 'onPropChanged', this, 'portletPropChanged');
 		dojo.connect(this.contextMenu, 'onRowDelete', this, 'destroyPortlet');
-		if (!this.addDialogName)
-			this.createAddWidgetDialog();
 	},
 	showMenuDialog: function(e){
 		this.contextMenu.show();
@@ -24,7 +27,7 @@ wm.Dashboard.extend({
 		switch(prop){
 			case 'isOpen':
 				if (inValue){
-					this.addNewPortlet(Obj);
+					this.addPortlet(Obj);
 				} else {
 					this.destroyPortlet(Obj);
 				}

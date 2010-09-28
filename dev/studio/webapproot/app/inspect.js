@@ -162,9 +162,10 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 	    newNavigation: {caption:" - New Navigation..."},
 	    serviceVariables: {caption: "Service Variables:", list: "serviceVariable"},
 	    navigations: {caption: "Navigations:", list: "navigationCall"},
-     	    existingCalls: {caption: "Shared Event Handlers:", list: "sharedEventHandlers"},
-            dialogs: {caption: "Show Dialogs:", list: "dialogs"},
-            timers: {caption: "Timers:", list: "timers"},
+			existingCalls: {caption: "Shared Event Handlers:", list: "sharedEventHandlers"},
+			dialogs: {caption: "Show Dialogs:", list: "dialogs"},
+			dashboards: {caption: "Dashboard Add Widget:", list: "dashboards"},
+      timers: {caption: "Timers:", list: "timers"},
 	    liveForms: {caption: "Live Forms:", list: "liveForms"}
 	},
 	isEventAction: function(inValue) {
@@ -180,7 +181,8 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 	    var nc = wm.listComponents([studio.application, studio.page], wm.NavigationCall);
       var sharedEventHandlers = eventList(this.inspected.getSharedEventLookupName(this.propName), wm.isInstanceType(studio.selected.owner, wm.Application) ? studio.appsourceEditor : studio.editArea);
 	    var dialogList = wm.listComponents([studio.application, studio.page], wm.Dialog);
-            dialogList = dialogList.concat(wm.listComponents([studio.application, studio.page], wm.DojoLightbox));
+      dialogList = dialogList.concat(wm.listComponents([studio.application, studio.page], wm.DojoLightbox));
+	    var dashboardList = wm.listComponents([studio.application, studio.page], wm.Dashboard);
 	    var lf = wm.listComponents([studio.application, studio.page], wm.LiveForm);
 	    var timers = wm.listComponents([studio.application, studio.page], wm.Timer);
 	    var items=[];
@@ -215,7 +217,10 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 								if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "liveForm") == -1) return;
 								a = lf;
 								break;
-
+							case "dashboards":
+								if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "dashboards") == -1) return;
+								a = dashboardList;
+								break;
 					    case "timers":
 								if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "timers") == -1) return;
 								a = timers;

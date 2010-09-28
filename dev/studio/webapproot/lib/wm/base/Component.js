@@ -672,7 +672,7 @@ this.panel1.createComponent("custom", "wm.Panel", {
 	_makeComponentEvent: function(inHandler) {
 		var self = this;
 		// FIXME: experimental: can call a method on a component
-		return function() { 
+		return function(e) { 
 			// inHandler could be a component
 			// or a (string) Id of a component
 			// or a (string) Id of a component + a dotted method suffix
@@ -680,7 +680,7 @@ this.panel1.createComponent("custom", "wm.Panel", {
 			//console.info('wm.isInstanceType = ' + wm.isInstanceType(inHandler, 'wm.Component'));
 			var c = wm.isInstanceType(inHandler, wm.Component) ? inHandler : self.getValueById(inHandler);
 			if (wm.isInstanceType(c, wm.Component))
-				wm.fire(c, "update");
+				wm.fire(c, "update", [e]);
 			// call a method on a component
 			else if (dojo.isString(inHandler)) {
 				var o = inHandler.split('.');
