@@ -166,7 +166,7 @@ dojo.require("dijit._editor.plugins.LinkDialog");
 		    this.connect(this.editor, "onBlur", this, function() {dojo.removeClass(this.editorNode, "Focused");});
                     this.editor.focusNode.style.lineHeight = "12px"; // needed for safari... 
 	            this.editor.focusNode.style.overflow = "auto";
-                    this.editor.attr("value", this.dataValue);
+                    this.editor.attr("value", this.dataValue || "");
      },
          isReady: function() {
             return Boolean(this._ready && this.editor && this.editor.focusNode);
