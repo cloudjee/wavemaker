@@ -661,7 +661,7 @@ Studio.extend({
 			positionLocation: "tl",
 			border: "1px",
 			width: 550,
-			height: 300,
+			height: 350,
 			hideControls: true,
 			title: "Binding..."
 		    },

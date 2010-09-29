@@ -45,8 +45,8 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
 					pageName: "BindSourceDialog",
 				    border: "1px",
 				    positionLocation: "tl",
-				    width: 550,
-				    height: 300,
+				    width: "550",
+				    height: "350",
 				    modal: false,
 				    hideControls: true,
 				    title: "Binding..."
