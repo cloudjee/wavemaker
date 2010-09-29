@@ -223,7 +223,7 @@ dojo.declare("wm.NavigationService", wm.Service, {
 	*/
 	    gotoDialogPage: function(inPageName, inHideControls, inTitle, inModal, inWidth, inHeight) {
 		this._resultConnect = dojo.connect(app.pageDialog, "onPageReady", this, "doResult");
-		app.pageDialog.showPage(inPageName, inHideControls, inWidth, inHeight, inTitle, inModal);
+		app.pageDialog.showPage(inPageName, inHideControls, String(inWidth)+"px", String(inHeight)+"px", inTitle, inModal);
 	},
         showToast: function(inContent, inDuration, cssClasses, toastPosition) {
 	    app.toastDialog.showToast(inContent, inDuration, cssClasses, toastPosition);
