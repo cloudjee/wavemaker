@@ -431,10 +431,14 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
 	getStructure: function(){
 		var structure = [];
+		var hasAutoField = false;
 		dojo.forEach(this.columns, function(col){
 			var obj = {	hidden:(!col.show), field: col.id, name:col.title, width: col.width, fieldType:col.fieldType, 
 						editable:col.editable,expression:col.expression, displayType:col.displayType};
 
+			if (col.show && col.width && col.width == 'auto')
+				hasAutoField = true;
+				
 			if (col.align && col.align != ''){
 				obj.styles = 'text-align:'+col.align + ';';				
 			}
@@ -478,6 +482,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			structure.push(obj);
 		}, this);
 
+		if (!hasAutoField){
+			structure.push({ field: 'wmAutoField', name:' ', width: 'auto', value: ' '});
+		}
+		
 		structure = [structure];
 	        //this.onGetStructure(structure);
 		return structure; 
