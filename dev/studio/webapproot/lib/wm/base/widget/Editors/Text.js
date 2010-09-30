@@ -481,7 +481,13 @@ dojo.declare("wm._TextAreaEditor", wm._TextEditor, {
 });
 
 dojo.declare("wm.LargeTextArea", wm.Text, {
-	height: "72px",
+	width: "300px",
+	height: "96px",
+	captionSize: "24px",
+	captionPosition: "top",
+        captionAlign: "left",
+	singleLine: false,
+
         changeOnEnter: false,
 	_createEditor: function(inNode, inProps) {
 	        return new dijit.form.SimpleTextarea(this.getEditorProps(inNode, inProps));

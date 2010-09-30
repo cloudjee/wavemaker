@@ -19,6 +19,8 @@ dojo.provide("wm.base.widget.Label");
 dojo.require("wm.base.widget.Formatters");
 
 dojo.declare("wm.Label", wm.Control, {
+	width: "200px",
+	height: "36px",
 	caption: '',
 	link: '',
 	display: '',

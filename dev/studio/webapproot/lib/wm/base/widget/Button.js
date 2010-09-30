@@ -19,6 +19,8 @@ dojo.provide("wm.base.widget.Button");
 dojo.require("wm.base.Widget");
 
 dojo.declare("wm.ToolButton", wm.Widget, {
+	width: "80px", 
+	height: "32px",
 	border: 0,
 	padding: "",
 	margin: "",
@@ -219,8 +221,8 @@ dojo.declare("wm.ToggleButton", wm.ToolButton, {
 	border: 1,
 	borderColor: "#ABB8CF",
 	margin: 4,
-	captionUp: "Button Up",
-        captionDown: "Button Down",
+	captionUp: "Btn Up",
+        captionDown: "Btn Down",
         classNames: "wmbutton wmtogglebutton",
         init: function() {
 	    this.caption = this.captionUp;

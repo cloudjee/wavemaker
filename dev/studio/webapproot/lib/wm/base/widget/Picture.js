@@ -21,8 +21,8 @@ dojo.require("wm.base.widget.Box");
 dojo.declare("wm.Picture", wm.Box, {
 	aspect: "none",
 	hint: "",
-	width: "1flex",
-	height: "1flex",
+	width: "100px",
+	height: "100px",
 	link: "",
 	source: "",
 	init: function() {

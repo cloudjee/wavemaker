@@ -39,7 +39,7 @@ wm.defaultEmptyValue = function(inType){
 //===========================================================================
 dojo.declare("wm._BaseEditor", wm.Widget, {
         classNames: "wmeditor",
-	width: "100%",
+	width: "300px",
 	height: "100%",
 	editorBorder: true,
 	border: 0,
@@ -395,7 +395,7 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 
     /* Formating */
 	height: "24px",
-	width: "100%",
+	width: "300px",
 	padding: 2,
 	border: 0,
 	editorBorder: true,
@@ -411,8 +411,8 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
     /* Caption */
 	caption: "",
         captionPosition: "left",
-	captionSize: "50%",
-         captionNode: null,
+	captionSize: "100px",
+        captionNode: null,
 	captionAlign: "right",
 	singleLine: true,
 

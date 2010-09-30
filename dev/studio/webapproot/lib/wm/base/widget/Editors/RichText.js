@@ -31,6 +31,7 @@ dojo.require("dijit._editor.plugins.LinkDialog");
 //===========================================================================
 
  dojo.declare("wm.RichText", wm.LargeTextArea, {
+	width: "100%",
         height: "200px",
      padding: "0",
      _ready: false,
@@ -48,7 +49,7 @@ dojo.require("dijit._editor.plugins.LinkDialog");
             toolbarColor: false,
      classNames: "wmeditor wmrichtext",
         afterPaletteDrop: function() {
-            //this.setCaption(this.name);
+            this.setCaption(this.name);
         },
          init: function() {
             this.inherited(arguments);

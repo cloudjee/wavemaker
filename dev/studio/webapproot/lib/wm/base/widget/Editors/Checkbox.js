@@ -145,6 +145,9 @@ dojo.declare("wm._CheckBoxEditor", wm._BaseEditor, {
 
 
 dojo.declare("wm.Checkbox", wm.AbstractEditor, {
+    /* Formating */
+	width: "120px",
+
 	dataType: "string",
 	startChecked: false,
         checkedValue: 1,
