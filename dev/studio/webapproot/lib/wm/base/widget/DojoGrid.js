@@ -359,6 +359,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 		if (this.isDesignLoaded()) {
 			dojo.connect(this.dojoObj,'onMoveColumn', this, '_onMoveColumn');
+			dojo.connect(this.dojoObj,'onResizeColumn', this, '_onResizeColumn');
 			dojo.connect(this.dojoObj, 'onHeaderContextMenu', this, 'showMenuDialog');
 			dojo.connect(this.dojoObj, 'onRowContextMenu', this, 'showMenuDialog');
 			//dojo.connect(this.dojoObj, 'onCellClick', this, 'hideMenuDialog');

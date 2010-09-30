@@ -189,6 +189,12 @@ wm.DojoGrid.extend({
 		this.dojoObj.attr('structure', this.getStructure());
 		this.dojoObj.render();
 	},
+	_onResizeColumn: function(idx, inDrag, delta){
+		var sArray = this.contextMenu.getUpdatedDataSet();
+		sArray[idx].width = delta.w + 'px';
+		this.contextMenu.setDataSet(sArray);
+		wm.fire(studio.inspector, "reinspect");
+	},
 	_onMoveColumn: function(arg1, arg2, oldPos, newPos){
 		var sArray = this.contextMenu.getUpdatedDataSet();
 		var tmp=sArray[oldPos];
