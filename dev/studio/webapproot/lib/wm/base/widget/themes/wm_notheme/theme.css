@@ -93,3 +93,22 @@
 	border-bottom: 1px solid #FFF;
 	color: #000;
 }
+
+
+.wm_notheme .dialogclosebutton {
+    background-image: url(images/DialogIconsBlack.png);
+    background-position: 0px 0px;
+    background-repeat: no-repeat;
+}
+
+.wm_notheme .dialogminifybutton {
+    background-image: url(images/DialogIconsBlack.png);
+    background-position: -16px 0px;
+    background-repeat: no-repeat;
+}
+
+.wm_notheme .dialogmaxifybutton {
+    background-image: url(images/DialogIconsBlack.png);
+    background-position: -32px 0px;
+    background-repeat: no-repeat;
+}

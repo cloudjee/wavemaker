@@ -104,7 +104,7 @@ dojo.declare("wm.Dialog", wm.Container, {
     borderColor: "rgb(80,80,80)",
     titlebarBorder: "1",
     titlebarBorderColor: "black",
-    titlebarHeight: "30",
+    titlebarHeight: "23",
 /*
 	contentWidth: 640,
 	contentHeight: 400,
@@ -208,7 +208,7 @@ dojo.declare("wm.Dialog", wm.Container, {
     setTitlebarBorder: function(inBorder) {
         this.titlebarBorder = inBorder;
         this.titleBar.setBorder(inBorder);
-        this.titleBar.setHeight((34 + this.titleBar.padBorderMargin.t + this.titleBar.padBorderMargin.b) + "px");
+        this.titleBar.setHeight((parseInt(this.titlebarHeight) + this.titleBar.padBorderMargin.t + this.titleBar.padBorderMargin.b) + "px");
     },
     setTitlebarBorderColor: function(inBorderColor) {
         this.titlebarBorderColor = inBorderColor;
@@ -525,31 +525,35 @@ dojo.declare("wm.Dialog", wm.Container, {
 					  border: this.titlebarBorder,
 					  borderColor: this.titlebarBorderColor,
 					  layoutKind: "left-to-right"});
-	this.titleClose = new wm.Button({
+	this.titleClose = new wm.Picture({_classes: {domNode: ["dialogclosebutton"]},
+					  source: "/wavemaker/lib/wm/base/widget/themes/default/images/blank.gif",
 					  noInspector: true,
 					 name: "titleClose",
-					 caption: "X",
-					 width: "30px",
-					 height: "30px",
+					 width: "16px",
+					 height: "19px",
+					  margin: "3,0,0,0",
 					 parent: this.titleBar,
 					 owner: this,
 					 showing: !this.modal && !this.noEscape });
-	this.titleMinify = new wm.Button({
+	this.titleMinify = new wm.Picture({_classes: {domNode: ["dialogminifybutton"]},
 					  noInspector: true,
+					  source: "/wavemaker/lib/wm/base/widget/themes/default/images/blank.gif",
 					  name: "titleMinify",
-					  caption: "&ndash;",
-					  width: "30px",
-					  height: "30px",
+					  width: "16px",
+					 height: "19px",
+					  margin: "3,0,0,0",
 					  parent: this.titleBar,
 					  owner: this,
 					  showing: !this.modal});	
 
-	this.titleMaxify = new wm.Button({
+	this.titleMaxify = new wm.Picture({_classes: {domNode: ["dialogmaxifybutton"]},
 					  noInspector: true,
+					  source: "/wavemaker/lib/wm/base/widget/themes/default/images/blank.gif",
 					  name: "titleMinify",
 					  caption: " ",
-					  width: "30px",
-					  height: "30px",
+					  width: "16px",
+					 height: "19px",
+					  margin: "3,0,0,0",
 					  parent: this.titleBar,
 					  owner: this,
 					  showing: !this.modal});	
@@ -629,6 +633,7 @@ wm.Object.extendSchema(wm.Dialog, {
     title: {group: "Header and Footer", order: 1},
     titlebarBorder: {group: "Header and Footer", order: 5},
     titlebarBorderColor: {group: "Header and Footer", order: 6},
+    titlebarHeight: {group: "Header and Footer", order: 7},
     noEscape: {group: "Dialog Keyboard", order: 1},
     enterKeyIsButton1: {group: "Dialog Keyboard", order: 2, ignore: 1},
     modal: {group: "Dialog Options", order: 1},

@@ -2329,3 +2329,22 @@ body.wm_graphite {
 /*****************************************
  * EOF: splitterbevel.css
  *****************************************/
+
+
+.wm_graphite .dialogclosebutton {
+    background-image: url(images/DialogIconsWhite.png);
+    background-position: 0px 0px;
+    background-repeat: no-repeat;
+}
+
+.wm_graphite .dialogminifybutton {
+    background-image: url(images/DialogIconsWhite.png);
+    background-position: -16px 0px;
+    background-repeat: no-repeat;
+}
+
+.wm_graphite .dialogmaxifybutton {
+    background-image: url(images/DialogIconsWhite.png);
+    background-position: -32px 0px;
+    background-repeat: no-repeat;
+}

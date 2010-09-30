@@ -2331,3 +2331,22 @@ body.wm_default {
 /*****************************************
  * EOF: splitterbevel.css
  *****************************************/
+
+
+.wm_default .dialogclosebutton {
+    background-image: url(images/DialogIconsWhite.png);
+    background-position: 0px 0px;
+    background-repeat: no-repeat;
+}
+
+.wm_default .dialogminifybutton {
+    background-image: url(images/DialogIconsWhite.png);
+    background-position: -16px 0px;
+    background-repeat: no-repeat;
+}
+
+.wm_default .dialogmaxifybutton {
+    background-image: url(images/DialogIconsWhite.png);
+    background-position: -32px 0px;
+    background-repeat: no-repeat;
+}

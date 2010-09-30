@@ -182,3 +182,20 @@ body .wm_template .dialogfooter .wmbutton:hover {
 }
 
 
+.wm_template .dialogclosebutton {
+    background-image: url(images/DialogIconsWhite.png);
+    background-position: 0px 0px;
+    background-repeat: no-repeat;
+}
+
+.wm_template .dialogminifybutton {
+    background-image: url(images/DialogIconsWhite.png);
+    background-position: -16px 0px;
+    background-repeat: no-repeat;
+}
+
+.wm_template .dialogmaxifybutton {
+    background-image: url(images/DialogIconsWhite.png);
+    background-position: -32px 0px;
+    background-repeat: no-repeat;
+}

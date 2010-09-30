@@ -1512,3 +1512,9 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
 	border-top: 4px solid red;
 }
 
+.dialogclosebutton img, 
+.dialogminifybutton img,
+.dialogmaxifybutton img {
+    width: 100%;
+    height: 100%;
+}
