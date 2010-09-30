@@ -43,6 +43,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		dojo['require']("dojox.grid.cells.dijit");
 		dojo['require']("dojo.data.ItemFileWriteStore");
 		dojo['require']("dojo.string");
+		dojo['require']("wm.base.lib.currencyMappings");
+		
 		if (this.isDesignLoaded()){
 			var js = "dijit.Dialog";
 			dojo["require"](js);
@@ -445,6 +447,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 					case 'wm_number_formatter':
 						obj.formatter = dojo.hitch(this, 'numberFormatter');
 						break;
+					case 'wm_currency_formatter':
+						obj.formatter = dojo.hitch(this, 'currencyFormatter');
+						break;
 					case 'wm_image_formatter':
 						obj.formatter = dojo.hitch(this, 'imageFormatter');
 						break;
@@ -600,6 +605,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 						case 'wm_number_formatter':
 							value = this.numberFormatter(value);	
 							break;
+						case 'wm_currency_formatter':
+							value = this.currencyFormatter(value);	
+							break;
 						case 'wm_image_formatter':
 							value = this.imageFormatter(value);	
 							break;
@@ -638,11 +646,14 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		return expValue;
 	},
 	dateFormatter: function(inDatum){
-		var constraints = {selector:'date', formatLength:'short'};
+		var constraints = {selector:'date', formatLength:'short', locale:dojo.locale};
 		return dojo.date.locale.format(new Date(inDatum), constraints);
 	},
 	numberFormatter: function(inValue){
-		return isNaN(inValue) ? 0 : inValue;
+		return dojo.number.format(inValue);
+	},
+	currencyFormatter: function(inValue){
+		return dojo.currency.format(inValue, {currency:wm.getLocaleCurrency()});
 	},
 	imageFormatter: function(inValue){
 		console.info('image inValue = ', inValue);

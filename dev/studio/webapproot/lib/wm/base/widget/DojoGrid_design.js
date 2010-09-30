@@ -18,6 +18,7 @@ wm.DojoGrid.extend({
 				{id:'editable', title:'Editable',width:'2%', type:'checkbox', isAdvanced:true}, 
 				{id:'expression', title: 'Data Expression',width:'20%', type:'text', isAdvanced:true}],
 	defaultFormatters:[	{name:'', value:''},
+											{name:'Currency (WaveMaker)', value:'wm_currency_formatter'},
 											{name:'Date (WaveMaker)', value:'wm_date_formatter'},
 											{name:'Number (WaveMaker)', value:'wm_number_formatter'},
 											{name:'Image (WaveMaker)', value:'wm_image_formatter'}],
