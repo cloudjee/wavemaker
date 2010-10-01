@@ -68,6 +68,19 @@ wm.define("wm.Container", wm.Control, {
                 this.setThemeStyleType(this.themeStyleType);
                 */
 	},
+        setThemeStyleType: function(inType) {
+	    var oldType = this.getThemeStyleType();
+	    if (oldType)
+		this.removeUserClass(oldType);
+	    this.addUserClass(inType);
+	},
+        getThemeStyleType: function() {
+	    var types = ["MainContent", "EmphasizedContent", "HeaderContent"];
+	    if (this._classes && this._classes.domNode)
+		for (var i = 0; i < types.length; i++) {
+		    if (dojo.indexOf(this._classes.domNode, types[i]) != -1) return types[i];
+		}
+	},
 	destroy: function()
 	{
 		if (this.domNode && this.domNode.box)
@@ -697,5 +710,5 @@ wm.Object.extendSchema(wm.Container, {
     fitToContentHeight: {group: "advanced layout", order: 91, shortname: "Auto Height"},
     autoScroll: {group: "scrolling", order: 100, ignore: 0},
     isMajorContent: {group: "style", order: 150, ignore: 1},
-    themeStyleType: {group: "style", order: 150}
+    themeStyleType: {ignore: true, group: "style", order: 150}
 });

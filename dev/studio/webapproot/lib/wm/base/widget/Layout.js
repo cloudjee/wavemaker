@@ -96,6 +96,7 @@ dojo.declare("wm.Layout", wm.Container, {
 
 // design-time
 wm.Object.extendSchema(wm.Layout, {
+    themeStyleType: {group: "style", order: 150},
 	fitToContent: { ignore: 1 },
 	fitToContentWidth: { ignore: 1 },
 	fitToContentHeight: { ignore: 1 },
