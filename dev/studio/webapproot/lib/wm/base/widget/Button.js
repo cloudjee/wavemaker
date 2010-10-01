@@ -20,7 +20,6 @@ dojo.require("wm.base.Widget");
 
 dojo.declare("wm.ToolButton", wm.Widget, {
 	width: "80px", 
-	height: "32px",
 	border: 0,
 	padding: "",
 	margin: "",
@@ -210,6 +209,7 @@ wm.ToolButton.extend({
 });
 
 dojo.declare("wm.Button", wm.ToolButton, {
+	height: "32px",
 	border: 1,
 	borderColor: "#ABB8CF",
 	margin: 4,
