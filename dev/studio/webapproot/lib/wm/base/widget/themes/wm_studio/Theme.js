@@ -78,7 +78,8 @@
 		"titlebarBorder": "1", 
 	    "titlebarBorderColor": "#FBFBFB",
 		"footerBorder": "1", 
-		"footerBorderColor": "#FBFBFB"
+	    "footerBorderColor": "#FBFBFB",
+		"titlebarHeight": "23"
 	}, 
 	"wm.GenericDialog": {
 		"border": 1, 

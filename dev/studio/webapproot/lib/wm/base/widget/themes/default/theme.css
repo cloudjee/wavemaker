@@ -1518,3 +1518,9 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
     width: 100%;
     height: 100%;
 }
+.dialogclosebutton, 
+.dialogminifybutton,
+.dialogmaxifybutton {
+	cursor: pointer;
+}
+
