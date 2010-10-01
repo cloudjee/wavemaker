@@ -185,17 +185,14 @@ dojo.declare("ThemeDesigner", wm.Page, {
                     description: "Buttons that are in the button bar on the bottom of a dialog are on a different hover background from other buttons in your theme.  Special background colors may be needed; and this is where you set them",
 		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]},
 
-		"TitleButtonsDefault": {
-                    displayName: "Top Buttons (Default)",
+		"TitleBar": {
+                    displayName: "Titlebar",
 		    demo: "themeGroupDemoAllPanelsWidgets",
 		    styles: ["Font-Color",  "BorderStyle-Shadow", "Background"],
                     description: "There are buttons in the title bar that show up for non-modal dialogs (create a dialog and uncheck the modal property).  Often, you will want these to look just like your footer buttons, but these buttons are much smaller and may need some different settings."
-		},               
-		"TitleButtonsHover": {
-                    displayName: "Top Buttons (Hover)",
-		    demo: "themeGroupDemoAllPanelsWidgets",
-                    description: "There are buttons in the title bar that show up for non-modal dialogs (create a dialog and uncheck the modal property).  Specify the hover behaviors of these buttons..",
-		    styles: ["Font-Color", "BorderStyle-Shadow", "Background"]}}},
+		}
+	    }
+	},
 
 	
 
@@ -887,10 +884,11 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    this.setCssSymbol("Dialogs-FooterButtonsDefault-Background", "Color", value);
 	    this.setCssSymbol("Dialogs-FooterButtonsHover-Background", "Color", newvalues[0]);
 
+/*
             // title buttons will always be just white
 	    this.setCssSymbol("Dialogs-TitleButtonsDefault-Background", "Color", "#ffffff");
 	    this.setCssSymbol("Dialogs-TitleButtonsHover-Background", "Color", "#dddddd");
-
+	    */
 
             for (var i = 0; i < this.panelTypes.length; i++) {
 	        this.setCssSymbol(this.panelTypes[i] + "-ClickablesHover-Background", "Color", newvalues[0]);
@@ -910,10 +908,11 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    this.setCssSymbol("Dialogs-FooterButtonsDefault-Font", "Color", value);
 	    this.setCssSymbol("Dialogs-FooterButtonsHover-Font", "Color", value);
 
+/*
             // Title buttons will always just be black font
 	    this.setCssSymbol("Dialogs-TitleButtonsDefault-Font", "Color", "#000000");
 	    this.setCssSymbol("Dialogs-TitleButtonsHover-Font", "Color", "#000000");
-
+	    */
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
             break;
 
@@ -937,11 +936,12 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    this.setCssSymbol("Dialogs-FooterButtonsDefault-Background", "Image-Repeat", repeat);
 	    this.setCssSymbol("Dialogs-FooterButtonsDefault-Background", "Image-Position", position);
 
+/*
             // No background image for the  titlebar buttons
 	    this.setCssSymbol("Dialogs-TitleButtonsDefault-Background", "Image", "none");
 	    this.setCssSymbol("Dialogs-TitleButtonsDefault-Background", "Image-Repeat", repeat);
 	    this.setCssSymbol("Dialogs-TitleButtonsDefault-Background", "Image-Position", position);
-
+	    */
 	    if  (url.match(/\d/)) {
 		var numb = parseInt(url.match(/\d/)[0]);
 		if (numb > 0) {
@@ -1076,6 +1076,10 @@ dojo.declare("ThemeDesigner", wm.Page, {
 		this.widgetList.eventSelect(this.widgetList.getItem(0));
 	    else
 		this.widgetselect(inSender);
+	    return;
+	} else if (groupName == "TitleBar") {
+	    this.createDialogTitleBarForm();
+	    this.regenerateDemoPanel();
 	    return;
 	}
 	this.widgetList.hide();
@@ -1262,6 +1266,98 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	}
 
         wm.onidle(this.widgetEditPanel,"reflow");
+    },
+
+    createDialogTitleBarForm: function() {
+        new wm.Label({name: "mainPanel1Label", caption: "Dialog Titlebar", width: "100%", height: "24px", parent: this.widgetEditPanel, owner: this, backgroundColor: "black"});
+
+	var props = {captionSize: "120px", 
+		     captionAlign: "left", 
+		     padding: "2,5,2,5",
+		     width: "100%", 
+		     height: "20px", 
+		     owner: this, 
+		     parent: this.widgetEditPanel, 
+		     readonly: Boolean(this.currentTheme.match(/^wm_/))
+		    };
+
+	var editors = [];
+
+	// titlebar height
+
+        if (!this.themePrototype["wm.Dialog"]) this.themePrototype["wm.Dialog"] = {};
+	editors.push(new wm.Number(dojo.mixin({name: "dialogTitlebarHeight",
+					       dataValue: this.themePrototype["wm.Dialog"]["titlebarHeight"],
+					       caption: "Titlebar Height (px)"}, props)));
+
+	// image list url
+        var widget_json = this.themeTypes["Image"];
+	// repeat, top left are both ignored, neither make it into the styleesheet.
+	var val = "repeat,top left," + this.getThemeDataValue("Dialogs-Titlebar", "Icons");
+
+	editors.push(this.widgetEditPanel.createComponent("dialogTitlebarIconUrl",
+							  widget_json[0], 
+							  dojo.mixin({caption: "Titlebar Icons", 
+								      dataValue: val}, 
+								     props, widget_json[1]), 
+							  {},
+							  widget_json[3], this));
+
+	// imagelist icon height
+	editors.push(new wm.Number(dojo.mixin({name: "dialogTitlebarIconHeight",
+					       dataValue: parseInt(this.getThemeDataValue("Dialogs-Titlebar", "IconHeight")),
+					       caption: "Titlebar Icon Height (px)"}, props)));
+
+	// imagelist icon width
+	editors.push(new wm.Number(dojo.mixin({name: "dialogTitlebarIconWidth",
+					       dataValue: Math.abs(parseInt(this.getThemeDataValue("Dialogs-Titlebar", "MinifyIconWidth"))),
+					       caption: "Titlebar Icon Width (px)"}, props)));
+
+	this.widgetEditPanel.reflow();
+
+        dojo.forEach(editors, dojo.hitch(this, function(e) {
+            var originalValue = e.getDataValue();
+            var hasChanged = false;
+            e.connect(e,"onchange", this, function(inValue) {
+                this.dialogTitlebarChange(e);
+            })
+	}));
+
+    },
+    dialogTitlebarChange: function(inSender) {
+
+        studio._themeDesignerChange = true;
+        studio._reflowPageDesigner = true;
+        studio.application.cacheWidgets();
+        this.setDirty(true);
+
+        var value = inSender.getDataValue();
+        var name = inSender.name;
+        switch(name) {
+	case "dialogTitlebarIconWidth":
+	    this.setCssSymbol("Dialogs-Titlebar", "MinifyIconWidth", (-value) + "px");
+	    this.setCssSymbol("Dialogs-Titlebar", "MaxifyIconWidth", (-2*value) + "px");
+            studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
+	    break;
+	case "dialogTitlebarIconHeight":
+	    this.setCssSymbol("Dialogs-Titlebar", "IconHeight", value); // not used yet
+            studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
+	    break;
+	case "dialogTitlebarIconUrl":
+	    this.setCssSymbol("Dialogs-Titlebar", "Icons", value.split(/,/)[2]);
+            studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
+	    break;
+	case "dialogTitlebarHeight":
+	    value = String(value);
+	    this.themePrototype["wm.Dialog"]["titlebarHeight"] = value;
+            var ctor = dojo.getObject("wm.Dialog");
+            if (ctor && ctor.prototype) {
+                studio.application.loadThemePrototypeForClass(ctor); // make sure the prototype is loaded before we start editting it
+                ctor.prototype.titlebarHeight = value;
+	    }
+            this.regenerateDemoPanel(null,null,false);
+	    break;
+	}
     },
 /*
     copyPageContentSettings: function() {
