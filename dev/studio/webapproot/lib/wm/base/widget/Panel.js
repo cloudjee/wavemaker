@@ -60,7 +60,9 @@ dojo.declare("wm.EmphasizedContentPanel", wm.Panel, {
 dojo.declare("wm.HeaderContentPanel", wm.Panel, {
     classNames: "wmcontainer wmpanel HeaderContent"
 });
-
+wm.Object.extendSchema(wm.Panel, {
+    themeStyleType: {group: "style", order: 150},
+});
 dojo.declare("wm.FancyPanel", wm.Panel, {
     //useDesignBorder: 0, // move this to a _design file if we ever create one
     freeze: true,
