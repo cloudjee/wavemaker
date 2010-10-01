@@ -57,7 +57,6 @@ import com.wavemaker.json.type.OperationEnumeration;
  *                   &lt;element name="exclude" type="{http://www.activegrid.com/namespaces/ServiceDefinitions/1.0}OperationEnumeration" maxOccurs="unbounded" minOccurs="0"/>
  *                 &lt;/sequence>
  *                 &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                 &lt;attribute name="subType" type="{http://www.w3.org/2001/XMLSchema}string" default="string" />
  *                 &lt;attribute name="typeRef" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *                 &lt;attribute name="isList" type="{http://www.w3.org/2001/XMLSchema}boolean" default="false" />
  *                 &lt;attribute name="allowNull" type="{http://www.w3.org/2001/XMLSchema}boolean" default="false" />
@@ -269,10 +268,9 @@ public class DataObject {
      *         &lt;element name="exclude" type="{http://www.activegrid.com/namespaces/ServiceDefinitions/1.0}OperationEnumeration" maxOccurs="unbounded" minOccurs="0"/>
      *       &lt;/sequence>
      *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *       &lt;attribute name="subType" type="{http://www.w3.org/2001/XMLSchema}string" default="string"/>
      *       &lt;attribute name="typeRef" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
      *       &lt;attribute name="isList" type="{http://www.w3.org/2001/XMLSchema}boolean" default="false" />
-     *       &lt;attribute name="allowNull" type="{http://www.w3.org/2001/XMLSchema}boolean" default="false" />    
+     *       &lt;attribute name="allowNull" type="{http://www.w3.org/2001/XMLSchema}boolean" default="false" />
      *     &lt;/restriction>
      *   &lt;/complexContent>
      * &lt;/complexType>
@@ -299,8 +297,6 @@ public class DataObject {
         protected List<OperationEnumeration> exclude;
         @XmlAttribute(required = true)
         protected String name;
-        @XmlAttribute
-        protected String subType; //xxx
         @XmlAttribute(required = true)
         protected String typeRef;
         @XmlAttribute
@@ -497,30 +493,6 @@ public class DataObject {
          */
         public void setAllowNull(Boolean value) {
             this.allowNull = value;
-        }
-
-        /**
-         * Gets the value of the subType property.
-         *
-         * @return
-         *     possible object is
-         *     {@link String }
-         *
-         */
-        public String getSubType() {
-            return subType;
-        }
-
-        /**
-         * Sets the value of the subType property.
-         *
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *
-         */
-        public void setSubType(String value) {
-            this.subType = value;
         }
 
     }

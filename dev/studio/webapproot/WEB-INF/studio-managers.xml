@@ -214,27 +214,6 @@ Server-side manager bean definitions.  These are only to be used at runtime.
         </property>
     </bean>
 
-	<!-- Beans needed for Salesforce interface.  These beans will later need to be moved to -->
-	<!-- the module container after the module design is enhanced. -->
-
-	<bean id="sfLoginObject"
-		class="com.wavemaker.runtime.ws.salesforce.LoginObject"
-		scope="session"
-		lazy-init="true">
-    </bean>
-
-	<bean id="sfLoginService" 
-		class="com.wavemaker.runtime.ws.salesforce.LoginService"
-		scope="singleton" 
-		lazy-init="true">
-	</bean>
-
-	<bean id="sfServiceBean" 
-		class="com.wavemaker.runtime.ws.salesforce.gen.SforceService"
-		scope="singleton" 
-		lazy-init="true">
-	</bean>
-
     <!-- we don't lazy-init this; upgradeManager has some afterPropertiesSet()
         to perform some studio upgrade tasks
     -->

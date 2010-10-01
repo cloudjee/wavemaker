@@ -56,8 +56,6 @@ public class ElementType {
     private boolean allowNull;
     
     private boolean supportsQuickData;
-
-    private String subType; //xxx
     
     private List<OperationEnumeration> require = new ArrayList<OperationEnumeration>();
     
@@ -247,14 +245,6 @@ public class ElementType {
         this.allowNull = allowNull;
     }
 
-    public String getSubType() { //xxx
-        return subType;
-    }
-
-    public void setSubType(String subType) { //xxx
-        this.subType = subType;
-    }
-
     public boolean isSupportsQuickData() {
         return supportsQuickData;
     }
@@ -357,7 +347,6 @@ public class ElementType {
         ret.setRequire(getRequire());
         ret.setName(getName());
         ret.setAllowNull(isAllowNull());
-        ret.setSubType(getSubType()); //xxx
         
         return ret;
     }

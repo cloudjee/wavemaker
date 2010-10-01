@@ -24,9 +24,9 @@ import java.util.List;
 
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.XMLUtils;
+import com.wavemaker.tools.data.Input;
 import com.wavemaker.tools.data.QueryInfo;
 import com.wavemaker.tools.data.util.DataServiceUtils;
-import com.wavemaker.runtime.data.Input;
 
 /**
  * @author Simon Toens

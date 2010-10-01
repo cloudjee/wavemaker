@@ -253,8 +253,6 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 			this.dumpOperationList(inNode, s._operations, '', '');
 			s.destroy();
 		}));
-
-		studio.addQryAndViewToTree(inNode); //xxx
 	},
 	dumpOperationList: function(inNode, inList) {
 		var sorted = [];
@@ -272,7 +270,6 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 				initNodeChildren: dojo.hitch(this, "serviceInitNodeChildren")
 			});
 		}
-		
 	},
 	dumpParamList: function(inNode, inList) {
 		var sorted = [];

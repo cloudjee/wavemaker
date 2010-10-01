@@ -83,13 +83,13 @@ public class DataServiceUtils {
         NO_CHANGE_OPERATIONS.add(OperationEnumeration.update);
     }
 
-    private static List<OperationEnumeration> EXCLUDE_OPERATIONS =
+    private static List<OperationEnumeration> EXCLUDE_OPERATIONS = 
         new ArrayList<OperationEnumeration>(1);
     static {
         EXCLUDE_OPERATIONS.add(OperationEnumeration.insert);
     }
 
-    private static final Collection<String> QUERY_ANNOTATIONS =
+    private static final Collection<String> QUERY_ANNOTATIONS = 
         new HashSet<String>(1);
     static {
         QUERY_ANNOTATIONS.add(DataServiceConstants.GENERATED_QUERY);

@@ -50,7 +50,6 @@ dojo.declare("wm.LivePanel", wm.Panel, {
 		                parent: fancyPanel2.containerWidget, // wm.FancyPanel change; revert to returning "this"
 				verticalAlign: "top",
 				horizontalAlign: "left",
-				liveDataSourceClass: this.liveSource, //xxx
 				_liveSource: this.liveSource
 			});
 	        this.reflow(); // added for fancypanel support

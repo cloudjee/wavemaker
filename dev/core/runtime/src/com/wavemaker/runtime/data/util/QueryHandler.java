@@ -134,69 +134,10 @@ public class QueryHandler implements InvocationHandler {
         }
     }
 
-    public static List<String> parseSQL(String qryStr) {
-        List<String> words =  new ArrayList<String>();
-
-        //First, break the query into word elements
-
-        StringBuffer token = new StringBuffer();
-        String twoLetters = null;
-        boolean holdIt = false;
-
-        for (int i=0; i<qryStr.length(); i++) {
-            String aLetter = qryStr.substring(i, i+1);
-            if (holdIt) {
-                if ((twoLetters.equals("<") && (aLetter.equals("=") || aLetter.equals(">"))) ||
-                    (twoLetters.equals(">") && aLetter.equals("=")) ||
-                    (twoLetters.equals("|") && aLetter.equals("|")) ||
-                    (twoLetters.equals("\r") && aLetter.equals("\n"))) {
-                    twoLetters = twoLetters + aLetter;
-                    words.add(twoLetters);
-                } else {
-                    if (isDelimiter(aLetter)) {
-                        words.add(twoLetters);
-                        words.add(aLetter);
-                    } else if (aLetter.equals(" ")) {
-                        words.add(twoLetters);
-                    }
-                }
-                holdIt = false;
-            } else {
-                if (aLetter.equals("<") || aLetter.equals(">") || aLetter.equals("|") ||
-                        aLetter.equals("\r")) {
-                    holdIt = true;
-                    twoLetters = aLetter;
-                    if (token.length() > 0) {
-                        words.add(token.toString());
-                        token.setLength(0);
-                    }
-                } else if (isDelimiter(aLetter)) {
-                    if (token.length() > 0) {
-                        words.add(token.toString());
-                        token.setLength(0);
-                    }
-                    words.add(aLetter);
-                } else if (aLetter.equals(" ")) {
-                    if (token.length() > 0) {
-                        words.add(token.toString());
-                        token.setLength(0);
-                    }
-                } else {
-                    token.append(aLetter);
-                }
-            }
-        }
-
-        if (token.length() > 0) words.add(token.toString());
-
-        return words;
-    }
-
     public String modifySQL (Object o, String fieldName, int tid) {
-        //String qryStr = o.toString();
-        List<String> words = parseSQL(o.toString());
+        String qryStr = o.toString();
 
-        /*ArrayList<String> words =  new ArrayList<String>();
+        ArrayList<String> words =  new ArrayList<String>();
 
         //First, break the query into word elements
 
@@ -248,7 +189,7 @@ public class QueryHandler implements InvocationHandler {
             }
         }
 
-        if (token.length() > 0) words.add(token.toString());*/
+        if (token.length() > 0) words.add(token.toString());
 
         //Process the array of words
 
@@ -535,7 +476,7 @@ public class QueryHandler implements InvocationHandler {
         return sb.toString();
     }
 
-    private static boolean isDelimiter(String val) {
+    private boolean isDelimiter(String val) {
         //String[] list = {"+", "-", "*", "/", "=", "<=", ">=", "<>", "<", ">",
         //        "!=", "||", "(", ")", "\r\n", "\n", ","};
         String[] list = {"+", "-", "*", "/", "=", "<", ">", "!=", "(", ")", "\n", ",", "\r"};
@@ -586,7 +527,7 @@ public class QueryHandler implements InvocationHandler {
         return true;
     }
 
-    private int getFirstNoneDelimiterPosBackward(int pos, List<String> words) {
+    private int getFirstNoneDelimiterPosBackward(int pos, ArrayList<String> words) {
         for (int i=pos; i>-1; i--) {
             if (!isDelimiter(words.get(i))) return i;
         }
@@ -618,7 +559,7 @@ public class QueryHandler implements InvocationHandler {
             inQuery = flag;
         }
 
-        private void addAliasNames(List<String> words, int indx, String fieldName, String alias) {
+        private void addAliasNames(ArrayList<String> words, int indx, String fieldName, String alias) {
             String tableClassName;
             int indx1 = getFirstNoneDelimiterPosBackward(indx, words);
             if (indx1 < 0) return;
@@ -648,7 +589,7 @@ public class QueryHandler implements InvocationHandler {
             }
         }
 
-        private StringBuffer appendTableAlias (StringBuffer sb, List<String> words, int indx, String fieldName) {
+        private StringBuffer appendTableAlias (StringBuffer sb, ArrayList<String> words, int indx, String fieldName) {
             if ((this.queryType.equalsIgnoreCase("select") && this.inFrom ||
                  this.queryType.equalsIgnoreCase("insert") && this.inInsert ||
                  this.queryType.equalsIgnoreCase("update") && this.inUpdate ||

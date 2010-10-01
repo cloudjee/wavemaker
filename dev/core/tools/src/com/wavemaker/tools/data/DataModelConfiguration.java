@@ -44,7 +44,6 @@ import com.wavemaker.runtime.client.TreeNode;
 import com.wavemaker.runtime.data.DataServiceDefinition;
 import com.wavemaker.runtime.data.DataServiceOperation;
 import com.wavemaker.runtime.data.ExternalDataModelConfig;
-import com.wavemaker.runtime.data.Input;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.data.util.DataServiceUtils;
 import com.wavemaker.runtime.data.util.QueryRunner;
@@ -198,7 +197,7 @@ public class DataModelConfiguration {
         this.springConfiguration = new DataServiceSpringConfiguration(
                 fileService, this.cfgPath, this.cfgFile, serviceId);
 
-        if (!serviceId.equals("salesforceService")) setup(); //xxx
+        setup();
     }
 
     public DataModelConfiguration(File springConfig) {
@@ -878,7 +877,6 @@ public class DataModelConfiguration {
                 Object rtn = null;
 
                 try {
-                    queryRunner.setName(name);
                     rtn = queryRunner.run(query);
                 } catch (Throwable th) {
                     throw DataServiceUtils.unwrap(th);
@@ -1975,7 +1973,7 @@ public class DataModelConfiguration {
         return rtn;
     }
 
-    private void setBindParameters(QueryRunner queryRunner,
+    private void setBindParameters(QueryRunner queryRunner, 
                                    Input[] inputs, String values, 
                                    boolean includeNullValues) 
     {

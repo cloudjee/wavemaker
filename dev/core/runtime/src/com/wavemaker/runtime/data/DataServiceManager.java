@@ -19,8 +19,6 @@ package com.wavemaker.runtime.data;
 
 import org.hibernate.Session;
 
-import java.util.Map;
-
 /**
  * Entry point of Data Service API.
  * 
@@ -56,15 +54,6 @@ public interface DataServiceManager {
      * @return Return value, may be null
      */
     Object invoke(Task task, Object... input);
-
-    /**
-     * Run a Task instance within a Transaction.
-     *
-     * @param task The task to run
-     * @param input Generic input the task may use
-     * @return Return value, may be null
-     */
-    Object invoke(Task task, Map<String, Class<?>> types, Object... input); //xxx
 
     /**
      * @return The Hibernate Session.

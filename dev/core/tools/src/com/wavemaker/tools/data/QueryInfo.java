@@ -18,7 +18,6 @@
 package com.wavemaker.tools.data;
 
 import com.wavemaker.runtime.data.DataServiceOperation;
-import com.wavemaker.runtime.data.Input;
 
 /**
  * Partially written on a flight to Las Vegas.

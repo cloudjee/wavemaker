@@ -296,7 +296,7 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     /**
      * Sets if generation should not overwrite existing customization files.
      * 
-     * @param noOverwriteCustomizationFiles
+     * @param overwriteCustomizationFiles
      */
     public void setNoOverwriteCustomizationFiles(
             boolean noOverwriteCustomizationFiles) {
@@ -336,7 +336,7 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     /**
      * Sets the additional JAXB customization files.
      * 
-     * @param jaxbCustomizationFiles The additional JAXB customization files.
+     * @param customizationFiles The additional JAXB customization files.
      */
     public void setJaxbCustomizationFiles(List<File> jaxbCustomizationFiles) {
         this.jaxbCustomizationFiles = jaxbCustomizationFiles;
@@ -355,7 +355,7 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     /**
      * Sets the additional JAXWS customization files.
      * 
-     * @param jaxwsCustomizationFiles The additional JAXWS customization files.
+     * @param customizationFiles The additional JAXWS customization files.
      */
     public void setJaxwsCustomizationFiles(List<File> jaxwsCustomizationFiles) {
         this.jaxwsCustomizationFiles = jaxwsCustomizationFiles;
@@ -755,7 +755,7 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     }
 
     public List<ElementType> getTypes() {
-        return getTypeMapper().getAllTypes(serviceId);
+        return getTypeMapper().getAllTypes();
     }
 
     public List<String> getEventNotifiers() {

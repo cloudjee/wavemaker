@@ -279,28 +279,3 @@ wm.getPrimitiveDisplayType = function(inPrimitiveName) {
 		t = "Text";
 	return t;
 }
-
-wm.getDisplayType = function(propInfo) { //xxx
-	var t;
-	var subType = propInfo.fieldSubType;
-	if (subType != undefined && subType != null && subType.length > 0) {
-		if (subType == "picklist")
-			t = "Select";
-		else if (subType == "textarea")
-			t = "TextArea";
-		else if (subType == "boolean")
-			t = "CheckBox";
-		else if (subType == "date")
-			t = "Date";
-		else if (subType == "datetime")
-			t = "Time";
-		else if (subType == "currency")
-			t = "Currency";
-		else
-			t = "Text";
-	} else {
-		t = wm.getPrimitiveDisplayType(propInfo.type);
-	}
-
-	return t;
-}

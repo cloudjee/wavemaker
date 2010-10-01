@@ -26,8 +26,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import java.sql.Timestamp;
-import java.sql.Time;
 
 /**
  * @author Simon Toens
@@ -179,20 +177,6 @@ public class TypeConversionUtils {
             throw new AssertionError(
                 "Unable to convert \"" + s + "\" to " + type + 
                 " - unknown type: " + type);
-        }
-    }
-
-    public static String getValueString(Class<?> type, String s) {  //xxx
-
-        if (s == null) {
-            return "null";
-        } else if (type == String.class || type == StringBuffer.class) {
-            return "'" + s + "'";
-        } else if (type == Date.class || type == java.sql.Date.class || type == Timestamp.class ||
-                   type == Time.class) {
-            return "'" + s + "'";
-        } else {
-            return s;
         }
     }
 

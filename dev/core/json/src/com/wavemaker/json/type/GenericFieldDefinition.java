@@ -54,7 +54,6 @@ public class GenericFieldDefinition implements FieldDefinition {
     private List<ListTypeDefinition> arrayTypes;
     private TypeDefinition typeDefinition;
     private boolean allowNull;
-    private String subType; //xxx
     private String name;
     private List<OperationEnumeration> require = new ArrayList<OperationEnumeration>();
     private List<OperationEnumeration> noChange = new ArrayList<OperationEnumeration>();
@@ -102,17 +101,6 @@ public class GenericFieldDefinition implements FieldDefinition {
 
     public void setAllowNull(boolean allowNull) {
         this.allowNull = allowNull;
-    }
-
-     /* (non-Javadoc)
-     * @see com.wavemaker.json.type.FieldDefinition#isAllowNull()
-     */
-    public String getSubType() { //xxx
-        return this.subType;
-    }
-
-    public void setSubType(String subType) { //xxx
-        this.subType = subType;
     }
 
     /* (non-Javadoc)

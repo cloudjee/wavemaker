@@ -570,22 +570,6 @@ public class DesignServiceManager {
         return ret;
     }
 
-    public SortedSet<Service> getServicesByType(String[] types) { //xxx
-
-        SortedSet<Service> services = getServices();
-        SortedSet<Service> ret = new TreeSet<Service>(new ServiceComparator());
-
-        for (String type : types) {
-            for (Service service : services) {
-                if (service.getType().equals(type)) {
-                    ret.add(service);
-                }
-            }
-        }
-
-        return ret;
-    }
-
     /**
      * Get the DesignServiceType corresponding with the tyepId, or null if no
      * DesignServiceType matches.
@@ -758,7 +742,6 @@ public class DesignServiceManager {
                     }
                     e.setIsList(entry.getValue().getDimensions() > 0);
                     e.setAllowNull(entry.getValue().isAllowNull());
-                    e.setSubType(entry.getValue().getSubType()); //xxx
 
                     for (OperationEnumeration oe : entry.getValue().getRequire()) {
                         e.getRequire().add(oe);
@@ -1021,8 +1004,7 @@ public class DesignServiceManager {
             throws JAXBException {
 
         Unmarshaller unmarshaller = definitionsContext.createUnmarshaller();
-        Service svc = (Service) unmarshaller.unmarshal(serviceDefXml);
-        return svc;
+        return (Service) unmarshaller.unmarshal(serviceDefXml);
     }
 
     public static Service loadServiceDefinition(InputStream serviceDefIS)

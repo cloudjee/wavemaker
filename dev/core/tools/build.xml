@@ -148,7 +148,6 @@
                 <include name="**/*.ftl"/>
                 <include name="**/*.dtd"/>
                 <include name="**/*.xml"/>
-				<include name="**/*.wsdl"/>
                 <include name="com/wavemaker/tools/ws/soapenc.xsd"/>
                 <include name="com/wavemaker/tools/security/login-template.html"/>
 				<include name="com/wavemaker/tools/cloudmgr/rackspace/cloud.properties"/>

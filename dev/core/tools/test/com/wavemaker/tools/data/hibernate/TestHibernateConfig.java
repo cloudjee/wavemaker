@@ -51,7 +51,7 @@ import com.wavemaker.tools.data.ColumnInfo;
 import com.wavemaker.tools.data.DataModelConfiguration;
 import com.wavemaker.tools.data.EntityInfo;
 import com.wavemaker.tools.data.ImportDB;
-import com.wavemaker.runtime.data.Input;
+import com.wavemaker.tools.data.Input;
 import com.wavemaker.tools.data.PropertyInfo;
 import com.wavemaker.tools.data.QueryInfo;
 import com.wavemaker.tools.data.RelatedInfo;

@@ -60,12 +60,6 @@ public class Field {
      * the order the field appears in the relevant table.
      */
     private int fieldOrder;
-
-    /**
-     * the type of of html object to be created when a live form is created, such as editor, select editor and
-     * text area.  Reserved only for Salesforce integration.
-     */
-    private String fieldSubType; //xxx
     
     public String getType() {
         return type;
@@ -109,13 +103,5 @@ public class Field {
     }
     public void setFieldOrder(int fieldOrder) {
         this.fieldOrder = fieldOrder;
-    }
-
-    public String getFieldSubType() { //xxx
-        return fieldSubType;
-    }
-    
-    public void setFieldSubType(String subType) { //xxx
-        this.fieldSubType = subType;
     }
 }
