@@ -504,8 +504,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			this.columns.push({show:i < 15, id: f.dataIndex, title:wm.capitalize(f.dataIndex), width:'auto', displayType:f.displayType, noDelete:true, align: f.displayType == 'Number' ? 'right':'left'});
 		}, this);
 		
-		if (this.isDesignLoaded())
-			this.contextMenu.setDataSet(this.columns);
+	    if (this.isDesignLoaded()) {
+		if (!this.contextMenu) this.designCreate(); // special case from themedesigner
+		this.contextMenu.setDataSet(this.columns);
+	    }
 	},
 	getDateFields: function(){
 		var dateFields = [];
