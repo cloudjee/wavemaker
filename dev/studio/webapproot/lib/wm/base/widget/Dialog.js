@@ -524,6 +524,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 					  padding: "0",
 					  border: this.titlebarBorder,
 					  borderColor: this.titlebarBorderColor,
+					  verticalAlign: "middle",
 					  layoutKind: "left-to-right"});
 	this.titleClose = new wm.Picture({_classes: {domNode: ["dialogclosebutton"]},
 					  source: "/wavemaker/lib/wm/base/widget/themes/default/images/blank.gif",
@@ -564,9 +565,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 					owner: this,
 					caption: this.title,
 					showing: Boolean(this.title),
-					margin: "0,0,0,10",
+					margin: "3,3,0,10",
 					width: "100%",
-					height: "30px"});
+					height: "100%"});
 	//this.titleBevel = new wm.Bevel({ parent: this, owner: this, showing: Boolean(this.title) });
 	this.connect(this.titleClose, "onclick", this, "dismiss");
 	this.connect(this.titleMinify, "onclick", this, "minify");
