@@ -27,14 +27,15 @@
    * DESCRIPTION: Sets the font and backgound colors, and rounding for
    *              the titlebar
    ************************************************************************************************/
-.wm_template .dialogtitlebar,
+
 .wm_template .dialogtitlebar .wmlabel{    
     /* Dialogs-Styles-Font */
     font-family: sans-serif; /* Dialogs-Styles-Font_Family */
     font-size: 12pt; /* Dialogs-Styles-Font_TextSize */
     color: #FFFFFF; /* Dialogs-Styles-Font_Color */
     font-weight: bold; /* Dialogs-Styles-Font_Weight */
-
+}
+.wm_template .dialogtitlebar {
     /* Dialogs-Styles-Background */
     background-color: #444444; /* Dialogs-Styles-Background_Color */
     background-image: url(images/threeD.png); /* Dialogs-Styles-Background_Image */
