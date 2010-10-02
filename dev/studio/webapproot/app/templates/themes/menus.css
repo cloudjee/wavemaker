@@ -11,6 +11,18 @@
     background-image: none !important;
 }
 
+.wm_template .dijitMenu .dijitMenuArrowCell img.dijitMenuExpand {
+   background-image: url("images/dropArrowBlack.png") !important; /* wm.DojoMenu_Image */    
+    background-position: 0% 50% !important;
+}
+
+.wm_template div.dijitMenuBar div.dijitMenuItem {
+   background-image: url("images/dropArrowBlack.png") !important; /* wm.DojoMenu_Image */
+   background-position: 100% 50% !important;
+   background-repeat: no-repeat !important;
+    padding-right: 15px !important;
+}
+
 @media screen { /* Document-Level */ 
     .wm_template .dojoMenu .dijitMenu,
     .wm_template .dojoMenu .dijitMenuBar {
@@ -22,8 +34,9 @@
 	background-color: transparent;
 	background-image: none;
     }
-    .wm_template .dojoMenu.ClickableDojoMenu .dijitMenu,
-    .wm_template .dojoMenu.ClickableDojoMenu .dijitMenuBar {
+    
+    .wm_template .dojoMenu.ClickableDojoMenu,
+    .wm_template .dojoMenu.ClickableDojoMenu {
 	color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
 
 	/* Document-ClickablesDefault-Background */
@@ -71,8 +84,8 @@
 	background-image: none;
 }
 
-    .wm_template .MainContent .dojoMenu.ClickableDojoMenu .dijitMenu,
-    .wm_template .MainContent .dojoMenu.ClickableDojoMenu .dijitMenuBar {
+    .wm_template .MainContent .dojoMenu.ClickableDojoMenu,
+    .wm_template .MainContent .dojoMenu.ClickableDojoMenu {
 	
 	/* MainContent-ClickablesDefault-Background */
 	background-color: #444444; /* MainContent-ClickablesDefault-Background_Color */
@@ -105,65 +118,45 @@
 
 @media screen { /* HeaderContent-Level */ 
     .wm_template .HeaderContent .dojoMenu .dijitMenu,
-    .wm_template .HeaderContent .dojoMenu .dijitMenuBar,
     .wm_template .HeaderContent .dojoMenu .dijitMenuBar {
 	/* HeaderContent-ClickablesDefault-Font */
 	font-family: sans-serif; /* HeaderContent-ClickablesDefault-Font_Family */
 	font-size: 12pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
-	color: #FFFFFF; /* HeaderContent-Styles-Font_Color */
 	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
-
-	/* HeaderContent-ClickablesDefault-Background */
-	background-color: transparent;
-	background-image: none; 
-	background-position: left top;
-	background-repeat: repeat-x; 
-
-	border-width: 0px;
-	font-weight: bold;        
-    }
-
-    /* Spacing between menu items */
-    .wm_template .HeaderContent .dijitMenuBar .dijitMenuItem,
-    .tundra .wm-darksnazzy .wm_template .dijitMenuBar .dijitMenuItem {
-	margin-right: 10px; /* wm.DojoMenu-Right_Margin */
-    }
-
-    body.wm_template .HeaderContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
-    body .wm_template .HeaderContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
-    body.wm_template .HeaderContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
-    body .wm_template .HeaderContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
-    body.wm_template .HeaderContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
-    body .wm_template .HeaderContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
-	/* HeaderContent-ClickablesHover-Font */
 	color: #FFFFFF; /* HeaderContent-Styles-Font_Color */
-
-	/* HeaderContent-ClickablesHover-Background */
 	background-color: transparent;
-        opacity: 0.8;
-	background-image: none; 
-	outline-width: 0;
-    }
-
- .wm_template .HeaderContent table.dijitMenuTable.dijitMenu.dijitReset {
-    /* HeaderContent-ClickablesDefault-Font */
-    font-family: sans-serif; /* HeaderContent-ClickablesDefault-Font_Family */
-    color: #FFFFFF; /* HeaderContent-Styles-Font_Color */
-    font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
-
-    /* HeaderContent-ClickablesDefault-Background */
-    background-color: transparent; 
-
-
-    border: solid 0px black;
-    border-top: solid 0px #999999;
-
-    -moz-box-shadow: 0px 0px 0px black; /* Floating-Shadow */
-    -webkit-box-shadow: 0px 0px 0px black;/* Floating-Shadow */
-    box-shadow: 0px 0px 0px black; /* Floating-Shadow */
+	background-image: none;
 }
 
+    .wm_template .HeaderContent .dojoMenu.ClickableDojoMenu,
+    .wm_template .HeaderContent .dojoMenu.ClickableDojoMenu {
+	
+	/* HeaderContent-ClickablesDefault-Background */
+	background-color: #444444; /* HeaderContent-ClickablesDefault-Background_Color */
+	background-image: url(images/threeD.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-position: left top;  /* HeaderContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
+    }
 
+
+    body.wm_template .HeaderContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemHover,
+    body .wm_template .HeaderContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemHover,
+    body.wm_template .HeaderContent  .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_template .HeaderContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemSelected,
+    body.wm_template .HeaderContent  .dojoMenu .dijitMenuActive .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_template .HeaderContent .dojoMenu .dijitMenuActive .dijitMenuItem.dijitMenuItemSelected {
+	/* HeaderContent-ClickablesHover-Font */
+	color: #FFFFFF; /* HeaderContent-ClickablesHover-Font_Color */
+
+	/* HeaderContent-ClickablesHover-Background */
+	background-color: #444444; /* HeaderContent-ClickablesHover-Background_Color */
+	background-image: url(images/threeD.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-position: left top;  /* HeaderContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
+
+
+	outline-width: 0;
+    }
 }
 
 
@@ -174,7 +167,8 @@
    *              the popup is always under body; the menubar itself we may update to work anywhere.
    *
    ************************************************************************************************/
-.wm_template .dijitPopup table.dijitMenuTable.dijitMenu.dijitReset {
+.wm_template .dijitPopup table.dijitMenuTable.dijitMenu.dijitReset,
+.wm_template .dijitPopup .dijitCalendarMonthLabel {
     /* Document-ClickablesDefault-Font */
     font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
     color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */

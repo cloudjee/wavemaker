@@ -374,7 +374,7 @@ wm.Object.extendSchema(wm.DojoMenu, {
 wm.DojoMenu.description = "A dojo menu.";
 
 wm.DojoMenu.extend({
-        themeableStyles: ["wm.DojoMenu-Right_Margin"],
+    themeableStyles: [{name: "wm.DojoMenu-Right_Margin", displayName: "Right Margin"}, {name: "wm.DojoMenu_Image", displayName: "Drop Icon"}],
 	designCreate: function() {
 		// if this is being created in studio, supply a default caption
 		if (this._studioCreating)
