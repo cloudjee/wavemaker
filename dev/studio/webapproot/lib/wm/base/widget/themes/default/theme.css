@@ -1524,3 +1524,11 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
 	cursor: pointer;
 }
 
+.tundra .dojoMenu .dijitMenu,
+.tundra .dojoMenu .dijitMenuBar {
+	border-width: 0px;
+}
+
+.dijitMenuItemLabel {
+    text-align: right;
+}

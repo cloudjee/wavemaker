@@ -53,6 +53,25 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		var thisObj = this;
 		dojo.addOnLoad(function(){thisObj.renderDojoObj();});
 	},
+    setTransparent: function(inTrans) {
+	this.transparent = inTrans;
+	if (inTrans)
+	    this.removeUserClass("ClickableDojoMenu");
+	else
+	    this.addUserClass("ClickableDojoMenu");
+    },
+    getTransparent: function() {
+	if (this._classes && this._classes.domNode)
+	    return dojo.indexOf(this._classes.domNode, "ClickableDojoMenu") == -1;
+	return true;
+    },
+    renderBounds: function() {
+	this.inherited(arguments);
+	if (this.dojoObj && this.dojoObj.domNode) {
+	    var bounds = this.getContentBounds();
+	    this.dojoObj.domNode.style.width = bounds.w + "px";
+	}
+    },
 	renderDojoObj: function() {
 	  /* WHAT IS THIS FOR PANKAJ?
 		if (this._loading)
@@ -342,6 +361,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 
 // design only...
 wm.Object.extendSchema(wm.DojoMenu, {
+    transparent: {group: "style", order: 150, type: "Boolean"},
 	caption:{ignore:1},
 	structure:{hidden:true, order:10},
 	eventList:{hidden:true},
@@ -369,6 +389,8 @@ wm.DojoMenu.extend({
 		switch (inName) {
 			case "menu":
 				return makeTextPropEdit(inName, inValue, inDefault);
+		case "transparent":
+		    return makeCheckPropEdit(inName, inValue, inDefault);
 		}
 		
 		return this.inherited(arguments);
