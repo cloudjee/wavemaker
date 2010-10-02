@@ -678,5 +678,13 @@
 		"IconHeight": 16, 
 		"MinifyIconWidth": "-16px", 
 		"MaxifyIconWidth": "-32px"
+	}, 
+	"wm.DojoMenu-Right": {
+		"Margin": "15px"
+	}, 
+	"wm.DojoMenu": {
+		"Image": "url(images/comboArrowDownDark.png)", 
+		"Image-Position": "top left", 
+		"Image-Repeat": "repeat"
 	}
 }

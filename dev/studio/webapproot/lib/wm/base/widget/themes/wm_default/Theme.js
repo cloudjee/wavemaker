@@ -64,7 +64,7 @@
 		"borderColor": "#333333", 
 		"titlebarBorder": "0,0,1,0", 
 		"titlebarBorderColor": "#333333", 
-		"containerClass": "MainContent",
+		"containerClass": "MainContent", 
 		"titlebarHeight": "23"
 	}, 
 	"wm.GenericDialog": {

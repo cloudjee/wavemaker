@@ -455,13 +455,14 @@ body .wm_graphite input:focus,
    * DESCRIPTION: Sets the font and backgound colors, and rounding for
    *              the titlebar
    ************************************************************************************************/
-.wm_graphite .dialogtitlebar,
 .wm_graphite .dialogtitlebar .wmlabel{    
     /* Dialogs-Styles-Font */
     font-family: Arial; /* Dialogs-Styles-Font_Family */
     font-size: 12pt; /* Dialogs-Styles-Font_TextSize */
     color: #ffffff; /* Dialogs-Styles-Font_Color */
     font-weight: bold; /* Dialogs-Styles-Font_Weight */
+}
+.wm_graphite .dialogtitlebar {
     /* Dialogs-Styles-Background */
     background-color: #333333; /* Dialogs-Styles-Background_Color */
     background-image: url(images/repeatx/brightEdge0.png); /* Dialogs-Styles-Background_Image */
@@ -583,6 +584,21 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     -moz-box-shadow: 1px 1px 1px #000000; /* Dialogs-FooterButtonsHover-BorderStyle_Shadow */
     -webkit-box-shadow: 1px 1px 1px #000000; /* Dialogs-FooterButtonsHover-BorderStyle_Shadow */
     box-shadow: 1px 1px 1px #000000; /* Dialogs-FooterButtonsHover-BorderStyle_Shadow */
+}
+/* Including dialogtitlebar should make it more specific than wm_studio/theme.css,
+* so don't add this level of specificity to wm_studio
+*/
+.wm_graphite .dialogtitlebar .dialogminifybutton {
+    background-position: -16px; /* Dialogs-Titlebar_MinifyIconWidth */
+}
+.wm_graphite .dialogtitlebar .dialogmaxifybutton {
+    background-position: -32px; /* Dialogs-Titlebar_MaxifyIconWidth */
+}
+.wm_graphite .dialogtitlebar .dialogmaxifybutton,
+.wm_graphite .dialogtitlebar .dialogclosebutton,
+.wm_graphite .dialogtitlebar .dialogminifybutton {
+    background-image: url(images/DialogIconsWhite.png) !important; /* Dialogs-Titlebar_Icons */
+    background-repeat: no-repeat;
 }
 /*****************************************
  * EOF: dialog.css
@@ -1283,34 +1299,47 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
 #studio_themesPage_themeDesigner_demoPanelTabLayers_client .dojoMenu {
     background-image: none !important;
 }
+.wm_graphite .dijitMenu .dijitMenuArrowCell img.dijitMenuExpand {
+   background-image: url(images/comboArrowDownDark.png) !important; /* wm.DojoMenu_Image */
+    background-position: 0% 50% !important;
+}
+.wm_graphite div.dijitMenuBar div.dijitMenuItem {
+   background-image: url(images/comboArrowDownDark.png) !important; /* wm.DojoMenu_Image */
+   background-position: 100% 50% !important;
+   background-repeat: no-repeat !important;
+    padding-right: 15px !important;
+}
 @media screen { /* Document-Level */ 
     .wm_graphite .dojoMenu .dijitMenu,
-    .wm_graphite .dojoMenu .dijitMenuBar,
     .wm_graphite .dojoMenu .dijitMenuBar {
 	/* Document-ClickablesDefault-Font */
 	font-family: Arial; /* Document-ClickablesDefault-Font_Family */
 	font-size: 10pt; /* Document-ClickablesDefault-Font_TextSize */
-	color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
 	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+	color: #000000; /* Document-Styles-Font_Color */
+	background-color: transparent;
+	background-image: none;
+    }
+    .wm_graphite .dojoMenu.ClickableDojoMenu,
+    .wm_graphite .dojoMenu.ClickableDojoMenu {
+	color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
 	/* Document-ClickablesDefault-Background */
 	background-color: #444444; /* Document-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyEdge3.png); /* Document-ClickablesDefault-Background_Image */
 	background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
-	border-width: 0px;
-	font-weight: bold;        
     }
     /* Spacing between menu items */
     .wm_graphite .dijitMenuBar .dijitMenuItem,
     .tundra .wm-darksnazzy .wm_graphite .dijitMenuBar .dijitMenuItem {
 	margin-right: 10px; /* wm.DojoMenu-Right_Margin */
     }
-    body.wm_graphite .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
-    body .wm_graphite .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
-    body.wm_graphite .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
-    body .wm_graphite .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
-    body.wm_graphite .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
-    body .wm_graphite .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
+    body.wm_graphite .dojoMenu .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
+    body .wm_graphite .dojoMenu .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
+    body.wm_graphite .dojoMenu .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_graphite .dojoMenu .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body.wm_graphite .dojoMenu .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_graphite .dojoMenu .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
 	/* Document-ClickablesHover-Font */
 	color: #ffffff; /* Document-ClickablesHover-Font_Color */
 	/* Document-ClickablesHover-Background */
@@ -1323,32 +1352,29 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
 }
 @media screen { /* MainContent-Level */ 
     .wm_graphite .MainContent .dojoMenu .dijitMenu,
-    .wm_graphite .MainContent .dojoMenu .dijitMenuBar,
     .wm_graphite .MainContent .dojoMenu .dijitMenuBar {
 	/* MainContent-ClickablesDefault-Font */
 	font-family: Arial; /* MainContent-ClickablesDefault-Font_Family */
 	font-size: 10pt; /* MainContent-ClickablesDefault-Font_TextSize */
-	color: #FFFFFF; /* MainContent-ClickablesDefault-Font_Color */
 	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
+	color: #000000; /* MainContent-Styles-Font_Color */
+	background-color: transparent;
+	background-image: none;
+}
+    .wm_graphite .MainContent .dojoMenu.ClickableDojoMenu,
+    .wm_graphite .MainContent .dojoMenu.ClickableDojoMenu {
 	/* MainContent-ClickablesDefault-Background */
 	background-color: #444444; /* MainContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyEdge3.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
-	border-width: 0px;
-	font-weight: bold;        
     }
-    /* Spacing between menu items */
-    .wm_graphite .MainContent .dijitMenuBar .dijitMenuItem,
-    .tundra .wm-darksnazzy .wm_graphite .dijitMenuBar .dijitMenuItem {
-	margin-right: 10px; /* wm.DojoMenu-Right_Margin */
-    }
-    body.wm_graphite .MainContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
-    body .wm_graphite .MainContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
-    body.wm_graphite .MainContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
-    body .wm_graphite .MainContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
-    body.wm_graphite .MainContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
-    body .wm_graphite .MainContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
+    body.wm_graphite .MainContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemHover,
+    body .wm_graphite .MainContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemHover,
+    body.wm_graphite .MainContent  .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_graphite .MainContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemSelected,
+    body.wm_graphite .MainContent  .dojoMenu .dijitMenuActive .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_graphite .MainContent .dojoMenu .dijitMenuActive .dijitMenuItem.dijitMenuItemSelected {
 	/* MainContent-ClickablesHover-Font */
 	color: #ffffff; /* MainContent-ClickablesHover-Font_Color */
 	/* MainContent-ClickablesHover-Background */
@@ -1361,55 +1387,38 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
 }
 @media screen { /* HeaderContent-Level */ 
     .wm_graphite .HeaderContent .dojoMenu .dijitMenu,
-    .wm_graphite .HeaderContent .dojoMenu .dijitMenuBar,
     .wm_graphite .HeaderContent .dojoMenu .dijitMenuBar {
 	/* HeaderContent-ClickablesDefault-Font */
 	font-family: Arial; /* HeaderContent-ClickablesDefault-Font_Family */
 	font-size: 10pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
-	color: #ffffff; /* HeaderContent-Styles-Font_Color */
 	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
-	/* HeaderContent-ClickablesDefault-Background */
-	background-color: transparent;
-	background-image: none; 
-	background-position: left top;
-	background-repeat: repeat-x; 
-	border-width: 0px;
-	font-weight: bold;        
-    }
-    /* Spacing between menu items */
-    .wm_graphite .HeaderContent .dijitMenuBar .dijitMenuItem,
-    .tundra .wm-darksnazzy .wm_graphite .dijitMenuBar .dijitMenuItem {
-	margin-right: 10px; /* wm.DojoMenu-Right_Margin */
-    }
-    body.wm_graphite .HeaderContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
-    body .wm_graphite .HeaderContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
-    body.wm_graphite .HeaderContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
-    body .wm_graphite .HeaderContent .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
-    body.wm_graphite .HeaderContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
-    body .wm_graphite .HeaderContent .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
-	/* HeaderContent-ClickablesHover-Font */
 	color: #ffffff; /* HeaderContent-Styles-Font_Color */
-	/* HeaderContent-ClickablesHover-Background */
 	background-color: transparent;
-        opacity: 0.8;
-	background-image: none; 
+	background-image: none;
+}
+    .wm_graphite .HeaderContent .dojoMenu.ClickableDojoMenu,
+    .wm_graphite .HeaderContent .dojoMenu.ClickableDojoMenu {
+	/* HeaderContent-ClickablesDefault-Background */
+	background-color: #999999; /* HeaderContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
+    }
+    body.wm_graphite .HeaderContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemHover,
+    body .wm_graphite .HeaderContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemHover,
+    body.wm_graphite .HeaderContent  .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_graphite .HeaderContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemSelected,
+    body.wm_graphite .HeaderContent  .dojoMenu .dijitMenuActive .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_graphite .HeaderContent .dojoMenu .dijitMenuActive .dijitMenuItem.dijitMenuItemSelected {
+	/* HeaderContent-ClickablesHover-Font */
+	color: #000000; /* HeaderContent-ClickablesHover-Font_Color */
+	/* HeaderContent-ClickablesHover-Background */
+	background-color: #cccccc; /* HeaderContent-ClickablesHover-Background_Color */
+	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
 	outline-width: 0;
     }
- .wm_graphite .HeaderContent table.dijitMenuTable.dijitMenu.dijitReset {
-    /* HeaderContent-ClickablesDefault-Font */
-    font-family: Arial; /* HeaderContent-ClickablesDefault-Font_Family */
-    color: #ffffff; /* HeaderContent-Styles-Font_Color */
-    font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
-    /* HeaderContent-ClickablesDefault-Background */
-    background-color: transparent; 
-    border: solid 0px black;
-    border-top: solid 0px #999999;
-    -moz-box-shadow: 0px 0px 0px black; /* Floating-Shadow */
-    -webkit-box-shadow: 0px 0px 0px black;/* Floating-Shadow */
-    box-shadow: 0px 0px 0px black; /* Floating-Shadow */
-}
 }
   /**************************************************************************************************
    * TYPE:        wm.DojoMenu Popup
@@ -1418,7 +1427,8 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
    *              the popup is always under body; the menubar itself we may update to work anywhere.
    *
    ************************************************************************************************/
- .wm_graphite table.dijitMenuTable.dijitMenu.dijitReset {
+.wm_graphite .dijitPopup table.dijitMenuTable.dijitMenu.dijitReset,
+.wm_graphite .dijitPopup .dijitCalendarMonthLabel {
     /* Document-ClickablesDefault-Font */
     font-family: Arial; /* Document-ClickablesDefault-Font_Family */
     color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
@@ -1443,15 +1453,15 @@ body .wm_graphite .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected
     outline-width: 0;
 }
   /**************************************************************************************************
-   * TYPE:        wm.SelectMenu Popup
+   * TYPE:        wm.SelectMenu Popup, wm.Calendar Month list popup
    *
    * DESCRIPTION: Sets styles for menu.  Does not depend at this time on what kind of panel its in,
    *              the popup is always under body; the menubar itself we may update to work anywhere.
    *
    ************************************************************************************************/
 body.wm_graphite ul.dijitMenu .dijitMenuItem,
-body .wm_graphite ul.dijitMenu .dijitMenuItem
-{
+body .wm_graphite ul.dijitMenu .dijitMenuItem,
+body.wm_default div.dijitMenu .dijitCalendarMonthLabel {
     /* Tables-EvenRows-Font */
     color: #000000; /* Tables-EvenRows-Font_Color */
     /* Tables-EvenRows-Background */
@@ -1460,12 +1470,13 @@ body .wm_graphite ul.dijitMenu .dijitMenuItem
     border-bottom-style: solid;   
     border-bottom-color: #aaaaaa; /* Tables-EvenRows-Border_Color */
 }
-/* Combobox Popup items with hover/selected */
+/* Combobox and Calendar Month Popup  items with hover/selected */
 body.wm_graphite  ul.dijitMenu .dijitMenuItem.dijitMenuItemHover,
 body .wm_graphite ul.dijitMenu .dijitMenuItem.dijitMenuItemHover,
 body.wm_graphite  ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected,
-body .wm_graphite ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected
- {
+body .wm_graphite ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected,
+body.wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover,
+body .wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
     /* Document-ClickablesHover-Font */
     color: #ffffff; /* Document-ClickablesHover-Font_Color */
     /* Document-ClickablesHover-Background */
@@ -1694,9 +1705,9 @@ body.wm_graphite {
     /* Document-ClickablesDefault-Font */
     font-family: Arial; /* Document-ClickablesDefault-Font_Family */
     font-size: 10pt; /* Document-ClickablesDefault-Font_TextSize */
-    color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
     font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
-    /* Document-ClickablesDefault-Background */
+    color: #ffffff; /* Document-ClickablesActive-Font_Color */
+    /* Document-ClickablesActive-Background */
     background-color: #666666; /* Document-ClickablesActive-Background_Color */
     background-image: url(images/repeatx/greyEdge4.png); /* Document-ClickablesActive-Background_Image */
     background-position: top left; /* Document-ClickablesActive-Background_Image-Position */
@@ -1752,6 +1763,42 @@ body.wm_graphite {
 	color: black; /* Custom mouseover color */
     }
     /* END SECTION wm.WizardLayers */
+    /* START PORTLETS */
+    .wm_graphite .dojoxPortlet div.dijitTitlePaneTitle {
+        /* Document-ClickablesDefault-Font */
+        font-family: Arial; /* Document-ClickablesDefault-Font_Family */
+        font-size: 10pt; /* Document-ClickablesDefault-Font_TextSize */
+        color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
+        font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+        /* Document-ClickablesDefault-Background */
+        background-color: #444444; /* Document-ClickablesDefault-Background_Color */
+        background-image: url(images/repeatx/greyEdge3.png); /* Document-ClickablesDefault-Background_Image */
+        background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
+        background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_graphite .dojoxPortlet div.dijitTitlePaneTitle .dijitTitlePaneTextNode {
+        color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
+    }
+    .wm_graphite .dojoxPortlet div.dijitTitlePaneTitle-hover {
+        /* Document-ClickablesDefault-Font */
+        font-family: Arial; /* Document-ClickablesDefault-Font_Family */
+        font-size: 10pt; /* Document-ClickablesDefault-Font_TextSize */
+        color: #ffffff; /* Document-ClickablesHover-Font_Color */
+        font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+        /* Document-ClickablesDefault-Background */
+        background-color: #555555; /* Document-ClickablesHover-Background_Color */
+        background-image: url(images/repeatx/greyEdge4.png); /* Document-ClickablesHover-Background_Image */
+        background-position: top left; /* Document-ClickablesHover-Background_Image-Position */
+        background-repeat: repeat-x; /* Document-ClickablesHover-Background_Image-Repeat */
+    }
+    .wm_graphite .dojoxPortlet div.dijitTitlePaneTitle-hover .dijitTitlePaneTextNode {
+        color: #ffffff; /* Document-ClickablesHover-Font_Color */
+    }
+    .wm_graphite .dojoxPortlet div.dijitTitlePaneTitle .dojoxPortletIcon {
+        background-color: white;
+        border-color: #333333;
+        margin-left: 5px;
+    }
 }
 @media screen { /* MainContent-Level */ 
   /**************************************************************************************************
@@ -1889,6 +1936,37 @@ body.wm_graphite {
 	color: black; /* wm.WizardLayers-Active_Color */
     }
     /* END SECTION wm.WizardLayers */
+    /* START PORTLETS */
+    .wm_graphite .MainContent div.dijitTitlePaneTitle {
+        /* MainContentClickablesDefault-Font */
+        font-family: sans-serif; /* MainContentClickablesDefault-Font_Family */
+        font-size: 12pt; /* MainContentClickablesDefault-Font_TextSize */
+        color: #FFFFFF; /* MainContentClickablesActive-Font_Color */
+        font-weight: bold; /* MainContentClickablesDefault-Font_Weight */
+        /* MainContentClickablesDefault-Background */
+        background-color: #444444; /* MainContentClickablesActive-Background_Color */
+        background-image: url(images/threeD.png); /* MainContentClickablesActive-Background_Image */
+        background-position: left top;  /* MainContentClickablesActive-Background_Image-Position */
+        background-repeat: repeat-x; /* MainContentClickablesActive-Background_Image-Repeat */
+    }
+    .wm_graphite .MainContent .dojoxPortlet div.dijitTitlePaneTitle .dijitTitlePaneTextNode {
+        color: #FFFFFF; /* MainContentClickablesDefault-Font_Color */
+    }
+    .wm_graphite .MainContent div.dijitTitlePaneTitle-hover {
+        /* MainContentClickablesDefault-Font */
+        font-family: sans-serif; /* MainContentClickablesDefault-Font_Family */
+        font-size: 12pt; /* MainContentClickablesDefault-Font_TextSize */
+        color: #FFFFFF; /* MainContentClickablesHover-Font_Color */
+        font-weight: bold; /* MainContentClickablesDefault-Font_Weight */
+        /* MainContentClickablesDefault-Background */
+        background-color: #444444; /* MainContentClickablesHover-Background_Color */
+        background-image: url(images/threeD.png); /* MainContentClickablesHover-Background_Image */
+        background-position: left top;  /* MainContentClickablesHover-Background_Image-Position */
+        background-repeat: repeat-x; /* MainContentClickablesHover-Background_Image-Repeat */
+    }
+    .wm_graphite .MainContent .dojoxPortlet div.dijitTitlePaneTitle-hover .dijitTitlePaneTextNode {
+        color: #FFFFFF; /* MainContentClickablesHover-Font_Color */
+    }
 }
 @media screen { /* EmphasizedContent-Level */ 
 .wm_graphite .EmphasizedContent {
@@ -2021,6 +2099,37 @@ body.wm_graphite {
 	color: black; /* wm.WizardLayers-Active_Color */
     }
     /* END SECTION wm.WizardLayers */
+    /* START PORTLETS */
+    .wm_graphite .EmphasizedContent div.dijitTitlePaneTitle {
+        /* EmphasizedContent-ClickablesDefault-Font */
+        font-family: Arial; /* EmphasizedContent-ClickablesDefault-Font_Family */
+        font-size: 10pt; /* EmphasizedContent-ClickablesDefault-Font_TextSize */
+        color: #ffffff; /* EmphasizedContent-ClickablesActive-Font_Color */
+        font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
+        /* EmphasizedContent-ClickablesDefault-Background */
+        background-color: #666666; /* EmphasizedContent-ClickablesActive-Background_Color */
+        background-image: url(images/repeatx/greyEdge4.png); /* EmphasizedContent-ClickablesActive-Background_Image */
+        background-position: top left; /* EmphasizedContent-ClickablesActive-Background_Image-Position */
+        background-repeat: repeat-x; /* EmphasizedContent-ClickablesActive-Background_Image-Repeat */
+    }
+    .wm_graphite .EmphasizedContent .dojoxPortlet div.dijitTitlePaneTitle .dijitTitlePaneTextNode {
+        color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
+    }
+    .wm_graphite .EmphasizedContent div.dijitTitlePaneTitle-hover {
+        /* EmphasizedContent-ClickablesDefault-Font */
+        font-family: Arial; /* EmphasizedContent-ClickablesDefault-Font_Family */
+        font-size: 10pt; /* EmphasizedContent-ClickablesDefault-Font_TextSize */
+        color: #ffffff; /* EmphasizedContent-ClickablesHover-Font_Color */
+        font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
+        /* EmphasizedContent-ClickablesDefault-Background */
+        background-color: #555555; /* EmphasizedContent-ClickablesHover-Background_Color */
+        background-image: url(images/repeatx/greyEdge4.png); /* EmphasizedContent-ClickablesHover-Background_Image */
+        background-position: top left; /* EmphasizedContent-ClickablesHover-Background_Image-Position */
+        background-repeat: repeat-x; /* EmphasizedContent-ClickablesHover-Background_Image-Repeat */
+    }
+    .wm_graphite .EmphasizedContent .dojoxPortlet div.dijitTitlePaneTitle-hover .dijitTitlePaneTextNode {
+        color: #ffffff; /* EmphasizedContent-ClickablesHover-Font_Color */
+    }
 }
 @media screen { /* HeaderContent-Level */ 
 .wm_graphite .HeaderContent {
@@ -2153,6 +2262,37 @@ body.wm_graphite {
 	color: black; /* wm.WizardLayers-Active_Color */
     }
     /* END SECTION wm.WizardLayers */
+    /* START PORTLETS */
+    .wm_graphite .HeaderContent div.dijitTitlePaneTitle {
+        /* HeaderContent-ClickablesDefault-Font */
+        font-family: Arial; /* HeaderContent-ClickablesDefault-Font_Family */
+        font-size: 10pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
+        color: #000000; /* HeaderContent-ClickablesActive-Font_Color */
+        font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
+        /* HeaderContent-ClickablesDefault-Background */
+        background-color: #ffffff; /* HeaderContent-ClickablesActive-Background_Color */
+        background-image: url(images/repeatx/greyEdge2.png); /* HeaderContent-ClickablesActive-Background_Image */
+        background-position: top left; /* HeaderContent-ClickablesActive-Background_Image-Position */
+        background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
+    }
+    .wm_graphite .HeaderContent .dojoxPortlet div.dijitTitlePaneTitle .dijitTitlePaneTextNode {
+        color: #000000; /* HeaderContent-ClickablesDefault-Font_Color */
+    }
+    .wm_graphite .HeaderContent div.dijitTitlePaneTitle-hover {
+        /* HeaderContent-ClickablesDefault-Font */
+        font-family: Arial; /* HeaderContent-ClickablesDefault-Font_Family */
+        font-size: 10pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
+        color: #000000; /* HeaderContent-ClickablesHover-Font_Color */
+        font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
+        /* HeaderContent-ClickablesDefault-Background */
+        background-color: #cccccc; /* HeaderContent-ClickablesHover-Background_Color */
+        background-image: url(images/repeatx/brightEdge4.png); /* HeaderContent-ClickablesHover-Background_Image */
+        background-position: top left; /* HeaderContent-ClickablesHover-Background_Image-Position */
+        background-repeat: repeat-x; /* HeaderContent-ClickablesHover-Background_Image-Repeat */
+    }
+    .wm_graphite .HeaderContent .dojoxPortlet div.dijitTitlePaneTitle-hover .dijitTitlePaneTextNode {
+        color: #000000; /* HeaderContent-ClickablesHover-Font_Color */
+    }
 }
 #wmMinifiedDialogPanel {
     opacity: 0.6;
@@ -2329,22 +2469,3 @@ body.wm_graphite {
 /*****************************************
  * EOF: splitterbevel.css
  *****************************************/
-
-
-.wm_graphite .dialogclosebutton {
-    background-image: url(images/DialogIconsWhite.png);
-    background-position: 0px 0px;
-    background-repeat: no-repeat;
-}
-
-.wm_graphite .dialogminifybutton {
-    background-image: url(images/DialogIconsWhite.png);
-    background-position: -16px 0px;
-    background-repeat: no-repeat;
-}
-
-.wm_graphite .dialogmaxifybutton {
-    background-image: url(images/DialogIconsWhite.png);
-    background-position: -32px 0px;
-    background-repeat: no-repeat;
-}

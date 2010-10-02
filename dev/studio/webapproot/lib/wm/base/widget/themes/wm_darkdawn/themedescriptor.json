@@ -1162,5 +1162,10 @@
 		"IconHeight": 16, 
 		"MinifyIconWidth": "-16px", 
 		"MaxifyIconWidth": "-32px"
+	}, 
+	"wm.DojoMenu": {
+		"Image": "url(images/comboArrowDownLight.png)", 
+		"Image-Position": "top left", 
+		"Image-Repeat": "repeat"
 	}
 }
