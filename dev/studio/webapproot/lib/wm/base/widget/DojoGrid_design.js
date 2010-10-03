@@ -60,6 +60,7 @@ wm.DojoGrid.extend({
 		var helpText = '* To re-arrange columns close dialog box and drag columns on grid to desired position.<br>* You can right click on grid to open this dialog.';
 		this.contextMenu = new wm.ContextMenuDialog('DojoGrid Column Properties', 'Add Column', dojo.hitch(this, 'addNewColumn'), 
 													this.headerAttr, this.columns, defaultCustomFieldParams, this.domNode, true, helpText);
+		this.contextMenu.showModal = false;
 		dojo.connect(this.contextMenu, 'onPropChanged', this, 'columnPropChanged');
 		dojo.connect(this.contextMenu, 'onRowDelete', this, 'destroyColumn');
 		dojo.connect(this.contextMenu, 'onAddNewColumnSuccess', this, 'columnAddSuccess');

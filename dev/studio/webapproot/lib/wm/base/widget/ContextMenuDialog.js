@@ -12,6 +12,7 @@ dojo.declare("wm.ContextMenuDialog", null, {
 		this.headerAttr = headerAttr;
 		this.trObjMap = {};
 		this.trId = 0;
+		this.showModal = true;
 		this.deleteButtonProps = {id:'deleteButton', title: ' ',width:'', type:'img', label:'Delete', src:'images/delete_24.png', width:'20px'};
 		dojo.connect(domNode, "oncontextmenu", this, "show");
 	},
@@ -19,6 +20,8 @@ dojo.declare("wm.ContextMenuDialog", null, {
 		if (!this.menu)
 			this.createRightClickMenu();
 		this.menu.show();
+		if (!this.showModal)
+			dijit._underlay.hide();
 		if (e)
 			dojo.stopEvent(e);
 	},
