@@ -11,7 +11,7 @@ wm.DojoGrid.extend({
 	headerAttr: [{id:'show', title:' ',width:'2%', type:'checkbox'}, 
 				{id:'id', title: 'Field',width:'15%', type:'text', readOnly:true}, 
 				{id:'title', title: 'Title',width:'15%', type:'text'}, 
-				{id:'width', title: 'Width',width:'5%', type:'text'}, 
+				{id:'width', title: 'Width',width:'13%', type:'width'}, 
 				{id:'align', title: 'Alignment',width:'10%', type:'dropdown'},
 				{id:'formatFunc', title: 'Format',width:'15%', type:'dropdown'},
 				{id:'fieldType', title: 'Edit Field Type',width:'12%', type:'dropdown', isAdvanced:true},

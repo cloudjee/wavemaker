@@ -1,4 +1,5 @@
 dojo.provide("wm.base.widget.ContextMenuDialog");
+dojo.require('dojo.data.ItemFileReadStore');
 
 dojo.declare("wm.ContextMenuDialog", null, {
 	constructor: function(dialogTitle, addButtonLabel, onAddButtonClick, headerAttr, dataSet, newRowDefault, domNode, addDeleteColumn, helpText){
@@ -57,6 +58,30 @@ dojo.declare("wm.ContextMenuDialog", null, {
 		}
 		
 		obj[columnId] = inValue;
+		var trId = dojo.attr(trObj, 'trId');
+		this.onPropChanged(obj, columnId, inValue, trObj);
+		this.trObjMap['TR_'+trId] = obj;
+	},
+	widthTextChanged: function(obj, columnId, trObj, textWidget, typeWidget, inValue){
+		var w = this.getWidthProps(inValue);
+		inValue = w.text;
+		textWidget.attr('value', inValue);
+		if (w.dd) {
+			inValue += w.dd;
+			typeWidget.attr('value', w.dd);
+		} else {
+			inValue += typeWidget.attr('value');
+		}
+		
+		obj[columnId] = inValue;
+		var trId = dojo.attr(trObj, 'trId');
+		this.onPropChanged(obj, columnId, inValue, trObj);
+		this.trObjMap['TR_'+trId] = obj;
+	},
+	widthTypeChanged: function(obj,columnId,trObj,textWidget,typeWidget,inValue){
+		var w = this.getWidthProps(obj[columnId]);
+		var width = w.text + inValue;
+		obj[columnId] = width;
 		var trId = dojo.attr(trObj, 'trId');
 		this.onPropChanged(obj, columnId, inValue, trObj);
 		this.trObjMap['TR_'+trId] = obj;
@@ -208,6 +233,25 @@ dojo.declare("wm.ContextMenuDialog", null, {
 						params.style = {width: '100%'};
 					widget = new dijit.form.FilteringSelect(params);
 				  	break;
+				case 'width':
+					var w = this.getWidthProps(obj[column.id]);
+					var params = {value: w.text, style:'width:40px;height:14px'};
+					if (column.readOnly)
+						params.readOnly = true;
+					var tf = new dijit.form.TextBox(params, dojo.doc.createElement('div'));
+					td.appendChild(tf.domNode);
+
+					var params = {value: w.dd || 'px', autoComplete: false, tabIndex:-1, store: this.getWidthStore(), query:{}, style:'width:60px;height:14px'};
+					if (column.readOnly)
+						params.readOnly = true;
+					widget = new dijit.form.FilteringSelect(params);
+					dojo.query('.dijitValidationIcon', widget.domNode).forEach(function(domNode){
+						domNode.style.display = 'none';
+					});
+
+					tf.onChange = dojo.hitch(this, 'widthTextChanged', obj, column.id, tr, tf, widget);
+					widget.onChange = dojo.hitch(this, 'widthTypeChanged', obj, column.id, tr, tf, widget);
+				  break;
 				default:
 					// by default we will always paint textbox.
 					var params = {value: obj[column.id] || '', 'onChange':dojo.hitch(this, 'rowPropChanged', obj, column.id, tr)};
@@ -236,6 +280,27 @@ dojo.declare("wm.ContextMenuDialog", null, {
 		}
 		
 		//dojo.connect(widget, 'onChange', dojo.hitch(this, 'rowPropChanged', obj, column.id, tr));
+	},
+	getWidthProps: function(inValue){
+		var props = {text:'auto'};
+		if (!inValue)
+			return props;
+
+		inValue = inValue.toLowerCase();
+		if (inValue.indexOf('p') != -1){
+			props.dd = 'px';
+		} else if (inValue.indexOf('%') != -1){
+			props.dd = '%';
+		}
+
+		inValue = inValue.replace(/p|x|%/g, '');
+		props.text = inValue;
+		return props;
+	},
+	getWidthStore: function(){
+		var arr = [{name:'px', value:'px'}, {name:'%', value:'%'}];
+		var data = {identifier: 'value', label: 'name', value: 'value', items: arr};
+		return new dojo.data.ItemFileReadStore({data: data});
 	},
 	paintNewColumnButton: function(){
 		if (this.newColumnButton)
