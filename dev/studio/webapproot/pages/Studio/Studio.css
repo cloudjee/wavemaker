@@ -1501,3 +1501,8 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #studio_inspectorLayers_Properties_bindSourceDialog_propList {
     background-color: #424A5A;
 }
+
+.KeyboardShortcutDialog td {
+    vertical-align: top;
+    padding: 0px 3px;
+}

@@ -133,6 +133,9 @@ dojo.declare("Studio", wm.Page, {
 		this.subscribe("service-variable-error", this, "handleServiceVariableError");
 
                 this.loadThemeList();
+	    this.helpDialog.containerWidget.c$[0].setPadding("0");
+	    this.helpDialog.containerWidget.c$[0].setBorder("10");
+	    this.helpDialog.containerWidget.c$[0].setBorderColor("#424959");
 	},
 	 startPageOnStart: function() {
 		this.startLayer = this.startEditor.parent;
@@ -660,6 +663,37 @@ dojo.declare("Studio", wm.Page, {
 		else
 			this.designer.selectParent();
 	},
+        keyboardShortcutsDialog: function() {
+	    var shortcuts = [
+		             {d: "Most common shortcuts"},
+			     {l: "C-w", d: "Toggle width between 100% and 100px (not supported for chrome in windows)"},
+			     {l: "C-h", d: "Toggle height between 100% and 100px"},
+			     {l: "C-m", d: "Toggle between model and palette"},
+			     {l: "C-s", d: "Save project"},
+			     {l: "C-r", d: "Run project"},
+			     {l: "ESC", d: "Select parent widget (warning: if used when selecting a widget in a dialog, it will instead close the dialog)"},
+			     {l: "DEL", d: "Delete selected component (unless a text field/property field is selected for editting in which case it edits the text field)"},
+
+		             {d: "Additional shortcuts"},		
+			     {l: "C-o", d: "Toggle horizontal alignment of widgets in container"},
+			     {l: "C-e", d: "toggle vertical alignment of widgets in container"},
+			     {l: "C-b", d: "Toggle layoutKind between left-to-right and top-to-bottom"},
+		             {l: "C-z", d: "Undo"}];
+
+	    var html = "<table>";
+	    for (var i = 0; i < shortcuts.length; i++) {
+		if (!shortcuts[i].l) {
+		    html += "<tr><td colspan='2'><b>" + shortcuts[i].d + "</td></tr>\n";
+		} else {
+		    html += "<tr><td style='white-space: nowrap;'>" + shortcuts[i].l + "</td><td>" + shortcuts[i].d + "</td></tr>\n";
+		}
+	    }
+	    html += "</table>";
+	    html = "<div class='KeyboardShortcutDialog'>" + html + "</div>";
+	    this.helpDialog.setUserPrompt(html);
+	    this.helpDialog.show();
+	    
+	},
 	componentRenamed: function(inOld, inNew, inComponent) {
 		this.renameComponentOnTree.apply(this, arguments);
 		_setInspectedCaption(inComponent);
@@ -799,7 +833,6 @@ dojo.declare("Studio", wm.Page, {
 		}
 	},
 	keydown: function(e) {
-               
 	      if (wm.dialog.showing) return true;
 		// only act on CTRL keys (but not SHIFT-CTRL)
 		var 
@@ -897,12 +930,31 @@ dojo.declare("Studio", wm.Page, {
 
             // darksnazzy messes with users ability to edit themes
                 dojo[(caption == bundleStudio.R_Themes) ? "removeClass" : "addClass"](this.sourceTab.domNode, "wm-darksnazzy");
-		if (caption == bundleStudio.Diagnostics) {
+		if (caption == bundleStudio.R_Diagnostics) {
 			this.diagnosticsPane.page.update();
-		} else if (caption == bundleStudio.ServerLogs) {
+		} else if (caption == bundleStudio.R_ServerLogs) {
 		    this.logViewer.page.showLogs();
-                }
+/*
+                } else if (caption == bundleStudio.R_App_Docs) {
+		    this.generateAllDocumentation();
+		    */
+		}
 	},
+/* THIS IS UNFINISHED WORK THAT SHOULD NOT YET BE AVAILABLE
+        generateAllDocumentation: function() {
+	    var html = "<h2>Page " + studio.project.pageName + "</h2>";
+	    var c;
+	    for (c in studio.page.components) {
+		html += "<hr/><h3>" + studio.page.components[c].toString() + "</h3>" + studio.page.components[c].documentation;
+	    }
+
+	    html += "<h2>App " + studio.application.name + "</h2>";
+	    for (c in studio.application.components) {
+		html += "<hr/><h3>" + studio.application.components[c].toString() + "</h3>" + studio.application.components[c].documentation ;
+	    }	    
+	    this.appDocViewer.setHtml(html);
+	},
+	*/
 	treeSelect: function(inSender, inNode) {
 		this.treeNodeSelect(inNode);
 		//this.select(inNode.component);

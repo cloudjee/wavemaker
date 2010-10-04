@@ -41,5 +41,6 @@ wm.studioConfig.hotkeyCodeMap = [
 	// mac delete key
 	{ key: 46, action: "deleteControl"},
 	{ key: dojo.keys.DELETE, action: "deleteControl"},
-	{ key: dojo.keys.BACKSPACE, action: "nullAction"}
+        { key: dojo.keys.BACKSPACE, action: "nullAction"},
+        { key: 191, action: "keyboardShortcutsDialog"} // "?" character
 ];
