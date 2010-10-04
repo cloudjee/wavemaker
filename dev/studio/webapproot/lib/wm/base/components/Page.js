@@ -285,6 +285,8 @@ dojo.declare("wm.Page", wm.Component, {
 			props.isRelativePositioned = true;	
 		}
 
+	    // All custom methods should be page methods; page methods have not been evaled, so 
+	    // can not be defined nor invoked at design time
 	    if (!this.isDesignLoaded()) {
 		for (var p in props) {
 		    if (p.indexOf("custom") == 0 && dojo.isFunction(ctor.prototype[p])) {

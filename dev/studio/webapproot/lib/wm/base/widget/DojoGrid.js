@@ -391,7 +391,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		var dataList = this.variable.getData();
 
 	    // If the user has provided a customSort method, use it
-	    if (this.customSort != this.constructor.prototype.customSort)
+	    // if its designtime, customSort will be the name of the method rather
+	    // than the actual method, so don't try running it
+	    if (this.customSort != this.constructor.prototype.customSort && dojo.isFunction(this.customSort))
 		dataList = dataList.sort(this.customSort);
 
 

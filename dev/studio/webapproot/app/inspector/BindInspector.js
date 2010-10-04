@@ -29,7 +29,7 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
 	getProps: function(inInspectorProps) {
 		var props = this.inherited(arguments);
 		for (var i in props)
-			if (props[i].isEvent)
+			if (props[i].isEvent || props[i].isCustomMethod)
 				delete props[i];
 		return props;
 	},

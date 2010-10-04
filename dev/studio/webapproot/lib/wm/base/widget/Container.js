@@ -313,7 +313,10 @@ wm.define("wm.Container", wm.Control, {
                 else if (w.invalid === undefined && w.getInvalid && w.getInvalid())
                     return true;
 	    }
-            return !this.customGetValidate();
+
+	    if (dojo.isFunction(this.customGetValidate))
+		return !this.customGetValidate();
+	    return false;
 	},
         customGetValidate: function() {
 	    return true;
