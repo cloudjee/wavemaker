@@ -40,3 +40,18 @@
     background-position: -32px 0px;
     background-repeat: no-repeat;
 }
+
+#wmMinifiedDialogPanel {  
+    opacity: 0.6;
+    background-color: black;
+}
+#wmMinifiedDialogPanel:hover {
+    opacity: 1;
+}
+#wmMinifiedDialogPanel .wmbutton {
+	-moz-border-radius: 0px !important; 
+	-webkit-border-radius: 0px !important;
+	border-radius: 0px !important;
+        font-size: 8pt;
+}
+

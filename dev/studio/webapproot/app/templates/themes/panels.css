@@ -1017,7 +1017,7 @@ body.wm_template {
 }
 
 
-#wmMinifiedDialogPanel {
+.wm_template #wmMinifiedDialogPanel {
     opacity: 0.6;
     background-color: #444444; /* Document-ClickablesActive-Background_Color */
 
@@ -1025,10 +1025,10 @@ body.wm_template {
     -webkit-box-shadow: 0px -2px 4px black;  /* wm.TabLayers-BorderStyle_UnselectedShadow */
     box-shadow: 0px -2px 4px black;  /* wm.TabLayers-BorderStyle_UnselectedShadow */
 }
-#wmMinifiedDialogPanel:hover {
+.wm_template #wmMinifiedDialogPanel:hover {
     opacity: 1;
 }
-#wmMinifiedDialogPanel .wmbutton {
+.wm_template #wmMinifiedDialogPanel .wmbutton {
 	-moz-border-radius: 0px !important; 
 	-webkit-border-radius: 0px !important;
 	border-radius: 0px !important;

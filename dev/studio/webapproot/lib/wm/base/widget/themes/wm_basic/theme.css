@@ -2302,17 +2302,17 @@ body.wm_basic {
         color: #000000; /* HeaderContent-ClickablesHover-Font_Color */
     }
 }
-#wmMinifiedDialogPanel {
+.wm_basic #wmMinifiedDialogPanel {
     opacity: 0.6;
     background-color: #090569; /* Document-ClickablesActive-Background_Color */
     -moz-box-shadow: 0px -2px 4px black; /* wm.TabLayers-BorderStyle_UnselectedShadow */
     -webkit-box-shadow: 0px -2px 4px black;  /* wm.TabLayers-BorderStyle_UnselectedShadow */
     box-shadow: 0px -2px 4px black;  /* wm.TabLayers-BorderStyle_UnselectedShadow */
 }
-#wmMinifiedDialogPanel:hover {
+.wm_basic #wmMinifiedDialogPanel:hover {
     opacity: 1;
 }
-#wmMinifiedDialogPanel .wmbutton {
+.wm_basic #wmMinifiedDialogPanel .wmbutton {
 	-moz-border-radius: 0px !important; 
 	-webkit-border-radius: 0px !important;
 	border-radius: 0px !important;

@@ -2302,22 +2302,23 @@ body.wm_graphite {
         color: #000000; /* HeaderContent-ClickablesHover-Font_Color */
     }
 }
-#wmMinifiedDialogPanel {
+.wm_graphite #wmMinifiedDialogPanel {  
     opacity: 0.6;
     background-color: #666666; /* Document-ClickablesActive-Background_Color */
     -moz-box-shadow: 3px 0px 3px #000000; /* wm.TabLayers-BorderStyle_UnselectedShadow */
     -webkit-box-shadow: 3px 0px 3px #000000; /* wm.TabLayers-BorderStyle_UnselectedShadow */
     box-shadow: 3px 0px 3px #000000; /* wm.TabLayers-BorderStyle_UnselectedShadow */
 }
-#wmMinifiedDialogPanel:hover {
+.wm_graphite #wmMinifiedDialogPanel:hover {
     opacity: 1;
 }
-#wmMinifiedDialogPanel .wmbutton {
+.wm_graphite #wmMinifiedDialogPanel .wmbutton {
 	-moz-border-radius: 0px !important; 
 	-webkit-border-radius: 0px !important;
 	border-radius: 0px !important;
         font-size: 8pt;
-}/*****************************************
+}
+/*****************************************
  * EOF: panels.css
  *****************************************/
 /*****************************************
