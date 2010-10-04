@@ -686,5 +686,20 @@
 		"Image": "url(images/comboArrowDownDark.png)", 
 		"Image-Position": "top left", 
 		"Image-Repeat": "repeat"
+	}, 
+	"wm.AccordionLayers-Arrow": {
+		"Image": "url(images/comboArrowDownLight.png)", 
+		"Image-Position": "top left", 
+		"Image-Repeat": "repeat"
+	}, 
+	"wm.AccordionLayers-Open": {
+		"Image": "url(images/comboArrowDownLight.png)", 
+		"Image-Position": "top left", 
+		"Image-Repeat": "repeat"
+	}, 
+	"wm.AccordionLayers-Closed": {
+		"Image": "url(images/arrowRightLight.png)", 
+		"Image-Position": "top left", 
+		"Image-Repeat": "repeat"
 	}
 }

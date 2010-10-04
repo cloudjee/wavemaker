@@ -178,7 +178,9 @@ wm.Layers.extend({
 
 wm.AccordionLayers.extend({
     themeable: true,
-    themeableProps: ["border","borderColor","layerBorder","captionHeight"]
+    themeableProps: ["border","borderColor","layerBorder","captionHeight"],
+    themeableStyles: [{name: "wm.AccordionLayers-Open_Image", displayName: "Open Arrow Icon"},
+		      {name: "wm.AccordionLayers-Closed_Image", displayName: "Closed Arrow Icon"}]
 });
 
 wm.TabLayers.extend({

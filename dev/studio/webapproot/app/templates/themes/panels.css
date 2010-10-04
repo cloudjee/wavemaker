@@ -129,6 +129,17 @@ body.tundra .wm_template  div.wmheader,
     /* END Border Styles */
 
 
+    .wm_template .wmaccordion .wmaccordion-collapsed .accordionArrowNode {
+        display: block;
+        background-image: url(images/arrowRightDark.png); /* wm.AccordionLayers-Closed_Image */
+     }
+
+
+    .wm_template .wmaccordion .accordionArrowNode {
+        display: block;
+        background-image: url(images/comboArrowDownDark.png); /* wm.AccordionLayers-Open_Image */
+     }
+
     .wm_template .wmaccordion .wmaccordion-content {
 	background-color: transparent;
     }

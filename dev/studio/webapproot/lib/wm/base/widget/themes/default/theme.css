@@ -1532,3 +1532,12 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
 .dijitMenuItemLabel {
 
 }
+
+.accordionArrowNode {
+    display: none;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    float: right;
+    width: 16px;
+    height: 16px;
+}

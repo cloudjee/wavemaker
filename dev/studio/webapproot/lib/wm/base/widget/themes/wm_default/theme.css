@@ -1600,6 +1600,14 @@ body.tundra .wm_default  div.wmheader,
     border-radius-topright: 12px;/* Borders-Panel_BorderStyle_Radius */
 }    
     /* END Border Styles */
+    .wm_default .wmaccordion .wmaccordion-collapsed .accordionArrowNode {
+        display: block;
+        background-image: url(images/arrowRightLight.png); /* wm.AccordionLayers-Closed_Image */
+     }
+    .wm_default .wmaccordion .accordionArrowNode {
+        display: block;
+        background-image: url(images/comboArrowDownDark.png); /* wm.AccordionLayers-Open_Image */
+     }
     .wm_default .wmaccordion .wmaccordion-content {
 	background-color: transparent;
     }
