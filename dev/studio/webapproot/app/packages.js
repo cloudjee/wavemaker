@@ -21,7 +21,6 @@
 
 [ bundlePackage.Common_Widgets, bundlePackage.Button, "wm.Button", "wm.base.widget.Button", "images/wm/button.png", "A simple button"],
 [ bundlePackage.Common_Widgets, bundlePackage.Toggle_Button, "wm.ToggleButton", "wm.base.widget.Button", "images/wm/button.png", "A simple button"],
-[ bundlePackage.Common_Widgets, bundlePackage.Rounded_Button, "wm.RoundedButton", "wm.base.widget.Button", "images/wm/button.png", "A simple rounded button"],
 [ bundlePackage.Common_Widgets, bundlePackage.DojoGrid, "wm.DojoGrid", "wm.base.widget.DojoGrid", "images/wm/data.png", "A Dojo grid"],
 [ bundlePackage.Common_Widgets, bundlePackage.Label, "wm.Label", "wm.base.widget.Label", "images/wm/content.png", "Static text"],
 [ bundlePackage.Common_Widgets, bundlePackage.Picture, "wm.Picture", "wm.base.widget.Picture", "images/wm/picture.png", "A picture from a url"],
@@ -102,6 +101,7 @@
 [ bundlePackage.Beta, bundlePackage.Ticker, "wm.Ticker", "wm.base.widget.Ticker", "images/wm/widget.png", "Animated scrolling panel"],
 
 [ bundlePackage.Deprecated, bundlePackage.DataGrid, "wm.DataGrid", "wm.base.widget.DataGrid", "images/wm/data.png", "A grid control for displaying lists"],
+[ bundlePackage.Deprecated, bundlePackage.Rounded_Button, "wm.RoundedButton", "wm.base.widget.Button", "images/wm/button.png", "A simple rounded button"],
 [ bundlePackage.Deprecated, bundlePackage.Checkbox, "wm.CheckBoxEditor", "wm.base.widget.Editor", "images/wm/edit.png", "A checkbox"],
 [ bundlePackage.Deprecated, bundlePackage.Currency, "wm.CurrencyEditor", "wm.base.widget.Editor", "images/wm/edit.png", "An editor for currency"],
 [ bundlePackage.Deprecated, bundlePackage.Date, "wm.DateEditor", "wm.base.widget.Editor", "images/wm/edit.png", "An editor for dates"],

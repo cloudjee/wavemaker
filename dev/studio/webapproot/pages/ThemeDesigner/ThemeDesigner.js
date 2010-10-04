@@ -98,7 +98,6 @@ dojo.declare("ThemeDesigner", wm.Page, {
                       description: "Change the border width and color Clickables such as wm.Buttons, wm.AccordionLayer's headings, wm.TabLayer's buttons.  Also changes titlebars for Dialogs and RoundedPanel/FancyPanel",
                       borders: [{borderClass: "wm.Button", borderProperty: "border"},
 			      {borderClass: "wm.ToggleButton", borderProperty: "border"},
-			      {borderClass: "wm.RoundedButton", borderProperty: "border"},
 			        {borderClass: "wm.BusyButton", borderProperty: "border"},
 			        {borderClass: "wm.AccordionDecorator", borderProperty: "captionBorder"}
 

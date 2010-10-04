@@ -29,7 +29,7 @@
 		"borderColor": "#ABB8CF"
 	}, 
 	"wm.RoundedButton": {
-		"border": "3", 
+		"border": "0", 
 		"borderColor": "#ABB8CF"
 	}, 
 	"wm.Layout": {

@@ -405,7 +405,7 @@ wm.LiveFormBase.extend({
 			case "captionPosition":
 				return makeSelectPropEdit(inName, inValue, ["top", "left", "bottom", "right"], inDefault);
                         case "editPanelStyle":
-				return makeSelectPropEdit(inName, inValue, ["wm.RoundedButton", "wm.Button", "none"], inDefault);
+				return makeSelectPropEdit(inName, inValue, ["wm.Button","wm.RoundedButton", "none"], inDefault);
 			case "dataSet":
 				var p = wm.getParentForm(this);
 				return p ?

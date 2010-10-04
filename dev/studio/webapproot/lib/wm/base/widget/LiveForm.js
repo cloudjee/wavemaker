@@ -463,7 +463,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	liveSaving: true,
 	liveVariable: null,
 	noButtonPanel: false,
-        editPanelStyle: "wm.RoundedButton",
+        editPanelStyle: "wm.Button",
 	_confirmDelete: true,
 	_formMessages: {
 		confirmDelete: "Are you sure you want to delete this data?"

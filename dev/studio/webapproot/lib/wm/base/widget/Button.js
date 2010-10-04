@@ -255,17 +255,10 @@ wm.Object.extendSchema(wm.ToggleButton, {
         clicked: { group: "display", bindTarget: 1, bindSource: 1, order: 12 },
         caption: {ignore: 1}
 });
-dojo.declare("wm.RoundedButton", wm.Button, {
-    classNames: "wmroundedbutton wmbutton",
-    border: "3"
-});
-wm.RoundedButton.extend({
 
-});
-dojo.declare("wm.RoundedButtonOld", wm.Button, {
+dojo.declare("wm.RoundedButton", wm.Button, {
         useDesignBorder: 0, // move this to a _design file if we ever create one
 	classNames: "roundedwmbutton",
-	height: "49px",
 	margin: 2,
 	padding: 0,
 	border: 0,
@@ -341,7 +334,9 @@ dojo.declare("wm.RoundedButtonOld", wm.Button, {
 	},
 	updateBounds: function(){
 		this.inherited(arguments);
-		this.btnNode.childNodes[1].style.width = parseInt(this.width) - (this.leftImgWidth + this.rightImgWidth + (this.margin * 2)) + "px";
+	    var bounds = this.getContentBounds();
+	    var width = bounds.w;
+	    this.btnNode.childNodes[1].style.width = width - (this.leftImgWidth + this.rightImgWidth) + "px";
 	}	
 });
 

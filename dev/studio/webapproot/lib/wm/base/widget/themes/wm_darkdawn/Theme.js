@@ -116,7 +116,7 @@
 		"borderColor": "#666666"
 	}, 
 	"wm.RoundedButton": {
-		"border": "1", 
+		"border": "0", 
 		"borderColor": "#666666"
 	}, 
 	"wm.DataGrid": {
