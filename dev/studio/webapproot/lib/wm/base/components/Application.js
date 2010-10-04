@@ -515,11 +515,22 @@ wm.Application.extend({
     firstThemeChange: true,
     set_theme: function(inTheme) {
         if (this.firstThemeChange) {
-            app.alert("You may want to save a copy of your project before you start changing themes. Now that you've been warned, feel free to change the as much as you like.");
-            this.firstThemeChange = false;
-        } else {
-            this.setTheme(inTheme);
-        }
+            app.confirm("Sometimes data can be lost when changing themes.  Do you want to save your project before changing themes?", true,
+			dojo.hitch(this, function() {
+			    studio.project.saveProject();
+			    this.firstThemeChange = false;
+			    this.setTheme(inTheme);
+			}),
+			dojo.hitch(this, function() {
+			    this.firstThemeChange = false;
+			    this.setTheme(inTheme);
+			}),
+			"Save and Change",
+			"Change Only");
+
+	} else {
+	    this.setTheme(inTheme);
+	}
 
     },
 	write: function(inIndent) {
