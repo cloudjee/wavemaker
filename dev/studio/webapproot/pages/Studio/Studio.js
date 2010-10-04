@@ -671,7 +671,8 @@ dojo.declare("Studio", wm.Page, {
 			     {l: "C-m", d: "Toggle between model and palette"},
 			     {l: "C-s", d: "Save project"},
 			     {l: "C-r", d: "Run project"},
-			     {l: "ESC", d: "Select parent widget (warning: if used when selecting a widget in a dialog, it will instead close the dialog)"},
+			     {l: "ESC", d: "If dialog is open: Close the dialog"},
+			     {l: "ESC", d: "If no dialog: Select the parent of the selected widget"},
 			     {l: "DEL", d: "Delete selected component (unless a text field/property field is selected for editting in which case it edits the text field)"},
 
 		             {d: "Additional shortcuts"},		
