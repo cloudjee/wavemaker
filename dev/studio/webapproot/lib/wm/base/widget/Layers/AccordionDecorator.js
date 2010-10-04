@@ -30,7 +30,7 @@ dojo.declare("wm.AccordionDecorator", wm.LayersDecorator, {
                 var captionHeight = inLayer.parent.captionHeight;
 		var p = this.decoree.client;
 		var h = inLayer.header = new wm.Label({
-			caption: inLayer.caption,
+		    caption: inLayer.caption + "<span class='accordionArrowNode'></span>",
 		        margin: "0,0,2,0",
 		        height: captionHeight + "px",
                         padding: "4,4,0,4",
@@ -88,7 +88,7 @@ dojo.declare("wm.AccordionDecorator", wm.LayersDecorator, {
 		this.inherited(arguments);
 	},
 	applyLayerCaption: function(inLayer) {
-		inLayer.header.setCaption(inLayer.caption);
+	    inLayer.header.setCaption(inLayer.caption +  "<span class='accordionArrowNode'></span>");
 	},
 	moveLayerIndex: function(inFromIndex, inToIndex) {
 		var d = this.decoree, client = d.client, l = d.getLayer(inFromIndex);
