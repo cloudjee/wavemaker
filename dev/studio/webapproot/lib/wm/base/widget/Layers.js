@@ -109,7 +109,6 @@ dojo.declare("wm.Layers", wm.Container, {
         clientBorderColor: "",
 	layerIndex: -1,
 	defaultLayer: -1,
-	multiActive: false,
 	decoratorClass: wm.LayersDecorator,
 	layersType: 'Layers',
 	layoutKind: "top-to-bottom",
@@ -155,6 +154,11 @@ dojo.declare("wm.Layers", wm.Container, {
 		if (wm.widgetIsShowing(this))
 			this._fireLayerOnShow();
 	},
+        afterPaletteDrop: function(){
+	    this.inherited(arguments);
+	    this.setClientBorder(this.clientBorder);
+	    this.setClientBorderColor(this.clientBorderColor);
+	},
 	_initDefaultLayer: function() {
 		var d = this.defaultLayer;
 		d = d != -1 ? d : 0;
@@ -182,10 +186,14 @@ dojo.declare("wm.Layers", wm.Container, {
 	        this.layers[i].setThemeStyleType(inMajor);
             }
 	},
+
         setClientBorder: function(inBorder) {
             this.clientBorder = inBorder;
-            for (var i = 0; i < this.layers.length; i++)
-                this.layers[i].setBorder(inBorder);
+	    // in design mode, set_border updates the design borders
+	    var method = this.isDesignLoaded() ? "set_border" : "setBorder";
+            for (var i = 0; i < this.layers.length; i++) {
+		this.layers[i][method](inBorder);
+	    }
         },
         setClientBorderColor: function(inBorderColor) {
             this.clientBorderColor = inBorderColor;
@@ -470,6 +478,7 @@ dojo.declare("wm.TabLayers", wm.Layers, {
 });
 
 dojo.declare("wm.AccordionLayers", wm.Layers, {
+    multiActive: false,
     themeStyleType: "ContentPanel",
     layersType: 'Accordion',
     layerBorder: 1,

@@ -99,7 +99,9 @@ wm.Object.extendSchema(wm.Layers, {
 	layersType: { group: "layout", order: 110 },
 	add: { group: "operation", order: 1 },
 	fitToContent: { ignore: 1},
-	headerHeight: { group: "layout", order: 50}
+        headerHeight: { group: "layout", order: 50},
+        clientBorder: {group: "style", order: "100"},
+        clientBorderColor: {group: "style", order: "101"}
 });
 
 wm.Layers.extend({
