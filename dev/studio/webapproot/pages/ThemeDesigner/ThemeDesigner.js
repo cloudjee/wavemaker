@@ -1928,7 +1928,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
             } else
                 newname += "1";
         }
-        dialog.setInputDefaultValue(newname);
+        dialog.setInputDataValue(newname);
         this.connect(dialog, "onButton2Click", this, function(inSender, inText) {
             this.disconnectEvent("onButton2Click");
             this.disconnectEvent("onButton1Click");

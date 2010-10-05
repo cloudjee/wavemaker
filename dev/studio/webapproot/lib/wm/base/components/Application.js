@@ -461,7 +461,7 @@ dojo.declare("wm.Application", wm.Component, {
         this.confirm(inText, false, onOKFunc, onCancelFunc, optionalOKText, optionalCancelText, true);
         this.confirmDialog.setShowInput(true);
 	    this.confirmDialog.setTitle("Prompt..."),
-        this.confirmDialog.setInputDefaultValue(inDefaultValue || "");
+        this.confirmDialog.setInputDataValue(inDefaultValue || "");
         this.confirmDialog.show();
     },
     confirmDialogOKClick: function() {
