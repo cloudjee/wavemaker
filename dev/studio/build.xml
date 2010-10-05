@@ -308,6 +308,10 @@
         <attribute name="servicename"/>
         <attribute name="serviceclass"/>
         <sequential>
+        <if>
+          <available file="${studio.dir}/services/@{servicename}/src" />
+          <!--Service Exists -->
+          <then>
             <javac srcdir="${studio.dir}/services/@{servicename}/src" 
                    destdir="${classes.studio.dir}" 
                    target="${javac.target}"
@@ -326,6 +330,8 @@
                     <include name="**/*.properties"/>
                 </fileset>            
             </copy>
+           </then>
+          </if>
         </sequential>
     </macrodef>
 

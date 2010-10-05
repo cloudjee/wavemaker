@@ -89,7 +89,7 @@ NEXT: exit "build"</echo>
     </target>
 
     <target name="build-source" description="Creates a source tarball"
-        depends="common.generate-best-license"  if="buildSrc" unless="skip.build-source">
+        depends="common.generate-best-license" if="buildSrc" unless="skip.build-source">
 		
 	<echo>DEBUG VERSION.TXT: build.dir == ${build.dir} PREFIX = ${tarroot}, version.file.name = ${version.file.name}</echo>
 		<property name="tempsrc.root" value="${build.dir}/tempsrcroot"/>
@@ -124,11 +124,10 @@ NEXT: exit "build"</echo>
                 <exclude name="dev/map.txt"/>
                 <exclude name="dev/studio/webapproot/*.war"/>
                 <exclude name="dev/studio/services/CloudDB/**"/>
+                <exclude name="dev/studio/services/dummyService/**"/>
                 <exclude name="dev/studio/services/registrationService/**"/>
+                <exclude name="dev/studio/services/UserService/**"/>
         	<exclude name="**/RbacPlugin.js" unless="common.modules.isEnterprise"/>
-                <!--exclude name="dev/core/runtime/src/com/wavemaker/runtime/security/JOSSOSecurityService.java"/>
-                <exclude name="dev/core/tools/src/com/wavemaker/tools/security/JOSSOSecurityServiceDefinition.java"/>
-                <exclude name="dev/core/runtime/src/com/wavemaker/runtime/data/util/QueryHandler.java"/-->
             </tarfileset>
             <tarfileset dir="${build.dir}" prefix="${tarroot}">
 		<include name="${version.file.name}"/>
@@ -164,7 +163,11 @@ NEXT: exit "build"</echo>
 	
     <target name="prep-build-source" description="Preps dummy for build-source">
 	<echo>Prep Build Source</echo>
-	<!-- <copy file="/dev/modules/lib/ant-contrib-06.jar" todir="${tempsrc.root}/dev/modules/lib" /> -->
+	<copy file="${studio.dir}/../modules/lib/ant-contrib-0.6.jar" todir="${tempsrc.root}/dev/modules/lib" /> 
+	<copy file="${studio.dir}/services/dummyService/dummyService.spring.xml" tofile="${tempsrc.root}/dev/studio/webapproot/WEB-INF/classes/CloudDB.spring.xml" /> 
+	<copy file="${studio.dir}/services/dummyService/dummyService.spring.xml" tofile="${tempsrc.root}/dev/studio/webapproot/WEB-INF/classes/registrationService.spring.xml" /> 
+	<copy file="${studio.dir}/services/dummyService/dummyService.spring.xml" tofile="${tempsrc.root}/dev/studio/webapproot/WEB-INF/classes/UserService.spring.xml" /> 
+
 	<mkdir dir="${tempsrc.root}/dev/core-dummy/common/src"/>
 	<mkdir dir="${tempsrc.root}/dev/core-dummy/json/src"/>
 	<mkdir dir="${tempsrc.root}/dev/core-dummy/runtime/src"/>

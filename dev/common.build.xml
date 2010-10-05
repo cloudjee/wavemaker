@@ -171,8 +171,7 @@
           <file name="${paranamer.jar}"/>
         </filelist>
     </then>    
-    <else> <!-- Default -->
-    		<echo> "Java 6 Build" </echo>        
+    <else> <!-- Default -->     
         <filelist id="common.runtime.jars">
           <file name="${acegi.jar}"/>
           <file name="${activation.jar}"/>
