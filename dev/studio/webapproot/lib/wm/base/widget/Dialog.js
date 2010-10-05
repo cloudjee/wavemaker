@@ -153,8 +153,7 @@ dojo.declare("wm.Dialog", wm.Container, {
                         }
                     }
                 }
-                if (!this.containerWidget) {
-	            containerWidget = new wm.Container({
+	            containerWidget = this.containerWidget ||  new wm.Container({
 			_classes: {domNode: ["wmdialogcontainer", this.containerClass]}, 
 			name: owner.getUniqueName("containerWidget"),
 			parent: this,
@@ -169,7 +168,6 @@ dojo.declare("wm.Dialog", wm.Container, {
 			horizontalAlign: "left",
 			verticalAlign: "top",
 			autoScroll: true});
-		}
 		containerNode = containerWidget.domNode;
 	    } else {
 	        containerNode = this.domNode;//this.container.domNode;
@@ -228,8 +226,10 @@ dojo.declare("wm.Dialog", wm.Container, {
     },
 
     setModal: function(inModal) {
+	alert(this.getId() + " modal: "+ inModal);
 	dojo[inModal ? "removeClass" : "addClass"](this.domNode, "nonmodaldialog");
 	this.modal = (inModal === undefined || inModal === null) ? true : inModal;
+
 	if (this.dojoMoveable) {
 	    this.dojoMoveable.destroy();
 	    this.dojoMoveable = null;
