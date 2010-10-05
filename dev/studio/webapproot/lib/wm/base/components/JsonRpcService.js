@@ -283,7 +283,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 	paramArrayToHash: function(inParams) {
 		var hash = {};
 		for (var i=0, p; (p=inParams[i]); i++)
-			hash[p.name] = { type: p.type };
+		    hash[p.name] = { type: p.type, hidden: p.hidden };
 		return hash;
 	},
 	listOperations: function() {
