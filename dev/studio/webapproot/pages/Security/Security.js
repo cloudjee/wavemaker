@@ -350,13 +350,14 @@ dojo.declare("Security", wm.Page, {
 		studio.updateServices();
 	},
 	checkErrorOnInputFields: function(dataSourceType) {
+	    if (!this.secEnableInput.getChecked()) return err;
 		var err = null;
 		if (dataSourceType == "Demo") {
 			if (this.demoUserList._data == null || this.demoUserList._data.length == 0) {
 				err = "At least one user needs to be added to the list!";
 			}
 		} else if (dataSourceType == "Database") {
-			if (!(this.dbDataModelInput.getDataValue() && 
+		    if (!(this.dbDataModelInput.getDataValue() && 
 				this.dbEntityInput.getDataValue() && 
 				this.getEditorDisplayValue(this.dbUsernameInput) &&
 				this.getEditorDisplayValue(this.dbUseridInput) && 
