@@ -44,7 +44,8 @@ wm.hasBindableWidgets = function(inWidget, inExcludeWidget) {
 }
 
 addComponentTypeBinderNodes = function(inParent, inClass, inStrict) {
-	var comps = wm.listComponents([studio.application, studio.page], inClass, inStrict);
+    var comps = wm.listComponents([studio.application, studio.page], inClass, inStrict);
+
 	comps.sort(function(a, b) {
 		return wm.data.compare(a.name, b.name);
 	});
@@ -58,6 +59,9 @@ addWidgetBinderNodes = function(inParent, optionalWidgets) {
 
     var types = [wm.AbstractEditor, wm.Composite, wm.DataGrid, wm.DojoGrid, wm.Editor, wm.List, wm.LiveForm ];
     var widgets = optionalWidgets || wm.listOfWidgetTypes(types);
+    var page = studio.page;   
+
+
 	widgets.sort(function(a, b) {
 		return wm.data.compare(a.name, b.name);
 	});
@@ -962,6 +966,7 @@ dojo.declare("wm.ComponentTypeSourceTreeNode", wm.TreeNode, {
 	initNodeChildren: function() {
 		if (this.className) {
 			addComponentTypeBinderNodes(this, dojo.getObject(this.className), this.strict);
+
 		}
 	},
 	expandBySource: function(inObjectId, inProp) {
@@ -1029,7 +1034,16 @@ dojo.declare("wm.WidgetContainerSourceTreeNode", wm.BindSourceTreeNode, {
 	},
 	initNodeChildren: function() {
 		this.inherited(arguments);
-		wm.forEachProperty(this.object.widgets, dojo.hitch(this, function(w) {
+	    var widgets = {};
+	    for(var w in this.object.widgets)
+		widgets[w] = this.object.widgets[w];
+	    if (this.object == studio.page.root) {
+		var comps = wm.listComponents([studio.application, studio.page], wm.Dialog, false);
+		for (var w in comps) 
+		    widgets[w] = comps[w];
+	    }
+
+		wm.forEachProperty(widgets, dojo.hitch(this, function(w) {
 			var
 				s = (w != studio.selected) && wm.widgetIsBindSource(w) && w.id,
 				c = w.container,

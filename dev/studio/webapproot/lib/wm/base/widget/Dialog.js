@@ -293,6 +293,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 
 	reflowParent: function() {
 	},
+
 	dismiss: function(e) {
 	        this.setShowing(false, false, true);
 		var why = "" || dojo.isString(e) ? e : e && e.target && e.target.innerHTML;
@@ -743,7 +744,7 @@ dojo.declare("wm.RichTextDialog", wm.WidgetsJsDialog, {
     }
 });
 wm.Object.extendSchema(wm.RichTextDialog, {
-    html: {group: "Dialog Options", order: 2},
+    html: {group: "Dialog Options", order: 2, bindable: true, simpleBindProp: true},
     enterKeyIsButton1: {group: "Dialog Keyboard", order: 2},
     footerBorder: {group: "style", order: 100},
     footerBorderColor:  {group: "style", order: 101}
@@ -858,11 +859,12 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
         if (this.$.textInput)
 	    this.$.textInput.setShowing(inShowInput);
     },
-    setInputDefaultValue: function(inValue) {
+
+    setInputDataValue: function(inValue) {
         if (this.$.textInput)
 	    this.$.textInput.setDataValue(inValue);
     },
-    getInputDataValue: function(inValue) {
+        getInputDataValue: function(inValue) {
         var result;
         if (this.$.textInput) {
 	    result = this.$.textInput.getDataValue();
@@ -920,6 +922,7 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
 
 
 wm.Object.extendSchema(wm.GenericDialog, {
+    
     enterKeyIsButton1: {group: "Dialog Keyboard", order: 2},
     widgets_json: {ignore: 1},
     button1Caption: {group: "Buttons", order: 1},
@@ -932,8 +935,9 @@ wm.Object.extendSchema(wm.GenericDialog, {
     button4Close: {group: "Buttons", order: 8},
     footerBorder: {group: "Header and Footer", order: 10},
     footerBorderColor: {group: "Header and Footer", order: 11},
-    userPrompt: {group: "Dialog Options", order: 2},
-    showInput: {group: "Dialog Options", order: 3},
+    userPrompt: {group: "Dialog Options", order: 2, bindTarget: true},
+    showInput: {group: "Dialog Options", order: 3, bindTarget: true},
+    inputDataValue: {group: "Dialog Options", order: 4, bindable: true, simpleBindProp: true},
     regExp: {group: "Dialog Options", order: 4},
     footerBorder: {group: "style", order: 100},
     footerBorderColor:  {group: "style", order: 101}
