@@ -44,12 +44,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		dojo['require']("dojo.data.ItemFileWriteStore");
 		dojo['require']("dojo.string");
 		dojo['require']("wm.base.lib.currencyMappings");
-		
-		if (this.isDesignLoaded()){
-			var js = "dijit.Dialog";
-			dojo["require"](js);
-		}
-		
+		dojo['require']("dijit.Dialog");
+
 		this.inherited(arguments);
 		var varProps = {name: "selectedItem", owner: this, 
 						json: this.selectionMode == 'multiple' ? '[]' : '', 

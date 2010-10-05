@@ -25,6 +25,7 @@
 
 dojo.provide("wm.base.widget.Dialog");
 dojo.require("wm.base.widget.Box");
+dojo.require("wm.base.widget.Picture");
 
 wm.dialog = {showingList: []};
 

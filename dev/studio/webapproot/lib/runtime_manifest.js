@@ -27,7 +27,6 @@ wm.registerPaths(
 wm.loadLibs([ 
 	// Dijit
 	"css.dijit.themes.tundra.tundra",
-	"css.dojox.grid._grid.Grid",
 	"css.dojox.grid.resources.Grid",
 	"css.dojox.grid.resources.tundraGrid",
 	"css.dojox.widget.FisheyeList.FisheyeList",

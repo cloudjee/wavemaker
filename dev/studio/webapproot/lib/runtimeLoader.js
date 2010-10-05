@@ -35,12 +35,21 @@ try
 		dojo.registerModulePath("build", wm.libPath + "build");
 
 		dojo.require("build.Gzipped.lib_build", true);	
+		
+		// START: The comments here are for debugging in non-debug mode. Please do not remove these comments
+		//dojo.require("build.lib_build_uncompressed", true);
+		//wm.writeJsTag(wm.relativeLibPath + '/build/lib_build_uncompressed.js');
+		// END: The comments here are for debugging in non-debug mode. Please do not remove these comments
+  
+		/*
 		dojo.require("build.Gzipped.wm_dojo_grid", true);
 		dojo.require("build.Gzipped.wm_editors", true);
 		dojo.require("build.Gzipped.wm_richTextEditor", true);
 		dojo.require("build.Gzipped.wm_menus", true);
 		dojo.require("build.Gzipped.wm_charts", true);
 		dojo.require("build.Gzipped.wm_gadgets", true);
+		*/
+
 
 		dojo.require("lib.runtime_manifest", true);
 	}

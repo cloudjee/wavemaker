@@ -77,6 +77,7 @@
        		<arg value="version=1.4.3.pro"/>
        		<arg value="action=clean,release"/>
        		<arg value="optimize=shrinksafe"/>
+					<arg value="cssOptimize=comments.keepLines"/>
 		</exec>
 		<echo>Done building dojo using exec</echo>
         <!-- copy the runtime built files out to the temp directory -->
@@ -137,6 +138,7 @@
        		<arg value="action=clean,release"/>
        		<arg value="optimize=shrinksafe"/>
        		<arg value="layerOptimize=comments"/>
+					<arg value="cssOptimize=comments.keepLines"/>
 		</exec>
 		<echo>Done building studio</echo>
 

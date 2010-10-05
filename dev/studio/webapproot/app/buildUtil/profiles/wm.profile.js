@@ -251,10 +251,12 @@ dependencies = {
 			resourceName: "wm.compressed.wm_dojo_grid",
 			layerDependencies: ["lib_build.js"],
 			dependencies: [
-	   			"dojox.grid.DataGrid",
+	   		"dojox.grid.DataGrid",
 				"dojox.grid.cells.dijit",
 				"dojo.data.ItemFileWriteStore",
 				"dojo.string",
+				"dijit.Dialog",
+				"wm.base.lib.currencyMappings",
 				"wm.base.widget.DataGrid",
 				"wm.base.widget.DojoGrid"
 			]
