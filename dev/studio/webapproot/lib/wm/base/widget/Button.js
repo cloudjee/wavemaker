@@ -218,6 +218,7 @@ dojo.declare("wm.Button", wm.ToolButton, {
 });
 
 dojo.declare("wm.ToggleButton", wm.ToolButton, {
+	height: "32px",
 	border: 1,
 	borderColor: "#ABB8CF",
 	margin: 4,
