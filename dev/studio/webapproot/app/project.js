@@ -564,6 +564,7 @@ Studio.extend({
             if (!studio.newProjectDialog.pageName)
                 studio.newProjectDialog.setPageName("NewProjectDialog");
             studio.newProjectDialog.page.projectName.setDataValue("Project");
+            studio.newProjectDialog.page.reset();
             studio.newProjectDialog.show();
 /*            
 	    this.promptForName("project", wm.findUniqueName('Project', [l]), projects,

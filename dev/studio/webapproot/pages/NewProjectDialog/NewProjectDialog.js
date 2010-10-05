@@ -52,6 +52,16 @@ dojo.declare("NewProjectDialog", wm.Page, {
         }
         dojo.query(".SelectableTemplate", this.templatesInsertPanel.domNode).connect("onclick", this, "templateClicked");
     },
+    reset: function() {
+        var projectNames = {};
+	var projects = studio.project.getProjectList();
+	var l={};
+	dojo.forEach(projects, dojo.hitch(this, function(p) {
+	    projectNames[p] = true;
+        }));
+	var newname = wm.findUniqueName("Project", [projectNames]);
+	this.projectName.setDataValue(newname);
+    },
     clearSelection: function() {
         if (this.selectedTemplate) {
             this.selectedTemplate.setBorderColor("#333333");
