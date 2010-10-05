@@ -1367,6 +1367,8 @@ dojo.declare("wm.PageDialog", [wm.Dialog, wm.pageContainerMixin], {
 	setContainerOptions: function(inHideControls, inWidth, inHeight) {
 		inWidth = inWidth || wm.Dialog.prototype.contentWidth;
 		inHeight = inHeight || wm.Dialog.prototype.contentHeight;
+	        if (!dojo.isString(inWidth)) inWidth += "px";
+	        if (!dojo.isString(inHeight)) inHeight += "px";
 		this.setWidth(inWidth);
 		this.setHeight(inHeight);
 		this.inherited(arguments);
