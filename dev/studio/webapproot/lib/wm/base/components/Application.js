@@ -76,6 +76,16 @@ dojo.declare("wm.Application", wm.Component, {
 	    if (isDesigned || !isInit) {
 		try {
 		    this.loadThemeCss(this.theme, isDesigned, optionalCss);
+
+		    // write before we change the prototype so defaults are left blank
+		    if (isDesigned && !isInit) {
+			this._themeChanged = true;
+			this.cacheWidgets();
+		    }
+		    this.loadThemePrototype(this.theme, optionalPrototype);
+		    if (isDesigned && !isInit && !noRegen) {
+			this.useWidgetCache();
+		    }
 		} catch(e) {
 		    if (inTheme != "wm_notheme")  {
 			this.setTheme("wm_notheme", isInit, optionalCss, optionalPrototype, noRegen);
@@ -87,16 +97,7 @@ dojo.declare("wm.Application", wm.Component, {
 		}
 	    }
 
-	   // write before we change the prototype so defaults are left blank
-	    if (isDesigned && !isInit) {
-                this._themeChanged = true;
-                this.cacheWidgets();
-	    }
-	    this.loadThemePrototype(this.theme, optionalPrototype);
-	    if (isDesigned && !isInit && !noRegen) {
-                this.useWidgetCache();
-	    }
-	},
+    },
             // don't regenerate over and over; as long as the user remains in the theme designer,
             // widgetsjs shouldn't change except as prototypes change, 
             // and we don't want the design to change each time the prototype border changes...
