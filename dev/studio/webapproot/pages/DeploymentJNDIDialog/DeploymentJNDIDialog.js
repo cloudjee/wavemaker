@@ -105,7 +105,7 @@ dojo.declare("DeploymentJNDIDialog", wm.Part, {
 	},
 	_svcError: function(inData) {
 		studio.endWait();
-		app.alert(inData);
+		app.alert(inData.toString());
 	},
 	_getDeploymentTargetNamesResult: function(inData) {
 		this.deploymentTargetSelect.editor.setOptions(inData.join(","));

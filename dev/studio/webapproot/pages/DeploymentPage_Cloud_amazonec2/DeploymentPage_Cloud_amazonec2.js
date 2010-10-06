@@ -396,7 +396,7 @@ dojo.declare("DeploymentPage_Cloud_amazonec2", wm.Page, {
 			  this.serverPassword1.getDataValue() == undefined ? "" : this.serverUser.getDataValue(),
 			  this.overrideFlag.getDataValue()],
 			 dojo.hitch(this,function(inResult) {
-				 app.alert(inResult);
+				 app.alert(inResult.toString());
 			 }),
 			 dojo.hitch(this, "_svcError"));
 	},
@@ -517,13 +517,13 @@ dojo.declare("DeploymentPage_Cloud_amazonec2", wm.Page, {
   /* Generic ajax error handler */
   _svcError: function(inData) {
     studio.endWait();
-    app.alert(inData);
+    app.alert(inData.toString());
   },
 
   _svcError1: function(inData) {
     studio.endWait();
 	this.loginError = true;
-    app.alert(inData);
+    app.alert(inData.toString());
   },
 
     _end: 0

@@ -314,7 +314,7 @@ dojo.declare("DeploymentDialog", wm.Part, {
 	},
 	_postCopyWarFile: function(inData) {
 		studio.endWait();
-		app.alert("WAR file " + inData + " has been uploaded to S3 bucket " + this.bucketName);
+		app.alert("WAR file " + inData.toString() + " has been uploaded to S3 bucket " + this.bucketName);
 	},
 	_deleteWarFileInS3: function() {
 		this.bucketName = this.s3BucketList.s3BucketList.bucketList.getDataValue();
@@ -325,7 +325,7 @@ dojo.declare("DeploymentDialog", wm.Part, {
 	},
 	_postDeleteWarFile: function(inData) {
 		studio.endWait();
-		app.alert("WAR file " + inData + " in S3 bucket " + this.bucketName + " has been deleted");
+		app.alert("WAR file " + inData.toString() + " in S3 bucket " + this.bucketName + " has been deleted");
 	},
 
 	onAppGridCellClick: function(inSender, inEvent) {
@@ -354,21 +354,21 @@ dojo.declare("DeploymentDialog", wm.Part, {
 	},
 	_deployed: function(inData) {
 		studio.endWait();
-		app.alert(inData);
+		app.alert(inData.toString());
 		this._loadDeployedApps();
 	},
 	_svcError: function(inData) {
 		studio.endWait();
-		app.alert(inData);
+		app.alert(inData.toString());
 	},
 	_undeployed: function(inData) {
 		studio.endWait();
-		app.alert(inData);
+		app.alert(inData.toString());
 		this._loadDeployedApps();
 	},
 	_redeployed: function(inData) {
 		studio.endWait();
-		app.alert(inData);
+		app.alert(inData.toString());
 	},
 	_getDeploymentTargetNamesResult: function(inData) {
 		this.deploymentTargetSelect.editor.setOptions(inData.join(","));

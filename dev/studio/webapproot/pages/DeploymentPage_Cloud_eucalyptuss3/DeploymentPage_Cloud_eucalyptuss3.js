@@ -170,7 +170,7 @@ dojo.declare("DeploymentPage_Cloud_eucalyptuss3", wm.Page, {
 			  "", //password
 			  this.overrideFlag.getDataValue()],
 			 dojo.hitch(this,function(inResult) {
-				 app.alert(inResult);
+				 app.alert(inResult.toString());
 			 }),
 			 dojo.hitch(this, "_svcError"));
 	},
@@ -232,7 +232,7 @@ dojo.declare("DeploymentPage_Cloud_eucalyptuss3", wm.Page, {
   /* Generic ajax error handler */
   _svcError: function(inData) {
     studio.endWait();
-    app.alert(inData);
+    app.alert(inData.toString());
   },
 
     _end: 0
