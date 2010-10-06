@@ -227,7 +227,6 @@ dojo.declare("wm.Dialog", wm.Container, {
     },
 
     setModal: function(inModal) {
-	alert(this.getId() + " modal: "+ inModal);
 	dojo[inModal ? "removeClass" : "addClass"](this.domNode, "nonmodaldialog");
 	this.modal = (inModal === undefined || inModal === null) ? true : inModal;
 
