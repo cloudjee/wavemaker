@@ -513,6 +513,7 @@ dojo.declare("wm.Application", wm.Component, {
 
 wm.Application.extend({
     firstThemeChange: true,
+/*
     set_theme: function(inTheme) {
         if (this.firstThemeChange) {
             app.confirm("Sometimes data can be lost when changing themes.  Do you want to save your project before changing themes?", true,
@@ -531,8 +532,9 @@ wm.Application.extend({
 	} else {
 	    this.setTheme(inTheme);
 	}
-
     },
+*/
+
 	write: function(inIndent) {
 	    var props = dojo.toJson(this.writeProps(),true);
 	    props = props.substring(1,props.length-2);
