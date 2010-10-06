@@ -323,7 +323,10 @@ dojo.declare("ThemeDesigner", wm.Page, {
 		    styles: ["Font", "Background-Color", "Border"]},
 		"OddRows":   {
 		    demo: "themeGroupDemoAllPanelsWidgets",
-		    styles: ["Font-Color", "Background-Color"]}
+		    styles: ["Font-Color", "Background-Color"]},
+		"HeaderRow":   {
+		    demo: "themeGroupDemoAllPanelsWidgets",
+		    styles: ["Font-TextSize"]}
             }}
     },
 

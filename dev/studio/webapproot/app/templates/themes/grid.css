@@ -122,7 +122,7 @@
 	/* Document-ClickablesDefault-Font */
 	font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
 	/* Adjust size when we figure out a good way to adjust the height of the header */
-	font-size: 12pt; /* Tables-EvenRows-Font_TextSize */
+	font-size: 12pt; /* Tables-HeaderRow-Font_TextSize */
 	color: inherit !important; /* Needed for wm.DojoGrid */
 	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
     }
