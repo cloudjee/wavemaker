@@ -501,8 +501,9 @@ body.wm_template {
     /* MainContent-ClickablesDefault-Font */
     font-family: sans-serif; /* MainContent-ClickablesDefault-Font_Family */
     font-size: 12pt; /* MainContent-ClickablesDefault-Font_TextSize */
-    color: #FFFFFF; /* MainContent-ClickablesDefault-Font_Color */
     font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
+
+    color: #FFFFFF; /* MainContent-ClickablesActive-Font_Color */
 
     /* MainContent-ClickablesActive-Background */
     background-color: #444444; /* MainContent-ClickablesActive-Background_Color */
@@ -707,8 +708,9 @@ body.wm_template {
     /* EmphasizedContent-ClickablesDefault-Font */
     font-family: sans-serif; /* EmphasizedContent-ClickablesDefault-Font_Family */
     font-size: 12pt; /* EmphasizedContent-ClickablesDefault-Font_TextSize */
-    color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
     font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
+
+    color: #FFFFFF; /* EmphasizedContent-ClickablesActive-Font_Color */
 
     /* EmphasizedContent-ClickablesActive-Background */
     background-color: #444444; /* EmphasizedContent-ClickablesActive-Background_Color */
@@ -912,8 +914,9 @@ body.wm_template {
     /* HeaderContent-ClickablesDefault-Font */
     font-family: sans-serif; /* HeaderContent-ClickablesDefault-Font_Family */
     font-size: 12pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
-    color: #FFFFFF; /* HeaderContent-ClickablesDefault-Font_Color */
     font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
+
+    color: #FFFFFF; /* HeaderContent-ClickablesActive-Font_Color */
 
     /* HeaderContent-ClickablesActive-Background */
     background-color: #444444; /* HeaderContent-ClickablesActive-Background_Color */
