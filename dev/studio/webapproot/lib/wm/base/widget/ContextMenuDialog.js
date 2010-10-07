@@ -51,7 +51,7 @@ dojo.declare("wm.ContextMenuDialog", null, {
 		return arr;
 	},
 
-	rowPropChanged: function(obj, columnId, trObj, inValue){
+	rowPropChanged: function(obj, columnId, trObj, widget, inValue){
 		if (columnId == 'deleteButton' && this.addDeleteColumn){
 			this.deleteRow(obj, columnId, trObj, inValue);
 			return;
@@ -59,7 +59,7 @@ dojo.declare("wm.ContextMenuDialog", null, {
 		
 		obj[columnId] = inValue;
 		var trId = dojo.attr(trObj, 'trId');
-		this.onPropChanged(obj, columnId, inValue, trObj);
+		this.onPropChanged(obj, columnId, inValue, trObj, widget);
 		this.trObjMap['TR_'+trId] = obj;
 	},
 	widthTextChanged: function(obj, columnId, trObj, textWidget, typeWidget, inValue){
@@ -204,13 +204,15 @@ dojo.declare("wm.ContextMenuDialog", null, {
 			switch(column.type){
 				case 'checkbox':
 					dojo.attr(td,'align','center');
-					var params = {'onChange':dojo.hitch(this, 'rowPropChanged', obj, column.id, tr)};
+					var params = {};
 					if (obj[column.id])
 						params.checked = true;
 					widget = new dijit.form.CheckBox(params, dojo.doc.createElement('div'));
+					widget.onChange = dojo.hitch(this, 'rowPropChanged', obj, column.id, tr, widget);
 					break;
 				case 'button':
-					widget = new dijit.form.Button({label: column.label, onClick: dojo.hitch(this, 'rowPropChanged', obj, column.id, tr), style:'padding:0px;'});
+					widget = new dijit.form.Button({label: column.label, style:'padding:0px;'});
+					widget.onClick = dojo.hitch(this, 'rowPropChanged', obj, column.id, tr, widget);
 					break;
 				case 'img':
 					var src = column.src;
@@ -228,11 +230,15 @@ dojo.declare("wm.ContextMenuDialog", null, {
 					widget = dojo.create('img', imgProps, td);
 					break;
 				case 'dropdown':
-					var params = {value: obj[column.id] || '', autoComplete: false,store: column.dataStore, onChange: dojo.hitch(this, 'rowPropChanged', obj, column.id, tr), query:{}};
+					var params = {value: obj[column.id] || '', autoComplete: false,store: column.dataStore, query:{}};
 					if (column.width) 
 						params.style = {width: '100%'};
-					widget = new dijit.form.FilteringSelect(params);
-				  	break;
+					widget = new dijit.form.ComboBox(params);
+					widget.onChange = dojo.hitch(this, 'rowPropChanged', obj, column.id, tr, widget);
+					dojo.query('.dijitValidationIcon', widget.domNode).forEach(function(domNode){
+						domNode.style.display = 'none';
+					});
+				  break;
 				case 'width':
 					var w = this.getWidthProps(obj[column.id]);
 					var params = {value: w.text, style:'width:40px;height:14px'};
@@ -254,12 +260,13 @@ dojo.declare("wm.ContextMenuDialog", null, {
 				  break;
 				default:
 					// by default we will always paint textbox.
-					var params = {value: obj[column.id] || '', 'onChange':dojo.hitch(this, 'rowPropChanged', obj, column.id, tr)};
+					var params = {value: obj[column.id] || ''};
 					if (column.width) 
 						params.style = {width: '100%'};
 					if (column.readOnly)
 						params.readOnly = true;
 					widget = new dijit.form.TextBox(params, dojo.doc.createElement('div'));
+					widget.onChange = dojo.hitch(this, 'rowPropChanged', obj, column.id, tr, widget);
 			}
 			
 			if (column.type != 'img') {

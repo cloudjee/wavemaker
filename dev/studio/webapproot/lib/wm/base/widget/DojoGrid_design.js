@@ -69,12 +69,26 @@ wm.DojoGrid.extend({
 		this.updateFormatterList();
 		this.contextMenu.show();
 	},
-	columnPropChanged: function(obj, columnId, inValue){
+	columnPropChanged: function(obj, columnId, inValue, trObj, widget){
 		if (columnId && columnId == 'width' && !isNaN(dojo.number.parse(inValue))){
 				obj.width = inValue+'px';
 		}
 		
+		var addFormatter = false;
+		if (columnId && columnId == 'formatFunc' && inValue == '- Add Formatter'){
+			var evtName = wm.getValidJsName('format'+ wm.getValidJsName(wm.capitalize(obj.id)) + wm.capitalize(this.name));
+			obj.formatFunc = evtName;
+			widget.attr('value', evtName, false);
+			addFormatter = true;
+		}
+		
 		this.updateGridStructure();		
+		if (addFormatter) {
+			this.contextMenu.hide();
+			eventEdit(this, '_formatterSignature', evtName, true);
+		}	
+	},
+	_formatterSignature: function(inValue){
 	},
 	destroyColumn: function(){
 		this.updateGridStructure();		
@@ -87,6 +101,7 @@ wm.DojoGrid.extend({
 		dojo.forEach(getAllEventsInCode(), function(f){
 			fArray.push({name:f, value:f});			
 		});
+		fArray.push({name:'- Add Formatter', value:'- Add Formatter'});
 
 		var data = {identifier: 'value', label: 'name', value: 'value', items: fArray};
 		if (!this.formatterStore){

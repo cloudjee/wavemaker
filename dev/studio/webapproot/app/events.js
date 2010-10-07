@@ -96,7 +96,7 @@ getAllEventsInCode = function() {
   return results;
 }
 
-eventEdit = function(ctrl, name, value) {
+eventEdit = function(ctrl, name, value, noInSenderInArgs) {
     var appLevel = wm.isInstanceType(ctrl.owner, wm.Application);
     var code = (appLevel) ? studio.getAppScript() : studio.getScript();
 
@@ -104,7 +104,7 @@ eventEdit = function(ctrl, name, value) {
 	value = name;
     if (!getEvent( value, code)) {
 	var a = getArgs(ctrl, name);
-	if (wm.isInstanceType(ctrl, wm.Page))
+	if (wm.isInstanceType(ctrl, wm.Page) || noInSenderInArgs)
 	    a = a.substring(1);
 	else
 	    a = "inSender" + a;
