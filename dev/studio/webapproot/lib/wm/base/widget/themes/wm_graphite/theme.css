@@ -597,7 +597,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
 .wm_graphite .dialogtitlebar .dialogmaxifybutton,
 .wm_graphite .dialogtitlebar .dialogclosebutton,
 .wm_graphite .dialogtitlebar .dialogminifybutton {
-    background-image: url(images/DialogIconsWhite.png) !important; /* Dialogs-Titlebar_Icons */
+    background-image: url(images/dialogIconsGray.png) !important; /* Dialogs-Titlebar_Icons */
     background-repeat: no-repeat;
 }
 /*****************************************
