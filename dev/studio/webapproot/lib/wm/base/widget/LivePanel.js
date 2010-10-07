@@ -63,6 +63,7 @@ dojo.declare("wm.LivePanel", wm.Panel, {
 });
 
 wm.Object.extendSchema(wm.LivePanel, {
+    themeStyleType: {ignore: 1},
 	liveDataName: {ignore: 1},
 	liveSource: {ignore: 1}
 });
