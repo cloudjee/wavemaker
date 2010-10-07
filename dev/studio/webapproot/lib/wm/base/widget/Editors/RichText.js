@@ -140,7 +140,6 @@ dojo.require("dijit._editor.plugins.LinkDialog");
             this.editor.iframe.style.height = (h-toolh) + "px";
              if (this.editor.focusNode) {
                 this.editor.focusNode.style.height =  (h-toolh) + "px";
-                 console.log("Editor Height: " + this.editor.focusNode.style.height);
              }
         },
         _createEditor: function(inNode, inProps) {
@@ -159,7 +158,6 @@ dojo.require("dijit._editor.plugins.LinkDialog");
             return this.editor;
         },
      onLoad: function() {
-                    console.log("onLoad:" + this.editor.focusNode);
                     this._ready = true;
                     this._cupdating = false;
                     this.sizeEditor();
