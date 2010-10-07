@@ -95,6 +95,8 @@ dojo.declare("wm.Application", wm.Component, {
 		    }
 		return;
 		}
+	    } else {
+		this.loadThemePrototype(this.theme, optionalPrototype);
 	    }
 
     },
