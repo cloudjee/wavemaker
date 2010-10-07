@@ -531,9 +531,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 					  source: "/wavemaker/lib/wm/base/widget/themes/default/images/blank.gif",
 					  noInspector: true,
 					 name: "titleClose",
-					 width: "19px",
+					 width: "22px",
 					 height: "19px",
-					  margin: "3,3,0,0",
+					  margin: "3,3,0,3",
 					 parent: this.titleBar,
 					 owner: this,
 					 showing: !this.modal && !this.noEscape });
