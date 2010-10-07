@@ -716,9 +716,9 @@ dojo.declare("wm.RichTextDialog", wm.WidgetsJsDialog, {
     prepare: function() {
         this.inherited(arguments);
         this.widgets_data = {documentation: ["wm.RichText", {width: "100%", height: "100%", "toolbarAlign":false,"toolbarLink":true,"toolbarColor":true, dataValue: this.html, displayValue: this.html}, {}],
-		             buttonBar: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, name: "buttonBar", layoutKind: "left-to-right",  padding: "2,0,2,0", horizontalAlign: "right", height: "34px", width: "100%", borderColor: this.footerBorderColor, border: this.footerBorder + ",0,0,0"}, {}, {
-		                 okButton: ["wm.Button", {"height":"100%","width":"150px","caption": "OK"}, {"onclick":"onOkClick"}],
-		                 cancelButton: ["wm.Button", {"height":"100%","width":"150px","caption": "Cancel"}, {"onclick":"onCancelClick"}]
+		             buttonBar: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, name: "buttonBar", layoutKind: "left-to-right",  padding: "2,0,2,0", horizontalAlign: "right", height: "34px", fitToContentHeight: true, width: "100%", borderColor: this.footerBorderColor, border: this.footerBorder + ",0,0,0"}, {}, {
+		                 okButton: ["wm.Button", {"width":"150px","caption": "OK"}, {"onclick":"onOkClick"}],
+		                 cancelButton: ["wm.Button", {"width":"150px","caption": "Cancel"}, {"onclick":"onCancelClick"}]
 	                     }]};
     },
  
@@ -787,12 +787,13 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
 				    padding: "2,6,2,6", 
 				    horizontalAlign: "right",
                                      borderColor: this.footerBorderColor, border: this.footerBorder + ",0,0,0",
+				     fitToContentHeight: true,
 				    height: "34px",
 				    width: "100%"}, {}, {
-		                        button4: ["wm.Button", {"height":"100%","width":"130px","showing":false}, {"onclick":"buttonClick"}],
-		                        button3: ["wm.Button", {"height":"100%","width":"130px","showing":false}, {"onclick":"buttonClick"}],
-		                        button2: ["wm.Button", {"height":"100%","width":"130px","showing":false}, {"onclick":"buttonClick"}],
-		                        button1: ["wm.Button", {"height":"100%","width":"130px","showing":false}, {"onclick":"buttonClick"}]
+		                        button4: ["wm.Button", {"width":"130px","showing":false}, {"onclick":"buttonClick"}],
+		                        button3: ["wm.Button", {"width":"130px","showing":false}, {"onclick":"buttonClick"}],
+		                        button2: ["wm.Button", {"width":"130px","showing":false}, {"onclick":"buttonClick"}],
+		                        button1: ["wm.Button", {"width":"130px","showing":false}, {"onclick":"buttonClick"}]
 	                            }]
         };
 
