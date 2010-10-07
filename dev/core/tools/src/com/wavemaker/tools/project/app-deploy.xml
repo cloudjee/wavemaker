@@ -345,14 +345,12 @@
         </condition>
     </target>
 
-    <target name="-generate-webxml-userxml" depends="init, -webxml-uptodate"
-            if="do_generate_webxml_inc_userxml">		
-		<replace file="${build.app.webinf.dir}/application.xml" token="{applicationName}"
-			value="${appName}"/>
-
+    <target name="-generate-webxml-userxml" depends="init, -webxml-uptodate, set-application-name-in-xml"
+            if="do_generate_webxml_inc_userxml">
         <taskdef name="xmltask"
                 classname="com.oopsconsultancy.xmltask.ant.XmlTask"
                 classpathref="studio.classpath"/>
+
         <xmltask source="${build.app.webinf.dir}/user-web.xml">
             <copy path="/*/*" buffer="userWebBuffer" append="true"/>
         </xmltask>
@@ -364,6 +362,11 @@
             <insert path="/*/*[1]" position="before" buffer="userWebBuffer"/>
         </xmltask>
     </target>
+
+	<target name="set-application-name-in-xml" depends="init" if="appXmlExists">
+		<replace file="${build.app.webinf.dir}/application.xml" token="{applicationName}"
+			value="${appName}"/>	
+	</target>
 
     <target name="-generate-webxml-no-userxml"
             depends="init, -webxml-uptodate"
@@ -379,7 +382,7 @@
         </xmltask>
     </target>
 
-	<target name="-generate-webxml-userxml-from-orig" depends="init, -webxml-uptodate"
+	<target name="-generate-webxml-userxml-from-orig" depends="init, -webxml-uptodate, set-application-name-in-xml"
             if="do_generate_webxml_inc_userxml_from_orig">
         <copy todir="${build.app.webinf.dir}" flatten="true" overwrite="true">
             <resources>
@@ -391,9 +394,6 @@
                         classpathref="app.classpath" />
             </resources>
         </copy>
-		
-		<replace file="${build.app.webinf.dir}/application.xml" token="{applicationName}"
-			value="${appName}"/>
 
         <taskdef name="xmltask"
                 classname="com.oopsconsultancy.xmltask.ant.XmlTask"
