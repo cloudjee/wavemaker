@@ -326,7 +326,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 		    styles: ["Font-Color", "Background-Color"]},
 		"HeaderRow":   {
 		    demo: "themeGroupDemoAllPanelsWidgets",
-		    styles: ["Font-TextSize"]}
+		    styles: ["Font", "Background"]}
             }}
     },
 
@@ -885,6 +885,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
 	    this.setCssSymbol("Dialogs-FooterButtonsDefault-Background", "Color", value);
 	    this.setCssSymbol("Dialogs-FooterButtonsHover-Background", "Color", newvalues[0]);
+	    this.setCssSymbol("Tables-HeaderRow-Background", "Color", newvalues[0]);
 
 /*
             // title buttons will always be just white
@@ -909,6 +910,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
 	    this.setCssSymbol("Dialogs-FooterButtonsDefault-Font", "Color", value);
 	    this.setCssSymbol("Dialogs-FooterButtonsHover-Font", "Color", value);
+	    this.setCssSymbol("Tables-HeaderRow-Font", "Color", value);
 
 /*
             // Title buttons will always just be black font
@@ -937,6 +939,10 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    this.setCssSymbol("Dialogs-FooterButtonsDefault-Background", "Image", url);
 	    this.setCssSymbol("Dialogs-FooterButtonsDefault-Background", "Image-Repeat", repeat);
 	    this.setCssSymbol("Dialogs-FooterButtonsDefault-Background", "Image-Position", position);
+
+	    this.setCssSymbol("Tables-HeaderRow-Background", "Image", url);
+	    this.setCssSymbol("Tables-HeaderRow-Background", "Image-Repeat", repeat);
+	    this.setCssSymbol("Tables-HeaderRow-Background", "Image-Position", position);
 
 /*
             // No background image for the  titlebar buttons
@@ -992,6 +998,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
 	    this.setCssSymbol("Dialogs-Styles-Font", "TextSize", value);
 
+	    this.setCssSymbol("Tables-HeaderRow-Font", "TextSize", value);
+
             // don't set the font size for the titlebar buttons; tends to mess with the position of the "x" and "-" in the buttons
 
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
@@ -1005,7 +1013,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
             }
 	    this.setCssSymbol("Dialogs-FooterButtonsDefault-Font", "Family", value);
 	    this.setCssSymbol("Dialogs-FooterButtonsHover-Font", "Family", value);
-
+	    this.setCssSymbol("Tables-HeaderRow-Font", "Family", value);
             // don't mess with the font for the titlebar buttons
 
 	    // Also sets the page font face; if the user wants something other than a single font face for their app, go advanced

@@ -111,45 +111,35 @@
 
     /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
     .wm_template div.dojoxGrid-header .dojoxGrid-cell,
-    .wm_template div.dojoxGridHeader .dojoxGridCell
-    {
-	background: inherit; /* see Header.dojoxGrid-header below */
+    .wm_template div.dojoxGridHeader .dojoxGridCell {
+	background: inherit; /* Style the Header row, not the Header cell for background */
 
 	border-right-width: 1px; /* Tables-EvenRows-Border_BorderSize */
 	border-right-style: solid;
 	border-right-color: #AAAAAA; /* Tables-EvenRows-Border_Color */
 
-	/* Document-ClickablesDefault-Font */
-	font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
-	/* Adjust size when we figure out a good way to adjust the height of the header */
+	/* Tables-HeaderRow-Font */
+	font-family: sans-serif; /* Tables-HeaderRow-Font_Family */
 	font-size: 12pt; /* Tables-HeaderRow-Font_TextSize */
-	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+	color: #000000 !important;/* Tables-HeaderRow-Font_Color */
+	font-weight: bold; /* Tables-HeaderRow-Font_Weight */
     }
 
-    .wm_template div.dojoxGridHeader .dojoxGridCell {
-	background-color: #333333; /* Document-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* Document-ClickablesDefault-Background_Image */
-	background-position: left top;  /* Document-ClickablesDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
-
-	/* Document-ClickablesDefault-Font */
-	font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
-	/*font-size: 12pt;  Clickables-Default-Font_TextSize */
-	color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
-	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+    .wm_template .wmlist-header th {
+	font-family: sans-serif; /* Tables-HeaderRow-Font_Family */
+/*	font-size: 12pt;  Tables-HeaderRow-Font_TextSize header height doesn't adjust*/
+	color: #000000 !important;/* Tables-HeaderRow-Font_Color */
+	font-weight: bold; /* Tables-HeaderRow-Font_Weight */
     }
 
     /* Header-Row-Background */
-    .wm_template .dojoxGrid-header, 
-    .wm_template .dojoxGridHeader,
-    .wm_template .wmlist-header {
-	color: #FFFFFF;	/* Document-ClickablesDefault-Font_Color */
-	background-color: #444444; /* Document-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* Document-ClickablesDefault-Background-Image */
-	background-position: left top;     /* Document-ClickablesDefault-Image-Position */
-	background-repeat: repeat-x;    /* Document-ClickablesDefault-Image-Repeat */
-
+    body.tundra .wm_template .dojoxGrid-header, 
+    body.tundra .wm_template .dojoxGridHeader,
+    body.tundra .wm_template .wmlist-header {
+	background-color: #444444; /* Tables-HeaderRow-Background_Color */
+	background-image: url(images/threeD.png); /* Tables-HeaderRow-Background_Image */
+	background-position: left top;     /* Tables-HeaderRow_Image-Position */
+	background-repeat: repeat-x;    /* Tables-HeaderRow_Image-Repeat */
     }
 
 }
@@ -193,45 +183,6 @@
     .wm_template .MainContent div.dojoxGridContent .dojoxGrid-cell-focus {
 	border-width: 1px dashed transparent !important;
     }
-
-    /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
-    .wm_template .MainContent div.dojoxGrid-header .dojoxGrid-cell,
-    .wm_template .MainContent div.dojoxGridHeader .dojoxGridCell
-    {
-	background: inherit; /* see Header.dojoxGrid-header below */
-
-	/* MainContent-ClickablesDefault-Font */
-	font-family: sans-serif; /* MainContent-ClickablesDefault-Font_Family */
-	/*    font-size: 12pt;  Clickables-Default-Font_TextSize */
-	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
-    }
-
-    .wm_template .MainContent div.dojoxGridHeader .dojoxGridCell {
-	background-color: #333333; /* MainContent-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-ClickablesDefault-Background_Image */
-	background-position: left top;  /* MainContent-ClickablesDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
-
-	/* MainContent-ClickablesDefault-Font */
-	font-family: sans-serif; /* MainContent-ClickablesDefault-Font_Family */
-	/*font-size: 12pt;  Clickables-Default-Font_TextSize */
-	color: #FFFFFF; /* MainContent-ClickablesDefault-Font_Color */
-	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
-    }
-
-    /* Header-Row-Background */
-    .wm_template .MainContent .dojoxGrid-header, 
-    .wm_template .MainContent .dojoxGridHeader,
-    .wm_template .MainContent .wmlist-header {
-	color: #FFFFFF;	/* MainContent-ClickablesDefault-Font_Color */
-	background-color: #444444; /* MainContent-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-ClickablesDefault-Background-Image */
-	background-position: left top;     /* MainContent-ClickablesDefault-Image-Position */
-	background-repeat: repeat-x;    /* MainContent-ClickablesDefault-Image-Repeat */
-
-    }
-
 }
 
 
@@ -275,45 +226,6 @@
     .wm_template .EmphasizedContent div.dojoxGridContent .dojoxGrid-cell-focus {
 	border-width: 1px dashed transparent !important;
     }
-
-    /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
-    .wm_template .EmphasizedContent div.dojoxGrid-header .dojoxGrid-cell,
-    .wm_template .EmphasizedContent div.dojoxGridHeader .dojoxGridCell
-    {
-	background: inherit; /* see Header.dojoxGrid-header below */
-
-	/* EmphasizedContent-ClickablesDefault-Font */
-	font-family: sans-serif; /* EmphasizedContent-ClickablesDefault-Font_Family */
-	/*    font-size: 12pt;  Clickables-Default-Font_TextSize */
-	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
-    }
-
-    .wm_template .EmphasizedContent div.dojoxGridHeader .dojoxGridCell {
-	background-color: #333333; /* EmphasizedContent-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
-	background-position: left top;  /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
-
-	/* EmphasizedContent-ClickablesDefault-Font */
-	font-family: sans-serif; /* EmphasizedContent-ClickablesDefault-Font_Family */
-	/*font-size: 12pt;  Clickables-Default-Font_TextSize */
-	color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
-	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
-    }
-
-    /* Header-Row-Background */
-    .wm_template .EmphasizedContent .dojoxGrid-header, 
-    .wm_template .EmphasizedContent .dojoxGridHeader,
-    .wm_template .EmphasizedContent .wmlist-header {
-	color: #FFFFFF;	/* EmphasizedContent-ClickablesDefault-Font_Color */
-	background-color: #444444; /* EmphasizedContent-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesDefault-Background-Image */
-	background-position: left top;     /* EmphasizedContent-ClickablesDefault-Image-Position */
-	background-repeat: repeat-x;    /* EmphasizedContent-ClickablesDefault-Image-Repeat */
-
-    }
-
 }
 
 
