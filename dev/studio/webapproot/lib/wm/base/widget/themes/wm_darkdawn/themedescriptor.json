@@ -1158,7 +1158,7 @@
 		"Color": "#000000"
 	}, 
 	"Dialogs-Titlebar": {
-		"Icons": "url(images/DialogIconsWhite.png)", 
+		"Icons": "url(images/dialogIconsGray.png)", 
 		"IconHeight": 16, 
 		"MinifyIconWidth": "-16px", 
 		"MaxifyIconWidth": "-32px"

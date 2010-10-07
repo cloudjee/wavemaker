@@ -597,7 +597,7 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
 .wm_darkdawn .dialogtitlebar .dialogmaxifybutton,
 .wm_darkdawn .dialogtitlebar .dialogclosebutton,
 .wm_darkdawn .dialogtitlebar .dialogminifybutton {
-    background-image: url(images/DialogIconsWhite.png) !important; /* Dialogs-Titlebar_Icons */
+    background-image: url(images/dialogIconsGray.png) !important; /* Dialogs-Titlebar_Icons */
     background-repeat: no-repeat;
 }
 /*****************************************

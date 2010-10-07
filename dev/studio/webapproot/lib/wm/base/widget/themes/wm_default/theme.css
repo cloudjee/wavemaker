@@ -597,7 +597,7 @@ body .wm_default .dialogfooter .wmbutton:hover {
 .wm_default .dialogtitlebar .dialogmaxifybutton,
 .wm_default .dialogtitlebar .dialogclosebutton,
 .wm_default .dialogtitlebar .dialogminifybutton {
-    background-image: url(images/dialogIconsRedYellowOrange.png) !important; /* Dialogs-Titlebar_Icons */
+    background-image: url(images/dialogIconsGray.png) !important; /* Dialogs-Titlebar_Icons */
     background-repeat: no-repeat;
 }
 /*****************************************
