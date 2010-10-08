@@ -69,6 +69,7 @@ dojo.declare("wm.Palette", wm.Tree, {
 			return;
 		var info = this.dragger.info;
 		var props = dojo.clone(info.props || {});
+	        props.name = props.name.replace(/\s/g,"");
 		var ctor = dojo.getObject(info.type);
 		dojo.mixin(props, {
 			_designer: studio.page._designer,
