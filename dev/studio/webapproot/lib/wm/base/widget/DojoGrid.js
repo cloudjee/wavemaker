@@ -379,7 +379,16 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			dojo.connect(this.dojoObj,'onMoveColumn', this, '_onMoveColumn');
 			dojo.connect(this.dojoObj,'onResizeColumn', this, '_onResizeColumn');
 			dojo.connect(this.dojoObj.domNode, 'oncontextmenu', this, 'showMenuDialog');
+		    if (dojo.isFF) {
+			dojo.connect(this.dojoObj, 'onHeaderCellMouseDown', this, function(evt) {
+                            if (evt.button == 2 || evt.ctrlKey) {
+				dojo.stopEvent(evt);			    
+				this.showMenuDialog();
+			    }
+			});
+		    } else {
 			dojo.connect(this.dojoObj, 'onHeaderContextMenu', this, 'showMenuDialog');
+		    }
 			dojo.connect(this.dojoObj, 'onRowContextMenu', this, 'showMenuDialog');
 			//dojo.connect(this.dojoObj, 'onCellClick', this, 'hideMenuDialog');
 		        dojo.connect(this.dojoObj,'onCellContextMenu', this, 'showMenuDialog');                        
