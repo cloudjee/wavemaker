@@ -76,10 +76,16 @@
 [ bundlePackage.More_Widgets, bundlePackage.ListViewer, "wm.ListViewer", "wm.base.widget.ListViewer", "images/wm/content.png", "A simple list control"],
 [ bundlePackage.More_Widgets, bundlePackage.ProgressBar, "wm.dijit.ProgressBar", "wm.base.widget.dijit.ProgressBar", "images/wm.dijit/ProgressBar.png", "Dojo progress bar"],
 
+/*
 [ bundlePackage.Templates, bundlePackage.FancyCentered, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "Template for OMG", wm.fullTemplates.fancyCenteredTemplate],
 [ bundlePackage.Templates, bundlePackage.CenteredPageContainer, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A 800px wide centered page container with header and footer", wm.fullTemplates.CenteredPageContainerWithHeaderFooter],
 [ bundlePackage.Templates, bundlePackage.ComplexLayout, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A complicated layout template.", wm.fullTemplates.complexLayout],
 [ bundlePackage.Templates, bundlePackage.CenteredLayout, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A 600px wide fixed centered layout", wm.fullTemplates.centeredFixedLayout],
+*/
+[ bundlePackage.Templates, "Fancy Template", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "Template for OMG", wm.fullTemplates.fancyTemplate],
+[ bundlePackage.Templates, "Menu on Side", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A 800px wide centered page container with header and footer", wm.fullTemplates.sideMenuTemplate],
+[ bundlePackage.Templates, "Template with Tabs", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A complicated layout template.", wm.fullTemplates.tabTemplate],
+[ bundlePackage.Templates, "Menu on Top", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A 600px wide fixed centered layout", wm.fullTemplates.topMenuTemplate],
 
 [ bundlePackage.SubTemplates, bundlePackage.TitleBar, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "An App Title Bar", wm.widgetTemplates.titleBar],
 [ bundlePackage.SubTemplates, bundlePackage.Footer, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A footer template.", wm.widgetTemplates.footer],
