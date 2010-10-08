@@ -175,7 +175,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    }
 	    this.setModal(this.modal);
 
-            this.setTitlebarBorder("0,0," + this.titlebarBorder + ",0");
+            this.setTitlebarBorder(this.titlebarBorder);
             this.setTitlebarBorderColor(this.titlebarBorderColor);
 
 	    if (this.useButtonBar) {
@@ -206,7 +206,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 	},
     setTitlebarBorder: function(inBorder) {
         this.titlebarBorder = inBorder;
-        this.titleBar.setBorder(inBorder);
+	var border = (String(inBorder).match(",")) ? inBorder : "0,0," + inBorder + ",0";
+        this.titleBar.setBorder(border);
         this.titleBar.setHeight((parseInt(this.titlebarHeight) + this.titleBar.padBorderMargin.t + this.titleBar.padBorderMargin.b) + "px");
     },
     setTitlebarBorderColor: function(inBorderColor) {
