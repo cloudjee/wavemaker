@@ -493,7 +493,7 @@ body .wm_default input:focus,
     font-weight: bold; /* Dialogs-Styles-Font_Weight */
     /* Dialogs-Styles-Background */
     background-color: #666666; /* Dialogs-Styles-Background_Color */
-    /*background-image: url(images/threeD.png); / * Dialogs-Styles-Background_Image * / */
+    /*background-image: url(images/repeatx/brightEdge1.png); / * Dialogs-Styles-Background_Image * / */
     background-position: top left; /* Dialogs-Styles-Background_Image-Position */
     background-repeat: repeat-x; /* Dialogs-Styles-Background_Image-Repeat */
     /* Automatically calculated to be 2px less than MainContent-Styles-Border_Style-Radius */
@@ -1205,9 +1205,9 @@ body .wm_default .dialogfooter .wmbutton:hover {
     .wm_default .HeaderContent .wmlist-header {
 	color: #FFFFFF; /* HeaderContent-ClickablesDefault-Font_Color */
 	background-color: #666666; /* HeaderContent-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* HeaderContent-ClickablesDefault-Background-Image */
-	background-position: left top;     /* HeaderContent-ClickablesDefault-Image-Position */
-	background-repeat: repeat-x;    /* HeaderContent-ClickablesDefault-Image-Repeat */
+	background-image: url(images/repeatx/brightThickEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
     }
 }
 /*****************************************
@@ -1935,7 +1935,7 @@ body.wm_default {
         font-weight: bold; /* MainContentClickablesDefault-Font_Weight */
         /* MainContentClickablesDefault-Background */
         background-color: #444444; /* MainContentClickablesActive-Background_Color */
-        background-image: url(images/threeD.png); /* MainContentClickablesActive-Background_Image */
+        background-image: url(images/repeatx/brightEdge1.png); /* MainContentClickablesActive-Background_Image */
         background-position: left top;  /* MainContentClickablesActive-Background_Image-Position */
         background-repeat: repeat-x; /* MainContentClickablesActive-Background_Image-Repeat */
     }
@@ -1950,7 +1950,7 @@ body.wm_default {
         font-weight: bold; /* MainContentClickablesDefault-Font_Weight */
         /* MainContentClickablesDefault-Background */
         background-color: #444444; /* MainContentClickablesHover-Background_Color */
-        background-image: url(images/threeD.png); /* MainContentClickablesHover-Background_Image */
+        background-image: url(images/repeatx/brightEdge1.png); /* MainContentClickablesHover-Background_Image */
         background-position: left top;  /* MainContentClickablesHover-Background_Image-Position */
         background-repeat: repeat-x; /* MainContentClickablesHover-Background_Image-Repeat */
     }

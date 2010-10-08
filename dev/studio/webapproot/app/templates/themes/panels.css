@@ -194,7 +194,7 @@ body.tundra .wm_template  div.wmheader,
 
     /* Document-Styles-Background */
     background-color: #444444; /* Document-Styles-Background_Color */
-    background-image: url(images/threeD.png); /* Document-Styles-Background_Image */
+    background-image: url(images/repeatx/brightEdge1.png); /* Document-Styles-Background_Image */
     background-position: left top;  /* Document-Styles-Background_Image-Position */
     background-repeat: repeat-x; /* Document-Styles-Background_Image-Repeat */
 
@@ -222,7 +222,7 @@ body.wm_template {
 
 	/* Document-ClickablesActive-Background */
 	background-color: #444444; /* Document-ClickablesActive-Background_Color */
-	background-image: url(images/threeD.png); /* Document-ClickablesActive-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* Document-ClickablesActive-Background_Image */
 	background-position: left top;  /* Document-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
 
@@ -244,7 +244,7 @@ body.wm_template {
 
 	/* Document-ClickablesDefault-Background */
 	background-color: #444444; /* Document-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* Document-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* Document-ClickablesDefault-Background_Image */
 	background-position: left top;  /* Document-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
 
@@ -261,7 +261,7 @@ body.wm_template {
 
 	/* Document-ClickablesHover-Background */
 	background-color: #444444; /* Document-ClickablesHover-Background_Color */
-	background-image: url(images/threeD.png); /* Document-ClickablesHover-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* Document-ClickablesHover-Background_Image */
 	background-position: left top;  /* Document-ClickablesHover-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesHover-Background_Image-Repeat */
     }
@@ -281,7 +281,7 @@ body.wm_template {
 
     /* Document-ClickablesActive-Background */
     background-color: #444444; /* Document-ClickablesActive-Background_Color */
-    background-image: url(images/threeD.png); /* Document-ClickablesActive-Background_Image */
+    background-image: url(images/repeatx/brightEdge1.png); /* Document-ClickablesActive-Background_Image */
     background-position: left top;  /* Document-ClickablesActive-Background_Image-Position */
     background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
 }
@@ -295,7 +295,7 @@ body.wm_template {
 
 	/* Document-ClickablesDefault-Background */
 	background-color: #444444; /* Document-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* Document-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* Document-ClickablesDefault-Background_Image */
 	background-position: left top;  /* Document-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
 
@@ -317,7 +317,7 @@ body.wm_template {
 
 	/* Document-ClickablesHover-Background */
 	background-color: #444444; /* Document-ClickablesHover-Background_Color */
-	background-image: url(images/threeD.png); /* Document-ClickablesHover-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* Document-ClickablesHover-Background_Image */
 	background-position: left top;  /* Document-ClickablesHover-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesHover-Background_Image-Repeat */
 
@@ -333,7 +333,7 @@ body.wm_template {
 
 	/* Document-ClickablesActive-Background */
 	background-color: #444444; /* Document-ClickablesActive-Background_Color */
-	background-image: url(images/threeD.png); /* Document-ClickablesActive-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* Document-ClickablesActive-Background_Image */
 	background-position: left top;  /* Document-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
     }
@@ -364,7 +364,7 @@ body.wm_template {
 
         /* Document-ClickablesDefault-Background */
         background-color: #444444; /* Document-ClickablesDefault-Background_Color */
-        background-image: url(images/threeD.png); /* Document-ClickablesDefault-Background_Image */
+        background-image: url(images/repeatx/brightEdge1.png); /* Document-ClickablesDefault-Background_Image */
         background-position: left top;  /* Document-ClickablesDefault-Background_Image-Position */
         background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
     }
@@ -380,7 +380,7 @@ body.wm_template {
 
         /* Document-ClickablesDefault-Background */
         background-color: #444444; /* Document-ClickablesHover-Background_Color */
-        background-image: url(images/threeD.png); /* Document-ClickablesHover-Background_Image */
+        background-image: url(images/repeatx/brightEdge1.png); /* Document-ClickablesHover-Background_Image */
         background-position: left top;  /* Document-ClickablesHover-Background_Image-Position */
         background-repeat: repeat-x; /* Document-ClickablesHover-Background_Image-Repeat */
     }
@@ -424,7 +424,7 @@ body.wm_template {
 
     /* MainContent-Styles-Background */
     background-color: #444444; /* MainContent-Styles-Background_Color */
-    background-image: url(images/threeD.png); /* MainContent-Styles-Background_Image */
+    background-image: url(images/repeatx/brightEdge1.png); /* MainContent-Styles-Background_Image */
     background-position: left top;  /* MainContent-Styles-Background_Image-Position */
     background-repeat: repeat-x; /* MainContent-Styles-Background_Image-Repeat */
 }
@@ -447,7 +447,7 @@ body.wm_template {
 
 	/* MainContent-ClickablesActive-Background */
 	background-color: #444444; /* MainContent-ClickablesActive-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-ClickablesActive-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* MainContent-ClickablesActive-Background_Image */
 	background-position: left top;  /* MainContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
 
@@ -469,7 +469,7 @@ body.wm_template {
 
 	/* MainContent-ClickablesDefault-Background */
 	background-color: #444444; /* MainContent-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: left top;  /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
 
@@ -486,7 +486,7 @@ body.wm_template {
 
 	/* MainContent-ClickablesHover-Background */
 	background-color: #444444; /* MainContent-ClickablesHover-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-ClickablesHover-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* MainContent-ClickablesHover-Background_Image */
 	background-position: left top;  /* MainContent-ClickablesHover-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesHover-Background_Image-Repeat */
     }
@@ -507,7 +507,7 @@ body.wm_template {
 
     /* MainContent-ClickablesActive-Background */
     background-color: #444444; /* MainContent-ClickablesActive-Background_Color */
-    background-image: url(images/threeD.png); /* MainContent-ClickablesActive-Background_Image */
+    background-image: url(images/repeatx/brightEdge1.png); /* MainContent-ClickablesActive-Background_Image */
     background-position: left top;  /* MainContent-ClickablesActive-Background_Image-Position */
     background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
 }
@@ -522,7 +522,7 @@ body.wm_template {
 
 	/* MainContent-ClickablesDefault-Background */
 	background-color: #444444; /* MainContent-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: left top;  /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
     }
@@ -533,7 +533,7 @@ body.wm_template {
 
 	/* MainContent-ClickablesHover-Background */
 	background-color: #444444; /* MainContent-ClickablesHover-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-ClickablesHover-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* MainContent-ClickablesHover-Background_Image */
 	background-position: left top;  /* MainContent-ClickablesHover-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesHover-Background_Image-Repeat */
 
@@ -549,7 +549,7 @@ body.wm_template {
 
 	/* MainContent-ClickablesActive-Background */
 	background-color: #444444; /* MainContent-ClickablesActive-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-ClickablesActive-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* MainContent-ClickablesActive-Background_Image */
 	background-position: left top;  /* MainContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
     }
@@ -580,7 +580,7 @@ body.wm_template {
 
         /* MainContentClickablesDefault-Background */
         background-color: #444444; /* MainContentClickablesActive-Background_Color */
-        background-image: url(images/threeD.png); /* MainContentClickablesActive-Background_Image */
+        background-image: url(images/repeatx/brightEdge1.png); /* MainContentClickablesActive-Background_Image */
         background-position: left top;  /* MainContentClickablesActive-Background_Image-Position */
         background-repeat: repeat-x; /* MainContentClickablesActive-Background_Image-Repeat */
     }
@@ -596,7 +596,7 @@ body.wm_template {
 
         /* MainContentClickablesDefault-Background */
         background-color: #444444; /* MainContentClickablesHover-Background_Color */
-        background-image: url(images/threeD.png); /* MainContentClickablesHover-Background_Image */
+        background-image: url(images/repeatx/brightEdge1.png); /* MainContentClickablesHover-Background_Image */
         background-position: left top;  /* MainContentClickablesHover-Background_Image-Position */
         background-repeat: repeat-x; /* MainContentClickablesHover-Background_Image-Repeat */
     }
@@ -631,7 +631,7 @@ body.wm_template {
        
     /* EmphasizedContent-Styles-Background */
     background-color: #444444; /* EmphasizedContent-Styles-Background_Color */
-    background-image: url(images/threeD.png); /* EmphasizedContent-Styles-Background_Image */
+    background-image: url(images/repeatx/brightEdge1.png); /* EmphasizedContent-Styles-Background_Image */
     background-position: left top;  /* EmphasizedContent-Styles-Background_Image-Position */
     background-repeat: repeat-x; /* EmphasizedContent-Styles-Background_Image-Repeat */
 }
@@ -654,7 +654,7 @@ body.wm_template {
 
 	/* EmphasizedContent-ClickablesActive-Background */
 	background-color: #444444; /* EmphasizedContent-ClickablesActive-Background_Color */
-	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesActive-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* EmphasizedContent-ClickablesActive-Background_Image */
 	background-position: left top;  /* EmphasizedContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesActive-Background_Image-Repeat */
 
@@ -676,7 +676,7 @@ body.wm_template {
 
 	/* EmphasizedContent-ClickablesDefault-Background */
 	background-color: #444444; /* EmphasizedContent-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
 	background-position: left top;  /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
 
@@ -693,7 +693,7 @@ body.wm_template {
 
 	/* EmphasizedContent-ClickablesHover-Background */
 	background-color: #444444; /* EmphasizedContent-ClickablesHover-Background_Color */
-	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesHover-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* EmphasizedContent-ClickablesHover-Background_Image */
 	background-position: left top;  /* EmphasizedContent-ClickablesHover-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesHover-Background_Image-Repeat */
     }
@@ -714,7 +714,7 @@ body.wm_template {
 
     /* EmphasizedContent-ClickablesActive-Background */
     background-color: #444444; /* EmphasizedContent-ClickablesActive-Background_Color */
-    background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesActive-Background_Image */
+    background-image: url(images/repeatx/brightEdge1.png); /* EmphasizedContent-ClickablesActive-Background_Image */
     background-position: left top;  /* EmphasizedContent-ClickablesActive-Background_Image-Position */
     background-repeat: repeat-x; /* EmphasizedContent-ClickablesActive-Background_Image-Repeat */
 }
@@ -729,7 +729,7 @@ body.wm_template {
 
 	/* EmphasizedContent-ClickablesDefault-Background */
 	background-color: #444444; /* EmphasizedContent-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
 	background-position: left top;  /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
 
@@ -741,7 +741,7 @@ body.wm_template {
 
 	/* EmphasizedContent-ClickablesHover-Background */
 	background-color: #444444; /* EmphasizedContent-ClickablesHover-Background_Color */
-	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesHover-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* EmphasizedContent-ClickablesHover-Background_Image */
 	background-position: left top;  /* EmphasizedContent-ClickablesHover-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesHover-Background_Image-Repeat */
 
@@ -757,7 +757,7 @@ body.wm_template {
 
 	/* EmphasizedContent-ClickablesActive-Background */
 	background-color: #444444; /* EmphasizedContent-ClickablesActive-Background_Color */
-	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesActive-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* EmphasizedContent-ClickablesActive-Background_Image */
 	background-position: left top;  /* EmphasizedContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesActive-Background_Image-Repeat */
     }
@@ -788,7 +788,7 @@ body.wm_template {
 
         /* EmphasizedContent-ClickablesDefault-Background */
         background-color: #444444; /* EmphasizedContent-ClickablesActive-Background_Color */
-        background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesActive-Background_Image */
+        background-image: url(images/repeatx/brightEdge1.png); /* EmphasizedContent-ClickablesActive-Background_Image */
         background-position: left top;  /* EmphasizedContent-ClickablesActive-Background_Image-Position */
         background-repeat: repeat-x; /* EmphasizedContent-ClickablesActive-Background_Image-Repeat */
     }
@@ -804,7 +804,7 @@ body.wm_template {
 
         /* EmphasizedContent-ClickablesDefault-Background */
         background-color: #444444; /* EmphasizedContent-ClickablesHover-Background_Color */
-        background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesHover-Background_Image */
+        background-image: url(images/repeatx/brightEdge1.png); /* EmphasizedContent-ClickablesHover-Background_Image */
         background-position: left top;  /* EmphasizedContent-ClickablesHover-Background_Image-Position */
         background-repeat: repeat-x; /* EmphasizedContent-ClickablesHover-Background_Image-Repeat */
     }
@@ -837,7 +837,7 @@ body.wm_template {
 
     /* HeaderContent-Styles-Background */
     background-color: #444444; /* HeaderContent-Styles-Background_Color */
-    background-image: url(images/threeD.png); /* HeaderContent-Styles-Background_Image */
+    background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-Styles-Background_Image */
     background-position: left top;  /* HeaderContent-Styles-Background_Image-Position */
     background-repeat: repeat-x; /* HeaderContent-Styles-Background_Image-Repeat */
 }
@@ -860,7 +860,7 @@ body.wm_template {
 
 	/* HeaderContent-ClickablesActive-Background */
 	background-color: #444444; /* HeaderContent-ClickablesActive-Background_Color */
-	background-image: url(images/threeD.png); /* HeaderContent-ClickablesActive-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesActive-Background_Image */
 	background-position: left top;  /* HeaderContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
 
@@ -882,7 +882,7 @@ body.wm_template {
 
 	/* HeaderContent-ClickablesDefault-Background */
 	background-color: #444444; /* HeaderContent-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
 	background-position: left top;  /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
 
@@ -899,7 +899,7 @@ body.wm_template {
 
 	/* HeaderContent-ClickablesHover-Background */
 	background-color: #444444; /* HeaderContent-ClickablesHover-Background_Color */
-	background-image: url(images/threeD.png); /* HeaderContent-ClickablesHover-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesHover-Background_Image */
 	background-position: left top;  /* HeaderContent-ClickablesHover-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesHover-Background_Image-Repeat */
     }
@@ -920,7 +920,7 @@ body.wm_template {
 
     /* HeaderContent-ClickablesActive-Background */
     background-color: #444444; /* HeaderContent-ClickablesActive-Background_Color */
-    background-image: url(images/threeD.png); /* HeaderContent-ClickablesActive-Background_Image */
+    background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesActive-Background_Image */
     background-position: left top;  /* HeaderContent-ClickablesActive-Background_Image-Position */
     background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
 }
@@ -935,7 +935,7 @@ body.wm_template {
 
 	/* HeaderContent-ClickablesDefault-Background */
 	background-color: #444444; /* HeaderContent-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
 	background-position: left top;  /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
 
@@ -947,7 +947,7 @@ body.wm_template {
 
 	/* HeaderContent-ClickablesHover-Background */
 	background-color: #444444; /* HeaderContent-ClickablesHover-Background_Color */
-	background-image: url(images/threeD.png); /* HeaderContent-ClickablesHover-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesHover-Background_Image */
 	background-position: left top;  /* HeaderContent-ClickablesHover-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesHover-Background_Image-Repeat */
 
@@ -963,7 +963,7 @@ body.wm_template {
 
 	/* HeaderContent-ClickablesActive-Background */
 	background-color: #444444; /* HeaderContent-ClickablesActive-Background_Color */
-	background-image: url(images/threeD.png); /* HeaderContent-ClickablesActive-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesActive-Background_Image */
 	background-position: left top;  /* HeaderContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
     }
@@ -994,7 +994,7 @@ body.wm_template {
 
         /* HeaderContent-ClickablesDefault-Background */
         background-color: #444444; /* HeaderContent-ClickablesActive-Background_Color */
-        background-image: url(images/threeD.png); /* HeaderContent-ClickablesActive-Background_Image */
+        background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesActive-Background_Image */
         background-position: left top;  /* HeaderContent-ClickablesActive-Background_Image-Position */
         background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
     }
@@ -1010,7 +1010,7 @@ body.wm_template {
 
         /* HeaderContent-ClickablesDefault-Background */
         background-color: #444444; /* HeaderContent-ClickablesHover-Background_Color */
-        background-image: url(images/threeD.png); /* HeaderContent-ClickablesHover-Background_Image */
+        background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesHover-Background_Image */
         background-position: left top;  /* HeaderContent-ClickablesHover-Background_Image-Position */
         background-repeat: repeat-x; /* HeaderContent-ClickablesHover-Background_Image-Repeat */
     }

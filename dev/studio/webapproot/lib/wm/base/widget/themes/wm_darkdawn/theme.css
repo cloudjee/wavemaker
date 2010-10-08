@@ -493,7 +493,7 @@ body .wm_darkdawn input:focus,
     font-weight: bold; /* Dialogs-Styles-Font_Weight */
     /* Dialogs-Styles-Background */
     background-color: #555555; /* Dialogs-Styles-Background_Color */
-    /*background-image: url(images/threeD.png); / * Dialogs-Styles-Background_Image * / */
+    /*background-image: url(images/repeatx/brightEdge1.png); / * Dialogs-Styles-Background_Image * / */
     background-position: top left; /* Dialogs-Styles-Background_Image-Position */
     background-repeat: repeat-x; /* Dialogs-Styles-Background_Image-Repeat */
     /* Automatically calculated to be 2px less than MainContent-Styles-Border_Style-Radius */
@@ -1049,39 +1049,31 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     }
     /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
     .wm_darkdawn div.dojoxGrid-header .dojoxGrid-cell,
-    .wm_darkdawn div.dojoxGridHeader .dojoxGridCell
-    {
-	background: inherit; /* see Header.dojoxGrid-header below */
+    .wm_darkdawn div.dojoxGridHeader .dojoxGridCell {
+	background: inherit; /* Style the Header row, not the Header cell for background */
 	border-right-width: 1px; /* Tables-EvenRows-Border_BorderSize */
 	border-right-style: solid;
 	border-right-color: #777777; /* Tables-EvenRows-Border_Color */
-	/* Document-ClickablesDefault-Font */
-	font-family: Arial; /* Document-ClickablesDefault-Font_Family */
-	/* Adjust size when we figure out a good way to adjust the height of the header */
-	font-size: 10pt; /* Tables-EvenRows-Font_TextSize */
-	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+	/* Tables-HeaderRow-Font */
+	font-family: sans-serif; /* Tables-HeaderRow-Font_Family */
+	font-size: 12pt; /* Tables-HeaderRow-Font_TextSize */
+	color: #000000 !important;/* Tables-HeaderRow-Font_Color */
+	font-weight: bold; /* Tables-HeaderRow-Font_Weight */
     }
-    .wm_darkdawn div.dojoxGridHeader .dojoxGridCell {
-	background-color: #555555; /* Document-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightEdge1.png); /* Document-ClickablesDefault-Background_Image */
-	background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
-	/* Document-ClickablesDefault-Font */
-	font-family: Arial; /* Document-ClickablesDefault-Font_Family */
-	/*font-size: 12pt;  Clickables-Default-Font_TextSize */
-	color: #ffffff; /* Document-ClickablesDefault-Font_Color */
-	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+    .wm_darkdawn .wmlist-header th {
+	font-family: sans-serif; /* Tables-HeaderRow-Font_Family */
+/*	font-size: 12pt;  Tables-HeaderRow-Font_TextSize header height doesn't adjust*/
+	color: #000000 !important;/* Tables-HeaderRow-Font_Color */
+	font-weight: bold; /* Tables-HeaderRow-Font_Weight */
     }
     /* Header-Row-Background */
-    .wm_darkdawn .dojoxGrid-header, 
-    .wm_darkdawn .dojoxGridHeader,
-    .wm_darkdawn .wmlist-header {
-	color: #ffffff; /* Document-ClickablesDefault-Font_Color */
-	background-color: #555555; /* Document-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* Document-ClickablesDefault-Background-Image */
-	background-position: left top;     /* Document-ClickablesDefault-Image-Position */
-	background-repeat: repeat-x;    /* Document-ClickablesDefault-Image-Repeat */
+    body.tundra .wm_darkdawn .dojoxGrid-header, 
+    body.tundra .wm_darkdawn .dojoxGridHeader,
+    body.tundra .wm_darkdawn .wmlist-header {
+	background-color: #444444; /* Tables-HeaderRow-Background_Color */
+	background-image: url(images/repeatx/brightEdge1.png); /* Tables-HeaderRow-Background_Image */
+	background-position: left top;     /* Tables-HeaderRow_Image-Position */
+	background-repeat: repeat-x;    /* Tables-HeaderRow_Image-Repeat */
     }
 }
 @media screen { /* MainContent-Level */ 
@@ -1117,38 +1109,6 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     .wm_darkdawn .MainContent div.dojoxGridContent .dojoxGrid-cell-focus {
 	border-width: 1px dashed transparent !important;
     }
-    /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
-    .wm_darkdawn .MainContent div.dojoxGrid-header .dojoxGrid-cell,
-    .wm_darkdawn .MainContent div.dojoxGridHeader .dojoxGridCell
-    {
-	background: inherit; /* see Header.dojoxGrid-header below */
-	/* MainContent-ClickablesDefault-Font */
-	font-family: Arial; /* MainContent-ClickablesDefault-Font_Family */
-	/*    font-size: 12pt;  Clickables-Default-Font_TextSize */
-	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
-    }
-    .wm_darkdawn .MainContent div.dojoxGridHeader .dojoxGridCell {
-	background-color: #555555; /* MainContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightEdge1.png); /* MainContent-ClickablesDefault-Background_Image */
-	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
-	/* MainContent-ClickablesDefault-Font */
-	font-family: Arial; /* MainContent-ClickablesDefault-Font_Family */
-	/*font-size: 12pt;  Clickables-Default-Font_TextSize */
-	color: #ffffff; /* MainContent-ClickablesDefault-Font_Color */
-	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
-    }
-    /* Header-Row-Background */
-    .wm_darkdawn .MainContent .dojoxGrid-header, 
-    .wm_darkdawn .MainContent .dojoxGridHeader,
-    .wm_darkdawn .MainContent .wmlist-header {
-	color: #ffffff; /* MainContent-ClickablesDefault-Font_Color */
-	background-color: #555555; /* MainContent-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-ClickablesDefault-Background-Image */
-	background-position: left top;     /* MainContent-ClickablesDefault-Image-Position */
-	background-repeat: repeat-x;    /* MainContent-ClickablesDefault-Image-Repeat */
-    }
 }
 @media screen { /* EmphasizedContent-Level */ 
     /* Selected color for rows: uses Clickables-Active */
@@ -1182,38 +1142,6 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     .wm_darkdawn .EmphasizedContent div.dojoxGridContent .dojoxGridCellFocus,
     .wm_darkdawn .EmphasizedContent div.dojoxGridContent .dojoxGrid-cell-focus {
 	border-width: 1px dashed transparent !important;
-    }
-    /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
-    .wm_darkdawn .EmphasizedContent div.dojoxGrid-header .dojoxGrid-cell,
-    .wm_darkdawn .EmphasizedContent div.dojoxGridHeader .dojoxGridCell
-    {
-	background: inherit; /* see Header.dojoxGrid-header below */
-	/* EmphasizedContent-ClickablesDefault-Font */
-	font-family: Arial; /* EmphasizedContent-ClickablesDefault-Font_Family */
-	/*    font-size: 12pt;  Clickables-Default-Font_TextSize */
-	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
-    }
-    .wm_darkdawn .EmphasizedContent div.dojoxGridHeader .dojoxGridCell {
-	background-color: #0078a3; /* EmphasizedContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightEdge1.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
-	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
-	/* EmphasizedContent-ClickablesDefault-Font */
-	font-family: Arial; /* EmphasizedContent-ClickablesDefault-Font_Family */
-	/*font-size: 12pt;  Clickables-Default-Font_TextSize */
-	color: #ffffff; /* EmphasizedContent-ClickablesDefault-Font_Color */
-	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
-    }
-    /* Header-Row-Background */
-    .wm_darkdawn .EmphasizedContent .dojoxGrid-header, 
-    .wm_darkdawn .EmphasizedContent .dojoxGridHeader,
-    .wm_darkdawn .EmphasizedContent .wmlist-header {
-	color: #ffffff; /* EmphasizedContent-ClickablesDefault-Font_Color */
-	background-color: #0078a3; /* EmphasizedContent-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesDefault-Background-Image */
-	background-position: left top;     /* EmphasizedContent-ClickablesDefault-Image-Position */
-	background-repeat: repeat-x;    /* EmphasizedContent-ClickablesDefault-Image-Repeat */
     }
 }
 @media screen { /* HeaderContent-Level */ 
@@ -1277,9 +1205,9 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     .wm_darkdawn .HeaderContent .wmlist-header {
 	color: #ffffff; /* HeaderContent-ClickablesDefault-Font_Color */
 	background-color: #f58400; /* HeaderContent-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* HeaderContent-ClickablesDefault-Background-Image */
-	background-position: left top;     /* HeaderContent-ClickablesDefault-Image-Position */
-	background-repeat: repeat-x;    /* HeaderContent-ClickablesDefault-Image-Repeat */
+	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
     }
 }
 /*****************************************
@@ -1320,14 +1248,18 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
 	background-color: transparent;
 	background-image: none;
     }
-    .wm_darkdawn .dojoMenu.ClickableDojoMenu,
     .wm_darkdawn .dojoMenu.ClickableDojoMenu {
-	color: #ffffff; /* Document-ClickablesDefault-Font_Color */
 	/* Document-ClickablesDefault-Background */
 	background-color: #555555; /* Document-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* Document-ClickablesDefault-Background_Image */
 	background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_darkdawn .dojoMenu.ClickableDojoMenu .dijitMenuItem {
+	color: #ffffff; /* Document-ClickablesDefault-Font_Color */
+    }
+    .wm_darkdawn .dojoMenu .dijitMenuItem {
+	color: #eeeeee; /* Document-Styles-Font_Color */
     }
     /* Spacing between menu items */
     .wm_darkdawn .dijitMenuBar .dijitMenuItem,
@@ -1361,13 +1293,18 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
 	background-color: transparent;
 	background-image: none;
 }
-    .wm_darkdawn .MainContent .dojoMenu.ClickableDojoMenu,
     .wm_darkdawn .MainContent .dojoMenu.ClickableDojoMenu {
 	/* MainContent-ClickablesDefault-Background */
 	background-color: #555555; /* MainContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_darkdawn .MainContent .dojoMenu.ClickableDojoMenu .dijitMenuItem {
+	color: #ffffff; /* MainContent-ClickablesDefault-Font_Color */
+    }
+    .wm_darkdawn .MainContent .dojoMenu .dijitMenuItem {
+	color: #000000; /* MainContent-Styles-Font_Color */
     }
     body.wm_darkdawn .MainContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemHover,
     body .wm_darkdawn .MainContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemHover,
@@ -1396,13 +1333,18 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
 	background-color: transparent;
 	background-image: none;
 }
-    .wm_darkdawn .HeaderContent .dojoMenu.ClickableDojoMenu,
     .wm_darkdawn .HeaderContent .dojoMenu.ClickableDojoMenu {
 	/* HeaderContent-ClickablesDefault-Background */
 	background-color: #f58400; /* HeaderContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_darkdawn .HeaderContent .dojoMenu.ClickableDojoMenu .dijitMenuItem {
+	color: #ffffff; /* HeaderContent-ClickablesDefault-Font_Color */
+    }
+    .wm_darkdawn .HeaderContent .dojoMenu .dijitMenuItem {
+	color: #ffffff; /* HeaderContent-Styles-Font_Color */
     }
     body.wm_darkdawn .HeaderContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemHover,
     body .wm_darkdawn .HeaderContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemHover,
@@ -1417,6 +1359,46 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
 	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
+	outline-width: 0;
+    }
+}
+@media screen { /* EmphasizedContent-Level */ 
+    .wm_darkdawn .EmphasizedContent .dojoMenu .dijitMenu,
+    .wm_darkdawn .EmphasizedContent .dojoMenu .dijitMenuBar {
+	/* EmphasizedContent-ClickablesDefault-Font */
+	font-family: Arial; /* EmphasizedContent-ClickablesDefault-Font_Family */
+	font-size: 12pt; /* EmphasizedContent-ClickablesDefault-Font_TextSize */
+	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
+	color: #ffffff; /* EmphasizedContent-Styles-Font_Color */
+	background-color: transparent;
+	background-image: none;
+}
+    .wm_darkdawn .EmphasizedContent .dojoMenu.ClickableDojoMenu {
+	/* EmphasizedContent-ClickablesDefault-Background */
+	background-color: #0078a3; /* EmphasizedContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightEdge1.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_darkdawn .EmphasizedContent .dojoMenu.ClickableDojoMenu .dijitMenuItem {
+	color: #ffffff; /* EmphasizedContent-ClickablesDefault-Font_Color */
+    }
+    .wm_darkdawn .EmphasizedContent .dojoMenu .dijitMenuItem {
+	color: #ffffff; /* EmphasizedContent-Styles-Font_Color */
+    }
+    body.wm_darkdawn .EmphasizedContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemHover,
+    body .wm_darkdawn .EmphasizedContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemHover,
+    body.wm_darkdawn .EmphasizedContent  .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_darkdawn .EmphasizedContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemSelected,
+    body.wm_darkdawn .EmphasizedContent  .dojoMenu .dijitMenuActive .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_darkdawn .EmphasizedContent .dojoMenu .dijitMenuActive .dijitMenuItem.dijitMenuItemSelected {
+	/* EmphasizedContent-ClickablesHover-Font */
+	color: #ffffff; /* EmphasizedContent-ClickablesHover-Font_Color */
+	/* EmphasizedContent-ClickablesHover-Background */
+	background-color: #0090c3; /* EmphasizedContent-ClickablesHover-Background_Color */
+	background-image: url(images/repeatx/brightEdge1.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
 	outline-width: 0;
     }
 }
@@ -1893,8 +1875,8 @@ body.wm_darkdawn {
     /* MainContent-ClickablesDefault-Font */
     font-family: Arial; /* MainContent-ClickablesDefault-Font_Family */
     font-size: 12pt; /* MainContent-ClickablesDefault-Font_TextSize */
-    color: #ffffff; /* MainContent-ClickablesDefault-Font_Color */
     font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
+    color: #ffffff; /* MainContent-ClickablesActive-Font_Color */
     /* MainContent-ClickablesActive-Background */
     background-color: #f58400; /* MainContent-ClickablesActive-Background_Color */
     background-image: url(images/repeatx/brightEdge3.png); /* MainContent-ClickablesActive-Background_Image */
@@ -1953,7 +1935,7 @@ body.wm_darkdawn {
         font-weight: bold; /* MainContentClickablesDefault-Font_Weight */
         /* MainContentClickablesDefault-Background */
         background-color: #444444; /* MainContentClickablesActive-Background_Color */
-        background-image: url(images/threeD.png); /* MainContentClickablesActive-Background_Image */
+        background-image: url(images/repeatx/brightEdge1.png); /* MainContentClickablesActive-Background_Image */
         background-position: left top;  /* MainContentClickablesActive-Background_Image-Position */
         background-repeat: repeat-x; /* MainContentClickablesActive-Background_Image-Repeat */
     }
@@ -1968,7 +1950,7 @@ body.wm_darkdawn {
         font-weight: bold; /* MainContentClickablesDefault-Font_Weight */
         /* MainContentClickablesDefault-Background */
         background-color: #444444; /* MainContentClickablesHover-Background_Color */
-        background-image: url(images/threeD.png); /* MainContentClickablesHover-Background_Image */
+        background-image: url(images/repeatx/brightEdge1.png); /* MainContentClickablesHover-Background_Image */
         background-position: left top;  /* MainContentClickablesHover-Background_Image-Position */
         background-repeat: repeat-x; /* MainContentClickablesHover-Background_Image-Repeat */
     }
@@ -2056,8 +2038,8 @@ body.wm_darkdawn {
     /* EmphasizedContent-ClickablesDefault-Font */
     font-family: Arial; /* EmphasizedContent-ClickablesDefault-Font_Family */
     font-size: 12pt; /* EmphasizedContent-ClickablesDefault-Font_TextSize */
-    color: #ffffff; /* EmphasizedContent-ClickablesDefault-Font_Color */
     font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
+    color: #000000; /* EmphasizedContent-ClickablesActive-Font_Color */
     /* EmphasizedContent-ClickablesActive-Background */
     background-color: #f58400; /* EmphasizedContent-ClickablesActive-Background_Color */
     background-image: url(images/repeatx/brightEdge3.png); /* EmphasizedContent-ClickablesActive-Background_Image */
@@ -2219,8 +2201,8 @@ body.wm_darkdawn {
     /* HeaderContent-ClickablesDefault-Font */
     font-family: Arial; /* HeaderContent-ClickablesDefault-Font_Family */
     font-size: 12pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
-    color: #ffffff; /* HeaderContent-ClickablesDefault-Font_Color */
     font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
+    color: #ffffff; /* HeaderContent-ClickablesActive-Font_Color */
     /* HeaderContent-ClickablesActive-Background */
     background-color: #555555; /* HeaderContent-ClickablesActive-Background_Color */
     background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesActive-Background_Image */

@@ -137,7 +137,7 @@
     body.tundra .wm_template .dojoxGridHeader,
     body.tundra .wm_template .wmlist-header {
 	background-color: #444444; /* Tables-HeaderRow-Background_Color */
-	background-image: url(images/threeD.png); /* Tables-HeaderRow-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* Tables-HeaderRow-Background_Image */
 	background-position: left top;     /* Tables-HeaderRow_Image-Position */
 	background-repeat: repeat-x;    /* Tables-HeaderRow_Image-Repeat */
     }
@@ -285,7 +285,7 @@
 
     .wm_template .HeaderContent div.dojoxGridHeader .dojoxGridCell {
 	background-color: #333333; /* HeaderContent-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
 	background-position: left top;  /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
 
@@ -302,9 +302,9 @@
     .wm_template .HeaderContent .wmlist-header {
 	color: #FFFFFF;	/* HeaderContent-ClickablesDefault-Font_Color */
 	background-color: #444444; /* HeaderContent-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* HeaderContent-ClickablesDefault-Background-Image */
-	background-position: left top;     /* HeaderContent-ClickablesDefault-Image-Position */
-	background-repeat: repeat-x;    /* HeaderContent-ClickablesDefault-Image-Repeat */
+	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-position: left top;     /* HeaderContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x;    /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
 
     }
 

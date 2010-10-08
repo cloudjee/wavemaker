@@ -493,7 +493,7 @@ body .wm_basic input:focus,
     font-weight: bold; /* Dialogs-Styles-Font_Weight */
     /* Dialogs-Styles-Background */
     background-color: #0d0897; /* Dialogs-Styles-Background_Color */
-    /*background-image: url(images/threeD.png); / * Dialogs-Styles-Background_Image * / */
+    /*background-image: url(images/repeatx/brightEdge1.png); / * Dialogs-Styles-Background_Image * / */
     background-position: top left; /* Dialogs-Styles-Background_Image-Position */
     background-repeat: repeat-x; /* Dialogs-Styles-Background_Image-Repeat */
     /* Automatically calculated to be 2px less than MainContent-Styles-Border_Style-Radius */
@@ -1049,39 +1049,31 @@ body .wm_basic .dialogfooter .wmbutton:hover {
     }
     /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
     .wm_basic div.dojoxGrid-header .dojoxGrid-cell,
-    .wm_basic div.dojoxGridHeader .dojoxGridCell
-    {
-	background: inherit; /* see Header.dojoxGrid-header below */
+    .wm_basic div.dojoxGridHeader .dojoxGridCell {
+	background: inherit; /* Style the Header row, not the Header cell for background */
 	border-right-width: 1px; /* Tables-EvenRows-Border_BorderSize */
 	border-right-style: solid;
 	border-right-color: #cccccc; /* Tables-EvenRows-Border_Color */
-	/* Document-ClickablesDefault-Font */
-	font-family: Arial; /* Document-ClickablesDefault-Font_Family */
-	/* Adjust size when we figure out a good way to adjust the height of the header */
-	font-size: 10pt; /* Tables-EvenRows-Font_TextSize */
-	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+	/* Tables-HeaderRow-Font */
+	font-family: sans-serif; /* Tables-HeaderRow-Font_Family */
+	font-size: 12pt; /* Tables-HeaderRow-Font_TextSize */
+	color: #000000 !important;/* Tables-HeaderRow-Font_Color */
+	font-weight: bold; /* Tables-HeaderRow-Font_Weight */
     }
-    .wm_basic div.dojoxGridHeader .dojoxGridCell {
-	background-color: #0d0897; /* Document-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightThickEdge1.png); /* Document-ClickablesDefault-Background_Image */
-	background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
-	/* Document-ClickablesDefault-Font */
-	font-family: Arial; /* Document-ClickablesDefault-Font_Family */
-	/*font-size: 12pt;  Clickables-Default-Font_TextSize */
-	color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
-	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+    .wm_basic .wmlist-header th {
+	font-family: sans-serif; /* Tables-HeaderRow-Font_Family */
+/*	font-size: 12pt;  Tables-HeaderRow-Font_TextSize header height doesn't adjust*/
+	color: #000000 !important;/* Tables-HeaderRow-Font_Color */
+	font-weight: bold; /* Tables-HeaderRow-Font_Weight */
     }
     /* Header-Row-Background */
-    .wm_basic .dojoxGrid-header, 
-    .wm_basic .dojoxGridHeader,
-    .wm_basic .wmlist-header {
-	color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
-	background-color: #0d0897; /* Document-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* Document-ClickablesDefault-Background-Image */
-	background-position: left top;     /* Document-ClickablesDefault-Image-Position */
-	background-repeat: repeat-x;    /* Document-ClickablesDefault-Image-Repeat */
+    body.tundra .wm_basic .dojoxGrid-header, 
+    body.tundra .wm_basic .dojoxGridHeader,
+    body.tundra .wm_basic .wmlist-header {
+	background-color: #444444; /* Tables-HeaderRow-Background_Color */
+	background-image: url(images/repeatx/brightEdge1.png); /* Tables-HeaderRow-Background_Image */
+	background-position: left top;     /* Tables-HeaderRow_Image-Position */
+	background-repeat: repeat-x;    /* Tables-HeaderRow_Image-Repeat */
     }
 }
 @media screen { /* MainContent-Level */ 
@@ -1117,38 +1109,6 @@ body .wm_basic .dialogfooter .wmbutton:hover {
     .wm_basic .MainContent div.dojoxGridContent .dojoxGrid-cell-focus {
 	border-width: 1px dashed transparent !important;
     }
-    /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
-    .wm_basic .MainContent div.dojoxGrid-header .dojoxGrid-cell,
-    .wm_basic .MainContent div.dojoxGridHeader .dojoxGridCell
-    {
-	background: inherit; /* see Header.dojoxGrid-header below */
-	/* MainContent-ClickablesDefault-Font */
-	font-family: Arial; /* MainContent-ClickablesDefault-Font_Family */
-	/*    font-size: 12pt;  Clickables-Default-Font_TextSize */
-	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
-    }
-    .wm_basic .MainContent div.dojoxGridHeader .dojoxGridCell {
-	background-color: #0d0897; /* MainContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightThickEdge1.png); /* MainContent-ClickablesDefault-Background_Image */
-	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
-	/* MainContent-ClickablesDefault-Font */
-	font-family: Arial; /* MainContent-ClickablesDefault-Font_Family */
-	/*font-size: 12pt;  Clickables-Default-Font_TextSize */
-	color: #FFFFFF; /* MainContent-ClickablesDefault-Font_Color */
-	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
-    }
-    /* Header-Row-Background */
-    .wm_basic .MainContent .dojoxGrid-header, 
-    .wm_basic .MainContent .dojoxGridHeader,
-    .wm_basic .MainContent .wmlist-header {
-	color: #FFFFFF; /* MainContent-ClickablesDefault-Font_Color */
-	background-color: #0d0897; /* MainContent-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-ClickablesDefault-Background-Image */
-	background-position: left top;     /* MainContent-ClickablesDefault-Image-Position */
-	background-repeat: repeat-x;    /* MainContent-ClickablesDefault-Image-Repeat */
-    }
 }
 @media screen { /* EmphasizedContent-Level */ 
     /* Selected color for rows: uses Clickables-Active */
@@ -1182,38 +1142,6 @@ body .wm_basic .dialogfooter .wmbutton:hover {
     .wm_basic .EmphasizedContent div.dojoxGridContent .dojoxGridCellFocus,
     .wm_basic .EmphasizedContent div.dojoxGridContent .dojoxGrid-cell-focus {
 	border-width: 1px dashed transparent !important;
-    }
-    /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
-    .wm_basic .EmphasizedContent div.dojoxGrid-header .dojoxGrid-cell,
-    .wm_basic .EmphasizedContent div.dojoxGridHeader .dojoxGridCell
-    {
-	background: inherit; /* see Header.dojoxGrid-header below */
-	/* EmphasizedContent-ClickablesDefault-Font */
-	font-family: Arial; /* EmphasizedContent-ClickablesDefault-Font_Family */
-	/*    font-size: 12pt;  Clickables-Default-Font_TextSize */
-	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
-    }
-    .wm_basic .EmphasizedContent div.dojoxGridHeader .dojoxGridCell {
-	background-color: #0d0897; /* EmphasizedContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightThickEdge1.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
-	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
-	/* EmphasizedContent-ClickablesDefault-Font */
-	font-family: Arial; /* EmphasizedContent-ClickablesDefault-Font_Family */
-	/*font-size: 12pt;  Clickables-Default-Font_TextSize */
-	color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
-	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
-    }
-    /* Header-Row-Background */
-    .wm_basic .EmphasizedContent .dojoxGrid-header, 
-    .wm_basic .EmphasizedContent .dojoxGridHeader,
-    .wm_basic .EmphasizedContent .wmlist-header {
-	color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
-	background-color: #0d0897; /* EmphasizedContent-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesDefault-Background-Image */
-	background-position: left top;     /* EmphasizedContent-ClickablesDefault-Image-Position */
-	background-repeat: repeat-x;    /* EmphasizedContent-ClickablesDefault-Image-Repeat */
     }
 }
 @media screen { /* HeaderContent-Level */ 
@@ -1277,9 +1205,9 @@ body .wm_basic .dialogfooter .wmbutton:hover {
     .wm_basic .HeaderContent .wmlist-header {
 	color: #222222; /* HeaderContent-ClickablesDefault-Font_Color */
 	background-color: #aaaaaa; /* HeaderContent-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* HeaderContent-ClickablesDefault-Background-Image */
-	background-position: left top;     /* HeaderContent-ClickablesDefault-Image-Position */
-	background-repeat: repeat-x;    /* HeaderContent-ClickablesDefault-Image-Repeat */
+	background-image: url(images/repeatx/brightThickEdge4.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
     }
 }
 /*****************************************
@@ -1320,14 +1248,18 @@ body .wm_basic .dialogfooter .wmbutton:hover {
 	background-color: transparent;
 	background-image: none;
     }
-    .wm_basic .dojoMenu.ClickableDojoMenu,
     .wm_basic .dojoMenu.ClickableDojoMenu {
-	color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
 	/* Document-ClickablesDefault-Background */
 	background-color: #0d0897; /* Document-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/brightThickEdge1.png); /* Document-ClickablesDefault-Background_Image */
 	background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_basic .dojoMenu.ClickableDojoMenu .dijitMenuItem {
+	color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
+    }
+    .wm_basic .dojoMenu .dijitMenuItem {
+	color: #000000; /* Document-Styles-Font_Color */
     }
     /* Spacing between menu items */
     .wm_basic .dijitMenuBar .dijitMenuItem,
@@ -1361,13 +1293,18 @@ body .wm_basic .dialogfooter .wmbutton:hover {
 	background-color: transparent;
 	background-image: none;
 }
-    .wm_basic .MainContent .dojoMenu.ClickableDojoMenu,
     .wm_basic .MainContent .dojoMenu.ClickableDojoMenu {
 	/* MainContent-ClickablesDefault-Background */
 	background-color: #0d0897; /* MainContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/brightThickEdge1.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_basic .MainContent .dojoMenu.ClickableDojoMenu .dijitMenuItem {
+	color: #FFFFFF; /* MainContent-ClickablesDefault-Font_Color */
+    }
+    .wm_basic .MainContent .dojoMenu .dijitMenuItem {
+	color: #000000; /* MainContent-Styles-Font_Color */
     }
     body.wm_basic .MainContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemHover,
     body .wm_basic .MainContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemHover,
@@ -1396,13 +1333,18 @@ body .wm_basic .dialogfooter .wmbutton:hover {
 	background-color: transparent;
 	background-image: none;
 }
-    .wm_basic .HeaderContent .dojoMenu.ClickableDojoMenu,
     .wm_basic .HeaderContent .dojoMenu.ClickableDojoMenu {
 	/* HeaderContent-ClickablesDefault-Background */
 	background-color: #aaaaaa; /* HeaderContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/brightThickEdge4.png); /* HeaderContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_basic .HeaderContent .dojoMenu.ClickableDojoMenu .dijitMenuItem {
+	color: #222222; /* HeaderContent-ClickablesDefault-Font_Color */
+    }
+    .wm_basic .HeaderContent .dojoMenu .dijitMenuItem {
+	color: #ffffff; /* HeaderContent-Styles-Font_Color */
     }
     body.wm_basic .HeaderContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemHover,
     body .wm_basic .HeaderContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemHover,
@@ -1417,6 +1359,46 @@ body .wm_basic .dialogfooter .wmbutton:hover {
 	background-image: url(images/repeatx/brightThickEdge4.png); /* HeaderContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
+	outline-width: 0;
+    }
+}
+@media screen { /* EmphasizedContent-Level */ 
+    .wm_basic .EmphasizedContent .dojoMenu .dijitMenu,
+    .wm_basic .EmphasizedContent .dojoMenu .dijitMenuBar {
+	/* EmphasizedContent-ClickablesDefault-Font */
+	font-family: Arial; /* EmphasizedContent-ClickablesDefault-Font_Family */
+	font-size: 12pt; /* EmphasizedContent-ClickablesDefault-Font_TextSize */
+	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
+	color: #000000; /* EmphasizedContent-Styles-Font_Color */
+	background-color: transparent;
+	background-image: none;
+}
+    .wm_basic .EmphasizedContent .dojoMenu.ClickableDojoMenu {
+	/* EmphasizedContent-ClickablesDefault-Background */
+	background-color: #0d0897; /* EmphasizedContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge1.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_basic .EmphasizedContent .dojoMenu.ClickableDojoMenu .dijitMenuItem {
+	color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
+    }
+    .wm_basic .EmphasizedContent .dojoMenu .dijitMenuItem {
+	color: #000000; /* EmphasizedContent-Styles-Font_Color */
+    }
+    body.wm_basic .EmphasizedContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemHover,
+    body .wm_basic .EmphasizedContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemHover,
+    body.wm_basic .EmphasizedContent  .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_basic .EmphasizedContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemSelected,
+    body.wm_basic .EmphasizedContent  .dojoMenu .dijitMenuActive .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_basic .EmphasizedContent .dojoMenu .dijitMenuActive .dijitMenuItem.dijitMenuItemSelected {
+	/* EmphasizedContent-ClickablesHover-Font */
+	color: #ffffff; /* EmphasizedContent-ClickablesHover-Font_Color */
+	/* EmphasizedContent-ClickablesHover-Background */
+	background-color: #0b0787; /* EmphasizedContent-ClickablesHover-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge1.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
 	outline-width: 0;
     }
 }
@@ -1893,8 +1875,8 @@ body.wm_basic {
     /* MainContent-ClickablesDefault-Font */
     font-family: Arial; /* MainContent-ClickablesDefault-Font_Family */
     font-size: 12pt; /* MainContent-ClickablesDefault-Font_TextSize */
-    color: #FFFFFF; /* MainContent-ClickablesDefault-Font_Color */
     font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
+    color: #ffffff; /* MainContent-ClickablesActive-Font_Color */
     /* MainContent-ClickablesActive-Background */
     background-color: #090569; /* MainContent-ClickablesActive-Background_Color */
     background-image: url(images/repeatx/brightThickEdge0.png); /* MainContent-ClickablesActive-Background_Image */
@@ -1953,7 +1935,7 @@ body.wm_basic {
         font-weight: bold; /* MainContentClickablesDefault-Font_Weight */
         /* MainContentClickablesDefault-Background */
         background-color: #444444; /* MainContentClickablesActive-Background_Color */
-        background-image: url(images/threeD.png); /* MainContentClickablesActive-Background_Image */
+        background-image: url(images/repeatx/brightEdge1.png); /* MainContentClickablesActive-Background_Image */
         background-position: left top;  /* MainContentClickablesActive-Background_Image-Position */
         background-repeat: repeat-x; /* MainContentClickablesActive-Background_Image-Repeat */
     }
@@ -1968,7 +1950,7 @@ body.wm_basic {
         font-weight: bold; /* MainContentClickablesDefault-Font_Weight */
         /* MainContentClickablesDefault-Background */
         background-color: #444444; /* MainContentClickablesHover-Background_Color */
-        background-image: url(images/threeD.png); /* MainContentClickablesHover-Background_Image */
+        background-image: url(images/repeatx/brightEdge1.png); /* MainContentClickablesHover-Background_Image */
         background-position: left top;  /* MainContentClickablesHover-Background_Image-Position */
         background-repeat: repeat-x; /* MainContentClickablesHover-Background_Image-Repeat */
     }
@@ -2056,8 +2038,8 @@ body.wm_basic {
     /* EmphasizedContent-ClickablesDefault-Font */
     font-family: Arial; /* EmphasizedContent-ClickablesDefault-Font_Family */
     font-size: 12pt; /* EmphasizedContent-ClickablesDefault-Font_TextSize */
-    color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
     font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
+    color: #ffffff; /* EmphasizedContent-ClickablesActive-Font_Color */
     /* EmphasizedContent-ClickablesActive-Background */
     background-color: #090569; /* EmphasizedContent-ClickablesActive-Background_Color */
     background-image: url(images/repeatx/brightThickEdge0.png); /* EmphasizedContent-ClickablesActive-Background_Image */
@@ -2219,8 +2201,8 @@ body.wm_basic {
     /* HeaderContent-ClickablesDefault-Font */
     font-family: Arial; /* HeaderContent-ClickablesDefault-Font_Family */
     font-size: 10pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
-    color: #222222; /* HeaderContent-ClickablesDefault-Font_Color */
     font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
+    color: #000000; /* HeaderContent-ClickablesActive-Font_Color */
     /* HeaderContent-ClickablesActive-Background */
     background-color: #aaaaaa; /* HeaderContent-ClickablesActive-Background_Color */
     background-image: url(images/repeatx/greyThickEdge1.png); /* HeaderContent-ClickablesActive-Background_Image */

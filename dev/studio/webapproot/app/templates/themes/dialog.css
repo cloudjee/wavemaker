@@ -38,7 +38,7 @@
 .wm_template .dialogtitlebar {
     /* Dialogs-Styles-Background */
     background-color: #444444; /* Dialogs-Styles-Background_Color */
-    background-image: url(images/threeD.png); /* Dialogs-Styles-Background_Image */
+    background-image: url(images/repeatx/brightEdge1.png); /* Dialogs-Styles-Background_Image */
     background-position: left top;  /* Dialogs-Styles-Background_Image-Position */
     background-repeat: repeat-x; /* Dialogs-Styles-Background_Image-Repeat */
 }
@@ -69,7 +69,7 @@
 
     /* Dialogs-Styles-Background */
     background-color: #444444; /* Dialogs-Styles-Background_Color */
-    /*background-image: url(images/threeD.png); / * Dialogs-Styles-Background_Image * / */
+    /*background-image: url(images/repeatx/brightEdge1.png); / * Dialogs-Styles-Background_Image * / */
     background-position: left top;  /* Dialogs-Styles-Background_Image-Position */
     background-repeat: repeat-x; /* Dialogs-Styles-Background_Image-Repeat */
 
@@ -93,7 +93,7 @@ body.wm_template .dialogtitlebar .wmbutton,
 body .wm_template .dialogtitlebar .wmbutton {
     /* Dialogs-TitleButtonsDefault-Background */
     background-color: #444444; /* Dialogs-TitleButtonsDefault-Background_Color */
-    background-image: url(images/threeD.png); /* Dialogs-TitleButtonsDefault-Background_Image */
+    background-image: url(images/repeatx/brightEdge1.png); /* Dialogs-TitleButtonsDefault-Background_Image */
     background-position: left top;  /* Dialogs-TitleButtonsDefault-Background_Image-Position */
     background-repeat: repeat-x; /* Dialogs-TitleButtonsDefault-Background_Image-Repeat */
 
@@ -131,7 +131,7 @@ body .wm_template .dialogfooter .wmbutton {
 
     /* Dialogs-FooterButtonsDefault-Background */
     background-color: #444444; /* Dialogs-FooterButtonsDefault-Background_Color */
-    background-image: url(images/threeD.png); /* Dialogs-FooterButtonsDefault-Background_Image */
+    background-image: url(images/repeatx/brightEdge1.png); /* Dialogs-FooterButtonsDefault-Background_Image */
     background-position: left top;  /* Dialogs-FooterButtonsDefault-Background_Image-Position */
     background-repeat: repeat-x; /* Dialogs-FooterButtonsDefault-Background_Image-Repeat */
 
@@ -156,7 +156,7 @@ body .wm_template .dialogtitlebar .wmbutton:hover {
 
     /* Dialogs-TitleButtonsHover-Background */
     background-color: #444444; /* Dialogs-TitleButtonsHover-Background_Color */
-    background-image: url(images/threeD.png); /* Dialogs-TitleButtonsHover-Background_Image */
+    background-image: url(images/repeatx/brightEdge1.png); /* Dialogs-TitleButtonsHover-Background_Image */
     background-position: left top;  /* Dialogs-TitleButtonsHover-Background_Image-Position */
     background-repeat: repeat-x; /* Dialogs-TitleButtonsHover-Background_Image-Repeat */
 
@@ -173,7 +173,7 @@ body .wm_template .dialogfooter .wmbutton:hover {
 
     /* Dialogs-FooterButtonsHover-Background */
     background-color: #444444; /* Dialogs-FooterButtonsHover-Background_Color */
-    background-image: url(images/threeD.png); /* Dialogs-FooterButtonsHover-Background_Image */
+    background-image: url(images/repeatx/brightEdge1.png); /* Dialogs-FooterButtonsHover-Background_Image */
     background-position: left top;  /* Dialogs-FooterButtonsHover-Background_Image-Position */
     background-repeat: repeat-x; /* Dialogs-FooterButtonsHover-Background_Image-Repeat */
 `
