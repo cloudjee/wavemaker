@@ -30,6 +30,12 @@ if (!wm.widgetSpecificTemplate) wm.widgetSpecificTemplate = {};
  *    Michael: While templates shown here sometimes have a wm.Template in _template, this seems to be completely unnecessary; all it does is place
  *             specially named panels into the canvas when dropped onto the canvas.
  *********************************************************************************************************************************************************************/
+ /***** COMMENTING OUT OLD TEMPLATES ***/
+ 
+ 
+ 
+ 
+ 
 wm.widgetTemplates.twoColumn = {
 	layoutKind: "top-to-bottom",
 	width: "100%",
@@ -47,7 +53,273 @@ wm.widgetTemplates.twoColumn = {
             }]
 	}
 }
+wm.fullTemplates.fancyTemplate = {
+	layoutKind: "top-to-bottom",
+	width: "100%",
+	height: "100%",
+	verticalAlign: "top",
+	horizontalAlign: "center",
+	_template: {
+	varTemplateUsername: ["wm.ServiceVariable", {"autoUpdate":true,"designTime":true,"operation":"getUserName","service":"securityService","startUpdate":true}, {}, {
+		input: ["wm.ServiceInput", {"type":"getUserNameInputs"}, {}]
+	}],
+	varTemplateLogout: ["wm.LogoutVariable", {}, {}, {
+		input: ["wm.ServiceInput", {"type":"logoutInputs"}, {}]
+	}],	
+	panel1: ["wm.Panel", {"border":"0,0","borderColor":"#999999","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"80%"}, {}, {
+		panel2: ["wm.HeaderContentPanel", {"height":"60px","horizontalAlign":"left","layoutKind":"left-to-right","padding":"0,10","verticalAlign":"middle","width":"100%"}, {}, {
+			picture1: ["wm.Picture", {"border":"0","height":"50px","source":"/wavemaker/lib/wm/base/widget/themes/default/images/wmLogo.png","width":"62px"}, {}],
+			label1: ["wm.Label", {"border":"0","caption":"Quisque Molestie Porta","width":"100%"}, {}, {
+				format: ["wm.DataFormatter", {}, {}]
+			}],
+			panel10: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"middle","width":"300px"}, {}, {
+				panel14: ["wm.Panel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
+					label4: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"autoSizeWidth":true,"border":"0","caption":"Welcome, ","height":"20px","width":"67px"}, {}, {
+						binding: ["wm.Binding", {}, {}, {
+							wire: ["wm.Wire", {"expression":"\"Welcome, \" + ${varTemplateUsername.dataValue}","targetProperty":"caption"}, {}]
+						}],
+						format: ["wm.DataFormatter", {}, {}]
+					}],
+					picture3: ["wm.Picture", {"border":"0","height":"16px","source":"/wavemaker/images/inactive.png","width":"16px"}, {"onclick":"varTemplateLogout"}]
+				}],
+				panel15: ["wm.Panel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
+					text1: ["wm.Text", {"displayValue":"Search","width":"100%"}, {}],
+					picture5: ["wm.Picture", {"border":"0","height":"16px","source":"/wavemaker/images/silkIcons/zoom.png","width":"16px"}, {}]
+				}]
+			}]
+		}],
+		panel3: ["wm.Panel", {"height":"32px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+			dojoMenu1: ["wm.DojoMenu", {"_classes":{"domNode":["ClickableDojoMenu"]},"eventList":[{"label":"File","children":[{"label":"New"},{"label":"Open"},{"label":"Save"},{"label":"Close"}]},{"label":"New"},{"label":"Open"},{"label":"Save"},{"label":"Close"},{"label":"Edit","children":[{"label":"Cut"},{"label":"Copy"},{"label":"Paste"}]},{"label":"Cut"},{"label":"Copy"},{"label":"Paste"},{"label":"Zoom","children":[{"label":"25%"},{"label":"50%"},{"label":"100%"},{"label":"150%"}]},{"label":"25%"},{"label":"50%"},{"label":"100%"},{"label":"150%"},{"label":"Help"}],"height":"100%","menu":"File > New, Open, Save, Close\nEdit > Cut, Copy, Paste\nZoom > 25%, 50%, 100%, 150%\nHelp","padding":"4,10,0,10","structure":"{\"items\":[{\"label\":\"File\",\"children\":[{\"label\":\"New\"},{\"label\":\"Open\"},{\"label\":\"Save\"},{\"label\":\"Close\"}]},{\"label\":\"Edit\",\"children\":[{\"label\":\"Cut\"},{\"label\":\"Copy\"},{\"label\":\"Paste\"}]},{\"label\":\"Zoom\",\"children\":[{\"label\":\"25%\"},{\"label\":\"50%\"},{\"label\":\"100%\"},{\"label\":\"150%\"}]},{\"label\":\"Help\"}]}","transparent":false}, {}]
+		}],
+		panel4: ["wm.MainContentPanel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+			tabLayers1: ["wm.TabLayers", {}, {}, {
+				layer1: ["wm.Layer", {"border":"1","borderColor":"#999999","caption":"layer1","horizontalAlign":"left","verticalAlign":"top"}, {}, {
+					fancyPanel1: ["wm.FancyPanel", {"horizontalAlign":"left","verticalAlign":"top"}, {}, {
+						dojoGrid1: ["wm.DojoGrid", {"dsType":"EntryData","height":"100%","columns":[{"show":true,"id":"name","title":"Name","width":"auto","displayType":undefined,"noDelete":true,"align":"left"},{"show":true,"id":"dataValue","title":"DataValue","width":"auto","displayType":undefined,"noDelete":true,"align":"left"}]}, {}, {
+							binding: ["wm.Binding", {}, {}, {
+								wire: ["wm.Wire", {"source":"studio.varTemplateData","targetProperty":"dataSet"}, {}]
+							}]
+						}],
+						panel7: ["wm.Panel", {"height":"36px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+							button1: ["wm.Button", {}, {}],
+							toggleButton2: ["wm.ToggleButton", {"clicked":true,"width":"100px"}, {}]
+						}],
 
+					}],
+					panel6: ["wm.Panel", {"height":"320px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+						fancyPanel3: ["wm.FancyPanel", {"horizontalAlign":"left","verticalAlign":"top"}, {}, {
+							panel12: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
+								text3: ["wm.Text", {"caption":"text3","displayValue":""}, {}],
+								checkbox1: ["wm.Checkbox", {"caption":"checkbox1","displayValue":""}, {}],
+								currency1: ["wm.Currency", {"caption":"currency1","displayValue":""}, {}],
+								date1: ["wm.Date", {"caption":"date1","displayValue":""}, {}],
+								number1: ["wm.Number", {"caption":"number1","displayValue":""}, {}],
+								radioButton1: ["wm.RadioButton", {"caption":"radioButton1","displayValue":""}, {}],
+								slider1: ["wm.Slider", {"caption":"slider1","displayValue":""}, {}],
+								richText1: ["wm.RichText", {"height":"100%"}, {}]
+							}],
+
+						}],
+						panel11: ["wm.EmphasizedContentPanel", {"height":"100%","horizontalAlign":"left","padding":"10","verticalAlign":"top","width":"300px"}, {}, {
+							panel8: ["wm.Panel", {"height":"32px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+								text2: ["wm.Text", {"displayValue":"Curabitur quis nibh","width":"100%"}, {}]
+							}],
+							fancyPanel2: ["wm.FancyPanel", {"height":"230px","horizontalAlign":"left","margin":"3","title":"Calendar","verticalAlign":"top"}, {}, {
+								calendar1: ["wm.dijit.Calendar", {"height":"100%","width":"100%"}, {}],
+
+							}],
+							panel9: ["wm.Panel", {"height":"36px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+								button4: ["wm.Button", {}, {}],
+								toggleButton1: ["wm.ToggleButton", {"clicked":true,"width":"100px"}, {}]
+							}]
+						}]
+					}]
+				}],
+				layer2: ["wm.Layer", {"border":"1","borderColor":"#999999","caption":"layer2","horizontalAlign":"left","verticalAlign":"top"}, {}]
+			}]
+		}],
+		panel5: ["wm.Panel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
+			picture2: ["wm.Picture", {"border":"0","height":"20px","source":"/wavemaker/lib/wm/base/widget/themes/default/images/wmSmallLogo.png","width":"25px"}, {}],
+			label2: ["wm.Label", {"border":"0","caption":"Powered By Wavemaker","height":"100%","width":"100%"}, {}, {
+				format: ["wm.DataFormatter", {}, {}]
+			}],
+			label3: ["wm.Label", {"align":"right","border":"0","caption":"Copyright © [company name] 2010","height":"100%","width":"300px"}, {}, {
+				format: ["wm.DataFormatter", {}, {}]
+			}]
+		}]
+	}]}	
+}
+
+wm.fullTemplates.WavemakerSideMenuTemplateMain = {
+	layoutKind: "left-to-right",
+	width: "100%",
+	height: "100%",
+	verticalAlign: "top",
+	horizontalAlign: "left",
+	_template: {
+	varTemplateUsername: ["wm.ServiceVariable", {"autoUpdate":true,"designTime":true,"operation":"getUserName","service":"securityService","startUpdate":true}, {}, {
+		input: ["wm.ServiceInput", {"type":"getUserNameInputs"}, {}]
+	}],
+	varTemplateLogout: ["wm.LogoutVariable", {}, {}, {
+		input: ["wm.ServiceInput", {"type":"logoutInputs"}, {}]
+	}],		
+	panel1: ["wm.Panel", {"border":"0,1,0,0","borderColor":"#999999","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"75%"}, {}, {
+		panel2: ["wm.HeaderContentPanel", {"border":"0,0,1,0","height":"65px","horizontalAlign":"left","layoutKind":"left-to-right","margin":"0","padding":"0,10,0,10","verticalAlign":"middle","width":"100%"}, {}, {
+			picture1: ["wm.Picture", {"border":"0","height":"50px","source":"/wavemaker/lib/wm/base/widget/themes/default/images/wmLogo.png","width":"62px"}, {}],
+			label3: ["wm.Label", {"border":"0","caption":"Quisque Molestie Porta","width":"100%"}, {}, {
+				format: ["wm.DataFormatter", {}, {}]
+			}],
+			panel10: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"middle","width":"300px"}, {}, {
+				panel14: ["wm.Panel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
+					label4: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"autoSizeWidth":true,"border":"0","caption":"Welcome, ","height":"20px","width":"67px"}, {}, {
+						binding: ["wm.Binding", {}, {}, {
+							wire: ["wm.Wire", {"expression":"\"Welcome, \" + ${varTemplateUsername.dataValue}","targetProperty":"caption"}, {}]
+						}],
+						format: ["wm.DataFormatter", {}, {}]
+					}],
+					picture3: ["wm.Picture", {"border":"0","height":"16px","source":"/wavemaker/images/inactive.png","width":"16px"}, {"onclick":"varTemplateLogout"}]
+				}],
+				panel15: ["wm.Panel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
+					text1: ["wm.Text", {"displayValue":"Search","width":"100%"}, {}],
+					picture5: ["wm.Picture", {"border":"0","height":"16px","source":"/wavemaker/lib/images/silkIcons/zoom.png","width":"16px"}, {}]
+				}]
+			}]
+		}],
+		panel3: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+			panel5: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"120px"}, {}, {
+				dojoMenu1: ["wm.DojoMenu", {"_classes":{"domNode":["ClickableDojoMenu"]},"eventList":[{"label":"Placerat","children":[{"label":"New"},{"label":"Open"},{"label":"Save"},{"label":"Close"}]},{"label":"Tristique"},{"label":"Lacinia"},{"label":"Egestas"},{"label":"Viverra"},{"label":"Feugiat","children":[{"label":"Cut"},{"label":"Copy"},{"label":"Paste"}]},{"label":"Consequat"},{"label":"Facilisis"},{"label":"Convallis"},{"label":"Pulvinar"},{"label":"Bibendum"},{"label":"Bibendum"},{"label":"Curabitur"},{"label":"Phasellus"},{"label":"Habitasse"}],"height":"100%","menu":"Placerat > Tristique, Lacinia, Egestas, Viverra\nFeugiat > Consequat, Facilisis, Convallis\nBibendum > Pulvinar, Bibendum, Curabitur, Phasellus\nHabitasse","padding":"20,0,0,0","structure":"{\"items\":[{\"label\":\"Placerat\",\"children\":[{\"label\":\"Tristique\"},{\"label\":\"Lacinia\"},{\"label\":\"Egestas\"},{\"label\":\"Viverra\"}]},{\"label\":\"Feugiat\",\"children\":[{\"label\":\"Consequat\"},{\"label\":\"Facilisis\"},{\"label\":\"Convallis\"}]},{\"label\":\"Bibendum\",\"children\":[{\"label\":\"Pulvinar\"},{\"label\":\"Bibendum\"},{\"label\":\"Curabitur\"},{\"label\":\"Phasellus\"}]},{\"label\":\"Habitasse\"}]}","transparent":false,"vertical":true}, {}]
+			}],
+			panel4: ["wm.MainContentPanel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}]
+		}],
+		panel6: ["wm.HeaderContentPanel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+			picture2: ["wm.Picture", {"border":"0","height":"100%","source":"/wavemaker/lib/wm/base/widget/themes/default/images/wmSmallLogo.png","width":"24px"}, {}],
+			label2: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"border":"0","caption":"Powered by WaveMaker","height":"100%"}, {}, {
+				format: ["wm.DataFormatter", {}, {}]
+			}],
+			label1: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright © [company name] 2010","height":"100%","width":"100%"}, {}, {
+				format: ["wm.DataFormatter", {}, {}]
+			}]
+		}]
+	}]}
+}
+
+wm.fullTemplates.WavemakerTabLayerTemplateMain = {
+	layoutKind: "top-to-bottom",
+	width: "100%",
+	height: "100%",
+	verticalAlign: "top",
+	horizontalAlign: "left",
+	_template: {
+	varTemplateUsername: ["wm.ServiceVariable", {"autoUpdate":true,"designTime":true,"operation":"getUserName","service":"securityService","startUpdate":true}, {}, {
+		input: ["wm.ServiceInput", {"type":"getUserNameInputs"}, {}]
+	}],
+	varTemplateLogout: ["wm.LogoutVariable", {}, {}, {
+		input: ["wm.ServiceInput", {"type":"logoutInputs"}, {}]
+	}],		
+	panel1: ["wm.HeaderContentPanel", {"border":"0,0,1,0","borderColor":"#333333","height":"65px","horizontalAlign":"left","layoutKind":"left-to-right","padding":"0,10","verticalAlign":"middle","width":"100%"}, {}, {
+		picture1: ["wm.Picture", {"border":"0","height":"50px","source":"/wavemaker/lib/wm/base/widget/themes/default/images/wmLogo.png","width":"62px"}, {}],
+		label3: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_20px","wm_FontSizePx_24px"]},"border":"0","caption":"Quisque Molestie Porta","width":"100%"}, {}, {
+			format: ["wm.DataFormatter", {}, {}]
+		}],
+		panel5: ["wm.Panel", {"height":"100%","horizontalAlign":"right","verticalAlign":"middle","width":"100%"}, {}, {
+			dojoMenu1: ["wm.DojoMenu", {"eventList":[{"label":"Placerat","children":[{"label":"New"},{"label":"Open"},{"label":"Save"},{"label":"Close"}]},{"label":"Feugiat","children":[{"label":"Cut"},{"label":"Copy"},{"label":"Paste"}]},{"label":"Bibendum"},{"label":"Bibendum"},{"label":"Habitasse"}],"height":"24px","menu":"Placerat\nFeugiat\nBibendum\nHabitasse","structure":"{\"items\":[{\"label\":\"Placerat\"},{\"label\":\"Feugiat\"},{\"label\":\"Bibendum\"},{\"label\":\"Habitasse\"}]}","transparent":true,"width":"370px"}, {}]
+		}]
+	}],
+	panel2: ["wm.MainContentPanel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+		tabLayers1: ["wm.TabLayers", {}, {}, {
+			layer1: ["wm.Layer", {"border":"1","borderColor":"#999999","caption":"Quisque","horizontalAlign":"left","padding":"10","verticalAlign":"top"}, {}, {
+				fancyPanel1: ["wm.FancyPanel", {"horizontalAlign":"left","verticalAlign":"top"}, {}, {
+
+				}]
+			}],
+			layer2: ["wm.Layer", {"border":"1","borderColor":"#999999","caption":"Ullamcorper","horizontalAlign":"left","verticalAlign":"top"}, {}, {
+				pageContainer1: ["wm.PageContainer", {"border":"0","deferLoad":true}, {}]
+			}],
+			layer3: ["wm.Layer", {"border":"1","borderColor":"#999999","caption":"Porttitor","horizontalAlign":"left","verticalAlign":"top"}, {}, {
+				pageContainer2: ["wm.PageContainer", {"border":"0","deferLoad":true}, {}]
+			}],
+			layer4: ["wm.Layer", {"border":"1","borderColor":"#999999","caption":"Faucibus","horizontalAlign":"left","verticalAlign":"top"}, {}, {
+				pageContainer3: ["wm.PageContainer", {"border":"0","deferLoad":true}, {}]
+			}],
+			layer5: ["wm.Layer", {"border":"1","borderColor":"#999999","caption":"Laoreet","horizontalAlign":"left","verticalAlign":"top"}, {}, {
+				pageContainer4: ["wm.PageContainer", {"border":"0","deferLoad":true}, {}]
+			}]
+		}]
+	}],
+	panel6: ["wm.HeaderContentPanel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+		picture2: ["wm.Picture", {"border":"0","height":"100%","source":"/wavemaker/lib/wm/base/widget/themes/default/images/wmSmallLogo.png","width":"24px"}, {}],
+		label2: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"border":"0","caption":"Powered by WaveMaker","height":"100%"}, {}, {
+			format: ["wm.DataFormatter", {}, {}]
+		}],
+		label1: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright © [company name] 2010","height":"100%","width":"100%"}, {}, {
+			format: ["wm.DataFormatter", {}, {}]
+		}]
+	}]}
+}
+
+wm.fullTemplates.WavemakerTopMenuTemplateMain = {
+	layoutKind: "top-to-bottom",
+	width: "100%",
+	height: "100%",
+	verticalAlign: "top",
+	horizontalAlign: "center",
+	_template: {
+	varTemplateUsername: ["wm.ServiceVariable", {"autoUpdate":true,"designTime":true,"operation":"getUserName","service":"securityService","startUpdate":true}, {}, {
+		input: ["wm.ServiceInput", {"type":"getUserNameInputs"}, {}]
+	}],
+	varTemplateLogout: ["wm.LogoutVariable", {}, {}, {
+		input: ["wm.ServiceInput", {"type":"logoutInputs"}, {}]
+	}],		
+	panelCenter: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"900px"}, {}, {
+		panelHeader: ["wm.HeaderContentPanel", {"height":"65px","horizontalAlign":"left","layoutKind":"left-to-right","padding":"0,10,0,10","verticalAlign":"middle","width":"100%"}, {}, {
+			picture1: ["wm.Picture", {"border":"0","height":"50px","source":"/wavemaker/lib/wm/base/widget/themes/default/images/wmLogo.png","width":"62px"}, {}],
+			label2: ["wm.Label", {"border":"0","caption":"Quisque Molestie Porta","width":"100%"}, {}, {
+				format: ["wm.DataFormatter", {}, {}]
+			}],
+			panel10: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"middle","width":"300px"}, {}, {
+				panel14: ["wm.Panel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
+					label4: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"autoSizeWidth":true,"border":"0","caption":"Welcome, ","height":"20px","width":"67px"}, {}, {
+						binding: ["wm.Binding", {}, {}, {
+							wire: ["wm.Wire", {"expression":"\"Welcome, \" + ${varTemplateUsername.dataValue}","targetProperty":"caption"}, {}]
+						}],
+						format: ["wm.DataFormatter", {}, {}]
+					}],
+					picture3: ["wm.Picture", {"border":"0","height":"16px","source":"/wavemaker/images/inactive.png","width":"16px"}, {"onclick":"varTemplateLogout"}]
+				}],
+				panel15: ["wm.Panel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
+					text1: ["wm.Text", {"displayValue":"Search","width":"100%"}, {}],
+					picture5: ["wm.Picture", {"border":"0","height":"16px","source":"/wavemaker/lib/images/silkIcons/zoom.png","width":"16px"}, {}]
+				}]
+			}]
+		}],
+		panel2: ["wm.Panel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+			dojoMenu1: ["wm.DojoMenu", {"_classes":{"domNode":["ClickableDojoMenu"]},"eventList":[{"label":"Placerat","children":[{"label":"New"},{"label":"Open"},{"label":"Save"},{"label":"Close"}]},{"label":"Tristique"},{"label":"Lacinia"},{"label":"Egestas"},{"label":"Viverra"},{"label":"Feugiat","children":[{"label":"Cut"},{"label":"Copy"},{"label":"Paste"}]},{"label":"Consequat"},{"label":"Facilisis"},{"label":"Convallis"},{"label":"Pulvinar"},{"label":"Bibendum"},{"label":"Bibendum"},{"label":"Curabitur"},{"label":"Phasellus"},{"label":"Habitasse"}],"height":"24px","menu":"Placerat > Tristique, Lacinia, Egestas, Viverra\nFeugiat > Consequat, Facilisis, Convallis\nBibendum > Pulvinar, Bibendum, Curabitur, Phasellus\nHabitasse","structure":"{\"items\":[{\"label\":\"Placerat\",\"children\":[{\"label\":\"Tristique\"},{\"label\":\"Lacinia\"},{\"label\":\"Egestas\"},{\"label\":\"Viverra\"}]},{\"label\":\"Feugiat\",\"children\":[{\"label\":\"Consequat\"},{\"label\":\"Facilisis\"},{\"label\":\"Convallis\"}]},{\"label\":\"Bibendum\",\"children\":[{\"label\":\"Pulvinar\"},{\"label\":\"Bibendum\"},{\"label\":\"Curabitur\"},{\"label\":\"Phasellus\"}]},{\"label\":\"Habitasse\"}]}","transparent":false}, {}]
+		}],
+		panelContent: ["wm.MainContentPanel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
+			fancyPanel1: ["wm.FancyPanel", {"horizontalAlign":"left","verticalAlign":"top"}, {}, {
+
+			}],
+			panel1: ["wm.EmphasizedContentPanel", {"height":"300px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+				fancyPanel3: ["wm.FancyPanel", {"horizontalAlign":"left","verticalAlign":"top"}, {}, {
+
+				}],
+				fancyPanel2: ["wm.FancyPanel", {"horizontalAlign":"left","verticalAlign":"top"}, {}, {
+
+				}]
+			}]
+		}],
+		panelFooter: ["wm.HeaderContentPanel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+			picture2: ["wm.Picture", {"border":"0","height":"100%","source":"/wavemaker/lib/wm/base/widget/themes/default/images/wmSmallLogo.png","width":"24px"}, {}],
+			label1: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"border":"0","caption":"Powered by WaveMaker","height":"100%"}, {}, {
+				format: ["wm.DataFormatter", {}, {}]
+			}],
+			edFooterLabel: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright © [company name] 2010","height":"100%","width":"100%"}, {}, {
+				format: ["wm.DataFormatter", {}, {}]
+			}]
+		}]
+	}]}
+}
+/*
 wm.fullTemplates.fancyCenteredTemplate = {
     layoutKind: "top-to-bottom",
     thumbnail: "/wavemaker/app/templates/widgetTemplateImages/template1.png",
@@ -113,7 +385,7 @@ wm.fullTemplates.CenteredPageContainerWithHeaderFooter = {
 		}]
 	}
 }
-
+*/
 wm.widgetTemplates.tabbedTwoColumn = {
 	layoutKind: "top-to-bottom",
 	width: "100%",
@@ -181,7 +453,7 @@ wm.widgetTemplates.toolbarWithGroupBox = {
 		}]
 	}
 }
-
+/*
 wm.fullTemplates.complexLayout = {
 	layoutKind: "top-to-bottom",
 	width: "100%",
@@ -212,7 +484,7 @@ wm.fullTemplates.complexLayout = {
 		}]
 	}
 }
-
+*/
 wm.widgetTemplates.searchListDetail = {
 	layoutKind: "top-to-bottom",
 	width: "100%",
@@ -252,7 +524,7 @@ wm.widgetTemplates.titleBar = {
 	    panel3: ["wm.Panel", {isMajorContent: true, height: "100%", width: "222px", border: "1"}, {}]
 	}
 }
-
+/*
 wm.fullTemplates.centeredFixedLayout = {
 	width: "100%",
 	height: "100%",
@@ -263,7 +535,7 @@ wm.fullTemplates.centeredFixedLayout = {
 	    contentPanel: ["wm.Panel", {isMajorContent: true, width: "600px", height: "100%", border: "0,1"}, {}]
 	}
 }
-
+*/
 wm.widgetTemplates.toolbar = {
 	layoutKind: "left-to-right",
 	width: "100%",
