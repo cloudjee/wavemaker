@@ -88,7 +88,7 @@ dojo.declare("NewProjectDialog", wm.Page, {
         this.selectedTemplate = inTarget;
         this.selectedTemplate.setBorderColor("#333333");
         this.selectedTemplate.setBorder("2");
-        dojo.addClass(target.domNode, "Selected");
+        dojo.addClass(inTarget.domNode, "Selected");
     },
     onCancelClick: function() {
         this.owner.owner.dismiss();
