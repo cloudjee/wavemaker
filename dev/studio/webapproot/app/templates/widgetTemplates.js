@@ -54,6 +54,7 @@ wm.widgetTemplates.twoColumn = {
 	}
 }
 wm.fullTemplates.fancyTemplate = {
+	displayName: "Fancy Template",
 	layoutKind: "top-to-bottom",
 	width: "100%",
 	height: "100%",
@@ -80,7 +81,7 @@ wm.fullTemplates.fancyTemplate = {
 						}],
 						format: ["wm.DataFormatter", {}, {}]
 					}],
-					picture3: ["wm.Picture", {"border":"0","height":"16px","source":"/wavemaker/images/inactive.png","width":"16px"}, {"onclick":"varTemplateLogout"}]
+					button2: ["wm.Button", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"caption":"Log Out","height":"28px"}, {"onclick":"varTemplateLogout"}]
 				}],
 				panel15: ["wm.Panel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
 					text1: ["wm.Text", {"displayValue":"Search","width":"100%"}, {}],
@@ -150,7 +151,8 @@ wm.fullTemplates.fancyTemplate = {
 	}]}	
 }
 
-wm.fullTemplates.WavemakerSideMenuTemplateMain = {
+wm.fullTemplates.sideMenuTemplate = {
+	displayName: "Menu on Side",
 	layoutKind: "left-to-right",
 	width: "100%",
 	height: "100%",
@@ -177,7 +179,7 @@ wm.fullTemplates.WavemakerSideMenuTemplateMain = {
 						}],
 						format: ["wm.DataFormatter", {}, {}]
 					}],
-					picture3: ["wm.Picture", {"border":"0","height":"16px","source":"/wavemaker/images/inactive.png","width":"16px"}, {"onclick":"varTemplateLogout"}]
+					button2: ["wm.Button", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"caption":"Log Out","height":"28px"}, {"onclick":"varTemplateLogout"}]					
 				}],
 				panel15: ["wm.Panel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
 					text1: ["wm.Text", {"displayValue":"Search","width":"100%"}, {}],
@@ -203,7 +205,8 @@ wm.fullTemplates.WavemakerSideMenuTemplateMain = {
 	}]}
 }
 
-wm.fullTemplates.WavemakerTabLayerTemplateMain = {
+wm.fullTemplates.tabTemplate = {
+	displayName: "Tab Layers",
 	layoutKind: "top-to-bottom",
 	width: "100%",
 	height: "100%",
@@ -257,7 +260,8 @@ wm.fullTemplates.WavemakerTabLayerTemplateMain = {
 	}]}
 }
 
-wm.fullTemplates.WavemakerTopMenuTemplateMain = {
+wm.fullTemplates.topMenuTemplate = {
+	displayName: "Menu on Top",
 	layoutKind: "top-to-bottom",
 	width: "100%",
 	height: "100%",
@@ -284,7 +288,7 @@ wm.fullTemplates.WavemakerTopMenuTemplateMain = {
 						}],
 						format: ["wm.DataFormatter", {}, {}]
 					}],
-					picture3: ["wm.Picture", {"border":"0","height":"16px","source":"/wavemaker/images/inactive.png","width":"16px"}, {"onclick":"varTemplateLogout"}]
+					button2: ["wm.Button", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"caption":"Log Out","height":"28px"}, {"onclick":"varTemplateLogout"}]					
 				}],
 				panel15: ["wm.Panel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
 					text1: ["wm.Text", {"displayValue":"Search","width":"100%"}, {}],
