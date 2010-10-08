@@ -8,22 +8,22 @@
 		"Shadow": "3px 3px 3px #444444"
 	}, 
 	"Document-Styles-Background": {
-		"Color": "#ffffff", 
+		"Color": "#dadada", 
 		"Image-Repeat": "no-repeat", 
 		"Image-Position": "top left", 
 		"Image": "none"
 	}, 
 	"Document-Styles-Font": {
-		"Color": "#000000", 
+		"Color": "#444444", 
 		"TextSize": "8pt", 
 		"Family": "Verdana", 
-		"Weight": "bold"
+		"Weight": "normal"
 	}, 
 	"Document-ClickablesDefault-Background": {
-		"Color": "#1f497d", 
+		"Color": "#333333", 
 		"Image-Repeat": "repeat-x", 
 		"Image-Position": "top left", 
-		"Image": "url(images/repeatx/brightThickEdge1.png)"
+		"Image": "url(images/repeatx/brightEdge0.png)"
 	}, 
 	"Document-ClickablesDefault-Font": {
 		"Color": "#ffffff", 
@@ -126,7 +126,7 @@
 	}, 
 	"Document-ClickablesHover-Font": {
 		"Family": "Verdana", 
-		"Color": "#000000", 
+		"Color": "#FFFFFF", 
 		"TextSize": "10pt"
 	}, 
 	"Document-ClickablesActive-Font": {
@@ -165,13 +165,13 @@
 		"Image-Position": "top left"
 	}, 
 	"Document-ClickablesHover-Background": {
-		"Color": "#addbe9", 
+		"Color": "#0e1601", 
 		"Image": "url(images/repeatx/greyThickEdge0.png)", 
 		"Image-Repeat": "repeat-x", 
 		"Image-Position": "top left"
 	}, 
 	"Document-ClickablesActive-Background": {
-		"Color": "#9fcbd8", 
+		"Color": "#a0c0e0", 
 		"Image": "url(images/repeatx/brightThickEdge0.png)", 
 		"Image-Repeat": "repeat-x", 
 		"Image-Position": "top left"
@@ -221,7 +221,7 @@
 		"Color": "#0d0897"
 	}, 
 	"Document-Styles-Border": {
-		"BorderSize": "2", 
+		"BorderSize": "0", 
 		"Color": "#000000"
 	}, 
 	"Document-Styles-BorderStyle": {
@@ -262,18 +262,18 @@
 	"MainContent-ClickablesDefault-Font": {
 		"Family": "Verdana", 
 		"Weight": "bold", 
-		"TextSize": "10pt", 
+		"TextSize": "8pt", 
 		"Color": "#333333"
 	}, 
 	"MainContent-ClickablesDefault-BorderStyle": {
 		"Radius": "4px", 
-		"Shadow": "3px 3px 3px #444444"
+		"Shadow": "1px 1px 1px #444444"
 	}, 
 	"MainContent-ClickablesDefault-Background": {
-		"Color": "#9dca49", 
+		"Color": "#ffffff", 
 		"Image-Repeat": "repeat-x", 
 		"Image-Position": "top left", 
-		"Image": "url(images/repeatx/brightEdge2.png)"
+		"Image": "url(images/repeatx/greyThickEdge2.png)"
 	}, 
 	"Document-EditorsHover-Border": {
 		"Color": "#333333"
@@ -307,17 +307,17 @@
 		"Color": "#dddddd"
 	}, 
 	"wm.TabLayers-Button": {
-		"Height": "24px", 
+		"Height": "23px", 
 		"TextSize": "9"
 	}, 
 	"wm.TabLayers-BorderStyle": {
-		"Shadow": "2px 0px 2px #444444"
+		"Shadow": "1px 1px 1px #444444"
 	}, 
 	"Dialogs-Styles-PanelType": {
 		"PanelStylePicker": "MainContent"
 	}, 
 	"Dialogs-Styles-Border": {
-		"BorderSize": "2", 
+		"BorderSize": "1", 
 		"Color": "#333333"
 	}, 
 	"Dialogs-Styles-Background": {
@@ -329,20 +329,20 @@
 	"Dialogs-Styles-Font": {
 		"Family": "Verdana", 
 		"Weight": "bold", 
-		"TextSize": "10pt", 
+		"TextSize": "8pt", 
 		"Color": "#ffffff"
 	}, 
 	"Dialogs-FooterButtonsDefault-Font": {
 		"Family": "Verdana", 
 		"Weight": "bold", 
-		"TextSize": "10pt", 
+		"TextSize": "9pt", 
 		"Color": "#000000"
 	}, 
 	"Dialogs-FooterButtonsDefault-BorderStyle": {
 		"Shadow": "3px 3px 3px #000000"
 	}, 
 	"Dialogs-FooterButtonsDefault-Background": {
-		"Color": "#86a2ac", 
+		"Color": "#e0f0f0", 
 		"Image-Repeat": "repeat-x", 
 		"Image-Position": "top left", 
 		"Image": "url(images/repeatx/brightEdge2.png)"
@@ -392,22 +392,22 @@
 	"HeaderContent-Styles-Font": {
 		"Family": "Verdana", 
 		"Weight": "bold", 
-		"TextSize": "8pt", 
+		"TextSize": "16pt", 
 		"Color": "#444444"
 	}, 
 	"HeaderContent-Styles-Border": {
 		"BorderSize": "1", 
-		"Color": "#222222"
+		"Color": "#888888"
 	}, 
 	"HeaderContent-Styles-BorderStyle": {
-		"Radius": "4px", 
+		"Radius": "0px", 
 		"Shadow": "2px 2px 2px #444444"
 	}, 
 	"HeaderContent-Styles-Background": {
-		"Color": "#dddddd", 
-		"Image-Repeat": "repeat-x", 
+		"Color": "#FFFFFF", 
+		"Image-Repeat": "no-repeat", 
 		"Image-Position": "top left", 
-		"Image": "url(images/repeatx/greyEdge3.png)"
+		"Image": "none"
 	}, 
 	"EmphasizedContent-Styles-Font": {
 		"Family": "Verdana", 
@@ -531,7 +531,7 @@
 		"Shadow": "1px 1px 1px #444444"
 	}, 
 	"MainContent-ClickablesHover-Background": {
-		"Color": "#77ae18", 
+		"Color": "#444444", 
 		"Image-Repeat": "repeat-x", 
 		"Image-Position": "top left", 
 		"Image": "url(images/repeatx/brightThickEdge0.png)"
@@ -545,7 +545,7 @@
 		"Shadow": "0px 0px 0px #444444"
 	}, 
 	"MainContent-ClickablesActive-Background": {
-		"Color": "#639410", 
+		"Color": "#002060", 
 		"Image-Repeat": "repeat-x", 
 		"Image-Position": "top left", 
 		"Image": "url(images/repeatx/brightThickEdge0.png)"
@@ -683,7 +683,7 @@
 		"Shadow": "0px 0px 0px #444444"
 	}, 
 	"wm.TabLayers-Active-BorderStyle": {
-		"Shadow": "2px 0px 2px #444444"
+		"Shadow": "1px 1px 1px #444444"
 	}, 
 	"MainContent-Editors-Default-Font": {
 		"TextSize": "8pt"
@@ -695,7 +695,7 @@
 		"TextSize": "8pt"
 	}, 
 	"Dialogs-Titlebar": {
-		"Icons": "url(images/dialogIconsGray.png)", 
+		"Icons": "url(images/dialogIconsRedYellowOrange.png)", 
 		"IconHeight": 16, 
 		"MinifyIconWidth": "-16px", 
 		"MaxifyIconWidth": "-32px"
@@ -717,5 +717,17 @@
 		"Image": "url(images/arrowRightLight.png)", 
 		"Image-Position": "top left", 
 		"Image-Repeat": "repeat"
+	}, 
+	"Tables-HeaderRow-Font": {
+		"TextSize": "10pt", 
+		"Family": "Verdana", 
+		"Weight": "bold", 
+		"Color": "#ffffff"
+	}, 
+	"Tables-HeaderRow-Background": {
+		"Color": "#444444", 
+		"Image-Repeat": "repeat-x", 
+		"Image-Position": "top left", 
+		"Image": "url(images/repeatx/brightEdge1.png)"
 	}
 }

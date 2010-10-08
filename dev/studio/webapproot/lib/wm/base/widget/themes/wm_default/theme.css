@@ -63,7 +63,7 @@ body .wm_default input:focus,
     #studio_designer.wm_default .wmlayout a:visited,
     .wm_default  #wavemakerNode  .wmlayout a,
     .wm_default  #wavemakerNode  .wmlayout a:visited {
-	color: #000000; /* Document-Styles-Font_Color */
+	color: #444444; /* Document-Styles-Font_Color */
 	font-weight: bold;
     }
 }
@@ -104,8 +104,8 @@ body .wm_default input:focus,
 	-webkit-box-shadow: 3px 3px 3px #444444; /* Document-ClickablesDefault-BorderStyle_Shadow */
 	box-shadow: 3px 3px 3px #444444; /* Document-ClickablesDefault-BorderStyle_Shadow */
 	/* Document-ClickablesDefault-Background */
-	background-color: #1f497d; /* Document-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightThickEdge1.png); /* Document-ClickablesDefault-Background_Image */
+	background-color: #333333; /* Document-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightEdge0.png); /* Document-ClickablesDefault-Background_Image */
 	background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
     }
@@ -118,7 +118,7 @@ body .wm_default input:focus,
 	/* Document-ClickablesActive-Font */
 	color: #000000; /* Document-ClickablesActive-Font_Color */
 	/* Document-ClickablesActive-Background */
-	background-color: #9fcbd8; /* Document-ClickablesActive-Background_Color */
+	background-color: #a0c0e0; /* Document-ClickablesActive-Background_Color */
 	background-image: url(images/repeatx/brightThickEdge0.png); /* Document-ClickablesActive-Background_Image */
 	background-position: top left; /* Document-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
@@ -136,9 +136,9 @@ body .wm_default input:focus,
     .wm_default   .wmroundedbutton:hover,
     .wm_default   .wmroundedbutton:focus {
 	/* Document-ClickablesHover-Font */
-	color: #000000; /* Document-ClickablesHover-Font_Color */
+	color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
 	/* Document-ClickablesHover-Background */
-	background-color: #addbe9; /* Document-ClickablesHover-Background_Color */
+	background-color: #0e1601; /* Document-ClickablesHover-Background_Color */
 	background-image: url(images/repeatx/greyThickEdge0.png); /* Document-ClickablesHover-Background_Image */
 	background-position: top left; /* Document-ClickablesHover-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesHover-Background_Image-Repeat */
@@ -162,19 +162,19 @@ body .wm_default input:focus,
     {
 	/* MainContent-ClickablesDefault-Font */
 	font-family: Verdana; /* MainContent-ClickablesDefault-Font_Family */
-	font-size: 10pt; /* MainContent-ClickablesDefault-Font_TextSize */
+	font-size: 8pt; /* MainContent-ClickablesDefault-Font_TextSize */
 	color: #333333; /* MainContent-ClickablesDefault-Font_Color */
 	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
 	/* MainContent-ClickablesDefault-Border */
 	-moz-border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
 	-webkit-border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
 	border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
-	-moz-box-shadow: 3px 3px 3px #444444; /* MainContent-ClickablesDefault-BorderStyle_Shadow */
-	-webkit-box-shadow: 3px 3px 3px #444444; /* MainContent-ClickablesDefault-BorderStyle_Shadow */
-	box-shadow: 3px 3px 3px #444444; /* MainContent-ClickablesDefault-BorderStyle_Shadow */
+	-moz-box-shadow: 1px 1px 1px #444444; /* MainContent-ClickablesDefault-BorderStyle_Shadow */
+	-webkit-box-shadow: 1px 1px 1px #444444; /* MainContent-ClickablesDefault-BorderStyle_Shadow */
+	box-shadow: 1px 1px 1px #444444; /* MainContent-ClickablesDefault-BorderStyle_Shadow */
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #9dca49; /* MainContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-color: #ffffff; /* MainContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/greyThickEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
     }
@@ -187,7 +187,7 @@ body .wm_default input:focus,
 	/* MainContent-ClickablesActive-Font */
 	color: #ffffff; /* MainContent-ClickablesActive-Font_Color */
 	/* MainContent-ClickablesActive-Background */
-	background-color: #639410; /* MainContent-ClickablesActive-Background_Color */
+	background-color: #002060; /* MainContent-ClickablesActive-Background_Color */
 	background-image: url(images/repeatx/brightThickEdge0.png); /* MainContent-ClickablesActive-Background_Image */
 	background-position: top left; /* MainContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
@@ -207,7 +207,7 @@ body .wm_default input:focus,
 	/* MainContent-ClickablesHover-Font */
 	color: #ffffff; /* MainContent-ClickablesHover-Font_Color */
 	/* MainContent-ClickablesHover-Background */
-	background-color: #77ae18; /* MainContent-ClickablesHover-Background_Color */
+	background-color: #444444; /* MainContent-ClickablesHover-Background_Color */
 	background-image: url(images/repeatx/brightThickEdge0.png); /* MainContent-ClickablesHover-Background_Image */
 	background-position: top left; /* MainContent-ClickablesHover-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesHover-Background_Image-Repeat */
@@ -377,8 +377,8 @@ body .wm_default input:focus,
     color: #ffffff; /* Document-ClickablesDefault-Font_Color */
     font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
     /* Document-ClickablesDefault-Background */
-    background-color: #1f497d; /* Document-ClickablesDefault-Background_Color */
-    background-image: url(images/repeatx/brightThickEdge1.png); /* Document-ClickablesDefault-Background_Image */
+    background-color: #333333; /* Document-ClickablesDefault-Background_Color */
+    background-image: url(images/repeatx/brightEdge0.png); /* Document-ClickablesDefault-Background_Image */
     background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
     background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
 }
@@ -397,7 +397,7 @@ body .wm_default input:focus,
 .wm_default .dijitCalendarContainer td.dijitCalendarSelectedDate,
 .wm_default .dijitCalendarContainer td.dijitCalendarSelectedDate.dijitCalendarCurrentMonth,
 .wm_default .dijitCalendarContainer .dijitCalendarSelectedYear {
-    background-color: #9fcbd8 !important; /* Document-ClickablesActive-Background_Color */
+    background-color: #a0c0e0 !important; /* Document-ClickablesActive-Background_Color */
     color: #000000 !important; /* Document-ClickablesActive-Font_Color */
     -moz-border-radius: 4px; /* PageContent-Styles-Border_Radius */
     -webkit-border-radius: 4px; /* PageContent-Styles-Border_Radius */
@@ -408,8 +408,8 @@ body .wm_default input:focus,
 .wm_default .dijitCalendarContainer .dijitCalendarHoveredYear,
 .wm_default .dijitCalendarContainer .dijitCalendarNextYear:hover,
 .wm_default .dijitCalendarContainer .dijitCalendarPreviousYear:hover {
-    background-color: #addbe9 !important; /* Document-ClickablesHover-Background_Color */
-    color: #000000 !important; /* Document-ClickablesHover-Font_Color */
+    background-color: #0e1601 !important; /* Document-ClickablesHover-Background_Color */
+    color: #FFFFFF !important; /* Document-ClickablesHover-Font_Color */
     -moz-border-radius: 4px; /* PageContent-Styles-Border_Radius */
     -webkit-border-radius: 4px; /* PageContent-Styles-Border_Radius */
     border-radius: 4px; /* PageContent-Styles-Border_Radius */
@@ -420,9 +420,9 @@ body .wm_default input:focus,
 .wm_default .dijitCalendarContainer .dijitCalendarPreviousMonth,
 .wm_default .dijitCalendarContainer .dijitCalendarNextMonth,
 .wm_default .dijitCalendarContainer .dijitCalendarDayLabelTemplate {
-    background-color: #ffffff !important; /* Document-Styles-Background_Color */
+    background-color: #dadada !important; /* Document-Styles-Background_Color */
     background-image: none;
-    color: #000000; /* Document-Styles-Font_Color */
+    color: #444444; /* Document-Styles-Font_Color */
 }
 /*****************************************
  * EOF: calendar.css
@@ -458,7 +458,7 @@ body .wm_default input:focus,
 .wm_default .dialogtitlebar .wmlabel{    
     /* Dialogs-Styles-Font */
     font-family: Verdana; /* Dialogs-Styles-Font_Family */
-    font-size: 10pt; /* Dialogs-Styles-Font_TextSize */
+    font-size: 8pt; /* Dialogs-Styles-Font_TextSize */
     color: #ffffff; /* Dialogs-Styles-Font_Color */
     font-weight: bold; /* Dialogs-Styles-Font_Weight */
 }
@@ -488,7 +488,7 @@ body .wm_default input:focus,
 .wm_default .wmpagedialog-controlspanel {
     /* Dialogs-Styles-Font */
     font-family: Verdana; /* Dialogs-Styles-Font_Family */
-    font-size: 10pt; /* Dialogs-Styles-Font_TextSize */
+    font-size: 8pt; /* Dialogs-Styles-Font_TextSize */
     color: #ffffff; /* Dialogs-Styles-Font_Color */
     font-weight: bold; /* Dialogs-Styles-Font_Weight */
     /* Dialogs-Styles-Background */
@@ -541,11 +541,11 @@ body.wm_default .dialogfooter .wmbutton,
 body .wm_default .dialogfooter .wmbutton {
     /* Dialogs-FooterButtonsDefault-Font */
     font-family: Verdana; /* Dialogs-FooterButtonsDefault-Font_Family */
-    font-size: 10pt; /* Dialogs-FooterButtonsDefault-Font_TextSize */
+    font-size: 9pt; /* Dialogs-FooterButtonsDefault-Font_TextSize */
     color: #000000; /* Dialogs-FooterButtonsDefault-Font_Color */
     font-weight: bold; /* Dialogs-FooterButtonsDefault-Font_Weight */
     /* Dialogs-FooterButtonsDefault-Background */
-    background-color: #86a2ac; /* Dialogs-FooterButtonsDefault-Background_Color */
+    background-color: #e0f0f0; /* Dialogs-FooterButtonsDefault-Background_Color */
     background-image: url(images/repeatx/brightEdge2.png); /* Dialogs-FooterButtonsDefault-Background_Image */
     background-position: top left; /* Dialogs-FooterButtonsDefault-Background_Image-Position */
     background-repeat: repeat-x; /* Dialogs-FooterButtonsDefault-Background_Image-Repeat */
@@ -597,7 +597,7 @@ body .wm_default .dialogfooter .wmbutton:hover {
 .wm_default .dialogtitlebar .dialogmaxifybutton,
 .wm_default .dialogtitlebar .dialogclosebutton,
 .wm_default .dialogtitlebar .dialogminifybutton {
-    background-image: url(images/dialogIconsGray.png) !important; /* Dialogs-Titlebar_Icons */
+    background-image: url(images/dialogIconsRedYellowOrange.png) !important; /* Dialogs-Titlebar_Icons */
     background-repeat: no-repeat;
 }
 /*****************************************
@@ -693,7 +693,7 @@ body .wm_default .dialogfooter .wmbutton:hover {
    *              button. 
    ************************************************************************************************/
 .wm_default .wmeditor .dijitComboBox .dijitArrowButton {
-    background-color: #1f497d; /* Document-ClickablesDefault-Background_Color */
+    background-color: #333333; /* Document-ClickablesDefault-Background_Color */
     background-image: none;
 }
     .wm_default .wmeditor .dijitTextBox,
@@ -756,7 +756,7 @@ body .wm_default .dialogfooter .wmbutton:hover {
    *              button. 
    ************************************************************************************************/
 .wm_default .wmeditor .dijitComboBox .dijitArrowButton {
-    background-color: #9dca49; /* MainContent-ClickablesDefault-Background_Color */
+    background-color: #ffffff; /* MainContent-ClickablesDefault-Background_Color */
     background-image: none;
 }
     .wm_default .MainContent .wmeditor .dijitTextBox,
@@ -1024,7 +1024,7 @@ body .wm_default .dialogfooter .wmbutton:hover {
     .wm_default .wmlist-item.wmlist-item-selected,
     .wm_default .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* Document-ClickablesActive-Background */
-	background-color: #9fcbd8 !important; /* Document-ClickablesActive-Background_Color */
+	background-color: #a0c0e0 !important; /* Document-ClickablesActive-Background_Color */
 	/* Document-ClickablesActive-Font */
 	color: #000000; /* Document-ClickablesActive-Font_Color */
     }
@@ -1036,9 +1036,9 @@ body .wm_default .dialogfooter .wmbutton:hover {
     .wm_default .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* Document-ClickablesHover-Background */
-	background-color: #addbe9 !important; /* Document-ClickablesHover-Background_Color */
+	background-color: #0e1601 !important; /* Document-ClickablesHover-Background_Color */
 	/* Document-ClickablesHover-Font */
-	color: #000000; /* Document-ClickablesHover-Font_Color */
+	color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
     }
     .wm_default div.dojoxGridContent .dojoxGridCell {
 	background: transparent;
@@ -1049,39 +1049,31 @@ body .wm_default .dialogfooter .wmbutton:hover {
     }
     /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
     .wm_default div.dojoxGrid-header .dojoxGrid-cell,
-    .wm_default div.dojoxGridHeader .dojoxGridCell
-    {
-	background: inherit; /* see Header.dojoxGrid-header below */
+    .wm_default div.dojoxGridHeader .dojoxGridCell {
+	background: inherit; /* Style the Header row, not the Header cell for background */
 	border-right-width: 1px; /* Tables-EvenRows-Border_BorderSize */
 	border-right-style: solid;
 	border-right-color: #cccccc; /* Tables-EvenRows-Border_Color */
-	/* Document-ClickablesDefault-Font */
-	font-family: Verdana; /* Document-ClickablesDefault-Font_Family */
-	/* Adjust size when we figure out a good way to adjust the height of the header */
-	font-size: 8pt; /* Tables-EvenRows-Font_TextSize */
-	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+	/* Tables-HeaderRow-Font */
+	font-family: Verdana; /* Tables-HeaderRow-Font_Family */
+	font-size: 10pt; /* Tables-HeaderRow-Font_TextSize */
+	color: #ffffff !important; /* Tables-HeaderRow-Font_Color */
+	font-weight: bold; /* Tables-HeaderRow-Font_Weight */
     }
-    .wm_default div.dojoxGridHeader .dojoxGridCell {
-	background-color: #1f497d; /* Document-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightThickEdge1.png); /* Document-ClickablesDefault-Background_Image */
-	background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
-	/* Document-ClickablesDefault-Font */
-	font-family: Verdana; /* Document-ClickablesDefault-Font_Family */
-	/*font-size: 12pt;  Clickables-Default-Font_TextSize */
-	color: #ffffff; /* Document-ClickablesDefault-Font_Color */
-	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+    .wm_default .wmlist-header th {
+	font-family: Verdana; /* Tables-HeaderRow-Font_Family */
+/*	font-size: 12pt;  Tables-HeaderRow-Font_TextSize header height doesn't adjust*/
+	color: #ffffff !important; /* Tables-HeaderRow-Font_Color */
+	font-weight: bold; /* Tables-HeaderRow-Font_Weight */
     }
     /* Header-Row-Background */
-    .wm_default .dojoxGrid-header, 
-    .wm_default .dojoxGridHeader,
-    .wm_default .wmlist-header {
-	color: #ffffff; /* Document-ClickablesDefault-Font_Color */
-	background-color: #1f497d; /* Document-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* Document-ClickablesDefault-Background-Image */
-	background-position: left top;     /* Document-ClickablesDefault-Image-Position */
-	background-repeat: repeat-x;    /* Document-ClickablesDefault-Image-Repeat */
+    body.tundra .wm_default .dojoxGrid-header, 
+    body.tundra .wm_default .dojoxGridHeader,
+    body.tundra .wm_default .wmlist-header {
+	background-color: #444444; /* Tables-HeaderRow-Background_Color */
+	background-image: url(images/repeatx/brightEdge1.png); /* Tables-HeaderRow-Background_Image */
+	background-position: left top;     /* Tables-HeaderRow_Image-Position */
+	background-repeat: repeat-x;    /* Tables-HeaderRow_Image-Repeat */
     }
 }
 @media screen { /* MainContent-Level */ 
@@ -1094,7 +1086,7 @@ body .wm_default .dialogfooter .wmbutton:hover {
     .wm_default .MainContent .wmlist-item.wmlist-item-selected,
     .wm_default .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* MainContent-ClickablesActive-Background */
-	background-color: #639410 !important; /* MainContent-ClickablesActive-Background_Color */
+	background-color: #002060 !important; /* MainContent-ClickablesActive-Background_Color */
 	/* MainContent-ClickablesActive-Font */
 	color: #ffffff; /* MainContent-ClickablesActive-Font_Color */
     }
@@ -1106,7 +1098,7 @@ body .wm_default .dialogfooter .wmbutton:hover {
     .wm_default .MainContent .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* MainContent-ClickablesHover-Background */
-	background-color: #77ae18 !important; /* MainContent-ClickablesHover-Background_Color */
+	background-color: #444444 !important; /* MainContent-ClickablesHover-Background_Color */
 	/* MainContent-ClickablesHover-Font */
 	color: #ffffff; /* MainContent-ClickablesHover-Font_Color */
     }
@@ -1116,38 +1108,6 @@ body .wm_default .dialogfooter .wmbutton:hover {
     .wm_default .MainContent div.dojoxGridContent .dojoxGridCellFocus,
     .wm_default .MainContent div.dojoxGridContent .dojoxGrid-cell-focus {
 	border-width: 1px dashed transparent !important;
-    }
-    /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
-    .wm_default .MainContent div.dojoxGrid-header .dojoxGrid-cell,
-    .wm_default .MainContent div.dojoxGridHeader .dojoxGridCell
-    {
-	background: inherit; /* see Header.dojoxGrid-header below */
-	/* MainContent-ClickablesDefault-Font */
-	font-family: Verdana; /* MainContent-ClickablesDefault-Font_Family */
-	/*    font-size: 12pt;  Clickables-Default-Font_TextSize */
-	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
-    }
-    .wm_default .MainContent div.dojoxGridHeader .dojoxGridCell {
-	background-color: #9dca49; /* MainContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
-	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
-	/* MainContent-ClickablesDefault-Font */
-	font-family: Verdana; /* MainContent-ClickablesDefault-Font_Family */
-	/*font-size: 12pt;  Clickables-Default-Font_TextSize */
-	color: #333333; /* MainContent-ClickablesDefault-Font_Color */
-	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
-    }
-    /* Header-Row-Background */
-    .wm_default .MainContent .dojoxGrid-header, 
-    .wm_default .MainContent .dojoxGridHeader,
-    .wm_default .MainContent .wmlist-header {
-	color: #333333; /* MainContent-ClickablesDefault-Font_Color */
-	background-color: #9dca49; /* MainContent-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* MainContent-ClickablesDefault-Background-Image */
-	background-position: left top;     /* MainContent-ClickablesDefault-Image-Position */
-	background-repeat: repeat-x;    /* MainContent-ClickablesDefault-Image-Repeat */
     }
 }
 @media screen { /* EmphasizedContent-Level */ 
@@ -1182,38 +1142,6 @@ body .wm_default .dialogfooter .wmbutton:hover {
     .wm_default .EmphasizedContent div.dojoxGridContent .dojoxGridCellFocus,
     .wm_default .EmphasizedContent div.dojoxGridContent .dojoxGrid-cell-focus {
 	border-width: 1px dashed transparent !important;
-    }
-    /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
-    .wm_default .EmphasizedContent div.dojoxGrid-header .dojoxGrid-cell,
-    .wm_default .EmphasizedContent div.dojoxGridHeader .dojoxGridCell
-    {
-	background: inherit; /* see Header.dojoxGrid-header below */
-	/* EmphasizedContent-ClickablesDefault-Font */
-	font-family: Verdana; /* EmphasizedContent-ClickablesDefault-Font_Family */
-	/*    font-size: 12pt;  Clickables-Default-Font_TextSize */
-	color: inherit !important; /* Needed for wm.DojoGrid */
-	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
-    }
-    .wm_default .EmphasizedContent div.dojoxGridHeader .dojoxGridCell {
-	background-color: #333333; /* EmphasizedContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightThickEdge1.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
-	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
-	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
-	/* EmphasizedContent-ClickablesDefault-Font */
-	font-family: Verdana; /* EmphasizedContent-ClickablesDefault-Font_Family */
-	/*font-size: 12pt;  Clickables-Default-Font_TextSize */
-	color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
-	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
-    }
-    /* Header-Row-Background */
-    .wm_default .EmphasizedContent .dojoxGrid-header, 
-    .wm_default .EmphasizedContent .dojoxGridHeader,
-    .wm_default .EmphasizedContent .wmlist-header {
-	color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
-	background-color: #333333; /* EmphasizedContent-ClickablesDefault-Background_Color */
-	background-image: url(images/threeD.png); /* EmphasizedContent-ClickablesDefault-Background-Image */
-	background-position: left top;     /* EmphasizedContent-ClickablesDefault-Image-Position */
-	background-repeat: repeat-x;    /* EmphasizedContent-ClickablesDefault-Image-Repeat */
     }
 }
 @media screen { /* HeaderContent-Level */ 
@@ -1316,18 +1244,22 @@ body .wm_default .dialogfooter .wmbutton:hover {
 	font-family: Verdana; /* Document-ClickablesDefault-Font_Family */
 	font-size: 10pt; /* Document-ClickablesDefault-Font_TextSize */
 	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
-	color: #000000; /* Document-Styles-Font_Color */
+	color: #444444; /* Document-Styles-Font_Color */
 	background-color: transparent;
 	background-image: none;
     }
-    .wm_default .dojoMenu.ClickableDojoMenu,
     .wm_default .dojoMenu.ClickableDojoMenu {
-	color: #ffffff; /* Document-ClickablesDefault-Font_Color */
 	/* Document-ClickablesDefault-Background */
-	background-color: #1f497d; /* Document-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightThickEdge1.png); /* Document-ClickablesDefault-Background_Image */
+	background-color: #333333; /* Document-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightEdge0.png); /* Document-ClickablesDefault-Background_Image */
 	background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_default .dojoMenu.ClickableDojoMenu .dijitMenuItem {
+	color: #ffffff; /* Document-ClickablesDefault-Font_Color */
+    }
+    .wm_default .dojoMenu .dijitMenuItem {
+	color: #444444; /* Document-Styles-Font_Color */
     }
     /* Spacing between menu items */
     .wm_default .dijitMenuBar .dijitMenuItem,
@@ -1341,10 +1273,10 @@ body .wm_default .dialogfooter .wmbutton:hover {
     body.wm_default .dojoMenu .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
     body .wm_default .dojoMenu .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
 	/* Document-ClickablesHover-Font */
-	color: #000000; /* Document-ClickablesHover-Font_Color */
+	color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
 	/* Document-ClickablesHover-Background */
-	background-color: #addbe9; /* Document-ClickablesHover-Background_Color */
-	background-image: url(images/repeatx/brightThickEdge1.png); /* Document-ClickablesDefault-Background_Image */
+	background-color: #0e1601; /* Document-ClickablesHover-Background_Color */
+	background-image: url(images/repeatx/brightEdge0.png); /* Document-ClickablesDefault-Background_Image */
 	background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
 	outline-width: 0;
@@ -1355,19 +1287,24 @@ body .wm_default .dialogfooter .wmbutton:hover {
     .wm_default .MainContent .dojoMenu .dijitMenuBar {
 	/* MainContent-ClickablesDefault-Font */
 	font-family: Verdana; /* MainContent-ClickablesDefault-Font_Family */
-	font-size: 10pt; /* MainContent-ClickablesDefault-Font_TextSize */
+	font-size: 8pt; /* MainContent-ClickablesDefault-Font_TextSize */
 	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
 	color: #000000; /* MainContent-Styles-Font_Color */
 	background-color: transparent;
 	background-image: none;
 }
-    .wm_default .MainContent .dojoMenu.ClickableDojoMenu,
     .wm_default .MainContent .dojoMenu.ClickableDojoMenu {
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #9dca49; /* MainContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-color: #ffffff; /* MainContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/greyThickEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_default .MainContent .dojoMenu.ClickableDojoMenu .dijitMenuItem {
+	color: #333333; /* MainContent-ClickablesDefault-Font_Color */
+    }
+    .wm_default .MainContent .dojoMenu .dijitMenuItem {
+	color: #000000; /* MainContent-Styles-Font_Color */
     }
     body.wm_default .MainContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemHover,
     body .wm_default .MainContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemHover,
@@ -1378,8 +1315,8 @@ body .wm_default .dialogfooter .wmbutton:hover {
 	/* MainContent-ClickablesHover-Font */
 	color: #ffffff; /* MainContent-ClickablesHover-Font_Color */
 	/* MainContent-ClickablesHover-Background */
-	background-color: #77ae18; /* MainContent-ClickablesHover-Background_Color */
-	background-image: url(images/repeatx/brightEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-color: #444444; /* MainContent-ClickablesHover-Background_Color */
+	background-image: url(images/repeatx/greyThickEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
 	outline-width: 0;
@@ -1396,13 +1333,18 @@ body .wm_default .dialogfooter .wmbutton:hover {
 	background-color: transparent;
 	background-image: none;
 }
-    .wm_default .HeaderContent .dojoMenu.ClickableDojoMenu,
     .wm_default .HeaderContent .dojoMenu.ClickableDojoMenu {
 	/* HeaderContent-ClickablesDefault-Background */
 	background-color: #666666; /* HeaderContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/brightThickEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_default .HeaderContent .dojoMenu.ClickableDojoMenu .dijitMenuItem {
+	color: #FFFFFF; /* HeaderContent-ClickablesDefault-Font_Color */
+    }
+    .wm_default .HeaderContent .dojoMenu .dijitMenuItem {
+	color: #444444; /* HeaderContent-Styles-Font_Color */
     }
     body.wm_default .HeaderContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemHover,
     body .wm_default .HeaderContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemHover,
@@ -1420,6 +1362,46 @@ body .wm_default .dialogfooter .wmbutton:hover {
 	outline-width: 0;
     }
 }
+@media screen { /* EmphasizedContent-Level */ 
+    .wm_default .EmphasizedContent .dojoMenu .dijitMenu,
+    .wm_default .EmphasizedContent .dojoMenu .dijitMenuBar {
+	/* EmphasizedContent-ClickablesDefault-Font */
+	font-family: Verdana; /* EmphasizedContent-ClickablesDefault-Font_Family */
+	font-size: 10pt; /* EmphasizedContent-ClickablesDefault-Font_TextSize */
+	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
+	color: #000000; /* EmphasizedContent-Styles-Font_Color */
+	background-color: transparent;
+	background-image: none;
+}
+    .wm_default .EmphasizedContent .dojoMenu.ClickableDojoMenu {
+	/* EmphasizedContent-ClickablesDefault-Background */
+	background-color: #333333; /* EmphasizedContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge1.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_default .EmphasizedContent .dojoMenu.ClickableDojoMenu .dijitMenuItem {
+	color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
+    }
+    .wm_default .EmphasizedContent .dojoMenu .dijitMenuItem {
+	color: #000000; /* EmphasizedContent-Styles-Font_Color */
+    }
+    body.wm_default .EmphasizedContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemHover,
+    body .wm_default .EmphasizedContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemHover,
+    body.wm_default .EmphasizedContent  .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_default .EmphasizedContent .dojoMenu .dijitMenuPassive .dijitMenuItem.dijitMenuItemSelected,
+    body.wm_default .EmphasizedContent  .dojoMenu .dijitMenuActive .dijitMenuItem.dijitMenuItemSelected,
+    body .wm_default .EmphasizedContent .dojoMenu .dijitMenuActive .dijitMenuItem.dijitMenuItemSelected {
+	/* EmphasizedContent-ClickablesHover-Font */
+	color: #ffffff; /* EmphasizedContent-ClickablesHover-Font_Color */
+	/* EmphasizedContent-ClickablesHover-Background */
+	background-color: #666666; /* EmphasizedContent-ClickablesHover-Background_Color */
+	background-image: url(images/repeatx/brightThickEdge1.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
+	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
+	outline-width: 0;
+    }
+}
   /**************************************************************************************************
    * TYPE:        wm.DojoMenu Popup
    *
@@ -1434,7 +1416,7 @@ body .wm_default .dialogfooter .wmbutton:hover {
     color: #ffffff; /* Document-ClickablesDefault-Font_Color */
     font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
     /* Document-ClickablesDefault-Background */
-    background-color: #1f497d; /* Document-ClickablesDefault-Background_Color */
+    background-color: #333333; /* Document-ClickablesDefault-Background_Color */
     border: solid 1px black;
     border-top: solid 1px #999999;
     -moz-box-shadow: 3px 3px 4px black; /* Floating-Shadow */
@@ -1446,9 +1428,9 @@ body .wm_default .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemHover,
 body.wm_default  .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected,
 body .wm_default .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected
  {
-    color: #000000; /* Document-ClickablesHover-Font_Color */
+    color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
     /* Document-ClickablesHover-Background */
-    background-color: #addbe9; /* Document-ClickablesHover-Background_Color */
+    background-color: #0e1601; /* Document-ClickablesHover-Background_Color */
     background-image: none;
     outline-width: 0;
 }
@@ -1478,9 +1460,9 @@ body .wm_default ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected,
 body.wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover,
 body .wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
     /* Document-ClickablesHover-Font */
-    color: #000000; /* Document-ClickablesHover-Font_Color */
+    color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
     /* Document-ClickablesHover-Background */
-    background-color: #addbe9; /* Document-ClickablesHover-Background_Color */
+    background-color: #0e1601; /* Document-ClickablesHover-Background_Color */
     outline-width: 0;
 }
 /* Border around the entire menu */
@@ -1507,24 +1489,24 @@ body .wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
    ************************************************************************************************/
 .wm_default button.wmtablayers-tab {
     /* wm.TabLayers-BorderStyle_Shadow */
-    -moz-box-shadow: 2px 0px 2px #444444; /* wm.TabLayers-BorderStyle_Shadow */
-    -webkit-box-shadow: 2px 0px 2px #444444; /* wm.TabLayers-BorderStyle_Shadow */
-    box-shadow: 2px 0px 2px #444444; /* wm.TabLayers-BorderStyle_Shadow */
-    height: 24px; /* wm.TabLayers-Button_Height */
+    -moz-box-shadow: 1px 1px 1px #444444; /* wm.TabLayers-BorderStyle_Shadow */
+    -webkit-box-shadow: 1px 1px 1px #444444; /* wm.TabLayers-BorderStyle_Shadow */
+    box-shadow: 1px 1px 1px #444444; /* wm.TabLayers-BorderStyle_Shadow */
+    height: 23px; /* wm.TabLayers-Button_Height */
     font-size: 9; /* wm.TabLayers-Button_TextSize */
 }
 .wm_default .wmtablayers-tab:hover, .wm_default .wmtablayers-tab:focus {
     /* wm.TabLayers-HoverShadow */
-    -moz-box-shadow: 2px 0px 2px #444444; /* wm.TabLayers-BorderStyle_Shadow */
+    -moz-box-shadow: 1px 1px 1px #444444; /* wm.TabLayers-BorderStyle_Shadow */
     -webkit-box-shadow: 0px 0px 0px #444444; /* wm.TabLayers-Hover-BorderStyle_Shadow */
     box-shadow: 1px 0px 1px #444444;   /* wm.TabLayers-Hover-BorderStyle-Shadow */
 }
 .wm_default .wmtablayers-tab.wmtablayers-selected,
 .wm_default .wmtablayers-tab.wmtablayers-selected:hover,
 .wm_default .wmtablayers-tab.wmtablayers-selected:focus {
-    -moz-box-shadow: 2px 0px 2px #444444; /* wm.TabLayers-Active-BorderStyle_Shadow */
-    -webkit-box-shadow: 2px 0px 2px #444444; /* wm.TabLayers-Active-BorderStyle_Shadow */
-    box-shadow: 2px 0px 2px #444444; /* wm.TabLayers-Active-BorderStyle_Shadow */
+    -moz-box-shadow: 1px 1px 1px #444444; /* wm.TabLayers-Active-BorderStyle_Shadow */
+    -webkit-box-shadow: 1px 1px 1px #444444; /* wm.TabLayers-Active-BorderStyle_Shadow */
+    box-shadow: 1px 1px 1px #444444; /* wm.TabLayers-Active-BorderStyle_Shadow */
 }
 /* Spacing between each tab */
 .wm_default .wmtablayers-tab.wmtablayers-selected,
@@ -1647,22 +1629,22 @@ body.tundra .wm_default  div.wmheader,
     /* Document-Styles-Font */
     font-family: Verdana; /* Document-Styles-Font_Family */
     font-size: 8pt; /* Document-Styles-Font_TextSize */
-    color: #000000; /* Document-Styles-Font_Color */
-    font-weight: bold; /* Document-Styles-Font_Weight */
+    color: #444444; /* Document-Styles-Font_Color */
+    font-weight: normal; /* Document-Styles-Font_Weight */
     /* Document-Styles-Background */
-    background-color: #ffffff; /* Document-Styles-Background_Color */
+    background-color: #dadada; /* Document-Styles-Background_Color */
     background-image: none; /* Document-Styles-Background_Image */
     background-position: top left; /* Document-Styles-Background_Image-Position */
     background-repeat: no-repeat; /* Document-Styles-Background_Image-Repeat */
     /* Document-Styles-Font */
     font-family: Verdana; /* Document-Styles-Font_Family */
     font-size: 8pt; /* Document-Styles-Font_TextSize */
-    color: #000000; /* Document-Styles-Font_Color */
-    font-weight: bold; /* Document-Styles-Font_Weight */
+    color: #444444; /* Document-Styles-Font_Color */
+    font-weight: normal; /* Document-Styles-Font_Weight */
 }
 #studio_designer.wm_default, 
 body.wm_default {
-    background-color: #ffffff; /* Document-Styles-Background_Color */
+    background-color: #dadada; /* Document-Styles-Background_Color */
 }
     .wm_default div.wmaccordion-header {
 	/* Document-ClickablesActive-Font  + Clickables-Default-Font */
@@ -1671,7 +1653,7 @@ body.wm_default {
 	color: #000000; /* Document-ClickablesActive-Font_Color */
 	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
 	/* Document-ClickablesActive-Background */
-	background-color: #9fcbd8; /* Document-ClickablesActive-Background_Color */
+	background-color: #a0c0e0; /* Document-ClickablesActive-Background_Color */
 	background-image: url(images/repeatx/brightThickEdge0.png); /* Document-ClickablesActive-Background_Image */
 	background-position: top left; /* Document-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
@@ -1688,8 +1670,8 @@ body.wm_default {
 	font-family: Verdana; /* Document-ClickablesDefault-Font_Family */
 	font-size: 10pt; /* Document-ClickablesDefault-Font_TextSize */
 	/* Document-ClickablesDefault-Background */
-	background-color: #1f497d; /* Document-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightThickEdge1.png); /* Document-ClickablesDefault-Background_Image */
+	background-color: #333333; /* Document-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightEdge0.png); /* Document-ClickablesDefault-Background_Image */
 	background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
 	/* Document-ClickablesDefault-BorderStyle_Radius */
@@ -1700,9 +1682,9 @@ body.wm_default {
     .wm_default div.wmaccordion-header:hover, 
     .wm_default div.wmaccordion wmaccordion-header.wmaccordion-collapsed:hover {
 	/* Document-ClickablesHover-Font */
-	color: #000000; /* Document-ClickablesHover-Font_Color */
+	color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
 	/* Document-ClickablesHover-Background */
-	background-color: #addbe9; /* Document-ClickablesHover-Background_Color */
+	background-color: #0e1601; /* Document-ClickablesHover-Background_Color */
 	background-image: url(images/repeatx/greyThickEdge0.png); /* Document-ClickablesHover-Background_Image */
 	background-position: top left; /* Document-ClickablesHover-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesHover-Background_Image-Repeat */
@@ -1716,7 +1698,7 @@ body.wm_default {
     font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
     color: #000000; /* Document-ClickablesActive-Font_Color */
     /* Document-ClickablesActive-Background */
-    background-color: #9fcbd8; /* Document-ClickablesActive-Background_Color */
+    background-color: #a0c0e0; /* Document-ClickablesActive-Background_Color */
     background-image: url(images/repeatx/brightThickEdge0.png); /* Document-ClickablesActive-Background_Image */
     background-position: top left; /* Document-ClickablesActive-Background_Image-Position */
     background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
@@ -1728,8 +1710,8 @@ body.wm_default {
 	color: #ffffff; /* Document-ClickablesDefault-Font_Color */
 	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
 	/* Document-ClickablesDefault-Background */
-	background-color: #1f497d; /* Document-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightThickEdge1.png); /* Document-ClickablesDefault-Background_Image */
+	background-color: #333333; /* Document-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightEdge0.png); /* Document-ClickablesDefault-Background_Image */
 	background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
 	/* Document-ClickablesDefault-Border */
@@ -1743,9 +1725,9 @@ body.wm_default {
     }
     .wm_default .wmtablayers-tab:hover, .wm_default .wmtablayers-tab:focus {
 	/* Document-ClickablesHover-Font */
-	color: #000000; /* Document-ClickablesHover-Font_Color */
+	color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
 	/* Document-ClickablesHover-Background */
-	background-color: #addbe9; /* Document-ClickablesHover-Background_Color */
+	background-color: #0e1601; /* Document-ClickablesHover-Background_Color */
 	background-image: url(images/repeatx/greyThickEdge0.png); /* Document-ClickablesHover-Background_Image */
 	background-position: top left; /* Document-ClickablesHover-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesHover-Background_Image-Repeat */
@@ -1757,7 +1739,7 @@ body.wm_default {
 	/* Document-ClickablesActive-Font */
 	color: #000000; /* Document-ClickablesActive-Font_Color */
 	/* Document-ClickablesActive-Background */
-	background-color: #9fcbd8; /* Document-ClickablesActive-Background_Color */
+	background-color: #a0c0e0; /* Document-ClickablesActive-Background_Color */
 	background-image: url(images/repeatx/brightThickEdge0.png); /* Document-ClickablesActive-Background_Image */
 	background-position: top left; /* Document-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
@@ -1779,8 +1761,8 @@ body.wm_default {
         color: #ffffff; /* Document-ClickablesDefault-Font_Color */
         font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
         /* Document-ClickablesDefault-Background */
-        background-color: #1f497d; /* Document-ClickablesDefault-Background_Color */
-        background-image: url(images/repeatx/brightThickEdge1.png); /* Document-ClickablesDefault-Background_Image */
+        background-color: #333333; /* Document-ClickablesDefault-Background_Color */
+        background-image: url(images/repeatx/brightEdge0.png); /* Document-ClickablesDefault-Background_Image */
         background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
         background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
     }
@@ -1791,16 +1773,16 @@ body.wm_default {
         /* Document-ClickablesDefault-Font */
         font-family: Verdana; /* Document-ClickablesDefault-Font_Family */
         font-size: 10pt; /* Document-ClickablesDefault-Font_TextSize */
-        color: #000000; /* Document-ClickablesHover-Font_Color */
+        color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
         font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
         /* Document-ClickablesDefault-Background */
-        background-color: #addbe9; /* Document-ClickablesHover-Background_Color */
+        background-color: #0e1601; /* Document-ClickablesHover-Background_Color */
         background-image: url(images/repeatx/greyThickEdge0.png); /* Document-ClickablesHover-Background_Image */
         background-position: top left; /* Document-ClickablesHover-Background_Image-Position */
         background-repeat: repeat-x; /* Document-ClickablesHover-Background_Image-Repeat */
     }
     .wm_default .dojoxPortlet div.dijitTitlePaneTitle-hover .dijitTitlePaneTextNode {
-        color: #000000; /* Document-ClickablesHover-Font_Color */
+        color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
     }
     .wm_default .dojoxPortlet div.dijitTitlePaneTitle .dojoxPortletIcon {
         background-color: white;
@@ -1847,11 +1829,11 @@ body.wm_default {
     .wm_default .MainContent div.wmaccordion-header {
 	/* MainContent-ClickablesActive-Font  + Clickables-Default-Font */
 	font-family: Verdana; /* MainContent-ClickablesDefault-Font_Family */
-	font-size: 10pt; /* MainContent-ClickablesDefault-Font_TextSize */
+	font-size: 8pt; /* MainContent-ClickablesDefault-Font_TextSize */
 	color: #ffffff; /* MainContent-ClickablesActive-Font_Color */
 	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
 	/* MainContent-ClickablesActive-Background */
-	background-color: #639410; /* MainContent-ClickablesActive-Background_Color */
+	background-color: #002060; /* MainContent-ClickablesActive-Background_Color */
 	background-image: url(images/repeatx/brightThickEdge0.png); /* MainContent-ClickablesActive-Background_Image */
 	background-position: top left; /* MainContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
@@ -1866,10 +1848,10 @@ body.wm_default {
 	color: #333333; /* MainContent-ClickablesDefault-Font_Color */
 	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
 	font-family: Verdana; /* MainContent-ClickablesDefault-Font_Family */
-	font-size: 10pt; /* MainContent-ClickablesDefault-Font_TextSize */
+	font-size: 8pt; /* MainContent-ClickablesDefault-Font_TextSize */
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #9dca49; /* MainContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-color: #ffffff; /* MainContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/greyThickEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
 	/* MainContent-ClickablesDefault-BorderStyle_Radius */
@@ -1882,7 +1864,7 @@ body.wm_default {
 	/* MainContent-ClickablesHover-Font */
 	color: #ffffff; /* MainContent-ClickablesHover-Font_Color */
 	/* MainContent-ClickablesHover-Background */
-	background-color: #77ae18; /* MainContent-ClickablesHover-Background_Color */
+	background-color: #444444; /* MainContent-ClickablesHover-Background_Color */
 	background-image: url(images/repeatx/brightThickEdge0.png); /* MainContent-ClickablesHover-Background_Image */
 	background-position: top left; /* MainContent-ClickablesHover-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesHover-Background_Image-Repeat */
@@ -1892,11 +1874,11 @@ body.wm_default {
 #studio_themesPage_themeDesigner_demoPanelTabLayers_client .MainContent .wmfancypanel .wmFancyPanel-labelWidget  {
     /* MainContent-ClickablesDefault-Font */
     font-family: Verdana; /* MainContent-ClickablesDefault-Font_Family */
-    font-size: 10pt; /* MainContent-ClickablesDefault-Font_TextSize */
-    color: #333333; /* MainContent-ClickablesDefault-Font_Color */
+    font-size: 8pt; /* MainContent-ClickablesDefault-Font_TextSize */
     font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
+    color: #ffffff; /* MainContent-ClickablesActive-Font_Color */
     /* MainContent-ClickablesActive-Background */
-    background-color: #639410; /* MainContent-ClickablesActive-Background_Color */
+    background-color: #002060; /* MainContent-ClickablesActive-Background_Color */
     background-image: url(images/repeatx/brightThickEdge0.png); /* MainContent-ClickablesActive-Background_Image */
     background-position: top left; /* MainContent-ClickablesActive-Background_Image-Position */
     background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
@@ -1909,8 +1891,8 @@ body.wm_default {
 	color: #333333; /* MainContent-ClickablesDefault-Font_Color */
 	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #9dca49; /* MainContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-color: #ffffff; /* MainContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/greyThickEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
     }
@@ -1918,7 +1900,7 @@ body.wm_default {
 	/* MainContent-ClickablesHover-Font */
 	color: #ffffff; /* MainContent-ClickablesHover-Font_Color */
 	/* MainContent-ClickablesHover-Background */
-	background-color: #77ae18; /* MainContent-ClickablesHover-Background_Color */
+	background-color: #444444; /* MainContent-ClickablesHover-Background_Color */
 	background-image: url(images/repeatx/brightThickEdge0.png); /* MainContent-ClickablesHover-Background_Image */
 	background-position: top left; /* MainContent-ClickablesHover-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesHover-Background_Image-Repeat */
@@ -1930,7 +1912,7 @@ body.wm_default {
 	/* MainContent-ClickablesActive-Font */
 	color: #ffffff; /* MainContent-ClickablesActive-Font_Color */
 	/* MainContent-ClickablesActive-Background */
-	background-color: #639410; /* MainContent-ClickablesActive-Background_Color */
+	background-color: #002060; /* MainContent-ClickablesActive-Background_Color */
 	background-image: url(images/repeatx/brightThickEdge0.png); /* MainContent-ClickablesActive-Background_Image */
 	background-position: top left; /* MainContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
@@ -2056,8 +2038,8 @@ body.wm_default {
     /* EmphasizedContent-ClickablesDefault-Font */
     font-family: Verdana; /* EmphasizedContent-ClickablesDefault-Font_Family */
     font-size: 10pt; /* EmphasizedContent-ClickablesDefault-Font_TextSize */
-    color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
     font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
+    color: #ffffff; /* EmphasizedContent-ClickablesActive-Font_Color */
     /* EmphasizedContent-ClickablesActive-Background */
     background-color: #333333; /* EmphasizedContent-ClickablesActive-Background_Color */
     background-image: url(images/repeatx/brightThickEdge0.png); /* EmphasizedContent-ClickablesActive-Background_Image */
@@ -2142,9 +2124,9 @@ body.wm_default {
 @media screen { /* HeaderContent-Level */ 
 .wm_default .HeaderContent {
     /* HeaderContent-Styles-Border */
-    -moz-border-radius: 4px; /* HeaderContent-Styles-BorderStyle_Radius */
-    -webkit-border-radius: 4px; /* HeaderContent-Styles-BorderStyle_Radius */
-    border-radius: 4px; /* HeaderContent-Styles-BorderStyle_Radius */
+    -moz-border-radius: 0px; /* HeaderContent-Styles-BorderStyle_Radius */
+    -webkit-border-radius: 0px; /* HeaderContent-Styles-BorderStyle_Radius */
+    border-radius: 0px; /* HeaderContent-Styles-BorderStyle_Radius */
     -moz-box-shadow: 2px 2px 2px #444444; /* HeaderContent-Styles-BorderStyle_Shadow */
     -webkit-box-shadow: 2px 2px 2px #444444; /* HeaderContent-Styles-BorderStyle_Shadow */
     box-shadow: 2px 2px 2px #444444; /* HeaderContent-Styles-BorderStyle_Shadow */
@@ -2153,20 +2135,20 @@ body.wm_default {
 #studio_designer.wm_default .HeaderContent {
     /* HeaderContent-Styles-Font */
     font-family: Verdana; /* HeaderContent-Styles-Font_Family */
-    font-size: 8pt; /* HeaderContent-Styles-Font_TextSize */
+    font-size: 16pt; /* HeaderContent-Styles-Font_TextSize */
     color: #444444; /* HeaderContent-Styles-Font_Color */
     font-weight: bold; /* HeaderContent-Styles-Font_Weight */
     /* HeaderContent-Styles-Background */
-    background-color: #dddddd; /* HeaderContent-Styles-Background_Color */
-    background-image: url(images/repeatx/greyEdge3.png); /* HeaderContent-Styles-Background_Image */
+    background-color: #FFFFFF; /* HeaderContent-Styles-Background_Color */
+    background-image: none; /* HeaderContent-Styles-Background_Image */
     background-position: top left; /* HeaderContent-Styles-Background_Image-Position */
-    background-repeat: repeat-x; /* HeaderContent-Styles-Background_Image-Repeat */
+    background-repeat: no-repeat; /* HeaderContent-Styles-Background_Image-Repeat */
 }
 #studio_themesPage_themeDesigner_demoPanelTabLayers_client .HeaderContent,
 .wm_default #studio_themesPage_themeDesigner_demoPanel .HeaderContent {
     /* HeaderContent-Styles-Font */
     font-family: Verdana; /* HeaderContent-Styles-Font_Family */
-    font-size: 8pt; /* HeaderContent-Styles-Font_TextSize */
+    font-size: 16pt; /* HeaderContent-Styles-Font_TextSize */
     color: #444444; /* HeaderContent-Styles-Font_Color */
     font-weight: bold; /* HeaderContent-Styles-Font_Weight */
 }
@@ -2219,8 +2201,8 @@ body.wm_default {
     /* HeaderContent-ClickablesDefault-Font */
     font-family: Verdana; /* HeaderContent-ClickablesDefault-Font_Family */
     font-size: 10pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
-    color: #FFFFFF; /* HeaderContent-ClickablesDefault-Font_Color */
     font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
+    color: #000000; /* HeaderContent-ClickablesActive-Font_Color */
     /* HeaderContent-ClickablesActive-Background */
     background-color: #999999; /* HeaderContent-ClickablesActive-Background_Color */
     background-image: url(images/repeatx/greyThickEdge1.png); /* HeaderContent-ClickablesActive-Background_Image */
@@ -2304,7 +2286,7 @@ body.wm_default {
 }
 .wm_default #wmMinifiedDialogPanel {
     opacity: 0.6;
-    background-color: #9fcbd8; /* Document-ClickablesActive-Background_Color */
+    background-color: #a0c0e0; /* Document-ClickablesActive-Background_Color */
     -moz-box-shadow: 0px -2px 4px black; /* wm.TabLayers-BorderStyle_UnselectedShadow */
     -webkit-box-shadow: 0px -2px 4px black;  /* wm.TabLayers-BorderStyle_UnselectedShadow */
     box-shadow: 0px -2px 4px black;  /* wm.TabLayers-BorderStyle_UnselectedShadow */
@@ -2351,8 +2333,8 @@ body.wm_default {
 	color: #ffffff; /* Document-ClickablesDefault-Font_Color */
 	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
 	/* Document-ClickablesDefault-Background */
-	background-color: #1f497d; /* Document-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightThickEdge1.png); /* Document-ClickablesDefault-Background_Image */
+	background-color: #333333; /* Document-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightEdge0.png); /* Document-ClickablesDefault-Background_Image */
 	background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
     }
@@ -2373,12 +2355,12 @@ body.wm_default {
     .wm_default .MainContent .wmprogressbar .dijitProgressBarTile {
 	/* MainContent-ClickablesDefault-Font */
 	font-family: Verdana; /* MainContent-ClickablesDefault-Font_Family */
-	font-size: 10pt; /* MainContent-ClickablesDefault-Font_TextSize */
+	font-size: 8pt; /* MainContent-ClickablesDefault-Font_TextSize */
 	color: #333333; /* MainContent-ClickablesDefault-Font_Color */
 	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #9dca49; /* MainContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-color: #ffffff; /* MainContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/greyThickEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
     }
@@ -2464,7 +2446,7 @@ body.wm_default {
 .wm_default div.wmsplitter-v,
 .wm_default .wmbevel {
     /* Document-ClickablesDefault-Background */
-    background-color: #1f497d; /* Document-ClickablesDefault-Background_Color */
+    background-color: #333333; /* Document-ClickablesDefault-Background_Color */
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
     border-radius: 2px;
@@ -2472,7 +2454,7 @@ body.wm_default {
 .wm_default div.wmsplitter-h:hover,
 .wm_default div.wmsplitter-v:hover {
     /* Document-ClickablesHover-Background */
-    background-color: #addbe9; /* Document-ClickablesHover-Background_Color */
+    background-color: #0e1601; /* Document-ClickablesHover-Background_Color */
 }
 /*****************************************
  * EOF: splitterbevel.css
