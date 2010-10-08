@@ -80,7 +80,11 @@
 	"ProgressBar" : "ProgressBar",
 
 	"Templates" : "Templates",
+	"FancyTemplate" : "Fancy Template",
 	"FancyCentered" : "FancyCentered",
+	"SideMenu" : "Menu on Side",
+	"TabsTemplate" : "Template with Tabs",
+	"TopMenu" : "Menu on Top",
 	"CenteredPageContainer" : "CenteredPageContainer",
 	"SubTemplates" : "Sub Templates",
 	"TitleBar" : "TitleBar",
