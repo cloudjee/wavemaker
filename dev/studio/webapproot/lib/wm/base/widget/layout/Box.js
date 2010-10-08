@@ -120,6 +120,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 		case "middle":
 		case "center":
 		    b[inFlowOrd] += free / 2;
+		    if (b[inFlowOrd] < 0) b[inFlowOrd] = 0;
 		    break;
 		}
 	    }
@@ -174,6 +175,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 		    case "center":
 		    case "middle":
 			b[inFitOrd] = (fitOrd + fitBound - cFitSize) / 2; 
+			if (b[inFitOrd] < 0) b[inFitOrd] = 0;
 			break;
 		    case "bottom":
 		    case "right":
