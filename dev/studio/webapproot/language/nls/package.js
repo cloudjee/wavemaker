@@ -83,7 +83,7 @@
 	"FancyTemplate" : "Fancy Template",
 	"FancyCentered" : "FancyCentered",
 	"SideMenu" : "Menu on Side",
-	"TabsTemplate" : "Template with Tabs",
+	"TabsTemplate" : "Tabs Template",
 	"TopMenu" : "Menu on Top",
 	"CenteredPageContainer" : "CenteredPageContainer",
 	"SubTemplates" : "Sub Templates",

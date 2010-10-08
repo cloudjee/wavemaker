@@ -54,7 +54,7 @@ wm.widgetTemplates.twoColumn = {
 	}
 }
 wm.fullTemplates.fancyTemplate = {
-	displayName: "Fancy Template",
+	displayName: bundlePackage.FancyTemplate,
 	layoutKind: "top-to-bottom",
 	width: "100%",
 	height: "100%",
@@ -152,7 +152,7 @@ wm.fullTemplates.fancyTemplate = {
 }
 
 wm.fullTemplates.sideMenuTemplate = {
-	displayName: "Menu on Side",
+	displayName: bundlePackage.SideMenu,
 	layoutKind: "left-to-right",
 	width: "100%",
 	height: "100%",
@@ -206,7 +206,7 @@ wm.fullTemplates.sideMenuTemplate = {
 }
 
 wm.fullTemplates.tabTemplate = {
-	displayName: "Tab Layers",
+	displayName: bundlePackage.TabsTemplate,
 	layoutKind: "top-to-bottom",
 	width: "100%",
 	height: "100%",
@@ -261,7 +261,7 @@ wm.fullTemplates.tabTemplate = {
 }
 
 wm.fullTemplates.topMenuTemplate = {
-	displayName: "Menu on Top",
+	displayName: bundlePackage.TopMenu,
 	layoutKind: "top-to-bottom",
 	width: "100%",
 	height: "100%",
