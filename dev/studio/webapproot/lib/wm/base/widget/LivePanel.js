@@ -22,6 +22,7 @@ dojo.declare("wm.LivePanel", wm.Panel, {
 	width: "100%",
 	layoutKind: "top-to-bottom",
 	liveDataName: "",
+        autoScroll: true,
 	afterPaletteDrop: function() {
 		wm.Container.prototype.afterPaletteDrop.call(this);
 	        var fancyPanel1 = new wm.FancyPanel({parent: this,
