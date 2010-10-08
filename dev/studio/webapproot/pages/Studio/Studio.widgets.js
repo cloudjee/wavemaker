@@ -38,7 +38,7 @@ Studio.widgets = {
 	smallToolbarImageList: ["wm.ImageList", {width: 16, height: 16, colCount: 32, url: "images/smallToolbarBtns.png"}, {}],
 	canvasToolbarImageList16: ["wm.ImageList", {width: "16", height: "16", colCount: 22, url: "images/canvasToolbarBtns16.png"}, {}],        
         genericDialog: ["wm.GenericDialog", {}],
-    newProjectDialog: ["wm.PageDialog", {width: "480px", height: "400px", title: "New Project", modal: true, hideControls: true, noEscape: false, pageName: "", border: "1", borderColor: "black", titlebarBorder: "0"}],
+    newProjectDialog: ["wm.PageDialog", {width: "500px", height: "460px", title: "New Project", modal: true, hideControls: true, noEscape: false, pageName: "", border: "1", borderColor: "black", titlebarBorder: "0"}],
     helpDialog: ["wm.GenericDialog", {"height":"77px","modal":false,"noEscape":false,"title":"Help","userPrompt":"","width":"300px", modal: false,button1Caption: "OK", button1Close: true, corner: "tr"}, {}],
 	layout: ["wm.Layout", {height: "100%"}, {}, {
 		dialog: ["wm.Dialog", {height: "400px", border: "1", borderColor: "#666E80"}, {}],

@@ -46,9 +46,9 @@
 
 .NewProjectDialog .NewProjectDialog-templatesInsertPanel .SelectableTemplate.Selected{
         background-color: #ffffff;
-        -moz-box-shadow: 2px 2px 4px #0000ff;
-        -webkit-box-shadow: 2px 2px 4px #0000ff; 
-        box-shadow: 2px 2px 4px #0000ff;
+        -moz-box-shadow: 0px 0px 0px #333333;
+        -webkit-box-shadow: 0px 0px 0px #333333; 
+        box-shadow: 0px 0px 0px #333333;
         opacity: 1.0;
 /*        background-color: #333388;*/
 }

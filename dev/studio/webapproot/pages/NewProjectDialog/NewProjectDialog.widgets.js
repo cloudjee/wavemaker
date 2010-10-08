@@ -19,7 +19,7 @@
 NewProjectDialog.widgets = {
     themesListVar: ["wm.Variable", {type: "StringData"}],
     layoutBox1: ["wm.Layout", {layoutKind: "top-to-bottom", width: "100%", height: "100%"}, {}, {
-        mainPanel: ["wm.Panel", {layoutKind: "top-to-bottom", width: "100%", height: "100%", horizontalAlign: "left", verticalAlign: "top", padding: "15", border: "10", borderColor: "#313743", backgroundColor: "#848c99"},{}, {
+        mainPanel: ["wm.Panel", {_classes: {domNode: ["dialogcontainer"]},layoutKind: "top-to-bottom", width: "100%", height: "100%", horizontalAlign: "left", verticalAlign: "top", padding: "15", border: "10", borderColor: "#313743", backgroundColor: "#848c99"},{}, {
             projectName: ["wm.Text", {width: "100%", height: "24px", captionSize: "90px", caption: "Project Name", displayValue: "Project", regExp: '^[a-zA-Z][\\w\\d]+$', invalidMessage: "Only letters/numbers.  Must start with letter", tooltipDisplayTime: "6000"}, {"onEnterKeyPress":"onOkClick"}],
             themeName: ["wm.SelectMenu", {width: "100%", height: "24px",  captionSize: "90px", caption: "Theme", displayField: "dataValue", dataField: "dataValue" }, {"onEnterKeyPress":"onOkClick"}, {
 		binding: ["wm.Binding", {}, {}, {
@@ -31,7 +31,7 @@ NewProjectDialog.widgets = {
                 templatesInsertPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom", horizontalAlign: "left", verticalAlign: "top", border: "1", borderColor: "#333333"}]
             }]
         }],
-            buttonPanel: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, width: "100%", height: "35px", layoutKind: "left-to-right", horizontalAlign: "right", verticalAlign: "top"},{}, {
+            buttonPanel: ["wm.Panel", {_classes: {domNode: ["wmDialogFooter"]}, width: "100%", height: "35px", layoutKind: "left-to-right", horizontalAlign: "right", verticalAlign: "top"},{}, {
                 CancelButton: ["wm.Button", {caption: "Cancel", width: "100px", height: "100%"}, {onclick: "onCancelClick"}],
                 OKButton: ["wm.Button", {caption: "OK", width: "100px", height: "100%"}, {onclick: "onOkClick"}]
         }]

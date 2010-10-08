@@ -55,6 +55,7 @@ wm.widgetTemplates.twoColumn = {
 }
 wm.fullTemplates.fancyTemplate = {
 	displayName: bundlePackage.FancyTemplate,
+        thumbnail: "/wavemaker/app/templates/widgetTemplateImages/fancyTemplate.png",
 	layoutKind: "top-to-bottom",
 	width: "100%",
 	height: "100%",
@@ -153,6 +154,7 @@ wm.fullTemplates.fancyTemplate = {
 
 wm.fullTemplates.sideMenuTemplate = {
 	displayName: bundlePackage.SideMenu,
+        thumbnail: "/wavemaker/app/templates/widgetTemplateImages/sideMenuTemplate.png",
 	layoutKind: "left-to-right",
 	width: "100%",
 	height: "100%",
@@ -207,6 +209,7 @@ wm.fullTemplates.sideMenuTemplate = {
 
 wm.fullTemplates.tabTemplate = {
 	displayName: bundlePackage.TabsTemplate,
+        thumbnail: "/wavemaker/app/templates/widgetTemplateImages/tabLayersTemplate.png",
 	layoutKind: "top-to-bottom",
 	width: "100%",
 	height: "100%",
@@ -262,6 +265,7 @@ wm.fullTemplates.tabTemplate = {
 
 wm.fullTemplates.topMenuTemplate = {
 	displayName: bundlePackage.TopMenu,
+        thumbnail: "/wavemaker/app/templates/widgetTemplateImages/topMenuTemplate.png",
 	layoutKind: "top-to-bottom",
 	width: "100%",
 	height: "100%",

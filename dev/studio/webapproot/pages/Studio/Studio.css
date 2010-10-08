@@ -1204,7 +1204,7 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 	text-align: center;
 }
 
-.wmDialogFooter,  .Studio > .wmdialog > .wmdialogcontainer .dialogfooter {
+.wmDialogFooter,  .Studio > .wmdialog  .wmdialogcontainer .dialogfooter {
 	background-image:url(images/dark_toolbar_bg.gif);
 	background-repeat:repeat-x;
 	border-bottom:1px #363b44 solid;
