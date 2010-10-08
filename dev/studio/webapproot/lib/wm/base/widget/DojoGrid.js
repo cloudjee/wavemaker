@@ -337,6 +337,31 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		var selectedData = this.selectedItem.getData();
 		if (selectedData)
 			this.selectItemOnGrid(this.selectedItem);
+
+            if (this.isDesignLoaded()) {
+                var scrollNode = this.dojoObj.scroller.contentNodes[0].parentNode;
+
+                if (dojo.isFF) {
+                    // this works for firefox
+		    this.connect(scrollNode,'onmousedown', this, function(evt) {
+                        if (evt.button == 2 || evt.ctrlKey) {
+                            dojo.stopEvent(evt);
+                            this.showMenuDialog();
+                        }
+                    });
+                }
+
+                if (dojo.isWebKit) {
+                    // This works for webkit browsers
+		    this.connect(scrollNode,'oncontextmenu', this, function(evt) {
+                        dojo.stopEvent(evt);
+                        this.showMenuDialog();
+                        return false;
+                    });
+                }
+
+            }
+
 	},
 	dojoRenderer: function (){
 		if (!this.dojoObj)
@@ -345,13 +370,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
 	connectDojoEvents: function(){
 		//dojo.connect(this.dojoObj, 'onCellClick', this, 'onCellClick');
-		dojo.connect(this.dojoObj, 'onClick', this, '_onClick');
-		dojo.connect(this.dojoObj,'onCellDblClick', this,'_onCellDblClick');
-		dojo.connect(this.dojoObj,'onCellContextMenu', this, '_onCellRightClick');
+
 		//dojo.connect(this.dojoObj, "onDeselect", this, "deselect");
 		//dojo.connect(this.dojoObj, "onSelected", this, "select");
 		dojo.connect(this.dojoObj, "onSelectionChanged", this, "selectionChange");
-		dojo.connect(this.dojoObj, "onApplyCellEdit", this, "cellEditted");
 
 		if (this.isDesignLoaded()) {
 			dojo.connect(this.dojoObj,'onMoveColumn', this, '_onMoveColumn');
@@ -360,7 +382,13 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			dojo.connect(this.dojoObj, 'onHeaderContextMenu', this, 'showMenuDialog');
 			dojo.connect(this.dojoObj, 'onRowContextMenu', this, 'showMenuDialog');
 			//dojo.connect(this.dojoObj, 'onCellClick', this, 'hideMenuDialog');
-		}
+		        dojo.connect(this.dojoObj,'onCellContextMenu', this, 'showMenuDialog');                        
+		} else {
+		    dojo.connect(this.dojoObj,'onCellContextMenu', this, '_onCellRightClick');
+		    dojo.connect(this.dojoObj, "onApplyCellEdit", this, "cellEditted");
+		    dojo.connect(this.dojoObj, 'onClick', this, '_onClick');
+		    dojo.connect(this.dojoObj,'onCellDblClick', this,'_onCellDblClick');
+                }
 	},
 	getDataSet: function() {
 		return this.variable;
