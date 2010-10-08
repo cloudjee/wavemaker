@@ -22,10 +22,10 @@ dojo.declare("wm.studio.Project", null, {
 	// New
 	//=========================================================================
     newProject: function(inName, optionalInTheme, optionalInTemplate) {
-        
 		var n = inName || this.projectName || "Project";
 		this.projectName = wm.getValidJsName(n);
 		this.pageName = "Main";
+        studio.beginWait("Setting up new project");
 		var d = studio.studioService.requestAsync("newProject", [this.projectName]);
 	        d.addCallbacks(
                     dojo.hitch(this, function(inResult) {
@@ -45,6 +45,7 @@ dojo.declare("wm.studio.Project", null, {
 		this.saveProject(this.projectName);
 		this.projectChanged();
 		this.projectsChanged();
+	    studio.endWait("Setting up new project");
 		//studio.deploy("Configuring Project...");
 	},
     // pageType and argHash are typically empty
