@@ -88,6 +88,13 @@ dojo.declare("wm.FancyPanel", wm.Panel, {
     themeStyleType: "ContentPanel",
     init: function() {
 	var classes = this._classes;
+	var containerClasses = {domNode:[]};
+	for (var i = classes.domNode.length-1; i >= 0; i--) {
+	    if (classes.domNode[i].match(/^wm_Border_(Bottom|Drop)/)) {
+		containerClasses.domNode.push(classes.domNode[i]);
+		wm.Array.removeElementAt(classes.domNode,i);
+	    }
+	}
 	this._classes = {domNode:[]};
         try {
 	    //var classes = this.captionClasses.split(/\s+/);
@@ -96,6 +103,7 @@ dojo.declare("wm.FancyPanel", wm.Panel, {
 	    this.labelWidget = new wm.Label({border: this.innerBorder,
                                              borderColor: this.borderColor,
                                              showing: Boolean(this.title),
+		                             _classes: classes,
                                              name: "labelWidget",
                                              caption: this.title,
                                              width: "100%",
@@ -107,8 +115,8 @@ dojo.declare("wm.FancyPanel", wm.Panel, {
 	    var innerBorder = String(this.innerBorder);
             innerBorder = this._parseExtents(innerBorder);
 	    this.containerWidget = new wm.Container({
+		                                     _classes: containerClasses,
                                                      name:           "containerWidget",
-		                                     _classes:       classes,
                                                      layoutKind:     this.innerLayoutKind,
                                                      width:          "100%",
                                                      height:         "100%",
