@@ -189,6 +189,7 @@ dependencies = {
 				//"wm.base.widget.Cards",
 				// Dijits
 				"wm.base.widget.dijit.Dijit",
+				"wm.base.components.Timer"
 				//"wm.base.components.componentList",				
 				//"wm.base.widget.dijit.CheckBox",
 				//"wm.base.widget.dijit.Calendar",

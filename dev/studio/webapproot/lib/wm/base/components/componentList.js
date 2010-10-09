@@ -64,7 +64,8 @@ wm.componentList = {
 	'wm.TimeEditor':['build.Gzipped.wm_editors'],
 	'wm.dijit.ProgressBar':['wm.base.widget.dijit.ProgressBar'],
 	'wm.BusyButton':['wm.base.widget.BusyButton'],
-
+	'wm.Timer':['wm.base.components.Timer'],
+	
 	'wm.Date':['build.Gzipped.wm_editors'],
 	'wm.SelectMenu':['build.Gzipped.wm_editors'],
 	'wm.Number':['build.Gzipped.wm_editors'],
