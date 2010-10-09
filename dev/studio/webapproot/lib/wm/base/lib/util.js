@@ -538,6 +538,20 @@ wm.Array.removeElement = function(inArray, inElement) {
     return inArray; 
 }
 
+wm.Array.equals = function(a, b,optionalCallback) {
+    if (a == b) return true;
+    if (!a || !b) return false;
+    if (a.length != b.length) return false;
+    for (var i = 0; i < i.length; i++) {
+	if (optionalCallback) {
+	    if (!optionalCallback(a[i],b[i])) return false;
+	} else {
+	    if (a[i] != b[i]) return false;
+	}
+    }
+    return true;
+}
+
 wm.Array.last = function(inArray) {
     return inArray[inArray.length-1];
 }
