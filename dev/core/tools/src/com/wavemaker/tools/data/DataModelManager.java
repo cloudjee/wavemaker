@@ -827,6 +827,8 @@ public class DataModelManager {
             packageName = packageName.substring(0, packageName.length() - 1);
         }
 
+        File javaDir = getJavaDir(outputDir, packageName);
+
         ImportDB importer = new ImportDB();
         importer.setDestDir(outputDir);
         importer.setUsername(username);
@@ -836,6 +838,7 @@ public class DataModelManager {
         importer.setServiceName(serviceId);
         importer.setCatalogName(catalogName);
         importer.setPackage(packageName);
+        importer.setJavaDir(javaDir);
 
         String dataPackage = packageName;
         if (!dataPackage.endsWith("." + DataServiceConstants.DATA_PACKAGE_NAME)) {
@@ -915,6 +918,10 @@ public class DataModelManager {
 		String partialCxn = connectionUrl.substring(n);
 		int k = partialCxn.indexOf(';');
     	return partialCxn.substring(0, k);
+    }
+
+    private File getJavaDir(File dir, String pathname) {
+        return (new File(dir, pathname.replace(".", "/") + "/data"));
     }
     
     private class DataModelKey {

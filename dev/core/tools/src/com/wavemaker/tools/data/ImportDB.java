@@ -17,20 +17,18 @@
  */
 package com.wavemaker.tools.data;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
+import org.apache.commons.io.FileUtils;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.ant.ExporterTask;
 import org.hibernate.tool.ant.Hbm2HbmXmlExporterTask;
@@ -38,9 +36,12 @@ import org.hibernate.tool.ant.Hbm2JavaExporterTask;
 
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.common.util.StringUtils;
+import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
+import com.wavemaker.runtime.data.util.QueryHandler;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
+import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.tools.common.Bootstrap;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.reveng.BasicMetaDataDialect;
@@ -328,8 +329,55 @@ public class ImportDB extends BaseDataModelSetup {
 
         getJavaExporter().execute();
 
+        removeConstructor();
+
         if (compile) {
             compile();
+        }
+    }
+
+    private void removeConstructor(){
+
+        FilenameFilter filter = new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                int len = name.length();
+                return name.substring(len-5).equals(".java");
+            }          
+        };
+
+        File[] javafiles = javadir.listFiles(filter);
+
+        try {
+            for (File file : javafiles) {
+                String content = FileUtils.readFileToString(file, ServerConstants.DEFAULT_ENCODING);
+
+                String fileName = file.getName();
+                int len = fileName.length();
+                fileName = fileName.substring(0, len-5);
+                String regExp = "public\\s+" + fileName + "\\s*\\([^\\)]*\\)\\s*\\{[^\\}]*\\}";
+                Pattern pattern = Pattern.compile(regExp);
+                Matcher matcher = pattern.matcher(content);
+
+                boolean done = false;
+                int indx1, indx2;
+                String str;
+                while (!done) {
+                    if (matcher.find()) {
+                        indx1 = matcher.start();
+                        indx2 = matcher.end();
+                        str = content.substring(indx1, indx2);
+                        content = content.replace(str, "");
+                        matcher = pattern.matcher(content);
+                    } else {
+                        done = true;
+                    }
+                }
+
+                FileUtils.writeStringToFile(file, content, ServerConstants.DEFAULT_ENCODING);
+            }
+
+        } catch (IOException ioe) {
+            throw new WMRuntimeException(ioe);
         }
     }
 

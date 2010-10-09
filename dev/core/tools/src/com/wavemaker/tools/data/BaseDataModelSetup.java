@@ -231,6 +231,8 @@ public abstract class BaseDataModelSetup {
 
     protected File destdir = null;
 
+    protected File javadir = null;
+
     protected Properties properties = new Properties();
 
     protected boolean initialized = false;
@@ -239,6 +241,11 @@ public abstract class BaseDataModelSetup {
 
     public void setDestDir(File destdir) {
         this.destdir = destdir;
+        getParentTask().setDestDir(destdir);
+    }
+
+    public void setJavaDir(File javadir) {
+        this.javadir = javadir;
         getParentTask().setDestDir(destdir);
     }
 
