@@ -600,8 +600,14 @@ Studio.extend({
                                dojo.hitch(this, function(n) {
 		                   if (n)
 			               this.waitForCallback(bundleDialog.M_SavingPageAs + n, dojo.hitch(this.project, "savePageAs", n));
-                               }));
-                                         
+                               }));                                         
+	},
+	refreshScriptClick: function() {
+		this.refreshScript();
+  },	
+  refreshScript: function() {
+    var updatedScript = studio.project.loadProjectData(wm.pagesFolder + studio.project.pageName + "/" + studio.project.pageName + ".js")
+    studio.setScript(updatedScript);
 	},
 	importJavascriptLibrary: function() {
 	    this.beginBind("Script Importer", studio.editArea, "js");

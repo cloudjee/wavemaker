@@ -414,6 +414,7 @@ Studio.widgets = {
 						scriptRibbon: ["wm.Panel", {height: "29px", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#000000"}, {}, {
 						    scriptPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_Save, imageIndex: 8}, {onclick: "saveScriptClick"}],
 						    scriptPageImportBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_Import, imageIndex: 25}, {onclick: "importJavascriptLibrary"}],
+						    scriptPageRefreshBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Refresh, imageIndex: 27}, {onclick: "refreshScriptClick"}],
 						    scriptToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
 						    scriptLogoBottomHolder: ["wm.Panel", {width: "221px", border: "0"}, {}]
 						}],
