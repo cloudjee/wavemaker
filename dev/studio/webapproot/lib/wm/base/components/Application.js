@@ -483,11 +483,17 @@ dojo.declare("wm.Application", wm.Component, {
         if (this.confirmCancelFunc)
             this.confirmCancelFunc();
     },
+    toastError: function(inMsg) {
+        this.toastDialog.showToast(inMsg, 8000, "Error");
+    },
     toastWarning: function(inMsg) {
         this.toastDialog.showToast(inMsg, 8000, "Warning");
     },
     toastSuccess: function(inMsg) {
         this.toastDialog.showToast(inMsg, 5000, "Success");
+    },
+    toastInfo: function(inMsg) {
+        this.toastDialog.showToast(inMsg, 5000, "Info");
     },
     createMinifiedDialogPanel: function() {
 	this.wmMinifiedDialogPanel = new wm.Panel({name: "wmMinifiedDialogPanel", width: this._page.root.bounds.w + "px", height: "25px", border: "2,0,0,0", padding: "2", autoScroll: true, verticalAlign: "top", horizontalAlign: "left", layoutKind: "left-to-right"});
