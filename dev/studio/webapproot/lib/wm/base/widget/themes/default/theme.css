@@ -1464,18 +1464,31 @@ body.tundra div.wmtoast.wmtoastExtraSpecific .wmdialogcontainer {
     width: 30px;
     height: 30px;
     vertical-align: bottom;
+    background-repeat: no-repeat;
 }
 
 .wmtoast.Success .ToastLeft {
-   background-image: url(images/ToastSuccess.png);
+   background-image: url(../../../../../images/boolean/Signage/OK.png);
 }
 
 .wmtoast.Warning .ToastLeft {
-   background-image: url(images/ToastWarning.png);
+   background-image: url(../../../../../images/boolean/Signage/Caution.png);
+}
+
+.wmtoast.Error .ToastLeft {
+   background-image: url(../../../../../images/boolean/Signage/Close.png);
 }
 
 .wmtoast.Info .ToastLeft {
-   background-image: url(images/ToastInfo.png);
+   background-image: url(../../../../../images/boolean/Signage/Help\ Circle.png);
+}
+.wmtoast .wmToast-message {
+   font-size: 10px;
+}
+
+.wmtoast .wmToast-title {
+   font-size: 11px;
+   font-weight: bold;
 }
 
 /* END wm.FancyPanel */

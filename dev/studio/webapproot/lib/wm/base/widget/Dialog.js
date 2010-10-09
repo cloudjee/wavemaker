@@ -1044,19 +1044,26 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
     height: "100px",
     width: "350px",
     corner: "br", // bottom right
-    border: "5",
+    border: "2",
     margin: "0",
     prepare: function() {
         this.inherited(arguments);
-        this.widgets_data = {img: ["wm.Picture", {_classes: {domNode: ["ToastLeft"]}, width: "30px", height: "30px"}, {}],
-		             message: ["wm.Label", { height: "100px", width: "100%", singleLine: false, autoSizeHeight: true, margin: "5,10,5,10"}]};
+        this.widgets_data = {
+	    img: ["wm.Picture", {_classes: {domNode: ["ToastLeft"]}, width: "30px", height: "100%",margin: "4,0,0,4"}],
+	    rightColumn: ["wm.Panel", {layoutKind: "top-to-bottom", width: "100%", height: "100%", fitToContentHeight: true, padding: "0"},{},{
+		title: ["wm.Label", { height: "20px", width: "100%", singleLine: true}],
+		message: ["wm.Label", { height: "100px", width: "100%", singleLine: false, autoSizeHeight: true}]
+	    }]
+	};
     },
     postInit: function() {
 	this.inherited(arguments);
-        this.containerWidget.setLayoutKind("left-to-right");
-        this.containerWidget.setVerticalAlign("middle");
+	this.containerWidget.setLayoutKind("left-to-right");
+	this.containerWidget.setPadding("4");	
         this.img = this.containerWidget.c$[0];
-        this.message = this.containerWidget.c$[1];
+        this.title = this.containerWidget.c$[1].c$[0];
+        this.message = this.containerWidget.c$[1].c$[1];
+
 	this.setContent(this.content);
 	this.connectEvents(this.domNode, ["click"]);
     },
@@ -1078,9 +1085,12 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
         if (this.message)
             this.message.setCaption(inContent);
     },
-
-    // classes supported "Success", "Warning", "Info".  User may add their own classes via css file
-    showToast: function(inContent,inDuration, inCssClasses, inPosition) {
+    setTitle: function(inTitle) {
+	if (this.title)
+	    this.title.setCaption(inTitle);
+    },
+    // classes supported "Success", "Error", "Warning", "Info".  User may add their own classes via css file
+    showToast: function(inContent,inDuration, inCssClasses, inPosition, optionalTitle) {
         if (inPosition)
             inPosition = inPosition.replace(/top/, "t").replace(/bottom/,"b").replace(/left/,"l").replace(/right/,"r").replace(/center/,"c").replace(/ /,"");
         this.corner = inPosition || app.toastPosition || "br";
@@ -1089,12 +1099,16 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
 	    this.hide();
 	    this._timeoutId = 0;
 	}
+	this.setTitle(optionalTitle || inCssClasses);
         inCssClasses = inCssClasses || "Info";
         var classes = (inCssClasses) ? inCssClasses.split(" ") : [];
+
         if (dojo.indexOf(classes, "Success") != -1) {
             this.setBorderColor("rgb(0,120,0)");
-        } else if (dojo.indexOf(classes, "Warning") != -1) {
+        } else if (dojo.indexOf(classes, "Error") != -1) {
             this.setBorderColor("rgb(120,0,0)");
+        } else if (dojo.indexOf(classes, "Warning") != -1) {
+            this.setBorderColor("#f9a215");
         } else {
             this.setBorderColor("rgb(0,0,0)");
         }
@@ -1111,7 +1125,7 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
 	this.domNode.style.opacity = "0.01";
 	this.show();
         this.message.doAutoSize(true, true);
-        this.setHeight((this.message.bounds.h + this.padBorderMargin.t + this.padBorderMargin.b) + "px" );
+        this.setHeight((this.containerWidget.padBorderMargin.t + this.containerWidget.padBorderMargin.b + this.message.parent.bounds.h + this.padBorderMargin.t + this.padBorderMargin.b) + "px" );
 	dojo.anim(this.domNode, { opacity: 1}, 800);
 
     },
