@@ -603,7 +603,9 @@ Studio.extend({
                                }));                                         
 	},
 	refreshScriptClick: function() {
-		this.refreshScript();
+		app.confirm(bundleDialog.M_AreYouSureReload, false, dojo.hitch(this, function() {
+                            this.refreshScript();
+                        }));
   },	
   refreshScript: function() {
     var updatedScript = studio.project.loadProjectData(wm.pagesFolder + studio.project.pageName + "/" + studio.project.pageName + ".js")

@@ -46,6 +46,7 @@
 	"M_AreYouSureCloseProject" : "Are you sure you want to close project ${project}? Unsaved changes will be lost.",
 	"M_CreatingProject" : "Creating project: ",
 	"M_SavingProject" : "Saving project: ",
+	"M_AreYouSureReload" : "Are you sure you want to reload this file file from disk ? Unsaved changes will be lost",
 	"M_SavingScript" : "Saving script: ",
 	"M_SavingCSS" : "Saving CSS: ",
 	"M_SavingMarkup" : "Saving Markup: ",
