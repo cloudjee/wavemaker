@@ -109,7 +109,7 @@
 	"R_Save" : "Save",
 	"R_Import" : "Import",
 	"R_Themes" : "Themes",
-	"R_NewTheme" : "New Theme (Copies wm_basic theme)",
+	"R_NewTheme" : "New Theme (Copies wm_default theme)",
 	"R_CopyTheme" : "Copy Current Theme",
 	"R_DeleteTheme" : "Delete Theme",
 	"R_Revert" : "Revert Changes",

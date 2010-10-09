@@ -1110,7 +1110,7 @@ dojo.declare("Studio", wm.Page, {
 	this.themesPage.page.saveTheme(inSender);
     },
     addNewThemeClick: function(inSender) {
-	this.themesPage.page.copyThemeClick(inSender, "wm_basic");
+	this.themesPage.page.copyThemeClick(inSender, "wm_default");
     },
     copyThemeClick: function(inSender) {
 	this.themesPage.page.copyThemeClick(inSender);
