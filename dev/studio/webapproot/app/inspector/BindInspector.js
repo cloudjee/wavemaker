@@ -371,7 +371,7 @@ dojo.declare("wm.NavigationInspector", wm.DataInspector, {
                                                                 value: ins || "Info",
                                                                 name: inName,
                                                                 defaultValue: "Info",
-                                                                options: ["Success", "Warning", "Info", "Misc"]})).getHtml();
+                                                                options: ["Success", "Error", "Warning", "Info", "Misc"]})).getHtml();
                         case "duration":
                                 return (new wm.propEdit.Select({component: this,
                                                                 value: ins || "5000",
