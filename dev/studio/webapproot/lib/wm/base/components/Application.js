@@ -424,6 +424,8 @@ dojo.declare("wm.Application", wm.Component, {
 	    return this.projectVersion + "." + this.projectSubVersion;
 	},
         alert: function(inText, nonmodal) {
+	    if (dojo.isObject(inText))
+		inText = inText.toString();
 	    nonmodal = Boolean(nonmodal);
 	    this.alertDialog.setUserPrompt(inText);
 	    this.alertDialog.setModal(!nonmodal);
