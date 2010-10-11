@@ -246,7 +246,6 @@ public abstract class BaseDataModelSetup {
 
     public void setJavaDir(File javadir) {
         this.javadir = javadir;
-        getParentTask().setDestDir(destdir);
     }
 
     public void setDefaultDBType() {

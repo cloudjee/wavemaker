@@ -920,7 +920,7 @@ public class DataModelManager {
     	return partialCxn.substring(0, k);
     }
 
-    private File getJavaDir(File dir, String pathname) {
+    public static File getJavaDir(File dir, String pathname) {
         return (new File(dir, pathname.replace(".", "/") + "/data"));
     }
     
