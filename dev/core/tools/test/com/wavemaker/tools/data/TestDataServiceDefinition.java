@@ -206,6 +206,10 @@ public class TestDataServiceDefinition extends WMTestCase {
             importer.setGenerateServiceClass(true);
             importer.setCompileServiceClass(true);
             importer.setCatalogName(null);
+
+            File javaDir = DataModelManager.getJavaDir(outputDir, "hh.gg.qq");
+            importer.setJavaDir(javaDir);
+
             importer.run();
 
             Collection<String> expectedFiles = new HashSet<String>();
@@ -268,6 +272,9 @@ public class TestDataServiceDefinition extends WMTestCase {
 
             // backward compat
             importer.setUseIndividualCRUDOperations(true);
+
+            File javaDir = DataModelManager.getJavaDir(outputDir, "com.wavemaker.data.test");
+            importer.setJavaDir(javaDir);
 
             importer.run();
 
