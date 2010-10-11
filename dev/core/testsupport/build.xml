@@ -64,7 +64,7 @@
         <junit printsummary="on"
                fork="true"
                forkmode="once"
-               haltonfailure="true"
+               haltonfailure="false"
                showoutput="true">
             <classpath> 
                 <path refid="test.build.classpath"/>

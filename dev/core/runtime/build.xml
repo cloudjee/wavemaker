@@ -174,7 +174,7 @@
         <property name="test.exclude" value="com/wavemaker/runtime/data/**"/>
         <junit printsummary="on"
                fork="false"
-               haltonfailure="true"
+               haltonfailure="false"
                showoutput="true">
             <classpath refid="test.run.classpath"/>
             <formatter type="plain" usefile="false"/>

@@ -107,7 +107,7 @@ To bundle in a new module, change the project name and the version.
         <junit printsummary="on"
                fork="true"
                forkmode="once"
-               haltonfailure="true"
+               haltonfailure="false"
                showoutput="true">
             <classpath>
                 <path refid="modules.test.build.classpath"/>

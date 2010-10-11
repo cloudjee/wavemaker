@@ -90,7 +90,7 @@
         <property name="test.exclude" value=""/>
         <junit printsummary="on"
                fork="false"
-               haltonfailure="true"
+               haltonfailure="false"
                showoutput="true">
             <classpath>
                 <path refid="test.build.classpath"/>

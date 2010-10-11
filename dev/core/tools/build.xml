@@ -285,7 +285,7 @@
         <junit printsummary="on"
                fork="true"
                forkmode="once"
-               haltonfailure="true"
+               haltonfailure="false"
                showoutput="true">
             <classpath refid="${test.classpathid}"/>
             <formatter type="plain" usefile="false"/>
