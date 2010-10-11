@@ -553,20 +553,20 @@ wm.Application.extend({
 
 	    var compsArray = this.writeComponents(inIndent);
 
-	    /* We should always put wm.TypeDefinitions before all other components as those components may 
-	     * depend upon the type being defined.
-	     */
+	    var classOrdering = ["wm.TypeDefinition", "wm.LiveView"];
+
 	    compsArray = compsArray.sort(function(a,b) {
-		var alist = a.match(/^(.*?)\:\s*\[\"(.*)?\"/);
-		var blist = b.match(/^(.*?)\:\s*\[\"(.*)?\"/);		
-		if (alist[2] == "wm.TypeDefinition" && blist[2] == "wm.TypeDefinition")
+		var alist = a.match(/^(.*?)\:\s*\[\"(.*?)\"/);
+		var blist = b.match(/^(.*?)\:\s*\[\"(.*?)\"/);
+		var aindex = dojo.indexOf(classOrdering, alist[2]);
+		var bindex = dojo.indexOf(classOrdering, blist[2]);
+		if (aindex == -1) aindex = classOrdering.length;
+		if (bindex == -1) bindex = classOrdering.length;
+		if (aindex == bindex)
 		    return (alist[1] <= blist[1]) ? -1 : 1;
-		else if (alist[2] == "wm.TypeDefinition")
-		    return -1;
-		else if (blist[2] == "wm.TypeDefinition")
-		    return 1;
 		else
-		    return (alist[1] <= blist[1]) ? -1 : 1;
+		    return (aindex < bindex) ? -1 : 1;
+
 	    });
 
 	    var comps = compsArray.join(", " + sourcer_nl);
