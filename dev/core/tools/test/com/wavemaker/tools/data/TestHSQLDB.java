@@ -221,6 +221,9 @@ public class TestHSQLDB extends WMTestCase {
             importer.setGenerateServiceClass(true);
             importer.setCompileServiceClass(true);
 
+            File javaDir = DataModelManager.getJavaDir(outputDir, "com.foo.blah");
+            importer.setJavaDir(javaDir);
+
             importer.run();
 
             // the existence of the lockfile indicates we don't
