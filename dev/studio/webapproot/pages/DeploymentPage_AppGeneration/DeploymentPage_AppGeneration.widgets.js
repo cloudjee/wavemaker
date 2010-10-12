@@ -36,14 +36,17 @@ DeploymentPage_AppGeneration.widgets = {
 		}]
 	    }],
 		GenerateAppButtonPanel: ["wm.Panel", {height: "48px", width: "100%", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "right"}, {}, {
-		generateAppButton: ["wm.Button", {width: "150px", height: "100%", caption: "Generate Application"}, {onclick: "generateAppButtonClick"}, {
-		    binding: ["wm.Binding", {}, {}, {
-			wire: ["wm.Wire", {"targetProperty":"disabled","source":"archiveType.emptySelection"}, {}]
-		    }]
-		}],
+		generateAppButton: ["wm.Button", {width: "150px", height: "100%", caption: "Generate Application"}, 
+			{onclick: "generateAppButtonClick"}],
 
 		downloadAppButton: ["wm.Button", {width: "150px", height: "100%", caption: "Download Application"},
-				    {onclick: "downloadAppClick"}],
+				    {onclick: "downloadAppClick"}, {
+			
+			binding: ["wm.Binding", {}, {}, {
+			wire: ["wm.Wire", {"targetProperty":"disabled","source":"archiveType.emptySelection"}, {}]
+		    }]
+			
+		}],
 	    }]
 	}]	
 	}]
