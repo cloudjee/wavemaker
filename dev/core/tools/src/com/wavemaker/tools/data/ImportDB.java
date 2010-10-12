@@ -347,37 +347,39 @@ public class ImportDB extends BaseDataModelSetup {
 
         File[] javafiles = javadir.listFiles(filter);
 
-        try {
-            for (File file : javafiles) {
-                String content = FileUtils.readFileToString(file, ServerConstants.DEFAULT_ENCODING);
+        if (javafiles != null) {
+            try {
+                for (File file : javafiles) {
+                    String content = FileUtils.readFileToString(file, ServerConstants.DEFAULT_ENCODING);
 
-                String fileName = file.getName();
-                int len = fileName.length();
-                fileName = fileName.substring(0, len-5);
-                String regExp = "public\\s+" + fileName + "\\s*\\([^\\)]*\\)\\s*\\{[^\\}]*\\}";
-                Pattern pattern = Pattern.compile(regExp);
-                Matcher matcher = pattern.matcher(content);
+                    String fileName = file.getName();
+                    int len = fileName.length();
+                    fileName = fileName.substring(0, len-5);
+                    String regExp = "public\\s+" + fileName + "\\s*\\([^\\)]*\\)\\s*\\{[^\\}]*\\}";
+                    Pattern pattern = Pattern.compile(regExp);
+                    Matcher matcher = pattern.matcher(content);
 
-                boolean done = false;
-                int indx1, indx2;
-                String str;
-                while (!done) {
-                    if (matcher.find()) {
-                        indx1 = matcher.start();
-                        indx2 = matcher.end();
-                        str = content.substring(indx1, indx2);
-                        content = content.replace(str, "");
-                        matcher = pattern.matcher(content);
-                    } else {
-                        done = true;
+                    boolean done = false;
+                    int indx1, indx2;
+                    String str;
+                    while (!done) {
+                        if (matcher.find()) {
+                            indx1 = matcher.start();
+                            indx2 = matcher.end();
+                            str = content.substring(indx1, indx2);
+                            content = content.replace(str, "");
+                            matcher = pattern.matcher(content);
+                        } else {
+                            done = true;
+                        }
                     }
+
+                    FileUtils.writeStringToFile(file, content, ServerConstants.DEFAULT_ENCODING);
                 }
 
-                FileUtils.writeStringToFile(file, content, ServerConstants.DEFAULT_ENCODING);
+            } catch (IOException ioe) {
+                throw new WMRuntimeException(ioe);
             }
-
-        } catch (IOException ioe) {
-            throw new WMRuntimeException(ioe);
         }
     }
 
