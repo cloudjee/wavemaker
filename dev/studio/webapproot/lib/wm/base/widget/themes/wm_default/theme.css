@@ -1069,7 +1069,10 @@ body .wm_default .dialogfooter .wmbutton:hover {
     /* Header-Row-Background */
     body.tundra .wm_default .dojoxGrid-header, 
     body.tundra .wm_default .dojoxGridHeader,
-    body.tundra .wm_default .wmlist-header {
+    body.tundra .wm_default .wmlist-header,
+    body.tundra.wm_default .dojoxGrid-header, 
+    body.tundra.wm_default .dojoxGridHeader,
+    body.tundra.wm_default .wmlist-header { 
 	background-color: #444444; /* Tables-HeaderRow-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* Tables-HeaderRow-Background_Image */
 	background-position: left top;     /* Tables-HeaderRow_Image-Position */
@@ -1228,11 +1231,11 @@ body .wm_default .dialogfooter .wmbutton:hover {
     background-image: none !important;
 }
 .wm_default .dijitMenu .dijitMenuArrowCell img.dijitMenuExpand {
-   background-image: url(images/comboArrowDownDark.png) !important; /* wm.DojoMenu_Image */
+   background-image: url(images/comboArrowDownLight.png) !important; /* wm.DojoMenu_Image */
     background-position: 0% 50% !important;
 }
 .wm_default div.dijitMenuBar div.dijitMenuItem {
-   background-image: url(images/comboArrowDownDark.png) !important; /* wm.DojoMenu_Image */
+   background-image: url(images/comboArrowDownLight.png) !important; /* wm.DojoMenu_Image */
    background-position: 100% 50% !important;
    background-repeat: no-repeat !important;
     padding-right: 15px !important;

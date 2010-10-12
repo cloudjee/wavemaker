@@ -1069,7 +1069,10 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     /* Header-Row-Background */
     body.tundra .wm_graphite .dojoxGrid-header, 
     body.tundra .wm_graphite .dojoxGridHeader,
-    body.tundra .wm_graphite .wmlist-header {
+    body.tundra .wm_graphite .wmlist-header,
+    body.tundra.wm_graphite .dojoxGrid-header, 
+    body.tundra.wm_graphite .dojoxGridHeader,
+    body.tundra.wm_graphite .wmlist-header { 
 	background-color: #444444; /* Tables-HeaderRow-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* Tables-HeaderRow-Background_Image */
 	background-position: left top;     /* Tables-HeaderRow_Image-Position */

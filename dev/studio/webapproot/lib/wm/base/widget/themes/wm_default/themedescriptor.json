@@ -704,7 +704,7 @@
 		"Margin": "15px"
 	}, 
 	"wm.DojoMenu": {
-		"Image": "url(images/comboArrowDownDark.png)", 
+		"Image": "url(images/comboArrowDownLight.png)", 
 		"Image-Position": "top left", 
 		"Image-Repeat": "repeat"
 	}, 

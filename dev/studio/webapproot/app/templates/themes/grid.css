@@ -135,7 +135,10 @@
     /* Header-Row-Background */
     body.tundra .wm_template .dojoxGrid-header, 
     body.tundra .wm_template .dojoxGridHeader,
-    body.tundra .wm_template .wmlist-header {
+    body.tundra .wm_template .wmlist-header,
+    body.tundra.wm_template .dojoxGrid-header, 
+    body.tundra.wm_template .dojoxGridHeader,
+    body.tundra.wm_template .wmlist-header { 
 	background-color: #444444; /* Tables-HeaderRow-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* Tables-HeaderRow-Background_Image */
 	background-position: left top;     /* Tables-HeaderRow_Image-Position */
