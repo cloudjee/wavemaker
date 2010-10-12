@@ -359,6 +359,8 @@
         </xmltask>
         <xmltask sourcebuffer="webxmlOutput"
                 dest="${build.app.webinf.dir}/web.xml">
+			<remove path="/:web-app/:display-name"/> 
+			<remove path="/:web-app/:welcome-file-list"/> 
             <insert path="/*/*[1]" position="before" buffer="userWebBuffer"/>
         </xmltask>
     </target>
