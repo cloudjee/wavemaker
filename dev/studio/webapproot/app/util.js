@@ -78,6 +78,29 @@ wm.listMatchingComponentIds = function(inOwners, inMatch, inRecurse) {
 	return d;
 }
 
+// Actually returns the page in the page container, not the pagecontainer itself
+wm.listAllPageContainers = function(inOwners) {
+    var pagecontainers = wm.listComponents(inOwners, wm.PageContainer, false);
+    var pages = [];
+    for (var i = 0; i < pagecontainers.length; i++)  {
+	if (pagecontainers[i].page)
+	    pages.push(pagecontainers[i].page);
+    }
+
+    var pagedialogs = wm.listComponents(inOwners, wm.PageDialog, false);
+    for (var i = 0; i < pagedialogs.length; i++) {
+	if (pagedialogs[i].page)
+	    pages.push(pagedialogs[i].page);
+    }
+
+    if (pages.length) {
+	var subpages = wm.listAllPageContainers(pages);
+	return pages.concat(subpages);
+    } else {
+	return [];
+    }
+}
+
 // produce list of components (not widgets) of a given class name within a set of owners
 // if inStrict is true, only classes with declaredClass == inClass.declaredClass are returned
 wm.listComponents = function(inOwners, inClass, inStrict) {
