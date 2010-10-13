@@ -43,11 +43,17 @@ wm.hasBindableWidgets = function(inWidget, inExcludeWidget) {
 	
 }
 
-addComponentTypeBinderNodes = function(inParent, inClass, inStrict) {
-    var comps = wm.listComponents([studio.application, studio.page], inClass, inStrict);
+addComponentTypeBinderNodes = function(inParent, inClass, inStrict, includePageContainers) {
+    if (!includePageContainers) {
+	var comps = wm.listComponents([studio.application, inParent.page], inClass, inStrict);
+    } else {
+	var pages = wm.listAllPageContainers([studio.application, inParent.page]);
+	var comps = wm.listComponents(pages, inClass, false);
+
+    }
 
 	comps.sort(function(a, b) {
-		return wm.data.compare(a.name, b.name);
+		return wm.data.compare(a.owner.name + "." + a.name, b.owner.name + "." + b.name);
 	});
 	dojo.forEach(comps, function(c) {
 		if (c != studio.selected)
@@ -57,13 +63,15 @@ addComponentTypeBinderNodes = function(inParent, inClass, inStrict) {
 
 addWidgetBinderNodes = function(inParent, optionalWidgets) {
 
-    var types = [wm.AbstractEditor, wm.Composite, wm.DataGrid, wm.DojoGrid, wm.Editor, wm.List, wm.LiveForm ];
+    var types = [wm.AbstractEditor, wm.Composite, wm.DataGrid, wm.DojoGrid, wm.Editor, wm.List, wm.ToggleButton, wm.LiveForm ];
     var widgets = optionalWidgets || wm.listOfWidgetTypes(types);
-    var page = studio.page;   
+    var page = inParent.page;   
 
 
 	widgets.sort(function(a, b) {
-		return wm.data.compare(a.name, b.name);
+	    var ownera = (a.owner == studio.page) ? "" : a.owner.name + ".";
+	    var ownerb = (b.owner == studio.page) ? "" : b.owner.name + ".";
+		return wm.data.compare(ownera + a.name, ownerb + b.name);
 	});
 	dojo.forEach(widgets, function(w) {
 		if (w != studio.selected) {
@@ -72,28 +80,31 @@ addWidgetBinderNodes = function(inParent, optionalWidgets) {
 				object = props.object,
 				schema = object.listDataProperties("bindSource");
 
+		        var name = object.name || object.declaredClass;
 			dojo.mixin(props, { 
 				isObject: true,
 				isList: object.isList,
 				_hasChildren: !wm.isEmpty(schema),
 				objectId: object.getId(),
-				name: object.name,
+			        name: (w.owner == studio.page) ? name : w.owner.name + "." + name,
 				schema: schema,
 				image: props.image || studio.getComponentImage(object)
 			});
 			
-			var b = wm.convertForSimpleBind(props);
+		    var b = wm.convertForSimpleBind(props);
+		    var p = inParent.parent.owner; // bindSourceDialog
+		    var isBindable = wm.isNodeBindable(
+			props.type,
+			props,
+			props.isList,
+			p.targetType,
+			p.targetProps);
 			if (b) {
-				var p = inParent.parent.owner;
-				if ((w instanceof wm.Editor || w instanceof wm.AbstractEditor) && !wm.isNodeBindable(
-						props.type,
-						props,
-						props.isList,
-						p.targetType,
-						p.targetProps))
+
+				if ((w instanceof wm.Editor || w instanceof wm.AbstractEditor) && !isBindable)
 					return;
 			}
-			new wm.SimpleBindSourceTreeNode(inParent, {object: w});
+		    new wm.SimpleBindSourceTreeNode(inParent, {object: w, content: props.name, type: props.type, isValidBinding: isBindable});
 		}
 	});
 }
@@ -162,7 +173,7 @@ addWidgetBinderNodes = function(inParent, optionalWidgets) {
 }
 
 
-wm.convertForSimpleBind = function(inNodeProps) {
+wm.convertForSimpleBind = function(inNodeProps, optionalSource) {
 	var p;
 	for (var n in inNodeProps.schema) {
 		var property = inNodeProps.schema[n];
@@ -171,7 +182,7 @@ wm.convertForSimpleBind = function(inNodeProps) {
 	}
 	
 	if (p) {
-		inNodeProps.source = [inNodeProps.source, p.name].join(".");
+		inNodeProps.source = optionalSource || [inNodeProps.source, p.name].join(".");
 		inNodeProps.objectId = inNodeProps.source;
 		inNodeProps.isObject = p.property.isObject;
 		inNodeProps.isList =  p.property.isList;
@@ -194,7 +205,7 @@ wm.convertForSimpleBind = function(inNodeProps) {
 }
 
 wm.isNodeBindable = function(inType, inProps, inIsList, inTargetType, inTargetProps) {
-	if (!inTargetType) return;
+	if (!inTargetType) return false;
 	if (!inProps.isSimpleBind && inProps.isObject && inProps.object instanceof wm.Control) {
 		return inProps.object.declaredClass == inTargetType.type;
 	}
@@ -284,7 +295,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	    }]
 	},
         propListVar: null,
-	init: function() {
+	init: function() {	    
 	    this.propListVar = new wm.Variable({name: "propListVar", type: "EntryData", owner: this});
 		dojo.addClass(this.domNode, "wmbindersource");
 		this.createComponents(this._source);
@@ -424,9 +435,10 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	},
 	updateBindSourceUi: function(gv) {
 	  //var gv = this.simpleRb.getValue("groupValue"),
-		 var t = this.tree;
-		t.clear();
-		var r = t.root;
+	    var t = this.tree;
+	    t.clear();
+	    var r = t.root;
+	    r.page = studio.page;
 	    if (gv != "resources" && this.searchBar.getDataValue())
 		gv = "search";
 
@@ -481,7 +493,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		    return;
 		}
 		var appcomps = this.doSearch(studio.application);
-		var pagecomps = this.doSearch(studio.page);
+		var pagecomps = this.doSearch(inParent.page);
 	    if (this.simpleRb.getGroupValue() == "simple") {
 		addWidgetBinderNodes(inParent, appcomps);
 		addWidgetBinderNodes(inParent, pagecomps);
@@ -509,15 +521,20 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		// variables
 		addComponentTypeBinderNodes(inParent, wm.Variable, true);
 		// widgets
+
+	    // pagecontainers
+	    addComponentTypeBinderNodes(inParent, wm.Variable, false, true);
+
+
 	    addWidgetBinderNodes(inParent);
 	},
 	_buildAdvancedTree: function(inParent) {
 		// servicecalls
 		//new wm.ComponentTypeSourceTreeNode(inParent, {content: "ServiceVariables", className: "wm.ServiceVariable", image: "images/wm/serviceData.png"});
 		// variables
-		new wm.ComponentTypeSourceTreeNode(inParent, {content: "Non-visual Components", className: "wm.Variable", canSelect: false});
+	        new wm.ComponentTypeSourceTreeNode(inParent, {page: studio.page, content: "Non-visual Components", className: "wm.Variable", canSelect: false});
 		// widgets
-		new wm.WidgetContainerSourceTreeNode(inParent, {content: "Visual Components", object: studio.page.root, hasSchema: true, canSelect: false});
+	        new wm.WidgetContainerSourceTreeNode(inParent, {page: studio.page, content: "Visual Components", object: studio.page.root, hasSchema: true, canSelect: false});
 	},
 	_buildResourceTree: function(inParent) {	    	    
 	    var _this = this;
@@ -579,7 +596,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		var
 			type = tp.staticType,
 			typeObject = type && dojo.getObject(type),
-			sourceValue = studio.page.getValueById(sp.source);
+			sourceValue = studio.bindDialog.bindSourceDialog.bindPage.getValueById(sp.source);
 		if (typeObject && typeObject.prototype instanceof wm.Object) {
 			if (!(sourceValue instanceof typeObject))
 				return;
@@ -652,7 +669,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		var
 			sa = studio.application,
 			tobj = inTargetObject,
-		        sobj = inExpression ? this._getExpressionPageSourceObject(inExpression) : this._getSourceObject(inSource),
+	    sobj = inExpression ? this._getExpressionPageSourceObject(inExpression, inTargetObject.owner) : this._getSourceObject(inSource, inTargetObject.owner),
 			sourceBind = tobj.isOwnedBy(sa) && sobj && !sobj.isOwnedBy(sa),
 			targetId = (tobj || 0).getId();
 		return {
@@ -666,16 +683,16 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 			}
 		};
 	},
-	_getSourceObject: function(inSource) {
+        _getSourceObject: function(inSource, inOwner) {
 		var parts = (inSource || "").split('.'), o = [];
 		parts.length = (parts.length && parts[0] == "app") ? 2 : 1;
-		return studio.page.getValueById(parts.join('.'));
+		return inOwner.getValueById(parts.join('.'));
 	},
-	_getExpressionPageSourceObject: function(inExpression) {
+    _getExpressionPageSourceObject: function(inExpression, inOwner) {
 		var sources = wm.expression.getSources(inExpression);
 		for (var i=0, o, s; (s=sources[i]); i++) {
-			o = this._getSourceObject(s);
-			if (o && o.isOwnedBy(studio.page))
+		    o = this._getSourceObject(s, inOwner);
+		    if (o && o.isOwnedBy(inOwner))
 				return o;
 		}
 	},
@@ -685,9 +702,18 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	},
 	// events
 	onBindNodeSelected: function(inNode) {
+/*
+	    if (inNode.isInterPageBinding) {
+		studio.bindDialog.bindSourceDialog.bindPageContainer = inNode.object;
+		studio.bindDialog.bindSourceDialog.bindPage = inNode.object._pageLoader.page;		
+		this.searchBar.setDataValue("");
+		this.updateBindSourceUi();
+	    } else {
+	    */
 		var b = inNode.isValidBinding;
 		this.validLabel.setShowing(b);
 		this.invalidLabel.setShowing(!b);
+//	    }
 	},
 	// expression builder
 	addValueToExpressionEditor: function(inValue) {
@@ -716,15 +742,21 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	    }
 	    var searchRegex = new RegExp(search, "i");
 	    var data = [];
-	    var comps = owner.components;
+
+	    var pages = wm.listAllPageContainers([owner]);
+	    var owners = [owner].concat(pages);
+	    var comps = wm.listComponents(owners, wm.Component, false);
+	    console.log(comps);
+//	    var comps = owner.components;
 	    for (var comp in comps) {    
 		if (comp) 
 		    c = comps[comp];
 		if (c) {
 		    if (searchByExactName) {
-			if (c.name == search)
+			var name = c.name || c.declaredClass;
+			if (name == search)
 			    data.push(c);
-		    } else if (c.declaredClass.match(searchRegex) || c.name.match(searchRegex)) {
+		    } else if (c.declaredClass.match(searchRegex) || name.match(searchRegex)) {
 			if (wm.widgetIsBindSource(c))
 			    data.push(c);
 		    } else {
@@ -758,6 +790,7 @@ dojo.declare("wm.BindTreeNode", wm.TreeNode, {
 		var
 			props = inProps,
 			object = props.object,
+	                name = object.name || object.declaredClass,
 			schema = this.listDataProperties(object);
 			// node props
 		dojo.mixin(props, { 
@@ -765,21 +798,51 @@ dojo.declare("wm.BindTreeNode", wm.TreeNode, {
 			isList: object.isList,
 			_hasChildren: !wm.isEmpty(schema),
 			objectId: object.getId(),
-			name: object.name,
+		        name: name,
 			schema: schema,
 			image: props.image || studio.getComponentImage(object)
 		});
 		// add bind info
 		this.initBindingProps(this.parent, props);
-		props.content = props.content || this.getNodeContent(object.getId(), object.type, object.isList, props);
+	    var content;
+	    delete object.id;
+	    if (object.owner == studio.page) {
+		content = object.getId();
+	    } else {
+		content = object.owner.name + "." + object.getId();
+	    }
+		props.content = props.content || this.getNodeContent(content, object.type, object.isList, props);
 
 	},
+    buildSourceProp: function(inNodeProps) {
+	var namelist = [];
+	if (inNodeProps._propertyPath) namelist.push(inNodeProps._propertyPath);
+	namelist.push(inNodeProps.objectId);
+	var owner = inNodeProps.object.owner;
+	while (owner && owner != studio.page) {
+	    if (!(owner instanceof wm.PageContainer && owner.owner instanceof wm.PageDialog) && owner.name)
+		namelist.push(owner.name);
+	    owner = owner.owner;
+	}
+	return namelist.reverse().join(".");
+    },
 	dumpSchema: function(inParent, inSchema) {
 		inParent.hasSchema = true;
 		// sort nodes in schema
 		var props = [];
-		for (var n in inSchema)
+	        for (var n in inSchema) {
+		    if (inSchema[n].pageProperty) {
+			var pagePropertyName = inSchema[n].pageProperty;
+			var page = this.object[pagePropertyName];
+			if (page) {
+			    new wm.ComponentTypeSourceTreeNode(inParent, {page: page, content: "Non-visual Components", className: "wm.Variable", canSelect: false});
+			// widgets
+			    new wm.WidgetContainerSourceTreeNode(inParent, {page: page, content: "Visual Components", object: page.root, hasSchema: true, canSelect: false});			
+			}
+		    } else {
 			props.push({name: n, property: inSchema[n]});
+		    }
+		}
 		props.sort(function(a, b) {
 			return wm.data.compare(a.name, b.name);
 		});
@@ -810,13 +873,15 @@ dojo.declare("wm.BindTreeNode", wm.TreeNode, {
 			object: object,
 			name: n,
 			type: t.type,
-		    isList: (t.isList),
-			_hasChildren: !wm.isEmpty(schema),
+	                isInterPageBinding: t.isPage,
+		        isList: (t.isList),
+			_hasChildren: !wm.isEmpty(schema) || t.isPage,
 			objectId: inParent.objectId || object.getId(),
 			schema: schema,
 			image: "images/wm/type.png",
 			initNodeChildren: dojo.hitch(this, "initNodeChildren"),
 			expandBySchemaProp: this.expandBySchemaProp,
+		    page: inParent.page,
 			closed: true
 		});
 	},
@@ -883,16 +948,20 @@ dojo.declare("wm.BindTreeNode", wm.TreeNode, {
 dojo.declare("wm.BindSourceTreeNode", wm.BindTreeNode, {
 	_bindFlag: "bindSource",
 	initBindingProps: function(inParent, inNodeProps) {
-		this.inherited(arguments);
-		inNodeProps.source = inNodeProps._propertyPath ? [inNodeProps.objectId, inNodeProps._propertyPath].join('.') : inNodeProps.objectId;
-		inNodeProps.isProperty = true;
+	    this.inherited(arguments);
+	    if (!this.page)
+		this.page = inParent.page;
+
+	    // not sure yet what this is, but looks like its only for navigating the advanced tree
+	    inNodeProps.source = this.buildSourceProp(inNodeProps);
+	    inNodeProps.isProperty = true;
 	}
 });
 
 dojo.declare("wm.SimpleBindSourceTreeNode", wm.BindSourceTreeNode, {
 	initBindingProps: function(inParent, inNodeProps) {
 		this.inherited(arguments);
-		wm.convertForSimpleBind(inNodeProps);
+	        wm.convertForSimpleBind(inNodeProps,this.source);
 	}
 });
 
@@ -970,7 +1039,7 @@ dojo.declare("wm.ComponentTypeSourceTreeNode", wm.TreeNode, {
 		}
 	},
 	expandBySource: function(inObjectId, inProp) {
-		var o = studio.page.getValueById(inObjectId);
+		var o = this.page.getValueById(inObjectId);
 		if (o && o.declaredClass == this.className) {
 			this.setOpen(true);
 			for (var i=0, n, nodes=this.kids; (n=nodes[i]); i++)
@@ -1023,7 +1092,7 @@ dojo.declare("wm.WidgetContainerSourceTreeNode", wm.BindSourceTreeNode, {
 	},
 	// open max levels inside root
 	shouldInitClosed: function() {
-		var r = studio.page.root, w = this.object, l = 0, max = 1;
+		var r = this.page.root, w = this.object, l = 0, max = 1;
 		while (w && w != r) {
 			w = w.parent;
 			if (l >= max)
@@ -1037,8 +1106,8 @@ dojo.declare("wm.WidgetContainerSourceTreeNode", wm.BindSourceTreeNode, {
 	    var widgets = {};
 	    for(var w in this.object.widgets)
 		widgets[w] = this.object.widgets[w];
-	    if (this.object == studio.page.root) {
-		var comps = wm.listComponents([studio.application, studio.page], wm.Dialog, false);
+	    if (this.object == this.page.root) {
+		var comps = wm.listComponents([studio.application, this.page], wm.Dialog, false);
 		for (var w in comps) 
 		    widgets[w] = comps[w];
 	    }
@@ -1049,9 +1118,9 @@ dojo.declare("wm.WidgetContainerSourceTreeNode", wm.BindSourceTreeNode, {
 				c = w.container,
 				cw = c && wm.hasBindableWidgets(w, studio.selected);
 			if (cw)
-				new wm.WidgetContainerSourceTreeNode(this, {object: w, hasBindableWidgets: true});
+			    new wm.WidgetContainerSourceTreeNode(this, {page: this.page, object: w, hasBindableWidgets: true});
 			else if (s)
-				new wm.BindSourceTreeNode(this, {object: w});
+			    new wm.BindSourceTreeNode(this, {page: this.page, object: w});
 		}));
 	},
 	widgetIsChild: function(inWidget) {
@@ -1063,7 +1132,7 @@ dojo.declare("wm.WidgetContainerSourceTreeNode", wm.BindSourceTreeNode, {
 		}
 	},
 	expandBySource: function(inObjectId, inProp) {
-		var o = studio.page.getValueById(inObjectId);
+		var o = this.page.getValueById(inObjectId);
 		if (this.widgetIsChild(o)) {
 			this.setOpen(true);
 			for (var i=0, n, nodes=this.kids; (n=nodes[i]); i++)
