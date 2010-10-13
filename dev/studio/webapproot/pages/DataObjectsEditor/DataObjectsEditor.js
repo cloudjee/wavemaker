@@ -30,6 +30,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	currentDataModelName: null,
 	currentEntity: null,
 	currentEntityName: null,
+        currentTableName: null,
 	currentPropertyName: null,
 	propertiesAreDirty: false,
 	onlyEntityIsDirty: false,
@@ -174,6 +175,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		this.tableDetailSchemaName.setDataValue("");
 		this.tableDetailCatalogName.setDataValue("");
 		this.tableDetailTableName.setDataValue("");
+	    this.currentTableName = "";
 		this.tableDetailEntityName.setDataValue("");
 		this.tableDetailPackageName.setDataValue("");
 		this.dynamicInsertCheckBox.components.editor.setChecked(false);
@@ -181,9 +183,11 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		this.refreshCheckBox.components.editor.setChecked(false);
 	},
 	renderTableDetails: function(entity) {
+	    this.objectPages.setLayer(this.OBJECT_PAGE);
 		this.tableDetailSchemaName.setDataValue(entity.schemaName);
 		this.tableDetailCatalogName.setDataValue(entity.catalogName);
 		this.tableDetailTableName.setDataValue(entity.tableName);
+	    this.currentTableName = entity.tableName;
 		this.tableDetailEntityName.setDataValue(entity.entityName);
 		this.tableDetailPackageName.setDataValue(entity.packageName);
 		this.dynamicInsertCheckBox.components.editor.setChecked(entity.dynamicInsert);
@@ -197,11 +201,13 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		this.onlyEntityIsDirty = true;
 	},
 	tableDetailTableNameChange: function() {
+	    if (this.tableDetailTableName.getDataValue() && this.currentTableName  != this.tableDetailTableName.getDataValue())
 		this.onlyEntityIsDirty = true;
 	},
 	tableDetailEntityNameChange: function() {
 		// Force sending column and relationship info to the server
 		// when renaming an Entity.
+	    if (this.tableDetailEntityName.getDataValue() && this.currentEntityName != this.tableDetailEntityName.getDataValue())
 		this.propertiesAreDirty = true;
 	},
 	tableDetailPackageNameChange: function(inSender) {
@@ -391,6 +397,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	},
 	getEntityResult: function(inResponse) {
 		this.renderTableDetails(inResponse);
+	    this.resetChanges();
 		this.getEntityOutputChanged(inResponse);
 	},
 	getRelatedResult: function(inResponse) {
@@ -549,6 +556,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		this.selectEntityNode();
 		studio.refreshWidgetsTree();
             app.toastSuccess("Saved!");
+	    this.resetChanges(); // clears dirty flags
 	},
 	saveColumns: function(inSender) {
 		// hack - set fk to false for all columns, add it back
@@ -804,6 +812,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		this.initData();
 		studio.updateServices();
 		this.setSchemas();
+	    this.resetChanges();
 	},
 	addColumn: function(name, isPk, isFk, notNull, length, precision, 
 		generator, sqlType) 
@@ -962,7 +971,47 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		this.propertyName.setInputValue(this.currentPropertyName);
 	},
 	_selectNode: function() {
-		selectFirstChildNode(this.tree);
+	    var treeNode = studio.tree.selected;
+	    var comp = treeNode.component;
+
+	    while(!comp && treeNode && treeNode.parent) {
+		treeNode = treeNode.parent;
+		comp = treeNode.component;
+	    }
+	    var modelName = comp.dataModelName;
+	    var entityName = comp.entityName;
+	    var modelNode;
+	    var entityNode;
+	    if (modelName) {
+		var databases = this.tree.root.kids[0].kids;
+		for (var i = 0; i < databases.length; i++) {
+		    if (databases[i].content == modelName) {
+			modelNode = databases[i];
+			break;
+		    }
+		}
+	    }
+	    if (modelNode && entityName) {
+		var liveTableNode;
+		for (var i = 0; i < modelNode.kids.length; i++) {
+		    if (modelNode.kids[i].content == "LiveTables") {
+			liveTableNode = modelNode.kids[i];
+			break;
+		    }
+		}
+		for (var i = 0; i < liveTableNode.kids.length; i++) {
+		    if (liveTableNode.kids[i].content == entityName) {
+			entityNode = liveTableNode.kids[i];
+			break;
+		    }
+		}
+	    }
+
+	    if (entityNode)
+		this.tree.select(entityNode);
+	    else
+		this.tree.select(modelNode);
+	    //selectFirstChildNode(this.tree);
 	},
 	_askAboutLosingChanges: function() {
 		if (this.isDirty()) {

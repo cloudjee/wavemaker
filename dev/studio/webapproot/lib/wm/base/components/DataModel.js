@@ -117,7 +117,13 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 			}
 		}));
 		studio.addQryAndViewToTree(inNode);
-	}
+	},
+	designSelect: function() {
+	    var c = studio.navGotoEditor("DataObjectsEditor");
+	    c.page.objectPages.setLayer(c.page.DEFAULT_PAGE);
+	    c.page.setDataModel(this);
+	},
+
 });
 
 dojo.declare("wm.DataModelEntity", wm.Component, {
@@ -132,6 +138,7 @@ dojo.declare("wm.DataModelEntity", wm.Component, {
 	},
 	designSelect: function() {
 		var c = studio.navGotoEditor("DataObjectsEditor");
+	    c.page.objectPages.setLayer(c.page.OBJECT_PAGE);
 		if (this.entityName) {
 			c.pageLoadedDeferred.addCallback(dojo.hitch(this, function() {
 				c.page.selectEntity(this.dataModelName, this.entityName);
