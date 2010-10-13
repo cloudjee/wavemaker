@@ -30,7 +30,7 @@ wm.getViewField = function(inTypeSchema, inPropName) {
 			type: propInfo.type,
 			displayType: wm.getPrimitiveDisplayType(propInfo.type),
 			required: propInfo.required,
-			readonly: dojo.indexOf(propInfo.noChange||[], "read") >= 0,
+			readonly: dojo.indexOf(propInfo.noChange||[], "read") >= 0, 
 			includeLists: true,
 			includeForms: true,
 			order: propInfo.fieldOrder
