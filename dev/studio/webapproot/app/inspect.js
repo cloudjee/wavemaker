@@ -135,7 +135,8 @@ inspect = function(inComponent, inDoFocus) {
 
 _setInspectedCaption = function(inComponent) {
 	var c = inComponent;
-	studio.inspected.setCaption(c ? c.name  + ': ' + c._designee.declaredClass : "(none)");
+        if (studio.application && studio.page)
+	    studio.inspected.setCaption(c ? c.name  + ': ' + c._designee.declaredClass : "(none)");
 }
 
 _inspect = function(inComponent, inDoFocus) {
