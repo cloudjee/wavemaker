@@ -552,7 +552,7 @@ wm.Array.equals = function(a, b,optionalCallback) {
     return true;
 }
 
-
+ 
 wm.Array.indexOf = function(inArray, inValue, inCallback) {
     for (var i = 0; i < inArray.length; i++) {
         if (inCallback(inArray[i], inValue))
