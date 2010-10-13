@@ -120,8 +120,14 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 	},
 	designSelect: function() {
 	    var c = studio.navGotoEditor("DataObjectsEditor");
-	    c.page.objectPages.setLayer(c.page.DEFAULT_PAGE);
+	    studio.selected._studioTreeNode.setOpen(true);
 	    c.page.setDataModel(this);
+	    if (studio.selected._studioTreeNode.kids.length) {
+		studio.tree.select(studio.selected._studioTreeNode.kids[0]);
+		c.page.objectPages.setLayer(c.page.OBJECT_PAGE);
+	    } else {
+		c.page.objectPages.setLayer(c.page.DEFAULT_PAGE);
+	    }
 	},
 
 });
