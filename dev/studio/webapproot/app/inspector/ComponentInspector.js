@@ -86,6 +86,7 @@ dojo.declare("wm.ComponentInspectorPanel", wm.Panel, {
 	},
 	// tree
 	clearTree: function() {
+	    if (this.tree)
 		this.tree.clear();
 		this.treeNodes = {};
 	},
