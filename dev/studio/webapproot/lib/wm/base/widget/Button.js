@@ -253,7 +253,7 @@ dojo.declare("wm.ToggleButton", wm.ToolButton, {
 wm.Object.extendSchema(wm.ToggleButton, {
         captionUp: { group: "display", bindTarget: 1, order: 10, focus: 1 },
 	captionDown: { group: "display", bindTarget: 1, order: 11},
-    clicked: { group: "display", type: "Boolean", bindTarget: 1, bindSource: 1, order: 12, simpleBindProp: true},
+    clicked: { group: "display", type: "Boolean", bindTarget: 1, bindSource: 1, order: 12, simpleBindProp: true}, 
         caption: {ignore: 1}
 });
 
