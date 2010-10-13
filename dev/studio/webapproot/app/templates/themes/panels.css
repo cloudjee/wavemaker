@@ -388,10 +388,23 @@ body.wm_template {
         color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
     }
     .wm_template .dojoxPortlet div.dijitTitlePaneTitle .dojoxPortletIcon {
-        background-color: white;
+	background-image: url(images/DialogIconsWhite.png) !important; /* Dialogs-Titlebar_Icons */
         border-color: #333333;
-        margin-left: 5px;
+	width: 16px;
+        margin-left: 1px;
     }
+
+    .wm_template .dojoxPortlet div.dijitTitlePaneTitle .dojoxPortletIcon.dojoxCloseNode {
+	background-position: 0px 0px; 
+    }
+    .wm_template .dojoxPortlet div.dijitTitlePaneTitle .dojoxPortletIcon.dojoxArrowDown {
+	margin-top: 1px;
+	background-position: -16px 0px; /* Dialogs-Titlebar_MinifyIconWidth */
+    }
+    .wm_template .dojoxPortlet div.dijitTitlePaneTitle.dijitClosed .dojoxPortletIcon.dojoxArrowDown {
+	background-position: -32px 0px; /* Dialogs-Titlebar_MaxifyIconWidth */
+    }
+}
 }
 
 
