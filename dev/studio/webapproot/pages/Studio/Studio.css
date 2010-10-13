@@ -1506,3 +1506,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
     vertical-align: top;
     padding: 0px 3px;
 }
+
+#studio_dialog {
+    z-index: 999 !important;
+}
