@@ -175,7 +175,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    }
 	    this.setModal(this.modal);
 
-            this.setTitlebarBorder(this.titlebarBorder);
+            this.setTitlebarBorder(this.titlebarBorder); 
             this.setTitlebarBorderColor(this.titlebarBorderColor);
 
 	    if (this.useButtonBar) {
