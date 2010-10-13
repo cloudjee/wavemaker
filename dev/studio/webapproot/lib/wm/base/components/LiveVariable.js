@@ -61,6 +61,11 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 		this.sourceData = new wm.Variable({name: "sourceData", owner: this, type: this.type || "any" });
 		this.subscribe(this.filter.getRuntimeId() + "-changed", this, "filterChanged");
 		this.subscribe(this.sourceData.getRuntimeId() + "-changed", this, "sourceDataChanged");
+
+	    // default assumption is that its a list until we have some actual
+	    // data to tell us otherwise
+	    if (this.isList === undefined && this.operation == "read") 
+		this.isList = true;
 	},
 	postInit: function() {
 		this.inherited(arguments);
@@ -168,6 +173,13 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 		if (this.isDesignLoaded())
 			this.doAutoUpdate();
 	},
+    setType: function(inType) {
+	this.inherited(arguments);
+
+	// until we have data, assume any read livevar is a list.
+	if (this.operation == "read" && wm.isEmpty(this.getData()))
+	    this.isList = true;
+    },
 	// ==========================================================
 	// Server I/O
 	// ==========================================================

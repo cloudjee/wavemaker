@@ -368,6 +368,24 @@
 	border-right-color: #939fb6 !important;
 	border-bottom-color: #939fb6 !important;
 }
+
+.wm_Mouse_pointer {
+    cursor: pointer !important;
+}
+
+.wm_Mouse_wait {
+    cursor: wait !important;
+}
+
+.wm_Mouse_help {
+    cursor: help !important;
+}
+
+.wm_Mouse_move {
+    cursor: move !important;
+}
+
+
 .wm_Attribution_new {
 	background-image: url(images/wavemakerLogo.png) !important;
 	background-repeat: no-repeat !important;

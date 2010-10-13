@@ -256,7 +256,10 @@ wm.PageContainer.extend({
         studio.promptForName("page", wm.findUniqueName("Page", [l]), pages,
                              dojo.hitch(this, function(n) {
 				 n = wm.capitalize(n);
-				 this.pageName = n;
+				 if (this.owner instanceof wm.PageDialog)
+				     this.owner.pageName = n;
+				 else
+				     this.pageName = n;
 				 app.confirm("Can we save your current page before moving on to the next page? This will save your pageContainer's pageName.", 
 					     false,
 					     dojo.hitch(this,function() {
@@ -301,7 +304,7 @@ wm.PageContainer.extend({
 
 wm.Object.extendSchema(wm.PageContainer, {
 	pageLoadedDeferred: {ignore: 1},
-	pageName: {group: "common", bindable: 1, type: "string", order: 50},
+        pageName: {group: "common", bindable: 1, type: "string", order: 50, pageProperty: "page"},
 	deferLoad: {group: "common", order: 100},
 	loadParentFirst: {group: "common", order: 101},
 	box: {ignore: 1},

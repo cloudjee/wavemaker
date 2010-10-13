@@ -88,6 +88,8 @@ dojo.declare("wm.Variable", wm.Component, {
 		return true;
 	},
 	setType: function(inType) {
+	    if (inType == this.declaredClass || this.owner instanceof wm.Variable && inType == this.owner.declaredClass) inType = "";
+
                 this.unsubscribe("TypeChange-" + this.type);
 		if (!this.canSetType(inType))
 			return;

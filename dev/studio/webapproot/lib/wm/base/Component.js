@@ -397,7 +397,7 @@ dojo.declare("wm.Component", wm.Object, {
 		  return app.getValue(inId);
 		}
 
-		return r || wm.Component.byId[inId];
+		return r || inId && wm.Component.byId[inId];
 	},
 	/* 
   	LiveForm does not work with the impovement changes below.

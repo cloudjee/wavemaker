@@ -535,18 +535,54 @@ this.label.enable();
 		//this.updateBounds();
 	},
     isAncestorHiddenLayer: function() {
-	  if (this instanceof wm.Layout) return false;
+	  if (this instanceof wm.Layout && this.owner == app._page) return false;
 	  if (this instanceof wm.Layer && this.parent && this.parent.getActiveLayer() != this) return true;
-	  if (this.parent == null || !(this.parent instanceof wm.Control)) return false;
-	  return this.parent.isAncestorHiddenLayer();
+        var parent;
+        if (this.parent && this.parent instanceof wm.Control) 
+            parent = this.parent;
+        else if (this.owner instanceof wm.Page && this.owner.owner instanceof wm.Control)
+            parent = this.owner.owner;
+	if (!parent) return false;
+	  return parent.isAncestorHiddenLayer();
 	},
         isAncestorHidden: function() {
             if (!this.showing) return true;
-	  if (this instanceof wm.Layout || this instanceof wm.Dialog) return false;
+	  if (this instanceof wm.Layout && this.owner == app._page || this instanceof wm.Dialog) return false;
 	  if (this instanceof wm.Layer && this.parent.getActiveLayer() != this) return true;
-	  if (this.parent == null || !(this.parent instanceof wm.Control)) return true;
-	  return this.parent.isAncestorHidden();
+        var parent;
+        if (this.parent && this.parent instanceof wm.Control) 
+            parent = this.parent;
+        else if (this.owner instanceof wm.Page && this.owner.owner instanceof wm.Control)
+            parent = this.owner.owner;
+	if (!parent) return false;
+	  return parent.isAncestorHidden();
 	},
+
+    // TODO: Should also handle dialogs showing/hiding
+    // OPTIONAL: Maybe handle all parents showing/hiding but thats a lot of connections
+    //           and it may be better to just tell people not to show/hide parents of widgets needing these; just use layers
+    connectToAllLayers: function(obj, callback) {
+        var layers = [];
+        var parent = this.parent;
+        while (parent && parent != app._page.root) {
+            if (parent instanceof wm.Layer)
+                layers.push(parent);
+            if (parent.parent)
+                parent = parent.parent;
+            else if (parent.owner instanceof wm.Page && parent.owner.owner instanceof wm.Control)
+                parent = this.owner.owner;
+        }
+
+        var f = dojo.hitch(obj,callback);
+
+        dojo.forEach(layers, dojo.hitch(this,function(l) {
+            this.connect(l, "onShow", this, function() {
+                if (dojo.every(layers, function(l2) {return l2.isActive();})) {
+                    f();
+                }
+            });
+        }));
+    },
     isAncestor: function(inParent) {
 	var o;
 	while (o && o != inParent) {

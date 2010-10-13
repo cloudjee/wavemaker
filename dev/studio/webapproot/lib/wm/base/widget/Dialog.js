@@ -334,7 +334,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 			//// center within parent
 			//var parentBox = dojo.contentBox(this.domNode.parentNode);
 			//var bounds = this.getBounds();
-                        if (!this._fixPosition) {
+                        if (this.fixPositionNode) {
+                            this.renderBoundsByPositionNode();
+                        } else if (!this._fixPosition) {
                             this.renderBoundsByCorner();
 /*
 			    var t = (parentBox.h - bounds.h) / 2;
@@ -362,23 +364,54 @@ dojo.declare("wm.Dialog", wm.Container, {
         this.renderBoundsByCorner();
     },
 /* if the dialog is off the edge of the screen, attempt to compensate */
-    insureDialogVisible: function() {
+    insureDialogVisible: function(testOnly) {
 	if (!this.showing) return;
         var w = this.bounds.w;
         var h = this.bounds.h;
         var isDesigned =  (this.domNode.parentNode != document.body);
         var W = (isDesigned) ? studio.designer.bounds.w : app._page.root.bounds.w;
         var H = (isDesigned) ? studio.designer.bounds.h : app._page.root.bounds.h;
-        if (this.bounds.t + this.bounds.h > H)
-            this.bounds.t = H - this.bounds.h;
-        if (this.bounds.l + this.bounds.w > W)
-            this.bounds.l = W - this.bounds.w;
-        if (this.bounds.t < 0)
-            this.bounds.t = 0;
-        if (this.bounds.l < 0)
-            this.bounds.l = 0;
+        if (this.bounds.t + this.bounds.h > H) {
+            if (testOnly) return false;
+            else this.bounds.t = H - this.bounds.h;
+        }
+        if (this.bounds.l + this.bounds.w > W) {
+            if (testOnly) return false;
+            else this.bounds.l = W - this.bounds.w;
+        }
+        if (this.bounds.t < 0) {
+            if (testOnly) return false;
+            else this.bounds.t = 0;
+        }
+        if (this.bounds.l < 0) {
+            if (testOnly) return false;
+            else this.bounds.l = 0;
+        }
+        if (!testOnly)           
+	    wm.Control.prototype.renderBounds.call(this);        
+        return true;
+    },
 
-	wm.Control.prototype.renderBounds.call(this);        
+    // TODO: Update colorpickerdialog to use this
+    // TODO: Add property to control whether dialog goes below, above, left or right
+    renderBoundsByPositionNode: function() {
+        if (!this.fixPositionNode) return;
+	var o = dojo._abs(this.fixPositionNode);
+        this.bounds.t = o.y + o.h; // position it directly under the specified node
+        this.bounds.l = o.x;
+        if (!this.insureDialogVisible(true)) {
+            this.bounds.t = o.y - this.bounds.h;
+            if (!this.insureDialogVisible(true)) {
+                this.bounds.t = o.y;
+                this.bounds.l = o.x + o.w;
+                if (!this.insureDialogVisible(true)) {
+                    this.bounds.l = o.x - this.bounds.w;
+                    this.insureDialogVisible(false); // if all test up to this point have failed, force it to fit here.
+                    return; // insureDialogVisible calls renderBounds
+                }
+            }
+        }
+	wm.Control.prototype.renderBounds.call(this);
     },
     renderBoundsByCorner: function() {
 	if (!this.showing) return;
@@ -1372,7 +1405,15 @@ dojo.declare("wm.PageDialog", [wm.Dialog, wm.pageContainerMixin], {
 		this.inherited(arguments);
 		this.initPageContainer();
 	},
-        setPageName: function(inPageName) {return this.setPage(inPageName);},
+        setPageName: function(inPageName) {
+	    if (this._pageLoading)
+		return;
+	    if (inPageName == "-New Page" && this.isDesignLoaded()) {
+	        return this.pageContainer.createNewPage();
+	    }
+
+	    return this.setPage(inPageName);
+	},
         setPage: function(inPageName) {
 	    this.pageName = inPageName;
             if (inPageName && this.pageContainer.pageName != inPageName) 
@@ -1409,7 +1450,7 @@ dojo.declare("wm.PageDialog", [wm.Dialog, wm.pageContainerMixin], {
     makePropEdit: function(inName, inValue, inDefault) {
 	switch (inName) {
 	case "pageName":
-	    return new wm.propEdit.PagesSelect({component: this, name: inName, value: inValue});
+	    return new wm.propEdit.PagesSelect({component: this, name: inName, value: inValue, newPage: true});
 	}
 	return this.inherited(arguments);
     },
@@ -1432,7 +1473,7 @@ wm.PageDialog.extend({
 });
 
 wm.Object.extendSchema(wm.PageDialog, {
-    pageName: {group: "Dialog Options", bindable: 1, type: "string", order: 50},
+    pageName: {group: "Dialog Options", bindable: 1, type: "string", order: 50, pageProperty: "page"},
     noBevel: {ignore: 1},
     footerBorder: {group: "style", order: 100},
     footerBorderColor:  {group: "style", order: 101}

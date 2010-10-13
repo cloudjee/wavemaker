@@ -65,7 +65,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 			autoComplete: this.autoComplete,
 			hasDownArrow: this.hasDownArrow,
 			searchAttr: this._storeNameField,
-			pageSize: this.pageSize ? this.pageSize : Infinity
+		    pageSize: this.pageSize ? this.pageSize + 1 : Infinity // dijit requires 1 higher or it will still print the "more" link
 		}, inProps || {});
 	},
 	_createEditor: function(inNode, inProps) {
@@ -424,7 +424,7 @@ dojo.declare("wm._SelectEditor", wm._BaseEditor, {
 			autoComplete: this.autoComplete,
 			hasDownArrow: this.hasDownArrow,
 			searchAttr: "name",
-			pageSize: this.pageSize ? this.pageSize : Infinity
+		    pageSize: this.pageSize ? this.pageSize + 1: Infinity // dijit requires 1 higher or it will still print the "more" link
 		}, inProps || {});
 	},
 	_createEditor: function(inNode, inProps) {

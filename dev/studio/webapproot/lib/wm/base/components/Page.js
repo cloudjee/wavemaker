@@ -281,7 +281,8 @@ dojo.declare("wm.Page", wm.Component, {
 			_loading: true
 		}, props);
 
-		if (this.isRelativePositioned){
+
+		if (this.isRelativePositioned && inType == "wm.Layout"){
 			props.isRelativePositioned = true;	
 		}
 
