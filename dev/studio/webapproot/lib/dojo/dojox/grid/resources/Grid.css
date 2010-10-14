@@ -28,6 +28,16 @@
 	position: relative;
 }
 
+/* actions */
+
+.dojoxGridActions {
+	position: relative;
+	padding: 1em;
+	background-color: white;
+	height:10px;
+	margin-bottom:2px;
+}
+
 /* master messages */
 
 .dojoxGridMasterMessages {
