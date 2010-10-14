@@ -163,23 +163,22 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	},
 	setType: function(inType) {
 		this.inherited(arguments);
-		this.filter.setType(this.type);
-		this.sourceData.setType(this.type);
-		if (!this._updating && this.$.binding)
-			this.$.binding.refresh();
+
+	    // until we have data, assume any read livevar is a list.
+	    if (this.operation == "read" && wm.isEmpty(this.getData()))
+		this.isList = true;
+
+	    this.filter.setType(this.type);
+	    this.sourceData.setType(this.type);
+	    if (!this._updating && this.$.binding)
+		this.$.binding.refresh();
 	},
 	_liveViewChanged: function() {
 		this.setType(this.liveView.dataType);
 		if (this.isDesignLoaded())
 			this.doAutoUpdate();
 	},
-    setType: function(inType) {
-	this.inherited(arguments);
 
-	// until we have data, assume any read livevar is a list.
-	if (this.operation == "read" && wm.isEmpty(this.getData()))
-	    this.isList = true;
-    },
 	// ==========================================================
 	// Server I/O
 	// ==========================================================
