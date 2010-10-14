@@ -76,7 +76,7 @@ wm.fullTemplates.fancyTemplate = {
 			}],
 			panel10: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"middle","width":"300px"}, {}, {
 				panel14: ["wm.Panel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
-					label4: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"autoSizeWidth":true,"border":"0","caption":"Welcome, ","height":"20px","width":"67px"}, {}, {
+					label4: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"border":"0","caption":"Welcome, ","height":"20px","width":"100%"}, {}, {
 						binding: ["wm.Binding", {}, {}, {
 							wire: ["wm.Wire", {"expression":"\"Welcome, \" + ${varTemplateUsername.dataValue}","targetProperty":"caption"}, {}]
 						}],
@@ -175,7 +175,7 @@ wm.fullTemplates.sideMenuTemplate = {
 			}],
 			panel10: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"middle","width":"300px"}, {}, {
 				panel14: ["wm.Panel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
-					label4: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"autoSizeWidth":true,"border":"0","caption":"Welcome, ","height":"20px","width":"67px"}, {}, {
+					label4: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"border":"0","caption":"Welcome, ","height":"20px","width":"100%"}, {}, {
 						binding: ["wm.Binding", {}, {}, {
 							wire: ["wm.Wire", {"expression":"\"Welcome, \" + ${varTemplateUsername.dataValue}","targetProperty":"caption"}, {}]
 						}],
@@ -286,7 +286,7 @@ wm.fullTemplates.topMenuTemplate = {
 			}],
 			panel10: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"middle","width":"300px"}, {}, {
 				panel14: ["wm.Panel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
-					label4: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"autoSizeWidth":true,"border":"0","caption":"Welcome, ","height":"20px","width":"67px"}, {}, {
+					label4: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"border":"0","caption":"Welcome, ","height":"20px","width":"100%"}, {}, {
 						binding: ["wm.Binding", {}, {}, {
 							wire: ["wm.Wire", {"expression":"\"Welcome, \" + ${varTemplateUsername.dataValue}","targetProperty":"caption"}, {}]
 						}],
