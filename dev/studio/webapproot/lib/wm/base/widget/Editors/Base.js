@@ -265,7 +265,7 @@ dojo.declare("wm._BaseEditor", wm.Widget, {
 			}
 	},
  	getDisplayValue: function() {
-		return this.editor && this.editor.declaredClass && this.editor.attr && this.editor.attr('displayedValue') ? this.editor.attr('displayedValue') || "" : this.getEditorValue() || "";
+		return this.editor && this.editor.declaredClass && this.editor.get && this.editor.get('displayedValue') ? this.editor.get('displayedValue') || "" : this.getEditorValue() || "";
 	},
 	makeEmptyValue: function() {
 		switch (this.owner.emptyValue) {
@@ -277,14 +277,14 @@ dojo.declare("wm._BaseEditor", wm.Widget, {
 	},
 	getEditorValue: function() {
 		var v;
-		if (this.editor && this.editor.attr)
-			v = this.editor.attr('value');
+		if (this.editor && this.editor.get)
+			v = this.editor.get('value');
 		return (v || v === 0) ? v : this.makeEmptyValue();
 	},
 	setEditorValue: function(inValue) {
-		if (this.editor && this.editor.attr) {
+		if (this.editor && this.editor.set) {
 			inValue = inValue === undefined ? null : inValue;
-			this.editor.attr('value',inValue);
+			this.editor.set('value',inValue);
 			this.updateReadonlyValue();
 		}
 	},
@@ -310,8 +310,8 @@ dojo.declare("wm._BaseEditor", wm.Widget, {
 	},
 	setDisabled: function(inDisabled) {
 		this.disabled = inDisabled;
-		if (this.editor && this.editor.attr)
-			this.editor.attr("disabled", inDisabled);
+		if (this.editor && this.editor.set)
+			this.editor.set("disabled", inDisabled);
 	},
 	// used to determine if the editor is ready to send and receive values
 	isReady: function() {
@@ -377,7 +377,7 @@ dojo.declare("wm._BaseEditor", wm.Widget, {
 	doChangeOnKey: function(inEvent) {
 		var e = this.editor;
 		//e.setValue(e.getValue());
-	        e.attr("value",e.attr("value"));
+	        e.set("value",e.get("value"));
 	},
         onEnterKeyPress: function() {}
 });
@@ -514,7 +514,7 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 		if (this.editor instanceof wm.Control)
 			this.editor.setDisabled(inDisabled);
 		else
-			this.editor.attr("disabled", inDisabled);
+			this.editor.set("disabled", inDisabled);
 		dojo[this.disabled ? "addClass" : "removeClass"](this.captionNode, "wmeditor-caption-disabled");
 	    }
 	    this.disabled = inDisabled;
@@ -888,7 +888,7 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 		this.readOnlyNode.innerHTML = this._getReadonlyValue();
 	},
 	getDisplayValue: function() {
-		return this.editor && this.editor.declaredClass &&  this.editor.attr && this.editor.attr('displayedValue') ? this.editor.attr('displayedValue') || "" : this.getEditorValue() || "";
+		return this.editor && this.editor.declaredClass &&  this.editor.get && this.editor.get('displayedValue') ? this.editor.get('displayedValue') || "" : this.getEditorValue() || "";
 	},
 	makeEmptyValue: function() {
 		// this.display is only set by LiveForm therefore will only work for fields in LiveForm and their emptyValue is not set yet.
@@ -907,14 +907,14 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 	    // If using html widgets and replacing them with dijits use 
 	    // v = (this.editor.declaredClass) ? this.editor.attr('value') : this.editor.value;
 		if (this.editor)
-		    v = this.editor.attr('value') ;
+		    v = this.editor.get('value') ;
 	    
 		return (v || v === 0) ? v : this.makeEmptyValue();
 	},
 	setEditorValue: function(inValue) {
 	    if (this.editor) {  // If using html widgets and replacing them with dijits use  if (this.editor && this.editor.declaredClass) {
 			inValue = inValue === undefined ? null : inValue;
-			this.editor.attr('value',inValue);
+			this.editor.set('value',inValue);
 			this.updateReadonlyValue();
 		}
 	},
@@ -1035,11 +1035,11 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 	doChangeOnKey: function(inEvent) {
 		var e = this.editor;
 		//e.setValue(e.getValue());
-	        e.attr("value",e.attr("value"));
+	        e.set("value",e.get("value"));
 	},
 	setDefaultOnInsert:function(){
 		if (this.editor && this.defaultInsert)
-			this.editor.attr('value', ''+this.defaultInsert, false);
+			this.editor.set('value', ''+this.defaultInsert, false);
 	},
     onEnterKeyPress: function() {}
 });

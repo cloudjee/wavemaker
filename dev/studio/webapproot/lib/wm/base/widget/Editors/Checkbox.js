@@ -63,7 +63,7 @@ dojo.declare("wm._CheckBoxEditor", wm._BaseEditor, {
 		return Boolean(this.editor.checked);
 	},
 	setChecked: function(inChecked) {
-		this.editor.attr('checked',inChecked);
+		this.editor.set('checked',inChecked);
 	},
 	captionClicked: function() {
 		if (!this.owner.readonly && !this.owner.disabled)
@@ -107,7 +107,7 @@ dojo.declare("wm._CheckBoxEditor", wm._BaseEditor, {
 				f = (inValue === this.makeEmptyValue());
 			// if we're set to neither checked or unchcked value, does not have a readonly value.
 			this._hasReadonlyValue = t || f;
-			this.editor.attr('checked',t);
+			this.editor.set('checked',t);
 			this.updateReadonlyValue();
 		}
 	},
@@ -123,8 +123,8 @@ dojo.declare("wm._CheckBoxEditor", wm._BaseEditor, {
 
 		var v = this._hasReadonlyValue ? this.getEditorValue() : "";
 		var tempCheckbox = new dijit.form.CheckBox({},dojo.doc.createElement('div'));
-		tempCheckbox.attr('checked', v);
-		tempCheckbox.attr('disabled', true);
+		tempCheckbox.set('checked', v);
+		tempCheckbox.set('disabled', true);
 		while (this.domNode.childNodes.length > 0)
 		{
 			this.domNode.removeChild(this.domNode.childNodes[0]);
@@ -193,7 +193,7 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 		return Boolean(this.editor.checked);
 	},
 	setChecked: function(inChecked) {
-		this.editor.attr('checked',inChecked);
+		this.editor.set('checked',inChecked);
 	},
 	captionClicked: function() {
 	        if (!this.readonly && !this.disabled && !this.isDesignLoaded())
@@ -233,7 +233,7 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 		}
 
 		if (this.editor) {
-		    this.editor.attr('checked',Boolean(inValue));
+		    this.editor.set('checked',Boolean(inValue));
 		}
 	},
 
@@ -252,14 +252,14 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 	    this.inherited(arguments);
 	    if (!this.editor) return;
 	    if (this.readonly)
-		this.editor.attr("disabled",true);
+		this.editor.set("disabled",true);
 	},
 	setReadonly: function(inReadonly) {
 	    this.readonly = inReadonly;
 	    if (!this.editor) return;
 	    if (!this.readOnlyNode) this.readOnlyNode = this.editor;
 	    if (inReadonly || !this.disabled)
-		this.editor.attr("disabled",inReadonly);
+		this.editor.set("disabled",inReadonly);
 	}
 });
 

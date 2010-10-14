@@ -69,12 +69,12 @@ Studio.extend({
 	disableMenuBar: function(inDisabled) {
 	  try {
 	  // attr for dojo menu items; setDisabled for wavemaker components.  At some point we'll want to put our own DojoMenuItem wrapper around the dojo menu items
-		this.projectPopupBtn.attr("disabled",false);
-		this.editPopupBtn.attr("disabled",inDisabled);
-		this.viewPopupBtn.attr("disabled",inDisabled);
-		this.insertPopupBtn.attr("disabled",inDisabled);
-		this.servicesPopupBtn.attr("disabled",inDisabled);
-		this.pagePopupBtn.attr("disabled",inDisabled);
+		this.projectPopupBtn.set("disabled",false);
+		this.editPopupBtn.set("disabled",inDisabled);
+		this.viewPopupBtn.set("disabled",inDisabled);
+		this.insertPopupBtn.set("disabled",inDisabled);
+		this.servicesPopupBtn.set("disabled",inDisabled);
+		this.pagePopupBtn.set("disabled",inDisabled);
 		this.navTestBtn.setDisabled(inDisabled);
 		this.leftToolbarButtons.setDisabled(inDisabled);
 		this.navRunBtn.setDisabled(inDisabled);
@@ -82,11 +82,11 @@ Studio.extend({
 		    this.navEditAccountBtn.setDisabled(false);
 		    this.navLogoutBtn.setDisabled(false);
 		}
-		    this.closeProjectItem.attr("disabled",inDisabled);
-		    this.copyProjectItem.attr("disabled",inDisabled);
-		    this.deleteProjectItem.attr("disabled",inDisabled);
-		    this.exportProjectItem.attr("disabled",inDisabled);
-		    this.deployProjectItem.attr("disabled",inDisabled);
+		    this.closeProjectItem.set("disabled",inDisabled);
+		    this.copyProjectItem.set("disabled",inDisabled);
+		    this.deleteProjectItem.set("disabled",inDisabled);
+		    this.exportProjectItem.set("disabled",inDisabled);
+		    this.deployProjectItem.set("disabled",inDisabled);
 	  } catch(e) {
 	    console.error("disableMenuBar Failed");
 	    console.log(e);
@@ -95,11 +95,11 @@ Studio.extend({
 	},
 	disableCanvasOnlyMenuItems: function(inDisabled) {
 		var d = inDisabled;
-		this.editPopupBtn.attr("disabled",d);
-		this.insertPopupBtn.attr("disabled",d);
-		this.pagePopupBtn.attr("disabled",d);
-		this.outlineItem.attr("disabled",d);
-		//this.liveLayoutItem.attr("disabled",d);
+		this.editPopupBtn.set("disabled",d);
+		this.insertPopupBtn.set("disabled",d);
+		this.pagePopupBtn.set("disabled",d);
+		this.outlineItem.set("disabled",d);
+		//this.liveLayoutItem.set("disabled",d);
 		//this.navigationBar.reflow();
 	}
 })

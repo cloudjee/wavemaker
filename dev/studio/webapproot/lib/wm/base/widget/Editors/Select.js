@@ -134,7 +134,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		if (i !== undefined) {
 			this._setEditorValue(this.editor.store.getValue(i, this._storeNameField))
 		} else if (!this.restrictValues) {
-                        this.editor.attr("value", inValue);
+                        this.editor.set("value", inValue);
                 } else {
 			this.clear();
                 }
@@ -183,7 +183,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 			if (this.restrictValues)
 				this.clear();
 			else
-				this.editor.attr("value",i);
+				this.editor.set("value",i);
 		}
 		this.updateReadonlyValue();
 	},
@@ -195,9 +195,9 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		delete this._isValid;
 		e._isvalid=true;
 		if (this.restrictValues)
-			e.attr('displayedValue', inDisplayValue, !this._updating);
+			e.set('displayedValue', inDisplayValue, !this._updating);
 		else
-			e.attr('value', inDisplayValue, !this._updating);
+			e.set('value', inDisplayValue, !this._updating);
 	},
 	getDisplayValue: function() {
 		if (this.hasValues())
@@ -207,7 +207,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	getEditorValue: function(getFullDataObj) {
 		var v;
 		if (this.editor && this.hasValues()) {
-		    var displayed = this.editor.attr('value');
+		    var displayed = this.editor.get('value');
 		    var v = displayed && this.getStoreItem(displayed, this._storeNameField);
 		}
 
@@ -353,9 +353,9 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		// set a blank value even if this is not a valid value
 		if (this.editor && this.hasValues()) {
 			if (this.restrictValues) {
-				this.editor.attr('value', '', false);
+				this.editor.set('value', '', false);
 			} else {
-				this.editor.attr("value", undefined, false);
+				this.editor.set("value", undefined, false);
 			}
 			this.updateReadonlyValue();
 		}
@@ -510,7 +510,7 @@ dojo.declare("wm._SelectEditor", wm._BaseEditor, {
 		    if (this.restrictValues)
 			this.clear();
 		    else
-			this.editor.attr("value",inValue);
+			this.editor.set("value",inValue);
 		}
 		this.updateReadonlyValue();
 	},
@@ -522,9 +522,9 @@ dojo.declare("wm._SelectEditor", wm._BaseEditor, {
 		var e = this.editor;
 		e._isvalid=true;
         if (this.restrictValues)
-			e.attr('displayedValue', inDisplayValue);
+			e.set('displayedValue', inDisplayValue);
         else
-		    e.attr("value", inDisplayValue);
+		    e.set("value", inDisplayValue);
 	},
 	getDisplayValue: function() {
 		if (this.hasValues())
@@ -534,7 +534,7 @@ dojo.declare("wm._SelectEditor", wm._BaseEditor, {
 		var v;
 		if (this.editor && this.hasValues()) {
 			var
-				displayed = this.editor.attr('value'),
+				displayed = this.editor.get('value'),
 				i = displayed && this.getStoreItem(displayed, "name");
 			if (i) {
 				v = this.editor.store.getValue(i, "value");
@@ -696,13 +696,13 @@ dojo.declare("wm._SelectEditor", wm._BaseEditor, {
 				//this.editor._setValue(undefined, "");
 				try{
 					//this.editor._setValue(undefined, "");
-					this.editor.attr('value','');
+					this.editor.set('value','');
 				}
 				catch(e){
 					console.info('error while clearing editor value............', e);
 				}
 		    } else {
-				this.editor.attr("value", undefined);
+				this.editor.set("value", undefined);
 		    }
 	},
 	// fired when owning editor widget processs change
