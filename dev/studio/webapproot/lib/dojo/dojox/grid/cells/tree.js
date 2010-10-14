@@ -11,7 +11,7 @@ dojox.grid.cells.TreeCell = {
 	formatIndexes: function(inRowIndexes, inItem){
 		var f, g=this.grid, i=g.edit.info, 
 			d=this.get ? this.get(inRowIndexes[0], inItem, inRowIndexes) : (this.value || this.defaultValue);
-		if(this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndexes[0] && i.cell==this))){
+		if(this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndexes.join('/') && i.cell==this))){
 			return this.formatEditing(d, inRowIndexes[0], inRowIndexes);
 		}else{
 			return this._defaultFormat(d, [d, inRowIndexes[0], inRowIndexes, this]);

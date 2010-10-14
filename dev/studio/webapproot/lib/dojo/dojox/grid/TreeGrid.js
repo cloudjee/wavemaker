@@ -853,6 +853,11 @@ dojo.declare("dojox.grid.TreeGrid", dojox.grid.DataGrid, {
 			var asDate = new Date(inValue);
 			inValue = isNaN(asDate.getTime()) ? inValue : asDate;
 		}
+
+		if (inValue == undefined){
+			inValue = null;
+		}
+
 		this.store.setValue(item, inAttrName, inValue);
 		this.onApplyCellEdit(inValue, inRowIndex, inAttrName);
 	}

@@ -925,6 +925,9 @@ dojo.requireLocalization("dijit", "loading");
 			//		Render a single row.
 			// inRowIndex: Integer
 			//		Index of the row to render
+			if (inRowIndex && typeof inRowIndex == 'string' && inRowIndex.indexOf('/') != -1){
+				inRowIndex = Number(inRowIndex.split('/')[0]);
+			}
 			inRowIndex = Number(inRowIndex);
 			if(this.updating){
 				this.invalidated[inRowIndex]=true;

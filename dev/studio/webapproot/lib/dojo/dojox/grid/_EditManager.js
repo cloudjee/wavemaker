@@ -98,7 +98,7 @@ dojo.declare("dojox.grid._EditManager", null, {
 		// inCell: Object
 		//		Grid cell object
 		if(!this.isEditCell(inRowIndex, inCell.index) && this.grid.canEdit && this.grid.canEdit(inCell, inRowIndex)){
-			this.start(inCell, inRowIndex, this.isEditRow(inRowIndex) || inCell.editable);
+			this.start(inCell, inRowIndex, inCell.editable || this.isEditRow(inRowIndex));
 		}
 	},
 
