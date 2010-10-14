@@ -110,7 +110,14 @@
 				contents = d._scopePrefix + contents + d._scopeSuffix;
 			}
 			if(!d.isIE){ contents += "\r\n//@ sourceURL=" + uri; } // debugging assist for Firebug
-			var value = d["eval"](contents);
+			try{
+				value = d["eval"](contents);
+			}
+			catch (e){
+				console.info('error while doing an eval on file loaded from ' + uri);
+				console.info('Error: ' + e.message);
+				//return false;
+			}
 			if(cb){ cb(value); }
 		}
 		// Check to see if we need to call _callLoaded() due to an addOnLoad() that arrived while we were busy downloading
