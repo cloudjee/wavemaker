@@ -470,7 +470,13 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 			 this._queuedFetches = [];
 		 }
 	},
-
+	reload: function(data){
+		this.clearOnClose = true;
+		this._loadFinished = true;
+		this._jsonData = null;
+		this.data = data;
+        this.close();
+	},
 	_getItemsFromLoadedData: function(/* Object */ dataObject){
 		//	summary:
 		//		Function to parse the loaded data into item format and build the internal items array.
