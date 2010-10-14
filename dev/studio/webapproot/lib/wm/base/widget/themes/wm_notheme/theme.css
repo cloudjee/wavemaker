@@ -25,10 +25,6 @@
 	background: #ffffff none;
 }
 
-.wm_notheme button.wmtablayers-tab {
-    height: 26px; /* wm.TabLayers-Button_Height */
-}
-
 /* Custom CSS goes below this line */
 
 .wm_notheme .wmbutton {
