@@ -205,9 +205,11 @@ wm.convertForSimpleBind = function(inNodeProps, optionalSource) {
 }
 
 wm.isNodeBindable = function(inType, inProps, inIsList, inTargetType, inTargetProps) {
-	if (!inTargetType) return false;
+    if (!inTargetType) return 0;
+    var targetIsObject = inTargetType.isObject || inTargetType.type.toLowerCase() == "object";
+
 	if (!inProps.isSimpleBind && inProps.isObject && inProps.object instanceof wm.Control) {
-		return inProps.object.declaredClass == inTargetType.type;
+	    return inProps.object.declaredClass == inTargetType.type ? 1 : 0;
 	}
 	var t = (!inProps.isSimpleBind && inType) || inProps.type || (inProps.object && inProps.object.type);
         var originalT = t;
@@ -215,27 +217,45 @@ wm.isNodeBindable = function(inType, inProps, inIsList, inTargetType, inTargetPr
 	var o = inProps.isSimpleBind ? inProps.isObject : wm.typeManager.isStructuredType(t);
 	if (!o)
 		t = wm.decapitalize(t);
-	if (!inTargetType.isObject)
+	if (!targetIsObject)
 		inTargetType.type = wm.decapitalize(inTargetType.type);
 	
 //	console.log("target: " + inTargetType.type + " isObject:" + inTargetType.isObject + " isList:" + inTargetType.isList);
 //	console.log("source: " + t + " isObject:" + o + " isLIst:" + inIsList);
-	
-    if (inTargetType.isList  && !inIsList)
-		return false;
-    if (!inTargetType.isList && inIsList && !(inTargetProps.object instanceof wm.LiveForm))
-		return false;
-	var b = (t == inTargetType.type);
-	if (!b) {
-		if (inTargetType.type == "wm.Variable")
-                    // there is either a structured type, or we're dealing with a primitive type only found in service variables -- exactly the data that getPrimitiveType is replacing "t" with.
-		        b = wm.typeManager.isStructuredType(t) || (originalT != t && originalT);
-		else if (!inTargetType.isObject && !o)
-			b = true;
-	    else if (inTargetType.isList && inIsList && (inTargetProps.object instanceof wm.DojoChart || inTargetProps.object instanceof wm.DojoGrid))
-			b = true;
-	}
-	return b;
+
+
+    // If only one of them is an object, outright failure
+    if (Boolean(targetIsObject) != Boolean(inProps.isObject))
+	return 0;
+
+    // If we are matching objects and they have different types, outright failure
+    // "object" matches all objects...
+    if (targetIsObject && t !=inTargetType.type && String(inTargetType.type).toLowerCase() != "object")
+	return 0;
+
+    // If we don't match on list, this could be a fluke, treat it as warning rather than failure
+    // If its a liveform, then give it a pass
+    if (inTargetType.isList  && !inIsList || !inTargetType.isList && inIsList) {
+	if (inTargetProps.object instanceof wm.LiveForm) return 1;
+	else return 2;
+    }
+
+    // if the types are equal, then given that the list status has been passed, these are a match
+    if (t == inTargetType.type)
+	return 1;
+
+    // haven't reviewed this one 
+    if (inTargetType.type == "wm.Variable") {
+        // there is either a structured type, or we're dealing with a primitive type only found in service variables -- exactly the data that getPrimitiveType is replacing "t" with.
+	return (wm.typeManager.isStructuredType(t) || (originalT != t && originalT)) ? 1 : 0;
+    }
+
+    // haven't reviewed this one
+    else if (inTargetType.isList && inIsList && (inTargetProps.object instanceof wm.DojoChart || inTargetProps.object instanceof wm.DojoGrid))
+	return 1;
+
+    // If it hasn't outright failed, and hasn't outright passed, consider it a warning rather than good/bad.
+    return 2;
 }
 
 //===========================================================================
@@ -267,6 +287,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 			spacer1: ["wm.Spacer", {height: "100%", width: "100%"}, {}],
 			validLabel: ["wm.Picture", {height: "100%", width: "20px", source: "images/active.png", showing: false}, {}],
 			invalidLabel: ["wm.Picture", {height: "100%", width: "20px", source: "images/inactive.png", showing: false}, {}],
+			warningLabel: ["wm.Picture", {height: "100%", width: "20px", source: "lib/images/boolean/Signage/Caution.png", showing: false}, {}],
 			spacer2: ["wm.Spacer", {height: "100%", width: "40px"}, {}]
 		    }],
 		    bindLayers: ["wm.Layers", {border: 0, height: "100%", layoutKind: "top-to-bottom"}, {}, {
@@ -711,8 +732,9 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	    } else {
 	    */
 		var b = inNode.isValidBinding;
-		this.validLabel.setShowing(b);
-		this.invalidLabel.setShowing(!b);
+		this.validLabel.setShowing(b == 1);
+		this.invalidLabel.setShowing(b == 0);
+		this.warningLabel.setShowing(b == 2);
 //	    }
 	},
 	// expression builder
@@ -894,7 +916,8 @@ dojo.declare("wm.BindTreeNode", wm.TreeNode, {
 		inNodeProps._propertyPath = inParent._propertyPath ? [inParent._propertyPath, inNodeProps.name].join('.') : this.parent != inParent ? inNodeProps.name : "";
 	},
 	getNodeContent: function(inName, inType, inIsList, inProps) {
-		var p = this.tree.owner;
+	    var p = this.tree.owner;
+	    inProps.isObject = Boolean(!wm.typeManager.getPrimitiveType(inType) && wm.typeManager.getType(inType));
 		inProps.isValidBinding = wm.isNodeBindable(inType, inProps, inIsList, p.targetType, p.targetProps);
 		if (inProps.isSimpleBind)
 			inType = inProps.type;
@@ -999,6 +1022,8 @@ dojo.declare("wm.BindTargetTreeNode", wm.BindTreeNode, {
 		inNodeProps.clearBinding = this._clearBinding;
 	},
 	getNodeContent: function(inName, inType, inIsList, inProps) {
+	    var p = this.tree.owner;
+	    inProps.isValidBinding = wm.isNodeBindable(inType, inProps, inIsList, p.targetType, p.targetProps);
 		var
 			c = wm.BindTreeNode.prototype.getNodeContent.apply(this, arguments),
 			wire = wm.data.getPropWire(inProps.object, inProps.targetProperty);
