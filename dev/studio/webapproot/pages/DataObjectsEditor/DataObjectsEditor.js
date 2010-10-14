@@ -970,6 +970,22 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		this.currentPropertyName = inNode.data[1];
 		this.propertyName.setInputValue(this.currentPropertyName);
 	},
+    getSelectedModelNode: function(inName) {
+	var databases = this.tree.root.kids[0].kids;
+	for (var i = 0; i < databases.length; i++) {
+	    if (databases[i].content == inName)
+		return databases[i];
+	}
+	return null;
+    },
+    getLiveTablesNode: function(inNode) {
+	var children = inNode.kids;
+	for (var i = 0; i < children.length; i++) {
+	    if (children[i].content == "LiveTables")
+		return children[i];
+	}
+	return null;
+    },
 	_selectNode: function() {
 	    var treeNode = studio.tree.selected;
 	    var comp = treeNode.component;
@@ -980,31 +996,22 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	    }
 	    var modelName = comp.dataModelName;
 	    var entityName = comp.entityName;
-	    var modelNode;
+	    var modelNode = this.getSelectedModelNode(modelName);
+	    if (!modelNode) return;
+	    var liveTableNode = this.getLiveTablesNode(modelNode);
 	    var entityNode;
-	    if (modelName) {
-		var databases = this.tree.root.kids[0].kids;
-		for (var i = 0; i < databases.length; i++) {
-		    if (databases[i].content == modelName) {
-			modelNode = databases[i];
-			break;
-		    }
-		}
-	    }
-	    if (modelNode && entityName) {
-		var liveTableNode;
-		for (var i = 0; i < modelNode.kids.length; i++) {
-		    if (modelNode.kids[i].content == "LiveTables") {
-			liveTableNode = modelNode.kids[i];
-			break;
-		    }
-		}
-		for (var i = 0; i < liveTableNode.kids.length; i++) {
+
+	    if (entityName) {
+		for (i = 0; i < liveTableNode.kids.length; i++) {
 		    if (liveTableNode.kids[i].content == entityName) {
 			entityNode = liveTableNode.kids[i];
 			break;
 		    }
 		}
+		console.log("FOUND i=" + i);
+	    } else if (liveTableNode.kids.length > 0) {
+		entityNode = liveTableNode.kids[0];
+		entityName = entityNode.content;
 	    }
 
 	    if (entityNode)

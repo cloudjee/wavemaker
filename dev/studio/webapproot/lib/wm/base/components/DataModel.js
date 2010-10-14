@@ -119,15 +119,19 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 		studio.addQryAndViewToTree(inNode);
 	},
 	designSelect: function() {
+	    if (studio.tree.selected.component instanceof wm.DataModelEntity) return;
 	    var c = studio.navGotoEditor("DataObjectsEditor");
 	    studio.selected._studioTreeNode.setOpen(true);
 	    c.page.setDataModel(this);
+	    c.page._selectNode();
+/*
 	    if (studio.selected._studioTreeNode.kids.length) {
-		studio.tree.select(studio.selected._studioTreeNode.kids[0]);
+		var entityName = studio.selected._studioTreeNode.kids[0].content;
 		c.page.objectPages.setLayer(c.page.OBJECT_PAGE);
 	    } else {
 		c.page.objectPages.setLayer(c.page.DEFAULT_PAGE);
 	    }
+*/
 	},
 
 });
