@@ -106,3 +106,20 @@
     background-image: url(images/dialogIconsGray.png) !important; /* Dialogs-Titlebar_Icons */
     background-repeat: no-repeat;
 }
+
+.wm_notheme #wmMinifiedDialogPanel {
+    opacity: 0.6;
+    background-color: #666666; /* Document-ClickablesActive-Background_Color */
+    -moz-box-shadow: 3px 0px 3px #000000; /* wm.TabLayers-BorderStyle_UnselectedShadow */
+    -webkit-box-shadow: 3px 0px 3px #000000; /* wm.TabLayers-BorderStyle_UnselectedShadow */
+    box-shadow: 3px 0px 3px #000000; /* wm.TabLayers-BorderStyle_UnselectedShadow */
+}
+.wm_notheme #wmMinifiedDialogPanel:hover {
+    opacity: 1;
+}
+.wm_notheme #wmMinifiedDialogPanel .wmbutton {
+	-moz-border-radius: 0px !important; 
+	-webkit-border-radius: 0px !important;
+	border-radius: 0px !important;
+        font-size: 8pt;
+}
