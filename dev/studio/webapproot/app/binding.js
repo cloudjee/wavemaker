@@ -778,7 +778,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 			var name = c.name || c.declaredClass;
 			if (name == search)
 			    data.push(c);
-		    } else if (c.declaredClass.match(searchRegex) || name.match(searchRegex)) {
+		    } else if (c.declaredClass.match(searchRegex) || c.name.match(searchRegex)) {
 			if (wm.widgetIsBindSource(c))
 			    data.push(c);
 		    } else {
