@@ -234,6 +234,10 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	resetChanges: function() {
 		this.onlyEntityIsDirty = false;
 		this.propertiesAreDirty = false;
+	    window.setTimeout(100, dojo.hitch(this, function() {
+		this.onlyEntityIsDirty = false;
+		this.propertiesAreDirty = false;
+	    }));
 	},
 	selectEntity: function(inDataModelName, inEntityName) {
 		this.currentDataModelName = inDataModelName;
