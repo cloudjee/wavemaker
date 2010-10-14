@@ -85,7 +85,7 @@ dojo.require("dojo._base.array");
 		return result;
 	}
 
-	function inherited(args, a, f){
+	function inherited2(args, a, f){
 		var name, chains, bases, caller, meta, base, proto, opf, pos,
 			cache = this._inherited = this._inherited || {};
 
@@ -185,7 +185,11 @@ dojo.require("dojo._base.array");
 		// cache the found super method
 		cache.c = f;
 		cache.p = pos;
+	    return f;
+    }
 
+	function inherited(args, a, f){
+	    var f = inherited2.call(this,args,a,f);
 		// now we have the result
 		if(f){
 			return a === true ? f : f.apply(this, a || args);
