@@ -162,7 +162,11 @@
 		d._loaders = [];
 
 		for(var x = 0; x < mll.length; x++){
-			mll[x]();
+			try {
+				mll[x]();
+			} catch (e) {
+				console.error(e);
+			}
 		}
 
 		d._loadNotifying = false;
