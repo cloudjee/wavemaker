@@ -94,17 +94,17 @@ Var ProjectsDialog
 
 # Installer pages
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "${LICENSEFILE}"
+#!insertmacro MUI_PAGE_LICENSE "${LICENSEFILE}"
 !define MUI_PAGE_CUSTOMFUNCTION_PRE Components_PreFunction
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
 #Page custom ProjectsDirectoryPage ProjectsDirectoryPageLeave
 !insertmacro MUI_PAGE_STARTMENU Application $StartMenuGroup
 !insertmacro MUI_PAGE_INSTFILES
-!define MUI_FINISHPAGE_TEXT "If this is not your first time installing ${PRODUCT_NAME}, you should clear your browser's cache before running ${PRODUCT_NAME} again to ensure the latest version is presented by the browser."
+!define MUI_FINISHPAGE_TEXT "Do you need to clear your browser's cache ? $\r$\nIf this is not your first time running ${PRODUCT_NAME} on this machine, it is strongly suggested that you clear your browser's cache before running ${PRODUCT_NAME} again."
 # !define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\${PRODUCT_NAME}.lnk"
 # !define MUI_FINISHPAGE_SHOWREADME_TEXT "Run ${PRODUCT_NAME}"
-!define MUI_FINISHPAGE_LINK "Click here to download EnterpriseDB Postgres Plus."
+!define MUI_FINISHPAGE_LINK "Click to Download EnterpriseDB's Postgres Plus Advanced Server"
 !define MUI_FINISHPAGE_LINK_LOCATION "http://www.enterprisedb.com/products/download.do"
 !insertmacro MUI_PAGE_FINISH
 
@@ -116,7 +116,7 @@ Var ProjectsDialog
 !define MUI_UNCONFIRMPAGE_TEXT_TOP "We value your feedback.  At the completion of the uninstall you will be requested to provide your suggestions.  Please let us know how we can improve WaveMaker." 
 !insertmacro MUI_UNPAGE_CONFIRM
 !insertmacro MUI_UNPAGE_INSTFILES
-!define MUI_FINISHPAGE_LINK "We value your feedback. Please click here."
+!define MUI_FINISHPAGE_LINK "Please let us know how we can improve WaveMaker. Click here."
 !define MUI_FINISHPAGE_LINK_LOCATION "http://www.wavemaker.com/feedback"
 !insertmacro MUI_UNPAGE_FINISH
 
