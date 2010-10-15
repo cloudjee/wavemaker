@@ -283,7 +283,7 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 		this.inherited(arguments);
 		this.domNode.style.width = this.domNode.style.height = "100%";
 	},
-	attr: function(inName,inValue) {
+	set: function(inName,inValue) {
 	  if (inName == "value" || inName == "item") {
 	  	var value = inName == "value" ? inValue : inValue.name;
 		var c = this.inspected, o = c.getValue(this.propName);
@@ -300,28 +300,28 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 		var ea = this.eventActions, c = this.inspected, p = this.propName, v;
 		switch (inEventName) {
 		        case ea.noEvent.caption:
-				this.attr("value","");			  
+				this.set("value","");			  
 				break;
 			case ea.jsFunc.caption:
 				v = c.generateEventName(p);
-				this.attr("value",v);
+				this.set("value",v);
 				try{c.updatingEvent(p,v);}catch (e){/*do nothing as this might happen if there's a component which does not extends wm.control class*/}
 				eventEdit(c, p, v);
 				break;
 			case ea.jsSharedFunc.caption:
 				v = c.generateSharedEventName(p);
-				this.attr("value",v);
+				this.set("value",v);
 				try{c.updatingEvent(p,v);}catch (e){/*do nothing as this might happen if there's a component which does not extends wm.control class*/}
 				eventEdit(c, p, v);
                                 studio.inspector.reinspect();
 				break;
 			case ea.newService.caption:
 				studio.newComponentButtonClick({componentType: "wm.ServiceVariable"});
-				this.attr("value",studio.selected.name);
+				this.set("value",studio.selected.name);
 				break;
 			case ea.newNavigation.caption:
 				studio.newComponentButtonClick({componentType: "wm.NavigationCall"});
-				this.attr("value",studio.selected.name);
+				this.set("value",studio.selected.name);
 				break;
 		}
 	}
