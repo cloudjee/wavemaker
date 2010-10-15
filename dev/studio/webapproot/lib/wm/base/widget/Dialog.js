@@ -182,7 +182,14 @@ dojo.declare("wm.Dialog", wm.Container, {
 		if (this.$.buttonBar)
 		    this.buttonBar = this.$.buttonBar;
 		else if (this.useContainerWidget) {
-		    this.buttonBar = new wm.Panel({_classes: {domNode: ["dialogfooter"]},
+		    for (var i = 0; i < this.c$.length; i++) {
+			if (this.c$[i].name == "buttonBar") {
+			    this.buttonBar = this.c$[i];
+			    break;
+			}
+		    }
+		    if (!this.buttonBar)
+			this.buttonBar = new wm.Panel({_classes: {domNode: ["dialogfooter"]},
 						   name: "buttonBar",
 						   owner: owner,
 						   parent: this,
