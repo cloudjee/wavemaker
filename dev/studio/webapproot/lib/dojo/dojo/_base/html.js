@@ -399,7 +399,7 @@ if(dojo.isIE || dojo.isOpera){
 	}else{
 		gcs = function(node){
 			return node.nodeType == 1 ?
-				node.ownerDocument.defaultView.getComputedStyle(node, null) : {};
+				(node.ownerDocument.defaultView.getComputedStyle(node, null) || {}) : {};
 		};
 	}
 	//>>excludeEnd("webkitMobile");
