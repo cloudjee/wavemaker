@@ -74,8 +74,7 @@ public class JSONRPCController extends ControllerBase {
             logger.debug("Request body: '" + input + "'");
         }
 
-	System.out.println("REQUEST: " + serviceName + ", INPUT: " + input);
-        JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(input,
+	    JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(input,
                 getInternalRuntime().getJSONState());
         
         if (null==jsonReq) {
@@ -86,7 +85,6 @@ public class JSONRPCController extends ControllerBase {
         }
 
         method = (String) jsonReq.get(ServerConstants.METHOD);
-logger.debug("MICHAEL: invoke service: " + serviceName + ", method: " + method);
         // callId = jsonReq.getInt("id");
         params = null;
         if (jsonReq.containsKey(ServerConstants.PARAMETERS)) {
@@ -115,9 +113,9 @@ logger.debug("MICHAEL: invoke service: " + serviceName + ", method: " + method);
         }
 
         if (logger.isInfoEnabled()) {
-            logger.info("invoke service: " + serviceName + ", method: " + method);
+            logger.info("Invoke Service: " + serviceName + ", Method: " + method);
             if (logger.isDebugEnabled()) {
-                logger.debug("method "+method+" parameters: "+params);
+                logger.debug("Method "+method+" Parameters: "+params);
             }
         }
         
