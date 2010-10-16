@@ -478,9 +478,10 @@ dojo.declare("wm.Dialog", wm.Container, {
 		this.containerNode.innerHTML = inContent;
 	},
         setShowing: function(inShowing, forceChange, skipOnClose) {
-		if (inShowing != this.showing && this.modal)
-			this.dialogScrim.setShowing(inShowing);
-		this.inherited(arguments);
+	    // First show/hide the scrim if we're modal
+	    if (inShowing != this.showing && this.modal)
+		this.dialogScrim.setShowing(inShowing);
+
 		// global flag for easily finding the most recently shown dialog
 	        wm.Array.removeElement(wm.dialog.showingList, this);
 	    if (inShowing && (!window["studio"] || this != window["studio"].dialog)) {
@@ -488,7 +489,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	        this.domNode.style.zIndex = wm.dialog.getNextZIndex();
             }
 
-		if (this.showing) {
+		if (inShowing) {
 		    if (this._minified)
 			this.unminify(null, true);
 			this.reflow();
@@ -497,12 +498,57 @@ dojo.declare("wm.Dialog", wm.Container, {
 			wm.hideToolTip(true);*/
 	    wm.bgIframe.setShowing(inShowing && this.modal && !this.isDesignedComponent());
 
-		if (this.showing)
-			this.onShow();
-	        else if (!skipOnClose) 
-		    this.onClose("");
+
 	    if (this.designWrapper)
 		this.designWrapper.setShowing(inShowing);
+
+	    if (inShowing) {
+
+		if (app.dialogAnimationTime) {
+		    if (this._hideAnimation) {
+			this._hideAnimation.stop();
+			delete this._hideAnimation;
+		    }
+		    this._showAnimation = this._showAnimation || 
+			dojo.animateProperty({node: this.domNode, 
+					      properties: {opacity: 1},
+					      duration: app.dialogAnimationTime,
+					      onEnd: dojo.hitch(this, "onShow")});
+		    if (this._showAnimation.status() != "playing") {
+			this.domNode.style.opacity = 0.01;
+			this.inherited(arguments);
+			this._showAnimation.play();
+		    }
+		} else {
+		    this.inherited(arguments);		    
+		    this.onShow();
+		}
+
+	    } else {
+		if (app.dialogAnimationTime) {
+		    if (this._showAnimation)
+			this._showAnimation.stop();
+
+		    if (!this._hideAnimation)
+			this._hideAnimation = 
+			dojo.animateProperty({node: this.domNode, 
+					      properties: {opacity: 0.01},
+					      duration: app.dialogAnimationTime,
+					      onEnd: dojo.hitch(this, function() {
+						  wm.Control.prototype.setShowing.call(this,inShowing,forceChange, skipOnClose);
+						  if (!skipOnClose) 
+						      this.onClose("");
+						  delete this._hideAnimation; // has no destroy method
+					      })}).play();		
+		} else {
+		    this.inherited(arguments);		    
+		    if (!skipOnClose) 
+			this.onClose("");
+		}
+	    }
+
+
+
 	},
 /*
 	setContentWidth: function(inWidth) {

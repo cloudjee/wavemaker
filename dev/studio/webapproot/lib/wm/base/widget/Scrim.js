@@ -55,8 +55,53 @@ dojo.declare("wm.Scrim", wm.Widget, {
 			self.scrimify.apply(self, args)
 		}, 100);
 	},
+
 	setShowing: function(inShowing) {
-		this.inherited(arguments);
+	    if (inShowing) {
+		if (app.dialogAnimationTime) {
+		    if (this._hideAnimation) {
+			this._hideAnimation.stop();
+		    }
+		    this._showAnimation = this._showAnimation || 
+			dojo.animateProperty({node: this.domNode, 
+					      properties: {opacity: 0.35},
+					      duration: app.dialogAnimationTime});
+		    if (this._showAnimation.status() != "playing") {
+			this.domNode.style.opacity = 0.01;
+			this.inherited(arguments);
+			this._showAnimation.play();
+		    }
+		} else {
+		    this.inherited(arguments);		    
+		    this.onShow();
+		}
+
+	    } else {
+		if (app.dialogAnimationTime) {
+		    if (this._showAnimation)
+			this._showAnimation.stop();
+
+		    this._hideAnimation = 
+			this._hideAnimation ||
+			dojo.animateProperty({node: this.domNode, 
+					      properties: {opacity: 0.01},
+					      duration: app.dialogAnimationTime,
+					      onEnd: dojo.hitch(this, function() {
+						  wm.Control.prototype.setShowing.call(this,false);
+					      })});
+		    if (this._hideAnimation.status() != "playing") {
+			this._hideAnimation.play();
+		    }
+		} else {
+		    this.inherited(arguments);		    
+		    if (!skipOnClose) 
+			this.onClose("");
+		}
+	    }
+	},
+
+//	setShowing: function(inShowing) {
+//		this.inherited(arguments);
 		// FIXME: Try to get scrim behavior in IE.... (not currently working)
 		/*if (dojo.isIE) {
 			setTimeout(dojo.hitch(this, function() {
@@ -65,7 +110,7 @@ dojo.declare("wm.Scrim", wm.Widget, {
 				document.body[inShowing ? "setCapture" : "releaseCapture"](true);
 			}), 0);
 		}*/
-	},
+//	},
 	scrimifyDeferred: function(inDeferred) {
 		this.setShowing(true);
 		inDeferred.addCallback(dojo.hitch(this, this.setShowing, false));
