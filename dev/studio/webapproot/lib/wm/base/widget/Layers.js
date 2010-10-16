@@ -28,7 +28,6 @@ dojo.declare("wm.Layer", wm.Container, {
 	layoutKind: "top-to-bottom",
 	moveable: false,
 	_requiredParent: "wm.Layers",
-        transition: "none",
 	destroy: function() {
 		//console.info('layer destroy called');
 		if (this.parent)
@@ -105,6 +104,7 @@ dojo.declare("wm.Layer", wm.Container, {
 });
 
 dojo.declare("wm.Layers", wm.Container, {
+        transition: "none",
         clientBorder: "",
         clientBorderColor: "",
 	layerIndex: -1,

@@ -89,11 +89,11 @@ dojo.declare("wm.LayersDecorator", null, {
 
 		// ok, now move it to its starting positino and reset opacity
 		var left = inLayer.bounds.w + "px";
-		inLayer.domNode.style.left = (inLayer.transitionNext) ? left : "-" + left;
+		inLayer.domNode.style.left = (inLayer._transitionNext) ? left : "-" + left;
 		inLayer.domNode.style.opacity = 1;
 
 	    }
-	    var newleft = (inShowing) ? 0 : inLayer.transitionNext ? - parseInt(inLayer.domNode.style.width) : parseInt(inLayer.domNode.style.width);
+	    var newleft = (inShowing) ? 0 : inLayer._transitionNext ? - parseInt(inLayer.domNode.style.width) : parseInt(inLayer.domNode.style.width);
 	    var anim = dojo.animateProperty({
 		node: inLayer.domNode,
 		properties:{
@@ -113,10 +113,10 @@ dojo.declare("wm.LayersDecorator", null, {
     },
     animFade: function(inLayer, inShowing) {
 	    if (inShowing) {
-		inLayer.domNode.style.opacity = 0.1; // can't fade in if its opacity starts at 1!
+		inLayer.domNode.style.opacity = 0.01; // can't fade in if its opacity starts at 1!
 		inLayer.domNode.style.display = "";
 	    }
-	    var newopacity = (inShowing) ? 1 : 0.1;
+	    var newopacity = (inShowing) ? 1 : 0.01;
 	    var anim = dojo.animateProperty({
 		node: inLayer.domNode,
 		properties:{
@@ -139,7 +139,7 @@ dojo.declare("wm.LayersDecorator", null, {
 		var d = this.decoree;
 		var old = d.getLayer(d.lastLayerIndex);
 	        if (old && old != inLayer) {
-		        old.transitionNext = inLayer.transitionNext = inLayer.getIndex() > old.getIndex();
+		        old._transitionNext = inLayer._transitionNext = inLayer.getIndex() > old.getIndex();
 			this.setLayerActive(old, false);		    
 		}
 		this.setLayerActive(inLayer, true);
