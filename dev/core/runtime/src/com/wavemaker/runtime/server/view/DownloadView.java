@@ -63,8 +63,8 @@ public class DownloadView extends AbstractView implements TypedView {
             response.setContentType(dr.getContentType());
             response.setContentLength(dr.getContents().available());
             if (null!=dr.getFileName()) {
-                response.setHeader("Content-Disposition",
-                        "inline; filename=\""+dr.getFileName()+"\"");
+                response.setHeader("Content-disposition",
+                        "attachment; filename=\""+dr.getFileName()+"\"");
             }
 
             IOUtils.copy(dr.getContents(), response.getOutputStream());
