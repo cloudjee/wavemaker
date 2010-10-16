@@ -34,7 +34,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
     // Show a list of files that were uploaded or that are to be uploaded.  The list allows the user to remove files.
     useList: true,
 
-    autoDeleteDelay: 5, // Set to "" to turn off autoDeletion
+    autoDeleteDelay: 4, // Set to "" to turn off autoDeletion
 
     // Class to append to the domnode
     classNames: "wmdojofileupload",
@@ -504,7 +504,9 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
         this._serviceVariable.setOperation("deleteFiles");
         this._serviceVariable.input.setValue("files", [item.name]);
         this._serviceVariable.update();
-        this.updateHtml();
+	var node = dojo.byId(this.getId() + "_checkbox" + item.tmpid).parentNode;
+        dojo.anim(node, {height: 0},350, null, function() {dojo.destroy(node);});
+        //this.updateHtml();
         this.onSuccess(this.variable.getData());
 	this._serviceVariable.setOperation(oldOp);
 
@@ -522,7 +524,22 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
             
             this.progressBar.hide();
             if (this.useList) {
-                this.updateHtml();
+		if (fileList.length == 1) {
+		    var html = this.getHtmlForItem(this.variable.getItem(0).getData()).replace("div", "div style='height:0''");
+/*
+		    var div = document.createElement("div");
+		    div.innerHTML = html;
+		    var div2 = div.firstChild;
+		    */
+		    var newnode =dojo.place(html, this.html.domNode, "first");
+		    dojo.connect(dojo.query("input", newnode)[0], "onchange", this, "checkboxchange");
+		    //dojo.destroy(div);
+		    dojo.animateProperty({node: newnode,
+					  properties: {height: 16},
+					  duration:450}).play(5);
+		} else {
+                    this.updateHtml();
+		}
                 this.html.show();
             }
             this._state = "uploaded";
@@ -573,23 +590,27 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
         */
         wm.job(this.getId() + ": upload()", 100, dojo.hitch(this, "upload"));
     },
+    getHtmlForItem: function(d) {
+//            var img = (!d.uploaded || !this.noDeletionAfterLoad) ? "<img id='" + this.getId() + "_delete" + d.tmpid + "' src='/wavemaker/lib/wm/base/widget/themes/default/images/error.png' /> " : "";
+            //var checkbox = (this.uploadImmediately || this._state == "filestoupload") ?  "<input type='checkbox' id='" + this.getId() + "_checkbox" + d.tmpid + "' " + ((d.included) ? "checked='checked'" : "") + "/> " : "";
+            var checkbox = "<input type='checkbox' id='" + this.getId() + "_checkbox" + d.tmpid + "' " + ((d.included) ? "checked='checked'" : "") + "/> ";
+        return "<div class='wmfileuploaderListItem'>" + checkbox + ((d.error) ? "<span style='color: red' class='FileUploaderError'>" + d.name + "</span>" : d.name) + "</div>";
+
+    },
     updateHtml: function() {
 
         var html = "";
         var data = this.variable.getData();
 
         dojo.forEach(data, dojo.hitch(this,function(d,i) {
-//            var img = (!d.uploaded || !this.noDeletionAfterLoad) ? "<img id='" + this.getId() + "_delete" + d.tmpid + "' src='/wavemaker/lib/wm/base/widget/themes/default/images/error.png' /> " : "";
-            //var checkbox = (this.uploadImmediately || this._state == "filestoupload") ?  "<input type='checkbox' id='" + this.getId() + "_checkbox" + d.tmpid + "' " + ((d.included) ? "checked='checked'" : "") + "/> " : "";
-            var checkbox = "<input type='checkbox' id='" + this.getId() + "_checkbox" + d.tmpid + "' " + ((d.included) ? "checked='checked'" : "") + "/> ";
-            html += "<div class='wmfileuploaderListItem'>" + checkbox + ((d.error) ? "<span style='color: red' class='FileUploaderError'>" + d.name + "</span>" : d.name) + "</div>";
+	    html += this.getHtmlForItem(d);
         }));
         this.html.setHtml(html);
-        dojo.query("input:", this.html.domNode).connect("onchange", this, function(event) {
+        dojo.query("input", this.html.domNode).connect("onchange", this, "checkboxchange");
+    },
+    checkboxchange: function(event) {
             var node = event.target;
             var i = node.id.match(/\d+$/)[0];
-
-
 
             // checkbox has been unchecked
 	    if (!event.target.checked) {
@@ -625,8 +646,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
                     this.variable.addItem(item);
                 }
             }
-        });
-    },
+},
     onSuccess: function(fileList) {
     },
     onError: function(evt) {
