@@ -356,6 +356,10 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		    _this.updateBindSourceUi(inDataValue);
 		  });
 		this.tree.connect(this.tree, "onselect", this, "bindNodeSelected");
+	    this.tree.connect(this.tree, "ondblclick", this, dojo.hitch(this, function(inNode) {
+		this.bindNodeSelected(inNode);
+		this.owner.applyButtonClick();
+	    }));
 
 		this.expressionTree.connect(this.expressionTree, "onselect", this, "expressionNodeSelected");
 		for (var i=0, c; c=this.expressionButtons.c$[i]; i++){
