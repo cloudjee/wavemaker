@@ -34,6 +34,8 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
     // Show a list of files that were uploaded or that are to be uploaded.  The list allows the user to remove files.
     useList: true,
 
+    autoDeleteDelay: 5, // Set to "" to turn off autoDeletion
+
     // Class to append to the domnode
     classNames: "wmdojofileupload",
 
@@ -479,14 +481,34 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
     },
     deleteRemovedFiles: function() {
         var names = this.getRemovedFileNames();
+	var oldOp = this._serviceVariable.operation;
         this._serviceVariable.setOperation("deleteFiles");
         this._serviceVariable.input.setValue("files", names)
         this._serviceVariable.update();
         this._variable.setData([]);
         this.updateHtml();
         this.onSuccess(this.variable.getData());
+	this._serviceVariable.setOperation(oldOp);
     },
+    deleteFileItem: function(item) {
+	if (item instanceof wm.Variable)
+	    item = item.getData();
+	var data = this._variable.getData();
+	var index = wm.Array.indexOf(data,item, function(a,b) {
+	    return (a.tmpid == b);
+	});
+	if (index != -1) {
+	    this._variable.removeItem(index);
+	}
+	var oldOp = this._serviceVariable.operation;
+        this._serviceVariable.setOperation("deleteFiles");
+        this._serviceVariable.input.setValue("files", [item.name]);
+        this._serviceVariable.update();
+        this.updateHtml();
+        this.onSuccess(this.variable.getData());
+	this._serviceVariable.setOperation(oldOp);
 
+    },
     // if this is a flash widget, fileList is an array of "wm.DojoFileUpload.FileData" objects (see definition in init method)
     // if this is an html widget, fileList is an array of response objects from the server
     success: function(fileList) {
@@ -567,8 +589,10 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
             var node = event.target;
             var i = node.id.match(/\d+$/)[0];
 
+
+
             // checkbox has been unchecked
-            if (!event.target.checked || this._state == "filestoupload") {
+	    if (!event.target.checked) {
                 var data = this.variable.getData();
                 var index = wm.Array.indexOf(data,i, function(a,b) {
                     return (a.tmpid == b);
@@ -580,9 +604,17 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
                         var item = this.variable.getItem(index);
                         this.variable.removeItem(index);
                         this._variable.addItem(item);
+			if (String(this.autoDeleteDelay).match(/^\d+$/))
+			    wm.job("removeUncheckedFile:"+item.tmpId, this.autoDeleteDelay*1000, 
+				   dojo.hitch(this, function() {
+				       this.deleteFileItem(item);
+				   }));
+
                     }
                 }
             } else {
+		wm.job("removeUncheckedFile:"+item.tmpId, 0, function(){}); // remove the job
+
                 var data = this._variable.getData();
                 var index = wm.Array.indexOf(data,i, function(a,b) {
                     return (a.tmpid == b);
