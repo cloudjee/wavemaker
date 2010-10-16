@@ -57,15 +57,16 @@ dojo.declare("wm.Scrim", wm.Widget, {
 	},
 
 	setShowing: function(inShowing) {
+	    var animationTime = (this._cupdating || this.showing == inShowing) ? 0 : app.dialogAnimationTime;
 	    if (inShowing) {
-		if (app.dialogAnimationTime) {
+		if (animationTime) {
 		    if (this._hideAnimation) {
 			this._hideAnimation.stop();
 		    }
 		    this._showAnimation = this._showAnimation || 
 			dojo.animateProperty({node: this.domNode, 
 					      properties: {opacity: 0.35},
-					      duration: app.dialogAnimationTime});
+					      duration: animationTime});
 		    if (this._showAnimation.status() != "playing") {
 			this.domNode.style.opacity = 0.01;
 			this.inherited(arguments);
@@ -73,11 +74,10 @@ dojo.declare("wm.Scrim", wm.Widget, {
 		    }
 		} else {
 		    this.inherited(arguments);		    
-		    this.onShow();
 		}
 
 	    } else {
-		if (app.dialogAnimationTime) {
+		if (animationTime) {
 		    if (this._showAnimation)
 			this._showAnimation.stop();
 
@@ -85,7 +85,7 @@ dojo.declare("wm.Scrim", wm.Widget, {
 			this._hideAnimation ||
 			dojo.animateProperty({node: this.domNode, 
 					      properties: {opacity: 0.01},
-					      duration: app.dialogAnimationTime,
+					      duration: animationTime,
 					      onEnd: dojo.hitch(this, function() {
 						  wm.Control.prototype.setShowing.call(this,false);
 					      })});
@@ -94,8 +94,6 @@ dojo.declare("wm.Scrim", wm.Widget, {
 		    }
 		} else {
 		    this.inherited(arguments);		    
-		    if (!skipOnClose) 
-			this.onClose("");
 		}
 	    }
 	},

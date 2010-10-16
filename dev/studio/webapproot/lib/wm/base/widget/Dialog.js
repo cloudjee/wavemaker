@@ -502,9 +502,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    if (this.designWrapper)
 		this.designWrapper.setShowing(inShowing);
 
+	    var animationTime = (this._cupdating || this.showing == inShowing) ? 0 : app.dialogAnimationTime;
 	    if (inShowing) {
-
-		if (app.dialogAnimationTime) {
+		if (animationTime) {
 		    if (this._hideAnimation) {
 			this._hideAnimation.stop();
 			delete this._hideAnimation;
@@ -512,7 +512,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		    this._showAnimation = this._showAnimation || 
 			dojo.animateProperty({node: this.domNode, 
 					      properties: {opacity: 1},
-					      duration: app.dialogAnimationTime,
+					      duration: animationTime,
 					      onEnd: dojo.hitch(this, "onShow")});
 		    if (this._showAnimation.status() != "playing") {
 			this.domNode.style.opacity = 0.01;
@@ -525,21 +525,23 @@ dojo.declare("wm.Dialog", wm.Container, {
 		}
 
 	    } else {
-		if (app.dialogAnimationTime) {
+		if (animationTime) {
 		    if (this._showAnimation)
 			this._showAnimation.stop();
 
-		    if (!this._hideAnimation)
+		    if (!this._hideAnimation) {
 			this._hideAnimation = 
 			dojo.animateProperty({node: this.domNode, 
 					      properties: {opacity: 0.01},
-					      duration: app.dialogAnimationTime,
+					      duration: animationTime,
 					      onEnd: dojo.hitch(this, function() {
 						  wm.Control.prototype.setShowing.call(this,inShowing,forceChange, skipOnClose);
 						  if (!skipOnClose) 
 						      this.onClose("");
 						  delete this._hideAnimation; // has no destroy method
-					      })}).play();		
+					      })});
+			    this._hideAnimation.play();
+		    }
 		} else {
 		    this.inherited(arguments);		    
 		    if (!skipOnClose) 

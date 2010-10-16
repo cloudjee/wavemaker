@@ -42,6 +42,7 @@ dojo.declare("wm.Application", wm.Component, {
 		this.inherited(arguments);
 		wm.typeManager.initTypes();
 	        this.setTheme(themematch ? themematch[1] : this.theme, true);
+	        if (dojo.isIE && dojo.isIE < 8) this.dialogAnimationTime = 0;
 		this.pageDialog = new wm.PageDialog({name: "pageDialog", owner: this});
 		this.toastDialog = new wm.Toast({name: "toastDialog", owner: this});
 	       try{
