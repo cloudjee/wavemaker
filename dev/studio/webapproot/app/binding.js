@@ -841,11 +841,13 @@ dojo.declare("wm.BindTreeNode", wm.TreeNode, {
 	if (inNodeProps._propertyPath) namelist.push(inNodeProps._propertyPath);
 	namelist.push(inNodeProps.objectId);
 	var owner = inNodeProps.object.owner;
-	while (owner && owner != studio.page) {
-	    if (!(owner instanceof wm.PageContainer && owner.owner instanceof wm.PageDialog) && owner.name)
-		namelist.push(owner.name);
-	    owner = owner.owner;
-	}
+        if (owner instanceof wm.Page) {
+	    while (owner && owner != studio.page) {
+	        if (!(owner instanceof wm.PageContainer && owner.owner instanceof wm.PageDialog) && owner.name)
+		    namelist.push(owner.name);
+	        owner = owner.owner;
+	    }
+        }
 	return namelist.reverse().join(".");
     },
 	dumpSchema: function(inParent, inSchema) {
