@@ -56,6 +56,7 @@ dojo.declare("wm.ServiceCall", null, {
 	*/
 	operation: "",
 	_operationInfo: {},
+        downloadFile: false,
 	destroy: function() {
 		this.inherited(arguments);
 		wm.fire(this._requester, "cancel");
@@ -172,12 +173,37 @@ dojo.declare("wm.ServiceCall", null, {
 		return this.input.getArgs();
 	},
 	request: function(inArgs) {
-		inArgs = inArgs || this.getArgs();
-		wm.logging && console.debug("request", this.getId(), "operation", this.operation, "args", inArgs);
+            if (this.downloadFile) {
+	        var args = inArgs || this.input.getArgsHash();
+                var argString = "method=" + this.operation;
+                for (i in args) {
+                    argString += "&" + i + "=" + escape(args[i]);
+                }
+		      var iframe = dojo.byId("downloadFrame");
+		      if (iframe) iframe.parentNode.removeChild(iframe);
+
+		      iframe = document.createElement("iframe");
+		      dojo.attr(iframe, {id: "downloadFrame",
+					 name: "downloadFrame"});
+		      dojo.style(iframe, {top: "1px",
+					  left: "1px",
+					  width: "1px",
+					  height: "1px",
+					  visibility: "hidden"}); 
+		      dojo.body().appendChild(iframe);
+
+                var baseurl = window.location.href;
+                baseurl = baseurl.replace(/\?.*$/,"");
+                baseurl = baseurl.replace(/\/[^\/]*$/,"/");
+		iframe.src = baseurl + this._service._service.serviceUrl.replace(/\.json$/,".download") + "?" + argString;
+            } else {
+	        var args = inArgs || this.getArgs();
+		wm.logging && console.debug("request", this.getId(), "operation", this.operation, "args", args);
 		if (djConfig.isDebug)
 		  console.log("REQUEST   Component: " + this.getRoot() + "." + this.name + ";  Operation: " + this.operation);
-	          var d = this._requester = this._service.invoke(this.operation, inArgs, this.owner);
+	        var d = this._requester = this._service.invoke(this.operation, args, this.owner);
 		return this.processRequest(d);
+            }
 	},
 	processRequest: function(inDeferred) {
 		var d = inDeferred;
@@ -362,6 +388,7 @@ wm.ServiceCall.extend({
 	}
 });
 wm.Object.extendSchema(wm.ServiceCall, {
+    downloadFile: {},
     startUpdateComplete: { ignore: 1},
     designTime: {ignore: 1}
 });
@@ -397,6 +424,14 @@ dojo.declare("wm.ServiceInput", wm.Variable, {
 		}
 
 	},
+    getArgsHash: function() {
+	var data= this.getData(), args={}, d;
+
+	for (var p in this._dataSchema) {
+	    args[p] = (data[p] === undefined || data[p] === null) ? "" : data[p];
+        }
+	return args;
+    },
 	getArgs: function() {
 		var data= this.getData(), args=[], d;
 		// convert to array
