@@ -85,7 +85,7 @@ dojo.declare("wm.ToolButton", wm.Widget, {
 		this.btnNode.disabled = inDisabled ? "disabled" : "";
 		dojo[inDisabled ? "addClass" : "removeClass"](this.domNode, "wmbutton-disabled");
 	        this.invalidCss = true;
-		this.render();
+	    this.render(false, true);
 	},
 	setSelected: function(inSelected) {
 		this.selected = inSelected;
@@ -140,10 +140,11 @@ dojo.declare("wm.ToolButton", wm.Widget, {
 	        this.invalidCss = true;
 		this.render();
 	},
-	render: function(forceRender) {
+    render: function(forceRender, noInherited) {
 	    if (!forceRender && (!this.invalidCss || !this.isReflowEnabled())) return;
-	    this.inherited(arguments);
-		var il = this._imageList;
+            if (!noInherited)
+	        this.inherited(arguments);
+	    var il = this._imageList;
 		if (il && il.getImageHtml && this.imageIndex >= 0) {
 			var ii = this.imageIndex + (this.disabled ? il.colCount * 2 : 0) + (this.selected ? il.colCount : 0);
 			var sl = this.singleLine ? "line-height: " + this.height + "; " : "";
