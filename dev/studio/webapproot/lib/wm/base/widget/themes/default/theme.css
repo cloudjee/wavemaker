@@ -747,8 +747,8 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	background-color: #EEEEEE;
 }
 
-.nonmodaldialog .wmdialog-title {
-    cursor: pointer;   
+.nonmodaldialog .wmdialogtitlebar {
+    cursor: hand;
 }
  .dialogtitlebar, .dialogfooter {
     background-color: #555555;	   
@@ -1557,4 +1557,8 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
 
 #wmMinifiedDialogPanel {
     z-index: 100;
+}
+
+.wmdojofileupload .wmfileuploaderListItem {
+    overflow: hidden;
 }
