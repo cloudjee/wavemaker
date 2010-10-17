@@ -83,12 +83,12 @@ dojo.declare("wm._BaseEditor", wm.Widget, {
 			this.connectEditor();
 			this.setRequired(this.required);
 			this.setInitialValue();
-
+/*
                     if (this.editor._onChangeHandle) {
                         window.clearTimeout(this.editor._onChangeHandle);
                         this.editor._onChangeHandle = null;
                     }          
-
+		    */
 			this.setReadonly(this.readonly);
 		}
 		this.editor.owner = this;
@@ -284,8 +284,11 @@ dojo.declare("wm._BaseEditor", wm.Widget, {
 	setEditorValue: function(inValue) {
 		if (this.editor && this.editor.set) {
 			inValue = inValue === undefined ? null : inValue;
-			this.editor.set('value',inValue);
-			this.updateReadonlyValue();
+		    var oldVal = this.editor.get('value');
+		    this.editor.set('value',inValue, false);
+		    if (oldVal != inValue)
+			this.changed();
+		    this.updateReadonlyValue();
 		}
 	},
 	setDisplayValue: function(inValue) {
@@ -377,7 +380,8 @@ dojo.declare("wm._BaseEditor", wm.Widget, {
 	doChangeOnKey: function(inEvent) {
 		var e = this.editor;
 		//e.setValue(e.getValue());
-	        e.set("value",e.get("value"));
+	        //e.set("value",e.get("value"));
+	        this.changed();
 	},
         onEnterKeyPress: function() {}
 });
@@ -534,10 +538,12 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 	    this.startTimerWithName("CreateDijit", this.declaredClass);
 		this.editor = this._createEditor(n, inProps);
 
+/*
             if (this.editor._onChangeHandle) {
                 window.clearTimeout(this.editor._onChangeHandle);
                 this.editor._onChangeHandle = null;
             }
+	    */
 		this.editorNode = this.editor.domNode;
 		this.editorNode.style.margin = "0"; // failure to explicitly set these is throwing off my bounds calculations
 		this.editorNode.style.padding = "0"; // and causes it to stretch wider than it should by a few pixels
@@ -552,11 +558,12 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 			this.setRequired(this.required);
 			this.setInitialValue();
 
+/*
             if (this.editor._onChangeHandle) {
                 window.clearTimeout(this.editor._onChangeHandle);
                 this.editor._onChangeHandle = null;
             }
-
+	    */
 			this.setReadonly(this.readonly);
 		}
 
@@ -914,8 +921,11 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 	setEditorValue: function(inValue) {
 	    if (this.editor) {  // If using html widgets and replacing them with dijits use  if (this.editor && this.editor.declaredClass) {
 			inValue = inValue === undefined ? null : inValue;
-			this.editor.set('value',inValue);
+		        var oldValue = this.editor.get('value');
+		        this.editor.set('value',inValue, false);
 			this.updateReadonlyValue();
+		        if (oldValue != inValue)
+			    this.changed();
 		}
 	},
 	setDisplayValue: function(inValue) {
@@ -1034,8 +1044,8 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 	},
 	doChangeOnKey: function(inEvent) {
 		var e = this.editor;
-		//e.setValue(e.getValue());
-	        e.set("value",e.get("value"));
+	        //e.set("value",e.get("value"));
+	        this.changed();
 	},
 	setDefaultOnInsert:function(){
 		if (this.editor && this.defaultInsert)
