@@ -374,20 +374,21 @@ dojo.declare("wm.Page", wm.Component, {
 	keydown: function(e) {
             // Ignore keydown if a dialog is open; if the owner is not the main application; if the main page of the application is not this page (this page is in a page container)
 	      if (wm.dialog.showing || this.owner != app || this != app._page) return true;
+	    var isInput = (e.target.tagName == "INPUT");
 	    var chr = String.fromCharCode(e.keyCode);
 	    if (e.shiftKey) {
-		if (e.keyCode != dojo.keys.SHIFT)
+		if (e.keyCode != dojo.keys.SHIFT && !isInput)
 		    this.onShiftKey(e.keyCode, chr);
 	    } else if (e.ctrlKey) {
 		if (e.keyCode != dojo.keys.CTRL)
 		    this.onCtrlKey(e.keyCode, chr);
 	    } else if (e.keyCode == dojo.keys.ESCAPE)
 		this.onEscapeKey();
-	    else if (e.keyCode == dojo.keys.ENTER)
+	    else if (e.keyCode == dojo.keys.ENTER && !isInput)
 		this.onEnterKey();
-	    else if (chr)
+	    else if (chr && !isInput)
 		this.onLetterKey(chr);
-	    else 
+	    else if (!isInput)
 		this.onMiscKey(e.keyCode);
 	},
         onEnterKey: function() {},
