@@ -502,7 +502,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    if (this.designWrapper)
 		this.designWrapper.setShowing(inShowing);
 
-	    var animationTime = (this._cupdating || this.showing == inShowing) ? 0 : app.dialogAnimationTime;
+	    var animationTime = (this._cupdating || this.showing == inShowing || this._noAnimation) ? 0 : app.dialogAnimationTime;
 	    if (inShowing) {
 		if (animationTime) {
 		    if (this._hideAnimation) {
@@ -1122,6 +1122,7 @@ dojo.declare("wm.FileUploadDialog", wm.GenericDialog, {
 
 
 dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
+    _noAnimation: true,
     classNames: "wmtoast wmtoastExtraSpecific",
     title: "",
     modal: false,
