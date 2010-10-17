@@ -265,7 +265,7 @@ wm.job = function(inName, inDelay, inJob) {
 wm.cancelJob = function(inName) {
 	clearTimeout(wm._jobs[inName]);
 }
-wm._jobs = [ ];
+wm._jobs = {};
 
 wm.connectEvents = function(inObject, inNode, inEvents) {
 	// FIXME: maybe remove this at some point

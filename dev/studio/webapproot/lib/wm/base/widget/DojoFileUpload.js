@@ -272,11 +272,11 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
     },
 
     createDijit: function() {
-            wm.job(this.getId() + ": Create Dijit", 100,dojo.hitch(this, "createDijit2"));
+            wm.job(this.getRuntimeId() + ": Create Dijit", 100,dojo.hitch(this, "createDijit2"));
     },
     createDijit2: function() {
         // clear any pending jobs which there shouldn't be any of as there should be no direct calls to createDijit2
-        wm.job(this.getId() + ": Create Dijit", 10,function(){});
+        wm.job(this.getRuntimeId() + ": Create Dijit", 10,function(){});
 
         // Flag that any events triggered by the code that follows should NOT try recreating the dijit...
         this._inCreateDijit = true;
@@ -362,7 +362,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
                 this.button.btnNode = div;
 
                 this.dijit.insideNode.style.opacity = "0.01";
-                this.dijit.insideNode.style.filter = "alpha(opacity=50)";
+                this.dijit.insideNode.style.filter = "alpha(opacity=1)";
 
                 this.button.setCaption(this.buttonCaption);
         console.log("CREATE DIJIT IS A D");
@@ -588,7 +588,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
 
         }
         */
-        wm.job(this.getId() + ": upload()", 100, dojo.hitch(this, "upload"));
+        wm.job(this.getRuntimeId() + ": upload()", 100, dojo.hitch(this, "upload"));
     },
     getHtmlForItem: function(d) {
 //            var img = (!d.uploaded || !this.noDeletionAfterLoad) ? "<img id='" + this.getId() + "_delete" + d.tmpid + "' src='/wavemaker/lib/wm/base/widget/themes/default/images/error.png' /> " : "";
@@ -612,21 +612,25 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
             var node = event.target;
             var i = node.id.match(/\d+$/)[0];
 
+
             // checkbox has been unchecked
-	    if (!event.target.checked) {
-                var data = this.variable.getData();
-                var index = wm.Array.indexOf(data,i, function(a,b) {
-                    return (a.tmpid == b);
-                });
+	if (!event.target.checked) {
+            var data = this.variable.getData();
+            var index = wm.Array.indexOf(data,i, function(a,b) {
+		return (a.tmpid == b);
+            });
+            var item = this.variable.getItem(index);
                 if (index != -1) {
                     if (this._state == "filestoupload")
                         this.variable.getItem(index).setValue("included", node.checked); 
                     else {
-                        var item = this.variable.getItem(index);
+
                         this.variable.removeItem(index);
                         this._variable.addItem(item);
+			var itemData = item.getData();
 			if (String(this.autoDeleteDelay).match(/^\d+$/))
-			    wm.job("removeUncheckedFile:"+item.tmpId, this.autoDeleteDelay*1000, 
+			    console.log(this.getRuntimeId() + ":removeUncheckedFile:"+itemData.tmpid);
+			    wm.job(this.getRuntimeId() + ":removeUncheckedFile:"+itemData.tmpid, this.autoDeleteDelay*1000, 
 				   dojo.hitch(this, function() {
 				       this.deleteFileItem(item);
 				   }));
@@ -634,7 +638,13 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
                     }
                 }
             } else {
-		wm.job("removeUncheckedFile:"+item.tmpId, 0, function(){}); // remove the job
+            var data = this._variable.getData();
+            var index = wm.Array.indexOf(data,i, function(a,b) {
+		return (a.tmpid == b);
+            });
+		var item = this._variable.getItem(index).getData();
+		console.log("CLEAR:"+this.getRuntimeId() + ":removeUncheckedFile:"+item.tmpid);
+		wm.job(this.getRuntimeId() + ":removeUncheckedFile:"+item.tmpid, 0, function(){}); // remove the job
 
                 var data = this._variable.getData();
                 var index = wm.Array.indexOf(data,i, function(a,b) {

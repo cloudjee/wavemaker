@@ -184,7 +184,7 @@ dojo.declare("wm.NavigationService", wm.Service, {
 
                 // Delay openning the page as loading the page immediately will cause the widgets/components that triggered this to be destroyed in the
                 // middle of calling this.  Use wm.job so that if another page request fires, this one is canceled
-                wm.job(this.getId() + ": PageChange", 1, function() {
+                wm.job(this.getRuntimeId() + ": PageChange", 1, function() {
 		    app.loadPage(inPageName);
                 });
 	    } else if (page.owner instanceof wm.PageContainer || page.owner instanceof wm.PageContainerMixin) {
