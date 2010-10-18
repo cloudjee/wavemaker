@@ -57,13 +57,13 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
 	smd: null,
 	required: false,
 	sync: false,
-	designTime: false,
+        _designTime: false,
 	bind: function(method, parameters, deferredRequestHandler, url){
 		//console.log("method", method, "parameters", parameters || [], "url", url || this.serviceUrl);
 		url = url || this.serviceUrl;
 		if (!url)
 			return;
-		if (this.designTime) 
+		if (this._designTime) 
 					url = url + "?designTime=true";
 		var props = {
 			url: url||this.serviceUrl,
@@ -133,8 +133,8 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 			    } else {
 
 				this._service = new wm.JsonRpc(url);
-				if (this.designTime)
-					this._service.designTime = true;
+				if (this._designTime)
+					this._service._designTime = true;
 				this._service.timeout = this.timeout;
 				this.ready = Boolean(this._service && this._service.smd);
 				if (this.ready) {
@@ -163,7 +163,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 			}
 		}
 	},
-        invoke: function(inMethod, inArgs, owner) {
+       invoke: function(inMethod, inArgs, owner) {
 		if (!this._service) 
 			return null;
 		this._service.sync = this.sync;
@@ -180,6 +180,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		}
 		this.result = null;
 		this.error = null;
+
 		var d = this._service.callRemote(inMethod, inArgs || []);
 		d.addBoth(dojo.hitch(this, function(r) {
 			this.inflight = false;

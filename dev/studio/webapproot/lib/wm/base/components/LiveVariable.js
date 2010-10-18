@@ -192,7 +192,7 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	_update: function() {
 		// note: runtime service only available when application is deployed
 		// so must wait until here to set it.
-		if (this.designTime)
+		if (this._designTime)
 			this._service = wm.getRuntimeServiceDesignTime(this);
 		else
 			this._service = wm.getRuntimeService(this);

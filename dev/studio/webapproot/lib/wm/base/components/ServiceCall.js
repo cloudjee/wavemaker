@@ -317,7 +317,7 @@ wm.ServiceCall.extend({
 	queue: "(serviceCalls)",
 	/** @lends wm.ServiceCall.prototype */
 	doDesigntimeUpdate: function() {
-		this.designTime = true;
+		this._designTime = true;
 		return studio.makeLiveDataCall(dojo.hitch(this, "_update"));
 	},
 	doClearInput: function() {
@@ -389,8 +389,7 @@ wm.ServiceCall.extend({
 });
 wm.Object.extendSchema(wm.ServiceCall, {
     downloadFile: {},
-    startUpdateComplete: { ignore: 1},
-    designTime: {ignore: 1}
+    startUpdateComplete: { ignore: 1}
 });
 
 
