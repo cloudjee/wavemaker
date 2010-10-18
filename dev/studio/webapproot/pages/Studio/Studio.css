@@ -1343,6 +1343,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 }
 
 .wm-darksnazzy .wmtablayers-tabbar,
+#studio_javaEditorContainer_javaEditor_logTabs .wmtablayers-tabbar,
 #studio_sourceTabs {
 	background-image:url(images/dark_tabbar_bg.gif);
 	border-bottom: 1px solid #c0c4ca;
@@ -1351,11 +1352,13 @@ body.wm-darksnazzy .wmToolbar button:hover {
 }
 
 .wm-darksnazzy .wmtablayers .wmtablayers-tab,
+#studio_javaEditorContainer_javaEditor_logTabs .wmtablayers-tab,
 #studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-tab {
 	cursor: pointer;
 }
 
 .wm-darksnazzy .wmtablayers-tab,
+#studio_javaEditorContainer_javaEditor_logTabs .wmtablayers-tab,
 #studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-tab {
 	cursor: pointer;
 	border-top: 1px solid #5e6678;
@@ -1369,6 +1372,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 }
 
 .wm-darksnazzy .wmtablayers-selected,
+#studio_javaEditorContainer_javaEditor_logTabs .wmtablayers-selected,
 #studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-selected {
 	border-top: 1px solid #c0c4ca;
 	border-right: 1px solid #363b44;
