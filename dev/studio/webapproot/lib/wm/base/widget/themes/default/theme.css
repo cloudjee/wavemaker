@@ -1559,6 +1559,12 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
     z-index: 100;
 }
 
+.wmdojofileupload form, .wmdojofileupload form > .dijitFileInputReal {
+    height: 100% !important;
+    width: 100% !important;
+    left: 0px !important;
+}
+
 .wmdojofileupload .wmfileuploaderListItem {
     overflow: hidden;
 }
