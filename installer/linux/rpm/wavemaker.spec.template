@@ -12,6 +12,6 @@ Group: Application/Devel
 AutoReqProv: no
 
 %description 
-WaveMaker provides for the Web-Fast development of CIO-Safe applications.
+WaveMaker is the only open and easy-to-use cloud development platform for web applications. WaveMaker's visual, drag and drop tools flatten the Java learning curve by 92%, enabling any developer to build enterprise web applications that deploy to a standard Java platform. WaveMaker's WYSIWYG studio creates standard Java applications with 98% less code, boosting developer productivity and quality without compromising flexibility. WaveMaker applications are cloud-ready and include built-in support for multi-tenancy and elastic scaling.
 
 %files
