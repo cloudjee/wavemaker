@@ -517,6 +517,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 		    if (this._showAnimation.status() != "playing") {
 			this.domNode.style.opacity = 0.01;
 			this.inherited(arguments);
+			this.renderBounds();
+			this.reflow();
 			this._showAnimation.play();
 		    }
 		} else {
