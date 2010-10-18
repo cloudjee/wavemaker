@@ -890,9 +890,11 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 		
 		this.updateReadonlyValue();
 	},
-	updateReadonlyValue: function() {
-	    if (this.readonly && this.readOnlyNode)
-		this.readOnlyNode.innerHTML = this._getReadonlyValue();
+	updateReadonlyValue: function(inValue) {
+	 	if (this.readonly && this.readOnlyNode){
+			var value = inValue || this._getReadonlyValue();
+			this.readOnlyNode.innerHTML = value;
+		}
 	},
 	getDisplayValue: function() {
 		return this.editor && this.editor.declaredClass &&  this.editor.get && this.editor.get('displayedValue') ? this.editor.get('displayedValue') || "" : this.getEditorValue() || "";
