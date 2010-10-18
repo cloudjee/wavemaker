@@ -1,13 +1,14 @@
 Name: wavemaker-@PROJECTTYPE@
 Version: @VERSION@
-Release: 0
-License: WaveMaker Inc, 2009
+Release: @VERSION@
+License: WaveMaker Inc, 2010
 Packager: Ed Callahan <community@wavemaker.com>
 Vendor: WaveMaker Inc
+URL: http://wavemaker.com
 BuildRoot: @BUILDROOT@
 %define _topdir @TOPDIR@
 Summary: AJAX RAD Studio
-Group: Applications
+Group: Application/Devel
 AutoReqProv: no
 
 %description 
