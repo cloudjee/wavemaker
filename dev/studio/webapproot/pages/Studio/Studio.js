@@ -58,6 +58,8 @@ dojo.declare("Studio", wm.Page, {
 	// initialization
 	//=========================================================================
 	start: function() {
+	    app._page = this;// not sure why this was failing to set, but I don't have time to investigate...
+
 		try{
 		    this.documentationDialog = new wm.RichTextDialog({owner: this, name:"documentationDialog"});
 		    this.connect(this.documentationDialog, "onOkClick", this, "saveDocumentation");
@@ -79,7 +81,7 @@ dojo.declare("Studio", wm.Page, {
 		this.loadModuleConfig();
 		// FIXME: hack
 		this.owner = app;
-		this.scrim = new wm.Scrim({owner: this,  _classes: {domNode: ["wmdialog-scrim"]}, waitCursor: false});
+	    this.scrim = new wm.Scrim({owner: this, name: "studioScrim", _classes: {domNode: ["wmdialog-scrim"]}, waitCursor: false, _noAnimation: true});
 		// populate palettes
 		loadPackages();
 		// init some UI
