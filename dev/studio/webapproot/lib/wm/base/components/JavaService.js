@@ -61,6 +61,7 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 	return serviceId;
     },
     newJavaServiceWithFunc: function(serviceId, classId, javaFunctions) {
+        studio.beginWait("Initializing Java Service " + serviceId);
         if (!studio.javaEditorContainer || !studio.javaEditorContainer.page) {
 	    var c = studio.getEditor("JavaEditor");
             wm.job(this.getRuntimeId() +":newJavaServiceWithFunc", 10, dojo.hitch(this, function() {
@@ -91,7 +92,7 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 
         var imports = javaFunctions.match(/import.*;/g);
         javaFunctions = javaFunctions.replace(/import.*;\s*\n/g, "");
-
+        studio.endWait();
 	var params = javaFunctions.match(/\$\{.*?\}/g);
 	if (params) {
 	    for(var i = 0; i < params.length; i++) {
@@ -117,13 +118,25 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 	    });
 				      
 	    var d = new wm.Dialog({owner: app, 
+                                   borderColor: "white",
+                                   border: "2",
 				   width: "400px",
 				   height: "400px",
 				   modal: true,
 				   useContainerWidget: true,
 				   fitToContentHeight: true,
 				   title: "Create a Java Service"});
+            d.containerWidget.setBorder("10");
+            d.containerWidget.setBorderColor("#424A5A");
+            d.buttonBar.addUserClass("wmDialogFooter");
 	    for(var i = 0; i < params.length; i++) {
+                new wm.Label({singleLine: false,
+                              owner: d,
+                              parent: d.containerWidget,
+                              height: "20px",
+                              width: "100%",                             
+                              autoSizeHeight: true,
+                              caption: "<b>" + params[i].name  + "</b> "+ params[i].description});
 		params[i].editor = 
 		    new wm.Text({owner: d,
 				 parent: d.containerWidget,
@@ -132,9 +145,8 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 				 padding: "4,10,4,10",
 				 height: "30px",
 				 width: "100%",
-				 emptyValue: "emptyString",
-				 caption: params[i].name,
-				 promptMessage: params[i].type + ": "+ params[i].description});
+				 emptyValue: "emptyString"});
+                params[i].editor.editor.set("placeHolder", params[i].type);
 		params[i].editor.connect(params[i].editor, "onEnterKeyPress", this, function() {
 		    onOKFunc();
 		    onDoneFunc();
@@ -143,12 +155,10 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 	    var okButton = new wm.Button({owner:  d,
 					  parent: d.buttonBar,
 					  width: "100px",
-					  height: "40px",
 					  caption: "OK"});
 	    var cancelButton = new wm.Button({owner:  d,
 					  parent: d.buttonBar,
 					  width: "100px",
-					  height: "40px",
 					  caption: "Cancel"});
 	    d.show();
 	    params[0].editor.focus();
@@ -158,6 +168,7 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 	    });
 
 	    d.connect(cancelButton, "onclick", this, function() {
+                studio.servicesService.requestAsync("deleteService", [serviceId]);
 		onDoneFunc();
 	    });
 
@@ -165,9 +176,15 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 
 
                                                 }),
-                                                function(error) {app.toastWarning(error);});
+                                                function(error) {
+                                                    studio.endWait();
+                                                    app.toastWarning(error);
+                                                });
             }),
-            function(error) {app.toastWarning(error);});
+            function(error) {
+                studio.endWait();
+                app.toastWarning(error);
+            });
         
     },
     newJavaServiceWithFunc2: function(serviceId, classId, javaFunctions) {
