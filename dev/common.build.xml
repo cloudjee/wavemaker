@@ -119,7 +119,7 @@
 	    	<echo> "Java 5 build" </echo>
         <filelist id="common.runtime.jars">
         	<file name="${jaxb-api.jar}"/>
-        	<!-- same as java6 below -->
+        	<!-- below is same as java6 -->
           <file name="${acegi.jar}"/>
           <file name="${activation.jar}"/>
           <file name="${apache-collections.jar}"/>
@@ -173,6 +173,9 @@
     </then>    
     <else> <!-- Default -->     
         <filelist id="common.runtime.jars">
+        	<!-- including in jdk6 builds for jdk5 deployments -->
+        	<file name="${jaxb-api.jar}"/>
+        	<!-- below is same as java5 -->
           <file name="${acegi.jar}"/>
           <file name="${activation.jar}"/>
           <file name="${apache-collections.jar}"/>
