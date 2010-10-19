@@ -514,9 +514,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 					      properties: {opacity: 1},
 					      duration: animationTime,
 					      onEnd: dojo.hitch(this, function() {
-                                                  try {
-                                                      this.onShow();
-                                                  }catch(e) {console.error("ERROR in onShow for " + this.toString());}
+                                                  this.onShow();
                                               })});
 		    if (this._showAnimation.status() != "playing") {
 			this.domNode.style.opacity = 0.01;
@@ -542,12 +540,10 @@ dojo.declare("wm.Dialog", wm.Container, {
 					      duration: animationTime,
 					      onEnd: dojo.hitch(this, function() {
                                                   if (this.isDestroyed) return;
-                                                  try {
 						      wm.Control.prototype.setShowing.call(this,inShowing,forceChange, skipOnClose);
 						      if (!skipOnClose) 
 						          this.onClose("");
 						      delete this._hideAnimation; // has no destroy method
-                                                  }catch(e) {console.error("ERROR in setShowing for " + this.toString());}
 					      })});
 			    this._hideAnimation.play();
 		    }
