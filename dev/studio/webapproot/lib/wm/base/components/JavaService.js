@@ -61,6 +61,36 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 	return serviceId;
     },
     newJavaServiceWithFunc: function(serviceId, classId, javaFunctions) {
+        if (!studio.javaEditorContainer || !studio.javaEditorContainer.page) {
+	    var c = studio.getEditor("JavaEditor");
+            wm.job(this.getRuntimeId() +":newJavaServiceWithFunc", 10, dojo.hitch(this, function() {
+                this.newJavaServiceWithFunc(serviceId,classId, javaFunctions);
+            }));
+            return;
+        }
+
+	var newServiceId = this.getUniqueServiceId(serviceId);
+
+	// if the service id has changed, also update the class name to match
+	if (newServiceId != serviceId) {
+	    var numb = newServiceId.match(/\d$/)[0];
+	    if (classId.match(/\d+$/))
+		classId = classId.replace(/\d+$/, numb);
+	    else
+		classId += numb;
+	}
+	serviceId = newServiceId;
+
+
+	// STEP 1: Create a new class
+	studio.javaService.requestAsync(
+	    "newClass", [serviceId, classId], dojo.hitch(this, function() {
+		studio.javaService.requestAsync("openClass", [serviceId],
+                                                dojo.hitch(this, function(inData) {
+
+
+        var imports = javaFunctions.match(/import.*;/g);
+        javaFunctions = javaFunctions.replace(/import.*;\s*\n/g, "");
 
 	var params = javaFunctions.match(/\$\{.*?\}/g);
 	if (params) {
@@ -76,7 +106,8 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 		for (var i = 0; i < params.length; i++) {
 		    javaFunctions = javaFunctions.replace(new RegExp("\\$\\{" + params[i].type + ":" + params[i].name + ":.*?\\}"), params[i].editor.getDataValue());
 		}
-		this.newJavaServiceWithFunc2(serviceId, classId, javaFunctions);
+                inData = inData.substring(0, inData.indexOf("public String sampleJavaOperation")) + javaFunctions + "\n}";
+		this.newJavaServiceWithFunc2(serviceId, classId, imports.join("\n") + "\n" + inData);
 	    });
 	    var onDoneFunc = dojo.hitch(this, function() {
 		d.destroy();
@@ -130,70 +161,43 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 		onDoneFunc();
 	    });
 
-	    
-	} else {
-	    this.newJavaServiceWithFunc2(serviceId, classId, javaFunctions);
-	}
+        }
+
+
+                                                }),
+                                                function(error) {app.toastWarning(error);});
+            }),
+            function(error) {app.toastWarning(error);});
+        
     },
     newJavaServiceWithFunc2: function(serviceId, classId, javaFunctions) {
 	studio.beginWait("Creating service");
-	var newServiceId = this.getUniqueServiceId(serviceId);
 
-	// if the service id has changed, also update the class name to match
-	if (newServiceId != serviceId) {
-	    var numb = newServiceId.match(/\d$/)[0];
-	    if (classId.match(/\d+$/))
-		classId = classId.replace(/\d+$/, numb);
-	    else
-		classId += numb;
-	}
-	serviceId = newServiceId;
+	studio.javaService.requestAsync("saveClass",
+					[serviceId, javaFunctions], 
+                                        dojo.hitch(this, function() {
+	                                    app.toastSuccess("Created java service " + serviceId);
+	                                    var c = new wm.JavaService({name: serviceId, serviceId: serviceId})
+	                                    //studio.javaEditorContainer.page.update();
+	                                    studio.application.addServerComponent(c);
+			                    studio.refreshWidgetsTree();
+	                                    if (!this.initialNoEdit || studio.javaEditor.isActive()) {
+		                                studio.select(c);
+		                                c.editView();
+		                                studio.navGotoModelTreeClick();
+	                                    }
+	                                    delete this.iintialNoEdit;
+	                                    
+	                                    studio.endWait("Creating service");
+                                            this._onClassFirstSave();
+                                        }),
+					dojo.hitch(this, function(inError) {
+	                                    app.toastWarning("Failed to create java service " + serviceId +": " + inError);
+	                                    studio.endWait("Creating service");
+	                                }));
 
-	var onError = dojo.hitch(this, function(inError) {
-	    app.toastWarning("Failed to create java service " + serviceId +": " + inError);
-	    studio.endWait("Creating service");
-	});
-
-
-	var onSaveSuccess = dojo.hitch(this,function() {
-	    app.toastSuccess("Created java service " + serviceId);
-	    var c = new wm.JavaService({name: serviceId, serviceId: serviceId})
-	    studio.application.addServerComponent(c);
-	    studio.refreshWidgetsTree();
-	    if (!this.initialNoEdit || studio.javaEditor.isActive()) {
-		studio.select(c);
-		c.editView();
-		studio.navGotoModelTreeClick();
-	    }
-	    delete this.iintialNoEdit;
-	    
-	    studio.endWait("Creating service");
-	});
-
-
-
-	// STEP 3: After loading the class file from the server, add in the specified java code and save/compile it
-	var onOpenSuccess = dojo.hitch(this,function(inData) {
-	    inData = inData.substring(0, inData.indexOf("public String sampleJavaOperation"))
-		+ javaFunctions + "\n}";
-		studio.javaService.requestAsync("saveClass",
-						[serviceId, inData], 
-						onSaveSuccess,
-						onError);
-	});
-
-	// STEP 2: After creating a new class, load the class file from the server
-	var onNewSuccess = dojo.hitch(this,function() {
-	    studio.javaService.requestAsync("openClass", [serviceId],
-					    onOpenSuccess, onError);
-	});
-
-
-	// STEP 1: Create a new class
-	studio.javaService.requestAsync(
-	    "newClass", [serviceId, classId], onNewSuccess, onError);
-
-        },
+    },
+    _onClassFirstSave: function() {},
 	newJavaServiceDialog: function(inSender) {
 		var d = this.getCreateJavaServiceDialog();
 		if (d.page)

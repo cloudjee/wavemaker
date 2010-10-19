@@ -110,7 +110,12 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
             if (!found) {
                 var javaservice = new wm.JavaService({owner: studio.application, initialNoEdit: true, javaTemplate: "FileUploadDownload.java"});
                 var result = studio.studioService.requestSync("getJavaServiceTemplate", [javaservice.javaTemplate]).results[0];
-                javaservice.newJavaServiceWithFunc("FileUploadDownload", "FileUploadDownload", result);
+                javaservice.connect(javaservice, "_onClassFirstSave", this, function() {
+                    this._serviceVariable.setService("");
+                    this._serviceVariable.setService(this.service);
+                    studio.inspector.reinspect();
+                });
+                javaservice.newJavaServiceWithFunc("FileUploadDownload","FileUploadDownload", result);
             }
         } catch(e) {
             console.error("DojoFileUpload.js failed to create javaservice:" + e);
@@ -145,7 +150,8 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
 
             // Create the subcomponents; may want to move this to postInit
             this._serviceVariable = new wm.ServiceVariable({owner: this, operation: this.operation, service: this.service});
-
+            this.connect(this._serviceVariable, "onSuccess", this, "onSuccess");
+            this.connect(this._serviceVariable, "onError", this, "onError");
             this.variable = new wm.Variable({name: "variable", owner: this, type: "wm.DojoFileUpload.FileData", isList: true});
             this.variable.isList= true; // this value got killed off by Variable.js:setType
             this._variable = new wm.Variable({name: "_variable", owner: this, type: "wm.DojoFileUpload.FileData", isList: true});
@@ -195,6 +201,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
                          width: "100%",
                          height: "100%",
                          border: "1",
+                         html: "<i>No files selected</i>",
                          showing: this.useList});
         this.progressBar = 
             new wm.dijit.ProgressBar({parent: this,
@@ -252,15 +259,8 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
 
 /*
         this.button.connect(this.button, "renderBounds", this, function() {
-            if (!this.button.isAncestorHidden() && !this._inCreateDijit) {
-                if (!this._lastButtonBounds || 
-                    this._lastButtonBounds.w != this.button.bounds.w ||
-                    this._lastButtonBounds.h != this.button.bounds.h ||
-                    this._lastButtonBounds.l != this.button.bounds.l ||
-                    this._lastButtonBounds.t != this.button.bounds.t) {
-                console.log("JOB: createButton");
-                wm.job(this.getId() + ": Create Dijit", 10,dojo.hitch(this, "createDijit"));
-                }
+            if (!this.button.isAncestorHidden() && !this._inCreateDijit && this.dijit) {
+                this.dijit._fileInput.style.left = 0;
             }
         });
         */
@@ -345,28 +345,6 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
         this.connect(this.dijit, "onComplete", this, "success");
         this.connect(this.dijit, "onError", this, "onError");
         this.connect(this.dijit, "onProgress", this, "progress");
-
-        // If its the flash widget, point the button to the new nodes created by the dijit, set the opacity
-        // of the flash widget to 0.01, and make sure we reset the buttoncaption which was cleared
-        // to minimize the text showing up in the flash widget hovering over the button we want users to see.
-        if (this._uploaderType == "flash") {
-            this.button.domNode = this.dijit.domNode;
-            var div = document.createElement("div");
-            var s = div.style;
-            s.height = "100%";
-            s.width = "100%";
-            s.textAlign = "center";
-
-        console.log("CREATE DIJIT IS A C");
-                this.button.domNode.appendChild(div);
-                this.button.btnNode = div;
-
-                this.dijit.insideNode.style.opacity = "0.01";
-                this.dijit.insideNode.style.filter = "alpha(opacity=1)";
-
-                this.button.setCaption(this.buttonCaption);
-        console.log("CREATE DIJIT IS A D");
-        }
 
         this._inCreateDijit = false;
     },
@@ -471,23 +449,42 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
         }
         return data;
     },
-    getRemovedFileNames: function() {
-        var names = [];
-        var data = this._variable.getData();
+
+    getAllFilePaths: function() {
+        var paths = [];
+        var data = this._variable.getData().concat(this.variable.getData());
         for (var i = 0; i < data.length; i++) {
-            names.push(data[i].name);
+            paths.push(data[i].path);
         }
-        return names;
+        return paths;
     },
-    deleteRemovedFiles: function() {
-        var names = this.getRemovedFileNames();
+    deleteAllFiles: function() {
+        var paths = this.getAllFilePaths();
 	var oldOp = this._serviceVariable.operation;
         this._serviceVariable.setOperation("deleteFiles");
-        this._serviceVariable.input.setValue("files", names)
+        this._serviceVariable.input.setValue("files", paths)
         this._serviceVariable.update();
         this._variable.setData([]);
         this.updateHtml();
-        this.onSuccess(this.variable.getData());
+	this._serviceVariable.setOperation(oldOp);
+    },
+
+    getRemovedFilePaths: function() {
+        var paths = [];
+        var data = this._variable.getData();
+        for (var i = 0; i < data.length; i++) {
+            paths.push(data[i].path);
+        }
+        return paths;
+    },
+    deleteRemovedFiles: function() {
+        var paths = this.getRemovedFilePaths();
+	var oldOp = this._serviceVariable.operation;
+        this._serviceVariable.setOperation("deleteFiles");
+        this._serviceVariable.input.setValue("files", paths)
+        this._serviceVariable.update();
+        this._variable.setData([]);
+        this.updateHtml();
 	this._serviceVariable.setOperation(oldOp);
     },
     deleteFileItem: function(item) {
@@ -502,19 +499,21 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
 	}
 	var oldOp = this._serviceVariable.operation;
         this._serviceVariable.setOperation("deleteFiles");
-        this._serviceVariable.input.setValue("files", [item.name]);
+        this._serviceVariable.input.setValue("files", [item.path]);
         this._serviceVariable.update();
+        this._serviceVariable.setOperation(oldOp);
 	var node = dojo.byId(this.getId() + "_checkbox" + item.tmpid).parentNode;
         dojo.anim(node, {height: 0},350, null, function() {dojo.destroy(node);});
         //this.updateHtml();
-        this.onSuccess(this.variable.getData());
-	this._serviceVariable.setOperation(oldOp);
-
     },
     // if this is a flash widget, fileList is an array of "wm.DojoFileUpload.FileData" objects (see definition in init method)
     // if this is an html widget, fileList is an array of response objects from the server
     success: function(fileList) {
+        if (!fileList)
+            return this.onSuccess(this.variable.getData());
         try {
+            if (dojo.query("input", this.html.domNode).length == 0)
+                this.html.setHtml(""); // remove the "no files selected" message
             this.updateVariable(fileList);
             var data = this._uploadedVariable.getData();
             var data2 = this.variable.getData();
@@ -524,7 +523,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
             
             this.progressBar.hide();
             if (this.useList) {
-		if (fileList.length == 1) {
+		if (fileList.length == 1) {                    
 		    var html = this.getHtmlForItem(this.variable.getItem(0).getData()).replace("div", "div style='height:0''");
 /*
 		    var div = document.createElement("div");
@@ -703,28 +702,34 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
             this.buttonWidth = parseInt(inWidth);
             this.buttonPanel.setWidth(inWidth + "px");
             if (this._uploaderType == "html") {
-                this.button.btnNode.parentNode.style.width = this.button.getContentBounds().w + "px";
-                this.button.btnNode.style.width = this.button.getContentBounds().w + "px";                
+                this.adjustButtonWidth();
             } else {
                 if (this.isDesignLoaded()) {
                     this.createDijit(); // must recreate the flash widget if size changes; this is why we don't support % sizing
                 }
             }
         },
+        adjustButtonWidth: function(inWidth) {
+                this.button.btnNode.parentNode.style.width = this.button.getContentBounds().w + "px";
+                this.button.btnNode.style.width = this.button.getContentBounds().w + "px";                
+        },
         setButtonHeight: function(inHeight) {
             this.buttonHeight = parseInt(inHeight);
             this.buttonPanel.setHeight(inHeight + "px");
             if (this._uploaderType == "html") {
-                var newheight = this.button.getContentBounds().h + "px";
-                this.button.btnNode.parentNode.style.height = newheight
-                this.button.btnNode.style.height = newheight;
-                this.button.btnNode.style.lineHeight = newheight;
-                this.button.render(false,true);
+                this.adjustButtonHeight();
             } else {
                 if (this.isDesignLoaded()) {
                     this.createDijit(); // must recreate the flash widget if size changes; this is why we don't support % sizing
                 }
             }
+        },
+        adjustButtonHeight: function() {
+                var newheight = this.button.getContentBounds().h + "px";
+                this.button.btnNode.parentNode.style.height = newheight
+                this.button.btnNode.style.height = newheight;
+                this.button.btnNode.style.lineHeight = newheight;
+                this.button.render(false,true);
         },
         setButtonCaption: function(inCaption) {
             this.buttonCaption = inCaption;
@@ -736,13 +741,19 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
         if (!inUse) {
             this.buttonPanel.setWidth("100%");
             this.buttonPanel.setHeight("100%");
+            this.adjustButtonHeight();
+            this.adjustButtonWidth();
         } else {
             this.buttonPanel.setWidth(this.buttonWidth);
             this.buttonPanel.setHeight(this.buttonHeight);
+            this.adjustButtonHeight();
+            this.adjustButtonWidth();
         }
+/*
         if (this.isDesignLoaded()) {
             this.createDijit(); // must recreate the flash widget if size changes; this is why we don't support % sizing
         }
+        */
     },
     setDisabled: function(inDisabled) {
         this.disabled = inDisabled;
