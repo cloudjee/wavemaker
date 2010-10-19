@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" springFile="resourceManager.spring.xml" type="JavaService" CRUDService="false" class="com.wavemaker.studio.ResourceFileService" id="resourceFileService">
     <operation name="uploadFile">
-        <parameter isList="false" typeRef="org.springframework.web.multipart.MultipartFile" name="file"/>
-        <return isList="false" typeRef="java.lang.String"/>
+        <parameter isList="false" typeRef="org.springframework.web.multipart.MultipartFile" name="file0"/>
+        <parameter isList="false" typeRef="java.lang.String" name="path"/>
+        <return isList="false" typeRef="com.wavemaker.runtime.server.FileUploadResponse"/>
+    </operation>
+    <operation name="unzipAndMoveNewFile">
+        <parameter isList="false" typeRef="java.lang.String" name="file"/>
+        <return isList="false" typeRef="boolean"/>
+    </operation>
+    <operation name="changeClassPath">
+        <parameter isList="false" typeRef="java.lang.String" name="inPath"/>
+        <parameter isList="false" typeRef="boolean" name="isInClassPath"/>
+        <return isList="false" typeRef="boolean"/>
     </operation>
     <operation name="deleteFile">
         <parameter isList="false" typeRef="java.lang.String" name="name"/>
@@ -20,13 +30,10 @@
         <parameter isList="false" typeRef="java.lang.String" name="name"/>
         <return isList="false" typeRef="boolean"/>
     </operation>
-    <operation name="unzipFile">
-        <parameter isList="false" typeRef="java.lang.String" name="file"/>
-        <return isList="false" typeRef="boolean"/>
-    </operation>
     <operation name="moveNewFile">
         <parameter isList="false" typeRef="java.lang.String" name="from"/>
         <parameter isList="false" typeRef="java.lang.String" name="to"/>
+        <parameter isList="false" typeRef="boolean" name="overwrite"/>
         <return isList="false" typeRef="java.lang.String"/>
     </operation>
     <operation name="renameFile">
@@ -35,5 +42,12 @@
         <parameter isList="false" typeRef="boolean" name="overwrite"/>
         <return isList="false" typeRef="java.lang.String"/>
     </operation>
-    <dataobjects/>
+    <dataobjects>
+        <dataobject supportsQuickData="false" name="FileUploadResponse" javaType="com.wavemaker.runtime.server.FileUploadResponse">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="error"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="height"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="path"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="width"/>
+        </dataobject>
+    </dataobjects>
 </service>

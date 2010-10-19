@@ -18,6 +18,11 @@
 
 package com.wavemaker.studio;
  import com.wavemaker.runtime.server.DownloadResponse;
+import com.wavemaker.runtime.server.DojoFileUploaderResponse;
+import com.wavemaker.common.util.IOUtils;
+
+import java.util.Random;
+import java.util.Vector;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
@@ -26,8 +31,11 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
 import com.wavemaker.runtime.server.ParamName;
 import com.wavemaker.tools.project.ProjectManager; 
+import com.wavemaker.runtime.server.FileUploadResponse;
 
 import java.util.Hashtable;
 import java.util.zip.*;
@@ -188,15 +196,26 @@ public class ResourceFileService {
 	 P.put("type", "folder");
          return P; 
     }
-    
 
+    public FileUploadResponse uploadFile(@ParamName(name="file0") MultipartFile file, String path) throws IOException {
+        FileUploadResponse ret = new FileUploadResponse();
+        try {
+            File dir = new File(getResourcesDir(), path);
+            File outputFile = new File(dir, file.getOriginalFilename().replaceAll("[^a-zA-Z0-9.-_ ]",""));
+            System.out.println("OUTPUT FILE:" + outputFile.getAbsolutePath());
+            FileOutputStream fos = new FileOutputStream(outputFile);            
+            IOUtils.copy(file.getInputStream(), fos);
+            file.getInputStream().close();
+            fos.close();
+            ret.setPath(outputFile.getAbsolutePath());
+            ret.setError("");
+            ret.setWidth("");
+            ret.setHeight("");
 
-    /* Uploads a file to the tmp folder */
-    public String  uploadFile(
-    		@ParamName(name="file") MultipartFile file) throws IOException {
-
-    	File resourceDir = projectManager.getTmpDir();
-    	return com.wavemaker.tools.project.ResourceManager.uploadFile(file, resourceDir);
+        } catch(Exception e) {
+            ret.setError(e.getMessage());
+        }
+        return ret;
     }
 
     /*
@@ -214,17 +233,19 @@ public class ResourceFileService {
      * @return An OpenProjectReturn object containing the current web path, as
      *         well as any upgrades that were performed.
      */
-    public boolean unzipAndMoveNewFile(@ParamName(name="file") String file,
-			       @ParamName(name="dest") String to) {
-      File zipfile = new File(projectManager.getTmpDir().getAbsolutePath() + "/" + file);
-      File zipfolder = com.wavemaker.tools.project.ResourceManager.unzipFile(zipfile);
+    public boolean unzipAndMoveNewFile(@ParamName(name="file") String path) {
+        File zipfile = new File(getResourcesDir(), path);
+        File zipfolder = com.wavemaker.tools.project.ResourceManager.unzipFile(zipfile);
       if  (zipfolder.exists() && zipfolder.isDirectory()) {
+        /*
+
 	  File dest =  new File(new File(this.getResourcesDir(), to), zipfolder.getName());
 
 	  for (int i = 0; i < 1000 && dest.exists(); i++) {
 	      dest= new File(dest.getParent(), zipfolder.getName() + i);
 	  }
 	  zipfolder.renameTo(dest);
+        */
 	  return true;
       } else {
 	  return false;
