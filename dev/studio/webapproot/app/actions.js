@@ -72,8 +72,9 @@ dojo.declare("wm.ComponentTaskMixin", null, {
 		if (this.component) {
 			// note: components owned by studio.application are not in app.
 		  var o;
-		  if (this.component.owner == studio.application ||
-		      this.component.owner.app ==  studio.application) {
+		    if (this.component.owner && (
+                        this.component.owner == studio.application ||
+		            this.component.owner.app ==  studio.application)) {
 		    o = studio.application;
 		  } else {
 		    o = app;
