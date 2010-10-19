@@ -73,6 +73,7 @@ dojo.declare("ResourceManager", wm.Page, {
 	this.promptDialog.show();
         */
     },
+/*
     addNewFile: function() {
 	// add a reusable dialog box that takes only a FileUpload widget
 	this.doingFileUpdate =  false;
@@ -83,6 +84,7 @@ dojo.declare("ResourceManager", wm.Page, {
         this.doingFileUpdate =  true;
 	this.getAddFileDialog().show();
     },
+    */
     downloadItem: function() {
       this.selectedItem.downloadItem();
     },
@@ -112,6 +114,7 @@ dojo.declare("ResourceManager", wm.Page, {
 	return this.promptDialog;
     },
     */
+/*
     getAddFileDialog: function() {
 	if (!this.selectedItem) {
 	    this.setSelectedItem(this.resourcesFolder);
@@ -139,11 +142,12 @@ dojo.declare("ResourceManager", wm.Page, {
 	}
 	return this.fileDialog;
     },
-    fileUploadCompleted: function(inSender, inResponse) {
-	var filename = inResponse;
+    */
+    fileUploadCompleted: function(inSender, fileList) {
+	var filename = fileList[0].name;
 	var selectedItem = this.selectedItem || this.resourcesFolder;
 	if (selectedItem && !(selectedItem instanceof wm.FolderResourceItem)) {
-	  selectedItem = selectedItem.getParent();
+	    selectedItem = selectedItem.treeNode.parent.data;
 	}
 	if (!selectedItem) {
 	    selectedItem = this.resourcesFolder;
@@ -151,11 +155,10 @@ dojo.declare("ResourceManager", wm.Page, {
 
 	var newName;
 	var newItem;
-	var parent = this.selectedItem;
+	var parent = selectedItem;
 	if (!this.doingFileUpdate) {
 
-	  newItem = addResourceBinderNodes(this.selectedItem.treeNode, {file: filename, files: [], type: "file"}, false);
-
+	  newItem = addResourceBinderNodes(parent.treeNode, {file: filename, files: [], type: "file"}, false);
 	  this.setSelectedItem(newItem);
 	  newName = filename;
 	} else {
@@ -163,7 +166,7 @@ dojo.declare("ResourceManager", wm.Page, {
 	  newName = newItem.getItemName();
 	}
 	parent.treeNode.setOpen(true);
-	newItem.finishFileUpload2(filename, newName, !this.doingFileUpdate);
+	newItem.finishFileUpload();
     },
 
     start: function() {
@@ -351,8 +354,12 @@ dojo.declare("ResourceManager", wm.Page, {
 
     itemSelected: function() {
       this.selectedItem = this.tree.selected.data;
+        var folder = (this.selectedItem instanceof wm.FolderResourceItem) ? this.selectedItem : this.tree.selected.parent.data;
+            
       this.updateToolbar();
       this.showPropertiesPanel();
+        this.addFileButton.input.setType("AnyData");
+        this.addFileButton.input.setData({dataValue: {path: folder.getResourcelessFilePath()}});
     },
 
     setSelectedItem: function(item) {
@@ -558,6 +565,7 @@ dojo.declare("wm.ResourceMover", wm.DragDropper, {
 
 wm.ResourceItem.extend({
     addCustomDataToPropertiesPanel: function(propertiesPanel) {},
+/*
     finishFileUpload2: function(uploadedName, newName, isNewFile) {
 	var _this = this;
 	var manager = studio.resourcesPage.getComponent("resourceManager");
@@ -590,7 +598,7 @@ wm.ResourceItem.extend({
 	    app.alert(this.getItemName() + bundleStudio.R_HasBeenUpdated);
 	}
     },
-
+    */
 
 
     isDescendantOf: function(possibleParent) {
@@ -731,11 +739,11 @@ wm.ImageResourceItem.extend({
 });
 
 wm.ZipResourceItem.extend({
-    finishFileUpload2: function(uploadedName, newName, isNewFile) {
+    finishFileUpload: function() {
 
 	var manager = studio.resourcesPage.getComponent("resourceManager");
 	var _this = this;
-	studio.resourceManagerService.requestAsync("unzipAndMoveNewFile", [ uploadedName, this.getParent().getResourcelessFilePath()],
+	studio.resourceManagerService.requestAsync("unzipAndMoveNewFile", [  this.getResourcelessFilePath()],
 						   function(result) {
 						     try {
 						       if (!result) {
