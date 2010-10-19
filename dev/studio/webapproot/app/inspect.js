@@ -140,7 +140,7 @@ _setInspectedCaption = function(inComponent) {
 }
 
 _inspect = function(inComponent, inDoFocus) {
-    if (inComponent.isDestroyed) return;
+    if (inComponent.isDestroyed || !studio.application) return;
 	var c = inspected = inComponent; 
 	// update label
 	_setInspectedCaption(c);
