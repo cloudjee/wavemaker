@@ -47,6 +47,7 @@ dojo.declare("wm.Application", wm.Component, {
 		this.toastDialog = new wm.Toast({name: "toastDialog", owner: this});
 	       try{
 		    this.alertDialog = new wm.GenericDialog({name: "alertDialog",
+                                                             _noAnimation: true,
 						     owner: this,
 						     title: "Alert!",
 						     noEscape: false,
@@ -439,6 +440,7 @@ dojo.declare("wm.Application", wm.Component, {
     confirm: function(inText, nonmodal, onOKFunc, onCancelFunc, optionalOKText,optionalCancelText, noshow) {
             if (!this.confirmDialog) {
 	        this.confirmDialog = new wm.GenericDialog({name: "confirmDialog",
+                                                             _noAnimation: true,
 						           owner: this,
 						           noEscape: false,
 						           width: "350px",
