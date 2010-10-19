@@ -239,9 +239,11 @@ dojo.declare("wm.Application", wm.Component, {
 			this.domNode = null;
 		}		
 		
-		this.pageDialog.destroy();
+                if (this.pageDialog)
+		    this.pageDialog.destroy();
 		delete this.pageDialog;
-		this.scrim.destroy();
+                if (this.scrim)
+		    this.scrim.destroy();
 		delete this.scrim;
 		delete this.app;
 		//dojo.publish('applicationDestroyed',[]);
