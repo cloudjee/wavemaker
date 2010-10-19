@@ -513,7 +513,11 @@ dojo.declare("wm.Dialog", wm.Container, {
 			dojo.animateProperty({node: this.domNode, 
 					      properties: {opacity: 1},
 					      duration: animationTime,
-					      onEnd: dojo.hitch(this, "onShow")});
+					      onEnd: dojo.hitch(this, function() {
+                                                  try {
+                                                      this.onShow();
+                                                  }catch(e) {console.error("ERROR in onShow for " + this.toString());}
+                                              })});
 		    if (this._showAnimation.status() != "playing") {
 			this.domNode.style.opacity = 0.01;
 			this.inherited(arguments);
@@ -537,10 +541,13 @@ dojo.declare("wm.Dialog", wm.Container, {
 					      properties: {opacity: 0.01},
 					      duration: animationTime,
 					      onEnd: dojo.hitch(this, function() {
-						  wm.Control.prototype.setShowing.call(this,inShowing,forceChange, skipOnClose);
-						  if (!skipOnClose) 
-						      this.onClose("");
-						  delete this._hideAnimation; // has no destroy method
+                                                  if (this.isDestroyed) return;
+                                                  try {
+						      wm.Control.prototype.setShowing.call(this,inShowing,forceChange, skipOnClose);
+						      if (!skipOnClose) 
+						          this.onClose("");
+						      delete this._hideAnimation; // has no destroy method
+                                                  }catch(e) {console.error("ERROR in setShowing for " + this.toString());}
 					      })});
 			    this._hideAnimation.play();
 		    }
@@ -1745,5 +1752,5 @@ dojo.declare("wm.DesignableDialog", wm.Dialog, {
 });
 
 wm.Object.extendSchema(wm.DesignableDialog, {
-    owner: {ignore: true}
+/*    owner: {ignore: true} */ // See JIRA-2118: Can't drag and drop to an app level container
 });
