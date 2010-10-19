@@ -101,7 +101,7 @@ Var ProjectsDialog
 #Page custom ProjectsDirectoryPage ProjectsDirectoryPageLeave
 !insertmacro MUI_PAGE_STARTMENU Application $StartMenuGroup
 !insertmacro MUI_PAGE_INSTFILES
-!define MUI_FINISHPAGE_TEXT "Do you need to clear your browser's cache ? $\r$\nIf this is not your first time running ${PRODUCT_NAME} on this machine, it is strongly suggested that you clear your browser's cache before running ${PRODUCT_NAME} again."
+!define MUI_FINISHPAGE_TEXT "Do you need to clear your browser's cache ? $\r$\n$\r$\nIf this is not your first time running ${PRODUCT_NAME} on this machine, it is strongly suggested that you clear your browser's cache before running ${PRODUCT_NAME} again."
 # !define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\${PRODUCT_NAME}.lnk"
 # !define MUI_FINISHPAGE_SHOWREADME_TEXT "Run ${PRODUCT_NAME}"
 !define MUI_FINISHPAGE_LINK "Download EnterpriseDB's Postgres Plus Advanced Server"
