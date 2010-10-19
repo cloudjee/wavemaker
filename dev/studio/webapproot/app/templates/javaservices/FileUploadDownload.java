@@ -10,8 +10,10 @@ import com.wavemaker.common.util.IOUtils;
 import java.util.Random;
 import java.util.Vector;
 import com.wavemaker.runtime.server.FileUploadResponse;
+import com.wavemaker.runtime.RuntimeAccess;
 
 import javax.activation.MimetypesFileTypeMap;
+
 
 
 
@@ -64,7 +66,16 @@ import javax.activation.MimetypesFileTypeMap;
      *    You may need to set a different uploadDir for your deployment environment
      *    than you used on your local development environment.
      ********************************************************************************/
-     static String uploadDir = "${java.lang.String:uploadDir:Absolute path to the folder where you will upload the file; typically a tmp folder}";
+     String uploadDir = "${java.lang.String:uploadDir:Absolute path to the folder where you will upload the file; possibly a tmp folder. Leave blank to use your project's webapproot/resources/data folder}";
+protected File getUploadDir() {
+    if (uploadDir.length() == 0) {
+        uploadDir = RuntimeAccess.getInstance().getSession().getServletContext().getRealPath("resources/data");
+    }
+    File f = new File(uploadDir);
+    f.mkdirs();
+    return f;
+}
+     
 
 
     /********************************************************************************
@@ -106,7 +117,7 @@ import javax.activation.MimetypesFileTypeMap;
         FileUploadResponse ret = new FileUploadResponse();
         try {
             /* Find our upload directory, make sure it exists */
-            File dir = new File(uploadDir);
+            File dir = getUploadDir();
             if (!dir.exists()) 
               dir.mkdirs();
 
@@ -154,7 +165,7 @@ import javax.activation.MimetypesFileTypeMap;
      ********************************************************************************/
     public WMFile[] listFiles() throws IOException {
       MimetypesFileTypeMap m = new MimetypesFileTypeMap();
-      File dir = new File(uploadDir);      
+      File dir = getUploadDir();
 
       /* Get a list of files; ignore any filename starting with "." as these are
        * typically private or temporary files not for users to interact with
@@ -193,7 +204,7 @@ import javax.activation.MimetypesFileTypeMap;
      *   a better understanding of how/where you are storing files.
      ****************************************************************************/
  public void deleteFiles(String[] files) throws IOException {
-    File dir = new File(uploadDir);
+     File dir = getUploadDir();
     for (int i = 0; i < files.length; i++) {
       File f = (files[i].startsWith("/")) ? new File(files[i]) : new File(dir,files[i]);
 
@@ -206,7 +217,7 @@ import javax.activation.MimetypesFileTypeMap;
 
 
   public void deleteFile(String file) throws IOException {
-      File dir = new File(uploadDir);
+      File dir = getUploadDir();
       File f = (file.startsWith("/")) ? new File(file) : new File(dir,file);
       
       // verify that the path specified by the server is a valid path, and not, say,
@@ -231,7 +242,7 @@ import javax.activation.MimetypesFileTypeMap;
      *   a better understanding of how/where you are storing files.
      ****************************************************************************/
     public DownloadResponse downloadFile(String file, String returnname) throws Exception {
-      File dir = new File(uploadDir);
+        File dir = getUploadDir();
       File f = (file.startsWith("/")) ? new File(file) : new File(dir,file);
       
         // verify that the path specified by the server is a valid path, and not, say,
