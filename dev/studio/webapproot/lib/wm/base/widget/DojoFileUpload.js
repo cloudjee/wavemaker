@@ -85,7 +85,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
     destroy: function() {
         if (this.dijit) {
             this.dijit.destroy();
-            dijit.registry.remove(this.button.domNode.id);
+            dijit.registry.remove(this.button.getRuntimeId());
         }
         if (this.button)
             this.button.destroy();
@@ -93,7 +93,8 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
             this.buttonPanel.destroy();
         if (this.html)
             this.html.destroy();
-        delete this.$.input; // this widget doesn't really own input; the servicevariable does
+        if (this.$ && this.$.input)
+            delete this.$.input; // this widget doesn't really own input; the servicevariable does; let it do any destroying
 	this.inherited(arguments);
     },
 
