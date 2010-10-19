@@ -113,7 +113,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 	},
 	resizeDijit: function() {
 		if (this.dojoObj)
-			this.dojoObj.resize();
+			this.dojoObj.resize(dojo.contentBox(this.domNode));
 	},
 	renderDojoObj: function() {
 		if (this.dojoObj != null){
@@ -135,7 +135,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 			"class":"soria"*/
 		};
 
-		this.dojoObj = new dojox.layout.GridContainer(props, dojo.create('div', {}, this.domNode));
+		this.dojoObj = new dojox.layout.GridContainer(props, dojo.create('div', {style:"width:100%;height:100%;"}, this.domNode));
 		this.connectDojoEvents();
 		this.dojoRenderer();
 		this.renderPortlets();
