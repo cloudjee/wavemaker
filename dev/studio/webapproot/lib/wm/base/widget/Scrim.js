@@ -83,7 +83,6 @@ dojo.declare("wm.Scrim", wm.Widget, {
 		if (animationTime) {
 		    if (this._showAnimation)
 			this._showAnimation.stop();
-                    console.error("SCRIM: " + this.toString() + "; OWNER: " + (this.owner ? this.owner.toString() : "null"));
 		    this._hideAnimation = 
 			this._hideAnimation ||
 			dojo.animateProperty({node: this.domNode, 
