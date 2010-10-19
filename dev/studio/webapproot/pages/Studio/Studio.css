@@ -1214,7 +1214,7 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 	border-right: 1px solid #363b44;
 }
 
-.wmDialogFooter button, .wmDialogBody button, .Studio > .wmdialog > .wmdialogcontainer .dialogfooter button,  .Studio > .wmdialog > .wmdialogcontainer .dialogheader button {
+.wmdialog .wmDialogFooter button, .wmDialogBody button, .Studio > .wmdialog > .wmdialogcontainer .dialogfooter button,  .Studio > .wmdialog > .wmdialogcontainer .dialogheader button {
 	background-image:url(images/dark_btn_bg.gif);
 	background-repeat:repeat-x;
 	color: #FFF;
