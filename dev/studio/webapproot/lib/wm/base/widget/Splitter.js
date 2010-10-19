@@ -187,12 +187,10 @@ dojo.declare("wm.Splitter", wm.Bevel, {
 		this.move(inDy, "top", "h");
 	},
 	dblclick: function() {
-		app.scrim.scrimOnIdle(this, function(){
 			if (this._collapsed)
 				this.expand();
 			else
 				this.collapse();
-		});
 	},
 	collapse: function() {
 		this._collapsed = true;

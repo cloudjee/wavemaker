@@ -62,7 +62,7 @@ dojo.declare("wm.Application", wm.Component, {
 				
 		this.createPageLoader();
 		this.components = {};
-		this.scrim = new wm.Scrim();
+	    //this.scrim = new wm.Scrim();
 	        var themematch = window.location.search.match(/theme\=(.*?)\&/) ||
 		                 window.location.search.match(/theme\=(.*?)$/);
 

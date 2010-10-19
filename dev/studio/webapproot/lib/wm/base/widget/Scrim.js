@@ -19,6 +19,7 @@ dojo.provide("wm.base.widget.Scrim");
 dojo.require("wm.base.widget.LayoutBox");
 
 dojo.declare("wm.Scrim", wm.Widget, {
+        _noAnimation: false,
 	showing: false,
 	waitCursor: true,
 	init: function() {
@@ -57,6 +58,8 @@ dojo.declare("wm.Scrim", wm.Widget, {
 	},
 
 	setShowing: function(inShowing) {
+            if (this._cupdating || this._noAnimation)
+                return this.inherited(arguments);
 	    var animationTime = (this._cupdating || this.showing == inShowing) ? 0 : app.dialogAnimationTime;
 	    if (inShowing) {
 		if (animationTime) {
@@ -80,13 +83,15 @@ dojo.declare("wm.Scrim", wm.Widget, {
 		if (animationTime) {
 		    if (this._showAnimation)
 			this._showAnimation.stop();
-
+                    console.error("SCRIM: " + this.toString() + "; OWNER: " + (this.owner ? this.owner.toString() : "null"));
 		    this._hideAnimation = 
 			this._hideAnimation ||
 			dojo.animateProperty({node: this.domNode, 
 					      properties: {opacity: 0.01},
 					      duration: animationTime,
 					      onEnd: dojo.hitch(this, function() {
+                                                  if (!this.domNode) 
+                                                      return;
 						  wm.Control.prototype.setShowing.call(this,false);
 					      })});
 		    if (this._hideAnimation.status() != "playing") {

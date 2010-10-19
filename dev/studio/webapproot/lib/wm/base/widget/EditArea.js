@@ -40,7 +40,7 @@ dojo.declare("wm.EditArea", wm.Box, {
 	},
 	getScrim: function() {
 		if (!this._scrim) {
-			this._scrim = new wm.Scrim();
+		    this._scrim = new wm.Scrim({owner: this});
 		}
 		return this._scrim;
 	},
