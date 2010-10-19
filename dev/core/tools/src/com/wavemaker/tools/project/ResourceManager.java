@@ -124,6 +124,8 @@ public class ResourceManager {
 	        return file.getOriginalFilename();
 	    }
 	    
+
+
           static public Hashtable[] getListing(File curdir, File jarListFile) {
 	        File[] listing = curdir.listFiles(
 	          new java.io.FilenameFilter() {
@@ -222,6 +224,9 @@ public class ResourceManager {
 		  folderName = zipname.substring(0,  extindex);
 
 	      File zipFolder= new File(zipfile.getParentFile(), folderName);
+              for (int i = 0; zipFolder.exists(); i++) {
+                  zipFolder= new File(zipfile.getParentFile(), folderName + i);
+              }
 	      zipFolder.mkdir();
 
 
@@ -261,19 +266,17 @@ public class ResourceManager {
 
 			zipfile.delete();        
 			File[] currentDirFiles = currentDir.listFiles();
+                        System.out.println("CURRENT " + currentDir.getAbsolutePath() + ", LENGTH: " + currentDirFiles.length);
 			if (currentDirFiles.length == 1) {
-			    if (currentDir.getName().equals(currentDirFiles[0].getName())) {
-				File newtmpfile = new File(currentDir.getParent(),"tmp");
+				File newtmpfile = new File(currentDir.getParent(),"_tmp");
+                                System.out.println("TMP " + newtmpfile.getAbsolutePath());
 				currentDirFiles[0].renameTo(newtmpfile);
+                                System.out.println("DELETE " + currentDir.toString());
 				currentDir.delete();
 				newtmpfile.renameTo(currentDir);
-			    } else {
-				File newtmpfile = new File(currentDir.getParent(), currentDirFiles[0].getName());
-				currentDirFiles[0].renameTo(newtmpfile);
-				currentDir.delete();
-				currentDir= newtmpfile;
-			    }
-			}
+                                System.out.println("RENAME " + newtmpfile.getAbsolutePath() + " TO " +  currentDir.getAbsolutePath());
+
+			}                
 			return currentDir;
 		} catch(Exception e) {
 			e.printStackTrace();
