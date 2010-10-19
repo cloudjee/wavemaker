@@ -62,6 +62,7 @@ wm.loadLibs([
 	"wm.base.Plugin",
 	"wm.base.widget.DojoGrid",
 	"wm.base.widget.DojoChart",
+
 	"wm.base.widget.Dashboard",
 	"wm.base.widget.DojoFisheye",
 	"wm.base.widget.DojoLightbox",
@@ -161,6 +162,7 @@ wm.loadLibs([
 	"wm.base.widget.dijit.CheckBox",
 	"wm.base.widget.dijit.Calendar",
 	"wm.base.widget.dijit.ProgressBar",
+        "wm.base.widget.DojoFileUpload",
 	// dojo firebug debugger
 	//"dojo._firebug.firebug",
 	// Grid
