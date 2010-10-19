@@ -120,12 +120,12 @@ dojo.declare("JavaEditor", wm.Page, {
 		this.update();
 	},
 	openCmpOutBtnClick: function(inSender) {
-	    //this.javaCodeSplitter.setShowing(true);
-            //this.javaCompilerOutputPanel.setShowing(true);
+	    this.javaCodeSplitter.setShowing(true);
+            this.logTabs.setShowing(true);
 	},
 	closeCmpOutBtnClick: function(inSender) {
-	    //this.javaCodeSplitter.setShowing(false);
-	    //this.javaCompilerOutputPanel.setShowing(false);
+	    this.javaCodeSplitter.setShowing(false);
+            this.logTabs.setShowing(false);
 	},
 	javaServiceRefreshButtonClick: function(inSender) {
 		if (this.tree.serviceId) {
@@ -165,7 +165,7 @@ dojo.declare("JavaEditor", wm.Page, {
 			app.alert('Save or compile failed; see compiler output or wm.log');
 		}
 		var m = (inData.buildSucceeded ? "Service Compiled Successfully" : "Service Compile Failed") + "\n\n";
-		this.javaCompilerOutputEditor.setInputValue(m + inData.compileOutput);
+	        this.javaCompilerOutputEditor.setInputValue(m + inData.compileOutput.substring(inData.compileOutput.indexOf("compile:") + 9));
 		this.logViewer.page.clearLog();
 		this.updateJavaLogs();
 		this.openCmpOutBtnClick();
