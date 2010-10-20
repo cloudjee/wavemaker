@@ -413,6 +413,14 @@ dojo.declare("wm.Variable", wm.Component, {
 	getItem: function(inIndex) {
 		return this.isList && this._needItem(inIndex);
 	},
+	getItemData: function(inIndex) {
+	    if  (!this.isList) return;
+            var item = this.data.list[inIndex];
+            if (item instanceof wm.Variable)
+                return item.data;
+            else
+                return item;
+	},
 	_populateItems: function() {
 		for (var i=0, c = this.getCount(); i<c; i++)
 			this.getItem(i);
