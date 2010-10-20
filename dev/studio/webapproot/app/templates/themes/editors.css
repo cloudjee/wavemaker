@@ -47,6 +47,7 @@
 
 
 .wm_template .wmeditor .dijitComboBox .dijitArrowButton {
+    height: 100% !important;
     -moz-border-radius-bottomright: 2px; /* wm.SelectMenu-Inner_Radius */
     -moz-border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
     -webkit-border-bottom-right-radius: 2px;/* wm.SelectMenu-Inner_Radius */
@@ -56,6 +57,8 @@
 }
 
 .wm_template .wmeditor .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
+        height: 100% !important;
+        background-position: 50% 50%;
 	background-image: url(images/comboArrowDown.png); /* wm.SelectMenu-Down-Arrow_Image */
         -moz-border-radius-bottomright: 2px;/* wm.SelectMenu-Inner_Radius */
         -moz-border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
@@ -344,6 +347,7 @@
 .wm_template .wmeditor .dijitComboBox .dijitArrowButton {
     background-color: #666666; /* HeaderContent-ClickablesDefault-Background_Color */
     background-image: none;
+    height: 100% !important;
 }
 
     /* BEGIN inner content panel editors */

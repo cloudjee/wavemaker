@@ -119,3 +119,12 @@
 	border-radius: 0px !important;
         font-size: 8pt;
 }
+
+.wm_notheme .wmeditor .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {    
+        height: 100% !important;
+        background-position: 50% 50%;
+        background-image: url(images/comboArrowDownDark.png);
+}
+.wm_notheme .wmeditor .dijitComboBox .dijitArrowButton {
+    height: 100% !important;
+}

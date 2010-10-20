@@ -648,6 +648,7 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     border-radius-bottomright: 4px; /* Borders-Editor_BorderStyle_Radius */
 }
 .wm_darkdawn .wmeditor .dijitComboBox .dijitArrowButton {
+        height: 100% !important;
     -moz-border-radius-bottomright: 2px; /* wm.SelectMenu-Inner_Radius */
     -moz-border-radius-topright: 2px; /* wm.SelectMenu-Inner_Radius */
     -webkit-border-bottom-right-radius: 2px; /* wm.SelectMenu-Inner_Radius */
@@ -656,6 +657,8 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     border-radius-topright: 2px; /* wm.SelectMenu-Inner_Radius */
 }
 .wm_darkdawn .wmeditor .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
+        height: 100% !important;
+        background-position: 50% 50%;
 	background-image: url(images/comboArrowDownLight.png); /* wm.SelectMenu-Down-Arrow_Image */
         -moz-border-radius-bottomright: 2px; /* wm.SelectMenu-Inner_Radius */
         -moz-border-radius-topright: 2px; /* wm.SelectMenu-Inner_Radius */
