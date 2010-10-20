@@ -157,7 +157,7 @@ body.tundra .wm_template  div.wmheader,
    *
    * DESCRIPTION: Specify all font and background styles for the document level
    ************************************************************************************************/
-@media screen { /* Document-Level */ 
+
 
   /**************************************************************************************************
    * TYPE:        Main document-level border
@@ -405,10 +405,7 @@ body.wm_template {
 	background-position: -32px 0px; /* Dialogs-Titlebar_MaxifyIconWidth */
     }
 }
-}
 
-
-@media screen { /* MainContent-Level */ 
 
   /**************************************************************************************************
    * TYPE:        Main document-level border
@@ -616,11 +613,7 @@ body.wm_template {
     .wm_template .MainContent .dojoxPortlet div.dijitTitlePaneTitle-hover .dijitTitlePaneTextNode {
         color: #FFFFFF; /* MainContentClickablesHover-Font_Color */
     }
-}
 
-
-
-@media screen { /* EmphasizedContent-Level */ 
 
 .wm_template .EmphasizedContent {
     /* EmphasizedContent-Styles-Border */
@@ -824,10 +817,7 @@ body.wm_template {
     .wm_template .EmphasizedContent .dojoxPortlet div.dijitTitlePaneTitle-hover .dijitTitlePaneTextNode {
         color: #FFFFFF; /* EmphasizedContent-ClickablesHover-Font_Color */
     }
-}
 
-
-@media screen { /* HeaderContent-Level */ 
 
 .wm_template .HeaderContent {
     /* HeaderContent-Styles-Border */
@@ -1030,7 +1020,7 @@ body.wm_template {
     .wm_template .HeaderContent .dojoxPortlet div.dijitTitlePaneTitle-hover .dijitTitlePaneTextNode {
         color: #FFFFFF; /* HeaderContent-ClickablesHover-Font_Color */
     }
-}
+
 
 
 .wm_template #wmMinifiedDialogPanel {
