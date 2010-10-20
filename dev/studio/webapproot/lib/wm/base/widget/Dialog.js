@@ -1582,7 +1582,7 @@ dojo.declare("wm.ColorPickerDialog", wm.Dialog, {
     border: "1",
     borderColor: "#888888",
     width: "325px",
-    height: "210px",
+    height: "233px",
     modal: false,
     colorPickerControl: null,
     init: function() {
@@ -1600,7 +1600,7 @@ dojo.declare("wm.ColorPickerDialog", wm.Dialog, {
             document.getElementsByTagName("head")[0].appendChild(link);
             wm.ColorPickerDialog.cssLoaded = true;
         }
-        this.colorPickerControl = new wm.Control({name: "colorPickerControl", width: "325px", height: "170px", owner: this, parent: this});
+        this.colorPickerControl = new wm.Control({name: "colorPickerControl", width: "325px", height: "193px", owner: this, parent: this});
         this.buttonPanel = new wm.Panel({name: "buttonPanel", width: "100%", height: "100%", layoutKind: "left-to-right", owner: this, parent: this, horizontalAlign: "right"});
         this.BrightenButton = new wm.Button({caption: "Bright", width: "80px", height: "30px", parent: this.buttonPanel});
         this.DarkenButton = new wm.Button({caption: "Dark", width: "80px", height: "30px", parent: this.buttonPanel});
@@ -1641,8 +1641,10 @@ dojo.declare("wm.ColorPickerDialog", wm.Dialog, {
 	    this.colorPicker.PICKER_SAT_VAL_H = 152;
 	    this.colorPicker.PICKER_SAT_VAL_W = 152;
 	    this.colorPicker.PICKER_HUE_H = 150;
+/*
             this.colorPicker._shift.picker.x = 5;
             this.colorPicker._shift.picker.y = 5;
+            */
         }
         
         if (inShowing) {
