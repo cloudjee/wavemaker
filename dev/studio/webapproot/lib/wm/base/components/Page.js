@@ -114,16 +114,19 @@ dojo.declare("wm.Page", wm.Component, {
 		//this.onShow();
 	    //} else
 		
-		dojo.addOnLoad(function(){
-			self.postRender();
-			if (notAppOwned)
-				ds.left = previousStyleLeft;
-			self.onShow();
+	    dojo.addOnLoad(dojo.hitch(this, function(){
+		this.postRender();
+		if (notAppOwned)
+		    ds.left = previousStyleLeft;
+                if (!this.root.isAncestorHidden())
+		    this.onShow();
+                if (this.owner instanceof wm.Control)
+                    this.owner.connectToAllLayers(this, "onShow");
 		    //alert("Page rendered in " + ( new Date().getTime() - startTime) + " ms");
 			//console.timeEnd('renderTime ');
 			//console.info('postInitCalled = ' + postInitCalled);
 			//postInitCalled = 0;
-		});
+	    }));
 
 		//console.profile();
 

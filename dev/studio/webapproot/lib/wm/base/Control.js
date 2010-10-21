@@ -534,6 +534,8 @@ this.label.enable();
 		this.initUserClasses();
 		//this.updateBounds();
 	},
+
+
     isAncestorHiddenLayer: function() {
 	  if (this instanceof wm.Layout && this.owner == app._page) return false;
 	  if (this instanceof wm.Layer && this.parent && this.parent.getActiveLayer() != this) return true;
@@ -558,30 +560,50 @@ this.label.enable();
 	  return parent.isAncestorHidden();
 	},
 
-    // TODO: Should also handle dialogs showing/hiding
+
     // OPTIONAL: Maybe handle all parents showing/hiding but thats a lot of connections
     //           and it may be better to just tell people not to show/hide parents of widgets needing these; just use layers
+    // NOTE: Also handles dialogs if "this" is in a dialog; these connections to layers are more about knowing when its hidden/showing
+    // and less about the details of whether its a layer or something else.
     connectToAllLayers: function(obj, callback) {
         var layers = [];
-        var parent = this.parent;
-        while (parent && parent != app._page.root) {
-            if (parent instanceof wm.Layer)
-                layers.push(parent);
-            if (parent.parent)
-                parent = parent.parent;
-            else if (parent.owner instanceof wm.Page && parent.owner.owner instanceof wm.Control)
-                parent = this.owner.owner;
+        var dialogs = []; // should only be 0 or 1 dialogs, but arrays work nicely no matter how many elements
+        var parentObj = this;
+        while (parentObj && (!app._page || parentObj != app._page.root)) {
+            if (parentObj instanceof wm.Layer)
+                layers.push(parentObj);
+            else if (parentObj instanceof wm.Dialog)
+                dialogs.push(parentObj);
+            if (parentObj.parent)
+                parentObj = parentObj.parent;
+            else if (parentObj.owner instanceof wm.Page && parentObj.owner.owner instanceof wm.Control)
+                parentObj = parentObj.owner.owner;
+            else
+                parentObj = null;
         }
 
         var f = dojo.hitch(obj,callback);
 
         dojo.forEach(layers, dojo.hitch(this,function(l) {
             this.connect(l, "onShow", this, function() {
-                if (dojo.every(layers, function(l2) {return l2.isActive();})) {
+                if (dojo.every(layers, function(l2) {return l2.isActive();}) && 
+                    dojo.every(dialogs, function(l2) {return l2.showing;})) {
                     f();
                 }
             });
         }));
+
+        dojo.forEach(dialogs, dojo.hitch(this,function(d) {
+            this.connect(d, "setShowing", this, function() {
+                if (d.showing && !d._transitionToHiding) { // transition handles case where showing is true, but animation is running that will have it hidden very soon
+                    if (dojo.every(layers, function(l2) {return l2.isActive();}) && 
+                        dojo.every(dialogs, function(l2) {return l2.showing;})) {
+                        f();
+                    }
+                }
+            });
+        }));
+                
     },
     isAncestor: function(inParent) {
 	var o;
