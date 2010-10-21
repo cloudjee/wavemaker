@@ -36,9 +36,10 @@ dojo.declare("wm.EditPanel", wm.Panel, {
 		this.inherited(arguments);
 	},
 	init: function() {
+                this.height = wm.Button.prototype.height;
 		this.inherited(arguments);
 		this.setLiveForm(this.liveForm);
-		this.updateControlsStatus();
+		this.updateControlsStatus();                
 	},
 	loaded: function() {
 		this.inherited(arguments);
@@ -125,7 +126,7 @@ wm.EditPanel.extend({
 	addControls: "(addControls)",
 	removeControls: "(removeControls)",
 	_defaultClasses: {domNode: ["wm_Padding_4px"]},
-	_buttonWidth: "100px",
+        //_buttonWidth: "100px",
 	designCreate: function() {
 		this.inherited(arguments);
 		this.subscribe("wmwidget-idchanged", this, "widgetNameChanged");
@@ -150,14 +151,14 @@ wm.EditPanel.extend({
 	},
 	_createSavePanel: function() {
 		var
-	          props = {showing: false, layoutKind: "left-to-right", horizontalAlign: "right", verticalAlign: "top", width: "100%", height: "100%", border: "0"},
+	    props = {showing: false, layoutKind: "left-to-right", horizontalAlign: "right", verticalAlign: "top", width: "100%", height: "100%", border: "0"},
 			p = this.owner.loadComponent("savePanel1", this, "wm.Panel", props);
 		this.savePanel = p.getId();
 		//
 		var
 			n = this.getId(),
-			sb = this.owner.loadComponent("saveButton1", p, this.editPanelStyle, {caption: "Save", width: this._buttonWidth, height: "100%"}, {onclick: n + ".saveData"});
-		this.owner.loadComponent("cancelButton1", p, this.editPanelStyle, {caption: "Cancel", width: this._buttonWidth, height: "100%"}, {onclick: n + ".cancelEdit"});
+			sb = this.owner.loadComponent("saveButton1", p, this.editPanelStyle, {caption: "Save"}, {onclick: n + ".saveData"});
+		this.owner.loadComponent("cancelButton1", p, this.editPanelStyle, {caption: "Cancel"}, {onclick: n + ".cancelEdit"});
 		sb.$.binding.addWire("", "disabled", n + ".formInvalid");
 		this.reflow();
 	},
@@ -168,9 +169,9 @@ wm.EditPanel.extend({
 		this.operationPanel = p.getId();
 		//
 		var n = this.getId();
-		this.owner.loadComponent("newButton1", p, this.editPanelStyle, {caption: "New", width: this._buttonWidth, height: "100%"}, {onclick: n + ".beginDataInsert"});
-		var u = this.owner.loadComponent("updateButton1", p, this.editPanelStyle, {caption: "Update", width: this._buttonWidth, height: "100%"}, {onclick: n + ".beginDataUpdate"});
-		var d = this.owner.loadComponent("deleteButton1", p, this.editPanelStyle, {caption: "Delete", width: this._buttonWidth, height: "100%"}, {onclick: n + ".deleteData"});
+		this.owner.loadComponent("newButton1", p, this.editPanelStyle, {caption: "New"}, {onclick: n + ".beginDataInsert"});
+		var u = this.owner.loadComponent("updateButton1", p, this.editPanelStyle, {caption: "Update"}, {onclick: n + ".beginDataUpdate"});
+		var d = this.owner.loadComponent("deleteButton1", p, this.editPanelStyle, {caption: "Delete"}, {onclick: n + ".deleteData"});
 		this.reflow();
 		//
 		u.$.binding.addWire("", "disabled", n + ".formUneditable");
