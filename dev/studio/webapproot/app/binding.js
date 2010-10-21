@@ -228,9 +228,11 @@ wm.isNodeBindable = function(inType, inProps, inIsList, inTargetType, inTargetPr
     if (Boolean(targetIsObject) != Boolean(inProps.isObject))
 	return 0;
 
+    if (inTargetType.type == "wm.Variable" && inProps.object instanceof wm.Variable)
+        ;
     // If we are matching objects and they have different types, outright failure
-    // "object" matches all objects...
-    if (targetIsObject && t !=inTargetType.type && String(inTargetType.type).toLowerCase() != "object")
+    // "object" and "wm.Variable" matches all objects... 
+    else if (targetIsObject && t !=inTargetType.type && String(inTargetType.type).toLowerCase() != "object" )
 	return 0;
 
     // If we don't match on list, this could be a fluke, treat it as warning rather than failure
