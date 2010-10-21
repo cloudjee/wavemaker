@@ -108,13 +108,27 @@ dojo.declare("wm.Application", wm.Component, {
             // and we don't want the design to change each time the prototype border changes...
     cacheWidgets: function() {
         if (!this._widgetsjs) {
-	    var widgetsjs = dojo.fromJson("{"+ studio.page.root.write("") + "}");
+            var dialogs = "";
+            var components = studio.page.components;
+            for (c in components) {
+                if (components[c] instanceof wm.Dialog) {
+                    dialogs += components[c].write("") + ",";
+                }
+            }
+	        var widgetsjs = dojo.fromJson("{"+ dialogs + studio.page.root.write("") + "}");
             this._widgetsjs = widgetsjs;            
         }
     },
     useWidgetCache: function() {
 	studio.page.root.destroy();
         delete studio.page.root;
+        var components = studio.page.components;
+        for (c in components) {
+            if (components[c] instanceof wm.Dialog) {
+                components[c].destroy();
+            }
+        }
+
 	studio.page.loadComponents(this._widgetsjs,null);
         delete this._widgetsjs;
 	studio.page.reflow();
@@ -205,11 +219,14 @@ dojo.declare("wm.Application", wm.Component, {
                 var imagepath = path.replace(/\/[^\/]*$/,"/images");
                 while (imagepath.match(/[^\/]+\/\.\.\//)) 
                     imagepath = imagepath.replace(/[^\/]+\/\.\.\//,"");
-		var results = dojo.xhrGet({url:path, sync:true, preventCache:false}).results;
-		if (results[1])
-		    throw results[1];
-
-		themecss = optionalCss || results[0] || "";
+                if (optionalCss) {
+                    themecss = optionalCss;
+                } else {
+		    var results = dojo.xhrGet({url:path, sync:true, preventCache:false}).results;
+		    if (results[1])
+		        throw results[1];
+		    themecss = results[0] || "";
+                }
 		themecss = themecss.replace(/url\s*\(\s*images/g,"url(" + imagepath);
 		setCss("theme_ss", themecss);
 	    } else {
