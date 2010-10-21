@@ -41,6 +41,10 @@ dojo.declare("wm.Application", wm.Component, {
 		this.app = this;
 		this.inherited(arguments);
 		wm.typeManager.initTypes();
+
+	        var themematch = window.location.search.match(/theme\=(.*?)\&/) ||
+		                 window.location.search.match(/theme\=(.*?)$/);
+
 	        this.setTheme(themematch ? themematch[1] : this.theme, true);
 	        if (dojo.isIE && dojo.isIE < 8) this.dialogAnimationTime = 0;
 		this.pageDialog = new wm.PageDialog({name: "pageDialog", owner: this});
@@ -60,13 +64,9 @@ dojo.declare("wm.Application", wm.Component, {
 		   } catch(e){
 		   	console.info('error while creating alert Dialog ', e);
 		   }
-				
 		this.createPageLoader();
 		this.components = {};
 	    //this.scrim = new wm.Scrim();
-	        var themematch = window.location.search.match(/theme\=(.*?)\&/) ||
-		                 window.location.search.match(/theme\=(.*?)$/);
-
 		this.loadComponents(this.constructor.widgets || this.widgets);
 	},
     setTheme: function(inTheme, isInit, optionalCss, optionalPrototype, noRegen, forceUpdate) {
@@ -76,10 +76,13 @@ dojo.declare("wm.Application", wm.Component, {
             this._lastTheme = this.theme;
 	    this.theme = inTheme;
 	    dojo.addClass(node, this.theme);
-	    if (isDesigned || !isInit) {
+
+	var themematch = window.location.search.match(/theme\=(.*?)\&/) ||
+	    window.location.search.match(/theme\=(.*?)$/);
+
+	    if (isDesigned || !isInit || themematch) {
 		try {
 		    this.loadThemeCss(this.theme, isDesigned, optionalCss);
-
 		    // write before we change the prototype so defaults are left blank
 		    if (isDesigned && !isInit) {
 			this._themeChanged = true;
@@ -99,7 +102,7 @@ dojo.declare("wm.Application", wm.Component, {
 		return;
 		}
 	    } else {
-		this.loadThemePrototype(this.theme, optionalPrototype);
+		    this.loadThemePrototype(this.theme, optionalPrototype);
 	    }
 
     },
