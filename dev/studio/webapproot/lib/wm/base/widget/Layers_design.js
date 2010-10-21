@@ -113,6 +113,35 @@ wm.Layers.extend({
 		if (this.defaultLayer != -1)
 			this.set_layerIndex(this.defaultLayer);
 	},
+        set_layersType: function(inLayersType) {
+            this.layersType = inLayersType;
+            var newClass;
+            switch(inLayersType) {
+            case "Tabs":
+            case "RoundedTabs":
+                newClass = "wm.TabLayers";
+                break;
+            case "Accordion":
+                newClass = "wm.AccordionLayers";
+                break;
+            case "Layers":
+                newClass = "wm.Layers";
+                break;
+            }
+            var widgetsjs = this.write("");
+            widgetsjs = dojo.fromJson(widgetsjs.replace(/^.*?\:/,""));
+	    var name = this.name;	
+            var parent = this.parent;
+	    var owner = this.owner;
+            var indexInParent = dojo.indexOf(this.parent.c$, this);
+            this.destroy();
+            var clone = parent.createComponent(name, newClass, widgetsjs[1], widgetsjs[2], widgetsjs[3], owner);
+            parent.moveControl(clone, indexInParent);
+            parent.reflow();
+	    studio.refreshWidgetsTree();
+	    studio.select(clone);
+
+        },
 	set_layerIndex: function(inLayerIndex) {
 		this.setLayerIndex(inLayerIndex);
 		if (this.isDesignLoaded())
