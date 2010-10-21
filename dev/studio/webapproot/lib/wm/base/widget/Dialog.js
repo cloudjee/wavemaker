@@ -506,6 +506,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    var animationTime = (this._cupdating || this.showing == inShowing || this._noAnimation) ? 0 : app.dialogAnimationTime;
 	    if (inShowing) {
 		if (animationTime) {
+
 		    if (this._hideAnimation) {
 			this._hideAnimation.stop();
 			delete this._hideAnimation;
@@ -535,6 +536,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 			this._showAnimation.stop();
 
 		    if (!this._hideAnimation) {
+                        this._transitionToHiding = true;
 			this._hideAnimation = 
 			dojo.animateProperty({node: this.domNode, 
 					      properties: {opacity: 0.01},
@@ -542,6 +544,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 					      onEnd: dojo.hitch(this, function() {
                                                   if (this.isDestroyed) return;
 						      wm.Control.prototype.setShowing.call(this,inShowing,forceChange, skipOnClose);
+                                                  delete this._transitionToHiding;
 						      if (!skipOnClose) 
 						          this.onClose("");
 						      delete this._hideAnimation; // has no destroy method
