@@ -372,32 +372,40 @@ dojo.declare("wm.Page", wm.Component, {
 	onStart: function(inPage) {		
 	},
 	keydown: function(e) {
+            console.log("charCode:" + e.charCode);
             // Ignore keydown if a dialog is open; if the owner is not the main application; if the main page of the application is not this page (this page is in a page container)
 	      if (wm.dialog.showing || this.owner != app || this != app._page) return true;
 	    var isInput = (e.target.tagName == "INPUT");
-	    var chr = String.fromCharCode(e.keyCode);
-	    if (e.shiftKey) {
-		if (e.keyCode != dojo.keys.SHIFT && !isInput)
-		    this.onShiftKey(e.keyCode, chr);
+	    var chr = app._keys[e.keyCode];
+            var isSpecial = chr.length > 1;
+
+            if (e.keyCode == dojo.keys.ESCAPE)
+		this.onEscapeKey();
+
+	    else if (e.shiftKey) {
+                // we get a keyCode for the shiftKey being pressed which we should ignore; and a second keycode when a key is hit while shiftKey is held
+		if (e.keyCode != dojo.keys.SHIFT && !isInput) 
+		    this.onShiftKey(chr);
 	    } else if (e.ctrlKey) {
 		if (e.keyCode != dojo.keys.CTRL)
-		    this.onCtrlKey(e.keyCode, chr);
-	    } else if (e.keyCode == dojo.keys.ESCAPE)
-		this.onEscapeKey();
-	    else if (e.keyCode == dojo.keys.ENTER && !isInput)
+		    this.onCtrlKey(chr);
+	    } else if (e.keyCode == dojo.keys.ENTER && !isInput)
 		this.onEnterKey();
-	    else if (chr && !isInput)
-		this.onLetterKey(chr);
-	    else if (!isInput)
-		this.onMiscKey(e.keyCode);
+            else if (!isInput && e.keyCode) {
+                if (isSpecial)
+		    this.onMiscKey(chr);
+                else
+                    this.onLetterKey(chr);
+            }
+
 	},
         onEnterKey: function() {},
-        onShiftKey: function(inKeyCode, inCharacter) {},
-        onCtrlKey: function(inKeyCode, inCharacter) {},
+        onShiftKey: function(inCharacter) {},
+        onCtrlKey: function(inCharacter) {},
         onEscapeKey: function() {},
 
         onLetterKey: function(inCharacter) {},
-        onMiscKey: function(inKeyCode) {},
+        onMiscKey: function(inCharacter) {},
 	// bc only: load page css and html
 	/*loadCssHtml: function() {
 		var path = wm.pagesFolder + this.declaredClass + "/" + this.declaredClass;
