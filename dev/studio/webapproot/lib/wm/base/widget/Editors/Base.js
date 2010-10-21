@@ -1147,7 +1147,7 @@ wm.AbstractEditor.extend({
 
 wm.Object.extendSchema(wm.AbstractEditor, {
     formField: {ignore: 1, writeonly: 1, group: "common", order: 500},
-    caption: {group: "Labeling", order: 1},
+    caption: {group: "Labeling", order: 1, bindTarget:true},
     captionPosition: {group: "Labeling", order: 2},
     captionAlign: {group: "Labeling", order: 3},
     captionSize: {group: "layout", order: 4},
