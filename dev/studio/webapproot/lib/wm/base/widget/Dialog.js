@@ -118,6 +118,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	modal: true,
     init: function() {
         this.inherited(arguments);
+        this._isDesign = this.isDesignLoaded();
 	this.dialogScrim = new wm.Scrim({owner: this, _classes: {domNode: ["wmdialog-scrim"]}, waitCursor: false});
 	this.createTitle();
     },
@@ -244,7 +245,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	}
 	if (!inModal) 
 	    this.dojoMoveable = new dojo.dnd.Moveable(this.domNode, {handle: this.titleLabel.domNode});
-	if (this.showing) {
+	if (this.showing  && !this._isDesign) {
 	    this.dialogScrim.setShowing(this.modal);
 	    wm.bgIframe.setShowing(!this.modal && !this.isDesignedComponent());
 	}
@@ -479,7 +480,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	},
         setShowing: function(inShowing, forceChange, skipOnClose) {
 	    // First show/hide the scrim if we're modal
-	    if (inShowing != this.showing && this.modal)
+	    if (inShowing != this.showing && this.modal && !this._isDesign)
 		this.dialogScrim.setShowing(inShowing);
 
 		// global flag for easily finding the most recently shown dialog
@@ -720,7 +721,7 @@ wm.Dialog.extend({
             return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["top left", "top center", "top right", "center left", "center center", "center right", "bottom left", "bottom center", "bottom right"]});
 	}
 	return this.inherited(arguments);
-    },
+    }
 
 });
 
@@ -1012,7 +1013,7 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
     onButton1Click: function(inButton, inText) {},
     onButton2Click: function(inButton, inText) {},
     onButton3Click: function(inButton, inText) {},
-    onButton4Click: function(inButton, inText) {},
+    onButton4Click: function(inButton, inText) {}
 });
 
 
