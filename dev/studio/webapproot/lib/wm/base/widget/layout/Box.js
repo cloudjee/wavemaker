@@ -278,7 +278,8 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
                         var topParent = (c.owner instanceof wm.Page) ? c.owner.root : c.owner;
                         if (!topParent._autoSizeList)
                             topParent._autoSizeList = [];
-                        topParent._autoSizeList.push(c);
+                        if (dojo.indexOf(topParent._autoSizeList, c) == -1)
+                            topParent._autoSizeList.push(c);
 /*
 		        var cupdatingwas = c._cupdating;
 		        c._cupdating = true;				
