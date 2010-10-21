@@ -854,7 +854,7 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 	},
 
     // TODO: If editor gets resized, what will the readOnlyNode do?
-	setReadonly: function(inReadonly) {
+	setReadonly: function(inReadonly, hideOrShowEditor) {
 		var r = this.readonly;
 		this.readonly = inReadonly;
 		if (r != this.readonly)
@@ -876,12 +876,20 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 				domNode.removeChild(this.readOnlyNode);
 		} 
 		
-		// Add or remove the editorNode from our domNode
-		if (!this.readonly && this.editorNode.parentNode != domNode) 
-			dojo.place(this.editorNode, domNode,  "last");
-		else if (this.readonly && this.editorNode.parentNode == domNode) 
-			domNode.removeChild(this.editorNode);
-		
+		if (hideOrShowEditor) {
+	    if (this.readonly) 
+	      this.editorNode.style.display = 'none';
+	    else  
+	      this.editorNode.style.display = 'block';
+		} else {
+			// Add or remove the editorNode from our domNode
+			if (!this.readonly && this.editorNode.parentNode != domNode) 
+				dojo.place(this.editorNode, domNode, "last");
+			else 
+				if (this.readonly && this.editorNode.parentNode == domNode) 
+					domNode.removeChild(this.editorNode);
+		}
+			
 		this.invalidCss = true;
 		this.render();
 		

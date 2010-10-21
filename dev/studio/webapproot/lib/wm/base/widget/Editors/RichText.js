@@ -119,10 +119,10 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	setReadonly: function(inReadonly) {
 		if (this.readonly && !inReadonly) {
 			var val = this.getDataValue();
-			this.inherited(arguments);
+      this.inherited(arguments, [inReadonly, true]);
 			this.setDataValue(val);
 		} else
-  		this.inherited(arguments);
+      this.inherited(arguments, [inReadonly, true]);
 	},
 	//Character Formatting: bold, italic, underline, strikethrough, subscript, superscript, removeFormat, forecolor, hilitecolor
 	//Paragraph Formatting:: indent, outdent,justifyCenter, justifyFull, justifyLeft, justifyRight, delete, selectall
@@ -181,19 +181,20 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	},
 	_setEditorAttempts: 0,
 	setEditorValue: function(inValue) {
-		if (!this._ready) {
-	  	this.dataValue = inValue;
-		} else {
-		 if (inValue === null || inValue === undefined) 
-		   inValue = "\n\n";
-		 if (dojo.isString(inValue)) 
-		   inValue += "";
-			try {
-				this.editor.set('value', inValue);
-				this.updateReadonlyValue(inValue);
-			} catch (e) {
-				console.warn("setEditorValue Failed: " + e);
-			}
+    if (this.editor && !this.editor.isLoaded){
+			this.editor.onLoadDeferred.addCallback(dojo.hitch(this, 'setEditorValue', inValue));
+		  return;
+		}
+		
+		if (inValue === null || inValue === undefined) 
+  		inValue = "\n\n";
+		if (dojo.isString(inValue)) 
+	 	  inValue += "";
+		try {
+		  this.editor.set('value', inValue);
+		  this.updateReadonlyValue(inValue);
+		} catch (e) {
+		  console.warn("setEditorValue Failed: " + e);
 		}
 	}
  });
