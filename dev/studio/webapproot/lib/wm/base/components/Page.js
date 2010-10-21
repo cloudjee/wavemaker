@@ -372,7 +372,7 @@ dojo.declare("wm.Page", wm.Component, {
 	onStart: function(inPage) {		
 	},
 	keydown: function(e) {
-            console.log("charCode:" + e.charCode);
+
             // Ignore keydown if a dialog is open; if the owner is not the main application; if the main page of the application is not this page (this page is in a page container)
 	      if (wm.dialog.showing || this.owner != app || this != app._page) return true;
 	    var isInput = (e.target.tagName == "INPUT");
