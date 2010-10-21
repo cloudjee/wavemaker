@@ -1747,6 +1747,11 @@ dojo.declare("wm.DesignableDialog", wm.Dialog, {
     postInit: function() {
 	this.inherited(arguments);
 	delete this.containerNode; // containerNode is where child nodes get added to when appending children; just let the normal parent/child relationships prevail...
+    },
+    set_owner: function(inOwner) {
+        this.inherited(arguments);
+        var owner = this.owner;
+        wm.forEachWidget(this, function(w) {w.setOwner(owner);console.log("CHANGE " + w.toString());});
     }
 });
 

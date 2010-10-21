@@ -120,20 +120,20 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 		}
 	},
 	findTarget: function(inHit) {
-		var t;
+	    var t;
 	    var d = this.getDesignableDialog();
 	    if (d) {
 		if (this.targetInDialog(inHit, d)) {
-			t = (this.designable ? this._findTarget(inHit, d.containerWidget) : d.containerWidget);
-		    }
-		} else if (this.targetInRoot(inHit)) {
-			t = (this.designable ? this._findTarget(inHit, this.root) : this.root);
-		} 
-		if (!t)
-			kit._setMarginBox(this.markNode, 0, 0, 0, 0);
-		if (t != this.target) {
-			this.setTarget(t);
+		    t = (this.designable ? this._findTarget(inHit, d.containerWidget) : d.containerWidget);
 		}
+	    } else if (this.targetInRoot(inHit)) {
+		t = (this.designable ? this._findTarget(inHit, this.root) : this.root);
+	    } 
+	    if (!t)
+		kit._setMarginBox(this.markNode, 0, 0, 0, 0);
+	    if (t != this.target) {
+		this.setTarget(t);
+	    }
 	},
 	_findTarget: function(inHit, inWidget, inMargin) {
 		var h = inHit, dn = inWidget.domNode, w, b, o;
@@ -184,7 +184,7 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 	getDesignableDialog: function() {
 	    for (var i = wm.dialog.showingList.length-1; i >= 0; i--) {
 		var d = wm.dialog.showingList[i];
-		if (d.owner == studio.wip && d instanceof wm.DesignableDialog)
+		if ((d.owner == studio.wip || d.owner == studio.application) && d instanceof wm.DesignableDialog)
 		    return d;
 	    }
 	    return;

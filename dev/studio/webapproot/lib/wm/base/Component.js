@@ -79,7 +79,20 @@ dojo.declare("wm.Component", wm.Object, {
 	    return this.owner.getParentPage();
 	return null;
     },
+    isAncestorInstanceOf: function(inClass) {
+        // exit condition
+        if (this == app._page || this == app || window["studio"] && (this == studio.application || this == studio.page))
+            return false;
 
+        if (this instanceof inClass) return true;
+
+        if (this.parent)
+            return this.parent.isAncestorInstanceOf(inClass)
+        else if (this.owner)
+            return this.owner.isAncestorInstanceOf(inClass)
+        else
+            return false;
+    },
     getOwnerApp: function() {
         if (wm.isInstanceType(this, wm.Application)) return this;
 
@@ -265,8 +278,8 @@ dojo.declare("wm.Component", wm.Object, {
 			this.updateId();  
 			// If my id has been changed by this, then so will all of my children's ids...
 			if (this.isDesignLoaded())
-			    this.resetChildIds(); 
-		    }
+			    this.resetChildIds(); 		    
+                    }
 		}
 	        delete this.rootId;
 

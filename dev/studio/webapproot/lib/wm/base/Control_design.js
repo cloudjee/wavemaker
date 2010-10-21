@@ -20,7 +20,7 @@ dojo.provide("wm.base.Control_design");
 wm.isDesignable = function(inControl) {
 	// inControl is designable if it has a non-Widget owner
         // return inControl.owner && !(inControl.owner instanceof wm.Control);
-        return inControl.owner && inControl.owner == studio.page;
+    return inControl.owner && inControl.owner == studio.page || inControl.owner == studio.application && (inControl instanceof wm.Dialog || inControl.isAncestorInstanceOf(wm.DesignableDialog));
 }
 
 wm.Control.extend({
