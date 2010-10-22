@@ -1131,7 +1131,6 @@ dojo.declare("wm.FileUploadDialog", wm.GenericDialog, {
 
 
 dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
-    _noAnimation: true,
     classNames: "wmtoast wmtoastExtraSpecific",
     title: "",
     modal: false,
@@ -1166,7 +1165,7 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
 	this.connectEvents(this.domNode, ["click"]);
     },
     click: function() {
-        this.fadeaway(true);
+        this.hide();
         this.onToastClick();
     },
     onToastClick: function() {},
@@ -1216,17 +1215,23 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
         this.message.autoSizeHeight = true;
 	this.duration = inDuration || this.duration;
 	this.domNode.className = this.classNames + " " + ((inCssClasses) ? inCssClasses : "");
+	this.show();
+	this.setContent(inContent);
+        this.message.doAutoSize(true, true);
+        this.setHeight((this.containerWidget.padBorderMargin.t + this.containerWidget.padBorderMargin.b + this.message.parent.bounds.h + this.padBorderMargin.t + this
+.padBorderMargin.b) + "px" );
 
         // After a timeout, animate the toast away
-	this._timeoutId = window.setTimeout(dojo.hitch(this, "fadeaway"), this.duration);
-
+	this._timeoutId = window.setTimeout(dojo.hitch(this, "hide"), this.duration);
+/*
 	this.domNode.style.opacity = "0.01";
 	this.show();
         this.message.doAutoSize(true, true);
         this.setHeight((this.containerWidget.padBorderMargin.t + this.containerWidget.padBorderMargin.b + this.message.parent.bounds.h + this.padBorderMargin.t + this.padBorderMargin.b) + "px" );
 	dojo.anim(this.domNode, { opacity: 1}, 800);
-
+        */
     },
+/*
     fadeaway: function(fromClick) {
         if (!this._timeoutId) return;
 	this._timeoutId = 0;
@@ -1239,6 +1244,7 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
 	    dojo.anim(this.domNode, { opacity: 0.01 }, 500, null, dojo.hitch(this, function() {this.hide();}));
         }
     },
+    */
     // this is what is called when you bind an event handler to a dialog; call showToast so that the timer is triggered
     update: function() {
 	this.showToast(this.content,this.duration, this.domNode.className);
@@ -1246,103 +1252,6 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
 
 });
 
-dojo.declare("wm.ToastFirstDraft", wm.Dialog, {
-    classNames: "wmtoast wmtoastExtraSpecific",
-    title: "",
-    modal: false,
-    useContainerWidget: true,
-    _timeoutId: 0,
-    duration: 5000,
-    content: "Toast",
-    height: "50px",
-    border: "0,0,5,0",
-    margin: "0",
-    init: function() {
-	this.inherited(arguments);
-	this.containerWidget.setPadding("2,20,2,20");
-	this.setContent(this.content);
-	this.connectEvents(this.domNode, ["click"]);
-    },
-    click: function() {
-        this.fadeaway(true);
-        this.onToastClick();
-    },
-    onToastClick: function() {},
-    postInit: function() {
-	this.inherited(arguments);
-        this.containerWidget.setHeight("100px");
-	this.containerWidget.renderCss();
-    },
-    renderBounds: function() {
-	if (this.showing) {
-	    var t = 0;
-	    var l = 0;
-	    var coords = dojo.coords(app.domNode);
-	    this.setBounds(l, t, coords.w, this.height);
-	    this.domNode.style.top = t + "px";
-	    this.domNode.style.left = l + "px";
-	    this.domNode.style.width = coords.w + "px";
-	    this.domNode.style.height = this.height;
-	    wm.Control.prototype.renderBounds.call(this);
-
-	}
-    },
-    setContent: function(inContent) {
-	this.inherited(arguments);
-	this.content = inContent;
-    },
-
-    // classes supported "Success", "Warning", "Info".  User may add their own classes via css file
-    showToast: function(inContent,inDuration, inCssClasses) {
-	if (this._timeoutId) {
-	    window.clearTimeout(this._timeoutId);
-	    this.hide();
-	    this._timeoutId = 0;
-	}
-        inCssClasses = inCssClasses || "Info";
-        var classes = (inCssClasses) ? inCssClasses.split(" ") : [];
-        if (dojo.indexOf(classes, "Success") != -1) {
-            this.setBorderColor("rgb(0,120,0)");
-        } else if (dojo.indexOf(classes, "Warning") != -1) {
-            this.setBorderColor("rgb(120,0,0)");
-        } else {
-            this.setBorderColor("rgb(0,0,0)");
-        }
-        if (!inContent || !inContent.match(/\<img/)) 
-            inContent = "<img src='" + wm.theme.getImagesPath() + "blank.gif' class='ToastLeft'/>" + inContent;
-
-	this.toastHeight = parseInt(this.height);
-	this.setContent(inContent);
-	this.duration = inDuration || this.duration;
-	this.domNode.className = this.classNames + " " + ((inCssClasses) ? inCssClasses : "");
-
-        // After a timeout, animate the toast away
-	this._timeoutId = window.setTimeout(dojo.hitch(this, "fadeaway"), this.duration);
-
-	this.show();
-
-	this.domNode.style.height = "1px";
-	dojo.anim(this.domNode, { height: parseInt(this.height) }, 400);
-
-    },
-    fadeaway: function(fromClick) {
-        if (!this._timeoutId) return;
-	this._timeoutId = 0;
-        if (fromClick) {
-	    dojo.anim(this.domNode, { opacity: 0 }, 200, null, dojo.hitch(this, function() {
-                this.hide();
-                this.domNode.style.opacity = 1;
-            }));
-        } else {
-	    dojo.anim(this.domNode, { height: 0 }, 800, null, dojo.hitch(this, function() {this.hide();}));
-        }
-    },
-    // this is what is called when you bind an event handler to a dialog; call showToast so that the timer is triggered
-    update: function() {
-	this.showToast(this.content,this.duration, this.domNode.className);
-    }
-
-});
 
 
 wm.Object.extendSchema(wm.Toast, {
@@ -1754,7 +1663,7 @@ dojo.declare("wm.DesignableDialog", wm.Dialog, {
     set_owner: function(inOwner) {
         this.inherited(arguments);
         var owner = this.owner;
-        wm.forEachWidget(this, function(w) {w.setOwner(owner);console.log("CHANGE " + w.toString());});
+        wm.forEachWidget(this, function(w) {w.setOwner(owner);});
     }
 });
 
