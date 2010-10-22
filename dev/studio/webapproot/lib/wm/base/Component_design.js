@@ -314,7 +314,7 @@ wm.Component.extend({
 	},
 	generateEventName: function(inEventName) {
 		var n = inEventName;
-		return this.name + n.slice(2, 3).toUpperCase() + n.slice(3)
+	    return (this instanceof wm.Application) ? inEventName :  this.name + n.slice(2, 3).toUpperCase() + n.slice(3)
 	},
 	generateSharedEventName: function(inEventName) {
 		var n = inEventName;
@@ -436,7 +436,7 @@ wm.Component.extend({
 		// otherwise an event
 		var n=inName, v = inValue || this.generateEventName(n);
 		this.setEvent(n, v);
-		eventEdit(this, n, v);
+		eventEdit(this, n, v, c == studio.application);
 	},
         getSharedEventLookupName: function(inProp) {return inProp;}
 });

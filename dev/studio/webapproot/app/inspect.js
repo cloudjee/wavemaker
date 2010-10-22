@@ -306,13 +306,13 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 				v = c.generateEventName(p);
 				this.set("value",v);
 				try{c.updatingEvent(p,v);}catch (e){/*do nothing as this might happen if there's a component which does not extends wm.control class*/}
-				eventEdit(c, p, v);
+		                eventEdit(c, p, v, c == studio.application);
 				break;
 			case ea.jsSharedFunc.caption:
 				v = c.generateSharedEventName(p);
 				this.set("value",v);
 				try{c.updatingEvent(p,v);}catch (e){/*do nothing as this might happen if there's a component which does not extends wm.control class*/}
-				eventEdit(c, p, v);
+				eventEdit(c, p, v, c == studio.application);
                                 studio.inspector.reinspect();
 				break;
 			case ea.newService.caption:
