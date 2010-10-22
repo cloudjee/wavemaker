@@ -103,7 +103,7 @@ wm.DojoGrid.extend({
 		});
 		fArray.push({name:'- Add Formatter', value:'- Add Formatter'});
 
-		var data = {identifier: 'value', label: 'name', value: 'value', items: fArray};
+		var data = {identifier: 'value', items: fArray};
 		if (!this.formatterStore){
 			this.formatterStore = new dojo.data.ItemFileReadStore({data: data});
 		} else {

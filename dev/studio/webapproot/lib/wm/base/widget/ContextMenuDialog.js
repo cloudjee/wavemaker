@@ -52,6 +52,10 @@ dojo.declare("wm.ContextMenuDialog", null, {
 	},
 
 	rowPropChanged: function(obj, columnId, trObj, widget, inValue){
+		if (widget && widget.declaredClass == 'dijit.form.ComboBox'){
+		  inValue = this.getComboBoxValueFromLabel(widget, inValue);	
+		}
+		
 		if (columnId == 'deleteButton' && this.addDeleteColumn){
 			this.deleteRow(obj, columnId, trObj, inValue);
 			return;
@@ -61,6 +65,18 @@ dojo.declare("wm.ContextMenuDialog", null, {
 		var trId = dojo.attr(trObj, 'trId');
 		this.onPropChanged(obj, columnId, inValue, trObj, widget);
 		this.trObjMap['TR_'+trId] = obj;
+	},
+	getComboBoxValueFromLabel: function(widget, label){
+		var value = label;
+    try {
+			var identifier = widget.store.getIdentityAttributes()[0];
+      value = widget.item[identifier][0];
+    } catch(e) {
+      // do nothing as anything might go wrong in above to statements.
+			// If so, then we will just pass label back.	 	
+	  }
+	
+		return value;
 	},
 	widthTextChanged: function(obj, columnId, trObj, textWidget, typeWidget, inValue){
 		var w = this.getWidthProps(inValue);
