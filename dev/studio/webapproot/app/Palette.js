@@ -75,7 +75,7 @@ dojo.declare("wm.Palette", wm.Tree, {
 		dojo.mixin(props, {
 			_designer: studio.page._designer,
 			name: studio.page.getUniqueName(props.name || studio.makeName(info.type)),
-			owner: studio.page,
+			owner: this.dragger.target.owner,
 			parent: this.dragger.target
 		});
 		if (ctor.prototype instanceof wm.Control) {
