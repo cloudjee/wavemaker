@@ -474,7 +474,7 @@ Studio.widgets = {
 							appsrcLogoBottomHolder: ["wm.Panel", {width: "221px", border: "0"}, {}]
 						}],
 
-						        appsourceHtml: ["wm.Html", {width: "100%", height: "100%", border: 0, padding: "4, 0, 0, 4"}, {}],
+						        appsourceHtml: ["wm.Html", {width: "100%", height: "300px", border: 0, padding: "4, 0, 0, 4"}, {}],
 						        appsourceSplitter: ["wm.Splitter", {layout: "bottom"}, {}],
 						        appsourceEditor: ["wm.EditArea", {width: "100%", height: "100%"}, {}]
 
