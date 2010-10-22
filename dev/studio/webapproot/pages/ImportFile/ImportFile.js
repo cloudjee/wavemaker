@@ -19,56 +19,16 @@
 dojo.provide("wm.studio.pages.ImportFile.ImportFile");
 
 dojo.declare("ImportFile", wm.Page, {
-    title: "Upload a File",
-    buttonCaption: "Upload",
-    uploadService: "resourceFileService",
-    uploadOperation: "uploadFile",
     start: function() {
-	this.setTitle(this.title);
-	this.setButtonCaption(this.buttonCaption);
-	this.setUploadService(this.uploadService);
-	this.setUploadOperation(this.uploadOperation);
-	/* Caller must directly call setCaption, setTitle, etc... as these parameters are not being effectively passed in
-	if (this.caption) this.setCaption(this.caption);
-	if (this.title) this.setTitle(this.title);
-	if (this.service) this.setUploadService(this.service);
-	if (this.operation) this.setUploadOperation(this.operation);
-	*/
     },
-    setTitle: function(inTitle) {
-	this.title = inTitle;
-	this.dialogLabel.setCaption(this.title);
+    openProject: function() {
+	this.owner.dismiss();
+	studio.project.openProject(this.list.selectedItem.getData().path);
     },
-    setCaption: function(inLabel) {
-      this.fileUploader.setCaption(inLabel);
+    selectLastItem: function() {
+	wm.onidle(this, function() {
+	    this.list.eventSelect(this.list.getItem(this.list.getCount()-1));
+	});
     },
-    setButtonCaption: function(inCaption) {
-	this.buttonCaption = inCaption;
-	this.fileUploader.setUploadButtonCaption(this.buttonCaption);
-    },
-    setUploadService: function(inService) {
-	this.uploadService = inService;
-	this.fileUploader.setService(inService);
-    },
-    setUploadOperation: function(inOperation) {
-	this.uploadOperation = inOperation;
-	this.fileUploader.setOperation(inOperation);
-    },
-    cancelButtonClick: function(inSender) {
-	wm.fire(this.owner, "dismiss");
-    },
-
-    startImportClick: function(inSender) {
-	studio.beginWait("Importing File...");
-    },			  
-    importClickCallback: function(inSource, inResponse) {
-	studio.endWait();
-	wm.fire(this.owner, "dismiss");
-    },
-    importClickError: function(inSource,inError) {
-	studio.endWait();
-	// any notification to user must be done by the component that requested the file
-    },
-
     _end: 0
 });

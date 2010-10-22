@@ -347,6 +347,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
         this.connect(this.dijit, "onError", this, "onError");
         this.connect(this.dijit, "onProgress", this, "progress");
 
+	this.adjustButtonHeight();
         this._inCreateDijit = false;
     },
     // 

@@ -46,6 +46,8 @@ import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.runtime.RuntimeAccess;
 
+import com.wavemaker.runtime.server.FileUploadResponse;
+
 /**
  * Main deployment class.
  *
@@ -333,10 +335,10 @@ public class DeploymentManager {
     }
 
     /*  This function takes a zip file as input, unzips it and moves it into the project folder */
-    public String  importFromZip(MultipartFile file) throws IOException {
+    public FileUploadResponse importFromZip(MultipartFile file) throws IOException {
+        FileUploadResponse ret = new FileUploadResponse();
     	File tmpDir = projectManager.getTmpDir();
 
-    	DownloadResponse ret = new DownloadResponse();
 
     	// Write the zip file to outputFile
     	File outputFile = new File(tmpDir, file.getOriginalFilename());                                                                         
@@ -422,7 +424,11 @@ public class DeploymentManager {
 
     	// TODO: Make sure we didn't break anyting for resource uploading of zips (into project resources)
 
-    	return finalProjectFolder.getName().substring(projectManager.getUserProjectPrefix().length());
+	ret.setPath(finalProjectFolder.getName().substring(projectManager.getUserProjectPrefix().length()));
+	ret.setError("");
+	ret.setWidth("");
+	ret.setHeight("");
+    	return ret;
     }
 
     

@@ -16,35 +16,11 @@
  *  limitations under the License.
  */
 
-.ImportFile .ImportFile-titleBar {
-	background-image:url(images/dark_toolbar_bg.gif);
-	background-repeat:repeat-x;
-	border-bottom:1px #363b44 solid;
-	color: #FFF;
-	border-left: 1px solid #c0c4ca;
-	border-right: 1px solid #363b44;
-	font-size: 120%;
+.ImportFile .ImportFile-panel {
+    background-color: #8F98A4;
 }
 
-.ImportFile .ImportFile-footer {
-	background-image:url(images/dark_toolbar_bg.gif);
-	background-repeat:repeat-x;
-	border-bottom:1px #363b44 solid;
-	color: #FFF;
-	padding: 4px;
-	border-left: 1px solid #c0c4ca;
-	border-right: 1px solid #363b44;
-}
-
-.ImportFile .ImportFile-footer button {
-	background-image:url(images/dark_btn_bg.gif);
-	background-repeat:repeat-x;
-	color: #FFF;
-	font-weight:bold;
-	border: solid 1px #353a44;
-}
-
-.ImportFile button {
+.ImportFile .wmbutton {
 	background-image:url(images/wmbutton_bg.png);
 	background-repeat:repeat-x;
 	color: #FFF;
@@ -52,5 +28,12 @@
 	border-right: 1px solid #363b44;
 	border-top: 1px solid #c0c4ca;
 	border-bottom: 1px solid #363b44;
-	cursor: pointer;
+	cursor: pointer !important;
+}
+.ImportFile input, .ImportFile form {
+    cursor: pointer !important;
+}
+.ImportFile .wmbutton:hover {
+    background-color: silver !important;
+	background-image:url(images/wmbutton_bg.png) !important;
 }

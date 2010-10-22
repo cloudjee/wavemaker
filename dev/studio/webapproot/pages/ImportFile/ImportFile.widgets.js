@@ -18,37 +18,45 @@
 
 ImportFile.widgets = {
     layoutBox1: ["wm.Layout", {layoutKind: "top-to-bottom", width: "100%", height: "100%", _classes: ["wm-darksnazzy"]}, {}, {
-	dialog: ["wm.Panel", {layoutKind: "top-to-bottom",  width: "100%", height: "100%"}, {}, {
-	    titleBar: ["wm.Panel", {layoutKind: "left-to-right", height: "29px"}, {}, {
-		dialogLabel: ["wm.Label", {_classes: {domNode: [
-					    "wm_TextDecoration_Bold", 
-					    "wm_TextAlign_Center", 
-					    "wm_Padding_4px", 
-					    "wm_FontColor_White"]}, caption: "",  width: "100%", height: "100%"}, {}, {
-						format: ["wm.DataFormatter", {}, {}]
-					    }]
-	    }],
-	    panel: ["wm.Panel", {_classes: ["wm_Padding_16px"], layoutKind: "top-to-bottom",  width: "100%", height: "100%", horizontalAlign: "center"}, {}, {
-	        spacer: ["wm.Spacer", {height: "10px", width: "100%"}],
-		fileUploader: ["wm.FileUpload", {  caption: "",
-						   uploadButtonCaption: "Import",
-						   padding: "0,20,0,20",
-						   width: "500px",
-						   height: "28px",
-						   captionSize: "100px",						   
-						   captionAlign: "left",
-						   captionPosition: "left",
-						   uploadButtonPosition: "right",
-						   uploadButtonWidth: "100px",
-						   uploadButtonHeight: "30px",
-						   service: "",
-						   operation: ""}, 
-                                                {  onUploadSuccess: "importClickCallback",
-						   onUploadError: "importClickError",
-						   onBegin:       "startImportClick"}, {}]
-	    }],
-	    footer: ["wm.Panel", {layoutKind: "left-to-right",  horizontalAlign: "right", verticalAligh: "bottom", height: "26px", width: "100%"}, {}, {
-		cancelButton: ["wm.Button", {caption: "Cancel", width: "100px", height: "100%"}, {onclick: "cancelButtonClick"}]
+	dialog: ["wm.Panel", {layoutKind: "top-to-bottom",  width: "100%", height: "100%", border: "10", borderColor: "#424959"}, {}, {
+	    panel: ["wm.Panel", {_classes: ["wm_Padding_16px"], 
+				 layoutKind: "top-to-bottom", 
+				 width: "100%", 
+				 height: "100%", 
+				 padding: "16",
+				 horizontalAlign: "left", 
+				 verticalAlign: "top"}, {}, {
+		panel1: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "40px", verticalAlign: "top", horizontalAlign: "left"},{}, {
+		    fileUploader: ["wm.DojoFileUpload", {  width: "100px",
+							   height: "32px",
+							   useList: false,
+							   buttonCaption: "Select Zipfile",
+							   service: "deploymentService",
+							   operation: "uploadProjectZipFile"},
+				   {onSuccess: "selectLastItem"}],
+		    openButton: ["wm.Button", { caption: "Open Project",
+						height: "32px",
+						padding: "0",
+						margin: "0,0,0,20",
+						width: "120px"},
+				 {onclick: "openProject"},
+				 {
+				      binding: ["wm.Binding", {}, {}, {
+					  wire: ["wm.Wire", {"targetProperty":"disabled", expression: "!${list.selectedItem.path}"}, {}]
+				      }]
+				 }]
+		}],
+		list: ["wm.List", {width: "100%",
+				   height: "100%",
+				   dataFields: "name",
+				   headerVisible: false,
+				   border: "1",
+				   borderColor: "black"
+				  },{}, {
+				      binding: ["wm.Binding", {}, {}, {
+					  wire: ["wm.Wire", {"targetProperty":"dataSet", source: "fileUploader.variable"}, {}]
+				      }]
+				  }]
 	    }]
 	}]
     }]

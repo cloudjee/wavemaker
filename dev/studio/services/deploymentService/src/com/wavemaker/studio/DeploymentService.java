@@ -39,6 +39,9 @@ import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.runtime.server.ParamName;
+
+import com.wavemaker.runtime.server.FileUploadResponse;
+
 /**
  * @author Joel Hare
  * @version $Rev$ - $Date$
@@ -159,7 +162,7 @@ public class DeploymentService {
     public void exportProject(String zipFileName) {
         deploymentManager.exportProject(zipFileName);
     }
-    public String  uploadProjectZipFile(
+    public FileUploadResponse uploadProjectZipFile(
             @ParamName(name="file") MultipartFile file) throws IOException {
     	return deploymentManager.importFromZip(file);
     }

@@ -149,6 +149,12 @@ Studio.extend({
 	//=====================================================================
 	// Import
 	//=====================================================================
+	getImportProjectDialog: function() {
+	  if (!this.importProjectDialog) {
+	      this.importProjectDialog = new wm.PageDialog({owner: studio, pageName: "ImportFile", width: "500px", height: "300px", hideControls: true, title: "Import Projects", modal: false});
+	  }
+	    return this.importProjectDialog;
+	},
 	getImportFileDialog: function() {
 	  if (!this.importFileDialog) {
 /*
@@ -188,10 +194,12 @@ Studio.extend({
 	  this.confirmAppChange("Are you sure you want to close project \"${project}\"? Unsaved changes will be lost.",
                                 undefined, dojo.hitch(this, function() {
 	                            this.project.closeProject();
-                                    this.importFileDialog = this.getImportFileDialog().show();
+                                    //this.importFileDialog = this.getImportFileDialog().show();
+				    this.getImportProjectDialog().show();
                                 }));
       } else
-          this.importFileDialog = this.getImportFileDialog().show();
+	  this.getImportProjectDialog().show();
+          //this.importFileDialog = this.getImportFileDialog().show();
     },
    importProjectClickCallback: function(inSource, inResponse) {
       studio.endWait();
