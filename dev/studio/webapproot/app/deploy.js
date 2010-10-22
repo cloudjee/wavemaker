@@ -23,7 +23,7 @@ Studio.extend({
 	// Deployment
 	//=====================================================================
 	deployClick: function(inSender) {
-		this.project.saveProject();
+		this.project.saveProject(true);
 		/*
 		if (wm.studioConfig.isPalmApp) {
 			var p = prompt("Enter the path to Palm workspace:", "/Users/mmcnulty/workspace");

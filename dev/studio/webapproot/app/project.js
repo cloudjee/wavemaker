@@ -42,7 +42,7 @@ dojo.declare("wm.studio.Project", null, {
 		this.createApplicationArtifacts();
 	        this.makeApplication({theme: optionalInTheme || "wm_default"});
 	        this.newPage(this.pageName, "", {template: optionalInTemplate});
-		this.saveProject(this.projectName);
+                this.saveProject();
 		this.projectChanged();
 		this.projectsChanged();
 	    studio.endWait("Setting up new project");
@@ -202,7 +202,7 @@ dojo.declare("wm.studio.Project", null, {
 	loadApplication: function() {
 		this.projectData = {
 			js: this.loadProjectData(this.projectName + ".js"),
-		    css: this.loadProjectData("app.css").replace(/^\@import.*theme.css.*/,"").replace(/^\n*/,""), // remove theme import from editable part of app.css
+		    css: this.loadProjectData("app.css"),//.replace(/^\@import.*theme.css.*/,"").replace(/^\n*/,""), // remove theme import from editable part of app.css
 		        documentation: dojo.fromJson(this.loadProjectData(this.projectName + ".documentation.json"))
 		};
 		if (!this.projectData.js) {
@@ -274,7 +274,8 @@ dojo.declare("wm.studio.Project", null, {
 	//=========================================================================
 	// Save
 	//=========================================================================
-	saveProject: function() {
+	saveProject: function(isDeployment) {
+                this.deployingProject = isDeployment;
 		this.saveApplication();
 		this.savePage();
 
@@ -332,8 +333,14 @@ dojo.declare("wm.studio.Project", null, {
 		this.saveProjectData(c.appConfigFileName, c.appConfigTemplate, true);
 
             var themename = studio.application.theme;
-            var path = (themename.match(/^wm_/)) ? "/wavemaker/lib/wm/base/widget/themes/" + themename + "/theme.css" : "/wavemaker/lib/wm/common/themes/" + themename + "/theme.css";
+            var path;
+            if (this.deployingProject)
+                path = (themename.match(/^wm_/)) ? "lib/wm/base/widget/themes/" + themename + "/theme.css" : "lib/wm/common/themes/" + themename + "/theme.css";
+            else
+                path = (themename.match(/^wm_/)) ? "/wavemaker/lib/wm/base/widget/themes/" + themename + "/theme.css" : "/wavemaker/lib/wm/common/themes/" + themename + "/theme.css";
+
 	        this.saveProjectData(c.appCssFileName, '@import "' + path + '";\n' +  studio.getAppCss());
+
 		this.saveProjectData(c.appDebugBootFileName, '', true);
 		if (wm.studioConfig.isPalmApp) {
 			this.saveProjectData(c.appPalmAppInfoFileName, makePalmAppInfo(this.projectName), true);
