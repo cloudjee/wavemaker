@@ -2071,6 +2071,21 @@ dojo.declare("ThemeDesigner", wm.Page, {
             return;
         }
 
+        app.confirm("Are you sure you want to delete '" + selectedName + "'?", false, 
+                    dojo.hitch(this, function() {
+                        var d = studio.deploymentService.requestAsync("deleteTheme", [selectedName]);
+                        d.addCallback(dojo.hitch(this, function(inData) {
+                            app.toastDialog.showToast("Theme Deleted!", 5000, "Success");
+                            studio.loadThemeList(dojo.hitch(this, function() {
+                                this.themeSelect.setDataSet(studio.themesListVar);
+                                this.themeSelect.setDataValue(studio.themesListVar.getData()[0].dataValue);
+                            }));
+                        }));
+                        d.addErrback(dojo.hitch(this, function(result) {
+                            app.toastDialog.showToast("Theme Delete Failed:" + result.message, 10000, "Warning");
+                        }));
+                    }), null, "Delete");
+/*
         var dialog = studio.genericDialog; // defined in Studio.widgets.js
         dialog.setButton1Caption("Delete");
         dialog.setButton2Caption("Cancel");
@@ -2102,7 +2117,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
         });
             dialog.show();
-
+            */
     },
 
 
