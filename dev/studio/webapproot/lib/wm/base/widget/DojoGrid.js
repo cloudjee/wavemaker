@@ -497,7 +497,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 					
 					default:
 						if (!this.isDesignLoaded())
-							obj.formatter = dojo.hitch(this.owner, col.formatFunc);
+							obj.formatter = dojo.hitch(this, 'customFormatter', col.formatFunc);
 						break;
 				}
 			}
@@ -703,12 +703,13 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		return dojo.currency.format(inValue, {currency:wm.getLocaleCurrency()});
 	},
 	imageFormatter: function(inValue){
-		console.info('image inValue = ', inValue);
 		if (inValue && inValue != '')
 			return '<img src="'+ inValue +'">';
 		return inValue;
 	},
-	
+	customFormatter: function(formatFunc, inValue, rowIdx, cellObj){
+		return dojo.hitch(this.owner, formatFunc, inValue, rowIdx, cellObj.index, cellObj.field, cellObj)();
+	},
 	/* Action buttons implementation*/
 	addActionButtons: function(){
 		if (this.showAddButton && !this.addButton){
