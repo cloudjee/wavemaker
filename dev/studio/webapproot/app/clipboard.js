@@ -97,7 +97,7 @@ Studio.extend({
 	_deleteControl: function(inControl){
 		var c = inControl, p = c.parent, o = c.owner;
 		// FIXME: remove o check to delete sub-components.
-		if (!c.deletionDisabled && (o == this.application || o == this.page) && c != this.page.root && !(c.isParentFrozen && c.isParentFrozen()) || (o==null)) {
+		if (!c.deletionDisabled && (o == this.application || o == this.page || o instanceof wm.TypeDefinition) && c != this.page.root && !(c.isParentFrozen && c.isParentFrozen()) || (o==null)) {
 			this.page.removeComponent(c);
 			this.inspector.inspected = null;
 			c.destroy();

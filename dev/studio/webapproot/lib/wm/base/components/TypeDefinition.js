@@ -155,5 +155,10 @@ wm.TypeDefinition.extend({
 	    studio.select(field);
             this.doRemoveType(); // old type def is missing this field
             this.doAddType(); // now we update the type def
-        }
+        },
+    removeComponent: function(inComponent) {
+	this.inherited(arguments);
+	delete this.fields;
+	this.getCollection();
+    }
 });
