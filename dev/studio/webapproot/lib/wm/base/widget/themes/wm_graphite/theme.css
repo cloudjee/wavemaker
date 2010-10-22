@@ -118,8 +118,8 @@ body .wm_graphite input:focus,
 	/* Document-ClickablesActive-Font */
 	color: #ffffff; /* Document-ClickablesActive-Font_Color */
 	/* Document-ClickablesActive-Background */
-	background-color: #666666; /* Document-ClickablesActive-Background_Color */
-	background-image: url(images/repeatx/greyEdge4.png); /* Document-ClickablesActive-Background_Image */
+	background-color: #808d8f; /* Document-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/brightEdge2.png); /* Document-ClickablesActive-Background_Image */
 	background-position: top left; /* Document-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
 	-moz-box-shadow: 0px 0px 0px #444444; /* Document-ClickablesActive-BorderStyle_Shadow */
@@ -173,7 +173,7 @@ body .wm_graphite input:focus,
 	-webkit-box-shadow: 3px 3px 3px #444444; /* MainContent-ClickablesDefault-BorderStyle_Shadow */
 	box-shadow: 3px 3px 3px #444444; /* MainContent-ClickablesDefault-BorderStyle_Shadow */
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #444444; /* MainContent-ClickablesDefault-Background_Color */
+	background-color: #807e7e; /* MainContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyEdge3.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
@@ -187,8 +187,8 @@ body .wm_graphite input:focus,
 	/* MainContent-ClickablesActive-Font */
 	color: #ffffff; /* MainContent-ClickablesActive-Font_Color */
 	/* MainContent-ClickablesActive-Background */
-	background-color: #666666; /* MainContent-ClickablesActive-Background_Color */
-	background-image: url(images/repeatx/greyEdge4.png); /* MainContent-ClickablesActive-Background_Image */
+	background-color: #769b9f; /* MainContent-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/brightEdge2.png); /* MainContent-ClickablesActive-Background_Image */
 	background-position: top left; /* MainContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
 	-moz-box-shadow: 0px 0px 0px #444444; /* MainContent-ClickablesActive-BorderStyle_Shadow */
@@ -207,7 +207,7 @@ body .wm_graphite input:focus,
 	/* MainContent-ClickablesHover-Font */
 	color: #ffffff; /* MainContent-ClickablesHover-Font_Color */
 	/* MainContent-ClickablesHover-Background */
-	background-color: #555555; /* MainContent-ClickablesHover-Background_Color */
+	background-color: #b5b3b3; /* MainContent-ClickablesHover-Background_Color */
 	background-image: url(images/repeatx/greyEdge4.png); /* MainContent-ClickablesHover-Background_Image */
 	background-position: top left; /* MainContent-ClickablesHover-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesHover-Background_Image-Repeat */
@@ -242,7 +242,7 @@ body .wm_graphite input:focus,
 	-webkit-box-shadow: 3px 3px 3px #444444; /* EmphasizedContent-ClickablesDefault-BorderStyle_Shadow */
 	box-shadow: 3px 3px 3px #444444; /* EmphasizedContent-ClickablesDefault-BorderStyle_Shadow */
 	/* EmphasizedContent-ClickablesDefault-Background */
-	background-color: #444444; /* EmphasizedContent-ClickablesDefault-Background_Color */
+	background-color: #868484; /* EmphasizedContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyEdge3.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
@@ -256,8 +256,8 @@ body .wm_graphite input:focus,
 	/* EmphasizedContent-ClickablesActive-Font */
 	color: #ffffff; /* EmphasizedContent-ClickablesActive-Font_Color */
 	/* EmphasizedContent-ClickablesActive-Background */
-	background-color: #666666; /* EmphasizedContent-ClickablesActive-Background_Color */
-	background-image: url(images/repeatx/greyEdge4.png); /* EmphasizedContent-ClickablesActive-Background_Image */
+	background-color: #35646a; /* EmphasizedContent-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/brightEdge2.png); /* EmphasizedContent-ClickablesActive-Background_Image */
 	background-position: top left; /* EmphasizedContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesActive-Background_Image-Repeat */
 	-moz-box-shadow: 0px 0px 0px #444444; /* EmphasizedContent-ClickablesActive-BorderStyle_Shadow */
@@ -325,7 +325,7 @@ body .wm_graphite input:focus,
 	/* HeaderContent-ClickablesActive-Font */
 	color: #000000; /* HeaderContent-ClickablesActive-Font_Color */
 	/* HeaderContent-ClickablesActive-Background */
-	background-color: #ffffff; /* HeaderContent-ClickablesActive-Background_Color */
+	background-color: #a6bee6; /* HeaderContent-ClickablesActive-Background_Color */
 	background-image: url(images/repeatx/greyEdge2.png); /* HeaderContent-ClickablesActive-Background_Image */
 	background-position: top left; /* HeaderContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
@@ -397,7 +397,7 @@ body .wm_graphite input:focus,
 .wm_graphite .dijitCalendarContainer td.dijitCalendarSelectedDate,
 .wm_graphite .dijitCalendarContainer td.dijitCalendarSelectedDate.dijitCalendarCurrentMonth,
 .wm_graphite .dijitCalendarContainer .dijitCalendarSelectedYear {
-    background-color: #666666 !important; /* Document-ClickablesActive-Background_Color */
+    background-color: #808d8f !important; /* Document-ClickablesActive-Background_Color */
     color: #ffffff !important; /* Document-ClickablesActive-Font_Color */
     -moz-border-radius: 4px; /* PageContent-Styles-Border_Radius */
     -webkit-border-radius: 4px; /* PageContent-Styles-Border_Radius */
@@ -420,7 +420,7 @@ body .wm_graphite input:focus,
 .wm_graphite .dijitCalendarContainer .dijitCalendarPreviousMonth,
 .wm_graphite .dijitCalendarContainer .dijitCalendarNextMonth,
 .wm_graphite .dijitCalendarContainer .dijitCalendarDayLabelTemplate {
-    background-color: #888888 !important; /* Document-Styles-Background_Color */
+    background-color: #999999 !important; /* Document-Styles-Background_Color */
     background-image: none;
     color: #000000; /* Document-Styles-Font_Color */
 }
@@ -648,7 +648,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     border-radius-bottomright: 4px; /* Borders-Editor_BorderStyle_Radius */
 }
 .wm_graphite .wmeditor .dijitComboBox .dijitArrowButton {
-        height: 100% !important;
+    height: 100% !important;
     -moz-border-radius-bottomright: 2px; /* wm.SelectMenu-Inner_Radius */
     -moz-border-radius-topright: 2px; /* wm.SelectMenu-Inner_Radius */
     -webkit-border-bottom-right-radius: 2px; /* wm.SelectMenu-Inner_Radius */
@@ -713,7 +713,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
 	color: #000000; /* Document-EditorsDefault-Font_Color */
 	font-weight: normal; /* Document-EditorsDefault-Font_Weight */
 	/* Document-EditorsDefault-Background */
-	background-color: #888888; /* Document-EditorsDefault-Background_Color */
+	background-color: #bcb9b9; /* Document-EditorsDefault-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* Document-EditorsDefault-Background_Image */
 	background-position: top left; /* Document-EditorsDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-EditorsDefault-Background_Image-Repeat */
@@ -759,7 +759,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
    *              button. 
    ************************************************************************************************/
 .wm_graphite .wmeditor .dijitComboBox .dijitArrowButton {
-    background-color: #444444; /* MainContent-ClickablesDefault-Background_Color */
+    background-color: #807e7e; /* MainContent-ClickablesDefault-Background_Color */
     background-image: none;
 }
     .wm_graphite .MainContent .wmeditor .dijitTextBox,
@@ -776,7 +776,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
 	color: #000000; /* MainContent-EditorsDefault-Font_Color */
 	font-weight: normal; /* MainContent-EditorsDefault-Font_Weight */
 	/* MainContent-EditorsDefault-Background */
-	background-color: #888888; /* MainContent-EditorsDefault-Background_Color */
+	background-color: #d0cdcd; /* MainContent-EditorsDefault-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* MainContent-EditorsDefault-Background_Image */
 	background-position: top left; /* MainContent-EditorsDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-EditorsDefault-Background_Image-Repeat */
@@ -800,7 +800,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
 	color: #000000; /* MainContent-EditorsHover-Font_Color */
 	border-color: #333333; /* MainContent-EditorsHover-Border_Color */
 	/* MainContent-EditorsHover-Background */
-	background-color: #bbbbbb; /* MainContent-EditorsHover-Background_Color */
+	background-color: #e4e1e1; /* MainContent-EditorsHover-Background_Color */
 	background-image: url(images/repeatx/brightEdge3.png); /* MainContent-EditorsHover-Background_Image */
 	background-position: top left; /* MainContent-EditorsHover-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-EditorsHover-Background_Image-Repeat */
@@ -830,7 +830,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
    *              button. 
    ************************************************************************************************/
 .wm_graphite .wmeditor .dijitComboBox .dijitArrowButton {
-    background-color: #444444; /* EmphasizedContent-ClickablesDefault-Background_Color */
+    background-color: #868484; /* EmphasizedContent-ClickablesDefault-Background_Color */
     background-image: none;
 }
     /* BEGIN inner content panel editors */
@@ -896,6 +896,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
 .wm_graphite .wmeditor .dijitComboBox .dijitArrowButton {
     background-color: #999999; /* HeaderContent-ClickablesDefault-Background_Color */
     background-image: none;
+    height: 100% !important;
 }
     /* BEGIN inner content panel editors */
     .wm_graphite .HeaderContent .wmeditor .dijitTextBox,
@@ -912,7 +913,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
 	color: #000000; /* HeaderContent-EditorsDefault-Font_Color */
 	font-weight: normal; /* HeaderContent-EditorsDefault-Font_Weight */
 	/* HeaderContent-EditorsDefault-Background */
-	background-color: #888888; /* HeaderContent-EditorsDefault-Background_Color */
+	background-color: #c6c1c1; /* HeaderContent-EditorsDefault-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-EditorsDefault-Background_Image */
 	background-position: top left; /* HeaderContent-EditorsDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-EditorsDefault-Background_Image-Repeat */
@@ -927,7 +928,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
 	color: #000000; /* HeaderContent-EditorsHover-Font_Color */
 	border-color: #333333; /* HeaderContent-EditorsHover-Border_Color */
 	/* HeaderContent-EditorsHover-Background */
-	background-color: #bbbbbb; /* HeaderContent-EditorsHover-Background_Color */
+	background-color: #d5cbcb; /* HeaderContent-EditorsHover-Background_Color */
 	background-image: url(images/repeatx/brightEdge3.png); /* HeaderContent-EditorsHover-Background_Image */
 	background-position: top left; /* HeaderContent-EditorsHover-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-EditorsHover-Background_Image-Repeat */
@@ -981,7 +982,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     /* Tables-OddRows-Font */
     color: #000000; /* Tables-OddRows-Font_Color */
     /* Tables-OddRows-Background */
-    background-color: #cccccc; /* Tables-OddRows-Background_Color */
+    background-color: #eeeeee; /* Tables-OddRows-Background_Color */
 }
   /**************************************************************************************************
    * TYPE:        Grid cell borders
@@ -1027,7 +1028,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     .wm_graphite .wmlist-item.wmlist-item-selected,
     .wm_graphite .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* Document-ClickablesActive-Background */
-	background-color: #666666 !important; /* Document-ClickablesActive-Background_Color */
+	background-color: #808d8f !important; /* Document-ClickablesActive-Background_Color */
 	/* Document-ClickablesActive-Font */
 	color: #ffffff; /* Document-ClickablesActive-Font_Color */
     }
@@ -1058,16 +1059,16 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
 	border-right-style: solid;
 	border-right-color: #aaaaaa; /* Tables-EvenRows-Border_Color */
 	/* Tables-HeaderRow-Font */
-	font-family: sans-serif; /* Tables-HeaderRow-Font_Family */
-	font-size: 12pt; /* Tables-HeaderRow-Font_TextSize */
-	color: #000000 !important;/* Tables-HeaderRow-Font_Color */
-	font-weight: bold; /* Tables-HeaderRow-Font_Weight */
+	font-family: Arial; /* Tables-HeaderRow-Font_Family */
+	font-size: 11pt; /* Tables-HeaderRow-Font_TextSize */
+	color: #000000 !important; /* Tables-HeaderRow-Font_Color */
+	font-weight: normal; /* Tables-HeaderRow-Font_Weight */
     }
     .wm_graphite .wmlist-header th {
-	font-family: sans-serif; /* Tables-HeaderRow-Font_Family */
+	font-family: Arial; /* Tables-HeaderRow-Font_Family */
 /*	font-size: 12pt;  Tables-HeaderRow-Font_TextSize header height doesn't adjust*/
-	color: #000000 !important;/* Tables-HeaderRow-Font_Color */
-	font-weight: bold; /* Tables-HeaderRow-Font_Weight */
+	color: #000000 !important; /* Tables-HeaderRow-Font_Color */
+	font-weight: normal; /* Tables-HeaderRow-Font_Weight */
     }
     /* Header-Row-Background */
     body.tundra .wm_graphite .dojoxGrid-header, 
@@ -1076,8 +1077,8 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     body.tundra.wm_graphite .dojoxGrid-header, 
     body.tundra.wm_graphite .dojoxGridHeader,
     body.tundra.wm_graphite .wmlist-header { 
-	background-color: #444444; /* Tables-HeaderRow-Background_Color */
-	background-image: url(images/repeatx/brightEdge1.png); /* Tables-HeaderRow-Background_Image */
+	background-color: #8b9c9e; /* Tables-HeaderRow-Background_Color */
+	background-image: url(images/repeatx/brightEdge2.png); /* Tables-HeaderRow-Background_Image */
 	background-position: left top;     /* Tables-HeaderRow_Image-Position */
 	background-repeat: repeat-x;    /* Tables-HeaderRow_Image-Repeat */
     }
@@ -1092,7 +1093,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     .wm_graphite .MainContent .wmlist-item.wmlist-item-selected,
     .wm_graphite .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* MainContent-ClickablesActive-Background */
-	background-color: #666666 !important; /* MainContent-ClickablesActive-Background_Color */
+	background-color: #769b9f !important; /* MainContent-ClickablesActive-Background_Color */
 	/* MainContent-ClickablesActive-Font */
 	color: #ffffff; /* MainContent-ClickablesActive-Font_Color */
     }
@@ -1104,7 +1105,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     .wm_graphite .MainContent .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* MainContent-ClickablesHover-Background */
-	background-color: #555555 !important; /* MainContent-ClickablesHover-Background_Color */
+	background-color: #b5b3b3 !important; /* MainContent-ClickablesHover-Background_Color */
 	/* MainContent-ClickablesHover-Font */
 	color: #ffffff; /* MainContent-ClickablesHover-Font_Color */
     }
@@ -1126,7 +1127,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     .wm_graphite .EmphasizedContent .wmlist-item.wmlist-item-selected,
     .wm_graphite .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* EmphasizedContent-ClickablesActive-Background */
-	background-color: #666666 !important; /* EmphasizedContent-ClickablesActive-Background_Color */
+	background-color: #35646a !important; /* EmphasizedContent-ClickablesActive-Background_Color */
 	/* EmphasizedContent-ClickablesActive-Font */
 	color: #ffffff; /* EmphasizedContent-ClickablesActive-Font_Color */
     }
@@ -1160,7 +1161,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     .wm_graphite .HeaderContent .wmlist-item.wmlist-item-selected,
     .wm_graphite .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* HeaderContent-ClickablesActive-Background */
-	background-color: #ffffff !important; /* HeaderContent-ClickablesActive-Background_Color */
+	background-color: #a6bee6 !important; /* HeaderContent-ClickablesActive-Background_Color */
 	/* HeaderContent-ClickablesActive-Font */
 	color: #000000; /* HeaderContent-ClickablesActive-Font_Color */
     }
@@ -1301,7 +1302,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
 }
     .wm_graphite .MainContent .dojoMenu.ClickableDojoMenu {
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #444444; /* MainContent-ClickablesDefault-Background_Color */
+	background-color: #807e7e; /* MainContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyEdge3.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
@@ -1321,7 +1322,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
 	/* MainContent-ClickablesHover-Font */
 	color: #ffffff; /* MainContent-ClickablesHover-Font_Color */
 	/* MainContent-ClickablesHover-Background */
-	background-color: #555555; /* MainContent-ClickablesHover-Background_Color */
+	background-color: #b5b3b3; /* MainContent-ClickablesHover-Background_Color */
 	background-image: url(images/repeatx/greyEdge3.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
@@ -1381,7 +1382,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
 }
     .wm_graphite .EmphasizedContent .dojoMenu.ClickableDojoMenu {
 	/* EmphasizedContent-ClickablesDefault-Background */
-	background-color: #444444; /* EmphasizedContent-ClickablesDefault-Background_Color */
+	background-color: #868484; /* EmphasizedContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyEdge3.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
@@ -1498,7 +1499,7 @@ body .wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
     -moz-box-shadow: 3px 0px 3px #444444; /* wm.TabLayers-BorderStyle_Shadow */
     -webkit-box-shadow: 3px 0px 3px #444444; /* wm.TabLayers-BorderStyle_Shadow */
     box-shadow: 3px 0px 3px #444444; /* wm.TabLayers-BorderStyle_Shadow */
-    height: 25px; /* wm.TabLayers-Button_Height */
+    height: 24px; /* wm.TabLayers-Button_Height */
     font-size: 11pt; /* wm.TabLayers-Button_TextSize */
 }
 .wm_graphite .wmtablayers-tab:hover, .wm_graphite .wmtablayers-tab:focus {
@@ -1608,7 +1609,6 @@ body.tundra .wm_graphite  div.wmheader,
    *
    * DESCRIPTION: Specify all font and background styles for the document level
    ************************************************************************************************/
-@media screen { /* Document-Level */ 
   /**************************************************************************************************
    * TYPE:        Main document-level border
    *
@@ -1638,7 +1638,7 @@ body.tundra .wm_graphite  div.wmheader,
     color: #000000; /* Document-Styles-Font_Color */
     font-weight: normal; /* Document-Styles-Font_Weight */
     /* Document-Styles-Background */
-    background-color: #888888; /* Document-Styles-Background_Color */
+    background-color: #999999; /* Document-Styles-Background_Color */
     background-image: url(images/repeatx/greyEdge4.png); /* Document-Styles-Background_Image */
     background-position: top left; /* Document-Styles-Background_Image-Position */
     background-repeat: repeat-x; /* Document-Styles-Background_Image-Repeat */
@@ -1650,7 +1650,7 @@ body.tundra .wm_graphite  div.wmheader,
 }
 #studio_designer.wm_graphite, 
 body.wm_graphite {
-    background-color: #888888; /* Document-Styles-Background_Color */
+    background-color: #999999; /* Document-Styles-Background_Color */
 }
     .wm_graphite div.wmaccordion-header {
 	/* Document-ClickablesActive-Font  + Clickables-Default-Font */
@@ -1659,8 +1659,8 @@ body.wm_graphite {
 	color: #ffffff; /* Document-ClickablesActive-Font_Color */
 	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
 	/* Document-ClickablesActive-Background */
-	background-color: #666666; /* Document-ClickablesActive-Background_Color */
-	background-image: url(images/repeatx/greyEdge4.png); /* Document-ClickablesActive-Background_Image */
+	background-color: #808d8f; /* Document-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/brightEdge2.png); /* Document-ClickablesActive-Background_Image */
 	background-position: top left; /* Document-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
 	/* Document-ClickablesDefault-BorderStyle_Radius */
@@ -1704,8 +1704,8 @@ body.wm_graphite {
     font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
     color: #ffffff; /* Document-ClickablesActive-Font_Color */
     /* Document-ClickablesActive-Background */
-    background-color: #666666; /* Document-ClickablesActive-Background_Color */
-    background-image: url(images/repeatx/greyEdge4.png); /* Document-ClickablesActive-Background_Image */
+    background-color: #808d8f; /* Document-ClickablesActive-Background_Color */
+    background-image: url(images/repeatx/brightEdge2.png); /* Document-ClickablesActive-Background_Image */
     background-position: top left; /* Document-ClickablesActive-Background_Image-Position */
     background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
 }
@@ -1745,8 +1745,8 @@ body.wm_graphite {
 	/* Document-ClickablesActive-Font */
 	color: #ffffff; /* Document-ClickablesActive-Font_Color */
 	/* Document-ClickablesActive-Background */
-	background-color: #666666; /* Document-ClickablesActive-Background_Color */
-	background-image: url(images/repeatx/greyEdge4.png); /* Document-ClickablesActive-Background_Image */
+	background-color: #808d8f; /* Document-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/brightEdge2.png); /* Document-ClickablesActive-Background_Image */
 	background-position: top left; /* Document-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
     }
@@ -1791,12 +1791,22 @@ body.wm_graphite {
         color: #ffffff; /* Document-ClickablesHover-Font_Color */
     }
     .wm_graphite .dojoxPortlet div.dijitTitlePaneTitle .dojoxPortletIcon {
-        background-color: white;
+	background-image: url(images/dialogIconsGray.png) !important; /* Dialogs-Titlebar_Icons */
         border-color: #333333;
-        margin-left: 5px;
+	width: 16px;
+        margin-left: 1px;
+    }
+    .wm_graphite .dojoxPortlet div.dijitTitlePaneTitle .dojoxPortletIcon.dojoxCloseNode {
+	background-position: 0px 0px; 
+    }
+    .wm_graphite .dojoxPortlet div.dijitTitlePaneTitle .dojoxPortletIcon.dojoxArrowDown {
+	margin-top: 1px;
+	background-position: -16px; /* Dialogs-Titlebar_MinifyIconWidth */
+    }
+    .wm_graphite .dojoxPortlet div.dijitTitlePaneTitle.dijitClosed .dojoxPortletIcon.dojoxArrowDown {
+	background-position: -32px; /* Dialogs-Titlebar_MaxifyIconWidth */
     }
 }
-@media screen { /* MainContent-Level */ 
   /**************************************************************************************************
    * TYPE:        Main document-level border
    *
@@ -1819,7 +1829,7 @@ body.wm_graphite {
     color: #000000; /* MainContent-Styles-Font_Color */
     font-weight: normal; /* MainContent-Styles-Font_Weight */
     /* MainContent-Styles-Background */
-    background-color: #dddddd; /* MainContent-Styles-Background_Color */
+    background-color: #ffffff; /* MainContent-Styles-Background_Color */
     background-image: url(images/repeatx/brightEdge3.png); /* MainContent-Styles-Background_Image */
     background-position: top left; /* MainContent-Styles-Background_Image-Position */
     background-repeat: repeat-x; /* MainContent-Styles-Background_Image-Repeat */
@@ -1839,8 +1849,8 @@ body.wm_graphite {
 	color: #ffffff; /* MainContent-ClickablesActive-Font_Color */
 	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
 	/* MainContent-ClickablesActive-Background */
-	background-color: #666666; /* MainContent-ClickablesActive-Background_Color */
-	background-image: url(images/repeatx/greyEdge4.png); /* MainContent-ClickablesActive-Background_Image */
+	background-color: #769b9f; /* MainContent-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/brightEdge2.png); /* MainContent-ClickablesActive-Background_Image */
 	background-position: top left; /* MainContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
 	/* MainContent-ClickablesDefault-BorderStyle_Radius */
@@ -1856,7 +1866,7 @@ body.wm_graphite {
 	font-family: Arial; /* MainContent-ClickablesDefault-Font_Family */
 	font-size: 10pt; /* MainContent-ClickablesDefault-Font_TextSize */
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #444444; /* MainContent-ClickablesDefault-Background_Color */
+	background-color: #807e7e; /* MainContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyEdge3.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
@@ -1870,7 +1880,7 @@ body.wm_graphite {
 	/* MainContent-ClickablesHover-Font */
 	color: #ffffff; /* MainContent-ClickablesHover-Font_Color */
 	/* MainContent-ClickablesHover-Background */
-	background-color: #555555; /* MainContent-ClickablesHover-Background_Color */
+	background-color: #b5b3b3; /* MainContent-ClickablesHover-Background_Color */
 	background-image: url(images/repeatx/greyEdge4.png); /* MainContent-ClickablesHover-Background_Image */
 	background-position: top left; /* MainContent-ClickablesHover-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesHover-Background_Image-Repeat */
@@ -1884,8 +1894,8 @@ body.wm_graphite {
     font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
     color: #ffffff; /* MainContent-ClickablesActive-Font_Color */
     /* MainContent-ClickablesActive-Background */
-    background-color: #666666; /* MainContent-ClickablesActive-Background_Color */
-    background-image: url(images/repeatx/greyEdge4.png); /* MainContent-ClickablesActive-Background_Image */
+    background-color: #769b9f; /* MainContent-ClickablesActive-Background_Color */
+    background-image: url(images/repeatx/brightEdge2.png); /* MainContent-ClickablesActive-Background_Image */
     background-position: top left; /* MainContent-ClickablesActive-Background_Image-Position */
     background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
 }
@@ -1897,7 +1907,7 @@ body.wm_graphite {
 	color: #FFFFFF; /* MainContent-ClickablesDefault-Font_Color */
 	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #444444; /* MainContent-ClickablesDefault-Background_Color */
+	background-color: #807e7e; /* MainContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyEdge3.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
@@ -1906,7 +1916,7 @@ body.wm_graphite {
 	/* MainContent-ClickablesHover-Font */
 	color: #ffffff; /* MainContent-ClickablesHover-Font_Color */
 	/* MainContent-ClickablesHover-Background */
-	background-color: #555555; /* MainContent-ClickablesHover-Background_Color */
+	background-color: #b5b3b3; /* MainContent-ClickablesHover-Background_Color */
 	background-image: url(images/repeatx/greyEdge4.png); /* MainContent-ClickablesHover-Background_Image */
 	background-position: top left; /* MainContent-ClickablesHover-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesHover-Background_Image-Repeat */
@@ -1918,8 +1928,8 @@ body.wm_graphite {
 	/* MainContent-ClickablesActive-Font */
 	color: #ffffff; /* MainContent-ClickablesActive-Font_Color */
 	/* MainContent-ClickablesActive-Background */
-	background-color: #666666; /* MainContent-ClickablesActive-Background_Color */
-	background-image: url(images/repeatx/greyEdge4.png); /* MainContent-ClickablesActive-Background_Image */
+	background-color: #769b9f; /* MainContent-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/brightEdge2.png); /* MainContent-ClickablesActive-Background_Image */
 	background-position: top left; /* MainContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
     }
@@ -1963,8 +1973,6 @@ body.wm_graphite {
     .wm_graphite .MainContent .dojoxPortlet div.dijitTitlePaneTitle-hover .dijitTitlePaneTextNode {
         color: #FFFFFF; /* MainContentClickablesHover-Font_Color */
     }
-}
-@media screen { /* EmphasizedContent-Level */ 
 .wm_graphite .EmphasizedContent {
     /* EmphasizedContent-Styles-Border */
     -moz-border-radius: 12px; /* EmphasizedContent-Styles-BorderStyle_Radius */
@@ -1982,7 +1990,7 @@ body.wm_graphite {
     color: #000000; /* EmphasizedContent-Styles-Font_Color */
     font-weight: normal; /* EmphasizedContent-Styles-Font_Weight */
     /* EmphasizedContent-Styles-Background */
-    background-color: #999999; /* EmphasizedContent-Styles-Background_Color */
+    background-color: #c5cdce; /* EmphasizedContent-Styles-Background_Color */
     background-image: url(images/repeatx/brightEdge0.png); /* EmphasizedContent-Styles-Background_Image */
     background-position: top left; /* EmphasizedContent-Styles-Background_Image-Position */
     background-repeat: repeat-x; /* EmphasizedContent-Styles-Background_Image-Repeat */
@@ -2002,8 +2010,8 @@ body.wm_graphite {
 	color: #ffffff; /* EmphasizedContent-ClickablesActive-Font_Color */
 	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
 	/* EmphasizedContent-ClickablesActive-Background */
-	background-color: #666666; /* EmphasizedContent-ClickablesActive-Background_Color */
-	background-image: url(images/repeatx/greyEdge4.png); /* EmphasizedContent-ClickablesActive-Background_Image */
+	background-color: #35646a; /* EmphasizedContent-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/brightEdge2.png); /* EmphasizedContent-ClickablesActive-Background_Image */
 	background-position: top left; /* EmphasizedContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesActive-Background_Image-Repeat */
 	/* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
@@ -2019,7 +2027,7 @@ body.wm_graphite {
 	font-family: Arial; /* EmphasizedContent-ClickablesDefault-Font_Family */
 	font-size: 10pt; /* EmphasizedContent-ClickablesDefault-Font_TextSize */
 	/* EmphasizedContent-ClickablesDefault-Background */
-	background-color: #444444; /* EmphasizedContent-ClickablesDefault-Background_Color */
+	background-color: #868484; /* EmphasizedContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyEdge3.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
@@ -2047,8 +2055,8 @@ body.wm_graphite {
     font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
     color: #ffffff; /* EmphasizedContent-ClickablesActive-Font_Color */
     /* EmphasizedContent-ClickablesActive-Background */
-    background-color: #666666; /* EmphasizedContent-ClickablesActive-Background_Color */
-    background-image: url(images/repeatx/greyEdge4.png); /* EmphasizedContent-ClickablesActive-Background_Image */
+    background-color: #35646a; /* EmphasizedContent-ClickablesActive-Background_Color */
+    background-image: url(images/repeatx/brightEdge2.png); /* EmphasizedContent-ClickablesActive-Background_Image */
     background-position: top left; /* EmphasizedContent-ClickablesActive-Background_Image-Position */
     background-repeat: repeat-x; /* EmphasizedContent-ClickablesActive-Background_Image-Repeat */
 }
@@ -2060,7 +2068,7 @@ body.wm_graphite {
 	color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
 	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
 	/* EmphasizedContent-ClickablesDefault-Background */
-	background-color: #444444; /* EmphasizedContent-ClickablesDefault-Background_Color */
+	background-color: #868484; /* EmphasizedContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyEdge3.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
@@ -2081,8 +2089,8 @@ body.wm_graphite {
 	/* EmphasizedContent-ClickablesActive-Font */
 	color: #ffffff; /* EmphasizedContent-ClickablesActive-Font_Color */
 	/* EmphasizedContent-ClickablesActive-Background */
-	background-color: #666666; /* EmphasizedContent-ClickablesActive-Background_Color */
-	background-image: url(images/repeatx/greyEdge4.png); /* EmphasizedContent-ClickablesActive-Background_Image */
+	background-color: #35646a; /* EmphasizedContent-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/brightEdge2.png); /* EmphasizedContent-ClickablesActive-Background_Image */
 	background-position: top left; /* EmphasizedContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesActive-Background_Image-Repeat */
     }
@@ -2103,8 +2111,8 @@ body.wm_graphite {
         color: #ffffff; /* EmphasizedContent-ClickablesActive-Font_Color */
         font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
         /* EmphasizedContent-ClickablesDefault-Background */
-        background-color: #666666; /* EmphasizedContent-ClickablesActive-Background_Color */
-        background-image: url(images/repeatx/greyEdge4.png); /* EmphasizedContent-ClickablesActive-Background_Image */
+        background-color: #35646a; /* EmphasizedContent-ClickablesActive-Background_Color */
+        background-image: url(images/repeatx/brightEdge2.png); /* EmphasizedContent-ClickablesActive-Background_Image */
         background-position: top left; /* EmphasizedContent-ClickablesActive-Background_Image-Position */
         background-repeat: repeat-x; /* EmphasizedContent-ClickablesActive-Background_Image-Repeat */
     }
@@ -2126,8 +2134,6 @@ body.wm_graphite {
     .wm_graphite .EmphasizedContent .dojoxPortlet div.dijitTitlePaneTitle-hover .dijitTitlePaneTextNode {
         color: #ffffff; /* EmphasizedContent-ClickablesHover-Font_Color */
     }
-}
-@media screen { /* HeaderContent-Level */ 
 .wm_graphite .HeaderContent {
     /* HeaderContent-Styles-Border */
     -moz-border-radius: 8px; /* HeaderContent-Styles-BorderStyle_Radius */
@@ -2145,7 +2151,7 @@ body.wm_graphite {
     color: #ffffff; /* HeaderContent-Styles-Font_Color */
     font-weight: normal; /* HeaderContent-Styles-Font_Weight */
     /* HeaderContent-Styles-Background */
-    background-color: #444444; /* HeaderContent-Styles-Background_Color */
+    background-color: #555555; /* HeaderContent-Styles-Background_Color */
     background-image: url(images/repeatx/brightEdge0.png); /* HeaderContent-Styles-Background_Image */
     background-position: top left; /* HeaderContent-Styles-Background_Image-Position */
     background-repeat: repeat-x; /* HeaderContent-Styles-Background_Image-Repeat */
@@ -2165,7 +2171,7 @@ body.wm_graphite {
 	color: #000000; /* HeaderContent-ClickablesActive-Font_Color */
 	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
 	/* HeaderContent-ClickablesActive-Background */
-	background-color: #ffffff; /* HeaderContent-ClickablesActive-Background_Color */
+	background-color: #a6bee6; /* HeaderContent-ClickablesActive-Background_Color */
 	background-image: url(images/repeatx/greyEdge2.png); /* HeaderContent-ClickablesActive-Background_Image */
 	background-position: top left; /* HeaderContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
@@ -2210,7 +2216,7 @@ body.wm_graphite {
     font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
     color: #000000; /* HeaderContent-ClickablesActive-Font_Color */
     /* HeaderContent-ClickablesActive-Background */
-    background-color: #ffffff; /* HeaderContent-ClickablesActive-Background_Color */
+    background-color: #a6bee6; /* HeaderContent-ClickablesActive-Background_Color */
     background-image: url(images/repeatx/greyEdge2.png); /* HeaderContent-ClickablesActive-Background_Image */
     background-position: top left; /* HeaderContent-ClickablesActive-Background_Image-Position */
     background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
@@ -2244,7 +2250,7 @@ body.wm_graphite {
 	/* HeaderContent-ClickablesActive-Font */
 	color: #000000; /* HeaderContent-ClickablesActive-Font_Color */
 	/* HeaderContent-ClickablesActive-Background */
-	background-color: #ffffff; /* HeaderContent-ClickablesActive-Background_Color */
+	background-color: #a6bee6; /* HeaderContent-ClickablesActive-Background_Color */
 	background-image: url(images/repeatx/greyEdge2.png); /* HeaderContent-ClickablesActive-Background_Image */
 	background-position: top left; /* HeaderContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
@@ -2266,7 +2272,7 @@ body.wm_graphite {
         color: #000000; /* HeaderContent-ClickablesActive-Font_Color */
         font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
         /* HeaderContent-ClickablesDefault-Background */
-        background-color: #ffffff; /* HeaderContent-ClickablesActive-Background_Color */
+        background-color: #a6bee6; /* HeaderContent-ClickablesActive-Background_Color */
         background-image: url(images/repeatx/greyEdge2.png); /* HeaderContent-ClickablesActive-Background_Image */
         background-position: top left; /* HeaderContent-ClickablesActive-Background_Image-Position */
         background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
@@ -2289,10 +2295,9 @@ body.wm_graphite {
     .wm_graphite .HeaderContent .dojoxPortlet div.dijitTitlePaneTitle-hover .dijitTitlePaneTextNode {
         color: #000000; /* HeaderContent-ClickablesHover-Font_Color */
     }
-}
 .wm_graphite #wmMinifiedDialogPanel {
     opacity: 0.6;
-    background-color: #666666; /* Document-ClickablesActive-Background_Color */
+    background-color: #808d8f; /* Document-ClickablesActive-Background_Color */
     -moz-box-shadow: 3px 0px 3px #000000; /* wm.TabLayers-BorderStyle_UnselectedShadow */
     -webkit-box-shadow: 3px 0px 3px #000000; /* wm.TabLayers-BorderStyle_UnselectedShadow */
     box-shadow: 3px 0px 3px #000000; /* wm.TabLayers-BorderStyle_UnselectedShadow */
@@ -2351,7 +2356,7 @@ body.wm_graphite {
 	color: #000000; /* Document-EditorsDefault-Font_Color */
 	font-weight: normal; /* Document-EditorsDefault-Font_Weight */
 	/* Document-EditorsDefault-Background */
-	background-color: #888888; /* Document-EditorsDefault-Background_Color */
+	background-color: #bcb9b9; /* Document-EditorsDefault-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* Document-EditorsDefault-Background_Image */
 	background-position: top left; /* Document-EditorsDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-EditorsDefault-Background_Image-Repeat */
@@ -2365,7 +2370,7 @@ body.wm_graphite {
 	color: #FFFFFF; /* MainContent-ClickablesDefault-Font_Color */
 	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #444444; /* MainContent-ClickablesDefault-Background_Color */
+	background-color: #807e7e; /* MainContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyEdge3.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
@@ -2377,7 +2382,7 @@ body.wm_graphite {
 	color: #000000; /* MainContent-EditorsDefault-Font_Color */
 	font-weight: normal; /* MainContent-EditorsDefault-Font_Weight */
 	/* MainContent-EditorsDefault-Background */
-	background-color: #888888; /* MainContent-EditorsDefault-Background_Color */
+	background-color: #d0cdcd; /* MainContent-EditorsDefault-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* MainContent-EditorsDefault-Background_Image */
 	background-position: top left; /* MainContent-EditorsDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-EditorsDefault-Background_Image-Repeat */
@@ -2391,7 +2396,7 @@ body.wm_graphite {
 	color: #FFFFFF; /* EmphasizedContent-ClickablesDefault-Font_Color */
 	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
 	/* EmphasizedContent-ClickablesDefault-Background */
-	background-color: #444444; /* EmphasizedContent-ClickablesDefault-Background_Color */
+	background-color: #868484; /* EmphasizedContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyEdge3.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
@@ -2429,7 +2434,7 @@ body.wm_graphite {
 	color: #000000; /* HeaderContent-EditorsDefault-Font_Color */
 	font-weight: normal; /* HeaderContent-EditorsDefault-Font_Weight */
 	/* HeaderContent-EditorsDefault-Background */
-	background-color: #888888; /* HeaderContent-EditorsDefault-Background_Color */
+	background-color: #c6c1c1; /* HeaderContent-EditorsDefault-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-EditorsDefault-Background_Image */
 	background-position: top left; /* HeaderContent-EditorsDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-EditorsDefault-Background_Image-Repeat */
