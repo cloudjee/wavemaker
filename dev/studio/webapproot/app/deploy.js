@@ -151,7 +151,7 @@ Studio.extend({
 	//=====================================================================
 	getImportProjectDialog: function() {
 	  if (!this.importProjectDialog) {
-	      this.importProjectDialog = new wm.PageDialog({owner: studio, pageName: "ImportFile", width: "500px", height: "300px", hideControls: true, title: "Import Projects", modal: false});
+	      this.importProjectDialog = new wm.PageDialog({owner: studio, pageName: "ImportFile", width: "500px", height: "120px", hideControls: true, title: "Import Projects", modal: false});
 	  }
 	    return this.importProjectDialog;
 	},

@@ -411,11 +411,13 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
     },
     */
     reset: function() {
+/*
         var data = this.variable.getData();
         for (var i = 0; i < data.length; i++) {
             var d = data[i];
             this.dijit.removeFile(d.name);
         }
+	*/
         this.variable.setData([]);
         this._variable.setData([]);
         this._uploadedVariable.setData([]);
@@ -589,6 +591,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
 
         }
         */
+	this.onChange();
         wm.job(this.getRuntimeId() + ": upload()", 100, dojo.hitch(this, "upload"));
     },
     getHtmlForItem: function(d) {

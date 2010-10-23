@@ -20,44 +20,42 @@ ImportFile.widgets = {
     layoutBox1: ["wm.Layout", {layoutKind: "top-to-bottom", width: "100%", height: "100%", _classes: ["wm-darksnazzy"]}, {}, {
 	dialog: ["wm.Panel", {layoutKind: "top-to-bottom",  width: "100%", height: "100%", border: "10", borderColor: "#424959"}, {}, {
 	    panel: ["wm.Panel", {_classes: ["wm_Padding_16px"], 
-				 layoutKind: "top-to-bottom", 
+				 layoutKind: "left-to-right", 
 				 width: "100%", 
 				 height: "100%", 
 				 padding: "16",
 				 horizontalAlign: "left", 
 				 verticalAlign: "top"}, {}, {
-		panel1: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "40px", verticalAlign: "top", horizontalAlign: "left"},{}, {
-		    fileUploader: ["wm.DojoFileUpload", {  width: "100px",
-							   height: "32px",
-							   useList: false,
-							   buttonCaption: "Select Zipfile",
-							   service: "deploymentService",
-							   operation: "uploadProjectZipFile"},
-				   {onSuccess: "selectLastItem"}],
-		    openButton: ["wm.Button", { caption: "Open Project",
-						height: "32px",
-						padding: "0",
-						margin: "0,0,0,20",
-						width: "120px"},
-				 {onclick: "openProject"},
-				 {
-				      binding: ["wm.Binding", {}, {}, {
-					  wire: ["wm.Wire", {"targetProperty":"disabled", expression: "!${list.selectedItem.path}"}, {}]
-				      }]
+					 fileUploader: ["wm.DojoFileUpload", {  width: "100px",
+										height: "32px",
+										margin: "2",
+										useList: false,
+										buttonCaption: "Select Zipfile",
+										service: "deploymentService",
+										operation: "uploadProjectZipFile"},
+							{onChange: "onChange"}],
+				     filename: ["wm.Text", {width: "100%",
+							    height: "32px",
+							    disabled: true,
+							    caption: "",
+							   },{}, {
+							       binding: ["wm.Binding", {}, {}, {
+								   wire: ["wm.Wire", {"targetProperty":"dataValue", source: "fileUploader.variable.name"}, {}]
+							       }]
+							   }],
+					 openButton: ["wm.Button", { caption: "Open Project",
+								     height: "32px",
+								     padding: "0",
+								     margin: "2",
+								     width: "120px"},
+						      {onclick: "openProject"},
+						      {
+							  binding: ["wm.Binding", {}, {}, {
+							      wire: ["wm.Wire", {"targetProperty":"disabled", expression: "!${filename.dataValue}"}, {}]
+							  }]
+						      }]
+
 				 }]
-		}],
-		list: ["wm.List", {width: "100%",
-				   height: "100%",
-				   dataFields: "name",
-				   headerVisible: false,
-				   border: "1",
-				   borderColor: "black"
-				  },{}, {
-				      binding: ["wm.Binding", {}, {}, {
-					  wire: ["wm.Wire", {"targetProperty":"dataSet", source: "fileUploader.variable"}, {}]
-				      }]
-				  }]
-	    }]
 	}]
     }]
 }

@@ -20,15 +20,19 @@ dojo.provide("wm.studio.pages.ImportFile.ImportFile");
 
 dojo.declare("ImportFile", wm.Page, {
     start: function() {
+	this.filename.editor.set("placeHolder", "Select a zip file");
     },
     openProject: function() {
 	this.owner.dismiss();
-	studio.project.openProject(this.list.selectedItem.getData().path);
+	studio.project.openProject(this.fileUploader.variable.getData()[0].path);
     },
     selectLastItem: function() {
 	wm.onidle(this, function() {
 	    this.list.eventSelect(this.list.getItem(this.list.getCount()-1));
 	});
+    },
+    onChange: function() {
+	this.fileUploader.reset();
     },
     _end: 0
 });

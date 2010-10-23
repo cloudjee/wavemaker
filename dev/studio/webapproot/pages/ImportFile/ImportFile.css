@@ -30,10 +30,15 @@
 	border-bottom: 1px solid #363b44;
 	cursor: pointer !important;
 }
-.ImportFile input, .ImportFile form {
+.ImportFile form input, .ImportFile form {
     cursor: pointer !important;
 }
 .ImportFile .wmbutton:hover {
     background-color: silver !important;
 	background-image:url(images/wmbutton_bg.png) !important;
+}
+
+.ImportFile .wmeditor .dijitInputInner,
+.ImportFile .wmeditor .dijitPlaceHolder {
+    font-size: 18px !important;
 }
