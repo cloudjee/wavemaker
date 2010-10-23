@@ -81,7 +81,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	},
 	canSetType: function(inType) {
 		// type is locked to dataSet type if it is set
-		if (this.dataSet) {
+		if (this.dataSet && this.dataSet.type == this.type) {
 			wm.logging && console.debug(this.name, "cannot set variable type because this variable has a dataSet");
 			return;
 		}
@@ -901,7 +901,7 @@ wm.Object.extendSchema(wm.Variable, {
 	isPrimitive: { ignore: 1},
 	type: { ignore: 0, group: "common", order: 1},
 	json: { group: "data", order: 5},
-	dataSet: { readonly: 1, bindable: 1, group: "data", order: 0, defaultBindTarget: 1, isObject: true, type: "any", categoryParent: "Properties", categoryProps: {content: "dataSet", inspector: "Data"} }
+	dataSet: { readonly: 1, bindable: 1, group: "data", order: 0, defaultBindTarget: 1, isObject: true, categoryParent: "Properties", categoryProps: {content: "dataSet", inspector: "Data"} }
 });
 
 /**#@+ @design */

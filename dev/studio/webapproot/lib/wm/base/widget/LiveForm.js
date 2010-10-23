@@ -222,6 +222,8 @@ dojo.declare("wm.LiveFormBase", wm.Panel, {
 		});
 	},
 	populateDataOutput: function() {
+                if (this.dataOutput.type != this.dataSet.type)
+                    this.dataOutput.setType(this.dataSet.type);
 		var d = this.dataOutput;
 		dojo.forEach(this.getFormEditorsArray(), function(e) {
 			if (wm.isInstanceType(e, wm.LiveFormBase)) {
@@ -667,6 +669,11 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 		var data = this.dataOutput.getData();
 		if (this.liveSaving) {
 			var lv = this.liveVariable;
+
+                    // for whatever reason, the livevariable has not been properly setup
+                    if (lv.type != this.dataOutput.type) {
+			lv.setLiveSource(this.dataOutput.type);
+                    }
 			lv.setOperation(inOperation);
 			lv.sourceData.setData(this.dataOutput.getData());
 			return lv.update();
