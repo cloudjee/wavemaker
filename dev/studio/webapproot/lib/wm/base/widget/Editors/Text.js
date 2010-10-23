@@ -382,6 +382,7 @@ wm.Object.extendSchema(wm.ResizableEditor, {
 });
 
 dojo.declare("wm.Text", wm.ResizableEditor, {
+        placeHolder: "",
 	changeOnKey: false,
 	changeOnEnter: true,
 
@@ -397,6 +398,7 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 		var p = dojo.mixin(this.inherited(arguments), {
 			promptMessage: this.promptMessage,
 			invalidMessage: this.invalidMessage || "$_unset_$",
+		        placeHolder: this.placeHolder,
 			regExp: this.regExp,
 			value: this.displayValue,
 			required: this.required,
@@ -414,6 +416,11 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 	},
 	validationEnabled: function() {
 	  return (this.regExp && this.regExp != ".*") || this.required;
+	},
+        setPlaceHolder: function(inPlaceHolder) {
+	    this.placeHolder = inPlaceHolder;
+	    if (this.editor)
+		this.editor.attr("placeHolder", inPlaceHolder);
 	},
 	setPassword: function(inPassword) {
 		this.password = inPassword;
@@ -609,6 +616,7 @@ wm.Object.extendSchema(wm._TextAreaEditor, {
 });
 
 wm.Object.extendSchema(wm.Text, {
+    placeHolder: {ignore: true}, // ignoring this only for 6.2 as it needs polish, particularly if its to work with themes
     promptMessage: {group: "Labeling", order: 6},
     tooltipDisplayTime: {group: "Labeling", order: 7},
     password: {group: "editor", order: 5},
