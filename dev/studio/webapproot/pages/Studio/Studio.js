@@ -674,6 +674,28 @@ dojo.declare("Studio", wm.Page, {
 	    var newval = this.treeSearch.getDataValue();
 	    this.refreshWidgetsTree(newval);
 	},
+    resetTreeSearch: function() {
+	    this.treeSearch.setDataValue("");
+    },
+        paletteSearchChange: function(inSender) {
+	    var newval = this.paletteSearch.getDataValue();
+	    this.palette.filterNodes(new RegExp(newval ? newval.toLowerCase() : ""));
+	},
+    resetPaletteSearch: function() {
+	    this.paletteSearch.setDataValue("");
+    },
+        projectsSearchChange: function(inSender) {
+	    var newval = this.projectsSearch.getDataValue() || "";
+	    var regex = new RegExp(newval.toLowerCase());
+	    var projectNodes = this.projectsTree.root.kids;
+	    for (var i = 0; i <  projectNodes.length; i++) {
+		projectNodes[i].domNode.style.display =  (projectNodes[i].content.toLowerCase().match(regex)) ? "block" : "none";
+	    }
+	},
+    resetProjectsSearch: function() {
+	    this.projectsSearch.setDataValue("");
+    },
+
         keyboardShortcutsDialog: function() {
 	    var shortcuts = [
 		             {d: "Most common shortcuts"},

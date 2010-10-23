@@ -263,16 +263,17 @@ Studio.widgets = {
 					designerResourcesBtn: ["wm.ToolButton", {border: "0", borderColor: "#294473", margin: "0", padding: "0,6", height: "100%", width: "79px", caption: "", hint: bundleStudio.T_ResourcesTip}, {onclick: "navGotoResourcesClick"}]
 				}],
 				left: ["wm.TabLayers", {_classes: {domNode: ["wm-darksnazzy"]}, border: "0", width: "100%", height: "100%"}, {onchange: "leftTabsChange"}, {
-				    mlpal: ["wm.Layer", {_classes: {domNode: ["wm-palette"]}, caption: bundleStudio.Palette}, {}, {
+				    mlpal: ["wm.Layer", {_classes: {domNode: ["wm-palette"]}, caption: bundleStudio.Palette}, {onShow: "resetPaletteSearch"}, {
 					benchbevel6: ["wm.Bevel", {border: ""}, {}],
+					paletteSearch: ["wm.Text", {caption: "", width: "100%", placeHolder: "Find Component/Widget", padding: "2,15,2,15", changeOnKey: true, _resetButton: true}, {onchange: "paletteSearchChange"}],
 					palette: ["wm.Palette", {height: "100%", border: ""}, {}]
 					/*
 					paletteSplitter: ["wm.Splitter", {border: "0", layout: "bottom"}, {}],
 					componentPalette: ["wm.Palette", {height: "300px", border: ""}, {}]*/
 				    }],
-				    leftObjects: ["wm.Layer", {caption: bundleStudio.Model}, {}, {
+				    leftObjects: ["wm.Layer", {caption: bundleStudio.Model}, {onShow: "resetTreeSearch"}, {
 					benchbevel5: ["wm.Bevel", {border: ""}, {}],
-					treeSearch: ["wm.Text", {caption: "", width: "100%", placeHolder: "Find Component/Widget", padding: "2,15,2,15", changeOnKey: true}, {onchange: "treeSearchChange"}],
+					treeSearch: ["wm.Text", {caption: "", width: "100%", placeHolder: "Find Component/Widget", padding: "2,15,2,15", changeOnKey: true, _resetButton: true}, {onchange: "treeSearchChange"}],
 					label11: ["wm.Label", {height: "22px", width: "100%", caption: bundleStudio.Non_visual_Components, border: "", padding: "4"}, {}, {
 					    format: ["wm.DataFormatter", {}, {}]
 					}],
@@ -283,7 +284,7 @@ Studio.widgets = {
 					}],
 					widgetsTree: ["wm.Tree", {height: "100%", border: "", padding: "4,0,0,0"}, {onselect: "treeSelect"}]
 				    }],
-				    projects: ["wm.Layer", {caption: bundleStudio.Projects}, {}, {
+				    projects: ["wm.Layer", {caption: bundleStudio.Projects}, {onShow: "resetProjectsSearch"}, {
 					ptoolbar: ["wm.Panel", {height: "29px", border: "0", padding: "4,4", layoutKind: "left-to-right", imageList: "smallToolbarImageList", backgroundColor: "#959DAB"}, {}, {
 						    /*projectMorePopupBtn: ["wm.PopupButton", {width: "32px", caption: "<img src=\"images/dropArrow.png\"/>", popupWidth: "150", imageIndex: 14}, {}, {
 							newProjectItem: ["wm.Item", {imageIndex: 17, caption: "New Project..."}, {onclick: "newProjectClick"}],
@@ -306,6 +307,7 @@ Studio.widgets = {
 						    projectSettingsItem: ["wm.Item", {caption: "Settings...", imageIndex: 3}, {onclick: "projectSettingsClick"}]
 						    }]*/
 						}],
+					projectsSearch: ["wm.Text", {caption: "", width: "100%", placeHolder: "Find Project", padding: "2,15,2,15", changeOnKey: true, _resetButton: true}, {onchange: "projectsSearchChange"}],
 					projectsTree: ["wm.Tree", {height: "100%", border: "0"}, {ondblclick: "projectsTreeDblClick", oninitchildren: "projectsTreeInitChildren", onselect: "projectsTreeSelectionChange"}]
 				    }]
 				}],
@@ -480,6 +482,12 @@ Studio.widgets = {
 						        appsourceEditor: ["wm.EditArea", {width: "100%", height: "100%"}, {}]
 
 						}],
+/*
+					    appDocs: ["wm.Layer", {caption: bundleStudio.R_App_Docs}, {}, {
+							benchbevel14: ["wm.Bevel", {}, {}],
+						        appDocViewer: ["wm.Html", {width: "100%", height: "100%"}]
+						}],
+						*/
 					    logs: ["wm.Layer", {caption: bundleStudio.R_Server_Logs}, {}, {
 							benchbevel14: ["wm.Bevel", {}, {}],
 							logViewer: ["wm.PageContainer", {loadParentFirst: true, pageName: "LogViewer",  width: "100%", height: "100%"}]

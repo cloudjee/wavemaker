@@ -37,6 +37,17 @@ dojo.declare("wm.Palette", wm.Tree, {
 		this.dragger = new wm.design.Mover();
 		this.dragger.ondrop = dojo.hitch(this, "dragDrop");
 	},
+    filterNodes: function(searchRegExp, optionalNode) {
+	var kids = optionalNode ? optionalNode.kids : this.root.kids;
+	for (var i = 0; i < kids.length; i++) {
+	    if (kids[i].klass && (kids[i].klass.toLowerCase().match(searchRegExp) || kids[i].content.toLowerCase().match(searchRegExp)) || !kids[i].klass) {
+		kids[i].domNode.style.display = "block";
+		this.filterNodes(searchRegExp, kids[i]);
+	    } else {
+		kids[i].domNode.style.display = "none";
+	    }
+	}
+    },
 	mousedown: function(e) {
 		var t = this.findEventNode(e);
 		if (t) {

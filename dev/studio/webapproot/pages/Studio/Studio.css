@@ -1514,3 +1514,11 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #studio_dialog {
     z-index: 999 !important;
 }
+
+#studio_left_client .dijitTextBox {
+     -moz-border-radius: 16px; 
+     -webkit-border-radius: 16px;
+     border-radius: 16px; 
+    padding-left: 5px !important;
+    padding-right: 20px !important;
+}
