@@ -84,8 +84,18 @@ Studio.extend({
 
 	        n.component = this.page;
 	        this.page._studioTreeNode = n;
-	    this.componentsToTree(n, this.getTreeComponents(this.page.components, [wm.Control]));
-	    this.componentsToTree(n, this.getTreeComponents(this.page.components, null, [wm.Dialog]));
+
+	    var components  = this.getTreeComponents(this.page.components, [wm.Control]);
+	    var dialogs = this.getTreeComponents(this.page.components, null, [wm.Dialog]);
+
+	    var cmpCount = 0;
+	    for (cmp in components) cmpCount++;
+	    for (cmp in dialogs) cmpCount++;
+	    this.useHierarchy =  (cmpCount > 6);
+
+	    this.componentsToTree(n, components);
+	    this.componentsToTree(n, dialogs);
+	    this.useHierarchy = false;
 	},
 	appComponentsToTree: function(inTree) {
 		// app components
@@ -94,11 +104,18 @@ Studio.extend({
 	        this.application._studioTreeNode = n;
 	    this.excTypes = [wm.Query, wm.LiveView];
 		if (this.application) {
-			this.svrComps = this.application.getServerComponents();
-			this.otherComps = this.application.components;
+		    this.svrComps = this.getTreeComponents(this.application.getServerComponents(), this.excTypes);
+		    this.otherComps = this.getTreeComponents(this.application.components, this.excTypes);
+		    
+		    var cmpCount = 0;
+		    for (cmp in this.svrComps) cmpCount++;
+		    for (cmp in this.otherComps) cmpCount++;
+		    this.useHierarchy =  (cmpCount > 6);
+			
 
-			this.componentsToTree(n, this.getTreeComponents(this.svrComps, this.excTypes));
-			this.componentsToTree(n, this.getTreeComponents(this.otherComps, this.excTypes));
+		    this.componentsToTree(n, this.svrComps);
+		    this.componentsToTree(n, this.otherComps);
+		    this.useHierarchy = false;
 		}
 	},
 	addQryAndViewToTree: function(inNode) {
@@ -166,11 +183,33 @@ Studio.extend({
 			this.componentToTree(inNode, c, inType);
 	},
 	componentsToTree: function(inNode, inComponents, inType) {
-		var n = [], cn;
+	    var n = [], cn;
+	    if (!this.useHierarchy) {
 		for (cn in inComponents) { n.push(cn); }
 		n.sort();
 		for (var i=0; (cn=n[i]); i++)
-			this.componentToTree(inNode, inComponents[cn], inType);
+		    this.componentToTree(inNode, inComponents[cn], inType);
+	    } else {
+		for (cn in inComponents) { n.push(inComponents[cn]); }
+		n.sort(function(a,b) {
+		    if (a.declaredClass > b.declaredClass) return 1;
+		    if (a.declaredClass < b.declaredClass) return -1;
+		    if (a.name > b.name) return 1;
+		    if (a.name < b.name) return -1;
+		    return 0;
+		});
+		var lastClass = "";
+		var lastParent = null;
+		for (var i = 0; i < n.length; i++) {
+		    var c = n[i];
+		    if (c.declaredClass != lastClass) {
+			var img = this.getComponentImage(c);
+			lastParent = this.newTreeNode(inNode, img, c.declaredClass);
+			lastClass = c.declaredClass;
+		    }
+		    this.componentToTree(lastParent, c, inType);
+		}
+	    }
 	},
 	componentsToTree_rev: function(inNode, inComponents, inTypes, inType) {
 		var n = [], cn;
