@@ -382,6 +382,7 @@ wm.Object.extendSchema(wm.ResizableEditor, {
 });
 
 dojo.declare("wm.Text", wm.ResizableEditor, {
+        _resetButton: false,
         placeHolder: "",
 	changeOnKey: false,
 	changeOnEnter: true,
@@ -452,10 +453,31 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
     },
     */
 	_createEditor: function(inNode, inProps) {
+	    var result;
 		  if (this.validationEnabled() || this.promptMessage)
-			return new dijit.form.ValidationTextBox(this.getEditorProps(inNode, inProps));
+		      result = new dijit.form.ValidationTextBox(this.getEditorProps(inNode, inProps));
 		  else
-			return new dijit.form.TextBox(this.getEditorProps(inNode, inProps));
+		      result = new dijit.form.TextBox(this.getEditorProps(inNode, inProps));
+	    if (this._resetButton) {
+		this._resetButtonNode = document.createElement("img");
+		this._resetButtonNode.src = dojo.moduleUrl("lib.images.boolean.Signage") + "Close.png";
+		var s = this._resetButtonNode.style;
+		s.position = "absolute";
+		s.width = "16px";
+		s.height = "16px";
+		s.top = "1px";
+		s.right = "1px";
+		result.domNode.appendChild(this._resetButtonNode);
+		this.connect(this._resetButtonNode, "onclick", this, function() {
+		    this.setDataValue("");
+		});
+	    }
+	    return result;
+	},
+        destroy: function() {
+	    if (this._resetButtonNode)
+		dojo.destroy(this._resetButtonNode);
+	    this.inherited(arguments);
 	},
 	validator: function(inValue, inConstraints) {
 		var l = Number(this.maxChars);
