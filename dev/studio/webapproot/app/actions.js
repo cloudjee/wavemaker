@@ -94,26 +94,26 @@ dojo.declare("wm.ComponentTaskMixin", null, {
 dojo.declare("wm.DeleteTask", wm.ComponentTaskMixin, {
 	hint: "Delete Component",
 	constructor: function() {
-		var c = studio.selected;
-		if (!c)
+		var comp = studio.selected;
+		if (!comp)
 			return;
-		this.setComponent(c);
-		this.hint = "Delete " + c.declaredClass.split(".").pop();
-		this.clip = c.serialize({styles: true});
-		this.classType = c.declaredClass;
-		this.owner = c.owner;
-		this.isWidget = c instanceof wm.Widget;
-		this.parent = c.parent;
+		this.setComponent(comp);
+		this.hint = "Delete " + comp.declaredClass.split(".").pop();
+		this.clip = comp.serialize({styles: true});
+		this.classType = comp.declaredClass;
+		this.owner = comp.owner;
+		this.isWidget = comp instanceof wm.Widget;
+		this.parent = comp.parent;
 		this.redo();
 	},
 	cachePlacement: function() {
-		var c = this.getComponent();
+		var comp = this.getComponent();
 		// FIXME: nearly duped from code in Designer.js
-		this.originalTarget = c.parent;
-		this.originalRect = dojo.marginBox(c.domNode);
+		this.originalTarget = comp.parent;
+		this.originalRect = dojo.marginBox(comp.domNode);
 		// FIXME: PITA, find the next sibling that actually participates in layout
 	    if (this.originalTarget)
-		this.originalSibling = this.originalTarget.container && this.originalTarget.nextSibling(c);
+		this.originalSibling = this.originalTarget.container && this.originalTarget.nextSibling(comp);
 	},
 	restorePlacement: function() {
 		studio.designer.replace(this.getComponent(), this.originalTarget, this.originalRect, this.originalSibling);
