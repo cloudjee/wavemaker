@@ -629,6 +629,11 @@ dojo.declare("Studio", wm.Page, {
 
 		while (inComponent && inComponent.isParentLocked && inComponent.isParentLocked())
 			inComponent = inComponent.parent;
+
+	    if (inComponent && this.treeSearch.getDataValue()) {
+		this.treeSearch.setDataValue("");
+		this.refreshWidgetsTree();
+	    }
 		try {
 			var s = this.selected = inComponent;
 			// make sure selected widget and all ancestors are showing
@@ -664,6 +669,10 @@ dojo.declare("Studio", wm.Page, {
 			this.selectProperty()
 		else
 			this.designer.selectParent();
+	},
+        treeSearchChange: function(inSender) {
+	    var newval = this.treeSearch.getDataValue();
+	    this.refreshWidgetsTree(newval);
 	},
         keyboardShortcutsDialog: function() {
 	    var shortcuts = [
@@ -732,7 +741,6 @@ dojo.declare("Studio", wm.Page, {
 			return;
 		this.dialog.setWidth("242px");
 		this.dialog.setHeight("115px");
-		this.dialog.domNode.style.zIndex = 30;
 		this.dialog.containerNode.innerHTML = [
 			'<table class="wmWaitDialog"><tr><td>',
 				inNoThrobber ? '' : '<div class="wmWaitThrobber">&nbsp;</div>',

@@ -272,6 +272,7 @@ Studio.widgets = {
 				    }],
 				    leftObjects: ["wm.Layer", {caption: bundleStudio.Model}, {}, {
 					benchbevel5: ["wm.Bevel", {border: ""}, {}],
+					treeSearch: ["wm.Text", {caption: "", width: "100%", placeHolder: "Find Component/Widget", padding: "2,15,2,15", changeOnKey: true}, {onchange: "treeSearchChange"}],
 					label11: ["wm.Label", {height: "22px", width: "100%", caption: bundleStudio.Non_visual_Components, border: "", padding: "4"}, {}, {
 					    format: ["wm.DataFormatter", {}, {}]
 					}],

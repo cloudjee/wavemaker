@@ -33,9 +33,12 @@ Studio.extend({
 		// re-select selected component
 		this.selectInTree(this.selected);
 	},
-	refreshWidgetsTree: function() {
+	refreshWidgetsTree: function(optionalSearch) {
 		this.tree.clear();
 		this.widgetsTree.clear();
+   	        this.searchText = (optionalSearch) ? optionalSearch.toLowerCase() :  "";
+	        if (optionalSearch)
+	            this.regex = new RegExp(this.searchText);
 		if (this.application)
 			this.appComponentsToTree(this.tree);
 		if (this.page) {
@@ -88,6 +91,26 @@ Studio.extend({
 	    var components  = this.getTreeComponents(this.page.components, [wm.Control]);
 	    var dialogs = this.getTreeComponents(this.page.components, null, [wm.Dialog]);
 
+		    if (this.searchText) {
+			var _components = {};
+			for (var name in components) {
+			    var c = components[name];
+			    if (name.toLowerCase().match(this.regex)) {
+				_components[name] = c;
+			    }
+			}
+			components = _components;
+
+			var _dialogs = {};
+			for (var name in dialogs) {
+			    var c = dialogs[name];
+			    if (name.toLowerCase().match(this.regex)) {
+				_dialogs[name] = c;
+			    }
+			}
+			dialogs = _dialogs;
+		    }
+
 	    var cmpCount = 0;
 	    for (cmp in components) cmpCount++;
 	    for (cmp in dialogs) cmpCount++;
@@ -107,6 +130,27 @@ Studio.extend({
 		    this.svrComps = this.getTreeComponents(this.application.getServerComponents(), this.excTypes);
 		    this.otherComps = this.getTreeComponents(this.application.components, this.excTypes);
 		    
+		    if (this.searchText) {
+			var svrComps = {};
+			for (var i in this.svrComps) {
+			    var c = this.svrComps[i];
+			    var name = c.name;
+			    if (name.toLowerCase().match(this.regex)) {
+				svrComps[name] = c;
+			    }
+			}
+			this.svrComps = svrComps;
+
+			var otherComps = {};
+			for (var name in this.otherComps) {
+			    var c = this.otherComps[name];
+			    if (name.toLowerCase().match(this.regex)) {
+				otherComps[name] = c;
+			    }
+			}
+			this.otherComps = otherComps;
+		    }
+
 		    var cmpCount = 0;
 		    for (cmp in this.svrComps) cmpCount++;
 		    for (cmp in this.otherComps) cmpCount++;
@@ -151,8 +195,9 @@ Studio.extend({
 	widgetToTree: function(inNode, inWidget) {
 		if (inWidget) {
 		    if (inWidget.flags.notInspectable || inWidget.isParentLocked() || inWidget instanceof wm.Dialog)
-				return;
-		    var n = this.newComponentNode(inNode, inWidget);
+				return;		    
+		    // create a new node if we are displaying this widget, else pass in the parent node.  If we're in search mode, then all widgets get added to the root node
+		    var n = (this.searchText && !inWidget.name.match(this.regex)) ? inNode : this.newComponentNode(inNode, inWidget);
 		    this.subWidgetsToTree(n, inWidget);
 		}
 	},
@@ -173,9 +218,17 @@ Studio.extend({
 			var props = {};
 		    props.closed = inComponent instanceof wm.Dialog || inComponent instanceof wm.Control == false;
 			inNode = wm.fire(inComponent, "preNewComponentNode", [inNode, props]) || inNode;
-			var n = this.newComponentNode(inNode, inComponent, null, null, props);
-  		        if (inComponent instanceof wm.TypeDefinition || inComponent instanceof wm.DesignableDialog)
+		    if (this.searchText && !inComponent.name.toLowerCase().match(this.regex)) {
+			return;
+		    } else {
+			var searchText = this.searchText;
+			this.searchText = "";
+		    }
+
+		    var n = this.newComponentNode(inNode, inComponent, null, null, props);
+  		    if (inComponent instanceof wm.TypeDefinition || inComponent instanceof wm.DesignableDialog)
 			    this.subWidgetsToTree(n, inComponent);
+		    this.searchText = searchText;
 		}
 	},
 	collectionToTree: function(inNode, inCollection, inType) {
