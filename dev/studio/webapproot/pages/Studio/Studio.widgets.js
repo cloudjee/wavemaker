@@ -486,7 +486,7 @@ Studio.widgets = {
 					    appDocs: ["wm.Layer", {caption: bundleStudio.R_App_Docs}, {}, {
 							benchbevel14: ["wm.Bevel", {}, {}],
 						appdocsRibbon: ["wm.Panel", {height: "29px", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#000000"}, {}, {
-							appdocsPrintBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_Save, imageIndex: 4}, {onclick: "printAppDocsClick"}]
+							appdocsPrintBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_Print, imageIndex: 4}, {onclick: "printAppDocsClick"}]
 						}],
 
 						        appDocViewer: ["wm.Html", {width: "100%", height: "100%"}]

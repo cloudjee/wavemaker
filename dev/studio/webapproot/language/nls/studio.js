@@ -107,6 +107,7 @@
 	"R_IDE" : "IDE",
 	"R_Script" : "Script",
 	"R_Save" : "Save",
+	"R_Print" : "Print",
 	"R_Import" : "Import",
 	"R_Themes" : "Themes",
 	"R_NewTheme" : "New Theme (Copies wm_default theme)",
