@@ -103,7 +103,7 @@
 
 [ bundlePackage.Beta, bundlePackage.ColorPicker, "wm.ColorPicker", "wm.base.widget.Editors.Text", "images/wm/edit.png", "A color picker"],
 [ bundlePackage.Beta, bundlePackage.BusyButton, "wm.BusyButton", "wm.base.widget.BusyButton", "images/wm/button.png", "A button with a progress indicator"],
-[ bundlePackage.Beta, bundlePackage.Tree, "wm.Tree", "wm.base.widget.Tree", "images/wm/tree.png", "A tree control"],
+[ bundlePackage.Beta, bundlePackage.Tree, "wm.PropertyTree", "wm.base.widget.Tree", "images/wm/tree.png", "A tree control"],
 [ bundlePackage.Beta, bundlePackage.Ticker, "wm.Ticker", "wm.base.widget.Ticker", "images/wm/widget.png", "Animated scrolling panel"],
 
 [ bundlePackage.Deprecated, bundlePackage.DataGrid, "wm.DataGrid", "wm.base.widget.DataGrid", "images/wm/data.png", "A grid control for displaying lists"],

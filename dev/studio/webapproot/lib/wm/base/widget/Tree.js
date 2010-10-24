@@ -657,3 +657,112 @@ wm.expandNode = function(n, step, accel, interval) {
 	}
 	act();
 }
+
+
+/**************************************************************************************************************
+ * CLASS: wm.PropertyTree
+ * DESCRIPTION:
+ *   Takes a dataSet which is a wm.Variable or subclass that has a list.  
+ *   Each item in that list will be a node of the tree -- a child of the root node of the tree.
+ *   The "mainContentField" property indicates the field of each item to display the node.
+ *   The "propertyList" property is a comma separated list of
+ *   EXAMPLE FROM CMDB Database
+ *   dataSet: customerLiveVar
+ *   { displayValue: "customername",
+ *     childNodes: {orderses: {displayValue: "orderdate",
+ *                             childNodes: {}}}}
+ *   childNodes is a hash of as many different properties as the designer wants
+ *   LiveVariables are generated and fired by the tree to load childNode lists ondemand
+ */
+dojo.declare("wm.PropertyTree", wm.Tree, {
+    dataSet: "",
+    treeConfigJson: "",
+    _treeConfig: null,
+    init: function() {
+	this.inherited(arguments);
+	this.setConfigJson(this.treeConfigJson);
+	this.setDataSet(this.dataSet);
+    },
+    setConfigJson: function(inJson) {
+	
+	this.treeConfigJson = inJson;
+	try { 
+	    this._treeConfig = eval("(" + inJson + ")");
+	    this.buildTree();
+	} catch(e) {
+	    console.error("Json error in " + this.name + ": " + e);
+	}
+    },
+
+    setDataSet: function(inDataSet) {
+	this.dataSet = inDataSet;
+	    this.buildTree();
+    },
+    set_dataSet: function(inDataSet) {
+	// support setting dataSet via id from designer
+	if (inDataSet && !(inDataSet instanceof wm.Variable)) {
+	    var ds = this.getValueById(inDataSet);
+	    if (ds)
+		this.components.binding.addWire("", "dataSet", ds.getId());
+	} else
+	    this.setDataSet(inDataSet);
+    },
+
+    buildTree: function() {
+	this.clear();  // remove all nodes so we can rebuild
+	if (!this.dataSet || !this._treeConfig) return;
+
+	var size = this.dataSet.getCount();
+	for (var i = 0; i < size; i++) {
+	    var item = this.dataSet.getItem(i);
+	    var childProps = this._treeConfig.childNodes;
+	    var hasChild = false;
+	    for (var j in childProps) {
+		if (item.getValue(j)) {
+		    hasChild = true;
+		    break;
+		}
+	    }
+	    var node = new wm.TreeNode(this.root, {closed: true,
+						   data: item,
+						   _nodeConfig: childProps,
+						   content: item.getValue(this._treeConfig.displayValue)});
+	    if (hasChild) {
+		var blankChild = new wm.TreeNode(node, {close: true,
+							content: "_PLACEHOLDER"});
+	    }
+	}
+    },
+    buildSubTree: function(inParentNode) {
+	var childProps = inParentNode._nodeConfig;
+	for (var prop in childProps) {
+	    var variable = inParentNode.data.getValue(prop);
+	    if (variable.isList) {
+		var size = variable.getCount();
+		for (var i = 0; i < size; i++) {
+		    var item = variable.getItem(i);
+		    var node = new wm.TreeNode(inParentNode, {closed: true,
+							      data: item,
+							      _nodeConfig: childProps[prop],
+							      content: item.getValue(childProps[prop].displayValue)});
+		}
+	    } else {
+		    var node = new wm.TreeNode(inParentNode, {closed: true,
+							      data: variable,
+							      _nodeConfig: childProps[prop],
+							      content: variable.getValue(childProps[prop].displayValue)});
+	    }
+	}
+    },
+    initNodeChildren: function(inParentNode) {
+	if (inParentNode.kids.length == 1 && inParentNode.kids[0].content == "_PLACEHOLDER") {
+	    inParentNode.remove(inParentNode.kids[0]);
+	    this.buildSubTree(inParentNode);
+	}
+    },
+    _end: 0
+});
+
+wm.Object.extendSchema(wm.PropertyTree, {
+	dataSet: { readonly: true, group: "data", order: 1, bindTarget: 1, type: "wm.Variable", isList: true}
+});
