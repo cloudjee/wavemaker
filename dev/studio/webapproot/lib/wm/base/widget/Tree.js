@@ -670,7 +670,11 @@ wm.expandNode = function(n, step, accel, interval) {
  *   dataSet: customerLiveVar
  *   { displayValue: "customername",
  *     childNodes: {orderses: {displayValue: "orderdate",
- *                             childNodes: {}}}}
+ *                             childNodes: {customers: {displayValue: "customername"}}
+ *                            }
+ *                 }
+ *   }
+ *
  *   childNodes is a hash of as many different properties as the designer wants
  *   LiveVariables are generated and fired by the tree to load childNode lists ondemand
  **************************************************************************************************************/
@@ -716,13 +720,7 @@ dojo.declare("wm.PropertyTree", wm.Tree, {
 	for (var i = 0; i < size; i++) {
 	    var item = this.dataSet.getItem(i);
 	    var childProps = this._treeConfig.childNodes;
-	    var hasChild = false;
-	    for (var j in childProps) {
-		if (item._dataSchema[j]) {
-		    hasChild = true;
-		    break;
-		}
-	    }
+	    var hasChild = !wm.isEmpty(childProps);
 	    var node = new wm.TreeNode(this.root, {closed: true,
 						   data: item,
 						   _nodeConfig: childProps,
@@ -734,23 +732,34 @@ dojo.declare("wm.PropertyTree", wm.Tree, {
 	}
     },
     buildSubTree: function(inParentNode) {
-	var childProps = inParentNode._nodeConfig;
-	for (var prop in childProps) {
+	var parentChildProps = inParentNode._nodeConfig;
+	for (var prop in parentChildProps) {
 	    var variable = inParentNode.data.getValue(prop);
+	    var props = parentChildProps[prop];
+	    var childNodes = props.childNodes;
+	    var hasChild = !wm.isEmpty(childNodes);
 	    if (variable.isList) {
 		var size = variable.getCount();
 		for (var i = 0; i < size; i++) {
 		    var item = variable.getItem(i);
 		    var node = new wm.TreeNode(inParentNode, {closed: true,
 							      data: item,
-							      _nodeConfig: childProps[prop],
-							      content: item.getValue(childProps[prop].displayValue)});
+							      _nodeConfig: childNodes,
+							      content: item.getValue(props.displayValue)});
+		    if (hasChild) {
+			var blankChild = new wm.TreeNode(node, {close: true,
+								content: "_PLACEHOLDER"});
+		    }
 		}
 	    } else {
 		    var node = new wm.TreeNode(inParentNode, {closed: true,
 							      data: variable,
-							      _nodeConfig: childProps[prop],
-							      content: variable.getValue(childProps[prop].displayValue)});
+							      _nodeConfig: childNodes,
+							      content: variable.getValue(props.displayValue)});
+		if (hasChild) {
+		    var blankChild = new wm.TreeNode(node, {close: true,
+							    content: "_PLACEHOLDER"});
+		}
 	    }
 	}
     },
@@ -759,6 +768,13 @@ dojo.declare("wm.PropertyTree", wm.Tree, {
 	    inParentNode.remove(inParentNode.kids[0]);
 	    this.buildSubTree(inParentNode);
 	}
+    },
+    makePropEdit: function(inName, inValue, inDefault) {
+	switch (inName) {
+	case "treeConfigJson":
+	    return makeTextPropEdit(inName, inValue, inDefault)
+	}
+	return this.inherited(arguments);
     },
     _end: 0
 });
