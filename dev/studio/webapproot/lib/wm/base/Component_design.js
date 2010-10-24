@@ -361,6 +361,25 @@ wm.Component.extend({
 	    eventSection = "<h4>Event Handlers</h4><div style='margin-left:15px;'>" +	eventSection + "</div>";
 	    html += eventSection;
 
+	    var eventsFromSection = "";
+	    var complist = wm.listOfWidgetType(wm.Component);
+	    for (var i = 0; i < complist.length; i++) {
+		var eventBindings = complist[i].eventBindings;
+		if (!wm.isEmpty(eventBindings)) {
+		    for (evt in eventBindings) {
+			if (eventBindings[evt] == this.getId())
+			    eventsFromSection += "<li>" + complist[i].getId() + "." + evt + "</li>\n";
+		    }
+		}
+	    }
+	    if (!eventsFromSection) {
+		eventsFromSection = "No bindings";
+	    }
+	    eventsFromSection = "<h4>The following object event handlers activate this component</h4><ul  style='padding-left:0px;list-style-position: inside;margin-left: 15px;'>\n" + eventsFromSection + "</ul>";
+	    html += eventsFromSection;
+
+
+
 	    var bindingSection = "";
 	    if (this.components.binding) {
 		var wires = this.components.binding.components;
@@ -421,6 +440,7 @@ wm.Component.extend({
 			inHash[wires[i].target.getId()] = wires[i];
 		}
 	    }
+	    
 		for (var i in this.components) {
 		    this.components[i].generateBindingDescriptions(inHash,comparisonObj);
 		}
