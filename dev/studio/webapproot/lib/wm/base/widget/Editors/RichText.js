@@ -22,7 +22,7 @@ dojo.require("wm.base.widget.Editors.Text");
 
 dojo.require("dijit.Editor");
 dojo.require("dijit._editor.plugins.AlwaysShowToolbar");
-//dojo.require("dijit._editor.plugins.FontChoice");
+dojo.require("dijit._editor.plugins.FontChoice");
 dojo.require("dijit._editor.plugins.TextColor");
 dojo.require("dijit._editor.plugins.LinkDialog");
 
@@ -174,7 +174,9 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	},
 	getEditorValue: function() {
 		try {
-  		return this.inherited(arguments);
+  		    var result =  this.inherited(arguments);
+		    if (!result.match(/\>\w/)) result = "";
+		    return result;
 		} catch(e) {
 		}
 		return this.dataValue;
@@ -220,7 +222,7 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	toolbarList: {group: "toolbar", order: 5, shortname: "lists"},
 	toolbarLink: {group: "toolbar", order: 6, shortname: "link"},
 	toolbarFont: {ignore: 1},
-	//toolbarFont: {group: "toolbar", order: 7, shortname: "font"},
+     toolbarFont: {group: "toolbar", order: 7, shortname: "font"},
 	toolbarColor: {group: "toolbar", order: 8, shortname: "color"}
  });
  
