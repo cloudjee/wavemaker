@@ -673,7 +673,7 @@ wm.expandNode = function(n, step, accel, interval) {
  *                             childNodes: {}}}}
  *   childNodes is a hash of as many different properties as the designer wants
  *   LiveVariables are generated and fired by the tree to load childNode lists ondemand
- */
+ **************************************************************************************************************/
 dojo.declare("wm.PropertyTree", wm.Tree, {
     dataSet: "",
     treeConfigJson: "",
@@ -718,7 +718,7 @@ dojo.declare("wm.PropertyTree", wm.Tree, {
 	    var childProps = this._treeConfig.childNodes;
 	    var hasChild = false;
 	    for (var j in childProps) {
-		if (item.getValue(j)) {
+		if (item._dataSchema[j]) {
 		    hasChild = true;
 		    break;
 		}
