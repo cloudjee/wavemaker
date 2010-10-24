@@ -459,6 +459,7 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 		  else
 		      result = new dijit.form.TextBox(this.getEditorProps(inNode, inProps));
 	    if (this._resetButton) {
+		dojo.addClass(this.domNode, "wmreseteditor");
 		this._resetButtonNode = document.createElement("img");
 		this._resetButtonNode.src = dojo.moduleUrl("lib.images.boolean.Signage") + "Close.png";
 		var s = this._resetButtonNode.style;
