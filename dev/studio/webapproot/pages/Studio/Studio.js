@@ -967,27 +967,51 @@ dojo.declare("Studio", wm.Page, {
 			this.diagnosticsPane.page.update();
 		} else if (caption == bundleStudio.R_ServerLogs) {
 		    this.logViewer.page.showLogs();
-/*
+
                 } else if (caption == bundleStudio.R_App_Docs) {
 		    this.generateAllDocumentation();
-		    */
+
 		}
 	},
-/* THIS IS UNFINISHED WORK THAT SHOULD NOT YET BE AVAILABLE
+
         generateAllDocumentation: function() {
-	    var html = "<h2>Page " + studio.project.pageName + "</h2>";
+	    
+	    var html = "<i>Note: this page is for reviewing documentation; to edit documentation you must go to the component in the model and select its documentation property</i>";
 	    var c;
-	    for (c in studio.page.components) {
-		html += "<hr/><h3>" + studio.page.components[c].toString() + "</h3>" + studio.page.components[c].documentation;
-	    }
 
 	    html += "<h2>App " + studio.application.name + "</h2>";
 	    for (c in studio.application.components) {
-		html += "<hr/><h3>" + studio.application.components[c].toString() + "</h3>" + studio.application.components[c].documentation ;
+		var comp = studio.application.components[c];
+		if (comp.documentation || comp instanceof wm.Control == false)
+		    html += "<hr/><h3>" + comp.name + " (" + comp.declaredClass + ")</h3><div style='padding-left: 15px'>" + (comp.documentation || "No Documentation") + "</div>";
 	    }	    
+
+
+	    html += "<h2>Page " + studio.project.pageName + " Non-Visual Components</h2>";
+	    for (c in studio.page.components) {
+		var comp = studio.page.components[c];
+		if (comp.documentation || comp instanceof wm.Control == false)
+		html += "<hr/><h3>" + comp.name + " (" + comp.declaredClass + ")</h3><div style='padding-left: 15px'>" + (comp.documentation || "No Documentation") + "</div>";
+	    }
+
+	    html += "<h2>Page " + studio.project.pageName + " Non-Visual Components</h2>";
+	    var widgets = wm.listOfWidgetType(wm.Control, false, true);
+	    for (var i = 0; i < widgets.length; i++) {
+		var comp = widgets[i];
+		if (comp.documentation) 
+		    html += "<hr/><h3>" + comp.name + " (" + comp.declaredClass + ")</h3><div style='padding-left: 15px'>" + comp.documentation  + "</div>";
+	    }
 	    this.appDocViewer.setHtml(html);
 	},
-	*/
+        printAppDocsClick: function(inSender) {
+	    var win = window.open("", "APIPrintout", "width=800,height=500");
+	    var doc = win.document.open("text/html");
+	    doc.write(this.appDocViewer.html);
+	    doc.write("<script>window.setTimeout(function() {window.print();}, 100);</script>");
+	    doc.close();
+	    
+
+	},
 	treeSelect: function(inSender, inNode) {
 		this.treeNodeSelect(inNode);
 		//this.select(inNode.component);

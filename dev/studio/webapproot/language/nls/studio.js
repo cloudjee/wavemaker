@@ -120,6 +120,7 @@
 	"R_Widgets" : "Widgets",
 	"R_Application" : "Application",
 	"R_Server_Logs" : "Server Logs",
+	"R_App_Docs" : "Documentation",
 	"R_Diagnostics" : "Diagnostics",
 	"R_RelativeURL" : "Relative URL:",
 	"R_UploadFile" : "Upload a File",

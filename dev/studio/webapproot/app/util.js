@@ -23,10 +23,14 @@ dojo.provide("wm.studio.app.util");
 
 // produce a name ordered list of widgets of a given class,
 // don't include widgets that are owned by Composite
-wm.listOfWidgetType = function(inType, inIgnoreBuiltin) {
+wm.listOfWidgetType = function(inType, inIgnoreBuiltin, ignoreDialogs) {
     var list = [];
-    var owners = wm.listComponents([studio.application, studio.page], wm.Dialog, false);
-    owners.push(studio.page);
+    if (ignoreDialogs) {
+	var owners = [studio.page];
+    } else {
+	var owners = wm.listComponents([studio.application, studio.page], wm.Dialog, false);
+	owners.push(studio.page);
+    }
     for (var i = 0; i < owners.length; i++) {
 	var root = owners[i] instanceof wm.Page ? owners[i].root : owners[i];
 	if (root) {

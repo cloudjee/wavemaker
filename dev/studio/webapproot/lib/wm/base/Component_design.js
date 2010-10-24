@@ -323,58 +323,75 @@ wm.Component.extend({
 		return "on" + name +  n.slice(2, 3).toUpperCase() + n.slice(3);
 	},
         generateDocumentation: function() {
-	    var html = "<h2>Generated Documentation</h2>\n";
-	    html += "<h3>Event Handlers</h3><div style='margin-left: 40px;'>";
+	    var html = "<i>Generated Documentation</i>\n";
+	    var eventSection = "";
 	    var props = this.listProperties();
 	    for (var i in props)
 		if (props[i].isEvent) {
 		    var propvalue = this.getProp(i);
-		    if (!propvalue) {
-			html += "<h4>" + i + "</h4>\nUnused<br/>";
-		    } else {
-			html += "<h4>" + i + "</h4>\n executes ";
+		    if (propvalue) {
+			eventSection += "<h4>" + i + "</h4>\n executes ";
 			var comp = this.owner.components[propvalue] || this.owner.getValue(propvalue);
 			if (comp) {
-			    if (wm.isInstanceType(comp, wm.ServiceCall)) {
-				html += propvalue + " (" + comp.declaredClass + ")<ul><li><b>Operation</b>: " + comp.operation;
+			    if (comp instanceof wm.ServiceCall || comp instanceof wm.ServiceVariable) {
+				eventSection += propvalue + " (" + comp.declaredClass + ")";
+				eventSection += "<ul style='padding-left:0px;list-style-position: inside;margin-left: 15px;'>";
+				eventSection += "<li><b>Type:</b>: " + comp.type + "</li>";
+				eventSection += "<li><b>Operation</b>: " + comp.operation + "</li>";
 				var params = comp.input.getData();
 				for (var j in params) {
 				    if (wm.isInstanceType(params[j], wm.Component)) {
-					html += "<li><b>" + j + "</b>:" + params[j].toString() + "</li>";
+					eventSection += "<li><b>" + j + "</b>:" + params[j].toString() + "</li>";
 				    } else {
-					html += "<li><b>" + j + "</b>:" + params[j] + "</li>";
+					eventSection += "<li><b>" + j + "</b>:" + params[j] + "</li>";
 				    }
 				}
-				html += "</ul>";
+				eventSection += "</ul>";
 			    } else if (wm.isInstanceType(comp, wm.Dialog)) {
-				html += propvalue + " (" + comp.declaredClass + ")";
+				eventSection += propvalue + " (" + comp.declaredClass + ")";
 			    }
 			} else {
-			    html += propvalue + " (Function)";
+			    eventSection += propvalue + " (Function)";
 			}
 		    }
 		}
-	    html += "</div>";
-
-	    if (this.components.binding) {
-		html += "<h3>This object has the following bindings</h3><div style='margin-left: 40px;'><ul>\n";
-		var wires = this.components.binding.components;
-		for (var i in wires) {
-		    html += "<li><b>this." + wires[i].targetProperty + "</b> is bound to <i>" + (wires[i].source || wires[i].expression) + "</i></li>\n";
-		}
-		html += "</ul></div>";
+	    if (!eventSection) {
+		eventSection = "No event handlers";
 	    }
+	    eventSection = "<h4>Event Handlers</h4><div style='margin-left:15px;'>" +	eventSection + "</div>";
+	    html += eventSection;
 
-	    html += "<h3>The following objects are bound to this</h3><div style='margin-left: 40px;'> <ul>\n";
-	    
+	    var bindingSection = "";
+	    if (this.components.binding) {
+		var wires = this.components.binding.components;
+		if (!wm.isEmpty(wires)) {
+		    for (var i in wires) {
+			bindingSection += "<li><b>this." + wires[i].targetProperty + "</b> is bound to <i>" + (wires[i].source || wires[i].expression) + "</i></li>\n";
+		    }
+		}
+	    } 
+	    if (!bindingSection) {
+		bindingSection += "No bindings";
+	    }
+	    bindingSection = "<h4>This object has the following bindings</h4><ul  style='padding-left:0px;list-style-position: inside;margin-left: 15px;'>\n" + bindingSection + "</ul>";
+	    html += bindingSection
+
+	    var bindToSection = "";
 	    var bindingHash = {};
 	    this.owner.generateBindingDescriptions(bindingHash,this);
-	    var wire;
-	    for (var i in bindingHash) {
-		wire = bindingHash[i];
-		html += "<li>" + wire.target.getId() + "." + wire.targetProperty + " is bound to <i>" + (wire.source || wire.expression) + "</i></li>\n";
+	    if (!wm.isEmpty(bindingHash)) {
+		var wire;
+		for (var i in bindingHash) {
+		    wire = bindingHash[i];
+		    bindToSection += "<li>" + wire.target.getId() + "." + wire.targetProperty + " is bound to <i>" + (wire.source || wire.expression) + "</i></li>\n";
+		}
 	    }
-	    html += "</ul></div>";
+	    if (!bindToSection) {
+		bindToSection = "No bindings";
+	    }
+	    bindToSection = "<h4>The following objects are bound to this</h4><ul  style='padding-left:0px;list-style-position: inside;margin-left: 15px;'>\n" + bindToSection + "</ul>";
+	    html += bindToSection;
+	    console.log(html);
 	    return html;
 	},
         generateBindingDescriptions: function(inHash, comparisonObj) {
@@ -387,7 +404,7 @@ wm.Component.extend({
 			componentIds.push(source.replace(/\.[^\.]*/,""));
 		    } else {
 			var expression = wires[i].expression;
-			var ids = expression.match(/\{(.*?)\}/g);
+			var ids = expression.match(/\{(.*?)\}/g) || [];
 			for (var j = 0; j < ids.length; j++) {
 			    ids[j] = ids[j].substring(1,ids[j].length-1)
 			    var idparts = ids[j].split(/\./);

@@ -197,7 +197,7 @@ Studio.widgets = {
 							    }
 						      ]
 						     },  {},{}],
-			  /*
+			  /* The old menu bar
 				nspcr5: ["wm.Spacer", {width: "15px"}, {}],
 				projectPopupBtn: ["wm.PopupButton", {width: "55px", caption: "<span style=\"font-weight:bold;padding:4px;\">File</span><img src=\"images/dropArrow.png\"/> ", popupWidth: "180", hint: "Project Administration", imageList: "smallToolbarImageList", height: "29px"}, {}, {
 					newProjectItem: ["wm.Item", {caption: "New Project...", imageIndex: 17}, {onclick: "newProjectClick"}],
@@ -404,7 +404,7 @@ Studio.widgets = {
 		resourcesTab: ["wm.Layer", {caption: bundleStudio.Resources}, {}, {
 		                    resourcesPage: ["wm.PageContainer", {loadParentFirst: true, pageName: "ResourceManager", height: "100%", width: "100%"}, {}]
 				}],
-				sourceTab: ["wm.Layer", {_classes: {domNode: ["wm-darksnazzy"]}, caption: bundleStudio.R_IDE}, {}, {
+		sourceTab: ["wm.Layer", {_classes: {domNode: ["wm-darksnazzy"]}, caption: bundleStudio.R_IDE}, {}, {
 				    /*
 					sourceRibbon: ["wm.Panel", {height: "29px", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4"}, {}, {
 						sourcePageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Save", imageIndex: 8}, {onclick: "saveProjectClick"}],
@@ -482,12 +482,16 @@ Studio.widgets = {
 						        appsourceEditor: ["wm.EditArea", {width: "100%", height: "100%"}, {}]
 
 						}],
-/*
+
 					    appDocs: ["wm.Layer", {caption: bundleStudio.R_App_Docs}, {}, {
 							benchbevel14: ["wm.Bevel", {}, {}],
+						appdocsRibbon: ["wm.Panel", {height: "29px", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#000000"}, {}, {
+							appdocsPrintBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_Save, imageIndex: 4}, {onclick: "printAppDocsClick"}]
+						}],
+
 						        appDocViewer: ["wm.Html", {width: "100%", height: "100%"}]
 						}],
-						*/
+
 					    logs: ["wm.Layer", {caption: bundleStudio.R_Server_Logs}, {}, {
 							benchbevel14: ["wm.Bevel", {}, {}],
 							logViewer: ["wm.PageContainer", {loadParentFirst: true, pageName: "LogViewer",  width: "100%", height: "100%"}]
