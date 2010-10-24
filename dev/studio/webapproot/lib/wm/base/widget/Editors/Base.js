@@ -546,7 +546,7 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 	    */
 		this.editorNode = this.editor.domNode;
 		this.editorNode.style.margin = "0"; // failure to explicitly set these is throwing off my bounds calculations
-	        this.editorNode.style.padding = (this._resetButton) ? "0px 20px 0px 5px" : "0"; // and causes it to stretch wider than it should by a few pixels
+	        this.editorNode.style.padding = "0";
 	    this.stopTimerWithName("CreateDijit", this.declaredClass);
 		// If using html widgets and replacing them with dijits use  "if (this.editor && this.editor.declaredClass) "
 		if (this.editor) {
@@ -634,7 +634,6 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 		    }
 		    labelWidth = Math.round(labelWidth);
 		    editorWidth = Math.round(editorWidth);
-		    if (this._resetButton) editorWidth -= 25;
 		    var s = this.captionNode.style;
 		    var labelWidthWithSpacing = (labelWidth - ((position == "right" || position == "left") ? captionEditorSpacing : 0));
 		    labelWidthWithSpacing = (labelWidthWithSpacing) ? labelWidthWithSpacing : 0;
