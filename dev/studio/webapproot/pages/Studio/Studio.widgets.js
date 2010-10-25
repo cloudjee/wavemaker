@@ -265,7 +265,7 @@ Studio.widgets = {
 				left: ["wm.TabLayers", {_classes: {domNode: ["wm-darksnazzy"]}, border: "0", width: "100%", height: "100%"}, {onchange: "leftTabsChange"}, {
 				    mlpal: ["wm.Layer", {_classes: {domNode: ["wm-palette"]}, caption: bundleStudio.Palette}, {onShow: "resetPaletteSearch"}, {
 					benchbevel6: ["wm.Bevel", {border: ""}, {}],
-					paletteSearch: ["wm.Text", {caption: "", width: "100%", placeHolder: "Find Component/Widget", padding: "3,5,3,5", changeOnKey: true, _resetButton: true}, {onchange: "paletteSearchChange"}],
+					paletteSearch: ["wm.Text", {caption: "", width: "100%", placeHolder: "Find Component/Widget", padding: "2,5,2,5", changeOnKey: true, _resetButton: true}, {onchange: "paletteSearchChange"}],
 					benchbevel6_6: ["wm.Bevel", {border: ""}, {}],
 					palette: ["wm.Palette", {height: "100%", border: ""}, {}]
 					/*
@@ -274,7 +274,7 @@ Studio.widgets = {
 				    }],
 				    leftObjects: ["wm.Layer", {caption: bundleStudio.Model}, {onShow: "resetTreeSearch"}, {
 					benchbevel5: ["wm.Bevel", {border: ""}, {}],
-					treeSearch: ["wm.Text", {caption: "", width: "100%", placeHolder: "Find Component/Widget", padding: "3,5,3,5", changeOnKey: true, _resetButton: true}, {onchange: "treeSearchChange"}],
+					treeSearch: ["wm.Text", {caption: "", width: "100%", placeHolder: "Find Component/Widget", padding: "2,5,2,5", changeOnKey: true, _resetButton: true}, {onchange: "treeSearchChange"}],
 					benchbevel5_5: ["wm.Bevel", {border: ""}, {}],
 					label11: ["wm.Label", {height: "22px", width: "100%", caption: bundleStudio.Non_visual_Components, border: "", padding: "4"}, {}, {
 					    format: ["wm.DataFormatter", {}, {}]
@@ -309,7 +309,7 @@ Studio.widgets = {
 						    projectSettingsItem: ["wm.Item", {caption: "Settings...", imageIndex: 3}, {onclick: "projectSettingsClick"}]
 						    }]*/
 						}],
-					projectsSearch: ["wm.Text", {caption: "", width: "100%", placeHolder: "Find Project", padding: "3,5,3,5", changeOnKey: true, _resetButton: true}, {onchange: "projectsSearchChange"}],
+					projectsSearch: ["wm.Text", {caption: "", width: "100%", placeHolder: "Find Project", padding: "2,5,2,5", changeOnKey: true, _resetButton: true}, {onchange: "projectsSearchChange"}],
 					benchbevel5_6: ["wm.Bevel", {border: ""}, {}],
 					projectsTree: ["wm.Tree", {height: "100%", border: "0"}, {ondblclick: "projectsTreeDblClick", oninitchildren: "projectsTreeInitChildren", onselect: "projectsTreeSelectionChange"}]
 				    }]
