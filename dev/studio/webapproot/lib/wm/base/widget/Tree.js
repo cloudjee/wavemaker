@@ -668,9 +668,9 @@ wm.expandNode = function(n, step, accel, interval) {
  *   The "propertyList" property is a comma separated list of
  *   EXAMPLE FROM CMDB Database
  *   dataSet: customerLiveVar
- *   { displayValue: "customername",
- *     childNodes: {orderses: {displayValue: "orderdate",
- *                             childNodes: {customers: {displayValue: "customername"}}
+ *   { displayField: "customername",
+ *     childNodes: {orderses: {displayField: "orderdate",
+ *                             childNodes: {customers: {displayField: "customername"}}
  *                            }
  *                 }
  *   }
@@ -680,16 +680,20 @@ wm.expandNode = function(n, step, accel, interval) {
  **************************************************************************************************************/
 dojo.declare("wm.PropertyTree", wm.Tree, {
     dataSet: "",
-    treeConfigJson: "",
+    configJson: "",
     _treeConfig: null,
+
+    selectedItem: null,  // wm.Variable that the selected item contains
+
     init: function() {
 	this.inherited(arguments);
-	this.setConfigJson(this.treeConfigJson);
+	this.setConfigJson(this.configJson);
+	this.selectedItem = new wm.Variable({name: "selectedItem", owner: this});
 	this.setDataSet(this.dataSet);
     },
     setConfigJson: function(inJson) {
 	
-	this.treeConfigJson = inJson;
+	this.configJson = inJson;
 	try { 
 	    this._treeConfig = eval("(" + inJson + ")");
 	    this.buildTree();
@@ -700,7 +704,9 @@ dojo.declare("wm.PropertyTree", wm.Tree, {
 
     setDataSet: function(inDataSet) {
 	this.dataSet = inDataSet;
-	    this.buildTree();
+	if (inDataSet)
+	    this.selectedItem.setType(inDataSet.type);
+	this.buildTree();
     },
     set_dataSet: function(inDataSet) {
 	// support setting dataSet via id from designer
@@ -726,7 +732,7 @@ dojo.declare("wm.PropertyTree", wm.Tree, {
 						   data: item,
 						   dataValue: null,
 						   _nodeConfig: childProps,
-						   content: item.getValue(this._treeConfig.displayValue)});
+						   content: item.getValue(this._treeConfig.displayField)});
 	    if (hasChild) {
 		var blankChild = new wm.TreeNode(node, {close: true,
 							content: "_PLACEHOLDER"});
@@ -752,7 +758,7 @@ dojo.declare("wm.PropertyTree", wm.Tree, {
 								  propertyName: prop,
 								  dataValue: null,
 								  _nodeConfig: childNodes,
-								  content: item.getValue(props.displayValue)});
+								  content: item.getValue(props.displayField)});
 			if (hasChild) {
 			    var blankChild = new wm.TreeNode(node, {close: true,
 								    content: "_PLACEHOLDER"});
@@ -764,7 +770,7 @@ dojo.declare("wm.PropertyTree", wm.Tree, {
 							      propertyName: prop,
 							      dataValue: null,
 							      _nodeConfig: childNodes,
-							      content: variable.getValue(props.displayValue)});
+							      content: variable.getValue(props.displayField)});
 		    if (hasChild) {
 			var blankChild = new wm.TreeNode(node, {close: true,
 								content: "_PLACEHOLDER"});
@@ -787,7 +793,7 @@ dojo.declare("wm.PropertyTree", wm.Tree, {
     },
     makePropEdit: function(inName, inValue, inDefault) {
 	switch (inName) {
-	case "treeConfigJson":
+	case "configJson":
 	    return makeTextPropEdit(inName, inValue, inDefault)
 	}
 	return this.inherited(arguments);
@@ -796,13 +802,22 @@ dojo.declare("wm.PropertyTree", wm.Tree, {
 	if (this.selected != inNode) {
 	    this.deselect();
 	    this.addToSelection(inNode);
-	    this.onselect(inNode, inNode.data, inNode.propertyName, inNode.dataValue);
+	    this.selectedItem.setData(inNode.data);
+	    var data = [inNode.data];
+	    var node = inNode.parent;
+	    while (node != this.root) {
+		if (dojo.indexOf(data, node.data) == -1)
+		    data.push(node.data);
+		node = node.parent;
+	    }
+	    this.onselect(inNode, data, inNode.propertyName, inNode.dataValue);
 	}
     },
-    onselect: function(inNode, inSelectedVariable, inSelectedPropertyName, inSelectedPropertyValue) {},
+    onselect: function(inNode, inSelectedDataList, inSelectedPropertyName, inSelectedPropertyValue) {},
     _end: 0
 });
 
 wm.Object.extendSchema(wm.PropertyTree, {
-	dataSet: { readonly: true, group: "data", order: 1, bindTarget: 1, type: "wm.Variable", isList: true}
+    dataSet: { readonly: true, group: "data", order: 1, bindTarget: 1, type: "wm.Variable", isList: true},
+    selectedItem: { ignore: 1, bindSource: 1, isObject: true, simpleBindProp: true }
 });
