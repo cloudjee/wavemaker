@@ -213,13 +213,16 @@ dojo.declare("wm.LiveFormBase", wm.Panel, {
 	//===========================================================================
 	populateEditors: function() {
 		var i = this.getItemData(), data = i ? i.getData() : null;
-		dojo.forEach(this.getFormEditorsArray(), function(e) {
+	    dojo.forEach(this.getFormEditorsArray(), dojo.hitch(this, function(e) {
 			if (wm.isInstanceType(e, wm.LiveFormBase)) {
 				wm.fire(e, "populateEditors");
 			} else {
-				wm.fire(e, "setDataValue", [e.formField && data ? data[e.formField] : data]);
+                            if (e instanceof wm.Lookup && (!e.dataSet || !e.dataSet.type)) 
+                                e.setAutoDataSet(e.autoDataSet);
+
+			    wm.fire(e, "setDataValue", [e.formField && data ? data[e.formField] : data]);
 			} 
-		});
+		        }));
 	},
 	populateDataOutput: function() {
                 if (this.dataOutput.type != this.dataSet.type)
