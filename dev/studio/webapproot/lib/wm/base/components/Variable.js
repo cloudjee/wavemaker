@@ -63,7 +63,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		// optimization: we should never need bindings on subNards so not creating them
 		if (!this._subNard && !this.$.binding)
 			new wm.Binding({name: "binding", owner: this});
-		this.setType(this.type);
+	        this.setType(this.type, true);
 		if (this.json)
 			this.setJson(this.json);
 		else
@@ -79,7 +79,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		if (this.isPrimitive || wm.typeManager.isType(this.type))
 			this.setType(this.type);
 	},
-	canSetType: function(inType) {
+        canSetType: function(inType) {
 		// type is locked to dataSet type if it is set
 		if (this.dataSet && this.dataSet.type == this.type) {
 			wm.logging && console.debug(this.name, "cannot set variable type because this variable has a dataSet");
@@ -87,7 +87,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		}
 		return true;
 	},
-	setType: function(inType) {
+	setType: function(inType, noNotify) {
 	    if (inType == this.declaredClass || this.owner instanceof wm.Variable && inType == this.owner.declaredClass) inType = "";
 
                 this.unsubscribe("TypeChange-" + this.type);
@@ -102,6 +102,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		} else if (!(this.data && this.data.list))
 			this.isList = false;
 
+                var hasChanged = (this.type == t);
 		this.type = t;
 		//
 		if (this._proxy)
@@ -115,6 +116,9 @@ dojo.declare("wm.Variable", wm.Component, {
                         this.setJson(this.json);
                 }));
             }
+
+            if (!noNotify && hasChanged && inType && inType != "any")
+		this.dataChanged();//  this will cause anyone bound to this object to treat a change of type as a change in its dataSet
 	},
 	typeChanged: function(inType) {
 		var t = inType;
@@ -178,7 +182,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	*/
 	clearData: function() {
 		this._clearData();
-		this.setType(this.type);
+	        this.setType(this.type, true);
 		this.notify();
 	},
 	_clearData: function() {
@@ -632,7 +636,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	setDataSet: function(inDataSet) {
 		this.dataSet = "";
 		if (inDataSet instanceof wm.Variable) {
-			this.setType(inDataSet ? inDataSet.type : "wm.Variable");
+		        this.setType(inDataSet ? inDataSet.type : "wm.Variable", true);
 			this.dataSet = inDataSet;
 			this.cursor = inDataSet.cursor;
 		}
@@ -795,7 +799,7 @@ wm.Variable.extend({
 		if (inDataSet instanceof wm.Variable) {
 			this._rootField = inDataSet._rootField || "";
 			this.setLiveView(inDataSet.liveView);
-			this.setType(inDataSet ? inDataSet.type : "wm.Variable");
+		        this.setType(inDataSet ? inDataSet.type : "wm.Variable", true);
 			this.dataSet = inDataSet;
 			this.cursor = inDataSet.cursor;
 		}
