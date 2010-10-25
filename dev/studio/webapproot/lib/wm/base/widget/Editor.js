@@ -58,7 +58,7 @@ wm.getFieldEditorProps = function(inFieldInfo) {
 			display: wm.getEditorType(f.displayType || f.type),
 			readonly: f.readonly,
 			editorInitProps: {required: f.required},
-                        required: true,
+      required: f.required,
 			subType: f.subType //xxx
 		};
 	// fixup: ensure checkbox is boolean type
