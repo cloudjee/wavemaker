@@ -468,10 +468,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		var structure = [];
 		var hasAutoField = false;
 		dojo.forEach(this.columns, function(col){
-			var obj = {	hidden:(!col.show), field: col.id, name:col.title, width: col.width, fieldType:col.fieldType, 
+			var obj = {	hidden:(!col.show), field: col.id, name:col.title, width: col.width == '100%' ? 'auto' : col.width, fieldType:col.fieldType, 
 						editable:col.editable,expression:col.expression, displayType:col.displayType};
 
-			if (col.show && col.width && col.width == 'auto')
+			if (col.show && obj.width && obj.width == 'auto')
 				hasAutoField = true;
 				
 			if (col.align && col.align != ''){
@@ -535,7 +535,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		this.columns = [];
 		var viewFields = this.getViewFields();
 	        dojo.forEach(viewFields, function(f,i){
-			this.columns.push({show:i < 15, id: f.dataIndex, title:wm.capitalize(f.dataIndex), width:'auto', displayType:f.displayType, noDelete:true, align: f.displayType == 'Number' ? 'right':'left'});
+			this.columns.push({show:i < 15, id: f.dataIndex, title:wm.capitalize(f.dataIndex), width:'100%', displayType:f.displayType, noDelete:true, align: f.displayType == 'Number' ? 'right':'left'});
 		}, this);
 		
 	    if (this.isDesignLoaded()) {

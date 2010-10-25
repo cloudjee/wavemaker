@@ -56,7 +56,7 @@ wm.DojoGrid.extend({
 
 		this.updateFieldTypeList(this.fieldOptions);
 		this.headerAttr[6].dataStore = this.fieldTypeStore;
-		var defaultCustomFieldParams = {id: 'customField', isCustomField: true, expression: '', show:true, width:'auto'};
+		var defaultCustomFieldParams = {id: 'customField', isCustomField: true, expression: '', show:true, width:'100%'};
 		var helpText = '* To re-arrange columns close dialog box and drag columns on grid to desired position.<br>* You can right click on grid to open this dialog.';
 		this.contextMenu = new wm.ContextMenuDialog('DojoGrid Column Properties', 'Add Column', dojo.hitch(this, 'addNewColumn'), 
 													this.headerAttr, this.columns, defaultCustomFieldParams, this.domNode, true, helpText);
@@ -162,7 +162,7 @@ wm.DojoGrid.extend({
 		this.dojoObj.render();
 	},
 	addNewColumn: function(){
-		var customField = {id: this.getNewColumnId('customField'), isCustomField: true, expression: '', show:true, width:'auto'};
+		var customField = {id: this.getNewColumnId('customField'), isCustomField: true, expression: '', show:true, width:'100%'};
 		return customField;		
 	},
 	addDialogForInsert: function(){
