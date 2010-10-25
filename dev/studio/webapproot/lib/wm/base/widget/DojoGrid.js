@@ -407,7 +407,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		if (this.isDesignLoaded() && !this._loading)
 			this.setColumnData();
 		this.setDojoStore();
-
+                if (inValue && inValue instanceof wm.Variable)
+                    this.selectedItem.setType(inValue.type);
 		var thisObj = this;
 		dojo.addOnLoad(function(){thisObj.renderDojoObj();});
 	},
