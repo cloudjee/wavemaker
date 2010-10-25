@@ -272,7 +272,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	    bindPanelOuter: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right"}, {}, {
 		propList: ["wm.List", {border: "1,2,1,1", borderColor: "#5D6678", width: "147px", height: "100%", headerVisible: false, dataFields: "name"}],
 		bindPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom"}, {}, {
-		    searchBar: ["wm.Text", {height: "25px", width: "100%", captionSize: "60px", caption: "Search", changeOnKey: true, changeOnEnter: true}],		
+		    searchBar: ["wm.Text", {height: "25px", width: "100%", captionSize: "60px", caption: "Search", changeOnKey: true, changeOnEnter: true, _resetButton: true, placeHolder: "Enter Name or Class"}],		
 		    treeControlsPanel: ["wm.Panel", {border: 0, height: "22px", layoutKind: "left-to-right", width: "100%"}, {}, {
 			simpleRb: ["wm.Editor", {display: "RadioButton", displayValue: "simple", caption: "Simple", width: "76px", captionSize: "50px", captionPosition: "right", captionAlign: "left"}, {}, {
 			    editor: ["wm._RadioButtonEditor", {radioGroup: "_bindInspector", startChecked: true}, {}]
