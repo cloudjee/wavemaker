@@ -83,10 +83,13 @@ dojo.declare("wm.Palette", wm.Tree, {
 	        if (props.name)
 	            props.name = props.name.replace(/\s/g,"");
 		var ctor = dojo.getObject(info.type);
+                var owner = this.dragger.target.owner;
+                while (owner != studio.page && owner != studio.application)
+                    owner = owner.owner;
 		dojo.mixin(props, {
 			_designer: studio.page._designer,
 			name: studio.page.getUniqueName(props.name || studio.makeName(info.type)),
-			owner: this.dragger.target.owner,
+		    owner: owner,
 			parent: this.dragger.target
 		});
 		if (ctor.prototype instanceof wm.Control) {
