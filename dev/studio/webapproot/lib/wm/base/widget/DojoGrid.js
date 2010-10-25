@@ -170,7 +170,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 				return;
 		}
 		this.updateSelectedItem( this.getSelectedIndex());
-		this.onCellEditted(inValue, inRowIndex, inFieldName);
+		this.onCellEdited(inValue, inRowIndex, inFieldName);
 	},
 	updateSelectedItem: function(selectedIndex) {
 		if (selectedIndex == -1) {
@@ -198,8 +198,6 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         this.selectedItem._setArrayData(objList);
 		//this.setValue("emptySelection", !this.hasSelection());
 	},
-	onSelectionChange: function() {},
-	onCellEditted: function(inValue, inRowIndex, inFieldName) {},
 	getSelectedIndex: function() {
 	  if (!this.dojoObj) return -1; // just in case the dojoObj hasn't been fully created yet
 	  return this.dojoObj.selection.selectedIndex;
@@ -602,6 +600,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
 	onCellRightClick: function(evt, selectedItem, rowId, fieldId, rowNode, cellNode){
 	},
+  onCellEdited: function(inValue, rowId, fieldId) {},
+  onSelectionChange: function() {},
 	addColumnToCSV: function(csvArray, value){
 		if (dojo.isString(value))
 			value = value.replace(/\"/g, '\\\"');
