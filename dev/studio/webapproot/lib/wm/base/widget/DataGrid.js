@@ -671,7 +671,9 @@ dojo.declare("wm.DataGrid", wm.dijit.Grid, {
 			this.dataSetToColumns();
 		}
 		this.renderGrid();
-	},
+                if (inDataSet && inDataSet.type && inDataSet.type != "any" && inDataSet.type != this.selectedItem.type)
+                    this.selectedItem.setType(inDataSet.type);
+ 	},
 	preRender: function() {
 		this.dataSetToSelectedItem();
 		if (this._columns.length == 0)

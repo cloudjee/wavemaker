@@ -321,6 +321,8 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		if (!ds || !ds.data || !ds.data.list)
 			return;
 		this.createEditor();
+            if (inDataSet && inDataSet.type && inDataSet.type != "any" && inDataSet.type != this.selectedItem.type)
+                this.selectedItem.setType(inDataSet.type);
 	},
 	setOptionsVariable: function() {
 		var opts = this._getOptionsData();
@@ -645,6 +647,9 @@ dojo.declare("wm._SelectEditor", wm._BaseEditor, {
 		if (!ds || !ds.data || !ds.data.list)
 			return;
 		this.createEditor();
+            if (inDataSet && inDataSet.type && inDataSet.type != "any" && inDataSet.type != this.owner.selectedItem.type)
+                this.owner.selectedItem.setType(inDataSet.type);
+
 	},
 	setOptionsVariable: function() {
 		var opts = this._getOptionsData();
@@ -885,7 +890,7 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 	init: function() {
 		this.inherited(arguments);
 		if (this.autoDataSet)
-			this.createDataSet();
+		    this.createDataSet();
 	},
 	createDataSet: function() {
 		wm.fire(this.$.liveVariable, "destroy");
