@@ -114,8 +114,8 @@ Studio.extend({
 	    var cmpCount = 0;
 	    for (cmp in components) cmpCount++;
 	    for (cmp in dialogs) cmpCount++;
-	    this.useHierarchy =  (cmpCount > 6);
-
+	    //this.useHierarchy =  (cmpCount > 6);
+	    this.useHierarchy =  true;
 	    this.componentsToTree(n, components);
 	    this.componentsToTree(n, dialogs);
 	    this.useHierarchy = false;
@@ -154,8 +154,8 @@ Studio.extend({
 		    var cmpCount = 0;
 		    for (cmp in this.svrComps) cmpCount++;
 		    for (cmp in this.otherComps) cmpCount++;
-		    this.useHierarchy =  (cmpCount > 6);
-			
+		    //this.useHierarchy =  (cmpCount > 6);
+		    this.useHierarchy = true;
 
 		    this.componentsToTree(n, this.svrComps);
 		    this.componentsToTree(n, this.otherComps);
@@ -257,7 +257,7 @@ Studio.extend({
 		    var c = n[i];
 		    if (c.declaredClass != lastClass) {
 			var img = this.getComponentImage(c);
-			lastParent = this.newTreeNode(inNode, img, c.declaredClass);
+			lastParent = this.newTreeNode(inNode, img, "<span class='TreeHeader'>" +c.declaredClass + "</span>");
 			lastClass = c.declaredClass;
 		    }
 		    this.componentToTree(lastParent, c, inType);
