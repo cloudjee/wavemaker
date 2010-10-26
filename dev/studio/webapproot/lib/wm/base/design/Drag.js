@@ -124,7 +124,9 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 	    var d = this.getDesignableDialog();
 	    if (d) {
 		if (this.targetInDialog(inHit, d)) {
-		    t = (this.designable ? this._findTarget(inHit, d.containerWidget) : d.containerWidget);
+		    inHit.l -= d.bounds.l;
+		    inHit.t -= d.bounds.t;
+		    t = (this.designable ? this._findTarget(inHit, d) : d.containerWidget);
 		}
 	    } else if (this.targetInRoot(inHit)) {
 		t = (this.designable ? this._findTarget(inHit, this.root) : this.root);
@@ -136,12 +138,14 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 	    }
 	},
 	_findTarget: function(inHit, inWidget, inMargin) {
+            console.log("_findTarget: " + inWidget.toString());
 		var h = inHit, dn = inWidget.domNode, w, b, o;
 		var sl = dn.scrollLeft, st = dn.scrollTop;
 		var ws = inWidget.widgets;
 		var m = inMargin || 0;
 		for (var i in ws) {
 			w = ws[i];
+                    console.log("_test: " + w.toString());
 			if (w != this.info.control && w.container && !w.getLock()) {
 				b = kit._getMarginBox(w.domNode);
 				if (w.domNode.parentNode != inWidget.domNode){
@@ -159,12 +163,15 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 				if (h.l-b.l>m && b.r-h.l>m && h.t-b.t>m && b.b-h.t>m) {
 					h.l -= b.l; 
 					h.t -= b.t;
-					return this._findTarget(h, w, m+1);
+				    var result = this._findTarget(h, w, m+1);
+                                    console.log("RESULT " + w.toString() + ": " + result);
+                                    return result;
 				}
 			}
 		}
 		// FIXME: sort out _noCreate
 		var t = inWidget._noCreate ? inWidget.parent : inWidget;
+            console.log("CANBETARGET " + t.toString() + ": " + this.canBeTarget(t));
 		return this.canBeTarget(t) ? t : null;
 	},
 	canBeTarget: function(inWidget) {
@@ -175,8 +182,14 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 		return !(h.l < 0 || h.t < 0 || h.l > b.w || h.t > b.h);
 	},
     targetInDialog: function(inHit, inDialog) {
-		var h = inHit, b = kit._getMarginBox(inDialog.containerWidget.domNode);
-		return !(h.l < 0 || h.t < 0 || h.l > b.w || h.t > b.h);
+	var h = inHit;
+        var b = {l: inDialog.bounds.l + inDialog.containerWidget.bounds.l,
+                 t: inDialog.bounds.t + inDialog.containerWidget.bounds.t,
+                 h: inDialog.containerWidget.bounds.h + ((inDialog.buttonBar) ? inDialog.buttonBar.bounds.h : 0),
+                 w: inDialog.containerWidget.bounds.w};
+
+        return (h.l > b.l && h.l < b.l+b.w &&
+                h.t > b.t && h.t < b.t+b.h);
 	},
     isDesignableDialogShowing: function() {
 	return Boolean(this.getDesignableDialog());
