@@ -94,7 +94,7 @@ dojo.declare("wm.Dialog", wm.Container, {
     scrim: true,
 
     useContainerWidget: false,  // if true, we create a container widget, if false we just use the dom node directly.  dom node is fine if you just want to set innerHTML or stick a 3rd party widget into the dialog.
-    useButtonBar: true,
+    useButtonBar: false,
     _minified: false,
     _maxified: false,
     noEscape: false,
@@ -139,22 +139,23 @@ dojo.declare("wm.Dialog", wm.Container, {
 		this._connections.push(this.connect(document, "onkeypress", this, "keyPress"));
 		this._subscriptions.push(dojo.subscribe("window-resize", this, "reflow"));	    
 
+
+	    this.setModal(this.modal);
+
+            this.setTitlebarBorder(this.titlebarBorder); 
+            this.setTitlebarBorderColor(this.titlebarBorderColor);
+
+
 	    var containerWidget, containerNode;
 	    
-	    if (this.$.containerWidget)
-		this.containerWidget = this.$.containerWidget;
+            // set the owner to wm.Page to allow othis to be written... IF its an instance not a subclass of wm.Dialog
+            var owner = (this.declaredClass == "wm.Dialog" || this instanceof wm.DesignableDialog) ? this.owner : this; 
 
-                    var owner = (this.declaredClass == "wm.Dialog" || this instanceof wm.DesignableDialog) ? this.owner : this; // set the owner to wm.Page to allow othis to be written... IF its an instance not a subclass of wm.Dialog
 
-	    if (this.useContainerWidget) {
-		if (!this.containerWidget) {
-                    for (var i = 0; i < this.c$.length; i++) {
-                        if (this.c$[i].name.match(/containerWidget/)) {
-                            this.containerWidget = this.c$[i];
-                            break;
-                        }
-                    }
-                }
+            // If the dialog has only a single widget inside of it, thats the titlebar, and the rest of it hasn't yet been created and needs creating.
+            // If the dialog has more than one widget inside of it, then its safe to assume everything this dialog needs has been created
+            if (this.c$.length == 1) {
+	        if (this.useContainerWidget) {
 	            containerWidget = this.containerWidget ||  new wm.Container({
 			_classes: {domNode: ["wmdialogcontainer", this.containerClass]}, 
 			name: owner.getUniqueName("containerWidget"),
@@ -171,40 +172,26 @@ dojo.declare("wm.Dialog", wm.Container, {
 			verticalAlign: "top",
 			autoScroll: true});
 		containerNode = containerWidget.domNode;
-	    } else {
-	        containerNode = this.domNode;//this.container.domNode;
-	    }
-	    this.setModal(this.modal);
+	        } else {
+	            containerNode = this.domNode;//this.container.domNode;
+	        }
+            }
 
-            this.setTitlebarBorder(this.titlebarBorder); 
-            this.setTitlebarBorderColor(this.titlebarBorderColor);
+            if (this.c$.length < 3) {
+                // use of buttonbar is only accepted if useContainerWidget is true
+               	if (this.useButtonBar && this.useContainerWidget) {		  
+                    this.createButtonBar();
+                }
+            }
 
-	    if (this.useButtonBar) {
-		if (this.$.buttonBar)
-		    this.buttonBar = this.$.buttonBar;
-		else if (this.useContainerWidget) {
-		    for (var i = 0; i < this.c$.length; i++) {
-			if (this.c$[i].name == "buttonBar") {
-			    this.buttonBar = this.c$[i];
-			    break;
-			}
-		    }
-		    if (!this.buttonBar)
-			this.buttonBar = new wm.Panel({_classes: {domNode: ["dialogfooter"]},
-						   name: "buttonBar",
-						   owner: owner,
-						   parent: this,
-						   width: "100%",
-						   height: "0px",
-						   fitToContentHeight: true,
-						   minHeight: (this.isDesignLoaded()) ? 5 : 1,
-						   horizontalAlign: "right",
-						   verticalAlign: "top",
-						   layoutKind: "left-to-right",
-						   border: this.footerBorder + ",0,0,0",
-						   borderColor: this.titlebarBorderColor});
-		}
-	    }
+
+            this.containerWidget = this.c$[1]; // could be undefined
+            this.buttonBar = this.c$[2];       // could be undefined
+            if (this.containerWidget)
+                this.containerWidget.noInspector = true;
+            if (this.buttonBar)
+                this.buttonBar.noInspector = true;
+
 	    // must set this AFTER creating the button bar, or the button
 	    // bar will be ADDED to the containerWidget
 	    if (containerWidget) {
@@ -212,6 +199,34 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    }
 	    this.containerNode = containerNode;
 	},
+    setUseButtonBar: function(inUse) {
+        this.useButtonBar = inUse;
+        if (inUse && !this.buttonBar) {
+            this.createButtonBar();
+            this.reflow();
+        } else if (!inUse && this.buttonBar) {
+            this.buttonBar.destroy();
+            delete this.buttonBar;
+            this.reflow();
+        }
+    },
+    createButtonBar: function() {
+        var owner = (this.declaredClass == "wm.Dialog" || this instanceof wm.DesignableDialog) ? this.owner : this; 
+	this.buttonBar = new wm.Panel({_classes: {domNode: ["dialogfooter"]},
+				       name: "buttonBar",
+				       owner: owner,
+				       parent: this,
+				       width: "100%",
+				       height: wm.Button.prototype.height,
+				       horizontalAlign: "right",
+				       verticalAlign: "top",
+				       layoutKind: "left-to-right",
+                                       noInspector: true,
+				       border: this.footerBorder + ",0,0,0",
+				       borderColor: this.titlebarBorderColor});
+
+
+    },
     setTitlebarBorder: function(inBorder) {
         this.titlebarBorder = inBorder;
 	var border = (String(inBorder).match(",")) ? inBorder : "0,0," + inBorder + ",0";
@@ -760,7 +775,6 @@ wm.Object.extendSchema(wm.Dialog, {
 dojo.declare("wm.WidgetsJsDialog", wm.Dialog, { 
     margin: "0,4,4,0",
     useContainerWidget: true,
-    useButtonBar: false,
     widgets_data: null,
     widgets_json: "",
     width: "400px",
@@ -1647,6 +1661,7 @@ wm.ColorPickerDialog.cssLoaded = false;
 
 
 dojo.declare("wm.DesignableDialog", wm.Dialog, {
+    useButtonBar: true,
     border: "1",
     borderColor: "black",
     titlebarBorder: "1",
@@ -1668,5 +1683,6 @@ dojo.declare("wm.DesignableDialog", wm.Dialog, {
 });
 
 wm.Object.extendSchema(wm.DesignableDialog, {
+    useButtonBar: {group: "Dialog Options", order: 1}
 /*    owner: {ignore: true} */ // See JIRA-2118: Can't drag and drop to an app level container
 });
