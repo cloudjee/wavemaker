@@ -121,7 +121,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 		}
 
 		var props = {
-			acceptTypes:['dojox.widget.Portlet','dojox.widget.FeedPortlet'],
+			acceptTypes:['Portlet'],
 			handleClasses:["dijitTitlePaneTitle"],
 			isAutoOrganized:false,
 			hasResizableColumns:this.hasResizableColumns,
@@ -218,7 +218,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 
 		if (!this.isDesignLoaded()){
 		    dojo.connect(portlet, 'onClose', this, 'portletClosed');
-		    portlet.subscribe("/dnd/drop", dojo.hitch(this, '_onDashboardChange'));
+		    portlet.subscribe("/dojox/mdnd/drop", dojo.hitch(this, '_onDashboardChange'));
 				this._onDashboardChange();
 		}	
 		
@@ -288,7 +288,9 @@ dojo.declare("wm.Dashboard", wm.Control, {
 		var pList = this.updatePortletXY();
 		console.info('saving in cookie....', pList);
 		if (this.saveInCookie)
-			dojo.cookie(this.getId() + '_portlets', dojo.toJson(pList), {expires:5});
+      dojo.cookie(this.getId() + '_portlets', dojo.toJson(pList), {expires:5});
+    else
+      dojo.cookie(this.getId() + '_portlets', null, {expires:-1});
 		this.onDashboardChange(pList);
 	},
 	onDashboardChange: function(activePortlets){
@@ -307,8 +309,8 @@ dojo.declare("wm.Dashboard", wm.Control, {
 		this.portletXY = {};
 		var _this = this;
 		var currentPortletList = [];
-	    dojo.forEach(this.dojoObj.grid, function(colObj, x){
-	      dojo.forEach(colObj.getAllNodes(), function(domPort, y){
+	    dojo.forEach(this.dojoObj._grid, function(col, x){
+	      dojo.forEach(col.node.childNodes, function(domPort, y){
 	        var portlet = dijit.getEnclosingWidget(domPort);
 					var wmProps = portlet.wmProps;
 	        if (portlet){
