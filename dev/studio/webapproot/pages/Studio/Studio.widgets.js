@@ -41,7 +41,7 @@ Studio.widgets = {
     newProjectDialog: ["wm.PageDialog", {width: "500px", height: "460px", title: "New Project", modal: true, hideControls: true, noEscape: false, pageName: "", border: "1", borderColor: "black", titlebarBorder: "0"}],
     helpDialog: ["wm.GenericDialog", {"height":"77px","modal":false,"noEscape":false,"title":"Help","userPrompt":"","width":"300px", modal: false,button1Caption: "OK", button1Close: true, corner: "tr"}, {}],
 	layout: ["wm.Layout", {height: "100%"}, {}, {
-		dialog: ["wm.Dialog", {height: "400px", border: "1", borderColor: "#666E80"}, {}],
+	    dialog: ["wm.Dialog", {height: "400px", border: "1", borderColor: "#666E80", _noAnimation: true}, {}],
 		
 		navigationBar: ["wm.Panel", {_classes: {domNode: ["wm-darksnazzy"]}, height: "29px", border: "0", layoutKind: "left-to-right"}, {}, {
 			navBtnHolder: ["wm.Panel", {width: "100%", border: "0", layoutKind: "left-to-right", imageList: "navImageList", horizontalAlign: "left"}, {}, {
