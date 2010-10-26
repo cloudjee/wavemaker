@@ -296,7 +296,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	getIsRowSelected: function(){
 		return !this.getEmptySelection();
 	},
-  renderBounds: function() {
+        renderBounds: function() {
 	    this.inherited(arguments);
 		if (this.showAddButton || this.showDeleteButton) {
 			var position = this.getStyleBounds();
@@ -482,15 +482,19 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			if (col.formatFunc && col.formatFunc != ''){
 				switch(col.formatFunc){
 					case 'wm_date_formatter':
+					case 'Date (WaveMaker)':				    
 						obj.formatter = dojo.hitch(this, 'dateFormatter');			
 						break;
 					case 'wm_number_formatter':
+					case 'Number (WaveMaker)':				    
 						obj.formatter = dojo.hitch(this, 'numberFormatter');
 						break;
 					case 'wm_currency_formatter':
+					case 'Currency (WaveMaker)':				    
 						obj.formatter = dojo.hitch(this, 'currencyFormatter');
 						break;
 					case 'wm_image_formatter':
+					case 'Image (WaveMaker)':				    
 						obj.formatter = dojo.hitch(this, 'imageFormatter');
 						break;
 					
@@ -611,9 +615,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
 	addBreakToCSV: function(csvArray){
 		csvArray.pop(); // this pops the last comma.
-		csvArray.push('<br>');
+		csvArray.push('\n');
 	},
 	showCSVData: function(){
+/*
 		if (!this.csvDialog){
 			this.csvDialog = new dijit.Dialog({ title: "CSV Data for " + this.name});
 			dojo.body().appendChild(this.csvDialog.domNode);
@@ -622,6 +627,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		
 		this.csvDialog.attr('content', this.toCSV());
 		this.csvDialog.show();
+*/
+	    app.echoFile(this.toCSV(), "text/csv", this.name + ".csv");
 	},
 	toCSV: function(){
 		var csvData = [];
