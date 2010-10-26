@@ -548,6 +548,17 @@ dojo.declare("wm.Application", wm.Component, {
         getFullVersionNumber: function() {
 	    return this.projectVersion + "." + this.projectSubVersion;
 	},
+
+    // This sends a synchronous request. I don't like it, but a user calling
+    // this expects to get a result.
+        getSessionId: function() {
+	    if (!this.sessionId) {
+		var a = new wm.JsonRpcService({service: "runtimeService", sync: true});
+		a.requestSync("getSessionId", []);
+		this.sessionId = a.result;
+	    }
+	    return this.sessionId;
+	},
         alert: function(inText, nonmodal) {
 	    if (dojo.isObject(inText))
 		inText = inText.toString();

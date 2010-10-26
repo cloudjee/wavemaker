@@ -20,6 +20,9 @@ package com.wavemaker.runtime.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.io.InputStream;
+import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
@@ -33,6 +36,7 @@ import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.server.InternalRuntime;
 import com.wavemaker.runtime.server.JSONParameterTypeField;
 import com.wavemaker.runtime.server.ServerUtils;
+import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.runtime.service.events.ServiceEventNotifier;
 import com.wavemaker.runtime.service.response.SuccessResponse;
 
@@ -201,7 +205,22 @@ public class RuntimeService {
     public String getLocalHostIP() {
         return SystemUtils.getIP();
     }
-    
+
+    public String getSessionId() {
+        return RuntimeAccess.getInstance().getSession().getId();
+    }
+
+    public DownloadResponse echo(String contents, String contentType,
+            String fileName) {
+        InputStream is;
+        try {
+            is = new ByteArrayInputStream(contents.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new WMRuntimeException(e);
+        }
+        return (new DownloadResponse(is, contentType, fileName));
+    }
+
     private void shiftDeserializedProperties(int index) {
         InternalRuntime ir = InternalRuntime.getInstance();
         List<List<String>> org = ir.getDeserializedProperties();
