@@ -127,19 +127,20 @@ Studio.extend({
 	        this.application._studioTreeNode = n;
 	    this.excTypes = [wm.Query, wm.LiveView];
 		if (this.application) {
-		    this.svrComps = this.getTreeComponents(this.application.getServerComponents(), this.excTypes);
+		    this.svrComps = this.application.getServerComponents();
+                    var svrComps = this.getTreeComponents(this.svrComps, this.excTypes);
 		    this.otherComps = this.getTreeComponents(this.application.components, this.excTypes);
 		    
 		    if (this.searchText) {
-			var svrComps = {};
-			for (var i in this.svrComps) {
-			    var c = this.svrComps[i];
+			var svrCompSearch = {};
+			for (var i in svrComps) {
+			    var c = svrComps[i];
 			    var name = c.name;
 			    if (name.toLowerCase().match(this.regex)) {
-				svrComps[name] = c;
+				svrCompSearch[name] = c;
 			    }
+                            svrComps = svrCompSearch;
 			}
-			this.svrComps = svrComps;
 
 			var otherComps = {};
 			for (var name in this.otherComps) {
@@ -152,12 +153,12 @@ Studio.extend({
 		    }
 
 		    var cmpCount = 0;
-		    for (cmp in this.svrComps) cmpCount++;
+		    for (cmp in svrComps) cmpCount++;
 		    for (cmp in this.otherComps) cmpCount++;
 		    //this.useHierarchy =  (cmpCount > 6);
 		    this.useHierarchy = true;
 
-		    this.componentsToTree(n, this.svrComps);
+		    this.componentsToTree(n, svrComps);
 		    this.componentsToTree(n, this.otherComps);
 		    this.useHierarchy = false;
 		}
