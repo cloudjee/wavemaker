@@ -27,7 +27,7 @@ wm.Object.extendSchema(wm.Layer, {
 	flex: {ignore: 1},
 	sizeUnits: {ignore: 1},
 	size: {ignore: 1},
-        caption: { group: "display", order: 200, focus: true},
+    caption: { group: "display", order: 200, focus: true, bindTarget: true},
 	inFlow: {ignore: 1},
 	active: {ignore: 1},
     fitToContentWidth: { ignore: 1},
@@ -100,6 +100,7 @@ wm.Object.extendSchema(wm.Layers, {
 	add: { group: "operation", order: 1 },
 	fitToContent: { ignore: 1},
         headerHeight: { group: "layout", order: 50},
+    
         clientBorder: {group: "style", order: "100"},
         clientBorderColor: {group: "style", order: "101"}
 });

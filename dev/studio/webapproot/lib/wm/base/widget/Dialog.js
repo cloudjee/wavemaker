@@ -171,7 +171,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 			horizontalAlign: "left",
 			verticalAlign: "top",
 			autoScroll: true});
-		containerNode = containerWidget.domNode;
+		    containerNode = containerWidget.domNode;
 	        } else {
 	            containerNode = this.domNode;//this.container.domNode;
 	        }
@@ -745,7 +745,7 @@ wm.Dialog.extend({
 
 
 wm.Object.extendSchema(wm.Dialog, {
-    title: {group: "Header and Footer", order: 1},
+    title: {group: "Header and Footer", order: 1, bindTarget: true},
     titlebarBorder: {group: "Header and Footer", order: 5},
     titlebarBorderColor: {group: "Header and Footer", order: 6},
     titlebarHeight: {group: "Header and Footer", order: 7},

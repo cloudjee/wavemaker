@@ -514,7 +514,7 @@ wm.FancyPanel.extend({
 });
 
 wm.Object.extendSchema(wm.FancyPanel, {
-    title: { type: "String", bindable: 1, group: "display", order: 100, focus: true },
+    title: { type: "String", bindTarget: 1, group: "display", order: 100, focus: true },
     labelWidget: {ignore: 1},
     themeStyleType:  {ignore: 1},
     containerWidget: {ignore: 1},
