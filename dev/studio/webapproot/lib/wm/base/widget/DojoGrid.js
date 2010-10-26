@@ -408,7 +408,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			this.setColumnData();
 		this.setDojoStore();
                 if (inValue && inValue instanceof wm.Variable)
-                    this.selectedItem.setType(inValue.type);
+                    this.selectedItem.setType(inValue.type); // broadcasts a message to all who are bound to the selectedItem
 		var thisObj = this;
 		dojo.addOnLoad(function(){thisObj.renderDojoObj();});
 	},
