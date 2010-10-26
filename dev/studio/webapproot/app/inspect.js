@@ -166,8 +166,8 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 			existingCalls: {caption: "Shared Event Handlers:", list: "sharedEventHandlers"},
 			dialogs: {caption: "Show Dialogs:", list: "dialogs"},
 			dashboards: {caption: "Dashboard Add Widget:", list: "dashboards"},
-      timers: {caption: "Timers:", list: "timers"},
-	    liveForms: {caption: "Live Forms:", list: "liveForms"}
+      timers: {caption: "Timers:", list: "timers"}
+	    //liveForms: {caption: "Live Forms:", list: "liveForms"}
 	},
 	isEventAction: function(inValue) {
 		var ea = this.eventActions;
@@ -184,7 +184,7 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 	    var dialogList = wm.listComponents([studio.application, studio.page], wm.Dialog);
       dialogList = dialogList.concat(wm.listComponents([studio.application, studio.page], wm.DojoLightbox));
 	    var dashboardList = wm.listComponents([studio.application, studio.page], wm.Dashboard);
-	    var lf = wm.listComponents([studio.application, studio.page], wm.LiveForm);
+	    //var lf = wm.listComponents([studio.application, studio.page], wm.LiveForm);
 	    var timers = wm.listComponents([studio.application, studio.page], wm.Timer);
 	    var items=[];
 	    var eventSchema = this.inspected.schema[this.propName];
@@ -215,9 +215,11 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 								a = lightboxList;
 								break;
 					    case "liveForms":
+/*
 								if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "liveForm") == -1) return;
 								a = lf;
 								break;
+*/
 							case "dashboards":
 								if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "dashboards") == -1) return;
 								a = dashboardList;
@@ -232,6 +234,8 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 						items.push({name: n, value: n});
 						dojo.forEach(a, function(obj) {
 							var aa = (wm.isInstanceType(obj, wm.Component)) ? obj.getId() : obj;
+						    items.push({name: ". . . " + aa, value: aa});
+/*
 							if (obj instanceof wm.LiveForm){
 								items.push({name: aa + '.beginDataInsert', value: aa + '.beginDataInsert'});
 								items.push({name: aa + '.saveData', value: aa + '.saveData'});
@@ -245,6 +249,7 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 							} else {
 								items.push({name: aa, value: aa});
 							}
+*/
 						})
 					}
 				} else {
