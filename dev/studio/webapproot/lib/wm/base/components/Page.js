@@ -375,9 +375,16 @@ dojo.declare("wm.Page", wm.Component, {
 	onStart: function(inPage) {		
 	},
 	keydown: function(e) {
+	    // if there are any modal dialogs showing, do not handle keypress, as
+	    // that would allow the user to interact with the page which is deliberately
+	    // blocked
+	    for (var i = 0; i < wm.dialog.showingList.length; i++) {
+		if (wm.dialog.showingList.modal) return;
+	    }
 
-            // Ignore keydown if a dialog is open; if the owner is not the main application; if the main page of the application is not this page (this page is in a page container)
-	      if (wm.dialog.showing || this.owner != app || this != app._page) return true;
+	    // only the application's main page should be receiving keyboard events
+	      if (this.owner != app || this != app._page) return true;
+
 	    var isInput = (e.target.tagName == "INPUT");
 	    var chr = app._keys[e.keyCode];
             var isSpecial = chr.length > 1;
@@ -456,7 +463,7 @@ wm.Object.extendSchema(wm.Page, {
     onShow: {events: ["js", "disableNoEvent"]},
     onShiftKey: {events: ["js", "disableNoEvent"]},
     onCtrlKey: {events: ["js", "disableNoEvent"]},
-    onEscapeKey: {events: ["js", "disableNoEvent"]},
+    onEscapeKey: {}, // allow all events
     onEnterKey: {}, // allow all events
     onLetterKey: {events: ["js", "disableNoEvent"]},
     onMiscKey: {events: ["js", "disableNoEvent"]}
