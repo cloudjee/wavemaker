@@ -1060,7 +1060,7 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 	},
 	setDefaultOnInsert:function(){
 		if (this.editor && this.defaultInsert)
-			this.editor.set('value', ''+this.defaultInsert, false);
+		    this.editor.set('value', this.defaultInsert, false);
 	},
     onEnterKeyPress: function() {}
 });
