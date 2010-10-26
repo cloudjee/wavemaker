@@ -898,6 +898,7 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 		
 		this.updateReadonlyValue();
 	},
+
 	updateReadonlyValue: function(inValue) {
 	 	if (this.readonly && this.readOnlyNode){
 			var value = inValue || this._getReadonlyValue();
@@ -1155,7 +1156,7 @@ wm.Object.extendSchema(wm.AbstractEditor, {
     readonly: {group: "editor", order: 1},
 
     displayValue: {group: "editData", order: 2},
-    dataValue: {ignore: 1, bindable: 1, group: "editData", order: 3, simpleBindProp: true},
+    dataValue: {ignore: 1, bindable: 1, group: "editData", order: 3, simpleBindProp: true, type: "String"},
     emptyValue: {group: "editData", order: 4},
     required: {group: "validation", order: 1},
     editorBorder: {group: "style", order: 100},

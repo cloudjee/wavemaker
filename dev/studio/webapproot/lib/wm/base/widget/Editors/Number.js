@@ -291,6 +291,7 @@ dojo.declare("wm.Number", wm.Text, {
 });
 
 wm.Object.extendSchema(wm.Number, {
+    dataValue: {ignore: 1, bindable: 1, group: "editData", order: 3, simpleBindProp: true, type: "Number"},
     places: {group: "editor", order: 2},
     minimum:  { group: "editor", order: 3, emptyOK: true},
     maximum: { group: "editor", order: 4, emptyOK: true},
