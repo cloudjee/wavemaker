@@ -559,6 +559,27 @@ dojo.declare("wm.Application", wm.Component, {
 	    }
 	    return this.sessionId;
 	},
+    echoFile: function(filecontents, filetype, filename) {
+	    if (!this.echoFileService) {
+		this.echoFileService =
+		    new wm.ServiceVariable({owner: app, 
+					    name: "echoFileService", 
+					    downloadFile: true, 
+					    service: "runtimeService", 
+					    operation: "echo"})
+		this.echoFileService.input.setType("");
+		wm.typeManager.addType("echoInputs", 
+				       {internal: false, 
+					fields: {contents: {type: "java.lang.String"}, 
+						 fileType: {type: "java.lang.String"},
+						 fileName: {type: "java.lang.String"}}
+				       });        
+		this.echoFileService.input.setType("echoInputs");
+	    }
+	
+	this.echoFileService.input.setData({contents: filecontents, fileType: filetype,fileName: filename});
+	this.echoFileService.update();
+    },
         alert: function(inText, nonmodal) {
 	    if (dojo.isObject(inText))
 		inText = inText.toString();
