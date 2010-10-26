@@ -2042,12 +2042,15 @@ dojo.declare("ThemeDesigner", wm.Page, {
     editAllBorderColors: function(inColor) {
         for (var i in this.themePrototype) {
 	    var propHash = this.themePrototype[i];	    
-	    var prototype = dojo.getObject(i).prototype;
-	    for (var j in propHash) {
-		if (j.match(/borderColor$/i)) {
-		    propHash[j] = inColor;
-		    prototype[j] = inColor;
-		}
+            var obj = dojo.getObject(i);
+            if (obj) {
+	        var prototype = obj.prototype;
+	        for (var j in propHash) {
+		    if (j.match(/borderColor$/i)) {
+		        propHash[j] = inColor;
+		        prototype[j] = inColor;
+		    }
+                }
 	    }
 	}
         if (!this.themePrototype["wm.Control"])
