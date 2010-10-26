@@ -206,7 +206,7 @@ wm.convertForSimpleBind = function(inNodeProps, optionalSource) {
 
 wm.isNodeBindable = function(inType, inProps, inIsList, inTargetType, inTargetProps) {
     if (!inTargetType) return 0;
-    var targetIsObject = inTargetType.isObject || inTargetType.type.toLowerCase() == "object";
+    var targetIsObject = inTargetType.isObject || inTargetType.type && inTargetType.type.toLowerCase() == "object";
 
 	if (!inProps.isSimpleBind && inProps.isObject && inProps.object instanceof wm.Control) {
 	    return inProps.object.declaredClass == inTargetType.type ? 1 : 0;
@@ -774,7 +774,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	    var pages = wm.listAllPageContainers([owner]);
 	    var owners = [owner].concat(pages);
 	    var comps = wm.listComponents(owners, wm.Component, false);
-	    console.log(comps);
+
 //	    var comps = owner.components;
 	    for (var comp in comps) {    
 		if (comp) 
