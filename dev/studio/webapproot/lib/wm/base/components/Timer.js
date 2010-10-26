@@ -62,8 +62,11 @@ dojo.declare("wm.Timer", wm.Component, {
     },
 
     // If I have a ServiceVariable, and its onSuccess method points to this timer,
-    // the Activate method is what would be called.  So, onSuccess, the timer starts up.
+    // the Activate (or is it update?) method is what would be called.  So, onSuccess, the timer starts up.
     activate: function() {
+	this.startTimer();
+    },
+    update: function() {
 	this.startTimer();
     },
 
