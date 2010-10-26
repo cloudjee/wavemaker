@@ -4,8 +4,8 @@
         class="com.wavemaker.runtime.service.RuntimeService"
         id="runtimeService"
         springFile="com/wavemaker/runtime/service/runtimeServiceBean.xml">
-        
-    <operation name="getProperty">
+
+	<operation name="getProperty">
         <parameter isList="false"
             typeRef="java.lang.Object"
             name="instance"/>
@@ -20,6 +20,23 @@
 
     <operation name="getLocalHostIP">
         <return isList="false" typeRef="java.lang.String"/>
+    </operation>
+
+	<operation name="getSessionId">
+        <return isList="false" typeRef="java.lang.String"/>
+    </operation>
+
+	<operation name="echo">
+        <parameter isList="false"
+            typeRef="java.io.InputStream"
+            name="contents"/>
+        <parameter isList="false"
+            typeRef="java.lang.String"
+            name="contentType"/>
+        <parameter isList="false"
+            typeRef="java.lang.String"
+            name="fileName"/>
+        <return isList="false" typeRef="com.wavemaker.runtime.server.DownloadResponse" />
     </operation>
     
     <operation name="read">
