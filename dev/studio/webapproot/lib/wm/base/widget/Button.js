@@ -169,7 +169,7 @@ dojo.declare("wm.ToolButton", wm.Widget, {
 wm.Object.extendSchema(wm.ToolButton, {
 	scrollX:  { ignore: 1 },
 	scrollY:  { ignore: 1 },
-        clicked: {ignore: 1, bindSource: true},
+        clicked: {ignore: 1, bindSource: true, type: "Boolean"},
 	iconUrl: {group: "format", bindable: true, type: "String", subtype: "File"},
 	iconWidth: {group: "format"},
 	iconHeight: {group: "format"},
