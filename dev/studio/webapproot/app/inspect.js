@@ -235,7 +235,7 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 						items.push({name: n, value: n});
 						dojo.forEach(a, function(obj) {
 							var aa = (wm.isInstanceType(obj, wm.Component)) ? obj.getId() : obj;
-						    items.push({name: ". . . " + aa, value: aa});
+						    items.push({name: aa, value: aa, indent:true});
 /*
 							if (obj instanceof wm.LiveForm){
 								items.push({name: aa + '.beginDataInsert', value: aa + '.beginDataInsert'});
