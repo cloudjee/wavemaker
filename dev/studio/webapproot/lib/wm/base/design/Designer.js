@@ -300,12 +300,15 @@ dojo.declare("wm.Designer", wm.Surface, {
 	selectParent: function(inControl) {
 		var p = inControl || this.selected;
 		p = p&&p.parent;
-	        if (p)
+	    if (p) {
                     if (p.designWrapper) {
 			this.select(p);
                     } else {
                         this.selectParent(p);
                     }
+	    } else if (studio.page.root) {
+		this.select(studio.page.root);
+	    }
 	},
 	_deleted: function(inControl) {
 		// FIXME: name bad, called from Wrapper on destroy

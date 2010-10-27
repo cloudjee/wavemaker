@@ -602,6 +602,7 @@ dojo.declare("wm.Dialog", wm.Container, {
             }
 
 	    if (inEvent.keyCode == dojo.keys.ESCAPE && !this.noEscape) {
+		if (this._isDesign && studio.selected != this && studio.selected.getParentDialog() == this) return;
 		if (this.showing) {
 		    this.setShowing(false);
 		    this.onClose("cancel");
