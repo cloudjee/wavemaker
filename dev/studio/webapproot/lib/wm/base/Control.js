@@ -1186,7 +1186,7 @@ this.label.enable();
 	},
 	renderBounds: function() {
 		if (this.dom)
-			this.dom.setBox(this.getStyleBounds(), this.singleLine && this instanceof wm.AbstractEditor == false);
+			this.dom.setBox(this.getStyleBounds(), wm.AbstractEditor && this.singleLine && this instanceof wm.AbstractEditor == false);
 		// bc
 		if (this.designWrapper) {
 			this.designWrapper.controlBoundsChange();
