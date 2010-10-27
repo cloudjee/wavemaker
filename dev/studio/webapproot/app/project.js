@@ -181,6 +181,9 @@ dojo.declare("wm.studio.Project", null, {
 		}
 	},
 	openPage: function(inName) {
+	    if (studio.bindDialog.showing && !studio.bindDialog._hideAnimation) 
+		studio.bindDialog.dismiss();
+
 		this.pageChanging();
 		this.pageName = inName;
 		try {
@@ -430,6 +433,8 @@ dojo.declare("wm.studio.Project", null, {
 	// Close
 	//=========================================================================
 	closeProject: function(inProjectName) {
+	    if (studio.bindDialog.showing && !studio.bindDialog._hideAnimation) 
+		studio.bindDialog.dismiss();
 		wm.fire(studio._deployer, "cancel");
 		this.pageChanging();
 		this.projectChanging();
@@ -497,7 +502,7 @@ dojo.declare("wm.studio.Project", null, {
 		studio.projectChanged(name, projectData);
 	},
 	pageChanging: function() {
-		studio.pageChanging();
+	    studio.pageChanging();
 	},
 	pageChanged: function() {
 		studio.pageChanged(this.pageName, this.pageData || {});
