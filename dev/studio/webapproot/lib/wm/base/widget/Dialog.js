@@ -494,9 +494,22 @@ dojo.declare("wm.Dialog", wm.Container, {
 		this.containerNode.innerHTML = inContent;
 	},
         setShowing: function(inShowing, forceChange, skipOnClose) {
+	    var animationTime = (this._cupdating || this.showing == inShowing || this._noAnimation || this._showAnimation && this._showAnimation.status() == "playing") ? 0 : app.dialogAnimationTime; 
+
 	    // First show/hide the scrim if we're modal
 	    if (inShowing != this.showing && this.modal && !this._isDesign)
 		this.dialogScrim.setShowing(inShowing);
+
+	    var wasShowing = this.showing;
+
+	    // set it to showing so that rendering can happen
+	    if (inShowing) {
+		if (animationTime) {
+		    this.domNode.opacity = 0.01;
+		}
+		this.inherited(arguments);
+	    }
+
 
 		// global flag for easily finding the most recently shown dialog
 	        wm.Array.removeElement(wm.dialog.showingList, this);
@@ -514,14 +527,13 @@ dojo.declare("wm.Dialog", wm.Container, {
 			wm.hideToolTip(true);*/
 	    wm.bgIframe.setShowing(inShowing && this.modal && !this.isDesignedComponent());
 
-
 	    if (this.designWrapper)
 		this.designWrapper.setShowing(inShowing);
 
-	    var animationTime = (this._cupdating || this.showing == inShowing || this._noAnimation) ? 0 : app.dialogAnimationTime;
-	    if (inShowing) {
-		if (animationTime) {
 
+	    if (inShowing && !wasShowing) {
+		if (animationTime) {
+		    
 		    if (this._hideAnimation) {
 			this._hideAnimation.stop();
 			delete this._hideAnimation;
@@ -533,19 +545,13 @@ dojo.declare("wm.Dialog", wm.Container, {
 					      onEnd: dojo.hitch(this, function() {
                                                   this.onShow();
                                               })});
-		    if (this._showAnimation.status() != "playing") {
-			this.domNode.style.opacity = 0.01;
-			this.inherited(arguments);
-			this.renderBounds();
-			this.reflow();
 			this._showAnimation.play();
-		    }
 		} else {
-		    this.inherited(arguments);		    
 		    this.onShow();
 		}
 
-	    } else {
+	    } else if (!inShowing && wasShowing) {
+		
 		if (animationTime) {
 		    if (this._showAnimation)
 			this._showAnimation.stop();
