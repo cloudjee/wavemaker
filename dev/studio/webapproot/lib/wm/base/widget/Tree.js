@@ -674,11 +674,10 @@ wm.expandNode = function(n, step, accel, interval) {
  *                            }
  *                 }
  *   }
- *
- *   We can also get fancy and use displayExpression:
- *   { displayExpression: "${customername} + ' : ' + ${companyname}",
- *     childNodes:  {orderses: {displayExpression: "new Date(${orderdate}).toString()"},
- *                   customaddress: {displayExpression: "${addressline1} + '<br/>' + ${addressline2} + '<br/>' + ${city} + ', ' + ${state}"}}
+ * We can also get fancy and use displayExpression:
+ * { displayExpression: "${customername} + ' : ' + ${phone}.substring(0,3) + '-' + ${phone}.substring(3,6) + '-' + ${phone}.substring(6,10)",
+ *    childNodes:  {orderses: {displayExpression: "new Date(${orderdate}).toString()"},
+ *                   customaddress: {displayExpression: "${addressline1} +'; ' + ${city} + ', ' + ${state}"}}
  *   }
  *                   
  *   childNodes is a hash of as many different properties as the designer wants
