@@ -177,15 +177,16 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 	},
 	//FIXME: cache this
 	generateStore: function() {
-	    var sc = wm.listComponents([studio.application, studio.page], wm.ServiceVariable);
+	    var sc = wm.listComponents([studio.application, studio.page], wm.ServiceVariable).sort();
 			var lightboxList = wm.listComponents([studio.application, studio.page], wm.DojoLightbox);
-	    var nc = wm.listComponents([studio.application, studio.page], wm.NavigationCall);
+	    var nc = wm.listComponents([studio.application, studio.page], wm.NavigationCall).sort();
       var sharedEventHandlers = eventList(this.inspected.getSharedEventLookupName(this.propName), wm.isInstanceType(studio.selected.owner, wm.Application) ? studio.appsourceEditor : studio.editArea);
 	    var dialogList = wm.listComponents([studio.application, studio.page], wm.Dialog);
-      dialogList = dialogList.concat(wm.listComponents([studio.application, studio.page], wm.DojoLightbox));
-	    var dashboardList = wm.listComponents([studio.application, studio.page], wm.Dashboard);
+	    dialogList = dialogList.concat(wm.listComponents([studio.application, studio.page], wm.DojoLightbox));
+	    dialogList = dialogList.sort();
+	    var dashboardList = wm.listComponents([studio.application, studio.page], wm.Dashboard).sort();
 	    //var lf = wm.listComponents([studio.application, studio.page], wm.LiveForm);
-	    var timers = wm.listComponents([studio.application, studio.page], wm.Timer);
+	    var timers = wm.listComponents([studio.application, studio.page], wm.Timer).sort();
 	    var items=[];
 	    var eventSchema = this.inspected.schema[this.propName];
 
