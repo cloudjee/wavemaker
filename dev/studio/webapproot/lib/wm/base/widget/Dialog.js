@@ -912,6 +912,8 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
     },
     postInit: function() {
 	this.inherited(arguments);
+        this.containerWidget = this.c$[1];
+        this.buttonBar = this.containerWidget.c$[this.containerWidget.c$.length-1];
         this.setFooterBorder(this.footerBorder);
         this.setFooterBorderColor(this.footerBorderColor);
 
@@ -924,8 +926,8 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
 		button.setCaption(caption);
 		button.show();
 	    }
-            if (this.$.buttonBar)
-	        this.$.buttonBar.setShowing(captionFound);
+            if (this.buttonBar)
+	        this.buttonBar.setShowing(captionFound);
 	    this.setShowInput(this.showInput);
 	}
         if (this.$.userQuestionLabel)
@@ -934,15 +936,15 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
     },
     setFooterBorder: function(inBorder) {
         this.footerBorder = inBorder;
-        if (this.$.buttonBar) {
-            this.$.buttonBar.setBorder(inBorder);
-            this.$.buttonBar.setHeight((34 + this.$.buttonBar.padBorderMargin.t + this.$.buttonBar.padBorderMargin.b) + "px");
+        if (this.buttonBar) {
+            this.buttonBar.setBorder(inBorder);
+            this.buttonBar.setHeight((34 + this.buttonBar.padBorderMargin.t + this.buttonBar.padBorderMargin.b) + "px");
         }
     },
     setFooterBorderColor: function(inBorderColor) {
         this.footerBorderColor = inBorderColor;
-        if (this.$.buttonBar)
-            this.$.buttonBar.setBorderColor(inBorderColor);
+        if (this.buttonBar)
+            this.buttonBar.setBorderColor(inBorderColor);
     },
     // handle fitToContentHeight adjustments
     reflow: function() {
@@ -1006,7 +1008,8 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
 	} else {
 	    button.hide();
 	}	
-	this.$.buttonBar.setShowing(this.button1Caption || this.button2Caption || this.button3Caption || this.button4Caption);
+        if (this.buttonBar)
+	    this.buttonBar.setShowing(this.button1Caption || this.button2Caption || this.button3Caption || this.button4Caption);
     },
     onEnterKeyPress: function(inText) {
         if (this.enterKeyIsButton1) {
