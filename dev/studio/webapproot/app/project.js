@@ -233,6 +233,9 @@ dojo.declare("wm.studio.Project", null, {
 		}
 		var ctor = dojo.declare(n, wm.Page);
 		eval(this.pageData.widgets);	    
+	    if (!this.htmlLoader)
+		this.htmlLoader = new wm.HtmlLoader({owner: app, name: "projectHtmlLoader", relativeUrl: false});
+	    this.htmlLoader.setHtml(this.pageData.html);
 	},
 	makeApplication: function(inProps) {
             inProps = inProps || {};

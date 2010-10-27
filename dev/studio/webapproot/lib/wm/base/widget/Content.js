@@ -52,6 +52,7 @@ dojo.declare("wm.Content", wm.Box, {
 		return n;
 	},
 	contentChanged: function(forceUpdate) {
+
 	    // ignore publish events about markup changes if your stuck in a page container
 	    if (!forceUpdate && this.isDesignedComponent() && this.owner != studio.page) return;
 		var dn = this.domNode;
@@ -59,10 +60,17 @@ dojo.declare("wm.Content", wm.Box, {
 			dn.removeChild(dn.firstChild);
 		if (this.resource) {
 		    var root = this.resource.slice(0, 4) != "http" && this.resource.slice(0, 1) != "/" ? this.getPath() : "";
-			if (!this.htmlLoader)
-				this.htmlLoader = new wm.HtmlLoader({owner: this, relativeUrl: true});
-			this.htmlLoader._htmlNode = this.domNode;
-		        this.htmlLoader.setUrl(root + this.resource);
+
+		    var url = this.getPath() + this.resource;
+		    var deferred = dojo.xhrGet({url: url, 
+						sync: false,
+						preventCache: this.isDesignLoaded()});
+		    deferred.addCallback(dojo.hitch(this, function(result) {
+			var div = document.createElement("div");
+			div.innerHTML = result;
+			dn.appendChild(div);
+		    }));
+
 		} else {
 		    var n = this._makeContentNode();
 		    dn.appendChild(n);
