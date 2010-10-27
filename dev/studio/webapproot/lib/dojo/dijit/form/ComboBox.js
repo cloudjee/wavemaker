@@ -874,7 +874,8 @@ dojo.declare(
 			dojo.forEach(results, function(item, i){
 				var menuitem = this._createOption(item, labelFunc);
 				menuitem.className = "dijitReset dijitMenuItem" +
-					(this.isLeftToRight() ? "" : " dijitMenuItemRtl");
+					(this.isLeftToRight() ? "" : " dijitMenuItemRtl") + 
+					(item.indent ? " indentOption" : "");
 				dojo.attr(menuitem, "id", this.id + i);
 				this.domNode.insertBefore(menuitem, this.nextButton);
 			}, this);
