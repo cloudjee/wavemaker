@@ -165,7 +165,7 @@ Studio.extend({
 	},
 	addQryAndViewToTree: function(inNode) {
 		this.componentsToTree_rev(inNode, this.svrComps, this.excTypes);
-		this.componentsToTree_rev(inNode, this.otherComps, this.excTypes);
+		this.componentsToTree_rev(inNode, this.application.components, this.excTypes);
 	},
 	newTreeNode: function(inParent, inImage, inName, inClosed, inProps) {
 		inProps = dojo.mixin(inProps || {}, {image: inImage, content: inName, closed: inClosed});
