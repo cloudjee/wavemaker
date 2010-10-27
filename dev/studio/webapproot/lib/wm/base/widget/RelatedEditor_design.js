@@ -47,12 +47,14 @@ wm.RelatedEditor.extend({
 		}
 
 		var fieldSchema = this._getFieldSchema();
-		if (fieldSchema && fieldSchema.isList){
-			this._editingModes = ["readonly"];
-			this.editingMode = "readonly";
-		}	else {
-			this.set_editingMode("lookup");
-		}	
+		if (!this.editingMode){
+		 	 if(fieldSchema && fieldSchema.isList){
+			   this._editingModes = ["readonly"];
+			   this.editingMode = "readonly";
+		   }	else {
+			 this.set_editingMode("lookup");
+		 }
+	 }	
 	},
 	getUniqueFormField: function(){
 			var lf = wm.getParentForm(this);
