@@ -48,6 +48,7 @@
 	"Text" : "Text",
 	"TextArea" : "TextArea",
 	"Time" : "Time",
+	"RichText" : "RichText",
 	
 	"Dialogs" : "Dialogs",
 	"GenericDialog" : "GenericDialog",
@@ -65,7 +66,6 @@
 
 	"Form_Tools" : "Form Tools",
 	"DataNavigator" : "DataNavigator",
-	"SimpleForm" : "SimpleForm",
 	"LiveForm" : "LiveForm",
 	"RelatedEditor" : "RelatedEditor",
 
@@ -104,11 +104,13 @@
 
 	"Beta" : "Beta",
 	"ColorPicker" : "ColorPicker",
-	"RichText" : "RichText",
 	"BusyButton" : "BusyButton",
-	"Tree" : "Tree",
 	"Ticker" : "Ticker",
 	
+	"Advanced" : "Advanced",
+	"Tree" : "Tree",
+	"SimpleForm" : "SimpleForm",
+
 	"Deprecated" : "Deprecated",
 
 	"Non_Visual_Components" : "Non-Visual Components",

@@ -63,7 +63,6 @@
 
 [ bundlePackage.Form_Tools, bundlePackage.DataNavigator, "wm.DataNavigator", "wm.base.widget.DataNavigator", "images/wm/edit.png"],
 // [ bundlePackage.Form_Tools, "EditPanel", "wm.EditPanel", "wm.base.widget.EditPanel", "images/wm/panel.png"], //
-[ bundlePackage.Form_Tools, bundlePackage.SimpleForm, "wm.SimpleForm", "wm.base.widget.LiveForm", "images/wm/content.png"],
 [ bundlePackage.Form_Tools, bundlePackage.LiveForm, "wm.LiveForm", "wm.base.widget.LiveForm", "images/wm/content.png"],
 [ bundlePackage.Form_Tools, bundlePackage.RelatedEditor, "wm.RelatedEditor", "wm.base.widget.RelatedEditor", "images/wm/edit.png", "A group of editors for related data"],
 
@@ -103,8 +102,10 @@
 
 [ bundlePackage.Beta, bundlePackage.ColorPicker, "wm.ColorPicker", "wm.base.widget.Editors.Text", "images/wm/edit.png", "A color picker"],
 [ bundlePackage.Beta, bundlePackage.BusyButton, "wm.BusyButton", "wm.base.widget.BusyButton", "images/wm/button.png", "A button with a progress indicator"],
-[ bundlePackage.Beta, bundlePackage.Tree, "wm.PropertyTree", "wm.base.widget.Tree", "images/wm/tree.png", "A tree control"],
 [ bundlePackage.Beta, bundlePackage.Ticker, "wm.Ticker", "wm.base.widget.Ticker", "images/wm/widget.png", "Animated scrolling panel"],
+
+[ bundlePackage.Advanced, bundlePackage.Tree, "wm.PropertyTree", "wm.base.widget.Tree", "images/wm/tree.png", "A tree control"],
+[ bundlePackage.Advanced, bundlePackage.SimpleForm, "wm.SimpleForm", "wm.base.widget.LiveForm", "images/wm/content.png"],
 
 [ bundlePackage.Deprecated, bundlePackage.DataGrid, "wm.DataGrid", "wm.base.widget.DataGrid", "images/wm/data.png", "A grid control for displaying lists"],
 [ bundlePackage.Deprecated, bundlePackage.Rounded_Button, "wm.RoundedButton", "wm.base.widget.Button", "images/wm/button.png", "A simple rounded button"],
