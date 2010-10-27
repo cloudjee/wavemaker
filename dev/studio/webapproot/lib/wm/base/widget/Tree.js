@@ -675,6 +675,12 @@ wm.expandNode = function(n, step, accel, interval) {
  *                 }
  *   }
  *
+ *   We can also get fancy and use displayExpression:
+ *   { displayExpression: "${customername} + ' : ' + ${companyname}",
+ *     childNodes:  {orderses: {displayExpression: "new Date(${orderdate}).toString()"},
+ *                   customaddress: {displayExpression: "${addressline1} + '<br/>' + ${addressline2} + '<br/>' + ${city} + ', ' + ${state}"}}
+ *   }
+ *                   
  *   childNodes is a hash of as many different properties as the designer wants
  *   LiveVariables are generated and fired by the tree to load childNode lists ondemand
  **************************************************************************************************************/
@@ -728,11 +734,17 @@ dojo.declare("wm.PropertyTree", wm.Tree, {
 	    var item = this.dataSet.getItem(i);
 	    var childProps = this._treeConfig.childNodes;
 	    var hasChild = !wm.isEmpty(childProps);
+	    var content;
+	    if (this._treeConfig.displayExpression) {
+		content = wm.expression.getValue(this._treeConfig.displayExpression, item);
+	    } else {
+		content = item.getValue(this._treeConfig.displayField);
+	    }
 	    var node = new wm.TreeNode(this.root, {closed: true,
 						   data: item,
 						   dataValue: null,
 						   _nodeConfig: childProps,
-						   content: item.getValue(this._treeConfig.displayField)});
+						   content: content});
 	    if (hasChild) {
 		var blankChild = new wm.TreeNode(node, {close: true,
 							content: "_PLACEHOLDER"});
@@ -753,35 +765,53 @@ dojo.declare("wm.PropertyTree", wm.Tree, {
 		    var size = variable.getCount();
 		    for (var i = 0; i < size; i++) {
 			var item = variable.getItem(i);
+			var content;
+			if (props.displayExpression) {
+			    content = wm.expression.getValue(props.displayExpression, item);
+			} else {
+			    content = item.getValue(props.displayField);
+			}
 			var node = new wm.TreeNode(inParentNode, {closed: true,
 								  data: item,
 								  propertyName: prop,
 								  dataValue: null,
 								  _nodeConfig: childNodes,
-								  content: item.getValue(props.displayField)});
+								  content: content});
 			if (hasChild) {
 			    var blankChild = new wm.TreeNode(node, {close: true,
 								    content: "_PLACEHOLDER"});
 			}
 		    }
 		} else {
+		    var content;
+		    if (props.displayExpression) {
+			content = wm.expression.getValue(props.displayExpression, item);
+		    } else {
+			content = item.getValue(props.displayField);
+		    }
 		    var node = new wm.TreeNode(inParentNode, {closed: true,
 							      data: variable,
 							      propertyName: prop,
 							      dataValue: null,
 							      _nodeConfig: childNodes,
-							      content: variable.getValue(props.displayField)});
+							      content: content});
 		    if (hasChild) {
 			var blankChild = new wm.TreeNode(node, {close: true,
 								content: "_PLACEHOLDER"});
 		    }
 		}
 	    } else {
+		    var content;
+		    if (parentChildProps[prop].displayExpression) {
+			content = wm.expression.getValue(parentChildProps[prop].displayExpression, inParentNode.data);
+		    } else {
+			content = value;
+		    }
 		    var node = new wm.TreeNode(inParentNode, {closed: true,
 							      data: inParentNode.data,
 							      propertyName: prop,
 							      dataValue: value,
-							      content: value});
+							      content: content});
 	    }
 	}
     },
