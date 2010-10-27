@@ -38,7 +38,7 @@ Studio.extend({
 		this.widgetsTree.clear();
    	        this.searchText = (optionalSearch) ? optionalSearch.toLowerCase() :  "";
 	        if (optionalSearch)
-	            this.regex = new RegExp(this.searchText);
+	            this.regex = new RegExp(this.searchText.toLowerCase());
 		if (this.application)
 			this.appComponentsToTree(this.tree);
 		if (this.page) {
@@ -139,8 +139,8 @@ Studio.extend({
 			    if (name.toLowerCase().match(this.regex)) {
 				svrCompSearch[name] = c;
 			    }
-                            svrComps = svrCompSearch;
 			}
+                        svrComps = svrCompSearch;
 
 			var otherComps = {};
 			for (var name in this.otherComps) {
@@ -198,7 +198,7 @@ Studio.extend({
 		    if (inWidget.flags.notInspectable || inWidget.isParentLocked() || inWidget instanceof wm.Dialog)
 				return;		    
 		    // create a new node if we are displaying this widget, else pass in the parent node.  If we're in search mode, then all widgets get added to the root node
-		    var n = (this.searchText && !inWidget.name.match(this.regex)) ? inNode : this.newComponentNode(inNode, inWidget);
+		    var n = (this.searchText && !inWidget.name.toLowerCase().match(this.regex)) ? inNode : this.newComponentNode(inNode, inWidget);
 		    this.subWidgetsToTree(n, inWidget);
 		}
 	},
