@@ -197,7 +197,9 @@ public class ResourceFileService {
          return P; 
     }
 
-    public FileUploadResponse uploadFile(@ParamName(name="file0") MultipartFile file, String path) throws IOException {
+    public FileUploadResponse uploadFile(@ParamName(name="file") MultipartFile file, String path) throws IOException {
+	    System.out.println("UPLOAD FILE");
+	    System.out.println("UPLOAD FILE:" + file.getOriginalFilename());
         FileUploadResponse ret = new FileUploadResponse();
         try {
             File dir = new File(getResourcesDir(), path);

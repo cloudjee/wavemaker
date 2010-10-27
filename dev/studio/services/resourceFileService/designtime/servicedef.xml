@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" springFile="resourceManager.spring.xml" type="JavaService" CRUDService="false" class="com.wavemaker.studio.ResourceFileService" id="resourceFileService">
     <operation name="uploadFile">
-        <parameter isList="false" typeRef="org.springframework.web.multipart.MultipartFile" name="file0"/>
+        <parameter isList="false" typeRef="org.springframework.web.multipart.MultipartFile" name="file"/>
         <parameter isList="false" typeRef="java.lang.String" name="path"/>
         <return isList="false" typeRef="com.wavemaker.runtime.server.FileUploadResponse"/>
     </operation>
