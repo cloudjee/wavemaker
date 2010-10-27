@@ -533,20 +533,30 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         //onGetStructure: function(inStructure) {},
 	setColumnData: function(){
 		if (!this.variable || (this.variable.type == this.dsType && this.columns.length > 0)){
-			return;
+  		return;
 		}
-
+		
 		this.dsType = this.variable.type;
 		this.columns = [];
 		var viewFields = this.getViewFields();
-	        dojo.forEach(viewFields, function(f,i){
-			this.columns.push({show:i < 15, id: f.dataIndex, title:wm.capitalize(f.dataIndex), width:'100%', displayType:f.displayType, noDelete:true, align: f.displayType == 'Number' ? 'right':'left'});
+		dojo.forEach(viewFields, function(f,i){
+		  var align = 'left';
+			var width = '100%';
+      var formatFunc = '';
+		  if (f.displayType == 'Number'){
+		    align = 'right';
+				width = '120px';
+		  } else if (f.displayType == 'Date'){
+        width = '120px';
+				formatFunc = 'wm_date_formatter';
+			}
+		  this.columns.push({show:i < 15, id: f.dataIndex, title:wm.capitalize(f.dataIndex), width:width, displayType:f.displayType, noDelete:true, align: align, formatFunc: formatFunc});
 		}, this);
 		
-	    if (this.isDesignLoaded()) {
-		if (!this.contextMenu) this.designCreate(); // special case from themedesigner
-		this.contextMenu.setDataSet(this.columns);
-	    }
+		if (this.isDesignLoaded()) {
+		  if (!this.contextMenu) this.designCreate(); // special case from themedesigner
+		  this.contextMenu.setDataSet(this.columns);
+		}
 	},
 	getDateFields: function(){
 		var dateFields = [];
