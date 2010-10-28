@@ -47,36 +47,34 @@ dojo.declare("wm.ListViewerRow", wm.Container, {
 	this.inherited(arguments);
 	this.variable = new wm.Variable({name: "variable", owner: this});
 	this.itemNumber = new wm.Variable({name: "itemNumber", owner: this, type: "NumberData"});
-	this._first = true;
         this.border = this.parent.rowBorder;
         this.borderColor = this.parent.borderColor;
+	dojo.destroy(this.domNode);
+        this.domNode = this.replacementNode;
+        this.dom.node = this.domNode;
+        delete this.replacementNode;
+        
     },
-    renderRow: function(inData, inNode, index) {
-	if (this._first) {
-	    dojo.destroy(this.domNode);
-	    this._first = false;
-	}
+    renderRow: function(inData, index) {
+
 	// Prepare this object to represent a new row
-	this.domNode = inNode;
-	this.dom.node = inNode;
 	this.components = {};
 	this.c$ = [];
 	this.widgets = {};
 	this.domNode.innerHTML = "";
-	this.variable.setData(inData);
-	this.itemNumber.setData({dataValue: index+1});
-	
-	var widgetsJson = dojo.clone(this.owner._widgetsJson);
-	this.fixWireIds(widgetsJson);
 
-	this.createComponents(widgetsJson, this);
-	//this.destroyWires(this);
+	    this.variable.setData(inData);
+	    this.itemNumber.setData({dataValue: index+1});
+	    var widgetsJson = dojo.clone(this.owner._widgetsJson);
+	    this.fixWireIds(widgetsJson);
+	    this.createComponents(widgetsJson, this);
+	    //this.destroyWires(this);
+
 	this.invalidCss = true;
 	this.render();
 
 	this.reflow();
 	this.renderBounds();
-
     },
     renderBounds: function() {
         this.inherited(arguments);
@@ -129,6 +127,9 @@ dojo.declare("wm.ListViewerRow", wm.Container, {
  * auto loading new rows from server?
  */
 dojo.declare("wm.ListViewer", wm.Container, {
+    _selectedIndex: -1,
+    selectedItem: null,
+    allowRowSelection: false,
     lock: true,
     manageLiveVar: false,
     scrollX: false,
@@ -156,11 +157,11 @@ dojo.declare("wm.ListViewer", wm.Container, {
 	this.nodes = [];
 	this.rowRenderers = [];
 	this.currentRenderer = this.rowRenderers[0];
-
+        this.selectedItem = new wm.Variable({name: "selectedItem", owner: this});
 	this.setDataSet(this.dataSet);
         if (this.pageName)
 	    this.setPageName(this.pageName);
-	this.connect(this.domNode, "onscroll", this, "renderRows");
+	this.connect(this.domNode, "onscroll", this, "scheduleRenderRows");
     },
     setRowBorder: function(inBorder) {
         this.rowBorder = inBorder;
@@ -253,13 +254,16 @@ dojo.declare("wm.ListViewer", wm.Container, {
 	    dojo.disconnect(this._dataSetConnection);
 	this.dataSet = inDataSet;
 	if (inDataSet && inDataSet instanceof wm.Variable) {
+            this.selectedItem.setType(inDataSet.type);
 	    var h = this.avgHeight;
 
 	    if (this.manageLiveVar)
 		this._dataSetConnection = dojo.connect(this.dataSet, "onSuccess", this, "renderRows");
 
-	    for (var i = 0; i < this.rowRenderers.length; i++)
-		this.rowRenderers[i].variable.setType(inDataSet.type);
+	    for (var i = 0; i < this.rowRenderers.length; i++) {
+                if (this.rowRenderers[i].variable.type != inDataSet.type)
+                    this.rowRenderers[i].variable.setType(inDataSet.type);
+            }
 
 	    var length;
 	    if (this.manageLiveVar) {
@@ -270,6 +274,7 @@ dojo.declare("wm.ListViewer", wm.Container, {
 		length = this.dataSet.getCount();
 
 
+            
 	    for (var i = 0; i < length; i++) {
 		if (!this.nodes[i]) {
 		    this.nodes[i] = document.createElement("div");		
@@ -307,7 +312,7 @@ dojo.declare("wm.ListViewer", wm.Container, {
     renderBounds: function() {
 	this.inherited(arguments);
 	this._hasBounds = true;
-	this.renderRows(); // can't properly render the rows until we have a size of our own. keep in mind we can't just call reflow on all rows; all rows are rendered by a single renderer object
+	this.renderRows(); 
     },
     updateRowTops: function() {
         if (!this._renderingRows) {
@@ -319,6 +324,30 @@ dojo.declare("wm.ListViewer", wm.Container, {
             }
         }
             
+    },
+    scheduleRenderRows: function() {
+        wm.job(this.getRuntimeId() + ".renderRows", 10, dojo.hitch(this, "renderRows"));
+    },
+    addOnClickHandler: function(i) {
+        this.connect(this.nodes[i], "onclick", this, function() {
+            this.setSelectedIndex(i);
+        });
+    },
+    setSelectedIndex: function(i) {
+        if (this._selectedIndex != -1) {
+            dojo.removeClass(this.nodes[this._selectedIndex], "ListViewerSelectedItem");
+        }
+        i = parseInt(i);
+        if (!isNaN(i) && i >= 0) {
+            this._selectedIndex = i;
+            dojo.addClass(this.nodes[this._selectedIndex], "ListViewerSelectedItem");
+            this.selectedItem.setData(this.rowRenderers[i].variable);
+        } else {
+            this._selectedIndex = -1;
+        }
+    },
+    getSelectedIndex: function() {
+        return this._selectedIndex;
     },
     renderRows: function() {
 	if (!this._hasBounds) return;
@@ -334,60 +363,98 @@ dojo.declare("wm.ListViewer", wm.Container, {
         this._renderingRows = true;	
 	
 	var heightSum = 0;
+        var realSum = 0;
 	var heightCount = 0;
 	var curAvg = this.avgHeight;
+        var realAvg = 0;
+        var realAvgCount = 0;
 	var bounds = this.getContentBounds();
+        var lastRenderedRowIndex = 0;
 
 	var length;
 	if (this.manageLiveVar) 
-		length = this.dataSet.dataSetCount-1; // fix to this also in setDataSet
+	    length = this.dataSet.dataSetCount-1; // fix to this also in setDataSet
 	else
 	    length = this.dataSet.getCount();
 
+        /* Iterate over every row, creating each row, and then rendering each one that is scrolled into view */
 	for (var i = 0; i < length; i++) {
 	    this.currentRenderer = this.rowRenderers[i];	    
+
+            /* If there is no rowRenderer, create one; so we'll have an empty rowRenderer for each row; row is empty until 
+             * we call renderRow and variable.setDataSet 
+             */
 	    if (!this.currentRenderer) {
 		var name = "rowRenderer" + i;
-		this.currentRenderer = this[name] = this.rowRenderers[i] = dojo.mixin(new wm.ListViewerRow({name: name, owner: this, parent: this}), this._js);
+		this.currentRenderer = this[name] = this.rowRenderers[i] = dojo.mixin(new wm.ListViewerRow({name: name, owner: this, parent: this, replacementNode: this.nodes[i]}), this._js);
 		this.currentRenderer.variable.setType(this.dataSet.type);
 		this.nodes[i].id = this.currentRenderer.getId() + "_row" + i;
-		this.currentRenderer.bounds.h = curAvg;
-		this.currentRenderer.height = curAvg + "px";
-	    }
+                if (this.allowRowSelection) {
+                    this.addOnClickHandler(i);
+                }
+                this.currentRenderer._noData = true;
+/*
+                dojo.destroy(this.currentRenderer.domNode);
+                this.currentRenderer.domNode = this.nodes[i];
+                this.currentRenderer.dom.domNode = this.nodes[i];
 
+                */
+		this.currentRenderer.bounds.h = curAvg;
+	    }
 
 	    this.currentRenderer.bounds.w = bounds.w;
 
-
+            // for each row that is visible, render it
 	    if (this.isScrolledIntoView(heightSum, this.currentRenderer.bounds.h , bounds)) {
-		if (this.currentRenderer.c$.length == 0) {
-		    if (!data[i]) {
-			if (!this.dataSet._requester) 
-			    this.dataSet.setPage(Math.floor(i/(this.dataSet.maxResults || 1)));
-			this.currentRenderer._noData = true;
-		    }
-		} else if (data[i] && this.currentRenderer._noData) {
+
+                // If there are no widgets in the rowRenderer, then it needs to be rendered.  If there's no data from the
+                // server, insure that we have data from the server and call setData on the renderer's wm.Variable.
+		if (this.currentRenderer._noData) {
+		    if (!data[i] && !this.dataSet._requester) {
+			    this.dataSet.firstRow = i;
+                            this.dataSet.update();
+                            //this.dataSet.setPage(Math.floor(i/(this.dataSet.maxResults || 1)));
+                    } else if (data[i]) {
 			this.currentRenderer.variable.setData(data[i]);
 			delete this.currentRenderer._noData;
-		}
+		    }
+                }
 
+                // If the row has widgets in it, then call renderBounds and reflow; else call renderRow to load the widgets.
 		this.currentRenderer.inFlow = true;
-		if (this.currentRenderer.c$.length) {
+		if (this.currentRenderer.c$.length || this.currentRenderer._noData) {
 		    this.currentRenderer.renderBounds();
 		    this.currentRenderer.reflow();
 		} else
-		    this.currentRenderer.renderRow(data[i], this.nodes[i], i);
-	    } else 
-		    this.currentRenderer.inFlow = false;
-
+		    this.currentRenderer.renderRow(data[i], i);
+                lastRenderedRowIndex = i;
+	    } else {
+		this.currentRenderer.inFlow = false;
+                if (this.currentRenderer.c$.length == 0 && !this.currentRenderer._avgHeightSet) {
+                    var avg =  (realAvgCount >= 5) ? realAvg : curAvg;
+		    this.currentRenderer.bounds.h = avg;
+		    this.currentRenderer.height = avg + "px";
+                    this.currentRenderer._avgHeightSet = true;
+                }
+            }
 	    this.currentRenderer.bounds.w = bounds.w;
 	    this.currentRenderer.bounds.t = heightSum;
 	    this.currentRenderer.domNode.style.top = heightSum + "px";
+	    this.currentRenderer.domNode.style.height = this.currentRenderer.bounds.h + "px";
+
             //console.log(i + ": " + heightSum + ", INC:" + this.currentRenderer.getPreferredFitToContentHeight());
-	    heightSum += this.currentRenderer.getPreferredFitToContentHeight();
+            //var curHeight = this.currentRenderer.getPreferredFitToContentHeight();
+            var curHeight = this.currentRenderer.bounds.h;
+	    heightSum += curHeight;
 	    heightCount++;
+            if (this.currentRenderer.c$.length) {
+                realSum += curHeight;
+                realAvgCount++;
+            }
+            realAvg = Math.floor(realSum/realAvgCount);
 	    curAvg = Math.floor(heightSum/heightCount);
 	}
+
         delete this._renderingRows;
 
     },
@@ -431,7 +498,12 @@ wm.ListViewer.extend({
 });
 
 wm.Object.extendSchema(wm.ListViewer, {
-	dataSet: { readonly: true, group: "data", order: 1, bindTarget: 1, type: "wm.Variable", isList: true},
-	pageName: {group: "common", bindable: 1, type: "string", order: 50}
+    dataSet: { readonly: true, group: "data", order: 1, bindTarget: 1, type: "wm.Variable", isList: true},
+    pageName: {group: "common", bindable: 1, type: "string", order: 50},
+    fitToContentWidth:  {ignore: true},
+    fitToContentHeight:  {ignore: true},
+    imageList: {ignore: true},
+    lock: {ignore: true},
+    selectedItem: { ignore: 1, bindSource: 1, isObject: true, simpleBindProp: true }
 });
 
