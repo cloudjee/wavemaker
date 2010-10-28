@@ -634,7 +634,6 @@ dojo.declare("wm.Dialog", wm.Container, {
     },
     createTitle: function() {
 	this.titleBar = new wm.Container({_classes: {domNode: ["dialogtitlebar"]}, 
-					  noInspector: true,
 					  showing: this.title,
 					  name: "titleBar", 
 					  parent: this,
@@ -646,7 +645,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 					  border: this.titlebarBorder,
 					  borderColor: this.titlebarBorderColor,
 					  verticalAlign: "middle",
-					  layoutKind: "left-to-right"});
+					  layoutKind: "left-to-right",
+					  flags: {notInspectable: true}});
+
 	this.titleClose = new wm.Picture({_classes: {domNode: ["dialogclosebutton"]},
 					  source: "/wavemaker/lib/wm/base/widget/themes/default/images/blank.gif",
 					  noInspector: true,
@@ -920,7 +921,9 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
     postInit: function() {
 	this.inherited(arguments);
         this.containerWidget = this.c$[1];
+	this.containerWidget.flags.notInspectable = true;
         this.buttonBar = this.containerWidget.c$[this.containerWidget.c$.length-1];
+	this.buttonBar.flags.notInspectable = true;
         this.setFooterBorder(this.footerBorder);
         this.setFooterBorderColor(this.footerBorderColor);
 
@@ -1341,7 +1344,8 @@ dojo.declare("wm.pageContainerMixin", null, {
 							 height: "40px",
 							 width: "100%",
 						         border: this.footerBorder || "",
-							 borderColor: this.footerBorderColor || ""});
+							 borderColor: this.footerBorderColor || "",
+							 flags: {notInspectable: true}});
 	    if (!this.noBevel)
 		this.controlsBevel = new wm.Bevel({ parent: cp, owner: this });
 		var bp = this.buttonPanel = new wm.Panel({ parent: cp, owner: this, width: "100%", height: "100%", layoutKind: "left-to-right", horizontalAlign: "right"});

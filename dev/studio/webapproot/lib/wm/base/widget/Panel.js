@@ -111,7 +111,8 @@ dojo.declare("wm.FancyPanel", wm.Panel, {
                                              padding: "0,0,0,10",
                                              owner: this,
                                              parent: this,
-                                             noInspector: true});
+					     flags: {notInspectable: true}});
+
 	    var innerBorder = String(this.innerBorder);
             innerBorder = this._parseExtents(innerBorder);
 	    this.containerWidget = new wm.Container({
