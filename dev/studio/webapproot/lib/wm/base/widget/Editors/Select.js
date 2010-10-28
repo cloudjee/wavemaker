@@ -887,8 +887,10 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 	dataField: "All Fields",
 	autoDataSet: true,
 	startUpdate: true,
+        _selectedData: null,
 	init: function() {
 		this.inherited(arguments);
+            this._selectedData = {};
 		if (this.autoDataSet)
 		    this.createDataSet();
 	},
@@ -945,7 +947,7 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		if (s) {
 			this.beginEditUpdate();
 			//console.log(s.getId(), this.dataValue);
-			var v = this.selectedItem;
+		        var v = this._selectedData;
 			// update cursor
 			if (this.autoDataSet && this.dataSet) {
 				var i = this.dataSet.getItemIndex(v);
@@ -962,6 +964,12 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 			this.setEditorValue(this.defaultInsert);
 			this.changed();
 		}
+	},
+	updateSelectedItem: function() {
+		// FIXME: only if dataField is All Field should we update entire selectedItem.
+		var v = this.getEditorValue(true);
+                this._selectedData = v;
+		this.selectedItem.setData(v);
 	}
 });
 
