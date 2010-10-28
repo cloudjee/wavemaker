@@ -406,6 +406,13 @@ dojo.declare("wm.Tree", wm.Box, {
 	},
 	addToSelection: function(inNode) {
 		if (inNode) {
+		    var tmpnode = inNode.parent;
+		    while (tmpnode != this.root) {
+			if (tmpnode.closed)
+			    tmpnode.setOpen(true);
+			tmpnode = tmpnode.parent;
+		    }
+
 			this.selected = inNode;
 			inNode.selected = true;
 			inNode.styleContent();
