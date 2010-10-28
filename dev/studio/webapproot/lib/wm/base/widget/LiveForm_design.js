@@ -274,9 +274,10 @@ wm.LiveFormBase.extend({
 	addEditorToForm: function(inEditor) {
 		var e = inEditor, ff = e.formField && this.getViewDataIndex(e.formField || "");
 		if (ff) {
+                    if (e instanceof wm.RelatedEditor)
 			var f = this.addEditorToView(e, ff);
-			if (f)
-				wm.updateFieldEditorProps(e, f)
+		    if (f)
+			wm.updateFieldEditorProps(e, f)
 		}
 		inEditor.setReadonly(this.readonly);
 		this._bindEditor(inEditor);
