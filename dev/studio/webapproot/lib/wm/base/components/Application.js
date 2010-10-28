@@ -46,7 +46,7 @@ dojo.declare("wm.Application", wm.Component, {
 		                 window.location.search.match(/theme\=(.*?)$/);
 
 	        this.setTheme(themematch ? themematch[1] : this.theme, true);
-	        if (dojo.isIE && dojo.isIE < 8) this.dialogAnimationTime = 0;
+	        if (dojo.isIE && dojo.isIE < 8 || dojo.isIE == 9) this.dialogAnimationTime = 0;
 		this.pageDialog = new wm.PageDialog({name: "pageDialog", owner: this});
 		this.toastDialog = new wm.Toast({name: "toastDialog", owner: this});
 	       try{
