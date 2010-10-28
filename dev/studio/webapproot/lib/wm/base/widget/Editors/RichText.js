@@ -175,7 +175,7 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	getEditorValue: function() {
 		try {
   		    var result =  this.inherited(arguments);
-		    if (!result.match(/\>\w/)) result = "";
+		    if (result.match(/^\s*\<.*\>\s*$/) && !result.match(/\>\w/)) result = "";
 		    return result;
 		} catch(e) {
 		}
