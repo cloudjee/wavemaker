@@ -42,8 +42,17 @@ Studio.extend({
 		if (this.application)
 			this.appComponentsToTree(this.tree);
 		if (this.page) {
-			this.pageComponentsToTree(this.tree);
-			this.widgetToTree(this.widgetsTree.root, this.page.root);
+		    this.pageComponentsToTree(this.tree);
+		    var dialogs = this.getTreeComponents(this.application.components, null, [wm.Dialog]);
+		    for (var d in dialogs) {
+			this.widgetToTree(this.widgetsTree.root, dialogs[d]);
+		    }
+		    dialogs = this.getTreeComponents(this.page.components, null, [wm.Dialog]);
+		    for (var d in dialogs) {
+			this.widgetToTree(this.widgetsTree.root, dialogs[d]);
+		    }
+		    this.widgetToTree(this.widgetsTree.root, this.page.root);
+
 		}
 	},
 	    getTreeComponents: function(inComponents, inExcludeTypes, inIncludeTypes) {
@@ -89,7 +98,6 @@ Studio.extend({
 	        this.page._studioTreeNode = n;
 
 	    var components  = this.getTreeComponents(this.page.components, [wm.Control]);
-	    var dialogs = this.getTreeComponents(this.page.components, null, [wm.Dialog]);
 
 		    if (this.searchText) {
 			var _components = {};
@@ -101,6 +109,7 @@ Studio.extend({
 			}
 			components = _components;
 
+/*
 			var _dialogs = {};
 			for (var name in dialogs) {
 			    var c = dialogs[name];
@@ -109,15 +118,16 @@ Studio.extend({
 			    }
 			}
 			dialogs = _dialogs;
+			*/
 		    }
 
 	    var cmpCount = 0;
 	    for (cmp in components) cmpCount++;
-	    for (cmp in dialogs) cmpCount++;
+	    //for (cmp in dialogs) cmpCount++;
 	    //this.useHierarchy =  (cmpCount > 6);
 	    this.useHierarchy =  true;
 	    this.componentsToTree(n, components);
-	    this.componentsToTree(n, dialogs);
+	    //this.componentsToTree(n, dialogs);
 	    this.useHierarchy = false;
 	},
 	appComponentsToTree: function(inTree) {
@@ -185,7 +195,7 @@ Studio.extend({
 			o = inComponent && inComponent._studioTreeNode,
 			closed = o ? o.closed : (inProps && inProps.closed),
 			img = inImage || this.getComponentImage(inComponent),
-			name = inName || inComponent._treeNodeName || inComponent.name,
+	                name = inName || inComponent._treeNodeName || inComponent.getId(),
 			n = this.newTreeNode(inParent, img, name, closed, inProps);
 		if (inComponent) {
 			n.component = inComponent;
@@ -195,11 +205,12 @@ Studio.extend({
 	},
 	widgetToTree: function(inNode, inWidget) {
 		if (inWidget) {
-		    if (inWidget.flags.notInspectable || inWidget.isParentLocked() || inWidget instanceof wm.Dialog)
+		    if (inWidget.flags.notInspectable || inWidget.isParentLocked())
 				return;		    
 		    // create a new node if we are displaying this widget, else pass in the parent node.  If we're in search mode, then all widgets get added to the root node
-		    var n = (this.searchText && !inWidget.name.toLowerCase().match(this.regex)) ? inNode : this.newComponentNode(inNode, inWidget);
-		    this.subWidgetsToTree(n, inWidget);
+		    var n = (this.searchText && !inWidget.name.toLowerCase().match(this.regex)) ? inNode : this.newComponentNode(inNode, inWidget, null, null, {closed: inWidget instanceof wm.Dialog});
+		    if (inWidget instanceof wm.Dialog == false || inWidget instanceof wm.DesignableDialog)
+			this.subWidgetsToTree(n, inWidget);
 		}
 	},
 	subWidgetsToTree: function(inNode, inWidget) {
@@ -217,7 +228,7 @@ Studio.extend({
 	componentToTree: function(inNode, inComponent, inType) {
 		if (inComponent && !inComponent.flags.notInspectable && (!inType || inComponent instanceof inType)) {
 			var props = {};
-		    props.closed = inComponent instanceof wm.Dialog || inComponent instanceof wm.Control == false;
+		    props.closed = true;
 			inNode = wm.fire(inComponent, "preNewComponentNode", [inNode, props]) || inNode;
 		    if (this.searchText && !inComponent.name.toLowerCase().match(this.regex)) {
 			return;
@@ -227,7 +238,7 @@ Studio.extend({
 		    }
 
 		    var n = this.newComponentNode(inNode, inComponent, null, null, props);
-  		    if (inComponent instanceof wm.TypeDefinition || inComponent instanceof wm.DesignableDialog)
+  		    if (inComponent instanceof wm.TypeDefinition)
 			    this.subWidgetsToTree(n, inComponent);
 		    this.searchText = searchText;
 		}

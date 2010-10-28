@@ -44,10 +44,12 @@ wm.hasBindableWidgets = function(inWidget, inExcludeWidget) {
 }
 
 addComponentTypeBinderNodes = function(inParent, inClass, inStrict, includePageContainers) {
+    var isRoot = !inParent.page || inParent.page == studio.page;
+    var owners = (isRoot) ? [studio.application, inParent.page] : [inParent.page];
     if (!includePageContainers) {
-	var comps = wm.listComponents([studio.application, inParent.page], inClass, inStrict);
+	var comps = wm.listComponents(owners, inClass, inStrict);
     } else {
-	var pages = wm.listAllPageContainers([studio.application, inParent.page]);
+	var pages = wm.listAllPageContainers(owners);
 	var comps = wm.listComponents(pages, inClass, false);
 
     }
@@ -834,11 +836,8 @@ dojo.declare("wm.BindTreeNode", wm.TreeNode, {
 		this.initBindingProps(this.parent, props);
 	    var content;
 	    delete object.id;
-	    if (object.owner == studio.page) {
-		content = object.getId();
-	    } else {
-		content = object.owner.name + "." + object.getId();
-	    }
+	    content = object.getId();
+
 		props.content = props.content || this.getNodeContent(content, object.type, object.isList, props);
 
 	},
@@ -1138,11 +1137,15 @@ dojo.declare("wm.WidgetContainerSourceTreeNode", wm.BindSourceTreeNode, {
 		this.inherited(arguments);
 	    var widgets = {};
 	    for(var w in this.object.widgets)
-		widgets[w] = this.object.widgets[w];
+		if (!this.object.widgets[w].flags.notInspectable)
+		    widgets[w] = this.object.widgets[w];
 	    if (this.object == this.page.root) {
-		var comps = wm.listComponents([studio.application, this.page], wm.Dialog, false);
-		for (var w in comps) 
-		    widgets[w] = comps[w];
+		var owners = (this.page == studio.page) ? [studio.application, this.page] : [this.page];
+		var comps = wm.listComponents(owners, wm.Dialog, false);
+		for (var w in comps) {
+		    if (!comps[w].flags.notInspectable)
+			widgets[w] = comps[w];
+		}
 	    }
 
 		wm.forEachProperty(widgets, dojo.hitch(this, function(w) {
