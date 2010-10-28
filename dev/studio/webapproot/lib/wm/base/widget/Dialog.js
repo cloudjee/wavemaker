@@ -50,7 +50,7 @@ wm.bgIframe = {
 				" style='position: absolute; left: 0px; top: 0px;",
 				" z-index: 2; filter:Alpha(Opacity=\"0\");'>"
 			].join(''),
-			f = this.domNode = dojo.isIE ? document.createElement(html) : document.createElement("IFRAME");
+	    f = this.domNode = (dojo.isIE && dojo.isIE < 9) ? document.createElement(html) : document.createElement("IFRAME");
 		document.body.appendChild(f);
 		f.style.display = "none";
 		if (dojo.isMoz) {
@@ -546,6 +546,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 					      properties: {opacity: 1},
 					      duration: animationTime,
 					      onEnd: dojo.hitch(this, function() {
+			                          this.domNode.style.opacity = 1; // needed for IE 9 beta
                                                   this.onShow();
                                               })});
 			this._showAnimation.play();
