@@ -444,7 +444,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	incrementSeries: function(){
 		this.addChartSeries(true);
 		this.dojoObj.render();
-		this.renderBounds();
+		//this.renderBounds();
 	},
 	updateSeries: function(seriesName, inData){
 		try{
