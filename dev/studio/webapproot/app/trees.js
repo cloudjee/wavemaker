@@ -135,7 +135,7 @@ Studio.extend({
 		var n = this.newTreeNode(inTree.root, "images/project_16t.png", "Project (" + studio.project.projectName + ")");
 	        n.component = n.owner = this.application
 	        this.application._studioTreeNode = n;
-	    this.excTypes = [wm.Query, wm.LiveView];
+	    this.excTypes = [wm.Query, wm.LiveView, wm.Control];
 		if (this.application) {
 		    this.svrComps = this.application.getServerComponents();
                     var svrComps = this.getTreeComponents(this.svrComps, this.excTypes);
