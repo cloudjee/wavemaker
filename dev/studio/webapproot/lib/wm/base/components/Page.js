@@ -387,7 +387,7 @@ dojo.declare("wm.Page", wm.Component, {
 
 	    var isInput = (e.target.tagName == "INPUT");
 	    var chr = app._keys[e.keyCode];
-            var isSpecial = chr.length > 1;
+            var isSpecial = chr && chr.length > 1;
 
             if (e.keyCode == dojo.keys.ESCAPE)
 		this.onEscapeKey();
