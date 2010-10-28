@@ -119,15 +119,18 @@ dojo.declare("wm.Dialog", wm.Container, {
     init: function() {
         this.inherited(arguments);
         this._isDesign = this.isDesignLoaded();
+
+	if (this._isDesign) 
+	    studio.designer.domNode.appendChild(this.domNode);
+	else
+	    document.body.appendChild(this.domNode);
+
 	this.dialogScrim = new wm.Scrim({owner: this, _classes: {domNode: ["wmdialog-scrim"]}, waitCursor: false});
 	this.createTitle();
     },
 	postInit: function() {
 		this.inherited(arguments);
-	    if (this.isDesignedComponent())
-		studio.designer.domNode.appendChild(this.domNode);
-	    else
-		document.body.appendChild(this.domNode);
+
 		dojo.addClass(this.domNode, "wmdialog");
 /*
 		this.setContentWidth(this.contentWidth);
