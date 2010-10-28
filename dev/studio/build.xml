@@ -46,12 +46,38 @@
         <delete file="${classes.studio.dir}/CloudDB.properties" />
     </target>
 
+      <target name="tar-clean" description="Clean for building from tar file">
+      <echo>Start of tar-clean in studio/build.xml</echo>
+        <mkdir dir="${root.dir}/tmp" />
+        <copy file="${classes.studio.dir}/CloudDB.spring.xml" todir="${root.dir}/tmp"/>
+        <copy file="${classes.studio.dir}/CloudDB.properties" todir="${root.dir}/tmp"/>
+        <copy file="${classes.studio.dir}/registrationService.spring.xml" todir="${root.dir}/tmp"/>
+        <copy file="${classes.studio.dir}/UserService.spring.xml" todir="${root.dir}/tmp"/>
+        <delete dir="${classes.studio.dir}"/>
+        <copy file="${root.dir}/tmp/CloudDB.spring.xml" todir="${classes.studio.dir}"/>
+        <copy file="${root.dir}/tmp/CloudDB.properties" todir="${classes.studio.dir}"/>
+        <copy file="${root.dir}/tmp/registrationService.spring.xml" todir="${classes.studio.dir}"/>
+        <copy file="${root.dir}/tmp/UserService.spring.xml" todir="${classes.studio.dir}"/>
+        <delete dir="${root.dir}/tmp"/>
+        <delete dir="${build.studio.dir}"/>
+        <delete dir="${javadoc.studio.dir}"/>
+    </target>
+    
+    
     <target name="cleanall" depends="clean" 
             description="Delete all compiled and copied artifacts">
       <echo>Step 1 (dev/studio/build.xml "cleanall") finished depends "clean"; now delete ${lib.studio.dir}</echo>
         <delete dir="${lib.studio.dir}"/>
       <echo>Step 2 (dev/studio/build.xml "cleanall") finished deletion; exiting "cleanall"</echo>
     </target>
+    
+    <target name="tar-cleanall" depends="tar-clean" 
+            description="Delete all compiled and copied artifacts except a few spring xml files for building from tar ball">
+      <echo>Step 1 (dev/studio/build.xml "cleanall") finished depends "tar-clean"; now delete ${lib.studio.dir}</echo>
+        <delete dir="${lib.studio.dir}"/>
+      <echo>Step 2 (dev/studio/build.xml "cleanall") finished deletion; exiting "cleanall"</echo>
+    </target>
+
 
     <target name="setup-webinf-xml">
       <copy tofile="${webinf.studio.dir}/web.xml" file="${src.root.dir}/tools/templates/web.xml" overwrite="true" />

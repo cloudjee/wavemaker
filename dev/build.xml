@@ -6,8 +6,14 @@
 
     <target name="all" depends="clean,buildtest, deployWithBuild"
             description="Build product and tests, deploy studio">
-		<delete dir="${src.temp.root.dir}"/>
-	</target>
+		  <delete dir="${src.temp.root.dir}"/>
+	  </target>
+
+    <target name="tar-all" depends="tar-clean,buildtest, deployWithBuild"
+            description="Build product and tests, deploy studio">
+		  <delete dir="${src.temp.root.dir}"/>
+	  </target>
+
   
     <target name="clean" depends="undeploy" unless="dev-clean-complete"
             description="Clean everything except js build">
@@ -27,6 +33,24 @@ FINISHED: call to (studio/build.xml "cleanall");
 NEXT: exiting "clean"</echo>
     </target>
 
+    <target name="tar-clean" depends="undeploy" unless="dev-clean-complete"
+            description="Clean everything except js build but save required spring xml files">
+      <property name="dev-clean-complete" value="true" />
+      <echo>Start of tar-clean in dev/build.xml</echo>
+      <echo>Step 1 (dev/build.xml "tar-clean"): 
+FINISHED: depends "undeploy";
+NEXT: delete ${build.dir}</echo>
+        <delete dir="${build.dir}"/>
+
+	<echo>Step 2 (dev/build.xml "tar-clean"): 
+FINISHED: delete ${build.dir};
+NEXT: call tar-cleanall on ${studio.dir}</echo>
+        <ant dir="${studio.dir}" target="tar-cleanall"/>
+	<echo>Step 3 (dev/build.xml "clean"):
+FINISHED: call to (studio/build.xml "tar-cleanall"); 
+NEXT: exiting "tar-clean"</echo>
+    </target>
+    
     <!-- Currently cleanall is just clean + wiping out our compressed javascript library -->
     <target name="cleanall" depends="clean" description="Clean everything" unless="dev-cleanall-complete">
       <echo>Start of cleanall in dev/build.xml</echo>
