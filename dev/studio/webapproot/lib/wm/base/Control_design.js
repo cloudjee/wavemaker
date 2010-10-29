@@ -107,6 +107,11 @@ wm.Control.extend({
 		if (this._studioCreating && this._defaultClasses)
 			this._classes = dojo.mixin({}, this._defaultClasses);
 	},
+    set_owner: function() {
+        this.inherited(arguments);
+        if (this.designWrapper)
+            this.designWrapper.controlNameChanged();
+    },
 	// Begin design border
 	/*
 		Gambit: store the real border in runtimeBorder and 
