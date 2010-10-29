@@ -138,6 +138,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 		*/
 		this.domNode.style.position = "absolute";
 	    this.domNode.style.zIndex = wm.dialog.getNextZIndex();
+            if (this.designWrapper)
+                this.designWrapper.domNode.style.zIndex = this.domNode.style.zIndex+1;
+
 		this.domNode.style.display = "none";		
 		this._connections.push(this.connect(document, "onkeypress", this, "keyPress"));
 		this._subscriptions.push(dojo.subscribe("window-resize", this, "reflow"));	    
