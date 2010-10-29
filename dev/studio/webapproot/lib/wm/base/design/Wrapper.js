@@ -192,7 +192,7 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 		        this.domNode.style.backgroundColor = 'transparent';
 			if (c.scrim)
 				this.setScrim(c.scrim);
-			this.label.innerHTML = c.name;
+		        this.label.innerHTML = c.getId();
 			this.owner = c.owner;
 			this.setShowing(inControl.showing);
 		}
@@ -218,7 +218,7 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 		);
 	},
 	controlNameChanged: function() {
-		this.label.innerHTML = this.control.name;
+	    this.label.innerHTML = this.control.getId()
 	},
 	controlParentChanged: function() {
 		this.setDesignNode(this.control.domNode);
@@ -262,7 +262,7 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 			this.handles.setBounds(b);
 		// FIXME: hacky
 		// hides only the label, leaving the slant
-	    this.label.innerHTML = (b.h > 22 && b.w > 64) ? this.control.name : ".";
+	    this.label.innerHTML = (b.h > 22 && b.w > 64) ? this.control.getId() : ".";
 	    //this.label.parentNode.style.display = (b.h > 22 && b.w > 64) ? '' : 'none';
 		//this.label.style.width = b.w > 200 ? 64 + (b.w / 4) + "px" : "";
 	    wm.onidle(this, "setLabelPosition");
