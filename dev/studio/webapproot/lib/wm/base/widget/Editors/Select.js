@@ -34,10 +34,12 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	binding: '(data binding)',
     restrictValues: true,
 	_allFields: "All Fields",
-
+    selectedItem: null,
+    _selectedData: null,
 	init: function() {
-		this.inherited(arguments);
-		this.selectedItem = new wm.Variable({name: "selectedItem", owner: this});
+	    this.inherited(arguments);
+	    this.selectedItem = new wm.Variable({name: "selectedItem", owner: this});
+            this._selectedData = {};
 	},
         postInit: function() {
 	    if (this.options) this.setOptionsVariable();
@@ -154,20 +156,18 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		// Optimization: if we're setting a wm.Variable or hash
 		// get store item via name not value (should be faster searching data)
 		if (inValue !== null && dojo.isObject(inValue)) {
-			if (wm.isInstanceType(inValue, wm.Variable)) {
-				if (this.isAllDataFields()) {
-					var v = this._getDisplayData(inValue);
-					i = this.getStoreItem(v, this._displayField);
-				} else {
-					var v = inValue;
-					var lookupVal = v.getValue(lookupFieldName);
-					i = this.getStoreItem(lookupVal, lookupFieldName);
-					if (!i && !this.restrictValues) 
-						i = lookupVal || inValue;
-				}
-			} else {
-				i = inValue;
-			}
+		    if (this.isAllDataFields()) {
+			var v = this._getDisplayData(inValue);
+			i = this.getStoreItem(v, this._displayField);
+		    } else if (wm.isInstanceType(inValue, wm.Variable)) {
+			var v = inValue;
+			var lookupVal = v.getValue(lookupFieldName);
+			i = this.getStoreItem(lookupVal, lookupFieldName);
+			if (!i && !this.restrictValues) 
+			    i = lookupVal || inValue;
+		    } else {
+			i = inValue;
+		    }
 		} else {
 			i = this.getStoreItem(inValue,  lookupFieldName);
 			if (!i && !this.restrictValues)
@@ -195,9 +195,9 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		delete this._isValid;
 		e._isvalid=true;
 		if (this.restrictValues)
-			e.set('displayedValue', inDisplayValue, !this._updating);
+		    e.set('displayedValue', inDisplayValue, !this._updating);
 		else
-			e.set('value', inDisplayValue, !this._updating);
+		    e.set('value', inDisplayValue, !this._updating);
 	},
 	getDisplayValue: function() {
 		if (this.hasValues())
@@ -370,7 +370,14 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		// FIXME: only if dataField is All Field should we update entire selectedItem.
 		var v = this.getEditorValue(true);
 		this.selectedItem.setData(v);
+                this._selectedData = v;
 	},
+        getItemIndex: function(item) {
+            var data = this.editor.store.data;
+            for (var i = 0; i < data.length; i++)
+                if (item == data[i]) return i;
+            return -1;
+        },
 	isAllDataFields: function() {
 		return (this.dataField == this._allFields);
 	}
@@ -887,10 +894,8 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 	dataField: "All Fields",
 	autoDataSet: true,
 	startUpdate: true,
-        _selectedData: null,
 	init: function() {
 		this.inherited(arguments);
-            this._selectedData = {};
 		if (this.autoDataSet)
 		    this.createDataSet();
 	},
@@ -941,16 +946,19 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		// if value of loopupEditor is being initialized by the owner(not user) that means we should not change value of other fields in liveForm.
 		if (this.isUpdating()) 
 			return;
+
 		this.inherited(arguments);
 		var f = wm.getParentForm(this);
 		var s = this._getFormSource(f);
 		if (s) {
-			this.beginEditUpdate();
+                        s.beginUpdate();
 			//console.log(s.getId(), this.dataValue);
 		        var v = this._selectedData;
 			// update cursor
 			if (this.autoDataSet && this.dataSet) {
-				var i = this.dataSet.getItemIndex(v);
+                            // this is invalid; in some conditions, the objects in the datastore that populate _selectedData are no longer exact replicas of the objects in the datastore; for example, they have _selectMenuName property added to them
+			    //var i = this.dataSet.getItemIndex(v);
+                            var i = this.getItemIndex(v);
 				if (i >=0)
 					this.dataSet.cursor = i;
 			}
@@ -959,17 +967,12 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 			//wm.fire(f, "populateEditors");
 		}
 	},
+
 	setDefaultOnInsert:function(){
 		if (this.editor && this.defaultInsert){
 			this.setEditorValue(this.defaultInsert);
 			this.changed();
 		}
-	},
-	updateSelectedItem: function() {
-		// FIXME: only if dataField is All Field should we update entire selectedItem.
-		var v = this.getEditorValue(true);
-                this._selectedData = v;
-		this.selectedItem.setData(v);
 	}
 });
 
