@@ -491,6 +491,12 @@ Server-side manager bean definitions.  These are only to be used at runtime.
                         </bean>
                     </list>
                 </entry>
+				<entry key="0.42">
+                    <list>
+                        <bean class="com.wavemaker.tools.project.upgrade.six_dot_two.RuntimeServiceSmdTask">
+                        </bean>
+                    </list>
+                </entry>
             </map>
         </property>
         <property name="deploymentManager">
