@@ -648,6 +648,7 @@ body .wm_default .dialogfooter .wmbutton:hover {
     border-radius-bottomright: 4px; /* Borders-Editor_BorderStyle_Radius */
 }
 .wm_default .wmeditor .dijitComboBox .dijitArrowButton {
+    height: 100% !important;
     -moz-border-radius-bottomright: 2px; /* wm.SelectMenu-Inner_Radius */
     -moz-border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
     -webkit-border-bottom-right-radius: 2px;/* wm.SelectMenu-Inner_Radius */
@@ -656,6 +657,8 @@ body .wm_default .dialogfooter .wmbutton:hover {
     border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
 }
 .wm_default .wmeditor .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
+        height: 100% !important;
+        background-position: 50% 50%;
 	background-image: url(images/comboArrowDownLight.png); /* wm.SelectMenu-Down-Arrow_Image */
         -moz-border-radius-bottomright: 2px;/* wm.SelectMenu-Inner_Radius */
         -moz-border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
@@ -893,6 +896,7 @@ body .wm_default .dialogfooter .wmbutton:hover {
 .wm_default .wmeditor .dijitComboBox .dijitArrowButton {
     background-color: #666666; /* HeaderContent-ClickablesDefault-Background_Color */
     background-image: none;
+    height: 100% !important;
 }
     /* BEGIN inner content panel editors */
     .wm_default .HeaderContent .wmeditor .dijitTextBox,
@@ -1605,7 +1609,6 @@ body.tundra .wm_default  div.wmheader,
    *
    * DESCRIPTION: Specify all font and background styles for the document level
    ************************************************************************************************/
-@media screen { /* Document-Level */ 
   /**************************************************************************************************
    * TYPE:        Main document-level border
    *
@@ -1788,12 +1791,22 @@ body.wm_default {
         color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
     }
     .wm_default .dojoxPortlet div.dijitTitlePaneTitle .dojoxPortletIcon {
-        background-color: white;
+	background-image: url(images/dialogIconsRedYellowOrange.png) !important; /* Dialogs-Titlebar_Icons */
         border-color: #333333;
-        margin-left: 5px;
+	width: 16px;
+        margin-left: 1px;
+    }
+    .wm_default .dojoxPortlet div.dijitTitlePaneTitle .dojoxPortletIcon.dojoxCloseNode {
+	background-position: 0px 0px; 
+    }
+    .wm_default .dojoxPortlet div.dijitTitlePaneTitle .dojoxPortletIcon.dojoxArrowDown {
+	margin-top: 1px;
+	background-position: -16px; /* Dialogs-Titlebar_MinifyIconWidth */
+    }
+    .wm_default .dojoxPortlet div.dijitTitlePaneTitle.dijitClosed .dojoxPortletIcon.dojoxArrowDown {
+	background-position: -32px; /* Dialogs-Titlebar_MaxifyIconWidth */
     }
 }
-@media screen { /* MainContent-Level */ 
   /**************************************************************************************************
    * TYPE:        Main document-level border
    *
@@ -1960,8 +1973,6 @@ body.wm_default {
     .wm_default .MainContent .dojoxPortlet div.dijitTitlePaneTitle-hover .dijitTitlePaneTextNode {
         color: #FFFFFF; /* MainContentClickablesHover-Font_Color */
     }
-}
-@media screen { /* EmphasizedContent-Level */ 
 .wm_default .EmphasizedContent {
     /* EmphasizedContent-Styles-Border */
     -moz-border-radius: 16px; /* EmphasizedContent-Styles-BorderStyle_Radius */
@@ -2123,8 +2134,6 @@ body.wm_default {
     .wm_default .EmphasizedContent .dojoxPortlet div.dijitTitlePaneTitle-hover .dijitTitlePaneTextNode {
         color: #ffffff; /* EmphasizedContent-ClickablesHover-Font_Color */
     }
-}
-@media screen { /* HeaderContent-Level */ 
 .wm_default .HeaderContent {
     /* HeaderContent-Styles-Border */
     -moz-border-radius: 0px; /* HeaderContent-Styles-BorderStyle_Radius */
@@ -2286,7 +2295,6 @@ body.wm_default {
     .wm_default .HeaderContent .dojoxPortlet div.dijitTitlePaneTitle-hover .dijitTitlePaneTextNode {
         color: #ffffff; /* HeaderContent-ClickablesHover-Font_Color */
     }
-}
 .wm_default #wmMinifiedDialogPanel {
     opacity: 0.6;
     background-color: #a0c0e0; /* Document-ClickablesActive-Background_Color */
