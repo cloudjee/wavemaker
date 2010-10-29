@@ -1514,6 +1514,9 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #studio_dialog {
     z-index: 999 !important;
 }
+.Studio .wmtoolbutton {
+background-color: transparent;
+}
 
 .Studio #studio_tree .TreeHeader {
    font-style: italic;
