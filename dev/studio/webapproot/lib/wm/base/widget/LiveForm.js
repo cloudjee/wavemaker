@@ -141,11 +141,10 @@ dojo.declare("wm.LiveFormBase", wm.Panel, {
 		this.dataOutput.setDataSet(inDataSet);
 	},
 	clearDataOutput: function() {
-		// FIXME: handle related editors specially
 		dojo.forEach(this.getRelatedEditorsArray(), function(e) {
-				e.clearDataOutput();
+		    e.clearDataOutput();
 		});
-		this.dataOutput.setData({});
+	    this.dataOutput.setData({});
 	},
 	getItemData: function() {
 		return wm.fire(this.dataSet, "getCursorItem");
@@ -228,13 +227,16 @@ dojo.declare("wm.LiveFormBase", wm.Panel, {
                 if (this.dataOutput.type != this.dataSet.type)
                     this.dataOutput.setType(this.dataSet.type);
 		var d = this.dataOutput;
-		dojo.forEach(this.getFormEditorsArray(), function(e) {
+	    dojo.forEach(this.getFormEditorsArray(), dojo.hitch(this, function(e) {
 			if (wm.isInstanceType(e, wm.LiveFormBase)) {
-				wm.fire(e, "populateDataOutput");
+                            wm.fire(e, "populateDataOutput"); // this.dataOutput will be updated via bindings once e has been updated
 			}else if (e.formField) {
 				d.setValue(e.formField, e.getDataValue());
-			}
-		});
+			} else if (this instanceof wm.RelatedEditor) {
+                            d.setData(e.getDataValue());
+                        }
+	    }));
+            return this.dataOutput;
 	},
 	editStarting: function() {
 		dojo.forEach(this.getFormEditorsArray(), function(e) {
