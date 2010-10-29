@@ -283,14 +283,14 @@ Studio.extend({
 		for (var i=0; (cn=n[i]); i++) {
 			var comp = inComponents[cn];
 			if (this._instanceOf(comp, inTypes)) {
-				var key;
+				var key = "";
 				if (comp instanceof wm.Query)
 					key = comp.dataModelName;
 				else if (comp instanceof wm.LiveView) {
 					key = comp.service;
-				}
+                                }
 
-				if (key == inNode.content)
+				if (key && key == inNode.content)
 					this.componentToTree(inNode, comp, inType);
 			}
 		}
