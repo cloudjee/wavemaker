@@ -31,6 +31,8 @@ dojo.declare("DeploymentJNDIDialog", wm.Part, {
 		this.deploymentTarget = null;
 		this.currentEditors = [];
 		this.dataModelNames = [];
+	    var showJNDI =  (studio.isModuleEnabled("security-driver", "wm.josso"));
+	    this.root.setShowing(showJNDI);
 	},
 	setup: function() {
 		this._setDataTypes();
@@ -131,6 +133,8 @@ dojo.declare("DeploymentJNDIDialog", wm.Part, {
 	},
 	//sets key pair names for BuildWar call only
 	_saveJNDIName: function() {
+	        var showJNDI =  (studio.isModuleEnabled("security-driver", "wm.josso"));
+	        if (!showJNDI) return;
 		var key = this._getKey(this.dataModelNameEditor.getDataValue());
 		var j = this.jndiEditor.getDataValue();
 		if (j == null) {

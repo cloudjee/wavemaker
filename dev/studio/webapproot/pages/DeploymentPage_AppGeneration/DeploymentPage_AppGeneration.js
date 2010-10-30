@@ -48,6 +48,8 @@ dojo.declare("DeploymentPage_AppGeneration", wm.Part, {
   },
 	reset: function() {
 		this.generateAppButton.setDisabled(false);
+	    var showJNDI =  (studio.isModuleEnabled("security-driver", "wm.josso"));
+	    this.jndiRowPanel.setShowing(showJNDI);
 	},
 	archiveTypeSelectionChange: function() {
 	//this.generatePanel.show();

@@ -23,7 +23,7 @@ DeploymentPage_AppGeneration.widgets = {
 	GenerateAppLayer: ["wm.Layer", {},{}, {
 	    chooseCloudHeader: ["wm.Label", {_classes: {domNode: ["wm_FontSizePx_14px", "DeploymentHeader"]}, height: "38px", width: "96px", caption: "Generate your application if not done yet or if your project has been updated since last generation", margin: "0,0,5,0"}],
 		spacer11: ["wm.Spacer", {height: "15px", width: "50px"}, {}],
-	    jndiRowPanel: ["wm.Panel", {height: "48px", width: "300px", border: "0,0,0,0", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+	    jndiRowPanel: ["wm.Panel", {height: "48px", width: "300px", border: "0,0,0,0", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left", showing: false}, {}, {
 		lastGeneratedLabel: ["wm.Label",  {_classes:{domNode:["wm_TextAlign_Left", "wm_FontSizePx_12px"]}, width: "100%", height: "20px", caption: "", border: "0 0 0 0", borderColor: "rgb(200,200,200)"}],
 		useJNDICheckbox: ["wm.Checkbox", {width: "100px", captionAlign: "center", displayValue: "1", height: "20px", singleLine: false, display: "CheckBox", padding: "5,0,0,0", caption: "Use JNDI?", captionSize: "80px", captionPosition: "left", captionAlign: "right"}, {onchange: "useJNDICheckboxChange"}],
 		jndiButton: ["wm.Button", {height: "100%", width: "150px", disabled: true, caption: "Setup JNDI", border: "0"}, {onclick: "setupJNDIButtonClick"}]
