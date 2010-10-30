@@ -31,11 +31,11 @@ try
 	{
 		// Register paths for compressed parts of dojo
 		dojo.registerModulePath("dojo.nls", wm.libPath + "build/nls");
-		dojo.registerModulePath("dijit.themes.tundra", wm.libPath + "build/themes/tundra");
+	    //dojo.registerModulePath("dijit.themes.tundra", wm.libPath + "build/themes/tundra");
 		dojo.registerModulePath("build", wm.libPath + "build");
 
-		dojo.require("build.Gzipped.lib_build", true);	
-		
+	        //dojo.require("build.Gzipped.lib_build", true);	
+		dojo.require("build.lib_build_uncompressed", true);	
 		// START: The comments here are for debugging in non-debug mode. Please do not remove these comments
 		//dojo.require("build.lib_build_uncompressed", true);
 		//wm.writeJsTag(wm.relativeLibPath + '/build/lib_build_uncompressed.js');

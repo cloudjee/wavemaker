@@ -26,7 +26,7 @@ dojo.require("studio.app.packageLoader", true);
 if (!djConfig.debugBoot) {
 	// Note: re-register paths for compressed parts of dojo
 	dojo.registerModulePath("dojo.nls", wm.libPath + "../build/nls");
-	dojo.registerModulePath("dijit.themes.tundra", wm.libPath + "build/themes/tundra");
+        //dojo.registerModulePath("dijit.themes.tundra", wm.libPath + "build/themes/tundra");
 	//
 	wm.loadLibs([
 		"studio.build.studio_base",
