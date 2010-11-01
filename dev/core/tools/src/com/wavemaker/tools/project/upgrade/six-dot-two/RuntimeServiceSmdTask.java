@@ -32,6 +32,10 @@ public class RuntimeServiceSmdTask implements UpgradeTask {
     /* (non-Javadoc)
      * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
      */
+
+    private boolean processed = false;
+    private boolean error = false;
+
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
         String path = project.getWebAppRoot().getAbsolutePath() + "/services/runtimeService.smd";
         File rtsmd = new File(path);
@@ -40,6 +44,24 @@ public class RuntimeServiceSmdTask implements UpgradeTask {
 
         if (success) {
             upgradeInfo.addMessage("runtimeService.smd is successfully deleted for re-creation.");
+            processed = true;
+        } else {
+            upgradeInfo.addMessage("*** Cannot delete runtimeService.smd. Upgrade has failed ***"); 
+            error = true;
+        }
+
+        if (error) return;
+
+        File webxml = project.getWebXml();
+
+        success = webxml.delete();
+
+        if (success) {
+            upgradeInfo.addMessage("\r\n\tweb.xml is successfully deleted for re-creation.");
+            processed = true;
+        } else {
+            upgradeInfo.addMessage("*** Cannot delete web.xml. Upgrade has failed ***");
+            error = true;
         }
     }
 }
