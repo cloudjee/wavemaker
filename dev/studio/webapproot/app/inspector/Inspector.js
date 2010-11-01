@@ -26,7 +26,7 @@ wm.addPropertyGroups({
 	common: {displayName: bundleStudio.I_Common, order: 10},
 	data: {displayName: bundleStudio.I_Data, order: 13},
 	display: {displayName: bundleStudio.I_Display, order: 15},
-	layout: {displayName: bundleStudio.I_Layout, order: 20},
+	layout: {displayName: bundleStudio.I_Layout, order: 25},
 	"advanced layout": {displayName: bundleStudio.I_Advanced_Layout, order: 180},
 	style: {displayName: bundleStudio.I_Style, order: 30},
 	scrolling: {displayName: bundleStudio.I_Scrolling, order: 32},
@@ -556,7 +556,7 @@ dojo.declare("wm.GroupInspector", wm.Inspector, {
 	sortGroups: function(inGroups) {
 		// sort groups
 		inGroups.sort(function(a, b) {
-			return ((wm.propertyGroups[a.name] || 0).order || 0) - ((wm.propertyGroups[b.name] || 0).order || 0);
+			return ((wm.propertyGroups[a.name] || 0).order || 28) - ((wm.propertyGroups[b.name] || 0).order || 28); // things with no order go after layout and before style
 		});
 		// sort props in each group
 		dojo.forEach(inGroups, function(g) {
