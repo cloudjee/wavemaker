@@ -1,5 +1,12 @@
+/****
 
+ * CTRL-shift-J: Joins current line with next line
+ * CTRL-g: findnext
+ * CTRL-shift-G: findprior
+ * CTRL-z:undo
+ ***/
 dojo.provide("wm.base.widget.Bespin");
+
 
 dojo.declare("wm.Bespin", wm.Control, {
     // design mode property
@@ -12,7 +19,9 @@ dojo.declare("wm.Bespin", wm.Control, {
     // bespin props
     syntax: "js",
     fontSize: "10",
+    fontFace: "Monaco, Lucida Console, monospace",
     dataValue: "dojo.declare('myclass', null, {\n});",
+    tabSize: 4,
 
     // wm.Control props
     width: "100%",
@@ -27,33 +36,41 @@ dojo.declare("wm.Bespin", wm.Control, {
 	head.appendChild(link);
 
 	var script = document.createElement("script");
-	script.src = "/wavemaker/lib/bespin/prebuilt/BespinEmbedded.uncompressed.js"
+	script.src = "/wavemaker/lib/bespin/prebuilt/BespinEmbedded.js"
 	head.appendChild(script);
 
 	this.inherited(arguments);
     },
     postInit: function() {
 	this.inherited(arguments);
-	this.initBespinObject();
+	if (wm.Bespin.onLoadFinished)
+	    this.initBespinObject();
+	else
+	    this.connect(null, "onBespinLoad", this, "initBespinObject");
     },
     initBespinObject: function() {
-	console.log("Does bespin exist?" + window.bespin);
-	if (!window.bespin || !dojo.isFunction(window.bespin.useBespin))
-	    return window.setTimeout(dojo.hitch(this, "initBespinObject"), 50);
-	console.log("useBespin!");
 	bespin.useBespin(this.domNode,
 			 {stealFocus: true,
-			  syntax:     this.syntax}).then(dojo.hitch(this, function(env) {
+			  syntax:     this.syntax,
+			  plugins: ["embedded", "command_line"],
+			  settings:   {
+			      tabstop: this.tabSize,
+			      fontsize: this.fontSize,
+			      fontface: this.fontFace
+			      //theme
+			      //customKeymapping
+			  }
+			 }).then(dojo.hitch(this, function(env) {
 			      console.log("Have ENV!");console.log(env);
 			      this._editor = env.editor;
 			      this._editor.value = this.dataValue;
-			      this._evn = env;
+			      this._env = env;
 
 			      this._editor.syntax = this.syntax;
-			      this._evn.settings.set("fontsize", this.fontSize);
 			      this._editor.textChanged.add(dojo.hitch(this, "_change"));
 			      this._editor.selectionChanged.add(dojo.hitch(this, "_selectionChange"));
 			  }));
+	console.log("USE BESPIN DONE");
     },
     setSyntax: function(inSyntax) {
 	this.syntax = inSyntax;
@@ -75,7 +92,17 @@ dojo.declare("wm.Bespin", wm.Control, {
     setFontSize: function(inSize) {
 	this.fontSize = inSize;
 	if (this._editor)
-	    this._evn.settings.set("fontsize", this.fontSize);
+	    this._env.settings.set("fontsize", this.fontSize);
+    },
+    setFontFace: function(inFace) {
+	this.fontFace = inFace;
+	if (this._editor)
+	    this._env.settings.set("fontface", this.fontFace);
+    },
+    setTabSize: function(inFace) {
+	this.tabSize = inFace;
+	if (this._editor)
+	    this._env.settings.set("tabstop", this.tabSize);
     },
     getSelectedText: function() {
 	if (this._editor)
@@ -130,3 +157,8 @@ dojo.declare("wm.Bespin", wm.Control, {
     },
     _end:0
 });
+
+wm.Bespin.onLoadFinished = false;
+window.onBespinLoad = function () { 
+    wm.Bespin.onLoadFinished = true;
+}; 
