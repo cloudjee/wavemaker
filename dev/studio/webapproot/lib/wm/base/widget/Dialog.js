@@ -245,15 +245,15 @@ dojo.declare("wm.Dialog", wm.Container, {
     },
     setFooterBorder: function(inBorder) {
         this.footerBorder = inBorder;
-        if (this.$.buttonBar) {
-            this.$.buttonBar.setBorder(inBorder + ",0,0,0");
+        if (this.buttonBar) {
+            this.buttonBar.setBorder(inBorder + ",0,0,0");
             //this.$.buttonBar.setHeight((34 + this.$.buttonBar.padBorderMargin.t + this.$.buttonBar.padBorderMargin.b) + "px");
         }
     },
     setFooterBorderColor: function(inBorderColor) {
         this.footerBorderColor = inBorderColor;
-        if (this.$.buttonBar)
-            this.$.buttonBar.setBorderColor(inBorderColor);
+        if (this.buttonBar)
+            this.buttonBar.setBorderColor(inBorderColor);
     },
 
     setModal: function(inModal) {
@@ -761,16 +761,26 @@ wm.Dialog.extend({
 
 
 wm.Object.extendSchema(wm.Dialog, {
-    title: {group: "Header and Footer", order: 1, bindTarget: true},
-    titlebarBorder: {group: "Header and Footer", order: 5},
-    titlebarBorderColor: {group: "Header and Footer", order: 6},
-    titlebarHeight: {group: "Header and Footer", order: 7},
-    noEscape: {group: "Dialog Keyboard", order: 1},
-    enterKeyIsButton1: {group: "Dialog Keyboard", order: 2, ignore: 1},
-    modal: {group: "Dialog Options", order: 1},
+    title: {group: "display", order: 1, bindTarget: true},
+
+    owner: { group: "common", order: 1, readonly: true, options: ["Page", "Application"] },
+
+    titlebarBorder: {group: "style", order: 5},
+    titlebarBorderColor: {group: "style", order: 6},
+    titlebarHeight: {group: "style", order: 7},
+    footerBorder: {group: "style", order: 8},
+    footerBorderColor: {group: "style", order: 9},
+
+    modal: {group: "display", order: 50},
+    noEscape: {group: "display", order: 51},
+    corner: {group: "layout", order: 52},
+
+    noBevel: {ignore: 1},
+    imageList: {ignore: 1},
     fitToContentWidth: {ignore: 1},
     fitToContentHeight: {ignore: 1},
     useContainerWidget: {ignore: 1},
+    containerClass: {ignore: 1},
     useButtonBar: {ignore: 1}, // user doesn't decide this; buttonbar is autosizing; if nothing in there, then it doesn't show.
     lock: {ignore: 1},
     freeze: {ignore: 1},
@@ -781,8 +791,7 @@ wm.Object.extendSchema(wm.Dialog, {
     layoutKind: {ignore: 1},
     horizontalAlign: {ignore: 1},
     verticalAlign: {ignore: 1},
-    showing: {ignore: 1},
-    owner: { group: "common", order: 1, readonly: true, options: ["Page", "Application"] }
+    showing: {ignore: 1}
 });
 
 
@@ -872,8 +881,7 @@ dojo.declare("wm.RichTextDialog", wm.WidgetsJsDialog, {
     }
 });
 wm.Object.extendSchema(wm.RichTextDialog, {
-    html: {group: "Dialog Options", order: 2, bindable: true, simpleBindProp: true},
-    enterKeyIsButton1: {group: "Dialog Keyboard", order: 2},
+    html: {group: "display", order: 54, bindable: true, simpleBindProp: true},
     footerBorder: {group: "style", order: 100},
     footerBorderColor:  {group: "style", order: 101}
 });
@@ -1057,22 +1065,22 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
 
 wm.Object.extendSchema(wm.GenericDialog, {
     
-    enterKeyIsButton1: {group: "Dialog Keyboard", order: 2},
+    enterKeyIsButton1: {group: "Buttons", order: 60},
     widgets_json: {ignore: 1},
-    button1Caption: {group: "Buttons", order: 1},
-    button1Close: {group: "Buttons", order: 2},
-    button2Caption: {group: "Buttons", order: 3},
-    button2Close: {group: "Buttons", order: 4},
-    button3Caption: {group: "Buttons", order: 5},
-    button3Close: {group: "Buttons", order: 6},
-    button4Caption: {group: "Buttons", order: 7},
-    button4Close: {group: "Buttons", order: 8},
-    footerBorder: {group: "Header and Footer", order: 10},
-    footerBorderColor: {group: "Header and Footer", order: 11},
-    userPrompt: {group: "Dialog Options", order: 2, bindTarget: true},
-    showInput: {group: "Dialog Options", order: 3, bindTarget: true},
-    inputDataValue: {group: "Dialog Options", order: 4, bindable: true, simpleBindProp: true},
-    regExp: {group: "Dialog Options", order: 4},
+    button1Caption: {group: "Buttons", order: 61},
+    button1Close: {group: "Buttons", order: 62},
+    button2Caption: {group: "Buttons", order: 63},
+    button2Close: {group: "Buttons", order: 64},
+    button3Caption: {group: "Buttons", order: 65},
+    button3Close: {group: "Buttons", order: 66},
+    button4Caption: {group: "Buttons", order: 67},
+    button4Close: {group: "Buttons", order: 68},
+
+    userPrompt: {group: "display", order: 54, bindTarget: true},
+    showInput: {group: "display", order: 55, bindTarget: true},
+    inputDataValue: {group: "editData", order: 56, bindable: true, simpleBindProp: true},
+    regExp: {group: "editData", order: 57},
+
     footerBorder: {group: "style", order: 100},
     footerBorderColor:  {group: "style", order: 101}
 });
@@ -1483,8 +1491,7 @@ wm.PageDialog.extend({
 });
 
 wm.Object.extendSchema(wm.PageDialog, {
-    pageName: {group: "Dialog Options", bindable: 1, type: "string", order: 50, pageProperty: "page"},
-    noBevel: {ignore: 1},
+    pageName: {group: "display", bindable: 1, type: "string", order: 54, pageProperty: "page"},
     footerBorder: {group: "style", order: 100},
     footerBorderColor:  {group: "style", order: 101}
 });
@@ -1698,13 +1705,17 @@ dojo.declare("wm.DesignableDialog", wm.Dialog, {
 	delete this.containerNode; // containerNode is where child nodes get added to when appending children; just let the normal parent/child relationships prevail...
     },
     set_owner: function(inOwner) {
+        var oldOwner = this.owner;
         this.inherited(arguments);
         var owner = this.owner;
-        wm.forEachWidget(this, function(w) {w.setOwner(owner);});
+        wm.forEachWidget(this, function(w) {
+            if (w.owner == oldOwner)
+                w.setOwner(owner);
+        });
     }
 });
 
 wm.Object.extendSchema(wm.DesignableDialog, {
-    useButtonBar: {group: "Dialog Options", order: 1}
+    useButtonBar: {group: "display", order: 55}
 /*    owner: {ignore: true} */ // See JIRA-2118: Can't drag and drop to an app level container
 });
