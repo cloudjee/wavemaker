@@ -138,14 +138,14 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 	    }
 	},
 	_findTarget: function(inHit, inWidget, inMargin) {
-            console.log("_findTarget: " + inWidget.toString());
+            //console.log("_findTarget: " + inWidget.toString());
 		var h = inHit, dn = inWidget.domNode, w, b, o;
 		var sl = dn.scrollLeft, st = dn.scrollTop;
 		var ws = inWidget.widgets;
 		var m = inMargin || 0;
 		for (var i in ws) {
 			w = ws[i];
-                    console.log("_test: " + w.toString());
+                    //console.log("_test: " + w.toString());
 			if (w != this.info.control && w.container && !w.getLock()) {
 				b = kit._getMarginBox(w.domNode);
 				if (w.domNode.parentNode != inWidget.domNode){
@@ -164,14 +164,14 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 					h.l -= b.l; 
 					h.t -= b.t;
 				    var result = this._findTarget(h, w, m+1);
-                                    console.log("RESULT " + w.toString() + ": " + result);
+                                    //console.log("RESULT " + w.toString() + ": " + result);
                                     return result;
 				}
 			}
 		}
 		// FIXME: sort out _noCreate
 		var t = inWidget._noCreate ? inWidget.parent : inWidget;
-            console.log("CANBETARGET " + t.toString() + ": " + this.canBeTarget(t));
+            //console.log("CANBETARGET " + t.toString() + ": " + this.canBeTarget(t));
 		return this.canBeTarget(t) ? t : null;
 	},
 	canBeTarget: function(inWidget) {
