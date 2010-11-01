@@ -250,7 +250,8 @@ Studio.widgets = {
 				navBarSpacer7: ["wm.Spacer", {width: "100%", border: "0"}, {}],
 				userLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, width: "250px"}, {}],
 				navEditAccountBtn: ["wm.ToolButton", {showing: false, width: "120px", hint: bundleStudio.T_EditAccountTip, caption: "<img src=\"images/user_settings24.png\"/><span style=\"font-weight:bold\"> Edit Account </span>", height: "29px"}, {onclick: "editAccountClick"}],
-				navLogoutBtn: ["wm.ToolButton", {showing: false,width: "100px", hint: bundleStudio.T_LogoutTip, caption: "<img src=\"images/close_24.png\"/><span style=\"font-weight:bold\"> Logout </span>", height: "29px"}, {onclick: "logoutClick"}]
+			        navLogoutBtn: ["wm.ToolButton", {showing: false,width: "100px", hint: bundleStudio.T_LogoutTip, caption: "<img src=\"images/close_24.png\"/><span style=\"font-weight:bold\"> Logout </span>", height: "29px"}, {onclick: "logoutClick"}],
+                                trackerImage: ["wm.Picture", {height: "1px", width: "1px"}]
 			}]
 		}],
 		panel1: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}, {

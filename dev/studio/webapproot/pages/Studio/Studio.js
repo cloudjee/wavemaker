@@ -68,6 +68,7 @@ dojo.declare("Studio", wm.Page, {
 			console.info('error while creating RichTextDialog for documentation.');	
 		}
 		
+            this.trackerImage.setSource("http://wavemaker.com/img/blank.gif?op=studioLoad&v=" + escape(wm.studioConfig.studioVersion) + "&r=" + String(Math.random(new Date().getTime())).replace(/\D/,"").substring(0,8));
 		this.project = new wm.studio.Project();
 		this.startEditor = studio.addEditor("Start");
 		this.startEditor.connect(this.startEditor, "onStart", this, "startPageOnStart");

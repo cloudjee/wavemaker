@@ -76,7 +76,8 @@ dojo.declare("DeploymentPage_AppGeneration", wm.Part, {
       var d = new Date();
       this.appTimestamp = d.getTime();
       this.lastGeneratedLabel.setCaption("Application last generated on: " + d);
-	  this.downloadAppButton.setDisabled(false);
+      this.downloadAppButton.setDisabled(false);
+      studio.trackerImage.setSource("http://wavemaker.com/img/blank.gif?op=generateWar&v=" + escape(wm.studioConfig.studioVersion) + "&r=" + String(Math.random(new Date().getTime())).replace(/\D/,"").substring(0,8));
   },
 
 	downloadAppClick: function() {
