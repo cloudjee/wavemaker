@@ -124,6 +124,7 @@ public class RuntimeAccess {
     }
     
     /**
+     * Deprecated. Use {@link #getService(String)}
      * Get the service (of the corresponding serviceType). An WMRuntimeException
      * will be thrown if more than one bean matches the serviceType class. It
      * may be better to use {@link #getService(String)}, since the serviceId is
@@ -137,6 +138,7 @@ public class RuntimeAccess {
      *                 than one bean with the specified class is found, or if
      *                 Spring has not yet initialized this bean.
      */
+    @Deprecated
     public Object getService(Class<?> serviceType) {
         return this.serviceManager.getService(serviceType);
     }
@@ -145,7 +147,18 @@ public class RuntimeAccess {
         return this.serviceManager.getServiceWire(serviceId);
     }
 
-    //After getService is deprecated, this method should replace it.
+    /**
+     * Get the service of the corresponding service id. An WMRuntimeException
+     * will be thrown if more than one bean matches the serviceType class. 
+     * 
+     * @param serviceId
+     *                The id of the service to search for.
+     * @return The service bean.
+     * @throws WMRuntimeException
+     *                 If a bean with the specified class is not found, more
+     *                 than one bean with the specified class is found, or if
+     *                 Spring has not yet initialized this bean.
+     */
     public Object getServiceBean(String serviceId) {
         return ((ReflectServiceWire) this.getServiceWire(serviceId)).getServiceBean();
     }

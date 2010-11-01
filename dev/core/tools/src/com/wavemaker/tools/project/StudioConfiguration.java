@@ -40,7 +40,6 @@ import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.tools.config.ConfigurationStore;
-//import com.wavemaker.desktop.launcher.Main;
 
 /**
  * StudioConfiguration holds configuration data associated with this studio.
@@ -90,7 +89,7 @@ public class StudioConfiguration {
     protected static final String CMD_NOTSET = "NOTSET";
 
     protected static final String VERSION_FILE = "version";
-    
+ 
     /**
      * WaveMaker home override, used for testing.  NEVER set this in production.
      */
@@ -145,6 +144,17 @@ public class StudioConfiguration {
 	return false;
     }
 
+    private static boolean isCommercial = false;
+    public boolean isCommercial(){
+	    try {
+			org.springframework.core.io.ClassPathResource cpr = new org.springframework.core.io.ClassPathResource("ldap.src.resource");
+			isCommercial = cpr.exists();
+		    } catch(Exception e) {
+			return false;
+		    }
+	return isCommercial;
+    }
+    
     private static boolean isCloud;
     private static boolean isCloudInitialized = false;
     public static boolean isCloud() {

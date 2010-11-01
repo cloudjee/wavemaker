@@ -31,6 +31,8 @@ import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.security.GeneralOptions;
+import com.wavemaker.tools.security.SecurityToolsManager;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.util.DesignTimeUtils;
@@ -326,7 +328,20 @@ public class ServiceDeploymentManager {
             Map<String, String> properties) {
 
         for (Service service : mgr.getServices()) {
-
+        	if (service.getId().equals("securityService")){
+       	            if (projectMgr != null && mgr != null && !projectMgr.getStudioConfiguration().isCommercial()) {
+       	            	SecurityToolsManager secToolsMgr = new SecurityToolsManager(projectMgr,mgr);
+       	            	try {
+       	            	GeneralOptions options = secToolsMgr.getGeneralOptions();
+       	            		if (options != null && options.isEnforceSecurity()){ 
+       	            			secToolsMgr.setStandardOptions(true);
+       	            		}
+       	            	}
+       	            	catch(Exception e) {
+       	            		e.printStackTrace();
+       	            	}
+       	            }
+        	}
             // hack: only run for dataservices for now
             if (!service.getType().equals(DataServiceType.TYPE_NAME)) {
                 continue;

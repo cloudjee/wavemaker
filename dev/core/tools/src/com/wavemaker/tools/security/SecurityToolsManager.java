@@ -261,6 +261,14 @@ public class SecurityToolsManager {
     	SecuritySpringSupport.setSecurityResources(beans, enforceSecurity, false);
     	saveAcegiSpringBeans(beans);
     }
+    
+    public void setStandardOptions(boolean enforceSecurity)
+    throws IOException, JAXBException {
+    	Beans beans = getAcegiSpringBeans(false);
+    	SecuritySpringSupport.setSecurityResources(beans, enforceSecurity, false);
+    	SecuritySpringSupport.setSecurityFilterChain(beans);
+    	saveAcegiSpringBeans(beans);
+    }
 
     public DemoOptions getDemoOptions() throws JAXBException, IOException {
         Beans beans = getAcegiSpringBeans(false);

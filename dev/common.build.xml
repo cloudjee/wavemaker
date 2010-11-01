@@ -389,13 +389,13 @@ SVN version: ${gfv.svn.revision.range}
 Build number: ${env.BUILD_NUMBER}
 Job name: ${env.JOB_NAME}
 SVN ${gfv.svn.repository.url}
-     </echo>
+</echo>
 
      <echo>Version: ${version.number} WRITTEN TO FILE: ${version.project.file}</echo>
      <echo file="${version.project.file}">Version: ${version.number}
 Build type: ${project.type}
 SVN version: ${gfv.svn.revision.range}
-     </echo>
+</echo>
         <property name="version.full"
                 value="Version: ${version.number}\nSVN url: ${generate-full-version.svn.url}\nSVN version: ${generate-full-version.svn.rev}"/>
     </target>

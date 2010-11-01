@@ -166,10 +166,6 @@
                       serviceclass="com.wavemaker.runtime.security.JOSSOSecurityService"/>
         <buildservice servicename="servicesService" 
                       serviceclass="com.wavemaker.studio.ServicesService"/>
-<!--
-        <buildservice servicename="fileTransferService" 
-                      serviceclass="FileTransferService"/>
--->
         <buildservice servicename="resourceFileService" 
                       serviceclass="com.wavemaker.studio.ResourceFileService"/>
         <buildservice servicename="UserService" 
@@ -358,6 +354,7 @@
             </copy>
            </then>
           </if>
+          
         </sequential>
     </macrodef>
 

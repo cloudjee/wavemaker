@@ -58,6 +58,10 @@ public class SecuritySpringSupport {
     private static final String FILTER_SECURITY_INTERCEPTOR_BEAN_ID = "filterSecurityInterceptor";
 
     private static final String OBJECT_DEFINITION_SOURCE_PROPERTY = "objectDefinitionSource";
+    
+    private static final String FILTER_CHAIN_PROXY_BEAN_ID = "filterChainProxy";
+    
+    private static final String FILTER_DEFINITION_SOURCE_PROPERTY ="filterInvocationDefinitionSource";
 
     private static final String AUTHENTICATON_MANAGER_BEAN_ID = "authenticationManager";
 
@@ -150,7 +154,11 @@ public class SecuritySpringSupport {
 
     private static final String UNPROTECTED_OBJECT_DEFINITION_SOURCE_SUFFIX =
         "\n" + SPACES_12;
-
+    
+    private static final String STANDARD_FILTER_CHAIN_DEFINITION = "CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON" + "\n" +
+    		"PATTERN_TYPE_APACHE_ANT" + "\n" +
+    		"/**=httpSessionContextIntegrationFilter,logoutFilter,formAuthenticationProcessingFilter,anonymousProcessingFilter,jsonExceptionTranslationFilter,filterSecurityInterceptor";
+    
     private static final String SECURITY_SERVICE = "securityService";
     
     private static final String ROLES = "roles";
@@ -211,6 +219,15 @@ public class SecuritySpringSupport {
                     (new String[] { IS_AUTHENTICATED_FULLY })));
         }
         value = generateObjectDefinitionSource(enforceSecurity, urlMap);
+        newContent.add(value);
+        property.getValueElement().setContent(newContent);
+    }
+
+    static void setSecurityFilterChain(Beans beans) {
+        Bean bean = beans.getBeanById(FILTER_CHAIN_PROXY_BEAN_ID);
+        Property property = bean.getProperty(FILTER_DEFINITION_SOURCE_PROPERTY);
+        List<String> newContent = new ArrayList<String>();
+        String value = STANDARD_FILTER_CHAIN_DEFINITION;
         newContent.add(value);
         property.getValueElement().setContent(newContent);
     }
