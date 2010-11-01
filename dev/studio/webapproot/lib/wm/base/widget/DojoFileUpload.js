@@ -772,8 +772,18 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
 });
 
 wm.Object.extendSchema(wm.DojoFileUpload, {
+    useList: {group: "display", order: 1, type: "boolean"},
+    buttonCaption: {group: "display", order: 2, type: "string"},
+    service: {group: "Services", order: 38},
+    operation: {group: "Services", order: 39},
+    autoDeleteDelay: {group: "Services", order: 40, type: "number"},
+    buttonWidth: {group: "layout", order: 50},
+    buttonHeight: {group: "layout", order: 51},
+
     input: { ignore: 1 , writeonly: 1, componentonly: 1, categoryParent: "Properties", categoryProps: {component: "input", bindToComponent: true, inspector: "Data"}},
     variable: {bindSource: true, ignore: true},
+    horizontalAlign: {ignore: true},
+    verticalAlign: {ignore: true},
     autoScroll: {ignore: true},
     scrollX: {ignore: true},
     scrollY: {ignore: true},
