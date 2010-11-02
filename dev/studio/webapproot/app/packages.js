@@ -72,7 +72,6 @@
 [ bundlePackage.More_Widgets, bundlePackage.HTML, "wm.Html", "wm.base.widget.Html", "images/wm/content.png", "A display for static markup"],
 [ bundlePackage.More_Widgets, bundlePackage.IFrame, "wm.IFrame", "wm.base.widget.IFrame", "images/wm/pane.png", "An IFrame for external content"],
 [ bundlePackage.More_Widgets, bundlePackage.List, "wm.List", "wm.base.widget.List", "images/wm/content.png", "A simple list control"],
-[ bundlePackage.More_Widgets, bundlePackage.ListViewer, "wm.ListViewer", "wm.base.widget.ListViewer", "images/wm/content.png", "A simple list control"],
 [ bundlePackage.More_Widgets, bundlePackage.ProgressBar, "wm.dijit.ProgressBar", "wm.base.widget.dijit.ProgressBar", "images/wm.dijit/ProgressBar.png", "Dojo progress bar"],
 
 /*
@@ -103,6 +102,7 @@
 [ bundlePackage.Beta, bundlePackage.ColorPicker, "wm.ColorPicker", "wm.base.widget.Editors.Text", "images/wm/edit.png", "A color picker"],
 [ bundlePackage.Beta, bundlePackage.BusyButton, "wm.BusyButton", "wm.base.widget.BusyButton", "images/wm/button.png", "A button with a progress indicator"],
 [ bundlePackage.Beta, bundlePackage.Ticker, "wm.Ticker", "wm.base.widget.Ticker", "images/wm/widget.png", "Animated scrolling panel"],
+[ bundlePackage.Beta, bundlePackage.ListViewer, "wm.ListViewer", "wm.base.widget.ListViewer", "images/wm/content.png", "A simple list control"],
 
 [ bundlePackage.Advanced, bundlePackage.Tree, "wm.PropertyTree", "wm.base.widget.Tree", "images/wm/tree.png", "A tree control"],
 [ bundlePackage.Advanced, bundlePackage.SimpleForm, "wm.SimpleForm", "wm.base.widget.LiveForm", "images/wm/content.png"],
