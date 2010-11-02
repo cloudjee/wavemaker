@@ -8,9 +8,14 @@
 dojo.provide("wm.base.widget.Bespin");
 
 
-dojo.declare("wm.Bespin", wm.Control, {
+dojo.declare("wm.Bespin", wm.Container, {
     // design mode property
     scrim: true,
+
+    // container properties
+    layoutKind: "top-to-bottom",
+    horizontalAlign: "left",
+    verticalAlign: "top",
 
     // Access to bespin objects
     _editor: null,
@@ -23,6 +28,9 @@ dojo.declare("wm.Bespin", wm.Control, {
     dataValue: "dojo.declare('myclass', null, {\n});",
     tabSize: 4,
 
+    // toolbar props
+    useSearchToolbar: true,
+
     // wm.Control props
     width: "100%",
     height: "200px",
@@ -32,27 +40,44 @@ dojo.declare("wm.Bespin", wm.Control, {
 	
 	var link = document.createElement("link");
 	link.id = "bespin_base";
-	link.href = "/wavemaker/lib/bespin/prebuilt";
+	link.href = "/wavemaker/lib/bespin/build";
 	head.appendChild(link);
 
 	var script = document.createElement("script");
-	script.src = "/wavemaker/lib/bespin/prebuilt/BespinEmbedded.js"
+	script.src = "/wavemaker/lib/bespin/build/BespinEmbedded.js"
 	head.appendChild(script);
 
 	this.inherited(arguments);
     },
     postInit: function() {
 	this.inherited(arguments);
+        this.toolBar = new wm.Container({name: "toolBar", width: "100%", height: "20px", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left", parent: this, owner: this});
+        this.bespinControl = new wm.Control({name: "bespinControl", width: "100%", height: "100%", parent: this, owner: this});
+        this.bespinControl.connect(this.bespinControl, "renderBounds", this, function() {
+	    if (this._env) 
+	        this._env.dimensionsChanged();
+        });
+
 	if (wm.Bespin.onLoadFinished)
 	    this.initBespinObject();
 	else
 	    this.connect(null, "onBespinLoad", this, "initBespinObject");
+        this.buildToolbar();
+    },
+    buildToolbar: function() {
+        if (this.useSearchToolbar) {
+            this.searchSpacer = new wm.Spacer({name: "searchSpacer", width: "100%", height: "1px", parent: this.toolBar, owner: this});
+            this.searchEditor = new wm.Text({name: "searchEditor", caption: "Find", captionSize: "50px", width: "200px", changeOnKey: true, parent: this.toolBar, owner: this});
+            this.replacePopupButton = new wm.ToolButton({name: "replacePopupButton", caption: "R", width: "20px", height: "100%", parent: this.toolBar, owner: this});
+
+            this.searchEditor.connect(this.searchEditor, "onchange", this, "doFind");
+        }
+
     },
     initBespinObject: function() {
-	bespin.useBespin(this.domNode,
+	bespin.useBespin(this.bespinControl.domNode,
 			 {stealFocus: true,
 			  syntax:     this.syntax,
-			  plugins: ["embedded", "command_line"],
 			  settings:   {
 			      tabstop: this.tabSize,
 			      fontsize: this.fontSize,
@@ -131,13 +156,21 @@ dojo.declare("wm.Bespin", wm.Control, {
 	if (this._editor)
 	    this._editor.focus = true;
     },
-    renderBounds: function() {
-	this.inherited(arguments);
-	if (this._env) 
-	    this._env.dimensionsChanged();
+
+    doFind: function() {
+        var text = this.searchEditor.getDataValue();
+        this._editor.searchController.setSearchText(text);
+        var range = this._editor.searchController.findNext();
+        if (range) {
+            this._editor.selection = range;
+        } else {
+            var position = { row: 0, col: 0 }; 
+            this._editor.setCursor(position);
+             range = this._editor.searchController.findNext();
+            if (range)
+                this._editor.selection = range;
+        }
     },
-
-
     _change: function() {
 	this.onChange(this._editor.value);
     },
