@@ -13,7 +13,7 @@ dojo.declare("wm.Bespin", wm.Container, {
     scrim: true,
 
     // container properties
-    layoutKind: "top-to-bottom",
+    layoutKind: "left-to-right",
     horizontalAlign: "left",
     verticalAlign: "top",
 
@@ -31,6 +31,10 @@ dojo.declare("wm.Bespin", wm.Container, {
     // toolbar props
     useSearchToolbar: true,
     _lastFind: "",
+
+    // autocompletion props
+    useAutoCompletion: true, // only works for javascript
+    autoCompletionThisPointer: "main",    
 
     // wm.Control props
     width: "100%",
@@ -52,8 +56,9 @@ dojo.declare("wm.Bespin", wm.Container, {
     },
     postInit: function() {
 	this.inherited(arguments);
-        this.toolBar = new wm.Container({name: "toolBar", width: "100%", height: "25px", margin: "0,0,2,0", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left", parent: this, owner: this});
-        this.bespinControl = new wm.Control({name: "bespinControl", width: "100%", height: "100%", parent: this, owner: this});
+	this.leftContainer = new wm.Container({name: "leftContainer", width: "100%", height: "100%", layoutKind: "top-to-bottom", horizontalAlign: "left", verticalAlign: "top", parent: this, owner: this});
+        this.toolBar = new wm.Container({name: "toolBar", width: "100%", height: "25px", margin: "0,0,2,0", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left", parent: this.leftContainer, owner: this});	
+        this.bespinControl = new wm.Control({name: "bespinControl", width: "100%", height: "100%", parent: this.leftContainer, owner: this});
         this.bespinControl.connect(this.bespinControl, "renderBounds", this, function() {
 	    if (this._env) 
 	        this._env.dimensionsChanged();
@@ -64,9 +69,28 @@ dojo.declare("wm.Bespin", wm.Container, {
 	else
 	    this.connect(null, "onBespinLoad", this, "initBespinObject");
         this.buildToolbar();
-
+	if (this.useAutoCompletion) {
+	    this.autoCompletionList = new wm.List({name: "autoCompletionList",
+						   width: "120px",
+						   height: "100%",
+						   headerVisible: false,
+						   parent: this,
+						   owner: this});
+	    this.autoCompletionList.connect(this.autoCompletionList, "onselect", this, function() {
+		this._editor.selectedText = this.autoCompletionList.selectedItem.getData().dataValue;
+		this._editor.setCursor(this._editor.selection.end);
+		this.focus();		
+	    });
+	    this.autoCompletionVar = new wm.Variable({name: "autoCompletionVar",
+						      type: "StringData",
+						      isList: true,
+						      owner: this});
+	    this.autoCompletionList.setDataSet(this.autoCompletionVar);
+	    this.thisRegex = new RegExp("^this.");
+	}
 
 	this.connect(this.domNode, "onkeydown", this, "handleKeyPress");
+	
     },
     buildToolbar: function() {
 	this.gotoLineButton = new wm.ToolButton({name: "gotoLineButton", 
@@ -234,12 +258,41 @@ dojo.declare("wm.Bespin", wm.Container, {
 		dojo.stopEvent(e);
 		break;
 	    }
+	} else {
+	    wm.onidle(this, function() {
+		var text = this._editor.value;
+		var cursor = this._editor.selection.end;
+		var line = text.split(/\n/)[cursor.row];
+		var lastcol = cursor.col;
+		for (var i = lastcol; i >= 0 && line[i] != ' '; i--) ;
+		var token = line.substring(i+1,lastcol);
+		console.log("TOKEN:"+token);
+		token = token.replace(this.thisRegex, this.autoCompletionThisPointer +".");
+		try {
+		    var obj = dojo.getObject(token);
+		    var keylist = [];
+		    if (obj) {
+			for (var i in obj) {
+			    if (i[0] != "_") {
+				keylist.push({dataValue: i});
+			    }
+			}
+		    }
+		    this.autoCompletionVar.setData(keylist);
+		} catch(e) {
+		    this.autoCompletionVar.setData([]);
+		}
+		this.autoCompletionList.setDataSet(this.autoCompletionVar);
+	    });
 	}
     },
     promptGotoLine: function() {
 	app.prompt("Enter line number", this._editor.selection.start.row, 
 		   dojo.hitch(this, function(inValue) {this.setLineNumber(inValue);}));
 
+    },
+    focus: function() {
+	this._editor.focus = true;
     },
     setSyntax: function(inSyntax) {
 	this.syntax = inSyntax;
