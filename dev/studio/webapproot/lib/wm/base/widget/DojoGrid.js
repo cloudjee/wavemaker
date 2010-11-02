@@ -576,14 +576,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		if (this.variable instanceof wm.LiveVariable)
 			fields = this.variable.getViewFields();
 		else if (this.variable instanceof wm.Variable)
-		{
-			for (prop in this.variable._dataSchema)
-			{
-				if (this.variable._dataSchema[prop].isList)
-					continue;
-				fields[fields.length] = {dataIndex: prop};
-			}
-		}
+      fields = wm.getDefaultView(this.variable.type) || [];
 		return fields;
 	},
 	_onGridEvent: function(evt){
