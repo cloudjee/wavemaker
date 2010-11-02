@@ -28,6 +28,11 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 	},
 	beginDrag: function(inEvent, inInfo) {
 		this.info = inInfo || this.info;
+		if (this.info && this.info.control){
+		  var parentForm = wm.getParentForm(this.info.control);
+			this.info.parentForm = parentForm instanceof wm.LiveFormBase ? parentForm : null;	
+		}
+		
 		this.mousedown(inEvent);
 	},
 	initNodes: function() {
@@ -175,7 +180,15 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 		return this.canBeTarget(t) ? t : null;
 	},
 	canBeTarget: function(inWidget) {
-		return inWidget.container && !inWidget.flags.notInspectable && !inWidget.getFreeze();
+		var parentOK = true;
+		if (this.info.parentForm){
+			var targetParentForm = inWidget instanceof wm.LiveFormBase ? inWidget : wm.getParentForm(inWidget);
+	    if (!targetParentForm || targetParentForm.getId() != this.info.parentForm.getId()){
+        parentOK = false;
+			}
+		}
+		
+		return parentOK && inWidget.container && !inWidget.flags.notInspectable && !inWidget.getFreeze();
 	},
 	targetInRoot: function(inHit) {
 		var h = inHit, b = kit._getMarginBox(this.root.domNode);
