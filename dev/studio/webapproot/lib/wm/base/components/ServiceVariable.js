@@ -70,8 +70,10 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
 		this.inherited(arguments);
 		// output has named type matching operation returnType
 		var op = this._operationInfo;
-		if (op)
-			this.setType(op.returnType);
+		if (op) {
+		  this.setType(op.returnType);
+		  this.clearData();
+	  }
 		if ((this.autoUpdate || this.startUpdate) && !this._loading && this.isDesignLoaded()) {
 		  this.update();
 		}
