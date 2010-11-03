@@ -258,13 +258,18 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
         });
         */
 
-/*
+
         this.button.connect(this.button, "renderBounds", this, function() {
             if (!this.button.isAncestorHidden() && !this._inCreateDijit && this.dijit) {
-                this.dijit._fileInput.style.left = 0;
+                var b = this.button.getContentBounds();
+                this.button.btnNode.style.lineHeight = b.h + "px";
+                this.button.btnNode.style.height = b.h + "px";
+                this.button.btnNode.style.width = b.w + "px";
+                
+                //this.dijit._fileInput.style.left = 0;
             }
         });
-        */
+        
     },
 
     // Convenience method for those more accustomed to calling renderDojoObj
