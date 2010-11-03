@@ -124,6 +124,7 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 				   height: "400px",
 				   modal: true,
 				   useContainerWidget: true,
+                                   useButtonBar: true,
 				   fitToContentHeight: true,
 				   title: "Create a Java Service"});
             d.containerWidget.setBorder("10");
