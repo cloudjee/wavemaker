@@ -79,12 +79,15 @@ dojo.declare("wm.Component", wm.Object, {
 	    return this.owner.getParentPage();
 	return null;
     },
+
+    // perhaps should be called getAncestorInstanceOf; returns false if the widget/component lacks parent/owner that
+    // is an instance of the specified class, else returns the class itself
     isAncestorInstanceOf: function(inClass) {
         // exit condition
         if (this == app._page || this == app || window["studio"] && (this == studio.application || this == studio.page))
             return false;
 
-        if (this instanceof inClass) return true;
+        if (this instanceof inClass) return this;
 
         if (this.parent)
             return this.parent.isAncestorInstanceOf(inClass)
