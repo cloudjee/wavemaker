@@ -69,9 +69,13 @@ wm.Component.extend({
 	},
 	listProperties: function() {
 		var props = this.inherited(arguments);
-		if (this.isDesignLoaded() && (this.owner != studio.application && this.owner != studio.page))
-			props.owner = {ignore: 1};
+	    if (this.isDesignLoaded() && (this.owner != studio.application && this.owner != studio.page)) {
+                props = dojo.clone(props);
+		props.owner = {ignore: 1};
+            }
+
 	    if (this.deletionDisabled) {
+                props = dojo.clone(props);
 		props.name = {ignore: 1};
 	    }
 		return props;
