@@ -2427,7 +2427,7 @@ layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAli
 			spacer1: ["wm.Spacer", {"height":"0px","minWidth":10,"width":"100%"}, {}],
 			contentPanel: ["wm.Panel", {"borderColor":"#888888","height":"100%","themeStyleType":"ContentPanel","width":"770px"}, {}, {
 				HeaderPanel: ["wm.Panel", {"height":"50px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-					headerLogoPicture: ["wm.Picture", {"border":"0","height":"60px","source":"/wavemaker/lib/wm/base/styles/images/wavemakerLogo.png","width":"273px"}, {}],
+					headerLogoPicture: ["wm.Picture", {"border":"0","height":"60px","source":"lib/wm/base/styles/images/wavemakerLogo.png","width":"273px"}, {}],
 					headerTitleLabel: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_20px"]},"align":"center","border":"0","caption":"Template","height":"100%","width":"100%"}, {}, {
 						format: ["wm.DataFormatter", {}, {}]
 					}],
