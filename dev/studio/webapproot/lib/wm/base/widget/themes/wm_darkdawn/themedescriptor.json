@@ -260,7 +260,7 @@
 		"Family": "Arial", 
 		"Weight": "normal", 
 		"TextSize": "10pt", 
-		"Color": "#eeeeee"
+		"Color": "#000000"
 	}, 
 	"Document-Styles-Border": {
 		"BorderSize": "0", 

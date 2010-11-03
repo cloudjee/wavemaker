@@ -43,9 +43,9 @@
 	}, 
 	"MainContent-Styles-Background": {
 		"Color": "#ffffff", 
-		"Image-Repeat": "repeat-x", 
+		"Image-Repeat": "no-repeat", 
 		"Image-Position": "top left", 
-		"Image": "url(images/repeatx/brightEdge3.png)"
+		"Image": "none"
 	}, 
 	"Common-Editor_BorderStyle": {
 		"Radius": "4px"
@@ -191,7 +191,7 @@
 		"Color": "#807e7e", 
 		"Image-Repeat": "repeat-x", 
 		"Image-Position": "top left", 
-		"Image": "url(images/repeatx/greyEdge3.png)"
+		"Image": "url(images/repeatx/brightEdge1.png)"
 	}, 
 	"EmphasizedContent-Styles-Font": {
 		"Family": "Arial", 
@@ -223,7 +223,7 @@
 		"Color": "#868484", 
 		"Image-Repeat": "repeat-x", 
 		"Image-Position": "top left", 
-		"Image": "url(images/repeatx/greyEdge3.png)"
+		"Image": "url(images/repeatx/brightEdge2.png)"
 	}, 
 	"MainContent-ClickablesDefault-Border": {
 		"BorderSize": "2"
@@ -483,7 +483,7 @@
 		"Color": "#999999", 
 		"Image-Repeat": "repeat-x", 
 		"Image-Position": "top left", 
-		"Image": "url(images/repeatx/brightEdge1.png)"
+		"Image": "url(images/repeatx/brightEdge2.png)"
 	}, 
 	"HeaderContent-ClickablesHover-Font": {
 		"Color": "#000000"

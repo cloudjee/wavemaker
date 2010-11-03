@@ -63,7 +63,7 @@ body .wm_darkdawn input:focus,
     #studio_designer.wm_darkdawn .wmlayout a:visited,
     .wm_darkdawn  #wavemakerNode  .wmlayout a,
     .wm_darkdawn  #wavemakerNode  .wmlayout a:visited {
-	color: #eeeeee; /* Document-Styles-Font_Color */
+	color: #000000; /* Document-Styles-Font_Color */
 	font-weight: bold;
     }
 }
@@ -422,7 +422,7 @@ body .wm_darkdawn input:focus,
 .wm_darkdawn .dijitCalendarContainer .dijitCalendarDayLabelTemplate {
     background-color: #ffffff !important; /* Document-Styles-Background_Color */
     background-image: none;
-    color: #eeeeee; /* Document-Styles-Font_Color */
+    color: #000000; /* Document-Styles-Font_Color */
 }
 /*****************************************
  * EOF: calendar.css
@@ -1251,7 +1251,7 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
 	font-family: Arial; /* Document-ClickablesDefault-Font_Family */
 	font-size: 11pt; /* Document-ClickablesDefault-Font_TextSize */
 	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
-	color: #eeeeee; /* Document-Styles-Font_Color */
+	color: #000000; /* Document-Styles-Font_Color */
 	background-color: transparent;
 	background-image: none;
     }
@@ -1266,7 +1266,7 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
 	color: #ffffff; /* Document-ClickablesDefault-Font_Color */
     }
     .wm_darkdawn .dojoMenu .dijitMenuItem {
-	color: #eeeeee; /* Document-Styles-Font_Color */
+	color: #000000; /* Document-Styles-Font_Color */
     }
     /* Spacing between menu items */
     .wm_darkdawn .dijitMenuBar .dijitMenuItem,
@@ -1635,7 +1635,7 @@ body.tundra .wm_darkdawn  div.wmheader,
     /* Document-Styles-Font */
     font-family: Arial; /* Document-Styles-Font_Family */
     font-size: 10pt; /* Document-Styles-Font_TextSize */
-    color: #eeeeee; /* Document-Styles-Font_Color */
+    color: #000000; /* Document-Styles-Font_Color */
     font-weight: normal; /* Document-Styles-Font_Weight */
     /* Document-Styles-Background */
     background-color: #ffffff; /* Document-Styles-Background_Color */
@@ -1645,7 +1645,7 @@ body.tundra .wm_darkdawn  div.wmheader,
     /* Document-Styles-Font */
     font-family: Arial; /* Document-Styles-Font_Family */
     font-size: 10pt; /* Document-Styles-Font_TextSize */
-    color: #eeeeee; /* Document-Styles-Font_Color */
+    color: #000000; /* Document-Styles-Font_Color */
     font-weight: normal; /* Document-Styles-Font_Weight */
 }
 #studio_designer.wm_darkdawn, 

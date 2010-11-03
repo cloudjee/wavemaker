@@ -126,7 +126,7 @@
 	}, 
 	"Document-ClickablesHover-Font": {
 		"Family": "Verdana", 
-		"Color": "#FFFFFF", 
+		"Color": "#000000", 
 		"TextSize": "10pt"
 	}, 
 	"Document-ClickablesActive-Font": {

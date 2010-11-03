@@ -174,7 +174,7 @@ body .wm_graphite input:focus,
 	box-shadow: 3px 3px 3px #444444; /* MainContent-ClickablesDefault-BorderStyle_Shadow */
 	/* MainContent-ClickablesDefault-Background */
 	background-color: #807e7e; /* MainContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/greyEdge3.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
     }
@@ -243,7 +243,7 @@ body .wm_graphite input:focus,
 	box-shadow: 3px 3px 3px #444444; /* EmphasizedContent-ClickablesDefault-BorderStyle_Shadow */
 	/* EmphasizedContent-ClickablesDefault-Background */
 	background-color: #868484; /* EmphasizedContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/greyEdge3.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge2.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
     }
@@ -312,7 +312,7 @@ body .wm_graphite input:focus,
 	box-shadow: 3px 3px 3px #000000; /* HeaderContent-ClickablesDefault-BorderStyle_Shadow */
 	/* HeaderContent-ClickablesDefault-Background */
 	background-color: #999999; /* HeaderContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge2.png); /* HeaderContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
     }
@@ -1197,7 +1197,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     }
     .wm_graphite .HeaderContent div.dojoxGridHeader .dojoxGridCell {
 	background-color: #999999; /* HeaderContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge2.png); /* HeaderContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
 	/* HeaderContent-ClickablesDefault-Font */
@@ -1212,7 +1212,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     .wm_graphite .HeaderContent .wmlist-header {
 	color: #000000; /* HeaderContent-ClickablesDefault-Font_Color */
 	background-color: #999999; /* HeaderContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge2.png); /* HeaderContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
     }
@@ -1303,7 +1303,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     .wm_graphite .MainContent .dojoMenu.ClickableDojoMenu {
 	/* MainContent-ClickablesDefault-Background */
 	background-color: #807e7e; /* MainContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/greyEdge3.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
     }
@@ -1323,7 +1323,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
 	color: #ffffff; /* MainContent-ClickablesHover-Font_Color */
 	/* MainContent-ClickablesHover-Background */
 	background-color: #b5b3b3; /* MainContent-ClickablesHover-Background_Color */
-	background-image: url(images/repeatx/greyEdge3.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
 	outline-width: 0;
@@ -1343,7 +1343,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     .wm_graphite .HeaderContent .dojoMenu.ClickableDojoMenu {
 	/* HeaderContent-ClickablesDefault-Background */
 	background-color: #999999; /* HeaderContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge2.png); /* HeaderContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
     }
@@ -1363,7 +1363,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
 	color: #000000; /* HeaderContent-ClickablesHover-Font_Color */
 	/* HeaderContent-ClickablesHover-Background */
 	background-color: #cccccc; /* HeaderContent-ClickablesHover-Background_Color */
-	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge2.png); /* HeaderContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
 	outline-width: 0;
@@ -1383,7 +1383,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     .wm_graphite .EmphasizedContent .dojoMenu.ClickableDojoMenu {
 	/* EmphasizedContent-ClickablesDefault-Background */
 	background-color: #868484; /* EmphasizedContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/greyEdge3.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge2.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
     }
@@ -1403,7 +1403,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
 	color: #ffffff; /* EmphasizedContent-ClickablesHover-Font_Color */
 	/* EmphasizedContent-ClickablesHover-Background */
 	background-color: #555555; /* EmphasizedContent-ClickablesHover-Background_Color */
-	background-image: url(images/repeatx/greyEdge3.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge2.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
 	outline-width: 0;
@@ -1830,9 +1830,9 @@ body.wm_graphite {
     font-weight: normal; /* MainContent-Styles-Font_Weight */
     /* MainContent-Styles-Background */
     background-color: #ffffff; /* MainContent-Styles-Background_Color */
-    background-image: url(images/repeatx/brightEdge3.png); /* MainContent-Styles-Background_Image */
+    background-image: none; /* MainContent-Styles-Background_Image */
     background-position: top left; /* MainContent-Styles-Background_Image-Position */
-    background-repeat: repeat-x; /* MainContent-Styles-Background_Image-Repeat */
+    background-repeat: no-repeat; /* MainContent-Styles-Background_Image-Repeat */
 }
 #studio_themesPage_themeDesigner_demoPanelTabLayers_client .MainContent,
 .wm_graphite #studio_themesPage_themeDesigner_demoPanel .MainContent {
@@ -1867,7 +1867,7 @@ body.wm_graphite {
 	font-size: 10pt; /* MainContent-ClickablesDefault-Font_TextSize */
 	/* MainContent-ClickablesDefault-Background */
 	background-color: #807e7e; /* MainContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/greyEdge3.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
 	/* MainContent-ClickablesDefault-BorderStyle_Radius */
@@ -1908,7 +1908,7 @@ body.wm_graphite {
 	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
 	/* MainContent-ClickablesDefault-Background */
 	background-color: #807e7e; /* MainContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/greyEdge3.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
     }
@@ -2028,7 +2028,7 @@ body.wm_graphite {
 	font-size: 10pt; /* EmphasizedContent-ClickablesDefault-Font_TextSize */
 	/* EmphasizedContent-ClickablesDefault-Background */
 	background-color: #868484; /* EmphasizedContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/greyEdge3.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge2.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
 	/* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
@@ -2069,7 +2069,7 @@ body.wm_graphite {
 	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
 	/* EmphasizedContent-ClickablesDefault-Background */
 	background-color: #868484; /* EmphasizedContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/greyEdge3.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge2.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
     }
@@ -2189,7 +2189,7 @@ body.wm_graphite {
 	font-size: 10pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
 	/* HeaderContent-ClickablesDefault-Background */
 	background-color: #999999; /* HeaderContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge2.png); /* HeaderContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
 	/* HeaderContent-ClickablesDefault-BorderStyle_Radius */
@@ -2230,7 +2230,7 @@ body.wm_graphite {
 	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
 	/* HeaderContent-ClickablesDefault-Background */
 	background-color: #999999; /* HeaderContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge2.png); /* HeaderContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
     }
@@ -2371,7 +2371,7 @@ body.wm_graphite {
 	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
 	/* MainContent-ClickablesDefault-Background */
 	background-color: #807e7e; /* MainContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/greyEdge3.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge1.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
     }
@@ -2397,7 +2397,7 @@ body.wm_graphite {
 	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
 	/* EmphasizedContent-ClickablesDefault-Background */
 	background-color: #868484; /* EmphasizedContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/greyEdge3.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge2.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
     }
@@ -2423,7 +2423,7 @@ body.wm_graphite {
 	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
 	/* HeaderContent-ClickablesDefault-Background */
 	background-color: #999999; /* HeaderContent-ClickablesDefault-Background_Color */
-	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-image: url(images/repeatx/brightEdge2.png); /* HeaderContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
     }
