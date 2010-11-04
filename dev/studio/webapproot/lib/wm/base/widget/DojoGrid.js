@@ -371,7 +371,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 		//dojo.connect(this.dojoObj, "onDeselect", this, "deselect");
 		//dojo.connect(this.dojoObj, "onSelected", this, "select");
-		dojo.connect(this.dojoObj, "onSelectionChanged", this, "selectionChange");
+		dojo.connect(this.dojoObj, "onSelected", this, "selectionChange");
 
 		if (this.isDesignLoaded()) {
 			dojo.connect(this.dojoObj,'onMoveColumn', this, '_onMoveColumn');
