@@ -704,6 +704,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		return expValue;
 	},
 	dateFormatter: function(inDatum){
+		if (!inDatum)
+		  return inDatum;
 		var constraints = {selector:'date', formatLength:'short', locale:dojo.locale};
 		return dojo.date.locale.format(new Date(inDatum), constraints);
 	},
