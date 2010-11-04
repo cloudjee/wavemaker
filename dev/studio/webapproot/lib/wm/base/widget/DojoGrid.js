@@ -545,9 +545,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
       var formatFunc = '';
 		  if (f.displayType == 'Number'){
 		    align = 'right';
-				width = '120px';
+				width = '80px';
 		  } else if (f.displayType == 'Date'){
-        width = '120px';
+                      width = '80px';
 				formatFunc = 'wm_date_formatter';
 			}
 		  this.columns.push({show:i < 15, id: f.dataIndex, title:wm.capitalize(f.dataIndex), width:width, displayType:f.displayType, noDelete:true, align: align, formatFunc: formatFunc});
