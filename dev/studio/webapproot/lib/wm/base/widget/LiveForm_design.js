@@ -416,15 +416,27 @@ wm.LiveFormBase.extend({
 		return this.inherited(arguments);
 	},
         setName: function(inName) {
-            this.inherited(arguments);
+            var editPanel = this.getEditPanel();
+            if (!editPanel.isCustomized && editPanel.lock) {
+                this.setName2(inName);
+            } else {
+                editPanel.setName(this.name + "EditPanel");
+                app.confirm("Customizations you have made to your EditPanel will be lost if you change the name.  Procede?", false, 
+                            dojo.hitch(this, function() {
+                                this.setName2(inName);
+                                studio.inspector.reinspect();
+                            }),
+                            dojo.hitch(this, function() {
+                                studio.inspector.reinspect();
+                            }));
+            }
+        },
+        setName2: function(inName) {
+            wm.Container.prototype.setName.call(this, inName);
             var editPanel = this.getEditPanel();
             if (editPanel) {
-                editPanel.setName(this.name + "EditPanel");
-                app.confirm("Shall we update your edit panel to use this new name? (Strongly recommended, but if you've customized your edit panel's events or properties these changes will be lost)", false, dojo.hitch(this, function() {
-                    editPanel.destroy(); 
-                    this.addEditPanel();
-                }));
-
+                editPanel.destroy(); 
+                this.addEditPanel();                
             }
         },
 	editProp: function(inName, inValue, inInspector) {

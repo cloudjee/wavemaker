@@ -31,6 +31,7 @@ dojo.declare("wm.EditPanel", wm.Panel, {
 	width: "100%",
 	height: "40px",
         editPanelStyle: "wm.RoundedButton",
+        isCustomized: false,
 	destroy: function() {
 		this._unsubscribeLiveForm();
 		this.inherited(arguments);
@@ -41,6 +42,11 @@ dojo.declare("wm.EditPanel", wm.Panel, {
 		this.setLiveForm(this.liveForm);
 		this.updateControlsStatus();                
 	},
+        setLock: function(inValue) {
+            this.inherited(arguments);
+            if (!inValue)
+                this.isCustomized = true;
+        },
 	loaded: function() {
 		this.inherited(arguments);
 		if (wm.pasting)
@@ -170,13 +176,14 @@ wm.EditPanel.extend({
 		//
 		var n = this.getId();
 		this.owner.loadComponent("newButton1", p, this.editPanelStyle, {caption: "New"}, {onclick: n + ".beginDataInsert"});
-		var u = this.owner.loadComponent("updateButton1", p, this.editPanelStyle, {caption: "Update"}, {onclick: n + ".beginDataUpdate"});
+	        var u = this.owner.loadComponent("updateButton1", p, this.editPanelStyle, {caption: "Update"}, {onclick: n + ".beginDataUpdate"});
 		var d = this.owner.loadComponent("deleteButton1", p, this.editPanelStyle, {caption: "Delete"}, {onclick: n + ".deleteData"});
 		this.reflow();
 		//
 		u.$.binding.addWire("", "disabled", n + ".formUneditable");
 		d.$.binding.addWire("", "disabled", n + ".formUneditable");
 	},
+
 	removeControls: function() {
 		if (confirm("Are you sure? All widgets in " + this.getId() + " will be deleted.")) {
 			this._removeControls();
