@@ -1522,3 +1522,10 @@ background-color: transparent;
    font-style: italic;
    color: rgb(200,200,200);
 }
+
+.Studio .indentOption, .Studio .indentOption1 {
+    padding-left: 20px !important;
+}
+ .Studio .indentOption2 {
+    padding-left: 40px !important;
+}

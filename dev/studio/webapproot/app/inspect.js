@@ -164,7 +164,7 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 	    serviceVariables: {caption: "Service Variables:", list: "serviceVariable"},
 	    navigations: {caption: "Navigations:", list: "navigationCall"},
 			existingCalls: {caption: "Shared Event Handlers:", list: "sharedEventHandlers"},
-			dialogs: {caption: "Show Dialogs:", list: "dialogs"},
+			dialogs: {caption: "Dialogs:", list: "dialogs"},
 			dashboards: {caption: "Dashboard Add Widget:", list: "dashboards"},
       timers: {caption: "Timers:", list: "timers"}
 	    //liveForms: {caption: "Live Forms:", list: "liveForms"}
@@ -234,8 +234,13 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 					if (a && a.length) {
 						items.push({name: n, value: n});
 						dojo.forEach(a, function(obj) {
-							var aa = (wm.isInstanceType(obj, wm.Component)) ? obj.getId() : obj;
-						    items.push({name: aa, value: aa, indent:true});
+						        var aa = (wm.isInstanceType(obj, wm.Component)) ? obj.getId() : obj;
+							if (obj instanceof wm.Dialog){
+							    items.push({name: aa + '.show', value: aa + '.show', indent: 1});
+							    items.push({name: aa + '.hide', value: aa + '.hide', indent: 1});
+                                                        } else {
+						            items.push({name: aa, value: aa, indent:1});
+                                                        }
 /*
 							if (obj instanceof wm.LiveForm){
 								items.push({name: aa + '.beginDataInsert', value: aa + '.beginDataInsert'});
