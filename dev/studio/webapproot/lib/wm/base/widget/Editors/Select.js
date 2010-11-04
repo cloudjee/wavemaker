@@ -266,7 +266,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
                 inVariable.data[this._storeNameField]  = this._getDisplayData(inVariable);
             }
 	    var de = this.displayExpression, v = inVariable;
-	    return String(de ? wm.expression.getValue(de, v) : inVariable.getValue(this._displayField));
+	    return de ? wm.expression.getValue(de, v) : inVariable.getValue(this._displayField);
 	},
 /*
 	_getDataByValue: function(inObj) {
