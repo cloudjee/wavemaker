@@ -61,6 +61,7 @@ wm.fullTemplates.fancyTemplate = {
 	height: "100%",
 	verticalAlign: "top",
 	horizontalAlign: "center",
+    autoScroll: true,
 	_template: {
 	varTemplateUsername: ["wm.ServiceVariable", {"autoUpdate":true,"designTime":true,"operation":"getUserName","service":"securityService","startUpdate":true}, {}, {
 		input: ["wm.ServiceInput", {"type":"getUserNameInputs"}, {}]
@@ -160,6 +161,7 @@ wm.fullTemplates.sideMenuTemplate = {
 	height: "100%",
 	verticalAlign: "top",
 	horizontalAlign: "left",
+    autoScroll: true,
 	_template: {
 	varTemplateUsername: ["wm.ServiceVariable", {"autoUpdate":true,"designTime":true,"operation":"getUserName","service":"securityService","startUpdate":true}, {}, {
 		input: ["wm.ServiceInput", {"type":"getUserNameInputs"}, {}]
@@ -206,6 +208,7 @@ wm.fullTemplates.tabTemplate = {
 	height: "100%",
 	verticalAlign: "top",
 	horizontalAlign: "center",
+    autoScroll: true,
 	_template: {
 	varTemplateUsername: ["wm.ServiceVariable", {"autoUpdate":true,"designTime":true,"operation":"getUserName","service":"securityService","startUpdate":true}, {}, {
 		input: ["wm.ServiceInput", {"type":"getUserNameInputs"}, {}]
@@ -250,6 +253,7 @@ wm.fullTemplates.topMenuTemplate = {
 	height: "100%",
 	verticalAlign: "top",
 	horizontalAlign: "center",
+    autoScroll: true,
 	_template: {
 	varTemplateUsername: ["wm.ServiceVariable", {"autoUpdate":true,"designTime":true,"operation":"getUserName","service":"securityService","startUpdate":true}, {}, {
 		input: ["wm.ServiceInput", {"type":"getUserNameInputs"}, {}]
