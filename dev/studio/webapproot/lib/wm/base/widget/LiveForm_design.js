@@ -418,7 +418,14 @@ wm.LiveFormBase.extend({
         setName: function(inName) {
             this.inherited(arguments);
             var editPanel = this.getEditPanel();
-            if (editPanel) editPanel.setName(this.name + "EditPanel");
+            if (editPanel) {
+                editPanel.setName(this.name + "EditPanel");
+                app.confirm("Shall we update your edit panel to use this new name? (Strongly recommended, but if you've customized your edit panel's events or properties these changes will be lost)", false, dojo.hitch(this, function() {
+                    editPanel.destroy(); 
+                    this.addEditPanel();
+                }));
+
+            }
         },
 	editProp: function(inName, inValue, inInspector) {
 		switch (inName) {
