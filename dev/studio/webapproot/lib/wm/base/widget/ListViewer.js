@@ -54,6 +54,9 @@ dojo.declare("wm.ListViewerRow", wm.Container, {
         this.dom.node = this.domNode;
         delete this.replacementNode;
         
+	if (!this.variable.$.binding)
+	    new wm.Binding({name: "binding", owner: this.variable});
+
     },
     renderRow: function(inData, index) {
 
@@ -415,7 +418,8 @@ dojo.declare("wm.ListViewer", wm.Container, {
                             this.dataSet.update();
                             //this.dataSet.setPage(Math.floor(i/(this.dataSet.maxResults || 1)));
                     } else if (data[i]) {
-			this.currentRenderer.variable.setData(data[i]);
+                        this.currentRenderer.variable.$.binding.addWire("", "dataSet", this.dataSet.getItem(i).getId());
+			//this.currentRenderer.variable.setDataSet(this.dataSet.getItem(i));
 			delete this.currentRenderer._noData;
 		    }
                 }
