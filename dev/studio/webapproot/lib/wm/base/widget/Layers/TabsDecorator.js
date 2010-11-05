@@ -283,7 +283,7 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 	}
 
 	//layer.layerHasBeenValidated = true;
-	//dojo.addClass(this.btns[i], "done");
+	dojo.addClass(this.btns[i], "done");
 	return true;
     },
     backClick: function() {
