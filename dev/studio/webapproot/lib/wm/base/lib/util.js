@@ -107,7 +107,11 @@ wm.nop = function() {};
 wm.isEmpty = function(inObj) {
 	for (var i in inObj)
 		return false;
-	return true;
+
+    // for (var i in inObj) finds no properties 
+    if (typeof inObj == "object" && inObject instanceof Date)
+        return false;
+    return true;
 }
 
 wm.fire = function(obj, method, args) {
@@ -537,6 +541,7 @@ wm.Array.removeElement = function(inArray, inElement) {
 	inArray.splice(index, 1);
     return inArray; 
 }
+
 
 wm.Array.equals = function(a, b,optionalCallback) {
     if (a == b) return true;
