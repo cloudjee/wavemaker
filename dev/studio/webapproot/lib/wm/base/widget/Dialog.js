@@ -98,6 +98,8 @@ dojo.declare("wm.Dialog", wm.Container, {
     _minified: false,
     _maxified: false,
     noEscape: false,
+    noMinify: false,
+    noMaxify: false,
 	layoutKind: "top-to-bottom",
     horizontalAlign: "left",
     verticalAlign: "top",
@@ -271,8 +273,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    wm.bgIframe.setShowing(!this.modal && !this.isDesignedComponent());
 	}
 	this.titleClose.setShowing(!this.modal && !this.noEscape);
-	this.titleMinify.setShowing(!this.modal);
-	this.titleMaxify.setShowing(!this.modal);
+	this.titleMinify.setShowing(!this.modal && !this.noMinify);
+	this.titleMaxify.setShowing(!this.modal && !this.noMaxify);
     },
     setNoEscape: function(inNoEscape) {
 	this.noEscape = inNoEscape;
@@ -659,9 +661,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 					     noInspector: true,
 					     name: "titleClose",
                                              hint: "Close dialog",
-					     width: "22px",
+					     width: "19px",
 					     height: "19px",
-					     margin: "3,3,0,3",
+					     margin: "3,0,0,3",
 					     parent: this.titleBar,
 					     owner: this,
 					     showing: !this.modal && !this.noEscape });
@@ -671,10 +673,10 @@ dojo.declare("wm.Dialog", wm.Container, {
 					      name: "titleMinify",
 					      width: "19px",
 					      height: "19px",
-					      margin: "3,3,0,0",
+					      margin: "3,0,0,3",
 					      parent: this.titleBar,
 					      owner: this,
-					      showing: !this.modal});	
+					      showing: !this.modal && !this.noMinify});	
 
 	this.titleMaxify = new wm.ToolButton({_classes: {domNode: ["dialogmaxifybutton"]},
 					  noInspector: true,
@@ -683,10 +685,10 @@ dojo.declare("wm.Dialog", wm.Container, {
 					      caption: " ",
 					      width: "19px",
 					      height: "19px",
-					      margin: "3,3,0,0",
+					      margin: "3,0,0,3",
 					      parent: this.titleBar,
 					      owner: this,
-					      showing: !this.modal});	
+					      showing: !this.modal && !this.noMaxify});	
     
 	this.titleLabel = new wm.Label({
 					  noInspector: true,
@@ -704,6 +706,16 @@ dojo.declare("wm.Dialog", wm.Container, {
 	this.connect(this.titleMaxify, "onclick", this, "maxify");
 	this.connect(this.titleLabel, "onclick", this, "unminify");
 	this.connect(this.titleLabel.domNode, "onmousedown", this, "unminifyormove");
+    },
+    setNoMinify: function(val) {
+        this.noMinify = val;
+        if (this.titleMinify)
+            this.titleMinify.setShowing(!val);
+    },
+    setNoMaxify: function(val) {
+        this.noMaxify = val;
+        if (this.titleMaxify)
+            this.titleMaxify.setShowing(!val);
     },
     setTitle: function(inTitle) {
 	this.title = inTitle;
@@ -773,6 +785,8 @@ wm.Object.extendSchema(wm.Dialog, {
 
     modal: {group: "display", order: 50},
     noEscape: {group: "display", order: 51},
+    noMinify: {group: "display", order: 51},
+    noMaxify: {group: "display", order: 51},
     corner: {group: "layout", order: 52},
 
     noBevel: {ignore: 1},
