@@ -166,7 +166,8 @@ dojo.declare("ResourceManager", wm.Page, {
 	  newName = newItem.getItemName();
 	}
 	parent.treeNode.setOpen(true);
-	newItem.finishFileUpload();
+        if (newItem.finishFileUpload)
+	    newItem.finishFileUpload();
     },
 
     start: function() {

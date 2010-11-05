@@ -426,6 +426,8 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
         this.variable.setData([]);
         this._variable.setData([]);
         this._uploadedVariable.setData([]);
+        if (this.html)
+            this.html.setHtml("<i>No files selected</i>");
     },
 
     // parameter can either be just the tmpid field value, or the entire file object from which we extract tmpid
@@ -596,6 +598,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
 
         }
         */
+        this.updateVariable();
 	this.onChange();
         wm.job(this.getRuntimeId() + ": upload()", 100, dojo.hitch(this, "upload"));
     },
