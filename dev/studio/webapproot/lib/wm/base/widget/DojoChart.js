@@ -236,21 +236,38 @@ dojo.declare("wm.DojoChart", wm.Control, {
 		}, this);
 	},
 	getChartDataSet: function(){
-		if ((this.xAxis == 'wmDefaultX' || this.yAxis == 'wmDefaultY') && this.isDesignLoaded())
+		if (this.xAxis == 'wmDefaultX' && this.yAxis == 'wmDefaultY')
 			return this.defaultXY;
 		if (!this.variable || this.variable == '')
 			return [];
 		var ds = this.variable.getData();
 		if (ds && !(ds instanceof Array))
 			ds = [ds];
+
+    if (this.xAxis == 'wmDefaultX' || this.yAxis == 'wmDefaultY'){
+      if (this.xAxis == 'wmDefaultX')
+			 var axis = 'wmDefaultX';
+			else
+			 var axis = 'wmDefaultY';
+      dojo.forEach(ds, function(obj, i){
+				if (i >= this.defaultXY.length)
+					return;
+				ds[i][axis] = this.defaultXY[i][axis];
+			}, this);      
+    }   
+
 		return ds;
 	},
 	updateXLabelSet: function (){
 		if (this.isTimeXAxis)
 			return [];
 		this.xLabels = {};
-		var ds = this.getChartDataSet();
-		var x = (this.xAxis == 'wmDefaultX' || this.yAxis == 'wmDefaultY') ? "wmDefaultX" : this.xAxis;
+		if (this.xAxis == 'wmDefaultX')
+		  var ds = this.defaultXY;
+		else
+		  var ds = this.getChartDataSet();
+		
+		var x = this.xAxis;
 		dojo.forEach(ds, function(obj,idx){
 			var label = obj[x];
 			this.xLabels[label] = this.addXLabel(label);
@@ -264,9 +281,9 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	getColumnDataSet: function(columnName){
 		var data = [], x = '';
 		var ds = this.getChartDataSet();
-		var xField = (this.xAxis == 'wmDefaultX' || this.yAxis == 'wmDefaultY') ? "wmDefaultX" : this.xAxis;
+		var xField = this.xAxis;
 		dojo.forEach(ds, function(dataObj, i){
-			var obj = {y: dataObj[columnName]};
+			var obj = {y: columnName in dataObj ? dataObj[columnName] : 0};
 			if (this.isPieChart()) {
 				if (xField != '')
 					obj.legend = dataObj[xField];
