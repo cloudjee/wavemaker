@@ -1427,8 +1427,7 @@ display: block;
 	cursor: pointer;
 	border: 1px solid transparent;
 	background-color: transparent;
-	height: 20px;
-	margin: 3px;
+        height: 100%;
 	color: rgb(80,80,80);
 }
 .wmwizardlayers .wmwizardlayers-tab.done, .wmwizardlayers .wmwizardlayers-tab.wmwizardlayers-selected {
