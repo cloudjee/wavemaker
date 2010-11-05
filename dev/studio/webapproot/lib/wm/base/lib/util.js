@@ -109,7 +109,7 @@ wm.isEmpty = function(inObj) {
 		return false;
 
     // for (var i in inObj) finds no properties 
-    if (typeof inObj == "object" && inOb instanceof Date)
+    if (typeof inObj == "object" && inObj instanceof Date)
         return false;
     return true;
 }
