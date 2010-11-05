@@ -205,7 +205,7 @@ dojo.declare("wm.studio.Project", null, {
 	loadApplication: function() {
 		this.projectData = {
 			js: this.loadProjectData(this.projectName + ".js"),
-		    css: this.loadProjectData("app.css"),//.replace(/^\@import.*theme.css.*/,"").replace(/^\n*/,""), // remove theme import from editable part of app.css
+		    css: this.loadProjectData("app.css").replace(/^\@import.*theme.css.*/,"").replace(/^\s*\n*/,""), // remove theme import from editable part of app.css
 		        documentation: dojo.fromJson(this.loadProjectData(this.projectName + ".documentation.json"))
 		};
 		if (!this.projectData.js) {
