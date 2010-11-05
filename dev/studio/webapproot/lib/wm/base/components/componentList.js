@@ -103,6 +103,8 @@ wm.componentList = {
 //	'wm.WidgetList':["build.Gzipped.wm_list"],
 	'wm.IFrame':['wm.base.widget.IFrame'],
 	'wm.FeedList':['wm.base.widget.FeedList'],
+	'wm.ListViewer':['wm.base.widget.ListViewer'],
+        "wm.DraggableTree":['wm.base.widget.DraggableTree'],
 	
 	'wm.LogoutVariable':['wm.base.components.LogoutVariable'],
 	'wm.Service':['wm.base.components.Service']
