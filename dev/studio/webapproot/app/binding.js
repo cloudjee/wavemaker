@@ -391,13 +391,14 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		var object = this.owner.targetProps.object;
 		var prop = this.owner.targetProps.targetProperty;
 		var propPrefix = "";
+/*
 		if (prop.indexOf(".") != -1) {
 		    propPrefix = prop.replace(/\..*?$/,"");
 		    prop = prop.replace(/^.*\./,"");
-		    object = object.getValue(propPrefix);
+		    object = object.getValue(propPrefix) || object;
 		    propPrefix += ".";
 		}
-                
+                */              
 		if (propPrefix) {
 		    var propList = object.listDataProperties("bindTarget");
 		    var list = [];
