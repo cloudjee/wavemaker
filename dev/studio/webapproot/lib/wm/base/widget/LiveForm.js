@@ -372,8 +372,13 @@ dojo.declare("wm.LiveFormBase", wm.Panel, {
 	setEditorWidth: function(inEditorWidth) {
 		this.editorWidth = inEditorWidth;
 		dojo.forEach(this.getEditorsArray(), function(e) {
+                    if (e.parent.horizontalAlign != "justified")
 			e.setWidth(inEditorWidth);
 		});
+		dojo.forEach(this.getRelatedEditorsArray(), function(e) {
+			e.setWidth(inEditorWidth);
+		});
+
 	},
 	setEditorHeight: function(inEditorHeight) {
 		this.editorHeight = inEditorHeight;

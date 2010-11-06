@@ -212,6 +212,7 @@ wm.LiveFormBase.extend({
 	createRelatedEditor: function(inFormField) {
 		var props = this.getFormEditorProps();
 		props.formField = inFormField;
+                props.width = this.editorWidth;
 		return this.owner.loadComponent(wm.makeNameForProp(inFormField, "RelatedEditor"), this, "wm.RelatedEditor", props);
 	},
 	// formField that should be included here. not returned if should not included
@@ -245,7 +246,10 @@ wm.LiveFormBase.extend({
 	createEditor: function(inFieldInfo, inProps, inEvents, inClass) {
 		var e = wm.createFieldEditor(this.getEditorParent(), inFieldInfo, inProps, inEvents, inClass);
 		if (e) {
-			e.setWidth(this.editorWidth);
+                        if (e.parent.horizontalAlign != "justified")
+			    e.setWidth(this.editorWidth);
+                        else 
+                            e.setWidth("100%"); // because its going to be 100% anyway so why confuse the user?
 			e.setHeight(this.editorHeight);
 			//console.log(this.name, "createEditor", arguments, e);
 			return e;
