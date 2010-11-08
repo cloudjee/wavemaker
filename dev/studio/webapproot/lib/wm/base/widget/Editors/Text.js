@@ -525,7 +525,9 @@ dojo.declare("wm.LargeTextArea", wm.Text, {
 
         changeOnEnter: false,
 	_createEditor: function(inNode, inProps) {
-	        return new dijit.form.SimpleTextarea(this.getEditorProps(inNode, inProps));
+	    var editor = new dijit.form.SimpleTextarea(this.getEditorProps(inNode, inProps));
+            editor.domNode.style.lineHeight = "normal"; // we test for this style before setting it to height of height px; if its normal we leave it alone
+            return editor;
 	},
         validationEnabled: function() {return false;},
 	sizeEditor: function() {

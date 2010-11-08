@@ -683,11 +683,15 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 			    s.backgroundImage = "";
 			    b.w -= 2;
 			    b.h -= 2;
+                            if (s.lineHeight != "normal")
+                                s.lineHeight = (b.h) + "px"
 			} else {
 			    s.borderWidth = "0px";
                             if (!this._editorBackgroundColor)
 			        s.backgroundColor = "transparent";
 			    s.backgroundImage = "none";
+                            if (s.lineHeight != "normal" && b.h)
+                                s.lineHeight = b.h + "px"
 			}
 			s.width = b.w + "px";
 			s.height= b.h + "px";
@@ -712,7 +716,7 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 	    if (s.overflow != overflow) s.overflow = overflow;
 
 	    var lineHeight = this.getReadOnlyNodeLineHeight();
-	    if(s.lineHeight != lineHeight) s.lineHeight = lineHeight;
+	    if(s.lineHeight != lineHeight) s.lineHeight = lineHeight + "px";
 
 	    var whiteSpace = this.getReadOnlyNodeWhiteSpace();
 	    if (s.whiteSpace != whiteSpace) s.whiteSpace = whiteSpace;
@@ -722,7 +726,7 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 	},
         getReadOnlyNodeLineHeight: function() {
 	    if (this.singleLine)
-		return this.readOnlyNode.style.height;
+		return parseInt(this.readOnlyNode.style.height) + ((this.editorBorder) ? 2 : 0);
 	    else
 		return "normal";
 	},
@@ -791,9 +795,8 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
     },
     onfocus: function() {},
     changed: function() {
-	    /* As of dojo 1.4, each editor seems to fire this once during initialization; and we do NOT want to propgate this event until its a user or application driven event. */
-		this.validate();
-	    this.doOnchange();
+	this.validate();
+	this.doOnchange();
     },
     doOnchange: function() {
 	this.editorChanged();

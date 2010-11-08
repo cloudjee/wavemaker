@@ -46,7 +46,9 @@ dojo.declare("wm._CheckBoxEditor", wm._BaseEditor, {
 	},
 	// checkbox cannot be sized, but should be adjusted in container
 	sizeEditor: function() {
+            this.inherited(arguments);
 	    this.editor.domNode.style.width = "16px";
+
 	},
 	renderBounds: function() {
 		this.inherited(arguments);
@@ -163,10 +165,14 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 	},
 	// checkbox cannot be sized, but should be adjusted in container
 	sizeEditor: function() {
+	    if (this._cupdating)
+		return;
 	    this.inherited(arguments);
 	    var node = this.editorNode;
 	    node.style.width = "16px";
 	    node.style.height = "16px";
+            var height = parseInt(node.style.lineHeight);
+            node.style.marginTop = (Math.floor(height-16)/2) + "px";
 	},
 
 	styleEditor: function() {
