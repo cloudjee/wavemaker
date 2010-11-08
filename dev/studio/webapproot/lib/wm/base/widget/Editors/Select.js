@@ -94,8 +94,10 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	    var h = this.editorNode.style.height.match(/\d+/)[0];
             
 	    this.editorNode.style.lineHeight = '';
+/*
 	    var arrowNode = dojo.query(".dijitArrowButtonInner", this.domNode)[0];
 	    if (arrowNode) arrowNode.style.height = (h-2) + "px";
+*/
 	},
 	hasValues: function(){
 		return (this.editor && this.editor.store.getCount());
@@ -464,6 +466,8 @@ dojo.declare("wm._SelectEditor", wm._BaseEditor, {
 		this.inherited(arguments);
 		this.domNode.style.height = '';		
 		this.domNode.style.lineHeight = '';		
+	    if (this.editor && this.editor.domNode)
+		this.editor.domNode.style.height = this.getContentBounds().h + "px";
 	},
 	hasValues: function() {
 		return (this.editor && this.editor.store.getCount());
@@ -701,17 +705,7 @@ dojo.declare("wm._SelectEditor", wm._BaseEditor, {
 		this.dataField    = keys[1];
 		this.createEditor();
 	},
-    renderBounds: function() {
-        this.inherited(arguments);
-           
-	if (this.editor.domNode && this.isReflowEnabled()) {
-	    var h = dojo.coords(this.editor.domNode).h;
-            this.editor.domNode.style.lineHeight = '';
-	    dojo.query(".dijitArrowButtonInner, .dijitDownArrowButton", this.domNode).forEach(function(e) {
-	        e.style.height = (h-2) + "px !important";
-            });
-        }
-    },
+
 	isReady: function() {
 		return this.inherited(arguments) && this.hasValues();
 	},
