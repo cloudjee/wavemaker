@@ -172,9 +172,16 @@ dojo.declare("wm.ServiceCall", null, {
 	getArgs: function() {
 		return this.input.getArgs();
 	},
+    replaceAllDateObjects: function(item) {
+        for (var i in item) {
+            if (item[i] instanceof Date) item[i] = item[i].getTime();
+            else if (typeof item[i] == "object") this.replaceAllDateObjects(item[i]);
+        }
+    },
 	request: function(inArgs) {
             if (this.downloadFile) {
 	        var args = inArgs || this.input.getArgsHash();
+                this.replaceAllDateObjects(args);
                 var argString = "method=" + this.operation;
                 for (i in args) {
                     argString += "&" + i + "=" + escape(args[i]);
@@ -198,6 +205,7 @@ dojo.declare("wm.ServiceCall", null, {
 		iframe.src = baseurl + this._service._service.serviceUrl.replace(/\.json$/,".download") + "?" + argString;
             } else {
 	        var args = inArgs || this.getArgs();
+                this.replaceAllDateObjects(args);
 		wm.logging && console.debug("request", this.getId(), "operation", this.operation, "args", args);
 		if (djConfig.isDebug)
 		  console.log("REQUEST   Component: " + this.getRoot() + "." + this.name + ";  Operation: " + this.operation);
