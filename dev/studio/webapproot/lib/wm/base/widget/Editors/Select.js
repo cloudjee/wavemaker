@@ -26,6 +26,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	displayField: "",
 	dataField: "",
 	displayExpression: "",
+	displayType:"Text",
 	pageSize: 20,
 	allowNone: false,
 	autoComplete: true,
@@ -268,8 +269,33 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
                 inVariable.data[this._storeNameField]  = this._getDisplayData(inVariable);
             }
 	    var de = this.displayExpression, v = inVariable;
-	    return de ? wm.expression.getValue(de, v) : inVariable.getValue(this._displayField);
+	    var result = de ? wm.expression.getValue(de, v) : inVariable.getValue(this._displayField);
+            if (this.displayType && this.displayType != 'Text')
+                result = this.formatData(result);
+            return result;
 	},
+	formatData: function(inValue){
+		try
+		{
+			if (this.formatter){
+				return this.formatter.format(inValue);
+			}
+			else if (this.displayType){
+				var ctor = wm.getFormatter(this.displayType);
+				this.formatter = new ctor({name: "format", owner: this});
+				return this.formatter.format(inValue);
+			}
+			else
+				return inValue;
+		}
+		catch(e)
+		{
+			console.info('error while getting data from formatData----- ', e);
+		}
+			
+	},
+
+
 /*
 	_getDataByValue: function(inObj) {
             var inVariable;
@@ -1022,6 +1048,8 @@ wm.SelectMenu.extend({
 			case "dataField":
 				var l = this._listFields();
 				return makeSelectPropEdit(inName, inValue, l, inDefault);
+			case "displayType":
+				return makeSelectPropEdit(inName, inValue, wm.selectDisplayTypes, inDefault);
 			case "dataSet":
 				return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.dataSet ? this.dataSet.getId() : "", allowAllTypes: true, listMatch: true});
 			case "updateNow":
@@ -1078,6 +1106,7 @@ wm.Object.extendSchema(wm.SelectMenu, {
 	dataField: {group: "editor", order: 10},
 	displayField: {group: "editor", order: 15},
 	displayExpression: {group: "editor", order: 20},
+	displayType:{group: "editor", order: 21},
   autoComplete: {group: "editor", order: 25},
 	hasDownArrow: {group: "editor", order: 26},
   allowNone: {group: "editor", order: 30},
