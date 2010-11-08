@@ -272,10 +272,15 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	resourcesModifiedData: 0,
 	_source: {
 	    bindPanelOuter: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right"}, {}, {
-		propList: ["wm.List", {border: "1,2,1,1", borderColor: "#5D6678", width: "147px", height: "100%", headerVisible: false, dataFields: "name"}],
 		bindPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom"}, {}, {
-		    searchBar: ["wm.Text", {height: "25px", width: "100%", captionSize: "60px", caption: "Search", changeOnKey: true, changeOnEnter: true, _resetButton: true, placeHolder: "Enter Name or Class"}],		
+		    searchPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "25px"}, {}, {
+			searchBar: ["wm.Text", {height: "25px", width: "100%", captionSize: "60px", caption: "Search", changeOnKey: true, changeOnEnter: true, _resetButton: true, placeHolder: "Enter Name or Class", margin: "0,20,0,0"}],
+			validLabel: ["wm.Picture", {height: "100%", width: "20px", source: "images/active.png", showing: false}, {}],
+			invalidLabel: ["wm.Picture", {height: "100%", width: "20px", source: "images/inactive.png", showing: false}, {}],
+			warningLabel: ["wm.Picture", {height: "100%", width: "20px", source: "lib/images/boolean/Signage/Caution.png", showing: false}, {}]
+		    }],
 		    treeControlsPanel: ["wm.Panel", {border: 0, height: "22px", layoutKind: "left-to-right", width: "100%"}, {}, {
+			propListLabel: ["wm.Label", {caption: "Properties", width: "150px", height: "15px", align: "center"}],
 			simpleRb: ["wm.Editor", {display: "RadioButton", displayValue: "simple", caption: "Simple", width: "76px", captionSize: "50px", captionPosition: "right", captionAlign: "left"}, {}, {
 			    editor: ["wm._RadioButtonEditor", {radioGroup: "_bindInspector", startChecked: true}, {}]
 			}],
@@ -288,24 +293,20 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 			expressionRb: ["wm.Editor", {display: "RadioButton", displayValue: "expression", caption: "Expression", width: "100px", captionSize: "74px", captionPosition: "right", captionAlign: "left"}, {}, {
 			    editor: ["wm._RadioButtonEditor", {radioGroup: "_bindInspector"}, {}]
 			}],
-			spacer1: ["wm.Spacer", {height: "100%", width: "100%"}, {}],
-			validLabel: ["wm.Picture", {height: "100%", width: "20px", source: "images/active.png", showing: false}, {}],
-			invalidLabel: ["wm.Picture", {height: "100%", width: "20px", source: "images/inactive.png", showing: false}, {}],
-			warningLabel: ["wm.Picture", {height: "100%", width: "20px", source: "lib/images/boolean/Signage/Caution.png", showing: false}, {}],
 			spacer2: ["wm.Spacer", {height: "100%", width: "40px"}, {}]
 		    }],
+		    bindLeftToRight: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "100%"},{}, {
+			propList: ["wm.List", {width: "100%", height: "100%", headerVisible: false, dataFields: "name", width: "147px", border: "0,5,0,1", borderColor: "#5D6678"}],			
 		    bindLayers: ["wm.Layers", {border: 0, height: "100%", layoutKind: "top-to-bottom"}, {}, {
 			treeLayer: ["wm.Layer", {border: 0, caption: "tree"}, {}, {
 			    tree: ["wm.Tree", {border: 0, padding: 2, height: "100%", width: "100%"}, {}, {}],
-			    bindEditor: ["wm.Editor", {height: "30px", width: "100%", padding: "4,0"}, {}, {
-				editor: ["wm._TextEditor", {}, {}]
-			    }]
 			}],
 			expressionLayer: ["wm.Layer", {border: 0, caption: "expression"}, {}, {
-			    expressionEditor: ["wm.Editor", {display: "TextArea", padding: 0, width: "100%", height: "100%"}, {}, {
+			    expressionEditor: ["wm.Editor", {display: "TextArea", padding: 0, width: "100%", height: "100px"}, {}, {
 				editor: ["wm._TextAreaEditor", {}, {}]
 			    }],
-			    expressionBuilderPanel: ["wm.Panel", {height: "150px", width: "100%", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+			    exprSplitter: ["wm.Splitter", {}],
+			    expressionBuilderPanel: ["wm.Panel", {height: "100%", width: "100%", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 				expressionButtons: ["wm.Panel", {height: "25px", width: "100%", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 				    button1: ["wm.Button", {caption: "+", margin: 2, width: "24px", height: "100%"}, {}],
 				    button2: ["wm.Button", {caption: "-", margin: 2, width: "24px", height: "100%"}, {}],
@@ -316,6 +317,8 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 			    }]
 			}]
 		    }]
+		    }],
+		    bindEditor: ["wm.Text", { readonly:true, caption: "Bound to", captionSize: "65px", captionAlign: "left", width: "100%", padding: "4,0"}, {}, {}]
 		}]
 	    }]
 	},
@@ -331,6 +334,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 
 	    this.propList.connect(this.propList, "onselect", this,  function() {
 		_this.owner.update({object: _this.owner.targetProps.object, targetProperty: this.propList.selectedItem.getData().dataValue}, true);
+		_this.bindEditor.setDataValue("");
 	    });
 
 
@@ -391,14 +395,14 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		var object = this.owner.targetProps.object;
 		var prop = this.owner.targetProps.targetProperty;
 		var propPrefix = "";
-/*
+
 		if (prop.indexOf(".") != -1) {
 		    propPrefix = prop.replace(/\..*?$/,"");
 		    prop = prop.replace(/^.*\./,"");
 		    object = object.getValue(propPrefix) || object;
 		    propPrefix += ".";
 		}
-                */              
+
 		if (propPrefix) {
 		    var propList = object.listDataProperties("bindTarget");
 		    var list = [];
@@ -413,9 +417,12 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		    if (selectedIndex != this.propList.getSelectedIndex())
 			this.propList.select(this.propList.getItem(selectedIndex));
                     this.owner.applyStayButton.show();
+		    this.propListLabel.setCaption(object.name + " properties");
 		    this.propList.show();
+		    this.propListLabel.show();
 		} else {
 		    this.propList.hide();
+		    this.propListLabel.hide();
                     this.owner.applyStayButton.hide();
 		}
 	    }
@@ -492,17 +499,20 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 			case "simple":
 		                this.searchBar.setDisabled(false);
 				this.treeLayer.activate();
+		                this.bindEditor.show();
 				this._buildSimpleTree(r);
 				break;
 			case "advanced":
 		                this.searchBar.setDisabled(false);
 				this.treeLayer.activate();
+		                this.bindEditor.show();
 				this._buildAdvancedTree(r);
 				break;
 			case "expression":
 		                this.searchBar.setDisabled(false);
 				this.expressionTree.clear();
 				this.expressionLayer.activate();
+		                this.bindEditor.hide();
 				this._buildAdvancedTree(this.expressionTree.root);
 				this.validLabel.setShowing(false);
 				this.invalidLabel.setShowing(false);
@@ -510,6 +520,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 			case "resources":
 		                this.searchBar.setDisabled(true);
 				this.treeLayer.activate();
+		                this.bindEditor.show();
 				this._buildResourceTree(r);
 				this.invalidLabel.setShowing(false);
 				break;
@@ -727,7 +738,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		}
 	},
 	bindNodeSelected: function(inNode) {
-		if (inNode.isProperty)
+		if (inNode && inNode.isProperty)
 			this.onBindNodeSelected(inNode);
 	},
 	// events
@@ -1136,10 +1147,16 @@ dojo.declare("wm.WidgetContainerSourceTreeNode", wm.BindSourceTreeNode, {
 	},
 	initNodeChildren: function() {
 		this.inherited(arguments);
+
+	    // Collect all of the widgets that are children of the current node
 	    var widgets = {};
 	    for(var w in this.object.widgets)
 		if (!this.object.widgets[w].flags.notInspectable)
 		    widgets[w] = this.object.widgets[w];
+
+	    // If the current node is the wm.Layout of the page,
+	    // then also gather all other top level widgets (dialogs)
+	    // to put in the visual model
 	    if (this.object == this.page.root) {
 		var owners = (this.page == studio.page) ? [studio.application, this.page] : [this.page];
 		var comps = wm.listComponents(owners, wm.Dialog, false);
@@ -1149,7 +1166,8 @@ dojo.declare("wm.WidgetContainerSourceTreeNode", wm.BindSourceTreeNode, {
 		}
 	    }
 
-		wm.forEachProperty(widgets, dojo.hitch(this, function(w) {
+	    // For each widget, add it to the tree
+	    wm.forEachProperty(widgets, dojo.hitch(this, function(w) {
 			var
 				s = (w != studio.selected) && wm.widgetIsBindSource(w) && w.id,
 				c = w.container,
