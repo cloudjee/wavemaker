@@ -30,6 +30,7 @@ dojo.declare("wm.LivePanel", wm.Panel, {
                                                      verticalAlign: "top",
 						     owner: this.owner,
 						     name: this.liveDataName + "GridPanel",
+                                                     minHeight: "180",
 						     title: wm.capitalize(this.liveDataName)});
 		this.dataGrid = new wm.DojoGrid({
                                 border: "0", // wm.FancyPanel + theme change; fancy panel provides the border; ignore any default borders provided by theme
