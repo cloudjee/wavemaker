@@ -197,15 +197,15 @@ wm.Control.extend({
 	// End design border
 */
 	getNodeStyles: function(inNodeName) {
-		return getControlNodeStyles(this.name, inNodeName);
+		return getControlNodeStyles(this, inNodeName);
 	},
 	setNodeStyles: function(inStyles, inNodeName) {
-		setControlNodeStyles(this.name, inStyles, inNodeName);
+	    setControlNodeStyles(this, inStyles, inNodeName);
 		if (!this._stylesUpdating)
 			studio.cssChanged();
 	},
 	get_styles: function() {
-		return getControlStyles(this.name);
+		return getControlStyles(this);
 	},
 	set_styles: function(inStyles) {
 		this._stylesUpdating = true;

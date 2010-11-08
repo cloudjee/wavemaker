@@ -48,33 +48,36 @@ setIe6Css = function(inSheet, inCss) {
 	c.appendChild(n);
 }
 
-getCssDeclaration = function(inName, inNodeName) {
-	inNodeName = inNodeName ? " ." + inNodeName : "";
-	var pageName = studio.project.pageName;
-        var obj = studio.page[inName];
-    var isLayout =  (obj && obj instanceof wm.Layout);
-    var result = ["body.tundra ." + pageName + (isLayout ? "" : " .wmlayout") + " ." + pageName + "-" + inName + inNodeName + (isLayout ? ".wmlayout":"")];
+getCssDeclaration = function(inWidget, inNodeName) {
+    inNodeName = inNodeName ? " ." + inNodeName : "";
+    
+
+    var inDesignableDialog = Boolean(inWidget.isAncestorInstanceOf(wm.DesignableDialog));
+    var pageName = inDesignableDialog ? "" : "." + studio.project.pageName;
+    var pageName2 = "." + studio.project.pageName;
+    var isLayout = (inWidget instanceof wm.Layout);
+    var result = ["body.tundra " + pageName + (isLayout || inDesignableDialog ? "" : " .wmlayout") + " " + pageName2 + "-" + inWidget.name + inNodeName + (isLayout ? ".wmlayout":"")];
     return result.join(",\n");
 
 }
 
-addCssTemplate = function(inName) {
+addCssTemplate = function(inWidget) {
 	var css = studio.cssEditArea, t = css.getText();
-	css.setText(t + getCssDeclaration(inName) + " {\n\n}\n\n");
+	css.setText(t + getCssDeclaration(inWidget) + " {\n\n}\n\n");
 }
 
-getNodeStyleRegExp = function(inName, inNodeName){
-	var d = getCssDeclaration(inName, inNodeName).replace(".", "\\.")
+getNodeStyleRegExp = function(inWidget, inNodeName){
+	var d = getCssDeclaration(inWidget, inNodeName).replace(".", "\\.")
 	return new RegExp(d + " \\{([^}]*)\\}(\n*)");
 }
 
-getControlStyleRegExp = function(inName) {
-	var d = getCssDeclaration(inName).replace(".", "\\.")
+getControlStyleRegExp = function(inWidget) {
+	var d = getCssDeclaration(inWidget).replace(".", "\\.")
 	return new RegExp(d + "(.*)\\{([^}]*)\\}(\n*)", "g");
 }
 
-getControlStyles = function(inName) {
-	var t = studio.cssEditArea.getText(), r = getControlStyleRegExp(inName);
+getControlStyles = function(inWidget) {
+	var t = studio.cssEditArea.getText(), r = getControlStyleRegExp(inWidget);
 	var m, s, r, result=[], n, c;
 	while((m = r.exec(t)) != null) {
 		n = dojo.trim(m[1]);
@@ -86,13 +89,13 @@ getControlStyles = function(inName) {
 	return result;
 }
 
-getControlNodeStyles = function(inName, inNodeName) {
-	var t = studio.cssEditArea.getText(), r = getNodeStyleRegExp(inName, inNodeName);
+getControlNodeStyles = function(inWidget, inNodeName) {
+	var t = studio.cssEditArea.getText(), r = getNodeStyleRegExp(inWidget, inNodeName);
 	var m = t.match(r) || [], s = m[1] || '';
 	return s.replace(/\r|\t/g, "").slice(1);
 }
 
-setControlNodeStyles = function(inName, inStyles, inNodeName) {
+setControlNodeStyles = function(inWidget, inStyles, inNodeName) {
 	var s= inStyles;
 	if (s) {
 		if (s.slice(-1) == '\n')
@@ -102,8 +105,8 @@ setControlNodeStyles = function(inName, inStyles, inNodeName) {
 	var
 		css = studio.cssEditArea,
 		t = css.getText(),
-		r = getNodeStyleRegExp(inName, inNodeName),
-		st = getCssDeclaration(inName, inNodeName) + " {\n" + s;
+		r = getNodeStyleRegExp(inWidget, inNodeName),
+		st = getCssDeclaration(inWidget, inNodeName) + " {\n" + s;
 	// removes old declaration if no styles passed in.
 	if (t.match(r)) {
 		css.setText(t.replace(r, s ? st + "\n}$2" : ""));
