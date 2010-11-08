@@ -927,9 +927,7 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
         this.widgets_data = {
 	    genericInfoPanel: ["wm.Panel", {layoutKind: "top-to-bottom",  width: "100%", height: "100%", horizontalAlign: "left", verticalAlign: "top", autoScroll: true, fitToContentHeight: true, padding: "10,5,10,5"}, {}, {
 		userQuestionLabel: ["wm.Html", {autoScroll: false, "height":"25px",autoSizeHeight: true, "width":"100%",html: ""}],
-		textInput: ["wm.TextEditor", {"width":"100%","captionSize":"0%","showing":false}, {}, {
-		    editor: ["wm._TextEditor", {}, {}]
-		}]
+		textInput: ["wm.Text", {"width":"100%","captionSize":"0%","showing":false}, {}, {}]
 	    }],
 	    buttonBar: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]},
 				    name: "buttonBar",
@@ -956,6 +954,9 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
 	this.buttonBar.flags.notInspectable = true;
         this.setFooterBorder(this.footerBorder);
         this.setFooterBorderColor(this.footerBorderColor);
+
+	if (this.regExp != ".*")
+	    this.$.textInput.setRegExp(this.regExp);
 
 	var captionFound = false;
 	for (var i = 1; i <= 6; i++) {
