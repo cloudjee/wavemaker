@@ -33,6 +33,14 @@ Studio.extend({
                     wm.onidle(this.page, "reflow");
                 }
             }
+            if (studio.page && studio.page.root && !studio.page.root.isDestroyed && (
+                !studio.selected ||
+                studio.selected instanceof wm.DataModel ||
+                studio.selected instanceof wm.DataModelEntity ||
+                studio.selected instanceof wm.Query ||
+                studio.selected instanceof wm.LiveView ||
+                    studio.selected instanceof wm.LiveView))
+                studio.select(studio.page.root);
 		//this.mainAndResourcePalettes.setLayer("mainPalettes");
 		//wm.fire(this.page, "reflow");
 	},
