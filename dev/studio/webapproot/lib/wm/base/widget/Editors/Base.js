@@ -128,13 +128,14 @@ dojo.declare("wm._BaseEditor", wm.Widget, {
 				bounds = this.getContentBounds(),
 				// note, subtract 2 from bounds for dijit editor border/margin
 				height = bounds.h ? bounds.h - 2 + "px" : "",
-				width = bounds.w ? bounds.w - 4 + "px" : "",
+				width = bounds.w ? bounds.w - 4 : "",
 				d = e && e.domNode,
 				s = d.style,
 				fc = d && d.firstChild;
 
                     if (this._editorPaddingLeft) width -= this._editorPaddingLeft;
                     if (this._editorPaddingRight) width -= this._editorPaddingRight;
+                    if (width) width += "px";
 
 			if (!this.editorBorder) s.border = 0;
 		        s.backgroundColor = this.editorBorder ? "" : "transparent";
