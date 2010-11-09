@@ -110,22 +110,23 @@ wm.Component.extend({
 		return !ps || ((ps.writeonly || !(ps.ignore || ps.readonly)) && !ps.isEvent &&  !ps.componentonly);
 	},
 	writeProps: function() {
-	    // iterates over all props and checks it's writeable via isWriteableProp
-	    // NOTE: previously used listWriteableProps, which was eliminated as unnecessary.
-	    var props = this.listProperties(), src = this._designee, p = src.constructor.prototype, out = {};
-            var propList = [];
-	    for (var n in props) propList.push(n);
-            propList = propList.sort();
-            for (var i = 0; i < propList.length; i++) {
-                var n = propList[i];
-		if (this.isWriteableProp(props[n])) {
-		    if (wm.isInstanceType(src, wm.Application) && src[n] !== undefined)
-			out[n] = src[n];
-		    else if (n in src && (n == "_classes" && src[n] && src[n].domNode && src[n].domNode.length > 0 || n != "_classes" && src[n] != p[n]))
-			out[n] = src[n];
+		// iterates over all props and checks it's writeable via isWriteableProp
+		// NOTE: previously used listWriteableProps, which was eliminated as unnecessary.
+		var props = this.listProperties(), src = this._designee, p = src.constructor.prototype, out = {};
+		var propList = [];
+		for (var n in props) propList.push(n);
+		propList = propList.sort();
+		for (var i = 0; i < propList.length; i++) {
+			var n = propList[i];
+			if (this.isWriteableProp(props[n])) {
+			 if (wm.isInstanceType(src, wm.Application) && src[n] !== undefined)
+			   out[n] = src[n];
+			 else if (n in src && !(src[n] instanceof wm.Variable) && (n == "_classes" && src[n] && src[n].domNode && src[n].domNode.length > 0 || n != "_classes" && src[n] != p[n]))
+			   out[n] = src[n];
+			}
 		}
-	    }
-	    return out;
+		
+		return out;
 	},
 	writeEvents: function(inEvents) {
 		return this.eventBindings;
