@@ -1029,13 +1029,18 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	        this.setCssSymbol(this.panelTypes[i] + "-Styles-Background", "Color", value);
 
 
-            var newvalues = this.offsetColor(value);
+            var editorColors = this.getBrightColor(value);
+            var newvalues = this.offsetColor(editorColors);
             for (var i = 0; i < this.panelTypes.length; i++) {
 	        this.setCssSymbol(this.panelTypes[i] + "-EditorsDefault-Background", "Color", newvalues[0]);
 	        this.setCssSymbol(this.panelTypes[i] + "-EditorsHover-Background", "Color", newvalues[1]);
 	        this.setCssSymbol(this.panelTypes[i] + "-EditorsFocus-Background", "Color", "#FFFFFF");
+	        this.setCssSymbol(this.panelTypes[i] + "-Editors-Default-Font", "Color", "#000000");
+	        this.setCssSymbol(this.panelTypes[i] + "-Editors-Hover-Font", "Color", "#000000");
+	        this.setCssSymbol(this.panelTypes[i] + "-Editors-Focus-Font", "Color", "#000000");
             }
 
+            newvalues = this.offsetColor(value);
 	    this.setCssSymbol("Tables-EvenRow-Background", "Color", value);
 	    this.setCssSymbol("Table-OddRow-Background", "Color", newvalues[0]);
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
@@ -1043,13 +1048,13 @@ dojo.declare("ThemeDesigner", wm.Page, {
         case "pageFontColor":
             for (var i = 0; i < this.panelTypes.length; i++) 
 	        this.setCssSymbol(this.panelTypes[i] + "-Styles-Font", "Color", value);
-
+            /*
             for (var i = 0; i < this.panelTypes.length; i++) {
 	        this.setCssSymbol(this.panelTypes[i] + "-Editors-Default-Font", "Color", value);
 	        this.setCssSymbol(this.panelTypes[i] + "-Editors-Hover-Font", "Color", value);
 	        this.setCssSymbol(this.panelTypes[i] + "-Editors-Focus-Font", "Color", "#000000");
             }
-
+            */
 	    this.setCssSymbol("Table-EvenRow-Font", "Color", value);
 	    this.setCssSymbol("Table-OddRow-Font", "Color", value);
             studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
@@ -2136,6 +2141,26 @@ dojo.declare("ThemeDesigner", wm.Page, {
             result1[i] = ("" + result1[i]).length < 2 ? "0" + result1[i] : "" + result1[i];
         }
         return result1;
+    },
+
+    getBrightColor: function(inValue) {
+        var values = [parseInt(inValue.substr(1,2),16),
+                      parseInt(inValue.substr(3,2),16),
+                      parseInt(inValue.substr(5,2),16)];
+        if (values[0] < 40) values[0] = 40;
+        if (values[1] < 40) values[1] = 40;
+        if (values[2] < 40) values[2] = 40;
+        while (values[0] + values[1] + values[2] < 600) {
+            values[0] = Math.min(255,Math.floor(values[0] * 1.2));
+            values[1] = Math.min(255,Math.floor(values[1] * 1.2));
+            values[2] = Math.min(255,Math.floor(values[2] * 1.2));
+            console.log("INC:" + values.join(""));
+
+        }
+        values[0] = values[0].toString(16);
+        values[1] = values[1].toString(16);
+        values[2] = values[2].toString(16);
+        return "#" + values.join("");
     },
 
     /* returns array of colors offset from the original; both must be offset in the same direction (brighter or darker) */
