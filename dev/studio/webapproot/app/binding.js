@@ -325,11 +325,11 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
         propListVar: null,
 	init: function() {	    
 	    this.propListVar = new wm.Variable({name: "propListVar", type: "EntryData", owner: this});
-		dojo.addClass(this.domNode, "wmbindersource");
-		this.createComponents(this._source);
+	    dojo.addClass(this.domNode, "wmbindersource");
+	    this.createComponents(this._source);
 
-		// FIXME: get references to widgets
-		this.mixinWidgets(this.widgets);
+	    // FIXME: get references to widgets
+	    this.mixinWidgets(this.widgets);
 		// connections
 
 	    this.propList.connect(this.propList, "onselect", this,  function() {
@@ -342,39 +342,39 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		_this.updateBindSourceUi("search");
 	    });
 
-		var _this = this;
-		this.simpleRb.connect(this.simpleRb, "onchange", this, function(inDisplayValue, inDataValue) {
-		  //console.log("SIMPLE: " + inDisplayValue + " | " + inDataValue);
-		  if (inDataValue == "simple")
+	    var _this = this;
+	    this.simpleRb.connect(this.simpleRb, "onchange", this, function(inDisplayValue, inDataValue) {
+		//console.log("SIMPLE: " + inDisplayValue + " | " + inDataValue);
+		if (inDataValue == "simple")
 		    _this.updateBindSourceUi(inDataValue);
-		  });
-		this.advancedRb.connect(this.advancedRb, "onchange", this, function(inDisplayValue, inDataValue) {
-		  //console.log("Advanced: " + inDisplayValue + " | " + inDataValue);
-		  if (inDataValue == "advanced")
+	    });
+	    this.advancedRb.connect(this.advancedRb, "onchange", this, function(inDisplayValue, inDataValue) {
+		//console.log("Advanced: " + inDisplayValue + " | " + inDataValue);
+		if (inDataValue == "advanced")
 		    _this.updateBindSourceUi(inDataValue);
-		  });
-		this.resourceRb.connect(this.resourceRb, "onchange", this,  function(inDisplayValue, inDataValue) {
-		  //console.log("Resources: " + inDisplayValue + " | " + inDataValue);
-		  if (inDataValue == "resources")
+	    });
+	    this.resourceRb.connect(this.resourceRb, "onchange", this,  function(inDisplayValue, inDataValue) {
+		//console.log("Resources: " + inDisplayValue + " | " + inDataValue);
+		if (inDataValue == "resources")
 		    _this.updateBindSourceUi(inDataValue);
-		  });
-		this.expressionRb.connect(this.expressionRb, "onchange", this,  function(inDisplayValue, inDataValue) {
-		  //console.log("Expression: " + inDisplayValue + " | " + inDataValue);
-		  if (inDataValue == "expression")
+	    });
+	    this.expressionRb.connect(this.expressionRb, "onchange", this,  function(inDisplayValue, inDataValue) {
+		//console.log("Expression: " + inDisplayValue + " | " + inDataValue);
+		if (inDataValue == "expression")
 		    _this.updateBindSourceUi(inDataValue);
-		  });
-		this.tree.connect(this.tree, "onselect", this, "bindNodeSelected");
+	    });
+	    this.tree.connect(this.tree, "onselect", this, "bindNodeSelected");
 	    this.tree.connect(this.tree, "ondblclick", this, dojo.hitch(this, function(inNode) {
 		this.bindNodeSelected(inNode);
 		this.owner.applyButtonClick();
 	    }));
-
-		this.expressionTree.connect(this.expressionTree, "onselect", this, "expressionNodeSelected");
-		for (var i=0, c; c=this.expressionButtons.c$[i]; i++){
-			if (c instanceof wm.Button) {
-				this.connect(c, "onclick", this, "expressionButtonClicked");
-			}
+            
+	    this.expressionTree.connect(this.expressionTree, "onselect", this, "expressionNodeSelected");
+	    for (var i=0, c; c=this.expressionButtons.c$[i]; i++){
+		if (c instanceof wm.Button) {
+		    this.connect(c, "onclick", this, "expressionButtonClicked");
 		}
+	    }
 		//
 		this.inherited(arguments);
 	},
@@ -476,6 +476,11 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	    t.clear();
 	    var r = t.root;
 	    r.page = studio.page;
+            var t2 = this.expressionTree;
+            t2.clear();
+            var r2 = t2.root;
+            r2.page = studio.page;
+
 	    if (gv != "resources" && this.searchBar.getDataValue())
 		gv = "search";
 
@@ -486,7 +491,6 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		    wm.onidle(this, function() {
 			this.treeLayer.activate();
 			if (this.simpleRb.getGroupValue() == "expression") {
-			    this.expressionTree.clear();
 			    this.expressionLayer.activate();
 		            this._buildSearchTree(this.expressionTree.root);
 			    this.validLabel.setShowing(false);
@@ -510,7 +514,6 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 				break;
 			case "expression":
 		                this.searchBar.setDisabled(false);
-				this.expressionTree.clear();
 				this.expressionLayer.activate();
 		                this.bindEditor.hide();
 				this._buildAdvancedTree(this.expressionTree.root);
@@ -551,10 +554,27 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 
 		dojo.forEach(pagecomps, function(c) {
 		    if (c != studio.selected)
-			new wm.BindSourceTreeNode(inParent, {object: c, closed: count > 2});
+			new wm.BindSourceTreeNode(inParent, {content: ((c.owner != studio.page) ? c.owner.name + "." : "") + c.name, object: c, closed: count > 2});
 		});
 	    }
-	   
+            if (this.tree.root.kids.length == 1) {                
+                this.tree.select(this.tree.root.kids[0]);
+                if (this.simpleRb.getGroupValue() != "simple") {
+                    var props = this.tree.root.kids[0].object.listProperties();
+                    var simpleProp = "";
+                    for (var propName in props) {
+                        if (props[propName].simpleBindProp) {
+                            simpleProp = propName;
+                            break;
+                        }
+                    }
+                    var parent = this.tree.root.kids[0];
+                    for (var i = 0; i < parent.kids.length; i++) {
+                        if (parent.kids[i].name == simpleProp)
+                            this.tree.select(parent.kids[i]);
+                    }
+                }
+            }	   
 	},
 	_buildSimpleTree: function(inParent) {
 		// servicecalls
@@ -780,8 +800,9 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	    var searchByExactName = false;
 	    if (search.indexOf("#") == 0) {
 		search = search.substring(1);
-		searchByExactName = true;
-	    }
+		this.searchByExactName = true;
+	    } else 
+		this.searchByExactName = false;
 	    var searchRegex = new RegExp(search, "i");
 	    var data = [];
 
@@ -794,7 +815,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		if (comp) 
 		    c = comps[comp];
 		if (c) {
-		    if (searchByExactName) {
+		    if (this.searchByExactName) {
 			var name = c.name || c.declaredClass;
 			if (name == search)
 			    data.push(c);
@@ -849,7 +870,6 @@ dojo.declare("wm.BindTreeNode", wm.TreeNode, {
 	    var content;
 	    delete object.id;
 	    content = object.getId();
-
 		props.content = props.content || this.getNodeContent(content, object.type, object.isList, props);
 
 	},
