@@ -41,7 +41,9 @@ public class WMAuthenticationProcessingFilter extends AuthenticationProcessingFi
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException,
             ServletException {
-        boolean designTime = false;
+        //Since it is decided to back out changes for WM-1715, this class serves only for the potential wrapper
+        //for corresponding Acegi class if needed in the future.
+        /*boolean designTime = false;
         Enumeration e = req.getParameterNames();
         while(e != null && e.hasMoreElements())
         {
@@ -56,9 +58,9 @@ public class WMAuthenticationProcessingFilter extends AuthenticationProcessingFi
 
         if (designTime) {
             chain.doFilter(req, res);
-        } else {
+        } else {*/
             super.doFilter(req, res, chain);
-        }
+        //}
     }
 
 }
