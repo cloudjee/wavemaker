@@ -25,7 +25,6 @@ wm.loadLibs([
 	// Dijit
 	"css.dijit.themes.tundra.tundra",
 	"css.dijit.themes.soria.soria",
-	"css.dojox.grid._grid.Grid",
 	"css.dojox.grid.resources.Grid",
 	"css.dojox.grid.resources.tundraGrid",
 	"css.dojox.widget.Portlet.Portlet",
@@ -42,7 +41,7 @@ wm.loadLibs([
 	"css.dojox.widget.FisheyeList.FisheyeList",
 	"css.dojox.image.resources.image",
 	
-	"dijit.form._FormValueWidget",
+	"dijit.form._FormWidget",
 	"dijit._Container",
 	// wm utility libs
 	"wm.base.lib.util",
