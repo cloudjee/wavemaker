@@ -29,8 +29,8 @@ dojo.declare("wm.ToolButton", wm.Widget, {
 	classNames: "wmtoolbutton",
 	imageIndex: -1,
 	iconUrl: "",        
-	iconWidth: "40px",
-	iconHeight: "40px",
+	iconWidth: "16px",
+	iconHeight: "16px",
 	iconMargin: "0 10px 0 0",
         clicked: false,
 	//alignInParent: "topLeft",
@@ -152,11 +152,19 @@ dojo.declare("wm.ToolButton", wm.Widget, {
 			this.btnNode.innerHTML = il.getImageHtml(ii) + captionHtml;
 			this.btnNode.style.padding = "0px";
 		} else if (this.iconUrl) {
+                    var url = this.iconUrl;
+                    var root;
+	            if (url.indexOf("lib/") == 0) {
+		      root = dojo.moduleUrl("lib").path.replace(/lib\/$/, "");
+                        url = root + url;
+                    } else {
+			 root =  this.getPath() || "";
+                    }
 			var sl = this.singleLine ? "line-height: " + this.height + "; " : "";
 			var captionHtml = this.caption ? '<span style="padding-left: 2px; ' + sl +'">' + this.caption + '</span>' : "";
-			var root =  this.getPath() || "";
 
-			this.btnNode.innerHTML = "<img src='" + wm.theme.getImagesPath() + "blank.gif' style='margin: " + this.iconMargin + "; width: " + this.iconWidth + "; height: " + this.iconHeight + "; vertical-align: middle; background:url(" + root + this.iconUrl + ") no-repeat; background-color: transparent;' />" + captionHtml;
+
+			this.btnNode.innerHTML = "<img src='" + wm.theme.getImagesPath() + "blank.gif' style='margin: " + this.iconMargin + "; width: " + this.iconWidth + "; height: " + this.iconHeight + "; vertical-align: middle; background:url(" + root + url + ") no-repeat; background-color: transparent;' />" + captionHtml;
 
 			this.btnNode.style.padding = "0px";
 		} else {
