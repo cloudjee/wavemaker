@@ -351,7 +351,7 @@ dojo.declare("wm.TreeRoot", wm.TreeNode, {
 });
 
 dojo.declare("wm.Tree", wm.Box, {
-	width: "",
+	width: "100%",
 	height: "",
 	connectors: true,
 	selected: null,
