@@ -574,7 +574,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
             } else {
                 data.push({path: f.file, 
                            tmpid: this._tmpcounter++,
-                           name: f.name, 
+                           name: String(f.name).replace(/^C\:\\fakepath\\/,""), 
                            error: f.error,
                            width: f.width,
                            height: f.height,
