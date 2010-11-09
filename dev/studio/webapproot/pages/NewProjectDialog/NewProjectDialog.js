@@ -51,6 +51,7 @@ dojo.declare("NewProjectDialog", wm.Page, {
             i++;
         }
         dojo.query(".SelectableTemplate", this.templatesInsertPanel.domNode).connect("onclick", this, "templateClicked");
+        dojo.query(".SelectableTemplate", this.templatesInsertPanel.domNode).connect("dblclick", this, "templateDblClicked");
 	this.templateClicked2(firstimgpanel);
     },
     reset: function() {
@@ -71,16 +72,22 @@ dojo.declare("NewProjectDialog", wm.Page, {
             this.selectedTemplate = null;
         }
     },
+    templateDblClicked: function(inMouseEvent) {
+        var target = wm.getWidgetByDomNode(inMouseEvent.target);
+        while(target && !dojo.hasClass(target.domNode, "SelectableTemplate"))
+            target = target.parent;
+        if (!target) return;
+        if (target != this.selectedTemplate) {
+	    this.templateClicked2(target);
+        }
+        this.onOkClick();
+    },
     templateClicked: function(inMouseEvent) {
         var target = wm.getWidgetByDomNode(inMouseEvent.target);
         while(target && !dojo.hasClass(target.domNode, "SelectableTemplate"))
             target = target.parent;
         if (!target) return;
-        if (target == this.selectedTemplate) {
-            this.clearSelection();
-            this.templateClicked({target: this.noneTarget.domNode});
-            return;
-        }
+        if (target == this.selectedTemplate) return;
 	this.templateClicked2(target);
     },
     templateClicked2: function(inTarget) {
