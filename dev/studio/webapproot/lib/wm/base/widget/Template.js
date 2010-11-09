@@ -18,7 +18,7 @@
 dojo.provide("wm.base.widget.Template");
 dojo.require("wm.base.widget.Panel");
 
-dojo.declare("wm.Template", wm.Container, {
+dojo.declare("wm.Template", wm.Panel, {
 	layoutKind: "top-to-bottom",
 	init: function() {
 		this.readTemplate();
@@ -39,6 +39,10 @@ dojo.declare("wm.Template", wm.Container, {
         }
 });
 wm.Template.extend({
-    themeable: false
+    themeable: false,
+    // block wm.Panel's afterPaletteDrop
+    afterPaletteDrop: function() {
+        wm.Container.prototype.afterPaletteDrop(arguments);
+    }
 });
 wm.Template.description = "A set of built from a template.";
