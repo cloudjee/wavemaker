@@ -205,7 +205,7 @@ dojo.declare("wm.ServiceCall", null, {
 		iframe.src = baseurl + this._service._service.serviceUrl.replace(/\.json$/,".download") + "?" + argString;
             } else {
 	        var args = inArgs || this.getArgs();
-                this.replaceAllDateObjects(args);
+                //this.replaceAllDateObjects(args);
 		wm.logging && console.debug("request", this.getId(), "operation", this.operation, "args", args);
 		if (djConfig.isDebug)
 		  console.log("REQUEST   Component: " + this.getRoot() + "." + this.name + ";  Operation: " + this.operation);
