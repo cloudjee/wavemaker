@@ -1577,3 +1577,7 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
 .wmeditor.wmreseteditor .dijitInputField {
     padding: 0px 20px 0px 5px !important;
 }
+
+.wmeditor .dijitInputField, .wmeditor textarea {
+    padding: 0px 3px 0px 3px !important;
+}
