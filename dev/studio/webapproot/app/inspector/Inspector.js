@@ -69,16 +69,17 @@ dojo.declare("wm.InspectorBase", null, {
 	},
 	getHelpDialog: function() {
 		if (!studio.helpPopup) {
-			var
-				props = {
-					owner: this,
-					pageName: "PopupHelp",
-					scrimBackground: true,
-					hideOnClick: false,
-					positionLocation: " l"
-				},
-				d = studio.helpPopup = new wm.PagePopup(props);
-			d.setContainerOptions(true, 500, 275);
+		    var props = {
+			owner: this,
+			pageName: "PopupHelp",
+	                width: "500px",
+                        height: "275px",
+                        modal: false,
+                        noEscape: false,
+                        useContainerWidget: false,
+                        hideControls: true
+		    };
+		    var d = studio.helpPopup = new wm.PageDialog(props);
 		}
 		var b = studio.helpPopup;
 		return b;
@@ -396,7 +397,7 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 
 	      bd.sourceNode = inNode;
 	      //bd.positionNode = inNode.parentNode;
-	      bd.positionNode = dojo.byId("studio_designer");
+	      bd.fixPositionNode = inNode.parentNode;
 	      bd.page.setContent(""); // clear previous content before showing
 	      bd.show();
 	      inType = inType.substring(inType.indexOf(".")+1);

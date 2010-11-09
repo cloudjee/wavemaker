@@ -33,7 +33,6 @@ dojo.declare("Security", wm.Page, {
 	    var bd = this.getHelpDialog();
 	    bd.page.setHeader("","Username Field");
 	    bd.sourceNode = this.databaseLayer.domNode;
-	    bd.positionNode = this.databaseLayer.domNode;
 	    bd.page.setContent("Select the user name that the user will type in to log in.  Typically an email address or identifier that is based on the user's personal name.  You can find the value of the logged in user's username in your application by <ol><li>creating a new ServiceVariable</li><li>set its 'service' to 'securityService'</li><li>select the operation 'getUserName'</li></ol>");
 	    bd.show();
 	},
@@ -41,22 +40,26 @@ dojo.declare("Security", wm.Page, {
 	    var bd = this.getHelpDialog();
 	    bd.page.setHeader("","User ID Field");
 	    bd.sourceNode = this.databaseLayer.domNode;
-	    bd.positionNode = this.databaseLayer.domNode;
 	    bd.page.setContent("Select the user ID that uniquely identifies the user in the database.  This is typically a number that the database has assigned to the user's entry in the database.  While you can use an email address, this tends to result in a database that bogs down badly as the size of your database goes up as this value is used by other database tables to identify the user account the data is associated with. You can  find out the ID when your project is running by <ol><li>creating a new ServiceVariable</li><li>set its 'service' to 'securityService'</li><li>select the operation 'getUserId'</li></ol>");
 	    bd.show();
 	},
 	getHelpDialog: function() {
 		if (!this.helpDialog) {
-			var
-				props = {
-					owner: this,
-					pageName: "PopupHelp",
-					scrimBackground: true,
-					hideOnClick: false,
-					positionLocation: " l"
-				},
-				d = this.helpDialog = new wm.PagePopup(props);
-			d.setContainerOptions(true, 500, 200);
+		    var props = {
+			owner: this,
+			pageName: "PopupHelp",
+			//scrimBackground: true,
+			//hideOnClick: false,
+			//positionLocation: " l",
+                        width: "500px",
+                        height: "200px",
+                        useContainerWidget: false,
+                        modal: false,
+                        noEscape: false,
+                        hideControls: true,
+                        corner: "tr"
+			};
+		    var d = this.helpDialog = new wm.PageDialog(props);
 		}
 		var b = this.helpDialog;
 		return b;
