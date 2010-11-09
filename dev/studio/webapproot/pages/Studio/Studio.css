@@ -1529,3 +1529,7 @@ background-color: transparent;
  .Studio .indentOption2 {
     padding-left: 40px !important;
 }
+
+.Studio .prop-button button {
+    border: solid 1px transparent;
+}
