@@ -136,7 +136,12 @@ dojo.declare("wm.CompositeMixin", null, {
 				new wm.Wire({target: this, targetProperty: "source" + pub.name, source: pre + pub.id, owner: this}).connectWire();
 			}
 		}
+
+                this.start(); // this is created from a wm.Page where startup code goes in start method
+                this.onStart();
 	},
+    start: function() {}, // meant to be overridden by the end user's composite
+    onStart: function() {}, // meant to be overriden as standard event handler
 	// get the target component for facade property inName
 	marshallFacade: function(inName) {
 		if (this.published) {
