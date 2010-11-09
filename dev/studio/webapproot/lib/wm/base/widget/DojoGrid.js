@@ -157,7 +157,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			this.updateAllSelectedItem();
 		else
 			this.updateSelectedItem( this.getSelectedIndex());
-	  this.onSelectionChange();
+	  if (!this.rendering)
+		  this.onSelectionChange();
 	},
 	cellEditted: function(inValue, inRowIndex, inFieldName) {
 		// values of the selectedItem must be updated, but do NOT call a selectionChange event, as its the same selected item, just different values
@@ -319,6 +320,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 		if (!this.variable)
 			return;
+		
+		this.rendering = true;
 		var structure = this.getStructure();
 		if (structure[0].length == 0)
 			structure = {};
@@ -360,6 +363,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
             }
 
+    var _this = this;
+    setTimeout(function(){
+			   _this.rendering = false;
+		}, 0)
 	},
 	dojoRenderer: function (){
 		if (!this.dojoObj)
