@@ -132,6 +132,10 @@ dojo.declare("wm._BaseEditor", wm.Widget, {
 				d = e && e.domNode,
 				s = d.style,
 				fc = d && d.firstChild;
+
+                    if (this._editorPaddingLeft) width -= this._editorPaddingLeft;
+                    if (this._editorPaddingRight) width -= this._editorPaddingRight;
+
 			if (!this.editorBorder) s.border = 0;
 		        s.backgroundColor = this.editorBorder ? "" : "transparent";
 			s.backgroundImage = this.editorBorder ? "" : "none";
@@ -634,6 +638,8 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 		    }
 		    labelWidth = Math.round(labelWidth);
 		    editorWidth = Math.round(editorWidth);
+                    if (this._editorPaddingLeft) editorWidth -= this._editorPaddingLeft;
+                    if (this._editorPaddingRight) editorWidth -= this._editorPaddingRight;
 		    var s = this.captionNode.style;
 		    var labelWidthWithSpacing = (labelWidth - ((position == "right" || position == "left") ? captionEditorSpacing : 0));
 		    labelWidthWithSpacing = (labelWidthWithSpacing) ? labelWidthWithSpacing : 0;

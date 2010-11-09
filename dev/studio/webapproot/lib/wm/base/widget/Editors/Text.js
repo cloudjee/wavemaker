@@ -505,6 +505,8 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 // TextArea Editor
 //===========================================================================
 dojo.declare("wm._TextAreaEditor", wm._TextEditor, {
+        _editorPaddingLeft: 3,
+        _editorPaddingRight: 3,
 	_createEditor: function(inNode, inProps) {
 	        return new dijit.form.SimpleTextarea(this.getEditorProps(inNode, inProps));
 	},
@@ -516,6 +518,8 @@ dojo.declare("wm._TextAreaEditor", wm._TextEditor, {
 });
 
 dojo.declare("wm.LargeTextArea", wm.Text, {
+        _editorPaddingLeft: 3,
+        _editorPaddingRight: 3,
 	width: "300px",
 	height: "96px",
 	captionSize: "24px",
