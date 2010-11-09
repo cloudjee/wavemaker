@@ -410,12 +410,16 @@ dojo.declare("wm.Application", wm.Component, {
 								  owner: owner});
 		return this._runtimeService;
 	},
+
+	//The following lines are not being used now.  They may be used in the future to differenciate requests from Studio from
+	//requests deployed application.
 	getRuntimeServiceDesignTime: function(owner) {
 		if (!this._runtimeService)
 		    this._runtimeService = new wm.JsonRpcService({service: "runtimeService",
 								  owner: owner, designTime: true});
 		return this._runtimeService;
 	},
+
 	getRoot: function() {
 		return this;
 	},

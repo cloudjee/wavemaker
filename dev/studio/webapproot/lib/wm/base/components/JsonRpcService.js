@@ -63,8 +63,12 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
 		url = url || this.serviceUrl;
 		if (!url)
 			return;
+
+		//The following lines are not being used now.  They may be used in the future to differenciate requests from Studio from
+		//requests deployed application.
 		if (this._designTime) 
 					url = url + "?designTime=true";
+
 		var props = {
 			url: url||this.serviceUrl,
 			postData: this.createRequest(method, parameters || []),
@@ -133,8 +137,12 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 			    } else {
 
 				this._service = new wm.JsonRpc(url);
+
+				//The following lines are not being used now.  They may be used in the future to differenciate requests from Studio from
+				//requests deployed application.
 				if (this._designTime)
 					this._service._designTime = true;
+
 				this._service.timeout = this.timeout;
 				this.ready = Boolean(this._service && this._service.smd);
 				if (this.ready) {

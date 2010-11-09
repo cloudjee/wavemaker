@@ -192,6 +192,8 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	_update: function() {
 		// note: runtime service only available when application is deployed
 		// so must wait until here to set it.
+		//The following lines for checking designTime flag are not being used now.  They may be used in the future to differenciate requests from 
+		//Studio from requests deployed application.
 		if (this._designTime)
 			this._service = wm.getRuntimeServiceDesignTime(this);
 		else

@@ -26,6 +26,8 @@ wm.getRuntimeService = function(inComponent) {
 	return wm.fire(a, "getRuntimeService");
 };
 
+//The following lines are not being used now.  They may be used in the future to differenciate requests from Studio from
+//requests deployed application.
 wm.getRuntimeServiceDesignTime = function(inComponent) {
 	var a = dojo.getObject("studio.wip.app") || app;
 	return wm.fire(a, "getRuntimeServiceDesignTime");

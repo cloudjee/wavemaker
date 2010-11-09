@@ -325,7 +325,8 @@ wm.ServiceCall.extend({
 	queue: "(serviceCalls)",
 	/** @lends wm.ServiceCall.prototype */
 	doDesigntimeUpdate: function() {
-		this._designTime = true;
+		this._designTime = true; //The line is not being used now.  It may be used in the future to differenciate requests from 
+		//Studio from requests deployed application.
 		return studio.makeLiveDataCall(dojo.hitch(this, "_update"));
 	},
 	doClearInput: function() {
