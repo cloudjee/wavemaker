@@ -80,6 +80,7 @@ dojo.declare("wm.PageLoader", wm.Component, {
                 }
                 if (!ctor) {
                     app.alert("Error parsing " + inPath + ".js");
+                    this.onError("Error parsing " + inPath + ".js");
                     ctor = dojo.declare(inName, wm.Page); // so at least we can display widgets.js
 		}
 		return ctor;
@@ -119,26 +120,35 @@ dojo.declare("wm.PageLoader", wm.Component, {
 			this.loadSupport(ctor, path);
 		return ctor;
 	},
-	loadPage: function(inClassName, inName) {
-		inName = inName || inClassName;
-		if (!inName) {
-			wm.logging && console.debug("Invalid page name. Must load a valid page.");
-			return;
-		}
+        loadPage: function(inClassName, inName) {
+	    inName = inName || inClassName;
+	    if (!inName) {
+	        wm.logging && console.debug("Invalid page name. Must load a valid page.");
+	        return;
+	    }
 
-		this.previousPage = this.page;
-		this.previousClassName = this.className;
-		this.className = inClassName;
-		var ctor = this.loadPageCode(inClassName);
-		if (ctor) {
-			this.onBeforeCreatePage();
-			this.createPage(ctor, inName);
-			this.pageChanged();
-			this.unloadSupport(ctor);
-		} else
-			console.log("Page not found:", inClassName);
-		
-	},
+	    this.previousPage = this.page;
+	    this.previousClassName = this.className;
+	    this.className = inClassName;
+            try {
+	        var ctor = this.loadPageCode(inClassName);
+	        if (ctor) {
+		    this.onBeforeCreatePage();
+		    this.createPage(ctor, inName);
+		    this.pageChanged();
+		    this.unloadSupport(ctor);
+	        } else {
+		    console.log("Page not found:", inClassName);
+                    this.onError("Page not found:" + inClassName);
+                }
+                if (!this.page || !this.page.root)
+                    this.onError("Page not loaded:" + inClassName);
+	    } catch(e) { 
+                this.onError(e);
+            }
+
+        },
+        onError: function(inErrorOrMessage) {},
 	createPage: function(inCtor, inName) {
 		var props = dojo.mixin({name: inName, owner: this.owner, domNode: this.domNode, isRelativePositioned: this.isRelativePositioned}, this.pageProps || {});
 		this.page = new inCtor(props);

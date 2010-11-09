@@ -68,9 +68,11 @@ dojo.declare("wm.PageContainer", wm.Box, {
 	});
 
     },
+        onError: function(inErrorOrMessage) {},
 	createPageLoader: function() {
 		this._pageLoader = new wm.PageLoader({owner: this, domNode: this.domNode, isRelativePositioned: this.isRelativePositioned});
 		this._connections.push(this.connect(this._pageLoader, "onPageChanged", this, "pageChanged"));
+		this._connections.push(this.connect(this._pageLoader, "onError", this, "onError"));
 	},
 	getMainPage: function() {
 	  var owner = this.owner;
@@ -161,7 +163,7 @@ dojo.declare("wm.PageContainer", wm.Box, {
 			    this._pageLoaderConnectedToOwnerStart = true;
 			}
 		    } else {
-		      this._pageLoader.loadPage(inName, pageName);
+                        this._pageLoader.loadPage(inName, pageName);
 				if (this._currentPageConnect)
 					dojo.disconnect(this._currentPageConnect);
                         if (this._pageLoader.page._startCalled)

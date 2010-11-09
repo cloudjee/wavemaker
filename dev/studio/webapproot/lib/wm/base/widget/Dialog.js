@@ -1326,11 +1326,13 @@ dojo.declare("wm.pageContainerMixin", null, {
 	initPageContainer: function() {
 	    this.pageContainer = new wm.PageContainer({loadParentFirst: false, parent: this, owner: this, flex: 1, pageProperties: this.pageProperties});
 		this._connections.push(this.connect(this.pageContainer, "onPageChanged", this, "_pageChanged"));
+		this._connections.push(this.connect(this.pageContainer, "onError", this, "onError"));
 		this.pageContainer.dismiss = dojo.hitch(this, "dismiss");
 		if (this.pageName)
 			this.setPage(this.pageName);
 	    this.createControls();
 	},
+        onError: function(inErrorOrMessage) {},
 	setPage: function(inPageName) {
 		if (inPageName) {
 		    if (this.pageContainer.pageName != inPageName) {
