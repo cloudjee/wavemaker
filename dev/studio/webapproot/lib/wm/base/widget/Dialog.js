@@ -1706,8 +1706,9 @@ dojo.declare("wm.ColorPickerDialog", wm.Dialog, {
 wm.ColorPickerDialog.cssLoaded = false;
 
 
+/* Use designable dialog if your planning to design it in studio; if programatically creating a dialog use wm.Dialog */
 dojo.declare("wm.DesignableDialog", wm.Dialog, {
-    useButtonBar: true,
+    useButtonBar: false, // its false so we can add it in paletteDrop, but then the user can delete it if they want
     border: "1",
     borderColor: "black",
     titlebarBorder: "1",
@@ -1729,10 +1730,30 @@ dojo.declare("wm.DesignableDialog", wm.Dialog, {
             if (w.owner == oldOwner)
                 w.setOwner(owner);
         });
-    }
+    },
+    afterPaletteDrop: function() {
+	this.inherited(arguments);
+        this.createButtonBar();
+    },
+	makePropEdit: function(inName, inValue, inDefault) {
+		switch (inName) {
+                case "createButtonBar":
+				return makeReadonlyButtonEdit(inName, inValue, inDefault);
+                }
+		return this.inherited(arguments);
+        },
+	editProp: function(inName, inValue, inInspector) {
+		switch (inName) {
+                case "createButtonBar":
+                    this.createButtonBar();
+                    this.reflow();
+                    return;
+                }
+		return this.inherited(arguments);
+        }
 });
 
 wm.Object.extendSchema(wm.DesignableDialog, {
-    useButtonBar: {group: "display", order: 55}
 /*    owner: {ignore: true} */ // See JIRA-2118: Can't drag and drop to an app level container
+    createButtonBar: {group: "operation", order: 20}
 });
