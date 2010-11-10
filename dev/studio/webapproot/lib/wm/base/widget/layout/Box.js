@@ -109,7 +109,10 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
                 var free = flowEx.free;
 	        for (var i=0, c; c=inContainer.c$[i]; i++) {
 		    if (this.inFlow(c)) {                
-                        free -= c._percEx[inFlowAxis] ? (flowEx.ratio * c._percEx[inFlowAxis]) : 0;
+                        var size = c._percEx[inFlowAxis] ? (flowEx.ratio * c._percEx[inFlowAxis]) : 0;
+                        if (size < c["min" + (inFlowAxis == "w" ? "Width":"Height")]) 
+                            size = c["min" + (inFlowAxis == "w" ? "Width":"Height")];
+                        free -= size;
                     }
                 }
 		switch (inFlowAlign) {
@@ -148,6 +151,8 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
                      * If px sized: We aren't calculating this bounds axis, its a fixed size, so just set it to NaN
                      */
 		    b[inFlowAxis] = c._percEx[inFlowAxis] ? Math.round((flowEx.ratio * c._percEx[inFlowAxis])) : NaN;		
+                    if (b[inFlowAxis] < c["min" + (inFlowAxis == "w" ? "Width":"Height")]) 
+                        b[inFlowAxis] = c["min" + (inFlowAxis == "w" ? "Width":"Height")];
 
                     /* Step 7b: Calculate the bounds against the flow, and update the bounds and set cFitSize
                      * If its % sized: then set bounds and cFitSize to a size calculated from the parent's size * this widget's % size
