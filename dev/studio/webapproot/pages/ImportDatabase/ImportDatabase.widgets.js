@@ -35,10 +35,10 @@ ImportDatabase.widgets = {
 								panel2: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right", horizontalAlign: "center", padding: "4,0,0,0"}, {}, {
 									basicOptions: ["wm.Panel", {width: "452px", padding: "0"}, {}, {
 										panel501a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right"}, {}, {
-											label301: ["wm.Label", {width: "120px", border: "0", caption: "Database System"}, {}, {
+											label301: ["wm.Label", {width: "118px", border: "0", caption: "Database System"}, {}, {
 												format: ["wm.DataFormatter", {}, {}]
 											}],
-											dbdropdown: ["wm.Editor", {display: "Select", height: "20px", width: "300px"}, {onchange: "importDBdropdownChanged"}, {
+											dbdropdown: ["wm.Editor", {display: "Select", height: "20px", width: "304px"}, {onchange: "importDBdropdownChanged"}, {
 												editor: ["wm._SelectEditor", {}, {}]
 											}]
 										}],

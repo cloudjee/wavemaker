@@ -239,7 +239,7 @@ setupWidgetsForDatabaseType = function(
 	} else if (isHSQLDB(inDBType)) {
 		h = null;
 		p = null;
-		e = "File: ";
+		e = "File ";
 		username = "sa";
 	} else if (isPostgreSQL(inDBType)) {
 		p = 5432;
@@ -248,10 +248,10 @@ setupWidgetsForDatabaseType = function(
 	} else if (isOracle(inDBType)) {
 		h = ip;
 		p = "1521";
-		e = "SID:";
+		e = "SID";
 	} else if (isSQLServer(inDBType)) {
 		p = 1433;
-		e2 = "Instance:";
+		e2 = "Instance";
 		schemaFilter = SQL_SERVER_DEFAULT_SCHEMA;
 	} else if (isDB2(inDBType)) {
 		p = 50000;
