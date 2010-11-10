@@ -192,7 +192,19 @@
             <replacevalue>"</replacevalue>
         </replace>
 
+		<replace dir="${build.app.webapproot.dir}">
+            <include name="app.css"/>
+            <replacetoken>"/wavemaker/</replacetoken>
+            <replacevalue>"</replacevalue>
+        </replace>
+
         <war basedir="${build.app.webapproot.dir}" destfile="${war.file.name}" webxml="${build.app.webinf.dir}/web.xml"/>
+
+		<replace dir="${build.app.webapproot.dir}">
+            <include name="app.css"/>
+            <replacetoken>"lib/</replacetoken>
+            <replacevalue>"/wavemaker/lib/</replacevalue>
+        </replace>
     </target>
 
     <target name="deploy-war">
