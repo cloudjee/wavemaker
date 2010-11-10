@@ -151,6 +151,7 @@ dojo.declare("wm.ToolButton", wm.Widget, {
 			var captionHtml = this.caption ? '<span style="padding-left: 2px; ' + sl +'">' + this.caption + '</span>' : "";
 			this.btnNode.innerHTML = il.getImageHtml(ii) + captionHtml;
 			this.btnNode.style.padding = "0px";
+
 		} else if (this.iconUrl) {
                     var url = this.iconUrl;
                     var root;
@@ -171,7 +172,17 @@ dojo.declare("wm.ToolButton", wm.Widget, {
 			this.btnNode.innerHTML = this.caption;
 			this.btnNode.style.padding = "";
 		}
-	}
+    },
+    renderBounds: function() {
+        this.inherited(arguments);
+        if (!this._IEButtonTrickUsed && dojo.isIE && dojo.isIE < 9 && this.btnNode && this.btnNode.firstChild) {
+            this._IEButtonTrickUsed = true;
+            this.btnNode.firstChild.style.padding = "1px";
+            wm.onidle(this, function() {
+                this.btnNode.firstChild.style.padding = "0px";
+            });
+        }
+    }
 });
 
 wm.Object.extendSchema(wm.ToolButton, {
