@@ -297,16 +297,35 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
     tabClicked: function(inLayer, e) {
 	if (this.decoree.isDesignLoaded()) return this.inherited(arguments);
 	var layer = this.decoree.getActiveLayer();
-
+        
+        var oldindex = layer.getIndex();
 	var newindex = inLayer.getIndex();
-	for (var i = 0; i < newindex; i++) {
-	    if (this.decoree.layers[i].invalid) {
-		app.toastDialog.showToast("Please fill out \"" + this.decoree.layers[i].caption + "\" first", 3000, "Warning", "cc");
-		return;
-	    }
-	}
 
-	this.inherited(arguments);
+        // If trying to skip ahead, validate the current layer
+        if (oldindex < newindex && !this.validateCurrentLayer()) return;
+
+        // If the user clicks on to the very next tab, then this is the same as clicking the "Next" button.
+        // We've already validated the current layer so procede
+        if (oldindex + 1 == newindex)
+            return this.inherited(arguments);
+
+        // So, the current layer is valid, and we're skipping ahead at least two layers, this is ONLY ok
+        // if all layers between oldindex and newindex are valid AND if they are all tagged as "Done".
+        if (oldindex < newindex) {
+            for (var i = oldindex + 1; i < newindex; i++) {
+	        if (this.decoree.layers[i].invalid) {                
+		    app.toastDialog.showToast("Please fill out \"" + this.decoree.layers[i].caption + "\" first", 3000, "Warning", "cc");
+		    return;
+                } else if (!dojo.hasClass(this.btns[i], "done")) {
+		    app.toastDialog.showToast("Please review \"" + this.decoree.layers[i].caption + "\" first", 3000, "Warning", "cc");
+		    return;
+                }
+            }
+        } else {
+            this.validateCurrentLayer(true);
+        }
+
+	return this.inherited(arguments);
     }
 
 });

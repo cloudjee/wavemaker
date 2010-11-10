@@ -1431,11 +1431,12 @@ display: block;
 	color: rgb(80,80,80);
 }
 .wmwizardlayers .wmwizardlayers-tab.done, .wmwizardlayers .wmwizardlayers-tab.wmwizardlayers-selected {
-	color: black;
-}
-.wmwizardlayers .wmwizardlayers-tab.wmwizardlayers-selected {
 	font-weight: bold;
 }
+.wmwizardlayers .wmwizardlayers-tab.wmwizardlayers-selected {
+    text-decoration: underline;
+}
+
 
 body.tundra div.wmtoast.wmtoastExtraSpecific {
     font-size: 12pt;
