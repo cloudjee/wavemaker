@@ -36,7 +36,8 @@ dojo.declare("PopupHelp", wm.Page, {
 	      wm.fire(this.owner.owner, "dismiss");
 	},
 	 setHeader: function(objectType, propName) {
-	   this.labelHeading.setCaption("Help: " + ((objectType) ? objectType + ": " : "") + propName);
+	     //this.labelHeading.setCaption("Help: " + ((objectType) ? objectType + ": " : "") + propName);
+             this.owner.owner.setTitle("Help: " + ((objectType) ? objectType + ": " : "") + propName);
 	 },
 	 setContent: function(text) {
 	       this.labelBody.setCaption(text);	       

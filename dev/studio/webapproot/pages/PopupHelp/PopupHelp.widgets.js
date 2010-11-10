@@ -17,9 +17,8 @@
  */ 
 PopupHelp.widgets = {
 	layoutBox: ["wm.Layout", {box: "v", flex: 1, height: "", width: ""}, {}, {
-	      labelHeading: ["wm.Label", {caption: "Help", height: "20px", width: "100%"}, {}, {}],
 	      labelBody: ["wm.Label", {caption: "Loading...", height: "100%", width: "100%", scrollY: true, singleLine: false}, {}, {}],
-	      buttonPanel: ["wm.Panel", {border: 0, width: "100%", height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
+	    buttonPanel: ["wm.Panel", {_classes: {domNode: ["wmDialogFooter"]}, border: 0, width: "100%", height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
 			      /*
 		    moreButton: ["wm.Button", {caption: "More...", width: "70px"}, {onclick: "moreButtonClick"}],
 		    examplesButton: ["wm.Button", {caption: "Examples...", width: "85px"}, {onclick: "examplesButtonClick"}],
