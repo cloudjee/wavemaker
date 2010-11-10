@@ -430,7 +430,6 @@ DIV.dijitArrowButton {
 	text-indent: -1em !important;
 	direction: ltr !important;
 	text-align: left !important;
-	height: auto !important;
 	#text-indent: 0 !important;
 	#letter-spacing: -5em !important;
 	#text-align: right !important;

@@ -497,7 +497,7 @@ dojo.declare("wm._SelectEditor", wm._BaseEditor, {
 		if (this.editor.downArrowNode) {
 		    this.editor.downArrowNode.style.height = this.editor.domNode.style.height;
                     if (this.editor.downArrowNode.childNodes.length == 1)
-		        this.editor.downArrowNode.childNodes[0].style.height = this.editor.domNode.style.height + " !important";
+		        this.editor.downArrowNode.childNodes[0].style.height = this.editor.domNode.style.height ;
                 }
             }
 	},
