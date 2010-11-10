@@ -599,7 +599,14 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
 	_onClick: function(evt){
 		var params = this._onGridEvent(evt);
-		this.onClick(evt, params.selectedItem, params.rowId, params.fieldId, params.rowNode, params.cellNode);
+    // This will happen if user clicks on empty area of grid.
+		if (!params.rowId)
+			return;
+		if (params.rowId == -1){
+		  this.onHeaderClick(evt, params.selectedItem, params.rowId, params.fieldId, params.rowNode, params.cellNode);	
+		} else {
+      this.onClick(evt, params.selectedItem, params.rowId, params.fieldId, params.rowNode, params.cellNode);
+		}
 	},
 	_onCellDblClick: function(evt){
 		var params = this._onGridEvent(evt);
@@ -616,6 +623,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	onCellRightClick: function(evt, selectedItem, rowId, fieldId, rowNode, cellNode){
 	},
   onCellEdited: function(inValue, rowId, fieldId) {},
+	onHeaderClick: function(evt, selectedItem, rowId, fieldId, rowNode, cellNode){
+  }, 
   onSelectionChange: function() {},
 	addColumnToCSV: function(csvArray, value){
 		if (dojo.isString(value))
