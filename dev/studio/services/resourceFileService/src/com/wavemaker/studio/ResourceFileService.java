@@ -198,13 +198,13 @@ public class ResourceFileService {
     }
 
     public FileUploadResponse uploadFile(@ParamName(name="file") MultipartFile file, String path) throws IOException {
-	    System.out.println("UPLOAD FILE");
-	    System.out.println("UPLOAD FILE:" + file.getOriginalFilename());
+        //System.out.println("UPLOAD FILE");
+        //System.out.println("UPLOAD FILE:" + file.getOriginalFilename());
         FileUploadResponse ret = new FileUploadResponse();
         try {
             File dir = new File(getResourcesDir(), path);
             File outputFile = new File(dir, file.getOriginalFilename().replaceAll("[^a-zA-Z0-9.-_ ]",""));
-            System.out.println("OUTPUT FILE:" + outputFile.getAbsolutePath());
+            //System.out.println("OUTPUT FILE:" + outputFile.getAbsolutePath());
             FileOutputStream fos = new FileOutputStream(outputFile);            
             IOUtils.copy(file.getInputStream(), fos);
             file.getInputStream().close();

@@ -80,8 +80,8 @@ public class DeploymentService {
 	long wartime = warFile.lastModified();
         ProjectManager projectMgr = serviceDeploymentManager.getProjectManager();
 	long lastModTime = com.wavemaker.common.util.IOUtils.getMostRecentModificationTime(projectMgr.getCurrentProject().getProjectRoot());
-	System.out.println("WAR TIME: " + wartime);
-	System.out.println("LAS TIME: " + lastModTime);
+	//System.out.println("WAR TIME: " + wartime);
+	//System.out.println("LAS TIME: " + lastModTime);
 	return wartime >= lastModTime;
     }
 
