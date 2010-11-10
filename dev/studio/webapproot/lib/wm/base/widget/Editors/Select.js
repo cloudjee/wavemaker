@@ -492,8 +492,14 @@ dojo.declare("wm._SelectEditor", wm._BaseEditor, {
 		this.inherited(arguments);
 		this.domNode.style.height = '';		
 		this.domNode.style.lineHeight = '';		
-	    if (this.editor && this.editor.domNode)
+	    if (this.editor && this.editor.domNode) {
 		this.editor.domNode.style.height = this.getContentBounds().h + "px";
+		if (this.editor.downArrowNode) {
+		    this.editor.downArrowNode.style.height = this.editor.domNode.style.height;
+                    if (this.editor.downArrowNode.childNodes.length == 1)
+		        this.editor.downArrowNode.childNodes[0].style.height = this.editor.domNode.style.height + " !important";
+                }
+            }
 	},
 	hasValues: function() {
 		return (this.editor && this.editor.store.getCount());

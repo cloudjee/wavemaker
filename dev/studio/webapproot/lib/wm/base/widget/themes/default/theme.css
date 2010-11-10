@@ -835,6 +835,10 @@ background: url(images/omg/header-bg.png) no-repeat top center;
         height: 16px;
 }
 
+.tundra .wmeditor .dijitTextBox .dijitArrowButtonInner {
+    background-position: 50% 50%;
+}
+
 .wmbox .dijitProgressBarEmpty {
 	background: white;
 }
@@ -1569,6 +1573,7 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
 .wmdojofileupload .wmfileuploaderListItem {
     overflow: hidden;
 }
+
 
 .wmeditor.wmreseteditor .dijitTextBox {
      -moz-border-radius: 16px; 
