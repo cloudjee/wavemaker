@@ -77,7 +77,6 @@ dojo.declare("wm.LiveFormBase", wm.Panel, {
 	editorHeight: "26px",
 	editorWidth: "100%",
 	captionSize: "200px",
-	margin: "0,40,0,40",
 	captionAlign: "right",
 	captionPosition: "left",
 	height: "228px",
@@ -229,7 +228,7 @@ dojo.declare("wm.LiveFormBase", wm.Panel, {
 		        }));
 	},
 	populateDataOutput: function() {
-                if (this.dataOutput.type != this.dataSet.type)
+                if (this.dataSet && this.dataOutput.type != this.dataSet.type)
                     this.dataOutput.setType(this.dataSet.type);
 		var d = this.dataOutput;
 	    dojo.forEach(this.getFormEditorsArray(), dojo.hitch(this, function(e) {
@@ -470,6 +469,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	/**
 		@lends wm.LiveForm.prototype
 	*/
+	margin: "0,40,0,40",
 	defaultButton: "",
 	displayErrors: true,
 	// process editing via liveData API
