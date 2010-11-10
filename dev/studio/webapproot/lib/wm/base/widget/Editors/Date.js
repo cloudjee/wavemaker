@@ -30,6 +30,7 @@ dojo.declare("wm.Date", wm.Text, {
 	minimum: "",
 	maximum: "",
 	format: '',
+	validationEnabled: function() { return true;},
 	getEditorProps: function(inNode, inProps) {
 		var constraints = {};
 		if (this.minimum)
