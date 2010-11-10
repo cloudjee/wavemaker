@@ -75,8 +75,9 @@ wm.getFormField = function(inWidget) {
 dojo.declare("wm.LiveFormBase", wm.Panel, {
 	/** @lends wm.LiveFormBase.prototype */
 	editorHeight: "26px",
-	editorWidth: "85%",
-	captionSize: "225px",
+	editorWidth: "100%",
+	captionSize: "200px",
+	margin: "0,40,0,40",
 	captionAlign: "right",
 	captionPosition: "left",
 	height: "228px",
