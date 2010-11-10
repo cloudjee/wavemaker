@@ -19,6 +19,12 @@ dojo.provide("wm.studio.pages.JavaEditor.JavaEditor");
 
 dojo.declare("JavaEditor", wm.Page, {
 	start: function() {
+            /*
+            if (dojo.isFF > 4 || dojo.isWebKit || dojo.isIE >= 9)
+                this.javaCodeEditor.setSyntax("java");
+            else 
+                this.javaCodeEditor.setSyntax("");
+                */
 		this.tree.initNodeChildren = dojo.hitch(this.tree, "treeInitNodeChildren");
 		this.update();
 		this.subscribe("wmtypes-changed", dojo.hitch(this, "typesChangedCall"));
@@ -65,7 +71,7 @@ dojo.declare("JavaEditor", wm.Page, {
 	        this.packageName = (matches) ? matches[1] : "";
 		var matches2 = inData.match(/\s*public\s+class\s+(\S+)/);
 		this.className = matches2[1];
-		this.logViewer.page.setLogFile(this.packageName + "." + this.className + ".log");
+	    this.logViewer.page.setLogFile((this.packageName ? this.packageName + "." : "") + this.className + ".log");
 	},
 	openJavaClassErrorCallback: function(inError) {
 		this.layers.setLayer("defaultServiceLayer");

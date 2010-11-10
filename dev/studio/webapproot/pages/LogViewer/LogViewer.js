@@ -20,7 +20,6 @@ dojo.declare("LogViewer", wm.Page, {
   lastProjectName: null,
   logName: "project.log",
   start: function() {
-
   },
   update: function(inText, inSyntax) {
 
@@ -28,6 +27,9 @@ dojo.declare("LogViewer", wm.Page, {
   closeViewer: function(inSender, e) {
 		wm.dismiss(this, e);
   },
+    onShow: function() {
+        this.showLogs();
+    },
   showLogs: function() {
       if (this.lastProjectName != studio.project.projectName) {
 	  this.lastProjectName = studio.project.projectName;
