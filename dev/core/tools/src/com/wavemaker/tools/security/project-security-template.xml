@@ -111,7 +111,7 @@
 
     <!-- Authentication using In-memory Dao -->
     <bean id="inMemoryDaoImpl"
-        class="org.acegisecurity.userdetails.memory.InMemoryDaoImpl">
+        class="com.wavemaker.runtime.security.EnhancedInMemoryDaoImpl">
         <property name="userMap">
             <value>
                 demo=demo,ROLE_DEFAULT_NO_ROLES
