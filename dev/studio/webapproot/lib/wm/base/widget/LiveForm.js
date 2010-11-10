@@ -120,6 +120,10 @@ dojo.declare("wm.LiveFormBase", wm.Panel, {
 	// Form data
 	//===========================================================================
 	setDataSet: function(inDataSet) {
+		if (this.parent && this.parent.operation){
+			return;	
+		}
+		
 		this.beginEditUpdate();
 		this.dataSet = inDataSet;
 		var d = this.getItemData();
