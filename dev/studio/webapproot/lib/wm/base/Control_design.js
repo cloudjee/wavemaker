@@ -358,6 +358,7 @@ wm.Control.extend({
 });
 
 wm.Object.extendSchema(wm.Control, {
+        noInspector: {ignore: 1}, // obsolete property, but still don't want it showing in property panels
         numTabbableWidgets: {ignore: 1},
         internalTabIndex: {writeonly: 1, ignore: 1},
         autoScroll: {ignore: 1},
