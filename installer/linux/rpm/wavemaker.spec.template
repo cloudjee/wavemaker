@@ -1,6 +1,6 @@
 Name: wavemaker-@PROJECTTYPE@
 Version: @VERSION@
-Release: @VERSION@
+Release: all
 License: WaveMaker Inc, 2010
 Packager: Ed Callahan <community@wavemaker.com>
 Vendor: WaveMaker Inc
