@@ -266,7 +266,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
                 inVariable = new wm.Variable();
                 inVariable.setType(this.dataSet.type);
                 inVariable.setData(inObj);
-                inVariable.data[this._storeNameField]  = this._getDisplayData(inVariable);
+                inVariable.data[this._storeNameField]  = String(this._getDisplayData(inVariable));
             }
 	    var de = this.displayExpression, v = inVariable;
 	    var result = de ? wm.expression.getValue(de, v) : inVariable.getValue(this._displayField);
@@ -319,7 +319,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		// argh, copy data from variable
 	    for (var i=0, c=dataSet.getCount(), v; i < c && (v = dataSet.getItem(i)); i++) {
                 var d = v.getData();
-                d[this._storeNameField]  = this._getDisplayData(v);
+                d[this._storeNameField]  = String(this._getDisplayData(v));
 		data.push(d);
             }
 		//console.log("getDataSetData", (new Date()).getTime() - time);
@@ -940,6 +940,7 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		this.inherited(arguments);
 		if (this.autoDataSet)
 		    this.createDataSet();
+            this.dataField = "All Fields"; // just in case someone somehow changed it, this must be all fields to work.
 	},
 	createDataSet: function() {
 		wm.fire(this.$.liveVariable, "destroy");
@@ -1124,6 +1125,11 @@ wm.Object.extendSchema(wm.SelectMenu, {
 });
 
 wm.Object.extendSchema(wm._LookupEditor, {
+	autoDataSet: {group: "data", order: 3},
+	options: {ignore: 1},
+	dataField: {ignore: 1}
+});
+wm.Object.extendSchema(wm.LookupEditor, {
 	autoDataSet: {group: "data", order: 3},
 	options: {ignore: 1},
 	dataField: {ignore: 1}
