@@ -835,8 +835,12 @@ background: url(images/omg/header-bg.png) no-repeat top center;
         height: 16px;
 }
 
-.tundra .wmeditor .dijitTextBox .dijitArrowButtonInner {
+.tundra .dijitTextBox .dijitArrowButtonInner {
     background-position: 50% 50%;
+    height: 100%;
+}
+.tundra .dijitTextBox .dijitArrowButton {
+    height: 100%;
 }
 
 .wmbox .dijitProgressBarEmpty {
