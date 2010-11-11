@@ -45,6 +45,12 @@
 				}
 			}
 		}
+
+    // If quotes and if there is no closing tag in the end then ignore this quote
+    if (arg.charAt(arg.length-1) == '\n'){
+			return arg;
+		}
+		
 		// for single line comment the \n must not be included in the span tags
 		if(close_tag=="\n"){
 			return "µ__"+ new_class +"__µ"+ arg.replace(/(\r?\n)?$/m, "µ_END_µ$1");

@@ -83,8 +83,8 @@
 						this.syntax[lang]["quotes"][x]=x;
 						//quote_tab[quote_tab.length]="("+x+"(?:\\\\"+x+"|[^"+x+"])*("+x+"|$))";
 						//previous working : quote_tab[quote_tab.length]="("+x+"(?:[^"+x+"\\\\]*(\\\\\\\\)*(\\\\"+x+"?)?)*("+x+"|$))";
-						quote_tab[quote_tab.length]="("+ x +"(\\\\.|[^"+ x +"])*(?:"+ x +"|$))";
-						
+            quote_tab[quote_tab.length]="("+ x +"(\\\\.|[^"+ x +"])*(?:\\n|$))";
+            quote_tab[quote_tab.length]="("+ x +"(\\\\.|[^"+ x +"])*(?:"+ x +"|\\n|$))";
 						syntax_trace.push(x);			
 					}			
 				}
