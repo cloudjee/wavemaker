@@ -19,6 +19,8 @@
 
 // built in wm widgets
 
+[ bundlePackage.Common_Widgets, "Bespin", "wm.Bespin", "wm.base.widget.Bespin", "images/wm/button.png", "A simple button"],
+
 [ bundlePackage.Common_Widgets, bundlePackage.Button, "wm.Button", "wm.base.widget.Button", "images/wm/button.png", "A simple button"],
 [ bundlePackage.Common_Widgets, bundlePackage.Toggle_Button, "wm.ToggleButton", "wm.base.widget.Button", "images/wm/button.png", "A simple button"],
 [ bundlePackage.Common_Widgets, bundlePackage.DojoGrid, "wm.DojoGrid", "wm.base.widget.DojoGrid", "images/wm/data.png", "A Dojo grid"],
@@ -56,9 +58,11 @@
 
 [ bundlePackage.Dojo_Widgets, bundlePackage.Chart, "wm.DojoChart", "wm.base.widget.DojoChart", "images/wm/bar_chart.png", "A Dojo chart"],
 [ bundlePackage.Dojo_Widgets, bundlePackage.Dashboard, "wm.Dashboard", "wm.base.widget.Dashboard", "images/wm/lightbox_16.png", "Dashboard"],
-[ bundlePackage.Dojo_Widgets, bundlePackage.Menu, "wm.DojoMenu", "wm.base.widget.DojoMenu", "images/wm/menu.png", "A Dojo menu"],
+[ bundlePackage.Dojo_Widgets, bundlePackage.DojoFileUpload, "wm.DojoFileUpload", "wm.base.widget.DojoFileUpload", "images/wm/button.png", "An example custom button widget."],
 [ bundlePackage.Dojo_Widgets, bundlePackage.Fisheye, "wm.DojoFisheye", "wm.base.widget.DojoFisheye", "images/wm/fisheye.png", "A Dojo Fisheye"],
 [ bundlePackage.Dojo_Widgets, bundlePackage.Lightbox, "wm.DojoLightbox", "wm.base.widget.DojoLightbox", "images/wm/lightbox_16.png", "A Dojo Lightbox"],
+[ bundlePackage.Dojo_Widgets, bundlePackage.Menu, "wm.DojoMenu", "wm.base.widget.DojoMenu", "images/wm/menu.png", "A Dojo menu"],
+
 /*[ "Dojo Widgets", "Test", "wm.DojoWidget", "wm.base.widget.DojoWidget", "images/wm/button.png", "A button with a progress indicator"],*/
 
 [ bundlePackage.Form_Tools, bundlePackage.DataNavigator, "wm.DataNavigator", "wm.base.widget.DataNavigator", "images/wm/edit.png"],

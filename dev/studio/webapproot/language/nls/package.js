@@ -76,6 +76,7 @@
 	"HTML" : "HTML",
 	"IFrame" : "IFrame",
 	"List" : "List",
+	"DojoFileUpload" : "FileUpload",
 	"ListViewer" : "ListViewer",
 	"ProgressBar" : "ProgressBar",
 
