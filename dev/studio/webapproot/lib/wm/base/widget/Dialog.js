@@ -1323,12 +1323,13 @@ dojo.declare("wm.pageContainerMixin", null, {
 	pageName: "",
 	hideControls: false,
 	pageProperties: null,
+        deferLoad: false, // I'd rather this were true, but projects (AND STUDIO!) will break until users go through and change deferLoad back to false
 	initPageContainer: function() {
-	    this.pageContainer = new wm.PageContainer({loadParentFirst: false, parent: this, owner: this, flex: 1, pageProperties: this.pageProperties});
+	    this.pageContainer = new wm.PageContainer({loadParentFirst: false, deferLoad: false, parent: this, owner: this, flex: 1, pageProperties: this.pageProperties});
 		this._connections.push(this.connect(this.pageContainer, "onPageChanged", this, "_pageChanged"));
 		this._connections.push(this.connect(this.pageContainer, "onError", this, "onError"));
 		this.pageContainer.dismiss = dojo.hitch(this, "dismiss");
-		if (this.pageName)
+		if (this.pageName && !this.deferLoad)
 			this.setPage(this.pageName);
 	    this.createControls();
 	},
@@ -1440,6 +1441,11 @@ dojo.declare("wm.PageDialog", [wm.Dialog, wm.pageContainerMixin], {
 		this.inherited(arguments);
 		this.initPageContainer();
 	},
+        setShowing: function(inShow, forceChange) {
+	    this.inherited(arguments);
+            if (this.deferLoad && inShow)
+                this.setPage(this.pageName);
+        },
         setPageName: function(inPageName) {
 	    if (this._pageLoading)
 		return;
@@ -1509,6 +1515,7 @@ wm.PageDialog.extend({
 
 wm.Object.extendSchema(wm.PageDialog, {
     pageName: {group: "display", bindable: 1, type: "string", order: 54, pageProperty: "page"},
+    deferLoad:{group: "display", type: "boolean", order: 55},
     footerBorder: {group: "style", order: 100},
     footerBorderColor:  {group: "style", order: 101}
 });
