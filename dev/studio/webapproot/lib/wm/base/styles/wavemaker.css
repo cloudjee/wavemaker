@@ -72,9 +72,11 @@
 }
 
 .wm_FontColor_Red {
+    color: #581313 !important;
+}
+.wm_FontColor_BrightRed {
 	color:  #FF0000 !important;
 }
-
 .wm_FontColor_Evergreen {
 	color: #435c46 !important;
 }
@@ -215,6 +217,10 @@
 
 .wm_BackgroundColor_Red {
 	background: #581313 !important;
+}
+
+.wm_BackgroundColor_BrightRed {
+	background: #FF0000 !important;
 }
 
 .wm_BackgroundColor_Evergreen {
