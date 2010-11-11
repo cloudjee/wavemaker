@@ -516,6 +516,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 		    this.domNode.opacity = 0.01;
 		}
 		this.inherited(arguments);
+                this.domNode.tabIndex = -1;
+                this.domNode.focus(); // individual dialogs may override this to focus on something more specific, but at a minimum, I want focus somewhere on/in the dialog when it shows
 	    }
 
 
