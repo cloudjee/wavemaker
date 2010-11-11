@@ -58,10 +58,14 @@ dojo.declare("wm.ListViewerRow", wm.Container, {
 	    new wm.Binding({name: "binding", owner: this.variable});
 
     },
+	addComponent: function(inComponent) {
+	    this[inComponent.name] = inComponent;
+            this.inherited(arguments);
+        },
     renderRow: function(inData, index) {
 
 	// Prepare this object to represent a new row
-	this.components = {};
+	this.$ = this.components = {};
 	this.c$ = [];
 	this.widgets = {};
 	this.domNode.innerHTML = "";
@@ -79,6 +83,7 @@ dojo.declare("wm.ListViewerRow", wm.Container, {
 	this.reflow();
 	this.renderBounds();
     },
+    start: function() {},
     renderBounds: function() {
         this.inherited(arguments);
         this.parent.updateRowTops();
@@ -162,9 +167,29 @@ dojo.declare("wm.ListViewer", wm.Container, {
 	this.currentRenderer = this.rowRenderers[0];
         this.selectedItem = new wm.Variable({name: "selectedItem", owner: this});
 	this.setDataSet(this.dataSet);
+
+        if (this.dataSet && this.dataSet._requester) 
+            this.setLoadingImageShowing(true);
+        
+
         if (this.pageName)
 	    this.setPageName(this.pageName);
 	this.connect(this.domNode, "onscroll", this, "scheduleRenderRows");
+    },
+    setLoadingImageShowing: function(inShowing) {
+        if (inShowing) {
+            this.domNode.style.backgroundImage = "url(" + dojo.moduleUrl("wm.base.widget.themes.default.images") + "loadingThrobber.gif)";
+            this.domNode.style.backgroundPosition = "50% 50%";
+            this.domNode.style.backgroundRepeat = "no-repeat";
+        } else {
+            this.domNode.style.backgroundImage = "";
+            this.domNode.style.backgroundPosition = "";
+            this.domNode.style.backgroundRepeat = "";
+        }
+    },
+    setBorderColor: function(inColor) {
+        this.inherited(arguments);
+        dojo.forEach(this.rowRenderers, function(r) {r.setBorderColor(inColor);});        
     },
     setRowBorder: function(inBorder) {
         this.rowBorder = inBorder;
@@ -226,7 +251,7 @@ dojo.declare("wm.ListViewer", wm.Container, {
 	console.log(this._js);
 
 	    this._js = dojo.fromJson(this._js);
-	    delete this._js.start;
+
 	} catch(e) {
 	    console.error(e);
 	    delete window[inPage]; // if we failed to assign it, the existence of this object will block project.findUniqueName from working. Especially if we're trying to recreate a page
@@ -247,14 +272,17 @@ dojo.declare("wm.ListViewer", wm.Container, {
 		c[1].verticalAlign = "top";
 		c[1].horizontalAlign = "top";
 		
-	    } else {
-		delete inComponents[i]; // get rid of all variables and nonvisual components that are outside of wm.Layout
+	    } else if (i == "variable") {
+		delete inComponents[i]; // get rid of the "variable" as that will be created as part of the listviewer row
 	    }
 	}
     },
     setDataSet: function(inDataSet) {
-	if (this.dataSet && this.manageLiveVar)
+        if (app.dontdothat) return;
+	if (this.dataSet && this.manageLiveVar) {
 	    dojo.disconnect(this._dataSetConnection);
+            dojo.disconnect(this._loaderConnection);
+        }
 	this.dataSet = inDataSet;
 	if (inDataSet && inDataSet instanceof wm.Variable) {
             this.selectedItem.setType(inDataSet.type);
@@ -262,6 +290,11 @@ dojo.declare("wm.ListViewer", wm.Container, {
 
 	    if (this.manageLiveVar)
 		this._dataSetConnection = dojo.connect(this.dataSet, "onSuccess", this, "renderRows");
+
+            if (this.dataSet.onBeforeUpdate)
+                this.connect(this.dataSet, "onBeforeUpdate", this, function() {
+                    this.setLoadingImageShowing(true);
+                });
 
 	    for (var i = 0; i < this.rowRenderers.length; i++) {
                 if (this.rowRenderers[i].variable.type != inDataSet.type)
@@ -271,7 +304,6 @@ dojo.declare("wm.ListViewer", wm.Container, {
 	    var length;
 	    if (this.manageLiveVar) {
 		this.dataSet.maxResults = Math.max(20,this.bounds.h * 2 / h);
-		this._totalPages = this.dataSet.getTotalPages() || 1;
 		length = this.dataSet.dataSetCount-1; // fix to this also in renderRows
 	    } else
 		length = this.dataSet.getCount();
@@ -345,10 +377,15 @@ dojo.declare("wm.ListViewer", wm.Container, {
             this._selectedIndex = i;
             dojo.addClass(this.nodes[this._selectedIndex], "ListViewerSelectedItem");
             this.selectedItem.setData(this.rowRenderers[i].variable);
+            this.onSelection(this.rowRenderers[i], this.rowRenderers[i].variable);
+
         } else {
             this._selectedIndex = -1;
         }
     },
+    onSelection: function(inRowWidget, inRowVariable) {},
+    onRenderRow: function(inRowWidget, inRowVariable) {},
+    onRerenderRow: function(inRowWidget, inRowVariable) {},
     getSelectedIndex: function() {
         return this._selectedIndex;
     },
@@ -418,19 +455,33 @@ dojo.declare("wm.ListViewer", wm.Container, {
                             this.dataSet.update();
                             //this.dataSet.setPage(Math.floor(i/(this.dataSet.maxResults || 1)));
                     } else if (data[i]) {
-                        this.currentRenderer.variable.$.binding.addWire("", "dataSet", this.dataSet.getItem(i).getId());
-			//this.currentRenderer.variable.setDataSet(this.dataSet.getItem(i));
+                        //this.currentRenderer.variable.$.binding.addWire("", "dataSet", this.dataSet.getItem(i).getId());
+			this.currentRenderer.variable.setDataSet(this.dataSet.getItem(i));
 			delete this.currentRenderer._noData;
 		    }
                 }
 
                 // If the row has widgets in it, then call renderBounds and reflow; else call renderRow to load the widgets.
 		this.currentRenderer.inFlow = true;
-		if (this.currentRenderer.c$.length || this.currentRenderer._noData) {
+                var resetData = this.currentRenderer.c$.length && data[i] && data[i] != this.currentRenderer.__lookupData;
+                console.log("HEY:"+ resetData);
+                if (resetData) {
+                    this.currentRenderer.variable.setData(data[i]);
+                    this.currentRenderer.start();
+                    this.currentRenderer.__lookupData = data[i];
+                    this.onRenderRow(this.currentRenderer, this.currentRenderer.variable);
+                }
+		else if (this.currentRenderer.c$.length || this.currentRenderer._noData) {
 		    this.currentRenderer.renderBounds();
 		    this.currentRenderer.reflow();
-		} else
+                    if (!this.currentRenderer._noData)
+                        this.onRerenderRow(this.currentRenderer, this.currentRenderer.variable);
+		} else {
 		    this.currentRenderer.renderRow(data[i], i);
+                    this.currentRenderer.start();
+                    this.currentRenderer.__lookupData = data[i];
+                    this.onRenderRow(this.currentRenderer, this.currentRenderer.variable);
+                }
                 lastRenderedRowIndex = i;
 	    } else {
 		this.currentRenderer.inFlow = false;
@@ -458,7 +509,7 @@ dojo.declare("wm.ListViewer", wm.Container, {
             realAvg = Math.floor(realSum/realAvgCount);
 	    curAvg = Math.floor(heightSum/heightCount);
 	}
-
+        this.setLoadingImageShowing(false);
         delete this._renderingRows;
 
     },
@@ -475,8 +526,13 @@ dojo.declare("wm.ListViewer", wm.Container, {
 	var index = dojo.indexOf(this.rowRenderers, c);
 	if (index >= 0)
 	    return this.dataSet.getItem(index);
-    }
+    },
+    setRowBorder: function(inBorder) {
+        this.rowBorder = inBorder;
+        dojo.forEach(this.rowRenderers, function(r) {r.setBorder(inBorder);});
+    },
 
+    _end: 0
 });
 
 // design only
@@ -504,6 +560,7 @@ wm.ListViewer.extend({
 wm.Object.extendSchema(wm.ListViewer, {
     dataSet: { readonly: true, group: "data", order: 1, bindTarget: 1, type: "wm.Variable", isList: true},
     pageName: {group: "common", bindable: 1, type: "string", order: 50},
+    customGetValidate:  {ignore: true},
     fitToContentWidth:  {ignore: true},
     fitToContentHeight:  {ignore: true},
     imageList: {ignore: true},
