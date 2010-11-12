@@ -26,7 +26,7 @@ dojo.declare("wm.DojoFlashFileUpload", wm.DojoFileUpload, {
     fileMaskLabel: "All Images",
 
     // List of file patterns to accept by flash file browser; ignored for html widget
-    fileMaskList: ".png;.jpg;.jpeg;.gif",
+    fileMaskList: "*.png;*.jpg;*.jpeg;*.gif",
 
     // JavaService name and operation name
     service: "FlashUploadDownload",
