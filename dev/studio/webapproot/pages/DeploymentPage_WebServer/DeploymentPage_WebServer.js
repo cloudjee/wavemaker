@@ -22,6 +22,7 @@ dojo.declare("DeploymentPage_WebServer", wm.Page, {
 	deploymentTarget: "tomcat",
 	currentTarget: "",
 	currentAction: "",
+	s3ServiceURL: "s3.amazonaws.com",
 	start: function() {
 	wm.typeManager.addType("com.wavemaker.tools.deployment.TargetInfo", {internal: true, 	
 		"fields": {
@@ -328,7 +329,7 @@ dojo.declare("DeploymentPage_WebServer", wm.Page, {
 	AMFileListUploadWarButtonClick: function(inSender) {
 		studio.beginWait("Uploading WAR File to Amazon S3 ...");
 	    this.cloudStorageService.requestAsync("copyWarFileToCloudStorage",["amazon", this.DepTargetList.selectedItem.data.container, null, null,
-				this.accessKeyId.getDataValue(), this.secretAccessKey.getDataValue()],
+				this.accessKeyId.getDataValue(), this.secretAccessKey.getDataValue(), this.s3ServiceURL],
 			dojo.hitch(this, "getAMCloudFilesComplete"),
 			dojo.hitch(this, "_svcError"));
 	},
@@ -345,7 +346,7 @@ dojo.declare("DeploymentPage_WebServer", wm.Page, {
 		studio.beginWait("Deleting a File in Amazon S3 ...");
 	    this.cloudStorageService.requestAsync("deleteFileInCloudStorage",["amazon", this.DepTargetList.selectedItem.data.container,
 				this.AMFileList.selectedItem.data.fileName, null, null,
-				this.accessKeyId.getDataValue(), this.secretAccessKey.getDataValue()],
+				this.accessKeyId.getDataValue(), this.secretAccessKey.getDataValue(), this.s3ServiceURL],
 			dojo.hitch(this, "getAMCloudFilesComplete"),
 			dojo.hitch(this, "_svcError"));
 	},
@@ -353,7 +354,7 @@ dojo.declare("DeploymentPage_WebServer", wm.Page, {
 	amShowFiles: function(inSender) {
 		studio.beginWait("Getting the file list...");
 	    this.cloudStorageService.requestAsync("getCloudFiles",["amazon", this.DepTargetList.selectedItem.data.container, null, null,
-				this.accessKeyId.getDataValue(), this.secretAccessKey.getDataValue()],
+				this.accessKeyId.getDataValue(), this.secretAccessKey.getDataValue(), this.s3ServiceURL],
 			dojo.hitch(this, "getAMCloudFilesComplete"),
 			dojo.hitch(this, "_svcError"));
 	},
