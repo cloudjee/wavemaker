@@ -116,7 +116,10 @@ th {
 	height: 20px;
 	margin: 0px 0px 0px 3px;
 }
-
+.dj_ie6 .wmtablayers-tab, .dj_ie7 .wmtablayers-tab {
+        border-bottom-color: transparent !important;
+        border-bottom-width: 1px !important;
+}
 .wmtablayers-selected {
 	/*border: 1px solid #939fb6;*/
 	background-image: none;
@@ -1587,6 +1590,7 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
 
 .wmdojofileupload .wmfileuploaderListItem {
     overflow: hidden;
+    white-space: no-wrap;    
 }
 
 
