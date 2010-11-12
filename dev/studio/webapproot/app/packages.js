@@ -58,7 +58,6 @@
 
 [ bundlePackage.Dojo_Widgets, bundlePackage.Chart, "wm.DojoChart", "wm.base.widget.DojoChart", "images/wm/bar_chart.png", "A Dojo chart"],
 [ bundlePackage.Dojo_Widgets, bundlePackage.Dashboard, "wm.Dashboard", "wm.base.widget.Dashboard", "images/wm/lightbox_16.png", "Dashboard"],
-[ bundlePackage.Dojo_Widgets, bundlePackage.DojoFileUpload, "wm.DojoFileUpload", "wm.base.widget.DojoFileUpload", "images/wm/button.png", "An example custom button widget."],
 [ bundlePackage.Dojo_Widgets, bundlePackage.Fisheye, "wm.DojoFisheye", "wm.base.widget.DojoFisheye", "images/wm/fisheye.png", "A Dojo Fisheye"],
 [ bundlePackage.Dojo_Widgets, bundlePackage.Lightbox, "wm.DojoLightbox", "wm.base.widget.DojoLightbox", "images/wm/lightbox_16.png", "A Dojo Lightbox"],
 [ bundlePackage.Dojo_Widgets, bundlePackage.Menu, "wm.DojoMenu", "wm.base.widget.DojoMenu", "images/wm/menu.png", "A Dojo menu"],
@@ -105,6 +104,9 @@
 
 [ bundlePackage.Beta, bundlePackage.ColorPicker, "wm.ColorPicker", "wm.base.widget.Editors.Text", "images/wm/edit.png", "A color picker"],
 [ bundlePackage.Beta, bundlePackage.BusyButton, "wm.BusyButton", "wm.base.widget.BusyButton", "images/wm/button.png", "A button with a progress indicator"],
+[ bundlePackage.Beta, bundlePackage.DojoFileUpload, "wm.DojoFileUpload", "wm.base.widget.DojoFileUpload", "images/wm/button.png", "An example custom button widget."],
+[ bundlePackage.Beta, bundlePackage.DojoFlashFileUpload, "wm.DojoFlashFileUpload", "wm.base.widget.DojoFlashFileUpload", "images/wm/button.png", "An example custom button widget."],
+
 [ bundlePackage.Beta, bundlePackage.Ticker, "wm.Ticker", "wm.base.widget.Ticker", "images/wm/widget.png", "Animated scrolling panel"],
 [ bundlePackage.Beta, bundlePackage.ListViewer, "wm.ListViewer", "wm.base.widget.ListViewer", "images/wm/content.png", "A simple list control"],
 
