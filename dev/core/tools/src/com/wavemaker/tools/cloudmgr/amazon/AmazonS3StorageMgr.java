@@ -54,7 +54,7 @@ public class AmazonS3StorageMgr implements CloudStorageMgr {
         //if (conn == null)
         //{
             CallingFormat fmt = CallingFormat.getSubdomainCallingFormat();
-            if (serviceURL.contains("Walrus")) isSecured = false;
+            if (serviceURL != null && serviceURL.contains("Walrus")) isSecured = false;
             conn = new AWSAuthConnection(awsAccessKeyId, awsSecretAccessKey, isSecured, serviceURL, fmt);
         //}
         return getContainerList(conn);
@@ -173,7 +173,7 @@ public class AmazonS3StorageMgr implements CloudStorageMgr {
             {
                 CallingFormat fmt = CallingFormat.getSubdomainCallingFormat();
                 //conn = new AWSAuthConnection(awsAccessKeyId, awsSecretAccessKey, true, Utils.DEFAULT_HOST, fmt);
-                if (serviceURL.contains("Walrus")) isSecured = false;
+                if (serviceURL != null && serviceURL.contains("Walrus")) isSecured = false;
                 conn = new AWSAuthConnection(awsAccessKeyId, awsSecretAccessKey, isSecured, serviceURL, fmt);
             }
             if (conn.checkBucketExists(bucket)) throw new AssertionError("Bucket already exists");
@@ -207,7 +207,7 @@ public class AmazonS3StorageMgr implements CloudStorageMgr {
             if (conn == null)
             {
                 CallingFormat fmt = CallingFormat.getSubdomainCallingFormat();
-                if (serviceURL.contains("Walrus")) isSecured = false;
+                if (serviceURL != null && serviceURL.contains("Walrus")) isSecured = false;
                 conn = new AWSAuthConnection(awsAccessKeyId, awsSecretAccessKey, isSecured, serviceURL, fmt);
             }
             Response response = conn.deleteBucket(bucket, null);
@@ -235,7 +235,7 @@ public class AmazonS3StorageMgr implements CloudStorageMgr {
             if (conn == null)
             {
                 CallingFormat fmt = CallingFormat.getSubdomainCallingFormat();
-                if (serviceURL.contains("Walrus")) isSecured = false;
+                if (serviceURL != null && serviceURL.contains("Walrus")) isSecured = false;
                 conn = new AWSAuthConnection(awsAccessKeyId, awsSecretAccessKey, isSecured, serviceURL, fmt);
             }
 
@@ -266,7 +266,7 @@ public class AmazonS3StorageMgr implements CloudStorageMgr {
             if (conn == null)
             {
                 CallingFormat fmt = CallingFormat.getSubdomainCallingFormat();
-                if (serviceURL.contains("Walrus")) isSecured = false;
+                if (serviceURL != null && serviceURL.contains("Walrus")) isSecured = false;
                 conn = new AWSAuthConnection(awsAccessKeyId, awsSecretAccessKey, isSecured, serviceURL, fmt);
             }
             Response response = conn.delete(containerName, fileName, null);
