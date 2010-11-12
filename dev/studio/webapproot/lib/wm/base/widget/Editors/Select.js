@@ -1129,7 +1129,7 @@ wm.Object.extendSchema(wm._LookupEditor, {
 	options: {ignore: 1},
 	dataField: {ignore: 1}
 });
-wm.Object.extendSchema(wm.LookupEditor, {
+wm.Object.extendSchema(wm.Lookup, {
 	autoDataSet: {group: "data", order: 3},
 	options: {ignore: 1},
 	dataField: {ignore: 1}
