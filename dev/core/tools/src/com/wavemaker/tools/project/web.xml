@@ -37,6 +37,12 @@
         <url-pattern>*.upload</url-pattern>
     </servlet-mapping>
 
+
+    <servlet-mapping>
+        <servlet-name>springapp</servlet-name>
+        <url-pattern>*.flashUploader</url-pattern>
+    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>springapp</servlet-name>
         <url-pattern>/lib/build/Gzipped/*</url-pattern>
