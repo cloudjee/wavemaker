@@ -161,7 +161,8 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		if (inValue !== null && dojo.isObject(inValue)) {
 		    if (this.isAllDataFields()) {
 			var v = this._getDisplayData(inValue);
-			i = this.getStoreItem(v, this._displayField);
+			//i = this.getStoreItem(v, this._displayField);
+			i = this.getStoreItem(v, this._storeNameField);
 		    } else if (wm.isInstanceType(inValue, wm.Variable)) {
 			var v = inValue;
 			var lookupVal = v.getValue(lookupFieldName);
@@ -180,7 +181,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		// STEP 2: Set the value to the datastore item; if no datastore item then either clear (restricted values) or set the inValue text as the value (TODO: what if inValue is a wm.Variable?)
 		if (i !== undefined && i !== null && dojo.isObject(i)) {
 			// why can't we just set the value to i??? Optimization??
-			this._setEditorValue(i[this.displayField || this._displayField]);
+			this._setEditorValue(i[this._storeNameField] || i[this.displayField || this._displayField]);
 			// allow any value not in store is treated as a clear
 		} else {
 			if (this.restrictValues)
