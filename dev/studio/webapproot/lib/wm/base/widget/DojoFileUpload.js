@@ -57,7 +57,6 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
     // input variable to provide additional parameters to go with files at runtime
     input: "", 
 
-
     // Standard control/container properties 
     verticalAlign: "top",
     horizontalAlign: "top",
@@ -105,18 +104,18 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
             var found = false;
             var components = studio.application.getServerComponents();
             for (var i = 0; i < components.length; i++) {
-                if (components[i].name == "FileUploadDownload") 
+                if (components[i].name == this.service) 
                     found = true;
             }
             if (!found) {
-                var javaservice = new wm.JavaService({owner: studio.application, initialNoEdit: true, javaTemplate: "FileUploadDownload.java"});
+                var javaservice = new wm.JavaService({owner: studio.application, initialNoEdit: true, javaTemplate: this.service + ".java"});
                 var result = studio.studioService.requestSync("getJavaServiceTemplate", [javaservice.javaTemplate]).results[0];
                 javaservice.connect(javaservice, "_onClassFirstSave", this, function() {
                     this._serviceVariable.setService("");
                     this._serviceVariable.setService(this.service);
                     studio.inspector.reinspect();
                 });
-                javaservice.newJavaServiceWithFunc("FileUploadDownload","FileUploadDownload", result);
+                javaservice.newJavaServiceWithFunc(this.service, this.service, result);
             }
         } catch(e) {
             console.error("DojoFileUpload.js failed to create javaservice:" + e);
@@ -202,11 +201,13 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
                          width: "100%",
                          height: "100%",
                          border: "1",
+                         padding: "2",
                          html: "<i>No files selected</i>",
                          showing: this.useList});
         this.progressBar = 
             new wm.dijit.ProgressBar({parent: this,
                                       owner: this,
+                                      name: "progressBar",
                                       showing: false,
                                       width: "100%",
                                       height: "100%"});
@@ -217,6 +218,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
             new wm.Panel({layoutKind: "left-to-right",
                           width: (this.useList) ? this.buttonWidth + "px": "100%",
                           height: (this.useList) ? this.buttonHeight + "px" : "100%",
+                          name: "buttonPanel",
                           owner: this,
                           parent: this,
                           horizontalAlign: "left",
@@ -231,7 +233,9 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
             } 
 
             // Do we need to recreate the dijit each time its shown, or only the first time???
-            this.connectToAllLayers(this, "createDijit");
+            this.connectToAllLayers(this, dojo.hitch(this, function() {
+                if (!this.dijit) this.createDijit();
+            }));
         } else {
             this.createDijit();
         }
@@ -265,7 +269,6 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
                 this.button.btnNode.style.lineHeight = b.h + "px";
                 this.button.btnNode.style.height = b.h + "px";
                 this.button.btnNode.style.width = b.w + "px";
-                
                 //this.dijit._fileInput.style.left = 0;
             }
         });
@@ -310,9 +313,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
 
         // Calculate the path/url that will submit the files
         // A different java service is needed to process the parameters and response of the flash uploader vs the html uploader
-        var l = window.location;
-        var path = l.protocol + "//" + l.host + l.pathname.replace(/[^\/]*$/, ""); // strip out any index.html index.php myfile.xxx from the pathane; should end with "/"
-        path += "services/" + this.service + ((this._uploaderType == "flash") ?".flashUploader" : ".upload") + "?method=" + this.operation;
+        var path = this.getPath();
 
             this.dijit = new dojox.form.FileUploader({isDebug: true,
                                                       uploadUrl: path,
@@ -346,14 +347,20 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
             this.dijit._fileInput.style.left = "0";
         }
 
-        // Connect to all the events
+        // Connect to all the events 
         this.connect(this.dijit, "onChange", this, "change");
         this.connect(this.dijit, "onComplete", this, "success");
         this.connect(this.dijit, "onError", this, "onError");
         this.connect(this.dijit, "onProgress", this, "progress");
-
-	this.adjustButtonHeight();
+        if (this._uploaderType == "html") 
+	    this.adjustButtonHeight();
         this._inCreateDijit = false;
+    },
+    getPath: function() {
+        var l = window.location;
+        var path = l.protocol + "//" + l.host + l.pathname.replace(/[^\/]*$/, ""); // strip out any index.html index.php myfile.xxx from the pathane; should end with "/"
+        path += "services/" + this.service + ".upload?method=" + this.operation;
+        return path;
     },
     // 
     upload: function() {
@@ -366,6 +373,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
         var submitData = this.input.getData();
         if (this.input.type == "AnyData")
             submitData = submitData.dataValue;
+        console.log("UPLOAD");console.log(data);
         this.dijit.upload(submitData);
     },
     // Selecting the FileUploader from the event menu will fire the upload
@@ -534,7 +542,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
             
             this.progressBar.hide();
             if (this.useList) {
-		if (fileList.length == 1) {                    
+		if (fileList.length == 1 && this._uploaderType == "html") {
 		    var html = this.getHtmlForItem(this.variable.getItem(0).getData()).replace("div", "div style='height:0''");
 /*
 		    var div = document.createElement("div");
@@ -551,7 +559,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
                     this.updateHtml();
 		}
                 this.html.show();
-            }
+        }
             this._state = "uploaded";
             if (this._uploaderType == "html") {
                 this.onSuccess(this.variable.getData());
@@ -574,38 +582,24 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
             } else {
                 data.push({path: f.file, 
                            tmpid: this._tmpcounter++,
-                           name: String(f.name).replace(/^C\:\\fakepath\\/,""), 
+                           name: String(f.name).replace(/^C\:\\fakepath\\/,""), //
                            error: f.error,
                            width: f.width,
                            height: f.height,
                            percent: f.uploadTime !== undefined ? 100 : f.percent !== undefined ? f.percent : 0,
                            included: true,
-                           uploaded: !f.error && (f.uploadTime !== undefined || this._uploaderType == "html" && f.percent == 100)}); // not flagged as uploaded until ALL files have been uploaded and the server stats (uploadTime) are gathered.  Use percent == 100 if you want to know that a file is done... but note you don't yet have the server response which will help you identiffy the file on the server
+                           uploaded: !f.error && (f.uploadTime !== undefined || this._uploaderType == "html" && f.percent == 100)}); // not flagged as uploaded until ALL files have been uploaded and the server stats (uploadTime) are gathered.  Use percent == 100 if you want to know that a file is done... but note you dont yet have the server response which will help you identiffy the file on the server
             }
         }        
         this.variable.setData(data);
     },
     change: function(fileList) {
-/*
-        this.updateVariable();
-        if (!this.uploadImmediately) {
-            this._state = "filestoupload";
-            this.progressBar.hide();
-            if (this.useList) {
-                this.updateHtml();
-                this.html.show();
-            }
-
-        }
-        */
         this.updateVariable();
 	this.onChange();
         wm.job(this.getRuntimeId() + ": upload()", 100, dojo.hitch(this, "upload"));
     },
     getHtmlForItem: function(d) {
-//            var img = (!d.uploaded || !this.noDeletionAfterLoad) ? "<img id='" + this.getId() + "_delete" + d.tmpid + "' src='/wavemaker/lib/wm/base/widget/themes/default/images/error.png' /> " : "";
-            //var checkbox = (this.uploadImmediately || this._state == "filestoupload") ?  "<input type='checkbox' id='" + this.getId() + "_checkbox" + d.tmpid + "' " + ((d.included) ? "checked='checked'" : "") + "/> " : "";
-            var checkbox = "<input type='checkbox' id='" + this.getId() + "_checkbox" + d.tmpid + "' " + ((d.included) ? "checked='checked'" : "") + "/> ";
+            var checkbox = (this._uploaderType == "html" || this.uploadImmediately || this._state == "filestoupload") ?  "<input type='checkbox' id='" + this.getId() + "_checkbox" + d.tmpid + "' " + ((d.included) ? "checked='checked'" : "") + "/> " : "";
         return "<div class='wmfileuploaderListItem'>" + checkbox + ((d.error) ? "<span style='color: red' class='FileUploaderError'>" + d.name + "</span>" : d.name) + "</div>";
 
     },
@@ -672,6 +666,12 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
     onSuccess: function(fileList) {
     },
     onError: function(evt) {
+        app.toastError("File failed to upload; " + evt);
+        this.progressBar.hide();
+        if (this.useList) {
+            this.updateHtml();
+            this.html.show();
+        }
     },
     progress: function(fileList) {
         this._state = "uploading";
@@ -714,13 +714,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
         setButtonWidth: function(inWidth) {
             this.buttonWidth = parseInt(inWidth);
             this.buttonPanel.setWidth(inWidth + "px");
-            if (this._uploaderType == "html") {
-                this.adjustButtonWidth();
-            } else {
-                if (this.isDesignLoaded()) {
-                    this.createDijit(); // must recreate the flash widget if size changes; this is why we don't support % sizing
-                }
-            }
+            this.adjustButtonWidth();
         },
         adjustButtonWidth: function(inWidth) {
                 this.button.btnNode.parentNode.style.width = this.button.getContentBounds().w + "px";
@@ -729,13 +723,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
         setButtonHeight: function(inHeight) {
             this.buttonHeight = parseInt(inHeight);
             this.buttonPanel.setHeight(inHeight + "px");
-            if (this._uploaderType == "html") {
-                this.adjustButtonHeight();
-            } else {
-                if (this.isDesignLoaded()) {
-                    this.createDijit(); // must recreate the flash widget if size changes; this is why we don't support % sizing
-                }
-            }
+            this.adjustButtonHeight();
         },
         adjustButtonHeight: function() {
                 var newheight = this.button.getContentBounds().h + "px";
