@@ -175,7 +175,7 @@ dojo.declare("wm.ToolButton", wm.Widget, {
     },
     renderBounds: function() {
         this.inherited(arguments);
-        if (!this._IEButtonTrickUsed && dojo.isIE && dojo.isIE < 9 && this.btnNode && this.btnNode.firstChild) {
+        if (!this._IEButtonTrickUsed && dojo.isIE && dojo.isIE < 9 && this.btnNode && this.btnNode.firstChild && this.btnNode.firstChild.tagName) {
             this._IEButtonTrickUsed = true;
             this.btnNode.firstChild.style.padding = "1px";
             wm.onidle(this, function() {
