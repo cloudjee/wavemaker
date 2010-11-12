@@ -19,7 +19,7 @@
 .wm_template .wmtablayers-tab:hover, .wm_template .wmtablayers-tab:focus {
     
     /* wm.TabLayers-HoverShadow */
-    -moz-box-shadow: 1px 0px 1px #444444;  /* wm.TabLayers-BorderStyle_Shadow */
+    -moz-box-shadow: 1px 0px 1px #444444;  /* wm.TabLayers-Hover-BorderStyle_Shadow */
     -webkit-box-shadow: 1px 0px 1px #444444;   /* wm.TabLayers-Hover-BorderStyle_Shadow */
     box-shadow: 1px 0px 1px #444444;   /* wm.TabLayers-Hover-BorderStyle-Shadow */
 }
