@@ -19,8 +19,6 @@
 
 // built in wm widgets
 
-[ bundlePackage.Common_Widgets, "Bespin", "wm.Bespin", "wm.base.widget.Bespin", "images/wm/button.png", "A simple button"],
-
 [ bundlePackage.Common_Widgets, bundlePackage.Button, "wm.Button", "wm.base.widget.Button", "images/wm/button.png", "A simple button"],
 [ bundlePackage.Common_Widgets, bundlePackage.Toggle_Button, "wm.ToggleButton", "wm.base.widget.Button", "images/wm/button.png", "A simple button"],
 [ bundlePackage.Common_Widgets, bundlePackage.DojoGrid, "wm.DojoGrid", "wm.base.widget.DojoGrid", "images/wm/data.png", "A Dojo grid"],
