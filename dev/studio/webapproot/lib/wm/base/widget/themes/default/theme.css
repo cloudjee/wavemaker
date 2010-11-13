@@ -117,7 +117,6 @@ th {
 	margin: 0px 0px 0px 3px;
 }
 .dj_ie6 .wmtablayers-tab, .dj_ie7 .wmtablayers-tab {
-        border-bottom-color: inherited !important;
         border-bottom-width: 1px !important;
 }
 .dj_ie6 .wmtablayers-tab.wmtablayers-selected, .dj_ie7 .wmtablayers-tab.wmtablayers-selected {
@@ -1014,24 +1013,6 @@ padding-top:2px !important;
 	text-align: center;
 }
 
-.dojoxGrid-header .dojoxGrid-cell { 
-/*	border: 1px solid;*/
-        border-bottom: 1px solid;
-	border-color: #fff #a2b6da #a2b6da #fff;
-	background: url(images/sb_grid_headbg.png) #d3def0 top repeat-x;
-	padding-bottom: 2px;
-	color: #294473;
-	font-weight: normal;
-}
-
-.dojoxGrid-header .dojoxGrid-cell-over {
-	/*background-image: none;
-	background-color: #eaeef6;*/
-	border-bottom-color: #a2b6da;
-	margin-bottom: 0;
-	padding-bottom: 0;
-	border-bottom-width: 3px;
-}
 
 .dojoxGrid-sort-down {
 	background: url(images/grid_sort_down.gif) left no-repeat; 

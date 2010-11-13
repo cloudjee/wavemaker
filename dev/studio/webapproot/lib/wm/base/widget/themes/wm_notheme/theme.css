@@ -128,3 +128,22 @@
 .wm_notheme .wmeditor .dijitComboBox .dijitArrowButton {
     height: 100% !important;
 }
+
+.wm_notheme .dojoxGrid-header .dojoxGrid-cell { 
+/*	border: 1px solid;*/
+        border-bottom: 1px solid;
+	border-color: #fff #a2b6da #a2b6da #fff;
+	background: url(images/sb_grid_headbg.png) #d3def0 top repeat-x;
+	padding-bottom: 2px;
+	color: #294473;
+	font-weight: normal;
+}
+
+.wm_notheme .dojoxGrid-header .dojoxGrid-cell-over {
+	/*background-image: none;
+	background-color: #eaeef6;*/
+	border-bottom-color: #a2b6da;
+	margin-bottom: 0;
+	padding-bottom: 0;
+	border-bottom-width: 3px;
+}
