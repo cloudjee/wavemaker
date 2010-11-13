@@ -138,7 +138,9 @@
     body.tundra .wm_template .wmlist-header,
     body.tundra.wm_template .dojoxGrid-header, 
     body.tundra.wm_template .dojoxGridHeader,
-    body.tundra.wm_template .wmlist-header { 
+    body.tundra.wm_template .wmlist-header,
+    .dj_ie7 .wm_template .dojoxGridHeader .dojoxGridCell, 
+    .dj_ie6 .wm_template .dojoxGridHeader .dojoxGridCell { 
 	background-color: #444444; /* Tables-HeaderRow-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* Tables-HeaderRow-Background_Image */
 	background-position: left top;     /* Tables-HeaderRow_Image-Position */
@@ -302,7 +304,9 @@
     /* Header-Row-Background */
     .wm_template .HeaderContent .dojoxGrid-header, 
     .wm_template .HeaderContent .dojoxGridHeader,
-    .wm_template .HeaderContent .wmlist-header {
+    .wm_template .HeaderContent .wmlist-header,
+    .dj_ie7 .wm_template .HeaderContent .dojoxGridHeader .dojoxGridCell, 
+    .dj_ie6 .wm_template .HeaderContent .dojoxGridHeader .dojoxGridCell {
 	color: #FFFFFF;	/* HeaderContent-ClickablesDefault-Font_Color */
 	background-color: #444444; /* HeaderContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
