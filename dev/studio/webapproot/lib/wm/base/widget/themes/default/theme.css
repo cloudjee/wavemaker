@@ -117,8 +117,11 @@ th {
 	margin: 0px 0px 0px 3px;
 }
 .dj_ie6 .wmtablayers-tab, .dj_ie7 .wmtablayers-tab {
-        border-bottom-color: transparent !important;
+        border-bottom-color: inherited !important;
         border-bottom-width: 1px !important;
+}
+.dj_ie6 .wmtablayers-tab.wmtablayers-selected, .dj_ie7 .wmtablayers-tab.wmtablayers-selected {
+        border-bottom-width: 0px !important;
 }
 .wmtablayers-selected {
 	/*border: 1px solid #939fb6;*/
@@ -126,6 +129,7 @@ th {
 	margin: 0px 0px 0px 3px;
 	position: relative;
 	z-index: 10;
+        top: 1px;
 }
 
 /* ROUNDED TEMPLATE */

@@ -32,6 +32,7 @@
     box-shadow: 0px 0px 0px black;   /* wm.TabLayers-Active-BorderStyle_Shadow */
 }
 
+
 /* Spacing between each tab */
 .wm_template .wmtablayers-tab.wmtablayers-selected,
 .wm_template .wmtablayers-tab.wmtablayers-tab {
@@ -337,7 +338,9 @@ body.wm_template {
 	background-position: left top;  /* Document-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
     }
-
+    .dj_ie6 .wmtablayers-tab, .dj_ie7 .wmtablayers-tab {
+        border-bottom-color: inherited !important; /* Document-ClickablesDefault-Background_Color */
+    }
 
     /* END SECTION wm.TabLayers / wm.TabDecorator */
 
@@ -563,7 +566,9 @@ body.wm_template {
 	background-position: left top;  /* MainContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
     }
-
+    .dj_ie6 .MainContent .wmtablayers-tab, .dj_ie7 .MainContent .wmtablayers-tab {
+        border-bottom-color: inherited !important; /* MainContent-ClickablesDefault-Background_Color */
+    }
 
     /* END SECTION wm.TabLayers / wm.TabDecorator */
 
@@ -767,7 +772,9 @@ body.wm_template {
 	background-position: left top;  /* EmphasizedContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesActive-Background_Image-Repeat */
     }
-
+    .dj_ie6 .EmphasizedContent .wmtablayers-tab, .dj_ie7 .EmphasizedContent .wmtablayers-tab {
+        border-bottom-color: inherited !important; /* EmphasizedContent-ClickablesDefault-Background_Color */
+    }
 
     /* END SECTION wm.TabLayers / wm.TabDecorator */
 
@@ -965,12 +972,14 @@ body.wm_template {
 	color: #FFFFFF; /* HeaderContent-ClickablesActive-Font_Color */
 
 	/* HeaderContent-ClickablesActive-Background */
-	background-color: #444444; /* HeaderContent-ClickablesActive-Background_Color */
+	background-color: #444444; /* HeaderContent-ClickablesActive-x[Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesActive-Background_Image */
 	background-position: left top;  /* HeaderContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
     }
-
+    .dj_ie6 .HeaderContent .wmtablayers-tab, .dj_ie7 .HeaderContent .wmtablayers-tab {
+        border-bottom-color: inherited !important; /* HeaderContent-ClickablesDefault-Background_Color */
+    }
 
     /* END SECTION wm.TabLayers / wm.TabDecorator */
 
