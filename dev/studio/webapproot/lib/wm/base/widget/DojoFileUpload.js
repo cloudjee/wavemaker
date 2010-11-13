@@ -522,7 +522,10 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
         this._serviceVariable.update();
         this._serviceVariable.setOperation(oldOp);
 	var node = dojo.byId(this.getId() + "_checkbox" + item.tmpid).parentNode;
-        dojo.anim(node, {height: 0},350, null, function() {dojo.destroy(node);});
+        if (!dojo.isIE || dojo.isIE >= 8)
+            dojo.anim(node, {height: 0},350, null, function() {dojo.destroy(node);});
+        else
+            dojo.destroy(node);
         //this.updateHtml();
     },
     // if this is a flash widget, fileList is an array of "wm.DojoFileUpload.FileData" objects (see definition in init method)
@@ -542,7 +545,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
             
             this.progressBar.hide();
             if (this.useList) {
-		if (fileList.length == 1 && this._uploaderType == "html") {
+		if (fileList.length == 1 && this._uploaderType == "html" && (!dojo.isIE || dojo.isIE >= 8)) {
 		    var html = this.getHtmlForItem(this.variable.getItem(0).getData()).replace("div", "div style='height:0''");
 /*
 		    var div = document.createElement("div");
@@ -634,12 +637,15 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
                         this.variable.removeItem(index);
                         this._variable.addItem(item);
 			var itemData = item.getData();
-			if (String(this.autoDeleteDelay).match(/^\d+$/))
+			if (this.autoDeleteDelay && String(this.autoDeleteDelay).match(/^\d+$/)) {
 			    console.log(this.getRuntimeId() + ":removeUncheckedFile:"+itemData.tmpid);
 			    wm.job(this.getRuntimeId() + ":removeUncheckedFile:"+itemData.tmpid, this.autoDeleteDelay*1000, 
 				   dojo.hitch(this, function() {
 				       this.deleteFileItem(item);
 				   }));
+                        } else {
+			    this.deleteFileItem(item);
+                        }
 
                     }
                 }
