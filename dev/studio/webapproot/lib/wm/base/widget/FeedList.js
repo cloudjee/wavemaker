@@ -62,7 +62,15 @@ dojo.declare("wm.FeedList", wm.List, {
 	updateHeaderWidth: function() {
 		if (this.headerNode.firstChild) {
 			dojo.marginBox(this.headerNode.firstChild, {w: this.width});
+			this.updateItemListHeight();
 		}
+	},
+	updateItemListHeight: function(){
+		var domNodeBox = dojo.contentBox(this.domNode);
+		var headerBox = dojo.marginBox(this.headerNode);
+		var listNodeHeight = domNodeBox.h - headerBox.h;
+		console.info('setting height for list node = ', listNodeHeight);
+		dojo.marginBox(this.listNode, {h:listNodeHeight});
 	},
 	getCellContent: function(inRow, inCol, inHeader) {
 		var d = this.getItemData(this.getCount());
