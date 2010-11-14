@@ -452,12 +452,10 @@ Studio.widgets = {
 						}],
 						cssEditArea: ["wm.EditArea", {width: "100%", height: "100%", syntax: "css"}, {}],
 						cssSplitter: ["wm.Splitter", {layout: "bottom"}, {}],
-						cssAppPanel: ["wm.Panel", {height: "300px", border: "0"}, {}, {
-						    cssAppLabel: ["wm.Label", {caption: bundleStudio.R_Application_CSS, height: "18px", border: 0}, {}, {
-							format: ["wm.DataFormatter", {}, {}]
-						    }],
-						    appCssEditArea: ["wm.EditArea", {width: "100%", height: "100%", syntax: "css"}, {}]
-						}]
+                cssAppLabel: ["wm.Label", {caption: bundleStudio.R_Application_CSS, height: "18px", border: 0}, {}, {
+              format: ["wm.DataFormatter", {}, {}]
+                }],
+                appCssEditArea: ["wm.EditArea", {width: "100%", height: "300px", syntax: "css"}, {}]
                                             }],
 						markupLayer: ["wm.Layer", {caption: bundleStudio.R_Markup}, {}, {
 							benchbevel10: ["wm.Bevel", {}, {}],
