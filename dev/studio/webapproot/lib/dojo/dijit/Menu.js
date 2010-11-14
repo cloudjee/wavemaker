@@ -97,9 +97,9 @@ dojo.declare("dijit._MenuBase",
 		// Don't do anything unless user has "activated" the menu by:
 		//		1) clicking it
 		//		2) opening it from a parent menu (which automatically focuses it)
-		if(this.isActive){
+		if(this.isActive || this.openOnHover){
 			this.focusChild(item);
-			if(this.focusedChild.popup && !this.focusedChild.disabled && !this.hover_timer){
+			if(this.openOnHover || (this.focusedChild.popup && !this.focusedChild.disabled && !this.hover_timer)){
 				this.hover_timer = setTimeout(dojo.hitch(this, "_openPopup"), this.popupDelay);
 			}
 		}

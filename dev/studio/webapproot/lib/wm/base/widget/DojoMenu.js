@@ -28,6 +28,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 	dojoObj:null,
 	menu:'',
 	vertical: false,
+	openOnHover:false,
 	eventList:[],
 	menuItems: [],
 	
@@ -79,14 +80,21 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 			return;
 		}
 	  */
-		if (this.dojoObj)
-			this.dojoObj.destroyRecursive();
+		if (this.dojoObj) {
+		  this.dojoObj.destroyRecursive();
+			if (this.hoverConnect)
+			 dojo.disconnect(this.hoverConnect);
+	  }
+		
 		this.menuItems = [];
 		if (this.vertical)
-			this.dojoObj = new dijit.Menu({style:'width:0%'});
+			this.dojoObj = new dijit.Menu({style:'width:0%', openOnHover:this.openOnHover});
 		else
-			this.dojoObj = new dijit.MenuBar({});
+			this.dojoObj = new dijit.MenuBar({openOnHover:this.openOnHover});
 		dojo.addClass(this.dojoObj.domNode, this.id + '_CSS');
+		if (this.openOnHover && !this.vertical){
+		  this.hoverConnect = dojo.connect(this.dojoObj, 'onItemHover', this, '_onItemHover');	
+		}
 		
 		this.dojoObj.placeAt(this.domNode);
 
@@ -108,6 +116,10 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		}
 		
 		this.dojoRenderer();
+	},
+	_onItemHover: function(item){
+		console.info('_onItemHover called .......');
+		this.dojoObj.focusChild(item);
 	},
 	addMenuChildren: function(parentObj, data, isTop){
 		var menuObj = null;
@@ -394,6 +406,18 @@ wm.DojoMenu.extend({
 		}
 		
 		return this.inherited(arguments);
+	},
+	setOpenOnHover: function(inValue){
+		this.openOnHover = inValue;
+    if (this.dojoObj)
+		  this.dojoObj.openOnHover = this.openOnHover;
+			
+    if (this.openOnHover && !this.vertical){
+      this.hoverConnect = dojo.connect(this.dojoObj, 'onItemHover', this, '_onItemHover');  
+    } else {
+      if (this.hoverConnect)
+			 dojo.disconnect(this.hoverConnect);  
+		}
 	},
 	setMenu: function(inValue){
 		this.menu = inValue;

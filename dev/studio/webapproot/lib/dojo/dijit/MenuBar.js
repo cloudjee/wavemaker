@@ -9,7 +9,8 @@ dojo.declare("dijit.MenuBar", dijit._MenuBase, {
 	templateString: dojo.cache("dijit", "templates/MenuBar.html"),
 
 	baseClass: "dijitMenuBar",
-
+  openOnHover: false,
+	
 	// _isMenuBar: [protected] Boolean
 	//		This is a MenuBar widget, not a (vertical) Menu widget.
 	_isMenuBar: true,
@@ -32,7 +33,7 @@ dojo.declare("dijit.MenuBar", dijit._MenuBase, {
 		var prev_item = this.focusedChild,
 			showpopup = prev_item && prev_item.popup && prev_item.popup.isShowingNow;
 		this.inherited(arguments);
-		if(showpopup && item.popup && !item.disabled){
+		if(this.openOnHover || (showpopup && item.popup && !item.disabled)){
 			this._openPopup();		// TODO: on down arrow, _openPopup() is called here and in onItemClick()
 		}
 	},
