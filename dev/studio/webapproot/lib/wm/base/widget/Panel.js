@@ -523,6 +523,8 @@ wm.Object.extendSchema(wm.FancyPanel, {
     innerLayoutKind: {group: "layout", order: 100, shortname: "layoutKind"},
     innerHorizontalAlign: {group: "layout", order: 101, shortname: "horizontalAlign"},
     innerVerticalAlign: {group: "layout", order: 101, shortname: "verticalAlign"},
+    horizontalAlign: {ignore: 1},
+    verticalAlign: {ignore: 1},
     padding: {ignore: 1},
     labelHeight: {group: "layout", order: 90},
     border: {ignore: 1},
