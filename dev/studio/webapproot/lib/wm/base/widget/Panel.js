@@ -324,7 +324,7 @@ dojo.declare("wm.FancyPanel", wm.Panel, {
 	var result = [];
 	if (this.containerWidget)
 	    result = result.concat(this.containerWidget.writeComponents(inIndent, inOptions));
-	if (this.components.binding)
+	if (this.components.binding && !wm.isEmpty(this.components.binding.$))
 	    result = result.concat(this.components.binding.write(inIndent, inOptions));
 	return result;
     },
