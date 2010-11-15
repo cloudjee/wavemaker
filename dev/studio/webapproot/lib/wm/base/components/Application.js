@@ -49,21 +49,6 @@ dojo.declare("wm.Application", wm.Component, {
 	        if (dojo.isIE && dojo.isIE < 8 || dojo.isIE == 9) this.dialogAnimationTime = 0;
 		this.pageDialog = new wm.PageDialog({name: "pageDialog", owner: this});
 		this.toastDialog = new wm.Toast({name: "toastDialog", owner: this});
-	       try{
-		    this.alertDialog = new wm.GenericDialog({name: "alertDialog",
-                                                             _noAnimation: true,
-						     owner: this,
-						     title: "Alert!",
-						     noEscape: false,
-						     width: "300px",
-						     height: "180px",
-						     button1Caption: "OK",
-						     button1Close: true,
-						     userPrompt: ""});
-                this.alertDialog.domNode.style.zIndex = 45;
-		   } catch(e){
-		   	console.info('error while creating alert Dialog ', e);
-		   }
 		this.createPageLoader();
 		this.components = {};
 	    //this.scrim = new wm.Scrim();
@@ -585,6 +570,22 @@ dojo.declare("wm.Application", wm.Component, {
 	this.echoFileService.update();
     },
         alert: function(inText, nonmodal) {
+            if (!this.alertDialog) {
+		    this.alertDialog = new wm.GenericDialog({name: "alertDialog",
+                                                             _noAnimation: true,
+						     owner: this,
+						     title: "Alert!",
+						     noEscape: false,
+						     width: "300px",
+						     height: "180px",
+						     button1Caption: "OK",
+						     button1Close: true,
+						     userPrompt: ""});
+                this.alertDialog.domNode.style.zIndex = 45;
+
+            }
+
+
 	    if (dojo.isObject(inText))
 		inText = inText.toString();
 	    nonmodal = Boolean(nonmodal);
