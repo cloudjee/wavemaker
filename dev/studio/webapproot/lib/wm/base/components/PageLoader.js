@@ -79,7 +79,8 @@ dojo.declare("wm.PageLoader", wm.Component, {
 		        ctor = dojo.getObject(inName);
                 }
                 if (!ctor) {
-                    app.alert("Error parsing " + inPath + ".js");
+                    app.toastError("Page " + inName + ".js had errors");
+                    console.error("Error parsing " + inPath + ".js");
                     this.onError("Error parsing " + inPath + ".js");
                     ctor = dojo.declare(inName, wm.Page); // so at least we can display widgets.js
 		}
@@ -138,12 +139,15 @@ dojo.declare("wm.PageLoader", wm.Component, {
 		    this.pageChanged();
 		    this.unloadSupport(ctor);
 	        } else {
-		    console.log("Page not found:", inClassName);
+		    console.error("Page not found:", inClassName);
                     this.onError("Page not found:" + inClassName);
                 }
-                if (!this.page || !this.page.root)
+                if (!this.page || !this.page.root) {
+		    console.error("Page not found:", inClassName);
                     this.onError("Page not loaded:" + inClassName);
+                }
 	    } catch(e) { 
+		console.error("Page not found:", inClassName);
                 this.onError(e);
             }
 
