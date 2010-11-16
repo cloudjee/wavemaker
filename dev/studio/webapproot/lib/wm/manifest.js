@@ -156,12 +156,14 @@ wm.loadLibs([
 	"wm.base.widget.Ticker",
 	"wm.base.widget.Composite",
 	"wm.base.widget.Cards",
+        //"wm.base.widget.Bespin",
 	// Dijits
 	"wm.base.widget.dijit.Dijit",
 	"wm.base.widget.dijit.CheckBox",
 	"wm.base.widget.dijit.Calendar",
 	"wm.base.widget.dijit.ProgressBar",
         "wm.base.widget.DojoFileUpload",
+        "wm.base.widget.DojoFlashFileUpload",
 	// dojo firebug debugger
 	//"dojo._firebug.firebug",
 	// Grid
