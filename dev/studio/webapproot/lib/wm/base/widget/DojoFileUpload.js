@@ -17,6 +17,8 @@
  */
 dojo.provide("wm.base.widget.DojoFileUpload");
 dojo.require("wm.base.widget.Panel");
+dojo.require("wm.base.widget.Html");
+dojo.require("wm.base.widget.dijit.ProgressBar");
 dojo.require("dojo.io.iframe");
 
 
@@ -127,6 +129,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
     // initialize new types
     // setup design time parameters
     init: function() {
+
 	    this.inherited(arguments);
             dojo.require("dojox.form.FileUploader");
 
@@ -152,12 +155,20 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
             this._serviceVariable = new wm.ServiceVariable({owner: this, operation: this.operation, service: this.service});
             this.connect(this._serviceVariable, "onSuccess", this, "onSuccess");
             this.connect(this._serviceVariable, "onError", this, "onError");
+
             this.variable = new wm.Variable({name: "variable", owner: this, type: "wm.DojoFileUpload.FileData", isList: true});
             this.variable.isList= true; // this value got killed off by Variable.js:setType
+            this.variable.setData([]);
+
             this._variable = new wm.Variable({name: "_variable", owner: this, type: "wm.DojoFileUpload.FileData", isList: true});
+            this._variable.isList= true; // this value got killed off by Variable.js:setType
             this._variable.setData([]);
+
+
             this._uploadedVariable =  new wm.Variable({name: "_uploadedVariable", owner: this, type: "wm.DojoFileUpload.FileData", isList: true});
+
             this._uploadedVariable.setData([]);
+
 
             // If the design is loaded, strip out uneditable input fields that are managed by the flash widget... 
             // if we're using the flash widget
@@ -181,6 +192,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
     // We created the components in init; we don't need the widgets created until postInit
     // here we create the wm.Html, the progressbar and the button.
     postInit: function() {
+
 	this.inherited(arguments);
 
         // this.input actually points to the servicevaraible's input.  This seemed a lot simpler
@@ -192,8 +204,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
             this.$.input = this._serviceVariable.$.input;
         }
         this.input = this.$.input;
-        
-        
+
         this.html = 
             new wm.Html({parent: this,
                          owner: this,
@@ -204,6 +215,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
                          padding: "2",
                          html: "<i>No files selected</i>",
                          showing: this.useList});
+
         this.progressBar = 
             new wm.dijit.ProgressBar({parent: this,
                                       owner: this,
@@ -223,8 +235,9 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
                           parent: this,
                           horizontalAlign: "left",
                           verticalAlign: "top"});
-        this.createButton();
 
+
+        this.createButton();
 
         if (this._uploaderType == "flash") {
             // Without this, that flash widget will show up even if its not visible
