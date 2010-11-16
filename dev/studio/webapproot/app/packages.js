@@ -46,7 +46,7 @@
 [ bundlePackage.Editor, bundlePackage.TextArea, "wm.LargeTextArea", "wm.base.widget.Editors.Text", "images/wm/edit.png", "An editor for multiline text"],
 [ bundlePackage.Editor, bundlePackage.Time, "wm.Time", "wm.base.widget.Editors.Date", "images/wm/edit.png", "An editor for time"],
 [ bundlePackage.Editor, bundlePackage.RichText, "wm.RichText", "wm.base.widget.Editors.RichText", "images/wm/edit.png", "An rich text editor"],
-[ bundlePackage.Editor, bundlePackage.ColorPicker, "wm.ColorPicker", "wm.base.widget.Editors.Text", "images/wm/edit.png", "A text editor that pops up a color picker dialog"],
+
 
 [ bundlePackage.Dialogs, bundlePackage.GenericDialog, "wm.GenericDialog", "wm.base.widget.Dialog", "images/wm/button.png", "A simple button"],
 [ bundlePackage.Dialogs, bundlePackage.PageDialog, "wm.PageDialog", "wm.base.widget.Dialog", "images/wm/button.png", "A simple button"],
