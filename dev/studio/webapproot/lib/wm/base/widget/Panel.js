@@ -131,7 +131,9 @@ dojo.declare("wm.FancyPanel", wm.Panel, {
                                                      fitToContentWidth: this.fitToContentWidth,
                                                      /* margin: "0,0,7,0",*/
                                                      border:         "0,"+innerBorder.r+","+innerBorder.b+","+innerBorder.l,
-                                                     borderColor: this.borderColor});
+                                                     borderColor: this.borderColor,
+                                                     _assignChildrenToOwner: this.owner                
+            });
 
 	    this.containerWidget.setLayoutKind(this.innerLayoutKind);
 	    this.widgets.labelWidget = this.labelWidget;

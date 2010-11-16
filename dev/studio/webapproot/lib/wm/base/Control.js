@@ -686,7 +686,8 @@ this.label.enable();
 	},
 	adjustChildProps: function(inCtor, inProps) {
 	        if (wm.isClassInstanceType(inCtor, wm.Control))
-			dojo.mixin(inProps, {owner: this.owner, parent: this});
+                    // assignChildrenToOwner allows a widget to be owned by a container, the container is owned by the page, and that widget's children are also owned by the page
+			dojo.mixin(inProps, {owner: this._assignChildrenToOwner || this.owner, parent: this});
 		else
 			this.inherited(arguments);
 	},
