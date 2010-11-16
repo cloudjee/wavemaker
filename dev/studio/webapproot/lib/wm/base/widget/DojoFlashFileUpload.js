@@ -112,7 +112,7 @@ dojo.declare("wm.DojoFlashFileUpload", wm.DojoFileUpload, {
                 this.button.btnNode = div;
 
                 this.dijit.insideNode.style.opacity = "0.01";
-                this.dijit.insideNode.style.filter = "alpha(opacity=50)";
+                this.dijit.insideNode.style.filter = "alpha(opacity=1)";
 
         this.button.caption = this.buttonCaption;
         this.button.render(true,true);
