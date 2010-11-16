@@ -67,7 +67,9 @@
          border-radius-bottomright: 2px;/* wm.SelectMenu-Inner_Radius */
          border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
 }
-
+.dj_ie6 .wm_template .wmeditor .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
+    background-position: 50% 100%;
+}
   /**************************************************************************************************
    * TYPE:        Slider
    *
@@ -129,6 +131,13 @@
 
     }
 
+    .dj_ie6 .wm_template .wmeditor .dijitTextBox,
+    .dj_ie6 .wm_template .wmeditor .dijitTextArea,
+    .dj_ie6 .wm_template .wmeditor .dijitComboBox,
+    .dj_ie6 .wm_template .dijitTimePickerItem,
+    .dj_ie6 .wm_template .wmeditor .RichTextEditable iframe {
+        background-image: none !important;
+    }
 
     .wm_template .wmeditor .dijitTextBox.dijitHover,
     .wm_template .wmeditor .dijitTextArea:hover,
