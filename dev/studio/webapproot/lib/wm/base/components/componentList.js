@@ -92,6 +92,9 @@ wm.componentList = {
 	'wm.CompositeMixin':['wm.base.widget.Composite'],
 	'wm.Ticker':['wm.base.widget.Ticker'],
 	'wm.FileUpload':['wm.base.widget.FileUpload'],
+	'wm.DojoFileUpload':['wm.base.widget.DojoFileUpload'],
+	'wm.DojoFlashFileUpload':['wm.base.widget.DojoFlashFileUpload'],
+
 	'wm.Popup':['wm.base.widget.Popup'],
 	'wm.Service':['wm.base.components.Service'],
 	'wm.ServiceCall':['wm.base.components.ServiceCall'],
