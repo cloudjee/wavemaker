@@ -21,6 +21,13 @@
     background-position: left top;  /* Document-ClickablesDefault-Background_Image-Position */
     background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
 }
+.dj_ie6 .wm_template tr.dijitCalendarMonthContainer th {
+    background-image: none !important;
+}
+
+.dj_ie6 .wm_template .dijitCalendarArrow img {
+    background-color: white !important;
+}
 
 .wm_template tr.dijitCalendarMonthContainer th .dijitCalendarMonthLabel {
     /* Document-ClickablesDefault-Font */
