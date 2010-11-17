@@ -39,6 +39,9 @@
 	background-position: left top;  /* Document-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
     }
+    .dj_ie6 .wm_template .wmbutton {
+        background-image: none !important;
+    }
 
     /**************************************************************************************************
        * TYPE:        Active Styling
