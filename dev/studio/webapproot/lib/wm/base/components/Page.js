@@ -98,7 +98,7 @@ dojo.declare("wm.Page", wm.Component, {
 	    this._loadingPage = true;
 	    var startTime = new Date().getTime();
 	    var widgets = this.constructor.widgets || this.widgets;
-	    if (wm.isEmpty(widgets)) {
+	    if (wm.isEmpty(widgets) && !this.isDesignLoaded()) {
 	        console.error("Page " + this.name + " has been corrupted, and no longer has a wm.Layout nor any widgets; please create a new project or edit " + this.name + ".widgets.js by hand");
 		app.toastError("Page " + this.name + " has errors");
             }
