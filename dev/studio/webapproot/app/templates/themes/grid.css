@@ -77,7 +77,8 @@
     .wm_template div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_template div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
     .wm_template .wmlist-item.wmlist-item-selected,
-    .wm_template .wmlist-item.wmlist-item-selected.wmlist-item-over {
+    .wm_template .wmlist-item.wmlist-item-selected.wmlist-item-over,
+    .dj_ie6 .wm_template .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* Document-ClickablesActive-Background */
 	background-color: #333333 !important; /* Document-ClickablesActive-Background_Color */
 
@@ -87,6 +88,7 @@
 
     /* Custom mouse-over color for rows */
     .wm_template .wmlist-item.wmlist-item-over,
+    .dj_ie6 .wm_template .wmlist-item.wmlist-item-over,
     .wm_template div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_template .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
     .wm_template .dojoxGridRow.dojoxGridRowOver, 
@@ -147,6 +149,13 @@
 	background-repeat: repeat-x;    /* Tables-HeaderRow_Image-Repeat */
     }
 
+    .dj_ie6 .wm_template .dojoxGrid-header,
+    .dj_ie6 .wm_template .dojoxGridHeader,
+    .dj_ie6 .wm_template .wmlist-header,
+    .dj_ie6 .wm_template .dojoxGridHeader .dojoxGridCell {
+        background-image: none !important;
+    }
+
 }
 
 @media screen { /* MainContent-Level */ 
@@ -157,7 +166,8 @@
     .wm_template .MainContent div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_template .MainContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
     .wm_template .MainContent .wmlist-item.wmlist-item-selected,
-    .wm_template .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
+    .wm_template .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over, 
+    .dj_ie6 .wm_template .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* MainContent-ClickablesActive-Background */
 	background-color: #333333 !important; /* MainContent-ClickablesActive-Background_Color */
 
@@ -167,6 +177,7 @@
 
     /* Custom mouse-over color for rows */
     .wm_template .MainContent .wmlist-item.wmlist-item-over,
+    .dj_ie6 .wm_template .MainContent .wmlist-item.wmlist-item-over,
     .wm_template .MainContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_template .MainContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
     .wm_template .MainContent .dojoxGridRow.dojoxGridRowOver, 
@@ -200,7 +211,8 @@
     .wm_template .EmphasizedContent div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_template .EmphasizedContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
     .wm_template .EmphasizedContent .wmlist-item.wmlist-item-selected,
-    .wm_template .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
+    .wm_template .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over,
+    .dj_ie6 .wm_template .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* EmphasizedContent-ClickablesActive-Background */
 	background-color: #333333 !important; /* EmphasizedContent-ClickablesActive-Background_Color */
 
@@ -210,6 +222,7 @@
 
     /* Custom mouse-over color for rows */
     .wm_template .EmphasizedContent .wmlist-item.wmlist-item-over,
+    .dj_ie6 .wm_template .EmphasizedContent .wmlist-item.wmlist-item-over,
     .wm_template .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_template .EmphasizedContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
     .wm_template .EmphasizedContent .dojoxGridRow.dojoxGridRowOver, 
@@ -243,7 +256,8 @@
     .wm_template .HeaderContent div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_template .HeaderContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
     .wm_template .HeaderContent .wmlist-item.wmlist-item-selected,
-    .wm_template .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
+    .wm_template .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over,
+    .dj_ie6 .wm_template .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* HeaderContent-ClickablesActive-Background */
 	background-color: #333333 !important; /* HeaderContent-ClickablesActive-Background_Color */
 
@@ -253,6 +267,7 @@
 
     /* Custom mouse-over color for rows */
     .wm_template .HeaderContent .wmlist-item.wmlist-item-over,
+    .dj_ie6 .wm_template .HeaderContent .wmlist-item.wmlist-item-over,
     .wm_template .HeaderContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_template .HeaderContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
     .wm_template .HeaderContent .dojoxGridRow.dojoxGridRowOver, 
