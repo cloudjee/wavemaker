@@ -67,9 +67,7 @@
          border-radius-bottomright: 2px;/* wm.SelectMenu-Inner_Radius */
          border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
 }
-.dj_ie6 .wm_template .wmeditor .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
-    background-position: 50% 100%;
-}
+
   /**************************************************************************************************
    * TYPE:        Slider
    *
