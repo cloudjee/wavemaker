@@ -12,12 +12,12 @@
 }
 
 .wm_template .dijitMenu .dijitMenuArrowCell img.dijitMenuExpand {
-   background-image: url("images/dropArrowBlack.png") !important; /* wm.DojoMenu_Image */    
+   background-image: url("images/dropArrowBlack.png") !important; /* wm.DojoMenu-Right_Image */    
     background-position: 0% 50% !important;
 }
 
 .wm_template div.dijitMenuBar div.dijitMenuItem {
-   background-image: url("images/dropArrowBlack.png") !important; /* wm.DojoMenu_Image */
+   background-image: url("images/dropArrowBlack.png") !important; /* wm.DojoMenu-Down_Image */
    background-position: 100% 50% !important;
    background-repeat: no-repeat !important;
     padding-right: 15px !important;
