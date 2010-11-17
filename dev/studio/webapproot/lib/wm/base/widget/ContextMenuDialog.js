@@ -115,6 +115,11 @@ dojo.declare("wm.ContextMenuDialog", null, {
 	
 	createRightClickMenu: function(){
 		this.menu = new dijit.Dialog({title:this.dialogTitle},dojo.doc.createElement('div'));
+		this.titleBarClass = 'wmcontainer wmPageDialog-titleBar dialogtitlebar wmlabel wmGenericDialog-dialogTitleLabel';
+		dojo.removeClass(this.menu.titleBar, 'dijitDialogTitleBar');
+    dojo.addClass(this.menu.titleBar, this.titleBarClass);
+		this.menu.domNode.style.border = '1px solid #333333';
+		
 		if (this.helpText){
 			this.helpTextDiv = dojo.create('div', {innerHTML:this.helpText, style:'padding-left:5px;margin:5px;background:#FFF1A8;border:1px solid #DCDCDC;'}, this.menu.containerNode);
 		}
@@ -141,7 +146,8 @@ dojo.declare("wm.ContextMenuDialog", null, {
 		if (this.addDeleteColumn){
 			if (this.hasAdvancedColumn)
 				this.deleteButtonProps.isAdvanced = true;
-			this.addHeaderColumn(tr, this.deleteButtonProps);
+			var deleteTD = this.addHeaderColumn(tr, this.deleteButtonProps);
+			deleteTD.style.backgroundColor = '#FFFFFF'; 
 		}
 
 		this.rightClickTBody = dojo.doc.createElement('tbody');
@@ -196,6 +202,8 @@ dojo.declare("wm.ContextMenuDialog", null, {
 			td.style.display = 'none';
 			this.advancedColumns.push(td);
 		}
+		
+		return td;
 	},
 	addNewRow: function(obj, headerAttr, tbody){
 		var tr = dojo.doc.createElement('tr');
