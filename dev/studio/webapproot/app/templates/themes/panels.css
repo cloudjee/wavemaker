@@ -205,7 +205,9 @@ body.tundra .wm_template  div.wmheader,
     color: #FFFFFF; /* Document-Styles-Font_Color */
     font-weight: bold; /* Document-Styles-Font_Weight */
 }
-
+.dj_ie6 .wm_template .wmlayout {
+    background-image: none !important;
+}
 
 #studio_designer.wm_template, 
 body.wm_template {
@@ -234,7 +236,9 @@ body.wm_template {
 
 	padding-left: 10px;
     }
-
+.dj_ie6 .wm_template .wmaccordion-header {
+    background-image: none !important;
+}
     .wm_template div.wmaccordion .wmaccordion-collapsed {
 	/* Document-ClickablesDefault-Font */
 	color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
@@ -287,6 +291,10 @@ body.wm_template {
     background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
 }
 
+    .dj_ie6 .wm_template .wmFancyPanel-labelWidget {
+        background-image: none !important;
+    }
+
     /* Tab buttons */
     .wm_template button.wmtablayers-tab {
 	/* Document-ClickablesDefault-Font */
@@ -312,6 +320,11 @@ body.wm_template {
 
     }
 
+    .dj_ie6 .wm_template .wmtablayers-tab {
+        background-image: none !important;
+    }
+
+
     .wm_template .wmtablayers-tab:hover, .wm_template .wmtablayers-tab:focus {
 	/* Document-ClickablesHover-Font */
 	color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
@@ -326,6 +339,7 @@ body.wm_template {
 
 
     /* Selected tab */
+    .dj_ie6 .wm_template .wmtablayers-tab.wmtablayers-selected,
     .wm_template .wmtablayers-tab.wmtablayers-selected,
     .wm_template .wmtablayers-tab.wmtablayers-selected:hover,
     .wm_template .wmtablayers-tab.wmtablayers-selected:focus {
@@ -371,6 +385,9 @@ body.wm_template {
         background-position: left top;  /* Document-ClickablesDefault-Background_Image-Position */
         background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
     }
+.dj_ie6 .wm_template .dijitTitlePaneTitle {
+    background-image: none !important;
+}
     .wm_template .dojoxPortlet div.dijitTitlePaneTitle .dijitTitlePaneTextNode {
         color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
     }
@@ -440,6 +457,10 @@ body.wm_template {
     background-image: url(images/repeatx/brightEdge1.png); /* MainContent-Styles-Background_Image */
     background-position: left top;  /* MainContent-Styles-Background_Image-Position */
     background-repeat: repeat-x; /* MainContent-Styles-Background_Image-Repeat */
+}
+
+.dj_ie6 .wm_template .MainContent {
+    background-image: none !important;
 }
 
 #studio_themesPage_themeDesigner_demoPanelTabLayers_client .MainContent,
@@ -647,6 +668,10 @@ body.wm_template {
     background-repeat: repeat-x; /* EmphasizedContent-Styles-Background_Image-Repeat */
 }
 
+.dj_ie6 .wm_template .EmphasizedContent {
+    background-image: none !important;
+}
+
 #studio_themesPage_themeDesigner_demoPanelTabLayers_client .EmphasizedContent,
 .wm_template #studio_themesPage_themeDesigner_demoPanel .EmphasizedContent {
     /* EmphasizedContent-Styles-Font */
@@ -850,6 +875,10 @@ body.wm_template {
     background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-Styles-Background_Image */
     background-position: left top;  /* HeaderContent-Styles-Background_Image-Position */
     background-repeat: repeat-x; /* HeaderContent-Styles-Background_Image-Repeat */
+}
+
+.dj_ie6 .wm_template .HeaderContent {
+    background-image: none !important;
 }
 
 #studio_themesPage_themeDesigner_demoPanelTabLayers_client .HeaderContent,

@@ -42,6 +42,9 @@
     background-position: left top;  /* Dialogs-Styles-Background_Image-Position */
     background-repeat: repeat-x; /* Dialogs-Styles-Background_Image-Repeat */
 }
+.dj_ie6 .wm_template .dialogtitlebar {
+    background-image: none !important;
+}
 .wm_template .dialogtitlebar {
     /* Automatically calculated to be 2px less than MainContent-Styles-Border_Style-Radius */
     -moz-border-radius-topleft: 2px; /* wm.Dialog_Inner-Radius */
@@ -140,7 +143,6 @@ body .wm_template .dialogfooter .wmbutton {
     -webkit-box-shadow: 4px 4px 4px black; /* Dialogs-FooterButtonsDefault-BorderStyle_Shadow */
     box-shadow: 4px 4px 4px black; /* Dialogs-FooterButtonsDefault-BorderStyle_Shadow */
 }
-
 
 
   /**************************************************************************************************
