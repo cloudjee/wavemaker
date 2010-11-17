@@ -95,6 +95,13 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	    var h = this.editorNode.style.height.match(/\d+/)[0];
             
 	    //this.editorNode.style.lineHeight = '';
+            if (dojo.isIE && dojo.isIE < 8) { // tested for IE7
+	        var n = dojo.query(".dijitArrowButtonInner", this.domNode)[0];
+                var s = n.style;
+                var c = dojo.coords(n);
+                s.position = "relative";
+                s.top = Math.floor((h-c.h)/2) + "px";
+            }
 /*
 	    var arrowNode = dojo.query(".dijitArrowButtonInner", this.domNode)[0];
 	    if (arrowNode) arrowNode.style.height = (h-2) + "px";
@@ -499,6 +506,15 @@ dojo.declare("wm._SelectEditor", wm._BaseEditor, {
 		    this.editor.downArrowNode.style.height = this.editor.domNode.style.height;
                     if (this.editor.downArrowNode.childNodes.length == 1)
 		        this.editor.downArrowNode.childNodes[0].style.height = this.editor.domNode.style.height ;
+                }
+
+                if (dojo.isIE && dojo.isIE < 8) {
+	            var n = dojo.query(".dijitArrowButtonInner", this.domNode)[0];
+                    var h = dojo.coords(this.editor.domNode).h;
+                    var s = n.style;
+                    var c = dojo.coords(n);
+                    s.position = "relative";
+                    s.top = Math.floor((h-c.h)/2) + "px";
                 }
             }
 	},
