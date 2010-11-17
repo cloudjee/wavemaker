@@ -52,7 +52,10 @@
 	background-repeat: repeat-x; /* Document-EditorsDefault-Background_Image-Repeat */
     }
 }
-
+    .dj_ie6 .wm_template .dijitProgressBarTile,
+    .dj_ie6 .wm_template .dijitProgressBar {
+        background-image: none !important;
+    }
 
 @media screen { /* MainContent-Level */ 
     .wm_template .MainContent .wmprogressbar .dijitProgressBarTile {
