@@ -1,12 +1,12 @@
 <!-- NOTE: I had to stop tomcat, restart tomcat, run ant to deploy new studio before changes to this file could be seen; MK -->
 <project name="app-deploy" default="testrunstart" basedir=".">
-    <!--property name="project.dir" value="${basedir}" /-->
-    <!--property name="studio.webapproot.dir" value="${project.dir}/webapproot"/-->
-    <!--property name="wavemaker.home" value="${project.dir}/.."/-->
+    <property name="project.dir" value="${basedir}" />
+    <property name="studio.webapproot.dir" value="${project.dir}/webapproot"/>
+    <property name="wavemaker.home" value="${project.dir}/.."/>
 
-    <!--property name="project.encoding" value="UTF-8"/-->
-    <!--property name="tomcat.host" value="localhost"/-->
-    <!--property name="tomcat.port" value="8080"/-->
+    <property name="project.encoding" value="UTF-8"/>
+    <property name="tomcat.host" value="localhost"/>
+    <property name="tomcat.port" value="8080"/>
     <property name="tomcat.manager.url" value="http://${tomcat.host}:${tomcat.port}/manager"/>
     <property name="tomcat.manager.username" value="manager"/>
     <property name="tomcat.manager.password" value="manager"/>
@@ -15,12 +15,13 @@
     
     <property name="app.webapproot.dir" value="${project.dir}/webapproot" />
 
-    <!--property name="build.app.webapproot.dir" value="${app.webapproot.dir}"/-->
+    <property name="build.app.webapproot.dir" value="${app.webapproot.dir}"/>
     <property name="build.app.webinf.dir" value="${build.app.webapproot.dir}/WEB-INF"/>
     <property name="build.app.classes.dir" value="${build.app.webinf.dir}/classes"/>
     <property name="build.app.lib.dir" value="${build.app.webinf.dir}/lib"/>
 
-    <!--property name="war.file.name" value="${wavemaker.home}/${deploy.name}.war"/-->
+    <property name="war.file.name" value="${wavemaker.home}/${deploy.name}.war"/>
+	<property name="ear.file.name" value="${wavemaker.home}/${deploy.name}.ear"/>
 
     <condition property="build.inline">
         <equals arg1="${build.app.webapproot.dir}" arg2="${app.webapproot.dir}"/>
@@ -51,27 +52,11 @@
         </fileset>
     </path>
 
-	<echo>*********basedir = ${basedir}</echo>
-	<echo>*********project.dir = ${project.dir}</echo>
-	<echo>*********project.new.name = ${project.new.name}</echo>
-	<echo>*********project.encoding = ${project.encoding}</echo>
-	<echo>*********tomcat.host = ${tomcat.host}</echo>
-	<echo>*********tomcat.port = ${tomcat.port}</echo>
-	<echo>*********deploy.name = ${deploy.name}</echo>
-	<echo>*********studio.webapproot.dir = ${studio.webapproot.dir}</echo>
-	<echo>*********war.file.name = ${war.file.name}</echo>
-	<echo>*********ear.file.name = ${ear.file.name}</echo>
-	<echo>*********orig.proj.dir = ${orig.proj.dir}</echo>
-	<echo>*********custom.wm.dir = ${custom.wm.dir}</echo>
-	<echo>*********zip.file.name = ${zip.file.name}</echo>
-	<echo>*********zip.folder.name = ${zip.folder.name}</echo>
-	<echo>*********build.app.webapproot.dir = ${build.app.webapproot.dir}</echo>
-	<echo>*********wavemaker.home = ${wavemaker.home}</echo>
-
-	<echo>*********build.app.lib.dir = ${build.app.lib.dir}</echo>
-	<echo>*********build.app.classes.dir = ${build.app.classes.dir}</echo>
+	<available file="${orig.proj.dir}/webapproot/WEB-INF/application.xml" property="appXmlExists">
+		</available>
 
     <target name="init" />
+
     <target name="testrunclean" description="Clean build files"
             depends="init,undeploy,clean">
     </target>
@@ -192,20 +177,19 @@
             <replacevalue>"</replacevalue>
         </replace>
 
-		<replace dir="${build.app.webapproot.dir}">
-            <include name="app.css"/>
-            <replacetoken>"/wavemaker/</replacetoken>
-            <replacevalue>"</replacevalue>
-        </replace>
-
-        <war basedir="${build.app.webapproot.dir}" destfile="${war.file.name}" webxml="${build.app.webinf.dir}/web.xml"/>
-
-		<replace dir="${build.app.webapproot.dir}">
-            <include name="app.css"/>
-            <replacetoken>"lib/</replacetoken>
-            <replacevalue>"/wavemaker/lib/</replacevalue>
-        </replace>
+		<war basedir="${build.app.webapproot.dir}" destfile="${war.file.name}">
+			<exclude name="**/application.xml"/>
+		</war>
     </target>
+
+	<target name="build-ear" if="appXmlExists">
+		<ear destfile="${ear.file.name}"
+			appxml="${build.app.webinf.dir}/application.xml">
+			<fileset dir="${orig.proj.dir}/dist">
+				<include name="*.war"/>
+			</fileset>
+		</ear>
+	</target>
 
     <target name="deploy-war">
         <taskdef name="deploy"
@@ -298,15 +282,15 @@
     <!-- check to see if we should generate the web.xml -->
     <target name="-webxml-uptodate" depends="init">
         <uptodate property="webxml_is_uptodate"
-                targetfile="${build.app.webinf.dir}/web.xml">
+                targetfile="${orig.proj.dir}/webapproot/WEB-INF/web.xml">
             <srcresources>
                 <javaresource
                         name="com/wavemaker/tools/project/web.xml"
                         classpathref="app.classpath" />
-                <file file="${build.app.webinf.dir}/user-web.xml"/>
+                <file file="${orig.proj.dir}/webapproot/WEB-INF/user-web.xml"/>
             </srcresources>
 
-            <mapper type="merge" to="${build.app.webinf.dir}/web.xml"/>
+            <mapper type="merge" to="${orig.proj.dir}/webapproot/WEB-INF/web.xml"/>
         </uptodate>
 
         <condition property="do_generate_webxml">
@@ -319,15 +303,39 @@
             </or>
         </condition>
 
-        <condition property="do_generate_webxml_inc_userxml">
-            <and>
+		<condition property="do_generate_webxml_inc_userxml">
+            <and>				
+                <available file="${build.app.webinf.dir}/web.xml"/>                
                 <available file="${build.app.webinf.dir}/user-web.xml"/>
                 <istrue value="${do_generate_webxml}"/>
             </and>
         </condition>
 
         <condition property="do_generate_webxml_no_userxml">
+            <and>			    
+                <available file="${build.app.webinf.dir}/web.xml"/>                
+                <not>
+                    <available file="${build.app.webinf.dir}/user-web.xml"/>
+                </not>
+                <istrue value="${do_generate_webxml}"/>
+            </and>
+        </condition>
+
+        <condition property="do_generate_webxml_inc_userxml_from_orig">
             <and>
+				<not>
+                    <available file="${build.app.webinf.dir}/web.xml"/>
+                </not>
+                <available file="${build.app.webinf.dir}/user-web.xml"/>
+                <istrue value="${do_generate_webxml}"/>
+            </and>
+        </condition>
+
+        <condition property="do_generate_webxml_no_userxml_from_orig">
+            <and>
+			    <not>
+                    <available file="${build.app.webinf.dir}/web.xml"/>
+                </not>
                 <not>
                     <available file="${build.app.webinf.dir}/user-web.xml"/>
                 </not>
@@ -336,16 +344,68 @@
         </condition>
     </target>
 
-    <target name="-generate-webxml-userxml" depends="init, -webxml-uptodate"
+    <target name="-generate-webxml-userxml" depends="init, -webxml-uptodate, set-application-name-in-xml"
             if="do_generate_webxml_inc_userxml">
+		<taskdef name="mergeuserwebxml"
+            classname="com.wavemaker.tools.ant.MergeUserWebXmlTask"
+            classpathref="studio.classpath"/>
+        <mergeuserwebxml workdir="${build.app.webinf.dir}" />
+        <!--taskdef name="xmltask"
+                classname="com.oopsconsultancy.xmltask.ant.XmlTask"
+                classpathref="studio.classpath"/>
+
+        <xmltask source="${build.app.webinf.dir}/user-web.xml">
+            <copy path="/*/*" buffer="userWebBuffer" append="true"/>
+        </xmltask>
+        <xmltask source="${build.app.webinf.dir}/web.xml"
+                destbuffer="webxmlOutput">
+        </xmltask>
+        <xmltask sourcebuffer="webxmlOutput"
+                dest="${build.app.webinf.dir}/web.xml">
+			<remove path="/:web-app/:display-name"/> 
+			<remove path="/:web-app/:welcome-file-list"/> 
+            <insert path="/*/*[1]" position="before" buffer="userWebBuffer"/>
+        </xmltask-->
+    </target>
+
+	<target name="set-application-name-in-xml" depends="init" if="appXmlExists">
+		<replace file="${build.app.webinf.dir}/application.xml" token="{applicationName}"
+			value="${deploy.name}"/>	
+	</target>
+
+    <target name="-generate-webxml-no-userxml"
+            depends="init, -webxml-uptodate, set-application-name-in-xml"
+            if="do_generate_webxml_no_userxml">
+        <taskdef name="xmltask"
+                classname="com.oopsconsultancy.xmltask.ant.XmlTask"
+                classpathref="studio.classpath"/>
+        <xmltask source="${build.app.webinf.dir}/web.xml"
+                destbuffer="webxmlOutput">
+        </xmltask>
+        <xmltask sourcebuffer="webxmlOutput"
+                dest="${build.app.webinf.dir}/web.xml">
+        </xmltask>
+    </target>
+
+	<target name="-generate-webxml-userxml-from-orig" depends="init, -webxml-uptodate, set-application-name-in-xml"
+            if="do_generate_webxml_inc_userxml_from_orig">
         <copy todir="${build.app.webinf.dir}" flatten="true" overwrite="true">
             <resources>
                 <javaresource
                         name="com/wavemaker/tools/project/web.xml"
                         classpathref="app.classpath" />
+				<javaresource
+                        name="com/wavemaker/tools/project/application.xml"
+                        classpathref="app.classpath" />
             </resources>
         </copy>
-        <taskdef name="xmltask"
+
+		<taskdef name="mergeuserwebxml"
+            classname="com.wavemaker.tools.ant.MergeUserWebXmlTask"
+            classpathref="studio.classpath"/>
+        <mergeuserwebxml workdir="${build.app.webinf.dir}" />
+
+        <!--taskdef name="xmltask"
                 classname="com.oopsconsultancy.xmltask.ant.XmlTask"
                 classpathref="studio.classpath"/>
         <xmltask source="${build.app.webinf.dir}/user-web.xml">
@@ -357,16 +417,19 @@
         <xmltask sourcebuffer="webxmlOutput"
                 dest="${build.app.webinf.dir}/web.xml">
             <insert path="/*/*[1]" position="before" buffer="userWebBuffer"/>
-        </xmltask>
+        </xmltask-->
     </target>
 
-    <target name="-generate-webxml-no-userxml"
-            depends="init, -webxml-uptodate"
-            if="do_generate_webxml_no_userxml">
+    <target name="-generate-webxml-no-userxml-from-orig"
+            depends="init, -webxml-uptodate, set-application-name-in-xml"
+            if="do_generate_webxml_no_userxml_from_orig">
         <copy todir="${build.app.webinf.dir}" flatten="true" overwrite="true">
             <resources>
                 <javaresource
                         name="com/wavemaker/tools/project/web.xml"
+                        classpathref="app.classpath" />
+				<javaresource
+                        name="com/wavemaker/tools/project/application.xml"
                         classpathref="app.classpath" />
             </resources>
         </copy>
@@ -382,7 +445,9 @@
     </target>
 
     <target name="generate-webxml"
-            depends="init,-generate-webxml-userxml,-generate-webxml-no-userxml">
+            depends="init,-generate-webxml-userxml,-generate-webxml-no-userxml,
+					-generate-webxml-userxml-from-orig,-generate-webxml-no-userxml-from-orig"
+			if="do_generate_webxml">
     </target>
 
 
