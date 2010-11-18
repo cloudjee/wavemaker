@@ -137,6 +137,7 @@ dojo.declare("wm.Layers", wm.Container, {
 		this.setLayersType(this.layersType);
 	},
 	init: function() {
+    this.userDefHeaderHeight = this.headerHeight;
 		if (!this.isRelativePositioned)
 			dojo.addClass(this.domNode, "wmlayers");
 		else
@@ -451,6 +452,21 @@ dojo.declare("wm.Layers", wm.Container, {
 			return;
 		this.headerHeight = inHeight;
 		this.decorator && this.decorator.tabsControl && this.decorator.tabsControl.setHeight(inHeight);
+	},
+	renderBounds: function() {
+		this.inherited(arguments);
+    if (this.layersType != 'Tabs' && this.layersType != "RoundedTabs")
+      return;
+		if (!this.decorator || !this.decorator.tabsControl)
+		  return;
+			
+		var headerChanged = this.decorator.tabsControl.updateHeaderHeight();
+		if (headerChanged){
+	    if (this.userDefHeaderHeight && parseInt(this.userDefHeaderHeight) + 5 > headerChanged)
+	      headerChanged = parseInt(this.userDefHeaderHeight);
+      console.info('changing header height to = ', headerChanged+'px');
+			this.setHeaderHeight(headerChanged+'px');
+		}
 	},
         getMinHeightProp: function() {
             if (this.minHeight) return this.minHeight;

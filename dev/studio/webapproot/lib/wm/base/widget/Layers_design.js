@@ -98,6 +98,7 @@ wm.Object.extendSchema(wm.Layers, {
 	defaultLayer: { group: "layout", order: 105 },
 	layersType: { group: "layout", order: 110 },
 	add: { group: "operation", order: 1 },
+	userDefHeaderHeight: {ignore:1},
 	fitToContent: { ignore: 1},
         headerHeight: { group: "layout", order: 50},
     

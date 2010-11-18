@@ -340,5 +340,19 @@ dojo.declare("wm.TabsControl", wm.Control, {
 		dojo.addClass(this.domNode, "wmtablayers-tabbar");
 		this.height = this.owner && this.owner.headerHeight;
 		this.inherited(arguments);
+	},
+	updateHeaderHeight: function(){
+		// dont do anything during design mode as designer decides what height should header have.
+		if (this.isDesignLoaded())
+		  return false;
+		var _currHeight = dojo.marginBox(this.domNode).h;
+		this.domNode.style.height = 'auto';
+		var domHeight = dojo.marginBox(this.domNode).h;
+		if (domHeight != _currHeight){
+			dojo.marginBox(this.domNode, {h:_currHeight});
+			return domHeight;
+		}
+		
+		return false;
 	}
 });
