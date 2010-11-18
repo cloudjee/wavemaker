@@ -42,6 +42,7 @@ dojo.declare("wm.studio.Project", null, {
 		this.createApplicationArtifacts();
 	        this.makeApplication({theme: optionalInTheme || "wm_default"});
 	        this.newPage(this.pageName, "", {template: optionalInTemplate});
+	        studio.application.securityEnabled = false;// can remove this once I'm no longer worried about upgrading projects that don't use this... or once we have a proper upgrade script
                 this.saveProject();
 		this.projectChanged();
 		this.projectsChanged();
