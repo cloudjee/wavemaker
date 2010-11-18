@@ -258,6 +258,8 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 	},
 	onError: function(inError) {
 	    try {
+		if (String(inError).message.match(/No ServiceWire found/) && !djConfig.isDebug)
+		    return;
 	        console.group("Service Call Failed: " + this.name + "." + this.debugLastMethod);                              
 		if (inError)
 		  console.error(inError.message);                                                                               
