@@ -228,6 +228,7 @@ public class DeploymentManager {
         File f = new File(warFileName);
         String projDir = f.getParentFile().getParentFile().getAbsolutePath();
         properties.put(PROJ_DIRECTORY_PROPERTY, projDir);
+        properties.put(DEPLOY_NAME_PROPERTY, getDeployName(f.getParentFile().getParentFile()));
 
         antExecute(projectDir, BUILD_WAR_OPERATION, properties);
         antExecute(projectDir, BUILD_EAR_OPERATION, properties);

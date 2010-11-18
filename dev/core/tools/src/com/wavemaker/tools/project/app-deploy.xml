@@ -3,7 +3,6 @@
     <property name="project.dir" value="${basedir}" />
     <property name="studio.webapproot.dir" value="${project.dir}/webapproot"/>
     <property name="wavemaker.home" value="${project.dir}/.."/>
-	<basename property="appName" file="${project.dir}"/>
 
     <property name="project.encoding" value="UTF-8"/>
     <property name="tomcat.host" value="localhost"/>
@@ -185,7 +184,7 @@
 
 	<target name="build-ear" if="appXmlExists">
 		<ear destfile="${ear.file.name}"
-			appxml="${orig.proj.dir}/webapproot/WEB-INF/application.xml">
+			appxml="${build.app.webinf.dir}/application.xml">
 			<fileset dir="${orig.proj.dir}/dist">
 				<include name="*.war"/>
 			</fileset>
@@ -371,11 +370,11 @@
 
 	<target name="set-application-name-in-xml" depends="init" if="appXmlExists">
 		<replace file="${build.app.webinf.dir}/application.xml" token="{applicationName}"
-			value="${appName}"/>	
+			value="${deploy.name}"/>	
 	</target>
 
     <target name="-generate-webxml-no-userxml"
-            depends="init, -webxml-uptodate"
+            depends="init, -webxml-uptodate, set-application-name-in-xml"
             if="do_generate_webxml_no_userxml">
         <taskdef name="xmltask"
                 classname="com.oopsconsultancy.xmltask.ant.XmlTask"
@@ -422,7 +421,7 @@
     </target>
 
     <target name="-generate-webxml-no-userxml-from-orig"
-            depends="init, -webxml-uptodate"
+            depends="init, -webxml-uptodate, set-application-name-in-xml"
             if="do_generate_webxml_no_userxml_from_orig">
         <copy todir="${build.app.webinf.dir}" flatten="true" overwrite="true">
             <resources>
