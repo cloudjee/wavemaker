@@ -335,7 +335,7 @@ dojo.declare("Security", wm.Page, {
         },
 	configDemoResult: function(inResponse) {
 		this.updateStudioServices();
-               this.toastToSuccess();
+               this.toastToSuccess();	       
 	},
 	configDatabaseResult: function(inResponse) {
 		this.updateStudioServices();
@@ -350,7 +350,9 @@ dojo.declare("Security", wm.Page, {
                this.toastToSuccess();
 	},
 	updateStudioServices: function() {
-		studio.updateServices();
+	    studio.updateServices();
+	    studio.application.securityEnabled = this.secEnableInput.getChecked();
+	    studio.project.saveApplication();
 	},
 	checkErrorOnInputFields: function(dataSourceType) {
 	    if (!this.secEnableInput.getChecked()) return err;

@@ -33,6 +33,7 @@ dojo.declare("wm.Application", wm.Component, {
         dialogAnimationTime: 350,
         theme: "wm_notheme",
         toastPosition: "br",
+        securityEnabled: "", // should be true/false, but "" means its never been initialized
         _lastTheme: "",
     //IERoundedCorners: false,
 	init: function() {
@@ -784,6 +785,7 @@ wm.Application.extend({
     }
 });
 wm.Object.extendSchema(wm.Application, {
+    securityEnabled: {hidden:true}, // should only be changed by the Security page
     name: {ignore: 1}, // at some point, we might provide this as a way to rename the project... but renaming is really a server side op, so requires confirmation. 
     main: {shortname: "mainPageName"},
     promptChromeFrame: {shorname: "chromeFrame (NA)"},

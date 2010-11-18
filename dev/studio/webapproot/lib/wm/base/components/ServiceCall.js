@@ -79,10 +79,12 @@ dojo.declare("wm.ServiceCall", null, {
 	//=======================================================
 	// Service
 	//=======================================================
-	setService: function(inService) {
-		this.service = inService;
-		this._service = wm.services.getService(this.service) || new wm.Service({});
-		wm.fire(this._service, "setServiceCall", [this]);
+        setService: function(inService) {
+	    this.service = inService;
+	    var app = this.getOwnerApp();
+	    if (this.service == "securityService" && !app.securityEnabled) return;
+	    this._service = wm.services.getService(this.service) || new wm.Service({});
+	    wm.fire(this._service, "setServiceCall", [this]);
 	},
 	//=======================================================
 	// Operation
@@ -162,9 +164,13 @@ dojo.declare("wm.ServiceCall", null, {
 		event to control the output of canUpdate.
 	*/
 	canUpdate: function() {
-		var info = {canUpdate: this._getCanUpdate() };
-		this.onCanUpdate(info);
-		return info.canUpdate;
+	    var app = this.getOwnerApp();
+	    if (this.service == "securityService" && !app.securityEnabled) 
+		return false;
+
+	    var info = {canUpdate: this._getCanUpdate() };
+	    this.onCanUpdate(info);
+	    return info.canUpdate;
 	},
 	_getCanUpdate: function() {
 		return this._service && this.operation && !Boolean(this._requester);

@@ -162,6 +162,13 @@ dojo.declare("wm.studio.Project", null, {
 				this.pageName = inPageName || (ctor ? ctor.prototype.main : "Main");
 				this.makeApplication();
 				this.openPage(this.pageName);
+			    if (dojo.isString(studio.application.securityEnabled)) {
+				studio.securityConfigService.requestSync("getGeneralOptions", null, 
+									 dojo.hitch(this, function(inResponse) {
+									     studio.application.securityEnabled = inResponse.enforceSecurity;
+									     this.saveProject();
+									 }));
+			    }
 			} catch(e) {
 				console.debug(e);
 				this.loadError(bundleDialog.M_FailedToOpenProject + this.projectName + ". Error: " + e);
