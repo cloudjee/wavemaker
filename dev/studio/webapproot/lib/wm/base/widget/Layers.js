@@ -464,7 +464,6 @@ dojo.declare("wm.Layers", wm.Container, {
 		if (headerChanged){
 	    if (this.userDefHeaderHeight && parseInt(this.userDefHeaderHeight) + 5 > headerChanged)
 	      headerChanged = parseInt(this.userDefHeaderHeight);
-      console.info('changing header height to = ', headerChanged+'px');
 			this.setHeaderHeight(headerChanged+'px');
 		}
 	},
