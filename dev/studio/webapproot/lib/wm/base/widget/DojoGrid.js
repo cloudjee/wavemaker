@@ -600,7 +600,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	_onClick: function(evt){
 		var params = this._onGridEvent(evt);
     // This will happen if user clicks on empty area of grid.
-		if (!params.rowId)
+		if (!params.rowId && params.rowId != 0)
 			return;
 		if (params.rowId == -1){
 		  this.onHeaderClick(evt, params.selectedItem, params.rowId, params.fieldId, params.rowNode, params.cellNode);	
