@@ -241,6 +241,16 @@ wm.Component.extend({
 		}
 	},
 	renameComponentEvents: function(originalId, newId) {
+	    var eventBindings = this.eventBindings;
+	    for (var eventName in eventBindings) {
+		var eventValue = eventBindings[eventName];
+		if (eventValue == originalId) {
+		    this.setEvent(eventName, newId);
+		}
+	    }
+	},
+/*
+	renameComponentEvents: function(originalId, newId) {
 		var eventBindings = this.eventBindings;
 		for (var eventName in eventBindings) {
 			var bindingElements = eventBindings[eventName].split('.');
@@ -257,6 +267,7 @@ wm.Component.extend({
 			}
 		}
 	},
+	*/
 	/**
 		Return a custom property editor for the given property.
 		@param {String} inName The name of the property.
