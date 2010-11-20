@@ -244,7 +244,15 @@ wm.Component.extend({
 	    var eventBindings = this.eventBindings;
 	    for (var eventName in eventBindings) {
 		var eventValue = eventBindings[eventName];
+		// If the eventValue is the exact name of the component, change it to the exact new name of the component
 		if (eventValue == originalId) {
+		    this.setEvent(eventName, newId);
+		}
+
+		// If the eventValue is a subcomponent of this object, or it is a method of this object, rename
+		// the prefix and keep the postfix unchanged
+		else if (eventValue.indexOf(originalId + ".") == 0) {
+		    newId = newId + "." + eventValue.substring(originalId.length+1);
 		    this.setEvent(eventName, newId);
 		}
 	    }
