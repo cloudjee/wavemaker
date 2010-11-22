@@ -136,6 +136,10 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 		this.inherited(arguments);
 		var h = parseInt(this.editorNode.style.height);
 		var toolh = this.editorNode.childNodes[0].clientHeight;
+	        if (h <= toolh) {
+		    h = Math.max(40,this.bounds.h - 20);
+		    toolh = 20;
+		}
 		this.editor.iframe.style.height = (h-toolh) + "px";
 		if (this.editor.focusNode) {
   		this.editor.focusNode.style.height =  (h-toolh) + "px";
@@ -145,7 +149,10 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 		this._ready = false;
 		this.editorNode = document.createElement("div");
 		this.domNode.appendChild(this.editorNode);
-		this.editor = new dijit.Editor({height: parseInt(this.height), plugins: this.plugins}, this.editorNode);
+		this.editor = new dijit.Editor({height: parseInt(this.height), 
+						plugins: this.plugins,
+						disabled: this.disabled},
+					       this.editorNode);
 		this.onLoad();
 		return this.editor;
 	},
@@ -169,8 +176,10 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	isReady: function() {
   	return Boolean(this._ready && this.editor && this.editor.focusNode);
 	},
-	setDisabled: function() {
-    wm.logging && console.warn("wm.RichText.setDisabled is not supported");
+	setDisabled: function(inDisabled) {
+	    this.disabled = inDisabled;
+	    if (this.editor)
+		this.editor.set("disabled",inDisabled);
 	},
 	getEditorValue: function() {
 		try {
@@ -212,7 +221,6 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	maxChars: {ignore: 1},
 	singleLine: {ignore: 1},
 	tooltipDisplayTime: {ignore: 1},
-	disabled: {ignore: 1},
 	promptMessage: {ignore: 1},
 	displayValue: {ignore: 1},
 	toolbarUndo: {group: "toolbar", order: 1, shortname: "undo"},
@@ -222,7 +230,7 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	toolbarList: {group: "toolbar", order: 5, shortname: "lists"},
 	toolbarLink: {group: "toolbar", order: 6, shortname: "link"},
 	toolbarFont: {ignore: 1},
-     toolbarFont: {group: "toolbar", order: 7, shortname: "font"},
+     //toolbarFont: {group: "toolbar", order: 7, shortname: "font"}, // as of dojo 1.5, this toolbar still causes problems
 	toolbarColor: {group: "toolbar", order: 8, shortname: "color"}
  });
  
