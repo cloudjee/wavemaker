@@ -152,7 +152,7 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 
 	dataType: "string",
 	startChecked: false,
-        checkedValue: 1,
+        checkedValue: true,
 	_createEditor: function(inNode, inProps) {
 		return new dijit.form.CheckBox(this.getEditorProps(inNode, inProps));
 	},
