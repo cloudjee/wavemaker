@@ -34,6 +34,7 @@
         <copy todir="${installer.wm.root}/studio">
             <fileset dir="${dist.studio.dir}">
 				<exclude name="**/RbacPlugin.js" unless="isEnterprise"/>
+				<exclude name="**/DojoFlashFileUpload.js" unless="isEnterprise"/>
 			</fileset>
         </copy>
 
