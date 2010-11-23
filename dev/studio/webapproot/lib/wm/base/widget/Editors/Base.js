@@ -655,8 +655,8 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 
                     var b = {w: editorWidth , 
                              h: editorHeight,
-                             l: ((position == "left") ? labelWidth : 0) + bounds.l,
-                             t: ((position == "top") ? labelHeight : 0) + bounds.t};
+                             l: ((position == "left" &&  labelWidth) ? labelWidth : 0) + bounds.l,
+                             t: ((position == "top" && labelHeight) ? labelHeight : 0) + bounds.t};
 /*
 		    if (this instanceof wm.Checkbox) {
 			b.w = "16";
