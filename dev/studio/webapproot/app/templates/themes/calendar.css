@@ -8,19 +8,30 @@
    *              on its parent...
    ************************************************************************************************/
 
+
+.wm_template table .dijitCalendarYearContainer tr {
+    background-color: #444444; /* Document-ClickablesDefault-Background_Color */
+    border-style: solid;
+    border-color: #AAAAAA; /* Document-ClickablesHover-Background_Color */
+    border-top-width: 1px;
+}
+.wm_template table .dijitCalendarYearContainer td span {
+    color: #FFFFFF !important; /* Document-ClickablesDefault-Font_Color */
+
+}
+
 .wm_template tr.dijitCalendarMonthContainer th {
     /* Document-ClickablesDefault-Font */
-    font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
-    font-size: 12pt; /* Document-ClickablesDefault-Font_TextSize */
+    font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */ 
+    font-size: 12px; /* Document-ClickablesDefault-Font_Size */  
     color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
     font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
 
     /* Document-ClickablesDefault-Background */
     background-color: #444444; /* Document-ClickablesDefault-Background_Color */
-    background-image: url(images/repeatx/brightEdge1.png); /* Document-ClickablesDefault-Background_Image */
-    background-position: left top;  /* Document-ClickablesDefault-Background_Image-Position */
-    background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
+    background-image: none; /* Document -ClickablesDefault-Background_ Image */
 }
+
 .dj_ie6 .wm_template tr.dijitCalendarMonthContainer th {
     background-image: none !important;
 }
@@ -32,15 +43,36 @@
 .wm_template tr.dijitCalendarMonthContainer th .dijitCalendarMonthLabel {
     /* Document-ClickablesDefault-Font */
     font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
-    font-size: 12pt; /* Document-ClickablesDefault-Font_TextSize */
+    font-size: 0.909em;
     color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
     font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+    border-width: 0px;
+    -moz-box-shadow: 0px 0px 0px black; 
+    -webkit-box-shadow: 0px 0px 0px black;
+    box-shadow: 0px 0px 0px black;
 }
 
-.wm_template table.dijitCalendarContainer td,
+.wm_template table.dijitCalendarContainer {
+    border-color: #666666; /* Borders-Clickable_Border_Color */
+    border-style: solid;
+    border-width: 4px;
+
+    -moz-border-radius: 4px; /* PageContent-Styles-Border_Radius */
+    -webkit-border-radius: 4px; /* PageContent-Styles-Border_Radius */
+    border-radius: 4px; /* PageContent-Styles-Border_Radius */
+}
+
+
 .wm_template table.dijitCalendarContainer td.dijitCalendarCurrentMonth {
     background-color: #444444 !important; /* PageContent-Styles-Background_Color */
     color: #FFFFFF !important; /* PageContent-Styles-Font_Color */
+}
+
+.wm_template .dijitCalendarBodyContainer td {
+    border-style: solid;
+    border-color: #666666; /* Borders-Clickable_Border_Color */
+    border-right-width: 1px;
+    border-top-width: 1px;
 }
 
 .wm_template .dijitCalendarContainer td.dijitCalendarSelectedDate,
@@ -48,10 +80,6 @@
 .wm_template .dijitCalendarContainer .dijitCalendarSelectedYear {
     background-color: #AAAAAA !important; /* Document-ClickablesActive-Background_Color */
     color: #FFFFFF !important; /* Document-ClickablesActive-Font_Color */
-
-    -moz-border-radius: 4px; /* PageContent-Styles-Border_Radius */
-    -webkit-border-radius: 4px; /* PageContent-Styles-Border_Radius */
-    border-radius: 4px; /* PageContent-Styles-Border_Radius */
 }
 
 .wm_template .dijitCalendarContainer td.dijitCalendarHoveredDate,
@@ -61,9 +89,6 @@
 .wm_template .dijitCalendarContainer .dijitCalendarPreviousYear:hover {
     background-color: #AAAAAA !important; /* Document-ClickablesHover-Background_Color */
     color: #FFFFFF !important; /* Document-ClickablesHover-Font_Color */
-    -moz-border-radius: 4px; /* PageContent-Styles-Border_Radius */
-    -webkit-border-radius: 4px; /* PageContent-Styles-Border_Radius */
-    border-radius: 4px; /* PageContent-Styles-Border_Radius */
 }
 
 
@@ -78,4 +103,10 @@
     background-color: #DDDDDD !important; /* Document-Styles-Background_Color */
     background-image: none;
     color: #FFFFFF; /* Document-Styles-Font_Color */
+}
+
+.wm_template .dijitCalendarDayLabelTemplate {
+    border-style: solid;
+    border-color: #666666; /* Borders-Clickable_Border_Color */
+    border-right-width: 1px;
 }
