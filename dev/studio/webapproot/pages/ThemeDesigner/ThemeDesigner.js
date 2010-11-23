@@ -480,7 +480,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
             var lines =this.cssText.match(/.*\S.*/g);
             for (var i = 0; i < lines.length; i++) {
                 var l = lines[i];
-                var results = l.match(/(.*?)\:(.*?)(\s+\!important)?;\s*\/\* (\S+?)_(\S+) \*\//);
+                var results = l.match(/(.*?)\:(.*?)(\s+\!important)?;\s*\/\* (\S+)_(\S+) \*\//);
                 if (results) {
 
                     // results[1]: css styletag: background-color
