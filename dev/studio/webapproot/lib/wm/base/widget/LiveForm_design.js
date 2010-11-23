@@ -246,7 +246,9 @@ wm.LiveFormBase.extend({
 	createEditor: function(inFieldInfo, inProps, inEvents, inClass) {
 		var e = wm.createFieldEditor(this.getEditorParent(), inFieldInfo, inProps, inEvents, inClass);
 		if (e) {
-                        if (e.parent.horizontalAlign != "justified")
+		        if (e instanceof wm.Date && this.bounds.w > 400)
+			    e.setWidth("400px");
+                        else if (e.parent.horizontalAlign != "justified")
 			    e.setWidth(this.editorWidth);
                         else 
                             e.setWidth("100%"); // because its going to be 100% anyway so why confuse the user?
