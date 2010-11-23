@@ -56,10 +56,13 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 	},
     setTransparent: function(inTrans) {
 	this.transparent = inTrans;
-	if (inTrans)
+	if (inTrans) {
+	    this.addUserClass("TransparentDojoMenu");
 	    this.removeUserClass("ClickableDojoMenu");
-	else
+	} else {
 	    this.addUserClass("ClickableDojoMenu");
+	    this.removeUserClass("TransparentDojoMenu");
+	}
     },
     getTransparent: function() {
 	if (this._classes && this._classes.domNode)
