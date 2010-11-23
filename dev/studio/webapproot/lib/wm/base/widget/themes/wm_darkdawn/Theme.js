@@ -148,8 +148,6 @@
 		"border": "0"
 	}, 
 	"wm.dijit.Calendar": {
-		"border": "2", 
-		"borderColor": "#666666"
 	}, 
 	"wm.DojoGrid": {
 		"border": "2", 

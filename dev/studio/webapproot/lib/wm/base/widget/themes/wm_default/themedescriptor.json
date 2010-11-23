@@ -683,7 +683,7 @@
 		"Shadow": "0px 0px 0px #444444"
 	}, 
 	"wm.TabLayers-Active-BorderStyle": {
-		"Shadow": "1px 1px 1px #444444"
+		"Shadow": "0px 0px 0px #444444"
 	}, 
 	"MainContent-Editors-Default-Font": {
 		"TextSize": "8pt"
@@ -701,7 +701,10 @@
 		"MaxifyIconWidth": "-32px"
 	}, 
 	"wm.DojoMenu-Right": {
-		"Margin": "15px"
+		"Margin": "15px", 
+		"Image": "url(images/arrowRightLight.png)", 
+		"Image-Position": "top left", 
+		"Image-Repeat": "repeat"
 	}, 
 	"wm.DojoMenu": {
 		"Image": "url(images/comboArrowDownLight.png)", 
@@ -729,5 +732,13 @@
 		"Image-Repeat": "repeat-x", 
 		"Image-Position": "top left", 
 		"Image": "url(images/repeatx/brightEdge1.png)"
+	}, 
+	"wm.DojoMenu-Down": {
+		"Image": "url(images/comboArrowDownDark.png)", 
+		"Image-Position": "top left", 
+		"Image-Repeat": "repeat"
+	}, 
+	"wm.Calendar-Font": {
+		"Size": "9px"
 	}
 }

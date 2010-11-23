@@ -109,6 +109,9 @@ body .wm_green input:focus,
 	background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
     }
+    .dj_ie6 .wm_green .wmbutton {
+        background-image: none !important;
+    }
     /**************************************************************************************************
        * TYPE:        Active Styling
        *
@@ -370,38 +373,72 @@ body .wm_green input:focus,
    *              parent is always the body tag.  We may in the future want Calendar itself to depend 
    *              on its parent...
    ************************************************************************************************/
+.wm_green table .dijitCalendarYearContainer tr {
+    background-color: #a19fa0; /* Document-ClickablesDefault-Background_Color */
+    border-style: solid;
+    border-color: #d7d1d5; /* Document-ClickablesHover-Background_Color */
+    border-top-width: 1px;
+}
+.wm_green table .dijitCalendarYearContainer td span {
+    color: #ffffff !important; /* Document-ClickablesDefault-Font_Color */
+}
+.wm_green .dijitCalendarYearLabel {
+    font-size: 10px; /*Document-ClickablesDefault-Font_Size */
+}
+.wm_green .dijitCalendarDayLabel,
+.wm_green .dijitCalendarDateLabel {
+    font-size: 9px; /* wm.Calendar-Font_Size */  
+}
 .wm_green tr.dijitCalendarMonthContainer th {
     /* Document-ClickablesDefault-Font */
     font-family: Verdana; /* Document-ClickablesDefault-Font_Family */
-    font-size: 10pt; /* Document-ClickablesDefault-Font_TextSize */
+    font-size: 10px; /*Document-ClickablesDefault-Font_Size */
     color: #ffffff; /* Document-ClickablesDefault-Font_Color */
     font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
     /* Document-ClickablesDefault-Background */
     background-color: #a19fa0; /* Document-ClickablesDefault-Background_Color */
-    background-image: url(images/repeatx/brightEdge2.png); /* Document-ClickablesDefault-Background_Image */
-    background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
-    background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
+    background-image: none; /* Document -ClickablesDefault-Background_ Image */
+}
+.dj_ie6 .wm_green tr.dijitCalendarMonthContainer th {
+    background-image: none !important;
+}
+.dj_ie6 .wm_green .dijitCalendarArrow img {
+    background-color: white !important;
 }
 .wm_green tr.dijitCalendarMonthContainer th .dijitCalendarMonthLabel {
     /* Document-ClickablesDefault-Font */
     font-family: Verdana; /* Document-ClickablesDefault-Font_Family */
-    font-size: 10pt; /* Document-ClickablesDefault-Font_TextSize */
+    font-size: 10px; /*Document-ClickablesDefault-Font_Size */
     color: #ffffff; /* Document-ClickablesDefault-Font_Color */
     font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+    border-width: 0px;
+    -moz-box-shadow: 0px 0px 0px black; 
+    -webkit-box-shadow: 0px 0px 0px black;
+    box-shadow: 0px 0px 0px black;
 }
-.wm_green table.dijitCalendarContainer td,
+.wm_green table.dijitCalendarContainer {
+    border-color: #444444; /* Borders-Clickable_Border_Color */
+    border-style: solid;
+    border-width: 4px;
+    -moz-border-radius: 4px; /* PageContent-Styles-Border_Radius */
+    -webkit-border-radius: 4px; /* PageContent-Styles-Border_Radius */
+    border-radius: 4px; /* PageContent-Styles-Border_Radius */
+}
 .wm_green table.dijitCalendarContainer td.dijitCalendarCurrentMonth {
     background-color: #ffffff !important; /* PageContent-Styles-Background_Color */
     color: #000000 !important; /* PageContent-Styles-Font_Color */
+}
+.wm_green .dijitCalendarBodyContainer td {
+    border-style: solid;
+    border-color: #444444; /* Borders-Clickable_Border_Color */
+    border-right-width: 1px;
+    border-top-width: 1px;
 }
 .wm_green .dijitCalendarContainer td.dijitCalendarSelectedDate,
 .wm_green .dijitCalendarContainer td.dijitCalendarSelectedDate.dijitCalendarCurrentMonth,
 .wm_green .dijitCalendarContainer .dijitCalendarSelectedYear {
     background-color: #636162 !important; /* Document-ClickablesActive-Background_Color */
     color: #000000 !important; /* Document-ClickablesActive-Font_Color */
-    -moz-border-radius: 4px; /* PageContent-Styles-Border_Radius */
-    -webkit-border-radius: 4px; /* PageContent-Styles-Border_Radius */
-    border-radius: 4px; /* PageContent-Styles-Border_Radius */
 }
 .wm_green .dijitCalendarContainer td.dijitCalendarHoveredDate,
 .wm_green .dijitCalendarContainer td.dijitCalendarHoveredDate.dijitCalendarCurrentMonth,
@@ -410,9 +447,6 @@ body .wm_green input:focus,
 .wm_green .dijitCalendarContainer .dijitCalendarPreviousYear:hover {
     background-color: #d7d1d5 !important; /* Document-ClickablesHover-Background_Color */
     color: #000000 !important; /* Document-ClickablesHover-Font_Color */
-    -moz-border-radius: 4px; /* PageContent-Styles-Border_Radius */
-    -webkit-border-radius: 4px; /* PageContent-Styles-Border_Radius */
-    border-radius: 4px; /* PageContent-Styles-Border_Radius */
 }
 .wm_green .dijitCalendarContainer {
     background-color: #ffffff; /* PageContent-Styles-Background_Color */
@@ -424,7 +458,11 @@ body .wm_green input:focus,
     background-image: none;
     color: #444444; /* Document-Styles-Font_Color */
 }
-/*****************************************
+.wm_green .dijitCalendarDayLabelTemplate {
+    border-style: solid;
+    border-color: #444444; /* Borders-Clickable_Border_Color */
+    border-right-width: 1px;
+}/*****************************************
  * EOF: calendar.css
  *****************************************/
 /*****************************************
@@ -442,7 +480,7 @@ body .wm_green input:focus,
     /* Borders-Panel_BorderStyle_Radius */
     -moz-border-radius: 4px; /* Borders-Panel_BorderStyle_Radius */
     -webkit-border-radius: 4px; /* Borders-Panel_BorderStyle_Radius */
-    border-radius: 4px;  /* Borders-Panel_BorderStyle_Radius */
+    border-radius: 4px; /* Borders-Panel_BorderStyle_Radius */
     /* Floating-Shadow should automatically be calculated as min 2px 2px 2px black and preferred
      * 1.5 times the value of wm.Content-BorderStyle_Shadow */
     -moz-box-shadow: 3px 3px 3px black;   /* Floating-Shadow */
@@ -468,6 +506,9 @@ body .wm_green input:focus,
     background-image: url(images/repeatx/brightThickEdge0.png); /* Dialogs-Styles-Background_Image */
     background-position: top left; /* Dialogs-Styles-Background_Image-Position */
     background-repeat: repeat-x; /* Dialogs-Styles-Background_Image-Repeat */
+}
+.dj_ie6 .wm_green .dialogtitlebar {
+    background-image: none !important;
 }
 .wm_green .dialogtitlebar {
     /* Automatically calculated to be 2px less than MainContent-Styles-Border_Style-Radius */
@@ -640,7 +681,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
 /* Can't round the top edges of the richtext editor until we're ready to tackle rounding dojo's toolbar */
 .wm_green .wmeditor.wmrichtext {
     /* Borders-Editor_BorderStyle_Radius */
-    -moz-border-radius-bottomleft: 4px;  /* Borders-Editor_BorderStyle_Radius */
+    -moz-border-radius-bottomleft: 4px; /* Borders-Editor_BorderStyle_Radius */
     -moz-border-radius-bottomright: 4px; /* Borders-Editor_BorderStyle_Radius */
     -webkit-border-bottom-left-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
     -webkit-border-bottom-right-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
@@ -717,6 +758,13 @@ body .wm_green .dialogfooter .wmbutton:hover {
 	background-image: url(images/repeatx/greyEdge2.png); /* Document-EditorsDefault-Background_Image */
 	background-position: top left; /* Document-EditorsDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-EditorsDefault-Background_Image-Repeat */
+    }
+    .dj_ie6 .wm_green .wmeditor .dijitTextBox,
+    .dj_ie6 .wm_green .wmeditor .dijitTextArea,
+    .dj_ie6 .wm_green .wmeditor .dijitComboBox,
+    .dj_ie6 .wm_green .dijitTimePickerItem,
+    .dj_ie6 .wm_green .wmeditor .RichTextEditable iframe {
+        background-image: none !important;
     }
     .wm_green .wmeditor .dijitTextBox.dijitHover,
     .wm_green .wmeditor .dijitTextArea:hover,
@@ -1026,7 +1074,8 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .wm_green div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_green div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
     .wm_green .wmlist-item.wmlist-item-selected,
-    .wm_green .wmlist-item.wmlist-item-selected.wmlist-item-over {
+    .wm_green .wmlist-item.wmlist-item-selected.wmlist-item-over,
+    .dj_ie6 .wm_green .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* Document-ClickablesActive-Background */
 	background-color: #636162 !important; /* Document-ClickablesActive-Background_Color */
 	/* Document-ClickablesActive-Font */
@@ -1034,6 +1083,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
     }
     /* Custom mouse-over color for rows */
     .wm_green .wmlist-item.wmlist-item-over,
+    .dj_ie6 .wm_green .wmlist-item.wmlist-item-over,
     .wm_green div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_green .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
     .wm_green .dojoxGridRow.dojoxGridRowOver, 
@@ -1076,11 +1126,19 @@ body .wm_green .dialogfooter .wmbutton:hover {
     body.tundra .wm_green .wmlist-header,
     body.tundra.wm_green .dojoxGrid-header, 
     body.tundra.wm_green .dojoxGridHeader,
-    body.tundra.wm_green .wmlist-header { 
+    body.tundra.wm_green .wmlist-header,
+    .dj_ie7 .wm_green .dojoxGridHeader .dojoxGridCell, 
+    .dj_ie6 .wm_green .dojoxGridHeader .dojoxGridCell { 
 	background-color: #686868; /* Tables-HeaderRow-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* Tables-HeaderRow-Background_Image */
 	background-position: left top;     /* Tables-HeaderRow_Image-Position */
 	background-repeat: repeat-x;    /* Tables-HeaderRow_Image-Repeat */
+    }
+    .dj_ie6 .wm_green .dojoxGrid-header,
+    .dj_ie6 .wm_green .dojoxGridHeader,
+    .dj_ie6 .wm_green .wmlist-header,
+    .dj_ie6 .wm_green .dojoxGridHeader .dojoxGridCell {
+        background-image: none !important;
     }
 }
 @media screen { /* MainContent-Level */ 
@@ -1091,7 +1149,8 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .wm_green .MainContent div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_green .MainContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
     .wm_green .MainContent .wmlist-item.wmlist-item-selected,
-    .wm_green .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
+    .wm_green .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over, 
+    .dj_ie6 .wm_green .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* MainContent-ClickablesActive-Background */
 	background-color: #5e7f11 !important; /* MainContent-ClickablesActive-Background_Color */
 	/* MainContent-ClickablesActive-Font */
@@ -1099,6 +1158,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
     }
     /* Custom mouse-over color for rows */
     .wm_green .MainContent .wmlist-item.wmlist-item-over,
+    .dj_ie6 .wm_green .MainContent .wmlist-item.wmlist-item-over,
     .wm_green .MainContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_green .MainContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
     .wm_green .MainContent .dojoxGridRow.dojoxGridRowOver, 
@@ -1125,7 +1185,8 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .wm_green .EmphasizedContent div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_green .EmphasizedContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
     .wm_green .EmphasizedContent .wmlist-item.wmlist-item-selected,
-    .wm_green .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
+    .wm_green .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over,
+    .dj_ie6 .wm_green .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* EmphasizedContent-ClickablesActive-Background */
 	background-color: #9c9b46 !important; /* EmphasizedContent-ClickablesActive-Background_Color */
 	/* EmphasizedContent-ClickablesActive-Font */
@@ -1133,6 +1194,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
     }
     /* Custom mouse-over color for rows */
     .wm_green .EmphasizedContent .wmlist-item.wmlist-item-over,
+    .dj_ie6 .wm_green .EmphasizedContent .wmlist-item.wmlist-item-over,
     .wm_green .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_green .EmphasizedContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
     .wm_green .EmphasizedContent .dojoxGridRow.dojoxGridRowOver, 
@@ -1159,7 +1221,8 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .wm_green .HeaderContent div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_green .HeaderContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
     .wm_green .HeaderContent .wmlist-item.wmlist-item-selected,
-    .wm_green .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
+    .wm_green .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over,
+    .dj_ie6 .wm_green .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* HeaderContent-ClickablesActive-Background */
 	background-color: #999999 !important; /* HeaderContent-ClickablesActive-Background_Color */
 	/* HeaderContent-ClickablesActive-Font */
@@ -1167,6 +1230,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
     }
     /* Custom mouse-over color for rows */
     .wm_green .HeaderContent .wmlist-item.wmlist-item-over,
+    .dj_ie6 .wm_green .HeaderContent .wmlist-item.wmlist-item-over,
     .wm_green .HeaderContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_green .HeaderContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
     .wm_green .HeaderContent .dojoxGridRow.dojoxGridRowOver, 
@@ -1209,7 +1273,9 @@ body .wm_green .dialogfooter .wmbutton:hover {
     /* Header-Row-Background */
     .wm_green .HeaderContent .dojoxGrid-header, 
     .wm_green .HeaderContent .dojoxGridHeader,
-    .wm_green .HeaderContent .wmlist-header {
+    .wm_green .HeaderContent .wmlist-header,
+    .dj_ie7 .wm_green .HeaderContent .dojoxGridHeader .dojoxGridCell, 
+    .dj_ie6 .wm_green .HeaderContent .dojoxGridHeader .dojoxGridCell {
 	color: #FFFFFF; /* HeaderContent-ClickablesDefault-Font_Color */
 	background-color: #666666; /* HeaderContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/brightThickEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
@@ -1235,14 +1301,14 @@ body .wm_green .dialogfooter .wmbutton:hover {
     background-image: none !important;
 }
 .wm_green .dijitMenu .dijitMenuArrowCell img.dijitMenuExpand {
-   background-image: url(images/comboArrowDownLight.png) !important; /* wm.DojoMenu_Image */
+   background-image: url(images/arrowRightLight.png) !important; /* wm.DojoMenu-Right_Image */
     background-position: 0% 50% !important;
 }
 .wm_green div.dijitMenuBar div.dijitMenuItem {
-   background-image: url(images/comboArrowDownLight.png) !important; /* wm.DojoMenu_Image */
-   background-position: 100% 50% !important;
+   background-image: url(images/comboArrowDownLight.png) !important; /* wm.DojoMenu-Down_Image */
+   background-position: 90% 50% !important;
    background-repeat: no-repeat !important;
-    padding-right: 15px !important;
+    padding-right: 25px !important;
 }
 @media screen { /* Document-Level */ 
     .wm_green .dojoMenu .dijitMenu,
@@ -1416,7 +1482,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
    *              the popup is always under body; the menubar itself we may update to work anywhere.
    *
    ************************************************************************************************/
-.wm_green .dijitPopup table.dijitMenuTable.dijitMenu.dijitReset,
+.wm_green .dijitMenuPopup table.dijitMenuTable.dijitMenu.dijitReset,
 .wm_green .dijitPopup .dijitCalendarMonthLabel {
     /* Document-ClickablesDefault-Font */
     font-family: Verdana; /* Document-ClickablesDefault-Font_Family */
@@ -1504,16 +1570,16 @@ body .wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
 }
 .wm_green .wmtablayers-tab:hover, .wm_green .wmtablayers-tab:focus {
     /* wm.TabLayers-HoverShadow */
-    -moz-box-shadow: 1px 1px 1px #444444; /* wm.TabLayers-BorderStyle_Shadow */
+    -moz-box-shadow: 0px 0px 0px #444444; /* wm.TabLayers-Hover-BorderStyle_Shadow */
     -webkit-box-shadow: 0px 0px 0px #444444; /* wm.TabLayers-Hover-BorderStyle_Shadow */
     box-shadow: 1px 0px 1px #444444;   /* wm.TabLayers-Hover-BorderStyle-Shadow */
 }
 .wm_green .wmtablayers-tab.wmtablayers-selected,
 .wm_green .wmtablayers-tab.wmtablayers-selected:hover,
 .wm_green .wmtablayers-tab.wmtablayers-selected:focus {
-    -moz-box-shadow: 1px 1px 1px #444444; /* wm.TabLayers-Active-BorderStyle_Shadow */
-    -webkit-box-shadow: 1px 1px 1px #444444; /* wm.TabLayers-Active-BorderStyle_Shadow */
-    box-shadow: 1px 1px 1px #444444; /* wm.TabLayers-Active-BorderStyle_Shadow */
+    -moz-box-shadow: 0px 0px 0px #444444; /* wm.TabLayers-Active-BorderStyle_Shadow */
+    -webkit-box-shadow: 0px 0px 0px #444444; /* wm.TabLayers-Active-BorderStyle_Shadow */
+    box-shadow: 0px 0px 0px #444444; /* wm.TabLayers-Active-BorderStyle_Shadow */
 }
 /* Spacing between each tab */
 .wm_green .wmtablayers-tab.wmtablayers-selected,
@@ -1558,9 +1624,9 @@ body .wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
    ************************************************************************************************/
 .wm_green .wmaccordion .wmlayer {
     /* Borders-Panel_BorderStyle */
-    -moz-border-radius: 2px; /* Borders-Panel_BorderStyle_Radius */
-    -webkit-border-radius: 2px; /* Borders-Panel_BorderStyle_Radius */
-    border-radius: 2px; /* Borders-Panel_BorderStyle_Radius */
+    -moz-border-radius: 4px; /* Borders-Panel_BorderStyle_Radius */
+    -webkit-border-radius: 4px; /* Borders-Panel_BorderStyle_Radius */
+    border-radius: 4px; /* Borders-Panel_BorderStyle_Radius */
 }
 body.tundra.wm_green  div.wmheader,
 body.tundra .wm_green  div.wmheader,
@@ -1573,20 +1639,20 @@ body.tundra .wm_green  div.wmheader,
 }
 .wm_green .wmFancyPanel-containerWidget {
     -moz-border-radius-bottomleft: 4px; /* Borders-Panel_BorderStyle_Radius */
-    -moz-border-radius-bottomright: 4px;/* Borders-Panel_BorderStyle_Radius */
-    -webkit-border-bottom-left-radius: 4px;/* Borders-Panel_BorderStyle_Radius */
-    -webkit-border-bottom-right-radius: 4px;/* Borders-Panel_BorderStyle_Radius */
-    border-radius-bottomleft: 4px;/* Borders-Panel_BorderStyle_Radius */
-    border-radius-bottomright: 4px;/* Borders-Panel_BorderStyle_Radius */
+    -moz-border-radius-bottomright: 4px; /* Borders-Panel_BorderStyle_Radius */
+    -webkit-border-bottom-left-radius: 4px; /* Borders-Panel_BorderStyle_Radius */
+    -webkit-border-bottom-right-radius: 4px; /* Borders-Panel_BorderStyle_Radius */
+    border-radius-bottomleft: 4px; /* Borders-Panel_BorderStyle_Radius */
+    border-radius-bottomright: 4px; /* Borders-Panel_BorderStyle_Radius */
 }    
 .wm_green .wmFancyPanel-labelWidget {
     /* Must always be 2-4px smaller than .wmfancypanel */
-       -moz-border-radius-topleft: 12px;   /* Borders-Panel_BorderStyle_Radius */
-    -moz-border-radius-topright: 12px;/* Borders-Panel_BorderStyle_Radius */
-    -webkit-border-top-left-radius: 12px;/* Borders-Panel_BorderStyle_Radius */
-    -webkit-border-top-right-radius: 12px;/* Borders-Panel_BorderStyle_Radius */
-    border-radius-topleft: 12px;/* Borders-Panel_BorderStyle_Radius */
-    border-radius-topright: 12px;/* Borders-Panel_BorderStyle_Radius */
+       -moz-border-radius-topleft: 4px; /* Borders-Panel_BorderStyle_Radius */
+    -moz-border-radius-topright: 4px; /* Borders-Panel_BorderStyle_Radius */
+    -webkit-border-top-left-radius: 4px; /* Borders-Panel_BorderStyle_Radius */
+    -webkit-border-top-right-radius: 4px; /* Borders-Panel_BorderStyle_Radius */
+    border-radius-topleft: 4px; /* Borders-Panel_BorderStyle_Radius */
+    border-radius-topright: 4px; /* Borders-Panel_BorderStyle_Radius */
 }    
     /* END Border Styles */
     .wm_green .wmaccordion .wmaccordion-collapsed .accordionArrowNode {
@@ -1648,6 +1714,9 @@ body.tundra .wm_green  div.wmheader,
     color: #444444; /* Document-Styles-Font_Color */
     font-weight: normal; /* Document-Styles-Font_Weight */
 }
+.dj_ie6 .wm_green .wmlayout {
+    background-image: none !important;
+}
 #studio_designer.wm_green, 
 body.wm_green {
     background-color: #dadada; /* Document-Styles-Background_Color */
@@ -1669,6 +1738,9 @@ body.wm_green {
 	border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
 	padding-left: 10px;
     }
+.dj_ie6 .wm_green .wmaccordion-header {
+    background-image: none !important;
+}
     .wm_green div.wmaccordion .wmaccordion-collapsed {
 	/* Document-ClickablesDefault-Font */
 	color: #ffffff; /* Document-ClickablesDefault-Font_Color */
@@ -1709,6 +1781,9 @@ body.wm_green {
     background-position: top left; /* Document-ClickablesActive-Background_Image-Position */
     background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
 }
+    .dj_ie6 .wm_green .wmFancyPanel-labelWidget {
+        background-image: none !important;
+    }
     /* Tab buttons */
     .wm_green button.wmtablayers-tab {
 	/* Document-ClickablesDefault-Font */
@@ -1723,11 +1798,14 @@ body.wm_green {
 	/* Document-ClickablesDefault-Border */
 	border-bottom-color: transparent;
 	border-top-color: #444444; /* Borders-Clickable_Border_Color */
-	border-right-color:#444444; /* Borders-Clickable_Border_Color */
-	border-left-color:#444444; /* Borders-Clickable_Border_Color */
+	border-right-color: #444444; /* Borders-Clickable_Border_Color */
+	border-left-color: #444444; /* Borders-Clickable_Border_Color */
         /* editting this is problematic without also editting headerHeight */
     border-width: 2px;
     border-style: solid;
+    }
+    .dj_ie6 .wm_green .wmtablayers-tab {
+        background-image: none !important;
     }
     .wm_green .wmtablayers-tab:hover, .wm_green .wmtablayers-tab:focus {
 	/* Document-ClickablesHover-Font */
@@ -1739,6 +1817,7 @@ body.wm_green {
 	background-repeat: repeat-x; /* Document-ClickablesHover-Background_Image-Repeat */
     }
     /* Selected tab */
+    .dj_ie6 .wm_green .wmtablayers-tab.wmtablayers-selected,
     .wm_green .wmtablayers-tab.wmtablayers-selected,
     .wm_green .wmtablayers-tab.wmtablayers-selected:hover,
     .wm_green .wmtablayers-tab.wmtablayers-selected:focus {
@@ -1749,6 +1828,9 @@ body.wm_green {
 	background-image: url(images/repeatx/brightThickEdge0.png); /* Document-ClickablesActive-Background_Image */
 	background-position: top left; /* Document-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-ClickablesActive-Background_Image-Repeat */
+    }
+    .dj_ie6 .wmtablayers-tab, .dj_ie7 .wmtablayers-tab {
+        border-bottom-color: #a19fa0 !important; /* Document-ClickablesDefault-Background_Color */
     }
     /* END SECTION wm.TabLayers / wm.TabDecorator */
     /* END ESCTION wm.TabLayers / wm.WizardLayers */
@@ -1772,6 +1854,9 @@ body.wm_green {
         background-position: top left; /* Document-ClickablesDefault-Background_Image-Position */
         background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
     }
+.dj_ie6 .wm_green .dijitTitlePaneTitle {
+    background-image: none !important;
+}
     .wm_green .dojoxPortlet div.dijitTitlePaneTitle .dijitTitlePaneTextNode {
         color: #ffffff; /* Document-ClickablesDefault-Font_Color */
     }
@@ -1833,6 +1918,9 @@ body.wm_green {
     background-image: none; /* MainContent-Styles-Background_Image */
     background-position: top left; /* MainContent-Styles-Background_Image-Position */
     background-repeat: no-repeat; /* MainContent-Styles-Background_Image-Repeat */
+}
+.dj_ie6 .wm_green .MainContent {
+    background-image: none !important;
 }
 #studio_themesPage_themeDesigner_demoPanelTabLayers_client .MainContent,
 .wm_green #studio_themesPage_themeDesigner_demoPanel .MainContent {
@@ -1933,6 +2021,9 @@ body.wm_green {
 	background-position: top left; /* MainContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
     }
+    .dj_ie6 .MainContent .wmtablayers-tab, .dj_ie7 .MainContent .wmtablayers-tab {
+        border-bottom-color: #ffffff !important; /* MainContent-ClickablesDefault-Background_Color */
+    }
     /* END SECTION wm.TabLayers / wm.TabDecorator */
     /* END ESCTION wm.TabLayers / wm.WizardLayers */
     /* BEGIN SECTION wm.WizardLayers */
@@ -1994,6 +2085,9 @@ body.wm_green {
     background-image: none; /* EmphasizedContent-Styles-Background_Image */
     background-position: top left; /* EmphasizedContent-Styles-Background_Image-Position */
     background-repeat: no-repeat; /* EmphasizedContent-Styles-Background_Image-Repeat */
+}
+.dj_ie6 .wm_green .EmphasizedContent {
+    background-image: none !important;
 }
 #studio_themesPage_themeDesigner_demoPanelTabLayers_client .EmphasizedContent,
 .wm_green #studio_themesPage_themeDesigner_demoPanel .EmphasizedContent {
@@ -2094,6 +2188,9 @@ body.wm_green {
 	background-position: top left; /* EmphasizedContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesActive-Background_Image-Repeat */
     }
+    .dj_ie6 .EmphasizedContent .wmtablayers-tab, .dj_ie7 .EmphasizedContent .wmtablayers-tab {
+        border-bottom-color: #333333 !important; /* EmphasizedContent-ClickablesDefault-Background_Color */
+    }
     /* END SECTION wm.TabLayers / wm.TabDecorator */
     /* END ESCTION wm.TabLayers / wm.WizardLayers */
     /* BEGIN SECTION wm.WizardLayers */
@@ -2155,6 +2252,9 @@ body.wm_green {
     background-image: none; /* HeaderContent-Styles-Background_Image */
     background-position: top left; /* HeaderContent-Styles-Background_Image-Position */
     background-repeat: no-repeat; /* HeaderContent-Styles-Background_Image-Repeat */
+}
+.dj_ie6 .wm_green .HeaderContent {
+    background-image: none !important;
 }
 #studio_themesPage_themeDesigner_demoPanelTabLayers_client .HeaderContent,
 .wm_green #studio_themesPage_themeDesigner_demoPanel .HeaderContent {
@@ -2250,10 +2350,13 @@ body.wm_green {
 	/* HeaderContent-ClickablesActive-Font */
 	color: #000000; /* HeaderContent-ClickablesActive-Font_Color */
 	/* HeaderContent-ClickablesActive-Background */
-	background-color: #999999; /* HeaderContent-ClickablesActive-Background_Color */
+	background-color: #444444; /* HeaderContent-ClickablesActive-x[Background_Color */
 	background-image: url(images/repeatx/greyThickEdge1.png); /* HeaderContent-ClickablesActive-Background_Image */
 	background-position: top left; /* HeaderContent-ClickablesActive-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
+    }
+    .dj_ie6 .HeaderContent .wmtablayers-tab, .dj_ie7 .HeaderContent .wmtablayers-tab {
+        border-bottom-color: #666666 !important; /* HeaderContent-ClickablesDefault-Background_Color */
     }
     /* END SECTION wm.TabLayers / wm.TabDecorator */
     /* END ESCTION wm.TabLayers / wm.WizardLayers */
@@ -2362,6 +2465,10 @@ body.wm_green {
 	background-repeat: repeat-x; /* Document-EditorsDefault-Background_Image-Repeat */
     }
 }
+    .dj_ie6 .wm_green .dijitProgressBarTile,
+    .dj_ie6 .wm_green .dijitProgressBar {
+        background-image: none !important;
+    }
 @media screen { /* MainContent-Level */ 
     .wm_green .MainContent .wmprogressbar .dijitProgressBarTile {
 	/* MainContent-ClickablesDefault-Font */

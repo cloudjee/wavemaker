@@ -154,11 +154,11 @@
 		"Color": "#eeeeee"
 	}, 
 	"wm.TabLayers-Button": {
-		"Height": "24px", 
+		"Height": "25px", 
 		"TextSize": "11pt"
 	}, 
 	"wm.TabLayers-BorderStyle": {
-		"Shadow": "3px 0px 3px #444444", 
+		"Shadow": "2px 0px 2px #444444", 
 		"UnselectedShadow": "3px 0px 3px #000000", 
 		"HoverShadow": "1px 0px 1px #000000", 
 		"SelectedShadow": "0px 0px 0px #444444"
@@ -175,7 +175,10 @@
 		"Inner-Radius": "2px"
 	}, 
 	"wm.DojoMenu-Right": {
-		"Margin": "10px"
+		"Margin": "10px", 
+		"Image": "url(images/arrowRightLight.png)", 
+		"Image-Position": "top left", 
+		"Image-Repeat": "repeat"
 	}, 
 	"MainContent-ClickablesDefault-Font": {
 		"Family": "Arial", 
@@ -552,7 +555,7 @@
 		"Shadow": "1px 0px 1px #444444"
 	}, 
 	"wm.TabLayers-Active-BorderStyle": {
-		"Shadow": "3px 0px 3px #444444"
+		"Shadow": "0px 0px 0px #444444"
 	}, 
 	"Dialogs-Titlebar": {
 		"Icons": "url(images/dialogIconsGray.png)", 
@@ -590,5 +593,13 @@
 		"Image-Repeat": "repeat-x", 
 		"Image-Position": "top left", 
 		"Image": "url(images/repeatx/brightEdge2.png)"
+	}, 
+	"wm.DojoMenu-Down": {
+		"Image": "url(images/comboArrowDownLight.png)", 
+		"Image-Position": "top left", 
+		"Image-Repeat": "repeat"
+	}, 
+	"wm.Calendar-Font": {
+		"Size": "9px"
 	}
 }

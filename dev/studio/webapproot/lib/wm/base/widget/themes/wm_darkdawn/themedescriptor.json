@@ -210,7 +210,10 @@
 		"Inner-Radius": "2px"
 	}, 
 	"wm.DojoMenu-Right": {
-		"Margin": "32px"
+		"Margin": "32px", 
+		"Image": "url(images/arrowRightLight.png)", 
+		"Image-Position": "top left", 
+		"Image-Repeat": "repeat"
 	}, 
 	"wm.SelectMenu-Down-Arrow": {
 		"Image": "url(images/comboArrowDownLight.png)", 
@@ -1194,5 +1197,21 @@
 		"Image-Repeat": "repeat-x", 
 		"Image-Position": "top left", 
 		"Image": "url(images/repeatx/brightEdge1.png)"
+	}, 
+	"wm.TabLayers-BorderStyle": {
+		"Shadow": "2px 0px 2px #444444"
+	}, 
+	"wm.TabLayers-Hover-BorderStyle": {
+		"Shadow": "1px 0px 1px #444444"
+	}, 
+	"wm.TabLayers-Active-BorderStyle": {
+	}, 
+	"wm.DojoMenu-Down": {
+		"Image": "url(images/comboArrowDownLight.png)", 
+		"Image-Position": "top left", 
+		"Image-Repeat": "repeat"
+	}, 
+	"wm.Calendar-Font": {
+		"Size": "10px"
 	}
 }
