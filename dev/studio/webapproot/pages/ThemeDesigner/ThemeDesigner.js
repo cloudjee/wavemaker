@@ -518,7 +518,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	        var propHash = this.themePrototype[i];
 	        var prototype = dojo.getObject(i).prototype;
 	        for (var j in propHash) {
-		    console.log("SET " + i + "." + j + ": " + propHash[j]);
+		    //console.log("SET " + i + "." + j + ": " + propHash[j]);
 		    prototype[j] = propHash[j];
 	        }
                 } catch(e) {
@@ -1185,7 +1185,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
             }
             var styleList = this.themeGroupTypes[subGroupName.replace(/^.*_/,"")];
 
-            var label = new wm.Label({width: "100%", height: "20px", margin: "5,0,0,0", caption: subGroupName.replace(/_/g," ") + (description ? " <a>?</a>" : ""), parent: this.widgetEditPanel, owner: this});
+            var label = new wm.Label({width: "100%", height: "20px", margin: "5,0,0,0", caption: subGroupName.replace(/\_/g," ") + (description ? " <a>?</a>" : ""), parent: this.widgetEditPanel, owner: this});
             if (description) {
                 this._descConnections.push(dojo.connect(dojo.query("a",label.domNode)[0], "onclick", this, function() {
                     studio.helpDialog.setUserPrompt(description);
@@ -1808,7 +1808,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
           }
         */
 
-        console.log("SET SYMBOL: " + symbolicName + " TO " + inValue);
+	//console.log("SET SYMBOL: " + symbolicName + " TO " + inValue);
         if (!this.themeData[inGroupName])
             this.themeData[inGroupName] = {};
         this.themeData[inGroupName][inName] = inValue;
@@ -1871,6 +1871,10 @@ dojo.declare("ThemeDesigner", wm.Page, {
             var newValue = Math.floor(parseInt(inValue) * 0.6) + "px";
             this.setCssSymbol("wm.SelectMenu", "Inner-Radius", newValue);
             break;
+	case "Document-ClickablesDefault-Font_TextSize":
+	    var newValue = (parseInt(inValue)-1) + "px";
+	    this.setCssSymbol("wm.Calendar-Font", "Size", newValue);
+	    break;
             /*
 	      case "Borders-Panel_BorderStyle_Radius":
               var newValue = Math.floor(parseInt(inValue) * 0.6) + "px";
