@@ -441,7 +441,7 @@ this.label.enable();
 
 		this.padding = String(this.padding);
 		this.paddingExtents = this._parseExtents(this.padding);
-		this.setMargin(this.margin);
+	        this.setMargin(String(this.margin));
 	        this.doSetSizeBc();
 	        if (!this.showing) this.setShowing(false,true);
 
