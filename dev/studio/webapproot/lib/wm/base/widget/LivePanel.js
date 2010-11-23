@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 dojo.provide("wm.base.widget.LivePanel");
+dojo.require("wm.base.widget.LiveForm");
 
 dojo.declare("wm.LivePanel", wm.Panel, {
 	height: "100%",
