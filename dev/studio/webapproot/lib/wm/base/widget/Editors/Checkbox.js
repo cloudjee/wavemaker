@@ -191,12 +191,17 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 	},
 	setInitialValue: function() {
 		this.beginEditUpdate();
-		if (this.startChecked)
+	    // if setEditorValue has been called, then startChecked no longer controls the checkbox's initial state;
+	    // the dataValue only controls the state now.
+	        if (this.startChecked && !this._setEditorValueCalled || Boolean(this.dataValue))
 			this.setChecked(true);
 		this.endEditUpdate();
 	},
 	getChecked: function() {
+	    if (this.editor)
 		return Boolean(this.editor.checked);
+	    else
+		return Boolean(this.dataValue);
 	},
 	setChecked: function(inChecked) {
 		this.editor.set('checked',inChecked);
@@ -233,11 +238,7 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 		}
 	},
 	setEditorValue: function(inValue) {
-		if (inValue == null)
-		{
-			inValue = this.startChecked;
-		}
-
+	        this._setEditorValueCalled = true;
 		if (this.editor) {
 		    this.editor.set('checked',Boolean(inValue));
 		}
