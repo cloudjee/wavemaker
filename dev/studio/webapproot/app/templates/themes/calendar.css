@@ -17,13 +17,20 @@
 }
 .wm_template table .dijitCalendarYearContainer td span {
     color: #FFFFFF !important; /* Document-ClickablesDefault-Font_Color */
+}
+.wm_template .dijitCalendarYearLabel {
+    font-size: 10px; /*Document-ClickablesDefault-Font_Size */
+}
 
+.wm_template .dijitCalendarDayLabel,
+.wm_template .dijitCalendarDateLabel {
+    font-size: 12px; /* wm.Calendar-Font_Size */  
 }
 
 .wm_template tr.dijitCalendarMonthContainer th {
     /* Document-ClickablesDefault-Font */
     font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */ 
-    font-size: 12px; /* Document-ClickablesDefault-Font_Size */  
+    font-size: 10px; /*Document-ClickablesDefault-Font_Size */
     color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
     font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
 
@@ -43,7 +50,7 @@
 .wm_template tr.dijitCalendarMonthContainer th .dijitCalendarMonthLabel {
     /* Document-ClickablesDefault-Font */
     font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
-    font-size: 0.909em;
+    font-size: 10px; /*Document-ClickablesDefault-Font_Size */
     color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
     font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
     border-width: 0px;

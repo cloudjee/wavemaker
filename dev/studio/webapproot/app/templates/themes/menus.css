@@ -18,9 +18,9 @@
 
 .wm_template div.dijitMenuBar div.dijitMenuItem {
    background-image: url("images/dropArrowBlack.png") !important; /* wm.DojoMenu-Down_Image */
-   background-position: 100% 50% !important;
+   background-position: 90% 50% !important;
    background-repeat: no-repeat !important;
-    padding-right: 15px !important;
+    padding-right: 25px !important;
 }
 
 @media screen { /* Document-Level */ 
@@ -233,7 +233,7 @@
    *              the popup is always under body; the menubar itself we may update to work anywhere.
    *
    ************************************************************************************************/
-.wm_template .dijitPopup table.dijitMenuTable.dijitMenu.dijitReset,
+.wm_template .dijitMenuPopup table.dijitMenuTable.dijitMenu.dijitReset,
 .wm_template .dijitPopup .dijitCalendarMonthLabel {
     /* Document-ClickablesDefault-Font */
     font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
