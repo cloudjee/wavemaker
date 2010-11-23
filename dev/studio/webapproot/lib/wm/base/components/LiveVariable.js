@@ -98,6 +98,7 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	sourceDataChanged: function() {
 		this.doAutoUpdate();
 	},
+
 	/** Set the filter used for read operations */
 	setFilter: function(inFilter) {
 		if ((inFilter || 0).type == this.type) {
@@ -347,11 +348,13 @@ wm.LiveVariable.extend({
 		if (this.isDesignLoaded()) {
 			// automatically set autoUpdate to true if we're reading, 
 			// since this is the default anyway, otherwise set to false.
+		        this.setStartUpdate(inOperation == "read");
 			this.setAutoUpdate(inOperation == "read");
 			if (studio.selected == this)
 				studio.inspector.inspect(this);
 		}
 	},
+
 	set_liveSource: function(inLiveSource) {
 		this.setLiveSource(inLiveSource);
 		if (this.isDesignLoaded() && studio.selected == this)
