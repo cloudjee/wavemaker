@@ -137,14 +137,14 @@ dojo.declare("wm.Layers", wm.Container, {
 		this.setLayersType(this.layersType);
 	},
 	init: function() {
-    this.userDefHeaderHeight = this.headerHeight;
-		if (!this.isRelativePositioned)
-			dojo.addClass(this.domNode, "wmlayers");
-		else
-			this.setHeaderHeight('20px');
+	    this.userDefHeaderHeight = this.headerHeight;
+	    if (!this.isRelativePositioned)
+		dojo.addClass(this.domNode, "wmlayers");
+	    else
+		this.setHeaderHeight('20px');
             // vertical defaults to justified; once we get rid of justified, we can remove this property
 	    this.client = new wm.Panel({isRelativePositioned:this.isRelativePositioned, border: 0, name: "client", parent: this, owner: this, height: "100%", width: "100%",  flags: {notInspectable: true}});
-		this.inherited(arguments);
+	    this.inherited(arguments);
 	},
 	postInit: function() {
 		this.inherited(arguments);
@@ -451,7 +451,12 @@ dojo.declare("wm.Layers", wm.Container, {
 		if (this.layersType != 'Tabs' && this.layersType != "RoundedTabs")
 			return;
 		this.headerHeight = inHeight;
+	        this.userDefHeaderHeight = this.headerHeight;
 		this.decorator && this.decorator.tabsControl && this.decorator.tabsControl.setHeight(inHeight);
+
+		delete this._lastTabHeight;
+		this.renderBounds();
+
 	},
         renderBounds: function() {
 	    this.inherited(arguments);
@@ -473,7 +478,11 @@ dojo.declare("wm.Layers", wm.Container, {
 			this._lastTabHeight = newHeight;
 			if (this.userDefHeaderHeight && parseInt(this.userDefHeaderHeight) + 5 > newHeight)
 			    newHeight = parseInt(this.userDefHeaderHeight);
-			this.setHeaderHeight(newHeight+'px');
+			if (this.isDesignLoaded()) {
+			    this.decorator.tabsControl.setHeight(newHeight+ "px");
+			} else {
+			    this.setHeaderHeight(newHeight+'px');
+			}
 		    }
 
 		} catch(e) {
