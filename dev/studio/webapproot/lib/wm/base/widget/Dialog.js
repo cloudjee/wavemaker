@@ -873,7 +873,7 @@ dojo.declare("wm.RichTextDialog", wm.WidgetsJsDialog, {
     html: "", // initial html to show in the editor; use getHtml for current value
     prepare: function() {
         this.inherited(arguments);
-        this.widgets_data = {documentation: ["wm.RichText", {width: "100%", height: "100%", "toolbarAlign":false,"toolbarLink":true,"toolbarColor":true, dataValue: this.html, displayValue: this.html}, {}],
+        this.widgets_data = {documentation: ["wm.RichText", {width: "100%", height: "100%", "toolbarAlign":false,"toolbarLink":true,"toolbarColor":true, toolbarFormatName: true, dataValue: this.html, displayValue: this.html}, {}],
 		             buttonBar: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, name: "buttonBar", layoutKind: "left-to-right",  padding: "2,0,2,0", horizontalAlign: "right", height: "34px", fitToContentHeight: true, width: "100%", borderColor: this.footerBorderColor, border: this.footerBorder + ",0,0,0"}, {}, {
 		                 okButton: ["wm.Button", {"width":"150px","caption": "OK"}, {"onclick":"onOkClick"}],
 		                 cancelButton: ["wm.Button", {"width":"150px","caption": "Cancel"}, {"onclick":"onCancelClick"}]

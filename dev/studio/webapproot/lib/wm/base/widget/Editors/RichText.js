@@ -45,7 +45,9 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	toolbarAlign: true,
 	toolbarList: true,
 	toolbarLink: false,
-	toolbarFont: false,
+	toolbarFontName: false,
+	toolbarFormatName: false,
+	toolbarSize: false,
 	toolbarColor: false,
 	classNames: "wmeditor wmrichtext",
 	afterPaletteDrop: function() {
@@ -102,18 +104,22 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	      this.plugins.push("unlink");
 	      this.plugins.push("|");
 	  }
-	  if (this.toolbarFont) {
-	      //this.plugins.push("dijit._editor.plugins.FontChoice");
-	      this.plugins.push("fontName");
-	      this.plugins.push("fontSize");
-	      this.plugins.push("formatBlock");
-	      this.plugins.push("|");
-	  }
+
 	  if (this.toolbarColor) {
 	      this.plugins.push("dijit._editor.plugins.TextColor");
 	      this.plugins.push("foreColor");
 	      this.plugins.push("hiliteColor");
 	      this.plugins.push("|");
+	  }
+
+	  if (this.toolbarFontName) {
+	      this.plugins.push("fontName");
+	  }
+	  if (this.toolbarSize) {
+	      this.plugins.push("fontSize");
+	  }
+	  if (this.toolbarFormatName) {
+	      this.plugins.push("formatBlock");
 	  }
 	},
 	setReadonly: function(inReadonly) {
@@ -170,7 +176,7 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 		}
 	},
 	updateFocusNode: function(){
-		this.editor.focusNode.style.lineHeight = "12px"; // needed for safari... 
+	    //this.editor.focusNode.style.lineHeight = "12px"; // needed for safari... 
 		this.editor.focusNode.style.overflow = "auto";
 	},
 	isReady: function() {
@@ -229,9 +235,12 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	toolbarAlign: {group: "toolbar", order: 4, shortname: "align"},
 	toolbarList: {group: "toolbar", order: 5, shortname: "lists"},
 	toolbarLink: {group: "toolbar", order: 6, shortname: "link"},
-	toolbarFont: {ignore: 1},
-     //toolbarFont: {group: "toolbar", order: 7, shortname: "font"}, // as of dojo 1.5, this toolbar still causes problems
-	toolbarColor: {group: "toolbar", order: 8, shortname: "color"}
+     //toolbarFont: {ignore: 1},
+     toolbarFontName: {group: "toolbar", order: 7, shortname: "fontName"}, 
+     toolbarFormatName: {group: "toolbar", order: 8, shortname: "formatName"}, 
+     toolbarSize: {group: "toolbar", order: 9, shortname: "size"}, 
+     toolbarFont: {group: "toolbar", order: 10, shortname: "font"}, 
+	toolbarColor: {group: "toolbar", order: 11, shortname: "color"}
  });
  
  wm.RichText.extend({
@@ -266,8 +275,18 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 		this.updatePlugins();
 		this.createEditor();
 	},
-	setToolbarFont:function(val) {
-		this.toolbarFont = val;
+	setToolbarFontName:function(val) {
+		this.toolbarFontName = val;
+		this.updatePlugins();
+		this.createEditor();
+	},
+	setToolbarFormatName:function(val) {
+		this.toolbarFormatName = val;
+		this.updatePlugins();
+		this.createEditor();
+	},
+	setToolbarSize:function(val) {
+		this.toolbarSize = val;
 		this.updatePlugins();
 		this.createEditor();
 	},

@@ -1592,3 +1592,18 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
 .wmeditor .dijitInputField, .wmeditor textarea {
     padding: 0px 3px 0px 3px !important;
 }
+
+
+.dijitToolbar .dijitTextBox,
+.dijitToolbar input,
+.dijitToolbar label
+ {
+    height: 20px;
+    line-height: 20px;
+}
+.dijitToolbar span {
+    height: 24px;
+}
+.dijitToolbar .dijitComboBox {
+    width:120px;
+}
