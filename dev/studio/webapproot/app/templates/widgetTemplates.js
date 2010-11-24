@@ -172,7 +172,7 @@ wm.fullTemplates.sideMenuTemplate = {
 	panel1: ["wm.Panel", {"border":"0,1,0,0","borderColor":"#999999","height":"100%","horizontalAlign":"left","minWidth":900,"verticalAlign":"top","width":"75%"}, {}, {
 		panel2: ["wm.HeaderContentPanel", {"border":"0,0,1,0","height":"65px","horizontalAlign":"left","layoutKind":"left-to-right","margin":"0","padding":"0,10,0,10","verticalAlign":"middle","width":"100%"}, {}, {
 			picture1: ["wm.Picture", {"border":"0","height":"50px","source":"lib/wm/base/widget/themes/default/images/wmLogo.png","width":"62px"}, {}],
-			label3: ["wm.Label", {"border":"0","caption":"[Application Name]","width":"100%"}, {}, {
+		    label3: ["wm.Label", {"border":"0","caption":"[Application Name]","width":"100%", height: "35px"}, {}, {
 				format: ["wm.DataFormatter", {}, {}]
 			}],
 			panel10: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"middle","width":"300px"}, {}, {
@@ -219,7 +219,7 @@ wm.fullTemplates.tabTemplate = {
 	panel3: ["wm.Panel", {"height":"100%","horizontalAlign":"left","minWidth":900,"verticalAlign":"top","width":"75%"}, {}, {
 		panel1: ["wm.HeaderContentPanel", {"border":"0,0,1,0","borderColor":"#333333","height":"65px","horizontalAlign":"left","layoutKind":"left-to-right","padding":"0,10","verticalAlign":"middle","width":"100%"}, {}, {
 			picture1: ["wm.Picture", {"border":"0","height":"50px","source":"lib/wm/base/widget/themes/default/images/wmLogo.png","width":"62px"}, {}],
-			label3: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_20px","wm_FontSizePx_24px"]},"border":"0","caption":"[Application Name]","width":"100%"}, {}, {
+		    label3: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_20px","wm_FontSizePx_24px"]},"border":"0","caption":"[Application Name]","width":"100%", height: "35px"}, {}, {
 				format: ["wm.DataFormatter", {}, {}]
 			}],
 			panel5: ["wm.Panel", {"height":"100%","horizontalAlign":"right","verticalAlign":"middle","width":"100%"}, {}, {
@@ -269,7 +269,7 @@ wm.fullTemplates.topMenuTemplate = {
 	panelCenter: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"900px"}, {}, {
 		panelHeader: ["wm.HeaderContentPanel", {"height":"65px","horizontalAlign":"left","layoutKind":"left-to-right","padding":"0,10,0,10","verticalAlign":"middle","width":"100%"}, {}, {
 			picture1: ["wm.Picture", {"border":"0","height":"50px","source":"lib/wm/base/widget/themes/default/images/wmLogo.png","width":"62px"}, {}],
-			label2: ["wm.Label", {"border":"0","caption":"[Application Name]","width":"100%"}, {}, {
+		    label2: ["wm.Label", {"border":"0","caption":"[Application Name]","width":"100%", height: "35px"}, {}, {
 				format: ["wm.DataFormatter", {}, {}]
 			}],
 			panel10: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"middle","width":"300px"}, {}, {
