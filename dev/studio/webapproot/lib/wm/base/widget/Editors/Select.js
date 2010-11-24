@@ -280,7 +280,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	    var result = de ? wm.expression.getValue(de, v) : inVariable.getValue(this._displayField);
             if (this.displayType && this.displayType != 'Text')
                 result = this.formatData(result);
-            return result;
+            return String(result);
 	},
 	formatData: function(inValue){
 		try
