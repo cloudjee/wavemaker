@@ -345,14 +345,14 @@ dojo.declare("wm.TabsControl", wm.Control, {
 		// dont do anything during design mode as designer decides what height should header have.
 		if (this.isDesignLoaded())
 		  return false;
-		var _currHeight = dojo.marginBox(this.domNode).h;
-		this.domNode.style.height = 'auto';
+	        //var _currHeight = dojo.marginBox(this.domNode).h;  these two lines are invoked by the caller before doing a short delay so that IE 6 can update its dom structure
+		//this.domNode.style.height = 'auto';
 		var domHeight = dojo.marginBox(this.domNode).h;
+	    return domHeight;		    c
 		if (domHeight != _currHeight){
 			dojo.marginBox(this.domNode, {h:_currHeight});
 			return domHeight;
 		}
-		
 		return false;
 	}
 });

@@ -453,19 +453,33 @@ dojo.declare("wm.Layers", wm.Container, {
 		this.headerHeight = inHeight;
 		this.decorator && this.decorator.tabsControl && this.decorator.tabsControl.setHeight(inHeight);
 	},
-	renderBounds: function() {
-		this.inherited(arguments);
-    if (this.layersType != 'Tabs' && this.layersType != "RoundedTabs")
-      return;
-		if (!this.decorator || !this.decorator.tabsControl)
-		  return;
-			
-		var headerChanged = this.decorator.tabsControl.updateHeaderHeight();
-		if (headerChanged){
-	    if (this.userDefHeaderHeight && parseInt(this.userDefHeaderHeight) + 5 > headerChanged)
-	      headerChanged = parseInt(this.userDefHeaderHeight);
-			this.setHeaderHeight(headerChanged+'px');
+        renderBounds: function() {
+	    this.inherited(arguments);
+	    if (this.layersType != 'Tabs' && this.layersType != "RoundedTabs")
+		return;
+	    if (!this.decorator || !this.decorator.tabsControl)
+		return;
+
+	    // for purposes of IE6, we need to get the current height, change the style, and then wait
+	    // before doing anything
+	    if (!this._lastTabHeight)
+		this._lastTabHeight = dojo.marginBox(this.decorator.tabsControl.domNode).h;
+	    this.decorator.tabsControl.domNode.style.height = 'auto';
+	    wm.job(this.getRuntimeId() + ":updateHeaderHeight", 1, dojo.hitch(this, function() {
+		try {
+		    var newHeight = this.decorator.tabsControl.updateHeaderHeight();
+
+		    if (newHeight != this._lastTabHeight){
+			this._lastTabHeight = newHeight;
+			if (this.userDefHeaderHeight && parseInt(this.userDefHeaderHeight) + 5 > newHeight)
+			    newHeight = parseInt(this.userDefHeaderHeight);
+			this.setHeaderHeight(newHeight+'px');
+		    }
+
+		} catch(e) {
+		    console.error(e);
 		}
+	    }));
 	},
         getMinHeightProp: function() {
             if (this.minHeight) return this.minHeight;
