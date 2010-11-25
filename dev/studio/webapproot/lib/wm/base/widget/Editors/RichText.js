@@ -235,11 +235,9 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	toolbarAlign: {group: "toolbar", order: 4, shortname: "align"},
 	toolbarList: {group: "toolbar", order: 5, shortname: "lists"},
 	toolbarLink: {group: "toolbar", order: 6, shortname: "link"},
-     //toolbarFont: {ignore: 1},
      toolbarFontName: {group: "toolbar", order: 7, shortname: "fontName"}, 
      toolbarFormatName: {group: "toolbar", order: 8, shortname: "formatName"}, 
      toolbarSize: {group: "toolbar", order: 9, shortname: "size"}, 
-     toolbarFont: {group: "toolbar", order: 10, shortname: "font"}, 
 	toolbarColor: {group: "toolbar", order: 11, shortname: "color"}
  });
  
