@@ -387,7 +387,7 @@ body .wm_graphite input:focus,
 }
 .wm_graphite .dijitCalendarDayLabel,
 .wm_graphite .dijitCalendarDateLabel {
-    font-size: 9px; /* wm.Calendar-Font_Size */  
+    font-size: 9px; /* wm.Calendar-Font_Size */
 }
 .wm_graphite tr.dijitCalendarMonthContainer th {
     /* Document-ClickablesDefault-Font */
@@ -2010,6 +2010,7 @@ body.wm_graphite {
 	background-repeat: repeat-x; /* MainContent-ClickablesHover-Background_Image-Repeat */
     }
     /* Selected tab */
+    .dj_ie6 .wm_graphite .MainContent .wmtablayers-tab.wmtablayers-selected,
     .wm_graphite .MainContent .wmtablayers-tab.wmtablayers-selected,
     .wm_graphite .MainContent .wmtablayers-tab.wmtablayers-selected:hover,
     .wm_graphite .MainContent .wmtablayers-tab.wmtablayers-selected:focus {
@@ -2177,6 +2178,7 @@ body.wm_graphite {
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesHover-Background_Image-Repeat */
     }
     /* Selected tab */
+    .dj_ie6 .wm_graphite .EmphasizedContent .wmtablayers-tab.wmtablayers-selected,
     .wm_graphite .EmphasizedContent .wmtablayers-tab.wmtablayers-selected,
     .wm_graphite .EmphasizedContent .wmtablayers-tab.wmtablayers-selected:hover,
     .wm_graphite .EmphasizedContent .wmtablayers-tab.wmtablayers-selected:focus {

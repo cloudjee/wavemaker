@@ -270,7 +270,7 @@
 		"Shadow": "1px 1px 1px #444444"
 	}, 
 	"MainContent-ClickablesDefault-Background": {
-		"Color": "#ffffff", 
+		"Color": "#eeeeee", 
 		"Image-Repeat": "repeat-x", 
 		"Image-Position": "top left", 
 		"Image": "url(images/repeatx/greyThickEdge2.png)"
@@ -460,7 +460,7 @@
 		"Image": "url(images/repeatx/brightSliverEdge4.png)"
 	}, 
 	"HeaderContent-ClickablesActive-Font": {
-		"Color": "#000000", 
+		"Color": "#ffffff", 
 		"TextSize": "10pt", 
 		"Family": "Verdana"
 	}, 
@@ -628,7 +628,7 @@
 		"Shadow": "0px 0px 0px #444444"
 	}, 
 	"EmphasizedContent-ClickablesActive-Background": {
-		"Color": "#333333", 
+		"Color": "#575757", 
 		"Image-Repeat": "repeat-x", 
 		"Image-Position": "top left", 
 		"Image": "url(images/repeatx/brightThickEdge0.png)"

@@ -387,7 +387,7 @@ body .wm_darkdawn input:focus,
 }
 .wm_darkdawn .dijitCalendarDayLabel,
 .wm_darkdawn .dijitCalendarDateLabel {
-    font-size: 10px; /* wm.Calendar-Font_Size */  
+    font-size: 10px; /* wm.Calendar-Font_Size */
 }
 .wm_darkdawn tr.dijitCalendarMonthContainer th {
     /* Document-ClickablesDefault-Font */
@@ -2010,6 +2010,7 @@ body.wm_darkdawn {
 	background-repeat: repeat-x; /* MainContent-ClickablesHover-Background_Image-Repeat */
     }
     /* Selected tab */
+    .dj_ie6 .wm_darkdawn .MainContent .wmtablayers-tab.wmtablayers-selected,
     .wm_darkdawn .MainContent .wmtablayers-tab.wmtablayers-selected,
     .wm_darkdawn .MainContent .wmtablayers-tab.wmtablayers-selected:hover,
     .wm_darkdawn .MainContent .wmtablayers-tab.wmtablayers-selected:focus {
@@ -2177,6 +2178,7 @@ body.wm_darkdawn {
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesHover-Background_Image-Repeat */
     }
     /* Selected tab */
+    .dj_ie6 .wm_darkdawn .EmphasizedContent .wmtablayers-tab.wmtablayers-selected,
     .wm_darkdawn .EmphasizedContent .wmtablayers-tab.wmtablayers-selected,
     .wm_darkdawn .EmphasizedContent .wmtablayers-tab.wmtablayers-selected:hover,
     .wm_darkdawn .EmphasizedContent .wmtablayers-tab.wmtablayers-selected:focus {

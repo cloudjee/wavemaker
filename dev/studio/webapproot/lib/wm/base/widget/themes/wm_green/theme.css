@@ -176,7 +176,7 @@ body .wm_green input:focus,
 	-webkit-box-shadow: 1px 1px 1px #444444; /* MainContent-ClickablesDefault-BorderStyle_Shadow */
 	box-shadow: 1px 1px 1px #444444; /* MainContent-ClickablesDefault-BorderStyle_Shadow */
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #ffffff; /* MainContent-ClickablesDefault-Background_Color */
+	background-color: #eeeeee; /* MainContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyThickEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
@@ -387,7 +387,7 @@ body .wm_green input:focus,
 }
 .wm_green .dijitCalendarDayLabel,
 .wm_green .dijitCalendarDateLabel {
-    font-size: 9px; /* wm.Calendar-Font_Size */  
+    font-size: 9px; /* wm.Calendar-Font_Size */
 }
 .wm_green tr.dijitCalendarMonthContainer th {
     /* Document-ClickablesDefault-Font */
@@ -807,7 +807,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
    *              button. 
    ************************************************************************************************/
 .wm_green .wmeditor .dijitComboBox .dijitArrowButton {
-    background-color: #ffffff; /* MainContent-ClickablesDefault-Background_Color */
+    background-color: #eeeeee; /* MainContent-ClickablesDefault-Background_Color */
     background-image: none;
 }
     .wm_green .MainContent .wmeditor .dijitTextBox,
@@ -1368,7 +1368,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
 }
     .wm_green .MainContent .dojoMenu.ClickableDojoMenu {
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #ffffff; /* MainContent-ClickablesDefault-Background_Color */
+	background-color: #eeeeee; /* MainContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyThickEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
@@ -1954,7 +1954,7 @@ body.wm_green {
 	font-family: Verdana; /* MainContent-ClickablesDefault-Font_Family */
 	font-size: 8pt; /* MainContent-ClickablesDefault-Font_TextSize */
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #ffffff; /* MainContent-ClickablesDefault-Background_Color */
+	background-color: #eeeeee; /* MainContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyThickEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
@@ -1995,7 +1995,7 @@ body.wm_green {
 	color: #333333; /* MainContent-ClickablesDefault-Font_Color */
 	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #ffffff; /* MainContent-ClickablesDefault-Background_Color */
+	background-color: #eeeeee; /* MainContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyThickEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
@@ -2010,6 +2010,7 @@ body.wm_green {
 	background-repeat: repeat-x; /* MainContent-ClickablesHover-Background_Image-Repeat */
     }
     /* Selected tab */
+    .dj_ie6 .wm_green .MainContent .wmtablayers-tab.wmtablayers-selected,
     .wm_green .MainContent .wmtablayers-tab.wmtablayers-selected,
     .wm_green .MainContent .wmtablayers-tab.wmtablayers-selected:hover,
     .wm_green .MainContent .wmtablayers-tab.wmtablayers-selected:focus {
@@ -2022,7 +2023,7 @@ body.wm_green {
 	background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
     }
     .dj_ie6 .MainContent .wmtablayers-tab, .dj_ie7 .MainContent .wmtablayers-tab {
-        border-bottom-color: #ffffff !important; /* MainContent-ClickablesDefault-Background_Color */
+        border-bottom-color: #eeeeee !important; /* MainContent-ClickablesDefault-Background_Color */
     }
     /* END SECTION wm.TabLayers / wm.TabDecorator */
     /* END ESCTION wm.TabLayers / wm.WizardLayers */
@@ -2177,6 +2178,7 @@ body.wm_green {
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesHover-Background_Image-Repeat */
     }
     /* Selected tab */
+    .dj_ie6 .wm_green .EmphasizedContent .wmtablayers-tab.wmtablayers-selected,
     .wm_green .EmphasizedContent .wmtablayers-tab.wmtablayers-selected,
     .wm_green .EmphasizedContent .wmtablayers-tab.wmtablayers-selected:hover,
     .wm_green .EmphasizedContent .wmtablayers-tab.wmtablayers-selected:focus {
@@ -2477,7 +2479,7 @@ body.wm_green {
 	color: #333333; /* MainContent-ClickablesDefault-Font_Color */
 	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #ffffff; /* MainContent-ClickablesDefault-Background_Color */
+	background-color: #eeeeee; /* MainContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyThickEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
