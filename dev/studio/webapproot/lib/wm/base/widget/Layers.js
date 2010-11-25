@@ -476,7 +476,6 @@ dojo.declare("wm.Layers", wm.Container, {
 	    wm.job(this.getRuntimeId() + ":updateHeaderHeight", 1, dojo.hitch(this, function() {
 		try {
 		    var newHeight = this.decorator.tabsControl.updateHeaderHeight();
-		    console.log("HEIGHT WAS: " + this._lastTabHeight + "; NOW:" + newHeight);
 		    if (newHeight != this._lastTabHeight){
 			this._lastTabHeight = newHeight;
 			if (this.userDefHeaderHeight && parseInt(this.userDefHeaderHeight) + 5 > newHeight)
@@ -528,6 +527,13 @@ dojo.declare("wm.AccordionLayers", wm.Layers, {
     postInit: function() {
         this.inherited(arguments);
         this.setLayerBorder(this.layerBorder);
+    },
+    setCaptionHeight: function(inHeight) {
+	this.captionHeight = inHeight;
+        for (var i = 0; i < this.layers.length; i++) {
+	    this.layers[i].header.setHeight(inHeight + "px");
+	}
+	
     },
     setBorderColor: function(inColor) {
 	this.inherited(arguments);
