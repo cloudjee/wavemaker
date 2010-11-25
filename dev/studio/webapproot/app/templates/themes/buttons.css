@@ -240,7 +240,6 @@
        *
        * DESCRIPTION: Sets font, shadowing and background for a wm.Button with a mouseover
        ************************************************************************************************/
-
     .wm_template .EmphasizedContent  .wmbutton:hover,
     .wm_template .EmphasizedContent  .wmbutton:focus,
     .wm_template .EmphasizedContent  .wmroundedbutton:hover,

@@ -575,6 +575,7 @@ body.wm_template {
 
 
     /* Selected tab */
+    .dj_ie6 .wm_template .MainContent .wmtablayers-tab.wmtablayers-selected,
     .wm_template .MainContent .wmtablayers-tab.wmtablayers-selected,
     .wm_template .MainContent .wmtablayers-tab.wmtablayers-selected:hover,
     .wm_template .MainContent .wmtablayers-tab.wmtablayers-selected:focus {
@@ -785,6 +786,7 @@ body.wm_template {
 
 
     /* Selected tab */
+    .dj_ie6 .wm_template .EmphasizedContent .wmtablayers-tab.wmtablayers-selected,
     .wm_template .EmphasizedContent .wmtablayers-tab.wmtablayers-selected,
     .wm_template .EmphasizedContent .wmtablayers-tab.wmtablayers-selected:hover,
     .wm_template .EmphasizedContent .wmtablayers-tab.wmtablayers-selected:focus {
