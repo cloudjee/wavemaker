@@ -154,7 +154,7 @@
 		"Color": "#eeeeee"
 	}, 
 	"wm.TabLayers-Button": {
-		"Height": "25px", 
+		"Height": "23px", 
 		"TextSize": "11pt"
 	}, 
 	"wm.TabLayers-BorderStyle": {

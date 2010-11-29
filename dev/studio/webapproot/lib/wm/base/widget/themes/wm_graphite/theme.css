@@ -1565,7 +1565,7 @@ body .wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
     -moz-box-shadow: 2px 0px 2px #444444; /* wm.TabLayers-BorderStyle_Shadow */
     -webkit-box-shadow: 2px 0px 2px #444444; /* wm.TabLayers-BorderStyle_Shadow */
     box-shadow: 2px 0px 2px #444444; /* wm.TabLayers-BorderStyle_Shadow */
-    height: 25px; /* wm.TabLayers-Button_Height */
+    height: 23px; /* wm.TabLayers-Button_Height */
     font-size: 11pt; /* wm.TabLayers-Button_TextSize */
 }
 .wm_graphite .wmtablayers-tab:hover, .wm_graphite .wmtablayers-tab:focus {
