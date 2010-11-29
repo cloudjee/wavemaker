@@ -51,6 +51,7 @@ dojo.declare("wm.LivePanel", wm.Panel, {
 				name: studio.page.getUniqueName(this.liveDataName + "LiveForm1"),
 				owner: this.owner,
 		                parent: fancyPanel2.containerWidget, // wm.FancyPanel change; revert to returning "this"
+		                margin: "0,40,0,40",
 				verticalAlign: "top",
 				horizontalAlign: "left",
 				_liveSource: this.liveSource

@@ -469,7 +469,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	/**
 		@lends wm.LiveForm.prototype
 	*/
-	margin: "0,40,0,40",
+        margin: "0",
 	defaultButton: "",
 	displayErrors: true,
 	// process editing via liveData API
