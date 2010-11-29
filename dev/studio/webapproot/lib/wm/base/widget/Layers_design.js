@@ -214,6 +214,9 @@ wm.AccordionLayers.extend({
 		      {name: "wm.AccordionLayers-Closed_Image", displayName: "Closed Arrow Icon"}],
     transition: {ignore: true}
 });
+wm.Object.extendSchema(wm.AccordionLayers, {
+    captionBorder: {ignore: 1}
+});
 
 wm.TabLayers.extend({
     themeable: true,
