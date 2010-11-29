@@ -42,7 +42,7 @@ wm.Template.extend({
     themeable: false,
     // block wm.Panel's afterPaletteDrop
     afterPaletteDrop: function() {
-        wm.Container.prototype.afterPaletteDrop(arguments);
+        wm.Container.prototype.afterPaletteDrop.call(this); 
     }
 });
 wm.Template.description = "A set of built from a template.";
