@@ -353,7 +353,10 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 		
 		this.conUserInput.setInputValue(inData.username);
 		this.conPasswordInput.setInputValue(inData.password);
+		if(l){
 		this.conConnectionUrlInput.setInputValue(buildInitialCxnUrl(l[0], l[3], inData.connectionUrl, this.overrideFlagInput.getDataValue()));
+		}
+	  else {this.conConnectionUrlInput.setInputValue(inData.connectionUrl);}
 		this.conTablePatternInput.setInputValue(inData.tableFilter);
 		this.conSchemaPatternInput.setInputValue(inData.schemaFilter);
 		this.conDriverClassInput.setInputValue(inData.driverClassName);
