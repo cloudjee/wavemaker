@@ -220,12 +220,21 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    var item = this.dojoObj.getItem(rowIndex);
 	    return this.dojoObj.store.getValue(item,fieldName);
 	},
+        getCellNode: function(rowIndex, fieldName) {
+	    var cells = this.dojoObj.layout.cells;
+	    for (var i = 0; i < cells.length; i++) {
+		if (cells[i].field == fieldName) {
+		    return this.dojoObj.layout.cells[i].getNode(rowIndex);
+		}
+	    }
+	},
 	/* This method is flawed; tab does not work if cells are edited this way */
 	editCell: function(rowIndex, fieldName) {
 	  var cells = this.dojoObj.layout.cells;
 	  for (var i = 0; i < cells.length; i++) {
 	    if (cells[i].field == fieldName) {
 	      this.dojoObj.edit.setEditCell(cells[i], rowIndex);
+	      this.dojoObj.focus.setFocusCell(cells[i], rowIndex);
 	      return;
 	    }
 	  }
