@@ -33,27 +33,38 @@ dojo.declare("LogViewer", wm.Page, {
   showLogs: function() {
       if (this.lastProjectName != studio.project.projectName) {
 	  this.lastProjectName = studio.project.projectName;
-	  if (this.logArea)
-	    this.logArea.setHtml("");
+	  if (this.logArea) {
+	  this.logArea.setHtml("<div style='text-align:center'>* The only messages you will see here are calls to log(FATAL | ERROR | WARN | INFO | DEBUG, message) *</div>");
+	      this._isClear = true;
+	  }
       }
 
       var _this = this;
       studio.studioService.requestAsync("getLogUpdate", [this.logName, this.lastTimeStamp],
 				 function(result) {
 				     var logs = result.logs;			     
-				     if (_this.logArea)
-				       _this.logArea.appendHtml(logs);
+				     if (_this.logArea && logs) {
+					 if (_this._isClear) {
+					     _this._isClear = false;
+					     _this.logArea.setHtml(logs);
+					 } else 
+					     _this.logArea.appendHtml(logs);
+				     }
 				     if (result.lastStamp) _this.lastTimeStamp = result.lastStamp;
 				 });
   },
   clearLog: function() {
-    if (this.logArea) this.logArea.setHtml("");
+      if (this.logArea) {
+	  this.logArea.setHtml("<div style='text-align:center'>* The only messages you will see here are calls to log(FATAL | ERROR | WARN | INFO | DEBUG, message) *</div>");
+	  this._isClear = true;
+      }
   },
   updateLog: function() {
       this.showLogs();
   },
   setLogFile: function(inLogName) {
       this.logName = inLogName;
+      this.lastTimeStamp = 0;
       this.clearLog();
       this.updateLog();
   },
