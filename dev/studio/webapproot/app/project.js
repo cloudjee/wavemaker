@@ -219,8 +219,8 @@ dojo.declare("wm.studio.Project", null, {
 		        this.projectData.js = src;
 		        this.projectData.jscustom = this.projectName + ".extend({\n\n\t_end: 0});";
                     } else {
-		        this.projectData.js = src.substring(0,extendIndex).trim();
-		        this.projectData.jscustom = src.substring(extendIndex).trim() || this.projectName + ".extend({\n\n\t_end: 0});";
+		        this.projectData.js = dojo.trim(src.substring(0,extendIndex));
+		        this.projectData.jscustom = dojo.trim(src.substring(extendIndex)) || this.projectName + ".extend({\n\n\t_end: 0});";
                     }
 		}
 		eval(this.projectData.js);

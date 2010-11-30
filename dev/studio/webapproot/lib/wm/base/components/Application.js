@@ -734,7 +734,7 @@ wm.Application.extend({
 
 	    var comps = compsArray.join(", " + sourcer_nl);
 	
-	    var customsrc = String(studio.getAppScript()).trim() || studio.project.projectName + ".extend({\n\n\t" + terminus + "\n});";
+	    var customsrc = dojo.trim(String(studio.getAppScript())) || studio.project.projectName + ".extend({\n\n\t" + terminus + "\n});";
 	    var src = 'dojo.declare("' + this.declaredClass + '", wm.Application, {' +
 		props + ",\n\t" + 
 		    '"widgets": {\n' +  (comps || "") + '\n\t},\n\t' +
