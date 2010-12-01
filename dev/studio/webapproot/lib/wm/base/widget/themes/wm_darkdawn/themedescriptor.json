@@ -668,7 +668,7 @@
 		"Family": "Arial", 
 		"Weight": "normal", 
 		"TextSize": "10pt", 
-		"Color": "#ffffff"
+		"Color": "#000000"
 	}, 
 	"MainContent-EditorsHover-Border": {
 		"Color": "#006082"

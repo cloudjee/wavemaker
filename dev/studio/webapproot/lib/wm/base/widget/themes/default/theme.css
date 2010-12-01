@@ -843,14 +843,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
         height: 16px;
 }
 
-.dj_ie .wmeditor .dijitTextBox .dijitInputField {
-height: 100% !important;
-}
 
-.dj_ie .wmeditor .dijitTextBox .dijitInputField input {
-height: 100% !important;
-padding-top:2px !important;
-}
 
 .tundra .dijitTextBox .dijitArrowButtonInner {
     background-position: 50% 50%;
@@ -1586,11 +1579,12 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
      border-radius: 16px;     
 }
 .wmeditor.wmreseteditor .dijitInputField {
-    padding: 0px 20px 0px 5px !important;
+    padding: 1px 20px 0px 5px !important;
 }
 
 /* WARNING: Changing the 3px requires a change to the LargeTextArea class in Text.js */
-.wmeditor .dijitInputField, .wmeditor textarea {
+.wmeditor .dijitInputField, 
+.wmeditor textarea {
     padding: 0px 3px 0px 3px !important;
 }
 

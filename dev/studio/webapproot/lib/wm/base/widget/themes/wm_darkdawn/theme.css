@@ -433,6 +433,8 @@ body .wm_darkdawn input:focus,
     border-color: #666666; /* Borders-Clickable_Border_Color */
     border-right-width: 1px;
     border-top-width: 1px;
+    border-left-width: 0px;
+    border-bottom-width: 0px;
 }
 .wm_darkdawn .dijitCalendarContainer td.dijitCalendarSelectedDate,
 .wm_darkdawn .dijitCalendarContainer td.dijitCalendarSelectedDate.dijitCalendarCurrentMonth,
@@ -821,7 +823,7 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
 	/* MainContent-EditorsDefault-Font */
 	font-family: Arial; /* MainContent-EditorsDefault-Font_Family */
 	font-size: 10pt; /* MainContent-EditorsDefault-Font_TextSize */
-	color: #ffffff; /* MainContent-EditorsDefault-Font_Color */
+	color: #000000; /* MainContent-EditorsDefault-Font_Color */
 	font-weight: normal; /* MainContent-EditorsDefault-Font_Weight */
 	/* MainContent-EditorsDefault-Background */
 	background-color: #dddddd; /* MainContent-EditorsDefault-Background_Color */
@@ -2488,7 +2490,7 @@ body.wm_darkdawn {
 	/* MainContent-EditorsDefault-Font */
 	font-family: Arial; /* MainContent-EditorsDefault-Font_Family */
 	font-size: 10pt; /* MainContent-EditorsDefault-Font_TextSize */
-	color: #ffffff; /* MainContent-EditorsDefault-Font_Color */
+	color: #000000; /* MainContent-EditorsDefault-Font_Color */
 	font-weight: normal; /* MainContent-EditorsDefault-Font_Weight */
 	/* MainContent-EditorsDefault-Background */
 	background-color: #dddddd; /* MainContent-EditorsDefault-Background_Color */

@@ -80,6 +80,8 @@
     border-color: #666666; /* Borders-Clickable_Border_Color */
     border-right-width: 1px;
     border-top-width: 1px;
+    border-left-width: 0px;
+    border-bottom-width: 0px;
 }
 
 .wm_template .dijitCalendarContainer td.dijitCalendarSelectedDate,

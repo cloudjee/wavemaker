@@ -433,6 +433,8 @@ body .wm_green input:focus,
     border-color: #444444; /* Borders-Clickable_Border_Color */
     border-right-width: 1px;
     border-top-width: 1px;
+    border-left-width: 0px;
+    border-bottom-width: 0px;
 }
 .wm_green .dijitCalendarContainer td.dijitCalendarSelectedDate,
 .wm_green .dijitCalendarContainer td.dijitCalendarSelectedDate.dijitCalendarCurrentMonth,
@@ -1562,9 +1564,9 @@ body .wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
    ************************************************************************************************/
 .wm_green button.wmtablayers-tab {
     /* wm.TabLayers-BorderStyle_Shadow */
-    -moz-box-shadow: 1px 1px 1px #444444; /* wm.TabLayers-BorderStyle_Shadow */
-    -webkit-box-shadow: 1px 1px 1px #444444; /* wm.TabLayers-BorderStyle_Shadow */
-    box-shadow: 1px 1px 1px #444444; /* wm.TabLayers-BorderStyle_Shadow */
+    -moz-box-shadow: 1px 0px 1px #444444; /* wm.TabLayers-BorderStyle_Shadow */
+    -webkit-box-shadow: 1px 0px 1px #444444; /* wm.TabLayers-BorderStyle_Shadow */
+    box-shadow: 1px 0px 1px #444444; /* wm.TabLayers-BorderStyle_Shadow */
     height: 23px; /* wm.TabLayers-Button_Height */
     font-size: 9; /* wm.TabLayers-Button_TextSize */
 }

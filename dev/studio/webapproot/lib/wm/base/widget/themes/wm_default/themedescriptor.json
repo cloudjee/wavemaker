@@ -311,7 +311,7 @@
 		"TextSize": "9"
 	}, 
 	"wm.TabLayers-BorderStyle": {
-		"Shadow": "1px 1px 1px #444444"
+		"Shadow": "1px 0px 1px #444444"
 	}, 
 	"Dialogs-Styles-PanelType": {
 		"PanelStylePicker": "MainContent"
@@ -680,7 +680,7 @@
 	"wm.SelectMenu-Inner": {
 	}, 
 	"wm.TabLayers-Hover-BorderStyle": {
-		"Shadow": "0px 0px 0px #444444"
+		"Shadow": "2px 0px 2px #444444"
 	}, 
 	"wm.TabLayers-Active-BorderStyle": {
 		"Shadow": "0px 0px 0px #444444"

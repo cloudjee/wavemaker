@@ -158,7 +158,7 @@
 		"TextSize": "11pt"
 	}, 
 	"wm.TabLayers-BorderStyle": {
-		"Shadow": "2px 0px 2px #444444", 
+		"Shadow": "1px 0px 1px #444444", 
 		"UnselectedShadow": "3px 0px 3px #000000", 
 		"HoverShadow": "1px 0px 1px #000000", 
 		"SelectedShadow": "0px 0px 0px #444444"
@@ -552,7 +552,7 @@
 		"Color": "#000000"
 	}, 
 	"wm.TabLayers-Hover-BorderStyle": {
-		"Shadow": "1px 0px 1px #444444"
+		"Shadow": "2px 0px 2px #444444"
 	}, 
 	"wm.TabLayers-Active-BorderStyle": {
 		"Shadow": "0px 0px 0px #444444"
