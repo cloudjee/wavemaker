@@ -480,6 +480,18 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 	    }
 	    return result;
 	},
+    sizeEditor: function() {
+	this.inherited(arguments);
+	if (this._cupdating)
+	    return;
+	if (dojo.isFF || dojo.isIE) {
+	    var input = dojo.query("input.dijitInputInner", this.domNode)[0];
+	    if (input) {
+		input.style.height = this.editorNode.style.height;
+		input.style.lineHeight = this.editorNode.style.lineHeight;
+	    }
+	}
+    },
         destroy: function() {
 	    if (this._resetButtonNode)
 		dojo.destroy(this._resetButtonNode);
