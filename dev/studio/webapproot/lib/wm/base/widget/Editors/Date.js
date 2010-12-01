@@ -29,7 +29,8 @@ dojo.declare("wm.Date", wm.Text, {
 	invalidMessage: "",
 	minimum: "",
 	maximum: "",
-	format: '',
+	//locale: '',
+    
 	validationEnabled: function() { return true;},
 	getEditorProps: function(inNode, inProps) {
 		var constraints = {};
@@ -45,8 +46,10 @@ dojo.declare("wm.Date", wm.Text, {
 			value: this.convertValue(this.displayValue)
 		}, inProps || {});
 		
-		if (this.format != '')
-			prop.lang = this.format;
+/*
+		if (this.locale != '')
+			prop.lang = this.locale;
+*/
 		return prop;
 	},
 	_createEditor: function(inNode, inProps) {
