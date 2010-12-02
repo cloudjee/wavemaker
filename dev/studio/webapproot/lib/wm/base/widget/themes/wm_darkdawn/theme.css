@@ -86,7 +86,7 @@ body .wm_darkdawn input:focus,
        * DESCRIPTION: Sets font, rounding, shadowing and background for the standard button state
        ************************************************************************************************/
     .wm_darkdawn   .wmbutton,
-    .wm_darkdawn   .wmtogglebutton,
+        .wm_darkdawn   .wmtogglebutton,
     .wm_darkdawn   .wmroundedbutton,
     .wm_darkdawn   .wmbutton.wmbutton-disabled:hover,
     .wm_darkdawn   .wmbutton.wmbutton-disabled:focus
@@ -111,6 +111,9 @@ body .wm_darkdawn input:focus,
     }
     .dj_ie6 .wm_darkdawn .wmbutton {
         background-image: none !important;
+    }
+    .wm_darkdawn .wmbutton span {
+	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
     }
     /**************************************************************************************************
        * TYPE:        Active Styling
@@ -181,6 +184,9 @@ body .wm_darkdawn input:focus,
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
     }
+    .wm_darkdawn .MainContent .wmbutton span {
+	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
+    }
     /**************************************************************************************************
        * TYPE:        Active Styling
        *
@@ -250,6 +256,9 @@ body .wm_darkdawn input:focus,
 	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
     }
+    .wm_darkdawn .EmphasizedContent .wmbutton span {
+	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
+    }
     /**************************************************************************************************
        * TYPE:        Active Styling
        *
@@ -318,6 +327,9 @@ body .wm_darkdawn input:focus,
 	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_darkdawn .HeaderContent .wmbutton span {
+	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
     }
     /**************************************************************************************************
        * TYPE:        Active Styling
@@ -699,7 +711,7 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     border-radius-bottomright: 2px; /* wm.SelectMenu-Inner_Radius */
     border-radius-topright: 2px; /* wm.SelectMenu-Inner_Radius */
 }
-.wm_darkdawn .wmeditor .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
+.wm_darkdawn .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
         height: 100% !important;
         background-position: 50% 50%;
 	background-image: url(images/comboArrowDownLight.png); /* wm.SelectMenu-Down-Arrow_Image */
@@ -742,6 +754,8 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     background-color: #555555; /* Document-ClickablesDefault-Background_Color */
     background-image: none;
 }
+    .wm_darkdawn .dojoxGrid .dijitTextBox,
+    .wm_darkdawn .dojoxGrid .dijitComboBox,
     .wm_darkdawn .wmeditor .dijitTextBox,
     .wm_darkdawn .wmeditor .dijitTextArea,
     .wm_darkdawn .wmeditor .dijitComboBox,
@@ -783,6 +797,8 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
 	background-position: top left; /* Document-EditorsHover-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-EditorsHover-Background_Image-Repeat */
     }
+    .wm_darkdawn .dojoxGrid .dijitTextBox.dijitFocused,
+    .wm_darkdawn .dojoxGrid .dijitComboBox.dijitFocused,
     .wm_darkdawn .wmeditor .dijitTextBox.dijitFocused,
     .wm_darkdawn .wmeditor .dijitTextBox.dijitFocused.dijitHover,
     .wm_darkdawn .wmeditor .dijitTextArea.dijitFocused,
@@ -895,7 +911,7 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
 	/* EmphasizedContent-EditorsDefault-Font */
 	font-family: Arial; /* EmphasizedContent-EditorsDefault-Font_Family */
 	font-size: 10pt; /* EmphasizedContent-EditorsDefault-Font_TextSize */
-	color: #ffffff; /* EmphasizedContent-EditorsDefault-Font_Color */
+	color: #000000; /* EmphasizedContent-EditorsDefault-Font_Color */
 	font-weight: normal; /* EmphasizedContent-EditorsDefault-Font_Weight */
 	/* EmphasizedContent-EditorsDefault-Background */
 	background-color: #dddddd; /* EmphasizedContent-EditorsDefault-Background_Color */
@@ -2516,7 +2532,7 @@ body.wm_darkdawn {
 	/* EmphasizedContent-EditorsDefault-Font */
 	font-family: Arial; /* EmphasizedContent-EditorsDefault-Font_Family */
 	font-size: 10pt; /* EmphasizedContent-EditorsDefault-Font_TextSize */
-	color: #ffffff; /* EmphasizedContent-EditorsDefault-Font_Color */
+	color: #000000; /* EmphasizedContent-EditorsDefault-Font_Color */
 	font-weight: normal; /* EmphasizedContent-EditorsDefault-Font_Weight */
 	/* EmphasizedContent-EditorsDefault-Background */
 	background-color: #dddddd; /* EmphasizedContent-EditorsDefault-Background_Color */

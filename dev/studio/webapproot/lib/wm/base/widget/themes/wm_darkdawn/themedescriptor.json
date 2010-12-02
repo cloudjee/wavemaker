@@ -766,7 +766,7 @@
 		"Family": "Arial", 
 		"Weight": "normal", 
 		"TextSize": "10pt", 
-		"Color": "#ffffff"
+		"Color": "#000000"
 	}, 
 	"EmphasizedContent-EditorsHover-Border": {
 		"Color": "#006082"
