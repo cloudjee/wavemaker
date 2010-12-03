@@ -252,8 +252,8 @@ dojo.declare("wm.ToggleButton", wm.ToolButton, {
                 this.setClicked(true);
 	},
         click: function() {
-	    this.onclick();
 	    this.setProp("clicked", !this.clicked);
+	    this.onclick();
 	},
     /* Sets the state, updates the css, does not fire events; useful in a set of toggle buttons where clicking one updates the states of the others, but firing events on each one would be bad */
     setClicked: function(inClicked) {
