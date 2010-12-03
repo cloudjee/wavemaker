@@ -93,7 +93,7 @@ public class DataServiceMetaData {
         new HashMap<String, Map<String, Property>>();
 
     // Entity class names in alphabetical order
-    private final SortedSet<String> entityClassNamesX = new TreeSet<String>();
+    private final SortedSet<String> entityClassNames = new TreeSet<String>();
 
     // Component class names in alphabetical order
     private final SortedSet<String> componentClassNames = new TreeSet<String>();
