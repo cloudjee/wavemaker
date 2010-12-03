@@ -169,6 +169,7 @@
           <file name="${wsdl4j.jar}"/>
           <file name="${xmlschema.jar}"/>
           <file name="${paranamer.jar}"/>
+		  <file name="${json-org.jar}"/>
         </filelist>
     </then>    
     <else> <!-- Default -->     
@@ -224,6 +225,7 @@
           <file name="${wsdl4j.jar}"/>
           <file name="${xmlschema.jar}"/>
           <file name="${paranamer.jar}"/>
+		  <file name="${json-org.jar}"/>
         </filelist>
 			</else>
 			</if>
