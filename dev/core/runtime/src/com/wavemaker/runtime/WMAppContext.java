@@ -19,18 +19,18 @@ package com.wavemaker.runtime;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.CommonConstants;
+import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.Properties;
 import java.util.HashMap;
+
+import org.json.JSONObject;
 
 /**
  * This singleton class is to store any properties in the scope of the
@@ -50,6 +50,7 @@ public class WMAppContext
     private String appName;
     private static HashMap<String, Integer> tenantIdMap = new HashMap<String, Integer>();
     private static HashMap<String, String> userNameMap = new HashMap<String, String>();
+    private JSONObject typesObj; //xxx
 
     private WMAppContext(ServletContextEvent event) {
         context = event.getServletContext();
@@ -58,11 +59,25 @@ public class WMAppContext
         
         //In Studio, the tenant field and def tenant ID is injected by ProjectManager when a project opens
         if (!appName.equals(DataServiceConstants.WAVEMAKER_STUDIO)) {
+            //Store types.js contents in memory
             FileInputStream is;
             try {
                 String path = context.getRealPath("");
-                path = path + "/WEB-INF/classes/" + CommonConstants.APP_PROPERTY_FILE;
+                path = path + "/types.js";
                 is = new FileInputStream(path);
+                String s = IOUtils.convertStreamToString(is);
+                typesObj = new JSONObject(s.substring(11));
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+
+            //Set up multi-tenant info
+            FileInputStream fis;
+            try {
+                String path = context.getRealPath("");
+                path = path + "/WEB-INF/classes/" + CommonConstants.APP_PROPERTY_FILE;
+                fis = new FileInputStream(path);
             } catch (FileNotFoundException ne) {
                 return;
             } catch (WMRuntimeException re) {
@@ -76,7 +91,7 @@ public class WMAppContext
 
             try {
                 props = new Properties();
-                props.load(is);
+                props.load(fis);
             } catch (IOException ioe) {
                 ioe.printStackTrace();
                 return;
@@ -217,6 +232,14 @@ public class WMAppContext
 
     public String getAppContextRoot() {
         return context.getRealPath("");    
+    }
+
+    public JSONObject  getTypesObject() { //xxx
+        return typesObj;
+    }
+
+    public void setTypesObject(JSONObject val) { //xxx
+        this.typesObj = val;
     }
 
     class ProjectInfo {

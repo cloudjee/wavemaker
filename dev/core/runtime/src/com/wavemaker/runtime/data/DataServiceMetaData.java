@@ -29,6 +29,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.File;
+import java.lang.reflect.Method;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -42,13 +46,14 @@ import org.hibernate.mapping.Value;
 import org.hibernate.type.Type;
 
 import com.wavemaker.common.Resource;
-import com.wavemaker.common.util.CastUtils;
-import com.wavemaker.common.util.OneToManyMap;
-import com.wavemaker.common.util.StringUtils;
-import com.wavemaker.common.util.Tuple;
+import com.wavemaker.common.util.*;
 import com.wavemaker.runtime.data.spring.ConfigurationRegistry;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.data.util.DataServiceUtils;
+import com.wavemaker.runtime.data.parser.HbmQueryParser;
+import com.wavemaker.runtime.WMAppContext;
+import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.runtime.ws.salesforce.SalesforceSupport;
 
 /**
  * Wraps a Hibernate Configuration with convenience methods.
@@ -88,7 +93,7 @@ public class DataServiceMetaData {
         new HashMap<String, Map<String, Property>>();
 
     // Entity class names in alphabetical order
-    private final SortedSet<String> entityClassNames = new TreeSet<String>();
+    private final SortedSet<String> entityClassNamesX = new TreeSet<String>();
 
     // Component class names in alphabetical order
     private final SortedSet<String> componentClassNames = new TreeSet<String>();
@@ -127,7 +132,8 @@ public class DataServiceMetaData {
             refreshEntities = new HashSet<String>(StringUtils.split(s));
         }
 
-        initMappingData();
+        if (!configurationName.equals("salesforceService"))
+            initMappingData();
     }
 
     /**
@@ -142,6 +148,13 @@ public class DataServiceMetaData {
 
         operationManager = new DataServiceOperationManager(fac,
                 useIndividualCRUDOperations);
+    }
+
+    public void init_SF(String configurationName) {
+
+        DataOperationFactory fac = initFactory_SF(configurationName);
+
+        operationManager = new DataServiceOperationManager(fac, false);
     }
 
     public void dispose() {}
@@ -499,6 +512,128 @@ public class DataServiceMetaData {
                     }
                 }
                 return rtn;
+            }
+        };
+    }
+
+    private DataOperationFactory initFactory_SF(String configurationName) { //xxx
+        return new DataOperationFactory() {
+
+            // this is magic, and has to match the name of the
+            // generated example query(ies).
+            private static final String GENERATED_QUERY_NAME =
+                "ExampleHQLQuery1";
+
+            private static final String qfname = "com/sforce/queries/sforce-queries.xml";
+            private HbmQueryParser p;
+            private Map<String, QueryInfo> queries = null;
+
+            {
+                String appName = WMAppContext.getInstance().getAppName();
+                //if (appName.equals(DataServiceConstants.WAVEMAKER_STUDIO)) {
+                //    p = new HbmQueryParser(RuntimeAccess.getInstance().getProjectRoot());
+                //} else {
+                    InputStream is = ClassLoaderUtils.getResourceAsStream(qfname);
+                    p = new HbmQueryParser(new InputStreamReader(is));
+                //}
+
+                queries = p.getQueries();
+            }
+
+            public Collection<String> getEntityClassNames() {
+                return entityClassNames;
+            }
+
+            public List<Tuple.Three<String, String, Boolean>> getQueryInputs(
+                    String queryName) {
+
+                List<Tuple.Three<String, String, Boolean>> rtn =
+                    new ArrayList<Tuple.Three<String, String, Boolean>>();
+
+                Input[] inputs = queries.get(queryName).getInputs();
+
+                for (Input input : inputs) {
+                    Tuple.Three<String, String, Boolean> t =
+                            new Tuple.Three<String, String, Boolean>(input.getParamName(), input.getParamType(),
+                                    input.getList());
+                    rtn.add(t);
+                }
+
+                return rtn;
+            }
+
+            @SuppressWarnings("unchecked")
+            public Collection<String> getQueryNames() {
+
+                Collection<String> rtn = new HashSet<String>();
+
+                rtn.addAll(queries.keySet());
+
+                return rtn;
+            }
+
+            public List<String> getQueryReturnNames(String operationName,
+                    String queryName) {
+
+                String query = queries.get(queryName).getQuery();
+
+                List<String> fldList;
+
+                SalesforceSupport sfs = new SalesforceSupport();
+                fldList = sfs.getColumns(query);
+
+                if (fldList == null || fldList.size() == 0)
+                    return Collections.emptyList();
+
+                List<String> rtn = new ArrayList<String>();
+                int num = 0;
+                for (String fld : fldList) {
+                    String cnum = "" + num;
+                    rtn.add(cnum);
+                    num++;
+                }
+
+                return rtn;
+            }
+
+            public boolean requiresResultWrapper(String operationName,
+                    String queryName) {
+                return true;
+            }
+
+            public List<String> getQueryReturnTypes(String operationName,
+                    String queryName) {
+
+                String query = queries.get(queryName).getQuery();
+
+                List<String> types;
+
+                SalesforceSupport sfs = new SalesforceSupport();
+                try {
+                    types = sfs.getColumnTypes(query);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+
+                return types;
+            }
+
+            public boolean queryReturnsSingleResult(String operationName,
+                    String queryName) {
+
+                // hack for generated queries - only required for initial
+                // ServiceDefinition instance that is used to add the service
+                /*if (queryName.equals(GENERATED_QUERY_NAME)) {
+                    return true;
+                }
+
+                // to make existing tests happy
+                if (queryName.startsWith("get") && queryName.endsWith(("ById"))) {
+                    return true;
+                }*/
+
+                return false;
             }
         };
     }

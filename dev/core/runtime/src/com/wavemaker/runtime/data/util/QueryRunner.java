@@ -52,8 +52,13 @@ public class QueryRunner {
 
     private final DataServiceManager mgr;
 
-    private final Map<String, Object> bindParameters = 
+    private final Map<String, Object> bindParameters =
         new HashMap<String, Object>();
+
+    private final Map<String, Class<?>> bindParameterTypes =  //xxx
+        new HashMap<String, Class<?>>();
+
+    private String name = null; //xxx
 
     private Long maxResults = null;
 
@@ -99,6 +104,7 @@ public class QueryRunner {
             boolean isList) {
         Object o = TypeConversionUtils.fromString(type, value, isList);
         bindParameters.put(name, o);
+        bindParameterTypes.put(name, type);
     }
 
     public void setMaxResults(Long maxResults) {
@@ -120,6 +126,8 @@ public class QueryRunner {
                 // ignore connection errors
                 throw ex;
             }
+        } catch (Exception ex1) {
+
         }
     }
 
@@ -140,8 +148,35 @@ public class QueryRunner {
         }
     }
 
+    //used for salesforce
+    public Object run(String query, boolean named) { //xxx
+
+        try {
+
+            Object[] args = setupTaskArgs(query, true);
+
+            Object rtn;
+            //if (name.equals("salesforceService")) //xxx
+                rtn = mgr.invoke(runQueryTask, bindParameterTypes, named, args);
+            //else
+            //    rtn = mgr.invoke(runQueryTask, args);
+
+            SystemUtils.clientPrepare();
+
+            return rtn;
+
+        } finally {
+            bindParameters.clear();
+            bindParameterTypes.clear(); //xxx
+        }
+    }
+
     public void dispose() {
         mgr.dispose();
+    }
+
+    public void setName(String name) { //xxx
+        this.name = name;
     }
 
     private Object[] setupTaskArgs(String query, boolean includePagingOptions) {

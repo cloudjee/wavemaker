@@ -23,15 +23,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JType;
-import com.sun.codemodel.JVar;
+import com.sun.codemodel.*;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.ws.BindingProperties;
 import com.wavemaker.runtime.ws.util.Constants;
@@ -164,6 +156,20 @@ public abstract class WebServiceGenerator extends ServiceGenerator {
                 "bindingProperties");
         JBlock setBlock = setBindingPropsMethod.body();
         setBlock.assign(JExpr._this().ref(bindingPropertiesVar), var);
+
+        //special requirements for Salesforce
+        if (serviceDefinition.getServiceId().equals("salesforceService")) { //xxx
+            JCodeModel mdl = new JCodeModel();
+            JDefinedClass liveDataSvcCls;
+
+            try {
+                liveDataSvcCls = mdl._class("com.sforce.LiveDataServiceImpl_SF"); //xxx
+            } catch (Exception e) {
+                throw new GenerationException(e);
+            }
+
+            cls._extends(liveDataSvcCls);
+        }
     }
 
     @Override

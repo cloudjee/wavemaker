@@ -44,6 +44,7 @@ import com.wavemaker.runtime.client.TreeNode;
 import com.wavemaker.runtime.data.DataServiceDefinition;
 import com.wavemaker.runtime.data.DataServiceOperation;
 import com.wavemaker.runtime.data.ExternalDataModelConfig;
+import com.wavemaker.runtime.data.Input;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.data.util.DataServiceUtils;
 import com.wavemaker.runtime.data.util.QueryRunner;
@@ -197,7 +198,10 @@ public class DataModelConfiguration {
         this.springConfiguration = new DataServiceSpringConfiguration(
                 fileService, this.cfgPath, this.cfgFile, serviceId);
 
-        setup();
+        if (!serviceId.equals("salesforceService")) //xxx
+            setup();
+        else
+            setup_SF();
     }
 
     public DataModelConfiguration(File springConfig) {
@@ -877,6 +881,7 @@ public class DataModelConfiguration {
                 Object rtn = null;
 
                 try {
+                    queryRunner.setName(name);
                     rtn = queryRunner.run(query);
                 } catch (Throwable th) {
                     throw DataServiceUtils.unwrap(th);
@@ -1070,11 +1075,19 @@ public class DataModelConfiguration {
     }
 
     public String getDataPackage() {
+        if (this.name.equals("salesforceService")) { //xxx
+            return getDataPackage_SF();
+        }
+
         if (dataPackage == null) {
             throw new IllegalStateException(
                     "Cannot determine package until mapping files have been registered");
         }
         return dataPackage;
+    }
+
+    public String getDataPackage_SF() { //xxx
+        return "com.sforce.queries";
     }
 
     public String getOutputPackage() {
@@ -1502,7 +1515,7 @@ public class DataModelConfiguration {
                     .unwrapAndCast(def);
 
             dataDef.getMetaData().setServiceClassName(
-                    externalConfig.getServiceClass());
+                externalConfig.getServiceClass());
 
             for (String q : modifiedQueryNames) {
 
@@ -1757,6 +1770,11 @@ public class DataModelConfiguration {
         addRegisteredFiles();
     }
 
+    private void setup_SF() { //xxx
+        String path = "com/sforce/queries/sforce-queries.xml";
+        addQueryDocument(path);
+    }
+
     private HbmQueryParser getParserForQuery(QueryInfo qi) {
 
         if (queryNameToParser.containsKey(qi.getName())) {
@@ -1799,9 +1817,9 @@ public class DataModelConfiguration {
 
             String meta = p.getMeta();
 
-            if (meta != null
+            if ((meta != null
                     && com.wavemaker.tools.data.util.DataServiceUtils
-                            .isDefaultQueryStore(meta)) {
+                            .isDefaultQueryStore(meta)) || (name.equals("salesforceService"))) { //xxx
                 defaultQueryParser = p;
             }
 
@@ -1973,7 +1991,7 @@ public class DataModelConfiguration {
         return rtn;
     }
 
-    private void setBindParameters(QueryRunner queryRunner, 
+    private void setBindParameters(QueryRunner queryRunner,
                                    Input[] inputs, String values, 
                                    boolean includeNullValues) 
     {

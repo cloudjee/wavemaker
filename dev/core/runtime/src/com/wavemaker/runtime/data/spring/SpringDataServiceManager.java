@@ -403,4 +403,8 @@ public class SpringDataServiceManager implements DataServiceManager {
         return rtn;
     }
 
+    public Object invoke(Task task, Map<String, Class<?>> types, boolean named, Object... input) { //xxx
+        return null;
+    }
+
 }

@@ -17,16 +17,7 @@
  */
 package com.wavemaker.common.util;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -471,5 +462,23 @@ public class IOUtils {
     public static boolean excludeByExactMatch(File file) {
 
         return DEFAULT_EXCLUSION.contains(file.getName());
+    }
+
+    /**
+     * Convert InputStream to String
+     */
+    public static String convertStreamToString(InputStream is) //xxx
+            throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+        } finally {
+            is.close();
+        }
+        return sb.toString();
     }
 }

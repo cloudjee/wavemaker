@@ -65,6 +65,7 @@ import com.wavemaker.tools.spring.beans.Entry;
 import com.wavemaker.tools.spring.beans.Import;
 import com.wavemaker.tools.spring.beans.Property;
 import com.wavemaker.tools.spring.beans.Value;
+import com.wavemaker.tools.ws.salesforce.SalesforceHelper;
 
 /**
  * Responsible for generating the runtime configuration files.
@@ -140,7 +141,8 @@ public /*static*/ class ConfigurationCompiler {
 
     /**
      * Get the runtime SMD directory.
-     * @param p
+     * @param servicesDir service directory
+     * @param serviceName service name
      * @return
      */
     public static File getSmdFile(File servicesDir, String serviceName) {
@@ -408,8 +410,18 @@ public /*static*/ class ConfigurationCompiler {
                 type.setService(serviceId);
                 type.setInternal(dao.isInternal());
 
+                /*SalesforceHelper helper = null;
+                if (serviceId.equals("salesforceService")) { //xxx
+                    try { //xxx
+                        helper = new SalesforceHelper(dao.getName(), serviceId);  //xxx
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }*/
+
                 int fieldOrder = 0;
                 for (Element et : dao.getElement()) {
+                    if (SalesforceHelper.skipElement(et, serviceId)) continue; //xxx
                     Field f = new Field();
                     f.setType(et.getTypeRef());
                     f.setIsList(et.isIsList());
@@ -418,6 +430,12 @@ public /*static*/ class ConfigurationCompiler {
                     f.setNoChange(et.getNoChange());
                     f.setInclude(et.getRequire());
                     f.setFieldOrder(fieldOrder);
+
+                    /*if (serviceId.equals("salesforceService")) { //xxx
+                        String subType = helper.getSubType(et.getName());
+                        f.setFieldSubType(subType);
+                    }*/
+                    f.setFieldSubType(et.getSubType()); //xxx
 
                     type.getFields().put(et.getName(), f);
                     fieldOrder++;

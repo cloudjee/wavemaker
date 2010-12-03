@@ -40,7 +40,7 @@ import com.wavemaker.json.type.reflect.ReflectTypeUtils;
 import com.wavemaker.runtime.server.json.JSONUtils;
 import com.wavemaker.runtime.server.testspring.BeanClass;
 import com.wavemaker.runtime.service.ParsedServiceArguments;
-import com.wavemaker.tools.data.Input;
+import com.wavemaker.runtime.data.Input;
 import com.wavemaker.tools.data.QueryInfo;
 import com.wavemaker.tools.spring.ComplexReturnBean;
 

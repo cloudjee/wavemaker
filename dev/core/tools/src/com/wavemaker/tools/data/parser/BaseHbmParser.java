@@ -33,7 +33,9 @@ import javax.xml.stream.XMLStreamReader;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.ClassLoaderUtils;
-import com.wavemaker.tools.data.DataServiceLoggers;
+//import com.wavemaker.tools.data.DataServiceLoggers; //xxx
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Simon Toens
@@ -182,8 +184,12 @@ public abstract class BaseHbmParser {
                         ClassLoaderUtils.getResourceAsStream(
                         "com/wavemaker/tools/data/hibernate-mapping-3.0.dtd");
                     if (rtn == null) {
-                        DataServiceLoggers.parserLogger.warn(
+                        //get rid of references to "tools" package
+                        Log parserLogger = LogFactory.getLog("com.wavemaker.tools.data.parser");
+                        parserLogger.warn(
                         "Did not find local copy of \"hibernate-mapping-3.0.dtd\"");
+                        //DataServiceLoggers.parserLogger.warn( //
+                        //"Did not find local copy of \"hibernate-mapping-3.0.dtd\"");
                     } else {
                         return rtn;
                     }

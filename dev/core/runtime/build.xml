@@ -63,6 +63,7 @@
                 <include name="**/*.properties"/>
                 <include name="**/*.cfg"/>
                 <include name="**/*.xml"/>
+				<include name="**/*.wsdl"/>
             </fileset>
         </copy>
     </target>

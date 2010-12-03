@@ -28,13 +28,7 @@ import java.util.TreeSet;
 import com.wavemaker.common.Resource;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.common.util.Tuple;
-import com.wavemaker.runtime.data.DataOperationFactory;
-import com.wavemaker.runtime.data.DataServiceInternal;
-import com.wavemaker.runtime.data.DataServiceOperation;
-import com.wavemaker.runtime.data.DataServiceOperationManager;
-import com.wavemaker.runtime.data.DataServiceRuntimeException;
-import com.wavemaker.runtime.data.DataServiceType;
-import com.wavemaker.runtime.data.ExternalDataModelConfig;
+import com.wavemaker.runtime.data.*;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.data.util.DataServiceUtils;
 import com.wavemaker.runtime.service.ElementType;
@@ -208,8 +202,13 @@ public class DataServiceDefinition  extends AbstractDeprecatedServiceDefinition
     }
 
     private void initOperationManager() {
-        this.operationManager = new DataServiceOperationManager(initFactory(),
+        if (!this.serviceId.equals("salesforceService")) { //xxx
+            this.operationManager = new DataServiceOperationManager(initFactory(),
                 dataCfg.useIndividualCRUDOperations());
+        } else {
+            this.operationManager = new DataServiceOperationManager(initFactory(),
+                false);
+        }
     }
 
     private DataOperationFactory initFactory() {

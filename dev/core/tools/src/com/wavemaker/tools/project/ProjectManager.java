@@ -44,6 +44,7 @@ import com.wavemaker.tools.project.upgrade.UpgradeManager;
 import com.wavemaker.tools.data.DataModelManager;
 
 import org.apache.commons.io.FileUtils;
+import org.json.JSONObject;
 
 /**
  * Manages projects; list of all available projects, and keeps track of any
@@ -169,6 +170,20 @@ public class ProjectManager {
             wmApp.setTenantInfoForProj(projectName, tenantFieldName, defTenantID, tenantColumnName);
         }
 
+        //Store types.js contents in the memory //xxx
+        String typesPath = ret.getWebAppRoot().getAbsolutePath() + "/types.js";
+        try {
+            is = new FileInputStream(typesPath);
+
+            String s = IOUtils.convertStreamToString(is);
+            JSONObject typesObj = new JSONObject(s.substring(11));
+            if (wmApp != null) {
+                wmApp.setTypesObject(typesObj);
+            }
+        }  catch (FileNotFoundException ex) {
+        }  catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**

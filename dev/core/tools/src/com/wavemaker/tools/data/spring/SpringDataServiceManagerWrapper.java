@@ -24,6 +24,8 @@ import com.wavemaker.runtime.data.DataServiceManager;
 import com.wavemaker.runtime.data.DataServiceMetaData;
 import com.wavemaker.runtime.data.Task;
 
+import java.util.Map;
+
 /**
  * @author stoens
  * @version $Rev$ - $Date$
@@ -66,6 +68,10 @@ public class SpringDataServiceManagerWrapper implements DataServiceManager {
 
     public Object invoke(Task task, Object... input) {
         return delegate.invoke(task, (Object[])input);
+    }
+
+    public Object invoke(Task task, Map<String, Class<?>> types, boolean named, Object... input) {
+        return delegate.invoke(task, types, named, (Object[])input); //xxx0909
     }
 
     public void rollback() {
