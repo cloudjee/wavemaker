@@ -229,6 +229,8 @@ dojo.declare("QueryEditor", wm.Page, {
 			var c = cs[i];
 			if (c.declaredClass == "wm.DataModel") {
 				names.push(c.dataModelName);
+			} else if (c.id == SALESFORCE_SERVICE) {
+				names.push(c.id);
 			}
 		}
 		this.queryDataModelInput.editor.setOptions(names.join());
@@ -263,7 +265,8 @@ dojo.declare("QueryEditor", wm.Page, {
 		}
 		studio.beginWait("Saving Query: " + name);
 
-		this._checkQuery();
+		//this._checkQuery(); //xxx
+		this._updateQuery();
 	},
 	_checkQuery: function() {
 		var bindParamValues = this._buildBindParms();
