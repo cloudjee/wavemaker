@@ -275,6 +275,8 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 			this.dumpOperationList(inNode, s._operations, '', '');
 			s.destroy();
 		}));
+
+		studio.addQryAndViewToTree(inNode); //xxx
 	},
 	dumpOperationList: function(inNode, inList) {
 		var sorted = [];

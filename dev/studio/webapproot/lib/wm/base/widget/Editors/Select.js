@@ -963,6 +963,7 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		wm.fire(this.$.liveVariable, "destroy");
 		var v = wm.getFormLiveView(wm.getParentForm(this));
 		if (v) {
+			if (v.service == "salesforceService" && this.displayField == "queryLocator") return; //xxx
 			var ff = wm.getFormField(this);
 			v.addRelated(ff);
 			var lv = this.dataSet = new wm.LiveVariable({

@@ -54,6 +54,7 @@ dojo.declare("wm.LivePanel", wm.Panel, {
 		                margin: "0,40,0,40",
 				verticalAlign: "top",
 				horizontalAlign: "left",
+				liveDataSourceClass: this.liveSource, //xxx
 				_liveSource: this.liveSource
 			});
 	        this.reflow(); // added for fancypanel support

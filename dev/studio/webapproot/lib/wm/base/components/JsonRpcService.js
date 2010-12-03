@@ -61,6 +61,13 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
 	bind: function(method, parameters, deferredRequestHandler, url){
 		//console.log("method", method, "parameters", parameters || [], "url", url || this.serviceUrl);
 		url = url || this.serviceUrl;
+
+		//if a query is running for salesforceService, the query service must be provided by the customer application,
+		//not from Studio.
+		if (method == "runQuery" && parameters[0] == SALESFORCE_SERVICE) { //xxx
+			url = wm.services.getService(SALESFORCE_SERVICE)._service.serviceUrl;
+		}
+
 		if (!url)
 			return;
 

@@ -28,12 +28,14 @@ wm.getViewField = function(inTypeSchema, inPropName) {
 			sortable: true,
 			dataIndex: inPropName,
 			type: propInfo.type,
-			displayType: wm.getPrimitiveDisplayType(propInfo.type),
+			//displayType: wm.getPrimitiveDisplayType(propInfo.type),
+			displayType: wm.getDisplayType(propInfo), //xxx
 			required: propInfo.required,
 			readonly: dojo.indexOf(propInfo.noChange||[], "read") >= 0, 
 			includeLists: true,
 			includeForms: true,
-			order: propInfo.fieldOrder
+			order: propInfo.fieldOrder,
+			subType: propInfo.fieldSubType //xxx
 		};
 	}
 }
@@ -101,6 +103,8 @@ dojo.declare("wm.LiveView", wm.Component, {
 				var isRelatedField = wm.typeManager.isStructuredType(field.type);
 				if (isRelatedField && field.required)
 				{
+					if (field.type == "com.sforce.soap.enterprise.salesforceservice.QueryResultType") 
+						continue; //xxx
 					this.addRelated(i);
 					ts.push(i);
 				}
@@ -283,6 +287,22 @@ dojo.declare("wm.LiveView", wm.Component, {
 			return list;
 		} else
 			return view;
+	},
+	
+	//check if any picklist(for salesforce for now) exists
+	pickListExists: function() { //xxx
+		var exists = false;
+		if (SALESFORCE_SERVICE == this.service) {
+			for (var i=0; i<this.view.length; i++) {
+				var e = this.view[i];
+				if ("picklist" == e.subType) {
+					exists = true;
+					break;
+				}
+			}
+		}
+
+		return exists;
 	}
 });
 

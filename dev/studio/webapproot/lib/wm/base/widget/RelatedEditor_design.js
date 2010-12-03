@@ -225,11 +225,13 @@ wm.RelatedEditor.extend({
 		};
 		props.name = wm.makeNameForProp(this.formField, "Lookup");
 		var lookupProps = this._getLookupFieldInfo(inFieldSchema);
-		lookupProps.displayField = ff.dataIndex;
-		var e = this.createEditor(lookupProps, props, null, "wm.Lookup");
-		if (e) {
-			this._bindEditor(e);
-			return e;
+		if (lookupProps) { //xxx
+			lookupProps.displayField = ff.dataIndex;
+			var e = this.createEditor(lookupProps, props, null, "wm.Lookup");
+			if (e) {
+				this._bindEditor(e);
+				return e;
+			}
 		}
 	},
 	_getFieldSchema: function() {
@@ -246,6 +248,8 @@ wm.RelatedEditor.extend({
 		return wm.typeManager.getPropertyInfoFromSchema(schema, this.formField);
 	},
 	_getLookupFieldInfo: function(inFieldSchema) {
+		if (inFieldSchema.type == "com.sforce.soap.enterprise.salesforceservice.QueryResultType") 
+			return null; //xxx
 		return {
 			caption: wm.capitalize(this.formField) + ' (lookup)',
 			displayType: "Lookup",
