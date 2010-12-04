@@ -150,7 +150,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		
 		if (!this.isDesignLoaded() && evtObj && evtObj.onClick && evtObj.onClick != '')
 		{
-		    var f = this.owner.getValueById(evtObj.onClick);//this.owner[evtObj.onClick];
+		    var f = this.owner.getValueById(evtObj.onClick) || this.owner[evtObj.onClick];
                     menuObj.onClick = this.owner.makeEvent(f, evtObj.onClick);
 		}
 		
