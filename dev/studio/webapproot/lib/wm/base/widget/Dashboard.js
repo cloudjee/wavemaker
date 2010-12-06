@@ -40,6 +40,8 @@ dojo.declare("wm.Dashboard", wm.Control, {
 		dojo['require']("dojox.widget.Portlet");
 		dojo['require']("dijit.TooltipDialog");
 		this.inherited(arguments);
+                wm.requireCss("lib.dojo.dojox.layout.resources.GridContainer");
+                wm.requireCss("lib.dojo.dojox.widget.Portlet.Portlet");
 	},
 	postInit: function() {
 		this.inherited(arguments);

@@ -28,6 +28,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	query:'',
 	dojoObj:null,
 	singleClickEdit:false,
+    liveEditing: false,
 	selectedItem: null,
 	emptySelection: true,
 	isRowSelected: false,
@@ -146,6 +147,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	  this.onSelectionChange();
 	},
 	select: function() {
+	    this._selectedItemTimeStamp = new Date().getTime();
 		if (this.selectionMode == 'multiple')
 			this.updateAllSelectedItem();
 		else
@@ -153,6 +155,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		this.onSelectionChange();
 	},
 	selectionChange: function() {
+	    this._selectedItemTimeStamp = new Date().getTime();
 		if (this.selectionMode == 'multiple')
 			this.updateAllSelectedItem();
 		else
@@ -171,6 +174,20 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 				return;
 		}
 		this.updateSelectedItem( this.getSelectedIndex());
+	        if (this.liveEditing)
+		    this.writeSelectedItem();
+
+	    // A bug in dojox.grid editting causes it to set "user.name" but read from "user: {name: currentname}" so we copy in the data to compenate
+	    if (inFieldName.indexOf(".")) {
+		var elements = inFieldName.split(".");
+		var firstElement = elements.shift();
+		var obj = this.getCell(inRowIndex, firstElement);
+		if (obj[elements.join(".")])
+		    obj[elements.join(".")][0] = inValue;
+		else
+		    obj[elements.join(".")] = [inValue];
+
+	    }
 		this.onCellEdited(inValue, inRowIndex, inFieldName);
 	},
 	updateSelectedItem: function(selectedIndex) {
@@ -187,6 +204,93 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		this.setValue("emptySelection", !this.hasSelection());
 		this.setValue("isRowSelected", this.hasSelection());
 	},
+    createNewLiveVariable: function() {
+	return new wm.LiveVariable({owner: this,
+				    operation: "update",
+				    name: "liveVar",
+				    liveSource: this.getDataSet().liveSource,
+				    autoUpdate: false,
+				    startUpdate: false});
+    },
+    writeSelectedItem: function() {
+	var deferred;
+	var rowIndex = this.getSelectedIndex();
+	var operation = this.getRow(rowIndex)._new ? "insert" : "update";
+	var sourceData = this.selectedItem.getData();
+	if (operation == "insert") {
+	    this.setCell(rowIndex, "_new", false); // after we insert it, all future ops are update
+	    for (prop in sourceData)
+		if (sourceData[prop] == "&nbsp;")
+		    sourceData[prop] = "";
+	}
+
+	if (!this.liveVariables) {
+	    this.liveVariables = [];
+	    this.liveVariables.unshift(this.createNewLiveVariable());
+	}
+	var livevar = 	this.liveVariables[0];
+	if (livevar._requester) {
+	    if (this._writingSelectedItemTimeStamp == this._selectedItemTimeStamp && operation != "insert") {
+		// for this case we Could create a new variable or reuse an old one, 
+		// but I don't want to worry about a possible race condition between writing
+		// selectedItem after change 1, after change 2 and after change 3...
+		livevar.setSourceData(sourceData);
+		console.log("Update On Result");
+		livevar.operation = operation;
+		livevar.setUpdateOnResult(true);
+	    } else {
+		livevar = null;
+		for (var i = 0; i < this.liveVariables.length; i++) {
+		    if (!this.liveVariables[i]._requester) {
+			livevar = this.liveVariables[i];
+			console.log("Reuse: " + i);
+			break;
+		    }
+		    if (!livevar) {
+			console.log("Create new Var");
+			this.liveVariables.unshift(this.createNewLiveVariable());
+			livevar = this.liveVariables[0];
+		    }
+		    livevar.setSourceData(sourceData);
+		    console.log("Update on OTHER!");
+		    livevar.operation = operation;
+		    deferred = livevar.update();
+		}
+	    }
+	}else {
+	    livevar.setSourceData(sourceData);
+	    this._writingSelectedItemTimeStamp = this._selectedItemTimeStamp;
+		    console.log("Update on FIRST!");
+	    livevar.operation = operation;
+	    deferred = livevar.update();
+	    }
+	if (operation == "insert")
+	    this.handleInsertResult(deferred,rowIndex); // in separate method to localize the variables
+	},
+    handleInsertResult: function(deferred,rowIndex) {
+	deferred.addCallback(dojo.hitch(this, 
+				    function(result) {
+					this.setUneditableFields(rowIndex, result);
+				    }));
+	deferred.addErrback(dojo.hitch(this,
+				    function(result) {
+					console.error(result);
+					this.deleteRow(rowIndex);
+				    }));
+    },
+    setUneditableFields: function(rowIndex, data) {
+	var oldData = this.getRow(rowIndex);
+	var type = wm.typeManager.getType(this.getDataSet().type);
+	var columns = this.columns;
+	for (var i = 0; i < columns.length; i++) {
+	    var field = type.fields[columns[i].id];
+	    if (field.exclude.length) {
+		this.setCell(rowIndex, columns[i].id, data[columns[i].id]);
+	    } else if (oldData[columns[i].id] == "&nbsp;")
+		oldData[columns[i].id] = ""; // only needed &nbsp; so that the row wasn't 1px high
+	}
+
+    },
 	updateAllSelectedItem: function(){
 		if (!this.dojoObj) return;
 		this.selectedItem.clearData();
@@ -233,29 +337,45 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	  var cells = this.dojoObj.layout.cells;
 	  for (var i = 0; i < cells.length; i++) {
 	    if (cells[i].field == fieldName) {
-	      this.dojoObj.edit.setEditCell(cells[i], rowIndex);
-	      this.dojoObj.focus.setFocusCell(cells[i], rowIndex);
-	      return;
+		this.dojoObj.edit.setEditCell(cells[i], rowIndex);
+		this.dojoObj.focus.setFocusCell(cells[i],rowIndex);
+		return;
 	    }
 	  }
 	},
-	setCell: function(rowIndex, fieldName, newValue) {
+        setCell: function(rowIndex, fieldName, newValue, noRendering) {
 	  if (rowIndex < 0) {
 	    console.error("setCell requires 0 or greater for row index");
 	    return;
 	  }
 
 	    var item = this.dojoObj.getItem(rowIndex);
-	    this.dojoObj.store.setValue(item, fieldName, newValue);
-	    // Update the selectedItem variable if we just updated the selected item
-	    if (this.getSelectedIndex() == rowIndex) {
+
+	    this.dojoObj.store._setValueOrValues(item, fieldName, newValue, !noRendering);
+
 	      this.updateSelectedItem(rowIndex);
-	    }
+
 	},
 	deleteRow: function(rowIndex) {
+	    if (this.liveEditing) {
+		if (!this.liveVariables) {
+		    this.liveVariables = [];
+		    this.liveVariables.unshift(this.createNewLiveVariable());
+		}
+		var livevar = this.liveVariables[0];
+		if (livevar._requester) { 
+		    // could just create a new variable, but I'm being lazy for my first pass
+		    app.toastWarning("Please wait until all edits are saved before deleting");
+		    return;
+		}
+		livevar.operation = "delete";
+		livevar.setSourceData(this.getRow(rowIndex));
+		livevar.update();
+	    }
 	  this.updateSelectedItem(-1);
 	  var item = this.getRowData(rowIndex);
 	  this.dojoObj.store.deleteItem(item);
+	    this.dojoObj.render();
 	},
 	addRow: function(inFields, selectOnAdd) {
 	  if (this.getRowCount() == 0 && this.variable) {
@@ -275,6 +395,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	      data[key] = "";
 	    }
 	  }
+	    data._new = true;
 	  var result = this.store.newItem(data);
 
 	  if (selectOnAdd) {
@@ -289,6 +410,29 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	  }
 	  return result;
 	},
+    addEmptyRow: function(selectOnAdd) {
+	var type = wm.typeManager.getType(this.getDataSet().type);
+	var obj = {};
+	for (var prop in type.fields) {
+	    switch(type.fields[prop].type) {
+	    case "java.lang.Integer":
+	    case "java.lang.Double":
+	    case "java.lang.Float":
+	    case "java.lang.Short":
+		obj[prop] = "0";
+		break;
+	    case "java.lang.Date":
+		obj[prop] = new Date().getTime();
+		break;
+	    case "java.lang.Boolean":
+		obj[prop] = false;
+		break;
+	    default:
+		obj[prop] = "&nbsp;";
+	    }
+	}
+	this.addRow(obj,selectOnAdd);
+    },
 	getRowCount: function() {
 	  return this.dojoObj.rowCount;
 	},
@@ -348,6 +492,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		if (selectedData)
 			this.selectItemOnGrid(this.selectedItem);
 
+/*
             if (this.isDesignLoaded()) {
                 var scrollNode = this.dojoObj.scroller.contentNodes[0].parentNode;
 
@@ -370,8 +515,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                     });
                 }
 
-            }
-
+		}
+	    */
     var _this = this;
     setTimeout(function(){
 			   _this.rendering = false;
@@ -392,20 +537,23 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		if (this.isDesignLoaded()) {
 			dojo.connect(this.dojoObj,'onMoveColumn', this, '_onMoveColumn');
 			dojo.connect(this.dojoObj,'onResizeColumn', this, '_onResizeColumn');
-			dojo.connect(this.dojoObj.domNode, 'oncontextmenu', this, 'showMenuDialog');
+
+			dojo.connect(this.dojoObj.domNode, 'oncontextmenu', this, 'showContextMenu');
 		    if (dojo.isFF) {
 			dojo.connect(this.dojoObj, 'onHeaderCellMouseDown', this, function(evt) {
                             if (evt.button == 2 || evt.ctrlKey) {
 				dojo.stopEvent(evt);			    
-				this.showMenuDialog();
+				this.showContextMenu(evt);
 			    }
 			});
 		    } else {
-			dojo.connect(this.dojoObj, 'onHeaderContextMenu', this, 'showMenuDialog');
+			dojo.connect(this.dojoObj, 'onHeaderContextMenu', this, 'showContextMenu');
 		    }
-			dojo.connect(this.dojoObj, 'onRowContextMenu', this, 'showMenuDialog');
+			dojo.connect(this.dojoObj, 'onRowContextMenu', this, 'showContextMenu');
+
 			//dojo.connect(this.dojoObj, 'onCellClick', this, 'hideMenuDialog');
-		        dojo.connect(this.dojoObj,'onCellContextMenu', this, 'showMenuDialog');                        
+		        dojo.connect(this.dojoObj,'onCellContextMenu', this, 'showContextMenu');                        
+			
 		} else {
 		    dojo.connect(this.dojoObj,'onCellContextMenu', this, '_onCellRightClick');
 		    dojo.connect(this.dojoObj, "onApplyCellEdit", this, "cellEditted");
@@ -441,7 +589,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 	    // If the user has provided a customSort method, use it
 	    // if its designtime, customSort will be the name of the method rather
-	    // than the actual method, so don't try running it
+	    // than the actual method, so don't try running it 
 	    if (this.customSort != this.constructor.prototype.customSort && dojo.isFunction(this.customSort))
 		dataList = dataList.sort(this.customSort);
 
@@ -460,7 +608,6 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		if (!this.caseSensitiveSort)
 			this.makeSortingInsensitive();
 	},
-
 	makeSortingInsensitive: function(){
 		this.store.comparatorMap = {};
 		dojo.forEach(this.columns, function(col){
@@ -485,8 +632,15 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		var structure = [];
 		var hasAutoField = false;
 		dojo.forEach(this.columns, function(col){
-			var obj = {	hidden:(!col.show), field: col.id, name:col.title, width: col.width == '100%' ? 'auto' : col.width, fieldType:col.fieldType, 
-						editable:col.editable,expression:col.expression, displayType:col.displayType};
+			var obj = {	hidden:(!col.show), 
+					field: col.id, 
+					name:col.title, 
+					width: col.width == '100%' ? 'auto' : col.width, 
+					fieldType:col.fieldType, 
+					options: col.options, // at the moment, there's no UI for entering these, but I can hard code adding these into my page.js
+					editable:col.editable,
+					expression:col.expression, 
+					displayType:col.displayType};
 
 			if (col.show && obj.width && obj.width == 'auto')
 				hasAutoField = true;
@@ -513,7 +667,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 					case 'Image (WaveMaker)':				    
 						obj.formatter = dojo.hitch(this, 'imageFormatter');
 						break;
-					
+				    break;
 					default:
 						if (!this.isDesignLoaded())
 							obj.formatter = dojo.hitch(this, 'customFormatter', col.formatFunc);
@@ -546,6 +700,16 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	        //this.onGetStructure(structure);
 		return structure; 
 	},
+    setColumnComboBoxOptions: function(inFieldName, inOptions) {
+          for (var i = 0; i < this.columns.length; i++) {
+            if (this.columns[i].id == inFieldName) {
+		this.columns[i].options = inOptions;
+		this.columns[i].fieldType = "dojox.grid.cells.ComboBox";
+		this.renderDojoObj();
+		break;
+            }
+          }
+    },
         //onGetStructure: function(inStructure) {},
 	setColumnData: function(){
 		if (!this.variable || (this.variable.type == this.dsType && this.columns.length > 0)){
@@ -746,7 +910,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		return inValue;
 	},
 	customFormatter: function(formatFunc, inValue, rowIdx, cellObj){
-		return dojo.hitch(this.owner, formatFunc, inValue, rowIdx, cellObj.index, cellObj.field, cellObj)();
+	    return dojo.hitch(this.owner, formatFunc, inValue, rowIdx, cellObj.index, cellObj.field, cellObj)();
 	},
 	/* Action buttons implementation*/
 	addActionButtons: function(){
@@ -833,7 +997,7 @@ wm.DojoGrid.extend({
 	  var json = {};
 	  if (item && store) {
 	    //Determine the attributes we need to process.
-	    var attributes = store.getAttributes(item);
+	      var attributes = wm.isEmpty(item) ? [] : store.getAttributes(item);
 	    if (attributes && attributes.length > 0) {
 	      var i;
 	      for (i = 0; i < attributes.length; i++) {
