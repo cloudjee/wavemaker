@@ -28,7 +28,6 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	query:'',
 	dojoObj:null,
 	singleClickEdit:false,
-    liveEditing: false,
 	selectedItem: null,
 	emptySelection: true,
 	isRowSelected: false,
@@ -147,7 +146,6 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	  this.onSelectionChange();
 	},
 	select: function() {
-	    this._selectedItemTimeStamp = new Date().getTime();
 		if (this.selectionMode == 'multiple')
 			this.updateAllSelectedItem();
 		else
@@ -155,7 +153,6 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		this.onSelectionChange();
 	},
 	selectionChange: function() {
-	    this._selectedItemTimeStamp = new Date().getTime();
 		if (this.selectionMode == 'multiple')
 			this.updateAllSelectedItem();
 		else
@@ -173,9 +170,6 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			if (oldObj[inFieldName] == inValue)
 				return;
 		}
-		this.updateSelectedItem( this.getSelectedIndex());
-	        if (this.liveEditing)
-		    this.writeSelectedItem();
 
 	    // A bug in dojox.grid editting causes it to set "user.name" but read from "user: {name: currentname}" so we copy in the data to compenate
 	    if (inFieldName.indexOf(".")) {
@@ -185,9 +179,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		if (obj[elements.join(".")])
 		    obj[elements.join(".")][0] = inValue;
 		else
-		    obj[elements.join(".")] = [inValue];
-
+		    obj[elements.join(".")] = [inValue];                
 	    }
+
+		this.updateSelectedItem( this.getSelectedIndex());
+
 		this.onCellEdited(inValue, inRowIndex, inFieldName);
 	},
 	updateSelectedItem: function(selectedIndex) {
@@ -204,93 +200,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		this.setValue("emptySelection", !this.hasSelection());
 		this.setValue("isRowSelected", this.hasSelection());
 	},
-    createNewLiveVariable: function() {
-	return new wm.LiveVariable({owner: this,
-				    operation: "update",
-				    name: "liveVar",
-				    liveSource: this.getDataSet().liveSource,
-				    autoUpdate: false,
-				    startUpdate: false});
-    },
-    writeSelectedItem: function() {
-	var deferred;
-	var rowIndex = this.getSelectedIndex();
-	var operation = this.getRow(rowIndex)._new ? "insert" : "update";
-	var sourceData = this.selectedItem.getData();
-	if (operation == "insert") {
-	    this.setCell(rowIndex, "_new", false); // after we insert it, all future ops are update
-	    for (prop in sourceData)
-		if (sourceData[prop] == "&nbsp;")
-		    sourceData[prop] = "";
-	}
 
-	if (!this.liveVariables) {
-	    this.liveVariables = [];
-	    this.liveVariables.unshift(this.createNewLiveVariable());
-	}
-	var livevar = 	this.liveVariables[0];
-	if (livevar._requester) {
-	    if (this._writingSelectedItemTimeStamp == this._selectedItemTimeStamp && operation != "insert") {
-		// for this case we Could create a new variable or reuse an old one, 
-		// but I don't want to worry about a possible race condition between writing
-		// selectedItem after change 1, after change 2 and after change 3...
-		livevar.setSourceData(sourceData);
-		console.log("Update On Result");
-		livevar.operation = operation;
-		livevar.setUpdateOnResult(true);
-	    } else {
-		livevar = null;
-		for (var i = 0; i < this.liveVariables.length; i++) {
-		    if (!this.liveVariables[i]._requester) {
-			livevar = this.liveVariables[i];
-			console.log("Reuse: " + i);
-			break;
-		    }
-		    if (!livevar) {
-			console.log("Create new Var");
-			this.liveVariables.unshift(this.createNewLiveVariable());
-			livevar = this.liveVariables[0];
-		    }
-		    livevar.setSourceData(sourceData);
-		    console.log("Update on OTHER!");
-		    livevar.operation = operation;
-		    deferred = livevar.update();
-		}
-	    }
-	}else {
-	    livevar.setSourceData(sourceData);
-	    this._writingSelectedItemTimeStamp = this._selectedItemTimeStamp;
-		    console.log("Update on FIRST!");
-	    livevar.operation = operation;
-	    deferred = livevar.update();
-	    }
-	if (operation == "insert")
-	    this.handleInsertResult(deferred,rowIndex); // in separate method to localize the variables
-	},
-    handleInsertResult: function(deferred,rowIndex) {
-	deferred.addCallback(dojo.hitch(this, 
-				    function(result) {
-					this.setUneditableFields(rowIndex, result);
-				    }));
-	deferred.addErrback(dojo.hitch(this,
-				    function(result) {
-					console.error(result);
-					this.deleteRow(rowIndex);
-				    }));
-    },
-    setUneditableFields: function(rowIndex, data) {
-	var oldData = this.getRow(rowIndex);
-	var type = wm.typeManager.getType(this.getDataSet().type);
-	var columns = this.columns;
-	for (var i = 0; i < columns.length; i++) {
-	    var field = type.fields[columns[i].id];
-	    if (field.exclude.length) {
-		this.setCell(rowIndex, columns[i].id, data[columns[i].id]);
-	    } else if (oldData[columns[i].id] == "&nbsp;")
-		oldData[columns[i].id] = ""; // only needed &nbsp; so that the row wasn't 1px high
-	}
-
-    },
 	updateAllSelectedItem: function(){
 		if (!this.dojoObj) return;
 		this.selectedItem.clearData();
@@ -357,21 +267,6 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 	},
 	deleteRow: function(rowIndex) {
-	    if (this.liveEditing) {
-		if (!this.liveVariables) {
-		    this.liveVariables = [];
-		    this.liveVariables.unshift(this.createNewLiveVariable());
-		}
-		var livevar = this.liveVariables[0];
-		if (livevar._requester) { 
-		    // could just create a new variable, but I'm being lazy for my first pass
-		    app.toastWarning("Please wait until all edits are saved before deleting");
-		    return;
-		}
-		livevar.operation = "delete";
-		livevar.setSourceData(this.getRow(rowIndex));
-		livevar.update();
-	    }
 	  this.updateSelectedItem(-1);
 	  var item = this.getRowData(rowIndex);
 	  this.dojoObj.store.deleteItem(item);
@@ -395,7 +290,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	      data[key] = "";
 	    }
 	  }
-	    data._new = true;
+
 	  var result = this.store.newItem(data);
 
 	  if (selectOnAdd) {
@@ -491,8 +386,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		var selectedData = this.selectedItem.getData();
 		if (selectedData)
 			this.selectItemOnGrid(this.selectedItem);
+        
 
-/*
             if (this.isDesignLoaded()) {
                 var scrollNode = this.dojoObj.scroller.contentNodes[0].parentNode;
 
@@ -516,7 +411,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                 }
 
 		}
-	    */
+
     var _this = this;
     setTimeout(function(){
 			   _this.rendering = false;
@@ -538,22 +433,21 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			dojo.connect(this.dojoObj,'onMoveColumn', this, '_onMoveColumn');
 			dojo.connect(this.dojoObj,'onResizeColumn', this, '_onResizeColumn');
 
-			dojo.connect(this.dojoObj.domNode, 'oncontextmenu', this, 'showContextMenu');
+			dojo.connect(this.dojoObj.domNode, 'oncontextmenu', this, 'showMenuDialog');
 		    if (dojo.isFF) {
 			dojo.connect(this.dojoObj, 'onHeaderCellMouseDown', this, function(evt) {
                             if (evt.button == 2 || evt.ctrlKey) {
 				dojo.stopEvent(evt);			    
-				this.showContextMenu(evt);
+				this.showMenuDialog();
 			    }
 			});
 		    } else {
-			dojo.connect(this.dojoObj, 'onHeaderContextMenu', this, 'showContextMenu');
+			dojo.connect(this.dojoObj, 'onHeaderContextMenu', this, 'showMenuDialog');
 		    }
-			dojo.connect(this.dojoObj, 'onRowContextMenu', this, 'showContextMenu');
+			dojo.connect(this.dojoObj, 'onRowContextMenu', this, 'showMenuDialog');
 
 			//dojo.connect(this.dojoObj, 'onCellClick', this, 'hideMenuDialog');
-		        dojo.connect(this.dojoObj,'onCellContextMenu', this, 'showContextMenu');                        
-			
+		        dojo.connect(this.dojoObj,'onCellContextMenu', this, 'showMenuDialog');                        			
 		} else {
 		    dojo.connect(this.dojoObj,'onCellContextMenu', this, '_onCellRightClick');
 		    dojo.connect(this.dojoObj, "onApplyCellEdit", this, "cellEditted");
