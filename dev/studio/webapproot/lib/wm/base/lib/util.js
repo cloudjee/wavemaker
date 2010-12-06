@@ -38,6 +38,21 @@ wm.decapitalize = function(s) {
 	return s ? s.charAt(0).toLowerCase() + s.slice(1) : "";
 }
 
+wm.requireCss = function(modulepath) {
+    var stylenode = dojo.byId("CSS_" + modulepath);
+    if (stylenode) return;
+
+    var parts = modulepath.split(".");
+    var filename = parts.pop();
+    var path = parts.join(".");
+    path = dojo.moduleUrl(path).path + filename + ".css";
+    stylenode = document.createElement("link");
+    stylenode.id = "CSS_"+modulepath;
+    stylenode.type="text/css";
+    stylenode.href = path;
+    document.getElementsByTagName("head")[0].appendChild(stylenode);
+}
+
 wm.isEqual = function (a1, a2){ 
 	try{
 		if(a1 == a2)
