@@ -55,6 +55,10 @@ getCssDeclaration = function(inWidget, inNodeName) {
     var inDesignableDialog = Boolean(inWidget.isAncestorInstanceOf(wm.DesignableDialog));
     var pageName = inDesignableDialog ? "" : "." + studio.project.pageName;
     var pageName2 = "." + studio.project.pageName;
+    if (inWidget.owner instanceof wm.Application) {
+        pageName = "";
+        pageName2 = "." + inWidget.owner.declaredClass;
+    }
     var isLayout = (inWidget instanceof wm.Layout);
     var result = ["body.tundra " + pageName + (isLayout || inDesignableDialog ? "" : " .wmlayout") + " " + pageName2 + "-" + inWidget.name + inNodeName + (isLayout ? ".wmlayout":"")];
     return result.join(",\n");
