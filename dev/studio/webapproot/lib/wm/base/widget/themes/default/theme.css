@@ -1594,11 +1594,15 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
 .dijitToolbar label
  {
     height: 20px;
-    line-height: 20px;
+    line-height: 20px !important;
 }
 .dijitToolbar span {
     height: 24px;
 }
 .dijitToolbar .dijitComboBox {
     width:120px;
+}
+
+.dj_ie6 .dijitToolbar .dijitButtonNode {
+   width: 16px;
 }
