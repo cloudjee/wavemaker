@@ -390,12 +390,15 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		// note: hack to call internal dijit function to ensure we can
 		// set a blank value even if this is not a valid value
 		if (this.editor && this.hasValues()) {
+                    var valueWas = this.editor.get("value");
 			if (this.restrictValues) {
 				this.editor.set('value', '', false);
 			} else {
 				this.editor.set("value", undefined, false);
 			}
 			this.updateReadonlyValue();
+                    if (valueWas)
+                        this.changed();
 		}
 	},
 	editorChanged: function() {
@@ -963,7 +966,6 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		wm.fire(this.$.liveVariable, "destroy");
 		var v = wm.getFormLiveView(wm.getParentForm(this));
 		if (v) {
-			if (v.service == "salesforceService" && this.displayField == "queryLocator") return; //xxx
 			var ff = wm.getFormField(this);
 			v.addRelated(ff);
 			var lv = this.dataSet = new wm.LiveVariable({
