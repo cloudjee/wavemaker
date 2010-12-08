@@ -13,7 +13,7 @@ dojo.require("dijit.form.DateTextBox");
 
 dojo.declare('wm._dualCalendar', dijit._Calendar, {
 	templateString:'',
-	templatePath: dojo.moduleUrl("dijit", "templates/dualCalendar.html"),
+	templatePath: dojo.moduleUrl("wm.base", "templates/dualCalendar.html"),
 	dayWidth: "narrow",
 	dateObject:null,
 	

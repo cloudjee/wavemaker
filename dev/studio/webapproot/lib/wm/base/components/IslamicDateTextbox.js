@@ -16,7 +16,7 @@ dojo.require("dojo.cldr.supplemental");
 
 dojo.declare('wm._IslamicCalendar', dijit._Calendar, {
 	templateString:'',
-	templatePath: dojo.moduleUrl("dijit", "templates/islamicCalendar.html"),
+	templatePath: dojo.moduleUrl("wm.base", "templates/islamicCalendar.html"),
 	dayWidth: "narrow",
 	value: new dojox.date.IslamicDate(),
 	_setValueAttr: function(/*Date*/ value){
