@@ -396,6 +396,10 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 			} else {
 				this.editor.set("value", undefined, false);
 			}
+                        // because we passed in false above so as to fire out own SYNCRHONOUS onchange
+                        // _lastValueReported is not cleared, which means that trying to changing the value
+                        // back to _lastValueReported will fail to fire an onchange event
+                        this.editor._lastValueReported = "";
 			this.updateReadonlyValue();
                     if (valueWas)
                         this.changed();
