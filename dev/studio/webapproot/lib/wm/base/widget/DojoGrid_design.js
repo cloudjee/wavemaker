@@ -88,7 +88,7 @@ wm.DojoGrid.extend({
 			eventEdit(this, '_formatterSignature', evtName, true);
 		}	
 	},
-	_formatterSignature: function(inValue, rowId, cellId, cellField, cellObj){
+	_formatterSignature: function(inValue, rowId, cellId, cellField, cellObj, rowObj){
 	},
 	destroyColumn: function(){
 		this.updateGridStructure();		

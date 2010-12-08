@@ -804,7 +804,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		return inValue;
 	},
 	customFormatter: function(formatFunc, inValue, rowIdx, cellObj){
-	    return dojo.hitch(this.owner, formatFunc, inValue, rowIdx, cellObj.index, cellObj.field, cellObj)();
+		  var rowObj = this.getRow(rowIdx);
+	    return dojo.hitch(this.owner, formatFunc, inValue, rowIdx, cellObj.index, cellObj.field, cellObj, rowObj)();
 	},
 	/* Action buttons implementation*/
 	addActionButtons: function(){
