@@ -226,7 +226,7 @@ wm.Component.extend({
 		// events can be components, only update source if event is a function reference
 		var o = this.eventBindings[n], oc = this.getComponent(o), nc = this.getComponent(v);
 		if (!(nc instanceof wm.Component || oc instanceof wm.Component))
-			eventChange(o, v);
+		    eventChange(this.owner instanceof wm.Page ? studio.editArea : studio.appsourceEditor, o, v);
 		if (v)
 			this.eventBindings[n] = v;
 		else 
