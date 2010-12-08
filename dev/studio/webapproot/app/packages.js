@@ -86,6 +86,7 @@
 [ bundlePackage.Templates, bundlePackage.TabsTemplate, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A complicated layout template.", wm.fullTemplates.tabTemplate],
 [ bundlePackage.Templates, bundlePackage.TopMenu, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A 600px wide fixed centered layout", wm.fullTemplates.topMenuTemplate],
 
+[ bundlePackage.SubTemplates, bundlePackage.SecurityTemplate, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "An App Title Bar", wm.widgetTemplates.securityTemplate],
 [ bundlePackage.SubTemplates, bundlePackage.TitleBar, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "An App Title Bar", wm.widgetTemplates.titleBar],
 [ bundlePackage.SubTemplates, bundlePackage.Footer, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A footer template.", wm.widgetTemplates.footer],
 [ bundlePackage.SubTemplates, bundlePackage.SearchListDetail, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A simple CRUD template.", wm.widgetTemplates.searchListDetail],

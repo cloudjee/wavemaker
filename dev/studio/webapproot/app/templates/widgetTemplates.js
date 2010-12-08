@@ -163,12 +163,6 @@ wm.fullTemplates.sideMenuTemplate = {
 	horizontalAlign: "left",
     autoScroll: true,
 	_template: {
-	varTemplateUsername: ["wm.ServiceVariable", {"autoUpdate":true,"designTime":true,"operation":"getUserName","service":"securityService","startUpdate":true}, {}, {
-		input: ["wm.ServiceInput", {"type":"getUserNameInputs"}, {}]
-	}],
-	varTemplateLogout: ["wm.LogoutVariable", {}, {}, {
-		input: ["wm.ServiceInput", {"type":"logoutInputs"}, {}]
-	}],		
 	panel1: ["wm.Panel", {"border":"0,1,0,0","borderColor":"#999999","height":"100%","horizontalAlign":"left","minWidth":900,"verticalAlign":"top","width":"75%"}, {}, {
 		panel2: ["wm.HeaderContentPanel", {"border":"0,0,1,0","height":"65px","horizontalAlign":"left","layoutKind":"left-to-right","margin":"0","padding":"0,10,0,10","verticalAlign":"middle","width":"100%"}, {}, {
 			picture1: ["wm.Picture", {"border":"0","height":"50px","source":"lib/wm/base/widget/themes/default/images/wmLogo.png","width":"62px"}, {}],
@@ -210,12 +204,6 @@ wm.fullTemplates.tabTemplate = {
 	horizontalAlign: "center",
     autoScroll: true,
 	_template: {
-	varTemplateUsername: ["wm.ServiceVariable", {"autoUpdate":true,"designTime":true,"operation":"getUserName","service":"securityService","startUpdate":true}, {}, {
-		input: ["wm.ServiceInput", {"type":"getUserNameInputs"}, {}]
-	}],
-	varTemplateLogout: ["wm.LogoutVariable", {}, {}, {
-		input: ["wm.ServiceInput", {"type":"logoutInputs"}, {}]
-	}],		
 	panel3: ["wm.Panel", {"height":"100%","horizontalAlign":"left","minWidth":900,"verticalAlign":"top","width":"75%"}, {}, {
 		panel1: ["wm.HeaderContentPanel", {"border":"0,0,1,0","borderColor":"#333333","height":"65px","horizontalAlign":"left","layoutKind":"left-to-right","padding":"0,10","verticalAlign":"middle","width":"100%"}, {}, {
 			picture1: ["wm.Picture", {"border":"0","height":"50px","source":"lib/wm/base/widget/themes/default/images/wmLogo.png","width":"62px"}, {}],
@@ -260,12 +248,6 @@ wm.fullTemplates.topMenuTemplate = {
 	horizontalAlign: "center",
     autoScroll: true,
 	_template: {
-	varTemplateUsername: ["wm.ServiceVariable", {"autoUpdate":true,"designTime":true,"operation":"getUserName","service":"securityService","startUpdate":true}, {}, {
-		input: ["wm.ServiceInput", {"type":"getUserNameInputs"}, {}]
-	}],
-	varTemplateLogout: ["wm.LogoutVariable", {}, {}, {
-		input: ["wm.ServiceInput", {"type":"logoutInputs"}, {}]
-	}],		
 	panelCenter: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"900px"}, {}, {
 		panelHeader: ["wm.HeaderContentPanel", {"height":"65px","horizontalAlign":"left","layoutKind":"left-to-right","padding":"0,10,0,10","verticalAlign":"middle","width":"100%"}, {}, {
 			picture1: ["wm.Picture", {"border":"0","height":"50px","source":"lib/wm/base/widget/themes/default/images/wmLogo.png","width":"62px"}, {}],
@@ -370,6 +352,28 @@ wm.fullTemplates.CenteredPageContainerWithHeaderFooter = {
 	}
 }
 */
+
+wm.widgetTemplates.securityTemplate = {
+    layoutKind: "left-to-right",
+    width: "300px",
+    height: "35px",
+    _template: {
+	templateUsernameVar: ["wm.ServiceVariable", {"autoUpdate":true,"operation":"getUserName","service":"securityService","startUpdate":true}, {}, {
+		input: ["wm.ServiceInput", {"type":"getUserNameInputs"}, {}]
+	}],
+	templateLogoutVar: ["wm.LogoutVariable", {}, {}, {
+		input: ["wm.ServiceInput", {"type":"logoutInputs"}, {}]
+	}],
+	templateUserNameLabel: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"border":"0","caption":"Welcome, ","height":"20px","width":"100%"}, {}, {
+	    binding: ["wm.Binding", {}, {}, {
+		wire: ["wm.Wire", {"expression":"\"Welcome, \" + ${templateUsernameVar.dataValue}","targetProperty":"caption"}, {}]
+	    }],
+	    format: ["wm.DataFormatter", {}, {}]
+        }],
+	templateLogoutButton: ["wm.Button", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"borderColor":"#666666","caption":"Log Out","height":"28px"}, {"onclick":"templateLogoutVar"}]
+    }
+};
+
 wm.widgetTemplates.tabbedTwoColumn = {
 	layoutKind: "top-to-bottom",
 	width: "100%",

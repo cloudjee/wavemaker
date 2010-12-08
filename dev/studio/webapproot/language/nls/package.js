@@ -96,6 +96,7 @@
 	"SearchListDetail" : "SearchListDetail",
 	"Toolbar" : "Toolbar",
 	"TwoColumns" : "TwoColumns",
+	"SecurityTemplate" : "SecurityComponents",
 	"TabbedTwoCol" : "TabbedTwoCol",
 
 	"Web_Content" : "Web Content",
