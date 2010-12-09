@@ -65,7 +65,6 @@ dojo.declare("wm.LayersDecorator", null, {
 
 	    var page = inLayer.getParentPage();
 	    if (!this.decoree._cupdating && page && !page._loadingPage && !window["studio"] && this.decoree.transition && this.decoree.transition != "none") {
-		console.log("SET ACTIVE LAYER FADE!");
 		if (!inActive) {
 		    /* FADE OUT */
 		    this["anim" + wm.capitalize(this.decoree.transition)](inLayer, false);
