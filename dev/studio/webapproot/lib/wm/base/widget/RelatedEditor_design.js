@@ -277,7 +277,7 @@ wm.RelatedEditor.extend({
 	// return a grid with same dataSet id as the relatedEditor
 	findGrid: function() {
 		return wm.getMatchingFormWidgets(this, dojo.hitch(this, function(w) {
-			return ((w instanceof wm.DataGrid) && w.dataSet.getId() == this.dataSet.getId());
+			return ((w instanceof wm.DojoGrid) && w.getDataSet().getId() == this.dataSet.getId());
 		}));
 	},
 	makeGrid: function() {
