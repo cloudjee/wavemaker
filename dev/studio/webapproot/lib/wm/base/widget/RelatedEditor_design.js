@@ -27,7 +27,7 @@ wm.Object.extendSchema(wm.RelatedEditor, {
 });
 
 wm.RelatedEditor.extend({
-	_editingModes: ["lookup", "readonly"],
+	_editingModes: ["lookup", "readonly", "editable subform"],
 	_cachedLookup: null,
 	designCreate: function() {
 		this.inherited(arguments);
