@@ -77,7 +77,8 @@
        		<arg value="version=1.5.0.pro"/>
        		<arg value="action=clean,release"/>
        		<arg value="optimize=shrinksafe"/>
-					<arg value="cssOptimize=comments.keepLines"/>
+		<arg value="cssOptimize=comments"/> 
+<!--					<arg value="cssOptimize=comments.keepLines"/> -->
 		</exec>
 		<echo>Done building dojo using exec</echo>
         <!-- copy the runtime built files out to the temp directory -->
@@ -138,7 +139,8 @@
        		<arg value="action=clean,release"/>
        		<arg value="optimize=shrinksafe"/>
        		<arg value="layerOptimize=comments"/>
-					<arg value="cssOptimize=comments.keepLines"/>
+		<arg value="cssOptimize=comments"/> 
+<!--					<arg value="cssOptimize=comments.keepLines"/>-->
 		</exec>
 		<echo>Done building studio</echo>
 
@@ -170,6 +172,7 @@
             <fileset dir="${dojo.release-temp.dir}/build/" />
         </copy>
 
+        <copy tofile="${dojo.src.dir}/dijit/themes/tundra/t.css" file="${dojo.release-temp.dir}/wm_build/themes/tundra/tundra.css" />
         <!-- also deleted as part of clean -->
         <delete dir="${lib.webapproot.studio.dir}/wm/studio" />
         <delete dir="${dojo.release.dir}" />

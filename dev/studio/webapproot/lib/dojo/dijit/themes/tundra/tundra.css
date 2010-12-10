@@ -39,3 +39,13 @@
 @import url("../../icons/editorIcons.css"); /* sprite for editor icons to be used by all themes */
 @import url("ColorPalette.css");
 @import url("tundra_rtl.css");
+
+/* WAVEMAKER */
+@import url("../../../dojox/grid/resources/tundraGrid.css");
+@import url("../../../dojox/grid/resources/Grid.css");
+@import url("../../../dojox/widget/FisheyeList/FisheyeList.css"); /* not much used, but its small */
+/*@import url("../../../../wm/base/widget/themes/default/theme.css"); dojo's build won't load outside of dojo*/
+/*@import url("../../../../wm/base/css/wavemaker.css"); dojo's build won't load outside of dojo*/
+/*@import url("../../../../wm/base/css/progressBar.css"); dojo's build won't load outside of dojo*/
+/*@import url("../../../dojox/layout/resources/GridContainer.css"); removed as wm.Dashboard not common */
+/*@import url("../../../dojox/widget/Portlet/Portlet.css");  removed as wm.Dashboard not common */

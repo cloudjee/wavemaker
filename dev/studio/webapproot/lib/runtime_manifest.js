@@ -26,20 +26,20 @@ wm.registerPaths(
 
 wm.loadLibs([ 
 	// Dijit
-	"css.dijit.themes.tundra.tundra",
-	"css.dojox.grid.resources.Grid",
-	"css.dojox.grid.resources.tundraGrid",
-	"css.dojox.widget.FisheyeList.FisheyeList",
-	"css.dojox.image.resources.image",
-	"css.dojox.widget.gauge._Gauge",
+    (djConfig.isDebug) ? "css.dijit.themes.tundra.tundra" : "css.dijit.themes.tundra.t",
+    //"css.dojox.grid.resources.Grid", // added to tundra.css
+    // "css.dojox.grid.resources.tundraGrid", // added to tundra.css
+    // "css.dojox.widget.FisheyeList.FisheyeList", // added to tundra.css
+	//"css.dojox.image.resources.image",
+        //"css.dojox.widget.gauge._Gauge",
 	//"dijit.form.ValidationTextBox",
 	//"dijit.form.ComboBox",
 	//"dijit.form.FilteringSelect",
 	//"dojox.html.styles",
 	// WM
-	"css.wm.base.widget.themes.default.theme",
-	"css.wm.base.styles.wavemaker",
-	"css.wm.base.styles.progressBar",
+    //"css.wm.base.widget.themes.default.theme", // added to tundra.css
+    //"css.wm.base.styles.wavemaker",// added to tundra.css
+    //"css.wm.base.styles.progressBar",// added to tundra.css
 	// wm utility libs
 	//"wm.base.lib.util",
 	//"wm.base.lib.date",

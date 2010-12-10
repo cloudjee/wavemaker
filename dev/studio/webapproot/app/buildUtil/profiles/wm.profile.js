@@ -61,6 +61,8 @@ dependencies = {
 				//"dojo.dijit.form._Spinner",
 				//
 				// WM
+                            "wm.base.components.componentList",
+
 				// wm utility libs
 				"wm.base.lib.util",
 				//"wm.base.lib.date",
@@ -111,8 +113,8 @@ dependencies = {
 				// widgets
 				//"wm.base.widget.Formatters",
 				//"wm.base.widget.Editors.dijit",
-				//"wm.base.widget.Editors.Base",
-				//"wm.base.widget.Editors.Text",
+				"wm.base.widget.Editors.Base",
+				"wm.base.widget.Editors.Text",
 				//"wm.base.widget.Editors.Number",
 				//"wm.base.widget.Editors.Date",
 				//"wm.base.widget.Editors.Checkbox",
@@ -132,7 +134,7 @@ dependencies = {
 				"wm.base.widget.Bevel",
 				//"wm.base.widget.Splitter",
 				"wm.base.widget.Button",
-				//"wm.base.widget.Picture",
+				"wm.base.widget.Picture",
 				"wm.base.widget.Label",
 				/*
 				"wm.base.widget.gadget.Gadget",
@@ -284,8 +286,8 @@ dependencies = {
         	   "wm.base.widget.Editors.dijit",
                "wm.base.widget.Editor",
                "wm.base.widget.RelatedEditor",
-               "wm.base.widget.Editors.Base",
-               "wm.base.widget.Editors.Text",
+               //"wm.base.widget.Editors.Base",
+               //"wm.base.widget.Editors.Text",
                "wm.base.widget.Editors.Number",
                "wm.base.widget.Editors.Date",
                "wm.base.widget.Editors.Checkbox",
