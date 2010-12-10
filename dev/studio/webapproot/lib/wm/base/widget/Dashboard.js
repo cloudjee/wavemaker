@@ -57,6 +57,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 		this.addDialog = new dijit.TooltipDialog({}, "tt");
 		this.addDialog.startup();
 		var dom = this.addDialog.containerNode;
+                dojo.require("wm.base.widget.Editors.Select");
 		this.selectEditor = new wm.SelectMenu({"caption":"Widget","display":"Select","readonly":false,"width":"250px", captionSize:"80px", required: true, isRelativePositioned:true});
 		dom.appendChild(this.selectEditor.domNode);
 		var panel = dojo.create('div', {style:'text-align:center'}, dom);
