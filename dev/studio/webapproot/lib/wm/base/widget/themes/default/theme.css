@@ -1606,3 +1606,22 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
 .dj_ie6 .dijitToolbar .dijitButtonNode {
    width: 16px;
 }
+
+
+/*
+Overriding dijit's progress bar properties to enable height changes to progress bar.
+*/
+.tundra .dijitProgressBarEmpty {
+	background:#FFFFFF url(../../../dojo/dijit/themes/tundra/images/progressBarEmpty.png) repeat scroll 0 0;
+	border-color:#A2A2A2 #B8B8B8 #B8B8B8 #A2A2A2;
+	height:100%;
+}
+
+.tundra .dijitProgressBarTile {
+	background:#F0F0F0 url(../../../dojo/dijit/themes/tundra/images/progressBarFull.png) repeat scroll center center;
+}
+
+.dijitProgressBarFull{
+	height:100%;
+}
+/* End override of dijit progressbar */

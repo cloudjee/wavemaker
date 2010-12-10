@@ -37,9 +37,9 @@ wm.loadLibs([
 	//"dijit.form.FilteringSelect",
 	//"dojox.html.styles",
 	// WM
-    //"css.wm.base.widget.themes.default.theme", // added to tundra.css
-    //"css.wm.base.styles.wavemaker",// added to tundra.css
-    //"css.wm.base.styles.progressBar",// added to tundra.css
+    "css.wm.base.widget.themes.default.theme", 
+    "css.wm.base.styles.wavemaker",
+    //"css.wm.base.styles.progressBar", moved into default.theme
 	// wm utility libs
 	//"wm.base.lib.util",
 	//"wm.base.lib.date",
