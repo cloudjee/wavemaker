@@ -114,6 +114,15 @@ public class Service {
         return this.operation;
     }
 
+    public List<Operation> addOperation(Operation operation) { //xxx
+        if (this.operation == null) {
+            this.operation = new ArrayList<Operation>();
+        }
+        this.operation.add(operation);
+
+        return this.operation;
+    }
+
     /**
      * Gets the value of the dataobjects property.
      * 
