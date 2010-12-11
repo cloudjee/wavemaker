@@ -108,6 +108,7 @@ dojo.declare("wm.Dialog", wm.Container, {
     titlebarBorder: "1",
     titlebarBorderColor: "black",
     titlebarHeight: "23",
+    footerBorder: "1,0,0,0",
 /*
 	contentWidth: 640,
 	contentHeight: 400,
@@ -233,7 +234,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 				       verticalAlign: "top",
 				       layoutKind: "left-to-right",
                                        noInspector: true,
-				       border: this.footerBorder + ",0,0,0",
+				       border: this.footerBorder,
 				       borderColor: this.titlebarBorderColor});
 
 
@@ -251,7 +252,7 @@ dojo.declare("wm.Dialog", wm.Container, {
     setFooterBorder: function(inBorder) {
         this.footerBorder = inBorder;
         if (this.buttonBar) {
-            this.buttonBar.setBorder(inBorder + ",0,0,0");
+            this.buttonBar.setBorder(inBorder);
             //this.$.buttonBar.setHeight((34 + this.$.buttonBar.padBorderMargin.t + this.$.buttonBar.padBorderMargin.b) + "px");
         }
     },
@@ -874,7 +875,7 @@ dojo.declare("wm.RichTextDialog", wm.WidgetsJsDialog, {
     prepare: function() {
         this.inherited(arguments);
         this.widgets_data = {documentation: ["wm.RichText", {width: "100%", height: "100%", "toolbarAlign":false,"toolbarLink":true,"toolbarColor":true, toolbarFormatName: true, dataValue: this.html, displayValue: this.html}, {}],
-		             buttonBar: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, name: "buttonBar", layoutKind: "left-to-right",  padding: "2,0,2,0", horizontalAlign: "right", height: "34px", fitToContentHeight: true, width: "100%", borderColor: this.footerBorderColor, border: this.footerBorder + ",0,0,0"}, {}, {
+		             buttonBar: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, name: "buttonBar", layoutKind: "left-to-right",  padding: "2,0,2,0", horizontalAlign: "right", height: "34px", fitToContentHeight: true, width: "100%", borderColor: this.footerBorderColor, border: this.footerBorder}, {}, {
 		                 okButton: ["wm.Button", {"width":"150px","caption": "OK"}, {"onclick":"onOkClick"}],
 		                 cancelButton: ["wm.Button", {"width":"150px","caption": "Cancel"}, {"onclick":"onCancelClick"}]
 	                     }]};
@@ -941,7 +942,7 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
 				    layoutKind: "left-to-right",
 				    padding: "2,6,2,6", 
 				    horizontalAlign: "right",
-                                     borderColor: this.footerBorderColor, border: this.footerBorder + ",0,0,0",
+                                     borderColor: this.footerBorderColor, border: this.footerBorder,
 				     fitToContentHeight: true,
 				    height: "34px",
 				    width: "100%"}, {}, {
@@ -1727,7 +1728,6 @@ dojo.declare("wm.DesignableDialog", wm.Dialog, {
     borderColor: "black",
     titlebarBorder: "1",
     titlebarBorderColor: "black",
-    footerBorder: "1",
     footerBorderColor: "black",
     scrim: false,
     useContainerWidget: true,
