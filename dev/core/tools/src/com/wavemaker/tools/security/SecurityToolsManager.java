@@ -268,6 +268,7 @@ public class SecurityToolsManager {
     	SecuritySpringSupport.setSecurityResources(beans, enforceSecurity, false);
     	SecuritySpringSupport.setSecurityFilterChain(beans);
     	saveAcegiSpringBeans(beans);
+    	logger.warn("Notice: Community Security settings applied to project, use Enteprise Edition.");
     }
 
     public DemoOptions getDemoOptions() throws JAXBException, IOException {
