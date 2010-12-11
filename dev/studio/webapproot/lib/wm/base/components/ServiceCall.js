@@ -446,7 +446,10 @@ dojo.declare("wm.ServiceInput", wm.Variable, {
 		for (var p in this._dataSchema) {
 			if (data !== undefined)
 				d = data[p];
-			args.push(d !== undefined ? d : null);
+			//args.push(d !== undefined ? d : null);
+			if (d) {
+				args.push(d);
+			}
 		}
 		return args;
 	}
