@@ -44,6 +44,7 @@ import com.wavemaker.runtime.data.DefaultTaskManager;
 import com.wavemaker.runtime.data.Task;
 import com.wavemaker.runtime.data.TaskManager;
 import com.wavemaker.runtime.data.ThreadContext;
+import com.wavemaker.runtime.data.hibernate.DataServiceMetaData_Hib;
 import com.wavemaker.runtime.data.task.DefaultRollback;
 import com.wavemaker.runtime.data.task.PreProcessor;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
@@ -391,7 +392,7 @@ public class SpringDataServiceManager implements DataServiceManager {
             final Map<String, String> properties) 
     {
         final DataServiceMetaData rtn = 
-            new DataServiceMetaData(configurationName, cfg, properties);
+            new DataServiceMetaData_Hib(configurationName, cfg, properties); //xxx
 
         htemp.execute(new HibernateCallback() {
             public Object doInHibernate(Session session) {

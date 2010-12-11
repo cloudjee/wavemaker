@@ -30,6 +30,7 @@ import org.hibernate.cfg.Configuration;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.data.util.DataServiceUtils;
+import com.wavemaker.runtime.data.hibernate.DataServiceMetaData_Hib;
 import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.runtime.service.ServiceType;
 import com.wavemaker.runtime.service.definition.AbstractDeprecatedServiceDefinition;
@@ -74,7 +75,7 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition
 
     public DataServiceDefinition(String serviceName, Configuration hbcfg,
             boolean isImportDB, boolean useIndividualCRUDOperations) {
-        this.metaData = new DataServiceMetaData(serviceName, hbcfg);
+        this.metaData = new DataServiceMetaData_Hib(serviceName, hbcfg);
 
         try {
             this.sessionFactory = hbcfg.buildSessionFactory();

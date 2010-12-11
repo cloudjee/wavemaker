@@ -199,9 +199,9 @@ public class SalesforceDataServiceManager implements DataServiceManager {
                                                     final Map<String, String> properties)
         {
             final DataServiceMetaData rtn =
-                new DataServiceMetaData(configurationName, null, properties);
+                new DataServiceMetaData_SF(configurationName, properties);
 
-            rtn.init_SF(configurationName);
+            rtn.init(configurationName);
 
             return rtn;
         }
