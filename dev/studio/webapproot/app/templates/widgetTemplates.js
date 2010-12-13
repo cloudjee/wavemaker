@@ -219,10 +219,10 @@ wm.fullTemplates.tabTemplate = {
 			    layer1: ["wm.Layer", {"border":"1","borderColor":"#999999","caption":"Tab 1","horizontalAlign":"left","padding":"10","verticalAlign":"top"}, {},{
                             }],
 			    layer2: ["wm.Layer", {"border":"1","borderColor":"#999999","caption":"Tab 2","horizontalAlign":"left","verticalAlign":"top"}, {},{
-                                pageContainer1: ["wm.PageContainer", {width: "100%", height: "100%", deferLoad: true}]
+
                             }],
 			    layer3: ["wm.Layer", {"border":"1","borderColor":"#999999","caption":"Tab 3","horizontalAlign":"left","verticalAlign":"top"}, {}, {
-                                pageContainer2: ["wm.PageContainer", {width: "100%", height: "100%", deferLoad: true}]
+
                             }]
 			}]
 		}],
