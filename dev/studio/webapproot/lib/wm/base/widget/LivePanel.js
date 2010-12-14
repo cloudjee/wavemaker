@@ -54,12 +54,14 @@ dojo.declare("wm.LivePanel", wm.Panel, {
 		                margin: "0,40,0,40",
 				verticalAlign: "top",
 				horizontalAlign: "left",
-				liveDataSourceClass: this.liveSource, //xxx
 				_liveSource: this.liveSource
 			});
 	        this.reflow(); // added for fancypanel support
 		this.liveForm.createLiveSource(this.liveSource);
 		var lvar = this.liveForm.dataSet.name;
+
+                this.liveForm.dataSet.liveView.getRelatedFields()
+
 		this.dataGrid.set_dataSet(lvar);
 		this.liveForm.set_dataSet(this.dataGrid.name + ".selectedItem");
 		this.liveForm.eventBindings.onSuccess = lvar;
