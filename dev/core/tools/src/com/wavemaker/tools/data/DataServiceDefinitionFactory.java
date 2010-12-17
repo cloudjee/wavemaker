@@ -81,7 +81,8 @@ public class DataServiceDefinitionFactory implements ServiceDefinitionFactory,
             rtn = new DataServiceDefinition(serviceId, externalConfig,
                     serviceMgr, f);
 
-            if (!rtn.getDataModelConfiguration().isKnownConfiguration()) {
+            if (!rtn.getDataModelConfiguration().isKnownConfiguration() &&
+                    !serviceId.equals("salesforceService")) { //xxx
                 rtn.dispose();
                 return null;
             }
