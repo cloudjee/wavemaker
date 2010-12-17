@@ -98,11 +98,11 @@ public abstract class ServiceGenerator {
     /**
      * The <code>ServiceGenerator</code> implementation should override this
      * method to customize the class level javadoc.
-     * 
+     *
      * @param jdoc
      */
     protected void generateClassJavadoc(JDocComment jdoc) {
-        addJavadoc(jdoc);
+        //addJavadoc(jdoc); //xxx
     }
 
     /**
@@ -240,6 +240,7 @@ public abstract class ServiceGenerator {
 
         for (int i = 0; i < operationNames.size(); i++) {
             String operationName = operationNames.get(i);
+            if (isSalesForceMethod(operationName)) continue; //xxx
             List<ElementType> inputTypes = serviceDefinition
                     .getInputTypes(operationName);
             generateOperationMethod(serviceCls, operationName, inputTypes, null);
@@ -265,6 +266,10 @@ public abstract class ServiceGenerator {
         }
 
         postGeneration();
+    }
+
+    protected boolean isSalesForceMethod(String operationNames) throws GenerationException { //xxx
+        return false;
     }
 
     protected JDefinedClass generateClass() throws GenerationException {
@@ -348,9 +353,9 @@ public abstract class ServiceGenerator {
                 .getName(), type);
     }
 
-    private void addJavadoc(JDocComment jdoc) {
+    /*private void addJavadoc(JDocComment jdoc) { //xxx
         jdoc.add(" Operations for service \""
                 + serviceDefinition.getServiceId() + "\"\n"
                 + StringUtils.getFormattedDate());
-    }
+    }*/
 }
