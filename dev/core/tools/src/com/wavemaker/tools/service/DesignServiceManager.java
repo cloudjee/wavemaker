@@ -1037,6 +1037,23 @@ public class DesignServiceManager {
         File serviceDefFile = getServiceDefXml(serviceId);
         Service service = getCurrentServiceDefinition(serviceId);
 
+        Service oldService = null; //xxx-s
+        if (serviceId.equals("salesforceService")) {
+            oldService = loadServiceDefinition(serviceId);
+
+            for (Operation op : oldService.getOperation()) {
+                service.addOperation(op);
+            }
+
+            List<DataObject> dataObjects = service.getDataobjects().getDataobject();
+            for (DataObject dobj : oldService.getDataobjects().getDataobject()) {
+                dataObjects.add(dobj);
+            }
+
+            service.setType(oldService.getType());
+            service.setCRUDService(oldService.getCRUDService());
+        } //xxx-e
+
         try {
             FileUtils.forceMkdir(
                     getServiceDesigntimeDirectory(service.getId()));
@@ -1088,5 +1105,9 @@ public class DesignServiceManager {
 
     public List<DesignServiceType> getDesignServiceTypes() {
         return designServiceTypes;
+    }
+
+    public JAXBContext getDefinitionsContext() { //xxx
+        return definitionsContext;
     }
 }
