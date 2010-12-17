@@ -23,6 +23,10 @@ import com.wavemaker.runtime.ws.BindingProperties;
 import com.wavemaker.runtime.ws.salesforce.SalesforceSupport;
 import com.wavemaker.runtime.ws.salesforce.gen.*;
 import com.wavemaker.tools.service.definitions.DataObject;
+import com.wavemaker.tools.service.definitions.Service;
+import com.wavemaker.tools.service.definitions.Operation;
+import com.wavemaker.tools.service.DesignServiceManager;
+import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.json.type.OperationEnumeration;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -33,6 +37,9 @@ import javax.xml.transform.Source;
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.JAXBException;
 import java.util.*;
 import java.io.File;
 
@@ -228,5 +235,43 @@ public class SalesforceHelper {
         }
         
         return subType;
+    }
+
+    public static boolean isSalesForceMethod(DesignServiceManager dsm, String methodName)
+        throws GenerationException {
+        boolean found = false;
+
+        try {
+            File serviceDefXml = dsm.getServiceDefXml("salesforceService");
+            Unmarshaller unmarshaller = dsm.getDefinitionsContext().createUnmarshaller();
+            Service svc = (Service) unmarshaller.unmarshal(serviceDefXml);
+            List<Operation> operations = svc.getOperation();
+
+            Operation operation = null;
+            for (Operation op : operations) {
+                if (methodName.equals(op.getName())) {
+                    found = true;
+                    operation = op;
+                    break;
+                }
+            }
+
+            if (found) {
+                List<Operation.Parameter> parameters = operation.getParameter();
+                found = false;
+                for (Operation.Parameter parm : parameters) {
+                    if (parm.getTypeRef().contains("salesforceservice.SessionHeader") ||
+                        parm.getTypeRef().contains("salesforceservice.Login") ||
+                        parm.getTypeRef().contains("salesforceservice.Logout")) {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+        } catch (JAXBException ex) {
+            throw new GenerationException(ex);
+        }
+
+        return found;
     }
 }
