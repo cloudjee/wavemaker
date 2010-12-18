@@ -20,11 +20,13 @@ dojo.provide("wm.base.widget.DojoMenu");
 /* We definitely want to move these out of the header, but currently this is our standard approach for handling dojo.requires statements; there is no handling of them in manifest.js */
 
 dojo.declare("wm.DojoMenu", wm.Control, {
+        _menuConnects: null,
 	padding: 4,
 	width:'100%',
 	height:'35px',
 	structure:'',
 	fullStructure: null,
+        fullStructureStr: "",// this varient of fullStructure can be written to widgets.js
 	dojoObj:null,
 	menu:'',
 	vertical: false,
@@ -76,6 +78,25 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 	    this.dojoObj.domNode.style.width = bounds.w + "px";
 	}
     },
+    createMenuBar: function() {
+
+
+		if (this.vertical)
+			this.dojoObj = new dijit.Menu({style:'width:0%', openOnHover:this.openOnHover});
+		else
+			this.dojoObj = new dijit.MenuBar({openOnHover:this.openOnHover});
+	dojo.addClass(this.dojoObj.domNode, this.getRuntimeId().replace(/\./g,"_") + '_CSS');
+		if (this.openOnHover && !this.vertical){
+		  this.hoverConnect = dojo.connect(this.dojoObj, 'onItemHover', this, '_onItemHover');	
+		}
+		
+	return this.dojoObj;
+    },
+    destroy: function() {
+	dojo.forEach(this._menuConnects, "destroy");
+	delete this._menuConnects;
+	this.inherited(arguments);
+    },
 	renderDojoObj: function() {
 	  /* WHAT IS THIS FOR PANKAJ?
 		if (this._loading)
@@ -84,23 +105,30 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		}
 	  */
 		if (this.dojoObj) {
-		  this.dojoObj.destroyRecursive();
-			if (this.hoverConnect)
-			 dojo.disconnect(this.hoverConnect);
+		    this.dojoObj.destroyRecursive();
+		    dojo.forEach(this._menuConnects, "destroy");
+		    if (this.hoverConnect)
+			dojo.disconnect(this.hoverConnect);
 	  }
 		
 		this.menuItems = [];
-		if (this.vertical)
-			this.dojoObj = new dijit.Menu({style:'width:0%', openOnHover:this.openOnHover});
-		else
-			this.dojoObj = new dijit.MenuBar({openOnHover:this.openOnHover});
-		dojo.addClass(this.dojoObj.domNode, this.id + '_CSS');
-		if (this.openOnHover && !this.vertical){
-		  this.hoverConnect = dojo.connect(this.dojoObj, 'onItemHover', this, '_onItemHover');	
-		}
-		
-		this.dojoObj.placeAt(this.domNode);
+	        
+	    this.dojoObj = this.createMenuBar();
 
+	    dojo.addClass(this.dojoObj.domNode, this.getRuntimeId().replace(/\./g,"_") + '_CSS');
+
+	        if (!this.isPopupMenu)
+		    this.dojoObj.placeAt(this.domNode);
+
+	        if (this.fullStructureStr) 
+		    this.setFullStructureStr(this.fullStructureStr);
+
+	    // This block will upgrade menus built using the freetext "menu" property to use
+	    // the new format
+	        if (!this.fullStructure) {
+		    var structure = this.getStructure();
+		    this.fullStructure = structure.items;
+		}
 		if (this.fullStructure) {
 			var structure = dojo.clone(this.fullStructure); // don't operate on original as we delete stuff that dojo shouldn't see from the datastructure
 			for (var i = 0; i < structure.length; i++)
@@ -109,6 +137,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 				this.addAdvancedMenuChildren(this.dojoObj, menuData, true);
 			}
 		} else {
+		    // this block should no longer be reachable.
 			var structure = this.getStructure();
 			for (var i = 0; i < structure.items.length; i++)
 			{
@@ -126,7 +155,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 	},
 	addMenuChildren: function(parentObj, data, isTop){
 		var menuObj = null;
-		if (isTop)
+		if (isTop && !this.isPopupMenu)
 		{
 			if (this.vertical)
 				menuObj = new dijit.MenuItem({label: data.label});
@@ -139,19 +168,23 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		}
 		else if (!data.children)
 		{
-			menuObj = new dijit.MenuItem({label: data.label});
+		    menuObj = new dijit.MenuItem({label: data.label, iconClass: data.iconClass});
 		}
 		else
 		{
-			menuObj = new dijit.PopupMenuItem({label: data.label});
+		    menuObj = new dijit.PopupMenuItem({label: data.label, iconClass: data.iconClass});
 		}
 
 		var evtObj = this.getEventObj(this.getEventName(data.label));
 		
 		if (!this.isDesignLoaded() && evtObj && evtObj.onClick && evtObj.onClick != '')
 		{
-		    var f = this.owner.getValueById(evtObj.onClick) || this.owner[evtObj.onClick];
-                    menuObj.onClick = this.owner.makeEvent(f, evtObj.onClick);
+		    if (dojo.isFunction(evtObj.onClick)) {
+			menuObj.onClick = evtObj.onClick;
+		    } else {
+			var f = this.owner.getValueById(evtObj.onClick) || this.owner[evtObj.onClick];
+			menuObj.onClick = this.owner.makeEvent(f, evtObj.onClick, this, "onClick");
+		    }
 		}
 		
 		if (data.children && data.children.length > 0)
@@ -173,9 +206,9 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 			
 			menuObj.popup = subMenu;
 		}
-
-		parentObj.addChild(menuObj);
-		dojo.addClass(menuObj.domNode, this.id + '_CSS');
+	    
+	        parentObj.addChild(menuObj);
+	        dojo.addClass(menuObj.domNode, this.getRuntimeId().replace(/\./g,"_")+ '_CSS');
 		return menuObj;
 	},
 
@@ -205,9 +238,9 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		var idInPage = data.idInPage;;
 		delete data.idInPage;
 
-		if (isTop)
+		if (isTop && !this._neverIsTop)
 		{
-			menuObj = new dijit.PopupMenuBarItem({label: data.label});
+		    menuObj = new dijit.PopupMenuBarItem({label: data.label, data: data});
 		}
 		else if (data.separator === true)
 		{
@@ -221,16 +254,27 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		if (!this.isDesignLoaded() && this.eventList[data.label] && this.eventList[data.label] != '') 
 		        menuObj.onClick = dojo.hitch(this.eventList[data.label]);
 
-		if (onClick) 
-		  menuObj.onClick = dojo.hitch(this.owner, onClick, menuObj, data);
-
+	    if (onClick) {
+		if (dojo.isString(onClick)) {
+		    var f = this.owner.getValueById(onClick) || this.owner[evtObj.onClick];
+		    menuObj.onClick = this.owner.makeEvent(f, onClick, this, "onClick");
+		} else {
+		    menuObj.onClick = dojo.hitch(this.owner, onClick, menuObj, data);
+		}
+		this._menuConnects.push(dojo.connect(menuObj, "onClick", this, function(e) {
+		    this.onclick(menuObj.label, menuObj.iconClass, e);
+		}));
+	    } else {
+		menuObj.onClick = dojo.hitch(this, function(e) {
+		    this.onclick(menuObj.label, menuObj.iconClass, e);
+		});
+	    }
 
 		if (idInPage) {
 		  this.owner[idInPage] = menuObj;
 		}
 
-
-		if (data.children) 
+		if (data.children && data.children.length > 0) 
 		{
 		  var subMenu = new dijit.Menu({});
 		  dojo.addClass(subMenu.domNode, this.owner.name + "_" + this.name  + "_PopupMenu");
@@ -242,18 +286,40 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		    }
 		  
 		  menuObj.popup = subMenu;
+		    // shouldn't be needed, but is needed when I right click 
+		    // on a layer and get the contextual menu with a submenu 
+		    // of layers
+		    var arrowNode = dojo.query(".dijitMenuArrowCell div", menuObj.domNode)[0];
+		    if (arrowNode) arrowNode.style.visibility = "visible";
 		}
 		parentObj.addChild(menuObj);
+	        return menuObj;
+	},
+    // fires every time any menu item is selected
+        onclick: function(inLabel, inIconClass, inEvent) {
+	    //alert(inLabel);
 	},
 	addNewMenuItem: function(parentObj, data) {
-	  var subMenu = parentObj.popup;
-	  this.addAdvancedMenuChildren(subMenu, data, false);
+	    if (!parentObj.popup) {
+		var subMenu = new dijit.Menu({});
+		dojo.addClass(subMenu.domNode, this.owner.name + "_" + this.name  + "_PopupMenu");
+		if (data.idInPage)
+		    dojo.addClass(subMenu.domNode, this.owner.name + "_" + data.idInPage  + "_PopupMenu");
+		parentObj.popup = subMenu;
+	    }
+
+	    //var subMenu = parentObj.popup;
+	  this.addAdvancedMenuChildren(parentObj.popup, data, false);
 	},
 	dojoRenderer: function (){
 	},
+	setFullStructureStr: function(inStruct) {
+	    this.fullStructureStr = inStruct;
+	    this.setFullStructure(dojo.fromJson(inStruct));	    
+	},
 	setFullStructure: function(inStruct) {
-	  this.fullStructure = inStruct;
-	  this.renderDojoObj();
+	    this.fullStructure = inStruct;
+	    this.eventList = [];
 	},
 	getStructure: function(){
 	  return this.structure == '' ? {items:[]} : dojo.fromJson(this.structure); 
@@ -378,17 +444,23 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 wm.Object.extendSchema(wm.DojoMenu, {
     transparent: {group: "style", order: 150, type: "Boolean"},
 	caption:{ignore:1},
-	structure:{hidden:true, order:10},
+        menu: {ignore: true},
+        structure:{ignore: 1,  order:10},
+        fullStructureStr: {hidden: true},
 	eventList:{hidden:true},
 	dataValue:{ignore:1},
 	dataSet: { ignore:1},
 	disabled:{ignore:1},
-	menuItems:{ignore:1}
+        menuItems:{ignore:1},
+        editMenuItems: {group: "operation"}
 });
 
 wm.DojoMenu.description = "A dojo menu.";
 
 wm.DojoMenu.extend({
+
+    editMenuItems: "(Edit Menu Items)",
+
     themeableStyles: [{name: "wm.DojoMenu-Right_Margin", displayName: "Right Margin"}, {name: "wm.DojoMenu-Down_Image", displayName: "Drop Icon (MenuBar)"}, {name: "wm.DojoMenu-Right_Image", displayName: "Drop Icon (SubMenu)"}],
 	designCreate: function() {
 		// if this is being created in studio, supply a default caption
@@ -402,7 +474,9 @@ wm.DojoMenu.extend({
 	},
 	makePropEdit: function(inName, inValue, inDefault) {
 		switch (inName) {
-			case "menu":
+		case "editMenuItems":
+		    return makeReadonlyButtonEdit(inName, inValue, inDefault);
+		case "menu":
 				return makeTextPropEdit(inName, inValue, inDefault);
 		case "transparent":
 		    return makeCheckPropEdit(inName, inValue, inDefault);
@@ -410,6 +484,24 @@ wm.DojoMenu.extend({
 		
 		return this.inherited(arguments);
 	},
+
+	editProp: function(inName, inValue, inInspector) {
+		switch (inName) {
+		case "editMenuItems":
+		    if (!studio.menuDesignerDialog) {
+			studio.menuDesignerDialog = new wm.PageDialog({pageName: "MenuDesigner", 
+								       name: "MenuDesignerDialog",
+								       title: "Edit Menu",
+								       hideControls: true,
+								       owner: studio,
+								       width: "250px",
+								       height: "350px"});
+		    }
+		    studio.menuDesignerDialog.page.setMenu(this);
+		    studio.menuDesignerDialog.show();
+		}
+	},
+
 	setOpenOnHover: function(inValue){
 		this.openOnHover = inValue;
     if (this.dojoObj)
@@ -434,13 +526,24 @@ wm.DojoMenu.extend({
 			if (props[evt].isMenuItem)
 				delete props[evt];
 		}
-		
+	    if (this.fullStructure) {
+		this.addNodesToPropList(this.fullStructure, props);
+	    } else {
 		dojo.forEach(this.eventList, function(obj){
 			props[this.getEventName(obj.label)] = {isEvent:true, isObject:false, noprop:false, type: 'string', isMenuItem:true};
 		}, this);
-		
+	    }
 		return props;
 	},
+    addNodesToPropList: function(struct, props) {
+	for (var i = 0; i < struct.length; i++) {
+	    if (!struct[i].children || struct[i].children.length == 0)
+		props[this.getEventName(struct[i].label)] = {isEvent: true, isObject: false, noprop: false, type: "string", isMenuItem: true};
+	    if (struct[i].children)// test for children needed on upgraded projects
+		this.addNodesToPropList(struct[i].children,props);
+	}
+
+    },
 	writeEvents:function(arg){
 		var e = this.inherited(arguments);
 		return e;
@@ -450,9 +553,18 @@ wm.DojoMenu.extend({
 		return this.getCleanText(name);
 	},
 	updatingEvent: function (prop, inValue){
-		var evtObj = this.getEventObj(prop);
+	    var evtObj = this.fullStructure ? this.getEventObjFull(this.fullStructure,prop) : this.getEventObj(prop);
 		if (evtObj != null)
 			evtObj.onClick = inValue;
+	},
+        getEventObjFull: function (struct,prop){
+	    for (var i = 0; i < struct.length; i++) {
+		if (this.getEventName(struct[i].label) == prop) return struct[i];
+		if (struct[i].children) {// test for children needed on upgraded projects
+		    var result = this.getEventObjFull(struct[i].children,prop);
+		    if (result) return result;
+		}
+	    }
 	},
 	getEventObj: function (prop){
 		prop = this.getCleanText(prop);
@@ -482,15 +594,15 @@ wm.DojoMenu.extend({
 		this.renderDojoObj();
 	},
 	getProp: function (inProp){
-		var evtObj = this.getEventObj(inProp);
+	    var evtObj = this.fullStructure ? this.getEventObjFull(this.fullStructure,inProp) : this.getEventObj(inProp);
 		if (evtObj != null)
 			return evtObj.onClick;
 		else
 			return this.inherited(arguments);
 	},
 	setProp: function(inProp, inValue){
-		var evtObj = this.getEventObj(inProp);
-		if (evtObj != null)
+	    var evtObj = this.fullStructure ? this.getEventObjFull(this.fullStructure,inProp) : this.getEventObj(inProp);
+	    if (evtObj != null) 
 			this.updatingEvent(inProp, inValue);
 		else
 			this.inherited(arguments);
@@ -518,6 +630,92 @@ wm.DojoMenu.extend({
 		if (item.children)
 		    this.renameComponentEventsMenu(item.children,originalId,newId);
 	    }
+    },
+    write: function() {
+	if (this.fullStructure)
+	    this.fullStructureStr = dojo.toJson(this.fullStructure);
+	return this.inherited(arguments);
     }
 });
 
+dojo.declare("wm.PopupMenu", wm.DojoMenu, {
+    classNames: "wmpopupmenu",
+    _neverIsTop:true,
+    width: "0px",
+    height: "0px",
+    isPopupMenu: true,
+    createMenuBar: function() {
+	return new dijit.Menu({style:'width:0%'});
+    },
+
+    // Disable all framework rendering
+    renderBounds: function() {},
+    render: function() {},
+    renderCss: function() {},
+    renderDojoObj: function() {
+	this.inherited(arguments);
+	if (this.domNode != this.dojoObj.domNode) {
+	    this.dojoObj.className += this.domNode.className;
+	    dojo.destroy(this.domNode);
+	    this.domNode = this.dojoObj.domNode;
+	    dojo.addClass(this.domNode, this.classNames);
+	}
+    },
+    // fired by studio.select
+    activate: function(inNode) {
+	if (this.isDesignLoaded()) {
+	    this.dojoObj._scheduleOpen(studio.designer.domNode);
+	} else if (inNode) {
+	    this.setShowing(true, inNode);
+	}
+    },
+    update: function(inEvt, inTarget, belowTarget) {
+	this.target = inTarget;
+	if (belowTarget || !inEvt) {
+	    var coords = dojo.coords(inTarget.domNode);
+	    var bounds = inTarget.getContentBounds();
+	    var y = coords.y + bounds.h;
+	    var x = coords.x;
+	    this.dojoObj.domNode.style.width = (bounds.w + inTarget.borderExtents.l + inTarget.borderExtents.r) + "px";
+	    this.dojoObj.domNode.style.borderTop = "solid 1px " + inTarget.borderColor;
+	    this.dojoObj._scheduleOpen(inTarget.domNode, null, {x: x,y: y});
+	} else {
+	    this.dojoObj._scheduleOpen(inEvt.target, null, {x: inEvt.pageX, y: inEvt.pageY});
+	}
+    },
+    setShowing: function(inShowing, inNode) {
+	if (inShowing) 
+	    this.dojoObj._scheduleOpen(inNode);
+    },
+    afterPaletteDrop: function() {
+	this.inherited(arguments);
+	this.setParent(null);
+	studio.designer.domNode.appendChild(this.domNode);
+	this.setMenu("File > New, Open, Save, Close\nEdit > Cut, Copy, Paste\nZoom > 25%, 50%, 100%, 150%\nHelp");
+	this.activate();
+    },
+    setLabel: function(inIndex, inText) {
+	this.dojoObj.getChildren()[inIndex].set("label", inText);
+    },
+    removeAllChildren: function() {
+	var children = this.dojoObj.getChildren();
+	for (var i = children.length-1; i >= 0; i--)
+	    children[i].destroy();
+    },
+    _end: 0
+});
+
+wm.Object.extendSchema(wm.PopupMenu, {
+    vertical: {ignore:true},
+    isPopupMenu: {ignore:true},
+    transparent: {ignore:true},
+    width: {ignore:true},
+    height: {ignore:true},
+    showing: {ignore:true},
+    border: {ignore:true},
+    borderColor: {ignore:true},
+    margin: {ignore:true},
+    padding: {ignore:true},
+    scrollX: {ignore:true},
+    scrollY: {ignore:true}
+});
