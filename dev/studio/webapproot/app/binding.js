@@ -274,7 +274,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	    bindPanelOuter: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right"}, {}, {
 		bindPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom"}, {}, {
 		    searchPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "25px"}, {}, {
-			searchBar: ["wm.Text", {height: "25px", width: "100%", captionSize: "60px", caption: "Search", changeOnKey: true, changeOnEnter: true, _resetButton: true, placeHolder: "Enter Name or Class", margin: "0,20,0,0"}],
+			searchBar: ["wm.Text", {height: "25px", width: "100%", captionSize: "60px", caption: "Search", changeOnKey: true, changeOnEnter: true, resetButton: true, placeHolder: "Enter Name or Class", margin: "0,20,0,0"}],
 			validLabel: ["wm.Picture", {height: "100%", width: "20px", source: "images/active.png", showing: false}, {}],
 			invalidLabel: ["wm.Picture", {height: "100%", width: "20px", source: "images/inactive.png", showing: false}, {}],
 			warningLabel: ["wm.Picture", {height: "100%", width: "20px", source: "lib/images/boolean/Signage/Caution.png", showing: false}, {}]
