@@ -111,7 +111,14 @@ dojo.declare("wm.ServiceCall", null, {
 		return i;
 	},
 	inputChanged: function() {
-		this.doAutoUpdate();
+	        if (djConfig.isDebug && this.autoUpdate) {
+		    this._autoUpdateFiring = "inputChanged";
+		    this.doAutoUpdate();
+		    delete this._autoUpdateFiring;
+		} else {
+		    this.doAutoUpdate();
+		}
+
 	},
 	//=======================================================
 	// Updating
@@ -137,7 +144,7 @@ dojo.declare("wm.ServiceCall", null, {
 		}
 	},
 	doAutoUpdate: function() {
-	        if (this.autoUpdate && !this._loading && (!this.startUpdate || this.startUpdateComplete || this.isDesignLoaded()))
+	        if (this.autoUpdate && !this._loading && (!this.startUpdate || this.startUpdateComplete || this.isDesignLoaded())) 
 			this.update();
 	},
 	/**
@@ -209,7 +216,7 @@ dojo.declare("wm.ServiceCall", null, {
 		wm.logging && console.debug("request", this.getId(), "operation", this.operation, "args", args);
 		if (djConfig.isDebug)
 		  console.log("REQUEST   Component: " + this.getRoot() + "." + this.name + ";  Operation: " + this.operation);
-	        var d = this._requester = this._service.invoke(this.operation, args, this.owner);
+	        var d = this._requester = this._service.invoke(this.operation, args, this.owner, this);
 		return this.processRequest(d);
             }
 	},
@@ -242,9 +249,13 @@ dojo.declare("wm.ServiceCall", null, {
 				if (max > 0 && cnt == max) break;
 			}
 			this.processResult(tmp);
+		        if (this.updateOnResult)
+			    this.update();
 			return tmp;
 		} else {
 			this.processResult(inResult);
+		        if (this.updateOnResult)
+			    this.update();
 			return inResult;
 		}
 	},
@@ -261,6 +272,9 @@ dojo.declare("wm.ServiceCall", null, {
 		this.onResult(inError);
 		this.onError(inError);
 	},
+    setUpdateOnResult: function(inVal) {
+	this.updateOnResult = inVal;
+    },
 	//=======================================================
 	// Events
 	//=======================================================
@@ -304,7 +318,7 @@ dojo.declare("wm.ServiceCall", null, {
 	*/
 	// fires only on error
 	onError: function(inError) {
-		var errCodes = inError.message.match(/(\d+)$/);
+	    var errCodes = (dojo.isObject(inError) ? inError.message : inError).match(/(\d+)$/);
 		var errCode = (errCodes) ? errCodes[0] : "";
 
 		// If the failer is a security access error, AND if its NOT a security error that comes from live view 
