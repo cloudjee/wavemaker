@@ -158,7 +158,9 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 		dojo.addClass(this.domNode, "wmdesign-wrapper");
 		this.domNode.style.cssText = "z-index: 10; visibility: hidden;";
 		this.setControl(this.control);
+	    dojo.connect(this.control.scrim ? this.domNode : this.control.domNode, dojo.isFF ? "onmousedown" : "oncontextmenu", this.control, "showContextMenu");
 	},
+
 	destroy: function() {
 		this.surface._deleted(this.control);
 		this.disconnect();
@@ -203,6 +205,7 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 		if (inShowing != this.showing)
 			this.showHideHandles(inShowing)
 		this.inherited(arguments);
+
 	},
 	// undo connections to our control
 	disconnect: function() {
@@ -404,6 +407,9 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
     destroy: function() {
 	this.handles.destroy();
 	this.inherited(arguments);
+    },
+    showContextMenu: function(e) {
+	this.control.showContextMenu(e);
     }
 });
 
