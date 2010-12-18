@@ -114,6 +114,7 @@ wm.loadLibs([
 	"wm.base.widget.Layout",
 	"wm.base.widget.Content",
 	"wm.base.widget.Html",
+
 	"wm.base.widget.Bevel",
 	"wm.base.widget.Splitter",
 	"wm.base.widget.Layers.Decorator",
@@ -121,9 +122,11 @@ wm.loadLibs([
 	"wm.base.widget.Layers.AccordionDecorator",
 	"wm.base.widget.Layers",
 	"wm.base.widget.Button",
+	"wm.base.widget.DojoFileUpload",
 	"wm.base.widget.DialogButton",
 	"wm.base.widget.Picture",
 	"wm.base.widget.Tree",
+	"wm.base.widget.DraggableTree",
 	"wm.base.widget.Label",
 	"wm.base.widget.gadget.Gadget",
 	"wm.base.widget.gadget.Stocks",
@@ -188,5 +191,6 @@ wm.loadLibs([
 	*/
 	// Plugins
 	//"wm.modules.rbac.RbacPlugin"
-	"wm.base.RbacPlugin"
+       "wm.base.RbacPlugin",
+       "wm.base.I18nPlugin"
 ]);
