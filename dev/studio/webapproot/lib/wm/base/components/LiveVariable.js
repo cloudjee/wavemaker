@@ -93,10 +93,22 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 			this.inherited(arguments);
 	},
 	filterChanged: function() {
-		this.doAutoUpdate();
+	        if (djConfig.isDebug && this.autoUpdate) {
+		    this._autoUpdateFiring = "filterChanged";
+		    this.doAutoUpdate();
+		    delete this._autoUpdateFiring;
+		} else {
+		    this.doAutoUpdate();
+		}
 	},
 	sourceDataChanged: function() {
-		this.doAutoUpdate();
+	        if (djConfig.isDebug && this.autoUpdate) {
+		    this._autoUpdateFiring = "sourceDataChanged";
+		    this.doAutoUpdate();
+		    delete this._autoUpdateFiring;
+		} else {
+		    this.doAutoUpdate();
+		}
 	},
 
 	/** Set the filter used for read operations */
@@ -113,7 +125,10 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	/** Set the source data which is used for operations. */
 	setSourceData: function(inSourceData) {
 		var liveType = this.isLiveType();
-		if (!liveType || (inSourceData || 0).type == this.type) {
+	    // if no livetype, accept anything...
+	    // if passing in a hash (no declaredClass) thats fine if we already have a type
+	    // else if passing in a variable, its type should match our current type
+	    if (!liveType || (this.type && !inSourceData.declaredClass) || (inSourceData || 0).type == this.type) {
 			this.sourceData.setDataSet(inSourceData);
 			if (!liveType) {
 				this._updating++;
@@ -163,7 +178,11 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 		});
 	},
 	setType: function(inType) {
-		this.inherited(arguments);
+	    var oldType = this.type;
+	    var oldSourceType = this.sourceData.type;
+	    var oldFilterType = this.filter.type;
+
+	    this.inherited(arguments);
 
 	    // until we have data, assume any read livevar is a list.
 	    if (this.operation == "read" && wm.isEmpty(this.getData()))
@@ -171,7 +190,9 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 
 	    this.filter.setType(this.type);
 	    this.sourceData.setType(this.type);
-	    if (!this._updating && this.$.binding)
+	    // I've been seeing these bindings fire way too often, so
+	    // some extra tests to insure its needed
+	    if (!this._updating && !this._inPostInit && this.$.binding && (oldType != this.type || oldSourceType != this.sourceDataType || oldFilterType != this.filter.type))
 		this.$.binding.refresh();
 	},
 	_liveViewChanged: function() {
@@ -320,12 +341,12 @@ wm.LiveVariable.extend({
 		var
 			p = this.inherited(arguments),
 			r = (this.operation == "read");
-		p.matchMode.ignore = !r;
-		p.firstRow.ignore = !r;
-		p.maxResults.ignore = !r;
-		p.designMaxResults.ignore = !r;
-		p.orderBy.ignore = !r;
-		p.ignoreCase.ignore = !r;
+		p.matchMode.ignoretmp = !r;
+		p.firstRow.ignoretmp = !r;
+		p.maxResults.ignoretmp = !r;
+		p.designMaxResults.ignoretmp = !r;
+		p.orderBy.ignoretmp = !r;
+		p.ignoreCase.ignoretmp = !r;
 		p.filter.bindTarget = r;
 		p.filter.categoryParent = r ? "Properties" : "";
 		return p;
@@ -350,15 +371,19 @@ wm.LiveVariable.extend({
 			// since this is the default anyway, otherwise set to false.
 		        this.setStartUpdate(inOperation == "read");
 			this.setAutoUpdate(inOperation == "read");
+/*
 			if (studio.selected == this)
 				studio.inspector.inspect(this);
+				*/
 		}
 	},
 
 	set_liveSource: function(inLiveSource) {
 		this.setLiveSource(inLiveSource);
+/*
 		if (this.isDesignLoaded() && studio.selected == this)
 			studio.inspector.inspect(this);
+			*/
 	},
 	set_sourceData: function(inSourceData) {
 		this.setSourceData(inSourceData);
@@ -367,8 +392,10 @@ wm.LiveVariable.extend({
 	},
 	set_filter: function(inFilter) {
 		this.setFilter(inFilter);
+/*
 		if (this.isDesignLoaded() && studio.selected == this)
 			studio.inspector.inspect(this);
+			*/
 	},
 	checkOrderBy: function(inOrderBy) {
 		var
