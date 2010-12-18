@@ -102,8 +102,21 @@ dojo.declare("wm.Page", wm.Component, {
 	        console.error("Page " + this.name + " has been corrupted, and no longer has a wm.Layout nor any widgets; please create a new project or edit " + this.name + ".widgets.js by hand");
 		app.toastError("Page " + this.name + " has errors");
             }
+	    if (wm.useDojoParser) {
+		var oldOwner = wm._dojoParserCurrentOwner;
+		wm._dojoParserCurrentOwner = this;
+		var loaderNode = this.owner._pageLoader.htmlLoader.getHtmlNode();
+		while(loaderNode.childNodes.length) {
+		    if (loaderNode.firstChild)
+			this.domNode.appendChild(loaderNode.firstChild);
+		    else
+			loaderNode.removeChild(loaderNode.firstChild);
+		}
+		var result = dojo.parser.parse(this.domNode);
+		wm._dojoParserCurrentOwner = oldOwner;
+	    } else {
 		this.loadComponents(widgets, null);
-
+	    }
 	    //this._layoutPanel.parentNode.appendChild(this._layoutPanel.domNode);
 
 		//this.loadCssHtml();
@@ -395,6 +408,8 @@ dojo.declare("wm.Page", wm.Component, {
 		this.onEscapeKey();
 
 	    else if (e.shiftKey) {
+		if (djConfig.isDebug && e.ctrlKey && chr == "d")
+		    return app.debugDialog.show();
                 // we get a keyCode for the shiftKey being pressed which we should ignore; and a second keycode when a key is hit while shiftKey is held
 		if (e.keyCode != dojo.keys.SHIFT && !isInput) 
 		    this.onShiftKey(chr);
