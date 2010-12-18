@@ -19,18 +19,11 @@ NewJavaService.widgets = {
 	layoutBox1: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", width: "100%"}, {}, {
 		dialog: ["wm.Panel", {border: "0", height: "100%", layoutKind: "left-to-right", width: "100%"}, {}, {
 			dialogInner: ["wm.Panel", {border: "0", height: "100%", width: "100%"}, {}, {
-				titleBar: ["wm.Panel", {border: "0", height: "29px", layoutKind: "left-to-right"}, {}, {
-					dialogLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_TextAlign_Center", "wm_Padding_4px", "wm_FontColor_White"]}, caption: "New Java Service", width: "100%", height: "100%", border: "0"}, {}, {
-						format: ["wm.DataFormatter", {}, {}]
-					}]
-				}],
 				panel: ["wm.Panel", {border: "0", height: "100%", width: "100%", verticalAlign: "center", padding: "10"}, {}, {
 					panel1: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]}, border: "0", height: "100%", width: "100%", verticalAlign: "center", padding: "10"}, {}, {
-						newJavaServiceIdInput: ["wm.Editor", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "150px", caption: "Service Name"}, {}, {
-							editor: ["wm._TextEditor", {}, {}]
+					    newJavaServiceIdInput: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "150px", caption: "Service Name"}, {onEnterKeyPress: "okButtonClick"}, {
 						}],
-						newJavaClassNameInput: ["wm.Editor", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "150px", caption: "Package and Class Name"}, {}, {
-							editor: ["wm._TextEditor", {}, {}]
+						newJavaClassNameInput: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "150px", caption: "Package and Class Name"}, {onEnterKeyPress: "okButtonClick"}, {
 						}]
 					}]
 				}],
