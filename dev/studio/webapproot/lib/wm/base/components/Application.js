@@ -47,10 +47,27 @@ dojo.declare("wm.Application", wm.Component, {
 
 	        this.setTheme(themematch ? themematch[1] : this.theme, true);
 	        if (dojo.isIE && dojo.isIE < 8 || dojo.isIE == 9) this.dialogAnimationTime = 0;
+
+	    if (djConfig.isDebug) {
+		dojo.require("wm.base.widget.Dialog");
+		dojo.require("wm.base.widget.Tree");
+		dojo.require("wm.base.components.JsonRpcService");
+		this.debugDialog = new wm.DebugDialog({owner: this, 
+						       width: "250px", 
+						       height: "400px",
+						  corner: "cr",
+
+						  noEscape: false});
+		this.debugTree = this.debugDialog.debugTree;
+	    }
+
 		this.pageDialog = new wm.PageDialog({name: "pageDialog", owner: this});
 		this.toastDialog = new wm.Toast({name: "toastDialog", owner: this});
 		this.createPageLoader();
 		this.components = {};
+	        if (this._touchEnabled === undefined)
+		    this._touchEnabled = navigator.userAgent.match(/AppleWebKit/) &&
+		navigator.userAgent.match(/Mobile/);
 	    //this.scrim = new wm.Scrim();
 		this.loadComponents(this.constructor.widgets || this.widgets);
 
@@ -801,3 +818,5 @@ wm.Object.extendSchema(wm.Application, {
 
 wm.Application.themePrototypeData = {};
 wm.Application.themeData = {};			    
+
+
