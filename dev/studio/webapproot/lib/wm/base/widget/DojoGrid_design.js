@@ -8,7 +8,7 @@ wm.DojoGrid.extend({
 		           	{name:'Number',value:'dojox.grid.cells.NumberTextBox'},
 	                {name:'Date',value:'dojox.grid.cells.DateTextBox'},
 	                {name:'Checkbox',value:'dojox.grid.cells.Bool'},
-	                {name:'ComboBox',value:'dojox.grid.cells.ComboBox'},
+	                {name:'ComboBox',value:'dojox.grid.cells.ComboBox'}
 		      ],
 	headerAttr: [{id:'show', title:' ',width:'10px', type:'checkbox'}, 
 				{id:'id', title: 'Field',width:'150px', type:'text', readOnly:true}, 
@@ -119,10 +119,10 @@ wm.DojoGrid.extend({
 			dojo.query(".EditorComboOptions", trObj)[0].style.display = "none";
 			break;
 		    }
-		    */
+
 
 		}
-		
+		    */		
 		this.updateGridStructure();		
 		if (addFormatter) {
 			this.contextMenu.hide();
