@@ -62,6 +62,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	},
 	postInit: function() {
 		this.inherited(arguments);
+	        this._inPostInit = true;
 		// optimization: we should never need bindings on subNards so not creating them
 		if (!this._subNard && !this.$.binding)
 			new wm.Binding({name: "binding", owner: this});
@@ -70,6 +71,9 @@ dojo.declare("wm.Variable", wm.Component, {
 			this.setJson(this.json);
 		else
 			this._clearData();
+
+	    this._inPostInit = false;
+
 		// need to reinitialize after type is set
 		if (!this._updating && this.$.binding)
 			this.$.binding.refresh();
