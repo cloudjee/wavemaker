@@ -74,9 +74,24 @@ dojo.declare("wm.Wire", wm.Component, {
 	_sourceValueChanged: function(inValue) {
 		if (wm.bindingsDisabled)
 			return;
+
 		inValue = this.expression ? wm.expression.getValue(this.expression, this.getRoot()) : inValue;
-		if (this.canSetValue())
-			this.target.setValue(this.targetProperty, inValue);
+	        if (this.canSetValue()) {
+		    // ignore expressions that don't reference any variables; presume these to be
+		    // literals or otherwise uninteresting to log
+		    // ignore if we are in refresh; this is not called by values changing,
+		    // but rather by components insuring everyone knows their state
+		    if (djConfig.isDebug && !this.owner._inRefresh && (!this.expression || this.expression.match(/\$/))) {
+			app.debugTree.newLogEvent({type: "bindingEvent",
+						   component: this.target,
+						   property: this.targetProperty,
+						   value: inValue,
+						   source: this.expression ? null : this.source,
+						   expression: this.expression});
+		    }
+
+		    this.target.setValue(this.targetProperty, inValue);
+		}
 	},
 	sourceValueChanged: function(inValue, inV2) {
 		wm.logging && console.info("==> (sourceValueChanged) ", this.getFullTarget(), " <= ", this.source, "(" + inValue + ")");
@@ -248,7 +263,9 @@ dojo.declare("wm.Binding", wm.Component, {
 		this.inherited(arguments);
 	},
 	refresh: function() {
+	    this._inRefresh = true;
 		wm.forEachProperty(this.wires, function(w) { w.refreshValue(); });
+	    this._inRefresh = false;
 	},
 	addWire: function(inTargetId, inTargetProperty, inSource, inExpression) {
 		var id = (inTargetId ? inTargetId + "." : "") + inTargetProperty;
