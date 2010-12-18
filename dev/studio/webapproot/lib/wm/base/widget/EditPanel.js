@@ -37,7 +37,6 @@ dojo.declare("wm.EditPanel", wm.Panel, {
 		this.inherited(arguments);
 	},
 	init: function() {
-                this.height = wm.Button.prototype.height;
 		this.inherited(arguments);
 		this.setLiveForm(this.liveForm);
 		this.updateControlsStatus();                

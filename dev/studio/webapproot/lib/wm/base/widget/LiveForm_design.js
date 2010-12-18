@@ -588,7 +588,7 @@ wm.LiveForm.extend({
             if (this.editPanelStyle == "none") return;
 	    var r = this.getRoot();
 	    if (!this.getEditPanel() && (wm.typeManager.getLiveService((this.dataSet || 0).type) || this.liveVariable)) {
-		var e = this.owner.loadComponent(this.name + "EditPanel", this, "wm.EditPanel", {editPanelStyle: this.editPanelStyle});
+		var e = this.owner.loadComponent(this.name + "EditPanel", this, "wm.EditPanel", {editPanelStyle: this.editPanelStyle, height: wm.Button.prototype.height});
 		if (e) {
 		    e.set_liveForm(this.getId());
 		}
