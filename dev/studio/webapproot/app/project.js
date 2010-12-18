@@ -598,17 +598,11 @@ Studio.extend({
 	saveProjectClick: function() {
 		this.waitForCallback(bundleDialog.M_SavingProject + this.project.projectName, dojo.hitch(this.project, "saveProject"));
 	},
-	saveScriptClick: function() {
-		this.waitForCallback(bundleDialog.M_SavingScript + this.project.projectName, dojo.hitch(this.project, "saveScript"));
-	},
 	saveCssClick: function() {
 		this.waitForCallback(bundleDialog.M_SavingCSS + this.project.projectName, dojo.hitch(this.project, "saveCss"));
 	},
 	saveMarkupClick: function() {
 		this.waitForCallback(bundleDialog.M_SavingMarkup + this.project.projectName, dojo.hitch(this.project, "saveMarkup"));
-	},
-        saveAppSrcClick: function() {
-		this.waitForCallback(bundleDialog.M_SavingAppScript + this.project.projectName, dojo.hitch(this.project, "saveAppScript"));
 	},
 	savePageAsClick: function() {
 	    this.promptForName("page", this.page.declaredClass, this.project.getPageList(), 
@@ -616,24 +610,6 @@ Studio.extend({
 		                   if (n)
 			               this.waitForCallback(bundleDialog.M_SavingPageAs + n, dojo.hitch(this.project, "savePageAs", n));
                                }));                                         
-	},
-	refreshScriptClick: function() {
-		app.confirm(bundleDialog.M_AreYouSureReload, false, dojo.hitch(this, function() {
-                            this.refreshScript();
-                        }));
-  },	
-  refreshScript: function() {
-    var updatedScript = studio.project.loadProjectData(wm.pagesFolder + studio.project.pageName + "/" + studio.project.pageName + ".js")
-    studio.setScript(updatedScript);
-	},
-	importJavascriptLibrary: function() {
-	    this.beginBind("Script Importer", studio.editArea, "js");
-	},
-	importAppJavascriptLibrary: function() {
-	    this.beginBind("Script Importer", studio.appsourceEditor, "js");
-	},
-	importCssLibrary: function() {
-	    this.beginBind("Css Importer", studio.cssEditArea, "css");
 	},
 	beginBind: function(inPropName, editArea, type) {
 	    var bd = this.getBindDialog();
@@ -906,15 +882,23 @@ Studio.extend({
 	    var projectPrefix = studio.projectPrefix;
 	    return "/" + projectPrefix + this.project.projectName + (s.length ? "/?" + s.join("&") : "");
 	},
+
+    runProjectChange: function(inSender, inLabel, inIconClass, inEvent) {
+	if (inLabel == "Compile")
+	    inSender.setWidth("90px");
+	else
+	    inSender.setWidth("75px");
+    },
 	runProjectClick: function(inSender) {	    
 	  this._runRequested = inSender.name;
-	    var isTest = (inSender.name == "navTestBtn");
+	    
 		this.saveProjectClick();
 		this.deploy(bundleDialog.M_BuildingPreview, dojo.hitch(this, function(result) {
 		      this._runRequested = false;
-		      wm.openUrl(this.getPreviewUrl(isTest), this.project.projectName, "_wmPreview");
-                      studio.endWait();
-		      return result;
+		    if (inSender.caption != "Compile") 
+			wm.openUrl(this.getPreviewUrl(inSender.caption == "Test"), this.project.projectName, "_wmPreview");
+		    studio.endWait();
+		    return result;
 		}));
 	}
 });
@@ -1002,6 +986,10 @@ Studio.extend({
 	  // Do not allow users to delete the last page of the project
 	  if (n.page && n.parent.kids.length == 1) 
 	    this.projectDeleteButton.setDisabled(true);
-	}
+	},
+    contextualMenuClick: function(inSender,inLabel, inIconClass, inEvent) {
+
+    }
 });
+
 
