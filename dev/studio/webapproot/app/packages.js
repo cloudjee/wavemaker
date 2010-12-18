@@ -19,7 +19,9 @@
 
 // built in wm widgets
 
+
 [ bundlePackage.Common_Widgets, bundlePackage.Button, "wm.Button", "wm.base.widget.Button", "images/wm/button.png", "A simple button"],
+[ bundlePackage.Common_Widgets, bundlePackage.PopupButton, "wm.PopupMenuButton", "wm.base.widget.Button", "images/wm/button.png", "A simple button"],
 [ bundlePackage.Common_Widgets, bundlePackage.Toggle_Button, "wm.ToggleButton", "wm.base.widget.Button", "images/wm/button.png", "A simple button"],
 [ bundlePackage.Common_Widgets, bundlePackage.DojoGrid, "wm.DojoGrid", "wm.base.widget.DojoGrid", "images/wm/data.png", "A Dojo grid"],
 [ bundlePackage.Common_Widgets, bundlePackage.Label, "wm.Label", "wm.base.widget.Label", "images/wm/content.png", "Static text"],
@@ -56,6 +58,7 @@
 
 [ bundlePackage.Dojo_Widgets, bundlePackage.Chart, "wm.DojoChart", "wm.base.widget.DojoChart", "images/wm/bar_chart.png", "A Dojo chart"],
 [ bundlePackage.Dojo_Widgets, bundlePackage.Dashboard, "wm.Dashboard", "wm.base.widget.Dashboard", "images/wm/lightbox_16.png", "Dashboard"],
+[ bundlePackage.Dojo_Widgets, bundlePackage.PopupMenu, "wm.PopupMenu", "wm.base.widget.DojoMenu", "images/wm/menu.png", "A Dojo menu"],
 [ bundlePackage.Dojo_Widgets, bundlePackage.Fisheye, "wm.DojoFisheye", "wm.base.widget.DojoFisheye", "images/wm/fisheye.png", "A Dojo Fisheye"],
 [ bundlePackage.Dojo_Widgets, bundlePackage.Lightbox, "wm.DojoLightbox", "wm.base.widget.DojoLightbox", "images/wm/lightbox_16.png", "A Dojo Lightbox"],
 [ bundlePackage.Dojo_Widgets, bundlePackage.Menu, "wm.DojoMenu", "wm.base.widget.DojoMenu", "images/wm/menu.png", "A Dojo menu"],
@@ -67,6 +70,7 @@
 [ bundlePackage.Form_Tools, bundlePackage.LiveForm, "wm.LiveForm", "wm.base.widget.LiveForm", "images/wm/content.png"],
 [ bundlePackage.Form_Tools, bundlePackage.RelatedEditor, "wm.RelatedEditor", "wm.base.widget.RelatedEditor", "images/wm/edit.png", "A group of editors for related data"],
 
+[ bundlePackage.More_Widgets, bundlePackage.JsonStatus, "wm.JsonStatus", "wm.base.widget.Tree", "images/wm/bevel.png", "A bar to put between widgets"],
 [ bundlePackage.More_Widgets, bundlePackage.Bevel, "wm.Bevel", "wm.base.widget.Bevel", "images/wm/bevel.png", "A bar to put between widgets"],
 [ bundlePackage.More_Widgets, bundlePackage.Calendar, "wm.dijit.Calendar", "wm.base.widget.dijit.Calendar", "images/wm.dijit/Calendar.png", "Dojo calendar control"],
 [ bundlePackage.More_Widgets, bundlePackage.Content, "wm.Content", "wm.base.widget.Content", "images/wm/content.png", "A display for static markup"],
@@ -110,6 +114,7 @@
 [ bundlePackage.Beta, bundlePackage.ListViewer, "wm.ListViewer", "wm.base.widget.ListViewer", "images/wm/content.png", "A simple list control"],
 
 [ bundlePackage.Advanced, bundlePackage.Tree, "wm.PropertyTree", "wm.base.widget.Tree", "images/wm/tree.png", "A tree control"],
+[ bundlePackage.Advanced, bundlePackage.DraggableTree, "wm.DraggableTree", "wm.base.widget.DraggableTree", "images/wm/tree.png", "A tree control"],
 [ bundlePackage.Advanced, bundlePackage.SimpleForm, "wm.SimpleForm", "wm.base.widget.LiveForm", "images/wm/content.png"],
 
 [ bundlePackage.Deprecated, bundlePackage.DataGrid, "wm.DataGrid", "wm.base.widget.DataGrid", "images/wm/data.png", "A grid control for displaying lists"],
@@ -143,11 +148,13 @@
 [ bundlePackage.Non_Visual_Components, bundlePackage.ServiceVariable, "wm.ServiceVariable", "wm.base.components.ServiceVariable", "images/wm/servicevar_24.png"],
 [ bundlePackage.Non_Visual_Components, bundlePackage.LiveVariable, "wm.LiveVariable", "wm.base.components.LiveVariable", "images/wm/livevar_24.png"],
 [ "Non-Visual Components", "SalesForceMonitorVariable", "wm.SalesForceMonitorVariable", "wm.base.components.SalesForceMonitorVariable", "images/wm/servicevar_24.png"],
-[ bundlePackage.Non_Visual_Components, bundlePackage.ImageList, "wm.ImageList", "wm.base.components.ImageList", "images/wm/picture.png", ""],
+[ bundlePackage.Non_Visual_Components, bundlePackage.ImageList, "wm.ImageList", "wm.base.components.ImageList", "images/wm/picture.png", "", {_notInInsertMenu:true}],
+[ bundlePackage.Non_Visual_Components, "Silk Icons ImageList", "wm.ImageList", "wm.base.components.ImageList", "images/wm/picture.png", "", {url: "lib/images/silkIcons/silk.png", width: 18,height: 20, colCount: 35, iconCount: 196, _notInInsertMenu:true }],
+[ bundlePackage.Non_Visual_Components, "Boolean Signage ImageList", "wm.ImageList", "wm.base.components.ImageList", "images/wm/picture.png", "", {url: "lib/images/boolean/Signage/set.png", width: 16,height: 16, colCount: 9, _notInInsertMenu:true}],
 [ bundlePackage.Non_Visual_Components, bundlePackage.NavigationCall, "wm.NavigationCall", "wm.base.components.NavigationCall", "images/wm/navigation_24.png"],
-[ bundlePackage.Non_Visual_Components, bundlePackage.LogoutVariable, "wm.LogoutVariable", "wm.base.components.LogoutVariable", "images/wm/servicevar_24.png"],
-[ bundlePackage.Non_Visual_Components, bundlePackage.Timer, "wm.Timer", "wm.base.components.Timer", "images/wm/variable_24.png"],
-[ bundlePackage.Non_Visual_Components, bundlePackage.TypeDefinition, "wm.TypeDefinition", "wm.base.components.TypeDefinition", "images/wm/variable_24.png"],
+[ bundlePackage.Non_Visual_Components, bundlePackage.LogoutVariable, "wm.LogoutVariable", "wm.base.components.LogoutVariable", "images/wm/servicevar_24.png", "", {_notInInsertMenu:true}],
+[ bundlePackage.Non_Visual_Components, bundlePackage.Timer, "wm.Timer", "wm.base.components.Timer", "images/wm/variable_24.png", "", {_notInInsertMenu:true}],
+[ bundlePackage.Non_Visual_Components, bundlePackage.TypeDefinition, "wm.TypeDefinition", "wm.base.components.TypeDefinition", "images/wm/variable_24.png", "", {}],
 
 
 [ bundlePackage.Services, bundlePackage.Database_Service, "wm.DataModel", "wm.base.components.DataModel", "images/wm/data_blue.png"],
