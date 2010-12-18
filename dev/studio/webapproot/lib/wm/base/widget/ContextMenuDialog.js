@@ -1,8 +1,12 @@
 dojo.provide("wm.base.widget.ContextMenuDialog");
 dojo.require('dojo.data.ItemFileReadStore');
 
-dojo.declare("wm.ContextMenuDialog", null, {
-	constructor: function(dialogTitle, addButtonLabel, onAddButtonClick, headerAttr, dataSet, newRowDefault, domNode, addDeleteColumn, helpText){
+dojo.declare("wm.ContextMenuDialog", wm.Dialog, {
+    useContainerWidget: true,
+    modal: false,
+    title: "",
+    constructor: function(dialogTitle, addButtonLabel, onAddButtonClick, headerAttr, dataSet, newRowDefault, domNode, addDeleteColumn, helpText, width){
+	        this.owner = window["studio"]; // without this, dialog shows up only in canvas
 		this.helpText = helpText;
 		this.dialogTitle = dialogTitle;
 		this.addButtonLabel = addButtonLabel;
@@ -15,8 +19,15 @@ dojo.declare("wm.ContextMenuDialog", null, {
 		this.trId = 0;
 		this.showModal = true;
 		this.deleteButtonProps = {id:'deleteButton', title: ' ',width:'', type:'img', label:'Delete', src:'images/delete_24.png', width:'20px'};
+	        this.containerNodeWidth = width;
 		dojo.connect(domNode, "oncontextmenu", this, "show");
 	},
+    show: function(e) {
+	this.inherited(arguments);
+	this.createRightClickMenu();
+	dojo.stopEvent(e);
+    },
+/*
 	show: function(e){
 		if (!this.menu)
 			this.createRightClickMenu();
@@ -29,6 +40,7 @@ dojo.declare("wm.ContextMenuDialog", null, {
 	hide: function(){
 		this.menu.hide();
 	},
+	*/
 	setDataSet: function(dataSet){
 		this.trObjMap = {};
 		this.trId = 0;
@@ -45,7 +57,7 @@ dojo.declare("wm.ContextMenuDialog", null, {
 			
 		var arr = [];
 		for (var tr in this.trObjMap){
-			arr.push(this.trObjMap[tr]);
+			 arr.push(this.trObjMap[tr]);
 		}
 		
 		return arr;
@@ -114,16 +126,21 @@ dojo.declare("wm.ContextMenuDialog", null, {
 	},
 	
 	createRightClickMenu: function(){
+	    if (this.rightMenuCreated) return;
+	    this.rightMenuCreated = true;
+/*
 		this.menu = new dijit.Dialog({title:this.dialogTitle},dojo.doc.createElement('div'));
 		this.titleBarClass = 'wmcontainer wmPageDialog-titleBar dialogtitlebar wmlabel wmGenericDialog-dialogTitleLabel';
 		dojo.removeClass(this.menu.titleBar, 'dijitDialogTitleBar');
     dojo.addClass(this.menu.titleBar, this.titleBarClass);
 		this.menu.domNode.style.border = '1px solid #333333';
-		
+		*/				
+	    this.containerNode.style.overflowX = "auto";
+	        
 		if (this.helpText){
-			this.helpTextDiv = dojo.create('div', {innerHTML:this.helpText, style:'padding-left:5px;margin:5px;background:#FFF1A8;border:1px solid #DCDCDC;'}, this.menu.containerNode);
+			this.helpTextDiv = dojo.create('div', {innerHTML:this.helpText, style:'padding-left:5px;margin:5px;background:#FFF1A8;border:1px solid #DCDCDC;'}, this.containerNode);
 		}
-		
+
 		this.createMenuHTML(this.headerAttr, this.dataSet);
 	},
 	createMenuHTML: function(headerAttr, rows){
@@ -132,6 +149,8 @@ dojo.declare("wm.ContextMenuDialog", null, {
 		this.advancedColumns = [];
 		this.menuTable = dojo.doc.createElement('table');
 		this.menuTable.style.display = 'none';
+	    if (this.containerNodeWidth)
+		this.menuTable.style.width = this.containerNodeWidth + "px";
 		var thead = dojo.doc.createElement('thead');
 		this.menuTable.appendChild(thead);
 		var tr = dojo.doc.createElement('tr');
@@ -148,11 +167,12 @@ dojo.declare("wm.ContextMenuDialog", null, {
 				this.deleteButtonProps.isAdvanced = true;
 			var deleteTD = this.addHeaderColumn(tr, this.deleteButtonProps);
 			deleteTD.style.backgroundColor = '#FFFFFF'; 
+		    deleteTD.width = "20px";
 		}
 
 		this.rightClickTBody = dojo.doc.createElement('tbody');
 		this.menuTable.appendChild(this.rightClickTBody);
-		this.menu.containerNode.appendChild(this.menuTable);
+		this.containerNode.appendChild(this.menuTable);
 		
 		dojo.forEach(rows, function(row){
 			this.addNewRow(row, headerAttr, this.rightClickTBody);
@@ -164,8 +184,8 @@ dojo.declare("wm.ContextMenuDialog", null, {
 	},
 	addAdvancedProperties: function(){
 		this.destoryAdvancedPropertiesDiv();
-		this.advancedButtonDiv = dojo.create('div', {style:'text-align:right;'}, this.menu.containerNode);
-		dojo.place(this.advancedButtonDiv, this.helpTextDiv, 'after');
+	    this.advancedButtonDiv = dojo.create('span', {}, this.containerNode);
+	    dojo.place(this.advancedButtonDiv, this.newColumnButton.domNode, 'after');
 		this.advancedButton = new dijit.form.Button({label:'Show Advanced Properties >>'},dojo.create('div',{},this.advancedButtonDiv));
 		dojo.connect(this.advancedButton, 'onClick', this, 'toggleAdvancedProps');
 	},
@@ -182,15 +202,17 @@ dojo.declare("wm.ContextMenuDialog", null, {
 				td.style.display = '';
 			});
 			this.advancedButton.attr('label', '<< Hide Advanced Properties');
+		    this.menuTable.style.width = "1000px";
 		} else {
 			this.isAdvancedHidden = true;
 			dojo.forEach(this.advancedColumns, function(td){
 				td.style.display = 'none';
 			});
 			this.advancedButton.attr('label', 'Show Advanced Properties >>');
+	    this.menuTable.style.width = "700px";
 		}
 		
-		this.menu._position();
+	    //this.menu._position();
 	},
 	addHeaderColumn: function(tr, attr){
 		var td = dojo.doc.createElement('td');
@@ -223,7 +245,7 @@ dojo.declare("wm.ContextMenuDialog", null, {
 	},
 	addChildColumn: function(tr, column, obj){
 		try{
-			var td = dojo.doc.createElement('td');
+		    var td = dojo.create('td', {});
 			var widget = null;
 			switch(column.type){
 				case 'checkbox':
@@ -241,13 +263,14 @@ dojo.declare("wm.ContextMenuDialog", null, {
 				case 'img':
 					var src = column.src;
 					if (column.id == 'deleteButton' && obj.noDelete){
-						dojo.create('div', {}, td);
+					    dojo.create('div', {}, td);
 						break;
 					}
 					
 					var imgProps = {src: src, onclick: dojo.hitch(this, 'rowPropChanged', obj, column.id, tr)};
-					if (column.width)
+			                if (column.width) {
 						imgProps.width = column.width;
+					}
 					if (column.height)
 						imgProps.height = column.height;
 						
@@ -263,6 +286,68 @@ dojo.declare("wm.ContextMenuDialog", null, {
 						domNode.style.display = 'none';
 					});
 				  break;
+/*
+			        case 'gridEditParams':
+			          var fieldType = obj.fieldType;
+
+			    var options = [{name: "EditorTextOptions", value: "dojox.grid.cells._Widget"},
+					   {name: "EditorNumberOptions", value: "dojox.grid.cells.NumberTextBox"},
+					   {name: "EditorCheckboxOptions", value: "dojox.grid.cells.Bool"},
+					   {name: "EditorDateOptions", value: "dojox.grid.cells.DateTextBox"},
+					   {name: "EditorComboOptions", value: "dojox.grid.cells.ComboTextBox"}];
+			    var optionNodes = {};
+			    widget = document.createElement("div");
+			    widget.className = "optionsField";
+			    dojo.forEach(options, function(option) {
+				var node = dojo.create("div", {}, widget);
+				node.className = option.name;
+				node.style.display = option.value == fieldType ? "block" : "none";
+				optionNodes[option.name] = node;
+			    });
+
+
+			    var regExpEditor = new dijit.form.TextBox({value: (fieldType == "dojo.grid.cells._Widget") ? v : "",
+								       placeHolder: "Optional regular Expression"},
+								      dojo.create("div",{},optionNodes.EditorTextOptions));
+
+			    var numberMinNode = dojo.create("div", {},optionNodes.EditorNumberOptions);
+			    var numberMinEditor = new dijit.form.TextBox({value: (fieldType == "dojo.grid.cells.Number") ? v : "",
+									  placeHolder: "Optional Minimum"},
+									 numberMinNode);
+
+			    var numberMaxNode = dojo.create("div", {}, optionNodes.EditorNumberOptions);
+			    var numberMaxEditor = new dijit.form.TextBox({value: (fieldType == "dojo.grid.cells.Number") ? v : "",
+									  placeHolder: "Optional Maximum"},
+									 numberMaxNode);
+
+
+			    var useDateMinEditor = new dijit.form.NumberTextBox({value: (fieldType == "dojo.grid.cells.DateTextBox") ? v : "",
+										 placeHolder: "Min date; days offset from today"},
+										dojo.create("div", {}, optionNodes.EditorDateOptions));
+
+
+			    var staticComboEditor = new dijit.form.TextBox({value: (fieldType == "dojo.grid.cells.ComboBox") ? v : "",
+									    placeHolder: "Comma separated options"},
+									   dojo.create("div", {}, optionNodes.EditorComboOptions));
+
+
+			    var variableComboEditor = new dijit.form.ComboBox({value: (fieldType == "dojo.grid.cells.ComboBox") ? v : ""},
+									   dojo.create("div", {}, optionNodes.EditorComboOptions));
+
+
+
+			    var displayFieldComboEditor = new dijit.form.ComboBox({value: (fieldType == "dojo.grid.cells.ComboBox") ? v : ""},
+									   dojo.create("div", {}, optionNodes.EditorComboOptions));
+
+
+			    var dataFieldComboEditor = new dijit.form.ComboBox({value: (fieldType == "dojo.grid.cells.ComboBox") ? v : ""},
+									   dojo.create("div", {}, optionNodes.EditorComboOptions));
+
+			    td.appendChild(widget);
+			    widget = null;
+
+				  break;
+				  */
 				case 'width':
 					var w = this.getWidthProps(obj[column.id]);
 					var params = {value: w.text, style:'width:40px;height:14px'};
@@ -293,7 +378,7 @@ dojo.declare("wm.ContextMenuDialog", null, {
 					widget.onChange = dojo.hitch(this, 'rowPropChanged', obj, column.id, tr, widget);
 			}
 			
-			if (column.type != 'img') {
+		        if (column.type != 'img' ) {
 				if (widget) 
 					td.appendChild(widget.domNode);
 				else 
@@ -337,7 +422,7 @@ dojo.declare("wm.ContextMenuDialog", null, {
 		if (this.newColumnButton)
 			this.newColumnButton.destroy();
 		var div = dojo.doc.createElement('div');
-		this.menu.containerNode.appendChild(div);
+		this.containerNode.appendChild(div);
 		this.newColumnButton = new dijit.form.Button({label: this.addButtonLabel, onClick: dojo.hitch(this, 'addNewColumn'), style:'padding:5px;'});
 		this.newColumnButton.placeAt(div);
 	},
