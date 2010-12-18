@@ -57,7 +57,9 @@ wm.Object.extendSchema(wm.Bevel, {
 	scrollX: {ignore: 1},
         scrollY: {ignore: 1},
         minWidth:  {ignore: 1},
-        minHeight: {ignore: 1}
+    minHeight: {ignore: 1},
+    bevelSize: {group: "layout", doc: 1},
+    updateSize: {group: "method", params: "()", doc: 1}
 });
 
 wm.Bevel.extend({
