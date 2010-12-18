@@ -91,7 +91,7 @@ dijit.form.ValidationTextBox.prototype.displayMessage = function(message){
 	this._message = message;
 	this._cancelHideTooltip();
 	dijit.hideTooltip(this.domNode);
-	if(message && !this.owner.readonly){
+    if(message && (!this.owner || !this.owner.readonly)){
 		dijit.showTooltip(message, this.domNode, this.tooltipPosition);
 		dijit._hideTooltipHandle = setTimeout(dojo.hitch(this, function() {
 			wm.fire(this, "_hideTooltip");
