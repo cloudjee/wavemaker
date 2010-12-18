@@ -31,7 +31,9 @@
 	background: #dfe5f1 repeat-x url(images/wmsb_btn_bg.png); 
 	color: #294473;	
 }
-
+.wm_notheme .wmbutton:hover {
+    background: #cfd5e1 none;
+}
 .wm_notheme .wmsplitter-h {
 	background-image: url(images/splitter_bg_h.png);
 }
