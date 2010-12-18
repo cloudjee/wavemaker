@@ -287,12 +287,12 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	        invalidCss: {ignore: 1},
 	        renderedOnce: {ignore: 1},
 		bounds: {ignore: 1},
-		border: {group: "style"},
-		borderColor: {group: "style"},
+	    border: {group: "style", doc: 1},
+	    borderColor: {group: "style", doc: 1},
 		//backgroundColor: {group: "style"},
 		backgroundColor: {ignore: 1},
-		margin: {group: "style"},
-		padding: {group: "style"},
+	    margin: {group: "style", doc: 1},
+	    padding: {group: "style", doc: 1},
 	        autoScroll: {group: "scrolling", order: 100, ignore: 1},
 	        scrollX: {group: "scrolling", order: 101},
 	        scrollY: {group: "scrolling", order: 102},
@@ -383,6 +383,34 @@ this.label.enable();
 		this.widgets = {};
 	        this._classes = dojo.clone(this._classes);    
 	},
+
+    
+    // experimental code for supporting dojo.parser
+    // TODO:
+    // 1. Need a way to find the parent widget (owner[node.parentNode.id]) should work, though we may need to parse "id" to strip out any owner ids
+    // 2. Need a way to find the owner component (Page.js will need to set a global app._currentParseOwner before calling dojo.parser; and then restoring the prior value when its done in case Page.js is loading a pagecontainer)
+    // 3. Need a way to invoke postInit; probably will need Page.js to do a second traversal after all widgets are created calling postInit on each widget   
+    markupFactory: function(params, node) {
+	var ctor = arguments.callee.arguments[2];
+	var domNode = node;
+	var owner = wm._dojoParserCurrentOwner;
+	var parentid = node.parentNode.id;
+	while (parentid.indexOf("_") != -1 && !owner[parentid])
+	    parentid = parentid.substring(parentid.indexOf("_")+1);
+	var parent = owner[parentid];
+	params = dojo.mixin(params,{
+	    domNode: domNode,
+	    parentNode: domNode.parentNode,
+	    parent: parent,	    
+	    name: owner.getUniqueName(params.name),
+	    owner: owner,
+	    _designer: owner._designer,
+	    _loading:false}); // should be changing this to true... but need to do something about calling postInit in a second pass before we change this
+	var result = new ctor(params);
+	if (!params.parent && ctor.prototype.declaredClass == "wm.Layout")
+	    result.owner.root = result;
+	return result;
+    },
     prepare: function(inProps) {
 	try {
 	if (inProps) {
@@ -645,11 +673,13 @@ this.label.enable();
 		this.addRemoveDefaultCssClass(true);
 	},
 	addWidget: function(inWidget){
-		this.widgets[inWidget.name] = inWidget;
-		    var p = this.containerNode || this.domNode;
-  	            if (inWidget.domNode.parentNode != p) {
-			p.appendChild(inWidget.domNode);
-		    }
+	    this.widgets[inWidget.name] = inWidget;
+	    var p = this.containerNode || this.domNode;
+	    if (this._touchScroll && p.childNodes[1] && p.childNodes[1].firstChild)
+		p = p.childNodes[1].firstChild;
+  	    if (inWidget.domNode.parentNode != p) {
+		p.appendChild(inWidget.domNode);
+	    }
 	},
     /* NOTE: I don't see this called anywhere */
     insertDomNodes: function() {
@@ -665,7 +695,8 @@ this.label.enable();
 		}
 		
 		var p = this.containerNode || this.parentNode || this.parent.domNode;
-		
+		if (this._touchScroll && p.childNodes[1] && p.childNodes[1].firstChild)
+		    p = p.childNodes[1].firstChild;
   		if (this.domNode.parentNode != p && this.domNode.parentNode != window.document.body) 
 		    p.appendChild(this.domNode);
 	    } catch (e) {
@@ -696,14 +727,14 @@ this.label.enable();
 	//=======================================================
 	listProperties: function() {
 		var p = this.inherited(arguments);
-		p.autoSizeWidth.ignore = (!this.isSizeable() && !this.autoSizeWidth) || (this.schema.autoSizeWidth && this.schema.autoSizeWidth.ignore);
-		p.autoSizeHeight.ignore = (!this.isSizeable() && !this.autoSizeHeight) || (this.schema.autoSizeHeight && this.schema.autoSizeHeight.ignore);
-                p.minWidth.ignore = !this.schema.minWidth || this.schema.minWidth.ignore || (!this._percEx.w && !this.autoSizeWidth); // minWidth only applies if width is % or autosize is on
-                p.minHeight.ignore = this.schema.minHeight.ignore || (!this._percEx.h && !this.autoSizeHeight); // minHeight only applies if height is % or autosize is on
+		p.autoSizeWidth.ignoretmp = (!this.isSizeable() && !this.autoSizeWidth) || (this.schema.autoSizeWidth && this.schema.autoSizeWidth.ignore);
+		p.autoSizeHeight.ignoretmp = (!this.isSizeable() && !this.autoSizeHeight) || (this.schema.autoSizeHeight && this.schema.autoSizeHeight.ignore);
+                p.minWidth.ignoretmp = !this.schema.minWidth || this.schema.minWidth.ignore || (!this._percEx.w && !this.autoSizeWidth); // minWidth only applies if width is % or autosize is on
+                p.minHeight.ignoretmp = this.schema.minHeight.ignore || (!this._percEx.h && !this.autoSizeHeight); // minHeight only applies if height is % or autosize is on
 		//p.width.ignore = p.width.writeonly = !this.isSizeable() || !this.canSetWidth();
 		//p.height.ignore = p.height.writeonly = !this.isSizeable() || !this.canSetHeight();
-	        p.width.ignore = p.width.writeonly = this.schema.width.ignore || !this.isSizeable() || this.autoSizeWidth;
-	        p.height.ignore = p.height.writeonly = this.schema.height.ignore || !this.isSizeable() || this.autoSizeHeight;
+	        p.width.ignoretmp = p.width.writeonly = this.schema.width.ignore || !this.isSizeable() || this.autoSizeWidth;
+	        p.height.ignoretmp = p.height.writeonly = this.schema.height.ignore || !this.isSizeable() || this.autoSizeHeight;
 		// _classes as array for bc; now an object that supports storing sets of classes
 		if (p._classes)
 			p._classes.writeonly = (dojo.isArray(this._classes) && this._classes.length) || !wm.isEmpty(this._classes);
@@ -1041,7 +1072,6 @@ this.label.enable();
 
 	    // these should be called only once per object
 	    var cssObj = this.buildCssSetterObj();
-
 	    // some browsers are faster to set via cssText... but its NOT faster to reset them via cssText using our method of appending to the css string after an initial set of values have been stored.  
 	    if (!this.renderedOnce && (dojo.isFF || dojo.isSafari || dojo.isChrome)) {
 		this.setCssViaCssText(cssObj);
@@ -1089,16 +1119,16 @@ this.label.enable();
 		overflowY: (this.scrollY ? "scroll" : "hidden")};
 
 	    } else {
-	    return {
+		return {
 		margin:  (this.margin.split(marginSplitter).join("px ") || 0) + "px",
 		padding: (paddArr.join("px ") || 0) + "px",
 		borderStyle:  "solid",
 		borderWidth:  (this.border.split(borderSplitter).join("px ") || 0) + "px",
 		borderColor:  this.borderColor,
 		backgroundColor: this.backgroundColor,
-		overflow:  (this.autoScroll || this._xscrollX || this._xscrollY ? "auto" : "hidden"),
-		overflowX: (this.scrollX ? "scroll" : "hidden"),
-		overflowY: (this.scrollY ? "scroll" : "hidden")};
+		overflow:  ((!this._touchScroll && (this.autoScroll || this._xscrollX || this._xscrollY)) ? "auto" : "hidden"),
+		overflowX: (!this._touchScroll && this.scrollX ? "scroll" : "hidden"),
+		overflowY: (!this._touchScroll && this.scrollY ? "scroll" : "hidden")};
 	    }
 	},
 	setCssViaCssText: function(cssObj) {
@@ -1134,7 +1164,7 @@ this.label.enable();
 		    // Frankies one line change for scrolling
 		//+ "overflow:" + cssObj.overflow +";" 
 		    + "overflow-x:" + ((cssObj.overflow != "auto") ? cssObj.overflowX : cssObj.overflow) + ";"
-		    + "overflow-y:" + ((cssObj.overflow != "auto") ? cssObj.overflowY : cssObj.overflow) + ";"
+		   + "overflow-y:" + ((cssObj.overflow != "auto") ? cssObj.overflowY : cssObj.overflow) + ";"
 		;
 
 	    }
@@ -1186,8 +1216,14 @@ this.label.enable();
 		return splitter;
 	},
 	renderBounds: function() {
-		if (this.dom)
-			this.dom.setBox(this.getStyleBounds(), wm.AbstractEditor && this.singleLine && this instanceof wm.AbstractEditor == false);
+	    if (this.dom) {
+		var b = this.getStyleBounds();
+		this.dom.setBox(b, wm.AbstractEditor && this.singleLine && this instanceof wm.AbstractEditor == false);
+		if (this._touchScroll) {
+		    this._touchScroll.scrollers.outer.style.width = b.w + "px";
+		    this._touchScroll.scrollers.outer.style.height = b.h + "px";
+		}
+	    }
 		// bc
 		if (this.designWrapper) {
 			this.designWrapper.controlBoundsChange();
@@ -1333,7 +1369,8 @@ this.label.enable();
 		}
 		// BC: wm.Layout
 		else if (this.parentNode && this.domNode) {
-			this.parentNode.appendChild(this.domNode);
+		    var node = (this.parentNode._touchScroll && this.parentNode.childNodes[1] && this.parentNode.childNodes[1].firstChild) ? this.parentNode.childNodes[1].firstChild : this.parentNode;
+		    node.appendChild(this.domNode);
 		}
 	},
 	canChangeShowing: function() {
@@ -1443,7 +1480,12 @@ this.label.enable();
 		return [];
 	},
 	updatingEvent: function (prop, inValue){
-	}
+	},
+
+    // Only if you subscribe to these are these connected; if you subscribe then the event stops here
+    onRightClick: function(event){dojo.stopEvent(event);},
+    onMouseOver: function(event){dojo.stopEvent(event);}, 
+    onMouseOut: function(event){dojo.stopEvent(event);}
 });
 
 // layout specific
