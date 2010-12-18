@@ -38,10 +38,6 @@
         cursor: pointer;
 }
 
-.wmbutton:hover {
-    background: #cfd5e1 none;
-}
-
 .wmbutton.wmbutton-disabled {
     opacity: 0.7;
     filter: alpha(opacity=70);
@@ -52,6 +48,43 @@
 
 .wmtoolbutton {
 	text-align: left;
+}
+
+.wmPopupButton {
+    padding-right: 0px;
+}
+.wmPopupButton table {
+    background-color: transparent;
+}
+.wmPopupButton .dijitMenuArrow {
+    width: 12px;
+}
+.wmPopupButton .popupIcon {
+    border: 0px;
+    background-image: url(images/comboArrowDownDark.png);
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    width: 8px;
+    height: 12px;
+}
+.wmpopupmenu .dijitMenuItemLabel {
+    padding-right: 2px;
+    padding-left: 2px;
+    
+/*    width: 100%;*/
+}
+
+.wmpopupmenu .dijitMenuItemLabel span {
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+.wmPopupButton img {
+    background-position: 50% 50% !important;
+}
+
+.wmpopupbuttonmenu .dijitMenuItemIconCell {
+    width: 20px;
 }
 
 /**/
@@ -1543,9 +1576,6 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
 	border-width: 0px;
 }
 
-.dijitMenuItemLabel {
-
-}
 
 .accordionArrowNode {
     display: none;
@@ -1588,6 +1618,22 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
     padding: 0px 3px 0px 3px !important;
 }
 
+.wmdraggabletree .wmtree-content {
+    width: 100%;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    border-top: solid 2px transparent;
+    border-bottom: solid 2px transparent;
+}
+
+.wmdraggabletree .dndHoverTop > .wmtree-content {
+    border-top: solid 2px black;
+}
+
+.wmdraggabletree .dndHoverBottom > .wmtree-content {
+    border-bottom: solid 2px black;
+}
+
 
 .dijitToolbar .dijitTextBox,
 .dijitToolbar input,
@@ -1606,6 +1652,36 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
 .dj_ie6 .dijitToolbar .dijitButtonNode {
    width: 16px;
 }
+
+.dijitSelect td.dijitButtonContents {
+width: 100%;
+}
+
+.wmjsonstatus .wmjsonstatusicon {
+    width: 20px;
+    height: 20px;
+    float: right;
+    background-repeat: no-repeat;
+}
+
+.wmjsonstatus.wmStatusWaiting .wmjsonstatusicon {
+    background-image: url(images/loadingThrobber.gif);
+}
+.wmjsonstatus .wmjsonstatuslabel {
+    white-space: nowrap;
+    overflow: hidden;
+    margin: 4px;
+}
+
+.wmjsonstatus {
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+}
+.wmjsonstatus.wmStatusWaiting {
+    opacity: 1;
+    filter: alpha(opacity=100);
+}
+
 
 
 /*
