@@ -62,7 +62,7 @@ wm.Object.extendSchema(wm.NavigationCall,{
 wm.NavigationCall.extend({
 	listProperties: function() {
 		var result = this.inherited(arguments);
-		result.owner.ignore = (this.operation == "gotoPage" || this.operation == "gotoDialogPage") ? 0 : 1;
+		result.owner.ignoretmp = (this.operation == "gotoPage" || this.operation == "gotoDialogPage") ? 0 : 1;
 		return result;
 	},
 	operationChanged: function() {
