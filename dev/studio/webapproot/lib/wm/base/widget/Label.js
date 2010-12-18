@@ -148,9 +148,6 @@ dojo.declare("wm.Label", wm.Control, {
 		}
 	    }
 
-	    // the line underneath updates panel's width property. Therefore only required for studio.
-	    if (this.isDesignLoaded() && studio.designer.selected == this)
-		studio.inspector.reinspect();
             this._doingAutoSize = false;
 	},
 	setLink: function(inLink) {
@@ -184,14 +181,18 @@ dojo.declare("wm.Label", wm.Control, {
 // design only...
 wm.Object.extendSchema(wm.Label, {
     disabled: { ignore: 1 },
-    caption: { type: "String", bindable: 1, group: "display", order: 100, focus: true },
+    caption: { type: "String", bindable: 1, group: "display", order: 100, focus: true, doc: 1},
     display: { group: "format", order: 20 },
     align: { group: "display", order: 25 },
-    singleLine: { group: "display", order: 200 },
+    singleLine: { group: "display", order: 200,doc: 1},
     format: { ignore: 1, writeonly: 1, categoryParent: "Properties", categoryProps: {component: "format"}},
     link: { type: "String", bindable: 1, group: "format", order: 40 },
     autoSizeHeight: {type: "Boolean", group: "advanced layout", order: 31, writeonly: true, ignore: true},
-    autoSizeWidth: {type: "Boolean", group: "advanced layout", order: 32, shortname: "Auto Size"}
+    autoSizeWidth: {type: "Boolean", group: "advanced layout", order: 32, writeonly: true, ignore: true},
+    autoSize: {group: "advanced layout"},
+    setCaption: {group: "method", params: "(inCaption)", doc: 1},
+    setSingleLine: {group: "method", params: "(inSingleLine)", doc: 1}
+
     //resizeToFit:{ group: "layout", order: 30 }
 });
 
@@ -241,7 +242,7 @@ wm.Label.extend({
 			case "resizeToFit":
 				return makeReadonlyButtonEdit(inName, inValue, inDefault);
                                 */
-                        case "autoSizeWidth": 
+                        case "autoSize": 
 		                return makeSelectPropEdit(inName, (this.autoSizeHeight) ? "height" : (this.autoSizeWidth) ? "width" : "none", ["none", "width", "height"], inDefault);
 			case "align":
 				return makeSelectPropEdit(inName, inValue, ["none", "left", "center", "right", "justify"], inDefault);
@@ -249,23 +250,35 @@ wm.Label.extend({
 		return this.inherited(arguments);
 	},
 
+    getAutoSize: function() {
+	if (this.autoSizeWidth) return "width";
+	if (this.autoSizeHeight) return "height";
+	return "none";
+    },
     /* This hack should only be called at design time */
-    setAutoSizeWidth: function(inValue) {
+    setAutoSize: function(inValue) {
         if (inValue == "none") {
-            wm.Control.prototype.setAutoSizeWidth.call(this, false);
-            this.setAutoSizeHeight(false);
+	    if (this.autoSizeWidth)
+		this.setAutoSizeWidth(false);
+	    if (this.autoSizeHeight)
+		this.setAutoSizeHeight(false);
         } else if (inValue == "width") {
             if (inValue) {
                 this.setSingleLine(true);
             }
-            this.setAutoSizeHeight(false);
-            wm.Control.prototype.setAutoSizeWidth.call(this, true);
+	    if (!this.autoSizeWidth)
+		this.setAutoSizeWidth(true);
+	    if (this.autoSizeHeight)
+		this.setAutoSizeHeight(false);
+
         } else if (inValue == "height") {
             if (inValue) {
                 this.setSingleLine(false);
             }
-            wm.Control.prototype.setAutoSizeWidth.call(this, false);
-            this.setAutoSizeHeight(true);
+	    if (this.autoSizeWidth)
+		this.setAutoSizeWidth(false);
+	    if (!this.autoSizeHeight)
+		this.setAutoSizeHeight(true);
         }
     },
 
