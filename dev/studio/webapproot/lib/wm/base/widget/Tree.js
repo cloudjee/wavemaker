@@ -857,3 +857,358 @@ wm.Object.extendSchema(wm.PropertyTree, {
     dataSet: { readonly: true, group: "data", order: 1, bindTarget: 1, type: "wm.Variable", isList: true},
     selectedItem: { ignore: 1, bindSource: 1, isObject: true, simpleBindProp: true }
 });
+
+
+
+dojo.require("wm.base.widget.Dialog");
+dojo.declare("wm.DebugDialog", wm.Dialog, {
+    useContainerWidget: true,
+    useButtonBar: true,
+    modal: false,
+    title: "Debugger",
+
+    commands: null,
+    commandPointer: null,
+    postInit: function() {
+	this.inherited(arguments);
+	this.commands = [];
+	this.debugTree = new wm.DebugTree({owner: this, 
+					   parent: this.containerWidget,
+					   width: "100%", height: "100%",
+					   name: "debugTree"});
+
+	var commandLine = new wm.Text({width: "100%",
+				       owner: this,
+				       parent: this.containerWidget,
+				       name: "commandLineDebug"});
+
+	var bindButton = new wm.ToggleButton({owner: this,
+					      parent: this.buttonBar,
+					      name: "debugBindingButton",
+					      captionUp: "Bindings",
+					      captionDown: "Bindings"});
+	var clearDebugButton = new wm.Button({owner: this,
+					      parent: this.buttonBar,
+					      name: "clearDebugButton",
+					      caption: "Clear"});
+	var executeDebugButton = new wm.Button({owner: this,
+						parent: this.buttonBar,
+						name: "executeDebugButton",
+						caption: "Execute"});
+
+	this.connect(clearDebugButton, "onclick", this, function() {
+	    this.debugTree.clear();
+	});
+	this.connect(bindButton, "onclick", this, function() {
+	    this.debugTree.showBinding(bindButton.clicked);
+	});
+	this.connect(executeDebugButton, "onclick", this, function() {
+	    var text = commandLine.getDataValue();
+	    this.debugTree.logCommand(text,"dojo.hitch(app._page, function() {try {return " + text + "}catch(e){return e;}})()");
+	    commandLine.clear();
+	    this.commands.push(text);
+	    while (this.commands.length > 50)
+		this.commands.shift();
+	    this.commandPointer = null;
+	});
+	commandLine.connect(commandLine, "dokeypress", dojo.hitch(this, function(inEvent) {
+	    if (inEvent.keyCode == dojo.keys.ENTER) {
+		executeDebugButton.click();
+	    } else if (app._keys[inEvent.keyCode] == "UP") {
+		if (this.commandPointer === null)
+		    this.commandPointer = this.commands.length-1;
+		else {
+		    this.commandPointer--;
+		    if (this.commandPointer < 0)
+			this.commandPointer = this.commands.length-1;
+		}
+		commandLine.setDataValue(this.commands[this.commandPointer]);
+	    } else if (app._keys[inEvent.keyCode] == "DOWN") {
+		if (this.commandPointer === null)
+		    this.commandPointer = 0;
+		else
+		    this.commandPointer = this.commandPointer + 1 % this.commands.length;
+		commandLine.setDataValue(this.commands[this.commandPointer]);	    
+	    }
+	}));
+    }
+
+
+
+});
+
+dojo.declare("wm.DebugTree", wm.Tree, {
+    tmpRoot: null,
+    showBindings: false,
+    commands: null,
+    init: function() {	
+	this.inherited(arguments);
+	this.tmpRoot = this.root;
+	this.connect(wm.inflight, "add", this, "newJsonNode");
+	this.subscribe("wmlog", dojo.hitch(this, "newLogEvent"));
+	this.startEventImage =  "<img src='" + dojo.moduleUrl("lib.images.silkIcons") + "control_play.png' /> ",
+	this.componentEventImage = "<img src='" + dojo.moduleUrl("lib.images.silkIcons") + "bullet_go.png' /> ";
+	this.commands = [];
+    },
+    // used like console.log
+    log: function(args,parent) {
+	new wm.JSObjTreeNode(parent || this.tmpRoot, {prefix: "",
+					 object: args});
+    },
+    error: function(args,parent) {
+	new wm.JSObjTreeNode(parent || this.tmpRoot, {prefix: "<img src='" + dojo.moduleUrl("lib.images.boolean.Signage") + "Denied.png'/>",
+					 object: args});
+    },
+    logCommand: function(inText, inEval) {
+	var result = eval(inEval);
+	var node = new wm.TreeNode(this.tmpRoot, {content: inText,
+					       hasChildren: true});
+	if (result instanceof Error)
+	    this.error(result,node);
+	else
+	    this.log(result,node);
+    },
+    showBinding: function(inShow) {
+	this.showBindings = inShow;
+	this.forEachNode(function(inNode) {
+	    if (inNode instanceof wm.DebugBindingNode) 
+		inNode.domNode.style.display = inShow ? "block" : "none";
+	});
+    },
+    newLogEvent: function(inData) {
+	var newNode;
+	if (inData.type == "componentEvent") {
+	    var content = [this.componentEventImage,
+			   inData.trigger.name || inData.trigger.declaredClass,
+			   "'s ",
+			   inData.eventName,
+			   " fires ",
+			   inData.firing.name || inData.firing.declaredClass, 
+			   ".",
+			   inData.method];
+	    newNode = new wm.TreeNode(this.tmpRoot, {content:  content.join("")});
+	} else if (inData.type == "javascriptEventStart") { 
+	    var content = [this.startEventImage,
+			   inData.trigger.name || inData.trigger.declaredClass,
+			   "'s ",
+			   inData.eventName,
+			   inData.type == "javascriptEventStart" ? " fires page." : " finished firing page.",
+			   inData.method];
+	    newNode = new wm.TreeNode(this.tmpRoot, {content:  content.join(""), 
+						     closed: false});
+	    this.tmpRoot = newNode;
+	} else if (inData.type == "javascriptEventStop") {
+	    this.tmpRoot = this.tmpRoot.parent;
+
+	} else if (inData.type == "bindingEvent") {
+	    newNode = new wm.DebugBindingNode(this.tmpRoot, inData, this.showBindings);
+	}
+	this.cleanupTree();
+	return newNode;
+    },
+    newJsonNode: function(inDeferred, inService, optName, inArgs, inMethod, invoker) {
+	new wm.DebugTreeJsonNode(this.tmpRoot, {deferred: inDeferred,
+						name: optName,
+						service: inService,
+						invoker: invoker,
+						method: inMethod,
+						args: inArgs});
+	this.cleanupTree();
+    },
+    cleanupTree: function() {
+	while (this.root.kids.length > 20)
+	    this.root.kids[0].destroy();
+    }
+});
+
+dojo.declare("wm.DebugTreeJsonNode", wm.TreeNode, {
+    closed: true,
+    jsonFiring: true,
+    result: "",
+    method: "",
+    args: "",
+    description: "",
+    response: null,
+    hasChildren: true,
+    autoUpdate: "",
+    constructor: function(inParent, inProps) {
+	this.autoUpdate = inProps.invoker ? inProps.invoker._autoUpdateFiring : null;
+	if (inProps.service != "runtimeService") {
+	    this.description = inProps.service + "." + inProps.method; 
+	} else if (inProps.name) {
+	    this.description = inProps.name + "." + inProps.method;
+	} else if (inProps.args[0]) {
+	    this.description = inProps.args[0] + ": " + inProps.args[1];
+	} else {
+	    this.description = "LazyLoad: " + inProps.args[1];
+	}
+	    
+	this.setContent("<img src='" + dojo.moduleUrl("wm.base.widget.themes.default.images") + "loadingThrobber.gif' style='width:16px;height:16px;'/> " + this.description); 
+	var deferred = inProps.deferred;
+	deferred.addCallback(dojo.hitch(this, "jsonResult"));
+	deferred.addErrback(dojo.hitch(this, "jsonError"));
+	delete this.deferred;
+    },
+    jsonResult: function(inResponse) {
+	this.jsonFiring = false;
+	this.result = "Success";
+	this.response = inResponse;
+	this.setContent("<img src='" + dojo.moduleUrl("lib.images.boolean.Signage") + "OK.png'/> " + this.description);
+	if (this.responseNode)
+	    this.responseNode.setObject(inResponse);
+	else
+	    this.responseData = inResponse;
+    },
+    jsonError: function(inResponse) {
+	this.jsonFiring = false;
+	this.result = "Error";
+	this.response = inResponse;
+	this.setContent("<img src='" + dojo.moduleUrl("lib.images.boolean.Signage") + "Denied.png'/> " + this.description);
+    },
+
+    // This node has the following children
+    // 1. parameter obj
+    // 2. Response obj
+    initNodeChildren: function(inParentNode) {
+	if (this.invoker && this.autoUpdate)
+	    this.requestNode = new wm.JSObjTreeNode(this, {prefix: "AutoUpdate",
+							   object: this.autoUpdate});
+	if (this.invoker) 
+	    this.requestNode = new wm.JSObjTreeNode(this, {prefix: "Invoker",
+							   object: this.invoker});
+
+	this.requestNode = new wm.JSObjTreeNode(this, {prefix: "Request",
+						       object: this.args});
+	this.responseNode= new wm.JSObjTreeNode(this, {prefix: "Response",
+						       object: this.responseData});
+    }
+
+});
+
+
+
+dojo.declare("wm.DebugBindingNode", wm.TreeNode, {
+    component: null,
+    property: "",
+    value: "",
+    source: "",
+    expression: "",
+    closed: true,
+    constructor: function(inParent, inProps, inShowing) {
+	if (!inShowing) this.domNode.style.display = "none";
+	this.setContent("<img src='" + dojo.moduleUrl("lib.images.silkIcons") + "wrench.png' /> Bound '" + this.property + "' of " + this.component.getRuntimeId());
+    },
+    initNodeChildren: function(inParentNode) {
+	this.requestNode = new wm.JSObjTreeNode(this, {prefix: this.property + " set to",
+						       object: this.value});
+	this.requestNode = new wm.JSObjTreeNode(this, {prefix: "For component",
+						       object: this.component});
+
+	this.requestNode = new wm.TreeNode(this, {content: "Changed by " + (this.expression || this.source)});
+    }
+
+});
+
+
+dojo.declare("wm.JSObjTreeNode", wm.TreeNode, {
+    closed: true,
+    constructor: function(inParent, inProps) {
+	if (this.object !== undefined)
+	    this.setObject(this.object);
+	else
+	    this.setContent(this.prefix);
+    },
+    setObject: function(inObject) {
+	var prefix = this.prefix ? this.prefix + ": " : ""
+	if (dojo.isArray(inObject) && inObject.length == 0)
+	    this.setContent(prefix + "[]");
+	else if (inObject === null || inObject === undefined)
+	    this.setContent(prefix + "" + String(inObject));
+	else if (typeof inObject == "object" && wm.isEmpty(inObject))
+	    this.setContent(prefix + "{}");
+	else if (typeof inObject == "object") {
+	    this.hasChildren = true;
+	    //this.objectString = dojo.toJson(inObject);
+	    //this.setContent(this.prefix + ": " + this.objectString);
+	    var objectString;
+	    if (dojo.isArray(inObject))
+		objectString = "Array of length " + inObject.length;
+	    else
+		objectString = inObject instanceof wm.Component ? inObject.getRuntimeId() : inObject.toString();
+	    this.setContent(prefix + objectString);
+	    this.styleNode();
+	} else {
+	    this.setContent(prefix + inObject);
+	}
+
+    },
+    initNodeChildren: function(inParentNode) {
+	var inObject = this.object;
+	    for (var i in inObject) {
+		new wm.JSObjTreeNode(this, {prefix: i,
+					    object: inObject[i]});
+	    }
+    }
+});
+
+
+
+dojo.declare("wm.JsonStatus", wm.Control, {
+    classNames: "wmjsonstatus",
+    width: "24px",
+    height: "28px",
+    border: "2",
+    statusBar: false,
+    argsList: null,
+    minimize: false,
+    build: function() {
+	this.inherited(arguments);
+
+	this.buttonNode = document.createElement("div");
+	dojo.addClass(this.buttonNode, "wmjsonstatusicon");
+	this.domNode.appendChild(this.buttonNode);
+
+	this.messageNode = document.createElement("div");
+	dojo.addClass(this.messageNode, "wmjsonstatuslabel");
+	this.domNode.appendChild(this.messageNode);
+    },
+    init: function() {
+	this.inherited(arguments);
+	this.connect(wm.inflight, "add", this, "add");
+	this.connect(wm.inflight, "remove", this, "remove");
+	this.connect(this.domNode, "onclick", this, "onclick");
+	this.argsList = [];
+    },
+    add: function(inDeferred, inService, optName, inArgs, inMethod, invoker) {
+	this.updateSpinner();
+	if (this.bounds.w > 40)
+	    this.updateMessage();
+    },
+    remove: function(inDeferred, inResult) {
+	this.updateSpinner();
+	if (this.bounds.w > 40)
+	    this.updateMessage();
+    },
+    updateSpinner: function() {
+	if (wm.inflight._inflight.length)
+	    dojo.addClass(this.domNode, "wmStatusWaiting");
+	else
+	    dojo.removeClass(this.domNode, "wmStatusWaiting");
+    },
+    updateMessage: function() {
+	this.messageNode.innerHTML = wm.Array.last(wm.inflight._inflightNames) || "";
+    },
+    setMinimize: function(inMinimize) {
+	if (inMinimize) {
+	    this.setWidth((20 + this.padBorderMargin.l + this.padBorderMargin.r) + "px");
+	    this.setHeight((20 + this.padBorderMargin.t + this.padBorderMargin.b) + "px");
+	    this.messageNode.innerHTML = "";
+	} else {
+	    this.setWidth("80px");
+	}
+    },
+    onclick: function() {
+	if (djConfig.isDebug)
+	    app.debugDialog.show();
+    }
+});
