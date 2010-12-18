@@ -271,7 +271,7 @@ dojo.declare("wm.DataGridColumn", wm.Component, {
 wm.DataGridColumn.extend({
 	listProperties: function() {
 		var p = this.inherited(arguments);
-		p.columnWidth.ignore = this.autoSize;
+		p.columnWidth.ignoretmp = this.autoSize;
 		return p;
 	},
 	set_index: function(inIndex) {
