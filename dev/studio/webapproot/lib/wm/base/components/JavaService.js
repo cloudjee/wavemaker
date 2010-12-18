@@ -231,7 +231,8 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 			pageName: "NewJavaService",
 			hideControls: true,
 			width: 400,
-			height: 200
+		        height: 180,
+		        title: "New Java Service"
 		};
 		var d = wm.JavaService.newJavaServiceDialog = new wm.PageDialog(props);
 		d.onClose = dojo.hitch(this, function(inWhy) {
