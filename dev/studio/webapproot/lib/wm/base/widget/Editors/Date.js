@@ -35,9 +35,9 @@ dojo.declare("wm.Date", wm.Text, {
 	getEditorProps: function(inNode, inProps) {
 		var constraints = {};
 		if (this.minimum)
-			constraints.min = this.convertValue(this.minimum);
+		    constraints.min = this.convertValue(this.minimum).getTime();
 		if (this.maximum)
-			constraints.max = this.convertValue(this.maximum);
+		    constraints.max = this.convertValue(this.maximum).getTime();
 		var prop = dojo.mixin(this.inherited(arguments), {
 			promptMessage: this.promptMessage,
 			invalidMessage: this.invalidMessage || "$_unset_$",
@@ -187,9 +187,9 @@ wm.Object.extendSchema(wm._TimeEditor, {
 
 wm.Object.extendSchema(wm.Date, {
     changeOnKey: { ignore: 1 },
-    minimum: {group: "editor", order: 2},  // readonly is order: 1 in Base.js
-    maximum: {group: "editor", order: 3},
-    format:  {group: "editor", order: 4},
+    minimum: {group: "editor", order: 2,  doc: 1},
+    maximum: {group: "editor", order: 3, doc: 1}, 
+    format:  {group: "editor", doc: 1},
     invalidMessage: {group: "validation", order: 3},
     showMessages: {group: "validation", order: 4},
     promptMessage: {group: "Labeling", order: 6},
@@ -203,7 +203,7 @@ wm.Object.extendSchema(wm.Time, {
     format: { ignore: 1 },
     minimum: {group: "editor", order: 2, ignore: 1},
     maximum: {group: "editor", order: 3, ignore: 1},
-    timePattern:{group: "editor", order: 4},
+    timePattern:{group: "editor", order: 4,  doc: 1},
     invalidMessage: {group: "validation", order: 3},
     showMessages: {group: "validation", order: 4},
     promptMessage: {group: "Labeling", order: 6},
