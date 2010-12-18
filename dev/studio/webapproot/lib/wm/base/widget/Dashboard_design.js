@@ -5,10 +5,10 @@ dojo.require("wm.base.widget.ContextMenuDialog");
 wm.Dashboard.extend({
   themeable: false,
 	configPortlets: "(Configure Portlets)",
-	headerAttr: [{id:'isOpen', title:'Default',width:'10%', type:'checkbox'}, 
-				{id:'title', title: 'Title',width:'30%', type:'text'}, 
-				{id:'page', title: 'Page',width:'30%', type:'dropdown'}, 
-				{id:'isClosable', title: 'Closable',width:'10%', type:'checkbox'}],
+	headerAttr: [{id:'isOpen', title:'Default',width:'50px', type:'checkbox'}, 
+				{id:'title', title: 'Title',width:'170px', type:'text'}, 
+				{id:'page', title: 'Page',width:'170px', type:'dropdown'}, 
+				{id:'isClosable', title: 'Closable',width:'55px', type:'checkbox'}],
 
 	designCreate: function(){
 		this.inherited(arguments);
@@ -19,6 +19,11 @@ wm.Dashboard.extend({
 													this.headerAttr, this.portlets, defaultPortletParams, this.domNode, true);
 		dojo.connect(this.contextMenu, 'onPropChanged', this, 'portletPropChanged');
 		dojo.connect(this.contextMenu, 'onRowDelete', this, 'destroyPortlet');
+
+	        this.contextMenu.setWidth("500px");
+	        this.contextMenu.setHeight("300px");
+	        this.contextMenu.setTitle("Configure Portlets");
+
 	},
 	showMenuDialog: function(e){
 		this.contextMenu.show();
