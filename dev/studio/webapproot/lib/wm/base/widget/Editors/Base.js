@@ -1119,7 +1119,7 @@ wm.AbstractEditor.extend({
 	listProperties: function() {
 	        var props = this.inherited(arguments);
 		var f = wm.getParentForm(this);
-		props.formField.ignore = !Boolean(f);
+		props.formField.ignoretmp = !Boolean(f);
 		props.displayValue.readonly = this.formField;
 		return props;
 	},
@@ -1158,23 +1158,39 @@ wm.AbstractEditor.extend({
 
 wm.Object.extendSchema(wm.AbstractEditor, {
     formField: {ignore: 1, writeonly: 1, group: "common", order: 500},
-    caption: {group: "Labeling", order: 1, bindTarget:true},
-    captionPosition: {group: "Labeling", order: 2},
-    captionAlign: {group: "Labeling", order: 3},
-    captionSize: {group: "layout", order: 4},
+    caption: {group: "Labeling", order: 1, bindTarget:true, doc: 1},
+    captionPosition: {group: "Labeling", order: 2, doc: 1},
+    captionAlign: {group: "Labeling", order: 3, doc: 1},
+    captionSize: {group: "layout", order: 4, doc: 1},
     singleLine: {group: "Labeling", order: 5},
-    readonly: {group: "editor", order: 1},
+    readonly: {group: "editor", order: 1, doc: 1},
 
-    displayValue: {group: "editData", order: 2},
-    dataValue: {ignore: 1, bindable: 1, group: "editData", order: 3, simpleBindProp: true, type: "String"},
-    emptyValue: {group: "editData", order: 4},
-    required: {group: "validation", order: 1},
+    displayValue: {group: "editData", order: 2}, // use getDisplayValue()
+    dataValue: {ignore: 1, bindable: 1, group: "editData", order: 3, simpleBindProp: true, type: "String"}, // use getDataValue()
+    emptyValue: {group: "editData", order: 4, doc: 1},
+    required: {group: "validation", order: 1, doc: 1},
     editorBorder: {group: "style", order: 100},
     scrollX: {ignore:1},
     scrollY: {ignore:1},
     changeOnEnter: {ignore: 1},
     changeOnKey: {ignore: 1},
     onEnterKeyPress: {ignore: 1},
-		display:{ignore:1},
-		defaultInsert:{type: "String", bindable: 1, group: "editData", order: 10, dependency: '${parent.declaredClass} == "wm.LiveForm" || ${parent.declaredClass} == "wm.RelatedEditor"'}
+    display:{ignore:1},
+    defaultInsert:{type: "String", bindable: 1, group: "editData", order: 10, dependency: '${parent.declaredClass} == "wm.LiveForm" || ${parent.declaredClass} == "wm.RelatedEditor"'},
+    setCaption: {group: "method", params: "(inCaption)", doc: 1},
+    setCaptionSize: {group: "method", params: "(inCaptionSize)", doc: 1},
+    setCaptionAlign: {group: "method", params: "(inAlign)", doc: 1},
+    setCaptionPosition:{group: "method", params: "(inPosition)",doc: 1},
+    setDisabled: {group: "method", params: "(inDisabled)", doc: 1},
+    getInvalid: {group: "method", params: "()", doc: 1},
+    setReadonly: {group: "method", params: "(inReadonly)",doc: 1},
+    getDisplayValue: {group: "method", params: "()", doc: 1},
+    getDataValue: {group: "method", params: "()", doc: 1},
+    setDisplayValue: {group: "method", params: "(inValue)", doc: 1},
+    setDataValue: {group: "method", params: "(inValue)", doc: 1},
+
+		   focus: {group: "method", params: "()", doc: 1},
+	    clear: {group: "method", params: "()", doc: 1}
+    
+    
 });
