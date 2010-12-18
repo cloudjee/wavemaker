@@ -301,7 +301,26 @@ wm.PageContainer.extend({
 		// change default so deferLoad is false
 		// this.inherited(arguments);
 		this.deferLoad = true;
+	},
+    createDesignContextMenu: function(menuObj) {
+	var pagelist = wm.getPageList(this.currentPageOK);
+	if (pagelist.length) {
+	    var data = {label: "Set PageName",
+			children: []};
+
+	    for (var i = 0; i < pagelist.length; i++) {
+		data.children.push(this.addPageToContextMenu(pagelist[i]));
+	    }
+	    var submenu = menuObj.addAdvancedMenuChildren(menuObj.dojoObj, data);
 	}
+    },
+    addPageToContextMenu: function(pagename) {
+	return 	{label:   pagename,
+		 onClick: dojo.hitch(this, function() {
+		     this.setPageName(pagename);
+		 })
+		};
+    }
 })
 
 wm.Object.extendSchema(wm.PageContainer, {
