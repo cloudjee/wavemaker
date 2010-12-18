@@ -67,11 +67,11 @@ dojo.declare("wm.ToolButton", wm.Widget, {
 		this.imageListChanged();
 	},
 	click: function(inEvent) {
-		this.onclick(inEvent);
 	        if (!this.clicked) 
 		    this.setProp("clicked", true);
+	        this.onclick(inEvent, this);
 	},
-	onclick: function(inEvent) {
+        onclick: function(inEvent, inTarget) {
 	},
 	findImageList: function() {
 		var t = this;
@@ -94,8 +94,10 @@ dojo.declare("wm.ToolButton", wm.Widget, {
 	},
 	setCaption: function(inCaption) {
 		this.caption = inCaption;
-	        this.invalidCss = true;
-		this.render();
+	        if (!this._cupdating) {
+	            this.invalidCss = true;
+		    this.render();
+		}
 	},
 	setIconUrl: function(inUrl) {
 		this.iconUrl = inUrl;
@@ -189,16 +191,56 @@ wm.Object.extendSchema(wm.ToolButton, {
 	scrollX:  { ignore: 1 },
 	scrollY:  { ignore: 1 },
         clicked: {ignore: 1, bindSource: true, type: "Boolean"},
-	iconUrl: {group: "format", bindable: true, type: "String", subtype: "File"},
+    iconUrl: {group: "format", bindable: true, type: "String", subtype: "File", doc: 1},
 	iconWidth: {group: "format"},
 	iconHeight: {group: "format"},
-	iconMargin: {group: "format"}
+        iconMargin: {group: "format"}
 });
 
 wm.ToolButton.extend({
         scrim: true,
+
+    showImageListDialog: function() {
+	var imageList = this._imageList
+	if (!imageList) {
+	    var imageListName = studio.getImageLists()[0];
+	    if (imageListName) {
+		this.setImageList(imageListName);
+		imageList = this._imageList;
+	    }
+	}
+	if (imageList) {
+	    var popupDialog = imageList.getPopupDialog();
+	    popupDialog.fixPositionNode = dojo.query(".wminspector-prop-button",dojo.byId("widget_studio_propinspect_imageIndex").parentNode.parentNode)[0];
+	    
+	    this._designImageListSelectCon = dojo.connect(imageList._designList, "onselect", this, function() {		    
+		    this.setImageIndex(imageList._designList.getSelectedIndex());
+		    studio.inspector.reinspect();
+	    });
+
+	    popupDialog.show();
+	    this._designImageListPopupCloseCon = dojo.connect(popupDialog, "setShowing", this, function(inShowing) {
+		if (!inShowing || studio.selected != this) {
+		    dojo.disconnect(this._designImageListPopupCloseCon);
+		    delete this._designImageListPopupCloseCon;
+		    dojo.disconnect(this._designImageListSelectCon);
+		    delete this._designImageListSelectCon;
+		}
+	    });
+	}
+    },
+    editProp: function(inName, inValue) {
+	switch (inName) {
+	case "imageIndex":
+	    this.showImageListDialog();
+	    return;
+	}
+	return this.inherited(arguments);
+    },
 	makePropEdit: function(inName, inValue, inDefault) {
 		switch (inName) {
+		        case "imageIndex":
+		                return makeReadonlyButtonEdit(inName, inValue, inDefault);		    
 			case "iconWidth":
 			case "iconHeight":
 				return new wm.propEdit.UnitValue({
@@ -271,10 +313,11 @@ dojo.declare("wm.ToggleButton", wm.ToolButton, {
 });
 
 wm.Object.extendSchema(wm.ToggleButton, {
-        captionUp: { group: "display", bindTarget: 1, order: 10, focus: 1 },
-	captionDown: { group: "display", bindTarget: 1, order: 11},
-    clicked: { group: "display", type: "Boolean", bindTarget: 1, bindSource: 1, order: 12, simpleBindProp: true}, 
-        caption: {ignore: 1}
+    captionUp: { group: "display", bindTarget: 1, order: 10, focus: 1, doc: 1},
+    captionDown: { group: "display", bindTarget: 1, order: 11, doc: 1},
+    clicked: { group: "display", type: "Boolean", bindTarget: 1, bindSource: 1, order: 12, simpleBindProp: true,doc: 1},
+    caption: {ignore: 1},
+    setClicked: {group: "method", params: "(inClicked)", doc: 1}
 });
 
 dojo.declare("wm.RoundedButton", wm.Button, {
@@ -368,8 +411,12 @@ wm.Object.extendSchema(wm.Button, {
 	caption: { group: "display", bindable: 1, order: 10, focus: 1 },
 	hint: { group: "display", order: 20 },
 	imageList: { group: "display",order: 50},
-	imageIndex: { group: "display", order: 51 }
-
+    imageIndex: { group: "display", order: 51, type: "String", subtype: "imageList", doc: 1},
+    setCaption: {group: "method", params: "(inCaption)", doc: 1},
+    setImageIndex: {group: "method", params: "(inIndex)", doc: 1},
+    setIconUrl: {group: "method",params: "(inIconUrl)", doc: 1},
+    setDisabled: {group: "method",params: "(inDisabled)", doc: 1},
+    click:  {group: "method", params: "()", doc: 1}
 });
 
 
@@ -390,3 +437,274 @@ wm.Object.extendSchema(wm.RoundedButton, {
 });
 
 wm.Button.description = "A simple button.";
+
+
+
+dojo.declare("wm.PopupMenuButton", wm.Button, {
+    width: "120px",
+    rememberWithCookie: true,
+    classNames: "wmbutton wmPopupButton",
+    fullStructureStr: "",
+    iconClass: "", // alternative to iconUrl which allows for the icon to be loaded the same way as the icons in the menu itself
+
+    onclick:function() {},
+    onchange: function(inLabel,inIconClass,inEvent) {}, // fired when the user changes the button's caption (reselects also fires)
+    onchangeNoInit: function(inLabel,inIconClass,inEvent) {}, // fired when the user changes the button's caption (reselects also fires)
+    postInit: function() {
+	this.dojoMenu = new wm.PopupMenu({name:"dojoMenu", 
+					  classNames: "wmpopupmenu wmpopupbuttonmenu",
+					  owner: this});
+
+	try {
+	    if (this.rememberWithCookie && !this.isDesignLoaded()) {
+		var obj = dojo.cookie(this.getRuntimeId());
+		if (obj) obj = dojo.fromJson(obj);
+		if (obj && typeof obj == "object") {
+		    this.caption = obj.caption;
+		    this.iconClass = obj.iconClass;
+		    this.iconWidth = obj.iconWidth;
+		    this.iconHeight = obj.iconHeight;
+		    this.onchange(obj.caption, obj.iconClass);
+		}
+	    }
+	} catch(e) {
+
+	}
+ /*
+			     this.caption = obj.label;
+			     var img = dojo.query( ".dijitIcon." + obj.label, this.dojoMenu.dojoObj.domNode)[0];
+			     if (img) {
+				 var computed = dojo.getComputedStyle(img);
+				 var url = computed.backgroundImage;
+				 url = url.substring(4, url.length-1);
+				 var width = computed.width;
+				 var height = computed.height;
+			     }
+			     this.iconUrl = url;
+			     this.width = width;
+			     this.height = height;
+			     this.render(true);
+			     */
+	if (this.fullStructureStr)
+	    this.setFullStructureStr(this.fullStructureStr);
+	else if (this.fullStructure)
+	    this.setFullStructure(this.fullStructure);
+
+	this.connect(this.dojoMenu, "onclick", this, "menuChange");
+	this.inherited(arguments);	
+    },
+    menuChange: function(inLabel, inIconClass, inEvent) {
+	this.caption = inLabel;
+	this.iconClass = inIconClass;
+	if (inIconClass) {
+	    var img = dojo.query(".dijitIcon." + inIconClass, this.dojoMenu.dojoObj.domNode)[0];
+	    if (img) {
+		var computed = dojo.getComputedStyle(img);
+		var width = computed.width;
+		var height = computed.height;
+		this.iconWidth = width;
+		this.iconHeight = height;
+	    } else {
+		this.iconUrl = "";
+		this.iconWidth = "0px";
+		this.iconHeight  = "0px";
+	    }
+	}
+	    this.render(true);
+	this.onchange(inLabel,inIconClass,inEvent);
+	this.onchangeNoInit(inLabel,inIconClass,inEvent);
+	if (this.rememberWithCookie) {
+	    dojo.cookie(this.getRuntimeId(), dojo.toJson({caption: this.caption, 
+					      iconClass: this.iconClass,
+					      iconWidth: this.iconWidth,
+							  iconHeight: this.iconHeight}));
+	}
+    },
+/*
+    updateButtonFromMenu: function(domNode) {
+	while (domNode.tagName.toLowerCase() != "tr")
+	    domNode = domNode.parentNode;
+	this.caption = dojo.query(".dijitMenuItemLabel",domNode)[0].innerHTML;
+	var img = dojo.query( ".dijitMenuItemIcon", domNode)[0];
+	if (img) {
+	    var computed = dojo.getComputedStyle(img);
+	    var url = computed.backgroundImage;
+	    url = url.substring(4, url.length-1);
+	    var width = computed.width;
+	    var height = computed.height;
+	    this.iconWidth = width;
+	    this.iconHeight = height;
+	    this.iconUrl = url;
+	} else {
+	    this.iconWidth = "0px";
+	    this.iconHeight = "0px";
+	    this.iconUrl = "";
+	}
+
+
+	this.render(true);
+    },
+    */
+    build: function() {
+	this.inherited(arguments);
+	var html = "<table class='dijitMenuTable' style='width:100%'><tbody class='dijitReset'><tr class='dijitMenuItem dijitReset'><td class='dijitReset dijitMenuItemIconCell' style='width:"+(parseInt(this.iconWidth)+4) + "px;'><div style='width:"+this.iconWidth + ";height:"+this.iconHeight+";'/></td><td class='dijitReset dijitMenuItemLabel'>"+this.caption + "</td><td class='dijitReset dijitMenuArrow'><div class='popupIcon'/></td></tr></tbody></table>";
+	this.domNode.innerHTML = html;
+/*
+	var div = dojo.query(".popupIcon", this.domNode)[0];
+	    this.connect(div, "onclick", this, function(e) {
+		if (this.disabled) return;
+		dojo.stopEvent(e);
+		this.dojoMenu.update(e, this, true);
+	    });
+	    */
+    },
+    click: function(inEvent) {
+	if (this.disabled) return;
+	var coords = dojo.coords(dojo.query(".popupIcon", this.domNode)[0]);
+	var popupX = coords.x-2;
+	if (inEvent.pageX >= popupX) {
+	    this.dojoMenu.update(inEvent, this, true);
+	} else {	    
+	    this.onclick(inEvent, this);
+	    if (!this.clicked) 
+		this.setProp("clicked", true);
+	}
+    },
+
+
+    // TODO: I want code that will change how we render a button and its icon if there is an icon... 
+    render: function(forceRender) {
+	if (!forceRender && (!this.invalidCss || !this.isReflowEnabled())) return;
+	wm.Control.prototype.render.call(this, forceRender);
+	dojo.query(".dijitMenuItemLabel",this.domNode)[0].innerHTML = this.caption;
+	var img = dojo.query(".dijitMenuItemIconCell div",this.domNode)[0];
+	img.className = this.iconClass;
+	img.style.width = this.iconWidth;
+	img.style.height = this.iconHeight;
+
+	var width = parseInt(this.iconWidth) || 0;
+	img.parentNode.style.width = (width+4) + "px";
+/*
+	var height = parseInt(this.iconHeight) || 0;
+	img.parentNode.style.height = (height+4) + "px";
+	*/
+    },
+    setIconClass: function(inClass) {
+	this.iconClass = inClass;
+	if (this.isReflowEnabled()) 
+	    this.render(true);
+    },
+
+    set_caption: function(inCaption) {
+	for (var i = 0; i < this.dojoMenu.fullStructure.length; i++) {
+	    if (!inCaption || inCaption == this.dojoMenu.fullStructure[i].label) {
+		this.setIconClass(this.dojoMenu.fullStructure[i].iconClass);
+		return this.setCaption(inCaption);
+	    }
+	}
+    },
+
+    editMenuItems: "(Edit Menu Items)",
+    makePropEdit: function(inName, inValue, inDefault) {
+	switch (inName) {
+	case "editMenuItems":
+	    return makeReadonlyButtonEdit(inName, inValue, inDefault);
+	case "caption":
+	    var list = [];
+	    dojo.forEach(this.dojoMenu.fullStructure, function(struct) {
+		list.push(struct.label);
+	    });
+	    return makeSelectPropEdit("caption", this.caption, list, list[0]);
+	}
+	return this.inherited(arguments);
+    },
+    setPropEdit: function(inName) {
+	switch (inName) {
+	case "caption":
+	    var editor = dijit.byId("studio_propinspect_caption");
+	    var store = editor.store.root;
+	    while (store.firstChild) store.removeChild(store.firstChild);
+	    dojo.forEach(this.dojoMenu.fullStructure, function(struct) {
+		var node = document.createElement("option");
+		node.innerHTML = struct.label;
+		store.appendChild(node);
+	    });
+	    return true;
+	}
+	return this.inherited(arguments);
+    },
+	editProp: function(inName, inValue, inInspector) {
+		switch (inName) {
+		case "editMenuItems":
+		    if (!studio.menuDesignerDialog) {
+			studio.menuDesignerDialog = new wm.PageDialog({pageName: "MenuDesigner", 
+								       name: "MenuDesignerDialog",
+								       title: "Edit Menu",
+								       hideControls: true,
+								       owner: studio,
+								       width: "250px",
+								       height: "350px"});
+		    }
+		    studio.menuDesignerDialog.page.setMenu(this,{content: this.caption,
+								 iconClass: this.iconClass},true);
+		    studio.menuDesignerDialog.show();
+		}
+	},
+    setFullStructureStr: function(inStr, inSetByDesigner) {
+	this.fullStructureStr = inStr;
+	this.dojoMenu.setFullStructureStr(inStr);
+	this.dojoMenu.renderDojoObj();
+	if (!this.caption)
+	    this.set_caption();
+	if (inSetByDesigner && this.isDesignLoaded())
+	    studio.inspector.reinspect();
+    },
+    // used by users who hand edit their own widgets.js files; used by studio.widgets.js
+    setFullStructure: function(inObj) {
+	this.dojoMenu.setFullStructure(inObj);
+	this.dojoMenu.renderDojoObj();
+    },
+/*
+    setDefaultItem: function(inData) {
+	if (!inData) {
+	    this.caption = this.dojoMenu.fullStructure[0].label;
+	    this.iconClass = this.dojoMenu.fullStructure[0].iconClass;
+	} else {
+	    this.caption = inData.content;
+	    this.iconClass = inData.iconClass;
+	}
+	this.render(true);
+    },
+    */
+    /* when we're ready to have every menu item appear in our events list, uncomment this; but
+       you'll still have to write some code so that when the user selects an event it gets handled
+       properly 
+    listProperties: function(){
+	var props = this.inherited(arguments);
+	for (evt in props)
+	{
+	    if (props[evt].isMenuItem)
+		delete props[evt];
+	}
+	this.dojoMenu.addNodesToPropList(this.dojoMenu.fullStructure, props);
+	return props;
+    },
+    */
+    _end: 0
+});
+
+wm.Object.extendSchema(wm.PopupMenuButton, {
+    iconClass: {hidden: true},
+    editMenuItems: {group: "operation"},
+    fullStructureStr: {hidden: true},
+    hint: {ignore: true},
+    iconUrl: {ignore: true},
+    imageList:  {ignore: true},
+    imageIndex: {ignore: true},
+    iconMargin: {ignore: true},
+    dojoMenu: {ignore: true, doc: 1},
+    setIconClass: {group: "method", params: "(inIconClass)", doc: 1}
+
+});   
+
+
