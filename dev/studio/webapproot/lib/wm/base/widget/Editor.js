@@ -361,9 +361,9 @@ wm.Editor.extend({
 			e = this.editor,
 			props =  dojo.mixin({}, this.inherited(arguments), e ? e.listOwnerProperties() : {}),
 			f = wm.getParentForm(this);
-		props.formField.ignore = !Boolean(f);
+		props.formField.ignoretmp = !Boolean(f);
 		props.displayValue.readonly = this.formField && !this.saveDisplayValue;
-		props.saveDisplayValue.ignore = !this.formField;
+		props.saveDisplayValue.ignoretmp = !this.formField;
 		return props;
 	},
 	afterPaletteDrop: function() {
