@@ -638,7 +638,7 @@ wm.DojoMenu.extend({
     }
 });
 
-dojo.declare("wm.PopupMenu", wm.DojoMenu, {
+dojo.declare("wm.PopupMenu", wm.DojoMenu, { 
     classNames: "wmpopupmenu",
     _neverIsTop:true,
     width: "0px",
