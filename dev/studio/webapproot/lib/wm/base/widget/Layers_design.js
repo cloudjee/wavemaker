@@ -27,13 +27,17 @@ wm.Object.extendSchema(wm.Layer, {
 	flex: {ignore: 1},
 	sizeUnits: {ignore: 1},
 	size: {ignore: 1},
-    caption: { group: "display", order: 200, focus: true, bindTarget: true},
+    caption: { group: "display", order: 200, focus: true, bindTarget: true, doc: 1},
 	inFlow: {ignore: 1},
 	active: {ignore: 1},
     fitToContentWidth: { ignore: 1},
     fitToContentHeight: { ignore: 1},
     minWidth: { ignore: 1},
-    minHeight: { ignore: 1}
+    minHeight: { ignore: 1},
+    activate: {group: "method", params: "()", doc: 1},
+    isActive: {group: "method", params: "()", returns: "Boolean", doc: 1},
+    setCaption: {group: "method", params: "(inCaption)", doc: 1},
+    getIndex: {group: "method", params: "()", returns: "Number", doc: 1},
 });
 
 wm.Layer.extend({
@@ -82,7 +86,16 @@ wm.Layer.extend({
 				this.inherited(arguments);
 				return;
 		}
-	}
+	},
+    createDesignContextMenu: function(menuObj) {
+	var result = this.parent.createDesignContextMenu(menuObj);
+	menuObj.addAdvancedMenuChildren(menuObj.dojoObj, {label: "add", 
+						  onClick: dojo.hitch(this, function() {
+						      this.parent.addLayer();
+						  })
+						 });
+	
+    }
 });
 
 wm.Object.extendSchema(wm.Layers, {
@@ -95,15 +108,36 @@ wm.Object.extendSchema(wm.Layers, {
 	verticalAlign: { ignore: 1},
 	layerIndex: {ignore: 1},
 	lastLayerIndex: {ignore: 1},
-	defaultLayer: { group: "layout", order: 105 },
+        defaultLayer: { group: "layout", order: 105, doc: 1},
 	layersType: { group: "layout", order: 110 },
 	add: { group: "operation", order: 1 },
 	userDefHeaderHeight: {ignore:1},
 	fitToContent: { ignore: 1},
         headerHeight: { group: "layout", order: 50},
     
-        clientBorder: {group: "style", order: "100"},
-        clientBorderColor: {group: "style", order: "101"}
+        clientBorder: {group: "style", order: "100", doc: 1},
+        clientBorderColor: {group: "style", order: "101", doc: 1},
+
+    addLayer: {group: "method", params: "(inCaption)", doc: 1},
+    getLayer: {group: "method", params: "(inIndex)", returns: "wm.Layer", doc: 1},
+    removeLayer:{group: "method", params: "(inIndex)", doc: 1},
+
+    getActiveLayer: {group: "method", params: "()", returns: "wm.Layer", doc: 1},
+
+    indexOfLayer:  {group: "method", params: "(inLayer)", returns: "Number", doc: 1},
+    indexOfLayerName:  {group: "method", params: "(inLayerName)", returns: "Number", doc: 1},
+    indexOfLayerCaption:  {group: "method", params: "(inLayerCaption)", returns: "Number", doc: 1},
+
+    setLayer: {group: "method", params: "(inNameOrLayer)", doc: 1},
+    setLayerIndex: {group: "method", params: "(inIndex)", doc: 1},
+    
+    getCount: {group: "method", params: "()",  returns: "Number", doc: 1},
+
+    moveLayerIndex: {group: "method", params: "(inLayer, inIndex)", doc: 1},
+    clear: {group: "method", params: "()", doc: 1},
+
+    setClientBorder: {group: "method", params: "(inBorder)", doc: 1},
+    setClientBorderColor: {group: "method", params: "(inBorderColor)", doc: 1},
 });
 
 wm.Layers.extend({
@@ -199,12 +233,31 @@ wm.Layers.extend({
 	},
 	listProperties: function() {
 		var props = this.inherited(arguments);
-		props.headerHeight.ignore = (this.layersType != 'Tabs' && this.layersType != 'RoundedTabs');
+		props.headerHeight.ignoretmp = (this.layersType != 'Tabs' && this.layersType != 'RoundedTabs');
 		return props;
 	},
 	getOrderedWidgets: function() {
 		return this.layers;
+	},
+    createDesignContextMenu: function(menuObj) {
+	if (this.layers.length) {
+	    var data = {label: "Show Layer",
+			children: []};
+
+	    for (var i = 0; i < this.layers.length; i++) {
+		if (!this.layers[i].isActive())
+		    data.children.push(this.addLayerToContextMenu(i));
+	    }
+	    var submenu = menuObj.addAdvancedMenuChildren(menuObj.dojoObj, data);
 	}
+    },
+    addLayerToContextMenu: function(i) {
+	return 	{label:   this.layers[i].caption,
+		 onClick: dojo.hitch(this, function() {
+		     this.setLayerIndex(i);
+		 })
+		};
+    }
 });
 
 wm.AccordionLayers.extend({
