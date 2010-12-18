@@ -21,14 +21,31 @@ dojo.require("dojo.rpc.JsonService");
 
 wm.inflight = {
 	_inflight: [],
+        _inflightNames: [],
 	getCount: function() {
 		return this._inflight.length;
 	},
 	change: function() {
 	},
-	add: function(inDeferred) {
-		inDeferred._timeStamp = new Date().getTime();
-		this._inflight.push(inDeferred);
+    // inName: this.service,
+    // this.name, inArgs, inMethod, invoker);
+    add: function(inDeferred, inName, optName, inArgs, inMethod, invoker) {
+	inDeferred._timeStamp = new Date().getTime();
+	this._inflight.push(inDeferred);
+
+	var name;
+	if (inName != "runtimeService") {
+	    name = inName + "." + inMethod;
+	} else if (optName) {
+	    name = optName + "." + inMethod;
+	} else if (inArgs[0]) {
+	    name = inArgs[0] + ": " + inArgs[1];
+	} else {
+	    name = "LazyLoad: " + inArgs[1];
+	}
+
+
+		this._inflightNames.push(name);
 		inDeferred.addBoth(dojo.hitch(this, "remove", inDeferred));
 		this.change();
 	},
@@ -39,6 +56,7 @@ wm.inflight = {
 		var delta = new Date().getTime() - inDeferred._timeStamp;
 		//console.info("deferred inflight for ", delta + "ms", inDeferred);
 		this._inflight.splice(i, 1);
+		this._inflightNames.splice(i, 1);
 		this.change();
 		return inResult;
 	},
@@ -178,7 +196,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 			}
 		}
 	},
-       invoke: function(inMethod, inArgs, owner) {
+        invoke: function(inMethod, inArgs, owner, invoker) {
 		if (!this._service) 
 			return null;
 		this._service.sync = this.sync;
@@ -186,7 +204,10 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		//if (wm.logging)
 	        this.debugLastMethod = inMethod;
 		if (djConfig.isDebug && !dojo.isFF) {
-		    console.group("JsonRpcService.invoke method:", inMethod);
+		    if (console.groupCollapsed)
+			console.groupCollapsed("JsonRpcService.invoke method:", inMethod);
+		    else
+			console.group("JsonRpcService.invoke method:", inMethod);
 		    if (inArgs && inArgs.length) {
 		      console.log("Arguments:");
 		      console.log(inArgs); 
@@ -202,12 +223,13 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 			return r;
 		}));
 		d.addCallbacks(dojo.hitch(this, "onResult"), dojo.hitch(this, "onError"));
-		wm.inflight.add(d);
+	    //wm.inflight.add(d, this.service == "runtimeService" ? (inArgs[0] ? inArgs[0] : "LazyLoad Data") + ": " + inArgs[1] : this.name + "." + inMethod, inMethod, inArgs, invoker);
+	    wm.inflight.add(d, this.service, this.name, inArgs, inMethod, invoker);
 		this.inflight = true;
 		return d;
 	},
-	request: function(inMethod, inArgs, inResult, inError) {
-		var d = this.invoke(inMethod, inArgs);
+        request: function(inMethod, inArgs, inResult, inError, invoker) {
+	    var d = this.invoke(inMethod, inArgs, null, invoker);
 		if (inResult) {
 			if (dojo.isFunction(inResult))
 				d.addCallback(inResult);
@@ -223,15 +245,15 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		return d;
 	},
 	// force a sync call, irrespective of our sync setting
-	requestSync: function(inMethod, inArgs, inResult, inError) {
+    requestSync: function(inMethod, inArgs, inResult, inError, invoker) {
 		var s = this.sync;
 		this.sync = true;
-		var d = this.request.apply(this, arguments);
+	        var d = this.request.apply(this, [inMethod, inArgs, inResult, inError, null, invoker]);
 		this.sync = s;
 		return d;
 	},
 	// force an async call, irrespective of our sync setting
-	requestAsync: function(inMethod, inArgs, inResult, inError) {
+        requestAsync: function(inMethod, inArgs, inResult, inError, invoker) {
 		var s = this.sync;
 		this.sync = false;
 		var
@@ -243,7 +265,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 				this.sync = s;
 				return inError.apply(this, dojo._toArray(arguments));
 			}) : null;
-		return this.request(inMethod, inArgs, cb, eb);
+	         return this.request(inMethod, inArgs, cb, eb, null, invoker);
 	},
 	getResultSync: function(inMethod, inArgs) {
 		var d = this.requestSync(inMethod, inArgs);
@@ -252,6 +274,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 	onResult: function(inResult) {
 		var r = this.fullResult = inResult;
 		this.result = (r || 0).result;
+/*
 		if (djConfig.isDebug && !dojo.isFF) {
 			console.group("Service Call Completed: " + this.name + "." + this.debugLastMethod);
 			if (this.result) {
@@ -261,17 +284,23 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 			}
 			console.groupEnd();
 		}
+		*/
 		return this.result;
 	},
 	onError: function(inError) {
+	    var message = inError != null && dojo.isObject(inError) ? inError.message : inError;
 	    try {
-		if (!inError || inError.message.match(/No ServiceWire found/) && !djConfig.isDebug)
+		if (!inError || message.match(/No ServiceWire found/) && !djConfig.isDebug)
 		    return;
-	        console.group("Service Call Failed: " + this.name + "." + this.debugLastMethod);                              
-		if (inError)
-		  console.error(inError.message);                                                                               
+
+		if (console.groupCollapsed)
+	            console.groupCollapsed("Service Call Failed: " + this.name + "." + this.debugLastMethod);
+		else
+	            console.group("Service Call Failed: " + this.name + "." + this.debugLastMethod);                              
+		if (message)
+		  console.error(message);                                                                               
                 console.groupEnd();    
-		var errCodes = inError.message.match(/(\d+)$/);
+		var errCodes = message.match(/(\d+)$/);
 		var errCode = (errCodes) ? errCodes[0] : "";
 
 		// If the failer is a security access error, AND if its NOT a security error that comes from live view 
