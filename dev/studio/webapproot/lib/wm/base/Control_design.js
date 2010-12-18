@@ -379,16 +379,31 @@ wm.Object.extendSchema(wm.Control, {
 	sizeable: { ignore: 1 }, // Property tells designer if a given class of widgets can be resized; splitter is an example of a widget where you might want this set to false
 	styles: { ignore: 1 },
     //runtimeBorder: { ignore: 1 },
-	width: { group: "layout", order: 20},
-	height: { group: "layout", order: 30},
+    width: { group: "layout", order: 20, doc: 1},
+    height: { group: "layout", order: 30, doc: 1},
         minWidth: { group: "advanced layout", order: 40},
         minHeight: { group: "advanced layout", order: 50},
-	parent: { ignore: 1 },
+    parent: { ignore: 1, doc: 1, _prototype: wm.Control.prototype, prototype: wm.Control.prototype },
 	domNode: { ignore: 1 },
 	parentNode: { ignore: 1 },
 	widgets: { ignore: 1 },
-	showing: { bindTarget: true, group: "common", order: 30},
-	disabled: { bindTarget: true, type: "Boolean", group: "common", order: 40},
+    showing: { bindTarget: true, group: "common", order: 30, doc: 1},
+    disabled: { bindTarget: true, type: "Boolean", group: "common", order: 40, doc: 1},
 	size: { ignore: true },
-	sizeUnits: { ignore: true }
+        sizeUnits: { ignore: true },
+
+    setShowing: {group: "method", params: "(inShowing)", doc: 1},
+
+    setBorder: {group: "method", params: "(inBorder)", doc: 1},
+    setBorderColor: {group: "method",params: "(inBorderColor)", doc: 1},
+    setPadding: {group: "method", params: "(inPadding)", doc: 1},
+    setMargin: {group: "method", params: "(inMargin)", doc: 1},
+    setWidth: {group: "method", params: "(inWidth)", doc: 1},
+    setHeight: {group: "method", params: "(inHeight)", doc: 1},
+
+    isAncestorHidden: {group: "method", doc: 1},
+    setParent: {group: "method", params: "(inContainer)", doc: 1}
+
+    
+    
 });
