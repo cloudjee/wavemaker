@@ -145,6 +145,17 @@ dojo.declare("wm.Layers", wm.Container, {
             // vertical defaults to justified; once we get rid of justified, we can remove this property
 	    this.client = new wm.Panel({isRelativePositioned:this.isRelativePositioned, border: 0, name: "client", parent: this, owner: this, height: "100%", width: "100%",  flags: {notInspectable: true}});
 	    this.inherited(arguments);
+            this._isDesign = this.isDesignLoaded();
+	    if (this._isDesign) {
+		this.flags.noModelDrop = true;
+	    } else {
+		this.connectToAllLayers(this.parent, dojo.hitch(this, function() {
+		    this._fireLayerOnShow();
+		}));
+
+	    }
+
+	    
 	},
 	postInit: function() {
 		this.inherited(arguments);
