@@ -14,7 +14,7 @@
        ************************************************************************************************/
 
     .wm_template   .wmbutton,
-    .wm_template   .wmtogglebutton,
+        .wm_template   .wmtogglebutton,
     .wm_template   .wmroundedbutton,
     .wm_template   .wmbutton.wmbutton-disabled:hover,
     .wm_template   .wmbutton.wmbutton-disabled:focus
@@ -43,6 +43,10 @@
         background-image: none !important;
     }
 
+
+    .wm_template .wmbutton span {
+	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+    }
     /**************************************************************************************************
        * TYPE:        Active Styling
        *
@@ -130,6 +134,9 @@
 	background-position: left top;  /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
     }
+    .wm_template .MainContent .wmbutton span {
+	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
+    }
 
     /**************************************************************************************************
        * TYPE:        Active Styling
@@ -211,6 +218,10 @@
 	background-image: url(images/repeatx/brightEdge1.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
 	background-position: left top;  /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
+    }
+
+    .wm_template .EmphasizedContent .wmbutton span {
+	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
     }
 
     /**************************************************************************************************
@@ -295,6 +306,10 @@
 	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
 	background-position: left top;  /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
+    }
+
+    .wm_template .HeaderContent .wmbutton span {
+	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
     }
 
     /**************************************************************************************************
