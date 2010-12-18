@@ -385,7 +385,7 @@ dojo.declare("wm.FocusableList", wm.List, {
 	  this.focusEventTime = (e) ? e.timeStamp : 0;
 	  this.hasFocus = inFocus;
 	  if (inFocus) {
-	    console.log(this.name + " has focus now");
+	      //console.log(this.name + " has focus now");
 	    this.show();
 	      dojo.addClass(this.domNode, "wmselectedlist");
 	    this.setBorderColor("rgb(0,0,160)");
@@ -428,7 +428,7 @@ dojo.declare("wm.FocusableList", wm.List, {
 	    
 	    var next  =tmpObj.getValue("data." + this.nextFocusableItemField);
 	    if (next) {
-	      console.log("set next to " + next);
+		//console.log("set next to " + next);
 	      this.setNextFocus(next);
 	      if (this.getNextFocus() instanceof Object) this.getNextFocus().show();
 	    }
@@ -524,7 +524,7 @@ dojo.declare("wm.FocusablePanel", wm.Panel, {
 	  this.focusEventTime = e.timeStamp;
 	  this.hasFocus = inFocus;
 	  if (inFocus) {
-	    console.log(this.name + " has focus now");
+	      //console.log(this.name + " has focus now");
 	    this.show();
 	    this.setBorderColor("rgb(0,0,160)");
 	    if (this.autoFormFocus)
@@ -566,7 +566,10 @@ dojo.declare("wm.FocusablePanel", wm.Panel, {
 	    dojo.stopEvent(e);
 	    if (this.nextFocus)
 	      this.getNextFocus().hideNextChain();
+	  } else if (e.keyCode == dojo.keys.ENTER || e.keyCode == dojo.keys.NUMPAD_ENTER) {
+	      this.ondblclick({}, this.selectedItem);
 	  }
+
 	},
 	hideNextChain: function() {
 	  this.hide();
