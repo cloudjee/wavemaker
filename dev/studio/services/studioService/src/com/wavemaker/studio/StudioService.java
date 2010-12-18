@@ -16,6 +16,16 @@
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */ 
 package com.wavemaker.studio;
+
+/* Added for closure */
+import java.net.URLEncoder;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URLConnection;
+import java.io.OutputStreamWriter;
+
+
+
 import java.io.File;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -60,6 +70,46 @@ import java.util.regex.Matcher;
  */
 @HideFromClient
 public class StudioService {
+
+    @ExposeToClient
+    public String closurecompile(String s) {
+       String result  = null;
+        URL url = null;
+        try {
+System.out.println("A");
+            url = new URL("http://closure-compiler.appspot.com/compile");
+        } catch (MalformedURLException e) {
+            System.out.println(e.toString());
+            return "";
+        }
+System.out.println("B");
+        try {
+            URLConnection conn = url.openConnection();
+            conn.setDoOutput(true);
+            OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+ System.out.println("C");
+           String data = "output_format=json&output_info=errors&js_code=" +  java.net.URLEncoder.encode(s);
+           
+           //write parameters
+            writer.write(data);
+            writer.flush();
+            System.out.println("D");
+            StringBuffer answer = new StringBuffer();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+System.out.println("E");
+            String line;
+            while ((line = reader.readLine()) != null) {
+                answer.append(line);
+            }
+System.out.println("F");
+            writer.close();
+            reader.close();
+            result = answer.toString();
+        } catch(Exception e) {System.out.println(e.toString());}
+      System.out.println("F: " + result);
+       return result;
+    }
+
 
     /**
      * Undeploy and close the project.
