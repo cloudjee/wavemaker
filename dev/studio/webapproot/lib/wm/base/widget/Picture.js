@@ -76,10 +76,13 @@ dojo.declare("wm.Picture", wm.Box, {
 });
 
 wm.Object.extendSchema(wm.Picture, {
-    source: { type: "String", bindable: 1, group: "common", order: 1, focus: 1, subtype: "File", extensionMatch: ["jpg","jpeg","gif","png","tiff"] },
-	hint: { group: "common", order: 2 },
-	link: { type: "String", bindable: 1 },
-	aspect: { group: "layout", order: 50}
+    source: { type: "String", bindable: 1, group: "common", order: 1, focus: 1, subtype: "File", extensionMatch: ["jpg","jpeg","gif","png","tiff"], simpleBindTarget: true, doc: 1},
+    hint: { group: "common", order: 2, doc: 1},
+    link: { type: "String", bindable: 1, doc: 1},
+    aspect: { group: "layout", order: 50},
+    setSource: {group: "method", params: "(inSource)", doc: 1},
+    setHint: {group: "method", params: "(inHint)", doc: 1},
+    setLink: {group: "method", params: "(inUrl)", doc: 1}
 });
 
 // design-time 
