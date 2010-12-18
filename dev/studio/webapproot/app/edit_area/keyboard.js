@@ -22,9 +22,10 @@ function keyDown(e){
 	var use=false;
 	if (EA_keys[e.keyCode])
 		letter=EA_keys[e.keyCode];
+        else if (top.app._keys[e.keyCode])
+	        letter = top.app._keys[e.keyCode];
 	else
 		letter=String.fromCharCode(e.keyCode);
-	
 	var low_letter= letter.toLowerCase();
 			
 	if(letter=="Page up" && !editArea.isOpera){
@@ -42,7 +43,7 @@ function keyDown(e){
 		else
 			editArea.execCommand("tab_selection");
 		
-		use=true;
+	    use=true;
 		if(editArea.isOpera || (editArea.isFirefox && editArea.isMac) )	// opera && firefox mac can't cancel tabulation events...
 			setTimeout("editArea.execCommand('focus');", 1);
 	}else if(letter=="Entrer" && target_id=="textarea"){
@@ -76,10 +77,12 @@ function keyDown(e){
 				setTimeout("editArea.execCommand('go_to_line');", 5);	// the prompt stop the return false otherwise
 				use=true;
 				break;
+/*
 			case "e":
 				editArea.execCommand("show_help");
 				use=true;
 				break;
+				*/
 			case "z":
 				use=true;
 				editArea.execCommand("undo");
@@ -89,9 +92,11 @@ function keyDown(e){
 				editArea.execCommand("redo");
 				break;
 			case "s":
-				user=true;
-				editArea.execCommand("callSave", e);
+		                return false; // let wavemaker handle this
+				//editArea.execCommand("callSave", e);
+		                break;
 			default:
+		                return false;
 				break;			
 		}		
 	}		
