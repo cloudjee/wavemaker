@@ -44,7 +44,10 @@ dojo.declare("wm.DraggableTree", wm.Tree, {
 	dojo.toggleClass(inNode.contentNode, "noDrop", noDrop);
     },
     getNoDrop: function(inNode) {
-	return dojo.hasClass(inNode.contentNode, "noDrop");
+	if (inNode == this.root)
+	    return dojo.hasClass(inNode.domNode, "noDrop");
+	else
+	    return dojo.hasClass(inNode.contentNode, "noDrop");
     },
     nodeDrop: function() {
 	// TODO: Better management of which nodes have what temporary classes
@@ -99,7 +102,12 @@ dojo.declare("wm.DraggableTree", wm.Tree, {
 		 * Otherwise, the drop node becomes the target node's next sibling.
 		 *************************************************************************************/
 		if (!this.getNoDrop(targetNode) && !targetNode.closed && targetNode.kids) {
-		    index = 0; // first child
+		    if (targetNode.declaredClass == "wm.TreeNode" && targetNode.kids.length == 0) {
+			index = dojo.indexOf(targetNode.parent.kids, targetNode)+1; // next sibling
+			targetNode = targetNode.parent; // has same parent as targetnode
+		    } else {
+			index = 0; // first child
+		    }
 		} else if (isParentDropTarget) {
 		    index = dojo.indexOf(targetNode.parent.kids, targetNode)+1; // next sibling
 		    targetNode = targetNode.parent; // has same parent as targetnode
@@ -224,19 +232,23 @@ dojo.declare("wm.DraggableTreeMover", wm.DragDropper, {
 	this.hoverStyleNodes = [];
 	switch(inTargetArea) {
 	case "top":
+	    dojo.addClass(this.target.domNode, "dndHover");
 	    dojo.addClass(this.target.domNode, "dndHoverTop");
 	    this.hoverStyleNodes.push(this.target.domNode);
 	    break;
 	case "bot":
 	    if (!this.target.closed && this.target.kids && this.target.kids.length && !this.manager.getNoDrop(this.target)) {
+		dojo.removeClass(this.target.domNode, "dndHover");
 		dojo.addClass(this.target.kids[0].domNode, "dndHoverTop");
 		this.hoverStyleNodes.push(this.target.kids[0].domNode);
 	    } else {
+		dojo.addClass(this.target.domNode, "dndHover");
 		dojo.addClass(this.target.domNode, "dndHoverBottom");
 		this.hoverStyleNodes.push(this.target.domNode);
 	    }
 	    break;
 	case "mid":
+	    dojo.addClass(this.target.domNode, "dndHover");
 	    if (this.manager.getNoDrop(this.target)) {
 		dojo.addClass(this.target.domNode, "dndHoverBottom");
 		this.hoverStyleNodes.push(this.target.domNode);
@@ -282,7 +294,11 @@ dojo.declare("wm.DraggableTreeMover", wm.DragDropper, {
 		  break;
 	      case "bot":
 		  if (!this.target.closed && !this.manager.getNoDrop(this.target)) 
-		      caption += " first child of ";
+		      if (this.target.declaredClass == "wm.TreeNode" && this.target.kids.length == 0) {
+			  caption += " after ";
+		      } else {
+			  caption += " first child of ";
+		      }
 		  else if (isParentDropTarget) 
 		      caption += " after ";
 		  else {
@@ -361,7 +377,8 @@ dojo.declare("wm.DraggableTreeMover", wm.DragDropper, {
 
 	targetInRoot: function(inHit) {
 	  var h = inHit;
-	  var b = wm.calcOffset(studio.selected._studioTreeNode.domNode, studio.widgetsTree.root.domNode);
+	  var b = wm.calcOffset(this.draggedItem, this.manager.root.domNode);
+	    //var b = wm.calcOffset(studio.selected._studioTreeNode.domNode, studio.widgetsTree.root.domNode);
 	  var result = !(h.l < 0 || h.t < 0 || h.l > b.w || h.t > b.h);;
 	  return result;
 	}
