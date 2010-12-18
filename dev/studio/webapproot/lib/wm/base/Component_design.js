@@ -34,14 +34,21 @@ wm.Object.extendSchema(wm.Component, {
 	id: { ignore: 1 },
 	ignoredProps: { ignore: 1 },
 	name: { group: "common", order: 0, readonly: true },
-	owner: { group: "common", order: 1, readonly: true, options: ["Page", "Application"] },
+    owner: { group: "common", order: 1, readonly: true, options: ["Page", "Application"], doc: 1},
 	publishClass: { ignore: 1 },
 	readonlyProps: { ignore: 1 },
 	referenceProps: { ignore: 1 },
 	state: { ignore: 1 },
         binding: { ignore: 1, writeonly: 1},
         runtimeId: {ignore: 1},
-        rootId: {ignore: 1}
+    rootId: {ignore: 1},
+
+
+    destroy: {group:"method", params:"()", doc: 1},
+    toString: {group:"method",params: "()", doc: 1},
+    getId: {group: "method", params: "()", doc: 1},
+    getRuntimeId: {group: "method",params: "()", doc: 1},
+    $: {ignore: true,doc: 1}
 });
 
 //=======================================================
@@ -71,12 +78,12 @@ wm.Component.extend({
 		var props = this.inherited(arguments);
 	    if (this.isDesignLoaded() && (this.owner != studio.application && this.owner != studio.page)) {
                 props = dojo.clone(props);
-		props.owner = {ignore: 1};
+		props.owner = {ignoretmp: 1};
             }
 
 	    if (this.deletionDisabled) {
                 props = dojo.clone(props);
-		props.name = {ignore: 1};
+		props.name = {ignoretmp: 1};
 	    }
 		return props;
 	},
@@ -107,7 +114,7 @@ wm.Component.extend({
 	},
 	isWriteableProp: function(inPropSchema) {
 		var ps = inPropSchema;
-		return !ps || ((ps.writeonly || !(ps.ignore || ps.readonly)) && !ps.isEvent &&  !ps.componentonly);
+		return !ps || ((ps.writeonly || !(ps.ignore || ps.ignoretmp || ps.readonly)) && !ps.isEvent &&  !ps.componentonly);
 	},
 	writeProps: function() {
 		// iterates over all props and checks it's writeable via isWriteableProp
@@ -133,10 +140,11 @@ wm.Component.extend({
 		//dojo.mixin(inEvents, this.eventBindings);
 	},
 	_isWriteableComponent: function(inName, inProperties) {
-	    if (!inName || (this.components[inName] instanceof wm.Widget && !wm.isInstanceType(this.components[inName], wm.Dialog)))
+	    if (!inName || (this.components[inName] instanceof wm.Widget && !wm.isInstanceType(this.components[inName], wm.Dialog) && !wm.isInstanceType(this.components[inName], wm.PopupMenu))) {
 			return false;
+	    }
 		var ps = inProperties[inName];
-		return !ps || ((ps.writeonly || !(ps.ignore || ps.readonly)) && !ps.isEvent && !ps.isCustomMethod);
+		return !ps || ((ps.writeonly || !(ps.ignore || ps.ignoretmp || ps.readonly)) && !ps.isEvent && !ps.isCustomMethod);
 	},
 	writeComponents: function(inIndent, inOptions) {
 		// iterates over all props and checks it's writeable via isWriteableComponent
@@ -227,6 +235,7 @@ wm.Component.extend({
 		var o = this.eventBindings[n], oc = this.getComponent(o), nc = this.getComponent(v);
 		if (!(nc instanceof wm.Component || oc instanceof wm.Component))
 		    eventChange(this.owner instanceof wm.Page ? studio.editArea : studio.appsourceEditor, o, v);
+
 		if (v)
 			this.eventBindings[n] = v;
 		else 
@@ -326,6 +335,9 @@ wm.Component.extend({
 			return makeCheckPropEdit(inName, inValue, inDefault);
 		// use default
 	},
+        setPropEdit: function(inName, inValue, inDefault) {
+	    return false; // unhandled
+	},
 	editComponentProp: function(inComponent) {
 		if (inComponent) {
 			// registered type?
@@ -371,7 +383,8 @@ wm.Component.extend({
 				    }
 				}
 				eventSection += "</ul>";
-			    } else if (wm.isInstanceType(comp, wm.Dialog)) {
+			    } else if (wm.isInstanceType(comp, wm.Dialog) || 
+				       wm.isInstanceType(comp, wm.PopupMenu)) {
 				eventSection += propvalue + " (" + comp.declaredClass + ")";
 			    }
 			} else {
@@ -499,5 +512,57 @@ wm.Component.extend({
 		this.setEvent(n, v);
 		eventEdit(this, n, v, c == studio.application);
 	},
-        getSharedEventLookupName: function(inProp) {return inProp;}
+    getSharedEventLookupName: function(inProp) {return inProp;},
+    createDesignContextMenu: function(menuObj) {},
+    showContextMenu: function(e) {
+		if (dojo.isFF && !(e.button == 2 || e.ctrlKey)) return;
+		dojo.stopEvent(e);		
+		var menuObj = studio.contextualMenu;
+		menuObj.removeAllChildren();
+	this.createDesignContextMenu(menuObj);
+		var props = this.listProperties();
+		for (p in props) {
+		    if (props[p].group == "operation"
+/*
+			props[p].simpleBindTarget || 
+			props[p].simpleBindProp && (props[p].bindable || props[p].bindTarget)*/)
+			this.addContextMenuItem(menuObj,p, props[p]);
+		}
+		
+	if (this instanceof wm.Control) {
+	    var submenuOptions = {label: "Select", children: [{label: this.name,
+							       onClick: this._makeSelectComponentMethod(this)}]};
+	    var parent = this.parent;
+	    while(parent != studio.designer) {
+		submenuOptions.children.push({label: parent.name,
+			       onClick: this._makeSelectComponentMethod(parent)});
+		parent = parent.parent;
+	    }	    
+	    menuObj.addAdvancedMenuChildren(menuObj.dojoObj, submenuOptions);
+	}
+
+
+		menuObj.addAdvancedMenuChildren(menuObj.dojoObj, {label: this.declaredClass + " docs...", onClick: dojo.hitch(this, function() {window.open("http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/" + this.declaredClass.replace(/^.*\./,""));})});
+	    
+	    menuObj.update(e, this.domNode);
+    },
+	_makeSelectComponentMethod: function(inComp) {
+	    return dojo.hitch(this, function() {
+		studio.select(inComp);
+	    });
+	},
+    addContextMenuItem: function(inMenu, inPropName, inProp) {
+	    inMenu.addAdvancedMenuChildren(inMenu.dojoObj, {label: inProp.simpleBindProp ? "Bind " + inPropName : inPropName, onClick: dojo.hitch(this, function() {
+/*
+	       if (inProp.simpleBindProp || inProp.simpleBindTarget) {
+		   studio.bindDialog.page.update(dojo.mixin({object: this,
+							targetProperty: inPropName,
+						       },inProp));
+		   studio.bindDialog.show();
+	       } else
+	       */
+		   this.editProp(inPropName);
+	   })});
+       },
+
 });
