@@ -142,6 +142,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
             }
             */
             /* Step 7: Iterate over each widget in this container, calculate its size and call setBounds on it. */
+	    var maxFit = 0;
 	    for (var i=0, c; c=inContainer.c$[i]; i++) {
 		if (this.inFlow(c)) {
 
@@ -214,9 +215,32 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
                        TODO: Couldn't we just set this to c.bounds["r" or "b"]?
                        */
 		    b[inFlowOrd] += Math.max(0, c.bounds[inFlowAxis]);
+		    maxFit = Math.max(maxFit, c.bounds[inFitAxis]);
 		    wm.flowees++;
 		}
             }
+
+	    if (inContainer._touchScroll && inContainer instanceof wm.ListViewer == false) {
+		var touchScrollChanged = false;
+		if (inFlowAxis == "h") {
+		    var scrollRequiredHeight = b.t;
+		    var scrollRequiredWidth = maxFit;
+		} else {
+		    var scrollRequiredHeight = maxFit;
+		    var scrollRequiredWidth = b.l;
+		}
+		if (
+		    scrollRequiredHeight + "px" != inContainer._touchScroll.scrollers.inner.style.height) {
+		    inContainer._touchScroll.scrollers.inner.style.height = scrollRequiredHeight + "px";
+		    touchScrollChanged = true;
+		}
+		if (scrollRequiredWidth + "px" != inContainer._touchScroll.scrollers.inner.style.width) {
+		    inContainer._touchScroll.scrollers.inner.style.width = scrollRequiredWidth + "px";
+		    touchScrollChanged = true;
+		}
+		if (touchScrollChanged)
+		    inContainer._touchScroll.setupScroller();
+	    }
 
 		/* Start of Frankie's new code
 		if (inContainer.autoScroll && reflowTest) {
@@ -315,11 +339,14 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
             inContainer._xscrollY = false;
             scrollY = "hidden";
         } else {
-            var needsScrollY = inContainer.getPreferredFitToContentHeight() > inContainer.bounds.h;
+	    var requiredHeight = (inContainer instanceof wm.Layout) ? inContainer.bounds.h : inContainer.getPreferredFitToContentHeight();
+            var needsScrollY = requiredHeight > inContainer.bounds.h;
             var scrollY = (needsScrollY) ? "auto" : "hidden";
             inContainer._xscrollY = (scrollY=="auto");
         }
-	if (inContainer.domNode.style.overflowY != scrollY) {
+	if (inContainer._touchScroll) {
+	    ;
+	} else if (inContainer.domNode.style.overflowY != scrollY) {
 	    inContainer.domNode.style.overflowY = scrollY;
             inContainer.domNode.scrollTop = 0;
         }
@@ -330,11 +357,14 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
             inContainer._xscrollX = false;
             scrollX = "hidden";
         } else {
-            var needsScrollX = inContainer.getPreferredFitToContentWidth() > inContainer.bounds.w;
+	    var requiredWidth = (inContainer instanceof wm.Layout) ? inContainer.bounds.w : inContainer.getPreferredFitToContentWidth();
+            var needsScrollX = requiredWidth > inContainer.bounds.w;
             var scrollX = (needsScrollX) ? "auto" : "hidden";
         }
         inContainer._xscrollX = (scrollX=="auto");
-	if (inContainer.domNode.style.overflowX != scrollX) {
+	if (inContainer._touchScroll) {
+	    ;
+	} else if (inContainer.domNode.style.overflowX != scrollX) {
 	    inContainer.domNode.style.overflowX = scrollX;
             inContainer.domNode.scrollLeft = 0;
         }
