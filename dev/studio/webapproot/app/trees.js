@@ -17,10 +17,12 @@
  */ 
 dojo.provide("wm.studio.app.trees");
 
+
 Studio.extend({
 	//=========================================================================
 	// Trees
 	//=========================================================================
+    
 	clearTrees: function() {
 		this.tree.clear();
 		this.widgetsTree.clear();
@@ -36,6 +38,7 @@ Studio.extend({
 	refreshWidgetsTree: function(optionalSearch) {
 		this.tree.clear();
 		this.widgetsTree.clear();
+
    	        this.searchText = (optionalSearch) ? optionalSearch.toLowerCase() :  "";
 	        if (optionalSearch)
 	            this.regex = new RegExp(this.searchText.toLowerCase());
@@ -43,11 +46,11 @@ Studio.extend({
 			this.appComponentsToTree(this.tree);
 		if (this.page) {
 		    this.pageComponentsToTree(this.tree);
-		    var dialogs = this.getTreeComponents(this.application.components, null, [wm.Dialog]);
+		    var dialogs = this.getTreeComponents(this.application.components, null, [wm.Dialog, wm.PopupMenu]);
 		    for (var d in dialogs) {
 			this.widgetToTree(this.widgetsTree.root, dialogs[d]);
 		    }
-		    dialogs = this.getTreeComponents(this.page.components, null, [wm.Dialog]);
+		    dialogs = this.getTreeComponents(this.page.components, null, [wm.Dialog, wm.PopupMenu]);
 		    for (var d in dialogs) {
 			this.widgetToTree(this.widgetsTree.root, dialogs[d]);
 		    }
@@ -55,6 +58,14 @@ Studio.extend({
 
 		}
 	},
+    addDndItemsToSource: function(node, results) {
+	if (node != this.widgetsTree.root && node.parent != this.widgetsTree.root)
+	    results.push(node.domNode);
+	if (node.kids)
+	    for (var i = 0; i < node.kids.length; i++) {
+		this.addDndItemsToSource(node.kids[i], results);
+	    }
+    },
 	    getTreeComponents: function(inComponents, inExcludeTypes, inIncludeTypes) {
 		var list = {}, c;
 		for (var i in inComponents) {
@@ -179,7 +190,8 @@ Studio.extend({
 	},
 	newTreeNode: function(inParent, inImage, inName, inClosed, inProps) {
 		inProps = dojo.mixin(inProps || {}, {image: inImage, content: inName, closed: inClosed});
-		return new wm.TreeNode(inParent, inProps);
+		var node = new wm.TreeNode(inParent, inProps);
+	    return node;
 	},
 	getClassNameImage: function(inClassName) {
 		var i = wm.Palette.items[inClassName] || 0;
@@ -190,18 +202,32 @@ Studio.extend({
 		return ci || inComponent.image || ("images/wm/" + (inComponent instanceof wm.Widget ? "widget" : "component") + ".png");
 	},
 	newComponentNode: function(inParent, inComponent, inName, inImage, inProps) {
-		var
+
 			// get node closed state
-			o = inComponent && inComponent._studioTreeNode,
-			closed = o ? o.closed : (inProps && inProps.closed),
-			img = inImage || this.getComponentImage(inComponent),
-	                name = inName || inComponent._treeNodeName || inComponent.getId(),
-			n = this.newTreeNode(inParent, img, name, closed, inProps);
-		if (inComponent) {
-			n.component = inComponent;
-			inComponent._studioTreeNode = n;
+	    var o = inComponent && inComponent._studioTreeNode;
+	    var closed = o ? o.closed : (inProps && inProps.closed);
+	    var img = inImage || this.getComponentImage(inComponent);
+	    var name = inName || inComponent._treeNodeName || inComponent.getId();
+	    var n = this.newTreeNode(inParent, img, name, closed, inProps);
+
+	    if (inComponent) {
+		n.component = inComponent;
+		inComponent._studioTreeNode = n;
+		if (n.tree == this.widgetsTree && (inComponent.flags.noModelDrop || inComponent instanceof wm.Container == false)) {
+		    n.tree.setNoDrop(n, true);
 		}
-		return n;
+
+		if (inComponent && inComponent.showContextMenu) {
+		    dojo.connect(n.domNode, dojo.isFF ? "onmousedown" : "oncontextmenu", inComponent, "showContextMenu");
+		}
+
+	    }
+	    return n;
+	},
+    onWidgetTreeNodeDrop: function(inSender, inMovedNode, inNewParentNode, inIndexInParent, inOldParent) {
+	    var movedComponent = inMovedNode.component;
+	    var parentComponent = inNewParentNode.component;
+	    parentComponent.designMoveControl(movedComponent, {i: inIndexInParent});
 	},
 	widgetToTree: function(inNode, inWidget) {
 		if (inWidget) {
@@ -270,6 +296,7 @@ Studio.extend({
 		    if (c.declaredClass != lastClass) {
 			var img = this.getComponentImage(c);
 			lastParent = this.newTreeNode(inNode, img, "<span class='TreeHeader'>" +c.declaredClass + "</span>");
+			this.buildTreeGroupContextMenu(lastParent, c.declaredClass);
 			lastClass = c.declaredClass;
 		    }
 		    this.componentToTree(lastParent, c, inType);
@@ -353,5 +380,54 @@ Studio.extend({
 					break;
 			}
 		}
-	}
+	},
+    buildTreeGroupContextMenu: function(inNode, inClassName) {
+	dojo.connect(inNode.domNode, dojo.isFF ? "onmousedown" : "oncontextmenu", this, function(e) {
+		if (dojo.isFF && !(e.button == 2 || e.ctrlKey)) return;
+		dojo.stopEvent(e);		
+	    var menuObj = studio.contextualMenu;
+	    menuObj.removeAllChildren();
+	    if (inClassName != "wm.DataModel") 
+	    menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
+					    {label: "New " + inClassName,
+					     onClick: dojo.hitch(this, function() {
+						 var props = {owner: studio.page,
+							      _designer: studio.page._designer,
+							      name: studio.page.getUniqueName(studio.makeName(inClassName))};
+						 var ctor = dojo.getObject(inClassName);
+
+						 /* all this code copied from Palette.js */
+						 studio.application.loadThemePrototypeForClass(ctor);
+						 var comp = new ctor(props);
+
+						 if (!(comp instanceof wm.ServerComponent)) {
+						     // create an undo task
+						     new wm.AddTask(comp);
+						 }
+						 if (comp instanceof wm.Control) {
+						     //comp.designMoveControl(this.dragger.target, this.dragger.dropRect);
+						     this.dragger.target.designMoveControl(comp, this.dragger.dropRect);
+						 }
+						 if (!wm.fire(comp, "afterPaletteDrop")) {
+						     // FIXME: should not refresh entire tree when dropping from palette.
+						     studio.refreshDesignTrees();
+						     studio.inspector.resetInspector();
+						     studio.select(comp);
+						 }
+
+
+					     })
+					    });
+	    menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
+					    {label: inClassName + " docs...", 
+					     onClick: dojo.hitch(this, function() {
+						 window.open("http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/" + inClassName.replace(/^.*\./,""));
+					     })
+					    });
+
+
+	    menuObj.update(e, inNode.domNode);
+	});
+
+    },
 })
