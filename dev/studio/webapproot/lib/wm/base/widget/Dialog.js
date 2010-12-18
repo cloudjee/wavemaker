@@ -185,7 +185,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 			autoScroll: true});
 		    containerNode = containerWidget.domNode;
 	        } else {
-	            containerNode = this.domNode;//this.container.domNode;
+		    containerNode = this.domNode;
 	        }
             }
 
@@ -520,7 +520,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		    this.domNode.opacity = 0.01;
 		}
 		this.inherited(arguments);
-		if (this.modal) {
+		if (this.modal && !this._noAutoFocus) {
                     this.domNode.tabIndex = -1;
                     this.domNode.focus(); // individual dialogs may override this to focus on something more specific, but at a minimum, I want focus somewhere on/in the dialog when it shows
 		}
