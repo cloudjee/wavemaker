@@ -19,7 +19,8 @@
 /* Custom CSS goes below this line */
 
 
-.wm_studio .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
+.wm_studio .dijitComboBox .dijitArrowButton .dijitArrowButtonInner,
+.wm_studio .dijitSelect .dijitArrowButton .dijitArrowButtonInner {
 	background-image: url(images/comboArrowDownDark.png); /* wm.SelectMenu-Down-Arrow_Image */
 }
 
@@ -55,3 +56,7 @@
         font-size: 8pt;
 }
 
+.wm_studio .dijitMenu .dijitMenuArrowCell img.dijitMenuExpand {
+   background-image: url(images/arrowRightDark.png) !important; /* wm.DojoMenu-Right_Image */
+    background-position: 0% 50% !important;
+}
