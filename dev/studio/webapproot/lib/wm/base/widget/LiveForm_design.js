@@ -65,8 +65,8 @@ wm.LiveFormBase.extend({
 	//===========================================================================
 	listProperties: function() {
 		var p = this.inherited(arguments);
-		p.editorWidth.ignore = p.editorWidth.writeonly = (this.box == "v");
-		p.editorHeight.ignore = p.editorHeight.writeonly = (this.box == "h");
+		p.editorWidth.ignoretmp = p.editorWidth.writeonly = (this.box == "v");
+		p.editorHeight.ignoretmp = p.editorHeight.writeonly = (this.box == "h");
 		return p;
 	},
 	//===========================================================================
@@ -182,7 +182,7 @@ wm.LiveFormBase.extend({
 					readonly: true,
 					name: wm.makeNameForProp(ff, "Editor")
 				}),
-				e = this.createEditor(f, props, null, wm.getEditorClassName(f.displayType));
+		    e = this.createEditor(f, props, {onEnterKeyPress: this.getId() + ".saveDataIfValid"}, wm.getEditorClassName(f.displayType));
 			if (e)
 			this._bindEditor(e);
 			return true;
