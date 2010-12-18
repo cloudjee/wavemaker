@@ -95,6 +95,8 @@ dojo.declare("Studio", wm.Page, {
 			this.liveLayoutBtn.setDisabled(true);
 		*/
 
+	    this.bindDialog = this.getBindDialog();
+
 		this.clearTrees();
 		this.initConsole();
 		// Listen to some events
@@ -139,6 +141,8 @@ dojo.declare("Studio", wm.Page, {
 	    this.helpDialog.containerWidget.c$[0].setPadding("0");
 	    this.helpDialog.containerWidget.c$[0].setBorder("10");
 	    this.helpDialog.containerWidget.c$[0].setBorderColor("#424959");
+	    this.scriptPageCompileChkBtn.setChecked(dojo.cookie(this.scriptPageCompileChkBtn.getRuntimeId()) == "true");
+	    this.appsrcPageCompileChkBtn.setChecked(dojo.cookie(this.scriptPageCompileChkBtn.getRuntimeId()) == "true");
 	},
 	 startPageOnStart: function() {
 		this.startLayer = this.startEditor.parent;
@@ -1019,6 +1023,10 @@ dojo.declare("Studio", wm.Page, {
 	},
 	inflightChange: function() {
 		this.updateStatus();
+	    if (wm.inflight.getCount())
+		this.setStatusMsg("Pending Request: " + wm.Array.last(wm.inflight._inflightNames));
+	    else
+		this.setStatusMsg("");
 		//this.setStatusMsg("Pending Requests: " + wm.inflight.getCount());
 	},
 	//=========================================================================
