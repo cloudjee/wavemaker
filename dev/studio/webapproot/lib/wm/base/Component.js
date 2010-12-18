@@ -448,7 +448,9 @@ dojo.declare("wm.Component", wm.Object, {
 	// Utility
 	//=======================================================
 	connect: function() {
-		this._connections.push(dojo.connect.apply(dojo, arguments));
+	    var c = dojo.connect.apply(dojo, arguments);
+	    this._connections.push(c);
+	    return c;
 	},
 	connectEvents: function(inObject, inEvents) {
 		this._connections = this._connections.concat(wm.connectEvents(this, inObject, inEvents));
@@ -673,40 +675,81 @@ this.panel1.createComponent("custom", "wm.Panel", {
 			if (this._designer)
 				// if designing, note the eventBinding
 				wm.fire(inComponent, "setProp", [n, f]);
-			else
-				// otherwise, connect the named event
-				this.connect(inComponent._eventSource||inComponent, n, this.makeEvent(e, f));
+		        else {
+			    // otherwise, connect the named event
+			    this.connect(inComponent._eventSource||inComponent, n, this.makeEvent(e, f, inComponent, n));
+			    // For most events, doing connections this way is a bad idea; many uses of 
+			    // events are done from code rather than inEvents; however, for performance
+			    // reasons and because dynamically setting onRightClick is something I'm ok not
+			    // suporting, I've made an exception here.
+			    if (n == "onRightClick") {
+				inComponent.connect(inComponent.domNode, dojo.isFF ? "onmousedown" : "oncontextmenu", inComponent, function(event) {
+				    if (!dojo.isFF || (event.button == 2 || event.ctrlKey))
+					this.onRightClick(event);
+				});
+			    } else if (n == "onMouseOver") {
+				inComponent.connect(inComponent.domNode, "onmouseover", inComponent, "onMouseOver");
+			    } else if (n == "onMouseOut") {
+				inComponent.connect(inComponent.domNode, "onmouseout", inComponent, "onMouseOut");
+			    }
+			}
 		}
 	},
-	makeEvent: function(inHandler, inName) {
-		return dojo.isFunction(inHandler) ? this._makeEvent(inName) : this._makeComponentEvent(inHandler);
+        makeEvent: function(inHandler, inName, inComponent, eventName) {
+	    return dojo.isFunction(inHandler) ? this._makeEvent(inName,inComponent,eventName) : this._makeComponentEvent(inHandler,inComponent,eventName);
 	},
-	_makeEvent: function(inName) {
+    _makeEvent: function(inName, inComponent,eventName) {
 		var self = this;
 		return function() { 
-			self[inName].apply(self, self._eventArgs(this, arguments));
+		    if (djConfig.isDebug && app.debugTree)
+			var startNode = app.debugTree.newLogEvent({type: "javascriptEventStart",
+								   eventName: eventName,
+								   trigger: inComponent,
+								   method: inName});
+
+		    self[inName].apply(self, self._eventArgs(this, arguments));
+
+		    if (djConfig.isDebug && app.debugTree)
+			app.debugTree.newLogEvent({type: "javascriptEventStop",
+						   startNode: startNode,
+						   eventName: eventName,
+						   trigger: inComponent,
+						   method: inName});
 		}
 	},
-	_makeComponentEvent: function(inHandler) {
+    _makeComponentEvent: function(inHandler, inComponent,eventName) {
 		var self = this;
 		// FIXME: experimental: can call a method on a component
-		return function(e) { 
+	        return function(e, optionalTargetComp) { 
 			// inHandler could be a component
 			// or a (string) Id of a component
 			// or a (string) Id of a component + a dotted method suffix
 			//console.info('inHandler ', inHandler, ' instanceof wm.Component = ' + (inHandler instanceof wm.Component));
 			//console.info('wm.isInstanceType = ' + wm.isInstanceType(inHandler, 'wm.Component'));
 			var c = wm.isInstanceType(inHandler, wm.Component) ? inHandler : self.getValueById(inHandler);
-			if (wm.isInstanceType(c, wm.Component))
-				wm.fire(c, "update", [e]);
+		    if (wm.isInstanceType(c, wm.Component)) {
+			if (djConfig.isDebug && app.debugTree)
+			    app.debugTree.newLogEvent({type: "componentEvent",
+							       eventName: eventName,
+							       trigger: inComponent,
+							       firing: c,
+							       method: "update"});
+			        wm.fire(c, "update", [e, optionalTargetComp]);
 			// call a method on a component
-			else if (dojo.isString(inHandler)) {
+		    } else if (dojo.isString(inHandler)) {
 				var o = inHandler.split('.');
 				if (o.length > 1) {
 					var m = o.pop();
 					c = self.getValueById(o);
-					if (c && c[m])
-						c[m]();
+				    if (c && c[m]) {
+					if (djConfig.isDebug && app.debugTree)
+					    app.debugTree.newLogEvent({type: "componentEvent",
+							       eventName: eventName,
+							       trigger: inComponent,
+							       firing: c,
+							       method: m});
+					c[m]();
+				    }
 				}
 			}
 		}
