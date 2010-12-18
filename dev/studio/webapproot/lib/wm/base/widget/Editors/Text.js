@@ -382,7 +382,7 @@ wm.Object.extendSchema(wm.ResizableEditor, {
 });
 
 dojo.declare("wm.Text", wm.ResizableEditor, {
-        _resetButton: false,
+        resetButton: false,
         placeHolder: "",
 	changeOnKey: false,
 	changeOnEnter: true,
@@ -463,7 +463,7 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 		      result = new dijit.form.ValidationTextBox(this.getEditorProps(inNode, inProps));
 		  else
 		      result = new dijit.form.TextBox(this.getEditorProps(inNode, inProps));
-	    if (this._resetButton) {
+	    if (this.resetButton) {
 		dojo.addClass(this.domNode, "wmreseteditor");
 		this._resetButtonNode = document.createElement("img");
 		this._resetButtonNode.src = dojo.moduleUrl("lib.images.boolean.Signage") + "Close.png";
@@ -474,7 +474,7 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 		s.top = "1px";
 		s.right = "1px";
 		result.domNode.appendChild(this._resetButtonNode);
-		this.connect(this._resetButtonNode, "onclick", this, function() {
+		this._resetButtonConnect = dojo.connect(this._resetButtonNode, "onclick", this, function() {
 		    this.setDataValue("");
 		});
 	    }
@@ -493,8 +493,10 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 	}
     },
         destroy: function() {
-	    if (this._resetButtonNode)
+	    if (this._resetButtonNode) 
 		dojo.destroy(this._resetButtonNode);
+	    if (this._resetButtonConnect)
+		dojo.disconnect(this._resetButtonConnect);
 	    this.inherited(arguments);
 	},
 	validator: function(inValue, inConstraints) {
@@ -509,7 +511,16 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 			v = a.join('');
 		}
 		return v;
+	},
+    setResetButton: function(inReset) {
+	if (this._resetButtonConnect) {
+	    dojo.disconnect(this._resetButtonConnect);
+	    delete this._resetButtonConnect;
 	}
+	this.resetButton = inReset;
+	dojo[inReset ? "addClass":"removeClass"](this.domNode, "wmreseteditor");
+	this.createEditor();
+    }
 });
 
 
@@ -662,16 +673,19 @@ wm.Object.extendSchema(wm._TextAreaEditor, {
 });
 
 wm.Object.extendSchema(wm.Text, {
-    placeHolder: {ignore: true}, // ignoring this only for 6.2 as it needs polish, particularly if its to work with themes
+    placeHolder: {group: "Labeling", doc: 1}, // TODO: ignoring this only for 6.2 as it needs polish, particularly if its to work with themes
     promptMessage: {group: "Labeling", order: 6},
     tooltipDisplayTime: {group: "Labeling", order: 7},
-    password: {group: "editor", order: 5},
-    maxChars: {group: "editor", order: 6},
+    password: {group: "editor", order: 5, doc: 1},
+    maxChars: {group: "editor", order: 6, doc: 1},
     changeOnKey: {group: "events", order: 3},
-    regExp: {group: "validation", order: 2},
+    regExp: {group: "validation", order: 2, doc: 1},
     invalidMessage: {group: "validation", order: 3},
     showMessages: {group: "validation", order: 4},
-    onEnterKeyPress: {ignore: 0}
+    onEnterKeyPress: {ignore: 0},
+    setPlaceholder: {group: "method", params: "(inPlaceholder)", doc: 1},
+    setPassword: {group: "method", params: "(inPassword)", doc: 1},
+    setRegExp: {group: "method", params: "(inRegExp)", doc: 1}
 });
 
 
