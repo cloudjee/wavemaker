@@ -33,10 +33,12 @@ Studio.widgets = {
 	resourceManagerService: ["wm.JsonRpcService", {service: "resourceFileService", sync: true}, {}],
 	//tempData used to show grid on FancyTemplate
 	varTemplateData: ["wm.Variable", {"json":"[{name: \"Vestibulum\", dataValue: \"sodales magna mollis purus iaculis sagittis\"},\n{name: \"Lacinia\", dataValue: \" aliquam mauris nulla, consequat\"},\n{name: \"Consequat\", dataValue: \"rhoncus diam metus id arcu\"},\n{name: \"Elementum\", dataValue: \"quis odio sodales ornare quis eu\"},\n{name: \"Sagittis\", dataValue: \"torquent per conubia nostra, per inceptos\"},\n{name: \"Aliquam\", dataValue: \"molestie auctor tortor ac tincidunt\"},\n{name: \"Nullam\", dataValue: \"in orci eros, vitae convallis neque\"},\n{name: \"Mauris\", dataValue: \"luctus adipiscing ligula urna a nisl\"},\n{name: \"Pellentesque\", dataValue: \" ante lectus, mollis ut suscipit id\"}]","type":"EntryData"}, {}],
+        silkIconImageList: ["wm.ImageList", {"colCount":35,"height":20,"iconCount":196,"url":"lib/images/silkIcons/silk.png","width":18}, {}],
 	navImageList: ["wm.ImageList", {width: 24, height: 28, colCount: 10, url: "images/navBtns.png"}, {}],
 //	canvasToolbarImageList: ["wm.ImageList", {width: 24, height: 24, colCount: 20, url: "images/canvasToolbarBtns.png"}, {}],
 	smallToolbarImageList: ["wm.ImageList", {width: 16, height: 16, colCount: 32, url: "images/smallToolbarBtns.png"}, {}],
 	canvasToolbarImageList16: ["wm.ImageList", {width: "16", height: "16", colCount: 22, url: "images/canvasToolbarBtns16.png"}, {}],        
+    contextualMenu: ["wm.PopupMenu", {"fullStructureStr":"[{\"label\":\"Help\",\"iconClass\":undefined,\"imageList\":null,\"children\":[]}]"},{onclick: "contextualMenuClick"}],
         genericDialog: ["wm.GenericDialog", {}],
     newProjectDialog: ["wm.PageDialog", {width: "500px", height: "460px", title: "New Project", modal: true, hideControls: true, noEscape: false, pageName: "", border: "1", borderColor: "black", titlebarBorder: "0"}],
     helpDialog: ["wm.GenericDialog", {"height":"77px","modal":false,"noEscape":false,"title":"Help","userPrompt":"","width":"300px", modal: false,button1Caption: "OK", button1Close: true, corner: "tr"}, {}],
@@ -245,8 +247,11 @@ Studio.widgets = {
 				}],
 				navBarSpacer6: ["wm.Spacer", {width: "24px", margin: "0,10", border: "0"}, {}],
 */
-				navTestBtn: ["wm.ToolButton", {width: "75px", hint: bundleStudio.T_TestTip, caption: "<img src=\"images/runapp_24.png\"/><span style=\"font-weight:bold\"> Test </span>", height: "29px"}, {onclick: "runProjectClick"}],
+			    runPopup: ["wm.PopupMenuButton", {iconWidth: "24px", iconHeight: "24px", iconClass: "studioProjectRun", caption: "Run", width: "90px", height: "29px", border: "0", margin: "0", padding: "0", fullStructure: [{label: "Run", iconClass: "studioProjectRun"},{label: "Test", iconClass: "studioProjectTest"},{label:"Compile", iconClass: "studioProjectCompile"}]},{onclick: "runProjectClick", onchange: "runProjectChange"}],
+/*
+				navTestBtn: ["wm.ToolButton", {width: "75px", hint: bundleStudio.T_TestTip, caption: "<img src=\"images/runapp_24.png\"/><span style=\"font-weight:bold\"> Test </span>", height: "29px"}, {onclick: "runProjectPopupClick"}],
 				navRunBtn: ["wm.ToolButton", {width: "75px", hint: bundleStudio.T_RunTip, caption: "<img src=\"images/runapp_24.png\"/><span style=\"font-weight:bold\"> Run </span>", height: "29px"}, {onclick: "runProjectClick"}],
+				*/
 				navBarSpacer7: ["wm.Spacer", {width: "100%", border: "0"}, {}],
 				userLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, width: "250px"}, {}],
 				navEditAccountBtn: ["wm.ToolButton", {showing: false, width: "120px", hint: bundleStudio.T_EditAccountTip, caption: "<img src=\"images/user_settings24.png\"/><span style=\"font-weight:bold\"> Edit Account </span>", height: "29px"}, {onclick: "editAccountClick"}],
@@ -266,7 +271,7 @@ Studio.widgets = {
 				left: ["wm.TabLayers", {_classes: {domNode: ["wm-darksnazzy"]}, border: "0", width: "100%", height: "100%"}, {onchange: "leftTabsChange"}, {
 				    mlpal: ["wm.Layer", {_classes: {domNode: ["wm-palette"]}, caption: bundleStudio.Palette}, {onShow: "resetPaletteSearch"}, {
 					benchbevel6: ["wm.Bevel", {border: ""}, {}],
-					paletteSearch: ["wm.Text", {caption: "", width: "100%", placeHolder: "Find Component/Widget", padding: "2,5,2,5", changeOnKey: true, _resetButton: true}, {onchange: "paletteSearchChange"}],
+					paletteSearch: ["wm.Text", {caption: "", width: "100%", placeHolder: "Find Component/Widget", padding: "2,5,2,5", changeOnKey: true, resetButton: true}, {onchange: "paletteSearchChange"}],
 					benchbevel6_6: ["wm.Bevel", {border: ""}, {}],
 					palette: ["wm.Palette", {height: "100%", border: ""}, {}]
 					/*
@@ -275,7 +280,7 @@ Studio.widgets = {
 				    }],
 				    leftObjects: ["wm.Layer", {caption: bundleStudio.Model}, {onShow: "resetTreeSearch"}, {
 					benchbevel5: ["wm.Bevel", {border: ""}, {}],
-					treeSearch: ["wm.Text", {caption: "", width: "100%", placeHolder: "Find Component/Widget", padding: "2,5,2,5", changeOnKey: true, _resetButton: true}, {onchange: "treeSearchChange"}],
+					treeSearch: ["wm.Text", {caption: "", width: "100%", placeHolder: "Find Component/Widget", padding: "2,5,2,5", changeOnKey: true, resetButton: true}, {onchange: "treeSearchChange"}],
 					benchbevel5_5: ["wm.Bevel", {border: ""}, {}],
 					label11: ["wm.Label", {height: "22px", width: "100%", caption: bundleStudio.Non_visual_Components, border: "", padding: "4"}, {}, {
 					    format: ["wm.DataFormatter", {}, {}]
@@ -285,7 +290,7 @@ Studio.widgets = {
 					label12: ["wm.Label", {height: "22px", width: "100%", caption: bundleStudio.Visual_Components, border: "", padding: "4"}, {}, {
 					    format: ["wm.DataFormatter", {}, {}]
 					}],
-					widgetsTree: ["wm.Tree", {height: "100%", border: "", padding: "4,0,0,0"}, {onselect: "treeSelect"}]
+					widgetsTree: ["wm.DraggableTree", {height: "100%", border: "", padding: "4,0,0,0", dropBetweenNodes: true}, {onselect: "treeSelect", onNodeDrop: "onWidgetTreeNodeDrop"}]
 				    }],
 				    projects: ["wm.Layer", {caption: bundleStudio.Projects}, {onShow: "resetProjectsSearch"}, {
 					ptoolbar: ["wm.Panel", {height: "29px", border: "0", padding: "4,4", layoutKind: "left-to-right", imageList: "smallToolbarImageList", backgroundColor: "#959DAB"}, {}, {
@@ -310,7 +315,7 @@ Studio.widgets = {
 						    projectSettingsItem: ["wm.Item", {caption: "Settings...", imageIndex: 3}, {onclick: "projectSettingsClick"}]
 						    }]*/
 						}],
-					projectsSearch: ["wm.Text", {caption: "", width: "100%", placeHolder: "Find Project", padding: "2,5,2,5", changeOnKey: true, _resetButton: true}, {onchange: "projectsSearchChange"}],
+					projectsSearch: ["wm.Text", {caption: "", width: "100%", placeHolder: "Find Project", padding: "2,5,2,5", changeOnKey: true, resetButton: true}, {onchange: "projectsSearchChange"}],
 					benchbevel5_6: ["wm.Bevel", {border: ""}, {}],
 					projectsTree: ["wm.Tree", {height: "100%", border: "0"}, {ondblclick: "projectsTreeDblClick", oninitchildren: "projectsTreeInitChildren", onselect: "projectsTreeSelectionChange"}]
 				    }]
@@ -420,12 +425,18 @@ Studio.widgets = {
 						benchbevel8: ["wm.Bevel", {}, {}],
 						scriptRibbon: ["wm.Panel", {height: "29px", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#000000"}, {}, {
 						    scriptPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_Save, imageIndex: 8}, {onclick: "saveScriptClick"}],
+						    scriptPageFindBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Find, iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findScriptClick"}],
 						    scriptPageImportBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_Import, imageIndex: 25}, {onclick: "importJavascriptLibrary"}],
 						    scriptPageRefreshBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Refresh, imageIndex: 27}, {onclick: "refreshScriptClick"}],
+						    scriptPageFormatBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Format, imageIndex: 29}, {onclick: "formatScriptClick"}],
+						    scriptPageWordWrapBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Wrap, imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapScriptClick"}],
+						    scriptPageCompileBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Compile, imageIndex: 28}, {onclick: "validateScriptClick"}],
+						    scriptPageCompletionsBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Completion, imageIndex: 7, imageList: "canvasToolbarImageList16"}, {onclick: "listCompletions"}],
+						    scriptPageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Help, imageIndex: 26}, {onclick: "showEditorHelp"}],
 						    scriptToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
-						    scriptLogoBottomHolder: ["wm.Panel", {width: "221px", border: "0"}, {}]
+						    scriptPageCompileChkBtn: ["wm.Checkbox", {caption: "Validate on Save", width: "120px"}, {onchange: "validateScriptCheckboxChange"}]
 						}],
-						editArea: ["wm.EditArea", {width: "100%", height: "100%"}, {}]
+						editArea: ["wm.EditArea", {width: "100%", height: "100%"}, {onCtrlKey: "scriptEditorCtrlKey"}]
 					    }],
                                             themeLayer: ["wm.Layer", {_classes: {domNode: ["wm-darksnazzy"]}, caption: bundleStudio.R_Themes, width: "100%", height: "100%"}, {}, {
 						themesbevel: ["wm.Bevel", {}, {}],
@@ -439,32 +450,40 @@ Studio.widgets = {
                                                 themesPage: ["wm.PageContainer", {deferLoad: true, loadParentFirst: true, 
                                                                                   pageName: "ThemeDesigner"}]
                                             }],
-					    cssLayer: ["wm.Layer", {caption: bundleStudio.R_CSS}, {}, {
+					    cssLayer: ["wm.Layer", {caption: bundleStudio.R_CSS}, {onShow: "cssShow"}, {
 						benchbevel9: ["wm.Bevel", {}, {}],
 						cssRibbon: ["wm.Panel", {height: "29px", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4"}, {}, {
 						    cssPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_Save, imageIndex: 8}, {onclick: "saveCssClick"}],
+						    cssPageFindBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Find, iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findCssClick"}],
 						    cssPageImportBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_Import, imageIndex: 25}, {onclick: "importCssLibrary"}],
+						    cssPageWordWrapBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Wrap, imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapCssClick"}],
+						    cssPageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Help, imageIndex: 26}, {onclick: "showCssEditorHelp"}],
 						    cssToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
 						    cssLogoBottomHolder: ["wm.Panel", {width: "221px", border: "0"}, {}]
 						}],
 						cssPageLabel: ["wm.Label", {caption: bundleStudio.R_Page_CSS, height: "18px", border: 0}, {}, {
 						    format: ["wm.DataFormatter", {}, {}]
 						}],
-						cssEditArea: ["wm.EditArea", {width: "100%", height: "100%", syntax: "css"}, {}],
+						cssEditArea: ["wm.EditArea", {width: "100%", height: "100%", syntax: "css"}, {onCtrlKey: "cssEditorCtrlKey"}],
 						cssSplitter: ["wm.Splitter", {layout: "bottom"}, {}],
-                cssAppLabel: ["wm.Label", {caption: bundleStudio.R_Application_CSS, height: "18px", border: 0}, {}, {
-              format: ["wm.DataFormatter", {}, {}]
-                }],
-                appCssEditArea: ["wm.EditArea", {width: "100%", height: "300px", syntax: "css"}, {}]
-                                            }],
+						cssInnerPanel: ["wm.Panel", {width: "100%", height: "300px", layoutKind: "top-to-bottom"},{}, {
+						cssAppLabel: ["wm.Label", {caption: bundleStudio.R_Application_CSS, height: "18px", border: 0}, {}, {
+						    format: ["wm.DataFormatter", {}, {}]
+						}],
+						appCssEditArea: ["wm.EditArea", {width: "100%", height: "100%", syntax: "css"}, {onCtrlKey: "cssEditorCtrlKey"}]
+					    }]
+                                        }],
 						markupLayer: ["wm.Layer", {caption: bundleStudio.R_Markup}, {}, {
 							benchbevel10: ["wm.Bevel", {}, {}],
 							markupRibbon: ["wm.Panel", {height: "29px", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4"}, {}, {
 							    markupPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_Save, imageIndex: 8}, {onclick: "saveMarkupClick"}],
+							    markupPageFindBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Find, iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findMarkupClick"}],
+							    markupPageWordWrapBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Wrap, imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapMarkupClick"}],
+							    markupPageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Help, imageIndex: 26}, {onclick: "showMarkupEditorHelp"}],
 							    markupToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
 							    markupLogoBottomHolder: ["wm.Panel", {width: "221px", border: "0"}, {}]
 							}],
-							markupEditArea: ["wm.EditArea", {width: "100%", height: "100%", syntax: "html"}, {}]
+							markupEditArea: ["wm.EditArea", {width: "100%", height: "100%", syntax: "html"}, {onCtrlKey: "markupEditorCtrlKey"}]
 						}],
 						widgets: ["wm.Layer", {caption: bundleStudio.R_Widgets}, {}, {
 							benchbevel13: ["wm.Bevel", {}, {}],
@@ -474,14 +493,20 @@ Studio.widgets = {
 						    appsrcbenchbevel9: ["wm.Bevel", {}, {}],
 						    appsrcRibbon: ["wm.Panel", {height: "29px", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#000000"}, {}, {
 							appsrcPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_Save, imageIndex: 8}, {onclick: "saveAppSrcClick"}],
+							appsrcPageFindBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Find, iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findAppScriptClick"}],
 							appsrcPageImportBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_Import, imageIndex: 25}, {onclick: "importAppJavascriptLibrary"}],
-							appsrcToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
-							appsrcLogoBottomHolder: ["wm.Panel", {width: "221px", border: "0"}, {}]
+						    appsrcPageFormatBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Format, imageIndex: 29}, {onclick: "formatAppScriptClick"}],
+						    appsrcPageWordWrapBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Wrap, imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapAppScriptClick"}],
+							appsrcPageCompileBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Compile, imageIndex: 28,iconWidth: "20px", iconHeight: "20px"}, {onclick: "validateAppScriptClick"}],
+						    appsrcPageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Help, imageIndex: 26}, {onclick: "showAppScriptEditorHelp"}],
+						    scriptToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
+						    appsrcPageCompileChkBtn: ["wm.Checkbox", {caption: "Validate on Save", width: "120px"}, {onchange: "validateScriptCheckboxChange"}]
+
 						}],
 
 						        appsourceHtml: ["wm.Html", {width: "100%", height: "300px", border: 0, padding: "4, 0, 0, 4"}, {}],
 						        appsourceSplitter: ["wm.Splitter", {layout: "bottom"}, {}],
-						        appsourceEditor: ["wm.EditArea", {width: "100%", height: "100%"}, {}]
+						        appsourceEditor: ["wm.EditArea", {width: "100%", height: "100%"}, {onCtrlKey: "appScriptEditorCtrlKey"}]
 
 						}],
 
