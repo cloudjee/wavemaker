@@ -482,6 +482,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	/**
 		@lends wm.LiveForm.prototype
 	*/
+    alwaysPopulateEditors: false,
         margin: "0",
 	defaultButton: "",
 	displayErrors: true,
@@ -544,7 +545,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	// Form data
 	//===========================================================================
 	setDataSet: function(inDataSet) {
-		if (this.operation)
+		if (this.operation && !this.alwaysPopulateEditors)
 			return;
 		if (this.liveVariable && inDataSet && inDataSet.type)
 			this.liveVariable.setLiveSource(inDataSet.type);
@@ -596,7 +597,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	endEdit: function() {
 		if (this.liveEditing)
 			this.setReadonly(true);
-		this.operation = null;
+	    //this.operation = null;
 	},
 	/**
 		Cancels an edit by restoring the editors to the data from the <i>dataSet</i> property.
@@ -658,6 +659,10 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 		return d;
 	},
 		 
+    saveDataIfValid: function() {
+	if (this.getInvalid()) return;
+	return this.saveData();
+    },
 	saveData: function() {
  	        if (this.validateBeforeSave)
 		  if (!this.validateData()) 
@@ -687,12 +692,21 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 		<i>dataOutput</i> property.
 	*/
 	deleteData: function() {
-		if (!this._confirmDelete || confirm(this._formMessages.confirmDelete)) {
-			this.onBeginDelete()
-			return this.doOperation("delete");
-		} else {
-			this.cancelEdit();
-		}
+	    var f = dojo.hitch(this,function() {
+		this.onBeginDelete()
+		return this.doOperation("delete");
+	    });
+
+	    if (!this._confirmDelete) {
+		f();
+	    } else {
+		app.confirm(this._formMessages.confirmDelete, false,
+			    f,
+			    dojo.hitch(this,function() {
+				this.cancelEdit();
+			    }));
+
+	    }
 	},
 	doOperation: function(inOperation) {
 		this.populateDataOutput();
