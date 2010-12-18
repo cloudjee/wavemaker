@@ -21,7 +21,7 @@ dojo.require("wm.base.widget.RelatedEditor");
 wm.Object.extendSchema(wm.RelatedEditor, {
 	dataSet: {ignore: 1},
 	editingMode: { group: "common", order: 100},
-	formField: {ignore: 1, writeonly: 1, group: "common", order: 500},
+	formField: {writeonly: 1, group: "common", order: 500},
 	caption: {ignore: 1},
 	readonly: {ignore: 1}
 });
@@ -74,7 +74,7 @@ wm.RelatedEditor.extend({
 		var
 			props =  dojo.mixin({}, this.inherited(arguments)),
 			f = wm.getParentForm(this);
-		props.formField.ignore = !Boolean(f);
+		props.formField.ignoretmp = !Boolean(f);
 		return props;
 	},
 	set_formField: function(inFieldName) {
