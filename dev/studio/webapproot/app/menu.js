@@ -21,6 +21,10 @@ Studio.extend({
 
 		  // called by packageLoader.js for anything that is not an instanceof wm.Control
 	addComponentMenuItem: function(inTab, inName, inDescription, inImage, inClass, inProps) {
+	    if (inProps && inProps._notInInsertMenu) {
+		delete inProps._notInInsertMenu;
+		return;
+	    }
 	  try {
 	  var menu = (inTab == bundleStudio.M_Services) ? this.servicesPopupBtn : this.insertPopupBtn;
 	  var menuBar = this.navigationMenu;
@@ -41,9 +45,10 @@ Studio.extend({
 	}
 	},
 	// TODO: Palette has similar function; should only has one
-	selectComponentMenuItem: function(menuObj, info) {
+	selectComponentMenuItem: function(menuObj) {
+	    var info = menuObj.info;
 	  //var info = e.item.info;
-		var props = dojo.clone(info.info.props || {});
+		var props = dojo.clone(info.props || {});
 		var ctor = dojo.getObject(info.type);
 		dojo.mixin(props, {
 			_designer: studio.page._designer,
@@ -75,9 +80,12 @@ Studio.extend({
 		this.insertPopupBtn.set("disabled",inDisabled);
 		this.servicesPopupBtn.set("disabled",inDisabled);
 		this.pagePopupBtn.set("disabled",inDisabled);
-		this.navTestBtn.setDisabled(inDisabled);
 		this.leftToolbarButtons.setDisabled(inDisabled);
+/*
+		this.navTestBtn.setDisabled(inDisabled);
 		this.navRunBtn.setDisabled(inDisabled);
+		*/
+	      this.runPopup.setDisabled(inDisabled);
 		if (studio.isCloud()) {
 		    this.navEditAccountBtn.setDisabled(false);
 		    this.navLogoutBtn.setDisabled(false);
