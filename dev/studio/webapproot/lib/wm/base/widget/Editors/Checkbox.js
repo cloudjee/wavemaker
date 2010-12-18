@@ -297,10 +297,12 @@ wm.Object.extendSchema(wm.Checkbox, {
     dataValue: {ignore: 1, bindable: 1, group: "editData", order: 3, simpleBindProp: true, type: "Boolean"},
         readOnlyCheckbox: {ignore: 1},
         startChecked: { group: "editor", bindable: 1, type: "Boolean"},
-        dataType:  { group: "editData"},
+    dataType:  { group: "editData", doc: 1},
 	displayValue: {ignore: 1, writeonly: 1, type: "any" },
-        checkedValue: {group: "editor", bindable: 1,order: 40, type: "any"},
-        required: {ignore: 1}
+    checkedValue: {group: "editor", bindable: 1,order: 40, type: "any", doc: 1},    
+    required: {ignore: 1},
+    getChecked: {group: "method", params: "()", doc: 1},
+    setChecked: {group: "method", params: "(inChecked)", doc: 1}
 });
 
 wm.Checkbox.extend({
