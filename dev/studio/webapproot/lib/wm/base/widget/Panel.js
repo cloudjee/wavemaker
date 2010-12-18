@@ -100,6 +100,12 @@ dojo.declare("wm.FancyPanel", wm.Panel, {
 	    //var classes = this.captionClasses.split(/\s+/);
 	    this.layout = wm.layout.cache["top-to-bottom"];
 	    this.inherited(arguments);
+
+            this._isDesign = this.isDesignLoaded();
+	    if (this._isDesign) {
+		this.flags.noModelDrop = true;
+	    }
+
 	    this.labelWidget = new wm.Label({border: this.innerBorder,
                                              borderColor: this.borderColor,
                                              showing: Boolean(this.title),
@@ -517,20 +523,25 @@ wm.FancyPanel.extend({
 });
 
 wm.Object.extendSchema(wm.FancyPanel, {
-    title: { type: "String", bindTarget: 1, group: "display", order: 100, focus: true },
-    labelWidget: {ignore: 1},
+    title: { type: "String", bindTarget: 1, group: "display", order: 100, focus: true,  doc: 1},
+    labelWidget: {ignore: 1,  doc: 1},
     themeStyleType:  {ignore: 1},
-    containerWidget: {ignore: 1},
+    containerWidget: {ignore: 1,  doc: 1},
     layoutKind: {ignore: 1},
-    innerLayoutKind: {group: "layout", order: 100, shortname: "layoutKind"},
-    innerHorizontalAlign: {group: "layout", order: 101, shortname: "horizontalAlign"},
-    innerVerticalAlign: {group: "layout", order: 101, shortname: "verticalAlign"},
+    innerLayoutKind: {group: "layout", order: 100, shortname: "layoutKind",  doc: 1},
+    innerHorizontalAlign: {group: "layout", order: 101, shortname: "horizontalAlign", doc: 1},
+    innerVerticalAlign: {group: "layout", order: 101, shortname: "verticalAlign",  doc: 1},
     horizontalAlign: {ignore: 1},
     verticalAlign: {ignore: 1},
     padding: {ignore: 1},
     labelHeight: {group: "layout", order: 90},
     border: {ignore: 1},
-    innerBorder: {group: "style", shortname: "border"}
+    innerBorder: {group: "style", shortname: "border",  doc: 1},
+    setInnerLayoutKind: {group: "method",   doc: 1},
+    setInnerHorizontalAlign: {group: "method",params: "(inLayoutKind)", doc: 1},
+    setInnerVerticalAlign: {group: "method", params: "(inAlign)", doc: 1},
+    setInnerBorder: {group: "method", params: "(inAlign)", doc: 1},
+    setTitle:  {group: "method", params: "(inTitle)", doc: 1}
 });
 
 
