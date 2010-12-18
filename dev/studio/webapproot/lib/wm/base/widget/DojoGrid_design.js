@@ -7,7 +7,9 @@ wm.DojoGrid.extend({
 	fieldOptions: [	{name:'Text',value:'dojox.grid.cells._Widget'},
 		           	{name:'Number',value:'dojox.grid.cells.NumberTextBox'},
 	                {name:'Date',value:'dojox.grid.cells.DateTextBox'},
-	                {name:'Checkbox',value:'dojox.grid.cells.Bool'}	],
+	                {name:'Checkbox',value:'dojox.grid.cells.Bool'},
+	                {name:'ComboBox',value:'dojox.grid.cells.ComboBox'},
+		      ],
 	headerAttr: [{id:'show', title:' ',width:'10px', type:'checkbox'}, 
 				{id:'id', title: 'Field',width:'150px', type:'text', readOnly:true}, 
 				{id:'title', title: 'Title',width:'150px', type:'text'}, 
@@ -15,7 +17,8 @@ wm.DojoGrid.extend({
 				{id:'align', title: 'Alignment',width:'70px', type:'dropdown'},
 				{id:'formatFunc', title: 'Format',width:'150px', type:'dropdown'},
 				{id:'fieldType', title: 'Edit Field Type',width:'100px', type:'dropdown', isAdvanced:true},
-				{id:'editable', title:'Editable',width:'10px', type:'checkbox', isAdvanced:true}, 
+/*				{id:'editable', title:'Editable',width:'10px', type:'checkbox', isAdvanced:true}, */
+/*		                {id: 'editParams', title: "Edit Parameters", width: "100px", type: 'gridEditParams', isAdvanced: true},*/
 				{id:'expression', title: 'Data Expression',width:'150px', type:'text', isAdvanced:true}],
 	defaultFormatters:[	{name:'', value:''},
 											{name:'Currency (WaveMaker)', value:'wm_currency_formatter'},
@@ -59,8 +62,11 @@ wm.DojoGrid.extend({
 		var defaultCustomFieldParams = {id: 'customField', isCustomField: true, expression: '', show:true, width:'100%'};
 		var helpText = '* To re-arrange columns close dialog box and drag columns on grid to desired position.<br>* You can right click on grid to open this dialog.';
 		this.contextMenu = new wm.ContextMenuDialog('DojoGrid Column Properties', 'Add Column', dojo.hitch(this, 'addNewColumn'), 
-													this.headerAttr, this.columns, defaultCustomFieldParams, this.domNode, true, helpText);
-		this.contextMenu.showModal = false;
+							    this.headerAttr, this.columns, defaultCustomFieldParams, this.domNode, true, helpText, 700);
+	        this.contextMenu.setWidth("710px");
+	        this.contextMenu.setTitle("DojoGrid Column Properties");
+
+		//this.contextMenu.showModal = false;
 		dojo.connect(this.contextMenu, 'onPropChanged', this, 'columnPropChanged');
 		dojo.connect(this.contextMenu, 'onRowDelete', this, 'destroyColumn');
 		dojo.connect(this.contextMenu, 'onAddNewColumnSuccess', this, 'columnAddSuccess');
@@ -80,6 +86,41 @@ wm.DojoGrid.extend({
 			obj.formatFunc = evtName;
 			widget.attr('value', evtName, false);
 			addFormatter = true;
+		} /*else if (columnId == "fieldType") {
+		    switch(inValue) {
+		    case "dojox.grid.cells.ComboBox":
+			dojo.query(".EditorTextOptions", trObj)[0].style.display = "none";
+			dojo.query(".EditorNumberOptions", trObj)[0].style.display = "none";
+			dojo.query(".EditorDateOptions", trObj)[0].style.display = "none";
+			dojo.query(".EditorComboOptions", trObj)[0].style.display = "block";
+			break;
+		    case "dojox.grid.cells.DateTextBox":
+			dojo.query(".EditorTextOptions", trObj)[0].style.display = "none";
+			dojo.query(".EditorNumberOptions", trObj)[0].style.display = "none";
+			dojo.query(".EditorDateOptions", trObj)[0].style.display = "block";
+			dojo.query(".EditorComboOptions", trObj)[0].style.display = "none";
+			break;
+		    case "dojox.grid.cells.NumberTextBox":
+			dojo.query(".EditorTextOptions", trObj)[0].style.display = "none";
+			dojo.query(".EditorNumberOptions", trObj)[0].style.display = "block";
+			dojo.query(".EditorDateOptions", trObj)[0].style.display = "none";
+			dojo.query(".EditorComboOptions", trObj)[0].style.display = "none";
+			break;
+		    case "dojox.grid.cells.Bool":
+			dojo.query(".EditorTextOptions", trObj)[0].style.display = "none";
+			dojo.query(".EditorNumberOptions", trObj)[0].style.display = "none";
+			dojo.query(".EditorDateOptions", trObj)[0].style.display = "none";
+			dojo.query(".EditorComboOptions", trObj)[0].style.display = "none";
+			break;
+		    case "dojox.grid.cells._Widget":
+			dojo.query(".EditorTextOptions", trObj)[0].style.display = "block";
+			dojo.query(".EditorNumberOptions", trObj)[0].style.display = "none";
+			dojo.query(".EditorDateOptions", trObj)[0].style.display = "none";
+			dojo.query(".EditorComboOptions", trObj)[0].style.display = "none";
+			break;
+		    }
+		    */
+
 		}
 		
 		this.updateGridStructure();		
@@ -266,7 +307,7 @@ wm.Object.extendSchema(wm.DojoGrid, {
 	scrollY:{ignore:1},
 	disabled:{ignore:1},
 	query: {ignore:1},
-	editColumns:{group: "edit", order:40},
+	editColumns:{group: "operation", order:40},
     //showAddDialog:{group: "edit", order:40},
     showAddDialog: {ignore: true}, // will unignore once this feature is ready
     singleClickEdit: {group: "edit", order: 32},
@@ -276,14 +317,27 @@ wm.Object.extendSchema(wm.DojoGrid, {
 	menu:{ignore:1},
 	storeGUID:{ignore:1},
 	dataValue:{ignore:1},
-	selectedItem: {ignore:1, bindSource: 1, simpleBindProp: true },
-	emptySelection: { ignore: true, bindSource: 1, type: "Boolean" },
-	isRowSelected: { ignore: true, bindSource: 1, type: "Boolean" },
-	dataSet: {bindTarget: 1, group: "edit", order: 30, isList: true},
+    selectedItem: {ignore:1, bindSource: 1, simpleBindProp: true, doc: 1},
+    emptySelection: { ignore: true, bindSource: 1, type: "Boolean",  doc: 1},
+    isRowSelected: { ignore: true, bindSource: 1, type: "Boolean",   doc: 1},
+    dataSet: {bindTarget: 1, group: "edit", order: 30, isList: true, simpleBindTarget: true, doc: 1},
 	selectionMode: {group: "edit", order: 31},
 	rightClickTBody: {ignore:1},
 	addDialogName:{hidden:true},
 	addFormName:{hidden:true},
 	dsType:{hidden:true},
-    columns:{ignore:1}
+    columns:{ignore:1},
+    setSelectedRow: {group: "method", params: "(inRowIndex,isSelected)", doc: 1},
+    getSelectedIndex:{group: "method",params: "()", returns: "Number", doc: 1},
+    getRow: {group: "method", params: "(inRowIndex)", doc: 1},
+    findRowIndexByFieldValue:  {group: "method", params: "(inFieldName, inFieldValue)", returns: "Number", doc: 1},
+    getCell:  {group: "method", params: "(inRowIndex, inFieldName)", returns: "String", doc: 1},
+    setCell:  {group: "method", params: "(inRowIndex, inFieldName, inValue)", doc: 1},
+    editCell:  {group: "method", params: "(inRowIndex, inFieldName)", doc: 1},
+    deleteRow:  {group: "method",params: "(inRowIndex)", doc: 1},
+    addRow:  {group: "method", params: "(inFields, inSelectOnAdd)", doc: 1},
+    getRowCount: {group: "method", params: "()", returns: "Number", doc: 1},
+    getDataSet: {group: "method", params: "()", returns: "wm.Variable", doc: 1},
+    setDataSet: {group: "method", params: "(inDataSet)", doc: 1},
+    showCSVData: {group: "method", params: "()", doc: 1}
 });
