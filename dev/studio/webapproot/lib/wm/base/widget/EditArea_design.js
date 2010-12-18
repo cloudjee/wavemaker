@@ -19,12 +19,5 @@ dojo.provide("wm.base.widget.EditArea_design");
 dojo.require("wm.base.widget.EditArea");
 
 wm.EditArea.extend({
-	editorStarted: function() {
-		var f = this.getEditFrame();
-		if (f)
-			this.connect(f.document, "keydown", this, "keydown");
-	},
-	keydown: function(e) {
-		studio.keydown(e);
-	}
+
 });

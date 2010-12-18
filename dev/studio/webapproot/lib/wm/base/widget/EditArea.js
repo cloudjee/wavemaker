@@ -170,6 +170,7 @@ dojo.declare("wm.EditArea", wm.Box, {
 		this._isStarted = true;
 		setTimeout(dojo.hitch(this, function() {
 			//this.resize();
+		        if (this.editorStarted) this.editorStarted();
 			this._startHandle && this._startHandle.callback(true);
 		}), 1);
 	},
@@ -198,5 +199,74 @@ dojo.declare("wm.EditArea", wm.Box, {
 		if (studio)
 			studio.saveScriptClick();
 		dojo.stopEvent(e);
+	},
+    promptGotoLine: function() {
+	app.prompt("Enter line number", 0, dojo.hitch(this, function(inValue) {this.goToLine(inValue);}));
+    },
+    goToLine: function(inLineNumber, selectLine) {
+	editAreaLoader.execCommand(this.area.textarea.id, "go_to_line", String(inLineNumber));
+	if (selectLine) {
+	    var start = editAreaLoader.getSelectionRange(this.area.textarea.id).start;
+	    var end = this.getText().indexOf("\n", start);
+	    if (end == -1)
+		end = this.getText().indexOf("\r", start);
+	    if (end == -1) return;
+	    this.setSelectionRange(start,end);
+	}
+    },
+    getSelectedText: function() {
+	var range = editAreaLoader.getSelectionRange(this.area.textarea.id);
+	var start = range.start;
+	var end = range.end;
+	var text = this.getText();
+	return text.substring(start,end);
+    },
+    getTextBeforeCursor: function(selectText) {
+	var range = editAreaLoader.getSelectionRange(this.area.textarea.id);
+	var start = range.start;
+	var text = this.getText().substring(0,start);
+	var lines = text.split(/\n/);
+	var text = lines[lines.length-1].match(/\S*$/)[0];
+	if (selectText)
+	    this.setSelectionRange(start-text.length,start);
+	return text;
+    },
+    replaceSelectedText: function(newtext) {
+	var range = editAreaLoader.getSelectionRange(this.area.textarea.id);
+	var start = range.start;
+	var end = range.end;
+	var text = this.getText();
+	text = text.substring(0,start) + newtext + text.substring(end);
+	this.setText(text);
+	this.setSelectionRange(start,start+newtext.length);
+
+    },
+    setWordWrap: function(inWrap) {
+	editAreaLoader.execCommand(this.area.textarea.id, "set_word_wrap", inWrap);
+    },
+    showHelp: function() {
+	editAreaLoader.execCommand(this.area.textarea.id, "show_help",1);
+    },
+    showSearch: function() {
+	editAreaLoader.execCommand(this.area.textarea.id, "show_search",1);
+    },
+	editorStarted: function() {
+		var f = this.getEditFrame();
+		if (f)
+			this.connect(f.document, "keydown", this, "keydown");
+	},
+    idleDelay: 0,
+    onIdle: function() {},
+	keydown: function(e) {
+	    if (e.ctrlKey && app._keys[e.keyCode] != "CTRL") {
+		this.onCtrlKey(app._keys[e.keyCode]);
+		dojo.stopEvent(e);
+	    } else if (this.idleDelay) {
+		if (this._keydownTimeout) window.clearTimeout(this._keydownTimeout);
+		this._keydownTimeout = window.setTimeout(dojo.hitch(this,function() {this.onIdle();}), this.idleDelay);
+	    }
+	},
+        onCtrlKey: function(letter) {
+
 	}
 });
