@@ -17,6 +17,7 @@
  */
 
 {
+
 	"Palette" : "Palette",
 	"Diagnostics" : "Diagnostics",
 	"ServerLogs" : "Server Logs",
@@ -67,7 +68,10 @@
 	"M_Java_Server_Documentation" : "Java (Server) Documentation",
 	"M_JavaScriptClientDocs" : "JavaScript (Client) Docs",
 	"M_Refresh" : "Refresh",
-
+    "M_Format": "Reformat",
+    "M_Wrap": "Toggle lineWrapping",
+    "M_Compile": "Validate script",
+    "M_Completion": "Autocompletion",
 	"T_TestTip" : "Run in Debug mode with lots of FireBug/FireBug Lite output",
 	"T_Test" : "Test",
 	"T_RunTip" : "Run Project",
@@ -146,6 +150,7 @@
 	"MSG_PleaseNoteUnpublishedChanges" : "Please note that any unpublished changes will be lost.",
 	"MSG_PleaseNoteUnsavedChanges" : "Please note, there are no unsaved changes.",
 
+        "I_BasicStyles": "Basic",
 	"I_Common" : "Common",
 	"I_Data" : "Data",
 	"I_Display" : "Display",

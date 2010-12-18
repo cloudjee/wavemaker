@@ -19,6 +19,7 @@
 {
 	"Common_Widgets" : "Common Widgets",
 	"Button" : "Button",
+	"PopupButton" : "PopupButton",
 	"Toggle_Button" : "Toggle Button",
 	"Rounded_Button" : "Rounded Button",
 	"DataGrid" : "DataGrid",
@@ -61,6 +62,7 @@
 	"Chart" : "Chart",
 	"Dashboard" : "Dashboard",
 	"Menu" : "Menu",
+	"PopupMenu" : "PopupMenu",
 	"Fisheye" : "Fisheye",
 	"Lightbox" : "Lightbox",
 
@@ -70,6 +72,7 @@
 	"RelatedEditor" : "RelatedEditor",
 
 	"More_Widgets" : "More Widgets",
+	"JsonStatus": "JsonStatus",
 	"Bevel": "Bevel",
 	"Calendar" : "Calendar",
 	"Content" : "Content",
@@ -112,6 +115,7 @@
 	
 	"Advanced" : "Advanced",
 	"Tree" : "Tree",
+	"DraggableTree" : "DraggableTree",
 	"SimpleForm" : "SimpleForm",
 
 	"Deprecated" : "Deprecated",
