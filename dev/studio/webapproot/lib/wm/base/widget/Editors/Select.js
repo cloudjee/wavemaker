@@ -945,8 +945,8 @@ wm._SelectEditor.extend({
 wm._LookupEditor.extend({
 	listProperties: function() {
 		var props = this.inherited(arguments);
-		props.dataSet.ignore = this.autoDataSet;
-		props.dataSet.bindTarget = !props.dataSet.ignore;
+		props.dataSet.ignoretmp = this.autoDataSet;
+		props.dataSet.bindTarget = !props.dataSet.ignoretmp;
 		return props;
 	}
 });
@@ -1107,16 +1107,16 @@ wm.SelectMenu.extend({
 wm.Object.extendSchema(wm._SelectEditor, {
 	changeOnKey: { ignore: 1 },
 	changeOnEnter: { ignore: 1 },
-	selectedItem: { ignore: true, isObject: true, bindSource: true, isOwnerProperty: 1 },
-	dataSet: { readonly: true, group: "data", order: 5, type: "wm.Variable", isList: true, bindTarget: true},
+    selectedItem: { ignore: true, isObject: true, bindSource: true, isOwnerProperty: 1},
+    dataSet: { readonly: true, group: "data", order: 5, type: "wm.Variable", isList: true, bindTarget: true},
 	startUpdate: { group: "data", order: 6},
 	liveVariable: {ignore: 1 },
 	formatter: {ignore:1},
 	options: {group: "data", order: 7},
-	dataField: {group: "data", order: 10},
-	displayField: {group: "data", order: 15},
+    dataField: {group: "data", order: 10},
+    displayField: {group: "data", order: 15},
 	lookupDisplay:{group: "data", order: 16},
-	displayExpression: {group: "data", order: 20},
+    displayExpression: {group: "data", order: 20},
 	hasDownArrow: {group: "editor", order: 26},
         restrictValues: {type: "wm.Boolean", group: "data", order: 40},
 	pageSize: { order: 0},
@@ -1125,18 +1125,18 @@ wm.Object.extendSchema(wm._SelectEditor, {
 });
 
 wm.Object.extendSchema(wm.SelectMenu, {
-  restrictValues: {type: "wm.Boolean", group: "editor", order: 40},
+    restrictValues: {type: "wm.Boolean", group: "editor", order: 40, doc: 1},
 	changeOnKey: { ignore: 1 },
 	changeOnEnter: { ignore: 1 },
-	selectedItem: { ignore: true, isObject: true, bindSource: true},
-	dataSet: { readonly: true, group: "editor", order: 4, type: "wm.Variable", isList: true, bindTarget: true},
+	selectedItem: { ignore: true, isObject: true, bindSource: true, doc: 1},
+	dataSet: { readonly: true, group: "editor", order: 4, type: "wm.Variable", isList: true, bindTarget: true, doc: 1},
 	startUpdate: { group: "editor", order: 5},
   pageSize: { order: 6, group: "editor"},
 	liveVariable: {ignore: 1 },
 	options: {group: "editor", order: 7},
-	dataField: {group: "editor", order: 10},
-	displayField: {group: "editor", order: 15},
-	displayExpression: {group: "editor", order: 20},
+	dataField: {group: "editor", order: 10, doc: 1},
+	displayField: {group: "editor", order: 15,doc: 1},
+	displayExpression: {group: "editor", order: 20, doc: 1},
 	displayType:{group: "editor", order: 21},
   autoComplete: {group: "editor", order: 25},
 	hasDownArrow: {group: "editor", order: 26},
@@ -1145,7 +1145,11 @@ wm.Object.extendSchema(wm.SelectMenu, {
   dataFieldWire: { ignore: 1},
   optionsVar: {ignore:1},
 	_allFields: {ignore:1},
-	defaultInsert:{ignore:1, bindTarget: 1, type:'wm.Variable', group: "editData", order: 10, dependency: '${parent.declaredClass} == "wm.LiveForm" || ${parent.declaredClass} == "wm.RelatedEditor"'}
+    defaultInsert:{ignore:1, bindTarget: 1, type:'wm.Variable', group: "editData", order: 10, dependency: '${parent.declaredClass} == "wm.LiveForm" || ${parent.declaredClass} == "wm.RelatedEditor"'},
+    setRestrictValues: {group: "method", params: "(inRestrict)", doc: 1},
+    setDataSet: {group: "method", params: "(inDataSet)", doc: 1},
+		 setOptions: {group: "method", params: "(inOptions)", doc: 1},
+		 getItemIndex: {group: "method", params: "()", doc: 1}
 });
 
 wm.Object.extendSchema(wm._LookupEditor, {
