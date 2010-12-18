@@ -24,6 +24,7 @@ dojo.declare("wm.Layout", wm.Container, {
 	fit: false,
 	width: "",
 	height: "",
+        touchScrolling: true,
 	create: function() {
 		this.inherited(arguments);
 	},
@@ -46,8 +47,9 @@ dojo.declare("wm.Layout", wm.Container, {
 		//if(this.domNode === document.body || mainBox){ 
 			this.subscribe("window-resize", this, "resize");
 		//}
-	},
 
+	    
+	},
 	fitTo: function() {
 		if(this.domNode === document.body) {
 			document.body.scrollTop = 0;
