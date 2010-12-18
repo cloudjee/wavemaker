@@ -46,8 +46,8 @@ dojo.declare("wm.Property", wm.Component, {
 	},
 	listProperties: function() {
 		var p = this.inherited(arguments);
-		p.bindTarget.ignore = this.isEvent;
-		p.bindSource.ignore = this.isEvent;
+		p.bindTarget.ignoretmp = this.isEvent;
+		p.bindSource.ignoretmp = this.isEvent;
 		return p;
 	},
 	makePropEdit: function(inName, inValue, inDefault) {
