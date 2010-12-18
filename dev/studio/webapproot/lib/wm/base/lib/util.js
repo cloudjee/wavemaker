@@ -578,3 +578,35 @@ wm.String.endStringWith = function(inString, inEnd) {
 	return inString;
 }
 
+
+
+setCss = function(inSheetId, inCss){
+	var sheet = dojo.byId(inSheetId);
+	if (!sheet)
+		return;
+	inCss = inCss || "";
+	if(sheet.styleSheet) {//IE
+		// must make sure to set cssText to at least empty string or IE can crash
+		if (dojo.isIE < 7)
+			setIe6Css(sheet, inCss);
+		else
+			sheet.styleSheet.cssText = inCss;
+	} else {
+		sheet.firstChild && sheet.removeChild(sheet.firstChild);
+		sheet.appendChild(document.createTextNode(inCss));
+	}
+}
+
+// IE6 doesn't allow setting cssText so replace the style node completely
+setIe6Css = function(inSheet, inCss) {
+	var c = document.documentElement.firstChild, id = inSheet.id;
+	c.removeChild(inSheet);
+	var n = document.createElement("style");
+	n.id = id;
+	n.type = "text/css";
+	if (n.styleSheet)
+		n.styleSheet.cssText = inCss;
+	else
+		n.appendChild(document.createTextNode(inCss));
+	c.appendChild(n);
+}
