@@ -168,7 +168,8 @@ wm.loadLibs([
 	*/
 	// Plugins
 	//"wm.modules.rbac.RbacPlugin"
-	"wm.base.RbacPlugin"
+       "wm.base.RbacPlugin",
+       "wm.base.I18nPlugin"
 ]);
 
 if (dojo.isIE)
