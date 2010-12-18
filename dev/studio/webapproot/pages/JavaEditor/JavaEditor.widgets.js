@@ -27,14 +27,20 @@ JavaEditor.widgets = {
 				toolbarspacer2: ["wm.Spacer", {height: "24px", width: "12px", margin: "0,5"}, {}],
 				openCmpOutBtn: ["wm.ToolButton", {imageIndex: 22, width: "24px", height: "100%", hint: "Open Compiler Output", border: "0", margin: "0"}, {onclick: "openCmpOutBtnClick"}],
 				closeCmpOutBtn: ["wm.ToolButton", {imageIndex: 23, width: "24px", height: "100%",  hint: "Close Compiler Output", border: "0", margin: "0"}, {onclick: "closeCmpOutBtnClick"}],
-				javaServiceRefreshButton: ["wm.ToolButton", {imageIndex: 27, width: "24px", height: "100%",hint: "Refresh Java service from disk", border: "0", margin: "0"}, {onclick: "javaServiceRefreshButtonClick"}]
+			    javaServiceRefreshButton: ["wm.ToolButton", {imageIndex: 27, width: "24px", height: "100%",hint: "Refresh Java service from disk", border: "0", margin: "0"}, {onclick: "javaServiceRefreshButtonClick"}],
+			    toolbarspacer3: ["wm.Spacer", {height: "24px", width: "12px", margin: "0,5"}, {}],
+			    findBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Find, iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findClick"}],
+			    formatBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Format, imageIndex: 29}, {onclick: "formatClick"}],
+			    wordWrapBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Wrap, imageIndex: 29}, {onclick: "toggleWrapClick"}],
+			    pageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Help, imageIndex: 26}, {onclick: "showEditorHelp"}],
+
 			}],
 			logoBtmHolder: ["wm.Panel", {border: "0", width: "221px"}, {}]
 		}],
 		editorContainer: ["wm.Panel", {border: "0", width: "100%", layoutKind: "left-to-right", height: "100%"}, {}, {
 			panel6: ["wm.Panel", {border: "0", width: "100%", height: "100%"}, {}, {
 				javaServicePanel: ["wm.Panel", {border: "0", width: "100%", height: "100%"}, {}, {
-					javaCodeEditor: ["wm.EditArea", {height: "100%", width: "100%", border: "0", syntax: "java"}, {}],
+				    javaCodeEditor: ["wm.EditArea", {height: "100%", width: "100%", border: "0", syntax: "java"}, {onCtrlKey: "onCtrlKey"}],
 					javaCodeSplitter: ["wm.Splitter", {layout: "bottom", border: "0"}, {}],
 					logTabs: ["wm.TabLayers", {width: "100%", height: "200px"}, {onchange: "changeLogTab"}, {
 					    complierTab: ["wm.Layer", {caption: "Compiler Messages"}, {}, {

@@ -92,8 +92,9 @@ dojo.declare("JavaEditor", wm.Page, {
 				pageName: "NewJavaService",
 				owner: studio,
 				hideControls: true,
-				height: 200,
-				width: 400
+				height: 180,
+			        width: 400,
+			        title: "New Java Service"
 			});
 			d.onClose = dojo.hitch(this, function(inWhy) {
 				if (inWhy == "OK")
@@ -187,5 +188,38 @@ dojo.declare("JavaEditor", wm.Page, {
 		studio.endWait();
 		app.alert('Save or compile failed with message:\n'+inError.message +'\nSee wm.log or Compiler output');
 	},
+    showEditorHelp: function() {
+	this.javaCodeEditor.showHelp();
+    },
+    toggleWrapClick: function() {
+	this._editAreaWrapping = (this._editAreaWrapping == undefined) ? false : !this._editAreaWrapping;
+	this.javaCodeEditor.setWordWrap(this._editAreaWrapping);
+    },
+    findClick: function() {
+	this.javaCodeEditor.showSearch();
+    },
+    formatClick: function() {
+	try {
+	    dojo.require("lib.github.beautify");
+	} catch(e){}
+	var start = editAreaLoader.getSelectionRange(this.javaCodeEditor.area.textarea.id).start;
+	this.javaCodeEditor.setText(js_beautify(this.javaCodeEditor.getText()));
+	this.javaCodeEditor.setSelectionRange(start, start);
+    },
+    onCtrlKey: function(inSender, letter) {
+	switch(letter.toLowerCase()) {
+	case "s":
+	    return this.javaServiceSaveButtonClick();
+	case "i":
+	    return this.formatClick();
+	case "o":
+	    return this.toggleWrapClick();
+	case "l":
+	    return this.javaCodeEditor.promptGotoLine();
+	}
+
+
+
+    },
 	_end: 0
 });

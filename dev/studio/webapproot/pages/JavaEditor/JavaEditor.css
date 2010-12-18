@@ -85,6 +85,6 @@
 	border-bottom: 1px solid #363b44;
 }
 
-.JavaEditor-toolbarspacer1, .JavaEditor-toolbarspacer2 {
+.JavaEditor-toolbarspacer1, JavaEditor-toolbarspacer2,.JavaEditor-toolbarspacer3 {
 	background-image:url(images/toolbarspacer.gif);
 }
