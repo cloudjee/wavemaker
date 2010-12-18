@@ -15,13 +15,18 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+.Studio .studioProjectRun, .Studio .studioProjectTest, .Studio .studioProjectCompile {
+    background-image: url(/wavemaker/images/runapp_24.png);
+    width: 24px !important;
+    height: 24px !important;
+}
 
 /* MenuBar */
 .wm-darksnazzy .dojoMenu {
 	background: url(images/navbar_bg.gif) bottom repeat-x;
 }
 
-.tundra .wm-darksnazzy .dijitMenu, .tundra .wm-darksnazzy .dijitMenuBar {
+.tundra .wm-darksnazzy .dijitMenu, .tundra .wm-darksnazzy .dijitMenuBar, #studio_navigationBar .dijitMenuItemLabel {
  	background-color: transparent;
 	color: white;
 	font-weight: bold;
@@ -510,13 +515,15 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 }
 
 .wminspector .wminspector-bindProp {
-	background-image: url(images/inspector_bind.gif);
+	background-image: url(images/inspector_bound.gif);
+    /*background-image: url(images/inspector_bind.gif);*/
 }
 
+/*
 .wminspector .wminspector-bindProp.wminspector-boundProp {
 	background-image: url(images/inspector_bound.gif);
 }
-
+*/
 .wminspector-grouprow {
 	cursor: pointer;
 }
@@ -614,7 +621,8 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 	background-repeat:repeat-x;
 }
 
-.Studio-ribbon, .Studio-apiRibbon, .Studio-sourceRibbon, .Studio-leftToolbarButtons {
+.Studio-ribbon, .Studio-apiRibbon, .Studio-sourceRibbon, .Studio-leftToolbarButtons, 
+#studio_MenuDesignerDialog_menuDesigner_panel1 {
 	background-image:url(images/dark_toolbar_bg.gif);
 	background-repeat:repeat-x;
 	/*border-top:1px #FFFFFF solid;*/
@@ -628,10 +636,6 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 
 .Studio-logoTopHolder {
 	background: url(images/wmbug_top.gif) bottom no-repeat;
-}
-
-.Studio-logoBottomHolder, .Studio-apiLogoBottomHolder, .Studio-sourceLogoBottomHolder {
-	/*background: url(images/wmbug_bot.gif) no-repeat;*/
 }
 
 .Studio-studioToolbarButtons button, .Studio-componentsToolbar button, .Studio-servicesPane_services_servicesTopPanel button, .Studio-sourceRibbon button{
@@ -1523,6 +1527,11 @@ background-color: transparent;
    color: rgb(200,200,200);
 }
 
+
+.Studio .wmdraggabletree .wmtree-content {
+    height: 16px;
+}
+
 .Studio .indentOption, .Studio .indentOption1 {
     padding-left: 20px !important;
 }
@@ -1532,4 +1541,69 @@ background-color: transparent;
 
 .Studio .prop-button button {
     border: solid 1px transparent;
+}
+.Studio-runPopup.wmPopupButton .popupIcon {
+    background-image: url(/wavemaker/lib/wm/base/widget/themes/default/images/comboArrowDownLight.png);
+} 
+
+.Studio-imageListPopupDialog .wmlist-item img {
+    padding: 0 !important;
+}
+
+#studio_inspectorLayers .dijitComboBox {
+    width: 100% !important;
+}
+
+#studio_autoCompletionList .wmlist-item.wmlist-item-selected,
+#studio_autoCompletionList .wmlist-item.wmlist-item-selected.Odd {
+    background-color: #3D80DF;
+}
+
+#studio_autoCompletionList .wmlist-item.Odd {
+    background-color: rgb(230,230,230);
+}
+
+#studio_autoCompletionList .wmlist-item.CompletionListHeader,
+#studio_autoCompletionList .wmlist-item.wmlist-item-over.CompletionListHeader {
+    background-color: #424959;
+    color: white;
+    cursor: default;
+}
+
+.studio_contextualMenu_CSS {
+    width: 120px !important;
+}
+
+
+#studio_LivePanelTypeChooserDialog .wmlist,
+#studio_LivePanelTypeChooserDialog .wmhtml {
+    background-color: white;
+}
+
+#studio_LivePanelTypeChooserDialog .Studio-containerWidget {
+    background-color: #424959;
+}
+
+#studio_inspectorLayers .dijitSelectLabel {
+    color: black;
+}
+
+.Studio .wmdraggabletree .dndHover.dndHoverTop > .wmtree-content,
+.Studio .wmdraggabletree .dndHoverTop > .wmtree-content {
+    border-top: solid 2px green;
+    border-left-color: transparent !important;
+    border-bottom-color: transparent !important;
+    border-right-color: transparent !important;
+}
+
+.Studio .wmdraggabletree .dndHover.dndHoverBottom > .wmtree-content,
+.Studio .wmdraggabletree .dndHoverBottom > .wmtree-content {
+    border-bottom: solid 2px green;
+    border-left-color: transparent !important;
+    border-top-color: transparent !important;
+    border-right-color: transparent !important;
+}
+
+.Studio .wmdraggabletree .dndHover > .wmtree-content {
+    border: solid 2px green;
 }
