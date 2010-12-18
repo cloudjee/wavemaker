@@ -144,8 +144,39 @@ dojo.declare("wm.Palette", wm.Tree, {
 					klass: inClass,
 					props: inProps
 				});
+		    this.createContextMenu(n);
 		}
 		wm.Palette.items[inClass] = { desc: inDescription, image: inImage, klass: inClass };
+
+	},
+    createContextMenu:function(inNode) {
+	dojo.connect(inNode.domNode, dojo.isFF ? "onmousedown" : "oncontextmenu", this, function(e) {
+	    if (dojo.isFF && !(e.button == 2 || e.ctrlKey)) return;
+	    dojo.stopEvent(e);		
+	    var menuObj = studio.contextualMenu;
+	    menuObj.removeAllChildren();
+	    menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
+					    {label: "Copy New " + inNode.klass,
+					     onClick: dojo.hitch(this, function() {
+						 studio.clipboard = "{" + inNode.klass.replace(/^.*\./,"") + "1: ['" + inNode.klass + "'," + (inNode.props ? dojo.toJson(inNode.props) : "{}") + "]}";
+						 console.log(studio.clipboard);
+						 studio.clipboardClass = inNode.klass;
+						 studio.updateCutPasteUi();
+					     })
+					    });
+
+	    menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
+					    {label: inNode.klass + " docs...", 
+					     onClick: dojo.hitch(this, function() {
+						 window.open("http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/" + inNode.klass.replace(/^.*\./,""));
+					     })
+					    });
+
+
+	    menuObj.update(e, inNode.domNode);
+
+
+	});
 	},
 	removeItem: function(inTab, inName) {
 		var g = this.findItemByName(inTab);
