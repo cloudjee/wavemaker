@@ -22,21 +22,21 @@ dojo.require('wm.base.lib.data');
 
 dojo.declare("wm.BindInspector", wm.GroupInspector, {
 	colCount: 3,
-	init: function() {
-		this.inherited(arguments);
-		studio.bindDialog = this.getBindDialog();
-	},
-	getProps: function(inInspectorProps) {
+
+        /* Properties that can be inspected are all the usual properties except for those that are events or methods */
+	getProps: function() {
 		var props = this.inherited(arguments);
 		for (var i in props)
 			if (props[i].isEvent || props[i].isCustomMethod)
 				delete props[i];
 		return props;
 	},
+/*
 	inspect: function() {
 		this.inherited(arguments);
 		studio.bindDialog.page.initBinding();
 	},
+
 	getBindDialog: function() {
 		if (!studio.bindDialog) {
 		    var
@@ -62,12 +62,19 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
 		b._hideConnect = dojo.connect(b, "onHide", this, "endBind");
 		return b;
 	},
+	*/
+
+        /* Unlike the default inspector, we need a column for the bind buttons */
 	generateHeaderCells: function() {
 		var r = this.inherited(arguments);
 		//r.unshift('<th class="wminspector-header wminspector-binding"></th>');
 		r.push('<th class="wminspector-header wminspector-binding"></th>');		
 		return r;
 	},
+
+        /* Unlike the typical row, we need to pass in bind information (shows readonly node)
+	 * and the proper bind or clear button
+	 */
 	generateRowCells: function(inName, inProp) {
 		var
 			n = inName,
@@ -80,40 +87,163 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
 			//'<td class="wminspector-binding', c, bc, '">', b, '</td>',
 			'<td class="wminspector-caption">', this.makeRowCaption(n, inProp), '</td>',
 			'<td class="wminspector-property">', this.makePropEdit(n, inProp, wire), '</td>',
-			'<td class="wminspector-binding', c, bc, '">', b, '</td>'
+		    '<td class="' + (Boolean(wire) ? 'bound-prop-button' : 'wminspector-binding' + c + bc) + '">', b, '</td>'
 		];
 	},
+
+    /* The parent method checks to see if "ignore" is true to determine if it can be shown.
+     * If its set to be bindable though, then its meant to be editted by the user via the properties panel,
+     * and the "ignore" really means "you can not set the value as a property, but you can bind it".
+     * I don't actually understand WHY this is used; but it can be seen for dataValue for AbstractEditor/Editor
+     */
 	shouldShowProp: function(inName, inProp) {
 		return this.inherited(arguments) || this.isBindable(inProp);
 	},
+
+    /* Get the value of this property in the widget we are inspecting.
+     * If its bound, we'll get a formatted string to describe that binding
+     * Else we'll let the parent method take care of it
+     */
+    _getInspectedProp: function(inProp) {
+	   var bindable = this.isBindable(this.props[inProp]);
+	   var wire = bindable && this.getPropWire(this.props[inProp]);
+	if (wire)
+	    return this.getFormattedValue(inProp, wire.source, wire.expression);
+	else
+	    return this.inherited(arguments);
+    },
+
+    /* Most of the time, we need the parent class's makePropEdit method to generate the property editor
+     * which could be a checkbox, combobox or other UI element.  The only thing the parent method does not
+     * handle is the case where the prop is bindable but ignored (if we're inspecting it, and its ignored, 
+     * we know its bindable; see getProps())
+     */
 	canMakeDefaultPropEdit: function(inProp) {
 		return !inProp.ignore;
 	},
 	makePropEdit: function(inName, inProp, inWire) {
+/*
 		if (inWire && inWire instanceof wm.Wire)
-			return this.makeBoundPropEdit(inName, inWire.source || inWire.expression)
-		if (this.canMakeDefaultPropEdit(inProp)) 
-			return this.inherited(arguments, [inName, inProp])
-		return this.makeBindPropEdit(inName);
+		    return this.makeBoundPropEdit(inName, inWire.source, inWire.expression)
+		    */
+
+	    if (this.canMakeDefaultPropEdit(inProp)) {
+		var result = this.inherited(arguments, [inName, inProp]);
+		if (inWire && inWire instanceof wm.Wire) {
+		    // nasty hack to switch from the standard editor to the readonly bind node.  Why needed?
+		    // because the various techniques for generating property editors do not get as input the
+		    // wire component.  And anyway, I'm a perl hacker.
+		    result = result.replace(/readonly="true" style="display:none/, 'readonly="true" style="');
+		    result = result.replace(/display:block/,"display:none"); // hide the first editor
+		}
+		return result;
+	    }
+
+	    // If the parent method isn't generating the UI, then create a 
+	    //return this.makeBindPropEdit(inName, wm.typeManager.isStructuredType(inProp.type));
+
+	    /* Ok, we have a property that is bindable but ignored; so we need a basic text editor, readonly=true, and if
+	     * it has a binding we'll need to show its value.
+	     */
+	    return makeInputPropEdit(inName, 
+				     inWire && inWire instanceof wm.Wire ? this.getFormattedValue(inProp, inWire.source, inWire.expression) : "",
+				     "", true, Boolean(inWire && inWire instanceof wm.Wire));
 	},
-	makeBindPropEdit: function(inName) {
-		var m = "(data binding)";
-		return makeInputPropEdit(inName, m, m, true);
+/*
+        makeBindPropEdit: function(inName, inReadOnly) {
+	    var m = (inReadOnly) ? "(binding data)" : "";
+	    return makeBoundEdit(inName,"");
+	    //return makeInputPropEdit(inName, m, m, inReadOnly);
+	    //return makeInputPropEdit(inName, m, m, true);
 	},
-	makeBoundPropEdit: function(inName, inSource) {
-		return makeBoundEdit(inName, inSource)
-	},
+	*/
+
+    /* Reinspect uses this method to update the values of all editors.
+     * Let the parent method handle the work of setting all of the values.
+     * After its done, 
+     * 1. Update the visibility of the readonly bind value vs the regular editable field.
+     * 2. Update the state of the bind/reset button
+     */
+	setPropEdit: function(inName/*, inProp*/) {
+	    this.inherited(arguments);
+	   var bindable = this.isBindable(this.props[inName]);
+	   var wire = bindable && this.getPropWire(this.props[inName]);
+	   var row = dojo.byId("propinspect_row_" + inName);
+	   var value = wire ? this.getFormattedValue(inName,wire.source, wire.expression) : "";
+	   if (row && bindable) {
+	       var node = dojo.query(".bound-prop-button, .wminspector-bindProp", row)[0];
+	       if (node) 
+		   node.className = (value ? "bound-prop-button" : "wminspector-binding wminspector-bindProp");
+	       var readonly = dojo.query(".wminspector-readonly", row)[0];
+	       var edit = dojo.query(".wminspector-edit", row)[0];
+	       if (value) {
+		   readonly.value = value;
+		   readonly.style.display = "block";
+		   edit.style.display = "none";
+	       } else {
+		   readonly.style.display = "none";
+		   edit.style.display = "block";
+	       }
+	   }
+       },
+
+    /* Generate a friendly readable description of the bind value for a bound property */
+    getFormattedValue: function(inName, inSource, inExpr) {
+	var inValue = "";
+	if (!inSource && !inExpr)
+	    ;
+	else if (inSource) 
+	    inValue = "bind: " + inSource;
+	else if (inExpr === undefined || inExpr === null || inExpr === "" || String(inExpr).match(/^\s*$/))
+	    inValue = "";
+	else if (inExpr == "true")
+	    inValue = "bool: true";
+	else if (inExpr == "false")
+	    inValue = "bool: false";
+	else if (inExpr == "null")
+	    inValue = "null: null";
+	else if (inExpr == "null")
+	    inValue = "null: null";
+	else if (String(inExpr).match(/\d/) && !isNaN(inExpr)) // isNaN("") == isNaN(" ") == false
+	    inValue = "numb: " + inExpr;
+	else if (inExpr == "(binding data)")
+	    inValue = inExpr;
+	else {
+	    var matches = inExpr.match(/^\s*\"([^\"]*)\"\s*$/);
+	    if (matches)
+		inValue = "str: " + matches[1];
+	    else
+		inValue = "expr: " + inExpr;
+	    inValue = String(inValue).replace(/\"/g, "&quot;") || "";
+	}
+	return inValue;
+    },
+
+    /*
+    makeBoundPropEdit: function(inName, inSource, inExpr) {	
+	return makeBoundEdit(inName, this.getFormattedValue(inName,inSource,inExpr));
+
+    },
+    */
+
+    /* If the user clicks on a property, let the parent inspector try handling it; if it finds nothing to handle,
+     * we handle clicks on bind and reset bind buttons.
+     * I think this.selectMode also lets us handle selecting properties when the wm.Property is trying to select
+     * a property to associate itself with
+     */
 	propClick: function(e) {
 		var
 			handled = this.inherited(arguments),
 			propName = this.getPropNameByEvent(e);
 		if (this.selectMode)
 			return this.endBind(propName, e.target);
-		else if (!handled && dojo.hasClass(e.target, "wminspector-bindProp"))
+	    else if (!handled && dojo.hasClass(e.target, "wminspector-bindProp")) {
 			return this.beginBind(propName, e.target);
-		else if (dojo.hasClass(e.target, "bound-prop-button"))
+	    } else if (dojo.hasClass(e.target, "bound-prop-button"))
 			this.unbindProp(propName);
 	},
+
+    /* If the user clicks the unbind button, remove the binding and update this property editor's state */
 	unbindProp: function(inPropName) {
 		var
 			b = this.getBinding(),
@@ -124,34 +254,42 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
 			//wireOwner.removeWire(wireOwner.getWireId(w));
 			wireOwner.removeWire(w.getWireId());
 			this._setInspectedProp(tp, "");
-			this._inspect();
+		} else {
+		    this._setPropEdit(inPropName, "","");
 		}
 	},
 	isBindable: function(inProp) {
 		return inProp && (inProp.bindable || inProp.bindTarget);
 	},
 	getBinding: function() {
-		var i = this.inspected;
+		var i = this.owner.inspected;
 		return i && i.components.binding;
 	},
 	getTargetProperty: function(inPropName) {
 		return inPropName;
 	},
+
+    /* Get the wm.Wire for this bindable property if there is one */
 	getPropWire: function(inProp) {
 		var
 			b = this.getBinding(),
 			tp = this.getTargetProperty(inProp.name);
 		return b && b.owner && wm.data.getPropWire(b.owner, tp);
 	},
+
+    /* Setup the parameters for the bind dialog */
 	getBindDialogProps: function(inPropName) {
 		var
-			o = this.inspected,
+			o = this.owner.inspected,
 			tp = this.getTargetProperty(inPropName),
 			prop = this.props[tp];
 		if (this.isBindable(prop))
 			return dojo.mixin({object: o, targetProperty: tp}, prop || {});
 	},
+
+    /* Show the bind dialog, setup for binding the selected property */
 	beginBind: function(inPropName, inNode) {
+	    studio.bindDialog.page.initBinding();
 		var
 			bd = studio.bindDialog,
 			p = this.getBindDialogProps(inPropName),
@@ -159,7 +297,6 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
 
 		bd.positionLocation = (coords.y > bd.contentHeight) ? "tl" : "bl"; 
 		if (p) {
-
 			bd.page.update(p);
 			// FIXME: wm.calcOffset fails for td/tr so use tr for now.
 			bd.positionNode = inNode.parentNode;
@@ -167,6 +304,8 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
 			return true;
 		}
 	},
+
+    /* After 
 	endBind: function(inPropName, inNode) {
 		//if (this.selectMode) {
 		//	studio.propertySelected(this.inspected.getRuntimeId() + "." + inPropName);
@@ -186,7 +325,7 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
 			studio.testClick(this, p, "Select binding for<br/><b>" + this.inspected.name + "." + inPropName + "</b>");
 		}
 	},*/
-	/*
+	/* This is only used when wm.Property is selecting a property to edit.  I think... */
 	endBind: function(inPropName, inNode) {
 		//alert(inPropName);
 		studio.onSelectProperty(this.inspected.getRuntimeId() + "." + inPropName);
@@ -196,28 +335,34 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
 		//if (this.active)
 		//	this._inspect();
 	}
-	*/
+
 });
 
-// Data inspector
+
+
+/* Data inspector, used to inspect data of wm.Variable subclasses such as
+ * a navigationService's "input", a LiveVariable's sourceData and filter
+ * and other things we think of as "properties" but which can't be set
+ * like a property because they're part of the variable.data...[propertyName] instead of variable[propertyName]
+ */
 dojo.declare("wm.DataInspector", wm.BindInspector, {
 	constructor: function() {
 		this.initNodeChildren = dojo.hitch(this, this.initNodeChildren);
 	},
-	preinspect: function(inInspectorProps) {
-		var
-			ip = inInspectorProps,
-			bindToComponent = ip && ip.bindToComponent;
+	inspect: function(inComponent) {
+	    var ip = this.parent.parent.inspectorProps;
+	    var bindToComponent = ip ? ip.bindToComponent : null;
 		// FIXME:
 		// note: inspected is always the component we're inspecting
 		// and ip.inspected is always the root object bding inspected
-		this.bindingOwner = bindToComponent ? this.inspected : ip && studio.page.getValueById(ip.inspected);
+
+		this.bindingOwner = bindToComponent ? inComponent : ip && studio.page.getValueById(ip.inspected);
 		this.bindPrefix = ip && ip.bindPrefix;
 		this.dataProp = ip && ip.dataProp ? ip.dataProp : "";
 		this.inherited(arguments);
 	},
-	getProps: function(inInspectorProps) {
-		var c = this.inspected, dp = this.dataProp;
+	getProps: function() {
+		var c = this.owner.inspected, dp = this.dataProp;
 		if (!(c instanceof wm.Variable)) {
 			return {};
 		}
@@ -254,6 +399,64 @@ dojo.declare("wm.DataInspector", wm.BindInspector, {
 		var i = this.bindingOwner;
 		return i && i.components.binding;
 	},
+
+	_setInspectedProp: function(inProp, inValue) {
+		if (!this.owner.inspected)
+			return;
+		var w = wm.data.getPropWire(this.owner.inspected, inProp);
+		if (w) w.destroy();
+	    if (inValue === "") return;
+
+		var type = this.owner.inspected.getPropertyType(inProp);
+		switch ((type || 0).type) {
+			case "number":
+		                inValue = (inValue === "" && type.emptyOK) ? "" : Number(inValue);
+				break;
+			case "boolean":
+				inValue = Boolean(inValue);
+				break;
+		}
+	    //this.inspected.setProp(inProp, inValue);
+/*
+	    var b = bindTo.components.binding;
+	    */
+	    var origProp = inProp;
+	    var b = this.bindingOwner.components.binding;
+	    if (this.dataProp)
+		inProp = this.dataProp + "." + inProp;
+	    if (this.bindPrefix)
+		inProp = this.bindPrefix + "." + inProp;
+
+	    if (inValue == "true" || inValue == "false" || !isNaN(inValue) || String(inValue).match(/\"/) || String(inValue).match(/\$\{.*\}/) || String(inValue).match(/(\+|\-|\*|\/|\w\.\w)/)) {
+		inValue = String(inValue);
+	    } else {
+		inValue = '"' + inValue + '"';
+	    }
+	    try {
+		var tmp = inValue;
+		tmp = tmp.replace(/\$\{.*?\}/g, "''"); // remove the crazy stuff that we dont want to try evaluating right now (probably ok to evaluate it at design time, but its not needed to see if this will compile)
+		// if its undefined, then presumably it failed to compile
+		var tmp2 = eval(tmp);		
+		if (tmp2 === undefined) {
+		    this.beginBind(origProp, this.bindingOwner);
+		    studio.bindDialog.bindSourceDialog.expressionRb.editor.setChecked(true);
+		    studio.bindDialog.bindSourceDialog.expressionEditor.setDataValue(inValue);
+		    app.toastError("This value failed to compile; please try again.  Most common problem: lack of quotes");
+		    return;
+		}
+	    } catch(e) {
+		    this.beginBind(origProp, this.bindingOwner);
+		studio.bindDialog.bindSourceDialog.expressionRb.editor.setChecked(true);
+		studio.bindDialog.bindSourceDialog.expressionEditor.setDataValue(inValue);
+		    app.toastError("This value failed to compile; please try again.  Most common problem: lack of quotes");
+
+		    return;
+	    }
+	    this.owner.inspected.components.binding.addWire("", inProp, "", inValue);
+
+	    this.setPropEdit(inProp);
+	},
+
 	getTargetProperty: function(inPropName) {
 		var
 			dp = this.dataProp,
@@ -267,7 +470,7 @@ dojo.declare("wm.DataInspector", wm.BindInspector, {
 	},
 	getBindDialogProps: function(inPropName) {
 		var
-			o = this.bindingOwner || this.inspected,
+			o = this.bindingOwner || this.owner.inspected,
 			tp = this.getTargetProperty(inPropName);
 		return {object: o, targetProperty: tp};
 	},
@@ -358,7 +561,7 @@ dojo.declare("wm.DataInspector", wm.BindInspector, {
 
 dojo.declare("wm.NavigationInspector", wm.DataInspector, {
 	makePropEdit: function(inName, inProp, inWire) {
-		var ins = this.inspected.getValue(inName);
+		var ins = this.owner.inspected.getValue(inName);
 		switch (inName) {
 			case "pageName":
 				return (new wm.propEdit.PagesSelect({
@@ -407,32 +610,54 @@ dojo.declare("wm.NavigationInspector", wm.DataInspector, {
 						value: ins && ins.name
 					})).getHtml();
 		}
-		if (inWire && inWire instanceof wm.Wire)
-			return this.makeBoundPropEdit(inName, inWire.source || inWire.expression)
+	       if (inWire && inWire instanceof wm.Wire)
+		   //return this.makeBoundPropEdit(inName, inWire.source, inWire.expression)
+		   return makeInputPropEdit(inName, this.getFormattedValue(inName,inWire.source,inWire.expression), "", false, Boolean(inWire.source || inWire.expression));
 		if (this.canMakeDefaultPropEdit(inProp)) 
 			return this.inherited(arguments, [inName, inProp])
-		return this.makeBindPropEdit(inName);
+	    //return this.makeBindPropEdit(inName, false);
+
+	    return makeInputPropEdit(inName, 
+				     inWire && inWire instanceof wm.Wire ? this.getFormattedValue(inProp, inWire.source, inWire.expression) : "",
+				     "", false, Boolean(inWire && inWire instanceof wm.Wire));
 	},
-	_applyProp: function(t) {
-		if (t && t.name) {
-			switch (t.name) {
+
+	_setInspectedProp: function(inProp, inValue) {
+		if (!this.owner.inspected)
+			return;
+		var w = wm.data.getPropWire(this.owner.inspected, inProp);
+		if (w) w.destroy();
+	    switch (inProp) {
 				case "pageName":
 				case "duration":
 				case "cssClasses":
 				case "dialogPosition":
-					this.inspected.components.binding.addWire("", t.name, "", '"' + t.value + '"');
+					this.owner.inspected.components.binding.addWire("", inProp, "", '"' + inValue + '"');
 					return;
 				case "pageContainer":
 				case "layer":
 				case "layers":
-					this.inspected.components.binding.addWire("", t.name, t.value, "");
+					this.owner.inspected.components.binding.addWire("", inProp, inValue, "");
 					return;
 			}
-			var e = this._editors && this._editors[t.name];
-			if (e) 
-				e.applyProp(t);
-			else 
-				this._setInspectedProp(t.name, t.type == "checkbox" ? t.checked : t.value);
-		}
-	}
+	    return this.inherited(arguments);
+	},
+       _setPropEdit: function(inName, inValue, inDefault) {
+			switch (inName) {
+				case "pageName":
+				case "duration":
+				case "cssClasses":
+				case "dialogPosition":
+				case "pageContainer":
+				case "layer":
+				case "layers":
+			    var bindable = this.isBindable(this.props[inName]);
+			    var wire = bindable && this.getPropWire(this.props[inName]);
+			    var editor = setInputPropEdit(inName, wire.expression.replace(/\"/g,""));
+
+			    break;
+			default:
+			    this.inherited(arguments);
+			}
+       }
 });

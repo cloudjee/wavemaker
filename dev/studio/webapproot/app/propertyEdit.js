@@ -45,11 +45,14 @@ dojo.declare("wm.propEdit.Base", null, {
 		if (!("defaultValue" in inProps))
 			this.defaultValue = this._getPropDefaultValue();
 	},
-	applyProp: function(t) {
-		if (t && t.name && ("value" in t)) {
-			var v = t.type == "checkbox" ? t.checked : t.value;
-			this._setPropValue(v);
-		}
+        applyProp: function(propName, value) {
+	    this._setPropValue(value);
+	},
+        setPropEdit: function(propName, value) {
+	    var editor = dijit.byId("studio_propinspect_" + propName);
+	    editor.set("value", value, false);
+	    if (!value)
+		delete editor._lastValueReported;
 	},
 	_getPropValue: function() {
 		var v = this.component.getProp(this.name);
@@ -94,21 +97,24 @@ dojo.declare("wm.propEdit.UnitValue", wm.propEdit.Select, {
 		var defaultValue = wm.splitUnits(this.defaultValue);
 		var html = [
 			'<table class="wminspector-property" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="border: 0 none;">',
-			makeInputPropEdit(this.name, value.value, defaultValue.value),
+		    makeInputPropEdit(this.name + "_1", value.value, defaultValue.value),
 			'</td><td style="width: 1px; border-left: 1px solid gray">&nbsp;</td><td width="44">',
-			makeSelectPropEdit(this.name, value.units, this.options, ""/*defaultValue.units*/, this.values),
+		    makeSelectPropEdit(this.name + "_2", value.units, this.options, ""/*defaultValue.units*/, this.values),
 			'</td></tr>',
 			//'<tr><td>Hello more lines!</td></tr>',
 			'</table>'
 		];
 		return html.join('');
 	},
-	applyProp: function(t) {
-		var row = t.parentNode.parentNode;
-		var edit = row.cells[0].firstChild;
-		var select = row.cells[2].firstChild;
-		var su = this.lex(edit.value);
-		this.inspector._setInspectedProp(this.name, su.value + (su.units || select.value));
+        applyProp: function(propName, value) {
+	    var value = dijit.byId("studio_propinspect_" + propName + "_1").get("value");
+	    var select = dijit.byId("studio_propinspect_" + propName + "_2").get("value");
+	    var su = this.lex(value);
+	    this.inspector._setInspectedProp(this.name, su.value + (su.units || select.value));
+	},
+        setPropEdit: function(propName, value) {
+	    dijit.byId("studio_propinspect_" + propName + "_1").set("value", parseInt(value), false);
+	    dijit.byId("studio_propinspect_" + propName + "_2").set("value", value.match(/%|px/)[0], false);
 	}
 });
 

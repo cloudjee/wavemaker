@@ -23,48 +23,113 @@ dojo.require("wm.studio.app.inspector.SecurityInspector");
 dojo.require("wm.base.widget.Tree");
 
 dojo.declare("wm.ComponentInspector", wm.Layers, {
-	inspectors: {
-		Properties: wm.BindInspector,
-		"Events": wm.EventInspector,
-		"CustomMethods": wm.CustomMethodInspector,
-		Styles: wm.StyleInspector,
-		Security: wm.SecurityInspector,
-		Data: wm.DataInspector,
-		Navigation: wm.NavigationInspector
-	},
-	init: function() {
-		//this.subscribe("wmwidget-rename", this, "reinspect");
-		this.inherited(arguments);
-		this._inspectors = {};
-		for (var i in this.inspectors) {
-			var ctor = this.inspectors[i];
-			this._inspectors[i] = new ctor({border: 0, name: i, parent: this.addLayer(i), owner: this});
-		}
-	},
-	inspect: function(inComponent, inInspectorProps) {
-		var
-			c = this.inspected = inComponent,
-			ip = this.inspectorProps = inInspectorProps;
-			n = ip && ip.inspector,
-			inspector = this._inspectors[n];
-		if (inspector)
-			inspector.inspect(c, inInspectorProps);
-	},
-	reinspect: function() {
-		if (this.inspected && this.inspectorProps)
-			this.inspect(this.inspected, this.inspectorProps);
-	},
-	focusDefault: function() {
-		var inspector = this._inspectors[this.getLayerCaption()];
-		wm.fire(inspector, "focusDefault");
-	},
-	setSelectMode: function(inMode) {
-		for (var i in this.inspectors) {
-			this._inspectors[i].setSelectMode(inMode);
-		}
-	},
-	writeChildren: function() {
+    inspectors: {
+	Properties: wm.BindInspector,
+	"Events": wm.EventInspector,
+	"CustomMethods": wm.CustomMethodInspector,
+	Styles: wm.StyleInspector,
+	Security: wm.SecurityInspector,
+	Data: wm.DataInspector,
+	Navigation: wm.NavigationInspector
+    },
+    init: function() {
+	//this.subscribe("wmwidget-rename", this, "reinspect");
+	this.inherited(arguments);
+	this._inspectors = {};
+	for (var i in this.inspectors) {
+	    var ctor = this.inspectors[i];
+	    this._inspectors[i] = new ctor({border: 0, name: i, parent: this.addLayer(i), owner: this});
 	}
+    },
+    /* Inspect the specified component
+     * NOTE: inInspectorProps is actually a tree node from the tree over the properties panel, 
+     *       and is used to tell us which subcomponent we are editting properties for
+     */
+    inspect: function(inComponent, inInspectorProps) {
+	try {
+	    var wasInspecting = this.inspected;
+
+	    var c = this.inspected = inComponent;
+	    var ip = this.inspectorProps = inInspectorProps;
+	    var n = ip && ip.inspector;
+	    var inspector = this.getInspector();
+
+	    // If we're inspecting the same component with the same inspector, call reinspect
+	    if (inspector == this._currentInspector && inComponent == wasInspecting) {
+
+		// Update all values in the property inspector UI
+		this._currentInspector.reinspect();
+	    } else if (inspector) {
+
+		// If we have any dijits, we'll need to destroy them all as we'll be reusing those IDs
+		if (this.dijits) dojo.forEach(this.dijits,function(d) {d.destroy();});
+
+		// Cache the current inspector
+		this._currentInspector = inspector;
+
+		// Generate the property inspector UI
+		inspector.inspect(c);
+
+		// Turn all editors into dijits and cache them so we can destroy them later
+		this.dijits = dojo.parser.parse(this.domNode);
+	    }
+	} catch(e) {
+	    console.error(e);
+	}
+    },
+
+    /* Lookup which inspector should do the editting based on which node in the top property tree is selected */
+    getInspector: function() {
+	var selected = this.parent.tree.selected.inspector;
+	switch(selected) {
+	case "Properties":
+	    return this._inspectors.Properties;
+	case "Events":
+	    return this._inspectors.Events;
+	case "CustomMethods":
+	    return this._inspectors.CustomMethods;
+	case "Security":
+	    return this._inspectors.Security;
+	case "Data":
+	    return this._inspectors.Data;
+	case "Navigation":
+	    return this._inspectors.Navigation;
+	case "Style":
+	    if (this._inspectors.Styles.getActiveLayer().caption == "Property")
+		return this._inspectors.Properties;
+	    else
+		return this._inspectors.Styles;
+	}
+
+    },
+
+    /* If reinspect is called, verify that we are using the same inspector or we need to call inspect to generate new
+     * editors instead of reinspect to populate existing editors
+     */
+    reinspect: function() {	    
+	var requiredInspector = this.getInspector();
+	var inspectorProps = this.parent.tree.selected.inspector;
+	if (this._currentInspector != requiredInspector || this.inspectorProps != inspectorProps)
+	    return this.inspect(this.inspected);
+	if (this.inspected && this.inspectorProps) {
+	    this._currentInspector.reinspect(this.inspected);
+	}
+    },
+
+    /* Focus on the default property; we've discontinued doing this, but may resume... */
+    focusDefault: function() {
+	var inspector = this.getInspector();
+	wm.fire(inspector, "focusDefault");
+    },
+
+    /* I believe that select mode is used when seting up composites and wm.Property classes */
+    setSelectMode: function(inMode) {
+	for (var i in this.inspectors) {
+	    this._inspectors[i].setSelectMode(inMode);
+	}
+    },
+    writeChildren: function() {
+    }
 });
 
 // magic schema stuff:
@@ -72,37 +137,42 @@ dojo.declare("wm.ComponentInspector", wm.Layers, {
 // categoryProps: inspector root tree node properties
 // categoryParent: a parent node in the inspector
 dojo.declare("wm.ComponentInspectorPanel", wm.Panel, {
-	init: function() {
-		this.inherited(arguments);
-		var t = ['{',
-			'inspectorTree: ["wm.Tree", {height: "120px", border: 0}, {}, {}],',
-			'splitter3: ["wm.Splitter", {layout: "top", border: 0}, {}, {}],',
-			'inspectorLayers: ["wm.ComponentInspector", {border: 0, flex: 1, box: "v"}, {}, {}]',
-		'}'];
-		this.readComponents(t.join(''));
-		this.tree = this.owner.inspectorTree;
-		this.inspector = this.owner.inspectorLayers;
-		this.connect(this.tree, "onselect", this, "treeSelect");
-	},
-	// tree
-	clearTree: function() {
-	    if (this.tree)
-		this.tree.clear();
-		this.treeNodes = {};
-	},
-	// whether a tree node is shown is controlled by the property info first and then the inspector
-	canInspect: function(inInspector, inNodeProps) {
-		var i = inInspector, cs = inNodeProps.canInspect, ics = "canInspect", r;
-		if (cs && this[cs])
-			r = this[cs](this.inspected, this.props);
-		else if (i && i[ics])
-			r = i[ics](this.inspected, this.props);
-		else
-			r = true;
-		if (inInspector)
-			inInspector.active = r;
-		return r;
-	},
+
+    /* The ComponentInspectorPanel is a Tree, splitter and a ComponentInspector */
+    init: function() {
+	this.inherited(arguments);
+	var t = ['{',
+		 'inspectorTree: ["wm.Tree", {height: "120px", border: 0}, {}, {}],',
+		 'splitter3: ["wm.Splitter", {layout: "top", border: 0}, {}, {}],',
+		 'inspectorLayers: ["wm.ComponentInspector", {border: 0, flex: 1, box: "v", autoScroll: false}, {}, {}]',
+		 '}'];
+	this.readComponents(t.join(''));
+	this.tree = this.owner.inspectorTree;
+	this.inspector = this.owner.inspectorLayers;
+	this.connect(this.tree, "onselect", this, "treeSelect");
+    },
+
+    clearTree: function() {
+	if (this.tree)
+	    this.tree.clear();
+	this.treeNodes = {};
+    },
+
+    // whether a tree node is shown is controlled by the property info first and then the inspector
+    canInspect: function(inInspector, inNodeProps) {
+	var i = inInspector, cs = inNodeProps.canInspect, ics = "canInspect", r;
+	if (cs && this[cs])
+	    r = this[cs](this.inspected, this.props);
+	else if (i && i[ics])
+	    r = i[ics](this.inspected, this.props);
+	else
+	    r = true;
+	if (inInspector)
+	    inInspector.active = r;
+	return r;
+    },
+
+    // Add nodes to the tree...
 	_addTreeNode: function(inInspector, inParent, inProps) {
 		var i = inInspector, a = inProps.addTreeNode, ia = (i||0).addTreeNode;
 		if (a && this[a])
@@ -213,15 +283,18 @@ dojo.declare("wm.ComponentInspectorPanel", wm.Panel, {
 		this.initTree(inComponent);
 		// update tree selection...
 		var n = this.selectedNode = this.treeNodes[this.inspectorName] || this.treeNodes["Properties"];
-		this.tree.select(n);
+	        this.tree.select(n);	        
 	},
 	reinspect: function() {
 		// if we have a component, inspect it
 		var n = (this.selectedNode ||0).component;
 		if (n) {
 			this.inspectComponent(n, this.selectedNode);
-		} else
-			this.inspector.inspect(this.inspected, this.selectedNode);
+		} else if (this.inspector.inspected == this.inspected) {
+		    this.inspector.reinspect();
+		} else {
+		    this.inspector.inspect(this.inspected, this.selectedNode);
+		}
 	},
 	focusDefault: function() {
 		wm.fire(this.inspector, "focusDefault");

@@ -23,6 +23,10 @@ dojo.declare("wm.StyleInspector", [wm.Layers, wm.InspectorBase], {
 	flex: 1,
 	box: 'v',
 	_source: {
+		properties: ["wm.Layer", {flex: 1, title: bundleStudio.I_BasicStyles, box: "v"}, {}, {
+		    stylePropHtml: ["wm.Html", {width: "100%", height: "100%"}]
+		}],
+
 		classes: ["wm.Layer", {flex: 1, title: bundleStudio.I_Classes, box: "v"}, {}, {
 			classTree: ["wm.Tree", {flex: 1}, {}, {}],
 			bevel1: ["wm.Bevel", {}, {}, {}],
@@ -31,20 +35,31 @@ dojo.declare("wm.StyleInspector", [wm.Layers, wm.InspectorBase], {
 			}]
 		}],
 		custom: ["wm.Layer", {flex: 1, title: bundleStudio.I_Custom_Styles, box: "v"}, {}, {
-			textArea: ["wm.TextArea", {width: "100%", height: "100%", border: 0}, {}, {}],
+		    textArea: ["wm.LargeTextArea", {width: "100%", height: "100%", border: 0}, {}, {}],
 			panel1: ["wm.Panel", {_classes: {domNode: [ "wm-darksnazzy"]}, layoutKind: "left-to-right", height: "34", boxPosition: "bottomRight", border: 0, padding: 2}, {}, {
 				applyStylesButton: ["wm.Button", {caption: bundleStudio.I_Apply, border: 1, width: "60"}, {}]
 			}]
 		}]
 	},
+/* when any of its internal layers changes, this fires */
+    onchange: function() {
+	if (!this._cupdating) {
+	    if (this.getLayer(this.indexOfLayerName("properties")).isActive())
+		studio.inspector.reinspect(); 
+	    else
+		this.inspect(this.owner.inspected, this.owner.inspectorProps);
+	}
+    },
 	init: function() {
-		dojo.addClass(this.domNode, "wmstyleinspector");
 		//this.createComponents(this._source); //, this);
 		// inherited init deals with showing layers so call after adding layers
 		this.inherited(arguments);
 		this.createComponents(this._source); //, this);
 		this.initClasses();
 		this.initStyles();
+		dojo.addClass(this.layers[0].domNode, "wminspector");
+		dojo.addClass(this.layers[1].domNode, "wmstyleinspector");
+		dojo.addClass(this.layers[2].domNode, "wmstyleinspector");
 	},
 	initClasses: function() {
 		this.classTree = this.$.client.widgets.classes.widgets.classTree;
@@ -64,21 +79,22 @@ dojo.declare("wm.StyleInspector", [wm.Layers, wm.InspectorBase], {
 		}
 	},
 	initStyles: function() {
-		this.text = this.$.client.widgets.custom.widgets.textArea;
-		//this.text = this.widgets.custom.widgets.textArea;
-		this.text.domNode.name = "styles";
-		this.connect(this.text.domNode, "onmousedown", this, "textMousedown");
-		this.connect(this.text.domNode, "onfocus", wm.bubble);
-		this.connect(this.text.domNode, "onblur", wm.bubble);
+	    this.text = this.getLayer(this.indexOfLayerName("custom")).c$[0];
+	    this.text.connect(this.text, "onchange", this, function(inValue) {
+		this._setInspectedProp("styles", inValue);
+	    });
 	},
 	_setInspectedProp: function(inProp, inValue) {
 		if (inProp == "styles")
-			this.inspected.setNodeStyles(inValue, this.nodeClass);
+			this.owner.inspected.setNodeStyles(inValue, this.nodeClass);
 		else
 			this.inherited(arguments);
 	},
+        reinspect: function(inInspected, inProps) {
+	    this.inspect(inInspected, inProps);
+	},
 	inspect: function(inInspected, inProps) {
-		var ins = this.inspected = inInspected, def = "domNode";
+		var ins = inInspected, def = "domNode";
 		var isWidget = ins instanceof wm.Widget;
 		//
 		this.classTree.setShowing(isWidget);
@@ -110,21 +126,20 @@ dojo.declare("wm.StyleInspector", [wm.Layers, wm.InspectorBase], {
 		this.classEdit.endEditUpdate();
 		//
 		var s = ins.getNodeStyles(this.nodeClass);
-		this.text.setInputValue(s);
-		this.focusedProp = this.text.domNode;
+		this.text.setDataValue(s);
 	},
 	classFromNode: function(inNode) {
 		return ["wm", inNode.parent.name, inNode.name].join("_");
 	},
 	classCheckboxClick: function(inNode) {
 		//dojo.stopEvent(inEvent);
-		var i = this.inspected;
+		var i = this.owner.inspected;
 		i[inNode.getChecked() ? "addUserClass" : "removeUserClass"](this.classFromNode(inNode), this.nodeName);
 		i.reflowParent();
 	},
 	classEditChange: function() {
 		var
-			i = this.inspected,
+			i = this.owner.inspected,
 			v = this.classEdit.getValue("dataValue") || "",
 			classes = v.split(' ');
 		// remove old extra classes

@@ -63,7 +63,7 @@ dojo.declare("wm.SecurityInspector", [wm.Box, wm.InspectorBase], {
 	},
 	inspect: function(inInspected, inProps) {
 		this.initRoles();
-		var ins = this.inspected = inInspected, def = "domNode";
+		var ins = inInspected, def = "domNode";
 		var isWidget = ins instanceof wm.Widget;
 
 		this.roleTree.setShowing(isWidget);
@@ -87,7 +87,7 @@ dojo.declare("wm.SecurityInspector", [wm.Box, wm.InspectorBase], {
 		}
 	},
 	roleCheckboxClick: function(inNode) {
-		var i = this.inspected;
+		var i = this.owner.inspected;
 		if (inNode == this.everyoneNode) {
 			if (inNode.getChecked()) {
 				i.removeAllRoles();

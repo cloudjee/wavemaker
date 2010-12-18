@@ -19,6 +19,7 @@ dojo.provide("wm.studio.app.inspect");
 dojo.require("wm.studio.app.util");
 
 wm.bubble = function(e) {
+    
 	dojo.fixEvent(e);
 	var t = e.target, n = "_on" + e.type;
 	while (t && !t[n]){
@@ -28,6 +29,42 @@ wm.bubble = function(e) {
 		t[n](e);
 }
 
+wm.dijitbubble = function(inPropName, inEvent) {
+    if (studio.inspector.inspector._startInspectTime + 200 > new Date().getTime()) return; // just firing off onchange events as a result of the constructor
+    var input = dijit.byId("studio-prop-panel-"+inPropName);
+    if (!input) 
+	return;
+
+	var inValue = input.value;
+
+    studio.inspector.inspector._currentInspector[inEvent](input);
+
+    // at this point, we only use this method for ComboBoxes; there's a dijit method window.setTimeout(xxx, 0) which causes focus to be lost.  Lets put a stop to that...
+    if (inEvent == "propChange") {
+	window.setTimeout(function() {
+	    // no domNode means its been destroyed... but we still have the id, lets see if a new dijit has replaced it
+	    if (!input.domNode)
+		input = dijit.byId(input.id);
+	    if (input) input.focus();
+	}, 10);
+    }
+}
+
+
+wm.inspectOnChange = function(inPropName) {
+    var input = dijit.byId("studio_propinspect_"+inPropName);
+    if (!input || input.readOnly)  // pretty stupid that readonly nodes still fire onchange events when I click away from them!
+	return;
+
+	var inValue = input.value;
+    var inspector = studio.inspector.inspector._currentInspector;
+    if (!inspector._inReinspect)
+	studio.inspector.inspector._currentInspector.propChange(inPropName.replace(/_\d+$/,""), input.get("value"));
+}
+
+
+
+
 /**
 	Return a Select property editor for the given property.
 	@param {String} inName The property name.
@@ -36,26 +73,55 @@ wm.bubble = function(e) {
 	@param {Array} inValues (Optional) An array of matching values for each option displayed in the Select.
 	@returns {String} Html string for the Select property editor.
 */
-makeSelectPropEdit = function(inName, inValue, inOptions, inDefault, inValues) {
-	var html = [ '<select name="', inName, '" onfocus="wm.bubble(event)" onchange="wm.bubble(event)">' ];
+makeSelectPropEdit = function(inName, inValue, inOptions, inDefault, inValues, inReadonly, isBound) {
+    var html = [
+	'<select class="wminspector-edit" style="display:' + (isBound ? 'none' : 'block') + '" id="studio_propinspect_'+inName+'" dojoType="dijit.form.ComboBox"  name="', inName, '" id="studio-prop-panel-' + inName + '" ',
+		 'onChange="wm.inspectOnChange(\'' +inName + '\')">' ];
 	for (var i=0, l=inOptions.length, o, v; (o=inOptions[i])||(i<l); i++) {
 		v = inValues ? inValues[i] : o;
 		html.push('<option', 
 			' value="' + v + '"',
 			(inValue==v ? ' selected="selected"' : ''), '>', 
-			(o==inDefault ? ''+o+' (default)' : o),
+			  //(o==inDefault ? ''+o+' (default)' : o),
+			  o,
 			'</option>');
 	}
 	html.push('</select>');
+    html.push('<input class="wminspector-readonly" value="'+inValue+'" readonly="true" style="display:' + (!isBound ? 'none' : 'block') + '"/>');
 	return html.join('');
 }
 
-makeCheckPropEdit = function(inName, inValue, inDefault) {
+makeCheckPropEdit = function(inName, inValue, inDefault, inReadonly, isBound) {
 	return [ 
-		'<input style="width: auto; height: auto; background: transparent;" type="checkbox" name="', inName, '"', (inValue==inDefault ? ' class="prop-default"' : ''), (inValue ? 'checked="checked"' : '') + '"/>'
+	    '<input style="display:' + (isBound ? 'none' : 'block') + '" ',
+	    'id="studio_propinspect_'+inName+'" ',
+	    'dojoType="dijit.form.CheckBox" onChange="wm.inspectOnChange(\''+inName+'\')" type="checkbox" name="', 
+	    inName, '"', 
+	    (inValue==inDefault ? ' class="prop-default wminspector-edit"' : ' class="wminspector-edit"'), 
+	    (inValue ? 'checked="checked"' : '') + '"/>',
+	    '<input class="wminspector-readonly"  value="'+inValue+'" readonly="true" style="display:' + (!isBound ? 'none' : 'block') + '"/>'
 	].join('');
 }
+makeInputPropEdit = function(inName, inValue, inDefault, inReadonly, isBound) {
+	inValue = inValue === undefined ? "" : inValue;
+	// FIXME: need more escaping here likely. just doing quotes for now
 
+	return [
+	    '<input style="display:' + (isBound ? 'none' : 'block') + '" id="studio_propinspect_'+inName+'" dojoType="dijit.form.TextBox" name="', inName, '"',
+	    'onChange="wm.inspectOnChange(\''+inName+'\')"',
+		(inValue==inDefault ? ' class="prop-default wminspector-edit"' : 'class="wminspector-edit"'),
+		(inReadonly === true || isBound ? ' readOnly="true"' : ''),
+	    ' value="', String(inValue).replace(/\"/g,"'"), '"/>',
+	    '<input class="wminspector-readonly"  value="'+inValue+'" readonly="true" style="display:' + (!isBound ? 'none' : 'block') + '"/>'
+	].join('');
+}
+setInputPropEdit = function(inName, inValue) {
+    var editor = dijit.byId("studio_propinspect_"+inName);
+    if (editor)
+	editor.set("value", inValue, false);
+    return editor;
+}
+/*
 makeInputPropEdit = function(inName, inValue, inDefault, inReadonly) {
 	inValue = inValue === undefined ? "" : inValue;
 	// FIXME: need more escaping here likely. just doing quotes for now
@@ -68,10 +134,10 @@ makeInputPropEdit = function(inName, inValue, inDefault, inReadonly) {
 		' value="', inValue, '"/>'
 	].join('');
 }
-
+*/
 makeTextPropEdit = function(inName, inValue, inDefault, inRows) {
 	return [
-		'<textarea name="', inName, '"', ' wrap="soft" rows="', inRows||8, '"', ' onfocus="wm.bubble(event)" onblur="wm.bubble(event)"', (inValue==inDefault ? ' class="prop-default"' : ''), '">', inValue, '</textarea>'
+	    '<textarea  id="propinspect_'+inName+'" dojoType="SimpleTextarea" onChange="wm.inspectOnChange(\''+inName+'\')" name="', inName, '"', ' wrap="soft" rows="', inRows||8, '"',  (inValue==inDefault ? ' class="prop-default"' : ''), '">', inValue, '</textarea>'
 	].join('');
 }
 
@@ -86,10 +152,11 @@ makeInputButtonEdit = function(inName, inValue, inDefault, inContent) {
 }
 
 makeBoundEdit = function(inName, inValue) {
+    return makeInputPropEdit(inName, inValue, "", false, Boolean(inValue));
 	return [
 		'<table class="bound-prop-table" cellpadding="0" cellspacing="0" border="0">',
-		'<tr><td class="bound-prop">', makeInputPropEdit(inName, inValue, "", true), '</td>',
-		'<td class="bound-prop-button"></td></tr>',
+	    '<tr><td class="bound-prop">', makeInputPropEdit(inName, inValue, "", Boolean(inValue)), '</td>',
+	    '<td ' + (inValue ? '' : 'style="display:none" ') + ' class="bound-prop-button"></td></tr>',
 		'</table>'
 	].join('');
 }
@@ -183,7 +250,9 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
       var sharedEventHandlers = eventList(this.inspected.getSharedEventLookupName(this.propName), wm.isInstanceType(studio.selected.owner, wm.Application) ? studio.appsourceEditor : studio.editArea);
 	    var dialogList = wm.listComponents([studio.application, studio.page], wm.Dialog);
 	    dialogList = dialogList.concat(wm.listComponents([studio.application, studio.page], wm.DojoLightbox));
+	    dialogList = dialogList.concat(wm.listComponents([studio.application, studio.page], wm.PopupMenu));
 	    dialogList = dialogList.sort();
+
 	    var dashboardList = wm.listComponents([studio.application, studio.page], wm.Dashboard).sort();
 	    //var lf = wm.listComponents([studio.application, studio.page], wm.LiveForm);
 	    var timers = wm.listComponents([studio.application, studio.page], wm.Timer).sort();
@@ -311,28 +380,28 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 		var ea = this.eventActions, c = this.inspected, p = this.propName, v;
 		switch (inEventName) {
 		        case ea.noEvent.caption:
-				this.set("value","");			  
+		    this.set("value","", false);			  
 				break;
 			case ea.jsFunc.caption:
 				v = c.generateEventName(p);
-				this.set("value",v);
+		    this.set("value",v, false);
 				try{c.updatingEvent(p,v);}catch (e){/*do nothing as this might happen if there's a component which does not extends wm.control class*/}
 		                eventEdit(c, p, v, c == studio.application);
 				break;
 			case ea.jsSharedFunc.caption:
 				v = c.generateSharedEventName(p);
-				this.set("value",v);
+		    this.set("value",v, false);
 				try{c.updatingEvent(p,v);}catch (e){/*do nothing as this might happen if there's a component which does not extends wm.control class*/}
 				eventEdit(c, p, v, c == studio.application);
                                 studio.inspector.reinspect();
 				break;
 			case ea.newService.caption:
 				studio.newComponentButtonClick({componentType: "wm.ServiceVariable"});
-				this.set("value",studio.selected.name);
+		    this.set("value",studio.selected.name, false);
 				break;
 			case ea.newNavigation.caption:
 				studio.newComponentButtonClick({componentType: "wm.NavigationCall"});
-				this.set("value",studio.selected.name);
+		    this.set("value",studio.selected.name, false);
 				break;
 		}
 	}
@@ -340,7 +409,7 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 
 // inspector formatting (allow widgets in inspectors)
 formatEventProp = function(inComponent, inName, inValue, inNode) {
-	return new wm.EventEditor({inspected: inComponent, propName: inName, value: inValue, srcNodeRef: inNode});
+    return new wm.EventEditor({inspected: inComponent, propName: inName, value: inValue, srcNodeRef: inNode});
 }
 
 formatPropEdit = function(inComponent, inName, inValue, inNode, noEventProps) {

@@ -55,18 +55,11 @@ dojo.declare("wm.InspectorBase", null, {
 		this.connect(this.domNode, "onmousemove", this, "propMove");
 		this.connect(this.domNode, "onmouseleave", this, "propLeave");
 		this.connect(this.domNode, "onmousedown", this, "propDown");
-		this.connect(this.domNode, "onchange", this, "propChange");
 		this.connect(this.domNode, "onclick", this, "propClick");
-		this.connect(this.domNode, "_onblur", this, "propBlur", true);
-		this.connect(this.domNode, "_onfocus", this, "propFocus", true);
-		this.connect(this.domNode, "_onchange", this, "propChange", true);
-		this.connect(this.domNode, "onkeypress", this, "propKey");
 
 		studio.helpPopup = this.getHelpDialog();
 	},
-	reinspect: function() {
-		this.owner.reinspect();
-	},
+
 	getHelpDialog: function() {
 		if (!studio.helpPopup) {
 		    var props = {
@@ -84,16 +77,15 @@ dojo.declare("wm.InspectorBase", null, {
 		var b = studio.helpPopup;
 		return b;
 	},
-	finishProp: function() {
-		var p = this.focusedProp;
-		this.focusedProp = null;
-		if (p && this.focusValue != p.value)
-			this._applyProp(p);
-	},
+
 	_setInspectedProp: function(inProp, inValue) {
-		if (!this.inspected)
+	    if (this instanceof wm.StyleInspector)
+		return this.owner._inspectors.Properties._setInspectedProp(inProp,inValue);
+
+
+		if (!this.owner.inspected)
 			return;
-		var type = this.inspected.getPropertyType(inProp);
+		var type = this.owner.inspected.getPropertyType(inProp);
 		switch ((type || 0).type) {
 			case "number":
 		                inValue = (inValue === "" && type.emptyOK) ? "" : Number(inValue);
@@ -102,62 +94,40 @@ dojo.declare("wm.InspectorBase", null, {
 				inValue = Boolean(inValue);
 				break;
 		}
-		this.inspected.setProp(inProp, inValue);
-		wm.onidle(this, "reinspect");
+		this.owner.inspected.setProp(inProp, inValue);
+	    this.reinspect();
 	},
 	_getInspectedProp: function(inProp) {
-		if (!this.inspected)
-			return;
-		var v = this.inspected.getProp(inProp);
-		return dojo.isFunction(v) ? ["(", inProp, ")"].join('') : v;
+	    if (this instanceof wm.StyleInspector)
+		return this.owner._inspectors.Properties._setInspectedProp(inProp,inValue);
+
+	    if (!this.owner.inspected)
+		return;
+	    var v = this.owner.inspected.getProp(inProp);
+	    return dojo.isFunction(v) ? ["(", inProp, ")"].join('') : v;
 	},
-	_applyProp: function(t) {
-		if (t && t.name) {
-			var e = this._editors && this._editors[t.name];
-			if (e) 
-				e.applyProp(t);
-			else 
-				this._setInspectedProp(t.name, t.type == "checkbox" ? t.checked : t.value);
-		}
-	},
-	applyProp: function(e) {
-		this._applyProp(e.target);
-	},
+
 	editProp: function(inTarget) {
-		var t = inTarget, p= t && t.parentNode.previousSibling.firstChild;
-		if (this.inspected && p && p.name && ("value" in p)) {
-			this.inspected.editProp(p.name, p.value, this);
+	    var t = inTarget;
+	    var p = t && t.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+	    var propName = dojo.attr(p, "propname");
+	    var editor = dijit.byId("studio_propinspect_"+propName);
+	    if (editor) {
+		var v = editor.get("value");
+		if (this.owner.inspected) {
+			this.owner.inspected.editProp(propName, v, this);
 		}
+	    }
 	},
-	propFocus: function(e) {
-		dojo.fixEvent(e);
-		var t = e.target;
-		if (t && t.tagName=="OPTION")
-			t = t.parentNode;
-		if (t && t.name) {
-			this.focusedProp = t;
-			this.focusValue = t.value;
-		}
-	},
-	propBlur: function(e) {
-		dojo.fixEvent(e);
-		var t = e.target;
-		if (this.focusedProp == t){
-				this.finishProp();
-		}
-	},
-	propKey: function(e) {
-		dojo.fixEvent(e);
-		if (e.target == this.focusedProp && e.target.tagName != "TEXTAREA" && e.keyCode == dojo.keys.ENTER && !e.shiftKey) {
-			this.finishProp();
-			try{e.target.select();}catch(x){}
-		}
-	},
-	propChange: function(e) {
-		dojo.fixEvent(e);
-		if (e.target == this.focusedProp) {
-			this.finishProp();
-		}
+
+    propChange: function(propName,value,propEditorName) {
+	var e = this._editors && this._editors[propName];
+	if (e) {
+	    e.applyProp(propName, value);
+	    this.reinspect(); //applyEdit doesn't handle bound values
+	} else {
+	    this._setInspectedProp(propName, value);
+	}
 	},
 	propDown: function(e) {
 		if (this.selectMode) {
@@ -219,7 +189,7 @@ dojo.declare("wm.InspectorBase", null, {
 		this.selectMode = inTrueForSelectMode;
 	},
 	endSelectMode: function(inPropName) {
-		studio.propertySelected(this.inspected.getRuntimeId() + "." + inPropName);
+		studio.propertySelected(this.owner.inspected.getRuntimeId() + "." + inPropName);
 	}
 });
 
@@ -241,35 +211,58 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 		this.tableContainer = this.domNode.firstChild;
 		this.table = this.tableContainer.firstChild;
 	},
-	inspect: function(inComponent, inInspectorProps) {
-		if (!this.active) {
-			this.inspected = inComponent;
-			return;
-		}
-		this.finishProp();
-		this.nextFocusedPropName = null;
-		this.inspected = inComponent; 
+    inspect: function(inComponent) {
+
 		// make sure inspector is scrolled back to top
 		this.domNode.scrollTop = 0;
-		this.preinspect(inInspectorProps);
+		this.preinspect();
 		this._inspect();
 	},
-	getProps: function(inInspectorProps) {
+	reinspect: function() {
+	    this._inReinspect = true; // block all onChange events from firing while we start setting dijit values
+	    try {
+		this.preinspect(this.inspectorProps); // because based on last changes, some props may not have ignore settings changed
+		for (var propname in this.props) {
+		    var prop = this.props[propname];
+		    if (this.shouldShowProp(propname, prop)) {
+			// stuff that was moved into the style inspector may not have a generated node... 
+			// or if we are in the style inspector viewing border/margin/padding, the rest of the props won't have nodes
+			// So test if we have a node before doing anything
+			var node = dojo.byId("propinspect_row_"+propname);
+			if (node) {
+			    this.setPropEdit(propname);
+			    // neat hack... I first tried style.display = "none" and the table became unformatted
+			    // position absolute removes it from the flow and visibility makes it hidden
+			    node.style.position = prop.ignoretmp ? "absolute" : ""; 
+			    node.style.visibility = prop.ignoretmp ? "hidden" : ""; 
+			}
+		    }
+		}
+	    } catch(e) {
+		console.error(e);
+	    }
+	    this._inReinspect = false; // enable all onChange events to fire
+	},
+	getProps: function() {
+	    
 		var
-			c = this.inspected,
+			c = this.owner.inspected,
 			allProps = c ? c.listProperties() : {},
 			props = {};
 		for (var i in allProps)
 			props[i] = dojo.mixin({name: i}, allProps[i]);
 		return props;
 	},
-	preinspect: function(inInspectorProps) {
-		this.props = this.getProps(inInspectorProps);
+	preinspect: function() {
+		this.props = this.getProps();
+	},
+	shouldShowProp: function(inName, inProp) {
+		return !inProp.ignore;
 	},
 	_inspect: function() {
 		this._editors = {};
 		this.focusedProp = null;
-		var c = this.inspected;
+		var c = this.owner.inspected;
                 if (c.isDestroyed) return;
 		var headerCells = this.generateHeaderCells();
 
@@ -286,28 +279,32 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 		// allow widgets to be inspectors (we need nodes first)
 		this.editors = this.formatTable();
 		this.reflow();
-		//this.setupClickHandlers();
+	        //this.setupClickHandlers();
 	},
-	/*
+
 	setupClickHandlers: function() {
-	      var inspected = this.inspected;
-	      dojo.query(".wm-inspector-help", this.tableContainer).onclick(function(e) {
-		    var p = this.parentNode.getAttribute("propName");
-		    alert(inspected.declaredClass + ": " + p);
-		    });
+
+	    dojo.query(".wminspector-help", this.tableContainer).onclick(dojo.hitch(this,function(e) {
+		  var inspected = this.owner.inspected;
+		  if (!dojo.hasClass(e.target, "wminspector-header")) {
+		      var propName = this.getPropNameByEvent(e); //e.target.parentNode.propname
+		      return this.beginHelp(propName, e.target, this.owner.inspected.declaredClass);
+		  }
+	    }));
         },
-	*/
+
 	generateHeaderCells: function() {
 		return [
 			'<th class="wminspector-header" style="width: 30%;">' + bundleStudio.I_Property + '</th>',
-			'<th class="wminspector-header">' + bundleStudio.I_Value + '</th>'			
+		    '<th class="wminspector-header">' + bundleStudio.I_Value + '</th>'
 		];
 	},
 	generateTableContent: function() {
 		var rows = []
 		wm.forEachProperty(this.props, dojo.hitch(this, function(p, n) {
+
 			rows.push(
-				'<tr propName="', n, '">',
+			    '<tr id="propinspect_row_' + n + '" ' + (p.ignoretmp ? 'style="position:absolute;visibility:hidden" ' :'') +  'propName="', n, '">',
 				this.generateRowCells(n, p).join(''),
 				'<td class="wminspector-help">?</td>',
 				'</tr>'
@@ -327,10 +324,11 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 	    else
 		return inProp.shortname;
 	},
-	makePropEdit: function(inName/*, inProp*/) {            
-	    var c = this.inspected;
+        makePropEdit: function(inName/*, inProp*/, inProp, inWire) {
+	    var c = this.owner.inspected;
             if (c.isDestroyed) return;
-            var d = c.constructor.prototype[inName], v = this._getInspectedProp(inName);
+            var d = c.constructor.prototype[inName];
+	    var v = this._getInspectedProp(inName);
 
 		var e = c.makePropEdit(inName, v, d) || makeInputPropEdit(inName, v, d);
 		if (!dojo.isString(e)) {
@@ -340,6 +338,21 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 		}
 		return e;
 	},
+	setPropEdit: function(inName/*, inProp*/) {            
+	    var c = this.owner.inspected;
+            if (c.isDestroyed) return;
+            var d = c.constructor.prototype[inName], v = this._getInspectedProp(inName);
+
+	    var e = this._editors && this._editors[inName];
+	    if (e) {
+		e.setPropEdit(inName, v);
+	    } else {
+		c.setPropEdit(inName, v, d) || this._setPropEdit(inName,v,d);
+	    }
+	},
+    _setPropEdit: function(inName, inValue, inDefault) {
+	setInputPropEdit(inName, inValue, inDefault);
+    },
 	formatTable: function() {
 		var editors = [];
 		for (var i=1, rows=this.table.rows, tr; (tr=rows[i]); i++){
@@ -354,11 +367,12 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 		      var td = inTr.cells[inTr.cells.length - 2];
 		      //var td = inTr.cells[inTr.cells.length - 1];
 			var n = td&&td.firstChild;
-		        var e = formatPropEdit(this.inspected, p, this._getInspectedProp(p), n, wm.isInstanceType(this, wm.BindInspector));
+		        var e = formatPropEdit(this.owner.inspected, p, this._getInspectedProp(p), n, wm.isInstanceType(this, wm.BindInspector));
 			if (e)
 				ioEditors.push(e);
 		}
 	},
+/*
 	reinspect: function() {
 		this.inherited(arguments);
 		if (this.nextFocusedPropName) {
@@ -366,24 +380,23 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 			this.nextFocusedPropName = null;
 		}
 	},
+	*/
 	// property groups
+
 	propClick: function(e) {
 		if (this.inherited(arguments))
 			return true;
 		studio.studioKeyPriority = false;
-		this.propFocus(e);
+
 		var t = e.target || 0;
 
 		if (dojo.hasClass(e.target, "wminspector-help")) {
 		    if (!dojo.hasClass(e.target, "wminspector-header")) {
 			var propName = this.getPropNameByEvent(e); //e.target.parentNode.propname
-			return this.beginHelp(propName, e.target, this.inspected.declaredClass);
+			return this.beginHelp(propName, e.target, this.owner.inspected.declaredClass);
 		    } else
 			return true;
-		} else if (t.type == "checkbox") {
-			this.applyProp(e);
-			return true;
-		} else {
+		} else if (dojo.hasClass(t, "wminspector-prop-button")) {
 			var t = this.getTargetByClass(t, "wminspector-prop-button");
 			if (t) {
 				this.editProp(t);
@@ -391,6 +404,7 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 			}
 		}
 	},
+
 	beginHelp: function(inPropName, inNode, inType) {
 	      var bd = studio.helpPopup;
 	      bd.page.setHeader(inType,inPropName);
@@ -469,15 +483,26 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 dojo.declare("wm.GroupInspector", wm.Inspector, {
 	autoScroll: true,
 	//scrollY: true,
-	colCount: 2,
-	preinspect: function(inInspectorProps) {
+	colCount: 3,
+	preinspect: function() {
 		this.inherited(arguments);
-		this.groups = this.inspected ? this.initGroups(this.props) : [];
+		this.groups = this.owner.inspected ? this.initGroups(this.props) : [];
 	},
 	generateTableContent: function() {
-		var rows = [], c = this.inspected;
+		var rows = [], c = this.owner.inspected;
 		dojo.forEach(this.groups, dojo.hitch(this, function(g) {
+		    if (g.name == "style") {
+			var headerCells = this.generateHeaderCells();
+			headerCells.push('<th class="wminspector-header wminspector-help">?</th>');
+			var html1 = ['<table border="0" cellspacing="0" cellpadding="0" style="width: 100%;">',
+				    '<tr>', headerCells.join(''), '</tr>',
+				    this.generateGroup(g),
+				     '</table>'];
+			var html = html1.join("");
+			this.owner._inspectors.Styles.layers[0].c$[0].setHtml(html);
+		    } else {
 			rows.push(this.generateGroup(g));
+		    }
 		}));
 		//rows.push(this.makeSpacerRow());
 		return rows.join('');
@@ -490,12 +515,14 @@ dojo.declare("wm.GroupInspector", wm.Inspector, {
 		for (var i=0, p, n; (p=props[i]); i++){
 			if (p.hidden)
 				continue;
-			if (p.dependency && !wm.expression.getValue(p.dependency, this.inspected))
+			if (p.dependency && !wm.expression.getValue(p.dependency, this.owner.inspected))
 				continue;
 						
 			n = p.name;
 			rows.push(
-				'<tr propName="', n, '"', inGroup.closed ? ' style="display: none;"' : '', '>',
+				'<tr ',
+			    (p.ignoretmp ? 'style="position:absolute;visibility:hidden" ' :''),
+			    'id="propinspect_row_' + n + '" propName="', n, '"', inGroup.closed ? ' style="display: none;"' : '', '>',
 				this.generateRowCells(n, p).join(''),
 				// add a "?" button unless its a Data group.  Its assumed that a Data group contains variable/database/webservice 
 				// specific information that would not reside on our wiki, but which the user should know better than us.
@@ -524,9 +551,7 @@ dojo.declare("wm.GroupInspector", wm.Inspector, {
 		}
 		this.inherited(arguments);
 	},
-	shouldShowProp: function(inName, inProp) {
-		return !inProp.ignore;
-	},
+
 	// property groups
 	initGroups: function(inProps) {
 		var groups = this.buildGroups(inProps);
@@ -548,6 +573,7 @@ dojo.declare("wm.GroupInspector", wm.Inspector, {
 				g = groups[name] || (groups[name] = []),
 				order = o && o.order != undefined ? o.order : 1000,
 				p = dojo.mixin({}, o, {name: n, order: order});
+		    if (name != "method")
 			g.push(p);
 		}));
 		for (var i in groups)
@@ -599,18 +625,19 @@ dojo.declare("wm.GroupInspector", wm.Inspector, {
 		return true;
 	},
 	getDefaultFocusProp: function() {
-		if (!this.inspected)
+		if (!this.owner.inspected)
 			return;
 		for (var i=0, g, groups=this.groups; (g=groups[i]); i++)
 			for (var j=0, p; (p=g.props[j]); j++)
-				if ((this.inspected.schema[p.name] || 0).focus)
+				if ((this.owner.inspected.schema[p.name] || 0).focus)
 					return p.name;
 		return "name";
 	}
 });
 
 dojo.declare("wm.EventInspector", wm.Inspector, {
-	getProps: function(inInspectorProps) {
+    reinspect: function() {this.inspect();},
+	getProps: function() {
 		var props = this.inherited(arguments);
 		for (var i in props)
 			if (!props[i].isEvent || props[i].ignore)
@@ -633,7 +660,8 @@ dojo.declare("wm.EventInspector", wm.Inspector, {
 });
 
 dojo.declare("wm.CustomMethodInspector", wm.Inspector, {
-	getProps: function(inInspectorProps) {
+    reinspect: function() {this.inspect();},
+	getProps: function() {
 		var props = this.inherited(arguments);
 		for (var i in props)
 			if (!props[i].isCustomMethod || props[i].ignore)
