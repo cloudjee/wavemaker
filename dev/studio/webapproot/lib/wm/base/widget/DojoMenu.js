@@ -36,6 +36,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 	
 
 	init: function() {
+	    this._menuConnects = [];
 /*
 	    this.eventList = [];
 	    this.menuItems = [];
