@@ -34,6 +34,7 @@ wm.define("wm.Container", wm.Control, {
 		disabled: { ignore: 1 },
 	        autoScroll: {group: "scrolling", order: 100, ignore: 0}
 	},
+    touchScrolling: false,
 	imageList: "",
 	border: 0,
 	container: true,
@@ -52,6 +53,17 @@ wm.define("wm.Container", wm.Control, {
 		this.c$ = [];
 	},
 	init: function() {
+	    if (this.touchScrolling && app._touchEnabled) {
+		try {
+		    dojo.require("lib.github.touchscroll.touchscroll");
+		} catch(e) {}
+		this._touchScroll = new TouchScroll(this.domNode, {elastic:true, owner: this});
+		this._touchScroll.scrollers.outer.style.position = "absolute";
+		this._touchScroll.scrollers.outer.style.left = "0px";
+		this._touchScroll.scrollers.outer.style.top = "0px";
+	    }
+
+
 	    this.inherited(arguments);
 	    this.setLayoutKind(this.layoutKind);
 	    this.domNode.box = this.box = "";
@@ -482,7 +494,7 @@ wm.define("wm.Container", wm.Control, {
 wm.Container.extend({
 	listProperties: function() {
 		var p = this.inherited(arguments);
-		p.freeze.ignore = this.schema.freeze.ignore || this.getLock();
+		p.freeze.ignoretmp = this.schema.freeze.ignore || this.getLock();
 		return p;
 	},
 	writeChildren: function(inNode, inIndent, inOptions) {
@@ -609,12 +621,14 @@ wm.Container.extend({
 	    }
 	    return null;
 	},
+/* Obsolete */
         setIsMajorContent: function(inMajor) {
 	    if (inMajor)
 		this.addUserClass("wmcontentarea");
 	    else
 		this.removeUserClass("wmcontentarea");
 	},
+/* Obsolete */
         getIsMajorContent: function() {
 	    try {
 		return dojo.indexOf(this._classes.domNode, "wmcontentarea") != -1;
@@ -705,13 +719,19 @@ wm.Container.extend({
 });
 
 wm.Object.extendSchema(wm.Container, {
-    layoutKind:         {group: "layout", order: 100},
-    horizontalAlign:    {group: "layout", order: 110},
-    verticalAlign:      {group: "layout", order: 120},
+    layoutKind:         {group: "layout", order: 100, doc: 1},
+    horizontalAlign:    {group: "layout", order: 110, doc: 1},
+    verticalAlign:      {group: "layout", order: 120, doc: 1},
     fitToContent:       {ignore: true},
     fitToContentWidth:  {group: "advanced layout", order: 90, shortname: "Auto Width"},
     fitToContentHeight: {group: "advanced layout", order: 91, shortname: "Auto Height"},
     autoScroll: {group: "scrolling", order: 100, ignore: 0},
-    isMajorContent: {group: "style", order: 150, ignore: 1},
-    themeStyleType: {ignore: true, group: "style", order: 150}
+    isMajorContent: {group: "style", order: 150, ignore: 1}, // obsolete
+    themeStyleType: {ignore: true, group: "style", order: 150},
+    setThemeStyleType: {group: "method", params: "(inStyleType)",doc: 1},
+    getThemeStyleType: {group: "method",  params: "()",doc: 1},
+    reflow: {group: "method", params: "()", doc: 1},
+    getInvalidWidget: {group: "method", params: "()",doc: 1},
+    setHorizontalAlign:    {group: "method", params: "(inAlign)",doc: 1},
+    setVerticalAlign:      {group: "method", params: "(inAlign)", doc: 1}
 });
