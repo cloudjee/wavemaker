@@ -1289,5 +1289,20 @@ dojo.declare("Studio", wm.Page, {
             }));
             if (optionalCallback)
                 d.addCallback(optionalCallback);
-        }
+        },
+    loadHelp: function(inType, inPropName, onSuccess) {
+	      inType = inType.substring(inType.indexOf(".")+1);
+
+
+	      if (inType.indexOf("gadget.") == 0)
+		  inType = inType.substring(inType.indexOf(".")+1);
+
+	      if (inType.indexOf("dijit.") == 0)
+		  inType = inType.substring(inType.indexOf(".")+1);
+
+
+	      inType = inType.replace(/\./g, "_");
+
+	studio.studioService.requestAsync("getPropertyHelp", [inType + "_" + inPropName + "?synopsis"], onSuccess);
+    }
 });

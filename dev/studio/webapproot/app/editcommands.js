@@ -288,12 +288,24 @@ Studio.extend({
 	text = text.replace(/^this\./,"");
 	return studio.page.getValue(text);
     },
+
+    /* See if this text refers to an object */
     getListCompletionObject: function(text) {
 	var object = studio.page;
+
+	/* Remove this. as we already assume "this" refers to studio.page, and studio.page.this is meaningless */
 	text = text.replace(/^this\.?/,"");
+
+	/* Remainder: text left unused */
 	var remainder = "";
+
+	/* Prefix: the part of text we are working on analyzing */
 	var prefix = "";
+
+	/* Keep working until text is empty */
 	while (text.length) {
+
+	    /* If text does not have a "." then prefix is the entire text, else its just the text until the first "." */
 	    if (text.indexOf(".") == -1) {
 		prefix = text;
 		text = "";
@@ -301,6 +313,10 @@ Studio.extend({
 		prefix = text.substring(0,text.indexOf("."));
 		text = text.substring(text.indexOf(".")+1);
 	    }
+
+	    /* If the prefix contains a method call, we'll need to get the property definition for the method
+	     * and find its return type
+	     */
 	    if (prefix.match(/\(/)) {
 		var name = prefix.match(/^(.*)\(/)[1];
 		var props = object.listProperties();
@@ -329,27 +345,27 @@ Studio.extend({
 	// commented this out; starting to get really really annoying...
 	//this.listCompletions(true);
     },
-    listCompletions: function(noAutoSelect) {
+    listCompletions: function() {
+
+	/* Clear the description text if we're loading new completions */
 	if (this.autoCompletionHtml)
 	    this.autoCompletionHtml.setHtml("");
 
+	/* Lets work with a trimmed version of the selected text...
+	 * or if no selected text, a trimmed version of the text before the cursor
+	 */
 	var text = dojo.trim(this.editArea.getSelectedText());
 	if (!text) 
-	    text = dojo.trim(this.editArea.getTextBeforeCursor(!noAutoSelect));
-	if (!text && noAutoSelect) return;
-	if (!text) text = "this.";
-	this._autoCompletionOriginalText = text;
-/*
-	if (!text.match(/\s*this\.?$/)) {
-	    text = text.replace(/^\s*this\./,"");
-	    text = text.replace(/\.\s*$/,"");
-	    var object = studio.page.getValue(text);
-	} else {
-	    object = studio.page;
-	}
-	*/
+	    text = dojo.trim(this.editArea.getTextBeforeCursor(true));
 
-	var object = this.getListCompletionObject(text);
+	/* If there is no text, then presume the user wants a "this." */
+	if (!text) text = "this.";
+
+	/* Cache our original search text so we can easily append completions to it */
+	this._autoCompletionOriginalText = text;
+
+	/* See if the text refers to a component */
+	var object = this._autoCompletionObject = this.getListCompletionObject(text);
 
 
 	if (!object) {
@@ -365,11 +381,18 @@ Studio.extend({
 
 	    for (var i in props) {
 		var p = props[i];
-		if (p.description) {
-		    if (!this._autoCompletionRemainder || i.indexOf(this._autoCompletionRemainder) == 0)
+		var params = "";
+		if (p.doc) {
+		    if (!this._autoCompletionRemainder || i.indexOf(this._autoCompletionRemainder) == 0) {
+			 params = getArgs(object, i).substring(2);
+		    if (params == "*,args*/")
+			params = "";
+		    else
+			params = "("+params + ")";
+		    }
 			showprops.push({name: i, 
-					description: p.description,
-					params: p.params});
+					description: "_",
+					params: params});
 		}
 	    }
 
@@ -473,54 +496,74 @@ Studio.extend({
 						       title: "Completions",
 						       name: "autoCompletionDialog",
 						       useContainerWidget: true,
-						       width: "255px",
-						       height: "500px",
+						       width: "350px",
+						       height: "650px",
 						       corner: "tr",
 						       modal: false});
 	    this.autoCompletionDialog.containerWidget.setPadding("0,10,10,10");
 	    this.autoCompletionDialog.containerWidget.setBackgroundColor("#424959");
-	    var panel = new wm.Panel({owner: this,
+	    var topPanel = new wm.Panel({owner: this,
 				      parent: this.autoCompletionDialog.containerWidget,
 				      layoutKind: "left-to-right",
 				      width: "100%",
-				      height: "20px"});
-	     new wm.Label({owner: this,
-			   caption: "Methods",
-			   _classes:{domNode:["wm_FontColor_White"]},
-			   parent: panel,
-			   width: "100px",
-			   height: "100%"});
-	    new wm.Label({owner: this,
-			  _classes:{domNode:["wm_FontColor_White"]},
-			  caption: "Description",
-			  padding: "4,4,4,10",
-			  parent: panel,
-			  width: "100%",
-			  height: "100%"});
-	    var panel2 = new wm.Panel({owner: this,
-				      parent: this.autoCompletionDialog.containerWidget,
-				      layoutKind: "left-to-right",
-				      width: "100%",
+				      height: "50%"});
+	    var listPanel = new wm.Panel({owner: this,
+					  parent: topPanel,
+				      layoutKind: "top-to-bottom",
+				      width: "150px",
 				      height: "100%"});
+	     new wm.Label({owner: this,
+			   caption: "Properties/Methods",
+			   _classes:{domNode:["wm_FontColor_White"]},
+			   parent: listPanel,
+			   width: "100px",
+			   height: "20px"});
 	    this.autoCompletionList = new wm.FocusableList({owner: this,
 							    name: "autoCompletionList",
-							    parent: panel2,
+							    parent: listPanel,
 							    width: "100px",
 							    height: "100%",
 							    backgroundColor: "white",
 							    headerVisible: false,
 							    dataFields: "name"});
+	    var propPanel = new wm.Panel({owner: this,
+					  parent: topPanel,
+					  name: "autoCompletePropPanel",
+				      layoutKind: "top-to-bottom",
+					  width: "100%",
+					  height: "100%"});
+	    var typeLabel = new wm.Label({owner: this,
+					  parent: propPanel,
+					  singleLine: false,
+					  width: "100%",
+					  height: "48px",
+					  caption: "Type:"});
+	    var paramsLabel = new wm.Label({owner: this,
+					  parent: propPanel,
+					  singleLine: false,
+					  width: "100%",
+					  height: "48px",
+					    showing: false,
+					  caption: "Parameters:"});
+
+	    new wm.Label({owner: this,
+			  _classes:{domNode:["wm_FontColor_White"]},
+			  caption: "Description",
+			  padding: "4,4,4,10",
+			  parent: this.autoCompletionDialog.containerWidget,
+			  width: "100%",
+			  height: "20px"});
+
 	    this.autoCompletionHtml = new wm.Html({owner: this,
 						   name: "autoCompletionHtml",
-						   parent: panel2,
+						   parent: this.autoCompletionDialog.containerWidget,
 						   backgroundColor: "white",
 						   html: "Select a term to see description; double click to add it to your code",
-						   border: "0,0,0,10",
+						   border: "0,0,0,0",
 						   borderColor: "#424959",
 
-						   padding: "4",
 						   width: "100%",
-						   height: "100%"});
+						   height: "50%"});
 
 	    this.autoCompletionDialog.connect(this.autoCompletionDialog, "onClose", this, function() {
 		if (!this.editArea.isAncestorHidden())
@@ -528,7 +571,26 @@ Studio.extend({
 	    });
 
 	    this.autoCompletionList.connect(this.autoCompletionList,"onselect", this, function() {
-		this.autoCompletionHtml.setHtml(this.autoCompletionList.selectedItem.getData().description);
+		var item =  this.autoCompletionList.selectedItem.getData();
+		var itemDef = this._autoCompletionObject.listProperties()[item.name];
+		var type;
+		if (item.params)
+		    type = "Method";
+		else if (itemDef)
+		    type = itemDef.type || "";
+		else if (dojo.isObject(this._autoCompletionObject[item.name]))
+		    type = this._autoCompletionObject[item.name].declaredClass || "Object";
+		typeLabel.setCaption("<b>Type:</b><br/>&nbsp;&nbsp;&nbsp;" + type);
+		paramsLabel.setCaption("<b>Parameters:</b><br/>&nbsp;&nbsp;&nbsp;" + (item.params || ""));
+		paramsLabel.setShowing(Boolean(item.params));
+		if (item.description != "_")
+		    this.autoCompletionHtml.setHtml(item.description);
+		else {
+		    var property = item.name;
+		    studio.loadHelp(this._autoCompletionObject.declaredClass, property, dojo.hitch(this, function(inResponse) {
+			this.autoCompletionHtml.setHtml(inResponse);			
+		    }));
+		}
 	    });
 
 	    this.autoCompletionList.connect(this.autoCompletionList,"ondblclick", this, function() {

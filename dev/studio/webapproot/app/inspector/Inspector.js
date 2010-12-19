@@ -414,21 +414,9 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 	      bd.fixPositionNode = inNode.parentNode;
 	      bd.page.setContent(""); // clear previous content before showing
 	      bd.show();
-	      inType = inType.substring(inType.indexOf(".")+1);
-
-
-	      if (inType.indexOf("gadget.") == 0)
-		  inType = inType.substring(inType.indexOf(".")+1);
-
-	      if (inType.indexOf("dijit.") == 0)
-		  inType = inType.substring(inType.indexOf(".")+1);
-
-
-	      inType = inType.replace(/\./g, "_");
-
-	      studio.studioService.requestAsync("getPropertyHelp", [inType + "_" + inPropName + "?synopsis"], function(response) {
-		    bd.page.setContent(response);
-	      });
+	    studio.loadHelp(inType, inPropName, function(inResponse) {
+		bd.page.setContent(inResponse);
+	    });
 
 	      /*
 	      dojo.xhrGet({

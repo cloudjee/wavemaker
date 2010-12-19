@@ -1607,3 +1607,50 @@ background-color: transparent;
 .Studio .wmdraggabletree .dndHover > .wmtree-content {
     border: solid 2px green;
 }
+
+
+/* AutoCompletion */
+#studio_autoCompletionDialog .code {
+
+    background-color: #4d5668;
+    border-top: solid 1px #3d4658;
+    border-left: solid 1px #3d4658;
+    border-right: solid 2px #2d3648;
+    border-bottom: solid 2px #2d3648;
+    font-family:courier,courier new,monospace;
+    font-size:12px;
+    line-height:150%;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 10px;
+    padding:5px;
+    white-space:pre;
+    color: white;
+}
+
+#studio_autoCompletionDialog a {
+   text-decoration: underline;
+   color: rgb(220,220,240);
+   font-weight: bold;
+}
+
+
+#studio_autoCompletionDialog .warningmessage {
+   background-color: rgb(235,237,66);
+   font-weight: bold;
+   color: black;
+   padding: 5px;
+   margin: 5px 15px 15px 15px;
+}
+
+#studio_autoCompletionDialog .java-keyword {
+color: rgb(150,150,255);
+}
+
+#studio_autoCompletionDialog .java-quote {
+color: rgb(0,270,0);
+}
+#studio_autoCompletePropPanel {
+    color: white;
+}
+/* END AutoCompletion */

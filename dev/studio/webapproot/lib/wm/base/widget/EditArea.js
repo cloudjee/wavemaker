@@ -129,6 +129,9 @@ dojo.declare("wm.EditArea", wm.Box, {
 		/*else if (this.area)
 			setTimeout(dojo.hitch(this, "resize"), 100);*/
 	},
+        focus: function() {
+	    this.area.textarea.focus();
+	},
 	getText: function() {
 		if (this.isStarted())
 			return editAreaLoader.getValue(this.area.textarea.id);
@@ -137,7 +140,7 @@ dojo.declare("wm.EditArea", wm.Box, {
 	},
 	setText: function(inText) {
 		if (this.isStarted()) {
-			// FIXME: get exception due to editArea focus attempt when setting text and
+		    // FIXME: get exception due to editArea focuswe attempt when setting text and
 			// not really showing
 			if (this.isReallyShowing())
 				editAreaLoader.setValue(this.area.textarea.id, inText);
