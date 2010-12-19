@@ -41,6 +41,13 @@ dojo.declare("wm.studio.Project", null, {
 		this.projectChanging();
 		this.createApplicationArtifacts();
 	        this.makeApplication({theme: optionalInTheme || "wm_default"});
+	        new wm.ImageList({owner: studio.application,
+				  name: "silkIconList",
+				  url: "lib/images/silkIcons/silk.png", 
+				  width: 18,
+				  height: 20, 
+				  colCount: 35, 
+				  iconCount: 196});
 	        this.newPage(this.pageName, "", {template: optionalInTemplate});
                 this.saveProject();
 		this.projectChanged();
