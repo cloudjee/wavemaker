@@ -683,9 +683,9 @@ wm.Object.extendSchema(wm.Text, {
     invalidMessage: {group: "validation", order: 3},
     showMessages: {group: "validation", order: 4},
     onEnterKeyPress: {ignore: 0},
-    setPlaceHolder: {group: "method", params: "(inPlaceholder)", doc: 1},
-    setPassword: {group: "method", params: "(inPassword)", doc: 1},
-    setRegExp: {group: "method", params: "(inRegExp)", doc: 1}
+    setPlaceHolder: {group: "method", doc: 1},
+    setPassword: {group: "method", doc: 1},
+    setRegExp: {group: "method", doc: 1}
 });
 
 

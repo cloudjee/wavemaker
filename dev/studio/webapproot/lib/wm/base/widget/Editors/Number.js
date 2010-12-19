@@ -299,8 +299,8 @@ wm.Object.extendSchema(wm.Number, {
     rangeMessage: {  group: "editor", order: 5},
     regExp: { ignore: 1 },
     maxChars: { ignore: 1},
-    setMaximum: {group: "method", params: "(inMax)", doc: 1},
-    setMinimum: {group: "method", params: "(inMin)", doc: 1}
+    setMaximum: {group: "method", doc: 1},
+    setMinimum: {group: "method", doc: 1}
 });
 
 //===========================================================================

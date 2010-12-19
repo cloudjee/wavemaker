@@ -1146,10 +1146,10 @@ wm.Object.extendSchema(wm.SelectMenu, {
   optionsVar: {ignore:1},
 	_allFields: {ignore:1},
     defaultInsert:{ignore:1, bindTarget: 1, type:'wm.Variable', group: "editData", order: 10, dependency: '${parent.declaredClass} == "wm.LiveForm" || ${parent.declaredClass} == "wm.RelatedEditor"'},
-    setRestrictValues: {group: "method", params: "(inRestrict)", doc: 1},
-    setDataSet: {group: "method", params: "(inDataSet)", doc: 1},
-		 setOptions: {group: "method", params: "(inOptions)", doc: 1},
-		 getItemIndex: {group: "method", params: "()", doc: 1}
+    setRestrictValues: {group: "method", doc: 1},
+    setDataSet: {group: "method", doc: 1},
+    setOptions: {group: "method", doc: 1},
+    getItemIndex: {group: "method", doc: 1, returns: "Integer"}
 });
 
 wm.Object.extendSchema(wm._LookupEditor, {

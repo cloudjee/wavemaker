@@ -239,16 +239,16 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
      toolbarFormatName: {group: "toolbar", order: 8, shortname: "formatName", doc: 1},
      toolbarSize: {group: "toolbar", order: 9, shortname: "size",  doc: 1},
      toolbarColor: {group: "toolbar", order: 11, shortname: "color", doc: 1},
-     setToolbarUndo: {group: "method", params: "(inEnabled)",  doc: 1},
-     setToolbarStyle: {group: "method", params: "(inEnabled)",  doc: 1},
-     setToolbarStyleAll: {group: "method", params: "(inEnabled)", doc: 1},
-     setToolbarAlign: {group: "method", params: "(inEnabled)",  doc: 1},
-     setToolbarList: {group: "method", params: "(inEnabled)",  doc: 1},
-     setToolbarLink: {group: "method", params: "(inEnabled)",  doc: 1},
-     setToolbarFont: {group: "method", params: "(inEnabled)",  doc: 1},
-     setToolbarFormat: {group: "method", params: "(inEnabled)", doc: 1},
-     setToolbarSize: {group: "method", params: "(inEnabled)",  doc: 1},
-     setToolbarColor: {group: "method", params: "(inEnabled)",  doc: 1}
+     setToolbarUndo: {group: "method",  doc: 1},
+     setToolbarStyle: {group: "method",  doc: 1},
+     setToolbarStyleAll: {group: "method", doc: 1},
+     setToolbarAlign: {group: "method",  doc: 1},
+     setToolbarList: {group: "method",  doc: 1},
+     setToolbarLink: {group: "method",  doc: 1},
+     setToolbarFont: {group: "method",  doc: 1},
+     setToolbarFormat: {group: "method", doc: 1},
+     setToolbarSize: {group: "method",  doc: 1},
+     setToolbarColor: {group: "method",  doc: 1}
  });
  
  wm.RichText.extend({

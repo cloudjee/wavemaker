@@ -1177,20 +1177,20 @@ wm.Object.extendSchema(wm.AbstractEditor, {
     onEnterKeyPress: {ignore: 1},
     display:{ignore:1},
     defaultInsert:{type: "String", bindable: 1, group: "editData", order: 10, dependency: '${parent.declaredClass} == "wm.LiveForm" || ${parent.declaredClass} == "wm.RelatedEditor"'},
-    setCaption: {group: "method", params: "(inCaption)", doc: 1},
-    setCaptionSize: {group: "method", params: "(inCaptionSize)", doc: 1},
-    setCaptionAlign: {group: "method", params: "(inAlign)", doc: 1},
-    setCaptionPosition:{group: "method", params: "(inPosition)",doc: 1},
-    setDisabled: {group: "method", params: "(inDisabled)", doc: 1},
-    getInvalid: {group: "method", params: "()", doc: 1},
-    setReadonly: {group: "method", params: "(inReadonly)",doc: 1},
-    getDisplayValue: {group: "method", params: "()", doc: 1},
-    getDataValue: {group: "method", params: "()", doc: 1},
-    setDisplayValue: {group: "method", params: "(inValue)", doc: 1},
-    setDataValue: {group: "method", params: "(inValue)", doc: 1},
+    setCaption: {group: "method", doc: 1},
+    setCaptionSize: {group: "method", doc: 1},
+    setCaptionAlign: {group: "method",doc: 1},
+    setCaptionPosition:{group: "method", doc: 1},
+    setDisabled: {group: "method", doc: 1},
+    getInvalid: {group: "method", doc: 1, returns: "Boolean"},
+    setReadonly: {group: "method", doc: 1},
+    getDisplayValue: {group: "method",doc: 1, returns: "String"},
+    getDataValue: {group: "method", doc: 1, returns: "Any"},
+    setDisplayValue: {group: "method", doc: 1},
+    setDataValue: {group: "method", doc: 1},
 
-		   focus: {group: "method", params: "()", doc: 1},
-	    clear: {group: "method", params: "()", doc: 1}
+		   focus: {group: "method",doc: 1},
+	    clear: {group: "method", doc: 1}
     
     
 });

@@ -392,6 +392,7 @@ Studio.extend({
 		    }
 			showprops.push({name: i, 
 					description: "_",
+					returns: p.returns,
 					params: params});
 		}
 	    }
@@ -440,7 +441,8 @@ Studio.extend({
 		if (!lastPrototype || prot.declaredClass != lastPrototype.declaredClass) {
 		    lastPrototype = prot;
 		    if (lastPrototype)
-			showprops.splice(i,0, {name: "<b>" + lastPrototype.declaredClass + "</b>"});
+			showprops.splice(i,0, {name: "<b>" + lastPrototype.declaredClass + "</b>",
+					       description: "__"});
 		    i++;
 		}
 	    }
@@ -452,8 +454,8 @@ Studio.extend({
 			if (!this._autoCompletionRemainder || i.indexOf(this._autoCompletionRemainder) == 0) {
 			    if (moreprops.length == 0)
 				moreprops.push({name: "<b>Page Components</b>"});
-			    moreprops.push({name: i, 
-					    description: object[i].declaredClass});
+			    moreprops.push({name: i});
+					    //description: object[i].declaredClass});
 			}
 		    }
 		}
@@ -479,7 +481,7 @@ Studio.extend({
 		for (var i in object) 
 
 		    showprops.push({name: i,
-				    description: (object[i] instanceof wm.Component) ? object[i].declaredClass : dojo.isFunction(object[i]) ? "Not a wavemaker method" : (object[i] || "").toString(),
+				    //description: (object[i] instanceof wm.Component) ? object[i].declaredClass : dojo.isFunction(object[i]) ? "Not a wavemaker method" : (object[i] || "").toString(),
 				    params: dojo.isFunction(object[i]) ? "(???)" : ""});
 	    }
 	}
@@ -488,6 +490,7 @@ Studio.extend({
 		"fields": {
 		    "name": {"type": "String"},
 		    "description": {"type": "String"},
+		    "returns": {type: "String"},
 		    "params":{type: "String"}}});
 
 
@@ -532,19 +535,32 @@ Studio.extend({
 				      layoutKind: "top-to-bottom",
 					  width: "100%",
 					  height: "100%"});
+	    var nameLabel = new wm.Label({owner: this,
+					  parent: propPanel,
+					  singleLine: false,
+					  width: "100%",
+					  height: "48px",
+					  caption: "<b>Name:</b>"});
 	    var typeLabel = new wm.Label({owner: this,
 					  parent: propPanel,
 					  singleLine: false,
 					  width: "100%",
 					  height: "48px",
-					  caption: "Type:"});
+					  caption: "<b>Type:</b>"});
 	    var paramsLabel = new wm.Label({owner: this,
 					  parent: propPanel,
 					  singleLine: false,
 					  width: "100%",
 					  height: "48px",
 					    showing: false,
-					  caption: "Parameters:"});
+					  caption: "<b>Parameters:</b>"});
+	    var returnsLabel = new wm.Label({owner: this,
+					  parent: propPanel,
+					  singleLine: false,
+					  width: "100%",
+					  height: "48px",
+					    showing: false,
+					  caption: "<b>Returns:</b>"});
 
 	    new wm.Label({owner: this,
 			  _classes:{domNode:["wm_FontColor_White"]},
@@ -580,9 +596,12 @@ Studio.extend({
 		    type = itemDef.type || "";
 		else if (dojo.isObject(this._autoCompletionObject[item.name]))
 		    type = this._autoCompletionObject[item.name].declaredClass || "Object";
+		nameLabel.setCaption("<b>Name:</b><br/>&nbsp;&nbsp;&nbsp;" + item.name);
 		typeLabel.setCaption("<b>Type:</b><br/>&nbsp;&nbsp;&nbsp;" + type);
 		paramsLabel.setCaption("<b>Parameters:</b><br/>&nbsp;&nbsp;&nbsp;" + (item.params || ""));
 		paramsLabel.setShowing(Boolean(item.params));
+		returnsLabel.setCaption("<b>Returns:</b><br/>&nbsp;&nbsp;&nbsp;" + (item.returns || ""));
+		returnsLabel.setShowing(Boolean(item.returns));
 		if (item.description != "_")
 		    this.autoCompletionHtml.setHtml(item.description);
 		else {
@@ -595,7 +614,7 @@ Studio.extend({
 
 	    this.autoCompletionList.connect(this.autoCompletionList,"ondblclick", this, function() {
 		var data = this.autoCompletionList.selectedItem.getData();
-		if (!data.description) return;
+		if (data.description == "__") return;
 		var text = this._autoCompletionOriginalText;
 		text = text.substring(0,text.length-this._autoCompletionRemainder.length);
 		
@@ -612,7 +631,7 @@ Studio.extend({
 						       name: "autoCompletionVariable",
 						       type: "com.wavemaker.editor.completions"});
 	}
-	this.autoCompletionDialog.setTitle(object.toString().replace(/[\[\]]/g,""));
+	//this.autoCompletionDialog.setTitle(object.toString().replace(/[\[\]]/g,""));
 	this.autoCompletionVariable.setData(showprops);
 	this.autoCompletionList.setDataSet(this.autoCompletionVariable);
 

@@ -301,8 +301,8 @@ wm.Object.extendSchema(wm.Checkbox, {
 	displayValue: {ignore: 1, writeonly: 1, type: "any" },
     checkedValue: {group: "editor", bindable: 1,order: 40, type: "any", doc: 1},    
     required: {ignore: 1},
-    getChecked: {group: "method", params: "()", doc: 1},
-    setChecked: {group: "method", params: "(inChecked)", doc: 1}
+    getChecked: {group: "method", doc: 1, returns: "Boolean"},
+    setChecked: {group: "method", doc: 1}
 });
 
 wm.Checkbox.extend({
