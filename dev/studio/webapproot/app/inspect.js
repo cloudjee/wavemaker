@@ -137,7 +137,7 @@ makeInputPropEdit = function(inName, inValue, inDefault, inReadonly) {
 */
 makeTextPropEdit = function(inName, inValue, inDefault, inRows) {
 	return [
-	    '<textarea  id="propinspect_'+inName+'" dojoType="SimpleTextarea" onChange="wm.inspectOnChange(\''+inName+'\')" name="', inName, '"', ' wrap="soft" rows="', inRows||8, '"',  (inValue==inDefault ? ' class="prop-default"' : ''), '">', inValue, '</textarea>'
+	    '<textarea  id="propinspect_'+inName+'" dojoType="dijit.form.SimpleTextarea" onChange="wm.inspectOnChange(\''+inName+'\')" name="', inName, '"', ' wrap="soft" rows="', inRows||8, '"',  (inValue==inDefault ? ' class="prop-default"' : ''), '">', inValue, '</textarea>'
 	].join('');
 }
 
