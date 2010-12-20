@@ -134,7 +134,8 @@
 	"Template_Publisher" : "Template Publisher",
 
 	"Services" : "Services",
-	"Database_Service" : "Database Service",
+	"Database_Service" : "Import Database",
+	"Database_Design" : "Design Database",
 	"Java_Service" : "Java Service",
 	"LiveView" : "LiveView",
 	"Query" : "Query",
