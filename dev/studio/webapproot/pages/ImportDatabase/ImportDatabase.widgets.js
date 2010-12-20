@@ -17,24 +17,11 @@
  */ 
 ImportDatabase.widgets = {
 	layoutBox1: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", width: "100%"}, {}, {
-		importDBDialog: ["wm.Panel", {width: "100%", height: "100%"}, {}, {
-			titleBar: ["wm.Panel", {height: "29px", layoutKind: "left-to-right"}, {}, {
-				dialogLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_TextAlign_Center", "wm_Padding_4px", "wm_FontColor_White"]}, height: "100%", width: "100%", border: "0", caption: "New Data Model"}, {}, {
-					format: ["wm.DataFormatter", {}, {}]
-				}]
-			}],
-			tabs: ["wm.TabLayers", {}, {}, {
-				importDatabase: ["wm.Layer", {caption: "Import Data Model", horizontalAlign: "left", verticalAlign: "top"}, {}, {
 					importDBDialogInner: ["wm.Panel", {width: "100%", height: "100%"}, {}, {
-						panel5: ["wm.Panel", {width: "100%", height: "100%"}, {}, {
-							benchbevel4: ["wm.Bevel", {border: "0", width: "100%", height: "4px"}, {}],
-							panel1: ["wm.Panel", {height: "100%", padding: "10"}, {}, {
-								label1: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, height: "18px", border: "0", caption: "Basic Options"}, {}, {
-									format: ["wm.DataFormatter", {}, {}]
-								}],
-								panel2: ["wm.Panel", {width: "100%", height: "200px", layoutKind: "left-to-right", horizontalAlign: "center", padding: "4,0,0,0"}, {}, {
-									basicOptions: ["wm.Panel", {width: "452px", padding: "0"}, {}, {
-										panel501a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right"}, {}, {
+							panel1: ["wm.TabLayers", {height: "100%", padding: "10"}, {}, {
+							    panel2: ["wm.Layer", {caption: "Basic Options", layoutKind: "top-to-bottom", horizontalAlign: "center", verticalAlign: "middle", padding: "0"}, {}, {
+
+										panel501a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right", width: "100%",horizontalAlign: "center"}, {}, {
 											label301: ["wm.Label", {width: "118px", border: "0", caption: "Database System"}, {}, {
 												format: ["wm.DataFormatter", {}, {}]
 											}],
@@ -42,101 +29,98 @@ ImportDatabase.widgets = {
 												editor: ["wm._SelectEditor", {}, {}]
 											}]
 										}],
-										panel601a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right"}, {}, {
+										panel601a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right", width: "100%",horizontalAlign: "center"}, {}, {
 											hostLabel: ["wm.Label", {width: "120px", border: "0", caption: "Hostname"}, {}, {
 												format: ["wm.DataFormatter", {}, {}]
 											}],
-											hostInput: ["wm.Input", {checked: true, width: "300px", border: "0"}, {onkeypress: "onImportHostKeyPress", onchange: "importHostChanged"}]
+										    hostInput: ["wm.Input", {checked: true, width: "300px", border: "0"}, {onkeypress: "onImportHostKeyPress", onchange: "importHostChanged", onenterkey: "importBtnClick"}]
 										}],
-										panel602a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right"}, {}, {
-											portLabel: ["wm.Label", {width: "120px", border: "0", caption: "Port"}, {}, {
-												format: ["wm.DataFormatter", {}, {}]
-											}],
-											portInput: ["wm.Input", {checked: true, width: "300px", border: "0"}, {onkeypress: "onImportPortKeyPress", onchange: "importPortChanged"}]
-										}],
-										panel6a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right"}, {}, {
+										panel6a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right", width: "100%",horizontalAlign: "center"}, {}, {
 											label4: ["wm.Label", {width: "120px", border: "0", caption: "Username"}, {}, {
 												format: ["wm.DataFormatter", {}, {}]
 											}],
-											usernameInput: ["wm.Input", {checked: true, width: "300px", border: "0"}, {onkeypress: "onUsernameKeyPress", onchange: "usernameChanged"}]
+											usernameInput: ["wm.Input", {checked: true, width: "300px", border: "0"}, {onkeypress: "onUsernameKeyPress", onchange: "usernameChanged", onenterkey: "importBtnClick"}]
 										}],
-										panel603a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right"}, {}, {
+										panel603a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right", width: "100%",horizontalAlign: "center"}, {}, {
 											label5: ["wm.Label", {width: "120px", border: "0", caption: "Password"}, {}, {
 												format: ["wm.DataFormatter", {}, {}]
 											}],
-											passwordInput: ["wm.Input", {checked: true, width: "300px", border: "0", inputType: "password"}, {}]
+											passwordInput: ["wm.Input", {checked: true, width: "300px", border: "0", inputType: "password"}, {onenterkey: "importBtnClick"}]
 										}],
-										panel701a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right"}, {}, {
+										panel701a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right", width: "100%",horizontalAlign: "center"}, {}, {
 											extraInputLabel: ["wm.Label", {width: "120px", border: "0", caption: "extraInputLabel", showing: false}, {}, {
 												format: ["wm.DataFormatter", {}, {}]
 											}],
-											extraInput: ["wm.Input", {checked: true, width: "300px", border: "0", showing: false}, {onkeypress: "onImportExtraKeyPress", onchange: "importExtraChanged"}]
+											extraInput: ["wm.Input", {checked: true, width: "300px", border: "0", showing: false}, {onkeypress: "onImportExtraKeyPress", onchange: "importExtraChanged", onenterkey: "importBtnClick"}]
 										}],
-										panel5a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right"}, {}, {
-											label3: ["wm.Label", {width: "120px", border: "0", caption: "Service Name"}, {}, {
-												format: ["wm.DataFormatter", {}, {}]
-											}],
-											serviceNameInput: ["wm.Input", {checked: true, width: "300px", border: "0"}, {onkeypress: "onServiceNameKeyPress", onchange: "serviceNameChanged"}]
-										}],
-										extra2Panel: ["wm.Panel", {height: "24px", layoutKind: "left-to-right"}, {}, {
+										extra2Panel: ["wm.Panel", {height: "24px", layoutKind: "left-to-right", width: "100%",horizontalAlign: "center"}, {}, {
 											extra2InputLabel: ["wm.Label", {width: "120px", border: "0", caption: "Instance"}, {}, {
 												format: ["wm.DataFormatter", {}, {}]
 											}],
-											extra2Input: ["wm.Input", {checked: true, width: "300px", border: "0"}, {onkeypress: "onImportExtra2KeyPress", onchange: "importExtra2Changed"}]
+											extra2Input: ["wm.Input", {checked: true, width: "300px", border: "0"}, {onkeypress: "onImportExtra2KeyPress", onchange: "importExtra2Changed", onenterkey: "importBtnClick"}]
 										}]
-									}]
 								}],
-								spacerMiddle: ["wm.Spacer", {height: "10px"}, {}],
-								label2: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, height: "18px", border: "0", caption: "Advanced Options"}, {}, {
-									format: ["wm.DataFormatter", {}, {}]
-								}],
-								panel4: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right", horizontalAlign: "center", padding: "4,0,0,0"}, {}, {
-									advancedOptions: ["wm.Panel", {width: "452px"}, {}, {
-										panel110a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right"}, {}, {
+							    panel4: ["wm.Layer", {caption: "Advanced Options", layoutKind: "top-to-bottom", padding: "4,0,0,0", autoScroll: true}, {}, {
+
+								panel5a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right", width: "100%",horizontalAlign: "center"}, {}, {
+											label3: ["wm.Label", {width: "120px", border: "0", caption: "Service Name"}, {}, {
+												format: ["wm.DataFormatter", {}, {}]
+											}],
+											serviceNameInput: ["wm.Input", {checked: true, width: "300px", border: "0"}, {onkeypress: "onServiceNameKeyPress", onchange: "serviceNameChanged", onenterkey: "importBtnClick"}]
+										}],
+
+										panel602a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right", width: "100%",horizontalAlign: "center"}, {}, {
+											portLabel: ["wm.Label", {width: "120px", border: "0", caption: "Port"}, {}, {
+												format: ["wm.DataFormatter", {}, {}]
+											}],
+											portInput: ["wm.Input", {checked: true, width: "300px", border: "0"}, {onkeypress: "onImportPortKeyPress", onchange: "importPortChanged", onenterkey: "importBtnClick"}]
+										}],
+
+										panel110a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right", width: "100%",horizontalAlign: "center"}, {}, {
 											label6: ["wm.Label", {width: "120px", border: "0", caption: "Connection URL"}, {}, {
 												format: ["wm.DataFormatter", {}, {}]
 											}],
-											connectionUrlInput: ["wm.Input", {checked: true, width: "300px", border: "0"}, {}]
+											connectionUrlInput: ["wm.Input", {checked: true, width: "300px", border: "0"}, {onenterkey: "importBtnClick"}]
 										}],
-										panel19a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right"}, {}, {
+										panel19a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right", width: "100%",horizontalAlign: "center"}, {}, {
 											label7: ["wm.Label", {width: "120px", border: "0", caption: "Java Package"}, {}, {
 												format: ["wm.DataFormatter", {}, {}]
 											}],
-											packageInput: ["wm.Input", {checked: true, width: "300px", border: "0"}, {}]
+											packageInput: ["wm.Input", {checked: true, width: "300px", border: "0"}, {onenterkey: "importBtnClick"}]
 										}],
-										panel18a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right"}, {}, {
+										panel18a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right", width: "100%",horizontalAlign: "center"}, {}, {
 											label8: ["wm.Label", {width: "120px", border: "0", caption: "Table Filter"}, {}, {
 												format: ["wm.DataFormatter", {}, {}]
 											}],
-											tablePatternInput: ["wm.Input", {checked: true, width: "300px", border: "0"}, {}]
+											tablePatternInput: ["wm.Input", {checked: true, width: "300px", border: "0"}, {onenterkey: "importBtnClick"}]
 										}],
-										panel1801a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right"}, {}, {
+										panel1801a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right", width: "100%",horizontalAlign: "center"}, {}, {
 											label9: ["wm.Label", {width: "120px", border: "0", caption: "Schema Filter"}, {}, {
 												format: ["wm.DataFormatter", {}, {}]
 											}],
-											schemaPatternInput: ["wm.Input", {checked: true, width: "300px", border: "0"}, {}]
+											schemaPatternInput: ["wm.Input", {checked: true, width: "300px", border: "0"}, {onenterkey: "importBtnClick"}]
 										}],
-										panel20a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right"}, {}, {
+										panel20a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right", width: "100%",horizontalAlign: "center"}, {}, {
 											label16: ["wm.Label", {width: "120px", border: "0", caption: "Driver Class"}, {}, {
 												format: ["wm.DataFormatter", {}, {}]
 											}],
-											driverClassInput: ["wm.Input", {checked: true, width: "300px", border: "0"}, {}]
+											driverClassInput: ["wm.Input", {checked: true, width: "300px", border: "0"}, {onenterkey: "importBtnClick"}]
 										}],
-										panel201a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right"}, {}, {
+										panel201a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right", width: "100%",horizontalAlign: "center"}, {}, {
 											label27: ["wm.Label", {width: "120px", border: "0", caption: "Dialect"}, {}, {
 												format: ["wm.DataFormatter", {}, {}]
 											}],
-											dialectInput: ["wm.Input", {checked: true, width: "300px", border: "0"}, {}]
+											dialectInput: ["wm.Input", {checked: true, width: "300px", border: "0"}, {onenterkey: "importBtnClick"}]
 										}],
-										panel202a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right"}, {}, {
+								panel202a: ["wm.Panel", {height: "28px", padding: "0,0,4,0", layoutKind: "left-to-right", width: "100%",horizontalAlign: "center"}, {}, {
 											label28: ["wm.Label", {width: "120px", border: "0", caption: "Naming Strategy"}, {}, {
 												format: ["wm.DataFormatter", {}, {}]
 											}],
-											revengNamingStrategyInput: ["wm.Input", {checked: true, width: "300px", border: "0"}, {}]
+											revengNamingStrategyInput: ["wm.Input", {checked: true, width: "300px", border: "0"}, {onenterkey: "importBtnClick"}]
 										}]
 									}]
 								}]
-							}]
+
 						}],
 						footer: ["wm.Panel", {height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
 							testConnectionBtn: ["wm.Button", {caption: "Test Connection", width: "160px"}, {onclick: "testConnectionBtnClick"}],
@@ -145,31 +129,6 @@ ImportDatabase.widgets = {
 							spacer2: ["wm.Spacer", {width: "10px"}, {}],
 							cancelBtn: ["wm.Button", {caption: "Close", width: "96px"}, {onclick: "cancelBtnClick"}]
 						}]
-					}]
-				}],
-				newDatabase: ["wm.Layer", {caption: "New Data Model", horizontalAlign: "left", verticalAlign: "top"}, {}, {
-					newDBDialogInner: ["wm.Panel", {width: "100%", height: "100%"}, {}, {
-						panel6: ["wm.Panel", {width: "100%", height: "100%"}, {}, {
-							benchbevel6: ["wm.Bevel", {border: "0", width: "100%", height: "4px"}, {}],
-							panel3: ["wm.Panel", {height: "100%", padding: "10"}, {}, {
-								panel22: ["wm.Panel", {width: "100%", height: "100px", layoutKind: "left-to-right", horizontalAlign: "center", verticalAlign: "center"}, {}, {
-									panel7: ["wm.Panel", {width: "490px", height: "100%", horizontalAlign: "center", verticalAlign: "middle"}, {}, {
-										newDataModelInput: ["wm.Editor", {width: "100%", caption: "Data Model Name"}, {}, {
-											editor: ["wm._TextEditor", {}, {}]
-										}]
-									}]
-								}]
-							}]
-						}],
-						footer1: ["wm.Panel", {height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
-							spacer3: ["wm.Spacer", {width: "10px"}, {}],
-							newBtn1: ["wm.Button", {caption: "OK", width: "96px", hint: "New Database"}, {onclick: "newBtnClick"}],
-							spacer4: ["wm.Spacer", {width: "10px"}, {}],
-							cancelBtn1: ["wm.Button", {caption: "Cancel", width: "96px"}, {onclick: "cancelBtnClick"}]
-						}]
-					}]
-				}]
-			}]
+
 		}]
-	}]
 }

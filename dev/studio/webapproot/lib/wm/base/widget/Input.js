@@ -119,10 +119,13 @@ dojo.declare("wm.Input", wm.Box, {
 	onblur: function() {
 		this.inputChanged();
 	},
-	onkeypress: function() {
+	onkeypress: function(e) {
 		if (this.changeOnKey)
-			setTimeout(dojo.hitch(this, "inputChanged"), 0);
-	}
+			setTimeout(dojo.hitch(this, "inputChanged"), 2);
+	    if (e.keyCode == dojo.keys.ENTER)
+			setTimeout(dojo.hitch(this, "onenterkey"), 2);
+	},
+    onenterkey: function() {}
 });
 
 // design only...

@@ -135,7 +135,7 @@
 
 	"Services" : "Services",
 	"Database_Service" : "Import Database",
-	"Database_Design" : "Design Database",
+	"Database_Design" : "Design Database", 
 	"Java_Service" : "Java Service",
 	"LiveView" : "LiveView",
 	"Query" : "Query",

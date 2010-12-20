@@ -197,6 +197,7 @@ dojo.declare("ImportDatabase", wm.Page, {
 	_loadedIP: function(inData) {
 		this.ip = inData;
 	},
+/*
 	newBtnClick: function(inSender) {
 		var f = this.newDataModelInput.getDataValue();
 		this.dataModelName = f;
@@ -214,6 +215,8 @@ dojo.declare("ImportDatabase", wm.Page, {
 		wm.fire(studio.getEditor("DataObjectsEditor").page, "newDataModelResult");
 		this._close("New");
 	},
+
+	*/
 	_close: function(inWhy) {
 		wm.fire(this.owner, "dismiss", [inWhy]);
 	},

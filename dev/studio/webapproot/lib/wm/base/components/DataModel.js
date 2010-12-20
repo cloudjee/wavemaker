@@ -33,16 +33,46 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 	port: "",
 	dbName: "",
 	noPrompt: false,
+        _type: "import",
 	afterPaletteDrop: function() {
 		this.newDataModelDialog();
 		return true;
 	},
 	newDataModelDialog: function(inSender) {
+	    if (this._type == "import") {
 		var d = this.getCreateDataModelDialog();
 		if (d.page)
-			d.page.update(this);
+		    d.page.update(this);
 		d.show();
+	    } else {
+		app.prompt("Enter your data model name", "MyTestDatabase", dojo.hitch(this, "createDataModel"));
+	    }
+/*
+	    if (this._type == "import") {
+		d.page.tabs.setLayerIndex(0);
+		d.setHeight("300px");
+	    } else {
+		d.page.tabs.setLayerIndex(1);
+		d.setHeight("150px");
+	    }
+	    */
 	},
+	createDataModel: function(inValue) {
+	        this._dataModelName = inValue;
+		studio.beginWait("Adding " + inValue);
+		studio.dataService.requestAsync(NEW_DATA_MODEL_OP, 
+			[inValue], 
+			dojo.hitch(this, "newDataModelResult"), 
+			dojo.hitch(this, "newDataModelError"));
+	},
+	newDataModelError: function(inError) {
+		app.alert(inError);
+	},
+	newDataModelResult: function() {
+	    this.completeNewDataModel();  
+	    studio.endWait("Adding " + this._dataModelName);
+	},
+
 	getCreateDataModelDialog: function() {
 		if (studio.importDBDialog) {
 			return studio.importDBDialog;
@@ -52,7 +82,8 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 			pageName: "ImportDatabase",
 			hideControls: true,
 			width: 700,
-			height: 550
+		    height: 340,
+		    title: "New Data Model"
 		};
 		var d = studio.importDBDialog = new wm.PageDialog(props);
 		d.onPageReady = dojo.hitch(d, function() {
@@ -66,16 +97,28 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 	},
 	completeNewDataModel: function() {
 		var p = this.getCreateDataModelDialog().page;
-		if (p.dataModelName) {
-			var n = p.dataModelName;
+		if (this._dataModelName || p.dataModelName) {
+			var n = this._dataModelName || p.dataModelName;
 			var c = new wm.DataModel({name: n, dataModelName: n});
 			studio.application.addServerComponent(c);
 			studio.application.loadServerComponents("wm.Query");
 			wm.fire(studio.getEditor("QueryEditor").page, "update");
 			studio.refreshWidgetsTree();
+
+		    // If designing a data model
+		    if (this._dataModelName) {
 			studio.select(c);
 			this.editView();
 			studio.navGotoModelTreeClick();
+ 			wm.fire(studio.getEditor("DataObjectsEditor").page, "newDataModelResult");
+ 			var page = studio.getEditor("DataObjectsEditor").page;
+			page.objectPages.setLayer(page.DEFAULT_PAGE);
+		    } 
+
+		    // else we're importing a datamodel
+		    else {
+			app.toastSuccess(n + " has been imported");
+		    }
 		}
 	},
 	editView: function() {

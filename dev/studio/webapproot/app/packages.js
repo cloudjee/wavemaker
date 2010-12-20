@@ -158,6 +158,7 @@
 
 
 [ bundlePackage.Services, bundlePackage.Database_Service, "wm.DataModel", "wm.base.components.DataModel", "images/wm/data_blue.png"],
+[ bundlePackage.Services, bundlePackage.Database_Design, "wm.DataModel", "wm.base.components.DataModel", "images/wm/data_blue.png", "", {_type: "New"}],
 [ bundlePackage.Services, bundlePackage.Java_Service, "wm.JavaService", "wm.base.components.JavaService", "images/wm/component.png"],
 // [ bundlePackage.Services, bundlePackage.UploadDownload_Service, "wm.JavaService", "wm.base.components.JavaService", "images/wm/component.png", "Creates a java service for handling file downloads", {initialCode: "public String download() {return 'Ouch!';}", serviceId: "Download", initialClassId: "Download"}],
 [ bundlePackage.Services, bundlePackage.LiveView, "wm.LiveView", "wm.base.components.LiveView", "images/wm/liveview_16.png"],
