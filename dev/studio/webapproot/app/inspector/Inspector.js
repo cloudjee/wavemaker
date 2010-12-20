@@ -469,7 +469,7 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 }});
 
 dojo.declare("wm.GroupInspector", wm.Inspector, {
-	autoScroll: true,
+    autoScroll: false,
 	//scrollY: true,
 	colCount: 3,
 	preinspect: function() {
