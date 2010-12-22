@@ -892,7 +892,7 @@ Studio.extend({
 
     runProjectChange: function(inSender, inLabel, inIconClass, inEvent) {
 	if (inLabel == "Compile")
-	    inSender.setWidth("90px");
+	    inSender.setWidth("100px");
 	else
 	    inSender.setWidth("75px");
     },
