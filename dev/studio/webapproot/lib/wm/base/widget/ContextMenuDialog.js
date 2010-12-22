@@ -20,7 +20,7 @@ dojo.declare("wm.ContextMenuDialog", wm.Dialog, {
 		this.showModal = true;
 		this.deleteButtonProps = {id:'deleteButton', title: ' ',width:'', type:'img', label:'Delete', src:'images/delete_24.png', width:'20px'};
 	        this.containerNodeWidth = width;
-		dojo.connect(domNode, "oncontextmenu", this, "show");
+	//dojo.connect(domNode, "oncontextmenu", this, "show");
 	},
     show: function(e) {
 	this.inherited(arguments);
