@@ -73,11 +73,11 @@ function keyDown(e){
 				editArea.execCommand("change_highlight");			
 				use=true;
 				break;
+/*
 			case "g":
 				setTimeout("editArea.execCommand('go_to_line');", 5);	// the prompt stop the return false otherwise
 				use=true;
 				break;
-/*
 			case "e":
 				editArea.execCommand("show_help");
 				use=true;

@@ -59,7 +59,7 @@ Studio.extend({
 	    return this.formatScriptClick();
 	case "o":
 	    return this.toggleWrapScriptClick();
-	case "l":
+	case "g":
 	    return this.editArea.promptGotoLine();
 	case "n":
 	    return this.listCompletions();
@@ -75,7 +75,7 @@ Studio.extend({
 	    return this.formatAppScriptClick();
 	case "o":
 	    return this.toggleWrapAppScriptClick();
-	case "l":
+	case "g":
 	    return this.appsourceEditor.promptGotoLine();
 	}
     },
@@ -89,7 +89,7 @@ Studio.extend({
 	    break;
 	case "o":
 	    return this.toggleWrapCssClick();
-	case "l":
+	case "g":
 	    return this.cssEditArea.promptGotoLine();
 	}
     },
@@ -103,7 +103,7 @@ Studio.extend({
 	    break;
 	case "o":
 	    return this.toggleWrapMarkupClick();
-	case "l":
+	case "g":
 	    return this.markupEditArea.promptGotoLine();
 	}
     },
