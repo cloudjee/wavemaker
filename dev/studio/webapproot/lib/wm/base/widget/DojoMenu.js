@@ -122,7 +122,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		    this.dojoObj.placeAt(this.domNode);
 
 	        if (this.fullStructureStr) 
-		    this.setFullStructureStr(this.fullStructureStr);
+		    this.setFullStructureStr(this.fullStructureStr, 0);
 
 	    // This block will upgrade menus built using the freetext "menu" property to use
 	    // the new format
@@ -314,9 +314,11 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 	},
 	dojoRenderer: function (){
 	},
-	setFullStructureStr: function(inStruct) {
+    setFullStructureStr: function(inStruct, setByDesigner) {
 	    this.fullStructureStr = inStruct;
 	    this.setFullStructure(dojo.fromJson(inStruct));	    
+	if (setByDesigner)
+	    this.renderDojoObj();
 	},
 	setFullStructure: function(inStruct) {
 	    this.fullStructure = inStruct;
