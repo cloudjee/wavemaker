@@ -1,4 +1,4 @@
-/*
+ /*
  *  Copyright (C) 2008-2010 WaveMaker Software, Inc.
  *
  *  This file is part of the WaveMaker Client Runtime.
@@ -136,21 +136,21 @@ wm.services = {
 				this._destroyService(s);
 		}
 	},
-	getService: function(inName) {
+        getService: function(inName, hideFromClient) {
 		var s;
 		if (inName) {
-			s = this._services[inName] || this._createService(inName);
+		    s = this._services[inName] || this._createService(inName, hideFromClient);
 			if (!s._service)
 				s.initService();
 		}
 		return s;
 	},
-	_createService: function(inName) {
+       _createService: function(inName, hideFromClient) {
 		var
 			defaultCtor = "wm.JsonRpcService",
 			s = this.byName[inName];
 		if (!s)
-			s = this.add({name: inName, ctor: defaultCtor});
+		    s = this.add({name: inName, ctor: defaultCtor, clientHide: hideFromClient});
 		var ctor = dojo.getObject(s.ctor || defaultCtor);
 		// FIXME: we don't want to be streamed so don't include owner
 		// otoh without owner, we don't know how to resolve paths at designTime
