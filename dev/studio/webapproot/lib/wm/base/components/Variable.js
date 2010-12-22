@@ -108,7 +108,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		} else if (!(this.data && this.data.list))
 			this.isList = false;
 
-                var hasChanged = (this.type == t);
+                var hasChanged = (this.type != t);
 		this.type = t;
 		//
 		if (this._proxy)
