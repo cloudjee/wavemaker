@@ -934,6 +934,37 @@ wm._SelectEditor.extend({
 		}
 		return this.inherited(arguments);
 	},
+    setPropEdit: function(inName, inValue, inDefault) {
+	switch (inName) {
+	case "displayField":
+	    var editor1 = dijit.byId("studio_propinspect_displayField");
+
+	    var store1 = editor1.store.root;
+
+	    while (store1.firstChild) store1.removeChild(store1.firstChild);
+
+
+	    var displayFields = this.makePropEdit("displayField");
+	    displayFields = displayFields.replace(/^.*?\<option/,"<option");
+	    displayFields = displayFields.replace(/\<\/select.*/,"");
+	    store1.innerHTML = displayFields;
+	    return true;
+	case "dataField":
+	    var editor1 = dijit.byId("studio_propinspect_dataField");
+
+	    var store1 = editor1.store.root;
+
+	    while (store1.firstChild) store1.removeChild(store1.firstChild);
+
+
+	    var dataFields = this.makePropEdit("dataField");
+	    dataFields = dataFields.replace(/^.*?\<option/,"<option");
+	    dataFields = dataFields.replace(/\<\/select.*/,"");
+	    store1.innerHTML = dataFields;
+	    return true;
+	}
+	return this.inherited(arguments);
+    },    
 	editProp: function(inName, inValue, inInspector) {
 		switch (inName) {
 			case "updateNow":
@@ -1088,6 +1119,37 @@ wm.SelectMenu.extend({
 		}
 		return this.inherited(arguments);
 	},
+    setPropEdit: function(inName, inValue, inDefault) {
+	switch (inName) {
+	case "displayField":
+	    var editor1 = dijit.byId("studio_propinspect_displayField");
+
+	    var store1 = editor1.store.root;
+
+	    while (store1.firstChild) store1.removeChild(store1.firstChild);
+
+
+	    var displayFields = this.makePropEdit("displayField");
+	    displayFields = displayFields.replace(/^.*?\<option/,"<option");
+	    displayFields = displayFields.replace(/\<\/select.*/,"");
+	    store1.innerHTML = displayFields;
+	    return true;
+	case "dataField":
+	    var editor1 = dijit.byId("studio_propinspect_dataField");
+
+	    var store1 = editor1.store.root;
+
+	    while (store1.firstChild) store1.removeChild(store1.firstChild);
+
+
+	    var dataFields = this.makePropEdit("dataField");
+	    dataFields = dataFields.replace(/^.*?\<option/,"<option");
+	    dataFields = dataFields.replace(/\<\/select.*/,"");
+	    store1.innerHTML = dataFields;
+	    return true;
+	}
+	return this.inherited(arguments);
+    },    
 	editProp: function(inName, inValue, inInspector) {
 		switch (inName) {
 			case "updateNow":

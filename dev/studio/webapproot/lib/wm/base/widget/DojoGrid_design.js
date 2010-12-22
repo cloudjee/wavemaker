@@ -265,7 +265,7 @@ wm.DojoGrid.extend({
 	makePropEdit: function(inName, inValue, inDefault) {
 		switch (inName) {
 			case "dataSet":
-				return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.dataSet ? this.dataSet.getId() : "", allowAllTypes: true, listMatch: true});
+				return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.variable ? this.variable.getId() : "", allowAllTypes: true, listMatch: true});
 		case "selectionMode":
 			return makeSelectPropEdit(inName, inValue, ["single", "multiple", "extended", "none"], inDefault);
 		case "editColumns":

@@ -81,7 +81,10 @@ dojo.declare("wm.ServiceCall", null, {
 	//=======================================================
 	setService: function(inService) {
 		this.service = inService;
-		this._service = wm.services.getService(this.service) || new wm.Service({});
+	    var owner = this.getOwnerApp();
+
+	    this._service = wm.services.getService(this.service, 	
+						   owner && owner.declaredClass == "StudioApplication") || new wm.Service({});
 		wm.fire(this._service, "setServiceCall", [this]);
 	},
 	//=======================================================
@@ -373,6 +376,28 @@ wm.ServiceCall.extend({
 		}
 		d.show();
 	},
+    setPropEdit: function(inName, inValue, inDefault) {
+	switch (inName) {
+	case "operation":
+	    var editor = dijit.byId("studio_propinspect_operation");
+	    var store = editor.store.root;
+	    while (store.firstChild) store.removeChild(store.firstChild);
+
+	    var	s = this._service;
+	    var valueOk = s && s.getOperation(inValue);
+	    var methods = s && s.getOperationsList();
+	    
+	    
+	    dojo.forEach(methods, function(method) {
+		var node = document.createElement("option");
+		node.innerHTML = method;
+		store.appendChild(node);
+	    });
+	    return true;
+	}
+	return this.inherited(arguments);
+    },
+
 	makePropEdit: function(inName, inValue, inDefault) {
 		switch (inName) {
 			case "service":

@@ -75,7 +75,8 @@ wm.inspectOnChange = function(inPropName) {
 */
 makeSelectPropEdit = function(inName, inValue, inOptions, inDefault, inValues, inReadonly, isBound) {
     var html = [
-	'<select class="wminspector-edit" style="display:' + (isBound ? 'none' : 'block') + '" id="studio_propinspect_'+inName+'" dojoType="dijit.form.ComboBox"  name="', inName, '" id="studio-prop-panel-' + inName + '" ',
+	'<table class="studio_propinspect_innertable"><tr><td class="studio_propinspect_editcell">',
+	'<select class="wminspector-edit" id="studio_propinspect_'+inName+'" dojoType="dijit.form.ComboBox"  name="', inName, '" id="studio-prop-panel-' + inName + '" ',
 		 'onChange="wm.inspectOnChange(\'' +inName + '\')">' ];
 	for (var i=0, l=inOptions.length, o, v; (o=inOptions[i])||(i<l); i++) {
 		v = inValues ? inValues[i] : o;
@@ -87,19 +88,21 @@ makeSelectPropEdit = function(inName, inValue, inOptions, inDefault, inValues, i
 			'</option>');
 	}
 	html.push('</select>');
-    html.push('<input class="wminspector-readonly" value="'+inValue+'" readonly="true" style="display:' + (!isBound ? 'none' : 'block') + '"/>');
+    html.push('<input class="wminspector-readonly" value="'+inValue+'" readonly="true" />');
+    html.push('</td><td class="bound-prop-button">&nbsp;</td></tr></table>');
 	return html.join('');
 }
 
 makeCheckPropEdit = function(inName, inValue, inDefault, inReadonly, isBound) {
 	return [ 
-	    '<input style="display:' + (isBound ? 'none' : 'block') + '" ',
-	    'id="studio_propinspect_'+inName+'" ',
+	    '<table class="studio_propinspect_innertable"><tr><td class="studio_propinspect_editcell">',
+	    '<input id="studio_propinspect_'+inName+'" ',
 	    'dojoType="dijit.form.CheckBox" onChange="wm.inspectOnChange(\''+inName+'\')" type="checkbox" name="', 
 	    inName, '"', 
 	    (inValue==inDefault ? ' class="prop-default wminspector-edit"' : ' class="wminspector-edit"'), 
 	    (inValue ? 'checked="checked"' : '') + '"/>',
-	    '<input class="wminspector-readonly"  value="'+inValue+'" readonly="true" style="display:' + (!isBound ? 'none' : 'block') + '"/>'
+	    '<input class="wminspector-readonly"  value="'+inValue+'" readonly="true" />',
+	    '</td><td class="bound-prop-button">&nbsp;</td></tr></table>'
 	].join('');
 }
 makeInputPropEdit = function(inName, inValue, inDefault, inReadonly, isBound) {
@@ -107,12 +110,14 @@ makeInputPropEdit = function(inName, inValue, inDefault, inReadonly, isBound) {
 	// FIXME: need more escaping here likely. just doing quotes for now
 
 	return [
-	    '<input style="display:' + (isBound ? 'none' : 'block') + '" id="studio_propinspect_'+inName+'" dojoType="dijit.form.TextBox" name="', inName, '"',
+	    '<table class="studio_propinspect_innertable"><tr><td class="studio_propinspect_editcell">',
+	    '<input id="studio_propinspect_'+inName+'" dojoType="dijit.form.TextBox" name="', inName, '"',
 	    'onChange="wm.inspectOnChange(\''+inName+'\')"',
 		(inValue==inDefault ? ' class="prop-default wminspector-edit"' : 'class="wminspector-edit"'),
-		(inReadonly === true || isBound ? ' readOnly="true"' : ''),
+	    (inReadonly === true ? ' readOnly="true"' : ''),
 	    ' value="', String(inValue).replace(/\"/g,"'"), '"/>',
-	    '<input class="wminspector-readonly"  value="'+inValue+'" readonly="true" style="display:' + (!isBound ? 'none' : 'block') + '"/>'
+	    '<input class="wminspector-readonly"  value="'+inValue+'" readonly="true"/>',
+	    '</td><td class="bound-prop-button">&nbsp;</td></tr></table>'
 	].join('');
 }
 setInputPropEdit = function(inName, inValue) {
@@ -140,15 +145,20 @@ makeTextPropEdit = function(inName, inValue, inDefault, inRows) {
 	    '<textarea  id="propinspect_'+inName+'" dojoType="dijit.form.SimpleTextarea" onChange="wm.inspectOnChange(\''+inName+'\')" name="', inName, '"', ' wrap="soft" rows="', inRows||8, '"',  (inValue==inDefault ? ' class="prop-default"' : ''), '">', inValue, '</textarea>'
 	].join('');
 }
-
+/*
 addButtonToEdit = function(inEdit, inValue, inDefault, inContent) {
-	var b = '<button class="wminspector-prop-button" type="button">' + (inContent||"&hellip;") + '</button>';
+	var b = '<button class="wminspector-prop-button" type="button">' + (inContent||"&#187;") + '</button>';
 	return '<table class="prop-table" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td' + (inValue==inDefault ? ' class="prop-default"' : '') + '>' + inEdit + '</td><td class="prop-button">' + b + '</td></tr></table>';
 }
-
+    */
+addButtonToEdit = function(inName, inEdit, inValue, inContent) {
+    //return '<button class="wminspector-prop-button" type="button">' + (inContent ? "" : "&#171;") + inName  + (inContent||"&#187;") + '</button>';
+return '<button class="wminspector-prop-button" type="button">'  + inName  + '</button>';
+}
 makeInputButtonEdit = function(inName, inValue, inDefault, inContent) {
-	var i = makeInputPropEdit(inName, inValue, inDefault);
-	return addButtonToEdit(i, inValue, inDefault, inContent);
+    //var i = makeInputPropEdit(inName, inValue, inDefault);
+    //return addButtonToEdit(i, inValue, inDefault, inContent);
+    return addButtonToEdit(inName, inValue, inContent);
 }
 
 makeBoundEdit = function(inName, inValue) {
@@ -162,8 +172,9 @@ makeBoundEdit = function(inName, inValue) {
 }
 
 makeReadonlyButtonEdit = function(inName, inValue, inDefault, inContent) {
-	var i = makeInputPropEdit(inName, inValue, inDefault, true);
-	return addButtonToEdit(i, inValue, inDefault, inContent);
+    //var i = makeInputPropEdit(inName, inValue, inDefault, true);
+    //return addButtonToEdit(i, inValue, inDefault, inContent);
+return addButtonToEdit(inName, inValue, inContent);
 };
 
 inspectFileboxUrlChange = function() { 

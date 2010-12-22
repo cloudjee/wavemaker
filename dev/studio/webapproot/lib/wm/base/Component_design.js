@@ -23,7 +23,7 @@ dojo.require('wm.base.Component');
 //===========================================================================
 wm.Object.extendSchema(wm.Component, {
         documentation: {group: "docs", readonly: true, order: 1},
-        generateDocumentation: {group: "docs", readonly: true, order: 2},
+    generateDocumentation: {group: "docs", readonly: true, order: 2},
         themeable: {ignore: 1},
         theme: {ignore: 1},
         isDestroyed: {ignore: 1},
@@ -295,8 +295,9 @@ wm.Component.extend({
 	makePropEdit: function(inName, inValue, inDefault) {
 		switch (inName) {
 		   case "documentation":
-		   case "generateDocumentation":
 		       return makeReadonlyButtonEdit(inName, inValue, inDefault);
+		   case "generateDocumentation":
+		       return makeReadonlyButtonEdit("generateDocs", inValue, inDefault);
 		}
 
 	        if (inName.match(/^custom/) && dojo.isFunction(this.constructor.prototype[inName])) {
@@ -533,12 +534,14 @@ wm.Component.extend({
 	    var submenuOptions = {label: "Select", children: [{label: this.name,
 							       onClick: this._makeSelectComponentMethod(this)}]};
 	    var parent = this.parent;
-	    while(parent != studio.designer) {
-		submenuOptions.children.push({label: parent.name,
-			       onClick: this._makeSelectComponentMethod(parent)});
+	    while(parent && parent != studio.designer) {
+		if (!parent.flags || !parent.flags.notInspectable && !parent.noInspector)
+		    submenuOptions.children.push({label: parent.name,
+						  onClick: this._makeSelectComponentMethod(parent)});
 		parent = parent.parent;
-	    }	    
-	    menuObj.addAdvancedMenuChildren(menuObj.dojoObj, submenuOptions);
+	    }
+	    if (submenuOptions.children.length > 1)
+		menuObj.addAdvancedMenuChildren(menuObj.dojoObj, submenuOptions);
 	}
 
 

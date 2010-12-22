@@ -109,25 +109,28 @@ dojo.declare("wm.InspectorBase", null, {
 
 	editProp: function(inTarget) {
 	    var t = inTarget;
-	    var p = t && t.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
-	    var propName = dojo.attr(p, "propname");
+	    while (!dojo.attr(t, "propname"))
+		t = t.parentNode;
+
+	    var propName = dojo.attr(t, "propname");
 	    var editor = dijit.byId("studio_propinspect_"+propName);
-	    if (editor) {
-		var v = editor.get("value");
-		if (this.owner.inspected) {
-			this.owner.inspected.editProp(propName, v, this);
-		}
+	    var v = "";
+	    if (editor) 
+		v = editor.get("value");
+	    if (this.owner.inspected) {
+		this.owner.inspected.editProp(propName, v, this);
 	    }
+
 	},
 
     propChange: function(propName,value,propEditorName) {
 	var e = this._editors && this._editors[propName];
 	if (e) {
 	    e.applyProp(propName, value);
-	    this.reinspect(); //applyEdit doesn't handle bound values
 	} else {
 	    this._setInspectedProp(propName, value);
 	}
+	    this.reinspect(); //applyEdit doesn't handle bound values
 	},
 	propDown: function(e) {
 		if (this.selectMode) {
@@ -313,10 +316,17 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 		return rows.join('');
 	},
 	generateRowCells: function(inName, inProp) {
+	    var editor = this.makePropEdit(inName);
+	    if (editor.match(/class="wminspector-prop-button"/)) {
+		return [
+			'<td></td><td>', editor, '</td>'
+		];
+	    } else {
 		return [
 			'<td class="wminspector-caption">', this.makeRowCaption(inName, inProp), '</td>',
-			'<td class="wminspector-property">', this.makePropEdit(inName), '</td>'
+			'<td class="wminspector-property">', editor, '</td>'
 		];
+	    }
 	},
 	makeRowCaption: function(inName, inProp) {
 	    if (inProp.shortname === undefined)
@@ -508,7 +518,9 @@ dojo.declare("wm.GroupInspector", wm.Inspector, {
 						
 			n = p.name;
 			rows.push(
-				'<tr ',
+				'<tr class="',
+			    this.getRowClasses(n,p),
+			    '"',
 			    (p.ignoretmp ? 'style="position:absolute;visibility:hidden" ' :''),
 			    'id="propinspect_row_' + n + '" propName="', n, '"', inGroup.closed ? ' style="display: none;"' : '', '>',
 				this.generateRowCells(n, p).join(''),
@@ -520,6 +532,9 @@ dojo.declare("wm.GroupInspector", wm.Inspector, {
 		}
 		return rows.join('');
 	},
+    getRowClasses: function(inName, inProp) {
+	return "";
+    },
 	generateGroupRow: function(inGroup) {
 		var
 			closed = (wm.propertyGroups[inGroup.name] || 0).closed,

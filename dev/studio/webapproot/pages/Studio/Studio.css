@@ -384,14 +384,9 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 }
 
 .prop-button {
-	width: 1.75em;
+	width: 2em;
 }
 
-.prop-button button {
-	width: 1.75em;
-	padding: 0;
-	margin: 0;
-}
 
 .wmstyleinspector {
 }
@@ -570,7 +565,7 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 .wminspector-prop-table td {
 	border: none;
 }
-
+/*
 .wminspector-prop-button {
 	width: 1.75em;
 }
@@ -579,6 +574,30 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 	width: 1.75em;
 	padding: 0;
 	margin: 0;
+}
+*/
+.wminspector-prop-button {
+	width: 96%;
+	padding: 0;
+
+	-moz-border-radius: 4px; 
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+        border: solid 2px black;
+    border-left-width: 1px;
+        border-top-width: 1px;
+	margin: 1% 2%;
+        background: -webkit-gradient(linear, left top, left bottom, from(#E0E0E0), to(#707070));
+	background: -moz-linear-gradient(top,  #E0E0E0,  #707070);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#E0E0E0', endColorstr='#707070');
+        cursor: pointer;
+}
+.wminspector-prop-button:hover {
+        background: -webkit-gradient(linear, left top, left bottom, from(#D0D0D0), to(#404040));
+	background: -moz-linear-gradient(top,  #D0D0D0,  #404040);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#D0D0D0', endColorstr='#404040');    
+        border: solid 1px black;
+    padding-bottom: 1px;
 }
 
 .wminspector-group img {
@@ -605,7 +624,7 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 }
 
 .wminspector .bound-prop-button {
-	padding: 0 2px;
+	padding: 0px;
 	width: 16px;
 	background: url(images/inspector_bind_disabled.gif) no-repeat 50% 50%;
 }
@@ -1539,9 +1558,6 @@ background-color: transparent;
     padding-left: 40px !important;
 }
 
-.Studio .prop-button button {
-    border: solid 1px transparent;
-}
 .Studio-runPopup.wmPopupButton .popupIcon {
     background-image: url(/wavemaker/lib/wm/base/widget/themes/default/images/comboArrowDownLight.png);
 } 
@@ -1586,6 +1602,40 @@ background-color: transparent;
 
 #studio_inspectorLayers .dijitSelectLabel {
     color: black;
+}
+
+#studio_inspectorLayers .dijitCheckBox {
+    margin-left: 3px !important;
+}
+
+#studio_inspectorLayers .bound-prop-button {
+    width: 0px;
+    height: 100%;
+}
+
+#studio_inspectorLayers .wminspector-readonly,
+#studio_inspectorLayers .isBound .wminspector-edit {
+    display: none;
+}
+
+#studio_inspectorLayers .isBound .wminspector-readonly,
+#studio_inspectorLayers .wminspector-edit {
+    display: block;
+}
+
+#studio_inspectorLayers .isBound .bound-prop-button {
+    width:16px;
+}
+
+#studio_inspectorLayers .studio_propinspect_innertable {
+    border-spacing:0px;
+    width:100%;
+    height:19px;
+}
+
+#studio_inspectorLayers .studio_propinspect_editcell {
+    padding:0px;
+    background-color: #D0D1D3;
 }
 
 .Studio .wmdraggabletree .dndHover.dndHoverTop > .wmtree-content,
