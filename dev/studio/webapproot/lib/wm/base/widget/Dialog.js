@@ -148,7 +148,7 @@ dojo.declare("wm.Dialog", wm.Container, {
                 this.designWrapper.domNode.style.zIndex = this.domNode.style.zIndex+1;
 
 		this.domNode.style.display = "none";		
-		this._connections.push(this.connect(document, "onkeypress", this, "keyPress"));
+		this._connections.push(this.connect(document, "keydown", this, "keydown"));
 		this._subscriptions.push(dojo.subscribe("window-resize", this, "reflow"));	    
 
 
@@ -464,9 +464,13 @@ dojo.declare("wm.Dialog", wm.Container, {
         
         var top  = this.corner.substring(0,1);
         var left = this.corner.substring(1,2);
-	for (var i = wm.dialog.showingList.length - 1; i >= 0 && wm.dialog.showingList[i] == this; i--)
-	    ;
-	var last = (i >= 0 && (!window["studio"] || this != window["studio"].dialog)) ? wm.dialog.showingList[i] : null;
+	var showingList = [];
+	var thisownerapp = this.getOwnerApp();
+	for (var i = 0; i < wm.dialog.showingList.length; i++)
+	    if (wm.dialog.showingList[i] != this && wm.dialog.showingList[i].getOwnerApp() == thisownerapp && (!window["studio"] || this != window["studio"].dialog))
+		showingList.push(wm.dialog.showingList[i]);
+
+	var last = wm.Array.last(showingList);
 
         switch(left) {
         case "l":
@@ -614,7 +618,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		this.setContentHeight(inHeight);
 	},
 	*/
-	keyPress: function(inEvent) {
+	keydown: function(inEvent) {
             if (!this.showing) return true;
             var dialogs = dojo.query(".wmdialog");
             var zindex = parseInt(this.domNode.style.zIndex);
@@ -629,7 +633,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 		if (this.showing) {
 		    this.setShowing(false);
 		    this.onClose("cancel");
-		    //inEvent.stopPropagation(); // Else escape will also change what the selected canvas item is
+		    if (!this._isDesign)
+			inEvent._wmstop = true;
 		}
 	    } else if (inEvent.keyCode == dojo.keys.ENTER) {
                 if (this.$.textInput && this.$.textInput.getDataValue)

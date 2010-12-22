@@ -871,7 +871,15 @@ dojo.declare("Studio", wm.Page, {
 		}
 	},
 	keydown: function(e) {
-	      if (wm.dialog.showing) return true;
+	    // return if there are any showing dialogs owned by StudioApplication; dialogs intercept ESC and other keyboard
+	    // events using their own event handlers
+	    if (dojo.some(wm.dialog.showingList, dojo.hitch(this,function(dialog) {return dialog.getOwnerApp() == this.owner;})))
+		return true;
+
+	    if (e._wmstop)
+		return true;
+	    
+
 		// only act on CTRL keys (but not SHIFT-CTRL)
 		var 
 			hotkey = (e.ctrlKey && !(e.ctrlKey && e.shiftKey)),
