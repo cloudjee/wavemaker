@@ -363,4 +363,6 @@
 }
 
 
-
+.wm_template .wmPopupButton .popupIcon {
+   background-image: url("images/dropArrowBlack.png") !important; /* wm.PopupMenuButton_Image */
+}

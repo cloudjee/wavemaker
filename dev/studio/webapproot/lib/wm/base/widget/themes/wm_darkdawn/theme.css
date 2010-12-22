@@ -370,6 +370,9 @@ body .wm_darkdawn input:focus,
 	box-shadow: 1px 1px 1px #444444; /* HeaderContent-ClickablesHover-BorderStyle_Shadow */
     }
 }
+.wm_darkdawn .wmPopupButton .popupIcon {
+   background-image: url(images/comboArrowDownLight.png) !important; /* wm.PopupMenuButton_Image */
+}
 /*****************************************
  * EOF: buttons.css
  *****************************************/

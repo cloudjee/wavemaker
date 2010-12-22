@@ -132,7 +132,7 @@ dojo.declare("wm.ToolButton", wm.Widget, {
 	},
 	setImageIndex: function(inImageIndex) {
 		if (inImageIndex !== undefined) {
-			this.imageIndex = inImageIndex;
+		    this.imageIndex = Number(inImageIndex);
 			this.imageListChanged();
 		}
 	},
@@ -211,7 +211,7 @@ wm.ToolButton.extend({
 	}
 	if (imageList) {
 	    var popupDialog = imageList.getPopupDialog();
-	    popupDialog.fixPositionNode = dojo.query(".wminspector-prop-button",dojo.byId("widget_studio_propinspect_imageIndex").parentNode.parentNode)[0];
+	    popupDialog.fixPositionNode = dojo.query(".wminspector-prop-button",dojo.byId("propinspect_row_editImageIndex"))[0];
 	    
 	    this._designImageListSelectCon = dojo.connect(imageList._designList, "onselect", this, function() {		    
 		    this.setImageIndex(imageList._designList.getSelectedIndex());
@@ -231,7 +231,7 @@ wm.ToolButton.extend({
     },
     editProp: function(inName, inValue) {
 	switch (inName) {
-	case "imageIndex":
+	case "editImageIndex":
 	    this.showImageListDialog();
 	    return;
 	}
@@ -239,7 +239,7 @@ wm.ToolButton.extend({
     },
 	makePropEdit: function(inName, inValue, inDefault) {
 		switch (inName) {
-		        case "imageIndex":
+		        case "editImageIndex":
 		                return makeReadonlyButtonEdit(inName, inValue, inDefault);		    
 			case "iconWidth":
 			case "iconHeight":
@@ -408,10 +408,11 @@ dojo.declare("wm.RoundedButton", wm.Button, {
 // design-time
 
 wm.Object.extendSchema(wm.Button, {
-	caption: { group: "display", bindable: 1, order: 10, focus: 1 },
+    caption: { group: "display", bindable: 1, order: 10, focus: 1, type: "String" },
 	hint: { group: "display", order: 20 },
 	imageList: { group: "display",order: 50},
-    imageIndex: { group: "display", order: 51, type: "String", subtype: "imageList", doc: 1},
+    imageIndex: { group: "display", order: 51, type: "Number",  doc: 1},
+    editImageIndex: { group: "display", order: 52, type: "String", doc: 1},
     setCaption: {group: "method", params: "(inCaption)", doc: 1},
     setImageIndex: {group: "method", params: "(inIndex)", doc: 1},
     setIconUrl: {group: "method",params: "(inIconUrl)", doc: 1},
@@ -691,6 +692,10 @@ dojo.declare("wm.PopupMenuButton", wm.Button, {
     },
     */
     _end: 0
+});
+
+wm.PopupMenuButton.extend({
+    themeableStyles: [{name: "wm.PopupMenuButton_Image", displayName: "Icon"}]
 });
 
 wm.Object.extendSchema(wm.PopupMenuButton, {

@@ -1213,5 +1213,10 @@
 	}, 
 	"wm.Calendar-Font": {
 		"Size": "10px"
+	}, 
+	"wm.PopupMenuButton": {
+		"Image": "url(images/comboArrowDownLight.png)", 
+		"Image-Position": "top left", 
+		"Image-Repeat": "repeat"
 	}
 }

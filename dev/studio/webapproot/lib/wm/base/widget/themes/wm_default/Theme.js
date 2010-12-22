@@ -223,5 +223,7 @@
 		"borderColor": "#333333"
 	}, 
 	"wm.WidgetList": {
+	}, 
+	"wm.PopupMenuButton": {
 	}
 }

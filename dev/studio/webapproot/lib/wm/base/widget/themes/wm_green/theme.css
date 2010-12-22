@@ -86,7 +86,7 @@ body .wm_green input:focus,
        * DESCRIPTION: Sets font, rounding, shadowing and background for the standard button state
        ************************************************************************************************/
     .wm_green   .wmbutton,
-    .wm_green   .wmtogglebutton,
+        .wm_green   .wmtogglebutton,
     .wm_green   .wmroundedbutton,
     .wm_green   .wmbutton.wmbutton-disabled:hover,
     .wm_green   .wmbutton.wmbutton-disabled:focus
@@ -111,6 +111,9 @@ body .wm_green input:focus,
     }
     .dj_ie6 .wm_green .wmbutton {
         background-image: none !important;
+    }
+    .wm_green .wmbutton span {
+	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
     }
     /**************************************************************************************************
        * TYPE:        Active Styling
@@ -181,6 +184,9 @@ body .wm_green input:focus,
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
     }
+    .wm_green .MainContent .wmbutton span {
+	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
+    }
     /**************************************************************************************************
        * TYPE:        Active Styling
        *
@@ -249,6 +255,9 @@ body .wm_green input:focus,
 	background-image: url(images/repeatx/brightThickEdge1.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_green .EmphasizedContent .wmbutton span {
+	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
     }
     /**************************************************************************************************
        * TYPE:        Active Styling
@@ -319,6 +328,9 @@ body .wm_green input:focus,
 	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
     }
+    .wm_green .HeaderContent .wmbutton span {
+	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
+    }
     /**************************************************************************************************
        * TYPE:        Active Styling
        *
@@ -357,6 +369,9 @@ body .wm_green input:focus,
 	-webkit-box-shadow: 0px 0px 0px #444444; /* HeaderContent-ClickablesHover-BorderStyle_Shadow */
 	box-shadow: 0px 0px 0px #444444; /* HeaderContent-ClickablesHover-BorderStyle_Shadow */
     }
+}
+.wm_green .wmPopupButton .popupIcon {
+   background-image: url(images/comboArrowDownLight.png) !important; /* wm.PopupMenuButton_Image */
 }
 /*****************************************
  * EOF: buttons.css
@@ -699,7 +714,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
     border-radius-bottomright: 2px;/* wm.SelectMenu-Inner_Radius */
     border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
 }
-.wm_green .wmeditor .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
+.wm_green .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
         height: 100% !important;
         background-position: 50% 50%;
 	background-image: url(images/comboArrowDownLight.png); /* wm.SelectMenu-Down-Arrow_Image */
@@ -742,6 +757,8 @@ body .wm_green .dialogfooter .wmbutton:hover {
     background-color: #a19fa0; /* Document-ClickablesDefault-Background_Color */
     background-image: none;
 }
+    .wm_green .dojoxGrid .dijitTextBox,
+    .wm_green .dojoxGrid .dijitComboBox,
     .wm_green .wmeditor .dijitTextBox,
     .wm_green .wmeditor .dijitTextArea,
     .wm_green .wmeditor .dijitComboBox,
@@ -783,6 +800,8 @@ body .wm_green .dialogfooter .wmbutton:hover {
 	background-position: top left; /* Document-EditorsHover-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-EditorsHover-Background_Image-Repeat */
     }
+    .wm_green .dojoxGrid .dijitTextBox.dijitFocused,
+    .wm_green .dojoxGrid .dijitComboBox.dijitFocused,
     .wm_green .wmeditor .dijitTextBox.dijitFocused,
     .wm_green .wmeditor .dijitTextBox.dijitFocused.dijitHover,
     .wm_green .wmeditor .dijitTextArea.dijitFocused,

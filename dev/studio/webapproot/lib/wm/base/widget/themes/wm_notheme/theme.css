@@ -149,3 +149,7 @@
 	padding-bottom: 0;
 	border-bottom-width: 3px;
 }
+
+.wm_notheme .wmPopupButton .popupIcon {
+    background-image: url(images/comboArrowDownDark.png);
+}

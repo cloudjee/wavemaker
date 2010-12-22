@@ -61,7 +61,6 @@
 }
 .wmPopupButton .popupIcon {
     border: 0px;
-    background-image: url(images/comboArrowDownDark.png);
     background-repeat: no-repeat;
     background-position: 50% 50%;
     width: 8px;

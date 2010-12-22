@@ -86,7 +86,7 @@ body .wm_default input:focus,
        * DESCRIPTION: Sets font, rounding, shadowing and background for the standard button state
        ************************************************************************************************/
     .wm_default   .wmbutton,
-    .wm_default   .wmtogglebutton,
+        .wm_default   .wmtogglebutton,
     .wm_default   .wmroundedbutton,
     .wm_default   .wmbutton.wmbutton-disabled:hover,
     .wm_default   .wmbutton.wmbutton-disabled:focus
@@ -111,6 +111,9 @@ body .wm_default input:focus,
     }
     .dj_ie6 .wm_default .wmbutton {
         background-image: none !important;
+    }
+    .wm_default .wmbutton span {
+	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
     }
     /**************************************************************************************************
        * TYPE:        Active Styling
@@ -181,6 +184,9 @@ body .wm_default input:focus,
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
     }
+    .wm_default .MainContent .wmbutton span {
+	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
+    }
     /**************************************************************************************************
        * TYPE:        Active Styling
        *
@@ -249,6 +255,9 @@ body .wm_default input:focus,
 	background-image: url(images/repeatx/brightThickEdge1.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* EmphasizedContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_default .EmphasizedContent .wmbutton span {
+	font-weight: bold; /* EmphasizedContent-ClickablesDefault-Font_Weight */
     }
     /**************************************************************************************************
        * TYPE:        Active Styling
@@ -319,6 +328,9 @@ body .wm_default input:focus,
 	background-position: top left; /* HeaderContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
     }
+    .wm_default .HeaderContent .wmbutton span {
+	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
+    }
     /**************************************************************************************************
        * TYPE:        Active Styling
        *
@@ -357,6 +369,9 @@ body .wm_default input:focus,
 	-webkit-box-shadow: 0px 0px 0px #444444; /* HeaderContent-ClickablesHover-BorderStyle_Shadow */
 	box-shadow: 0px 0px 0px #444444; /* HeaderContent-ClickablesHover-BorderStyle_Shadow */
     }
+}
+.wm_default .wmPopupButton .popupIcon {
+   background-image: url(images/comboArrowDownLight.png) !important; /* wm.PopupMenuButton_Image */
 }
 /*****************************************
  * EOF: buttons.css
@@ -699,7 +714,7 @@ body .wm_default .dialogfooter .wmbutton:hover {
     border-radius-bottomright: 2px;/* wm.SelectMenu-Inner_Radius */
     border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
 }
-.wm_default .wmeditor .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
+.wm_default .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
         height: 100% !important;
         background-position: 50% 50%;
 	background-image: url(images/comboArrowDownLight.png); /* wm.SelectMenu-Down-Arrow_Image */
@@ -742,6 +757,8 @@ body .wm_default .dialogfooter .wmbutton:hover {
     background-color: #333333; /* Document-ClickablesDefault-Background_Color */
     background-image: none;
 }
+    .wm_default .dojoxGrid .dijitTextBox,
+    .wm_default .dojoxGrid .dijitComboBox,
     .wm_default .wmeditor .dijitTextBox,
     .wm_default .wmeditor .dijitTextArea,
     .wm_default .wmeditor .dijitComboBox,
@@ -783,6 +800,8 @@ body .wm_default .dialogfooter .wmbutton:hover {
 	background-position: top left; /* Document-EditorsHover-Background_Image-Position */
 	background-repeat: repeat-x; /* Document-EditorsHover-Background_Image-Repeat */
     }
+    .wm_default .dojoxGrid .dijitTextBox.dijitFocused,
+    .wm_default .dojoxGrid .dijitComboBox.dijitFocused,
     .wm_default .wmeditor .dijitTextBox.dijitFocused,
     .wm_default .wmeditor .dijitTextBox.dijitFocused.dijitHover,
     .wm_default .wmeditor .dijitTextArea.dijitFocused,

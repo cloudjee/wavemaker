@@ -212,5 +212,7 @@
 	"wm.HeaderContentPanel": {
 		"border": "2", 
 		"borderColor": "#333333"
+	}, 
+	"wm.PopupMenuButton": {
 	}
 }
