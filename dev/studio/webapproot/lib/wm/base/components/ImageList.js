@@ -126,7 +126,7 @@ wm.ImageList.extend({
 	    d = this._designPopupDialog = new wm.Dialog({owner: studio,
 							     name: this.getRuntimeId() + "_designPopupDialog",
 							 width: (this.width + 35) + "px",
-							     height: "200px",
+							     height: "400px",
 							     useContainerWidget: true,
 							     modal: false,
 							 noMinify: true,
