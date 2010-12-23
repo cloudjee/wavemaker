@@ -42,7 +42,7 @@ wm.studioConfig = {
 };
 
 wm.basePath = "../../../";
-wm.libPath = wm.basePath + "lib/";
+wm.libPath = wm.basePath + "lib";
 wm.relativeLibPath = "lib/";
 wm.logging = (location.search.indexOf("logging") >= 0)
 wm.checkGoogleFrame = true;

@@ -18,7 +18,7 @@
 dojo.provide("wm.manifest");
 
 wm.registerPaths(
-	["wm", wm.libPath + "wm"]
+	["wm", wm.libPath + "/wm"]
 );
 
 wm.loadLibs([ 

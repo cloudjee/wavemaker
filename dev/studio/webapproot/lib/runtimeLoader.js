@@ -18,21 +18,22 @@
 
 try
 {
+        wm.libPath = wm.libPath.replace(/\/$/,""); // please remove this after we've gotten a few versions past 6.2
+
 	dojo.registerModulePath("lib", wm.libPath);
 	dojo.registerModulePath(
-		["wm", wm.libPath + "wm"],
-		["wm.packages", wm.libPath + "wm/common/packages"],
-		["common", wm.libPath + "wm/common"],
+		["wm", wm.libPath + "/wm"],
+		["wm.packages", wm.libPath + "/wm/common/packages"],
+		["common", wm.libPath + "/wm/common"],
 		["wm.modules", wm.basePath + "modules/ep"]
 	);	
-
 	// Load minified built version of libraries when not booting in debug mode
 	if (!djConfig.debugBoot) 
 	{
 		// Register paths for compressed parts of dojo
-		dojo.registerModulePath("dojo.nls", wm.libPath + "build/nls");
+		dojo.registerModulePath("dojo.nls", wm.libPath + "/build/nls");
 	    //dojo.registerModulePath("dijit.themes.tundra", wm.libPath + "build/themes/tundra");
-		dojo.registerModulePath("build", wm.libPath + "build");
+		dojo.registerModulePath("build", wm.libPath + "/build");
 
 	        dojo.require("build.Gzipped.lib_build", true);	
 		//dojo.require("build.lib_build_uncompressed", true);	

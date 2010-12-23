@@ -63,6 +63,8 @@ dependencies = {
 				// WM
                             "wm.base.components.componentList",
 
+			    "lib.github.touchscroll.touchscroll",
+
 				// wm utility libs
 				"wm.base.lib.util",
 				//"wm.base.lib.date",
@@ -322,7 +324,8 @@ dependencies = {
 	prefixes: [
 		[ "dijit", "../dijit" ],
 		[ "dojox", "../dojox" ],
-		[ "wm", "../../wm" ]
+	        [ "wm", "../../wm" ],
+	        [ "lib", "../../" ]
 		/*,[ "Palm", "../../Palm" ]*/
 	]
 }

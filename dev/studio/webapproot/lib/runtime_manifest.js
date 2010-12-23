@@ -16,11 +16,11 @@
  *  limitations under the License.
  */
 dojo.provide("wm.manifest");
-
 wm.registerPaths(
-	["wm", wm.libPath + "wm"],
-	["wm.packages", wm.libPath + "wm/common/packages"],
-	["common", wm.libPath + "wm/common"],
+	["wm", wm.libPath + "/wm"],    
+	["wm.packages", wm.libPath + "/wm/common/packages"],
+	["common", wm.libPath + "/wm/common"],
+	["github", wm.libPath + "/github"],
 	["wm.modules", wm.basePath + "modules/ep"]
 );
 

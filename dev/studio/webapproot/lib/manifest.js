@@ -18,8 +18,8 @@
 
 // Define user resource paths
 wm.registerPaths(
-	["wm.packages", wm.libPath + "wm/common/packages"],
-	["common", wm.libPath + "wm/common"],
+	["wm.packages", wm.libPath + "/wm/common/packages"],
+	["common", wm.libPath + "/wm/common"],
 	["wm.modules", wm.basePath + "modules/ep"]
 );
 

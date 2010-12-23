@@ -15,17 +15,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */ 
+
 dojo.registerModulePath("studio", wm.basePath);
 dojo.registerModulePath("lib", wm.libPath);
-dojo.registerModulePath("wm", wm.libPath + "wm");
-
+dojo.registerModulePath("wm", wm.libPath + "/wm");
+alert(dojo._modulePrefixes.wm.value);
 // make sure package registration is available up front
 dojo.require("studio.app.packageLoader", true);
 
 // Load minified built version of libraries when not booting in debug mode
 if (!djConfig.debugBoot) {
 	// Note: re-register paths for compressed parts of dojo
-	dojo.registerModulePath("dojo.nls", wm.libPath + "../build/nls");
+	dojo.registerModulePath("dojo.nls", wm.libPath + "/../build/nls");
         //dojo.registerModulePath("dijit.themes.tundra", wm.libPath + "build/themes/tundra");
 	//
 	wm.loadLibs([

@@ -145,7 +145,7 @@ dojo.addOnLoad(function() {
 	wm.headAppend(wm.createElement("style", {id: "page_ss", type: "text/css"}));
 	wm.headAppend(wm.createElement("style", {id: "theme_ss", type: "text/css"}));
 	// note: this stylesheet is loaded via studio.loadlib to preserve paths
-	defaultStyleSheet = loadDataSync(dojo.moduleUrl("wm") + "base/styles/wavemaker.css");
+	defaultStyleSheet = loadDataSync(dojo.moduleUrl("wm") + "/base/styles/wavemaker.css");
 	//
 	var n = listClassNames(defaultStyleSheet);
 	//
