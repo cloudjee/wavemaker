@@ -48,7 +48,7 @@ dojo.declare("wm.Application", wm.Component, {
 	        this.setTheme(themematch ? themematch[1] : this.theme, true);
 	        if (dojo.isIE && dojo.isIE < 8 || dojo.isIE == 9) this.dialogAnimationTime = 0;
 
-	    if (djConfig.isDebug) {
+	    if (djConfig.isDebug && !this.debugDialog) {
 		dojo.require("wm.base.widget.Dialog");
 		dojo.require("wm.base.widget.Tree");
 		dojo.require("wm.base.components.JsonRpcService");
@@ -65,6 +65,7 @@ dojo.declare("wm.Application", wm.Component, {
 		this.toastDialog = new wm.Toast({name: "toastDialog", owner: this});
 		this.createPageLoader();
 		this.components = {};
+	    this._touchEnabled = 1;
 	        if (this._touchEnabled === undefined)
 		    this._touchEnabled = navigator.userAgent.match(/AppleWebKit/) &&
 		navigator.userAgent.match(/Mobile/);

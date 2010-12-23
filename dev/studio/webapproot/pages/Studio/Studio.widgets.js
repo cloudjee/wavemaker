@@ -351,7 +351,7 @@ Studio.widgets = {
 						bench: ["wm.Panel", {width: "100%", border: "1, 0, 0, 0", backgroundColor: "silver", borderColor: "#666E80"}, {}, {
 							designer: ["wm.Designer", {height: "100%", width: "100%", backgroundColor: "white", borderColor: "black", border: ""}, {onselect: "designerSelect", onmove: "designerMove"}],
 							benchbevel: ["wm.Bevel", {border: ""}, {}],
-							status: ["wm.Box", {height: "24px", border: "1, 0, 0, 0", borderColor: "#666E80", backgroundColor: "#424A5A", width: "767px"}, {}]
+							status: ["wm.JsonStatus", {height: "24px", border: "1, 0, 0, 0", borderColor: "#666E80", backgroundColor: "#424A5A", width: "767px"}, {}]
 						}],
 						splitter3: ["wm.Splitter", {border: "0", layout: "right"}, {}],
 						right: ["wm.Panel", {_classes: {domNode: ["wm-darksnazzy"]}, width: "246px", border: "0"}, {}, {

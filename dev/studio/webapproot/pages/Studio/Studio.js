@@ -815,6 +815,7 @@ dojo.declare("Studio", wm.Page, {
 		this.updateStatus();
 	},
 	updateStatus: function() {
+	    return;
 		var s = this.selected, m = [s ? s.name : '(no selection)'];
 		if (s && s instanceof wm.Widget) {
 			var b = s.getBounds();

@@ -22,6 +22,21 @@ dojo.declare("StudioApplication", wm.Application, {
         theme: "wm_studio",
 	widgets: {
 	},
+    init: function() {
+	this.inherited(arguments);
+	    if (!this.debugDialog) {
+		dojo.require("wm.base.widget.Dialog");
+		dojo.require("wm.base.widget.Tree");
+		dojo.require("wm.base.components.JsonRpcService");
+		this.debugDialog = new wm.DebugDialog({owner: this, 
+						       width: "250px", 
+						       height: "400px",
+						  corner: "cr",
+
+						  noEscape: false});
+		this.debugTree = this.debugDialog.debugTree;
+	    }
+    },
     confirm: function() {
         this.inherited(arguments);
         this.confirmDialog.setBorderColor("white");
