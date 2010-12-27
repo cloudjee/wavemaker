@@ -48,24 +48,13 @@ dojo.declare("wm.Application", wm.Component, {
 	        this.setTheme(themematch ? themematch[1] : this.theme, true);
 	        if (dojo.isIE && dojo.isIE < 8 || dojo.isIE == 9) this.dialogAnimationTime = 0;
 
-	    if (djConfig.isDebug && !this.debugDialog) {
-		dojo.require("wm.base.widget.Dialog");
-		dojo.require("wm.base.widget.Tree");
-		dojo.require("wm.base.components.JsonRpcService");
-		this.debugDialog = new wm.DebugDialog({owner: this, 
-						       width: "250px", 
-						       height: "400px",
-						  corner: "cr",
-
-						  noEscape: false});
-		this.debugTree = this.debugDialog.debugTree;
-	    }
+	    if (djConfig.isDebug && !this.debugDialog) 
+		this.createDebugDialog();
 
 		this.pageDialog = new wm.PageDialog({name: "pageDialog", owner: this});
 		this.toastDialog = new wm.Toast({name: "toastDialog", owner: this});
 		this.createPageLoader();
 		this.components = {};
-	    this._touchEnabled = 1;
 	        if (this._touchEnabled === undefined)
 		    this._touchEnabled = navigator.userAgent.match(/AppleWebKit/) &&
 		navigator.userAgent.match(/Mobile/);
@@ -171,7 +160,19 @@ dojo.declare("wm.Application", wm.Component, {
 		220:"\\",
 		221:']',
 		222:'"'};
-	    },
+	},
+    createDebugDialog: function() {
+		dojo.require("wm.base.widget.Dialog");
+		dojo.require("wm.base.widget.Tree");
+		dojo.require("wm.base.components.JsonRpcService");
+		this.debugDialog = new wm.DebugDialog({owner: this, 
+						       width: "250px", 
+						       height: "400px",
+						  corner: "cr",
+
+						  noEscape: false});
+		this.debugTree = this.debugDialog.debugTree;
+    },
     setTheme: function(inTheme, isInit, optionalCss, optionalPrototype, noRegen, forceUpdate) {
 	    var isDesigned = (window["studio"] && this != app);
 	    var node = isDesigned ? studio.designer.domNode : document.body;
@@ -677,6 +678,29 @@ dojo.declare("wm.Application", wm.Component, {
     },
     toastInfo: function(inMsg) {
         this.toastDialog.showToast(inMsg, 5000, "Info");
+    },
+    
+    createToolTip: function(message, node, event) {
+	if (!this.toolTipDialog) {
+	    this.toolTipDialog = new wm.GenericDialog({title: "",
+						       modal: false,
+						       width: "350px",
+						       height: "100px",
+						       fitToContentHeight: true,
+						       owner: this,
+						       _fixPosition: true});
+	}
+	if (node) {
+	    this.toolTipDialog.fixPositionNode = node;
+	} else {
+	    this.toolTipDialog.bounds.l = event.mouseX;
+	    this.toolTipDialog.bounds.t = event.mouseY;
+	}
+	this.toolTipDialog.setUserPrompt(message);
+	this.toolTipDialog.show();
+    },
+    hideToolTip: function() {
+	this.toolTipDialog.hide();
     },
     createMinifiedDialogPanel: function() {
 	this.wmMinifiedDialogPanel = new wm.Panel({name: "wmMinifiedDialogPanel", width: this._page.root.bounds.w + "px", height: "25px", border: "2,0,0,0", padding: "2", autoScroll: true, verticalAlign: "top", horizontalAlign: "left", layoutKind: "left-to-right"});
