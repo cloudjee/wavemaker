@@ -1007,7 +1007,8 @@ dojo.declare("wm.DebugTree", wm.Tree, {
 	return newNode;
     },
     newJsonNode: function(inDeferred, inService, optName, inArgs, inMethod, invoker) {
-	new wm.DebugTreeJsonNode(this.tmpRoot, {deferred: inDeferred,
+	if (djConfig.isDebug || invoker && window["studio"] && invoker.isDesignLoaded()) 
+	    new wm.DebugTreeJsonNode(this.tmpRoot, {deferred: inDeferred,
 						name: optName,
 						service: inService,
 						invoker: invoker,
@@ -1063,7 +1064,7 @@ dojo.declare("wm.DebugTreeJsonNode", wm.TreeNode, {
 	this.jsonFiring = false;
 	this.result = "Error";
 	this.response = inResponse;
-	this.setContent("<img src='" + dojo.moduleUrl("lib.images.boolean.Signage") + "Denied.png'/> " + this.description);
+	this.setContent("<img src='" + dojo.moduleUrl("lib.images.boolean.Signage") + "Denied.png'/> " + this.response);
     },
 
     // This node has the following children
@@ -1154,10 +1155,13 @@ dojo.declare("wm.JSObjTreeNode", wm.TreeNode, {
 
 
 dojo.declare("wm.JsonStatus", wm.Control, {
+    scrim: true,
     classNames: "wmjsonstatus",
     width: "24px",
     height: "28px",
     border: "2",
+    iconWidth: 20,
+    iconHeight: 20,
     statusBar: false,
     argsList: null,
     minimize: false,
@@ -1200,15 +1204,15 @@ dojo.declare("wm.JsonStatus", wm.Control, {
     },
     setMinimize: function(inMinimize) {
 	if (inMinimize) {
-	    this.setWidth((20 + this.padBorderMargin.l + this.padBorderMargin.r) + "px");
-	    this.setHeight((20 + this.padBorderMargin.t + this.padBorderMargin.b) + "px");
+	    this.setWidth((parseInt(this.iconWidth) + this.padBorderMargin.l + this.padBorderMargin.r) + "px");
+	    this.setHeight((parseInt(this.iconHeight) + this.padBorderMargin.t + this.padBorderMargin.b) + "px");
 	    this.messageNode.innerHTML = "";
 	} else {
 	    this.setWidth("80px");
 	}
     },
     onclick: function() {
-	if (djConfig.isDebug)
+	if (djConfig.isDebug || window["studio"])
 	    app.debugDialog.show();
     }
 });
