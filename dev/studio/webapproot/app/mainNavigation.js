@@ -39,7 +39,7 @@ Studio.extend({
                 studio.selected instanceof wm.DataModelEntity ||
                 studio.selected instanceof wm.Query ||
                 studio.selected instanceof wm.LiveView ||
-                    studio.selected instanceof wm.LiveView))
+                    studio.selected instanceof wm.Security))
                 studio.select(studio.page.root);
 		//this.mainAndResourcePalettes.setLayer("mainPalettes");
 		//wm.fire(this.page, "reflow");
