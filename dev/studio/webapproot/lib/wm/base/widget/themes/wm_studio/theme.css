@@ -57,6 +57,6 @@
 }
 
 .wm_studio .dijitMenu .dijitMenuArrowCell img.dijitMenuExpand {
-   background-image: url(images/arrowRightDark.png) !important; /* wm.DojoMenu-Right_Image */
+   background-image: url(images/arrowRightLight.png) !important; /* wm.DojoMenu-Right_Image */
     background-position: 0% 50% !important;
 }
