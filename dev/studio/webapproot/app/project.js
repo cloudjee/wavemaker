@@ -68,6 +68,7 @@ dojo.declare("wm.studio.Project", null, {
 		this.savePage();
 		this.pageChanged();
 		this.pagesChanged();
+	        studio.pageSelect.setDataValue(inName);
 	},
 	createApplicationArtifacts: function() {
 		var ctor = dojo.declare(this.projectName, wm.Application);
@@ -203,6 +204,7 @@ dojo.declare("wm.studio.Project", null, {
 			studio.page = null;
 		} finally {
 			this.pageChanged();
+		        studio.pageSelect.setDataValue(inName);
 		}
 	},
 	loadProjectData: function(inPath) {
@@ -258,6 +260,7 @@ dojo.declare("wm.studio.Project", null, {
                             else
                                 console.error("studio.application.components[" + i + "] not found for setting documentation: " + this.projectData.documentation[i]);
 			}
+		studio.updatePagesMenu(); // now that we have a studio.application object		
 	    }
 	},
 	makePage: function() {
@@ -298,8 +301,9 @@ dojo.declare("wm.studio.Project", null, {
 		var loginhtml = loadDataSync(templateFolder + "login.html");
 		studio.project.saveProjectData("login.html", wm.makeLoginHtml(loginhtml, studio.project.projectName, studio.application.theme));
             }
+	    studio.updatePagesMenu();
             app.toastSuccess("Project Saved!");
-
+	    
 	},
 	saveScript: function() {
   	       //this.savePageData(this.pageName + ".js", studio.getScript());
@@ -472,8 +476,14 @@ dojo.declare("wm.studio.Project", null, {
 		var d = studio.pagesService.requestSync("listPages", null);
 		d.addCallback(dojo.hitch(this, function(inResult) {
 			inResult.sort();
-			this.pageList = inResult;
-			return inResult;
+		    var result = [];
+		    for (var i = 0; i < inResult.length; i++)
+			result.push({dataValue: inResult[i]});
+		    app.pagesListVar.setData(result);
+		    this.pageList = inResult;
+
+		    studio.updatePagesMenu();
+		    return inResult;
 		}));
 		return d;
 	},
@@ -550,6 +560,56 @@ Studio.extend({
 // Project UI
 //=========================================================================
 Studio.extend({
+    updatePagesMenu: function() {
+
+		    var children = this.navigationMenu.fullStructure;
+		    var pagesMenu;
+		    for (var i = 0; i < children.length; i++) {
+			if (children[i].idInPage == "pagePopupBtn") {
+			    pagesMenu = children[i];
+			    break;
+			}
+		    }
+		    children = pagesMenu.children;
+		    var deleteMenu;
+		    for (var i = 0; i < children.length; i++) {
+			if (children[i].idInPage == "deletePageItem") {
+			    deleteMenu = children[i];
+			    break;
+			}
+		    }
+
+		    while(deleteMenu.children.length) deleteMenu.children.pop();
+		    dojo.forEach(this.project.pageList, dojo.hitch(this, function(page) {
+			deleteMenu.children.push({label: page,
+						iconClass: this.application && page == this.application.main ? "setHomePageItem" : "",
+						  onClick: function() {
+						      studio.deletePage(page);
+						  }
+						 });
+		    }));
+
+		    var homeMenu;
+		    for (var i = 0; i < children.length; i++) {
+			if (children[i].idInPage == "setHomePageItem") {
+			    homeMenu = children[i];
+			    break;
+			}
+		    }
+
+		    while(homeMenu.children.length) homeMenu.children.pop();
+		    dojo.forEach(this.project.pageList, dojo.hitch(this, function(page) {
+			homeMenu.children.push({label: page,
+						iconClass: this.application && page == this.application.main ? "setHomePageItem" : "",
+						onClick: function() {
+						    if (studio.application.main != page)
+							studio.setProjectMainPage(page);
+						}
+					       });
+		    }));
+		    this.navigationMenu.renderDojoObj();
+    },
+
     newPageClick: function(inSender, inEvent, optionalPageType, optionalPageName) {
 	   var pageName = optionalPageName || "Page";
 		if (!this.project.projectName)
@@ -797,8 +857,10 @@ Studio.extend({
 		} else {
 			this.preferencesDialog = d = new wm.PageDialog({pageName: "PreferencesPane", owner: studio, hideControls: true, contentHeight: 250, contentWidth: 500});
 			d.onClose = function(inWhy) {
+			    /* Removal of projects tab
 				if (inWhy == "OK")
 					studio.updateProjectTree();
+					*/
 			};
 		}
 		d.show();
@@ -914,6 +976,7 @@ Studio.extend({
 // Project Tree
 //=========================================================================
 Studio.extend({
+    /* Removal of projects tab
 	updateProjectTree: function() {
 		var d = this.project.updateProjectList();
 		d.addCallback(dojo.hitch(this, "_updateProjectTree"));
@@ -994,6 +1057,7 @@ Studio.extend({
 	  if (n.page && n.parent.kids.length == 1) 
 	    this.projectDeleteButton.setDisabled(true);
 	},
+	*/
     contextualMenuClick: function(inSender,inLabel, inIconClass, inEvent) {
 
     }
