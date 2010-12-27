@@ -76,7 +76,7 @@ Studio.extend({
 	  // attr for dojo menu items; setDisabled for wavemaker components.  At some point we'll want to put our own DojoMenuItem wrapper around the dojo menu items
 		this.projectPopupBtn.set("disabled",false);
 		this.editPopupBtn.set("disabled",inDisabled);
-		this.viewPopupBtn.set("disabled",inDisabled);
+	      //this.viewPopupBtn.set("disabled",inDisabled);
 		this.insertPopupBtn.set("disabled",inDisabled);
 		this.servicesPopupBtn.set("disabled",inDisabled);
 		this.pagePopupBtn.set("disabled",inDisabled);
@@ -106,7 +106,7 @@ Studio.extend({
 		this.editPopupBtn.set("disabled",d);
 		this.insertPopupBtn.set("disabled",d);
 		this.pagePopupBtn.set("disabled",d);
-		this.outlineItem.set("disabled",d);
+	    //this.outlineItem.set("disabled",d);
 		//this.liveLayoutItem.set("disabled",d);
 		//this.navigationBar.reflow();
 	}
