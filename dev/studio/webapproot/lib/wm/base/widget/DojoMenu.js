@@ -107,7 +107,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 	  */
 		if (this.dojoObj) {
 		    this.dojoObj.destroyRecursive();
-		    dojo.forEach(this._menuConnects, "destroy");
+		    dojo.forEach(this._menuConnects, function(c) {dojo.disconnect(c);})
 		    if (this.hoverConnect)
 			dojo.disconnect(this.hoverConnect);
 	  }
@@ -257,7 +257,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 
 	    if (onClick) {
 		if (dojo.isString(onClick)) {
-		    var f = this.owner.getValueById(onClick) || this.owner[evtObj.onClick];
+		    var f = this.owner.getValueById(onClick);// || this.owner[evtObj.onClick];
 		    menuObj.onClick = this.owner.makeEvent(f, onClick, this, "onClick");
 		} else {
 		    menuObj.onClick = dojo.hitch(this.owner, onClick, menuObj, data);
