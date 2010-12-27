@@ -133,7 +133,9 @@ dojo.declare("Studio", wm.Page, {
 		    this.navEditAccountBtn.setShowing(true);
 		}
 
+			    /* Removal of projects tab
 		this.updateProjectTree();
+		*/
 		this.subscribe("session-expiration-servicecall", this, "handleSessionExpiration");
 		this.subscribe("service-variable-error", this, "handleServiceVariableError");
 
@@ -154,15 +156,25 @@ dojo.declare("Studio", wm.Page, {
 	   studio.endWait();  // if there was a beginWait call in progress, then we'd best close it in case there is no suitable error handler for the call
 	 },
 	handleSessionExpiration: function(serviceVar) {
-	  if ( serviceVar.getRoot().app == window.studio) {
-	    if (!this.isLoginShowing()) {
-	      if (!studio.getUserName()) {
-		wm.logout();
-	      } else {
-		studio.navGoToLoginPage();
-	      }
+	    if (serviceVar.isDesignLoaded()) {
+		this.statusBarLabel.setCaption("Security Error <span class='StudioHelpIcon'/>");
+		var node = dojo.query(".StudioHelpIcon", this.statusBarLabel.domNode)[0];
+		dojo.connect(node, "onmouseover", this, function(e) {
+		    app.createToolTip("A security error shown here has no effect on the project you are designing.  It does indicate that we are unable to show your data within the designer.  You can typically fix this problem by running your application, logging in to your application, and then the data should show up in the designer", node, e);
+		});
+		dojo.connect(node, "onmouseout", this, function() {
+		    app.hideToolTip();
+		});
+		
+	    } else {
+		if (!this.isLoginShowing()) {
+		    if (!studio.getUserName()) {
+			wm.logout();
+		    } else {
+			studio.navGoToLoginPage();
+		    }
+		}
 	    }
-	  }
 	},
 	isCloud: function() {
 	  return this.isModuleEnabled("cloud", "wm.cloud");
@@ -284,7 +296,9 @@ dojo.declare("Studio", wm.Page, {
 		}
 		this.disableMenuBar(!b);
 		this.disableCanvasSourceBtns(!b);
+			    /* Removal of projects tab
 		this.updateProjectTree();
+		*/
 
 	  if (inName && inName != "") { // if project has closed, don't need to publish
     	if (inName == this.project.projectName) { // if project is changing, first call to this function will have different project name, only publish on second call
@@ -311,19 +325,25 @@ dojo.declare("Studio", wm.Page, {
 		this.cssChanged();
 		this.setMarkup(inPageData.html || "");
 		this.setCleanPage(inPageData);
-		this.refreshDesignTrees();
-		if (this.page)
-			this.select(this.page.root);
+
+	        if (this.page) {
+		    this.select(this.page.root);
+		    this.refreshDesignTrees();
+		}
 		dojo.publish("wm-page-changed");
 		this.pagesChanged();
 	},
 	pagesChanged: function() {
 		this.updateWindowTitle();
 		this.refreshPagePalette();
+			    /* Removal of projects tab
 		this.updateProjectTreePages();
+		*/
 	},
 	projectsChanged: function() {
+			    /* Removal of projects tab
  		this.updateProjectTree();
+		*/
 	},
 	updateWindowTitle: function() {
 		var project = studio.application ? studio.application.declaredClass : "";
@@ -635,9 +655,16 @@ dojo.declare("Studio", wm.Page, {
 		while (inComponent && inComponent.isParentLocked && inComponent.isParentLocked())
 			inComponent = inComponent.parent;
 
-	    if (inComponent && this.treeSearch.getDataValue()) {
-		this.treeSearch.setDataValue("");
-		this.refreshWidgetsTree();
+	    if (inComponent) {
+		if (this.treeSearch.getDataValue()) {
+		    this.treeSearch.setDataValue("");
+		    this.refreshVisualTree();
+		}
+		if (this.compTreeSearch.getDataValue()) {
+		    this.compTreeSearch.setDataValue("");
+		    this.refreshServiceTree();
+		    this.refreshComponentTree();
+		}
 	    }
 		try {
 			var s = this.selected = inComponent;
@@ -647,8 +674,12 @@ dojo.declare("Studio", wm.Page, {
 			this.designer.select(s instanceof wm.Widget ? s : null);
 			// select component on appropriate tree
 			if (s) {
+			    if (!s._studioTreeNode || s._studioTreeNode.tree != this.tree)
 				this.tree.deselect();
+			    if (!s._studioTreeNode || s._studioTreeNode.tree != this.widgetsTree)
 				this.widgetsTree.deselect();
+			    if (!s._studioTreeNode || s._studioTreeNode.tree != this.compTree)
+				this.compTree.deselect();
 			}
 			this.selectInTree(s);
 			// show in inspector
@@ -677,10 +708,18 @@ dojo.declare("Studio", wm.Page, {
 	},
         treeSearchChange: function(inSender) {
 	    var newval = this.treeSearch.getDataValue();
-	    this.refreshWidgetsTree(newval);
+	    this.refreshVisualTree(newval);
+	},
+        compTreeSearchChange: function(inSender) {
+	    var newval = this.compTreeSearch.getDataValue();
+	    this.refreshServiceTree(newval);
+	    this.refreshComponentTree(newval);
 	},
     resetTreeSearch: function() {
 	    this.treeSearch.setDataValue("");
+    },
+    resetCompTreeSearch: function() {
+	    this.compTreeSearch.setDataValue("");
     },
         paletteSearchChange: function(inSender) {
 	    var newval = this.paletteSearch.getDataValue();
@@ -935,6 +974,7 @@ dojo.declare("Studio", wm.Page, {
 		}
 	},
 	tabsChange: function(inSender) {
+	    if (!studio.page) return;
 		var caption = inSender.getLayerCaption();
 		this.designer.showHideHandles(caption == "Design");
 		switch (caption) {
@@ -1195,7 +1235,15 @@ dojo.declare("Studio", wm.Page, {
     revertThemeClick: function(inSender) {
 	this.themesPage.page.revertTheme();
     },
-
+    pageSelectChanged: function(inSender, optionalPageName) {
+	var page = optionalPageName || inSender.getDataValue();
+	if (page == this.project.pageName) return;
+	var warnPage = bundleDialog.M_AreYouSureOpenPage;
+        this.confirmPageChange(warnPage, page, dojo.hitch(this, function() {
+			    this.waitForCallback(bundleDialog.M_OpeningPage + page + ".", dojo.hitch(this.project, "openPage", page));
+                        }));
+	this.project.openPage(pagename);
+    },
 
 	selectProperty: function(inSender, info, text) {
 		console.log("selectProperty");
