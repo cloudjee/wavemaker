@@ -30,7 +30,8 @@
 	"NewProject" : "New Project...",
 	"NewPage" : "New Page...",
 	"OpenSelected" : "Open Selected",
-	"DeleteSelected" : "Delete Selected...",
+        "DeleteProjectCaption" : "Delete",
+        "NewProjectCaption": "New",
 	"SetSelected" : "Set Selected As Home Page",
 
 	"M_File" : "File",
@@ -58,6 +59,8 @@
 	"M_Page" : "Page",
 	"M_New" : "New...",
 	"M_SaveAs" : "Save As...",
+/*	"M_ManagePages" : "Manage Pages...",*/
+    "M_DeletePage": "Delete",
 	"M_ImportPage" : "Import Page...",
 	"M_SetAsHomePage" : "Set As Home Page",
 	"M_Services" : "Services",

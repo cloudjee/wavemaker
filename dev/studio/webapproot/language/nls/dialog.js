@@ -25,6 +25,7 @@
 	"ExploreDesc" : "Demos & Samples",
 	"Community" : "Community",
 	"CommunityDesc" : "Find answers quickly",
+	"ProjectsTab" : "Projects",
 	"CreateNewProject" : "Create a New Project...",
 	"Tutorials" : "Tutorials",
 	"Documentation" : "Documentation",
