@@ -531,8 +531,10 @@ wm.Component.extend({
 		}
 		
 	if (this instanceof wm.Control) {
-	    var submenuOptions = {label: "Select", children: [{label: this.name,
-							       onClick: this._makeSelectComponentMethod(this)}]};
+	    var submenuOptions = {label: "Select", 
+				  iconClass: "Studio_silkIconImageList_95",
+				  children: [{label: this.name,
+					      onClick: this._makeSelectComponentMethod(this)}]};
 	    var parent = this.parent;
 	    while(parent && parent != studio.designer) {
 		if (!parent.flags || !parent.flags.notInspectable && !parent.noInspector)
@@ -545,7 +547,8 @@ wm.Component.extend({
 	}
 
 
-		menuObj.addAdvancedMenuChildren(menuObj.dojoObj, {label: this.declaredClass + " docs...", onClick: dojo.hitch(this, function() {window.open("http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/" + this.declaredClass.replace(/^.*\./,""));})});
+	menuObj.addAdvancedMenuChildren(menuObj.dojoObj, {iconClass: "StudioHelpIcon", 
+							  label: this.declaredClass + " docs...", onClick: dojo.hitch(this, function() {window.open("http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/" + this.declaredClass.replace(/^.*\./,""));})});
 	    
 	    menuObj.update(e, this.domNode);
     },
@@ -555,7 +558,10 @@ wm.Component.extend({
 	    });
 	},
     addContextMenuItem: function(inMenu, inPropName, inProp) {
-	    inMenu.addAdvancedMenuChildren(inMenu.dojoObj, {label: inProp.simpleBindProp ? "Bind " + inPropName : inPropName, onClick: dojo.hitch(this, function() {
+	    inMenu.addAdvancedMenuChildren(inMenu.dojoObj, 
+					   {label: inProp.simpleBindProp ? "Bind " + inPropName : inPropName, 
+					    iconClass: "Studio_silkIconImageList_30",
+					    onClick: dojo.hitch(this, function() {
 /*
 	       if (inProp.simpleBindProp || inProp.simpleBindTarget) {
 		   studio.bindDialog.page.update(dojo.mixin({object: this,
