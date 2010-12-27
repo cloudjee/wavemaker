@@ -39,7 +39,7 @@ dojo.declare("wm.Panel", wm.Container, {
         var clone = parent.createComponent(name, "wm." + inType + "Panel", widgetsjs[1], widgetsjs[2], widgetsjs[3], owner);
         parent.moveControl(clone, indexInParent);
         parent.reflow();
-	studio.refreshWidgetsTree();
+	studio.refreshVisualTree();
 	studio.select(clone);
     },
     getThemeStyleType: function() {

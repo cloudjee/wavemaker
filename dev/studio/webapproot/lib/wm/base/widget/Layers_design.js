@@ -90,6 +90,7 @@ wm.Layer.extend({
     createDesignContextMenu: function(menuObj) {
 	var result = this.parent.createDesignContextMenu(menuObj);
 	menuObj.addAdvancedMenuChildren(menuObj.dojoObj, {label: "add", 
+						  iconClass: "Studio_silkIconImageList_30",
 						  onClick: dojo.hitch(this, function() {
 						      this.parent.addLayer();
 						  })
@@ -174,7 +175,7 @@ wm.Layers.extend({
             var clone = parent.createComponent(name, newClass, widgetsjs[1], widgetsjs[2], widgetsjs[3], owner);
             parent.moveControl(clone, indexInParent);
             parent.reflow();
-	    studio.refreshWidgetsTree();
+	    studio.refreshVisualTree();
 	    studio.select(clone);
 
         },
@@ -222,7 +223,7 @@ wm.Layers.extend({
 			case "add":
 				this.addLayer();
 				// FIXME: need to refresh tree and select layer
-				studio.refreshWidgetsTree();
+				studio.refreshVisualTree();
 				studio.select(null);
 				studio.select(this);
 				break;
@@ -242,6 +243,7 @@ wm.Layers.extend({
     createDesignContextMenu: function(menuObj) {
 	if (this.layers.length) {
 	    var data = {label: "Show Layer",
+			iconClass: "Studio_silkIconImageList_95",
 			children: []};
 
 	    for (var i = 0; i < this.layers.length; i++) {
