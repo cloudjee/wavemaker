@@ -147,12 +147,6 @@ Studio.widgets = {
 								 idInPage: "newPageItem",
 								 onClick: "newPageClick",
 								 iconClass: "newPageItem"},
-/*
-							        {"label": bundleStudio.M_ManagePages,
-								 idInPage: "managePagesItem",
-								 onClick: "managePageClick",
-								 iconClass: "Studio_silkIconImageList_150"},
-								 */
 							        {"label": bundleStudio.M_SaveAs,
 								 idInPage: "saveAsPageItem",
 								 onClick: "savePageAsClick",
