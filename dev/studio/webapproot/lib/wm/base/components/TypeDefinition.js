@@ -37,8 +37,8 @@ dojo.declare("wm.TypeDefinitionField", wm.Component, {
             this.owner.doRemoveType();
             this.owner.doAddType();
         }
-	if (this.isDesignLoaded() && !this._cupdating)
-	    studio.refreshDesignTrees();
+	if (this.isDesignLoaded() && !this._cupdating && studio.page)
+	    studio.refreshComponentTrees();
     },
     setFieldType: function(inType) {
         this.fieldType = inType || "String";
@@ -158,8 +158,8 @@ wm.TypeDefinition.extend({
             var field = new wm.TypeDefinitionField({name: defName, owner: this});
 
             this.fields = null; // force this to be recalculated
-	    if (this.isDesignLoaded() && !this._cupdating) {
-		studio.refreshDesignTrees();
+	    if (this.isDesignLoaded() && !this._cupdating && studio.page) {
+		studio.refreshComponentTrees();
 		studio.select(field);
 	    }
             this.doRemoveType(); // old type def is missing this field

@@ -198,7 +198,7 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 	                                    var c = new wm.JavaService({name: serviceId, serviceId: serviceId})
 	                                    //studio.javaEditorContainer.page.update();
 	                                    studio.application.addServerComponent(c);
-			                    studio.refreshWidgetsTree();
+			                    studio.refreshServiceTree();
 	                                    if (!this.initialNoEdit || studio.javaEditor.isActive()) {
 		                                studio.select(c);
 		                                c.editView();
@@ -248,7 +248,7 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 			var c = new wm.JavaService({name: n, serviceId: n})
 			studio.updateServices();
 			studio.application.addServerComponent(c);
-			studio.refreshWidgetsTree();
+			studio.refreshServiceTree();
 			studio.select(c);
 			this.editView();
 			studio.navGotoModelTreeClick();

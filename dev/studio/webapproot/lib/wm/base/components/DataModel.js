@@ -103,7 +103,7 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 			studio.application.addServerComponent(c);
 			studio.application.loadServerComponents("wm.Query");
 			wm.fire(studio.getEditor("QueryEditor").page, "update");
-			studio.refreshWidgetsTree();
+			studio.refreshServiceTree();
 
 		    // If designing a data model
 		    if (this._dataModelName) {

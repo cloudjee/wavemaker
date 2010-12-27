@@ -60,7 +60,7 @@ dojo.declare("wm.WebService", wm.JavaService, {
 			var c = new wm.WebService({name: n, serviceId: n});
 			studio.updateServices();
 			studio.application.addServerComponent(c);
-			studio.refreshWidgetsTree();
+			studio.refreshServiceTree();
 			studio.select(c);
 			this.editView();
 			studio.navGotoModelTreeClick();
