@@ -306,6 +306,7 @@ wm.PageContainer.extend({
 	var pagelist = wm.getPageList(this.currentPageOK);
 	if (pagelist.length) {
 	    var data = {label: "Set PageName",
+			iconClass: "Studio_silkIconImageList_30",
 			children: []};
 
 	    for (var i = 0; i < pagelist.length; i++) {
