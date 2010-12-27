@@ -39,10 +39,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.NamedQueryDefinition;
-import org.hibernate.mapping.Component;
-import org.hibernate.mapping.Property;
-import org.hibernate.mapping.RootClass;
-import org.hibernate.mapping.Value;
+import org.hibernate.mapping.*;
 import org.hibernate.type.Type;
 
 import com.wavemaker.common.Resource;
@@ -180,10 +177,17 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { //xxx
 
     private void initMappingData() {
 
-        for (Iterator<RootClass> iter = CastUtils.cast(getConfiguration()
+        RootClass rc;
+        //for (Iterator<RootClass> iter = CastUtils.cast(getConfiguration()
+        for (Iterator iter = CastUtils.cast(getConfiguration()
                 .getClassMappings()); iter.hasNext();) {
 
-            RootClass rc = iter.next();
+            //RootClass rc = iter.next();
+            Object obj = iter.next();
+            if (obj instanceof RootClass)
+                rc = (RootClass)obj;
+            else
+                rc = ((Subclass)obj).getRootClass();
 
             String s = rc.getClassName();
             entityClassNames.add(s);
