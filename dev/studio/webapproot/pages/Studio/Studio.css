@@ -1121,7 +1121,10 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 	border-bottom: 1px solid #363b44;
 }
 
-.statusNameBox, .statusSizeBox, .statusMsgBox, .statusLoadingBox {
+/*.statusNameBox, .statusSizeBox, .statusMsgBox, .statusLoadingBox*/ 
+#studio_status.wmjsonstatus {
+    opacity: 1.0 !important;
+    filter: alpha(opacity=100);
 	background-color: #424a5a;
 	border-width: 1px;
 	border-left-color: #1c1f26;
@@ -1129,6 +1132,26 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 	border-top-color: #1c1f26;
 	border-right-color: #c0c4ca;
 	color: #FFF;
+}
+#studio_status.wmjsonstatus .wmjsonstatusicon {
+    border-left: solid 1px #666E80;
+    background-position: 50% 50%;
+    height: 100%;
+}
+#studio_statusBarLabel {
+    color: white;
+    font-weight: bold;
+}
+#studio_statusBarLabel .StudioHelpIcon {
+    float: left;
+    margin-right: 10px;
+    width: 26px;
+}
+.StudioHelpIcon, .wminspector-help {
+    background-image: url(/wavemaker/lib/images/boolean/Signage/Help%20Circle.png);
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
 }
 
 .wm-darksnazzy .wmaccordion {
