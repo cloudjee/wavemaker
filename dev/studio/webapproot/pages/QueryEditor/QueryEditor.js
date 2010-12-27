@@ -338,13 +338,13 @@ dojo.declare("QueryEditor", wm.Page, {
 			  return;
 			}
 		}
-		studio.refreshWidgetsTree();
+		studio.refreshServiceTree();
 		studio.selected = null;
 		studio.select(this.query);
 	},
 	_keepOriginalQuery: function() {
 	    //app.pageDialog.page.dismiss();
-		studio.refreshWidgetsTree();
+		studio.refreshServiceTree();
 		studio.selected = null;
 		studio.select(this.query);
 	},
@@ -357,7 +357,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		  REMOVE_QUERY_OP, [this.deleteQuery.dataModelName, this.deleteQuery.name],
 		  function() {
 		    studio.application.removeServerComponent(_this.deleteQuery);
-		    studio.refreshWidgetsTree();
+		    studio.refreshServiceTree();
 		    studio.selected = null;
 		    studio.select(_this.query);		    
 		    studio.endWait();
@@ -578,7 +578,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		this._clear();
 		//this._loadQueries();
 		studio.application.removeServerComponent(this.query);
-		studio.refreshWidgetsTree();
+		studio.refreshServiceTree();
 	},
 	_loadTypes: function() {
 		studio.servicesService.requestSync(LOAD_PRIMITIVES_OP, 

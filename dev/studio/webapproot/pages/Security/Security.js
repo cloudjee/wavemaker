@@ -319,12 +319,12 @@ dojo.declare("Security", wm.Page, {
 					[this.secEnableInput.getChecked(), roles[0]],
 					dojo.hitch(this, "configJOSSOResult"));
 					studio.application.loadServerComponents();
-					studio.refreshWidgetsTree();
+					studio.refreshServiceTree();
 					return;			
 		}
 			this.saveRolesSetup();
 			studio.application.loadServerComponents();
-			studio.refreshWidgetsTree();
+			studio.refreshServiceTree();
 		}
 	},
         toastToSuccess: function() {

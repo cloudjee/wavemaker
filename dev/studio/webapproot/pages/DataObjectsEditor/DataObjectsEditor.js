@@ -462,7 +462,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		this.initData();
 		studio.application.removeServerComponent(this.dataModel);
 		studio.application.loadServerComponents("wm.Query");
-		studio.refreshWidgetsTree();
+		studio.refreshServiceTree();
 	},
 	removeDataModelFailed: function(inSender) {
 		studio.endWait();
@@ -558,7 +558,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		studio.updateServices();
 		studio.endWait();
 		this.selectEntityNode();
-		studio.refreshWidgetsTree();
+		studio.refreshServiceTree();
             app.toastSuccess("Saved!");
 	    this.resetChanges(); // clears dirty flags
 	},

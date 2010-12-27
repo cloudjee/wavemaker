@@ -26,7 +26,7 @@ dojo.declare("Services", wm.Page, {
 	},
 	update: function() {
 		studio.updateServices();
-		studio.refreshWidgetsTree();
+		studio.refreshServiceTree();
 	},
 	isDirty: function() {
 		return this.dirty;

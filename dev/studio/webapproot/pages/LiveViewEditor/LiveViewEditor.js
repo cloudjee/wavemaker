@@ -422,7 +422,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 		this.fieldToForm(inNode);
 	},
 	saveLiveViewBtnClick: function(inSender) {
-		studio.refreshWidgetsTree();
+		studio.refreshServiceTree();
 		studio.selected = null;
 		studio.select(this.clientLiveView);
 		studio.project.saveProject();
