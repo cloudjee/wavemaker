@@ -87,7 +87,7 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
 	    var editor = this.makePropEdit(n, inProp, wire);
 	    if (editor.match(/class="wminspector-prop-button"/)) {
 		return [
-			'<td></td><td>', editor, '</td>'
+			'<td></td><td>', editor, '</td><td></td>'
 		];
 	    } else {
 		return [

@@ -271,7 +271,7 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 
 		// If the first group name is "Data", then we are looking at variable fields that were defined by the user rather than us.
 		if (!this.groups || this.groups.length == 0 || this.groups[0].name != "Data")
-		      headerCells.push('<th class="wminspector-header wminspector-help">?</th>');
+		      headerCells.push('<th class="wminspector-header wminspector-help"></th>');
 		this.tableContainer.innerHTML = [
 			'<table border="0" cellspacing="0" cellpadding="0" style="width: 100%;">',
 			'<tr>', headerCells.join(''), '</tr>',
@@ -309,7 +309,7 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 			rows.push(
 			    '<tr id="propinspect_row_' + n + '" ' + (p.ignoretmp ? 'style="position:absolute;visibility:hidden" ' :'') +  'propName="', n, '">',
 				this.generateRowCells(n, p).join(''),
-				'<td class="wminspector-help">?</td>',
+				'<td class="wminspector-help"></td>',
 				'</tr>'
 			);
 		}));
@@ -491,7 +491,7 @@ dojo.declare("wm.GroupInspector", wm.Inspector, {
 		dojo.forEach(this.groups, dojo.hitch(this, function(g) {
 		    if (g.name == "style") {
 			var headerCells = this.generateHeaderCells();
-			headerCells.push('<th class="wminspector-header wminspector-help">?</th>');
+			headerCells.push('<th class="wminspector-header wminspector-help"></th>');
 			var html1 = ['<table border="0" cellspacing="0" cellpadding="0" style="width: 100%;">',
 				    '<tr>', headerCells.join(''), '</tr>',
 				    this.generateGroup(g),
@@ -526,7 +526,7 @@ dojo.declare("wm.GroupInspector", wm.Inspector, {
 				this.generateRowCells(n, p).join(''),
 				// add a "?" button unless its a Data group.  Its assumed that a Data group contains variable/database/webservice 
 				// specific information that would not reside on our wiki, but which the user should know better than us.
-				(inGroup.name != "Data") ? '<td class="wminspector-help">?</td>' : "", 
+				(inGroup.name != "Data") ? '<td class="wminspector-help"></td>' : "", 
 				'</tr>'
 			);
 		}

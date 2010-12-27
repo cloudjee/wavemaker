@@ -55,7 +55,7 @@ dojo.declare("wm.ComponentInspector", wm.Layers, {
 	    var inspector = this.getInspector();
 
 	    // If we're inspecting the same component with the same inspector, call reinspect
-	    if (inspector == this._currentInspector && inComponent == wasInspecting) {
+	    if (inspector == this._currentInspector && inComponent == wasInspecting && this.dijits) {
 
 		// Update all values in the property inspector UI
 		this._currentInspector.reinspect();
@@ -71,7 +71,12 @@ dojo.declare("wm.ComponentInspector", wm.Layers, {
 		inspector.inspect(c);
 
 		// Turn all editors into dijits and cache them so we can destroy them later
-		this.dijits = dojo.parser.parse(this.domNode);
+		try {
+		    this.dijits = dojo.parser.parse(this.domNode);
+		} catch(e) {
+		    dijit.registry._hash = {};
+		    this.dijits = dojo.parser.parse(this.domNode);
+		}
 	    }
 	} catch(e) {
 	    console.error(e);
