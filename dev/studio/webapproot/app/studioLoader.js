@@ -19,7 +19,7 @@
 dojo.registerModulePath("studio", wm.basePath);
 dojo.registerModulePath("lib", wm.libPath);
 dojo.registerModulePath("wm", wm.libPath + "/wm");
-alert(dojo._modulePrefixes.wm.value);
+
 // make sure package registration is available up front
 dojo.require("studio.app.packageLoader", true);
 
