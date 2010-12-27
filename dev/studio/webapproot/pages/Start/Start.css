@@ -118,7 +118,9 @@
 	background-color: #6F798A;
 }
 
-.Start .Start-openProjectBtn {
+.Start .Start-openProjectBtn,
+.Start .Start-deleteProjectBtn,
+.Start .Start-newProjectBtn {
 	background-image:url(images/dark_btn_bg.gif);
 	background-repeat:repeat-x;
 	color: #FFF;
@@ -127,4 +129,7 @@
 
 .Start .Start-panel9 {
 	background-color: #959dab;
+}
+.Start .Start-projectSearch {
+    color: black !important;
 }

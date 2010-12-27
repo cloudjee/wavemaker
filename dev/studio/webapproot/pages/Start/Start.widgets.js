@@ -63,13 +63,20 @@ Start.widgets = {
 							}]
 						}]
 					}],
-					layer2: ["wm.Layer", {caption: bundleDialog.OpenExistingProject, horizontalAlign: "left", verticalAlign: "top", padding: "8"}, {}, {
+					layer2: ["wm.Layer", {caption: bundleDialog.ProjectsTab, horizontalAlign: "left", verticalAlign: "top", padding: "8"}, {}, {
+					    projectSearch: ["wm.Text", {width: "100%", height: "24px", resetButton: true, placeHolder: "Search by Project Name", caption: "", changeOnKey: true}, {onchange: "filterProjectList"}],
 						panel8: ["wm.Panel", {height: "100%", width: "100%", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 							projlist: ["wm.Panel", {height: "100%", width: "100%", layoutKind: "left-to-right", padding: "5,10,10,10"}, {}, {
 								existingProjectList: ["wm.List", {width: "100%", border: "0"}, {onselect: "projectListSelect", ondeselect: "projectListDeselect", ondblclick: "openProject"}]
 							}],
 							panel9: ["wm.Panel", {height: "34px", width: "100%", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "center"}, {}, {
-								openProjectBtn: ["wm.Button", {caption: bundleDialog.OpenProject, width: "113px", height: "100%"}, {onclick: "openProject"}]
+							    openProjectBtn: ["wm.Button", {caption: bundleDialog.OpenProject, width: "160px", height: "100%"}, {onclick: "openProject"}],
+							    deleteProjectBtn: ["wm.Button", {caption: bundleStudio.DeleteProjectCaption, width: "160px", height: "100%"}, {onclick: "deleteProject"}, {
+								binding: ["wm.Binding",{},{}, {
+								    wire: ["wm.Wire", {"targetProperty":"disabled", "expression": "${existingProjectList.emptySelection}"}, {}]
+								}]
+							    }],
+							    newProjectBtn: ["wm.Button", {caption: bundleStudio.NewProjectCaption, width: "180px", height: "100%"}, {onclick: "newProjectClick"}],
 							}]
 						}]
 					}]

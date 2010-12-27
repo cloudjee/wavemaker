@@ -59,11 +59,35 @@ dojo.declare("Start", wm.Page, {
 	registerClick: function() {
 		window.open("http://www.wavemaker.com/community/dlreg.html");
 	},
+
+        filterProjectList: function(inSender) {
+	    var text = inSender.getDataValue().toLowerCase();
+	    var list = [];
+	    for (var i = 0; i < this.projectList.length; i++) {
+		if (this.projectList[i].toLowerCase().match(text))
+		    list.push(this.projectList[i]);
+	    }
+		this.existingProjectList.renderData(list);
+		for (var i = 0; i < list.length; i++) 
+		    this.existingProjectList.items[i].projectName = list[i];	    
+	},
 	// Open Existing Project tab
 	openProject: function(inSender) {
 		var p = this.getSelectedProject();
 		if (p)
 			studio.waitForCallback(bundleDialog.M_OpeningProject + p, dojo.hitch(studio.project, "openProject", p));
+	},
+        deleteProject: function(inSender) {
+	    var projname = this.existingProjectList.selected.projectName;
+	    if (projname) {
+		app.confirm(bundleDialog.M_AreYouSureDeleteProject + projname + "?", false,
+			   dojo.hitch(this, function() {
+		               if (studio.project.projectName == projname)
+			           studio.project.closeProject();
+			       studio.project.deleteProject(projname);	       
+
+			   }));
+	    }
 	},
 	selectProjectInList: function(projectName) {
 	    var items = this.existingProjectList.items;
@@ -85,9 +109,15 @@ dojo.declare("Start", wm.Page, {
 	    this.disEnableProjectButtons(this.existingProjectList.selected != true);	    
 	},
 	listProjectsResult: function(inResult) {
-		this.existingProjectList.renderData(inResult);
-		for (var i = 0; i < inResult.length; i++) 
-		    this.existingProjectList.items[i].projectName = inResult[i];
+	        this.projectList = dojo.clone(inResult);
+	        this.projectList = this.projectList.sort(function(a,b) {
+		    a = a.toLowerCase();
+		    b = b.toLowerCase();
+		    return a.localeCompare(b);
+		});
+		this.existingProjectList.renderData(this.projectList);
+		for (var i = 0; i < this.projectList.length; i++) 
+		    this.existingProjectList.items[i].projectName = this.projectList[i];
 	},
 	existingProjectListFormatCell: function(inDataInfo) {
 		var di = inDataInfo;
