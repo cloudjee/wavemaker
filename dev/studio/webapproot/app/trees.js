@@ -33,19 +33,24 @@ Studio.extend({
 		//this.refreshComponentsTree();
 		this.refreshWidgetsTree();
 		// re-select selected component
-		this.selectInTree(this.selected);
-	},
-	refreshWidgetsTree: function(optionalSearch) {
-		this.tree.clear();
-		this.widgetsTree.clear();
+	     
+	    this.selectInTree(this.selected && this.selected.owner == studio.page ? this.selected : studio.page.root);
 
-   	        this.searchText = (optionalSearch) ? optionalSearch.toLowerCase() :  "";
+	},
+    /* This is really the "refreshAllTrees" method */
+	refreshWidgetsTree: function(optionalSearch) {
+	    this.refreshVisualTree("");
+	    this.refreshServiceTree("");
+	    this.refreshComponentTree("");
+	},
+    refreshVisualTree: function(optionalSearch) {
+		this.widgetsTree.clear();
+   	        this._searchText = (optionalSearch) ? optionalSearch.toLowerCase() :  "";
 	        if (optionalSearch)
-	            this.regex = new RegExp(this.searchText.toLowerCase());
-		if (this.application)
-			this.appComponentsToTree(this.tree);
+	            this.regex = new RegExp(this._searchText.toLowerCase());
+
 		if (this.page) {
-		    this.pageComponentsToTree(this.tree);
+		    this.pageComponentsToTree(this.compTree);
 		    var dialogs = this.getTreeComponents(this.application.components, null, [wm.Dialog, wm.PopupMenu]);
 		    for (var d in dialogs) {
 			this.widgetToTree(this.widgetsTree.root, dialogs[d]);
@@ -57,7 +62,26 @@ Studio.extend({
 		    this.widgetToTree(this.widgetsTree.root, this.page.root);
 
 		}
-	},
+    },
+    refreshServiceTree: function(optionalSearch) {
+	this.tree.clear();
+   	this._searchText = (optionalSearch) ? optionalSearch.toLowerCase() :  "";
+	if (this._searchText)
+	    this.regex = new RegExp(this._searchText);
+	this.useHierarchy = true;
+	this.appServicesToTree(this.tree);
+	this.useHierarchy = false;
+    },
+    refreshComponentTree: function(optionalSearch) {
+	this.compTree.clear();
+   	this._searchText = (optionalSearch) ? optionalSearch.toLowerCase() :  "";
+	if (optionalSearch)
+	    this.regex = new RegExp(this._searchText.toLowerCase());
+	this.useHierarchy = true;
+	this.appComponentsToTree(this.compTree);
+	this.useHierarchy = false;
+    },
+
     addDndItemsToSource: function(node, results) {
 	if (node != this.widgetsTree.root && node.parent != this.widgetsTree.root)
 	    results.push(node.domNode);
@@ -110,7 +134,7 @@ Studio.extend({
 
 	    var components  = this.getTreeComponents(this.page.components, [wm.Control]);
 
-		    if (this.searchText) {
+		    if (this._searchText) {
 			var _components = {};
 			for (var name in components) {
 			    var c = components[name];
@@ -141,28 +165,48 @@ Studio.extend({
 	    //this.componentsToTree(n, dialogs);
 	    this.useHierarchy = false;
 	},
+	appServicesToTree: function(inTree) {
+	    // app components
+	    var n = this.newTreeNode(inTree.root, "images/project_16t.png", "Project (" + studio.project.projectName + ")");
+	    n.component = n.owner = this.application
+	    //this.application._studioTreeNode = n;
+	    this.excTypes = [wm.Query, wm.LiveView, wm.Control];
+	    if (this.application) {
+		this.svrComps = this.application.getServerComponents();
+                var svrComps = this.getTreeComponents(this.svrComps, this.excTypes);
+
+		/* Currently we can't search the contentx of services because it requires a service call
+		 * to load all of the entities of the data model; other components it may be possible
+		 * I haven't yet investigated.  I can't think of any reason why we couldn't preload
+		 * all data when a project is loaded in studio so we can support searching.
+		 */
+		if (this._searchText) {
+		    var svrCompSearch = {};
+		    for (var i in svrComps) {
+			var c = svrComps[i];
+			var name = c.name;
+			if (name.toLowerCase().match(this.regex)) {
+			    svrCompSearch[name] = c;
+			} 
+		    }
+                    svrComps = svrCompSearch;
+
+		}
+
+		    this.componentsToTree(n, svrComps);
+ 
+	    }
+	},
 	appComponentsToTree: function(inTree) {
 		// app components
 		var n = this.newTreeNode(inTree.root, "images/project_16t.png", "Project (" + studio.project.projectName + ")");
 	        n.component = n.owner = this.application
-	        this.application._studioTreeNode = n;
+	    //this.application._studioTreeNode = n;
 	    this.excTypes = [wm.Query, wm.LiveView, wm.Control];
 		if (this.application) {
-		    this.svrComps = this.application.getServerComponents();
-                    var svrComps = this.getTreeComponents(this.svrComps, this.excTypes);
 		    this.otherComps = this.getTreeComponents(this.application.components, this.excTypes);
-		    
-		    if (this.searchText) {
-			var svrCompSearch = {};
-			for (var i in svrComps) {
-			    var c = svrComps[i];
-			    var name = c.name;
-			    if (name.toLowerCase().match(this.regex)) {
-				svrCompSearch[name] = c;
-			    }
-			}
-                        svrComps = svrCompSearch;
-
+		    		    
+		    if (this._searchText) {
 			var otherComps = {};
 			for (var name in this.otherComps) {
 			    var c = this.otherComps[name];
@@ -173,15 +217,7 @@ Studio.extend({
 			this.otherComps = otherComps;
 		    }
 
-		    var cmpCount = 0;
-		    for (cmp in svrComps) cmpCount++;
-		    for (cmp in this.otherComps) cmpCount++;
-		    //this.useHierarchy =  (cmpCount > 6);
-		    this.useHierarchy = true;
-
-		    this.componentsToTree(n, svrComps);
 		    this.componentsToTree(n, this.otherComps);
-		    this.useHierarchy = false;
 		}
 	},
 	addQryAndViewToTree: function(inNode) {
@@ -234,7 +270,7 @@ Studio.extend({
 		    if (inWidget.flags.notInspectable || inWidget.isParentLocked())
 				return;		    
 		    // create a new node if we are displaying this widget, else pass in the parent node.  If we're in search mode, then all widgets get added to the root node
-		    var n = (this.searchText && !inWidget.name.toLowerCase().match(this.regex)) ? inNode : this.newComponentNode(inNode, inWidget, null, null, {closed: inWidget instanceof wm.Dialog});
+		    var n = (this._searchText && !inWidget.name.toLowerCase().match(this.regex)) ? inNode : this.newComponentNode(inNode, inWidget, null, null, {closed: inWidget instanceof wm.Dialog});
 		    if (inWidget instanceof wm.Dialog == false || inWidget instanceof wm.DesignableDialog)
 			this.subWidgetsToTree(n, inWidget);
 		}
@@ -256,17 +292,17 @@ Studio.extend({
 			var props = {};
 		    props.closed = true;
 			inNode = wm.fire(inComponent, "preNewComponentNode", [inNode, props]) || inNode;
-		    if (this.searchText && !inComponent.name.toLowerCase().match(this.regex)) {
+		    if (this._searchText && !inComponent.name.toLowerCase().match(this.regex)) {
 			return;
 		    } else {
-			var searchText = this.searchText;
-			this.searchText = "";
+			var searchText = this._searchText;
+			this._searchText = "";
 		    }
 
 		    var n = this.newComponentNode(inNode, inComponent, null, null, props);
   		    if (inComponent instanceof wm.TypeDefinition)
 			    this.subWidgetsToTree(n, inComponent);
-		    this.searchText = searchText;
+		    this._searchText = searchText;
 		}
 	},
 	collectionToTree: function(inNode, inCollection, inType) {
