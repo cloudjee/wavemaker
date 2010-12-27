@@ -157,6 +157,7 @@ dojo.declare("wm.Palette", wm.Tree, {
 	    menuObj.removeAllChildren();
 	    menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
 					    {label: "Copy New " + inNode.klass,
+					     iconClass: "Studio_canvasToolbarImageList16_3",
 					     onClick: dojo.hitch(this, function() {
 						 studio.clipboard = "{" + inNode.klass.replace(/^.*\./,"") + "1: ['" + inNode.klass + "'," + (inNode.props ? dojo.toJson(inNode.props) : "{}") + "]}";
 						 console.log(studio.clipboard);
@@ -167,6 +168,7 @@ dojo.declare("wm.Palette", wm.Tree, {
 
 	    menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
 					    {label: inNode.klass + " docs...", 
+					     iconClass: "StudioHelpIcon", 
 					     onClick: dojo.hitch(this, function() {
 						 window.open("http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/" + inNode.klass.replace(/^.*\./,""));
 					     })
