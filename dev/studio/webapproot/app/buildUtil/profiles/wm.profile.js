@@ -325,7 +325,7 @@ dependencies = {
 		[ "dijit", "../dijit" ],
 		[ "dojox", "../dojox" ],
 	        [ "wm", "../../wm" ],
-	        [ "lib", "../../" ]
+	        [ "lib", "../.." ]
 		/*,[ "Palm", "../../Palm" ]*/
 	]
 }
