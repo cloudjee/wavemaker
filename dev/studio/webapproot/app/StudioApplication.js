@@ -21,21 +21,11 @@ dojo.declare("StudioApplication", wm.Application, {
 	main: "Main",
         theme: "wm_studio",
 	widgets: {
+            pagesListVar: ["wm.Variable", {type: "StringData", isList: true}] 
 	},
     init: function() {
 	this.inherited(arguments);
-	    if (!this.debugDialog) {
-		dojo.require("wm.base.widget.Dialog");
-		dojo.require("wm.base.widget.Tree");
-		dojo.require("wm.base.components.JsonRpcService");
-		this.debugDialog = new wm.DebugDialog({owner: this, 
-						       width: "250px", 
-						       height: "400px",
-						  corner: "cr",
-
-						  noEscape: false});
-		this.debugTree = this.debugDialog.debugTree;
-	    }
+	this.createDebugDialog();
     },
     confirm: function() {
         this.inherited(arguments);
