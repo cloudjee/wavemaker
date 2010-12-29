@@ -21,28 +21,83 @@ Studio.extend({
 
 		  // called by packageLoader.js for anything that is not an instanceof wm.Control
 	addComponentMenuItem: function(inTab, inName, inDescription, inImage, inClass, inProps) {
-	    if (inProps && inProps._notInInsertMenu) {
-		delete inProps._notInInsertMenu;
-		return;
-	    }
+
 	  try {
-	  var menu = (inTab == bundleStudio.M_Services) ? this.servicesPopupBtn : this.insertPopupBtn;
-	  var menuBar = this.navigationMenu;
+
+	      if (!this._serviceMenuStructure) {
+		  var menus = this.navigationMenu.fullStructure;
+		  for (var i = 0; i < menus.length; i++) {
+		      if (menus[i].label == bundleStudio.M_Services)
+			  this._serviceMenuStructure = menus[i];
+		      else if (menus[i].label == bundleStudio.M_Insert)
+			  this._insertMenuStructure = menus[i];
+		  }
+	      }
+	      var list;
+	      var obj = {label: inName,
+			 info: {type: inClass, props: inProps}, // for callback to selectComponentMenuItem, not for the menu itself
+			 type: inClass,                         // for callback to selectComponentMenuItem, not for the menu itself
+			 onClick: "selectComponentMenuItem",
+			 idInPage: inName + "MenuItem",
+			 iconClass: inImage.substring(inImage.lastIndexOf("/")+1,inImage.indexOf("."))};
+
+	      var menu = (inTab == bundleStudio.M_Services) ? this._serviceMenuStructure : this._insertMenuStructure;
+	      if (inProps && inProps.parentMenu) {
+		  var submenu;
+		  for (var i = 0; i < menu.children.length; i++) {
+		      if (menu.children[i].label == inProps.parentMenu) {
+			  submenu = menu.children[i];
+			  break;
+		      }
+		  }
+		  if (!submenu) {
+		      submenu = {label: inProps.parentMenu,
+				 iconClass: "InsertMenu" + inProps.parentMenu,
+				 children: []};
+		      menu.children.push(submenu);
+		  }
+		  
+		  list = submenu.children;
+
+	      } else {
+		  list = menu.children;
+	      }
+
+	      for (var i = 0; i < list.length; i++)
+		  if (list[i].label == obj.label) return;
+
+	      list.push(obj);
+/*
+	      var menuBar = this.navigationMenu;
+	      var menu = (inTab == bundleStudio.M_Services) ? this.servicesPopupBtn : this.insertPopupBtn;
+	      if (inProps && inProps.parentMenu) {
+		  var parentid = "insertMenu" + inProps.parentMenu + "MenuItem";
+		  var tmpmenu = studio[parentid];
+		  if (!tmpmenu) {
+		      menuBar.addNewMenuItem(menu, {label: inProps.parentMenu,
+						    idInPage: parentid,
+						    children: []});
+		      tmpmenu = studio[parentid];
+		  }
+		  menu = tmpmenu;
+	      }
+
 	  var newId = inName + "MenuItem";
 
-	  // Don't add it twice...
-	  if (!this[newId]) {
 	    menuBar.addNewMenuItem(menu, {label: inName,
 					  info: {type: inClass, props: inProps}, // for callback to selectComponentMenuItem, not for the menu itself
 					  type: inClass,                         // for callback to selectComponentMenuItem, not for the menu itself
 					  onClick: "selectComponentMenuItem",
 					  idInPage: inName + "MenuItem",
 					  iconClass: inImage.substring(inImage.lastIndexOf("/")+1,inImage.indexOf("."))});
-	  }
+
+					  */
 	} catch(e) {
 	    console.error("disableMenuBar Failed");
 	    console.log(e);
 	}
+	    if (inProps)
+		delete inProps.parentMenu;
 	},
 	// TODO: Palette has similar function; should only has one
 	selectComponentMenuItem: function(menuObj) {

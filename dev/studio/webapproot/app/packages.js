@@ -147,14 +147,14 @@
 [ bundlePackage.Non_Visual_Components, bundlePackage.Variable, "wm.Variable", "wm.base.components.Variable", "images/wm/variable_24.png"],
 [ bundlePackage.Non_Visual_Components, bundlePackage.ServiceVariable, "wm.ServiceVariable", "wm.base.components.ServiceVariable", "images/wm/servicevar_24.png"],
 [ bundlePackage.Non_Visual_Components, bundlePackage.LiveVariable, "wm.LiveVariable", "wm.base.components.LiveVariable", "images/wm/livevar_24.png"],
-[ "Non-Visual Components", "SalesForceMonitorVariable", "wm.SalesForceMonitorVariable", "wm.base.components.SalesForceMonitorVariable", "images/wm/servicevar_24.png"],
-[ bundlePackage.Non_Visual_Components, bundlePackage.ImageList, "wm.ImageList", "wm.base.components.ImageList", "images/wm/picture.png", "", {_notInInsertMenu:true}],
-[ bundlePackage.Non_Visual_Components, "Silk Icons ImageList", "wm.ImageList", "wm.base.components.ImageList", "images/wm/picture.png", "", {url: "lib/images/silkIcons/silk.png", width: 18,height: 20, colCount: 35, iconCount: 196, _notInInsertMenu:true }],
-[ bundlePackage.Non_Visual_Components, "Boolean Signage ImageList", "wm.ImageList", "wm.base.components.ImageList", "images/wm/picture.png", "", {url: "lib/images/boolean/Signage/set.png", width: 16,height: 16, colCount: 9, _notInInsertMenu:true}],
 [ bundlePackage.Non_Visual_Components, bundlePackage.NavigationCall, "wm.NavigationCall", "wm.base.components.NavigationCall", "images/wm/navigation_24.png"],
-[ bundlePackage.Non_Visual_Components, bundlePackage.LogoutVariable, "wm.LogoutVariable", "wm.base.components.LogoutVariable", "images/wm/servicevar_24.png", "", {_notInInsertMenu:true}],
-[ bundlePackage.Non_Visual_Components, bundlePackage.Timer, "wm.Timer", "wm.base.components.Timer", "images/wm/variable_24.png", "", {_notInInsertMenu:true}],
-[ bundlePackage.Non_Visual_Components, bundlePackage.TypeDefinition, "wm.TypeDefinition", "wm.base.components.TypeDefinition", "images/wm/variable_24.png", "", {}],
+/*[ "Non-Visual Components", "SalesForceMonitorVariable", "wm.SalesForceMonitorVariable", "wm.base.components.SalesForceMonitorVariable", "images/wm/servicevar_24.png"],*/
+[ bundlePackage.Non_Visual_Components, bundlePackage.ImageList, "wm.ImageList", "wm.base.components.ImageList", "images/wm/picture.png", "", {parentMenu: bundlePackage.Graphics}],
+[ bundlePackage.Non_Visual_Components, "Silk Icons ImageList", "wm.ImageList", "wm.base.components.ImageList", "images/wm/picture.png", "", {url: "lib/images/silkIcons/silk.png", width: 18,height: 20, colCount: 35, iconCount: 196, parentMenu: bundlePackage.Graphics }],
+[ bundlePackage.Non_Visual_Components, "Boolean Signage ImageList", "wm.ImageList", "wm.base.components.ImageList", "images/wm/picture.png", "", {url: "lib/images/boolean/Signage/set.png", width: 16,height: 16, colCount: 9, parentMenu: bundlePackage.Graphics}],
+[ bundlePackage.Non_Visual_Components, bundlePackage.LogoutVariable, "wm.LogoutVariable", "wm.base.components.LogoutVariable", "images/wm/servicevar_24.png", "", {parentMenu: bundlePackage.Advanced}],
+[ bundlePackage.Non_Visual_Components, bundlePackage.Timer, "wm.Timer", "wm.base.components.Timer", "images/wm/variable_24.png", "", {parentMenu: bundlePackage.Advanced}],
+[ bundlePackage.Non_Visual_Components, bundlePackage.TypeDefinition, "wm.TypeDefinition", "wm.base.components.TypeDefinition", "images/wm/variable_24.png", "", {parentMenu: bundlePackage.Advanced}],
 
 
 [ bundlePackage.Services, bundlePackage.Database_Service, "wm.DataModel", "wm.base.components.DataModel", "images/wm/data_blue.png"],

@@ -1727,3 +1727,12 @@ color: rgb(0,270,0);
     color: white;
 }
 /* END AutoCompletion */
+
+
+.InsertMenuGraphics {
+     background: transparent url(images/wm/picture_16.png) no-repeat;`    
+}
+
+.InsertMenuAdvanced {
+    background: transparent url(http://localhost:8080/wavemaker/images/wm/component_16.png) no-repeat;
+}

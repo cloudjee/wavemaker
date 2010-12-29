@@ -43,7 +43,7 @@ _import = function(inTab, inName, inClass, inModule, inImage, inDescription, inP
 	}
 	p = "palette" + p;*/
 	studio["palette"].addItem(inTab, n, d, i, c, inProps);
-	if (!(ctor.prototype instanceof wm.Control))
+        if (!(ctor.prototype instanceof wm.Control) && !(ctor.prototype.declaredClass == "wm.DojoLightbox"))
 		studio.addComponentMenuItem(inTab, n, d, i, c, inProps);
 }
 

@@ -157,7 +157,7 @@ Studio.widgets = {
 								 iconClass: "importPageItem"},
 								{"label": bundleStudio.M_DeletePage,
 								 idInPage: "deletePageItem",
-								 iconClass: "deletePageItem",
+								 iconClass: "deleteItem",
 								 children: []},
 							        {"label": bundleStudio.M_SetAsHomePage,
 								 idInPage: "setHomePageItem",

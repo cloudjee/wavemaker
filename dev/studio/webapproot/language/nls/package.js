@@ -120,6 +120,8 @@
 
 	"Deprecated" : "Deprecated",
 
+    "Graphics": "Graphics",
+    "Advanced": "Advanced",
 	"Non_Visual_Components" : "Non-Visual Components",
 	"Variable" : "Variable",
 	"ServiceVariable" : "ServiceVariable",
