@@ -396,7 +396,7 @@ dojo.declare("Studio", wm.Page, {
 		var 
 			palette = studio.palette,
 			list = this.project.getPageList(),
-			caption = "Pages",
+			caption = "Page Containers",
 			desc = "A page in this project.",
 			image ="images/wm/pane.png";
 		palette.clearSection(caption);
@@ -410,10 +410,10 @@ dojo.declare("Studio", wm.Page, {
 		var 
 			palette = studio.palette,
 			list = wm.dataSources.sources,
-			caption = "Data",
+			caption = bundlePackage.Database,
 			desc = "A data object in this project.",
 			image ="images/wm/data.png";
-		palette.makeGroup(caption, 8);
+		palette.makeGroup(caption, 6);
 		palette.clearSection(caption);
 		wm.forEach(list, function(l, i) {
 			wm.forEach(l, function(d) {

@@ -121,17 +121,35 @@ dojo.declare("wm.Palette", wm.Tree, {
 	makeGroup: function(inGroup, inParentIndex) {
 		if (this.findItemByName(inGroup))
 			return;
+
+	    var f = function(inGroup, inParent, inParentIndex, inClosed) {
+		for (var i = 0; i < inParent.kids.length; i++) {
+		    if (inParent.kids[i].name == inGroup)
+			return inParent.kids[i];
+		}
+
 		var props = {
 			content: inGroup,
+		        data: inGroup,
 			name: inGroup,
-			closed: true
+			closed: inClosed
 		}
 		if (inParentIndex !== undefined)
 			props.parentIndex = inParentIndex;
-		var n = new wm.TreeNode(this.root, props);
+		var n = new wm.TreeNode(inParent, props);
+/*
 		if (n == this.root.kids[0] || n == this.root.kids[1] || n == this.root.kids[2])
 			n.setOpen(true);
+			*/
 		return n;
+	    };
+
+	    var names = inGroup.split("/");
+	    var node = this.root;
+	    for (var i = 0; i < names.length; i++) {
+		node = f(names[i], node, i == 0 ? inParentIndex : undefined, i == 0 && this.root.kids.length > 0);
+	    }
+	    return node;
 	},
 	addItem: function(inTab, inName, inDescription, inImage, inClass, inProps) {
 		if (inTab){
@@ -202,11 +220,19 @@ dojo.declare("wm.Palette", wm.Tree, {
 		return names;
 	},
 	findItemByName: function(inName, inParent) {
-		inParent = inParent || this.root;
+	    var names = inName.split("/");
+	    
+	    var f = function(inName,inParent) {
 		for (var i=0, nodes=inParent.kids, n; (n=nodes[i]); i++) {
 			if (inName == (n||0).name)
 				return n;
 		}
+	    };
+	    var node = inParent || this.root;
+	    for (var i = 0; node && i < names.length; i++) {
+		node = f(names[i],node);
+	    }
+	    return node;
 	},
 	select: function() {
 	},

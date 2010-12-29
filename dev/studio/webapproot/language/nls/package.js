@@ -17,13 +17,17 @@
  */ 
 
 {
+	"Frequent_Category" : "Frequently Used",
+    "Button_Category": "Buttons",
+    "Formatting_Category": "Formatting",
+    "Containers_Layer_Category": "Layer Containers",
 	"Common_Widgets" : "Common Widgets",
 	"Button" : "Button",
 	"PopupButton" : "PopupButton",
 	"Toggle_Button" : "Toggle Button",
 	"Rounded_Button" : "Rounded Button",
 	"DataGrid" : "DataGrid",
-	"DojoGrid" : "DojoGrid",
+	"DojoGrid" : "Grid",
 	"Label" : "Label",
 	"Picture" : "Picture",
 	"Spacer" : "Spacer",
@@ -36,7 +40,7 @@
 	"Panel" : "Panel",
 	"Rounded_Panel" : "Rounded Panel",
 	"Tabs" : "Tabs",
-	"Wizards" : "Wizard/CardLayers",
+	"Wizards" : "Wizard/Cards",
 
 	"Editor" : "Editor",
 	"Checkbox" : "Checkbox",
@@ -68,7 +72,7 @@
 
 	"Form_Tools" : "Form Tools",
 	"DataNavigator" : "DataNavigator",
-	"LiveForm" : "LiveForm",
+	"LiveForm" : "Form",
 	"RelatedEditor" : "RelatedEditor",
 
 	"More_Widgets" : "More Widgets",
@@ -116,7 +120,7 @@
 	"Advanced" : "Advanced",
 	"Tree" : "Tree",
 	"DraggableTree" : "DraggableTree",
-	"SimpleForm" : "SimpleForm",
+	"SimpleForm" : "Form Generator",
 
 	"Deprecated" : "Deprecated",
 
@@ -136,6 +140,8 @@
 	"Template_Publisher" : "Template Publisher",
 
 	"Services" : "Services",
+    "DataWidget": "Data Set Widgets",
+    "Database": "Database Widgets",
 	"Database_Service" : "Import Database",
 	"Database_Design" : "Design Database", 
 	"Java_Service" : "Java Service",

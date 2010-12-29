@@ -20,64 +20,87 @@
 // built in wm widgets
 
 
-[ bundlePackage.Common_Widgets, bundlePackage.Button, "wm.Button", "wm.base.widget.Button", "images/wm/button.png", "A simple button"],
-[ bundlePackage.Common_Widgets, bundlePackage.PopupButton, "wm.PopupMenuButton", "wm.base.widget.Button", "images/wm/button.png", "A simple button"],
-[ bundlePackage.Common_Widgets, bundlePackage.Toggle_Button, "wm.ToggleButton", "wm.base.widget.Button", "images/wm/button.png", "A simple button"],
-[ bundlePackage.Common_Widgets, bundlePackage.DojoGrid, "wm.DojoGrid", "wm.base.widget.DojoGrid", "images/wm/data.png", "A Dojo grid"],
-[ bundlePackage.Common_Widgets, bundlePackage.Label, "wm.Label", "wm.base.widget.Label", "images/wm/content.png", "Static text"],
-[ bundlePackage.Common_Widgets, bundlePackage.Picture, "wm.Picture", "wm.base.widget.Picture", "images/wm/picture.png", "A picture from a url"],
-[ bundlePackage.Common_Widgets, bundlePackage.Spacer, "wm.Spacer", "wm.base.widget.Spacer", "images/wm/spacer.png", "Add space between widgets"],
-[ bundlePackage.Common_Widgets, bundlePackage.Splitter, "wm.Splitter", "wm.base.widget.Splitter", "images/wm/splitter.png", "A moveable bar between widgets"],
+[ bundlePackage.Frequent_Category, bundlePackage.Button, "wm.Button", "wm.base.widget.Button", "images/wm/button.png", "A simple button"],
+[ bundlePackage.Frequent_Category, bundlePackage.Label, "wm.Label", "wm.base.widget.Label", "images/wm/content.png", "Static text"],
+[ bundlePackage.Frequent_Category, bundlePackage.Picture, "wm.Picture", "wm.base.widget.Picture", "images/wm/picture.png", "A picture from a url"],
+[ bundlePackage.Frequent_Category, bundlePackage.DojoGrid, "wm.DojoGrid", "wm.base.widget.DojoGrid", "images/wm/data.png", "A Dojo grid"],
+[ bundlePackage.Frequent_Category, bundlePackage.PageContainer, "wm.PageContainer", "wm.base.widget.PageContainer", "images/wm/pane.png", "A page container"],
+[ bundlePackage.Frequent_Category, bundlePackage.Panel, "wm.Panel", "wm.base.widget.Panel", "images/wm/panel.png", "Container for other widgets"],
+[ bundlePackage.Frequent_Category, bundlePackage.Text, "wm.Text", "wm.base.widget.Editors.Text", "images/wm/edit.png", "An editor for text"],
 
-[ bundlePackage.Containers, bundlePackage.Accordion, "wm.AccordionLayers", "wm.base.widget.Layers", "images/wm/press.png", "Accordion controlled container"],
-[ bundlePackage.Containers, bundlePackage.Layers, "wm.Layers", "wm.base.widget.Layers", "images/wm/notebook.png", "Stackable dynamic container"],
+[ "Basic Widgets/" + bundlePackage.Button_Category, bundlePackage.Button, "wm.Button", "wm.base.widget.Button", "images/wm/button.png", "A simple button"],
+[ "Basic Widgets/" +  bundlePackage.Button_Category, bundlePackage.Button, "wm.Button", "wm.base.widget.Button", "images/wm/button.png", "A simple button"],
+[ "Basic Widgets/" +  bundlePackage.Button_Category, bundlePackage.PopupButton, "wm.PopupMenuButton", "wm.base.widget.Button", "images/wm/button.png", "A simple button"],
+[ "Basic Widgets/" +  bundlePackage.Button_Category, bundlePackage.Toggle_Button, "wm.ToggleButton", "wm.base.widget.Button", "images/wm/button.png", "A simple button"],
+[ "Basic Widgets/" +  bundlePackage.Button_Category, bundlePackage.BusyButton, "wm.BusyButton", "wm.base.widget.BusyButton", "images/wm/button.png", "A button with a progress indicator"],
+
+
+
+[ "Basic Widgets/" +  bundlePackage.Formatting_Category, bundlePackage.Label, "wm.Label", "wm.base.widget.Label", "images/wm/content.png", "Static text"],
+[ "Basic Widgets/" +  bundlePackage.Formatting_Category, bundlePackage.Picture, "wm.Picture", "wm.base.widget.Picture", "images/wm/picture.png", "A picture from a url"],
+[ "Basic Widgets/" +  bundlePackage.Formatting_Category, bundlePackage.Spacer, "wm.Spacer", "wm.base.widget.Spacer", "images/wm/spacer.png", "Add space between widgets"],
+[ "Basic Widgets/" +  bundlePackage.Formatting_Category, bundlePackage.Splitter, "wm.Splitter", "wm.base.widget.Splitter", "images/wm/splitter.png", "A moveable bar between widgets"],
+[ "Basic Widgets/" +  bundlePackage.Formatting_Category, bundlePackage.Bevel, "wm.Bevel", "wm.base.widget.Bevel", "images/wm/bevel.png", "A bar to put between widgets"],
+[ "Basic Widgets/" +  bundlePackage.Formatting_Category, bundlePackage.Content, "wm.Content", "wm.base.widget.Content", "images/wm/content.png", "A display for static markup"],
+[ "Basic Widgets/" +  bundlePackage.Formatting_Category, bundlePackage.HTML, "wm.Html", "wm.base.widget.Html", "images/wm/content.png", "A display for static markup"],
+[ "Basic Widgets/" +  bundlePackage.Formatting_Category, bundlePackage.IFrame, "wm.IFrame", "wm.base.widget.IFrame", "images/wm/pane.png", "An IFrame for external content"],
+
+[ "Basic Widgets/Menus", bundlePackage.Menu, "wm.DojoMenu", "wm.base.widget.DojoMenu", "images/wm/menu.png", "A Dojo menu"],
+[ "Basic Widgets/Menus", bundlePackage.PopupMenu, "wm.PopupMenu", "wm.base.widget.DojoMenu", "images/wm/menu.png", "A Dojo menu"],
+[ "Basic Widgets/Menus", bundlePackage.PopupButton, "wm.PopupMenuButton", "wm.base.widget.Button", "images/wm/button.png", "A simple button"],
+
+[ bundlePackage.Containers, bundlePackage.Dashboard, "wm.Dashboard", "wm.base.widget.Dashboard", "images/wm/lightbox_16.png", "Dashboard"],
 [ bundlePackage.Containers, bundlePackage.PageContainer, "wm.PageContainer", "wm.base.widget.PageContainer", "images/wm/pane.png", "A page container"],
 [ bundlePackage.Containers, bundlePackage.Panel, "wm.Panel", "wm.base.widget.Panel", "images/wm/panel.png", "Container for other widgets"],
 [ bundlePackage.Containers, bundlePackage.Rounded_Panel, "wm.FancyPanel", "wm.base.widget.Panel", "images/wm/panel.png", "Container for other widgets"],
-[ bundlePackage.Containers, bundlePackage.Tabs, "wm.TabLayers", "wm.base.widget.Layers", "images/wm/tabbook.png", "Tabbed container for other widgets"],
-[ bundlePackage.Containers, bundlePackage.Wizards, "wm.WizardLayers", "wm.base.widget.Layers", "images/wm/tabbook.png", "Tabbed container for other widgets"],
 
-[ bundlePackage.Editor, bundlePackage.Checkbox, "wm.Checkbox", "wm.base.widget.Editors.Checkbox", "images/wm/edit.png", "A checkbox"],
-[ bundlePackage.Editor, bundlePackage.Currency, "wm.Currency", "wm.base.widget.Editors.Text", "images/wm/edit.png", "An editor for currency"],
-[ bundlePackage.Editor, bundlePackage.Date, "wm.Date", "wm.base.widget.Editors.Date", "images/wm/edit.png", "An editor for dates"],
-[ bundlePackage.Editor, bundlePackage.Number, "wm.Number", "wm.base.widget.Editors.Number", "images/wm/edit.png", "An editor for numbers"],
-[ bundlePackage.Editor, bundlePackage.RadioButton, "wm.RadioButton", "wm.base.widget.Editors.Radiobutton", "images/wm/edit.png", "A radiobutton"],
-[ bundlePackage.Editor, bundlePackage.Select, "wm.SelectMenu", "wm.base.widget.Editors.Select", "images/wm/edit.png", "A drop down menu"],
-[ bundlePackage.Editor, bundlePackage.Slider, "wm.Slider", "wm.base.widget.Editors.Number", "images/wm/edit.png", "An editor for slider"],
-[ bundlePackage.Editor, bundlePackage.Text, "wm.Text", "wm.base.widget.Editors.Text", "images/wm/edit.png", "An editor for text"],
-[ bundlePackage.Editor, bundlePackage.TextArea, "wm.LargeTextArea", "wm.base.widget.Editors.Text", "images/wm/edit.png", "An editor for multiline text"],
-[ bundlePackage.Editor, bundlePackage.Time, "wm.Time", "wm.base.widget.Editors.Date", "images/wm/edit.png", "An editor for time"],
-[ bundlePackage.Editor, bundlePackage.RichText, "wm.RichText", "wm.base.widget.Editors.RichText", "images/wm/edit.png", "An rich text editor"],
+
+[ bundlePackage.Containers + "/" + bundlePackage.Containers_Layer_Category, bundlePackage.Accordion, "wm.AccordionLayers", "wm.base.widget.Layers", "images/wm/press.png", "Accordion controlled container"],
+[ bundlePackage.Containers + "/" +  bundlePackage.Containers_Layer_Category, bundlePackage.Layers, "wm.Layers", "wm.base.widget.Layers", "images/wm/notebook.png", "Stackable dynamic container"],
+[ bundlePackage.Containers + "/" +  bundlePackage.Containers_Layer_Category, bundlePackage.Tabs, "wm.TabLayers", "wm.base.widget.Layers", "images/wm/tabbook.png", "Tabbed container for other widgets"],
+[ bundlePackage.Containers + "/" +  bundlePackage.Containers_Layer_Category, bundlePackage.Wizards, "wm.WizardLayers", "wm.base.widget.Layers", "images/wm/tabbook.png", "Tabbed container for other widgets"],
 
 
 [ bundlePackage.Dialogs, bundlePackage.GenericDialog, "wm.GenericDialog", "wm.base.widget.Dialog", "images/wm/button.png", "A simple button"],
 [ bundlePackage.Dialogs, bundlePackage.PageDialog, "wm.PageDialog", "wm.base.widget.Dialog", "images/wm/button.png", "A simple button"],
-[ bundlePackage.Dialogs, bundlePackage.RichTextDialog, "wm.RichTextDialog", "wm.base.widget.Dialog", "images/wm/button.png", "A simple button"],
 [ bundlePackage.Dialogs, bundlePackage.DesignableDialog, "wm.DesignableDialog", "wm.base.widget.Dialog", "images/wm/button.png", "A simple button"],
 
 
-[ bundlePackage.Dojo_Widgets, bundlePackage.Chart, "wm.DojoChart", "wm.base.widget.DojoChart", "images/wm/bar_chart.png", "A Dojo chart"],
-[ bundlePackage.Dojo_Widgets, bundlePackage.Dashboard, "wm.Dashboard", "wm.base.widget.Dashboard", "images/wm/lightbox_16.png", "Dashboard"],
-[ bundlePackage.Dojo_Widgets, bundlePackage.PopupMenu, "wm.PopupMenu", "wm.base.widget.DojoMenu", "images/wm/menu.png", "A Dojo menu"],
-[ bundlePackage.Dojo_Widgets, bundlePackage.Fisheye, "wm.DojoFisheye", "wm.base.widget.DojoFisheye", "images/wm/fisheye.png", "A Dojo Fisheye"],
-[ bundlePackage.Dojo_Widgets, bundlePackage.Lightbox, "wm.DojoLightbox", "wm.base.widget.DojoLightbox", "images/wm/lightbox_16.png", "A Dojo Lightbox"],
-[ bundlePackage.Dojo_Widgets, bundlePackage.Menu, "wm.DojoMenu", "wm.base.widget.DojoMenu", "images/wm/menu.png", "A Dojo menu"],
+[ "Forms &amp; Editors", bundlePackage.LiveForm, "wm.LiveForm", "wm.base.widget.LiveForm", "images/wm/content.png"],
+[ "Forms &amp; Editors/" + bundlePackage.Editor, bundlePackage.Checkbox, "wm.Checkbox", "wm.base.widget.Editors.Checkbox", "images/wm/edit.png", "A checkbox"],
+[ "Forms &amp; Editors/" +  bundlePackage.Editor, bundlePackage.Currency, "wm.Currency", "wm.base.widget.Editors.Text", "images/wm/edit.png", "An editor for currency"],
+[ "Forms &amp; Editors/" +  bundlePackage.Editor, bundlePackage.Date, "wm.Date", "wm.base.widget.Editors.Date", "images/wm/edit.png", "An editor for dates"],
+[ "Forms &amp; Editors/" +  bundlePackage.Editor, bundlePackage.Number, "wm.Number", "wm.base.widget.Editors.Number", "images/wm/edit.png", "An editor for numbers"],
+[ "Forms &amp; Editors/" +  bundlePackage.Editor, bundlePackage.RadioButton, "wm.RadioButton", "wm.base.widget.Editors.Radiobutton", "images/wm/edit.png", "A radiobutton"],
+[ "Forms &amp; Editors/" +  bundlePackage.Editor, bundlePackage.Select, "wm.SelectMenu", "wm.base.widget.Editors.Select", "images/wm/edit.png", "A drop down menu"],
+[ "Forms &amp; Editors/" +  bundlePackage.Editor, bundlePackage.Slider, "wm.Slider", "wm.base.widget.Editors.Number", "images/wm/edit.png", "An editor for slider"],
+[ "Forms &amp; Editors/" +  bundlePackage.Editor, bundlePackage.Text, "wm.Text", "wm.base.widget.Editors.Text", "images/wm/edit.png", "An editor for text"],
+[ "Forms &amp; Editors/" +  bundlePackage.Editor, bundlePackage.TextArea, "wm.LargeTextArea", "wm.base.widget.Editors.Text", "images/wm/edit.png", "An editor for multiline text"],
+[ "Forms &amp; Editors/" +  bundlePackage.Editor, bundlePackage.Time, "wm.Time", "wm.base.widget.Editors.Date", "images/wm/edit.png", "An editor for time"],
+[ "Forms &amp; Editors/" +  bundlePackage.Editor, bundlePackage.RichText, "wm.RichText", "wm.base.widget.Editors.RichText", "images/wm/edit.png", "An rich text editor"],
+[ "Forms &amp; Editors/" +  bundlePackage.Editor, bundlePackage.Calendar, "wm.dijit.Calendar", "wm.base.widget.dijit.Calendar", "images/wm.dijit/Calendar.png", "Dojo calendar control"],
+[  "Forms &amp; Editors/" +  bundlePackage.Editor, bundlePackage.ColorPicker, "wm.ColorPicker", "wm.base.widget.Editors.Text", "images/wm/edit.png", "A color picker"],
+[ "Forms &amp; Editors/Misc", bundlePackage.RelatedEditor, "wm.RelatedEditor", "wm.base.widget.RelatedEditor", "images/wm/edit.png", "A group of editors for related data"],
+[ "Forms &amp; Editors/Misc", bundlePackage.SimpleForm, "wm.SimpleForm", "wm.base.widget.LiveForm", "images/wm/content.png"],
+[ "Forms &amp; Editors/Misc", bundlePackage.DojoFileUpload, "wm.DojoFileUpload", "wm.base.widget.DojoFileUpload", "images/wm/button.png", "An example custom button widget."],
+[ "Forms &amp; Editors/Misc", bundlePackage.DojoFlashFileUpload, "wm.DojoFlashFileUpload", "wm.base.widget.DojoFlashFileUpload", "images/wm/button.png", "An example custom button widget."],
+
+
+
+[ bundlePackage.DataWidget, bundlePackage.DojoGrid, "wm.DojoGrid", "wm.base.widget.DojoGrid", "images/wm/data.png", "A Dojo grid"],
+[ bundlePackage.DataWidget, bundlePackage.DataNavigator, "wm.DataNavigator", "wm.base.widget.DataNavigator", "images/wm/edit.png"],
+[ bundlePackage.DataWidget, bundlePackage.Chart, "wm.DojoChart", "wm.base.widget.DojoChart", "images/wm/bar_chart.png", "A Dojo chart"],
+[ bundlePackage.DataWidget, bundlePackage.List, "wm.List", "wm.base.widget.List", "images/wm/content.png", "A simple list control"],
+[ bundlePackage.DataWidget, bundlePackage.ListViewer, "wm.ListViewer", "wm.base.widget.ListViewer", "images/wm/content.png", "A simple list control"],
+[ bundlePackage.DataWidget, bundlePackage.Tree, "wm.PropertyTree", "wm.base.widget.Tree", "images/wm/tree.png", "A tree control"],
+[ bundlePackage.DataWidget, bundlePackage.DraggableTree, "wm.DraggableTree", "wm.base.widget.DraggableTree", "images/wm/tree.png", "A tree control"],
+[ bundlePackage.DataWidget, bundlePackage.Calendar, "wm.dijit.Calendar", "wm.base.widget.dijit.Calendar", "images/wm.dijit/Calendar.png", "Dojo calendar control"],
+
 
 /*[ "Dojo Widgets", "Test", "wm.DojoWidget", "wm.base.widget.DojoWidget", "images/wm/button.png", "A button with a progress indicator"],*/
 
-[ bundlePackage.Form_Tools, bundlePackage.DataNavigator, "wm.DataNavigator", "wm.base.widget.DataNavigator", "images/wm/edit.png"],
-// [ bundlePackage.Form_Tools, "EditPanel", "wm.EditPanel", "wm.base.widget.EditPanel", "images/wm/panel.png"], //
-[ bundlePackage.Form_Tools, bundlePackage.LiveForm, "wm.LiveForm", "wm.base.widget.LiveForm", "images/wm/content.png"],
-[ bundlePackage.Form_Tools, bundlePackage.RelatedEditor, "wm.RelatedEditor", "wm.base.widget.RelatedEditor", "images/wm/edit.png", "A group of editors for related data"],
 
-[ bundlePackage.More_Widgets, bundlePackage.JsonStatus, "wm.JsonStatus", "wm.base.widget.Tree", "images/wm/bevel.png", "A bar to put between widgets"],
-[ bundlePackage.More_Widgets, bundlePackage.Bevel, "wm.Bevel", "wm.base.widget.Bevel", "images/wm/bevel.png", "A bar to put between widgets"],
-[ bundlePackage.More_Widgets, bundlePackage.Calendar, "wm.dijit.Calendar", "wm.base.widget.dijit.Calendar", "images/wm.dijit/Calendar.png", "Dojo calendar control"],
-[ bundlePackage.More_Widgets, bundlePackage.Content, "wm.Content", "wm.base.widget.Content", "images/wm/content.png", "A display for static markup"],
-[ bundlePackage.More_Widgets, bundlePackage.HTML, "wm.Html", "wm.base.widget.Html", "images/wm/content.png", "A display for static markup"],
-[ bundlePackage.More_Widgets, bundlePackage.IFrame, "wm.IFrame", "wm.base.widget.IFrame", "images/wm/pane.png", "An IFrame for external content"],
-[ bundlePackage.More_Widgets, bundlePackage.List, "wm.List", "wm.base.widget.List", "images/wm/content.png", "A simple list control"],
-[ bundlePackage.More_Widgets, bundlePackage.ProgressBar, "wm.dijit.ProgressBar", "wm.base.widget.dijit.ProgressBar", "images/wm.dijit/ProgressBar.png", "Dojo progress bar"],
+// [ bundlePackage.Form_Tools, "EditPanel", "wm.EditPanel", "wm.base.widget.EditPanel", "images/wm/panel.png"], //
 
 /*
 [ bundlePackage.Templates, bundlePackage.FancyCentered, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "Template for OMG", wm.fullTemplates.fancyCenteredTemplate],
@@ -85,18 +108,18 @@
 [ bundlePackage.Templates, bundlePackage.ComplexLayout, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A complicated layout template.", wm.fullTemplates.complexLayout],
 [ bundlePackage.Templates, bundlePackage.CenteredLayout, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A 600px wide fixed centered layout", wm.fullTemplates.centeredFixedLayout],
 */
-[ bundlePackage.Templates, bundlePackage.FancyTemplate, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "Template for OMG", wm.fullTemplates.fancyTemplate],
-[ bundlePackage.Templates, bundlePackage.SideMenu, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A 800px wide centered page container with header and footer", wm.fullTemplates.sideMenuTemplate],
-[ bundlePackage.Templates, bundlePackage.TabsTemplate, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A complicated layout template.", wm.fullTemplates.tabTemplate],
-[ bundlePackage.Templates, bundlePackage.TopMenu, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A 600px wide fixed centered layout", wm.fullTemplates.topMenuTemplate],
+[ bundlePackage.Templates + "/Page Layouts", bundlePackage.FancyTemplate, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "Template for OMG", wm.fullTemplates.fancyTemplate],
+[ bundlePackage.Templates + "/Page Layouts", bundlePackage.SideMenu, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A 800px wide centered page container with header and footer", wm.fullTemplates.sideMenuTemplate],
+[ bundlePackage.Templates  + "/Page Layouts", bundlePackage.TabsTemplate, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A complicated layout template.", wm.fullTemplates.tabTemplate],
+[ bundlePackage.Templates + "/Page Layouts", bundlePackage.TopMenu, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A 600px wide fixed centered layout", wm.fullTemplates.topMenuTemplate],
 
-[ bundlePackage.SubTemplates, bundlePackage.SecurityTemplate, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "An App Title Bar", wm.widgetTemplates.securityTemplate],
-[ bundlePackage.SubTemplates, bundlePackage.TitleBar, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "An App Title Bar", wm.widgetTemplates.titleBar],
-[ bundlePackage.SubTemplates, bundlePackage.Footer, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A footer template.", wm.widgetTemplates.footer],
-[ bundlePackage.SubTemplates, bundlePackage.SearchListDetail, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A simple CRUD template.", wm.widgetTemplates.searchListDetail],
-[ bundlePackage.SubTemplates, bundlePackage.Toolbar, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A toolbar with buttons", wm.widgetTemplates.toolbar],
-[ bundlePackage.SubTemplates, bundlePackage.TwoColumns, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A simple template.", wm.widgetTemplates.twoColumn],
-[ bundlePackage.SubTemplates, bundlePackage.TabbedTwoCol, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "Tabbed two column interface.", wm.widgetTemplates.tabbedTwoColumn],
+[ bundlePackage.Templates + "/Panel Layouts", bundlePackage.SecurityTemplate, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "An App Title Bar", wm.widgetTemplates.securityTemplate],
+[ bundlePackage.Templates + "/Panel Layouts", bundlePackage.TitleBar, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "An App Title Bar", wm.widgetTemplates.titleBar],
+[ bundlePackage.Templates + "/Panel Layouts", bundlePackage.Footer, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A footer template.", wm.widgetTemplates.footer],
+[ bundlePackage.Templates + "/Panel Layouts", bundlePackage.SearchListDetail, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A simple CRUD template.", wm.widgetTemplates.searchListDetail],
+[ bundlePackage.Templates + "/Panel Layouts", bundlePackage.Toolbar, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A toolbar with buttons", wm.widgetTemplates.toolbar],
+[ bundlePackage.Templates + "/Panel Layouts", bundlePackage.TwoColumns, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A simple template.", wm.widgetTemplates.twoColumn],
+[ bundlePackage.Templates + "/Panel Layouts", bundlePackage.TabbedTwoCol, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "Tabbed two column interface.", wm.widgetTemplates.tabbedTwoColumn],
 //[ bundlePackage.SubTemplates, "ToolbarAndForm", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A toolbar and simple form template.", wm.widgetTemplates.toolbarWithGroupBox],
 
 [ bundlePackage.Web_Content, bundlePackage.Feed_List, "wm.FeedList", "wm.base.widget.FeedList", "images/rss.png", "Feed List"],
@@ -104,18 +127,13 @@
 //[ bundlePackage.Web_Content, "Stocks", "wm.gadget.Stocks", "wm.base.widget.gadget.Stocks", "images/flash.png", "Stocks Google Gadget"],
 [ bundlePackage.Web_Content, bundlePackage.Weather, "wm.gadget.Weather", "wm.base.widget.gadget.Weather", "images/flash.png", "Weather Google Gadget"],
 [ bundlePackage.Web_Content, bundlePackage.YouTube, "wm.gadget.YouTube", "wm.base.widget.gadget.YouTube", "images/flash.png", "YouTube Google Gadget"],
+[ bundlePackage.Web_Content, bundlePackage.Fisheye, "wm.DojoFisheye", "wm.base.widget.DojoFisheye", "images/wm/fisheye.png", "A Dojo Fisheye"],
+[ bundlePackage.Web_Content, bundlePackage.Lightbox, "wm.DojoLightbox", "wm.base.widget.DojoLightbox", "images/wm/lightbox_16.png", "A Dojo Lightbox"],
+[ bundlePackage.Web_Content, bundlePackage.ProgressBar, "wm.dijit.ProgressBar", "wm.base.widget.dijit.ProgressBar", "images/wm.dijit/ProgressBar.png", "Dojo progress bar"],
+[ bundlePackage.Web_Content, bundlePackage.IFrame, "wm.IFrame", "wm.base.widget.IFrame", "images/wm/pane.png", "An IFrame for external content"],
+[ bundlePackage.Web_Content, bundlePackage.JsonStatus, "wm.JsonStatus", "wm.base.widget.Tree", "images/wm/bevel.png", "A bar to put between widgets"],
+[ bundlePackage.Web_Content, bundlePackage.Ticker, "wm.Ticker", "wm.base.widget.Ticker", "images/wm/widget.png", "Animated scrolling panel"],
 
-[ bundlePackage.Beta, bundlePackage.ColorPicker, "wm.ColorPicker", "wm.base.widget.Editors.Text", "images/wm/edit.png", "A color picker"],
-[ bundlePackage.Beta, bundlePackage.BusyButton, "wm.BusyButton", "wm.base.widget.BusyButton", "images/wm/button.png", "A button with a progress indicator"],
-[ bundlePackage.Beta, bundlePackage.DojoFileUpload, "wm.DojoFileUpload", "wm.base.widget.DojoFileUpload", "images/wm/button.png", "An example custom button widget."],
-[ bundlePackage.Beta, bundlePackage.DojoFlashFileUpload, "wm.DojoFlashFileUpload", "wm.base.widget.DojoFlashFileUpload", "images/wm/button.png", "An example custom button widget."],
-
-[ bundlePackage.Beta, bundlePackage.Ticker, "wm.Ticker", "wm.base.widget.Ticker", "images/wm/widget.png", "Animated scrolling panel"],
-[ bundlePackage.Beta, bundlePackage.ListViewer, "wm.ListViewer", "wm.base.widget.ListViewer", "images/wm/content.png", "A simple list control"],
-
-[ bundlePackage.Advanced, bundlePackage.Tree, "wm.PropertyTree", "wm.base.widget.Tree", "images/wm/tree.png", "A tree control"],
-[ bundlePackage.Advanced, bundlePackage.DraggableTree, "wm.DraggableTree", "wm.base.widget.DraggableTree", "images/wm/tree.png", "A tree control"],
-[ bundlePackage.Advanced, bundlePackage.SimpleForm, "wm.SimpleForm", "wm.base.widget.LiveForm", "images/wm/content.png"],
 
 [ bundlePackage.Deprecated, bundlePackage.DataGrid, "wm.DataGrid", "wm.base.widget.DataGrid", "images/wm/data.png", "A grid control for displaying lists"],
 [ bundlePackage.Deprecated, bundlePackage.Rounded_Button, "wm.RoundedButton", "wm.base.widget.Button", "images/wm/button.png", "A simple rounded button"],
