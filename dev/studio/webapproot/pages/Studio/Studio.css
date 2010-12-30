@@ -1157,6 +1157,7 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
     background-repeat: no-repeat;
     width: 16px;
     height: 16px;
+    cursor: pointer;
 }
 
 .wm-darksnazzy .wmaccordion {

@@ -240,6 +240,11 @@ dojo.declare("wm.Palette", wm.Tree, {
     onselect: function(inNode) {
 	if (!inNode) return;
 	var data = inNode.data;
+	if (!data.description) {
+	    studio.paletteTips.hide();
+	    return;
+	}
+	studio.paletteTips.show();
 	studio.paletteTips.setCaption( "<span class='StudioHelpIcon'>&nbsp;</span>" + data.description);
 	var node = dojo.query(".StudioHelpIcon", studio.paletteTips.domNode)[0];
 	dojo.connect(node, "onmouseover", this, function(e) {
