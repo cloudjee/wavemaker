@@ -281,7 +281,8 @@ Studio.widgets = {
 					benchbevel6: ["wm.Bevel", {border: ""}, {}],
 					paletteSearch: ["wm.Text", {caption: "", width: "100%", placeHolder: "Find Component/Widget", padding: "2,5,2,5", changeOnKey: true, resetButton: true}, {onchange: "paletteSearchChange"}],
 					benchbevel6_6: ["wm.Bevel", {border: ""}, {}],
-					palette: ["wm.Palette", {height: "100%", border: ""}, {}]
+					palette: ["wm.Palette", {height: "100%", border: ""}, {}],
+					paletteTips: ["wm.Label", {width: "100%", height: "24px", border: "3,0,0,0", borderColor: "#666E80", backgroundColor: "#424A5A", autoSizeHeight: true,singleLine: false}]
 					/*
 					paletteSplitter: ["wm.Splitter", {border: "0", layout: "bottom"}, {}],
 					componentPalette: ["wm.Palette", {height: "300px", border: ""}, {}]*/

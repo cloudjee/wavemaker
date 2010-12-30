@@ -1147,6 +1147,11 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
     margin-right: 10px;
     width: 26px;
 }
+#studio_paletteTips .StudioHelpIcon {
+    float: left;
+    margin-right: 3px;
+    width: 19px;
+}
 .StudioHelpIcon, .wminspector-help {
     background-image: url(/wavemaker/lib/images/boolean/Signage/Help%20Circle.png);
     background-repeat: no-repeat;

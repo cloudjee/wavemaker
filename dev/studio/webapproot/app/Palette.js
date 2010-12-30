@@ -158,6 +158,8 @@ dojo.declare("wm.Palette", wm.Tree, {
 			var n = new wm.TreeNode(p, {
 					name: inName,
 					content: inName,
+			                data: {description: inDescription,
+					       klass: inClass},
 					image: inImage,
 					klass: inClass,
 					props: inProps
@@ -234,8 +236,24 @@ dojo.declare("wm.Palette", wm.Tree, {
 	    }
 	    return node;
 	},
-	select: function() {
-	},
+
+    onselect: function(inNode) {
+	if (!inNode) return;
+	var data = inNode.data;
+	studio.paletteTips.setCaption( "<span class='StudioHelpIcon'>&nbsp;</span>" + data.description);
+	var node = dojo.query(".StudioHelpIcon", studio.paletteTips.domNode)[0];
+	dojo.connect(node, "onmouseover", this, function(e) {
+	    app.createToolTip("Click for docs", node, e, "100px");
+	});
+	dojo.connect(node, "onmouseout", this, function() {
+	    app.hideToolTip();
+	});
+	dojo.connect(node, "onclick", this, function(e) {
+	    window.open("http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/" + inNode.klass.replace(/^.*\./,""));
+	});
+
+    },
+
 	// bc
 	setLayerIndex: function() {
 	},

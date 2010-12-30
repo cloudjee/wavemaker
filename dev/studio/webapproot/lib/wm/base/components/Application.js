@@ -680,7 +680,7 @@ dojo.declare("wm.Application", wm.Component, {
         this.toastDialog.showToast(inMsg, 5000, "Info");
     },
     
-    createToolTip: function(message, node, event) {
+    createToolTip: function(message, node, event, optionalWidth) {
 	if (!this.toolTipDialog) {
 	    this.toolTipDialog = new wm.GenericDialog({title: "",
 						       modal: false,
@@ -690,6 +690,7 @@ dojo.declare("wm.Application", wm.Component, {
 						       owner: this,
 						       _fixPosition: true});
 	}
+	this.toolTipDialog.setWidth(optionalWidth || "350px");
 	if (node) {
 	    this.toolTipDialog.fixPositionNode = node;
 	} else {
