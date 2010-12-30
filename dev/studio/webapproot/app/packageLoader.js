@@ -17,7 +17,7 @@
  */ 
 dojo.provide("wm.studio.app.packageLoader");
 
-_import = function(inTab, inName, inClass, inModule, inImage, inDescription, inProps) {
+_import = function(inTab, inName, inClass, inModule, inImage, inDescription, isBeta, inProps) {
 	var
 		n=inName,
 		c=inClass,
@@ -45,7 +45,7 @@ _import = function(inTab, inName, inClass, inModule, inImage, inDescription, inP
         if (!(ctor.prototype instanceof wm.Control) && !(ctor.prototype.declaredClass == "wm.DojoLightbox"))
 		studio.addComponentMenuItem(inTab, n, d, i, c, inProps);
         else
-	    studio["palette"].addItem(inTab, n, d, i, c, inProps);
+	    studio["palette"].addItem(inTab, n, d, i, c, inProps, isBeta);
 }
 
 installPackages = function(m) {

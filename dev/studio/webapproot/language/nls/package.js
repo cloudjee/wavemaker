@@ -235,6 +235,9 @@
     "descLightbox": "Popup for showing a set of photos",
     "descProgressBar": "Widget for showing a progress indicator",
     "descJsonStatus": "Widget for indicating that json calls are in progress",
-    "descTicker": "Panel that contains widgets and scrolls them across the screen"    
+    "descTicker": "Panel that contains widgets and scrolls them across the screen",
+
+
+    "isBeta": "(beta)"
 
 }

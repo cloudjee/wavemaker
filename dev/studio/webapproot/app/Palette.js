@@ -151,13 +151,13 @@ dojo.declare("wm.Palette", wm.Tree, {
 	    }
 	    return node;
 	},
-	addItem: function(inTab, inName, inDescription, inImage, inClass, inProps) {
+    addItem: function(inTab, inName, inDescription, inImage, inClass, inProps, isBeta) {
 		if (inTab){
 			var p = this.findItemByName(inTab) || this.makeGroup(inTab);
 			wm.fire(this.findItemByName(inName, p), "destroy");
 			var n = new wm.TreeNode(p, {
 					name: inName,
-					content: inName,
+			    content: inName + (isBeta ? " " + bundlePackage.isBeta : ""),
 			                data: {description: inDescription,
 					       klass: inClass},
 					image: inImage,
