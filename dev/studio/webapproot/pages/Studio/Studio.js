@@ -1361,5 +1361,8 @@ dojo.declare("Studio", wm.Page, {
 	      inType = inType.replace(/\./g, "_");
 
 	studio.studioService.requestAsync("getPropertyHelp", [inType + "_" + inPropName + "?synopsis"], onSuccess);
+    },
+    startPageIFrameLoaded: function() {
+	this.startContainer.page.iframe.show();
     }
 });

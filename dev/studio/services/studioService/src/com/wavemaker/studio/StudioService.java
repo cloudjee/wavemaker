@@ -477,6 +477,35 @@ System.out.println("F");
 	  return s;
     }
 
+
+    @ExposeToClient
+    public String getContent(String inUrl) throws IOException {
+	System.out.println("URL:"+inUrl);
+	URL url = new URL(inUrl);
+	  String str = "";
+	  try {
+		// Read all the text returned by the server
+		BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+
+		StringBuffer sbuf = new StringBuffer();
+		while ((str = in.readLine()) != null) {
+		      sbuf.append(str + "\n");
+		      // str is one line of text; readLine() strips the newline character(s)
+		}
+		str = sbuf.toString();
+		
+		in.close();
+		str = str.replace("<head>", "<head><base href='" + inUrl + "' /><base target='_blank' /><script>top.studio.startPageIFrameLoaded();</script>");
+		
+		//str = str.replaceAll("<a ", "<a target='newspage' ");
+		//str = str.replaceAll("/wiki/bin/", "http://dev.wavemaker.com/wiki/bin/");
+	  } catch(Exception e) {
+	      str = "";
+	  }
+
+	  return str;
+    }
+
     /* Note this should probably be moved to javaServices.java,
        but I didn't want to spend the time to figure out how to
        access studioConfiguration from that file */  

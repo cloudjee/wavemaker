@@ -28,7 +28,7 @@ Start.widgets = {
 							welcomeTitleLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_TextAlign_Center"]}, height: "50px", width: "100%", caption: bundleDialog.WelcomeMessage, border: "0"}, {}, {
 								format: ["wm.DataFormatter", {}, {}]
 							}],
-							panel4: ["wm.Panel", {height: "170px", width: "100%", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "center", padding: "10,0,0,0"}, {}, {
+							panel4: ["wm.Panel", {height: "160px", width: "100%", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "center", padding: "0,0,0,0"}, {}, {
 								screencast: ["wm.Label", {_classes: {domNode: ["wm_TextAlign_Center"]}, height: "100%", width: "100%", caption: "<div class=\"start_icon_label\">" + bundleDialog.Screencast + "</div><div style=\"font-weight:normal;font-size:85%\">A short video of WaveMaker in action</div>", padding: "14,4,4,4", singleLine: false}, {onclick: "screencastClick"}, {
 									format: ["wm.DataFormatter", {}, {}]
 								}],
@@ -55,7 +55,8 @@ Start.widgets = {
 										format: ["wm.DataFormatter", {}, {}]
 									}]
 								}],
-								panel2: ["wm.Panel", {height: "170px", width: "100%", verticalAlign: "bottom", horizontalAlign: "right", padding: "0,0,10,0"}, {}, {
+							    iframe: ["wm.IFrame", {source: "/wavemaker/studioService.download?method=getContent&inUrl=http://wavemaker.com/splash", width: "100%", height: "100%", border: "1", borderColor: "#000F19", margin: "0,3,10,0", showing: false}],
+							    panel2: ["wm.Panel", {showing: false, height: "170px", width: "100%", verticalAlign: "bottom", horizontalAlign: "right", padding: "0,0,10,0"}, {}, {
 									dontShowCheckbox: ["wm.Editor", {showing: false, _classes: {domNode: ["wm_FontSize_80percent"], captionNode: ["wm_FontColor_White"]}, caption: bundleDialog.DontShowThisAgain, display: "CheckBox", width: "308px", height: "20px", captionAlign: "left", captionPosition: "right", captionSize: "90%"}, {onchange: "dontShowCheckboxChange"}, {
 										editor: ["wm._CheckBoxEditor", {}, {}]
 									}]
