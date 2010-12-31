@@ -46,7 +46,7 @@ Studio.widgets = {
 	layout: ["wm.Layout", {height: "100%"}, {}, {
 	    dialog: ["wm.Dialog", {height: "400px", border: "1", borderColor: "#666E80", _noAnimation: true}, {}],
 		
-		navigationBar: ["wm.Panel", {_classes: {domNode: ["wm-darksnazzy"]}, height: "29px", border: "0", layoutKind: "left-to-right"}, {}, {
+	    navigationBar: ["wm.Panel", {_classes: {domNode: ["wm-darksnazzy"]}, width: "100%", height: "29px", border: "0", layoutKind: "left-to-right"}, {}, {
 			navBtnHolder: ["wm.Panel", {width: "100%", border: "0", layoutKind: "left-to-right", imageList: "navImageList", horizontalAlign: "left"}, {}, {
 			  navigationMenu: ["wm.DojoMenu", {height: "29px", width: "420px",
 						      "fullStructure": 
@@ -207,65 +207,21 @@ Studio.widgets = {
 							     */
 						      ]
 							  },  {},{}],
-			  /* The old menu bar
-				nspcr5: ["wm.Spacer", {width: "15px"}, {}],
-				projectPopupBtn: ["wm.PopupButton", {width: "55px", caption: "<span style=\"font-weight:bold;padding:4px;\">File</span><img src=\"images/dropArrow.png\"/> ", popupWidth: "180", hint: "Project Administration", imageList: "smallToolbarImageList", height: "29px"}, {}, {
-					newProjectItem: ["wm.Item", {caption: "New Project...", imageIndex: 17}, {onclick: "newProjectClick"}],
-					openProjectItem: ["wm.Item", {caption: "Open Project...", imageIndex: 18}, {onclick: "openProjectClick"}],
-					closeProjectItem: ["wm.Item", {caption: "Close Project", imageIndex: 13}, {onclick: "closeClick"}],
-					copyProjectItem: ["wm.Item", {caption: "Copy Current Project...", imageIndex: 1}, {onclick: "copyProjectClick"}],
-					deleteProjectItem: ["wm.Item", {caption: "Delete Current Project", imageIndex: 0}, {onclick: "deleteProjectClick"}],
-					exportProjectItem: ["wm.Item", {caption: "Export Project", imageIndex: 19}, {onclick: "exportClick"}],
-					importProjectItem: ["wm.Item", {caption: "Import Project...", imageIndex: 19}, {onclick: "importClick"}],
-					deployProjectItem: ["wm.Item", {caption: "Deployment...", imageIndex: 3}, {onclick: "deployClick"}],
-					preferencesItem: ["wm.Item", {caption: "Preferences...", imageIndex: 3}, {onclick: "projectSettingsClick"}]
-				}],
-				editPopupBtn: ["wm.PopupButton", {width: "55px", caption: "<span style=\"font-weight:bold;padding:4px;\">Edit</span><img src=\"images/dropArrow.png\"/> ", popupWidth: "120", hint: "Page Edit", imageList: "canvasToolbarImageList16", height: "29px"}, {}, {
-					cutItem: ["wm.Item", {caption: "Cut", imageIndex: 2}, {onclick: "cutClick"}],
-					copyItem: ["wm.Item", {caption: "Copy", imageIndex: 3}, {onclick: "copyClick"}],
-					pasteItem: ["wm.Item", {caption: "Paste", imageIndex: 4}, {onclick: "pasteClick"}],
-					deleteItem: ["wm.Item", {caption: "Delete", imageIndex: 5}, {onclick: "deleteClick"}],
-					undoItem: ["wm.Item", {caption: "Undo", imageIndex: 6}, {onclick: "undoClick"}]
-				}],
-				viewPopupBtn: ["wm.PopupButton", {width: "65px", caption: "<span style=\"font-weight:bold;padding:4px;\">View</span><img src=\"images/dropArrow.png\"/> ", popupWidth: "120", hint: "Page View", imageList: "canvasToolbarImageList16", height: "29px"}, {}, {
-					canvasItem: ["wm.Item", {caption: "Canvas", imageIndex: 21}, {onclick: "navGotoDesignerClick"}],
-					sourceItem: ["wm.Item", {caption: "Source", imageIndex: 20}, {onclick: "navGotoSourceClick"}],
-					resourceItem: ["wm.Item", {caption: "Resource", imageIndex: 20}, {onclick: "navGotoResourcesClick"}],
-					outlineItem: ["wm.Item", {caption: "Outline", imageIndex: 8}, {onclick: "outlinedClick"}]/ *,
-					liveLayoutItem: ["wm.Item", {caption: "Live Layout", imageIndex: 7}, {onclick: "refreshLiveData"}]* /
-				}],
-				insertPopupBtn: ["wm.PopupButton", {width: "70px", caption: "<span style=\"font-weight:bold;padding:4px;\">Insert</span><img src=\"images/dropArrow.png\"/> ", popupWidth: "180", hint: "Insert New Component", imageList: "smallToolbarImageList", height: "29px"}, {}, {
-					
-				}],
-				pagePopupBtn: ["wm.PopupButton", {width: "65px", caption: "<span style=\"font-weight:bold;padding:4px;\">Page</span><img src=\"images/dropArrow.png\"/> ", popupWidth: "200", hint: "Page Administration", imageList: "smallToolbarImageList", height: "29px"}, {}, {
-					newPageItem: ["wm.Item", {caption: "New...", imageIndex: 5}, {onclick: "newPageClick"}],
-					saveAsPageItem: ["wm.Item", {caption: "Save As...", imageIndex: 7}, {onclick: "savePageAsClick"}],
-					importPageItem: ["wm.Item", {caption: "Import Page...", imageIndex: 11}, {onclick: "importProjectClick"}],
-					setHomePageItem: ["wm.Item", {caption: "Set As Home Page", imageIndex: 2}, {onclick: "makeHomeClick"}]
-				}],
-				servicesPopupBtn: ["wm.PopupButton", {width: "85px", caption: "<span style=\"font-weight:bold;padding:4px;\">Services</span><img src=\"images/dropArrow.png\"/> ", popupWidth: "180", hint: "Create New Service", imageList: "smallToolbarImageList", height: "29px"}, {}, {
-					
-				}],
-				helpPopupBtn: ["wm.PopupButton", {width: "60px", caption: "<span style=\"font-weight:bold;padding:4px;\">Help </span><img src=\"images/dropArrow.png\"/>", popupWidth: "250", hint: "Help"}, {}, {
-					tutorialItem: ["wm.Item", {caption: "Tutorial", openLink: "http://dev.wavemaker.com/wiki/bin/view/WM5_Documentation/Tutorial", openLinkTitle: "WaveMaker Tutorial"}, {onclick: "linkButtonClick"}],
-					documentationItem: ["wm.Item", {caption: "Documentation", openLink: "http://dev.wavemaker.com/wiki/bin/view/WM5_Documentation/", openLinkTitle: "WaveMaker User Guide"}, {onclick: "linkButtonClick"}],
-					communityButtonClick: ["wm.Item", {caption: "Community", openLink: "http://dev.wavemaker.com", openLinkTitle: "WaveMaker Community"}, {onclick: "linkButtonClick"}],
-					javaApiDocBtn: ["wm.Item", {caption: "Java (Server) Documentation", openLink: "javadoc", openLinkTitle: "WaveMaker Java (Server) Documentation"}, {onclick: "linkButtonClick"}],
-					jsApiDocBtn: ["wm.Item", {caption: "JavaScript (Client) Documentation", openLink: "jsdoc", openLinkTitle: "WaveMaker JavaScript (Client) Documentation"}, {onclick: "linkButtonClick"}]
-				}],
-				navBarSpacer6: ["wm.Spacer", {width: "24px", margin: "0,10", border: "0"}, {}],
-*/
-						    runPopup: ["wm.PopupMenuButton", {iconWidth: "24px", iconHeight: "24px", iconClass: "studioProjectRun", caption: "Run", width: "90px", height: "29px", border: "0", margin: "0", padding: "0", fullStructure: [{label: "Run", iconClass: "studioProjectRun"},{label: "Test", iconClass: "studioProjectTest"},{label:"Compile", iconClass: "studioProjectCompile"}]},{onclick: "runProjectClick", onchange: "runProjectChange"}],
+			    runPopup: ["wm.PopupMenuButton", {iconWidth: "24px", iconHeight: "24px", iconClass: "studioProjectRun", caption: "Run", width: "90px", height: "29px", border: "0", margin: "0", padding: "0", fullStructure: [{label: "Run", iconClass: "studioProjectRun"},{label: "Test", iconClass: "studioProjectTest"},{label:"Compile", iconClass: "studioProjectCompile"}]},{onclick: "runProjectClick", onchange: "runProjectChange"}],
 /*
 				navTestBtn: ["wm.ToolButton", {width: "75px", hint: bundleStudio.T_TestTip, caption: "<img src=\"images/runapp_24.png\"/><span style=\"font-weight:bold\"> Test </span>", height: "29px"}, {onclick: "runProjectPopupClick"}],
 				navRunBtn: ["wm.ToolButton", {width: "75px", hint: bundleStudio.T_RunTip, caption: "<img src=\"images/runapp_24.png\"/><span style=\"font-weight:bold\"> Run </span>", height: "29px"}, {onclick: "runProjectClick"}],
 				*/
-				navBarSpacer7: ["wm.Spacer", {width: "100%", border: "0"}, {}],
-				userLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, width: "250px"}, {}],
-				navEditAccountBtn: ["wm.ToolButton", {showing: false, width: "120px", hint: bundleStudio.T_EditAccountTip, caption: "<img src=\"images/user_settings24.png\"/><span style=\"font-weight:bold\"> Edit Account </span>", height: "29px"}, {onclick: "editAccountClick"}],
-			        navLogoutBtn: ["wm.ToolButton", {showing: false,width: "100px", hint: bundleStudio.T_LogoutTip, caption: "<img src=\"images/close_24.png\"/><span style=\"font-weight:bold\"> Logout </span>", height: "29px"}, {onclick: "logoutClick"}],
-                                trackerImage: ["wm.Picture", {height: "1px", width: "1px"}]
-			}]
+			    navBarSpacer7: ["wm.Spacer", {width: "100%", border: "0"}, {}],
+			    userLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, width: "250px"}, {}],
+			    navEditAccountBtn: ["wm.ToolButton", {showing: false, width: "120px", hint: bundleStudio.T_EditAccountTip, caption: "<img src=\"images/user_settings24.png\"/><span style=\"font-weight:bold\"> Edit Account </span>", height: "29px"}, {onclick: "editAccountClick"}],
+			    navLogoutBtn: ["wm.ToolButton", {showing: false,width: "100px", hint: bundleStudio.T_LogoutTip, caption: "<img src=\"images/close_24.png\"/><span style=\"font-weight:bold\"> Logout </span>", height: "29px"}, {onclick: "logoutClick"}],
+			    menuBarHelp: ["wm.Label", {_classes: {domNode: ["StudioHelpIcon"]}, width: "20px", height: "100%"}, {onMouseOver: "mouseOverMenuBarHelp", onMouseOut: "mouseOutMenuBarHelp", onclick: "menuBarHelpClick"}],
+                            trackerImage: ["wm.Picture", {height: "1px", width: "1px"}]
+			}],
+
+
+
 		}],
 		panel1: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}, {
 			benchbevel11: ["wm.Bevel", {border: ""}, {}],

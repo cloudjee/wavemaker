@@ -1364,5 +1364,15 @@ dojo.declare("Studio", wm.Page, {
     },
     startPageIFrameLoaded: function() {
 	this.startContainer.page.iframe.show();
+    },
+    menuBarHelpClick: function() {
+	window.open("http://dev.wavemaker.com/wiki/bin/wmdoc/");
+    },
+    mouseOverMenuBarHelp: function(inSender) {
+	app.createToolTip("Click for documentation", this.menuBarHelp.domNode, null, "150px");
+    },
+    mouseOutMenuBarHelp: function(inSender) {
+	app.hideToolTip();
     }
+
 });

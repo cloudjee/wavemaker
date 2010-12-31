@@ -1160,6 +1160,16 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
     cursor: pointer;
 }
 
+.Studio-menuBarHelp {
+    background-position: 0% 50%;
+}
+
+.Studio-trackerImage {
+    opacity: 0.1;
+    filter: alpha(opacity=10);    
+}
+
+
 .wm-darksnazzy .wmaccordion {
 	border: none;
 	/*border-bottom: 1px solid #3399FF;*/
