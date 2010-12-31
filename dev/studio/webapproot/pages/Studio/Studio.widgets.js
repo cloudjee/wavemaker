@@ -229,8 +229,7 @@ Studio.widgets = {
 				leftToolbarButtons: ["wm.Panel", {height: "29px", width: "100%", layoutKind: "left-to-right", verticalAlign: "top", border: 0, padding: "0,4"}, {}, {
 					nspcr4: ["wm.Spacer", {width: "2px"}, {}],
 					designerCanvasBtn: ["wm.ToolButton", {border: "0", borderColor: "#294473", margin: "0", padding: "0,6", height: "100%", width: "56px", caption: "", hint: bundleStudio.T_CanvasTip}, {onclick: "navGotoDesignerClick"}],
-					designerSourceBtn: ["wm.ToolButton", {border: "0", borderColor: "#294473", margin: "0", padding: "0,6", height: "100%", width: "57px", caption: "", hint: bundleStudio.T_SourceTip}, {onclick: "navGotoSourceClick"}],
-					designerResourcesBtn: ["wm.ToolButton", {border: "0", borderColor: "#294473", margin: "0", padding: "0,6", height: "100%", width: "79px", caption: "", hint: bundleStudio.T_ResourcesTip}, {onclick: "navGotoResourcesClick"}]
+					designerSourceBtn: ["wm.ToolButton", {border: "0", borderColor: "#294473", margin: "0", padding: "0,6", height: "100%", width: "57px", caption: "", hint: bundleStudio.T_SourceTip}, {onclick: "navGotoSourceClick"}]
 				}],
 				left: ["wm.TabLayers", {_classes: {domNode: ["wm-darksnazzy"]}, border: "0", width: "100%", height: "100%"}, {onchange: "leftTabsChange"}, {
 				    mlpal: ["wm.Layer", {_classes: {domNode: ["wm-palette"]}, caption: bundleStudio.Palette}, {onShow: "resetPaletteSearch"}, {
@@ -379,9 +378,6 @@ Studio.widgets = {
 		deploymentLayer: ["wm.Layer", {caption: bundleStudio.Deployment}, {}, {
 		    deploymentPage: ["wm.PageContainer", {pageName:  "", height: "100%", width: "100%"}, {}]
 		}],
-		resourcesTab: ["wm.Layer", {caption: bundleStudio.Resources}, {}, {
-		                    resourcesPage: ["wm.PageContainer", {loadParentFirst: true, pageName: "ResourceManager", height: "100%", width: "100%"}, {}]
-				}],
 		sourceTab: ["wm.Layer", {_classes: {domNode: ["wm-darksnazzy"]}, caption: bundleStudio.R_IDE}, {}, {
 				    /*
 					sourceRibbon: ["wm.Panel", {height: "29px", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4"}, {}, {
@@ -492,9 +488,14 @@ Studio.widgets = {
 							benchbevel14: ["wm.Bevel", {}, {}],
 							logViewer: ["wm.PageContainer", {loadParentFirst: true, pageName: "LogViewer",  width: "100%", height: "100%"}]
 						}],
+					    resourcesTab: ["wm.Layer", {caption: bundleStudio.Resources}, {onShow: "loadResourcesTab"}, {
+						resourcesPage: ["wm.PageContainer", {loadParentFirst: true, pageName: "ResourceManager", height: "100%", width: "100%"}, {}]
+					    }]
+/*
 						diagnosticsTab: ["wm.Layer", {caption: bundleStudio.R_Diagnostics}, {}, {
 							diagnosticsPane: ["wm.PageContainer", {loadParentFirst: true, pageName: "Diagnostics", width: "100%", height: "100%"}, {}]
 						}]
+						*/
 					}]
 				}]/*,
 				servicesTab: ["wm.Layer", {caption: "Services", layoutKind: "left-to-right"}, {}, {

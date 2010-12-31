@@ -21,7 +21,7 @@ Studio.extend({
 	navGotoDesignerClick: function() {
 		this.disableMenuBar(false);
 		this.disableCanvasOnlyMenuItems(false);
-		this.toggleCanvasSourceBtns(true, false, false);
+		this.toggleCanvasSourceBtns(true, false);
 		this.tabs.setLayer("workspace");
             if (this.page) {
                 if (this._themeDesignerChange) {
@@ -47,18 +47,19 @@ Studio.extend({
 	navGotoSourceClick: function() {
 		this.disableMenuBar(false);
 		this.disableCanvasOnlyMenuItems(true);
-		this.toggleCanvasSourceBtns(false, true, false);
+		this.toggleCanvasSourceBtns(false, true);
 		this.tabs.setLayer("sourceTab");
 		//this.mainAndResourcePalettes.setLayer("mainPalettes");
 	},
+/*
 	navGotoResourcesClick: function() {
 		this.disableMenuBar(false);
 		this.disableCanvasOnlyMenuItems(true);
-		this.toggleCanvasSourceBtns(false, false, true);
 		this.tabs.setLayer("resourcesTab");
 		//this.mainAndResourcePalettes.setLayer("resourcePaletteLayer");
 		this.resourcesPage.getComponent("resourceManager").loadResources();
 	},
+	*/
 	navGoToLoginPage: function() {
 		this.disableCanvasOnlyMenuItems(true);
 		this.disableMenuBar(true);
@@ -69,7 +70,7 @@ Studio.extend({
 	navGoToDeploymentPage: function() {
 		this.disableMenuBar(false);
 		this.disableCanvasOnlyMenuItems(true);
-		this.toggleCanvasSourceBtns(false, false, false);
+		this.toggleCanvasSourceBtns(false, false);
 		if (this.deploymentPage.page != "DeploymentPage")
 		  this.deploymentPage.setPageName("DeploymentPage");
 		this.tabs.setLayer("deploymentLayer");
@@ -79,13 +80,13 @@ Studio.extend({
 	isLoginShowing: function() {
 	    return this.tabs.getLayer().name == "loginTab";
 	},
-	toggleCanvasSourceBtns: function(inCanvasOn, inSourceOn, inResourcesOn) {
+	toggleCanvasSourceBtns: function(inCanvasOn, inSourceOn) {
 		dojo.removeClass(this.designerCanvasBtn.domNode, (inCanvasOn ? "Studio-sourceCanvasBtn" : "Studio-designerCanvasBtn"));
 		dojo.addClass(this.designerCanvasBtn.domNode, (inCanvasOn ? "Studio-designerCanvasBtn" : "Studio-sourceCanvasBtn"));
 		dojo.removeClass(this.designerSourceBtn.domNode, (inSourceOn ? "Studio-designerSourceBtn" : "Studio-sourceSourceBtn"));
 		dojo.addClass(this.designerSourceBtn.domNode, (inSourceOn ? "Studio-sourceSourceBtn" : "Studio-designerSourceBtn"));
-		dojo.removeClass(this.designerResourcesBtn.domNode, (inResourcesOn ? "Studio-designerResourceBtn" : "Studio-sourceResourceBtn"));
-		dojo.addClass(this.designerResourcesBtn.domNode, (inResourcesOn ? "Studio-sourceResourceBtn" : "Studio-designerResourceBtn"));
+	        //dojo.removeClass(this.designerResourcesBtn.domNode, (inResourcesOn ? "Studio-designerResourceBtn" : "Studio-sourceResourceBtn"));
+	    //dojo.addClass(this.designerResourcesBtn.domNode, (inResourcesOn ? "Studio-sourceResourceBtn" : "Studio-designerResourceBtn"));
 
 	},
 	disableCanvasSourceBtns: function(inDisable) {

@@ -1373,6 +1373,9 @@ dojo.declare("Studio", wm.Page, {
     },
     mouseOutMenuBarHelp: function(inSender) {
 	app.hideToolTip();
+    },
+    loadResourcesTab: function() {
+	this.resourcesPage.getComponent("resourceManager").loadResources();
     }
 
 });
