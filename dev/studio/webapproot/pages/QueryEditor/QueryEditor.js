@@ -37,6 +37,15 @@ dojo.declare("QueryEditor", wm.Page, {
                 this._startCalled = true;
 		this.subscribe("wm-project-changed", this, "update");
 		this.update();
+
+	    /* Dojo's onBlur is somehow jamming our onclick so it doesn't fire; users going from editing to hitting save will fail without us switching from onclick to onmousedown */
+	    var buttons = [this.saveQueryBtn, this.newQueryBtn, this.delQueryBtn, this.addInputBtn, this.deleteParamBtn,this.runQueryBtn];
+	    dojo.forEach(buttons, function(b) {
+		b.disconnectEvent("onclick");
+		dojo.connect(b.domNode, "onmousedown", function() {
+		    b.click();
+		});
+	    });
 	},
 	update: function() {
 		//this.selectedNode = null;
