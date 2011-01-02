@@ -49,7 +49,7 @@ dojo.declare("wm._RadioButtonEditor", wm._CheckBoxEditor, {
 	},
 	getGroup: function() {
 		var groupList = [];
-		var nList = dojo.query("[name="+this.radioGroup+"]");
+		var nList = dojo.query("input[type=radio][name="+this.radioGroup+"]");
 		nList.forEach(function(DOMNode, index, nodeList){
 			groupList[index] = dijit.getEnclosingWidget(DOMNode);
 		});
@@ -217,7 +217,7 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 	},
 	getGroup: function() {
 		var groupList = [];
-		var nList = dojo.query("[name="+this.radioGroup+"]");
+		var nList = dojo.query("input[type=radio][name="+this.radioGroup+"]");
 		nList.forEach(function(DOMNode, index, nodeList){
 			groupList[index] = dijit.getEnclosingWidget(DOMNode);
 		});
