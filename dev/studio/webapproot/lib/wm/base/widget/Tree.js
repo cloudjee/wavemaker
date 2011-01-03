@@ -45,10 +45,18 @@ dojo.declare("wm.TreeNode", null, {
 		this._destroy();
 	},
 	destroy: function() {
+	    this.isDestroyed = true;
+	    this.removeChildren();
+	    
 		if (this.tree.nodes[this.id])
 			this.tree._removeNode(this);
-		if (this.parent)
-			wm.fire(this.parent, "_remove", [this]);
+	    if (this.parent) {
+		if (this.parent instanceof wm.TreeNode) {
+		    this.parent.kids = wm.Array.removeElement(this.parent.kids, this);
+		    delete this.parent;
+		}
+		wm.fire(this.parent, "_remove", [this]);
+	    }
 		if (this != this.tree.root) {
 			var d = this.domNode;
 			dojo._destroyElement(d);
