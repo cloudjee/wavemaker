@@ -50,7 +50,6 @@ Studio.extend({
 	            this.regex = new RegExp(this._searchText.toLowerCase());
 
 		if (this.page) {
-		    this.pageComponentsToTree(this.compTree);
 		    var dialogs = this.getTreeComponents(this.application.components, null, [wm.Dialog, wm.PopupMenu]);
 		    for (var d in dialogs) {
 			this.widgetToTree(this.widgetsTree.root, dialogs[d]);
@@ -79,6 +78,7 @@ Studio.extend({
 	    this.regex = new RegExp(this._searchText.toLowerCase());
 	this.useHierarchy = true;
 	this.appComponentsToTree(this.compTree);
+	this.pageComponentsToTree(this.compTree);
 	this.useHierarchy = false;
     },
 
