@@ -168,11 +168,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		var rowIdx = this.getSelectedIndex();
 		if (rowIdx != inRowIndex) {
 			this.setSelectedRow(inRowIndex, true);
-		} else {
-			var oldObj = this.selectedItem.getData();
-			if (oldObj[inFieldName] == inValue)
-				return;
 		}
+	    var oldObj = this.selectedItem.getData();
+	    if (oldObj[inFieldName] == inValue)
+		return;
+
 
 	    // A bug in dojox.grid editting causes it to set "user.name" but read from "user: {name: currentname}" so we copy in the data to compenate
 	    if (inFieldName.indexOf(".")) {
