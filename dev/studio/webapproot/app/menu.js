@@ -135,7 +135,7 @@ Studio.extend({
 		this.insertPopupBtn.set("disabled",inDisabled);
 		this.servicesPopupBtn.set("disabled",inDisabled);
 		this.pagePopupBtn.set("disabled",inDisabled);
-		this.leftToolbarButtons.setDisabled(inDisabled);
+	      //this.leftToolbarButtons.setDisabled(inDisabled);
 /*
 		this.navTestBtn.setDisabled(inDisabled);
 		this.navRunBtn.setDisabled(inDisabled);
@@ -150,6 +150,7 @@ Studio.extend({
 		    this.deleteProjectItem.set("disabled",inDisabled);
 		    this.exportProjectItem.set("disabled",inDisabled);
 		    this.deployProjectItem.set("disabled",inDisabled);
+	            this.saveProjectItem.set("disabled",inDisabled);
 	  } catch(e) {
 	    console.error("disableMenuBar Failed");
 	    console.log(e);
