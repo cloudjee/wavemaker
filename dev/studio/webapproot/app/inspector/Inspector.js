@@ -96,6 +96,7 @@ dojo.declare("wm.InspectorBase", null, {
 		}
 		this.owner.inspected.setProp(inProp, inValue);
 	    this.reinspect();
+	    wm.job("studio.updateDirtyBit",10, function() {studio.updateProjectDirty();});
 	},
 	_getInspectedProp: function(inProp) {
 	    if (this instanceof wm.StyleInspector)

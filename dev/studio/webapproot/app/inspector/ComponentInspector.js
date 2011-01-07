@@ -54,8 +54,11 @@ dojo.declare("wm.ComponentInspector", wm.Layers, {
 	    var n = ip && ip.inspector;
 	    var inspector = this.getInspector();
 
+	    var changedNode = (this._lastNodeName != inInspectorProps._nodeName);
+	    this._lastNodeName = inInspectorProps._nodeName;
+
 	    // If we're inspecting the same component with the same inspector, call reinspect
-	    if (inspector == this._currentInspector && inComponent == wasInspecting && this.dijits) {
+	    if (inspector == this._currentInspector && inComponent == wasInspecting && !changedNode && this.dijits) {
 
 		// Update all values in the property inspector UI
 		this._currentInspector.reinspect();

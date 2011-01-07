@@ -156,7 +156,7 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
 	     */
 	    console.log(inName + ": " + inProp.type);
 	    var type = inProp.type.toLowerCase();
-	    var isEditable = (type == "string" || type == "boolean" || type == "number" ||
+	    var isEditable = (type == "string" || type == "boolean" || type == "number" || type == "int" ||
 			      type == "java.lang.string" || type == "java.lang.boolean" || type == "java.lang.integer" || 
 			      type == "java.lang.boolean" || type == "java.lang.byte" || type == "java.lang.double" ||
 			      type == "java.lang.float" || type == "java.lang.number" || type == "java.lang.short");
@@ -197,10 +197,17 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
 	       var edit = dojo.query(".wminspector-edit", row)[0];
 	       if (value) {
 		   readonly.value = value;
+
 		   //readonly.style.display = "block";
 		   //edit.style.display = "none";
 	       } else if (!prop.ignore && !prop.tmpignore) {
-		   dijit.byId(dojo.attr(edit,"widgetid")).set("value", this.owner.inspected.getProp(inName), false);
+	       	   var newval = this.owner.inspected.getProp(inName); // get its nonbind value if it has one
+		   if (newval === null || newval === undefined) newval = "";
+		   var editor = dijit.byId(dojo.attr(edit,"widgetid"));
+		   editor.set("value", newval, false);
+		   if (newval === "")
+		       editor._lastValueReported = ""; // dijit bug, without this won't fire change event if we restore last value
+		   
 		   //readonly.style.display = "none";
 		   //edit.style.display = "block";
 	       } else {
@@ -287,7 +294,7 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
 	},
 	getBinding: function() {
 		var i = this.owner.inspected;
-		return i && i.components.binding;
+	    return i && i.components.binding;
 	},
 	getTargetProperty: function(inPropName) {
 		return inPropName;
@@ -479,9 +486,10 @@ dojo.declare("wm.DataInspector", wm.BindInspector, {
 
 		    return;
 	    }
-	    this.owner.parent.inspected.components.binding.addWire("", inProp, "", inValue);
+	    this.bindingOwner.components.binding.addWire("", inProp, "", inValue);
 
 	    this.setPropEdit(inProp);
+	    wm.job("studio.updateDirtyBit",10, function() {studio.updateProjectDirty();});
 	},
 
 	getTargetProperty: function(inPropName) {
