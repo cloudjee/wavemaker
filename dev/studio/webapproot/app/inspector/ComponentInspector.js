@@ -50,12 +50,14 @@ dojo.declare("wm.ComponentInspector", wm.Layers, {
 	    var wasInspecting = this.inspected;
 
 	    var c = this.inspected = inComponent;
-	    var ip = this.inspectorProps = inInspectorProps;
+	    if (inInspectorProps)
+		this.inspectorProps = inInspectorProps;
+	    var ip = this.inspectorProps ;
 	    var n = ip && ip.inspector;
 	    var inspector = this.getInspector();
 
-	    var changedNode = (this._lastNodeName != inInspectorProps._nodeName);
-	    this._lastNodeName = inInspectorProps._nodeName;
+	    var changedNode = (this._lastNodeName != ip._nodeName);
+	    this._lastNodeName = ip._nodeName;
 
 	    // If we're inspecting the same component with the same inspector, call reinspect
 	    if (inspector == this._currentInspector && inComponent == wasInspecting && !changedNode && this.dijits) {
