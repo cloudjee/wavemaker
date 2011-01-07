@@ -21,11 +21,11 @@ terminus = "_end: 0";
 pageScript = function(name, defaultFunctions) {
 	return [
 		'dojo.declare("' + name + '", wm.Page, {',
-		'\tstart: function() {',
-		'\t\t',
-		'\t},',
-	         (defaultFunctions ? "\t" + defaultFunctions + "," : ""),
-		'\t' + terminus,
+		'    start: function() {',
+		'        ',
+		'    },',
+	         (defaultFunctions ? "    " + defaultFunctions + "," : ""),
+		'    ' + terminus,
 		'});'
 	].join('\n');
 }
@@ -50,7 +50,7 @@ getEventCode = function(ctrl, name, value, code) {
 	a = a.substring(1);
     else
 	a = "inSender" + a;
-    return value + ": function(" + a + ") {\n\t\t" + code + "\n\t},\n\t";
+    return value + ": function(" + a + ") {\n        " + code + "\n    },\n    ";
 
 }
 
@@ -62,7 +62,7 @@ writeCodeFragment = function(code) {
 
 removeCodeFragment = function(start, end) {
 	var code = studio.getScript();
-	var re = new RegExp("\\/\\*\\s+" + start + "\\s+\\*\\/[\\S\\s]*\\/\\*\\s+" + end + "\\s+\\*\\/.*\n\t", "i");
+	var re = new RegExp("\\/\\*\\s+" + start + "\\s+\\*\\/[\\S\\s]*\\/\\*\\s+" + end + "\\s+\\*\\/.*\n    ", "i");
 	code = code.replace(re, "");
 	studio.setScript(t);
 }
@@ -170,18 +170,18 @@ textareaTab = function(e) {
 		if(document.selection){
 			t.focus();
 			var sel = document.selection.createRange();
-			sel.text = "\t";
+			sel.text = "    ";
 		}
 		//Mozilla + Netscape
 		else if(t.selectionStart || t.selectionStart == "0"){
 			var scrollY = t.scrollTop, scrollX = t.scrollLeft, start = t.selectionStart, end = t.selectionEnd;
-			t.value = t.value.substring(0,start) + "\t" + t.value.substring(end,t.value.length);
+			t.value = t.value.substring(0,start) + "    " + t.value.substring(end,t.value.length);
 			t.focus();
 			t.selectionStart = t.selectionEnd = start+1;
 			t.scrollTop = scrollY;
 			t.scrollLeft = scrollX;
 		}
-		else t.value += "\t";
+		else t.value += "    ";
 		dojo.stopEvent(e);
 	}
 }
