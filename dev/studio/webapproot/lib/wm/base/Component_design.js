@@ -118,7 +118,7 @@ wm.Component.extend({
 	},
 	writeProps: function() {
 	    // make sure the proper prototype is loaded so we correctly write the properties that are different from default
-	    if (this.owner.loadThemePrototypeForClass) 
+	    if (this.owner && this.owner.loadThemePrototypeForClass) 
 		this.owner.loadThemePrototypeForClass(this.constructor, this);
 
 		// iterates over all props and checks it's writeable via isWriteableProp
