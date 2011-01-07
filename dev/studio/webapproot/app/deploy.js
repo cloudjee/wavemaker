@@ -203,7 +203,7 @@ Studio.extend({
     },
    importProjectClickCallback: function(inSource, inResponse) {
       studio.endWait();
-      var d = studio.startEditor.page.refreshProjectList();
+      var d = studio.startPageDialog.page.refreshProjectList();
        
        app.toastDialog.showToast("Successfully imported project " + inResponse, 3000, "Success");		
       wm.fire(this.owner, "dismiss");
