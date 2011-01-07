@@ -657,5 +657,37 @@ Studio.extend({
 		window.setTimeout(dojo.hitch(this, "autoCompletionDialogAutoHide"), 5000);
 	}
 
+    },
+    setEditAreaDirty: function(inSender) {
+	var name = inSender.name;
+	var originalText = "";
+	switch(name) {
+	case "editArea":
+	    originalText = this._cleanPageData ? this._cleanPageData.js : ""
+	    break;
+	case "cssEditArea":
+	    originalText = this._cleanPageData ? this._cleanPageData.css : ""
+	    break;
+	case "appCssEditArea":
+	    originalText = this._cleanAppData ? this._cleanAppData.css : ""
+	    break;
+	case "markupEditArea":
+	    originalText = this._cleanPageData ? this._cleanPageData.html : ""
+	    break;
+	case "appsourceEditor":
+	    originalText = this._cleanAppData ? this._cleanAppData.js : ""
+	    break;
+	}
+	var changed = originalText != inSender.getText();
+	var parent = inSender;
+	while (parent instanceof wm.Layer == false) {
+	    parent = parent.parent;
+	}
+	var caption = parent.caption;
+	var newCaption = (changed ? "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " : "") + caption.replace(/^\<.*?\>\s*/,"");
+	if (caption != newCaption) {
+	    parent.setCaption(newCaption);
+	    this.updateSourceDirty();
+	}
     }
 });
