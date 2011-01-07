@@ -379,7 +379,7 @@ Studio.extend({
 				n.tree.select(n);
 				// find and goto layer on which tree resides
 				var p = n.parent;
-				while ((p != this.page.root) && !(p instanceof wm.Layer))
+				while (p && (p != this.page.root) && !(p instanceof wm.Layer))
 					p = p.parent;
 				if (p)
 					p.show();
