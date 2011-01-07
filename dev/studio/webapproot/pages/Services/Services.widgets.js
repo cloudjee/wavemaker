@@ -36,22 +36,22 @@ Services.widgets = {
 						panel1: ["wm.Panel", {border: "0", layoutKind: "left-to-right", height: "100%"}, {}, {
 							panel2: ["wm.Panel", {border: "1,0,0,0", borderColor: "#000000", width: "100%", padding: "4"}, {}, {
 								serviceNameInput: ["wm.Editor", {caption: "Service Name", captionSize: "240px", height: "20px", layoutKind: "left-to-right", readonly: true}, {}, {
-									editor: ["wm._TextEditor", {}, {}]
+								    editor: ["wm._TextEditor", {changeOnKey: true}, {}]
 								}],
 								feedDescInput: ["wm.Editor", {/*singleLine: false, */showing: false, caption: "Description", captionSize: "240px", height: "24px", layoutKind: "left-to-right", displayValue: "Supports all of the popular RSS and Atom formats including RSS 0.90, RSS 0.91 Netscape, RSS 0.91 Userland, RSS 0.92, RSS 0.93, RSS 0.94, RSS 1.0, RSS 2.0, Atom 0.3, and Atom 1.0.", readonly: true}, {}, {
-									editor: ["wm._TextEditor", {}, {}]
+									editor: ["wm._TextEditor", {changeOnKey: true}, {}]
 								}],
 								authUsernameInput: ["wm.Editor", {showing: false, caption: "HTTP Basic Auth Username", captionSize: "240px", height: "24px", emptyValue: "null", layoutKind: "left-to-right"}, {onchange: "editorChange"}, {
-									editor: ["wm._TextEditor", {}, {}]
+									editor: ["wm._TextEditor", {changeOnKey: true}, {}]
 								}],
 								authPasswordInput: ["wm.Editor", {showing: false, caption: "HTTP Basic Auth Password", captionSize: "240px", height: "24px", emptyValue: "null", layoutKind: "left-to-right"}, {onchange: "editorChange"}, {
-									editor: ["wm._TextEditor", {password: true}, {}]
+								    editor: ["wm._TextEditor", {password: true,changeOnKey: true}, {}]
 								}],
 								wsConnectionTimeoutInput: ["wm.Editor", {showing: false, caption: "Connection Timeout (milliseconds)", captionSize: "240px", height: "24px", emptyValue: "null", layoutKind: "left-to-right", display: "Number"}, {onchange: "editorChange"}, {
-									editor: ["wm._NumberEditor", {}, {}]
+									editor: ["wm._NumberEditor", {changeOnKey: true}, {}]
 								}],
 								wsRequestTimeoutInput: ["wm.Editor", {showing: false, caption: "Request Timeout (milliseconds)", captionSize: "240px", height: "24px", emptyValue: "null", layoutKind: "left-to-right", display: "Number"}, {onchange: "editorChange"}, {
-									editor: ["wm._NumberEditor", {}, {}]
+									editor: ["wm._NumberEditor", {changeOnKey: true}, {}]
 								}]
 							}]
 						}]

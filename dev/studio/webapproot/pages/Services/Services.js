@@ -31,12 +31,36 @@ dojo.declare("Services", wm.Page, {
 	isDirty: function() {
 		return this.dirty;
 	},
-	setDirty: function(inDirty) {
-		this.dirty = inDirty;
-		this.webServiceSaveBtn.setDisabled(!inDirty);
+	setDirty: function() {
+	    wm.job(this.getRuntimeId() + "_hasChanged", 500, dojo.hitch(this, function() {
+		if (this.isDestroyed) return;
+		var changed = this._cachedData != this.getCachedData();
+		var caption = (!changed ? "" : "<img class='StudioDirtyIcon'  src='images/blank.gif' /> ") +
+		    this.serviceNameInput.getDataValue();
+		if (caption != this.owner.parent.caption) {
+		    this.owner.parent.setCaption(caption);
+		    studio.updateServicesDirtyTabIndicators();
+		}
+		this.dirty = changed;
+		this.webServiceSaveBtn.setDisabled(!this.dirty);
+	    }));
+
 	},
+
+    /* getDirty, save, saveComplete are all common methods all services should provide so that studio can 
+     * interact with them
+     */
+    getDirty: function() {
+	return this._cachedData != this.getCachedData();
+    },
+    save: function() {
+	this.webServiceSaveBtnClick();
+    },
+    saveComplete: function() {
+    },
+
 	editorChange: function() {
-		this.setDirty(true);
+		this.setDirty();
 	},
 	updateSelect: function(inSelect, inData) {
 		var s = inSelect, o;
@@ -49,7 +73,6 @@ dojo.declare("Services", wm.Page, {
 		s.editor.setOptions(o);
 	},
 	servicesChanged: function() {
-		this.dirty = false;
 		this.clearAll();
 		this.tree.deselect();
 		var names = [];
@@ -94,7 +117,7 @@ dojo.declare("Services", wm.Page, {
 		this.wsRequestTimeoutInput.setShowing(!isFeedSrv);
 		this.wsdlSpacing.setShowing(!isFeedSrv);
 		this.feedDescInput.setShowing(isFeedSrv);
-		this.setDirty(false);
+		this.setDirty();
 		if (!isFeedSrv) {
 			studio.webService.requestAsync("getBindingProperties", [this.tree.serviceId],
 				dojo.hitch(this, "getBindingPropertiesCallback"));
@@ -105,7 +128,7 @@ dojo.declare("Services", wm.Page, {
 	getBindingPropertiesCallback: function(inData) {
 		if (inData) {
 			this.authUsernameInput.beginEditUpdate();
-			this.authUsernameInput.setValue("dataValue", inData.httpBasicAuthUsername);
+		        this.authUsernameInput.setValue("dataValue", inData.httpBasicAuthUsername);
 			this.authUsernameInput.endEditUpdate();
 			this.authPasswordInput.beginEditUpdate();
 			this.authPasswordInput.setValue("dataValue", inData.httpBasicAuthPassword);
@@ -124,8 +147,12 @@ dojo.declare("Services", wm.Page, {
 			this.wsRequestTimeoutInput.beginEditUpdate();
 			this.wsRequestTimeoutInput.setValue("dataValue", rt);
 			this.wsRequestTimeoutInput.endEditUpdate();
+		    this._cachedData = this.getCachedData();
 		}
 	},
+    getCachedData: function() {
+	return this.serviceNameInput.getDataValue() + "|" + this.authUsernameInput.getDataValue() + "|" + this.authPasswordInput.getDataValue() + "|" + this.wsConnectionTimeoutInput.getDataValue() + "|" + this.wsRequestTimeoutInput.getDataValue();
+    },
 	getWSDLCallback: function(inData) {
 		if (inData.indexOf("services") == 0) {
 			this.wsdlCodeEditor.setShowing(false);
@@ -138,7 +165,6 @@ dojo.declare("Services", wm.Page, {
 		}
 	},
 	webServiceSaveBtnClick: function(inSender) {
-		this.setDirty(false);
 		if (this.tree.serviceId) {
 			var ct = this.wsConnectionTimeoutInput.getValue("dataValue");
 			if (ct == null || ct.length == 0) {
@@ -159,6 +185,9 @@ dojo.declare("Services", wm.Page, {
 		}
 	},
 	setBindingPropertiesCallback: function(inData) {
+	    this._cachedData = this.getCachedData();
+	    this.setDirty();	    
+	    this.saveComplete();
 	},
 	setBindingPropertiesErrorCallback: function(inError) {
 	},
