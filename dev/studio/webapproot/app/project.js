@@ -44,12 +44,12 @@ dojo.declare("wm.studio.Project", null, {
 	        new wm.ImageList({owner: studio.application,
 				  name: "silkIconList",
 				  url: "lib/images/silkIcons/silk.png", 
-				  width: 18,
-				  height: 20, 
+				  width: 16,
+				  height: 16, 
 				  colCount: 35, 
-				  iconCount: 196});
+				  iconCount: 90});
 	        this.newPage(this.pageName, "", {template: optionalInTemplate});
-                this.saveProject();
+                this.saveProject(false, false);
 		this.projectChanged();
 		this.projectsChanged();
 	    studio.endWait("Setting up new project");
@@ -170,6 +170,7 @@ dojo.declare("wm.studio.Project", null, {
 				this.pageName = inPageName || (ctor ? ctor.prototype.main : "Main");
 				this.makeApplication();
 				this.openPage(this.pageName);
+			        studio.startPageDialog.hide();
 			} catch(e) {
 				console.debug(e);
 				this.loadError(bundleDialog.M_FailedToOpenProject + this.projectName + ". Error: " + e);
@@ -188,7 +189,16 @@ dojo.declare("wm.studio.Project", null, {
 		    this.closeProject();
 		}
 	},
+    closeAllServicesTabs: function() {
+	var layers = studio.tabs.layers;
+	for (var i = layers.length-1; i >= 0; i--) 
+	    if (layers[i].closable) {
+		dojo.forEach(layers[i].c$[0].layers, function(l) {l.destroy();})
+		layers[i].hide();
+	    }
+    },
 	openPage: function(inName) {
+	    this.closeAllServicesTabs();
 	    if (studio.bindDialog.showing && !studio.bindDialog._hideAnimation) 
 		studio.bindDialog.dismiss();
 
@@ -284,42 +294,68 @@ dojo.declare("wm.studio.Project", null, {
 		}
 	},
 	loadError: function(inMessage) {
-		alert(inMessage);
+	    app.toastError(inMessage, 15000);
 		this.projectChanged();
 	},
 	//=========================================================================
 	// Save
 	//=========================================================================
-	saveProject: function(isDeployment) {
+        saveProject: function(isDeployment, saveAll) {
                 this.deployingProject = isDeployment;
-		this.saveApplication();
-		this.savePage();
+		this.saveApplication(); // synchronous
+		this.savePage(); // synchronous
 
-            // in case the theme has changed, resave the login.html page
+            // in case the theme has changed, resave the login.html page (synchronous)
 	    if (webFileExists("login.html")) {
 		var templateFolder = dojo.moduleUrl("wm.studio.app") + "templates/security/";
 		var loginhtml = loadDataSync(templateFolder + "login.html");
 		studio.project.saveProjectData("login.html", wm.makeLoginHtml(loginhtml, studio.project.projectName, studio.application.theme));
             }
 	    studio.updatePagesMenu();
-            app.toastSuccess("Project Saved!");
-	    
+
+	    // everything here is asynchronous; if we need to save all, then find all unsaved
+	    // content and prompt the user to save them using the listUnsavedDialog.
+	    if (saveAll) {
+		var unsavedPages = [];
+		var tabs = [studio.JavaEditorSubTab, studio.databaseSubTab, studio.webServiceSubTab, studio.securitySubTab];
+		dojo.forEach(tabs, dojo.hitch(this, function(tab) {
+		    dojo.forEach(tab.layers, dojo.hitch(this, function(layer) {
+			if (layer.c$.length) {
+			    var page = layer.c$[0].page;
+			    if (page.getDirty()) unsavedPages.push(page);
+			}
+		    }));
+		}));
+		if (unsavedPages.length > 0) {
+		    studio.listUnsavedDialog.page.setUnsaved(unsavedPages);
+		    studio.listUnsavedDialog.page.onDone = dojo.hitch(this, function() {
+			this.projectSaveComplete();
+		    });
+		    studio.listUnsavedDialog.show();
+		    return;
+		}
+	    }
+	    this.projectSaveComplete();
 	},
+    projectSaveComplete: function() {
+            app.toastSuccess("Project Saved!");
+	    wm.job("studio.updateDirtyBit",10, function() {studio.updateProjectDirty();});
+    },
 	saveScript: function() {
   	       //this.savePageData(this.pageName + ".js", studio.getScript());
-		 this.saveProject();
+	    this.saveProject(false, false);
 	},
 	saveAppScript: function() {
   	       //this.savePageData(this.pageName + ".js", studio.getScript());
-		 this.saveProject();
+	    this.saveProject(false, false);
 	},
 	saveCss: function() {
 	       //this.savePageData(this.pageName + ".css", studio.getCss());
-		 this.saveProject();
+	    this.saveProject(false, false);
 	},
 	saveMarkup: function() {
    	      //this.savePageData(this.pageName + ".html", studio.getMarkup());
-		 this.saveProject();
+	    this.saveProject(false, false);
 	},
         getProjectPath: function() {
 	    //return studio.projectPrefix + this.projectName;
@@ -328,13 +364,14 @@ dojo.declare("wm.studio.Project", null, {
 	saveApplication: function() {
 	        studio.application.incSubversionNumber();
 	        try {
-		    studio.application.setValue("studioVersion", dojo.byId("studio_startContainer_start_content1").innerHTML.match(/Studio Version\: (.*)\</)[1]);
+		    studio.application.setValue("studioVersion", wm.studioConfig.studioVersion);
 		}catch(e) {console.error("Failed to write studio version to project file");}
 	        if (studio.tree.selected && studio.tree.selected.component == studio.application)
 		    studio.inspector.reinspect();
 
 		var src = this.generateApplicationSource()
 		this.saveProjectData(this.projectName + ".js", src);
+	    //studio["_cachedEditDataappsourceEditor"] = studio.appsourceEditor.getText();
 	        var appdocumentation = studio.application.getDocumentationHash();
 	        this.saveProjectData(this.projectName + ".documentation.json", dojo.toJson(appdocumentation, true));
 		// save html file, config file, and debug loader + css
@@ -356,7 +393,8 @@ dojo.declare("wm.studio.Project", null, {
             else
                 path = (themename.match(/^wm_/)) ? "/wavemaker/lib/wm/base/widget/themes/" + themename + "/theme.css" : "/wavemaker/lib/wm/common/themes/" + themename + "/theme.css";
 
-	        this.saveProjectData(c.appCssFileName, '@import "' + path + '";\n' +  studio.getAppCss());
+	    this.saveProjectData(c.appCssFileName, '@import "' + path + '";\n' +  studio.getAppCss());
+	    //studio["_cachedEditDataappCssEditArea"] = studio.appCssEditArea.getText();
 
 		this.saveProjectData(c.appDebugBootFileName, '', true);
 		if (wm.studioConfig.isPalmApp) {
@@ -398,9 +436,13 @@ dojo.declare("wm.studio.Project", null, {
 	},
 	savePage: function() {
 		this.savePageData(this.pageName + ".js", studio.getScript());
+	    //studio["_cachedEditDataeditArea"] = studio.getScript();
 		this.savePageData(this.pageName + ".widgets.js", studio.getWidgets());
+	    //studio["_cachedEditDatacssEditArea"] = studio.getCss();
+	    
 		this.savePageData(this.pageName + ".css", studio.getCss());
 		this.savePageData(this.pageName + ".html", studio.getMarkup());
+	    //studio["_cachedEditDatamarkupEditArea"] = studio.getMarkup();
 	        var documentation = studio.page.getDocumentationHash();
 	        this.savePageData(this.pageName + ".documentation.json", dojo.toJson(documentation, true));
 		studio.setCleanPage();
@@ -414,7 +456,7 @@ dojo.declare("wm.studio.Project", null, {
 	},
 	copyProject: function(inName, inNewName) {
 		if (inName && inNewName)
-			this.saveProject();
+			this.saveProject(false, true);
 			studio.studioService.requestAsync("copyProject", [inName, inNewName], dojo.hitch(this, "projectsChanged"));
 	},
 	//=========================================================================
@@ -446,6 +488,7 @@ dojo.declare("wm.studio.Project", null, {
 	closeProject: function(inProjectName) {
 	    if (studio.bindDialog.showing && !studio.bindDialog._hideAnimation) 
 		studio.bindDialog.dismiss();
+	    this.closeAllServicesTabs();
 		wm.fire(studio._deployer, "cancel");
 		this.pageChanging();
 		this.projectChanging();
@@ -533,26 +576,196 @@ Studio.extend({
 	setCleanPage: function(inPageData) {
 		this._cleanPageData = this.page ? {
 			js: inPageData ? inPageData.js : this.getScript(),
-			widgets: inPageData ? inPageData.widgets : this.getWidgets()
+		        css: this.getCss(),
+		        widgets: inPageData ? inPageData.widgets : this.getWidgets(),
+		        html: this.getMarkup()
 		} : {};
 	},
 	setCleanApp: function() {
-		this._cleanAppData = this.application ? { script: this.project.generateApplicationSource() } : {};
+	    this._cleanAppData = this.application ? { script: this.project.generateApplicationSource(),
+						      widgets: dojo.toJson(this.application.writeComponents("")),
+						      js: this.appsourceEditor.getText(),
+						      css: this.getAppCss()} : {};
 	},
+
+
+    /* isPageDirty tells us when its safe to leave a page/change pages and when the user should
+     * be warned of unsaved changes
+     */
 	isPageDirty: function() {
 		var c = this._cleanPageData;
 		if (!c)
 			return;
 		return this.page && (c.js != this.getScript() || c.widgets != this.getWidgets());
 	},
+
+    /* isAppDirty is only called from isProjectDirty */
 	isAppDirty: function() {
 		var c = this._cleanAppData;
 		if (!c)
 			return;
 		return this.application && (c.script != this.project.generateApplicationSource());
 	},
+
+    /* Called when the user tries to close their current project or unload studio itself */
 	isProjectDirty: function() {
-		return this.isAppDirty() || this.isPageDirty();
+	    return this.isAppDirty() || this.isPageDirty() || this.isServicesDirty();
+	},
+
+    /* Called only by isProjectDirty to report true/false to whether there are unsaved services */
+    isServicesDirty: function() {
+	var tabs = [this.JavaEditorSubTab, this.databaseSubTab, this.webServiceSubTab, this.securitySubTab];
+	for (var i = 0; i < tabs.length; i++) {
+	    var tab = tabs[i];
+	    var isDirty = false;
+	    for (var j = 0; j < tab.layers.length; j++) {
+		var layer = tab.layers[j];
+		if (layer.c$.length == 0) continue;
+		var page = layer.c$[0].page;
+		if (page && page.getDirty && page.getDirty()) 
+		    return true;
+	    }
+	}
+	return false;
+    },
+
+    /* Called whenever we want to update dirty indicators throughout studio as a result of some action such as
+     * saving the project, or openning a new project
+     */
+        updateProjectDirty: function() {
+	    if (!studio.application) return;
+	    this.updateCanvasDirty();
+	    this.updateSourceDirty();
+	    this.updateServicesDirtyTabIndicators();
+	},
+
+    /* Called by updateProjectDirty; 
+     * Updates the dirty indicator for canvas based on whether widgets at page or app level have any changes */
+        updateCanvasDirty: function() {
+	    var c = this._cleanPageData;
+	    if (!c)
+		return;
+	    var dirty = c.widgets != this.getWidgets();
+
+	    /* Flag the canvas as dirty if anything in the app level model has changed */
+	    if (!dirty) {
+		var c = this._cleanAppData;
+		if (!c)
+			return;
+		dirty = this.application && (c.widgets != dojo.toJson(this.application.writeComponents("")));
+	    }
+
+	    var caption = this.workspace.caption;
+	    if (dirty && !caption.match(/\<img/)) {
+		caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
+		this.workspace.setCaption(caption);
+	    } else if (!dirty && caption.match(/\<img/)) {
+		caption = caption.replace(/^.*\/\>\s*/,"");
+		this.workspace.setCaption(caption);
+	    }
+	},
+
+    /* Called by updateProjectDirty; Updates the dirty indicators for each source tab based on whether or not the current value matches the saved value */
+        updateSourceDirty: function() {
+	    var c = this._cleanPageData;
+	    if (!c)
+		return;
+
+	    var dirty = false;
+
+	    dirty = this.updatePageCodeDirty() || dirty;
+	    dirty = this.updateCssCodeDirty() || dirty;
+	    dirty = this.updateAppCodeDirty() || dirty;
+	    dirty = this.updateMarkupCodeDirty() || dirty;
+
+
+	    var caption = this.sourceTab.caption;
+	    if (dirty && !caption.match(/\<img/)) {
+		caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
+		this.sourceTab.setCaption(caption);
+	    } else if (!dirty && caption.match(/\<img/)) {
+		caption = caption.replace(/^.*\/\>\s*/,"");
+		this.sourceTab.setCaption(caption);
+	    }
+	},
+
+    /* Called by updateSourceDirty; 
+     * Updates the dirty indicator for page code based on whether its changed from saved value */
+        updatePageCodeDirty: function() {
+	    var c = this._cleanPageData;
+	    if (!c)
+		return;
+	    var dirty = c.js != this.getScript();
+
+	    var caption = this.scriptLayer.caption;
+	    if (dirty && !caption.match(/\<img/)) {
+		caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
+		this.scriptLayer.setCaption(caption);
+	    } else if (!dirty && caption.match(/\<img/)) {
+		caption = caption.replace(/^.*\/\>\s*/,"");
+		this.scriptLayer.setCaption(caption);
+	    }
+	    return dirty;
+	},
+
+    /* Called by updateSourceDirty; 
+     * Updates the dirty indicator for app and page CSS based on whether its changed from saved value */
+        updateCssCodeDirty: function() {
+	    var c1 = this._cleanPageData;
+	    var c2 = this._cleanAppData;
+	    if (!c1 || !c2)
+		return;
+	    var dirty = c1.css != this.getCss() || c2.css != this.getAppCss();
+
+	    var caption = this.cssLayer.caption;
+	    if (dirty && !caption.match(/\<img/)) {
+		caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
+		this.cssLayer.setCaption(caption);
+	    } else if (!dirty && caption.match(/\<img/)) {
+		caption = caption.replace(/^.*\/\>\s*/,"");
+		this.cssLayer.setCaption(caption);
+	    }
+	    return dirty;
+	},
+
+    /* Called by updateSourceDirty; 
+     * Updates the dirty indicator for markup based on whether its changed from saved value */
+        updateMarkupCodeDirty: function() {
+	    var c = this._cleanPageData;
+
+	    if (!c)
+		return;
+	    var dirty = c.html != this.getMarkup()
+
+	    var caption = this.markupLayer.caption;
+	    if (dirty && !caption.match(/\<img/)) {
+		caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
+		this.markupLayer.setCaption(caption);
+	    } else if (!dirty && caption.match(/\<img/)) {
+		caption = caption.replace(/^.*\/\>\s*/,"");
+		this.markupLayer.setCaption(caption);
+	    }
+	    return dirty;
+	},
+
+    /* Called by updateSourceDirty; 
+     * Updates the dirty indicator for the custom app javascript code based on whether its changed from saved value */
+        updateAppCodeDirty: function() {
+	    var c = this._cleanAppData;
+
+	    if (!c)
+		return;
+	    var dirty = c.js != this.appsourceEditor.getText();
+
+	    var caption = this.appsource.caption;
+	    if (dirty && !caption.match(/\<img/)) {
+		caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
+		this.appsource.setCaption(caption);
+	    } else if (!dirty && caption.match(/\<img/)) {
+		caption = caption.replace(/^.*\/\>\s*/,"");
+		this.appsource.setCaption(caption);
+	    }
+	    return dirty;
 	}
 });
 
@@ -663,7 +876,7 @@ Studio.extend({
 		this.projects.activate();
 	},
 	saveProjectClick: function() {
-		this.waitForCallback(bundleDialog.M_SavingProject + this.project.projectName, dojo.hitch(this.project, "saveProject"));
+	    this.waitForCallback(bundleDialog.M_SavingProject + this.project.projectName, dojo.hitch(this.project, "saveProject", false, true));
 	},
 	saveCssClick: function() {
 		this.waitForCallback(bundleDialog.M_SavingCSS + this.project.projectName, dojo.hitch(this.project, "saveCss"));
@@ -773,8 +986,18 @@ Studio.extend({
 		}
 	},
 	openProjectClick: function() {
-		this.navGotoEditor(this.startLayer.name);
-		this.startEditor.page.openProjectTab();
+	        //this.navGotoEditor(this.startLayer.name);
+	    if (studio.application) {
+		this.confirmAppChange(bundleDialog.M_AreYouSureCloseProject, 
+                                      undefined, dojo.hitch(this, function() {
+					  this.project.closeProject();
+					  this.startPageDialog.show();
+					  this.startPageDialog.page.openProjectTab();
+                                      }));
+	    } else {
+		this.startPageDialog.show();
+		this.startPageDialog.page.openProjectTab();
+	    }
 	},
 	deleteProjectClick: function() {
 	  if (studio.project) {
@@ -959,16 +1182,27 @@ Studio.extend({
 	    inSender.setWidth("75px");
     },
 	runProjectClick: function(inSender) {	    
-	  this._runRequested = inSender.name;
-	    
-		this.saveProjectClick();
+	    this._runRequested = inSender.name;
+
+	    if (!this._runConnections) this._runConnections = [];
+
+	    /* Clear any prior connections... esp for runs that don't make it to projectSaveComplete */
+	    for (var i = 0; i < this._runConnections.length; i++) dojo.disconnect(this._runConnections[i]);
+	    this._runConnections.push(dojo.connect(this.project,"projectSaveComplete", this, function() {
+
+		/* Clear this connection */
+		for (var i = 0; i < this._runConnections.length; i++) dojo.disconnect(this._runConnections[i]);
+		this._runConnections = [];
+
 		this.deploy(bundleDialog.M_BuildingPreview, dojo.hitch(this, function(result) {
-		      this._runRequested = false;
+		    this._runRequested = false;
 		    if (inSender.caption != "Compile") 
 			wm.openUrl(this.getPreviewUrl(inSender.caption == "Test"), this.project.projectName, "_wmPreview");
 		    studio.endWait();
 		    return result;
 		}));
+	    }));
+	    this.saveProjectClick();
 	}
 });
 
