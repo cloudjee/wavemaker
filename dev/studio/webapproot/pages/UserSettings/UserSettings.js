@@ -41,7 +41,7 @@ dojo.declare("UserSettings", wm.Page, {
 	changePasswordSuccess: function(inResponse) {
 		wm.fire(this.owner, "dismiss");
 		app.alert("The password has been successfully updated.");
-		studio.startEditor.start.tabLayers1.setLayerIndex(0);
+		studio.startPageDialog.start.tabLayers1.setLayerIndex(0);
 	},
 	changePasswordError: function(inError) {
 		app.alert(inError);
