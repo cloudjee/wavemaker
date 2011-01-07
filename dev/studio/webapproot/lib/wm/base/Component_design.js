@@ -117,6 +117,8 @@ wm.Component.extend({
 		return !ps || ((ps.writeonly || !(ps.ignore || ps.ignoretmp || ps.readonly)) && !ps.isEvent &&  !ps.componentonly);
 	},
 	writeProps: function() {
+	    this.owner.loadThemePrototypeForClass(this.constructor, this); // make sure the proper prototype is loaded so we correctly write the properties that are different from default
+
 		// iterates over all props and checks it's writeable via isWriteableProp
 		// NOTE: previously used listWriteableProps, which was eliminated as unnecessary.
 		var props = this.listProperties(), src = this._designee, p = src.constructor.prototype, out = {};
