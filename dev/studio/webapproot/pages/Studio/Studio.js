@@ -70,10 +70,14 @@ dojo.declare("Studio", wm.Page, {
 		
             this.trackerImage.setSource("http://wavemaker.com/img/blank.gif?op=studioLoad&v=" + escape(wm.studioConfig.studioVersion) + "&r=" + String(Math.random(new Date().getTime())).replace(/\D/,"").substring(0,8));
 		this.project = new wm.studio.Project();
+/*
 		this.startEditor = studio.addEditor("Start");
 		this.startEditor.connect(this.startEditor, "onStart", this, "startPageOnStart");
+		*/
+	    //this.startPageDialog.fixPositionNode = this.tabs.domNode;
 
-		
+	    this.startPageDialog.show();
+	    this.startPageDialog.dialogScrim.domNode.style.opacity = 0.7;
 		// set this up now because we won't be able to load it when the session has expired
 
 		// get user configuration settings
@@ -145,13 +149,20 @@ dojo.declare("Studio", wm.Page, {
 	    this.helpDialog.containerWidget.c$[0].setBorderColor("#424959");
 	    this.scriptPageCompileChkBtn.setChecked(dojo.cookie(this.scriptPageCompileChkBtn.getRuntimeId()) == "true");
 	    this.appsrcPageCompileChkBtn.setChecked(dojo.cookie(this.scriptPageCompileChkBtn.getRuntimeId()) == "true");
+
+	    // attempt to allow autoscroll while killing the left-to-right scrolling
+	    dojo.connect(studio.tree, "renderCss", studio.tree, function() {
+		    this.domNode.style.overflowX = "hidden";
+	    });
 	},
+/*
 	 startPageOnStart: function() {
 		this.startLayer = this.startEditor.parent;
 		if (!this.getUserSetting("useLop") || !this.getUserSetting("defaultProject")) {
 		    this.startLayer.activate();
 		}
 	 },
+	 */
 	 handleServiceVariableError: function(inServiceVar, inError) {
 	   studio.endWait();  // if there was a beginWait call in progress, then we'd best close it in case there is no suitable error handler for the call
 	 },
@@ -281,10 +292,12 @@ dojo.declare("Studio", wm.Page, {
 		     // open in designer
 		     // switch to designer
 		     if (b) {
+			 studio.startPageDialog.hide();
 		       this.navGotoDesignerClick();
 		       this.mlpal.activate();
 		     } else if (!this.isLoginShowing()) {
-		       this.startLayer.activate();
+			 studio.startPageDialog.show();
+			 //this.startLayer.activate();
 		       //this.projects.activate();
 		     }
     
@@ -295,7 +308,7 @@ dojo.declare("Studio", wm.Page, {
 	            	studio.deploy(null,null, true); 
 		}
 		this.disableMenuBar(!b);
-		this.disableCanvasSourceBtns(!b);
+	    //this.disableCanvasSourceBtns(!b);
 			    /* Removal of projects tab
 		this.updateProjectTree();
 		*/
@@ -454,8 +467,8 @@ dojo.declare("Studio", wm.Page, {
                         this.deploySuccess();
                         return true;
                     } else {
-		        if (result.dojoType != "cancel")
-			    app.alert('Run failed: ' + result.message);
+		        if (result.dojoType != "cancel" && !app.toastDialog.showing)
+			    app.toastError('Run failed: ' + result.message);
 			this._deploying = false;
 			this._runRequested = false;
 			return result;
@@ -479,12 +492,14 @@ dojo.declare("Studio", wm.Page, {
 		return this.editArea.getText();
 	},
 	setScript: function(inScript) {
+	        //this["_cachedEditDataeditArea"] = inScript;
 		return this.editArea.setText(inScript);
 	},
         getAppScript: function() {
 	    return this.appsourceEditor.getText();
 	},
         setAppScript: function(inScript) {
+	    //this["_cachedEditDataappsourceEditor"] = inScript;
 	        return this.appsourceEditor.setText(inScript);
 	},
 	getWidgets: function() {
@@ -519,10 +534,12 @@ dojo.declare("Studio", wm.Page, {
 		return this.appCssEditArea.getText();
 	},
 	setCss: function(inCss) {
+	    //this["_cachedEditDatacssEditArea"] = inCss;
 		this.cssEditArea.setText(inCss);
 		this.cssChanged();
 	},
 	setAppCss: function(inCss) {
+	    //this["_cachedEditDataappCssEditArea"] = inCss;
 		this.appCssEditArea.setText(inCss);
 		this.cssChanged();
 	},
@@ -535,6 +552,7 @@ dojo.declare("Studio", wm.Page, {
 		return this.markupEditArea.getText();
 	},
 	setMarkup: function(inScript) {
+	    //this["_cachedEditDatamarkupEditArea"] = inScript;
 		this.markupEditArea.setText(inScript);
 		this.markupChanged();
 	},
@@ -955,7 +973,7 @@ dojo.declare("Studio", wm.Page, {
 	},*/
 	tabsCanChange: function(inSender, inChangeInfo) {
 		switch (inSender.getLayerCaption()) {
-			case "IDE":
+			case bundleStudio.R_IDE:
 				setTimeout(dojo.hitch(this, function() {
 					this.cssChanged();
 					this.markupChanged();
@@ -963,7 +981,7 @@ dojo.declare("Studio", wm.Page, {
 				break;
 		}
 		switch (inSender.getLayerCaption(inChangeInfo.newIndex)) {
-			case "IDE":
+			case bundleStudio.R_IDE:
 				this.widgetsHtml.setHtml('<pre style="padding: 0; width: 100%; height: 100%;">' + this.getWidgets() + "</pre>");
 		                var appsrc = this.project.generateApplicationSource();
 		                var match = appsrc.split(terminus)
@@ -975,13 +993,16 @@ dojo.declare("Studio", wm.Page, {
 	},
 	tabsChange: function(inSender) {
 	    if (!studio.page) return;
+	    
 		var caption = inSender.getLayerCaption();
-		this.designer.showHideHandles(caption == "Design");
+
 		switch (caption) {
-			case "IDE":
+			case bundleStudio.R_IDE:
+		                this.designer.showHideHandles(false);
 				this.sourceTabsChange(this.sourceTabs);
 				break;
-			case "Design":
+			case bundleStudio.T_Design:
+		                this.designer.showHideHandles(true);
 				// re-inspect when we show designer
 				if (this.selected) {
                                     // selected object may have changed; example: 
@@ -1026,6 +1047,7 @@ dojo.declare("Studio", wm.Page, {
 		    this.generateAllDocumentation();
 
 		}
+
 	},
 
         generateAllDocumentation: function() {
@@ -1236,12 +1258,13 @@ dojo.declare("Studio", wm.Page, {
 	this.themesPage.page.revertTheme();
     },
     pageSelectChanged: function(inSender, optionalPageName) {
+	if (!studio.page) return;
 	var page = optionalPageName || inSender.getDataValue();
 	if (page == this.project.pageName) return;
 	var warnPage = bundleDialog.M_AreYouSureOpenPage;
         this.confirmPageChange(warnPage, page, dojo.hitch(this, function() {
-			    this.waitForCallback(bundleDialog.M_OpeningPage + page + ".", dojo.hitch(this.project, "openPage", page));
-                        }));
+	    this.waitForCallback(bundleDialog.M_OpeningPage + page + ".", dojo.hitch(this.project, "openPage", page));
+        }));
 	this.project.openPage(pagename);
     },
 
@@ -1363,17 +1386,19 @@ dojo.declare("Studio", wm.Page, {
 	studio.studioService.requestAsync("getPropertyHelp", [inType + "_" + inPropName + "?synopsis"], onSuccess);
     },
     startPageIFrameLoaded: function() {
-	this.startContainer.page.iframe.show();
+	this.startPageDialog.page.iframe.show();
     },
     menuBarHelpClick: function() {
 	window.open("http://dev.wavemaker.com/wiki/bin/wmdoc/");
     },
+/*
     mouseOverMenuBarHelp: function(inSender) {
 	app.createToolTip("Click for documentation", this.menuBarHelp.domNode, null, "150px");
     },
     mouseOutMenuBarHelp: function(inSender) {
 	app.hideToolTip();
     },
+    */
     loadResourcesTab: function() {
 	this.resourcesPage.getComponent("resourceManager").loadResources();
     }

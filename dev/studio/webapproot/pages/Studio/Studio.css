@@ -583,7 +583,7 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 	-moz-border-radius: 4px; 
 	-webkit-border-radius: 4px;
 	border-radius: 4px;
-        border: solid 2px black;
+        border: solid 2px #282828;
     border-left-width: 1px;
         border-top-width: 1px;
 	margin: 1% 2%;
@@ -596,7 +596,7 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
         background: -webkit-gradient(linear, left top, left bottom, from(#D0D0D0), to(#404040));
 	background: -moz-linear-gradient(top,  #D0D0D0,  #404040);
 	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#D0D0D0', endColorstr='#404040');    
-        border: solid 1px black;
+        border: solid 1px #111111;
     padding-bottom: 1px;
 }
 
@@ -642,8 +642,10 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 
 .Studio-ribbon, .Studio-apiRibbon, .Studio-sourceRibbon, .Studio-leftToolbarButtons, 
 #studio_MenuDesignerDialog_menuDesigner_panel1 {
+/*
 	background-image:url(images/dark_toolbar_bg.gif);
 	background-repeat:repeat-x;
+       */
 	/*border-top:1px #FFFFFF solid;*/
 	border-bottom:1px #363b44 solid;
 	/*padding: 2px;*/
@@ -657,9 +659,11 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 	background: url(images/wmbug_top.gif) bottom no-repeat;
 }
 
-.Studio-studioToolbarButtons button, .Studio-componentsToolbar button, .Studio-servicesPane_services_servicesTopPanel button, .Studio-sourceRibbon button{
+.Studio-studioToolbarButtons button, .Studio-componentsToolbar button, .Studio-servicesPane_services_servicesTopPanel button, .Studio-sourceRibbon button {
+/*
 	background-image:url(images/dark_toolbar_bg.gif);
 	background-repeat:repeat-x;
+       */
 	height: 24px;
 	text-align: center;
 }
@@ -1105,7 +1109,7 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 	background-position: center;
 }
 
-#studio_benchbevel, #studio_benchbevel2, #studio_benchbevel3, #studio_benchbevel4, #studio_benchbevel12, #studio_themesbevel {
+#studio_benchbevel, #studio_benchbevel2, #studio_benchbevel3, #studio_benchbevel4, #studio_benchbevel12, #studio_themesbevel, .studio_tabs_bevel, #studio_benchbevel8882 {
 	background-color: #959dab;
 	border-top: 1px solid #c0c4ca;
 	border-bottom: 1px solid #363b44;
@@ -1159,8 +1163,8 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
     height: 16px;
     cursor: pointer;
 }
-
-.Studio-menuBarHelp {
+.Studio-menuBarHelp .StudioHelpIcon {
+    float:right;
     background-position: 0% 50%;
 }
 
@@ -1343,8 +1347,10 @@ body.wm-darksnazzy  button.wmbutton {
 }
 
 .wm-darksnazzy .wmToolbar button {
+/*
 	background-image:url(images/dark_toolbar_bg.gif);
 	background-repeat:repeat-x;
+       */
 	height: 24px;
 }
 
@@ -1405,23 +1411,56 @@ body.wm-darksnazzy .wmToolbar button:hover {
 }
 
 .wm-darksnazzy .wmtablayers-tabbar,
+#studio_tabs .wmtablayers-tabbar,
+#studio_javaEditorContainer_javaEditor_logTabs .wmtablayers-tabbar,
+#studio_sourceTabs .wmtablayers-tabbar {
+   /*
+        background: -webkit-gradient(linear, left top, left bottom, from(#222222), to(#5D6778));
+	background: -moz-linear-gradient(top,  #222222,  #5D6778);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#222222', endColorstr='#5D6778');
+*/
+            background: -webkit-gradient(linear, left top, left bottom, from(#5D6778), to(#BDC7D8));
+	background: -moz-linear-gradient(top,  #5D6778,  #BDC7D8);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#5D6778', endColorstr='#BDC7D8');
+}
+
+    .wm-darksnazzy .wmtablayers-tabbar,
+#studio_tabs .wmtablayers-tabbar,
 #studio_javaEditorContainer_javaEditor_logTabs .wmtablayers-tabbar,
 #studio_sourceTabs {
-	background-image:url(images/dark_tabbar_bg.gif);
 	border-bottom: 1px solid #c0c4ca;
 	background-repeat:repeat-x;
 	padding-top: 8px;
 }
-
+/*
 .wm-darksnazzy .wmtablayers .wmtablayers-tab,
 #studio_javaEditorContainer_javaEditor_logTabs .wmtablayers-tab,
+#studio_tabs .wmtablayers-tab,
 #studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-tab {
 	cursor: pointer;
 }
+*/
 
+.Studio-tabs > .wmtablayers-tabbar > .wmtablayers-tab {
+    font-size: 14px;
+    height: 24px;
+}
+.Studio-left > .wmtablayers-tabbar > .wmtablayers-tab {
+    height: 20px;
+    margin-top: 5px;
+}
 .wm-darksnazzy .wmtablayers-tab,
 #studio_javaEditorContainer_javaEditor_logTabs .wmtablayers-tab,
+#studio_tabs .wmtablayers-tab,
 #studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-tab {
+	-moz-border-radius-topleft: 4px; 
+	-moz-border-radius-topright: 4px; 
+	-webkit-border-top-left-radius: 4px; 
+	-webkit-border-top-right-radius: 4px;
+	border-radius-topleft: 4px; 
+	border-radius-topright: 4px;
+
+
 	cursor: pointer;
 	border-top: 1px solid #5e6678;
 	border-right: none;
@@ -1434,6 +1473,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 }
 
 .wm-darksnazzy .wmtablayers-selected,
+#studio_tabs .wmtablayers-selected,
 #studio_javaEditorContainer_javaEditor_logTabs .wmtablayers-selected,
 #studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-selected {
 	border-top: 1px solid #c0c4ca;
@@ -1444,6 +1484,10 @@ body.wm-darksnazzy .wmToolbar button:hover {
 	background-image: none;
 	margin: 0px 0px 0px 6px;
 	color: #FFF;
+}
+
+#studio_tabs .wmtablayers-closabletab {
+    padding-right: 2px;
 }
 
 /* Palette */
@@ -1751,4 +1795,37 @@ color: rgb(0,270,0);
 
 .InsertMenuAdvanced {
     background: transparent url(http://localhost:8080/wavemaker/images/wm/component_16.png) no-repeat;
+}
+
+.Studio-scriptRibbon, 
+.Studio-ribbon,
+.Studio-themesRibbon,
+.Studio-cssRibbon,
+.Studio-markupRibbon,
+.Studio-appsrcRibbon,
+.Studio-appdocsRibbon,
+.JavaEditor-editorToolbar,
+#studio_MenuDesignerDialog_menuDesigner_panel1,
+.DataObjectsEditor-editorToolbar,
+.QueryEditor-editorToolbar,
+.QueryEditor-editorToolbar2,
+.LiveViewEditor-managerToolbar {
+        background: -webkit-gradient(linear, left top, left bottom, from(#555555), to(#8E96A3));
+	background: -moz-linear-gradient(top,  #5B5B5B,  #8E96A3);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#5B5B5B', endColorstr='#8E96A3');
+/* background-color: #8E96A3;*/   
+}
+
+.StudioDirtyIcon {
+    height: 8px;
+    width: 8px;
+    border: solid 1px #500000;
+
+        background: -webkit-gradient(linear, left top, left bottom, from(#C09090), to(#600000));
+	background: -moz-linear-gradient(top,  #C09090,  #600000);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#C09090', endColorstr='#600000');
+
+	-moz-border-radius: 6px; 
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
 }
