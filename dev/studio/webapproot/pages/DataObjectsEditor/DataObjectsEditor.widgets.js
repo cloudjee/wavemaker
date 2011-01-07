@@ -55,20 +55,20 @@ DataObjectsEditor.widgets = {
 							entityPanel: ["wm.Panel", {border: "0", height: "180px", layoutKind: "left-to-right", width: "800px"}, {}, {
 								tableDetailPanel: ["wm.Panel", {border: "0", width: "400px"}, {}, {
 									tableDetailPackageName: ["wm.Editor", {caption: "Package", height: "26px", layoutKind: "left-to-right", readonly: true}, {onchange: "tableDetailPackageNameChange"}, {
-										editor: ["wm._TextEditor", {layoutFlex: 10}, {}]
+									    editor: ["wm._TextEditor", {layoutFlex: 10, changeOnKey:true}, {}]
 									}],
 									tableDetailSchemaName: ["wm.Editor", {caption: "Schema", height: "26px", layoutKind: "left-to-right"}, {onchange: "tableDetailSchemaNameChange"}, {
-										editor: ["wm._TextEditor", {layoutFlex: 10}, {}]
+										editor: ["wm._TextEditor", {layoutFlex: 10, changeOnKey:true}, {}]
 									}],
 									tableDetailCatalogName: ["wm.Editor", {caption: "Catalog", height: "26px", layoutKind: "left-to-right"}, {onchange: "tableDetailCatalogNameChange"}, {
-										editor: ["wm._TextEditor", {layoutFlex: 10}, {}]
+										editor: ["wm._TextEditor", {layoutFlex: 10, changeOnKey:true}, {}]
 									}],
 									spacer1: ["wm.Spacer", {height: "10px", border: ""}, {}],
 									tableDetailTableName: ["wm.Editor", {caption: "Table Name", height: "26px", layoutKind: "left-to-right"}, {onchange: "tableDetailTableNameChange"}, {
-										editor: ["wm._TextEditor", {layoutFlex: 10}, {}]
+										editor: ["wm._TextEditor", {layoutFlex: 10, changeOnKey:true}, {}]
 									}],
 									tableDetailEntityName: ["wm.Editor", {caption: "Entity Name", height: "26px", layoutKind: "left-to-right"}, {onchange: "tableDetailEntityNameChange"}, {
-										editor: ["wm._TextEditor", {layoutFlex: 10}, {}]
+										editor: ["wm._TextEditor", {layoutFlex: 10, changeOnKey:true}, {}]
 									}]
 								}],
 								tableSettingsPanel: ["wm.Panel", {padding: "5,0,0,0", width: "150px"}, {}, {

@@ -31,7 +31,7 @@ JavaEditor.widgets = {
 			    toolbarspacer3: ["wm.Spacer", {height: "24px", width: "12px", margin: "0,5"}, {}],
 			    findBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Find, iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findClick"}],
 			    formatBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Format, imageIndex: 29}, {onclick: "formatClick"}],
-			    wordWrapBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Wrap, imageIndex: 29}, {onclick: "toggleWrapClick"}],
+			    wordWrapBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Wrap, imageIndex: 15,imageList: "studio.canvasToolbarImageList16"}, {onclick: "toggleWrapClick"}],
 			    pageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Help, imageIndex: 26}, {onclick: "showEditorHelp"}],
 
 			}],
@@ -40,9 +40,9 @@ JavaEditor.widgets = {
 		editorContainer: ["wm.Panel", {border: "0", width: "100%", layoutKind: "left-to-right", height: "100%"}, {}, {
 			panel6: ["wm.Panel", {border: "0", width: "100%", height: "100%"}, {}, {
 				javaServicePanel: ["wm.Panel", {border: "0", width: "100%", height: "100%"}, {}, {
-				    javaCodeEditor: ["wm.EditArea", {height: "100%", width: "100%", border: "0", syntax: "java"}, {onCtrlKey: "onCtrlKey"}],
+				    javaCodeEditor: ["wm.EditArea", {height: "100%", width: "100%", border: "0", syntax: "java"}, {onCtrlKey: "onCtrlKey", onKeyDown: "setDirty"}],
 					javaCodeSplitter: ["wm.Splitter", {layout: "bottom", border: "0"}, {}],
-					logTabs: ["wm.TabLayers", {width: "100%", height: "200px"}, {onchange: "changeLogTab"}, {
+				    logTabs: ["wm.TabLayers", {width: "100%", height: "200px",clientBorder: "2,0,0,0", clientBorderColor: "#959DAB"}, {onchange: "changeLogTab"}, {
 					    complierTab: ["wm.Layer", {caption: "Compiler Messages"}, {}, {
 						    /*
 						javaCompilerOutputPanel: ["wm.Panel", {border: "0", height: "150px"}, {}, {

@@ -16,21 +16,25 @@
  *  limitations under the License.
  */
 
-#studio_queryEditorContainer_queryEditor_editorToolbar, #studio_queryEditorContainer_queryEditor_editorToolbar2 {
+.QueryEditor-editorToolbar, .QueryEditor-editorToolbar2 {
+/*
 	background-image:url(images/dark_toolbar_bg.gif);
 	background-repeat:repeat-x;
+       */
 	/*border-top:1px #FFFFFF solid;*/
 	border-bottom:1px #363b44 solid;
 	/*padding: 2px;*/
 }
 
-#studio_queryEditorContainer_queryEditor_logoBtmHolder {
+.QueryEditor-logoBtmHolder {
 	/*background: url(images/wmbug_bot.gif) bottom no-repeat;*/
 }
 
 .QueryEditor button {
+/*
 	background-image:url(images/dark_toolbar_bg.gif);
 	background-repeat:repeat-x;
+*/
 	height: 24px;
 	text-align: center;
 }
@@ -41,7 +45,7 @@
 	height: 24px;
 }
 
-#studio_queryEditorContainer_queryEditor_splitter1 {
+.QueryEditor-splitter1 {
 	background:#959dab url(images/v_splitter_handle.gif) no-repeat scroll 1px center;
 	border-left: 1px solid #c0c4ca;
 	border-right: 1px solid #363b44;
@@ -51,13 +55,13 @@
 	z-index:9;
 }
 
-#studio_queryEditorContainer_queryEditor_benchbevel4 {
+.QueryEditor-benchbevel4 {
 	background-color: #959dab;
 	border-top: 1px solid #c0c4ca;
 	border-bottom: 1px solid #363b44;
 }
 
-#studio_queryEditorContainer_queryEditor_splitter2 {
+.QueryEditor-splitter2 {
 	background:#959dab url(images/h_splitter_handle.gif) no-repeat scroll 1px center;
 	border-top: 1px solid #c0c4ca;
 	border-bottom: 1px solid #363b44;
@@ -68,13 +72,13 @@
 	background-position: center;
 }
 
-#studio_queryEditorContainer_queryEditor_queryTextArea {
+.QueryEditor-queryTextArea {
 	padding: 2px;
 	overflow: auto;
 }
 
 
-#studio_queryEditorContainer_queryEditor_paramsPanel, #studio_queryEditorContainer_queryEditor_queryPanel, #studio_queryEditorContainer_queryEditor_queryPropsPanel, #studio_queryEditorContainer_queryEditor_queryTestPanel, #studio_queryEditorContainer_queryEditor_helpPanel {
+.QueryEditor-paramsPanel, .QueryEditor-queryPanel, .QueryEditor-queryPropsPanel, .QueryEditor-queryTestPanel, .QueryEditor-helpPanel {
 	background-image:url(images/dark_toolbar_bg.gif);
 	background-repeat:repeat-x;
 	background-color: #949cab;
@@ -85,13 +89,13 @@
 	padding: 5px;
 }
 
-#studio_queryEditorContainer_queryEditor_queryInputsList, #studio_queryEditorContainer_queryEditor_queryOutputList {
+.QueryEditor-queryInputsList, .QueryEditor-queryOutputList {
 	background-color: #FFF;
 	color: #000;
 	border: solid 1px #000;
 }
 
-#studio_queryEditorContainer_queryEditor_addInputBtn, #studio_queryEditorContainer_queryEditor_deleteParamBtn, #studio_queryEditorContainer_queryEditor_runQueryBtn {
+.QueryEditor-addInputBtn, .QueryEditor-deleteParamBtn, .QueryEditor-runQueryBtn {
 	background: none;
 	border: none;
 }

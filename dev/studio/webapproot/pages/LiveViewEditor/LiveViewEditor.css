@@ -16,12 +16,13 @@
  *  limitations under the License.
  */
 
+/*
 .LiveViewEditor .LiveViewEditor-managerToolbar {
 	background-image:url(images/dark_toolbar_bg.gif);
 	background-repeat:repeat-x;
 
 }
-
+*/
 .LiveViewEditor .LiveViewEditor-logoBtmHolder {
 	/*background: url(images/wmbug_bot.gif) bottom no-repeat;*/
 }
@@ -41,8 +42,10 @@
 }
 
 .LiveViewEditor .LiveViewEditor-toolbarBtnHolder button {
+/*
 	background-image:url(images/dark_toolbar_bg.gif);
 	background-repeat:repeat-x;
+       */
 	height: 24px;
 	text-align: center;
 }

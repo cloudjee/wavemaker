@@ -33,7 +33,7 @@ LiveViewEditor.widgets = {
 		}],
 		namePanel: ["wm.Panel", {border: "0", height: "28px", padding: "2", width: "100%", layoutKind: "left-to-right"}, {}, {
 			nameEdit: ["wm.Editor", {caption: "LiveView Name", captionSize: "150px", layoutKind: "left-to-right", captionAlign: "left", width: "350px", height: "100%"}, {onchange: "nameEditChanged"}, {
-				editor: ["wm._TextEditor", {}, {}]
+			    editor: ["wm._TextEditor", {changeOnKey:true}, {}]
 			}]
 		}],
 		label1: ["wm.Label", {height: "20px", width: "100%", border: "", padding: "4", caption: "Choose fields to include in this LiveView. Fields required for data operations indicated by <span class=\"wmeditor-required\">*</span>.", singleLine: false}, {}, {
@@ -49,10 +49,10 @@ LiveViewEditor.widgets = {
 				}],
 				liveForm1: ["wm.LiveForm", {border: "0", captionSize: "90px", height: "100%", width: "100%", padding: "4"}, {}, {
 					captionEdit: ["wm.Editor", {caption: "Caption", height: "24px", captionSize: "90px", layoutKind: "left-to-right"}, {onchange: "fieldEditorChanged"}, {
-						editor: ["wm._TextEditor", {}, {}]
+						editor: ["wm._TextEditor", {changeOnKey:true}, {}]
 					}],
 					orderEdit: ["wm.Editor", {caption: "Order", height: "24px", captionSize: "90px", layoutKind: "left-to-right"}, {onchange: "fieldEditorChanged"}, {
-						editor: ["wm._NumberEditor", {}, {}]
+						editor: ["wm._NumberEditor", {changeOnKey:true}, {}]
 					}],
 					typeEdit: ["wm.Editor", {caption: "Type Hint", display: "Select", height: "24px", captionSize: "90px", layoutKind: "left-to-right"}, {onchange: "fieldEditorChanged"}, {
 						editor: ["wm._SelectEditor", {options: "Text,Date,Time,Number,Currency,CheckBox,TextArea,RadioButton,Slider"}, {}]
@@ -62,7 +62,7 @@ LiveViewEditor.widgets = {
 					}],
 					panel5: ["wm.Panel", {border: "0", height: "24px", width: "100%", layoutKind: "left-to-right"}, {}, {
 						widthEdit: ["wm.Editor", {caption: "Width", display: "Number", captionSize: "90px", layoutKind: "left-to-right", height: "100%"}, {onchange: "fieldEditorChanged"}, {
-							editor: ["wm._NumberEditor", {}, {}]
+							editor: ["wm._NumberEditor", {changeOnKey:true}, {}]
 						}],
 						widthUnitsEdit: ["wm.Editor", {display: "Select", layoutKind: "left-to-right", captionPosition: "right", width: "82px", height: "100%"}, {onchange: "fieldEditorChanged"}, {
 							editor: ["wm._SelectEditor", {options: "px,%"}, {}]

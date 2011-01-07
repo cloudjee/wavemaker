@@ -16,18 +16,17 @@
  *  limitations under the License.
  */
 
-
+/*
 .DataObjectsEditor-editorToolbar {
 	background-image:url(images/dark_toolbar_bg.gif);
 	background-repeat:repeat-x;
-	/*padding: 2px;*/
 }
-
-#studio_dataObjectsEditorContainer_dataObjectsEditor_logoBtmHolder {
+*/
+.DataObjectsEditor-logoBtmHolder {
 	/*background: url(images/wmbug_bot.gif) bottom no-repeat;*/
 }
 
-/*#studio_dataObjectsEditorContainer_dataObjectsEditor_panel3 button, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel103 button {
+/*.DataObjectsEditor-panel3 button, .DataObjectsEditor-panel103 button {
 	border: 1px solid #586981;
 	background-image: url(images/proj_btn_bg.gif);
 	background-repeat:repeat-x;
@@ -35,7 +34,7 @@
 	font-size: 100%;
 }
 
-#studio_dataObjectsEditorContainer_dataObjectsEditor_panel3 button:hover, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel103 button:hover {
+.DataObjectsEditor-panel3 button:hover, .DataObjectsEditor-panel103 button:hover {
 	border: 1px solid #586981;
 	background-image: url(images/proj_btn_bg_hover.gif);
 	background-repeat:repeat-x;
@@ -48,8 +47,10 @@
 }
 
 .DataObjectsEditor-toolbarBtnHolder button, .DataObjectsEditor-panel3 button, .DataObjectsEditor-panel103 button {
+/*
 	background-image:url(images/dark_toolbar_bg.gif);
 	background-repeat:repeat-x;
+       */
 	height: 24px;
 	text-align: center;
 }
@@ -300,32 +301,32 @@
 	font-family: inherit;
 }
 
-#studio_dataObjectsEditorContainer_dataObjectsEditor_importPage input, #studio_dataObjectsEditorContainer_dataObjectsEditor_dbdropdown, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel100 input {
+.DataObjectsEditor-importPage input, .DataObjectsEditor-dbdropdown, .DataObjectsEditor-panel100 input {
 	font-size: 100%;
 }
 
-#studio_dataObjectsEditorContainer_dataObjectsEditor_panel5 {
+.DataObjectsEditor-panel5 {
 	padding: 4px;
 	background-image:url(images/editor_toolbar_bg.gif);
 	background-repeat:repeat-x;
 }
 
-#studio_dataObjectsEditorContainer_dataObjectsEditor_panel501, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel601, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel602, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel6,  #studio_dataObjectsEditorContainer_dataObjectsEditor_panel603, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel701, #studio_dataObjectsEditorContainer_dataObjectsEditor_extra2Panel, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel110, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel19, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel18, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel1801, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel20, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel201, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel202, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel101, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel102, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel103, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel104, #studio_dataObjectsEditorContainer_dataObjectsEditor_conpanel501, #studio_dataObjectsEditorContainer_dataObjectsEditor_conpanel601, #studio_dataObjectsEditorContainer_dataObjectsEditor_conpanel602, #studio_dataObjectsEditorContainer_dataObjectsEditor_conpanel701, #studio_dataObjectsEditorContainer_dataObjectsEditor_conextra2Panel, #studio_dataObjectsEditorContainer_dataObjectsEditor_conpanel1801, #studio_dataObjectsEditorContainer_dataObjectsEditor_conpanel1802, #studio_dataObjectsEditorContainer_dataObjectsEditor_conpanel20, #studio_dataObjectsEditorContainer_dataObjectsEditor_conpanel201, #studio_dataObjectsEditorContainer_dataObjectsEditor_conpanel202 {
+.DataObjectsEditor-panel501, .DataObjectsEditor-panel601, .DataObjectsEditor-panel602, .DataObjectsEditor-panel6,  .DataObjectsEditor-panel603, .DataObjectsEditor-panel701, .DataObjectsEditor-extra2Panel, .DataObjectsEditor-panel110, .DataObjectsEditor-panel19, .DataObjectsEditor-panel18, .DataObjectsEditor-panel1801, .DataObjectsEditor-panel20, .DataObjectsEditor-panel201, .DataObjectsEditor-panel202, .DataObjectsEditor-panel101, .DataObjectsEditor-panel102, .DataObjectsEditor-panel103, .DataObjectsEditor-panel104, .DataObjectsEditor-conpanel501, .DataObjectsEditor-conpanel601, .DataObjectsEditor-conpanel602, .DataObjectsEditor-conpanel701, .DataObjectsEditor-conextra2Panel, .DataObjectsEditor-conpanel1801, .DataObjectsEditor-conpanel1802, .DataObjectsEditor-conpanel20, .DataObjectsEditor-conpanel201, .DataObjectsEditor-conpanel202 {
 	padding: 3px;
 }
 
-#studio_dataObjectsEditorContainer_dataObjectsEditor_layer1, #studio_dataObjectsEditorContainer_dataObjectsEditor_layer2 {
+.DataObjectsEditor-layer1, .DataObjectsEditor-layer2 {
 	background-color: #FFFFFF;
 }
 
-#studio_dataObjectsEditorContainer_dataObjectsEditor_importPage {
+.DataObjectsEditor-importPage {
 	background-color: #ebebeb;
 }
 
-#studio_dataObjectsEditorContainer_dataObjectsEditor_panel3, #studio_dataObjectsEditorContainer_dataObjectsEditor_panel103 {
+.DataObjectsEditor-panel3, .DataObjectsEditor-panel103 {
 	padding: 10px;
 }
 
-#studio_dataObjectsEditorContainer_dataObjectsEditor_inlineHelpText {
+.DataObjectsEditor-inlineHelpText {
 	overflow:auto;
 }

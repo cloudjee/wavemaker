@@ -38,7 +38,7 @@ Security.widgets = {
 							secEnableInput: ["wm.CheckBoxEditor", {"captionSize":"120px","caption":"Enable Security","width":"100%","captionAlign":"left","margin":"0,0,0,30"}, {"onchange":"securityCheckboxChange"}, {
 								editor: ["wm._CheckBoxEditor", {}, {}]
 							}],
-							showLoginPageInput: ["wm.CheckBoxEditor", {"captionSize":"120px","caption":"Show Login Page","width":"100%","captionAlign":"left","margin":"0,0,0,60"}, {}, {
+						    showLoginPageInput: ["wm.CheckBoxEditor", {"captionSize":"120px","caption":"Show Login Page","width":"100%","captionAlign":"left","margin":"0,0,0,60"}, {"onchange": "setDirty"}, {
 								editor: ["wm._CheckBoxEditor", {}, {}]
 							}]
 						}]
@@ -86,26 +86,26 @@ Security.widgets = {
 							dbEntityInput: ["wm.Editor", {"caption":"Entity","emptyValue":"null","height":"20px","display":"Select"}, {"onchange":"dbEntityInputChange"}, {
 								editor: ["wm._SelectEditor", {}, {}]
 							}],
-							dbUsernameInput: ["wm.Editor", {"caption":"Username Field <span style='cursor:pointer;font-weight:bold;color: black;' id='HelpUID1'>?</a>","emptyValue":"null","height":"20px","display":"Select"}, {}, {
+						    dbUsernameInput: ["wm.Editor", {"caption":"Username Field <span style='cursor:pointer;font-weight:bold;color: black;' id='HelpUID1'>?</a>","emptyValue":"null","height":"20px","display":"Select"}, {onchange: "setDirty"}, {
 								editor: ["wm._SelectEditor", {}, {}]
 							}],
-							dbUseridInput: ["wm.Editor", {"caption":"User ID Field <span style='cursor:pointer;font-weight:bold;color: black;' id='HelpUID2'>?</a>","emptyValue":"null","height":"20px","display":"Select"}, {}, {
+							dbUseridInput: ["wm.Editor", {"caption":"User ID Field <span style='cursor:pointer;font-weight:bold;color: black;' id='HelpUID2'>?</a>","emptyValue":"null","height":"20px","display":"Select"}, {onchange: "setDirty"}, {
 								editor: ["wm._SelectEditor", {}, {}]
 							}],
-							dbPasswordInput: ["wm.Editor", {"caption":"Password Field","emptyValue":"null","height":"20px","display":"Select"}, {}, {
+							dbPasswordInput: ["wm.Editor", {"caption":"Password Field","emptyValue":"null","height":"20px","display":"Select"}, {onchange: "setDirty"}, {
 								editor: ["wm._SelectEditor", {}, {}]
 							}],
-							dbRoleInput: ["wm.Editor", {"caption":"Role Field (Enterprise users only)","emptyValue":"null","height":"20px","display":"Select"}, {}, {
+							dbRoleInput: ["wm.Editor", {"caption":"Role Field (Enterprise users only)","emptyValue":"null","height":"20px","display":"Select"}, {onchange: "setDirty"}, {
 								editor: ["wm._SelectEditor", {}, {}]
 							}],
 							spacer30: ["wm.Spacer", {"width":"96px","height":"10px"}, {}],
 							labelmt: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold","wm_Padding_4px"]},"caption":"Multitenant Configuration (Enterprise users only)","border":"0","height":"24px"}, {}, {
 								format: ["wm.DataFormatter", {}, {}]
 								}],
-							tenantIdField: ["wm.Editor", {"captionSize":"211px","caption":"Tenant ID Field Name","emptyValue":"null","layoutKind":"left-to-right","height":"20px","width":"100px","display":"Select"}, {}, {
+							tenantIdField: ["wm.Editor", {"captionSize":"211px","caption":"Tenant ID Field Name","emptyValue":"null","layoutKind":"left-to-right","height":"20px","width":"100px","display":"Select"}, {onchange: "setDirty"}, {
 								editor: ["wm._SelectEditor", {}, {}]
 							}],
-							defTenantId: ["wm.Editor", {"captionSize":"211px","caption":"Default Tenant ID Value","emptyValue":"null","height":"20px","width":"100px"}, {}, {
+							defTenantId: ["wm.Editor", {"captionSize":"211px","caption":"Default Tenant ID Value","emptyValue":"null","height":"20px","width":"100px"}, {onchange: "setDirty"}, {
 								editor: ["wm._TextEditor", {}, {}]
 							}],
 							spacer31: ["wm.Spacer", {"width":"96px","height":"10px"}, {}],
@@ -117,12 +117,12 @@ Security.widgets = {
 									}]
 								}],
 								dbRoleBySQLEnablePanel: ["wm.Panel", {"height":"100%"}, {}, {
-									dbRoleBySQLInput: ["wm.Editor", {"caption":" ","emptyValue":"null","height":"48px","display":"TextArea"}, {}, {
+									dbRoleBySQLInput: ["wm.Editor", {"caption":" ","emptyValue":"null","height":"48px","display":"TextArea"}, {onchange: "setDirty"}, {
 										editor: ["wm._TextAreaEditor", {}, {}]
 									}],
 									panel22: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_2px"]},"height":"24px","layoutKind":"left-to-right"}, {}, {
 										spacer20: ["wm.Spacer", {"width":"100%"}, {}],
-										dbTestSQLInput: ["wm.Editor", {"caption":"User ID","emptyValue":"null","width":"250px"}, {}, {
+										dbTestSQLInput: ["wm.Editor", {"caption":"User ID","emptyValue":"null","width":"250px"}, {onchange: "setDirty"}, {
 											editor: ["wm._TextEditor", {}, {}]
 										}],
 										dbTestSQLButton: ["wm.Button", {"caption":"Test Query","margin":"2","width":"100px"}, {"onclick":"dbTestSQLButtonClick"}]
@@ -141,28 +141,28 @@ Security.widgets = {
 							}]
 						}],
 						ldapLayer: ["wm.Layer", {"caption":"LDAP"}, {"onShow":"showLDAPLayer"}, {
-							ldapUrlInput: ["wm.Editor", {"caption":"LDAP URL","emptyValue":"null","height":"20px"}, {}, {
+							ldapUrlInput: ["wm.Editor", {"caption":"LDAP URL","emptyValue":"null","height":"20px"}, {onchange: "setDirty"}, {
 								editor: ["wm._TextEditor", {}, {}]
 							}],
-							ldapManagerDnInput: ["wm.Editor", {"caption":"Manager DN","emptyValue":"null","height":"20px"}, {}, {
+							ldapManagerDnInput: ["wm.Editor", {"caption":"Manager DN","emptyValue":"null","height":"20px"}, {onchange: "setDirty"}, {
 								editor: ["wm._TextEditor", {}, {}]
 							}],
-							ldapManagerPasswordInput: ["wm.Editor", {"caption":"Manager Password","emptyValue":"null","height":"20px"}, {}, {
+							ldapManagerPasswordInput: ["wm.Editor", {"caption":"Manager Password","emptyValue":"null","height":"20px"}, {onchange: "setDirty"}, {
 								editor: ["wm._TextEditor", {"password":true}, {}]
 							}],
-							ldapUserDnPatternInput: ["wm.Editor", {"caption":"User DN Pattern","emptyValue":"null","height":"20px"}, {}, {
+							ldapUserDnPatternInput: ["wm.Editor", {"caption":"User DN Pattern","emptyValue":"null","height":"20px"}, {onchange: "setDirty"}, {
 								editor: ["wm._TextEditor", {}, {}]
 							}],
 							ldapSearchRoleCheckbox: ["wm.CheckBoxEditor", {"caption":"Search User Role","height":"20px","emptyValue":"null"}, {"onchange":"ldapSearchRoleCheckboxChange"}, {
 								editor: ["wm._CheckBoxEditor", {}, {}]
 							}],
-							ldapGroupSearchBaseInput: ["wm.Editor", {"caption":"Group Search Base","emptyValue":"null","height":"20px"}, {}, {
+							ldapGroupSearchBaseInput: ["wm.Editor", {"caption":"Group Search Base","emptyValue":"null","height":"20px"}, {onchange: "setDirty"}, {
 								editor: ["wm._TextEditor", {}, {}]
 							}],
-							ldapGroupRoleAttributeInput: ["wm.Editor", {"caption":"Group Role Attribute","emptyValue":"null","height":"20px"}, {}, {
+							ldapGroupRoleAttributeInput: ["wm.Editor", {"caption":"Group Role Attribute","emptyValue":"null","height":"20px"}, {onchange: "setDirty"}, {
 								editor: ["wm._TextEditor", {}, {}]
 							}],
-							ldapGroupSearchFilterInput: ["wm.Editor", {"caption":"Group Search Filter","emptyValue":"null","height":"20px"}, {}, {
+							ldapGroupSearchFilterInput: ["wm.Editor", {"caption":"Group Search Filter","emptyValue":"null","height":"20px"}, {onchange: "setDirty"}, {
 								editor: ["wm._TextEditor", {}, {}]
 							}],
 							spacer6: ["wm.Spacer", {"height":"2px"}, {}],
@@ -199,7 +199,7 @@ Security.widgets = {
 								panel9: ["wm.Panel", {"height":"38px","layoutKind":"left-to-right"}, {}, {
 									spacer17: ["wm.Spacer", {"width":"96px"}, {}],
 									panel12: ["wm.Panel", {"width":"362px"}, {}, {
-										addRoleInput: ["wm.Editor", {"captionSize":"50px","caption":"Role","emptyValue":"null"}, {}, {
+										addRoleInput: ["wm.Editor", {"captionSize":"50px","caption":"Role","emptyValue":"null"}, {onchange: "setDirty"}, {
 											editor: ["wm._TextEditor", {}, {}]
 										}]
 									}],
@@ -227,10 +227,10 @@ Security.widgets = {
 				label1: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold"]},"caption":"Live Layout Login","height":"33px","width":"96px"}, {}, {
 					format: ["wm.DataFormatter", {}, {}]
 				}],
-				liveLayoutUser: ["wm.Editor", {"caption":"User","emptyValue":"null","height":"20px"}, {}, {
+				liveLayoutUser: ["wm.Editor", {"caption":"User","emptyValue":"null","height":"20px"}, {onchange: "setDirty"}, {
 					editor: ["wm._TextEditor", {}, {}]
 				}],
-				liveLayoutPassword: ["wm.Editor", {"caption":"Password","emptyValue":"null","height":"20px"}, {}, {
+				liveLayoutPassword: ["wm.Editor", {"caption":"Password","emptyValue":"null","height":"20px"}, {onchange: "setDirty"}, {
 					editor: ["wm._TextEditor", {}, {}]
 				}],
 				spacer9: ["wm.Spacer", {"width":"96px","height":"30px"}, {}],

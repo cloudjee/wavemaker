@@ -193,6 +193,7 @@ dojo.declare("Security", wm.Page, {
 			this.securityCheckboxChange();
 			this.secEnableInput.setShowing(false);			
 		 }
+	    this.setDirty();
 	},
 	populateGeneralOptions: function() {
 		studio.securityConfigService.requestSync("getGeneralOptions", null, 
@@ -269,7 +270,8 @@ dojo.declare("Security", wm.Page, {
 			app.alert(err);
 		} else {
 			this.copyLoginFiles();
-		
+		    studio.beginWait("Saving Security Settings");
+		    wm.onidle(this, function() {
 			if (t == "Demo") {
 				studio.securityConfigService.requestSync(
 					"configDemo",
@@ -286,7 +288,7 @@ dojo.declare("Security", wm.Page, {
 				studio.securityConfigService.requestSync(
 					"configDatabase",
 					[this.dbDataModelInput.getDataValue(),
-					this.dbEntityInput.getDataValue(),
+					 this.dbEntityInput.getDataValue(),
 					this.getEditorDisplayValue(this.dbUsernameInput),
 					this.getEditorDisplayValue(this.dbUseridInput),
 					this.getEditorDisplayValue(this.dbPasswordInput),
@@ -297,7 +299,7 @@ dojo.declare("Security", wm.Page, {
 					this.secEnableInput.getChecked(),
 					this.showLoginPageInput.getChecked()],
 					dojo.hitch(this, "configDatabaseResult"));
-
+			    
 			} else if (t == "LDAP") {
 				studio.securityConfigService.requestSync(
 					"configLDAP",
@@ -325,29 +327,36 @@ dojo.declare("Security", wm.Page, {
 			this.saveRolesSetup();
 			studio.application.loadServerComponents();
 			studio.refreshServiceTree();
+		    });
 		}
 	},
         toastToSuccess: function() {
+	    studio.endWait("Saving Security Settings");
             app.toastDialog.showToast("Security settings saved; Security is " + 
 				      (this.secEnableInput.getChecked() ? "ON" : "OFF"),
                                       5000,
                                       "Success");
+	    this.saveComplete();
         },
 	configDemoResult: function(inResponse) {
 		this.updateStudioServices();
                this.toastToSuccess();
+	    this.owner.owner.hide();
 	},
 	configDatabaseResult: function(inResponse) {
 		this.updateStudioServices();
                this.toastToSuccess();
+	this.owner.owner.hide();
 	},
 	configLDAPResult: function(inResponse) {
 		this.updateStudioServices();
                this.toastToSuccess();
+	this.owner.owner.hide();
 	},
 	configJOSSOResult: function(inResponse) {
 		this.updateStudioServices();
                this.toastToSuccess();
+	this.owner.owner.hide();
 	},
 	updateStudioServices: function() {
 		studio.updateServices();
@@ -409,6 +418,7 @@ dojo.declare("Security", wm.Page, {
 			this.demoUsernameInput.clear();
 			this.demoPasswordInput.clear();
 			this.demoRoleInput.clear();
+		    this.setDirty();
 		} else {
 			app.alert("Username and Password fields cannot be empty!");
 		}
@@ -423,13 +433,16 @@ dojo.declare("Security", wm.Page, {
 				}
 			}
 			this.demoUserList.renderData(nd);
+		    this.setDirty();
 		}
 	},
 	dbDataModelInputChange: function(inSender, inValue) {
 		this.getTableList();
+	        this.setDirty();
 	},
 	dbEntityInputChange: function(inSender, inValue) {
 		this.getPropertyList();
+	        this.setDirty();
 	},
 	getDataModelList: function() {
 		studio.dataService.requestSync("getDataModelNames", null, 
@@ -528,6 +541,7 @@ dojo.declare("Security", wm.Page, {
 		this.dbRoleInput.setDisabled(c);
 		this.dbRoleBySQLInput.setShowing(c);
 		this.dbRoleBySQLEnablePanel.setShowing(c);
+	        this.setDirty();
 	},
 	dbTestSQLButtonClick: function(inSender) {
 		studio.beginWait("Running Query...");
@@ -555,6 +569,7 @@ dojo.declare("Security", wm.Page, {
 		this.ldapGroupSearchBaseInput.setShowing(c);
 		this.ldapGroupRoleAttributeInput.setShowing(c);
 		this.ldapGroupSearchFilterInput.setShowing(c);
+	        this.setDirty();
 	},
 	ldapConnectionButtonClick: function(inSender) {
 		studio.beginWait("Testing LDAP Connection...");
@@ -602,6 +617,7 @@ dojo.declare("Security", wm.Page, {
 			this.updateSelect(this.demoRoleInput, d);
 			this.addRoleInput.clear();
 			this.addRoleInput.focus();
+		    this.setDirty();
 		} else {
 			app.alert("Role field cannot be empty!");
 		}
@@ -620,6 +636,7 @@ dojo.declare("Security", wm.Page, {
 			}
 			this.roleList.renderData(nd);
 			this.updateSelect(this.demoRoleInput, nd);
+		    this.setDirty();
 		}
 	},
 	populateRolesSetup: function() {
@@ -631,6 +648,7 @@ dojo.declare("Security", wm.Page, {
 	getRolesResult: function(inResponse) {
 		this.roleList.renderData(inResponse);
 		this.updateSelect(this.demoRoleInput, inResponse);
+	        this._cachedData = this.getCachedData();// at this point we've finished initializingt security page
 	},
 	saveRolesSetup: function() {
 		if(this.isJOSSO())
@@ -722,10 +740,76 @@ dojo.declare("Security", wm.Page, {
 	    
 	    if (this.isJOSSO())  this.showLoginPageInput.setShowing(false);
 	    this.panel1a.setHeight((this.isJOSSO()) ? "70px" : "350px");
+	    this.setDirty();
 	},
 	isJOSSO: function() {
 	    return this.secProviderInput.editor.getEditorValue() == "JOSSO";
 	},
+    cancelButtonClick: function() {
+	this.owner.owner.hide();
+    },
+
+
+    getCachedData: function() {
+	var rolesQuery = null;
+	if (this.dbRoleBySQLCheckbox.getChecked()) {
+	    rolesQuery = this.dbRoleBySQLInput.getDataValue();
+	}
+	var result = [dojo.toJson(this.demoUserList._data),
+		      dojo.toJson(this.roleList._data),
+		      this.secProviderInput.getDataValue(),
+		      this.secEnableInput.getChecked(),
+		      this.showLoginPageInput.getChecked(),
+		      this.dbRoleBySQLCheckbox.getChecked(),
+		      this.dbDataModelInput.getDataValue(),
+		      this.dbEntityInput.getDataValue(),
+		      this.getEditorDisplayValue(this.dbUsernameInput),
+		      this.getEditorDisplayValue(this.dbUseridInput),
+		      this.getEditorDisplayValue(this.dbPasswordInput),
+		      this.getEditorDisplayValue(this.dbRoleInput),
+		      this.getEditorDisplayValue(this.tenantIdField) || "",
+		      this.defTenantId.getDataValue() || 0,
+		      rolesQuery,
+		      this.ldapUrlInput.getDataValue(),
+		      this.ldapManagerDnInput.getDataValue(),
+		      this.ldapManagerPasswordInput.getDataValue(),
+		      this.ldapUserDnPatternInput.getDataValue(),
+		      !this.ldapSearchRoleCheckbox.getChecked(),
+		      this.ldapGroupSearchBaseInput.getDataValue(),
+		      this.ldapGroupRoleAttributeInput.getDataValue(),
+		      this.ldapGroupSearchFilterInput.getDataValue()];
+	return result.join("|");
+    },
+    setDirty: function() {
+
+	    wm.job(this.getRuntimeId() + "_hasChanged", 500, dojo.hitch(this, function() {
+		if (this.isDestroyed) return;
+		var changed = this._cachedData != this.getCachedData();
+		var caption = (!changed ? "" : "<img class='StudioDirtyIcon'  src='images/blank.gif' /> ") +
+		    bundleStudio["TabCaption_Security"];
+
+		if (caption != this.owner.parent.caption) {
+		    this.owner.parent.setCaption(caption);
+		    studio.updateServicesDirtyTabIndicators();
+		}
+	    }));
+
+    },
+
+    /* getDirty, save, saveComplete are all common methods all services should provide so that studio can 
+     * interact with them
+     */
+    getDirty: function() {
+	return this._cachedData != this.getCachedData();
+    },
+    save: function() {
+	this.saveButtonClick();
+    },
+    saveComplete: function() {
+	this._cachedData = this.getCachedData();
+	this.setDirty();
+    },
+
 
 	_end: 0
 });

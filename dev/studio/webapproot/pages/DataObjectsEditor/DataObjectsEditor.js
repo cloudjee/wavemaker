@@ -40,6 +40,8 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		this.setDataTypes();
 		this.update();
 		this.subscribe("wm-project-changed", this, "update");
+	    this.connect(this.relationshipsList.dijit, "onApplyCellEdit", this, "setDirty");
+	    this.connect(this.columnList.dijit, "onApplyCellEdit", this, "setDirty");
 	},
 	update: function() {
 		this.setSchemas();
@@ -171,6 +173,58 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		this.relationshipsList.setDataSet(this.relationshipsListVar);
 		setTimeout(dojo.hitch(this,'resetChanges'), 0);		
 	},
+    getCachedData: function() {
+
+	var relations = dojo.toJson(this.getRelatedProperties());
+	var columns = "";
+	var length = this.columnListVar.getCount();
+	if (this.columnListVar.getData())
+	    for (var i = 0; i < length; i++) {
+		var r = this.columnListVar.getItem(i);
+		columns += "|" + i + ":" + dojo.toJson(r.getData());
+	    }
+
+
+	return this.tableDetailSchemaName.getDataValue() + "|" + 
+	    this.tableDetailCatalogName.getDataValue() + "|" + 
+	    this.tableDetailEntityName.getDataValue() + "|" +
+	    this.tableDetailTableName.getDataValue() + "|" +
+	    this.tableDetailPackageName.getDataValue() + "|" +
+	    this.dynamicInsertCheckBox.components.editor.getChecked() + "|" +
+	    this.dynamicUpdateCheckBox.components.editor.getChecked() + "|" + 
+	    this.refreshCheckBox.components.editor.getChecked() + "|" + 
+	    this.tableDetailTableName.getDataValue() + "|" +
+	    relations + "|" +
+	    columns;
+	    
+    },
+    setDirty: function() {
+	    wm.job(this.getRuntimeId() + "_hasChanged", 500, dojo.hitch(this, function() {
+		if (this.isDestroyed) return;
+		var changed = this._cachedData != this.getCachedData();
+		var oldCaption = this.owner.parent.caption;
+		var caption = (!changed ? "" : "<img class='StudioDirtyIcon'  src='images/blank.gif' /> ") +
+		    oldCaption.replace(/^\<.*\>\s*/,"")
+		if (caption != this.owner.parent.caption) {
+		    this.owner.parent.setCaption(caption);
+		    studio.updateServicesDirtyTabIndicators();
+		}
+		this.saveButton1.setDisabled(!changed);
+	    }));
+    },
+    /* getDirty, save, saveComplete are all common methods all services should provide so that studio can 
+     * interact with them
+     */
+    getDirty: function() {
+	return this._cachedData != this.getCachedData();
+    },
+    save: function() {
+	this.saveAll();
+    },
+    saveComplete: function() {
+    },
+
+
 	clearTableDetails: function() {
 		this.tableDetailSchemaName.setDataValue("");
 		this.tableDetailCatalogName.setDataValue("");
@@ -195,49 +249,41 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		this.refreshCheckBox.components.editor.setChecked(entity.refreshEntity);
 	},
 	tableDetailSchemaNameChange: function(inSender) {
-		this.onlyEntityIsDirty = true;
+	    this.setDirty();
 	},
 	tableDetailCatalogNameChange: function(inSender) {
-		this.onlyEntityIsDirty = true;
+	    this.setDirty();
 	},
 	tableDetailTableNameChange: function() {
-	    if (this.tableDetailTableName.getDataValue() && this.currentTableName  != this.tableDetailTableName.getDataValue())
-		this.onlyEntityIsDirty = true;
+	    this.setDirty();
 	},
 	tableDetailEntityNameChange: function() {
-		// Force sending column and relationship info to the server
-		// when renaming an Entity.
-	    if (this.tableDetailEntityName.getDataValue() && this.currentEntityName != this.tableDetailEntityName.getDataValue())
-		this.propertiesAreDirty = true;
+	    this.setDirty();
 	},
 	tableDetailPackageNameChange: function(inSender) {
-		this.onlyEntityIsDirty = true;
+	    this.setDirty();
 	},
 	dynamicInsertChange: function(inSender) {
-		this.onlyEntityIsDirty = true;
+	    this.setDirty();
 	},
 	dynamicUpdateChange: function(inSender) {
-		this.onlyEntityIsDirty = true;
+	    this.setDirty();
 	},
 	refreshChange: function(inSender) {
-		this.onlyEntityIsDirty = true;
+	    this.setDirty();
 	},
 	columnsChange: function() {
-		this.propertiesAreDirty = true;
+	    this.setDirty();
 	},
 	relationshipsChange: function() {
-		this.propertiesAreDirty = true;
+	    this.setDirty();
 	},
 	propertyNameChange: function() {
-		this.propertiesAreDirty = true;
+	    this.setDirty();
 	},
 	resetChanges: function() {
-		this.onlyEntityIsDirty = false;
-		this.propertiesAreDirty = false;
-	  window.setTimeout(dojo.hitch(this, function() {
-		  this.onlyEntityIsDirty = false;
-		  this.propertiesAreDirty = false;
-	    }), 100);
+	    this._cachedData = this.getCachedData();
+	    this.setDirty();
 	},
 	selectEntity: function(inDataModelName, inEntityName) {
 		this.currentDataModelName = inDataModelName;
@@ -288,7 +334,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		this.objectPages.setLayer(this.OBJECT_PAGE);
 		this.setDataObject(this.currentDataModelName, 
 			this.getEntityName(inNode));
-
+	    this._cachedData = this.getCachedData();
 	},
 	treeDeselect: function(inSender, inNode) {
 		//this.removeButton.setDisabled(true);
@@ -375,12 +421,20 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		return d && (d.name != inName || d.table != inTable);
 	},
 	setDataObject: function(inName, inTable) {
+	    var f = dojo.hitch(this, function() {
 		var changed = this.dataObjectSelectionChanged(inName, inTable);
 		this.dataObject.name = inName;
 		this.dataObject.table = inTable;
 		if (changed) {
 			this.dataObjectChanged();
 		}
+	    });
+	    if (!this._cachedData || this._cachedData == this.getCachedData())
+		f();
+	    else {
+		app.confirm("If you leave this page, your changes will not be saved; Leave anyway?",
+			    false,f, function() {studio.tree.deselect();});
+	    }
 	},
 	getEntityOutputChanged: function(inData) {
 		this.columnListVar.beginUpdate();
@@ -401,7 +455,6 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	},
 	getEntityResult: function(inResponse) {
 		this.renderTableDetails(inResponse);
-	    this.resetChanges();
 		this.getEntityOutputChanged(inResponse);
 	},
 	getRelatedResult: function(inResponse) {
@@ -410,6 +463,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		this.relationshipsListVar.setData(inResponse || []);
 		this.relationshipsListVar.endUpdate();
 		this.relationshipsList.setDataSet(this.relationshipsListVar);
+	        this.resetChanges();
 	},
 	typeUpdated: function(inData) {
 		var s = this.tree.selected;
@@ -561,6 +615,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		studio.refreshServiceTree();
             app.toastSuccess("Saved!");
 	    this.resetChanges(); // clears dirty flags
+	    this.saveComplete();
 	},
 	saveColumns: function(inSender) {
 		// hack - set fk to false for all columns, add it back
@@ -725,8 +780,8 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 			}
 		}
 
-		//var saveColumns = !this.onlyEntityIsDirty;
-		var saveColumns = this.propertiesAreDirty;
+	    //var saveColumns = this.propertiesAreDirty;
+	    var saveColumns = true; // honestly, if it takes a little longer to save, so what?
 
 		this.resetChanges();
 

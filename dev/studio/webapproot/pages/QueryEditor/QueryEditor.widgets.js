@@ -59,7 +59,7 @@ QueryEditor.widgets = {
 							}],
 							queryPanel: ["wm.Panel", {border: "0", height: "100%", padding: "4"}, {}, {
 								queryInputPanel: ["wm.Panel", {border: "0", height: "100%", layoutKind: "left-to-right"}, {}, {
-									queryTextArea: ["wm.TextArea", {readOnly: false, border: "0", width: "100%", height: "100%", scrollY: true, scrollX: true}, {onkeypress: "queryTextAreaKeyPress", onchange: "queryTextAreaChanged"}]
+								    queryTextArea: ["wm.LargeTextArea", {readOnly: false, border: "0", width: "100%", height: "100%", changeOnKey: true}, {onchange: "queryTextAreaChanged"}]
 								}],
 								queryOptionsPanel: ["wm.Panel", {border: "0", height: "22px", layoutKind: "left-to-right"}, {}, {
 									returnsSingleResultCheckBox: ["wm.Editor", {layoutKind: "left-to-right", caption: "Returns single result", display: "CheckBox", captionSize: "150px", width: "200px"}, {onchange: "singleResultChanged"}, {

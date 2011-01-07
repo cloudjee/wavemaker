@@ -18,6 +18,7 @@
 dojo.provide("wm.studio.pages.JavaEditor.JavaEditor");
 
 dojo.declare("JavaEditor", wm.Page, {
+    isDirty: false,
 	start: function() {
             /*
             if (dojo.isFF > 4 || dojo.isWebKit || dojo.isIE >= 9)
@@ -29,6 +30,31 @@ dojo.declare("JavaEditor", wm.Page, {
 		this.update();
 		this.subscribe("wmtypes-changed", dojo.hitch(this, "typesChangedCall"));
 	},
+
+    setDirty: function() {
+		wm.job(this.getRuntimeId() + "_keydown", 500, dojo.hitch(this, function() {
+		    if (this.isDestroyed) return;
+		    this.isDirty = this.javaCodeEditor.getText() != this._cachedData;
+		    var caption =  (this.isDirty ? "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " : "") + this.tree.serviceId;
+		    if (caption != this.owner.parent.caption) {
+			this.owner.parent.setCaption(caption);
+			studio.updateServicesDirtyTabIndicators();
+		    }
+		}));
+    },
+
+    /* getDirty, save, saveComplete are all common methods all services should provide so that studio can 
+     * interact with them
+     */
+    getDirty: function() {return this.isDirty;},
+    save: function() {
+	this.javaServiceSaveButtonClick();
+    },
+    saveComplete: function() {
+	this._cachedData = this.javaCodeEditor.getText();
+	this.setDirty();
+    },
+
 	update: function() {
 		studio.updateServices();
 		this.servicesChanged();
@@ -67,6 +93,8 @@ dojo.declare("JavaEditor", wm.Page, {
 		// FIXME: without clearing the text here, the EditArea doesn't display properly
 		this.javaCodeEditor.setText("");
 		this.javaCodeEditor.setText(inData || "");
+	        this._cachedData = inData || "";
+	        this.isDirty = false;
 		var matches = inData.match(/^\s*package\s+(\S*)\s*;/);
 	        this.packageName = (matches) ? matches[1] : "";
 		var matches2 = inData.match(/\s*public\s+class\s+(\S+)/);
@@ -123,6 +151,8 @@ dojo.declare("JavaEditor", wm.Page, {
 	deleteServiceCallback: function(inData) {
 		this.tree.serviceId = null;
 		this.javaCodeEditor.setText("");
+	        if (this.javaService._editTab)
+		    this.javaService._editTab.destroy();
 		studio.application.removeServerComponent(this.javaService);
 		this.update();
 	},
@@ -164,6 +194,9 @@ dojo.declare("JavaEditor", wm.Page, {
 		}
 	},
 	saveJavaServiceCallback: function(inData) {
+	        this._cachedData = this.javaCodeEditor.getText();
+	        this.isDirty = false;
+	    this.owner.parent.setCaption(this.tree.serviceId);
 		studio.endWait();
 		if (inData.buildSucceeded) {
 			this.update();
@@ -176,6 +209,7 @@ dojo.declare("JavaEditor", wm.Page, {
 		this.logViewer.page.clearLog();
 		this.updateJavaLogs();
 		this.openCmpOutBtnClick();
+	        this.saveComplete();
 	},
 	changeLogTab: function() {
 	    // TODO: Only call this if the server logs tab is selected

@@ -16,37 +16,39 @@
  *  limitations under the License.
  */
 
-#studio_javaEditorContainer_javaEditor_logViewer_logViewer_logArea {
+.JavaEditor-logArea {
    background-color: white;
 }
 
-#studio_javaEditorContainer_javaEditor_editorToolbar, #studio_javaEditorContainer_javaEditor_javaServiceToolbar {
-	background-image:url(images/dark_toolbar_bg.gif);
-	background-repeat:repeat-x;
+.JavaEditor-editorToolbar {
+/*	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;*/
 	/*border-top:1px #FFFFFF solid;*/
 	border-bottom:1px #363b44 solid;
 	/*padding: 2px;*/
 	color: #FFF;
 }
 
-#studio_javaEditorContainer_javaEditor_logoBtmHolder {
+.JavaEditor-logoBtmHolder {
 	/*background: url(images/wmbug_bot.gif) bottom no-repeat;*/
 }
 
-#studio_javaEditorContainer_javaEditor_toolbarBtnHolder button, #studio_javaEditorContainer_javaEditor_javaServiceToolbar button {
+.JavaEditor-toolbarBtnHolder button, .JavaEditor-javaServiceToolbar button {
+/*
 	background-image:url(images/dark_toolbar_bg.gif);
 	background-repeat:repeat-x;
+       */
 	height: 24px;
 	text-align: center;
 }
 
-#studio_javaEditorContainer_javaEditor_toolbarBtnHolder button:hover, #studio_javaEditorContainer_javaEditor_javaServiceToolbar button:hover {
+.JavaEditor-toolbarBtnHolder button:hover, .JavaEditor-javaServiceToolbar button:hover {
 	background-image:url(images/dark_toolbar_btn_sm_on.gif);
 	background-repeat:no-repeat;
 	height: 24px;
 }
 
-#studio_javaEditorContainer_javaEditor_javaServiceOutputLabel {
+.JavaEditor-javaServiceOutputLabel {
 	background-image:url(images/dark_toolbar_bg.gif);
 	background-repeat:repeat-x;
 	/*border-top:1px #FFFFFF solid;*/
@@ -58,7 +60,7 @@
 	font-weight: bold;
 }
 
-#studio_javaEditorContainer_javaEditor_splitter1 {
+.JavaEditor-splitter1 {
 	background:#959dab url(images/v_splitter_handle.gif) no-repeat scroll 1px center;
 	border-left: 1px solid #c0c4ca;
 	border-right: 1px solid #363b44;
@@ -68,7 +70,7 @@
 	z-index:9;
 }
 
-#studio_javaEditorContainer_javaEditor_javaCodeSplitter {
+.JavaEditor-javaCodeSplitter {
 	background:#959dab url(images/h_splitter_handle.gif) no-repeat scroll 1px center;
 	border-top: 1px solid #c0c4ca;
 	border-bottom: 1px solid #363b44;
@@ -79,7 +81,7 @@
 	background-position: center;
 }
 
-#studio_javaEditorContainer_javaEditor_benchbevel4 {
+.JavaEditor-benchbevel4 {
 	background-color: #959dab;
 	border-top: 1px solid #c0c4ca;
 	border-bottom: 1px solid #363b44;

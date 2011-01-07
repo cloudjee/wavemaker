@@ -66,10 +66,11 @@ dojo.declare("LiveViewEditor", wm.Page, {
 		}
 		this.clearFieldForm();
 		this.runtimeServiceFetch();
+	        this._cachedData = this.clientLiveView.write("");
 	},
 	accept: function() {
 		if (this.clientLiveView) {
-			this.clientLiveView.setProp("name", this.nameEdit.getDataValue());
+			this.clientLiveView.setProp("name", this.nameEdit.getDataValue());		    
 			this.clientLiveView.setFields(this.listRelated(), this.listFields());
 			this.clientLiveView.viewChanged();
 		}
@@ -383,7 +384,37 @@ dojo.declare("LiveViewEditor", wm.Page, {
 		// update preview
 		this.runtimeServiceFetch();
 		this.accept();
+	    this.setDirty();
 	},
+    setDirty: function() {
+
+	    wm.job(this.getRuntimeId() + "_hasChanged", 500, dojo.hitch(this, function() {
+		if (this.isDestroyed) return;
+		var changed = this._cachedData != this.clientLiveView.write("") ;
+		var caption = (!changed ? "" : "<img class='StudioDirtyIcon'  src='images/blank.gif' /> ") +
+		    this.clientLiveView.name + " (" + bundleStudio["TabCaption_LiveView"] + ")";
+
+		if (caption != this.owner.parent.caption) {
+		    this.owner.parent.setCaption(caption);
+		    studio.updateServicesDirtyTabIndicators();
+		}
+	    }));
+
+    },
+
+    /* getDirty, save, saveComplete are all common methods all services should provide so that studio can 
+     * interact with them
+     */
+    getDirty: function() {
+	return this._cachedData != this.clientLiveView.write("") ;
+    },
+    save: function() {
+	this.saveLiveViewBtnClick();
+    },
+    saveComplete: function() {
+    },
+
+
 	fieldEditorChanged: function(inSender, inDisplayValue, inDataValue) {
 		if (!this.viewField)
 			return;
@@ -396,9 +427,13 @@ dojo.declare("LiveViewEditor", wm.Page, {
 				this.accept();
 			}
 		}
+	    this.setDirty();
 	},
 	nameEditChanged: function() {
 		this.accept();
+	        this.owner.parent.setName(this.clientLiveView.getLayerName());
+	        this.owner.parent.setCaption(this.clientLiveView.getLayerCaption());
+	    this.setDirty();
 	},
 	//
 	// Preview
@@ -426,6 +461,9 @@ dojo.declare("LiveViewEditor", wm.Page, {
 		studio.selected = null;
 		studio.select(this.clientLiveView);
 		studio.project.saveProject();
+	        this._cachedData = this.clientLiveView.write("");
+	        this.setDirty();
+	        this.saveComplete();
 	},
 	delLiveViewBtnClick: function(inSender) {
 		var v = this.clientLiveView;
