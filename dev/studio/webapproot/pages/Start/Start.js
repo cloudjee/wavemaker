@@ -20,6 +20,8 @@ dojo.declare("Start", wm.Page, {
 		this.subscribe("wm-project-changed", this, "update");
 		this.existingProjectList.connect(this.existingProjectList, "onformat", this, "existingProjectListFormatCell");
 		this.update();
+
+
 	},
 	update: function() {
 		this.refreshProjectList();

@@ -16,6 +16,10 @@
  *  limitations under the License.
  */
 
+.Start a, .Start a:visited, .Start a:hover {
+    color: white;
+}
+
 .Start .Start-editorToolbar {
 	background-image:url(images/dark_toolbar_bg.gif);
 	background-repeat:repeat-x;

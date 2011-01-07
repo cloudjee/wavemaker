@@ -17,11 +17,13 @@
  */ 
 Start.widgets = {
 	layoutBox1: ["wm.Layout", {height: "100%", width: "100%", horizontalAlign: "center", backgroundColor: "#ffffff"}, {}, {
+/*
 		editorToolbar: ["wm.Panel", {height: "29px", width: "100%", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
 			logoBtmHolder: ["wm.Panel", {height: "100%", width: "221px"}, {}]
 		}],
+		*/
 		panel5: ["wm.Panel", {height: "100%", width: "100%", verticalAlign: "middle", horizontalAlign: "center"}, {}, {
-			panel1: ["wm.Panel", {height: "450px", width: "750px", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+			panel1: ["wm.Panel", {height: "450px", width: "750px", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 				tabLayers1: ["wm.TabLayers", {margin: "4,8,8,8"}, {}, {
 					layer1: ["wm.Layer", {caption: bundleDialog.Welcome, horizontalAlign: "left", verticalAlign: "top", padding: "8"}, {}, {
 						panel3: ["wm.Panel", {height: "100%", width: "100%", verticalAlign: "middle", horizontalAlign: "left", borderColor: ""}, {}, {
@@ -81,9 +83,10 @@ Start.widgets = {
 							}]
 						}]
 					}]
-				}]
-			}]
-		}],
+				}],
 		content1: ["wm.Content", {_classes: {domNode: ["wm_TextAlign_Center"]}, height: "20px", width: "100%", content: "_studio_footer"}, {}]
+			}]
+		}]
+
 	}]
 }
