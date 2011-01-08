@@ -60,9 +60,9 @@ public class CommonDirectoryMove implements StudioUpgradeTask {
             }
             
             try {
-                FileUtils.copyDirectory(commonDir, commonBakDir);
-                FileUtils.forceDelete(commonDir);
-                
+                //FileUtils.copyDirectory(commonDir, commonBakDir);
+                //FileUtils.forceDelete(commonDir);
+                upgradeInfo.addMessage("Common directory is now: ("+commonDir+") ");
                 // force common directory recreation
                 studioConfiguration.getCommonDir();
             } catch (IOException e) {
