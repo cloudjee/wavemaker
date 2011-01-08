@@ -123,11 +123,12 @@ wm.logout = function() {
 dojo.declare("wm.Security", wm.ServerComponent, {
 	afterPaletteDrop: function() {
 		this.editView();
-		studio.navGotoModelTreeClick();
+		studio.navGotoComponentsTreeClick();
 		return true;
 	},
 	editView: function() {
-		studio.navGotoEditor("Security");
+	    studio.navGotoEditor("Security", studio.securityTab, "SecurityLayer", bundleStudio["TabCaption_Security"]);
+	    //studio.securityPageDialog.show();
 	}
 });
 
