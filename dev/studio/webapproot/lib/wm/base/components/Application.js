@@ -667,17 +667,17 @@ dojo.declare("wm.Application", wm.Component, {
         if (this.confirmCancelFunc)
             this.confirmCancelFunc();
     },
-    toastError: function(inMsg) {
-        this.toastDialog.showToast(inMsg, 8000, "Error");
+    toastError: function(inMsg, optionalDuration) {
+        this.toastDialog.showToast(inMsg, optionalDuration || 8000, "Error");
     },
-    toastWarning: function(inMsg) {
-        this.toastDialog.showToast(inMsg, 8000, "Warning");
+    toastWarning: function(inMsg, optionalDuration) {
+        this.toastDialog.showToast(inMsg, optionalDuration || 8000, "Warning");
     },
-    toastSuccess: function(inMsg) {
-        this.toastDialog.showToast(inMsg, 5000, "Success");
+    toastSuccess: function(inMsg, optionalDuration) {
+        this.toastDialog.showToast(inMsg, optionalDuration || 5000, "Success");
     },
-    toastInfo: function(inMsg) {
-        this.toastDialog.showToast(inMsg, 5000, "Info");
+    toastInfo: function(inMsg, optionalDuration) {
+        this.toastDialog.showToast(inMsg, optionalDuration || 5000, "Info");
     },
     
     createToolTip: function(message, node, event, optionalWidth) {
