@@ -39,17 +39,44 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 		var b = this.btns[inIndex] = document.createElement("button");
 	        //b.style.outline = "none";
 		b.style.display = inLayer.showing ? "" : "none";
-		this.setBtnText(b, inCaption);
+	    this.setBtnText(b, inCaption, inLayer.closable || inLayer.destroyable);
 		this.decoree.connect(b, "onclick", dojo.hitch(this, "tabClicked", inLayer));
-	        b.className=this.decorationClass + "-tab";
-		this.tabsControl.domNode.appendChild(b);
+	    b.className=this.decorationClass + "-tab" +  (inLayer.closable || inLayer.destroyable ? " " + this.decorationClass + "-closabletab" : "");
+	    if (!inCaption) b.style.display = "none";
+	    this.tabsControl.domNode.appendChild(b);
 	},
 	tabClicked: function(inLayer, e) {
 		var d = this.decoree;
 		// prevent designer click
 		if (d.isDesignLoaded())
 			dojo.stopEvent(e);
+	    var close = dojo.hasClass(e.target, "TabCloseIcon");
+	    if (!close && (inLayer.closable || inLayer.destroyable)) {
+		var closeIcon = dojo.coords(e.target.firstChild);
+		var button = dojo.coords(e.target);
+		if (e.clientX >= closeIcon.x &&
+		    e.clientY <= closeIcon.y+closeIcon.h)
+		    close = true;
+	    }
+	    if (close) {
+		if (inLayer.parent.customClose != inLayer.parent.constructor.prototype.customClose)
+		    return inLayer.parent.customClose(inLayer);
+		var currentLayer = inLayer.parent.getActiveLayer();
+		var currentIndex = currentLayer.getIndex();
+		var parent = inLayer.parent;
+		parent.onClose(inLayer);
+		if (inLayer.destroyable) 
+		    inLayer.destroy();
+		else
+		    inLayer.hide();
+		this.decoree.renderBounds(); // in case number of rows of tabs has changed
+		if (!currentLayer.isDestroyed) currentLayer.activate();
+		else if (currentIndex > 0) parent.setLayerIndex(currentIndex-1);
+		else parent.setLayerIndex(0);
+		    
+	    } else {
 		d.setLayer(inLayer);
+	    }
 	},
 	decorateLayer: function(inLayer, inIndex) {
 		this.inherited(arguments);
@@ -74,10 +101,11 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 	applyLayerCaption: function(inLayer) {
 		var d = this.decoree, i = inLayer.getIndex();
 		if (i != -1)
-			this.setBtnText(this.btns[i], inLayer.caption);
+			this.setBtnText(this.btns[i], inLayer.caption, inLayer.closable || inLayer.destroyable);
 	},
-	setBtnText: function(inBtn, inCaption) {
-		inBtn.innerHTML = inCaption || '&nbsp;';
+    setBtnText: function(inBtn, inCaption, closable) {
+	dojo[closable ? "addClass" : "removeClass"](inBtn, this.decorationClass + "-closabletab");
+	inBtn.innerHTML = (closable ? "<span class='TabCloseIcon'>x</span>" : "") +  (inCaption || '&nbsp;');
 	},
 	getBtn: function(inCaption) {
 		var d = this.decoree, i = d.indexOfLayerCaption(inCaption);
@@ -135,7 +163,7 @@ dojo.declare("wm.RoundedTabsDecorator", wm.TabsDecorator, {
 		divCenter.innerHTML = "&nbsp;";
 		divRight.innerHTML = "&nbsp;";
 		
-		this.setBtnText(divCenter, inCaption);
+		this.setBtnText(divCenter, inCaption, inLayer.closable || inLayer.destroyable);
 		this.decoree.connect(b, "onclick", dojo.hitch(this, "tabClicked", inLayer));
 		this.decoree.connect(b, "onmouseover", dojo.hitch(this, "mouseoverout", inLayer, true));
 		this.decoree.connect(b, "onmouseout", dojo.hitch(this, "mouseoverout", inLayer, false));
@@ -181,7 +209,7 @@ dojo.declare("wm.RoundedTabsDecorator", wm.TabsDecorator, {
 	applyLayerCaption: function(inLayer) {
 		var d = this.decoree, i = inLayer.getIndex();
 		if (i != -1)
-			this.setBtnText(this.btns[i].childNodes[1], inLayer.caption);
+			this.setBtnText(this.btns[i].childNodes[1], inLayer.caption, inLayer.closable || inLayer.destroyable);
 	}
 	
 });
