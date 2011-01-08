@@ -35,7 +35,8 @@ wm.Control.extend({
 	// design only
         getNumTabbableWidgets: function() {return 1;},
 	designMove: function(inTarget, inMoveInfo) {
-		inTarget.designMoveControl(this, inMoveInfo);
+	    inTarget.designMoveControl(this, inMoveInfo);
+	    wm.job("studio.updateDirtyBit",10, function() {studio.updateProjectDirty();});
 	},
 	resizeUpdate: function(inBounds) {
 		// update the boundary rectangle highlight only
@@ -97,6 +98,7 @@ wm.Control.extend({
 		this.reflowParent();
 		// IE6 has trouble refreshing inspector when it contains SELECT
 		setTimeout(dojo.hitch(studio.inspector, "reinspect"), 100);
+	        wm.job("studio.updateDirtyBit",10, function() {studio.updateProjectDirty();});
 	},
 	designCreate: function() {
 		this.inherited(arguments);
