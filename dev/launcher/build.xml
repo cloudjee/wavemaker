@@ -65,6 +65,7 @@
         <copy todir="${classes.launcher.dir}">
             <fileset dir="src">
                 <include name="**/*.png"/>
+                <include name="**/*.gif"/>
             </fileset>
         </copy>
     </target>
@@ -76,6 +77,7 @@
             <manifest>
                 <attribute name="Main-Class" value="com.wavemaker.desktop.launcher.Main"/>
                 <attribute name="Class-Path" value="${build.manifest.jars} ${runtime.manifest.jars} ."/>
+				<attribute name="SplashScreen-Image" value="WMSplashScreen.gif"/>
             </manifest>
         </jar>
     </target>
