@@ -259,6 +259,13 @@ dojo.declare("wm.Component", wm.Object, {
 			delete this.components[n];
 	},
         setOwner: function(inOwner, nonWritable) {
+	    var isDesign = this.isDesignLoaded();
+
+	    // setOwner is called any time a component is created or destroyed, so is a perfect place for
+	    // detecting when changes are made
+	    if (isDesign)
+		wm.job("studio.updateDirtyBit",10, function() {studio.updateProjectDirty();});
+
 		var originalOwner = this.owner;
 		if (this.owner)
 			this.owner.removeComponent(this);
