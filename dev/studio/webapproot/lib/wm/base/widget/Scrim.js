@@ -30,7 +30,7 @@ dojo.declare("wm.Scrim", wm.Widget, {
 	    this.inherited(arguments);
 		dojo.addClass(this.domNode, "wmscrim");
 		// remember, zIndex must be set in style to avoid layout.
-		this.domNode.style.zIndex = 10;
+		this.domNode.style.zIndex = 20;
 		this.domNode.style.position = "absolute";
 		if (this.waitCursor)
 			this.domNode.style.cursor = "wait";
