@@ -259,6 +259,7 @@ if(typeof window != 'undefined'){
 					var err = Error("Unable to load "+uri+" status:"+ http.status);
 					err.status = http.status;
 					err.responseText = http.responseText;
+				        if (fail_ok) return null;
 					throw err;
 				}
 			}catch(e){
