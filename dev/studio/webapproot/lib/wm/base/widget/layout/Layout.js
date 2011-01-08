@@ -33,7 +33,7 @@ wm.inLayout = function(inNode) {
 dojo.declare("wm.layout.Base", null, {
 	inFlow: function(inControl) {
 		return inControl.showing && (inControl.inFlow !== false) &&
-			wm.inLayout(inControl.domNode); //bc only
+		      (inControl._forceShowing || wm.inLayout(inControl.domNode)); //bc only
 	},
 	flow: function(inContainer) {
 	},
