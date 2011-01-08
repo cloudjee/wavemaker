@@ -536,7 +536,7 @@ wm.Component.extend({
 		
 	if (this instanceof wm.Control) {
 	    var submenuOptions = {label: "Select", 
-				  iconClass: "Studio_silkIconImageList_95",
+				  iconClass: "Studio_silkIconImageList_83",
 				  children: [{label: this.name,
 					      onClick: this._makeSelectComponentMethod(this)}]};
 	    var parent = this.parent;
