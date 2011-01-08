@@ -154,7 +154,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 
 	    this.setModal(this.modal);
 
-            this.setTitlebarBorder(this.titlebarBorder); 
+	    this.setTitlebarBorder(this.titlebarBorder); 
             this.setTitlebarBorderColor(this.titlebarBorderColor);
 
 
@@ -655,6 +655,7 @@ dojo.declare("wm.Dialog", wm.Container, {
         if (this.titleBar) this.titleBar.setHeight(inHeight + "px");
     },
     createTitle: function() {
+	var border = (String(this.titlebarBorder).match(",")) ? this.titlebarBorder : "0,0," + this.titlebarBorder + ",0";
 	this.titleBar = new wm.Container({_classes: {domNode: ["dialogtitlebar"]}, 
 					  showing: this.title,
 					  name: "titleBar", 
@@ -664,7 +665,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 					  height: this.titlebarHeight + "px",
 					  margin: "0",
 					  padding: "0",
-					  border: this.titlebarBorder,
+					  border: border,
 					  borderColor: this.titlebarBorderColor,
 					  verticalAlign: "middle",
 					  layoutKind: "left-to-right",
@@ -719,6 +720,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	this.connect(this.titleMaxify, "onclick", this, "maxify");
 	this.connect(this.titleLabel, "onclick", this, "unminify");
 	this.connect(this.titleLabel.domNode, "onmousedown", this, "unminifyormove");
+
     },
     setNoMinify: function(val) {
         this.noMinify = val;
