@@ -32,11 +32,13 @@ DeploymentDialog.widgets = {
 		}]
 	}],
 	layoutBox1: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", border: "0"}, {}, {
+/*
 		titleBar: ["wm.Panel", {height: "29px", layoutKind: "left-to-right", border: "0"}, {}, {
 			dialogLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_TextAlign_Center", "wm_Padding_4px", "wm_FontColor_White"]}, caption: "Deployment", width: "100%", height: "100%", border: "0"}, {}, {
 				format: ["wm.DataFormatter", {}, {}]
 			}]
 		}],
+		*/
 		deplPanel: ["wm.Panel", {_classes: {domNode: ["wmDialogBody"]}, height: "100%", width: "100%", border: "0"}, {}, {
 			layers1: ["wm.TabLayers", {border: "0"}, {}, {
 				layer1: ["wm.Layer", {caption: "Generate War", border: "0"}, {}, {
