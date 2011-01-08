@@ -21,6 +21,7 @@ dojo.provide("wm.base.widget.EditArea");
 //wm.loadModule("edit_area/edit_area_loader");
 
 dojo.declare("wm.EditArea", wm.Box, {
+    _forceShowing: true,
 	scrim: true,
 	syntax: "js",
 	_scrim: null,
@@ -33,14 +34,16 @@ dojo.declare("wm.EditArea", wm.Box, {
 		n.style.border = n.style.padding = 0;
 		n.style.width = "100%";
 		n.style.height = "100%";
-		n.id = this.getRuntimeId();
+	    n.id = this.getRuntimeId().replace(/\s/g,"_");
 		this.domNode.appendChild(this.textAreaNode);
 		this.textAreaDom = new wm.DomNode(this.textAreaNode);
 		this._startHandle = new dojo.Deferred();
 	},
+
 	getScrim: function() {
 		if (!this._scrim) {
 		    this._scrim = new wm.Scrim({owner: this});
+		    this.domNode.appendChild(this._scrim.domNode);
 		}
 		return this._scrim;
 	},
@@ -73,15 +76,28 @@ dojo.declare("wm.EditArea", wm.Box, {
 	},
 	render: function() {
 		this.inherited(arguments);
-		if (this.isReallyShowing()) {
+		if (!this._cupdating && this.isReallyShowing()) {
 			if (!this.isStarted())
 				this.initEdit();
 			else
 				this.resize();
 		}
 	},
+        renderBounds: function() {
+	    this.inherited(arguments);
+	    var node = dojo.byId("frame_" + this.getRuntimeId().replace(/\./g,"_"));
+	    if (!node)
+		return;
+	    var style = node.style;
+	    var bounds = this.getBounds();
+	    style.top = bounds.t + "px";
+	    style.left = bounds.l + "px";
+	    style.width = bounds.w + "px";
+	    style.height = bounds.h + "px";
+	},
 	initEdit: function() {
-		var id = this.getRuntimeId();
+	    var id = this.getRuntimeId().replace(/\./g,"_");
+	    console.log("initEdit: " + id);
 		if (this._editAreaInitialized)
 			return;
 		this.getScrim().setShowing(true);
@@ -109,13 +125,13 @@ dojo.declare("wm.EditArea", wm.Box, {
 			return;
 		this.off();
 		this._startHandle = new dojo.Deferred();
-		var id = this.getRuntimeId();
+	        var id = this.getRuntimeId().replace(/\./g,"_");
 		this._editAreaInitialized = false;
 		editAreaLoader.delete_instance(id);
 		window.area = null;
 	},
 	isStarted: function() {
-		return Boolean(this.area && this.area.textarea && this._editAreaInitialized && this._isStarted);
+		return Boolean(this.area && this.area.textarea && this._editAreaInitialized && this._isStarted && this._isLoaded);
 	},
 	resize: function() {
 		if (this.isStarted()) {
@@ -142,15 +158,17 @@ dojo.declare("wm.EditArea", wm.Box, {
 		if (this.isStarted()) {
 		    // FIXME: get exception due to editArea focuswe attempt when setting text and
 			// not really showing
-			if (this.isReallyShowing())
+
+// if statement bad because getText gets from different place than we set in the else clause
+//			if (this.isReallyShowing())
 				editAreaLoader.setValue(this.area.textarea.id, inText);
-			else {
+/*			else {
 				this.off();
 				this.textAreaNode.value = inText;
-			}
+			}*/
 			this.resetUndo();
 		} else
-			this.textAreaNode.value = inText;
+		    this.textAreaNode.value = inText;
 	},
 	setSelectionRange: function(inStart, inEnd) {
 		if (this.isStarted()) {
@@ -170,15 +188,20 @@ dojo.declare("wm.EditArea", wm.Box, {
 		}
 	},
 	_onStarted: function() {
-		this._isStarted = true;
+	    this._isStarted = true;
 		setTimeout(dojo.hitch(this, function() {
 			//this.resize();
-		        if (this.editorStarted) this.editorStarted();
 			this._startHandle && this._startHandle.callback(true);
 		}), 1);
 	},
 	_onLoaded: function() {
-		this.getScrim().setShowing(false);
+	    this._isLoaded = true;
+	    dojo.byId("frame_" + this.getRuntimeId().replace(/\./g,"_")).style.position = "absolute";
+	    this.editorStarted();
+	    this.renderBounds();
+	    this.getScrim().setShowing(false);
+	    if (this.textAreaNode.value != this.getText())
+		this.setText(this.textAreaNode.value); // strange timing error causes this to happen
 	},
 	callAfterStarted: function(inFunction) {
 		if (!dojo.isFunction(inFunction))
@@ -191,7 +214,7 @@ dojo.declare("wm.EditArea", wm.Box, {
 	getEditFrame: function() {
 		// get the iframe for the editor... using Edit Area method
 		if (this.isStarted())
-			return window.frames["frame_" + this.getRuntimeId()];
+		    return window.frames["frame_" + this.getRuntimeId().replace(/\./g,"_")];
 	},
 	setSyntax: function(inSyntax) {
 		this.syntax = inSyntax;
@@ -258,18 +281,24 @@ dojo.declare("wm.EditArea", wm.Box, {
 		if (f)
 			this.connect(f.document, "keydown", this, "keydown");
 	},
-    idleDelay: 0,
-    onIdle: function() {},
 	keydown: function(e) {
 	    if (e.ctrlKey && app._keys[e.keyCode] != "CTRL") {
 		this.onCtrlKey(app._keys[e.keyCode]);
 		dojo.stopEvent(e);
-	    } else if (this.idleDelay) {
+	    } else {
 		if (this._keydownTimeout) window.clearTimeout(this._keydownTimeout);
-		this._keydownTimeout = window.setTimeout(dojo.hitch(this,function() {this.onIdle();}), this.idleDelay);
+		this._keydownTimeout = wm.job(this.getRuntimeId() + "onKeyDown", 100, dojo.hitch(this, function() {
+		    this.onKeyDown(e);
+		}));
+
 	    }
+	    
 	},
         onCtrlKey: function(letter) {
 
-	}
+	},
+    destroy: function() {
+	this.deleteEdit();
+	this.inherited(arguments);
+    }
 });
