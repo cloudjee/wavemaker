@@ -21,9 +21,9 @@
 	"Palette" : "Palette",
 	"Diagnostics" : "Diagnostics",
 	"ServerLogs" : "Server Logs",
-
+    "componentsTab": "Services", // fits better than "Components" in FF
 	"Model" : "Model",
-	"Non_visual_Components" : "Non-visual Components:",
+	"Non_visual_Components" : "Components:",
 	"Visual_Components" : "Visual Components:",
 
 	"Projects" : "Projects",
@@ -86,7 +86,7 @@
 	"T_CanvasTip" : "Canvas",
 	"T_SourceTip" : "Source",
 	"T_ResourcesTip" : "Resources",
-	"T_Design" : "Design",
+	"T_Design" : "Canvas",
 	"T_SaveTip" : "Save",
 	"T_CutTip" : "Cut",
 	"T_CopyTip" : "Copy",
@@ -111,7 +111,7 @@
 	"Login" : "Login",
 	"Deployment" : "Deployment",
 	"Resources" : "Resources",
-	"R_IDE" : "IDE",
+	"R_IDE" : "Source",
 	"R_Script" : "Script",
 	"R_Save" : "Save",
 	"R_Print" : "Print",
@@ -185,6 +185,15 @@
 	"I_Custom" : "Custom",
 	"I_Apply" : "Apply",
 	
+/*    "TabCaption_DataObjectsEditor": "Database Designs",*/
+/*    "TabCaption_QueryEditor": "Database Queries",*/
+    "TabCaption_JavaService": "Java",
+    "TabCaption_LiveView": "Live View",
+    "TabCaption_Query": "Query",
+    "TabCaption_DataModelEntity": "Data Model",
+    "TabCaption_WebService": "Web Service",
+    "TabCaption_Security": "Security",
+/*    "TabCaption_LiveViewEditor": "Live Views"*/
 //	"D_BoundTo" : " bound to ",
 //	"D_WithMatchedType" : " with matched type <i>",
 }
