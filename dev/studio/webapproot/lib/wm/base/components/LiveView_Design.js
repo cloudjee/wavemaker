@@ -64,8 +64,14 @@ wm.LiveView.extend({
 		this.setDataType(dataType);
 		this.editView();
 	},
+    getLayerName: function() {
+	return this.name + "LiveView";
+    },
+    getLayerCaption: function() {
+	return this.name + " (" + bundleStudio["TabCaption_LiveView"] + ")";
+    },
 	editView: function() {
-		var c = studio.navGotoEditor("LiveViewEditor");
+	    var c = studio.navGotoEditor("LiveViewEditor", studio.databaseTab, this.getLayerName(), this.getLayerCaption());
 		var ed = c.page;
 		if (ed) {
 			ed.setLiveView(this);

@@ -102,16 +102,28 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 			var c = new wm.DataModel({name: n, dataModelName: n});
 			studio.application.addServerComponent(c);
 			studio.application.loadServerComponents("wm.Query");
-			wm.fire(studio.getEditor("QueryEditor").page, "update");
+		        var layers = studio.tabs.layers;
+		    var done;
+		    for (var i = 0; !done && i < layers.length; i++) {
+			var l = layers[i];
+			var widgets = l.c$;
+			for (var j = 0; j < widgets.length; j++)
+			    if (widgets[j] instanceof wm.PageContainer) {
+				done = true;
+				if (widgets[j].page instanceof QueryEditor)
+				    widgets[j].page.updateDataModelInput();
+				break;
+			    }
+		    }
 			studio.refreshServiceTree();
 
 		    // If designing a data model
 		    if (this._dataModelName) {
 			studio.select(c);
 			this.editView();
-			studio.navGotoModelTreeClick();
- 			wm.fire(studio.getEditor("DataObjectsEditor").page, "newDataModelResult");
- 			var page = studio.getEditor("DataObjectsEditor").page;
+			studio.navGotoComponentsTreeClick();
+ 			wm.fire(studio.getEditor("DataObjectsEditor", studio.databaseTab, this.getLayerName(), this.getLayerCaption()).page, "newDataModelResult");
+ 			var page = studio.getEditor("DataObjectsEditor", studio.databaseTab, this.getLayerName(), this.getLayerCaption()).page;
 			page.objectPages.setLayer(page.DEFAULT_PAGE);
 		    } 
 
@@ -122,7 +134,7 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 		}
 	},
 	editView: function() {
-		var c = studio.navGotoEditor("DataObjectsEditor");
+	    var c = studio.navGotoEditor("DataObjectsEditor", studio.databaseTab, this.getLayerName(), this.getLayerCaption());
 		if (this.dataModelName) {
 			c.pageLoadedDeferred.addCallback(dojo.hitch(this, function() {
 				c.page.setDataModel(this);
@@ -163,7 +175,7 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 	},
 	designSelect: function() {
 	    if (studio.tree.selected.component instanceof wm.DataModelEntity) return;
-	    var c = studio.navGotoEditor("DataObjectsEditor");
+	    var c = studio.navGotoEditor("DataObjectsEditor", studio.databaseTab, this.getLayerName(), this.getLayerCaption());
 	    studio.selected._studioTreeNode.setOpen(true);
 	    c.page.setDataModel(this);
 	    c.page._selectNode();
@@ -176,6 +188,12 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 	    }
 */
 	},
+    getLayerName: function() {
+	return this.name + "DataModelLayer";
+    },
+    getLayerCaption: function() {
+	return this.name + " (" + bundleStudio["TabCaption_DataModelEntity"] + ")";
+    }
 
 });
 
@@ -190,7 +208,7 @@ dojo.declare("wm.DataModelEntity", wm.Component, {
 		return "";
 	},
 	designSelect: function() {
-		var c = studio.navGotoEditor("DataObjectsEditor");
+	    var c = studio.navGotoEditor("DataObjectsEditor", studio.databaseTab, this.getLayerName(), this.getLayerCaption());
 	    c.page.objectPages.setLayer(c.page.OBJECT_PAGE);
 		if (this.entityName) {
 			c.pageLoadedDeferred.addCallback(dojo.hitch(this, function() {
@@ -198,7 +216,13 @@ dojo.declare("wm.DataModelEntity", wm.Component, {
 				return true;
 			}));
 		}
-	}
+	},
+    getLayerName: function() {
+	return this.dataModelName + "DataModelLayer";
+    },
+    getLayerCaption: function() {
+	return this.dataModelName + " (" + bundleStudio["TabCaption_DataModelEntity"] + ")";
+    }
 });
 
 dojo.declare("wm.DataModelLoader", null, {

@@ -63,7 +63,7 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
     newJavaServiceWithFunc: function(serviceId, classId, javaFunctions) {
         studio.beginWait("Initializing Java Service " + serviceId);
         if (!studio.javaEditorContainer || !studio.javaEditorContainer.page) {
-	    var c = studio.getEditor("JavaEditor");
+	    var c = studio.navGotoEditor("JavaEditor",  studio.JavaEditorTab, this.name + "JavaServiceLayer", this.name);
             wm.job(this.getRuntimeId() +":newJavaServiceWithFunc", 10, dojo.hitch(this, function() {
                 this.newJavaServiceWithFunc(serviceId,classId, javaFunctions);
             }));
@@ -202,7 +202,7 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 	                                    if (!this.initialNoEdit || studio.javaEditor.isActive()) {
 		                                studio.select(c);
 		                                c.editView();
-		                                studio.navGotoModelTreeClick();
+		                                studio.navGotoComponentsTreeClick();
 	                                    }
 	                                    delete this.iintialNoEdit;
 	                                    
@@ -250,16 +250,17 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 			studio.application.addServerComponent(c);
 			studio.refreshServiceTree();
 			studio.select(c);
-			this.editView();
-			studio.navGotoModelTreeClick();
+		        //c.editView();
+			studio.navGotoComponentsTreeClick();
 		
 	    }
 	},
 	editView: function() {
-		var c = studio.navGotoEditor("JavaEditor");
+	    var c = studio.navGotoEditor("JavaEditor", studio.JavaEditorTab, this.name + "JavaServiceLayer", this.name);
+	    this._editTab = c.parent;
 		if (this.serviceId) {
 			c.pageLoadedDeferred.addCallback(dojo.hitch(this, function() {
-				c.page.selectService(this);
+				c.page.selectService(this);			    
 				return true;
 			}));
 		}

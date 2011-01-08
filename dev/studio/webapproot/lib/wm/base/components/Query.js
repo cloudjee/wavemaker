@@ -28,19 +28,29 @@ dojo.declare("wm.Query", wm.ServerComponent, {
 	dataModelName: "",
 	queryName: "",
 	afterPaletteDrop: function() {
-		var c = studio.navGotoEditor("QueryEditor");
+	    var c = studio.navGotoEditor("QueryEditor",  studio.databaseTab, this.getLayerName(), this.getLayerCaption());
 		c.pageLoadedDeferred.addCallback(dojo.hitch(this, function() {
 			c.page.addQuery();
-			studio.navGotoModelTreeClick();
+			studio.navGotoComponentsTreeClick();
 			return true;
 		}));
 		return true;
 	},
-	editView: function() {
-		var c = studio.navGotoEditor("QueryEditor");
+    getLayerName: function() {
+	return this.name + "QueryLayer";
+    },
+    getLayerCaption: function() {
+	return this.name + " (" + bundleStudio["TabCaption_Query"] + ")";
+    },
+    editView: function() {
+	var c = studio.navGotoEditor("QueryEditor", studio.databaseTab, this.getLayerName(), this.getLayerCaption());
 		if (this.dataModelName && this.queryName) {
 			c.pageLoadedDeferred.addCallback(dojo.hitch(this, function() {
+			    // Don't regenerate the query if we're actually returning to one we're in the middle of editing
+			    if (c._isNewlyCreated) {
 				c.page.selectQuery(this);
+				delete c._isNewlyCreated;
+			    }
 				return true;
 			}));
 		}

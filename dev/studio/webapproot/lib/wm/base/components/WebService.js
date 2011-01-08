@@ -63,18 +63,24 @@ dojo.declare("wm.WebService", wm.JavaService, {
 			studio.refreshServiceTree();
 			studio.select(c);
 			this.editView();
-			studio.navGotoModelTreeClick();
+			studio.navGotoComponentsTreeClick();
 		}
 	},
 	editView: function() {
-		var c = studio.navGotoEditor("Services");
+	    var c = studio.navGotoEditor("Services", studio.webServiceTab,  this.getLayerName(), this.getLayerCaption());
 		if (this.serviceId) {
 			c.pageLoadedDeferred.addCallback(dojo.hitch(this, function() {
 				c.page.selectService(this);
 				return true;
 			}));
 		}
-	}
+	},
+    getLayerName: function() {
+	return this.name + "WebServiceLayer";
+    },
+    getLayerCaption: function() {
+	return this.name;// + " (" + bundleStudio["TabCaption_WebService"] + ")";
+    }
 });
 
 dojo.declare("wm.WebServiceLoader", null, {
