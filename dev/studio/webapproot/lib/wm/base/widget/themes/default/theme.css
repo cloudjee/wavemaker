@@ -148,6 +148,7 @@ th {
 	cursor: pointer;
 	height: 20px;
 	margin: 0px 0px 0px 3px;
+    overflow:hidden;
 }
 .dj_ie6 .wmtablayers-tab, .dj_ie7 .wmtablayers-tab {
         border-bottom-width: 1px !important;
@@ -1699,4 +1700,36 @@ Overriding dijit's progress bar properties to enable height changes to progress 
 .dijitProgressBarFull{
 	height:100%;
 }
+
+
 /* End override of dijit progressbar */
+
+
+.TabCloseIcon {
+   float: right;
+    color: #222222;
+    font-weight: bold;
+    margin: 0px 1px 0px 5px;
+    padding: 0px 4px 0px 4px;
+    opacity: .5;
+    filter: alpha(opacity=50);
+}
+.TabCloseIcon:hover {
+    opacity: 1;
+    filter: alpha(opacity=100);
+    color: #444444;
+
+            background: -webkit-gradient(linear, left top, left bottom, from(#CCCCCC), to(#666666));
+	background: -moz-linear-gradient(top,  #CCCCCC,  #666666);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#CCCCCC', endColorstr='#666666');
+
+	-moz-border-radius: 8px; 
+	-webkit-border-radius: 8px;
+	border-radius: 8px;
+}
+.dj_ff3 .TabCloseIcon,
+.dj_ff4 .TabCloseIcon {
+    left: 4px;
+    top: -5px;
+    
+}
