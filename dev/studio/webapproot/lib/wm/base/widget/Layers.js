@@ -30,9 +30,12 @@ dojo.declare("wm.Layer", wm.Container, {
 	_requiredParent: "wm.Layers",
 	destroy: function() {
 		//console.info('layer destroy called');
-		if (this.parent)
-			this.parent.setCaptionMapLayer(this.caption, null);
-		this.inherited(arguments);
+	    var parent = this.parent;
+	    if (parent) 
+		parent.setCaptionMapLayer(this.caption, null);	    
+	    this.inherited(arguments);
+	    if (parent && parent.conditionalTabButtons)
+		parent.decorator.tabsControl.setShowing(parent.layers.length > 1);
 	},
 	init: function() {
 		this.inherited(arguments);
@@ -100,7 +103,16 @@ dojo.declare("wm.Layer", wm.Container, {
 		wm.forEachProperty(this.widgets, function(w) {
 			wm.fire(w, "_onShowParent");
 		})
-	}
+	},
+    /* Only valid for layers within a TabLayers */
+       setClosable: function(isClosable) {
+	   this.closable = isClosable;
+	   this.decorator.applyLayerCaption(this);
+       },
+       setDestroyable: function(isClosable) {
+	   this.destroyable = isClosable;
+	   this.decorator.applyLayerCaption(this);
+       }
 });
 
 dojo.declare("wm.Layers", wm.Container, {
@@ -240,7 +252,15 @@ dojo.declare("wm.Layers", wm.Container, {
 			this.setCaptionMapLayer(inWidget.caption, null);
 			this.decorator.undecorateLayer(inWidget, i);
 			this.client.removeWidget(inWidget);
-			this.setLayerIndex(0);
+		    var found = false;
+		    for (j = 0; j < this.layers.length; j++) {
+			if (this.layers[j].active) {
+			    this.layerIndex = j;
+			    found = true;
+			}
+		    }
+		    if (!found)
+			this.setLayerIndex(this.layers.length == 0 ? -1 : (i > 0 ? i - 1 : 0));
 		} else {
 			this.inherited(arguments);
 		}
@@ -522,7 +542,29 @@ dojo.declare("wm.Layers", wm.Container, {
 dojo.declare("wm.TabLayers", wm.Layers, {
         //useDesignBorder: 0,
        themeStyleType: "ContentPanel",
-       layersType: 'Tabs'/*,
+       layersType: 'Tabs',
+       conditionalTabButtons: false,
+	addLayer: function(inCaption) {
+	    var result = this.inherited(arguments);
+	    if (!this._cupdating && !this.owner._loadingPage)
+		this.renderBounds();
+	    if (this.conditionalTabButtons)
+		this.decorator.tabsControl.setShowing(this.layers.length > 1);
+	    return result;
+	},
+	removeLayer: function(inIndex) {
+	    this.inherited(arguments);
+	    if (this.conditionalTabButtons)
+		this.decorator.tabsControl.setShowing(this.layers.length > 1);
+	},
+    // onClose handles both destroy and close as long as it came from clicking the close icon in the tab button
+    onClose: function(inLayer) {
+
+    },
+    customClose: function(inLayer) {
+
+    }
+/*,
 	   afterPaletteDrop: function(){
 	   	this.inherited(arguments);
 	   	this.setLayersType("RoundedTabs");
