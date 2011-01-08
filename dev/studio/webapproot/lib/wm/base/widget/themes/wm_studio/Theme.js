@@ -40,7 +40,7 @@
 		"border": 0
 	}, 
 	"wm.Splitter": {
-		"bevelSize": "4", 
+		"bevelSize": "6", 
 		"border": "0"
 	}, 
 	"wm.AccordionDecorator": {
