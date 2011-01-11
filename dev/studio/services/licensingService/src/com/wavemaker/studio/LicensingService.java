@@ -18,17 +18,11 @@
 package com.wavemaker.studio;
 
 import java.io.IOException;
-import java.io.InputStream;
 import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.runtime.license.LicenseProcessor;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.project.StudioConfiguration;
-import com.wavemaker.common.util.IOUtils;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.FileInputStream;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wavemaker.runtime.server.FileUploadResponse;
@@ -55,13 +49,14 @@ public class LicensingService {
 
     @ExposeToClient
     public int getLicenseExpiration() {
-	return 6; // If a value > 30 is returned, we show no license information.  If user has full license, returning 31, 3000000 or any other large numbers will have the same effect
+	    //return 6; // If a value > 30 is returned, we show no license information.  If user has full license, returning 31, 3000000 or any other large numbers will have the same effect
+        return LicenseProcessor.getLicenseExpiration();
     }
 
     @ExposeToClient
     public FileUploadResponse uploadLicense(
 					    MultipartFile file) throws IOException {
-	String result = processLicense(file.getInputStream());
+	String result = LicenseProcessor.installLicense(file);
     	file.getInputStream().close();
         FileUploadResponse ret = new FileUploadResponse();
 	ret.setPath("private");
@@ -73,9 +68,9 @@ public class LicensingService {
     }
 
 
-    private String processLicense(InputStream input) throws IOException {
+    //private String processLicense(InputStream input) throws IOException {
 	/* these lines are only here to verify that the input stream your getting is valid; Remove them any time. */
-    	File tmpDir = new File("/Users/mkantor/Downloads");
+    	/*File tmpDir = new File("/Users/mkantor/Downloads");
     	File outputFile = new File(tmpDir, "tmp.txt");
 	System.out.println("OUTPUT:" + outputFile.getAbsolutePath());
     	FileOutputStream fos = new FileOutputStream(outputFile);
@@ -83,5 +78,5 @@ public class LicensingService {
     	fos.close();
 
 	return "OK";
-    }
+    }*/
 }
