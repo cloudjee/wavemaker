@@ -137,6 +137,12 @@ dojo.declare("Studio", wm.Page, {
 		    this.navEditAccountBtn.setShowing(true);
 		}
 
+	    if (studio.isModuleEnabled("security-driver", "wm.josso")) { // if isEnterprise
+		this.setupLicenseInfoLabel();
+	    }
+
+
+
 			    /* Removal of projects tab
 		this.updateProjectTree();
 		*/
@@ -153,7 +159,8 @@ dojo.declare("Studio", wm.Page, {
 	    // attempt to allow autoscroll while killing the left-to-right scrolling
 	    dojo.connect(studio.tree, "renderCss", studio.tree, function() {
 		    this.domNode.style.overflowX = "hidden";
-	    });
+	    });	    
+
 	},
 /*
 	 startPageOnStart: function() {
@@ -163,6 +170,33 @@ dojo.declare("Studio", wm.Page, {
 		}
 	 },
 	 */
+    setupLicenseInfoLabel: function() {
+	var licenseService = new wm.JsonRpcService({owner: this, service: "licensingService", sync: false});
+	
+	var licenseDeferred = licenseService.requestAsync("getLicenseExpiration");
+	licenseDeferred.addCallback(dojo.hitch(this, "setupLicenseInfoLabelResult"));
+    },
+    setupLicenseInfoLabelResult: function(inResult) {
+		    if (inResult > 30) return; // no display if more than 30 days
+		    if (inResult < 0) {
+			this.userLabel.setCaption("<div class='Studio_silkIconImageList_59 LicenseIcon'></div> Trial License has expired");
+			this.userLabel.removeUserClass("LicenseWarning");			    
+			this.userLabel.addUserClass("LicenseError");
+			this.startPageDialog.show();
+			this.startPageDialog.page.licenseLayer.activate();
+		    } else {
+			this.userLabel.setCaption("<div class='Studio_silkIconImageList_60 LicenseIcon'></div> Trial license expires in " + inResult + " days");
+			if (inResult <= 2)
+			    this.userLabel.addUserClass("LicenseWarning");			    
+
+			// if its not expiring for over a month or has already expired, don't bother with this, else retest status every few hours
+			if (!this._licenseTestTimeout)
+			    this._licenseTestTimeout = window.setInterval(function() {
+				var licenseDeferred = licenseService.requestAsync("getLicenseExpiration");
+				licenseDeferred.addCallback(dojo.hitch(studio, "setupLicenseInfoLabelResult"));
+			    }, 10800000); // every 3 hours update the license info label
+		    }
+    },
 	 handleServiceVariableError: function(inServiceVar, inError) {
 	   studio.endWait();  // if there was a beginWait call in progress, then we'd best close it in case there is no suitable error handler for the call
 	 },

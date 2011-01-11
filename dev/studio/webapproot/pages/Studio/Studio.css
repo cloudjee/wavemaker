@@ -1829,3 +1829,15 @@ color: rgb(0,270,0);
 	-webkit-border-radius: 6px;
 	border-radius: 6px;
 }
+
+.LicenseError {
+    background-color: red;
+}
+
+.Studio .LicenseWarning {
+    color: red !important;
+}
+
+.Studio-userLabel .LicenseIcon {
+    display: inline-block;
+}
