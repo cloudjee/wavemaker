@@ -170,6 +170,10 @@
           <file name="${xmlschema.jar}"/>
           <file name="${paranamer.jar}"/>
 		  <file name="${json-org.jar}"/>
+		  <file name="${truelicense.jar}"/>
+          <file name="${trueswing.jar}"/>
+		  <file name="${truexml.jar}"/>
+		  <file name="${commons-codec-1.4.jar}"/>
         </filelist>
     </then>    
     <else> <!-- Default -->     
@@ -226,6 +230,10 @@
           <file name="${xmlschema.jar}"/>
           <file name="${paranamer.jar}"/>
 		  <file name="${json-org.jar}"/>
+		  <file name="${truelicense.jar}"/>
+          <file name="${trueswing.jar}"/>
+		  <file name="${truexml.jar}"/>
+		  <file name="${commons-codec-1.4.jar}"/>
         </filelist>
 			</else>
 			</if>
