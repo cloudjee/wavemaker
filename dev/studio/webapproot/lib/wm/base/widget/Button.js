@@ -71,7 +71,7 @@ dojo.declare("wm.ToolButton", wm.Widget, {
 		    this.setProp("clicked", true);
 	        this.onclick(inEvent, this);
 	},
-        onclick: function(inEvent, inTarget) {
+        onclick: function() {
 	},
 	findImageList: function() {
 		var t = this;
