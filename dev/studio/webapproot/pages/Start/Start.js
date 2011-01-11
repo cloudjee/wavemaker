@@ -135,5 +135,17 @@ dojo.declare("Start", wm.Page, {
 		/*this.openProjectButton.setDisabled(inDisable);
 		this.deleteProjectButton.setDisabled(inDisable);
 		this.copyProjectButton.setDisabled(inDisable);*/
-	}
+	},
+    showLicenseLayer: function() {
+	this.tabLayers1.decorator.tabsControl.hide();
+	this.tabLayers1.setMargin("0");
+    },
+    showWelcomeLayer: function() {
+	this.tabLayers1.decorator.tabsControl.show();
+	this.tabLayers1.setMargin("4,8,8,8");
+    },
+    showProjectLayer: function() {
+	this.tabLayers1.decorator.tabsControl.show();
+	this.tabLayers1.setMargin("4,8,8,8");
+    }
 });

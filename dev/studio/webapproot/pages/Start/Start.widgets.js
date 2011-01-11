@@ -25,7 +25,7 @@ Start.widgets = {
 		panel5: ["wm.Panel", {height: "100%", width: "100%", verticalAlign: "middle", horizontalAlign: "center"}, {}, {
 			panel1: ["wm.Panel", {height: "450px", width: "750px", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 				tabLayers1: ["wm.TabLayers", {margin: "4,8,8,8"}, {}, {
-					layer1: ["wm.Layer", {caption: bundleDialog.Welcome, horizontalAlign: "left", verticalAlign: "top", padding: "8"}, {}, {
+					layer1: ["wm.Layer", {caption: bundleDialog.Welcome, horizontalAlign: "left", verticalAlign: "top", padding: "8"}, {onShow: "showWelcomeLayer"}, {
 						panel3: ["wm.Panel", {height: "100%", width: "100%", verticalAlign: "middle", horizontalAlign: "left", borderColor: ""}, {}, {
 							welcomeTitleLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_TextAlign_Center"]}, height: "50px", width: "100%", caption: bundleDialog.WelcomeMessage, border: "0"}, {}, {
 								format: ["wm.DataFormatter", {}, {}]
@@ -66,7 +66,7 @@ Start.widgets = {
 							}]
 						}]
 					}],
-					layer2: ["wm.Layer", {caption: bundleDialog.ProjectsTab, horizontalAlign: "left", verticalAlign: "top", padding: "8"}, {}, {
+					layer2: ["wm.Layer", {caption: bundleDialog.ProjectsTab, horizontalAlign: "left", verticalAlign: "top", padding: "8"}, {onShow: "showProjectLayer"}, {
 					    projectSearch: ["wm.Text", {width: "100%", height: "24px", resetButton: true, placeHolder: "Search by Project Name", caption: "", changeOnKey: true}, {onchange: "filterProjectList"}],
 						panel8: ["wm.Panel", {height: "100%", width: "100%", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 							projlist: ["wm.Panel", {height: "100%", width: "100%", layoutKind: "left-to-right", padding: "5,10,10,10"}, {}, {
@@ -82,7 +82,10 @@ Start.widgets = {
 							    newProjectBtn: ["wm.Button", {caption: bundleStudio.NewProjectCaption, width: "180px", height: "100%"}, {onclick: "newProjectClick"}],
 							}]
 						}]
-					}]
+					}],
+				    licenseLayer: ["wm.Layer", {caption: ""}, {onShow: "showLicenseLayer"}, {
+					licensePage: ["wm.PageContainer", {pageName: "LicenseDialog", deferLoad: true}],
+				    }]
 				}],
 		content1: ["wm.Content", {_classes: {domNode: ["wm_TextAlign_Center"]}, height: "20px", width: "100%", content: "_studio_footer"}, {}]
 			}]
