@@ -172,6 +172,8 @@
                       serviceclass="com.wavemaker.studio.cloud.UserService" />
         <buildservice servicename="studioService" 
                       serviceclass="com.wavemaker.studio.StudioService"/>
+        <buildservice servicename="licensingService" 
+                      serviceclass="com.wavemaker.studio.LicensingService"/>
         <buildservice servicename="webService" 
                       serviceclass="com.wavemaker.studio.ws.WebService"/>
  
