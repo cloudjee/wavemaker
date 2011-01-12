@@ -22,12 +22,14 @@ Studio.extend({
 	saveScriptClick: function() {
 	    if (this.scriptPageCompileChkBtn.getChecked()) 
 		this.validateScriptClick();
-	    this.waitForCallback(bundleDialog.M_SavingScript + this.project.projectName, dojo.hitch(this.project, "saveScript"));
+	    studio.saveAll(studio.project);
+	    //this.waitForCallback(bundleDialog.M_SavingScript + this.project.projectName, dojo.hitch(this.project, "saveScript"));
 	},
         saveAppSrcClick: function() {
 	    if (this.appsrcPageCompileChkBtn.getChecked()) 
 		this.validateAppScriptClick();
-		this.waitForCallback(bundleDialog.M_SavingAppScript + this.project.projectName, dojo.hitch(this.project, "saveAppScript"));
+	    //this.waitForCallback(bundleDialog.M_SavingAppScript + this.project.projectName, dojo.hitch(this.project, "saveAppScript"));
+	    studio.saveAll(studio.project);
 	},
 
 
