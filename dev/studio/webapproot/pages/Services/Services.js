@@ -54,9 +54,29 @@ dojo.declare("Services", wm.Page, {
 	return this._cachedData != this.getCachedData();
     },
     save: function() {
-	this.webServiceSaveBtnClick();
+		if (this.tree.serviceId) {
+			var ct = this.wsConnectionTimeoutInput.getValue("dataValue");
+			if (ct == null || ct.length == 0) {
+				ct = 0;
+			}
+			var rt = this.wsRequestTimeoutInput.getValue("dataValue");
+			if (rt == null || rt.length == 0) {
+				rt = 0;
+			}
+			studio.webService.requestAsync("setBindingProperties",
+				[this.tree.serviceId, {
+					httpBasicAuthUsername: this.authUsernameInput.getValue("dataValue"),
+					httpBasicAuthPassword: this.authPasswordInput.getValue("dataValue"),
+					connectionTimeout: ct,
+					requestTimeout: rt}
+				],
+				dojo.hitch(this, "setBindingPropertiesCallback"), dojo.hitch(this, "setBindingPropertiesErrorCallback"));
+		}
     },
     saveComplete: function() {
+    },
+    getProgressIncrement: function(runtime) {
+	return 10;
     },
 
 	editorChange: function() {
@@ -165,24 +185,7 @@ dojo.declare("Services", wm.Page, {
 		}
 	},
 	webServiceSaveBtnClick: function(inSender) {
-		if (this.tree.serviceId) {
-			var ct = this.wsConnectionTimeoutInput.getValue("dataValue");
-			if (ct == null || ct.length == 0) {
-				ct = 0;
-			}
-			var rt = this.wsRequestTimeoutInput.getValue("dataValue");
-			if (rt == null || rt.length == 0) {
-				rt = 0;
-			}
-			studio.webService.requestAsync("setBindingProperties",
-				[this.tree.serviceId, {
-					httpBasicAuthUsername: this.authUsernameInput.getValue("dataValue"),
-					httpBasicAuthPassword: this.authPasswordInput.getValue("dataValue"),
-					connectionTimeout: ct,
-					requestTimeout: rt}
-				],
-				dojo.hitch(this, "setBindingPropertiesCallback"), dojo.hitch(this, "setBindingPropertiesErrorCallback"));
-		}
+	    studio.saveAll(this);
 	},
 	setBindingPropertiesCallback: function(inData) {
 	    this._cachedData = this.getCachedData();

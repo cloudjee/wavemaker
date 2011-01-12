@@ -289,9 +289,10 @@ Studio.extend({
 	},
 	componentToTree: function(inNode, inComponent, inType) {
 		if (inComponent && !inComponent.flags.notInspectable && (!inType || inComponent instanceof inType)) {
-			var props = {};
+		    var props = {};
 		    props.closed = true;
-			inNode = wm.fire(inComponent, "preNewComponentNode", [inNode, props]) || inNode;
+		    inNode = wm.fire(inComponent, "preNewComponentNode", [inNode, props]) || inNode;
+
 		    if (this._searchText && !inComponent.name.toLowerCase().match(this.regex)) {
 			return;
 		    } else {
@@ -300,6 +301,9 @@ Studio.extend({
 		    }
 
 		    var n = this.newComponentNode(inNode, inComponent, null, null, props);
+		    if (n && n.tree == studio.tree && studio.application._metaData["service_invalid_" + inComponent.getRuntimeId()])
+			dojo.addClass(n.domNode, "Error");
+
   		    if (inComponent instanceof wm.TypeDefinition)
 			    this.subWidgetsToTree(n, inComponent);
 		    this._searchText = searchText;

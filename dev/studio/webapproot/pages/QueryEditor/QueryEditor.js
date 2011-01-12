@@ -55,12 +55,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		//this._loadQueries();
 	},
 	saveQuery: function(inSender) {
-		if (this._canSaveQuery()) {
-			this._saveQuery();
-		}
-		else {
-			app.alert("Enter query details before saving.");
-		}
+	    studio.saveAll(this);
 	},
 	removeQuery: function(inSender) {
 		//var n = this.queriesTree.selected;
@@ -258,20 +253,25 @@ dojo.declare("QueryEditor", wm.Page, {
 		var name = dojo.string.trim(this.queryNameInput.getDataValue());
 		
 		// check existing query with the same name
-		var cs = studio.application.getServerComponents();
+
+		var cs = studio.application.getServerComponents();   
 		for (var i in cs) {
 			var c = cs[i];
-			if (c.declaredClass == "wm.Query" && c.dataModelName == this.dataModelName && c.queryName == name) {
-                            app.confirm("Overwrite existing query \"" + name + "\"?", false, dojo.hitch(this, "_saveQuery2"), null);
-/*
-				app.pageDialog.showPage("GenericDialog",true,350,140);
-				app.pageDialog.page.setupPage("Confirm...", 'Overwrite existing query "' + name + '"?');
-				app.pageDialog.page.setupButton(1, "Overwrite", dojo.hitch(this, "_saveQuery2"));
-				app.pageDialog.page.setupButton(2, "Cancel", function() {app.pageDialog.dismiss();});
-                                */
-				return;
+			if (c.declaredClass == "wm.Query" && c != this.query && c.queryName == name) {
+                            app.confirm("Overwrite existing query \"" + name + "\"?", false, 
+					dojo.hitch(this, function() {
+					    studio.dataService.requestSync(
+						REMOVE_QUERY_OP, [c.dataModelName, c.queryName],
+						dojo.hitch(this, function() {
+						    studio.application.removeServerComponent(c);
+						}));
+					    this._saveQuery2();
+					}),
+					dojo.hitch(this, "saveComplete"));
+			    return; // when the user clicks, then we'll do something; we're finished until the user clicks
 			} 
 		}
+
 		this._saveQuery2();
 	},
 	_saveQuery2: function() {
@@ -280,7 +280,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		if (this.query) {
 		  this.query.newName = name;
 		}
-		studio.beginWait("Saving Query: " + name);
+	    //studio.beginWait("Saving Query: " + name);
 
 		//this._checkQuery(); //xxx
 		this._updateQuery();
@@ -329,7 +329,7 @@ dojo.declare("QueryEditor", wm.Page, {
 	},
 	_saveQueryCompleted: function() {
 		studio.updateServices();
-		studio.endWait();
+	    //studio.endWait();
 		//this._loadQueries();
 		this._resetChanges();
 		this.saveQueryBtn.setDisabled(true);
@@ -344,11 +344,13 @@ dojo.declare("QueryEditor", wm.Page, {
 				queryName: n
 			});
 
-	        this.owner.parent.setName(this.query.getLayerName());
+	            this.owner.parent.setName(this.query.getLayerName());
 
-			studio.application.addServerComponent(this.query);
+		    studio.application.addServerComponent(this.query);
 
-			if (this.deleteQuery) {
+/*
+		    if (this.deleteQuery) {
+
                             app.confirm("Your new query has been saved; do you want to delete the original or keep both the new query and the original?", false, dojo.hitch(this, "_deleteOriginalQuery"), dojo.hitch(this, "_keepOriginalQuery"), "Delete", "Keep Original");
 /*
 			  app.pageDialog.showPage("GenericDialog",true,350,140);
@@ -356,21 +358,23 @@ dojo.declare("QueryEditor", wm.Page, {
 			  
 			  app.pageDialog.page.setupButton(1, "Delete Old Query", dojo.hitch(this, "_deleteOriginalQuery"));
 			  app.pageDialog.page.setupButton(2, "Keep Old Query", dojo.hitch(this, "_keepOriginalQuery"));
-                          */
+
 			  return;
-			}
+			  }
+                          */
 		}
+
 		studio.refreshServiceTree();
 		studio.selected = null;
 		studio.select(this.query);
-	    this.saveComplete();
-	},
+	    this.onSaveSuccess();
+		},
 	_keepOriginalQuery: function() {
 	    //app.pageDialog.page.dismiss();
 		studio.refreshServiceTree();
 		studio.selected = null;
 		studio.select(this.query);
-	    this.saveComplete();
+	    this.onSaveSuccess();
 	},
 	_deleteOriginalQuery: function() {
 	    //app.pageDialog.page.dismiss();
@@ -385,12 +389,14 @@ dojo.declare("QueryEditor", wm.Page, {
 		    studio.selected = null;
 		    studio.select(_this.query);		    
 		    studio.endWait();
-			_this.saveComplete();
+			_this.onSaveSuccess();
 		  });
 	},
 	_saveQueryError: function(inError) {
-		studio.endWait();
-	    app.alert("Error saving query: " + inError.message);
+	    //studio.endWait();
+	    studio._saveErrors.push({owner: this,
+				     message: "Error saving query: " + inError.message});
+	    this.saveComplete();
 	},
 	/*_loadQueries: function() {
 		studio.dataService.requestSync(LOAD_QUERIES_TREE_OP,
@@ -407,7 +413,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		    this.owner.parent.setCaption(caption);
 		    studio.updateServicesDirtyTabIndicators();
 		}
-		this.saveQueryBtn.setDisabled(changed);
+		this.saveQueryBtn.setDisabled(!changed);
 		this.hasChanges = changed;
 
 	    }));
@@ -420,13 +426,25 @@ dojo.declare("QueryEditor", wm.Page, {
 	return this._cachedData != this.getCachedData();
     },
     save: function() {
-	this.saveQuery();
+		if (this._canSaveQuery()) {
+			this._saveQuery();
+		}
+		else {
+		    studio._saveErrors.push({owner: this,
+					     message: "Enter query details before saving."});
+		    this.saveComplete();
+		}
     },
     saveComplete: function() {
+    },
+    onSaveSuccess: function() {
 	this._cachedData = this.getCachedData();
 	this.setDirty();
+	this.saveComplete();
     },
-
+    getProgressIncrement: function() {
+	return 5; //  1 tick is very fast; this is 10 times slower than that
+    },
 	_getQueryInputs: function() {
 		var qi = [];
 		for (var i = 0; i <	this.queryInputsList._data.length; i++) {
@@ -456,7 +474,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		return rtn;
 	},
 	_runQueryResult: function(inResult) {
-		studio.endWait();
+	    studio.endWait();
 		if (inResult.length == 0) {
 			this.emptyResultSetLabel.setShowing(true);
 			this.queryOutputList.setShowing(false);

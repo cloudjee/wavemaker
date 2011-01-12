@@ -21,7 +21,13 @@ dojo.declare("Start", wm.Page, {
 		this.existingProjectList.connect(this.existingProjectList, "onformat", this, "existingProjectListFormatCell");
 		this.update();
 
-
+	    // If we're running as a dialog, its scrim should not cover the menu bar
+	    if (this.owner && this.owner.owner && this.owner.owner instanceof wm.Dialog) {
+		dojo.connect(studio, "start", this, function() {
+		    studio.panel1.domNode.appendChild(this.owner.owner.domNode);
+		    studio.panel1.domNode.appendChild(this.owner.owner.dialogScrim.domNode);
+		});
+	    }
 	},
 	update: function() {
 		this.refreshProjectList();

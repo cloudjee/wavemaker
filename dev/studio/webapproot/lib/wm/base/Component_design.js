@@ -193,6 +193,8 @@ wm.Component.extend({
 		var tmp = this.components[i].getDocumentationHash();
 		if (!wm.isEmpty(tmp)) dojo.mixin(hash,tmp);
 	    }
+	    if (this._metaData)
+		hash.__metaData = this._metaData;
 	    return hash;
 	},
 	//=======================================================

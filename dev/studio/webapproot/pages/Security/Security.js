@@ -29,6 +29,7 @@ dojo.declare("Security", wm.Page, {
 		dojo.connect(dojo.byId("HelpUID1"), "onclick", this, "showUIDHelp1");
 		dojo.connect(dojo.byId("HelpUID2"), "onclick", this, "showUIDHelp2");
 	},
+
 	showUIDHelp1: function() {
 	    var bd = this.getHelpDialog();
 	    bd.page.setHeader("","Username Field");
@@ -261,83 +262,23 @@ dojo.declare("Security", wm.Page, {
 		this.ldapGroupSearchFilterInput.setDataValue(inResponse.groupSearchFilter);
 	},
 	saveButtonClick: function(inSender) {
-		if (this.secProviderInput.getDataValue() == this.SELECT_ONE) {
-			return;
-		}
-		var t = this.layers.getLayer().caption;
-		var err = this.checkErrorOnInputFields(t)
-		if (err) {
-			app.alert(err);
-		} else {
-			this.copyLoginFiles();
-		    studio.beginWait("Saving Security Settings");
-		    wm.onidle(this, function() {
-			if (t == "Demo") {
-				studio.securityConfigService.requestSync(
-					"configDemo",
-					[this.demoUserList._data,
-					this.secEnableInput.getChecked(),
-					this.showLoginPageInput.getChecked()],
-					dojo.hitch(this, "configDemoResult"));
-
-			} else if (t == "Database") {
-				var rolesQuery = null;
-				if (this.dbRoleBySQLCheckbox.getChecked()) {
-					rolesQuery = this.dbRoleBySQLInput.getDataValue();
-				}
-				studio.securityConfigService.requestSync(
-					"configDatabase",
-					[this.dbDataModelInput.getDataValue(),
-					 this.dbEntityInput.getDataValue(),
-					this.getEditorDisplayValue(this.dbUsernameInput),
-					this.getEditorDisplayValue(this.dbUseridInput),
-					this.getEditorDisplayValue(this.dbPasswordInput),
-					this.getEditorDisplayValue(this.dbRoleInput),
-					this.getEditorDisplayValue(this.tenantIdField) || "",
-					this.defTenantId.getDataValue() || 0,
-					rolesQuery,
-					this.secEnableInput.getChecked(),
-					this.showLoginPageInput.getChecked()],
-					dojo.hitch(this, "configDatabaseResult"));
-			    
-			} else if (t == "LDAP") {
-				studio.securityConfigService.requestSync(
-					"configLDAP",
-					[this.ldapUrlInput.getDataValue(),
-					this.ldapManagerDnInput.getDataValue(),
-					this.ldapManagerPasswordInput.getDataValue(),
-					this.ldapUserDnPatternInput.getDataValue(),
-					!this.ldapSearchRoleCheckbox.getChecked(),
-					this.ldapGroupSearchBaseInput.getDataValue(),
-					this.ldapGroupRoleAttributeInput.getDataValue(),
-					this.ldapGroupSearchFilterInput.getDataValue(),
-					this.secEnableInput.getChecked(),
-					this.showLoginPageInput.getChecked()],
-					dojo.hitch(this, "configLDAPResult"));
-			} else if (t == "JOSSO") {
-			    var roles = this.roleList._data;
-	    		studio.securityConfigService.requestSync(
-					"configJOSSO",
-					[this.secEnableInput.getChecked(), roles[0]],
-					dojo.hitch(this, "configJOSSOResult"));
-					studio.application.loadServerComponents();
-					studio.refreshServiceTree();
-					return;			
-		}
-			this.saveRolesSetup();
-			studio.application.loadServerComponents();
-			studio.refreshServiceTree();
-		    });
-		}
+	    studio.saveAll(this);
 	},
         toastToSuccess: function() {
+/*
 	    studio.endWait("Saving Security Settings");
             app.toastDialog.showToast("Security settings saved; Security is " + 
 				      (this.secEnableInput.getChecked() ? "ON" : "OFF"),
                                       5000,
                                       "Success");
-	    this.saveComplete();
+				      */
+	    this.onSaveSuccess();
         },
+        saveError: function(inError) {
+	    studio._saveErrors.push({owner: this,
+				     message: inError.message});
+	    this.saveComplete();
+	},
 	configDemoResult: function(inResponse) {
 		this.updateStudioServices();
                this.toastToSuccess();
@@ -803,13 +744,92 @@ dojo.declare("Security", wm.Page, {
 	return this._cachedData != this.getCachedData();
     },
     save: function() {
-	this.saveButtonClick();
+		if (this.secProviderInput.getDataValue() == this.SELECT_ONE) {
+			return;
+		}
+		var t = this.layers.getLayer().caption;
+		var err = this.checkErrorOnInputFields(t)
+		if (err) {
+		    studio._saveErrors.push({owner: this,
+					     message: err});
+		    this.saveComplete();
+		} else {
+			this.copyLoginFiles();
+		    //studio.beginWait("Saving Security Settings");
+		    wm.onidle(this, function() {
+			if (t == "Demo") {
+				studio.securityConfigService.requestSync(
+					"configDemo",
+					[this.demoUserList._data,
+					this.secEnableInput.getChecked(),
+					this.showLoginPageInput.getChecked()],
+				    dojo.hitch(this, "configDemoResult"),
+				    dojo.hitch(this, "saveError"));
+
+			} else if (t == "Database") {
+				var rolesQuery = null;
+				if (this.dbRoleBySQLCheckbox.getChecked()) {
+					rolesQuery = this.dbRoleBySQLInput.getDataValue();
+				}
+				studio.securityConfigService.requestSync(
+					"configDatabase",
+					[this.dbDataModelInput.getDataValue(),
+					 this.dbEntityInput.getDataValue(),
+					this.getEditorDisplayValue(this.dbUsernameInput),
+					this.getEditorDisplayValue(this.dbUseridInput),
+					this.getEditorDisplayValue(this.dbPasswordInput),
+					this.getEditorDisplayValue(this.dbRoleInput),
+					this.getEditorDisplayValue(this.tenantIdField) || "",
+					this.defTenantId.getDataValue() || 0,
+					rolesQuery,
+					this.secEnableInput.getChecked(),
+					this.showLoginPageInput.getChecked()],
+				    dojo.hitch(this, "configDatabaseResult"),
+				    dojo.hitch(this, "saveError")
+				);
+			    
+			} else if (t == "LDAP") {
+				studio.securityConfigService.requestSync(
+					"configLDAP",
+					[this.ldapUrlInput.getDataValue(),
+					this.ldapManagerDnInput.getDataValue(),
+					this.ldapManagerPasswordInput.getDataValue(),
+					this.ldapUserDnPatternInput.getDataValue(),
+					!this.ldapSearchRoleCheckbox.getChecked(),
+					this.ldapGroupSearchBaseInput.getDataValue(),
+					this.ldapGroupRoleAttributeInput.getDataValue(),
+					this.ldapGroupSearchFilterInput.getDataValue(),
+					this.secEnableInput.getChecked(),
+					this.showLoginPageInput.getChecked()],
+				    dojo.hitch(this, "configLDAPResult"),
+				    dojo.hitch(this, "saveError"));
+			} else if (t == "JOSSO") {
+			    var roles = this.roleList._data;
+	    		studio.securityConfigService.requestSync(
+					"configJOSSO",
+					[this.secEnableInput.getChecked(), roles[0]],
+					dojo.hitch(this, "configJOSSOResult"));
+					studio.application.loadServerComponents();
+					studio.refreshServiceTree();
+					return;			
+		}
+			this.saveRolesSetup();
+			studio.application.loadServerComponents();
+			studio.refreshServiceTree();
+		    });
+		}
+
     },
     saveComplete: function() {
+    },
+    onSaveSuccess: function() {
 	this._cachedData = this.getCachedData();
 	this.setDirty();
+	this.saveComplete();
     },
-
+    getProgressIncrement: function() {
+	return 5; //  1 tick is very fast; this is 5 times slower than that
+    },
 
 	_end: 0
 });

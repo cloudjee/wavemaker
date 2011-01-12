@@ -409,11 +409,13 @@ dojo.declare("LiveViewEditor", wm.Page, {
 	return this._cachedData != this.clientLiveView.write("") ;
     },
     save: function() {
-	this.saveLiveViewBtnClick();
+	// handled by studio.saveAll but save is also CALLED by studio.saveAll so don't try calling studio.saveAll here
     },
     saveComplete: function() {
     },
-
+    getProgressIncrement: function() {
+	return 1; //  1 tick is very fast
+    },
 
 	fieldEditorChanged: function(inSender, inDisplayValue, inDataValue) {
 		if (!this.viewField)
@@ -460,10 +462,13 @@ dojo.declare("LiveViewEditor", wm.Page, {
 		studio.refreshServiceTree();
 		studio.selected = null;
 		studio.select(this.clientLiveView);
-		studio.project.saveProject();
+	        //studio.project.saveProject();
+	        studio.saveAll(studio.project);
+	    dojo.connect(studio.project, "saveComplete", this, function() {
 	        this._cachedData = this.clientLiveView.write("");
 	        this.setDirty();
 	        this.saveComplete();
+	    });
 	},
 	delLiveViewBtnClick: function(inSender) {
 		var v = this.clientLiveView;

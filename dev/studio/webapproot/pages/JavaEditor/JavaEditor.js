@@ -47,12 +47,26 @@ dojo.declare("JavaEditor", wm.Page, {
      * interact with them
      */
     getDirty: function() {return this.isDirty;},
-    save: function() {
-	this.javaServiceSaveButtonClick();
-    },
+
+    /* Called when saving is done regardless of success/failure */
     saveComplete: function() {
+    },
+    onSaveSuccess: function() {
+	studio.project.setMetaDataFlag("service_invalid_" + this.javaService.getRuntimeId(), false);
+
+	dojo.removeClass(this.javaService._studioTreeNode.domNode, "Error");
 	this._cachedData = this.javaCodeEditor.getText();
 	this.setDirty();
+	this.saveComplete();
+    },
+    onSaveError: function() {
+	studio.project.setMetaDataFlag("service_invalid_" + this.javaService.getRuntimeId(), true);
+
+	dojo.addClass(this.javaService._studioTreeNode.domNode, "Error");
+	this.saveComplete();
+    },
+    getProgressIncrement: function() {
+	return 20; // saving java services is very slow...  1 tick is very fast; this is 20 times slower than that
     },
 
 	update: function() {
@@ -186,30 +200,39 @@ dojo.declare("JavaEditor", wm.Page, {
 	},
 	javaServiceSaveButtonClick: function(inSender) {
 		if (this.tree.serviceId) {
-			studio.beginWait("Saving Java service...");
-			studio.javaService.requestAsync("saveClass",
-				[this.tree.serviceId, this.javaCodeEditor.getText()],
-				dojo.hitch(this, "saveJavaServiceCallback"),
-				dojo.hitch(this, "saveJavaServiceErrorCallback"));
+		    //studio.beginWait("Saving Java service...");
+		    studio.saveAll(this);
 		}
 	},
+
+        save: function() {
+	    studio.javaService.requestAsync("saveClass",
+					    [this.tree.serviceId, this.javaCodeEditor.getText()],
+					    dojo.hitch(this, "saveJavaServiceCallback"),
+					    dojo.hitch(this, "saveJavaServiceErrorCallback"));
+	},
 	saveJavaServiceCallback: function(inData) {
-	        this._cachedData = this.javaCodeEditor.getText();
-	        this.isDirty = false;
 	    this.owner.parent.setCaption(this.tree.serviceId);
-		studio.endWait();
+	    //studio.endWait();
 		if (inData.buildSucceeded) {
 			this.update();
-                        app.toastSuccess("Compiled Successfully!");
+                    //app.toastSuccess("Compiled Successfully!");
 		} else {
-			app.alert('Save or compile failed; see compiler output or wm.log');
+		    studio._saveErrors.push({owner: this,
+					     message: 'Save or compile failed; see compiler output or wm.log'});
 		}
 		var m = (inData.buildSucceeded ? "Service Compiled Successfully" : "Service Compile Failed") + "\n\n";
 	        this.javaCompilerOutputEditor.setInputValue(m + inData.compileOutput.substring(inData.compileOutput.indexOf("compile:") + 9));
 		this.logViewer.page.clearLog();
 		this.updateJavaLogs();
 		this.openCmpOutBtnClick();
-	        this.saveComplete();
+		if (inData.buildSucceeded) {
+	            this.onSaveSuccess();
+	            this._cachedData = this.javaCodeEditor.getText();
+	            this.isDirty = false;
+		} else {
+		    this.onSaveError();
+		}
 	},
 	changeLogTab: function() {
 	    // TODO: Only call this if the server logs tab is selected
@@ -219,8 +242,10 @@ dojo.declare("JavaEditor", wm.Page, {
 	    this.logViewer.page.updateLog();
 	},
 	saveJavaServiceErrorCallback: function(inError) {
-		studio.endWait();
-		app.alert('Save or compile failed with message:\n'+inError.message +'\nSee wm.log or Compiler output');
+	        //studio.endWait();
+	    studio._saveErrors.push({owner: this,
+				     message: 'Save or compile failed with message:\n'+inError.message +'\nSee wm.log or Compiler output'});
+	    this.onSaveError();
 	},
     showEditorHelp: function() {
 	this.javaCodeEditor.showHelp();

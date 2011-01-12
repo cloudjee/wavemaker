@@ -219,11 +219,11 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	return this._cachedData != this.getCachedData();
     },
     save: function() {
-	this.saveAll();
+		this.saveEntity(); // calls saveColumns and saveRelationships
     },
-    saveComplete: function() {
+    getProgressIncrement: function(runtime) {
+	return runtime ? 0 : 20; // saving data model is very slow...  1 tick is very fast; this is 20 times slower than that
     },
-
 
 	clearTableDetails: function() {
 		this.tableDetailSchemaName.setDataValue("");
@@ -449,8 +449,13 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		var d = this.dataObject, n = d.name, t = d.table;
 		if (n || t) {
 			var getEntityInput = [n || null, t || null];
-			studio.dataService.requestSync("getEntity", getEntityInput, dojo.hitch(this, "getEntityResult"));
+
+		    studio.dataService.requestSync("getEntity", getEntityInput, dojo.hitch(this, "getEntityResult"));
+
+		    /* Allow the progress bar to update its position with a moments idle time */
+		    wm.onidle(this, function() {
 			studio.dataService.requestSync("getRelated", getEntityInput, dojo.hitch(this, "getRelatedResult"));
+		    });
 		}
 	},
 	getEntityResult: function(inResponse) {
@@ -526,7 +531,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	saveRelationships: function(inSender) {
 		this.relationshipsList.dijit.edit.apply();
 		var relatedProperties = this.getRelatedProperties();
-		studio.dataService.requestSync("updateRelated", 
+		studio.dataService.requestAsync("updateRelated", 
 				[this.currentDataModelName,
 				this.tableDetailEntityName.getDataValue(), 
 				relatedProperties], 
@@ -595,25 +600,28 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		}
 	},
 	relUpdateCompleted: function(inSender) {
-		this.saveAllCompleted();
+	        studio.incrementSaveProgressBar(6); // second save step
+	        this.onSaveSuccess();
 	},
 	relUpdateError: function(inError) {
-		studio.endWait();
 		var msg = "Failed to update related";
 		if (inError.message) {
 			msg += ": " + inError.message;
 		}
-		app.alert(msg);
+	    studio._saveErrors.push({owner: this,
+				     message: msg});
+	    this.saveComplete();
 	},
-	saveAllCompleted: function() {
+	saveComplete: function() {
+	},
+        onSaveSuccess: function() {
 		this.clearDetailDisplay();
 		this.initData();
 		this.setForeignKeyOnColumns();
 		studio.updateServices();
-		studio.endWait();
 		this.selectEntityNode();
 		studio.refreshServiceTree();
-            app.toastSuccess("Saved!");
+            //app.toastSuccess("Saved!");
 	    this.resetChanges(); // clears dirty flags
 	    this.saveComplete();
 	},
@@ -644,22 +652,24 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 			this._resetPrecisionAndLength(props[i].column);
 		}
 
-		studio.dataService.requestSync("updateColumns", 
+		studio.dataService.requestAsync("updateColumns", 
 					[this.currentDataModelName, 
 					entityName, columns, props],
 					dojo.hitch(this, "colUpdateCompleted"),
 					dojo.hitch(this, "colUpdateError"));
 	},
 	colUpdateCompleted: function(inSender) {
+	        studio.incrementSaveProgressBar(8); // first save step
 		this.saveRelationships();
 	},
 	colUpdateError: function(inError) {
-		studio.endWait();
 		var msg = "Failed to update columns";
 		if (inError.message) {
 			msg += ": " + inError.message;
 		}
-		app.alert(msg);
+	    studio._saveErrors.push({owner: this,
+				     message: msg});
+	    this.saveComplete();
 	},
 	getPropertiesForColumns: function() {
 		var n = this.findNode(this.tree.root, this.currentEntityName);
@@ -726,8 +736,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		return null;
 	},
 	saveAll: function(inSender) {
-		studio.beginWait("Saving " + this.currentDataModelName);
-		this.saveEntity(); // calls saveColumns and saveRelationships
+	    studio.saveAll(this); // calls this.save
 	},
 	getEntityNameFromTableName: function(tableName) {
 		return tableName.slice(0, 1).toUpperCase() + tableName.slice(1);
@@ -788,16 +797,17 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		if (saveColumns) {
 			this.saveColumns();
 		} else {
-			this.saveAllCompleted();
+	            this.onSaveSuccess();
 		}
 	},
 	isDirty: function() {
 		return this.onlyEntityIsDirty || this.propertiesAreDirty;
 	},
 	entityUpdateError: function(inError) {
-		studio.endWait();
 		if (inError.message) {
-			app.alert("Failed to update entity: " + inError.message);
+		    studio._saveErrors.push({owner: this,
+					     message: "Failed to update entity: " + inError.message});
+		    this.saveComplete();
 		}
 	},
 	detailColSelect: function(inSender, inItem) {
@@ -858,14 +868,12 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		//}
 	},
 	newDataModelError: function(inError) {
-		studio.endWait();
 		if (inError.message) {
 			app.alert("Failed to create datamodel: " + inError.message);
 		}
 		this.initData();
 	},
 	newDataModelResult: function() {
-		studio.endWait();
 		this.clearDetailDisplay();
 		this.pages.setLayer("objectquery");
 		this.initData();
@@ -932,7 +940,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		this.clearDetailDisplay();
 		this.initData();
 		this.expandCurrentTypesNode();
-		this.saveAllCompleted();
+		this.saveComplete();
 	},
 	deleteEntityFailed: function() {
 		studio.endWait();

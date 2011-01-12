@@ -132,6 +132,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    document.body.appendChild(this.domNode);
 
 	this.dialogScrim = new wm.Scrim({owner: this, _classes: {domNode: ["wmdialog-scrim"]}, waitCursor: false});
+
 	this.createTitle();
     },
 	postInit: function() {

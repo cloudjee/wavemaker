@@ -40,12 +40,18 @@ Studio.widgets = {
 	canvasToolbarImageList16: ["wm.ImageList", {width: "16", height: "16", colCount: 22, url: "images/canvasToolbarBtns16.png"}, {}],        
     contextualMenu: ["wm.PopupMenu", {"fullStructureStr":"[{\"label\":\"Help\",\"iconClass\":undefined,\"imageList\":null,\"children\":[]}]"},{onclick: "contextualMenuClick"}],
         genericDialog: ["wm.GenericDialog", {}],
-    startPageDialog: ["wm.PageDialog", {width: "764px", height: "460px", title: "", modal: true, hideControls: true, noEscape: true, pageName: "Start", border: "4", borderColor: "#222222", corner: "cc"}],
+    startPageDialog: ["wm.PageDialog", {width: "764px", height: "460px", title: "", modal: true, hideControls: true, noEscape: true, pageName: "Start", border: "4", borderColor: "#222222", corner: "cc", }],
     deploymentDialog: ["wm.PageDialog", {width: "800px", height: "550px", title: "Deployment", modal: true, hideControls: true, noEscape: true, pageName: "DeploymentDialog", deferLoad: true}],
     loginDialog: ["wm.PageDialog", {width: "250px", height: "325px", title: "Login", modal: true, hideControls: true, noEscape: true, pageName: "Login", deferLoad: true}],
     listUnsavedDialog: ["wm.PageDialog", {width: "250px", height: "325px", title: "Unsaved Tabs?", hideControls: true, modal: true, noEscape: true, pageName: "ListUnsavedDialog"}],
     newProjectDialog: ["wm.PageDialog", {width: "487px", height: "460px", title: "New Project", modal: true, hideControls: true, noEscape: false, pageName: "", border: "4", borderColor: "#222222", titlebarBorder: "1"}],
     helpDialog: ["wm.GenericDialog", {"height":"77px","modal":false,"noEscape":false,"title":"Help","userPrompt":"","width":"300px", modal: false,button1Caption: "OK", button1Close: true, corner: "tr"}, {}],
+    progressDialog: ["wm.DesignableDialog", {width: "350px", height: "100px", title: "", modal: true, noEscape: true}, {}, {
+	progressDialogContainer: ["wm.Container", {"_classes":{"domNode":["wmdialogcontainer","MainContent"]},"height":"100%","horizontalAlign":"left","margin":"0","padding":"10","verticalAlign":"top","width":"100%"}, {}, {
+	    saveDialogProgress: ["wm.dijit.ProgressBar", {width: "100%", height: "48px", progress: 0}],
+	    saveDialogLabel: ["wm.Label", {width: "100%", height: "30px", align: "center"}]
+    }]
+    }],
 	layout: ["wm.Layout", {height: "100%"}, {}, {
 	    dialog: ["wm.Dialog", {height: "400px", border: "1", borderColor: "#666E80", _noAnimation: true}, {}],
 		

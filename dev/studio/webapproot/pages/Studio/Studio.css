@@ -1630,6 +1630,10 @@ background-color: transparent;
 }
 
 
+.Studio .Error .wmtree-content {
+    color: red;
+}
+
 .Studio .wmdraggabletree .wmtree-content {
     height: 16px;
 }

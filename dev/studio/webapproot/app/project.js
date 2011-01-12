@@ -193,7 +193,10 @@ dojo.declare("wm.studio.Project", null, {
 	var layers = studio.tabs.layers;
 	for (var i = layers.length-1; i >= 0; i--) 
 	    if (layers[i].closable) {
-		dojo.forEach(layers[i].c$[0].layers, function(l) {l.destroy();})
+		var sublayers = layers[i].c$[0].layers;
+		for (var j = sublayers.length-1; j >= 0; j--) {
+		    sublayers[j].destroy();
+		}
 		layers[i].hide();
 	    }
     },
@@ -263,13 +266,17 @@ dojo.declare("wm.studio.Project", null, {
             inProps = inProps || {};
 	    var ctor = dojo.getObject(this.projectName);
 	    if (ctor) {
-		        studio.application = new ctor(dojo.mixin({ _designer: studio.designer }, inProps));
-		        for (var i in this.projectData.documentation) {
-                            if (studio.application.components[i])
-			        studio.application.components[i].documentation = this.projectData.documentation[i];
-                            else
-                                console.error("studio.application.components[" + i + "] not found for setting documentation: " + this.projectData.documentation[i]);
-			}
+		studio.application = new ctor(dojo.mixin({ _designer: studio.designer }, inProps));
+		for (var i in this.projectData.documentation) {
+                    if (studio.application.components[i])
+			studio.application.components[i].documentation = this.projectData.documentation[i];
+		    else if (i == "__metaData")
+			studio.application._metaData = this.projectData.documentation[i];
+                    else
+                        console.error("studio.application.components[" + i + "] not found for setting documentation: " + this.projectData.documentation[i]);
+		}
+		if (!studio.application._metaData)
+		    studio.application._metaData = {};
 		studio.updatePagesMenu(); // now that we have a studio.application object		
 	    }
 	},
@@ -300,17 +307,25 @@ dojo.declare("wm.studio.Project", null, {
 	//=========================================================================
 	// Save
 	//=========================================================================
+    save: function() {
+	this.saveProject(false,false);
+    },
         saveProject: function(isDeployment, saveAll) {
                 this.deployingProject = isDeployment;
-		this.saveApplication(); // synchronous
-		this.savePage(); // synchronous
-
-            // in case the theme has changed, resave the login.html page (synchronous)
-	    if (webFileExists("login.html")) {
-		var templateFolder = dojo.moduleUrl("wm.studio.app") + "templates/security/";
-		var loginhtml = loadDataSync(templateFolder + "login.html");
-		studio.project.saveProjectData("login.html", wm.makeLoginHtml(loginhtml, studio.project.projectName, studio.application.theme));
-            }
+	    this.saveApplication(dojo.hitch(this, function() {
+		this.savePage(dojo.hitch(this, function() {
+	            studio.setSaveProgressBarMessage("login.html");
+		    // in case the theme has changed, resave the login.html page (synchronous)
+		    if (webFileExists("login.html")) {
+			var templateFolder = dojo.moduleUrl("wm.studio.app") + "templates/security/";
+			var loginhtml = loadDataSync(templateFolder + "login.html");
+			studio.project.saveProjectData("login.html", wm.makeLoginHtml(loginhtml, studio.project.projectName, studio.application.theme));
+		    }
+	            studio.incrementSaveProgressBar(1);
+		    this.saveComplete();
+		}));
+	    }));
+/*
 	    studio.updatePagesMenu();
 
 	    // everything here is asynchronous; if we need to save all, then find all unsaved
@@ -329,16 +344,20 @@ dojo.declare("wm.studio.Project", null, {
 		if (unsavedPages.length > 0) {
 		    studio.listUnsavedDialog.page.setUnsaved(unsavedPages);
 		    studio.listUnsavedDialog.page.onDone = dojo.hitch(this, function() {
-			this.projectSaveComplete();
+			this.saveComplete();
 		    });
 		    studio.listUnsavedDialog.show();
 		    return;
 		}
 	    }
-	    this.projectSaveComplete();
+	    */
+
 	},
-    projectSaveComplete: function() {
+    // finished saving the project files (but not necesarily the service files)
+    saveComplete: function() {
+/*
             app.toastSuccess("Project Saved!");
+	    */
 	    wm.job("studio.updateDirtyBit",10, function() {studio.updateProjectDirty();});
     },
 	saveScript: function() {
@@ -361,48 +380,102 @@ dojo.declare("wm.studio.Project", null, {
 	    //return studio.projectPrefix + this.projectName;
 	     return this.projectName;
 	},
-	saveApplication: function() {
+    getProgressIncrement: function(runtime) {
+	return runtime ? 0 : 12;
+    },
+	saveApplication: function(callback) {
+
+	    var f = [];
+
+
 	        studio.application.incSubversionNumber();
 	        try {
 		    studio.application.setValue("studioVersion", wm.studioConfig.studioVersion);
 		}catch(e) {console.error("Failed to write studio version to project file");}
 	        if (studio.tree.selected && studio.tree.selected.component == studio.application)
 		    studio.inspector.reinspect();
+		
 
-		var src = this.generateApplicationSource()
-		this.saveProjectData(this.projectName + ".js", src);
-	    //studio["_cachedEditDataappsourceEditor"] = studio.appsourceEditor.getText();
-	        var appdocumentation = studio.application.getDocumentationHash();
-	        this.saveProjectData(this.projectName + ".documentation.json", dojo.toJson(appdocumentation, true));
+	    var c = wm.studioConfig;
+
+	    f.push(dojo.hitch(this, function() {
+		    var src = this.generateApplicationSource()
+	            studio.setSaveProgressBarMessage(this.projectName + ".js");
+		    this.saveProjectData(this.projectName + ".js", src);
+	            studio.incrementSaveProgressBar(1);
+	    }));
+
+	    f.push(dojo.hitch(this, function() {
+			studio.setSaveProgressBarMessage(this.projectName + ".documentation.json");
+			var appdocumentation = studio.application.getDocumentationHash();
+			this.saveProjectData(this.projectName + ".documentation.json", dojo.toJson(appdocumentation, true));
+			studio.incrementSaveProgressBar(1);
+	    }));
+
+
+	    f.push(dojo.hitch(this, function() {
 		// save html file, config file, and debug loader + css
-		var c = wm.studioConfig;
-		    this.saveProjectData(c.appIndexFileName, makeIndexHtml(this.projectName, studio.application.theme), true);
+	        studio.setSaveProgressBarMessage(c.appIndexFileName);
+	        this.saveProjectData(c.appIndexFileName, makeIndexHtml(this.projectName, studio.application.theme), true);
+	        studio.incrementSaveProgressBar(1);
+	    }));
 
+	    f.push(dojo.hitch(this, function() {
 		/* 
 		// Fix config.js if there is a username associated with this project (projectdir contains username or is empty string)
 		if (window.studio && studio.getProjectDir() &&  c.appConfigTemplate.indexOf('"../wavemaker/') != -1) {
 		    c.appConfigTemplate = c.appConfigTemplate.replace('"../wavemaker/', '"../../wavemaker/');
 		}	
 		*/	
+	        studio.setSaveProgressBarMessage(c.appConfigFileName);
 		this.saveProjectData(c.appConfigFileName, c.appConfigTemplate, true);
+	        studio.incrementSaveProgressBar(1);
+	    }));
 
-            var themename = studio.application.theme;
-            var path;
-            if (this.deployingProject)
-                path = (themename.match(/^wm_/)) ? "lib/wm/base/widget/themes/" + themename + "/theme.css" : "lib/wm/common/themes/" + themename + "/theme.css";
-            else
-                path = (themename.match(/^wm_/)) ? "/wavemaker/lib/wm/base/widget/themes/" + themename + "/theme.css" : "/wavemaker/lib/wm/common/themes/" + themename + "/theme.css";
+	    f.push(dojo.hitch(this, function() {
+		var themename = studio.application.theme;
+		var path;
+		if (this.deployingProject)
+                    path = (themename.match(/^wm_/)) ? "lib/wm/base/widget/themes/" + themename + "/theme.css" : "lib/wm/common/themes/" + themename + "/theme.css";
+		else
+                    path = (themename.match(/^wm_/)) ? "/wavemaker/lib/wm/base/widget/themes/" + themename + "/theme.css" : "/wavemaker/lib/wm/common/themes/" + themename + "/theme.css";
 
-	    this.saveProjectData(c.appCssFileName, '@import "' + path + '";\n' +  studio.getAppCss());
-	    //studio["_cachedEditDataappCssEditArea"] = studio.appCssEditArea.getText();
+		studio.setSaveProgressBarMessage(c.appCssFileName);
+		this.saveProjectData(c.appCssFileName, '@import "' + path + '";\n' +  studio.getAppCss());
+		studio.incrementSaveProgressBar(1);
+	    }));
 
+	    f.push(dojo.hitch(this, function() {
+		studio.setSaveProgressBarMessage(c.appDebugBootFileName);
 		this.saveProjectData(c.appDebugBootFileName, '', true);
+		studio.incrementSaveProgressBar(1);
+
 		if (wm.studioConfig.isPalmApp) {
-			this.saveProjectData(c.appPalmAppInfoFileName, makePalmAppInfo(this.projectName), true);
-			this.saveProjectData("app/views/first/first-scene.html", "", true);
+		    this.saveProjectData(c.appPalmAppInfoFileName, makePalmAppInfo(this.projectName), true);
+		    this.saveProjectData("app/views/first/first-scene.html", "", true);
 		}
 		studio.setCleanApp();
+	    }));
+		   
+	    f.push(callback);
+	    
+	    // In order to update the progress bar, we need a moment of idle time between each step.  For the cost of some 
+	    // extra code and 12 extra miliseconds, we get a progres bar.
+	    wm.onidleChain(f);
+				       
 	},
+
+    // Right now, the documentation files are our only place for storing project meta data... stuff that should be widget level properties,
+    // but which should not show up at runtime.  So we need a quick way to change them and save them
+    setMetaDataFlag: function(key,value) {
+	if (!studio.application._metaData)
+	    studio.application._metaData = {};
+	if (studio.application._metaData[key] != value) {
+	    studio.application._metaData[key] = value;
+	    var appdocumentation = studio.application.getDocumentationHash();
+	    this.saveProjectData(this.projectName + ".documentation.json", dojo.toJson(appdocumentation, true));
+	}
+    },
 	generateApplicationSource: function() {
 /*
 		var main = studio.application.main || "Main";
@@ -434,18 +507,47 @@ dojo.declare("wm.studio.Project", null, {
 		this.pagesChanged();
 		this.openPage(this.pageName);
 	},
-	savePage: function() {
+	savePage: function(callback) {
+	    var f = [];
+
+	    f.push(dojo.hitch(this, function() {
+		studio.setSaveProgressBarMessage(this.pageName + ".js");
 		this.savePageData(this.pageName + ".js", studio.getScript());
-	    //studio["_cachedEditDataeditArea"] = studio.getScript();
+		studio.incrementSaveProgressBar(1);
+	    }));
+
+	    f.push(dojo.hitch(this, function() {
+		studio.setSaveProgressBarMessage(this.pageName + ".widgets.js");
 		this.savePageData(this.pageName + ".widgets.js", studio.getWidgets());
-	    //studio["_cachedEditDatacssEditArea"] = studio.getCss();
-	    
+		studio.incrementSaveProgressBar(1);
+	    }));
+
+	    f.push(dojo.hitch(this, function() {	    
+		studio.setSaveProgressBarMessage(this.pageName + ".css");
 		this.savePageData(this.pageName + ".css", studio.getCss());
+		studio.incrementSaveProgressBar(1);
+	    }));
+
+	    f.push(dojo.hitch(this, function() {
+		studio.setSaveProgressBarMessage(this.pageName + ".html");
 		this.savePageData(this.pageName + ".html", studio.getMarkup());
-	    //studio["_cachedEditDatamarkupEditArea"] = studio.getMarkup();
-	        var documentation = studio.page.getDocumentationHash();
-	        this.savePageData(this.pageName + ".documentation.json", dojo.toJson(documentation, true));
+		studio.incrementSaveProgressBar(1);
+	    }));
+
+	    f.push(dojo.hitch(this, function() {
+		studio.setSaveProgressBarMessage(this.pageName + ".documentation");
+		var documentation = studio.page.getDocumentationHash();
+		this.savePageData(this.pageName + ".documentation.json", dojo.toJson(documentation, true));
+		studio.incrementSaveProgressBar(1);
 		studio.setCleanPage();
+	    }));
+	    
+	    f.push(callback);
+
+	    // In order to update the progress bar, we need a moment of idle time between each step.  For the cost of some 
+	    // extra code and 12 extra miliseconds, we get a progres bar.
+	    wm.onidleChain(f);
+
 	},
 	saveProjectData: function(inPath, inData, inNoOverwrite) {
 		return studio.studioService.requestSync("writeWebFile", [inPath, inData, inNoOverwrite||false]);
@@ -566,7 +668,8 @@ dojo.declare("wm.studio.Project", null, {
 	},
 	pageChanged: function() {
 		studio.pageChanged(this.pageName, this.pageData || {});
-	}
+	},
+        getDirty: function() {return studio.updateProjectDirty();}
 });
 
 //=========================================================================
@@ -634,9 +737,11 @@ Studio.extend({
      */
         updateProjectDirty: function() {
 	    if (!studio.application) return;
-	    this.updateCanvasDirty();
-	    this.updateSourceDirty();
-	    this.updateServicesDirtyTabIndicators();
+	    var dirty = false;
+	    dirty = this.updateCanvasDirty() || dirty;
+	    dirty = this.updateSourceDirty() || dirty;
+	    dirty = this.updateServicesDirtyTabIndicators() || dirty;
+	    return dirty;
 	},
 
     /* Called by updateProjectDirty; 
@@ -663,6 +768,7 @@ Studio.extend({
 		caption = caption.replace(/^.*\/\>\s*/,"");
 		this.workspace.setCaption(caption);
 	    }
+	    return dirty;
 	},
 
     /* Called by updateProjectDirty; Updates the dirty indicators for each source tab based on whether or not the current value matches the saved value */
@@ -687,6 +793,7 @@ Studio.extend({
 		caption = caption.replace(/^.*\/\>\s*/,"");
 		this.sourceTab.setCaption(caption);
 	    }
+	    return dirty;
 	},
 
     /* Called by updateSourceDirty; 
@@ -875,14 +982,17 @@ Studio.extend({
 	welcomeOpenClick: function() {
 		this.projects.activate();
 	},
-	saveProjectClick: function() {
-	    this.waitForCallback(bundleDialog.M_SavingProject + this.project.projectName, dojo.hitch(this.project, "saveProject", false, true));
+	saveProjectClick: function() {	    
+	    this.saveAll(studio.project);
+	    //this.waitForCallback(bundleDialog.M_SavingProject + this.project.projectName, dojo.hitch(this.project, "saveProject", false, true));
 	},
 	saveCssClick: function() {
-		this.waitForCallback(bundleDialog.M_SavingCSS + this.project.projectName, dojo.hitch(this.project, "saveCss"));
+	    this.saveAll(studio.project);
+	    //this.waitForCallback(bundleDialog.M_SavingCSS + this.project.projectName, dojo.hitch(this.project, "saveCss"));
 	},
 	saveMarkupClick: function() {
-		this.waitForCallback(bundleDialog.M_SavingMarkup + this.project.projectName, dojo.hitch(this.project, "saveMarkup"));
+	    this.saveAll(studio.project);
+	    //this.waitForCallback(bundleDialog.M_SavingMarkup + this.project.projectName, dojo.hitch(this.project, "saveMarkup"));
 	},
 	savePageAsClick: function() {
 	    this.promptForName("page", this.page.declaredClass, this.project.getPageList(), 
@@ -891,6 +1001,117 @@ Studio.extend({
 			               this.waitForCallback(bundleDialog.M_SavingPageAs + n, dojo.hitch(this.project, "savePageAs", n));
                                }));                                         
 	},
+        /* firstSaveCall: What we want is a short delay after we show the progress bar before we start saving.
+	 *                This delay allows the progress bar to render before we start saving.  
+	 * Usage:         Typical usage follows these steps
+	 *     1: Figure out how many things need to be saved so that the progress bar can be given a suitable range of values
+	 *     2: Show the dialog with the progress bar
+	 *     3: call firstSaveCall which should save whatever service/page requested the save
+	 *     4: firstSaveCall will call setSaveProgressBarMessage
+	 *     5: If firstSaveCall is successful, it will then call save on everything else that is unsaved
+	 */
+        saveAll: function(saveOwner) {
+	    this.saveDialogProgress.setProgress(0);
+	    this.saveDialogLabel.setCaption("Starting save...");
+	    this.progressDialog.show();
+	    this._saveErrors = [];
+	    
+	    /* If any source tab, canvas or app level variables are unsaved, then all source, canvas and app are saved at this time;
+	     * so if any of them are dirty, thats 6 saves in saveApplication (7 if there is a login.html file),
+	     * and 5 saves for the page level data; so if canvas or source are dirty, thats 12 save operations
+	     */
+	    var counter = 0;
+	    this._unsavedPages = [];
+
+	var tabs = [this.JavaEditorSubTab, this.databaseSubTab, this.webServiceSubTab, this.securitySubTab];
+	for (var i = 0; i < tabs.length; i++) {
+	    var tab = tabs[i];
+	    for (var j = 0; j < tab.layers.length; j++) {
+		var layer = tab.layers[j];
+		if (layer.c$.length == 0) continue;
+		var page = layer.c$[0].page;
+		if (page && page.getDirty && page.getDirty()) {
+		    counter += page.getProgressIncrement();
+		    this._unsavedPages.push(page);
+		}
+	    }
+	}
+
+	    if (this.updateCanvasDirty() || this.updateSourceDirty()) {
+		counter += this.project.getProgressIncrement();
+		this._unsavedPages.push(this.project);
+	    }
+
+	    this._saveProgressMax = counter;
+	    this._saveProgressCurrent = 0;
+	    this.setSaveProgressBarMessage(saveOwner.owner ? "Saving " + saveOwner.owner.parent.caption.replace(/\<.*?\>\s*/,"") : "");
+	    this._saveNextConnection = dojo.connect(saveOwner, "saveComplete", this, function() {
+		// if the first one fails, don't bother trying to save all the others
+		if (this._saveErrors.length) {
+		    app.alert(this._saveErrors[0].message);
+		    this.progressDialog.hide();
+		    dojo.disconnect(this._saveNextConnection);
+		    return;
+		}
+
+		var inc = saveOwner.getProgressIncrement(true);
+		this.incrementSaveProgressBar(inc);
+		this.saveNext();
+	    });
+	    wm.Array.removeElement(this._unsavedPages, saveOwner);
+	    wm.onidle(saveOwner, "save");
+	},
+	setSaveProgressBarMessage: function(inMessage) {
+	    this.saveDialogLabel.setCaption(inMessage);
+	},
+    incrementSaveProgressBar: function(delta) {
+	this._saveProgressCurrent += delta;
+	this.saveDialogProgress.setProgress(this._saveProgressCurrent * 100 / this._saveProgressMax);	
+    },
+/* TODO: if save fails, need to keep on saving next; so need to not only connect on saveComplete, but also saveError AND
+ * store a log of all errors to show the user when done 
+ */
+    saveNext: function() {
+	if (this._saveNextConnection)
+	    dojo.disconnect(this._saveNextConnection);
+
+	var page = this._unsavedPages.shift();
+	if (!page && this._unsavedPages.length == 0) {
+	    this.saveProjectComplete();
+	    return;
+	}
+	if (page && page.getDirty()) {
+	    this.setSaveProgressBarMessage(page.owner ? "Saving " + page.owner.parent.caption.replace(/\<.*?\>\s*/,"") : "");
+	    this._saveNextConnection = dojo.connect(page, "saveComplete", this, function() {
+		var inc = page.getProgressIncrement(true);
+		this.incrementSaveProgressBar(inc);
+		this.saveNext();
+	    });
+	    page.save();
+	} else {
+	    this.saveNext();
+	}
+    },
+    saveProjectComplete: function() {
+	this.progressDialog.hide();
+	app.toastSuccess("Project Saved");
+
+	if (this._saveErrors.length) {
+	    var text = "";
+	    for (var i = 0; i < this._saveErrors.length; i++) {
+		var owner = this._saveErrors[i].owner;
+		text += "<b>";
+		if (owner instanceof wm.Page) {
+		    text += owner.owner.parent.caption.replace(/\<.*?\>\s*/,"");
+		} else {
+		    text += "Project Files";
+		}
+		text += "</b>: " + this._saveErrors[i].message + "<br/>";
+	    }
+	    app.alert(text);
+	}
+    },
+
 	beginBind: function(inPropName, editArea, type) {
 	    var bd = this.getBindDialog();
 		    //p = this.getBindDialogProps(inPropName),
@@ -1188,7 +1409,7 @@ Studio.extend({
 
 	    /* Clear any prior connections... esp for runs that don't make it to projectSaveComplete */
 	    for (var i = 0; i < this._runConnections.length; i++) dojo.disconnect(this._runConnections[i]);
-	    this._runConnections.push(dojo.connect(this.project,"projectSaveComplete", this, function() {
+	    this._runConnections.push(dojo.connect(this.project,"saveComplete", this, function() {
 
 		/* Clear this connection */
 		for (var i = 0; i < this._runConnections.length; i++) dojo.disconnect(this._runConnections[i]);
