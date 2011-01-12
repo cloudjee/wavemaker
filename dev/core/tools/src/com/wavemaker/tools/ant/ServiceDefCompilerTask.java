@@ -80,7 +80,7 @@ public class ServiceDefCompilerTask extends CompilerTask {
     protected void doExecute() {
 
         DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(
-                getProjectRoot());
+                getProjectRoot(), true); //yyy
 
         for (NestedService ns: nestedServices) {
             String serviceId = ns.getServiceId();
