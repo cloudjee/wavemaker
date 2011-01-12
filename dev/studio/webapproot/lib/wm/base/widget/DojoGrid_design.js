@@ -128,6 +128,7 @@ wm.DojoGrid.extend({
 			this.contextMenu.hide();
 			eventEdit(this, '_formatterSignature', evtName, true);
 		}	
+	    wm.onidle(studio, "updateCanvasDirty");
 	},
 	_formatterSignature: function(inValue, rowId, cellId, cellField, cellObj, rowObj){
 	},

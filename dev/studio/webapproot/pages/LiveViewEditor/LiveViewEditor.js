@@ -410,6 +410,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
     },
     save: function() {
 	// handled by studio.saveAll but save is also CALLED by studio.saveAll so don't try calling studio.saveAll here
+	this.saveComplete();
     },
     saveComplete: function() {
     },
