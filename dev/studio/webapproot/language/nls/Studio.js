@@ -44,6 +44,7 @@
 	"M_ImportProject" : "Import Project...",
 	"M_Deployment" : "Deployment...",
 	"M_Preferences" : "Preferences...",
+	"M_License" : "Enter License...",
 	"M_Edit" : "Edit",
 	"M_Cut" : "Cut",
 	"M_Copy" : "Copy",

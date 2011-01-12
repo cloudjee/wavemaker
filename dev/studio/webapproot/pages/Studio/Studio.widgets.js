@@ -104,7 +104,11 @@ Studio.widgets = {
                                                               {"label": bundleStudio.M_Preferences,
 							       idInPage: "preferencesItem",
 							       onClick: "projectSettingsClick",
-							       iconClass: "preferencesItem"}
+							       iconClass: "preferencesItem"},
+                                                              {"label": bundleStudio.M_License,
+							       idInPage: "licenseItem",
+							       onClick: "showLicenseDialogClick",
+							       iconClass: "Studio_silkIconImageList_59"}
 							 ]},
 								{"label": bundleStudio.M_Edit,
 								idInPage: "editPopupBtn",

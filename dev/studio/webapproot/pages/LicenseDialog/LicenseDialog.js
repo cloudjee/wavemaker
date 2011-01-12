@@ -28,5 +28,8 @@ dojo.declare("LicenseDialog", wm.Page, {
         onError: function(inSender, inError) {
 	    this.resultLabel.setCaption(inError);
 	},
+    dismiss: function() {
+	studio.startPageDialog.page.tabLayers1.setLayerIndex(0);
+    },
 	_end: 0
 });

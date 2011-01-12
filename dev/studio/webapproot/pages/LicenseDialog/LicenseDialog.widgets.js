@@ -36,8 +36,8 @@ LicenseDialog.widgets = {
 				      {onSuccess: "onSuccess", onError: "onError"}],
 		    resultPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right"}, {}, {
 			resultLabel: ["wm.Label", {width: "100%", height: "100%", caption: "", singleLine: false}]
-		    }]
-
-		}]
+		    }],
+		closeButton: ["wm.Button", {width: "100px", caption: "Cancel", showing: false}, {onclick: "dismiss"}]
+	    }]
 	}]
 }

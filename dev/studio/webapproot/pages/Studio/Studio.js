@@ -139,6 +139,12 @@ dojo.declare("Studio", wm.Page, {
 
 	    if (studio.isModuleEnabled("security-driver", "wm.josso")) { // if isEnterprise
 		this.setupLicenseInfoLabel();
+	    } else {
+		this.licenseItem.domNode.style.display = "none";
+		var fileMenuItems = studio.navigationMenu.fullStructure[0].children;
+		var deleteIndex = wm.Array.indexOf(fileMenuItems, "licenseItem", function(item,value) {return item.idInPage == value;});
+		if (deleteIndex != -1)
+		    wm.Array.removeElementAt(fileMenuItems, deleteIndex);
 	    }
 
 
@@ -1118,10 +1124,13 @@ dojo.declare("Studio", wm.Page, {
 	    var doc = win.document.open("text/html");
 	    doc.write(this.appDocViewer.html);
 	    doc.write("<script>window.setTimeout(function() {window.print();}, 100);</script>");
-	    doc.close();
-	    
-
+	    doc.close();	    
 	},
+    showLicenseDialogClick: function() {
+	this.startPageDialog.show();
+	this.startPageDialog.page.licenseLayer.activate();
+	this.startPageDialog.page.licensePage.page.closeButton.show();
+    },
 	treeSelect: function(inSender, inNode) {
 		this.treeNodeSelect(inNode);
 		//this.select(inNode.component);
