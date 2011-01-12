@@ -413,6 +413,8 @@ dojo.declare("LiveViewEditor", wm.Page, {
 	this.saveComplete();
     },
     saveComplete: function() {
+	this._cachedData = this.clientLiveView.write("");
+	this.setDirty();
     },
     getProgressIncrement: function() {
 	return 1; //  1 tick is very fast
