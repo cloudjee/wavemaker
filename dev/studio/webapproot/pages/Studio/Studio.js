@@ -1019,7 +1019,7 @@ dojo.declare("Studio", wm.Page, {
 			wm.fire(this.welcomePane.page, "update");
 	},*/
 	tabsCanChange: function(inSender, inChangeInfo) {
-		switch (inSender.getLayerCaption()) {
+	    switch (inSender.getLayerCaption().replace(/^\<.*?\>\s*/,"")) {
 			case bundleStudio.R_IDE:
 				setTimeout(dojo.hitch(this, function() {
 					this.cssChanged();
@@ -1027,7 +1027,7 @@ dojo.declare("Studio", wm.Page, {
 				}), 100);
 				break;
 		}
-		switch (inSender.getLayerCaption(inChangeInfo.newIndex)) {
+		switch (inSender.getLayerCaption(inChangeInfo.newIndex).replace(/^\<.*?\>\s*/,"")) {
 			case bundleStudio.R_IDE:
 				this.widgetsHtml.setHtml('<pre style="padding: 0; width: 100%; height: 100%;">' + this.getWidgets() + "</pre>");
 		                var appsrc = this.project.generateApplicationSource();
@@ -1041,7 +1041,7 @@ dojo.declare("Studio", wm.Page, {
 	tabsChange: function(inSender) {
 	    if (!studio.page) return;
 	    
-		var caption = inSender.getLayerCaption();
+		var caption = inSender.getLayerCaption().replace(/^\<.*?\>\s*/,"");
 
 		switch (caption) {
 			case bundleStudio.R_IDE:
@@ -1081,7 +1081,7 @@ dojo.declare("Studio", wm.Page, {
 	sourceTabsCanChange: function(inSender, inChangeInfo) {
 	},
 	sourceTabsChange: function(inSender) {
-		var caption = inSender.getLayerCaption();
+		var caption = inSender.getLayerCaption().replace(/^\<.*?\>\s*/,"");
 
             // darksnazzy messes with users ability to edit themes
                 dojo[(caption == bundleStudio.R_Themes) ? "removeClass" : "addClass"](this.sourceTab.domNode, "wm-darksnazzy");
