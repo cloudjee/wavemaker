@@ -808,7 +808,12 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 	padding: 0px;
 }
 
-.Studio-dataObjectsPane_dataObjectsEditor_label1, .Studio-dataObjectsPane_dataObjectsEditor_label, .Studio-dataObjectsPane_dataObjectsEditor_label2, .Studio-dataObjectsPane_dataObjectsEditor_pageContainer_queryEditor_label6, .Studio-dataObjectsPane_dataObjectsEditor_pageContainer_queryEditor_label8, .Studio-dataObjectsPane_dataObjectsEditor_label100 {
+.Studio-dataObjectsPane_dataObjectsEditor_label1, 
+.Studio-dataObjectsPane_dataObjectsEditor_label, 
+.Studio-dataObjectsPane_dataObjectsEditor_label2,
+.Studio-dataObjectsPane_dataObjectsEditor_pageContainer_queryEditor_label6, 
+.Studio-dataObjectsPane_dataObjectsEditor_pageContainer_queryEditor_label8, 
+.Studio-dataObjectsPane_dataObjectsEditor_label100 {
 	background-image:url(images/topbar_bg.gif);
 	background-repeat:repeat-x;
 	border-bottom: 1px solid #c1c1c1;
@@ -816,6 +821,7 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 	font-weight: normal;
 	font-size: 100%;
 }
+
 
 .Studio-dataObjectsPane_dataObjectsEditor_label1, .Studio-dataObjectsPane_dataObjectsEditor_label, .Studio-dataObjectsPane_dataObjectsEditor_pageContainer_queryEditor_label8 {
 	border-top: 1px solid #c1c1c1;
@@ -1471,6 +1477,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 	background-color: #5e6678;
 	background-image:none;
 	color: #FFF;
+    padding: 2px 5px 3px 5px;
 }
 
 .wm-darksnazzy .wmtablayers-selected,
