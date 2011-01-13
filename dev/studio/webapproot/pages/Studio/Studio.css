@@ -53,7 +53,9 @@
 
 table.studio_navigationMenu_PopupMenu,
 table.studio_navigationMenu_PopupMenu.dijitMenu,
-table.studio_navigationMenu_PopupMenu .dijitMenuItem {
+table.studio_navigationMenu_PopupMenu .dijitMenuItem,
+table.studio_contextualMenu_CSS.dijitMenu,
+table.studio_contextualMenu_CSS .dijitMenuItem {
 	background-color: #6f798a;
 	color: #FFF;
 /*
@@ -68,7 +70,9 @@ table.studio_navigationMenu_PopupMenu .dijitMenuItem {
 
 
 table.studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemHover,
-table.studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemSelected {
+table.studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemSelected,
+table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemHover,
+table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
   background-color: #586981;
 }
 /*
@@ -200,6 +204,22 @@ table.studio_navigationMenu_PopupMenu .dijitMenuItem {
 
 .setHomePageItem {
    background: transparent url(images/smallToolbarBtns.png) no-repeat scroll -32px 0px;		
+}
+
+table.studio_contextualMenu_CSS .dijitMenuItem .wm_tablayers {
+    background-image: url(/wavemaker/images/wm/tabbook.png)
+}
+
+table.studio_contextualMenu_CSS .dijitMenuItem .wm_wizardlayers {
+    background-image: url(/wavemaker/images/wm/tabbook.png)
+}
+
+table.studio_contextualMenu_CSS .dijitMenuItem .wm_layers {
+    background-image: url(/wavemaker/images/wm/notebook.png)    
+}
+
+table.studio_contextualMenu_CSS .dijitMenuItem .wm_accordionlayers {
+    background-image: url(/wavemaker/images/wm/press.png)        
 }
 
 table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.lightbox_16 {
@@ -1478,6 +1498,13 @@ body.wm-darksnazzy .wmToolbar button:hover {
 	background-image:none;
 	color: #FFF;
     padding: 2px 5px 3px 5px;
+}
+
+.dj_ff3 .wm-darksnazzy .wmtablayers-tab,
+.dj_ff3 #studio_javaEditorContainer_javaEditor_logTabs .wmtablayers-tab,
+.dj_ff3 #studio_tabs .wmtablayers-tab,
+.dj_ff3 .#studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-tab {
+    padding: 2px 2px 3px 2px;
 }
 
 .wm-darksnazzy .wmtablayers-selected,

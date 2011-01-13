@@ -240,7 +240,7 @@ wm.Layers.extend({
 	getOrderedWidgets: function() {
 		return this.layers;
 	},
-    createDesignContextMenu: function(menuObj) {
+    createDesignContextMenu: function(menuObj, optionalSubmenuArray) {
 	if (this.layers.length) {
 	    var data = {label: "Show Layer",
 			iconClass: "Studio_silkIconImageList_95",
@@ -250,11 +250,20 @@ wm.Layers.extend({
 		if (!this.layers[i].isActive())
 		    data.children.push(this.addLayerToContextMenu(i));
 	    }
-	    var submenu = menuObj.addAdvancedMenuChildren(menuObj.dojoObj, data);
+	    if (optionalSubmenuArray) {
+		optionalSubmenuArray.push({label: "add",
+					   iconClass: "Studio_silkIconImageList_30",
+					   onClick: dojo.hitch(this, function() {
+					       this.editProp("add");
+					   })});
+		dojo.forEach(data.children, function(i) {optionalSubmenuArray.push(i);});
+	    } else
+		var submenu = menuObj.addAdvancedMenuChildren(menuObj.dojoObj, data);
 	}
     },
     addLayerToContextMenu: function(i) {
 	return 	{label:   this.layers[i].caption,
+		 iconClass: "Studio_silkIconImageList_83",
 		 onClick: dojo.hitch(this, function() {
 		     this.setLayerIndex(i);
 		 })

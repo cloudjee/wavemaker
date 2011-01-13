@@ -293,8 +293,9 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		    var arrowNode = dojo.query(".dijitMenuArrowCell div", menuObj.domNode)[0];
 		    if (arrowNode) arrowNode.style.visibility = "visible";
 		}
+	    if (parentObj.addChild)
 		parentObj.addChild(menuObj);
-	        return menuObj;
+	    return menuObj;
 	},
     // fires every time any menu item is selected
         onclick: function(inLabel, inIconClass, inEvent) {
