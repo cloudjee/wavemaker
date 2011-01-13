@@ -236,7 +236,7 @@ Studio.widgets = {
 			    userLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, width: "250px"}, {}],
 			    navEditAccountBtn: ["wm.ToolButton", {showing: false, width: "120px", hint: bundleStudio.T_EditAccountTip, caption: "<img src=\"images/user_settings24.png\"/><span style=\"font-weight:bold\"> Edit Account </span>", height: "29px"}, {onclick: "editAccountClick"}],
 			    navLogoutBtn: ["wm.ToolButton", {showing: false,width: "100px", hint: bundleStudio.T_LogoutTip, caption: "<img src=\"images/close_24.png\"/><span style=\"font-weight:bold\"> Logout </span>", height: "29px"}, {onclick: "logoutClick"}],
-			    menuBarHelp: ["wm.Label", {caption: "Help<span class='StudioHelpIcon'></span>", width: "50px", height: "100%"}, {onclick: "menuBarHelpClick"}],
+			    menuBarHelp: ["wm.Label", {caption: "<span class='StudioHelpIcon'></span>Help", width: "50px", height: "100%"}, {onclick: "menuBarHelpClick"}],
                             trackerImage: ["wm.Picture", {height: "1px", width: "1px"}]
 			}],
 
