@@ -26,7 +26,7 @@ public class BrowserLauncher
         final String b2 = "C:\\Users\\cconover\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe";
         openURL("http://www.wavemaker.com", b1);
     }
-            
+
     public static void openURL(String url)
     {
         openURL(url, null);
@@ -55,10 +55,10 @@ public class BrowserLauncher
                 Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
             }
             else // assume Unix or Linux
-            { 
+            {
                 String[] browsers =
                 {
-					// this uses the first browser it finds - is there a way to get the default browser for UNIX/Linux?
+// this uses the first browser it finds - is there a way to get the default browser for UNIX/Linux?
                     "chrome", "firefox", "opera", "konqueror",
                     "epiphany", "mozilla", "netscape"
                 };

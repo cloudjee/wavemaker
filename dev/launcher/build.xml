@@ -30,12 +30,14 @@
             <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/tomcat-i18n-fr.jar"/>
             <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/tomcat-i18n-ja.jar"/>
             <file name="${basedir}/apache-tomcat-${tomcat.version}-embed/lib/tomcat-juli.jar"/>
+            <file name="${basedir}/lib/swing-layout-1.0.4.jar"/>
         </filelist>
     </path>
 
     <path id="runtime.jars">
         <filelist>
             <file name="mysql-connector-java-5.1.11-bin.jar"/>
+            <file name="${basedir}/lib/swing-layout-1.0.4.jar"/>
         </filelist>
     </path>
 
@@ -64,6 +66,7 @@
         </javac>
         <copy todir="${classes.launcher.dir}">
             <fileset dir="src">
+                <include name="**/*.properties"/>
                 <include name="**/*.png"/>
                 <include name="**/*.gif"/>
             </fileset>
@@ -72,8 +75,7 @@
 
     <target name="jar" depends="compile">
         <mkdir dir="${lib.launcher.dir}"/>
-        <jar destfile="${lib.launcher.dir}/launcher.jar"
-                basedir="${classes.launcher.dir}">
+        <jar destfile="${lib.launcher.dir}/launcher.jar" basedir="${classes.launcher.dir}">
             <manifest>
                 <attribute name="Main-Class" value="com.wavemaker.desktop.launcher.Main"/>
                 <attribute name="Class-Path" value="${build.manifest.jars} ${runtime.manifest.jars} ."/>
@@ -88,6 +90,7 @@
             <fileset dir="apache-tomcat-${tomcat.version}-embed"/>
         </copy>
         <copy todir="${dist.launcher.dir}" file="${lib.launcher.dir}/launcher.jar"/>
+        <copy todir="${dist.launcher.dir}/lib" file="${basedir}/lib/swing-layout-1.0.4.jar"/>
 
         <!-- overwrite entries in dist/conf with stuff from conf -->
         <copy todir="${dist.launcher.dir}/conf" overwrite="true">

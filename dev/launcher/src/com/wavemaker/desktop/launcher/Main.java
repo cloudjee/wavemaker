@@ -43,7 +43,7 @@ import org.apache.catalina.startup.Catalina;
 
 /**
  * Main method for launching WaveMaker's Catalina wrapper ({@link Launcher}.)
- * 
+ *
  * @author small
  * @version $Rev$ - $Date: 2009-03-09 17:06:44 -0700 (Mon, 09 Mar 2009)
  *          $
@@ -228,17 +228,21 @@ public class Main
             if (isStudioUpgrade())
             {
                 StudioUpgradeDialog sud = new StudioUpgradeDialog(
-                        getCurrentVersionString(),
-                        getWaveMakerHome(), getNewDefaultWMHome(),
-                        isMajorUpgrade());
+                    getCurrentVersionString(),
+                    getWaveMakerHome(), getNewDefaultWMHome(),
+                    isMajorUpgrade());
+                
                 sud.setLocation(display.getWidth() / 2 - sud.getWidth() / 2,
-                        display.getHeight() / 2 - sud.getHeight() / 2);
+                    display.getHeight() / 2 - sud.getHeight() / 2);
+                
                 sud.setVisible(true);
                 // Perform new installation
                 ProgressDialog progress = new ProgressDialog("Studio Upgrade:",
                         "Please wait while the Studio upgrade is completed.",
                         false, false);
+                
                 progress.start();
+                
                 try
                 {
                     doUpgrade(sud.getSelectedProjectsPath());
@@ -255,8 +259,8 @@ public class Main
             ui.pack();
             ui.setLocation(display.getWidth() / 2 - ui.getWidth() / 2,
                     display.getHeight() / 2 - ui.getHeight() / 2);
-            //ui.setVisible(true);
-            ui.clickStart();
+            
+            ui.begin();
         }
     }
 
@@ -269,10 +273,7 @@ public class Main
     public static Launcher start(TomcatConfig config, boolean noStdoutRedirect)
             throws IOException, URISyntaxException
     {
-        return start(new String[]
-                {
-                    "start"
-                }, config, noStdoutRedirect);
+        return start(new String[] {"start"}, config, noStdoutRedirect);
     }
 
     public static Launcher start(String[] args, TomcatConfig config,
@@ -293,11 +294,7 @@ public class Main
     public static AppServer getServerInstance(TomcatConfig config,
             boolean noStdoutRedirect) throws IOException, URISyntaxException
     {
-        return getServerInstance(new String[]
-                {
-                    "start"
-                }, config,
-                noStdoutRedirect);
+        return getServerInstance(new String[] {"start"}, config, noStdoutRedirect);
     }
 
     public static AppServer getServerInstance(String[] args,
