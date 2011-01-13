@@ -30,7 +30,6 @@ dojo.declare("QueryEditor", wm.Page, {
 	primitivesShortNameLookup: null,
 	typesLongNameLookup: {},
 	typesShortNameLookup: {},
-	hasChanges: false,
         _startCalled: false,
 	start: function() {
             if (this._startCalled) return;
@@ -222,9 +221,6 @@ dojo.declare("QueryEditor", wm.Page, {
 		else
 			return parms;
 	},
-	isDirty: function() {
-		return this.hasChanges;
-	},
 	updateDataModelInput: function() {
 		var names = []
 		var cs = studio.application && studio.application.getServerComponents();
@@ -331,7 +327,6 @@ dojo.declare("QueryEditor", wm.Page, {
 		studio.updateServices();
 	    //studio.endWait();
 		//this._loadQueries();
-		this._resetChanges();
 		this.saveQueryBtn.setDisabled(true);
 		this.queryDataModelInput.setDisabled(true);
 	       
@@ -408,13 +403,13 @@ dojo.declare("QueryEditor", wm.Page, {
 		var changed = this.getCachedData() != this._cachedData;
 		var caption = (!changed ? "" : "<img class='StudioDirtyIcon'  src='images/blank.gif' /> ") +
 		    this.queryNameInput.getDataValue() + " (" + bundleStudio["TabCaption_Query"] + ")";
+		this.dirty = changed;
 
 		if (caption != this.owner.parent.caption) {
 		    this.owner.parent.setCaption(caption);
 		    studio.updateServicesDirtyTabIndicators();
 		}
 		this.saveQueryBtn.setDisabled(!changed);
-		this.hasChanges = changed;
 
 	    }));
     },
@@ -422,8 +417,9 @@ dojo.declare("QueryEditor", wm.Page, {
     /* getDirty, save, saveComplete are all common methods all services should provide so that studio can 
      * interact with them
      */
+    dirty: false,
     getDirty: function() {
-	return this._cachedData != this.getCachedData();
+	return this.dirty;
     },
     save: function() {
 		if (this._canSaveQuery()) {
@@ -596,16 +592,14 @@ dojo.declare("QueryEditor", wm.Page, {
 		this.queryInputsList.clear();
 		this.queryInputsList._data = [];
 		this.queryOutputList.clear();
-		this._resetChanges();
+	        this._cachedData = this.getCachedData();
 
 		this.saveQueryBtn.setDisabled(true);
 		this.runQueryBtn.setDisabled(true);
 		this.delQueryBtn.setDisabled(true);
 		this.newQueryBtn.setDisabled(true);
 	},
-	_resetChanges: function() {
-		this.hasChanges = false;
-	},
+
 	/*_loadedQueries: function(inData) {
 		this.queriesTree.renderData(inData.dataObjectsTree);
 		setTimeout(dojo.hitch(this, "_selectNode"), 10);

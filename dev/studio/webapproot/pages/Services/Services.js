@@ -28,20 +28,17 @@ dojo.declare("Services", wm.Page, {
 		studio.updateServices();
 		studio.refreshServiceTree();
 	},
-	isDirty: function() {
-		return this.dirty;
-	},
 	setDirty: function() {
 	    wm.job(this.getRuntimeId() + "_hasChanged", 500, dojo.hitch(this, function() {
 		if (this.isDestroyed) return;
 		var changed = this._cachedData != this.getCachedData();
+		this.dirty = changed;
 		var caption = (!changed ? "" : "<img class='StudioDirtyIcon'  src='images/blank.gif' /> ") +
 		    this.serviceNameInput.getDataValue();
 		if (caption != this.owner.parent.caption) {
 		    this.owner.parent.setCaption(caption);
 		    studio.updateServicesDirtyTabIndicators();
 		}
-		this.dirty = changed;
 		this.webServiceSaveBtn.setDisabled(!this.dirty);
 	    }));
 
@@ -50,8 +47,9 @@ dojo.declare("Services", wm.Page, {
     /* getDirty, save, saveComplete are all common methods all services should provide so that studio can 
      * interact with them
      */
+    dirty: false,
     getDirty: function() {
-	return this._cachedData != this.getCachedData();
+	return this.dirty;
     },
     save: function() {
 		if (this.tree.serviceId) {

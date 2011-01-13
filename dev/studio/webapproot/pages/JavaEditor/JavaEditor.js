@@ -18,7 +18,6 @@
 dojo.provide("wm.studio.pages.JavaEditor.JavaEditor");
 
 dojo.declare("JavaEditor", wm.Page, {
-    isDirty: false,
 	start: function() {
             /*
             if (dojo.isFF > 4 || dojo.isWebKit || dojo.isIE >= 9)
@@ -34,8 +33,8 @@ dojo.declare("JavaEditor", wm.Page, {
     setDirty: function() {
 		wm.job(this.getRuntimeId() + "_keydown", 500, dojo.hitch(this, function() {
 		    if (this.isDestroyed) return;
-		    this.isDirty = this.javaCodeEditor.getText() != this._cachedData;
-		    var caption =  (this.isDirty ? "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " : "") + this.tree.serviceId;
+		    this.dirty = this.javaCodeEditor.getText() != this._cachedData;
+		    var caption =  (this.dirty ? "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " : "") + this.tree.serviceId;
 		    if (caption != this.owner.parent.caption) {
 			this.owner.parent.setCaption(caption);
 			studio.updateServicesDirtyTabIndicators();
@@ -46,7 +45,8 @@ dojo.declare("JavaEditor", wm.Page, {
     /* getDirty, save, saveComplete are all common methods all services should provide so that studio can 
      * interact with them
      */
-    getDirty: function() {return this.isDirty;},
+    dirty: false,
+    getDirty: function() {return this.dirty;},
 
     /* Called when saving is done regardless of success/failure */
     saveComplete: function() {
@@ -108,7 +108,7 @@ dojo.declare("JavaEditor", wm.Page, {
 		this.javaCodeEditor.setText("");
 		this.javaCodeEditor.setText(inData || "");
 	        this._cachedData = inData || "";
-	        this.isDirty = false;
+	        this.dirty = false;
 		var matches = inData.match(/^\s*package\s+(\S*)\s*;/);
 	        this.packageName = (matches) ? matches[1] : "";
 		var matches2 = inData.match(/\s*public\s+class\s+(\S+)/);
@@ -229,7 +229,7 @@ dojo.declare("JavaEditor", wm.Page, {
 		if (inData.buildSucceeded) {
 	            this.onSaveSuccess();
 	            this._cachedData = this.javaCodeEditor.getText();
-	            this.isDirty = false;
+	            this.dirty = false;
 		} else {
 		    this.onSaveError();
 		}

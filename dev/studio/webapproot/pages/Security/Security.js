@@ -721,6 +721,8 @@ dojo.declare("Security", wm.Page, {
 		      this.ldapGroupSearchFilterInput.getDataValue()];
 	return result.join("|");
     },
+
+    dirty: false,
     setDirty: function() {
 
 	    wm.job(this.getRuntimeId() + "_hasChanged", 500, dojo.hitch(this, function() {
@@ -728,6 +730,7 @@ dojo.declare("Security", wm.Page, {
 		var changed = this._cachedData != this.getCachedData();
 		var caption = (!changed ? "" : "<img class='StudioDirtyIcon'  src='images/blank.gif' /> ") +
 		    bundleStudio["TabCaption_Security"];
+		this.dirty = changed;
 
 		if (caption != this.owner.parent.caption) {
 		    this.owner.parent.setCaption(caption);
@@ -741,7 +744,7 @@ dojo.declare("Security", wm.Page, {
      * interact with them
      */
     getDirty: function() {
-	return this._cachedData != this.getCachedData();
+	return this.dirty;
     },
     save: function() {
 		if (this.secProviderInput.getDataValue() == this.SELECT_ONE) {

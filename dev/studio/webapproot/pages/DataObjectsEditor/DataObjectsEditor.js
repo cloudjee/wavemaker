@@ -32,8 +32,8 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	currentEntityName: null,
         currentTableName: null,
 	currentPropertyName: null,
-	propertiesAreDirty: false,
-	onlyEntityIsDirty: false,
+    //propertiesAreDirty: false,
+    //onlyEntityIsDirty: false,
 	dataModelComponent: null,
 	start: function() {
 		this.dataObject = {name: "", table: ""};
@@ -202,6 +202,8 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	    wm.job(this.getRuntimeId() + "_hasChanged", 500, dojo.hitch(this, function() {
 		if (this.isDestroyed) return;
 		var changed = this._cachedData != this.getCachedData();
+		this.dirty = changed;
+
 		var oldCaption = this.owner.parent.caption;
 		var caption = (!changed ? "" : "<img class='StudioDirtyIcon'  src='images/blank.gif' /> ") +
 		    oldCaption.replace(/^\<.*\>\s*/,"")
@@ -215,8 +217,9 @@ dojo.declare("DataObjectsEditor", wm.Page, {
     /* getDirty, save, saveComplete are all common methods all services should provide so that studio can 
      * interact with them
      */
+    dirty: false,
     getDirty: function() {
-	return this._cachedData != this.getCachedData();
+	return this.dirty;
     },
     save: function() {
 		this.saveEntity(); // calls saveColumns and saveRelationships
@@ -766,7 +769,8 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		this.updateEntity(t);
 	},
 	updateEntity: function(entity) {
-		var save = this.onlyEntityIsDirty;
+	        // var save = this.onlyEntityIsDirty;
+	    var save = true;
 		studio.dataService.requestSync("updateEntity", 
 						[this.currentDataModelName, 
 						this.currentEntityName, 
@@ -800,9 +804,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	            this.onSaveSuccess();
 		}
 	},
-	isDirty: function() {
-		return this.onlyEntityIsDirty || this.propertiesAreDirty;
-	},
+
 	entityUpdateError: function(inError) {
 		if (inError.message) {
 		    studio._saveErrors.push({owner: this,
@@ -1088,7 +1090,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	    //selectFirstChildNode(this.tree);
 	},
 	_askAboutLosingChanges: function() {
-		if (this.isDirty()) {
+		if (this.getDirty()) {
 			if (!askSaveChanges()) {
 				this.tree._select(this.lastSelectedNode);
 				return true;

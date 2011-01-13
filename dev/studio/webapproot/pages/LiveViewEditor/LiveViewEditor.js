@@ -393,6 +393,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 		var changed = this._cachedData != this.clientLiveView.write("") ;
 		var caption = (!changed ? "" : "<img class='StudioDirtyIcon'  src='images/blank.gif' /> ") +
 		    this.clientLiveView.name + " (" + bundleStudio["TabCaption_LiveView"] + ")";
+		this.dirty = changed;
 
 		if (caption != this.owner.parent.caption) {
 		    this.owner.parent.setCaption(caption);
@@ -405,8 +406,9 @@ dojo.declare("LiveViewEditor", wm.Page, {
     /* getDirty, save, saveComplete are all common methods all services should provide so that studio can 
      * interact with them
      */
+    dirty: false,
     getDirty: function() {
-	return this._cachedData != this.clientLiveView.write("") ;
+	return this.dirty;
     },
     save: function() {
 	// handled by studio.saveAll but save is also CALLED by studio.saveAll so don't try calling studio.saveAll here
