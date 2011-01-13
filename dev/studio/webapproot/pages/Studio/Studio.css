@@ -1231,6 +1231,7 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 	background-color: #6f798a;
 }
 
+
 .Studio-PITreeTopBorderl, .Studio-PITopBorderl {
 	background-image: url(images/pi_ul.gif);
 }
@@ -1238,7 +1239,7 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 .Studio-PITreeTopBorderr, .Studio-PITopBorderr {
 	background-image: url(images/pi_ur.gif);
 }
-
+/*
 .Studio-PITreeBotBorderl, .Studio-PIBotBorderl {
 	background-image: url(images/pi_ll.gif);
 }
@@ -1246,7 +1247,7 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 .Studio-PITreeBotBorderr, .Studio-PIBotBorderr {
 	background-image: url(images/pi_lr.gif);
 }
-
+*/
 .Studio-inspectorLayers .wmtree-root-leaf, .Studio-inspectorLayers .wmtree-root-last-leaf, .Studio-inspectorLayers .wmtree-last-item { 
 	background-color: #fff; 
 }
@@ -1844,4 +1845,19 @@ color: rgb(0,270,0);
 
 .Studio-userLabel .LicenseIcon {
     display: inline-block;
+}
+
+.Studio-paletteToDialogButton {
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    right: 1px;
+    top: 15px;
+}
+.Studio-paletteToDialogButton,
+.Studio-inspectorDialogToggle {
+    background-image: url(/wavemaker/images/dialogIconsGray.png);
+    background-position: -16px 0px;
+    background-repeat: no-repeat;
+    cursor: pointer;
 }

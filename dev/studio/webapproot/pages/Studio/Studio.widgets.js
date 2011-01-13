@@ -40,6 +40,8 @@ Studio.widgets = {
 	canvasToolbarImageList16: ["wm.ImageList", {width: "16", height: "16", colCount: 22, url: "images/canvasToolbarBtns16.png"}, {}],        
     contextualMenu: ["wm.PopupMenu", {"fullStructureStr":"[{\"label\":\"Help\",\"iconClass\":undefined,\"imageList\":null,\"children\":[]}]"},{onclick: "contextualMenuClick"}],
         genericDialog: ["wm.GenericDialog", {}],
+    propertiesDialog: ["wm.Dialog", {_classes: {domNode: ["wm-darksnazzy"]}, width: "250px", height: "650px", modal: false, title: "Properties", noEscape: true, useContainerWidget:true, corner: "cr", border: "1", borderColor: "#222"}, {onClose: "toggleInspectorDialog"}],
+    paletteDialog: ["wm.Dialog", {width: "250px", height: "650px", modal: false, title: "Palette / Model", noEscape: true, useContainerWidget:true, corner: "cl", border: "1", borderColor: "#222"}, {onClose: "togglePaletteDialog"}],
     startPageDialog: ["wm.PageDialog", {width: "764px", height: "460px", title: "", modal: true, hideControls: true, noEscape: true, pageName: "Start", border: "4", borderColor: "#222222", corner: "cc", }],
     deploymentDialog: ["wm.PageDialog", {width: "800px", height: "550px", title: "Deployment", modal: true, hideControls: true, noEscape: true, pageName: "DeploymentDialog", deferLoad: true}],
     loginDialog: ["wm.PageDialog", {width: "250px", height: "325px", title: "Login", modal: true, hideControls: true, noEscape: true, pageName: "Login", deferLoad: true}],
@@ -251,7 +253,7 @@ Studio.widgets = {
 					designerSourceBtn: ["wm.ToolButton", {border: "0", borderColor: "#294473", margin: "0", padding: "0,6", height: "100%", width: "57px", caption: "", hint: bundleStudio.T_SourceTip}, {onclick: "navGotoSourceClick"}]
 				}],
 				*/
-							left: ["wm.TabLayers", {_classes: {domNode: ["wm-darksnazzy"]}, border: "0", width: "100%", height: "100%", headerHeight: "32px"}, {onchange: "leftTabsChange"}, {
+										left: ["wm.TabLayers", {_classes: {domNode: ["wm-darksnazzy"]}, border: "0", width: "100%", height: "100%", headerHeight: "32px"}, {onchange: "leftTabsChange"}, {
 				    mlpal: ["wm.Layer", {_classes: {domNode: ["wm-palette"]}, caption: bundleStudio.Palette}, {onShow: "resetPaletteSearch"}, {
 					benchbevel6: ["wm.Bevel", {border: ""}, {}],
 					paletteSearch: ["wm.Text", {caption: "", width: "100%", height: "27px", placeHolder: "Find Component/Widget", padding: "2,5,2,5", changeOnKey: true, resetButton: true}, {onchange: "paletteSearchChange"}],
@@ -358,14 +360,15 @@ Studio.widgets = {
 						}]
 					}],
 			splitter3b: ["wm.Splitter", {border: ""}, {}],
-			PIPanel: ["wm.Panel", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", width: "250px", border: "0", padding: "0", layoutKind: "left-to-right"}, {}, {
-								PIContents: ["wm.Panel", {width: "100%", border: "0"}, {}, {
+						PIPanel: ["wm.Panel", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", width: "250px", border: "0", padding: "0", layoutKind: "left-to-right"}, {}, {
+						    PIContents: ["wm.Panel", {width: "100%", height: "100%", border: "0"}, {}, {
 									propInsContainer: ["wm.Panel", {height: "100%", border: "0"}, {}, {
 										PILabelContainer: ["wm.Panel", {height: "25px", border: "0"}, {}, {
 											insTop: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}, {
 												inspected: ["wm.Label", {height: "100%", width: "100%", caption: "", border: "", padding: "2"}, {}, {
 													format: ["wm.DataFormatter", {}, {}]
-												}]
+												}],
+											    inspectorDialogToggle: ["wm.ToolButton", {width: "16px", height: "16px", padding: "0"},{onclick: "toggleInspectorDialog"}]
 											}]
 										}],
 										PITopBorder: ["wm.Panel", {height: "4px", border: "0", layoutKind: "left-to-right"}, {}, {

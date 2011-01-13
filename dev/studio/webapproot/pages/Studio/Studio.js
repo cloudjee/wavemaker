@@ -167,6 +167,13 @@ dojo.declare("Studio", wm.Page, {
 		    this.domNode.style.overflowX = "hidden";
 	    });	    
 
+
+	    this._paletteToDialogButton = document.createElement("div");
+	    this._paletteToDialogButton.className = "wmtoolbutton Studio-paletteToDialogButton";
+	    studio.left.decorator.tabsControl.domNode.appendChild(this._paletteToDialogButton);
+	    dojo.connect(this._paletteToDialogButton, "onclick", this, "togglePaletteDialog");
+	    this.propertiesDialog.containerWidget.setPadding("0");
+	    this.propertiesDialog.containerWidget.setAutoScroll(false);
 	},
 /*
 	 startPageOnStart: function() {
@@ -531,16 +538,16 @@ dojo.declare("Studio", wm.Page, {
 	getScript: function() {
 		return this.editArea.getText();
 	},
-	setScript: function(inScript) {
+        setScript: function(inScript) {
 	        //this["_cachedEditDataeditArea"] = inScript;
-		return this.editArea.setText(inScript);
+	    this.editArea.setText(inScript);
 	},
         getAppScript: function() {
 	    return this.appsourceEditor.getText();
 	},
         setAppScript: function(inScript) {
 	    //this["_cachedEditDataappsourceEditor"] = inScript;
-	        return this.appsourceEditor.setText(inScript);
+	    this.appsourceEditor.setText(inScript);
 	},
 	getWidgets: function() {
 		return sourcer(this.project.pageName, this.page);
@@ -1444,6 +1451,45 @@ dojo.declare("Studio", wm.Page, {
     */
     loadResourcesTab: function() {
 	this.resourcesPage.getComponent("resourceManager").loadResources();
+    },
+
+    toggleInspectorDialog: function() {
+	if (this.PIContents.parent == this.PIPanel) {
+	    this.PIContents.setParent(this.propertiesDialog.containerWidget);
+	    this.splitter3b.hide();
+	    this.PIPanel.hide();
+	    this.inspectorDialogToggle.hide();
+	    this.PIBotBorder.hide();
+	    this.propertiesDialog.titleClose.show();
+	    this.propertiesDialog.show();
+	} else {
+	    this.propertiesDialog.hide();
+	    this.PIContents.setParent(this.PIPanel);
+	    this.inspectorDialogToggle.show();
+	    this.PIBotBorder.show();
+	    this.PIPanel.show();
+	    this.splitter3b.show();
+	    this.PIPanel.reflow();
+	}
+    },
+
+    togglePaletteDialog: function() {
+	if (this.left.parent == this.panel2) {
+	    this.paletteDialog.containerWidget.setPadding("0");
+	    this.left.setParent(this.paletteDialog.containerWidget);
+	    this.splitter1.hide();
+	    this.panel2.hide();
+	    this._paletteToDialogButton.style.display = "none";
+	    this.paletteDialog.titleClose.show();
+	    this.paletteDialog.show();
+	} else {
+	    this.paletteDialog.hide();
+	    this.left.setParent(this.panel2);
+	    this._paletteToDialogButton.style.display = "";
+	    this.panel2.show();
+	    this.splitter1.show();
+	    this.panel2.reflow();
+	}
     }
 
 });

@@ -204,13 +204,16 @@ Studio.extend({
 	    inLayer.hide();
 	    this.updateServicesDirtyTabIndicators(); // remove unsaved indicator from the tab now that it has no layers
 	} else {
-	    studio.listUnsavedDialog.page.setUnsaved(unsavedPages);
-	    studio.listUnsavedDialog.page.onDone = function() {
+	    var message = studioBundle["page_unsavedchanges_tabclose"] + "<ul>";
+	    for (var i = 0; i < unsavedPages.length; i++)
+		message += "<li>" + unsavedPages[i].owner.parent.caption.replace(/^\<.*?\>\s*/,"") + "</li>";
+		//message += (i == unsavedPages.length-1 ? " and " : i ? ", " : "") + unsavedPages[i].owner.parent.caption.replace(/^\<.*?\>\s*/,"");
+	    message += "</ul>" +  studioBundle["page_closeAnyway"];
+	    app.confirm(message, false, dojo.hitch(this, function() {
 		while (layers.length) layers[0].destroy();
 		inLayer.hide();
 		this.updateServicesDirtyTabIndicators(); // remove unsaved indicator from the tab now that it has no layers
-	    };
-	    studio.listUnsavedDialog.show();
+	    }));
 	}
 
     },

@@ -588,7 +588,7 @@ dojo.declare("wm.Dialog", wm.Container, {
                                                   if (this.isDestroyed) return;
 						      wm.Control.prototype.setShowing.call(this,inShowing,forceChange, skipOnClose);
                                                   delete this._transitionToHiding;
-						      if (!skipOnClose) 
+						      if (!skipOnClose && !this._minified) 
 						          this.onClose("");
 						      delete this._hideAnimation; // has no destroy method
 					      })});
@@ -596,7 +596,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		    }
 		} else {
 		    this.inherited(arguments);		    
-		    if (!skipOnClose) 
+		    if (!skipOnClose && !this._minified) 
 			this.onClose("");
 		}
 	    }

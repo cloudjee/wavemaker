@@ -395,13 +395,17 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 				break;
 			case ea.jsFunc.caption:
 				v = c.generateEventName(p);
-		    this.set("value",v, false);
+		    window.setTimeout(dojo.hitch(this, function() {
+		        this.set("value",v, false);
+		    }), 50); // wait until after the whole clicking on an option has finished and menu been dismissed before we change the value
 				try{c.updatingEvent(p,v);}catch (e){/*do nothing as this might happen if there's a component which does not extends wm.control class*/}
 		                eventEdit(c, p, v, c == studio.application);
 				break;
 			case ea.jsSharedFunc.caption:
 				v = c.generateSharedEventName(p);
-		    this.set("value",v, false);
+		    window.setTimeout(dojo.hitch(this, function() {
+			this.set("value",v, false);
+		    }), 50);
 				try{c.updatingEvent(p,v);}catch (e){/*do nothing as this might happen if there's a component which does not extends wm.control class*/}
 				eventEdit(c, p, v, c == studio.application);
                                 studio.inspector.reinspect();

@@ -162,6 +162,11 @@ dojo.declare("wm.EditArea", wm.Box, {
 // if statement bad because getText gets from different place than we set in the else clause
 //			if (this.isReallyShowing())
 				editAreaLoader.setValue(this.area.textarea.id, inText);
+		    if (this.isReallyShowing()) {
+			this.off();
+			this.on();
+		    }
+
 /*			else {
 				this.off();
 				this.textAreaNode.value = inText;

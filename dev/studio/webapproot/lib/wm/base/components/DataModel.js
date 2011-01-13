@@ -25,6 +25,7 @@ dojo.require("wm.base.components.ServerComponent");
 	@extends wm.ServerComponent
 */
 dojo.declare("wm.DataModel", wm.ServerComponent, {
+	noInspector: true,
 	dataModelName: "",
 	userName: "",
 	password: "",
@@ -198,6 +199,7 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 });
 
 dojo.declare("wm.DataModelEntity", wm.Component, {
+	noInspector: true,
 	dataModelName: "",
 	entityName: "",
 	init: function() {
