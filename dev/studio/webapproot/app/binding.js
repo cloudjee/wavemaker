@@ -658,7 +658,8 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 			type = tp.staticType,
 			typeObject = type && dojo.getObject(type),
 			sourceValue = studio.bindDialog.bindSourceDialog.bindPage.getValueById(sp.source);
-		if (typeObject && typeObject.prototype instanceof wm.Object) {
+	    var prototype = (typeObject && typeObject.prototype) ? dojo.getObject(typeObject.prototype) : "";
+		if (prototype instanceof wm.Object) {
 			if (!(sourceValue instanceof typeObject))
 				return;
 		}

@@ -385,7 +385,7 @@ wm.Object.extendSchema(wm.Control, {
     height: { group: "layout", order: 30, doc: 1},
         minWidth: { group: "advanced layout", order: 40},
         minHeight: { group: "advanced layout", order: 50},
-    parent: { ignore: 1, doc: 1, _prototype: wm.Control.prototype, prototype: wm.Control.prototype },
+    parent: { ignore: 1, doc: 1, prototype: "wm.Control" },
 	domNode: { ignore: 1 },
 	parentNode: { ignore: 1 },
 	widgets: { ignore: 1 },
