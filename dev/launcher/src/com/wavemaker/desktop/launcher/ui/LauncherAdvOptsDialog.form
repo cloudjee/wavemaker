@@ -19,9 +19,6 @@
       <ResourceString bundle="com/wavemaker/desktop/launcher/ui/Bundle.properties" key="LauncherAdvOptsDialog.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
     </Property>
     <Property name="alwaysOnTop" type="boolean" value="true"/>
-    <Property name="modalityType" type="java.awt.Dialog$ModalityType" editor="org.netbeans.modules.form.editors.EnumEditor">
-      <Value id="null"/>
-    </Property>
     <Property name="name" type="java.lang.String" value="LaunchAdvOptsDlg" noResource="true"/>
   </Properties>
   <SyntheticProperties>

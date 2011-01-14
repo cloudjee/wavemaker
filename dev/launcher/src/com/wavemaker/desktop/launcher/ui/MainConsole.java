@@ -17,12 +17,16 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -69,18 +73,20 @@ public class MainConsole extends javax.swing.JFrame
     {
         initComponents();
         this.getContentPane().setBackground(Color.WHITE);
-
-//        SplashScreen splash = SplashScreen.getSplashScreen();
-//        if (splash == null)
-//        {
+        
+        String javaVersion = System.getProperty("java.version");
+        
+        if (!javaVersion.startsWith("1.6"))
+        {
+            Main.printlnToLog("########## no splash screen ##########");
             setVisible(true);
             pbStatus.setIndeterminate(true);
             pbStatus.setVisible(true);
-//        }
+        }
         
         this.version = version;
         setTitle(bundle.getString("MainConsole.title") + " " + version);
-        
+
         try
         {
             BufferedImage source = javax.imageio.ImageIO.read(
@@ -100,6 +106,46 @@ public class MainConsole extends javax.swing.JFrame
 
         tomcatConfig = config;
 //        initPropertyListeners();
+    }
+
+    static private boolean hasSplashScreen()
+    {
+        try
+        {
+            Class clazz = Class.forName("SplashScreen");
+            Method meth = clazz.getMethod("getSplashScreen");
+            return meth.invoke(null, new Object(){}) != null;
+        }
+        catch (IllegalAccessException ex)
+        {
+            Logger.getLogger(MainConsole.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        catch (IllegalArgumentException ex)
+        {
+            Logger.getLogger(MainConsole.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        catch (InvocationTargetException ex)
+        {
+            Logger.getLogger(MainConsole.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }        
+        catch (NoSuchMethodException ex)
+        {
+            Logger.getLogger(MainConsole.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        catch (SecurityException ex)
+        {
+            Logger.getLogger(MainConsole.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }        
+        catch (ClassNotFoundException ex)
+        {
+            Logger.getLogger(MainConsole.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
     }
 
 
