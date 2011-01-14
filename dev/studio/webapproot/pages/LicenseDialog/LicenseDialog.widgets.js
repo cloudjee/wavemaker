@@ -26,7 +26,7 @@ LicenseDialog.widgets = {
 	    panelouter: ["wm.Panel", {height: "100%", width: "100%", horizontalAlign: "center", verticalAlign: "top", margin: "10"}, {}, {
 		label2: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold"]}, caption: "You are running an unlicensed version of studio; please upload your license.  Note: Connection to the internet may be required for this to work:", border: "0", margin: "0,5", padding: "0,4", height: "48px", width: "100%", singleLine: false}],
 		licenseUploader: ["wm.DojoFileUpload",   {_classes: {domNode: ["studioButton"]},
-							  width: "100px",
+							  width: "200px",
 							      height: "32px",
 							      margin: "2",
 							      useList: false,
@@ -34,10 +34,15 @@ LicenseDialog.widgets = {
 							      service: "licensingService",
 							      operation: "uploadLicense"},
 				      {onSuccess: "onSuccess", onError: "onError"}],
+		toGetLabel: ["wm.Label", {width: "100%", height: "30px", margin: "10,5,0,5", caption: "If you don't have a license file yet, here are two ways to get a license"}],
+		trialButton: ["wm.Button", {width: "200px", caption: "Request Trial License"}, {onclick: "trialClick"}],
+		    buyButton: ["wm.Button", {width: "200px", caption: "Purchase License"}, {onclick: "buyClick"}],
 		    resultPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right"}, {}, {
 			resultLabel: ["wm.Label", {width: "100%", height: "100%", caption: "", singleLine: false}]
 		    }],
-		closeButton: ["wm.Button", {width: "100px", caption: "Cancel", showing: false}, {onclick: "dismiss"}]
+		buttonPanel: ["wm.Panel", {width: "100%", height: "40px", layoutKind: "left-to-right"}, {}, {
+		    closeButton: ["wm.Button", {width: "200px", caption: "Cancel", showing: false}, {onclick: "dismiss"}]
+		}]
 	    }]
 	}]
 }

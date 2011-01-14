@@ -19,7 +19,10 @@ dojo.provide("wm.studio.pages.LicenseDialog.LicenseDialog");
 
 dojo.declare("LicenseDialog", wm.Page, {
 	start: function() {
-
+	    var licenseService = new wm.JsonRpcService({owner: this, service: "licensingService", sync: false});	
+	    var licenseDeferred = licenseService.requestSync("getMacAddr", [], dojo.hitch(this, function(inResult) {
+		this.macaddr = inResult;
+	    }));
 	},
         onSuccess: function(inSender) {
 	    studio.startPageDialog.page.layer1.activate();
@@ -30,6 +33,12 @@ dojo.declare("LicenseDialog", wm.Page, {
 	},
     dismiss: function() {
 	studio.startPageDialog.page.tabLayers1.setLayerIndex(0);
+    },
+    trialClick: function() {
+	window.open("http://www.wavemaker.com/?macid=" + this.macaddr);
+    },
+    buyClick: function() {
+	window.open("http://www.wavemaker.com/?macid=" + this.macaddr);
     },
 	_end: 0
 });

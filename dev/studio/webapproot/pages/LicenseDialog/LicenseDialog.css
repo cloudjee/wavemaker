@@ -27,6 +27,8 @@
 }
 
 
+.LicenseDialog-buyButton,
+.LicenseDialog-trialButton,
 .LicenseDialog-closeButton,
 .LicenseDialog-licenseUploader {
 	background-image:url(images/dark_btn_bg.gif);
@@ -34,4 +36,8 @@
 	color: #FFF;
 	font-weight:bold;
     cursor: pointer;
+}
+
+.LicenseDialog-toGetLabel {
+    text-align: center;
 }
