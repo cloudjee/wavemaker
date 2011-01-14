@@ -193,7 +193,7 @@ public class ConfigurationCompilerTask extends AbstractServiceCompilerTask {
             // if we're doing any sort of build, generate types
             if (doXmlBuild || 0<doBuildServices.size()) {
                 DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(
-                        fileService.getFileServiceRoot());
+                        fileService.getFileServiceRoot(), true);
                 ConfigurationCompiler.generateTypes(fileService, typesJs,
                         allServices, dsm.getPrimitiveDataObjects());
                 
