@@ -26,7 +26,7 @@ public class LicenseManagerExt extends LicenseManager {
 
     public static String getMacAddr() {
         byte[] macAddr;
-        String info;
+        /*String info;
         try {
             InetAddress address = InetAddress.getLocalHost();
             NetworkInterface ni = NetworkInterface.getByInetAddress(address);
@@ -37,7 +37,8 @@ public class LicenseManagerExt extends LicenseManager {
             info = "";
         }
 
-        return info;
+        return info;*/
+        return "";
     }
 
     public synchronized LicenseNotary getLicenseNotary() {

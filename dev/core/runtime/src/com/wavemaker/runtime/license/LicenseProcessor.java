@@ -156,7 +156,7 @@ public class LicenseProcessor {
         if (lc == null)
             return "Invalid License";
         else
-            return "OK";
+            return "";
     }
 
     public static int getLicenseExpiration() {
