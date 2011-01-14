@@ -13,7 +13,6 @@ import com.wavemaker.desktop.launcher.Main;
 import com.wavemaker.desktop.launcher.TomcatConfig;
 
 import java.awt.Color;
-import java.awt.SplashScreen;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -71,13 +70,13 @@ public class MainConsole extends javax.swing.JFrame
         initComponents();
         this.getContentPane().setBackground(Color.WHITE);
 
-        SplashScreen splash = SplashScreen.getSplashScreen();
-        if (splash == null)
-        {
+//        SplashScreen splash = SplashScreen.getSplashScreen();
+//        if (splash == null)
+//        {
             setVisible(true);
             pbStatus.setIndeterminate(true);
             pbStatus.setVisible(true);
-        }
+//        }
         
         this.version = version;
         setTitle(bundle.getString("MainConsole.title") + " " + version);

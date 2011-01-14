@@ -107,7 +107,7 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(bundle.getString("LauncherAdvOptsDialog.title")); // NOI18N
         setAlwaysOnTop(true);
-        setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
+        setModalityType(null);
         setName("LaunchAdvOptsDlg"); // NOI18N
 
         ckbAutoLaunch.setBackground(new java.awt.Color(255, 255, 255));

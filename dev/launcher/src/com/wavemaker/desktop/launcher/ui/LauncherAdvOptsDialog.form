@@ -20,7 +20,7 @@
     </Property>
     <Property name="alwaysOnTop" type="boolean" value="true"/>
     <Property name="modalityType" type="java.awt.Dialog$ModalityType" editor="org.netbeans.modules.form.editors.EnumEditor">
-      <Value id="APPLICATION_MODAL"/>
+      <Value id="null"/>
     </Property>
     <Property name="name" type="java.lang.String" value="LaunchAdvOptsDlg" noResource="true"/>
   </Properties>
