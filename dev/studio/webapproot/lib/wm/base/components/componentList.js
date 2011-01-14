@@ -38,6 +38,7 @@ wm.componentList = {
 	'wm.TwitterFeed':['wm.base.widget.TwitterFeed'],
 	
 	'wm.Tree': ['wm.base.widget.Tree'],
+	'wm.PropertyTree': ['wm.base.widget.Tree'],
 	'wm.LivePanel': ['wm.base.widget.LivePanel'],
 	'wm.EditPanel': ['wm.base.widget.EditPanel'],
 	'wm.Gadget': ['build.Gzipped.wm_gadgets'],
