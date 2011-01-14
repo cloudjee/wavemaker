@@ -107,8 +107,9 @@ public class ProjectManager {
      *                if this is true, don't insert the project into the current
      *                session
      */
-    public void openProject(String projectName, boolean noSession) //yyy
+    public void openProject(String projectName, boolean noSession)
             throws IOException {
+        openProject(projectName, noSession, false);
     }
 
     public void openProject(String projectName, boolean noSession, boolean skip)
