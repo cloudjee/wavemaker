@@ -20,6 +20,7 @@ package com.wavemaker.studio;
 import java.io.IOException;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.license.LicenseProcessor;
+import com.wavemaker.runtime.license.LicenseManager;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.project.StudioConfiguration;
@@ -45,6 +46,11 @@ public class LicensingService {
     }
     public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
         this.studioConfiguration = studioConfiguration;
+    }
+
+    @ExposeToClient
+	public String getMacAddr() {
+	return LicenseManagerExt.getMacAddr();
     }
 
     @ExposeToClient
