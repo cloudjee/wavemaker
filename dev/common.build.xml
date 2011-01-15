@@ -389,7 +389,7 @@ or the ant property build.dir</echo>
         <property name="gfv.svn.repository.url" value="NON-SVN BUILD"/>
     </target>
 
-    <target name="common.generate-full-version" unless="version.full"
+    <target name="common.generate-full-version" 
             depends="-common.init.version,-common.version.do-svn,-common.version.do-non-svn">
 
      <echo>Version: ${version.number} WRITTEN TO FILE: ${version.file}</echo>

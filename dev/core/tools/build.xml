@@ -155,6 +155,7 @@
                 <include name="META-INF/services/com.sun.tools.xjc.Plugin"/>
             </fileset>
         </copy>
+	<ant dir="${root.dir}" antfile="common.build.xml" target="common.generate-full-version" />
         <copy file="${version.file}"
                 tofile="${classes.tools.dir}/com/wavemaker/tools/project/version"/>
     </target>
