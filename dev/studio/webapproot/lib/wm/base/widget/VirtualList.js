@@ -44,7 +44,7 @@ dojo.declare("wm.VirtualListItem", null, {
 		];
 	},
 	setContent: function(inContent) {
-		this.domNode.innerHTML = inContent;
+	    this.domNode.innerHTML = inContent;
 	},
 	getContent: function() {
 		return this.domNode.innerHTML;
@@ -97,6 +97,17 @@ dojo.declare("wm.VirtualList", wm.Box, {
 		this.domNode.appendChild(this.headerNode);
 		this.domNode.appendChild(this.listNode);
 		this.setHeaderVisible(this.headerVisible);
+
+	    if (app._touchEnabled) {
+		dojo.require("lib.github.touchscroll.touchscroll");
+		this._listTouchScroll = new TouchScroll(this.listNode, {elastic:true, owner: this});
+		this.listNode = this._listTouchScroll.scrollers.inner;
+		this._listTouchScroll.scrollers.outer.style.position = "absolute";
+		this._listTouchScroll.scrollers.outer.style.left = "0px";
+		this._listTouchScroll.scrollers.outer.style.top = "0px";
+
+	    }
+
 	},
 	dataSetToSelectedItem: function(inDataSet) {
 		this.selectedItem.setLiveView((inDataSet|| 0).liveView);
@@ -130,11 +141,40 @@ dojo.declare("wm.VirtualList", wm.Box, {
 		this.listNode = document.createElement('div');
 		this.listNode.flex = 1;
 		dojo.addClass(this.listNode, "wmlist-list");
+
 	},
 	createHeaderNode: function() {
 		this.headerNode = document.createElement('div');
 		dojo.addClass(this.headerNode, "wmlist-header");
 	},
+
+    renderBounds: function() {
+	this.inherited(arguments);
+	if (this.headerVisible) {
+	    wm.job(this.getRuntimeId() + "ListRenderBounds", 1, dojo.hitch(this, "renderListBounds"));
+	}
+    },
+    renderListBounds: function() {
+	var coords = dojo.marginBox(this.headerNode);
+	if (coords.h == 0) {
+	    return wm.job(this.getRuntimeId() + "ListRenderBounds", 1, dojo.hitch(this, "renderListBounds"));
+	}
+	var bodyheight = this.getContentBounds().h - coords.h;
+	if (!this._listTouchScroll) 
+	    this.listNode.style.height = bodyheight + "px";
+	else
+	    this._listTouchScroll.scrollers.outer.parentNode.height = bodyheight + "px";
+
+	if (this._listTouchScroll) {
+	    var b = this.getContentBounds();
+	    this._listTouchScroll.scrollers.outer.style.width = b.w + "px";
+	    this._listTouchScroll.scrollers.outer.style.height = (b.h - coords.h) + "px";
+	    this._listTouchScroll.scrollers.outer.style.top = coords.h + "px";
+	    if (this.updateHeaderWidth)
+		this.updateHeaderWidth();
+	}
+
+    },
 	clear: function() {
 		this._setHeaderVisible(false);
 		while (this.getCount())

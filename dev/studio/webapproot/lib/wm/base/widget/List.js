@@ -56,7 +56,7 @@ dojo.declare("wm.ListItem", wm.VirtualListItem, {
 });
 
 dojo.declare("wm.List", wm.VirtualList, {
-	autoScroll: true,
+        autoScroll: false,
 	constructor: function() {
 		this._data = [];
 	},
@@ -193,7 +193,9 @@ dojo.declare("wm.List", wm.VirtualList, {
 		}
 	},
 	updateHeaderWidth: function() {
-		var f = this.items&&this.items[0], n = f&&f.domNode.firstChild, b = n&&dojo.marginBox(n);
+	    var f = this.items&&this.items[0];
+	    var n = f&&f.domNode.firstChild;
+	    var b = n&&dojo.marginBox(n);
 		if (b && this.headerNode.firstChild)
 			dojo.marginBox(this.headerNode.firstChild, {w: b.w});
 	},
@@ -249,6 +251,10 @@ dojo.declare("wm.List", wm.VirtualList, {
 		this.renderHeader();
 	    dojo.query(".wmlist-item:nth-child(odd)",this.domNode).addClass("Odd");
 		this.reflow();
+	    console.log("RENDER DATA");
+	    if (this._listTouchScroll) {
+		wm.job(this.getRuntimeId() + "ListSetupScroller", 1, dojo.hitch(this._listTouchScroll, "setupScroller"));
+	    }
 	},
 	getHeading: function(inField) {
 		var d = this._dataSource, s = d && d.schema || 0, si = s[inField] || 0;

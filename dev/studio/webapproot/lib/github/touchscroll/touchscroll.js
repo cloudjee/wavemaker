@@ -725,14 +725,14 @@ TouchScroll.prototype = {
 		var scrollContainer = this.scrollers.outer.parentNode,
 			containerSize = {
 			    /* Changed for WaveMaker from clientWidth/Height to Style width/height */
-			        e: parseInt(scrollContainer.style.width),
-			        f: parseInt(scrollContainer.style.height)
+			        e: parseInt(scrollContainer.style.width || scrollContainer.clientWidth),
+			        f: parseInt(scrollContainer.style.height || scrollContainer.clientHeight)
 			},
 			innerScroller = this.scrollers.inner,
 			scrollerSize = {
 			    /* Changed for WaveMaker from clientWidth/Height to Style width/height */
-			    e: parseInt(innerScroller.style.width),
-			    f: parseInt(innerScroller.style.height)
+			    e: parseInt(innerScroller.style.width || innerScroller.clientWidth),
+			    f: parseInt(innerScroller.style.height || innerScroller.clientHeight)
 			},
 			scrollbars = this._scrollbars,
 			scrollMin = {
@@ -808,7 +808,14 @@ TouchScroll.prototype = {
 	handleEvent: function handleEvent(event){
 		var handlerName = this.handlerNames[event.type];
 		if(handlerName){
+		    /* Delay added by wavemaker so that a sequence of manipulations can be completed and this only run once */
+		    if (this.owner && event.type.match(/dom/i)) {
+			wm.job(this.owner.getRuntimeId() + "handleEvent", 1, dojo.hitch(this, function() {
+			    this[handlerName](event);
+			}));
+		    } else {
 			this[handlerName](event);
+		    }
 		}
 	},
 
@@ -847,7 +854,6 @@ TouchScroll.prototype = {
 		if(!this._doScroll){
 			return;
 		}
-
 		// must be present, because touchstart fired before
 		var lastEventOffset = this._trackedEvents[1].matrix,
 			scrollOffset = getMatrixFromEvent(event).translate(
@@ -860,7 +866,6 @@ TouchScroll.prototype = {
 
 		event.stopPropagation();
 		event.preventDefault();
-
 		if(!doScroll){
 			var threshold = config.threshold,
 			doScroll = scrollOffset.e <= -threshold || scrollOffset.e >= threshold ||
