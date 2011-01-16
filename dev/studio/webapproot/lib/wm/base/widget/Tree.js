@@ -28,6 +28,7 @@ dojo.addOnLoad(function() {
 
 dojo.declare("wm.TreeNode", null, {
 	images: { none: "tree_blank.gif", leaf: "tree_leaf.gif", closed: "tree_closed.gif", open: "tree_open.gif" },
+        touchimages: { none: "tree_blank.gif", leaf: "tree_leaf.gif", closed: "touch_tree_closed.png", open: "touch_tree_open.png" },
 	classes: { leaf: "wmtree-leaf", lastLeaf: "wmtree-last-leaf", lastItem: "wmtree-last-item", content: "wmtree-content", selected: "wmtree-selected", rootLeaf: "wmtree-root-leaf", rootLastLeaf: "wmtree-root-last-leaf", open: "wmtree-open" },
 	closed: false,
 	canSelect: true,
@@ -142,12 +143,19 @@ dojo.declare("wm.TreeNode", null, {
 			i.className = ic;
 		// node class
 		var nc = (isLast ? this.classes.lastItem : "") + (this.closed ? "" : " " + this.classes.open);
-		if (n.className != nc)
+		if (n.className != nc)		    
 			n.className = nc;
 		// FIXME: not a good check for if we have unrendered children (might be lazy)
 		var hasChildren = !this._childrenRendered && (this.hasChildren || this._hasChildren || (this._data.children && this._data.children.length));
 		// img src
-		var img = !this.kids.length && !hasChildren ? this.images.none : (this.closed ? this.images.closed : this.images.open), s = this.imageRoot + img;
+
+	    if (this.tree._touchScroll)
+		var img = !this.kids.length && !hasChildren ? this.images.none : (this.closed ? this.touchimages.closed : this.touchimages.open);
+	    else
+		var img = !this.kids.length && !hasChildren ? this.images.none : (this.closed ? this.images.closed : this.images.open);
+	    var s = this.imageRoot + img;
+
+
 		if (i && i.src != s)
 			i.src = s;
 	},
@@ -346,6 +354,9 @@ dojo.declare("wm.TreeCheckNode", wm.TreeNode, {
 
 dojo.declare("wm.TreeRoot", wm.TreeNode, {
 	render: function(inContent) {
+	    if (this.tree._touchScroll) 
+		this.domNode = this.tree._touchScroll.scrollers.inner;
+	    else
 		this.domNode = this.tree.domNode;
 	},
 	addParent: function(inTree) {
@@ -366,6 +377,16 @@ dojo.declare("wm.Tree", wm.Box, {
 	autoScroll: true,
 	init: function() {
 		this.inherited(arguments);
+
+	    if (app._touchEnabled) {
+		dojo.require("lib.github.touchscroll.touchscroll");
+		this._touchScroll = new TouchScroll(this.domNode, {/*elastic:true, */owner: this});
+		this._touchScroll.scrollers.outer.style.position = "absolute";
+		this._touchScroll.scrollers.outer.style.left = "0px";
+		this._touchScroll.scrollers.outer.style.top = "0px";
+		this.setConnectors(false);
+	    }
+
 		dojo.addClass(this.domNode, "wmtree");
 		this.setConnectors(this.connectors);
 		this._nodeId = 0;
@@ -394,7 +415,10 @@ dojo.declare("wm.Tree", wm.Box, {
 		this._data = {};
 		this._nodeId = 0;
 		this.selected = null;
-		this.domNode.innerHTML = "";
+	        if (this._touchScroll)
+		    this._touchScroll.scrollers.inner.innerHTML = "";
+	        else
+		    this.domNode.innerHTML = "";
 		this.nodes = [];
 		this.root.destroy();
 		this.root = new wm.TreeRoot(this, "");
