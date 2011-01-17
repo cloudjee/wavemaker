@@ -242,6 +242,7 @@ Studio.widgets = {
 
 
 		}],
+	    benchbevel11_11s: ["wm.Bevel", {border: "", bevelSize: "1"}, {}],
 		panel1: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}, {
 			benchbevel11: ["wm.Bevel", {border: ""}, {}],
 			panel2: ["wm.Panel", {height: "48px", width: "200px", border: "0", verticalAlign: "top", horizontalAlign: "left"}, {}, {

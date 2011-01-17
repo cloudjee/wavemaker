@@ -1115,9 +1115,9 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 }
 
 #studio_splitter1 {
-	background: #959dab url(images/dark_toolbar_bg.gif) no-repeat scroll 0px top;
+/*	background: #959dab url(images/dark_toolbar_bg.gif) no-repeat scroll 0px top;
 	border-left: 1px solid #c0c4ca;
-	border-right: 1px solid #363b44;
+	border-right: 1px solid #363b44;*/
 	cursor:e-resize;
 	overflow:hidden;
 	width:5px;
@@ -1135,7 +1135,7 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 	background-position: center;
 }
 
-#studio_benchbevel, #studio_benchbevel2, #studio_benchbevel3, #studio_benchbevel4, #studio_benchbevel12, #studio_themesbevel, .studio_tabs_bevel, #studio_benchbevel8882 {
+#studio_benchbevel, #studio_benchbevel2, #studio_benchbevel3, #studio_benchbevel4, #studio_benchbevel12, #studio_themesbevel, .studio_tabs_bevel, #studio_benchbevel8882, #studio_benchbevel11_11s, #studio_benchbevel11, #studio_splitter1 {
 	background-color: #959dab;
 	border-top: 1px solid #c0c4ca;
 	border-bottom: 1px solid #363b44;
@@ -1146,7 +1146,7 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 
 
 #studio_benchbevel11 {
-	background: #959dab url(images/dark_toolbar_bg.gif) no-repeat scroll 0px top;
+/*	background: #959dab url(images/dark_toolbar_bg.gif) no-repeat scroll 0px top;*/
 	border-top: 1px solid #c0c4ca;
 	border-bottom: 1px solid #363b44;
 }
