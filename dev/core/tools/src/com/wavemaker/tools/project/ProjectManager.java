@@ -36,7 +36,7 @@ import com.wavemaker.common.util.StringUtils;
 
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.WMAppContext;
-import com.wavemaker.runtime.license.LicenseProcessor;
+import com.wavemaker.tools.license.LicenseProcessor;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 
 import com.wavemaker.runtime.server.ServerConstants;
@@ -115,11 +115,11 @@ public class ProjectManager {
     public void openProject(String projectName, boolean noSession, boolean skip)
             throws IOException {
 
-        if (!skip) {
+        /*if (!skip) {
             String goOn = LicenseProcessor.verifyLicense();
             if (goOn != null && goOn.length() > 0)
                 throw new WMRuntimeException(goOn);
-        }
+        }*/
 
         File f = getProjectDir(projectName, false);
 
