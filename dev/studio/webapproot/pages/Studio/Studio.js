@@ -184,8 +184,7 @@ dojo.declare("Studio", wm.Page, {
 	 },
 	 */
     setupLicenseInfoLabel: function() {
-	var licenseService = new wm.JsonRpcService({owner: this, service: "licensingService", sync: false});
-	
+	var licenseService = new wm.JsonRpcService({owner: this, service: "licensingService", sync: false});	
 	var licenseDeferred = licenseService.requestAsync("getLicenseExpiration");
 	licenseDeferred.addCallback(dojo.hitch(this, "setupLicenseInfoLabelResult"));
     },
@@ -514,7 +513,7 @@ dojo.declare("Studio", wm.Page, {
                         this.deploySuccess();
                         return true;
                     } else {
-		        if (result.dojoType != "cancel" && !app.toastDialog.showing)
+		        if (result.dojoType != "cancel" && (!app.toastDialog.showing || app.toastDialog._toastType != "Warning" && app.toastDialog._toastType != "Error"))
 			    app.toastError('Run failed: ' + result.message);
 			this._deploying = false;
 			this._runRequested = false;
