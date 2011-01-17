@@ -1244,6 +1244,11 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
     },
     onToastClick: function() {},
     setShowing: function(inShow, forceChange) {
+	if (!inShow) {
+	    window.clearTimeout(this._timeoutId);
+	    delete this._timeoutId;
+	}
+
         this.inherited(arguments);
         if (inShow)
             this.renderBounds();
@@ -1272,6 +1277,7 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
 	}
 	this.setTitle(optionalTitle || inCssClasses);
         inCssClasses = inCssClasses || "Info";
+        this._toastType = inCssClasses = inCssClasses || "Info";
         var classes = (inCssClasses) ? inCssClasses.split(" ") : [];
 
         if (dojo.indexOf(classes, "Success") != -1) {
