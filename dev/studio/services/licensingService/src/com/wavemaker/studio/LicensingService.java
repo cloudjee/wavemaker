@@ -19,7 +19,7 @@ package com.wavemaker.studio;
 
 import java.io.IOException;
 import com.wavemaker.runtime.RuntimeAccess;
-import com.wavemaker.runtime.license.LicenseManagerExt;
+import com.wavemaker.tools.license.*;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.project.StudioConfiguration;
