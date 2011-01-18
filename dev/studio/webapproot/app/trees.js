@@ -26,7 +26,7 @@ Studio.extend({
 	clearTrees: function() {
 		this.tree.clear();
 		this.widgetsTree.clear();
-		//this.componentsTree.clear();
+	        this.compTree.clear();
 		//this.dataTree.clear();
 	},
 	refreshDesignTrees: function() {

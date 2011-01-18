@@ -319,6 +319,10 @@ dojo.declare("Studio", wm.Page, {
 			this.application = null;
 		}
 		this.clearTrees();
+	    if (this.propertiesDialog.showing)
+		this.propertiesDialog.hide();
+	    if (this.paletteDialog.showing)
+		this.paletteDialog.hide();
 		wm.typeManager.clearTypes();
 		wm.services.clear();
 		this.updateServices();
