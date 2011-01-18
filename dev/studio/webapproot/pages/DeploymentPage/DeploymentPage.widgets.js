@@ -18,11 +18,6 @@
 DeploymentPage.widgets = {
     webServerListVar: ["wm.Variable", {type: "EntryData", json: "[{name: 'Tomcat', value: 'tomcat'}]"}],		    
     layoutBox1: ["wm.Layout", {height: "100%"}, {}, {
-	titleBar: ["wm.Panel", {height: "29px", layoutKind: "left-to-right"}, {}, {
-	    dialogLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_TextAlign_Center", "wm_Padding_4px", "wm_FontColor_White"]}, height: "100%", width: "100%", caption: "Deployment", border: "0"}, {}, {
-		format: ["wm.DataFormatter", {}, {}]
-	    }]
-	}],
 	MainPanel: ["wm.Panel", {width: "100%", height: "600px", padding: "5, 10, 5, 10", layoutKind: "top-to-bottom"},{},{
 	    MainDeploymentLayers: ["wm.AccordionLayers", {width: "100%", height: "100%", border: "3", borderColor: "#B0BDD4"}, {}, {
 		GenerateAppLayer: ["wm.Layer", {width: "100%", height: "100%", caption: "Generate Application"}, {}, {
