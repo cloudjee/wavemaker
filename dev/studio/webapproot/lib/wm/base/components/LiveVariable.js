@@ -420,9 +420,19 @@ wm.LiveVariable.extend({
 			case "matchMode":
 				return makeSelectPropEdit(inName, inValue, this._matchModes, inDefault);
 			case "operation":
-				return makeSelectPropEdit(inName, inValue, this._operations, inDefault);
+		    return makeSelectPropEdit(inName, inValue, ["read", "insert", "update", "delete"], inDefault);
 		}
 		return this.inherited(arguments);
+	},
+    setPropEdit: function(inName, inValue, inDefault) {
+	switch (inName) {
+	case "operation":
+	    var editor = dijit.byId("studio_propinspect_operation");
+	    if (editor) editor.set(inValue, false);
+	    return true;
 	}
+	return this.inherited(arguments);
+    },
+
 });
 
