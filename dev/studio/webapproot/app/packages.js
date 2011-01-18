@@ -79,7 +79,7 @@
 [ "Forms &amp; Editors/" +  bundlePackage.Editor, bundlePackage.Calendar, "wm.dijit.Calendar", "wm.base.widget.dijit.Calendar", "images/wm.dijit/Calendar.png",bundlePackage.descCalendar, false],
 [  "Forms &amp; Editors/" +  bundlePackage.Editor, bundlePackage.ColorPicker, "wm.ColorPicker", "wm.base.widget.Editors.Text", "images/wm/edit.png",bundlePackage.descColorPicker, false],
 [ "Forms &amp; Editors/Misc", bundlePackage.RelatedEditor, "wm.RelatedEditor", "wm.base.widget.RelatedEditor", "images/wm/edit.png",bundlePackage.descRelatedEditor, false],
-[ "Forms &amp; Editors/Misc", bundlePackage.SimpleForm, "wm.SimpleForm", "wm.base.widget.LiveForm",bundlePackage.descSimpleForm, true],
+[ "Forms &amp; Editors/Misc", bundlePackage.SimpleForm, "wm.SimpleForm", "wm.base.widget.LiveForm","images/wm/content.png", bundlePackage.descSimpleForm,true],
 [ "Forms &amp; Editors/Misc", bundlePackage.DojoFileUpload, "wm.DojoFileUpload", "wm.base.widget.DojoFileUpload", "images/wm/button.png",bundlePackage.descDojoFileUpload, true],
 [ "Forms &amp; Editors/Misc", bundlePackage.DojoFlashFileUpload, "wm.DojoFlashFileUpload", "wm.base.widget.DojoFlashFileUpload", "images/wm/button.png",bundlePackage.descDojoFlashFileUpload, true],
 
@@ -90,7 +90,7 @@
 [ bundlePackage.DataWidget, bundlePackage.List, "wm.List", "wm.base.widget.List", "images/wm/content.png",bundlePackage.descList, false],
 [ bundlePackage.DataWidget, bundlePackage.ListViewer, "wm.ListViewer", "wm.base.widget.ListViewer", "images/wm/content.png",bundlePackage.descListViewer, true],
 [ bundlePackage.DataWidget, bundlePackage.Tree, "wm.PropertyTree", "wm.base.widget.Tree", "images/wm/tree.png",bundlePackage.descPropertyTree, false],
-[ bundlePackage.DataWidget, bundlePackage.DraggableTree, "wm.DraggableTree", "wm.base.widget.DraggableTree", "images/wm/tree.png",bundlePackage.descDraggableTree, false],
+[ bundlePackage.DataWidget, bundlePackage.DraggableTree, "wm.DraggableTree", "wm.base.widget.DraggableTree", "images/wm/tree.png",bundlePackage.descDraggableTree, true],
 [ bundlePackage.DataWidget, bundlePackage.Calendar, "wm.dijit.Calendar", "wm.base.widget.dijit.Calendar", "images/wm.dijit/Calendar.png",bundlePackage.descCalendar, false],
 
 
@@ -119,17 +119,17 @@
 [ bundlePackage.Templates + "/Panel Layouts", bundlePackage.TabbedTwoCol, "wm.Template", "wm.base.widget.Template", "images/wm/template.png", bundlePackage.descTabbedTwoColumnTemplate, false, wm.widgetTemplates.tabbedTwoColumn],
 //[ bundlePackage.SubTemplates, "ToolbarAndForm", "wm.Template", "wm.base.widget.Template", "images/wm/template.png", "A toolbar and simple form template.", wm.widgetTemplates.toolbarWithGroupBox],
 
-[ bundlePackage.Web_Content, bundlePackage.Feed_List, "wm.FeedList", "wm.base.widget.FeedList", "images/rss.png", false, bundlePackage.descFeedList],
-[ bundlePackage.Web_Content, bundlePackage.Twitter_Feed, "wm.TwitterFeed", "wm.base.widget.TwitterFeed", "images/wm/twitter.png", false, bundlePackage.descTwitterFeed],
+[ bundlePackage.Web_Content, bundlePackage.Feed_List, "wm.FeedList", "wm.base.widget.FeedList", "images/rss.png", bundlePackage.descFeedList, false],
+[ bundlePackage.Web_Content, bundlePackage.Twitter_Feed, "wm.TwitterFeed", "wm.base.widget.TwitterFeed", "images/wm/twitter.png", bundlePackage.descTwitterFeed, false],
 //[ bundlePackage.Web_Content, "Stocks", "wm.gadget.Stocks", "wm.base.widget.gadget.Stocks", "images/flash.png", "Stocks Google Gadget"],
-[ bundlePackage.Web_Content, bundlePackage.Weather, "wm.gadget.Weather", "wm.base.widget.gadget.Weather", "images/flash.png", false, bundlePackage.descWeatherWidget],
-[ bundlePackage.Web_Content, bundlePackage.YouTube, "wm.gadget.YouTube", "wm.base.widget.gadget.YouTube", "images/flash.png", false, bundlePackage.descYouTubeWidget],
-[ bundlePackage.Web_Content, bundlePackage.Fisheye, "wm.DojoFisheye", "wm.base.widget.DojoFisheye", "images/wm/fisheye.png", false, bundlePackage.descFisheye],
-[ bundlePackage.Web_Content, bundlePackage.Lightbox, "wm.DojoLightbox", "wm.base.widget.DojoLightbox", "images/wm/lightbox_16.png", false, bundlePackage.descLightbox],
-[ bundlePackage.Web_Content, bundlePackage.ProgressBar, "wm.dijit.ProgressBar", "wm.base.widget.dijit.ProgressBar", "images/wm.dijit/ProgressBar.png", false, bundlePackage.descProgressBar],
-[ bundlePackage.Web_Content, bundlePackage.IFrame, "wm.IFrame", "wm.base.widget.IFrame", "images/wm/pane.png", false, bundlePackage.descIFrame],
-[ bundlePackage.Web_Content, bundlePackage.JsonStatus, "wm.JsonStatus", "wm.base.widget.Tree", "images/wm/bevel.png", false, bundlePackage.descJsonStatus],
-[ bundlePackage.Web_Content, bundlePackage.Ticker, "wm.Ticker", "wm.base.widget.Ticker", "images/wm/widget.png", false, bundlePackage.descTicker],
+[ bundlePackage.Web_Content, bundlePackage.Weather, "wm.gadget.Weather", "wm.base.widget.gadget.Weather", "images/flash.png", bundlePackage.descWeatherWidget, false],
+[ bundlePackage.Web_Content, bundlePackage.YouTube, "wm.gadget.YouTube", "wm.base.widget.gadget.YouTube", "images/flash.png", bundlePackage.descYouTubeWidget, false],
+[ bundlePackage.Web_Content, bundlePackage.Fisheye, "wm.DojoFisheye", "wm.base.widget.DojoFisheye", "images/wm/fisheye.png", bundlePackage.descFisheye, true],
+[ bundlePackage.Web_Content, bundlePackage.Lightbox, "wm.DojoLightbox", "wm.base.widget.DojoLightbox", "images/wm/lightbox_16.png", bundlePackage.descLightbox, true],
+[ bundlePackage.Web_Content, bundlePackage.ProgressBar, "wm.dijit.ProgressBar", "wm.base.widget.dijit.ProgressBar", "images/wm.dijit/ProgressBar.png", bundlePackage.descProgressBar, false],
+[ bundlePackage.Web_Content, bundlePackage.IFrame, "wm.IFrame", "wm.base.widget.IFrame", "images/wm/pane.png", bundlePackage.descIFrame, false],
+[ bundlePackage.Web_Content, bundlePackage.JsonStatus, "wm.JsonStatus", "wm.base.widget.Tree", "images/wm/bevel.png", bundlePackage.descJsonStatus, true],
+[ bundlePackage.Web_Content, bundlePackage.Ticker, "wm.Ticker", "wm.base.widget.Ticker", "images/wm/widget.png", bundlePackage.descTicker, true],
 
 
 [ bundlePackage.Deprecated, bundlePackage.DataGrid, "wm.DataGrid", "wm.base.widget.DataGrid", "images/wm/data.png", false, "A grid control for displaying lists"],
