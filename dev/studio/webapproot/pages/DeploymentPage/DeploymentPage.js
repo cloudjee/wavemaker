@@ -34,7 +34,7 @@ dojo.declare("DeploymentPage", wm.Part, {
       if (this.ManageWebServersPageContainer.page) this.ManageWebServersPageContainer.page.reset();
   },
     doneClicked: function() {
-	studio.navGotoDesignerClick();
+	this.owner.owner.hide();
     },
   _end: 0
 });
