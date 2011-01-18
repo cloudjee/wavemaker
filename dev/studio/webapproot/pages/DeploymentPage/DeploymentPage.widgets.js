@@ -18,7 +18,7 @@
 DeploymentPage.widgets = {
     webServerListVar: ["wm.Variable", {type: "EntryData", json: "[{name: 'Tomcat', value: 'tomcat'}]"}],		    
     layoutBox1: ["wm.Layout", {height: "100%"}, {}, {
-	MainPanel: ["wm.Panel", {width: "100%", height: "600px", padding: "5, 10, 5, 10", layoutKind: "top-to-bottom"},{},{
+	MainPanel: ["wm.Panel", {width: "100%", height: "100%", padding: "5, 10, 5, 10", layoutKind: "top-to-bottom"},{},{
 	    MainDeploymentLayers: ["wm.AccordionLayers", {width: "100%", height: "100%", border: "3", borderColor: "#B0BDD4"}, {}, {
 		GenerateAppLayer: ["wm.Layer", {width: "100%", height: "100%", caption: "Generate Application"}, {}, {
 		    GenerateAppPageContainer: ["wm.PageContainer", {width: "100%", height: "100%", pageName: "DeploymentPage_AppGeneration", deferLoad: true},
@@ -32,11 +32,12 @@ DeploymentPage.widgets = {
 		    ManageWebServersPageContainer: ["wm.PageContainer", {width: "100%", height: "100%", pageName: "DeploymentPage_WebServer", deferLoad: true},
 						    {onShow: "reset"}]		
 		}]
-	    }],
-	    ButtonPanel: ["wm.Panel", {width: "100%", height: "48px", horizontalAlign: "right"}, {}, {
+	    }]
+	}],
+	    ButtonPanel: ["wm.Panel", {_classes: {domNode: ["wmDialogFooter"]}, width: "100%", height: "32px", horizontalAlign: "right"}, {}, {
 		doneButton: ["wm.Button", {width: "150px", height: "100%", caption: "Close"}, {onclick: "doneClicked"}]
 	    }]
-	}]
+
     }]
 };
 

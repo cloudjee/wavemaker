@@ -58,7 +58,7 @@ dojo.declare("DeploymentPage_AppGeneration", wm.Part, {
    /* Event handler for this.Generate_WAR; generates the war file and optionally downloads it after completion */  
   generateAppButtonClick: function(inSender) {
       var _this = this;
-      if (!this.useJNDICheckbox.getChecked()) {
+      if (!this.useJNDICheckbox.getChecked() && studio.JNDIDialog && studio.JNDIDialog.page) {
     	  studio.JNDIDialog.page._reset();
       }
       studio.onDeployOkClicked(this._prepareJNDINames(),
