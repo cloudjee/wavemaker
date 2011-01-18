@@ -114,7 +114,8 @@ dojo.declare("wm.propEdit.UnitValue", wm.propEdit.Select, {
 	},
         setPropEdit: function(propName, value) {
 	    dijit.byId("studio_propinspect_" + propName + "_1").set("value", parseInt(value), false);
-	    dijit.byId("studio_propinspect_" + propName + "_2").set("value", value.match(/%|px/)[0], false);
+	    var matches = value.match(/%|px/);
+	    dijit.byId("studio_propinspect_" + propName + "_2").set("value", matches && matches.length ? matches[0] : "px", false);
 	}
 });
 

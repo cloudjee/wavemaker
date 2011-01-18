@@ -1171,15 +1171,15 @@ dojo.declare("Studio", wm.Page, {
 	toggleWidthClick: function() {
 		var s = this.selected;
 		if (s) {
-			this.toggleControlSize(s, "width");
-			inspect(s);
+		    this.toggleControlSize(s, "width");
+                    this.inspector.reinspect();
 		}
 	},
 	toggleHeightClick: function() {
 		var s = this.selected;
 		if (s) {
-			this.toggleControlSize(s, "height");
-			inspect(s);
+		    this.toggleControlSize(s, "height");
+                    this.inspector.reinspect();
 		}
 	},
 	toggleFlexBcClick: function() {
@@ -1192,23 +1192,23 @@ dojo.declare("Studio", wm.Page, {
 	toggleVerticalAlignClick: function() {
 		var s = this.selected;
 		if (s) {
-			this.toggleControlPosition(s, "verticalAlign", ["top", "middle", "bottom"]);
-			inspect(s);
+		    this.toggleControlPosition(s, "verticalAlign", ["top", "middle", "bottom"]);
+                    this.inspector.reinspect();
 		}
 	},
 	toggleHorizontalAlignClick: function() {
 		var s = this.selected;
 		if (s) {
-			this.toggleControlPosition(s, "horizontalAlign", ["left", "center", "right"]);
-			inspect(s);
+		    this.toggleControlPosition(s, "horizontalAlign", ["left", "center", "right"]);
+                    this.inspector.reinspect();
 		}
 	},
 	toggleLayoutClick: function() {
 		var s = this.selected;
 		if (s) {
-			var v = "top-to-bottom", h = "left-to-right";
-			s.setLayoutKind(s.layoutKind == v ? h : v);
-			inspect(s);
+		    var v = "top-to-bottom", h = "left-to-right";
+		    s.setLayoutKind(s.layoutKind == v ? h : v);
+                    this.inspector.reinspect();
 		}
 	},
 	outlinedClick: function() {
