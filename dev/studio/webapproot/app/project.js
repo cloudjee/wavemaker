@@ -1102,7 +1102,7 @@ Studio.extend({
 	    dojo.disconnect(this._saveNextConnection);
 
 	var page = this._unsavedPages.shift();
-	if (!page && this._unsavedPages.length == 0) {
+	if ((!page || !page.getDirty()) && this._unsavedPages.length == 0) {
 	    this.saveProjectComplete();
 	    return;
 	}
@@ -1456,7 +1456,7 @@ Studio.extend({
 
 	    /* Clear any prior connections... esp for runs that don't make it to projectSaveComplete */
 	    for (var i = 0; i < this._runConnections.length; i++) dojo.disconnect(this._runConnections[i]);
-	    this._runConnections.push(dojo.connect(this.project,"saveComplete", this, function() {
+	    this._runConnections.push(dojo.connect(this,"saveProjectComplete", this, function() {
 
 		/* Clear this connection */
 		for (var i = 0; i < this._runConnections.length; i++) dojo.disconnect(this._runConnections[i]);
