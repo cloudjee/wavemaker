@@ -111,7 +111,7 @@ dojo.declare("wm.EditArea", wm.Box, {
 			syntax: this.syntax,
 			toolbar: " ",
 			cursor_position:"auto",
-			replace_tab_by_spaces: 2,
+			replace_tab_by_spaces: 4,
 			callSave: dojo.hitch(this, 'saveScript'),
 			EA_init_callback: this.getRuntimeId() + "._onStarted",
 			EA_load_callback: this.getRuntimeId() + "._onLoaded"
@@ -139,6 +139,10 @@ dojo.declare("wm.EditArea", wm.Box, {
 				this.off();
 				this.textAreaDom.setBox(this.getContentBounds());
 				this.on();
+			    wm.job(this.getRuntimeId() + "resize", 20, dojo.hitch(this, function() {
+				if (this.isReallyShowing()) 
+				    this.focus();
+			    }));
 			}catch(x){
 			}
 		} 
@@ -207,6 +211,15 @@ dojo.declare("wm.EditArea", wm.Box, {
 	    this.getScrim().setShowing(false);
 	    if (this.textAreaNode.value != this.getText())
 		this.setText(this.textAreaNode.value); // strange timing error causes this to happen
+
+/* This stupid hack forces a refocus which is needed for FF 3.6 to show the cursor */
+	    var tmp = document.createElement("input");
+	    tmp.type = "text";
+	    this.parent.domNode.appendChild(tmp);
+	    tmp.focus();
+	    dojo.destroy(tmp);
+	    this.focus();
+/* End stupid hack */
 	},
 	callAfterStarted: function(inFunction) {
 		if (!dojo.isFunction(inFunction))
