@@ -119,7 +119,7 @@ dojo.declare("wm.ComponentInspector", wm.Layers, {
     reinspect: function() {	    
 	var requiredInspector = this.getInspector();
 	var inspectorProps = this.parent.tree.selected.inspector;
-	if (this._currentInspector != requiredInspector || this.inspectorProps != inspectorProps)
+	if (this._currentInspector != requiredInspector || this.inspectorProps.inspector != inspectorProps)
 	    return this.inspect(this.inspected);
 	if (this.inspected && this.inspectorProps) {
 	    this._currentInspector.reinspect(this.inspected);
