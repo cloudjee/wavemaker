@@ -99,7 +99,7 @@ dojo.declare("wm.VirtualList", wm.Box, {
 		this.setHeaderVisible(this.headerVisible);
 
 	    if (app._touchEnabled) {
-		dojo.require("lib.github.touchscroll.touchscroll");
+		wm.conditionalRequire("lib.github.touchscroll.touchscroll");
 		this._listTouchScroll = new TouchScroll(this.listNode, {elastic:true, owner: this});
 		this.listNode = this._listTouchScroll.scrollers.inner;
 		this._listTouchScroll.scrollers.outer.style.position = "absolute";

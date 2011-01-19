@@ -379,7 +379,7 @@ dojo.declare("wm.Tree", wm.Box, {
 		this.inherited(arguments);
 
 	    if (app._touchEnabled) {
-		dojo.require("lib.github.touchscroll.touchscroll");
+		wm.conditionalRequire("lib.github.touchscroll.touchscroll");
 		this._touchScroll = new TouchScroll(this.domNode, {/*elastic:true, */owner: this});
 		this._touchScroll.scrollers.outer.style.position = "absolute";
 		this._touchScroll.scrollers.outer.style.left = "0px";
@@ -944,6 +944,7 @@ dojo.declare("wm.DebugDialog", wm.Dialog, {
 	    this.commandPointer = null;
 	});
 	commandLine.connect(commandLine, "dokeypress", dojo.hitch(this, function(inEvent) {
+	    if (inEvent.charCode) return;
 	    if (inEvent.keyCode == dojo.keys.ENTER) {
 		executeDebugButton.click();
 	    } else if (app._keys[inEvent.keyCode] == "UP") {
@@ -962,6 +963,7 @@ dojo.declare("wm.DebugDialog", wm.Dialog, {
 		    this.commandPointer = this.commandPointer + 1 % this.commands.length;
 		commandLine.setDataValue(this.commands[this.commandPointer]);	    
 	    }
+	    dojo.stopEvent(inEvent);
 	}));
     }
 

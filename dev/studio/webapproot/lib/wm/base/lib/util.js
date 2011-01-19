@@ -621,3 +621,14 @@ setIe6Css = function(inSheet, inCss) {
 		n.appendChild(document.createTextNode(inCss));
 	c.appendChild(n);
 }
+
+/* Stupid hack to hide a conditional dojo.require package from the build system
+   so that something like touchscroll doesn't get built into the core libraries -- especially
+   since nonwebkit browsers break on touchscroll and its a useless library for desktop apps.
+   The bulid system searches for "dojo.require", by using dojo["require"] the 
+   build system ignores this and doesn't try to add this package into the layer.
+ */
+wm.conditionalRequire = function(packageName, condition) {
+    if (arguments.length == 1 || condition)
+	dojo["require"](packageName);
+}

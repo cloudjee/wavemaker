@@ -54,9 +54,7 @@ wm.define("wm.Container", wm.Control, {
 	},
 	init: function() {
 	    if (this.touchScrolling && app._touchEnabled) {
-		try {
-		    dojo.require("lib.github.touchscroll.touchscroll");
-		} catch(e) {}
+		wm.conditionalRequire("lib.github.touchscroll.touchscroll");
 		this._touchScroll = new TouchScroll(this.domNode, {elastic:true, owner: this});
 		this._touchScroll.scrollers.outer.style.position = "absolute";
 		this._touchScroll.scrollers.outer.style.left = "0px";
