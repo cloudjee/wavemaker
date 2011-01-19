@@ -110,7 +110,7 @@ dojo.declare("wm.propEdit.UnitValue", wm.propEdit.Select, {
 	    var value = dijit.byId("studio_propinspect_" + propName + "_1").get("value");
 	    var select = dijit.byId("studio_propinspect_" + propName + "_2").get("value");
 	    var su = this.lex(value);
-	    this.inspector._setInspectedProp(this.name, su.value + (su.units || select.value));
+	    this.inspector._setInspectedProp(this.name, su.value + (su.units || select));
 	},
         setPropEdit: function(propName, value) {
 	    dijit.byId("studio_propinspect_" + propName + "_1").set("value", parseInt(value), false);
