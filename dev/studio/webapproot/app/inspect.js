@@ -62,7 +62,10 @@ wm.inspectOnChange = function(inPropName) {
 	studio.inspector.inspector._currentInspector.propChange(inPropName.replace(/_\d+$/,""), input.get("value"));
 }
 
-
+wm.inspectOnEnter = function(event) {
+    if (event.keyCode == 13)
+	wm.inspectOnChange(event.target.id.replace(/(widget_)?studio_propinspect_/,""));
+}
 
 
 /**
@@ -77,7 +80,8 @@ makeSelectPropEdit = function(inName, inValue, inOptions, inDefault, inValues, i
     var html = [
 	'<table class="studio_propinspect_innertable"><tr><td class="studio_propinspect_editcell">',
 	'<select class="wminspector-edit" id="studio_propinspect_'+inName+'" dojoType="dijit.form.ComboBox"  name="', inName, '" id="studio-prop-panel-' + inName + '" ',
-		 'onChange="wm.inspectOnChange(\'' +inName + '\')">' ];
+	'onKeyPress="wm.inspectOnEnter" ',
+	'onChange="wm.inspectOnChange(\'' +inName + '\')">' ];
 	for (var i=0, l=inOptions.length, o, v; (o=inOptions[i])||(i<l); i++) {
 		v = inValues ? inValues[i] : o;
 		html.push('<option', 
@@ -112,6 +116,7 @@ makeInputPropEdit = function(inName, inValue, inDefault, inReadonly, isBound) {
 	return [
 	    '<table class="studio_propinspect_innertable"><tr><td class="studio_propinspect_editcell">',
 	    '<input id="studio_propinspect_'+inName+'" dojoType="dijit.form.TextBox" name="', inName, '"',
+	    'onKeyPress="wm.inspectOnEnter" ',
 	    'onChange="wm.inspectOnChange(\''+inName+'\')"',
 		(inValue==inDefault ? ' class="prop-default wminspector-edit"' : 'class="wminspector-edit"'),
 	    (inReadonly === true ? ' readOnly="true"' : ''),
