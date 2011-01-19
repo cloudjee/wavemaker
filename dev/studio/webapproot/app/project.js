@@ -46,7 +46,7 @@ dojo.declare("wm.studio.Project", null, {
 				  url: "lib/images/silkIcons/silk.png", 
 				  width: 16,
 				  height: 16, 
-				  colCount: 35, 
+				  colCount: 39, 
 				  iconCount: 90});
 	        this.newPage(this.pageName, "", {template: optionalInTemplate});
                 this.saveProject(false, false);
@@ -559,7 +559,12 @@ dojo.declare("wm.studio.Project", null, {
 	copyProject: function(inName, inNewName) {
 		if (inName && inNewName)
 			this.saveProject(false, true);
-			studio.studioService.requestAsync("copyProject", [inName, inNewName], dojo.hitch(this, "projectsChanged"));
+	    studio.beginWait("Copying...");
+	    studio.studioService.requestAsync("copyProject", [inName, inNewName], dojo.hitch(this, function() {
+		this.projectsChanged();
+		studio.endWait();
+		app.toastSuccess(inName + " saved as " + inNewName + "; you are still editting " + inName);
+	    }));
 	},
 	//=========================================================================
 	// Delete
@@ -569,7 +574,8 @@ dojo.declare("wm.studio.Project", null, {
 		if  (deleteCurrentProject)
 			this.closeProject();		
 		return studio.studioService.requestAsync("deleteProject", [inName], dojo.hitch(this, function() {
-			this.projectChanged(inName);
+		    this.projectChanged(inName);
+		    studio.startPageDialog.page.refreshProjectList();
 		}));
 	},
 	deletePage: function(inName) {
@@ -587,7 +593,7 @@ dojo.declare("wm.studio.Project", null, {
 	//=========================================================================
 	// Close
 	//=========================================================================
-	closeProject: function(inProjectName) {
+	closeProject: function(inProjectName) {	    
 	    if (studio.bindDialog.showing && !studio.bindDialog._hideAnimation) 
 		studio.bindDialog.dismiss();
 	    this.closeAllServicesTabs();
@@ -635,6 +641,8 @@ dojo.declare("wm.studio.Project", null, {
 	getPageList: function() {
 		return this.pageList || [];
 	},
+    // TODO: start page's  refreshProjectList and this call to listProjects should share 
+    // a single model.
 	updateProjectList: function() {
 		var d = studio.studioService.requestSync("listProjects", null);
 		d.addCallback(dojo.hitch(this, function(inResult) {
@@ -736,7 +744,6 @@ Studio.extend({
      * saving the project, or openning a new project
      */
         updateProjectDirty: function() {
-	    if (!studio.application) return;
 	    var dirty = false;
 	    dirty = this.updateCanvasDirty() || dirty;
 	    dirty = this.updateSourceDirty() || dirty;
@@ -748,8 +755,12 @@ Studio.extend({
      * Updates the dirty indicator for canvas based on whether widgets at page or app level have any changes */
         updateCanvasDirty: function() {
 	    var c = this._cleanPageData;
-	    if (!c)
+	    var caption = this.workspace.caption;
+	    if (!c || !this.application) {
+		caption = caption.replace(/^\<.*\/\>\s*/,"");
+		this.workspace.setCaption(caption);
 		return;
+	    }
 	    var dirty = c.widgets != this.getWidgets();
 
 	    /* Flag the canvas as dirty if anything in the app level model has changed */
@@ -760,7 +771,7 @@ Studio.extend({
 		dirty = this.application && (c.widgets != dojo.toJson(this.application.writeComponents("")));
 	    }
 
-	    var caption = this.workspace.caption;
+
 	    if (dirty && !caption.match(/\<img/)) {
 		caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
 		this.workspace.setCaption(caption);
@@ -774,9 +785,12 @@ Studio.extend({
     /* Called by updateProjectDirty; Updates the dirty indicators for each source tab based on whether or not the current value matches the saved value */
         updateSourceDirty: function() {
 	    var c = this._cleanPageData;
-	    if (!c)
+	    var caption = this.sourceTab.caption;
+	    if (!c || !this.application) {
+		caption = caption.replace(/^\<.*\/\>\s*/,"");
+		this.sourceTab.setCaption(caption);
 		return;
-
+	    }
 	    var dirty = false;
 
 	    dirty = this.updatePageCodeDirty() || dirty;
@@ -785,7 +799,7 @@ Studio.extend({
 	    dirty = this.updateMarkupCodeDirty() || dirty;
 
 
-	    var caption = this.sourceTab.caption;
+
 	    if (dirty && !caption.match(/\<img/)) {
 		caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
 		this.sourceTab.setCaption(caption);
@@ -800,7 +814,7 @@ Studio.extend({
      * Updates the dirty indicator for page code based on whether its changed from saved value */
         updatePageCodeDirty: function() {
 	    var c = this._cleanPageData;
-	    if (!c)
+	    if (!c || !this.application)
 		return;
 	    var dirty = c.js != this.getScript();
 
@@ -820,11 +834,14 @@ Studio.extend({
         updateCssCodeDirty: function() {
 	    var c1 = this._cleanPageData;
 	    var c2 = this._cleanAppData;
-	    if (!c1 || !c2)
+	    var caption = this.cssLayer.caption;
+	    if (!c1 || !c2  || !this.application) {
+		caption = caption.replace(/^\<.*\/\>\s*/,"");
+		this.cssLayer.setCaption(caption);
 		return;
+	    }
 	    var dirty = c1.css != this.getCss() || c2.css != this.getAppCss();
 
-	    var caption = this.cssLayer.caption;
 	    if (dirty && !caption.match(/\<img/)) {
 		caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
 		this.cssLayer.setCaption(caption);
@@ -839,12 +856,15 @@ Studio.extend({
      * Updates the dirty indicator for markup based on whether its changed from saved value */
         updateMarkupCodeDirty: function() {
 	    var c = this._cleanPageData;
-
-	    if (!c)
+	    var caption = this.markupLayer.caption;
+	    if (!c || !this.application) {
+		caption = caption.replace(/^\<.*\/\>\s*/,"");
+		this.markupLayer.setCaption(caption);
 		return;
+	    }
 	    var dirty = c.html != this.getMarkup()
 
-	    var caption = this.markupLayer.caption;
+
 	    if (dirty && !caption.match(/\<img/)) {
 		caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
 		this.markupLayer.setCaption(caption);
@@ -859,12 +879,15 @@ Studio.extend({
      * Updates the dirty indicator for the custom app javascript code based on whether its changed from saved value */
         updateAppCodeDirty: function() {
 	    var c = this._cleanAppData;
-
-	    if (!c)
+	    var caption = this.appsource.caption;
+	    if (!c || !this.application) {
+		caption = caption.replace(/^\<.*\/\>\s*/,"");
+		this.appsource.setCaption(caption);
 		return;
+	    }
 	    var dirty = c.js != this.appsourceEditor.getText();
 
-	    var caption = this.appsource.caption;
+
 	    if (dirty && !caption.match(/\<img/)) {
 		caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
 		this.appsource.setCaption(caption);
@@ -1211,9 +1234,15 @@ Studio.extend({
 	    if (studio.application) {
 		this.confirmAppChange(bundleDialog.M_AreYouSureCloseProject, 
                                       undefined, dojo.hitch(this, function() {
-					  this.project.closeProject();
-					  this.startPageDialog.show();
-					  this.startPageDialog.page.openProjectTab();
+					  studio.beginWait("Closing...");
+					  wm.onidle(this, function() {
+					      try {
+						  this.project.closeProject();
+						  this.startPageDialog.show();
+						  this.startPageDialog.page.openProjectTab();
+					      } catch(e) {}
+					      studio.endWait();
+					  });
                                       }));
 	    } else {
 		this.startPageDialog.show();
@@ -1230,10 +1259,19 @@ Studio.extend({
 	    if (p) {
                 app.confirm(bundleDialog.M_AreYouSureDeleteProject + p + '?', false,
                             dojo.hitch(this, function() {
-		                if (studio.project.projectName == inName)
-			            this.project.closeProject();
-			        this.project.deleteProject(inName);
-			        this.left.setLayer("projects");
+		                if (studio.project.projectName == inName) {
+					  studio.beginWait("Deleting...");
+					  wm.onidle(this, function() {
+					      try {
+						  this.project.closeProject();
+						  this.project.deleteProject(inName);
+					      } catch(e) {}
+					      studio.endWait();
+					  });
+
+				} else {
+			            this.project.deleteProject(inName);
+				}
                             }));
 		}
 	},
@@ -1250,7 +1288,13 @@ Studio.extend({
 	closeClick: function() {
 	    this.confirmAppChange(bundleDialog.M_AreYouSureCloseProject, 
                                   undefined, dojo.hitch(this, function() {
-		                      this.project.closeProject();
+					  studio.beginWait("Closing...");
+					  wm.onidle(this, function() {
+					      try {
+						  this.project.closeProject();
+					      } catch(e) {}
+					      studio.endWait();
+					  });
                                   }));
 	},
 	copyProjectClick: function() {
