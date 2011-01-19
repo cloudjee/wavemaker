@@ -210,14 +210,17 @@ dojo.declare("wm.studio.Project", null, {
 		try {
 			this.loadPage();
 			this.makePage();
+			this.pageChanged();
+		        studio.pageSelect.setDataValue(inName);
 		} catch(e) {
 			console.debug(e);
 			this.loadError(bundleDialog.M_FailedToOpenPage + this.pageName + ". Error: " + e);
 			this.pageName = "";
 			studio.page = null;
-		} finally {
-			this.pageChanged();
-		        studio.pageSelect.setDataValue(inName);
+		    if (studio.application && studio.application.main && studio.application.main != inName)
+			this.openPage(studio.application.main);
+		    else
+			this.closeProject();
 		}
 	},
 	loadProjectData: function(inPath) {
@@ -231,7 +234,7 @@ dojo.declare("wm.studio.Project", null, {
 		        documentation: dojo.fromJson(this.loadProjectData(this.projectName + ".documentation.json"))
 		};
 		if (!this.projectData.js) {
-		    alert(bundleDialog.M_WarningCouldNotFind + " projects/" + this.projectName + "/" + this.projectName + ".js");
+			throw bundleDialog.M_WarningCouldNotFind + " projects/" + this.projectName + "/" + this.projectName + ".js";
 		} else {
 		    var src = this.projectData.js;
 		    var extendIndex = src.indexOf(this.projectName + ".extend");
@@ -291,6 +294,7 @@ dojo.declare("wm.studio.Project", null, {
 				owner: studio,
 				_designer: studio.designer
 			});
+		    if (!studio.page.root) throw "Invalid Page";
 			studio.page.root.parent = studio.designer;
 		        for (var i in this.pageData.documentation) {
                             if (i == "wip")
@@ -302,7 +306,6 @@ dojo.declare("wm.studio.Project", null, {
 	},
 	loadError: function(inMessage) {
 	    app.toastError(inMessage, 15000);
-		this.projectChanged();
 	},
 	//=========================================================================
 	// Save
