@@ -17,16 +17,12 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -108,45 +104,45 @@ public class MainConsole extends javax.swing.JFrame
 //        initPropertyListeners();
     }
 
-    static private boolean hasSplashScreen()
-    {
-        try
-        {
-            Class clazz = Class.forName("SplashScreen");
-            Method meth = clazz.getMethod("getSplashScreen");
-            return meth.invoke(null, new Object(){}) != null;
-        }
-        catch (IllegalAccessException ex)
-        {
-            Logger.getLogger(MainConsole.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }
-        catch (IllegalArgumentException ex)
-        {
-            Logger.getLogger(MainConsole.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }
-        catch (InvocationTargetException ex)
-        {
-            Logger.getLogger(MainConsole.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }        
-        catch (NoSuchMethodException ex)
-        {
-            Logger.getLogger(MainConsole.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }
-        catch (SecurityException ex)
-        {
-            Logger.getLogger(MainConsole.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }        
-        catch (ClassNotFoundException ex)
-        {
-            Logger.getLogger(MainConsole.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }
-    }
+//    static private boolean hasSplashScreen()
+//    {
+//        try
+//        {
+//            Class clazz = Class.forName("SplashScreen");
+//            Method meth = clazz.getMethod("getSplashScreen");
+//            return meth.invoke(null, new Object(){}) != null;
+//        }
+//        catch (IllegalAccessException ex)
+//        {
+//            Logger.getLogger(MainConsole.class.getName()).log(Level.SEVERE, null, ex);
+//            return false;
+//        }
+//        catch (IllegalArgumentException ex)
+//        {
+//            Logger.getLogger(MainConsole.class.getName()).log(Level.SEVERE, null, ex);
+//            return false;
+//        }
+//        catch (InvocationTargetException ex)
+//        {
+//            Logger.getLogger(MainConsole.class.getName()).log(Level.SEVERE, null, ex);
+//            return false;
+//        }        
+//        catch (NoSuchMethodException ex)
+//        {
+//            Logger.getLogger(MainConsole.class.getName()).log(Level.SEVERE, null, ex);
+//            return false;
+//        }
+//        catch (SecurityException ex)
+//        {
+//            Logger.getLogger(MainConsole.class.getName()).log(Level.SEVERE, null, ex);
+//            return false;
+//        }        
+//        catch (ClassNotFoundException ex)
+//        {
+//            Logger.getLogger(MainConsole.class.getName()).log(Level.SEVERE, null, ex);
+//            return false;
+//        }
+//    }
 
 
     private void initPropertyListeners()
@@ -375,11 +371,8 @@ public class MainConsole extends javax.swing.JFrame
         {
             Main.printlnToLog("*** start btnAdvOptsActionPerformed");
             JDialog optsDlg = new LauncherAdvOptsDialog(this, true);
-            Main.printlnToLog("    before set bg");
             optsDlg.getContentPane().setBackground(Color.WHITE);
-            Main.printlnToLog("    before set loc rel");
             optsDlg.setLocationRelativeTo(this);
-            Main.printlnToLog("    before set visible");
             optsDlg.setVisible(true);
             Main.printlnToLog("--- end btnAdvOptsActionPerformed");
         }

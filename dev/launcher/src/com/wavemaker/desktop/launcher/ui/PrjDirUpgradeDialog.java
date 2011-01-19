@@ -8,19 +8,62 @@
  *
  * Created on Jan 5, 2011, 8:42:15 AM
  */
-
 package com.wavemaker.desktop.launcher.ui;
+
+import java.io.File;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author cconover
  */
-public class PrjDirUpgradeDialog extends javax.swing.JFrame {
+public class PrjDirUpgradeDialog extends javax.swing.JFrame
+{
+
+    private boolean normalClose = false;
+    protected String version;
+    protected File projectsDir;
+    protected File existingDir;
 
     /** Creates new form PrjDirUpgradeDialog */
-    public PrjDirUpgradeDialog() {
-        initComponents();
+    public PrjDirUpgradeDialog(
+            String version,
+            File existingProjectsDirectory,
+            File defaultProjectsDirectory)
+    {
+        this(version, existingProjectsDirectory, defaultProjectsDirectory, false);
     }
+
+    public PrjDirUpgradeDialog(
+            String version, File existingProjectsDirectory,
+            File defaultProjectsDirectory, boolean majorUpgrade)
+    {
+        initComponents();
+
+        this.version = version;
+        this.existingDir = existingProjectsDirectory;
+        this.projectsDir = existingProjectsDirectory;
+        if (defaultProjectsDirectory != null)
+        {
+            this.projectsDir = defaultProjectsDirectory;
+        }
+
+        if (majorUpgrade)
+        {
+//            this.copyProjectsButton.setSelected(true);
+        }
+        else
+        {
+//            this.oldProjectsButton.setSelected(true);
+        }
+        
+//        this.setModal(true);
+        this.setSize(this.getPreferredSize());
+    }
+
+    
+
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -31,6 +74,7 @@ public class PrjDirUpgradeDialog extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        rbgPrjDir = new javax.swing.ButtonGroup();
         lblCongrats = new javax.swing.JLabel();
         lblClearCache = new javax.swing.JLabel();
         rbUseCurDir = new javax.swing.JRadioButton();
@@ -45,12 +89,18 @@ public class PrjDirUpgradeDialog extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/wavemaker/desktop/launcher/ui/Bundle"); // NOI18N
         setTitle(bundle.getString("PrjDirUpgradeDialog.title")); // NOI18N
+        setBackground(new java.awt.Color(255, 255, 255));
 
+        lblCongrats.setBackground(new java.awt.Color(255, 255, 255));
         lblCongrats.setText(bundle.getString("PrjDirUpgradeDialog.lblCongrats.text")); // NOI18N
         lblCongrats.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
+        lblClearCache.setBackground(new java.awt.Color(255, 255, 255));
         lblClearCache.setText(bundle.getString("PrjDirUpgradeDialog.lblClearCache.text")); // NOI18N
 
+        rbUseCurDir.setBackground(new java.awt.Color(255, 255, 255));
+        rbgPrjDir.add(rbUseCurDir);
+        rbUseCurDir.setSelected(true);
         rbUseCurDir.setText(bundle.getString("PrjDirUpgradeDialog.rbUseCurDir.text")); // NOI18N
         rbUseCurDir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -58,6 +108,8 @@ public class PrjDirUpgradeDialog extends javax.swing.JFrame {
             }
         });
 
+        rbUseNewDir.setBackground(new java.awt.Color(255, 255, 255));
+        rbgPrjDir.add(rbUseNewDir);
         rbUseNewDir.setText(bundle.getString("PrjDirUpgradeDialog.rbUseNewDir.text")); // NOI18N
         rbUseNewDir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -65,11 +117,13 @@ public class PrjDirUpgradeDialog extends javax.swing.JFrame {
             }
         });
 
+        pnlNewDirFields.setBackground(new java.awt.Color(255, 255, 255));
         pnlNewDirFields.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         lblChooseDir.setLabelFor(tfNewPrjDir);
         lblChooseDir.setText(bundle.getString("PrjDirUpgradeDialog.lblChooseDir.text")); // NOI18N
 
+        tfNewPrjDir.setEditable(false);
         tfNewPrjDir.setText("c:\\dev\\wavemaker");
         tfNewPrjDir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -77,8 +131,15 @@ public class PrjDirUpgradeDialog extends javax.swing.JFrame {
             }
         });
 
+        btnFileChooser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/wavemaker/desktop/launcher/ui/folder.png"))); // NOI18N
         btnFileChooser.setText(bundle.getString("PrjDirUpgradeDialog.btnFileChooser.text")); // NOI18N
+        btnFileChooser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFileChooserActionPerformed(evt);
+            }
+        });
 
+        ckbCopyProjects.setBackground(new java.awt.Color(255, 255, 255));
         ckbCopyProjects.setText(bundle.getString("PrjDirUpgradeDialog.ckbCopyProjects.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout pnlNewDirFieldsLayout = new org.jdesktop.layout.GroupLayout(pnlNewDirFields);
@@ -104,13 +165,18 @@ public class PrjDirUpgradeDialog extends javax.swing.JFrame {
                 .add(pnlNewDirFieldsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(tfNewPrjDir, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(lblChooseDir)
-                    .add(btnFileChooser))
+                    .add(btnFileChooser, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(ckbCopyProjects)
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         btnOk.setText(bundle.getString("PrjDirUpgradeDialog.btnOk.text")); // NOI18N
+        btnOk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOkActionPerformed(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -148,32 +214,99 @@ public class PrjDirUpgradeDialog extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void rbUseCurDirActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_rbUseCurDirActionPerformed
-    {//GEN-HEADEREND:event_rbUseCurDirActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rbUseCurDirActionPerformed
-
-    private void rbUseNewDirActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_rbUseNewDirActionPerformed
-    {//GEN-HEADEREND:event_rbUseNewDirActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rbUseNewDirActionPerformed
-
     private void tfNewPrjDirActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_tfNewPrjDirActionPerformed
     {//GEN-HEADEREND:event_tfNewPrjDirActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tfNewPrjDirActionPerformed
 
-    /**
-    * @param args the command line arguments
-    */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new PrjDirUpgradeDialog().setVisible(true);
-            }
-        });
-    }
+    private void btnFileChooserActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnFileChooserActionPerformed
+    {//GEN-HEADEREND:event_btnFileChooserActionPerformed
+        final JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        
+        if (projectsDir != null)
+        {
+            chooser.setCurrentDirectory(projectsDir);
+        }
 
+        if (chooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION)
+        {
+            tfNewPrjDir.setText(chooser.getSelectedFile().getAbsolutePath());
+            projectsDir = chooser.getCurrentDirectory();
+        }
+    }//GEN-LAST:event_btnFileChooserActionPerformed
+
+    private void btnOkActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnOkActionPerformed
+    {//GEN-HEADEREND:event_btnOkActionPerformed
+        boolean success = true;
+        
+        if (rbUseNewDir.isSelected())
+        {
+            // Test Projects directory
+                // Check if path exists
+                if (projectsDir.exists())
+                {
+                    // Check if a directory
+                    if (projectsDir.isDirectory())
+                    {
+                        // Check if writable
+                        if (!ckbCopyProjects.isSelected() && projectsDir.canWrite())
+                        {
+                            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), 
+                                "Unable to write to \"" + projectsDir.getAbsolutePath() 
+                                + "\".\nPlease correct the permissions or select a different location.", 
+                                "Error Opening Projects Directory:", JOptionPane.ERROR_MESSAGE);
+                            
+                            success = false;
+                        }
+                    }
+                    else
+                    {
+                        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "\"" 
+                            + projectsDir.getAbsolutePath() 
+                            + "\" is not a directory.\nPlease select a different location.", 
+                            "Error Opening Projects Directory:", JOptionPane.ERROR_MESSAGE);
+                        
+                        success = false;
+                    }
+                }
+                else
+                {
+                    // Create
+                    if (!projectsDir.mkdirs())
+                    {
+                        // Unable to create directories
+                        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
+                            "", "Error Creating Projects Directory:", 
+                            JOptionPane.ERROR_MESSAGE);
+                        
+                        success = false;
+                    }
+            }
+        }
+        
+        if (success)
+        {
+            normalClose = true;
+            dispose();
+        }
+    }//GEN-LAST:event_btnOkActionPerformed
+
+    private void rbUseNewDirActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_rbUseNewDirActionPerformed
+    {//GEN-HEADEREND:event_rbUseNewDirActionPerformed
+        enablePrjDirFields(rbUseNewDir.isSelected());
+    }//GEN-LAST:event_rbUseNewDirActionPerformed
+
+    private void rbUseCurDirActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_rbUseCurDirActionPerformed
+    {//GEN-HEADEREND:event_rbUseCurDirActionPerformed
+        enablePrjDirFields(rbUseNewDir.isSelected());
+    }//GEN-LAST:event_rbUseCurDirActionPerformed
+
+    private void enablePrjDirFields(boolean enable)
+    {
+        
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnFileChooser;
     private javax.swing.JButton btnOk;
@@ -184,7 +317,7 @@ public class PrjDirUpgradeDialog extends javax.swing.JFrame {
     private javax.swing.JPanel pnlNewDirFields;
     private javax.swing.JRadioButton rbUseCurDir;
     private javax.swing.JRadioButton rbUseNewDir;
+    private javax.swing.ButtonGroup rbgPrjDir;
     private javax.swing.JTextField tfNewPrjDir;
     // End of variables declaration//GEN-END:variables
-
 }

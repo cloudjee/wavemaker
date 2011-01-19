@@ -119,7 +119,8 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
         tfBrowser.setEditable(false);
         tfBrowser.setText(bundle.getString("SYSTEM_DEFAULT_BROWSER")); // NOI18N
 
-        btnFileChooser.setText("...");
+        btnFileChooser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/wavemaker/desktop/launcher/ui/folder.png"))); // NOI18N
+        btnFileChooser.setText(bundle.getString("LauncherAdvOptsDialog.btnFileChooser.text")); // NOI18N
         btnFileChooser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnFileChooserActionPerformed(evt);
@@ -314,7 +315,7 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
                     .add(pnlCheckboxes, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .add(20, 20, 20)
                 .add(pnlButtons, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         pack();
