@@ -56,7 +56,7 @@ dojo.declare("NewProjectDialog", wm.Page, {
     },
     reset: function() {
         var projectNames = {};
-	var projects = studio.project.getProjectList();
+	var projects = studio.startPageDialog.page.projectList;
 	var l={};
 	dojo.forEach(projects, dojo.hitch(this, function(p) {
 	    projectNames[p] = true;
