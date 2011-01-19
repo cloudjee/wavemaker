@@ -58,6 +58,11 @@ dojo.declare("Studio", wm.Page, {
 	// initialization
 	//=========================================================================
 	start: function() {
+	    if (dojo.isIE && dojo.isIE < 8) {
+		app.alert("<p>WaveMaker applications can run on IE6 or above.</p><p>However, WaveMaker Studio requires Chrome, FireFox or IE8.</p><p>Note: if you are running WaveMaker studio in IE8, you must turn off compatibility mode.</p>");
+		app.alertDialog.setButton1Caption("");
+		return;
+	    }
 	    app._page = this;// not sure why this was failing to set, but I don't have time to investigate...
 
 		try{
