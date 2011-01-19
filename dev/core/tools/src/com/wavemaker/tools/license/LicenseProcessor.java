@@ -1,4 +1,5 @@
 package com.wavemaker.tools.license;
+
 import java.util.prefs.Preferences;
 import java.util.Date;
 import java.io.*;

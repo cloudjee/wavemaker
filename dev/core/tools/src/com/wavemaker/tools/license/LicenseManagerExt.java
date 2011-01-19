@@ -3,8 +3,6 @@ package com.wavemaker.tools.license;
 import de.schlichtherle.license.*;
 import de.schlichtherle.xml.GenericCertificate;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.io.File;
 
 import com.wavemaker.tools.project.StudioConfiguration;
@@ -22,10 +20,10 @@ public class LicenseManagerExt extends LicenseManager {
         if (lc == null) return null;
 
         String macAddr = lc.getMacAddr();
-        String myMacAddr = getMacAddr();
-        /*if (!macAddr.equals(getMacAddr())) {
+        String myMacAddr = LicenseUtil.getMacAddr();
+        if (!macAddr.equals(myMacAddr)) {
             throw new Exception("Mis-matched hardware information in the license");
-        }*/
+        }
 
         String email = lc.getLicensee();
         String type = lc.getType();
@@ -57,28 +55,12 @@ public class LicenseManagerExt extends LicenseManager {
             throw new NoLicenseInstalledException(getLicenseParam().getSubject());
         certificate = getPrivacyGuard().key2cert(key);
         notary.verify(certificate);
-        final LicenseContentExt content = (LicenseContentExt) certificate.getContent();
+        Object result = certificate.getContent();
+        final LicenseContentExt content = (LicenseContentExt) result;
         validate(content);
         setCertificate(certificate);
 
         return content;
-    }
-
-    public static String getMacAddr() {
-        byte[] macAddr;
-        String info;
-        try {
-            InetAddress address = InetAddress.getLocalHost();
-            NetworkInterface ni = NetworkInterface.getByInetAddress(address);
-            macAddr = ni.getHardwareAddress();
-            info = new String(macAddr);
-        } catch (Exception e) {
-            e.printStackTrace();
-            info = "";
-        }
-
-        return info;
-        //return "";
     }
 
     public synchronized LicenseNotary getLicenseNotary() {
