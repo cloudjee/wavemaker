@@ -327,6 +327,7 @@ dojo.declare("Studio", wm.Page, {
 		wm.services.clear();
 		this.updateServices();
 		wm.roles = [];
+	    this.updateProjectDirty();
 		//
 		if (this.project.projectName)
 			this.navGotoDesignerClick();
