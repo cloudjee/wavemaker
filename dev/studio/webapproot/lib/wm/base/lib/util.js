@@ -261,7 +261,7 @@ wm.onidleChain = function(functionList) {
 	    var f2 = function(methods) {
 		window.setTimeout(function() {
 		    var f = methods.shift();
-		    f();
+		    if (f) f();
 		    if (methods.length)
 			f2(methods);
 		}, 1);
