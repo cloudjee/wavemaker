@@ -191,7 +191,7 @@ wm.Object.extendSchema(wm.ToolButton, {
 	scrollX:  { ignore: 1 },
 	scrollY:  { ignore: 1 },
         clicked: {ignore: 1, bindSource: true, type: "Boolean"},
-    iconUrl: {group: "format", bindable: true, type: "String", subtype: "File", doc: 1},
+        iconUrl: {group: "format", bindable: true, type: "String", subtype: "File"},
 	iconWidth: {group: "format"},
 	iconHeight: {group: "format"},
         iconMargin: {group: "format"}
@@ -413,11 +413,11 @@ wm.Object.extendSchema(wm.Button, {
 	imageList: { group: "display",order: 50},
     imageIndex: { group: "display", order: 51, type: "Number",  doc: 1},
     editImageIndex: { group: "display", order: 52, type: "String", doc: 1},
-    setCaption: {group: "method", params: "(inCaption)", doc: 1},
-    setImageIndex: {group: "method", params: "(inIndex)", doc: 1},
-    setIconUrl: {group: "method",params: "(inIconUrl)", doc: 1},
-    setDisabled: {group: "method",params: "(inDisabled)", doc: 1},
-    click:  {group: "method", params: "()", doc: 1}
+    setCaption: {group: "method",doc: 1},
+    setImageIndex: {group: "method",doc: 1},
+    setIconUrl: {group: "method",doc: 1},
+    setDisabled: {group: "method", doc: 1},
+    click:  {group: "method",  doc: 1}
 });
 
 
@@ -708,7 +708,7 @@ wm.Object.extendSchema(wm.PopupMenuButton, {
     imageIndex: {ignore: true},
     iconMargin: {ignore: true},
     dojoMenu: {ignore: true, doc: 1},
-    setIconClass: {group: "method", params: "(inIconClass)", doc: 1}
+    setIconClass: {group: "method", doc: 1}
 
 });   
 
