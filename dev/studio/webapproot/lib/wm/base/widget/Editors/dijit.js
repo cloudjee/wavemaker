@@ -137,7 +137,8 @@ dijit.form.NumberTextBox.prototype.parse = function(expression, options) {
 // dojo customization:
 // allow currency editor parse empty value as null, not NaN
 dijit.form.CurrencyTextBox.prototype.parse = function(expression, options) {
-	var v = dojo.currency.parse(expression, options);
+     var v = dojo.currency.parse(dojo.currency.format(expression.replace(/[^0-9\-\.]/g,""),options),options)
+    //var v = dojo.currency.parse(expression, options);
 	// null if NaN
 	if (isNaN(v) && !expression)
 		v = null;

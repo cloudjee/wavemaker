@@ -226,7 +226,7 @@ dojo.declare("wm.Number", wm.Text, {
 			var places = this._getPlaces();
 			if (places && places != '')
 			{
-				constraints.places = places;
+			    constraints.places = parseInt(places) != NaN ? parseInt(places) : places;
 			}
 		}
 
@@ -312,6 +312,7 @@ dojo.declare("wm.Currency", wm.Number, {
 		var prop = this.inherited(arguments);
 		if (prop.constraints)
 			delete prop.constraints.pattern;
+
 		return dojo.mixin(prop, {
 			currency: this.currency
 		}, inProps || {});
@@ -320,11 +321,27 @@ dojo.declare("wm.Currency", wm.Number, {
 		return new dijit.form.CurrencyTextBox(this.getEditorProps(inNode, inProps));
 	},
 	_getReadonlyValue: function() {
-		return dojo.currency.format( this.dataValue, {currency: this.currency, places: this.places});
+	    return dojo.currency.format( this.dataValue, {currency: this.currency, places: this.places});
 	},
 	_getPlaces: function() {
 		return this.places;
-	}
+	},
+    setEditorValue: function(inValue) {
+	var v = inValue;
+	if (this.editor)
+	    v = dojo.currency.parse(dojo.currency.format(String(v).replace(/[^0-9\-\.]/g,""),
+							 this.editor.constraints),
+				    this.editor.constraints)
+	wm.AbstractEditor.prototype.setEditorValue.call(this, v);
+    },
+    getDataValue: function() {return this.dataValue;},
+    editorChanged: function() {
+	this.dataValue = this.getEditorValue();
+	this.displayValue = this._getReadonlyValue();
+	this.valueChanged("dataValue", this.dataValue);
+	this.valueChanged("displayValue", this.displayValue);
+    },
+
 });
 
 wm.Object.extendSchema(wm.Currency, {
