@@ -49,7 +49,7 @@ public class LicensingService {
 
     @ExposeToClient
 	public String getMacAddr() {
-	return LicenseManagerExt.getMacAddr();
+	    return LicenseUtil.getMacAddr();
     }
 
     @ExposeToClient
