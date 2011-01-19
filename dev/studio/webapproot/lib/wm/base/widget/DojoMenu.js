@@ -94,7 +94,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 	return this.dojoObj;
     },
     destroy: function() {
-	dojo.forEach(this._menuConnects, "destroy");
+	dojo.forEach(this._menuConnects, function(c) {dojo.disconnect(c);});
 	delete this._menuConnects;
 	this.inherited(arguments);
     },
@@ -106,7 +106,9 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		}
 	  */
 		if (this.dojoObj) {
-		    this.dojoObj.destroyRecursive();
+		    try {
+			this.dojoObj.destroyRecursive();
+		    } catch(e) {}
 		    dojo.forEach(this._menuConnects, function(c) {dojo.disconnect(c);})
 		    if (this.hoverConnect)
 			dojo.disconnect(this.hoverConnect);
