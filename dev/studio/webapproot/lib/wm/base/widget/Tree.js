@@ -102,6 +102,7 @@ dojo.declare("wm.TreeNode", null, {
 			this.initKids();
 	},
 	createKidsNode: function() {
+	    if (this.kidsNode) return this.kidsNode;
 		var n = this.kidsNode = document.createElement("ul")
 		n.style.display = (this.closed ? "none" : "");
 		return n;
@@ -188,9 +189,9 @@ dojo.declare("wm.TreeNode", null, {
 		inChild.styleNode();
 		dojo.setSelectable(inChild.domNode, false);
 		if (i == this.kids.length-1)
-			this.kidsNode.appendChild(inChild.domNode);
+		    this.createKidsNode().appendChild(inChild.domNode);
 		else
-			this.kidsNode.insertBefore(inChild.domNode, this.kids[i+1].domNode);
+		    this.createKidsNode().insertBefore(inChild.domNode, this.kids[i+1].domNode);
 	},
 	_findIndexInParent: function(inChild) {
 		var parent = inChild.parent;
@@ -1051,7 +1052,12 @@ dojo.declare("wm.DebugTree", wm.Tree, {
 	this.cleanupTree();
     },
     cleanupTree: function() {
-	while (this.root.kids.length > 20)
+	var kids = [];
+	for (var i = 0; i < this.root.kids.length; i++) {
+	    if (this.root.kids[i].domNode.style.display != "none")
+		kids.push(this.root.kids[i]);
+	}
+	while (kids.length > 40)
 	    this.root.kids[0].destroy();
     }
 });
