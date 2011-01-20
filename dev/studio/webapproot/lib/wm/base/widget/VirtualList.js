@@ -150,13 +150,13 @@ dojo.declare("wm.VirtualList", wm.Box, {
 
     renderBounds: function() {
 	this.inherited(arguments);
-	if (this.headerVisible) {
+	if (this.headerVisible && !this.isAncestorHidden()) {
 	    wm.job(this.getRuntimeId() + "ListRenderBounds", 1, dojo.hitch(this, "renderListBounds"));
 	}
     },
     renderListBounds: function() {
 	var coords = dojo.marginBox(this.headerNode);
-	if (coords.h == 0) {
+	if (coords.h == 0 && !this.isAncestorHidden()) {
 	    return wm.job(this.getRuntimeId() + "ListRenderBounds", 1, dojo.hitch(this, "renderListBounds"));
 	}
 	var bodyheight = this.getContentBounds().h - coords.h;
