@@ -158,7 +158,11 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 		dojo.addClass(this.domNode, "wmdesign-wrapper");
 		this.domNode.style.cssText = "z-index: 10; visibility: hidden;";
 		this.setControl(this.control);
-	    dojo.connect(this.control.scrim ? this.domNode : this.control.domNode, dojo.isFF ? "onmousedown" : "oncontextmenu", this.control, "showContextMenu");
+	    dojo.connect(this.control.scrim ? this.domNode : this.control.domNode, dojo.isFF < 3.0 ? "onmousedown" : "oncontextmenu", this.control, function(event) {
+		if (event.type == "contextmenu" || (event.button == 2 || event.ctrlKey)) 
+		    this.showContextMenu(event);
+	    });
+
 	},
 
 	destroy: function() {
