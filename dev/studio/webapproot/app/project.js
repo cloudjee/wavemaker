@@ -1120,8 +1120,6 @@ Studio.extend({
     },
     saveProjectComplete: function() {
 	this.progressDialog.hide();
-	app.toastSuccess("Project Saved");
-
 	if (this._saveErrors.length) {
 	    var text = "";
 	    for (var i = 0; i < this._saveErrors.length; i++) {
@@ -1135,9 +1133,12 @@ Studio.extend({
 		text += "</b>: " + this._saveErrors[i].message + "<br/>";
 	    }
 	    app.alert(text);
+	} else {
+	    app.toastSuccess("Project Saved");
+	    this.saveProjectSuccess();
 	}
     },
-
+    saveProjectSuccess: function() {}, // for dojo.connect
 	beginBind: function(inPropName, editArea, type) {
 	    var bd = this.getBindDialog();
 		    //p = this.getBindDialogProps(inPropName),
@@ -1456,7 +1457,7 @@ Studio.extend({
 
 	    /* Clear any prior connections... esp for runs that don't make it to projectSaveComplete */
 	    for (var i = 0; i < this._runConnections.length; i++) dojo.disconnect(this._runConnections[i]);
-	    this._runConnections.push(dojo.connect(this,"saveProjectComplete", this, function() {
+	    this._runConnections.push(dojo.connect(this,"saveProjectSuccess", this, function() {
 
 		/* Clear this connection */
 		for (var i = 0; i < this._runConnections.length; i++) dojo.disconnect(this._runConnections[i]);
