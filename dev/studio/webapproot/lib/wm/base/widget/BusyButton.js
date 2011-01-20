@@ -154,6 +154,7 @@ wm.Object.extendSchema(wm.BusyButton, {
       iconMargin:      {group: "BusyButton", order: 36, doc: 1},
       imageList: {ignore: 1},
       imageIndex: {ignore: 1},
+    editImageIndex: {ignore: 1}
 });
 
 wm.BusyButton.extend({
