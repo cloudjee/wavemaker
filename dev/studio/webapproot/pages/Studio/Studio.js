@@ -375,7 +375,48 @@ dojo.declare("Studio", wm.Page, {
 		  	dojo.publish("wm-project-changed");
 		  }
 		}
+
+	    this.setupDefaultContextMenu();
 	},
+    setupDefaultContextMenu: function() {
+	var f = function(e) {
+		dojo.stopEvent(e);		
+		var menuObj = studio.contextualMenu;
+		menuObj.removeAllChildren();
+
+		menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
+						{"label": bundleStudio.M_Tutorials,
+						 iconClass: "StudioHelpIcon", 
+						 onClick: function() {window.open("http://dev.wavemaker.com/wiki/bin/wmdoc/Tutorials", "Docs");}
+						});
+		menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
+						{"label": bundleStudio.M_Documentation,
+						 iconClass: "StudioHelpIcon", 
+						 onClick: function() {window.open("http://dev.wavemaker.com/wiki/bin/wmdoc/", "Docs");}
+						});
+		menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
+						{"label": bundleStudio.M_JavaScriptClientDocs,
+						 iconClass: "StudioHelpIcon", 
+						 onClick: function() {window.open("http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/PropertyDocumentation", "Docs");}
+						});
+
+	    menuObj.dojoObj.addChild(new dijit.MenuSeparator());
+		menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
+						{"label": bundleStudio.M_Community,
+						 iconClass: "StudioHelpIcon", 
+						 onClick: function() {window.open("http://dev.wavemaker.com/forums", "Forums");}
+						});
+												
+		menuObj.update(e);
+	};
+	dojo.connect(this.domNode, "oncontextmenu", this, f);
+	if (dojo.isFF) {
+	    dojo.connect(this.domNode, "onmousedown", this, function(e) {
+	    if (e.button == 2 || e.ctrlKey) 
+		dojo.hitch(this, f)(e);
+	    });
+	}
+    },
 	pageChanging: function() {
 		wm.undo.clear();
 		if (!this.page)
