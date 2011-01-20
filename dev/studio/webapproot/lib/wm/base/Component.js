@@ -690,10 +690,14 @@ this.panel1.createComponent("custom", "wm.Panel", {
 			    // reasons and because dynamically setting onRightClick is something I'm ok not
 			    // suporting, I've made an exception here.
 			    if (n == "onRightClick") {
-				inComponent.connect(inComponent.domNode, dojo.isFF ? "onmousedown" : "oncontextmenu", inComponent, function(event) {
-				    if (!dojo.isFF || (event.button == 2 || event.ctrlKey))
+
+				inComponent.connect(inComponent.domNode, dojo.isFF < 3.0 ? "onmousedown" : "oncontextmenu", inComponent, function(event) {
+				    if (!dojo.isFF || (event.button == 2 || event.ctrlKey)) {
+					dojo.stopEvent(event);
 					this.onRightClick(event);
+				    }
 				});
+
 			    } else if (n == "onMouseOver") {
 				inComponent.connect(inComponent.domNode, "onmouseover", inComponent, "onMouseOver");
 			    } else if (n == "onMouseOut") {

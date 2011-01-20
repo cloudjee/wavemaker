@@ -152,12 +152,12 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		
 		this.dojoRenderer();
 	    try {
-		this.connect(this.dojoObj.domNode, dojo.isFF ? "onmousedown" : "oncontextmenu", function(event) {
+		this.connect(this.dojoObj.domNode, dojo.isFF < 3.0 ? "onmousedown" : "oncontextmenu", function(event) {
 		    if (!dojo.isFF || (event.button == 2 || event.ctrlKey)) {
 			dojo.stopEvent(event);
 		    }
 		});
-	    }  catch(e) {}
+	    } catch(e) {}
 
 
 	},
