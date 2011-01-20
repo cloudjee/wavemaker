@@ -423,7 +423,7 @@ dojo.declare("wm.LiveFormBase", wm.Panel, {
 		  }
 		  var val = e.dataValue;
 		  if (e.editor && e.editor.required && (val === null || val === undefined || val === "")) {
-		    alert(e.caption + " Needs a value");
+		      app.alert(e.caption + " Needs a value");
 		    result = false;
 		  }
 		});
@@ -874,7 +874,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	},
 
 	sforceRuntimeServiceError: function(inError) { //xxx
-		alert("sforceRuntimeServiceError error = " + inError);
+	    app.alert("sforceRuntimeServiceError error = " + inError);
 	},
 	
 	//===========================================================================
@@ -904,7 +904,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 		wm.logging && console.error(inError);
 		if (this.displayErrors) {
 			var m = dojo.isString(inError) ? inError : (inError.message ? "Error: " + inError.message : "Unspecified Error");
-			alert(m);
+		    app.alert(m);
 		}
 	}
 });
