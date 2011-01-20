@@ -489,6 +489,14 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 	/*background-color: #F1F1F1;*/
 }
 
+
+.tundra .wminspector-property .dijitInputContainer INPUT,
+.tundra .wminspector-property .dijitTextBox {
+	margin-right: 0px !important;
+}
+.tundra .wminspector-property .dijitTextBox {
+	width: 100%;
+}
 .wminspector-header {
 	padding: 2px 4px;
 	background-color:#424a5a;
