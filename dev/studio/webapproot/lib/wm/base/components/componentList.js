@@ -31,6 +31,7 @@ wm.componentList = {
 	'wm.DataGrid': ['build.Gzipped.wm_dojo_grid'],
 	'wm.DojoGrid': ['build.Gzipped.wm_dojo_grid', 'wm.base.widget.DojoGrid'],
 	'wm.DojoMenu': ['build.Gzipped.wm_menus'],
+	'wm.PopupMenu': ['build.Gzipped.wm_menus'],
 	'wm.DojoChart': ['build.Gzipped.wm_charts'],
 	'wm.Dashboard':['wm.base.widget.Dashboard'],
 	'wm.DojoFisheye': ['wm.base.widget.DojoFisheye'],
@@ -65,6 +66,8 @@ wm.componentList = {
 	'wm.TimeEditor':['build.Gzipped.wm_editors'],
 	'wm.dijit.ProgressBar':['wm.base.widget.dijit.ProgressBar'],
 	'wm.BusyButton':['wm.base.widget.BusyButton'],
+	'wm.PopupMenuButton':['wm.base.widget.Button'],
+	'wm.JsonStatus':['wm.base.widget.Tree'],
 	'wm.Timer':['wm.base.components.Timer'],
 	
 	'wm.Date':['build.Gzipped.wm_editors'],
