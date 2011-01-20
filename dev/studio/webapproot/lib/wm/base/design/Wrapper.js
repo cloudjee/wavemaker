@@ -112,6 +112,7 @@ dojo.declare("wm.WrapperMover", wm.design.Mover, {
 	},
 	ondrop: function(e) {
 		var i = this.dropRect;
+	        if (!i) return; // there's no i if we call this after a right click instead of after a move
 		i.target = this.target;
 		new wm.DropTask(this.wrapper.control);
 		this.wrapper.designMove(i);
@@ -158,10 +159,15 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 		dojo.addClass(this.domNode, "wmdesign-wrapper");
 		this.domNode.style.cssText = "z-index: 10; visibility: hidden;";
 		this.setControl(this.control);
-	    dojo.connect(this.control.scrim ? this.domNode : this.control.domNode, dojo.isFF < 3.0 ? "onmousedown" : "oncontextmenu", this.control, function(event) {
-		if (event.type == "contextmenu" || (event.button == 2 || event.ctrlKey)) 
+	    dojo.connect(this.control.scrim ? this.domNode : this.control.domNode, "oncontextmenu", this.control, function(event) {
 		    this.showContextMenu(event);
 	    });
+	    if (dojo.isFF) { // FF 3.6/4.0 on OSX require this, others may as well
+		dojo.connect(this.control.scrim ? this.domNode : this.control.domNode, "onmousedown", this.control, function(event) {
+		    if (event.button == 2 || event.ctrlKey)
+			this.showContextMenu(event);
+		});
+	    }
 
 	},
 

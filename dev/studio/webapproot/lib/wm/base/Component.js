@@ -691,14 +691,18 @@ this.panel1.createComponent("custom", "wm.Panel", {
 			    // suporting, I've made an exception here.
 			    if (n == "onRightClick") {
 
-				inComponent.connect(inComponent.domNode, dojo.isFF < 3.0 ? "onmousedown" : "oncontextmenu", inComponent, function(event) {
-				    if (event.type == "contextmenu" || (event.button == 2 || event.ctrlKey)) {
-					dojo.stopEvent(event);
-					wm.onidle(this, function() {
-					    this.onRightClick(event);
-					});
-				    }
+				inComponent.connect(inComponent.domNode, "oncontextmenu", inComponent, function(event) {
+				    dojo.stopEvent(event);
+				    this.onRightClick(event);
 				});
+				if (dojo.isFF) { // FF 3.6/4.0 on OSX require this, others may as well
+				    inComponent.connect(inComponent.domNode, "onmousedown", inComponent, function(event) {
+					if (event.button == 2 || event.ctrlKey) {
+					    dojo.stopEvent(event);
+					    this.onRightClick(event);
+					}
+				    });
+				}
 
 			    } else if (n == "onMouseOver") {
 				inComponent.connect(inComponent.domNode, "onmouseover", inComponent, "onMouseOver");

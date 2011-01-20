@@ -96,6 +96,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
     destroy: function() {
 	dojo.forEach(this._menuConnects, function(c) {dojo.disconnect(c);});
 	delete this._menuConnects;
+	this.dojoObj.destroyRecursive();
 	this.inherited(arguments);
     },
 	renderDojoObj: function() {
@@ -662,7 +663,6 @@ dojo.declare("wm.PopupMenu", wm.DojoMenu, {
     createMenuBar: function() {
 	return new dijit.Menu({style:'width:0%'});
     },
-
     // Disable all framework rendering
     renderBounds: function() {},
     render: function() {},
@@ -676,6 +676,7 @@ dojo.declare("wm.PopupMenu", wm.DojoMenu, {
 	    dojo.addClass(this.domNode, this.classNames);
 	}
     },
+
     // fired by studio.select
     activate: function(inNode) {
 	if (this.isDesignLoaded()) {

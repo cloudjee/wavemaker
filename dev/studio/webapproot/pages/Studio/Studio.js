@@ -351,6 +351,7 @@ dojo.declare("Studio", wm.Page, {
 			 studio.startPageDialog.hide();
 		       this.navGotoDesignerClick();
 		       this.mlpal.activate();
+			 this.paletteSearch.focus(); // this is done to help FF contextual menus work; else we get crazy stupid errors
 		     } else if (!this.isLoginShowing()) {
 			 studio.startPageDialog.show();
 			 //this.startLayer.activate();

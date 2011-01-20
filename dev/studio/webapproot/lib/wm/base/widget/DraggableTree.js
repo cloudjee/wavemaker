@@ -183,6 +183,7 @@ dojo.declare("wm.DraggableTreeMover", wm.DragDropper, {
 	drag: function(e) {
 		this.inherited(arguments);
 		// calc a target rect
+	        if (!this.rootOffset) return; // drag gets called on mouseup after right click which is something we should ignore
 		var r = { l: this.pxp - this.rootOffset.x, t: this.pyp - this.rootOffset.y, w:0, h: 0};
 					   
 		// locate target

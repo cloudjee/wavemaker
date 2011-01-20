@@ -170,36 +170,43 @@ dojo.declare("wm.Palette", wm.Tree, {
 
 	},
     createContextMenu:function(inNode) {
-	dojo.connect(inNode.domNode, dojo.isFF < 3.0 ? "onmousedown" : "oncontextmenu", this, function(e) {
-	    if (e.type != "contextmenu" && !(e.button == 2 || e.ctrlKey)) return;
-	    dojo.stopEvent(e);		
-	    var menuObj = studio.contextualMenu;
-	    menuObj.removeAllChildren();
-	    menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
-					    {label: "Copy New " + inNode.klass,
-					     iconClass: "Studio_canvasToolbarImageList16_3",
-					     onClick: dojo.hitch(this, function() {
-						 studio.clipboard = "{" + inNode.klass.replace(/^.*\./,"") + "1: ['" + inNode.klass + "'," + (inNode.props ? dojo.toJson(inNode.props) : "{}") + "]}";
-						 console.log(studio.clipboard);
-						 studio.clipboardClass = inNode.klass;
-						 studio.updateCutPasteUi();
-					     })
-					    });
+	    var f = function(e) {
+		dojo.stopEvent(e);		
+		var menuObj = studio.contextualMenu;
+		menuObj.removeAllChildren();
+		menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
+						{label: "Copy New " + inNode.klass,
+						 iconClass: "Studio_canvasToolbarImageList16_3",
+						 onClick: dojo.hitch(this, function() {
+						     studio.clipboard = "{" + inNode.klass.replace(/^.*\./,"") + "1: ['" + inNode.klass + "'," + (inNode.props ? dojo.toJson(inNode.props) : "{}") + "]}";
+						     console.log(studio.clipboard);
+						     studio.clipboardClass = inNode.klass;
+						     studio.updateCutPasteUi();
+						 })
+						});
 
-	    menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
-					    {label: inNode.klass + " docs...", 
-					     iconClass: "StudioHelpIcon", 
-					     onClick: dojo.hitch(this, function() {
-						 window.open("http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/" + inNode.klass.replace(/^.*\./,""));
-					     })
-					    });
-
-
-	    menuObj.update(e, inNode.domNode);
+		menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
+						{label: inNode.klass + " docs...", 
+						 iconClass: "StudioHelpIcon", 
+						 onClick: dojo.hitch(this, function() {
+						     window.open("http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/" + inNode.klass.replace(/^.*\./,""));
+						 })
+						});
 
 
-	});
-	},
+		menuObj.update(e, inNode.domNode);
+	    }
+
+	dojo.connect(inNode.domNode, "oncontextmenu", this, f);
+	if (dojo.isFF) {
+	    dojo.connect(inNode.domNode, "onmousedown", this, function(e) {
+	    if (e.button == 2 || e.ctrlKey) 
+		dojo.hitch(this, f)(e);
+	    });
+	}
+
+
+    },
 	removeItem: function(inTab, inName) {
 		var g = this.findItemByName(inTab);
 		if (g) {
