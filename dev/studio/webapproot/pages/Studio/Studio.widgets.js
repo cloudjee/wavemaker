@@ -505,10 +505,10 @@ Studio.widgets = {
 
 					    logs: ["wm.Layer", {caption: bundleStudio.R_Server_Logs}, {}, {
 							benchbevel14: ["wm.Bevel", {}, {}],
-							logViewer: ["wm.PageContainer", {loadParentFirst: true, pageName: "LogViewer",  width: "100%", height: "100%"}]
+						        logViewer: ["wm.PageContainer", {deferLoad: true, pageName: "LogViewer",  width: "100%", height: "100%"}]
 						}],
 					    resourcesTab: ["wm.Layer", {caption: bundleStudio.Resources}, {onShow: "loadResourcesTab"}, {
-						resourcesPage: ["wm.PageContainer", {loadParentFirst: true, pageName: "ResourceManager", height: "100%", width: "100%"}, {}]
+						resourcesPage: ["wm.PageContainer", {deferLoad: true, pageName: "ResourceManager", height: "100%", width: "100%"}, {}]
 					    }]
 /*
 						diagnosticsTab: ["wm.Layer", {caption: bundleStudio.R_Diagnostics}, {}, {
