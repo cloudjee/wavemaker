@@ -692,9 +692,11 @@ this.panel1.createComponent("custom", "wm.Panel", {
 			    if (n == "onRightClick") {
 
 				inComponent.connect(inComponent.domNode, dojo.isFF < 3.0 ? "onmousedown" : "oncontextmenu", inComponent, function(event) {
-				    if (!dojo.isFF || (event.button == 2 || event.ctrlKey)) {
+				    if (event.type == "contextmenu" || (event.button == 2 || event.ctrlKey)) {
 					dojo.stopEvent(event);
-					this.onRightClick(event);
+					wm.onidle(this, function() {
+					    this.onRightClick(event);
+					});
 				    }
 				});
 

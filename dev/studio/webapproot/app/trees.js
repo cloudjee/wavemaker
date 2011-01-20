@@ -254,7 +254,7 @@ Studio.extend({
 		}
 
 		if (inComponent && inComponent.showContextMenu) {
-		    dojo.connect(n.domNode, dojo.isFF ? "onmousedown" : "oncontextmenu", inComponent, "showContextMenu");
+		    dojo.connect(n.domNode, dojo.isFF < 3.0 ? "onmousedown" : "oncontextmenu", inComponent, "showContextMenu");
 		}
 
 	    }

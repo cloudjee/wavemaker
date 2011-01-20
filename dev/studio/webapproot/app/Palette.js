@@ -170,8 +170,8 @@ dojo.declare("wm.Palette", wm.Tree, {
 
 	},
     createContextMenu:function(inNode) {
-	dojo.connect(inNode.domNode, dojo.isFF ? "onmousedown" : "oncontextmenu", this, function(e) {
-	    if (dojo.isFF && !(e.button == 2 || e.ctrlKey)) return;
+	dojo.connect(inNode.domNode, dojo.isFF < 3.0 ? "onmousedown" : "oncontextmenu", this, function(e) {
+	    if (e.type != "contextmenu" && !(e.button == 2 || e.ctrlKey)) return;
 	    dojo.stopEvent(e);		
 	    var menuObj = studio.contextualMenu;
 	    menuObj.removeAllChildren();
