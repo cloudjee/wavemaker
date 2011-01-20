@@ -86,7 +86,8 @@ wm.Layer.extend({
 				this.inherited(arguments);
 				return;
 		}
-	},
+	}/*,
+
     createDesignContextMenu: function(menuObj) {
 	var result = this.parent.createDesignContextMenu(menuObj);
 	menuObj.addAdvancedMenuChildren(menuObj.dojoObj, {label: "add", 
@@ -97,6 +98,7 @@ wm.Layer.extend({
 						 });
 	
     }
+    */
 });
 
 wm.Object.extendSchema(wm.Layers, {
