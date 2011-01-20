@@ -46,6 +46,7 @@ dojo.declare("wm.TreeNode", null, {
 		this._destroy();
 	},
 	destroy: function() {
+	    if (this.isDestroyed) return;
 	    this.isDestroyed = true;
 	    this.removeChildren();
 	    
@@ -996,6 +997,8 @@ dojo.declare("wm.DebugTree", wm.Tree, {
     },
     logCommand: function(inText, inEval) {
 	var result = eval(inEval);
+	if (!this.tmpRoot.tree)
+	    this.tmpRoot = this.root;
 	var node = new wm.TreeNode(this.tmpRoot, {content: inText,
 					       hasChildren: true});
 	if (result instanceof Error)
@@ -1012,6 +1015,8 @@ dojo.declare("wm.DebugTree", wm.Tree, {
     },
     newLogEvent: function(inData) {
 	var newNode;
+	if (!this.tmpRoot.tree)
+	    this.tmpRoot = this.root;
 	if (inData.type == "componentEvent") {
 	    var content = [this.componentEventImage,
 			   inData.trigger.name || inData.trigger.declaredClass,
@@ -1057,8 +1062,10 @@ dojo.declare("wm.DebugTree", wm.Tree, {
 	    if (this.root.kids[i].domNode.style.display != "none")
 		kids.push(this.root.kids[i]);
 	}
-	while (kids.length > 40)
-	    this.root.kids[0].destroy();
+	while (kids.length > 40) {
+	    kids.shift().destroy();
+	}
+	if (!this.tmpRoot.parent || !this.tmpRoot.parent.parent) this.tmpRoot = this.root;
     }
 });
 
