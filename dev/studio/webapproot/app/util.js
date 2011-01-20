@@ -132,21 +132,30 @@ wm.listComponentIds = function(inOwners, inClass, inStrict) {
 // open a url and present user with a dialog if popups are blocked.
 wm.openUrl = function(inUrl, inTitle, inWindowName) {
 	var w = window.open(inUrl, inWindowName);
-	if (!w) {
-		var d = wm.openUrl.dialog;
-		if (!d)
-			d = wm.openUrl.dialog = new wm.Dialog({width: 320, height: 95});
-		var
-			target = ' target="' + (inWindowName || "_blank") + '"',
-			link = ['<a href="', inUrl , ,'"', target, 'style="color:#FFF" onclick="javascript:wm.openUrl.dialog.dismiss();">Popup Blocker Detected - Manually Launch ', inTitle || inUrl, '</a>'].join('');
-		d.containerNode.innerHTML = [
-			'<table class="wmWaitDialog" width="100%" height="100%" style="border: 1px solid #363b44;">',
-			'<tr><td align="center" valign="middle">',
-			link,
-			'</td></tr></table>'
-		].join('');
-		d.show();
+        if (dojo.isChrome) {
+	    wm.job(inWindowName, 3000, function() {
+		if (w.closed) return;
+		if (w.document.body && w.outerWidth == 0)
+		    wm.openUrlDialog(inUrl,inTitle,inWindowName+1);
+	    });
+	} else if (!w) {
+	    wm.openUrlDialog(inUrl,inTitle,inWindowName);
 	}
+}
+wm.openUrlDialog = function(inUrl, inTitle, inWindowName) {
+    var d = wm.openUrl.dialog;
+    if (!d)
+	d = wm.openUrl.dialog = new wm.Dialog({owner: studio, width: 320, height: 95});
+    var
+    target = ' target="' + (inWindowName || "_blank") + '"',
+    link = ['<a href="', inUrl , ,'"', target, 'style="color:#FFF" onclick="javascript:wm.openUrl.dialog.dismiss();">Popup Blocker Detected - Manually Launch ', inTitle || inUrl, '</a>'].join('');
+    d.containerNode.innerHTML = [
+	'<table class="wmWaitDialog" width="100%" height="100%" style="border: 1px solid #363b44;">',
+	'<tr><td align="center" valign="middle">',
+	link,
+	'</td></tr></table>'
+    ].join('');
+    d.show();
 }
 
 wm.makeLoginHtml =  function(fileTemplate, inProjectName, themeName) {
