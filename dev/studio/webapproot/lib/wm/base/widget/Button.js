@@ -699,6 +699,7 @@ wm.PopupMenuButton.extend({
 });
 
 wm.Object.extendSchema(wm.PopupMenuButton, {
+    caption: { group: "display", order: 10, focus: 1, type: "String" },
     iconClass: {hidden: true},
     editMenuItems: {group: "operation"},
     fullStructureStr: {hidden: true},
