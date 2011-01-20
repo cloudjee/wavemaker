@@ -408,7 +408,7 @@ dojo.declare("wm.Page", wm.Component, {
 		this.onEscapeKey();
 
 	    else if (e.shiftKey) {
-		if (djConfig.isDebug && e.ctrlKey && chr == "d")
+		if (djConfig.isDebug && (e.ctrlKey || e.altKey) && chr == "d")
 		    return app.debugDialog.show();
                 // we get a keyCode for the shiftKey being pressed which we should ignore; and a second keycode when a key is hit while shiftKey is held
 		if (e.keyCode != dojo.keys.SHIFT && !isInput) 
