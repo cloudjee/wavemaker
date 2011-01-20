@@ -182,9 +182,17 @@ dojo.declare("ImportDatabase", wm.Page, {
 		studio.endWait();
 		this.dataModelName = this.serviceNameInput.getInputValue();
 		studio.updateServices();
-		wm.fire(studio.getEditor("DataObjectsEditor").page, "update");
-		wm.fire(studio.getEditor("QueryEditor").page, "update");
-		this._close("Import");
+/*
+	        var layers = studio.databaseSubTab.layers;
+	    for (var i = 0; i < layers.length; i++) {
+		var pageContainer = layers[i].c$[0];
+		if (pageContainer.page instanceof DataObjectsEditor ||
+		    pageContainer.page instanceof QueryEditor) {
+		    pageContainer.page.update();
+		}
+	    }
+	    */
+	    this._close("Import");
 	},
 	_importError: function(inError) {
 		studio.endWait();
