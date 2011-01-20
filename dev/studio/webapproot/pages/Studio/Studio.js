@@ -119,7 +119,7 @@ dojo.declare("Studio", wm.Page, {
 		dojo.subscribe("wmwidget-rename", this, "componentRenamed");
 		// set up status update poll 
 		// FIXME: can't we do status updates via dojo.publish?
-		setInterval(dojo.hitch(this, "updateStatus"), 2000);
+	    //setInterval(dojo.hitch(this, "updateStatus"), 2000);
 		//this.preloadImages();
 		this.requestUserName();
 		var defaultProject = this.getUserSetting("defaultProject");
