@@ -135,8 +135,11 @@ dojo.declare("wm.ContextMenuDialog", wm.Dialog, {
     dojo.addClass(this.menu.titleBar, this.titleBarClass);
 		this.menu.domNode.style.border = '1px solid #333333';
 		*/				
-	    this.containerNode.style.overflowX = "auto";
-	        
+	    
+	    this.containerNode.style.overflow = "auto";
+	    this.connect(this.containerNode, "renderCss", this.containerNode, function() {    
+		this.containerNode.style.overflow = "auto";
+	    });
 		if (this.helpText){
 			this.helpTextDiv = dojo.create('div', {innerHTML:this.helpText, style:'padding-left:5px;margin:5px;background:#FFF1A8;border:1px solid #DCDCDC;'}, this.containerNode);
 		}
