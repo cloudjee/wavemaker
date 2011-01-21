@@ -42,7 +42,7 @@ Start.widgets = {
 								}]
 							}],
 							panel6: ["wm.Panel", {height: "100%", width: "100%", layoutKind: "left-to-right", verticalAlign: "middle", horizontalAlign: "left"}, {}, {
-								spacer1: ["wm.Spacer", {width: "20px"}, {}],
+								spacer1: ["wm.Spacer", {width: "15px"}, {}],
 								panel7: ["wm.Panel", {height: "100%", width: "224px", verticalAlign: "top", horizontalAlign: "left", padding: "15,0,0,0"}, {}, {
 									newProject: ["wm.Label", {height: "30px", width: "100%", caption: bundleDialog.CreateNewProject, padding: "0,0,0,20"}, {onclick: "newProjectClick"}, {
 										format: ["wm.DataFormatter", {}, {}]
@@ -57,7 +57,7 @@ Start.widgets = {
 										format: ["wm.DataFormatter", {}, {}]
 									}]
 								}],
-							    iframe: ["wm.IFrame", {source: "/wavemaker/studioService.download?method=getContent&inUrl=http://wavemaker.com/splash", width: "100%", height: "100%", border: "1", borderColor: "#000F19", margin: "0,3,10,0", showing: false}],
+								iframe: ["wm.IFrame", {source: "/wavemaker/studioService.download?method=getContent&inUrl=http://wavemaker.com/splash", width: "100%", height: "100%", border: "1", borderColor: "#000F19", margin: "0,8,10,0", showing: false}],
 							    panel2: ["wm.Panel", {showing: false, height: "170px", width: "100%", verticalAlign: "bottom", horizontalAlign: "right", padding: "0,0,10,0"}, {}, {
 									dontShowCheckbox: ["wm.Editor", {showing: false, _classes: {domNode: ["wm_FontSize_80percent"], captionNode: ["wm_FontColor_White"]}, caption: bundleDialog.DontShowThisAgain, display: "CheckBox", width: "308px", height: "20px", captionAlign: "left", captionPosition: "right", captionSize: "90%"}, {onchange: "dontShowCheckboxChange"}, {
 										editor: ["wm._CheckBoxEditor", {}, {}]
