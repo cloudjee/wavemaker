@@ -518,13 +518,17 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	removeDataModelCompleted: function(inSender) {
 		studio.endWait();
 		studio.updateServices();
-		this.setSchemas();
-		this.objectPages.setLayer(this.DEFAULT_PAGE);
-		this.clearDetailDisplay();
-		this.initData();
 		studio.application.removeServerComponent(this.dataModel);
 		studio.application.loadServerComponents("wm.Query");
 		studio.refreshServiceTree();
+
+	    var pageContainer = this.owner;
+	    var subtablayer = pageContainer.parent;
+	    var subtablayers = subtablayer.parent;
+	    var dblayer = subtablayers.parent;
+	    if (subtablayers.layers.length == 1)
+		dblayer.hide();
+	    subtablayer.destroy();
 	},
 	removeDataModelFailed: function(inSender) {
 		studio.endWait();

@@ -480,6 +480,20 @@ dojo.declare("LiveViewEditor", wm.Page, {
 	        if (v) {
                     app.confirm(["Are you sure you want to delete ", v.name, "?"].join(''), false,
                                 dojo.hitch(this, function() {
+				    v.destroy();
+				    studio.refreshServiceTree("");
+
+				    var pageContainer = this.owner;
+				    var subtablayer = pageContainer.parent;
+				    var subtablayers = subtablayer.parent;
+				    var dblayer = subtablayers.parent;
+				    if (subtablayers.layers.length == 1)
+					dblayer.hide();
+				    subtablayer.destroy();
+
+		                    studio.project.saveProject();
+/*
+
 			            this.liveVariable.setLiveView(null);
 			            v.destroy();
 			            this.update();
@@ -488,6 +502,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 				        studio.select(studio.page.root);
 			            studio.navGotoDesignerClick();
 		                    studio.project.saveProject();
+				    */
                                 }));
 		}
 	}
