@@ -56,6 +56,17 @@ dojo.declare("wm.InspectorBase", null, {
 		this.connect(this.domNode, "onmouseleave", this, "propLeave");
 		this.connect(this.domNode, "onmousedown", this, "propDown");
 		this.connect(this.domNode, "onclick", this, "propClick");
+	    if (this.name == "Properties") {
+		// onidle because this might not yet have been created
+		wm.onidle(this, function() {
+		    var node = studio.inspector.inspector._inspectors.Styles.layers[0].domNode;
+		    this.connect(node, "onmousemove", this, "propMove");
+		    this.connect(node, "onmouseleave", this, "propLeave");
+		    this.connect(node, "onmousedown", this, "propDown");
+		    this.connect(node, "onclick", this, "propClick");
+		});
+
+	    }
 
 		studio.helpPopup = this.getHelpDialog();
 	},
