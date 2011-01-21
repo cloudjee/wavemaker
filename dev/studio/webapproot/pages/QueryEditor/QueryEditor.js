@@ -640,11 +640,24 @@ dojo.declare("QueryEditor", wm.Page, {
 		return dojo.string.trim(qn) != "" && dojo.string.trim(q) != "";
 	},
 	_removedQuery: function() {
+	    studio.endWait();
+	    studio.application.removeServerComponent(this.query);
+	    studio.refreshServiceTree("");
+	    var pageContainer = this.owner;
+	    var subtablayer = pageContainer.parent;
+	    var subtablayers = subtablayer.parent;
+	    var dblayer = subtablayers.parent;
+	    if (subtablayers.layers.length == 1)
+		dblayer.hide();
+	    subtablayer.destroy();
+
+/*
 		studio.endWait();
 		this._clear();
 		//this._loadQueries();
 		studio.application.removeServerComponent(this.query);
 		studio.refreshServiceTree();
+		*/
 	},
 	_loadTypes: function() {
 		studio.servicesService.requestSync(LOAD_PRIMITIVES_OP, 
