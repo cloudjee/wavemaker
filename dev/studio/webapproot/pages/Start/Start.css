@@ -147,7 +147,7 @@
 	border-radius-topleft: 4px; 
 	border-radius-topright: 4px;
 
-    -moz-box-shadow: 4px 4px 4px black;
-    -webkit-box-shadow: 4px 4px 4px black;
-    box-shadow: 4px 4px 4px black;
+    -moz-box-shadow: 4px 4px 4px #111;
+    -webkit-box-shadow: 4px 4px 4px #111;
+    box-shadow: 4px 4px 4px #111;
 }
