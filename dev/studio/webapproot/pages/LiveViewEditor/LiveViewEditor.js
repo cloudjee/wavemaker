@@ -31,6 +31,7 @@ wm.forAllEditors = function(inParent, inFn) {
 }
 
 dojo.declare("LiveViewEditor", wm.Page, {
+    orderOffset: 0,
 	start: function() {
 		this.clearFieldForm();
 	},
@@ -118,8 +119,10 @@ dojo.declare("LiveViewEditor", wm.Page, {
 	// Tree Population
 	//
 	tree1Initchildren: function(inSender, inNode) {
-		if (inNode.hasChildren)
-			this.schemaToNode(inNode, inNode.schema);
+	    if (inNode.hasChildren) {
+		this.orderOffset += 1000;
+		this.schemaToNode(inNode, inNode.schema);
+	    }
 	},
 	// populate a node with filtered property information
 	_schemaToNode: function(inNode, inSchema, inAllow) {
@@ -247,7 +250,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 			type: inTypeInfo.type,
 			displayType: wm.getPrimitiveDisplayType(inTypeInfo.type),
 			required: inTypeInfo.required,
-			nodeOrder: inTypeInfo.fieldOrder, //xxx
+		        nodeOrder: this.orderOffset + inTypeInfo.fieldOrder, //xxx
 			checked: isInView || isRelated,
 			canAddField: !s,
 			hasChildren: Boolean(s),
