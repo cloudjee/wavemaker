@@ -11,17 +11,8 @@ import java.io.InputStream;
 import java.io.BufferedInputStream;
 
 public class LicenseUtil {
-
+//[nonemac-begin]
     public static String getMacAddr() {
-        String os = System.getProperty("os.name");
-        if (os.startsWith("Mac OS X")) {
-            return getMacAddrForMac();
-        } else {
-            return getMacAddrForNoneMac();    
-        }
-    }
-
-    private static String getMacAddrForNoneMac() {
         StringBuilder sb;
         try {
             InetAddress address = InetAddress.getLocalHost();
@@ -41,8 +32,9 @@ public class LicenseUtil {
         else
             return sb.toString();
     }
-
-    private static String getMacAddrForMac() {
+//[nonemac-end]
+/*//[mac-begin]
+    public static String getMacAddr() {
         String mac;
         try {
             mac = osxParseMacAddress(osxRunIfConfigCommand());
@@ -99,4 +91,5 @@ public class LicenseUtil {
         Matcher m = macPattern.matcher(macAddressCandidate);
         return m.matches();
     }
+//[mac-end]*/
 }
