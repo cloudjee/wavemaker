@@ -490,6 +490,7 @@ dojo.declare("wm.GroupInspector", wm.Inspector, {
 	generateTableContent: function() {
 		var rows = [], c = this.owner.inspected;
 		dojo.forEach(this.groups, dojo.hitch(this, function(g) {
+		    if (g.name == "method") return;
 		    if (g.name == "style") {
 			var headerCells = this.generateHeaderCells();
 			headerCells.push('<th class="wminspector-header wminspector-help"></th>');
