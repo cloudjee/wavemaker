@@ -131,8 +131,10 @@
 		<mkdir dir="${src.temp.root.dir}/tools"/>
 		<copy todir="${src.temp.root.dir}/tools" overwrite="yes">
 			<fileset dir="${src.tools.dir}">
+				<exclude name="**/LicenseUtil.java" if="common.modules.isEnterprise"/>
 			</fileset>
 		</copy>
+		<antcall target="copy-licenseutil"/>
 		<antcall target="overwrite-with-dummies"/>
         <mkdir dir="${classes.tools.dir}"/>
         <javac srcdir="${src.temp.root.dir}/tools" 
@@ -148,6 +150,7 @@
                 <include name="**/*.ftl"/>
                 <include name="**/*.dtd"/>
                 <include name="**/*.xml"/>
+				<include name="**/*.store" if="common.modules.isEnterprise"/>
                 <include name="com/wavemaker/tools/ws/soapenc.xsd"/>
                 <include name="com/wavemaker/tools/security/login-template.html"/>
 				<include name="com/wavemaker/tools/cloudmgr/rackspace/cloud.properties"/>
@@ -159,6 +162,48 @@
         <copy file="${version.file}"
                 tofile="${classes.tools.dir}/com/wavemaker/tools/project/version"/>
     </target>
+
+	<!-- Take appropriate block of code when copying LienseUtil.java -->
+	<target name="copy-licenseutil" if="common.modules.isEnterprise">
+		<condition property="isMac" value="true" else="false">
+			<os name="Mac OS X"/>
+		</condition>
+		<condition property="nonemac-begin.token" value="/*">
+            <equals arg1="${isMac}" arg2="true"/>
+        </condition>
+        <condition property="nonemac-end.token" value="*/">
+            <equals arg1="${isMac}" arg2="true"/>
+        </condition>
+
+		<condition property="mac-begin.token" value="/*">
+            <equals arg1="${isMac}" arg2="false"/>
+        </condition>
+        <condition property="mac-end.token" value="*/">
+            <equals arg1="${isMac}" arg2="false"/>
+        </condition>
+				
+        <!-- If not set already make sure that they are defined but empty -->
+		<property name="nonemac-begin.token" value=""/>
+        <property name="nonemac-end.token" value=""/>
+		<property name="mac-begin.token" value=""/>
+        <property name="mac-end.token" value=""/>
+
+		<copy todir="${src.temp.root.dir}/tools" overwrite="yes">
+			<fileset dir="${src.tools.dir}">
+				<include name="**/LicenseUtil.java"/>
+			</fileset>
+			<filterset begintoken="//[" endtoken="]">
+				<filter token="nonemac-begin" value="${nonemac-begin.token}"/>
+				<filter token="nonemac-end" value="${nonemac-end.token}"/>
+			</filterset>
+			<filterset begintoken="/*//[" endtoken="]">
+				<filter token="mac-begin" value="${mac-begin.token}"/>
+			</filterset>
+			<filterset begintoken="//[" endtoken="]*/">
+				<filter token="mac-end" value="${mac-end.token}"/>
+			</filterset>
+		</copy>
+	</target>
 
 	<target name="overwrite-with-dummies" unless="common.modules.isEnterprise"
 		description="Copy dummy java source to temp dir">
