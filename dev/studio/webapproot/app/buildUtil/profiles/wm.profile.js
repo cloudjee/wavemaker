@@ -63,7 +63,7 @@ dependencies = {
 				// WM
                             "wm.base.components.componentList",
 
-			    "lib.github.touchscroll.touchscroll",
+			    //"lib.github.touchscroll.touchscroll",
 
 				// wm utility libs
 				"wm.base.lib.util",
