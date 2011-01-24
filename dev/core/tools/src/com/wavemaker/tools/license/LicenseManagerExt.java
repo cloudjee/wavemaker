@@ -21,6 +21,8 @@ public class LicenseManagerExt extends LicenseManager {
 
         String macAddr = lc.getMacAddr();
         String myMacAddr = LicenseUtil.getMacAddr();
+        //System.out.println("-------------- Mac Addr in License = " + macAddr);
+        //System.out.println("-------------- Your Mac Addr = " + myMacAddr);
         if (!macAddr.equals(myMacAddr)) {
             throw new Exception("Mis-matched hardware information in the license");
         }
@@ -43,20 +45,20 @@ public class LicenseManagerExt extends LicenseManager {
     }
 
     @Override
-    protected synchronized LicenseContentExt verify(final LicenseNotary notary)
+    protected synchronized LicenseContentExt verify(LicenseNotary notary)
     throws Exception {
         GenericCertificate certificate = getCertificate();
         if (certificate != null)
             return (LicenseContentExt) certificate.getContent();
 
         // Load license key from preferences,
-        final byte[] key = getLicenseKey();
+        byte[] key = getLicenseKey();
         if (key == null)
             throw new NoLicenseInstalledException(getLicenseParam().getSubject());
         certificate = getPrivacyGuard().key2cert(key);
         notary.verify(certificate);
         Object result = certificate.getContent();
-        final LicenseContentExt content = (LicenseContentExt) result;
+        LicenseContentExt content = (LicenseContentExt) result;
         validate(content);
         setCertificate(certificate);
 
@@ -68,8 +70,8 @@ public class LicenseManagerExt extends LicenseManager {
     }
 
     /*public synchronized LicenseContentExt install(
-            final byte[] key,
-            final LicenseNotary notary) throws Exception {
+            byte[] key,
+            LicenseNotary notary) throws Exception {
         //return super.install(key, notary);
         return install(key, notary);
     }*/
@@ -80,20 +82,20 @@ public class LicenseManagerExt extends LicenseManager {
     }
 
     protected synchronized LicenseContentExt install(
-            final File keyFile,
-            final LicenseNotary notary)
+            File keyFile,
+            LicenseNotary notary)
     throws Exception {
         return install(loadLicenseKey(keyFile), notary);
     }
 
    @Override
    protected synchronized LicenseContentExt install(
-            final byte[] key,
-            final LicenseNotary notary)
+            byte[] key,
+            LicenseNotary notary)
     throws Exception {
-        final GenericCertificate certificate = getPrivacyGuard().key2cert(key);
+        GenericCertificate certificate = getPrivacyGuard().key2cert(key);
         notary.verify(certificate);
-        final LicenseContentExt content = (LicenseContentExt) certificate.getContent();
+        LicenseContentExt content = (LicenseContentExt) certificate.getContent();
         validate(content);
         setLicenseKey(key);
         setCertificate(certificate);
