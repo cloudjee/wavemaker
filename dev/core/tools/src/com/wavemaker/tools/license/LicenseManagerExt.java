@@ -21,8 +21,8 @@ public class LicenseManagerExt extends LicenseManager {
 
         String macAddr = lc.getMacAddr();
         String myMacAddr = LicenseUtil.getMacAddr();
-        //System.out.println("-------------- Mac Addr in License = " + macAddr);
-        //System.out.println("-------------- Your Mac Addr = " + myMacAddr);
+        System.out.println("-------------- Mac Addr in License = " + macAddr);
+        System.out.println("-------------- Your Mac Addr = " + myMacAddr);
         if (!macAddr.equals(myMacAddr)) {
             throw new Exception("Mis-matched hardware information in the license");
         }
