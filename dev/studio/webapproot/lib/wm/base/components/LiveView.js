@@ -226,12 +226,25 @@ dojo.declare("wm.LiveView", wm.Component, {
 	},
 	//$ Set the dataType for the dataView. This is a type that supports crud operations.
 	setDataType: function(inType) {
+	    if (this._typeChangeSubscribe) {
+		dojo.disconnect(this._typeChangeSubscribe);
+		delete this._typeChangeSubscribe;
+	    }
 		var t = this.dataType;
 		this.dataType = inType;
 		if (t != this.dataType)
 			this.dataTypeChanged();
 		if (this._defaultView)
 			this.createDefaultView();
+
+	    if (this._isDesignLoaded && this.owner instanceof wm.Variable) {
+		var typeInfo = wm.typeManager.getType(this.dataType);
+		if (typeInfo) {
+		    this._typeChangeSubscribe = this._subscribeTypeChange = dojo.subscribe("ServiceTypeChanged-" + typeInfo.service, dojo.hitch(this, function() {
+			this.owner.typeChanged(this.owner.type);
+		    }));
+		}
+	    }
 	},
 	dataTypeChanged: function() {
 		// FIXME: we need to do something smart here. changing the datatype should probably zot
@@ -274,6 +287,11 @@ dojo.declare("wm.LiveView", wm.Component, {
 	},
 	// get a view starting at inPropPath
 	getSubView: function(inPropPath) {
+
+	    // update the view if we're designing and the view is managed by a variable
+	    if (this._isDesignLoaded && this.owner instanceof wm.Variable)
+		this.createDefaultView();
+
 		inPropPath = inPropPath ? inPropPath + "." : "";
 		var view = this._copyView(this.view);
 		if (inPropPath) {
