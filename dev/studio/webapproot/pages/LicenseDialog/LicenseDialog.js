@@ -27,6 +27,7 @@ dojo.declare("LicenseDialog", wm.Page, {
         onSuccess: function(inSender) {
 	    studio.startPageDialog.page.layer1.activate();
 	    app.toastSuccess("License File Accepted!");
+	    studio.setupLicenseInfoLabel();
 	},
         onError: function(inSender, inError) {
 	    this.resultLabel.setCaption(inError);
