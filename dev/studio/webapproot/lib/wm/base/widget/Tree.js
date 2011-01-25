@@ -824,6 +824,7 @@ dojo.declare("wm.PropertyTree", wm.Tree, {
 		    }
 		} else {
 		    var content;
+		    var item = variable;
 		    if (props.displayExpression) {
 			content = wm.expression.getValue(props.displayExpression, item);
 		    } else {
@@ -1122,7 +1123,7 @@ dojo.declare("wm.DebugTreeJsonNode", wm.TreeNode, {
 	    this.requestNode = new wm.JSObjTreeNode(this, {prefix: "AutoUpdate",
 							   object: this.autoUpdate});
 	if (this.invoker) 
-	    this.requestNode = new wm.JSObjTreeNode(this, {prefix: "Invoker",
+	    this.requestNode = new wm.JSObjTreeNode(this, {prefix: "Invoker" + (this.invoker.operation ? " (" + this.invoker.operation + ")" : ""),
 							   object: this.invoker});
 
 	this.requestNode = new wm.JSObjTreeNode(this, {prefix: "Request",
