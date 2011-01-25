@@ -79,7 +79,7 @@
             <manifest>
                 <attribute name="Main-Class" value="com.wavemaker.desktop.launcher.Main"/>
                 <attribute name="Class-Path" value="${build.manifest.jars} ${runtime.manifest.jars} ."/>
-				<attribute name="SplashScreen-Image" value="WMSplashScreen.gif"/>
+				<attribute name="SplashScreen-Image" value="wm-splash-screen.gif"/>
             </manifest>
         </jar>
     </target>
