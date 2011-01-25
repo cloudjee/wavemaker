@@ -42,7 +42,6 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 	    this.setBtnText(b, inCaption, inLayer.closable || inLayer.destroyable);
 		this.decoree.connect(b, "onclick", dojo.hitch(this, "tabClicked", inLayer));
 	    b.className=this.decorationClass + "-tab" +  (inLayer.closable || inLayer.destroyable ? " " + this.decorationClass + "-closabletab" : "");
-	    if (!inCaption) b.style.display = "none";
 	    this.tabsControl.domNode.appendChild(b);
 	},
 	tabClicked: function(inLayer, e) {
@@ -104,8 +103,15 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 			this.setBtnText(this.btns[i], inLayer.caption, inLayer.closable || inLayer.destroyable);
 	},
     setBtnText: function(inBtn, inCaption, closable) {
-	dojo[closable ? "addClass" : "removeClass"](inBtn, this.decorationClass + "-closabletab");
-	inBtn.innerHTML = (closable ? "<span class='TabCloseIcon'>x</span>" : "") +  (inCaption || '&nbsp;');
+	if (inCaption) {
+	    if (inBtn.style.display)
+		inBtn.style.display = "";
+	    dojo[closable ? "addClass" : "removeClass"](inBtn, this.decorationClass + "-closabletab");
+	    inBtn.innerHTML = (closable ? "<span class='TabCloseIcon'>x</span>" : "") +  (inCaption || '&nbsp;');
+	} else {
+	    inBtn.style.display = "none";
+	}
+	
 	},
 	getBtn: function(inCaption) {
 		var d = this.decoree, i = d.indexOfLayerCaption(inCaption);
