@@ -1021,7 +1021,8 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 	clear: function() {
 		this.beginEditUpdate();
 		this.reset();
-		this.setEditorValue(null);
+		//this.setEditorValue(null);
+	        this.setDataValue(null);  // changed from setEditorValue because setEditorValue does not handle readonly editor
 		this.endEditUpdate();
 		this.editorChanged();
 	},
