@@ -282,22 +282,18 @@ dojo.declare("Security", wm.Page, {
 	configDemoResult: function(inResponse) {
 		this.updateStudioServices();
                this.toastToSuccess();
-	    this.owner.owner.hide();
 	},
 	configDatabaseResult: function(inResponse) {
 		this.updateStudioServices();
                this.toastToSuccess();
-	this.owner.owner.hide();
 	},
 	configLDAPResult: function(inResponse) {
 		this.updateStudioServices();
                this.toastToSuccess();
-	this.owner.owner.hide();
 	},
 	configJOSSOResult: function(inResponse) {
 		this.updateStudioServices();
                this.toastToSuccess();
-	this.owner.owner.hide();
 	},
 	updateStudioServices: function() {
 		studio.updateServices();
@@ -686,9 +682,6 @@ dojo.declare("Security", wm.Page, {
 	isJOSSO: function() {
 	    return this.secProviderInput.editor.getEditorValue() == "JOSSO";
 	},
-    cancelButtonClick: function() {
-	this.owner.owner.hide();
-    },
 
 
     getCachedData: function() {
