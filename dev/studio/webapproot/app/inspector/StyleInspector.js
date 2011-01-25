@@ -20,6 +20,8 @@ dojo.require("wm.studio.app.inspector.Inspector");
 
 dojo.declare("wm.StyleInspector", [wm.Layers, wm.InspectorBase], {
 	layersType: 'Tabs',
+        clientBorder: "2,0,0,0",
+        clientBorderColor: "#959DAB",
 	flex: 1,
 	box: 'v',
 	_source: {
