@@ -122,16 +122,16 @@ dojo.declare("wm.LivePanel", wm.Panel, {
 
 
 	/* Generate the LiveForm, LiveVariable and LiveView */
-		this.liveForm = new wm.LiveForm({
+	this.liveForm = new wm.LiveForm({
 				name: studio.page.getUniqueName(this.liveDataName + "LiveForm1"),
 				owner: this.owner,
 		                parent: dialog.containerWidget,
 				verticalAlign: "top",
 				horizontalAlign: "left",
-		    margin: "4",
-		    alwaysPopulateEditors: true,
-		    liveEditing: false,
-		    editPanelStyle: "none",
+                   		margin: "4",
+                   		alwaysPopulateEditors: true,
+                   		liveEditing: false,
+                   		editPanelStyle: "none",
 				_liveSource: this.liveSource
 			});
 		this.liveForm.createLiveSource(this.liveSource);
@@ -141,6 +141,7 @@ dojo.declare("wm.LivePanel", wm.Panel, {
 		    navigator.setLiveSource(lvar);
 		}
 		this.dataGrid.set_dataSet(lvar);
+
 
 	var liveFormConnect = this.liveForm.connect(this.liveForm, "finishAddEditors", this, function() {
 	    dojo.disconnect(liveFormConnect);
@@ -204,12 +205,26 @@ dojo.declare("wm.LivePanel", wm.Panel, {
     /* When the user hits edit, update the liveform's edit state to "update" and show the dialog */
     popupLivePanelEdit: function() {
 	this.liveForm.beginDataUpdate();
+	dojo.forEach(this.liveForm.getFormEditorsArray(), dojo.hitch(this.liveForm, function(e) {
+	    if (this._canChangeEditorReadonly(["update"], e, this, false)) {
+		if (e.readonly) e.setReadonly(false);
+	    } else {
+		if (!e.readonly) e.setReadonly(true);
+	    }
+	}));
 	this.dialog.show();
     },
 
     /* When the user hits New, update the liveform's edit state to "insert" and show the dialog */
     popupLivePanelInsert: function() {
 	this.liveForm.beginDataInsert();
+	dojo.forEach(this.liveForm.getFormEditorsArray(), dojo.hitch(this.liveForm, function(e) {
+	    if (this._canChangeEditorReadonly(["insert"], e, this, false)) {
+		if (e.readonly) e.setReadonly(false);
+	    } else {
+		if (!e.readonly) e.setReadonly(true);
+	    }
+	}));
 	this.dialog.show();
     },
 
