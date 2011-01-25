@@ -204,11 +204,11 @@ Studio.extend({
 	    inLayer.hide();
 	    this.updateServicesDirtyTabIndicators(); // remove unsaved indicator from the tab now that it has no layers
 	} else {
-	    var message = studioBundle["page_unsavedchanges_tabclose"] + "<ul>";
+	    var message = bundleStudio["page_unsavedchanges_tabclose"] + "<ul>";
 	    for (var i = 0; i < unsavedPages.length; i++)
 		message += "<li>" + unsavedPages[i].owner.parent.caption.replace(/^\<.*?\>\s*/,"") + "</li>";
 		//message += (i == unsavedPages.length-1 ? " and " : i ? ", " : "") + unsavedPages[i].owner.parent.caption.replace(/^\<.*?\>\s*/,"");
-	    message += "</ul>" +  studioBundle["page_closeAnyway"];
+	    message += "</ul>" +  bundleStudio["page_closeAnyway"];
 	    app.confirm(message, false, dojo.hitch(this, function() {
 		while (layers.length) layers[0].destroy();
 		inLayer.hide();
