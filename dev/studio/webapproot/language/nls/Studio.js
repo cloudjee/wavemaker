@@ -197,4 +197,6 @@
 /*    "TabCaption_LiveViewEditor": "Live Views"*/
 //	"D_BoundTo" : " bound to ",
 //	"D_WithMatchedType" : " with matched type <i>",
+    "page_unsavedchanges_tabclose": "You have unsaved changes:",
+    "page_closeAnyway": "Close anyway?"
 }
