@@ -192,7 +192,15 @@ dojo.declare("Studio", wm.Page, {
 	var licenseService = new wm.JsonRpcService({owner: this, service: "licensingService", sync: false});	
 	var licenseDeferred = licenseService.requestAsync("getLicenseExpiration");
 	licenseDeferred.addCallback(dojo.hitch(this, "setupLicenseInfoLabelResult"));
+	licenseDeferred.addErrback(dojo.hitch(this, "licenseError"));
     },
+	licenseError: function(inError) { //xxx
+		this.userLabel.setCaption("<div class='Studio_silkIconImageList_60 LicenseIcon'></div> Trial " + inError.toString());
+			this.userLabel.removeUserClass("LicenseWarning");			    
+			this.userLabel.addUserClass("LicenseError");
+			this.startPageDialog.show();
+			this.startPageDialog.page.licenseLayer.activate();
+	},
     setupLicenseInfoLabelResult: function(inResult) {
 		    if (inResult > 30) return; // no display if more than 30 days
 		    if (inResult < 0) {
