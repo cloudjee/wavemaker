@@ -48,27 +48,32 @@ dojo.declare("wm.studio.Project", null, {
 				  height: 16, 
 				  colCount: 39, 
 				  iconCount: 90});
-	        this.newPage(this.pageName, "", {template: optionalInTemplate});
-                this.saveProject(false, false);
-		this.projectChanged();
-		this.projectsChanged();
-	    studio.endWait("Setting up new project");
+	    this.newPage(this.pageName, "", {template: optionalInTemplate},
+			 dojo.hitch(this, function() {
+			     this.saveProject(false, false);
+			     this.projectChanged();
+			     this.projectsChanged();
+			     studio.endWait("Setting up new project");
+			 }));
 		//studio.deploy("Configuring Project...");
 	},
     // pageType and argHash are typically empty
     // argHash is a way to pass in custom parameters when creating a non-basic
     // page type
-        newPage: function(inName, pageType, argHash) {
+    newPage: function(inName, pageType, argHash, callback) {
 		if (!this.projectName)
 			return;
 		this.pageChanging();
 		this.pageName = inName;
 	        this.createPageArtifacts(pageType, argHash);
 		this.makePage();
-		this.savePage();
-		this.pageChanged();
-		this.pagesChanged();
-	        studio.pageSelect.setDataValue(inName);
+	this.savePage(dojo.hitch(this, function() {
+	    this.pageChanged();
+	    this.pagesChanged();
+	    this.updatePageList();
+	    studio.pageSelect.setDataValue(inName);
+	    if (callback) callback();
+	}));
 	},
 	createApplicationArtifacts: function() {
 		var ctor = dojo.declare(this.projectName, wm.Application);
@@ -973,7 +978,8 @@ Studio.extend({
                                        this.promptForName("page", wm.findUniqueName(pageName, [l]), pages,
                                                           dojo.hitch(this, function(n) {
 	                                                      n = wm.capitalize(n);
-			                                      this.waitForCallback(bundleDialog.M_CreatePage + n, dojo.hitch(this.project, "newPage", n, optionalPageType));
+							      studio.beginWait(bundleDialog.M_CreatePage + n);
+							      this.project.newPage(n, optionalPageType, {}, function() {studio.endWait();});
                                                           }));
                                    }));
 	},
@@ -1037,6 +1043,7 @@ Studio.extend({
 	 *     5: If firstSaveCall is successful, it will then call save on everything else that is unsaved
 	 */
         saveAll: function(saveOwner) {
+	    if (!saveOwner) saveOwner = studio.project;
 	    this.saveDialogProgress.setProgress(0);
 	    this.saveDialogLabel.setCaption("Starting save...");
 	    this.progressDialog.show();
