@@ -195,20 +195,23 @@ dojo.declare("Studio", wm.Page, {
 	licenseDeferred.addErrback(dojo.hitch(this, "licenseError"));
     },
 	licenseError: function(inError) { //xxx
-		this.userLabel.setCaption("<div class='Studio_silkIconImageList_60 LicenseIcon'></div> Trial " + inError.toString());
-			this.userLabel.removeUserClass("LicenseWarning");			    
-			this.userLabel.addUserClass("LicenseError");
-			this.startPageDialog.show();
-			this.startPageDialog.page.licenseLayer.activate();
+	    this.userLabel.setCaption("<div class='Studio_silkIconImageList_60 LicenseIcon'></div> Invalid License ");
+	    this.userLabel.removeUserClass("LicenseWarning");			    
+	    this.userLabel.addUserClass("LicenseError");
+	    this.startPageDialog.show();
+	    this.startPageDialog.page.licenseLayer.activate();
+			this.startPageDialog.page.licensePage.page.setError(inError.toString());
 	},
     setupLicenseInfoLabelResult: function(inResult) {
 		    if (inResult > 30) return; // no display if more than 30 days
-		    if (inResult < 0) {
-			this.userLabel.setCaption("<div class='Studio_silkIconImageList_59 LicenseIcon'></div> Trial License has expired");
+		    if (inResult < 0) {			
+			//this.userLabel.setCaption("<div class='Studio_silkIconImageList_59 LicenseIcon'></div> Trial License has expired");
+			this.userLabel.setCaption("");
 			this.userLabel.removeUserClass("LicenseWarning");			    
-			this.userLabel.addUserClass("LicenseError");
+			//this.userLabel.addUserClass("LicenseError");
 			this.startPageDialog.show();
 			this.startPageDialog.page.licenseLayer.activate();
+			this.startPageDialog.page.licensePage.page.setError("Trial license has expired");
 		    } else {
 			this.userLabel.setCaption("<div class='Studio_silkIconImageList_60 LicenseIcon'></div> Trial license expires in " + inResult + " days");
 			if (inResult <= 2)
@@ -477,6 +480,7 @@ dojo.declare("Studio", wm.Page, {
 		window.document.title = title.join(" - ");
 	},
 	updateServices: function() {
+		wm.typeManager.clearTypes();
 		this.setLiveLayoutReady(false);
 		this.servicesService.requestSync("listTypes", [], dojo.hitch(this, "typesChanged"));
 		this.servicesService.requestSync("listServicesWithType", [], dojo.hitch(this, "servicesDataChanged"));
@@ -1370,11 +1374,16 @@ dojo.declare("Studio", wm.Page, {
 	if (!studio.page) return;
 	var page = optionalPageName || inSender.getDataValue();
 	if (page == this.project.pageName) return;
+
 	var warnPage = bundleDialog.M_AreYouSureOpenPage;
-        this.confirmPageChange(warnPage, page, dojo.hitch(this, function() {
-	    this.waitForCallback(bundleDialog.M_OpeningPage + page + ".", dojo.hitch(this.project, "openPage", page));
-        }));
-	this.project.openPage(pagename);
+        this.confirmPageChange(warnPage, page, 
+			       dojo.hitch(this, function() {
+				   this.waitForCallback(bundleDialog.M_OpeningPage + page + ".", dojo.hitch(this.project, "openPage", page));
+			       }),
+			       dojo.hitch(this, function() {
+				   this.pageSelect.setDataValue(studio.project.pageName);
+			       }));
+	//this.project.openPage(pagename);
     },
 
 	selectProperty: function(inSender, info, text) {
