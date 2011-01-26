@@ -74,6 +74,14 @@ dojo.declare("wm.propEdit.Select", wm.propEdit.Base, {
 		this.options = this.options || this.getOptions();
 		this.values = this.values || this.getValues() || this.options;
 	},
+        applyProp: function(propName, value) {
+	    for (var i = 0; i < this.options.length; i++) {
+		if (value == this.options[i]) {
+		    this._setPropValue(this.values[i]);
+		    break;
+		}
+	    }
+	},
 	getValues: function() {
 	},
 	getOptions: function() {
@@ -233,14 +241,7 @@ dojo.declare("wm.propEdit.LiveSourcesSelect", wm.propEdit.DataTypesSelect, {
 		this.addOptionValues(this.getLiveViews(), true);
 		this.inherited(arguments);
 	},
-        applyProp: function(propName, value) {
-	    for (var i = 0; i < this.options.length; i++) {
-		if (value == this.options[i]) {
-		    this._setPropValue(this.values[i]);
-		    break;
-		}
-	    }
-	},
+
 	getLiveViews: function() {
 		var
 			views = wm.listComponents([studio.application], wm.LiveView),
