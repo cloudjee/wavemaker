@@ -6,6 +6,7 @@ import java.io.*;
 
 import de.schlichtherle.license.*;
 import org.springframework.web.multipart.MultipartFile;
+import com.wavemaker.common.WMRuntimeException;
 
 /**
  * @author slee
@@ -129,13 +130,14 @@ public class LicenseProcessor {
             lc = lm.verifyExt();
         } catch (Exception exc) {
             exc.printStackTrace();
-            return null;
+            throw new WMRuntimeException(exc);
+            //return null;
         }
 
         return lc;
     }
 
-    public static String verifyLicense() {
+    public static String verifyLicense() throws WMRuntimeException {
         LicenseContentExt lc = verifyLicense1();
         if (lc == null)
             return "Invalid License";
@@ -143,7 +145,7 @@ public class LicenseProcessor {
             return "";
     }
 
-    public static int getLicenseExpiration() {
+    public static int getLicenseExpiration() throws WMRuntimeException {
         LicenseContentExt lc = verifyLicense1();
         if (lc == null) return -1;
 
