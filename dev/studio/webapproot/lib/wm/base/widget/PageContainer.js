@@ -265,8 +265,11 @@ wm.PageContainer.extend({
 				 app.confirm("Can we save your current page before moving on to the next page? This will save your pageContainer's pageName.", 
 					     false,
 					     dojo.hitch(this,function() {
-						 studio.project.saveProject();
-						 studio.project.newPage(n);
+
+						 this.connect(studio, "saveProjectComplete", studio.project, function() {
+						     this.newPage(n);
+						 });
+						 studio.saveAll(studio.project);
 					     }),
 					     dojo.hitch(this,function() {
 						 studio.project.newPage(n);
