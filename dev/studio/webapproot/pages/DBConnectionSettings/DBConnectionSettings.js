@@ -405,8 +405,10 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 		studio.endWait();
 		studio.updateServices();		
 		studio.application.loadServerComponents("wm.Query");
+/*
 		wm.fire(studio.getEditor("DataObjectsEditor").page, "update");		
 		wm.fire(studio.getEditor("QueryEditor").page, "update");
+		*/
 	},
 	_getDDLResult: function(inData) {
 		studio.endWait();
