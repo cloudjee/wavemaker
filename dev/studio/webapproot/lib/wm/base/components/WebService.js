@@ -62,7 +62,7 @@ dojo.declare("wm.WebService", wm.JavaService, {
 			studio.application.addServerComponent(c);
 			studio.refreshServiceTree();
 			studio.select(c);
-			this.editView();
+		        c.editView();
 			studio.navGotoComponentsTreeClick();
 		}
 	},
