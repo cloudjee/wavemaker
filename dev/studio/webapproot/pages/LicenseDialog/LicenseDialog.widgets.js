@@ -38,7 +38,7 @@ LicenseDialog.widgets = {
 		trialButton: ["wm.Button", {width: "200px", caption: "Request Trial License"}, {onclick: "trialClick"}],
 		    buyButton: ["wm.Button", {width: "200px", caption: "Purchase License"}, {onclick: "buyClick"}],
 		    resultPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right"}, {}, {
-			resultLabel: ["wm.Label", {width: "100%", height: "100%", caption: "", singleLine: false}]
+			resultLabel: ["wm.Label", {width: "100%", height: "100%", caption: "", singleLine: false, align: "center"}]
 		    }],
 		buttonPanel: ["wm.Panel", {width: "100%", height: "40px", layoutKind: "left-to-right"}, {}, {
 		    closeButton: ["wm.Button", {width: "200px", caption: "Cancel", showing: false}, {onclick: "dismiss"}]

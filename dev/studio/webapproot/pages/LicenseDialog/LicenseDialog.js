@@ -41,5 +41,10 @@ dojo.declare("LicenseDialog", wm.Page, {
     buyClick: function() {
 	window.open("http://www.wavemaker.com/?macid=" + this.macaddr);
     },
+    setError: function(inMsg) {
+	this.resultLabel.setCaption(inMsg);
+	this.resultLabel.setBorder("4");
+	this.resultLabel.setBorderColor("red");
+    },
 	_end: 0
 });
