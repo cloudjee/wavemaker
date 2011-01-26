@@ -368,7 +368,7 @@ Section /o -un.WaveMaker UNSEC0002
         ClearErrors
         RmDir /r "$DeployDir"
         IfErrors 0 exit
-            MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION|MB_TOPMOST 'Unable to remove "$DeployDir". Would you like to retry the operation?$\r$\nIf cancel is selected, the uninstall will request to reboot on completetion and the files will be deleted on system startup.' /SD IDRETRY IDRETRY clearDirs
+            MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION|MB_TOPMOST 'Unable to remove "$DeployDir". Would you like to retry the operation?$\r$\nIf cancel is selected, the uninstall will request to reboot on completion and the files will be deleted on system startup.' /SD IDRETRY IDRETRY clearDirs
             RmDir /r /REBOOTOK $DeployDir
         exit:
         IfErrors done 0
