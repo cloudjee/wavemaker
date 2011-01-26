@@ -597,7 +597,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	endEdit: function() {
 		if (this.liveEditing)
 			this.setReadonly(true);
-	    //this.operation = null;
+	    this.operation = null;
 	},
 	/**
 		Cancels an edit by restoring the editors to the data from the <i>dataSet</i> property.
