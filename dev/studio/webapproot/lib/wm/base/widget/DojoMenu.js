@@ -55,6 +55,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 	postInit: function() {
 		this.inherited(arguments);
 		var thisObj = this;
+	    this._rightclickBlocker = [];
 		dojo.addOnLoad(function(){thisObj.renderDojoObj();});
 	},
     setTransparent: function(inTrans) {
@@ -106,6 +107,9 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 			return;
 		}
 	  */
+
+	    dojo.forEach(this._righclickBlocker, function(con) {dojo.disconnect(con);});
+	    this._righclickBlocker = [];
 		if (this.dojoObj) {
 		    try {
 			this.dojoObj.destroyRecursive();
@@ -152,16 +156,26 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		}
 		
 		this.dojoRenderer();
+	    this.blockRightClickOnMenu(this.dojoObj.domNode);
+
+	},
+    blockRightClickOnMenu: function(node) {
 	    try {
-		this.connect(this.dojoObj.domNode, dojo.isFF < 3.0 ? "onmousedown" : "oncontextmenu", function(event) {
-		    if (!dojo.isFF || (event.button == 2 || event.ctrlKey)) {
-			dojo.stopEvent(event);
-		    }
-		});
+		if (dojo.isFF) {
+		    this._righclickBlocker.push(this.connect(node, "onmousedown", function(event) {
+			if (event.button == 2 || event.ctrlKey) {
+			    dojo.stopEvent(event);
+			}
+		    }));
+		}
+		this._righclickBlocker.push(this.connect(node, "oncontextmenu", function(event) {
+		    dojo.stopEvent(event);
+		}));
+
 	    } catch(e) {}
 
 
-	},
+    },
 	_onItemHover: function(item){
 		console.info('_onItemHover called .......');
 		this.dojoObj.focusChild(item);
@@ -190,7 +204,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 
 		var evtObj = this.getEventObj(this.getEventName(data.label));
 		
-		if (!this.isDesignLoaded() && evtObj && evtObj.onClick && evtObj.onClick != '')
+			if (!this.isDesignLoaded() && evtObj && evtObj.onClick && evtObj.onClick != '')
 		{
 		    if (dojo.isFunction(evtObj.onClick)) {
 			menuObj.onClick = evtObj.onClick;
@@ -267,10 +281,11 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		if (!this.isDesignLoaded() && this.eventList[data.label] && this.eventList[data.label] != '') 
 		        menuObj.onClick = dojo.hitch(this.eventList[data.label]);
 
-	    if (onClick) {
+		    if (onClick) {
 		if (dojo.isString(onClick)) {
-		    var f = this.owner.getValueById(onClick);// || this.owner[evtObj.onClick];
-		    menuObj.onClick = this.owner.makeEvent(f, onClick, this, "onClick");
+		    //var f = this.owner.getValueById(onClick);// || this.owner[evtObj.onClick];
+		    var f  = this.owner[onClick];
+		    menuObj.onClick = this.owner.makeEvent(f || onClick, onClick, this, "onClick");
 		} else {
 		    menuObj.onClick = dojo.hitch(this.owner, onClick, menuObj, data);
 		}
@@ -290,6 +305,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		if (data.children && data.children.length > 0) 
 		{
 		  var subMenu = new dijit.Menu({});
+		    this.blockRightClickOnMenu(subMenu.domNode);
 		  dojo.addClass(subMenu.domNode, this.owner.name + "_" + this.name  + "_PopupMenu");
 		  dojo.addClass(subMenu.domNode, this.owner.name + "_" + idInPage  + "_PopupMenu");
 		  for (var i = 0; i < data.children.length; i++)
@@ -468,7 +484,9 @@ wm.Object.extendSchema(wm.DojoMenu, {
 	dataSet: { ignore:1},
 	disabled:{ignore:1},
         menuItems:{ignore:1},
-        editMenuItems: {group: "operation"}
+    editMenuItems: {group: "operation"},
+    vertical: {group: "display"},
+    openOnHover: {group: "display"}
 });
 
 wm.DojoMenu.description = "A dojo menu.";
@@ -717,6 +735,7 @@ dojo.declare("wm.PopupMenu", wm.DojoMenu, {
 	var children = this.dojoObj.getChildren();
 	for (var i = children.length-1; i >= 0; i--)
 	    children[i].destroy();
+	delete this.dojoObj.focusedChild;
     },
     _end: 0
 });
@@ -725,6 +744,7 @@ wm.Object.extendSchema(wm.PopupMenu, {
     vertical: {ignore:true},
     isPopupMenu: {ignore:true},
     transparent: {ignore:true},
+    openOnHover: {ignore: true},
     width: {ignore:true},
     height: {ignore:true},
     showing: {ignore:true},
