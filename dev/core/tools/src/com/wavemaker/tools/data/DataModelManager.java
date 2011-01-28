@@ -726,6 +726,11 @@ public class DataModelManager {
                 .getServicesByType(types); //xxx
 
         for (Service service : services) {
+            //Only SalesForce service should be treated as a data model among web services
+            if (service.getType().equals(WebServiceType.TYPE_NAME) ||
+                !service.getId().equals("salesforceService")) {
+                continue;
+            }
             initialize(service.getId(), force);
         }
     }
