@@ -197,8 +197,6 @@ public class Main
     public static void main(String[] args) throws InterruptedException,
             URISyntaxException, IOException
     {
-        System.out.println("********************* in Launcher main *************************");
-
         if (GraphicsEnvironment.isHeadless())
         {
             // Run silently
