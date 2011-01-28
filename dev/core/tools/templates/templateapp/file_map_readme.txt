@@ -6,6 +6,7 @@ lib
 services
  All services should be added via studio. Once added, services can be edit via eclipse or other editors, including adding additional classes. 
  Classes in this folder will be compiled when the project is run or deployed.
+ Modifications to imported services can be lost upon re-import.
  
  To see external updates in studio, use the refresh button in the java editor.
  
