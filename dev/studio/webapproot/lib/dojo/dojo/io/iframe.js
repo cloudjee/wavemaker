@@ -160,9 +160,18 @@ dojo.io.iframe = {
 		//		Function that sends the request to the server.
 		//		This transport can only process one send() request at a time, so if send() is called
 		//multiple times, it will queue up the calls and only process one at a time.
+
 		if(!this["_frame"]){
 			this._frame = this.create(this._iframeName, dojo._scopeName + ".io.iframe._iframeOnload();");
 		}
+	    /* Added by wavemaker; somehow dojox's file uploader is removing
+	     * this from the parent node, the result of using this parentless
+	     * frame to load data is that firefox shows it in a new window
+	     */
+	    if (!this._frame.parentNode)
+		args.form.ownerDocument.body.appendChild(this._frame);
+	    /* End Wavemaker modification */
+
 
 		//Set up the deferred.
 		var dfd = dojo._ioSetArgs(
