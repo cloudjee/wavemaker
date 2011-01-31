@@ -23,8 +23,10 @@ public class UserService {
     private CloudDB clouddb;
     
     public UserService() {
-        clouddb = (CloudDB) RuntimeAccess.getInstance().getService(
-                CloudDB.class);
+        //clouddb = (CloudDB) RuntimeAccess.getInstance().getService(
+        //        CloudDB.class);
+        clouddb = (CloudDB) RuntimeAccess.getInstance().getSpringBean(
+                "CloudDB");
     }
 
     public boolean createUser(String email) throws AddressException,
