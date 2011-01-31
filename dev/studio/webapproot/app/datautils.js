@@ -231,16 +231,17 @@ setupWidgetsForDatabaseType = function(
 
 	var username = "";
 	var password = "";
-
+        var extraInputValue = "";
 	if (isMySQL(inDBType)) {
 		p = 3306;
 		if (studio.isCloud()) 
 		  h = "mysql.wavemaker.com";
 	} else if (isHSQLDB(inDBType)) {
 		h = null;
-		p = null;
+	        p = null;
 		e = "File ";
 		username = "sa";
+	        extraInputValue = "hrdb";
 	} else if (isPostgreSQL(inDBType)) {
 		p = 5432;
 		tableFilter = POSTGRESQL_DEFAULT_TABLE_FILTER;
@@ -277,7 +278,7 @@ setupWidgetsForDatabaseType = function(
 		portInput.setInputValue(p);
 	}
 
-	extraInput.setInputValue("");
+	extraInput.setInputValue(extraInputValue);
 	extraInput.setShowing(e != null);
 	extraLabel.setShowing(e != null);
 	if (e != null) {
@@ -381,6 +382,9 @@ initDBTypeDropdown = function(inDropdown) {
 	l.sort();
 	l = [OTHER_DB_TYPE].concat(l);
 	inDropdown.editor.setOptions(l.join());
+    if (studio.isCloud())
+	inDropdown.setDisplayValue("HSQLDB");
+    else
 	inDropdown.setDisplayValue(DEFAULT_DB_TYPE);
 }
 
