@@ -170,10 +170,6 @@
           <file name="${xmlschema.jar}"/>
           <file name="${paranamer.jar}"/>
 		  <file name="${json-org.jar}"/>
-		  <file name="${truelicense.jar}"/>
-          <file name="${trueswing.jar}"/>
-		  <file name="${truexml.jar}"/>
-		  <file name="${commons-codec-1.4.jar}"/>
         </filelist>
     </then>    
     <else> <!-- Default -->     
@@ -230,42 +226,80 @@
           <file name="${xmlschema.jar}"/>
           <file name="${paranamer.jar}"/>
 		  <file name="${json-org.jar}"/>
-		  <file name="${truelicense.jar}"/>
-          <file name="${trueswing.jar}"/>
-		  <file name="${truexml.jar}"/>
-		  <file name="${commons-codec-1.4.jar}"/>
         </filelist>
 			</else>
 			</if>
 			
-    <filelist id="common.tools.jars">
-      <file name="${ant-launcher.jar}"/>
-      <file name="${ant-nodeps.jar}"/>
-      <file name="${ant.jar}"/>
-      <file name="${catalina-ant.jar}"/>
-      <file name="${collection-setter-injector.jar}"/>
-      <file name="${comresrcgen.jar}"/>
-      <file name="${freemaker.jar}"/>
-      <file name="${hibernate-ext.jar}"/>
-      <file name="${jaxb-xjc.jar}"/>
-      <file name="${jaxws-tools.jar}"/>
-      <file name="${jtidy.jar}"/>
-      <file name="${localizer.jar}"/>
-      <file name="${servlet.api.jar}"/>
-      <file name="${wadl-ant.jar}"/>
-      <file name="${wadl-cmdline.jar}"/>
-      <file name="${xbean.jar}"/>
-      <file name="${xmltask.jar}"/>
-  		<file name="${amazonec2.jar}"/>
-  		<file name="${amazons3.jar}"/>
-  		<file name="${commons-codec.jar}"/>
-  		<file name="${commons-httpclient.jar}"/>
-  		<file name="${rs-jar1.jar}"/>
-  		<file name="${rs-jar2.jar}"/>
-  		<file name="${rs-jar3.jar}"/>
-  		<file name="${rs-jar4.jar}"/>
-    </filelist>
-
+    <if>
+    	<equals arg1="${common.modules.isEnterprise}" arg2="true"/>
+	<then>
+		<filelist id="common.tools.jars">
+			<file name="${ant-launcher.jar}"/>
+			<file name="${ant-nodeps.jar}"/>
+			<file name="${ant.jar}"/>
+			<file name="${catalina-ant.jar}"/>
+			<file name="${collection-setter-injector.jar}"/>
+			<file name="${comresrcgen.jar}"/>
+			<file name="${freemaker.jar}"/>
+			<file name="${hibernate-ext.jar}"/>
+			<file name="${jaxb-xjc.jar}"/>
+			<file name="${jaxws-tools.jar}"/>
+			<file name="${jtidy.jar}"/>
+			<file name="${localizer.jar}"/>
+			<file name="${servlet.api.jar}"/>
+			<file name="${wadl-ant.jar}"/>
+			<file name="${wadl-cmdline.jar}"/>
+			<file name="${xbean.jar}"/>
+			<file name="${xmltask.jar}"/>
+			<file name="${amazonec2.jar}"/>
+			<file name="${amazons3.jar}"/>
+			<file name="${commons-codec.jar}"/>
+			<file name="${commons-httpclient.jar}"/>
+			<file name="${rs-jar1.jar}"/>
+			<file name="${rs-jar2.jar}"/>
+			<file name="${rs-jar3.jar}"/>
+			<file name="${rs-jar4.jar}"/>
+			<file name="${truelicense.jar}"/>
+			<file name="${trueswing.jar}"/>
+			<file name="${truexml.jar}"/>
+			<file name="${commons-codec-1.4.jar}"/>
+			<file name="${wmtools.sub.jar}" if="common.modules.isEnterprise"/>
+		</filelist>
+	</then>
+	<else>
+		<filelist id="common.tools.jars">
+			<file name="${ant-launcher.jar}"/>
+			<file name="${ant-nodeps.jar}"/>
+			<file name="${ant.jar}"/>
+			<file name="${catalina-ant.jar}"/>
+			<file name="${collection-setter-injector.jar}"/>
+			<file name="${comresrcgen.jar}"/>
+			<file name="${freemaker.jar}"/>
+			<file name="${hibernate-ext.jar}"/>
+			<file name="${jaxb-xjc.jar}"/>
+			<file name="${jaxws-tools.jar}"/>
+			<file name="${jtidy.jar}"/>
+			<file name="${localizer.jar}"/>
+			<file name="${servlet.api.jar}"/>
+			<file name="${wadl-ant.jar}"/>
+			<file name="${wadl-cmdline.jar}"/>
+			<file name="${xbean.jar}"/>
+			<file name="${xmltask.jar}"/>
+			<file name="${amazonec2.jar}"/>
+			<file name="${amazons3.jar}"/>
+			<file name="${commons-codec.jar}"/>
+			<file name="${commons-httpclient.jar}"/>
+			<file name="${rs-jar1.jar}"/>
+			<file name="${rs-jar2.jar}"/>
+			<file name="${rs-jar3.jar}"/>
+			<file name="${rs-jar4.jar}"/>
+			<file name="${truelicense.jar}"/>
+			<file name="${trueswing.jar}"/>
+			<file name="${truexml.jar}"/>
+			<file name="${commons-codec-1.4.jar}"/>
+		</filelist>
+    </else>
+	</if>
 
     <fileset id="common.modules.jars" dir="${allmodules.build.dir}">
         <include name="**/*.jar"/>
@@ -389,7 +423,7 @@ or the ant property build.dir</echo>
         <property name="gfv.svn.repository.url" value="NON-SVN BUILD"/>
     </target>
 
-    <target name="common.generate-full-version" 
+    <target name="common.generate-full-version" unless="version.full"
             depends="-common.init.version,-common.version.do-svn,-common.version.do-non-svn">
 
      <echo>Version: ${version.number} WRITTEN TO FILE: ${version.file}</echo>
