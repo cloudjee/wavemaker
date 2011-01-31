@@ -250,7 +250,7 @@ dojo.declare("Studio", wm.Page, {
 	    }
 	},
 	isCloud: function() {
-	  return this.isModuleEnabled("cloud", "wm.cloud");
+	  return  this.isModuleEnabled("cloud", "wm.cloud");
         },
 	preloadImages: function() {
 		var p = "images/", t = "lib/wm/base/widget/themes/default/images/";
@@ -1489,8 +1489,10 @@ dojo.declare("Studio", wm.Page, {
                 d.addCallback(optionalCallback);
         },
     loadHelp: function(inType, inPropName, onSuccess) {
-	      inType = inType.substring(inType.indexOf(".")+1);
+	      if (inType == studio.project.projectName) inType = "wm.Application";
 
+	      inType = inType.substring(inType.indexOf(".")+1);
+	
 
 	      if (inType.indexOf("gadget.") == 0)
 		  inType = inType.substring(inType.indexOf(".")+1);
