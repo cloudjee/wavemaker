@@ -24,7 +24,7 @@ public class LicenseProcessor {
                 final String resourceName = "publicCerts.store";
                 final InputStream in = getClass().getResourceAsStream(resourceName);
                 if (in == null)
-                throw new FileNotFoundException(resourceName);
+                    throw new FileNotFoundException(resourceName);
                 return in;
             }
             public String getAlias() {
@@ -83,7 +83,7 @@ public class LicenseProcessor {
                 final String resourceName = "publicCerts.store";
                 final InputStream in = getClass().getResourceAsStream(resourceName);
                 if (in == null)
-                throw new FileNotFoundException(resourceName);
+                    throw new FileNotFoundException(resourceName);
                 return in;
             }
             public String getAlias() {
