@@ -316,6 +316,15 @@
               file="${classes.runtime.dir}/log4j.properties"/>
         <copy todir="${classes.studio.dir}/"
             file="${studio.dir}/src/marker.resource.txt"/>
+
+		<!-- delete unobfuscated classes in case of enterprise version -->
+		<delete>
+			<fileset dir="${lib.studio.dir}">
+				<include name="wmtools.safe.jar"/>
+				<include name="truelicense.jar"/>
+				<include name="truexml.jar"/>
+			</fileset>
+		</delete>
     </target>
 
     <target name="javadoc">
