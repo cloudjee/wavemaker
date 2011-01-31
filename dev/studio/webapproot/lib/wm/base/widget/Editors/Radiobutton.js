@@ -240,7 +240,7 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 	},
 	setGroupValue: function(inValue) {
 		var group = this.getGroup();
-		for (var i=0, v; (v=group[i]); i++)
+	    for (var i=0, v; (v=group[i]); i++) {
 		    var o = v.owner;
 			if (o.checkedValue === inValue) {
 			    if (!o.getChecked()) {
@@ -248,6 +248,7 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 			    }
 			    return;
 			}
+	    }
 
 	    // if not a good value, uncheck checked editor in group
 	    for (var i=0, v; (v=group[i]); i++) {
