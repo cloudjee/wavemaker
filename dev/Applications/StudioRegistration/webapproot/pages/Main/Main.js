@@ -48,5 +48,21 @@ dojo.declare("Main", wm.Page, {
           console.error('ERROR IN resetDoneButtonClick: ' + e); 
       } 
   },
+  emailInputEnterKeyPress: function(inSender) {
+      try {
+          this.createAccountBtnClick();
+          
+      } catch(e) {
+          console.error('ERROR IN emailInputEnterKeyPress: ' + e); 
+      } 
+  },
+  pwResetEmailInputEnterKeyPress: function(inSender) {
+      try {
+          this.resetDoneButtonClick();
+          
+      } catch(e) {
+          console.error('ERROR IN pwResetEmailInputEnterKeyPress: ' + e); 
+      } 
+  },
   _end: 0
 });
