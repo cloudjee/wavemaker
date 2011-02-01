@@ -111,7 +111,7 @@ public class Tools {
         }
 
         //----------- Studio version
-        if (type.equalsIgnoreCase("p")) {
+        if (type.equalsIgnoreCase("Perpetual")) {
             System.out.println("Enter Studio version (eg. 6.1.9GA, 6.2.4Beta, 6.3.0DevBuild): ");
             in = new BufferedReader(new InputStreamReader(System.in));
 
