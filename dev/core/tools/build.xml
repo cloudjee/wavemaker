@@ -253,7 +253,6 @@
 	</target>
 
 	<target name="-obfuscate-jar" if="do.obfuscation">
-		<echo>---------------- obfuscate = ${obfuscate} ----------------</echo>
 		<taskdef resource="proguard/ant/task.properties"
 		classpath="${lib.tools.dir}/proguard/proguard.jar"/>
 			<proguard
