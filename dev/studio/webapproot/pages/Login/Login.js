@@ -19,7 +19,7 @@
 dojo.declare("Login", wm.Page, {
     form: null,
 	start: function() {
-	    this.connect(this.domNode, "keydown", this, "keydown");
+	    //this.connect(this.domNode, "keydown", this, "keydown");
 
 	    if (window.studio) {
 	        this.layoutBox.addUserClass("wm-darksnazzy");
@@ -86,16 +86,18 @@ dojo.declare("Login", wm.Page, {
 	setUserName: function(inName) {
 	    this.usernameInput.setDataValue(inName);
 	},
+/*
 	keydown: function(e) {
 		if (e.keyCode == dojo.keys.ENTER) {
 			this.loginButton.domNode.focus();
 		}
 	},
+	*/
         logoutButtonClick: function(inSender) {
 	  studio.logoutClick();
 	},
 	loginButtonClick: function(inSender) {
-
+	    this.loginButton.setDisabled(true);
 	        //this.form.submit();
 	        dojo.cookie("user", this.usernameInput.getDataValue(), {expires: 365});
 		this.loginErrorMsg.setCaption("");
@@ -106,14 +108,16 @@ dojo.declare("Login", wm.Page, {
 
 	},
         loginSuccess: function(inResponse) {
+	    this.loginButton.setDisabled(false);
 	  if (window.studio) 
 	    wm.fire(this.owner, "dismiss");
 
 	},
 	loginFailed: function(inResponse) {
+	    this.loginButton.setDisabled(false);
 		app.alert("Invalid username or password");
 		this.loginErrorMsg.setCaption("Invalid username or password.");
-		this.usernameInput._editor.focus();
+		this.usernameInput.focus();
 	},
 	_end: 0
 });

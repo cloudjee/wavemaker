@@ -32,15 +32,13 @@ Login.widgets = {
 						spacer5: ["wm.Spacer", {width: "100%"}, {}],
 						loginInputPanel: ["wm.Panel", {_classes: {domNode: ["wm_Border_StyleFirefoxCurved4px", "wm_Border_StyleSolid", "wm_Border_Size1px", "wm_Border_ColorLightGray"]}, pading: "10", width: "280px"}, {}, {
 						    reloginLabel: ["wm.Label", {height: "28px", showing: false, caption: "Please log back in to continue working", padding: "10", width:"280px"}],
-							usernameInput: ["wm.Editor", {caption: "Email", captionSize: "80px"}, {}, {
-								editor: ["wm._TextEditor", {}, {}]
+						    usernameInput: ["wm.Text", {caption: "Email", captionSize: "80px"}, {onEnterKeyPress: "loginButtonClick"}, {
 							}],
-							passwordInput: ["wm.Editor", {caption: "Password", captionSize: "80px"}, {}, {
-								editor: ["wm._TextEditor", {password: true}, {}]
+						    passwordInput: ["wm.Text", {password: true, caption: "Password", captionSize: "80px"}, {onEnterKeyPress: "loginButtonClick"}, {
 							}],
-						    loginButtonPanel: ["wm.Panel", {height: "28px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
-						                loginButton: ["wm.Button", {caption: "Login", width: "42px"}, {onclick: "loginButtonClick"}],
-								logoutButton: ["wm.Button", {showing: false, caption: "Logout", width: "42px"}, {onclick: "logoutButtonClick"}]
+						    loginButtonPanel: ["wm.Panel", {height: "28px", width: "100%", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
+						                loginButton: ["wm.Button", {caption: "Login", width: "52px"}, {onclick: "loginButtonClick"}],
+								logoutButton: ["wm.Button", {showing: false, caption: "Logout", width: "52px"}, {onclick: "logoutButtonClick"}]
 							}],
 							registerLink: ["wm.Content", {_classes: {domNode: ["wm_TextAlign_Center"]}, content: "registerLink", height: "30px"}, {}],
 						        pwdResetLink: ["wm.Label",   {_classes: {domNode: ["wm_TextAlign_Center"]}, caption: "Forgot My Password", height: "20px",width: "100%", link: "/StudioRegistration/?resetPassword" }, {}],
