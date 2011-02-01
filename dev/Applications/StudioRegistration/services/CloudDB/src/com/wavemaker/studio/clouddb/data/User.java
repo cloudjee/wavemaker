@@ -6,7 +6,7 @@ import java.util.Date;
 
 /**
  *  CloudDB.User
- *  12/01/2008 11:08:56
+ *  02/01/2011 11:28:32
  * 
  */
 public class User {
@@ -14,15 +14,6 @@ public class User {
     private String email;
     private String password;
     private Date createDate;
-
-    public User() {
-    }
-
-    public User(String email, String password, Date createDate) {
-        this.email = email;
-        this.password = password;
-        this.createDate = createDate;
-    }
 
     public String getEmail() {
         return email;

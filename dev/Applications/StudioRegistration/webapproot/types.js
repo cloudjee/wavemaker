@@ -16,6 +16,8 @@ wm.types = {
 			"fields": {
 				"firstResult": {
 					"exclude": [],
+					"fieldOrder": 0,
+					"fieldSubType": null,
 					"include": [],
 					"isList": false,
 					"noChange": [],
@@ -24,6 +26,8 @@ wm.types = {
 				},
 				"maxResults": {
 					"exclude": [],
+					"fieldOrder": 1,
+					"fieldSubType": null,
 					"include": [],
 					"isList": false,
 					"noChange": [],
@@ -32,6 +36,8 @@ wm.types = {
 				},
 				"orderBy": {
 					"exclude": [],
+					"fieldOrder": 2,
+					"fieldSubType": null,
 					"include": [],
 					"isList": true,
 					"noChange": [],
@@ -47,6 +53,8 @@ wm.types = {
 			"fields": {
 				"filters": {
 					"exclude": [],
+					"fieldOrder": 1,
+					"fieldSubType": null,
 					"include": [],
 					"isList": true,
 					"noChange": [],
@@ -55,6 +63,8 @@ wm.types = {
 				},
 				"properties": {
 					"exclude": [],
+					"fieldOrder": 0,
+					"fieldSubType": null,
 					"include": [],
 					"isList": true,
 					"noChange": [],
@@ -70,6 +80,8 @@ wm.types = {
 			"fields": {
 				"createDate": {
 					"exclude": [],
+					"fieldOrder": 2,
+					"fieldSubType": null,
 					"include": [],
 					"isList": false,
 					"noChange": [],
@@ -78,6 +90,8 @@ wm.types = {
 				},
 				"email": {
 					"exclude": [],
+					"fieldOrder": 0,
+					"fieldSubType": null,
 					"include": ["delete", "read", "update", "insert"],
 					"isList": false,
 					"noChange": ["delete", "read", "update"],
@@ -86,6 +100,8 @@ wm.types = {
 				},
 				"password": {
 					"exclude": [],
+					"fieldOrder": 1,
+					"fieldSubType": null,
 					"include": [],
 					"isList": false,
 					"noChange": [],
@@ -142,6 +158,10 @@ wm.types = {
 			"primitiveType": "Number"
 		},
 		"java.lang.String": {
+			"internal": false,
+			"primitiveType": "String"
+		},
+		"java.lang.StringBuffer": {
 			"internal": false,
 			"primitiveType": "String"
 		},

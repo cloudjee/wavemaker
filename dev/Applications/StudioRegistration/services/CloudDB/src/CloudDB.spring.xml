@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- Generated 12/01/2008 11:08:55
+<!-- Generated 02/01/2011 11:28:28
 
 Configuration for 'CloudDB' database service
 
@@ -134,11 +134,18 @@ Configuration for 'CloudDB' database service
         lazy-init="true"/>
 
     <bean class="com.wavemaker.runtime.service.events.EventWire"
-        lazy-init="true">
-        <property name="bean" ref="CloudDB"/>
+        lazy-init="false">
+        <property name="serviceWire" ref="CloudDBServiceWire"/>
         <property name="eventListener">
             <bean class="com.wavemaker.runtime.data.DataServiceEventListener"/>
         </property>
+    </bean>
+
+    <bean id="CloudDBServiceWire"
+        class="com.wavemaker.runtime.service.reflect.ReflectServiceWire"
+        lazy-init="false" scope="singleton">
+        <property name="serviceId" value="CloudDB"/>
+        <property name="serviceType" ref="DataService"/>
     </bean>
 
 </beans>

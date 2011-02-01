@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" springFile="UserService.spring.xml" type="JavaService" CRUDService="false" class="com.wavemaker.studio.cloud.UserService" id="UserService">
-    <operation name="resetPassword">
+    <operation name="createUser">
         <parameter isList="false" typeRef="java.lang.String" name="email"/>
         <return isList="false" typeRef="boolean"/>
     </operation>
-    <operation name="createUser">
+    <operation name="resetPassword">
         <parameter isList="false" typeRef="java.lang.String" name="email"/>
         <return isList="false" typeRef="boolean"/>
     </operation>

@@ -1,5 +1,5 @@
 Main.widgets = {
-	createUser: ["wm.ServiceVariable", {"operation":"createUser","service":"UserService"}, {"onSuccess":"createUserSuccess"}, {
+	createUser: ["wm.ServiceVariable", {"operation":"createUser","service":"UserService"}, {"onSuccess":"createUserSuccess","onResult":"createUserResult"}, {
 		input: ["wm.ServiceInput", {"type":"createUserInputs"}, {}, {
 			binding: ["wm.Binding", {}, {}, {
 				wire: ["wm.Wire", {"source":"emailInput.dataValue","targetProperty":"email"}, {}]
@@ -20,7 +20,7 @@ Main.widgets = {
 			}]
 		}]
 	}],
-	resetPassword: ["wm.ServiceVariable", {"operation":"resetPassword","service":"UserService"}, {"onSuccess":"resetPasswordSuccess","onBeforeUpdate":"resetPasswordBeforeUpdate"}, {
+    resetPassword: ["wm.ServiceVariable", {"operation":"resetPassword","service":"UserService"}, {"onSuccess":"resetPasswordSuccess","onBeforeUpdate":"resetPasswordBeforeUpdate", onResult: "resetPasswordResult"}, {
 		input: ["wm.ServiceInput", {"type":"resetPasswordInputs"}, {}, {
 			binding: ["wm.Binding", {}, {}, {
 				wire: ["wm.Wire", {"source":"pwResetEmailInput.dataValue","targetProperty":"email"}, {}]
@@ -74,7 +74,7 @@ Main.widgets = {
 						label3: ["wm.Label", {"_classes":{"domNode":["wm_FontSize_200percent","wm_TextAlign_Center"]},"border":"0","caption":"Reset Password","height":"48px","width":"70px"}, {}, {
 							format: ["wm.DataFormatter", {}, {}]
 						}],
-						pwResetEmailInput: ["wm.Text", {"border":"0","caption":"Email","captionSize":"30%","displayValue":"","height":"20px","required":true}, {"onEnterKeyPress":"pwResetEmailInputEnterKeyPress"}],
+						pwResetEmailInput: ["wm.Text", {"border":"0","caption":"Email","captionSize":"30%","displayValue":"","height":"20px","required":true}, {"onEnterKeyPress":"resetPassword"}],
 						panel8: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_4px"]},"height":"34px","horizontalAlign":"right","layoutKind":"left-to-right"}, {}, {
 							resetDoneButton: ["wm.Button", {"caption":"Return to Login","height":"30px","width":"180px"}, {"onclick":"resetDoneButtonClick"}],
 							resetPasswordBtn1: ["wm.Button", {"caption":"Reset my password","height":"30px","width":"180px"}, {"onclick":"resetPassword"}]

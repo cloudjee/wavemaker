@@ -9,7 +9,7 @@
             <column name="password" length="45" not-null="true"/>
         </property>
         <property name="createDate" type="timestamp">
-            <column name="createDate" not-null="true"/>
+            <column name="createDate" length="19" not-null="true"/>
         </property>
     </class>
 </hibernate-mapping>

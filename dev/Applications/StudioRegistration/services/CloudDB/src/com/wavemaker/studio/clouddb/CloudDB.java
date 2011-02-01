@@ -2,19 +2,20 @@
 package com.wavemaker.studio.clouddb;
 
 import java.util.List;
+import com.wavemaker.json.type.TypeDefinition;
 import com.wavemaker.runtime.data.DataServiceManager;
 import com.wavemaker.runtime.data.DataServiceManagerAccess;
 import com.wavemaker.runtime.data.TaskManager;
 import com.wavemaker.runtime.service.LiveDataService;
 import com.wavemaker.runtime.service.PagingOptions;
 import com.wavemaker.runtime.service.PropertyOptions;
-import com.wavemaker.runtime.service.response.LiveDataServiceResponse;
+import com.wavemaker.runtime.service.TypedServiceReturn;
 import com.wavemaker.studio.clouddb.data.User;
 
 
 /**
  *  Operations for service "CloudDB"
- *  12/04/2008 17:47:37
+ *  02/01/2011 11:28:42
  * 
  */
 @SuppressWarnings("unchecked")
@@ -38,8 +39,8 @@ public class CloudDB
         return dsMgr.invoke(taskMgr.getInsertTask(), o);
     }
 
-    public LiveDataServiceResponse read(Class rootType, Object o, PropertyOptions propertyOptions, PagingOptions pagingOptions) {
-        return ((LiveDataServiceResponse) dsMgr.invoke(taskMgr.getReadTask(), rootType, o, propertyOptions, pagingOptions));
+    public TypedServiceReturn read(TypeDefinition rootType, Object o, PropertyOptions propertyOptions, PagingOptions pagingOptions) {
+        return ((TypedServiceReturn) dsMgr.invoke(taskMgr.getReadTask(), rootType, o, propertyOptions, pagingOptions));
     }
 
     public Object update(Object o) {

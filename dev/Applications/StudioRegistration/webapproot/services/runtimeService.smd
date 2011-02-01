@@ -10,9 +10,24 @@
 		}, {
 			"name": "objectToDelete",
 			"type": "java.lang.Object"
-		}]
+		}],
+		"returnType": null
+	}, {
+		"name": "echo",
+		"parameters": [{
+			"name": "contents",
+			"type": "java.io.InputStream"
+		}, {
+			"name": "contentType",
+			"type": "java.lang.String"
+		}, {
+			"name": "fileName",
+			"type": "java.lang.String"
+		}],
+		"returnType": "com.wavemaker.runtime.server.DownloadResponse"
 	}, {
 		"name": "getLocalHostIP",
+		"parameters": null,
 		"returnType": "java.lang.String"
 	}, {
 		"name": "getProperty",
@@ -28,6 +43,10 @@
 		}],
 		"returnType": "java.lang.Object"
 	}, {
+		"name": "getSessionId",
+		"parameters": null,
+		"returnType": "java.lang.String"
+	}, {
 		"name": "insert",
 		"parameters": [{
 			"name": "serviceName",
@@ -38,7 +57,8 @@
 		}, {
 			"name": "objectToInsert",
 			"type": "java.lang.Object"
-		}]
+		}],
+		"returnType": null
 	}, {
 		"name": "read",
 		"parameters": [{
@@ -56,7 +76,8 @@
 		}, {
 			"name": "pagingOptions",
 			"type": "com.wavemaker.runtime.service.PagingOptions"
-		}]
+		}],
+		"returnType": null
 	}, {
 		"name": "update",
 		"parameters": [{
@@ -68,7 +89,8 @@
 		}, {
 			"name": "objectToUpdate",
 			"type": "java.lang.Object"
-		}]
+		}],
+		"returnType": null
 	}],
 	"serviceType": "JSON-RPC",
 	"serviceURL": "runtimeService.json"
