@@ -231,7 +231,7 @@
 			</if>
 			
     <if>
-    	<equals arg1="${common.modules.isEnterprise}" arg2="true"/>
+    	<equals arg1="${do.obfuscation}" arg2="true"/>
 	<then>
 		<filelist id="common.tools.jars">
 			<file name="${ant-launcher.jar}"/>
@@ -313,6 +313,15 @@
     </condition>
     <condition property="common.modules.isEnterprise">
         <equals arg1="${project.type}" arg2="${project.type.enterprise}"/>
+    </condition>
+
+	<condition property="do.obfuscation">
+		<and>
+			<equals arg1="${project.type}" arg2="${project.type.enterprise}"/>
+			<not>
+				<equals arg1="${skip.obfuscation}" arg2="true"/>
+			</not>
+		</and>
     </condition>
 
     <patternset id="common.modules.patternset">
