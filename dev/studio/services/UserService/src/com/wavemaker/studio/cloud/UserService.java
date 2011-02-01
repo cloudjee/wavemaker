@@ -36,8 +36,10 @@ public class UserService {
     private SecurityService securityService;
 
     public UserService() {
-        clouddb = (CloudDB) RuntimeAccess.getInstance().getService(
-                CloudDB.class);
+	/*        clouddb = (CloudDB) RuntimeAccess.getInstance().getService(
+		  CloudDB.class);*/
+        clouddb = (CloudDB) RuntimeAccess.getInstance().getSpringBean(
+                "CloudDB");
         securityService = (SecurityService) RuntimeAccess.getInstance()
                 .getService(SecurityService.class);
     }
