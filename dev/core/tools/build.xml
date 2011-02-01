@@ -254,7 +254,7 @@
 
 	<target name="-obfuscate-jar" if="common.modules.isEnterprise">
 		<taskdef resource="proguard/ant/task.properties"
-		classpath="G:/Software/ProGuard/proguard4.5.1/lib/proguard.jar"/>
+		classpath="${lib.tools.dir}/proguard/proguard.jar"/>
 			<proguard
 			allowaccessmodification="true"
 			usemixedcaseclassnames="false"
