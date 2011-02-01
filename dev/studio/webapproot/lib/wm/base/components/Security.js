@@ -36,6 +36,13 @@ wm.login = function(args, loginSuccessCallback, loginFailedCallback, properties,
 		url: (projectName ? '/' + projectName + '/' : '') + 'j_acegi_security_check',
 		content : properties,
 		handleAs: "json",
+	    error: function(response) {
+				if (loginFailedCallback) {
+				    loginFailedCallback(response.toString());
+				} else {
+				    app.alert(response.toString());
+				}
+	    },
 		load: function(response, ioArgs) {
 			if (response.url) {
                             var pathname = location.protocol + "//" + location.host + location.pathname + location.search; // sometimes using search helps and sometimes it breaks this test; still working out what is going on
@@ -64,6 +71,7 @@ wm.login = function(args, loginSuccessCallback, loginFailedCallback, properties,
                                     }
 				}
 			} else if (response.error) {
+
 				if (loginFailedCallback) {
 					loginFailedCallback(response.error);
 				} else {
