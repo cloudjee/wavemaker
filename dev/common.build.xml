@@ -263,7 +263,7 @@
 			<file name="${trueswing.jar}"/>
 			<file name="${truexml.jar}"/>
 			<file name="${commons-codec-1.4.jar}"/>
-			<file name="${wmtools.sub.jar}" if="common.modules.isEnterprise"/>
+			<file name="${wmtools.sub.jar}"/>
 		</filelist>
 	</then>
 	<else>
