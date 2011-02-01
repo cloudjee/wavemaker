@@ -104,7 +104,7 @@
             <ref bean="CloudDBDataSource"/>
         </property>
         <property name="usersByUsernameQuery">
-            <value>SELECT email, password, 1 FROM cloudstudio.user WHERE email = ?</value>
+            <value>SELECT email, password, 1, email FROM cloudstudio.user WHERE email = ?</value>
         </property>
         <property name="authoritiesByUsernameQuery">
             <value>SELECT email, 'DEFAULT_NO_ROLES' FROM cloudstudio.user WHERE email = ?</value>
