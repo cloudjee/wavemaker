@@ -223,9 +223,9 @@
         </pathconvert>
         <mkdir dir="${lib.dir}"/>
         <jar destfile="${wmtools.jar}" basedir="${classes.tools.dir}">
-			<exclude name="**/ProjectManager.class" if="common.modules.isEnterprise"/>
-			<exclude name="**/ProjectManagerHide.class" if="common.modules.isEnterprise"/>
-			<exclude name="**/License*.class" if="common.modules.isEnterprise"/>
+			<exclude name="**/ProjectManager.class" if="do.obfuscation"/>
+			<exclude name="**/ProjectManagerHide.class" if="do.obfuscation"/>
+			<exclude name="**/License*.class" if="do.obfuscation"/>
             <manifest>
                 <attribute name="Class-Path" value="${cp}"/>
             </manifest>
@@ -234,7 +234,7 @@
 		<antcall target="-obfuscate-jar"/>
     </target>
 
-	<target name="subjar" if="common.modules.isEnterprise">
+	<target name="subjar" if="do.obfuscation">
 		<path id="manifestcp">
             <pathelement location="${wmruntime.jar}"/>
             <filelist refid="common.tools.jars"/>
@@ -252,7 +252,8 @@
         </jar>
 	</target>
 
-	<target name="-obfuscate-jar" if="common.modules.isEnterprise">
+	<target name="-obfuscate-jar" if="do.obfuscation">
+		<echo>---------------- obfuscate = ${obfuscate} ----------------</echo>
 		<taskdef resource="proguard/ant/task.properties"
 		classpath="${lib.tools.dir}/proguard/proguard.jar"/>
 			<proguard
