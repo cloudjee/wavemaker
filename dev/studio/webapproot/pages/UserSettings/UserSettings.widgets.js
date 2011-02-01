@@ -29,14 +29,11 @@ UserSettings.widgets = {
 				}]
 			}],
 			panel: ["wm.Panel", {_classes: ["wm_Padding_16px"], layoutKind: "top-to-bottom",  width: "100%", height: "100%", horizontalAlign: "center"}, {}, {
-			    oldPasswordEditor: ["wm.Editor", { captionSize: 5, caption: "Current password", width: "100%", height: "24px", _classes: {captionNode: ["wm_FontColor_White"]}}, {}, {
-					editor: ["wm._TextEditor", {password: true}, {}]
+			    oldPasswordEditor: ["wm.Text", {password: true, captionSize: "150px", caption: "Current password", width: "100%", height: "24px", _classes: {captionNode: ["wm_FontColor_White"]}}, {onEnterKeyPress: "okButtonClick"}, {
 				}],
-				passwordEditor: ["wm.Editor", {captionSize: 5, caption: "New password", width: "100%", height: "24px", _classes: {captionNode: ["wm_FontColor_White"]}}, {}, {
-					editor: ["wm._TextEditor", {password: true}, {}]
+			    passwordEditor: ["wm.Text", {password: true, captionSize: "150px", caption: "New password", width: "100%", height: "24px", _classes: {captionNode: ["wm_FontColor_White"]}}, {onEnterKeyPress: "okButtonClick"}, {
 				}],
-			    confirmPasswordEditor: ["wm.Editor", { captionSize: 5, caption: "Confirm new password", width: "100%", height: "24px", _classes: {captionNode: ["wm_FontColor_White"]}}, {}, {
-					editor: ["wm._TextEditor", {password: true}, {}]
+			    confirmPasswordEditor: ["wm.Text", {password: true, captionSize: "150px", caption: "Confirm new password", width: "100%", height: "24px", _classes: {captionNode: ["wm_FontColor_White"]}}, {onEnterKeyPress: "okButtonClick"}, {
 				}]
 			}],
 			footer: ["wm.Panel", {layoutKind: "left-to-right",  horizontalAlign: "right", verticalAligh: "bottom", height: "26px", width: "100%"}, {}, {
