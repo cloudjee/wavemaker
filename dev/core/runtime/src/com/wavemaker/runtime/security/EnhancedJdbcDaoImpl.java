@@ -56,7 +56,8 @@ public class EnhancedJdbcDaoImpl extends JdbcDaoImpl {
             WMAppContext wmApp = WMAppContext.getInstance();
             if (wmApp != null && WMAppContext.getInstance().isMultiTenant())
                 qryStr = insertTenantIdField(getUsersByUsernameQuery(), wmApp.getTenantColumnName());
-        } catch (WMRuntimeInitException ex) {}
+        //} catch (WMRuntimeInitException ex) {}
+        } catch (Exception ex) {}
 
         this.usersByUsernameMapping = new UsersByUsernameMapping(getDataSource(), qryStr);
         this.authoritiesByUsernameMapping = new AuthoritiesByUsernameMapping(getDataSource());
@@ -128,7 +129,8 @@ public class EnhancedJdbcDaoImpl extends JdbcDaoImpl {
                     tenantId = rs.getInt(5);
                     wmApp.setTenantIdForUser(username, tenantId);
                 }
-            } catch (WMRuntimeInitException ex) {}
+            //} catch (WMRuntimeInitException ex) {}
+            } catch (Exception ex) {}
 
             WMAppContext.getInstance().setUserNameForUserID(userid, username);
 
