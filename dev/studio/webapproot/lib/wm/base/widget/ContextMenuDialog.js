@@ -1,14 +1,15 @@
 dojo.provide("wm.base.widget.ContextMenuDialog");
 dojo.require('dojo.data.ItemFileReadStore');
-
+dojo.require("wm.base.widget.Dialog");
 dojo.declare("wm.ContextMenuDialog", wm.Dialog, {
     useContainerWidget: true,
     modal: false,
     title: "",
-    constructor: function(dialogTitle, addButtonLabel, onAddButtonClick, headerAttr, dataSet, newRowDefault, domNode, addDeleteColumn, helpText, width){
+/*
+    constructor: function(addButtonLabel, onAddButtonClick, headerAttr, dataSet, newRowDefault, domNode, addDeleteColumn, helpText, width){
 	        this.owner = window["studio"]; // without this, dialog shows up only in canvas
 		this.helpText = helpText;
-		this.dialogTitle = dialogTitle;
+	//this.dialogTitle = dialogTitle;
 		this.addButtonLabel = addButtonLabel;
 		this.dataSet = dataSet;
 		this.onAddButtonClick = onAddButtonClick;
@@ -22,6 +23,16 @@ dojo.declare("wm.ContextMenuDialog", wm.Dialog, {
 	        this.containerNodeWidth = width;
 	//dojo.connect(domNode, "oncontextmenu", this, "show");
 	},
+	*/
+    init: function() {
+	this.owner = window["studio"]; // without this, dialog shows up only in canvas
+	this.inherited(arguments);
+	this.deleteButtonProps = {id:'deleteButton', title: ' ',width:'', type:'img', label:'Delete', src:'images/delete_24.png', width:'20px'};
+	this.trObjMap = {};
+	this.trId = 0;
+
+    },
+	
     show: function(e) {
 	this.inherited(arguments);
 	this.createRightClickMenu();

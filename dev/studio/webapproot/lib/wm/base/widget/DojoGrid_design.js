@@ -61,8 +61,14 @@ wm.DojoGrid.extend({
 		this.headerAttr[6].dataStore = this.fieldTypeStore;
 		var defaultCustomFieldParams = {id: 'customField', isCustomField: true, expression: '', show:true, width:'100%'};
 		var helpText = '* To re-arrange columns close dialog box and drag columns on grid to desired position.<br>* You can right click on grid to open this dialog.';
-		this.contextMenu = new wm.ContextMenuDialog('DojoGrid Column Properties', 'Add Column', dojo.hitch(this, 'addNewColumn'), 
-							    this.headerAttr, this.columns, defaultCustomFieldParams, this.domNode, true, helpText, 700);
+	    this.contextMenu = new wm.ContextMenuDialog({addButtonLabel: 'Add Column', 
+							 onAddButtonClick: dojo.hitch(this, 'addNewColumn'), 
+							 headerAttr: this.headerAttr, 
+							 dataSet: this.columns, 
+							 newRowDefault: defaultCustomFieldParams, 
+							 addDeleteColumn: true, 
+							 helpText: helpText, 
+							 containerNodeWidth: 700});
 	        this.contextMenu.setWidth("710px");
 	        this.contextMenu.setTitle("DojoGrid Column Properties");
 
@@ -328,17 +334,17 @@ wm.Object.extendSchema(wm.DojoGrid, {
 	addFormName:{hidden:true},
 	dsType:{hidden:true},
     columns:{ignore:1},
-    setSelectedRow: {group: "method", params: "(inRowIndex,isSelected)", doc: 1},
-    getSelectedIndex:{group: "method",params: "()", returns: "Number", doc: 1},
-    getRow: {group: "method", params: "(inRowIndex)", doc: 1},
-    findRowIndexByFieldValue:  {group: "method", params: "(inFieldName, inFieldValue)", returns: "Number", doc: 1},
-    getCell:  {group: "method", params: "(inRowIndex, inFieldName)", returns: "String", doc: 1},
-    setCell:  {group: "method", params: "(inRowIndex, inFieldName, inValue)", doc: 1},
-    editCell:  {group: "method", params: "(inRowIndex, inFieldName)", doc: 1},
-    deleteRow:  {group: "method",params: "(inRowIndex)", doc: 1},
-    addRow:  {group: "method", params: "(inFields, inSelectOnAdd)", doc: 1},
-    getRowCount: {group: "method", params: "()", returns: "Number", doc: 1},
-    getDataSet: {group: "method", params: "()", returns: "wm.Variable", doc: 1},
-    setDataSet: {group: "method", params: "(inDataSet)", doc: 1},
-    showCSVData: {group: "method", params: "()", doc: 1}
+    setSelectedRow: {group: "method"},
+    getSelectedIndex:{group: "method", returns: "Number"},
+    getRow: {group: "method"},
+    findRowIndexByFieldValue:  {group: "method", returns: "Number"},
+    getCell:  {group: "method", returns: "String"},
+    setCell:  {group: "method"},
+    editCell:  {group: "method"},
+    deleteRow:  {group: "method"},
+    addRow:  {group: "method"},
+    getRowCount: {group: "method", returns: "Number"},
+    getDataSet: {group: "method", returns: "wm.Variable"},
+    setDataSet: {group: "method"},
+    showCSVData: {group: "method"}
 });

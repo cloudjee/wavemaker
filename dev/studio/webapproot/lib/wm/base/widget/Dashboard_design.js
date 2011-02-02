@@ -15,8 +15,12 @@ wm.Dashboard.extend({
 		var defaultPortletParams = {id:'portlet', title:'Portlet', page:'', isOpen:true, isClosable:true, x:0, y:0};
 		this.updatePageList();
 		this.headerAttr[2].dataStore = this.pageStore;
-		this.contextMenu = new wm.ContextMenuDialog('Configure Portlets', 'Add Portlet', dojo.hitch(this, 'addNewPortlet'), 
-													this.headerAttr, this.portlets, defaultPortletParams, this.domNode, true);
+	    this.contextMenu = new wm.ContextMenuDialog({addButtonLabel: 'Add Portlet', 
+							onAddButtonClick: dojo.hitch(this, 'addNewPortlet'), 
+							headerAttr: this.headerAttr, 
+							dataSet: this.portlets, 
+							newRowDefault: defaultPortletParams, 
+							addDeleteColumn: true});
 		dojo.connect(this.contextMenu, 'onPropChanged', this, 'portletPropChanged');
 		dojo.connect(this.contextMenu, 'onRowDelete', this, 'destroyPortlet');
 
@@ -128,6 +132,11 @@ wm.Object.extendSchema(wm.Dashboard, {
 	dijitPortlets:{ignore:1},
 	addDialogName:{hidden:true},
 	headerAttr:{ignore:1},
-	configPortlets: { group: "edit", order: 10 }
+        configPortlets: { group: "edit", order: 10 },
+        autoScroll: {group: "style", order: 100, ignore: 0},
+    allowAutoScroll: {group: "style", order: 101, ignore: 0},
+    openDialog: {group: "method"},
+    initAddDialog: {group: "method"},
+    addPortlet: {group: "method"}
 });
 
