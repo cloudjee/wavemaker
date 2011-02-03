@@ -297,8 +297,8 @@ dojo.declare("LiveViewEditor", wm.Page, {
 		widthEdit: {name: "width", defaultValue: ""},
 		widthUnitsEdit: {name: "widthUnits", defaultValue: "px"},
 		requiredBox: {name: "required", defaultValue: true},
-		orderEdit: {name: "order"},
-		/*,
+		orderEdit: {name: "order"}/*,
+		
 
 		includedListsBox: {name: "includeLists", defaultValue: true},
 		includedFormsBox: {name: "includeForms", defaultValue: true}*/
