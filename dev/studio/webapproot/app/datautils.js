@@ -232,6 +232,7 @@ setupWidgetsForDatabaseType = function(
 	var username = "";
 	var password = "";
         var extraInputValue = "";
+        var extraInput2Value = "";
 	if (isMySQL(inDBType)) {
 		p = 3306;
 		if (studio.isCloud()) 
@@ -241,7 +242,9 @@ setupWidgetsForDatabaseType = function(
 	        p = null;
 		e = "File ";
 		username = "sa";
-	        extraInputValue = "hrdb";
+	    // before this works, we'll need to properly fire all event changes that occur when the user types in "hrdb"
+	        //extraInputValue = "hrdb";
+	        //extraInput2Value = extraInputValue;
 	} else if (isPostgreSQL(inDBType)) {
 		p = 5432;
 		tableFilter = POSTGRESQL_DEFAULT_TABLE_FILTER;
@@ -381,6 +384,9 @@ initDBTypeDropdown = function(inDropdown) {
 	}
 	l.sort();
 	l = [OTHER_DB_TYPE].concat(l);
+    if (inDropdown instanceof wm.SelectMenu)
+	inDropdown.setOptions(l.join());
+    else
 	inDropdown.editor.setOptions(l.join());
     if (studio.isCloud())
 	inDropdown.setDisplayValue("HSQLDB");
