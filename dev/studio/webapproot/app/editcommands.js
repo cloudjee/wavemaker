@@ -200,7 +200,7 @@ Studio.extend({
 
     formatScriptClick: function() {
 	try {
-	    dojo.require("lib.github.beautify");
+	    wm.conditionalRequire("lib.github.beautify", true);
 	} catch(e){}
 	var start = editAreaLoader.getSelectionRange(this.editArea.area.textarea.id).start;
 	var end = editAreaLoader.getSelectionRange(this.editArea.area.textarea.id).end;

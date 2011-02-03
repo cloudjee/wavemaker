@@ -259,7 +259,7 @@ dojo.declare("JavaEditor", wm.Page, {
     },
     formatClick: function() {
 	try {
-	    dojo.require("lib.github.beautify");
+	    wm.conditionalRequire("lib.github.beautify", true);
 	} catch(e){}
 	var start = editAreaLoader.getSelectionRange(this.javaCodeEditor.area.textarea.id).start;
 	this.javaCodeEditor.setText(js_beautify(this.javaCodeEditor.getText()));
