@@ -227,7 +227,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 				this.conDriverClassInput.getInputValue(),
 				this.conDialectInput.getInputValue(),
 				this.conRevengNamingStrategyInput.getInputValue(),
-				this.overrideFlagInput.getDataValue(),
+				this.overrideFlagInput.getDataValue()
 			],
 			dojo.hitch(this, "_exportResult"), 
 			dojo.hitch(this, "_exportError"));
