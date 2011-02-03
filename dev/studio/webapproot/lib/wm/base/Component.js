@@ -229,7 +229,7 @@ dojo.declare("wm.Component", wm.Object, {
 	    if (this.isOwnedBy(studio.page)) return true;
 	    if (this == studio.page) return true;
 	    if (this.isOwnedBy(studio.application)) return true;
-	    if (!this.isOwnedBy(app)) return true;
+	    if (window["app"] && !this.isOwnedBy(window["app"])) return true;
 	    return false;
 	},
 	getPath: function() {
