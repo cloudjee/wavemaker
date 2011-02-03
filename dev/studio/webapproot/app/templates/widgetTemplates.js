@@ -106,7 +106,7 @@ wm.fullTemplates.fancyTemplate = {
 						panel7: ["wm.Panel", {"height":"36px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 							button1: ["wm.Button", {}, {}],
 							toggleButton2: ["wm.ToggleButton", {"borderColor":"#666666","clicked":true,"width":"100px"}, {}]
-						}],
+						}]
 
 					}],
 					panel6: ["wm.Panel", {"height":"320px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
@@ -120,7 +120,7 @@ wm.fullTemplates.fancyTemplate = {
 								radioButton1: ["wm.RadioButton", {"caption":"radioButton1","displayValue":""}, {}],
 								slider1: ["wm.Slider", {"caption":"slider1","displayValue":""}, {}],
 								richText1: ["wm.RichText", {"borderColor":"#666666","height":"100%","margin":"10"}, {}]
-							}],
+							}]
 
 						}],
 						panel11: ["wm.EmphasizedContentPanel", {"height":"100%","horizontalAlign":"left","padding":"10","verticalAlign":"top","width":"300px"}, {}, {
@@ -128,7 +128,7 @@ wm.fullTemplates.fancyTemplate = {
 								text2: ["wm.Text", {"displayValue":"Curabitur quis nibh","width":"100%"}, {}]
 							}],
 							fancyPanel2: ["wm.FancyPanel", {"height":"230px","horizontalAlign":"left","margin":"3","title":"Calendar","verticalAlign":"top"}, {}, {
-								calendar1: ["wm.dijit.Calendar", {"borderColor":"#666666","height":"100%","width":"100%"}, {}],
+								calendar1: ["wm.dijit.Calendar", {"borderColor":"#666666","height":"100%","width":"100%"}, {}]
 
 							}],
 							panel9: ["wm.Panel", {"height":"36px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
