@@ -8,6 +8,13 @@
 <link rel="shortcut icon" href="lib/boot/images/favicon.ico" />
 <style type="text/css">
 	@import "lib/boot/boot.css";
+#_wm_loading {
+background-image: url("images/wm-splash-screen.gif");
+background-repeat: no-repeat;
+background-position: 50% 50%;
+
+}
+
 	@import "lib/wm/base/widget/themes/wm_studio/theme.css";
 </style>
 <!-- Boot Wavemaker -->
@@ -17,7 +24,7 @@
 </head>
 <body class="tundra">
 	<div id="_wm_loading" style="z-index: 100;">
-		<table><tr><td><img alt="Loading" src="lib/boot/images/loader.gif" />&nbsp;&nbsp;Loading...</td></tr></table>
+		<table><tr><td></td></tr></table>
 	</div>
 	<!-- Lib -->
 	<script type="text/javascript" src="app/studioLoader.js"></script>
