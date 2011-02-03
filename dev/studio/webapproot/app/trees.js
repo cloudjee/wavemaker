@@ -474,5 +474,5 @@ Studio.extend({
 	    menuObj.update(e, inNode.domNode);
 	});
 
-    },
+    }
 })
