@@ -93,7 +93,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 				this.conSchemaPatternInput.getInputValue(),
 				this.conDriverClassInput.getInputValue(),
 				this.conDialectInput.getInputValue(),
-				this.overrideFlagInput.getDataValue(),
+				this.overrideFlagInput.getDataValue()
 			],
 			dojo.hitch(this, "_getDDLResult"), 
 			dojo.hitch(this, "_getDDLError"));
