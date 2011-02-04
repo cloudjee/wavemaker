@@ -94,7 +94,7 @@ public class SalesforceHelper {
             //String userId = "community@wavemaker.com";
             //String passWord = "WMsurf!ng";
             String userId = "sammysm@wavemaker.com";
-            String passWord = "Silver88Surfer";
+            String passWord = "Silver77Surfer";
             Login parameters = new Login();
             parameters.setUsername(userId);
             parameters.setPassword(passWord);

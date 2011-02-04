@@ -61,7 +61,10 @@ public class DataServiceDefinitionFactory implements ServiceDefinitionFactory,
         ServiceDefinition def = cfg.getServiceDefinition();
 
         if (def instanceof DataServiceDefinition) {
-            return new DataServiceGenerator(cfg);
+            if (def.getServiceId().equals("salesforceService")) //xxx
+                return new DataServiceGenerator_SF(cfg);
+            else
+                return new DataServiceGenerator(cfg);
         }
         return null;
     }

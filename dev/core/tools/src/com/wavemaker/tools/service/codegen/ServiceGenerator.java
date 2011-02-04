@@ -52,7 +52,7 @@ public abstract class ServiceGenerator {
 
     protected static final String NDC_POP = "pop";
 
-    private Log logger = LogFactory
+    protected Log logger = LogFactory  //xxx
             .getLog("com.wavemaker.runtime.service.codegen");
 
     protected GenerationConfiguration configuration;
@@ -102,7 +102,7 @@ public abstract class ServiceGenerator {
      * @param jdoc
      */
     protected void generateClassJavadoc(JDocComment jdoc) {
-        //addJavadoc(jdoc); //xxx
+        addJavadoc(jdoc);
     }
 
     /**
@@ -191,7 +191,6 @@ public abstract class ServiceGenerator {
      *         re-generated.
      */
     public boolean isUpToDate(long srcLastModified) {
-
         if (srcLastModified == 0) {
             return false;
         }
@@ -240,7 +239,6 @@ public abstract class ServiceGenerator {
 
         for (int i = 0; i < operationNames.size(); i++) {
             String operationName = operationNames.get(i);
-            if (isSalesForceMethod(operationName)) continue; //xxx
             List<ElementType> inputTypes = serviceDefinition
                     .getInputTypes(operationName);
             generateOperationMethod(serviceCls, operationName, inputTypes, null);
@@ -266,10 +264,6 @@ public abstract class ServiceGenerator {
         }
 
         postGeneration();
-    }
-
-    protected boolean isSalesForceMethod(String operationNames) throws GenerationException { //xxx
-        return false;
     }
 
     protected JDefinedClass generateClass() throws GenerationException {
@@ -353,9 +347,9 @@ public abstract class ServiceGenerator {
                 .getName(), type);
     }
 
-    /*private void addJavadoc(JDocComment jdoc) { //xxx
+    protected void addJavadoc(JDocComment jdoc) { //xxx private --> protected
         jdoc.add(" Operations for service \""
                 + serviceDefinition.getServiceId() + "\"\n"
                 + StringUtils.getFormattedDate());
-    }*/
+    }
 }

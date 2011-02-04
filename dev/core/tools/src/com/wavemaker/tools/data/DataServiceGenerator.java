@@ -27,7 +27,18 @@ import java.util.Map;
 
 import org.apache.log4j.NDC;
 
-import com.sun.codemodel.*;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JConditional;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JTryBlock;
+import com.sun.codemodel.JType;
+import com.sun.codemodel.JVar;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.common.util.StringUtils;
@@ -45,16 +56,10 @@ import com.wavemaker.runtime.service.LiveDataService;
 import com.wavemaker.runtime.service.PagingOptions;
 import com.wavemaker.runtime.service.PropertyOptions;
 import com.wavemaker.runtime.service.TypedServiceReturn;
-import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.service.codegen.BeanGenerator;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
-import com.wavemaker.tools.service.codegen.GenerationException;
-import com.wavemaker.tools.service.DesignServiceManager;
-import com.wavemaker.tools.util.DesignTimeUtils;
-import com.wavemaker.tools.project.ProjectManager;
-import com.wavemaker.tools.ws.salesforce.SalesforceHelper;
 
 /**
  * DataService class generation.
@@ -107,8 +112,6 @@ public class DataServiceGenerator extends ServiceGenerator {
 
     private DataServiceOperation firstCountOperation = null;
 
-    private DesignServiceManager dsm;
-
     public DataServiceGenerator(GenerationConfiguration configuration) {
         this(configuration, configuration.getServiceDefinition()
                 .getServiceClass());
@@ -119,26 +122,17 @@ public class DataServiceGenerator extends ServiceGenerator {
 
         super(configuration);
 
-        this.serviceId = configuration.getServiceDefinition().getServiceId(); //xxx
-
-        this.serviceClass = this.serviceId.equals("salesforceService") ? //xxx
-                "com.sforce.SalesforceQueries" : serviceClass;
+        this.serviceClass = serviceClass;
 
         this.ds = (DataServiceInternal) DataServiceUtils.unwrap(configuration
                 .getServiceDefinition());
 
-        //this.serviceId = configuration.getServiceDefinition().getServiceId();
+        this.serviceId = configuration.getServiceDefinition().getServiceId();
 
         this.constantsClass = new BeanGenerator(DataServiceUtils
                 .getConstantsClassName(serviceClass));
 
         useNDCLogging = false;
-
-        if (this.serviceId.equals("salesforceService")) { //xxx
-            ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().
-                    getAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER);
-            dsm = DesignTimeUtils.getDSMForProjectRoot(projMgr.getCurrentProject().getProjectRoot());
-        }
     }
 
     public void setGenerateMain(boolean generateMain) {
@@ -157,11 +151,6 @@ public class DataServiceGenerator extends ServiceGenerator {
 
     @Override
     protected void preGenerateClassBody(JDefinedClass cls) {
-
-        if (this.serviceId.equals("salesforceService")) { //xxx
-            preGenerateClassBody_SF(cls);
-            return;
-        }
 
         // I don't think Kohsuke would like this
         cls.annotate(SuppressWarnings.class).param("value", "unchecked");
@@ -218,13 +207,8 @@ public class DataServiceGenerator extends ServiceGenerator {
 
     @Override
     protected void postGenerateClassBody(JDefinedClass cls) {
-        if (this.serviceId.equals("salesforceService")) { //xxx
-            postGenerateClassBody_SF(cls);
-            return;
-        }
 
         cls._implements(LiveDataService.class);
-        
         implementCRUDInterface(cls);
 
         // add convenience methods for begin/commit/rollback
@@ -274,98 +258,6 @@ public class DataServiceGenerator extends ServiceGenerator {
             b.add(sysout.invoke("print").arg(JExpr.lit(name + ": ")));
             b.add(sysout.invoke("println").arg(i));
         }
-    }
-
-    @Override
-    protected boolean isSalesForceMethod(String operationName) throws GenerationException { //xxx
-        boolean rtn = false;
-        if (serviceId.equals("salesforceService")) {
-            rtn = SalesforceHelper.isSalesForceMethod(dsm, operationName);
-        }
-
-        return rtn;
-    }
-
-    /**
-     * The <code>ServiceGenerator</code> implementation should override this
-     * method to customize the class level javadoc.
-     *
-     * @param jdoc
-     */
-    protected void generateClassJavadoc(JDocComment jdoc) {
-        if (this.serviceId.equals("salesforceService")) //xxx
-            addJavadoc_SF(jdoc);
-        else
-            addJavadoc(jdoc);
-    }
-
-    private void postGenerateClassBody_SF(JDefinedClass cls) {
-
-        //cls._implements(LiveDataService.class);
-
-        //implementCRUDInterface(cls);
-
-        // add convenience methods for begin/commit/rollback
-        //delegate(cls, BEGIN_OP);
-        //delegate(cls, COMMIT_OP);
-        //delegate(cls, ROLLBACK_OP);
-
-        //addGetterAndSetter(cls, DataServiceManager.class,
-        //        DATA_SERVICE_VAR_NAME, dataServiceVar);
-
-        //addGetterAndSetter(cls, TaskManager.class, TASK_MANAGER_VAR_NAME,
-        //        taskMgrVar);
-
-        writeConstantsClass();
-
-        if (generateMain) {
-
-            JMethod main = cls.method(JMod.PUBLIC | JMod.STATIC | JMod.FINAL,
-                    codeModel.VOID, "main");
-            main.param(String[].class, "args");
-
-            JType t = codeModel.ref(getClassName());
-            JBlock b = main.body();
-
-            if (firstCountOperation == null) {
-                JFieldRef sysout = codeModel.ref(System.class).staticRef("out");
-                b.add(sysout.invoke("print").arg(
-                        JExpr.lit("Don't know what to do")));
-                return;
-            }
-
-            JVar springConfig = b.decl(codeModel.ref(String.class), "cfg",
-                    JExpr.lit(serviceId + DataServiceConstants.SPRING_CFG_EXT));
-
-            JVar beanName = b.decl(codeModel.ref(String.class), "beanName",
-                    JExpr.lit(serviceId));
-
-            JVar v = b.decl(t, "s", JExpr.cast(t, codeModel.ref(
-                    SpringUtils.class).staticInvoke(GET_BEAN_METHOD_NAME).arg(
-                    springConfig).arg(beanName)));
-
-            String name = firstCountOperation.getName();
-
-            JInvocation i = v.invoke(name);
-
-            JFieldRef sysout = codeModel.ref(System.class).staticRef("out");
-            b.add(sysout.invoke("print").arg(JExpr.lit(name + ": ")));
-            b.add(sysout.invoke("println").arg(i));
-        }
-    }
-
-    private void preGenerateClassBody_SF(JDefinedClass cls) {
-
-        // I don't think Kohsuke would like this
-        //cls.annotate(SuppressWarnings.class).param("value", "unchecked");
-
-        //cls._implements(DataServiceManagerAccess.class);
-
-        //dataServiceVar = cls.field(JMod.PRIVATE, DataServiceManager.class,
-        //        DATA_SERVICE_VAR_NAME);
-
-        //taskMgrVar = cls.field(JMod.PRIVATE, TaskManager.class,
-        //        TASK_MANAGER_VAR_NAME);
     }
 
     private void implementCRUDInterface(JDefinedClass cls) {
@@ -557,16 +449,5 @@ public class DataServiceGenerator extends ServiceGenerator {
             } catch (Exception ignore) {
             }
         }
-    }
-
-    private void addJavadoc(JDocComment jdoc) {
-        jdoc.add(" Operations for service \""
-                + serviceDefinition.getServiceId() + "\"\n"
-                + StringUtils.getFormattedDate());
-    }
-
-    private void addJavadoc_SF(JDocComment jdoc) {
-        jdoc.add(" This class holds all named queries for SalesForce.\n"
-                + StringUtils.getFormattedDate());
     }
 }
