@@ -47,6 +47,8 @@ dojo.declare("Login", wm.Page, {
 		this.reloginLabel.setShowing(true);
 		this.loginButton.addUserClass("wm_FontColor_Black");
 	    } else {
+		var im = new Image();
+		im.src = "images/wm-splash-screen.gif";
 		this.usernameInput.focus();
 		this.pwdResetLink.setLink(this.pwdResetLink.link + "&loginUrl=" + escape(window.location));
 		this.usernameInput.setDataValue(dojo.cookie("user") || "");
