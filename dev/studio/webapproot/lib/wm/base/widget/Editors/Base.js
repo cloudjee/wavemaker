@@ -399,7 +399,9 @@ wm.createFieldEditor = function(inParent, inFieldInfo, inProps, inEvents, inClas
 };
 
 
+
 dojo.declare("wm.AbstractEditor", wm.Widget, {
+    changeKeycodes: [dojo.keys.ENTER, dojo.keys.NUMPAD_ENTER, dojo.keys.DELETE, dojo.keys.BACKSPACE],
     classNames: "wmeditor",
 
     /* Formating */
@@ -552,7 +554,7 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 		this.editorNode = this.editor.domNode;
 		this.editorNode.style.margin = "0"; // failure to explicitly set these is throwing off my bounds calculations
 	        this.editorNode.style.padding = "0";
-	    this.stopTimerWithName("CreateDijit", this.declaredClass);
+    	    this.stopTimerWithName("CreateDijit", this.declaredClass);
 		// If using html widgets and replacing them with dijits use  "if (this.editor && this.editor.declaredClass) "
 		if (this.editor) {
 			this.styleEditor();
@@ -780,8 +782,10 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 		delete this._isValid;
 	},
 	keypressed: function(inEvent){
+	    if (inEvent.charCode || dojo.indexOf(this.changeKeycodes, inEvent.keyCode) != -1) {
 		this.validate();
 	        this.dokeypress(inEvent);
+	    }
 	},
 	blurred: function() {
 		this.validate();
