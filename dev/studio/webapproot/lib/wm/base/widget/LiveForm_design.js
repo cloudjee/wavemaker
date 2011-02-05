@@ -32,7 +32,12 @@ wm.Object.extendSchema(wm.LiveFormBase, {
 	captionSize: { group: "display", order: 210},
 	captionUnits: { ignore: 1},
 	captionAlign: { group: "display", order: 230},
-	captionPosition: { group: "display", order: 240}
+    captionPosition: { group: "display", order: 240},
+    setDataSet: {group: "method"},
+    beginEditUpdate: {group: "method"},
+    clearData: {group: "method"},
+    setReadonly: {group: "method"}
+
 });
 
 // convert "foo.bar.spaz" of class wm.Editor to "fooBarSpazEditor1"
@@ -488,7 +493,11 @@ wm.Object.extendSchema(wm.LiveForm, {
         displayErrors: { group: "data", order: 15},
         noButtonPanel: {group: "display", order: 8, type: "Boolean", ignore: 1},
         editPanelStyle: {group: "display", order: 9, type: "String"},
-
+    beginDataInsert: {group: "method"},
+    saveData: {group: "method"},
+    insertData: {group: "method"},
+    updateData: {group: "method"},
+    deleteData: {group: "method"}
 });
 
 wm.LiveForm.extend({
