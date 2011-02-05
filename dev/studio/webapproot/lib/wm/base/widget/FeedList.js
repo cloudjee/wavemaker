@@ -128,6 +128,7 @@ dojo.declare("wm.FeedList", wm.List, {
 	},
 	registerFeedServiceSuccess: function(inResult) {
 		this._createGetFeedServiceVariable();
+	        delete studio.application.serverComponents; // force it to recalculate its updated component list
 		studio.updateServices();
 	},
 	update: function() {
