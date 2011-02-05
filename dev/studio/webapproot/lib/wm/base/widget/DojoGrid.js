@@ -103,6 +103,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		this.selectedItem.setType(this.variable && this.variable.type ? this.variable.type : "any");
 	},
 	setSelectedRow: function(rowIndex, isSelected) {
+	    if (this._setRowTimeout) {
+		window.clearTimeout(this._setRowTimeout);
+		delete this._setRowTimeout;
+	    }
+
 	  if (isSelected == undefined) 
 	    isSelected = true;
 	  if (isSelected) {
@@ -135,10 +140,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			if (idx == -1)
 				idx = _this.variable.getItemIndexByPrimaryKey(obj, pkList) || -1;
 			if (idx >= 0)
-				setTimeout(function(){
-					_this.setSelectedRow(idx);
-					_this.dojoObj.scrollToRow(idx);
-				},0);
+			    this._setRowTimeout = setTimeout(function(){
+				_this.setSelectedRow(idx);
+				_this.dojoObj.scrollToRow(idx);
+			    },0);
 		};
 		this.store.fetch({query:q, onComplete: sItem});
 	},
@@ -585,10 +590,27 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	getDataSet: function() {
 		return this.variable;
 	},
-	setDataSet: function (inValue, inDefault){
+	setDataSet: function (inValue, inDefault){	    
+	    if (this._typeChangedConnect) {
+		dojo.disconnect(this._typeChangedConnect);
+		delete this._typeChangedConnect;
+	    }
+
 		this.variable = inValue;
-		if (this.variable)
-			this.dataSetToSelectedItem();
+	    if (this.variable) {
+		this.dataSetToSelectedItem();
+
+		// If we're in design mode, then subscribe to be notified if the type definition is changed;
+		// also call updateColumnData in case the type definition was changed while editting some other page
+		if (this._isDesignLoaded) {
+		    this._typeChangedConnect = this.connect(this.variable, "typeChanged", this, function() {
+			this.updateColumnData(); // if the type changes for this.variable, reapply this variable's new type info
+			this.setDojoStore();
+			this.renderDojoObj();
+		    });
+		    this.updateColumnData();
+		}
+	    }
 		if (this.isDesignLoaded() && !this._loading)
 			this.setColumnData();
 		this.setDojoStore();
@@ -759,6 +781,54 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		  this.contextMenu.setDataSet(this.columns);
 		}
 	},
+
+    // if the type changes, we need to adjust rather than regenerate our columns
+    updateColumnData: function(){
+	
+	var viewFields = this.getViewFields();
+	dojo.forEach(viewFields, function(f,i){
+	    // if the column already exists, skip it
+	    if (dojo.some(this.columns, function(item) {return item.id == f.dataIndex;})) return;
+
+	    var align = 'left';
+	    var width = '100%';
+	    var formatFunc = '';
+	    if (f.displayType == 'Number'){
+		align = 'right';
+		width = '80px';
+	    } else if (f.displayType == 'Date'){
+		width = '80px';
+		formatFunc = 'wm_date_formatter';
+	    }
+	    this.columns.push({show:i < 15, id: f.dataIndex, title:wm.capitalize(f.dataIndex), width:width, displayType:f.displayType, noDelete:true, align: align, formatFunc: formatFunc});
+	}, this);
+
+	var newcolumns = [];
+	dojo.forEach(this.columns, dojo.hitch(this, function(col) {
+	    // we don't update custom fields
+	    if (col.isCustomField) {
+		newcolumns.push(col);
+		return;
+	    }
+	    // If the column is still in the viewFields after whatever change happened, then do nothing
+	    if (dojo.some(viewFields, dojo.hitch(this, function(field) {
+		return field.dataIndex == col.id;
+	    }))) {
+		newcolumns.push(col);
+		return;
+	    }
+
+	    // col is no longer relevant
+	    return;
+	}));
+	this.columns = newcolumns;
+
+	if (this.isDesignLoaded()) {
+	    if (!this.contextMenu) this.designCreate(); // special case from themedesigner
+	    this.contextMenu.setDataSet(this.columns);
+	}
+    },
+
 	getDateFields: function(){
 		var dateFields = [];
 		dojo.forEach(this.columns, function(col){
