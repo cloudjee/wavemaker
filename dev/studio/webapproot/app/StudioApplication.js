@@ -21,7 +21,8 @@ dojo.declare("StudioApplication", wm.Application, {
 	main: "Main",
         theme: "wm_studio",
 	widgets: {
-            pagesListVar: ["wm.Variable", {type: "StringData", isList: true}] 
+            pagesListVar: ["wm.Variable", {type: "StringData", isList: true}],
+	    projectListVar: ["wm.Variable", {type: "StringData", isList: true}]
 	},
     init: function() {
 	this.inherited(arguments);
