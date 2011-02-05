@@ -510,14 +510,6 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 
 /**/
 
-.wmtree { 
-	background-color: #fff;
-	padding-top: 4px;
-}
-
-.wmtree.wmtree-disabled {
-	background-color: #C8C8C8;
-}
 
 .wmtree ul { 
 	margin: 0; 
@@ -549,7 +541,6 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	background-image: url(images/treeimages.png); 
         background-position: -72px;
 /*	background-image: url(images/tree_half_bottom.gif);*/
-	background-color: #fff;
 	background-repeat:  no-repeat;
 }
 
@@ -559,7 +550,6 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	background-image: url(images/treeimages.png); 
         background-position: -112px 0px;
 /*	background-image: url(images/tree_leaf.gif);*/
-	background-color: #fff;
 	background-repeat:  no-repeat;
 }
 
@@ -569,7 +559,6 @@ background: url(images/omg/header-bg.png) no-repeat top center;
         background-position: -84px 0px;
 /*	background-image: url(images/tree_half_bar.gif);*/
 	background-repeat:  no-repeat;
-	background-color: #fff;
 	vertical-align: top;
 }
 
