@@ -17,13 +17,14 @@
  */ 
 dojo.provide("wm.studio.app.packageLoader");
 
+wm.packageImages = {};
 _import = function(inTab, inName, inClass, inModule, inImage, inDescription, isBeta, inProps) {
 	var
 		n=inName,
 		c=inClass,
 		m=inModule||c,
 		i=inImage||"images/wm/widget.png";
-
+    wm.packageImages[inClass] = i;
 	try{
 		// trips up build system to have a dojo.require here
 		dojo["require"](m);
