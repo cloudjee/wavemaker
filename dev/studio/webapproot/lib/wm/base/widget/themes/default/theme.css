@@ -548,7 +548,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 .wmtree-root-last-leaf { 
         width: 18px;
 	background-image: url(images/treeimages.png); 
-        background-position: -112px 0px;
+        background-position: -104px 0px;
 /*	background-image: url(images/tree_leaf.gif);*/
 	background-repeat:  no-repeat;
 }
