@@ -243,7 +243,7 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
 		inValue = "str: " + matches[1];
 	    else
 		inValue = "expr: " + inExpr;
-	    inValue = String(inValue).replace(/\"/g, "&quot;") || "";
+	    inValue = String(inValue).replace(/\"/g, "'") || "";
 	}
 	return inValue;
     },
