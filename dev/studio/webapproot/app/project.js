@@ -22,6 +22,19 @@ dojo.declare("wm.studio.Project", null, {
 	// New
 	//=========================================================================
     newProject: function(inName, optionalInTheme, optionalInTemplate) {
+	// validate the safety of the name; reserved javascript words cause big trouble
+	try {
+	    var tmp = dojo.declare(inName, wm.Application, {
+	    });
+	    eval(inName); // should do nothing, but if attempting to evaluate the name throws an error then its an invalid name
+	} catch(e) {
+	    app.toastError("That is a reserved javascript name");
+	    return;
+	}
+
+	if (this.projectName) {
+	    this.closeProject(inName);
+	}
 		var n = inName || this.projectName || "Project";
 		this.projectName = wm.getValidJsName(n);
 		this.pageName = "Main";
@@ -176,6 +189,7 @@ dojo.declare("wm.studio.Project", null, {
 				this.makeApplication();
 				this.openPage(this.pageName);
 			        studio.startPageDialog.hide();
+			    
 			} catch(e) {
 				console.debug(e);
 				this.loadError(bundleDialog.M_FailedToOpenProject + this.projectName + ". Error: " + e);
@@ -510,10 +524,11 @@ dojo.declare("wm.studio.Project", null, {
 		// if name changed update source
 		if (this.pageName != previousName)
 			studio.pageNameChange(previousName, this.pageName);
-		this.savePage();
+	    this.savePage(dojo.hitch(this, function() {
 		this.pageChanged();
 		this.pagesChanged();
 		this.openPage(this.pageName);
+	    }));
 	},
 	savePage: function(callback) {
 	    var f = [];
@@ -572,6 +587,7 @@ dojo.declare("wm.studio.Project", null, {
 		this.projectsChanged();
 		studio.endWait();
 		app.toastSuccess(inName + " saved as " + inNewName + "; you are still editting " + inName);
+		studio.startPageDialog.page.refreshProjectList();
 	    }));
 	},
 	//=========================================================================
@@ -651,6 +667,7 @@ dojo.declare("wm.studio.Project", null, {
 	},
     // TODO: start page's  refreshProjectList and this call to listProjects should share 
     // a single model.
+/*
 	updateProjectList: function() {
 		var d = studio.studioService.requestSync("listProjects", null);
 		d.addCallback(dojo.hitch(this, function(inResult) {
@@ -660,8 +677,15 @@ dojo.declare("wm.studio.Project", null, {
 		}));
 		return d;
 	},
-	getProjectList: function() {
+ 	getProjectList: function() {
 		return this.projectList || [];
+	},
+	*/
+	getProjectList: function() {
+	    var data =  app.projectListVar.getData();
+	    var result = [];
+	    dojo.forEach(data, function(d) {result.push(d.dataValue);});
+	    return result;
 	},
 	projectsChanged: function() {
 		studio.projectsChanged();
@@ -1346,7 +1370,7 @@ Studio.extend({
 	},
 	setProjectMainPage: function(inName) {
 		this.application.main = inName;
-		this.pagesChanged();
+		this.project.pagesChanged();
 		this.saveProjectClick();
 	},
 	projectSettingsClick: function(inSender) {
