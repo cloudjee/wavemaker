@@ -464,7 +464,7 @@ dojo.declare("wm.ListViewer", wm.Container, {
                 // If the row has widgets in it, then call renderBounds and reflow; else call renderRow to load the widgets.
 		this.currentRenderer.inFlow = true;
                 var resetData = this.currentRenderer.c$.length && data[i] && data[i] != this.currentRenderer.__lookupData;
-                console.log("HEY:"+ resetData);
+                //console.log("HEY:"+ resetData);
                 if (resetData) {
                     this.currentRenderer.variable.setData(data[i]);
                     this.currentRenderer.start();
@@ -565,6 +565,10 @@ wm.Object.extendSchema(wm.ListViewer, {
     fitToContentHeight:  {ignore: true},
     imageList: {ignore: true},
     lock: {ignore: true},
-    selectedItem: { ignore: 1, bindSource: 1, isObject: true, simpleBindProp: true }
+    selectedItem: { ignore: 1, bindSource: 1, isObject: true, simpleBindProp: true },    
+    autoScroll: {ignore: true, writeonly: 1},
+    scrollX: {ignore: true, writeonly: 1},
+    scrollY: {ignore: true, writeonly: 1},
+    touchScrolling: {ignore: true, writeonly: 1}
 });
 
