@@ -724,12 +724,15 @@ wm.Object.extendSchema(wm.Container, {
     fitToContentWidth:  {group: "advanced layout", order: 90, shortname: "Auto Width"},
     fitToContentHeight: {group: "advanced layout", order: 91, shortname: "Auto Height"},
     autoScroll: {group: "scrolling", order: 100, ignore: 0},
+    scrollX: {group: "scrolling", order: 101, ignore: 0},
+    scrollY: {group: "scrolling", order: 102, ignore: 0},
+    touchScrolling: {group: "scrolling", order: 103, ignore: 0},
     isMajorContent: {group: "style", order: 150, ignore: 1}, // obsolete
     themeStyleType: {ignore: true, group: "style", order: 150},
-    setThemeStyleType: {group: "method", params: "(inStyleType)",doc: 1},
-    getThemeStyleType: {group: "method",  params: "()",doc: 1},
-    reflow: {group: "method", params: "()", doc: 1},
-    getInvalidWidget: {group: "method", params: "()",doc: 1},
-    setHorizontalAlign:    {group: "method", params: "(inAlign)",doc: 1},
-    setVerticalAlign:      {group: "method", params: "(inAlign)", doc: 1}
+    setThemeStyleType: {group: "method"},
+    getThemeStyleType: {group: "method"},
+    reflow: {group: "method"},
+    getInvalidWidget: {group: "method"},
+    setHorizontalAlign:    {group: "method"},
+    setVerticalAlign:      {group: "method"}
 });
