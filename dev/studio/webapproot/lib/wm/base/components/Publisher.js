@@ -141,6 +141,7 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 			'"' + resource + '", ' +
 			'"' + image + '", ' +
 			'"' + this.description + '", ' +
+		        "false," + 
 			'{width: "' + this.width + '", height: "' + this.height + '"}' + 
 		']);';
 		//
