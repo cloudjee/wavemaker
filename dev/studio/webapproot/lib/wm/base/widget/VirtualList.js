@@ -364,5 +364,18 @@ wm.Object.extendSchema(wm.VirtualList, {
 	// FIXME: disabling this as we're not using it at all, and grid supports it.
 	multiSelect: { ignore: 1 },
 	box: { ignore: 1 },
-	toggleSelect: { group: "common", order: 100}
+    toggleSelect: { group: "common", order: 100},
+    getCount: {group: "method", returns: "Number"},
+    getItem: {group: "method", returns: "wm.ListItem"},
+    getItemByCallback: {group: "method", returns: "wm.ListItem"},
+    getItemByFieldName: {group: "method", returns: "wm.ListItem"},
+    removeItem: {group: "method"},
+    setHeaderVisible: {group: "method"},
+    clear: {group: "method"},
+    getSelectedIndex: {group: "method", returns: "Number"},
+    selectByIndex: {group: "method"},
+    select: {group: "method"},
+    eventSelect: {group: "method"},
+    eventDeselect: {group: "method"},
+    deselectAll: {group: "method"}
 });
