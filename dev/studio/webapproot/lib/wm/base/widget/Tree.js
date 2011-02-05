@@ -297,6 +297,17 @@ dojo.declare("wm.TreeNode", null, {
 	  return false;
 	},
 	// Input parameter is a function testing to see if something is true for some descendant
+	findDescendant: function(inFunc) {
+	  try {
+	      if (inFunc(this)) return this;
+	  } catch(e) {}
+	    for (var i=0, k, kids=this.kids; (k=kids[i]); i++) {
+		var result = k.findDescendant(inFunc);
+		if (result) return result;
+	    }
+	    return null;
+	},
+	// Input parameter is a function testing to see if something is true for some descendant
 	findChild: function(inFunc) {
 	  for (var i=0, k, kids=this.kids; (k=kids[i]); i++)
 	    if (inFunc(k)) return k;
@@ -315,6 +326,20 @@ dojo.declare("wm.TreeNode", null, {
 	  }
 	  return null;
 	}
+});
+
+wm.Object.extendSchema(wm.TreeNode, {
+    data: {ignore: 1, doc: 1},
+    closed: {ignore: 1, doc: 1},
+    content: {ignore: 1, doc: 1},
+    canSelect: {ignore: 1, doc: 1},
+    destroy: {group: "method"},
+    isSelected: {group: "method", returns: "Boolean"},
+    removeChildren: {group: "method"},
+    setOpen: {group: "method"},
+    setContent: {group: "method"},    
+    forEachDescendant: {group: "method"},    
+    findDescendant: {group: "method", returns: "wm.TreeNode"}
 });
 
 dojo.declare("wm.TreeCheckNode", wm.TreeNode, {
@@ -441,12 +466,11 @@ dojo.declare("wm.Tree", wm.Box, {
 	addToSelection: function(inNode) {
 		if (inNode) {
 		    var tmpnode = inNode.parent;
-		    while (tmpnode != this.root) {
+		    while (tmpnode && tmpnode != this.root) {
 			if (tmpnode.closed)
 			    tmpnode.setOpen(true);
 			tmpnode = tmpnode.parent;
 		    }
-
 			this.selected = inNode;
 			inNode.selected = true;
 			inNode.styleContent();
@@ -633,6 +657,9 @@ dojo.declare("wm.Tree", wm.Box, {
           }
       }                
   },
+    findNodeByCallack: function(inCallback) {
+	return this.root.findDescendant(inCallback);
+    },
 	findDomNode: function(inDomNode) {
 	  return this.root.findDomNode(inDomNode);
 	},
@@ -650,7 +677,14 @@ dojo.declare("wm.Tree", wm.Box, {
 
 wm.Object.extendSchema(wm.Tree, {
 	disabled: { ignore: 1 },
-	nodes: { ignore: 1}
+    nodes: { ignore: 1},
+    clear: {group: "method"},
+    deselect: {group: "method"},
+    select: {group: "method"},
+    forEachNode: {group: "method"},
+    findNodeByCallback: {group: "method", returns: "wm.TreeNode"},
+    root: {type: "wm.TreeNode", doc: 1, ignore: 1}
+
 });
 wm.Tree.extend({
     themeable: false
