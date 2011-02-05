@@ -74,7 +74,8 @@ dojo.declare("wm.ComponentTaskMixin", null, {
 		  var o;
 		    if (this.component.owner && (
                         this.component.owner == studio.application ||
-		            this.component.owner.app ==  studio.application)) {
+		            this.component.owner.app ==  studio.application ||
+			    this.component.owner.owner == studio.application)) {
 		    o = studio.application;
 		  } else {
 		    o = app;
