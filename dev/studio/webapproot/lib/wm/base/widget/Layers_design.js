@@ -34,10 +34,10 @@ wm.Object.extendSchema(wm.Layer, {
     fitToContentHeight: { ignore: 1},
     minWidth: { ignore: 1},
     minHeight: { ignore: 1},
-    activate: {group: "method", params: "()", doc: 1},
-    isActive: {group: "method", params: "()", returns: "Boolean", doc: 1},
-    setCaption: {group: "method", params: "(inCaption)", doc: 1},
-    getIndex: {group: "method", params: "()", returns: "Number", doc: 1},
+    activate: {group: "method"},
+    isActive: {group: "method", returns: "Boolean"},
+    setCaption: {group: "method"},
+    getIndex: {group: "method", returns: "Number"},
 });
 
 wm.Layer.extend({
@@ -121,26 +121,30 @@ wm.Object.extendSchema(wm.Layers, {
         clientBorder: {group: "style", order: "100", doc: 1},
         clientBorderColor: {group: "style", order: "101", doc: 1},
 
-    addLayer: {group: "method", params: "(inCaption)", doc: 1},
-    getLayer: {group: "method", params: "(inIndex)", returns: "wm.Layer", doc: 1},
-    removeLayer:{group: "method", params: "(inIndex)", doc: 1},
+    addLayer: {group: "method"},
+    getLayer: {group: "method", returns: "wm.Layer"},
+    removeLayer:{group: "method"},
 
-    getActiveLayer: {group: "method", params: "()", returns: "wm.Layer", doc: 1},
+    getActiveLayer: {group: "method", returns: "wm.Layer"},
 
-    indexOfLayer:  {group: "method", params: "(inLayer)", returns: "Number", doc: 1},
-    indexOfLayerName:  {group: "method", params: "(inLayerName)", returns: "Number", doc: 1},
-    indexOfLayerCaption:  {group: "method", params: "(inLayerCaption)", returns: "Number", doc: 1},
+    indexOfLayer:  {group: "method", returns: "Number"},
+    indexOfLayerName:  {group: "method", returns: "Number"},
+    indexOfLayerCaption:  {group: "method", returns: "Number"},
 
-    setLayer: {group: "method", params: "(inNameOrLayer)", doc: 1},
-    setLayerIndex: {group: "method", params: "(inIndex)", doc: 1},
+    setLayer: {group: "method"},
+    setLayerIndex: {group: "method"},
     
-    getCount: {group: "method", params: "()",  returns: "Number", doc: 1},
+    getCount: {group: "method", returns: "Number"},
 
-    moveLayerIndex: {group: "method", params: "(inLayer, inIndex)", doc: 1},
-    clear: {group: "method", params: "()", doc: 1},
+    moveLayerIndex: {group: "method"},
+    clear: {group: "method"},
 
-    setClientBorder: {group: "method", params: "(inBorder)", doc: 1},
-    setClientBorderColor: {group: "method", params: "(inBorderColor)", doc: 1},
+    setClientBorder: {group: "method"},
+    setClientBorderColor: {group: "method"},
+    autoScroll: {ignore: 1}, // wm.Layer should have scrolling set, not the wm.Layers/TabLayers.  Accordion is an exception
+    scrollX: {ignore: 1},
+    scrollY: {ignore: 1},
+    touchScrolling: {ignore: 1}
 });
 
 wm.Layers.extend({
@@ -281,7 +285,9 @@ wm.AccordionLayers.extend({
     transition: {ignore: true}
 });
 wm.Object.extendSchema(wm.AccordionLayers, {
-    captionBorder: {ignore: 1}
+    captionBorder: {ignore: 1},
+    autoScroll: {group: "scrolling", order: 100, ignore: 0}, // Accordion should support vertical scrolling
+    scrollY: {group: "scrolling", order: 102, ignore: 0}
 });
 
 wm.TabLayers.extend({
