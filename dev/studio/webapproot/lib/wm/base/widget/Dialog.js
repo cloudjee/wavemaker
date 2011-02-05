@@ -26,6 +26,7 @@
 dojo.provide("wm.base.widget.Dialog");
 dojo.require("wm.base.widget.Container");
 dojo.require("wm.base.widget.Picture");
+dojo.require("wm.base.widget.PageContainer");
 dojo.require("wm.base.widget.Button");
 
 wm.dialog = {showingList: []};
@@ -163,7 +164,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    var containerWidget, containerNode;
 	    
             // set the owner to wm.Page to allow othis to be written... IF its an instance not a subclass of wm.Dialog
-            var owner = (this.declaredClass == "wm.Dialog" || this instanceof wm.DesignableDialog) ? this.owner : this; 
+            var owner = (this.declaredClass == "wm.Dialog" || this._pageOwnsWidgets) ? this.owner : this; 
 
 
             // If the dialog has only a single widget inside of it, thats the titlebar, and the rest of it hasn't yet been created and needs creating.
@@ -817,12 +818,16 @@ wm.Object.extendSchema(wm.Dialog, {
     freeze: {ignore: 1},
     padding: {ignore: 1},
     margin: {ignore: 1},
+    autoScroll: {ignore: 1},
     scrollX: {ignore: 1},
     scrollY: {ignore: 1},
+    touchScrolling: {ignore: 1},
     layoutKind: {ignore: 1},
     horizontalAlign: {ignore: 1},
     verticalAlign: {ignore: 1},
-    showing: {ignore: 1}
+    showing: {ignore: 1},
+    setModal: {group: "method"},
+    minify: {group: "method"}
 });
 
 
@@ -871,7 +876,7 @@ dojo.declare("wm.WidgetsJsDialog", wm.Dialog, {
 
 
 dojo.declare("wm.RichTextDialog", wm.WidgetsJsDialog, {
-    autoScroll: false,
+
     noEscape: true,
     footerBorder: "",
     footerBorderColor: "",
@@ -922,7 +927,6 @@ wm.RichTextDialog.extend({
 
 dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
     enterKeyIsButton1: true,
-    autoScroll: false,
     noEscape: true,
     title: "Generic Dialog",
     footerBorder: "",
@@ -1114,7 +1118,15 @@ wm.Object.extendSchema(wm.GenericDialog, {
     regExp: {group: "editData", order: 57},
 
     footerBorder: {group: "style", order: 100},
-    footerBorderColor:  {group: "style", order: 101}
+    footerBorderColor:  {group: "style", order: 101},
+    setShowInput: {group:"method"},
+    setInputDataValue: {group:"method"},
+    getInputDataValue: {group:"method"},
+    setUserPrompt: {group:"method"},
+    setButton1Caption: {group:"method"},
+    setButton2Caption: {group:"method"},
+    setButton3Caption: {group:"method"},
+    setButton4Caption: {group:"method"}
 });
 
 wm.GenericDialog.extend({
@@ -1341,7 +1353,6 @@ wm.Object.extendSchema(wm.Toast, {
 });
 // Any project can overwrite this array in their page.start method.
 wm.Toast.classList = ["wm_FontSizePx_16px","wm_TextDecoration_Bold"];
-
 dojo.declare("wm.pageContainerMixin", null, {
 	pageName: "",
 	hideControls: false,
@@ -1738,6 +1749,7 @@ wm.ColorPickerDialog.cssLoaded = false;
 
 /* Use designable dialog if your planning to design it in studio; if programatically creating a dialog use wm.Dialog */
 dojo.declare("wm.DesignableDialog", wm.Dialog, {
+    _pageOwnsWidgets: true,
     useButtonBar: false, // its false so we can add it in paletteDrop, but then the user can delete it if they want
     border: "1",
     borderColor: "black",
