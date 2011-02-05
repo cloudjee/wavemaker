@@ -80,7 +80,7 @@ wm.Object.extendSchema(wm.Picture, {
     hint: { group: "common", order: 2, doc: 1},
     link: { type: "String", bindable: 1, doc: 1},
     aspect: { group: "layout", order: 50},
-    setSource: {group: "method", params: "(inSource)", doc: 1},
+    setSource: {group: "method", doc: 1},
     setHint: {group: "method", params: "(inHint)", doc: 1},
     setLink: {group: "method", params: "(inUrl)", doc: 1}
 });
