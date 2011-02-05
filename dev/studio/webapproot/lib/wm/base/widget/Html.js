@@ -138,24 +138,34 @@ dojo.declare("wm.Html", wm.Box, {
         },
 	makePropEdit: function(inName, inValue, inDefault) {
 		switch (inName) {
-                        case "autoSizeWidth": 
+                        case "autoSize": 
 		                return makeSelectPropEdit(inName, (this.autoSizeHeight) ? "height" : (this.autoSizeWidth) ? "width" : "none", ["none", "width", "height"], inDefault);
 		}
 		return this.inherited(arguments);
 	},
-    setAutoSizeWidth: function(inValue) {
-        if (this.autoSizeHeight && inValue != "height")
-            this.setAutoScroll(true);
+    getAutoSize: function() {
+	if (this.autoSizeWidth) return "width";
+	if (this.autoSizeHeight) return "height";
+	return "none";
+    },
+    /* This hack should only be called at design time */
+    setAutoSize: function(inValue) {
         if (inValue == "none") {
-            wm.Control.prototype.setAutoSizeWidth.call(this, false);
-            this.setAutoSizeHeight(false);
+	    if (this.autoSizeWidth)
+		this.setAutoSizeWidth(false);
+	    if (this.autoSizeHeight)
+		this.setAutoSizeHeight(false);
         } else if (inValue == "width") {
-            this.setAutoSizeHeight(false);
-            wm.Control.prototype.setAutoSizeWidth.call(this, true);
+	    if (!this.autoSizeWidth)
+		this.setAutoSizeWidth(true);
+	    if (this.autoSizeHeight)
+		this.setAutoSizeHeight(false);
+
         } else if (inValue == "height") {
-            this.setAutoScroll(false);
-            wm.Control.prototype.setAutoSizeWidth.call(this, false);
-            this.setAutoSizeHeight(true);
+	    if (this.autoSizeWidth)
+		this.setAutoSizeWidth(false);
+	    if (!this.autoSizeHeight)
+		this.setAutoSizeHeight(true);
         }
     }
 });
@@ -167,9 +177,11 @@ wm.Html.description = "Container for any HTML content.";
 wm.Object.extendSchema(wm.Html, {
 	disabled: { ignore: 1 },
         autoSizeHeight: {type: "Boolean", group: "advanced layout", order: 31, writeonly: true, ignore: true},
-        autoSizeWidth: {type: "Boolean", group: "advanced layout", order: 32, shortname: "Auto Size"},
+    autoSizeWidth: {type: "Boolean", group: "advanced layout", order: 32, shortname: "Auto Size", writeonly: true, ignore: true},
+    autoSize: {group: "advanced layout", order: 31},
         autoScroll: {group: "style", order: 100, ignore: 0},
-	html: { type: "String", bindable: 1, group: "display", order: 100, focus: true }
+    html: { type: "String", bindable: 1, group: "display", order: 100, focus: true },
+    setHtml: {group: "method"}
 });
 
 wm.Html.extend({
