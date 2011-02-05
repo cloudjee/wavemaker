@@ -47,7 +47,8 @@ dojo.declare("wm.IFrame", wm.Box, {
 // design only...
 wm.Object.extendSchema(wm.IFrame, {
 	disabled: { ignore: 1 },
-	source: { type: "String", bindable: 1 }
+    source: { type: "String", bindable: 1 },
+    setSource: {group: "method"}
 });
 
 wm.IFrame.description = "A frame.";
