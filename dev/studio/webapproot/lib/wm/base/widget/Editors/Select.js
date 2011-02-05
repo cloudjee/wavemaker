@@ -137,6 +137,17 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		else
 			this.setDisplayValue(displayValue);
 		this.endEditUpdate();
+
+
+	    /* WM-2515; setInitialValue is also called each time the editor is recreated -- such as when it gets a new dataSet; 
+	     *          fire an onChange if we have a displayValue after setting initialValue as this counts as a change in value
+	     *          from before it was recreated.
+	     */
+	    if (!this._cupdating) {
+	        var displayValue = this.getDisplayValue();
+		if (displayValue != this.displayValue)
+		    this.changed();
+	    }
 	},
 	// our dijit doesn't have a displayValue v. editorvalue distinction
 	// we're using displayValue for what the dijit calls its value.
@@ -225,8 +236,10 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
         if (v && !(getFullDataObj || this.dataField == 'All Fields'))
             v = v[this.dataField];
 
+/*
         if (!this.restrictValues && displayed && !v) 
 		    return displayed;
+		    */
 		return (v || v === 0) ? v : this.makeEmptyValue();
 	},
 	setDataField: function(inDataField) {
@@ -405,10 +418,45 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
                         this.changed();
 		}
 	},
-	editorChanged: function() {
-	    this.inherited(arguments);
-		this.updateSelectedItem();
+	_getValidatorNode: function() {
+	    var result = dojo.query(".dijitValidationContainer", this.editor.domNode)[0];
+	    result.firstChild.value = "";
+	    return result;
 	},
+	editorChanged: function() {
+	    console.log("editorChanged");
+	    /* WM-2515; Don't bother firing an onchange event if there are no options to choose from; this situation
+	     *          presumably means that we're still waiting for the dataSet to get options from the server;
+	     *          all changed actions will fire AFTER we have a displayValue to go with whatever dataValue we have.
+	     */
+	    if (this.dataSet && this.dataSet.getCount()) {
+		this.inherited(arguments);
+		this.updateSelectedItem();
+	    }
+	},
+
+        getInvalid: function() {
+	    var valid;
+	    if (this.editor._focused) {
+		valid = true;
+	    } else {
+
+		// always valid if !this.restrictValue
+		// always valid if !this.displayValue, but if there is a displayValue there must be a dataValue
+		var display = this.getDisplayValue();
+		this._isValid = (!this.restrictValues || (display && this.dataValue || !display) );
+		console.log("_isValid:" + this._isValid + "; display="+display + "; data:"+this.dataValue);
+
+
+		if (this.readonly) valid = true;
+		else if (this.required && !this.dataValue) valid = false;
+		else if (this.restrictValues && display && !this.dataValue) valid = false;
+		else valid = true;
+	    }
+	    this.validatorNode.style.display = !valid ? "block" : "none";
+	    return !valid;
+	},
+
 	updateSelectedItem: function() {
 		// FIXME: only if dataField is All Field should we update entire selectedItem.
 		var v = this.getEditorValue(true);
@@ -1086,6 +1134,8 @@ wm.SelectMenu.extend({
 				this.components.binding.addWire("", "dataSet", ds.getId());
 		} else
 			this.setDataSet(inDataSet);
+	    
+	    this.listProperties().dataValue.type = inDataSet.type;
 	},
 	// FIXME: for simplicity, allow only top level , non-list, non-object fields.
 	_addFields: function(inList, inSchema) {
@@ -1108,8 +1158,11 @@ wm.SelectMenu.extend({
 			case "displayField":
 				return makeSelectPropEdit(inName, inValue, this._listFields(), inDefault);
 			case "dataField":
-				var l = this._listFields();
-				return makeSelectPropEdit(inName, inValue, l, inDefault);
+				var values = this._listFields();
+		                if (values.length) values[0] = this._allFields;
+		                if (!inValue) inValue = this._allFields;
+		                return new wm.propEdit.Select({component: this, name: inName, value: inValue, options: values});
+
 			case "displayType":
 				return makeSelectPropEdit(inName, inValue, wm.selectDisplayTypes, inDefault);
 			case "dataSet":
@@ -1190,12 +1243,13 @@ wm.Object.extendSchema(wm.SelectMenu, {
     restrictValues: {type: "wm.Boolean", group: "editor", order: 40, doc: 1},
 	changeOnKey: { ignore: 1 },
 	changeOnEnter: { ignore: 1 },
-	selectedItem: { ignore: true, isObject: true, bindSource: true, doc: 1},
+    selectedItem: { ignore: true, bindable: true, isObject: true, bindSource: true, doc: 1,simpleBindProp: true},
 	dataSet: { readonly: true, group: "editor", order: 4, type: "wm.Variable", isList: true, bindTarget: true, doc: 1},
 	startUpdate: { group: "editor", order: 5},
   pageSize: { order: 6, group: "editor"},
 	liveVariable: {ignore: 1 },
 	options: {group: "editor", order: 7},
+        dataValue: {ignore: 1, bindable: 1, group: "editData", order: 3, type: "any"}, // use getDataValue()
 	dataField: {group: "editor", order: 10, doc: 1},
 	displayField: {group: "editor", order: 15,doc: 1},
 	displayExpression: {group: "editor", order: 20, doc: 1},
