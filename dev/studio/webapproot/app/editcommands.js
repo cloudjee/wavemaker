@@ -384,7 +384,7 @@ Studio.extend({
 	    for (var i in props) {
 		var p = props[i];
 		var params = "";
-		if (p.doc) {
+		if (p.group == "method" || !p.ignore && !p.tmpignore || p.doc) {
 		    if (!this._autoCompletionRemainder || i.indexOf(this._autoCompletionRemainder) == 0) {
 			 params = getArgs(object, i).substring(2);
 		    if (params == "*,args*/")
