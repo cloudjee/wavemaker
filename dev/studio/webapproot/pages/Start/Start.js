@@ -30,7 +30,7 @@ dojo.declare("Start", wm.Page, {
 	    }
 	},
 	update: function() {
-		this.refreshProjectList();
+	    this.refreshProjectList();
 		this.disEnableProjectButtons(true);
 	},
 	welcomeTab: function() {
@@ -117,6 +117,8 @@ dojo.declare("Start", wm.Page, {
 	    this.disEnableProjectButtons(this.existingProjectList.selected != true);	    
 	},
 	listProjectsResult: function(inResult) {
+	    var data = [];
+
 	        this.projectList = dojo.clone(inResult);
 	        this.projectList = this.projectList.sort(function(a,b) {
 		    a = a.toLowerCase();
@@ -124,8 +126,11 @@ dojo.declare("Start", wm.Page, {
 		    return a.localeCompare(b);
 		});
 		this.existingProjectList.renderData(this.projectList);
-		for (var i = 0; i < this.projectList.length; i++) 
+	    for (var i = 0; i < this.projectList.length; i++) {
 		    this.existingProjectList.items[i].projectName = this.projectList[i];
+		data.push({dataValue: this.projectList[i]});
+	    }
+	    app.projectListVar.setData(data);
 	},
 	existingProjectListFormatCell: function(inDataInfo) {
 		var di = inDataInfo;
