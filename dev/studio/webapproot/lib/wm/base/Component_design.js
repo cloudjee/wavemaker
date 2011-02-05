@@ -94,7 +94,7 @@ wm.Component.extend({
 			if (p.bindable || (inType && p[inType]) || (!inType && (p.bindTarget || p.bindSource))) {
 				// data property types may change, copy property and update so update them
 				p = dojo.mixin({}, props[i]);
-				p.type = p.isObject ? (this.getValue(i)||0).type : p.type;
+				p.type = p.isObject ? (this.getValue(i)||p).type : p.type;
 				list[i] = p;
 			}
 		}
