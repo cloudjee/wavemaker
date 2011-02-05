@@ -523,7 +523,9 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	margin: 0; 
 	padding: 0; 
 	list-style-type: none; 
-	background: url(images/tree_bar.gif) repeat-y; 
+	background: url(images/treeimages.png) repeat-y; 
+        background-position: 0px 100%;
+        width: 18px;
 } 
 
 .wmtree img { 
@@ -543,20 +545,29 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 }
 
 .wmtree-root-leaf { 
-	background-image: url(images/tree_half_bottom.gif);
+        width: 18px;
+	background-image: url(images/treeimages.png); 
+        background-position: -72px;
+/*	background-image: url(images/tree_half_bottom.gif);*/
 	background-color: #fff;
 	background-repeat:  no-repeat;
 }
 
 
 .wmtree-root-last-leaf { 
-	background-image: url(images/tree_leaf.gif);
+        width: 18px;
+	background-image: url(images/treeimages.png); 
+        background-position: -112px 0px;
+/*	background-image: url(images/tree_leaf.gif);*/
 	background-color: #fff;
 	background-repeat:  no-repeat;
 }
 
 .wmtree-last-item { 
-	background-image: url(images/tree_half_bar.gif);
+        width: 12px;
+	background-image: url(images/treeimages.png); 
+        background-position: -84px 0px;
+/*	background-image: url(images/tree_half_bar.gif);*/
 	background-repeat:  no-repeat;
 	background-color: #fff;
 	vertical-align: top;
@@ -567,7 +578,11 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 }
 
 .wmtree-leaf {
-	background: url(images/tree_leaf.gif) no-repeat;
+        width: 18px;
+	background-image: url(images/treeimages.png); 
+        background-position: -104px 0px;
+	background-repeat:  no-repeat;
+/*	background: url(images/tree_leaf.gif) no-repeat;*/
 }
 
 .touchScroll li {
