@@ -153,3 +153,23 @@
 .wm_notheme .wmPopupButton .popupIcon {
     background-image: url(images/comboArrowDownDark.png);
 }
+
+.wm_notheme .wmtree { 
+	background-color: #fff;
+	padding-top: 4px;
+}
+
+.wm_notheme .wmtree.wmtree-disabled {
+	background-color: #C8C8C8;
+}
+.wm_notheme .wmtree-root-leaf { 
+	background-color: #fff;
+}
+
+.wm_notheme .wmtree-root-last-leaf { 
+    background-color: #fff;
+}
+
+.wm_notheme .wmtree-last-item { 
+    background-color: #fff;
+}
