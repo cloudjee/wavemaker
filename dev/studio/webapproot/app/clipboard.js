@@ -98,7 +98,7 @@ Studio.extend({
 		var c = inControl, p = c.parent, o = c.owner;
 		// FIXME: remove o check to delete sub-components.
 		if (!c.deletionDisabled && (o == this.application || o == this.page || o instanceof wm.TypeDefinition) && c != this.page.root && !(c.isParentFrozen && c.isParentFrozen()) || (o==null)) {
-			this.page.removeComponent(c);
+		        (o || studio.page).removeComponent(c);
 			this.inspector.inspected = null;
 			c.destroy();
 			wm.fire(p, "reflow");
