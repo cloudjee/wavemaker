@@ -42,6 +42,28 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		this.subscribe("wm-project-changed", this, "update");
 	    this.connect(this.relationshipsList.dijit, "onApplyCellEdit", this, "setDirty");
 	    this.connect(this.columnList.dijit, "onApplyCellEdit", this, "setDirty");
+
+	    this.connect(this.owner.parent, "onShow", this, function() {
+		wm.onidle(this, function() {
+		if (this.dataObject && this.dataObject.name) {
+		    var components = studio.application.getServerComponents();
+		    var componentIndex = wm.Array.indexOf(components, this.dataObject.name, function(c,name) {return c.name == name;});
+		    var node = components[componentIndex]._studioTreeNode;
+		    if (this.dataObject.table) {
+			var kids = node.kids;
+			for (var i = 0; i < kids.length; i++) {
+			    if (kids[i].component.entityName == this.dataObject.table) {
+				kids[i].tree.deselect();
+				kids[i].tree.addToSelection(kids[i]);
+				return;
+			    }
+			}
+			node.tree.deselect();
+			node.tree.addToSelection(node);
+		    }
+		}
+		});
+	    });
 	},
 	update: function() {
 		this.setSchemas();
@@ -127,11 +149,12 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	importDBButtonClick: function() {
 		if (!studio.importDBDialog) {
 			var d = studio.importDBDialog = new wm.PageDialog({
-				owner: app,
-				pageName: "ImportDatabase",
-				hideControls: true,
-			        width:700,
-				height:550
+			owner: app,
+			pageName: "ImportDatabase",
+			hideControls: true,
+			width: 700,
+		    height: 340,
+		    title: "New Data Model"
 			});
 			d.onPageReady = dojo.hitch(d, function() {
 				d.onShow = dojo.hitch(d.page, "update");
@@ -517,7 +540,6 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	},
 	removeDataModelCompleted: function(inSender) {
 		studio.endWait();
-		studio.updateServices();
 		studio.application.removeServerComponent(this.dataModel);
 		studio.application.loadServerComponents("wm.Query");
 		studio.refreshServiceTree();
@@ -946,6 +968,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		this.clearDetailDisplay();
 		this.initData();
 		this.expandCurrentTypesNode();
+	        studio.updateServices();// this will update the database widgets in the palette, and remove the entity from the services tree
 		this.saveComplete();
 	},
 	deleteEntityFailed: function() {

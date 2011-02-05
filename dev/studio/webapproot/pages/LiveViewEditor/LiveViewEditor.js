@@ -413,13 +413,15 @@ dojo.declare("LiveViewEditor", wm.Page, {
     getDirty: function() {
 	return this.dirty;
     },
-    save: function() {
+    save: function() {	
 	// handled by studio.saveAll but save is also CALLED by studio.saveAll so don't try calling studio.saveAll here
+	
 	this.saveComplete();
     },
     saveComplete: function() {
 	this._cachedData = this.clientLiveView.write("");
 	this.setDirty();
+	//dojo.publish("TypeChanged-" + this.type);
     },
     getProgressIncrement: function() {
 	return 1; //  1 tick is very fast
@@ -508,5 +510,11 @@ dojo.declare("LiveViewEditor", wm.Page, {
 				    */
                                 }));
 		}
-	}
+	},
+    destroy: function() {
+	if (this.getDirty())
+	    //dojo.publish("TypeChanged-" + this.type); // type reverts to old value; notify everyone that the type has changed
+	    this.clientLiveView.viewChanged(); // type reverts to old value; notify everyone that the type has changed
+	this.inherited(arguments);
+    }
 });

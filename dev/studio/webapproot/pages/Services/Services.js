@@ -20,9 +20,11 @@ dojo.provide("wm.studio.pages.Services.Services");
 dojo.declare("Services", wm.Page, {
 	start: function() {
 		this.tree.initNodeChildren = dojo.hitch(this.tree, "treeInitNodeChildren");
-		this.subscribe("wmservices-changed", this, "servicesChanged");
+	        /* WM-2518: now that each web service gets its own editor, no longer monitor for changes to what the user has selected or to definitions for any types */
+		//this.subscribe("wmservices-changed", this, "servicesChanged");
 		this.subscribe("wm-project-changed", this, "update");
 		this.update();
+	    this._cachedData = this.getCachedData();
 	},
 	update: function() {
 		studio.updateServices();
@@ -90,6 +92,7 @@ dojo.declare("Services", wm.Page, {
 		s.displayValue = "";
 		s.editor.setOptions(o);
 	},
+/* WM-2518: now that each web service gets its own editor, no longer monitor for changes to what the user has selected or to definitions for any types * /
 	servicesChanged: function() {
 		this.clearAll();
 		this.tree.deselect();
@@ -104,6 +107,7 @@ dojo.declare("Services", wm.Page, {
 			this.serviceSelected();
 		}
 	},
+
 	treeSelect: function(inSender, inNode) {
 		var n = inNode;
 		while (n instanceof wm.TreeNode && n.isService != true) {
@@ -116,6 +120,7 @@ dojo.declare("Services", wm.Page, {
 			}
 		}
 	},
+	*/
 	selectService: function(inWebService) {
 		this.webService = inWebService;
 		this.tree.serviceId = inWebService.serviceId;
@@ -235,7 +240,19 @@ dojo.declare("Services", wm.Page, {
 	deleteServiceCallback: function(inData) {
 		this.tree.serviceId = null;
 		studio.application.removeServerComponent(this.webService);
-		this.update();
+	        studio.refreshServiceTree("");
+
+
+	    var pageContainer = this.owner;
+	    var subtablayer = pageContainer.parent;
+	    var subtablayers = subtablayer.parent;
+	    var serviceslayer = subtablayers.parent;
+	    if (subtablayers.layers.length == 1)
+		serviceslayer.hide();
+	    subtablayer.destroy();
+
+
+		//this.update();
 	},
 	serivceImported: function() {
 		var id = this.importWebServiceDialog.page.serviceId;

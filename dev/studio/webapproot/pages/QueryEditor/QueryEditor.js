@@ -426,8 +426,6 @@ dojo.declare("QueryEditor", wm.Page, {
 			this._saveQuery();
 		}
 		else {
-		    studio._saveErrors.push({owner: this,
-					     message: "Enter query details before saving."});
 		    this.saveComplete();
 		}
     },
@@ -436,6 +434,7 @@ dojo.declare("QueryEditor", wm.Page, {
     onSaveSuccess: function() {
 	this._cachedData = this.getCachedData();
 	this.setDirty();
+	//dojo.publish("ServiceTypeChanged-" +  this.dataModelName);  turns out that the call to studio.typeChanged takes care of this...
 	this.saveComplete();
     },
     getProgressIncrement: function() {
@@ -451,7 +450,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		return qi;
 	},
 	_getQueryValue: function() {
-		var rtn = this.queryTextArea.getDataValue();
+		var rtn = this.queryTextArea.getDataValue() || "";
 		if (rtn.charAt(rtn.length-1) == ';') {
 			rtn = rtn.substring(0, rtn.length-1);
 		}
@@ -637,12 +636,23 @@ dojo.declare("QueryEditor", wm.Page, {
 	_canSaveQuery: function() {
 		var qn = this.queryNameInput.getDataValue();
 		var q = this._getQueryValue();
-		return dojo.string.trim(qn) != "" && dojo.string.trim(q) != "";
+	    if (dojo.string.trim(qn || "") == "") {
+		studio._saveErrors.push({owner: this,
+					 message: "Enter query name before saving."});
+		return false;
+	    }
+	    if (dojo.string.trim(q||"") == "") {
+		studio._saveErrors.push({owner: this,
+					 message: "Enter a query before saving."});
+		return false;
+	    }
+	    return true;
 	},
 	_removedQuery: function() {
 	    studio.endWait();
 	    studio.application.removeServerComponent(this.query);
 	    studio.refreshServiceTree("");
+
 	    var pageContainer = this.owner;
 	    var subtablayer = pageContainer.parent;
 	    var subtablayers = subtablayer.parent;

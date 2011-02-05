@@ -163,12 +163,24 @@ dojo.declare("JavaEditor", wm.Page, {
                             }));
 	},
 	deleteServiceCallback: function(inData) {
+	    studio.application.removeServerComponent(this.javaService);	    
+	    studio.refreshServiceTree("");
+	    var pageContainer = this.owner;
+	    var subtablayer = pageContainer.parent;
+	    var subtablayers = subtablayer.parent;
+	    var javalayer = subtablayers.parent;
+	    if (subtablayers.layers.length == 1)
+		javalayer.hide();
+	    subtablayer.destroy();
+	    
+/*
 		this.tree.serviceId = null;
 		this.javaCodeEditor.setText("");
 	        if (this.javaService._editTab)
 		    this.javaService._editTab.destroy();
 		studio.application.removeServerComponent(this.javaService);
 		this.update();
+		*/
 	},
 	openCmpOutBtnClick: function(inSender) {
 	    this.javaCodeSplitter.setShowing(true);
