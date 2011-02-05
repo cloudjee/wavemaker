@@ -22,7 +22,12 @@ pageScript = function(name, defaultFunctions) {
 	return [
 		'dojo.declare("' + name + '", wm.Page, {',
 		'    start: function() {',
-		'        ',
+		'        try {',
+		'            ',
+		'            ',
+		'        } catch(e) {',
+		'            app.toastError(this.name + ".start() Failed: " + e.toString()); ',
+		'        }',
 		'    },',
 	         (defaultFunctions ? "    " + defaultFunctions + "," : ""),
 		'    ' + terminus,
