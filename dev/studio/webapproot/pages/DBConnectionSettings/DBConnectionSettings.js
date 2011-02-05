@@ -126,6 +126,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 		setTimeout(dojo.hitch(this, "conUsernameChanged"), 0);
 	},
 	conUsernameChanged: function() {
+	    if (this._disableChangeEvents) return;
 		var db = this.conDBdropdown.getDisplayValue();
 		var username = this.conUserInput.getInputValue();
 		this._updateSchemaFilter(db, username, 
@@ -137,7 +138,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 	conPasswordChanged: function() {
 	},
 	conDBdropdownChanged: function(inSender, inValue) {
-
+	    if (this._disableChangeEvents) return;
 		setupWidgetsForDatabaseType(inValue,
 						this.ip,
 						this.conHostLabel,
@@ -282,7 +283,8 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 		} 
 	},
 	_loadedConnectionProperties: function(inData) {
-
+	    this._disableChangeEvents = true;
+	    try {
 		this.conHostInput.setInputValue("");
 		this.conPortInput.setInputValue("");
 		this.conExtraInput.setInputValue("");
@@ -316,7 +318,9 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 			
 		} else {
 
+		        this.conDBdropdown.beginEditUpdate(); // don't allow onchange events
 			this.conDBdropdown.setDisplayValue(l[0]);
+		        this.conDBdropdown.endEditUpdate();
 
 			setupWidgetsForDatabaseType(
 				l[0], this.ip, this.conHostLabel,
@@ -363,6 +367,11 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 		this.conDialectInput.setInputValue(inData.dialect);
 		var rns = inData.reverseNamingStrategy;
 		this.conRevengNamingStrategyInput.setInputValue(rns);
+	    } catch(e) {
+		;
+	    } finally {
+		this._disableChangeEvents = false;
+	    }
 	},
 	_loadedIP: function(inData) {
 		this.ip = inData;
@@ -404,7 +413,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 	_reImportResult: function() {
 		studio.endWait();
 		studio.updateServices();		
-		studio.application.loadServerComponents("wm.Query");
+	    //studio.application.loadServerComponents("wm.Query");
 /*
 		wm.fire(studio.getEditor("DataObjectsEditor").page, "update");		
 		wm.fire(studio.getEditor("QueryEditor").page, "update");

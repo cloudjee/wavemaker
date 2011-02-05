@@ -45,9 +45,7 @@ DBConnectionSettings.widgets = {
 							conlabel301: ["wm.Label", {caption: "RDBMS:", width: "185px", border: "0"}, {}, {
 								format: ["wm.DataFormatter", {}, {}]
 							}],
-							conDBdropdown: ["wm.Editor", {display: "Select", height: "20px", width: "200px", layoutKind: "left-to-right"}, {onchange: "conDBdropdownChanged"}, {
-								editor: ["wm._SelectEditor", {layoutFlex: 10}, {}]
-							}]
+							conDBdropdown: ["wm.SelectMenu", {display: "Select", height: "20px", width: "200px", layoutKind: "left-to-right"}, {onchange: "conDBdropdownChanged"}, {}]
 						}],
 						conpanel601: ["wm.Panel", {border: "0", height: "24px", layoutKind: "left-to-right"}, {}, {
 							conHostLabel: ["wm.Label", {caption: "Hostname:", width: "185px", border: "0"}, {}, {
