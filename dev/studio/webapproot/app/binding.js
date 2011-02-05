@@ -102,9 +102,8 @@ addWidgetBinderNodes = function(inParent, optionalWidgets) {
 			p.targetType,
 			p.targetProps);
 			if (b) {
-
-				if ((w instanceof wm.Editor || w instanceof wm.AbstractEditor) && !isBindable)
-					return;
+			    if (w instanceof wm.SelectMenu == false && (w instanceof wm.Editor || w instanceof wm.AbstractEditor) && !isBindable)
+				return;
 			}
 		    new wm.SimpleBindSourceTreeNode(inParent, {object: w, content: props.name, type: props.type, isValidBinding: isBindable});
 		}
@@ -196,7 +195,10 @@ wm.convertForSimpleBind = function(inNodeProps, optionalSource) {
 			if (o) {
 				schema = o.listDataProperties("bindSource");
 				inNodeProps.object = o;
+			} else {
+			    schema = wm.typeManager.getTypeSchema(inNodeProps.type);
 			}
+
 		}
 		
 		inNodeProps.schema = schema;

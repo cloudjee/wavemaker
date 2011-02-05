@@ -244,6 +244,11 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	},
 	setDataField: function(inDataField) {
 		this.dataField = inDataField;
+	    if (this._isDesignLoaded) {
+		var prop = this.listProperties().dataValue;
+		prop.type = (this.isAllDataFields()) ? this.dataSet.type : "String";
+		prop.isObject = (inDataField == this._allFields);
+	    }
 	},
 	setDisplayField: function(inDisplayField) {
 		this.displayField = inDisplayField;
@@ -470,7 +475,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
             return -1;
         },
 	isAllDataFields: function() {
-		return (this.dataField == this._allFields);
+		return (this.dataField == this._allFields || this.dataField == "");
 	}
 });
 
@@ -1132,10 +1137,20 @@ wm.SelectMenu.extend({
 			var ds = this.getValueById(inDataSet);
 			if (ds)
 				this.components.binding.addWire("", "dataSet", ds.getId());
-		} else
+		} else {
 			this.setDataSet(inDataSet);
-	    
-	    this.listProperties().dataValue.type = inDataSet.type;
+		    var prop = this.listProperties().dataValue;
+		    if (inDataSet && inDataSet.type)
+			prop.type = inDataSet.type;
+		    else
+			prop.type = "any";
+		    if (this.isAllDataFields()) {
+			prop.isObject = true;
+		    } else {
+			prop.isObject = true;
+			prop.type = "String";
+		    }
+		}
 	},
 	// FIXME: for simplicity, allow only top level , non-list, non-object fields.
 	_addFields: function(inList, inSchema) {
@@ -1249,7 +1264,7 @@ wm.Object.extendSchema(wm.SelectMenu, {
   pageSize: { order: 6, group: "editor"},
 	liveVariable: {ignore: 1 },
 	options: {group: "editor", order: 7},
-        dataValue: {ignore: 1, bindable: 1, group: "editData", order: 3, type: "any"}, // use getDataValue()
+        dataValue: {ignore: 1, bindable: 1, group: "editData", order: 3, simpleBindProp: true, type: "any"}, // use getDataValue()
 	dataField: {group: "editor", order: 10, doc: 1},
 	displayField: {group: "editor", order: 15,doc: 1},
 	displayExpression: {group: "editor", order: 20, doc: 1},
