@@ -132,6 +132,7 @@ dojo.declare("wm.Application", wm.Component, {
 		105:'NUMPAD 9',
 		106:'NUMPAD *',
 		107:'NUMPAD +',
+		108:'NUMPAD ENTER',
 		109:'NUMPAD -',
 		110:'NUMPAD .',
 		111:'NUMPAD /',
