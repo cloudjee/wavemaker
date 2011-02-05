@@ -104,8 +104,8 @@ dojo.declare("wm.ComponentInspector", wm.Layers, {
 	    return this._inspectors.Data;
 	case "Navigation":
 	    return this._inspectors.Navigation;
-	case "Style":
-	    if (this._inspectors.Styles.getActiveLayer().caption == "Property")
+	case "Styles":
+	    if (this._inspectors.Styles.getActiveLayer().caption == "Basic")
 		return this._inspectors.Properties;
 	    else
 		return this._inspectors.Styles;
@@ -289,6 +289,7 @@ dojo.declare("wm.ComponentInspectorPanel", wm.Panel, {
 	},
 	// inspector api
 	inspect: function(inComponent) {
+	        if (inComponent.noInspector) return;
 		this.inspected = inComponent;
 		this.initTree(inComponent);
 		// update tree selection...
