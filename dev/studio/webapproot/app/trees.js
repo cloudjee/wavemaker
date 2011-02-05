@@ -78,7 +78,8 @@ Studio.extend({
 	    this.regex = new RegExp(this._searchText.toLowerCase());
 	this.useHierarchy = true;
 	this.appComponentsToTree(this.compTree);
-	this.pageComponentsToTree(this.compTree);
+	if (studio.page) // called without a page when loading app level definitions at project load time
+	    this.pageComponentsToTree(this.compTree);
 	this.useHierarchy = false;
     },
 
@@ -235,7 +236,7 @@ Studio.extend({
 	},
 	getComponentImage: function(inComponent) {
 		var ci = this.getClassNameImage(inComponent.publishClass);
-		return ci || inComponent.image || ("images/wm/" + (inComponent instanceof wm.Widget ? "widget" : "component") + ".png");
+		return ci || inComponent.image || wm.packageImages[inComponent.publishClass] || ("images/wm/" + (inComponent instanceof wm.Widget ? "widget" : "component") + ".png");
 	},
 	newComponentNode: function(inParent, inComponent, inName, inImage, inProps) {
 
@@ -338,9 +339,11 @@ Studio.extend({
 		var lastParent = null;
 		for (var i = 0; i < n.length; i++) {
 		    var c = n[i];
-		    if (c.declaredClass != lastClass) {
+		    if (c instanceof wm.TypeDefinitionField) {
+			;
+		    } else if (c.declaredClass != lastClass) {
 			var img = this.getComponentImage(c);
-			lastParent = this.newTreeNode(inNode, img, "<span class='TreeHeader'>" +c.declaredClass + "</span>");
+			var lastParent = this.newTreeNode(inNode, img, "<span class='TreeHeader'>" +c.declaredClass + "</span>");
 			this.buildTreeGroupContextMenu(lastParent, c.declaredClass);
 			lastClass = c.declaredClass;
 		    }
