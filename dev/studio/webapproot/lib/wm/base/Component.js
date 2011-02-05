@@ -191,6 +191,8 @@ dojo.declare("wm.Component", wm.Object, {
 	build: function() {
 	},
 	init: function() {
+	    if (this.isDesignLoaded())
+		this._isDesignLoaded = true;
 	},
 	postInit: function() {
 		this.valueChanged("", this);
@@ -200,7 +202,7 @@ dojo.declare("wm.Component", wm.Object, {
 		  this.postInit();
 	},
 	toString: function() {
-	    return '[' + this.declaredClass + ((this.name) ? ':' + this.name : "") + ']';
+	    return '[' + this.declaredClass + ((this.name) ? ':' + this.name : "") +  (this._isDestroyed ? ':DESTROYED' : '') + ']';
 	},
 	//=======================================================
 	// FIXME: deprecated, remove asap
@@ -705,9 +707,17 @@ this.panel1.createComponent("custom", "wm.Panel", {
 				}
 
 			    } else if (n == "onMouseOver") {
-				inComponent.connect(inComponent.domNode, "onmouseover", inComponent, "onMouseOver");
+				inComponent.connect(inComponent.domNode, "onmouseover", function(e) {
+				    wm.job(inComponent.getRuntimeId + "MouseMoveEvents", 50, function() {
+					inComponent.onMouseOver(e);
+				    });
+				});
 			    } else if (n == "onMouseOut") {
-				inComponent.connect(inComponent.domNode, "onmouseout", inComponent, "onMouseOut");
+				inComponent.connect(inComponent.domNode, "onmouseout", function(e) {
+				    wm.job(inComponent.getRuntimeId + "MouseMoveEvents", 50, function() {
+					inComponent.onMouseOut(e);
+				    });
+				});
 			    }
 			}
 		}
