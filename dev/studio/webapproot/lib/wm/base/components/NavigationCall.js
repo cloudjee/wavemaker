@@ -54,7 +54,7 @@ wm.Object.extendSchema(wm.NavigationCall,{
 	updateNow: { ignore: 1},
 	queue: { group: "operation", order: 20},
 	clearInput: { group: "operation", order: 30},
-	input: { ignore: 1 , writeonly: 1, componentonly: 1, categoryParent: "Properties", categoryProps: {component: "input", bindToComponent: true, inspector: "Navigation"}}
+    input: { ignore: 1 , writeonly: 1, componentonly: 1, categoryParent: "Properties", categoryProps: {component: "input", bindToComponent: true, inspector: "Navigation"}, doc: 1}
 });
 
 // design only...
