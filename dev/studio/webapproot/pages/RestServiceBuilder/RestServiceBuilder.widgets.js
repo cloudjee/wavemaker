@@ -43,7 +43,7 @@ RestServiceBuilder.widgets = {
 					urlInput: ["wm.Editor", {caption: "Service URL", captionSize: "120px", width: "100%", layoutKind: "left-to-right"}, {}, {
 						editor: ["wm._TextEditor", {}, {}]
 					}],
-					parameterizedButton: ["wm.Button", {caption: "Add Input Parameter String to URL", border: "0", margin: "2", width: "200px"}, {onclick: "parameterizedButtonClick"}]
+					parameterizedButton: ["wm.Button", {caption: "Add Parameter to URL", border: "0", margin: "2", width: "200px"}, {onclick: "parameterizedButtonClick"}]
 				}]
 			}]
 		}],
