@@ -293,9 +293,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		backgroundColor: {ignore: 1},
 	    margin: {group: "style", doc: 1},
 	    padding: {group: "style", doc: 1},
-	        autoScroll: {group: "scrolling", order: 100, ignore: 1},
-	        scrollX: {group: "scrolling", order: 101},
-	        scrollY: {group: "scrolling", order: 102},
+	    autoScroll: {group: "scrolling", order: 100, ignore: 1, writeonly: 1},
+	    scrollX: {group: "scrolling", order: 101, ignore: 1, writeonly: 1},
+	    scrollY: {group: "scrolling", order: 102, ignore: 1, writeonly: 1},
 		left: {writeonly: 1, ignore: 1},
 		top: {writeonly: 1, ignore: 1}
 	},
