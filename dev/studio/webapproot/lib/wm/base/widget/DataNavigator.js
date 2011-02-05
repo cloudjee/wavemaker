@@ -35,6 +35,11 @@ dojo.declare("wm.DataNavigator", wm.Panel, {
 		this.createNavComponents();
 		this.connectNavComponents();
 	},
+	afterPaletteDrop: function() {
+		this.inherited(arguments);
+	    this.setLayoutKind("left-to-right");
+	    this.setWidth("100%");
+	},
 	createNavComponents: function() {
 		this.readComponents(this.getTemplate());
 		dojo.mixin(this, this.widgets);
@@ -155,7 +160,11 @@ wm.Object.extendSchema(wm.DataNavigator, {
 	firstRecord: { group: "operation", order: 5},
 	previousRecord: { group: "operation", order: 10},
 	nextRecord: { group: "operation", order: 15},
-	lastRecord: { group: "operation", order: 20}
+    lastRecord: { group: "operation", order: 20},
+    autoScroll: {ignore: true},
+    scrollX: {ignore: true},
+    scrollY: {ignore: true},
+    touchScrolling: {ignore: true}
 });
 
 wm.DataNavigator.extend({
