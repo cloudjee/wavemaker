@@ -98,7 +98,7 @@ dojo.declare("wm.Object", null, {
 	_getPropWorker: function(inObj, inProp, inPrefix) {
 		//if (inProp=="dataValue" || inProp=="value")
 		//	return null;
-		var w = inObj[inPrefix + "_" + inProp] || this[inPrefix + inProp.slice(0, 1).toUpperCase() + inProp.slice(1)];
+		var w = inObj._isDesignLoaded && inObj[inPrefix + "_" + inProp] || this[inPrefix + inProp.slice(0, 1).toUpperCase() + inProp.slice(1)];
 		if (dojo.isFunction(w))
 			return w;
 	},
@@ -263,7 +263,9 @@ wm.Object.extendSchema(wm.Object, {
 	declaredClass: { ignore: 1 },
 	schema: { ignore: 1 },
 	schemaClass: { ignore: 1 },
-	type: { ignore: 1 }
+    type: { ignore: 1 },
+    setValue: {ignore: 1, group: "method"},
+    getValue: {ignore: 1, group: "method", returns: "Any"},
 });
 
 //===========================================================================
