@@ -55,6 +55,10 @@ dojo.declare("wm.ListItem", wm.VirtualListItem, {
 	}
 });
 
+wm.Object.extendSchema(wm.ListItem, {
+    getData: {group: "method"}
+});
+
 dojo.declare("wm.List", wm.VirtualList, {
         autoScroll: false,
 	constructor: function() {
@@ -251,7 +255,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 		this.renderHeader();
 	    dojo.query(".wmlist-item:nth-child(odd)",this.domNode).addClass("Odd");
 		this.reflow();
-	    console.log("RENDER DATA");
+
 	    if (this._listTouchScroll) {
 		wm.job(this.getRuntimeId() + "ListSetupScroller", 1, dojo.hitch(this._listTouchScroll, "setupScroller"));
 	    }
@@ -315,7 +319,13 @@ wm.Object.extendSchema(wm.List, {
 	disabled: { ignore: 1 },
 	selectedItem: { ignore: 1, bindSource: 1, isObject: true, simpleBindProp: true },
 	dataSet: { readonly: true, group: "data", order: 1, bindTarget: 1, type: "wm.Variable", isList: true},
-	emptySelection: { ignore: true, bindSource: 1, type: "Boolean" }
+    emptySelection: { ignore: true, bindSource: 1, type: "Boolean" },
+    getEmptySelection: {group: "method", returns: "Boolean"},
+    setColumnWidths: {group: "method"},
+    //getDataItemCount: {group: "method", returns: "Number"},
+    setDataSet: {group: "method"},
+    getItemData: {group: "method", returns: "Object"}   
+
 });
 
 wm.List.description = "Displays list of items.";
