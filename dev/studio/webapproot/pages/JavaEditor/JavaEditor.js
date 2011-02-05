@@ -233,7 +233,9 @@ dojo.declare("JavaEditor", wm.Page, {
 		    studio._saveErrors.push({owner: this,
 					     message: 'Save or compile failed; see compiler output or wm.log'});
 		}
-		var m = (inData.buildSucceeded ? "Service Compiled Successfully" : "Service Compile Failed") + "\n\n";
+	    var m = (inData.buildSucceeded ? "Service Compiled Successfully" : "Service Compile Failed") + " at " + 
+		dojo.date.locale.format(new Date(), {selector: "time",
+						     formatLength: "medium"}) + "\n\n";
 	        this.javaCompilerOutputEditor.setInputValue(m + inData.compileOutput.substring(inData.compileOutput.indexOf("compile:") + 9));
 		this.logViewer.page.clearLog();
 		this.updateJavaLogs();
