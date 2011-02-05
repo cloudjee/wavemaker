@@ -51,17 +51,16 @@ dojo.declare("wm.Property", wm.Component, {
 		return p;
 	},
 	makePropEdit: function(inName, inValue, inDefault) {
+
 		switch (inName) {
-			case "property":
-				var i = makeInputPropEdit(inName, inValue, inDefault);
-				var b = '<img class="wminspector-prop-button" src="images/target.png" style="width:23px;height:21px">';
-				return '<table class="prop-table" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td' + (inValue==inDefault ? ' class="prop-default"' : '') + '>' + i + '</td><td class="prop-button">' + b + '</td></tr></table>';
+			case "selectProperty":
+				return makeReadonlyButtonEdit(inName, inValue, inDefault);
 		}
 		return this.inherited(arguments);
 	},
 	editProp: function(inName, inValue, inInspector) {
 		switch (inName) {
-			case "property":
+			case "selectProperty":
 				wm.onidle(this, "beginBind");
 				break;
 		}
@@ -104,7 +103,9 @@ dojo.declare("wm.Property", wm.Component, {
 });
 
 wm.Object.extendSchema(wm.Property, {
-	owner: { ignore: 1}
+    owner: { ignore: 1},
+    property: {order: 2},
+    selectProperty: {order: 3}
 });
 
 /*
