@@ -85,7 +85,12 @@ wm.Object.extendSchema(wm.Ticker, {
 	startNow: { group: "operation", order: 10},
 	stopNow: { group: "operation", order: 20},
 	fitToContent: { ignore: 1 },		// ticker content must be larger than container to work
-	layoutKind: { ignore: 1 }				// ticker only moves left to right (so don't allow top-to-bottom)
+    layoutKind: { ignore: 1 },				// ticker only moves left to right (so don't allow top-to-bottom)
+    fitToContentHeight: {ignore: 1},
+    fitToContentWidth: {ignore: 1},
+    scrollY: {ignore: true, writeonly: 1},
+    touchScrolling: {ignore: true, writeonly: 1},
+    scrollX: {ignore: true, writeonly: 1}
 });
 
 wm.Ticker.extend({
@@ -124,6 +129,13 @@ wm.Ticker.extend({
 		this._stop();
 		this.domNode._noscroll = false;
 		this.reflowParent();
-	}
+	},
+	afterPaletteDrop: function() {
+		this.inherited(arguments);
+	    this.setLayoutKind("left-to-right");
+	    this.setWidth("100%");
+	},
 });
+
+
 
