@@ -382,7 +382,7 @@ dojo.declare("wm.TreeCheckNode", wm.TreeNode, {
 dojo.declare("wm.TreeRoot", wm.TreeNode, {
 	render: function(inContent) {
 	    if (this.tree._touchScroll) 
-		this.domNode = this.tree._touchScroll.scrollers.inner;
+		 this.domNode = this.tree._touchScroll.scrollers.inner;
 	    else
 		this.domNode = this.tree.domNode;
 	},
@@ -928,7 +928,63 @@ wm.Object.extendSchema(wm.PropertyTree, {
 });
 
 
+/* Example configuration; can be an arbitrary javascript object consisting of
+ * any mishmash of arrays and hashes.  
+   [
+      {"Joe":      {"some":"guy"}},
+      {"Michael":  {"role":     "Sr Engineer",
+                    "Years":    "2",
+		    "vacations":[
+		        {"Janurary": ["3-5", "10-14"],
+			 "February": {"sick":"3-5"}
+			}
+		    ]
+		   }
+      },
+      {"Derek":    {"role":      "VP Engineering",
+                    "Years":     "4",
+		    "Prior Jobs":["Persistence Software", "Progress"]
+		   }
+      }
+    ]
+*/
+dojo.declare("wm.ObjectBrowserTree", wm.Tree, {
+    data: null,
+    postInit: function() {
+	this.inherited(arguments);
+	if (this.data)
+	    this.setData(this.data);
+    },
+    setData: function(inData) {
+	if (dojo.isString(inData))
+	    inData = dojo.fromJson(inData);
+	this.data = inData;
+	this.root.destroy();
+	this.root = new wm.JSPrettyObjTreeRootNode(this, {prefix: "",
+							  object: inData});
+	this.root.setOpen(true);
+    },
+    makePropEdit: function(inName, inValue, inDefault) {
+	switch (inName) {
+	case "data":
+	    if (!dojo.isString(inValue)) inValue = dojo.toJson(inValue);
+	    return makeTextPropEdit(inName, inValue, inDefault)
+	}
+	return this.inherited(arguments);
+    },
+    onselect: function(inNode, inData) {},
+    select: function(inNode) {
+	if (this.selected != inNode) {
+	    this.deselect();
+	    this.addToSelection(inNode);
+	    this.onselect(inNode, inNode.object);
+	}
+    }
+});
 
+wm.Object.extendSchema(wm.ObjectBrowserTree, {
+    data: {group: "data", order: 1, type: "Object"},    
+});
 dojo.require("wm.base.widget.Dialog");
 dojo.declare("wm.DebugDialog", wm.Dialog, {
     useContainerWidget: true,
@@ -1195,14 +1251,23 @@ dojo.declare("wm.DebugBindingNode", wm.TreeNode, {
 
 dojo.declare("wm.JSObjTreeNode", wm.TreeNode, {
     closed: true,
+    setContent: function(inContent) {
+	this.content = inContent;
+	if (this.contentNode)
+	    this.inherited(arguments);
+    },
     constructor: function(inParent, inProps) {
 	if (this.object !== undefined)
 	    this.setObject(this.object);
-	else
-	    this.setContent(this.prefix);
+	else 
+	    this.setContent(this.prefix || "");
     },
     setObject: function(inObject) {
-	var prefix = this.prefix ? this.prefix + ": " : ""
+	this.object = inObject;
+	var prefix = this.prefix;
+	prefix =  (prefix) ? prefix + ":" : "";
+
+
 	if (dojo.isArray(inObject) && inObject.length == 0)
 	    this.setContent(prefix + "[]");
 	else if (inObject === null || inObject === undefined)
@@ -1213,10 +1278,10 @@ dojo.declare("wm.JSObjTreeNode", wm.TreeNode, {
 	    this.hasChildren = true;
 	    //this.objectString = dojo.toJson(inObject);
 	    //this.setContent(this.prefix + ": " + this.objectString);
-	    var objectString;
-	    if (dojo.isArray(inObject))
+	    var objectString = "";
+	    if (dojo.isArray(inObject)) 
 		objectString = "Array of length " + inObject.length;
-	    else
+	    else 
 		objectString = inObject instanceof wm.Component ? inObject.getRuntimeId() : inObject.toString();
 	    this.setContent(prefix + objectString);
 	    this.styleNode();
@@ -1235,6 +1300,73 @@ dojo.declare("wm.JSObjTreeNode", wm.TreeNode, {
 });
 
 
+
+dojo.declare("wm.JSPrettyObjTreeNode", wm.JSObjTreeNode, {
+    setObject: function(inObject) {
+	this.object = inObject;
+	var prefix = this.prefix;
+
+	if (dojo.isArray(inObject) && inObject.length == 0)
+	    this.setContent(prefix + ": none");
+	else if (inObject === null || inObject === undefined)
+	    this.setContent(prefix + ": none");
+	else if (typeof inObject == "object" && wm.isEmpty(inObject))
+	    this.setContent(prefix + ": none");
+	else if (typeof inObject == "object") {
+	    this.hasChildren = true;
+	    //this.objectString = dojo.toJson(inObject);
+	    //this.setContent(this.prefix + ": " + this.objectString);
+	    var objectString = "";
+	    if (dojo.isArray(inObject)) {
+		objectString = "";
+	    }
+	    if (objectString)
+		this.setContent(prefix + ": " + objectString);
+	    else
+		this.setContent(prefix);
+	    this.styleNode();
+	} else {
+	    if (prefix) prefix += ": ";
+	    this.setContent(prefix + inObject);
+	}
+
+    },
+    getPropertyCount: function() {
+	var i = 0;
+	for (prop in this.object) i++;
+	return i;
+    },
+
+    initNodeChildren: function(inParentNode, inCounter) {
+	var inObject = this.object;
+	var isArray = dojo.isArray(inObject) ;
+	for (var i in inObject) {
+	    if (isArray && dojo.isObject(inObject[i])) {
+		var p = this.prefix;		
+		this.object = inObject[i];
+
+		this.initNodeChildren(inParentNode, inCounter || parseInt(i)+1);
+		this.object = inObject;
+
+	    } else {
+		var prefix;
+		if (inCounter) {
+		    prefix = inCounter + ": " + i;
+		    inCounter++;
+		} else if (isArray)
+		    prefix = parseInt(i) + 1;
+		else
+		    prefix =  i;
+
+		new wm.JSPrettyObjTreeNode(this, {prefix: prefix,
+						  object: inObject[i]});
+	    }
+	}
+    }
+
+});
+
+dojo.declare("wm.JSPrettyObjTreeRootNode", [wm.JSPrettyObjTreeNode, wm.TreeRoot],{});
 
 dojo.declare("wm.JsonStatus", wm.Control, {
     scrim: true,
