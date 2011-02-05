@@ -363,7 +363,6 @@ wm.Object.extendSchema(wm.Control, {
         noInspector: {ignore: 1}, // obsolete property, but still don't want it showing in property panels
         numTabbableWidgets: {ignore: 1},
         internalTabIndex: {writeonly: 1, ignore: 1},
-        autoScroll: {ignore: 1},
         useDesignBorder: {ignore: 1},
 	classNames: { ignore: 1 },
 	className: { ignore: 1 },
@@ -386,7 +385,7 @@ wm.Object.extendSchema(wm.Control, {
         minWidth: { group: "advanced layout", order: 40},
         minHeight: { group: "advanced layout", order: 50},
     parent: { ignore: 1, doc: 1, prototype: "wm.Control" },
-	domNode: { ignore: 1 },
+    domNode: { ignore: 1, doc: 1 },
 	parentNode: { ignore: 1 },
 	widgets: { ignore: 1 },
     showing: { bindTarget: true, group: "common", order: 30, doc: 1},
@@ -394,17 +393,17 @@ wm.Object.extendSchema(wm.Control, {
 	size: { ignore: true },
         sizeUnits: { ignore: true },
 
-    setShowing: {group: "method", params: "(inShowing)", doc: 1},
+    setShowing: {group: "method", doc: 1},
 
-    setBorder: {group: "method", params: "(inBorder)", doc: 1},
-    setBorderColor: {group: "method",params: "(inBorderColor)", doc: 1},
-    setPadding: {group: "method", params: "(inPadding)", doc: 1},
-    setMargin: {group: "method", params: "(inMargin)", doc: 1},
-    setWidth: {group: "method", params: "(inWidth)", doc: 1},
-    setHeight: {group: "method", params: "(inHeight)", doc: 1},
+    setBorder: {group: "method", doc: 1},
+    setBorderColor: {group: "method",doc: 1},
+    setPadding: {group: "method", doc: 1},
+    setMargin: {group: "method", doc: 1},
+    setWidth: {group: "method", doc: 1},
+    setHeight: {group: "method", doc: 1},
 
     isAncestorHidden: {group: "method", doc: 1},
-    setParent: {group: "method", params: "(inContainer)", doc: 1}
+    setParent: {group: "method", doc: 1}
 
     
     
