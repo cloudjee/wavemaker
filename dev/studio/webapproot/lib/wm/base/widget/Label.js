@@ -183,15 +183,16 @@ wm.Object.extendSchema(wm.Label, {
     disabled: { ignore: 1 },
     caption: { type: "String", bindable: 1, group: "display", order: 100, focus: true, doc: 1},
     display: { group: "format", order: 20 },
-    align: { group: "display", order: 25 },
+    align: { group: "display", order: 25, doc: 1 },
     singleLine: { group: "display", order: 200,doc: 1},
     format: { ignore: 1, writeonly: 1, categoryParent: "Properties", categoryProps: {component: "format"}},
-    link: { type: "String", bindable: 1, group: "format", order: 40 },
+    link: { type: "String", bindable: 1, group: "format", order: 40, doc: 1 },
     autoSizeHeight: {type: "Boolean", group: "advanced layout", order: 31, writeonly: true, ignore: true},
     autoSizeWidth: {type: "Boolean", group: "advanced layout", order: 32, writeonly: true, ignore: true},
     autoSize: {group: "advanced layout"},
-    setCaption: {group: "method", params: "(inCaption)", doc: 1},
-    setSingleLine: {group: "method", params: "(inSingleLine)", doc: 1}
+    setAlign: {group: "method"},
+    setCaption: {group: "method"},
+    setSingleLine: {group: "method"}
 
     //resizeToFit:{ group: "layout", order: 30 }
 });
