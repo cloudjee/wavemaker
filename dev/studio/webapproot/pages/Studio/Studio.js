@@ -351,6 +351,7 @@ dojo.declare("Studio", wm.Page, {
 	projectChanged: function(inName, inAppData) {
 	        var b = this.application && this.page;
 	        if (inName == this.project.projectName) {
+		    this.projectNameLabel.setCaption(inName);
 		     this.setUserSettings({defaultProject: inName});
 		     this.setAppCss(inAppData.css || "");
 		    this.setAppScript(inAppData.jscustom || "");
@@ -484,12 +485,15 @@ dojo.declare("Studio", wm.Page, {
 		this.setLiveLayoutReady(false);
 		this.servicesService.requestSync("listTypes", [], dojo.hitch(this, "typesChanged"));
 		this.servicesService.requestSync("listServicesWithType", [], dojo.hitch(this, "servicesDataChanged"));
+	        studio.refreshServiceTree(); 
 	},
 	typesChanged: function(inData) {
+	    if (inData && inData.types) {
 		wm.typeManager.setTypes(inData.types);
 		wm.dataSources.update();
 		this.refreshDataPalette();
-		dojo.publish("wmtypes-changed");
+	    }
+	    dojo.publish("wmtypes-changed");
 	},
 	servicesDataChanged: function(inData) {
 		// clear non-client services from registry
@@ -667,10 +671,12 @@ dojo.declare("Studio", wm.Page, {
 		this.markupChanged();
 	},
 	markupChanged: function() {
+	    if (this.page) {
 		studio.markup.domNode.innerHTML = this.designifyMarkup(this.getMarkup());
-		// re-inspect selected control since markup change may influence inspector
-	        inspect(this.selected || this.root);
+	        // re-inspect selected control since markup change may influence inspector
+		inspect(this.selected || this.page.root);
 		dojo.publish("wm-markupchanged");
+	    }
 	},
 	//=========================================================================
 	// Control Management
@@ -1506,7 +1512,8 @@ dojo.declare("Studio", wm.Page, {
 	studio.studioService.requestAsync("getPropertyHelp", [inType + "_" + inPropName + "?synopsis"], onSuccess);
     },
     startPageIFrameLoaded: function() {
-	this.startPageDialog.page.iframe.show();
+	if (this.startPageDialog.page)
+	    this.startPageDialog.page.iframe.show();
     },
     menuBarHelpClick: function() {
 	window.open("http://dev.wavemaker.com/wiki/bin/wmdoc/");
