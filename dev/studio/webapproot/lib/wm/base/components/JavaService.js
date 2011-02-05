@@ -62,14 +62,15 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
     },
     newJavaServiceWithFunc: function(serviceId, classId, javaFunctions) {
         studio.beginWait("Initializing Java Service " + serviceId);
+/*
         if (!studio.javaEditorContainer || !studio.javaEditorContainer.page) {
-	    var c = studio.navGotoEditor("JavaEditor",  studio.JavaEditorTab, this.name + "JavaServiceLayer", this.name);
+	    //var c = studio.navGotoEditor("JavaEditor",  studio.JavaEditorTab, serviceId + "JavaServiceLayer", serviceId);
             wm.job(this.getRuntimeId() +":newJavaServiceWithFunc", 10, dojo.hitch(this, function() {
                 this.newJavaServiceWithFunc(serviceId,classId, javaFunctions);
             }));
             return;
         }
-
+	*/
 	var newServiceId = this.getUniqueServiceId(serviceId);
 
 	// if the service id has changed, also update the class name to match
@@ -199,7 +200,7 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 	                                    //studio.javaEditorContainer.page.update();
 	                                    studio.application.addServerComponent(c);
 			                    studio.refreshServiceTree();
-	                                    if (!this.initialNoEdit || studio.javaEditor.isActive()) {
+	                                    if (!this.initialNoEdit) {
 		                                studio.select(c);
 		                                c.editView();
 		                                studio.navGotoComponentsTreeClick();

@@ -56,7 +56,6 @@ dojo.declare("wm.ServiceCall", null, {
 	*/
 	operation: "",
 	_operationInfo: {},
-        downloadFile: false,
 	destroy: function() {
 		this.inherited(arguments);
 		wm.fire(this._requester, "cancel");
@@ -80,20 +79,37 @@ dojo.declare("wm.ServiceCall", null, {
 	// Service
 	//=======================================================
 	setService: function(inService) {
+	    if (this._inSetService) return;
+	    try {
+		this._inSetService = true;
 		this.service = inService;
-	    var owner = this.getOwnerApp();
+		var owner = this.getOwnerApp();
 
-	    this._service = wm.services.getService(this.service, 	
-						   owner && owner.declaredClass == "StudioApplication") || new wm.Service({});
+		this._service = wm.services.getService(this.service, 	
+						       owner && owner.declaredClass == "StudioApplication") || new wm.Service({});
 		wm.fire(this._service, "setServiceCall", [this]);
+		this._setOperation(this.operation, 1); // update the operation's type; forceUpdate needed so that if the type name is the same but fields have changed it will still get updated
+/*
+		if (this._isDesignLoaded && this.service) {
+		    dojo.subscribe("ServiceTypeChanged-" +  this.service, dojo.hitch(this, function() {
+			this._service = wm.services.getService(this.service, 	
+							       owner && owner.declaredClass == "StudioApplication") || new wm.Service({});
+			wm.fire(this._service, "setServiceCall", [this]);
+			this._setOperation(this.operation, 1); // update the operation's type; forceUpdate needed so that if the type name is the same but fields have changed it will still get updated
+		    }));
+		}      
+		*/
+	    } catch(e) {
+	    } finally {delete this._inSetService;}
+	    
 	},
 	//=======================================================
 	// Operation
 	//=======================================================
-	_setOperation: function(inOperation) {
+    _setOperation: function(inOperation, forceUpdate) {
 		this.operation = inOperation;
 		this._operationInfo = this.getOperationInfo(this.operation);
-		this.operationChanged();
+		this.operationChanged(forceUpdate);
 	},
 	setOperation: function(inOperation) {
 		this._setOperation(inOperation);
@@ -102,7 +118,7 @@ dojo.declare("wm.ServiceCall", null, {
 	getOperationInfo: function(inOperation) {
 		return (this._service && this._service.getOperation(inOperation)) || {};
 	},
-	operationChanged: function() {
+	operationChanged: function(forceUpdate) {
 		this.input.operationChanged(this.operation, this._operationInfo.parameters);
 	},
 	//=======================================================
@@ -436,8 +452,11 @@ wm.ServiceCall.extend({
 	}
 });
 wm.Object.extendSchema(wm.ServiceCall, {
-    downloadFile: {},
-    startUpdateComplete: { ignore: 1}
+    startUpdateComplete: { ignore: 1},
+    setService: {group: "method"},
+    setOperation: {group: "method"},
+    update: {group: "method"},
+    canUpdate: {group: "method"}
 });
 
 
@@ -471,6 +490,7 @@ dojo.declare("wm.ServiceInput", wm.Variable, {
 		}
 
 	},
+
     getArgsHash: function() {
 	var data= this.getData(), args={}, d;
 

@@ -94,9 +94,10 @@ dojo.declare("wm.Variable", wm.Component, {
 		return true;
 	},
 	setType: function(inType, noNotify) {
+	    this._hasChanged = false;
 	    if (inType == this.declaredClass || this.owner instanceof wm.Variable && inType == this.owner.declaredClass) inType = "";
 
-                this.unsubscribe("TypeChange-" + this.type);
+            //this.unsubscribe("TypeChange-" + this.type);
 		if (!this.canSetType(inType))
 			return;
 		
@@ -108,13 +109,22 @@ dojo.declare("wm.Variable", wm.Component, {
 		} else if (!(this.data && this.data.list))
 			this.isList = false;
 
-                var hasChanged = (this.type != t);
+            var hasChanged;
+	    if (this.type != t)
+		hasChanged = true;
+	    else if (this._isDesignLoaded) {
+		hasChanged = dojo.toJson(this._getSchemaForType(inType)) != dojo.toJson(this._dataSchema);		
+	    }
+	    this._hasChanged = hasChanged;
 		this.type = t;
 		//
 		if (this._proxy)
 			this._proxy.setType(this.type);
 		this.typeChanged(this.type);
-            if (this.isDesignLoaded()) {
+	    if (this.json & hasChanged)
+		this.setJson(this.json);
+/*
+            if (this._isDesignLoaded) {
                 this.subscribe("TypeChange-" + inType, dojo.hitch(this, function() {
                     this.setType(inType); // reset the type if the type definition has changed
                     // Reevaluate the json for the new type
@@ -122,10 +132,11 @@ dojo.declare("wm.Variable", wm.Component, {
                         this.setJson(this.json);
                 }));
             }
-
+	    */
             if (!noNotify && hasChanged && inType && inType != "any")
 		this.dataChanged();//  this will cause anyone bound to this object to treat a change of type as a change in its dataSet
 	},
+
 	typeChanged: function(inType) {
 		var t = inType;
 		var primitive = wm.typeManager.getPrimitiveType(t) || !t || t == "wm.Variable";
@@ -251,6 +262,31 @@ dojo.declare("wm.Variable", wm.Component, {
 	},
 	_setVariableData: function(inVariable) {
 		this.setData(inVariable.getData());
+	},
+
+    /* WM-2500: Need a way for the user to change the isList property at design time (but not for subclasses of wm.Variable) */
+        setIsList: function(isList) {
+	    if (isList && !this.isList) {
+		this.isList = true;
+		if (this.json && !this.data.list)
+		    this.setJson("[" + this.json + "]");
+		else if (wm.isEmpty(this.data))
+		    this._setArrayData([]);
+		else {
+		    var data = [];
+		    data.push(this.getData());
+		    this.setData(data);
+		}
+	    } else if (!isList && this.isList) {
+		if (this.json) {
+		    this.setJson(dojo.toJson(this.getItem(0).getData()));
+		} else if (wm.isEmpty(this.data.list)) {
+		    this.setData(null); // this should change isList automatically
+		} else {
+		    this.setData(this.getItem(0));// this should change isList automatically unless item(0) is itself a list
+		}
+
+	    }
 	},
 	_setArrayData: function(inArray) {
 		this.data = { list: inArray };
@@ -904,14 +940,24 @@ wm.Variable.extend({
 // Design Time Extensions
 //===========================================================================
 wm.Object.extendSchema(wm.Variable, {
-        onPrepareSetData: {events: ["js","sharedjs"]},
-	data: { ignore: 1 },
-	isList: { ignore: 1 },
-	cursor: { ignore: 1},
-	isPrimitive: { ignore: 1},
-	type: { ignore: 0, group: "common", order: 1},
-	json: { group: "data", order: 5},
-	dataSet: { readonly: 1, bindable: 1, group: "data", order: 0, defaultBindTarget: 1, isObject: true, categoryParent: "Properties", categoryProps: {content: "dataSet", inspector: "Data"} }
+    onPrepareSetData: {events: ["js","sharedjs"]},
+    data: { ignore: 1 },
+    isList: { group: "data", order: 4},
+    cursor: { ignore: 1},
+    isPrimitive: { ignore: 1},
+    type: { ignore: 0, group: "common", order: 1},
+    json: { group: "data", order: 5},
+    dataSet: { readonly: 1, bindable: 1, group: "data", order: 0, defaultBindTarget: 1, isObject: true, categoryParent: "Properties", categoryProps: {content: "dataSet", inspector: "Data"} },
+    removeItem: {group: "method"},
+    setData: {group: "method"},
+    addItem: {group: "method"},
+    setItem: {group: "method"},
+    setJson: {group: "method"},
+    removeItem: {group: "method"},
+    sort: {group: "method"},
+    getCount: {group: "method", returns: "Number"},
+    getData: {group: "method", returns: "Any"},
+    getItem: {group: "method", returns: "wm.Variable"}
 });
 
 /**#@+ @design */

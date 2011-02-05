@@ -70,7 +70,7 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	postInit: function() {
 		this.inherited(arguments);
 		// initialize via liveSource or optionally directly with a liveView)
-		if (this.liveSource)
+		if (this.liveSource && this.liveSource != "app")
 			this.setLiveSource(this.liveSource);
 		else
 			this.setLiveView(this.liveView || this.createLiveView(this.type));
@@ -178,11 +178,12 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 		});
 	},
 	setType: function(inType) {
-	    var oldType = this.type;
-	    var oldSourceType = this.sourceData.type;
-	    var oldFilterType = this.filter.type;
+
+	    var oldSourceType = this.sourceData.type + "|" + dojo.toJson(this.sourceData._dataSchema);
+	    var oldFilterType = this.filter.type + "|" + dojo.toJson(this.filter._dataSchema);
 
 	    this.inherited(arguments);
+	    var hasChanged = this._hasChanged;
 
 	    // until we have data, assume any read livevar is a list.
 	    if (this.operation == "read" && wm.isEmpty(this.getData()))
@@ -192,7 +193,9 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	    this.sourceData.setType(this.type);
 	    // I've been seeing these bindings fire way too often, so
 	    // some extra tests to insure its needed
-	    if (!this._updating && !this._inPostInit && this.$.binding && (oldType != this.type || oldSourceType != this.sourceDataType || oldFilterType != this.filter.type))
+	    var newSourceType = this.sourceDataType + "|" + dojo.toJson(this.sourceData._dataSchema);
+	    var newFilterType = this.filterDataType + "|" + dojo.toJson(this.filter._dataSchema);
+	    if (!this._updating && !this._inPostInit && this.$.binding && (hasChanged || oldSourceType != newSourceType || oldFilterType != newFilterType))
 		this.$.binding.refresh();
 	},
 	_liveViewChanged: function() {
@@ -322,8 +325,8 @@ wm.Object.extendSchema(wm.LiveVariable, {
 	input: {ignore: 1},
 	liveSource: { group: "data", order: 1},
 	liveView: { ignore: 1},
-	sourceData: {ignore: 1, group: "data", order: 3, bindTarget: 1, categoryParent: "Properties", categoryProps: {component: "sourceData", inspector: "Data"}},
-	filter: { ignore: 1, group: "data", order: 5, bindTarget: 1, categoryParent: "Properties", categoryProps: {component: "filter", inspector: "Data"}},
+    sourceData: {ignore: 1, group: "data", order: 3, bindTarget: 1, categoryParent: "Properties", categoryProps: {component: "sourceData", inspector: "Data"}, doc: 1},
+    filter: { ignore: 1, group: "data", order: 5, bindTarget: 1, categoryParent: "Properties", categoryProps: {component: "filter", inspector: "Data"}, doc: 1},
 	matchMode: {group: "data", order: 10},
 	firstRow: {group: "data", order: 15},
 	//maxResults: {group: "data", order: 17},

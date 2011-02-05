@@ -38,7 +38,7 @@ dojo.declare("wm.TypeDefinitionField", wm.Component, {
             this.owner.doAddType();
         }
 	if (this.isDesignLoaded() && !this._cupdating && studio.page)
-	    studio.refreshComponentTrees();
+	    studio.refreshComponentTree();
     },
     setFieldType: function(inType) {
         this.fieldType = inType || "String";
@@ -60,13 +60,7 @@ dojo.declare("wm.TypeDefinitionField", wm.Component, {
             this.owner.doRemoveType();
             this.owner.doAddType();
         }
-    },
-    destroy: function() {
-	delete this.owner.fields;
-	this.inherited(arguments);
     }
-
-
 });
 wm.TypeDefinitionField.extend({
 	makePropEdit: function(inName, inValue, inDefault) {
@@ -99,10 +93,13 @@ dojo.declare("wm.TypeDefinition", wm.Component, {
             this.$[i].parent = this;
         }
         */
+	delete this.fields;
         this.doAddType();
     },
     doRemoveType: function() {
         wm.typeManager.removeType(this.name);
+	if (this._isDesignLoaded)
+	    studio.typesChanged();
     },
     doAddType: function() {
         this.fieldsAsTypes = {};
@@ -110,7 +107,11 @@ dojo.declare("wm.TypeDefinition", wm.Component, {
             this.fieldsAsTypes[this.$[i].fieldName] = this.$[i].toTypeObj();
         }
         wm.typeManager.addType(this.name, {internal: this.internal, fields: this.fieldsAsTypes});        
-        dojo.publish("TypeChange-" + this.name);
+        //dojo.publish("TypeChange-" + this.name);
+	if (this._isDesignLoaded) {
+	    studio.typesChanged();
+	    studio.refreshComponentTree();
+	}
     },
     getCollection: function(inName) {
         if (!this.fields) {
@@ -158,16 +159,21 @@ wm.TypeDefinition.extend({
             var field = new wm.TypeDefinitionField({name: defName, owner: this});
 
             this.fields = null; // force this to be recalculated
-	    if (this.isDesignLoaded() && !this._cupdating && studio.page) {
-		studio.refreshComponentTrees();
+	    if (this._isDesignLoaded && !this._cupdating && studio.page) {
+		studio.refreshComponentTree();
 		studio.select(field);
 	    }
             this.doRemoveType(); // old type def is missing this field
             this.doAddType(); // now we update the type def
         },
     removeComponent: function(inComponent) {
-	this.inherited(arguments);
-	delete this.fields;
-	this.getCollection();
+	if (this.$[inComponent.name]) {
+	    this.inherited(arguments);
+	    if (!this._isDestroyed) {
+		delete this.fields;
+		this.getCollection();
+		this.doAddType();
+	    }
+	}
     }
 });

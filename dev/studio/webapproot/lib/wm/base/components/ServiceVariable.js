@@ -31,6 +31,7 @@ dojo.require("wm.base.components.ServiceCall");
 	@extends wm.ServiceCall
 */
 dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
+        downloadFile: false,
 	total: 0,
 	_page: 0,
 	/** Maximum number of results to return */
@@ -40,6 +41,18 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
 		this.setData(inResult);
 		this.inherited(arguments);
 	},
+    setType: function() {
+	if (this.input) 
+	    var oldInputType = this.input.type + "|" + dojo.toJson(this.input._dataSchema);
+
+	this.inherited(arguments);
+	if (this._isDesignLoaded && this.input) {
+	    this.setService(this.service);	    
+	    if (this == studio.selected)
+		studio.inspector.inspect(this);
+	}
+	
+    },
 	getTotal: function() {
 		return this.total || this.getCount();
 	},
@@ -66,11 +79,11 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
 	setLastPage: function() {
 		this.setPage(this.getPageCount());
 	},
-	operationChanged: function() {
+	operationChanged: function(forceUpdate) {
 		this.inherited(arguments);
 		// output has named type matching operation returnType
 		var op = this._operationInfo;
-		if (op) {
+		if (op || forceUpdate) {
 		  this.setType(op.returnType);
 		  this.clearData();
 	  }
@@ -81,6 +94,8 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
 });
 
 wm.Object.extendSchema(wm.ServiceVariable, {
+        downloadFile: {},
+        isList: {ignore: 1},
 	operation: { group: "common", order: 24},
 	clearInput: { group: "operation", order: 30},
 	onSetData: {ignore: 1},
@@ -102,7 +117,14 @@ wm.Object.extendSchema(wm.ServiceVariable, {
 	type: { ignore: 1 },
 	dataSet: { ignore: 1, defaultBindTarget: 1, isObject: true, type: "any"},
 	startUpdateComplete: { ignore: 1},
-	total: {ignore: 1}
+    total: {ignore: 1},
+    getTotal: {group: "method", returns: "Number"},
+    getPageCount: {group: "method", returns: "Number"},
+    setNextPage: {group: "method"},
+    setPreviousPage: {group: "method"},
+    setLastPage: {group: "method"},
+    getTotal: {group: "method"},
+    input: {ignore: 1, doc: 1, type: "wm.Variable"}
 });
 
 
