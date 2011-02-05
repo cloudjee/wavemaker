@@ -67,6 +67,12 @@
 
     <servlet-mapping>
         <servlet-name>springapp</servlet-name>
+        <url-pattern>/build/*</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet-mapping>
+        <servlet-name>springapp</servlet-name>
         <url-pattern>/lib/build/themes/*</url-pattern>
     </servlet-mapping>
 

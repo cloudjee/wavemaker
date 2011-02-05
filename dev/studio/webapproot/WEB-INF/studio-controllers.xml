@@ -29,6 +29,7 @@
                 /modules/**=wmModuleController
                 /lib/wm/common/**=agStaticFileController
 
+				/build/**=fileController 
 				/lib/build/Gzipped/*=fileController
 				/lib/build/themes/**=fileController
 				/lib/wm/base/widget/themes/**=fileController

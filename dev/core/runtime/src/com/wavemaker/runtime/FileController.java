@@ -44,7 +44,7 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.module.ModuleManager;
 
-
+import com.wavemaker.runtime.data.DataServiceLoggers;
 
 /**
  * Controller (in the MVC sense) providing the studio access to project files.
@@ -64,6 +64,7 @@ public final class FileController extends AbstractController {
     private static final String WM_RUNTIME_LOADER_URL = "/lib/runtimeLoader.js";
     private static final String WM_IMAGE_URL = "/resources/images/";
     private static final String WM_GZIPPED_URL = "/resources/gzipped/";
+    private static final String WM_STUDIO_BUILD_URL = "/build/";
     
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request,
@@ -76,7 +77,9 @@ public final class FileController extends AbstractController {
     	String reqPath = request.getRequestURI();
     	String contextPath = request.getContextPath();
     	reqPath = reqPath.replaceAll("%20", " ");
-    	
+	reqPath = reqPath.replaceAll("//","/");
+
+
     	// trim off the servlet name
         if (!contextPath.equals("") && reqPath.startsWith(contextPath))
         	reqPath = reqPath.substring(reqPath.indexOf('/', 1));
@@ -91,14 +94,30 @@ public final class FileController extends AbstractController {
         		reqPath.startsWith(WM_BUILD_DOJO_FOLDER_URL) || 
         		reqPath.equals(WM_BOOT_URL)|| 
         		reqPath.equals(WM_RUNTIME_LOADER_URL) ||
-        		reqPath.startsWith(WM_IMAGE_URL)){
+        		reqPath.startsWith(WM_IMAGE_URL) ||
+		        reqPath.startsWith(WM_STUDIO_BUILD_URL)){
         	addExpiresTag = true;
         }else{
             throw new WMRuntimeException(Resource.STUDIO_UNKNOWN_LOCATION,
                     reqPath, request.getRequestURI());
         }
         
-    	File sendFile = new File(path, reqPath);
+	File sendFile = null;
+	if (!isGzipped && reqPath.lastIndexOf(".js") == reqPath.length() - 3) {
+	    sendFile = new File(path, reqPath + ".gz");
+	    if (!sendFile.exists()) {
+		sendFile = null;
+	    } else {
+		isGzipped = true;
+	    }
+	}
+    	if (sendFile == null)
+	    sendFile = new File(path, reqPath);
+
+        if (DataServiceLoggers.fileControllerLogger.isDebugEnabled()) {
+            DataServiceLoggers.fileControllerLogger.debug("FileController: " + sendFile.getAbsolutePath() + "\t (" + reqPath + ")");
+        }
+
         if (null!=sendFile && !sendFile.exists()) {
             handleError(response, "File " + reqPath
                     + " not found in expected path: " + sendFile,

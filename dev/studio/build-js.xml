@@ -66,6 +66,7 @@
         <delete dir="${lib.webapproot.studio.dir}/wm/build"/>
         <delete dir="${build.webapproot.studio.dir}"/>
 
+        	
         <!-- runtime build -->
 		<echo>Building dojo using exec: ${dojo.executable.cmd}</echo>
 		<exec dir="${dojo.src.dir}/util/buildscripts/" executable="${dojo.executable.cmd}"	>
@@ -77,7 +78,9 @@
        		<arg value="version=1.5.0.pro"/>
        		<arg value="action=clean,release"/>
        		<arg value="optimize=shrinksafe"/>
+       		<arg value="layerOptimize=shrinksafe.keepLines"/>
 		<arg value="cssOptimize=comments"/> 
+		<arg value="stripConsole=normal"/>
 <!--					<arg value="cssOptimize=comments.keepLines"/> -->
 		</exec>
 		<echo>Done building dojo using exec</echo>
@@ -117,8 +120,8 @@
         <gzip src="${dojo.release.dir}/dojo/dojo/wm_dojo_grid.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_dojo_grid.js.gz"/>    	
         <gzip src="${dojo.release.dir}/dojo/dojo/wm_editors.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_editors.js.gz"/>    	
         <gzip src="${dojo.release.dir}/dojo/dojo/wm_richTextEditor.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_richTextEditor.js.gz"/>    	
-        <gzip src="${dojo.release.dir}/dojo/dojo/wm_gadgets.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_gadgets.js"/>    	
-        	
+        <gzip src="${dojo.release.dir}/dojo/dojo/wm_gadgets.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_gadgets.js.gz"/>    	
+
         <!-- copy files in; required for the studio build -->
         <mkdir dir="${lib.webapproot.studio.dir}/wm/studio" />
         <copy todir="${lib.webapproot.studio.dir}/wm/studio/pages">
@@ -127,6 +130,7 @@
         <copy todir="${lib.webapproot.studio.dir}/wm/studio/app">
             <fileset dir="${webapproot.studio.dir}/app" />
         </copy>
+
         <!-- studio build 1 (compressed) -->
 		<echo>Building studio</echo>
 		<exec dir="${dojo.src.dir}/util/buildscripts/" executable="${dojo.executable.cmd}"	>
@@ -138,8 +142,9 @@
        		<arg value="copyTests=false"/>
        		<arg value="action=clean,release"/>
        		<arg value="optimize=shrinksafe"/>
-       		<arg value="layerOptimize=comments"/>
+       		<arg value="layerOptimize=shrinksafe.keepLines"/>
 		<arg value="cssOptimize=comments"/> 
+		<arg value="stripConsole=normal"/>
 <!--					<arg value="cssOptimize=comments.keepLines"/>-->
 		</exec>
 		<echo>Done building studio</echo>
@@ -161,6 +166,10 @@
                 <include name="themes/**"/>
             </fileset>
         </copy>
+        <gzip src="${dojo.release-temp.dir}/build/studio_base.js" destfile="${dojo.release-temp.dir}/build/studio_base.js.gz"/>    	
+        <gzip src="${dojo.release-temp.dir}/build/studio_base.js" destfile="${dojo.release-temp.dir}/build/studio_base.js.gz"/>    	
+        <gzip src="${dojo.release-temp.dir}/build/studio_wm.js" destfile="${dojo.release-temp.dir}/build/studio_wm.js.gz"/>    	
+        <gzip src="${dojo.release-temp.dir}/build/studio.js" destfile="${dojo.release-temp.dir}/build/studio.js.gz"/>    	
 
         <!-- copy the built files to their destination -->
         <mkdir dir="${build.lib.webapproot.studio.dir}" />

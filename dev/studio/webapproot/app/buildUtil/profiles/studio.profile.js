@@ -23,6 +23,7 @@ dependencies = {
 			resourceName: "studio_base",
 			dependencies: [
 				"wm.studio.app.packageLoader",
+			    'wm.base.components.componentList',
 				"wm.base.lib.util",
 				"wm.base.lib.date",
 				"wm.base.lib.text",
@@ -34,6 +35,7 @@ dependencies = {
 				"wm.base.drag.capture",
 				"wm.base.drag.drag",
 				"wm.base.drag.layout",
+/* The old datagrid is still used in DataObjectsEditor and LiveViewEditor; let it load on demand*/
 				"dojox.grid._grid.scroller",
 				"dojox.grid._grid.edit",
 				"dojox.grid._grid.cell",
@@ -49,7 +51,7 @@ dependencies = {
 				"dojox.grid._grid.rowbar",
 				"dojox.grid._grid.publicEvents",
 				"dojox.grid.VirtualGrid",
-				"dojox.grid.compat.Grid",
+				"dojox.grid.compat.Grid",/**/
 				"dijit.form.TextBox",
 				"dijit.form._FormWidget",
 				"dijit._Widget",
@@ -79,27 +81,31 @@ dependencies = {
 				"dojo.rpc.RpcService",
 				"dojo.cookie",
 				"dijit.form.CheckBox",
+/* load on demand */
 				"dijit.form.Button",
 				"dijit._Container",
-				"dijit.form.DateTextBox",
+			        "dijit.form.DateTextBox",
 				"dijit._Calendar",
 				"dijit.form._DateTimeTextBox",
 				"dijit.form.TimeTextBox",
 				"dijit._TimePicker",
 				"dijit.form.NumberTextBox",
 				"dijit.form.FilteringSelect",
-				"dojo.number",
 				"dijit.form.CurrencyTextBox",
-				"dojo.currency",
 				"dijit.form.HorizontalSlider",
 				"dijit.form.VerticalSlider",
+				/*	*/
+				"dojo.number",
+				"dojo.currency",
+
 				"dojo.io.iframe",
 				"dijit.ProgressBar",
-				"dojo.fx",
-				"dijit.form._Spinner",
-				"dojox.charting.Chart2D",
+				"dojo.fx",			    
+				"dijit.form._Spinner"/*,  Load on demand
+			    ,"dojox.charting.Chart2D",
 				"dojox.charting.Theme",
 				"dojox.charting.widget.Legend"
+				*/
 			]
 		},
 		{
@@ -139,6 +145,13 @@ dependencies = {
 				"wm.base.components.JsonRpcService",
 				"wm.base.components.Security",
 				"wm.base.components.DomMacro",
+				"wm.base.components.Timer",
+				"wm.base.components.LogoutVariable",
+				"wm.base.components.TypeDefinition",
+				"wm.base.components.DataModel",
+				"wm.base.components.Query",
+				"wm.base.components.JavaService",
+				"wm.base.components.WebService",
 				"wm.base.widget.Formatters",
 				"wm.base.widget.Editors.dijit",
 				"wm.base.widget.Editors.Base",
@@ -173,18 +186,23 @@ dependencies = {
 				"wm.base.widget.Button",
 				"wm.base.widget.Picture",
 				"wm.base.widget.Tree",
+				"wm.base.widget.DraggableTree",
 				"wm.base.widget.Label",
-				"wm.base.widget.gadget.Gadget",
-				"wm.base.widget.gadget.Stocks",
-				"wm.base.widget.gadget.Weather",
-				"wm.base.widget.gadget.YouTube",
+
 				"wm.base.widget.PageContainer",
 				"wm.base.widget.Table.builder",
 				"wm.base.widget.VirtualList",
 				"wm.base.widget.List",
-				"wm.base.widget.FeedList",
-				"wm.base.widget.Detail",
-				"wm.base.widget.Form",
+			/**/	"wm.base.widget.FeedList",
+/* Load on demand*/
+				"wm.base.widget.gadget.Gadget",
+				"wm.base.widget.gadget.Stocks",
+				"wm.base.widget.gadget.Weather",
+				"wm.base.widget.gadget.YouTube",
+				"wm.base.widget.gadget.TwitterFeed",
+				/**/
+			/*	"wm.base.widget.Detail",
+				"wm.base.widget.Form",*/
 				"wm.base.widget.LiveForm",
 				"wm.base.widget.LiveForm_design",
 				"wm.base.widget.LivePanel",
@@ -192,16 +210,16 @@ dependencies = {
 				"wm.base.widget.RelatedEditor_design",
 				"wm.base.widget.EditPanel",
 				"wm.base.widget.DataNavigator",
-				"wm.base.widget.Input",
+			/**/	"wm.base.widget.Input",
 				"wm.base.widget.TextArea",
-				"wm.base.widget.Select",
+			    "wm.base.widget.Select",/**/
 				"wm.base.widget.Scrim",
 				"wm.base.widget.Dialog",
 				"wm.base.widget.Editor",
 				"wm.base.widget.FileUpload",
 				"wm.base.widget.EditArea",
 				"wm.base.widget.EditArea_design",
-				"wm.base.widget.Popup",
+				/*"wm.base.widget.Popup",*/
 				"wm.base.widget.IFrame",
 				"wm.base.widget.LayoutBox",
 				"wm.base.widget.dijit.Dijit",
@@ -211,11 +229,13 @@ dependencies = {
 				"wm.base.widget.dijit.ProgressBar",
 				"wm.base.widget.dijit.ProgressBar_design",
 				"wm.base.widget.dijit.Grid",
+/* Load on demand*/
 				"wm.base.widget.DataGrid",
 				"wm.base.widget.Toolbar",
 				"wm.base.widget.Ticker",
 				"wm.base.widget.Composite",
 				"wm.base.widget.Cards",
+			/*	*/
 				"wm.base.lib.date",
 	        	"wm.base.lib.text",
 	        	"wm.base.widget.Formatters",
@@ -229,17 +249,20 @@ dependencies = {
 	            "wm.base.widget.Editors.Checkbox",
 	            "wm.base.widget.Editors.Radiobutton",
 	            "wm.base.widget.Editors.Select",
-	            "wm.base.widget.Editors.Slider",
+	          /**/  "wm.base.widget.Editors.Slider",
 				"wm.base.widget.Editors.RichText",
+/* Load on demand*/
 				"wm.base.widget.DojoLightbox",
 				"wm.base.widget.Dashboard",
 				"wm.base.widget.Dashboard_design",
+				"wm.base.widget.DojoChart",
+			    "wm.base.widget.DojoFisheye",
+			/*	*/
 				"wm.base.widget.DojoGrid",
 				"wm.base.widget.DojoGrid_design",
-				"wm.base.widget.DojoMenu",
-				"wm.base.widget.DojoChart",
-				"wm.base.widget.DojoFisheye"
-				
+			    "wm.base.widget.DojoMenu",
+				"wm.base.widget.DojoFileUpload",				
+				"wm.base.widget.ListViewer",				
 				
 			]
 		},
@@ -271,6 +294,7 @@ dependencies = {
 				"wm.studio.app.inspect",
 				"wm.studio.app.sourcer",
 				"wm.studio.app.events",
+				"wm.studio.app.editcommands",
 				"wm.studio.app.file",
 				"wm.studio.app.css",
 				"wm.studio.app.project",
@@ -289,6 +313,7 @@ dependencies = {
 				"wm.studio.app.servicesTree",
 				"wm.studio.pages.Binder.Binder",
 				"wm.studio.pages.BindSourceDialog.BindSourceDialog",
+				/* Load on demand
 				"wm.studio.pages.ImportPageDialog.ImportPageDialog",
 				"wm.studio.pages.CreateLiveView.CreateLiveView",
 				"wm.studio.pages.DataObjectsEditor.DataObjectsEditor",
@@ -311,6 +336,7 @@ dependencies = {
 				"wm.studio.pages.Security.Security",
 				"wm.studio.pages.ServiceDialog.ServiceDialog",
 				"wm.studio.pages.Services.Services",
+				*/
 				"wm.studio.pages.Start.Start"
 			]
 		}
