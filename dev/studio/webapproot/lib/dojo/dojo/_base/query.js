@@ -1265,7 +1265,13 @@ if(typeof dojo != "undefined"){
 					//	so we're just checking for the presence of a space char
 					//	right now. Not elegant, but it's cheaper than running
 					//	the query parser when we might not need to
-					if(!((9 == root.nodeType) || nospace)){ throw ""; }
+					if(!((9 == root.nodeType) || nospace)){ 
+					    //throw ""; 
+					    /* WaveMaker Change: Get rid of dojo's 'throw ""' which drives break-on-error nuts, and just
+					     * call the same thing as the error handler
+					     */
+					    return getQueryFunc(query, true)(root);
+					}
 					var r = root[qsa](tq);
 					// skip expensive duplication checks and just wrap in a NodeList
 					r[noZip] = true;
