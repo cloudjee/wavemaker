@@ -60,8 +60,20 @@ dojo.declare("wm.PageContainer", wm.Box, {
 	this._designerOpenPageButton = openPageButton;
 	this.openPageButtonConnect = dojo.connect(openPageButton, "onclick", this, function() {
             if (this.pageName) {
-	        if (!studio.isPageDirty() || window.confirm("Are you sure you want to close the current page and open " + this.pageName + "?"))
+	        if (!studio.isPageDirty()) {
 		    studio.project.openPage(this.pageName);
+		} else {
+		    app.confirm("Can we save your current page before moving on to the next page? This will save your pageContainer's pageName.", false,
+				dojo.hitch(this,function() {
+				    this.connect(studio, "saveProjectComplete", studio.project, function() {				
+					studio.project.openPage(this.pageName);
+				    });
+				    studio.saveAll(studio.project);
+				}),
+				dojo.hitch(this, function() {
+					studio.project.openPage(this.pageName);
+				}));
+		}
             } else {
                 this.createNewPage();
             }
@@ -335,5 +347,7 @@ wm.Object.extendSchema(wm.PageContainer, {
 	box: {ignore: 1},
 	disabled: {ignore: 1},
 	page: {ignore: 1},
-	pageProperties: {ignore: 1, writeonly: 1}
+    pageProperties: {ignore: 1, writeonly: 1},
+    setPageName: {group: "method"},
+    forceReloadPage: {group: "method"}
 });
