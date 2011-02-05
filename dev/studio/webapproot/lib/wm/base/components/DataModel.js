@@ -121,10 +121,10 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 		    // If designing a data model
 		    if (this._dataModelName) {
 			studio.select(c);
-			this.editView();
+			c.editView();
 			studio.navGotoComponentsTreeClick();
- 			wm.fire(studio.getEditor("DataObjectsEditor", studio.databaseTab, this.getLayerName(), this.getLayerCaption()).page, "newDataModelResult");
- 			var page = studio.getEditor("DataObjectsEditor", studio.databaseTab, this.getLayerName(), this.getLayerCaption()).page;
+ 			wm.fire(studio.getEditor("DataObjectsEditor", studio.databaseTab, true, c.getLayerName(), c.getLayerCaption()).page, "newDataModelResult");
+ 			var page = studio.getEditor("DataObjectsEditor", studio.databaseTab, true, c.getLayerName(), c.getLayerCaption()).page;
 			page.objectPages.setLayer(page.DEFAULT_PAGE);
 		    } 
 
