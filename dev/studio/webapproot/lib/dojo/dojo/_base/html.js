@@ -127,6 +127,7 @@ if(dojo.isIE || dojo.isOpera){
 		//	|	dojo.query(".someNode").forEach(dojo.destroy);
 
 		node = byId(node);
+	        if (!node) return;
 		try{
 			var doc = node.ownerDocument;
 			// cannot use _destroyContainer.ownerDocument since this can throw an exception on IE
