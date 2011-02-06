@@ -461,6 +461,16 @@ dojo.declare("wm.Component", wm.Object, {
 	    this._connections.push(c);
 	    return c;
 	},
+    connectOnce: function(sourceObj, sourceMethod, targetObj, targetMethod) {
+	var connections = this._connections;
+	var c = dojo.connect(sourceObj, sourceMethod, targetObj, function() {
+	    dojo.disconnect(c);
+	    wm.Array.removeElement(connections, c);
+	    dojo.hitch(this, targetMethod)();
+	});
+	connections.push(c);
+	return c;
+    },
 	connectEvents: function(inObject, inEvents) {
 		this._connections = this._connections.concat(wm.connectEvents(this, inObject, inEvents));
 	},
