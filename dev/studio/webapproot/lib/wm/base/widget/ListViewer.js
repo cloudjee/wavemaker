@@ -214,8 +214,9 @@ dojo.declare("wm.ListViewer", wm.Container, {
 				 app.confirm("Can we save this page before moving on to the next page?", 
 					     false,
 					     dojo.hitch(this,function() {
-						 studio.project.saveProject();
-						 studio.project.newPage(n,"wm.ListViewerRow", {template: wm.widgetSpecificTemplate.ListViewerRow, editTemplate: dojo.hitch(this, "editTemplate")});
+						 studio.project.saveProject(false, dojo.hitch(this, function() {
+						     studio.project.newPage(n,"wm.ListViewerRow", {template: wm.widgetSpecificTemplate.ListViewerRow, editTemplate: dojo.hitch(this, "editTemplate")});
+						 }));
 					     }),
 					     dojo.hitch(this,function() {
 						 studio.project.newPage(n,"wm.ListViewerRow", {template: wm.widgetSpecificTemplate.ListViewerRow, editTemplate: dojo.hitch(this, "editTemplate")});
@@ -232,6 +233,10 @@ dojo.declare("wm.ListViewer", wm.Container, {
     },
     setPageName: function(inPage) {
 	if (inPage == "-New Page" && this.isDesignLoaded()) {
+	    if (!this.dataSet) {
+		app.toastWarning("Please select a dataSet before creating a new page");
+		return;
+	    }
 	    return this.createNewPage();
 	}
 	this.pageName = inPage;

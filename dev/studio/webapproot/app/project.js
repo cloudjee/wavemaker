@@ -63,7 +63,7 @@ dojo.declare("wm.studio.Project", null, {
 				  iconCount: 90});
 	    this.newPage(this.pageName, "", {template: optionalInTemplate},
 			 dojo.hitch(this, function() {
-			     this.saveProject(false, false);
+			     this.saveProject(false);
 			     this.projectChanged();
 			     this.projectsChanged();
 			     studio.endWait("Setting up new project");
@@ -330,9 +330,9 @@ dojo.declare("wm.studio.Project", null, {
 	// Save
 	//=========================================================================
     save: function() {
-	this.saveProject(false,false);
+	this.saveProject(false);
     },
-        saveProject: function(isDeployment, saveAll) {
+    saveProject: function(isDeployment, onSave) {
                 this.deployingProject = isDeployment;
 	    this.saveApplication(dojo.hitch(this, function() {
 		this.savePage(dojo.hitch(this, function() {
@@ -345,6 +345,7 @@ dojo.declare("wm.studio.Project", null, {
 		    }
 	            studio.incrementSaveProgressBar(1);
 		    this.saveComplete();
+		    if (onSave) onSave();
 		}));
 	    }));
 /*
@@ -384,19 +385,19 @@ dojo.declare("wm.studio.Project", null, {
     },
 	saveScript: function() {
   	       //this.savePageData(this.pageName + ".js", studio.getScript());
-	    this.saveProject(false, false);
+	    this.saveProject(false);
 	},
 	saveAppScript: function() {
   	       //this.savePageData(this.pageName + ".js", studio.getScript());
-	    this.saveProject(false, false);
+	    this.saveProject(false);
 	},
 	saveCss: function() {
 	       //this.savePageData(this.pageName + ".css", studio.getCss());
-	    this.saveProject(false, false);
+	    this.saveProject(false);
 	},
 	saveMarkup: function() {
    	      //this.savePageData(this.pageName + ".html", studio.getMarkup());
-	    this.saveProject(false, false);
+	    this.saveProject(false);
 	},
         getProjectPath: function() {
 	    //return studio.projectPrefix + this.projectName;
@@ -581,7 +582,7 @@ dojo.declare("wm.studio.Project", null, {
 	},
 	copyProject: function(inName, inNewName) {
 		if (inName && inNewName)
-			this.saveProject(false, true);
+			this.saveProject(false);
 	    studio.beginWait("Copying...");
 	    studio.studioService.requestAsync("copyProject", [inName, inNewName], dojo.hitch(this, function() {
 		this.projectsChanged();
