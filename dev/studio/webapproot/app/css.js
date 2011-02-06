@@ -136,7 +136,7 @@ listClassNames = function(inStyles) {
 	// FIXME: this is going to match stuff like .jpg
 	// need more mojo here
 	var re = /\.[^.\s\#]*/g;
-	return inStyles.match(re);
+    return inStyles ? inStyles.match(re) : [];
 }
 
 dojo.addOnLoad(function() {
