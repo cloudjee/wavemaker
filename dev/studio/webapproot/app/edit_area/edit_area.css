@@ -150,7 +150,7 @@ pre{
 #result .edit_area_cursor{
 	position: absolute; 
 	z-index:6; 
-	background-color: #FF6633;
+	background-color: red;
 	top: -100px;
 	margin: 0;
 }

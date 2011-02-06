@@ -123,7 +123,6 @@ wm.Object.extendSchema(wm.ServiceVariable, {
     setNextPage: {group: "method"},
     setPreviousPage: {group: "method"},
     setLastPage: {group: "method"},
-    getTotal: {group: "method"},
     input: {ignore: 1, doc: 1, type: "wm.Variable"}
 });
 

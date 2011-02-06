@@ -538,10 +538,10 @@ wm.Object.extendSchema(wm.FancyPanel, {
     border: {ignore: 1},
     innerBorder: {group: "style", shortname: "border",  doc: 1},
     setInnerLayoutKind: {group: "method",   doc: 1},
-    setInnerHorizontalAlign: {group: "method",params: "(inLayoutKind)", doc: 1},
-    setInnerVerticalAlign: {group: "method", params: "(inAlign)", doc: 1},
-    setInnerBorder: {group: "method", params: "(inAlign)", doc: 1},
-    setTitle:  {group: "method", params: "(inTitle)", doc: 1},
+    setInnerHorizontalAlign: {group: "method", doc: 1},
+    setInnerVerticalAlign: {group: "method", doc: 1},
+    setInnerBorder: {group: "method", doc: 1},
+    setTitle:  {group: "method",  doc: 1},
     autoScroll: {ignore: 1},  // until we actually scroll the correct node, don't even provide this property
     scrollX:  {ignore: 1}, 
     scrollY:  {ignore: 1}

@@ -730,9 +730,10 @@ wm.Object.extendSchema(wm.Container, {
     isMajorContent: {group: "style", order: 150, ignore: 1}, // obsolete
     themeStyleType: {ignore: true, group: "style", order: 150},
     setThemeStyleType: {group: "method"},
-    getThemeStyleType: {group: "method"},
+    getThemeStyleType: {group: "method", returns: "String"},
     reflow: {group: "method"},
-    getInvalidWidget: {group: "method"},
+    getInvalidWidget: {group: "method", returns: "wm.Control"},
     setHorizontalAlign:    {group: "method"},
-    setVerticalAlign:      {group: "method"}
+    setVerticalAlign:      {group: "method"},
+    customGetValidate:     {group: "customMethods"}
 });

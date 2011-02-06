@@ -90,6 +90,7 @@
 [ bundlePackage.DataWidget, bundlePackage.List, "wm.List", "wm.base.widget.List", "images/wm/content.png",bundlePackage.descList, false],
 [ bundlePackage.DataWidget, bundlePackage.ListViewer, "wm.ListViewer", "wm.base.widget.ListViewer", "images/wm/content.png",bundlePackage.descListViewer, true],
 [ bundlePackage.DataWidget, bundlePackage.Tree, "wm.PropertyTree", "wm.base.widget.Tree", "images/wm/tree.png",bundlePackage.descPropertyTree, false],
+[ bundlePackage.DataWidget, bundlePackage.Tree + "Object", "wm.ObjectBrowserTree", "wm.base.widget.Tree", "images/wm/tree.png",bundlePackage.descPropertyTree, false],
 [ bundlePackage.DataWidget, bundlePackage.DraggableTree, "wm.DraggableTree", "wm.base.widget.DraggableTree", "images/wm/tree.png",bundlePackage.descDraggableTree, true],
 [ bundlePackage.DataWidget, bundlePackage.Calendar, "wm.dijit.Calendar", "wm.base.widget.dijit.Calendar", "images/wm.dijit/Calendar.png",bundlePackage.descCalendar, false],
 

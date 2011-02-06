@@ -336,7 +336,7 @@ wm.Object.extendSchema(wm.DojoGrid, {
     columns:{ignore:1},
     setSelectedRow: {group: "method"},
     getSelectedIndex:{group: "method", returns: "Number"},
-    getRow: {group: "method"},
+    getRow: {group: "method", returns: "Object"},
     findRowIndexByFieldValue:  {group: "method", returns: "Number"},
     getCell:  {group: "method", returns: "String"},
     setCell:  {group: "method"},

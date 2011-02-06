@@ -1121,7 +1121,7 @@ wm.Object.extendSchema(wm.GenericDialog, {
     footerBorderColor:  {group: "style", order: 101},
     setShowInput: {group:"method"},
     setInputDataValue: {group:"method"},
-    getInputDataValue: {group:"method"},
+    getInputDataValue: {group:"method", returns: "String"},
     setUserPrompt: {group:"method"},
     setButton1Caption: {group:"method"},
     setButton2Caption: {group:"method"},

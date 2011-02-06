@@ -323,10 +323,17 @@ Studio.extend({
 		var name = prefix.match(/^(.*)\(/)[1];
 		var props = object.listProperties();
 		if (props[name] && props[name].returns) {
-		    if (props[name].returns.indexOf(".") != -1)
-			object = dojo.getObject(props[name].returns).prototype;
-		    else
+		    if (props[name].returns.indexOf(".") != -1) {
+			// see if there's an existing instance of this type; pick one at random
+			object = wm.listOfWidgetType(dojo.getObject(props[name].returns))[0];
+			if (!object) { // if not, grab the prototype instead
+			    object = dojo.getObject(props[name].returns).prototype;
+			    object._designee = object;
+			}
+		    } else
 			object = eval("new " + props[name].returns + "()");
+		} else if (props[name]) {
+		    object = "-"; // if no return value, then its returning undefined
 		} else {
 		    remainder = prefix + (text ? "." + text : "");
 		    break;
@@ -335,8 +342,22 @@ Studio.extend({
 		if (object[prefix])
 		    object = object[prefix];
 		else {
-		    remainder = prefix + (text ? "." + text : "");
-		    break;
+		    var name = prefix;
+		    var props = object.listProperties();
+		    if (props[name] && props[name].prototype) {		    
+			if (props[name].prototype.indexOf(".") != -1) {
+			// see if there's an existing instance of this type; pick one at random
+			object = wm.listOfWidgetType(dojo.getObject(props[name].returns))[0];
+			    if (!object) { // if not, grab the prototype instead
+				object = dojo.getObject(props[name].prototype).prototype;
+				object._designee = object;
+			    }
+			} else
+			    object = eval("new " + props[name].prototype + "()");
+		    } else {
+			remainder = prefix + (text ? "." + text : "");
+			break;
+		    }
 		}
 	    }
 	}
@@ -376,6 +397,9 @@ Studio.extend({
 	    else
 		app.alert("\"" + text + "\" not found. Please select text, such as 'this.button1', or 'button1', and if your page has a button1 in it, we will list suitable methods you can call on that object");
 	    return;
+	} else if (object == "-") {	    
+	    this._autoCompletionOriginalText = this._autoCompletionOriginalText.replace(/\.[^\.]*$/,"");
+	    return;
 	}
 	var showprops = [];	
 	if (object instanceof wm.Component) {
@@ -385,17 +409,27 @@ Studio.extend({
 		var p = props[i];
 		var params = "";
 		if (p.group == "method" || !p.ignore && !p.tmpignore || p.doc) {
-		    if (!this._autoCompletionRemainder || i.indexOf(this._autoCompletionRemainder) == 0) {
-			 params = getArgs(object, i).substring(2);
-		    if (params == "*,args*/")
-			params = "";
-		    else
-			params = "("+params + ")";
-		    }
+		    if (p.group == "method") {
+			if (!this._autoCompletionRemainder || i.indexOf(this._autoCompletionRemainder) == 0) {
+			    var methodstring = object[i].toString();
+			    var methodstringmatch = methodstring.match(/function\s*\(([^)]*)/);
+			    params = "()";
+			    if (methodstringmatch) 
+				params = "(" + methodstringmatch[1] + ")";
+			    //params = getArgs(object, i).substring(2);
+			    //if (params == "*,args*/")
+			//	params = "";
+			  //  else
+			//	params = "("+params + ")";
+			}
 			showprops.push({name: i, 
 					description: "_",
 					returns: p.returns,
 					params: params});
+		    } else {
+			showprops.push({name: i,
+					description: "_"});
+		    }
 		}
 	    }
 
@@ -409,22 +443,27 @@ Studio.extend({
 		    superPrototype.constructor.superclass.constructor.prototype;
 	    }
 
+	    var newshowprops = [];
 	    dojo.forEach(showprops, function(p) {
-		if (p.prototype) return;
+		if (p.prototype) {
+		    newshowprops.push(p);
+		    return;
+		}
 		for (var i = classList.length-1; i >= 0; i--) {
 		    if (wm.Object.getSchemaClass(classList[i].constructor).prototype[p.name]) {
 			if (classList[i].declaredClass == "wm.Bounds")
 			    i--;
 			p.prototype = classList[i];
+			newshowprops.push(p);			
 			break;
 		    }
 		}
 	    });
-	    showprops = showprops.sort(function(a,b) {
+	    showprops = newshowprops.sort(function(a,b) {
 		var indexA;
-		indexA = wm.Array.indexOf(classList,a.prototype, function(a,b) { if (a.declaredClass == b.declaredClass) return true;});
+		indexA = !a.prototype ? 0 : wm.Array.indexOf(classList,a.prototype, function(a,b) { if (a.declaredClass == b.declaredClass) return true;});
 		var indexB;
-		indexB = wm.Array.indexOf(classList,b.prototype, function(a,b) { if (a.declaredClass == b.declaredClass) return true;});
+		indexB = !b.prototype ? 0 : wm.Array.indexOf(classList,b.prototype, function(a,b) { if (a.declaredClass == b.declaredClass) return true;});
 
 		if (indexA > indexB) return 1;
 		if (indexA < indexB) return -1;
@@ -648,6 +687,7 @@ Studio.extend({
 	if (count == 0)
 	    this.autoCompletionHtml.setHtml("We do not provide information on this kind of object");
 
+	this.autoCompletionDialog.setTitle(object && object.declaredClass && object instanceof wm.Page == false ? object.declaredClass : "Completions");
 	this.autoCompletionDialog.show();
 	window.setTimeout(dojo.hitch(this, "autoCompletionDialogAutoHide"), 5000);
     },

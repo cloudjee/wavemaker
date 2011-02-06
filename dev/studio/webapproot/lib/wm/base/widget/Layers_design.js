@@ -38,6 +38,7 @@ wm.Object.extendSchema(wm.Layer, {
     isActive: {group: "method", returns: "Boolean"},
     setCaption: {group: "method"},
     getIndex: {group: "method", returns: "Number"},
+    parent: {ignore: 1, doc: 1, prototype: "wm.Layers"}
 });
 
 wm.Layer.extend({

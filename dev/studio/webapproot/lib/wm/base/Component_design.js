@@ -44,10 +44,10 @@ wm.Object.extendSchema(wm.Component, {
     rootId: {ignore: 1},
 
 
-    destroy: {group:"method", params:"()", doc: 1},
-    toString: {group:"method",params: "()", doc: 1},
-    getId: {group: "method", params: "()", doc: 1},
-    getRuntimeId: {group: "method",params: "()", doc: 1},
+    destroy: {group:"method", doc: 1},
+    toString: {group:"method", doc: 1, returns: "String"},
+    getId: {group: "method", doc: 1, returns: "String"},
+    getRuntimeId: {group: "method", doc: 1, returns: "String"},
     $: {ignore: true,doc: 1}
 });
 

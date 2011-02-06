@@ -402,7 +402,7 @@ wm.Object.extendSchema(wm.Control, {
     setWidth: {group: "method", doc: 1},
     setHeight: {group: "method", doc: 1},
 
-    isAncestorHidden: {group: "method", doc: 1},
+    isAncestorHidden: {group: "method", doc: 1, returns: "Boolean"},
     setParent: {group: "method", doc: 1}
 
     

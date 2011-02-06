@@ -1280,7 +1280,7 @@ wm.Object.extendSchema(wm.SelectMenu, {
     setRestrictValues: {group: "method", doc: 1},
     setDataSet: {group: "method", doc: 1},
     setOptions: {group: "method", doc: 1},
-    getItemIndex: {group: "method", doc: 1, returns: "Integer"}
+    getItemIndex: {group: "method", doc: 1, returns: "Number"}
 });
 
 wm.Object.extendSchema(wm._LookupEditor, {

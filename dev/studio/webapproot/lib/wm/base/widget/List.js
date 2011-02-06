@@ -56,7 +56,7 @@ dojo.declare("wm.ListItem", wm.VirtualListItem, {
 });
 
 wm.Object.extendSchema(wm.ListItem, {
-    getData: {group: "method"}
+    getData: {group: "method", returns: "Object"}
 });
 
 dojo.declare("wm.List", wm.VirtualList, {
