@@ -619,6 +619,18 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		var thisObj = this;
 		dojo.addOnLoad(function(){thisObj.renderDojoObj();});
 	},
+
+        setSortIndex: function(inSortIndex, inAsc) {
+	    this.dojoObj.setSortIndex(inSortIndex, inAsc);
+	},
+        setSortField: function(inSortField, inAsc) {
+	    var cells = this.dojoObj.layout.cells;
+	    for (var i = 0; i < cells.length; i++) {
+		if (cells[i].field == inSortField) {
+		    this.dojoObj.setSortIndex(cells[i].index, inAsc);
+		}
+	    }
+	},
         customSort: function(a,b) {return "";},
 	setDojoStore: function(){
 		if (!this.variable){
