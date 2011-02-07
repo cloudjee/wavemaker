@@ -346,5 +346,7 @@ wm.Object.extendSchema(wm.DojoGrid, {
     getRowCount: {group: "method", returns: "Number"},
     getDataSet: {group: "method", returns: "wm.Variable"},
     setDataSet: {group: "method"},
-    showCSVData: {group: "method"}
+    showCSVData: {group: "method"},
+    setSortIndex:{group: "method"},
+    setSortField:{group: "method"}
 });
