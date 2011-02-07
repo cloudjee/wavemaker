@@ -609,7 +609,9 @@
 			{	
 				this.textarea.setSelectionRange(0, 0);
 			}
-			this.textarea.setSelectionRange(start, end);
+		        try { /* Added by wavemaker to avoid throwing errors */
+			    this.textarea.setSelectionRange(start, end);
+			} catch(e) {}
 		}
 		this.check_line_selection();
 	};
