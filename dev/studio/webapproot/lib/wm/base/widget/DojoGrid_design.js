@@ -47,6 +47,11 @@ wm.DojoGrid.extend({
 		} else
 			this.setDataSet(inDataSet);
 	},
+	listProperties: function() {
+	    var props = this.inherited(arguments);
+	    props.dataSet.type = "Object";// should be able to bind to ANY type of variable (as long as its a list); could not find where this value is set to the dataset's type, but I don't want that happening.
+	    return props;
+	},
 	designCreate: function() {
 		// if this is being created in studio, supply a default caption
 		if (this._studioCreating)
