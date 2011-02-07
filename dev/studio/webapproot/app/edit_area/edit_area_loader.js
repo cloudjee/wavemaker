@@ -500,6 +500,7 @@ EditAreaLoader.prototype ={
 					t.setSelectionRange(0, 0);
 				}
 				try{
+				    if (t["setSelectionRange"]) /* Added by wavemaker to avoid throwing errors */
 					t.setSelectionRange(selStart, selEnd);
 				} catch(e) {};
 			}

@@ -132,9 +132,13 @@
 		var sel={}, start, end, len, str;
 	
 		this.getIESelection();
+	    try {
 		start	= this.textarea.selectionStart;
 		end		= this.textarea.selectionEnd;		
-		
+	    } catch(e) {
+		start = 0;
+		end = 0;
+	    }
 		if( this.last_selection["selectionStart"] == start && this.last_selection["selectionEnd"] == end && this.last_selection["full_text"] == this.textarea.value )
 		{	
 			return this.last_selection;

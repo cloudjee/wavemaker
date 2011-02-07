@@ -359,10 +359,12 @@
 				this.switchClassSticky(_$("undo"), 'editAreaButtonDisabled', true);
 		
 			if(!this.previous[this.previous.length-1] || this.previous[this.previous.length-1]["text"] != text){
+			    /* Try catch added by wavemaker to prevent firefox security error from stopping app */
+			    try {
 				this.previous.push({"text": text, "selStart": this.textarea.selectionStart, "selEnd": this.textarea.selectionEnd});
 				if(this.previous.length > this.settings["max_undo"]+1)
 					this.previous.shift();
-				
+			    } catch(e) {}
 			}
 			if(this.previous.length >= 2)
 				this.switchClassSticky(_$("undo"), 'editAreaButtonNormal', false);		
