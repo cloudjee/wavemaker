@@ -23,6 +23,7 @@ import de.schlichtherle.xml.GenericCertificate;
 import java.io.File;
 
 import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.common.WMRuntimeException;
 
 public class LicenseManagerExt extends LicenseManager {
 
@@ -67,8 +68,11 @@ public class LicenseManagerExt extends LicenseManager {
 
         // Load license key from preferences,
         byte[] key = getLicenseKey();
-        if (key == null)
-            throw new NoLicenseInstalledException(getLicenseParam().getSubject());
+        if (key == null) {
+            NoLicenseInstalledException ne = new NoLicenseInstalledException(getLicenseParam().getSubject());
+            String se = ne.getLocalizedMessage();
+            throw new WMRuntimeException(se);
+        }
         certificate = getPrivacyGuard().key2cert(key);
         notary.verify(certificate);
         Object result = certificate.getContent();
