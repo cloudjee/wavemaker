@@ -38,23 +38,23 @@ wm.RelatedEditor.extend({
 		this.inherited(arguments);
 		this.initializeFormField();
 	},
-	initializeFormField: function(){
-		if (!this.formField)
-		{
-			var ff = this.getUniqueFormField();
-			if (ff && ff != '')
-				this.set_formField(ff);
-		}
+        initializeFormField: function(){
+	    if (!this.formField)
+	    {
+		var ff = this.getUniqueFormField();
+		if (ff && ff != '')
+		    this.set_formField(ff);
+	    }
 
-		var fieldSchema = this._getFieldSchema();
-		if (!this.editingMode){
-		 	 if(fieldSchema && fieldSchema.isList){
-			   this._editingModes = ["readonly"];
-			   this.editingMode = "readonly";
-		   }	else {
-			 this.set_editingMode("lookup");
-		 }
-	 }	
+	    var fieldSchema = this._getFieldSchema();
+	    if (!this.editingMode){
+		if(fieldSchema && fieldSchema.isList){
+		    this._editingModes = ["readonly"];
+		    this.editingMode = "readonly";
+		} else {
+		    this.set_editingMode("lookup");
+		}
+	    }	
 	},
 	getUniqueFormField: function(){
 			var lf = wm.getParentForm(this);
@@ -103,21 +103,14 @@ wm.RelatedEditor.extend({
 		// if we're not in lookup mode, remove object editor, 
 		// but save it for later re-use
 		var m = this.editingMode;
-		if (m == 'readonly'){
-			var s = this.findLookup();
-			if (s)
-				s.setReadonly(true);
-		}
-		else if (m != "lookup")
-			this.cacheLookup();
-		else
-			this.insertLookup();
+		this.removeEditors();
+	        this.addEditors();
 		// reflow and update design trees due to insert editor change.
 		this.reflow();
 		this.updateDesignTrees();
 		this.bindFormEditors();
 		// children can be editable only if we are in inline mode.
-		if (m != "editable")
+		if (m != "editable subform")
 			this._disableChildrenEditing();
 	},
 	_disableChildrenEditing: function() {
@@ -158,7 +151,7 @@ wm.RelatedEditor.extend({
 					var	lv = this.getLiveVariable(),
 						fields = wm.getDefaultView((this.dataSet || 0).type);
 					for (var i = 0; i < fields.length; i++) {
-						if (this.makeEditor(fields[i]))
+						if (this.makeEditor(fields[i]) && this.editingMode != "editable subform" && i > 3)
 							break;
 					}
 				}
