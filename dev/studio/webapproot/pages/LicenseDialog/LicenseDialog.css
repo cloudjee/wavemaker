@@ -30,6 +30,7 @@
 .LicenseDialog-buyButton,
 .LicenseDialog-trialButton,
 .LicenseDialog-closeButton,
+.LicenseDialog-requestLicenseButton,
 .LicenseDialog-licenseUploader {
 	background-image:url(images/dark_btn_bg.gif);
 	background-repeat:repeat-x;
@@ -41,3 +42,10 @@
 .LicenseDialog-toGetLabel {
     text-align: center;
 }
+.LicenseDialog-logoLabel {
+    color: #0069c7;
+    text-align: center;
+    font-size: 30px;
+    text-shadow: #999 2px 2px 2px;
+}
+

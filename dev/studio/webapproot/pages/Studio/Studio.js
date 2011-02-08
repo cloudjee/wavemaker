@@ -195,12 +195,12 @@ dojo.declare("Studio", wm.Page, {
 	licenseDeferred.addErrback(dojo.hitch(this, "licenseError"));
     },
 	licenseError: function(inError) { //xxx
-	    this.userLabel.setCaption("<div class='Studio_silkIconImageList_60 LicenseIcon'></div> Invalid License ");
+	    this.userLabel.setCaption("");
 	    this.userLabel.removeUserClass("LicenseWarning");			    
-	    this.userLabel.addUserClass("LicenseError");
+	    //this.userLabel.addUserClass("LicenseError");
 	    this.startPageDialog.show();
 	    this.startPageDialog.page.licenseLayer.activate();
-			this.startPageDialog.page.licensePage.page.setError(inError.toString());
+	    this.startPageDialog.page.licensePage.page.setError(inError.toString().replace(/^Error\:\s*/,""));
 	},
     setupLicenseInfoLabelResult: function(inResult) {
 		    if (inResult > 30) return; // no display if more than 30 days
@@ -617,7 +617,7 @@ dojo.declare("Studio", wm.Page, {
 	    this.appsourceEditor.setText(inScript);
 	},
 	getWidgets: function() {
-		return sourcer(this.project.pageName, this.page);
+	    return this.page ? sourcer(this.project.pageName, this.page) : "";
 	},
 	pageNameChange: function(inOldName, inNewName) {
 		this.setScript(this.getScript().replace(new RegExp("\\b" + inOldName + "\\b"), inNewName));

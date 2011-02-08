@@ -36,15 +36,15 @@ dojo.declare("LicenseDialog", wm.Page, {
 	studio.startPageDialog.page.tabLayers1.setLayerIndex(0);
     },
     trialClick: function() {
-	window.open("http://www.wavemaker.com/?macid=" + this.macaddr);
+	window.open("http://www.wavemaker.com/downloads/enterprise_withmac_notrequired_mk.php?macid=" + this.macaddr);
     },
     buyClick: function() {
 	window.open("http://www.wavemaker.com/?macid=" + this.macaddr);
     },
     setError: function(inMsg) {
 	this.resultLabel.setCaption(inMsg);
-	this.resultLabel.setBorder("4");
-	this.resultLabel.setBorderColor("red");
+	this.resultPanel.setBorder("4");
+	this.resultPanel.setBorderColor("red");
     },
 	_end: 0
 });
