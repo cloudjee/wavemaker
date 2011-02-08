@@ -47,7 +47,7 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	/** our liveView **/
 	liveView: null,
 	/** Maximum number of results to return */
-	//maxResults: 0,
+	maxResults: 500,
 	//designMaxResults: 50,
 	/** Field in view to use as our root object / type */
 	_rootField: "",
