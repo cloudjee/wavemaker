@@ -68,7 +68,7 @@
             <arg value="${versionString}"/>
             <arg value="${mac.dmg.file}"/>
         </exec>
-        <delete file="${buildroot}/Applications" />
+        <symlink action="delete" link="${buildroot}/Applications"/> 
     </target>
 
     <target name="clean" depends="common-installer.clean">
