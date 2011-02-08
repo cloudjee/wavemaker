@@ -26,6 +26,7 @@ import com.wavemaker.tools.project.StudioConfiguration;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wavemaker.runtime.server.FileUploadResponse;
+import com.wavemaker.common.WMRuntimeException;
 
 @HideFromClient
 public class LicensingService {
@@ -61,15 +62,21 @@ public class LicensingService {
     @ExposeToClient
     public FileUploadResponse uploadLicense(
 					    MultipartFile file) throws IOException {
-	String result = LicenseProcessor.installLicense(file);
-    	file.getInputStream().close();
-        FileUploadResponse ret = new FileUploadResponse();
-	ret.setPath("private");
-	if (result != "OK")
-	    ret.setError(result);
-	ret.setWidth("");
-	ret.setHeight("");
-	return ret;
+	    FileUploadResponse ret;
+        try {
+            String result = LicenseProcessor.installLicense(file);
+
+            file.getInputStream().close();
+            ret = new FileUploadResponse();
+            ret.setPath("private");
+            if (!result.equals("OK"))
+                ret.setError(result);
+            ret.setWidth("");
+            ret.setHeight("");
+        } catch (Exception ex) {
+            throw new WMRuntimeException(ex);
+        }
+        return ret;
     }
 
 
