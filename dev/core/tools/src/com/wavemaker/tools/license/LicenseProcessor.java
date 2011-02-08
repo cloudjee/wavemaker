@@ -84,9 +84,8 @@ public class LicenseProcessor {
         try {
             lm.install(file.getBytes(), lm.getLicenseNotary());
         } catch (Exception exc) {
-            rtn = "Could not install license";
-            //exc.printStackTrace();
-            return rtn;
+            throw new WMRuntimeException(exc);
+            //return exc.getMessage();
         }
 
         rtn = "OK";
