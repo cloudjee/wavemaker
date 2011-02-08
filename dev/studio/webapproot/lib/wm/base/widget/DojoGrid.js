@@ -785,7 +785,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                       width = '80px';
 				formatFunc = 'wm_date_formatter';
 			}
-		  this.columns.push({show:i < 15, id: f.dataIndex, title:wm.capitalize(f.dataIndex), width:width, displayType:f.displayType, noDelete:true, align: align, formatFunc: formatFunc});
+		  this.columns.push({show:i < 15, id: f.dataIndex, title:f.caption, width:width, displayType:f.displayType, noDelete:true, align: align, formatFunc: formatFunc});
 		}, this);
 		
 		if (this.isDesignLoaded()) {
