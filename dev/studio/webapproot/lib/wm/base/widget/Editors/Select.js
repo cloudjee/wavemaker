@@ -233,8 +233,8 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		    var v = displayed && this.getStoreItem(displayed, this._storeNameField);
 		}
 
-        if (v && !(getFullDataObj || this.dataField == 'All Fields'))
-            v = v[this.dataField];
+            if (v && !(getFullDataObj || this.isAllDataFields()))
+		v = v[this.dataField];
 
 /*
         if (!this.restrictValues && displayed && !v) 
@@ -251,7 +251,9 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	    }
 	},
 	setDisplayField: function(inDisplayField) {
-		this.displayField = inDisplayField;
+	    this.displayField = inDisplayField;
+	    if (!this._cupdating)
+		this.createEditor();
 	},
 	_getFirstDataField: function() {
 		if (!this.dataSet)
@@ -1258,7 +1260,7 @@ wm.Object.extendSchema(wm.SelectMenu, {
     restrictValues: {type: "wm.Boolean", group: "editor", order: 40, doc: 1},
 	changeOnKey: { ignore: 1 },
 	changeOnEnter: { ignore: 1 },
-    selectedItem: { ignore: true, bindable: true, isObject: true, bindSource: true, doc: 1,simpleBindProp: true},
+    selectedItem: { ignore: true, bindSource: true, isObject: true, bindSource: true, doc: 1,simpleBindProp: true},
 	dataSet: { readonly: true, group: "editor", order: 4, type: "wm.Variable", isList: true, bindTarget: true, doc: 1},
 	startUpdate: { group: "editor", order: 5},
   pageSize: { order: 6, group: "editor"},
