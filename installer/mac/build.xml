@@ -52,6 +52,8 @@
             <arg value="+x"/>
             <arg value="${buildroot}/${mac.app.name}/Contents/MacOS/wmstart.sh"/>
         </exec>
+<echo>${buildroot}/Applications</echo>
+        <symlink link="${buildroot}/Applications" resource="/Applications" />
     </target>
 
     <target name="build"
@@ -66,6 +68,7 @@
             <arg value="${versionString}"/>
             <arg value="${mac.dmg.file}"/>
         </exec>
+        <delete file="${buildroot}/Applications" />
     </target>
 
     <target name="clean" depends="common-installer.clean">
