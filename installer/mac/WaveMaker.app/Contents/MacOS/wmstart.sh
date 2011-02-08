@@ -5,4 +5,5 @@ exec java \
     -Xmx512m \
     -XX:MaxPermSize=256m \
     $WM_JAVA_OPTS \
+    -Xdock:icon=$BASEDIR/../Resources/wmicon.icns \
     -jar $BASEDIR/../../launcher/launcher.jar
