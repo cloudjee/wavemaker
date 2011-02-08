@@ -595,7 +595,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		// servicecalls
 		//new wm.ComponentTypeSourceTreeNode(inParent, {content: "ServiceVariables", className: "wm.ServiceVariable", image: "images/wm/serviceData.png"});
 		// variables
-	        new wm.ComponentTypeSourceTreeNode(inParent, {page: studio.page, content: "Non-visual Components", className: "wm.Variable", canSelect: false});
+	    new wm.ComponentTypeSourceTreeNode(inParent, {page: studio.page, content: "Non-visual Components", className: "wm.Variable", canSelect: false, image: "images/wm/variable_16.png"});
 		// widgets
 	        new wm.WidgetContainerSourceTreeNode(inParent, {page: studio.page, content: "Visual Components", object: studio.page.root, hasSchema: true, canSelect: false});
 	},
@@ -899,7 +899,7 @@ dojo.declare("wm.BindTreeNode", wm.TreeNode, {
 			var pagePropertyName = inSchema[n].pageProperty;
 			var page = this.object[pagePropertyName];
 			if (page) {
-			    new wm.ComponentTypeSourceTreeNode(inParent, {page: page, content: "Non-visual Components", className: "wm.Variable", canSelect: false});
+			    new wm.ComponentTypeSourceTreeNode(inParent, {page: page, content: "Non-visual Components", className: "wm.Variable", canSelect: false, image: "images/wm/variable_16.png"});
 			// widgets
 			    new wm.WidgetContainerSourceTreeNode(inParent, {page: page, content: "Visual Components", object: page.root, hasSchema: true, canSelect: false});			
 			}
@@ -1174,7 +1174,7 @@ dojo.declare("wm.WidgetContainerSourceTreeNode", wm.BindSourceTreeNode, {
 	    // Collect all of the widgets that are children of the current node
 	    var widgets = {};
 	    for(var w in this.object.widgets)
-		if (!this.object.widgets[w].flags.notInspectable)
+		if (!this.object.widgets[w].flags.notInspectable || this.object.widgets[w].flags.bindInspectable)
 		    widgets[w] = this.object.widgets[w];
 
 	    // If the current node is the wm.Layout of the page,
