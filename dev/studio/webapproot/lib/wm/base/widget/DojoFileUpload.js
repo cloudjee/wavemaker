@@ -546,6 +546,8 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
     success: function(fileList) {
         if (!fileList)
             return this.onSuccess(this.variable.getData());
+	if (fileList && fileList.length == 1 && fileList[0].result && fileList[0].result.error)
+	    return this.onError(fileList[0].result.error);
         try {
             if (dojo.query("input", this.html.domNode).length == 0)
                 this.html.setHtml(""); // remove the "no files selected" message
@@ -575,13 +577,17 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
                     this.updateHtml();
 		}
                 this.html.show();
-        }
-            this._state = "uploaded";
-            if (this._uploaderType == "html") {
-                this.onSuccess(this.variable.getData());
-            } else {
-                this.onSuccess(fileList);
             }
+	    if (fileList[0].error) {
+		this.onError(fileList[0].error);
+	    } else {
+		this._state = "uploaded";
+		if (this._uploaderType == "html") {
+                    this.onSuccess(this.variable.getData());
+		} else {
+                    this.onSuccess(fileList);
+		}
+	    }
         } catch(e) {
             console.error(e);
         }
