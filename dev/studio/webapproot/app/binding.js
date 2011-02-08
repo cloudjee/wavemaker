@@ -1174,7 +1174,7 @@ dojo.declare("wm.WidgetContainerSourceTreeNode", wm.BindSourceTreeNode, {
 	    // Collect all of the widgets that are children of the current node
 	    var widgets = {};
 	    for(var w in this.object.widgets)
-		if (!this.object.widgets[w].flags.notInspectable || this.object.widgets[w].flags.bindInspectable)
+		if (!this.object.widgets[w].flags.notInspectable || this.object.widgets[w].flags.bindInspectable) // see wm.Layers client for example
 		    widgets[w] = this.object.widgets[w];
 
 	    // If the current node is the wm.Layout of the page,
