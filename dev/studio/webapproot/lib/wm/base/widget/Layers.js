@@ -155,7 +155,7 @@ dojo.declare("wm.Layers", wm.Container, {
 	    else
 		this.setHeaderHeight('20px');
             // vertical defaults to justified; once we get rid of justified, we can remove this property
-	    this.client = new wm.Panel({isRelativePositioned:this.isRelativePositioned, border: 0, name: "client", parent: this, owner: this, height: "100%", width: "100%",  flags: {notInspectable: true, bindInspectable: true}}); // bindInspectable means the user can see it as a container to open in the bind inspector
+	    this.client = new wm.Panel({isRelativePositioned:this.isRelativePositioned, border: 0, name: "client", parent: this, owner: this, height: "100%", width: "100%",  flags: {notInspectable: true, bindInspectable: true}}); // bindInspectable means the user can see it as a container to open in the bind inspector 
 	    this.inherited(arguments);
             this._isDesign = this.isDesignLoaded();
 	    if (this._isDesign) {
