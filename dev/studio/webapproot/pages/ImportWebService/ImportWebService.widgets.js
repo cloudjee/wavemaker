@@ -17,12 +17,7 @@
  */ 
 ImportWebService.widgets = {
 	layoutBox1: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%"}, {}, {
-		dialog: ["wm.Panel", {height: "100%", border: "0", width: "100%"}, {}, {
-			titleBar: ["wm.Panel", {height: "29px", border: "0", layoutKind: "left-to-right"}, {}, {
-				dialogLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_TextAlign_Center", "wm_Padding_4px", "wm_FontColor_White"]}, caption: "Import Web Service", border: "0", width: "100%"}, {}, {
-					format: ["wm.DataFormatter", {}, {}]
-				}]
-			}],
+		dialog: ["wm.Panel", {height: "580px", border: "0", width: "100%"}, {}, {
 			panel: ["wm.Panel", {height: "100%", border: "0"}, {}, {
 				typePanel: ["wm.Panel", {height: "30px", border: "0", padding: "4,0,4,0"}, {}, {
 					panel4: ["wm.Panel", {height: "24px", border: "0", layoutKind: "left-to-right", contentAlign: "center", horizontalAlign: "center"}, {}, {
