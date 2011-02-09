@@ -29,7 +29,7 @@
     <target name="init" depends="check">
         <mkdir dir="${buildroot}"/>
         <mkdir dir="${installer.wm.root}"/>
-
+          
         <unzip src="${java.zip.file}" dest="${installer.wm.root}"/>
 
         <condition property="doSigning">
@@ -54,6 +54,9 @@
             </path>
         </pathconvert>
 
+
+				<copy file="${buildroot}\VERSION" tofile="${src.buildsupport.dir}\VERSION"/>
+				
         <exec executable="${compiler.path}\makensis.exe" osfamily="Windows"
                 failonerror="true">
             <arg line="/V1"/>

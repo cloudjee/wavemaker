@@ -298,13 +298,9 @@ Section -post SEC0001
     
     ; Create version.txt file
     ClearErrors
-    Push $0
-    FileOpen $0 "$INSTDIR\version.txt" w
+    CopyFiles "${BUILDSUPPORTDIR}\VERSION" "$INSTDIR\version.txt"
     IfErrors error
-    FileWrite $0 "${PRODUCT_NAME} Version ${LONGVERSION}"
-    FileClose $0
     error:
-    Pop $0
 
     ; Create Uninstaller
     WriteUninstaller $INSTDIR\uninstall.exe
