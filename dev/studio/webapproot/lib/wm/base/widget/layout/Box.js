@@ -339,7 +339,8 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
             inContainer._xscrollY = false;
             scrollY = "hidden";
         } else {
-	    var requiredHeight = (inContainer instanceof wm.Layout) ? inContainer.bounds.h : inContainer.getPreferredFitToContentHeight();
+	    //var requiredHeight = (inContainer instanceof wm.Layout) ? inContainer.bounds.h : inContainer.getPreferredFitToContentHeight();
+	    var requiredHeight = inContainer.getPreferredFitToContentHeight();
             var needsScrollY = requiredHeight > inContainer.bounds.h;
             var scrollY = (needsScrollY) ? "auto" : "hidden";
             inContainer._xscrollY = (scrollY=="auto");
