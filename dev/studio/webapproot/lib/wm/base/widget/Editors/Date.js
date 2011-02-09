@@ -24,7 +24,7 @@ dojo.require("dijit.form.TimeTextBox");
 //===========================================================================
 // Date Editor
 //===========================================================================
-dojo.declare("wm.Date", wm.Text, {
+dojo.declare("wm.DateDeprecated", wm.Text, {
 	promptMessage: "",
 	invalidMessage: "",
 	minimum: "",
@@ -68,12 +68,82 @@ dojo.declare("wm.Date", wm.Text, {
 });
 
 
+dojo.declare("wm.Date", wm.Text, {
+	promptMessage: "",
+	invalidMessage: "",
+	minimum: "",
+	maximum: "",
+	//locale: '',
+    
+	validationEnabled: function() { return true;},
+	getEditorProps: function(inNode, inProps) {
+		var constraints = {};
+		if (this.minimum)
+		    constraints.min = this.convertValue(this.minimum).getTime();
+		if (this.maximum)
+		    constraints.max = this.convertValue(this.maximum).getTime();
+		var prop = dojo.mixin(this.inherited(arguments), {
+			promptMessage: this.promptMessage,
+			invalidMessage: this.invalidMessage || "$_unset_$",
+			constraints: constraints,
+			required: this.required,
+			value: this.convertValue(this.displayValue)
+		}, inProps || {});
+		
+/*
+		if (this.locale != '')
+			prop.lang = this.locale;
+*/
+		return prop;
+	},
+	_createEditor: function(inNode, inProps) {
+		return new dijit.form.DateTextBox(this.getEditorProps(inNode, inProps));
+	},
+	convertValue: function(inValue) {
+		return wm.convertValueToDate(inValue);
+	},
+	getEditorValue: function() {
+	    var d = this.inherited(arguments);
+	    if (d && d.getTime()) {
+		return dojo.date.locale.format(d, {datePattern: "yyyy-MM-dd", selector: "date"});
+	    } else {
+		return this.makeEmptyValue();
+	    }
+	},    
+	setEditorValue: function(inValue) {
+	    if (inValue instanceof Date)
+		this.inherited(arguments);
+	    else if (String(inValue).match(/(\d\d\d\d)\-(\d\d)\-(\d\d)/))
+		this.inherited(arguments, [dojo.date.locale.parse(inValue, {datePattern: "yyyy-MM-dd", selector: "date"})]);
+	    else
+		this.inherited(arguments, [this.convertValue(inValue)]);
+	},
+        getDate: function() {
+	    var d = this.getDataValue();
+	    if (d instanceof Date) return d;
+	    if (d) {
+		var matches = d.match(/(\d\d\d\d)\-(\d\d)\-(\d\d)/);
+		if (matches) {
+		    d = new Date();
+		    d.setYear(matches[1]);
+		    d.setMonth(parseInt(matches[2])-1);
+		    d.setDate(matches[3]);
+		    return d;
+		}
+	    }
+	    return null;
+	}
+
+});
+
+
 
 //===========================================================================
 // Time Editor
 //===========================================================================
-dojo.declare("wm.Time", wm.Date, {
+dojo.declare("wm.Time", wm.Text, {
 	timePattern:'HH:mm a',
+	validationEnabled: function() { return true;},
 	getEditorProps: function(inNode, inProps) {
 		var prop = dojo.mixin(this.inherited(arguments), {constraints:{timePattern: this.timePattern}}, inProps || {});
 		return prop;
@@ -90,7 +160,18 @@ dojo.declare("wm.Time", wm.Date, {
 			    return makeSelectPropEdit(inName, inValue, ["HH:mm", "HH:mm:ss", "HH:mm a", "HH:mm:ss a"], inDefault);
 		}
 		return this.inherited(arguments);
-	}
+	},
+	getEditorValue: function() {
+	    var d = this.inherited(arguments);
+	    return d && d.getTime() || this.makeEmptyValue();
+	},
+	setEditorValue: function(inValue) {
+	    this.inherited(arguments, [this.convertValue(inValue)]);
+	},
+    getDate: function() {
+	return new Date(this.getEditorValue());
+    }
+
 });
 
 
