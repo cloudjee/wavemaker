@@ -462,6 +462,8 @@ dojo.declare("wm.Dialog", wm.Container, {
         */
         var W = this.domNode.parentNode.clientWidth;
         var H = this.domNode.parentNode.clientHeight;
+	if (w + 2 > W) w = W-2;
+	if (h + 2 > H) h = H-2;
         var buffer = 10;
         var t,l;
         
