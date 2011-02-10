@@ -204,6 +204,7 @@ dojo.declare("wm._SliderEditor", wm._BaseEditor, {
 // Number Editor
 //===========================================================================
 dojo.declare("wm.Number", wm.Text, {
+        spinnerButtons: false,
 	minimum: "",
 	maximum: "",
 	places: "",
@@ -213,12 +214,18 @@ dojo.declare("wm.Number", wm.Text, {
 	},
 	rangeMessage: "",
         validationEnabled: function() { return true;},
+    connectEditor: function() {
+	this.inherited(arguments);
+	if (this.spinnerButtons)
+	    this.addEditorConnect(this.editor, "onClick", this, "changed");
+    },
 	getEditorProps: function(inNode, inProps) {
 		var constraints = {}, v = this.displayValue;
-		if (this.minimum)
+	    if (parseInt(this.minimum) != NaN)
 			constraints.min = Number(this.minimum);
-		if (this.maximum)
+	    if (parseInt(this.maximum) != NaN)
 			constraints.max = Number(this.maximum);
+
 		// NOTE: for constraining decimal places use pattern instead of places
 		// pattern is 'up to' while places is 'must be'
 		if (this.places)
@@ -243,6 +250,9 @@ dojo.declare("wm.Number", wm.Text, {
 		return '';
 	},
 	_createEditor: function(inNode, inProps) {
+	    if (this.spinnerButtons)
+		return new dijit.form.NumberSpinner(this.getEditorProps(inNode, inProps));
+	    else
 		return new dijit.form.NumberTextBox(this.getEditorProps(inNode, inProps));
 	},
 	_getPattern: function() {
@@ -286,7 +296,13 @@ dojo.declare("wm.Number", wm.Text, {
 		if (this.places && this.places != '')
 			formatProps.places = Number(this.places);
 		return formatProps;
+	},
+    setSpinnerButtons: function(inSpinner) {
+	if (this.spinnerButtons != inSpinner) {
+	    this.spinnerButtons = inSpinner;
+	    this.createEditor();
 	}
+    }
 	
 });
 
@@ -297,6 +313,7 @@ wm.Object.extendSchema(wm.Number, {
     minimum:  { group: "editor", order: 3, emptyOK: true, doc: 1},
     maximum: { group: "editor", order: 4, emptyOK: true, doc: 1},
     rangeMessage: {  group: "editor", order: 5},
+    spinnerButtons: {group: "editor", order: 6},
     regExp: { ignore: 1 },
     maxChars: { ignore: 1},
     setMaximum: {group: "method", doc: 1},
@@ -350,7 +367,8 @@ wm.Object.extendSchema(wm.Currency, {
     minimum:  { group: "editor", order: 3, emptyOK: true, doc: 1},
     maximum: { group: "editor", order: 4, emptyOK: true, doc: 1},
     places: {  group: "editor", order: 5, doc: 1},
-    rangeMessage: {  group: "editor", order: 6}
+    rangeMessage: {  group: "editor", order: 6},
+    spinnerButtons: {ignore: 1}
 });
 
 
