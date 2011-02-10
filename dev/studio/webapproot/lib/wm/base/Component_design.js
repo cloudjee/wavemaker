@@ -132,7 +132,7 @@ wm.Component.extend({
 			if (this.isWriteableProp(props[n])) {
 			 if (wm.isInstanceType(src, wm.Application) && src[n] !== undefined)
 			   out[n] = src[n];
-			 else if (n in src && !(src[n] instanceof wm.Variable) && (n == "_classes" && src[n] && src[n].domNode && src[n].domNode.length > 0 || n != "_classes" && src[n] != p[n]))
+			 else if (n in src && !(src[n] instanceof wm.Variable) && (n == "_classes" && src[n] && src[n].domNode && src[n].domNode.length > 0 || n != "_classes" && src[n] !== p[n]))
 			   out[n] = src[n];
 			}
 		}
