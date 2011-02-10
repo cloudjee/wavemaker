@@ -128,7 +128,7 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
 		s.width = s.height = "100%";
 	},
 	setDate: function(inValue) {
-		this.dijit.setValue(wm.convertValueToDate(inValue));
+	    this.dijit.set("value", wm.convertValueToDate(inValue));
 	},
 	getDisplayDate: function() {
 		return dojo.date.locale.format(this.dijit.value, { selector: "date"});
@@ -136,11 +136,26 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
 	setDisplayDate: function(inValue) {
 		this.setDate(inValue);
 	},
-	getDateValue: function() {
-		// dijit._Calendar doesn't have a getValue()
-		var v = this.dijit.value;
-		return v instanceof Date ? v.getTime() : null;
+	getDateObject: function() {
+	    // dijit._Calendar doesn't have a getValue()
+	    var v = this.dijit.value;
+	    if (v instanceof Date) {
+		v.setUTCMinutes(0);
+		v.setUTCHours(0);
+		v.setUTCSeconds(0);
+		return v;
+	    } else {
+		return null;
+	    }
 	},
+    getDateValue: function() {
+	var d = this.getDateObject();
+	if (d) return dojo.date.locale.format(d, {datePattern: "yyyy-MM-dd", selector: "date"});
+    },
+    getDateLong: function() {
+	var d = this.getDateObject();
+	if (d) return d.getTime();
+    },
 	setDateValue: function(inValue) {
 		this.setDate(inValue);
 	},
@@ -164,7 +179,8 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
                 this.dialog.$.description.setCaption(data.description);
             } else if (this.useDialog && this.dialog.showing)
                 this.dialog.dismiss();
-	    this.setValue("dateValue", inDate instanceof Date ? inDate.getTime() : null);
+	    this.valueChanged("dateLong", inDate instanceof Date ? inDate.getTime() : null);
+	    this.valueChanged("dateValue", this.getDateValue());
 	}
 });
 
@@ -173,6 +189,7 @@ wm.Object.extendSchema(wm.dijit.Calendar, {
         specialDates: { readonly: true, group: "data", order: 0, type: "wm.Variable", isList: true, bindTarget: true},
     useDialog: {group: "data", order: 1, type: "boolean"},
     dateValue: { ignore: 1, bindable: 1, type: "Date" },
+    dateLong:  { ignore: 1, bindable: 1, type: "Date" },
     setDate: {group: "method"},
     getDateValue: {group: "method"},
     setDisplayDate: {group: "method"},
