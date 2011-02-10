@@ -245,7 +245,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	return this.dirty;
     },
     save: function() {
-		this.saveEntity(); // calls saveColumns and saveRelationships
+	this.saveEntity(null, false); // calls saveColumns and saveRelationships
     },
     getProgressIncrement: function(runtime) {
 	return runtime ? 0 : 20; // saving data model is very slow...  1 tick is very fast; this is 20 times slower than that
@@ -773,7 +773,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	getTableNameFromEntityName: function(entityName) {
 		return entityName.slice(0, 1).toLowerCase() + entityName.slice(1);
 	},
-	saveEntity: function(inSender) {
+        saveEntity: function(inSender, isNew) {
 
 		var schemaName = this.tableDetailSchemaName.getDataValue();
 		if (!schemaName) {
@@ -792,11 +792,11 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 			dynamicInsert: this.dynamicInsertCheckBox.components.editor.getChecked(),
 			dynamicUpdate: this.dynamicUpdateCheckBox.components.editor.getChecked(),
 			refreshEntity: this.refreshCheckBox.components.editor.getChecked()};
-		this.updateEntity(t);
+	        this.updateEntity(t, isNew);
 	},
-	updateEntity: function(entity) {
+    updateEntity: function(entity, isNew) {
 	        // var save = this.onlyEntityIsDirty;
-	    var save = true;
+	var save = !isNew;
 		studio.dataService.requestSync("updateEntity", 
 						[this.currentDataModelName, 
 						this.currentEntityName, 
@@ -891,7 +891,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 				                      DEFAULT_COL_LENGTH, DEFAULT_COL_PRECISION, 
 				                      IDENTITY_GENERATOR, HIBERNATE_INT_TYPE);
                                        
-			               this.saveAll();
+			               this.saveEntity(null, true);
                                    }));
 		//}
 	},
