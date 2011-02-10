@@ -293,3 +293,72 @@ wm.Object.extendSchema(wm.Time, {
     maxChars: {ignore:1},
     changeOnKey: {ignore: 1}
 });
+
+
+dojo.declare("wm.DateTime", wm.Text, {
+
+    doOnfocus: function() {
+	this.inherited(arguments);
+	if (!wm.DateTime.dialog) {
+	    wm.DateTime.dialog = this.createComponent(	
+		"dialog", "wm.Dialog", {"height":"252px","title":"","width":"370px", modal: false}, {}, {
+		    containerWidget: ["wm.Container", {"_classes":{"domNode":["wmdialogcontainer","MainContent"]},"border":"0","height":"100%","horizontalAlign":"left","margin":"0","padding":"1","verticalAlign":"top","width":"100%"}, {}, {
+			calendar: ["wm.dijit.Calendar", {"border":"0"}, {onValueSelected: "handleDateChange"}],
+			panel1: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+			    hours: ["wm.Number", {"caption":"Hour","captionAlign":"left","captionPosition":"top","captionSize":"20px","changeOnKey":true,"displayValue":"","height":"43px","maximum":12,"minimum":1,"padding":"2","spinnerButtons":true,"width":"56px"}, {onchange: "handleDateChange"}],
+				minutes: ["wm.Number", {"caption":"Minute","captionAlign":"left","captionPosition":"top","captionSize":"20px","changeOnKey":true,"displayValue":"","height":"43px","maximum":59,"minimum":0,"padding":"2","spinnerButtons":true,"width":"56px"}, {onchange: "handleDateChange"}],
+			    ampm: ["wm.ToggleButton", {"captionDown":"PM","captionUp":"AM","height":"100%","margin":"21,0,6,0"}, {onclick: "handleDateChange"}],
+				spacer1: ["wm.Spacer", {"height":"48px","width":"33px"}, {}],
+				panel2: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
+				    button2: ["wm.Button", {"caption":"OK","height":"36px","margin":"0,5,0,0","width":"100%"}, {onclick: "okClicked"}],
+				    button1: ["wm.Button", {"caption":"Cancel","height":"36px","margin":"0,5,0,0","width":"100%"}, {onclick: "cancelClicked"}]
+				}]
+			}],
+			label: ["wm.Label", {"border":"0","caption":"undefined NaN, NaN 12:NaN:NaN PM","padding":"4","width":"100%"}, {}, {
+
+			}]
+		}]
+	}, this);
+	}
+	wm.DateTime.dialog.fixPositionNode = this.domNode;
+	this._initialValue = this.getDataValue();
+	wm.DateTime.dialog.show();
+    },
+    handleDateChange: function() {
+	var date = this.$.calendar.getDateObject();
+	var hour = this.$.hours.getDataValue() || 1;
+	var minute = this.$.minutes.getDataValue() || 0;
+	hour = String(hour).length == 1 ? "0" + hour : String(hour);
+	minute = String(minute).length == 1 ? "0" + minute : String(minute);
+	var timestr = hour + ":" + minute + " " + (this.$.ampm.clicked ? "PM":"AM");
+	var time = dojo.date.locale.parse(timestr, {selector:'time',timePattern: "hh:mm a"});
+	var displayValue1 = dojo.date.locale.format(new Date(date.getTime() + time.getTime()), {formatLength: "medium"});
+	this.$.label.setCaption(displayValue1);
+	var displayValue2 = dojo.date.locale.format(new Date(date.getTime() + time.getTime()), {formatLength: "short"});
+	this.setDisplayValue(displayValue2);
+    },
+	getDisplayValue: function() {
+	    if (this.editor)
+		return this.editor.get("displayedValue");
+	    else if (this.dataValue)
+		return dojo.date.locale.format(this.dataValue, {formatLength: "short"});
+	    else
+		return "";
+	},
+    getEditorValue: function() {
+	var value = this.getDisplayValue();
+	var date = dojo.date.locale.parse(value, {formatLength: "short"});
+	if (date) return date.getTime();
+	return null;
+    },
+    okClicked: function() {
+	wm.DateTime.dialog.hide();
+	this.changed();
+    },
+    cancelClicked: function() {
+	wm.DateTime.dialog.hide();
+	this.setDisplayValue(dojo.date.locale.format(new Date(this._initialValue), {formatLength: "short"}));
+    }
+
+
+});

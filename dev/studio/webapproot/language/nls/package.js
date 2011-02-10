@@ -46,6 +46,7 @@
 	"Checkbox" : "Checkbox",
 	"Currency" : "Currency",
 	"Date" : "Date",
+	"DateTime" : "DateTime",
 	"Number" : "Number",
 	"RadioButton" : "RadioButton",
 	"Select" : "Select",

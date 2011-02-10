@@ -68,6 +68,7 @@
 [ "Forms &amp; Editors/" + bundlePackage.Editor, bundlePackage.Checkbox, "wm.Checkbox", "wm.base.widget.Editors.Checkbox", "images/wm/edit.png", bundlePackage.descCheckbox, false],
 [ "Forms &amp; Editors/" +  bundlePackage.Editor, bundlePackage.Currency, "wm.Currency", "wm.base.widget.Editors.Text", "images/wm/edit.png", bundlePackage.descCurrency, false],
 [ "Forms &amp; Editors/" +  bundlePackage.Editor, bundlePackage.Date, "wm.Date", "wm.base.widget.Editors.Date", "images/wm/edit.png", bundlePackage.descDate, false],
+[ "Forms &amp; Editors/" +  bundlePackage.Editor, bundlePackage.DateTime, "wm.DateTime", "wm.base.widget.Editors.Date", "images/wm/edit.png", bundlePackage.descDate, false],
 [ "Forms &amp; Editors/" +  bundlePackage.Editor, bundlePackage.Number, "wm.Number", "wm.base.widget.Editors.Number", "images/wm/edit.png", bundlePackage.descNumber, false],
 [ "Forms &amp; Editors/" +  bundlePackage.Editor, bundlePackage.RadioButton, "wm.RadioButton", "wm.base.widget.Editors.Radiobutton", "images/wm/edit.png", bundlePackage.descRadioButton, false],
 [ "Forms &amp; Editors/" +  bundlePackage.Editor, bundlePackage.Select, "wm.SelectMenu", "wm.base.widget.Editors.Select", "images/wm/edit.png", bundlePackage.descSelectMenu, false],
