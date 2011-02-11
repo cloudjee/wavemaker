@@ -508,6 +508,9 @@ this.label.enable();
 			return;
 		try
 		{
+		    if (this._layerConnections)
+			delete this._layerConnections;
+
 			if (this.widgets) {
 				var wids = [];
 				for (var n in this.widgets) 
@@ -611,27 +614,34 @@ this.label.enable();
         }
 
         var f = dojo.hitch(obj,callback);
-
+	this._layerConnections = [];
         dojo.forEach(layers, dojo.hitch(this,function(l) {
-            this.connect(l, "onShow", this, function() {
+            this._layerConnections.push(this.connect(l, "onShow", this, function() {
                 if (dojo.every(layers, function(l2) {return l2.isActive();}) && 
                     dojo.every(dialogs, function(l2) {return l2.showing;})) {
                     f();
                 }
-            });
+            }));
         }));
 
         dojo.forEach(dialogs, dojo.hitch(this,function(d) {
-            this.connect(d, "setShowing", this, function() {
+            this._layerConnections.push(this.connect(d, "setShowing", this, function() {
                 if (d.showing && !d._transitionToHiding) { // transition handles case where showing is true, but animation is running that will have it hidden very soon
                     if (dojo.every(layers, function(l2) {return l2.isActive();}) && 
                         dojo.every(dialogs, function(l2) {return l2.showing;})) {
                         f();
                     }
                 }
-            });
+            }));
         }));
                 
+    },
+    disconnectFromAllLayers: function() {
+	dojo.forEach(this._layerConnections, dojo.hitch(this, function(c) {
+	    dojo.disconnect(c);
+	    this._connections = wm.Array.removeElement(this._connections, c);
+	}));
+	delete this._layerConnections;
     },
     isAncestor: function(inParent) {
 	var o;

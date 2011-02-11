@@ -494,6 +494,13 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		if (!this.variable)
 			return;
 		
+	    if (this.isAncestorHidden()) {
+		if (!this._layerConnections) 
+		    this.connectToAllLayers(this, "renderDojoObj");
+		return;
+	    } else if (this._layerConnections) {
+		this.disconnectFromAllLayers();
+	    }
 		this.rendering = true;
 		var structure = this.getStructure();
 		if (structure[0].length == 0)
@@ -592,7 +599,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
 	setDataSet: function (inValue, inDefault){	    
 	    if (this._typeChangedConnect) {
-		dojo.disconnect(this._typeChangedConnect);
+		this.disconnectEvent("typeChanged");
 		delete this._typeChangedConnect;
 	    }
 
