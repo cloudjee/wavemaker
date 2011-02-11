@@ -63,7 +63,7 @@ dojo.declare("wm.Date", wm.Text, {
 	    var d = this.inherited(arguments);
 	    if (d) {
 		if (!this.useLocalTime)
-		    d.setHours(-wm.serverTimeOffset - d.getTimezoneOffset()/60,0,0);
+		    d.setHours(-wm.serverTimeOffset - wm.Date.timezoneOffset,0,0);
 		return d.getTime();
 	    }
 	    return this.makeEmptyValue();
@@ -73,10 +73,12 @@ dojo.declare("wm.Date", wm.Text, {
 
 	    // If we assume that this is server time, then we need to add some number of hours to it so that instead of showing the date in local time, we show the date as it is according to the server
 	    if (!this.useLocalTime)
-		v.setHours(v.getHours() + wm.serverTimeOffset + v.getTimezoneOffset()/60);
+		v.setHours(v.getHours() + wm.serverTimeOffset + wm.Date.timezoneOffset);
 	    this.inherited(arguments, [v]);
 	}
 });
+
+wm.Date.timezoneOffset = new Date().getTimezoneOffset()/60;
 
 //===========================================================================
 // Time Editor
