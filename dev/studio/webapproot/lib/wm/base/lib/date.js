@@ -19,6 +19,7 @@ dojo.provide('wm.base.lib.date');
 dojo.require("dojo.date.locale");
 
 wm.convertValueToDate = function(inValue, inParams) {
+    if (inValue instanceof Date) return inValue;
 	var v = inValue, s = inParams || {selector: "date"};
 	if (!v && v !== 0)
 	{
