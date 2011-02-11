@@ -100,7 +100,7 @@ wm.Object.extendSchema(wm.ServiceVariable, {
 	clearInput: { group: "operation", order: 30},
 	onSetData: {ignore: 1},
         onCanUpdate: {events: ["js", "sharedjs", "sharedEventHandlers"]},
-	input: { ignore: 1 , writeonly: 1, componentonly: 1, categoryParent: "Properties", categoryProps: {component: "input", bindToComponent: true, inspector: "Data"}},
+    input: { ignore: 1 , doc: 1, type: "wm.Variable", writeonly: 1, componentonly: 1, categoryParent: "Properties", categoryProps: {component: "input", bindToComponent: true, inspector: "Data"}},
 	service: {group: "common", order: 23 },
 	autoUpdate: {group: "common", order: 25},
 	startUpdate: {group: "common", order: 26},
@@ -122,8 +122,8 @@ wm.Object.extendSchema(wm.ServiceVariable, {
     getPageCount: {group: "method", returns: "Number"},
     setNextPage: {group: "method"},
     setPreviousPage: {group: "method"},
-    setLastPage: {group: "method"},
-    input: {ignore: 1, doc: 1, type: "wm.Variable"}
+    setLastPage: {group: "method"}
+
 });
 
 
