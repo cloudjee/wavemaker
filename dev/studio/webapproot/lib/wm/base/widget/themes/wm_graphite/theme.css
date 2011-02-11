@@ -725,6 +725,14 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
          border-radius-bottomright: 2px; /* wm.SelectMenu-Inner_Radius */
          border-radius-topright: 2px; /* wm.SelectMenu-Inner_Radius */
 }
+.wm_graphite .dijitSpinner .dijitArrowButton .dijitArrowButtonInner {
+        height: 100% !important;
+	background-position: 30% 20%;
+	background-image: url(images/comboArrowDownLight.png); /* wm.NumberSpinner-Down-Arrow_Image */    
+}
+.wm_graphite .dijitSpinner .dijitArrowButton.dijitUpArrowButton .dijitArrowButtonInner {
+	background-image: url(images/comboArrowUpLight.png); /* wm.NumberSpinner-Up-Arrow_Image */    
+}
   /**************************************************************************************************
    * TYPE:        Slider
    *
@@ -753,6 +761,7 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
    * DESCRIPTION: We need to set the background color and background image for the menu's popup
    *              button. 
    ************************************************************************************************/
+.wm_graphite .wmeditor .dijitSpinner .dijitArrowButton,
 .wm_graphite .wmeditor .dijitComboBox .dijitArrowButton {
     background-color: #444444; /* Document-ClickablesDefault-Background_Color */
     background-image: none;
@@ -827,7 +836,8 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
    * DESCRIPTION: We need to set the background color and background image for the menu's popup
    *              button. 
    ************************************************************************************************/
-.wm_graphite .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_graphite .MainContent .wmeditor .dijitSpinner .dijitArrowButton,
+.wm_graphite .MainContent .wmeditor .dijitComboBox .dijitArrowButton {
     background-color: #807e7e; /* MainContent-ClickablesDefault-Background_Color */
     background-image: none;
 }
@@ -898,7 +908,8 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
    * DESCRIPTION: We need to set the background color and background image for the menu's popup
    *              button. 
    ************************************************************************************************/
-.wm_graphite .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_graphite .EmphasizedContent .wmeditor .dijitSpinner .dijitArrowButton,
+.wm_graphite .EmphasizedContent .wmeditor .dijitComboBox .dijitArrowButton {
     background-color: #868484; /* EmphasizedContent-ClickablesDefault-Background_Color */
     background-image: none;
 }
@@ -962,7 +973,8 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
    * DESCRIPTION: We need to set the background color and background image for the menu's popup
    *              button. 
    ************************************************************************************************/
-.wm_graphite .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_graphite .HeaderContent .wmeditor .dijitSpinner .dijitArrowButton {
+.wm_graphite .HeaderContent .wmeditor .dijitComboBox .dijitArrowButton {
     background-color: #999999; /* HeaderContent-ClickablesDefault-Background_Color */
     background-image: none;
     height: 100% !important;

@@ -745,5 +745,15 @@
 		"Image": "url(images/comboArrowDownLight.png)", 
 		"Image-Position": "top left", 
 		"Image-Repeat": "repeat"
+	}, 
+	"wm.NumberSpinner-Down-Arrow": {
+		"Image": "url(images/comboArrowDownDark.png)", 
+		"Image-Position": "top left", 
+		"Image-Repeat": "repeat"
+	}, 
+	"wm.NumberSpinner-Up-Arrow": {
+		"Image": "url(images/comboArrowUpDark.png)", 
+		"Image-Position": "top left", 
+		"Image-Repeat": "repeat"
 	}
 }

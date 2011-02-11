@@ -221,9 +221,9 @@ dojo.declare("wm.Number", wm.Text, {
     },
 	getEditorProps: function(inNode, inProps) {
 		var constraints = {}, v = this.displayValue;
-	    if (parseInt(this.minimum) != NaN)
+	    if (!isNaN(parseInt(this.minimum)))
 			constraints.min = Number(this.minimum);
-	    if (parseInt(this.maximum) != NaN)
+	    if (!isNaN(parseInt(this.maximum)))
 			constraints.max = Number(this.maximum);
 
 		// NOTE: for constraining decimal places use pattern instead of places
@@ -302,7 +302,8 @@ dojo.declare("wm.Number", wm.Text, {
 	    this.spinnerButtons = inSpinner;
 	    this.createEditor();
 	}
-    }
+    },
+    themeableStyles: [{name: "wm.NumberSpinner-Down-Arrow_Image", displayName: "Down Arrow"}, {name: "wm.NumberSpinner-Up-Arrow_Image", displayName: "Up Arrow"}]
 	
 });
 

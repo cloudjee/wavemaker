@@ -1756,3 +1756,13 @@ Overriding dijit's progress bar properties to enable height changes to progress 
     
 }
 
+.wmdatetimedialog,
+.wmdatetimedialog .dialogfooter {
+	-moz-border-radius: 0px !important; 
+	-webkit-border-radius: 0px !important; 
+	border-radius: 0px !important; 
+}
+.wmdatetimedialog .wmDialog-calendar .dijitCalendarContainer {
+    border: 0px;
+    
+}

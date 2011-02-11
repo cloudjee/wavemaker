@@ -727,13 +727,12 @@ body .wm_default .dialogfooter .wmbutton:hover {
 }
 .wm_default .dijitSpinner .dijitArrowButton .dijitArrowButtonInner {
         height: 100% !important;
-        background-position: 50% 50%;
-	background-image: url(images/comboArrowDownLight.png); /* wm.SelectMenu-Down-Arrow_Image */    
+	background-position: 30% 20%;
+	background-image: url(images/comboArrowDownLight.png); /* wm.NumberSpinner-Down-Arrow_Image */    
 }
 .wm_default .dijitSpinner .dijitArrowButton.dijitUpArrowButton .dijitArrowButtonInner {
-	background-image: url(images/comboArrowUpLight.png); /* wm.SelectMenu-Down-Arrow_Image */    
+	background-image: url(images/comboArrowUpLight.png); /* wm.NumberSpinner-Up-Arrow_Image */    
 }
-
   /**************************************************************************************************
    * TYPE:        Slider
    *
@@ -762,6 +761,7 @@ body .wm_default .dialogfooter .wmbutton:hover {
    * DESCRIPTION: We need to set the background color and background image for the menu's popup
    *              button. 
    ************************************************************************************************/
+.wm_default .wmeditor .dijitSpinner .dijitArrowButton,
 .wm_default .wmeditor .dijitComboBox .dijitArrowButton {
     background-color: #333333; /* Document-ClickablesDefault-Background_Color */
     background-image: none;
@@ -836,8 +836,8 @@ body .wm_default .dialogfooter .wmbutton:hover {
    * DESCRIPTION: We need to set the background color and background image for the menu's popup
    *              button. 
    ************************************************************************************************/
-.wm_default .wmeditor .dijitSpinner .dijitArrowButton,
-.wm_default .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_default .MainContent .wmeditor .dijitSpinner .dijitArrowButton,
+.wm_default .MainContent .wmeditor .dijitComboBox .dijitArrowButton {
     background-color: #eeeeee; /* MainContent-ClickablesDefault-Background_Color */
     background-image: none;
 }
@@ -908,12 +908,8 @@ body .wm_default .dialogfooter .wmbutton:hover {
    * DESCRIPTION: We need to set the background color and background image for the menu's popup
    *              button. 
    ************************************************************************************************/
-.wm_default .wmeditor .dijitSpinner .dijitArrowButtonInner {
-	background-position: 30% 20%;
-    }
-
-.wm_default .wmeditor .dijitSpinner .dijitArrowButton,
-.wm_default .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_default .EmphasizedContent .wmeditor .dijitSpinner .dijitArrowButton,
+.wm_default .EmphasizedContent .wmeditor .dijitComboBox .dijitArrowButton {
     background-color: #333333; /* EmphasizedContent-ClickablesDefault-Background_Color */
     background-image: none;
 }
@@ -977,7 +973,8 @@ body .wm_default .dialogfooter .wmbutton:hover {
    * DESCRIPTION: We need to set the background color and background image for the menu's popup
    *              button. 
    ************************************************************************************************/
-.wm_default .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_default .HeaderContent .wmeditor .dijitSpinner .dijitArrowButton {
+.wm_default .HeaderContent .wmeditor .dijitComboBox .dijitArrowButton {
     background-color: #666666; /* HeaderContent-ClickablesDefault-Background_Color */
     background-image: none;
     height: 100% !important;

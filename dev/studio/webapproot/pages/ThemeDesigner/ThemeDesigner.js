@@ -1663,6 +1663,9 @@ dojo.declare("ThemeDesigner", wm.Page, {
             var subTwo = new wm.Panel({isMajorContent: true, margin: "50", parent: subOne, horizontalAlign: "center", verticalAlign: "middle", width: "100%", height: "100%"});
             
             break;
+	case "wm.Number":
+	    o.setSpinnerButtons(true);
+	    break;
         }
 	this.owner = app;
         if (wm.isInstanceType(o, wm.Dialog)) {

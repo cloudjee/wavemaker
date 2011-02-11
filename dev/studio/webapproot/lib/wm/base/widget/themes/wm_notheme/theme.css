@@ -173,3 +173,12 @@
 .wm_notheme .wmtree-last-item { 
     background-color: #fff;
 }
+
+.wm_notheme .dijitSpinner .dijitArrowButton .dijitArrowButtonInner {
+        height: 100% !important;
+	background-position: 30% 20%;
+	background-image: url(images/comboArrowDownDark.png);
+}
+.wm_notheme .dijitSpinner .dijitArrowButton.dijitUpArrowButton .dijitArrowButtonInner {
+	background-image: url(images/comboArrowUpDark.png); 
+}
