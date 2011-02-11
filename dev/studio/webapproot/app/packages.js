@@ -124,7 +124,7 @@
 [ bundlePackage.Web_Content, bundlePackage.Feed_List, "wm.FeedList", "wm.base.widget.FeedList", "images/rss.png", bundlePackage.descFeedList, false],
 [ bundlePackage.Web_Content, bundlePackage.Twitter_Feed, "wm.TwitterFeed", "wm.base.widget.TwitterFeed", "images/wm/twitter.png", bundlePackage.descTwitterFeed, false],
 //[ bundlePackage.Web_Content, "Stocks", "wm.gadget.Stocks", "wm.base.widget.gadget.Stocks", "images/flash.png", "Stocks Google Gadget"],
-[ bundlePackage.Web_Content, bundlePackage.Weather, "wm.gadget.Weather", "wm.base.widget.gadget.Weather", "images/flash.png", bundlePackage.descWeatherWidget, false],
+//[ bundlePackage.Web_Content, bundlePackage.Weather, "wm.gadget.Weather", "wm.base.widget.gadget.Weather", "images/flash.png", bundlePackage.descWeatherWidget, false],
 [ bundlePackage.Web_Content, bundlePackage.YouTube, "wm.gadget.YouTube", "wm.base.widget.gadget.YouTube", "images/flash.png", bundlePackage.descYouTubeWidget, false],
 [ bundlePackage.Web_Content, bundlePackage.Fisheye, "wm.DojoFisheye", "wm.base.widget.DojoFisheye", "images/wm/fisheye.png", bundlePackage.descFisheye, true],
 [ bundlePackage.Web_Content, bundlePackage.Lightbox, "wm.DojoLightbox", "wm.base.widget.DojoLightbox", "images/wm/lightbox_16.png", bundlePackage.descLightbox, true],
