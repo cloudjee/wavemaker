@@ -374,10 +374,10 @@ wm.LiveVariable.extend({
 			// since this is the default anyway, otherwise set to false.
 		        this.setStartUpdate(inOperation == "read");
 			this.setAutoUpdate(inOperation == "read");
-/*
+
 			if (studio.selected == this)
-				studio.inspector.inspect(this);
-				*/
+			    studio.inspector.initTree(this);
+
 		}
 	},
 
