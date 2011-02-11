@@ -9,6 +9,42 @@
         <equals arg1="${project.type}" arg2="enterprise"/>
     </condition>
     
+      <target name="common-installer.generate-dist"
+            description="Generate the installer dist; depends on 'installer.wm.root' being set">
+        <mkdir dir="${installer.wm.root}"/>
+        <mkdir dir="${installer.wm.root}/Support"/>
+        <copy todir="${installer.wm.root}/Support">
+            <fileset dir="${root.dir}/../Support">
+                <exclude name="**/.svn"/>
+				<exclude name="**/Batchbuild/**" unless="isEnterprise"/>
+            </fileset>
+        </copy>
+
+        <mkdir dir="${installer.wm.root}/Samples"/>
+        <copy todir="${installer.wm.root}/Samples">
+            <fileset dir="${root.dir}/demos">
+                <exclude name="**/.svn"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${installer.wm.root}/launcher">
+            <fileset dir="${dist.launcher.dir}"/>
+        </copy>
+
+        <copy todir="${installer.wm.root}/studio">
+            <fileset dir="${dist.studio.dir}">
+				<exclude name="**/RbacPlugin.js" unless="isEnterprise"/>
+				<exclude name="**/DojoFlashFileUpload.js" unless="isEnterprise"/>
+			</fileset>
+        </copy>
+
+        <copy todir="${installer.wm.root}">
+            <fileset dir="${build.dir}">
+                <include name="VERSION"/>
+            </fileset>
+        </copy>
+    </target>
+      
     <target name="common-installer.generate-dist-sunjdk"
             description="Generate the installer dist; depends on 'installer.wm.sunjdk.root' being set">
         <mkdir dir="${installer.wm.sunjdk.root}"/>
