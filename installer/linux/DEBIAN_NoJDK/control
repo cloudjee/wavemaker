@@ -5,7 +5,7 @@ Priority: optional
 Architecture: amd64
 Maintainer: Ed Callahan <community@wavemaker.com>
 Provides: wavemaker-@PROJECTTYPE@
-Pre-Depends: ia32-libs
+Depends: ia32-libs, openjdk-6-jdk | sun-java6-jdk
 Suggests: lib32nss-mdns
 Homepage: http://dev.wavemaker.com/
 Description: Web 2.0 WSYWIG AJAX Development

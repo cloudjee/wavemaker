@@ -4,6 +4,7 @@ Section: devel
 Priority: optional
 Architecture: i386
 Maintainer: Ed Callahan <community@wavemaker.com>
+Depends: openjdk-6-jdk | sun-java6-jdk
 Provides: wavemaker-@PROJECTTYPE@
 Description: Web 2.0 WSYWIG AJAX Development
  WaveMaker provides for the Web-Fast development of CIO-Safe
