@@ -336,28 +336,17 @@ dojo.declare("wm.DateTime", wm.Text, {
 	if (this._initializingDialog) return;	
 	if (this.dateElements != "Time") {
 	    var date = new Date(wm.DateTime.dialog.$.calendar.getDateValue());
-
-	    // Zero these out so we can add a date with no time to a time value
-	    if (this.dateElements == "Date and Time") {
-		date.setUTCHours(0);
-		date.setUTCMinutes(0);
-		date.setUTCSeconds(0);
-	    }
 	} else {
 	    var date = new Date(0);
 	}
 	if (this.dateElements != "Date") {
-
 	    var hour = wm.DateTime.dialog.$.hours.getDataValue() || 1;
 	    var minute = wm.DateTime.dialog.$.minutes.getDataValue() || 0;
-	    hour = String(hour).length == 1 ? "0" + hour : String(hour);
-	    minute = String(minute).length == 1 ? "0" + minute : String(minute);
-	    var timestr = hour + ":" + minute + " " + (wm.DateTime.dialog.$.ampm.clicked ? "PM":"AM");
-	    var time = dojo.date.locale.parse(timestr, {selector:'time',timePattern: "hh:mm a"});
-	} else {
-	    time = new Date(0);
+	    var isPM = wm.DateTime.dialog.$.ampm.clicked;
+	    date.setHours(hour + (isPM ? 12 : 0), minute);
 	}
-	var displayValue1 = dojo.date.locale.format(new Date(date.getTime() + time.getTime()), {formatLength: "medium", selector: this.dateElements.toLowerCase()});
+
+	var displayValue1 = dojo.date.locale.format(date, {formatLength: "medium", selector: this.dateElements.toLowerCase()});
 	wm.DateTime.dialog.$.label.setCaption(displayValue1);
 
 	if (this.dateElements == "Date") {
@@ -365,9 +354,10 @@ dojo.declare("wm.DateTime", wm.Text, {
 	    this.setDisplayValue(displayValue2);
 	    wm.DateTime.dialog.hide();
 	} else {
-	    var displayValue2 = dojo.date.locale.format(new Date(date.getTime() + time.getTime()), {formatLength: this.formatLength, selector: this.dateElements.toLowerCase()});
+
+	    var displayValue2 = dojo.date.locale.format(date, {formatLength: this.formatLength, selector: this.dateElements.toLowerCase()});
 	    this.setDisplayValue(displayValue2);
-	}
+    }
 
     },
 	getDisplayValue: function() {
