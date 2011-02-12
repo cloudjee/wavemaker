@@ -419,6 +419,7 @@ dojo.declare("wm.DateTime", wm.Text, {
     listProperties: function() {
 	var p = this.inherited(arguments);
 	p.useLocalTime.tmpignore = (this.dateElements != "Date");
+	return p;
     }
 
 
