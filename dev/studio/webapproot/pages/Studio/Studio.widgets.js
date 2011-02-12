@@ -254,10 +254,9 @@ Studio.widgets = {
 					designerSourceBtn: ["wm.ToolButton", {border: "0", borderColor: "#294473", margin: "0", padding: "0,6", height: "100%", width: "57px", caption: "", hint: bundleStudio.T_SourceTip}, {onclick: "navGotoSourceClick"}]
 				}],
 				*/
-										left: ["wm.TabLayers", {_classes: {domNode: ["wm-darksnazzy"]}, border: "0", width: "100%", height: "100%", headerHeight: "32px"}, {onchange: "leftTabsChange"}, {
+			    left: ["wm.TabLayers", {_classes: {domNode: ["wm-darksnazzy"]}, border: "0", width: "100%", height: "100%", headerHeight: "32px", clientBorder: "3,0,0,0",clientBorderColor: "#959DAB"}, {onchange: "leftTabsChange"}, {
 				    mlpal: ["wm.Layer", {_classes: {domNode: ["wm-palette"]}, caption: bundleStudio.Palette}, {onShow: "resetPaletteSearch"}, {
-					benchbevel6: ["wm.Bevel", {border: ""}, {}],
-					paletteSearch: ["wm.Text", {caption: "", width: "100%", height: "27px", placeHolder: "Find Component/Widget", padding: "2,5,2,5", changeOnKey: true, resetButton: true}, {onchange: "paletteSearchChange"}],
+					paletteSearch: ["wm.Text", {caption: "", width: "100%", height: "27px", placeHolder: "Find Component/Widget", padding: "2,5,2,5", margin: "2,0,2,0", changeOnKey: true, resetButton: true}, {onchange: "paletteSearchChange"}],
 					benchbevel6_6: ["wm.Bevel", {border: ""}, {}],
 					palette: ["wm.Palette", {height: "100%", border: ""}, {}],
 					paletteTips: ["wm.Label", {width: "100%", height: "24px", border: "3,0,0,0", borderColor: "#666E80", backgroundColor: "#424A5A", autoSizeHeight: true,singleLine: false, showing: false}]
@@ -266,17 +265,15 @@ Studio.widgets = {
 					componentPalette: ["wm.Palette", {height: "300px", border: ""}, {}]*/
 				    }],
 				    leftObjects: ["wm.Layer", {caption: bundleStudio.Model}, {onShow: "resetTreeSearch"}, {
-					benchbevel5: ["wm.Bevel", {border: ""}, {}],
-					treeSearch: ["wm.Text", {caption: "", width: "100%",  height: "27px", placeHolder: "Find Component/Widget", padding: "2,5,2,5", changeOnKey: true, resetButton: true}, {onchange: "treeSearchChange"}],
+					treeSearch: ["wm.Text", {caption: "", width: "100%",  height: "27px", placeHolder: "Find Component/Widget", padding: "2,5,2,5", margin: "2,0,2,0", changeOnKey: true, resetButton: true}, {onchange: "treeSearchChange"}],
 					benchbevel5_5: ["wm.Bevel", {border: ""}, {}],
 					label12: ["wm.Label", {height: "22px", width: "100%", caption: bundleStudio.Visual_Components, border: "", padding: "4"}, {}, {
 					    format: ["wm.DataFormatter", {}, {}]
 					}],
-					widgetsTree: ["wm.DraggableTree", {height: "100%", border: "", padding: "4,0,0,0", dropBetweenNodes: true}, {onselect: "treeSelect", onNodeDrop: "onWidgetTreeNodeDrop"}]
+					widgetsTree: ["wm.DraggableTree", {height: "100%", border: "", padding: "3,0,0,0", dropBetweenNodes: true}, {onselect: "treeSelect", onNodeDrop: "onWidgetTreeNodeDrop"}]
 				    }],
 				    componentModel: ["wm.Layer", {caption: bundleStudio.componentsTab}, {onShow: "resetCompTreeSearch"}, {
-					benchbevel50_1: ["wm.Bevel", {border: ""}, {}],
-					compTreeSearch: ["wm.Text", {caption: "", width: "100%",  height: "27px", placeHolder: "Find Component/Widget", padding: "2,5,2,5", changeOnKey: true, resetButton: true}, {onchange: "compTreeSearchChange"}],
+					compTreeSearch: ["wm.Text", {caption: "", width: "100%",  height: "27px", placeHolder: "Find Component/Widget", padding: "2,5,2,5", margin: "2,0,2,0", changeOnKey: true, resetButton: true}, {onchange: "compTreeSearchChange"}],
 					benchbevel50_5: ["wm.Bevel", {border: ""}, {}],
 					compLabel11: ["wm.Label", {height: "22px", width: "100%", caption: bundleStudio.M_Services, border: "", padding: "4"}, {}, {
 					    format: ["wm.DataFormatter", {}, {}]
@@ -307,11 +304,11 @@ Studio.widgets = {
 				benchbevel12: ["wm.Bevel", {border: ""}, {}]
 			}],
 			splitter1: ["wm.Splitter", {border: "0", layout: "left"}, {}],
-		    tabs: ["wm.TabLayers", {border: "0", width: "100%", height: "100%", headerHeight: "32px",clientBorder: "2,0,0,0", clientBorderColor: "#959DAB",customClose: "closeServiceParentTab"}, {oncanchange: "tabsCanChange", onchange: "tabsChange"}, {
+		    tabs: ["wm.TabLayers", {border: "0", width: "100%", height: "100%", headerHeight: "32px",clientBorder: "3,0,0,0", clientBorderColor: "#959DAB",customClose: "closeServiceParentTab"}, {oncanchange: "tabsCanChange", onchange: "tabsChange"}, {
 		    workspace: ["wm.Layer", {caption: bundleStudio.T_Design, layoutKind: "top-to-bottom"}, {}, {
 			workspaceInner: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right"}, {}, {
 			    main: ["wm.Panel", {height: "100%", width: "100%", border: "", layoutKind: "top-to-bottom", borderColor: "#666E80"}, {}, {
-					ribbon: ["wm.Panel", {height: "29px", border: "0", layoutKind: "left-to-right", padding: "0,4"}, {}, {
+					ribbon: ["wm.Panel", {height: "30px", border: "0", layoutKind: "left-to-right", padding: "0,4"}, {}, {
 						studioToolbarButtons: ["wm.Panel", {height: "100%", width: "100%", border: "", layoutKind: "left-to-right", imageList: "canvasToolbarImageList16"}, {}, {
 							/*pagePopupBtn: ["wm.PopupButton", {width: "32px", caption: "<img src=\"images/dropArrow.png\"/>", popupWidth: "150", imageIndex: 14, imageList: "smallToolbarImageList"}, {}, {
 								pageBtnItem4: ["wm.Item", {caption: "New Page...", imageIndex: 5}, {onclick: "newPageClick"}],
@@ -405,9 +402,8 @@ Studio.widgets = {
 						sourceToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
 						sourceLogoBottomHolder: ["wm.Panel", {width: "221px", border: "0"}, {}]
 					}],*/
-					sourceTabs: ["wm.TabLayers", {border: "0", width: "100%", height: "100%",clientBorder: "2,0,0,0", clientBorderColor: "#959DAB"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {
+					sourceTabs: ["wm.TabLayers", {border: "0", width: "100%", height: "100%",clientBorder: "4,0,0,0", clientBorderColor: "#959DAB"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {
 					    scriptLayer: ["wm.Layer", {caption: bundleStudio.R_Script}, {}, {
-						benchbevel8: ["wm.Bevel", {}, {}],
 						scriptRibbon: ["wm.Panel", {height: "29px", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#000000"}, {}, {
 						    scriptPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_Save, imageIndex: 8}, {onclick: "saveScriptClick"}],
 						    scriptPageFindBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Find, iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findScriptClick"}],
@@ -424,7 +420,6 @@ Studio.widgets = {
 						editArea: ["wm.EditArea", {width: "100%", height: "100%"}, {onCtrlKey: "scriptEditorCtrlKey", onKeyDown: "setEditAreaDirty"}]
 					    }],
                                             themeLayer: ["wm.Layer", {_classes: {domNode: ["wm-darksnazzy"]}, caption: bundleStudio.R_Themes, width: "100%", height: "100%"}, {}, {
-						themesbevel: ["wm.Bevel", {}, {}],
 						themesRibbon: ["wm.Panel", {height: "29px", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4"}, {}, {
 						    themesPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_Save, imageIndex: 8}, {onclick: "saveThemeClick"}],
 						    themesPageAddBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_NewTheme, imageIndex: 25}, {onclick: "addNewThemeClick"}],
@@ -436,7 +431,6 @@ Studio.widgets = {
                                                                                   pageName: "ThemeDesigner"}]
                                             }],
 					    cssLayer: ["wm.Layer", {caption: bundleStudio.R_CSS}, {onShow: "cssShow"}, {
-						benchbevel9: ["wm.Bevel", {}, {}],
 						cssRibbon: ["wm.Panel", {height: "29px", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4"}, {}, {
 						    cssPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_Save, imageIndex: 8}, {onclick: "saveCssClick"}],
 						    cssPageFindBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Find, iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findCssClick"}],
@@ -459,7 +453,6 @@ Studio.widgets = {
 					    }]
                                         }],
 						markupLayer: ["wm.Layer", {caption: bundleStudio.R_Markup}, {}, {
-							benchbevel10: ["wm.Bevel", {}, {}],
 							markupRibbon: ["wm.Panel", {height: "29px", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4"}, {}, {
 							    markupPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_Save, imageIndex: 8}, {onclick: "saveMarkupClick"}],
 							    markupPageFindBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Find, iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findMarkupClick"}],
@@ -471,11 +464,9 @@ Studio.widgets = {
 							markupEditArea: ["wm.EditArea", {width: "100%", height: "100%", syntax: "html"}, {onCtrlKey: "markupEditorCtrlKey", onKeyDown: "setEditAreaDirty"}]
 						}],
 					    widgets: ["wm.Layer", {caption: bundleStudio.R_Widgets}, {}, {
-							benchbevel13: ["wm.Bevel", {}, {}],
 							widgetsHtml: ["wm.Html", {width: "100%", height: "100%", border: 0, padding: "4, 0, 0, 4"}, {}]
 						}],
 						appsource: ["wm.Layer", {caption: bundleStudio.R_Application}, {}, {
-						    appsrcbenchbevel9: ["wm.Bevel", {}, {}],
 						    appsrcRibbon: ["wm.Panel", {height: "29px", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#000000"}, {}, {
 							appsrcPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_Save, imageIndex: 8}, {onclick: "saveAppSrcClick"}],
 							appsrcPageFindBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Find, iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findAppScriptClick"}],
@@ -496,7 +487,6 @@ Studio.widgets = {
 						}],
 
 					    appDocs: ["wm.Layer", {caption: bundleStudio.R_App_Docs}, {}, {
-							benchbevel14: ["wm.Bevel", {}, {}],
 						appdocsRibbon: ["wm.Panel", {height: "29px", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#000000"}, {}, {
 							appdocsPrintBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_Print, imageIndex: 4}, {onclick: "printAppDocsClick"}]
 						}],
@@ -505,7 +495,6 @@ Studio.widgets = {
 						}],
 
 					    logs: ["wm.Layer", {caption: bundleStudio.R_Server_Logs}, {}, {
-							benchbevel14: ["wm.Bevel", {}, {}],
 						        logViewer: ["wm.PageContainer", {deferLoad: true, pageName: "LogViewer",  width: "100%", height: "100%"}]
 						}],
 					    resourcesTab: ["wm.Layer", {caption: bundleStudio.Resources}, {onShow: "loadResourcesTab"}, {
