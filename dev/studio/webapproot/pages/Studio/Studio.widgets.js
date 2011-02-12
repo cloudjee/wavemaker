@@ -40,7 +40,7 @@ Studio.widgets = {
 	canvasToolbarImageList16: ["wm.ImageList", {width: "16", height: "16", colCount: 22, url: "images/canvasToolbarBtns16.png"}, {}],        
     contextualMenu: ["wm.PopupMenu", {"fullStructureStr":"[{\"label\":\"Help\",\"iconClass\":undefined,\"imageList\":null,\"children\":[]}]"},{onclick: "contextualMenuClick"}],
         genericDialog: ["wm.GenericDialog", {}],
-    propertiesDialog: ["wm.Dialog", {_classes: {domNode: ["wm-darksnazzy"]}, width: "250px", height: "650px", modal: false, title: "Properties", noEscape: true, useContainerWidget:true, corner: "cr", border: "1", borderColor: "#222"}, {onClose: "toggleInspectorDialog"}],
+    propertiesDialog: ["wm.Dialog", {_classes: {domNode: ["wm-darksnazzy"]}, width: "300px", height: "650px", modal: false, title: "Properties", noEscape: true, useContainerWidget:true, corner: "cr", border: "1", borderColor: "#222"}, {onClose: "toggleInspectorDialog"}],
     paletteDialog: ["wm.Dialog", {width: "250px", height: "650px", modal: false, title: "Palette / Model", noEscape: true, useContainerWidget:true, corner: "cl", border: "1", borderColor: "#222"}, {onClose: "togglePaletteDialog"}],
     startPageDialog: ["wm.PageDialog", {width: "764px", height: "460px", title: "", modal: true, hideControls: true, noEscape: true, pageName: "Start", border: "4", borderColor: "#222222", corner: "cc", }],
     deploymentDialog: ["wm.PageDialog", {width: "900px", height: "680px", title: "Deployment", modal: true, hideControls: true, noEscape: true, pageName: "DeploymentPage", deferLoad: true}],
