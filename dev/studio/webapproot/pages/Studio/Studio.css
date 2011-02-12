@@ -508,8 +508,8 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 	text-align: left;
 }
 
-.wminspector-binding, .wminspector-help  {
-	width: 16px;
+.wminspector-binding, .wminspector .wminspector-help  {
+	width: 20px;
 	background-color:#424a5a;
 	background-repeat: no-repeat;
 	background-position: 50% 50%;
