@@ -1864,19 +1864,24 @@ color: rgb(0,270,0);
 }
 
 .StudioDirtyIcon {
+    height: 12px;
+    width: 12px;
+    border: solid 1px #444444;
+
+        background: -webkit-gradient(linear, left top, left bottom, from(#AAAAAA), to(#333333));
+	background: -moz-linear-gradient(top,  #AAAAAA,  #333333);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#AAAAAA', endColorstr='#333333');
+
+	-moz-border-radius: 12px; 
+	-webkit-border-radius: 12px;
+	border-radius: 12px;
+    position: relative;
+    top: 2px;
+}
+#studio_sourceTabs .StudioDirtyIcon {
     height: 8px;
     width: 8px;
-    border: solid 1px #500000;
-
-        background: -webkit-gradient(linear, left top, left bottom, from(#C09090), to(#600000));
-	background: -moz-linear-gradient(top,  #C09090,  #600000);
-	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#C09090', endColorstr='#600000');
-
-	-moz-border-radius: 6px; 
-	-webkit-border-radius: 6px;
-	border-radius: 6px;
 }
-
 .LicenseError {
     background-color: red;
 }
@@ -1899,7 +1904,7 @@ color: rgb(0,270,0);
 .Studio-paletteToDialogButton,
 .Studio-inspectorDialogToggle {
     background-image: url(/wavemaker/images/dialogIconsGray.png);
-    background-position: -16px 0px;
+    background-position: -32px 0px;
     background-repeat: no-repeat;
     cursor: pointer;
 }

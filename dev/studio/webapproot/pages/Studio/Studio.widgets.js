@@ -308,7 +308,7 @@ Studio.widgets = {
 		    workspace: ["wm.Layer", {caption: bundleStudio.T_Design, layoutKind: "top-to-bottom"}, {}, {
 			workspaceInner: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right"}, {}, {
 			    main: ["wm.Panel", {height: "100%", width: "100%", border: "", layoutKind: "top-to-bottom", borderColor: "#666E80"}, {}, {
-					ribbon: ["wm.Panel", {height: "30px", border: "0", layoutKind: "left-to-right", padding: "0,4"}, {}, {
+					ribbon: ["wm.Panel", {height: "30px", border: "0", layoutKind: "left-to-right", padding: "0"}, {}, {
 						studioToolbarButtons: ["wm.Panel", {height: "100%", width: "100%", border: "", layoutKind: "left-to-right", imageList: "canvasToolbarImageList16"}, {}, {
 							/*pagePopupBtn: ["wm.PopupButton", {width: "32px", caption: "<img src=\"images/dropArrow.png\"/>", popupWidth: "150", imageIndex: 14, imageList: "smallToolbarImageList"}, {}, {
 								pageBtnItem4: ["wm.Item", {caption: "New Page...", imageIndex: 5}, {onclick: "newPageClick"}],
