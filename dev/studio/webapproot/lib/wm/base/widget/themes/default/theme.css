@@ -1766,3 +1766,6 @@ Overriding dijit's progress bar properties to enable height changes to progress 
     border: 0px;
     
 }
+.dijitSpinner .dijitArrowButton .dijitArrowButtonInner {
+        height: 50% !important;
+}
