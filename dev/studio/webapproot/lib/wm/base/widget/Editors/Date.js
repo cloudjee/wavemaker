@@ -63,7 +63,7 @@ dojo.declare("wm.Date", wm.Text, {
 	    var d = this.inherited(arguments);
 	    if (d) {
 		if (!this.useLocalTime)
-		    d.setHours(-wm.serverTimeOffset - wm.Date.timezoneOffset,0,0);
+		    d.setHours(-wm.Date.timezoneOffset,0,0);
 		return d.getTime();
 	    }
 	    return this.makeEmptyValue();
@@ -73,12 +73,12 @@ dojo.declare("wm.Date", wm.Text, {
 
 	    // If we assume that this is server time, then we need to add some number of hours to it so that instead of showing the date in local time, we show the date as it is according to the server
 	    if (!this.useLocalTime)
-		v.setHours(v.getHours() + wm.serverTimeOffset + wm.Date.timezoneOffset);
+		v.setHours(v.getHours() + wm.Date.timezoneOffset);
 	    this.inherited(arguments, [v]);
 	}
 });
 
-wm.Date.timezoneOffset = new Date().getTimezoneOffset()/60;
+wm.Date.timezoneOffset = new Date().getTimezoneOffset()/60 + wm.serverTimeOffset/(1000*60*60); // hours offset
 
 //===========================================================================
 // Time Editor
@@ -252,7 +252,7 @@ dojo.declare("wm.DateTime", wm.Text, {
 		{"_classes":{"domNode":["wmdialogcontainer","MainContent"]},"border":"0","height":"100%","horizontalAlign":"left","margin":"0","padding":"0","verticalAlign":"top","width":"100%"},
 		{},
 		{
-		    calendar: ["wm.dijit.Calendar", {"border":"0", width: "100%"}, {onValueSelected: "handleDateChange"}],
+		    calendar: ["wm.dijit.Calendar", {useLocalTime: true, "border":"0", width: "100%"}, {onValueSelected: "handleDateChange"}],
 		    panel1: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"bottom","width":"100%"}, {}, {
 			hours: ["wm.Number", {"caption":"Hour","captionAlign":"left","captionPosition":"top","captionSize":"20px","changeOnKey":true,"displayValue":"","height":"43px","maximum":12,"minimum":1,"padding":"2","spinnerButtons":true,"width":"56px"}, {onchange: "handleDateChange"}],
 			minutes: ["wm.Number", {"caption":"Minute","captionAlign":"left","captionPosition":"top","captionSize":"20px","changeOnKey":true,"displayValue":"","height":"43px","maximum":59,"minimum":0,"padding":"2","spinnerButtons":true,"width":"56px"}, {onchange: "handleDateChange"}],
@@ -335,7 +335,9 @@ dojo.declare("wm.DateTime", wm.Text, {
     handleDateChange: function() {
 	if (this._initializingDialog) return;	
 	if (this.dateElements != "Time") {
-	    var date = wm.DateTime.dialog.$.calendar.getDateObject(this.dateElements == "Date");
+	    var date = new Date(wm.DateTime.dialog.$.calendar.getDateValue());
+
+	    // Zero these out so we can add a date with no time to a time value
 	    if (this.dateElements == "Date and Time") {
 		date.setUTCHours(0);
 		date.setUTCMinutes(0);
@@ -390,7 +392,7 @@ dojo.declare("wm.DateTime", wm.Text, {
 	if (d && d.getTime() != NaN) {
 	    displayValue = dojo.date.locale.format(d, {formatLength: this.formatLength, selector: this.dateElements.toLowerCase()});
 	    if (this.dateElements == "Date" && !this.useLocalTime)
-		d.setHours(d.getHours() + wm.serverTimeOffset + d.getTimezoneOffset()/60);
+		d.setHours(d.getHours() + wm.Date.timezoneOffset);
 	} else
 	    d = null;
 	this.inherited(arguments, [displayValue]);
@@ -402,9 +404,10 @@ dojo.declare("wm.DateTime", wm.Text, {
 	if (date) {
 	    if (this.dateElements == "Date") {
 		if (!this.useLocalTime)
-		    date.setHours(-wm.serverTimeOffset - date.getTimezoneOffset()/60,0,0);
+		    date.setHours(-wm.Date.timezoneOffset,0,0);
+		else
+		    date.setHours(0,0,0);
 	    }
-
 	    return date.getTime();
 	}
 	return null;
@@ -422,7 +425,10 @@ dojo.declare("wm.DateTime", wm.Text, {
 	var value = this.getDataValue();
 	this.dateElements = inValue; 
 	this.setDataValue(value);
-	this.listProperties().useLocalTime.tmpignore = (inValue != "Date");
+    },
+    listProperties: function() {
+	var p = this.inherited(arguments);
+	p.useLocalTime.tmpignore = (this.dateElements != "Date");
     }
 
 

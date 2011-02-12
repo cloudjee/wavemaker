@@ -131,7 +131,7 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
 	setDate: function(inValue) {
 	    var d = wm.convertValueToDate(inValue);
 	    if (!this.useLocalTime)
-		d.setHours(d.getHours() + wm.serverTimeOffset + wm.Date.timezoneOffset);
+		d.setHours(d.getHours() + wm.Date.timezoneOffset);
 	    this.dijit.set("value",d);
 	},
 	getDisplayDate: function() {
@@ -145,9 +145,9 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
 		var d = this.dijit.value;
 	    if (d instanceof Date) {
 		if (!this.useLocalTime)
-		    d.setHours(-wm.serverTimeOffset - wm.Date.timezoneOffset,0,0);
+		    d.setHours(-wm.Date.timezoneOffset,0,0);
 		else
-		    d.setHours(1,0,0);
+		    d.setHours(0,0,0);
 		return d.getTime();
 	    }
 	    return null;
@@ -175,7 +175,7 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
                 this.dialog.$.description.setCaption(data.description);
             } else if (this.useDialog && this.dialog.showing)
                 this.dialog.dismiss();
-	    this.setValue("dateValue", inDate instanceof Date ? inDate.getTime() : null);
+	    this.valueChanged("dateValue", inDate instanceof Date ? inDate.getTime() : null);
 	}
 });
 
