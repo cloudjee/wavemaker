@@ -26,6 +26,7 @@ wm.editors = [
 ];
 
 wm.getEditor = function(inName) {
+
 	var c = inName || "Text";
 	if (c.slice(0, 5) != "wm")
 		c = "wm._" + c + "Editor";
@@ -66,7 +67,9 @@ wm.getFieldEditorProps = function(inFieldInfo) {
 		props.editorInitProps.dataType = "boolean";
 		props.displayValue = true;
 		props.emptyValue = "false";
-	} 
+	} else if (props.display == "Date") {
+	    props.dateMode = "Date";
+	}
 	return props;
 };
 
