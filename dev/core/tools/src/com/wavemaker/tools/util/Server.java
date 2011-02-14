@@ -26,8 +26,6 @@ import java.net.ProtocolException;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.util.Calendar;
-import java.util.TimeZone;
 
 import com.wavemaker.tools.common.ConfigurationException;
 
@@ -87,14 +85,6 @@ public class Server {
             return false;
         }
         return true;
-    }
-
-    public static String getServerTimeOffset() {
-        Calendar now = Calendar.getInstance();
-
-        int totalOffset = now.get(Calendar.ZONE_OFFSET) + now.get(Calendar.DST_OFFSET);
-
-        return Integer.toString(totalOffset);
     }
 
     protected HttpURLConnection getPutConnection(String uri) {
