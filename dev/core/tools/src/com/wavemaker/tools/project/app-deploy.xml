@@ -23,8 +23,6 @@
     <property name="war.file.name" value="${wavemaker.home}/${deploy.name}.war"/>
 	<property name="ear.file.name" value="${wavemaker.home}/${deploy.name}.ear"/>
 
-	<property name="server.time.offset" value="0"/>
-
     <condition property="build.inline">
         <equals arg1="${build.app.webapproot.dir}" arg2="${app.webapproot.dir}"/>
     </condition>
@@ -178,8 +176,6 @@
             <replacetoken>"/wavemaker/</replacetoken>
             <replacevalue>"</replacevalue>
         </replace>
-		<replace file="${build.app.webapproot.dir}/config.js" token="{serverTimeOffset}"
-			value="${server.time.offset}"/>
 
 		<war basedir="${build.app.webapproot.dir}" destfile="${war.file.name}">
 			<exclude name="**/application.xml"/>

@@ -22,7 +22,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSessionBindingListener;
 import javax.servlet.http.HttpSessionBindingEvent;
@@ -38,11 +42,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.IOUtils;
+import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.runtime.RuntimeAccess;
 
 import com.wavemaker.runtime.server.FileUploadResponse;
-import com.wavemaker.tools.util.Server;
 
 /**
  * Main deployment class.
@@ -108,7 +112,6 @@ public class DeploymentManager {
     public static final String PACKAGES_JS_FILE = "packages.js";
     public static final String COMMON_MODULE_PREFIX = "common.packages.";
 
-    public static final String SERVER_TIME_OFFSET = "server.time.offset";
 
     private static boolean isCloud;
     private static boolean isCloudInitialized = false;
@@ -226,9 +229,6 @@ public class DeploymentManager {
         String projDir = f.getParentFile().getParentFile().getAbsolutePath();
         properties.put(PROJ_DIRECTORY_PROPERTY, projDir);
         properties.put(DEPLOY_NAME_PROPERTY, getDeployName(f.getParentFile().getParentFile()));
-
-        String serverTimeOffset = Server.getServerTimeOffset();
-        properties.put(SERVER_TIME_OFFSET, serverTimeOffset);
 
         antExecute(projectDir, BUILD_WAR_OPERATION, properties);
         antExecute(projectDir, BUILD_EAR_OPERATION, properties);
