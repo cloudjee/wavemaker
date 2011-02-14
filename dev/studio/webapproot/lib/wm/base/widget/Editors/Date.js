@@ -433,7 +433,13 @@ wm.Object.extendSchema(wm.DateTime, {
     password: {ignore:1},
     regExp: {ignore:1},
     maxChars: {ignore:1},
-    changeOnKey: {ignore: 1}
+    changeOnKey: {ignore: 1},
+
+    dateMode: {group: "editor", order: 2},
+    formatLength: {group: "editor", order: 3},
+    resetButton: {ignore: 1},
+    timePanelHeight: {group: "style"},
+    useLocalTime: {group: "editor", order: 4}
 });
 
 wm.DateTime.extend({
