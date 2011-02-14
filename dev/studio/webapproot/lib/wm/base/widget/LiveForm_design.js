@@ -48,11 +48,18 @@ wm.makeNameForProp = function(inProp, inSuffix) {
 wm.getEditorClassName = function(type){
 	if (dojo.indexOf(wm.editors, type) == -1)
 		type = 'Text';
-	if (type.toLowerCase() == 'checkbox')
-		type = 'Checkbox';
-	if (type.toLowerCase() == 'select')
-            type = 'SelectMenu';
-	return 'wm.'+type;
+    switch(type.toLowerCase()) {
+    case "checkbox":
+	type = "Checkbox";
+	break;
+    case "select":
+	type = "SelectMenu";
+	break;
+    case "date":
+	type = "DateTime";
+	break;
+    }
+    return 'wm.'+type;
 }
 
 wm.LiveFormBase.extend({
