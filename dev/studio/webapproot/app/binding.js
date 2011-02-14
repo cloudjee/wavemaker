@@ -192,7 +192,7 @@ wm.convertForSimpleBind = function(inNodeProps, optionalSource) {
 		var schema;
 		if (p.property.isObject) {
 			var o = inNodeProps.object.getValue(p.name);
-			if (o) {
+			if (o && o instanceof wm.Component) {
 				schema = o.listDataProperties("bindSource");
 				inNodeProps.object = o;
 			} else {
