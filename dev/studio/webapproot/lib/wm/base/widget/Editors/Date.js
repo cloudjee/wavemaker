@@ -72,7 +72,7 @@ dojo.declare("wm.Date", wm.Text, {
 	    var v = this.convertValue(inValue); // if inValue is just a date, returns unmodified date
 
 	    // If we assume that this is server time, then we need to add some number of hours to it so that instead of showing the date in local time, we show the date as it is according to the server
-	    if (!this.useLocalTime)
+	    if (!this.useLocalTime && v)
 		v.setHours(v.getHours() + wm.Date.timezoneOffset);
 	    this.inherited(arguments, [v]);
 	}
@@ -229,13 +229,13 @@ dojo.declare("wm.DateTime", wm.Text, {
     useLocalTime: false,
     timePanelHeight: 38,
     formatLength: "short",
-    dateElements: "Date and Time",
+    dateMode: "Date and Time",
     doOnblur: function() {
 	this.inherited(arguments);
 	wm.onidle(this, function() {
 	// If we lose focus on the datetime editor when only picking a date, then dismiss the dialog
 	// unless the focus is now on the dialog itself
-	if (this.dateElements == "Date" && wm.DateTime.dialog && wm.DateTime.dialog.showing) {
+	if (this.dateMode == "Date" && wm.DateTime.dialog && wm.DateTime.dialog.showing) {
 	    var node = document.activeElement;
 	    if (!dojo.isDescendant(node, this.domNode) && !dojo.isDescendant(node, wm.DateTime.dialog.domNode))
 		wm.DateTime.dialog.hide();
@@ -287,19 +287,19 @@ dojo.declare("wm.DateTime", wm.Text, {
 
 	this._initializingDialog = true;
 	wm.DateTime.dialog.$.calendar.setDate(date);
-	if (this.dateElements != "Date") {
+	if (this.dateMode != "Date") {
 	    var time = dojo.date.locale.format(date, {selector:'time',timePattern: "hh:mm a"});
 	    var timematches = time.match(/^(\d\d)\:(\d\d) (.*)$/);
 	    wm.DateTime.dialog.$.hours.setDataValue(timematches[1]);
 	    wm.DateTime.dialog.$.minutes.setDataValue(timematches[2]);
 	    wm.DateTime.dialog.$.ampm.setClicked(timematches[3].toLowerCase() == "pm");
 	}
-	wm.DateTime.dialog.$.panel1.setShowing(this.dateElements != "Date");
-	wm.DateTime.dialog.$.calendar.setShowing(this.dateElements != "Time");
-	wm.DateTime.dialog.$.label.setShowing(this.dateElements == "Date and Time");
-	wm.DateTime.dialog.buttonBar.setShowing(this.dateElements != "Date");
+	wm.DateTime.dialog.$.panel1.setShowing(this.dateMode != "Date");
+	wm.DateTime.dialog.$.calendar.setShowing(this.dateMode != "Time");
+	wm.DateTime.dialog.$.label.setShowing(this.dateMode == "Date and Time");
+	wm.DateTime.dialog.buttonBar.setShowing(this.dateMode != "Date");
 	
-	switch(this.dateElements) {
+	switch(this.dateMode) {
 	case "Time":
 	    dialog.setHeight((this.timePanelHeight + 
 			      dialog.buttonBar.bounds.h + 			      
@@ -329,33 +329,33 @@ dojo.declare("wm.DateTime", wm.Text, {
 	}
 	wm.DateTime.dialog.show();
 	delete this._initializingDialog;
-	var displayValue = dojo.date.locale.format(date, {formatLength: "medium", selector: this.dateElements.toLowerCase()});
+	var displayValue = dojo.date.locale.format(date, {formatLength: "medium", selector: this.dateMode.toLowerCase()});
 	wm.DateTime.dialog.$.label.setCaption(displayValue);
     },
     handleDateChange: function() {
 	if (this._initializingDialog) return;	
-	if (this.dateElements != "Time") {
+	if (this.dateMode != "Time") {
 	    var date = new Date(wm.DateTime.dialog.$.calendar.getDateValue());
 	} else {
 	    var date = new Date(0);
 	}
-	if (this.dateElements != "Date") {
+	if (this.dateMode != "Date") {
 	    var hour = wm.DateTime.dialog.$.hours.getDataValue() || 1;
 	    var minute = wm.DateTime.dialog.$.minutes.getDataValue() || 0;
 	    var isPM = wm.DateTime.dialog.$.ampm.clicked;
 	    date.setHours(hour + (isPM ? 12 : 0), minute);
 	}
 
-	var displayValue1 = dojo.date.locale.format(date, {formatLength: "medium", selector: this.dateElements.toLowerCase()});
+	var displayValue1 = dojo.date.locale.format(date, {formatLength: "medium", selector: this.dateMode.toLowerCase()});
 	wm.DateTime.dialog.$.label.setCaption(displayValue1);
 
-	if (this.dateElements == "Date") {
-	    var displayValue2 = dojo.date.locale.format(new Date(date.getTime() + time.getTime()), {formatLength: this.formatLength, selector: this.dateElements.toLowerCase()});
+	if (this.dateMode == "Date") {
+	    var displayValue2 = dojo.date.locale.format(new Date(date.getTime() ), {formatLength: this.formatLength, selector: this.dateMode.toLowerCase()});
 	    this.setDisplayValue(displayValue2);
 	    wm.DateTime.dialog.hide();
 	} else {
 
-	    var displayValue2 = dojo.date.locale.format(date, {formatLength: this.formatLength, selector: this.dateElements.toLowerCase()});
+	    var displayValue2 = dojo.date.locale.format(date, {formatLength: this.formatLength, selector: this.dateMode.toLowerCase()});
 	    this.setDisplayValue(displayValue2);
     }
 
@@ -364,7 +364,7 @@ dojo.declare("wm.DateTime", wm.Text, {
 	    if (this.editor)
 		return this.editor.get("displayedValue");
 	    else if (this.dataValue)
-		return dojo.date.locale.format(this.dataValue, {formatLength: this.formatLength, selector: this.dateElements.toLowerCase()});
+		return dojo.date.locale.format(this.dataValue, {formatLength: this.formatLength, selector: this.dateMode.toLowerCase()});
 	    else
 		return "";
 	},
@@ -375,13 +375,13 @@ dojo.declare("wm.DateTime", wm.Text, {
 	} else if (String(inValue).match(/^\d+$/)) {
 	    d = new Date(inValue); // its a long
 	} else if (inValue) {
-	    d =  wm.convertValueToDate(inValue, {formatLength: this.formatLength, selector: this.dateElements.toLowerCase()});
+	    d =  wm.convertValueToDate(inValue, {formatLength: this.formatLength, selector: this.dateMode.toLowerCase()});
 	}
 
 	var displayValue = null;
 	if (d && d.getTime() != NaN) {
-	    displayValue = dojo.date.locale.format(d, {formatLength: this.formatLength, selector: this.dateElements.toLowerCase()});
-	    if (this.dateElements == "Date" && !this.useLocalTime)
+	    displayValue = dojo.date.locale.format(d, {formatLength: this.formatLength, selector: this.dateMode.toLowerCase()});
+	    if (this.dateMode == "Date" && !this.useLocalTime)
 		d.setHours(d.getHours() + wm.Date.timezoneOffset);
 	} else
 	    d = null;
@@ -390,9 +390,9 @@ dojo.declare("wm.DateTime", wm.Text, {
     },
     getEditorValue: function() {
 	var value = this.getDisplayValue();
-	var date = dojo.date.locale.parse(value, {formatLength: this.formatLength, selector: this.dateElements.toLowerCase()});
+	var date = dojo.date.locale.parse(value, {formatLength: this.formatLength, selector: this.dateMode.toLowerCase()});
 	if (date) {
-	    if (this.dateElements == "Date") {
+	    if (this.dateMode == "Date") {
 		if (!this.useLocalTime)
 		    date.setHours(-wm.Date.timezoneOffset,0,0);
 		else
@@ -410,15 +410,15 @@ dojo.declare("wm.DateTime", wm.Text, {
 	wm.DateTime.dialog.hide();
 	this.setDisplayValue(this._initialDisplayValue);
     },
-    setDateElements: function(inValue) {
+    setDateMode: function(inValue) {
 	// must get value before changing formatLength because formatLength determines how to parse the value
 	var value = this.getDataValue();
-	this.dateElements = inValue; 
+	this.dateMode = inValue; 
 	this.setDataValue(value);
     },
     listProperties: function() {
 	var p = this.inherited(arguments);
-	p.useLocalTime.tmpignore = (this.dateElements != "Date");
+	p.useLocalTime.tmpignore = (this.dateMode != "Date");
 	return p;
     }
 
@@ -441,7 +441,7 @@ wm.DateTime.extend({
 	switch (inName) {
 	case "formatLength":
 	    return makeSelectPropEdit(inName, inValue, ["short", "medium", "long"], inDefault);
-	case "dateElements":
+	case "dateMode":
 	    return makeSelectPropEdit(inName, inValue, ["Date and Time", "Date", "Time"], inDefault);
 	}
 	return this.inherited(arguments);
