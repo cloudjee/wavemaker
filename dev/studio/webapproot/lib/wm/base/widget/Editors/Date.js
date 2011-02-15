@@ -297,7 +297,10 @@ dojo.declare("wm.DateTime", wm.Text, {
 
 
 	this._initializingDialog = true;
-	wm.DateTime.dialog.$.calendar.setDate(date);
+	if (date.getTime())
+	    wm.DateTime.dialog.$.calendar.setDate(date);
+	else
+	    wm.DateTime.dialog.$.calendar.setDate(new Date());
 	if (this.dateMode != "Date") {
 	    var time = dojo.date.locale.format(date, {selector:'time',timePattern: "hh:mm a"});
 	    var timematches = time.match(/^(\d\d)\:(\d\d) (.*)$/);
