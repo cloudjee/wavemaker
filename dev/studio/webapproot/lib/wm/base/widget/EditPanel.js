@@ -30,7 +30,7 @@ dojo.declare("wm.EditPanel", wm.Panel, {
 	formInvalid: true,
 	width: "100%",
 	height: "40px",
-        editPanelStyle: "wm.RoundedButton",
+        editPanelStyle: "wm.Button",
         isCustomized: false,
 	destroy: function() {
 		this._unsubscribeLiveForm();
@@ -123,8 +123,8 @@ wm.Object.extendSchema(wm.EditPanel, {
 	savePanel: {ignore: 1, writeonly: 1},
 	operationPanel: {ignore: 1, writeonly: 1},
 	formUneditable: {ignore: 1, bindSource: 1},
-    formInvalid: {ignore: 1, bindSource: 1},
-    editPanelStyle: {ignore: 1}
+    formInvalid: {ignore: 1, bindSource: 1}
+
 });
 
 wm.EditPanel.extend({
