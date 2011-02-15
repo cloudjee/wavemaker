@@ -79,6 +79,8 @@ dojo.declare("wm.Date", wm.Text, {
 });
 
 wm.Date.timezoneOffset = new Date().getTimezoneOffset()/60 + wm.serverTimeOffset/(1000*60*60); // hours offset
+if (isNaN(wm.Date.timezoneOffset))
+    wm.Date.timezoneOffset = 0;
 
 //===========================================================================
 // Time Editor
@@ -283,7 +285,16 @@ dojo.declare("wm.DateTime", wm.Text, {
 	dialog.connect(dialog.$.cancelButton, "onclick", this, "cancelClicked");
 	wm.DateTime.dialog.fixPositionNode = this.editor.domNode;
 	this._initialDisplayValue = this.getDisplayValue();
-	var date = new Date(this.getDataValue());
+
+	// Make the calendar focus on the date shown by the current value of the text; ignore timezone offset calcs for this
+	// or you risk showing the user a date in calendar other than what is shown in text
+	if (!this.useLocalTime && this.dateMode == "Date") {
+	    var value = this.getDisplayValue();
+	    var date = dojo.date.locale.parse(value, {formatLength: this.formatLength, selector: this.dateMode.toLowerCase()});
+	} else {
+	    var date = new Date(this.getDataValue());
+	}
+
 
 	this._initializingDialog = true;
 	wm.DateTime.dialog.$.calendar.setDate(date);
@@ -380,9 +391,9 @@ dojo.declare("wm.DateTime", wm.Text, {
 
 	var displayValue = null;
 	if (d && d.getTime() != NaN) {
-	    displayValue = dojo.date.locale.format(d, {formatLength: this.formatLength, selector: this.dateMode.toLowerCase()});
 	    if (this.dateMode == "Date" && !this.useLocalTime)
 		d.setHours(d.getHours() + wm.Date.timezoneOffset);
+	    displayValue = dojo.date.locale.format(d, {formatLength: this.formatLength, selector: this.dateMode.toLowerCase()});
 	} else
 	    d = null;
 	this.inherited(arguments, [displayValue]);
