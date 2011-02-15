@@ -84,7 +84,7 @@ dojo.declare("wm.LiveFormBase", wm.Panel, {
 	//fitToContent: true,
 	layoutKind: "top-to-bottom",
 	readonly: false,
-	validateBeforeSave: false,
+    //validateBeforeSave: false,
 	/**
 		The dataSet the LiveForm uses for source data.
 		
@@ -494,8 +494,8 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	liveSaving: true,
 	liveVariable: null,
 	liveDataSourceClass: null, //xxx
-	noButtonPanel: false,
-        editPanelStyle: "wm.Button",
+        //noButtonPanel: false,
+        //editPanelStyle: "wm.Button",
 	_confirmDelete: true,
 	_formMessages: {
 		confirmDelete: "Are you sure you want to delete this data?"
@@ -503,7 +503,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	_controlSubForms: false,
 	destroy: function() {
 		this._cancelDefaultButton();
-		this.inherited(arguments);
+		this.inherited(arguments);	    
 	},
 	init: function() {
 		this.connect(this.domNode, "keyup", this, "keyup");
@@ -664,10 +664,11 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	return this.saveData();
     },
 	saveData: function() {
+/* please use saveDataIfValid instead of validateBeforeSave
  	        if (this.validateBeforeSave)
 		  if (!this.validateData()) 
 		    return;
-	  
+		    */  
 		if (this.operation == "insert")
 			return this.insertData();
 		if (this.operation == "update")

@@ -24,8 +24,8 @@ wm.Object.extendSchema(wm.LiveFormBase, {
 	clearData: { group: "operation", order: 2},
 	addEditors: { group: "operation", order: 5},
 	removeEditors: { group: "operation", order: 10},
-	readonly: { group: "display", order: 5},
-	validateBeforeSave: {group: "display", order: 7, type: "Boolean"},
+	readonly: { group: "editor", order: 5},
+    //validateBeforeSave: {group: "display", order: 7, type: "Boolean"},
 	editorWidth: {group: "display", order: 200},
 	editorHeight: {group: "display", order: 201},
 	editorSize: { ignore: 1},
@@ -414,6 +414,7 @@ wm.LiveFormBase.extend({
 			case "addEditors":
 			case "removeEditors":
 			case "clearData":
+		        case "generateButtons":
 				return makeReadonlyButtonEdit(inName, inValue, inValue);
 			case "editorWidth":
 			case "editorHeight":
@@ -423,8 +424,10 @@ wm.LiveFormBase.extend({
 				return makeSelectPropEdit(inName, inValue, ["left", "center", "right"], inDefault);
 			case "captionPosition":
 				return makeSelectPropEdit(inName, inValue, ["top", "left", "bottom", "right"], inDefault);
+/*
                         case "editPanelStyle":
 				return makeSelectPropEdit(inName, inValue, ["wm.Button","wm.RoundedButton", "none"], inDefault);
+				*/
 			case "dataSet":
 				var p = wm.getParentForm(this);
 				return p ?
@@ -435,6 +438,8 @@ wm.LiveFormBase.extend({
 	},
         setName: function(inName) {
             var editPanel = this.getEditPanel();
+	    if (!editPanel) 
+		return this.inherited(arguments);
             if (!editPanel.isCustomized && editPanel.lock) {
                 this.setName2(inName);
             } else {
@@ -457,17 +462,96 @@ wm.LiveFormBase.extend({
                 this.addEditPanel();                
             }
         },
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-			case "addEditors":
-				return this.addEditors();
-			case "removeEditors":
-				if (confirm("Are you sure? All editors in " + this.getId() + " will be deleted."))
-					return this.removeEditors();
-			case "clearData":
-				return this.clearData();
-		}
-		return this.inherited(arguments);
+        editProp: function(inName, inValue, inInspector) {
+	    switch (inName) {
+	    case "addEditors":
+		return this.addEditors();
+	    case "removeEditors":
+		if (confirm("Are you sure? All editors in " + this.getId() + " will be deleted."))
+		    return this.removeEditors();
+	    case "clearData":
+		return this.clearData();
+	    case "generateButtons":
+		return this.generateButtons();
+	    }
+	    return this.inherited(arguments);
+	},
+    generateButtons: function() {
+	if (!this._generateButtonsDialog) {
+	    var dialog = this._generateButtonsDialog = new wm.GenericDialog({modal: true,
+									     footerBorder: "0",
+									     title: "Generate Form Buttons",
+									     userPrompt: "What kind of buttons do you want? EditPanel manages the buttons for you; basic buttons gives you a starting point for creating your own button panel",
+									     width: "400px",
+									     height: "200px",
+									     button1Caption: "Edit Panel",
+									     button2Caption: "Basic Buttons",
+									     button3Caption: "Cancel",
+									     button1Close: true,
+									     button2Close: true,
+									     button3Close: true,
+									     owner: studio,
+									     name: this.name + "_GenerateLiveFormButtonsDialog"});
+	    dialog.connect(dialog, "onButton1Click", this, function() {
+/*
+		if (this.editPanelStyle == "none")
+		    this.editPanelStyle = "wm.Button";
+		    */
+		this.addEditPanel();
+	    });
+
+	    dialog.connect(dialog, "onButton2Click", this, function() {
+		var panel = this.owner.loadComponent(this.name + "ButtonPanel", this, "wm.Panel", 
+						 {height: wm.Button.prototype.height,
+						  layoutKind: "left-to-right",
+						  width: "100%"});		
+
+		/* Generate a save button that is only enabled if data is valid and calls saveDataIfValid */
+		var saveButton = this.saveButton = new wm.Button({owner: studio.page,
+								  name: studio.page.getUniqueName(this.name + "SaveButton"),
+								  parent: panel,
+								  caption: "Save"});
+		saveButton.eventBindings.onclick = this.name + ".saveDataIfValid";
+		this.saveButton.$.binding.addWire(null, "disabled", this.name + ".invalid","");
+
+
+		/* Generate a cancel button which defaults to changing form to readonly. User may change this to a
+		 dialog.hide or something else */
+		var cancelButton = new wm.Button({owner: studio.page,
+						  name: studio.page.getUniqueName(this.name + "CancelButton"),
+						  parent: panel,
+						  caption: "Cancel"});
+		cancelButton.eventBindings.onclick = this.name + ".cancelEdit";
+
+		/* Generate a new button which defaults to calling beginDataInsert */
+		var newButton = new wm.Button({owner: studio.page,
+					       name: studio.page.getUniqueName(this.name + "NewButton"),
+					       parent: panel,
+					       caption: "New"});
+		newButton.eventBindings.onclick = this.name + ".beginDataInsert";
+
+		/* Generate a new button which defaults to calling beginDataInsert */
+		var updateButton = new wm.Button({owner: studio.page,
+					       name: studio.page.getUniqueName(this.name + "UpdateButton"),
+					       parent: panel,
+					       caption: "Update"});
+		updateButton.eventBindings.onclick = this.name + ".beginDataUpdate";
+
+
+		/* Generate a delete button which defaults to calling beginDataInsert */
+		var deleteButton = new wm.Button({owner: studio.page,
+						  name: studio.page.getUniqueName(this.name + "DeleteButton"),
+						  parent: panel,
+						  caption: "Delete"});
+		deleteButton.eventBindings.onclick = this.name + ".deleteData";
+
+		panel.reflow();
+		studio.refreshVisualTree();
+	    });
+
+	}
+	    this._generateButtonsDialog.show();
+	
 	},
 	getFormSubDataSetNames: function(inForm) {
 		var ds=[], id = inForm.getId() + ".dataSet.", schema = (inForm.dataSet || 0)._dataSchema;
@@ -482,7 +566,7 @@ wm.LiveFormBase.extend({
 	},
 	updateDesignTrees: function() {
 		wm.fire(studio, "refreshComponentOnTree", [this]);
-		wm.fire(studio, "refreshComponentsTree");
+		wm.fire(studio, "refreshWidgetsTrees");
 	}
 });
 
@@ -493,18 +577,24 @@ wm.LiveForm.description = "Displays a detailed form.";
 
 wm.Object.extendSchema(wm.LiveForm, {
 	liveVariable: {ignore: 1},
-	liveEditing: { group: "display", order: 5, type: "Boolean"},
+	liveEditing: { group: "editor", order: 5, type: "Boolean"},
+        alwaysPopulateEditors: { group: "editor", order: 15, type: "Boolean"},
 	liveSaving:{ ignore: 1},
 	operation: { ignore: 1},
 	defaultButton: { ignore: 1, group: "data", order: 5, bindTarget: 1, type: "wm.Button"},
         displayErrors: { group: "data", order: 15},
-        noButtonPanel: {group: "display", order: 8, type: "Boolean", ignore: 1},
-        editPanelStyle: {group: "display", order: 9, type: "String"},
+    //noButtonPanel: {group: "display", order: 8, type: "Boolean", ignore: 1},
+    //editPanelStyle: {group: "display", order: 9, type: "String"},
     beginDataInsert: {group: "method"},
     saveData: {group: "method"},
+    saveDataIfValid: {group: "method"},
     insertData: {group: "method"},
     updateData: {group: "method"},
-    deleteData: {group: "method"}
+    deleteData: {group: "method"},
+    generateButtons: {group: "operation", order: 12},
+    imageList: {ignore: 1},
+    freeze: {ignore: 1},
+    lock: {ignore: 1}
 });
 
 wm.LiveForm.extend({
@@ -520,7 +610,7 @@ wm.LiveForm.extend({
 		studio.beginWait("Adding Editors for " + this.getId());
 		wm.onidle(this, function() {
 			try {
-			    if (!this.getEditPanel()) {
+			    if (!this.getEditPanel() && !this._noEditPanel) {
 				this.addEditPanel();
 			  }
 				wm.LiveFormBase.prototype.addEditors.call(this);
@@ -535,6 +625,7 @@ wm.LiveForm.extend({
 	//===========================================================================
 	// Editor management / creation
 	//===========================================================================
+/*
 	setNoButtonPanel: function(inValue) {
 	  this.noButtonPanel = inValue;
 	  if (!inValue) {
@@ -556,6 +647,7 @@ wm.LiveForm.extend({
             else
                 this.reflow();
         },
+	*/
 	finishAddEditors: function() {
 	    var p = this.getEditPanel();
 	    if (p)
@@ -601,10 +693,10 @@ wm.LiveForm.extend({
 	},
 	// add an edit panel if we have a type that supports liveEditing.
 	addEditPanel: function() {
-            if (this.editPanelStyle == "none") return;
+            //if (this.editPanelStyle == "none") return;
 	    var r = this.getRoot();
 	    if (!this.getEditPanel() && (wm.typeManager.getLiveService((this.dataSet || 0).type) || this.liveVariable)) {
-		var e = this.owner.loadComponent(this.name + "EditPanel", this, "wm.EditPanel", {editPanelStyle: this.editPanelStyle, height: wm.Button.prototype.height});
+		var e = this.owner.loadComponent(this.name + "EditPanel", this, "wm.EditPanel", {/*editPanelStyle: this.editPanelStyle, */height: wm.Button.prototype.height});
 		if (e) {
 		    e.set_liveForm(this.getId());
 		}
@@ -644,7 +736,7 @@ wm.SimpleForm.extend({
 
 wm.Object.extendSchema(wm.SimpleForm, {
 	readonly: {ignore: 1},
-	validateBeforeSave: {ignore: 1},
+//	validateBeforeSave: {ignore: 1},
 	lock: {ignore: 1},
-	freeze: {ignore: 1}
+    freeze: {ignore: 1}
 });
