@@ -68,7 +68,7 @@
         <mkdir dir="${installer.wm.nojdk.root}/bin"/>
 
         <property name="wm.nojdk.sh.file" value="${installer.wm.nojdk.root}/bin/wavemaker.sh"/>
-        <copy file="bin/wavemaker.sh.template" tofile="${wm.nojdk.sh.file}">
+        <copy file="bin/wavemaker_nojdk.sh.template" tofile="${wm.nojdk.sh.file}">
             <filterset>
                 <filter token="PREFIX" value="${prefix-nojdk}" />
             </filterset>
@@ -76,7 +76,7 @@
         
         <exec executable="chmod" failonerror="true">
             <arg value="+x"/>
-            <arg value="${wm.sh.file}"/>
+            <arg value="${wm.nojdk.sh.file}"/>
         </exec>
         
         <copy file="README.template" tofile="${installer.wm.nojdk.root}/README">
