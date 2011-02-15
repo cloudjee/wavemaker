@@ -545,12 +545,21 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	// Form data
 	//===========================================================================
 	setDataSet: function(inDataSet) {
-		if (this.operation && !this.alwaysPopulateEditors)
-			return;
-		if (this.liveVariable && inDataSet && inDataSet.type)
-			this.liveVariable.setLiveSource(inDataSet.type);
-		this._cancelDefaultButton();
-		this.inherited(arguments, [inDataSet]);
+	    if (this.operation && !this.alwaysPopulateEditors)
+		return;
+	    if (this.liveVariable && inDataSet && inDataSet.type)
+		this.liveVariable.setLiveSource(inDataSet.type);
+	    this._cancelDefaultButton();
+	    this.inherited(arguments, [inDataSet]);
+
+	    if (!this.readonly) {
+		wm.getMatchingFormWidgets(this, function(w) {
+		    if (w instanceof wm.Editor || 
+			w instanceof wm.AbstractEditor ||
+			w instanceof wm.RelatedEditor) {
+			w.validate();
+		    }});
+	    }
 	},
 	//===========================================================================
 	// Edit API
