@@ -717,6 +717,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 					case 'Date (WaveMaker)':				    
 						obj.formatter = dojo.hitch(this, 'dateFormatter');			
 						break;
+					case 'wm_localdate_formatter':
+					case 'Local Date (WaveMaker)':				    
+						obj.formatter = dojo.hitch(this, 'localDateFormatter');			
+						break;
 					case 'wm_number_formatter':
 					case 'Number (WaveMaker)':				    
 						obj.formatter = dojo.hitch(this, 'numberFormatter');
@@ -959,6 +963,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 						case 'wm_date_formatter':
 							value = this.dateFormatter(value);			
 							break;
+						case 'wm_localdate_formatter':
+							value = this.localDateFormatter(value);			
+							break;
 						case 'wm_number_formatter':
 							value = this.numberFormatter(value);	
 							break;
@@ -1003,10 +1010,20 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		return expValue;
 	},
 	dateFormatter: function(inDatum){
-		if (!inDatum)
-		  return inDatum;
+	    if (!inDatum || inDatum instanceof Date == false)
+		return inDatum;
+	    console.log("HEY:"+inDatum);
+	    inDatum.setHours(inDatum.getHours() + wm.Date.timezoneOffset,0,0);
+
+	    var constraints = {selector:'date', formatLength:'short', locale:dojo.locale};
+	    console.log("HO:"+ dojo.date.locale.format(inDatum, constraints));
+	    return dojo.date.locale.format(inDatum, constraints);
+	},
+	localDateFormatter: function(inDatum){
+	    if (!inDatum || inDatum instanceof Date == false)
+		return inDatum;
 		var constraints = {selector:'date', formatLength:'short', locale:dojo.locale};
-		return dojo.date.locale.format(new Date(inDatum), constraints);
+		return dojo.date.locale.format(inDatum, constraints);
 	},
 	numberFormatter: function(inValue){
 		return dojo.number.format(inValue);

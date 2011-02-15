@@ -23,6 +23,7 @@ wm.DojoGrid.extend({
 	defaultFormatters:[	{name:'', value:''},
 											{name:'Currency (WaveMaker)', value:'wm_currency_formatter'},
 											{name:'Date (WaveMaker)', value:'wm_date_formatter'},
+											{name:'Date LocalTime (WaveMaker)', value:'wm_localdate_formatter'},
 											{name:'Number (WaveMaker)', value:'wm_number_formatter'},
 											{name:'Image (WaveMaker)', value:'wm_image_formatter'}],
     //showAddButton: false,

@@ -151,6 +151,7 @@ dojo.declare("wm.EvaluationFormatter", wm.DataFormatter, {
 });
 
 dojo.declare("wm.DateTimeFormatter", wm.DataFormatter, {
+	useLocalTime: true,
 	formatLength: "medium", // long, short, medium or full
 	_selector: "",
 	datePattern: "", // "M/d/yy",
@@ -166,6 +167,8 @@ dojo.declare("wm.DateTimeFormatter", wm.DataFormatter, {
 			locale: this.locale
 		}
 		var d = new Date(inDatum);
+		if (!this.useLocalTime)
+		    d.setHours(d.getHours() + wm.Date.timezoneOffset);
 		if (isNaN(d.getTime()))
 			d = new Date(Number(inDatum));
 		return (inDatum == undefined) || isNaN(d.getTime()) ? '-' : dojo.date.locale.format(d, opts);
@@ -190,7 +193,8 @@ dojo.declare("wm.DateTimeFormatter", wm.DataFormatter, {
 });
 
 dojo.declare("wm.DateFormatter", wm.DateTimeFormatter, {
-	_selector: "date"
+	_selector: "date",
+	useLocalTime: false
 });
 
 dojo.declare("wm.TimeFormatter", wm.DateTimeFormatter, {
