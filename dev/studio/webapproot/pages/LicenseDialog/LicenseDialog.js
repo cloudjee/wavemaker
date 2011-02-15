@@ -22,6 +22,7 @@ dojo.declare("LicenseDialog", wm.Page, {
 	    var licenseService = new wm.JsonRpcService({owner: this, service: "licensingService", sync: false});	
 	    var licenseDeferred = licenseService.requestSync("getMacAddr", [], dojo.hitch(this, function(inResult) {
 		this.macaddr = inResult;
+		this.macidLabel.setCaption("Mac ID: " + inResult);
 	    }));
 	},
         onSuccess: function(inSender) {

@@ -50,6 +50,7 @@ LicenseDialog.widgets = {
 			resultLabel: ["wm.Label", {width: "100%", height: "100%", caption: "", singleLine: false, align: "center"}]
 		    }]
 		}]
-	    }]
+	    }],
+	    macidLabel: ["wm.Label", {width: "100%", height: "24px", caption: ""}]
 	}]
 }
