@@ -179,7 +179,7 @@ body .wm_default input:focus,
 	-webkit-box-shadow: 1px 1px 1px #444444; /* MainContent-ClickablesDefault-BorderStyle_Shadow */
 	box-shadow: 1px 1px 1px #444444; /* MainContent-ClickablesDefault-BorderStyle_Shadow */
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #eeeeee; /* MainContent-ClickablesDefault-Background_Color */
+	background-color: #cccccc; /* MainContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyThickEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
@@ -726,7 +726,7 @@ body .wm_default .dialogfooter .wmbutton:hover {
          border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
 }
 .wm_default .dijitSpinner .dijitArrowButton .dijitArrowButtonInner {
-	background-position: 30% 50%;
+	background-position: 30% 20%;
 	background-image: url(images/comboArrowDownDark.png); /* wm.NumberSpinner-Down-Arrow_Image */
 }
 .wm_default .dijitSpinner .dijitArrowButton.dijitUpArrowButton .dijitArrowButtonInner {
@@ -837,7 +837,7 @@ body .wm_default .dialogfooter .wmbutton:hover {
    ************************************************************************************************/
 .wm_default .MainContent .wmeditor .dijitSpinner .dijitArrowButton,
 .wm_default .MainContent .wmeditor .dijitComboBox .dijitArrowButton {
-    background-color: #eeeeee; /* MainContent-ClickablesDefault-Background_Color */
+    background-color: #cccccc; /* MainContent-ClickablesDefault-Background_Color */
     background-image: none;
 }
     .wm_default .MainContent .wmeditor .dijitTextBox,
@@ -1400,7 +1400,7 @@ body .wm_default .dialogfooter .wmbutton:hover {
 }
     .wm_default .MainContent .dojoMenu.ClickableDojoMenu {
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #eeeeee; /* MainContent-ClickablesDefault-Background_Color */
+	background-color: #cccccc; /* MainContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyThickEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
@@ -1986,7 +1986,7 @@ body.wm_default {
 	font-family: Verdana; /* MainContent-ClickablesDefault-Font_Family */
 	font-size: 8pt; /* MainContent-ClickablesDefault-Font_TextSize */
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #eeeeee; /* MainContent-ClickablesDefault-Background_Color */
+	background-color: #cccccc; /* MainContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyThickEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
@@ -2027,7 +2027,7 @@ body.wm_default {
 	color: #333333; /* MainContent-ClickablesDefault-Font_Color */
 	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #eeeeee; /* MainContent-ClickablesDefault-Background_Color */
+	background-color: #cccccc; /* MainContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyThickEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
@@ -2055,7 +2055,7 @@ body.wm_default {
 	background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
     }
     .dj_ie6 .MainContent .wmtablayers-tab, .dj_ie7 .MainContent .wmtablayers-tab {
-        border-bottom-color: #eeeeee !important; /* MainContent-ClickablesDefault-Background_Color */
+        border-bottom-color: #cccccc !important; /* MainContent-ClickablesDefault-Background_Color */
     }
     /* END SECTION wm.TabLayers / wm.TabDecorator */
     /* END ESCTION wm.TabLayers / wm.WizardLayers */
@@ -2511,7 +2511,7 @@ body.wm_default {
 	color: #333333; /* MainContent-ClickablesDefault-Font_Color */
 	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #eeeeee; /* MainContent-ClickablesDefault-Background_Color */
+	background-color: #cccccc; /* MainContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyThickEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */

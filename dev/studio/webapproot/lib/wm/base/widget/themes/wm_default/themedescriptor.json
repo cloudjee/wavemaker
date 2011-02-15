@@ -270,7 +270,7 @@
 		"Shadow": "1px 1px 1px #444444"
 	}, 
 	"MainContent-ClickablesDefault-Background": {
-		"Color": "#eeeeee", 
+		"Color": "#cccccc", 
 		"Image-Repeat": "repeat-x", 
 		"Image-Position": "top left", 
 		"Image": "url(images/repeatx/greyThickEdge2.png)"
