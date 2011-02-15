@@ -31,7 +31,8 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 		this.tabsControl = new wm.TabsControl({
 			parent: this.decoree, 
 		        owner: this.decoree,
-		        padding: this.decoratorPadding
+		    padding: this.decoratorPadding,
+		    name: "tabsControl"
 		});
 		this.decoree.moveControl(this.tabsControl, 0);
 	},

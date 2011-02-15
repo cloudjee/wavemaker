@@ -1445,9 +1445,10 @@ body.wm-darksnazzy .wmToolbar button:hover {
 	color: #FFF;
 }
 
-.wm-darksnazzy .wmtablayers-tabbar,
-#studio_tabs .wmtablayers-tabbar,
-#studio_javaEditorContainer_javaEditor_logTabs .wmtablayers-tabbar,
+#studio_left > .wmtablayers-tabbar,
+#studio_tabs > .wmtablayers-tabbar,
+#studio_themesPage_themeDesigner_demoPanelTabLayers .wmtablayers-tabbar,
+.JavaEditor-logTabs .wmtablayers-tabbar,
 #studio_sourceTabs .wmtablayers-tabbar {
    /*
         background: -webkit-gradient(linear, left top, left bottom, from(#222222), to(#5D6778));
@@ -1459,9 +1460,10 @@ body.wm-darksnazzy .wmToolbar button:hover {
 	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#5D6778', endColorstr='#BDC7D8');
 }
 
-    .wm-darksnazzy .wmtablayers-tabbar,
-#studio_tabs .wmtablayers-tabbar,
-#studio_javaEditorContainer_javaEditor_logTabs .wmtablayers-tabbar,
+#studio_left > .wmtablayers-tabbar,
+#studio_tabs > .wmtablayers-tabbar,
+#studio_themesPage_themeDesigner_demoPanelTabLayers .wmtablayers-tabbar,
+.JavaEditor-logTabs .wmtablayers-tabbar,
 #studio_sourceTabs {
 	border-bottom: 1px solid #c0c4ca;
 	background-repeat:repeat-x;
@@ -1482,11 +1484,13 @@ body.wm-darksnazzy .wmToolbar button:hover {
 }
 .Studio-left > .wmtablayers-tabbar > .wmtablayers-tab {
     height: 20px;
-    margin-top: 5px;
+    margin-top: 5px !important;
 }
-.wm-darksnazzy .wmtablayers-tab,
-#studio_javaEditorContainer_javaEditor_logTabs .wmtablayers-tab,
-#studio_tabs .wmtablayers-tab,
+
+#studio_left > .wmtablayers-tabbar >  .wmtablayers-tab,
+#studio_themesPage_themeDesigner_demoPanelTabLayers > .wmtablayers-tabbar > .wmtablayers-tab,
+.JavaEditor-logTabs .wmtablayers-tab,
+#studio_tabs > .wmtablayers-tabbar > .wmtablayers-tab,
 #studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-tab {
 	-moz-border-radius-topleft: 4px; 
 	-moz-border-radius-topright: 4px; 
@@ -1508,16 +1512,19 @@ body.wm-darksnazzy .wmToolbar button:hover {
     padding: 2px 5px 3px 5px;
 }
 
-.dj_ff3 .wm-darksnazzy .wmtablayers-tab,
-.dj_ff3 #studio_javaEditorContainer_javaEditor_logTabs .wmtablayers-tab,
-.dj_ff3 #studio_tabs .wmtablayers-tab,
-.dj_ff3 .#studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-tab {
+.dj_ff3 #studio_tabs > .wmtablayers-tab,
+.dj_ff3 #studio_left > .wmtablayers-tab,
+.dj_ff3 .#studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-tab,
+.df_ff3 #studio_themesPage_themeDesigner_demoPanelTabLayers > .wmtablayers-tabbar > .wmtablayers-tab {
+.df_ff3 .JavaEditor-logTabs .wmtablayers-tabbar,
     padding: 2px 2px 3px 2px;
 }
 
-.wm-darksnazzy .wmtablayers-selected,
-#studio_tabs .wmtablayers-selected,
-#studio_javaEditorContainer_javaEditor_logTabs .wmtablayers-selected,
+
+#studio_left > .wmtablayers-tabbar > .wmtablayers-selected,
+#studio_tabs > .wmtablayers-tabbar >  .wmtablayers-selected,
+#studio_themesPage_themeDesigner_demoPanelTabLayers > .wmtablayers-tabbar > .wmtablayers-selected,
+.JavaEditor-logTabs .wmtablayers-selected,
 #studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-selected {
 	border-top: 1px solid #c0c4ca;
 	border-right: 1px solid #363b44;
