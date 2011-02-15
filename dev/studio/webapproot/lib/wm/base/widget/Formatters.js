@@ -240,12 +240,18 @@ dojo.declare("wm.ImageFormatter", wm.DataFormatter, {
 });
 
 // design only...
+
 wm.Object.extendSchema(wm.DataFormatter, {
 	name: { ignore: 1 }
 });
 
+wm.Object.extendSchema(wm.DateTimeFormatter, {
+	useLocalTime: { ignore: 1 }
+});
+
 wm.Object.extendSchema(wm.DateFormatter, {
-	timePattern: { ignore: 1 }
+	timePattern: { ignore: 1 },
+	useLocalTime: { ignore: 0 }
 });
 
 wm.Object.extendSchema(wm.TimeFormatter, {
