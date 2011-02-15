@@ -34,7 +34,10 @@ dojo.declare("LicenseDialog", wm.Page, {
 	    this.resultLabel.setCaption(inError);
 	},
     dismiss: function() {
-	studio.startPageDialog.page.tabLayers1.setLayerIndex(0);
+	if (studio.project.pageName && studio.page)
+	    studio.startPageDialog.hide();
+	else
+	    studio.startPageDialog.page.tabLayers1.setLayerIndex(0);
     },
     trialClick: function() {
 	window.open("http://www.wavemaker.com/downloads/enterprise_withmac_notrequired_mk.php?macid=" + this.macaddr);
