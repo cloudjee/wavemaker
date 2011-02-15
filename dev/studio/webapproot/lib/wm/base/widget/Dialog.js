@@ -239,8 +239,6 @@ dojo.declare("wm.Dialog", wm.Container, {
                                        noInspector: true,
 				       border: this.footerBorder,
 				       borderColor: this.titlebarBorderColor});
-
-
     },
     setTitlebarBorder: function(inBorder) {
         this.titlebarBorder = inBorder;
@@ -838,7 +836,7 @@ wm.Object.extendSchema(wm.Dialog, {
 
 
 dojo.declare("wm.WidgetsJsDialog", wm.Dialog, { 
-    margin: "0,4,4,0",
+    margin: "0,4,4,0",// for shadow styles
     useContainerWidget: true,
     widgets_data: null,
     widgets_json: "",
@@ -875,6 +873,18 @@ dojo.declare("wm.WidgetsJsDialog", wm.Dialog, {
 	this.containerWidget.createComponents(this.widgets_data, this);
 	this.containerWidget._cupdating = false;
 	this.containerWidget.reflow();
+	if (this.button_data) {
+	    if (!this.buttonBar) {
+		var containerWidget = this.containerWidget;
+		var containerNode = this.containerNode;
+		delete this.containerWidget;
+		delete this.containerNode;
+		this.createButtonBar();
+		this.containerWidget = containerWidget;
+		this.containerNode = containerNode;
+	    }
+	    this.buttonBar.createComponents(this.button_data, this);
+	}
     }
 });
 
@@ -953,33 +963,28 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
 	    genericInfoPanel: ["wm.Panel", {layoutKind: "top-to-bottom",  width: "100%", height: "100%", horizontalAlign: "left", verticalAlign: "top", autoScroll: true, fitToContentHeight: true, padding: "10,5,10,5"}, {}, {
 		userQuestionLabel: ["wm.Html", {autoScroll: false, "height":"25px",autoSizeHeight: true, "width":"100%",html: ""}],
 		textInput: ["wm.Text", {"width":"100%","captionSize":"0%","showing":false}, {}, {}]
-	    }],
-	    buttonBar: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]},
-				    name: "buttonBar",
-				    layoutKind: "left-to-right",
-				    padding: "2,6,2,6", 
-				    horizontalAlign: "right",
-                                     borderColor: this.footerBorderColor, border: this.footerBorder,
-				     fitToContentHeight: true,
-				    height: "34px",
-				    width: "100%"}, {}, {
+	    }]
+	};
+	this.button_data = {
 		                        button4: ["wm.Button", {"width":"130px","showing":false}, {"onclick":"buttonClick"}],
 		                        button3: ["wm.Button", {"width":"130px","showing":false}, {"onclick":"buttonClick"}],
 		                        button2: ["wm.Button", {"width":"130px","showing":false}, {"onclick":"buttonClick"}],
 		                        button1: ["wm.Button", {"width":"130px","showing":false}, {"onclick":"buttonClick"}]
-	                            }]
-        };
+	};
+    
+
 
     },
     postInit: function() {
 	this.inherited(arguments);
         this.containerWidget = this.c$[1];
 	this.containerWidget.flags.notInspectable = true;
-        this.buttonBar = this.containerWidget.c$[this.containerWidget.c$.length-1];
-	this.buttonBar.flags.notInspectable = true;
-        this.setFooterBorder(this.footerBorder);
-        this.setFooterBorderColor(this.footerBorderColor);
-
+	if (!this.buttonBar) {
+            this.buttonBar = this.containerWidget.c$[this.containerWidget.c$.length-1];
+	    this.buttonBar.flags.notInspectable = true;
+            this.setFooterBorder(this.footerBorder);
+            this.setFooterBorderColor(this.footerBorderColor);
+	}
 	if (this.regExp != ".*")
 	    this.$.textInput.setRegExp(this.regExp);
 
