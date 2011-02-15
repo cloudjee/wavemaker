@@ -131,7 +131,8 @@ dojo.declare("wm.LivePanel", wm.Panel, {
                    		margin: "4",
                    		alwaysPopulateEditors: true,
                    		liveEditing: false,
-                   		editPanelStyle: "none",
+                   		//editPanelStyle: "none",
+	                        _noEditPanel: true,
 				_liveSource: this.liveSource
 			});
 		this.liveForm.createLiveSource(this.liveSource);
