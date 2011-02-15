@@ -300,7 +300,7 @@ dojo.declare("wm.DateTime", wm.Text, {
 	if (date.getTime())
 	    wm.DateTime.dialog.$.calendar.setDate(date);
 	else
-	    wm.DateTime.dialog.$.calendar.setDate(new Date());
+	    wm.DateTime.dialog.$.calendar.dijit.goToToday();
 	if (this.dateMode != "Date") {
 	    var time = dojo.date.locale.format(date, {selector:'time',timePattern: "hh:mm a"});
 	    var timematches = time.match(/^(\d\d)\:(\d\d) (.*)$/);
@@ -343,8 +343,7 @@ dojo.declare("wm.DateTime", wm.Text, {
 	}
 	wm.DateTime.dialog.show();
 	delete this._initializingDialog;
-	var displayValue = dojo.date.locale.format(date, {formatLength: "medium", selector: this.dateMode.toLowerCase()});
-	wm.DateTime.dialog.$.label.setCaption(displayValue);
+	this.handleDateChange();
     },
     handleDateChange: function() {
 	if (this._initializingDialog) return;	
