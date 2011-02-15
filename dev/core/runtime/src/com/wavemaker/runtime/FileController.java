@@ -145,7 +145,7 @@ public final class FileController extends AbstractController {
             InputStream is = new FileInputStream(sendFile);
             if (reqPath.contains(WM_CONFIG_URL)) {
                 String content = IOUtils.toString(is);
-                content += "\r\n" + "wm.serverTimeOffset = " + ServerUtils.getServerTimeOffset();
+                content += "\r\n" + "wm.serverTimeOffset = " + ServerUtils.getServerTimeOffset() + ";";
                 IOUtils.write(content, os);
             } else {
                 IOUtils.copy(is, os);
