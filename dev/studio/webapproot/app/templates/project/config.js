@@ -38,4 +38,3 @@ wm.relativeLibPath = "../wavemaker/lib/";
 wm.images = wm.libPath + "wm/base/widget/themes/default/images/";
 wm.logging = (location.search.indexOf("logging") >= 0);
 wm.checkGoogleFrame = false;
-wm.serverTimeOffset = {serverTimeOffset}
