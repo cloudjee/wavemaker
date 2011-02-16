@@ -1012,11 +1012,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	dateFormatter: function(inDatum){
 	    if (!inDatum || inDatum instanceof Date == false)
 		return inDatum;
-	    console.log("HEY:"+inDatum);
 	    inDatum.setHours(inDatum.getHours() + wm.Date.timezoneOffset,0,0);
 
 	    var constraints = {selector:'date', formatLength:'short', locale:dojo.locale};
-	    console.log("HO:"+ dojo.date.locale.format(inDatum, constraints));
 	    return dojo.date.locale.format(inDatum, constraints);
 	},
 	localDateFormatter: function(inDatum){
