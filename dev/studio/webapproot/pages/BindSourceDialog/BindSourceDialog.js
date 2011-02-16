@@ -79,18 +79,20 @@ dojo.declare("BindSourceDialog", wm.Page, {
 	},
 	bindNodeSelected: function(inSender, inNode) {
 	    if (inNode) {
-		var targetOwner = this.targetProps.object.getRoot();
-		var nodeOwner = inNode.object.getRoot();
+		var targetOwner = this.targetProps.object.getRoot();		
 		var ownerString = "";
-		if (targetOwner != nodeOwner) {
-		    if (nodeOwner == studio.page)
-			ownerString = wm.decapitalize(studio.project.pageName) + ".";
-		    else if (nodeOwner == studio.application)
-			ownerString == "app.";
-		    else
-			ownerString = nodeOwner.getRuntimeId();
+		if (inNode.object) {
+		    var nodeOwner = inNode.object.getRoot();
+		    if (targetOwner != nodeOwner) {
+			if (nodeOwner == studio.page)
+			    ownerString = wm.decapitalize(studio.project.pageName) + ".";
+			else if (nodeOwner == studio.application)
+			    ownerString == "app.";
+			else
+			    ownerString = nodeOwner.getRuntimeId();
+		    }
 		}
-		    this.binderSource.bindEditor.setValue("dataValue", ownerString + inNode.source);
+		this.binderSource.bindEditor.setValue("dataValue", ownerString + inNode.source);
 	    }
 	},
 	applyButtonClick: function() {
