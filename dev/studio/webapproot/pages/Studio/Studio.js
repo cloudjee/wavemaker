@@ -140,6 +140,7 @@ dojo.declare("Studio", wm.Page, {
 		if (this.isCloud()) {
 		    this.navLogoutBtn.setShowing(true);
 		    this.navEditAccountBtn.setShowing(true);
+		    this.projectNameLabel.setShowing(false);
 		}
 
 	    if (studio.isModuleEnabled("security-driver", "wm.josso")) { // if isEnterprise

@@ -15,12 +15,27 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+/*
 .Studio .studioProjectRun, .Studio .studioProjectTest, .Studio .studioProjectCompile {
     background-image: url(/wavemaker/images/runapp_24.png);
     width: 24px !important;
     height: 24px !important;
 }
-
+*/
+.Studio .studioProjectRun, .Studio .studioProjectTest, .Studio .studioProjectCompile {
+    width: 24px !important;
+    height: 24px !important;    
+    background-repeat: no-repeat;
+}
+.Studio .studioProjectRun {
+    background-image: url(/wavemaker/images/runapp_24.png);    
+}
+.Studio .studioProjectTest {
+    background-image: url(/wavemaker/images/testapp_24.png);    	
+}
+.Studio .studioProjectCompile {
+    background-image: url(/wavemaker/images/compileapp_24.png);    	    
+}
 /* MenuBar */
 .wm-darksnazzy .dojoMenu {
 	background: url(images/navbar_bg.gif) bottom repeat-x;
@@ -1905,13 +1920,8 @@ color: rgb(0,270,0);
     width: 16px;
     height: 16px;
     position: absolute;
-    right: 1px;
-    top: 0px;
+    right: 4px;
+    top: 14px;
 }
-.Studio-paletteToDialogButton,
-.Studio-inspectorDialogToggle {
-    background-image: url(/wavemaker/images/dialogIconsGray.png);
-    background-position: -32px 0px;
-    background-repeat: no-repeat;
-    cursor: pointer;
-}
+
+

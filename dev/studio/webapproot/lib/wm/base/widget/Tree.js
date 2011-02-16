@@ -109,9 +109,13 @@ dojo.declare("wm.TreeNode", null, {
 		return n;
 	},
 	formatImage: function(inImage, inImageSize) {
-		inImage = inImage || this.image;
-		inImageSize = inImageSize || this.imageSize || 16;
+	    inImage = inImage || this.image;
+	    inImageSize = inImageSize || this.imageSize || 16;
+	    if (!inImage || inImage.indexOf(".") != -1) {
 		return inImage ? ['<img src="', inImage, '" style="height: ', inImageSize, 'px; width: ', inImageSize, 'px;">&nbsp;'].join('') : "";
+	    } else {
+		return inImage ? ['<img src="lib/wm/base/widget/themes/default/images/blank.gif" class="', inImage, '" style="height: ', inImageSize, 'px; width: ', inImageSize, 'px;">&nbsp;'].join('') : "";
+	    }
 	},
 	formatContent: function() {
 		i = this.formatImage();

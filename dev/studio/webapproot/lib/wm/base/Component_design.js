@@ -540,13 +540,14 @@ wm.Component.extend({
 	    var submenuOptions = {label: "Select", 
 				  iconClass: "Studio_silkIconImageList_83",
 				  children: [{label: this.name,
-					      iconClass: "Studio_silkIconImageList_83",
+					      iconClass: wm.packageImages[this.declaredClass] || "Studio_paletteImageList_0",
 					      onClick: this._makeSelectComponentMethod(this)}]};
 	    var parent = this.parent;
 	    while(parent && parent != studio.designer) {
 		if (!parent.flags || !parent.flags.notInspectable && !parent.noInspector)
 		    submenuOptions.children.push({label: parent.name,
-						  iconClass: "Studio_silkIconImageList_83",
+						  //iconClass: "Studio_silkIconImageList_83",
+						  iconClass: wm.packageImages[parent.declaredClass] || "Studio_paletteImageList_0",
 						  onClick: this._makeSelectComponentMethod(parent)});
 
 		if (parent instanceof wm.Layers) {

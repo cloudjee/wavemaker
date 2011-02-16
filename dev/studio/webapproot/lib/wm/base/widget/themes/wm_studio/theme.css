@@ -42,6 +42,23 @@
     background-repeat: no-repeat;
 }
 
+.Studio-paletteToDialogButton,
+.Studio-inspectorDialogToggle {
+    background-image: url(images/dialogIconsGray.png);
+    background-position: -64px 0px;
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+#studio_propertiesDialog .dialogclosebutton,
+#studio_paletteDialog .dialogclosebutton {
+    background-image: url(images/dialogIconsGray.png);
+    background-position: -49px 0px;
+    background-repeat: no-repeat;
+}
+
 #wmMinifiedDialogPanel {  
     opacity: 0.6;
     background-color: black;
