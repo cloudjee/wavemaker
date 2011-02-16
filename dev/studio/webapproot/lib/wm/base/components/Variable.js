@@ -608,22 +608,31 @@ dojo.declare("wm.Variable", wm.Component, {
 	//===========================================================================
 	// Update Messaging
 	//===========================================================================
-	dataRootChanged: function() {
-		if (this._subNard)
-			return;
-		// find first owner after root and send change message on that.
-		// this should trigger rule #3 for bindings.
-		var o = this.owner, p, root = this.getRoot();
-		while (o && o != root) {
-			p = o;
-			o = o && o.owner;
-		}
-		var n = p ? p.getRuntimeId() : this.getRuntimeId();
-		topic = n + "-rootChanged";
-		wm.logging && console.group("<== ROOTCHANGED [", topic, "] published by Variable.dataRootChanged");
-		dojo.publish(topic, [n]);
-		wm.logging && console.groupEnd();
-	},
+       dataRootChanged: function() {
+	   if (this._subNard)
+	       return;
+	   // find first owner after root and send change message on that.
+	   // this should trigger rule #3 for bindings.
+	   var o = this.owner, p, root = this.getRoot();
+	   while (o && o != root) {
+	       p = o;
+	       o = o && o.owner;
+	   }
+	   var n = p ? p.getRuntimeId() : this.getRuntimeId();
+	   var topic = n + "-rootChanged";
+	   wm.logging && console.group("<== ROOTCHANGED [", topic, "] published by Variable.dataRootChanged");
+	   dojo.publish(topic, [n]);
+
+	   var root = this.getRoot().getRuntimeId();
+	   if (root && root.indexOf(".") && n.indexOf(root) == 0) {
+	       var tmpn = n.substring(root.length);
+	       tmpn = root.substring(root.lastIndexOf(".")+1) + tmpn;
+	       topic = tmpn + "-rootChanged";
+	       wm.logging && console.group("<== ROOTCHANGED [", topic, "] published by Variable.dataRootChanged");
+	       dojo.publish(topic, [n]);
+	   }
+	   wm.logging && console.groupEnd();
+       },
 	dataOwnerChanged: function() {
 		if (this._updating)
 			return;
@@ -631,6 +640,16 @@ dojo.declare("wm.Variable", wm.Component, {
 		var topic = n + "-ownerChanged";
 		wm.logging && console.group("<== OWNERCHANGED [", topic, "] published by Variable.dataOwnerChanged");
 		dojo.publish(topic, [n]);
+
+	   var root = this.getRoot().getRuntimeId();
+	   if (root && root.indexOf(".") && n.indexOf(root) == 0) {
+	       var tmpn = n.substring(root.length);
+	       tmpn = root.substring(root.lastIndexOf(".")+1) + tmpn;
+	       topic = tmpn + "-ownerChanged";
+	       wm.logging && console.group("<== ROOTCHANGED [", topic, "] published by Variable.dataRootChanged");
+	       dojo.publish(topic, [n]);
+	   }
+
 		wm.logging && console.groupEnd();
 		//
 		// send root changed message
@@ -649,6 +668,18 @@ dojo.declare("wm.Variable", wm.Component, {
 		var topic=[id, "-changed"].join('');
 		wm.logging && console.group("<== CHANGED [", topic, "] published by Variable.dataChanged");
 		dojo.publish(topic, [this]);
+
+	   var root = this.getRoot().getRuntimeId();
+	    if (root && root.indexOf(".") && id.indexOf(root) == 0) {
+	       var tmpn = id.substring(root.length);
+	       tmpn = root.substring(root.lastIndexOf(".")+1) + tmpn;
+	       topic = tmpn + "-changed";
+	       wm.logging && console.group("<== ROOTCHANGED [", topic, "] published by Variable.dataRootChanged");
+	       dojo.publish(topic, [this]);
+	   }
+
+
+
 		// Rule: change notification is propagated up through owners
 		// propagate change up only if this is a subNard.
 		if (this._subNard)

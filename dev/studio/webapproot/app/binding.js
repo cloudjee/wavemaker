@@ -183,6 +183,7 @@ wm.convertForSimpleBind = function(inNodeProps, optionalSource) {
 	}
 	
 	if (p) {
+
 		inNodeProps.source = optionalSource || [inNodeProps.source, p.name].join(".");
 		inNodeProps.objectId = inNodeProps.source;
 		inNodeProps.isObject = p.property.isObject;
@@ -749,7 +750,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	},
         _getSourceObject: function(inSource, inOwner) {
 		var parts = (inSource || "").split('.'), o = [];
-		parts.length = (parts.length && parts[0] == "app") ? 2 : 1;
+	    parts.length = (parts.length && (parts[0] == "app" || parts[0] == wm.decapitalize(studio.project.pageName))) ? 2 : 1;
 		return inOwner.getValueById(parts.join('.'));
 	},
     _getExpressionPageSourceObject: function(inExpression, inOwner) {

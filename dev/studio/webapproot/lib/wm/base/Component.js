@@ -527,7 +527,7 @@ dojo.declare("wm.Component", wm.Object, {
 		return n in this._designee ? this._designee[n] : this.components[n];
 	},
 	_setProp: function(n, v) {
-		if (this.isEventProp(n))
+		if (this.isEventProp(n) && this._isDesignLoaded)
 			this.setEvent(n, v);
 		else {
 			// do we need this?
@@ -552,6 +552,17 @@ dojo.declare("wm.Component", wm.Object, {
 		
 		//console.info('Event: ' + evtId);
 		dojo.publish(evtId + "-changed", [inValue, this]);
+
+	    var root = this.getRoot();
+	    if (root) root = root.getRuntimeId();
+	    if (root && root.indexOf(".") && evtId.indexOf(root) == 0) {
+	       var n = evtId.substring(root.length);
+		n = root.substring(root.lastIndexOf(".")+1) + n;
+		var topic = n + "-changed";
+	       wm.logging && console.group("<== ROOTCHANGED [", topic, "] published by Variable.dataRootChanged");
+		dojo.publish(topic, [inValue, this]);
+	   }
+
 	},
 	//=======================================================
 	// Streaming In

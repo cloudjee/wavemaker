@@ -104,7 +104,7 @@ dojo.declare("wm.Wire", wm.Component, {
 		//	return;
 		//wm.logging && console.info("==> (top) ", this.source, "=>", this.getFullTarget(), " Wire.sourceTopUpdated");
 		//if (this.expression || this.source.indexOf(inSource)==0) {
-			this.refreshValue();
+			this.refreshValue(inSource);
 		//}
 	},
 	sourceRootUpdated: function() {
@@ -113,9 +113,21 @@ dojo.declare("wm.Wire", wm.Component, {
 		wm.logging && console.info("==> (sourceRootUpdated)", this.source);
 		this.getValueById(this.source);
 	},
-	refreshValue: function() {
+	refreshValue: function(optionalSource) {
 		//wm.logging && console.info("==> (refresh) ", this.source, "=>", this.getFullTarget(), " Wire.refreshValue");
-		this._sourceValueChanged(this.getValueById(this.source));
+
+	    /* Lets say I'm trying to match page3.grid1.selectedItem.empoloyee.eid, but optionalSource is actually
+	     * main.pageContainer1.page3.grid1.selectedItem.employee, we should add ".eid" to optionalSource before we use it */
+	    if (optionalSource) {
+		var optionalItems = optionalSource.split(/\./);
+		var sourceItems = this.source.split(/\./);
+		var lastOptionalItem = optionalItems[optionalItems.length-1];
+		for (var i = sourceItems.length-1; i >= 0; i--) {
+		    if (sourceItems[i] == lastOptionalItem) break;
+		    optionalSource += "." + sourceItems[i];
+		}
+	    }
+		this._sourceValueChanged(this.getValueById(optionalSource || this.source));
 		//wm.logging && console.groupEnd();
 	},
 	disconnectWire: function() {
@@ -128,7 +140,7 @@ dojo.declare("wm.Wire", wm.Component, {
 		// Rule 1: listen to "changed" on our source
 		var pre = inSource.indexOf("app.") == 0 ? "" : inRid;
 		var topic = pre + inSource + "-changed";
-		this.subscribe(topic, this, "sourceValueChanged")
+	    this.subscribe(topic, this, "sourceValueChanged");
 		wm.logging && console.info("***", " subscribed to [", topic, "]");
 		/*
 		var p = inSource.split("."), top = p.shift();
@@ -142,9 +154,10 @@ dojo.declare("wm.Wire", wm.Component, {
 		oid.pop();
 		oid = oid.join(".");
 		if (oid && oid != "app") {
-			topic = pre + oid + "-ownerChanged"
-			this.subscribe(topic, this, "sourceTopUpdated")
-			wm.logging && console.info("***", " subscribed to [", topic, "]");
+		    topic = pre + oid + "-ownerChanged";
+		    this.subscribe(topic, this, "sourceTopUpdated");
+		    wm.logging && console.info("***", " subscribed to [", topic, "]");
+
 			//
 			// Rule 3: listen to "rootChanged" on source's owner root
 			// (again, should be only for Variable sources, to make sure objects exist for lazy loading...)
