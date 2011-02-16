@@ -483,6 +483,7 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 	setCaption: function(inCaption) {
 		var oldCap = this.caption;
 		this.caption = inCaption;
+	    if (!this.captionNode) return;
 		var cap = inCaption + ((this.required && !this.readonly) ? '&nbsp;<span class="wmeditor-required">*</span>' : "");
 		this.captionNode.innerHTML = cap;
 		if (oldCap && !inCaption || !oldCap && inCaption) {
