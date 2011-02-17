@@ -244,6 +244,7 @@
         <javac destdir="${build.app.classes.dir}"
                 target="1.5"
                 debug="true"
+                includeantruntime="false"
                 encoding="${project.encoding}"
                 fork="true">
             <src>
