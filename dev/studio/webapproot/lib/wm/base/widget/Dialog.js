@@ -1008,7 +1008,7 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
     setFooterBorder: function(inBorder) {
         this.footerBorder = inBorder;
         if (this.buttonBar) {
-            this.buttonBar.setBorder(inBorder);
+	    this.buttonBar.setBorder(inBorder);
             this.buttonBar.setHeight((34 + this.buttonBar.padBorderMargin.t + this.buttonBar.padBorderMargin.b) + "px");
         }
     },
@@ -1022,9 +1022,11 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
         try {
             if (!this._settingHeight) {
                 var height = this.getPreferredFitToContentHeight();
+		if (dojo.isChrome) height--; // stupid chrome bug...
                 this._settingHeight = true;
                 this.setHeight(height + "px");
                 this._settingHeight = false;
+
                 this.inherited(arguments);
             }
         } catch(e) {this._settingHeight = false;}
