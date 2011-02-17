@@ -88,7 +88,7 @@ addWidgetBinderNodes = function(inParent, optionalWidgets) {
 				isList: object.isList,
 				_hasChildren: !wm.isEmpty(schema),
 				objectId: object.getId(),
-			        name: (w.owner == studio.page) ? name : w.owner.name + "." + name,
+			    name: (w.owner == studio.page) ? name : (w.owner == studio.application) ? "app." + name : w.owner.name + "." + name,
 				schema: schema,
 				image: props.image || studio.getComponentImage(object)
 			});

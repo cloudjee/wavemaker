@@ -77,19 +77,30 @@ dojo.declare("BindSourceDialog", wm.Page, {
 		isObject = type == "wm.Variable" || wm.typeManager.isStructuredType(type);
 		return {type: type, isObject: isObject, isList: isList || tp.isList};
 	},
+    // a variant on 
+    isAppLevel: function(inComponent) {
+	var c = inComponent.getRoot();
+	
+	while(c && c != studio.page && c != studio.application) {
+	    var tmpc = c.getRoot();
+	    c = (c == tmpc) ? c.parent : tmpc;
+	}
+	return c == studio.application;
+
+    },
 	bindNodeSelected: function(inSender, inNode) {
 	    if (inNode) {
 		var targetOwner = this.targetProps.object.getRoot();		
 		var ownerString = "";
 		if (inNode.object) {
-		    var nodeOwner = inNode.object.getRoot();
-		    if (targetOwner != nodeOwner) {
-			if (nodeOwner == studio.page)
-			    ownerString = wm.decapitalize(studio.project.pageName) + ".";
-			else if (nodeOwner == studio.application)
+		    var nodeIsAppLevel = this.isAppLevel(inNode.object);
+		    var targetIsAppLevel = this.isAppLevel(this.targetProps.object);
+		    if (nodeIsAppLevel != targetIsAppLevel) {
+			if (nodeIsAppLevel)
 			    ownerString == "app.";
 			else
-			    ownerString = nodeOwner.getRuntimeId();
+			    ownerString = wm.decapitalize(studio.project.pageName) + ".";
+
 		    }
 		}
 		this.binderSource.bindEditor.setValue("dataValue", ownerString + inNode.source);

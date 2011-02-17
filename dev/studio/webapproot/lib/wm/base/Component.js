@@ -112,6 +112,9 @@ dojo.declare("wm.Component", wm.Object, {
 		this.$ = this.components = {};
 		this._connections = [];
 		this._subscriptions = [];
+	        if (djConfig.isDebug) {
+		    this._debugSubscriptions = [];
+		}
 		this._designee = this;
 		this.isDestroyed = false;
 		this._subscriptions.push(dojo.subscribe('applicationDestroyed', this, 'destroy'));
@@ -364,6 +367,7 @@ dojo.declare("wm.Component", wm.Object, {
 	    this.components[i].resetChildIds();
 	}
     },
+
 	// get the root object that owns this component and under which its id is qualified
 	getRoot: function() {
 	    if (this.owner)
@@ -494,6 +498,9 @@ dojo.declare("wm.Component", wm.Object, {
 	subscribe: function() {
             var s = dojo.subscribe.apply(dojo, arguments);
 	    this._subscriptions.push(s);
+	    if (djConfig.isDebug) {
+		this._debugSubscriptions.push(arguments[0]);
+	    }
             return s;
 	},
         unsubscribe: function(subname) {
@@ -501,12 +508,18 @@ dojo.declare("wm.Component", wm.Object, {
                 if (this._subscriptions[i][0] == subname) {
                     dojo.unsubscribe(this._subscriptions[i]);
                     wm.Array.removeElementAt(this._subscriptions,i);
+		    if (djConfig.isDebug) {
+			wm.Array.removeElementAt(this._debugSubscriptions,i);
+		    }
                 }
             }
         },
 	_unsubscribe: function() {
 		dojo.forEach(this._subscriptions, dojo.unsubscribe);
 		this._subscriptions = [];
+	        if (djConfig.isDebug) {
+		    this._debugSubscriptions = [];
+		}
 	},
 	//=======================================================
 	// Properties

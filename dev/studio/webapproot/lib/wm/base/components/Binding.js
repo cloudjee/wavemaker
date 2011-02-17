@@ -127,7 +127,15 @@ dojo.declare("wm.Wire", wm.Component, {
 		    optionalSource += "." + sourceItems[i];
 		}
 	    }
-		this._sourceValueChanged(this.getValueById(optionalSource || this.source));
+
+	    // optionalSource is full runtime id; and can only be found reliably by the application object
+	    if (optionalSource) {
+		this._sourceValueChanged(app.getValueById(optionalSource));
+	    } else {
+		// this.source is a relative ID; the ID known at design time when we have no idea
+		// what our owner might be, and needs to be looked up relative to this component's page/owner
+		this._sourceValueChanged(this.getValueById(this.source));
+	    }
 		//wm.logging && console.groupEnd();
 	},
 	disconnectWire: function() {
