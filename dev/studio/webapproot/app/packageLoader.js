@@ -24,7 +24,8 @@ _import = function(inTab, inName, inClass, inModule, inImage, inDescription, isB
 		c=inClass,
 		m=inModule||c,
 		i=inImage||"images/wm/widget.png";
-    wm.packageImages[inClass] = i;
+    if (i.indexOf(".") == -1) // only add classes, not paths
+	wm.packageImages[inClass] = i;
 	try{
 		// trips up build system to have a dojo.require here
 		dojo["require"](m);
