@@ -688,6 +688,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 				if (obj[f])
 					dates[f] = new Date(obj[f]);
 			});
+		    //obj = wm.flattenObject(obj,true);
 			storeData.items[storeData.items.length] = dojo.mixin({},obj, dates);
 		}, this);
 		this.store = new dojo.data.ItemFileWriteStore({data: storeData});
@@ -725,7 +726,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 					width: col.width == '100%' ? 'auto' : col.width, 
 					fieldType:col.fieldType, 
 					options: col.options, // at the moment, there's no UI for entering these, but I can hard code adding these into my page.js
-					editable:col.editable,
+					editable:col.editable || col.fieldType, // col.editable is obsolete
 					expression:col.expression, 
 					displayType:col.displayType};
 
