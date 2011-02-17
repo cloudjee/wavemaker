@@ -30,13 +30,22 @@ public class LicenseUtil {
 //[nonemac-begin]
     public static String getMacAddr() {
         StringBuilder sb;
+
+        String os = System.getProperty("os.name");
+        String separator;
+        if (os.startsWith("Windows")) {
+            separator = "-";
+        } else {
+            separator = ":";
+        }
+        
         try {
             InetAddress address = InetAddress.getLocalHost();
             NetworkInterface ni = NetworkInterface.getByInetAddress(address);
             byte[] mac = ni.getHardwareAddress();
             sb = new StringBuilder();
             for (int i = 0; i < mac.length; i++) {
-                sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
+                sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? separator : ""));
             }
         } catch (Exception e) {
             e.printStackTrace();
