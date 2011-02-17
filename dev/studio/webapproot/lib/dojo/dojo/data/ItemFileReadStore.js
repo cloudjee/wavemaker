@@ -146,6 +146,24 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 		this._assertIsItem(item);
 		this._assertIsAttribute(attribute);
 		// Clone it before returning.  refs: #10474
+
+	    /* Wavemaker Addition */
+	    if (attribute.indexOf(".") != -1) {
+		var parts = attribute.split(/\./);
+		var value = item;
+		for (var i = 0; i < parts.length; i++) {
+		    var key = parts[i];
+		    if (value[key] && value[key][0])
+			value = i == parts.length-1 ? value[key] : value[key][0];
+		    else {
+			value = null;
+			break;
+		    }
+		}
+		if (value !== null)
+		    return value;
+	    }
+
 		return (item[attribute] || []).slice(0); // Array
 	},
 
