@@ -217,15 +217,17 @@ dojo.declare("wm.ContextMenuDialog", wm.Dialog, {
 			});
 			this.advancedButton.attr('label', '<< Hide Advanced Properties');
 		    this.menuTable.style.width = "1000px";
+		    this.setWidth("1020px");
 		} else {
 			this.isAdvancedHidden = true;
 			dojo.forEach(this.advancedColumns, function(td){
 				td.style.display = 'none';
 			});
 			this.advancedButton.attr('label', 'Show Advanced Properties >>');
+		    this.setWidth("720px");
 	    this.menuTable.style.width = "700px";
 		}
-		
+		    this.containerWidget.domNode.style.overflow = "auto";
 	    //this.menu._position();
 	},
 	addHeaderColumn: function(tr, attr){
