@@ -134,8 +134,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 		var _this = this;
 		var sItem = function(items, request){
-			if (items.length < 1)
-				return;
+		        if (items.length < 1) {
+                            _this.deselectAll();
+			    return;
+                        }
 			var idx = _this.dojoObj.getItemIndex(items[0]);
 			if (idx == -1)
 				idx = _this.variable.getItemIndexByPrimaryKey(obj, pkList) || -1;
@@ -144,13 +146,22 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 				_this.setSelectedRow(idx);
 				_this.dojoObj.scrollToRow(idx);
 			    },0);
+                         else 
+                            _this.deselectAll();
 		};
 		this.store.fetch({query:q, onComplete: sItem});
 	},
-	deselect: function() {
-	  this.updateSelectedItem(-1);
-	  this.onSelectionChange();
+	deselectAll: function() {
+            if (this.dojoObj)
+                this.dojoObj.selection.clear();
+	    this.updateSelectedItem(-1);
+	    this.onSelectionChange();
 	},
+
+    select: function(rowIndex, isSelected) {
+        this.setSelectedRow(rowIndex, isSelected);
+    },
+/* Functionality moved to selectionChange
 	select: function() {
 	    this._selectedItemTimeStamp = new Date().getTime();
 		if (this.selectionMode == 'multiple')
@@ -159,14 +170,25 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			this.updateSelectedItem( this.getSelectedIndex());
 		this.onSelectionChange();
 	},
+	*/
 	selectionChange: function() {
-	    this._selectedItemTimeStamp = new Date().getTime();
+            var newSelection = this.dojoObj.selection.getSelected();
+            var hasChanged = false;
+            if (!this._curSelectionObj || !wm.Array.equals(this._curSelectionObj, newSelection))
+                hasChanged = true;
+            if (hasChanged) {
+		this._selectedItemTimeStamp = new Date().getTime();
 		if (this.selectionMode == 'multiple')
 			this.updateAllSelectedItem();
 		else
 			this.updateSelectedItem( this.getSelectedIndex());
-	  if (!this.rendering)
-		  this.onSelectionChange();
+		if (!this.rendering)
+		    this.onSelectionChange();
+                this._curSelectionObj = [];
+                for (var i = 0; i < newSelection.length; i++)
+                    this._curSelectionObj.push(newSelection[i]);
+            }
+
 	},
 	cellEditted: function(inValue, inRowIndex, inFieldName) {
 		// values of the selectedItem must be updated, but do NOT call a selectionChange event, as its the same selected item, just different values
@@ -320,6 +342,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		}, this);
 
         this.selectedItem._setArrayData(objList);
+	    this.selectedItem.notify();
 		//this.setValue("emptySelection", !this.hasSelection());
 	},
 	getSelectedIndex: function() {
@@ -562,7 +585,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 		//dojo.connect(this.dojoObj, "onDeselect", this, "deselect");
 		//dojo.connect(this.dojoObj, "onSelected", this, "select");
-		dojo.connect(this.dojoObj, "onSelected", this, "selectionChange");
+	        //dojo.connect(this.dojoObj, "onSelected", this, "selectionChange");
+		dojo.connect(this.dojoObj, "onSelectionChanged", this, "selectionChange");
+	        //dojo.connect(this.dojoObj, "onDeselected", this, "selectionChange");
 
 		if (this.isDesignLoaded()) {
 			dojo.connect(this.dojoObj,'onMoveColumn', this, '_onMoveColumn');
