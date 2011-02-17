@@ -1237,6 +1237,7 @@ dojo.declare("wm.DebugBindingNode", wm.TreeNode, {
     source: "",
     expression: "",
     closed: true,
+    hasChildren: true,
     constructor: function(inParent, inProps, inShowing) {
 	if (!inShowing) this.domNode.style.display = "none";
 	this.setContent("<img src='" + dojo.moduleUrl("lib.images.silkIcons") + "wrench.png' /> Bound '" + this.property + "' of " + this.component.getRuntimeId());
