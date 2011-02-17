@@ -38,6 +38,23 @@ wm.decapitalize = function(s) {
 	return s ? s.charAt(0).toLowerCase() + s.slice(1) : "";
 }
 
+wm.flattenObject = function(inObj, keepOld) {
+    var outObj = {};
+    for (var prop in inObj) {
+	if (!inObj[prop])
+	    continue;
+
+	if (typeof inObj[prop] != "object") {
+	    outObj[prop] = inObj[prop];
+	} else {
+	    var tmpObj = wm.flattenObject(inObj[prop]);
+	    if (keepOld) outObj[prop] = tmpObj;
+	    for (var prop2 in tmpObj) outObj[prop + "." + prop2] = tmpObj[prop2];
+	}
+    }
+    return outObj;
+}
+
 wm.requireCss = function(modulepath) {
     var stylenode = dojo.byId("CSS_" + modulepath.replace(/\./g,"_"));
     if (stylenode) return;
