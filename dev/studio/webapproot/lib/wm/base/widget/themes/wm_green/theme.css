@@ -726,12 +726,11 @@ body .wm_green .dialogfooter .wmbutton:hover {
          border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
 }
 .wm_green .dijitSpinner .dijitArrowButton .dijitArrowButtonInner {
-        height: 100% !important;
 	background-position: 30% 20%;
-	background-image: url(images/comboArrowDownDark.png); /* wm.NumberSpinner-Down-Arrow_Image */    
+	background-image: url(images/comboArrowDownDark.png); /* wm.NumberSpinner-Down-Arrow_Image */
 }
 .wm_green .dijitSpinner .dijitArrowButton.dijitUpArrowButton .dijitArrowButtonInner {
-	background-image: url(images/comboArrowUpDark.png); /* wm.NumberSpinner-Up-Arrow_Image */    
+	background-image: url(images/comboArrowUpDark.png); /* wm.NumberSpinner-Up-Arrow_Image */
 }
   /**************************************************************************************************
    * TYPE:        Slider
@@ -973,7 +972,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
    * DESCRIPTION: We need to set the background color and background image for the menu's popup
    *              button. 
    ************************************************************************************************/
-.wm_green .HeaderContent .wmeditor .dijitSpinner .dijitArrowButton {
+.wm_green .HeaderContent .wmeditor .dijitSpinner .dijitArrowButton,
 .wm_green .HeaderContent .wmeditor .dijitComboBox .dijitArrowButton {
     background-color: #666666; /* HeaderContent-ClickablesDefault-Background_Color */
     background-image: none;

@@ -972,7 +972,7 @@ body .wm_default .dialogfooter .wmbutton:hover {
    * DESCRIPTION: We need to set the background color and background image for the menu's popup
    *              button. 
    ************************************************************************************************/
-.wm_default .HeaderContent .wmeditor .dijitSpinner .dijitArrowButton {
+.wm_default .HeaderContent .wmeditor .dijitSpinner .dijitArrowButton,
 .wm_default .HeaderContent .wmeditor .dijitComboBox .dijitArrowButton {
     background-color: #666666; /* HeaderContent-ClickablesDefault-Background_Color */
     background-image: none;
