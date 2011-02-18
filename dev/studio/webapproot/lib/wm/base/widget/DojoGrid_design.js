@@ -320,7 +320,7 @@ wm.Object.extendSchema(wm.DojoGrid, {
 	scrollY:{ignore:1},
 	disabled:{ignore:1},
 	query: {ignore:1},
-	editColumns:{group: "operation", order:40},
+    editColumns:{group: "edit", order:40, contextMenu: true},
     //showAddDialog:{group: "edit", order:40},
     showAddDialog: {ignore: true}, // will unignore once this feature is ready
     singleClickEdit: {group: "edit", order: 32},
