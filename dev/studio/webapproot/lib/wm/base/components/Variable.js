@@ -609,7 +609,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	// Update Messaging
 	//===========================================================================
        dataRootChanged: function() {
-	   if (this._subNard)
+	   if (this._subNard || !this.owner)
 	       return;
 	   // find first owner after root and send change message on that.
 	   // this should trigger rule #3 for bindings.
@@ -634,7 +634,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	   wm.logging && console.groupEnd();
        },
 	dataOwnerChanged: function() {
-		if (this._updating)
+		if (this._updating || !this.owner)
 			return;
 		var n = this.getRuntimeId();
 		var topic = n + "-ownerChanged";
@@ -662,7 +662,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		}
 	},
 	dataChanged: function() {
-		if (this._updating)
+		if (this._updating || !this.owner)
 			return;
 		var id = this.getRuntimeId();
 		var topic=[id, "-changed"].join('');
@@ -688,7 +688,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	},
 	// id-based notification
 	dataValueChanged: function(inProp, inValue) {
-		if (!this._updating) {
+		if (!this._updating && this.owner) {
 			// Can't simply call valueChanged; see note below.
 			wm.Component.prototype.valueChanged.call(this, inProp, inValue);
 			this.dataChanged();
