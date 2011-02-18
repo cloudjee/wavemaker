@@ -296,13 +296,18 @@ dojo.declare("wm.EditArea", wm.Box, {
     },
 	editorStarted: function() {
 		var f = this.getEditFrame();
+
 		if (f)
-			this.connect(f.document, "keydown", this, "keydown");
+		    this.connect(f.document, "keydown", this, "keydown");
+
 	},
+    reservedCtrlKeys: ["a","c","v","x"],
 	keydown: function(e) {
 	    if (e.ctrlKey && app._keys[e.keyCode] != "CTRL") {
-		this.onCtrlKey(app._keys[e.keyCode]);
-		dojo.stopEvent(e);
+		if (dojo.indexOf(this.reservedCtrlKeys, app._keys[e.keyCode]) == -1) {
+		    this.onCtrlKey(app._keys[e.keyCode]);
+		    dojo.stopEvent(e);
+		}
 	    } else {
 		if (this._keydownTimeout) window.clearTimeout(this._keydownTimeout);
 		this._keydownTimeout = wm.job(this.getRuntimeId() + "onKeyDown", 100, dojo.hitch(this, function() {

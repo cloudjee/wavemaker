@@ -96,7 +96,7 @@ function keyDown(e){
 				//editArea.execCommand("callSave", e);
 		                break;
 			default:
-		                return false;
+		                return true;
 				break;			
 		}		
 	}		
