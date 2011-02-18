@@ -69,7 +69,7 @@ wm.fullTemplates.fancyTemplate = {
 	varTemplateLogout: ["wm.LogoutVariable", {}, {}, {
 		input: ["wm.ServiceInput", {"type":"logoutInputs"}, {}]
 	}],	
-	panel1: ["wm.Panel", {"border":"0,0","borderColor":"#999999","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"80%"}, {}, {
+	    panel1: ["wm.Panel", {"border":"0,0","borderColor":"#999999","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"80%", minHeight: "660", minWidth:"800"}, {}, {
 		panel2: ["wm.HeaderContentPanel", {"borderColor":"#004c68","height":"60px","horizontalAlign":"left","layoutKind":"left-to-right","padding":"0,10","verticalAlign":"middle","width":"100%"}, {}, {
 			picture1: ["wm.Picture", {"border":"0","height":"50px","source":"lib/wm/base/widget/themes/default/images/wmLogo.png","width":"62px"}, {}],
 			label1: ["wm.Label", {"border":"0","caption":"Quisque Molestie Porta","width":"100%"}, {}, {
@@ -163,7 +163,7 @@ wm.fullTemplates.sideMenuTemplate = {
 	horizontalAlign: "left",
     autoScroll: true,
 	_template: {
-	panel1: ["wm.Panel", {"border":"0,1,0,0","borderColor":"#999999","height":"100%","horizontalAlign":"left","minWidth":900,"verticalAlign":"top","width":"75%"}, {}, {
+	    panel1: ["wm.Panel", {"border":"0,1,0,0","borderColor":"#999999","height":"100%","horizontalAlign":"left","minWidth":900,minHeight: 600, "verticalAlign":"top","width":"75%"}, {}, {
 		panel2: ["wm.HeaderContentPanel", {"border":"0,0,1,0","height":"65px","horizontalAlign":"left","layoutKind":"left-to-right","margin":"0","padding":"0,10,0,10","verticalAlign":"middle","width":"100%"}, {}, {
 			picture1: ["wm.Picture", {"border":"0","height":"50px","source":"lib/wm/base/widget/themes/default/images/wmLogo.png","width":"62px"}, {}],
 		    label3: ["wm.Label", {"border":"0","caption":"[Application Name]","width":"100%", height: "35px"}, {}, {
@@ -204,7 +204,7 @@ wm.fullTemplates.tabTemplate = {
 	horizontalAlign: "center",
     autoScroll: true,
 	_template: {
-	panel3: ["wm.Panel", {"height":"100%","horizontalAlign":"left","minWidth":900,"verticalAlign":"top","width":"75%"}, {}, {
+	    panel3: ["wm.Panel", {"height":"100%","horizontalAlign":"left","minWidth":900,minHeight:600, "verticalAlign":"top","width":"75%"}, {}, {
 		panel1: ["wm.HeaderContentPanel", {"border":"0,0,1,0","borderColor":"#333333","height":"65px","horizontalAlign":"left","layoutKind":"left-to-right","padding":"0,10","verticalAlign":"middle","width":"100%"}, {}, {
 			picture1: ["wm.Picture", {"border":"0","height":"50px","source":"lib/wm/base/widget/themes/default/images/wmLogo.png","width":"62px"}, {}],
 		    label3: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_20px","wm_FontSizePx_24px"]},"border":"0","caption":"[Application Name]","width":"100%", height: "35px"}, {}, {
@@ -248,7 +248,7 @@ wm.fullTemplates.topMenuTemplate = {
 	horizontalAlign: "center",
     autoScroll: true,
 	_template: {
-	panelCenter: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"900px"}, {}, {
+	    panelCenter: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"900px", minHeight: 600}, {}, {
 		panelHeader: ["wm.HeaderContentPanel", {"height":"65px","horizontalAlign":"left","layoutKind":"left-to-right","padding":"0,10,0,10","verticalAlign":"middle","width":"100%"}, {}, {
 			picture1: ["wm.Picture", {"border":"0","height":"50px","source":"lib/wm/base/widget/themes/default/images/wmLogo.png","width":"62px"}, {}],
 		    label2: ["wm.Label", {"border":"0","caption":"[Application Name]","width":"100%", height: "35px"}, {}, {
@@ -269,9 +269,6 @@ wm.fullTemplates.topMenuTemplate = {
 
 			}],
 			panel1: ["wm.EmphasizedContentPanel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"30%"}, {}, {
-				fancyPanel3: ["wm.FancyPanel", {"horizontalAlign":"left","verticalAlign":"top"}, {}, {
-
-				}]
 			}]
 		}],
 		panelFooter: ["wm.HeaderContentPanel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {

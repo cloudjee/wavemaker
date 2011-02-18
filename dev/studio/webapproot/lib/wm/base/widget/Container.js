@@ -545,21 +545,32 @@ wm.Container.extend({
                 var extra = this.padBorderMargin.r + this.padBorderMargin.l;	
 	        var max = 0;
 	        var sum = 0;
+	    var percentUsed = 0;
 		var v;
-		for (var i=0, c; c=this.c$[i]; i++) {
+		for (var i=0, c; c=this.c$[i]; i++) {		    
 			if (this.layout.inFlow(c)) {
 				if (c.fitToContentWidth) {
 					v =  c.getPreferredFitToContentWidth();
 				} else if (!c._percEx.w) {
 					v =  c.bounds.w;
 				} else {
-					v = c.minWidth || c.getMinWidthProp();
+				    v = parseInt(c.minWidth) || c.getMinWidthProp();
+				    if (c.bounds.w > c.minWidth || this.c$.length == 1) {
+					if (percentUsed < 100)
+					    percentUsed += c._percEx.w;
+				    } else {
+					percentUsed = 100;
+				    }
 				}
 				max = Math.max(max, v);
 				sum += v;				
+			    
 			}
 		}
-
+	    if (percentUsed && percentUsed < 100) {
+		sum = Math.round(sum * 100/percentUsed);
+		max = Math.round(max * 100/percentUsed);
+	    }
                 // Never return less than 30px wide; mostly this is for design mode where users still need to be able to find and drop widgets into the container.
 	        var result = ((this.layoutKind == "top-to-bottom") ? max : sum) + extra;
 	    return Math.max(result, wm.Control.prototype.getMinWidthProp.call(this));
@@ -575,7 +586,8 @@ wm.Container.extend({
             var extra = this.padBorderMargin.t + this.padBorderMargin.b;	
 	    var max = 0;
 	    var sum = 0;
-		var v;
+	    var percentUsed = 0;
+	    var v;
 		for (var i=0, c; c=this.c$[i]; i++) {
 			if (this.layout.inFlow(c)) {
 				 if (c.fitToContentHeight) {
@@ -583,12 +595,24 @@ wm.Container.extend({
 				} else if (!c._percEx.h) {
 					v = c.bounds.h;
 				} else {
-					v =  c.minHeight || c.getMinHeightProp();
+				    v =  parseInt(c.minHeight) || c.getMinHeightProp();
+				    if (c.bounds.w > c.minWidth || this.c$.length == 1) {
+					if (percentUsed < 100)
+					    percentUsed += c._percEx.h;
+				    } else {
+					percentUsed = 100;
+				    }
 				}
 				max = Math.max(max, v);
 				sum += v;
 			}
 		}
+
+	    if (percentUsed && percentUsed < 100) {
+		sum = Math.round(sum * 100/percentUsed);
+		max = Math.round(max * 100/percentUsed);
+	    }
+
             // never return less than 15px height
             var result =  ((this.layoutKind == "left-to-right") ? max : sum) + extra;
 	    return Math.max(result, wm.Control.prototype.getMinHeightProp.call(this));
