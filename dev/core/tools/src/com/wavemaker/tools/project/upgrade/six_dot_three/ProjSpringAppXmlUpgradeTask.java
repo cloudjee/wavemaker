@@ -35,7 +35,7 @@ public class ProjSpringAppXmlUpgradeTask implements UpgradeTask {
 
     private String fromStr = "/resources/gzipped/**=fileController";
 
-    private String toStr = fromStr + "\r\n\r\n\t\t\t\t/config.js=fileController";
+    private String toStr = fromStr + "\r\n\t\t\t\t/config.js=fileController";
 
     private boolean error = false;
 
