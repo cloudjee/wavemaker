@@ -358,7 +358,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
             inContainer._xscrollX = false;
             scrollX = "hidden";
         } else {
-	    var requiredWidth = (inContainer instanceof wm.Layout) ? inContainer.bounds.w : inContainer.getPreferredFitToContentWidth();
+	    var requiredWidth = inContainer.getPreferredFitToContentWidth();
             var needsScrollX = requiredWidth > inContainer.bounds.w;
             var scrollX = (needsScrollX) ? "auto" : "hidden";
         }
