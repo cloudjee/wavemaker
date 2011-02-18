@@ -1469,6 +1469,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #studio_webServiceSubTab > .wmtablayers-tabbar,
 #studio_securitySubTab > .wmtablayers-tabbar,
 #app_importDatabase_panel1 > .wmtablayers-tabbar,
+#studio_inspectorLayers_Styles > .wmtablayers-tabbar,
 #studio_sourceTabs .wmtablayers-tabbar {
    /*
         background: -webkit-gradient(linear, left top, left bottom, from(#222222), to(#5D6778));
@@ -1489,6 +1490,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #studio_webServiceSubTab > .wmtablayers-tabbar,
 #studio_securitySubTab > .wmtablayers-tabbar,
 #app_importDatabase_panel1 > .wmtablayers-tabbar,
+#studio_inspectorLayers_Styles > .wmtablayers-tabbar,
 #studio_sourceTabs {
 	border-bottom: 1px solid #c0c4ca;
 	background-repeat:repeat-x;
@@ -1521,6 +1523,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #studio_webServiceSubTab > .wmtablayers-tabbar > .wmtablayers-tab,
 #studio_securitySubTab > .wmtablayers-tabbar > .wmtablayers-tab,
 #app_importDatabase_panel1 > .wmtablayers-tabbar > .wmtablayers-tab,
+#studio_inspectorLayers_Styles > .wmtablayers-tabbar > .wmtablayers-tab,
 #studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-tab {
 	-moz-border-radius-topleft: 4px; 
 	-moz-border-radius-topright: 4px; 
@@ -1551,6 +1554,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 .df_ff3 #studio_webServiceSubTab > .wmtablayers-tabbar > .wmtablayers-tab,
 .df_ff3 #studio_securitySubTab > .wmtablayers-tabbar > .wmtablayers-tab,
 .df_ff3 #app_importDatabase_panel1 > .wmtablayers-tabbar > .wmtablayers-tab,
+.df_ff3 #studio_inspectorLayers_Styles > .wmtablayers-tabbar > .wmtablayers-tab,
 .df_ff3 .JavaEditor-logTabs .wmtablayers-tabbar {
     padding: 2px 2px 3px 2px;
 }
@@ -1565,6 +1569,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
  #studio_webServiceSubTab > .wmtablayers-tabbar > .wmtablayers-selected,
  #studio_securitySubTab > .wmtablayers-tabbar > .wmtablayers-selected,
 #app_importDatabase_panel1 > .wmtablayers-tabbar > .wmtablayers-selected,
+#studio_inspectorLayers_Styles > .wmtablayers-tabbar > .wmtablayers-selected,
 #studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-selected {
 	border-top: 1px solid #c0c4ca;
 	border-right: 1px solid #363b44;
