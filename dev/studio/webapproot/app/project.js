@@ -163,19 +163,40 @@ dojo.declare("wm.studio.Project", null, {
 	// Open
 	//=========================================================================		 
 	openProject: function(inProjectName, inPageName) {
-		if (!inProjectName) {
-			this.closeProject();
-			return;
-		}
-
-		if (this.projectName && this.projectName != null && this.projectName != '')
-		{
-			if (this.projectName != inProjectName)
-			{
-				this.closeProject(this.projectName);
+	    if (this.projectName && this.projectName != inProjectName)
+		this.closeProject();
+	    if (!inProjectName) {
+		return;
+	    }
+	    var o = studio.studioService.requestAsync("openProject", [inProjectName],
+						      dojo.hitch(this, function(o) {
+			this.projectName = inProjectName;
+			if (o.upgradeMessages)
+				this.showUpgradeMessage(o.upgradeMessages);
+			this.projectChanging();
+			try {
+				this.loadApplication();
+				var ctor = dojo.getObject(this.projectName);
+				this.pageName = inPageName || (ctor ? ctor.prototype.main : "Main");
+				this.makeApplication();
+				this.openPage(this.pageName);
+			        studio.startPageDialog.hide();
+			    
+			} catch(e) {
+				console.debug(e);
+				this.loadError(bundleDialog.M_FailedToOpenProject + this.projectName + ". Error: " + e);
+				this.projectName = "";
+				this.pageName = "";
+				studio.application = studio.page = null;
+			} finally {
+				this.projectChanged();
 			}
-		}
-		
+						      }),
+						      dojo.hitch(this, function(err) {
+							  app.alert(err || "Failed to open project");
+							  this.closeProject();
+						      }));
+/*
 		var o = studio.studioService.getResultSync("openProject", [inProjectName]);
 	        if (o) {
 			this.projectName = inProjectName;
@@ -207,6 +228,7 @@ dojo.declare("wm.studio.Project", null, {
 		    alert(studio.studioService.error || "Failed to open project");
 		    this.closeProject();
 		}
+		*/
 	},
     closeAllServicesTabs: function() {
 	var layers = studio.tabs.layers;
@@ -1016,6 +1038,7 @@ Studio.extend({
                 }
         },
         _newProjectClick: function() {
+	        this.project.closeProject();
 		var projects = this.project.getProjectList();
 		var l={};
 		dojo.forEach(projects, function(p) {

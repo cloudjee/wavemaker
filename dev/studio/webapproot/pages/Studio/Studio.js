@@ -367,6 +367,8 @@ dojo.declare("Studio", wm.Page, {
 			 this.paletteSearch.focus(); // this is done to help FF contextual menus work; else we get crazy stupid errors
 		     } else if (!this.isLoginShowing()) {
 			 studio.startPageDialog.show();
+			 if (app.alertDialog && app.alertDialog.showing && !app.alertDialog._hideAnimation)
+			     app.alertDialog.show(); // insure the alert dialog is over the startPageDialog
 			 //this.startLayer.activate();
 		       //this.projects.activate();
 		     }
