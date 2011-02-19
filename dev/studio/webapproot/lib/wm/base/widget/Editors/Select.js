@@ -244,11 +244,6 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	},
 	setDataField: function(inDataField) {
 		this.dataField = inDataField;
-	    if (this._isDesignLoaded) {
-		var prop = this.listProperties().dataValue;
-		prop.type = (this.isAllDataFields()) ? this.dataSet.type : "String";
-		prop.isObject = (inDataField == this._allFields);
-	    }
 	},
 	setDisplayField: function(inDisplayField) {
 	    this.displayField = inDisplayField;
@@ -478,6 +473,17 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
         },
 	isAllDataFields: function() {
 		return (this.dataField == this._allFields || this.dataField == "");
+	},
+        listProperties: function() {
+	    var props = this.inherited(arguments);
+	    if (this.isAllDataFields()) {
+		props.dataValue.simpleBindProp = false;
+		props.selectedItem.simpleBindProp = true;
+	    } else {
+		props.dataValue.simpleBindProp = true;
+		props.selectedItem.simpleBindProp = false;
+	    }
+	    return props;
 	}
 });
 
@@ -1141,17 +1147,6 @@ wm.SelectMenu.extend({
 				this.components.binding.addWire("", "dataSet", ds.getId());
 		} else {
 			this.setDataSet(inDataSet);
-		    var prop = this.listProperties().dataValue;
-		    if (inDataSet && inDataSet.type)
-			prop.type = inDataSet.type;
-		    else
-			prop.type = "any";
-		    if (this.isAllDataFields()) {
-			prop.isObject = true;
-		    } else {
-			prop.isObject = true;
-			prop.type = "String";
-		    }
 		}
 	},
 	// FIXME: for simplicity, allow only top level , non-list, non-object fields.
@@ -1260,7 +1255,7 @@ wm.Object.extendSchema(wm.SelectMenu, {
     restrictValues: {type: "wm.Boolean", group: "editor", order: 40, doc: 1},
 	changeOnKey: { ignore: 1 },
 	changeOnEnter: { ignore: 1 },
-    selectedItem: { ignore: true, bindSource: true, isObject: true, bindSource: true, doc: 1,simpleBindProp: true},
+    selectedItem: { ignore: true, bindSource: true, isObject: true, bindSource: true, doc: 1},
 	dataSet: { readonly: true, group: "editor", order: 4, type: "wm.Variable", isList: true, bindTarget: true, doc: 1},
 	startUpdate: { group: "editor", order: 5},
   pageSize: { order: 6, group: "editor"},
