@@ -297,7 +297,7 @@ dojo.declare("wm.DateTime", wm.Text, {
 
 
 	this._initializingDialog = true;
-	if (date.getTime())
+	if (date && date.getTime())
 	    wm.DateTime.dialog.$.calendar.setDate(date);
 	else
 	    wm.DateTime.dialog.$.calendar.dijit.goToToday();
@@ -341,9 +341,11 @@ dojo.declare("wm.DateTime", wm.Text, {
 			      dialog.containerWidget.padBorderMargin.b) + "px");
 	    break;
 	}
+	delete this._initializingDialog;	
 	wm.DateTime.dialog.show();
-	delete this._initializingDialog;
+	this._setupDialogValues = true;
 	this.handleDateChange();
+	delete this._setupDialogValues;
     },
     handleDateChange: function() {
 	if (this._initializingDialog) return;	
@@ -365,7 +367,8 @@ dojo.declare("wm.DateTime", wm.Text, {
 	if (this.dateMode == "Date") {
 	    var displayValue2 = dojo.date.locale.format(new Date(date.getTime() ), {formatLength: this.formatLength, selector: this.dateMode.toLowerCase()});
 	    this.setDisplayValue(displayValue2);
-	    wm.DateTime.dialog.hide();
+	    if (!this._setupDialogValues)
+		wm.DateTime.dialog.hide();
 	} else {
 
 	    var displayValue2 = dojo.date.locale.format(date, {formatLength: this.formatLength, selector: this.dateMode.toLowerCase()});
