@@ -58,11 +58,11 @@ dojo.declare("wm.Dashboard", wm.Control, {
 		this.addDialog.startup();
 		var dom = this.addDialog.containerNode;
                 dojo.require("wm.base.widget.Editors.Select");
-		this.selectEditor = new wm.SelectMenu({"caption":"Widget","display":"Select","readonly":false,"width":"250px", captionSize:"80px", required: true, isRelativePositioned:true});
+	    this.selectEditor = new wm.SelectMenu({owner: this, "caption":"Widget","display":"Select","readonly":false,"width":"250px", captionSize:"80px", required: true, isRelativePositioned:true});
 		dom.appendChild(this.selectEditor.domNode);
 		var panel = dojo.create('div', {style:'text-align:center'}, dom);
-		this.okButton = new wm.Button({"height":"100%","width":"60px","caption": "Add", isRelativePositioned:true}); //{"onclick":'onOkClick'}
-		this.cancelButton = new wm.Button({"height":"100%","width":"60px","caption": "Cancel", isRelativePositioned:true}); //, {"onclick":'onCancelClick'});
+	    this.okButton = new wm.Button({owner: this, "height":"100%","width":"60px","caption": "Add", isRelativePositioned:true}); //{"onclick":'onOkClick'}
+	    this.cancelButton = new wm.Button({owner: this, "height":"100%","width":"60px","caption": "Cancel", isRelativePositioned:true}); //, {"onclick":'onCancelClick'});
 		panel.appendChild(this.okButton.domNode);
 		panel.appendChild(this.cancelButton.domNode);
 	},
@@ -79,7 +79,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 			eData.push({name: obj.title,dataValue: obj});
 		});
 		
-		var ds = e.dataSet = new wm.Variable({ name: "optionsVar", owner: e, type: "EntryData" });
+	    var ds = e.dataSet = new wm.Variable({name: "optionsVar", owner: e, type: "EntryData" });
 		ds.setData(eData);
 		e.displayField = "name";
 		e.dataField = "dataValue";
