@@ -168,8 +168,10 @@ dojo.declare("wm.studio.Project", null, {
 	    if (!inProjectName) {
 		return;
 	    }
+	    studio.beginWait("Openning...");
 	    var o = studio.studioService.requestAsync("openProject", [inProjectName],
 						      dojo.hitch(this, function(o) {
+	                studio.endWait("Openning...");
 			this.projectName = inProjectName;
 			if (o.upgradeMessages)
 				this.showUpgradeMessage(o.upgradeMessages);
@@ -193,6 +195,7 @@ dojo.declare("wm.studio.Project", null, {
 			}
 						      }),
 						      dojo.hitch(this, function(err) {
+							  studio.endWait("Openning...");
 							  app.alert(err || "Failed to open project");
 							  this.closeProject();
 						      }));
