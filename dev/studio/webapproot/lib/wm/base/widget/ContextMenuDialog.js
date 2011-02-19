@@ -36,7 +36,8 @@ dojo.declare("wm.ContextMenuDialog", wm.Dialog, {
     show: function(e) {
 	this.inherited(arguments);
 	this.createRightClickMenu();
-	dojo.stopEvent(e);
+	if (e)
+	    dojo.stopEvent(e);
     },
 /*
 	show: function(e){
