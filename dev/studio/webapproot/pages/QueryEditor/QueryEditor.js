@@ -261,16 +261,16 @@ dojo.declare("QueryEditor", wm.Page, {
 						dojo.hitch(this, function() {
 						    studio.application.removeServerComponent(c);
 						}));
-					    this._saveQuery2();
+					    this._saveQuery2(c);
 					}),
 					dojo.hitch(this, "saveComplete"));
 			    return; // when the user clicks, then we'll do something; we're finished until the user clicks
 			} 
 		}
 
-		this._saveQuery2();
+		this._saveQuery2(c);
 	},
-	_saveQuery2: function() {
+	_saveQuery2: function(c) {
 	    //app.pageDialog.dismiss();
 		var name = dojo.string.trim(this.queryNameInput.getDataValue());
 		if (this.query) {
@@ -278,8 +278,10 @@ dojo.declare("QueryEditor", wm.Page, {
 		}
 	    //studio.beginWait("Saving Query: " + name);
 
-		//this._checkQuery(); //xxx
-		this._updateQuery();
+		if (c.id == SALESFORCE_SERVICE) //xxx
+			this._updateQuery();
+		else
+			this._checkQuery()
 	},
 	_checkQuery: function() {
 		var bindParamValues = this._buildBindParms();
@@ -294,7 +296,7 @@ dojo.declare("QueryEditor", wm.Page, {
 			bindParamValues];
 		studio.dataService.requestAsync(CHECK_QUERY_OP, checkQueryInput,
 			dojo.hitch(this, "_checkQueryCompleted"), 
-			dojo.hitch(this, "_saveQueryError"));
+			dojo.hitch(this, "_checkQueryError"));
 	},
 	_checkQueryCompleted: function() {
 		this._updateQuery();
@@ -391,6 +393,12 @@ dojo.declare("QueryEditor", wm.Page, {
 	    //studio.endWait();
 	    studio._saveErrors.push({owner: this,
 				     message: "Error saving query: " + inError.message});
+	    this.saveComplete();
+	},
+	_checkQueryError: function(inError) {
+	    //studio.endWait();
+	    studio._saveErrors.push({owner: this,
+				     message: "Warning: " + inError.message});
 	    this.saveComplete();
 	},
 	/*_loadQueries: function() {
