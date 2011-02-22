@@ -819,12 +819,16 @@ background: url(images/omg/header-bg.png) no-repeat top center;
     color: white;
 }
 
-.dialogtitlebar .wmbutton, .dialogfooter .wmbutton {
-    background: white;
+.dialogfooter .wmbutton {
     border: 2px solid #939fb6;
     color: black;
 
 }
+.dialogtitlebar button.wmtoolbutton {
+    background: transparent;
+}
+
+
 .dialogtitlebar .wmbutton:hover, .dialogfooter .wmbutton:hover {
     background: rgb(240,240,240);
 }
