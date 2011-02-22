@@ -825,7 +825,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 
 }
 .dialogtitlebar button.wmtoolbutton {
-    background: transparent;
+    background-color: transparent;
 }
 
 
