@@ -121,6 +121,10 @@ public class ProjectManager {
         // create and open
         Project ret = new Project(f);
 
+        if (currentProject == null) { //xxx
+            System.out.println("----------********** currentProject is null - loc 155");
+        }
+
         if (null!=currentProject) {
             closeProject();
         }
@@ -128,7 +132,14 @@ public class ProjectManager {
             getProjectEventNotifier().executeOpenProject(currentProject);
         }
 
+        if (currentProject == null) { //xxx
+            System.out.println("----------********** currentProject is null - loc 168");
+        }
+
         setCurrentProject(ret);
+        if (currentProject == null) { //xxx
+            System.out.println("----------********** currentProject is null - loc 175");
+        }
         if (!noSession) {
             RuntimeAccess.getInstance().getSession().setAttribute(
                     OPEN_PROJECT_SESSION_NAME, projectName);
@@ -140,9 +151,17 @@ public class ProjectManager {
                     DataServiceConstants.CURRENT_PROJECT_APP_ROOT, ret.getWebAppRoot().getAbsolutePath());
         }
 
+        if (currentProject == null) { //xxx
+            System.out.println("----------********** currentProject is null - loc 188");
+        }
+
         String appPropPath = ret.getWebAppRoot().getAbsolutePath() + "/WEB-INF/classes/" + CommonConstants.APP_PROPERTY_FILE;
         FileInputStream is = null;       
         boolean fileExists = true;
+
+        if (currentProject == null) { //xxx
+            System.out.println("----------********** currentProject is null - loc 197");
+        }
 
         int defTenantID = DataServiceConstants.DEFAULT_TENANT_ID;
         String tenantFieldName = DataServiceConstants.DEFAULT_TENANT_FIELD;
@@ -165,9 +184,17 @@ public class ProjectManager {
             tenantColumnName = props.getProperty(DataServiceConstants.TENANT_FIELD_PROPERTY_NAME);
         }
 
+        if (currentProject == null) { //xxx
+            System.out.println("----------********** currentProject is null - loc 200");
+        }
+
         WMAppContext wmApp = WMAppContext.getInstance();
         if (wmApp != null) {
             wmApp.setTenantInfoForProj(projectName, tenantFieldName, defTenantID, tenantColumnName);
+        }
+
+        if (currentProject == null) { //xxx
+            System.out.println("----------********** currentProject is null - loc 205");
         }
 
         //Store types.js contents in the memory //xxx
@@ -183,6 +210,9 @@ public class ProjectManager {
         }  catch (FileNotFoundException ex) {
         }  catch (Exception ex) {
             ex.printStackTrace();
+        }
+        if (currentProject == null) { //xxx
+            System.out.println("----------********** currentProject is null - loc 214");
         }
     }
 
@@ -568,9 +598,11 @@ public class ProjectManager {
     // Note if you change this, you may have to change how JavaServiceSuperClass looks up the project folder
     public Project getCurrentProject() {
         if (null == currentProject) {
+            System.out.println("----------********** current project is null "); //xxx
             HttpSession sess = RuntimeAccess.getInstance().getSession();
             String sessionProjectName = (String) sess.getAttribute(
                     OPEN_PROJECT_SESSION_NAME);
+            System.out.println("----------********** sessionProjectName = " + sessionProjectName); //xxx
             if (null != sessionProjectName) {
                 try {
                     openProject(sessionProjectName);
