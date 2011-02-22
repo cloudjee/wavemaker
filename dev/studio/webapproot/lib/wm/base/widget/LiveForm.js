@@ -69,10 +69,10 @@ wm.getFormField = function(inWidget) {
 	Base class for {@link wm.LiveForm}.
 	@name wm.LiveFormBase
 	@class
-	@extends wm.Panel
+	@extends wm.Container
 	@noindex
 */
-dojo.declare("wm.LiveFormBase", wm.Panel, {
+dojo.declare("wm.LiveFormBase", wm.Container, {
 	/** @lends wm.LiveFormBase.prototype */
 	editorHeight: "26px",
 	editorWidth: "100%",
