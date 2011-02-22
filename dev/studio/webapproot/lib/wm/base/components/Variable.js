@@ -627,9 +627,11 @@ dojo.declare("wm.Variable", wm.Component, {
 	   if (root && root.indexOf(".") && n.indexOf(root) == 0) {
 	       var tmpn = n.substring(root.length);
 	       tmpn = root.substring(root.lastIndexOf(".")+1) + tmpn;
-	       topic = tmpn + "-rootChanged";
-	       wm.logging && console.group("<== ROOTCHANGED [", topic, "] published by Variable.dataRootChanged");
-	       dojo.publish(topic, [n]);
+	       var topic2 = tmpn + "-rootChanged";
+	       if (topic2 != topic) {
+		   wm.logging && console.group("<== ROOTCHANGED [", topic2, "] published by Variable.dataRootChanged");
+		   dojo.publish(topic2, [n]);
+	       }
 	   }
 	   wm.logging && console.groupEnd();
        },
@@ -637,6 +639,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		if (this._updating || !this.owner)
 			return;
 		var n = this.getRuntimeId();
+	        if (!n) return;
 		var topic = n + "-ownerChanged";
 		wm.logging && console.group("<== OWNERCHANGED [", topic, "] published by Variable.dataOwnerChanged");
 		dojo.publish(topic, [n]);
@@ -645,9 +648,11 @@ dojo.declare("wm.Variable", wm.Component, {
 	   if (root && root.indexOf(".") && n.indexOf(root) == 0) {
 	       var tmpn = n.substring(root.length);
 	       tmpn = root.substring(root.lastIndexOf(".")+1) + tmpn;
-	       topic = tmpn + "-ownerChanged";
-	       wm.logging && console.group("<== ROOTCHANGED [", topic, "] published by Variable.dataRootChanged");
-	       dojo.publish(topic, [n]);
+	       var topic2 = tmpn + "-ownerChanged";
+	       if (topic2 != topic) {
+		   wm.logging && console.group("<== ROOTCHANGED [", topic2, "] published by Variable.dataRootChanged");
+		   dojo.publish(topic2, [n]);
+	       }
 	   }
 
 		wm.logging && console.groupEnd();
@@ -665,6 +670,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		if (this._updating || !this.owner)
 			return;
 		var id = this.getRuntimeId();
+	        if (!id) return;
 		var topic=[id, "-changed"].join('');
 		wm.logging && console.group("<== CHANGED [", topic, "] published by Variable.dataChanged");
 		dojo.publish(topic, [this]);
@@ -673,9 +679,11 @@ dojo.declare("wm.Variable", wm.Component, {
 	    if (root && root.indexOf(".") && id.indexOf(root) == 0) {
 	       var tmpn = id.substring(root.length);
 	       tmpn = root.substring(root.lastIndexOf(".")+1) + tmpn;
-	       topic = tmpn + "-changed";
-	       wm.logging && console.group("<== ROOTCHANGED [", topic, "] published by Variable.dataRootChanged");
-	       dojo.publish(topic, [this]);
+		var topic2 = tmpn + "-changed";
+		if (topic2 != topic) {
+		    wm.logging && console.group("<== ROOTCHANGED [", topic2, "] published by Variable.dataRootChanged");
+		    dojo.publish(topic2, [this]);
+		}
 	   }
 
 

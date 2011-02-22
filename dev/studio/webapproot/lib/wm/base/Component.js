@@ -571,9 +571,11 @@ dojo.declare("wm.Component", wm.Object, {
 	    if (root && root.indexOf(".") && evtId.indexOf(root) == 0) {
 	       var n = evtId.substring(root.length);
 		n = root.substring(root.lastIndexOf(".")+1) + n;
-		var topic = n + "-changed";
-	       wm.logging && console.group("<== ROOTCHANGED [", topic, "] published by Variable.dataRootChanged");
-		dojo.publish(topic, [inValue, this]);
+		if (n != evtId) {
+		    var topic = n + "-changed";
+		    wm.logging && console.group("<== ROOTCHANGED [", topic, "] published by Variable.dataRootChanged");
+		    dojo.publish(topic, [inValue, this]);
+		}
 	   }
 
 	},

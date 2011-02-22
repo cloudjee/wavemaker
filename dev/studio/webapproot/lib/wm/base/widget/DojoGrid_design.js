@@ -304,7 +304,7 @@ wm.DojoGrid.extend({
 	writeProps: function(){
 		try{
 			var props = this.inherited(arguments);
-			props.columns = this.contextMenu.getUpdatedDataSet();
+		        props.columns = this.contextMenu ? this.contextMenu.getUpdatedDataSet() : this.columns;
 			return props;
 		} catch(e){
 			console.info('Error while saving dashboard data..............', e);
