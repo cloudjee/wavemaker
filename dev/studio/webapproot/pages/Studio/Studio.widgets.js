@@ -342,22 +342,8 @@ Studio.widgets = {
 							statusBarLabel: ["wm.Label", {width: "100%", height: "100%"}],
 							status: ["wm.JsonStatus", {iconWidth: "26", height: "100%", border: "0, 0, 0, 1", borderColor: "#666E80", width: "300px"}, {}]
 						    }]
-						}],
-						splitter3: ["wm.Splitter", {border: "0", layout: "right"}, {}],
-						right: ["wm.Panel", {_classes: {domNode: ["wm-darksnazzy"]}, width: "246px", border: "0"}, {}, {
-							componentsTreePanel: ["wm.Panel", {height: "120px", border: "0", showing: false}, {}, {
-								componentsToolbar: ["wm.Panel", {height: "31px", border: "0", padding: "1, 0, 0, 0", layoutKind: "left-to-right"}, {}, {
-									newVariableButton: ["wm.ToolButton", {width: "32px", hint: bundleStudio.T_NewVariableTip, caption: "<img src=\"images/wm/variable_24.png\"/>"}, {onclick: "newComponentButtonClick"}],
-									newLiveVariableButton: ["wm.ToolButton", {width: "32px", hint: bundleStudio.T_NewLiveVariableTip, caption: "<img src=\"images/wm/livevar_24.png\"/>"}, {onclick: "newComponentButtonClick"}],
-									newServiceVariableButton: ["wm.ToolButton", {width: "32px", hint: bundleStudio.T_NewServiceVariableTip, caption: "<img src=\"images/wm/servicevar_24.png\"/>"}, {onclick: "newComponentButtonClick"}],
-									newNavigationButton: ["wm.ToolButton", {width: "32px", hint: bundleStudio.T_NewNavigationTip, caption: "<img src=\"images/wm/navigation_24.png\"/>"}, {onclick: "newComponentButtonClick"}],
-									dashspacer1: ["wm.Spacer", {width: "2px"}, {}],
-									deleteComponentButton: ["wm.ToolButton", {width: "32px", hint: bundleStudio.T_DeleteSelectedTip, caption: "<img src=\"images/delete_24.png\"/>"}, {onclick: "deleteComponentButtonClick"}]
-								}],
-								componentsTree: ["wm.Tree", {height: "100%"}, {onselect: "treeSelect", ondblclick: "componentsTreeDblClick"}]
-							}]
-							/*,spacer1: ["wm.Spacer", {height: "4px", width: "96px", border: "2", borderColor: "#666E80"}, {}]*/
 						}]
+
 					}],
 			splitter3b: ["wm.Splitter", {border: ""}, {}],
 						PIPanel: ["wm.Panel", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", width: "250px", border: "0", padding: "0", layoutKind: "left-to-right"}, {}, {
@@ -421,17 +407,6 @@ Studio.widgets = {
 						}],
 						editArea: ["wm.EditArea", {width: "100%", height: "100%"}, {onCtrlKey: "scriptEditorCtrlKey", onKeyDown: "setEditAreaDirty"}]
 					    }],
-                                            themeLayer: ["wm.Layer", {_classes: {domNode: ["wm-darksnazzy"]}, caption: bundleStudio.R_Themes, width: "100%", height: "100%"}, {}, {
-						themesRibbon: ["wm.Panel", {height: "29px", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4"}, {}, {
-						    themesPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_Save, imageIndex: 8}, {onclick: "saveThemeClick"}],
-						    themesPageAddBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_NewTheme, imageIndex: 25}, {onclick: "addNewThemeClick"}],
-						    themesPageCopyBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_CopyTheme, imageIndex: 1}, {onclick: "copyThemeClick"}],
-						    themesPageDeleteBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_DeleteTheme, imageIndex: 0}, {onclick: "deleteThemeClick"}],
-						    themesPageRevertBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_Revert, imageIndex: 6, imageList: "canvasToolbarImageList16"}, {onclick: "revertThemeClick"}]
-						}],
-                                                themesPage: ["wm.PageContainer", {deferLoad: true, loadParentFirst: true, 
-                                                                                  pageName: "ThemeDesigner"}]
-                                            }],
 					    cssLayer: ["wm.Layer", {caption: bundleStudio.R_CSS}, {onShow: "cssShow"}, {
 						cssRibbon: ["wm.Panel", {height: "29px", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4"}, {}, {
 						    cssPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_Save, imageIndex: 8}, {onclick: "saveCssClick"}],
@@ -487,6 +462,17 @@ Studio.widgets = {
 						        appsourceEditor: ["wm.EditArea", {width: "100%", height: "100%"}, {onCtrlKey: "appScriptEditorCtrlKey", onKeyDown: "setEditAreaDirty"}]
 
 						}],
+                                            themeLayer: ["wm.Layer", {_classes: {domNode: ["wm-darksnazzy"]}, caption: bundleStudio.R_Themes, width: "100%", height: "100%"}, {}, {
+						themesRibbon: ["wm.Panel", {height: "29px", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4"}, {}, {
+						    themesPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_Save, imageIndex: 8}, {onclick: "saveThemeClick"}],
+						    themesPageAddBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_NewTheme, imageIndex: 25}, {onclick: "addNewThemeClick"}],
+						    themesPageCopyBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_CopyTheme, imageIndex: 1}, {onclick: "copyThemeClick"}],
+						    themesPageDeleteBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_DeleteTheme, imageIndex: 0}, {onclick: "deleteThemeClick"}],
+						    themesPageRevertBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.R_Revert, imageIndex: 6, imageList: "canvasToolbarImageList16"}, {onclick: "revertThemeClick"}]
+						}],
+                                                themesPage: ["wm.PageContainer", {deferLoad: true, loadParentFirst: true, 
+                                                                                  pageName: "ThemeDesigner"}]
+                                            }],
 
 					    appDocs: ["wm.Layer", {caption: bundleStudio.R_App_Docs}, {}, {
 						appdocsRibbon: ["wm.Panel", {height: "29px", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#000000"}, {}, {

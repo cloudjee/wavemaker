@@ -1341,6 +1341,7 @@ dojo.declare("Studio", wm.Page, {
 	undoClick: function() {
 		wm.undo.pop();
 	},
+
 	newComponentButtonClick: function(inSender) {
 		var t = inSender.componentType;
 		if (t) {
@@ -1348,6 +1349,7 @@ dojo.declare("Studio", wm.Page, {
 			wm.fire(this.selected, "showConfigureDialog");
 		}
 	},
+/*
 	componentsTreeDblClick: function(inSender, inNode) {
 		var c = inNode.component;
 		if (c.showConfigureDialog)
@@ -1358,6 +1360,7 @@ dojo.declare("Studio", wm.Page, {
 		if (s && s.component)
 			this.deleteControl(s.component);
 	},
+	*/
 	linkButtonClick: function(inSender, inData) {
 		if (inData.openLink)
 			wm.openUrl(inSender.openLink, inSender.openLinkTitle);
