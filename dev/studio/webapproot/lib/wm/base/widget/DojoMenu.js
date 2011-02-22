@@ -137,7 +137,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		    var structure = this.getStructure();
 		    this.fullStructure = structure.items;
 		}
-		if (this.fullStructure) {
+		if (this.fullStructure  && this.fullStructure.length > 0) {
 			var structure = dojo.clone(this.fullStructure); // don't operate on original as we delete stuff that dojo shouldn't see from the datastructure
 			for (var i = 0; i < structure.length; i++)
 			{
@@ -358,7 +358,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 	},
 
 	setStructure: function(strStructure){
-	        if (this.fullStructure) return;
+	        if (this.fullStructure && this.fullStructure.length > 0) return;
 		if (strStructure == '')
 		{
 			return;
