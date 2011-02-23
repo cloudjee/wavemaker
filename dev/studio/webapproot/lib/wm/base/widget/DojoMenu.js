@@ -97,7 +97,8 @@ dojo.declare("wm.DojoMenu", wm.Control, {
     destroy: function() {
 	dojo.forEach(this._menuConnects, function(c) {dojo.disconnect(c);});
 	delete this._menuConnects;
-	this.dojoObj.destroyRecursive();
+	if (this.dojoObj)
+	    this.dojoObj.destroyRecursive();
 	this.inherited(arguments);
     },
 	renderDojoObj: function() {
