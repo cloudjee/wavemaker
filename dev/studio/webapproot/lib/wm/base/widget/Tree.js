@@ -1040,7 +1040,7 @@ dojo.declare("wm.DebugDialog", wm.Dialog, {
 		this.commands.shift();
 	    this.commandPointer = null;
 	});
-	commandLine.connect(commandLine, "dokeypress", dojo.hitch(this, function(inEvent) {
+	commandLine.connect(commandLine, "keypressed", dojo.hitch(this, function(inEvent) {
 	    if (inEvent.charCode) return;
 	    if (inEvent.keyCode == dojo.keys.ENTER) {
 		executeDebugButton.click();
