@@ -1290,3 +1290,13 @@ wm.Object.extendSchema(wm.Lookup, {
 	options: {ignore: 1},
 	dataField: {ignore: 1}
 });
+
+
+wm.Lookup.extend({
+	listProperties: function() {
+		var props = this.inherited(arguments);
+		props.dataSet.ignoretmp = this.autoDataSet;
+		props.dataSet.bindTarget = !props.dataSet.ignoretmp;
+		return props;
+	}
+});
