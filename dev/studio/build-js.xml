@@ -68,6 +68,7 @@
 
         	
         <!-- runtime build -->
+	<!-- parameters documented at http://dojotoolkit.org/reference-guide/build/buildScript.html -->
 		<echo>Building dojo using exec: ${dojo.executable.cmd}</echo>
 		<exec dir="${dojo.src.dir}/util/buildscripts/" executable="${dojo.executable.cmd}"	>
 			<arg value="${executable.cmd.variable}"/>
@@ -132,6 +133,10 @@
         </copy>
 
         <!-- studio build 1 (compressed) -->
+	<!-- parameters documented at http://dojotoolkit.org/reference-guide/build/buildScript.html
+	     NOTE: We'd like to use optimize=shrinksafe but this mangles parameter names, impacting
+	           all event handlers and autocompletion, so we just use "comments" and then gzip it.
+	-->
 		<echo>Building studio</echo>
 		<exec dir="${dojo.src.dir}/util/buildscripts/" executable="${dojo.executable.cmd}"	>
 			<arg value="${executable.cmd.variable}"/>
@@ -141,8 +146,8 @@
        		<arg value="version=1.5.0.pro"/>
        		<arg value="copyTests=false"/>
        		<arg value="action=clean,release"/>
-       		<arg value="optimize=shrinksafe"/>
-       		<arg value="layerOptimize=shrinksafe.keepLines"/>
+       		<arg value="optimize=comments"/>
+       		<arg value="layerOptimize=comments"/>
 		<arg value="cssOptimize=comments"/> 
 		<arg value="stripConsole=normal"/>
 <!--					<arg value="cssOptimize=comments.keepLines"/>-->
