@@ -1044,6 +1044,7 @@ dojo.declare("wm.DebugDialog", wm.Dialog, {
 	    if (inEvent.charCode) return;
 	    if (inEvent.keyCode == dojo.keys.ENTER) {
 		executeDebugButton.click();
+		dojo.stopEvent(inEvent);
 	    } else if (app._keys[inEvent.keyCode] == "UP") {
 		if (this.commandPointer === null)
 		    this.commandPointer = this.commands.length-1;
@@ -1053,14 +1054,16 @@ dojo.declare("wm.DebugDialog", wm.Dialog, {
 			this.commandPointer = this.commands.length-1;
 		}
 		commandLine.setDataValue(this.commands[this.commandPointer]);
+		dojo.stopEvent(inEvent);
 	    } else if (app._keys[inEvent.keyCode] == "DOWN") {
 		if (this.commandPointer === null)
 		    this.commandPointer = 0;
 		else
 		    this.commandPointer = this.commandPointer + 1 % this.commands.length;
 		commandLine.setDataValue(this.commands[this.commandPointer]);	    
+		dojo.stopEvent(inEvent);
 	    }
-	    dojo.stopEvent(inEvent);
+
 	}));
     }
 
