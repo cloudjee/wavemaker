@@ -34,11 +34,14 @@ dojo.declare("wm.Page", wm.Component, {
 	name: '',
         deletionDisabled: 1,
 	create: function() {
-		this.inherited(arguments);
-		if (!this.name) 
-		    this.name = this.declaredClass.toLowerCase();
-		//dojo.addOnLoad(wm.async(dojo.hitch(this, "render")));
-		this.render();
+	    this.inherited(arguments);
+	    if (!this.name) 
+		this.name = this.declaredClass.toLowerCase();
+
+	    wm.Page.registerPage(this);
+
+	    //dojo.addOnLoad(wm.async(dojo.hitch(this, "render")));
+	    this.render();
 	},
 	getMainPage: function() {
 	  if (!this.owner)
@@ -51,6 +54,7 @@ dojo.declare("wm.Page", wm.Component, {
 	    return owner;
 	},
 	destroy: function() {
+	    wm.Page.deregisterPage(this);
 	  	var owner = this.getMainPage();
 	  	if (owner) 
 			owner.subPageUnloaded(this);	  
@@ -488,3 +492,21 @@ wm.Object.extendSchema(wm.Page, {
 
 // bc
 wm.Part = wm.Page
+
+
+dojo.mixin(wm.Page, {
+    /* static variable for storing all pages; each element is an array so that there can be 
+     * multiple "page5" pages at the same time.  Note that if it weren't an array, then when
+     * we destroy the page and remove page5 from this list, that we could no longer access ANY page5.
+     */
+    byName: {}, 
+    registerPage: function(inPage) {
+	    // We'll need the page to 
+	    if (!wm.Page.byName[inPage.name])
+		wm.Page.byName[inPage.name] = [];
+	    wm.Page.byName[inPage.name].push(inPage);
+    },
+    deregisterPage: function(inPage) {
+	wm.Array.removeElement(wm.Page.byName[inPage.name], inPage);
+    }
+});

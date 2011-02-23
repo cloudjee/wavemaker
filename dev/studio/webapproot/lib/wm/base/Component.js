@@ -359,6 +359,7 @@ dojo.declare("wm.Component", wm.Object, {
 	    }
 	    return id;
 	},
+/*
     getBindId: function() {
 	var owner = this;
 	while(owner && owner instanceof wm.Page == false)
@@ -374,6 +375,7 @@ dojo.declare("wm.Component", wm.Object, {
 	    return id;
 	}
     },
+    */
     resetChildIds: function() {
 	for(var i in this.components) {
 	    delete this.components[i].id;
@@ -447,18 +449,17 @@ dojo.declare("wm.Component", wm.Object, {
 		return wm.Component.byId[inId];
 	    }
 
-	    if (inId && wm.Component.byShortId[inId]) {
-		return  wm.Component.byShortId[inId];
-	    }
-
 
 	    // First part of the ID is the page name
 	    var index = inId.indexOf(".");
 	    if (index != -1) {
 		var pageName = inId.substring(0,index);
 		var remainder = inId.substring(index+1);
-		var page = wm.Component.byShortId[pageName];
-		return page.getValueById(remainder);
+		var pages = wm.Page.byName[pageName];
+		if (pages) {
+		    var page = pages[0]; // If more than one page of the same name, we have know way to know which one to use so just pick the first
+		    return page.getValueById(remainder);
+		}
 	    }
 	    return "";
 	},
@@ -935,9 +936,6 @@ dojo.mixin(wm.Component, {
     add: function(inComponent){
 	var rid = inComponent.getRuntimeId();
 	wm.Component.byId[rid] = inComponent;
-
-	var bid = inComponent.getBindId();
-	wm.Component.byShortId[bid] = inComponent;
     },
     remove: function(inComponent){
 	delete wm.Component.byId[inComponent.getRuntimeId()];
