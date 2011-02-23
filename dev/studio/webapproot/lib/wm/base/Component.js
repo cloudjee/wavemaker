@@ -359,6 +359,21 @@ dojo.declare("wm.Component", wm.Object, {
 	    }
 	    return id;
 	},
+    getBindId: function() {
+	var owner = this;
+	while(owner && owner instanceof wm.Page == false)
+	    owner = owner.owner;
+
+	var id = this.getId();
+
+	if (owner == this) {
+	    return owner.name;
+	} else if (owner) {
+	    return owner.name + "." + id;
+	} else {
+	    return id;
+	}
+    },
     resetChildIds: function() {
 	for(var i in this.components) {
 	    delete this.components[i].id;
@@ -425,8 +440,27 @@ dojo.declare("wm.Component", wm.Object, {
 		if (r && r._wmNull) {
 		  return app.getValue(inId);
 		}
+	    
+	    if (r) return r;
 
-		return r || inId && wm.Component.byId[inId];
+	    if (inId && wm.Component.byId[inId]) {
+		return wm.Component.byId[inId];
+	    }
+
+	    if (inId && wm.Component.byShortId[inId]) {
+		return  wm.Component.byShortId[inId];
+	    }
+
+
+	    // First part of the ID is the page name
+	    var index = inId.indexOf(".");
+	    if (index != -1) {
+		var pageName = inId.substring(0,index);
+		var remainder = inId.substring(index+1);
+		var page = wm.Component.byShortId[pageName];
+		return page.getValueById(remainder);
+	    }
+	    return "";
 	},
 	/* 
   	LiveForm does not work with the impovement changes below.
@@ -891,20 +925,25 @@ this.panel1.createComponent("custom", "wm.Panel", {
 // Class Properties
 //=======================================================
 dojo.mixin(wm.Component, {
-	//=======================================================
-	// Component registry
-	//=======================================================
-	/** @lends wm.Component */
-	byId: {},
-        timingByComponent: {},
-	add: function(inComponent){
-		wm.Component.byId[inComponent.getRuntimeId()] = inComponent;
-	},
-	remove: function(inComponent){
-		delete wm.Component.byId[inComponent.getRuntimeId()];
-	},
-	property: {
-	}
+    //=======================================================
+    // Component registry
+    //=======================================================
+    /** @lends wm.Component */
+    byId: {},
+    byShortId: {},
+    timingByComponent: {},
+    add: function(inComponent){
+	var rid = inComponent.getRuntimeId();
+	wm.Component.byId[rid] = inComponent;
+
+	var bid = inComponent.getBindId();
+	wm.Component.byShortId[bid] = inComponent;
+    },
+    remove: function(inComponent){
+	delete wm.Component.byId[inComponent.getRuntimeId()];
+    },
+    property: {
+    }
 });
 
 

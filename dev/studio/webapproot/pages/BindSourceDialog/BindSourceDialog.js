@@ -88,7 +88,7 @@ dojo.declare("BindSourceDialog", wm.Page, {
 	return c == studio.application;
 
     },
-	bindNodeSelected: function(inSender, inNode) {
+    getBindNodeSource: function(inNode) {
 	    if (inNode) {
 		var targetOwner = this.targetProps.object.getRoot();		
 		var ownerString = "";
@@ -103,7 +103,12 @@ dojo.declare("BindSourceDialog", wm.Page, {
 
 		    }
 		}
-		this.binderSource.bindEditor.setValue("dataValue", ownerString + inNode.source);
+		return ownerString + inNode.source;
+	    }
+       },
+	bindNodeSelected: function(inSender, inNode) {
+	    if (inNode) {
+		this.binderSource.bindEditor.setValue("dataValue",this.getBindNodeSource(inNode));
 	    }
 	},
 	applyButtonClick: function() {

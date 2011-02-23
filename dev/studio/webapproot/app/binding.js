@@ -792,7 +792,8 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	},
 	expressionNodeSelected: function(inNode) {
 		if (inNode.isProperty && inNode.source) {
-			this.addValueToExpressionEditor(["${", inNode.source, "}"].join(""));
+		    var source = this.owner.getBindNodeSource(inNode);
+		    this.addValueToExpressionEditor(["${", source, "}"].join(""));
 		}
 	},
 	expressionButtonClicked: function(e) {
