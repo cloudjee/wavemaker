@@ -783,7 +783,7 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 		delete this._isValid;
 	},
 	keypressed: function(inEvent){
-	    if (inEvent.charCode || dojo.indexOf(this.changeKeycodes, inEvent.keyCode) != -1) {
+	    if (inEvent.charCode || inEvent.keyCode == dojo.keys.BACKSPACE || inEvent.keyCode == dojo.keys.DELETE || dojo.indexOf(this.changeKeycodes, inEvent.keyCode) != -1) {
 		this.validate();
 	        this.dokeypress(inEvent);
 	    }
