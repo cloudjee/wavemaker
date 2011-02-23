@@ -64,9 +64,10 @@ dojo.declare("wm.ContextMenuDialog", wm.Dialog, {
 		}
 	},
 	getUpdatedDataSet: function(){
-		if (!this.menu)
+/*
+		if (!this.menu) // with change in superclass, this.menu now refers to this.
 			return this.dataSet;
-			
+			*/			
 		var arr = [];
 		for (var tr in this.trObjMap){
 			 arr.push(this.trObjMap[tr]);
