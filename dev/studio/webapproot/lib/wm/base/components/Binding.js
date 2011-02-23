@@ -104,7 +104,7 @@ dojo.declare("wm.Wire", wm.Component, {
 		//	return;
 		//wm.logging && console.info("==> (top) ", this.source, "=>", this.getFullTarget(), " Wire.sourceTopUpdated");
 		//if (this.expression || this.source.indexOf(inSource)==0) {
-			this.refreshValue(inSource);
+			this.refreshValue();
 		//}
 	},
 	sourceRootUpdated: function() {
@@ -113,29 +113,9 @@ dojo.declare("wm.Wire", wm.Component, {
 		wm.logging && console.info("==> (sourceRootUpdated)", this.source);
 		this.getValueById(this.source);
 	},
-	refreshValue: function(optionalSource) {
+	refreshValue: function() {
 		//wm.logging && console.info("==> (refresh) ", this.source, "=>", this.getFullTarget(), " Wire.refreshValue");
-
-	    /* Lets say I'm trying to match page3.grid1.selectedItem.empoloyee.eid, but optionalSource is actually
-	     * main.pageContainer1.page3.grid1.selectedItem.employee, we should add ".eid" to optionalSource before we use it */
-	    if (optionalSource) {
-		var optionalItems = optionalSource.split(/\./);
-		var sourceItems = this.source.split(/\./);
-		var lastOptionalItem = optionalItems[optionalItems.length-1];
-		for (var i = sourceItems.length-1; i >= 0; i--) {
-		    if (sourceItems[i] == lastOptionalItem) break;
-		    optionalSource += "." + sourceItems[i];
-		}
-	    }
-
-	    // optionalSource is full runtime id; and can only be found reliably by the application object
-	    if (optionalSource) {
-		this._sourceValueChanged(app.getValueById(optionalSource));
-	    } else {
-		// this.source is a relative ID; the ID known at design time when we have no idea
-		// what our owner might be, and needs to be looked up relative to this component's page/owner
-		this._sourceValueChanged(this.getValueById(this.source));
-	    }
+	    this._sourceValueChanged(this.source ? this.getValueById(this.source) : "");
 		//wm.logging && console.groupEnd();
 	},
 	disconnectWire: function() {
