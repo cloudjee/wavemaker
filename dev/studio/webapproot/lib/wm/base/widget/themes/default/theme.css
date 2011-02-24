@@ -1773,3 +1773,9 @@ Overriding dijit's progress bar properties to enable height changes to progress 
 .dijitSpinner .dijitArrowButton .dijitArrowButtonInner {
         height: 50% !important;
 }
+
+.dojoxGridHeader th.dojoxGridCell {
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+}
