@@ -126,7 +126,7 @@
 //[ bundlePackage.Web_Content, "Stocks", "wm.gadget.Stocks", "wm.base.widget.gadget.Stocks", "images/flash.png", "Stocks Google Gadget"],
 //[ bundlePackage.Web_Content, bundlePackage.Weather, "wm.gadget.Weather", "wm.base.widget.gadget.Weather", "images/flash.png", bundlePackage.descWeatherWidget, false],
 [ bundlePackage.Web_Content, bundlePackage.YouTube, "wm.gadget.YouTube", "wm.base.widget.gadget.YouTube", "Studio_paletteImageList_35", bundlePackage.descYouTubeWidget, false],
-[ bundlePackage.Web_Content, bundlePackage.Fisheye, "wm.DojoFisheye", "wm.base.widget.DojoFisheye", "Studio_paletteImageList_34", bundlePackage.descFisheye, true],
+[ bundlePackage.Web_Content, bundlePackage.Fisheye, "wm.DojoFisheye", "wm.base.widget.DojoFisheye", "Studio_paletteImageList_34", bundlePackage.descFisheye, false],
 [ bundlePackage.Web_Content, bundlePackage.Lightbox, "wm.DojoLightbox", "wm.base.widget.DojoLightbox", "Studio_paletteImageList_36", bundlePackage.descLightbox, true],
 [ bundlePackage.Web_Content, bundlePackage.ProgressBar, "wm.dijit.ProgressBar", "wm.base.widget.dijit.ProgressBar", "images/wm.dijit/ProgressBar.png", bundlePackage.descProgressBar, false],
 [ bundlePackage.Web_Content, bundlePackage.IFrame, "wm.IFrame", "wm.base.widget.IFrame", "Studio_paletteImageList_16", bundlePackage.descIFrame, false],
