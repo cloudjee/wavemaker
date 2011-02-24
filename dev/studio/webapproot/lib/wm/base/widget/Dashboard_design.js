@@ -100,6 +100,10 @@ wm.Dashboard.extend({
 		try{
 			var props = this.inherited(arguments);
 			var pList = this.contextMenu.getUpdatedDataSet();
+		    if (pList.length == 0) {
+			this.contextMenu.setDataSet(this.portlets);
+			pList = this.contextMenu.getUpdatedDataSet();
+		    }
 			this.updatePortletXY();
 			var writePortlets = [];		
 			dojo.forEach(pList, function(obj){
