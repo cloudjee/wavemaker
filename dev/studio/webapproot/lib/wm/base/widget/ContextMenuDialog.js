@@ -60,8 +60,8 @@ dojo.declare("wm.ContextMenuDialog", wm.Dialog, {
 		if (this.menuTable){
 			dojo.destroy(this.menuTable);
 			delete this.menuTable;
+			this.createMenuHTML(this.headerAttr, this.dataSet);			
 		}
-	        this.createMenuHTML(this.headerAttr, this.dataSet);			
 	},
 	getUpdatedDataSet: function(){
 /*

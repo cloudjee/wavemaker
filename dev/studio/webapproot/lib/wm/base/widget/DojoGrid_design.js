@@ -45,9 +45,8 @@ wm.DojoGrid.extend({
 			var ds = this.getValueById(inDataSet);
 			if (ds)
 				this.components.binding.addWire("", "dataSet", ds.getId());
-		} else {
-		    this.setDataSet(inDataSet);
-		}
+		} else
+			this.setDataSet(inDataSet);
 	},
 	listProperties: function() {
 	    var props = this.inherited(arguments);
@@ -256,9 +255,9 @@ wm.DojoGrid.extend({
 		}			
 	},
 	updateGridStructure: function(){
-	    this.columns = this.contextMenu.getUpdatedDataSet();
-	    this.dojoObj.attr('structure', this.getStructure());
-	    this.dojoObj.render();
+		this.columns = this.contextMenu.getUpdatedDataSet();
+		this.dojoObj.attr('structure', this.getStructure());
+		this.dojoObj.render();
 	},
 	_onResizeColumn: function(idx, inDrag, delta){
 		var sArray = this.contextMenu.getUpdatedDataSet();
@@ -304,9 +303,11 @@ wm.DojoGrid.extend({
 	},
 	writeProps: function(){
 		try{
-			var props = this.inherited(arguments);
-		    props.columns = this.contextMenu ? this.contextMenu.getUpdatedDataSet() : dojo.toJson(this.columns);
-			return props;
+		    var props = this.inherited(arguments);
+		    props.columns = this.contextMenu ? this.contextMenu.getUpdatedDataSet() : [];
+		    if (props.columns.length == 0)
+			props.columns = this.columns;
+		    return props;
 		} catch(e){
 			console.info('Error while saving dashboard data..............', e);
 		}
@@ -315,7 +316,6 @@ wm.DojoGrid.extend({
 });
 
 wm.Object.extendSchema(wm.DojoGrid, {
-    rendering: {ignore: 1},
 	variable: { ignore: 1 },
 	caption:{ignore:1},
 	scrollX:{ignore:1},
