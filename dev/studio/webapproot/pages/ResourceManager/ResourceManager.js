@@ -156,15 +156,23 @@ dojo.declare("ResourceManager", wm.Page, {
 	var newName;
 	var newItem;
 	var parent = selectedItem;
-	if (!this.doingFileUpdate) {
 
-	  newItem = addResourceBinderNodes(parent.treeNode, {file: filename, files: [], type: "file"}, false);
-	  this.setSelectedItem(newItem);
-	  newName = filename;
-	} else {
-	  newItem = this.selectedItem;
-	  newName = newItem.getItemName();
+	var replaceIndex = -1;
+	for (var i = 0; i < parent.treeNode.kids.length; i++) {
+	    if (parent.treeNode.kids[i].content == filename)
+		replaceIndex = i;
 	}
+
+	if (replaceIndex == -1) {
+	  newItem = addResourceBinderNodes(parent.treeNode, {file: filename, files: [], type: "file"}, false);
+	    //newName = filename;
+	} else {
+	    newItem = parent.treeNode.kids[replaceIndex].data;
+
+	    //newName = newItem.getItemName();
+	}
+
+	this.setSelectedItem(newItem);
 	parent.treeNode.setOpen(true);
         if (newItem.finishFileUpload)
 	    newItem.finishFileUpload();
