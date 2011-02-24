@@ -100,9 +100,9 @@ body .wm_harrypotter input:focus,
 	-moz-border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
 	-webkit-border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
 	border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
-	-moz-box-shadow: 3px 3px 3px #444444; /* Document-ClickablesDefault-BorderStyle_Shadow */
-	-webkit-box-shadow: 3px 3px 3px #444444; /* Document-ClickablesDefault-BorderStyle_Shadow */
-	box-shadow: 3px 3px 3px #444444; /* Document-ClickablesDefault-BorderStyle_Shadow */
+	-moz-box-shadow: 3px 3px 3px #000000; /* Document-ClickablesDefault-BorderStyle_Shadow */
+	-webkit-box-shadow: 3px 3px 3px #000000; /* Document-ClickablesDefault-BorderStyle_Shadow */
+	box-shadow: 3px 3px 3px #000000; /* Document-ClickablesDefault-BorderStyle_Shadow */
 	/* Document-ClickablesDefault-Background */
 	background-color: #b30000; /* Document-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/brightEdge0.png); /* Document-ClickablesDefault-Background_Image */
@@ -221,9 +221,9 @@ body .wm_harrypotter input:focus,
 	background-position: top left; /* MainContent-ClickablesHover-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesHover-Background_Image-Repeat */
 	/* MainContent-ClickablesHover-BorderStyle_Shadow */
-	-moz-box-shadow: 1px 1px 1px #444444; /* MainContent-ClickablesHover-BorderStyle_Shadow */
-	-webkit-box-shadow: 1px 1px 1px #444444; /* MainContent-ClickablesHover-BorderStyle_Shadow */
-	box-shadow: 1px 1px 1px #444444; /* MainContent-ClickablesHover-BorderStyle_Shadow */
+	-moz-box-shadow: 0px 0px 0px #444444; /* MainContent-ClickablesHover-BorderStyle_Shadow */
+	-webkit-box-shadow: 0px 0px 0px #444444; /* MainContent-ClickablesHover-BorderStyle_Shadow */
+	box-shadow: 0px 0px 0px #444444; /* MainContent-ClickablesHover-BorderStyle_Shadow */
     }
 }
 @media screen { /* EmphasizedContent-Level */ 
@@ -247,9 +247,9 @@ body .wm_harrypotter input:focus,
 	-moz-border-radius: 4px; /* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
 	-webkit-border-radius: 4px; /* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
 	border-radius: 4px; /* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
-	-moz-box-shadow: 3px 3px 3px #444444; /* EmphasizedContent-ClickablesDefault-BorderStyle_Shadow */
-	-webkit-box-shadow: 3px 3px 3px #444444; /* EmphasizedContent-ClickablesDefault-BorderStyle_Shadow */
-	box-shadow: 3px 3px 3px #444444; /* EmphasizedContent-ClickablesDefault-BorderStyle_Shadow */
+	-moz-box-shadow: 2px 2px 2px #000000; /* EmphasizedContent-ClickablesDefault-BorderStyle_Shadow */
+	-webkit-box-shadow: 2px 2px 2px #000000; /* EmphasizedContent-ClickablesDefault-BorderStyle_Shadow */
+	box-shadow: 2px 2px 2px #000000; /* EmphasizedContent-ClickablesDefault-BorderStyle_Shadow */
 	/* EmphasizedContent-ClickablesDefault-Background */
 	background-color: #dd321c; /* EmphasizedContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/brightSliverEdge4.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
@@ -293,9 +293,9 @@ body .wm_harrypotter input:focus,
 	background-position: top left; /* EmphasizedContent-ClickablesHover-Background_Image-Position */
 	background-repeat: repeat-x; /* EmphasizedContent-ClickablesHover-Background_Image-Repeat */
 	/* EmphasizedContent-ClickablesHover-BorderStyle_Shadow */
-	-moz-box-shadow: 1px 1px 1px #444444; /* EmphasizedContent-ClickablesHover-BorderStyle_Shadow */
-	-webkit-box-shadow: 1px 1px 1px #444444; /* EmphasizedContent-ClickablesHover-BorderStyle_Shadow */
-	box-shadow: 1px 1px 1px #444444; /* EmphasizedContent-ClickablesHover-BorderStyle_Shadow */
+	-moz-box-shadow: 1px 1px 1px #000000; /* EmphasizedContent-ClickablesHover-BorderStyle_Shadow */
+	-webkit-box-shadow: 1px 1px 1px #000000; /* EmphasizedContent-ClickablesHover-BorderStyle_Shadow */
+	box-shadow: 1px 1px 1px #000000; /* EmphasizedContent-ClickablesHover-BorderStyle_Shadow */
     }
 }
 @media screen { /* HeaderContent-Level */ 
@@ -319,9 +319,9 @@ body .wm_harrypotter input:focus,
 	-moz-border-radius: 2px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
 	-webkit-border-radius: 2px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
 	border-radius: 2px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
-	-moz-box-shadow: 3px 3px 3px #444444; /* HeaderContent-ClickablesDefault-BorderStyle_Shadow */
-	-webkit-box-shadow: 3px 3px 3px #444444; /* HeaderContent-ClickablesDefault-BorderStyle_Shadow */
-	box-shadow: 3px 3px 3px #444444; /* HeaderContent-ClickablesDefault-BorderStyle_Shadow */
+	-moz-box-shadow: 3px 3px 3px #000000; /* HeaderContent-ClickablesDefault-BorderStyle_Shadow */
+	-webkit-box-shadow: 3px 3px 3px #000000; /* HeaderContent-ClickablesDefault-BorderStyle_Shadow */
+	box-shadow: 3px 3px 3px #000000; /* HeaderContent-ClickablesDefault-BorderStyle_Shadow */
 	/* HeaderContent-ClickablesDefault-Background */
 	background-color: #f5e67f; /* HeaderContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greySliverEdge4.png); /* HeaderContent-ClickablesDefault-Background_Image */

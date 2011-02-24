@@ -5,7 +5,7 @@
 	"ToolbarContent-Enabled": undefined, 
 	"Document-ClickablesDefault-BorderStyle": {
 		"Radius": "4px", 
-		"Shadow": "3px 3px 3px #444444"
+		"Shadow": "3px 3px 3px #000000"
 	}, 
 	"Document-Styles-Background": {
 		"Color": "#232323", 
@@ -437,7 +437,7 @@
 	}, 
 	"HeaderContent-ClickablesDefault-BorderStyle": {
 		"Radius": "2px", 
-		"Shadow": "3px 3px 3px #444444"
+		"Shadow": "3px 3px 3px #000000"
 	}, 
 	"HeaderContent-ClickablesDefault-Background": {
 		"Color": "#f5e67f", 
@@ -528,7 +528,7 @@
 		"TextSize": "10pt"
 	}, 
 	"MainContent-ClickablesHover-BorderStyle": {
-		"Shadow": "1px 1px 1px #444444"
+		"Shadow": "0px 0px 0px #444444"
 	}, 
 	"MainContent-ClickablesHover-Background": {
 		"Color": "#f96a02", 
@@ -597,7 +597,7 @@
 	}, 
 	"EmphasizedContent-ClickablesDefault-BorderStyle": {
 		"Radius": "4px", 
-		"Shadow": "3px 3px 3px #444444"
+		"Shadow": "2px 2px 2px #000000"
 	}, 
 	"EmphasizedContent-ClickablesDefault-Background": {
 		"Color": "#dd321c", 
@@ -611,7 +611,7 @@
 		"TextSize": "10pt"
 	}, 
 	"EmphasizedContent-ClickablesHover-BorderStyle": {
-		"Shadow": "1px 1px 1px #444444"
+		"Shadow": "1px 1px 1px #000000"
 	}, 
 	"EmphasizedContent-ClickablesHover-Background": {
 		"Color": "#ba2f1d", 
