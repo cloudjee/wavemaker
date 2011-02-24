@@ -40,7 +40,7 @@ Studio.extend({
 			 onClick: "selectComponentMenuItem",
 			 idInPage: inName + "MenuItem",
 			 iconClass: inImage.indexOf(".") == -1 ? inImage : inImage.substring(inImage.lastIndexOf("/")+1,inImage.indexOf("."))};
-	      console.log(inName + ": " + obj.iconClass);
+
 	      var menu = (inTab == bundleStudio.M_Services) ? this._serviceMenuStructure : this._insertMenuStructure;
 	      if (inProps && inProps.parentMenu) {
 		  var submenu;
