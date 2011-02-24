@@ -63,7 +63,7 @@ Studio.extend({
 	    return this.toggleWrapScriptClick();
 	case "g":
 	    return this.editArea.promptGotoLine();
-	case "n":
+	case ".":
 	    return this.listCompletions();
 	}
     },
