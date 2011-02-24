@@ -30,9 +30,14 @@ dojo.declare("wm.ContextMenuDialog", wm.Dialog, {
 	this.deleteButtonProps = {id:'deleteButton', title: ' ',width:'', type:'img', label:'Delete', src:'images/delete_24.png', width:'20px'};
 	this.trObjMap = {};
 	this.trId = 0;
-
     },
-	
+    postInit: function() {
+	this.inherited(arguments);
+	this.innerDomNode = document.createElement("div");
+	this.innerDomNode.style.overflow = "auto";
+	this.innerDomNode.style.height = "100%";
+	this.containerWidget.domNode.appendChild(this.innerDomNode);
+    },
     show: function(e) {
 	this.inherited(arguments);
 	this.createRightClickMenu();
@@ -149,12 +154,8 @@ dojo.declare("wm.ContextMenuDialog", wm.Dialog, {
 		this.menu.domNode.style.border = '1px solid #333333';
 		*/				
 	    
-	    this.containerNode.style.overflow = "auto";
-	    this.connect(this.containerNode, "renderCss", this.containerNode, function() {    
-		this.containerNode.style.overflow = "auto";
-	    });
 		if (this.helpText){
-			this.helpTextDiv = dojo.create('div', {innerHTML:this.helpText, style:'padding-left:5px;margin:5px;background:#FFF1A8;border:1px solid #DCDCDC;'}, this.containerNode);
+			this.helpTextDiv = dojo.create('div', {innerHTML:this.helpText, style:'padding-left:5px;margin:5px;background:#FFF1A8;border:1px solid #DCDCDC;'}, this.innerDomNode);
 		}
 
 		this.createMenuHTML(this.headerAttr, this.dataSet);
@@ -188,7 +189,7 @@ dojo.declare("wm.ContextMenuDialog", wm.Dialog, {
 
 		this.rightClickTBody = dojo.doc.createElement('tbody');
 		this.menuTable.appendChild(this.rightClickTBody);
-		this.containerNode.appendChild(this.menuTable);
+		this.innerDomNode.appendChild(this.menuTable);
 		
 		dojo.forEach(rows, function(row){
 			this.addNewRow(row, headerAttr, this.rightClickTBody);
@@ -200,7 +201,7 @@ dojo.declare("wm.ContextMenuDialog", wm.Dialog, {
 	},
 	addAdvancedProperties: function(){
 		this.destoryAdvancedPropertiesDiv();
-	    this.advancedButtonDiv = dojo.create('span', {}, this.containerNode);
+	    this.advancedButtonDiv = dojo.create('span', {}, this.innerDomNode);
 	    dojo.place(this.advancedButtonDiv, this.newColumnButton.domNode, 'after');
 		this.advancedButton = new dijit.form.Button({label:'Show Advanced Properties >>'},dojo.create('div',{},this.advancedButtonDiv));
 		dojo.connect(this.advancedButton, 'onClick', this, 'toggleAdvancedProps');
@@ -229,7 +230,7 @@ dojo.declare("wm.ContextMenuDialog", wm.Dialog, {
 		    this.setWidth("720px");
 	    this.menuTable.style.width = "700px";
 		}
-		    this.containerWidget.domNode.style.overflow = "auto";
+
 	    //this.menu._position();
 	},
 	addHeaderColumn: function(tr, attr){
@@ -440,7 +441,7 @@ dojo.declare("wm.ContextMenuDialog", wm.Dialog, {
 		if (this.newColumnButton)
 			this.newColumnButton.destroy();
 		var div = dojo.doc.createElement('div');
-		this.containerNode.appendChild(div);
+		this.innerDomNode.appendChild(div);
 		this.newColumnButton = new dijit.form.Button({label: this.addButtonLabel, onClick: dojo.hitch(this, 'addNewColumn'), style:'padding:5px;'});
 		this.newColumnButton.placeAt(div);
 	},
