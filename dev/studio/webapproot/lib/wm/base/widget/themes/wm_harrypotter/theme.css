@@ -708,29 +708,29 @@ body .wm_harrypotter .dialogfooter .wmbutton:hover {
 .wm_harrypotter .wmeditor .dijitComboBox .dijitArrowButton {
     height: 100% !important;
     -moz-border-radius-bottomright: 2px; /* wm.SelectMenu-Inner_Radius */
-    -moz-border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
-    -webkit-border-bottom-right-radius: 2px;/* wm.SelectMenu-Inner_Radius */
-    -webkit-border-top-right-radius: 2px;/* wm.SelectMenu-Inner_Radius */
-    border-radius-bottomright: 2px;/* wm.SelectMenu-Inner_Radius */
-    border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
+    -moz-border-radius-topright: 2px; /* wm.SelectMenu-Inner_Radius */
+    -webkit-border-bottom-right-radius: 2px; /* wm.SelectMenu-Inner_Radius */
+    -webkit-border-top-right-radius: 2px; /* wm.SelectMenu-Inner_Radius */
+    border-radius-bottomright: 2px; /* wm.SelectMenu-Inner_Radius */
+    border-radius-topright: 2px; /* wm.SelectMenu-Inner_Radius */
 }
 .wm_harrypotter .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
         height: 100% !important;
         background-position: 50% 50%;
 	background-image: url(images/comboArrowDownLight.png); /* wm.SelectMenu-Down-Arrow_Image */
-        -moz-border-radius-bottomright: 2px;/* wm.SelectMenu-Inner_Radius */
-        -moz-border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
-        -webkit-border-bottom-right-radius: 2px;/* wm.SelectMenu-Inner_Radius */
-        -webkit-border-top-right-radius: 2px;/* wm.SelectMenu-Inner_Radius */
-         border-radius-bottomright: 2px;/* wm.SelectMenu-Inner_Radius */
-         border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
+        -moz-border-radius-bottomright: 2px; /* wm.SelectMenu-Inner_Radius */
+        -moz-border-radius-topright: 2px; /* wm.SelectMenu-Inner_Radius */
+        -webkit-border-bottom-right-radius: 2px; /* wm.SelectMenu-Inner_Radius */
+        -webkit-border-top-right-radius: 2px; /* wm.SelectMenu-Inner_Radius */
+         border-radius-bottomright: 2px; /* wm.SelectMenu-Inner_Radius */
+         border-radius-topright: 2px; /* wm.SelectMenu-Inner_Radius */
 }
 .wm_harrypotter .dijitSpinner .dijitArrowButton .dijitArrowButtonInner {
 	background-position: 30% 20%;
-	background-image: url(images/comboArrowDownDark.png); /* wm.NumberSpinner-Down-Arrow_Image */    
+	background-image: url(images/comboArrowDownDark.png); /* wm.NumberSpinner-Down-Arrow_Image */
 }
 .wm_harrypotter .dijitSpinner .dijitArrowButton.dijitUpArrowButton .dijitArrowButtonInner {
-	background-image: url(images/comboArrowUpDark.png); /* wm.NumberSpinner-Up-Arrow_Image */    
+	background-image: url(images/comboArrowUpDark.png); /* wm.NumberSpinner-Up-Arrow_Image */
 }
   /**************************************************************************************************
    * TYPE:        Slider
@@ -1053,7 +1053,7 @@ body .wm_harrypotter .dialogfooter .wmbutton:hover {
     color: #ffffff; /* Tables-EvenRows-Font_Color */
     font-weight: normal; /* Tables-EvenRows-Font_Weight */
     /* Tables-EvenRows-Background */
-    background-color: #161616; /* Tables-EvenRows-Background_Color */
+    background-color: #202020; /* Tables-EvenRows-Background_Color */
 }
 /* Grid/List Odd rows: uses Tables-OddRows */
 .wm_harrypotter div.dojoxGrid-row.dojoxGrid-row-odd,
@@ -1552,7 +1552,7 @@ body.wm_default div.dijitMenu .dijitCalendarMonthLabel {
     /* Tables-EvenRows-Font */
     color: #ffffff; /* Tables-EvenRows-Font_Color */
     /* Tables-EvenRows-Background */
-    background-color: #161616; /* Tables-EvenRows-Background_Color */
+    background-color: #202020; /* Tables-EvenRows-Background_Color */
     border-bottom-size: 1px;      /* Tables-EvenRows-Border_Size */
     border-bottom-style: solid;   
     border-bottom-color: #323232; /* Tables-EvenRows-Border_Color */
