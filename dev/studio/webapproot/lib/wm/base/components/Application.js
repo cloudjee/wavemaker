@@ -831,7 +831,7 @@ wm.Application.extend({
 wm.Object.extendSchema(wm.Application, {
     name: {ignore: 1}, // at some point, we might provide this as a way to rename the project... but renaming is really a server side op, so requires confirmation. 
     main: {shortname: "mainPageName"},
-    promptChromeFrame: {shorname: "chromeFrame (NA)"},
+    promptChromeFrame: {shorname: "chromeFrame (NA)", ignore: 1},
     theme: {type: "string"},
     //IERoundedCorners: {type: "boolean"},
     studioVersion: {writeonly: true, type: "string"},
