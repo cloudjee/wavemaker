@@ -1021,13 +1021,18 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 		if (e) {
 			e._hasBeenBlurred = false;
 			wm.fire(e,"_hideTooltip");
+		    if (this.validatorNode && !this.getDisplayValue()) {
+			this.validatorNode.style.display = "none";
+			e.set("state", "Normal");
+			e._setStateClass();
+		    }
 		}
 	},
 	clear: function() {
 		this.beginEditUpdate();
-		this.reset();
 		//this.setEditorValue(null);
 	        this.setDataValue(null);  // changed from setEditorValue because setEditorValue does not handle readonly editor
+		this.reset();
 		this.endEditUpdate();
 		this.editorChanged();
 	},
