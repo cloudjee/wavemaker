@@ -110,6 +110,8 @@ dojo.declare("wm.Wire", wm.Component, {
 	sourceRootUpdated: function() {
 		// root updated is a special binding situation where we just want to check the value of the source
 		// to give it a chance to create itself (this is currently necessary for Variable lazy loading)
+	    // MK: 2/24/2011: I'm not seeing this called in a simple lazy loading project.  If this is in fact
+	    // called, it should handle this.expression as well as this.source, but its likely obsolete
 		wm.logging && console.info("==> (sourceRootUpdated)", this.source);
 		this.getValueById(this.source);
 	},
