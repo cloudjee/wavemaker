@@ -728,7 +728,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	//===========================================================================
 	_isVariableProp: function(inPropName) {
 		var typeInfo = this._dataSchema[inPropName];
-		return Boolean(typeInfo && wm.typeManager.isStructuredType(typeInfo.type));
+	    return Boolean(typeInfo && (typeInfo.isList || wm.typeManager.isStructuredType(typeInfo.type)));
 	},
 	isDataProp: function(inProp) {
 		return inProp in this._dataSchema;
