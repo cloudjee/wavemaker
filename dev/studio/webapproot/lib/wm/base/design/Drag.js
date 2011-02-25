@@ -69,8 +69,13 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 			// calculate suggested drop rect
 			var r = { l: this.pxp - this.targetOff.x, t: this.pyp - this.targetOff.y, w:0, h: 0, dx: this.dx, dy: this.dy};
 			this.target.suggestDropRect(this.info.control, r);
+
+
 			// position the drop marker
-			kit._setMarginBox(this.markNode, r.l + this.targetOff.x, r.t + this.targetOff.y, r.w, r.h);
+		    var designerBounds = dojo.coords(studio.designer.domNode);
+		    kit._setMarginBox(this.markNode, r.l + this.targetOff.x, r.t + this.targetOff.y, 
+				      Math.min(r.w, designerBounds.x+designerBounds.w - r.l-this.targetOff.x),
+				      Math.min(r.h, designerBounds.y+designerBounds.h - r.t - this.targetOff.y));
 			// position the snap markers
 			wm.showHideNode(this.hSnapNode, Boolean(r.hSnap));
 			if (r.hSnap) {
@@ -87,6 +92,7 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 			// cache drop position
 			this.dropRect = r;
 		} 
+
 	},
 	drop: function(e) {
 		if (this.target && this.target.layout.removeEdges)
