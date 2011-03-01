@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2010 WaveMaker Software, Inc.
+ *  Copyright (C) 2008-2011 WaveMaker Software, Inc.
  *
  *  This file is part of the WaveMaker Client Runtime.
  *
@@ -20,6 +20,7 @@ dojo.provide("wm.base.widget.dijit.ColorPalette");
 
 wm.dijit.ColorPalette.description = "Select a color with the mouse.";
 
+/* Michael Kantor March 2011: I don't think this is used anymore */
 dojo.extend(wm.dijit.ColorPalette, {
 	// getters / setters
 	set_palette: function(inPalette) {

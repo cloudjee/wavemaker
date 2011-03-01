@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 WaveMaker Software, Inc.
+ * Copyright (C) 2010-2011 WaveMaker Software, Inc.
  *
  * This file is part of WaveMaker Enterprise.
  *  You may not use this file in any manner except through written agreement with WaveMaker Software, Inc.

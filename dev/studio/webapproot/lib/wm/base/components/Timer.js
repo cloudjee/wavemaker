@@ -1,7 +1,7 @@
 // TODO: Add it to build system
 
 /*
- *  Copyright (C) 2010 WaveMaker Software, Inc.
+ *  Copyright (C) 2010-2011 WaveMaker Software, Inc.
  *
  *  This file is part of the WaveMaker Client Runtime.
  *

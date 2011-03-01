@@ -6,7 +6,7 @@
 # perl findFilesNeedingLicenses.pl path-to-folder
 #    if no path specified, searches the current folder.
 #    Running this has the following actions:
-#    1. Find any .js and .java file with a wavemaker copyright that doesn't indicate 2010 and updates it to 2010
+#    1. Find any .js and .java file with a wavemaker copyright that doesn't indicate 2011 and updates it to 2011
 #    2. Find any .js and .java file that looks like it has a non-wavemaker copyright and lists it for your review
 #    3. Find any .js and .java file that lacks a copyright and prints it out so that you can figure out which
 #       folders need which copyrights, and run the script in MODE #2
@@ -15,7 +15,7 @@
 # perl findFilesNeedingLicenses.pl path-to-folder path-to-copyright
 #     - If you want to run on your current directory, you will have to use ".", you can't just leave out that parameter.
 #     Running this has the following actions
-#    1. Find any .js and .java file with a wavemaker copyright that doesn't indicate 2010 and updates it to 2010
+#    1. Find any .js and .java file with a wavemaker copyright that doesn't indicate 2011 and updates it to 2011
 #    2. Find any .js and .java file that looks like it has a non-wavemaker copyright and lists it for your review
 #    3. Update any .js and .java file that lacks a copyright (any file that was listed when running in MODE #1)
 ########################################################################################################################
@@ -44,17 +44,17 @@ sub searchFile {
   my($file, $copyright) = @_;
 
   my $f = `cat $file`;
- if ($f =~ /Copyright \(C\) 200(\d)\-200\d WaveMaker/) {
-    $f =~ s/Copyright \(C\) 200(\d)\-200\d WaveMaker/Copyright (C) 200$1-2010 WaveMaker/;
+ if ($f =~ /Copyright \(C\) 20(\d\d)\-20\d\d WaveMaker/) {
+    $f =~ s/Copyright \(C\) 20(\d\d)\-20\d\d WaveMaker/Copyright (C) 20$1-2011 WaveMaker/;
     open(FILE, ">$file");
     print FILE $f;
     close(FILE);
-  } elsif ($f =~ /Copyright \(C\) 200(\d) WaveMaker/) {
-    $f =~ s/Copyright \(C\) 200(\d) WaveMaker/Copyright (C) 200$1-2010 WaveMaker/;
+  } elsif ($f =~ /Copyright \(C\) 20(\d\d) WaveMaker/ && $f !~ /Copyright \(C\) 2011 WaveMaker/) {
+    $f =~ s/Copyright \(C\) 20(\d\d) WaveMaker/Copyright (C) 20$1-2011 WaveMaker/;
     open(FILE, ">$file");
     print FILE $f;
     close(FILE);
-  } elsif ($f =~ /Copyright \(C\) (\d+\-)?2010 WaveMaker/) {
+  } elsif ($f =~ /Copyright \(C\) (\d+\-)?2011 WaveMaker/) {
     ;
   } elsif ($f =~ /(Copyright .*)/) {
     push(@FOREIGN, "$file has foreign copyright: $1");
@@ -80,7 +80,7 @@ if ($copyright) {
 
 if (-d $folder) {
   &searchFolder($folder, $copyright);
-} elsif ($folder =~ /\.(js|java)$/ && $folder !~ /\/dojo\// && $folder !~ /\/test\// && $folder !~ /\/build\//) {
+} elsif ($folder =~ /\.(js|java|css)$/ && $folder !~ /\/dojo\// && $folder !~ /\/test\// && $folder !~ /\/build\//) {
   &searchFile($folder, $copyright);
 }
 

@@ -1,3 +1,11 @@
+/*
+ * Copyright (C) 2011 WaveMaker Software, Inc.
+ *
+ * This file is part of WaveMaker Enterprise.
+ *  You may not use this file in any manner except through written agreement with WaveMaker Software, Inc.
+ *
+ */ 
+
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
