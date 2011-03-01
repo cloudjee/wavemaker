@@ -949,6 +949,8 @@ dojo.declare("wm.AbstractEditor", wm.Widget, {
 			inValue = inValue === undefined ? null : inValue;
 		        var oldValue = this.editor.get('value');
 		        this.editor.set('value',inValue, false);
+		        if (!inValue) 
+			    this.editor._lastValueReported = "";
 			this.updateReadonlyValue();
 		        if (oldValue != inValue)
 			    this.changed();
