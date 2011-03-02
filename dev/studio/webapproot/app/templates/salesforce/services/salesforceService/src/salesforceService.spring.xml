@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<beans xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans">
+    <bean lazy-init="true" scope="singleton" class="com.sforce.soap.enterprise.salesforceservice.SforceService" id="salesforceService">
+		<property name="dataServiceManager"> 
+            <ref bean="salesforceDataServiceManager"/>
+        </property>
+	</bean>
+    <bean lazy-init="false" scope="singleton" class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+        <property value="salesforceService" name="serviceId"/>
+        <property ref="WebService" name="serviceType"/>		
+    </bean>
+
+	<!-- the data service bean instance is injected into the service bean -->
+    <bean 
+        id="salesforceDataServiceManager" 
+        class="com.wavemaker.runtime.data.salesforce.SalesforceDataServiceManager"
+        lazy-init="true">
+		<constructor-arg>
+            <ref bean="salesforceTxMgr"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="salesforceTaskMgr"/>
+        </constructor-arg>
+		<constructor-arg>
+            <map>
+                <entry key="useIndividualCRUDOperations" value="false"/>
+                <entry key="refreshEntities" value=""/> 
+            </map>
+        </constructor-arg>
+    </bean>
+	<bean 
+        id="salesforceTaskMgr"
+        class="com.wavemaker.runtime.data.DefaultTaskManager"
+        lazy-init="true"/>
+	<bean 
+        id="salesforceTxMgr" 
+        class="com.wavemaker.runtime.data.salesforce.SalesforceTransactionManager"
+        lazy-init="true">
+    </bean>
+
+</beans>
