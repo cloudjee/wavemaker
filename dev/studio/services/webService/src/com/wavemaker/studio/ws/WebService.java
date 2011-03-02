@@ -86,18 +86,32 @@ public class WebService {
         return wsToolsMgr;
     }
 
-    public String importWSDL(String path, String serviceId, boolean overwrite)
+    /*public String importWSDL(String path, String serviceId, boolean overwrite)
             throws WSDLException, IOException, JAXBException {
+        //if (path.toLowerCase().endsWith("wadl")) {
+        //    return getWSToolsMgr().importWADL(path, serviceId, overwrite);
+        //}
+        return importWSDL(path, serviceId, overwrite, null, null);
+    }*/
+
+    public String importWSDL(String path, String serviceId, boolean overwrite, String username, String password)
+            throws WSDLException, IOException, JAXBException { //salesforce
         if (path.toLowerCase().endsWith("wadl")) {
             return getWSToolsMgr().importWADL(path, serviceId, overwrite);
         }
-        return getWSToolsMgr().importWSDL(path, serviceId, overwrite);
+        return getWSToolsMgr().importWSDL(path, serviceId, overwrite, username, password);
     }
 
-    public String uploadWSDL(@ParamName(name = "file")
+    /*public String uploadWSDL(@ParamName(name = "file")
             MultipartFile file, String serviceId, String overwrite)
             throws IOException, WSDLException, JAXBException {
-        return getWSToolsMgr().importUploadedFile(file, serviceId, overwrite);
+        return uploadWSDL(file, serviceId, overwrite, null, null);
+    }*/
+
+    public String uploadWSDL(@ParamName(name = "file")
+            MultipartFile file, String serviceId, String overwrite, String username, String password) //salesforce
+            throws IOException, WSDLException, JAXBException {
+        return getWSToolsMgr().importUploadedFile(file, serviceId, overwrite, username, password);
     }
 
     public String buildRestService(String serviceName, String operationName,
