@@ -106,10 +106,6 @@
         <url-pattern>/lib/runtimeLoader.js</url-pattern>
     </servlet-mapping>
 
-	<servlet-mapping>
-        <servlet-name>springapp</servlet-name>
-		<url-pattern>/app/config.js</url-pattern>
-    </servlet-mapping>
 
     <!-- for custom widgets mapping -->
     <servlet-mapping>

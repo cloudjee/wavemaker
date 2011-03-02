@@ -230,80 +230,39 @@
 			</else>
 			</if>
 			
-    <if>
-    	<equals arg1="${do.obfuscation}" arg2="true"/>
-	<then>
-		<filelist id="common.tools.jars">
-			<file name="${ant-launcher.jar}"/>
-			<file name="${ant-nodeps.jar}"/>
-			<file name="${ant.jar}"/>
-			<file name="${catalina-ant.jar}"/>
-			<file name="${collection-setter-injector.jar}"/>
-			<file name="${comresrcgen.jar}"/>
-			<file name="${freemaker.jar}"/>
-			<file name="${hibernate-ext.jar}"/>
-			<file name="${jaxb-xjc.jar}"/>
-			<file name="${jaxws-tools.jar}"/>
-			<file name="${jtidy.jar}"/>
-			<file name="${localizer.jar}"/>
-			<file name="${servlet.api.jar}"/>
-			<file name="${wadl-ant.jar}"/>
-			<file name="${wadl-cmdline.jar}"/>
-			<file name="${xbean.jar}"/>
-			<file name="${xmltask.jar}"/>
-			<file name="${amazonec2.jar}"/>
-			<file name="${amazons3.jar}"/>
-			<file name="${commons-codec.jar}"/>
-			<file name="${commons-httpclient.jar}"/>
-			<file name="${rs-jar1.jar}"/>
-			<file name="${rs-jar2.jar}"/>
-			<file name="${rs-jar3.jar}"/>
-			<file name="${rs-jar4.jar}"/>
-			<file name="${truelicense.jar}"/>
-			<file name="${trueswing.jar}"/>
-			<file name="${truexml.jar}"/>
-			<file name="${commons-codec-1.4.jar}"/>
-			<file name="${wmtools.sub.jar}"/>
-		</filelist>
-	</then>
-	<else>
-		<filelist id="common.tools.jars">
-			<file name="${ant-launcher.jar}"/>
-			<file name="${ant-nodeps.jar}"/>
-			<file name="${ant.jar}"/>
-			<file name="${catalina-ant.jar}"/>
-			<file name="${collection-setter-injector.jar}"/>
-			<file name="${comresrcgen.jar}"/>
-			<file name="${freemaker.jar}"/>
-			<file name="${hibernate-ext.jar}"/>
-			<file name="${jaxb-xjc.jar}"/>
-			<file name="${jaxws-tools.jar}"/>
-			<file name="${jtidy.jar}"/>
-			<file name="${localizer.jar}"/>
-			<file name="${servlet.api.jar}"/>
-			<file name="${wadl-ant.jar}"/>
-			<file name="${wadl-cmdline.jar}"/>
-			<file name="${xbean.jar}"/>
-			<file name="${xmltask.jar}"/>
-			<file name="${amazonec2.jar}"/>
-			<file name="${amazons3.jar}"/>
-			<file name="${commons-codec.jar}"/>
-			<file name="${commons-httpclient.jar}"/>
-			<file name="${rs-jar1.jar}"/>
-			<file name="${rs-jar2.jar}"/>
-			<file name="${rs-jar3.jar}"/>
-			<file name="${rs-jar4.jar}"/>
-			<file name="${truelicense.jar}"/>
-			<file name="${trueswing.jar}"/>
-			<file name="${truexml.jar}"/>
-			<file name="${commons-codec-1.4.jar}"/>
-		</filelist>
-    </else>
-	</if>
+    
 
     <fileset id="common.modules.jars" dir="${allmodules.build.dir}">
         <include name="**/*.jar"/>
     </fileset>
+
+	<filelist id="common.tools.jars">
+      <file name="${ant-launcher.jar}"/>
+      <file name="${ant-nodeps.jar}"/>
+      <file name="${ant.jar}"/>
+      <file name="${catalina-ant.jar}"/>
+      <file name="${collection-setter-injector.jar}"/>
+      <file name="${comresrcgen.jar}"/>
+      <file name="${freemaker.jar}"/>
+      <file name="${hibernate-ext.jar}"/>
+      <file name="${jaxb-xjc.jar}"/>
+      <file name="${jaxws-tools.jar}"/>
+      <file name="${jtidy.jar}"/>
+      <file name="${localizer.jar}"/>
+      <file name="${servlet.api.jar}"/>
+      <file name="${wadl-ant.jar}"/>
+      <file name="${wadl-cmdline.jar}"/>
+      <file name="${xbean.jar}"/>
+      <file name="${xmltask.jar}"/>
+  		<file name="${amazonec2.jar}"/>
+  		<file name="${amazons3.jar}"/>
+  		<file name="${commons-codec.jar}"/>
+  		<file name="${commons-httpclient.jar}"/>
+  		<file name="${rs-jar1.jar}"/>
+  		<file name="${rs-jar2.jar}"/>
+  		<file name="${rs-jar3.jar}"/>
+  		<file name="${rs-jar4.jar}"/>
+    </filelist>
 
     <condition property="common.modules.isCloud">
         <equals arg1="${project.type}" arg2="${project.type.cloud}"/>
@@ -313,15 +272,6 @@
     </condition>
     <condition property="common.modules.isEnterprise">
         <equals arg1="${project.type}" arg2="${project.type.enterprise}"/>
-    </condition>
-
-	<condition property="do.obfuscation">
-		<and>
-			<equals arg1="${project.type}" arg2="${project.type.enterprise}"/>
-			<not>
-				<equals arg1="${skip.obfuscation}" arg2="true"/>
-			</not>
-		</and>
     </condition>
 
     <patternset id="common.modules.patternset">

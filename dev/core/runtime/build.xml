@@ -64,7 +64,6 @@
                 <include name="**/*.cfg"/>
                 <include name="**/*.xml"/>
 				<include name="**/*.wsdl"/>
-				<include name="**/*.store"/>
             </fileset>
         </copy>
     </target>
@@ -108,7 +107,6 @@
                 <include name="**/*.wadl"/>
                 <include name="**/*.xjb"/>
                 <include name="**/*.xsd"/>
-				<include name="**/*.store"/>
                 <include name="com/wavemaker/runtime/foojar.jar"/>
                 <include name="com/wavemaker/runtime/data/mike.pic"/>
                 <include name="bar-module-contents.txt"/>

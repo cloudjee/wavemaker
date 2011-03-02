@@ -45,7 +45,6 @@ import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.module.ModuleManager;
 
 import com.wavemaker.runtime.data.DataServiceLoggers;
-import com.wavemaker.runtime.server.ServerUtils;
 
 /**
  * Controller (in the MVC sense) providing the studio access to project files.
@@ -66,20 +65,19 @@ public final class FileController extends AbstractController {
     private static final String WM_IMAGE_URL = "/resources/images/";
     private static final String WM_GZIPPED_URL = "/resources/gzipped/";
     private static final String WM_STUDIO_BUILD_URL = "/build/";
-    private static final String WM_CONFIG_URL = "/config.js";
-    private static final String SERVER_TIME = "{serverTimeOffset}";
     
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request,
             HttpServletResponse response) throws Exception {
 
+        String appName = WMAppContext.getInstance().getAppName();
         String path = WMAppContext.getInstance().getAppContextRoot();
     	boolean isGzipped = false;
     	boolean addExpiresTag = false;
     	String reqPath = request.getRequestURI();
     	String contextPath = request.getContextPath();
     	reqPath = reqPath.replaceAll("%20", " ");
-	    reqPath = reqPath.replaceAll("//","/");
+	reqPath = reqPath.replaceAll("//","/");
 
 
     	// trim off the servlet name
@@ -87,11 +85,11 @@ public final class FileController extends AbstractController {
         	reqPath = reqPath.substring(reqPath.indexOf('/', 1));
 
         
-        if (reqPath.startsWith(WM_BUILD_GZIPPED_URL) || reqPath.startsWith(WM_GZIPPED_URL) || reqPath.equals(WM_BUILD_DOJO_JS_URL)){
+        if(reqPath.startsWith(WM_BUILD_GZIPPED_URL) || reqPath.startsWith(WM_GZIPPED_URL) || reqPath.equals(WM_BUILD_DOJO_JS_URL)){
         	isGzipped = true;
         	addExpiresTag = true;
         	reqPath += ".gz";
-        } else if (reqPath.startsWith(WM_BUILD_DOJO_THEMES_URL) ||
+        }else if (reqPath.startsWith(WM_BUILD_DOJO_THEMES_URL) || 
         		reqPath.startsWith(WM_BUILD_WM_THEMES_URL) || 
         		reqPath.startsWith(WM_BUILD_DOJO_FOLDER_URL) || 
         		reqPath.equals(WM_BOOT_URL)|| 
@@ -99,22 +97,21 @@ public final class FileController extends AbstractController {
         		reqPath.startsWith(WM_IMAGE_URL) ||
 		        reqPath.startsWith(WM_STUDIO_BUILD_URL)){
         	addExpiresTag = true;
-        } else if (!reqPath.contains(WM_CONFIG_URL)) {
+        }else{
             throw new WMRuntimeException(Resource.STUDIO_UNKNOWN_LOCATION,
                     reqPath, request.getRequestURI());
         }
         
-        File sendFile = null;
-        if (!isGzipped && reqPath.lastIndexOf(".js") == reqPath.length() - 3) {
-            sendFile = new File(path, reqPath + ".gz");
-            if (!sendFile.exists()) {
-            sendFile = null;
-            } else {
-            isGzipped = true;
-            }
-        }
-
-        if (sendFile == null)
+	File sendFile = null;
+	if (!isGzipped && reqPath.lastIndexOf(".js") == reqPath.length() - 3) {
+	    sendFile = new File(path, reqPath + ".gz");
+	    if (!sendFile.exists()) {
+		sendFile = null;
+	    } else {
+		isGzipped = true;
+	    }
+	}
+    	if (sendFile == null)
 	    sendFile = new File(path, reqPath);
 
         if (DataServiceLoggers.fileControllerLogger.isDebugEnabled()) {
@@ -143,13 +140,7 @@ public final class FileController extends AbstractController {
         	
             OutputStream os = response.getOutputStream();
             InputStream is = new FileInputStream(sendFile);
-            if (reqPath.contains(WM_CONFIG_URL)) {
-                String content = IOUtils.toString(is);
-                content += "\r\n" + "wm.serverTimeOffset = " + ServerUtils.getServerTimeOffset() + ";";
-                IOUtils.write(content, os);
-            } else {
-                IOUtils.copy(is, os);
-            }
+            IOUtils.copy(is, os);
             os.close();
             is.close();
         }

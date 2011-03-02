@@ -92,10 +92,6 @@ public class DesignTimeUtils {
      * @return DesignServiceManager instance
      */
     public static DesignServiceManager getDSMForProjectRoot(File projectRoot) {
-        return getDSMForProjectRoot(projectRoot, false);
-    }
-
-    public static DesignServiceManager getDSMForProjectRoot(File projectRoot, boolean skip) {
         try {
             String oldProp = getDefaultProjectHome();
             
@@ -121,7 +117,7 @@ public class DesignTimeUtils {
                 
                 ProjectManager pm = new ProjectManager();
                 pm.setStudioConfiguration(sc);
-                pm.openProject(projectRoot.getName(), true, skip);
+                pm.openProject(projectRoot.getName(), true);
                 dsm.setProjectManager(pm);
                 
                 DeploymentManager dep = new DeploymentManager();

@@ -316,15 +316,6 @@
               file="${classes.runtime.dir}/log4j.properties"/>
         <copy todir="${classes.studio.dir}/"
             file="${studio.dir}/src/marker.resource.txt"/>
-
-		<!-- delete unobfuscated classes in case of enterprise version -->
-		<delete>
-			<fileset dir="${lib.studio.dir}">
-				<include name="wmtools.safe.jar" if="do.obfuscation"/>
-				<include name="truelicense.jar" if="do.obfuscation"/>
-				<include name="truexml.jar" if="do.obfuscation"/>
-			</fileset>
-		</delete>
     </target>
 
     <target name="javadoc">

@@ -22,7 +22,11 @@ import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -401,17 +405,5 @@ public/* static */class ServerUtils {
         }
         
         return ret;
-    }
-
-    /**
-     * Calculate the server time offset against UTC
-     *
-     * @return the server time offset in mili-seconds
-     */
-    public static String getServerTimeOffset() {
-        Calendar now = Calendar.getInstance();
-        int totalOffset = now.get(Calendar.ZONE_OFFSET) + now.get(Calendar.DST_OFFSET);
-
-        return Integer.toString(totalOffset);
-    }
+    }    
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2007-2011 WaveMaker Software, Inc.
+ *  Copyright (C) 2007-2010 WaveMaker Software, Inc.
  *
  *  This file is part of the WaveMaker Server Runtime.
  *
@@ -193,7 +193,7 @@ public class ConfigurationCompilerTask extends AbstractServiceCompilerTask {
             // if we're doing any sort of build, generate types
             if (doXmlBuild || 0<doBuildServices.size()) {
                 DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(
-                        fileService.getFileServiceRoot(), true);
+                        fileService.getFileServiceRoot());
                 ConfigurationCompiler.generateTypes(fileService, typesJs,
                         allServices, dsm.getPrimitiveDataObjects());
                 
