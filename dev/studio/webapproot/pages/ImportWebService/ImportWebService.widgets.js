@@ -32,7 +32,8 @@ ImportWebService.widgets = {
 							wsdlGroupLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, caption: "WSDL Information", border: "0", height: "24px"}, {}, {
 								format: ["wm.DataFormatter", {}, {}]
 							}],
-							panel1: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]}, height: "140px", border: "0", layoutKind: "left-to-right", contentAlign: "center", horizontalAlign: "center"}, {}, {
+							//panel1: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]}, height: "140px", border: "0", layoutKind: "left-to-right", contentAlign: "center", horizontalAlign: "center"}, {}, { //xxx
+							panel1: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]}, height: "160px", border: "0", layoutKind: "left-to-right", contentAlign: "center", horizontalAlign: "center"}, {}, {
 								panel2: ["wm.Panel", {border: "0", padding: "4", width: "606px"}, {}, {
 									panel5: ["wm.Panel", {height: "24px", border: "0", layoutKind: "left-to-right"}, {}, {
 										wsdlPathTypeInput: ["wm.Editor", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "100px", width: "200px", layoutKind: "left-to-right", caption: "WSDL Path", display: "Select"}, {onchange: "wsdlPathTypeInputChange"}, {
@@ -46,7 +47,8 @@ ImportWebService.widgets = {
 										}]
 									}],
 									spacer1: ["wm.Spacer", {height: "14px"}, {}],
-									panel3: ["wm.Panel", {height: "78px", border: "0", layoutKind: "left-to-right"}, {}, {
+									//panel3: ["wm.Panel", {height: "78px", border: "0", layoutKind: "left-to-right"}, {}, {
+									panel3: ["wm.Panel", {height: "110px", border: "0", layoutKind: "left-to-right"}, {}, { //xxx
 										panel6: ["wm.Panel", {border: "0", width: "112px"}, {}, {
 											label2: ["wm.Label", {_classes: {domNode: ["wm_TextAlign_Right", "wm_Padding_LeftNone", "wm_Padding_BottomNone", "wm_Padding_6px", "wm_FontColor_White"]}, caption: "Service Name", border: "0", height: "26px"}, {}, {
 												format: ["wm.DataFormatter", {}, {}]
@@ -68,6 +70,19 @@ ImportWebService.widgets = {
 												serviceIdInput: ["wm.Editor", {captionSize: "0px", width: "100%", layoutKind: "left-to-right"}, {}, {
 													editor: ["wm._TextEditor", {}, {}]
 												}]
+											}],
+											spacer2: ["wm.Spacer", {height: "14px"}, {}],
+											panel6a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right", width: "100%",horizontalAlign: "center"}, {}, {
+												usernameLabel: ["wm.Label", {width: "120px", border: "0", caption: "Username"}, {}, {
+													format: ["wm.DataFormatter", {}, {}]
+												}],
+												usernameInput: ["wm.Input", {displayValue:"sammysm@wavemaker.com", checked: true, width: "300px", border: "0"}, {onkeypress: "onUsernameKeyPress", onchange: "usernameChanged", onenterkey: "importBtnClick"}]
+											}],
+											panel603a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right", width: "100%",horizontalAlign: "center"}, {}, {
+												passwordLabel: ["wm.Label", {width: "120px", border: "0", caption: "Password"}, {}, {
+													format: ["wm.DataFormatter", {}, {}]
+												}],
+												passwordInput: ["wm.Input", {displayValue:"Silver77Surfer", checked: true, width: "300px", border: "0", inputType: "password"}, {onenterkey: "importBtnClick"}]
 											}]
 										}]
 									}]

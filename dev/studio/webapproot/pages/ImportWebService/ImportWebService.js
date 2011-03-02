@@ -23,10 +23,11 @@ dojo.declare("ImportWebService", wm.Page, {
 	TYPE_REST_WSDL: "REST (WSDL / WADL)",
 	TYPE_REST_BUILDER: "REST (Build-A-Service)",
 	TYPE_FEED: "Feed",
+	TYPE_SALESFORCE: "SOAP-Salesforce", //xxx
 	IMPORT_TYPE_URL: "URL",
 	IMPORT_TYPE_FILE: "File",
 	start: function() {
-		this.updateSelect(this.typeInput, [this.TYPE_SOAP, this.TYPE_REST_WSDL, this.TYPE_REST_BUILDER, this.TYPE_FEED]);
+		this.updateSelect(this.typeInput, [this.TYPE_SOAP, this.TYPE_REST_WSDL, this.TYPE_REST_BUILDER, this.TYPE_FEED, this.TYPE_SALESFORCE]); //xxx
 		this.typeInput.setValue("displayValue", this.TYPE_SOAP);
 		this.updateSelect(this.wsdlPathTypeInput, [this.IMPORT_TYPE_URL, this.IMPORT_TYPE_FILE]);
 		this.wsdlPathTypeInput.setValue("displayValue", this.IMPORT_TYPE_URL);
@@ -39,6 +40,8 @@ dojo.declare("ImportWebService", wm.Page, {
 		this.serviceIdAutoYesRadio.components.editor.setChecked(true);
 		this.serviceIdInput.clear();
 		this.restServiceBuilderPage.page.clearAll();
+		this.usernameInput.setInputValue("sammysm@wavemaker.com"); //xxx
+		this.passwordInput.setInputValue("Silver77Surfer"); //xxx
 	},
 	updateSelect: function(inSelect, inData) {
 		var s = inSelect, o;
@@ -54,11 +57,36 @@ dojo.declare("ImportWebService", wm.Page, {
 		if (inValue == this.TYPE_SOAP) {
 			this.layers.setLayer("wsdlLayer");
 			this.wsdlPathTypeInput.setCaption("WSDL");
-			this.wsdlGroupLabel.setCaption("WSDL Information")
+			this.wsdlGroupLabel.setCaption("WSDL Information");
+			this.usernameLabel.setShowing(false);
+			this.passwordLabel.setShowing(false);
+			this.usernameInput.setShowing(false);
+			this.passwordInput.setShowing(false);
+			this.serviceIdAutoYesRadio.components.editor.setChecked(true);
+			this.serviceIdInput.clear();
+			//this.serviceIdInput.setDisabled(true);
+		} else if (inValue == this.TYPE_SALESFORCE) { //xxx
+			this.layers.setLayer("wsdlLayer");
+			this.wsdlPathTypeInput.setCaption("WSDL");
+			this.wsdlGroupLabel.setCaption("WSDL Information");
+			this.usernameLabel.setShowing(true);
+			this.passwordLabel.setShowing(true);
+			this.usernameInput.setShowing(true);
+			this.passwordInput.setShowing(true);
+			this.serviceIdAutoNoRadio.components.editor.setChecked(true);
+			this.serviceIdInput.setDataValue("salesforceService");
+			this.serviceIdInput.setDisabled(true);
 		} else if (inValue == this.TYPE_REST_WSDL) {
 			this.layers.setLayer("wsdlLayer");
 			this.wsdlPathTypeInput.setCaption("WSDL / WADL");
 			this.wsdlGroupLabel.setCaption("WSDL / WADL Information");
+			this.usernameLabel.setShowing(false);
+			this.passwordLabel.setShowing(false);
+			this.usernameInput.setShowing(false);
+			this.passwordInput.setShowing(false);
+			this.serviceIdAutoYesRadio.components.editor.setChecked(true);
+			this.serviceIdInput.clear();
+			//this.serviceIdInput.setDisabled(true);
 		} else if (inValue == this.TYPE_REST_BUILDER) {
 			this.layers.setLayer("restBuilderLayer");
 		} else if (inValue == this.TYPE_FEED) {
@@ -68,7 +96,7 @@ dojo.declare("ImportWebService", wm.Page, {
 	importButtonClick: function(inSender) {
 		this.serviceId = null;
 		var t = this.typeInput.getValue("displayValue");
-		if (t == this.TYPE_SOAP || t == this.TYPE_REST_WSDL) {
+		if (t == this.TYPE_SOAP || t == this.TYPE_REST_WSDL || t == this.TYPE_SALESFORCE) {
 			this.importWSDL(false);
 		} else if (t == this.TYPE_FEED) {
 			if (wm.services.byName["FeedService"]) {
@@ -87,6 +115,8 @@ dojo.declare("ImportWebService", wm.Page, {
 	importWSDL: function(inOverwrite) {
 		var w = (inOverwrite == undefined || inOverwrite == null) ? false : inOverwrite;
 		var f, id = this.serviceIdInput.getValue("displayValue");
+		var un = this.usernameInput.getInputValue(); //xxx
+		var pw = this.passwordInput.getInputValue(); //xxx
 		if (w)
 			studio.application.removeServerComponentByName(this.overWriteId, "wm.WebService");
 		if (this.wsdlPathTypeInput.getValue("displayValue") == this.IMPORT_TYPE_URL) {
@@ -105,7 +135,7 @@ dojo.declare("ImportWebService", wm.Page, {
 				studio.beginWait("Importing Web Service...");
 				dojo.io.iframe.send({
 					url: "services/webService.upload",
-					content: {serviceId: id, overwrite: w},
+					content: {serviceId: id, overwrite: w, username: un, password: pw}, //xxx
 					form: this.wsdlFileInput.formNode,
 					handleAs: "json",
 					handle: dojo.hitch(this, "uploadWSDLComplete")
@@ -159,7 +189,9 @@ dojo.declare("ImportWebService", wm.Page, {
 		this.wsdlUrlInput.setShowing(b);
 	},
 	serviceIdAutoYesRadioChange: function(inSender, inDisplayValue, inDataValue) {
-		this.serviceIdInput.setDisabled(inDataValue == 1);
+		if (this.typeInput.getValue("displayValue") != this.TYPE_SALESFORCE) { //xxx
+			this.serviceIdInput.setDisabled(inDataValue == 1);
+		}
 	},
 	_end: 0
 });
