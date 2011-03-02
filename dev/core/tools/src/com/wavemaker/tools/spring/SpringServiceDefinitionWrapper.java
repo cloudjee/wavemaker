@@ -100,9 +100,18 @@ public class SpringServiceDefinitionWrapper implements DeprecatedServiceDefiniti
     public List<ElementType> getTypes() {
         return delegate.getTypes();
     }
+
+    @SuppressWarnings("deprecation")
+    public List<ElementType> getTypes(String username, String password) { //salesforce
+        return null;
+    }
     
     public List<TypeDefinition> getLocalTypes() {
         return delegate.getLocalTypes();
+    }
+
+    public List<TypeDefinition> getLocalTypes(String username, String password) {
+        return delegate.getLocalTypes(username, password);
     }
     
     public ServiceDefinition unwrap() {

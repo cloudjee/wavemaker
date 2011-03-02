@@ -170,10 +170,10 @@ public class SOAPServiceGenerator extends WebServiceGenerator {
 
     @Override
     protected void generateOperationMethodBody(JMethod method, JBlock body,
-            String operationName, Map<String, JType> inputJTypeMap,
+            String operationName, Map<String, JType> inputJTypeMap, ElementType outputType1, //salesforce
             JType outputJType, Integer overloadCount) throws GenerationException {
         super.generateOperationMethodBody(method, body, operationName, 
-                inputJTypeMap, outputJType, overloadCount);
+                inputJTypeMap, outputType1, outputJType, overloadCount);
         
         JFieldVar soapServiceVar = opSoapServiceMap.get(operationName);
         

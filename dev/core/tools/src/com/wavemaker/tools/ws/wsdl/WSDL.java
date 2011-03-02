@@ -758,6 +758,10 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
         return getTypeMapper().getAllTypes(serviceId);
     }
 
+    public List<ElementType> getTypes(String username, String password) {
+        return getTypeMapper().getAllTypes(serviceId, username, password);
+    }
+
     public List<String> getEventNotifiers() {
         return new ArrayList<String>();
     }

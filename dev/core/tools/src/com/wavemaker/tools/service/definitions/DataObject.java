@@ -300,7 +300,7 @@ public class DataObject {
         @XmlAttribute(required = true)
         protected String name;
         @XmlAttribute
-        protected String subType; //xxx
+        protected String subType; //salesforce
         @XmlAttribute(required = true)
         protected String typeRef;
         @XmlAttribute

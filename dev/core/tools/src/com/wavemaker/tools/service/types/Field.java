@@ -65,7 +65,7 @@ public class Field {
      * the type of of html object to be created when a live form is created, such as editor, select editor and
      * text area.  Reserved only for Salesforce integration.
      */
-    private String fieldSubType; //xxx
+    private String fieldSubType; //salesforce
     
     public String getType() {
         return type;
@@ -111,11 +111,11 @@ public class Field {
         this.fieldOrder = fieldOrder;
     }
 
-    public String getFieldSubType() { //xxx
+    public String getFieldSubType() { //salesforce
         return fieldSubType;
     }
     
-    public void setFieldSubType(String subType) { //xxx
+    public void setFieldSubType(String subType) { //salesforce
         this.fieldSubType = subType;
     }
 }

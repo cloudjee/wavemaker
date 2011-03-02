@@ -74,6 +74,11 @@ public class FeedServiceDefinition extends JavaServiceDefinition {
     }
 
     @Override
+    public List<TypeDefinition> getLocalTypes(String username, String password) { //salesforce
+        return null;
+    }
+
+    @Override
     public String getRuntimeConfiguration() {
         return this.runtimeConfiguration;
     }

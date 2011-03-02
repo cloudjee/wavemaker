@@ -114,8 +114,8 @@ public class WebServiceToolsManager {
      * @throws IOException
      * @throws JAXBException
      */
-    public String importWSDL(String wsdlPath, String serviceId,
-            boolean overwrite) throws WSDLException, IOException, JAXBException {
+    public String importWSDL(String wsdlPath, String serviceId,  //salesforce
+            boolean overwrite, String username, String password) throws WSDLException, IOException, JAXBException {
         
         logger.info("Importing " + wsdlPath);
         
@@ -133,7 +133,7 @@ public class WebServiceToolsManager {
                 File[] listFiles = origWsdlFile.listFiles();
                 for (File f : listFiles) {
                     if (f.getName().toLowerCase().endsWith(Constants.WSDL_EXT)) {
-                        srvId = importWSDL(f.getCanonicalPath(), null, true);
+                        srvId = importWSDL(f.getCanonicalPath(), null, true, username, password); //salesforce
                     }
                 }
                 return srvId;
@@ -198,7 +198,7 @@ public class WebServiceToolsManager {
 
         // update DesignServiceManager with the WSDL that contains the
         // type (TypeMapper) information.
-        designServiceMgr.defineService(wsdl);
+        designServiceMgr.defineService(wsdl, username, password); //salesforce
 
         String srvId = wsdl.getServiceId();
         logger.info("Import successful: " + srvId);
@@ -228,7 +228,7 @@ public class WebServiceToolsManager {
         File tempDir = IOUtils.createTempDirectory();
         try {
             File wsdlFile = generateWsdlFromWadl(wadlPath, tempDir);
-            return importWSDL(wsdlFile.getCanonicalPath(), serviceId, overwrite);
+            return importWSDL(wsdlFile.getCanonicalPath(), serviceId, overwrite, null, null);
         } finally {
             IOUtils.deleteRecursive(tempDir);
         }
@@ -252,7 +252,7 @@ public class WebServiceToolsManager {
      * @throws JAXBException
      */
     public String importUploadedFile(MultipartFile file, String serviceId,
-            String overwrite) throws IOException,
+            String overwrite, String username, String password) throws IOException,
             WSDLException, JAXBException {
         File tempDir = IOUtils.createTempDirectory();
         String fileName = file.getOriginalFilename();
@@ -274,7 +274,7 @@ public class WebServiceToolsManager {
             file.transferTo(wsdlFile);
             if (isWSDL) {
                 return importWSDL(wsdlFile.getCanonicalPath(), serviceId,
-                        Boolean.valueOf(overwrite));
+                        Boolean.valueOf(overwrite), username, password);
             } else {
                 return importWADL(wsdlFile.getCanonicalPath(), serviceId,
                         Boolean.valueOf(overwrite));
@@ -297,7 +297,7 @@ public class WebServiceToolsManager {
         
         designServiceMgr.validateServiceId(serviceId);
 
-        designServiceMgr.defineService(definition);
+        designServiceMgr.defineService(definition, null, null);
         
         return serviceId;
     }
@@ -382,7 +382,7 @@ public class WebServiceToolsManager {
         try {
             File wsdlFile = new File(tempDir, serviceName + Constants.WSDL_EXT);
             restWsdlGenerator.write(wsdlFile);
-            return importWSDL(wsdlFile.getCanonicalPath(), null, overwrite);
+            return importWSDL(wsdlFile.getCanonicalPath(), null, overwrite, null, null); //salesforce
         } finally {
             IOUtils.deleteRecursive(tempDir);
         }

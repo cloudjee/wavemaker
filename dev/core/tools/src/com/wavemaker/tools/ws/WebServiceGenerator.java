@@ -25,13 +25,17 @@ import javax.xml.namespace.QName;
 
 import com.sun.codemodel.*;
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.CommonConstants;
 import com.wavemaker.runtime.ws.BindingProperties;
 import com.wavemaker.runtime.ws.util.Constants;
+import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
 import com.wavemaker.tools.ws.wsdl.ServiceInfo;
 import com.wavemaker.tools.ws.wsdl.WSDL;
+import com.wavemaker.tools.ws.wsdl.TypeMapper;
+import com.wavemaker.tools.ws.salesforce.JAXBTypeMapper_SF;
 
 /**
  * Base class for all Web Service generators.
@@ -76,21 +80,21 @@ public abstract class WebServiceGenerator extends ServiceGenerator {
                 false);
 
         // set JAXB TypeMapper
-        JAXBTypeMapper typeMapper = null;
+        TypeMapper typeMapper = null;
         try {
-            typeMapper = new JAXBTypeMapper(wsdl, jaxbBindingFiles);
+            typeMapper = new JAXBTypeMapper_SF(wsdl, jaxbBindingFiles);
         } catch (GenerationException e) {
             // it may due to class/interface names collision, try to put
             // schemas in seperate packages.
             jaxbBindingFiles = builder.generate(
                     configuration.getOutputDirectory(), true);
             try {
-                typeMapper = new JAXBTypeMapper(wsdl, jaxbBindingFiles);
+                typeMapper = new JAXBTypeMapper_SF(wsdl, jaxbBindingFiles);
             } catch (GenerationException ex) {
                 // for some WSDLs, the global binding file causes some issues;
                 // so remove global binding file and try again.
                 removeGlobalBindingFile();
-                typeMapper = new JAXBTypeMapper(wsdl, jaxbBindingFiles);
+                typeMapper = new JAXBTypeMapper_SF(wsdl, jaxbBindingFiles);
             }
         }
         wsdl.setTypeMapper(typeMapper);
@@ -158,12 +162,12 @@ public abstract class WebServiceGenerator extends ServiceGenerator {
         setBlock.assign(JExpr._this().ref(bindingPropertiesVar), var);
 
         //special requirements for Salesforce
-        if (serviceDefinition.getServiceId().equals("salesforceService")) { //xxx
+        if (serviceDefinition.getServiceId().equals(CommonConstants.SALESFORCE_SERVICE)) { //salesforce
             JCodeModel mdl = new JCodeModel();
             JDefinedClass liveDataSvcCls;
 
             try {
-                liveDataSvcCls = mdl._class("com.sforce.LiveDataServiceImpl_SF"); //xxx
+                liveDataSvcCls = mdl._class("com.sforce.LiveDataServiceImpl_SF"); //salesforce
             } catch (Exception e) {
                 throw new GenerationException(e);
             }
@@ -174,7 +178,7 @@ public abstract class WebServiceGenerator extends ServiceGenerator {
 
     @Override
     protected void generateOperationMethodBody(JMethod method, JBlock body,
-            String operationName, Map<String, JType> inputJTypeMap,
+            String operationName, Map<String, JType> inputJTypeMap, ElementType outputType, //salesforce
             JType outputJType, Integer overloadCount) throws GenerationException {
     }
 

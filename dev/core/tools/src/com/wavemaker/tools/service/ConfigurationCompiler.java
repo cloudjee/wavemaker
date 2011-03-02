@@ -410,18 +410,9 @@ public /*static*/ class ConfigurationCompiler {
                 type.setService(serviceId);
                 type.setInternal(dao.isInternal());
 
-                /*SalesforceHelper helper = null;
-                if (serviceId.equals("salesforceService")) { //xxx
-                    try { //xxx
-                        helper = new SalesforceHelper(dao.getName(), serviceId);  //xxx
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }*/
-
                 int fieldOrder = 0;
                 for (Element et : dao.getElement()) {
-                    if (SalesforceHelper.skipElement(et, serviceId)) continue; //xxx
+                    if (SalesforceHelper.skipElement(et, serviceId)) continue; //salesforce
                     Field f = new Field();
                     f.setType(et.getTypeRef());
                     f.setIsList(et.isIsList());
@@ -430,12 +421,7 @@ public /*static*/ class ConfigurationCompiler {
                     f.setNoChange(et.getNoChange());
                     f.setInclude(et.getRequire());
                     f.setFieldOrder(fieldOrder);
-
-                    /*if (serviceId.equals("salesforceService")) { //xxx
-                        String subType = helper.getSubType(et.getName());
-                        f.setFieldSubType(subType);
-                    }*/
-                    f.setFieldSubType(et.getSubType()); //xxx
+                    f.setFieldSubType(et.getSubType()); //salesforce
 
                     type.getFields().put(et.getName(), f);
                     fieldOrder++;

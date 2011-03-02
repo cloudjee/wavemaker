@@ -19,6 +19,7 @@ package com.wavemaker.tools.ws.salesforce;
 
 import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.ws.BindingProperties;
 import com.wavemaker.runtime.ws.salesforce.SalesforceSupport;
 import com.wavemaker.runtime.ws.salesforce.gen.*;
@@ -27,7 +28,12 @@ import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.service.definitions.Operation;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.codegen.GenerationException;
+import com.wavemaker.tools.project.ProjectManager;
+import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.json.type.OperationEnumeration;
+import com.wavemaker.common.CommonConstants;
+import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.util.IOUtils;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -37,11 +43,10 @@ import javax.xml.transform.Source;
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.JAXBException;
 import java.util.*;
-import java.io.File;
+import java.io.*;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -56,9 +61,154 @@ public class SalesforceHelper {
 
     private static final String RECORD_ID = "Id";
 
-    private static final String SF_SERVICE_NAME = "salesforceService";
+    private static final String[] SYSTEM_OBJECTS =
+    {
+            "AllOrNoneHeader",
+            "AllowFieldTruncationHeader",
+            "ApexClassType",
+            "ApexComponentType",
+            "ApexLogType",
+            "ApexPageType",
+            "ApexTriggerType",
+            "ApiFaultType",
+            "ApiQueryFaultType",
+            "AsyncApexJobType",
+            "ChildRelationshipType",
+            "Create",
+            "CreateResponse",
+            "CronTriggerType",
+            "DebuggingHeader",
+            "DebuggingInfo",
+            "Delete",
+            "DeleteResponse",
+            "DeleteResultType",
+            "DeletedRecordType",
+            "DescribeDataCategoryGroupResultType",
+            "DescribeDataCategoryGroupStructureResultType",
+            "DescribeDataCategoryGroupStructures",
+            "DataCategoryGroupSobjectTypePairType",
+            "DescribeDataCategoryGroupStructuresResponse",
+            "DescribeDataCategoryGroups",
+            "DescribeDataCategoryGroupsResponse",
+            "DescribeGlobal",
+            "DescribeGlobalResponse",
+            "DescribeGlobalResultType",
+            "DescribeGlobalSObjectResultType",
+            "DescribeLayout",
+            "DescribeLayoutButtonSectionType",
+            "DescribeLayoutButtonType",
+            "DescribeLayoutComponentType",
+            "DescribeLayoutItemType",
+            "DescribeLayoutResponse",
+            "DescribeLayoutResultType",
+            "DescribeLayoutRowType",
+            "DescribeLayoutSectionType",
+            "DescribeLayoutType",
+            "DescribeSObject",
+            "DescribeSObjectResponse",
+            "DescribeSObjectResultType",
+            "DescribeSObjects",
+            "DescribeSObjectsResponse",
+            "DescribeSoftphoneLayout",
+            "DescribeSoftphoneLayoutCallTypeType",
+            "DescribeSoftphoneLayoutInfoFieldType",
+            "DescribeSoftphoneLayoutItemType",
+            "DescribeSoftphoneLayoutResponse",
+            "DescribeSoftphoneLayoutResultType",
+            "DescribeSoftphoneLayoutSectionType",
+            "DescribeSoftphoneScreenPopOptionType",
+            "DescribeTabSetResultType",
+            "DescribeTabType",
+            "DescribeTabs",
+            "DescribeTabsResponse",
+            "DisableFeedTrackingHeader",
+            "ErrorType",
+            "FieldType",
+            "GetDeleted",
+            "GetDeletedResponse",
+            "GetDeletedResultType",
+            "GetServerTimestamp",
+            "GetServerTimestampResponse",
+            "GetServerTimestampResultType",
+            "GetUpdated",
+            "GetUpdatedResponse",
+            "GetUpdatedResultType",
+            "GetUserInfo",
+            "GetUserInfoResponse",
+            "GetUserInfoResultType",
+            "InvalidFieldFault",
+            "InvalidIdFault",
+            "InvalidNewPasswordFault",
+            "InvalidQueryLocatorFault",
+            "InvalidSObjectFault",
+            "InvalidateSessions",
+            "InvalidateSessionsResponse",
+            "InvalidateSessionsResultType",
+            "Login",
+            "LoginFault",
+            "LoginResponse",
+            "LoginResultType",
+            "LoginScopeHeader",
+            "Logout",
+            "LogoutResponse",
+            "MalformedQueryFault",
+            "MalformedSearchFault",
+            "MassEmailMessageType",
+            "Merge",
+            "MergeRequestType",
+            "MergeResponse",
+            "MergeResultType",
+            "MruHeader",
+            "QueryAll",
+            "QueryAllResponse",
+            "QueryMore",
+            "QueryMoreResponse",
+            "QueryOptions",
+            "QueryResponse",
+            "QueryResultType",
+            "QueueSobjectType",
+            "RecordTypeInfoType",
+            "RecordTypeMappingType",
+            "RecordTypeType",
+            "RelatedListColumnType",
+            "RelatedListSortType",
+            "RelatedListType",
+            "ReportFeedType",
+            "ReportType",
+            "ResetPassword",
+            "ResetPasswordResponse",
+            "ResetPasswordResultType",
+            "Retrieve",
+            "RetrieveResponse",
+            "SObjectType",
+            "SaveResultType",
+            "ScontrolType",
+            "Search",
+            "SearchRecordType",
+            "SearchResponse",
+            "SearchResultType",
+            "SendEmail",
+            "SendEmailErrorType",
+            "SendEmailResultType",
+            "SessionHeader",
+            "SetPassword",
+            "SetPasswordResponse",
+            "SetPasswordResultType",
+            "SingleEmailMessageType",
+            "Undelete",
+            "UndeleteResponse",
+            "UndeleteResultType",
+            "UnexpectedErrorFault",
+            "Update",
+            "UpdateResponse",
+            "Upsert",
+            "UpsertResponse",
+            "UpsertResultType",
+            "UserTerritoryDeleteHeader",
+            "PagingOptions"
+    };
 
-    private static List<OperationEnumeration> NO_CHANGE_OPERATIONS =  //xxx-s
+    private static List<OperationEnumeration> NO_CHANGE_OPERATIONS =
         new ArrayList<OperationEnumeration>(3);
     static {
         NO_CHANGE_OPERATIONS.add(OperationEnumeration.delete);
@@ -78,14 +228,15 @@ public class SalesforceHelper {
         new ArrayList<OperationEnumeration>(1);
     static {
         EXCLUDE_OPERATIONS.add(OperationEnumeration.insert);
-    } //xxx-e
+    }
 
     private static SessionHeader sessionHeader = null;
     private List<FieldType> fields = null;
 
-    public SalesforceHelper(String objName, String serviceId) throws Exception {
+    public SalesforceHelper(String objName, String serviceId, String username, String password)
+            throws Exception {
 
-        if (!serviceId.equals(SF_SERVICE_NAME)) return;
+        if (!serviceId.equals(CommonConstants.SALESFORCE_SERVICE)) return;
 
         SforceService service = (SforceService) RuntimeAccess.getInstance().getSpringBean(
             "sfServiceBean");
@@ -93,11 +244,11 @@ public class SalesforceHelper {
         if (sessionHeader == null) {
             //String userId = "community@wavemaker.com";
             //String passWord = "WMsurf!ng";
-            String userId = "sammysm@wavemaker.com";
-            String passWord = "Silver77Surfer";
+            //String userId = "sammysm@wavemaker.com";
+            //String passWord = "Silver77Surfer";
             Login parameters = new Login();
-            parameters.setUsername(userId);
-            parameters.setPassword(passWord);
+            parameters.setUsername(username);
+            parameters.setPassword(password);
             LoginResponse response = service.login(parameters, new LoginScopeHeader(), null);
 
             BindingProperties bindingProperties = new BindingProperties();
@@ -119,8 +270,8 @@ public class SalesforceHelper {
         }         
     }
    
-    public ElementType setElementTypeProperties(ElementType type, String serviceId) { //xxx
-        if (!serviceId.equals(SF_SERVICE_NAME) || fields == null || fields.size() == 0) return type;
+    public ElementType setElementTypeProperties(ElementType type, String serviceId) {
+        if (!serviceId.equals(CommonConstants.SALESFORCE_SERVICE) || fields == null || fields.size() == 0) return type;
 
         if (SalesforceHelper.isPrimaryKey(type.getName(), serviceId)) {
             type.setNoChange(NO_CHANGE_OPERATIONS);
@@ -159,7 +310,7 @@ public class SalesforceHelper {
     }
 
     public static boolean isPrimaryKey(String field, String serviceId) {
-        if (!serviceId.equals(SF_SERVICE_NAME)) return false;
+        if (!serviceId.equals(CommonConstants.SALESFORCE_SERVICE)) return false;
 
         if (field.equalsIgnoreCase(RECORD_ID))
             return true;
@@ -168,13 +319,13 @@ public class SalesforceHelper {
     }
 
     public static boolean skipElement(DataObject.Element et, String serviceId) {
-        if (!serviceId.equals(SF_SERVICE_NAME)) return false;
+        if (!serviceId.equals(CommonConstants.SALESFORCE_SERVICE)) return false;
         
         return (SalesforceSupport.isSystemMaintained(et.getName()) || SalesforceSupport.isOptional(et.getName()));
     }
 
     public boolean skipElement(String field, String serviceId) {
-        if (!serviceId.equals(SF_SERVICE_NAME)) return false;
+        if (!serviceId.equals(CommonConstants.SALESFORCE_SERVICE)) return false;
 
         return (SalesforceSupport.isSystemMaintained(field) || isReferenceType(field) || SalesforceSupport.isOptional(field));
     }
@@ -242,7 +393,7 @@ public class SalesforceHelper {
         boolean found = false;
 
         try {
-            File serviceDefXml = dsm.getServiceDefXml("salesforceService");
+            File serviceDefXml = dsm.getServiceDefXml(CommonConstants.SALESFORCE_SERVICE);
             Unmarshaller unmarshaller = dsm.getDefinitionsContext().createUnmarshaller();
             Service svc = (Service) unmarshaller.unmarshal(serviceDefXml);
             List<Operation> operations = svc.getOperation();
@@ -273,5 +424,40 @@ public class SalesforceHelper {
         }
 
         return found;
+    }
+
+    public static void setupSalesforceSrc(ProjectManager mgr, String username, String password,
+                                          DesignServiceManager svcMgr) {
+        File destf;
+        try {
+            File srcf = new File(mgr.getStudioConfiguration().getStudioWebAppRootFile(),
+                    "app/templates/salesforce");
+
+            //File destf = new File(mgr.getCurrentProject().getProjectRoot(), "services");
+            destf = mgr.getCurrentProject().getProjectRoot();
+
+            IOUtils.copy(srcf, destf);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new WMRuntimeException(e);
+        }
+
+        Properties p = new Properties();
+        p.put(DataServiceConstants.DB_USERNAME.substring(1), username);
+        p.put(DataServiceConstants.DB_PASS.substring(1), password);
+
+        p = DataServiceUtils.addServiceName(p, CommonConstants.SALESFORCE_SERVICE);
+        File destdir = new File(destf.getAbsolutePath() + "/services/" + CommonConstants.SALESFORCE_SERVICE + "/src");
+
+        DataServiceUtils.writeProperties(p, destdir, CommonConstants.SALESFORCE_SERVICE);
+    }
+
+    public static boolean isSystemObject(String objectShortName) {
+        for (String obj : SYSTEM_OBJECTS) {
+            if (obj.equals(objectShortName)) return true;
+        }
+
+        return false;       
     }
 }

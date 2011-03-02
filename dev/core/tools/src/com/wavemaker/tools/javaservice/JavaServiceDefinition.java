@@ -318,6 +318,10 @@ public class JavaServiceDefinition implements ReflectServiceDefinition {
         return typeDefinitions;
     }
 
+    public List<TypeDefinition> getLocalTypes(String username, String password) { //salesforce       
+        return null;
+    }
+
     public List<ServiceOperation> getServiceOperations() {
         return this.operations;
     }

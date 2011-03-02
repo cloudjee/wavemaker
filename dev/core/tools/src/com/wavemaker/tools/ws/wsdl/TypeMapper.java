@@ -59,8 +59,17 @@ public interface TypeMapper {
      * Returns a list of all types in this mapper.  The returned list should
      * not include simple types like int, String...
      *
-     * @param serviceId The service Id. //xxx
+     * @param serviceId The service Id. //salesforce
      * @return A list of all types.
      */
     public List<ElementType> getAllTypes(String serviceId);
+
+    /**
+     * Returns a list of all types in this mapper.  The returned list should
+     * not include simple types like int, String...
+     *
+     * @param serviceId The service Id. //salesforce
+     * @return A list of all types.
+     */
+    public List<ElementType> getAllTypes(String serviceId, String username, String password);  //salesforce
 }

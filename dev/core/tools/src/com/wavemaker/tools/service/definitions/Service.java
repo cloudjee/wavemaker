@@ -114,7 +114,7 @@ public class Service {
         return this.operation;
     }
 
-    public List<Operation> addOperation(Operation operation) { //xxx
+    public List<Operation> addOperation(Operation operation) { //salesforce
         if (this.operation == null) {
             this.operation = new ArrayList<Operation>();
         }

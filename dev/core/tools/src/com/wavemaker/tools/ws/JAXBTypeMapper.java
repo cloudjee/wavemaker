@@ -41,13 +41,12 @@ import com.sun.tools.xjc.model.CTypeInfo;
 import com.sun.tools.xjc.model.Model;
 import com.sun.tools.xjc.model.nav.NType;
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.CommonConstants;
 import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.ws.wsdl.TypeMapper;
 import com.wavemaker.tools.ws.wsdl.WSDL;
 import com.wavemaker.tools.ws.wsdl.WSDL.WebServiceType;
-import com.wavemaker.tools.ws.salesforce.SalesforceHelper;
-import com.wavemaker.json.type.OperationEnumeration;
 
 /**
  * JAXB specific type mappings.
@@ -134,7 +133,7 @@ public class JAXBTypeMapper implements TypeMapper {
         }
     }
 
-    private Model getInternalModel() {
+    protected Model getInternalModel() {
         if (jaxbModel == null) {
             return null;
         }
@@ -165,39 +164,34 @@ public class JAXBTypeMapper implements TypeMapper {
         return mappings;
     }
     
-    public synchronized List<ElementType> getAllTypes (String serviceId) {
+    public List<ElementType> getAllTypes(String serviceId) {
         List<ElementType> allTypes = new ArrayList<ElementType>();
         Model internalModel = getInternalModel();
-        SalesforceHelper helper = null; //xxx
         if (internalModel != null) {
             for (CClassInfo ci : internalModel.beans().values()) {
                 ElementType type = new ElementType(ci.shortName, ci.fullName());
-
-                try {
-                    helper = new SalesforceHelper(ci.shortName, serviceId);  //xxx
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                List<ElementType> properties = getPropertyTypes(ci, serviceId, helper);
+                List<ElementType> properties = getPropertyTypes(ci);
                 // if the type extends from a base type, get those properties
                 // from the base type as well.
                 CClassInfo baseci = ci;
                 while ((baseci = baseci.getBaseClass()) != null) {
-                    properties.addAll(getPropertyTypes(baseci, serviceId, helper));
+                    properties.addAll(getPropertyTypes(baseci));
                 }
                 type.setProperties(properties);
 
                 allTypes.add(type);
             }
-            if (helper != null) SalesforceHelper.setSessionHeader(null); //xxx
         }
         return allTypes;
     }
 
-    private List<ElementType> getPropertyTypes(CClassInfo ci, String serviceId, SalesforceHelper sfHelper) {
+    public List<ElementType> getAllTypes(String serviceId, String username, String password) { //salesforce
+        return null;
+    }
+
+    private List<ElementType> getPropertyTypes(CClassInfo ci) {
         List<ElementType> properties = new ArrayList<ElementType>();
         for (CPropertyInfo prop : ci.getProperties()) {
-            if (sfHelper.skipElement(prop.getName(true), serviceId)) continue; //xxx
             Collection<? extends CTypeInfo> ref = prop.ref();
             String propJavaType = null;
             if (prop instanceof CElementPropertyInfo
@@ -212,8 +206,6 @@ public class JAXBTypeMapper implements TypeMapper {
             ElementType propType = new ElementType(
                     toPropertyName(prop.getName(true)), 
                     propJavaType, prop.isCollection());
-
-            propType = sfHelper.setElementTypeProperties(propType, serviceId);  //xxx
             properties.add(propType);
         }
         return properties;
