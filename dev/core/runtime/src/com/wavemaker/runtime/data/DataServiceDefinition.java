@@ -224,6 +224,13 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition
                 elementTypeFactory);
     }
 
+    public List<ElementType> getTypes(String username, String password) { //salesforce - just to avoid compile error
+        Collection<String> entities = metaData.getEntityClassNames();
+        Collection<String> helperTypes = metaData.getHelperClassNames();
+        return DataServiceUtils.getTypes(entities, helperTypes,
+                elementTypeFactory);
+    }
+
     public String outputTypeToString(String operationName) {
         ElementType et = getOutputType(operationName);
         return et.getJavaType();

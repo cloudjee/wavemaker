@@ -19,6 +19,7 @@ package com.wavemaker.runtime.service.definition;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
 import com.wavemaker.json.type.FieldDefinition;
 import com.wavemaker.json.type.TypeDefinition;
@@ -77,5 +78,25 @@ public abstract class AbstractDeprecatedServiceDefinition implements
         }
         
         return ret;
+    }
+
+    @SuppressWarnings("deprecation")
+    public List<TypeDefinition> getLocalTypes(String username, String password) { //salesforce
+
+        List<ElementType> types = getTypes(username, password);
+        List<TypeDefinition> ret = new ArrayList<TypeDefinition>(types.size());
+
+        for (ElementType type: types) {
+            FieldDefinition fd = type.toFieldDefinition();
+            if (null!=fd.getTypeDefinition()) {
+                ret.add(fd.getTypeDefinition());
+            }
+        }
+
+        return ret;
+    }
+
+    public List<ElementType> getTypes(String username, String password) { //xxx
+        return null;
     }
 }

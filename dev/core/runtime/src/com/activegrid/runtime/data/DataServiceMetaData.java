@@ -31,7 +31,7 @@ import org.hibernate.cfg.Configuration;
  */
 @Deprecated
 public class DataServiceMetaData extends
-        com.wavemaker.runtime.data.hibernate.DataServiceMetaData_Hib { //xxx
+        com.wavemaker.runtime.data.hibernate.DataServiceMetaData_Hib { //salesforce
 
     public DataServiceMetaData(String name, Configuration cfg) {
         super(name, cfg);

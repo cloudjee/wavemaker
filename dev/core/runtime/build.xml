@@ -47,6 +47,7 @@
 		<mkdir dir="${src.temp.root.dir}/runtime"/>
 		<copy todir="${src.temp.root.dir}/runtime" overwrite="yes">
 			<fileset dir="${src.runtime.dir}">
+				<exclude name="**/salesforce/**" unless="common.modules.isEnterprise"/>
 			</fileset>
 		</copy>
 		<antcall target="overwrite-with-dummies"/>

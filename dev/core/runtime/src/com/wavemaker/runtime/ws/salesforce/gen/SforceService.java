@@ -26,15 +26,14 @@ import org.springframework.core.io.ClassPathResource;
  */
 public class SforceService {
 
-    //public String serviceId = "salesforceService";
     private QName sforceServiceQName = new QName("urn:partner.soap.sforce.com", "SforceService");
     private BindingProperties bindingProperties;
     private Soap soapService;
 
-    public SforceService() throws Exception { //xxx
+    public SforceService() throws Exception {
         SforceServiceClient sforceServiceClient;
         try {
-            URL wsdlLocation = new ClassPathResource("com/wavemaker/runtime/ws/salesforce/partner.wsdl").getURL(); //xxx
+            URL wsdlLocation = new ClassPathResource("com/wavemaker/runtime/ws/salesforce/partner.wsdl").getURL(); //salesforce
             sforceServiceClient = new SforceServiceClient(wsdlLocation, sforceServiceQName);
         } catch (IOException e) {
             sforceServiceClient = new SforceServiceClient();

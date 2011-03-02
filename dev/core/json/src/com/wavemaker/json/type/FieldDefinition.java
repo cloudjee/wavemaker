@@ -71,7 +71,7 @@ public interface FieldDefinition {
      *
      * @return Sub type.
      */
-    public String getSubType(); //xxx
+    public String getSubType(); //salesforce
 
     /**
      * Get the list of operations this field is required for. See the

@@ -61,6 +61,16 @@ public interface ServiceDefinition {
     public List<TypeDefinition> getLocalTypes();
 
     /**
+     * Get all types associated with this service (instead of referenced in
+     * other services).
+     * @param username The user name for SalesForce account
+     * @param password The password for SalesForce account
+     * 
+     * @return The list of types contained within this service.
+     */
+    public List<TypeDefinition> getLocalTypes(String username, String password);
+
+    /**
      * Return this service's runtime configuration, typically a Spring file,
      * or null if this service does not have its own runtime file.
      *

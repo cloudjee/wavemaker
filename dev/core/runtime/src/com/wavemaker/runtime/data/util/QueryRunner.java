@@ -55,10 +55,8 @@ public class QueryRunner {
     private final Map<String, Object> bindParameters =
         new HashMap<String, Object>();
 
-    private final Map<String, Class<?>> bindParameterTypes =  //xxx
+    private final Map<String, Class<?>> bindParameterTypes =  //salesforce
         new HashMap<String, Class<?>>();
-
-    private String name = null; //xxx
 
     private Long maxResults = null;
 
@@ -148,18 +146,15 @@ public class QueryRunner {
         }
     }
 
-    //used for salesforce
-    public Object run(String query, boolean named) { //xxx
+    //salesforce-s
+    public Object run(String query, boolean named) {
 
         try {
 
             Object[] args = setupTaskArgs(query, true);
 
             Object rtn;
-            //if (name.equals("salesforceService")) //xxx
-                rtn = mgr.invoke(runQueryTask, bindParameterTypes, named, args);
-            //else
-            //    rtn = mgr.invoke(runQueryTask, args);
+            rtn = mgr.invoke(runQueryTask, bindParameterTypes, named, args);
 
             SystemUtils.clientPrepare();
 
@@ -167,16 +162,13 @@ public class QueryRunner {
 
         } finally {
             bindParameters.clear();
-            bindParameterTypes.clear(); //xxx
+            bindParameterTypes.clear();
         }
     }
+    //salesforce-e
 
     public void dispose() {
         mgr.dispose();
-    }
-
-    public void setName(String name) { //xxx
-        this.name = name;
     }
 
     private Object[] setupTaskArgs(String query, boolean includePagingOptions) {

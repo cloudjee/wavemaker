@@ -19,11 +19,8 @@ package com.wavemaker.runtime;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.CommonConstants;
-import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import java.io.*;
@@ -31,6 +28,7 @@ import java.util.Properties;
 import java.util.HashMap;
 
 import org.json.JSONObject;
+import org.apache.commons.io.IOUtils;
 
 /**
  * This singleton class is to store any properties in the scope of the
@@ -50,7 +48,7 @@ public class WMAppContext
     private String appName;
     private static HashMap<String, Integer> tenantIdMap = new HashMap<String, Integer>();
     private static HashMap<String, String> userNameMap = new HashMap<String, String>();
-    private JSONObject typesObj; //xxx
+    private JSONObject typesObj; //salesforce
 
     private WMAppContext(ServletContextEvent event) {
         context = event.getServletContext();
@@ -65,7 +63,7 @@ public class WMAppContext
                 String path = context.getRealPath("");
                 path = path + "/types.js";
                 is = new FileInputStream(path);
-                String s = IOUtils.convertStreamToString(is);
+                String s = IOUtils.toString(is);
                 typesObj = new JSONObject(s.substring(11));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -234,11 +232,11 @@ public class WMAppContext
         return context.getRealPath("");    
     }
 
-    public JSONObject  getTypesObject() { //xxx
+    public JSONObject  getTypesObject() { //salesforce
         return typesObj;
     }
 
-    public void setTypesObject(JSONObject val) { //xxx
+    public void setTypesObject(JSONObject val) { //salesforce
         this.typesObj = val;
     }
 

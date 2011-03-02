@@ -16,15 +16,12 @@ import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.ws.salesforce.gen.*;
 import com.wavemaker.runtime.service.PagingOptions;
-import com.wavemaker.common.util.TypeConversionUtils;
-import com.wavemaker.common.util.Tuple;
-import com.wavemaker.common.util.CastUtils;
+import com.wavemaker.common.util.*;
 import com.wavemaker.common.WMRuntimeException;
-//import com.sforce.soap.enterprise.salesforceservice.*;
-//import com.sforce.services.LoginService;
 
 import java.util.*;
 import java.lang.reflect.Method;
+
 import org.apache.commons.collections.map.MultiValueMap;
 
 /**
@@ -44,15 +41,12 @@ public class SalesforceSupport {
              "Tasks"};
 
     private Map<String, List<FieldType>> fieldsMap = null;
-
-    //private LoginService loginSvcBean = (LoginService) RuntimeAccess.getInstance().getSpringBean("loginService");
     private LoginService loginSvcBean = (LoginService) RuntimeAccess.getInstance().getSpringBean("sfLoginService");
 
     private int lastQryId = 0;
     private Map<Integer, SingleQuery> queryMap = new TreeMap<Integer, SingleQuery>(); //id, single query obj
     private MultiValueMap parentQueryMap = new MultiValueMap(); // parent id, single query obj
     private MultiValueMap resultRows; // key = row (List<Object>), value = Object(Rec ID + SObject)
-    //private MultiValueMap resultJsonObjs; // key = JSONObject (= List<Object>, value = Object(REC ID + SObject)
     private Map<List<Object>, JSONObject> resultJsonObjs;
     Long recId;
 
@@ -126,7 +120,7 @@ public class SalesforceSupport {
     private void setupFields(String objName) throws Exception {
         DescribeSObject parameters = new DescribeSObject();
         parameters.setSObjectType(getSalesforceObjName(objName));
-        String result = loginSvcBean.logIn("sammysm@wavemaker.com", "Silver88Surfer");
+        String result = loginSvcBean.logIn("sammysm@wavemaker.com", "Silver77Surfer");
         SessionHeader sessionHeader = LoginService.getSessionHeader();
         SforceService service= LoginService.getSforceService();
 
@@ -181,7 +175,7 @@ public class SalesforceSupport {
 
     public List<List<Object>> runQuery(Map<String, Class<?>> types, Object... input) {
 
-        executeQuery(types, input);
+        executeQuery(types, "executeSforceQueryFromEditor", input);
 
         List<List<Object>> rtn = new ArrayList<List<Object>>();
         TreeMap<Long, List<Object>> tmap = new TreeMap<Long, List<Object>>();
@@ -201,7 +195,7 @@ public class SalesforceSupport {
 
     public List<JSONObject> runNamedQuery(Map<String, Class<?>> types, Object... input) {
 
-        executeQuery(types, input);
+        executeQuery(types, "executeSforceQuery", input);
 
         List<JSONObject> rtn = new ArrayList<JSONObject>();
         TreeMap<Long, List<Object>> tmap = new TreeMap<Long, List<Object>>();
@@ -219,40 +213,27 @@ public class SalesforceSupport {
         return rtn;
     }
 
-    private void executeQuery(Map<String, Class<?>> types, Object... input) {
+    private void executeQuery(Map<String, Class<?>> types, String merhodName, Object... input) {
         
         try {
-            //Query parameters = new Query();
             String qry = buildQueryString(types, input);
-            //parameters.setQueryString(qry);
 
             lastQryId = 0;
 
             splitQueries(0, qry, 0);
 
-            //QueryOptions qo = new QueryOptions();
             int len = input.length;
             PagingOptions po = (PagingOptions)input[len-1];
             Long psize = po.getMaxResults();
             long firstrec = po.getFirstResult();
-            //qo.setBatchSize(psize.intValue());
-
-            /*String result = loginSvcBean.logIn("sammysm@wavemaker.com", "Silver88Surfer");
-            SessionHeader sessionHeader = LoginService.getSessionHeader();
-            SforceService service= LoginService.getSforceService();
-            QueryResponse response = service.query(parameters, sessionHeader, null, qo, null, null);
-
-            List<SObjectType> sobjs = response.getResult().getRecords();
-
-            if (sobjs == null || sobjs.size() == 0) return;*/
 
             Class cls;
             List<SObjectType> sobjs;
             try {
                 cls = Class.forName("com.sforce.SalesforceCalls");
                 Object obj = cls.newInstance();
-                String mn = "executeSforceQuery";
-                Method method = cls.getMethod(mn, new Class[]{java.lang.String.class, java.util.Map.class,
+                //String mn = "executeSforceQuery";
+                Method method = cls.getMethod(merhodName, new Class[]{java.lang.String.class, java.util.Map.class,
                                                 java.lang.Object[].class});
                 Object[] args = {qry, types, input};
                 sobjs = (List<SObjectType>)method.invoke(obj, args);
@@ -268,7 +249,7 @@ public class SalesforceSupport {
                 lastrec = sobjs.size();
 
             List<Object> row;
-            JSONObject jsonVal; //xxx
+            JSONObject jsonVal;
             resultRows = new MultiValueMap();
             resultJsonObjs = new HashMap<List<Object>, JSONObject>();
             //resultRowJsonObjMap = new HashMap();
@@ -427,19 +408,19 @@ public class SalesforceSupport {
         String methodName = "get" + myObjName.substring(0, 1).toUpperCase() + myObjName.substring(1);
         Method method = cls.getMethod(methodName,new Class[]{});
         List<Object> rec;
-        JSONObject jsonObj; //xxx
+        JSONObject jsonObj;
 
         QueryResultType qryResult = (QueryResultType)method.invoke(pobj, new Object[]{});
         if (qryResult != null) {
             List<SObjectType> rsobjs = qryResult.getRecords();
 
-            //List<List<Object>> rows = new ArrayList<List<Object>>(); //xxx
+            //List<List<Object>> rows = new ArrayList<List<Object>>();
             List<Tuple.Two<List<Object>, JSONObject>> rows =
-                    new ArrayList<Tuple.Two<List<Object>, JSONObject>>(); //xxx
+                    new ArrayList<Tuple.Two<List<Object>, JSONObject>>();
             for (SObjectType rsobj : rsobjs) {
                 sq.thisObjects.add(rsobj);
-                Tuple.Two<List<Object>, JSONObject> tval = getFieldValues(sq, rsobj); //xxx
-                //rows.add(getFieldValues(sq, rsobj));  //xxx
+                Tuple.Two<List<Object>, JSONObject> tval = getFieldValues(sq, rsobj);
+                //rows.add(getFieldValues(sq, rsobj));
                 rows.add(tval);
             }
             sq.rows.put(pobj, rows);
@@ -484,7 +465,7 @@ public class SalesforceSupport {
         try {
             cls = Class.forName(className);
         } catch (ClassNotFoundException ex) {
-            String result = loginSvcBean.logIn("sammysm@wavemaker.com", "Silver88Surfer");
+            String result = loginSvcBean.logIn("sammysm@wavemaker.com", "Silver77Surfer");
             SessionHeader sessionHeader = LoginService.getSessionHeader();
             SforceService service= LoginService.getSforceService();
             DescribeGlobal parameters = new DescribeGlobal();
@@ -526,11 +507,11 @@ public class SalesforceSupport {
         return cls;
     }
 
-    //private List<Object> getFieldValues(SingleQuery sq, Object sobj) throws Exception { //xxx
-    private Tuple.Two<List<Object>, JSONObject> getFieldValues(SingleQuery sq, Object sobj) throws Exception { //xxx
+    //private List<Object> getFieldValues(SingleQuery sq, Object sobj) throws Exception {
+    private Tuple.Two<List<Object>, JSONObject> getFieldValues(SingleQuery sq, Object sobj) throws Exception {
         Class cls = getSforceObjectClass(sq.objectName);
         List<Object> values = new ArrayList<Object>();
-        JSONObject jsonValues = new JSONObject(); //xxx
+        JSONObject jsonValues = new JSONObject();
         for (String fld : sq.fieldList) {
             String apifld = getAPIFieldName(fld);
             String methodName = "get" + apifld.substring(0, 1).toUpperCase() + apifld.substring(1);
@@ -538,10 +519,10 @@ public class SalesforceSupport {
             Object val = method.invoke(sobj, new Object[]{});
             if (val != null) {
                 values.add(val.toString());
-                jsonValues.put(fld, val); //xxx
+                jsonValues.put(fld, val);
             } else {
                 values.add(null);
-                jsonValues.put(fld, null); //xxx
+                jsonValues.put(fld, null);
             }
         }
 
@@ -563,16 +544,16 @@ public class SalesforceSupport {
                         Object val = method.invoke(obj, new Object[]{});
                         if (val != null) {
                             values.add(val.toString());
-                            jsonValues.put(fld, val); //xxx
+                            jsonValues.put(fld, val);
                         } else {
                             values.add(null);
-                            jsonValues.put(fld, val); //xxx
+                            jsonValues.put(fld, val);
                         }
                     }
                 } else { //Even though obj is null, we need to add null
                     for (String fld : fldList) {
                         values.add(null);
-                        jsonValues.put(fld, null); //xxx
+                        jsonValues.put(fld, null);
                     }
                 }
             }
@@ -583,7 +564,7 @@ public class SalesforceSupport {
         Tuple.Two<List<Object>, JSONObject> rtn = new Tuple.Two<List<Object>, JSONObject>(values, jsonValues);
 
         //return values;
-        return rtn; //xxx
+        return rtn;
     }
 
     private void splitQueries(int parentId, String qry, int pfnum) {
@@ -689,7 +670,7 @@ public class SalesforceSupport {
         MultiValueMap relFieldList; //parent object name, field name
         List<String> fieldList;
         List<Object> thisObjects = new ArrayList<Object>();
-        //Map<Object, List<List<Object>>> rows = new HashMap<Object, List<List<Object>>>(); //xxx
+        //Map<Object, List<List<Object>>> rows = new HashMap<Object, List<List<Object>>>();
         Map<Object, List<Tuple.Two<List<Object>, JSONObject>>> rows =
                 new HashMap<Object, List<Tuple.Two<List<Object>, JSONObject>>>();
         Map<List<Object>, Object> rowObject = new HashMap<List<Object>, Object>();

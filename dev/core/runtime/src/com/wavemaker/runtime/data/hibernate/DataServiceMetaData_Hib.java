@@ -29,10 +29,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.File;
-import java.lang.reflect.Method;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -47,18 +43,14 @@ import com.wavemaker.common.util.*;
 import com.wavemaker.runtime.data.spring.ConfigurationRegistry;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.data.util.DataServiceUtils;
-import com.wavemaker.runtime.data.parser.HbmQueryParser;
 import com.wavemaker.runtime.data.*;
-import com.wavemaker.runtime.WMAppContext;
-import com.wavemaker.runtime.RuntimeAccess;
-import com.wavemaker.runtime.ws.salesforce.SalesforceSupport;
 
 /**
  * Wraps a Hibernate Configuration with convenience methods.
  * 
  * @author Simon Toens
  */
-public class DataServiceMetaData_Hib implements DataServiceMetaData { //xxx
+public class DataServiceMetaData_Hib implements DataServiceMetaData { //salesforce
 
     private final Configuration cfg;
 
@@ -147,7 +139,7 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { //xxx
                 useIndividualCRUDOperations);
     }
 
-    public void init(String configurationName) {} //xxx
+    public void init(String configurationName) {} //salesforce
 
     public void dispose() {}
 

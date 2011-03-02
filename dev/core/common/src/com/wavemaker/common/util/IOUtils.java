@@ -463,22 +463,4 @@ public class IOUtils {
 
         return DEFAULT_EXCLUSION.contains(file.getName());
     }
-
-    /**
-     * Convert InputStream to String
-     */
-    public static String convertStreamToString(InputStream is) //xxx
-            throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-        String line = null;
-        try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-        } finally {
-            is.close();
-        }
-        return sb.toString();
-    }
 }

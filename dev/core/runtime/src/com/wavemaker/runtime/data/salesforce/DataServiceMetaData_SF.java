@@ -18,12 +18,9 @@
 package com.wavemaker.runtime.data.salesforce;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,37 +28,26 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.File;
-import java.lang.reflect.Method;
 
-//import org.hibernate.Query;
+
 import org.hibernate.Session;
-//import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.NamedQueryDefinition;
-//import org.hibernate.mapping.Component;
 import org.hibernate.mapping.Property;
-//import org.hibernate.mapping.RootClass;
-//import org.hibernate.mapping.Value;
-//import org.hibernate.type.Type;
 
 import com.wavemaker.common.Resource;
 import com.wavemaker.common.util.*;
-import com.wavemaker.runtime.data.spring.ConfigurationRegistry;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
-import com.wavemaker.runtime.data.util.DataServiceUtils;
 import com.wavemaker.runtime.data.parser.HbmQueryParser;
 import com.wavemaker.runtime.data.*;
-import com.wavemaker.runtime.WMAppContext;
-import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.ws.salesforce.SalesforceSupport;
 
 /**
  * Wraps a Salesforce Data Source Configuration with convenience methods.
  * 
- * @author Simon Toens
+ * @author slee
  */
-public class DataServiceMetaData_SF implements DataServiceMetaData { //xxx
+public class DataServiceMetaData_SF implements DataServiceMetaData {
 
     //private final Configuration cfg;
 
@@ -70,28 +56,6 @@ public class DataServiceMetaData_SF implements DataServiceMetaData { //xxx
     // entity classes
     private final List<Class<?>> entityClasses = 
         new ArrayList<Class<?>>();
-
-    // RootClass (String) -> RootClass
-    /*private final Map<Class<?>, RootClass> rootClasses =
-        new HashMap<Class<?>, RootClass>();
-
-    // RootClass -> all properties
-    private final OneToManyMap<String, Property> allProperties = 
-        new OneToManyMap<String, Property>();
-
-    private final OneToManyMap<String, String> allPropertyNames = 
-        new OneToManyMap<String, String>();
-
-    // RootClass -> properties for related objects
-    private final OneToManyMap<String, Property> relProperties = 
-        new OneToManyMap<String, Property>();
-
-    private final OneToManyMap<String, String> relPropertyNames = 
-        new OneToManyMap<String, String>();
-
-    // RootClass -> all properties in a Map for lookup by property name
-    private final Map<String, Map<String, Property>> allPropertiesMap = 
-        new HashMap<String, Map<String, Property>>();*/
 
     // Entity class names in alphabetical order
     private final SortedSet<String> entityClassNames = new TreeSet<String>();
@@ -178,68 +142,10 @@ public class DataServiceMetaData_SF implements DataServiceMetaData { //xxx
     }
 
     public Configuration getConfiguration() {
-        //return cfg;
         return null;
     }
 
-    /*private void initMappingData() {
-
-        for (Iterator<RootClass> iter = CastUtils.cast(getConfiguration()
-                .getClassMappings()); iter.hasNext();) {
-
-            RootClass rc = iter.next();
-
-            String s = rc.getClassName();
-            entityClassNames.add(s);
-            entityNames.add(StringUtils.splitPackageAndClass(s).v2);
-
-            rootClasses.put(rc.getMappedClass(), rc);
-            entityClasses.add(rc.getMappedClass());
-
-            Map<String, Property> propertiesMap = 
-                new HashMap<String, Property>();
-            allPropertiesMap.put(rc.getClassName(), propertiesMap);
-
-            for (Iterator<Property> iter2 = CastUtils.cast(rc
-                    .getPropertyIterator()); iter2.hasNext();) {
-
-                Property p = (Property) iter2.next();
-                initProperty(rc.getClassName(), p, propertiesMap);
-            }
-
-            Property id = rc.getIdentifierProperty();
-            initProperty(rc.getClassName(), id, propertiesMap);
-        }
-    }*/
-
-    private void initMappingData() { //xxx
-
-        /*for (Iterator<RootClass> iter = CastUtils.cast(getConfiguration()
-                .getClassMappings()); iter.hasNext();) {
-
-            RootClass rc = iter.next();
-
-            String s = rc.getClassName();
-            entityClassNames.add(s);
-            entityNames.add(StringUtils.splitPackageAndClass(s).v2);
-
-            rootClasses.put(rc.getMappedClass(), rc);
-            entityClasses.add(rc.getMappedClass());
-
-            Map<String, Property> propertiesMap =
-                new HashMap<String, Property>();
-            allPropertiesMap.put(rc.getClassName(), propertiesMap);
-
-            for (Iterator<Property> iter2 = CastUtils.cast(rc
-                    .getPropertyIterator()); iter2.hasNext();) {
-
-                Property p = (Property) iter2.next();
-                initProperty(rc.getClassName(), p, propertiesMap);
-            }
-
-            Property id = rc.getIdentifierProperty();
-            initProperty(rc.getClassName(), id, propertiesMap);
-        }*/
+    private void initMappingData() {
     }
 
 
@@ -310,173 +216,7 @@ public class DataServiceMetaData_SF implements DataServiceMetaData { //xxx
         return rtn;
     }
 
-    /*private RootClass getRootClass(Class<?> c) {
-        return null;
-    }
-
-    private String getJavaTypeName(Type type) {
-        return null;
-    }
-
-    private void ensureEntityOrComponent(String className) {
-        if (!entityClassNames.contains(className)
-                && !componentClassNames.contains(className)) {
-            throw new IllegalArgumentException(
-                    "Unknown Entity or Component class: " + className);
-        }
-    }*/
-
-    /*private DataOperationFactory initFactory(final Session session) {
-        return new DataOperationFactory() {
-
-            // this is magic, and has to match the name of the
-            // generated example query(ies).
-            private static final String GENERATED_QUERY_NAME = 
-                "ExampleHQLQuery1";
-
-            public Collection<String> getEntityClassNames() {
-                return entityClassNames;
-            }
-
-            public List<Tuple.Three<String, String, Boolean>> getQueryInputs(
-                    String queryName) {
-
-                List<Tuple.Three<String, String, Boolean>> rtn = 
-                    new ArrayList<Tuple.Three<String, String, Boolean>>();
-
-                NamedQueryDefinition def = getQueryDefinition(queryName);
-
-                Map<String, String> m = CastUtils.cast(def.getParameterTypes());
-
-                for (Map.Entry<String, String> e : m.entrySet()) {
-                    Tuple.Two<String, Boolean> t = DataServiceUtils
-                            .getQueryType(e.getValue());
-                    rtn.add(Tuple.tuple(e.getKey(), t.v1, t.v2));
-                }
-
-                return rtn;
-            }
-
-            @SuppressWarnings("unchecked")
-            public Collection<String> getQueryNames() {
-
-                Collection<String> rtn = new HashSet<String>();
-
-                Configuration cfg = getConfiguration();
-
-                rtn.addAll(cfg.getNamedQueries().keySet());
-                rtn.addAll(cfg.getNamedSQLQueries().keySet());
-
-                return rtn;
-            }
-
-            public List<String> getQueryReturnNames(String operationName,
-                    String queryName) {
-
-                Query query = session.getNamedQuery(queryName);
-
-                try {
-                    String[] names = query.getReturnAliases();
-                    if (names != null) {
-                        return Arrays.asList(names);
-                    }
-                } catch (RuntimeException ex) {
-                }
-
-                return Collections.emptyList();
-
-            }
-
-            public boolean requiresResultWrapper(String operationName,
-                    String queryName) {
-                NamedQueryDefinition query = getQueryDefinition(queryName);
-                return DataServiceUtils.requiresResultWrapper(query.getQuery());
-            }
-
-            public List<String> getQueryReturnTypes(String operationName,
-                    String queryName) {
-
-                List<String> rtn = new ArrayList<String>();
-
-                Type[] rtnTypes = getReturnTypes(queryName);
-
-                String queryString = getQueryDefinition(queryName).getQuery();
-
-                if (rtnTypes == null) {
-                    // Must be DML
-                    if (!DataServiceUtils.isDML(queryString)) {
-                        // throw new AssertionError(
-                        // "Query " + queryName + " doesn't return anything");
-                        // actually if it is a sql query we also end up here -
-                        // the tests have at least one...
-                    }
-                    rtn.add(DataServiceConstants.DML_OPERATION_RTN_TYPE
-                            .getName());
-                } else {
-
-                    if (DataServiceUtils
-                            .isDynamicInstantiationQuery(queryString)) {
-                        String className = DataServiceUtils
-                                .getDynamicInstantiationClassName(queryString);
-
-                        if (!StringUtils.isFullyQualified(className)) {
-                            if (entityNames.contains(className)) {
-                                className = StringUtils.fq(getDataPackage(),
-                                        className);
-                            }
-                        }
-                        rtn.add(className);
-                    } else {
-                        for (Type t : rtnTypes) {
-                            rtn.add(getJavaTypeName(t));
-                        }
-                    }
-                }
-
-                return rtn;
-            }
-
-            public boolean queryReturnsSingleResult(String operationName,
-                    String queryName) {
-
-                // hack for generated queries - only required for initial
-                // ServiceDefinition instance that is used to add the service
-                if (queryName.equals(GENERATED_QUERY_NAME)) {
-                    return true;
-                }
-
-                // to make existing tests happy
-                if (queryName.startsWith("get") && queryName.endsWith(("ById"))) {
-                    return true;
-                }
-
-                return false;
-            }
-
-            private Type[] getReturnTypes(String queryName) {
-
-                Type[] rtn = null;
-
-                Query query = session.getNamedQuery(queryName);
-
-                // this blows up for named sql queries (vs named hql queries)
-                // exception msg from hibernate is: "not yet implemented for sql
-                // queries"
-                try {
-                    rtn = query.getReturnTypes();
-                } catch (RuntimeException ex) {
-                    if (DataServiceLoggers.metaDataLogger.isDebugEnabled()) {
-                        DataServiceLoggers.metaDataLogger
-                            .debug("Failed to determine rtn type for query \""
-                                   + queryName + "\"");
-                    }
-                }
-                return rtn;
-            }
-        };
-    }*/
-
-    private DataOperationFactory initFactory(String configurationName) { //xxx
+    private DataOperationFactory initFactory(String configurationName) {
         return new DataOperationFactory() {
 
             // this is magic, and has to match the name of the
@@ -489,13 +229,8 @@ public class DataServiceMetaData_SF implements DataServiceMetaData { //xxx
             private Map<String, QueryInfo> queries = null;
 
             {
-                String appName = WMAppContext.getInstance().getAppName();
-                //if (appName.equals(DataServiceConstants.WAVEMAKER_STUDIO)) {
-                //    p = new HbmQueryParser(RuntimeAccess.getInstance().getProjectRoot());
-                //} else {
-                    InputStream is = ClassLoaderUtils.getResourceAsStream(qfname);
-                    p = new HbmQueryParser(new InputStreamReader(is));
-                //}
+                InputStream is = ClassLoaderUtils.getResourceAsStream(qfname);
+                p = new HbmQueryParser(new InputStreamReader(is));
 
                 queries = p.getQueries();
             }

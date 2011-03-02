@@ -34,6 +34,9 @@ public class CommonConstants {
     public static final String SERVER_TYPE_TOMCAT = "tomcat";
     public static final String SERVER_TYPE_WEBSPHERE = "websphere";
     public static final String DEPLOYMENT_TARGETS_XML = "deploymentTargets.xml";
+
+    public static final String SALESFORCE_SERVICE = "salesforceService"; //salesforce
+    public static final String SFLOGIN_SERVICE = "loginService"; //salesforce
      
     private CommonConstants() {
         throw new UnsupportedOperationException();

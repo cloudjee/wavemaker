@@ -23,6 +23,7 @@ import com.wavemaker.runtime.data.task.DefaultRollback;
 import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.ws.salesforce.SalesforceSupport;
 import com.wavemaker.common.util.IOUtils;
+import com.wavemaker.common.CommonConstants;
 import org.hibernate.Session;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -48,34 +49,13 @@ public class SalesforceDataServiceManager implements DataServiceManager {
     private final TaskManager taskMgr;
 
     private final DataServiceMetaData metaData;
-    //private final DataServiceMetaData metaData = new DataServiceMetaData("salesforceService", null);
 
     public SalesforceDataServiceManager(PlatformTransactionManager txMgr, TaskManager taskMgr,
                                         Map<String, String> properties) {
         this.txMgr = txMgr;
         this.taskMgr = taskMgr;
 
-        //ConfigurationRegistry reg = ConfigurationRegistry.getInstance();
-        /*this.cfg = reg.getConfiguration("salesforceService");
-        if (this.cfg == null) {
-            throw new DataServiceRuntimeException(
-                    "Cannot find configuration for salesforceService");
-        }*/
-
-        /*String appName = WMAppContext.getInstance().getAppName();
-        if (appName.equals(DataServiceConstants.WAVEMAKER_STUDIO)) {
-
-        }
-        String name = "com/sforce/queries/sforce-queries.xml";
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream(name);
-        try {
-            String s = IOUtils.convertStreamToString(is);
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }*/
-
-        this.metaData = initMetaData("salesforceService", properties); //xxx put back
-        //this.metaData = null; //xxx put back
+        this.metaData = initMetaData(CommonConstants.SALESFORCE_SERVICE, properties);
     }
 
     public void begin() {}
@@ -94,7 +74,7 @@ public class SalesforceDataServiceManager implements DataServiceManager {
 
     public Object invoke(Task task, Object... input) {return null;}
 
-    public Object invoke(Task task, Map<String, Class<?>> types, boolean named, Object... input) { //xxx
+    public Object invoke(Task task, Map<String, Class<?>> types, boolean named, Object... input) {
 
         boolean unset = false;
         ThreadContext.Context ctx = ThreadContext.getContext(metaData.getName());
@@ -163,19 +143,7 @@ public class SalesforceDataServiceManager implements DataServiceManager {
             if (rollbackOnly) {
                 status.setRollbackOnly();
             }
-            //Class cls;
             Object rtn;
-            /*try {
-                cls = Class.forName("com.sforce.SalesforceSupport");
-                Object obj = cls.newInstance();
-                String mn = named ? "runNamedQuery" : "runQuery";
-                Method method = cls.getMethod(mn, new Class[]{java.util.Map.class, java.lang.Object[].class});
-                Object[] args = {types, input};
-                rtn = method.invoke(obj, args);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }*/
 
             SalesforceSupport sfs = new SalesforceSupport();
             if (named)

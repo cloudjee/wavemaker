@@ -182,7 +182,7 @@ public class TypeConversionUtils {
         }
     }
 
-    public static String getValueString(Class<?> type, String s) {  //xxx
+    public static String getValueString(Class<?> type, String s) {  //salesforce
 
         if (s == null) {
             return "null";

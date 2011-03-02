@@ -190,7 +190,7 @@ public class RuntimeAccess {
         return (Integer)o;
     }
 
-    public Object getSpringBean(String beanId) { //xxx
+    public Object getSpringBean(String beanId) { //salesforce
         ServletContext context = request.getSession().getServletContext();
         WebApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(context);
 

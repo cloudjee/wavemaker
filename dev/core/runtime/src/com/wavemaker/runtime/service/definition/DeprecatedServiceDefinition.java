@@ -62,6 +62,16 @@ public interface DeprecatedServiceDefinition extends ReflectServiceDefinition {
      */
     @Deprecated
     public List<ElementType> getTypes();
+
+    /**
+     * Get all types associated with this service. Username and password were added for importing SalesForce service
+     *
+     * @return A list of types.
+     * @param username The user name for SalesForce account
+     * @param password The password for SalesForce account
+     */
+    @Deprecated
+    public List<ElementType> getTypes(String username, String password); //salesforce
     
     /**
      * Must be called explicitly to indicate that this instance is no longer

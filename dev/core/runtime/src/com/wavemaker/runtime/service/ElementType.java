@@ -57,7 +57,7 @@ public class ElementType {
     
     private boolean supportsQuickData;
 
-    private String subType; //xxx
+    private String subType; //salesforce
     
     private List<OperationEnumeration> require = new ArrayList<OperationEnumeration>();
     
@@ -247,11 +247,11 @@ public class ElementType {
         this.allowNull = allowNull;
     }
 
-    public String getSubType() { //xxx
+    public String getSubType() { //salesforce
         return subType;
     }
 
-    public void setSubType(String subType) { //xxx
+    public void setSubType(String subType) { //salesforce
         this.subType = subType;
     }
 
@@ -357,7 +357,7 @@ public class ElementType {
         ret.setRequire(getRequire());
         ret.setName(getName());
         ret.setAllowNull(isAllowNull());
-        ret.setSubType(getSubType()); //xxx
+        ret.setSubType(getSubType()); //salesforce
         
         return ret;
     }

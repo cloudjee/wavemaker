@@ -392,7 +392,7 @@ public class SpringDataServiceManager implements DataServiceManager {
             final Map<String, String> properties) 
     {
         final DataServiceMetaData rtn = 
-            new DataServiceMetaData_Hib(configurationName, cfg, properties); //xxx
+            new DataServiceMetaData_Hib(configurationName, cfg, properties); //salesforce
 
         htemp.execute(new HibernateCallback() {
             public Object doInHibernate(Session session) {
@@ -404,7 +404,7 @@ public class SpringDataServiceManager implements DataServiceManager {
         return rtn;
     }
 
-    public Object invoke(Task task, Map<String, Class<?>> types, boolean named, Object... input) { //xxx
+    public Object invoke(Task task, Map<String, Class<?>> types, boolean named, Object... input) { //salesforce
         return null;
     }
 
