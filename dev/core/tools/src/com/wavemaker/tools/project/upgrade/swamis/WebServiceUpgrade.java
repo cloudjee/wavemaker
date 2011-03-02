@@ -94,7 +94,7 @@ public class WebServiceUpgrade implements UpgradeTask {
 
                             dsm.deleteService(serviceId);
                             wstm.importWSDL(tempWsdlFile.getCanonicalPath(),
-                                    null, true);
+                                    null, true, null, null);
                         } finally {
                             try {
                                 IOUtils.deleteRecursive(tempDir);
