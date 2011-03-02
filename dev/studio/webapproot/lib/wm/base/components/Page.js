@@ -408,25 +408,36 @@ dojo.declare("wm.Page", wm.Component, {
 	    var chr = app._keys[e.keyCode];
             var isSpecial = chr && chr.length > 1;
 
-            if (e.keyCode == dojo.keys.ESCAPE)
+            if (e.keyCode == dojo.keys.ESCAPE) {
 		this.onEscapeKey();
 
-	    else if (e.shiftKey) {
-		if (djConfig.isDebug && (e.ctrlKey || e.altKey) && chr == "d")
-		    return app.debugDialog.show();
+	    } else if (e.shiftKey) {
+		if (djConfig.isDebug && (e.ctrlKey || e.altKey) && chr == "d") {
+		    app.debugDialog.show();
+		    dojo.stopEvent(e);
+		    return;
+		}
                 // we get a keyCode for the shiftKey being pressed which we should ignore; and a second keycode when a key is hit while shiftKey is held
-		if (e.keyCode != dojo.keys.SHIFT && !isInput) 
-		    this.onShiftKey(chr);
+		if (e.keyCode != dojo.keys.SHIFT && !isInput) {
+		    if (this.onShiftKey(chr))
+			dojo.stopEvent(e);
+		}
 	    } else if (e.ctrlKey) {
-		if (e.keyCode != dojo.keys.CTRL)
-		    this.onCtrlKey(chr);
-	    } else if (e.keyCode == dojo.keys.ENTER && !isInput)
-		this.onEnterKey();
-            else if (!isInput && e.keyCode) {
-                if (isSpecial)
-		    this.onMiscKey(chr);
-                else
-                    this.onLetterKey(chr);
+		if (e.keyCode != dojo.keys.CTRL) {
+		    if (this.onCtrlKey(chr))
+			dojo.stopEvent(e);
+		}
+	    } else if (e.keyCode == dojo.keys.ENTER && !isInput) {
+		if (this.onEnterKey())
+		    dojo.stopEvent(e);
+	    } else if (!isInput && e.keyCode) {
+                if (isSpecial) {
+		    if (this.onMiscKey(chr))
+			dojo.stopEvent(e);
+                } else {
+                    if (this.onLetterKey(chr))
+			dojo.stopEvent(e);
+		}
             }
 
 	},
