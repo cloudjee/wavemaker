@@ -131,6 +131,7 @@
 		<mkdir dir="${src.temp.root.dir}/tools"/>
 		<copy todir="${src.temp.root.dir}/tools" overwrite="yes">
 			<fileset dir="${src.tools.dir}">
+				<exclude name="**/salesforce/**" unless="common.modules.isEnterprise"/>
 			</fileset>
 		</copy>
 		<antcall target="overwrite-with-dummies"/>
