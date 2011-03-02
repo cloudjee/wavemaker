@@ -433,7 +433,6 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	    return result;
 	},
 	editorChanged: function() {
-	    console.log("editorChanged");
 	    /* WM-2515; Don't bother firing an onchange event if there are no options to choose from; this situation
 	     *          presumably means that we're still waiting for the dataSet to get options from the server;
 	     *          all changed actions will fire AFTER we have a displayValue to go with whatever dataValue we have.
@@ -454,7 +453,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		// always valid if !this.displayValue, but if there is a displayValue there must be a dataValue
 		var display = this.getDisplayValue();
 		this._isValid = (!this.restrictValues || (display && this.dataValue || !display) );
-		console.log("_isValid:" + this._isValid + "; display="+display + "; data:"+this.dataValue);
+		//console.log("_isValid:" + this._isValid + "; display="+display + "; data:"+this.dataValue);
 
 
 		if (this.readonly) valid = true;
