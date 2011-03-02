@@ -32,7 +32,6 @@ import com.wavemaker.common.CommonConstants;
 
 import com.wavemaker.common.util.FileAccessException;
 import com.wavemaker.common.util.IOUtils;
-import com.wavemaker.common.util.StringUtils;
 
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.WMAppContext;
@@ -41,7 +40,6 @@ import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.server.ServerConstants;
 
 import com.wavemaker.tools.project.upgrade.UpgradeManager;
-import com.wavemaker.tools.data.DataModelManager;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
@@ -175,7 +173,7 @@ public class ProjectManager {
         try {
             is = new FileInputStream(typesPath);
 
-            String s = IOUtils.convertStreamToString(is);
+            String s = org.apache.commons.io.IOUtils.toString(is);
             JSONObject typesObj = new JSONObject(s.substring(11));
             if (wmApp != null) {
                 wmApp.setTypesObject(typesObj);
