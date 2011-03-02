@@ -76,8 +76,6 @@ public class DataServiceGenerator extends ServiceGenerator {
 
     private static final String DELETE_CRUD_OP = "delete";
 
-    private static final String QUERY_NAME_CONSTANT_SUFFIX = "QueryName";
-
     private static final String BEGIN_OP = "begin";
 
     private static final String COMMIT_OP = "commit";
@@ -90,27 +88,29 @@ public class DataServiceGenerator extends ServiceGenerator {
 
     private static final String INVOKE_METHOD_NAME = "invoke";
 
-    private static final String GET_BEAN_METHOD_NAME = "getBean";
-
-    private static final String IS_EMPTY_METHOD_NAME = "isEmpty";
-
-    private static final String GET_METHOD_NAME = "get";
-
-    private final DataServiceInternal ds;
-
-    private final String serviceClass;
-
-    private final String serviceId;
-
-    private final BeanGenerator constantsClass;
-
     private JVar dataServiceVar = null;
 
     private JVar taskMgrVar = null;
 
-    private boolean generateMain = false;
+    protected static final String QUERY_NAME_CONSTANT_SUFFIX = "QueryName";
 
-    private DataServiceOperation firstCountOperation = null;
+    protected static final String GET_BEAN_METHOD_NAME = "getBean";
+
+    protected static final String IS_EMPTY_METHOD_NAME = "isEmpty";
+
+    protected static final String GET_METHOD_NAME = "get";
+
+    protected final DataServiceInternal ds;
+
+    protected final String serviceClass;
+
+    protected final String serviceId;
+
+    protected final BeanGenerator constantsClass;
+
+    protected boolean generateMain = false;
+
+    protected DataServiceOperation firstCountOperation = null;
 
     public DataServiceGenerator(GenerationConfiguration configuration) {
         this(configuration, configuration.getServiceDefinition()
@@ -189,7 +189,7 @@ public class DataServiceGenerator extends ServiceGenerator {
     @Override
     protected void generateOperationMethodBody(JMethod method, JBlock body,
             String operationName, Map<String, JType> inputJTypeMap,
-            JType outputJType, Integer overloadCount) {
+            ElementType outputType, JType outputJType, Integer overloadCount) {
 
         DataServiceOperation op = ds.getOperation(operationName);
 
@@ -428,7 +428,7 @@ public class DataServiceGenerator extends ServiceGenerator {
         }
     }
 
-    private void writeConstantsClass() {
+    protected void writeConstantsClass() {
         constantsClass.addClassJavadoc(" Query names for service \""
                 + serviceDefinition.getServiceId() + "\"\n"
                 + StringUtils.getFormattedDate());

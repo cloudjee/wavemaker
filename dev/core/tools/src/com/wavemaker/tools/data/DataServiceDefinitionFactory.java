@@ -27,6 +27,8 @@ import com.wavemaker.tools.service.ServiceDefinitionFactory;
 import com.wavemaker.tools.service.ServiceGeneratorFactory;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
+import com.wavemaker.tools.data.salesforce.DataServiceGenerator_SF;
+import com.wavemaker.common.CommonConstants;
 
 public class DataServiceDefinitionFactory implements ServiceDefinitionFactory,
         ServiceGeneratorFactory {
@@ -61,7 +63,7 @@ public class DataServiceDefinitionFactory implements ServiceDefinitionFactory,
         ServiceDefinition def = cfg.getServiceDefinition();
 
         if (def instanceof DataServiceDefinition) {
-            if (def.getServiceId().equals("salesforceService")) //xxx
+            if (def.getServiceId().equals(CommonConstants.SALESFORCE_SERVICE)) //salesforce
                 return new DataServiceGenerator_SF(cfg);
             else
                 return new DataServiceGenerator(cfg);
@@ -85,7 +87,7 @@ public class DataServiceDefinitionFactory implements ServiceDefinitionFactory,
                     serviceMgr, f);
 
             if (!rtn.getDataModelConfiguration().isKnownConfiguration() &&
-                    !serviceId.equals("salesforceService")) { //xxx
+                    !serviceId.equals(CommonConstants.SALESFORCE_SERVICE)) { //salesforce
                 rtn.dispose();
                 return null;
             }

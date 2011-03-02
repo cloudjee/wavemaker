@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.TreeSet;
 
 import com.wavemaker.common.Resource;
+import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.common.util.Tuple;
 import com.wavemaker.runtime.data.*;
@@ -202,7 +203,7 @@ public class DataServiceDefinition  extends AbstractDeprecatedServiceDefinition
     }
 
     private void initOperationManager() {
-        if (!this.serviceId.equals("salesforceService")) { //xxx
+        if (!this.serviceId.equals(CommonConstants.SALESFORCE_SERVICE)) { //salesforce
             this.operationManager = new DataServiceOperationManager(initFactory(),
                 dataCfg.useIndividualCRUDOperations());
         } else {

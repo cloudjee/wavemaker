@@ -36,6 +36,7 @@ import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.OneToManyMap;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.common.util.SystemUtils;
+import com.wavemaker.common.CommonConstants;
 import com.wavemaker.runtime.client.TreeNode;
 import com.wavemaker.runtime.data.DataServiceDefinition;
 import com.wavemaker.runtime.data.DataServiceInternal;
@@ -392,7 +393,7 @@ public class DataModelManager {
 
         serviceManager
                 .defineService(new com.wavemaker.tools.data.DataServiceDefinition(
-                        dataModelName, cfg, serviceManager, serviceClass));
+                        dataModelName, cfg, serviceManager, serviceClass)); //salesforce
 
         save(dataModelName, cfg, true, true);
     }
@@ -499,7 +500,11 @@ public class DataModelManager {
                 public void update(DataServiceDefinition def) {
                     def.setExternalConfig(extCfg);
                     setupElementTypeFactory(def.getServiceId(), def);
-                    serviceManager.defineService(def);
+                    if (dataModelName.equals(CommonConstants.SALESFORCE_SERVICE)) {//salesforce
+                        serviceManager.defineService(def, mgr, null, null); //salesforce
+                    } else {
+                        serviceManager.defineService(def);
+                    }
                 }
             }, forceUpdate, compile);
             mgr.removeBackupFiles();
@@ -538,19 +543,18 @@ public class DataModelManager {
         return rtn;
     }
 
-    public Collection<String> getDataModelNames() { //xxx0909
+    public Collection<String> getDataModelNames() { //salesforce
         Collection<String> names = getDataModelNamesAll();
-        names.remove("salesforceService");
+        names.remove(CommonConstants.SALESFORCE_SERVICE);
         return names;
     }
     
-    public Collection<String> getDataModelNames_SF() { //xxx0909
+    public Collection<String> getDataModelNames_SF() { //salesforce
         Collection<String> names = getDataModelNamesAll();
-        //names.remove("salesforceService");
         return names;
     }
 
-    public Collection<String> getDataModelNamesAll() { //xxx0909
+    public Collection<String> getDataModelNamesAll() { //salesforce
         initialize(false);
         if (dataModelNames.containsKey(getProjectName())) {
             return new TreeSet<String>(dataModelNames.get(getProjectName()));
@@ -720,15 +724,15 @@ public class DataModelManager {
 
     private void initialize(boolean force) {
 
-        String[] types = {DataServiceType.TYPE_NAME, WebServiceType.TYPE_NAME}; //xxx
+        String[] types = {DataServiceType.TYPE_NAME, WebServiceType.TYPE_NAME}; //salesforce
 
         Set<Service> services = serviceManager
-                .getServicesByType(types); //xxx
+                .getServicesByType(types); //salesforce
 
         for (Service service : services) {
             //Only SalesForce service should be treated as a data model among web services
             if (service.getType().equals(WebServiceType.TYPE_NAME) &&
-                !service.getId().equals("salesforceService")) {
+                !service.getId().equals(CommonConstants.SALESFORCE_SERVICE)) {
                 continue;
             }
             initialize(service.getId(), force);
@@ -799,12 +803,8 @@ public class DataModelManager {
                 }
             };
 
-            //if (serviceId.equals("salesforceService")) { //xxx
-               // rtn = new DataModelConfiguration();
-            //} else {
-                rtn = new DataModelConfiguration(cfg, projectManager
-                        .getCurrentProject(), serviceId, externalConfig, clf, cs);
-            //}
+            rtn = new DataModelConfiguration(cfg, projectManager
+                .getCurrentProject(), serviceId, externalConfig, clf, cs);
 
             dataModels.put(getKey(serviceId), rtn);
             dataModelNames.put(getProjectName(), serviceId);

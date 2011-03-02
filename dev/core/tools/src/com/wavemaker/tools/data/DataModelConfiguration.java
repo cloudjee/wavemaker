@@ -37,6 +37,7 @@ import java.util.TreeSet;
 
 import com.wavemaker.common.NotYetImplementedException;
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.StringUtils;
@@ -179,6 +180,9 @@ public class DataModelConfiguration {
     // path to deleted query file
     private final Collection<String> deletedQueries = new HashSet<String>();
 
+    private final Collection<String> deletedSFQueries = new HashSet<String>(); //salesforce
+    private final Collection<String> deletedSFDataObjects = new HashSet<String>(); //salesforce
+
     // =================================================
 
     private final Collection<String> writtenBackupFiles = new HashSet<String>();
@@ -198,7 +202,7 @@ public class DataModelConfiguration {
         this.springConfiguration = new DataServiceSpringConfiguration(
                 fileService, this.cfgPath, this.cfgFile, serviceId);
 
-        if (!serviceId.equals("salesforceService")) //xxx
+        if (!serviceId.equals(CommonConstants.SALESFORCE_SERVICE)) //salesforce
             setup();
         else
             setup_SF();
@@ -486,6 +490,8 @@ public class DataModelConfiguration {
         // package
         if (outputType != null && DataServiceUtils.isOutputType(outputType)) {
             deletedQueries.add(StringUtils.classNameToSrcFilePath(outputType));
+            deletedSFQueries.add(queryName); //salesforce
+            deletedSFDataObjects.add(StringUtils.classNameToSrcFilePath(outputType));
         }
 
         return rtn;
@@ -881,7 +887,6 @@ public class DataModelConfiguration {
                 Object rtn = null;
 
                 try {
-                    queryRunner.setName(name);
                     rtn = queryRunner.run(query);
                 } catch (Throwable th) {
                     throw DataServiceUtils.unwrap(th);
@@ -1075,7 +1080,7 @@ public class DataModelConfiguration {
     }
 
     public String getDataPackage() {
-        if (this.name.equals("salesforceService")) { //xxx
+        if (this.name.equals(CommonConstants.SALESFORCE_SERVICE)) { //salesforce
             return getDataPackage_SF();
         }
 
@@ -1086,7 +1091,7 @@ public class DataModelConfiguration {
         return dataPackage;
     }
 
-    public String getDataPackage_SF() { //xxx
+    public String getDataPackage_SF() { //salesforce
         return "com.sforce.queries";
     }
 
@@ -1147,6 +1152,22 @@ public class DataModelConfiguration {
 
     public String toString() {
         return "Mappings: " + entityNameToPath + "\n\nQueries: " + queryFiles;
+    }
+
+    public Collection<String> getDeletedSFQueries() { //salesforce
+        return deletedSFQueries;
+    }
+
+    public void removeDeletedSFQueries(String name) { //salesforce
+        deletedSFQueries.remove(name);
+    }
+
+    public Collection<String> getDeletedSFDataObjects() { //salesforce
+        return deletedSFDataObjects;
+    }
+
+    public void removeDeletedSFDataObjects(String name) { //salesforce
+        deletedSFDataObjects.remove(name);
     }
 
     private void setProperties(EntityInfo entity) {
@@ -1770,7 +1791,7 @@ public class DataModelConfiguration {
         addRegisteredFiles();
     }
 
-    private void setup_SF() { //xxx
+    private void setup_SF() { //salesforce
         String path = "com/sforce/queries/sforce-queries.xml";
         addQueryDocument(path);
     }
@@ -1819,7 +1840,7 @@ public class DataModelConfiguration {
 
             if ((meta != null
                     && com.wavemaker.tools.data.util.DataServiceUtils
-                            .isDefaultQueryStore(meta)) || (name.equals("salesforceService"))) { //xxx
+                            .isDefaultQueryStore(meta)) || (name.equals(CommonConstants.SALESFORCE_SERVICE))) { //salesforce
                 defaultQueryParser = p;
             }
 

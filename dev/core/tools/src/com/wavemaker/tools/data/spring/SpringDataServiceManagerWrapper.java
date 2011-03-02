@@ -71,7 +71,7 @@ public class SpringDataServiceManagerWrapper implements DataServiceManager {
     }
 
     public Object invoke(Task task, Map<String, Class<?>> types, boolean named, Object... input) {
-        return delegate.invoke(task, types, named, (Object[])input); //xxx0909
+        return delegate.invoke(task, types, named, (Object[])input); //salesforce
     }
 
     public void rollback() {

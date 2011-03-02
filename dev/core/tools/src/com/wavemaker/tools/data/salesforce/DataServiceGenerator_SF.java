@@ -15,41 +15,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.wavemaker.tools.data;
+package com.wavemaker.tools.data.salesforce;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.NDC;
-
 import com.sun.codemodel.*;
-import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.common.util.StringUtils;
-import com.wavemaker.common.util.Tuple;
-import com.wavemaker.json.type.TypeDefinition;
-import com.wavemaker.runtime.data.DataServiceInternal;
-import com.wavemaker.runtime.data.DataServiceManager;
-import com.wavemaker.runtime.data.DataServiceManagerAccess;
 import com.wavemaker.runtime.data.DataServiceOperation;
-import com.wavemaker.runtime.data.DefaultTaskManager;
-import com.wavemaker.runtime.data.TaskManager;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.service.ElementType;
-import com.wavemaker.runtime.service.LiveDataService;
-import com.wavemaker.runtime.service.PagingOptions;
-import com.wavemaker.runtime.service.PropertyOptions;
-import com.wavemaker.runtime.service.TypedServiceReturn;
 import com.wavemaker.runtime.RuntimeAccess;
-import com.wavemaker.tools.data.util.DataServiceUtils;
-import com.wavemaker.tools.service.codegen.BeanGenerator;
+import com.wavemaker.tools.data.DataServiceGenerator;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
-import com.wavemaker.tools.service.codegen.ServiceGenerator;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.util.DesignTimeUtils;
@@ -61,73 +43,13 @@ import com.wavemaker.tools.ws.salesforce.SalesforceHelper;
  * 
  * @author slee
  */
-public class DataServiceGenerator_SF extends ServiceGenerator {
-
-    private static final String CREATE_CRUD_OP = "insert";
-
-    private static final String READ_CRUD_OP = "read";
-
-    private static final String UPDATE_CRUD_OP = "update";
-
-    private static final String DELETE_CRUD_OP = "delete";
-
-    private static final String QUERY_NAME_CONSTANT_SUFFIX = "QueryName";
-
-    private static final String BEGIN_OP = "begin";
-
-    private static final String COMMIT_OP = "commit";
-
-    private static final String ROLLBACK_OP = "rollback";
-
-    private static final String DATA_SERVICE_VAR_NAME = "dsMgr";
-
-    private static final String TASK_MANAGER_VAR_NAME = "taskMgr";
-
-    private static final String INVOKE_METHOD_NAME = "invoke";
-
-    private static final String GET_BEAN_METHOD_NAME = "getBean";
-
-    private static final String IS_EMPTY_METHOD_NAME = "isEmpty";
-
-    private static final String GET_METHOD_NAME = "get";
-
-    private final DataServiceInternal ds;
-
-    private final String serviceClass;
-
-    private final String serviceId;
-
-    private final BeanGenerator constantsClass;
-
-    private JVar dataServiceVar = null;
-
-    private JVar taskMgrVar = null;
-
-    private boolean generateMain = false;
-
-    private DataServiceOperation firstCountOperation = null;
+public class DataServiceGenerator_SF extends DataServiceGenerator {
 
     private DesignServiceManager dsm;
 
     public DataServiceGenerator_SF(GenerationConfiguration configuration) {
-        this(configuration, configuration.getServiceDefinition()
-                .getServiceClass());
-    }
 
-    public DataServiceGenerator_SF(GenerationConfiguration configuration,
-            String serviceClass) {
-
-        super(configuration);
-
-        this.serviceClass = "com.sforce.SalesforceQueries";
-
-        this.ds = (DataServiceInternal) DataServiceUtils.unwrap(configuration
-                .getServiceDefinition());
-
-        this.serviceId = configuration.getServiceDefinition().getServiceId();
-
-        this.constantsClass = new BeanGenerator(DataServiceUtils
-                .getConstantsClassName(serviceClass));
+        super(configuration, "com.sforce.SalesforceQueries");
 
         useNDCLogging = false;
 
@@ -137,65 +59,72 @@ public class DataServiceGenerator_SF extends ServiceGenerator {
     }
 
     /**
-         * Generates service stubs.
-         *
-         * @throws GenerationException
-         */
-        @SuppressWarnings("deprecation")
-        @Override
-        public void generate() throws GenerationException {
+     * Generates service stubs.
+     *
+     * @throws GenerationException
+     */
+    @SuppressWarnings("deprecation")
+    @Override
+    public void generate() throws GenerationException {
 
-            preGeneration();
+        preGeneration();
 
-            JDefinedClass serviceCls = generateClass();
+        JDefinedClass serviceCls = generateClass();
 
-            preGenerateClassBody(serviceCls);
+        preGenerateClassBody(serviceCls);
 
-            generateClassJavadoc(serviceCls.javadoc());
+        generateClassJavadoc(serviceCls.javadoc());
 
-            if (hasDefaultConstructor()) {
-                JMethod defaultConst = generateDefaultConstructor(serviceCls);
-                JBlock defaultConstBody = defaultConst.body();
-                generateDefaultConstructorBody(defaultConstBody);
-            }
-
-            List<String> operationNames = serviceDefinition.getOperationNames();
-
-            if (logger.isDebugEnabled()) {
-                logger.debug("Generating service class with operations: "
-                        + operationNames);
-            }
-
-            for (int i = 0; i < operationNames.size(); i++) {
-                String operationName = operationNames.get(i);
-                if (isSalesForceMethod(operationName)) continue;
-                List<ElementType> inputTypes = serviceDefinition
-                        .getInputTypes(operationName);
-                generateOperationMethod(serviceCls, operationName, inputTypes, null);
-
-                // add overloaded versions for this method
-                int j = 0;
-                List<List<ElementType>> overloadedVersions = getOverloadedVersions(operationName);
-                for (List<ElementType> overloadedInputTypes : overloadedVersions) {
-                    generateOperationMethod(serviceCls, operationName,
-                            overloadedInputTypes, j++);
-                }
-
-            }
-
-            postGenerateClassBody(serviceCls);
-
-            try {
-                configuration.getOutputDirectory().mkdirs();
-                codeModel.build(configuration.getOutputDirectory(), configuration
-                        .getOutputDirectory(), null);
-            } catch (IOException e) {
-                throw new GenerationException("Unable to write service stub", e);
-            }
-
-            postGeneration();
+        if (hasDefaultConstructor()) {
+            JMethod defaultConst = generateDefaultConstructor(serviceCls);
+            JBlock defaultConstBody = defaultConst.body();
+            generateDefaultConstructorBody(defaultConstBody);
         }
 
+        List<String> operationNames = serviceDefinition.getOperationNames();
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("Generating service class with operations: "
+                    + operationNames);
+        }
+
+        for (int i = 0; i < operationNames.size(); i++) {
+            String operationName = operationNames.get(i);
+            if (isSalesForceMethod(operationName)) continue;
+            List<ElementType> inputTypes = serviceDefinition
+                    .getInputTypes(operationName);
+            generateOperationMethod(serviceCls, operationName, inputTypes, null);
+
+            // add overloaded versions for this method
+            int j = 0;
+            List<List<ElementType>> overloadedVersions = getOverloadedVersions(operationName);
+            for (List<ElementType> overloadedInputTypes : overloadedVersions) {
+                generateOperationMethod(serviceCls, operationName,
+                        overloadedInputTypes, j++);
+            }
+
+        }
+
+        generateOthers(serviceCls);
+
+        postGenerateClassBody(serviceCls);
+
+        try {
+            configuration.getOutputDirectory().mkdirs();
+            codeModel.build(configuration.getOutputDirectory(), configuration
+                    .getOutputDirectory(), null);
+        } catch (IOException e) {
+            throw new GenerationException("Unable to write service stub", e);
+        }
+
+        postGeneration();
+    }
+
+    public void generateOthers(JDefinedClass serviceCls) {
+        serviceCls.direct(
+                "public Object runNamedQuery(String dataModelName, String queryName, Class cls, Object ... values) {");
+        serviceCls.direct("return null;}");
+    }
 
     public void setGenerateMain(boolean generateMain) {
         this.generateMain = generateMain;
@@ -216,14 +145,6 @@ public class DataServiceGenerator_SF extends ServiceGenerator {
 
         // I don't think Kohsuke would like this
         cls.annotate(SuppressWarnings.class).param("value", "unchecked");
-
-        cls._implements(DataServiceManagerAccess.class);
-
-        dataServiceVar = cls.field(JMod.PRIVATE, DataServiceManager.class,
-                DATA_SERVICE_VAR_NAME);
-
-        taskMgrVar = cls.field(JMod.PRIVATE, TaskManager.class,
-                TASK_MANAGER_VAR_NAME);
     }
 
     @Override
@@ -251,7 +172,7 @@ public class DataServiceGenerator_SF extends ServiceGenerator {
     @Override
     protected void generateOperationMethodBody(JMethod method, JBlock body,
             String operationName, Map<String, JType> inputJTypeMap,
-            JType outputJType, Integer overloadCount) {
+            ElementType outputType, JType outputJType, Integer overloadCount) {
 
         DataServiceOperation op = ds.getOperation(operationName);
 
@@ -264,25 +185,11 @@ public class DataServiceGenerator_SF extends ServiceGenerator {
             firstCountOperation = op;
         }
 
-        addOperation(op, inputJTypeMap, outputJType, body);
+        addOperation(op, inputJTypeMap, outputType, outputJType, body);
     }
 
     @Override
     protected void postGenerateClassBody(JDefinedClass cls) {
-
-        /*cls._implements(LiveDataService.class);
-        implementCRUDInterface(cls);
-
-        // add convenience methods for begin/commit/rollback
-        delegate(cls, BEGIN_OP);
-        delegate(cls, COMMIT_OP);
-        delegate(cls, ROLLBACK_OP);
-
-        addGetterAndSetter(cls, DataServiceManager.class,
-                DATA_SERVICE_VAR_NAME, dataServiceVar);
-
-        addGetterAndSetter(cls, TaskManager.class, TASK_MANAGER_VAR_NAME,
-                taskMgrVar);*/
 
         writeConstantsClass();
 
@@ -324,7 +231,7 @@ public class DataServiceGenerator_SF extends ServiceGenerator {
 
     private boolean isSalesForceMethod(String operationName) throws GenerationException {
         boolean rtn = false;
-        if (serviceId.equals("salesforceService")) {
+        if (serviceId.equals(CommonConstants.SALESFORCE_SERVICE)) {
             rtn = SalesforceHelper.isSalesForceMethod(dsm, operationName);
         }
 
@@ -341,62 +248,13 @@ public class DataServiceGenerator_SF extends ServiceGenerator {
         addJavadoc(jdoc);
     }
 
-
-
-    private void implementCRUDInterface(JDefinedClass cls) {
-        addCreate(cls);
-        addRead(cls);
-        addUpdate(cls);
-        addDelete(cls);
-    }
-
-    private void addCreate(JDefinedClass cls) {
-        JMethod method = cls.method(JMod.PUBLIC, Object.class, CREATE_CRUD_OP);
-        JVar p1 = method.param(Object.class, "o");
-        JInvocation exp = dataServiceVar.invoke(INVOKE_METHOD_NAME);
-        exp.arg(taskMgrVar.invoke(DefaultTaskManager.GET_INSERT_TASK)).arg(p1);
-        method.body()._return(exp);
-    }
-
-    private void addRead(JDefinedClass cls) {
-        JMethod method = cls.method(JMod.PUBLIC,
-                TypedServiceReturn.class, READ_CRUD_OP);
-        JVar rootTypeParam = method.param(TypeDefinition.class, "rootType");
-        JVar instanceParam = method.param(Object.class, "o");
-        JVar propertyOptionsParam = method.param(PropertyOptions.class,
-                "propertyOptions");
-        JVar pagingOptionsParam = method.param(PagingOptions.class,
-                "pagingOptions");
-        JInvocation exp = dataServiceVar.invoke(INVOKE_METHOD_NAME);
-        exp.arg(taskMgrVar.invoke(DefaultTaskManager.GET_READ_TASK)).arg(
-                rootTypeParam).arg(instanceParam).arg(propertyOptionsParam)
-                .arg(pagingOptionsParam);
-        method.body()._return(
-                JExpr.cast(codeModel.ref(TypedServiceReturn.class), exp));
-    }
-    
-    private void addUpdate(JDefinedClass cls) {
-        JMethod method = cls.method(JMod.PUBLIC, Object.class, UPDATE_CRUD_OP);
-        JVar p1 = method.param(Object.class, "o");
-        JInvocation exp = dataServiceVar.invoke(INVOKE_METHOD_NAME);
-        exp.arg(taskMgrVar.invoke(DefaultTaskManager.GET_UPDATE_TASK)).arg(p1);
-        method.body()._return(exp);
-    }
-    
-    private void addDelete(JDefinedClass cls) {
-        JMethod method = cls.method(JMod.PUBLIC, void.class, DELETE_CRUD_OP);
-        JVar p1 = method.param(Object.class, "o");
-        JInvocation exp = dataServiceVar.invoke(INVOKE_METHOD_NAME);
-        exp.arg(taskMgrVar.invoke(DefaultTaskManager.GET_DELETE_TASK)).arg(p1);
-        method.body().add(exp);
-    }
-    
     private void addOperation(DataServiceOperation op,
-            Map<String, JType> inputJTypeMap, JType outputJType, JBlock body) {
+            Map<String, JType> inputJTypeMap, ElementType outputType, JType outputJType, JBlock body) {
 
-        JInvocation exp = dataServiceVar.invoke(INVOKE_METHOD_NAME);
+        JExpression thisObj = JExpr._this();
+        JInvocation exp = thisObj.invoke("runNamedQuery");
 
-        exp.arg(taskMgrVar.invoke(op.getTaskGetter()));
+        exp.arg(CommonConstants.SALESFORCE_SERVICE);
 
         if (op.isQuery()) {
             String queryName = op.getQueryName();
@@ -404,6 +262,9 @@ public class DataServiceGenerator_SF extends ServiceGenerator {
             constantsClass.addStringConstant(constantName, queryName);
             exp.arg(JExpr.direct(constantsClass.getClassName() + "."
                     + constantName));
+
+            String returnClassName = outputType.getJavaType() + ".class";
+            exp.arg(JExpr.direct(returnClassName));
         }
 
         // add arguments that are passed into method
@@ -451,89 +312,7 @@ public class DataServiceGenerator_SF extends ServiceGenerator {
             }
         }
     }
-
-    private void addGetterAndSetter(JDefinedClass cls, Class<?> c,
-            String paramName, JVar var) {
-
-        Tuple.Two<String, String> t = StringUtils.splitPackageAndClass(c);
-
-        cls.method(JMod.PUBLIC, c, "get" + t.v2).body()._return(var);
-
-        JMethod m = cls.method(JMod.PUBLIC, codeModel.VOID, "set" + t.v2);
-        JVar p = m.param(c, paramName);
-        m.body().assign(JExpr._this().ref(var), p);
-    }
-
-    private void delegate(JDefinedClass cls, String name) {
-        delegate(cls, name, new Class[] {}, new String[] {}, null);
-    }
-
-    private void delegate(JDefinedClass cls, String name, Class<?>[] params,
-            String[] paramNames, Class<?> rtn) {
-
-        JMethod m = null;
-        if (rtn == null) {
-            m = cls.method(JMod.PUBLIC, codeModel.VOID, name);
-        } else {
-            m = cls.method(JMod.PUBLIC, rtn, name);
-        }
-
-        for (int i = 0; i < params.length; i++) {
-            m.param(params[i], paramNames[i]);
-        }
-
-        JBlock body = m.body();
-
-        JTryBlock tryBlock = null;
-
-        if (useNDCLogging) {
-            tryBlock = body._try();
-            body = tryBlock.body();
-            body.staticInvoke(codeModel.ref(NDC.class), NDC_PUSH).arg(
-                    getClassName() + "." + name);
-        }
-
-        JInvocation invocation = dataServiceVar.invoke(name);
-
-        for (String s : paramNames) {
-            invocation.arg(JExpr.ref(s));
-        }
-
-        if (rtn == null) {
-            body.add(invocation);
-        } else {
-            body._return(invocation);
-        }
-
-        if (useNDCLogging) {
-            tryBlock._finally().block().staticInvoke(codeModel.ref(NDC.class),
-                    NDC_POP);
-        }
-    }
-
-    private void writeConstantsClass() {
-        constantsClass.addClassJavadoc(" Query names for service \""
-                + serviceDefinition.getServiceId() + "\"\n"
-                + StringUtils.getFormattedDate());
-        String relPath = StringUtils.classNameToSrcFilePath(constantsClass
-                .getFullyQualifiedClassName());
-        File f = new File(configuration.getOutputDirectory(), relPath);
-        f.getParentFile().mkdirs();
-        BufferedOutputStream bos = null;
-        try {
-            bos = new BufferedOutputStream(new FileOutputStream(f));
-            constantsClass.generate(bos);
-            bos.close();
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        } finally {
-            try {
-                bos.close();
-            } catch (Exception ignore) {
-            }
-        }
-    }
-
+    
     @Override
     protected void addJavadoc(JDocComment jdoc) {
         jdoc.add(" This class holds all named queries for SalesForce.\n"

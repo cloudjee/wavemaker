@@ -33,7 +33,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.ClassLoaderUtils;
-//import com.wavemaker.tools.data.DataServiceLoggers; //xxx
+//import com.wavemaker.tools.data.DataServiceLoggers; //salesforce
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
