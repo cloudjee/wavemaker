@@ -432,7 +432,9 @@ dojo.declare("ThemeDesigner", wm.Page, {
      * item or select basic if no current selection 
      */
     themeselect: function(inSender) {
-        this.currentTheme = inSender.getDataValue();
+	var currentTheme = inSender.getDataValue();
+	if (!currentTheme) return;
+        this.currentTheme = currentTheme;
         studio.beginWait("Loading Theme...");
         wm.onidle(this, function() {
             /* Step 1: Find out what theme was selected! */
