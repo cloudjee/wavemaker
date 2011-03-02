@@ -113,7 +113,8 @@ dojo.declare("wm.Wire", wm.Component, {
 	    // MK: 2/24/2011: I'm not seeing this called in a simple lazy loading project.  If this is in fact
 	    // called, it should handle this.expression as well as this.source, but its likely obsolete
 		wm.logging && console.info("==> (sourceRootUpdated)", this.source);
-		this.getValueById(this.source);
+	        if (this.source)
+		    this.getValueById(this.source);
 	},
 	refreshValue: function() {
 		//wm.logging && console.info("==> (refresh) ", this.source, "=>", this.getFullTarget(), " Wire.refreshValue");
