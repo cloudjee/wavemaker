@@ -73,7 +73,7 @@ public class SalesforceHelper {
         return false;
     }
 
-    public static void setupSalesforceSrc(ProjectManager mgr) {
+    public static void setupSalesforceSrc(ProjectManager mgr, String username, String password) {
         System.out.println("\n*** SalesForce interface is not avaliable in this package ***\n");
     }
 }
