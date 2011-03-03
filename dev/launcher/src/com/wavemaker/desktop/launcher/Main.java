@@ -197,7 +197,56 @@ public class Main
     public static void main(String[] args) throws InterruptedException,
             URISyntaxException, IOException
     {
-        if (GraphicsEnvironment.isHeadless())
+    	boolean isHeadless = GraphicsEnvironment.isHeadless();
+        if (!isHeadless)
+        {
+            // Run graphically
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            DisplayMode display = ge.getDefaultScreenDevice().getDisplayMode();
+            // Check for Studio Upgrade
+            if (isStudioUpgrade())
+            {
+                StudioUpgradeDialog sud = new StudioUpgradeDialog(
+                    getCurrentVersionString(),
+                    getWaveMakerHome(), getNewDefaultWMHome(),
+                    isMajorUpgrade());
+                
+                if(sud != null && display != null){  //Can be null, WM-2397
+	                sud.setLocation(display.getWidth() / 2 - sud.getWidth() / 2,
+	                    display.getHeight() / 2 - sud.getHeight() / 2);
+	                
+	                sud.setVisible(true);
+	                // Perform new installation
+	                ProgressDialog progress = new ProgressDialog("Studio Upgrade:",
+	                        "Please wait while the Studio upgrade is completed.",
+	                        false, false);
+	                
+	                progress.start();
+	                
+	                try
+	                {
+	                    doUpgrade(sud.getSelectedProjectsPath());
+	                }
+	                catch (RuntimeException e)
+	                {
+	                    e.printStackTrace();
+	                }
+	                progress.stop();
+	           
+	            tomcatConfig = TomcatConfig.GetDefaultConfig();
+	            MainConsole ui = new MainConsole(getCurrentVersionString(), tomcatConfig);
+	            ui.pack();
+	            ui.setLocation(display.getWidth() / 2 - ui.getWidth() / 2,
+	                    display.getHeight() / 2 - ui.getHeight() / 2);
+	            
+	            ui.begin();
+            }
+                else{
+                	isHeadless = true; //don't have a usable graphics after all
+                }
+          }
+        }
+        if (isHeadless)
         {
             // Run silently
             if (0 == args.length)
@@ -217,49 +266,7 @@ public class Main
                 stop(args);
             }
         }
-        else
-        {
-            // Run graphically
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            DisplayMode display = ge.getDefaultScreenDevice().getDisplayMode();
-            // Check for Studio Upgrade
-            if (isStudioUpgrade())
-            {
-                StudioUpgradeDialog sud = new StudioUpgradeDialog(
-                    getCurrentVersionString(),
-                    getWaveMakerHome(), getNewDefaultWMHome(),
-                    isMajorUpgrade());
-                
-                sud.setLocation(display.getWidth() / 2 - sud.getWidth() / 2,
-                    display.getHeight() / 2 - sud.getHeight() / 2);
-                
-                sud.setVisible(true);
-                // Perform new installation
-                ProgressDialog progress = new ProgressDialog("Studio Upgrade:",
-                        "Please wait while the Studio upgrade is completed.",
-                        false, false);
-                
-                progress.start();
-                
-                try
-                {
-                    doUpgrade(sud.getSelectedProjectsPath());
-                }
-                catch (RuntimeException e)
-                {
-                    e.printStackTrace();
-                }
-                progress.stop();
-            }
-            tomcatConfig = TomcatConfig.GetDefaultConfig();
-            // MainLauncherUI ui = new MainLauncherUI(getCurrentVersionString(), tomcatConfig);
-            MainConsole ui = new MainConsole(getCurrentVersionString(), tomcatConfig);
-            ui.pack();
-            ui.setLocation(display.getWidth() / 2 - ui.getWidth() / 2,
-                    display.getHeight() / 2 - ui.getHeight() / 2);
-            
-            ui.begin();
-        }
+        
     }
 
     public static Launcher start(String[] args, boolean noStdoutRedirect)
