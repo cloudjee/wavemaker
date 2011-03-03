@@ -116,7 +116,7 @@ Var ProjectsDialog
 !define MUI_UNCONFIRMPAGE_TEXT_TOP "We value your feedback.  At the completion of the uninstall you will be requested to provide your suggestions.  Please let us know how we can improve WaveMaker." 
 !insertmacro MUI_UNPAGE_CONFIRM
 !insertmacro MUI_UNPAGE_INSTFILES
-!define MUI_FINISHPAGE_LINK "How we can improve WaveMaker? Click here."
+!define MUI_FINISHPAGE_LINK "How can we improve WaveMaker? Click here."
 !define MUI_FINISHPAGE_LINK_LOCATION "http://www.wavemaker.com/feedback"
 !insertmacro MUI_UNPAGE_FINISH
 
