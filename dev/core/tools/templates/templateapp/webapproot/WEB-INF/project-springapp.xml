@@ -32,6 +32,7 @@
 				/lib/boot/boot.js=fileController
 				/resources/images/**=fileController
 				/resources/gzipped/**=fileController
+				/config.js=fileController
 
             </value>
         </property>
