@@ -426,8 +426,7 @@ public class SalesforceHelper {
         return found;
     }
 
-    public static void setupSalesforceSrc(ProjectManager mgr, String username, String password,
-                                          DesignServiceManager svcMgr) {
+    public static void setupSalesforceSrc(ProjectManager mgr, String username, String password) {
         File destf;
         try {
             File srcf = new File(mgr.getStudioConfiguration().getStudioWebAppRootFile(),
