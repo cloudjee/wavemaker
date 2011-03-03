@@ -185,7 +185,7 @@ public class LiveDataServiceImpl_SF extends SalesforceQueries implements LiveDat
         this.dsMgr = mgr;
     }
 
-    /*public Object runQuery(String dataModelName, String query, Input[] inputs,
+    public Object runQuery(String dataModelName, String query, Input[] inputs,
             String values, Long maxResults) {
 
         QueryRunner queryRunner = new QueryRunner(dsMgr);
@@ -228,7 +228,7 @@ public class LiveDataServiceImpl_SF extends SalesforceQueries implements LiveDat
         }
 
         return SalesforceSupport.convertToQueryReturnType(cls, result);
-    }*/
+    }
 
     private SObjectType prepareObject(SessionHeader header, String action, SObjectType obj) throws Exception {
         Class cls = obj.getClass();
