@@ -128,7 +128,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		var q = {};
 		dojo.forEach(pkList, function(f){
 			q[f] = obj[f];
-			if (dateFields.indexOf(f) != -1)
+		        if (dojo.indexOf(dateFields, f) != -1)
 				q[f] = new Date(obj[f]);
 		});
 
