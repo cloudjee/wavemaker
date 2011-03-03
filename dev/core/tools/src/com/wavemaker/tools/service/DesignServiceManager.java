@@ -372,7 +372,7 @@ public class DesignServiceManager {
         //TODO: Skipping salesforce setup when null is passed in for username is not good programming practice.
         //TODO: The logic has to be rewritten later when we have time.
         if (svcId.equals(CommonConstants.SALESFORCE_SERVICE) && username != null) { //salesforce
-            SalesforceHelper.setupSalesforceSrc(projectManager, username, password, this);
+            SalesforceHelper.setupSalesforceSrc(projectManager, username, password);
         }
 
         defineService(service);
