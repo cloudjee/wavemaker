@@ -83,6 +83,11 @@
         <url-pattern>/lib/runtimeLoader.js</url-pattern>
     </servlet-mapping>
 
+	<servlet-mapping>
+        <servlet-name>springapp</servlet-name>
+		<url-pattern>/config.js</url-pattern>
+    </servlet-mapping>
+
     <!-- for modules -->
     <servlet-mapping>
         <servlet-name>springapp</servlet-name>
