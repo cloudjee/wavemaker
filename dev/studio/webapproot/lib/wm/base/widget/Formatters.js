@@ -168,7 +168,7 @@ dojo.declare("wm.DateTimeFormatter", wm.DataFormatter, {
 		}
 		var d = new Date(inDatum);
 		if (!this.useLocalTime)
-		    d.setHours(d.getHours() + wm.Date.timezoneOffset);
+		    d.setHours(d.getHours() + wm.timezoneOffset);
 		if (isNaN(d.getTime()))
 			d = new Date(Number(inDatum));
 		return (inDatum == undefined) || isNaN(d.getTime()) ? '-' : dojo.date.locale.format(d, opts);

@@ -67,7 +67,7 @@ dependencies = {
 
 				// wm utility libs
 				"wm.base.lib.util",
-				//"wm.base.lib.date",
+				"wm.base.lib.date",
 				//"wm.base.lib.text",
 				"wm.base.lib.types",
 				"wm.base.lib.data",
@@ -282,7 +282,6 @@ dependencies = {
 			resourceName: "wm.compressed.wm_editors",
 			layerDependencies: ["lib_build.js"],
 			dependencies: [
-			   "wm.base.lib.date",
         	   "wm.base.lib.text",
         	   "wm.base.widget.Formatters",
         	   "wm.base.widget.Editors.dijit",

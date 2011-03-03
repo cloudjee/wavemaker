@@ -18,6 +18,11 @@
 dojo.provide('wm.base.lib.date');
 dojo.require("dojo.date.locale");
 
+wm.timezoneOffset = new Date().getTimezoneOffset()/60 + wm.serverTimeOffset/(1000*60*60); // hours offset
+if (isNaN(wm.timezoneOffset))
+    wm.timezoneOffset = 0;
+
+
 wm.convertValueToDate = function(inValue, inParams) {
     if (inValue instanceof Date) return inValue;
 	var v = inValue, s = inParams || {selector: "date"};

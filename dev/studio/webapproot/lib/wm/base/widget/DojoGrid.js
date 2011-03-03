@@ -1038,7 +1038,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	dateFormatter: function(inDatum){
 	    if (!inDatum || inDatum instanceof Date == false)
 		return inDatum;
-	    inDatum.setHours(inDatum.getHours() + wm.Date.timezoneOffset,0,0);
+	    inDatum.setHours(inDatum.getHours() + wm.timezoneOffset,0,0);
 
 	    var constraints = {selector:'date', formatLength:'short', locale:dojo.locale};
 	    return dojo.date.locale.format(inDatum, constraints);
