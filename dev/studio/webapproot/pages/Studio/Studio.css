@@ -1930,7 +1930,11 @@ color: rgb(0,270,0);
     position: relative;
     top: 2px;
 }
-#studio_sourceTabs .StudioDirtyIcon {
+#studio_sourceTabs .StudioDirtyIcon,
+#studio_JavaEditorSubTab .StudioDirtyIcon,
+#studio_databaseSubTab .StudioDirtyIcon,
+#studio_webServiceSubTab .StudioDirtyIcon,
+#studio_securitySubTab .StudioDirtyIcon {
     height: 8px;
     width: 8px;
 }
