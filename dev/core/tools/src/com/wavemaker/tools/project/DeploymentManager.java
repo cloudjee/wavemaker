@@ -342,7 +342,14 @@ public class DeploymentManager {
 
 
     	// Write the zip file to outputFile
-    	File outputFile = new File(tmpDir, file.getOriginalFilename());                                                                         
+	String originalName = file.getOriginalFilename();
+	
+	int upgradeIndex = originalName.indexOf("-upgrade-");
+	if (upgradeIndex > 0) {
+	    originalName = originalName.substring(0, upgradeIndex) + ".zip";
+	}
+    	File outputFile = new File(tmpDir, originalName);
+
     	FileOutputStream fos = new FileOutputStream(outputFile);
     	IOUtils.copy(file.getInputStream(), fos);
     	file.getInputStream().close();
@@ -353,7 +360,6 @@ public class DeploymentManager {
     		
     		// returns null if fails to unzip; need a handler for this...
     		File projectFolder = com.wavemaker.tools.project.ResourceManager.unzipFile(outputFile);
-
     		// Verify that we receive a valid zip file (no folder if not)
     		if (projectFolder == null) throw new WMRuntimeException("That didn't look like a zip file");
 
@@ -377,7 +383,7 @@ public class DeploymentManager {
     		// Get a File to point to where we're going to place this imported project
     		finalProjectFolder = new File(projectManager.getBaseProjectDir(), 
     				projectManager.getUserProjectPrefix() + projectFolder.getName());
-    		String finalname = finalProjectFolder.getName();
+		String finalname = finalProjectFolder.getName();
 
     		// If there is already a project at that location, rename the project
     		int i = -1;
