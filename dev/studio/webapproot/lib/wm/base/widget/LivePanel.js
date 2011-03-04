@@ -178,6 +178,8 @@ dojo.declare("wm.LivePanel", wm.Panel, {
 	//this.liveForm.eventBindings.onBeforeOperation = this.name + ".popupLiveFormBeforeOperation";
 
 	this.saveButton.$.binding.addWire(null, "disabled", this.liveForm.name + ".invalid","");
+	updateButton.$.binding.addWire(null, "disabled", this.dataGrid.name + ".emptySelection","");
+	deleteButton.$.binding.addWire(null, "disabled", this.dataGrid.name + ".emptySelection","");
 	this.$.binding.addWire(null, "dialog", dialog.name, ""); // insures that if "dialog" is renamed, we will still know the name of our dialog
 	this.$.binding.addWire(null, "liveForm", this.liveForm.name, "");
 	this.$.binding.addWire(null, "dataGrid", this.dataGrid.name, "");
