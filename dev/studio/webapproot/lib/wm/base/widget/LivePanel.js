@@ -409,5 +409,12 @@ dojo.declare("wm.LivePanel", wm.Panel, {
 wm.Object.extendSchema(wm.LivePanel, {
     themeStyleType: {ignore: 1},
 	liveDataName: {ignore: 1},
-	liveSource: {ignore: 1}
+    liveSource: {ignore: 1},
+    dataGrid: {ignore: 1},
+    dialog: {ignore: 1},
+    liveForm: {ignore: 1},
+    saveButton: {ignore: 1},
+    liveVariable: {ignore: 1},
+    livevar: {ignore: 1}
+
 });
