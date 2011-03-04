@@ -219,7 +219,7 @@ dojo.declare("Services", wm.Page, {
 				pageName: "ImportWebService",
 				owner: studio,
 				hideControls: true,
-				contentHeight: 600,
+				contentHeight: 612,
 				contentWidth: 800
 			});
 			d.onClose = dojo.hitch(this, function(inWhy) {

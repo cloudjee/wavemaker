@@ -44,7 +44,7 @@ dojo.declare("wm.WebService", wm.JavaService, {
 			pageName: "ImportWebService",
 			hideControls: true,
 			width: "800px",
-		    height: "600px",
+		    height: "612px",
 		    title: "Import Web Service"
 		};
 		var d = wm.WebService.newWebServiceDialog = new wm.PageDialog(props);
