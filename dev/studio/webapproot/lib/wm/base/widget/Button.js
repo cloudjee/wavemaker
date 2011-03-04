@@ -448,6 +448,18 @@ dojo.declare("wm.PopupMenuButton", wm.Button, {
     fullStructureStr: "",
     iconClass: "", // alternative to iconUrl which allows for the icon to be loaded the same way as the icons in the menu itself
 
+    afterPaletteDrop: function() {
+	this.inherited(arguments);
+	this.setFullStructure([{label: "File",
+				children: [{label: "Save"},
+					   {label: "Close"}]},
+			       {label: "Edit",
+				children: [{label: "Cut"},
+					   {label: "Copy"},
+					   {label: "Paste"}]},
+			       {label: "Help"}]);
+    },
+
     onclick:function() {},
     onchange: function(inLabel,inIconClass,inEvent) {}, // fired when the user changes the button's caption (reselects also fires)
     onchangeNoInit: function(inLabel,inIconClass,inEvent) {}, // fired when the user changes the button's caption (reselects also fires)
@@ -655,6 +667,7 @@ dojo.declare("wm.PopupMenuButton", wm.Button, {
 	this.fullStructureStr = inStr;
 	this.dojoMenu.setFullStructureStr(inStr);
 	this.dojoMenu.renderDojoObj();
+
 	if (!this.caption)
 	    this.set_caption();
 	if (inSetByDesigner && this.isDesignLoaded())
@@ -662,6 +675,8 @@ dojo.declare("wm.PopupMenuButton", wm.Button, {
     },
     // used by users who hand edit their own widgets.js files; used by studio.widgets.js
     setFullStructure: function(inObj) {
+	if (this._isDesignLoaded)
+	    this.fullStructureStr = dojo.toJson(inObj);
 	this.dojoMenu.setFullStructure(inObj);
 	this.dojoMenu.renderDojoObj();
     },

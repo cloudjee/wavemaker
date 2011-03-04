@@ -726,7 +726,15 @@ dojo.declare("wm.PopupMenu", wm.DojoMenu, {
 	this.inherited(arguments);
 	this.setParent(null);
 	studio.designer.domNode.appendChild(this.domNode);
-	this.setMenu("File > New, Open, Save, Close\nEdit > Cut, Copy, Paste\nZoom > 25%, 50%, 100%, 150%\nHelp");
+	this.setFullStructure([{label: "File",
+				children: [{label: "Save"},
+					   {label: "Close"}]},
+			       {label: "Edit",
+				children: [{label: "Cut"},
+					   {label: "Copy"},
+					   {label: "Paste"}]},
+			       {label: "Help"}]);
+	this.renderDojoObj();
 	this.activate();
     },
     setLabel: function(inIndex, inText) {
