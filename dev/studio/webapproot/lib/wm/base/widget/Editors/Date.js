@@ -250,7 +250,7 @@ dojo.declare("wm.DateTime", wm.Text, {
 		{"_classes":{"domNode":["wmdialogcontainer","MainContent"]},"border":"0","height":"100%","horizontalAlign":"left","margin":"0","padding":"0","verticalAlign":"top","width":"100%"},
 		{},
 		{
-		    calendar: ["wm.dijit.Calendar", {useLocalTime: true, "border":"0", width: "100%"}, {onValueSelected: "handleDateChange"}],
+		    calendar: ["wm.dijit.Calendar", {useLocalTime: true, "border":"0", height: "180px", width: "100%"}, {onValueSelected: "handleDateChange"}],
 		    panel1: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"bottom","width":"100%"}, {}, {
 			hours: ["wm.Number", {"caption":"Hour","captionAlign":"left","captionPosition":"top","captionSize":"20px","changeOnKey":true,"displayValue":"","height":"43px","maximum":12,"minimum":1,"padding":"2","spinnerButtons":true,"width":"56px"}, {onchange: "handleDateChange"}],
 			minutes: ["wm.Number", {"caption":"Minute","captionAlign":"left","captionPosition":"top","captionSize":"20px","changeOnKey":true,"displayValue":"","height":"43px","maximum":59,"minimum":0,"padding":"2","spinnerButtons":true,"width":"56px"}, {onchange: "handleDateChange"}],
@@ -319,7 +319,7 @@ dojo.declare("wm.DateTime", wm.Text, {
 			     dialog.containerWidget.padBorderMargin.b) + "px");
 	    break;
 	case "Date":
-	    dialog.setHeight((parseInt(wm.dijit.Calendar.prototype.height) +
+	    dialog.setHeight((dialog.$.calendar.bounds.h +
 			     //dialog.buttonBar.bounds.h + 
 			     dialog.padBorderMargin.t + 
 			     dialog.padBorderMargin.b +
@@ -328,7 +328,7 @@ dojo.declare("wm.DateTime", wm.Text, {
 	    break;
 	case "Date and Time":
 	    dialog.setHeight((this.timePanelHeight + 
-			     parseInt(wm.dijit.Calendar.prototype.height) +
+			      dialog.$.calendar.bounds.h +
 			     dialog.buttonBar.bounds.h + 
 			      dialog.$.label.bounds.h + 
 			     dialog.padBorderMargin.t + 
@@ -430,7 +430,7 @@ dojo.declare("wm.DateTime", wm.Text, {
     },
     listProperties: function() {
 	var p = this.inherited(arguments);
-	p.useLocalTime.tmpignore = (this.dateMode != "Date");
+	p.useLocalTime.ignoretmp = (this.dateMode != "Date");
 	return p;
     }
 
