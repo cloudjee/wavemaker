@@ -548,7 +548,10 @@ dojo.declare("wm.Dialog", wm.Container, {
 		if (inShowing) {
 		    if (this._minified)
 			this.unminify(null, true);
-			this.reflow();
+		    //this.reflow();
+		    delete this.showing; // stupid hack to fix bug in Safari Version 4.0.4 (6531.21.10)
+		    this.showing = true;
+		    this.flow();
 		}/* else
 			// FIXME: hide any tooltips that may be showing
 			wm.hideToolTip(true);*/
@@ -610,6 +613,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 
 
 	},
+
 /*
 	setContentWidth: function(inWidth) {
 		this.contentWidth = inWidth;
