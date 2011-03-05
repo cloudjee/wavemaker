@@ -54,6 +54,7 @@ import org.xml.sax.SAXException;
 
 import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.common.util.IOUtils;
+import com.wavemaker.common.CommonConstants;
 import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.runtime.ws.BindingProperties;
@@ -61,8 +62,10 @@ import com.wavemaker.runtime.ws.HTTPBindingSupport;
 import com.wavemaker.runtime.ws.WebServiceException;
 import com.wavemaker.runtime.ws.HTTPBindingSupport.HTTPRequestMethod;
 import com.wavemaker.runtime.ws.util.Constants;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.project.ProjectManager;
+import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.ws.wadl.Wadl2Wsdl;
@@ -202,6 +205,13 @@ public class WebServiceToolsManager {
 
         String srvId = wsdl.getServiceId();
         logger.info("Import successful: " + srvId);
+
+        if (srvId.equals(CommonConstants.SALESFORCE_SERVICE)) { //salesforce
+            DeploymentManager deploymentManager = (DeploymentManager) RuntimeAccess.getInstance().getSpringBean(
+                "deploymentManager");
+            deploymentManager.testRunStart();
+        }
+        
         return srvId;
     }
 
