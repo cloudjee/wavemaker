@@ -230,7 +230,7 @@ dojo.declare("wm.DateTime", wm.Text, {
     dateMode: "Date and Time",
     doOnblur: function() {
 	this.inherited(arguments);
-	wm.onidle(this, function() {
+
 	// If we lose focus on the datetime editor when only picking a date, then dismiss the dialog
 	// unless the focus is now on the dialog itself
 	if (this.dateMode == "Date" && wm.DateTime.dialog && wm.DateTime.dialog.showing) {
@@ -238,10 +238,10 @@ dojo.declare("wm.DateTime", wm.Text, {
 	    if (!dojo.isDescendant(node, this.domNode) && !dojo.isDescendant(node, wm.DateTime.dialog.domNode))
 		wm.DateTime.dialog.hide();
 	}
-	});
     },
     doOnfocus: function() {
 	this.inherited(arguments);
+	wm.onidle(this, function() {
 	if (!wm.DateTime.dialog) {
 	    var dialog = wm.DateTime.dialog = new wm.Dialog({_classes: {domNode: ["wmdatetimedialog"]}, owner: app, "height":"252px","title":"","width":"210px", modal: false, useContainerWidget:true, useButtonBar: true, name: "_DateTimeDialog"});
 	    dialog.containerWidget.setPadding("1");
@@ -342,6 +342,7 @@ dojo.declare("wm.DateTime", wm.Text, {
 	this._setupDialogValues = true;
 	this.handleDateChange();
 	delete this._setupDialogValues;
+	});
     },
     handleDateChange: function() {
 	if (this._initializingDialog) return;	
