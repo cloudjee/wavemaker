@@ -71,6 +71,7 @@ wm.componentList = {
 	'wm.Timer':['wm.base.components.Timer'],
 	
 	'wm.Date':['build.Gzipped.wm_editors'],
+	'wm.DateTime':['build.Gzipped.wm_editors'],
 	'wm.SelectMenu':['build.Gzipped.wm_editors'],
 	'wm.Number':['build.Gzipped.wm_editors'],
 	'wm.Checkbox':['build.Gzipped.wm_editors'],
