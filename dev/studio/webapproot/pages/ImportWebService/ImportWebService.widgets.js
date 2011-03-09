@@ -76,13 +76,13 @@ ImportWebService.widgets = {
 												usernameLabel: ["wm.Label", {width: "120px", border: "0", caption: "Username"}, {}, {
 													format: ["wm.DataFormatter", {}, {}]
 												}],
-												usernameInput: ["wm.Input", {displayValue:"sammysm@wavemaker.com", checked: true, width: "300px", border: "0"}, {onkeypress: "onUsernameKeyPress", onchange: "usernameChanged", onenterkey: "importBtnClick"}]
+												usernameInput: ["wm.Input", {displayValue:"", checked: true, width: "300px", border: "0"}, {onkeypress: "onUsernameKeyPress", onchange: "usernameChanged", onenterkey: "importBtnClick"}]
 											}],
 											panel603a: ["wm.Panel", {height: "24px", layoutKind: "left-to-right", width: "100%",horizontalAlign: "center"}, {}, {
 												passwordLabel: ["wm.Label", {width: "120px", border: "0", caption: "Password"}, {}, {
 													format: ["wm.DataFormatter", {}, {}]
 												}],
-												passwordInput: ["wm.Input", {displayValue:"Silver77Surfer", checked: true, width: "300px", border: "0", inputType: "password"}, {onenterkey: "importBtnClick"}]
+												passwordInput: ["wm.Input", {displayValue:"", checked: true, width: "300px", border: "0", inputType: "password"}, {onenterkey: "importBtnClick"}]
 											}]
 										}]
 									}]

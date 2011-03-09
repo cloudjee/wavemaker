@@ -40,8 +40,8 @@ dojo.declare("ImportWebService", wm.Page, {
 		this.serviceIdAutoYesRadio.components.editor.setChecked(true);
 		this.serviceIdInput.clear();
 		this.restServiceBuilderPage.page.clearAll();
-		this.usernameInput.setInputValue("sammysm@wavemaker.com"); //xxx
-		this.passwordInput.setInputValue("Silver77Surfer"); //xxx
+		this.usernameInput.setInputValue("");
+		this.passwordInput.setInputValue("");
 	},
 	updateSelect: function(inSelect, inData) {
 		var s = inSelect, o;
