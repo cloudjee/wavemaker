@@ -110,7 +110,9 @@ public class JAXBTypeMapper_SF extends JAXBTypeMapper {
     private List<ElementType> getPropertyTypes(CClassInfo ci, String serviceId, SalesforceHelper sfHelper) {
         List<ElementType> properties = new ArrayList<ElementType>();
         for (CPropertyInfo prop : ci.getProperties()) {
-            if (sfHelper.skipElement(prop.getName(true), serviceId)) continue; //salesforce
+            if (serviceId.equals(CommonConstants.SALESFORCE_SERVICE)) {
+                if (sfHelper.skipElement(prop.getName(true), serviceId)) continue; //salesforce
+            }
             Collection<? extends CTypeInfo> ref = prop.ref();
             String propJavaType = null;
             if (prop instanceof CElementPropertyInfo
