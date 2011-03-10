@@ -34,6 +34,7 @@ import org.apache.commons.io.FileUtils;
 
 import com.wavemaker.common.Resource;
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.json.JSONMarshaller;
 import com.wavemaker.json.JSONState;
@@ -412,7 +413,9 @@ public /*static*/ class ConfigurationCompiler {
 
                 int fieldOrder = 0;
                 for (Element et : dao.getElement()) {
-                    if (SalesforceHelper.skipElement(et, serviceId)) continue; //salesforce
+                    if (serviceId.equals(CommonConstants.SALESFORCE_SERVICE)) {
+                        if (SalesforceHelper.skipElement(et, serviceId)) continue; //salesforce
+                    }
                     Field f = new Field();
                     f.setType(et.getTypeRef());
                     f.setIsList(et.isIsList());
