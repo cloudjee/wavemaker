@@ -261,7 +261,9 @@ dojo.declare("wm.Dashboard", wm.Control, {
 		if (p){
 			var wmProps = p.wmProps;
 			this.updateClosedList(wmProps.id, true);			
-			p.destroy();
+		    if (p.wm_pageContainer)
+			p.wm_pageContainer.destroy();
+		    p.destroy();
 		}
 		this._onDashboardChange(e);
 	},
