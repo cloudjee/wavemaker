@@ -269,7 +269,7 @@ wm.Layers.extend({
 	}
     },
     addLayerToContextMenu: function(i) {
-	return 	{label:   this.layers[i].caption,
+	return 	{label:   this.layers[i].name,
 		 iconClass: "Studio_paletteImageList_0",
 		 onClick: dojo.hitch(this, function() {
 		     this.setLayerIndex(i);
