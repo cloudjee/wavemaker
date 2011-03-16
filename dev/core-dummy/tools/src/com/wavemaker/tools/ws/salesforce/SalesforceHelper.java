@@ -46,7 +46,7 @@ public class SalesforceHelper {
     }
 
     public static boolean skipElement(DataObject.Element et, String serviceId) {
-        System.out.println("\n*** SalesForce interface is not avaliable in this package ***\n");
+        //System.out.println("\n*** SalesForce interface is not avaliable in this package ***\n");
         return false;
     }
 
