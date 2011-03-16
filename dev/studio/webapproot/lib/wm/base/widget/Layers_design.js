@@ -214,7 +214,13 @@ wm.Layers.extend({
 			case "defaultLayer":
 				var options = [""], values = [-1];
 				this.getLayerInfo(options, values);
-				return makeSelectPropEdit(inName, inValue, options, inDefault, values);
+				return new wm.propEdit.Select({
+				    component: this,
+				    name: inName,
+				    value: inValue,
+				    values: values,
+				    options: options});
+
 			case "headerHeight":
 				return new wm.propEdit.UnitValue({
 					component: this,
