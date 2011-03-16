@@ -901,8 +901,14 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
 	_onGridEvent: function(evt){
 		var params = {};
-		if (!evt.grid)
+		if (!evt.grid){
+			params.cellNode == evt.target;
+			params.rowNode = evt.target.parentNode.parentNode.parentNode.parentNode;
+			params.rowId = evt.target.parentNode.parentNode.parentNode.parentNode.gridRowIndex;
+			params.selectedItem = this.selectedItem;
+			params.fieldId = this.dojoObj.structure[0][evt.target.cellIndex].field;
 			return params;
+		}
 		params.cellNode = evt.cellNode;
 		params.rowNode = evt.rowNode;
 		params.rowId = evt.rowIndex;
