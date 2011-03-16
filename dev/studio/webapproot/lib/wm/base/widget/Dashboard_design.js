@@ -153,7 +153,7 @@ wm.Object.extendSchema(wm.Dashboard, {
 	dijitPortlets:{ignore:1},
 	addDialogName:{hidden:true},
 	headerAttr:{ignore:1},
-        configPortlets: { group: "edit", order: 10 },
+        configPortlets: { group: "edit", order: 10, contextMenu: 1 },
         autoScroll: {group: "style", order: 100, ignore: 0},
     allowAutoScroll: {group: "style", order: 101, ignore: 0},
     openDialog: {group: "method"},
