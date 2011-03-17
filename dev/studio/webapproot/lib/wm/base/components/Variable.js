@@ -291,6 +291,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	_setArrayData: function(inArray) {
 		this.data = { list: inArray };
 		this.isList = true;
+	    this._isNull = inArray.length == 0;
 	},
 	_setObjectData: function(inObject) {
 		this.beginUpdate();
