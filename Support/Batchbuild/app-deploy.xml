@@ -177,9 +177,21 @@
             <replacevalue>"</replacevalue>
         </replace>
 
+		<replace dir="${build.app.webapproot.dir}">
+            <include name="app.css"/>
+            <replacetoken>"/wavemaker/</replacetoken>
+            <replacevalue>"</replacevalue>
+        </replace>
+        
 		<war basedir="${build.app.webapproot.dir}" destfile="${war.file.name}">
 			<exclude name="**/application.xml"/>
 		</war>
+		
+		<replace dir="${build.app.webapproot.dir}">
+            <include name="app.css"/>
+            <replacetoken>"lib/</replacetoken>
+            <replacevalue>"/wavemaker/lib/</replacevalue>
+        </replace>     
     </target>
 
 	<target name="build-ear" if="appXmlExists">
