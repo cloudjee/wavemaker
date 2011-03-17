@@ -1,3 +1,6 @@
+/*****************************************
+ * FILE: theme.css
+ *****************************************/
 /*
  *  Copyright (C) 2011 WaveMaker Software, Inc.
  *
@@ -15,10 +18,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
-/*****************************************
- * FILE: theme.css
- *****************************************/
 @import url("custom.css"); /* Edit this file if your editting by hand and don't want the themedesigner to overwrite your changes */
   /**************************************************************************************************
    * TYPE:        Button Focus for wm.Button and TabControls
@@ -92,6 +91,23 @@ body .wm_green input:focus,
 /*****************************************
  * FILE: buttons.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.Button
    *
@@ -397,6 +413,23 @@ body .wm_green input:focus,
 /*****************************************
  * FILE: calendar.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.Calendar and the popup from wm.Date
    *
@@ -503,6 +536,23 @@ body .wm_green input:focus,
 /*****************************************
  * FILE: dialog.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.Dialog main styles
    *
@@ -682,6 +732,23 @@ body .wm_green .dialogfooter .wmbutton:hover {
 /*****************************************
  * FILE: editors.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.AbstractEditor / wm._BaseEditor
    *
@@ -744,7 +811,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
          border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
 }
 .wm_green .dijitSpinner .dijitArrowButton .dijitArrowButtonInner {
-	background-position: 30% 20%;
+	background-position: 30% 30%;
 	background-image: url(images/comboArrowDownDark.png); /* wm.NumberSpinner-Down-Arrow_Image */
 }
 .wm_green .dijitSpinner .dijitArrowButton.dijitUpArrowButton .dijitArrowButtonInner {
@@ -1055,6 +1122,23 @@ body .wm_green .dialogfooter .wmbutton:hover {
 /*****************************************
  * FILE: grid.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        Grid rows (Even rows and odd rows)
    *
@@ -1136,8 +1220,9 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .dj_ie6 .wm_green .wmlist-item.wmlist-item-over,
     .wm_green div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_green .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_green .dojoxGridRow.dojoxGridRowOver, 
-    .wm_green .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_green .dojoxGridRowOver, 
+    .wm_green div.dojoxGridRowOdd.dojoxGridRowOver,
+    .wm_green div.dojoxGridRowOver td.dojoxGridCell
     {
 	/* Document-ClickablesHover-Background */
 	background-color: #d7d1d5 !important; /* Document-ClickablesHover-Background_Color */
@@ -1211,8 +1296,8 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .dj_ie6 .wm_green .MainContent .wmlist-item.wmlist-item-over,
     .wm_green .MainContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_green .MainContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_green .MainContent .dojoxGridRow.dojoxGridRowOver, 
-    .wm_green .MainContent .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_green .MainContent div.dojoxGridRowOver, 
+    .wm_green .MainContent div.dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* MainContent-ClickablesHover-Background */
 	background-color: #444444 !important; /* MainContent-ClickablesHover-Background_Color */
@@ -1247,8 +1332,8 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .dj_ie6 .wm_green .EmphasizedContent .wmlist-item.wmlist-item-over,
     .wm_green .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_green .EmphasizedContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_green .EmphasizedContent .dojoxGridRow.dojoxGridRowOver, 
-    .wm_green .EmphasizedContent .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_green .EmphasizedContent div.dojoxGridRowOver, 
+    .wm_green .EmphasizedContent div.dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* EmphasizedContent-ClickablesHover-Background */
 	background-color: #666666 !important; /* EmphasizedContent-ClickablesHover-Background_Color */
@@ -1283,8 +1368,8 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .dj_ie6 .wm_green .HeaderContent .wmlist-item.wmlist-item-over,
     .wm_green .HeaderContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_green .HeaderContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_green .HeaderContent .dojoxGridRow.dojoxGridRowOver, 
-    .wm_green .HeaderContent .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_green .HeaderContent div.dojoxGridRowOver, 
+    .wm_green .HeaderContent div.dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* HeaderContent-ClickablesHover-Background */
 	background-color: #333333 !important; /* HeaderContent-ClickablesHover-Background_Color */
@@ -1339,6 +1424,23 @@ body .wm_green .dialogfooter .wmbutton:hover {
 /*****************************************
  * FILE: menus.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.DojoMenu
    *
@@ -1603,6 +1705,23 @@ body .wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
 /*****************************************
  * FILE: panels.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 /* NOTE: Shadows don't currently work on fancy panel or Layers */
   /**************************************************************************************************
    * TYPE:        Tab Buttons
@@ -2471,6 +2590,23 @@ body.wm_green {
 /*****************************************
  * FILE: progressbar.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.dijit.ProgressBar
    *
@@ -2605,6 +2741,23 @@ body.wm_green {
 /*****************************************
  * FILE: splitterbevel.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.Splitter / wm.Bevel
    *

@@ -109,8 +109,9 @@
     .dj_ie6 .wm_template .wmlist-item.wmlist-item-over,
     .wm_template div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_template .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_template .dojoxGridRow.dojoxGridRowOver, 
-    .wm_template .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_template .dojoxGridRowOver, 
+    .wm_template div.dojoxGridRowOdd.dojoxGridRowOver,
+    .wm_template div.dojoxGridRowOver td.dojoxGridCell
     {
 	/* Document-ClickablesHover-Background */
 	background-color: #333333 !important; /* Document-ClickablesHover-Background_Color */
@@ -198,8 +199,8 @@
     .dj_ie6 .wm_template .MainContent .wmlist-item.wmlist-item-over,
     .wm_template .MainContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_template .MainContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_template .MainContent .dojoxGridRow.dojoxGridRowOver, 
-    .wm_template .MainContent .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_template .MainContent div.dojoxGridRowOver, 
+    .wm_template .MainContent div.dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* MainContent-ClickablesHover-Background */
 	background-color: #333333 !important; /* MainContent-ClickablesHover-Background_Color */
@@ -243,8 +244,8 @@
     .dj_ie6 .wm_template .EmphasizedContent .wmlist-item.wmlist-item-over,
     .wm_template .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_template .EmphasizedContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_template .EmphasizedContent .dojoxGridRow.dojoxGridRowOver, 
-    .wm_template .EmphasizedContent .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_template .EmphasizedContent div.dojoxGridRowOver, 
+    .wm_template .EmphasizedContent div.dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* EmphasizedContent-ClickablesHover-Background */
 	background-color: #333333 !important; /* EmphasizedContent-ClickablesHover-Background_Color */
@@ -288,8 +289,8 @@
     .dj_ie6 .wm_template .HeaderContent .wmlist-item.wmlist-item-over,
     .wm_template .HeaderContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_template .HeaderContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_template .HeaderContent .dojoxGridRow.dojoxGridRowOver, 
-    .wm_template .HeaderContent .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_template .HeaderContent div.dojoxGridRowOver, 
+    .wm_template .HeaderContent div.dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* HeaderContent-ClickablesHover-Background */
 	background-color: #333333 !important; /* HeaderContent-ClickablesHover-Background_Color */

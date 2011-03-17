@@ -1,3 +1,6 @@
+/*****************************************
+ * FILE: theme.css
+ *****************************************/
 /*
  *  Copyright (C) 2011 WaveMaker Software, Inc.
  *
@@ -15,10 +18,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
-/*****************************************
- * FILE: theme.css
- *****************************************/
 @import url("custom.css"); /* Edit this file if your editting by hand and don't want the themedesigner to overwrite your changes */
   /**************************************************************************************************
    * TYPE:        Button Focus for wm.Button and TabControls
@@ -92,6 +91,23 @@ body .wm_harrypotter input:focus,
 /*****************************************
  * FILE: buttons.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.Button
    *
@@ -397,6 +413,23 @@ body .wm_harrypotter input:focus,
 /*****************************************
  * FILE: calendar.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.Calendar and the popup from wm.Date
    *
@@ -503,6 +536,23 @@ body .wm_harrypotter input:focus,
 /*****************************************
  * FILE: dialog.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.Dialog main styles
    *
@@ -682,6 +732,23 @@ body .wm_harrypotter .dialogfooter .wmbutton:hover {
 /*****************************************
  * FILE: editors.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.AbstractEditor / wm._BaseEditor
    *
@@ -744,7 +811,7 @@ body .wm_harrypotter .dialogfooter .wmbutton:hover {
          border-radius-topright: 2px; /* wm.SelectMenu-Inner_Radius */
 }
 .wm_harrypotter .dijitSpinner .dijitArrowButton .dijitArrowButtonInner {
-	background-position: 30% 20%;
+	background-position: 30% 30%;
 	background-image: url(images/comboArrowDownDark.png); /* wm.NumberSpinner-Down-Arrow_Image */
 }
 .wm_harrypotter .dijitSpinner .dijitArrowButton.dijitUpArrowButton .dijitArrowButtonInner {
@@ -1055,6 +1122,23 @@ body .wm_harrypotter .dialogfooter .wmbutton:hover {
 /*****************************************
  * FILE: grid.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        Grid rows (Even rows and odd rows)
    *
@@ -1136,8 +1220,9 @@ body .wm_harrypotter .dialogfooter .wmbutton:hover {
     .dj_ie6 .wm_harrypotter .wmlist-item.wmlist-item-over,
     .wm_harrypotter div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_harrypotter .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_harrypotter .dojoxGridRow.dojoxGridRowOver, 
-    .wm_harrypotter .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_harrypotter .dojoxGridRowOver, 
+    .wm_harrypotter div.dojoxGridRowOdd.dojoxGridRowOver,
+    .wm_harrypotter div.dojoxGridRowOver td.dojoxGridCell
     {
 	/* Document-ClickablesHover-Background */
 	background-color: #fe9603 !important; /* Document-ClickablesHover-Background_Color */
@@ -1211,8 +1296,8 @@ body .wm_harrypotter .dialogfooter .wmbutton:hover {
     .dj_ie6 .wm_harrypotter .MainContent .wmlist-item.wmlist-item-over,
     .wm_harrypotter .MainContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_harrypotter .MainContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_harrypotter .MainContent .dojoxGridRow.dojoxGridRowOver, 
-    .wm_harrypotter .MainContent .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_harrypotter .MainContent div.dojoxGridRowOver, 
+    .wm_harrypotter .MainContent div.dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* MainContent-ClickablesHover-Background */
 	background-color: #f96a02 !important; /* MainContent-ClickablesHover-Background_Color */
@@ -1247,8 +1332,8 @@ body .wm_harrypotter .dialogfooter .wmbutton:hover {
     .dj_ie6 .wm_harrypotter .EmphasizedContent .wmlist-item.wmlist-item-over,
     .wm_harrypotter .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_harrypotter .EmphasizedContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_harrypotter .EmphasizedContent .dojoxGridRow.dojoxGridRowOver, 
-    .wm_harrypotter .EmphasizedContent .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_harrypotter .EmphasizedContent div.dojoxGridRowOver, 
+    .wm_harrypotter .EmphasizedContent div.dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* EmphasizedContent-ClickablesHover-Background */
 	background-color: #ba2f1d !important; /* EmphasizedContent-ClickablesHover-Background_Color */
@@ -1283,8 +1368,8 @@ body .wm_harrypotter .dialogfooter .wmbutton:hover {
     .dj_ie6 .wm_harrypotter .HeaderContent .wmlist-item.wmlist-item-over,
     .wm_harrypotter .HeaderContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_harrypotter .HeaderContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_harrypotter .HeaderContent .dojoxGridRow.dojoxGridRowOver, 
-    .wm_harrypotter .HeaderContent .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_harrypotter .HeaderContent div.dojoxGridRowOver, 
+    .wm_harrypotter .HeaderContent div.dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* HeaderContent-ClickablesHover-Background */
 	background-color: #333333 !important; /* HeaderContent-ClickablesHover-Background_Color */
@@ -1339,6 +1424,23 @@ body .wm_harrypotter .dialogfooter .wmbutton:hover {
 /*****************************************
  * FILE: menus.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.DojoMenu
    *
@@ -1603,6 +1705,23 @@ body .wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
 /*****************************************
  * FILE: panels.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 /* NOTE: Shadows don't currently work on fancy panel or Layers */
   /**************************************************************************************************
    * TYPE:        Tab Buttons
@@ -2471,6 +2590,23 @@ body.wm_harrypotter {
 /*****************************************
  * FILE: progressbar.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.dijit.ProgressBar
    *
@@ -2605,6 +2741,23 @@ body.wm_harrypotter {
 /*****************************************
  * FILE: splitterbevel.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.Splitter / wm.Bevel
    *
