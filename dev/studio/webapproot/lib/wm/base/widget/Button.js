@@ -148,7 +148,7 @@ dojo.declare("wm.ToolButton", wm.Widget, {
 	        this.inherited(arguments);
 	    var il = this._imageList;
 		if (il && il.getImageHtml && this.imageIndex >= 0) {
-			var ii = this.imageIndex + (this.disabled ? il.colCount * 2 : 0) + (this.selected ? il.colCount : 0);
+			var ii = this.imageIndex + (this.disabled && this.declaredClass == "wm.ToolButton" ? il.colCount * 2 : 0) + (this.selected ? il.colCount : 0);
 			var sl = this.singleLine ? "line-height: " + this.height + "; " : "";
 			var captionHtml = this.caption ? '<span style="padding-left: 2px; ' + sl +'">' + this.caption + '</span>' : "";
 			this.btnNode.innerHTML = il.getImageHtml(ii) + captionHtml;
