@@ -138,16 +138,18 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                             _this.deselectAll();
 			    return;
                         }
-			var idx = _this.dojoObj.getItemIndex(items[0]);
-			if (idx == -1)
-				idx = _this.variable.getItemIndexByPrimaryKey(obj, pkList) || -1;
-			if (idx >= 0)
-			    this._setRowTimeout = setTimeout(function(){
-				_this.setSelectedRow(idx);
-				_this.dojoObj.scrollToRow(idx);
-			    },0);
-                         else 
-                            _this.deselectAll();
+		    var idx =  _this.dojoObj.getItemIndex(items[0]);
+		    if (idx == -1)
+			idx = _this.variable.getItemIndexByPrimaryKey(obj, pkList) || -1;
+		    if (idx >= 0)
+			this._setRowTimeout = setTimeout(function(){
+			    _this.dojoObj.scrollToRow(idx);
+			    wm.onidle(_this, function() {
+				this.setSelectedRow(idx);
+			    });
+			},0);
+                    else 
+                        _this.deselectAll();
 		};
 		this.store.fetch({query:q, onComplete: sItem});
 	},
@@ -230,18 +232,18 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		this.onCellEdited(inValue, inRowIndex, inFieldName);
 	},
 	updateSelectedItem: function(selectedIndex) {
-		if (selectedIndex == -1) {
-			this.selectedItem.clearData();
-		} else {
-			var newdata = this.itemToJSONObject(this.store, this.getRowData(selectedIndex));
-			for (prop in newdata){
-				if (newdata[prop] instanceof Date)
-					newdata[prop] = newdata[prop].getTime();
-			}
-			this.selectedItem.setData(newdata);
+	    if (selectedIndex == -1) {
+		this.selectedItem.clearData();
+	    } else {
+		var newdata = this.itemToJSONObject(this.store, this.getRowData(selectedIndex));
+		for (prop in newdata){
+		    if (newdata[prop] instanceof Date)
+			newdata[prop] = newdata[prop].getTime();
 		}
-		this.setValue("emptySelection", !this.hasSelection());
-		this.setValue("isRowSelected", this.hasSelection());
+		this.selectedItem.setData(newdata);
+	    }
+	    this.setValue("emptySelection", !this.hasSelection());
+	    this.setValue("isRowSelected", this.hasSelection());
 	},
 
     createNewLiveVariable: function() {
@@ -506,6 +508,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		if (this.dojoObj)
 			this.dojoObj.resize();
 	},
+    /* Users connect to this to add in custom advanced props */
+    addDojoProps: function(inProps) {
+    },
 	renderDojoObj: function() {
 	  if (this._cupdating)
 			return;
@@ -529,7 +534,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		if (structure[0].length == 0)
 			structure = {};
 
-		var props = {escapeHTMLInData:false, structure:structure, store:this.store, singleClickEdit: this.singleClickEdit, columnReordering:true, query: this.query || {}};
+	    var props = {escapeHTMLInData:false, structure:structure, store:this.store, singleClickEdit: this.singleClickEdit, columnReordering:true, query: this.query || {}};
+	    this.addDojoProps(props);
 		this.dojoObj = new dojox.grid.DataGrid(props,dojo.create('div', {style:'width:100%;height:100%'}, this.gridNode));
 		this.connectDojoEvents();
 		this.setSelectionMode(this.selectionMode);
@@ -1106,6 +1112,15 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			this.liveForm.beginDataInsert();
 		}
 		this.onAddButtonClick(evt);
+	},
+	editActionCall: function(evt){
+		if (this.addDialog){
+			this.addDialog.show();
+		}
+		
+		if (this.liveForm){
+		    this.liveForm.beginDataUpdate();
+		}
 	},
 	cancelEdit: function(){
 		this.addDialog.hide();
