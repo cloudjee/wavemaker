@@ -244,10 +244,14 @@ dojo.declare("wm.studio.Project", null, {
 		layers[i].hide();
 	    }
     },
-	openPage: function(inName) {
-	    this.closeAllServicesTabs();
-	    if (studio.bindDialog.showing && !studio.bindDialog._hideAnimation) 
-		studio.bindDialog.dismiss();
+    openPage: function(inName, unsavedChanges) {
+	this.closeAllServicesTabs();
+	if (studio.bindDialog.showing && !studio.bindDialog._hideAnimation) 
+	    studio.bindDialog.dismiss();
+	
+	if (unsavedChanges) {
+	    studio.restoreCleanApp();
+	}
 
 		this.pageChanging();
 		this.pageName = inName;
@@ -756,7 +760,27 @@ Studio.extend({
 						      js: this.appsourceEditor.getText(),
 						      css: this.getAppCss()} : {};
 	},
+    restoreCleanApp: function() {
+	var d = this._cleanAppData;
+	if (!d) return;
+	this.setAppScript(d.js);
+	this.setAppCss(d.css);
+	var props = this.listProperties();
+	for (var name in this.application.components) {
+	    var c = this.application.components[name];
+	    if (c._isWriteableComponent(name, props)) 
+		c.destroy();
+	}
 
+	var restoreComponents = {};
+	var compArray = dojo.fromJson(d.widgets);
+	for (var i = 0; i < compArray.length; i++) {
+	    var tmp = dojo.fromJson("{"+compArray[i]+"}");
+	    restoreComponents = dojo.mixin(restoreComponents, tmp);
+	}
+	this.application.createComponents(restoreComponents, this.application);
+	this.updateProjectDirty();
+    },
 
     /* isPageDirty tells us when its safe to leave a page/change pages and when the user should
      * be warned of unsaved changes
@@ -1441,7 +1465,7 @@ Studio.extend({
             if (this.isPageDirty())
                 app.confirm(inMessage, false, onConfirm, onCancel);
             else if (onConfirm)
-                onConfirm();
+                onConfirm(true);
 	},
         confirmAppChange: function(inMessage, inNewProject, onConfirm, onCancel) {
 	    var inMessage = dojo.string.substitute(inMessage, {project: '"' + this.project.projectName + '"', newProject: inNewProject});
@@ -1510,7 +1534,7 @@ Studio.extend({
     },
 	runProjectClick: function(inSender) {	    
 	    this._runRequested = inSender.name;
-
+	    var operation = inSender.caption;
 	    if (!this._runConnections) this._runConnections = [];
 
 	    /* Clear any prior connections... esp for runs that don't make it to projectSaveComplete */
@@ -1523,8 +1547,8 @@ Studio.extend({
 
 		this.deploy(bundleDialog.M_BuildingPreview, dojo.hitch(this, function(result) {
 		    this._runRequested = false;
-		    if (inSender.caption != "Compile") 
-			wm.openUrl(this.getPreviewUrl(inSender.caption == "Test"), this.project.projectName, "_wmPreview");
+		    if (operation != "Compile") 
+			wm.openUrl(this.getPreviewUrl(operation == "Test"), this.project.projectName, "_wmPreview");
 		    studio.endWait();
 		    return result;
 		}));
