@@ -32,7 +32,7 @@ dojo.declare("wm.Html", wm.Box, {
 	},
 	setHtml: function(inHtml) {
                 var innerHTML = this.domNode.innerHTML;
-		if (inHtml && inHtml.indexOf('resources/') == 0)
+	        if (inHtml && String(inHtml).indexOf('resources/') == 0)
 		{
 			if (!this.htmlLoader)
 				this.htmlLoader = new wm.HtmlLoader({owner: this, relativeUrl: true});
