@@ -242,106 +242,108 @@ dojo.declare("wm.DateTime", wm.Text, {
     doOnfocus: function() {
 	this.inherited(arguments);
 	wm.onidle(this, function() {
-	if (!wm.DateTime.dialog) {
-	    var dialog = wm.DateTime.dialog = new wm.Dialog({_classes: {domNode: ["wmdatetimedialog"]}, owner: app, "height":"252px","title":"","width":"210px", modal: false, useContainerWidget:true, useButtonBar: true, name: "_DateTimeDialog"});
-	    dialog.containerWidget.setPadding("1");
-	    dialog.containerWidget.createComponent(	
-		"mainPanel", "wm.Container", 
-		{"_classes":{"domNode":["wmdialogcontainer","MainContent"]},"border":"0","height":"100%","horizontalAlign":"left","margin":"0","padding":"0","verticalAlign":"top","width":"100%"},
-		{},
-		{
-		    calendar: ["wm.dijit.Calendar", {useLocalTime: true, "border":"0", height: "180px", width: "100%"}, {onValueSelected: "handleDateChange"}],
-		    panel1: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"bottom","width":"100%"}, {}, {
-			hours: ["wm.Number", {"caption":"Hour","captionAlign":"left","captionPosition":"top","captionSize":"20px","changeOnKey":true,"displayValue":"","height":"43px","maximum":12,"minimum":1,"padding":"2","spinnerButtons":true,"width":"56px"}, {onchange: "handleDateChange"}],
-			minutes: ["wm.Number", {"caption":"Minute","captionAlign":"left","captionPosition":"top","captionSize":"20px","changeOnKey":true,"displayValue":"","height":"43px","maximum":59,"minimum":0,"padding":"2","spinnerButtons":true,"width":"56px"}, {onchange: "handleDateChange"}],
-			ampm: ["wm.ToggleButton", {"captionDown":"PM","captionUp":"AM","height":"21px",width: "50px", "margin":"0,0,2,0"}, {onclick: "handleDateChange"}]
-		    }],
-		    label: ["wm.Label", {"border":"0","caption":"","padding":"4","width":"100%"}]
-		}, dialog);
-	    new wm.Button({owner: dialog,
-			   parent: dialog.buttonBar,
-			   name: "okButton",
-			   caption: "OK",
-			   width: "100px"});
-	    new wm.Button({owner: dialog,
-			   parent: dialog.buttonBar,
-			   name: "cancelButton",
-			   caption: "Cancel",
-			   width: "100px"});
+	    if (!wm.DateTime.dialog) {	    
+		var dialog = wm.DateTime.dialog = new wm.Dialog({_classes: {domNode: ["wmdatetimedialog"]}, owner: app, "height":"252px","title":"","width":"210px", modal: false, useContainerWidget:true, useButtonBar: true, name: "_DateTimeDialog"});
+		dialog.containerWidget.setPadding("1");
+		dialog.containerWidget.createComponent(	
+		    "mainPanel", "wm.Container", 
+		    {"_classes":{"domNode":["wmdialogcontainer","MainContent"]},"border":"0","height":"100%","horizontalAlign":"left","margin":"0","padding":"0","verticalAlign":"top","width":"100%"},
+		    {},
+		    {
+			calendar: ["wm.dijit.Calendar", {useLocalTime: true, "border":"0", height: "180px", width: "100%"}, {onValueSelected: "handleDateChange"}],
+			panel1: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"bottom","width":"100%"}, {}, {
+			    hours: ["wm.Number", {"caption":"Hour","captionAlign":"left","captionPosition":"top","captionSize":"20px","changeOnKey":true,"displayValue":"","height":"43px","maximum":12,"minimum":1,"padding":"2","spinnerButtons":true,"width":"56px"}, {onchange: "handleDateChange"}],
+			    minutes: ["wm.Number", {"caption":"Minute","captionAlign":"left","captionPosition":"top","captionSize":"20px","changeOnKey":true,"displayValue":"","height":"43px","maximum":59,"minimum":0,"padding":"2","spinnerButtons":true,"width":"56px"}, {onchange: "handleDateChange"}],
+			    ampm: ["wm.ToggleButton", {"captionDown":"PM","captionUp":"AM","height":"21px",width: "50px", "margin":"0,0,2,0"}, {onclick: "handleDateChange"}]
+			}],
+			label: ["wm.Label", {"border":"0","caption":"","padding":"4","width":"100%"}]
+		    }, dialog);
+		new wm.Button({owner: dialog,
+			       parent: dialog.buttonBar,
+			       name: "okButton",
+			       caption: "OK",
+			       width: "100px"});
+		new wm.Button({owner: dialog,
+			       parent: dialog.buttonBar,
+			       name: "cancelButton",
+			       caption: "Cancel",
+			       width: "100px"});
 
-	}
-	
-	var dialog = wm.DateTime.dialog;
-	dialog._disconnect();
-	dialog.connect(dialog.$.calendar, "onValueSelected", this,"handleDateChange");
-	dialog.connect(dialog.$.hours, "onchange", this, "handleDateChange");
-	dialog.connect(dialog.$.minutes, "onchange", this, "handleDateChange");
-	dialog.connect(dialog.$.ampm, "onclick", this, "handleDateChange");
-	dialog.connect(dialog.$.okButton, "onclick", this, "okClicked");
-	dialog.connect(dialog.$.cancelButton, "onclick", this, "cancelClicked");
-	wm.DateTime.dialog.fixPositionNode = this.editor.domNode;
-	this._initialDisplayValue = this.getDisplayValue();
+	    }
+	    
+	    var dialog = wm.DateTime.dialog;
+	    dialog._disconnect();
+	    dialog.connect(dialog.$.calendar, "onValueSelected", this,"handleDateChange");
+	    dialog.connect(dialog.$.hours, "onchange", this, "handleDateChange");
+	    dialog.connect(dialog.$.minutes, "onchange", this, "handleDateChange");
+	    dialog.$.minutes.editor.set("smallDelta", 5);
+	    dialog.connect(dialog.$.ampm, "onclick", this, "handleDateChange");
+	    dialog.connect(dialog.$.okButton, "onclick", this, "okClicked");
+	    dialog.connect(dialog.$.cancelButton, "onclick", this, "cancelClicked");
+	    wm.DateTime.dialog.fixPositionNode = this.editor.domNode;
+	    this._initialDisplayValue = this.getDisplayValue();
+	    dialog._currentEditor = this;
 
-	// Make the calendar focus on the date shown by the current value of the text; ignore timezone offset calcs for this
-	// or you risk showing the user a date in calendar other than what is shown in text
-	if (!this.useLocalTime && this.dateMode == "Date") {
-	    var value = this.getDisplayValue();
-	    var date = dojo.date.locale.parse(value, {formatLength: this.formatLength, selector: this.dateMode.toLowerCase()});
-	} else {
-	    var date = new Date(this.getDataValue());
-	}
+	    // Make the calendar focus on the date shown by the current value of the text; ignore timezone offset calcs for this
+	    // or you risk showing the user a date in calendar other than what is shown in text
+	    if (!this.useLocalTime && this.dateMode == "Date") {
+		var value = this.getDisplayValue();
+		var date = dojo.date.locale.parse(value, {formatLength: this.formatLength, selector: this.dateMode.toLowerCase()});
+	    } else {
+		var date = new Date(this.getDataValue());
+	    }
 
 
-	this._initializingDialog = true;
-	if (date && date.getTime())
-	    wm.DateTime.dialog.$.calendar.setDate(date);
-	else
-	    wm.DateTime.dialog.$.calendar.dijit.goToToday();
-	if (this.dateMode != "Date") {
-	    var time = dojo.date.locale.format(date, {selector:'time',timePattern: "hh:mm a"});
-	    var timematches = time.match(/^(\d\d)\:(\d\d) (.*)$/);
-	    wm.DateTime.dialog.$.hours.setDataValue(timematches[1]);
-	    wm.DateTime.dialog.$.minutes.setDataValue(timematches[2]);
-	    wm.DateTime.dialog.$.ampm.setClicked(timematches[3].toLowerCase() == "pm");
-	}
-	wm.DateTime.dialog.$.panel1.setShowing(this.dateMode != "Date");
-	wm.DateTime.dialog.$.calendar.setShowing(this.dateMode != "Time");
-	wm.DateTime.dialog.$.label.setShowing(this.dateMode == "Date and Time");
-	wm.DateTime.dialog.buttonBar.setShowing(this.dateMode != "Date");
-	
-	switch(this.dateMode) {
-	case "Time":
-	    dialog.setHeight((this.timePanelHeight + 
-			      dialog.buttonBar.bounds.h + 			      
-			     dialog.padBorderMargin.t + 
-			     dialog.padBorderMargin.b +
-			     dialog.containerWidget.padBorderMargin.t + 
-			     dialog.containerWidget.padBorderMargin.b) + "px");
-	    break;
-	case "Date":
-	    dialog.setHeight((dialog.$.calendar.bounds.h +
-			     //dialog.buttonBar.bounds.h + 
-			     dialog.padBorderMargin.t + 
-			     dialog.padBorderMargin.b +
-			     dialog.containerWidget.padBorderMargin.t + 
-			     dialog.containerWidget.padBorderMargin.b) + "px");
-	    break;
-	case "Date and Time":
-	    dialog.setHeight((this.timePanelHeight + 
-			      dialog.$.calendar.bounds.h +
-			     dialog.buttonBar.bounds.h + 
-			      dialog.$.label.bounds.h + 
-			     dialog.padBorderMargin.t + 
-			     dialog.padBorderMargin.b +
-			     dialog.containerWidget.padBorderMargin.t + 
-			      dialog.containerWidget.padBorderMargin.b) + "px");
-	    break;
-	}
-	delete this._initializingDialog;	
-	wm.DateTime.dialog.show();
-	this._setupDialogValues = true;
-	this.handleDateChange();
-	delete this._setupDialogValues;
+	    this._initializingDialog = true;
+	    if (date && date.getTime())
+		wm.DateTime.dialog.$.calendar.setDate(date);
+	    else
+		wm.DateTime.dialog.$.calendar.dijit.goToToday();
+	    if (this.dateMode != "Date") {
+		var time = dojo.date.locale.format(date, {selector:'time',timePattern: "hh:mm a"});
+		var timematches = time.match(/^(\d\d)\:(\d\d) (.*)$/);
+		wm.DateTime.dialog.$.hours.setDataValue(timematches[1]);
+		wm.DateTime.dialog.$.minutes.setDataValue(timematches[2]);
+		wm.DateTime.dialog.$.ampm.setClicked(timematches[3].toLowerCase() == "pm");
+	    }
+	    wm.DateTime.dialog.$.panel1.setShowing(this.dateMode != "Date");
+	    wm.DateTime.dialog.$.calendar.setShowing(this.dateMode != "Time");
+	    wm.DateTime.dialog.$.label.setShowing(this.dateMode == "Date and Time");
+	    wm.DateTime.dialog.buttonBar.setShowing(this.dateMode != "Date");
+	    
+	    switch(this.dateMode) {
+	    case "Time":
+		dialog.setHeight((this.timePanelHeight + 
+				  dialog.buttonBar.bounds.h + 			      
+				  dialog.padBorderMargin.t + 
+				  dialog.padBorderMargin.b +
+				  dialog.containerWidget.padBorderMargin.t + 
+				  dialog.containerWidget.padBorderMargin.b) + "px");
+		break;
+	    case "Date":
+		dialog.setHeight((dialog.$.calendar.bounds.h +
+				  //dialog.buttonBar.bounds.h + 
+				  dialog.padBorderMargin.t + 
+				  dialog.padBorderMargin.b +
+				  dialog.containerWidget.padBorderMargin.t + 
+				  dialog.containerWidget.padBorderMargin.b) + "px");
+		break;
+	    case "Date and Time":
+		dialog.setHeight((this.timePanelHeight + 
+				  dialog.$.calendar.bounds.h +
+				  dialog.buttonBar.bounds.h + 
+				  dialog.$.label.bounds.h + 
+				  dialog.padBorderMargin.t + 
+				  dialog.padBorderMargin.b +
+				  dialog.containerWidget.padBorderMargin.t + 
+				  dialog.containerWidget.padBorderMargin.b) + "px");
+		break;
+	    }
+	    delete this._initializingDialog;	
+	    wm.DateTime.dialog.show();
+	    this._setupDialogValues = true;
+	    this.handleDateChange();
+	    delete this._setupDialogValues;
 	});
     },
     handleDateChange: function() {
