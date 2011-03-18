@@ -112,7 +112,7 @@ wm.DojoGrid.extend({
 		
 		var addFormatter = false;
 		if (columnId && columnId == 'formatFunc' && inValue == '- Add Formatter'){
-			var evtName = wm.getValidJsName('format'+ wm.getValidJsName(wm.capitalize(obj.id)) + wm.capitalize(this.name));
+		    var evtName = wm.getValidJsName(this.name + wm.getValidJsName(wm.capitalize(obj.id)) + 'Format');
 			obj.formatFunc = evtName;
 			widget.attr('value', evtName, false);
 			addFormatter = true;
@@ -171,6 +171,7 @@ wm.DojoGrid.extend({
 	updateFormatterList: function(){
 		var fArray = dojo.clone(this.defaultFormatters);
 		dojo.forEach(getAllEventsInCode(), function(f){
+		    if (f.match(/Format$/))
 			fArray.push({name:f, value:f});			
 		});
 		fArray.push({name:'- Add Formatter', value:'- Add Formatter'});
