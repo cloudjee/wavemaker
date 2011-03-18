@@ -650,7 +650,7 @@ dojo.declare("Studio", wm.Page, {
 		return c;
 	},
 	newComponent: function(inType, inProps) {
-		var tree = this.componentsTree;
+		var tree = this.compTree;
 		// FIXME: redundant
 		var ctor = dojo.getObject(inType), p = (ctor || 0).prototype;
 		var s = tree.selected || 0, c = s.component || 0, owner = c.owner || s.owner || this.page;
@@ -1096,7 +1096,7 @@ dojo.declare("Studio", wm.Page, {
 	objectTabsChange: function(inSender) {
 		var 
 			l = inSender.getLayerCaption(),
-			tree = l == "Widgets" ? this.tree : (l == "Components" ? this.componentsTree : null),
+			tree = l == "Widgets" ? this.tree : (l == "Components" ? this.compTree : null),
 			ss = this.selected,
 			s = tree && tree.selected,
 			c = s && s.component;
@@ -1338,8 +1338,8 @@ dojo.declare("Studio", wm.Page, {
 
 	var warnPage = bundleDialog.M_AreYouSureOpenPage;
         this.confirmPageChange(warnPage, page, 
-			       dojo.hitch(this, function() {
-				   this.waitForCallback(bundleDialog.M_OpeningPage + page + ".", dojo.hitch(this.project, "openPage", page));
+			       dojo.hitch(this, function(noChanges) {
+				   this.waitForCallback(bundleDialog.M_OpeningPage + page + ".", dojo.hitch(this.project, "openPage", page, !noChanges));
 			       }),
 			       dojo.hitch(this, function() {
 				   this.pageSelect.setDataValue(studio.project.pageName);
