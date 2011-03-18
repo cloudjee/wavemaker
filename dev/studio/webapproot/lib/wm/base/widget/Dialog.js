@@ -125,12 +125,11 @@ dojo.declare("wm.Dialog", wm.Container, {
 	modal: true,
     init: function() {
         this.inherited(arguments);
-        this._isDesign = this.isDesignLoaded();
-	if (this._isDesign) {
+	if (this._isDesignLoaded) {
 	    this.flags.noModelDrop = true;
 	}
 
-	if (this._isDesign) 
+	if (this._isDesignLoaded) 
 	    studio.designer.domNode.appendChild(this.domNode);
 	else
 	    document.body.appendChild(this.domNode);
@@ -275,7 +274,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	}
 	if (!inModal) 
 	    this.dojoMoveable = new dojo.dnd.Moveable(this.domNode, {handle: this.titleLabel.domNode});
-	if (this.showing  && !this._isDesign) {
+	if (this.showing  && !this._isDesignLoaded) {
 	    this.dialogScrim.setShowing(this.modal);
 	    wm.bgIframe.setShowing(!this.modal && !this.isDesignedComponent());
 	}
@@ -520,7 +519,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    var animationTime = (this._cupdating || this.showing == inShowing || this._noAnimation || this._showAnimation && this._showAnimation.status() == "playing") ? 0 : app.dialogAnimationTime; 
 
 	    // First show/hide the scrim if we're modal
-	    if (inShowing != this.showing && this.modal && !this._isDesign)
+	    if (inShowing != this.showing && this.modal && !this._isDesignLoaded)
 		this.dialogScrim.setShowing(inShowing);
 
 	    var wasShowing = this.showing;
@@ -561,13 +560,18 @@ dojo.declare("wm.Dialog", wm.Container, {
 		this.designWrapper.setShowing(inShowing);
 
 
+	    if (inShowing && this._hideAnimation) {
+		this._hideAnimation.stop();
+		delete this._hideAnimation;
+
+	    } else if (!inShowing && this._showAnimation) {
+		this._showAnimation.stop();
+		delete this._showAnimation;
+
+	    }
+
 	    if (inShowing && !wasShowing) {
 		if (animationTime) {
-		    
-		    if (this._hideAnimation) {
-			this._hideAnimation.stop();
-			delete this._hideAnimation;
-		    }
 		    this._showAnimation = this._showAnimation || 
 			dojo.animateProperty({node: this.domNode, 
 					      properties: {opacity: 1},
@@ -584,9 +588,6 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    } else if (!inShowing && wasShowing) {
 		
 		if (animationTime) {
-		    if (this._showAnimation)
-			this._showAnimation.stop();
-
 		    if (!this._hideAnimation) {
                         this._transitionToHiding = true;
 			this._hideAnimation = 
@@ -640,11 +641,11 @@ dojo.declare("wm.Dialog", wm.Container, {
             }
 
 	    if (inEvent.keyCode == dojo.keys.ESCAPE && !this.noEscape) {
-		if (this._isDesign && studio.selected != this && studio.selected.getParentDialog() == this) return;
+		if (this._isDesignLoaded && studio.selected.getParentDialog() == this) return;
 		if (this.showing) {
 		    this.setShowing(false);
 		    this.onClose("cancel");
-		    if (!this._isDesign)
+		    if (!this._isDesignLoaded)
 			inEvent._wmstop = true;
 		}
 	    } else if (inEvent.keyCode == dojo.keys.ENTER) {
@@ -875,6 +876,8 @@ dojo.declare("wm.WidgetsJsDialog", wm.Dialog, {
 	} catch(e) {console.error(e);}
     },
     generateContents: function() {
+	if (this._generated) return;
+	this._generated = true;
 	this.containerWidget._cupdating = true;
 	this.containerWidget.createComponents(this.widgets_data, this);
 	this.containerWidget._cupdating = false;
