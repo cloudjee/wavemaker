@@ -43,9 +43,11 @@ Studio.extend({
 	_pasteControl: function(inParent, inClip, inClass) {
             this.renamedDuringPaste =  {}; // set in Component.js.createComponent()
 
-		var
-			isLayer = (inClass == "wm.Layer"),
-			p = inParent || this.findContainer(this.selected, inClass) || studio.page.root.findContainer(inClass);
+	    var	isLayer = (inClass == "wm.Layer");
+	    var p = inParent || this.findContainer(this.selected, inClass) || studio.page.root.findContainer(inClass);
+	    if (p instanceof wm.Dialog) 
+		p = p.containerWidget;
+
 			// FIXME: layer must be pasted only into layers
 			// could also generalize beyond layers and intercept this in createComponents
 			rp = wm.getClassProp(inClass, "_requiredParent");
