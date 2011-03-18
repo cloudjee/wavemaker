@@ -39,6 +39,7 @@
 }
 
 .wmbutton.wmbutton-disabled {
+        cursor: default;
     opacity: 0.7;
     filter: alpha(opacity=70);
     -moz-box-shadow: 0px 0px 0px black !important; 
@@ -538,10 +539,9 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 
 .wmtree-root-leaf { 
         width: 18px;
-	background-image: url(images/treeimages.png); 
+/*	background-image: url(images/treeimages.png); 
         background-position: -72px;
-/*	background-image: url(images/tree_half_bottom.gif);*/
-	background-repeat:  no-repeat;
+	background-repeat:  no-repeat;*/
 }
 
 
@@ -1601,7 +1601,6 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
 .tundra .dojoMenu .dijitMenuBar {
 	border-width: 0px;
 }
-
 
 .accordionArrowNode {
     display: none;
