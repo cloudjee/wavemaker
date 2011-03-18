@@ -34,7 +34,7 @@ Studio.extend({
 		this.refreshWidgetsTree();
 		// re-select selected component
 	     
-	    this.selectInTree(this.selected && this.selected.owner == studio.page ? this.selected : studio.page.root);
+	    this.selectInTree(this.selected && (this.selected.owner == studio.page || this.selected.owner == studio.application) ? this.selected : studio.page.root);
 
 	},
     /* This is really the "refreshAllTrees" method */
