@@ -110,8 +110,9 @@
     .wm_template div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_template .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
     .wm_template .dojoxGridRowOver, 
-    .wm_template div.dojoxGridRowOdd.dojoxGridRowOver,
-    .wm_template div.dojoxGridRowOver td.dojoxGridCell
+    .wm_template .dojoxGridRowOdd.dojoxGridRowOver,
+    .wm_template #wavemakerNode .wmlayout .dojoxGridRowOdd.dojoxGridRowOver a,
+    .wm_template .dojoxGridRowOver td.dojoxGridCell
     {
 	/* Document-ClickablesHover-Background */
 	background-color: #333333 !important; /* Document-ClickablesHover-Background_Color */
@@ -199,8 +200,9 @@
     .dj_ie6 .wm_template .MainContent .wmlist-item.wmlist-item-over,
     .wm_template .MainContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_template .MainContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_template .MainContent div.dojoxGridRowOver, 
-    .wm_template .MainContent div.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_template .MainContent .dojoxGridRowOver, 
+    .wm_template #wavemakerNode .wmlayout .MainContent .dojoxGridRowOver a, 
+    .wm_template .MainContent .dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* MainContent-ClickablesHover-Background */
 	background-color: #333333 !important; /* MainContent-ClickablesHover-Background_Color */
@@ -244,8 +246,8 @@
     .dj_ie6 .wm_template .EmphasizedContent .wmlist-item.wmlist-item-over,
     .wm_template .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_template .EmphasizedContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_template .EmphasizedContent div.dojoxGridRowOver, 
-    .wm_template .EmphasizedContent div.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_template .EmphasizedContent .dojoxGridRowOver, 
+    .wm_template .EmphasizedContent .dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* EmphasizedContent-ClickablesHover-Background */
 	background-color: #333333 !important; /* EmphasizedContent-ClickablesHover-Background_Color */
@@ -289,8 +291,9 @@
     .dj_ie6 .wm_template .HeaderContent .wmlist-item.wmlist-item-over,
     .wm_template .HeaderContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_template .HeaderContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_template .HeaderContent div.dojoxGridRowOver, 
-    .wm_template .HeaderContent div.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_template .HeaderContent .dojoxGridRowOver, 
+    .wm_template .HeaderContent .dojoxGridRowOdd.dojoxGridRowOver,
+    .wm_template #wavemakerNode .wmlayout .HeaderContent .dojoxGridRowOver a
     {
 	/* HeaderContent-ClickablesHover-Background */
 	background-color: #333333 !important; /* HeaderContent-ClickablesHover-Background_Color */

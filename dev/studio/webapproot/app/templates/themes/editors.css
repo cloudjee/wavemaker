@@ -87,7 +87,7 @@
 }
 
 .wm_template .dijitSpinner .dijitArrowButton .dijitArrowButtonInner {
-	background-position: 30% 20%;
+	background-position: 30% 30%;
 	background-image: url(images/comboArrowDownLight.png); /* wm.NumberSpinner-Down-Arrow_Image */    
 }
 .wm_template .dijitSpinner .dijitArrowButton.dijitUpArrowButton .dijitArrowButtonInner {
