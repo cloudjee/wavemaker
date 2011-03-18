@@ -648,6 +648,7 @@ dojo.declare("wm.studio.Project", null, {
 	// Close
 	//=========================================================================
 	closeProject: function(inProjectName) {	    
+	    dojo.removeClass(studio.designer.domNode, studio.application.theme);
 	    if (studio.bindDialog.showing && !studio.bindDialog._hideAnimation) 
 		studio.bindDialog.dismiss();
 	    this.closeAllServicesTabs();
@@ -734,6 +735,7 @@ dojo.declare("wm.studio.Project", null, {
 		studio.projectChanged(name, projectData);
 	},
 	pageChanging: function() {
+	    dojo.removeClass(studio.designer.domNode, this.pageName);
 	    studio.pageChanging();
 	},
 	pageChanged: function() {
@@ -1535,6 +1537,7 @@ Studio.extend({
 	runProjectClick: function(inSender) {	    
 	    this._runRequested = inSender.name;
 	    var operation = inSender.caption;
+	    console.log("OPERATION:" + inSender.caption);
 	    if (!this._runConnections) this._runConnections = [];
 
 	    /* Clear any prior connections... esp for runs that don't make it to projectSaveComplete */
