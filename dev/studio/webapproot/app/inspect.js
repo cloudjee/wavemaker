@@ -243,6 +243,7 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 	    jsFunc: {caption: " - Javascript..."},
 	    jsSharedFunc: {caption: " - Javascript Shared..."},
 	    newService: {caption: " - New Service..."},
+	    newLiveVar: {caption: " - New LiveVariable..."},
 	    newNavigation: {caption:" - New Navigation..."},
 	    serviceVariables: {caption: "Service Variables:", list: "serviceVariable"},
 	    navigations: {caption: "Navigations:", list: "navigationCall"},
@@ -417,6 +418,10 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 				break;
 			case ea.newService.caption:
 				studio.newComponentButtonClick({componentType: "wm.ServiceVariable"});
+		    this.set("value",studio.selected.name, false);
+				break;
+			case ea.newLiveVar.caption:
+				studio.newComponentButtonClick({componentType: "wm.LiveVariable"});
 		    this.set("value",studio.selected.name, false);
 				break;
 			case ea.newNavigation.caption:
