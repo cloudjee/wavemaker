@@ -1221,8 +1221,9 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     .wm_graphite div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_graphite .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
     .wm_graphite .dojoxGridRowOver, 
-    .wm_graphite div.dojoxGridRowOdd.dojoxGridRowOver,
-    .wm_graphite div.dojoxGridRowOver td.dojoxGridCell
+    .wm_graphite .dojoxGridRowOdd.dojoxGridRowOver,
+    .wm_graphite #wavemakerNode .wmlayout .dojoxGridRowOdd.dojoxGridRowOver a,
+    .wm_graphite .dojoxGridRowOver td.dojoxGridCell
     {
 	/* Document-ClickablesHover-Background */
 	background-color: #555555 !important; /* Document-ClickablesHover-Background_Color */
@@ -1296,8 +1297,9 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     .dj_ie6 .wm_graphite .MainContent .wmlist-item.wmlist-item-over,
     .wm_graphite .MainContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_graphite .MainContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_graphite .MainContent div.dojoxGridRowOver, 
-    .wm_graphite .MainContent div.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_graphite .MainContent .dojoxGridRowOver, 
+    .wm_graphite #wavemakerNode .wmlayout .MainContent .dojoxGridRowOver a, 
+    .wm_graphite .MainContent .dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* MainContent-ClickablesHover-Background */
 	background-color: #b5b3b3 !important; /* MainContent-ClickablesHover-Background_Color */
@@ -1332,8 +1334,8 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     .dj_ie6 .wm_graphite .EmphasizedContent .wmlist-item.wmlist-item-over,
     .wm_graphite .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_graphite .EmphasizedContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_graphite .EmphasizedContent div.dojoxGridRowOver, 
-    .wm_graphite .EmphasizedContent div.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_graphite .EmphasizedContent .dojoxGridRowOver, 
+    .wm_graphite .EmphasizedContent .dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* EmphasizedContent-ClickablesHover-Background */
 	background-color: #555555 !important; /* EmphasizedContent-ClickablesHover-Background_Color */
@@ -1368,8 +1370,9 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     .dj_ie6 .wm_graphite .HeaderContent .wmlist-item.wmlist-item-over,
     .wm_graphite .HeaderContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_graphite .HeaderContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_graphite .HeaderContent div.dojoxGridRowOver, 
-    .wm_graphite .HeaderContent div.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_graphite .HeaderContent .dojoxGridRowOver, 
+    .wm_graphite .HeaderContent .dojoxGridRowOdd.dojoxGridRowOver,
+    .wm_graphite #wavemakerNode .wmlayout .HeaderContent .dojoxGridRowOver a
     {
 	/* HeaderContent-ClickablesHover-Background */
 	background-color: #cccccc !important; /* HeaderContent-ClickablesHover-Background_Color */

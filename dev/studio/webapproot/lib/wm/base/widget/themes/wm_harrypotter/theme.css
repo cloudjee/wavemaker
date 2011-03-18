@@ -1221,8 +1221,9 @@ body .wm_harrypotter .dialogfooter .wmbutton:hover {
     .wm_harrypotter div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_harrypotter .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
     .wm_harrypotter .dojoxGridRowOver, 
-    .wm_harrypotter div.dojoxGridRowOdd.dojoxGridRowOver,
-    .wm_harrypotter div.dojoxGridRowOver td.dojoxGridCell
+    .wm_harrypotter .dojoxGridRowOdd.dojoxGridRowOver,
+    .wm_harrypotter #wavemakerNode .wmlayout .dojoxGridRowOdd.dojoxGridRowOver a,
+    .wm_harrypotter .dojoxGridRowOver td.dojoxGridCell
     {
 	/* Document-ClickablesHover-Background */
 	background-color: #fe9603 !important; /* Document-ClickablesHover-Background_Color */
@@ -1296,8 +1297,9 @@ body .wm_harrypotter .dialogfooter .wmbutton:hover {
     .dj_ie6 .wm_harrypotter .MainContent .wmlist-item.wmlist-item-over,
     .wm_harrypotter .MainContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_harrypotter .MainContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_harrypotter .MainContent div.dojoxGridRowOver, 
-    .wm_harrypotter .MainContent div.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_harrypotter .MainContent .dojoxGridRowOver, 
+    .wm_harrypotter #wavemakerNode .wmlayout .MainContent .dojoxGridRowOver a, 
+    .wm_harrypotter .MainContent .dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* MainContent-ClickablesHover-Background */
 	background-color: #f96a02 !important; /* MainContent-ClickablesHover-Background_Color */
@@ -1332,8 +1334,8 @@ body .wm_harrypotter .dialogfooter .wmbutton:hover {
     .dj_ie6 .wm_harrypotter .EmphasizedContent .wmlist-item.wmlist-item-over,
     .wm_harrypotter .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_harrypotter .EmphasizedContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_harrypotter .EmphasizedContent div.dojoxGridRowOver, 
-    .wm_harrypotter .EmphasizedContent div.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_harrypotter .EmphasizedContent .dojoxGridRowOver, 
+    .wm_harrypotter .EmphasizedContent .dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* EmphasizedContent-ClickablesHover-Background */
 	background-color: #ba2f1d !important; /* EmphasizedContent-ClickablesHover-Background_Color */
@@ -1368,8 +1370,9 @@ body .wm_harrypotter .dialogfooter .wmbutton:hover {
     .dj_ie6 .wm_harrypotter .HeaderContent .wmlist-item.wmlist-item-over,
     .wm_harrypotter .HeaderContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_harrypotter .HeaderContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_harrypotter .HeaderContent div.dojoxGridRowOver, 
-    .wm_harrypotter .HeaderContent div.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_harrypotter .HeaderContent .dojoxGridRowOver, 
+    .wm_harrypotter .HeaderContent .dojoxGridRowOdd.dojoxGridRowOver,
+    .wm_harrypotter #wavemakerNode .wmlayout .HeaderContent .dojoxGridRowOver a
     {
 	/* HeaderContent-ClickablesHover-Background */
 	background-color: #333333 !important; /* HeaderContent-ClickablesHover-Background_Color */

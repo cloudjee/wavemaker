@@ -1221,8 +1221,9 @@ body .wm_default .dialogfooter .wmbutton:hover {
     .wm_default div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_default .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
     .wm_default .dojoxGridRowOver, 
-    .wm_default div.dojoxGridRowOdd.dojoxGridRowOver,
-    .wm_default div.dojoxGridRowOver td.dojoxGridCell
+    .wm_default .dojoxGridRowOdd.dojoxGridRowOver,
+    .wm_default #wavemakerNode .wmlayout .dojoxGridRowOdd.dojoxGridRowOver a,
+    .wm_default .dojoxGridRowOver td.dojoxGridCell
     {
 	/* Document-ClickablesHover-Background */
 	background-color: #0e1601 !important; /* Document-ClickablesHover-Background_Color */
@@ -1296,8 +1297,9 @@ body .wm_default .dialogfooter .wmbutton:hover {
     .dj_ie6 .wm_default .MainContent .wmlist-item.wmlist-item-over,
     .wm_default .MainContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_default .MainContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_default .MainContent div.dojoxGridRowOver, 
-    .wm_default .MainContent div.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_default .MainContent .dojoxGridRowOver, 
+    .wm_default #wavemakerNode .wmlayout .MainContent .dojoxGridRowOver a, 
+    .wm_default .MainContent .dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* MainContent-ClickablesHover-Background */
 	background-color: #444444 !important; /* MainContent-ClickablesHover-Background_Color */
@@ -1332,8 +1334,8 @@ body .wm_default .dialogfooter .wmbutton:hover {
     .dj_ie6 .wm_default .EmphasizedContent .wmlist-item.wmlist-item-over,
     .wm_default .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_default .EmphasizedContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_default .EmphasizedContent div.dojoxGridRowOver, 
-    .wm_default .EmphasizedContent div.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_default .EmphasizedContent .dojoxGridRowOver, 
+    .wm_default .EmphasizedContent .dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* EmphasizedContent-ClickablesHover-Background */
 	background-color: #666666 !important; /* EmphasizedContent-ClickablesHover-Background_Color */
@@ -1368,8 +1370,9 @@ body .wm_default .dialogfooter .wmbutton:hover {
     .dj_ie6 .wm_default .HeaderContent .wmlist-item.wmlist-item-over,
     .wm_default .HeaderContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_default .HeaderContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_default .HeaderContent div.dojoxGridRowOver, 
-    .wm_default .HeaderContent div.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_default .HeaderContent .dojoxGridRowOver, 
+    .wm_default .HeaderContent .dojoxGridRowOdd.dojoxGridRowOver,
+    .wm_default #wavemakerNode .wmlayout .HeaderContent .dojoxGridRowOver a
     {
 	/* HeaderContent-ClickablesHover-Background */
 	background-color: #333333 !important; /* HeaderContent-ClickablesHover-Background_Color */

@@ -1221,8 +1221,9 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .wm_green div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_green .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
     .wm_green .dojoxGridRowOver, 
-    .wm_green div.dojoxGridRowOdd.dojoxGridRowOver,
-    .wm_green div.dojoxGridRowOver td.dojoxGridCell
+    .wm_green .dojoxGridRowOdd.dojoxGridRowOver,
+    .wm_green #wavemakerNode .wmlayout .dojoxGridRowOdd.dojoxGridRowOver a,
+    .wm_green .dojoxGridRowOver td.dojoxGridCell
     {
 	/* Document-ClickablesHover-Background */
 	background-color: #d7d1d5 !important; /* Document-ClickablesHover-Background_Color */
@@ -1296,8 +1297,9 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .dj_ie6 .wm_green .MainContent .wmlist-item.wmlist-item-over,
     .wm_green .MainContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_green .MainContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_green .MainContent div.dojoxGridRowOver, 
-    .wm_green .MainContent div.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_green .MainContent .dojoxGridRowOver, 
+    .wm_green #wavemakerNode .wmlayout .MainContent .dojoxGridRowOver a, 
+    .wm_green .MainContent .dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* MainContent-ClickablesHover-Background */
 	background-color: #444444 !important; /* MainContent-ClickablesHover-Background_Color */
@@ -1332,8 +1334,8 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .dj_ie6 .wm_green .EmphasizedContent .wmlist-item.wmlist-item-over,
     .wm_green .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_green .EmphasizedContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_green .EmphasizedContent div.dojoxGridRowOver, 
-    .wm_green .EmphasizedContent div.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_green .EmphasizedContent .dojoxGridRowOver, 
+    .wm_green .EmphasizedContent .dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* EmphasizedContent-ClickablesHover-Background */
 	background-color: #666666 !important; /* EmphasizedContent-ClickablesHover-Background_Color */
@@ -1368,8 +1370,9 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .dj_ie6 .wm_green .HeaderContent .wmlist-item.wmlist-item-over,
     .wm_green .HeaderContent div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_green .HeaderContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_green .HeaderContent div.dojoxGridRowOver, 
-    .wm_green .HeaderContent div.dojoxGridRowOdd.dojoxGridRowOver
+    .wm_green .HeaderContent .dojoxGridRowOver, 
+    .wm_green .HeaderContent .dojoxGridRowOdd.dojoxGridRowOver,
+    .wm_green #wavemakerNode .wmlayout .HeaderContent .dojoxGridRowOver a
     {
 	/* HeaderContent-ClickablesHover-Background */
 	background-color: #333333 !important; /* HeaderContent-ClickablesHover-Background_Color */
