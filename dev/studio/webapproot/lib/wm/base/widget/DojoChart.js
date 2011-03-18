@@ -71,7 +71,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	dojoObj:null,
 	theme: 'CubanShirts',
 	xAxis:'wmDefaultX',
-	isTimeXAxis: false,
+	isTimeXAxis: "",
 	maxTimePoints:15,
 	xMajorTickStep: 5,
 	xMinorTicks:false,
@@ -547,7 +547,25 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	},
 	getTimeX: function(){
 		var today = new Date();
-		var h = today.getHours(), m = today.getMinutes(), s = today.getSeconds(), text = h+':'+m + ':' + s;
+	    var h = today.getHours();
+	    var m = today.getMinutes();
+	    var s = today.getSeconds();
+	    var text;
+
+	    // isTimeXAxis used to be a boolean; users should update, but this will handle those users who don't.  Change made for 6.3
+	    if (this.isTimeXAxis === true)
+		this.isTimeXAxis = "hh:mm:ss";
+	    switch(this.isTimeXAxis) {
+	    case "hh:mm:ss":
+		 text = h+':'+m + ':' + s;
+		break;
+	    case "hh:mm":
+		text = h + ':' + m;
+		break;
+	    case "hh":
+		text = h;
+		break;
+	    }
 		var xAxis = this.dojoObj.getAxis('x'), labels = xAxis.opt.labels || [];
 		if (labels.length < 1) {
 			var value = 1;
@@ -619,7 +637,7 @@ wm.Object.extendSchema(wm.DojoChart, {
 	legend:{ignore:1},
 	dataSet: {bindable: 1, group: "edit", order: 10, isList: true},
 	xAxis: {group: "edit", order: 20},
-	isTimeXAxis: {group: "edit", order: 21},
+    isTimeXAxis: {group: "edit", order: 21, type: "string"},
 	maxTimePoints: {group: "edit", order: 22},
 	yAxis: {group: "edit", order: 30},
 	chartColor: {group: "edit", order: 40},
@@ -648,6 +666,8 @@ wm.DojoChart.extend({
 				return makeSelectPropEdit(inName, inValue, chartThemes, inDefault);
 			case "chartType":
 				return makeSelectPropEdit(inName, inValue, chartTypes, inDefault);
+		case "isTimeXAxis":		    
+		    return makeSelectPropEdit(inName, inValue, ["", "hh:mm:ss", "hh:mm", "hh"], inDefault);
 		}
 		return this.inherited(arguments);
 	},
