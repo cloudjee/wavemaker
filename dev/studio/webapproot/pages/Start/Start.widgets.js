@@ -67,7 +67,7 @@ Start.widgets = {
 						}]
 					}],
 				    layer2: ["wm.Layer", {caption: bundleDialog.ProjectsTab, horizontalAlign: "left", verticalAlign: "top", padding: "8"}, {onShow: "projectsTabOnShow"}, {
-					    projectSearch: ["wm.Text", {width: "100%", height: "24px", resetButton: true, placeHolder: "Search by Project Name", caption: "", changeOnKey: true}, {onchange: "filterProjectList"}],
+					projectSearch: ["wm.Text", {width: "100%", height: "24px", resetButton: true, placeHolder: "Search by Project Name", caption: "", changeOnKey: true, emptyValue: "emptyString"}, {onchange: "filterProjectList"}],
 						panel8: ["wm.Panel", {height: "100%", width: "100%", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 							projlist: ["wm.Panel", {height: "100%", width: "100%", layoutKind: "left-to-right", padding: "5,10,10,10"}, {}, {
 								existingProjectList: ["wm.List", {width: "100%", border: "0"}, {onselect: "projectListSelect", ondeselect: "projectListDeselect", ondblclick: "openProject"}]
