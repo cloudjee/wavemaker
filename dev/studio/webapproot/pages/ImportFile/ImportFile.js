@@ -32,7 +32,13 @@ dojo.declare("ImportFile", wm.Page, {
 	});
     },
     onChange: function() {
+	var data = this.fileUploader.variable.getData();
 	this.fileUploader.reset();
+	if (data) {
+	    data = data[0];
+	    this.fileUploader.variable.setData([data]);
+	}
+	
     },
     _end: 0
 });
