@@ -146,5 +146,8 @@ dojo.declare("Start", wm.Page, {
 		/*this.openProjectButton.setDisabled(inDisable);
 		this.deleteProjectButton.setDisabled(inDisable);
 		this.copyProjectButton.setDisabled(inDisable);*/
-	}
+	},
+    projectsTabOnShow: function() {
+	this.projectSearch.focus();
+    }
 });
