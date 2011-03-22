@@ -45,7 +45,7 @@ dojo.declare("wm.WebService", wm.JavaService, {
 			hideControls: true,
 			width: "800px",
 		    height: "612px",
-		    title: "Import Web Service"
+		    title: studio.getDictionaryItem("wm.WebService.IMPORT_TITLE")
 		};
 		var d = wm.WebService.newWebServiceDialog = new wm.PageDialog(props);
 		d.onClose = dojo.hitch(this, function(inWhy) {
