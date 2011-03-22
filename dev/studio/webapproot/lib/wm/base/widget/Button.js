@@ -652,7 +652,7 @@ dojo.declare("wm.PopupMenuButton", wm.Button, {
 		    if (!studio.menuDesignerDialog) {
 			studio.menuDesignerDialog = new wm.PageDialog({pageName: "MenuDesigner", 
 								       name: "MenuDesignerDialog",
-								       title: "Edit Menu",
+								       title: studio.getDictionaryItem("wm.PopupButton.MENU_DESIGNER_TITLE"),
 								       hideControls: true,
 								       owner: studio,
 								       width: "250px",
