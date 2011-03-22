@@ -265,7 +265,7 @@ wm.Object.extendSchema(wm.Object, {
 	schemaClass: { ignore: 1 },
     type: { ignore: 1 },
     setValue: {ignore: 1, group: "method"},
-    getValue: {ignore: 1, group: "method", returns: "Any"},
+    getValue: {ignore: 1, group: "method", returns: "Any"}
 });
 
 //===========================================================================
