@@ -32,9 +32,7 @@ dojo.declare("wm.StyleInspector", [wm.Layers, wm.InspectorBase], {
 		classes: ["wm.Layer", {flex: 1, title: bundleStudio.I_Classes, box: "v"}, {}, {
 			classTree: ["wm.Tree", {flex: 1}, {}, {}],
 			bevel1: ["wm.Bevel", {}, {}, {}],
-			classEdit: ["wm.Editor", {caption: bundleStudio.I_Custom, captionSize: 40, captionUnits: "px", height: "22px"}, {}, {
-				editor: ["wm._TextEditor", {changeOnEnter: true}, {}]
-			}]
+		        classEdit: ["wm.Text", {changeOnEnter: true, caption: bundleStudio.I_Custom, captionSize: "60px", height: "22px"}, {}, {}]
 		}],
 		custom: ["wm.Layer", {flex: 1, title: bundleStudio.I_Custom_Styles, box: "v"}, {}, {
 		    textArea: ["wm.LargeTextArea", {width: "100%", height: "100%", border: 0}, {}, {}],
