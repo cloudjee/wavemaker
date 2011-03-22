@@ -61,7 +61,7 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 	return serviceId;
     },
     newJavaServiceWithFunc: function(serviceId, classId, javaFunctions) {
-        studio.beginWait("Initializing Java Service " + serviceId);
+        studio.beginWait(studio.getDictionaryItem("wm.JavaService.WAIT_INITIALIZING", {serviceId: serviceId}));
 /*
         if (!studio.javaEditorContainer || !studio.javaEditorContainer.page) {
 	    //var c = studio.navGotoEditor("JavaEditor",  studio.JavaEditorTab, serviceId + "JavaServiceLayer", serviceId);
@@ -127,7 +127,7 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 				   useContainerWidget: true,
                                    useButtonBar: true,
 				   fitToContentHeight: true,
-				   title: "Create a Java Service"});
+				   title: studio.getDictionaryItem("wm.JavaService.CREATE_SERVICE_TITLE")});
             d.containerWidget.setBorder("10");
             d.containerWidget.setBorderColor("#424A5A");
             d.buttonBar.addUserClass("wmDialogFooter");
@@ -157,11 +157,11 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 	    var okButton = new wm.Button({owner:  d,
 					  parent: d.buttonBar,
 					  width: "100px",
-					  caption: "OK"});
+					  caption: studio.getDictionaryItem("wm.JavaService.CREATE_SERVICE_OK")});
 	    var cancelButton = new wm.Button({owner:  d,
 					  parent: d.buttonBar,
 					  width: "100px",
-					  caption: "Cancel"});
+					  caption: studio.getDictionaryItem("wm.JavaService.CREATE_SERVICE_CANCEL")});
 	    d.show();
 	    params[0].editor.focus();
 	    d.connect(okButton, "onclick", this, function() {
@@ -190,12 +190,12 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
         
     },
     newJavaServiceWithFunc2: function(serviceId, classId, javaFunctions) {
-	studio.beginWait("Creating service");
+	studio.beginWait(studio.getDictionaryItem("wm.JavaService.WAIT_CREATING_SERVICE"));
 
 	studio.javaService.requestAsync("saveClass",
 					[serviceId, javaFunctions], 
                                         dojo.hitch(this, function() {
-	                                    app.toastSuccess("Created java service " + serviceId);
+	                                    app.toastSuccess("wm.JavaService.TOAST_SUCCESS_CREATING_SERVICE", {serviceId: serviceId});
 	                                    var c = new wm.JavaService({name: serviceId, serviceId: serviceId})
 	                                    //studio.javaEditorContainer.page.update();
 	                                    studio.application.addServerComponent(c);
@@ -207,12 +207,12 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 	                                    }
 	                                    delete this.iintialNoEdit;
 	                                    
-	                                    studio.endWait("Creating service");
+					    studio.endWait(studio.getDictionaryItem("wm.JavaService.WAIT_CREATING_SERVICE"));
                                             this._onClassFirstSave();
                                         }),
 					dojo.hitch(this, function(inError) {
-	                                    app.toastWarning("Failed to create java service " + serviceId +": " + inError);
-	                                    studio.endWait("Creating service");
+	                                    app.toastWarning("wm.JavaService.TOAST_SUCCESS_CREATING_SERVICE", {serviceId: serviceId});
+					    studio.endWait(studio.getDictionaryItem("wm.JavaService.WAIT_CREATING_SERVICE"));
 	                                }));
 
     },
@@ -228,12 +228,12 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 			return wm.JavaService.newJavaServiceDialog;
 		}
 		var props = {
-			owner: studio,
-			pageName: "NewJavaService",
-			hideControls: true,
-			width: 400,
-		        height: 180,
-		        title: "New Java Service"
+		    owner: studio,
+		    pageName: "NewJavaService",
+		    hideControls: true,
+		    width: 400,
+		    height: 180,
+		    title: studio.getDictionaryItem("wm.JavaService.CREATE_SERVICE_TITLE")
 		};
 		var d = wm.JavaService.newJavaServiceDialog = new wm.PageDialog(props);
 		d.onClose = dojo.hitch(this, function(inWhy) {
