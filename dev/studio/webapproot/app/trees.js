@@ -139,7 +139,7 @@ Studio.extend({
 			var _components = {};
 			for (var name in components) {
 			    var c = components[name];
-			    if (name.toLowerCase().match(this.regex)) {
+			    if (this.matchSearch(this._searchText, c)) {
 				_components[name] = c;
 			    }
 			}
@@ -174,8 +174,13 @@ Studio.extend({
 	    this.excTypes = [wm.Query, wm.LiveView, wm.Control];
 	    if (this.application) {
 		this.svrComps = this.application.getServerComponents();
-                var svrComps = this.getTreeComponents(this.svrComps, this.excTypes);
-
+                var svrComps = this.getTreeComponents(this.svrComps, this._searchText ? [] : this.excTypes);
+		if (this._searchText) {
+		    for (var comp in this.application.components) {
+			if (this.application.components[comp] instanceof wm.LiveView)
+			    svrComps[comp] = this.application.components[comp];
+		    }
+		}
 		/* Currently we can't search the contentx of services because it requires a service call
 		 * to load all of the entities of the data model; other components it may be possible
 		 * I haven't yet investigated.  I can't think of any reason why we couldn't preload
@@ -186,9 +191,8 @@ Studio.extend({
 		    for (var i in svrComps) {
 			var c = svrComps[i];
 			var name = c.name;
-			if (name.toLowerCase().match(this.regex)) {
+			if (name.toLowerCase().match(this.regex))
 			    svrCompSearch[name] = c;
-			} 
 		    }
                     svrComps = svrCompSearch;
 
@@ -211,7 +215,7 @@ Studio.extend({
 			var otherComps = {};
 			for (var name in this.otherComps) {
 			    var c = this.otherComps[name];
-			    if (name.toLowerCase().match(this.regex)) {
+			    if (this.matchSearch(this._searchText, c)) {
 				otherComps[name] = c;
 			    }
 			}
@@ -293,13 +297,23 @@ Studio.extend({
 			this.widgetToTree(inNode, w);
 		}));
 	},
+    matchSearch: function(inSearch, inComponent) {
+	if (!inSearch) return true;
+	if (inComponent.name.toLowerCase().match(this.regex)) return true;
+	if (inComponent instanceof wm.ServiceVariable && 
+	    (inComponent.operation && inComponent.operation.toLowerCase().match(this.regex) ||
+	     inComponent.service && inComponent.service.toLowerCase().match(this.regex) ||
+	     inComponent.liveSource && inComponent.liveSource.toLowerCase().match(this.regex)))
+	    return true;
+	return false;
+    },
 	componentToTree: function(inNode, inComponent, inType) {
 		if (inComponent && !inComponent.flags.notInspectable && (!inType || inComponent instanceof inType)) {
 		    var props = {};
 		    props.closed = true;
 		    inNode = wm.fire(inComponent, "preNewComponentNode", [inNode, props]) || inNode;
 
-		    if (this._searchText && !inComponent.name.toLowerCase().match(this.regex)) {
+		    if (!this.matchSearch(this._searchText, inComponent)) {
 			return;
 		    } else {
 			var searchText = this._searchText;
