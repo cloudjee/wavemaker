@@ -230,6 +230,7 @@ dojo.declare("wm.Component", wm.Object, {
 	    return this.isDesignLoaded(); // Doh!
         },
 	isDesignLoaded: function() {
+	    if (this._isDesignLoaded) return true;
 	    if (!window.studio) return false;
 	    if (this.isOwnedBy(studio.page)) return true;
 	    if (this == studio.page) return true;
