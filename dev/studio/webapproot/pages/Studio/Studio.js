@@ -519,11 +519,14 @@ dojo.declare("Studio", wm.Page, {
     deploySuccess: function() {
 			this.setLiveLayoutReady(true);
 			this._deploying = false;
+
+	/* This gets triggered if/when the user hits run/test when the app has just been loaded and is still deploying in order to enable livedata */
 			if (this._runRequested) {
-			  var isTest = (this._runRequested == "navTestBtn");
+			  var isTest = (this._runRequested == "Test");
 			  this._runRequested = false;
 			  wm.openUrl(this.getPreviewUrl(isTest), this.project.projectName, "_wmPreview");
                         }
+
     },
         deploy: function(inMsg, inCallback, noWait) {
            	if (this._deploying) {

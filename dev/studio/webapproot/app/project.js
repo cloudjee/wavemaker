@@ -1535,9 +1535,9 @@ Studio.extend({
 	    inSender.setWidth("75px");
     },
 	runProjectClick: function(inSender) {	    
-	    this._runRequested = inSender.name;
+
 	    var operation = inSender.caption;
-	    console.log("OPERATION:" + inSender.caption);
+	    this._runRequested = (operation != "Compile") ? operation : false;
 	    if (!this._runConnections) this._runConnections = [];
 
 	    /* Clear any prior connections... esp for runs that don't make it to projectSaveComplete */
