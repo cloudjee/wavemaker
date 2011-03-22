@@ -406,8 +406,7 @@ wm.LiveVariable.extend({
 			re = new RegExp("^(?:asc|desc)\:", "i");
 		for (var i=0, o; (o = orderParts[i]); i++)
 			if (!dojo.trim(o).match(re)) {
-				alert("Each property used in the orderBy clause must be of the form asc|desc: <propertyPath>. \"" + o + "\" does not match this format." + 
-					" The current orderBy clause will generate an error and should be corrected.");
+			    app.alert(studio.getDictionaryItem("wm.LiveVariable.ALERT_INVALID_SORT_ORDER", {order: o}));
 				return;
 			}
 		return true;
