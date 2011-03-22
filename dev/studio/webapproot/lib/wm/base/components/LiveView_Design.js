@@ -68,7 +68,7 @@ wm.LiveView.extend({
 	return this.name + "LiveView";
     },
     getLayerCaption: function() {
-	return this.name + " (" + bundleStudio["TabCaption_LiveView"] + ")";
+	return this.name + " (" + studio.getDictionaryItem("wm.LiveView.TAB_CAPTION") + ")";
     },
 	editView: function() {
 	    var c = studio.navGotoEditor("LiveViewEditor", studio.databaseTab, this.getLayerName(), this.getLayerCaption());
