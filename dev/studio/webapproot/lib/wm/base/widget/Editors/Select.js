@@ -95,7 +95,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	    var h = this.editorNode.style.height.match(/\d+/)[0];
             
 	    //this.editorNode.style.lineHeight = '';
-            if (dojo.isIE && dojo.isIE < 8) { // tested for IE7
+            if (dojo.isIE && dojo.isIE < 8 && !this.readonly) { // tested for IE7
 	        var n = dojo.query(".dijitArrowButtonInner", this.domNode)[0];
                 var s = n.style;
                 var c = dojo.coords(n);
