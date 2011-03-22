@@ -67,7 +67,7 @@ dojo.declare("wm.Property", wm.Component, {
 	},
 	beginBind: function(inPropName) {
 		studio.onSelectProperty = dojo.hitch(this, "selectProperty");
-		studio.selectProperty(this, null, "Select Property to publish as <b>" + this.name + "</b>");
+	    studio.selectProperty(this, null, studio.getDictionaryItem("wm.Property.SELECT_PROPERTY", {propertyName: this.name}));
 	},
 	selectProperty: function(inId) {
 		studio.onSelectProperty = null;
