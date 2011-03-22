@@ -987,7 +987,7 @@ dojo.declare("wm.ObjectBrowserTree", wm.Tree, {
 });
 
 wm.Object.extendSchema(wm.ObjectBrowserTree, {
-    data: {group: "data", order: 1, type: "Object"},    
+    data: {group: "data", order: 1, type: "Object"}
 });
 dojo.require("wm.base.widget.Dialog");
 dojo.declare("wm.DebugDialog", wm.Dialog, {
