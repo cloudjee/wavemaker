@@ -84,7 +84,7 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 			hideControls: true,
 			width: 700,
 		    height: 340,
-		    title: studio.getDictionary("wm.DataModel.IMPORT_DATABASE_TITLE")
+		    title: studio.getDictionaryItem("wm.DataModel.IMPORT_DATABASE_TITLE")
 		};
 		var d = studio.importDBDialog = new wm.PageDialog(props);
 		d.onPageReady = dojo.hitch(d, function() {
