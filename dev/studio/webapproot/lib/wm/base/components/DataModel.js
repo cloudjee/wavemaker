@@ -46,7 +46,7 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 		    d.page.update(this);
 		d.show();
 	    } else {
-		app.prompt("Enter your data model name", "MyTestDatabase", dojo.hitch(this, "createDataModel"));
+		app.prompt(studio.getDictionaryItem("wm.DataModel.ENTER_NAME"), "MyTestDatabase", dojo.hitch(this, "createDataModel"));
 	    }
 /*
 	    if (this._type == "import") {
@@ -59,8 +59,8 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 	    */
 	},
 	createDataModel: function(inValue) {
-	        this._dataModelName = inValue;
-		studio.beginWait("Adding " + inValue);
+	    this._dataModelName = inValue;
+	    studio.beginWait(studio.getDictionaryItem("wm.DataModel.WAIT_ADDING", {dataModel: inValue}));
 		studio.dataService.requestAsync(NEW_DATA_MODEL_OP, 
 			[inValue], 
 			dojo.hitch(this, "newDataModelResult"), 
@@ -71,7 +71,7 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 	},
 	newDataModelResult: function() {
 	    this.completeNewDataModel();  
-	    studio.endWait("Adding " + this._dataModelName);
+	    studio.endWait(studio.getDictionaryItem("wm.DataModel.WAIT_ADDING", {dataModel: this._dataModelName}));
 	},
 
 	getCreateDataModelDialog: function() {
@@ -84,7 +84,7 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 			hideControls: true,
 			width: 700,
 		    height: 340,
-		    title: "New Data Model"
+		    title: studio.getDictionary("wm.DataModel.IMPORT_DATABASE_TITLE")
 		};
 		var d = studio.importDBDialog = new wm.PageDialog(props);
 		d.onPageReady = dojo.hitch(d, function() {
@@ -130,7 +130,7 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 
 		    // else we're importing a datamodel
 		    else {
-			app.toastSuccess(n + " has been imported");
+			app.toastSuccess(studio.getDictionaryItem("wm.DataModel.TOAST_IMPORT_SUCCESS", {dataModel: n}));
 		    }
 		}
 	},
