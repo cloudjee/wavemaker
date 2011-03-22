@@ -71,6 +71,14 @@ dojo.declare("wm.Wire", wm.Component, {
 		}
 		return true;
 	},
+    debugBindingEvent: function(inValue) {
+			app.debugTree.newLogEvent({type: "bindingEvent",
+						   component: this.target,
+						   property: this.targetProperty,
+						   value: inValue,
+						   source: this.expression ? null : this.source,
+						   expression: this.expression});
+    },
 	_sourceValueChanged: function(inValue) {
 		if (wm.bindingsDisabled)
 			return;
@@ -82,12 +90,7 @@ dojo.declare("wm.Wire", wm.Component, {
 		    // ignore if we are in refresh; this is not called by values changing,
 		    // but rather by components insuring everyone knows their state
 		    if (djConfig.isDebug && !this.owner._inRefresh && (!this.expression || this.expression.match(/\$/))) {
-			app.debugTree.newLogEvent({type: "bindingEvent",
-						   component: this.target,
-						   property: this.targetProperty,
-						   value: inValue,
-						   source: this.expression ? null : this.source,
-						   expression: this.expression});
+			this.debugBindingEvent(inValue);
 		    }
 
 		    this.target.setValue(this.targetProperty, inValue);
