@@ -45,7 +45,13 @@ dojo.declare("wm.ContextMenuDialog", wm.Dialog, {
     init: function() {
 	this.owner = window["studio"]; // without this, dialog shows up only in canvas
 	this.inherited(arguments);
-	this.deleteButtonProps = {id:'deleteButton', title: ' ',width:'', type:'img', label:'Delete', src:'images/delete_24.png', width:'20px'};
+	this.deleteButtonProps = {id:'deleteButton', 
+				  title: ' ',
+				  width:'', 
+				  type:'img', 
+				  label: studio.getDictionaryItem("wm.ContextMenuDialog.DELETE_LABEL"),
+				  src:'images/delete_24.png', 
+				  width:'20px'};
 	this.trObjMap = {};
 	this.trId = 0;
     },
@@ -221,7 +227,7 @@ dojo.declare("wm.ContextMenuDialog", wm.Dialog, {
 		this.destoryAdvancedPropertiesDiv();
 	    this.advancedButtonDiv = dojo.create('span', {}, this.innerDomNode);
 	    dojo.place(this.advancedButtonDiv, this.newColumnButton.domNode, 'after');
-		this.advancedButton = new dijit.form.Button({label:'Show Advanced Properties >>'},dojo.create('div',{},this.advancedButtonDiv));
+	    this.advancedButton = new dijit.form.Button({label:studio.getDictionaryItem("wm.ContextMenuDialog.SHOW_MORE")},dojo.create('div',{},this.advancedButtonDiv));
 		dojo.connect(this.advancedButton, 'onClick', this, 'toggleAdvancedProps');
 	},
 	destoryAdvancedPropertiesDiv: function(){
@@ -236,7 +242,7 @@ dojo.declare("wm.ContextMenuDialog", wm.Dialog, {
 			dojo.forEach(this.advancedColumns, function(td){
 				td.style.display = '';
 			});
-			this.advancedButton.attr('label', '<< Hide Advanced Properties');
+		    this.advancedButton.attr('label', studio.getDictionaryItem("wm.ContextMenuDialog.SHOW_LESS"));
 		    this.menuTable.style.width = "1000px";
 		    this.setWidth("1020px");
 		} else {
@@ -244,7 +250,7 @@ dojo.declare("wm.ContextMenuDialog", wm.Dialog, {
 			dojo.forEach(this.advancedColumns, function(td){
 				td.style.display = 'none';
 			});
-			this.advancedButton.attr('label', 'Show Advanced Properties >>');
+			this.advancedButton.attr('label', studio.getDictionaryItem("wm.ContextMenuDialog.SHOW_MORE"));
 		    this.setWidth("720px");
 	    this.menuTable.style.width = "700px";
 		}
