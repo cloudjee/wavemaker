@@ -44,7 +44,7 @@ wm.Dashboard.extend({
 
 	        this.contextMenu.setWidth("500px");
 	        this.contextMenu.setHeight("300px");
-	        this.contextMenu.setTitle("Configure Portlets");
+	    this.contextMenu.setTitle(studio.getDictionaryItem("wm.Dashboard.CONTEXT_MENU_TITLE"));
 
 	},
 	showMenuDialog: function(e){
