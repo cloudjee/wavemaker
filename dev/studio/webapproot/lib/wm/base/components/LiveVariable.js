@@ -435,7 +435,7 @@ wm.LiveVariable.extend({
 	    return true;
 	}
 	return this.inherited(arguments);
-    },
+    }
 
 });
 
