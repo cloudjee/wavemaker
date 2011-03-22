@@ -62,7 +62,7 @@ dojo.declare("wm.LogoutVariable", wm.ServiceVariable, {
       },
       onError: function(inError) {
          this.inherited(arguments);
-	 alert("Failed to logout");
+	  app.alert("Failed to logout");
       },
       _end: 0
       });
