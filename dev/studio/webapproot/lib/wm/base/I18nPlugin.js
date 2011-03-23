@@ -27,7 +27,7 @@ wm.Plugin.plugin("i18n", wm.Component, {
 	if (params == undefined)
 	    return this._i18nDictionary[name];
 	else 
-	    return dojo.string.substitute(name,params);
+	    return dojo.string.substitute(this._i18nDictionary[name],params);
     }
 });
 
