@@ -452,8 +452,8 @@ dojo.declare("wm.Dialog", wm.Container, {
     },
     renderBoundsByCorner: function() {
 	if (!this.showing) return;
-        var w = this.bounds.w;
-        var h = this.bounds.h;
+        var w = this.width;
+        var h = this.height;
 /*
         var isDesigned =  (this.domNode.parentNode != document.body);
         var W = (isDesigned) ? studio.designer.bounds.w : app._page.root.bounds.w;
@@ -461,6 +461,19 @@ dojo.declare("wm.Dialog", wm.Container, {
         */
         var W = this.domNode.parentNode.clientWidth;
         var H = this.domNode.parentNode.clientHeight;
+
+	if (String(w).match(/\%/)) {
+	    w = W * parseInt(w)/100;
+	} else {
+	    w = parseInt(w);
+	}
+
+	if (String(h).match(/\%/)) {
+	    h = H * parseInt(h)/100;
+	} else {
+	    h = parseInt(h);
+	}
+
 	if (!this._isDesignLoaded) {
 	    if (w + 2 > W) w = W-2;
 	    if (h + 2 > H) h = H-2;
@@ -475,7 +488,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	for (var i = 0; i < wm.dialog.showingList.length; i++)
 	    if (wm.dialog.showingList[i] != this && wm.dialog.showingList[i].getOwnerApp() == thisownerapp && (!window["studio"] || this != window["studio"].dialog))
 		showingList.push(wm.dialog.showingList[i]);
-
+	    h = parseInt(h);
 	var last = wm.Array.last(showingList);
 
         switch(left) {
@@ -1154,6 +1167,7 @@ wm.GenericDialog.extend({
 });
 
 
+/* Remove this for 6.4 */
 dojo.declare("wm.FileUploadDialog", wm.GenericDialog, {
     uploadService: "",
     uploadOperation: "",
