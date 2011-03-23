@@ -112,6 +112,8 @@
 	"Twitter_Feed" : "Twitter Feed",
 	"Weather" : "Weather",
 	"YouTube" : "YouTube",
+	"FacebookLikeButton" : "FacebookLikeButton",
+	"FacebookActivityFeed" : "FacebookActivityFeed",
 
 	"Beta" : "Beta",
 	"ColorPicker" : "ColorPicker",
@@ -119,6 +121,7 @@
 	"Ticker" : "Ticker",
 	
 	"Advanced" : "Advanced",
+	"Variables" : "Prebuilt Variables",
 	"Tree" : "Tree",
 	"DraggableTree" : "DraggableTree",
 	"SimpleForm" : "Form Generator",

@@ -196,6 +196,29 @@
 //	"D_WithMatchedType" : " with matched type <i>",
     "page_unsavedchanges_tabclose": "You have unsaved changes:",
     "page_closeAnyway": "Close anyway?",
+
+    "wm.DataModel.WAIT_ADDING": "Adding ${dataModel}",
+    "wm.DataModel.IMPORT_DATABASE_TITLE": "New Data Model",
+    "wm.DataModel.TOAST_IMPORT_SUCCESS": "New Data Model ${dataModel} has been imported",
+    "wm.DataModel.ENTER_NAME": "Enter your data model name",
+    "wm.JavaService.WAIT_INITIALIZING": "Initializing Java Service ${serviceId}",
+    "wm.JavaService.CREATE_SERVICE_TITLE": "New Java Service",
+    "wm.JavaService.CREATE_SERVICE_OK": "OK",
+    "wm.JavaService.CREATE_SERVICE_CANCEL": "Cancel",
+    "wm.JavaService.WAIT_CREATING_SERVICE": "Creating service",
+    "wm.JavaService.TOAST_SUCCESS_CREATING_SERVICE": "Created java service ${serviceId}",
+    "wm.JavaService.TOAST_ERROR_CREATING_SERVICE": "Failed to Create java service ${serviceId}",
+    "wm.LiveVariable.ALERT_INVALID_SORT_ORDER": "Each property used in the orderBy clause must be of the form asc|desc: &lt;propertyPath&gt;. \"${order}\" does not match this format. The current orderBy clause will generate an error and should be corrected.",
+    "wm.Page.WIDGETS_MISSING": "Page ${pageName} has errors",
+    "wm.PageLoader.JS_NOT_LOADED": "Page ${inName}.js had errors",
+    "wm.Property.SELECT_PROPERTY": "Select Property to publish as <b>${propertyName}</b>",
+    "wm.WebService.IMPORT_TITLE": "Import Web Service",
+    "wm.PopupButton.MENU_DESIGNER_TITLE":"Edit Menu",
+    "wm.ContextMenuDialog.DELETE_LABEL": 'Delete', 
+    "wm.ContextMenuDialog.SHOW_MORE": 'Show Advanced Properties >>',
+    "wm.ContextMenuDialog.SHOW_LESS": '<< Hide Advanced Properties',
+    "wm.Dashboard.CONTEXT_MENU_TITLE": "Configure Portlets",
+    
     "wm.LiveView.TAB_CAPTION": "Live View",
     "wm.Security.TAB_CAPTION": "Security",
     "wm.Query.TAB_CAPTION": "Query",
@@ -227,7 +250,5 @@
     "wm.DojoGrid.CONFIG_TYPE": "Edit Field Type",
     "wm.DojoGrid.CONFIG_EXPR": "Data Expression",
 
-
-    
-
+				   
 }
