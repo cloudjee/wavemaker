@@ -366,21 +366,26 @@ wm.Component.extend({
 		return "on" + name +  n.slice(2, 3).toUpperCase() + n.slice(3);
 	},
         generateDocumentation: function() {
-	    var html = "<i>Generated Documentation</i>\n";
+	    var html = "<i>" + studio.getDictionaryItem("wm.Component.GENERATE_DOCUMENTATION_TOPNOTE") + "</i>\n";
 	    var eventSection = "";
 	    var props = this.listProperties();
 	    for (var i in props)
 		if (props[i].isEvent) {
 		    var propvalue = this.getProp(i);
 		    if (propvalue) {
-			eventSection += "<h4>" + i + "</h4>\n executes ";
+			eventSection +=  studio.getDictionaryItem("wm.Component.GENERATE_DOCUMENTATION_EVENT_HEADER", {eventName: i});
+
 			var comp = this.owner.components[propvalue] || this.owner.getValue(propvalue);
 			if (comp) {
 			    if (comp instanceof wm.ServiceCall || comp instanceof wm.ServiceVariable) {
 				eventSection += propvalue + " (" + comp.declaredClass + ")";
 				eventSection += "<ul style='padding-left:0px;list-style-position: inside;margin-left: 15px;'>";
-				eventSection += "<li><b>Type:</b>: " + comp.type + "</li>";
-				eventSection += "<li><b>Operation</b>: " + comp.operation + "</li>";
+				eventSection += "<li>" +
+				    studio.getDictionaryItem("wm.Component.GENERATE_DOCUMENTATION_EVENT_TARGET_TYPE", {componentType: comp.type}) +
+				    "</li>";
+				eventSection += "<li>" + 
+				    studio.getDictionaryItem("wm.Component.GENERATE_DOCUMENTATION_EVENT_TARGET_OPERATION", {operation: comp.operation}) +
+				    "</li>";
 				var params = comp.input.getData();
 				for (var j in params) {
 				    if (wm.isInstanceType(params[j], wm.Component)) {
@@ -395,14 +400,15 @@ wm.Component.extend({
 				eventSection += propvalue + " (" + comp.declaredClass + ")";
 			    }
 			} else {
-			    eventSection += propvalue + " (Function)";
+			    eventSection +=  studio.getDictionaryItem("wm.Component.GENERATE_DOCUMENTATION_EVENT_FUNCTION", {functionName: propvalue});
 			}
 		    }
 		}
 	    if (!eventSection) {
-		eventSection = "No event handlers";
+		eventSection = studio.getDictionaryItem("wm.Component.GENERATE_DOCUMENTATION_NO_EVENT_HANDLER");
 	    }
-	    eventSection = "<h4>Event Handlers</h4><div style='margin-left:15px;'>" +	eventSection + "</div>";
+	    eventSection = studio.getDictionaryItem("wm.Component.GENERATE_DOCUMENTATION_EVENT_SECTION",
+						    {eventHtml: eventSection});
 	    html += eventSection;
 
 	    var eventsFromSection = "";
@@ -417,27 +423,31 @@ wm.Component.extend({
 		}
 	    }
 	    if (!eventsFromSection) {
-		eventsFromSection = "No bindings";
+		eventsFromSection = studio.getDictionaryItem("wm.Component.GENERATE_DOCUMENTATION_NO_BINDING");
 	    }
-	    eventsFromSection = "<h4>The following object event handlers activate this component</h4><ul  style='padding-left:0px;list-style-position: inside;margin-left: 15px;'>\n" + eventsFromSection + "</ul>";
+	    eventsFromSection = studio.getDictionaryItem("wm.Component.GENERATE_DOCUMENTATION_EVENT_HANDLERS_HEADER",
+							 {eventHtml: eventsFromSection});
 	    html += eventsFromSection;
-
-
 
 	    var bindingSection = "";
 	    if (this.components.binding) {
 		var wires = this.components.binding.components;
 		if (!wm.isEmpty(wires)) {
 		    for (var i in wires) {
-			bindingSection += "<li><b>this." + wires[i].targetProperty + "</b> is bound to <i>" + (wires[i].source || wires[i].expression) + "</i></li>\n";
+			bindingSection += studio.getDictionaryItem("wm.Component.GENERATE_DOCUMENTATION_BINDING",
+								   {property: "this." + wires[i].targetProperty,
+								    source: wires[i].source || wires[i].expression});
+
 		    }
 		}
 	    } 
 	    if (!bindingSection) {
-		bindingSection += "No bindings";
+		bindingSection += studio.getDictionaryItem("wm.Component.GENERATE_DOCUMENTATION_NO_BINDING");
 	    }
-	    bindingSection = "<h4>This object has the following bindings</h4><ul  style='padding-left:0px;list-style-position: inside;margin-left: 15px;'>\n" + bindingSection + "</ul>";
-	    html += bindingSection
+	    bindingSection = studio.getDictionaryItem("wm.Component.GENERATE_DOCUMENTATION_BINDING_SECTION",
+						      {bindingHtml: bindingSection});
+
+	    html += bindingSection;
 
 	    var bindToSection = "";
 	    var bindingHash = {};
@@ -446,13 +456,19 @@ wm.Component.extend({
 		var wire;
 		for (var i in bindingHash) {
 		    wire = bindingHash[i];
-		    bindToSection += "<li>" + wire.target.getId() + "." + wire.targetProperty + " is bound to <i>" + (wire.source || wire.expression) + "</i></li>\n";
+		    bindToSection += studio.getDictionaryItem("wm.Component.GENERATE_DOCUMENTATION_BOUND_TO",
+							      {targetComponent: wire.target.getId(),
+							       targetProperty: wire.targetProperty,
+							       source: wire.source || wire.expression});
+
 		}
 	    }
 	    if (!bindToSection) {
-		bindToSection = "No bindings";
+		eventsFromSection = studio.getDictionaryItem("wm.Component.GENERATE_DOCUMENTATION_NO_BINDING");
 	    }
-	    bindToSection = "<h4>The following objects are bound to this</h4><ul  style='padding-left:0px;list-style-position: inside;margin-left: 15px;'>\n" + bindToSection + "</ul>";
+	    bindToSection = studio.getDictionaryItem("wm.Component.GENERATE_DOCUMENTATION_BOUND_TO_SECTION",
+						     {bindHtml: bindToSection});
+
 	    html += bindToSection;
 	    console.log(html);
 	    return html;
@@ -494,7 +510,7 @@ wm.Component.extend({
 	switch (inName) {
 	        case "documentation":
 	            studio.documentationDialog.setHtml(this.documentation);
-	            studio.documentationDialog.setTitle("Document " + this.getId());
+	    studio.documentationDialog.setTitle(studio.getDictionaryItem("wm.Component.DOCUMENTATION_DIALOG_TITLE", {name: this.getId()}))
 	            studio.documentationDialog.editComponent = this;
 	            studio.documentationDialog.show();
 	            return;
@@ -553,7 +569,7 @@ wm.Component.extend({
 		if (parent instanceof wm.Layers) {
 		    var layersOptions = {//iconClass: parent.declaredClass.toLowerCase().replace(/\./g,"_"),
 			                 iconClass: "Studio_silkIconImageList_83",
-					 label: parent.name + " Layers",
+			label: studio.getDictionaryItem("wm.Component.CONTEXT_MENU_LAYERS", {paretName: parent.name}),
 					 children: []};
 		    parent.createDesignContextMenu(menuObj, layersOptions.children);
 		    var layersMenu = menuObj.addAdvancedMenuChildren(menuObj.dojoObj, layersOptions);
@@ -567,7 +583,8 @@ wm.Component.extend({
 
 
 	menuObj.addAdvancedMenuChildren(menuObj.dojoObj, {iconClass: "StudioHelpIcon", 
-							  label: this.declaredClass + " docs...", onClick: dojo.hitch(this, function() {window.open("http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/" + this.declaredClass.replace(/^.*\./,""));})});
+							  label: studio.getDictionaryItem("wm.Component.CONTEXT_MENU_HELP", {"className": this.declaredClass}),
+							  onClick: dojo.hitch(this, function() {window.open("http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/" + this.declaredClass.replace(/^.*\./,""));})});
 	    
 	    menuObj.update(e, this.domNode);
     },
@@ -577,6 +594,7 @@ wm.Component.extend({
 	    });
 	},
     addContextMenuItem: function(inMenu, inPropName, inProp) {
+	/* This menu does not appear to get added */
 	    inMenu.addAdvancedMenuChildren(inMenu.dojoObj, 
 					   {label: inProp.simpleBindProp ? "Bind " + inPropName : inPropName, 
 					    iconClass: "Studio_silkIconImageList_30",

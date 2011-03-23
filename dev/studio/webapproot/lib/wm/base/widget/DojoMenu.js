@@ -524,13 +524,14 @@ wm.DojoMenu.extend({
 		switch (inName) {
 		case "editMenuItems":
 		    if (!studio.menuDesignerDialog) {
-			studio.menuDesignerDialog = new wm.PageDialog({pageName: "MenuDesigner", 
-								       name: "MenuDesignerDialog",
-								       title: "Edit Menu",
-								       hideControls: true,
-								       owner: studio,
-								       width: "250px",
-								       height: "350px"});
+			studio.menuDesignerDialog = 
+			    new wm.PageDialog({pageName: "MenuDesigner", 
+					       name: "MenuDesignerDialog",
+					       title: studio.getDictionaryItem("wm.DojoMenu.MENU_DESIGNER_TITLE"),
+					       hideControls: true,
+					       owner: studio,
+					       width: "250px",
+					       height: "350px"});
 		    }
 		    studio.menuDesignerDialog.page.setMenu(this);
 		    studio.menuDesignerDialog.show();

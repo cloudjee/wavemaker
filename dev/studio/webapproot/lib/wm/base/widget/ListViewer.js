@@ -211,7 +211,7 @@ dojo.declare("wm.ListViewer", wm.Container, {
                                  var data = this.dataSet.getData();
                                  if (data && data.length)
                                      this._sample = dojo.toJson(data[0]);
-				 app.confirm("Can we save this page before moving on to the next page?", 
+				 app.confirm(studio.getDictionaryItem("wm.ListViewer.CONFIRM_SAVE_CHANGES"),
 					     false,
 					     dojo.hitch(this,function() {
 						 studio.project.saveProject(false, dojo.hitch(this, function() {

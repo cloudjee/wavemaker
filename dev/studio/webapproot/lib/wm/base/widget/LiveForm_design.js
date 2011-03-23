@@ -444,7 +444,7 @@ wm.LiveFormBase.extend({
                 this.setName2(inName);
             } else {
                 editPanel.setName(this.name + "EditPanel");
-                app.confirm("Customizations you have made to your EditPanel will be lost if you change the name.  Procede?", false, 
+                app.confirm(studio.getDictionaryItem("wm.LiveForm.SET_NAME_CONFIRM"), false, 
                             dojo.hitch(this, function() {
                                 this.setName2(inName);
                                 studio.inspector.reinspect();
@@ -467,8 +467,11 @@ wm.LiveFormBase.extend({
 	    case "addEditors":
 		return this.addEditors();
 	    case "removeEditors":
-		if (confirm("Are you sure? All editors in " + this.getId() + " will be deleted."))
-		    return this.removeEditors();
+		app.confirm(studio.getDictionaryItem("wm.LiveForm.CONFIRM_REMOVE_EDITORS", {name: this.getId()}),
+			    false, 
+			    dojo.hitch(this, "removeEditors"));
+		
+		return;
 	    case "clearData":
 		return this.clearData();
 	    case "generateButtons":
@@ -704,6 +707,7 @@ wm.LiveForm.extend({
 		}
 	    }
             this.setHeight("500px"); // assuming fitToContentHeight is enabled, this will ignore the 500px and set to the preferred fitToContentHeight.
+
 	},
 	isFormFieldInForm: function(ff){
 		var arr = this.getRelatedEditorsArray() || [];

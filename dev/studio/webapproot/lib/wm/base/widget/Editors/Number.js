@@ -82,7 +82,7 @@ dojo.declare("wm._NumberEditor", wm._TextEditor, {
 			if (this.editor)
 				this.editor.constraints.max = v;
 		} else if (this.isDesignLoaded())
-			alert(dojo.string.substitute(this._messages.rangeMax, [this.minimum]));
+		    app.alert(dojo.string.substitute(this._messages.rangeMax, [this.minimum]));
 	},
 	setMinimum: function(inMin) {
 		var v = Number(inMin);
@@ -91,7 +91,7 @@ dojo.declare("wm._NumberEditor", wm._TextEditor, {
 			if (this.editor)
 				this.editor.constraints.min = v;
 		} else if (this.isDesignLoaded())
-			alert(dojo.string.substitute(this._messages.rangeMin, [this.maximum]));
+		    app.alert(dojo.string.substitute(this._messages.rangeMin, [this.maximum]));
 	},
 	_getReadonlyValue: function() {
 		return dojo.number.format(this.owner.dataValue, this.getFormatProps());
@@ -275,7 +275,7 @@ dojo.declare("wm.Number", wm.Text, {
 			        this.editor.validate();
 			}
 		} else if (this.isDesignLoaded())
-			alert(dojo.string.substitute(this._messages.rangeMax, [this.minimum]));
+		    app.alert(dojo.string.substitute(this._messages.rangeMax, [this.minimum]));
 	},
 	setMinimum: function(inMin) {
 	        var v = (inMin === "") ? "" :  Number(inMin);
@@ -286,7 +286,7 @@ dojo.declare("wm.Number", wm.Text, {
 			        this.editor.validate();
 			}
 		} else if (this.isDesignLoaded())
-			alert(dojo.string.substitute(this._messages.rangeMin, [this.maximum]));
+		    app.alert(dojo.string.substitute(this._messages.rangeMin, [this.maximum]));
 	},
 	_getReadonlyValue: function() {
 		return dojo.number.format(this.dataValue, this.getFormatProps());

@@ -103,15 +103,15 @@ dojo.declare("wm.LivePanel", wm.Panel, {
 	var newButton = new wm.Button({owner: studio.page,
 				       name: studio.page.getUniqueName(this.liveDataName + "NewButton"),
 				       parent: gridButtonPanel,
-				       caption: "New"});
+				       caption: studio.getDictionaryItem("wm.EditPanel.NEW_CAPTION")});
 	var updateButton = new wm.Button({owner: studio.page,
-					name: studio.page.getUniqueName(this.liveDataName + "UpdateButton"),
-				       parent: gridButtonPanel,
-				       caption: "Update"});
+					  name: studio.page.getUniqueName(this.liveDataName + "UpdateButton"),
+					  parent: gridButtonPanel,
+					  caption: studio.getDictionaryItem("wm.EditPanel.UPDATE_CAPTION")});
 	var deleteButton = new wm.Button({owner: studio.page,
 					  name: studio.page.getUniqueName(this.liveDataName + "DeleteButton"),
 				       parent: gridButtonPanel,
-				       caption: "Delete"});
+				       caption: studio.getDictionaryItem("wm.EditPanel.DELETE_CAPTION")});
 
 	var dialog = this.dialog = new wm.DesignableDialog({owner: studio.page,
 					      name: studio.page.getUniqueName(this.liveDataName + "Dialog"),
@@ -158,11 +158,11 @@ dojo.declare("wm.LivePanel", wm.Panel, {
 	var saveButton = this.saveButton = new wm.Button({owner: studio.page,
 							  name: studio.page.getUniqueName(this.liveDataName + "SaveButton"),
 							  parent: dialog.buttonBar,
-							  caption: "Save"});
+							  caption: studio.getDictionaryItem("wm.EditPanel.SAVE_CAPTION")});
 	var cancelButton = new wm.Button({owner: studio.page,
 					  name: studio.page.getUniqueName(this.liveDataName + "CancelButton"),
 					parent: dialog.buttonBar,
-					caption: "Cancel"});
+					  caption: studio.getDictionaryItem("wm.EditPanel.CANCEL_CAPTION")});
 					      
 
 	/* Generate all edit event handlers */
@@ -255,11 +255,11 @@ dojo.declare("wm.LivePanel", wm.Panel, {
 	var newButton = new wm.Button({owner: studio.page,
 				       name: studio.page.getUniqueName(this.liveDataName + "NewButton"),
 				       parent: gridButtonPanel,
-				       caption: "New"});
+					  caption: studio.getDictionaryItem("wm.EditPanel.NEW_CAPTION")});
 	var deleteButton = new wm.Button({owner: studio.page,
 					  name: studio.page.getUniqueName(this.liveDataName + "DeleteButton"),
 					  parent: gridButtonPanel,
-					  caption: "Delete"});
+					  caption: studio.getDictionaryItem("wm.EditPanel.DELETE_CAPTION")});
 
 	newButton.eventBindings.onclick = this.name + ".editableGridNew";
 	deleteButton.eventBindings.onclick = this.name + ".editableGridDelete";

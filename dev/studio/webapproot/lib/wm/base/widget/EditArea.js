@@ -245,7 +245,7 @@ dojo.declare("wm.EditArea", wm.Box, {
 		dojo.stopEvent(e);
 	},
     promptGotoLine: function() {
-	app.prompt("Enter line number", 0, dojo.hitch(this, function(inValue) {this.goToLine(inValue);}));
+	app.prompt(studio.getDictionaryItem("wm.EditArea.ENTER_LINE_NUMBER"), 0, dojo.hitch(this, function(inValue) {this.goToLine(inValue);}));
     },
     goToLine: function(inLineNumber, selectLine) {
 	editAreaLoader.execCommand(this.area.textarea.id, "go_to_line", String(inLineNumber));

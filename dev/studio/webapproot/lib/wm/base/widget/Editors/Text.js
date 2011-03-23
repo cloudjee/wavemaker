@@ -345,10 +345,10 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
     setMaxHeight: function(newMax) {
         if (this.isDesignLoaded()) {
             if (newMax < this.minHeight) {
-                alert("Your maxHeight must be at least as large as your minHeight!");
+                app.alert(studio.getDictionaryItem("wm.ResizableEditor.SET_MAX_HEIGHT", {minHeight: this.minHeight}));
                 return;
             } else if (newMax < this.getMinHeightProp()) {
-                alert("Please select a minHeight for this editor that is at least " + this.getMinHeightProp() + " high");
+                app.alert(studio.getDictionaryItem("wm.ResizableEditor.SET_MAX_HEIGHT", {minHeight: this.getMinHeightProp()}));
                 return;
             }
         }

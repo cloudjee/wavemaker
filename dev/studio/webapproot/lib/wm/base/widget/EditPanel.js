@@ -162,8 +162,12 @@ wm.EditPanel.extend({
 		//
 		var
 			n = this.getId(),
-			sb = this.owner.loadComponent("saveButton1", p, this.editPanelStyle, {caption: "Save"}, {onclick: n + ".saveData"});
-		this.owner.loadComponent("cancelButton1", p, this.editPanelStyle, {caption: "Cancel"}, {onclick: n + ".cancelEdit"});
+			sb = this.owner.loadComponent("saveButton1", p, this.editPanelStyle, 
+						      {caption: studio.getDictionaryItem("wm.EditPanel.SAVE_CAPTION")}, 
+						      {onclick: n + ".saveData"});
+		this.owner.loadComponent("cancelButton1", p, this.editPanelStyle, 
+					 {caption: studio.getDictionaryItem("wm.EditPanel.CANCEL_CAPTION")}, 
+					 {onclick: n + ".cancelEdit"});
 		sb.$.binding.addWire("", "disabled", n + ".formInvalid");
 		this.reflow();
 	},
@@ -174,9 +178,15 @@ wm.EditPanel.extend({
 		this.operationPanel = p.getId();
 		//
 		var n = this.getId();
-		this.owner.loadComponent("newButton1", p, this.editPanelStyle, {caption: "New"}, {onclick: n + ".beginDataInsert"});
-	        var u = this.owner.loadComponent("updateButton1", p, this.editPanelStyle, {caption: "Update"}, {onclick: n + ".beginDataUpdate"});
-		var d = this.owner.loadComponent("deleteButton1", p, this.editPanelStyle, {caption: "Delete"}, {onclick: n + ".deleteData"});
+		this.owner.loadComponent("newButton1", p, this.editPanelStyle, 
+					 {caption: studio.getDictionaryItem("wm.EditPanel.NEW_CAPTION")}, 
+					 {onclick: n + ".beginDataInsert"});
+	        var u = this.owner.loadComponent("updateButton1", p, this.editPanelStyle, 
+						 {caption: studio.getDictionaryItem("wm.EditPanel.UPDATE_CAPTION")}, 
+						 {onclick: n + ".beginDataUpdate"});
+		var d = this.owner.loadComponent("deleteButton1", p, this.editPanelStyle, 
+						 {caption: studio.getDictionaryItem("wm.EditPanel.DELETE_CAPTION")}, 
+						 {onclick: n + ".deleteData"});
 		this.reflow();
 		//
 		u.$.binding.addWire("", "disabled", n + ".formUneditable");
@@ -184,7 +194,7 @@ wm.EditPanel.extend({
 	},
 
 	removeControls: function() {
-		if (confirm("Are you sure? All widgets in " + this.getId() + " will be deleted.")) {
+	    if (confirm(studio.getDictionaryItem("wm.EditPanel.REMOVE_CONTROLS_CONFIRM", {name: this.getId()}))) {
 			this._removeControls();
 		}
 	},
@@ -206,10 +216,11 @@ wm.EditPanel.extend({
 		this._createOperationPanel();
 		this.setLock(true);
 		this.updateControlsStatus();
+		this.updateDesignTrees();
 		this.reflow();
 	},
 	updateDesignTrees: function() {
-		wm.fire(studio, "refreshComponentOnTree", [this]);
+		wm.fire(studio, "refreshVisualTree");
 	},
 	set_liveForm: function(inLiveForm) {
 		this.setLiveForm(inLiveForm);

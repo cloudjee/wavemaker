@@ -244,7 +244,7 @@ wm.RelatedEditor.extend({
 		if (inFieldSchema.type == "com.sforce.soap.enterprise.salesforceservice.QueryResultType") 
 			return null; //xxx
 		return {
-			caption: wm.capitalize(this.formField) + ' (lookup)',
+		    caption: studio.getDictionaryItem("wm.RelatedEditor.LOOKUP_CAPTION", {fieldName: wm.capitalize(this.formField)}),
 			displayType: "Lookup",
 			required: inFieldSchema.required,
 			includeLists: true,

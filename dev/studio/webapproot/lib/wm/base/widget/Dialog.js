@@ -1650,10 +1650,14 @@ dojo.declare("wm.ColorPickerDialog", wm.Dialog, {
         }
         this.colorPickerControl = new wm.Control({name: "colorPickerControl", width: "325px", height: "193px", owner: this, parent: this});
         this.buttonPanel = new wm.Panel({name: "buttonPanel", width: "100%", height: "100%", layoutKind: "left-to-right", owner: this, parent: this, horizontalAlign: "center"});
-        this.BrightenButton = new wm.Button({caption: "Bright", width: "75px", height: "30px", parent: this.buttonPanel, owner: this});
-        this.DarkenButton = new wm.Button({caption: "Dark", width: "75px", height: "30px", parent: this.buttonPanel, owner: this});
-        this.CancelButton = new wm.Button({caption: "Cancel", width: "75px", height: "30px", parent: this.buttonPanel, owner: this});
-        this.OKButton = new wm.Button({caption: "OK", width: "75px", height: "30px", parent: this.buttonPanel, owner: this});
+        this.BrightenButton = new wm.Button({caption: studio.getDictionaryItem("wm.ColorPickerDialog.BRIGHTEN"), 
+					     width: "75px", height: "30px", parent: this.buttonPanel, owner: this});
+        this.DarkenButton = new wm.Button({caption: studio.getDictionaryItem("wm.ColorPickerDialog.DARKEN"), 
+					   width: "75px", height: "30px", parent: this.buttonPanel, owner: this});
+        this.CancelButton = new wm.Button({caption: studio.getDictionaryItem("wm.ColorPickerDialog.CANCEL"), 
+					   width: "75px", height: "30px", parent: this.buttonPanel, owner: this});
+        this.OKButton = new wm.Button({caption: studio.getDictionaryItem("wm.ColorPickerDialog.OK"), 
+				       width: "75px", height: "30px", parent: this.buttonPanel, owner: this});
 
         this.connect(this.BrightenButton, "onclick", this, "brighten");
         this.connect(this.DarkenButton, "onclick", this, "darken");

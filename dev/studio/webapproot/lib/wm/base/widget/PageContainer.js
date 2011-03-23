@@ -274,7 +274,7 @@ wm.PageContainer.extend({
 				     this.owner.pageName = n;
 				 else
 				     this.pageName = n;
-				 app.confirm("Can we save your current page before moving on to the next page? This will save your pageContainer's pageName.", 
+				 app.confirm(studio.getDictionaryItem("wm.PageContainer.CONFIRM_SAVE_CHANGES"), 
 					     false,
 					     dojo.hitch(this,function() {
 
