@@ -93,8 +93,8 @@ wm.RelatedEditor.extend({
 	},
 	set_editingMode: function(inMode) {
 		if (this._hasAncestorEditingMode(["readonly", "lookup"]) && inMode != "readonly") {
-			alert("For this editor to be editable, its parent editor must have an editingMode of editable.");
-			return;
+		    app.alert(studio.getDictionaryItem("wm.RelatedEditor.BAD_EDIT_MODE"));
+		    return;
 		}
 		this.editingMode = inMode;
 		this._editModeChanged();

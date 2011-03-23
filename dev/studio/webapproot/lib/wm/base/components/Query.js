@@ -40,7 +40,7 @@ dojo.declare("wm.Query", wm.ServerComponent, {
 	return this.name + "QueryLayer";
     },
     getLayerCaption: function() {
-	return this.name + " (" + bundleStudio["TabCaption_Query"] + ")";
+	return this.name + " (" + studio.getDictionaryItem("wm.Query.TAB_CAPTION") + ")";
     },
     editView: function() {
 	var c = studio.navGotoEditor("QueryEditor", studio.databaseTab, this.getLayerName(), this.getLayerCaption());

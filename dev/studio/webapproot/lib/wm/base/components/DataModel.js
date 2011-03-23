@@ -193,7 +193,7 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 	return this.name + "DataModelLayer";
     },
     getLayerCaption: function() {
-	return this.name + " (" + bundleStudio["TabCaption_DataModelEntity"] + ")";
+	return this.name + " (" + studio.getDictionaryItem("wm.DataModel.TAB_CAPTION") + ")";
     }
 
 });
@@ -223,7 +223,7 @@ dojo.declare("wm.DataModelEntity", wm.Component, {
 	return this.dataModelName + "DataModelLayer";
     },
     getLayerCaption: function() {
-	return this.dataModelName + " (" + bundleStudio["TabCaption_DataModelEntity"] + ")";
+	return this.dataModelName + " (" + studio.getDictionaryItem("wm.DataModel.TAB_CAPTION") + ")";
     }
 });
 

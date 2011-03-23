@@ -34,7 +34,7 @@ dojo.declare("wm.LivePanel", wm.Panel, {
 								       height: "300px",
 								       modal: true,
 								       hideControls: true,
-								       title: "Pick LivePanel Layout"});
+								       title: studio.getDictionaryItem("wm.LivePanel.CHOOSER_TITLE")});
 	    }
 	    studio.LivePanelTypeChooserDialog.show();
 
@@ -383,7 +383,7 @@ dojo.declare("wm.LivePanel", wm.Panel, {
                                                      verticalAlign: "top",
 						     owner: this.owner,
 						     name: this.liveDataName + "DetailsPanel",
-						    title: "Details"});
+						     title: studio.getDictionaryItem("wm.LivePanel.DETAILS_PANEL_TITLE")});
 		this.liveForm = new wm.LiveForm({
 				name: studio.page.getUniqueName(this.liveDataName + "LiveForm1"),
 				owner: this.owner,

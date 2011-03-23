@@ -478,20 +478,22 @@ wm.LiveFormBase.extend({
 	},
     generateButtons: function() {
 	if (!this._generateButtonsDialog) {
-	    var dialog = this._generateButtonsDialog = new wm.GenericDialog({modal: true,
-									     footerBorder: "0",
-									     title: "Generate Form Buttons",
-									     userPrompt: "What kind of buttons do you want? EditPanel manages the buttons for you; basic buttons gives you a starting point for creating your own button panel",
-									     width: "400px",
-									     height: "200px",
-									     button1Caption: "Edit Panel",
-									     button2Caption: "Basic Buttons",
-									     button3Caption: "Cancel",
-									     button1Close: true,
-									     button2Close: true,
-									     button3Close: true,
-									     owner: studio,
-									     name: this.name + "_GenerateLiveFormButtonsDialog"});
+	    var dialog = 
+		this._generateButtonsDialog = 
+		new wm.GenericDialog({modal: true,
+				      footerBorder: "0",
+				      title: studio.getDictionaryItem("wm.LiveForm.GENERATE_BUTTONS_TITLE"),
+				      userPrompt: studio.getDictionaryItem("wm.LiveForm.GENERATE_BUTTONS_PROMPT"),
+				      width: "400px",
+				      height: "200px",
+				      button1Caption: studio.getDictionaryItem("wm.LiveForm.GENERATE_BUTTONS_CAPTION1"),
+				      button2Caption: studio.getDictionaryItem("wm.LiveForm.GENERATE_BUTTONS_CAPTION2"),
+				      button3Caption: studio.getDictionaryItem("wm.LiveForm.GENERATE_BUTTONS_CAPTION3"),
+				      button1Close: true,
+				      button2Close: true,
+				      button3Close: true,
+				      owner: studio,
+				      name: this.name + "_GenerateLiveFormButtonsDialog"});
 	    dialog.connect(dialog, "onButton1Click", this, function() {
 /*
 		if (this.editPanelStyle == "none")
@@ -510,7 +512,7 @@ wm.LiveFormBase.extend({
 		var saveButton = this.saveButton = new wm.Button({owner: studio.page,
 								  name: studio.page.getUniqueName(this.name + "SaveButton"),
 								  parent: panel,
-								  caption: "Save"});
+								  caption:  studio.getDictionaryItem("wm.LiveForm.GENERATE_BUTTONS_SAVE")});
 		saveButton.eventBindings.onclick = this.name + ".saveDataIfValid";
 		this.saveButton.$.binding.addWire(null, "disabled", this.name + ".invalid","");
 
@@ -520,21 +522,21 @@ wm.LiveFormBase.extend({
 		var cancelButton = new wm.Button({owner: studio.page,
 						  name: studio.page.getUniqueName(this.name + "CancelButton"),
 						  parent: panel,
-						  caption: "Cancel"});
+						  caption:  studio.getDictionaryItem("wm.LiveForm.GENERATE_BUTTONS_CANCEL")});
 		cancelButton.eventBindings.onclick = this.name + ".cancelEdit";
 
 		/* Generate a new button which defaults to calling beginDataInsert */
 		var newButton = new wm.Button({owner: studio.page,
 					       name: studio.page.getUniqueName(this.name + "NewButton"),
 					       parent: panel,
-					       caption: "New"});
+					       caption:  studio.getDictionaryItem("wm.LiveForm.GENERATE_BUTTONS_NEW")});
 		newButton.eventBindings.onclick = this.name + ".beginDataInsert";
 
 		/* Generate a new button which defaults to calling beginDataInsert */
 		var updateButton = new wm.Button({owner: studio.page,
-					       name: studio.page.getUniqueName(this.name + "UpdateButton"),
-					       parent: panel,
-					       caption: "Update"});
+						  name: studio.page.getUniqueName(this.name + "UpdateButton"),
+						  parent: panel,
+						  caption:  studio.getDictionaryItem("wm.LiveForm.GENERATE_BUTTONS_UPDATE")});
 		updateButton.eventBindings.onclick = this.name + ".beginDataUpdate";
 
 
@@ -542,7 +544,7 @@ wm.LiveFormBase.extend({
 		var deleteButton = new wm.Button({owner: studio.page,
 						  name: studio.page.getUniqueName(this.name + "DeleteButton"),
 						  parent: panel,
-						  caption: "Delete"});
+						  caption:  studio.getDictionaryItem("wm.LiveForm.GENERATE_BUTTONS_DELETE")});
 		deleteButton.eventBindings.onclick = this.name + ".deleteData";
 
 		panel.reflow();
@@ -607,7 +609,7 @@ wm.LiveForm.extend({
 		//console.log("addEditors", this._generateDeferred);
 		// remove bindings (but not dataSet binding)
 		// removing dataSet binding fails if triggered by the dataSet wire.
-		studio.beginWait("Adding Editors for " + this.getId());
+	    studio.beginWait(studio.getDictionaryItem("wm.LiveForm.WAIT_ADD_EDITORS", {widgetName: this.getId()}));
 		wm.onidle(this, function() {
 			try {
 			    if (!this.getEditPanel() && !this._noEditPanel) {

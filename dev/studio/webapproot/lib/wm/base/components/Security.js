@@ -135,7 +135,7 @@ dojo.declare("wm.Security", wm.ServerComponent, {
 		return true;
 	},
 	editView: function() {
-	    studio.navGotoEditor("Security", studio.securityTab, "SecurityLayer", bundleStudio["TabCaption_Security"]);
+	    studio.navGotoEditor("Security", studio.securityTab, "SecurityLayer", studio.getDictionaryItem("wm.Security.TAB_CAPTION"));
 	    //studio.securityPageDialog.show();
 	}
 });

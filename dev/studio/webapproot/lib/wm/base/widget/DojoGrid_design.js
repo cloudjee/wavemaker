@@ -28,22 +28,12 @@ wm.DojoGrid.extend({
 	                {name:'Checkbox',value:'dojox.grid.cells.Bool'},
 	                {name:'ComboBox',value:'dojox.grid.cells.ComboBox'}
 		      ],
-	headerAttr: [{id:'show', title:' ',width:'10px', type:'checkbox'}, 
-				{id:'id', title: 'Field',width:'150px', type:'text', readOnly:true}, 
-				{id:'title', title: 'Title',width:'150px', type:'text'}, 
-				{id:'width', title: 'Width',width:'109px', type:'width'}, 
-				{id:'align', title: 'Alignment',width:'70px', type:'dropdown'},
-				{id:'formatFunc', title: 'Format',width:'150px', type:'dropdown'},
-				{id:'fieldType', title: 'Edit Field Type',width:'100px', type:'dropdown', isAdvanced:true},
-/*				{id:'editable', title:'Editable',width:'10px', type:'checkbox', isAdvanced:true}, */
-/*		                {id: 'editParams', title: "Edit Parameters", width: "100px", type: 'gridEditParams', isAdvanced: true},*/
-				{id:'expression', title: 'Data Expression',width:'150px', type:'text', isAdvanced:true}],
-	defaultFormatters:[	{name:'', value:''},
-											{name:'Currency (WaveMaker)', value:'wm_currency_formatter'},
-											{name:'Date (WaveMaker)', value:'wm_date_formatter'},
-											{name:'Date LocalTime (WaveMaker)', value:'wm_localdate_formatter'},
-											{name:'Number (WaveMaker)', value:'wm_number_formatter'},
-											{name:'Image (WaveMaker)', value:'wm_image_formatter'}],
+	    defaultFormatters:[	{name:'', value:''},
+				{name:'Currency (WaveMaker)', value:'wm_currency_formatter'},
+				{name:'Date (WaveMaker)', value:'wm_date_formatter'},
+				{name:'Date LocalTime (WaveMaker)', value:'wm_localdate_formatter'},
+				{name:'Number (WaveMaker)', value:'wm_number_formatter'},
+				{name:'Image (WaveMaker)', value:'wm_image_formatter'}],
     //showAddButton: false,
     //showDeleteButton:false,
     themeableStyles: [],
@@ -77,6 +67,20 @@ wm.DojoGrid.extend({
 			this.studioCreate();
 		this.inherited(arguments);
 
+	    if (!this.headerAttr) {
+		this.headerAttr = 
+		    [{id:'show', title:' ',width:'10px', type:'checkbox'}, 
+		     {id:'id', title: studio.getDictionaryItem("wm.DojoGrid.CONFIG_ID"),width:'150px', type:'text', readOnly:true}, 
+		     {id:'title', title:  studio.getDictionaryItem("wm.DojoGrid.CONFIG_TITLE"),width:'150px', type:'text'}, 
+		     {id:'width', title:  studio.getDictionaryItem("wm.DojoGrid.CONFIG_WIDTH"),width:'109px', type:'width'}, 
+		     {id:'align', title:  studio.getDictionaryItem("wm.DojoGrid.CONFIG_ALIGN"),width:'70px', type:'dropdown'},
+		     {id:'formatFunc', title:  studio.getDictionaryItem("wm.DojoGrid.CONFIG_FORMAT"),width:'150px', type:'dropdown'},
+		     {id:'fieldType', title:  studio.getDictionaryItem("wm.DojoGrid.CONFIG_TYPE"),width:'100px', type:'dropdown', isAdvanced:true},
+		/*				{id:'editable', title:'Editable',width:'10px', type:'checkbox', isAdvanced:true}, */
+		/*		                {id: 'editParams', title: "Edit Parameters", width: "100px", type: 'gridEditParams', isAdvanced: true},*/
+		     {id:'expression', title:  studio.getDictionaryItem("wm.DojoGrid.CONFIG_EXPR"),width:'150px', type:'text', isAdvanced:true}];
+	    }
+
 		this.headerAttr[4].dataStore = this.getAlignmentTypeStore();
 		this.updateFormatterList();
 		this.headerAttr[5].dataStore = this.formatterStore;
@@ -84,7 +88,7 @@ wm.DojoGrid.extend({
 		this.updateFieldTypeList(this.fieldOptions);
 		this.headerAttr[6].dataStore = this.fieldTypeStore;
 		var defaultCustomFieldParams = {id: 'customField', isCustomField: true, expression: '', show:true, width:'100%'};
-		var helpText = '* To re-arrange columns close dialog box and drag columns on grid to desired position.<br>* You can right click on grid to open this dialog.';
+	    var helpText = studio.getDictionaryItem("wm.DojoGrid.HELP_TEXT");
 	    this.contextMenu = new wm.ContextMenuDialog({addButtonLabel: 'Add Column', 
 							 onAddButtonClick: dojo.hitch(this, 'addNewColumn'), 
 							 headerAttr: this.headerAttr, 

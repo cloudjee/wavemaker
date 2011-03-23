@@ -189,14 +189,45 @@
 /*    "TabCaption_DataObjectsEditor": "Database Designs",*/
 /*    "TabCaption_QueryEditor": "Database Queries",*/
     "TabCaption_JavaService": "Java",
-    "TabCaption_LiveView": "Live View",
-    "TabCaption_Query": "Query",
-    "TabCaption_DataModelEntity": "Data Model",
+
     "TabCaption_WebService": "Web Service",
-    "TabCaption_Security": "Security",
 /*    "TabCaption_LiveViewEditor": "Live Views"*/
 //	"D_BoundTo" : " bound to ",
 //	"D_WithMatchedType" : " with matched type <i>",
     "page_unsavedchanges_tabclose": "You have unsaved changes:",
-    "page_closeAnyway": "Close anyway?"
+    "page_closeAnyway": "Close anyway?",
+    "wm.LiveView.TAB_CAPTION": "Live View",
+    "wm.Security.TAB_CAPTION": "Security",
+    "wm.Query.TAB_CAPTION": "Query",
+    "wm.DataModel.TAB_CAPTION": "Data Model",
+    "wm.ListViewer.NO_DATASET": "Please select a dataSet before creating a new page",
+    "wm.RelatedEditor.BAD_EDIT_MODE": "For this editor to be editable, its parent editor must have an editingMode of editable.",
+    "wm.PageContainer.OPEN_PAGE": "Open Page",
+    "wm.PageContainer.NEW_PAGE": "New Page",
+    "wm.PageContainer.CONFIRM_SAVE_CHANGES": "Can we save your current page before moving on to the next page? This will save your pageContainer's pageName.",
+    "wm.DojoGrid.HELP_TEXT": '* To re-arrange columns close dialog box and drag columns on grid to desired position.<br>* You can right click on grid to open this dialog.',
+    "wm.LivePanel.CHOOSER_TITLE": "Pick LivePanel Layout",
+    "wm.LivePanel.DETAILS_PANEL_TITLE": "Details",
+    "wm.LiveForm.GENERATE_BUTTONS_TITLE": "Generate Form Buttons",
+    "wm.LiveForm.GENERATE_BUTTONS_PROMPT": "What kind of buttons do you want? EditPanel manages the buttons for you; basic buttons gives you a starting point for creating your own button panel",
+    "wm.LiveForm.GENERATE_BUTTONS_CAPTION1": "Edit Panel",
+    "wm.LiveForm.GENERATE_BUTTONS_CAPTION2": "Basic Buttons",
+    "wm.LiveForm.GENERATE_BUTTONS_CAPTION3": "Cancel",
+    "wm.LiveForm.GENERATE_BUTTONS_SAVE": "Save",
+    "wm.LiveForm.GENERATE_BUTTONS_CANCEL": "Cancel",
+    "wm.LiveForm.GENERATE_BUTTONS_NEW": "New",
+    "wm.LiveForm.GENERATE_BUTTONS_UPDATE": "Update",
+    "wm.LiveForm.GENERATE_BUTTONS_DELETE": "Delete",
+    "wm.LiveForm.WAIT_ADD_EDITORS": "Adding Editors for ${widgetName}",
+    "wm.DojoGrid.CONFIG_ID": "Field",
+    "wm.DojoGrid.CONFIG_TITLE": "Title",
+    "wm.DojoGrid.CONFIG_WIDTH": "Width",
+    "wm.DojoGrid.CONFIG_ALIGN": "Alignment",
+    "wm.DojoGrid.CONFIG_FORMAT": "Format",
+    "wm.DojoGrid.CONFIG_TYPE": "Edit Field Type",
+    "wm.DojoGrid.CONFIG_EXPR": "Data Expression",
+
+
+    
+
 }

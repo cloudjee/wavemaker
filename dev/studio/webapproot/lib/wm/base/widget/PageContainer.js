@@ -55,7 +55,7 @@ dojo.declare("wm.PageContainer", wm.Box, {
 	var openPageButton = this.openPageButton = document.createElement("div");
                 
 	openPageButton.className = "openPageContainerDesignWrapperButton" + ((this.pageName) ? " hasPageName" : ""); 
-	openPageButton.innerHTML = (this.pageName) ? "Open Page" : "New Page";
+	openPageButton.innerHTML = (this.pageName) ? studio.getDictionaryItem("wm.PageContainer.OPEN_PAGE") : studio.getDictionaryItem("wm.PageContainer.NEW_PAGE");
 	this.designWrapper.domNode.appendChild(openPageButton);	
 	this._designerOpenPageButton = openPageButton;
 	this.openPageButtonConnect = dojo.connect(openPageButton, "onclick", this, function() {
@@ -63,7 +63,7 @@ dojo.declare("wm.PageContainer", wm.Box, {
 	        if (!studio.isPageDirty()) {
 		    studio.project.openPage(this.pageName);
 		} else {
-		    app.confirm("Can we save your current page before moving on to the next page? This will save your pageContainer's pageName.", false,
+		    app.confirm(studio.getDictionaryItem("wm.PageContainer.CONFIRM_SAVE_CHANGES"), false,
 				dojo.hitch(this,function() {
 				    this.connect(studio, "saveProjectComplete", this, function() {				
 					studio.project.openPage(this.pageName);

@@ -234,7 +234,7 @@ dojo.declare("wm.ListViewer", wm.Container, {
     setPageName: function(inPage) {
 	if (inPage == "-New Page" && this.isDesignLoaded()) {
 	    if (!this.dataSet) {
-		app.toastWarning("Please select a dataSet before creating a new page");
+		app.toastWarning(studio.getDictionaryItem("wm.ListViewer.NO_DATASET"));
 		return;
 	    }
 	    return this.createNewPage();
