@@ -79,7 +79,9 @@ dojo.declare("wm.PageLoader", wm.Component, {
 		        ctor = dojo.getObject(inName);
                 }
                 if (!ctor) {
-                    app.toastError(studio.getDictionaryItem("wm.PageLoader.JS_NOT_LOADED", {pageName: inName}));
+		    /* TODO: Localize */
+		    if (!wm.disablePageLoadingToast)
+			app.toastError("Page " + inName + " has errors");
                     console.error("Error parsing " + inPath + ".js");
                     this.onError("Error parsing " + inPath + ".js");
                     ctor = dojo.declare(inName, wm.Page); // so at least we can display widgets.js

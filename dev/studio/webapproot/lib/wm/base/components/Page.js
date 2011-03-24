@@ -104,7 +104,9 @@ dojo.declare("wm.Page", wm.Component, {
 	    var widgets = this.constructor.widgets || this.widgets;
 	    if (wm.isEmpty(widgets) && !this.isDesignLoaded()) {
 	        console.error("Page " + this.name + " has been corrupted, and no longer has a wm.Layout nor any widgets; please create a new project or edit " + this.name + ".widgets.js by hand");
-		app.toastError(studio.getDictionaryItem("wm.Page.WIDGETS_MISSING", {pageName: this.name}));
+		/* TODO: Localize */
+		if (!wm.disablePageLoadingToast)
+		    app.toastError("Page " + this.name + " has errors");
             }
 	    if (wm.useDojoParser) {
 		var oldOwner = wm._dojoParserCurrentOwner;
