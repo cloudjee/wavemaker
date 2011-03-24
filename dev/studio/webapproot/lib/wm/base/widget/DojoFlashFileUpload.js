@@ -69,6 +69,7 @@ dojo.declare("wm.DojoFlashFileUpload", wm.DojoFileUpload, {
     },
     setUploadImmediately: function(inVal) {
         this.uploadImmediately = inVal;
+	/* TODO: Localize */
         this.setButtonCaption(this.uploadImmediately ? "Upload..." : "Select Files");
     },
     createButton: function() {
@@ -97,9 +98,7 @@ dojo.declare("wm.DojoFlashFileUpload", wm.DojoFileUpload, {
 
         // Point the button to the new nodes created by the dijit, set the opacity
         // of the flash widget to 0.01, and make sure we reset the buttoncaption which was cleared
-        // to minimize the text showing up in the flash widget hovering over the button we want users to see.
-        console.log(this.dijit);
-        console.log(this.dijit.domNode);
+        // to minimize the text showing up in the flash widget hovering over the button we want users to see.        
             this.button.dom.node = this.button.btnNode = this.button.domNode = this.dijit.domNode;
             var div = document.createElement("div");
             var s = div.style;
@@ -107,7 +106,6 @@ dojo.declare("wm.DojoFlashFileUpload", wm.DojoFileUpload, {
             s.width = "100%";
             s.textAlign = "center";
         s.lineHeight = this.button.getContentBounds().h + "px"; // NOTE: This means button must have a single line caption
-        console.log("CREATE DIJIT IS A C");
                 this.button.domNode.appendChild(div);
                 this.button.btnNode = div;
 
@@ -115,9 +113,7 @@ dojo.declare("wm.DojoFlashFileUpload", wm.DojoFileUpload, {
                 this.dijit.insideNode.style.filter = "alpha(opacity=1)";
 
         this.button.caption = this.buttonCaption;
-        this.button.render(true,true);
-        console.log("CREATE DIJIT IS A D");
-        
+        this.button.render(true,true);      
 
     },
     getPath: function() {

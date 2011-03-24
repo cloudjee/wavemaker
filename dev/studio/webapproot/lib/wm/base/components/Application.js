@@ -200,8 +200,10 @@ dojo.declare("wm.Application", wm.Component, {
 		} catch(e) {
 		    if (inTheme != "wm_notheme")  {
 			this.setTheme("wm_notheme", isInit, optionalCss, optionalPrototype, noRegen);
+			/* TODO: Localize */
 			app.alert("The theme '" + inTheme + "' was not found.  This can happen when importing a project that uses a theme that is not in your library.  You can download that theme and copy it into your WaveMaker/common/themes folder or go to your model, select 'Project', and pick a new theme");
 		    } else  {
+			/* TODO: Localize */
 			app.alert("Fatal error loading theme wm_notheme.  If you see this, please contact WaveMaker support.");
 		    }
 		return;
@@ -593,14 +595,16 @@ dojo.declare("wm.Application", wm.Component, {
             if (!this.alertDialog) {
 		    this.alertDialog = new wm.GenericDialog({name: "alertDialog",
                                                              _noAnimation: true,
-						     owner: this,
-						     title: "Alert!",
-						     noEscape: false,
-						     width: "300px",
-						     height: "180px",
-						     button1Caption: "OK",
-						     button1Close: true,
-						     userPrompt: ""});
+							     owner: this,
+							     /* TODO: Localize */
+							     title: "Alert!",
+							     noEscape: false,
+							     width: "300px",
+							     height: "180px",
+							     /* TODO: Localize */
+							     button1Caption: "OK",
+							     button1Close: true,
+							     userPrompt: ""});
                 this.alertDialog.domNode.style.zIndex = 45;
 
             }
@@ -619,13 +623,15 @@ dojo.declare("wm.Application", wm.Component, {
     confirm: function(inText, nonmodal, onOKFunc, onCancelFunc, optionalOKText,optionalCancelText, noshow) {
             if (!this.confirmDialog) {
 	        this.confirmDialog = new wm.GenericDialog({name: "confirmDialog",
-                                                             _noAnimation: true,
+                                                           _noAnimation: true,
 						           owner: this,
 						           noEscape: false,
 						           width: "350px",
 						           height: "180px",
+							   /* TODO: Localize */
 						           button1Caption: "OK",
 						           button1Close: true,
+							   /* TODO: Localize */
 						           button2Caption: "Cancel",
 						           button2Close: true,
 						           userPrompt: "confirm..."});
@@ -637,10 +643,13 @@ dojo.declare("wm.Application", wm.Component, {
 	    this.confirmDialog.setUserPrompt(inText);
 	    this.confirmDialog.setModal(!nonmodal);
             this.confirmDialog.setShowInput(false);
+	/* TODO: Localize */
 	    this.confirmDialog.setTitle("Confirm..."),
             this.confirmOKFunc = onOKFunc;
             this.confirmCancelFunc = onCancelFunc;
+	/* TODO: Localize */
             this.confirmDialog.setButton1Caption(optionalOKText || "OK");
+	/* TODO: Localize */
             this.confirmDialog.setButton2Caption(optionalCancelText || "Cancel");
             if (!noshow)
 	        this.confirmDialog.show();
@@ -648,7 +657,8 @@ dojo.declare("wm.Application", wm.Component, {
     prompt: function(inText, inDefaultValue, onOKFunc, onCancelFunc, optionalOKText,optionalCancelText) {
         this.confirm(inText, false, onOKFunc, onCancelFunc, optionalOKText, optionalCancelText, true);
         this.confirmDialog.setShowInput(true);
-	    this.confirmDialog.setTitle("Prompt..."),
+	/* TODO: Localize */
+	this.confirmDialog.setTitle("Prompt..."),
         this.confirmDialog.setInputDataValue(inDefaultValue || "");
         this.confirmDialog.show();
     },
@@ -669,15 +679,19 @@ dojo.declare("wm.Application", wm.Component, {
             this.confirmCancelFunc();
     },
     toastError: function(inMsg, optionalDuration) {
+	/* TODO: Localize */
         this.toastDialog.showToast(inMsg, optionalDuration || 8000, "Error");
     },
     toastWarning: function(inMsg, optionalDuration) {
+	/* TODO: Localize */
         this.toastDialog.showToast(inMsg, optionalDuration || 8000, "Warning");
     },
     toastSuccess: function(inMsg, optionalDuration) {
+	/* TODO: Localize */
         this.toastDialog.showToast(inMsg, optionalDuration || 5000, "Success");
     },
     toastInfo: function(inMsg, optionalDuration) {
+	/* TODO: Localize */
         this.toastDialog.showToast(inMsg, optionalDuration || 5000, "Info");
     },
     
@@ -802,6 +816,7 @@ wm.Application.extend({
 	    return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: options});
         case "toastPosition":
             inValue = inValue.replace(/^c/, "center ").replace(/^t/, "top ").replace(/^b/, "bottom ").replace(/l$/, "left").replace(/r$/, "right").replace(/c$/, "center");
+	    /* TODO: Localize */
             return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["top left", "top center", "top right", "center left", "center center", "center right", "bottom left", "bottom center", "bottom right"]});
 	}
 	return this.inherited(arguments);

@@ -91,7 +91,7 @@ wm.loadLibs([
 	//"wm.base.components.FileTransferService",
 	"wm.base.components.JsonRpcService",
 	"wm.base.components.Security",
-	"wm.base.components.DomMacro",
+    //"wm.base.components.DomMacro",
 	// widgets
 	"wm.base.widget.Formatters",
 	"wm.base.widget.Editors.dijit",
@@ -102,7 +102,7 @@ wm.loadLibs([
 	"wm.base.widget.Editors.Checkbox",
 	"wm.base.widget.Editors.Radiobutton",
 	"wm.base.widget.Editors.Select",
-	"wm.base.widget.Box",
+    //"wm.base.widget.Box",
 	"wm.base.widget.Spacer",
 	"wm.base.widget.layout.Layout",
 	"wm.base.widget.layout.Box",
@@ -158,7 +158,7 @@ wm.loadLibs([
 	"wm.base.widget.EditPanel",
 	"wm.base.widget.Ticker",
 	"wm.base.widget.Composite",
-	"wm.base.widget.Cards",
+    //"wm.base.widget.Cards",
         //"wm.base.widget.Bespin",
 	// Dijits
 	"wm.base.widget.dijit.Dijit",

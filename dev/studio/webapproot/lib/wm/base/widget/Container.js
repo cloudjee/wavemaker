@@ -676,10 +676,7 @@ wm.Container.extend({
 		switch (inName) {
 			case "layoutKind":
 				return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: wm.layout.listLayouts()});
-			case "horizontalAlign":
-				return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["left", "center", "right"/*, "justified"*/]});
-			case "verticalAlign":
-				return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["top", "middle", "bottom"/*, "justified"*/]});
+
                 case "themeStyleType":
 		    return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["", "MainContent", "EmphasizedContent", "HeaderContent"]});
 		}
@@ -742,8 +739,8 @@ wm.Container.extend({
 
 wm.Object.extendSchema(wm.Container, {
     layoutKind:         {group: "layout", order: 100, doc: 1},
-    horizontalAlign:    {group: "layout", order: 110, doc: 1},
-    verticalAlign:      {group: "layout", order: 120, doc: 1},
+    horizontalAlign:    {group: "layout", order: 110, doc: 1, options: ["left","center","right"]},
+    verticalAlign:      {group: "layout", order: 120, doc: 1, options: ["top","middle","bottom"]},
     fitToContent:       {ignore: true},
     fitToContentWidth:  {group: "advanced layout", order: 90, shortname: "Auto Width"},
     fitToContentHeight: {group: "advanced layout", order: 91, shortname: "Auto Height"},

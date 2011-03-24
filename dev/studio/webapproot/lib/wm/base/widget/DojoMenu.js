@@ -309,11 +309,10 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		    this.blockRightClickOnMenu(subMenu.domNode);
 		  dojo.addClass(subMenu.domNode, this.owner.name + "_" + this.name  + "_PopupMenu");
 		  dojo.addClass(subMenu.domNode, this.owner.name + "_" + idInPage  + "_PopupMenu");
-		  for (var i = 0; i < data.children.length; i++)
-		    {
-		    var subMenuData = data.children[i];
-		    this.addAdvancedMenuChildren(subMenu, subMenuData, false);	
-		    }
+		  for (var i = 0; i < data.children.length; i++) {
+		      var subMenuData = data.children[i];
+		      this.addAdvancedMenuChildren(subMenu, subMenuData, false);	
+		  }
 		  
 		  menuObj.popup = subMenu;
 		    // shouldn't be needed, but is needed when I right click 
@@ -496,7 +495,9 @@ wm.DojoMenu.extend({
 
     editMenuItems: "(Edit Menu Items)",
 
-    themeableStyles: [{name: "wm.DojoMenu-Right_Margin", displayName: "Right Margin"}, {name: "wm.DojoMenu-Down_Image", displayName: "Drop Icon (MenuBar)"}, {name: "wm.DojoMenu-Right_Image", displayName: "Drop Icon (SubMenu)"}],
+    themeableStyles: [{name: "wm.DojoMenu-Right_Margin", displayName: "Right Margin"},
+		      {name: "wm.DojoMenu-Down_Image", displayName: "Drop Icon (MenuBar)"},
+		      {name: "wm.DojoMenu-Right_Image", displayName: "Drop Icon (SubMenu)"}],
 	designCreate: function() {
 		// if this is being created in studio, supply a default caption
 		if (this._studioCreating)
@@ -727,14 +728,7 @@ dojo.declare("wm.PopupMenu", wm.DojoMenu, {
 	this.inherited(arguments);
 	this.setParent(null);
 	studio.designer.domNode.appendChild(this.domNode);
-	this.setFullStructure([{label: "File",
-				children: [{label: "Save"},
-					   {label: "Close"}]},
-			       {label: "Edit",
-				children: [{label: "Cut"},
-					   {label: "Copy"},
-					   {label: "Paste"}]},
-			       {label: "Help"}]);
+	this.setFullStructureStr(studio.getDictionaryItem("wm.PopupMenu.DEFAULT_STRUCTURE"));
 	this.renderDojoObj();
 	this.activate();
     },

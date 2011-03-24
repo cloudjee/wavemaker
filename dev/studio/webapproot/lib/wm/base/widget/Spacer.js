@@ -16,7 +16,6 @@
  *  limitations under the License.
  */
 dojo.provide("wm.base.widget.Spacer");
-dojo.require("wm.base.widget.Box");
 
 dojo.declare("wm.Spacer", wm.Control, {
 	classNames: "wmspacer",

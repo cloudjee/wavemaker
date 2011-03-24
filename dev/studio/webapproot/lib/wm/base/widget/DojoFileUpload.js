@@ -213,6 +213,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
                          height: "100%",
                          border: "1",
                          padding: "2",
+			 /* TODO: Localize */
                          html: "<i>No files selected</i>",
                          showing: this.useList});
 
@@ -258,6 +259,8 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
         if (this.button) this.button.destroy();
 
         this.button = new wm.Button({disabled: this.disabled,
+				     /* Version of flash this was tested on requires us to set caption
+				      * after flash widget is generated */
                                      caption: this._uploaderType == "flash" ? "." : this.buttonCaption,
                                      parent: this.buttonPanel,
                                      owner: this,
@@ -386,7 +389,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
         var submitData = this.input.getData();
         if (this.input.type == "AnyData")
             submitData = submitData.dataValue;
-        console.log("UPLOAD");console.log(data);
+        //console.log("UPLOAD");console.log(data);
         this.dijit.upload(submitData);
     },
     // Selecting the FileUploader from the event menu will fire the upload
@@ -447,6 +450,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
         this.variable.setData([]);
         this._variable.setData([]);
         this._uploadedVariable.setData([]);
+	/* TODO: Localize */
         if (this.html)
             this.html.setHtml("<i>No files selected</i>");
     },
@@ -691,6 +695,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
     onSuccess: function(fileList) {
     },
     onError: function(evt) {
+	/* TODO: Localize */
         app.toastError("File failed to upload; " + evt);
         this.progressBar.hide();
         if (this.useList) {

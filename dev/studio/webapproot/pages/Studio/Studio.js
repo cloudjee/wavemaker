@@ -19,7 +19,6 @@ dojo.provide("wm.studio.pages.Studio.Studio");
 
 dojo.require("dojo.cookie");
 dojo.require("wm.base.components.Page");
-dojo.require("wm.base.widget.Box");
 dojo.require("wm.base.widget.Content");
 dojo.require("wm.base.widget.Panel");
 dojo.require("wm.base.widget.Bevel");

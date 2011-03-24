@@ -254,6 +254,8 @@ wm.Object.extendSchema(wm.MyButton, {
 		dojo.requireLocalization("language", "schema");
 		wm.extendSchemaDictionary = dojo.i18n.getLocalization("language", "schema");
 	    }
+	    if (!wm.extendSchemaDictionary) 
+		wm.extendSchemaDictionary = {};
 	    var className = inClass.prototype.declaredClass;
 	    var dictionary = wm.extendSchemaDictionary[className];
 	    if (dictionary) {

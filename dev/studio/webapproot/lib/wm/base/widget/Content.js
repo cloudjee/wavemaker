@@ -16,9 +16,8 @@
  *  limitations under the License.
  */
 dojo.provide("wm.base.widget.Content");
-dojo.require("wm.base.widget.Box");
 
-dojo.declare("wm.Content", wm.Box, {
+dojo.declare("wm.Content", wm.Control, {
 	width: "100%", 
 	height: "200px",
 	scrim: true,

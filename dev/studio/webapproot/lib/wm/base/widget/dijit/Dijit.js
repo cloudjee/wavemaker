@@ -16,7 +16,6 @@
  *  limitations under the License.
  */
 dojo.provide("wm.base.widget.dijit.Dijit");
-dojo.require("wm.base.widget.Box");
 // include tooltip so the master tooltip is created right away
 dojo.require("dijit.Tooltip");
 
@@ -39,9 +38,9 @@ dojo.addOnLoad(function() {
 	Wrapper class to contain a Dijit.
 	@name wm.Dijit
 	@class
-	@extends wm.Box
+	@extends wm.Control
 */
-dojo.declare("wm.Dijit", wm.Box, {
+dojo.declare("wm.Dijit", wm.Control, {
 	/** @lends wm.Dijit.prototype */
 	dijitClass: null,
 	// FIXME: ignore props not intended for dijit

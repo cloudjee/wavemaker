@@ -218,7 +218,10 @@
     "wm.ContextMenuDialog.SHOW_MORE": 'Show Advanced Properties >>',
     "wm.ContextMenuDialog.SHOW_LESS": '<< Hide Advanced Properties',
     "wm.Dashboard.CONTEXT_MENU_TITLE": "Configure Portlets",
-    
+    "wm.Dashboard.CONFIG_DIALOG_OPEN_FIELD": "Default",
+    "wm.Dashboard.CONFIG_DIALOG_TITLE_FIELD": "Title",
+    "wm.Dashboard.CONFIG_DIALOG_PAGE_FIELD": "Page",
+    "wm.Dashboard.CONFIG_DIALOG_CLOSE_FIELD": "Closable",
     "wm.LiveView.TAB_CAPTION": "Live View",
     "wm.Security.TAB_CAPTION": "Security",
     "wm.Query.TAB_CAPTION": "Query",
@@ -228,6 +231,7 @@
     "wm.RelatedEditor.LOOKUP_CAPTION": "${fieldName} (lookup)",
     "wm.PageContainer.OPEN_PAGE": "Open Page",
     "wm.PageContainer.NEW_PAGE": "New Page",
+    "wm.PageContainer.NEW_PAGE_OPTION": "-New Page",
     "wm.PageContainer.CONFIRM_SAVE_CHANGES": "Can we save your current page before moving on to the next page? This will save your pageContainer's pageName.",
     "wm.ListViewer.CONFIRM_SAVE_CHANGES": "Can we save this page before moving on to the next page?", 
     "wm.DojoGrid.HELP_TEXT": '* To re-arrange columns close dialog box and drag columns on grid to desired position.<br>* You can right click on grid to open this dialog.',
@@ -259,14 +263,25 @@
     "wm.DojoGrid.CONFIG_FORMAT": "Format",
     "wm.DojoGrid.CONFIG_TYPE": "Edit Field Type",
     "wm.DojoGrid.CONFIG_EXPR": "Data Expression",
-
+    "wm.DojoGrid.ADD_COLUMN_LABEL": "Add Column",
+    "wm.DojoGrid.EDIT_COLUMNS_DIALOG_TITLE": "DojoGrid Column Properties",
+    "wm.DojoGrid.ADD_FORMATTER": '- Add Formatter',
+    "wm.DojoGrid.COLUMN_ALIGN_RIGHT": "Right",
+    "wm.DojoGrid.COLUMN_ALIGN_LEFT": "Left",
+    "wm.DojoGrid.COLUMN_ALIGN_CENTER": "Center",
     "wm.EditArea": "Enter line number"    ,
     "wm.ResizeableEditor.SET_MAX_HEIGHT": "Your maxHeight must be larger than ${minHeight}",
+/*
     "wm.ColorPickerDialog.CANCEL": "Cancel",
     "wm.ColorPickerDialog.OK": "OK",
     "wm.ColorPickerDialog.BRIGHTEN": "Bright",
     "wm.ColorPickerDialog.DARKEN": "Dark",
+    */
     "wm.DojoMenu.MENU_DESIGNER_TITLE": "Edit Menu",
+    "wm.PopupMenu.DEFAULT_STRUCTURE": 
+        '[{label: "File",	children: [{label: "Save"},{label: "Close"}]},' +
+	'{label: "Edit",	children: [{label: "Cut"}, {label: "Copy"},{label: "Paste"}]},' +
+        '{label: "Help"}]',
     "wm.Component.DOCUMENTATION_DIALOG_TITLE": "Document ${name}",
     "wm.Component.GENERATE_DOCUMENTATION_TOPNOTE": "Generated Documentation",
     "wm.Component.GENERATE_DOCUMENTATION_EVENT_HEADER": "<h4>${eventName}</h4>\n executes ",

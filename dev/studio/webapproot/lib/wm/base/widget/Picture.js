@@ -16,9 +16,8 @@
  *  limitations under the License.
  */
 dojo.provide("wm.base.widget.Picture");
-dojo.require("wm.base.widget.Box");
 
-dojo.declare("wm.Picture", wm.Box, {
+dojo.declare("wm.Picture", wm.Control, {
 	aspect: "none",
 	hint: "",
 	width: "100px",
@@ -91,18 +90,21 @@ dojo.extend(wm.Picture, {
         themeableDemoProps: {source: "images/add.png"},
 	makePropEdit: function(inName, inValue, inDefault) {
 		switch(inName){
+/*
 			case "source": 
 				return makePictureSourcePropEdit(inName, inValue, inDefault);
+				*/
 			case "aspect": 
 				return makeSelectPropEdit(inName, inValue, ["h", "v", "none"], inDefault);
 		}
 		return this.inherited("makePropEdit", arguments);
 	}
 });
-
+/*
 makePictureSourcePropEdit = function(inName, inValue, inDefault) {
 	var i = makeInputPropEdit(inName, inValue, inDefault);
 	var f = '<form class="inspector-filebox"><input class="inspector-fileinput" onchange="inspectFileboxUrlChange.call(this)" size="1" type="file"/></form>';
 	return '<table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td>' + i + '</td><td>' + f + '</td></tr></table>';
 }
 
+*/

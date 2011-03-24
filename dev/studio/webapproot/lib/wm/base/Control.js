@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 dojo.provide("wm.base.Control");
+dojo.provide("wm.base.Widget");
 wm.splitUnits = function(inUnitValue) {
     if (!dojo.isString(inUnitValue)) return {value: inUnitValue, units: "px"};
 	var m = (inUnitValue || "").match(wm.splitUnits.Rx);
@@ -271,9 +272,10 @@ dojo.declare("wm.DomNode", null, {
 	}
 });
 
+/* Appears to be obsolete
 wm.aligns = [
 	"topLeft", "center", "bottomRight", "justified"
-];
+];*/
 
 /**
 	Base class for all <i>visual</i> components.
@@ -1326,6 +1328,7 @@ this.label.enable();
 		this.setValue("disabled", false);
 	},
 	toString: function() {
+	    /* TODO: Localize */
 	    return '[' + this.declaredClass + ((this.name) ? ':' + this.name : "") + ((!this.showing) ? "(hidden)" : "") + ']';
 	},
 	//===========================================================================
@@ -1516,3 +1519,4 @@ wm.Object.extendSchema(wm.Control, {
 */
 
 wm.Widget = wm.Control;
+dojo.declare("wm.Box", wm.Widget, {}); // mostly obsolete

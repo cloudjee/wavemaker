@@ -699,6 +699,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	this.titleClose = new wm.ToolButton({_classes: {domNode: ["dialogclosebutton"]},
 					     noInspector: true,
 					     name: "titleClose",
+					     /* TODO: Localize */
                                              hint: "Close dialog",
 					     width: "19px",
 					     height: "19px",
@@ -708,6 +709,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 					     showing: !this.modal && !this.noEscape });
 	this.titleMinify = new wm.ToolButton({_classes: {domNode: ["dialogminifybutton"]},
 					      noInspector: true,
+					     /* TODO: Localize */
                                               hint: "Minify dialog (Puts it into a taskbar on the bottom of the screen)",
 					      name: "titleMinify",
 					      width: "19px",
@@ -719,6 +721,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 
 	this.titleMaxify = new wm.ToolButton({_classes: {domNode: ["dialogmaxifybutton"]},
 					  noInspector: true,
+					     /* TODO: Localize */
                                               hint: "Enlarge dialog",
 					      name: "titleMinify",
 					      caption: " ",
@@ -815,6 +818,7 @@ wm.Dialog.extend({
 wm.Object.extendSchema(wm.Dialog, {
     title: {group: "display", order: 1, bindTarget: true},
 
+    /* TODO: Localize */
     owner: { group: "common", order: 1, readonly: true, options: ["Page", "Application"] },
 
     titlebarBorder: {group: "style", order: 5},
@@ -924,10 +928,33 @@ dojo.declare("wm.RichTextDialog", wm.WidgetsJsDialog, {
     html: "", // initial html to show in the editor; use getHtml for current value
     prepare: function() {
         this.inherited(arguments);
-        this.widgets_data = {documentation: ["wm.RichText", {width: "100%", height: "100%", "toolbarAlign":false,"toolbarLink":true,"toolbarColor":true, toolbarFormatName: true, dataValue: this.html, displayValue: this.html}, {}],
-		             buttonBar: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, name: "buttonBar", layoutKind: "left-to-right",  padding: "2,0,2,0", horizontalAlign: "right", height: "34px", fitToContentHeight: true, width: "100%", borderColor: this.footerBorderColor, border: this.footerBorder}, {}, {
-		                 okButton: ["wm.Button", {"width":"150px","caption": "OK"}, {"onclick":"onOkClick"}],
-		                 cancelButton: ["wm.Button", {"width":"150px","caption": "Cancel"}, {"onclick":"onCancelClick"}]
+        this.widgets_data = {
+	    documentation: ["wm.RichText", {width: "100%", 
+					    height: "100%", 
+					    "toolbarAlign":false,
+					    "toolbarLink":true,
+					    "toolbarColor":true, 
+					    toolbarFormatName: true, 
+					    dataValue: this.html, 
+					    displayValue: this.html}, {}],
+	    buttonBar: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, 
+				     name: "buttonBar", 
+				     layoutKind: "left-to-right", 
+				     padding: "2,0,2,0",
+				     horizontalAlign: "right", 
+				     height: "34px", 
+				     fitToContentHeight: true, 
+				     width: "100%", 
+				     borderColor: this.footerBorderColor, 
+				     border: this.footerBorder}, {}, {
+					 okButton: ["wm.Button", {"width":"150px",
+								  /* TODO: Localize */
+								  "caption": "OK"}, 
+						    {"onclick":"onOkClick"}],
+					 cancelButton: ["wm.Button", {"width":"150px",
+								      /* TODO: Localize */
+								      "caption": "Cancel"}, 
+							{"onclick":"onCancelClick"}]
 	                     }]};
     },
  
@@ -982,16 +1009,30 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
     prepare: function() {
         this.inherited(arguments);
         this.widgets_data = {
-	    genericInfoPanel: ["wm.Panel", {layoutKind: "top-to-bottom",  width: "100%", height: "100%", horizontalAlign: "left", verticalAlign: "top", autoScroll: true, fitToContentHeight: true, padding: "10,5,10,5"}, {}, {
-		userQuestionLabel: ["wm.Html", {autoScroll: false, "height":"25px",autoSizeHeight: true, "width":"100%",html: ""}],
-		textInput: ["wm.Text", {"width":"100%","captionSize":"0%","showing":false}, {}, {}]
+	    genericInfoPanel: ["wm.Panel", {layoutKind: "top-to-bottom", 
+					    width: "100%", 
+					    height: "100%", 
+					    horizontalAlign: "left", 
+					    verticalAlign: "top", 
+					    autoScroll: true, 
+					    fitToContentHeight: true, 
+					    padding: "10,5,10,5"}, {},
+			       {
+				   userQuestionLabel: ["wm.Html", {autoScroll: false, 
+								   "height":"25px",
+								   autoSizeHeight: true, 
+								   "width":"100%",
+								   html: ""}],
+				   textInput: ["wm.Text", {"width":"100%",
+							   "captionSize":"0%",
+							   "showing":false}, {}, {}]
 	    }]
 	};
 	this.button_data = {
-		                        button4: ["wm.Button", {"width":"130px","showing":false}, {"onclick":"buttonClick"}],
-		                        button3: ["wm.Button", {"width":"130px","showing":false}, {"onclick":"buttonClick"}],
-		                        button2: ["wm.Button", {"width":"130px","showing":false}, {"onclick":"buttonClick"}],
-		                        button1: ["wm.Button", {"width":"130px","showing":false}, {"onclick":"buttonClick"}]
+	    button4: ["wm.Button", {"width":"130px","showing":false}, {"onclick":"buttonClick"}],
+	    button3: ["wm.Button", {"width":"130px","showing":false}, {"onclick":"buttonClick"}],
+	    button2: ["wm.Button", {"width":"130px","showing":false}, {"onclick":"buttonClick"}],
+	    button1: ["wm.Button", {"width":"130px","showing":false}, {"onclick":"buttonClick"}]
 	};
     
 
@@ -1167,7 +1208,7 @@ wm.GenericDialog.extend({
 });
 
 
-/* Remove this for 6.4 */
+/* Remove this for 6.4; do not localize */
 dojo.declare("wm.FileUploadDialog", wm.GenericDialog, {
     uploadService: "",
     uploadOperation: "",
@@ -1179,22 +1220,23 @@ dojo.declare("wm.FileUploadDialog", wm.GenericDialog, {
     button1Close: true,
     button2Close: true,
     postInit: function() {
-        this.widgets_data.genericInfoPanel[3].textInput = ["wm.FileUpload", {  caption: "",
-                                                                               uploadButton: false,
-						   padding: "0,20,0,20",
-						   width: "100%",
-						   height: "28px",
-						   captionSize: "100px",						   
-						   captionAlign: "left",
-						   captionPosition: "left",
-						   uploadButtonPosition: "right",
-						   uploadButtonWidth: "100px",
-						   uploadButtonHeight: "30px",
-						   service: "",
-						   operation: ""}, 
-                                                {  onUploadSuccess: "importClickCallback",
-						   onUploadError: "importClickError",
-						   onBegin:       "startImportClick"}, {}];
+        this.widgets_data.genericInfoPanel[3].textInput = ["wm.FileUpload", 
+							   {  caption: "",
+                                                              uploadButton: false,
+							      padding: "0,20,0,20",
+							      width: "100%",
+							      height: "28px",
+							      captionSize: "100px",						   
+							      captionAlign: "left",
+							      captionPosition: "left",
+							      uploadButtonPosition: "right",
+							      uploadButtonWidth: "100px",
+							      uploadButtonHeight: "30px",
+							      service: "",
+							      operation: ""}, 
+							   {  onUploadSuccess: "importClickCallback",
+							      onUploadError: "importClickError",
+							      onBegin:       "startImportClick"}, {}];
         this.inherited(arguments);
         this.fileUploader = this.$.textInput;
         this.setUploadService(this.uploadService);
@@ -1452,7 +1494,12 @@ dojo.declare("wm.pageContainerMixin", null, {
 		this.controlsBevel = new wm.Bevel({ parent: cp, owner: this });
 		var bp = this.buttonPanel = new wm.Panel({ parent: cp, owner: this, width: "100%", height: "100%", layoutKind: "left-to-right", horizontalAlign: "right"});
 		dojo.addClass(bp.domNode, "wmpagedialog-controlspanel");
-		this.closeButton = new wm.Button({ parent: bp, owner: this, caption: "Close", width: "80px", height: "100%"})
+		this.closeButton = new wm.Button({ parent: bp, 
+						   owner: this, 
+						   /* TODO: Localize */
+						   caption: "Close", 
+						   width: "80px", 
+						   height: "100%"})
 		this._connections.push(this.connect(this.closeButton, "onclick", this, "dismiss"));
 		cp.setShowing(!this.hideControls);
 		cp = null;
@@ -1517,8 +1564,10 @@ dojo.declare("wm.PageDialog", [wm.Dialog, wm.pageContainerMixin], {
         setPageName: function(inPageName) {
 	    if (this._pageLoading)
 		return;
-	    if (inPageName == "-New Page" && this.isDesignLoaded()) {
-	        return this.pageContainer.createNewPage();
+	    if (this.isDesignLoaded()) {
+		var newPage = studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION");
+		if (inPageName == newPage)
+	            return this.pageContainer.createNewPage();
 	    }
 
 	    return this.setPage(inPageName);
@@ -1590,6 +1639,7 @@ wm.Object.extendSchema(wm.PageDialog, {
 // design-time
 wm.Dialog.description = "Popup dialog.";
 
+/* This appears to be obsolete */
 dojo.declare("wm.PopoutDialog", wm.Dialog, {
 	popout: "",
 	postInit: function() {
@@ -1650,13 +1700,13 @@ dojo.declare("wm.ColorPickerDialog", wm.Dialog, {
         }
         this.colorPickerControl = new wm.Control({name: "colorPickerControl", width: "325px", height: "193px", owner: this, parent: this});
         this.buttonPanel = new wm.Panel({name: "buttonPanel", width: "100%", height: "100%", layoutKind: "left-to-right", owner: this, parent: this, horizontalAlign: "center"});
-        this.BrightenButton = new wm.Button({caption: studio.getDictionaryItem("wm.ColorPickerDialog.BRIGHTEN"), 
+        this.BrightenButton = new wm.Button({caption: "Bright",//studio.getDictionaryItem("wm.ColorPickerDialog.BRIGHTEN"), 
 					     width: "75px", height: "30px", parent: this.buttonPanel, owner: this});
-        this.DarkenButton = new wm.Button({caption: studio.getDictionaryItem("wm.ColorPickerDialog.DARKEN"), 
+        this.DarkenButton = new wm.Button({caption: "Dark",//studio.getDictionaryItem("wm.ColorPickerDialog.DARKEN"), 
 					   width: "75px", height: "30px", parent: this.buttonPanel, owner: this});
-        this.CancelButton = new wm.Button({caption: studio.getDictionaryItem("wm.ColorPickerDialog.CANCEL"), 
+        this.CancelButton = new wm.Button({caption: "Cancel",//studio.getDictionaryItem("wm.ColorPickerDialog.CANCEL"), 
 					   width: "75px", height: "30px", parent: this.buttonPanel, owner: this});
-        this.OKButton = new wm.Button({caption: studio.getDictionaryItem("wm.ColorPickerDialog.OK"), 
+        this.OKButton = new wm.Button({caption: "OK",//studio.getDictionaryItem("wm.ColorPickerDialog.OK"), 
 				       width: "75px", height: "30px", parent: this.buttonPanel, owner: this});
 
         this.connect(this.BrightenButton, "onclick", this, "brighten");

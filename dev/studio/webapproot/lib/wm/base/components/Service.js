@@ -72,7 +72,8 @@ dojo.declare("wm.Service", wm.Component, {
 		} else {
 			this.onError();
 			wm.onidle(function() {
-				d.errback("operation: " + inMethod + " does not exist.");
+			    /* TODO: Localize */
+			    d.errback("operation: " + inMethod + " does not exist.");
 			});
 		}
 		return d;

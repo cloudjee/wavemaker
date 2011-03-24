@@ -122,7 +122,7 @@ dependencies = {
 				//"wm.base.widget.Editors.Checkbox",
 				//"wm.base.widget.Editors.Radiobutton",
 				//"wm.base.widget.Editors.Select",
-				"wm.base.widget.Box",
+			        //"wm.base.widget.Box",
 				"wm.base.widget.Spacer",
 				"wm.base.widget.layout.Layout",
 				"wm.base.widget.layout.Box",

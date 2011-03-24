@@ -110,6 +110,7 @@ dojo.declare("wm.NavigationService", wm.Service, {
 		       m.apply(this, inArgs);
 		} else {
 			this.onError();
+		        /* TODO: Localize (probably not needed */
 			d.errback("operation: " + inMethod + " does not exist.");
 		}
 		return d;

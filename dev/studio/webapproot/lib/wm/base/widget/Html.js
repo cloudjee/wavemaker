@@ -16,9 +16,8 @@
  *  limitations under the License.
  */
 dojo.provide("wm.base.widget.Html");
-dojo.require("wm.base.widget.Box");
 
-dojo.declare("wm.Html", wm.Box, {
+dojo.declare("wm.Html", wm.Control, {
 	html: "",
         autoScroll: true,
 	init: function() {

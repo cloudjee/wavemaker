@@ -16,10 +16,9 @@
  *  limitations under the License.
  */
 dojo.provide("wm.base.widget.IFrame");
-dojo.require("wm.base.widget.Box");
 dojo.require("wm.base.components.Binding");
 
-dojo.declare("wm.IFrame", wm.Box, {
+dojo.declare("wm.IFrame", wm.Control, {
 	scrim: true,
 	source: "",
 	build: function() {

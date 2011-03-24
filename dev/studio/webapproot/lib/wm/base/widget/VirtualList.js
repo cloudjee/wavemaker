@@ -16,7 +16,6 @@
  *  limitations under the License.
  */
 dojo.provide("wm.base.widget.VirtualList");
-dojo.require("wm.base.widget.Box");
 
 dojo.declare("wm.VirtualListItem", null, {
 	selected: false,
@@ -78,7 +77,7 @@ dojo.declare("wm.VirtualListItem", null, {
 	}
 });
 
-dojo.declare("wm.VirtualList", wm.Box, {
+dojo.declare("wm.VirtualList", wm.Control, {
 	headerVisible: true,
 	toggleSelect: false,
 	width: "250px",

@@ -321,7 +321,7 @@ wm.Object.extendSchema(wm.LiveVariable, {
 	view: { ignore: 1},
 	service: { ignore: 1},
 	dataType: { ignore: 1},
-	operation: { group: "data", order: 0},
+    operation: { group: "data", order: 0}, // do not try and set the options here; parent class overrides this usage
 	input: {ignore: 1},
 	liveSource: { group: "data", order: 1},
 	liveView: { ignore: 1},

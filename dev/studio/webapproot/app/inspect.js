@@ -290,7 +290,7 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 		                    a = sc;
 							break;
 		                case "sharedEventHandlers":
-							if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "javascript") == -1) return;
+							if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "js") == -1) return;
 		        	        a = sharedEventHandlers;
 							break;
 					    case "dialogs":
@@ -356,6 +356,9 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 						    if (dojo.indexOf(eventSchema.events, "sharedjs") == -1) return;
 						    break;
 						case "newService":
+						    if ( dojo.indexOf(eventSchema.events, "service") == -1) return;
+						    break;
+						case "newLiveVar":
 						    if ( dojo.indexOf(eventSchema.events, "service") == -1) return;
 						    break;
 						case "newNavigation":

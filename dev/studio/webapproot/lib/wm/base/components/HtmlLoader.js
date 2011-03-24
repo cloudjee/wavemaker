@@ -89,48 +89,8 @@ dojo.declare("wm.HtmlLoader", wm.Component, {
 		if (n)
 			n.innerHTML = "";
 	},
-	listProperties: function() {
-		var p = this.inherited(arguments);
-		p.html.ignore = this.url;
-		return p;
-	},
 	getNodeIds: function() {
 		return wm.getNodeIds(this.getHtmlNode());
 	}
 });
 
-wm.HtmlLoader.extend({
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "html":
-				return makeReadonlyButtonEdit(inName, "(html)", "(html)");
-		}
-		return this.inherited(arguments);
-	},
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-			case "html":
-				this.showHtmlDialog();
-				return;
-		}
-		return this.inherited(arguments);
-	},
-	showHtmlDialog: function() {
-		var d = wm.getSyntaxEditorDialog();
-		this._dialogConnect = dojo.connect(d, "onClose", this, "htmlDialogClosed");
-		d.show();
-		d.page.update(this.html, "html");
-	},
-	htmlDialogClosed: function(inWhy) {
-		dojo.disconnect(this._dialogConnect);
-		this._dialogConnect = null;
-		if (inWhy == "OK") {
-			var d = wm.getSyntaxEditorDialog();
-			this.setHtml(d.page.getEditorText());
-		}
-	}
-});
-
-/*
-wm.registerPackage(["Components", "HtmlLoader", "wm.HtmlLoader", "wm.base.components.HtmlLoader", "images/wm/content.png", ""]);
-*/

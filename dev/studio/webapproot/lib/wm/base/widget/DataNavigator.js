@@ -101,6 +101,7 @@ dojo.declare("wm.DataNavigator", wm.Panel, {
 		this._updating = c != r.getValue("dataValue");
 		if (c > t) c = t;
 		r.setValue("dataValue", c);
+	    /* TODO: Localize */
 		this.totalLabel.setValue("caption", "of " + t);
 		this._doSetRecord(d, c);
 	},

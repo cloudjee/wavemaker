@@ -277,7 +277,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		// but I don't want to worry about a possible race condition between writing
 		// selectedItem after change 1, after change 2 and after change 3...
 		livevar.setSourceData(sourceData);
-		console.log("Update On Result");
+
 		livevar.operation = operation;
 		livevar.setUpdateOnResult(true);
 	    } else {
@@ -285,16 +285,13 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		for (var i = 0; i < this.liveVariables.length; i++) {
 		    if (!this.liveVariables[i]._requester) {
 			livevar = this.liveVariables[i];
-			console.log("Reuse: " + i);
 			break;
 		    }
 		    if (!livevar) {
-			console.log("Create new Var");
 			this.liveVariables.unshift(this.createNewLiveVariable());
 			livevar = this.liveVariables[0];
 		    }
 		    livevar.setSourceData(sourceData);
-		    console.log("Update on OTHER!");
 		    livevar.operation = operation;
 		    deferred = livevar.update();
 		}
@@ -302,7 +299,6 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	}else {
 	    livevar.setSourceData(sourceData);
 	    this._writingSelectedItemTimeStamp = this._selectedItemTimeStamp;
-		    console.log("Update on FIRST!");
 	    livevar.operation = operation;
 	    deferred = livevar.update();
 	    }
@@ -409,6 +405,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		var livevar = this.liveVariables[0];
 		if (livevar._requester) { 
 		    // could just create a new variable, but I'm being lazy for my first pass
+		    /* TODO: Localize, though hope this will be removed */
 		    app.toastWarning("Please wait until all edits are saved before deleting");
 		    return;
 		}
@@ -649,7 +646,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		    this.updateColumnData();
 		}
 	    }
-		if (this.isDesignLoaded() && !this._loading)
+		if (this._isDesignLoaded && !this._loading)
 			this.setColumnData();
 		this.setDojoStore();
                 if (inValue && inValue instanceof wm.Variable)
@@ -744,6 +741,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			}
 			
 			if (col.formatFunc && col.formatFunc != ''){
+			    /* TODO: Localize? */
 				switch(col.formatFunc){
 					case 'wm_date_formatter':
 					case 'Date (WaveMaker)':				    

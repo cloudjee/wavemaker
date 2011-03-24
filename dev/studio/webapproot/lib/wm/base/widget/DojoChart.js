@@ -48,6 +48,7 @@ var chartThemes = [
       		"PlotKit.red"
       	];
 
+/* TODO: Localize */
 var chartTypes = [
   				"Columns",
 				"ClusteredColumns",
@@ -780,6 +781,7 @@ wm.DojoChart.extend({
 		dojo.attr(link, 'style', 'text-decoration: none;');
 		var img = dojo.doc.createElement('img');
 		dojo.attr(img,'src', 'http://go.microsoft.com/fwlink/?LinkId=108181');
+	    /* TODO: Localize */
 		dojo.attr(img,'alt', 'Get Microsoft Silverlight');
 		dojo.attr(img,'style', 'border-style: none');
 		link.appendChild(img);

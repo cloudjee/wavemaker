@@ -275,6 +275,7 @@ dojo.declare("wm.Button", wm.ToolButton, {
 	border: 1,
 	borderColor: "#ABB8CF",
 	margin: 4,
+    /* TODO: Localize This */
 	caption: "Button",
 	classNames: "wmbutton"
 });
@@ -284,7 +285,9 @@ dojo.declare("wm.ToggleButton", wm.ToolButton, {
 	border: 1,
 	borderColor: "#ABB8CF",
 	margin: 4,
+    /* TODO: Localize This */
 	captionUp: "Btn Up",
+    /* TODO: Localize This */
         captionDown: "Btn Down",
         classNames: "wmbutton wmtogglebutton",
         init: function() {
@@ -320,6 +323,8 @@ wm.Object.extendSchema(wm.ToggleButton, {
     setClicked: {group: "method", params: "(inClicked)", doc: 1}
 });
 
+
+/* This class was created for 6.1; and is considered deprecated as of 6.2 */
 dojo.declare("wm.RoundedButton", wm.Button, {
         useDesignBorder: 0, // move this to a _design file if we ever create one
 	classNames: "roundedwmbutton",
@@ -450,6 +455,7 @@ dojo.declare("wm.PopupMenuButton", wm.Button, {
 
     afterPaletteDrop: function() {
 	this.inherited(arguments);
+	/* TODO: Localize This?? */
 	this.setFullStructure([{label: "File",
 				children: [{label: "Save"},
 					   {label: "Close"}]},

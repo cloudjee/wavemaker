@@ -97,60 +97,7 @@ dojo.declare("wm.CssLoader", wm.Component, {
 			s.appendChild(document.createTextNode("\n"));
 			s.appendChild(document.createTextNode(inCss));
 		}
-	},
-	listProperties: function() {
-		var p = this.inherited(arguments);
-		p.css.ignore = this.url;
-		return p;
 	}
 });
 
-wm.getSyntaxEditorDialog = function() {
-	if (!wm._syntaxEditorDialog) {
-		wm._syntaxEditorDialog = new wm.PageDialog({
-			name: "syntaxEditorDialog",
-			owner: studio,
-			contentWidth: 600,
-			contentHeight: 500,
-			hideControls: true,
-			pageName: "SyntaxEditor"
-		});
-	}
-	return wm._syntaxEditorDialog;
-}
 
-wm.CssLoader.extend({
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "css":
-				return makeReadonlyButtonEdit(inName, "(css)", "(css)");
-		}
-		return this.inherited(arguments);
-	},
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-			case "css":
-				this.showCssDialog();
-				return;
-		}
-		return this.inherited(arguments);
-	},
-	showCssDialog: function() {
-		var d = wm.getSyntaxEditorDialog();
-		this._dialogConnect = dojo.connect(d, "onClose", this, "cssDialogClosed");
-		d.show();
-		d.page.update(this.css, "css");
-	},
-	cssDialogClosed: function(inWhy) {
-		dojo.disconnect(this._dialogConnect);
-		this._dialogConnect = null;
-		if (inWhy == "OK") {
-			var d = wm.getSyntaxEditorDialog();
-			this.setCss(d.page.getEditorText());
-		}
-	}
-});
-
-/*
-wm.registerPackage(["Components", "CssLoader", "wm.CssLoader", "wm.base.components.CssLoader", "images/wm/content.png", ""]);
-*/

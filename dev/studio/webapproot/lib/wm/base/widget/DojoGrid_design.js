@@ -28,6 +28,7 @@ wm.DojoGrid.extend({
 	                {name:'Checkbox',value:'dojox.grid.cells.Bool'},
 	                {name:'ComboBox',value:'dojox.grid.cells.ComboBox'}
 		      ],
+    /* TODO: Localize */
 	    defaultFormatters:[	{name:'', value:''},
 				{name:'Currency (WaveMaker)', value:'wm_currency_formatter'},
 				{name:'Date (WaveMaker)', value:'wm_date_formatter'},
@@ -70,15 +71,23 @@ wm.DojoGrid.extend({
 	    if (!this.headerAttr) {
 		this.headerAttr = 
 		    [{id:'show', title:' ',width:'10px', type:'checkbox'}, 
-		     {id:'id', title: studio.getDictionaryItem("wm.DojoGrid.CONFIG_ID"),width:'150px', type:'text', readOnly:true}, 
-		     {id:'title', title:  studio.getDictionaryItem("wm.DojoGrid.CONFIG_TITLE"),width:'150px', type:'text'}, 
-		     {id:'width', title:  studio.getDictionaryItem("wm.DojoGrid.CONFIG_WIDTH"),width:'109px', type:'width'}, 
-		     {id:'align', title:  studio.getDictionaryItem("wm.DojoGrid.CONFIG_ALIGN"),width:'70px', type:'dropdown'},
-		     {id:'formatFunc', title:  studio.getDictionaryItem("wm.DojoGrid.CONFIG_FORMAT"),width:'150px', type:'dropdown'},
-		     {id:'fieldType', title:  studio.getDictionaryItem("wm.DojoGrid.CONFIG_TYPE"),width:'100px', type:'dropdown', isAdvanced:true},
+		     {id:'id', width:'150px', type:'text', readOnly:true,
+		      title: studio.getDictionaryItem("wm.DojoGrid.CONFIG_ID")},
+
+		     {id:'title',width:'150px', type:'text',
+		      title:  studio.getDictionaryItem("wm.DojoGrid.CONFIG_TITLE")},
+		     {id:'width', width:'109px', type:'width',
+		      title:  studio.getDictionaryItem("wm.DojoGrid.CONFIG_WIDTH")},
+		     {id:'align',width:'70px', type:'dropdown',
+		      title:  studio.getDictionaryItem("wm.DojoGrid.CONFIG_ALIGN")},
+		     {id:'formatFunc',width:'150px', type:'dropdown',
+		      title:  studio.getDictionaryItem("wm.DojoGrid.CONFIG_FORMAT")},
+		     {id:'fieldType',width:'100px', type:'dropdown', isAdvanced:true,
+		      title:  studio.getDictionaryItem("wm.DojoGrid.CONFIG_TYPE")},
 		/*				{id:'editable', title:'Editable',width:'10px', type:'checkbox', isAdvanced:true}, */
 		/*		                {id: 'editParams', title: "Edit Parameters", width: "100px", type: 'gridEditParams', isAdvanced: true},*/
-		     {id:'expression', title:  studio.getDictionaryItem("wm.DojoGrid.CONFIG_EXPR"),width:'150px', type:'text', isAdvanced:true}];
+		     {id:'expression', width:'150px', type:'text', isAdvanced:true,
+		      title:  studio.getDictionaryItem("wm.DojoGrid.CONFIG_EXPR")}];
 	    }
 
 		this.headerAttr[4].dataStore = this.getAlignmentTypeStore();
@@ -89,7 +98,9 @@ wm.DojoGrid.extend({
 		this.headerAttr[6].dataStore = this.fieldTypeStore;
 		var defaultCustomFieldParams = {id: 'customField', isCustomField: true, expression: '', show:true, width:'100%'};
 	    var helpText = studio.getDictionaryItem("wm.DojoGrid.HELP_TEXT");
-	    this.contextMenu = new wm.ContextMenuDialog({addButtonLabel: 'Add Column', 
+	    var addColumnLabel = studio.getDictionaryItem("wm.DojoGrid.ADD_COLUMN_LABEL");
+	    var dialogTitle =  studio.getDictionaryItem("wm.DojoGrid.EDIT_COLUMNS_DIALOG_TITLE");
+	    this.contextMenu = new wm.ContextMenuDialog({addButtonLabel: addColumnLabel, 
 							 onAddButtonClick: dojo.hitch(this, 'addNewColumn'), 
 							 headerAttr: this.headerAttr, 
 							 dataSet: this.columns, 
@@ -98,7 +109,7 @@ wm.DojoGrid.extend({
 							 helpText: helpText, 
 							 containerNodeWidth: 700});
 	        this.contextMenu.setWidth("710px");
-	        this.contextMenu.setTitle("DojoGrid Column Properties");
+	    this.contextMenu.setTitle(dialogTitle);
 
 		//this.contextMenu.showModal = false;
 		dojo.connect(this.contextMenu, 'onPropChanged', this, 'columnPropChanged');
@@ -115,7 +126,8 @@ wm.DojoGrid.extend({
 		}
 		
 		var addFormatter = false;
-		if (columnId && columnId == 'formatFunc' && inValue == '- Add Formatter'){
+	        /* TODO: Localize?? */
+		if (columnId && columnId == 'formatFunc' && inValue == "- Add Formatter"){
 		    var evtName = wm.getValidJsName(this.name + wm.getValidJsName(wm.capitalize(obj.id)) + 'Format');
 			obj.formatFunc = evtName;
 			widget.attr('value', evtName, false);
@@ -178,7 +190,8 @@ wm.DojoGrid.extend({
 		    if (f.match(/Format$/))
 			fArray.push({name:f, value:f});			
 		});
-		fArray.push({name:'- Add Formatter', value:'- Add Formatter'});
+
+	    fArray.push({name: studio.getDictionaryItem("wm.DojoGrid.ADD_FORMATTER"), value:'- Add Formatter'});
 
 		var data = {identifier: 'value', items: fArray};
 		if (!this.formatterStore){
@@ -196,7 +209,11 @@ wm.DojoGrid.extend({
 		}
 	},
 	getAlignmentTypeStore: function(){
-		var fieldTypeData = {identifier: 'value', label: 'name', value: 'value', items: [{name:'Left', value:'left'},{name:'Center', value:'center'},{name:'Right', value:'right'}]};
+	    /* TODO: Localize: Need to get the default value to use name instead of value */
+		var fieldTypeData = {identifier: 'value', label: 'name', value: 'value', 
+				     items: [{name:studio.getDictionaryItem("wm.DojoGrid.COLUMN_ALIGN_LEFT"), value:'left'},
+					     {name:studio.getDictionaryItem("wm.DojoGrid.COLUMN_ALIGN_CENTER"), value:'center'},
+					     {name:studio.getDictionaryItem("wm.DojoGrid.COLUMN_ALIGN_RIGHT"), value:'right'}]};
 		return new dojo.data.ItemFileReadStore({data: fieldTypeData});
 	},
 	getNewColumnId: function(cId){
@@ -243,39 +260,42 @@ wm.DojoGrid.extend({
 		return customField;		
 	},
 	addDialogForInsert: function(){
-		try{
-			if (!this.showAddButton){
-				return;
-			}
-				
-			if (!this.addDialog){
-				this.addDialogName = studio.page.getUniqueName(this.name+"_AddDialog");
-				this.addDialog = new wm.Dialog({width:320, height:95, name: this.addDialogName, 
-									  fitToContentHeight: true,
-												border:2, borderColor: "rgb(80,80,80)", 
-												parent: this, owner: this, 
-												modal: false, animateSlide:true});
-			}
-			
-			if (!this.liveForm && this.variable instanceof wm.LiveVariable){
-				this.addFormName = studio.page.getUniqueName(this.name+"_AddForm");
-				this.liveForm = new wm.LiveForm({
-						name: this.addFormName,
-						owner: this.owner,
-				        parent: this.addDialog,
-						verticalAlign: "top",
-						horizontalAlign: "left",
-						_liveSource: this.variable.liveSource
-					});
-	
-				this.liveForm.createLiveSource(this.liveForm._liveSource);
-				this.liveForm.beginDataInsert();
-				this.addDialog.setHeight(this.liveForm.height);
-			}
+	    try{
+		if (!this.showAddButton){
+		    return;
 		}
-		catch(e){
-			console.info('error while creating dialog and live variable: ', e);
-		}			
+				
+		if (!this.addDialog){
+		    this.addDialogName = studio.page.getUniqueName(this.name+"_AddDialog");
+		    this.addDialog = new wm.Dialog({width:320, 
+						    height:95, 
+						    name: this.addDialogName, 
+						    fitToContentHeight: true,
+						    border:2, 
+						    borderColor: "rgb(80,80,80)", 
+						    parent: this, owner: this, 
+						    modal: false, animateSlide:true});
+		}
+			
+		if (!this.liveForm && this.variable instanceof wm.LiveVariable){
+		    this.addFormName = studio.page.getUniqueName(this.name+"_AddForm");
+		    this.liveForm = new wm.LiveForm({
+			name: this.addFormName,
+			owner: this.owner,
+			parent: this.addDialog,
+			verticalAlign: "top",
+			horizontalAlign: "left",
+			_liveSource: this.variable.liveSource
+		    });
+		    
+		    this.liveForm.createLiveSource(this.liveForm._liveSource);
+		    this.liveForm.beginDataInsert();
+		    this.addDialog.setHeight(this.liveForm.height);
+		}
+	    }
+	    catch(e){
+		console.info('error while creating dialog and live variable: ', e);
+	    }			
 	},
 	updateGridStructure: function(){
 		this.columns = this.contextMenu.getUpdatedDataSet();
@@ -302,8 +322,10 @@ wm.DojoGrid.extend({
 		switch (inName) {
 			case "dataSet":
 				return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.variable ? this.variable.getId() : "", allowAllTypes: true, listMatch: true});
+/*
 		case "selectionMode":
 			return makeSelectPropEdit(inName, inValue, ["single", "multiple", "extended", "none"], inDefault);
+			*/
 		case "editColumns":
 			return makeReadonlyButtonEdit(inName, inValue, inDefault);
 		   case "showAddDialog":
@@ -359,7 +381,8 @@ wm.Object.extendSchema(wm.DojoGrid, {
     emptySelection: { ignore: true, bindSource: 1, type: "Boolean",  doc: 1},
     isRowSelected: { ignore: true, bindSource: 1, type: "Boolean",   doc: 1},
     dataSet: {bindTarget: 1, group: "edit", order: 30, isList: true, simpleBindTarget: true, doc: 1},
-	selectionMode: {group: "edit", order: 31},
+/* TODO: Localize */
+    selectionMode: {group: "edit", order: 31, options: ["single", "multiple", "extended", "none"]},
 	rightClickTBody: {ignore:1},
 	addDialogName:{hidden:true},
 	addFormName:{hidden:true},

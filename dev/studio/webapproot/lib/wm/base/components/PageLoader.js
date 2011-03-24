@@ -139,14 +139,17 @@ dojo.declare("wm.PageLoader", wm.Component, {
 		    this.pageChanged();
 		    this.unloadSupport(ctor);
 	        } else {
+		    /* TODO: Localize */
 		    console.error("Page not found:", inClassName);
                     this.onError("Page not found:" + inClassName);
                 }
                 if (!this.page || !this.page.root) {
+		    /* TODO: Localize and don't call if prior onError called */
 		    console.error("Page not found:", inClassName);
                     this.onError("Page not loaded:" + inClassName);
                 }
 	    } catch(e) { 
+		    /* TODO: Localize */
 		console.error("Page not found:", inClassName);
                 this.onError(e);
             }

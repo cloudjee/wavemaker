@@ -58,14 +58,24 @@ dojo.declare("wm.Dashboard", wm.Control, {
 		this.addDialog.startup();
 		var dom = this.addDialog.containerNode;
                 dojo.require("wm.base.widget.Editors.Select");
-	    this.selectEditor = new wm.SelectMenu({owner: this, "caption":"Widget","display":"Select","readonly":false,"width":"250px", captionSize:"80px", required: true, isRelativePositioned:true});
+	    /* TODO: Localize */
+	    this.selectEditor = new wm.SelectMenu({owner: this, 
+						   "caption":"Widget",
+						   "display":"Select",
+						   "readonly":false,
+						   "width":"250px", 
+						   captionSize:"80px", 
+						   required: true, 
+						   isRelativePositioned:true});
 		dom.appendChild(this.selectEditor.domNode);
 		var panel = dojo.create('div', {style:'text-align:center'}, dom);
+	    /* TODO: Localize */
 	    this.okButton = new wm.Button({owner: this, 
 					   "height":"100%",
 					   "width":"60px",
 					   "caption": "Add", 
 					   isRelativePositioned:true}); //{"onclick":'onOkClick'}
+	    /* TODO: Localize */
 	    this.cancelButton = new wm.Button({owner: this,
 					       "height":"100%",
 					       "width":"60px",

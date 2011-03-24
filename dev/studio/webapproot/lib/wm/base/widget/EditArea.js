@@ -15,12 +15,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-dojo.require("wm.base.widget.Box");
 dojo.provide("wm.base.widget.EditArea");
 
 //wm.loadModule("edit_area/edit_area_loader");
 
-dojo.declare("wm.EditArea", wm.Box, {
+dojo.declare("wm.EditArea", wm.Control, {
     _forceShowing: true,
 	scrim: true,
 	syntax: "js",

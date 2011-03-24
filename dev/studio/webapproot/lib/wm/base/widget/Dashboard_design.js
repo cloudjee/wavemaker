@@ -23,15 +23,21 @@ dojo.require("wm.base.widget.ContextMenuDialog");
 wm.Dashboard.extend({
   themeable: false,
 	configPortlets: "(Configure Portlets)",
-	headerAttr: [{id:'isOpen', title:'Default',width:'50px', type:'checkbox'}, 
-				{id:'title', title: 'Title',width:'170px', type:'text'}, 
-				{id:'page', title: 'Page',width:'170px', type:'dropdown'}, 
-				{id:'isClosable', title: 'Closable',width:'55px', type:'checkbox'}],
-
 	designCreate: function(){
 		this.inherited(arguments);
 		var defaultPortletParams = {id:'portlet', title:'Portlet', page:'', isOpen:true, isClosable:true, x:0, y:0};
 		this.updatePageList();
+	    if (!this.headerAttr) {
+		this.headerAttr =  [{id:'isOpen',width:'50px', type:'checkbox',
+				     title: studio.getDictionaryItem("wm.Dashboard.CONFIG_DIALOG_OPEN_FIELD")},
+				    {id:'title',width:'170px', type:'text',
+				     title: studio.getDictionaryItem("wm.Dashboard.CONFIG_DIALOG_TITLE_FIELD")},
+				    {id:'page',width:'170px', type:'dropdown',
+				     title: studio.getDictionaryItem("wm.Dashboard.CONFIG_DIALOG_PAGE_FIELD")},
+				    {id:'isClosable',width:'55px', type:'checkbox',
+				     title: studio.getDictionaryItem("wm.Dashboard.CONFIG_DIALOG_CLOSE_FIELD")}];
+
+	    }
 		this.headerAttr[2].dataStore = this.pageStore;
 	    this.contextMenu = new wm.ContextMenuDialog({addButtonLabel: 'Add Portlet', 
 							onAddButtonClick: dojo.hitch(this, 'addNewPortlet'), 

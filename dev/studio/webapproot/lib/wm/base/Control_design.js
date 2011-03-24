@@ -268,8 +268,10 @@ wm.Control.extend({
 				});
 			case "imageList":
 				return new wm.propEdit.ImageListSelect({component: this, value: inValue, name: inName});
+		    /* Created for kana but never fully ported to wavemaker
 			case "isTabbable":
 		                return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["false", "true", "accessibility-only"]});
+				*/
 			/*case "align":
 				return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["leftTop", "center", "rightBottom", "justify"]});
 			*/

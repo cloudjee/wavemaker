@@ -380,6 +380,7 @@ wm.ServiceCall.extend({
 			d.page.binding = q;
 			d.page.update();
 		}else{
+		    /* TODO: Convert to new dialogs */
 			wm.ServiceQueue.dialog = d = new wm.PageDialog({
 				name: "queueDialog",
 				owner: studio,
