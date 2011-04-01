@@ -1258,6 +1258,7 @@ wm.Object.extendSchema(wm._SelectEditor, {
 });
 
 wm.Object.extendSchema(wm.SelectMenu, {
+    onEnterKeyPress: {ignore: 0},
     restrictValues: {type: "wm.Boolean", group: "editor", order: 40, doc: 1},
 	changeOnKey: { ignore: 1 },
 	changeOnEnter: { ignore: 1 },
