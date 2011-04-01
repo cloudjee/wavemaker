@@ -75,6 +75,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 					   "width":"60px",
 					   "caption": "Add", 
 					   isRelativePositioned:true}); //{"onclick":'onOkClick'}
+	    this.connect(this.selectEditor, "onEnterKeyPress", this, "_onOkClick");
 	    /* TODO: Localize */
 	    this.cancelButton = new wm.Button({owner: this,
 					       "height":"100%",
