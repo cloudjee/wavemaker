@@ -174,8 +174,12 @@ dojo.declare("wm.DojoChart", wm.Control, {
 		var h = dojo.coords(this.domNode).h;
 		var lh = wm.splitUnits(this.legendHeight);
 		var l = lh.value;
+	    if (l == 0) {
+		var reducedHeight = h + 10; // if no legend desired, get rid of unnecessary margin set aside for the legend
+	    } else {
 		var reducedHeight = h - l;
-		if (reducedHeight > 0 )
+	    }
+	    if (reducedHeight > 0 )
 		{
 			// For IE8(Compatibility mode(IE7) height cannot be negetive else it throws js error)
 			this.dojoDiv.style.width = this.width;
@@ -461,7 +465,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	},
 	incrementSeries: function(){
 		this.addChartSeries(true);
-		this.dojoObj.render();
+		this.renderDojoObj();
 		//this.renderBounds();
 	},
 	updateSeries: function(seriesName, inData){
