@@ -520,6 +520,8 @@ dojo.mixin(wm.Page, {
 	    wm.Page.byName[inPage.name].push(inPage);
     },
     deregisterPage: function(inPage) {
-	wm.Array.removeElement(wm.Page.byName[inPage.name], inPage);
+	var a = wm.Page.byName[inPage.name || inPage.declaredClass];
+	if (a)
+	    wm.Array.removeElement(a, inPage);
     }
 });
