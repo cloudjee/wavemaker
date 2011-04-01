@@ -1,5 +1,5 @@
 #!/usr/bin/perl
- 
+  
 # INVOCATION: perl trackBlankImages.pl <path-to-log>  > output.csv
 # NOTES: Any change to server log format may break this script.
 
