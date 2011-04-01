@@ -281,6 +281,7 @@ dojo.declare("wm.ServiceCall", null, {
 	processResult: function(inResult) {
 		this.onResult(inResult);
 		this.onSuccess(inResult);
+	    if (!this.isDestroyed)
 		this.$.queue.update();
 	},
 	error: function(inError) {
