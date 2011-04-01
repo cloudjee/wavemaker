@@ -90,12 +90,12 @@
     </target>
 
 
-    <target name="init-rpm" depends="init-sunjdk" if="rpm.build">
+    <target name="init-rpm" depends="init-nojdk" if="rpm.build">
     </target>
 
     <target name="generate-spec" depends="init-rpm" if="rpm.build">
         <exec executable="${basedir}/rpm/genspec.py" failonerror="true"
-                dir="${buildroot}/SunJDK"  logerror="true" outputproperty="files.list">
+                dir="${buildroot}/NoJDK"  logerror="true" outputproperty="files.list">
             <arg line="."/>
         </exec>
 
@@ -110,7 +110,7 @@
             <filterchain>
                 <replacetokens>
                     <token key="VERSION" value="${version.number}" />
-                    <token key="BUILDROOT" value="${buildroot}/SunJDK" />
+                    <token key="BUILDROOT" value="${buildroot}/NoJDK" />
                     <token key="TOPDIR" value="${build.installer.dir}" />
                     <token key="FILES" value="${files.list}" />
                     <token key="PROJECTTYPE" value="${project.type}" />
