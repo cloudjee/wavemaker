@@ -250,7 +250,7 @@ wm.Object.extendSchema(wm.MyButton, {
 });
 	*/
 	extendSchema: function(inClass, inSchema) {
-	    if (!wm.extendSchemaDictionary) {
+	    if (!wm.extendSchemaDictionary && wm.studioConfig) {
 		dojo.requireLocalization("language", "schema");
 		wm.extendSchemaDictionary = dojo.i18n.getLocalization("language", "schema");
 	    }
@@ -276,6 +276,7 @@ wm.Object.extendSchema(wm.MyButton, {
 //===========================================================================
 // Design Schema
 //===========================================================================
+
 wm.Object.extendSchema(wm.Object, {
 	declaredClass: { ignore: 1 },
 	schema: { ignore: 1 },
@@ -366,6 +367,7 @@ wm.Object.extend({
 		return this.listProperties();
 	}
 });
+
 /**#@-*/
 
 //===========================================================================
