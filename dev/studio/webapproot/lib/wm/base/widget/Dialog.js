@@ -37,7 +37,7 @@ wm.dialog.getNextZIndex = function(isDesignLoaded) {
 	if (!isDesignLoaded || isDesignLoaded && wm.dialog.showingList[i]._isDesignLoaded)
 	    index = Math.max(index, wm.dialog.showingList[i].domNode.style.zIndex);
     }
-    return index+1;
+    return index+5;
 }
 
 wm.dismiss = function(inWidget, inWhy) {
@@ -148,6 +148,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		*/
 		this.domNode.style.position = "absolute";
 	    this.domNode.style.zIndex = wm.dialog.getNextZIndex(this._isDesignLoaded);
+
             if (this.designWrapper)
                 this.designWrapper.domNode.style.zIndex = this.domNode.style.zIndex+1;
 
@@ -554,7 +555,10 @@ dojo.declare("wm.Dialog", wm.Container, {
 	        wm.Array.removeElement(wm.dialog.showingList, this);
 	    if (inShowing && (!window["studio"] || this != window["studio"].dialog)) {
 		    wm.dialog.showingList.push(this);
-	        this.domNode.style.zIndex = wm.dialog.getNextZIndex(this._isDesignLoaded);
+		var zindex =  wm.dialog.getNextZIndex(this._isDesignLoaded);
+	        this.domNode.style.zIndex = zindex;
+	    if (this.modal)
+		this.dialogScrim.domNode.style.zIndex = zindex-1;
             }
 
 		if (inShowing) {
