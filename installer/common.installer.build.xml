@@ -45,58 +45,22 @@
         </copy>
     </target>
       
-    <target name="common-installer.generate-dist-sunjdk"
-            description="Generate the installer dist; depends on 'installer.wm.sunjdk.root' being set">
-        <mkdir dir="${installer.wm.sunjdk.root}"/>
-        <mkdir dir="${installer.wm.sunjdk.root}/Support"/>
-        <copy todir="${installer.wm.sunjdk.root}/Support">
-            <fileset dir="${root.dir}/../Support">
-                <exclude name="**/.svn"/>
-				<exclude name="**/Batchbuild/**" unless="isEnterprise"/>
-            </fileset>
-        </copy>
-
-        <mkdir dir="${installer.wm.sunjdk.root}/Samples"/>
-        <copy todir="${installer.wm.sunjdk.root}/Samples">
-            <fileset dir="${root.dir}/demos">
-                <exclude name="**/.svn"/>
-            </fileset>
-        </copy>
-
-        <copy todir="${installer.wm.sunjdk.root}/launcher">
-            <fileset dir="${dist.launcher.dir}"/>
-        </copy>
-
-        <copy todir="${installer.wm.sunjdk.root}/studio">
-            <fileset dir="${dist.studio.dir}">
-				<exclude name="**/RbacPlugin.js" unless="isEnterprise"/>
-				<exclude name="**/DojoFlashFileUpload.js" unless="isEnterprise"/>
-			</fileset>
-        </copy>
-
-        <copy todir="${installer.wm.sunjdk.root}">
-            <fileset dir="${build.dir}">
-                <include name="VERSION"/>
-            </fileset>
-        </copy>
-    </target>
-
   <target name="common-installer.generate-dist-nojdk"
             description="Generate the installer dist; depends on 'installer.wm.nojdk.root' being set">
         <mkdir dir="${installer.wm.nojdk.root}"/>
         <mkdir dir="${installer.wm.nojdk.root}/Support"/>
         <copy todir="${installer.wm.nojdk.root}/Support">
-            <fileset dir="${root.dir}/../Support">
-                <exclude name="**/.svn"/>
-				<exclude name="**/Batchbuild/**" unless="isEnterprise"/>
-            </fileset>
+          <fileset dir="${root.dir}/../Support">
+             <exclude name="**/.svn"/>
+					   <exclude name="**/Batchbuild/**" unless="isEnterprise"/>
+          </fileset>
         </copy>
 
         <mkdir dir="${installer.wm.nojdk.root}/Samples"/>
         <copy todir="${installer.wm.nojdk.root}/Samples">
-            <fileset dir="${root.dir}/demos">
-                <exclude name="**/.svn"/>
-            </fileset>
+          <fileset dir="${root.dir}/demos">
+            <exclude name="**/.svn"/>
+          </fileset>
         </copy>
 
         <copy todir="${installer.wm.nojdk.root}/launcher">
@@ -104,21 +68,20 @@
         </copy>
 
         <copy todir="${installer.wm.nojdk.root}/studio">
-            <fileset dir="${dist.studio.dir}">
-				<exclude name="**/RbacPlugin.js" unless="isEnterprise"/>
-				<exclude name="**/DojoFlashFileUpload.js" unless="isEnterprise"/>
-			</fileset>
+          <fileset dir="${dist.studio.dir}">
+						<exclude name="**/RbacPlugin.js" unless="isEnterprise"/>
+						<exclude name="**/DojoFlashFileUpload.js" unless="isEnterprise"/>
+					</fileset>
         </copy>
 
         <copy todir="${installer.wm.nojdk.root}">
             <fileset dir="${build.dir}">
-                <include name="VERSION"/>
+              <include name="VERSION"/>
             </fileset>
         </copy>
     </target>
   
     <target name="common-installer.clean">
         <delete dir="${installer.wm.nojdk.root}"/>
-	<delete dir="${installer.wm.sunjdk.root}"/>
-    </target>
+	  </target>
 </project>
