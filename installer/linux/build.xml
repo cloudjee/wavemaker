@@ -8,19 +8,14 @@
     <!-- must be inside of build.installer.dir -->
     <property name="buildroot" value="${build.installer.dir}/buildroot"/>
     <property name="wm.spec" value="${build.installer.dir}/wavemaker.spec"/>
-    <property name="prefix-sunjdk" value="/opt/wavemaker-${project.type}-sunjdk-${version.number}" />
     <property name="prefix-nojdk" value="/opt/wavemaker-${project.type}-${version.number}" />
     <property name="installer.wm.nojdk.root" value="${buildroot}/NoJDK/${prefix-nojdk}"/>
-    <property name="installer.wm.sunjdk.root" value="${buildroot}/SunJDK/${prefix-sunjdk}"/>
 
     <!-- Default properties -->
-    <property name="java.tar.file" value="${basedir}/java.tar" />
-
     <target name="check">
         <condition property="setupBAD">
             <not>
                 <and>
-                    <available file="${java.tar.file}" />
                     <available file="${dist.studio.dir}" />
                     <available file="${dist.launcher.dir}" />
                 </and>
@@ -29,38 +24,6 @@
         <fail if="setupBAD" message="required files missing" />
     </target>
 
-    <target name="init-sunjdk" depends="check">
-        <mkdir dir="${buildroot}/SunJDK"/>
-
-        <mkdir dir="${installer.wm.sunjdk.root}"/>
-        <mkdir dir="${installer.wm.sunjdk.root}/bin"/>
-
-        <property name="wm.sh.file" value="${installer.wm.sunjdk.root}/bin/wavemaker.sh"/>
-        <copy file="bin/wavemaker.sh.template" tofile="${wm.sh.file}">
-            <filterset>
-                <filter token="PREFIX" value="${prefix-sunjdk}" />
-            </filterset>
-        </copy>
-        <exec executable="chmod" failonerror="true">
-            <arg value="+x"/>
-            <arg value="${wm.sh.file}"/>
-        </exec>
-
-        <copy file="README.template" tofile="${installer.wm.sunjdk.root}/README">
-            <filterset>
-                <filter token="VERSION" value="${version.number}" />
-            </filterset>
-        </copy>
-
-        <exec executable="tar" dir="${installer.wm.sunjdk.root}" failonerror="true">
-            <arg line="xf"/>
-            <arg line="${java.tar.file}"/>
-        </exec>
-
-        <available file="/usr/bin/rpmbuild" property="rpm.build"/>
-        <available file="/usr/bin/dpkg" property="deb.build"/>
-    </target>
-    
     <target name="init-nojdk" depends="check">
         <mkdir dir="${buildroot}/NoJDK"/>
 
@@ -128,58 +91,6 @@
         </exec>
     </target>
 
-    <target name="init-deb-sunjdk" depends="init-sunjdk" if="deb.build">
-        <mkdir dir="${buildroot}/SunJDK/amd64/DEBIAN"/>
-        <copy todir="${buildroot}/SunJDK/amd64/DEBIAN">
-            <fileset dir="DEBIAN_SunJDK">
-                <exclude name="**/.svn*"/>
-            </fileset>
-            <filterset>
-                <filter token="VERSION" value="${version.number}" />
-                <filter token="PROJECTTYPE" value="${project.type}" />
-            </filterset>
-        </copy>
-        <exec executable="cp"> 
-        	<arg value="-r" />
-        	<arg value="${buildroot}/SunJDK/opt" />
-          <arg value="${buildroot}/SunJDK/amd64/opt" />
-        </exec>
-    </target>
-
-    <target name="build-deb-sunjdk" depends="init-deb-sunjdk" if="deb.build">
-        <exec executable="dpkg"  logerror="true" failonerror="true">
-            <arg line="--build" />
-            <arg line="${buildroot}/SunJDK/amd64" />
-            <arg line="${build.installer.dir}" />
-        </exec>
-    </target>
-
-    <target name="init-debi386-sunjdk" depends="init-sunjdk" if="deb.build">
-        <mkdir dir="${buildroot}/SunJDK/i386/DEBIAN"/>
-        <copy todir="${buildroot}/SunJDK/i386/DEBIAN">
-            <fileset dir="DEBIAN_i386_SunJDK">
-                <exclude name="**/.svn*"/>
-            </fileset>
-            <filterset>
-                <filter token="VERSION" value="${version.number}" />
-                <filter token="PROJECTTYPE" value="${project.type}" />
-            </filterset>
-        </copy>
- 			 <exec executable="cp">
- 			 	  <arg value="-r" /> 
-        	<arg value="${buildroot}/SunJDK/opt" />
-          <arg value="${buildroot}/SunJDK/i386/opt" />
-        </exec>
-
-    </target>
-
-    <target name="build-debi386-sunjdk" depends="init-debi386-sunjdk" if="deb.build">
-        <exec executable="dpkg"  logerror="true" failonerror="true">
-            <arg line="--build" />
-            <arg line="${buildroot}/SunJDK/i386" />
-            <arg line="${build.installer.dir}" />
-        </exec>
-    </target>
     
       <target name="init-deb-nojdk" depends="init-nojdk" if="deb.build">
         <mkdir dir="${buildroot}/NoJDK/amd64/DEBIAN"/>
@@ -218,10 +129,10 @@
                 <filter token="PROJECTTYPE" value="${project.type}" />
             </filterset>
         </copy>
- 			 <exec executable="cp">
- 			 	  <arg value="-r" /> 
-        	<arg value="${buildroot}/NoJDK/opt" />
-          <arg value="${buildroot}/NoJDK/i386/opt" />
+ 	 <exec executable="cp">
+  	   <arg value="-r" /> 
+       	   <arg value="${buildroot}/NoJDK/opt" />
+           <arg value="${buildroot}/NoJDK/i386/opt" />
         </exec>
 
     </target>
@@ -235,7 +146,7 @@
     </target>
     
     <target name="build"
-            depends="init-sunjdk, init-nojdk, common.generate-license, common.generate-full-version, common-installer.generate-dist-nojdk, common-installer.generate-dist-sunjdk, build-rpm, build-deb-nojdk, build-debi386-nojdk, build-deb-sunjdk, build-debi386-sunjdk">
+            depends="init-nojdk, common.generate-license, common.generate-full-version, common-installer.generate-dist-nojdk, build-rpm, build-deb-nojdk, build-debi386-nojdk">
     </target>
 
     <target name="clean" depends="common-installer.clean">
