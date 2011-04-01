@@ -1,6 +1,11 @@
 Repo Map
 ========
 
+eng3/trunk/dev/cloud
+
+	Used in the WM5.x CloudStudio Beta
+
+
 eng3/trunk/dev/wavemaker
 	- js: miscellaneous docs and the JsDoc toolkit, templates, and batch files to generate auto docs
 	- studio
