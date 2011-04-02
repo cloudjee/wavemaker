@@ -64,6 +64,7 @@ dojo.declare("wm.ImageList", wm.Component, {
     },
     destroy: function() {
 	dojo.destroy(this.domNode);
+	this.inherited(arguments);
     },
     getImageClass: function(inIndex) {
 	var id = "";

@@ -144,7 +144,8 @@ wm.Component.extend({
 		//dojo.mixin(inEvents, this.eventBindings);
 	},
 	_isWriteableComponent: function(inName, inProperties) {
-	    if (!inName || (this.components[inName] instanceof wm.Widget && !wm.isInstanceType(this.components[inName], wm.Dialog) && !wm.isInstanceType(this.components[inName], wm.PopupMenu))) {
+	    var c = this.components[inName];
+	    if (!inName || (c instanceof wm.Widget && !wm.isInstanceType(this.components[inName], wm.Dialog) && !wm.isInstanceType(this.components[inName], wm.ImageList) && !wm.isInstanceType(this.components[inName], wm.PopupMenu))) {
 			return false;
 	    }
 		var ps = inProperties[inName];

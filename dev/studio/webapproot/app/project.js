@@ -649,7 +649,7 @@ dojo.declare("wm.studio.Project", null, {
 	//=========================================================================
 	closeProject: function(inProjectName) {	    
 	    if (studio.application)
-	    	dojo.removeClass(studio.designer.domNode, studio.application.theme);
+		dojo.removeClass(studio.designer.domNode, studio.application.theme);
 	    if (studio.bindDialog.showing && !studio.bindDialog._hideAnimation) 
 		studio.bindDialog.dismiss();
 	    this.closeAllServicesTabs();
@@ -771,7 +771,7 @@ Studio.extend({
 	var props = this.listProperties();
 	for (var name in this.application.components) {
 	    var c = this.application.components[name];
-	    if (c._isWriteableComponent(name, props)) 
+	    if (this.application._isWriteableComponent(name, props)) 
 		c.destroy();
 	}
 
