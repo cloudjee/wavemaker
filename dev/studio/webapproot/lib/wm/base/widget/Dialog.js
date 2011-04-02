@@ -33,6 +33,8 @@ wm.dialog = {showingList: []};
 
 wm.dialog.getNextZIndex = function(isDesignLoaded) {
     var index = 30;
+    if (!wm.dialog.showingList.length) return index;
+
     for (var i = 0; i < wm.dialog.showingList.length; i++) {
 	if (!isDesignLoaded || isDesignLoaded && wm.dialog.showingList[i]._isDesignLoaded)
 	    index = Math.max(index, wm.dialog.showingList[i].domNode.style.zIndex);
@@ -554,8 +556,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 		// global flag for easily finding the most recently shown dialog
 	        wm.Array.removeElement(wm.dialog.showingList, this);
 	    if (inShowing && (!window["studio"] || this != window["studio"].dialog)) {
-		    wm.dialog.showingList.push(this);
 		var zindex =  wm.dialog.getNextZIndex(this._isDesignLoaded);
+		wm.dialog.showingList.push(this);
 	        this.domNode.style.zIndex = zindex;
 	    if (this.modal)
 		this.dialogScrim.domNode.style.zIndex = zindex-1;
