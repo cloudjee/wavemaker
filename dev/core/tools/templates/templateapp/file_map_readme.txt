@@ -44,7 +44,6 @@ webapproot/resources
  Created upon first use of the resources panel in studio. These are the folders uses by the resources panel and resources in binding. 
  
 webapproot/WEB-INF
-  project-security.xml is a studio manged file. Use security panel in studio to change security settings. Saving the project in studio may overwrite external changes.
   web.xml is a studio managed file. Use user-web.xml. Changes to user-web.xml will be merged into web.xml for deployment.
 
 webapproot/WEB-INF/classes
