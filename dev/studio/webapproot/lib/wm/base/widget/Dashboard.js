@@ -129,9 +129,20 @@ dojo.declare("wm.Dashboard", wm.Control, {
 	openDialog: function(inNearDOM){
 		dijit.popup.open({popup: this.addDialog, around: inNearDOM})		
 	},
-  renderBounds: function() {
-	  this.inherited(arguments);
-	  this.resizeDijit();
+        renderBounds: function() {
+	    this.inherited(arguments);
+	    this.resizeDijit();
+	    this.updatePageContainerBounds();
+	},
+        updatePageContainerBounds: function() {
+	    wm.job(this.getRuntimeId() + ".updatePageContainerBounds", 10, dojo.hitch(this, function() {
+		for (var i = 0; i < this.dijitPortlets.length; i++) {
+		    var p = this.dijitPortlets[i];
+		    var c = dojo.coords(p.wm_pageContainer.domNode.parentNode);
+		    p.wm_pageContainer.setBounds(null,null,c.w-2, c.h-4);
+		    p.wm_pageContainer.reflow();
+		}
+	    }));
 	},
 	resizeDijit: function() {
 		if (this.dojoObj)
@@ -231,11 +242,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 	  portlet.wm_pageContainer = new wm.PageContainer({loadParentFirst: false, owner: this, parentNode: portlet.containerNode, isRelativePositioned:true});
     if (props.page) {
 			portlet.wm_pageContainer.setPageName(props.page);
-      window.setTimeout(dojo.hitch(this, function() {
-          var c = dojo.coords(portlet.wm_pageContainer.domNode.parentNode);
-          portlet.wm_pageContainer.setBounds(null,null,c.w-2, c.h-4);
-          portlet.wm_pageContainer.reflow();
-      }), 100);
+	this.updatePageContainerBounds();
    	}
 
 		if (!this.isDesignLoaded()){
