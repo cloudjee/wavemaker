@@ -600,7 +600,7 @@ System.out.println("F");
         Set<Map.Entry<String, String>> entries = jarHash.entrySet();
         for (Map.Entry<String, String> entry : entries) {
             try {
-                Class cls = Class.forName(entry.getValue())
+                Class cls = Class.forName(entry.getValue());
             } catch (ClassNotFoundException ex) {
                 missingJars.add(entry.getKey());
             }
