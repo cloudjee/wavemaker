@@ -590,7 +590,7 @@ System.out.println("F");
     @ExposeToClient
     public List<String> getMissingJars() {
         Map<String, String> jarHash = new HashMap<String, String>();
-        jarHash.put("b2jcc.jar", "com.ibm.db2.app.DB2StructOutput.class");
+        jarHash.put("db2jcc.jar", "com.ibm.db2.app.DB2StructOutput.class");
         jarHash.put("ojdbc.jar", "oracle.jdbc.driver.OracleDatabaseMetaData");
         jarHash.put("wsdl4j.jar", "javax.wsdl.factory.WSDLFactory.class");
         //ClassLoader loader = ClassLoaderUtils.getClassLoader();
