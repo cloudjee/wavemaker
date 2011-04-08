@@ -32,9 +32,7 @@ import java.io.InputStreamReader;
 import java.io.InputStream;
 import java.net.URL;
 import java.io.IOException;
-import java.util.Map;
-import java.util.Properties;
-import java.util.SortedSet;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -56,6 +54,7 @@ import com.wavemaker.tools.project.upgrade.UpgradeManager;
 import com.wavemaker.tools.serializer.FileSerializerException;
 
 import com.wavemaker.common.util.IOUtils;
+import com.wavemaker.common.util.ClassLoaderUtils;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -69,7 +68,7 @@ import java.util.regex.Matcher;
  *
  */
 @HideFromClient
-public class StudioService {
+public class StudioService extends ClassLoader {
 
     @ExposeToClient
     public String closurecompile(String s) {
@@ -583,5 +582,30 @@ System.out.println("F");
         public void setUpgradeMessages(UpgradeInfo upgradeMessages) {
             this.upgradeMessages = upgradeMessages;
         }
+    }
+
+    //db2jcc.jar - com.ibm.db2.app.DB2StructOutput.class
+    //ojdbc.jar - oracle.jdbc.driver.OracleDatabaseMetaData
+    //wsdl4j.jar - javax.wsdl.factory.WSDLFactory.class
+    @ExposeToClient
+    public List<String> getMissingJars() {
+        Map<String, String> jarHash = new HashMap<String, String>();
+        jarHash.put("b2jcc.jar", "com.ibm.db2.app.DB2StructOutput.class");
+        jarHash.put("ojdbc.jar", "oracle.jdbc.driver.OracleDatabaseMetaData");
+        jarHash.put("wsdl4j.jar", "javax.wsdl.factory.WSDLFactory.class");
+        //ClassLoader loader = ClassLoaderUtils.getClassLoader();
+
+        List<String> missingJars = new ArrayList<String>();
+
+        Set<Map.Entry<String, String>> entries = jarHash.entrySet();
+        for (Map.Entry<String, String> entry : entries) {
+            try {
+                Class cls = Class.forName(entry.getValue())
+            } catch (ClassNotFoundException ex) {
+                missingJars.add(entry.getKey());
+            }
+        }
+
+        return missingJars;
     }
 }
