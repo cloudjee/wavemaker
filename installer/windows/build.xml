@@ -12,7 +12,7 @@
     <property name="versionString" value="${project.type}-${version.number}" />
     <property name="installerName" value="${build.installer.dir}/wavemaker-${versionString}.exe" />
 
-    <property name="java.zip.file" value="${basedir}/jdk1.6.0_21.zip"/>
+    <property name="java.zip.file" value="${basedir}/jdk1.6.0_24.zip"/>
     <property name="signtool" value="C:\Program Files\Microsoft Platform SDK for Windows Server 2003 R2\Bin\signtool.exe"/>
 
     <target name="check">

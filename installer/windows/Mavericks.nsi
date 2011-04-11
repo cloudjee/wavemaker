@@ -1,5 +1,5 @@
 # Build Install Script for WaveMaker
-# Aug 29, 2007 11:18:38 AM
+# April 11, 2011 11:18:38 AM
 ; VERSION should be of the form MAJOR.MINOR.REVISION
 ; SOURCEDIR should be the built installer root; see common-installer.build
 ; To compile this script pass /DVERSION=<PRODUCT_VERSION> /DSOURCEDIR=<INSTALLER_ROOT> to the NSIS compiler.
@@ -15,14 +15,14 @@ SetCompressor /FINAL LZMA
 !define COMPANY "WaveMaker Software, Inc"
 !define URL http://www.wavemaker.com
 !define DESCRIPTION "${PRODUCT_NAME} Studio and Runtime"
-!define COPYRIGHT "WaveMaker Software, Inc, 2010."
+!define COPYRIGHT "WaveMaker Software, Inc, 2011."
 /* 
  * The WaveMaker platform consists of two components: 
  * WaveMaker Studio for developing rich internet applications and 
  * WaveMaker Runtime for deploying applications into a standard and secure Java environment.
  *
  */
-; Java JDK 1.6.0.21
+; Java JDK 1.6.0.24
 ; Function Returns $R0
 !define ERROR_CANCEL "canceled"
 !define ERROR_SUCCESS "success"
@@ -94,7 +94,8 @@ Var ProjectsDialog
 
 # Installer pages
 !insertmacro MUI_PAGE_WELCOME
-#!insertmacro MUI_PAGE_LICENSE "${LICENSEFILE}"
+!insertmacro MUI_PAGE_LICENSE "${LICENSEFILE}"
+!insertmacro MUI_PAGE_LICENSE "${BUILDSUPPORTDIR}\Oracle_Binary_Code_Licence.txt"
 !define MUI_PAGE_CUSTOMFUNCTION_PRE Components_PreFunction
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
@@ -156,8 +157,8 @@ SectionGroup Prerequisites core
         ; Extract Binary Distribution
         DetailPrint "Installing ${__SECTION__}..."
         SetOutpath $INSTDIR
-        File /r "${SOURCEDIR}\jdk1.6.0_21"
-        WriteRegStr HKLM "${REGKEY}" JavaHome '$INSTDIR\jdk1.6.0_21'
+        File /r "${SOURCEDIR}\jdk-1.6.0_24"
+        WriteRegStr HKLM "${REGKEY}" JavaHome '$INSTDIR\jdk-1.6.0_24'
         WriteRegStr HKLM "${REGKEY}\Components" "Sun Java Development Kit" 1
         Pop $R0
     SectionEnd
@@ -194,7 +195,7 @@ Section WaveMaker main
     ; Extract studio files
     SetOverwrite on
     File /r /x .svn /x *doc.jar /x *src.jar /x *sources.jar "${SOURCEDIR}\studio"
-
+    
     ; Write Studio Config
     /*
     Push $0
@@ -202,7 +203,7 @@ Section WaveMaker main
     DeleteRegKey HKU ".DEFAULT\SOFTWARE\JavaSoft\Prefs\com\activegrid"
     ClearErrors
     DetailPrint "Studio projects directory set to: $DeployDir\Projects"
-    ExecWait '"$OUTDIR\jdk1.6.0_21\bin\javaw.exe" -cp "$OUTDIR\studio\WEB-INF\lib\wmtools.jar" com.wavemaker.tools.project.StudioConfiguration set wavemakerHome "$DeployDir"' $0
+    ExecWait '"$OUTDIR\jdk-1.6.0_24\bin\javaw.exe" -cp "$OUTDIR\studio\WEB-INF\lib\wmtools.jar" com.wavemaker.tools.project.StudioConfiguration set wavemakerHome "$DeployDir"' $0
     ${If} ${Errors}
         DetailPrint "Error($0) writing Studio configuration."
         ClearErrors
@@ -306,7 +307,7 @@ Section -post SEC0001
     WriteUninstaller $INSTDIR\uninstall.exe
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
     SetOutPath '$SMPROGRAMS\$StartMenuGroup'
-    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\${PRODUCT_NAME}.lnk" "$INSTDIR\jdk1.6.0_21\bin\javaw.exe" '-Xms256m -Xmx512m -XX:MaxPermSize=256m  -jar "$TomcatDir\launcher.jar"' "$INSTDIR\${PRODUCT_NAME}.ico" "" SW_SHOWNORMAL "" "${PRODUCT_NAME}: Web-Fast™ development of CIO-Safe™ applications."
+    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\${PRODUCT_NAME}.lnk" "$INSTDIR\jdk-1.6.0_24\bin\javaw.exe" '-Xms256m -Xmx512m -XX:MaxPermSize=256m  -jar "$TomcatDir\launcher.jar"' "$INSTDIR\${PRODUCT_NAME}.ico" "" SW_SHOWNORMAL "" "${PRODUCT_NAME}: Web-Fast™ development of CIO-Safe™ applications."
     CreateShortcut "$SMPROGRAMS\$StartMenuGroup\Uninstall ${PRODUCT_NAME}.lnk" $INSTDIR\uninstall.exe
     !insertmacro MUI_STARTMENU_WRITE_END
     WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}-${VERSION}" DisplayName "${PRODUCT_NAME}"
@@ -381,7 +382,7 @@ Section /o "un.Tomcat" UNSEC0000
 SectionEnd
 
 Section /o "un.Sun Java 1.6+" UNSEC0001
-    RmDir /r /REBOOTOK "$INSTDIR\jdk1.6.0_21"
+    RmDir /r /REBOOTOK "$INSTDIR\jdk-1.6.0_24"
     DeleteRegValue HKLM "${REGKEY}\Components" "Sun Java Development Kit"
 SectionEnd
 
