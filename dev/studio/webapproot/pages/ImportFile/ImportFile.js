@@ -20,7 +20,7 @@ dojo.provide("wm.studio.pages.ImportFile.ImportFile");
 
 dojo.declare("ImportFile", wm.Page, {
     start: function() {
-	this.filename.editor.set("placeHolder", "Select a zip file");
+	this.filename.editor.set("placeHolder", this.getDictionaryItem("PLACEHOLDER"));
     },
     openProject: function() {
 	this.owner.dismiss();

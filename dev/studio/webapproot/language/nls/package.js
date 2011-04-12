@@ -37,8 +37,10 @@
 	"Accordion" : "Accordion",
 	"Layers" : "Layers",
 	"PageContainer" : "PageContainer",
+    "PageContainers": "Page Containers", /* See Studio.js */
+    "PageContainersDescription": "A page in this project.",
 	"Panel" : "Panel",
-	"Rounded_Panel" : "Rounded Panel",
+	"Rounded_Panel" : "Titled Panel",
 	"Tabs" : "Tabs",
 	"Wizards" : "Wizard/Cards",
 

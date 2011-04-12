@@ -17,6 +17,8 @@
  */
 dojo.provide("wm.base.widget.TextArea");
 
+/* DEPRECATED, but still used by a couple of studio's pages */
+
 dojo.declare("wm.TextArea", wm.Box, {
 	inputValue: '',
 	width: "1flex",

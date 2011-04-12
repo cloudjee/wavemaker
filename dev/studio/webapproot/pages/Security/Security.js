@@ -18,9 +18,9 @@
 dojo.provide("wm.studio.pages.Security.Security");
 
 dojo.declare("Security", wm.Page, {
-	SELECT_ONE: "- Select One -",
-	NO_VALUE: "(no value)",
 	start: function() {
+	    this.SELECT_ONE = this.getDictionaryItem("MENU_SELECT_ONE");
+	    this.NO_VALUE   = this.getDictionaryItem("MENU_NO_VALUE");
 		this.loginTemplateFolder = dojo.moduleUrl("wm.studio.app") + "templates/security/";
 		this.loginPageTemplateFolder = this.loginTemplateFolder + "pages/Login/";
 		this.populatingOptions = false;
@@ -32,16 +32,16 @@ dojo.declare("Security", wm.Page, {
 
 	showUIDHelp1: function() {
 	    var bd = this.getHelpDialog();
-	    bd.page.setHeader("","Username Field");
+	    bd.page.setHeader("",this.getDictionaryItem("HELP_DIALOG_HEADER_USERNAME"));
 	    bd.sourceNode = this.databaseLayer.domNode;
-	    bd.page.setContent("Select the user name that the user will type in to log in.  Typically an email address or identifier that is based on the user's personal name.  You can find the value of the logged in user's username in your application by <ol><li>creating a new ServiceVariable</li><li>set its 'service' to 'securityService'</li><li>select the operation 'getUserName'</li></ol>");
+	    bd.page.setContent(this.getDictionaryItem("HELP_DIALOG_CONTENT_USERNAME"));
 	    bd.show();
 	},
 	showUIDHelp2: function() {
 	    var bd = this.getHelpDialog();
-	    bd.page.setHeader("","User ID Field");
+	    bd.page.setHeader("",this.getDictionaryItem("HELP_DIALOG_HEADER_USERID"));
 	    bd.sourceNode = this.databaseLayer.domNode;
-	    bd.page.setContent("Select the user ID that uniquely identifies the user in the database.  This is typically a number that the database has assigned to the user's entry in the database.  While you can use an email address, this tends to result in a database that bogs down badly as the size of your database goes up as this value is used by other database tables to identify the user account the data is associated with. You can  find out the ID when your project is running by <ol><li>creating a new ServiceVariable</li><li>set its 'service' to 'securityService'</li><li>select the operation 'getUserId'</li></ol>");
+	    bd.page.setContent(this.getDictionaryItem("HELP_DIALOG_CONTENT_USERID"));	  
 	    bd.show();
 	},
 	getHelpDialog: function() {
@@ -87,6 +87,7 @@ dojo.declare("Security", wm.Page, {
 		this.populateGeneralOptions();
 		this.populateRolesSetup();
 	},
+    /* TODO: Localize "Demo" and "Database"; challenge: make sure that if the server sends words like "Demo" and "Database" that we don't mess with tests on that */
 	initSecProviderInput: function() {
 		var l = [this.SELECT_ONE, "Demo", "Database"];
 		if (studio.isModuleEnabled("security-driver", "wm.ldap"))
@@ -303,7 +304,7 @@ dojo.declare("Security", wm.Page, {
 		var err = null;
 		if (dataSourceType == "Demo") {
 			if (this.demoUserList._data == null || this.demoUserList._data.length == 0) {
-				err = "At least one user needs to be added to the list!";
+			    err = this.getDictionaryItem("ERROR_DEMO_NO_USER")
 			}
 		} else if (dataSourceType == "Database") {
 		    if (!(this.dbDataModelInput.getDataValue() && 
@@ -311,12 +312,12 @@ dojo.declare("Security", wm.Page, {
 				this.getEditorDisplayValue(this.dbUsernameInput) &&
 				this.getEditorDisplayValue(this.dbUseridInput) && 
 				this.getEditorDisplayValue(this.dbPasswordInput))) {
-				err = "All required fields must be filled out!";
+			err = this.getDictionaryItem("ERROR_DATABASE_INPUT_REQUIRED");
 			}
 		} else if (dataSourceType == "LDAP") {
 			if (!(this.ldapUrlInput.getDataValue() && 
 				this.ldapUserDnPatternInput.getDataValue())) {
-				err = "All required fields must be filled out!";
+			    err = this.getDictionaryItem("ERROR_LDAP_INPUT_REQUIRED");
 			}
 		} else if (dataSourceType == "JOSSO") {
 			// To do
@@ -342,7 +343,7 @@ dojo.declare("Security", wm.Page, {
 			}
 			for (var i = 0; i < d.length; i++) {
 				if (d[i] && d[i].userid == userid) {
-					app.alert("Username already exists, please type in another one!");
+				    app.alert(this.getDictionaryItem("ALERT_USERNAME_EXISTS"));
 					return;
 				}
 			}
@@ -357,7 +358,7 @@ dojo.declare("Security", wm.Page, {
 			this.demoRoleInput.clear();
 		    this.setDirty();
 		} else {
-			app.alert("Username and Password fields cannot be empty!");
+		    app.alert(this.getDictionaryItem("ALERT_USER_INPUT_REQUIRED"));
 		}
 	},
 	demoDeleteUserButtonClick: function(inSender) {
@@ -481,7 +482,7 @@ dojo.declare("Security", wm.Page, {
 	        this.setDirty();
 	},
 	dbTestSQLButtonClick: function(inSender) {
-		studio.beginWait("Running Query...");
+	    studio.beginWait(this.getDictionaryItem("WAIT_TEST_SQL"));
 		studio.securityConfigService.requestAsync(
 			"testRolesByUsernameQuery",
 			[this.dbDataModelInput.getDataValue(),
@@ -509,7 +510,7 @@ dojo.declare("Security", wm.Page, {
 	        this.setDirty();
 	},
 	ldapConnectionButtonClick: function(inSender) {
-		studio.beginWait("Testing LDAP Connection...");
+	    studio.beginWait(this.getDictionaryItem("WAIT_TEST_LDAP"));
 		studio.securityConfigService.requestAsync(
 			"testLDAPConnection",
 			[this.ldapUrlInput.getDataValue(),
@@ -521,7 +522,7 @@ dojo.declare("Security", wm.Page, {
 	testLDAPConnectionResult: function(inResponse) {
 		studio.endWait();
 		this.ldapConnectionResultLabel.domNode.style.color = "";
-		this.ldapConnectionResultLabel.setCaption("Connection Successful.");
+	    this.ldapConnectionResultLabel.setCaption(this.getDictionaryItem("TEST_LDAP_MESSAGE_SUCCESS"));
 	},
 	testLDAPConnectionError: function(inError) {
 		studio.endWait();
@@ -540,12 +541,12 @@ dojo.declare("Security", wm.Page, {
 			}
 			for (var i = 0; i < d.length; i++) {
 				if (d[i].role == role) {
-					app.alert("Role already exists, please type in another one!");
+				    app.alert(this.getDictionaryItem("ALERT_ROLE_EXISTS"));
 					return;
 				}
 			}
 			if (d.length && this.isJOSSO()) {
-				app.alert("JOSSO only allows one role.  Delete existing role before entering new one.");
+			    app.alert(this.getDictionaryItem("ALERT_JOSSO_ONLY_ONE_ROLE"));
 				return;
 			}
 			d.push(role);
@@ -556,7 +557,7 @@ dojo.declare("Security", wm.Page, {
 			this.addRoleInput.focus();
 		    this.setDirty();
 		} else {
-			app.alert("Role field cannot be empty!");
+		    app.alert(this.getDictionaryItem("ALERT_ROLE_EMPTY"));
 		}
 	},
 	deleteRoleButtonClick: function(inSender) {
@@ -599,7 +600,7 @@ dojo.declare("Security", wm.Page, {
 	copyLoginFiles: function() {
 	  if (this.isJOSSO()) {
 		   if (!webFileExists("login-redirect.jsp")) {
-		      var loginhtml = "<%--\n  ~ JOSSO: Java Open Single Sign-On\n  ~\n  ~ Copyright 2004-2009, Atricore, Inc.\n  ~\n  ~ This is free software; you can redistribute it and/or modify it\n  ~ under the terms of the GNU Lesser General Public License as\n  ~ published by the Free Software Foundation; either version 2.1 of  \n~ the License, or (at your option) any later version.  \n~  \n~ This software is distributed in the hope that it will be useful,  \n~ but WITHOUT ANY WARRANTY; without even the implied warranty of  \n~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU  \n~ Lesser General Public License for more details.  \n~  ~ You should have received a copy of the GNU Lesser General Public  \n~ License along with this software; if not, write to the Free  \n~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  \n~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.  \n~  \n--%>\n\n<%@page contentType=\"text/html; charset=UTF-8\" language=\"java\" session=\"true\" %>\n<%\n response.sendRedirect(request.getContextPath() + \"/josso_login/\");\n%>";
+		       var loginhtml = this.getDictionaryItem("JOSSO_DETAILS");
 		      studio.project.saveProjectData("login-redirect.jsp", loginhtml);
 		     }
 	    }else {
@@ -627,11 +628,11 @@ dojo.declare("Security", wm.Page, {
 	demoUserListFormat: function(inSender, ioData, inColumn, inData, inHeader) {
 		if (inHeader) {
 			if (inColumn == 0) {
-				ioData.data = "<div>Username";
+			    ioData.data = "<div>" + this.getDictionaryItem("DEMO_USER_USERNAME");
 			} else if (inColumn == 1) {
-				ioData.data = "<div>Password";
+			    ioData.data = "<div>" + this.getDictionaryItem("DEMO_USER_PASSWORD");
 			} else if (inColumn == 2) {
-				ioData.data = "<div>Role";
+			    ioData.data = "<div>" + this.getDictionaryItem("DEMO_USER_ROLE");
 			}
 		}
 	},
@@ -722,7 +723,7 @@ dojo.declare("Security", wm.Page, {
 		if (this.isDestroyed) return;
 		var changed = this._cachedData != this.getCachedData();
 		var caption = (!changed ? "" : "<img class='StudioDirtyIcon'  src='images/blank.gif' /> ") +
-		    bundleStudio["TabCaption_Security"];
+		    studio.getDictionaryItem("wm.Security.TAB_CAPTION");
 		this.dirty = changed;
 
 		if (caption != this.owner.parent.caption) {

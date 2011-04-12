@@ -27,9 +27,9 @@ Studio.extend({
 	      if (!this._serviceMenuStructure) {
 		  var menus = this.navigationMenu.fullStructure;
 		  for (var i = 0; i < menus.length; i++) {
-		      if (menus[i].label == bundleStudio.M_Services)
+		      if (menus[i].idInPage == "servicesPopupBtn")
 			  this._serviceMenuStructure = menus[i];
-		      else if (menus[i].label == bundleStudio.M_Insert)
+		      else if (menus[i].idInPage == "insertPopupBtn")
 			  this._insertMenuStructure = menus[i];
 		  }
 	      }
@@ -41,7 +41,7 @@ Studio.extend({
 			 idInPage: inName + "MenuItem",
 			 iconClass: inImage.indexOf(".") == -1 ? inImage : inImage.substring(inImage.lastIndexOf("/")+1,inImage.indexOf("."))};
 
-	      var menu = (inTab == bundleStudio.M_Services) ? this._serviceMenuStructure : this._insertMenuStructure;
+	      var menu = (inTab == bundlePackage.Non_Visual_Components) ? this._insertMenuStructure : this._serviceMenuStructure;
 	      if (inProps && inProps.parentMenu) {
 		  var submenu;
 		  for (var i = 0; i < menu.children.length; i++) {

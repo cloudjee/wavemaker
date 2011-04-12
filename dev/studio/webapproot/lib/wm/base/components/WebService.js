@@ -25,7 +25,18 @@ dojo.require("wm.base.components.JavaService");
 	@extends wm.JavaService
 */
 dojo.declare("wm.WebService", wm.JavaService, {
-	afterPaletteDrop: function() {
+
+    showJarDialog: function() {
+	studio.handleMissingJar("wsdl4j.jar",
+				studio.getDictionaryItem("wm.WebService.JAR_INSTRUCTIONS"));				
+    },
+	afterPaletteDrop: function() {	    
+	    if (window["studio"] && studio.isJarMissing("wsdl4j.jar")) {
+		this.showJarDialog();
+		this.destroy();
+		return;
+	    }
+
 		this.newWebServiceDialog();
 		return true;
 	},
@@ -89,8 +100,12 @@ dojo.declare("wm.WebServiceLoader", null, {
 		var cs = []
 		wm.services.forEach(function(s) {
 			if (s.type == "WebService") {
+			    if (studio.isJarMissing("wsdl4j.jar")) {
+				wm.WebService.prototype.showJarDialog();
+			    } else {
 				var c = new wm.WebService({name: s.name, serviceId: s.name});
 				cs.push(c);
+			    }
 			}
 		});
 		return cs;

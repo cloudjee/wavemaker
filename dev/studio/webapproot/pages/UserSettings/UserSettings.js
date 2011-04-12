@@ -35,12 +35,13 @@ dojo.declare("UserSettings", wm.Page, {
 				dojo.hitch(this, "changePasswordSuccess"), 
 				dojo.hitch(this, "changePasswordError"));
 		} else {
-			app.alert("The password does not match the confirm password.");
+		    app.alert(this.getDictionaryItem("ALERT_PASSWORD_MISMATCH"));
 		}
 	},
 	changePasswordSuccess: function(inResponse) {
 		wm.fire(this.owner, "dismiss");
-		app.alert("The password has been successfully updated.");
+		    app.alert(this.getDictionaryItem("ALERT_PASSWORD_UPDATED"));
+		app.alert("");
 		studio.startPageDialog.start.tabLayers1.setLayerIndex(0);
 	},
 	changePasswordError: function(inError) {

@@ -29,10 +29,10 @@ JavaEditor.widgets = {
 				closeCmpOutBtn: ["wm.ToolButton", {imageIndex: 23, width: "24px", height: "100%",  hint: "Close Compiler Output", border: "0", margin: "0"}, {onclick: "closeCmpOutBtnClick"}],
 			    javaServiceRefreshButton: ["wm.ToolButton", {imageIndex: 27, width: "24px", height: "100%",hint: "Refresh Java service from disk", border: "0", margin: "0"}, {onclick: "javaServiceRefreshButtonClick"}],
 			    toolbarspacer3: ["wm.Spacer", {height: "24px", width: "12px", margin: "0,5"}, {}],
-			    findBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Find, iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findClick"}],
-			    formatBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Format, imageIndex: 29}, {onclick: "formatClick"}],
-			    wordWrapBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Wrap, imageIndex: 15,imageList: "studio.canvasToolbarImageList16"}, {onclick: "toggleWrapClick"}],
-			    pageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: bundleStudio.M_Help, imageIndex: 26}, {onclick: "showEditorHelp"}],
+			    findBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findClick"}],
+			    formatBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Reformat Code", imageIndex: 29}, {onclick: "formatClick"}],
+			    wordWrapBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Toggle line wrapping", imageIndex: 15,imageList: "studio.canvasToolbarImageList16"}, {onclick: "toggleWrapClick"}],
+			    pageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Help", imageIndex: 26}, {onclick: "showEditorHelp"}],
 
 			}],
 			logoBtmHolder: ["wm.Panel", {border: "0", width: "221px"}, {}]
@@ -52,7 +52,7 @@ JavaEditor.widgets = {
 							    */
 						    javaCompilerOutputEditor: ["wm.TextArea", {height: "100%", width: "100%", readonly: true, readOnly: true, border: "0", scrollY: true}, {}]
 						}],
-					    serverTab: ["wm.Layer", {caption: bundleStudio.ServerLogs}, {onclick: "updateLogs"}, {
+					    serverTab: ["wm.Layer", {caption: "Server Logs"}, {onclick: "updateLogs"}, {
 						logViewer: ["wm.PageContainer", {pageName: "LogViewer",  width: "100%", height: "100%"}]
 					    }]
 					}]

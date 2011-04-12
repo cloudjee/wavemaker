@@ -1,0 +1,32 @@
+ImportProject.widgets = {
+    layoutBox1: ["wm.Layout", {layoutKind: "top-to-bottom", width: "100%", height: "100%", _classes: ["wm-darksnazzy"]}, {}, {
+	dialog: ["wm.Panel", {layoutKind: "top-to-bottom",  width: "100%", height: "100%"}, {}, {
+	    titleBar: ["wm.Panel", {layoutKind: "left-to-right", height: "29px"}, {}, {
+		dialogLabel: ["wm.Label", {_classes: {domNode: [
+					    "wm_TextDecoration_Bold", 
+					    "wm_TextAlign_Center", 
+					    "wm_Padding_4px", 
+					    "wm_FontColor_White"]}, caption: "Import",  width: "100%", height: "100%"}, {}, {
+						format: ["wm.DataFormatter", {}, {}]
+					    }]
+	    }],
+	    panel: ["wm.Panel", {_classes: ["wm_Padding_16px"], layoutKind: "top-to-bottom",  width: "100%", height: "100%", horizontalAlign: "center"}, {}, {
+		fileUploader: ["wm.FileUpload", {  caption: "Select Zipfile",
+						   uploadButtonCaption: "Import",
+						   padding: "0,20,0,20",
+						   width: "100%",
+						   height: "100px",
+						   captionAlign: "left",
+						   captionPosition: "top",
+						   uploadButtonPosition: "bottom",
+						   service: "deploymentService",
+						   operation: "uploadProjectZipFile"}, {onUploadSuccess: "importClickCallback",
+											onUploadError: "importClickError",
+											onBegin: "startImportClick"}, {}]
+	    }],
+	    footer: ["wm.Panel", {layoutKind: "left-to-right",  horizontalAlign: "right", verticalAligh: "bottom", height: "26px", width: "100%"}, {}, {
+		cancelButton: ["wm.Button", {caption: "Cancel", width: "100px", height: "100%"}, {onclick: "cancelButtonClick"}]
+	    }]
+	}]
+    }]
+}

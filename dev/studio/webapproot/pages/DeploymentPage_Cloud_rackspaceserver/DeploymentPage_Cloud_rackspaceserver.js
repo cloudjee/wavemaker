@@ -254,16 +254,9 @@ dojo.declare("DeploymentPage_Cloud_rackspaceserver", wm.Page, {
 				}
 		}});
 
-		var htmlVal = "<font size=2>";	
-		htmlVal += "Please click <a href='http://www.rackspacecloud.com' target='_blank'>here</a> ";
-		htmlVal += "to perform the following prerequisite tasks if needed, before creating server instances.<br/><br/>";
-		htmlVal += "&nbsp;&nbsp;&nbsp;&nbsp;- Create a RackSpace account<br/>";
-		htmlVal += "&nbsp;&nbsp;&nbsp;&nbsp;- Acquire API Access Key<br/>";
-		htmlVal += "&nbsp;&nbsp;&nbsp;&nbsp;- Create custom server images<br/>";
-		htmlVal += "&nbsp;&nbsp;&nbsp;&nbsp;- Create custom server flavors<br/>";
-		htmlVal += "</font>";
-		this.helpLabel.setHtml(htmlVal);
-		this.helpLabel.show();
+	var htmlVal = this.getDictionaryItem("HTML");
+	this.helpLabel.setHtml(htmlVal);
+	this.helpLabel.show();
     },
     setup: function() {      
 	this.reset();      
@@ -287,7 +280,7 @@ dojo.declare("DeploymentPage_Cloud_rackspaceserver", wm.Page, {
 
 		// Validate the form
 		if (!this.usernameValue || !this.passwordValue) {
-			app.alert("Please log in so you can manage your servers.  ALTERNATIVE: Download the war and use your hosting provider's tools instead.");
+		    app.alert(this.getDictionaryItem("ALERT_NO_CREDENTIALS"))
 			return;
 		}
 		this.showServerList();
@@ -329,7 +322,7 @@ dojo.declare("DeploymentPage_Cloud_rackspaceserver", wm.Page, {
      * Server List Panel 
      **************************************************************************************************/
     showServerList: function() {
-		this.callServerList("Loading your server list", "ServerListLayer");
+	this.callServerList(this.getDictionaryItem("WAIT_LOADING_SERVERS"), "ServerListLayer");
     },
     deleteServerClick: function() {
 	    studio.beginWait("Terminating"); // in future may be used to do more than just kill a server
@@ -459,7 +452,7 @@ dojo.declare("DeploymentPage_Cloud_rackspaceserver", wm.Page, {
     callCreateServerEnabled: true,
     callCreateServer: function(inImage, inFlavor, inServerName, inLayer) {
 	if (this.callCreateServerEnabled) {
-	    studio.beginWait("Creating " + inServerName + ". It may take several minutes. Please wait.");
+	    studio.beginWait(this.getDictionaryItem("WAIT_CREATING", {serverName: inServerName}));
 	    this.cloudServerService.requestAsync("createServer", 
 						 ["rackspace",
 						  inServerName,
@@ -479,7 +472,7 @@ dojo.declare("DeploymentPage_Cloud_rackspaceserver", wm.Page, {
 						  null],
 						  dojo.hitch(this,function(inResult) {
 						     studio.endWait();
-							 app.alert("Server " + this.serverName.getDataValue() + " has been created successfully");
+						      app.alert(this.getDictionaryItem("ALERT_CREATING_SUCCESS", {serverName:this.serverName.getDataValue()}));
 						     //this.showServerList();
 							 this.MainLayers.setLayer(inLayer);
 						  }),

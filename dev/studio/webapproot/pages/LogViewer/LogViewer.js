@@ -34,7 +34,7 @@ dojo.declare("LogViewer", wm.Page, {
       if (this.lastProjectName != studio.project.projectName) {
 	  this.lastProjectName = studio.project.projectName;
 	  if (this.logArea) {
-	  this.logArea.setHtml("<div style='text-align:center'>* The only messages you will see here are calls to log(FATAL | ERROR | WARN | INFO | DEBUG, message) *</div>");
+	      this.logArea.setHtml(this.getDictionaryItem("PLACEHOLDER"));
 	      this._isClear = true;
 	  }
       }
@@ -55,7 +55,7 @@ dojo.declare("LogViewer", wm.Page, {
   },
   clearLog: function() {
       if (this.logArea) {
-	  this.logArea.setHtml("<div style='text-align:center'>* The only messages you will see here are calls to log(FATAL | ERROR | WARN | INFO | DEBUG, message) *</div>");
+	  this.logArea.setHtml(this.getDictionaryItem("PLACEHOLDER"));
 	  this._isClear = true;
       }
   },

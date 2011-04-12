@@ -48,13 +48,13 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 		var sname = this.serviceNameInput.getValue("displayValue");
 		var opname = this.serviceOpInput.getValue("displayValue");
 		if (!sname || sname.length == 0 || !opname || opname.length == 0) {
-			app.alert("Service name and operation name are required!");
+		    app.alert(this.getDictionaryItem("ALERT_INPUT_NEEDED"));
 			return;
 		}
 		var d = this.inParamsList._data;
 		var url = this.urlInput.getValue("displayValue");
 		if (!url || url.length == 0) {
-			app.alert("Missing Service URL!");
+		    app.alert(this.getDictionaryItem("ALERT_NO_URL"));
 			return;
 		}
 		var m = this.methodInput.getValue("displayValue");
@@ -82,7 +82,7 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 				schemaText = this.xmlSchemaTextInput.getValue("displayValue");
 			}
 		}
-		studio.beginWait("Importing REST Service...");
+	    studio.beginWait(this.getDictionaryItem("WAIT_IMPORT"));
 		studio.webService.requestAsync("buildRestService", 
 			[sname, opname, d, url, m, ct, output, schemaText, schemaPath, w], 
 			dojo.hitch(this, "buildRestServiceSuccess"), 
@@ -91,7 +91,7 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 	buildRestServiceSuccess: function(inResponse) {
 		studio.endWait();
 		if (inResponse == "$already_exists$") {
-                    app.confirm('The service name already exists. Overwrite?', false,
+                    app.confirm(this.getDictionaryItem("CONFIRM_OVERWRITE"), false,
                                 dojo.hitch(this, function() {
 				    this.buildRestService(true);
                                 }));
@@ -101,7 +101,7 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 	},
 	buildRestServiceError: function(inError) {
 		studio.endWait();
-		app.alert("Error occurred while importing REST service!\n" + inError);
+	    app.alert(this.getDictionaryItem("ALERT_ERROR", {error: inError}));
 	},
 	clearAll: function(inSender) {
 		this.serviceNameInput.clear();
@@ -161,7 +161,7 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 			}
 			for (var i = 0; i < d.length; i++) {
 				if (d[i] && d[i].name == name) {
-					app.alert("Parameter name already exists, please type in another one!");
+				    app.alert(this.getDictionaryItem("ALERT_PARAMETER_EXISTS"));
 					return;
 				}
 			}
@@ -193,8 +193,7 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 				for (var i = 0; i < d.length; i++) {
 					queryString = queryString + d[i].name + "={" + d[i].name + "}" + (i+1 == d.length ? "" : "&");
 				}
-			    app.confirm("This will append the query string '" + queryString + 
-					"' to the Service URL. Proceed?", false,
+			    app.confirm(this.getDictionaryItem("CONFIRM_APPEND", {query: queryString}), false,
                                         dojo.hitch(this, function() {
 					    this.urlInput.setValue("displayValue", (url + (url.indexOf("?") > -1 ? "&" : "?") + queryString));
                                         }));
@@ -278,9 +277,9 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 	xml2SchemaButtonClick: function(inSender) {
 		var xml = this.xmlSchemaTextInput.getValue("displayValue");
 	    if (xml) {
-                app.confirm("This will generate a XML Schema for the sample XML response entered in the text area. Proceed?", false,
+                app.confirm(this.getDictionaryItem("CONFIRM_GENERATE_SCHEMA"), false,
                             dojo.hitch(this, function() {
-			        studio.beginWait("Generating XML Schema...");
+			        studio.beginWait(this.getDictionaryItem("WAIT_GENERATE_SCHEMA"));
 			        studio.webService.requestAsync("convertXmlToSchema", 
 				                               [xml], 
 				                               dojo.hitch(this, "convertXmlToSchemaSuccess"), 
@@ -295,7 +294,7 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 	},
 	convertXmlToSchemaError: function(inError) {
 		studio.endWait();
-		app.alert("Error occurred while Generating XML Schema!\n" + inError);
+	    app.alert(this.getDictionaryItem("ALERT_GENERATE_SCHEMA_ERROR", {error: inError}));
 	},
 	pathTypeInputChange: function(inSender, inValue) {
 		var b = (inValue == this.IMPORT_TYPE_URL);

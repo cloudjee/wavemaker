@@ -283,6 +283,7 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 		//this.marker.setBounds(b);
 	},
     setLabelPosition: function() {
+	if (this.isDestroyed) return;
 	    if (studio.selected == this.control) {
 		this.label.parentNode.style.right = 
 		    this.label.parentNode.style.top = "0px";

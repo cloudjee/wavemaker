@@ -21,12 +21,13 @@ dojo.provide("wm.studio.pages.ImportWebService.ImportWebService");
 dojo.declare("ImportWebService", wm.Page, {
 	TYPE_SOAP: "SOAP",
 	TYPE_REST_WSDL: "REST (WSDL / WADL)",
-	TYPE_REST_BUILDER: "REST (Build-A-Service)",
+        TYPE_REST_BUILDER: null,
 	TYPE_FEED: "Feed",
 	TYPE_SALESFORCE: "SOAP-Salesforce", //xxx
 	IMPORT_TYPE_URL: "URL",
 	IMPORT_TYPE_FILE: "File",
 	start: function() {
+	        this.TYPE_REST_BUILDER = this.getDictionaryItem("REST_BUILDER");
 		this.updateSelect(this.typeInput, [this.TYPE_SOAP, this.TYPE_REST_WSDL, this.TYPE_REST_BUILDER, this.TYPE_FEED, this.TYPE_SALESFORCE]); //xxx
 		this.typeInput.setValue("displayValue", this.TYPE_SOAP);
 		this.updateSelect(this.wsdlPathTypeInput, [this.IMPORT_TYPE_URL, this.IMPORT_TYPE_FILE]);
@@ -57,7 +58,7 @@ dojo.declare("ImportWebService", wm.Page, {
 		if (inValue == this.TYPE_SOAP) {
 			this.layers.setLayer("wsdlLayer");
 			this.wsdlPathTypeInput.setCaption("WSDL");
-			this.wsdlGroupLabel.setCaption("WSDL Information");
+		        this.wsdlGroupLabel.setCaption(this.getDictionaryItem("CAPTION_WSDL_GROUP_SOAP"));
 			this.usernameLabel.setShowing(false);
 			this.passwordLabel.setShowing(false);
 			this.usernameInput.setShowing(false);
@@ -68,7 +69,7 @@ dojo.declare("ImportWebService", wm.Page, {
 		} else if (inValue == this.TYPE_SALESFORCE) { //xxx
 			this.layers.setLayer("wsdlLayer");
 			this.wsdlPathTypeInput.setCaption("WSDL");
-			this.wsdlGroupLabel.setCaption("WSDL Information");
+		        this.wsdlGroupLabel.setCaption(this.getDictionaryItem("CAPTION_WSDL_GROUP_SALESFORCE"));
 			this.usernameLabel.setShowing(true);
 			this.passwordLabel.setShowing(true);
 			this.usernameInput.setShowing(true);
@@ -79,7 +80,7 @@ dojo.declare("ImportWebService", wm.Page, {
 		} else if (inValue == this.TYPE_REST_WSDL) {
 			this.layers.setLayer("wsdlLayer");
 			this.wsdlPathTypeInput.setCaption("WSDL / WADL");
-			this.wsdlGroupLabel.setCaption("WSDL / WADL Information");
+		        this.wsdlGroupLabel.setCaption(this.getDictionaryItem("CAPTION_WSDL_GROUP_WSDL"));
 			this.usernameLabel.setShowing(false);
 			this.passwordLabel.setShowing(false);
 			this.usernameInput.setShowing(false);
@@ -100,10 +101,10 @@ dojo.declare("ImportWebService", wm.Page, {
 			this.importWSDL(false);
 		} else if (t == this.TYPE_FEED) {
 			if (wm.services.byName["FeedService"]) {
-				app.alert("Feed Service has already been imported.")
+			    app.alert(this.getDictionaryItem("ALERT_ALREADY_IMPORTED"));
 			} else {
-				studio.beginWait("Importing Feed Service...");
-				studio.webService.requestAsync("registerFeedService", null, dojo.hitch(this, "registerFeedServiceResult"), dojo.hitch(this, "registerFeedServiceError"));
+			    studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING_FEED"));
+			    studio.webService.requestAsync("registerFeedService", null, dojo.hitch(this, "registerFeedServiceResult"), dojo.hitch(this, "registerFeedServiceError"));
 			}
 		} else if (t == this.TYPE_REST_BUILDER) {
 			this.restServiceBuilderPage.page.saveButtonClick();
@@ -122,17 +123,17 @@ dojo.declare("ImportWebService", wm.Page, {
 		if (this.wsdlPathTypeInput.getValue("displayValue") == this.IMPORT_TYPE_URL) {
 			f = this.wsdlUrlInput.getValue("displayValue");
 			if (!f) {
-				app.alert("Must select a WSDL file!");
+			    app.alert(this.getDictionaryItem("ALERT_NO_WSDL"));
 			} else {
-				studio.beginWait("Importing Web Service...");
+			    studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING_WEB"));
 				studio.webService.requestAsync("importWSDL", [f, id, w], dojo.hitch(this, "importWSDLResult"), dojo.hitch(this, "importWSDLError"));
 			}
 		} else {
 			f = this.wsdlFileInput.fileNode.value;
 			if (!f) {
-				app.alert("Must select a WSDL file!");
+			    app.alert(this.getDictionaryItem("ALERT_NO_WSDL"));
 			} else {
-				studio.beginWait("Importing Web Service...");
+			    studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING_WEB"));
 				dojo.io.iframe.send({
 					url: "services/webService.upload",
 					content: {serviceId: id, overwrite: w, username: un, password: pw}, //xxx
@@ -159,7 +160,7 @@ dojo.declare("ImportWebService", wm.Page, {
 	importWSDLResult: function(inResponse) {
 		studio.endWait();
 		if (inResponse.slice(0,16) == "$already_exists$") {
-		    app.confirm('The service name already exists. Overwrite?', false,
+		    app.confirm(this.getDictionaryItem("CONFIRM_OVERWRITE"), false, 
                                 dojo.hitch(this, function() {
 				    this.overWriteId = inResponse.slice(16);
 				    this.importWSDL(true);
@@ -169,8 +170,8 @@ dojo.declare("ImportWebService", wm.Page, {
 		}
 	},
 	importWSDLError: function(inError) {
-		studio.endWait();
-		app.alert("Error occurred while importing WSDL!\n" + inError);
+	    studio.endWait();
+	    app.alert(this.getDictionaryItem("IMPORT_WSDL_FAILED", {error: inError}));
 	},
 	registerFeedServiceResult: function(inResponse) {
 		studio.endWait();
@@ -178,7 +179,7 @@ dojo.declare("ImportWebService", wm.Page, {
 	},
 	registerFeedServiceError: function(inError) {
 		studio.endWait();
-		app.alert("Error occurred while registering Feed service!\n" + inError);
+	    app.alert(this.getDictionaryItem("IMPORT_FEED_FAILED", {error: inError}));
 	},
 	navGotoDesignerClick: function() {
 		studio.tabs.setLayer("workspace");

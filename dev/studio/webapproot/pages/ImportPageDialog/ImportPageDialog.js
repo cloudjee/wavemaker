@@ -39,11 +39,11 @@ dojo.declare("ImportPageDialog", wm.Page, {
 	},
 	copyButtonClick: function(inSender) {
 		if(!this.projectList.selected) {
-			app.alert("Please select a project from which to import a page.");
+		    app.alert(this.getDictionaryItem("ALERT_NO_PROJECT_SELECTION"));
 			return;
 		}
 		if(!this.panesList.selected) {
-			app.alert("Please select a page to import.");
+		    app.alert(this.getDictionaryItem("ALERT_NO_PAGE_SELECTION"));
 			return;
 		}
 		var project = this.projectList.selected.getData();
@@ -51,7 +51,7 @@ dojo.declare("ImportPageDialog", wm.Page, {
 		var destPage = this.destPageName.getDataValue();
 		
 		if (dojo.indexOf(studio.project.getPageList(), destPage) != -1) {
-			app.alert("Please select page name that does not exist in the current project.");
+		    app.alert(this.getDictionaryItem("ALERT_NAME_EXISTS"));
 			return;
 		}
 		studio.pagesService.requestAsync("copyPage", [project, sourcePage, destPage],
@@ -66,7 +66,7 @@ dojo.declare("ImportPageDialog", wm.Page, {
 		return inResponse;
 	},
 	copyPaneError: function(error) {
-		app.alert('Copy page failed: '+error.message);
+	    app.alert(this.getDictionaryItem("ALERT_FAILED", {error: error.message}));
 		return error;
 	},
 	cancelButtonClick: function(inSender) {

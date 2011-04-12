@@ -23,21 +23,3 @@ dojo.declare("wm.Spacer", wm.Control, {
     getMinWidthProp: function() {return this.minWidth || 0;},
     getMinHeightProp: function() {return this.minHeight || 0;}
 });
-
-wm.Object.extendSchema(wm.Spacer, {
-        disabled: { ignore: 1 },
-	scrollX:  { ignore: 1 },
-	scrollY:  { ignore: 1 },
-	margin:   { ignore: 1 },
-	padding:  { ignore: 1 },
-	border:   { ignore: 1 },
-	borderColor:  { ignore: 1 }
-});
-
-// design-time
-dojo.extend(wm.Spacer, {
-        themeable: false,
-	scrim: true
-});
-
-wm.Spacer.description = "Resizable spacer for layouts.";

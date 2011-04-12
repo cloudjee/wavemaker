@@ -154,7 +154,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 			hideControls: true,
 			width: 700,
 		    height: 340,
-		    title: "New Data Model"
+			    title: this.getDictionaryItem("TITLE_IMPORT_DATABASE")
 			});
 			d.onPageReady = dojo.hitch(d, function() {
 				d.onShow = dojo.hitch(d.page, "update");
@@ -458,7 +458,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	    if (!this._cachedData || this._cachedData == this.getCachedData())
 		f();
 	    else {
-		app.confirm("If you leave this page, your changes will not be saved; Leave anyway?",
+		app.confirm(this.getDictionaryItem("CONFIRM_NO_SAVE"),
 			    false,f, function() {studio.tree.deselect();});
 	    }
 	},
@@ -587,7 +587,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	},
 	addRel: function(inSender) {
 		if (this.columnList.dijit.selection.selectedIndex < 0) {
-			app.alert("Please select a column to use as foreign key first");
+		    app.alert(this.getDictionaryItem("ALERT_SELECT_KEY"));
 			return;
 		}
 		this.applyGridEdits();
@@ -633,7 +633,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	        this.onSaveSuccess();
 	},
 	relUpdateError: function(inError) {
-		var msg = "Failed to update related";
+	    var msg = this.getDictionaryItem("MESSAGE_RELATED_FAILED");
 		if (inError.message) {
 			msg += ": " + inError.message;
 		}
@@ -834,7 +834,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	entityUpdateError: function(inError) {
 		if (inError.message) {
 		    studio._saveErrors.push({owner: this,
-					     message: "Failed to update entity: " + inError.message});
+					     message: this.getDictionaryItem("MESSAGE_UPDATE_FAILED", {error: inError.message})});
 		    this.saveComplete();
 		}
 	},
@@ -876,7 +876,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		} else {*/
 			var types = this.getDataModelTypeNodes();
 			var newEntityName = this.findUniqueEntityName();
-	                app.prompt('New table name', this.getTableNameFromEntityName(this.findUniqueEntityName()), 
+	               app.prompt(this.getDictionaryItem("PROMPT_NEW_TABLE"), this.getTableNameFromEntityName(this.findUniqueEntityName()), 
                                    dojo.hitch(this, function(t) {
 			               var entity = this.constructEntity(
 				           this.getEntityNameFromTableName(t), t);
@@ -896,10 +896,10 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		//}
 	},
 	newDataModelError: function(inError) {
-		if (inError.message) {
-			app.alert("Failed to create datamodel: " + inError.message);
-		}
-		this.initData();
+	    if (inError.message) {
+		app.alert(this.getDictionaryItem("ALERT_CREATE_MODEL_FAILED", {error: inError.message}));
+	    }
+	    this.initData();
 	},
 	newDataModelResult: function() {
 		this.clearDetailDisplay();
@@ -926,14 +926,14 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		var c = studio.tree.selected && studio.tree.selected.component;
 		
 		if (!c) {
-			app.alert("Please select an entity or a data model to delete.");
-			return;
+		    app.alert(this.getDictionary("ALERT_SELECT_TO_DELETE"));
+		    return;
 		}
 
 		if (c instanceof wm.DataModel) {
-		    app.confirm('Are you sure you want to delete data model "' + dmn + '"?', false,
+		    app.confirm(this.getDictionaryItem("CONFIRM_DELETE_MODEL", {modelName: dmn}), false,
                                 dojo.hitch(this, function() {
-			            studio.beginWait("Removing " + dmn);
+			            studio.beginWait(this.getDictionaryItem("WAIT_DELETE_MODEL", {modelName: dmn}));
 			            studio.dataService.requestAsync(
 					"removeDataModel", 
 					[dmn],
@@ -942,7 +942,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
                                 }));
 		} else {
 			var n = c.entityName;
-		    app.confirm('Are you sure you want to delete entity "' + n + '"?', false, 
+		    app.confirm(this.getDictionaryItem("WAIT_DELETE_ENTITY", {entityName: n}), false, 
                                 dojo.hitch(this, function() {
 			var types = this.getDataModelTypeNodes();
 			if (types == null) {
@@ -951,7 +951,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 			for (var i in types) {
 				var t = types[i];
 				if (t.data[0] == ENTITY_NODE && t.data[1] == n) {
-					studio.beginWait("Removing " + n);
+				    studio.beginWait(this.getDictionaryItem("WAIT_DELETE_ENTITY", {entityName: n}));
 					studio.dataService.requestAsync(
 							"deleteEntity",
 							[dmn, n],
@@ -1005,8 +1005,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 				return;
 		}
 		if (this.columnListVar.getData()[i].isFk) {
-			app.alert("Please delete the relationship using this " +
-				"foreign key column first");
+		    app.alert(this.getDictionaryItem("ALERT_REMOVE_COLUMN_DELETE_FIRST"))
 			return;
 		}
 		this.columnListVar.data.list.splice(i, 1);

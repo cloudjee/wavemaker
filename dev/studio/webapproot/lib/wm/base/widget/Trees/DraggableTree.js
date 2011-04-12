@@ -16,8 +16,8 @@
  *  limitations under the License.
  */
 
-dojo.provide("wm.base.widget.DraggableTree");
-dojo.require("wm.base.widget.Tree");
+dojo.provide("wm.base.widget.Trees.DraggableTree");
+dojo.require("wm.base.widget.Trees.Tree");
 
 dojo.declare("wm.DraggableTree", wm.Tree, {
     classNames: "wmtree wmdraggabletree",

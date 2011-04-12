@@ -61,7 +61,7 @@ wm.undo = {
 		var task = this.stack[this.stack.length-1];
 		studio.undoBtn.setDisabled(!task);
 		if (task)
-			studio.undoBtn.setHint("Undo " + task.hint);
+		    studio.undoBtn.setHint(studio.getDictionaryItem("UNDO_MOUSEOVER_HINT", {hint: task.hint}));
 	}
 };
 
@@ -93,13 +93,12 @@ dojo.declare("wm.ComponentTaskMixin", null, {
 });
 
 dojo.declare("wm.DeleteTask", wm.ComponentTaskMixin, {
-	hint: "Delete Component",
 	constructor: function() {
 		var comp = studio.selected;
 		if (!comp)
 			return;
 		this.setComponent(comp);
-		this.hint = "Delete " + comp.declaredClass.split(".").pop();
+	        this.hint = studio.getDictionaryItem("UNDO_DELETE_HINT", {className: comp.declaredClass.split(".").pop()});
 		this.clip = comp.serialize({styles: true});
 		this.classType = comp.declaredClass;
 		this.owner = comp.owner;
@@ -145,7 +144,7 @@ dojo.declare("wm.DropTask", wm.ComponentTaskMixin, {
 		// abort if this is really an AddTask
 		//if (this.component._draggedFromPalette)
 		//	return;
-		this.hint = "Drop " + inComponent.declaredClass.split(".").pop();
+	        this.hint = studio.getDictionaryItem("UNDO_DROP_HINT", {className: inComponent.declaredClass.split(".").pop()});
 		this.bounds = dojo.marginBox(inComponent.domNode);
 		var t = inComponent.parent;
 		this.targetId = inComponent.parent.getRuntimeId();
@@ -168,7 +167,7 @@ dojo.declare("wm.AddTask", wm.ComponentTaskMixin, {
 	hint: "Add Component",
 	constructor: function(inComponent) {
 		this.setComponent(inComponent);
-		this.hint = "Add " + inComponent.declaredClass.split(".").pop();
+	        this.hint = studio.getDictionaryItem("UNDO_ADD_HINT", {className: inComponent.declaredClass.split(".").pop()});
 		wm.undo.push(this);
 	},
 	undo: function() {

@@ -43,7 +43,8 @@ dojo.declare("ResourceManager", wm.Page, {
     renameItem: function() {
         if (!this.selectedItem || this.selectedItem.isRoot()) return;
 
-        app.prompt("Rename '" + this.selectedItem.getItemName() + "' to:", this.selectedItem.getItemName(), 
+        app.prompt(this.getDictionaryItem("PROMPT_NAME", {oldName: this.selectedItem.getItemName()}), 
+		   this.selectedItem.getItemName(), 
                    dojo.hitch(this.selectedItem, "setItemName"));
 /*
 	this.promptDialog.page.setTitle("Prompt: Rename");
@@ -63,7 +64,7 @@ dojo.declare("ResourceManager", wm.Page, {
 	    selectedItem = this.resourcesFolder;
 	}
 	this.setSelectedItem(selectedItem);
-        app.prompt("Choose a folder name", "", dojo.hitch(this.selectedItem, "addNewFolder"));
+        app.prompt(this.getDictionaryItem("PROMPT_FOLDER_NAME"), "", dojo.hitch(this.selectedItem, "addNewFolder"));
 /*
 	this.getAddPromptDialog();
 	this.promptDialog.page.setTitle("Prompt: New Folder");
@@ -257,7 +258,7 @@ dojo.declare("ResourceManager", wm.Page, {
 	}
 
 	if (targetItem.hasFileWithName(moveItem.getItemName())) {
-	    app.alert(bundleStudio.R_FileNameAlreadyExists);
+	    app.alert(this.getDictionaryItem("ALERT_NAME_EXISTS"));
 	    return;
 	}
 	var _this = this;
@@ -266,7 +267,7 @@ dojo.declare("ResourceManager", wm.Page, {
 						   function(response) {
 						     try {
 						       if (!response) {
-							   app.alert(bundleStudio.R_FailedToRenameFile);
+							   app.alert(this.getDictionaryItem("ALERT_RENAME_FAILED"));
 						       } else {
 							 var oldparent = moveNode.parent;
 							 oldparent._remove(moveNode);
@@ -292,7 +293,7 @@ dojo.declare("ResourceManager", wm.Page, {
     showLoadingIndicator: function() {
 	var loader = wm.createElement("div", {
 	    id: "_wm_loading",
-	    innerHTML: '<div id="_wm_loading" style="position: absolute; font-weight: bold; font-size: 12pt; z-index: 100; top: 40%; left: 40%;"><img alt="loading" style="vertical-align: middle" src="lib/boot/images/loader.gif" />&nbsp;Loading...</div>'});
+	    innerHTML: '<div id="_wm_loading" style="position: absolute; font-weight: bold; font-size: 12pt; z-index: 100; top: 40%; left: 40%;"><img alt="loading" style="vertical-align: middle" src="lib/boot/images/loader.gif" />&nbsp;' + this.getDictionaryItem("LOADING") + '</div>'});
 	document.body.appendChild(loader);
     },
     hideLoadingIndicator: function() {
@@ -412,7 +413,7 @@ dojo.declare("ResourceManager", wm.Page, {
 	    this.resourcePropertiesHeaderLabel.setCaption(this.selectedItem.type);
 
 	    new wm.Label({parent: this.propertiesPanel,
-			  caption: bundleStudio.R_RelativeURL,
+			  caption: this.getDictionaryItem("CAPTION_RELATIVE_URL"),
 			  width: "100%",
 			  height: "24px"});
 	    new wm.Label({parent: this.propertiesPanel,
@@ -530,7 +531,7 @@ dojo.declare("wm.ResourceMover", wm.DragDropper, {
 	  this.showHideAvatar(Boolean(this.target));	  
 	  if (this.target) {
 	    var dn = this.target.data.getItemName();
-	    this.setAvatarContent("Drop <b>" + this.info.caption + "</b>" + " into <b>" + dn + "</b>");
+	      this.setAvatarContent(this.getDictionaryItem("AVATAR_DROP", {caption: this.info.caption, target: dn}));
 	  }
 	},
 
@@ -643,14 +644,15 @@ wm.ResourceItem.extend({
     deleteItem: function() {
 	var manager = studio.resourcesPage.getComponent("resourceManager");
 
-	app.confirm(bundleStudio.R_AreYouSureDelete + ((this instanceof wm.FolderResourceItem) ? "folder" : "file") + " named '" + this.getItemName() + "'?", false,
+	app.confirm(this.getDictionaryItem("CONFIRM_DELETE", {type: this instanceof wm.FolderResourceItem ? "folder" : "file",
+							      name: this.getItemName()}), false,
                     dojo.hitch(this, function() {
 
 	                studio.resourceManagerService.requestAsync("deleteFile", [ this.getFilePath()],
                              dojo.hitch(this, function(result) { 
 		                 try {
 		                     if (!result) {
-			                 app.alert(bundleStudio.R_FailedToDelete + this.getItemName()); 
+			                 app.alert(this.getDictionaryItem("ALERT_DELETE_FAILED", {fileName: this.getItemName()}));
 			                 return;
 		                     }
 		                     var parent = this.treeNode.parent;
@@ -679,10 +681,10 @@ wm.ResourceItem.extend({
 						   function(result) {
 						     try {
 						       if (!result) {
-							   app.alert(bundleStudio.R_FailedToChangeName);
+							   app.alert(this.getDictionaryItem("ALERT_RENAME_FAILED"));
 							   return;
 						       } else if (result != inName)
-							   app.alert(bundleStudio.R_YourFileRenamed + result);
+							   app.alert(this.getDictionaryItem("ALERT_RENAME_SUCCESS", {fileName: result}));
 						       _this.setItemName(result,true);
 						       manager.forceShowPropertiesPanel();
 						       manager.updateModifiedDate();
@@ -756,7 +758,7 @@ wm.ZipResourceItem.extend({
 						   function(result) {
 						     try {
 						       if (!result) {
-							   app.alert(bundleStudio.R_FailedToUnzip);
+							   app.alert(this.getDictionaryItem("ALERT_UNZIP_FAILED"));
 							   return;
 						       }
 						       manager.loadResourcesData(true);
@@ -774,7 +776,7 @@ wm.ZipResourceItem.extend({
 wm.JarResourceItem.extend({
     checkbox: null,
     addCustomDataToPropertiesPanel: function(propertiesPanel) {
-       this.checkbox = new wm.CheckBoxEditor({caption: bundleStudio.R_InClassPath,
+	this.checkbox = new wm.CheckBoxEditor({caption: this.getDictionaryItem("CAPTION_CLASSPATH"),
 					    name: "inClassPathCheckbox",
 					    width: "100px",
 					    captionSize: "80px",
@@ -791,14 +793,14 @@ wm.JarResourceItem.extend({
 						       function(result) {
 							   if (!result) {
 							     if (isChecked)
-							       app.alert(bundleStudio.R_FailedToAddJar);
+								 app.alert(this.getDictionaryItem("ALERT_ADDJAR_FAILED"));
 							     else
-							       app.alert(bundleStudio.R_FailedToRemoveJar);
+								 app.alert(this.getDictionaryItem("ALERT_REMOVEJAR_FAILED"));
 							   } else {
 							     if (isChecked)
-							       app.alert(bundleStudio.R_FileAddedToClasspath);
+								 app.alert(this.getDictionaryItem("ALERT_ADDJAR_SUCCESS"));
 							     else
-							       app.alert(bundleStudio.R_FileRemovedFromClasspath);
+								 app.alert(this.getDictionaryItem("ALERT_REMOVEJAR_SUCCESS"));
 							   }
 						       },
                                                  dojo.hitch(app, "toastWarning"));
@@ -809,7 +811,7 @@ wm.FolderResourceItem.extend({
     addNewFolder: function(inName) {
       var manager = studio.resourcesPage.getComponent("resourceManager");
       if (this.hasFileWithName(inName)) {
-	app.alert(bundleStudio.R_ThatNameAlreadyExists);
+	  app.alert(this.getDictionaryItem("ALERT_NAME_EXISTS"));
 	return manager.addNewFolder();
       }
 
@@ -832,7 +834,7 @@ wm.FolderResourceItem.extend({
 						       function(result) {
 							 try {
 							   if (!result) {
-							       app.alert(bundleStudio.R_FailedToCreateFolder);
+							       app.alert(this.getDictionaryItem("ALERT_CREATE_FOLDER_FAILED"));
 							       return;
 							   }
 							   manager.forceShowPropertiesPanel();

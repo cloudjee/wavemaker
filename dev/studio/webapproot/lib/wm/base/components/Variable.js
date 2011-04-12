@@ -856,7 +856,15 @@ dojo.declare("wm.Variable", wm.Component, {
 			}
 		}
 		return true;
-	}
+	},
+
+    toString: function(inText) {   
+	var t = inText || "";
+	var hasData = this.data.isList ? this.data && this.data.list && this.data.list.length : wm.isEmpty(this.data);
+	t += "; " + wm.getDictionaryItem("wm.Variable.toString_TYPE", {type: this.type}) + "; " + wm.getDictionaryItem("wm.Variable.toString_ISEMPTY", {isEmpty: !hasData}); 
+	return this.inherited(arguments, [t]);
+    },
+    _end: 0
 });
 
 // FIXME: variable should have a data loader which can optionally have a liveView.

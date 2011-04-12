@@ -119,15 +119,17 @@ Studio.extend({
 		}
 		return ret;			
 	},
+    /*
 	systemComponentsToTree: function(inTree) {
 		// part components
 		var n = this.newTreeNode(inTree.root, "images/wm/pane.png", "System Components");
 		n.owner = this.page;
 		this.componentsToTree(n, this.getTreeComponents(this.page.components));
 	},
+	*/
 	pageComponentsToTree: function(inTree) {
 		// part components
-		var n = this.newTreeNode(inTree.root, "images/wm/pane.png", "Page (" + this.page.declaredClass + ")");
+	    var n = this.newTreeNode(inTree.root, "images/wm/pane.png", this.getDictionaryItem("MODELTREE_NODE_PAGE_HEADING", {className: this.page.declaredClass}));
 		n.owner = this.page;
 
 	        n.component = this.page;
@@ -168,7 +170,7 @@ Studio.extend({
 	},
 	appServicesToTree: function(inTree) {
 	    // app components
-	    var n = this.newTreeNode(inTree.root, "images/project_16t.png", "Project (" + studio.project.projectName + ")");
+	    var n = this.newTreeNode(inTree.root, "images/project_16t.png", this.getDictionaryItem("MODELTREE_NODE_PROJECT_HEADING", {projectName: studio.project.projectName}))
 	    n.component = n.owner = this.application
 	    //this.application._studioTreeNode = n;
 	    this.excTypes = [wm.Query, wm.LiveView, wm.Control];
@@ -204,7 +206,7 @@ Studio.extend({
 	},
 	appComponentsToTree: function(inTree) {
 		// app components
-		var n = this.newTreeNode(inTree.root, "images/project_16t.png", "Project (" + studio.project.projectName + ")");
+	    var n = this.newTreeNode(inTree.root, "images/project_16t.png", this.getDictionaryItem("MODELTREE_NODE_PROJECT_HEADING", {projectName: studio.project.projectName}));
 	        n.component = n.owner = this.application
 	    //this.application._studioTreeNode = n;
 	    this.excTypes = [wm.Query, wm.LiveView, wm.Control];
@@ -451,7 +453,7 @@ Studio.extend({
 	    menuObj.removeAllChildren();
 	    if (inClassName != "wm.DataModel") 
 	    menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
-					    {label: "New " + inClassName,
+					    {label: this.getDictionaryItem("MODELTREE_CONTEXTMENU_NEW", {className: inClassName}),
 					     onClick: dojo.hitch(this, function() {
 						 var props = {owner: studio.page,
 							      _designer: studio.page._designer,
@@ -481,9 +483,9 @@ Studio.extend({
 					     })
 					    });
 	    menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
-					    {label: inClassName + " docs...", 
+					    {label: this.getDictionaryItem("wm.Palette.MENU_ITEM_DOCS", {className: inClassName}),
 					     onClick: dojo.hitch(this, function() {
-						 window.open("http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/" + inClassName.replace(/^.*\./,""));
+						 window.open(this.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {className: inClassName.replace(/^.*\./,"")}));
 					     })
 					    });
 

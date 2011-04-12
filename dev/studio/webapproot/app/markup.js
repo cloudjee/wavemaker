@@ -38,6 +38,7 @@ makeMarkupIdsPropEdit = function(inName, inValue, inDefault) {
 }
 
 insertMarkupNode = function(inNode) {
+    if (!studio.markup) return [];
 	var ids = getMarkupIds();
 	if (dojo.indexOf(ids, inNode.id) == -1)
 		studio.markup.domNode.appendChild(inNode);

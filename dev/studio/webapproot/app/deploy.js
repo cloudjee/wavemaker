@@ -38,7 +38,7 @@ Studio.extend({
 		this.navGoToDeploymentPage();
 	},
         onDeployOkClicked: function(jndiNames, optionalCallback) {
-	        var msg = "Building WAR file. It may take several minutes. Please wait.";
+	    var msg = this.getDictionaryItem("WAIT_BUILDING_WAR");
 		studio.beginWait(msg);
 		var _this = this;
 
@@ -99,9 +99,9 @@ Studio.extend({
 	},
 	isSecurityEnabledResult: function(inResponse) {
 		if (inResponse) {
-			alert("In order for Live Layout to work, project security needs to be disabled.\n" +
-				"Please uncheck the 'Enable Security' check box in the Security Editor to disable security.\n" +
-				"To disable Live Layout, launch Studio in 'nolive' mode.");
+		    app.alert(this.getDictionaryItem("ALERT_LIVE_LAYOUT_SECURITY_WARNING"));
+		    
+		    
 		}
 	},
         downloadInIFrame: function(url) {
@@ -136,7 +136,7 @@ Studio.extend({
 	exportClickCallback: function(inResponse) {
 	    studio.endWait("Building ZIP File...");
 	    if (!studio.isCloud()) 
-		alert("Successfully exported project to zip file at " + inResponse + ".\n\nTo import this project unzip it into the projects directory of another studio.");
+		app.alert(this.getDictionaryItem("ALERT_BUILDING_WAR_SUCCESS", {inResponse: inResponse}));
 	    else {
 		this.downloadInIFrame("services/deploymentService.download?method=downloadProjectZip");
 	    }
@@ -151,7 +151,13 @@ Studio.extend({
 	//=====================================================================
 	getImportProjectDialog: function() {
 	  if (!this.importProjectDialog) {
-	      this.importProjectDialog = new wm.PageDialog({owner: studio, pageName: "ImportFile", width: "500px", height: "120px", hideControls: true, title: "Import Projects", modal: false});
+	      this.importProjectDialog = new wm.PageDialog({owner: studio, 
+							    pageName: "ImportFile", 
+							    width: "500px", 
+							    height: "120px", 
+							    hideControls: true, 
+							    title: this.getDictionaryItem("TITLE_IMPORT_PROJECT"), 
+							    modal: false});
 	  }
 	    return this.importProjectDialog;
 	},
@@ -177,13 +183,13 @@ Studio.extend({
 		    page.setCaption("Select Zip File");
 	      //this.importFileDialog.setContainerOptions(true, 500, 120);
               */
-              this.importFileDialog = new wm.FileUploadDialog({title: "Import Project", 
+              this.importFileDialog = new wm.FileUploadDialog({title: this.getDictionaryItem("TITLE_IMPORT_PROJECT"), 
                                                                noEscape: false,
                                                                uploadService: "deploymentService",
                                                                uploadOperation: "uploadProjectZipFile",
                                                                owner: studio
                                                               });
-              this.importFileDialog.setUserPrompt("Select a zip file for the project to import");
+              this.importFileDialog.setUserPrompt(this.getDictionaryItem("PROMPT_IMPORT_PROJECT"));
 		    this.importFileDialog.connect(this.importFileDialog, "importClickCallback", this, "importProjectClickCallback");
 		    this.importFileDialog.connect(this.importFileDialog, "importClickError", this, "importProjectClickError");
 	  }
@@ -191,7 +197,7 @@ Studio.extend({
     },
     importClick: function(inSender) {
       if (this.project.projectName) {
-	  this.confirmAppChange("Are you sure you want to close project \"${project}\"? Unsaved changes will be lost.",
+	  this.confirmAppChange(this.getDictionaryItem("CONFIRM_CLOSE_PROJECT_LOSE_UNSAVED",{projectName: this.project.projectName}),
                                 undefined, dojo.hitch(this, function() {
 	                            this.project.closeProject();
                                     //this.importFileDialog = this.getImportFileDialog().show();
@@ -205,7 +211,7 @@ Studio.extend({
       studio.endWait();
       var d = studio.startPageDialog.page.refreshProjectList();
        
-       app.toastDialog.showToast("Successfully imported project " + inResponse, 3000, "Success");		
+       app.toastDialog.showToast(this.getDictionaryItem("TOAST_IMPORT_PROJECT", {inResponse: inResponse}), 3000, "Success");		
       wm.fire(this.owner, "dismiss");
       studio.project.openProject(inResponse);
       /*
@@ -215,7 +221,7 @@ Studio.extend({
     },
    importProjectClickError: function(inSource,inError) {
       studio.endWait();
-      alert("Error occurred while importing project!\n" + inError);
+       app.alert(this.getDictionaryItem("ALERT_IMPORT_PROJECT_FAILED", {error: inError}));
     },
 
 	//=====================================================================
@@ -240,7 +246,7 @@ Studio.extend({
 		// use "require" to avoid interacting with the Dojo build system.
 		dojo["require"](inModule);
 		// if we get here, no exceptions occured
-		alert("Deployment successful.");
+	    app.alert(this.getDictionaryItem("ALERT_DEPLOY_SUCCESS"));
 		wm.fire(studio.inspector, "reinspect");
 	},
 	deployComponentError: function(inName, inNamespace, inError) {
@@ -250,7 +256,7 @@ Studio.extend({
 		} catch(e) {
 			console.debug(e);
 		}
-		alert("Deployment error: " + inError);
+	    app.alert(this.getDictionaryItem("ALERT_DEPLOY_FAILED", {error: inError}));
 	},
 	//=====================================================================
 	// Widget Undeploy
@@ -263,15 +269,16 @@ Studio.extend({
 			dojo.hitch(this, "undeployComponentError"));
 	},
 	undeployComponentCallback: function(inDisplayName, inGroup, inResponse) {
-		if (inResponse == true) {
-			studio.palette.removeItem(inGroup, inDisplayName);
-			wm.fire(studio.inspector, "reinspect");
-			alert("Undeployment successful.");
-		} else {
-			alert("Component not found.");
-		}
+	    if (inResponse == true) {
+		studio.palette.removeItem(inGroup, inDisplayName);
+		wm.fire(studio.inspector, "reinspect");
+		app.alert(this.getDictionaryItem("ALERT_UNDEPLOY_COMPONENT_SUCCESS"));
+	    } else {
+		app.alert(this.getDictionaryItem("ALERT_UNDEPLOY_COMPONENT_FAILED"));
+	    }
 	},
 	undeployComponentError: function(inError) {
-		alert("Undeployment error: " + inError);
+	    app.alert(this.getDictionaryItem("ALERT_UNDEPLOY_COMPONENT_FAILED2", {error: inError}));
+
 	}
 });

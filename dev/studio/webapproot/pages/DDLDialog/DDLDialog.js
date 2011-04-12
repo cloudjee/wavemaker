@@ -27,9 +27,9 @@ dojo.declare("DDLDialog", wm.Page, {
 	setup: function(showDDL) {
 	    this.showDDL = showDDL;
 		if (this.showDDL) {
-			    this.label1.setCaption("Are you sure you want to export the data model to your database?<br>Running the following DDL will cause tables to get dropped and you will lose data.");
+		    this.label1.setCaption(this.getDictionaryItem("LABEL1_CONFIRM"));
 		} else {
-		    this.label1.setCaption("Export Messages");
+		    this.label1.setCaption(this.getDictionaryItem("LABEL1_EXPORT"));
 		}
 
 	},

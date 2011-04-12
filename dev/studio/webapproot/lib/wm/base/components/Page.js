@@ -68,7 +68,7 @@ dojo.declare("wm.Page", wm.Component, {
 		owner = null;
 		delete this._designee;
 	},
-	/* TODO: Does't this mean that if my page name is document, then window.document property gets clobbered? (MK)*/
+
 	init: function() {
 		this.app = window.app;
 		if (this.owner instanceof wm.Application)		
@@ -104,9 +104,10 @@ dojo.declare("wm.Page", wm.Component, {
 	    var widgets = this.constructor.widgets || this.widgets;
 	    if (wm.isEmpty(widgets) && !this.isDesignLoaded()) {
 	        console.error("Page " + this.name + " has been corrupted, and no longer has a wm.Layout nor any widgets; please create a new project or edit " + this.name + ".widgets.js by hand");
-		/* TODO: Localize */
+
+		/* Some users have asked to have their own error handlers and be able to disable our toasts */
 		if (!wm.disablePageLoadingToast)
-		    app.toastError("Page " + this.name + " has errors");
+		    app.toastError(wm.getDictionaryItem("wm.Page.PAGE_ERRORS", {name: this.name}));
             }
 	    if (wm.useDojoParser) {
 		var oldOwner = wm._dojoParserCurrentOwner;

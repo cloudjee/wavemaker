@@ -90,7 +90,12 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
 		if ((this.autoUpdate || this.startUpdate) && !this._loading && this.isDesignLoaded()) {
 		  this.update();
 		}
-	}
+	},
+    toString: function(inText) {   
+	var t = inText || "";
+	t += "; " + wm.getDictionaryItem("wm.ServiceVariable.toString_FIRING", {isFiring: Boolean(this._requester)})
+	return this.inherited(arguments, [t]);
+    },
 });
 
 wm.Object.extendSchema(wm.ServiceVariable, {

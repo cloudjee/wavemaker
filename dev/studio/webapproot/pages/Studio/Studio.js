@@ -58,12 +58,12 @@ dojo.declare("Studio", wm.Page, {
 	//=========================================================================
 	start: function() {
 	    if (dojo.isIE && dojo.isIE < 8) {
-		app.alert("<p>WaveMaker applications can run on IE6 or above.</p><p>However, WaveMaker Studio requires Chrome, FireFox or IE8.</p><p>Note: if you are running WaveMaker studio in IE8, you must turn off compatibility mode.</p>");
+		app.alert(this.getDictionaryItem("ALERT_OLD_IE_BAD"));
 		app.alertDialog.setButton1Caption("");
 		return;
 	    }
 	    app._page = this;// not sure why this was failing to set, but I don't have time to investigate...
-
+	    this.neededJars = {};
 		try{
 		    this.documentationDialog = new wm.RichTextDialog({owner: this, name:"documentationDialog"});
 		    this.connect(this.documentationDialog, "onOkClick", this, "saveDocumentation");
@@ -168,6 +168,14 @@ dojo.declare("Studio", wm.Page, {
 	    dojo.connect(this._paletteToDialogButton, "onclick", this, "togglePaletteDialog");
 	    this.propertiesDialog.containerWidget.setPadding("0");
 	    this.propertiesDialog.containerWidget.setAutoScroll(false);
+
+	    this._jarsMissing = {};
+	    this.jarListService.requestAsync("getMissingJars").addCallback(dojo.hitch(this, function(inResult) {
+		for (var i = 0; i < inResult.length; i++) {
+		    this._jarsMissing[inResult[i]] = true;
+		}
+
+	    }));
 	},
 /*
 	 startPageOnStart: function() {
@@ -177,7 +185,23 @@ dojo.declare("Studio", wm.Page, {
 		}
 	 },
 	 */
+         isJarMissing: function(inName) {
+	     return this._jarsMissing[inName];
+	 },
+         handleMissingJar: function(jar, step1) {
+	     this.neededJars[jar] = true;
+	     if (!this.project.loadingProject) {
+		 this.jarDownloadDialog.page.html1.setHtml(step1);
+		 this.jarDownloadDialog.show();
+	     } else {
+		 var count = 0;
+		 for (var i in this.neededJars) count++;
+		 this.jarDownloadDialog.page["html"+count].setHtml(step1);
+		 this.jarDownloadDialog.page["layer" + (count*2-1)].show();
+		 this.jarDownloadDialog.page["layer" + (count*2)].show();
+	     }
 
+	 },
 	 handleServiceVariableError: function(inServiceVar, inError) {
 	   studio.endWait();  // if there was a beginWait call in progress, then we'd best close it in case there is no suitable error handler for the call
 	 },
@@ -186,7 +210,7 @@ dojo.declare("Studio", wm.Page, {
 		this.statusBarLabel.setCaption("Security Error <span class='StudioHelpIcon'/>");
 		var node = dojo.query(".StudioHelpIcon", this.statusBarLabel.domNode)[0];
 		dojo.connect(node, "onmouseover", this, function(e) {
-		    app.createToolTip("A security error shown here has no effect on the project you are designing.  It does indicate that we are unable to show your data within the designer.  You can typically fix this problem by running your application, logging in to your application, and then the data should show up in the designer", node, e);
+		    app.createToolTip(this.getDictionaryItem("TOOLTIP_SECURITY_ERROR"), node, e);
 		});
 		dojo.connect(node, "onmouseout", this, function() {
 		    app.hideToolTip();
@@ -222,8 +246,8 @@ dojo.declare("Studio", wm.Page, {
 		if (this._isLogout)
 			return;
 		var 
-			u = bundleStudio.MSG_PleaseNoteUnpublishedChanges,
-			s = bundleStudio.MSG_PleaseNoteUnsavedChanges,
+	    u = this.getDictionaryItem("ALERT_UNSAVED_LOST"),
+			s = this.getDictionaryItem("ALERT_NO_UNSAVED"),
 			m = this.isProjectDirty() ? u : s;
 		e.returnValue = m;
 		if (!m)
@@ -352,26 +376,26 @@ dojo.declare("Studio", wm.Page, {
 		menuObj.removeAllChildren();
 
 		menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
-						{"label": bundleStudio.M_Tutorials,
+						{"label": this.getDictionaryItem("MENU_ITEM_TUTORIALS"),
 						 iconClass: "StudioHelpIcon", 
-						 onClick: function() {window.open("http://dev.wavemaker.com/wiki/bin/wmdoc/Tutorials", "Docs");}
+						 onClick: function() {window.open(this.getDictionaryItem("URL_TUTORIALS"), "Docs");}
 						});
 		menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
-						{"label": bundleStudio.M_Documentation,
+						{"label": this.getDictionaryItem("MENU_ITEM_DOCS"),
 						 iconClass: "StudioHelpIcon", 
-						 onClick: function() {window.open("http://dev.wavemaker.com/wiki/bin/wmdoc/", "Docs");}
+						 onClick: function() {window.open(this.getDictionaryItem("URL_DOCS"), "Docs");}
 						});
 		menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
-						{"label": bundleStudio.M_JavaScriptClientDocs,
+						{"label": this.getDictionaryItem("MENU_ITEM_PROPDOCS"),
 						 iconClass: "StudioHelpIcon", 
-						 onClick: function() {window.open("http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/PropertyDocumentation", "Docs");}
+						 onClick: function() {window.open(this.getDictionaryItem("URL_PROPDOCS"), "Docs");}
 						});
 
 	    menuObj.dojoObj.addChild(new dijit.MenuSeparator());
 		menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
-						{"label": bundleStudio.M_Community,
+						{"label": this.getDictionaryItem("MENU_ITEM_COMMUNITY"),
 						 iconClass: "StudioHelpIcon", 
-						 onClick: function() {window.open("http://dev.wavemaker.com/forums", "Forums");}
+						 onClick: function() {window.open(this.getDictionaryItem("URL_FORUMS"), "Forums");}
 						});
 												
 		menuObj.update(e);
@@ -478,8 +502,8 @@ dojo.declare("Studio", wm.Page, {
 		var 
 			palette = studio.palette,
 			list = this.project.getPageList(),
-			caption = "Page Containers",
-			desc = "A page in this project.",
+	                caption = bundlePackage.PageContainers,
+			desc = bundlePackage.PageContainersDescription,
 			image ="images/wm/pane.png";
 		palette.clearSection(caption);
 		for (var i = 0, current = studio.page ? studio.page.declaredClass : "", p; (p = list[i]); i++)
@@ -493,7 +517,7 @@ dojo.declare("Studio", wm.Page, {
 			palette = studio.palette,
 			list = wm.dataSources.sources,
 			caption = bundlePackage.Database,
-			desc = "A data object in this project.",
+	                desc = bundlePackage.DatabaseDescription,
 			image ="images/wm/data.png";
 		palette.makeGroup(caption, 6);
 		palette.clearSection(caption);
@@ -506,11 +530,7 @@ dojo.declare("Studio", wm.Page, {
 		});
 	},
 	isLiveLayoutReady: function(inWarn) {
-		var r = this._liveLayoutReady;
-		if (inWarn && !r) {
-		    app.alert("Click the Live Layout button before requesting data.");
-		}
-		return r;
+	    return this._liveLayoutReady;
 	},
 	setLiveLayoutReady: function(inReady) {
 		this._liveLayoutReady = inReady;
@@ -540,7 +560,7 @@ dojo.declare("Studio", wm.Page, {
                         return true;
                     } else {
 		        if (result.dojoType != "cancel" && (!app.toastDialog.showing || app.toastDialog._toastType != "Warning" && app.toastDialog._toastType != "Error"))
-			    app.toastError('Run failed: ' + result.message);
+			    this.toastError(this.getDictionaryItem("TOAST_RUN_FAILED", {error: result.message}));
 			this._deploying = false;
 			this._runRequested = false;
 			return result;
@@ -670,7 +690,7 @@ dojo.declare("Studio", wm.Page, {
 		if (p)
 			return this._newWidget(inType, inProps, p);
 		else
-		    app.alert("No available container for the new widget.  All containers are either locked or frozen.");
+		    app.alert(this.getDictionaryItem("ALERT_NEW_WIDGET_NEEDS_CONTAINER"));// don't think this is every used
 	},
 	_marshall: function(inType) {
 		return dojo.getObject(inType) || dojo.declare(inType, wm.Label, { caption: inType });
@@ -834,21 +854,21 @@ dojo.declare("Studio", wm.Page, {
 
         keyboardShortcutsDialog: function() {
 	    var shortcuts = [
-		             {d: "Most common shortcuts"},
-			     {l: "C-w", d: "Toggle width between 100% and 100px (not supported for chrome in windows)"},
-			     {l: "C-h", d: "Toggle height between 100% and 100px"},
-			     {l: "C-m", d: "Toggle between model and palette"},
-			     {l: "C-s", d: "Save project"},
-			     {l: "C-r", d: "Run project"},
-			     {l: "ESC", d: "If dialog is open: Close the dialog"},
-			     {l: "ESC", d: "If no dialog: Select the parent of the selected widget"},
-			     {l: "DEL", d: "Delete selected component (unless a text field/property field is selected for editting in which case it edits the text field)"},
+		{d: this.getDictionaryItem("SHORTCUTS_HEADER")},
+			     {l: "C-w", d: this.getDictionaryItem("SHORTCUTS_W")},
+			     {l: "C-h", d: this.getDictionaryItem("SHORTCUTS_H")},
+			     {l: "C-m", d: this.getDictionaryItem("SHORTCUTS_M")},
+			     {l: "C-s", d: this.getDictionaryItem("SHORTCUTS_S")},
+			     {l: "C-r", d: this.getDictionaryItem("SHORTCUTS_R")},
+			     {l: "ESC", d: this.getDictionaryItem("SHORTCUTS_ESC_1")},
+			     {l: "ESC", d: this.getDictionaryItem("SHORTCUTS_ESC_2")},
+			     {l: "DEL", d: this.getDictionaryItem("SHORTCUTS_DEL")},
 
-		             {d: "Additional shortcuts"},		
-			     {l: "C-o", d: "Toggle horizontal alignment of widgets in container"},
-			     {l: "C-e", d: "toggle vertical alignment of widgets in container"},
-			     {l: "C-b", d: "Toggle layoutKind between left-to-right and top-to-bottom"},
-		             {l: "C-z", d: "Undo"}];
+		             {d: this.getDictionaryItem("SHORTCUTS_HEADER_2")},		
+			     {l: "C-o", d: this.getDictionaryItem("SHORTCUTS_O")},
+			     {l: "C-e", d: this.getDictionaryItem("SHORTCUTS_E")},
+			     {l: "C-b", d: this.getDictionaryItem("SHORTCUTS_B")},
+		             {l: "C-z", d: this.getDictionaryItem("SHORTCUTS_Z")}];
 
 	    var html = "<table>";
 	    for (var i = 0; i < shortcuts.length; i++) {
@@ -903,7 +923,7 @@ dojo.declare("Studio", wm.Page, {
 			'<table class="wmWaitDialog"><tr><td>',
 				inNoThrobber ? '' : '<div class="wmWaitThrobber">&nbsp;</div>',
 				'<div class="wmWaitMessage">',
-				inMsg || 'Please wait...',
+		    inMsg || this.getDictionaryItem("DIALOG_WAIT_MESSAGE"),
 				'</div>',
 				'<br />',
 			'</td></tr></table>',
@@ -1046,105 +1066,106 @@ dojo.declare("Studio", wm.Page, {
 			wm.fire(this.welcomePane.page, "update");
 	},*/
 	tabsCanChange: function(inSender, inChangeInfo) {
-	    switch (inSender.getLayerCaption().replace(/^\<.*?\>\s*/,"")) {
-			case bundleStudio.R_IDE:
-				setTimeout(dojo.hitch(this, function() {
-					this.cssChanged();
-					this.markupChanged();
-				}), 100);
-				break;
-		}
-		switch (inSender.getLayerCaption(inChangeInfo.newIndex).replace(/^\<.*?\>\s*/,"")) {
-			case bundleStudio.R_IDE:
-				this.widgetsHtml.setHtml('<pre style="padding: 0; width: 100%; height: 100%;">' + this.getWidgets() + "</pre>");
-		                var appsrc = this.project.generateApplicationSource();
-		                var match = appsrc.split(terminus)
+	    var newLayer = inSender.layers[inChangeInfo.newIndex];
+	    if (!newLayer) return;
+	    switch (newLayer.name) {
+	    case "sourceTab":
+		setTimeout(dojo.hitch(this, function() {
+		    this.cssChanged();
+		    this.markupChanged();
+		}), 100);
+		break;
+	    }
+	    switch (newLayer.name) {
+	    case "sourceTab":
+		this.widgetsHtml.setHtml('<pre style="padding: 0; width: 100%; height: 100%;">' + this.getWidgets() + "</pre>");
+		var appsrc = this.project.generateApplicationSource();
+		var match = appsrc.split(terminus)
 		               
-		    appsrc = (match) ? match[0] + "\n\t" + terminus + "\n});" : appsrc;
-		                this.appsourceHtml.setHtml('<pre style="padding: 0; width: 100%; height: 100%;">' + appsrc + "</pre>");
-				break;
-		}
+		appsrc = (match) ? match[0] + "\n\t" + terminus + "\n});" : appsrc;
+		this.appsourceHtml.setHtml('<pre style="padding: 0; width: 100%; height: 100%;">' + appsrc + "</pre>");
+		break;
+	    }
 	},
 	tabsChange: function(inSender) {
 	    if (!studio.page) return;
 	    
-		var caption = inSender.getLayerCaption().replace(/^\<.*?\>\s*/,"");
-
-		switch (caption) {
-			case bundleStudio.R_IDE:
-		                this.designer.showHideHandles(false);
-				this.sourceTabsChange(this.sourceTabs);
-				break;
-			case bundleStudio.T_Design:
-		                this.designer.showHideHandles(true);
-				// re-inspect when we show designer
-				if (this.selected) {
-                                    // selected object may have changed; example: 
-                                    // in liveview, I hit delete, now live view is no longer selected AND 
-                                    // we change tabs going back to the canvas.
-                                    if (this.selected == this.inspector.inspected)
-					this.inspector.reinspect();
-                                    else
-                                        this.inspector.inspect(this.selected);
-				}
-				break;
+		switch (inSender.name) {
+		case "sourceTab":
+		    this.designer.showHideHandles(false);
+		    this.sourceTabsChange(this.sourceTabs);
+		    break;
+		case "workspace":
+		    this.designer.showHideHandles(true);
+		    // re-inspect when we show designer
+		    if (this.selected) {
+                        // selected object may have changed; example: 
+                        // in liveview, I hit delete, now live view is no longer selected AND 
+                        // we change tabs going back to the canvas.
+                        if (this.selected == this.inspector.inspected)
+			    this.inspector.reinspect();
+                        else
+                            this.inspector.inspect(this.selected);
+		    }
+		    break;
 		}
 	},
 	leftTabsChange: function(inSender) {
-		var caption = inSender.getLayerCaption();
-		if (caption == bundleStudio.Palette && this.page)
-			this.navGotoDesignerClick();
+	    var layer = inSender.getActiveLayer();
+	    
+	    /* If the user goes to the palette, switch layers to the design/canvas layer */
+	    if (layer.name == "mlpal" && this.page) 
+		this.navGotoDesignerClick();
 	},
 	objectTabsChange: function(inSender) {
-		var 
-			l = inSender.getLayerCaption(),
-			tree = l == "Widgets" ? this.tree : (l == "Components" ? this.compTree : null),
-			ss = this.selected,
-			s = tree && tree.selected,
-			c = s && s.component;
-		if (tree && c && c != ss)
-			this.select(c);
+	    var layer = inSender.getActiveLayer();
+	    var n = inSender.name;
+	    /* leftObjects: visual model tab
+	     * componentModel: components tab */
+	    var tree = n == "leftObjects" ? this.tree : (l == "componentModel" ? this.compTree : null);
+	    var ss = this.selected;
+	    var s = tree && tree.selected;
+	    var c = s && s.component;
+	    if (tree && c && c != ss)
+		this.select(c);
 	},
 	sourceTabsCanChange: function(inSender, inChangeInfo) {
 	},
 	sourceTabsChange: function(inSender) {
-		var caption = inSender.getLayerCaption().replace(/^\<.*?\>\s*/,"");
+	    var layer = inSender.getActiveLayer();
 
             // darksnazzy messes with users ability to edit themes
-                dojo[(caption == bundleStudio.R_Themes) ? "removeClass" : "addClass"](this.sourceTab.domNode, "wm-darksnazzy");
-		if (caption == bundleStudio.R_Diagnostics) {
-			this.diagnosticsPane.page.update();
-		} else if (caption == bundleStudio.R_ServerLogs) {
-		    this.logViewer.page.showLogs();
+            dojo[(layer.name == "themeLayer") ? "removeClass" : "addClass"](this.sourceTab.domNode, "wm-darksnazzy");
+	    if (layer.name == "logs") {
+		this.logViewer.page.showLogs();
 
-                } else if (caption == bundleStudio.R_App_Docs) {
-		    this.generateAllDocumentation();
-
-		}
+            } else if (layer.name == "appDocs") {
+		this.generateAllDocumentation();
+	    }
 
 	},
 
         generateAllDocumentation: function() {
 	    
-	    var html = "<i>Note: this page is for reviewing documentation; to edit documentation you must go to the component in the model and select its documentation property</i>";
+	    var html = this.getDictionaryItem("GENERATE_DOCUMENTATION_HEADER");
 	    var c;
 
 	    html += "<h2>App " + studio.application.name + "</h2>";
 	    for (c in studio.application.components) {
 		var comp = studio.application.components[c];
 		if (comp.documentation || comp instanceof wm.Control == false)
-		    html += "<hr/><h3>" + comp.name + " (" + comp.declaredClass + ")</h3><div style='padding-left: 15px'>" + (comp.documentation || "No Documentation") + "</div>";
+		    html += "<hr/><h3>" + comp.name + " (" + comp.declaredClass + ")</h3><div style='padding-left: 15px'>" + (comp.documentation || this.getDictionaryItem("GENERATE_DOCUMENTATION_NODOCS")) + "</div>";
 	    }	    
 
 
-	    html += "<h2>Page " + studio.project.pageName + " Non-Visual Components</h2>";
+	    html += "<h2>" + this.getDictionaryItem("GENERATE_DOCUMENTATION_NONVISUAL_HEADER", {pageName: studio.project.pageName}) + "</h2>"
 	    for (c in studio.page.components) {
 		var comp = studio.page.components[c];
 		if (comp.documentation || comp instanceof wm.Control == false)
-		html += "<hr/><h3>" + comp.name + " (" + comp.declaredClass + ")</h3><div style='padding-left: 15px'>" + (comp.documentation || "No Documentation") + "</div>";
+		html += "<hr/><h3>" + comp.name + " (" + comp.declaredClass + ")</h3><div style='padding-left: 15px'>" + (comp.documentation || this.getDictionaryItem("GENERATE_DOCUMENTATION_NODOCS")) + "</div>";
 	    }
 
-	    html += "<h2>Page " + studio.project.pageName + " Non-Visual Components</h2>";
+	    html += "<h2>" + this.getDictionaryItem("GENERATE_DOCUMENTATION_VISUAL_HEADER", {pageName: studio.project.pageName}) + "</h2>"
 	    var widgets = wm.listOfWidgetType(wm.Control, false, true);
 	    for (var i = 0; i < widgets.length; i++) {
 		var comp = widgets[i];
@@ -1168,7 +1189,7 @@ dojo.declare("Studio", wm.Page, {
 	inflightChange: function() {
 		this.updateStatus();
 	    if (wm.inflight.getCount())
-		this.setStatusMsg("Pending Request: " + wm.Array.last(wm.inflight._inflightNames));
+		this.setStatusMsg(this.getDictionaryItem("JSON_PENDING", {name: wm.Array.last(wm.inflight._inflightNames)}));
 	    else
 		this.setStatusMsg("");
 		//this.setStatusMsg("Pending Requests: " + wm.inflight.getCount());
@@ -1338,10 +1359,10 @@ dojo.declare("Studio", wm.Page, {
 	var page = optionalPageName || inSender.getDataValue();
 	if (page == this.project.pageName) return;
 
-	var warnPage = bundleDialog.M_AreYouSureOpenPage;
+	var warnPage = this.getDictionaryItem("CONFIRM_OPEN_PAGE_LOSE_UNSAVED", {newPage: page, oldPage: this.project.pageName});
         this.confirmPageChange(warnPage, page, 
 			       dojo.hitch(this, function(noChanges) {
-				   this.waitForCallback(bundleDialog.M_OpeningPage + page + ".", dojo.hitch(this.project, "openPage", page, !noChanges));
+				   this.waitForCallback(this.getDictionaryItem("WAIT_OPENING_PAGE", {pageName: page}), dojo.hitch(this.project, "openPage", page, !noChanges));
 			       }),
 			       dojo.hitch(this, function() {
 				   this.pageSelect.setDataValue(studio.project.pageName);
@@ -1424,7 +1445,7 @@ dojo.declare("Studio", wm.Page, {
 	    app.pageDialog.showPage("UserSettings",true, 500,200);        
         },
 	logoutClick: function(inSender) {
-	    this.confirmAppChange('Are you sure you want to logout? Unsaved changes will be lost.', undefined, 
+	    this.confirmAppChange(this.getDictionaryItem("CONFIRM_LOGOUT"), undefined, 
                                   dojo.hitch(this, function() {
 		                      this._isLogout = true;
 		                      studio.securityService.requestSync("logout", [], dojo.hitch(this, "logoutSuccess"));
@@ -1473,7 +1494,7 @@ dojo.declare("Studio", wm.Page, {
 	    this.startPageDialog.page.iframe.show();
     },
     menuBarHelpClick: function() {
-	window.open("http://dev.wavemaker.com/wiki/bin/wmdoc/");
+	window.open(this.getDictionaryItem("URL_DOCS"));
     },
 /*
     mouseOverMenuBarHelp: function(inSender) {
@@ -1488,6 +1509,7 @@ dojo.declare("Studio", wm.Page, {
     },
 
     toggleInspectorDialog: function() {
+	if (!this.PIContents) return;
 	if (this.PIContents.parent == this.PIPanel) {
 	    this.PIContents.setParent(this.propertiesDialog.containerWidget);
 	    this.splitter3b.hide();
@@ -1508,6 +1530,7 @@ dojo.declare("Studio", wm.Page, {
     },
 
     togglePaletteDialog: function() {
+	if (!this.left) return;
 	if (this.left.parent == this.panel2) {
 	    this.paletteDialog.containerWidget.setPadding("0");
 	    this.left.setParent(this.paletteDialog.containerWidget);

@@ -213,8 +213,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
                          height: "100%",
                          border: "1",
                          padding: "2",
-			 /* TODO: Localize */
-                         html: "<i>No files selected</i>",
+                         html: wm.getDictionaryItem("wm.DojoFileUpload.MESSAGE_NO_FILES"),
                          showing: this.useList});
 
         this.progressBar = 
@@ -450,9 +449,8 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
         this.variable.setData([]);
         this._variable.setData([]);
         this._uploadedVariable.setData([]);
-	/* TODO: Localize */
         if (this.html)
-            this.html.setHtml("<i>No files selected</i>");
+            this.html.setHtml(wm.getDictionaryItem("wm.DojoFileUpload.MESSAGE_NO_FILES"));
     },
 
     // parameter can either be just the tmpid field value, or the entire file object from which we extract tmpid
@@ -695,8 +693,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
     onSuccess: function(fileList) {
     },
     onError: function(evt) {
-	/* TODO: Localize */
-        app.toastError("File failed to upload; " + evt);
+        app.toastError(wm.getDictionaryItem("wm.DojoFileUpload.TOAST_ONERROR", {error: evt}));
         this.progressBar.hide();
         if (this.useList) {
             this.updateHtml();

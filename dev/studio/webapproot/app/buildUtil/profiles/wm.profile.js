@@ -115,7 +115,7 @@ dependencies = {
 				// widgets
 				//"wm.base.widget.Formatters",
 				//"wm.base.widget.Editors.dijit",
-				"wm.base.widget.Editors.Base",
+				"wm.base.widget.Editors.AbstractEditor",
 				"wm.base.widget.Editors.Text",
 				//"wm.base.widget.Editors.Number",
 				//"wm.base.widget.Editors.Date",
@@ -135,7 +135,7 @@ dependencies = {
 				//"wm.base.widget.Html",
 				"wm.base.widget.Bevel",
 				//"wm.base.widget.Splitter",
-				"wm.base.widget.Button",
+				"wm.base.widget.Buttons.Button",
 				"wm.base.widget.Picture",
 				"wm.base.widget.Label",
 				/*
@@ -174,13 +174,17 @@ dependencies = {
 				//"wm.base.widget.Detail",
 				//"wm.base.widget.Form",
 				//"wm.base.widget.LiveForm",
-				"wm.base.widget.LivePanel",
 				//"wm.base.widget.DataNavigator",
 				//"wm.base.widget.Input",
 				//"wm.base.widget.TextArea",
 				//"wm.base.widget.Select",
 				"wm.base.widget.Scrim",
-				"wm.base.widget.Dialog",
+				"wm.base.widget.Dialogs.Dialog",
+				"wm.base.widget.Dialogs.Toast",
+				"wm.base.widget.Dialogs.WidgetsJsDialog",
+				"wm.base.widget.Dialogs.GenericDialog",
+				"wm.base.widget.Dialogs.PageDialog",
+				"wm.base.widget.Dialogs.DesignableDialog",
 				//"wm.base.widget.Editor",
 				//"wm.base.widget.RelatedEditor",
 				//"wm.base.widget.FileUpload",
@@ -248,7 +252,8 @@ dependencies = {
 				"dijit.MenuBarItem",
 				"dijit.PopupMenuBarItem",
 				"dijit.MenuSeparator",
-				"wm.base.widget.DojoMenu"
+			    "wm.base.widget.DojoMenu",
+			    "wm.base.widget.Buttons.PopupMenuButton",
 			]
 		},
 		{
@@ -286,23 +291,53 @@ dependencies = {
         	   "wm.base.widget.Formatters",
         	   "wm.base.widget.Editors.dijit",
                "wm.base.widget.Editor",
-               "wm.base.widget.RelatedEditor",
-               //"wm.base.widget.Editors.Base",
-               //"wm.base.widget.Editors.Text",
                "wm.base.widget.Editors.Number",
                "wm.base.widget.Editors.Date",
                "wm.base.widget.Editors.Checkbox",
                "wm.base.widget.Editors.Radiobutton",
                "wm.base.widget.Editors.Select",
-               "wm.base.widget.Editors.Slider"
+			    "wm.base.widget.Editors.Slider",
+			    "wm.base.widget.Buttons.ToggleButton",
+			    "wm.base.widget.JsonStatus"
 			]		
 		},
+		{
+			name: "wm_editors_old.js",
+			resourceName: "wm.compressed.wm_editors_old",
+			layerDependencies: ["lib_build.js"],
+			dependencies: [
+        	   "wm.base.lib.text",
+        	   "wm.base.widget.Formatters",
+        	   "wm.base.widget.Editors.dijit",
+			    "wm.base.widget.Editors.Base",
+               "wm.base.widget.Editor",
+               "wm.base.widget.Editors._NumberEditor",
+               "wm.base.widget.Editors._DateEditor",
+               "wm.base.widget.Editors._CheckBoxEditor",
+               "wm.base.widget.Editors._RadioButtonEditor",
+               "wm.base.widget.Editors._SelectEditor",
+			    "wm.base.widget.Editors.Slider"
+			]		
+		},
+
 		{
 			name: "wm_richTextEditor.js",
 			resourceName: "wm.compressed.wm_richTextEditor",
 			layerDependencies: ["lib_build.js", "wm_editors.js"],
 			dependencies: [
 			   "wm.base.widget.Editors.RichText"
+			]		
+		},
+		{
+			name: "wm_livepanel.js",
+			resourceName: "wm.compressed.wm_livepanel",
+			layerDependencies: ["lib_build.js"],
+			dependencies: [
+               "wm.base.widget.LiveForm",
+               "wm.base.widget.RelatedEditor",
+               "wm.base.widget.LivePanel",
+               "wm.base.widget.EditPanel",
+               "wm.base.widget.DataNavigator"
 			]		
 		},
 		{

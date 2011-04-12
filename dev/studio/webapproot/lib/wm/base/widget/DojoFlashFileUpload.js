@@ -69,8 +69,11 @@ dojo.declare("wm.DojoFlashFileUpload", wm.DojoFileUpload, {
     },
     setUploadImmediately: function(inVal) {
         this.uploadImmediately = inVal;
-	/* TODO: Localize */
-        this.setButtonCaption(this.uploadImmediately ? "Upload..." : "Select Files");
+	if (this.uploadImmediately) {
+            this.setButtonCaption(wm.getDictionaryItem("wm.DojoFlashFileUpload.CAPTION_UPLOAD")); //"Upload..." : "Select Files");
+	} else {
+            this.setButtonCaption(wm.getDictionaryItem("wm.DojoFlashFileUpload.CAPTION_SELECT")); //"Upload..." : "Select Files");
+	}
     },
     createButton: function() {
         this.inherited(arguments);

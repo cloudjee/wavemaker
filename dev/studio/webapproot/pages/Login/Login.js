@@ -117,8 +117,8 @@ dojo.declare("Login", wm.Page, {
 	},
 	loginFailed: function(inResponse) {
 	    this.loginButton.setDisabled(false);
-		app.alert("Invalid username or password");
-		this.loginErrorMsg.setCaption("Invalid username or password.");
+	    app.alert(this.getDictionaryItem("ALERT_LOGIN_FAILED"));
+		this.loginErrorMsg.setCaption(this.getDictionaryItem("CAPTION_LOGIN_FAILED"));
 		this.usernameInput.focus();
 	},
 	_end: 0

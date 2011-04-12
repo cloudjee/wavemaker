@@ -32,11 +32,11 @@ dojo.declare("NewJavaService", wm.Page, {
 		this.newServiceId = null;
 		this.newJavaCode = null;
 		if (srvid && cls) {
-			studio.beginWait("Creating new Java service...");
+		    studio.beginWait(this.getDictionaryItem("WAIT_CREATING"));
 			studio.javaService.requestAsync("newClass", [srvid, cls],
 				dojo.hitch(this, "newJavaClassCallback", srvid), dojo.hitch(this, "newJavaClassErrorCallback"));
 		} else {
-			app.alert("Service ID and Class Name cannot be empty!");
+		    app.alert(this.getDictionaryItem("ALERT_NEED_INPUT"));
 		}
 	},
 	cancelButtonClick: function(inSender) {

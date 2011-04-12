@@ -19,6 +19,8 @@ dojo.provide("wm.base.widget.FileUpload");
 dojo.require("wm.base.widget.Panel");
 dojo.require("dojo.io.iframe");
 
+/* DEPRECATED; will move to deprecated folder for 6.4 or 7.0 */
+
 dojo.declare("wm.FileUpload", [wm.Container, wm.ServiceCall], {
 	scrim: true,
 	box: "h",

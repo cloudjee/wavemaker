@@ -408,5 +408,5 @@ selectFirstChildNode = function(tree) {
 }
 
 askSaveChanges = function() {
-	return confirm('Discard unsaved changes?');
+    return  confirm(studio.getDictionaryItem("CONFIRM_GENERIC_DISCARD_UNSAVED"));
 }

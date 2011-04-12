@@ -63,6 +63,11 @@ _loadPackages = function( d) {
 }
 
 loadPackages = function() {
+    dojo.requireLocalization("language", "package");
+    window.bundlePackage = dojo.i18n.getLocalization("language", "package");
+
+    dojo.require("wm.studio.app.templates.widgetTemplates");
+
 	//studio.palette.beginUpdate();
 	loadData(dojo.moduleUrl("wm.studio.app") + "packages.js", _loadPackages);
 	loadData(dojo.moduleUrl("wm.packages") + "packages.js", _loadPackages);

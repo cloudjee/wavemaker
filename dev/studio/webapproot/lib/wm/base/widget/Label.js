@@ -21,7 +21,7 @@ dojo.require("wm.base.widget.Formatters");
 dojo.declare("wm.Label", wm.Control, {
 	width: "200px",
 	height: "24px",
-	caption: '',
+	caption: 'Label',
 	link: '',
 	display: '',
 	format: '(details)',
@@ -176,120 +176,6 @@ dojo.declare("wm.Label", wm.Control, {
 	},
 	onclick: function(inEvent) {
 	}
-});
-
-// design only...
-wm.Object.extendSchema(wm.Label, {
-    disabled: { ignore: 1 },
-    caption: { type: "String", bindable: 1, group: "display", order: 100, focus: true, doc: 1},
-    display: { group: "format", order: 20 },
-    align: { group: "display", order: 25, doc: 1 },
-    singleLine: { group: "display", order: 200,doc: 1},
-    format: { ignore: 1, writeonly: 1, categoryParent: "Properties", categoryProps: {component: "format"}},
-    link: { type: "String", bindable: 1, group: "format", order: 40, doc: 1 },
-    autoSizeHeight: {type: "Boolean", group: "advanced layout", order: 31, writeonly: true, ignore: true},
-    autoSizeWidth: {type: "Boolean", group: "advanced layout", order: 32, writeonly: true, ignore: true},
-    autoSize: {group: "advanced layout"},
-    setAlign: {group: "method"},
-    setCaption: {group: "method"},
-    setSingleLine: {group: "method"}
-
-    //resizeToFit:{ group: "layout", order: 30 }
-});
-
-wm.Label.description = "A simple label.";
-
-wm.Label.extend({
-        themeable: false,
-	designCreate: function() {
-		// if this is being created in studio, supply a default caption
-		if (this._studioCreating)
-			this.studioCreate();
-		this.inherited(arguments);
-	},
-	afterPaletteDrop: function() {
-		this.caption = this.caption || this.name;
-		this.renderLabel();
-	},
-	setDisplay: function(inDisplay) {
-		if (this.display == inDisplay)
-			return;
-		this.display = inDisplay;
-		var ctor = wm.getFormatter(this.display);
-		this.components.format.destroy();
-		new ctor({name: "format", owner: this});
-		this.renderLabel();
-	},
-/*
-	resizeLabel: function(){
-		var divObj = dojo.doc.createElement('span');
-		divObj.innerHTML = this.caption;
-		divObj.style.padding = '5px';
-		document.body.appendChild(divObj);
-		var coords = dojo.coords(divObj);
-		var captionWidth = coords.w;
-		divObj.parentNode.removeChild(divObj);
-		this.setWidth(captionWidth + 'px');
-		// the line underneath updates panel's width property. Therefore only required for studio.
-		if (this.isDesignLoaded())
-			setTimeout(dojo.hitch(studio.inspector, "reinspect"), 100); 		
-	},
-        */
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "display":
-				return makeSelectPropEdit(inName, inValue, [""].concat(wm.formatters), inDefault);
-/*
-			case "resizeToFit":
-				return makeReadonlyButtonEdit(inName, inValue, inDefault);
-                                */
-                        case "autoSize": 
-		                return makeSelectPropEdit(inName, (this.autoSizeHeight) ? "height" : (this.autoSizeWidth) ? "width" : "none", ["none", "width", "height"], inDefault);
-			case "align":
-				return makeSelectPropEdit(inName, inValue, ["none", "left", "center", "right", "justify"], inDefault);
-		}
-		return this.inherited(arguments);
-	},
-
-    getAutoSize: function() {
-	if (this.autoSizeWidth) return "width";
-	if (this.autoSizeHeight) return "height";
-	return "none";
-    },
-    /* This hack should only be called at design time */
-    setAutoSize: function(inValue) {
-        if (inValue == "none") {
-	    if (this.autoSizeWidth)
-		this.setAutoSizeWidth(false);
-	    if (this.autoSizeHeight)
-		this.setAutoSizeHeight(false);
-        } else if (inValue == "width") {
-            if (inValue) {
-                this.setSingleLine(true);
-            }
-	    if (!this.autoSizeWidth)
-		this.setAutoSizeWidth(true);
-	    if (this.autoSizeHeight)
-		this.setAutoSizeHeight(false);
-
-        } else if (inValue == "height") {
-            if (inValue) {
-                this.setSingleLine(false);
-            }
-	    if (this.autoSizeWidth)
-		this.setAutoSizeWidth(false);
-	    if (!this.autoSizeHeight)
-		this.setAutoSizeHeight(true);
-        }
-    },
-
-    // Any time the user changes the class for the label, recalculate autosize with the new styleing which may include font size changes	
-    addUserClass: function(inClass, inNodeName) {
-	this.inherited(arguments);
-        if (this.autoSizeHeight || this.autoSizeWidth) {
-	    this.scheduleAutoSize();
-        }
-    }
 });
 
 // NOTE: This sizing node is used by ALL classes that need a sizing node (wm.Html, wm.Base, etc...)

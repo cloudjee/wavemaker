@@ -166,7 +166,7 @@ Studio.extend({
 						    responseObj = dojo.fromJson(response);
 						
 						if (!response || !responseObj.errors || !responseObj.errors.length) {
-						    app.toastSuccess("No errors found");
+						    app.toastSuccess(this.getDictionaryItem("TOAST_CODE_VALIDATION_SUCCESS"));
 						    if (this.jscompileErrorDialog)
 							this.jscompileErrorDialog.hide();
 						} else {
@@ -177,7 +177,7 @@ Studio.extend({
 							    useContainerWidget: true,
 							    width: "220px",
 							    height: "350px",
-							    title: "Compiler Results",
+							    title: this.getDictionaryItem("TITLE_CODE_VALIDATION_DIALOG"),
 							    corner: "tr",
 							    modal: false});
 							this.jscompileErrorList = new wm.List({
@@ -258,7 +258,7 @@ Studio.extend({
 
 
     refreshScriptClick: function() {
-	app.confirm(bundleDialog.M_AreYouSureReload, false, dojo.hitch(this, function() {
+	app.confirm(this.getDictionaryItem("CONFIRM_REFRESH_SCRIPT"), false, dojo.hitch(this, function() {
             this.refreshScript();
         }));
     },	    
@@ -270,13 +270,13 @@ Studio.extend({
 
 
     importJavascriptLibrary: function() {
-	this.beginBind("Script Importer", studio.editArea, "js");
+	this.beginBind(this.getDictionaryItem("TITLE_IMPORT_JAVASCRIPT"), studio.editArea, "js");
     },
     importAppJavascriptLibrary: function() {
-	this.beginBind("Script Importer", studio.appsourceEditor, "js");
+	this.beginBind(this.getDictionaryItem("TITLE_IMPORT_JAVASCRIPT"), studio.appsourceEditor, "js");
     },
     importCssLibrary: function() {
-	this.beginBind("Css Importer", studio.cssEditArea, "css");
+	this.beginBind(this.getDictionaryItem("TITLE_IMPORT_JAVASCRIPT"), studio.cssEditArea, "css");
     },
 
     cssShow: function() {
@@ -411,9 +411,9 @@ Studio.extend({
 
 	if (!object) {
 	    if (!text)
-		app.alert("Please select text, such as 'this.button1', or 'button1', and if your page has a button1 in it, we will list suitable methods you can call on that object");
+		app.alert(this.getDictionaryItem("AUTOCOMPLETE_ALERT_SELECT_TEXT"));
 	    else
-		app.alert("\"" + text + "\" not found. Please select text, such as 'this.button1', or 'button1', and if your page has a button1 in it, we will list suitable methods you can call on that object");
+		app.alert(this.getDictionaryItem("AUTOCOMPLETE_ALERT_NOT_FOUND", {text: text}));
 	    return;
 	} else if (object == "-") {	    
 	    this._autoCompletionOriginalText = this._autoCompletionOriginalText.replace(/\.[^\.]*$/,"");
@@ -512,7 +512,7 @@ Studio.extend({
 		    if (i.indexOf("_") != 0 && object[i] instanceof wm.Component && !props[i]) {
 			if (!this._autoCompletionRemainder || i.indexOf(this._autoCompletionRemainder) == 0) {
 			    if (moreprops.length == 0)
-				moreprops.push({name: "<b>Page Components</b>"});
+				moreprops.push({name: "<b>" + this.getDictionaryItem("AUTOCOMPLETION_LABEL_PAGE_COMPONENTS") + "</b>"});
 			    moreprops.push({name: i});
 					    //description: object[i].declaredClass});
 			}
@@ -524,14 +524,11 @@ Studio.extend({
 
 	} else {
 	    if (object instanceof Number || typeof object == "number") {
-		console.log("OBJECT IS NUMBER");
-		showprops.push({name: "<b>Number</b>"});
+		showprops.push({name: "<b>" + this.getDictionaryItem("AUTOCOMPLETION_LABEL_TYPE_NUMBER") + "</b>"});
 	    } else if (object instanceof Boolean || typeof object == "boolean") {
-		console.log("OBJECT IS BOOLEAN");
-		showprops.push({name: "<b>Boolean</b>"});
+		showprops.push({name: "<b>" + this.getDictionaryItem("AUTOCOMPLETION_LABEL_TYPE_BOOLEAN") + "</b>"});
 	    } else if (object instanceof String || typeof object == "string") {
-		console.log("OBJECT IS STRING");
-		showprops.push({name: "<b>String</b>"});
+		showprops.push({name: "<b>" + this.getDictionaryItem("AUTOCOMPLETION_LABEL_TYPE_STRING") + "</b>"});
 
 	    } else {
 		try {
@@ -555,7 +552,7 @@ Studio.extend({
 
 	    this.autoCompletionDialog = new wm.Dialog({owner: this,
 						       _noAutoFocus: true,
-						       title: "Completions",
+						       title: this.getDictionaryItem("AUTOCOMPLETION_TITLE_DIALOG"),
 						       name: "autoCompletionDialog",
 						       useContainerWidget: true,
 						       width: "350px",
@@ -575,7 +572,7 @@ Studio.extend({
 				      width: "150px",
 				      height: "100%"});
 	     new wm.Label({owner: this,
-			   caption: "Properties/Methods",
+			   caption: this.getDictionaryItem("AUTOCOMPLETION_LABEL_PROPERTIES_METHODS"),
 			   _classes:{domNode:["wm_FontColor_White"]},
 			   parent: listPanel,
 			   width: "100px",
@@ -599,31 +596,31 @@ Studio.extend({
 					  singleLine: false,
 					  width: "100%",
 					  height: "48px",
-					  caption: "<b>Name:</b>"});
+					  caption: this.getDictionaryItem("AUTOCOMPLETION_LABEL_NAME", {name:""})});
 	    var typeLabel = new wm.Label({owner: this,
 					  parent: propPanel,
 					  singleLine: false,
 					  width: "100%",
 					  height: "48px",
-					  caption: "<b>Type:</b>"});
+					  caption: this.getDictionaryItem("AUTOCOMPLETION_LABEL_TYPE", {type:""})});
 	    var paramsLabel = new wm.Label({owner: this,
 					  parent: propPanel,
 					  singleLine: false,
 					  width: "100%",
 					  height: "48px",
 					    showing: false,
-					  caption: "<b>Parameters:</b>"});
+					    caption: this.getDictionaryItem("AUTOCOMPLETION_LABEL_PARAMS", {params:""})});
 	    var returnsLabel = new wm.Label({owner: this,
 					  parent: propPanel,
 					  singleLine: false,
 					  width: "100%",
 					  height: "48px",
 					    showing: false,
-					  caption: "<b>Returns:</b>"});
+					     caption: this.getDictionaryItem("AUTOCOMPLETION_LABEL_RETURN", {returns: ""})});
 
 	    new wm.Label({owner: this,
 			  _classes:{domNode:["wm_FontColor_White"]},
-			  caption: "Description",
+			  caption: this.getDictionaryItem("AUTOCOMPLETION_LABEL_DESCRIPTION"),
 			  padding: "4,4,4,10",
 			  parent: this.autoCompletionDialog.containerWidget,
 			  width: "100%",
@@ -633,7 +630,7 @@ Studio.extend({
 						   name: "autoCompletionHtml",
 						   parent: this.autoCompletionDialog.containerWidget,
 						   backgroundColor: "white",
-						   html: "Select a term to see description; double click to add it to your code",
+						   html: this.getDictionaryItem("AUTOCOMPLETION_HTML"),
 						   border: "0,0,0,0",
 						   borderColor: "#424959",
 
@@ -655,11 +652,11 @@ Studio.extend({
 		    type = itemDef.type || "";
 		else if (dojo.isObject(this._autoCompletionObject[item.name]))
 		    type = this._autoCompletionObject[item.name].declaredClass || "Object";
-		nameLabel.setCaption("<b>Name:</b><br/>&nbsp;&nbsp;&nbsp;" + item.name);
-		typeLabel.setCaption("<b>Type:</b><br/>&nbsp;&nbsp;&nbsp;" + type);
-		paramsLabel.setCaption("<b>Parameters:</b><br/>&nbsp;&nbsp;&nbsp;" + (item.params || ""));
+		nameLabel.setCaption(this.getDictionaryItem("AUTOCOMPLETION_LABEL_NAME", {name: item.name||""}));
+		typeLabel.setCaption(this.getDictionaryItem("AUTOCOMPLETION_LABEL_TYPE", {type: type||""}));
+		paramsLabel.setCaption(this.getDictionaryItem("AUTOCOMPLETION_LABEL_PARAMS", {params: item.params || ""}));
 		paramsLabel.setShowing(Boolean(item.params));
-		returnsLabel.setCaption("<b>Returns:</b><br/>&nbsp;&nbsp;&nbsp;" + (item.returns || ""));
+		returnsLabel.setCaption(this.getDictionaryItem("AUTOCOMPLETION_LABEL_RETURN", {returns: item.returns || ""}));
 		returnsLabel.setShowing(Boolean(item.returns));
 		if (item.description != "_")
 		    this.autoCompletionHtml.setHtml(item.description);
@@ -703,7 +700,7 @@ Studio.extend({
 	    }
 	}
 	if (count == 0)
-	    this.autoCompletionHtml.setHtml("We do not provide information on this kind of object");
+	    this.autoCompletionHtml.setHtml(this.getDictionaryItem("AUTOCOMPLETION_TYPE_NOT_SUPPORTED"));
 
 	this.autoCompletionDialog.setTitle(object && object.declaredClass && object instanceof wm.Page == false ? object.declaredClass : "Completions");
 	this.autoCompletionDialog.show();

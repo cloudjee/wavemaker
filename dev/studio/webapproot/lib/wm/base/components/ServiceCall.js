@@ -206,12 +206,16 @@ dojo.declare("wm.ServiceCall", null, {
     },
 	request: function(inArgs) {
             if (this.downloadFile) {
+		var useGET = true;
 	        var args = inArgs || this.input.getArgsHash();
                 this.replaceAllDateObjects(args);
-                var argString = "method=" + this.operation;
-                for (i in args) {
-                    argString += "&" + i + "=" + escape(args[i]);
-                }
+
+		if (useGET) {
+                    var argString = "method=" + this.operation;
+                    for (i in args) {
+			argString += "&" + i + "=" + escape(args[i]);
+                    }
+		}
 		      var iframe = dojo.byId("downloadFrame");
 		      if (iframe) iframe.parentNode.removeChild(iframe);
 
@@ -225,10 +229,30 @@ dojo.declare("wm.ServiceCall", null, {
 					  visibility: "hidden"}); 
 		      dojo.body().appendChild(iframe);
 
-                var baseurl = window.location.href;
-                baseurl = baseurl.replace(/\?.*$/,"");
-                baseurl = baseurl.replace(/\/[^\/]*$/,"/");
-		iframe.src = baseurl + this._service._service.serviceUrl.replace(/\.json$/,".download") + "?" + argString;
+		if (!useGET) {
+		    var form = document.createElement("form");
+		    dojo.attr(form, {id: "downloadForm",
+				     target: "downloadFrame",
+				     method: "POST",
+				     action: "runtimeService.download"});
+		    var method = document.createElement("input");
+		    dojo.attr(method, {name: "method",
+				       value: this.operation});
+		    form.appendChild(method);
+                    for (i in args) {
+			var input = document.createElement("input");
+			dojo.attr(method, {name: i,
+					   value: args[i]});		    
+			form.appendChild(input);
+                    }
+		    dojo.body().appendChild(form);
+		    form.submit();
+		} else {
+                    var baseurl = window.location.href;
+                    baseurl = baseurl.replace(/\?.*$/,"");
+                    baseurl = baseurl.replace(/\/[^\/]*$/,"/");
+		    iframe.src = baseurl + this._service._service.serviceUrl.replace(/\.json$/,".download") + "?" + argString;
+		}
             } else {
 	        var args = inArgs || this.getArgs();
                 //this.replaceAllDateObjects(args);

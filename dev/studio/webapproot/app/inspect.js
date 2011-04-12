@@ -238,23 +238,26 @@ _inspect = function(inComponent, inDoFocus) {
 
 // event inspection
 dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
-	eventActions: {
-	    noEvent: {caption: "- No Event"},
-	    jsFunc: {caption: " - Javascript..."},
-	    jsSharedFunc: {caption: " - Javascript Shared..."},
-	    newService: {caption: " - New Service..."},
-	    newLiveVar: {caption: " - New LiveVariable..."},
-	    newNavigation: {caption:" - New Navigation..."},
-	    serviceVariables: {caption: "Service Variables:", list: "serviceVariable"},
-	    navigations: {caption: "Navigations:", list: "navigationCall"},
-			existingCalls: {caption: "Shared Event Handlers:", list: "sharedEventHandlers"},
-			dialogs: {caption: "Dialogs:", list: "dialogs"},
-			dashboards: {caption: "Dashboard Add Widget:", list: "dashboards"},
-      timers: {caption: "Timers:", list: "timers"}
-	    //liveForms: {caption: "Live Forms:", list: "liveForms"}
-	},
+    constructor: function() {
+	if (!wm.EventEditor.eventActions) {
+	    wm.EventEditor.eventActions =  {
+		noEvent: {caption: studio.getDictionaryItem("wm.EventEditor.NO_EVENTS")},
+		jsFunc: {caption: studio.getDictionaryItem("wm.EventEditor.NEW_JAVASCRIPT")},
+		jsSharedFunc: {caption: studio.getDictionaryItem("wm.EventEditor.NEW_JAVASCRIPT_SHARED")},
+		newService: {caption: studio.getDictionaryItem("wm.EventEditor.NEW_SERVICE")},
+		newLiveVar: {caption: studio.getDictionaryItem("wm.EventEditor.NEW_LIVEVAR")},
+		newNavigation: {caption: studio.getDictionaryItem("wm.EventEditor.NEW_NAVIGATION")},
+		serviceVariables: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_SERVICE"), list: "serviceVariable"},
+		navigations: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_NAVIGATION"), list: "navigationCall"},
+		existingCalls: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_SHARED_JAVASCRIPT"), list: "sharedEventHandlers"},
+		dialogs: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_DIALOGS"), list: "dialogs"},
+		dashboards: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_DASHBOARDS"), list: "dashboards"},
+		timers: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_TIMERS"), list: "timers"}
+	    };
+	}
+    },
 	isEventAction: function(inValue) {
-		var ea = this.eventActions;
+		var ea = wm.EventEditor.eventActions;
 		for (var i in ea)
 			if (inValue == ea[i].caption)
 				return true;
@@ -276,7 +279,7 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 	    var items=[];
 	    var eventSchema = this.inspected.schema[this.propName];
 
-	        wm.forEachProperty(this.eventActions, function(o, name) {
+	        wm.forEachProperty(wm.EventEditor.eventActions, function(o, name) {
 				var n = o.caption, l = o.list;
 				if (l) {
 				    var a;
@@ -397,7 +400,7 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 	},
 
 	doEventAction: function(inEventName) {
-		var ea = this.eventActions, c = this.inspected, p = this.propName, v;
+		var ea = wm.EventEditor.eventActions, c = this.inspected, p = this.propName, v;
 		switch (inEventName) {
 		        case ea.noEvent.caption:
 		    this.set("value","", false);			  

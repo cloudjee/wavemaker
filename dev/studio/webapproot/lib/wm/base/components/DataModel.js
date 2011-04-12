@@ -194,6 +194,17 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
     },
     getLayerCaption: function() {
 	return this.name + " (" + studio.getDictionaryItem("wm.DataModel.TAB_CAPTION") + ")";
+    },
+
+    showOracleJarDialog: function() {
+	studio.handleMissingJar("ojdbc14.jar",
+				studio.getDictionaryItem("wm.DataModel.ORACLE_JAR_INSTRUCTIONS"));				
+
+    },
+    showDB2JarDialog: function() {
+	studio.handleMissingJar("db2jcc.jar",
+				studio.getDictionaryItem("wm.DataModel.DB2_JAR_INSTRUCTIONS"));
+	
     }
 
 });
@@ -233,6 +244,13 @@ dojo.declare("wm.DataModelLoader", null, {
 		studio.dataService.requestSync("getDataModelNames", null, function(inData) {
 			for (var i in inData) {
 				var n = inData[i];
+			        studio.dataService.requestSync(LOAD_CONNECTION_PROPS_OP, [n], function(inResponse) {
+				    if (inResponse.driverClassName == "oracle.jdbc.driver.OracleDriver" && studio.isJarMissing("ojdbc.jar")) {
+					wm.DataModel.prototype.showOracleJarDialog();
+				    } else if (inResponse.driverClassName == "com.ibm.db2.jcc.DB2Driver" && studio.isJarMissing("db2jcc.jar")) {
+					wm.DataModel.prototype.showDB2JarDialog();
+				    }
+				});
 				var c = new wm.DataModel({name: n, dataModelName: n});
 				cs.push(c);
 			}

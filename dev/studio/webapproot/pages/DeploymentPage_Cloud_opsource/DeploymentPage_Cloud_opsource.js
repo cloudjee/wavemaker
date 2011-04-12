@@ -228,15 +228,7 @@ dojo.declare("DeploymentPage_Cloud_opsource", wm.Page, {
 				}
 		}});
 
-		var htmlVal = "<font size=2>";	
-		htmlVal += "Please click <a href='http://www.opsourcecloud.com' target='_blank'>here</a> to ";
-		htmlVal += "create an OpSource account if you do not have one.<br/><br/>";
-		htmlVal += "If you have an OpSource account, please click <a href='https://admin.opsourcecloud.net/cloudui/ms/login.htm' target='_blank'>here</a> ";
-		htmlVal += "to perform the following prerequisite tasks if needed, before creating server instances.<br/><br/>";
-		htmlVal += "&nbsp;&nbsp;&nbsp;&nbsp;- Create an OpSource account<br/>";
-		htmlVal += "&nbsp;&nbsp;&nbsp;&nbsp;- Create custom server images<br/>";
-		htmlVal += "&nbsp;&nbsp;&nbsp;&nbsp;- Create networks<br/>";
-		htmlVal += "</font>";
+	var htmlVal = this.getDictionaryItem("HTML")
 		this.helpLabel.setHtml(htmlVal);
 		this.helpLabel.show();
     },
@@ -260,7 +252,7 @@ dojo.declare("DeploymentPage_Cloud_opsource", wm.Page, {
 
 		// Validate the form
 		if (!this.usernameValue || !this.passwordValue) {
-			app.alert("Please log in so you can manage your servers.  ALTERNATIVE: Download the war and use your hosting provider's tools instead.");
+		    app.alert(this.getDictionaryItem("ALERT_ENTER_CREDENTIALS"));
 			return;
 		}
 		this.showServerList();
@@ -274,7 +266,7 @@ dojo.declare("DeploymentPage_Cloud_opsource", wm.Page, {
      * Create Server Panel 
      **************************************************************************************************/
     createServerShow: function() {
-		this.callServerBaseInfo("Retrieving your server options");
+	this.callServerBaseInfo(this.getDictionaryItem("RETRIEVING_OPTIONS"));
     },
 
 	collectServerBaseInfo: function() {
@@ -304,10 +296,10 @@ dojo.declare("DeploymentPage_Cloud_opsource", wm.Page, {
      * Server List Panel 
      **************************************************************************************************/
     showServerList: function() {
-		this.callServerList("Loading your server list", "ServerListLayer");
+	this.callServerList(this.getDictionaryItem("LOADING_SERVER_LIST"), "ServerListLayer");
     },
     deleteServerClick: function() {
-	    studio.beginWait("Terminating"); // in future may be used to do more than just kill a server
+	studio.beginWait(this.getDictionaryItem("WAIT_DELETING")); // in future may be used to do more than just kill a server
 	    this.cloudServerService.requestAsync("deleteServer", 
 						 ["opsource",
 						  this.HostList.selectedItem.getData().serverId,
@@ -431,7 +423,7 @@ dojo.declare("DeploymentPage_Cloud_opsource", wm.Page, {
     callCreateServerEnabled: true,
     callCreateServer: function(inImage, inNetwork, inServerName, inDesc, inAdminPass, inLayer) {
 	if (this.callCreateServerEnabled) {
-	    studio.beginWait("Creating " + inServerName + ". It may take several minutes. Please wait.");
+	    studio.beginWait(this.getDictionaryItem("WAIT_CREATING", {serverName: inServerName}));
 	    this.cloudServerService.requestAsync("createServer", 
 						 ["opsource",
 						  inServerName,
@@ -451,7 +443,7 @@ dojo.declare("DeploymentPage_Cloud_opsource", wm.Page, {
 						  null],
 						  dojo.hitch(this,function(inResult) {
 						     studio.endWait();
-							 app.alert("Server " + this.serverName.getDataValue() + " has been created successfully");
+						      app.alert(this.getDictionaryItem("ALERT_CREATING_SUCCESS", {serverName: this.serverName.getDataValue()}));
 						     //this.showServerList();
 							 this.MainLayers.setLayer(inLayer);
 						  }),

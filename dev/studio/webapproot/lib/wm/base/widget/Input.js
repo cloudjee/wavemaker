@@ -15,7 +15,9 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 dojo.provide("wm.base.widget.Input");
+/* DEPRECATED (but still used in a few of studio's pages */
 
 dojo.declare("wm.Input", wm.Box, {
 	inputValue: "",

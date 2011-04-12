@@ -248,16 +248,9 @@ dojo.declare("DeploymentPage_Cloud_eucalyptusec2", wm.Page, {
 				}
 		}});
 
-		var htmlVal = "<font size=2>";
-		htmlVal += "In the event you would like to perform the following prerequisite tasks yourself, you may need to use <br/>";
-		htmlVal += "Eucalyptus Command Line Tools (Euca2ools).&nbsp;";
-		htmlVal += "Please click <a href='http://www.eucalyptus.com' target='_blank'>here</a> to download the tools.<br/><br/>";
-		htmlVal += "&nbsp;&nbsp;&nbsp;&nbsp;- Create server images (EMI)<br/>";
-		htmlVal += "&nbsp;&nbsp;&nbsp;&nbsp;- Create security groups<br/>";
-		htmlVal += "&nbsp;&nbsp;&nbsp;&nbsp;- Create SSH access key pairs<br/>";
-		htmlVal += "</font>";
-		this.helpLabel.setHtml(htmlVal);
-		this.helpLabel.show();
+	var htmlVal = this.getDictionaryItem("HTML");
+	this.helpLabel.setHtml(htmlVal);
+	this.helpLabel.show();
     },
     setup: function() {      
 	this.reset();      
@@ -279,7 +272,7 @@ dojo.declare("DeploymentPage_Cloud_eucalyptusec2", wm.Page, {
 
 		// Validate the form
 		if (!this.accessKeyIdValue || !this.secretAccessKeyValue) {
-			app.alert("Please log in so you can manage your servers.  ALTERNATIVE: Download the war and use your hosting provider's tools instead.");
+		    app.alert(this.getDictionaryItem("ALERT_ENTER_CREDENTIALS"));
 			return;
 		}
 		this.showServerList();
@@ -293,7 +286,7 @@ dojo.declare("DeploymentPage_Cloud_eucalyptusec2", wm.Page, {
      * Create Server Panel 
      **************************************************************************************************/
     createServerShow: function() {
-		this.callServerBaseInfo("Retrieving your server options");
+	this.callServerBaseInfo(this.getDictionaryItem("RETRIEVING_OPTIONS"));
     },
 
 	collectServerBaseInfo: function() {
@@ -489,7 +482,7 @@ dojo.declare("DeploymentPage_Cloud_eucalyptusec2", wm.Page, {
     callCreateServerEnabled: true,
     callCreateServer: function(inImage, inKeyPair, inVMType, inSecGroup, inLayer) {
 	if (this.callCreateServerEnabled) {
-	    studio.beginWait("Creating an EC2 instance. It may take several minutes. Please wait.");
+	    studio.beginWait(this.getDictionaryItem("WAIT_CREATING"));
 
 		this.serviceURL = "http://" + this.cloudIPAddr.getDataValue() + ":" + this.cloudPort.getDataValue()
 									+ "/services/Eucalyptus";
@@ -513,7 +506,7 @@ dojo.declare("DeploymentPage_Cloud_eucalyptusec2", wm.Page, {
 						  this.serviceURL],
 						  dojo.hitch(this,function(inResult) {
 						     studio.endWait();
-							 app.alert("A new EC2 instance has been created successfully");
+						      app.alert(this.getDictionaryItem("ALERT_CREATING_SUCCESS"));
 						     //this.showServerList();
 							 this.MainLayers.setLayer(inLayer);
 						  }),

@@ -9,6 +9,13 @@
 dojo.provide("wm.base.I18nPlugin");
 dojo.require("wm.base.Plugin");
 
+wm.getDictionaryItem = function(name, params) {
+    if (params == undefined)
+	return wm.locale.phrases[name];
+    else
+	    return dojo.string.substitute(wm.locale.phrases[name],params);	
+}
+
 wm.Plugin.plugin("i18n", wm.Component, {
     prepare: function(inProps) {
 	if (inProps && inProps.owner)

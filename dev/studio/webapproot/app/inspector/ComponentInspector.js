@@ -197,7 +197,7 @@ dojo.declare("wm.ComponentInspectorPanel", wm.Panel, {
 		inProps = inProps || {};
 		inProps.inspected = this.inspected && this.inspected.getId();
 		inProps._nodeName = inNodeName;
-		inProps.content = inProps.content || inNodeName;
+	        inProps.content = wm.extendSchemaDictionary["NODE_" + inNodeName] || inProps.content || inNodeName;
 		inProps.inspector = inProps.inspector || inParent.inspector;
 		inProps.image = inProps.image || inParent.image;
 		// FIXME: need to potentially create inspector if it doesn't exist
@@ -231,9 +231,9 @@ dojo.declare("wm.ComponentInspectorPanel", wm.Panel, {
 	initTree: function(inComponent) {
 		this.clearTree();
 		this.props = inComponent && inComponent.listProperties();
-		this.addTreeNode("Properties", {content: bundleStudio.I_Properties, image: "images/properties_16.png", inspector: "Properties"});
-		this.addTreeNode("Events", {content: bundleStudio.I_Events, image: "images/star_16.png", inspector: "Events"});
-		this.addTreeNode("CustomMethods", {content: bundleStudio.I_CustomMethods, image: "images/star_16.png", inspector: "CustomMethods"});
+	    this.addTreeNode("Properties", {content: studio.getDictionaryItem("wm.ComponentInpsectorPanel.PROPERTY_NODE_CAPTION"), image: "images/properties_16.png", inspector: "Properties"});
+		this.addTreeNode("Events", {content: studio.getDictionaryItem("wm.ComponentInpsectorPanel.EVENT_NODE_CAPTION"), image: "images/star_16.png", inspector: "Events"});
+		this.addTreeNode("CustomMethods", {content: studio.getDictionaryItem("wm.ComponentInpsectorPanel.CUSTOMMETHOD_NODE_CAPTION"), image: "images/star_16.png", inspector: "CustomMethods"});
 		// component props
 		var props = this.props, p;
 		for (var i in props) {

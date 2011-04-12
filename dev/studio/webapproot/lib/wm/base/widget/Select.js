@@ -17,6 +17,8 @@
  */
 dojo.provide("wm.base.widget.Select");
 
+/* DEPRECATED; use wm.base.widget.Editors.Select / wm.SelectMenu */
+
 dojo.declare("wm.Select", wm.Box, {
 	menuSize: '',
 	dataField: '',

@@ -353,10 +353,11 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 	    this.fullStructure = inStruct;
 	    this.eventList = [];
 	},
+
+    /* setStructure/getStructure are deprecated; use fullStructure instead */
 	getStructure: function(){
 	  return this.structure == '' ? {items:[]} : dojo.fromJson(this.structure); 
 	},
-
 	setStructure: function(strStructure){
 	        if (this.fullStructure && this.fullStructure.length > 0) return;
 		if (strStructure == '')
@@ -469,211 +470,14 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 			case 'MenuHover': return '.tundra .dijitMenuItemHover.';
 			case 'MenuPassiveHover': return '.tundra .dijitMenuPassive .dijitMenuItemHover.';
 		}
-	}
-});
-
-// design only...
-wm.Object.extendSchema(wm.DojoMenu, {
-    transparent: {group: "style", order: 150, type: "Boolean"},
-	caption:{ignore:1},
-        menu: {ignore: true},
-        structure:{ignore: 1,  order:10},
-        fullStructureStr: {hidden: true},
-	eventList:{hidden:true},
-	dataValue:{ignore:1},
-	dataSet: { ignore:1},
-	disabled:{ignore:1},
-        menuItems:{ignore:1},
-    editMenuItems: {group: "operation"},
-    vertical: {group: "display"},
-    openOnHover: {group: "display"}
-});
-
-wm.DojoMenu.description = "A dojo menu.";
-
-wm.DojoMenu.extend({
-
-    editMenuItems: "(Edit Menu Items)",
-
-    themeableStyles: [{name: "wm.DojoMenu-Right_Margin", displayName: "Right Margin"},
-		      {name: "wm.DojoMenu-Down_Image", displayName: "Drop Icon (MenuBar)"},
-		      {name: "wm.DojoMenu-Right_Image", displayName: "Drop Icon (SubMenu)"}],
-	designCreate: function() {
-		// if this is being created in studio, supply a default caption
-		if (this._studioCreating)
-			this.studioCreate();
-		this.inherited(arguments);
-	},
-	afterPaletteDrop: function() {
-		this.caption = this.caption || this.name;
-		this.renderDojoObj();
-	},
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-		case "editMenuItems":
-		    return makeReadonlyButtonEdit(inName, inValue, inDefault);
-		case "menu":
-				return makeTextPropEdit(inName, inValue, inDefault);
-		case "transparent":
-		    return makeCheckPropEdit(inName, inValue, inDefault);
-		}
-		
-		return this.inherited(arguments);
-	},
-
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-		case "editMenuItems":
-		    if (!studio.menuDesignerDialog) {
-			studio.menuDesignerDialog = 
-			    new wm.PageDialog({pageName: "MenuDesigner", 
-					       name: "MenuDesignerDialog",
-					       title: studio.getDictionaryItem("wm.DojoMenu.MENU_DESIGNER_TITLE"),
-					       hideControls: true,
-					       owner: studio,
-					       width: "250px",
-					       height: "350px"});
-		    }
-		    studio.menuDesignerDialog.page.setMenu(this);
-		    studio.menuDesignerDialog.show();
-		}
-	},
-
-	setOpenOnHover: function(inValue){
-		this.openOnHover = inValue;
-    if (this.dojoObj)
-		  this.dojoObj.openOnHover = this.openOnHover;
-			
-    if (this.openOnHover && !this.vertical){
-      this.hoverConnect = dojo.connect(this.dojoObj, 'onItemHover', this, '_onItemHover');  
-    } else {
-      if (this.hoverConnect)
-			 dojo.disconnect(this.hoverConnect);  
-		}
 	},
 	setMenu: function(inValue){
 		this.menu = inValue;
 		this.setStructure(inValue);
 		this.renderDojoObj();
-	},
-	listProperties: function(){
-		var props = this.inherited(arguments);
-		for (evt in props)
-		{
-			if (props[evt].isMenuItem)
-				delete props[evt];
-		}
-	    if (this.fullStructure) {
-		this.addNodesToPropList(this.fullStructure, props);
-	    } else {
-		dojo.forEach(this.eventList, function(obj){
-			props[this.getEventName(obj.label)] = {isEvent:true, isObject:false, noprop:false, type: 'string', isMenuItem:true};
-		}, this);
-	    }
-		return props;
-	},
-    addNodesToPropList: function(struct, props) {
-	for (var i = 0; i < struct.length; i++) {
-	    if (!struct[i].children || struct[i].children.length == 0)
-		props[this.getEventName(struct[i].label)] = {isEvent: true, isObject: false, noprop: false, type: "string", isMenuItem: true};
-	    if (struct[i].children)// test for children needed on upgraded projects
-		this.addNodesToPropList(struct[i].children,props);
 	}
-
-    },
-	writeEvents:function(arg){
-		var e = this.inherited(arguments);
-		return e;
-	},
-	generateEventName: function(p){
-		var name = this.inherited(arguments);
-		return this.getCleanText(name);
-	},
-	updatingEvent: function (prop, inValue){
-	    var evtObj = this.fullStructure ? this.getEventObjFull(this.fullStructure,prop) : this.getEventObj(prop);
-		if (evtObj != null)
-			evtObj.onClick = inValue;
-	},
-        getEventObjFull: function (struct,prop){
-	    for (var i = 0; i < struct.length; i++) {
-		if (this.getEventName(struct[i].label) == prop) return struct[i];
-		if (struct[i].children) {// test for children needed on upgraded projects
-		    var result = this.getEventObjFull(struct[i].children,prop);
-		    if (result) return result;
-		}
-	    }
-	},
-	getEventObj: function (prop){
-		prop = this.getCleanText(prop);
-		for (var i = 0; i < this.eventList.length; i++)
-		{
-			if (prop == this.getEventName(this.eventList[i].label))
-			{
-				return this.eventList[i];
-			}
-		}
-		
-		return null;
-	},
-	setVertical: function (inValue){
-		this.vertical = inValue;
-		if (this.vertical)
-		{
-			this.setHeight('100%');
-			this.setWidth('95px');
-		}
-		else
-		{
-			this.setHeight('35px');
-			this.setWidth('100%');
-		}
-
-		this.renderDojoObj();
-	},
-	getProp: function (inProp){
-	    var evtObj = this.fullStructure ? this.getEventObjFull(this.fullStructure,inProp) : this.getEventObj(inProp);
-		if (evtObj != null)
-			return evtObj.onClick;
-		else
-			return this.inherited(arguments);
-	},
-	setProp: function(inProp, inValue){
-	    var evtObj = this.fullStructure ? this.getEventObjFull(this.fullStructure,inProp) : this.getEventObj(inProp);
-	    if (evtObj != null) 
-			this.updatingEvent(inProp, inValue);
-		else
-			this.inherited(arguments);
-	},
-	getCleanText: function(text) {
-		return text.replace(/[^a-zA-Z0-9]+/g, '_');
-	},
-	getEventName: function(label){
-		return 'on' + this.getCleanText(label) + 'Click';	
-
-	},
-        getSharedEventLookupName: function(inProp) {
-            if (inProp.match(/^on.*Click$/)) return "onClick";
-            else return inProp;
-	},
-    renameComponentEvents: function(originalId, newId) {
-	this.renameComponentEventsMenu(this.eventList,originalId, newId);
-    },
-    renameComponentEventsMenu: function(children,originalId, newId) {
-	    for (var i = 0; i < children.length; i++)
-	    {
-		var item = children[i];
-		if (item.onClick && item.onClick == originalId)
-		    item.onClick = newId;
-		if (item.children)
-		    this.renameComponentEventsMenu(item.children,originalId,newId);
-	    }
-    },
-    write: function() {
-	if (this.fullStructure)
-	    this.fullStructureStr = dojo.toJson(this.fullStructure);
-	return this.inherited(arguments);
-    }
 });
+
 
 dojo.declare("wm.PopupMenu", wm.DojoMenu, { 
     classNames: "wmpopupmenu",
@@ -742,20 +546,4 @@ dojo.declare("wm.PopupMenu", wm.DojoMenu, {
 	delete this.dojoObj.focusedChild;
     },
     _end: 0
-});
-
-wm.Object.extendSchema(wm.PopupMenu, {
-    vertical: {ignore:true},
-    isPopupMenu: {ignore:true},
-    transparent: {ignore:true},
-    openOnHover: {ignore: true},
-    width: {ignore:true},
-    height: {ignore:true},
-    showing: {ignore:true},
-    border: {ignore:true},
-    borderColor: {ignore:true},
-    margin: {ignore:true},
-    padding: {ignore:true},
-    scrollX: {ignore:true},
-    scrollY: {ignore:true}
 });

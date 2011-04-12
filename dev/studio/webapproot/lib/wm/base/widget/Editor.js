@@ -21,6 +21,8 @@
  */
 dojo.provide("wm.base.widget.Editor");
 
+/* DEPRECATED! */
+
 wm.editors = [ 
       "Text", "Date", "Time", "Number", "Currency", "Select", "CheckBox", "TextArea", "RadioButton", "Lookup", "Slider"
 ];

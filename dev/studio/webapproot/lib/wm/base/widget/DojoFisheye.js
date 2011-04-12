@@ -189,32 +189,3 @@ wm.Object.extendSchema(wm.DojoFisheye, {
 	selectedItem: { ignore: true, isObject: true, bindSource: true, simpleBindProp: true }
 });
 
-wm.DojoFisheye.description = "A dojo Fisheye.";
-
-wm.DojoFisheye.extend({
-    themeable: false,
-	setImageUrlField: function(inValue){
-		this.imageUrlField = inValue;
-		this.renderDojoObj();
-	},
-	setImageLabelField: function(inValue){
-		this.imageLabelField = inValue;
-		this.renderDojoObj();
-	},
-	setItemMaxWidth: function(inValue){
-		this.itemMaxWidth = inValue;
-		this.renderDojoObj();
-	},
-	setItemMaxHeight: function(inValue){
-		this.itemMaxHeight = inValue;
-		this.renderDojoObj();
-	},
-	setItemHeight: function(inValue){
-		this.itemHeight = inValue;
-		this.renderDojoObj();
-	},
-	setItemWidth: function(inValue){
-		this.itemWidth = inValue;
-		this.renderDojoObj();
-	}
-});

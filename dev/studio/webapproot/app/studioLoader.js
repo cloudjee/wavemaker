@@ -41,3 +41,10 @@ dojo.require("lib.manifest", true);
 
 // Load studio code and design extensions
 dojo.require("studio.app.manifest", true);
+
+wm.locale = {};
+dojo.requireLocalization("wm.language", "components");
+wm.locale.phrases = dojo.i18n.getLocalization("wm.language", "components");
+
+dojo.requireLocalization("wm.language", "properties");
+wm.locale.props = dojo.i18n.getLocalization("wm.language", "properties");

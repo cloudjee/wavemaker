@@ -53,8 +53,6 @@
 	"M_SavingMarkup" : "Saving Markup: ",
 	"M_SavingAppScript" : "Saving Application scripts: ",
 	"M_SavingPageAs" : "Saving page as: ",
-	"M_AreYouSureOpenPage" : "Are you sure you want to open page ${newPage}? Unsaved changes to ${page} will be lost.",
-	"M_OpeningPage": "Opening page: ",
 	"M_AndPage" : ", and page ",
 	"M_AreYouSureDeleteProject" : "Are you sure you want to delete ",
 	"M_DeleteHomePage" : " is the project home page. You cannot delete the home page.",

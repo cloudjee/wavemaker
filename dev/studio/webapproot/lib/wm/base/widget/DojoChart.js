@@ -17,50 +17,6 @@
  */
 dojo.provide("wm.base.widget.DojoChart");
 
-var chartThemes = [
-      		"GreySkies",
-      		"Adobebricks",
-      		"Algae",
-      		"Bahamation",
-      		"BlueDusk",
-      		"CubanShirts",
-      		"Desert",
-      		"Dollar",
-      		"Grasshopper",
-      		"Grasslands",
-      		"IndigoNation",
-      		"Ireland",
-      		"MiamiNice",
-      		"Midwest",
-      		"Minty",
-      		"PurpleRain",
-      		"RoyalPurples",
-      		"SageToLime",
-      		"Shrooms",
-      		"Tufte",
-      		"WatersEdge",
-      		"Wetland",
-      		"PlotKit.blue",
-      		"PlotKit.cyan",
-      		"PlotKit.green",
-      		"PlotKit.orange",
-      		"PlotKit.purple",
-      		"PlotKit.red"
-      	];
-
-/* TODO: Localize */
-var chartTypes = [
-  				"Columns",
-				"ClusteredColumns",
-				"StackedColumns",
-				"Bars",
-				"ClusteredBars",
-				"StackedBars",
-				"Areas",
-				"StackedAreas",
-				"Pie",
-				"Lines"
-                  ];
 
 dojo.declare("wm.DojoChart", wm.Control, {
 	padding: 4,
@@ -72,7 +28,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	dojoObj:null,
 	theme: 'CubanShirts',
 	xAxis:'wmDefaultX',
-	isTimeXAxis: "",
+    //isTimeXAxis: "",
 	maxTimePoints:15,
 	xMajorTickStep: 5,
 	xMinorTicks:false,
@@ -204,9 +160,11 @@ dojo.declare("wm.DojoChart", wm.Control, {
 			return;
 			
 		var thisObj = this;
+/*
 		if (this.isTimeXAxis && this.dojoObj)
 			this.incrementSeries();
 		else
+		*/
 			dojo.addOnLoad(function(){thisObj.renderDojoObj();});
 	},
 	addChartSeries: function(isUpdate){
@@ -264,8 +222,10 @@ dojo.declare("wm.DojoChart", wm.Control, {
 		return ds;
 	},
 	updateXLabelSet: function (){
+/*
 		if (this.isTimeXAxis)
 			return [];
+			*/
 		this.xLabels = {};
 		if (this.xAxis == 'wmDefaultX')
 		  var ds = this.defaultXY;
@@ -302,9 +262,11 @@ dojo.declare("wm.DojoChart", wm.Control, {
 					}
 				}
 			} else {
+/*
 				if (this.isTimeXAxis)
 					x = this.getTimeX();
-				else if(xField)
+				else*/
+			    if(xField)
 					x = this.xLabels[dataObj[xField]];
 				if (x != '')
 					obj.x = x;
@@ -557,6 +519,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	    var s = today.getSeconds();
 	    var text;
 
+/*
 	    // isTimeXAxis used to be a boolean; users should update, but this will handle those users who don't.  Change made for 6.3
 	    if (this.isTimeXAxis === true)
 		this.isTimeXAxis = "hh:mm:ss";
@@ -571,6 +534,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 		text = h;
 		break;
 	    }
+	    */
 		var xAxis = this.dojoObj.getAxis('x'), labels = xAxis.opt.labels || [];
 		if (labels.length < 1) {
 			var value = 1;
@@ -597,6 +561,20 @@ dojo.declare("wm.DojoChart", wm.Control, {
 		this.dojoObj.addAxis("x", xAxis);
 		return value;
 	},
+	showAddSilverlight: function(){
+		if (!dojo.isIE || !Silverlight || Silverlight.isInstalled())
+			return;
+		this.addSilverlight = true;
+		var link = dojo.doc.createElement('a');
+		dojo.attr(link, 'href', 'http://go.microsoft.com/fwlink/?LinkId=149156');
+		dojo.attr(link, 'style', 'text-decoration: none;');
+		var img = dojo.doc.createElement('img');
+		dojo.attr(img,'src', 'http://go.microsoft.com/fwlink/?LinkId=108181');
+	        dojo.attr(img,'alt', wm.getDictionaryItem("ALT_PROMPT_SILVERLIGHT"));
+		dojo.attr(img,'style', 'border-style: none');
+		link.appendChild(img);
+		this.domNode.appendChild(link);
+	},
 	dojoChartEvent: function(e){
 		var type = e.type;
 		var idx = e.index;
@@ -620,192 +598,6 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	onMouseOver: function(e, dataObj){
 	},
 	onMouseOut: function(e, dataObj){
-	}
-});
-
-// design only...
-wm.Object.extendSchema(wm.DojoChart, {
-	variable: { ignore: 1 },
-	dojoDiv:{ignore:1},
-	caption:{ignore:1},
-	disabled:{ignore:1},
-	dataValue:{ignore:1},
-	defaultValuesX:{ignore:1},
-	defaultValuesY:{ignore:1},
-	addedSeries:{ignore:1},
-	aniHighlight:{ignore:1},
-	aniShake:{ignore:1},
-	magnify:{ignore:1},
-	aniTooltip:{ignore:1},
-	xLabels:{ignore:1},
-	legendDiv:{ignore:1},
-	legend:{ignore:1},
-	dataSet: {bindable: 1, group: "edit", order: 10, isList: true},
-	xAxis: {group: "edit", order: 20},
-    isTimeXAxis: {group: "edit", order: 21, type: "string"},
-	maxTimePoints: {group: "edit", order: 22},
-	yAxis: {group: "edit", order: 30},
-	chartColor: {group: "edit", order: 40},
-	chartType: {order: 10},
-	theme: {order: 20},
-	addSilverlight:{ignore:1}
-});
-
-wm.DojoChart.description = "A dojo chart.";
-
-wm.DojoChart.extend({
-    themeable: false,
-	designCreate: function() {
-		// if this is being created in studio, supply a default caption
-		if (this._studioCreating)
-			this.studioCreate();
-		this.inherited(arguments);
-	},
-	afterPaletteDrop: function() {
-		this.caption = this.caption || this.name;
-		this.renderDojoObj();
-	},
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "theme":
-				return makeSelectPropEdit(inName, inValue, chartThemes, inDefault);
-			case "chartType":
-				return makeSelectPropEdit(inName, inValue, chartTypes, inDefault);
-		case "isTimeXAxis":		    
-		    return makeSelectPropEdit(inName, inValue, ["", "hh:mm:ss", "hh:mm", "hh"], inDefault);
-		}
-		return this.inherited(arguments);
-	},
-	setXAxis: function(inValue){
-		this.xAxis = inValue;
-		this.renderDojoObj();
-	},
-	setYAxis: function(inValue){
-		this.yAxis = inValue;
-		this.renderDojoObj();
-	},
-	setYUpperRange: function(inValue){
-		this.yUpperRange = inValue;
-		this.renderDojoObj();
-	},
-	setChartColor: function(inValue){
-		if (inValue.indexOf(',') != -1 || this.chartType != 'Pie')
-			this.chartColor = inValue.split(',');
-		else
-			this.chartColor = inValue;
-		this.renderDojoObj();
-	},
-	setTheme:function(inValue){
-		this.theme = inValue;
-		this.setChartTheme();
-		var self = this;
-		dojo.addOnLoad(function(){
-			self.dojoRenderer();
-		});
-	},
-	setChartType: function(inValue){
-		this.chartType = inValue;
-		this.updateChartType();
-		this.dojoRenderer();
-	},
-	setLegendHeight: function(inValue){
-		this.legendHeight = inValue;
-		this.updateChartSize();
-	},
-	addUserClass: function(arg1, arg2){
-		this.inherited(arguments);
-		this.updateStyle();
-	},
-	removeUserClass: function(arg1, arg2){
-		this.inherited(arguments);
-		this.updateStyle();
-	},
-	updateStyle: function() { 
-		this.setIncludeX(this.includeX);
-		this.setIncludeY(this.includeY);
-	},
-	setIncludeX: function(inValue){
-		this.includeX = inValue;
-		if (this.includeX)
-		{
-			this.addXAxis();
-		}
-		else
-		{
-			this.dojoObj.removeAxis("x");
-		}
-		this.dojoRenderer();
-	},
-	setIncludeY: function(inValue){
-		this.includeY = inValue;
-		if (this.includeY)
-		{
-			var yProp = {vertical: true, natural: true, includeZero: true, fixUpper: "minor"};
-			var fontProp = this.getFontProperty();
-			if (fontProp)
-				dojo.mixin(yProp, fontProp);
-
-			this.dojoObj.addAxis("y", yProp);
-		}
-		else
-		{
-			this.dojoObj.removeAxis("y");
-		}
-		this.dojoRenderer();
-	},
-	setIncludeGrid:function(inValue){
-		this.includeGrid = inValue;
-		if(this.includeGrid)
-		{
-			this.dojoObj.addPlot("grid", {type: "Grid", hMinorLines: true, vMinorLines: true});
-		}
-		else
-		{
-			this.dojoObj.removePlot("grid");
-		}
-		
-		this.dojoRenderer();
-	},
-	setGap:function(inValue){
-		this.gap = inValue;
-		this.updateChartType();
-		this.dojoRenderer();
-	},
-	setEnableAnimation: function (inValue){
-		this.enableAnimation = inValue;
-		this.addAnimation();
-		this.dojoRenderer();
-	},
-	showAddSilverlight: function(){
-		if (!dojo.isIE || !Silverlight || Silverlight.isInstalled())
-			return;
-		this.addSilverlight = true;
-		var link = dojo.doc.createElement('a');
-		dojo.attr(link, 'href', 'http://go.microsoft.com/fwlink/?LinkId=149156');
-		dojo.attr(link, 'style', 'text-decoration: none;');
-		var img = dojo.doc.createElement('img');
-		dojo.attr(img,'src', 'http://go.microsoft.com/fwlink/?LinkId=108181');
-	    /* TODO: Localize */
-		dojo.attr(img,'alt', 'Get Microsoft Silverlight');
-		dojo.attr(img,'style', 'border-style: none');
-		link.appendChild(img);
-		this.domNode.appendChild(link);
-	},
-	designResize: function(inBounds){
-		this.inherited(arguments);
-		this.updateChartSize();
-	},
-	setSizeProp: function(n, v){
-		this.inherited(arguments);
-		this.updateChartSize();
-	},
-	updateChartSize: function(){
-		if (this.dojoObj != null)
-		{
-			this.updateChartDivHeight();
-			this.dojoObj.resize();
-			this.dojoObj.render();
-		}
 	}
 });
 

@@ -63,7 +63,8 @@ dojo.declare("MenuDesigner", wm.Page, {
       try {
           var parent = this.tree.selected || this.tree.root;
 	  var childCount = parent.kids.length;
-          new wm.TreeNode(parent, {closed: false, content: "Menu Item " + childCount, data: {content: "Menu Item " + childCount}});
+	  var content = this.getDictionaryItem("DEFAULT_ITEM_NAME", {index: childCount});
+          new wm.TreeNode(parent, {closed: false, content: content, data: {content: content}});
           this.updateMenu();
           
       } catch(e) {

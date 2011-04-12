@@ -94,7 +94,7 @@ dojo.declare("wm.RegularExpressionFormatter", wm.DataFormatter, {
 	init: function() {
 		/*console.log(this.expression);
 		this.expression = this.expression.replace(new RegExp(/\\/g), "\\\\");
-		console.log(this.expression);*/
+		console.log(this.expression); */
 		this.inherited(arguments);
 	},
 	format: function(inDatum) {

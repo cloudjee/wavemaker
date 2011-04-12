@@ -79,11 +79,10 @@ dojo.declare("wm.PageLoader", wm.Component, {
 		        ctor = dojo.getObject(inName);
                 }
                 if (!ctor) {
-		    /* TODO: Localize */
 		    if (!wm.disablePageLoadingToast)
-			app.toastError("Page " + inName + " has errors");
+			app.toastError(wm.getDictionaryItem("wm.Page.PAGE_ERRORS", {name: inName}));
                     console.error("Error parsing " + inPath + ".js");
-                    this.onError("Error parsing " + inPath + ".js");
+                    this.onError("Error parsing " + inPath + ".js"); // if you localize onError, then developers can't do tests on the return value
                     ctor = dojo.declare(inName, wm.Page); // so at least we can display widgets.js
 		}
 		return ctor;
@@ -141,17 +140,14 @@ dojo.declare("wm.PageLoader", wm.Component, {
 		    this.pageChanged();
 		    this.unloadSupport(ctor);
 	        } else {
-		    /* TODO: Localize */
 		    console.error("Page not found:", inClassName);
-                    this.onError("Page not found:" + inClassName);
+                    this.onError("Page not found:" + inClassName);// if you localize onError, then developers can't do tests on the return value
                 }
                 if (!this.page || !this.page.root) {
-		    /* TODO: Localize and don't call if prior onError called */
 		    console.error("Page not found:", inClassName);
-                    this.onError("Page not loaded:" + inClassName);
+                    this.onError("Page not loaded:" + inClassName);// if you localize onError, then developers can't do tests on the return value
                 }
 	    } catch(e) { 
-		    /* TODO: Localize */
 		console.error("Page not found:", inClassName);
                 this.onError(e);
             }
@@ -205,3 +201,4 @@ dojo.declare("wm.PageLoader", wm.Component, {
 	onPageChanged: function(inNewPage, inPreviousPage) {
 	}
 });
+

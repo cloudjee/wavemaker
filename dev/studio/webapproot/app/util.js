@@ -148,7 +148,10 @@ wm.openUrlDialog = function(inUrl, inTitle, inWindowName) {
 	d = wm.openUrl.dialog = new wm.Dialog({owner: studio, width: 320, height: 95});
     var
     target = ' target="' + (inWindowName || "_blank") + '"',
-    link = ['<a href="', inUrl , ,'"', target, 'style="color:#FFF" onclick="javascript:wm.openUrl.dialog.dismiss();">Popup Blocker Detected - Manually Launch ', inTitle || inUrl, '</a>'].join('');
+    link = ['<a href="', inUrl , ,'"', target, 
+	    'style="color:#FFF" onclick="javascript:wm.openUrl.dialog.dismiss();">',
+	    studio.getDictionaryItem("POPUP_BLOCKER_MESSAGE"), 
+	    ' ', inTitle || inUrl, '</a>'].join('');
     d.containerNode.innerHTML = [
 	'<table class="wmWaitDialog" width="100%" height="100%" style="border: 1px solid #363b44;">',
 	'<tr><td align="center" valign="middle">',

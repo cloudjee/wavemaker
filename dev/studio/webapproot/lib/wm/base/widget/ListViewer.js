@@ -195,34 +195,6 @@ dojo.declare("wm.ListViewer", wm.Container, {
         this.rowBorder = inBorder;
         dojo.forEach(this.rowRenderers, function(r) {r.setBorder(inBorder);});
     },
-    createNewPage: function() {
-	var pages = studio.project.getPageList();
-	studio.project.variableType = this.dataSet.type;
-
-	var l = {};
-	dojo.forEach(pages, function(p) {
-	    l[p] = true;
-	});
-        studio.promptForName("page", wm.findUniqueName("Row", [l]), pages,
-                             dojo.hitch(this, function(n) {
-				 n = wm.capitalize(n);
-				 this.pageName = n;
-                                 this._type = this.dataSet.type;
-                                 var data = this.dataSet.getData();
-                                 if (data && data.length)
-                                     this._sample = dojo.toJson(data[0]);
-				 app.confirm(studio.getDictionaryItem("wm.ListViewer.CONFIRM_SAVE_CHANGES"),
-					     false,
-					     dojo.hitch(this,function() {
-						 studio.project.saveProject(false, dojo.hitch(this, function() {
-						     studio.project.newPage(n,"wm.ListViewerRow", {template: wm.widgetSpecificTemplate.ListViewerRow, editTemplate: dojo.hitch(this, "editTemplate")});
-						 }));
-					     }),
-					     dojo.hitch(this,function() {
-						 studio.project.newPage(n,"wm.ListViewerRow", {template: wm.widgetSpecificTemplate.ListViewerRow, editTemplate: dojo.hitch(this, "editTemplate")});
-					     }));
-			     }));						 
-    },
     editTemplate: function(inWidgets) {
         // WARNING: This widget has already been destroyed before this call is made; be VERY careful what you put in here!
         var variable = inWidgets.variable;
@@ -559,7 +531,35 @@ wm.ListViewer.extend({
 				this.components.binding.addWire("", "dataSet", ds.getId());
 		} else
 			this.setDataSet(inDataSet);
-	}
+	},
+    createNewPage: function() {
+	var pages = studio.project.getPageList();
+	studio.project.variableType = this.dataSet.type;
+
+	var l = {};
+	dojo.forEach(pages, function(p) {
+	    l[p] = true;
+	});
+        studio.promptForName("page", wm.findUniqueName("Row", [l]), pages,
+                             dojo.hitch(this, function(n) {
+				 n = wm.capitalize(n);
+				 this.pageName = n;
+                                 this._type = this.dataSet.type;
+                                 var data = this.dataSet.getData();
+                                 if (data && data.length)
+                                     this._sample = dojo.toJson(data[0]);
+				 app.confirm(studio.getDictionaryItem("wm.ListViewer.CONFIRM_SAVE_CHANGES"),
+					     false,
+					     dojo.hitch(this,function() {
+						 studio.project.saveProject(false, dojo.hitch(this, function() {
+						     studio.project.newPage(n,"wm.ListViewerRow", {template: wm.widgetSpecificTemplate.ListViewerRow, editTemplate: dojo.hitch(this, "editTemplate")});
+						 }));
+					     }),
+					     dojo.hitch(this,function() {
+						 studio.project.newPage(n,"wm.ListViewerRow", {template: wm.widgetSpecificTemplate.ListViewerRow, editTemplate: dojo.hitch(this, "editTemplate")});
+					     }));
+			     }));						 
+    }
 });
 
 wm.Object.extendSchema(wm.ListViewer, {

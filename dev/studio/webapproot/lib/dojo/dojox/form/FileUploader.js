@@ -1176,7 +1176,6 @@ dojo.declare("dojox.form.FileUploader", [dijit._Widget, dijit._Templated, dijit.
 		});
 
 		dojo.addClass(this._fileInput, "dijitFileInputReal");
-		console.warn("BUILD FI")
 		this._formNode.appendChild(this._fileInput);
 		var real = dojo.marginBox(this._fileInput);
 		dojo.style(this._fileInput, {

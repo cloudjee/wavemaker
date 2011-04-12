@@ -6,9 +6,10 @@
 "wm.Control": {width: "length",
 	       "documentation": "docdocdoc",
 	       "generateDocumentation": "Gen Doc!"},
-"wm.Application": {main: "Main Page"},
+"wm.Application": {main: "Main Page"}, 
 "GROUP_OkDokie": "My Special Group",
-"GROUP_display": "Show me what you've got"
-*/
+"GROUP_display": "Show me what you've got",
 
+"NODE_Styles": "I got no style"
+*/
 }

@@ -145,11 +145,22 @@ wm.Component.extend({
 	},
 	_isWriteableComponent: function(inName, inProperties) {
 	    var c = this.components[inName];
-	    if (!inName || (c instanceof wm.Widget && !wm.isInstanceType(this.components[inName], wm.Dialog) && !wm.isInstanceType(this.components[inName], wm.ImageList) && !wm.isInstanceType(this.components[inName], wm.PopupMenu))) {
-			return false;
+
+	    /* If it has no name, then its not a user generated component, its an internal component and in any case is unsafe to write */
+	    if (!inName) {
+		return false;
 	    }
-		var ps = inProperties[inName];
-		return !ps || ((ps.writeonly || !(ps.ignore || ps.ignoretmp || ps.readonly)) && !ps.isEvent && !ps.isCustomMethod);
+
+	    /* If its a widget that is owned by something, don't write it; widgets are written as part of writing widgets NOT writing this.components.
+	     * Exceptions to this are Dialogs and PopupMenus which are outside the widget heirarchy 
+	     */
+	    else if (c instanceof wm.Control == true && c instanceof wm.Dialog == false  && c instanceof wm.PopupMenu == false) {
+		return false;
+	    }
+
+	    
+	    var ps = inProperties[inName];
+	    return !ps || ((ps.writeonly || !(ps.ignore || ps.ignoretmp || ps.readonly)) && !ps.isEvent && !ps.isCustomMethod);
 	},
 	writeComponents: function(inIndent, inOptions) {
 		// iterates over all props and checks it's writeable via isWriteableComponent
@@ -300,11 +311,13 @@ wm.Component.extend({
 		@returns {String} Html string for the property editor.
 	*/
 	makePropEdit: function(inName, inValue, inDefault) {
+	    var prop = this.schema ? this.schema[inName] : null;
+	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
 		switch (inName) {
 		   case "documentation":
-		       return makeReadonlyButtonEdit(inName, inValue, inDefault);
-		   case "generateDocumentation":
-		       return makeReadonlyButtonEdit("generateDocs", inValue, inDefault);
+		       return makeReadonlyButtonEdit(name, inValue, inDefault);
+		   case "generateDocumentation":	    
+		       return makeReadonlyButtonEdit(name, inValue, inDefault);
 		}
 
 	        if (inName.match(/^custom/) && dojo.isFunction(this.constructor.prototype[inName])) {

@@ -69,6 +69,15 @@ dojo.declare("ImportDatabase", wm.Page, {
 	},
 
 	importDBdropdownChanged: function(inSender, inValue) {
+	    if (inValue == "Oracle" && studio.isJarMissing("ojdbc.jar")) {
+		wm.DataModel.prototype.showOracleJarDialog();
+		inSender.setDisplayValue("HSQLDB");
+		return;
+	    } else if (inValue == "DB2" && studio.isJarMissing("db2jcc.jar")) {
+		wm.DataModel.prototype.showDB2JarDialog();
+		inSender.setDisplayValue("HSQLDB");
+		return;
+	    }
 
 		setupWidgetsForDatabaseType(inValue,
 					    this.ip,
@@ -121,7 +130,7 @@ dojo.declare("ImportDatabase", wm.Page, {
 	},
 	importBtnClick: function(inSender) {
 		this.dataModelName = null;
-		studio.beginWait("Importing Database...");
+	    studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING"));
 		studio.dataService.requestAsync(IMPORT_DB_OP,
 					[this.serviceNameInput.getInputValue(),
 					this.packageInput.getInputValue(),
@@ -172,11 +181,11 @@ dojo.declare("ImportDatabase", wm.Page, {
 	},
 	_connectionSucceeded: function() {
 		studio.endWait();
-		app.alert("Connection successful");
+	    app.alert(this.getDictionaryItem("ALERT_CONNECTION_SUCCESS"));
 	},
 	_connectionFailed: function(inError) {
-		studio.endWait();
-		app.alert("Connection failed: " + inError.message);
+	    studio.endWait();
+	    app.alert(this.getDictionaryItem("ALERT_CONNECTION_FAILED", {error: inError.message}));
 	},
 	_importResult: function() {
 		studio.endWait();
@@ -200,7 +209,7 @@ dojo.declare("ImportDatabase", wm.Page, {
 		if (inError.message) {
 		    msg = ": " + inError.message;
 		}
-		app.alert("Import failed " + msg + "\nSee wm.log for compiler output");
+	    app.alert(this.getDictionaryItem("ALERT_IMPORT_FAILED", {error: inError.message}));
 	},
 	_loadedIP: function(inData) {
 		this.ip = inData;

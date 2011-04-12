@@ -117,9 +117,9 @@ dojo.declare("BindSourceDialog", wm.Page, {
 	},
 	applyStayButtonClick: function() {
 	    if (this.binderSource.applyBinding(this.targetProps))
-		app.toastSuccess("Binding Added");
+		app.toastSuccess(this.getDictionaryItem("TOAST_SUCCESS"));
 	    else
-		app.toastWarning("Binding Failed");
+		app.toastWarning(this.getDictionaryItem("TOAST_FAILED"));
 	},
 	cancelButtonClick: function() {
 		wm.fire(this.owner.owner, "dismiss");

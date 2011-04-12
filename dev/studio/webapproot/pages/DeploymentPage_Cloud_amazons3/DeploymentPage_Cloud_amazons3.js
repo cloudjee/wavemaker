@@ -53,12 +53,9 @@ dojo.declare("DeploymentPage_Cloud_amazons3", wm.Page, {
 												"type": "com.wavemaker.tools.cloudmgr.CloudFile"
 											}
 									     }});
-		var htmlVal = "<font size=2>";	
-		htmlVal += "Please click <a href='http://aws.amazon.com/account' target='_blank'>here</a> to ";
-		htmlVal += "create an AWS account if you do not have one.";
-		htmlVal += "</font>";
-		this.helpLabel.setHtml(htmlVal);
-		this.helpLabel.show();
+	var htmlVal = this.getDictionaryItem("HTML");
+	this.helpLabel.setHtml(htmlVal);
+	this.helpLabel.show();
     },
     setup: function() {      
 	this.reset();      
@@ -80,7 +77,7 @@ dojo.declare("DeploymentPage_Cloud_amazons3", wm.Page, {
 
 		// Validate the form
 		if (!this.accessKeyIdValue || !this.secretAccessKeyValue) {
-			app.alert("Please log in so you can manage your containers.  ALTERNATIVE: Download the war and use your hosting provider's tools instead.");
+		    app.alert(this.getDictionaryItem("ALERT_ENTER_CREDENTIALS"));
 			return;
 		}
 		this.showContainerList();
@@ -96,7 +93,7 @@ dojo.declare("DeploymentPage_Cloud_amazons3", wm.Page, {
 
     createContainerClick: function() {
 		if (this.containerName.getDataValue().indexOf(".") != -1) {
-			app.alert("ERROR: You must not include periods (.) in the container name.");
+		    app.alert(this.getDictionaryItem("ALERT_INVALID_CONTAINER_NAME"));
 			return;
 		}
 		this.callCreateContainer(this.containerName.getDataValue(), 
@@ -119,7 +116,7 @@ dojo.declare("DeploymentPage_Cloud_amazons3", wm.Page, {
      * Container List Panel 
      **************************************************************************************************/
     showContainerList: function() {
-		this.callContainerList("Loading your container list", "ContainerListLayer");
+	this.callContainerList(this.getDictionaryItem("CONTAINER_LIST_LOADING"), "ContainerListLayer");
     },
     deleteContainerClick: function() {
 	    studio.beginWait("Deleting"); // in future may be used to do more than just kill a container
@@ -211,7 +208,7 @@ dojo.declare("DeploymentPage_Cloud_amazons3", wm.Page, {
     callCreateContainerEnabled: true,
     callCreateContainer: function(inContainerName, inLocation, inLayer) {
 	if (this.callCreateContainerEnabled) {
-	    studio.beginWait("Creating " + inContainerName + ". It may take several minutes. Please wait.");
+	    studio.beginWait(this.getDictionaryItem("WAIT_CREATING", {containerName: inContainerName}));
 	    this.cloudStorageService.requestAsync("createContainer", 
 						 ["amazon",
 						  inContainerName,

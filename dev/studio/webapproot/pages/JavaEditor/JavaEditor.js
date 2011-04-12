@@ -136,7 +136,7 @@ dojo.declare("JavaEditor", wm.Page, {
 				hideControls: true,
 				height: 180,
 			        width: 400,
-			        title: "New Java Service"
+			    title: this.getDictionaryItem("TITLE_NEW_SERVICE")
 			});
 			d.onClose = dojo.hitch(this, function(inWhy) {
 				if (inWhy == "OK")
@@ -157,7 +157,7 @@ dojo.declare("JavaEditor", wm.Page, {
 	},
 	delJavaBtnClick: function(inSender) {
 	    if (this.tree.serviceId)
-                app.confirm('Are you sure you want to delete ' + this.tree.serviceId + '?', false,
+                app.confirm(this.getDictionaryItem("CONFIRM_DELETE", {serviceName: this.tree.serviceId}), false,
                             dojo.hitch(this, function() {
 			        studio.servicesService.requestAsync("deleteService", [this.tree.serviceId], dojo.hitch(this, "deleteServiceCallback"));
                             }));
@@ -192,9 +192,9 @@ dojo.declare("JavaEditor", wm.Page, {
 	},
 	javaServiceRefreshButtonClick: function(inSender) {
 		if (this.tree.serviceId) {
-		    app.confirm("Reload service class from disk?  This will destroy any changes in this editor.", false,
+		    app.confirm(this.getDictionaryItem("CONFIRM_RELOAD"), false,
                                 dojo.hitch(this, function() {
-				studio.beginWait("Refreshing Java service...");
+				    studio.beginWait(this.getDictionaryItem("WAIT_RELOAD"));
 				studio.javaService.requestAsync("openClass", [this.tree.serviceId],
 					                        dojo.hitch(this, "refreshButtonCallback"),
 				                                dojo.hitch(this, "saveJavaServiceErrorCallback"));
@@ -231,11 +231,20 @@ dojo.declare("JavaEditor", wm.Page, {
                     //app.toastSuccess("Compiled Successfully!");
 		} else {
 		    studio._saveErrors.push({owner: this,
-					     message: 'Save or compile failed; see compiler output or wm.log'});
+					     message: this.getDictionaryItem("WARNING_COMPILE_FAILED")});
 		}
-	    var m = (inData.buildSucceeded ? "Service Compiled Successfully" : "Service Compile Failed") + " at " + 
-		dojo.date.locale.format(new Date(), {selector: "time",
-						     formatLength: "medium"}) + "\n\n";
+	    var m;
+	    if (inData.buildSucceeded) {
+		m = this.getDictionaryItem("COMPILE_LOG_SUCCESS", 
+					   {time: dojo.date.locale.format(new Date(), {selector: "time",
+										       formatLength: "medium"})});
+	    } else {
+		m = this.getDictionaryItem("COMPILE_LOG_FAILED",
+					   {time: dojo.date.locale.format(new Date(), {selector: "time",
+										       formatLength: "medium"})});
+	    }
+	    m += "\n\n";
+
 	        this.javaCompilerOutputEditor.setInputValue(m + inData.compileOutput.substring(inData.compileOutput.indexOf("compile:") + 9));
 		this.logViewer.page.clearLog();
 		this.updateJavaLogs();
@@ -258,7 +267,7 @@ dojo.declare("JavaEditor", wm.Page, {
 	saveJavaServiceErrorCallback: function(inError) {
 	        //studio.endWait();
 	    studio._saveErrors.push({owner: this,
-				     message: 'Save or compile failed with message:\n'+inError.message +'\nSee wm.log or Compiler output'});
+				     message: this.getDictionaryItem("WARNING_SAVE_FAILED", {error: inError.message})});
 	    this.onSaveError();
 	},
     showEditorHelp: function() {

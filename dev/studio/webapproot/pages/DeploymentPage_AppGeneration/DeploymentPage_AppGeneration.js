@@ -37,11 +37,11 @@ dojo.declare("DeploymentPage_AppGeneration", wm.Part, {
 					    [], 
 					    dojo.hitch(this, function(inResult) {
 							if (inResult == null) {
-								this.lastGeneratedLabel.setCaption("Application last generated on: Never");
+							    this.lastGeneratedLabel.setCaption(this.getDictionaryItem("LABEL_LAST_GENERATED_NEVER"));
 								this.downloadAppButton.setDisabled(true);
 							} else {
 								this.appTimestamp = inResult;
-								this.lastGeneratedLabel.setCaption("Application last generated on: " + new Date(inResult));
+							        this.lastGeneratedLabel.setCaption(this.getDictionaryItem("LABEL_LAST_GENERATED_NEVER", {timestamp: inResult}));
 								this.downloadAppButton.setDisabled(false);
 							}				
 					    }));
@@ -75,7 +75,7 @@ dojo.declare("DeploymentPage_AppGeneration", wm.Part, {
       // We now have an up-to-date WAR file, so the user no longer needs to click on the generate war button
       var d = new Date();
       this.appTimestamp = d.getTime();
-      this.lastGeneratedLabel.setCaption("Application last generated on: " + d);
+      this.lastGeneratedLabel.setCaption(this.getDictionaryItem("LABEL_LAST_GENERATED_NEVER", {timestamp: d}));
       this.downloadAppButton.setDisabled(false);
       studio.trackerImage.setSource("http://wavemaker.com/img/blank.gif?op=generateWar&v=" + escape(wm.studioConfig.studioVersion) + "&r=" + String(Math.random(new Date().getTime())).replace(/\D/,"").substring(0,8));
   },

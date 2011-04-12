@@ -45,25 +45,3 @@ dojo.declare("wm.Bevel", wm.Widget, {
 		this.updateSize();
 	}
 });
-
-// design-time
-wm.Object.extendSchema(wm.Bevel, {
-	vertical: { ignore: 1 },
-	disabled: { ignore: 1 },
-	border: {ignore: 1},
-	borderColor: {ignore: 1},
-	margin: {ignore: 1},
-	padding: {ignore: 1},
-	scrollX: {ignore: 1},
-        scrollY: {ignore: 1},
-        minWidth:  {ignore: 1},
-    minHeight: {ignore: 1},
-    bevelSize: {group: "layout", doc: 1}/*,
-    updateSize: {group: "method", params: "()", doc: 1}*/
-});
-
-wm.Bevel.extend({
-    themeableProps: ["bevelSize", "border", "borderColor"],
-	scrim: true,
-	sizeable: false
-});

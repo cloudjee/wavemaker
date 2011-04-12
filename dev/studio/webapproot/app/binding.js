@@ -329,11 +329,25 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	init: function() {	    
 	    this.propListVar = new wm.Variable({name: "propListVar", type: "EntryData", owner: this});
 	    dojo.addClass(this.domNode, "wmbindersource");
+
 	    this.createComponents(this._source);
+
 
 	    // FIXME: get references to widgets
 	    this.mixinWidgets(this.widgets);
 		// connections
+
+	    /* New localization section */
+	    this.searchBar.setCaption(this.getDictionaryItem("wm.BinderSource.searchBar.caption"));
+	    this.searchBar.setPlaceHolder(this.getDictionaryItem("wm.BinderSource.searchBar.placeHolder"));
+	    this.propListLabel.setCaption(this.getDictionaryItem("wm.BinderSource.propListLabel.caption", {componentName: ""}));
+	    this.simpleRb.setCaption(this.getDictionaryItem("wm.BinderSource.simpleRb.caption"));
+	    this.advancedRb.setCaption(this.getDictionaryItem("wm.BinderSource.advancedRb.caption"));
+	    this.resourceRb.setCaption(this.getDictionaryItem("wm.BinderSource.resourceRb.caption"));
+	    this.expressionRb.setCaption(this.getDictionaryItem("wm.BinderSource.expressionRb.caption"));
+	    this.bindEditor.setCaption(this.getDictionaryItem("wm.BinderSource.bindEditor.caption", {boundTo: ""}));
+	    /* End localization section */
+
 
 	    this.propList.connect(this.propList, "onselect", this,  function() {
 		_this.owner.update({object: _this.owner.targetProps.object, targetProperty: this.propList.selectedItem.getData().dataValue}, true);
@@ -420,7 +434,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		    if (selectedIndex != this.propList.getSelectedIndex())
 			this.propList.select(this.propList.getItem(selectedIndex));
                     this.owner.applyStayButton.show();
-		    this.propListLabel.setCaption(object.name + " properties");
+	    this.propListLabel.setCaption(this.owner.getDictionaryItem("wm.BinderSource.propListLabel.caption", {componentName: object.name}));
 		    this.propList.show();
 		    this.propListLabel.show();
 		} else {
@@ -596,9 +610,17 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		// servicecalls
 		//new wm.ComponentTypeSourceTreeNode(inParent, {content: "ServiceVariables", className: "wm.ServiceVariable", image: "images/wm/serviceData.png"});
 		// variables
-	    new wm.ComponentTypeSourceTreeNode(inParent, {page: studio.page, content: "Non-visual Components", className: "wm.Variable", canSelect: false, image: "images/wm/variable_16.png"});
+	    new wm.ComponentTypeSourceTreeNode(inParent, {page: studio.page, 
+							  content: this.getDictionaryItem("wm.BinderSource.NON_VISUAL"),
+							  className: "wm.Variable", 
+							  canSelect: false, 
+							  image: "images/wm/variable_16.png"});
 		// widgets
-	        new wm.WidgetContainerSourceTreeNode(inParent, {page: studio.page, content: "Visual Components", object: studio.page.root, hasSchema: true, canSelect: false});
+	        new wm.WidgetContainerSourceTreeNode(inParent, {page: studio.page, 
+								content: this.getDictionaryItem("wm.BinderSource.VISUAL"),
+								object: studio.page.root, 
+								hasSchema: true, 
+								canSelect: false});
 	},
 	_buildResourceTree: function(inParent) {	    	    
 	    var _this = this;
@@ -689,8 +711,8 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	},*/
 	applyBinding: function(inTargetProps) {
 		var
-			blankMessage = "Please select a bind value or expression.",
-			errorMessage = "Binding aborted due to the following error: ",
+	    blankMessage = this.getDictionaryItem("ALERT_BLANK_MESSAGE"),
+	    errorMessage = this.getDictionaryItem("ALERT_BIND_ERROR"),
 		        isExpression = this.isExpression(),
 		        isResource = this.isResource(),
 			s = !isExpression && !isResource && this.bindEditor.getValue("dataValue"),
@@ -901,9 +923,17 @@ dojo.declare("wm.BindTreeNode", wm.TreeNode, {
 			var pagePropertyName = inSchema[n].pageProperty;
 			var page = this.object[pagePropertyName];
 			if (page) {
-			    new wm.ComponentTypeSourceTreeNode(inParent, {page: page, content: "Non-visual Components", className: "wm.Variable", canSelect: false, image: "images/wm/variable_16.png"});
+			    new wm.ComponentTypeSourceTreeNode(inParent, {page: page, 
+									  content:  this.getDictionaryItem("wm.BinderSource.NON_VISUAL"),
+									  className: "wm.Variable", 
+									  canSelect: false, 
+									  image: "images/wm/variable_16.png"});
 			// widgets
-			    new wm.WidgetContainerSourceTreeNode(inParent, {page: page, content: "Visual Components", object: page.root, hasSchema: true, canSelect: false});			
+			    new wm.WidgetContainerSourceTreeNode(inParent, {page: page, 
+									    content: this.getDictionaryItem("wm.BinderSource.VISUAL"),
+									    object: page.root, 
+									    hasSchema: true, 
+									    canSelect: false});			
 			}
 		    } else {
 			props.push({name: n, property: inSchema[n]});

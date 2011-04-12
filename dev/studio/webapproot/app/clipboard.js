@@ -52,7 +52,7 @@ Studio.extend({
 			// could also generalize beyond layers and intercept this in createComponents
 			rp = wm.getClassProp(inClass, "_requiredParent");
 		if (!p) {
-			alert("Unable to paste.  All containers are either locked or frozen.");
+		    app.alert(studio.getDictionaryItem("ALERT_PASTE_FAILED_PANEL_LOCKED"))
 			return;
 		}
 		if (isLayer && rp && !(p instanceof dojo.getObject(rp))) {

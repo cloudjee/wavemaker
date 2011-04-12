@@ -163,8 +163,7 @@ dojo.declare("wm.Application", wm.Component, {
 		222:'"'};
 	},
     createDebugDialog: function() {
-		dojo.require("wm.base.widget.Dialog");
-		dojo.require("wm.base.widget.Tree");
+		dojo.require("wm.base.widget.Trees.DebugTree");
 		dojo.require("wm.base.components.JsonRpcService");
 		this.debugDialog = new wm.DebugDialog({owner: this, 
 						       width: "250px", 
@@ -200,11 +199,9 @@ dojo.declare("wm.Application", wm.Component, {
 		} catch(e) {
 		    if (inTheme != "wm_notheme")  {
 			this.setTheme("wm_notheme", isInit, optionalCss, optionalPrototype, noRegen);
-			/* TODO: Localize */
-			app.alert("The theme '" + inTheme + "' was not found.  This can happen when importing a project that uses a theme that is not in your library.  You can download that theme and copy it into your WaveMaker/common/themes folder or go to your model, select 'Project', and pick a new theme");
+			app.alert(wm.getDictionaryItem("wm.Application.ALERT_MISSING_THEME", {name: inTheme}));
 		    } else  {
-			/* TODO: Localize */
-			app.alert("Fatal error loading theme wm_notheme.  If you see this, please contact WaveMaker support.");
+			app.alert(wm.getDictionaryItem("wm.Application.ALERT_MISSING_NOTHEME", {name: inTheme}));
 		    }
 		return;
 		}
@@ -316,6 +313,18 @@ dojo.declare("wm.Application", wm.Component, {
             }
             wm.Application.themePrototypeData[declaredClass] = this.theme;
         }
+
+
+	/* Localization of default properties */
+	var ctorData = wm.locale.props[declaredClass];
+	if (ctorData) {
+	    for (var j in ctorData) {
+                ctor.prototype[j] = ctorData[j];
+		if (optionalWidget) optionalWidget[j] = ctorData[j];
+            }
+	}
+	/* End localization of default properties */
+
     },
     loadThemeCss: function(inThemeName, inDesign, optionalCss) {
 	    var path;
@@ -448,7 +457,9 @@ dojo.declare("wm.Application", wm.Component, {
 		this.reflow();
 	},
 	hideLoadingIndicator: function() {
-		dojo._destroyElement("_wm_loading");
+	    var l = dojo.byId("_wm_loading");
+	    if (l)
+		dojo._destroyElement(l);
 	},
 	run: function() {
 		// highlander when running
@@ -463,6 +474,7 @@ dojo.declare("wm.Application", wm.Component, {
 	doRun: function() {
 		this._pageLoader.domNode = this.domNode = dojo.byId(this.domNode) || document.body;
 		this.loadPage(app.main);
+	        this.hideLoadingIndicator();
 	},
 	start: function() {
 		//this.hideLoadingIndicator();
@@ -544,11 +556,7 @@ dojo.declare("wm.Application", wm.Component, {
 			// do nothing
 		  if (djConfig.isDebug)
 		    console.error("loadPage error: " + e);
-		}
-		finally 
-		{
-			this.hideLoadingIndicator();
-		}
+		}		
 	},
         // Provided for use in debugging. Note that when we do a better job of caching pages from server, we will need to deallocate them in this call
         forceReloadPage: function() {
@@ -596,13 +604,11 @@ dojo.declare("wm.Application", wm.Component, {
 		    this.alertDialog = new wm.GenericDialog({name: "alertDialog",
                                                              _noAnimation: true,
 							     owner: this,
-							     /* TODO: Localize */
-							     title: "Alert!",
+							     title: wm.getDictionaryItem("wm.Application.TITLE_ALERT"),
 							     noEscape: false,
 							     width: "300px",
 							     height: "180px",
-							     /* TODO: Localize */
-							     button1Caption: "OK",
+							     button1Caption: wm.getDictionaryItem("wm.Application.CAPTION_ALERT_OK"),
 							     button1Close: true,
 							     userPrompt: ""});
                 this.alertDialog.domNode.style.zIndex = 45;
@@ -628,11 +634,9 @@ dojo.declare("wm.Application", wm.Component, {
 						           noEscape: false,
 						           width: "350px",
 						           height: "180px",
-							   /* TODO: Localize */
-						           button1Caption: "OK",
+							   button1Caption: wm.getDictionaryItem("wm.Application.CAPTION_CONFIRM_OK"),
 						           button1Close: true,
-							   /* TODO: Localize */
-						           button2Caption: "Cancel",
+						           button2Caption: wm.getDictionaryItem("wm.Application.CAPTION_CONFIRM_CANCEL"),
 						           button2Close: true,
 						           userPrompt: "confirm..."});
                 this.confirmDialog.domNode.style.zIndex = 50;
@@ -643,22 +647,18 @@ dojo.declare("wm.Application", wm.Component, {
 	    this.confirmDialog.setUserPrompt(inText);
 	    this.confirmDialog.setModal(!nonmodal);
             this.confirmDialog.setShowInput(false);
-	/* TODO: Localize */
-	    this.confirmDialog.setTitle("Confirm..."),
+	    this.confirmDialog.setTitle( wm.getDictionaryItem("wm.Application.TITLE_CONFIRM"));
             this.confirmOKFunc = onOKFunc;
             this.confirmCancelFunc = onCancelFunc;
-	/* TODO: Localize */
-            this.confirmDialog.setButton1Caption(optionalOKText || "OK");
-	/* TODO: Localize */
-            this.confirmDialog.setButton2Caption(optionalCancelText || "Cancel");
+            this.confirmDialog.setButton1Caption(optionalOKText || wm.getDictionaryItem("wm.Application.CAPTION_CONFIRM_OK"));
+            this.confirmDialog.setButton2Caption(optionalCancelText || wm.getDictionaryItem("wm.Application.CAPTION_CONFIRM_CANCEL"));
             if (!noshow)
 	        this.confirmDialog.show();
         },
     prompt: function(inText, inDefaultValue, onOKFunc, onCancelFunc, optionalOKText,optionalCancelText) {
         this.confirm(inText, false, onOKFunc, onCancelFunc, optionalOKText, optionalCancelText, true);
         this.confirmDialog.setShowInput(true);
-	/* TODO: Localize */
-	this.confirmDialog.setTitle("Prompt..."),
+	this.confirmDialog.setTitle( wm.getDictionaryItem("wm.Application.TITLE_CONFIRM"));
         this.confirmDialog.setInputDataValue(inDefaultValue || "");
         this.confirmDialog.show();
     },
@@ -679,19 +679,15 @@ dojo.declare("wm.Application", wm.Component, {
             this.confirmCancelFunc();
     },
     toastError: function(inMsg, optionalDuration) {
-	/* TODO: Localize */
         this.toastDialog.showToast(inMsg, optionalDuration || 8000, "Error");
     },
     toastWarning: function(inMsg, optionalDuration) {
-	/* TODO: Localize */
         this.toastDialog.showToast(inMsg, optionalDuration || 8000, "Warning");
     },
     toastSuccess: function(inMsg, optionalDuration) {
-	/* TODO: Localize */
         this.toastDialog.showToast(inMsg, optionalDuration || 5000, "Success");
     },
     toastInfo: function(inMsg, optionalDuration) {
-	/* TODO: Localize */
         this.toastDialog.showToast(inMsg, optionalDuration || 5000, "Info");
     },
     
@@ -848,7 +844,7 @@ wm.Object.extendSchema(wm.Application, {
     main: {shortname: "mainPageName"},
     promptChromeFrame: {shortname: "chromeFrame (NA)", ignore: 1},
     theme: {type: "string"},
-    //IERoundedCorners: {type: "boolean"},
+    //IERoundedCorners: {ignore: true},
     studioVersion: {writeonly: true, type: "string"},
     dialogAnimationTime: {type: "number"},
     projectVersion: {type: "string"},

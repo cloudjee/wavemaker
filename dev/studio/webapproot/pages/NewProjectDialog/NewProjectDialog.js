@@ -113,7 +113,7 @@ dojo.declare("NewProjectDialog", wm.Page, {
 
             if (projectNames[this.projectName.getDataValue()]) {
                 var newname = wm.findUniqueName(this.projectName.getDataValue(), [projectNames]);
-                app.toastDialog.showToast("The Project name \"" + this.projectName.getDataValue() + "\" is already taken; name changed to \"" + newname + "\"", 8000, "Warning", "tc");
+                app.toastDialog.showToast(this.getDictionaryItem("TOAST_NAME_TAKEN", {oldName: this.projectName.getDataValue(), newName: newname}), 8000, "Warning", "tc");
                 this.projectName.setDataValue(newname);
             } else {
                 this._onOkClick();

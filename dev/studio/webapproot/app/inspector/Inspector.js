@@ -310,8 +310,8 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 
 	generateHeaderCells: function() {
 		return [
-			'<th class="wminspector-header" style="width: 30%;">' + bundleStudio.I_Property + '</th>',
-		    '<th class="wminspector-header">' + bundleStudio.I_Value + '</th>'
+		    '<th class="wminspector-header" style="width: 30%;">' + studio.getDictionaryItem("wm.Inspector.PROPERTIES_HEADER_CAPTION") + '</th>',
+		    '<th class="wminspector-header">' + studio.getDictionaryItem("wm.Inspector.VALUES_HEADER_CAPTION") + '</th>'
 		];
 	},
 	generateTableContent: function() {

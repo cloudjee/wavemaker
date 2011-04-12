@@ -175,7 +175,7 @@ dojo.declare("wm.Palette", wm.Tree, {
 		var menuObj = studio.contextualMenu;
 		menuObj.removeAllChildren();
 		menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
-						{label: "Copy New " + inNode.klass,
+						{label: studio.getDictionaryItem("wm.Palette.MENU_ITEM_COPY", {className: inNode.klass}),
 						 iconClass: "Studio_canvasToolbarImageList16_3",
 						 onClick: dojo.hitch(this, function() {
 						     studio.clipboard = "{" + inNode.klass.replace(/^.*\./,"") + "1: ['" + inNode.klass + "'," + (inNode.props ? dojo.toJson(inNode.props) : "{}") + "]}";
@@ -186,10 +186,10 @@ dojo.declare("wm.Palette", wm.Tree, {
 						});
 
 		menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
-						{label: inNode.klass + " docs...", 
+						{label: studio.getDictionaryItem("wm.Palette.MENU_ITEM_DOCS", {className: inNode.klass}),
 						 iconClass: "StudioHelpIcon", 
 						 onClick: dojo.hitch(this, function() {
-						     window.open("http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/" + inNode.klass.replace(/^.*\./,""));
+						     window.open(studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {className: inNode.klass, shortName: inNode.klass.replace(/^.*\./,"")}));
 						 })
 						});
 
@@ -255,13 +255,13 @@ dojo.declare("wm.Palette", wm.Tree, {
 	studio.paletteTips.setCaption( "<span class='StudioHelpIcon'>&nbsp;</span>" + data.description);
 	var node = dojo.query(".StudioHelpIcon", studio.paletteTips.domNode)[0];
 	dojo.connect(node, "onmouseover", this, function(e) {
-	    app.createToolTip("Click for docs", node, e, "100px");
+	    app.createToolTip(studio.getDictionaryItem("wm.Palette.TIP_DOCS"), node, e, "100px");
 	});
 	dojo.connect(node, "onmouseout", this, function() {
 	    app.hideToolTip();
 	});
 	dojo.connect(node, "onclick", this, function(e) {
-	    window.open("http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/" + inNode.klass.replace(/^.*\./,""));
+	    window.open(studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {className: inNode.klass, shortName: inNode.klass.replace(/^.*\./,"")}));
 	});
 
     },

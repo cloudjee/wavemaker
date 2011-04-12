@@ -405,8 +405,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		var livevar = this.liveVariables[0];
 		if (livevar._requester) { 
 		    // could just create a new variable, but I'm being lazy for my first pass
-		    /* TODO: Localize, though hope this will be removed */
-		    app.toastWarning("Please wait until all edits are saved before deleting");
+		    app.toastWarning(wm.getDictionaryItem("wm.DojoGrid.TOAST_DELETE_LATER"))
 		    return;
 		}
 		livevar.operation = "delete";

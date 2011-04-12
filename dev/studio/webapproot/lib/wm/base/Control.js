@@ -1327,9 +1327,11 @@ this.label.enable();
 	enable: function() {
 		this.setValue("disabled", false);
 	},
-	toString: function() {
-	    /* TODO: Localize */
-	    return '[' + this.declaredClass + ((this.name) ? ':' + this.name : "") + ((!this.showing) ? "(hidden)" : "") + ']';
+	toString: function(inText) {   
+	    var t = inText || "";
+	    if (!this.showing)
+		t += "(" + wm.getDictionaryItem("wm.Control.toString_HIDDEN") + ")";
+	    return this.inherited(arguments, [t]);
 	},
 	//===========================================================================
 	// Setters

@@ -19,25 +19,25 @@ dojo.provide("wm.studio.app.inspector.StyleInspector");
 dojo.require("wm.studio.app.inspector.Inspector");
 
 dojo.declare("wm.StyleInspector", [wm.Layers, wm.InspectorBase], {
-	layersType: 'Tabs',
-        clientBorder: "2,0,0,0",
-        clientBorderColor: "#959DAB",
-	flex: 1,
-	box: 'v',
-	_source: {
-		properties: ["wm.Layer", {flex: 1, title: bundleStudio.I_BasicStyles, box: "v"}, {}, {
+    layersType: 'Tabs',
+    clientBorder: "2,0,0,0",
+    clientBorderColor: "#959DAB",
+    flex: 1,
+    box: 'v',
+    _source: {
+	    properties: ["wm.Layer", {flex: 1, caption: "", box: "v"}, {}, {
 		    stylePropHtml: ["wm.Html", {width: "100%", height: "100%"}]
 		}],
 
-		classes: ["wm.Layer", {flex: 1, title: bundleStudio.I_Classes, box: "v"}, {}, {
+		classes: ["wm.Layer", {flex: 1, caption: "", box: "v"}, {}, {
 			classTree: ["wm.Tree", {flex: 1}, {}, {}],
 			bevel1: ["wm.Bevel", {}, {}, {}],
-		        classEdit: ["wm.Text", {changeOnEnter: true, caption: bundleStudio.I_Custom, captionSize: "60px", height: "22px"}, {}, {}]
+		        classEdit: ["wm.Text", {changeOnEnter: true, caption: "", captionSize: "60px", height: "22px"}, {}, {}]
 		}],
-		custom: ["wm.Layer", {flex: 1, title: bundleStudio.I_Custom_Styles, box: "v"}, {}, {
+		custom: ["wm.Layer", {flex: 1, caption: "", box: "v"}, {}, {
 		    textArea: ["wm.LargeTextArea", {width: "100%", height: "100%", border: 0}, {}, {}],
 			panel1: ["wm.Panel", {_classes: {domNode: [ "wm-darksnazzy"]}, layoutKind: "left-to-right", height: "34", boxPosition: "bottomRight", border: 0, padding: 2}, {}, {
-				applyStylesButton: ["wm.Button", {caption: bundleStudio.I_Apply, border: 1, width: "60"}, {}]
+				applyStylesButton: ["wm.Button", {caption: "", border: 1, width: "60"}, {}]
 			}]
 		}]
 	},
@@ -60,6 +60,12 @@ dojo.declare("wm.StyleInspector", [wm.Layers, wm.InspectorBase], {
 		dojo.addClass(this.layers[0].domNode, "wminspector");
 		dojo.addClass(this.layers[1].domNode, "wmstyleinspector");
 		dojo.addClass(this.layers[2].domNode, "wmstyleinspector");
+
+	    this.layers[0].setCaption(studio.getDictionaryItem("wm.StyleInspector.BASIC_STYLE_LAYER_CAPTION"));
+	    this.layers[1].setCaption(studio.getDictionaryItem("wm.StyleInspector.CLASSES_LAYER_CAPTION"));
+	    this.layers[2].setCaption(studio.getDictionaryItem("wm.StyleInspector.CUSTOM_LAYER_CAPTION"));
+	    this.layers[1].c$[2].setCaption(studio.getDictionaryItem("wm.StyleInspector.CUSTOM_CLASS_CAPTION"));
+	    this.layers[2].c$[1].c$[0].setCaption(studio.getDictionaryItem("wm.StyleInspector.CUSTOM_BUTTON_CAPTION"));
 	},
 	initClasses: function() {
 		this.classTree = this.$.client.widgets.classes.widgets.classTree;

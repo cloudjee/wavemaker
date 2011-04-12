@@ -204,8 +204,9 @@ dojo.declare("wm.Component", wm.Object, {
 		  this._loading = false;
 		  this.postInit();
 	},
-	toString: function() {
-	    return '[' + this.declaredClass + ((this.name) ? ':' + this.name : "") +  (this._isDestroyed ? ':DESTROYED' : '') + ']';
+	toString: function(inText) {
+	    var t = inText || "";
+	    return '[' + this.declaredClass + ((this.name) ? ':' + this.name : "") +  (this.isDestroyed ? ':' + wm.getDictionaryItem("wm.Component.toString_DESTROYED") : '') + t + ']';
 	},
 	//=======================================================
 	// FIXME: deprecated, remove asap
@@ -684,9 +685,7 @@ this.panel1.createComponent("custom", "wm.Panel", {
 			}
 		}
 
-		if (!ctor) throw('Component type "' + inType + '" is not available.');
-		//
-
+	    if (!ctor) throw(wm.getDictionaryItem("wm.Component.CLASS_NOT_FOUND", {type: inType, name: inName}));
 		var props = dojo.mixin({_designer: this._designer, _loading: true}, inProps);
 		this.adjustChildProps(ctor, props);
 

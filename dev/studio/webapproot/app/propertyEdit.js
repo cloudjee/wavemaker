@@ -227,6 +227,7 @@ dojo.declare("wm.propEdit.AllDataTypesSelect", wm.propEdit.DataTypesSelect, {
 		this.options = (this.options || []).concat(dojo.map(inOptionValues, function(d) { return d.option; }));
 		this.values = (this.values || []).concat(dojo.map(inOptionValues, function(d) { return d.value; }));
 	},
+    /* Localization TODO: At some point we may want to localize these, but we'd need to localize the entire type system to gain by that */
 	getDataTypes: function() {
             var list = this.inherited(arguments);
             var extras = [{option: "String Literal", value: "String"}, {option: "Number Literal", value: "Number"}, {option: "Boolean Literal", value: "Boolean"}, {option: "Date Literal", value: "Date"}];

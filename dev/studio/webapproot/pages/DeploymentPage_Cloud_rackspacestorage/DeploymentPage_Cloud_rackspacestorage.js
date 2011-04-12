@@ -52,14 +52,9 @@ dojo.declare("DeploymentPage_Cloud_rackspacestorage", wm.Page, {
 												"type": "com.wavemaker.tools.cloudmgr.CloudFile"
 											}
 									     }});
-		var htmlVal = "<font size=2>";	
-		htmlVal += "Please click <a href='http://www.rackspacecloud.com' target='_blank'>here</a> ";
-		htmlVal += "to perform the following prerequisite tasks if needed, before creating file containers.<br/><br/>";
-		htmlVal += "&nbsp;&nbsp;&nbsp;&nbsp;- Create a RackSpace account<br/>";
-		htmlVal += "&nbsp;&nbsp;&nbsp;&nbsp;- Acquire API Access Key<br/>";
-		htmlVal += "</font>";
-		this.helpLabel.setHtml(htmlVal);
-		this.helpLabel.show();
+	var htmlVal = this.getDictionaryItem("HTML");
+	this.helpLabel.setHtml(htmlVal);
+	this.helpLabel.show();
     },
     setup: function() {      
 	this.reset();      
@@ -81,8 +76,8 @@ dojo.declare("DeploymentPage_Cloud_rackspacestorage", wm.Page, {
 
 		// Validate the form
 		if (!this.usernameValue || !this.passwordValue) {
-			app.alert("Please log in so you can manage your containers.  ALTERNATIVE: Download the war and use your hosting provider's tools instead.");
-			return;
+		    app.alert(this.getDictionaryItem("ALERT_NO_CREDENTIALS"));
+		    return;
 		}
 		this.showContainerList();
 		if (!this.loginError)
@@ -108,7 +103,7 @@ dojo.declare("DeploymentPage_Cloud_rackspacestorage", wm.Page, {
      * Container List Panel 
      **************************************************************************************************/
     showContainerList: function() {
-		this.callContainerList("Loading your container list", "ContainerListLayer");
+		this.callContainerList(this.getDictionaryItem("WAIT_LOADING_LIST"), "ContainerListLayer");
     },
     deleteContainerClick: function() {
 	    studio.beginWait("Deleting"); // in future may be used to do more than just kill a container
@@ -198,7 +193,7 @@ dojo.declare("DeploymentPage_Cloud_rackspacestorage", wm.Page, {
     callCreateContainerEnabled: true,
     callCreateContainer: function(inContainerName, inLayer) {
 	if (this.callCreateContainerEnabled) {
-	    studio.beginWait("Creating " + inContainerName + ". It may take several minutes. Please wait.");
+	    studio.beginWait(this.getDictionaryItem("WAIT_CREATING", {containerName: inContainerName}));
 	    this.cloudStorageService.requestAsync("createContainer", 
 						 ["rackspace",
 						  inContainerName,
@@ -209,7 +204,7 @@ dojo.declare("DeploymentPage_Cloud_rackspacestorage", wm.Page, {
 						  null],
 						  dojo.hitch(this,function(inResult) {
 						     studio.endWait();
-							 app.alert("Container " + this.containerName.getDataValue() + " has been created successfully");
+						      app.alert(this.getDictionaryItem("ALERT_CREATING_SUCCESS", {containerName: this.containerName.getDataValue()}));
 							 this.MainLayers.setLayer(inLayer);
 						  }),
 						  dojo.hitch(this, "_svcError"));

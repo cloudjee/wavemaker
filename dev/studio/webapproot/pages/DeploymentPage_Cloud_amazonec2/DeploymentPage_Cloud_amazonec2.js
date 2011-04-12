@@ -248,16 +248,9 @@ dojo.declare("DeploymentPage_Cloud_amazonec2", wm.Page, {
 				}
 		}});
 
-		var htmlVal = "<font size=2>";	
-		htmlVal += "Please click <a href='http://aws.amazon.com/account' target='_blank'>here</a> to perform ";
-		htmlVal += "the following prerequisite tasks if needed, before creating server instances.<br/><br/>";
-		htmlVal += "&nbsp;&nbsp;&nbsp;&nbsp;- Create an AWS account<br/>";
-		htmlVal += "&nbsp;&nbsp;&nbsp;&nbsp;- Create custom server images (AMI)<br/>";
-		htmlVal += "&nbsp;&nbsp;&nbsp;&nbsp;- Create security groups<br/>";
-		htmlVal += "&nbsp;&nbsp;&nbsp;&nbsp;- Create SSH access key pairs<br/>";
-		htmlVal += "</font>";
-		this.helpLabel.setHtml(htmlVal);
-		this.helpLabel.show();
+	var htmlVal = this.getDictionaryItem("HTML");
+	this.helpLabel.setHtml(htmlVal);
+	this.helpLabel.show();
     },
     setup: function() {      
 	this.reset();      
@@ -279,7 +272,7 @@ dojo.declare("DeploymentPage_Cloud_amazonec2", wm.Page, {
 
 		// Validate the form
 		if (!this.accessKeyIdValue || !this.secretAccessKeyValue) {
-			app.alert("Please log in so you can manage your servers.  ALTERNATIVE: Download the war and use your hosting provider's tools instead.");
+		    app.alert(this.getDictionaryItem("ALERT_ENTER_CREDENTIALS"));
 			return;
 		}
 		this.showServerList();
@@ -483,7 +476,7 @@ dojo.declare("DeploymentPage_Cloud_amazonec2", wm.Page, {
     callCreateServerEnabled: true,
     callCreateServer: function(inImage, inKeyPair, inVMType, inSecGroup, inLayer) {
 	if (this.callCreateServerEnabled) {
-	    studio.beginWait("Creating an EC2 instance. It may take several minutes. Please wait.");
+	    studio.beginWait(this.getDictionaryItem("WAIT_CREATING_EC2"))
 
 	    this.cloudServerService.requestAsync("createServer", 
 						 ["amazon",
@@ -504,7 +497,7 @@ dojo.declare("DeploymentPage_Cloud_amazonec2", wm.Page, {
 						  this.serviceURL],
 						  dojo.hitch(this,function(inResult) {
 						     studio.endWait();
-							 app.alert("A new EC2 instance has been created successfully");
+						      app.alert(this.getDictionaryItem("ALERT_EC2_SUCCESS"));
 						     //this.showServerList();
 							 this.MainLayers.setLayer(inLayer);
 						  }),

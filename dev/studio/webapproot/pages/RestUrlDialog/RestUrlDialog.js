@@ -30,7 +30,7 @@ dojo.declare("RestUrlDialog", wm.Page, {
 	testBtnClick: function(inSender) {
 		var u = this.urlInput.getValue("displayValue");
 		if (u) {
-			studio.beginWait("Invoking REST Service...");
+		    studio.beginWait(this.getDictionaryItem("WAIT_TEST_CLICK"));
 			studio.webService.requestAsync("invokeRestCall", [u], 
 				dojo.hitch(this, "invokeRestCallSuccess"), 
 				dojo.hitch(this, "invokeRestCallError"));

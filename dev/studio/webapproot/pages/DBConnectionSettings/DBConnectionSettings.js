@@ -51,9 +51,9 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 	},
 	reimportBtnClick: function(inSender) {
 		var dmn = this._getSelectedDataModelName();
-	    app.confirm('Are you sure you want to re-import ' + dmn + '?', false, 
+	    app.confirm(this.getDictionaryItem("CONFIRM_REIMPORT", {modelName: dmn}), false,
                         dojo.hitch(this, function() {
-		studio.beginWait("Re-Importing " + dmn);
+			    studio.beginWait(this.getDictionaryItem("WAIT_REIMPORT"), {modelName: dmn});
 		studio.dataService.requestAsync(REIMPORT_DB_OP, [
 				dmn, 
 				this.conUserInput.getInputValue(),
@@ -72,8 +72,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 	},
 	exportBtnClick: function(inSender) {
 		if (this.overrideFlagInput.getDataValue()) {
-			if (!confirm
-				('WARNING: If this database already exists, all tables and data will be dropped and deleted. A shiny new database will be created if it does not exist. Do you want to continue?'))  
+		    if (!confirm(this.getDictionaryItem("CONFIRM_EXPORT")))  
 			{
 				return;
 			}
@@ -84,7 +83,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 			//}
 		}
 
-		studio.beginWait("Loading DDL...");
+	    studio.beginWait(this.getDictionaryItem("WAIT_LOADING_DDL"));
 		studio.dataService.requestAsync(LOAD_DDL_OP, [
 				this._getSelectedDataModelName(),
 				this.conUserInput.getInputValue(),
@@ -218,7 +217,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 	conRevengChanged: function() {
 	},
 	onDDLOkClicked: function() {
-		studio.beginWait("Exporting Database...");
+	        studio.beginWait(this.getDictionaryItem("WAIT_DDL_OK"));
 		studio.dataService.requestAsync(EXPORT_DB_OP, [
 				this._getSelectedDataModelName(),
 				this.conUserInput.getInputValue(),
@@ -377,7 +376,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 		this.ip = inData;
 	},
 	_testConnection: function(url, username, password, driverClassName) {
-		studio.beginWait("Test Connection: " + url);
+	    studio.beginWait(this.getDictionaryItem("WAIT_TEST_CONNECTION", {url: url}));
 		studio.dataService.requestAsync(
 			TEST_CONNECTION_OP,
 			[username, password, url, driverClassName],
@@ -386,17 +385,17 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 	},
 	_connectionSucceeded: function() {
 		studio.endWait();
-		app.alert("Connection successful");
+	    app.alert(this.getDictionaryItem("ALERT_CONNECTION_SUCCESS"));
 	},
 	_connectionFailed: function(inError) {
-		studio.endWait();
-		app.alert("Connection failed: " + inError.message);
+	    studio.endWait();
+	    app.alert(this.getDictionaryItem("ALERT_CONNECTION_FAILED", {error: inError.message})); 
 	},
 	_propWriteOk: function(inData) {
-		app.alert("Updated connection properties");
+	    app.alert(this.getDictionaryItem("ALERT_CONNECTION_PROPS_SUCCESS"));
 	},
 	_propWriteFailed: function(inData) {
-		app.alert("Failed to update connection properties");
+	    app.alert(this.getDictionaryItem("ALERT_CONNECTION_PROPS_FAILED"));
 	},
 	_getSelectedDataModelName: function() {
 		var i = this.dataModelList.selected.index;
@@ -405,10 +404,12 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 	_reImportError: function(inError) {
 		studio.endWait();
 		var msg = "";
+/*
 		if (inError.message) {
 		    msg = ": " + inError.message;
 		}
-		app.alert("Re-Import failed " + msg);
+		*/
+	    app.alert(this.getDictionaryItem("ALERT_REIMPORT_FAILED", {error: inError.message}));
 	},
 	_reImportResult: function() {
 		studio.endWait();
@@ -433,7 +434,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 		if (inError.message) {
 		    msg = ": " + inError.message;
 		}
-		app.alert("Unable to load DDL " + msg);
+	    app.alert(this.getDictionaryItem("ALERT_LOAD_DDL_FAILED", {error: inError.message}));
 	},
 	_updateDDL: function() {
 		this.msgDialog.page.setup(true);
@@ -457,7 +458,8 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 		if (inError.message) {
 		    msg = ": " + inError.message;
 		}
-		app.alert("Unable to export " + msg);
+	    app.alert(this.getDictionaryItem("ALERT_EXPORT_FAILED", {error: inError.message}));
+
 	},
 	_loadConnectionProperties: function(dataModelName) {
 		studio.dataService.requestAsync(

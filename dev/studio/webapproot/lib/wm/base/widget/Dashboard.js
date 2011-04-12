@@ -60,7 +60,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
                 dojo.require("wm.base.widget.Editors.Select");
 	    /* TODO: Localize */
 	    this.selectEditor = new wm.SelectMenu({owner: this, 
-						   "caption":"Widget",
+						   "caption":wm.getDictionaryItem("wm.Dashboard.ADD_DIALOG_SELECT_CAPTION"),
 						   "display":"Select",
 						   "readonly":false,
 						   "width":"250px", 
@@ -73,14 +73,14 @@ dojo.declare("wm.Dashboard", wm.Control, {
 	    this.okButton = new wm.Button({owner: this, 
 					   "height":"100%",
 					   "width":"60px",
-					   "caption": "Add", 
+					   "caption": wm.getDictionaryItem("wm.Dashboard.ADD_DIALOG_ADD_CAPTION"),
 					   isRelativePositioned:true}); //{"onclick":'onOkClick'}
 	    this.connect(this.selectEditor, "onEnterKeyPress", this, "_onOkClick");
 	    /* TODO: Localize */
 	    this.cancelButton = new wm.Button({owner: this,
 					       "height":"100%",
 					       "width":"60px",
-					       "caption": "Cancel", 
+					       "caption": wm.getDictionaryItem("wm.Dashboard.ADD_DIALOG_CANCEL_CAPTION"),
 					       isRelativePositioned:true}); //, {"onclick":'onCancelClick'});
 		panel.appendChild(this.okButton.domNode);
 		panel.appendChild(this.cancelButton.domNode);

@@ -201,7 +201,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 	},
 	checkChildren: function(inNode, inCheck) {
 	    if (!inCheck) {
-                app.confirm("Are you sure you want to deselect all properties in this object?", false,
+                app.confirm(this.getDictionaryItem("CONFIRM_DESELECT"), false,
                             dojo.hitch(this, function() {
 		                this._checkChildren(inNode, inCheck);
 		                this.runtimeServiceFetch();
@@ -313,7 +313,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 				e.setDisabled(true);
 				e.setValue("dataValue", "");
 			});
-		this.fieldLabel.setValue("caption", "Field Options");
+	    this.fieldLabel.setValue("caption", this.getDictionaryItem("FIELD_LABEL_CAPTION_OPTIONS"));
 	},
 	populateField: function(inField, inNode) {
 		var f = inField, node = inNode;
@@ -332,7 +332,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 	fieldToForm: function(inNode) {
 		this.clearFieldForm();
 		if (inNode.fullName) {
-			this.fieldLabel.setValue("caption", 'Options for "' + inNode.name + '"');
+		    this.fieldLabel.setValue("caption", this.getDictionaryItem("FIELD_LABEL_CAPTION_OPTIONS_FOR",{name: inNode.name}));
 			//
 			var v = this.findFieldInView(inNode.fullName);
 			this.viewField = v;
@@ -395,7 +395,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 		if (this.isDestroyed) return;
 		var changed = this._cachedData != this.clientLiveView.write("") ;
 		var caption = (!changed ? "" : "<img class='StudioDirtyIcon'  src='images/blank.gif' /> ") +
-		    this.clientLiveView.name + " (" + bundleStudio["TabCaption_LiveView"] + ")";
+		    this.clientLiveView.name + " (" + studio.getDictionaryItem("wm.LiveView.TAB_CAPTION") + ")";
 		this.dirty = changed;
 
 		if (caption != this.owner.parent.caption) {
@@ -483,7 +483,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 	delLiveViewBtnClick: function(inSender) {
 		var v = this.clientLiveView;
 	        if (v) {
-                    app.confirm(["Are you sure you want to delete ", v.name, "?"].join(''), false,
+                    app.confirm(this.getDictionaryItem("CONFIRM_DELETE", {name: v.name}), false,
                                 dojo.hitch(this, function() {
 				    v.destroy();
 				    studio.refreshServiceTree("");

@@ -286,11 +286,14 @@ EditAreaLoader.prototype ={
 	
 	start : function(id){
 		var t=this,d=document,f,span,father,next,html='',html_toolbar_content='',template,content,i;
-		
+	    
 		// check that the window is loaded
 		if(t.win!="loaded"){
-			setTimeout("editAreaLoader.start('"+id+"');", 50);
-			return;
+		    this._failCount = this._failCount ? this._failCount + 1 : 1;
+		    if (this._failCount > 10)
+			t.win = "loaded";
+		    setTimeout("editAreaLoader.start('"+id+"');", 50);
+		    return;
 		}
 		
 		// check that all needed scripts are loaded

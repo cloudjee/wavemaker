@@ -15,6 +15,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */ 
+
+/* LOCALIZATION NOTES: 
+ * This file is not localized at this time as we do not believe that localization of 
+ * custom javascript code is likely to be supported.
+ */
 dojo.provide("wm.studio.app.events");
 
 terminus = "_end: 0";

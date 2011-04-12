@@ -230,6 +230,13 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
     buttonPanel: null,
     nextButton: null,
     prevButton: null,
+    constructor: function() {
+	this.backCaption = wm.getDictionaryItem("wm.WizardDecorator.BACK");
+	this.nextCaption = wm.getDictionaryItem("wm.WizardDecorator.NEXT");
+	this.doneCaption = wm.getDictionaryItem("wm.WizardDecorator.DONE");
+	this.cancelCaption = wm.getDictionaryItem("wm.WizardDecorator.CANCEL");
+
+    },
 	undecorate: function() {
 	    this.inherited(arguments);
 	    if (this.buttonPanel)
@@ -254,13 +261,13 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 					     owner: this.decoree,
 					     width: "80px",
 					     height: "100%",
-					     caption: "Back"});
+					     caption: this.cancelCaption});
 	    this.nextButton = new wm.Button({name: "nextButton",
 					     parent: this.buttonPanel,
 					     owner: this.decoree,
 					     width: "80px",
 					     height: "100%",
-					     caption: "Next"});
+					     caption: this.nextCaption});
 	    dojo.connect(this.prevButton, "onclick", this, "backClick");
 	    dojo.connect(this.nextButton, "onclick", this, "nextClick");
 	},
@@ -273,13 +280,14 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 	    this.nextButton.setShowing(i < inLayer.decorator.decoree.layers.length-1);
 	    */
 
-	    this.nextButton.setCaption(i < inLayer.decorator.decoree.layers.length-1 ? "Next" : "Done");
+	    this.nextButton.setCaption(i < inLayer.decorator.decoree.layers.length-1 ? this.nextCaption : this.doneCaption);
+	    this.prevButton.setCaption(i  == 0 ? this.cancelCaption : this.backCaption);
 	},
     nextClick: function() {
 	var i = this.decoree.layerIndex;
 	var layer = this.decoree.getActiveLayer();
-	this.validateCurrentLayer();
-	if (!layer.invalid) {
+	var result = this.validateCurrentLayer();
+	if (result) {
 	    if (i == this.decoree.layers.length-1) {
 		this.decoree.onDoneClick();
 	    } else {
@@ -287,8 +295,6 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 		var layer = this.decoree.getActiveLayer();
 		layer.focusFirstEditor();
 	    }
-	} else {
-	    this.validateCurrentLayer(); // Notify user of the problem
 	}
     },
     validateCurrentLayer: function(noWarn) {
@@ -304,9 +310,9 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 
 	    // focusing on an invalid editor will automatically show its invalid message without needing an alert
 	    invalidWidget.focus();
-	    invalidWidget.editor.displayMessage(invalidWidget.invalidMessage || "Invalid Input", true);
+	    invalidWidget.editor.displayMessage(invalidWidget.invalidMessage || wm.getDictionaryItem("wm.TabDecorator.VALIDATION_INVALID_INPUT"), true);
 
-	    app.toastDialog.showToast("Invalid value for " + (invalidWidget.caption || invalidWidget.name), 3000, "Warning", "cc");
+	    app.toastDialog.showToast(wm.getDictionaryItem("wm.WizardDecorator.TOAST_INVALID", {name: invalidWidget.caption || invalidWidget.name}), 3000, "Warning", "cc");
 	    return false;
 	}
 
@@ -315,8 +321,14 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 	var result = {invalidMessage: null};
 	this.decoree.onLayerValidation(layer, result);
 	if (result.invalidMessage) {
-	    app.alertDialog.setUserPrompt(result.invalidMessage);
-	    app.alertDialog.show();
+	    if (!noWarn) 
+		app.alert(result.invalidMessage);
+	    return false;
+	}
+
+	if (layer.invalid) {
+	    if (!noWarn)
+		app.alert(wm.getDictionaryItem("wm.WizardDecorator.ALERT_INCOMPLETE"));
 	    return false;
 	}
 
@@ -352,10 +364,10 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
         if (oldindex < newindex) {
             for (var i = oldindex + 1; i < newindex; i++) {
 	        if (this.decoree.layers[i].invalid) {                
-		    app.toastDialog.showToast("Please fill out \"" + this.decoree.layers[i].caption + "\" first", 3000, "Warning", "cc");
+		    app.toastDialog.showToast(wm.getDictionaryItem("wm.WizardDecorator.TOAST_PLEASE_FILL", {name: this.decoree.layers[i].caption}), 3000, "Warning", "cc");
 		    return;
                 } else if (!dojo.hasClass(this.btns[i], "done")) {
-		    app.toastDialog.showToast("Please review \"" + this.decoree.layers[i].caption + "\" first", 3000, "Warning", "cc");
+		    app.toastDialog.showToast(wm.getDictionaryItem("wm.WizardDecorator.TOAST_SKIP_LAYER", {name:  this.decoree.layers[i].caption}), 3000, "Warning", "cc");
 		    return;
                 }
             }

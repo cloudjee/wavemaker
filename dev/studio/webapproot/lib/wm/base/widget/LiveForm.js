@@ -423,7 +423,8 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 		  }
 		  var val = e.dataValue;
 		  if (e.editor && e.editor.required && (val === null || val === undefined || val === "")) {
-		      app.alert(e.caption + " Needs a value");
+		      /* TODO: Localize this */
+		      app.alert(wm.getDictionaryItem("wm.LiveForm.INVALID_EDITOR", {caption: e.caption}));
 		    result = false;
 		  }
 		});
@@ -884,6 +885,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	},
 
 	sforceRuntimeServiceError: function(inError) { //xxx
+	    /* TODO: Localize this... though probably not accessable to users */
 	    app.alert("sforceRuntimeServiceError error = " + inError);
 	},
 	
@@ -911,10 +913,13 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	onResult: function(inData) {
 	},
 	onError: function(inError) {
-		wm.logging && console.error(inError);
-		if (this.displayErrors) {
-			var m = dojo.isString(inError) ? inError : (inError.message ? "Error: " + inError.message : "Unspecified Error");
+	    wm.logging && console.error(inError);
+	    if (this.displayErrors) {
+		if (dojo.isString(inError)) {
 		    app.alert(m);
+		} else {
+		    app.alert(wm.getDictionaryItem("wm.LiveForm.ONERROR", {error: inError || "??"}));
 		}
+	    }
 	}
 });

@@ -30,6 +30,7 @@ dojo.declare("wm.FeedList", wm.List, {
 	totalItems: "",
 	onselect: null,
 	ondeselect: null,
+
 	init: function() {
 		this.inherited(arguments);
 		dojo.addClass(this.domNode, "wmfeedlist");
@@ -41,8 +42,19 @@ dojo.declare("wm.FeedList", wm.List, {
 		this.inherited(arguments);
 		this.className = 'wmfeedlist';
 		if (this.isDesignLoaded() && !wm.services.byName["FeedService"]) {
+		    if (studio.isJarMissing("wsdl4j.jar")) {
+			wm.WebService.prototype.showJarDialog();
+
+			/* If we just created the component rather than loaded it from an existing page, destroy it until the environment is setup */
+			if (!studio.project.loadingPage) {
+			    this.destroy();
+			    throw "Missing jar file";
+			    return;
+			}
+		    } else {
 			studio.webService.requestAsync("registerFeedService", null, 
-			dojo.hitch(this, "registerFeedServiceSuccess"));
+						       dojo.hitch(this, "registerFeedServiceSuccess"));
+		    }
 		} else {
 			this._createGetFeedServiceVariable();
 		}

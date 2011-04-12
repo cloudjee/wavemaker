@@ -487,53 +487,7 @@ wm.define("wm.Container", wm.Control, {
 	}
 });
 
-// Design
-
 wm.Container.extend({
-	listProperties: function() {
-		var p = this.inherited(arguments);
-		p.freeze.ignoretmp = this.schema.freeze.ignore || this.getLock();
-		return p;
-	},
-	writeChildren: function(inNode, inIndent, inOptions) {
-		var s = [];
-		wm.forEach(this.getOrderedWidgets(), function(c) {
-			if (wm.isDesignable(c) && !c.flags.notStreamable)
-				s.push(c.write(inIndent, inOptions));
-		});
-		return s;
-	},
-	suggestDropRect: function(inControl, ioInfo) {
-		this.layout.suggest(this, inControl, ioInfo);
-	},
-	suggestSize: function(inControl, ioInfo) {
-		this.layout.suggestSize(this, inControl, ioInfo);
-	},
-	designMoveControl: function(inControl, inDropInfo) {
-		info = {l:inDropInfo.l, t:inDropInfo.t, i: inDropInfo.i};
-		if (inControl.parent == this) {
-			// inDropInfo.index 'i' may be counting inControl
-			this.moveControl(inControl, info.i || 0);
-		} else {
-			var p = inControl.parent;
-			inControl.setParent(this);
-			inControl.designWrapper.controlParentChanged();
-			// inDropInfo.index 'i' is never counting inControl
-			this.removeControl(inControl);
-			this.insertControl(inControl, info.i || 0);
-			if (p)
-				p.reflow();
-		}
-		if (this.layout.insert) {
-			this.layout.insert(this, inControl, inDropInfo);
-			//return;
-		}
-		this.reflow();
-	},
-	resizeUpdate: function(inBounds) {
-		// update the boundary rectangle highlight only
-		this.designWrapper._setBounds(inBounds);
-	},
 
     /* Get the preferred width of this container, for use if this is a fitToContentWidth container.
      * left-to-right container: width is the sum of the widths of all px sized children and the sum of all minWidths for % sized children.
@@ -643,19 +597,7 @@ wm.Container.extend({
 	    }
 	    return null;
 	},
-/* Obsolete */
-        setIsMajorContent: function(inMajor) {
-	    if (inMajor)
-		this.addUserClass("wmcontentarea");
-	    else
-		this.removeUserClass("wmcontentarea");
-	},
-/* Obsolete */
-        getIsMajorContent: function() {
-	    try {
-		return dojo.indexOf(this._classes.domNode, "wmcontentarea") != -1;
-	    } catch(e){}
-	},
+
 	// bc
 	clearEditors: function(){
 		return this.clearData();
@@ -672,16 +614,6 @@ wm.Container.extend({
 	verticalAlign: "justified",
 	//horizontalAlign: "left",
 	//verticalAlign: "top",
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "layoutKind":
-				return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: wm.layout.listLayouts()});
-
-                case "themeStyleType":
-		    return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["", "MainContent", "EmphasizedContent", "HeaderContent"]});
-		}
-		return this.inherited(arguments);
-	},
 	setLayoutKind: function(inLayoutKind) {
 		if (this.layoutKind != inLayoutKind || !this.layout) {
 		  /*

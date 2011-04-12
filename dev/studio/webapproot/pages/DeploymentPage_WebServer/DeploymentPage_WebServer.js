@@ -188,7 +188,7 @@ dojo.declare("DeploymentPage_WebServer", wm.Page, {
 	},
 
 	depTargetShow: function() {
-		this.getDepTargetList("Loading deployment targets from deploymentTargets.xml");
+	    this.getDepTargetList(this.getDictionaryItem("WAIT_LOADING_TARGETS"));
     },
 
 	getDepTargetList: function(message, inLayer) {
@@ -286,11 +286,11 @@ dojo.declare("DeploymentPage_WebServer", wm.Page, {
 		var cr = this._getContextRoot();
 		if (cr == null ) return;
 		if (cr == "/manager") {
-		  app.alert("Undeploying the Tomcat Manager will disable parts of this service; as such we do not support this action");
+		    app.alert(this.getDictionaryItem("ALERT_UNDEPLOY_UNSUPPORTED"));
 		  return;
 		}
 
-		studio.beginWait("Re-Deploying...");
+	    studio.beginWait(this.getDictionaryItem("WAIT_REDEPLOYING"));
 
 		studio.deploymentService.requestAsync("redeploy",
 						  [this.deploymentTarget, cr, this._getProperties()],
@@ -327,7 +327,7 @@ dojo.declare("DeploymentPage_WebServer", wm.Page, {
 	},
 
 	AMFileListUploadWarButtonClick: function(inSender) {
-		studio.beginWait("Uploading WAR File to Amazon S3 ...");
+	    studio.beginWait(this.getDictionaryItem("WAIT_UPLOADING_WAR"));
 	    this.cloudStorageService.requestAsync("copyWarFileToCloudStorage",["amazon", this.DepTargetList.selectedItem.data.container, null, null,
 				this.accessKeyId.getDataValue(), this.secretAccessKey.getDataValue(), this.s3ServiceURL],
 			dojo.hitch(this, "getAMCloudFilesComplete"),
@@ -335,7 +335,7 @@ dojo.declare("DeploymentPage_WebServer", wm.Page, {
 	},
 
 	AMFileListUploadEarButtonClick: function(inSender) {
-		studio.beginWait("Uploading EAR File to Amazon S3 ...");
+	    studio.beginWait(this.getDictionaryItem("WAIT_UPLOADING_EAR"));
 	    this.cloudStorageService.requestAsync("copyEarFileToCloudStorage",["amazon", this.DepTargetList.selectedItem.data.container, null, null,
 				this.accessKeyId.getDataValue(), this.secretAccessKey.getDataValue()],
 			dojo.hitch(this, "getAMCloudFilesComplete"),
@@ -343,7 +343,7 @@ dojo.declare("DeploymentPage_WebServer", wm.Page, {
 	},
 
 	AMFileListDeleteButtonClick: function(inSender) {
-		studio.beginWait("Deleting a File in Amazon S3 ...");
+	    studio.beginWait(this.getDictionaryItem("WAIT_DELETING_FILE"));
 	    this.cloudStorageService.requestAsync("deleteFileInCloudStorage",["amazon", this.DepTargetList.selectedItem.data.container,
 				this.AMFileList.selectedItem.data.fileName, null, null,
 				this.accessKeyId.getDataValue(), this.secretAccessKey.getDataValue(), this.s3ServiceURL],
@@ -352,7 +352,7 @@ dojo.declare("DeploymentPage_WebServer", wm.Page, {
 	},
 
 	amShowFiles: function(inSender) {
-		studio.beginWait("Getting the file list...");
+	    studio.beginWait(this.getDictionaryItem("WAIT_LISTING_FILES"));
 	    this.cloudStorageService.requestAsync("getCloudFiles",["amazon", this.DepTargetList.selectedItem.data.container, null, null,
 				this.accessKeyId.getDataValue(), this.secretAccessKey.getDataValue(), this.s3ServiceURL],
 			dojo.hitch(this, "getAMCloudFilesComplete"),
@@ -377,7 +377,7 @@ dojo.declare("DeploymentPage_WebServer", wm.Page, {
 	},
 
 	RSFileListUploadWarButtonClick: function(inSender) {
-		studio.beginWait("Uploading WAR File to RackSpace Storage ...");
+	    studio.beginWait(this.getDictionaryItem("WAIT_UPLOADING_WAR_RACKSPACE"));
 	    this.cloudStorageService.requestAsync("copyWarFileToCloudStorage",["rackspace", this.DepTargetList.selectedItem.data.container,
 				this.rsusername.getDataValue(), this.rspassword.getDataValue(), null, null] ,
 			dojo.hitch(this, "getRSCloudFilesComplete"),
@@ -385,7 +385,8 @@ dojo.declare("DeploymentPage_WebServer", wm.Page, {
 	},
 
 	RSFileListUploadEarButtonClick: function(inSender) {
-		studio.beginWait("Uploading EAR File to RackSpace Storage ...");
+	    studio.beginWait(this.getDictionaryItem("WAIT_UPLOADING_EAR_RACKSPACE"));
+
 	    this.cloudStorageService.requestAsync("copyEarFileToCloudStorage",["rackspace", this.DepTargetList.selectedItem.data.container,
 				this.rsusername.getDataValue(), this.rspassword.getDataValue(), null, null] ,
 			dojo.hitch(this, "getRSCloudFilesComplete"),
@@ -393,7 +394,8 @@ dojo.declare("DeploymentPage_WebServer", wm.Page, {
 	},
 
 	RSFileListDeleteButtonClick: function(inSender) {
-		studio.beginWait("Deleting a File in RackSpace Storage ...");
+	    studio.beginWait(this.getDictionaryItem("WAIT_DELETING_FILE_RACKSPACE"));
+
 	    this.cloudStorageService.requestAsync("deleteFileInCloudStorage",["rackspace", this.DepTargetList.selectedItem.data.container,
 				this.RSFileList.selectedItem.data.fileName, this.rsusername.getDataValue(), this.rspassword.getDataValue(), null, null] ,
 			dojo.hitch(this, "getRSCloudFilesComplete"),
@@ -401,7 +403,7 @@ dojo.declare("DeploymentPage_WebServer", wm.Page, {
 	},
 
 	rsShowFiles: function(inSender) {
-		studio.beginWait("Getting the file list...");
+	    studio.beginWait(this.getDictionaryItem("WAIT_LISTING_FILES"));
 	    this.cloudStorageService.requestAsync("getCloudFiles",["rackspace", this.DepTargetList.selectedItem.data.container, 
 			this.rsusername.getDataValue(), this.rspassword.getDataValue(), null, null] ,
 			dojo.hitch(this, "getRSCloudFilesComplete"),
@@ -444,30 +446,30 @@ dojo.declare("DeploymentPage_WebServer", wm.Page, {
 	/* Callback method for this.deployButtonClick */
 	deployComplete: function(inData) {
 		studio.endWait();
-            app.toastDialog.showToast(inData, 5000, "Success");
+            app.toastDialog.showToast(inData, 5000, this.getDictionaryItem("TOAST_DEPLOY_SUCCESS"));
 		//app.alert(inData);
 		this.MainLayers.setLayer("appListLayer");
 	},
 
 	redeployComplete: function(inData) {
 		studio.endWait();
-            app.toastDialog.showToast(inData, 5000, "Success");
+            app.toastDialog.showToast(inData, 5000,  this.getDictionaryItem("TOAST_REDEPLOY_SUCCESS"));
 		//app.alert(inData);
 	},
 
 	/* Event handler for this.undeployButton which undeploys the selected service from a tomcat server */
 	appListUndeployButtonClick: function(inSender) {
-            app.confirm("Are you sure you want to undeploy this application?", false,
+            app.confirm(this.getDictionaryItem("CONFIRM_UNDEPLOY"), false,
                         dojo.hitch(this, function() {
 		            // Get the servlet context root for the selected service 
 		            // (depends on the text box with context being updated each time the user selects something in the list of servlets)
 		            var cr = this._getContextRoot();
 		            if (cr == null ) return;
 		            if (cr == "/manager") {
-		                app.alert("Undeploying the Tomcat Manager will disable parts of this service; as such we do not support this action");
+		                app.alert(this.getDictionaryItem("ALERT_UNDEPLOY_UNSUPPORTED"));
 		                return;
 		            }
-		            studio.beginWait("Undeploying...");
+		            studio.beginWait(this.getDictionaryItem("WAIT_UNDEPLOY"));
 		            studio.deploymentService.requestAsync("undeploy", 
 					                          [this.deploymentTarget, cr, this._getProperties()],
 					                          dojo.hitch(this, "undeployComplete"),
@@ -479,7 +481,7 @@ dojo.declare("DeploymentPage_WebServer", wm.Page, {
 	undeployComplete: function(inData) {
 		studio.endWait();
 		//app.alert(inData);
-            app.toastDialog.showToast(inData, 5000, "Success");
+            app.toastDialog.showToast(inData, 5000,  this.getDictionaryItem("TOAST_UNDEPLOY_SUCCESS"));
 		this.loadServerManagerAppList();
 	},
 
@@ -601,13 +603,10 @@ dojo.declare("DeploymentPage_WebServer", wm.Page, {
 		var propObj = {};
 
 		if (item.serviceProvider == "opsource") { 
-			propObj.host = item.privateIp;
-			var htmlVal = "<font size=2>";
-			htmlVal += "To access an OpSource server instance, you should first establish a VPN connection to the server's Network at OpSource. ";
-			htmlVal += "Please click <a href='https://admin.opsourcecloud.net/cloudui/ms/login.htm' target='_blank'>here</a> to connect.";
-			htmlVal += "</font>";
-			this.helpLabel.setHtml(htmlVal);
-			this.helpLabel.show();
+		    propObj.host = item.privateIp;		    
+		    var htmlVal = this.getDictionaryItem("HTML");
+		    this.helpLabel.setHtml(htmlVal);
+		    this.helpLabel.show();
 		} else {
 			this.helpLabel.setHtml("");
 			this.helpLabel.show();
@@ -660,7 +659,7 @@ dojo.declare("DeploymentPage_WebServer", wm.Page, {
 	_getContextRoot: function() {
 		var rtn = this.contextRoot.getDataValue();
 		if (rtn == null) {
-			app.alert("Please enter a context root");
+		    app.alert(this.getDictionaryItem("ALERT_ENTER_ROOT"));
 		}
 		return rtn;
 	},

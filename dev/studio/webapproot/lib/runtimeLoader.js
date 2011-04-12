@@ -18,6 +18,7 @@
 
 try
 {
+
         wm.libPath = wm.libPath.replace(/\/$/,""); // please remove this after we've gotten a few versions past 6.2
 
 	dojo.registerModulePath("lib", wm.libPath);
@@ -27,6 +28,7 @@ try
 		["common", wm.libPath + "/wm/common"],
 		["wm.modules", wm.basePath + "modules/ep"]
 	);	
+
 	// Load minified built version of libraries when not booting in debug mode
 	if (!djConfig.debugBoot) 
 	{
@@ -35,7 +37,7 @@ try
 	    //dojo.registerModulePath("dijit.themes.tundra", wm.libPath + "build/themes/tundra");
 		dojo.registerModulePath("build", wm.libPath + "/build");
 
-	        dojo.require("build.Gzipped.lib_build", true);	
+	    dojo.require("build.Gzipped.lib_build", true);	
 		//dojo.require("build.lib_build_uncompressed", true);	
 		// START: The comments here are for debugging in non-debug mode. Please do not remove these comments
 		//dojo.require("build.lib_build_uncompressed", true);
@@ -45,7 +47,9 @@ try
 		/*
 		dojo.require("build.Gzipped.wm_dojo_grid", true);
 		dojo.require("build.Gzipped.wm_editors", true);
+	dojo.require("build.Gzipped.wm_editors_old", true);
 		dojo.require("build.Gzipped.wm_richTextEditor", true);
+		dojo.require("build.Gzipped.wm_livepanel", true);
 		dojo.require("build.Gzipped.wm_menus", true);
 		dojo.require("build.Gzipped.wm_charts", true);
 		dojo.require("build.Gzipped.wm_gadgets", true);
@@ -53,12 +57,22 @@ try
 
 
 		dojo.require("lib.runtime_manifest", true);
+
 	}
 	else
 	{
 		// Load lib manifest, ensuring anything not included in build will be loaded explicitly
 		dojo.require("lib.manifest", true);
+
+	    wm.locale = {};
+	    dojo.requireLocalization("wm.language", "components");
+	    wm.locale.phrases = dojo.i18n.getLocalization("wm.language", "components");
+	    
+	    dojo.requireLocalization("wm.language", "properties");
+	    wm.locale.props = dojo.i18n.getLocalization("wm.language", "properties");
 	}
+
+
 }
 catch (e)
 {

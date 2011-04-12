@@ -101,8 +101,7 @@ dojo.declare("wm.DataNavigator", wm.Panel, {
 		this._updating = c != r.getValue("dataValue");
 		if (c > t) c = t;
 		r.setValue("dataValue", c);
-	    /* TODO: Localize */
-		this.totalLabel.setValue("caption", "of " + t);
+	       this.totalLabel.setValue("caption", wm.getDictionaryItem("wm.DataNavigator.TOTAL_LABEL", {total: t}))
 		this._doSetRecord(d, c);
 	},
 	setLiveSource: function(inLiveSource) {
@@ -143,60 +142,6 @@ dojo.declare("wm.DataNavigator", wm.Panel, {
 	/*writeComponents: function(inIndent, inOptions) {
 		return [this.components.binding.write(inIndent, inOptions)];
 	},*/
-	writeChildren: function() {
-		// we don't want to stream our child widgets
-		// since we create them at runtime.
-		return [];
-	}
+
 });
 
-// design-time only
-wm.Object.extendSchema(wm.DataNavigator, {
-	box: {ignore: 1},
-	lock: {ignore: 1},
-	liveForm: {ignore: 1},
-	layoutKind: {ignore: 1},
-	byPage: {group: "common", order: 250},
-	liveSource: { readonly: 1, bindable: 1, type: "wm.LiveVariable", group: "common", order: 200},
-	firstRecord: { group: "operation", order: 5},
-	previousRecord: { group: "operation", order: 10},
-	nextRecord: { group: "operation", order: 15},
-    lastRecord: { group: "operation", order: 20},
-    autoScroll: {ignore: true},
-    scrollX: {ignore: true},
-    scrollY: {ignore: true},
-    touchScrolling: {ignore: true}
-});
-
-wm.DataNavigator.extend({
-	_defaultClasses: {domNode: ["wm_Padding_4px"]},
-	firstRecord: "(first record)",
-	previousRecord: "(previous record)",
-	nextRecord: "(next record)",
-	lastRecord: "(last record)",
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "firstRecord":
-			case "previousRecord":
-			case "nextRecord":
-			case "lastRecord":
-				return makeReadonlyButtonEdit(inName, inValue, inDefault);
-			case "liveSource":
-				return new wm.propEdit.DataSetSelect({component: this, name: inName, widgetDataSets: true, listMatch: true});
-		}
-		return this.inherited(arguments);
-	},
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-			case "firstRecord":
-				return this.setFirst();
-			case "previousRecord":
-				return this.setPrevious();
-			case "nextRecord":
-				return this.setNext();
-			case "lastRecord":
-				return this.setLast();
-		}
-		return this.inherited(arguments);
-	}
-});

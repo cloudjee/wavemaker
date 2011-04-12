@@ -475,15 +475,14 @@ dojo.declare("wm.DataInspector", wm.BindInspector, {
 		    this.beginBind(origProp, this.bindingOwner);
 		    studio.bindDialog.bindSourceDialog.expressionRb.editor.setChecked(true);
 		    studio.bindDialog.bindSourceDialog.expressionEditor.setDataValue(inValue);
-		    app.toastError("This value failed to compile; please try again.  Most common problem: lack of quotes");
+		    app.toastError(studio.getDictionaryItem("wm.DataInspector.TOAST_EXPRESSION_FAILED"));
 		    return;
 		}
 	    } catch(e) {
 		    this.beginBind(origProp, this.bindingOwner);
 		studio.bindDialog.bindSourceDialog.expressionRb.editor.setChecked(true);
 		studio.bindDialog.bindSourceDialog.expressionEditor.setDataValue(inValue);
-		    app.toastError("This value failed to compile; please try again.  Most common problem: lack of quotes");
-
+		    app.toastError(studio.getDictionaryItem("wm.DataInspector.TOAST_EXPRESSION_FAILED"));
 		    return;
 	    }
 	    this.bindingOwner.components.binding.addWire("", inProp, "", inValue);
@@ -605,6 +604,7 @@ dojo.declare("wm.NavigationInspector", wm.DataInspector, {
 						value: ins
 					})).getHtml();
                         case "cssClasses":
+		    /* TODO: Localize this */
                                 return (new wm.propEdit.Select({component: this,
                                                                 value: ins || "Info",
                                                                 name: inName,
@@ -617,6 +617,7 @@ dojo.declare("wm.NavigationInspector", wm.DataInspector, {
                                                                 defaultValue: "5000",
                                                                 options: ["1000", "2000", "3000", "4000", "5000", "6000", "8000", "10000", "15000"]})).getHtml();
                         case "dialogPosition":
+		    /* TODO: Localize this */
                                 return (new wm.propEdit.Select({component: this,
                                                                 value: ins || "Info",
                                                                 name: inName,

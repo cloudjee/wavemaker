@@ -47,25 +47,25 @@ dojo.declare("Start", wm.Page, {
 		studio.newProjectClick();
 	},
 	screencastClick: function() {
-		window.open("http://www.wavemaker.com/product/screencasts.html");
+	    window.open(this.getDictionaryItem("URL_SCREENCAST"));
 	},
 	demoClick: function() {
-		window.open("http://www.wavemaker.com/product/demos.html");
+		window.open(this.getDictionaryItem("URL_DEMO"));
 	},
 	communityClick: function() {
-		window.open("http://dev.wavemaker.com/")
+		window.open(this.getDictionaryItem("URL_COMMUNITY"));
 	},
 	userGuideClick: function() {
-		window.open("http://dev.wavemaker.com/wiki/bin/wmdoc/");
+		window.open(this.getDictionaryItem("URL_USERGUIDE"));
 	},
 	tutorialClick: function() {
-		window.open("http://dev.wavemaker.com/wiki/bin/wmdoc/Tutorials");
+		window.open(this.getDictionaryItem("URL_TUTORIAL"));
 	},
 	documentationClick: function() {
-		window.open("http://dev.wavemaker.com/wiki/bin/wmdoc/");
+		window.open(this.getDictionaryItem("URL_DOCS"));
 	},	
 	registerClick: function() {
-		window.open("http://www.wavemaker.com/community/dlreg.html");
+		window.open(this.getDictionaryItem("URL_REGISTER"));
 	},
 
         filterProjectList: function(inSender) {
@@ -83,12 +83,12 @@ dojo.declare("Start", wm.Page, {
 	openProject: function(inSender) {
 		var p = this.getSelectedProject();
 		if (p)
-			studio.waitForCallback(bundleDialog.M_OpeningProject + p, dojo.hitch(studio.project, "openProject", p));
+		    studio.waitForCallback(this.getDictionaryItem("WAIT_OPENNING_PROJECT", {projectName: p}), dojo.hitch(studio.project, "openProject", p));
 	},
         deleteProject: function(inSender) {
 	    var projname = this.existingProjectList.selected.projectName;
 	    if (projname) {
-		app.confirm(bundleDialog.M_AreYouSureDeleteProject + projname + "?", false,
+		app.confirm(this.getDictionaryItem("CONFIRM_DELETE", {projectName: projname}), false,
 			   dojo.hitch(this, function() {
 		               if (studio.project.projectName == projname)
 			           studio.project.closeProject();

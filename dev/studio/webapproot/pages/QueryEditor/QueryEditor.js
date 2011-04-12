@@ -70,7 +70,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		if (!name)
 			return;
 
-            app.confirm('Are you sure you want to delete "' + name + '"?', false, dojo.hitch(this, "_removeQuery"), null);
+            app.confirm(this.getDictionaryItem("CONFIRM_DELETE", {name: name}), false, dojo.hitch(this, "_removeQuery"), null);
 /*
 		app.pageDialog.showPage("GenericDialog",true,350,140);
 		app.pageDialog.page.setupPage("Confirm...", 'Are you sure you want to delete "' + name + '"?');
@@ -85,7 +85,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		//this.selectedNode = null;
 		this.selectedQueryName = null;
 
-		studio.beginWait("Deleting Query...");
+	    studio.beginWait(this.getDictionaryItem("WAIT_DELETE"));
 		studio.dataService.requestSync(
 			REMOVE_QUERY_OP, [this.dataModelName, name],
 			dojo.hitch(this, "_removedQuery"));
@@ -175,7 +175,7 @@ dojo.declare("QueryEditor", wm.Page, {
 	runQuery: function(inSender) {
 		//this.bindValue();
 		if (this._getQueryValue() == "") {
-		    app.alert("Nothing to run, please enter a query");
+		    app.alert(this.getDictionaryItem("ALERT_NO_QUERY"));
 		    return;
 		}
 		this.emptyResultSetLabel.setShowing(false);
@@ -183,7 +183,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		for (var i in DML_OPERATIONS) {
 			var op = DML_OPERATIONS[i];
 			if (this._getQueryValue().toLowerCase().indexOf(op) == 0) {
-				if (!confirm('Are you sure you run a DML operation?')) {
+			    if (!confirm(this.getDictionaryItem("CONFIRM_RUN"))) {
 					return;
 				}
 			}
@@ -201,7 +201,7 @@ dojo.declare("QueryEditor", wm.Page, {
 			this._getQueryInputs(),
 			bindParamValues,
 			this.maxResultsInput.getDataValue()];
-		studio.beginWait("Running Query...");
+		studio.beginWait(this.getDictionaryItem("WAIT_RUN"));
 		studio.dataService.requestAsync(RUN_QUERY_OP, runQueryInput, 
 			dojo.hitch(this, "_runQueryResult"), 
 			dojo.hitch(this, "_runQueryError"));
@@ -254,7 +254,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		for (var i in cs) {
 			var c = cs[i];
 			if (c.declaredClass == "wm.Query" && c != this.query && c.queryName == name) {
-                            app.confirm("Overwrite existing query \"" + name + "\"?", false, 
+                            app.confirm(this.getDictionaryItem("CONFIRM_RUN", {name: name}), false, 
 					dojo.hitch(this, function() {
 					    studio.dataService.requestSync(
 						REMOVE_QUERY_OP, [c.dataModelName, c.queryName],
@@ -300,7 +300,7 @@ dojo.declare("QueryEditor", wm.Page, {
 	},
 	_checkQueryCompleted: function() {
 		this._updateQuery();
-            app.toastSuccess("Query Saved");
+            app.toastSuccess(this.getDictionaryItem("TOAST_SAVED"));
 	},
 	_updateQuery: function() {
 		var name = dojo.string.trim(this.queryNameInput.getDataValue());
@@ -376,7 +376,7 @@ dojo.declare("QueryEditor", wm.Page, {
 	_deleteOriginalQuery: function() {
 	    //app.pageDialog.page.dismiss();
 
-		studio.beginWait("Deleting Query...");
+	    studio.beginWait(this.getDictionaryItem("WAIT_DELETE"));
 		var _this = this;
 		studio.dataService.requestSync(
 		  REMOVE_QUERY_OP, [this.deleteQuery.dataModelName, this.deleteQuery.name],
@@ -392,13 +392,13 @@ dojo.declare("QueryEditor", wm.Page, {
 	_saveQueryError: function(inError) {
 	    //studio.endWait();
 	    studio._saveErrors.push({owner: this,
-				     message: "Error saving query: " + inError.message});
+				     message: this.getDictionaryItem("ERROR_SAVING", {error: inError.message})});
 	    this.saveComplete();
 	},
 	_checkQueryError: function(inError) {
 	    //studio.endWait();
 	    studio._saveErrors.push({owner: this,
-				     message: "Warning: " + inError.message});
+				     message: this.getDictionaryItem("ERROR_CHECKING", {error: inError.message})});
 	    this.saveComplete();
 	},
 	/*_loadQueries: function() {
@@ -410,7 +410,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		if (this.isDestroyed) return;
 		var changed = this.getCachedData() != this._cachedData;
 		var caption = (!changed ? "" : "<img class='StudioDirtyIcon'  src='images/blank.gif' /> ") +
-		    this.queryNameInput.getDataValue() + " (" + bundleStudio["TabCaption_Query"] + ")";
+		    this.queryNameInput.getDataValue() + " (" + studio.getDictionaryItem("wm.Query.TAB_CAPTION") + ")";
 		this.dirty = changed;
 
 		if (caption != this.owner.parent.caption) {
@@ -521,7 +521,7 @@ dojo.declare("QueryEditor", wm.Page, {
 	},
 	addBindParam: function(inSender) {
 		if (this.bindNameInput.getDataValue() == "") {
-		    app.alert("The bind parameter name is required");
+		    app.alert(this.getDictionaryItem("ALERT_NO_BIND"));
 			return;
 		}
 /*
@@ -646,12 +646,12 @@ dojo.declare("QueryEditor", wm.Page, {
 		var q = this._getQueryValue();
 	    if (dojo.string.trim(qn || "") == "") {
 		studio._saveErrors.push({owner: this,
-					 message: "Enter query name before saving."});
+					 message: this.getDictionaryItem("ALERT_NO_NAME")});
 		return false;
 	    }
 	    if (dojo.string.trim(q||"") == "") {
 		studio._saveErrors.push({owner: this,
-					 message: "Enter a query before saving."});
+					 message: this.getDictionaryItem("ALERT_NO_QUERY")});
 		return false;
 	    }
 	    return true;

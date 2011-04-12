@@ -15,6 +15,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */ 
+
+
+/* This widget is used within both the JavaEditor and (Web) Services editor; however it is hidden,
+ * and should be obsolete as soon as we cleanup those two editors.
+ */
+
 dojo.provide("wm.studio.app.servicesTree");
 
 dojo.declare("wm.ServicesTree", wm.Tree, {

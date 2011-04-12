@@ -231,7 +231,7 @@ dojo.declare("Services", wm.Page, {
 	},
 	delWebServiceBtnClick: function(inSender) {
 	    if (this.tree.serviceId) {
-                app.confirm('Are you sure you want to delete ' + this.tree.serviceId + '?', false,
+                app.confirm(this.getDictionaryItem("CONFIRM_DELETE", {serviceId: this.tree.serviceId}), false,
                             dojo.hitch(this, function() {
 			        studio.servicesService.requestAsync("deleteService", [this.tree.serviceId], dojo.hitch(this, "deleteServiceCallback"));
                             }));
