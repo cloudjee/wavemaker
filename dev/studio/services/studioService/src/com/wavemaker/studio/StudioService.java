@@ -596,7 +596,7 @@ System.out.println("F");
         Map<String, String> jarHash = new HashMap<String, String>();
         jarHash.put("db2jcc.jar", "COM.ibm.db2.app.DB2StructOutput");
         jarHash.put("ojdbc.jar", "oracle.jdbc.driver.OracleDatabaseMetaData");
-        jarHash.put("wsdl4j.jar", "javax.wsdl.factory.WSDLFactory.class");
+        jarHash.put("wsdl4j.jar", "javax.wsdl.factory.WSDLFactory");
         //ClassLoader loader = ClassLoaderUtils.getClassLoader();
 
         List<String> missingJars = new ArrayList<String>();
