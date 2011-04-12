@@ -16,11 +16,20 @@
  *  limitations under the License.
  */
 
-.ImportFile .ImportFile-panel {
-    background-color: #8F98A4;
+.HandleRequiredJars a {
+    color: white;
 }
 
-.ImportFile .wmbutton {
+.HandleRequiredJars .wmwizardlayers .wmwizardlayers-tab {
+    color: white;
+}
+
+.HandleRequiredJars li {
+    padding-bottom: 8px;
+}
+
+
+.HandleRequiredJars .wmbutton {
 	background-image:url(images/wmbutton_bg.png);
 	background-repeat:repeat-x;
 	color: #FFF;
@@ -30,15 +39,8 @@
 	border-bottom: 1px solid #363b44;
 	cursor: pointer !important;
 }
-.ImportFile form input, .ImportFile form {
-    cursor: pointer !important;
-}
-.ImportFile .wmbutton:hover {
-    background-color: silver !important;
-	background-image:url(images/wmbutton_bg.png) !important;
-}
 
-.ImportFile .wmeditor .dijitInputInner,
-.ImportFile .wmeditor .dijitPlaceHolder {
-    font-size: 18px !important;
+.HandleRequiredJars .wmbutton:hover {
+    background-color: silver !important;
+    background-image:url(images/wmbutton_bg.png) !important;
 }

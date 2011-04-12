@@ -16,29 +16,35 @@
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */ 
 
-dojo.provide("wm.studio.pages.ImportFile.ImportFile");
+dojo.provide("wm.studio.pages.HandleRequiredJars.HandleRequiredJars");
 
-dojo.declare("ImportFile", wm.Page, {
+dojo.declare("HandleRequiredJars", wm.Page, {
     start: function() {
-	this.filename.editor.set("placeHolder", "Select a zip file");
+
     },
-    openProject: function() {
-	this.owner.dismiss();
-	studio.project.openProject(this.fileUploader.variable.getData()[0].path);
+    onShow: function() {
+	this.layer2.invalid = this.layer4.invalid = this.layer6.invalid = true;
+	this.layer1.activate();
     },
-    selectLastItem: function() {
-	wm.onidle(this, function() {
-	    this.list.eventSelect(this.list.getItem(this.list.getCount()-1));
-	});
-    },
-    onChange: function() {
-	var data = this.fileUploader.variable.getData();
-	this.fileUploader.reset();
-	if (data) {
-	    data = data[0];
-	    this.fileUploader.variable.setData([data]);
+
+    onSuccess: function(inSender) {
+	var layer = inSender.parent;
+	layer.invalid = false;
+	var index = layer.getIndex();
+	var layers = layer.parent.layers;
+	for (var i = index + 1; i < layers.length; i++) {
+	    if (layers[i].showing) {
+		layer.parent.setLayerIndex(i);
+		break;
+	    }
 	}
-	
+    },
+    close: function() {
+	this.layer3.hide();
+	this.layer4.hide();
+	this.layer5.hide();
+	this.layer6.hide();
+	this.owner.owner.hide();
     },
     _end: 0
 });
