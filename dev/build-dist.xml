@@ -9,7 +9,7 @@
     <!-- for faster build, use property skip_build_js -->
     <target name="buildwar" depends="build">
         <war basedir="${dist.studio.dir}" destfile="${root.dir}/wavemaker.war" webxml="${webinf.studio.dir}/web.xml" />
-	<echo>Writing war to ${root.dir}/wavemaker.war</echo>
+		<echo>Writing war to ${root.dir}/wavemaker.war</echo>
     </target>
 
 
@@ -67,6 +67,9 @@ NEXT: copy the build files into ${dist.studio.dir}</echo>
                 <exclude name="**/tests*" />
                 <exclude name="**/php*" />
                 <exclude name="**/*.war"/>
+				<exclude name="**/db2jcc.jar" />
+				<exclude name="**/ojdbc14.jar" />
+				<exclude name="**/wsdl4j.jar" />
             </fileset>
         </copy>
 
@@ -89,7 +92,7 @@ NEXT: exit "build"</echo>
     </target>
 
     <target name="build-source" description="Creates a source tarball"
-        depends="common.generate-best-license" if="buildSrc" unless="skip.build-source">
+        depends="common.generate-best-license" if="buildSrc"  unless="skip.build-source">
 		
 	<echo>DEBUG VERSION.TXT: build.dir == ${build.dir} PREFIX = ${tarroot}, version.file.name = ${version.file.name}</echo>
 		<property name="tempsrc.root" value="${build.dir}/tempsrcroot"/>
@@ -127,6 +130,11 @@ NEXT: exit "build"</echo>
                 <exclude name="dev/studio/services/dummyService/**"/>
                 <exclude name="dev/studio/services/registrationService/**"/>
                 <exclude name="dev/studio/services/UserService/**"/>
+				<exclude name="dev/studio/webapproot/WEB-INF/lib/db2jcc.jar"/>
+				<exclude name="dev/studio/webapproot/WEB-INF/lib/ojdbc14.jar"/>
+				<exclude name="dev/studio/webapproot/WEB-INF/lib/wsdl4j.jar"/>
+				<exclude name="dev/core/runtime/lib/wsdl4j-1_6_2/wsdl4j.jar"/>
+				<exclude name="dev/core/runtime/lib/wsdl4j-1_6_2/wsdl4j-src-1.6.2.zip"/>
         	<exclude name="**/RbacPlugin.js" unless="common.modules.isEnterprise"/>
             </tarfileset>
             <tarfileset dir="${build.dir}" prefix="${tarroot}">
@@ -138,8 +146,10 @@ NEXT: exit "build"</echo>
             </tarfileset>
             <tarfileset dir="${modules.dir}"
                     prefix="${tarroot}/dev/modules">
-                <include name="*"/>
+                <include name="*"/>				
                 <patternset refid="common.modules.patternset"/>
+				<exclude name="wm.db2/**" />
+				<exclude name="wm.oracle/**" />
             </tarfileset>
         </tar>
 
