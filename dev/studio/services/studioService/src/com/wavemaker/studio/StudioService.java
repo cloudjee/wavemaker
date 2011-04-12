@@ -59,6 +59,11 @@ import com.wavemaker.common.util.ClassLoaderUtils;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
+import org.springframework.web.multipart.MultipartFile;
+import com.wavemaker.runtime.server.FileUploadResponse;
+import java.io.FileOutputStream;
+import com.wavemaker.runtime.WMAppContext;
+
 /**
  * Main Studio service interface.  This service will manage the other studio
  * services, their inclusion into the HTTPSession, the current project, etc.
@@ -514,7 +519,6 @@ System.out.println("F");
     }
 
 
-
     // bean properties
     private RuntimeAccess runtimeAccess;
     private ProjectManager projectManager;
@@ -590,7 +594,7 @@ System.out.println("F");
     @ExposeToClient
     public List<String> getMissingJars() {
         Map<String, String> jarHash = new HashMap<String, String>();
-        jarHash.put("db2jcc.jar", "com.ibm.db2.app.DB2StructOutput.class");
+        jarHash.put("db2jcc.jar", "COM.ibm.db2.app.DB2StructOutput");
         jarHash.put("ojdbc.jar", "oracle.jdbc.driver.OracleDatabaseMetaData");
         jarHash.put("wsdl4j.jar", "javax.wsdl.factory.WSDLFactory.class");
         //ClassLoader loader = ClassLoaderUtils.getClassLoader();
@@ -607,5 +611,33 @@ System.out.println("F");
         }
 
         return missingJars;
+    }
+
+    @ExposeToClient
+	public FileUploadResponse uploadJar(MultipartFile file) {
+        FileUploadResponse ret = new FileUploadResponse();
+	try {
+
+	File destDir = new File(WMAppContext.getInstance().getAppContextRoot());
+	destDir = new File(destDir, "WEB-INF/lib");
+
+    	// Write the zip file to outputFile
+	String originalName = file.getOriginalFilename();
+    	File outputFile = new File(destDir, originalName);
+
+    	FileOutputStream fos = new FileOutputStream(outputFile);
+    	IOUtils.copy(file.getInputStream(), fos);
+    	file.getInputStream().close();
+    	fos.close();
+
+	ret.setPath(outputFile.getName());
+	ret.setError("");
+	ret.setWidth("");
+	ret.setHeight("");
+	} catch(IOException e) {
+	    ret.setError(e.getMessage());
+	}
+	return ret;
+
     }
 }
