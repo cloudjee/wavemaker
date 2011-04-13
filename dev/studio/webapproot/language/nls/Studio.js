@@ -19,12 +19,22 @@
 {
     ALERT_OLD_IE_BAD: "<p>WaveMaker applications can run on IE6 or above.</p><p>However, WaveMaker Studio requires Chrome, FireFox or IE8.</p><p>Note: if you are running WaveMaker studio in IE8, you must turn off compatibility mode.</p>",
     TOOLTIP_SECURITY_ERROR: "A security error shown here has no effect on the project you are designing.  It does indicate that we are unable to show your data within the designer.  You can typically fix this problem by running your application, logging in to your application, and then the data should show up in the designer",
+
+    /* Documentation; Help Menu */
     URL_TUTORIALS: "http://dev.wavemaker.com/wiki/bin/wmdoc/Tutorials",
     URL_DOCS: "http://dev.wavemaker.com/wiki/bin/wmdoc/",
     URL_PROPDOCS: "http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/PropertyDocumentation",
     URL_FORUMS: "http://dev.wavemaker.com/forums",
+    "MENU_ITEM_Tutorials" : "Tutorials",
+    "MENU_ITEM_DOCS" : "Documentation",
+    "MENU_ITEM_COMMUNITY" : "Community",
+    "MENU_ITEM_PROPDOCS" : "JavaScript (Client) Docs",
+
+
     TOAST_RUN_FAILED: 'Run failed: ${error}',
     ALERT_NEW_WIDGET_NEEDS_CONTAINER: "No available container for the new widget.  All containers are either locked or frozen.",
+
+    /* Shortcuts dialog */
     SHORTCUTS_HEADER: "Most common shortcuts",
     SHORTCUTS_W: "Toggle width between 100% and 100px (not supported for chrome in windows)",
     SHORTCUTS_H: "Toggle height between 100% and 100px",
@@ -39,165 +49,52 @@
     SHORTCUTS_E: "Toggle vertical alignment of widgets in container",
     SHORTCUTS_B: "Toggle layoutKind between left-to-right and top-to-bottom",
     SHORTCUTS_Z: "Undo",
+
+
     DIALOG_WAIT_MESSAGE: 'Please wait...',
+
+    /* Generate documentation */
     GENERATE_DOCUMENTATION_HEADER: "<i>Note: this page is for reviewing documentation; to edit documentation you must go to the component in the model and select its documentation property</i>",
     GENERATE_DOCUMENTATION_NODOCS: "No Documentation",
     GENERATE_DOCUMENTATION_NONVISUAL_HEADER: "Page ${pageName} Non-Visual Components</h2>",
     GENERATE_DOCUMENTATION_VISUAL_HEADER: "Page ${pageName} Visual Components</h2>",
+    "wm.Component.DOCUMENTATION_DIALOG_TITLE": "Document ${name}",
+    "wm.Component.GENERATE_DOCUMENTATION_TOPNOTE": "Generated Documentation",
+    "wm.Component.GENERATE_DOCUMENTATION_EVENT_HEADER": "<h4>${eventName}</h4>\n executes ",
+    "wm.Component.GENERATE_DOCUMENTATION_EVENT_TARGET_TYPE": "<b>Type:</b>: ${componentType}",
+    "wm.Component.GENERATE_DOCUMENTATION_EVENT_TARGET_OPERATION": "<b>Operation:</b>: ${operation}",
+    "wm.Component.GENERATE_DOCUMENTATION_EVENT_FUNCTION": "${propvalue} (Function)",
+    "wm.Component.GENERATE_DOCUMENTATION_NO_EVENT_HANDLER": "No event handlers",
+    "wm.Component.GENERATE_DOCUMENTATION_EVENT_SECTION": "<h4>Event Handlers</h4><div style='margin-left:15px;'>${eventHtml}</div>",
+    "wm.Component.GENERATE_DOCUMENTATION_EVENT_HANDLERS_HEADER": "<h4>The following object event handlers activate this component</h4><ul  style='padding-left:0px;list-style-position: inside;margin-left: 15px;'>\n${eventHtml}</ul>",
+    "wm.Component.GENERATE_DOCUMENTATION_BINDING": "<li><b>${property}</b> is bound to <i>${source}</i></li>\n",
+    "wm.Component.GENERATE_DOCUMENTATION_NO_BINDING": "No bindings",
+    "wm.Component.GENERATE_DOCUMENTATION_BINDING_SECTION": "<h4>This object has the following bindings</h4><ul  style='padding-left:0px;list-style-position: inside;margin-left: 15px;'>\n${bindingHtml}</ul>",
+    "wm.Component.GENERATE_DOCUMENTATION_BOUND_TO": "<li>${targetComponent}.${targetProperty} is bound to <i>${source}</i></li>\n",
+    "wm.Component.GENERATE_DOCUMENTATION_BOUND_TO_SECTION": "<h4>The following objects are bound to this</h4><ul  style='padding-left:0px;list-style-position: inside;margin-left: 15px;'>\n${bindHtml}</ul>",
+
+
     JSON_PENDING: "Pending Request: ${name}",
     CONFIRM_LOGOUT: 'Are you sure you want to logout? Unsaved changes will be lost.',
-    
     CONFIRM_OPEN_PAGE_LOSE_UNSAVED : "Are you sure you want to open page ${newPage}? Unsaved changes to ${oldPage} will be lost.",
     CONFIRM_CLOSE_PROJECT_LOSE_UNSAVED : "Are you sure you want to close project \"${projectName}\"? Unsaved changes will be lost.",
     WAIT_OPENING_PAGE: "Opening page: ${pageName}",
 
-	"Palette" : "Palette",
-	"Diagnostics" : "Diagnostics",
-	"ServerLogs" : "Server Logs",
-    "componentsTab": "Services", // fits better than "Components" in FF
-	"Model" : "Model",
-	"Non_visual_Components" : "Components:",
-	"Visual_Components" : "Visual Components:",
 
-	"Projects" : "Projects",
-	"NewProject" : "New Project...",
-	"NewPage" : "New Page...",
-	"OpenSelected" : "Open Selected",
-        "DeleteProjectCaption" : "Delete",
-        "NewProjectCaption": "New",
-	"SetSelected" : "Set Selected As Home Page",
 
-    "MENU_ITEM_Tutorials" : "Tutorials",
-	"MENU_ITEM_DOCS" : "Documentation",
-	"MENU_ITEM_COMMUNITY" : "Community",
-	"M_Java_Server_Documentation" : "Java (Server) Documentation",
-	"MENU_ITEM_PROPDOCS" : "JavaScript (Client) Docs",
-	"M_Refresh" : "Refresh",
-    "M_Format": "Reformat",
-    "M_Wrap": "Toggle lineWrapping",
-    "M_Compile": "Validate script",
-    "M_Completion": "Autocompletion",
-	"T_TestTip" : "Run in Debug mode with lots of FireBug/FireBug Lite output",
-	"T_Test" : "Test",
-	"T_RunTip" : "Run Project",
-	"T_Run" : "Run",
-	"T_EditAccount" : "Edit",
+    "LAYER_NAME_IDE" : "Source",
+    "ALERT_UNSAVED_LOST" : "Please note that any unpublished changes will be lost.",
+    "ALERT_NO_UNSAVED" : "Please note, there are no unsaved changes.",
 
-	"T_CanvasTip" : "Canvas",
-	"T_SourceTip" : "Source",
-	"T_ResourcesTip" : "Resources",
-	"T_Design" : "Canvas",
-	"T_SaveTip" : "Save",
-	"T_CutTip" : "Cut",
-	"T_CopyTip" : "Copy",
-	"T_PasteTip" : "Paste",
-	"T_DeleteTip" : "Delete",
-	"T_UndoTip" : "Undo",
-	"T_ToggleOutlinedViewTip" : "Toggle Outlined View",
-	"T_NewVariableTip" : "New Variable",
-	"T_NewLiveVariableTip" : "New LiveVariable",
-	"T_NewServiceVariableTip" : "New ServiceVariable",
-	"T_NewNavigationTip" : "New Navigation",
-	"T_DeleteSelectedTip" : "Delete Selected",
-	"T_Rename" : "Rename",
-	"T_Delete" : "Delete",
-	"T_Download" : "Download",
-	"T_Add_File" : "Add File",
-	"T_Add_Folder" : "Add Folder",
-	"T_Replace" : "Replace",
-	"T_Properties" : "Properties",
-
-	"PropertiesHO" : "PropertiesHO",
-	"Login" : "Login",
-	"Deployment" : "Deployment",
-	"Resources" : "Resources",
-	"LAYER_NAME_IDE" : "Source",
-	"R_Script" : "Script",
-	"R_Save" : "Save",
-	"R_Print" : "Print",
-	"R_Import" : "Import",
-	"R_Themes" : "Themes",
-	"R_NewTheme" : "New Theme (Copies wm_default theme)",
-	"R_CopyTheme" : "Copy Current Theme",
-	"R_DeleteTheme" : "Delete Theme",
-	"R_Revert" : "Revert Changes",
-	"R_CSS" : "CSS",
-	"R_Page_CSS" : "Page CSS",
-	"R_Application_CSS" : "Application CSS",
-	"R_Markup" : "Markup",
-	"R_Widgets" : "Widgets",
-	"R_Application" : "Application",
-	"R_Server_Logs" : "Server Logs",
-	"R_App_Docs" : "Documentation",
-	"R_Diagnostics" : "Diagnostics",
-    /*"R_RelativeURL" : "Relative URL:",
-    "R_UploadFile" : "Upload a File",
-    "R_SelectFile" : "Select a File",
-    "R_FileNameAlreadyExists" : "A file with that name already exists",
-    "R_FailedToRenameFile" : "Failed to rename file",
-    "R_FailedToPlaceFile" : "Failed to place file",
-    "R_HasBeenUpdated" : " has been updated",
-    "R_AreYouSureDelete" : "Are you sure you want to delete the ",
-    "R_FailedToDelete" : "Failed to delete ",
-	"R_FailedToChangeName" : "Failed to change name",
-    "R_YourFileRenamed" : "Your file has been renamed to ",
-    "R_FailedToUnzip" : "Failed to unzip the file",
-    "R_InClassPath" : "In ClassPath?",
-    "R_FailedToAddJar" : "Failed to add jar to classpath",
-    "R_FailedToRemoveJar" : "Failed  to remove jar from classpath",
-    "R_FileAddedToClasspath" : "File added to classpath",
-	"R_FileRemovedFromClasspath" : "File removed from classpath",
-	"R_ThatNameAlreadyExists" : "That name already exists",
-    "R_FailedToCreateFolder" : "Failed to create folder",*/
-
-	"ALERT_UNSAVED_LOST" : "Please note that any unpublished changes will be lost.",
-        "ALERT_NO_UNSAVED" : "Please note, there are no unsaved changes.",
-
-        "I_BasicStyles": "Basic",
-	"I_Common" : "Common",
-	"I_Data" : "Data",
-	"I_Display" : "Display",
-	"I_Layout" : "Layout",
-	"I_Advanced_Layout" : "Advanced Layout",
-	"I_Style" : "Style",
-	"I_Scrolling" : "Scrollbars",
-	"I_Data_Objects" : "Data Objects",
-	"I_Formatting" : "Formatting",
-	"I_Labeling" : "Labeling",
-	"I_Editing" : "Editing",
-	"I_Editor_Options" : "Editor Options",
-	"I_Editor_Data" : "Editor Data",
-	"I_Events" : "Events",
-	"I_CustomMethods" : "Custom Methods",
-	"I_General" : "General",
-	"I_Other" : "Other",
-	"I_Validation" : "Validation",
-	"I_Columns" : "Columns",
-	"I_Operations" : "Operations",
-	"I_Docs" : "Documentation",
-	"I_Properties" : "Properties",
-	"I_Events" : "Events",
-	"I_Styles" : "Styles",
-	"I_Property" : "Property",
-	"I_Value" : "Value",
-	"I_Classes" : "Classes",
-	"I_Custom_Styles" : "Custom Styles",
-	"I_Custom" : "Custom",
-	"I_Apply" : "Apply",
-	
-/*    "TabCaption_DataObjectsEditor": "Database Designs",*/
-/*    "TabCaption_QueryEditor": "Database Queries",*/
-    "TabCaption_JavaService": "Java",
-
-    "TabCaption_WebService": "Web Service",
-/*    "TabCaption_LiveViewEditor": "Live Views"*/
-//	"D_BoundTo" : " bound to ",
-//	"D_WithMatchedType" : " with matched type <i>",
-
+    /* wm.DataModel */
     "wm.DataModel.WAIT_ADDING": "Adding ${dataModel}",
     "wm.DataModel.IMPORT_DATABASE_TITLE": "New Data Model",
     "wm.DataModel.TOAST_IMPORT_SUCCESS": "New Data Model ${dataModel} has been imported",
     "wm.DataModel.ENTER_NAME": "Enter your data model name",
+    "wm.DataModel.ORACLE_JAR_INSTRUCTIONS": "<p>To use Oracle databases, you'll need to download and install ojdbc14.jar</p><p>Go to <a target='_New' href='http://www.oracle.com/technetwork/database/enterprise-edition/jdbc-10201-088211.html'>Oracle</a> and download ojdbc14.jar (or whatever the latest version number is).</p><p>Hit the \"Next\" button below when finished.</p>",
+    "wm.DataModel.DB2_JAR_INSTRUCTIONS":  "<p>To use DB2 databases, you'll need to download and install db2jcc.jar</p><p>Go to <a target='_New' href='https://www14.software.ibm.com/webapp/iwm/web/reg/pick.do?source=swg-idsjs11'>IBM</a> and download their driver.</p><p>Open the zip file and find db2jcc.jar (you can ignore the file named db2jcc4.jar)</p><p>Hit the \"Next\" button below when finished.</p>",
+
+    /* wm.JavaService */
     "wm.JavaService.WAIT_INITIALIZING": "Initializing Java Service ${serviceId}",
     "wm.JavaService.CREATE_SERVICE_TITLE": "New Java Service",
     "wm.JavaService.CREATE_SERVICE_OK": "OK",
@@ -205,33 +102,78 @@
     "wm.JavaService.WAIT_CREATING_SERVICE": "Creating service",
     "wm.JavaService.TOAST_SUCCESS_CREATING_SERVICE": "Created java service ${serviceId}",
     "wm.JavaService.TOAST_ERROR_CREATING_SERVICE": "Failed to Create java service ${serviceId}",
+
+    /* wm.WebService */
+    "wm.WebService.IMPORT_TITLE": "Import Web Service",
+    "wm.WebService.JAR_INSTRUCTIONS": "<p>To use web services, you'll need to download and install wsdl4j.jar</p><p>Go to <a target='_New' href='http://sourceforge.net/projects/wsdl4j/'>SourceForge</a> and download wsdl4j-bin-1.6.2.</p><p>Open the zip file and find wsdl4j.jar within the lib folder.  When you find it, hit this dialog's \"Next\" button.",
+
+    /* wm.LiveVariable */
     "wm.LiveVariable.ALERT_INVALID_SORT_ORDER": "Each property used in the orderBy clause must be of the form asc|desc: &lt;propertyPath&gt;. \"${order}\" does not match this format. The current orderBy clause will generate an error and should be corrected.",
+
+    /* wm.Page/PageLoader */
     "wm.Page.WIDGETS_MISSING": "Page ${pageName} has errors",
     "wm.PageLoader.JS_NOT_LOADED": "Page ${inName}.js had errors",
+
+    /* wm.PageContainer */
+    "wm.PageContainer.OPEN_PAGE": "Open Page",
+    "wm.PageContainer.NEW_PAGE": "New Page",
+    "wm.PageContainer.NEW_PAGE_OPTION": "-New Page",
+    "wm.PageContainer.CONFIRM_SAVE_CHANGES": "Can we save your current page before moving on to the next page? This will save your pageContainer's pageName.",
+
+    /* wm.Property/Composite/Publisher */
     "wm.Property.SELECT_PROPERTY": "Select Property to publish as <b>${propertyName}</b>",
-    "wm.WebService.IMPORT_TITLE": "Import Web Service",
-    "wm.PopupButton.MENU_DESIGNER_TITLE":"Edit Menu",
+
+    /* wm.PopupMenuButton, wm.DojoMenu */
+    "wm.PopupMenuButton.MENU_DESIGNER_TITLE":"Edit Menu",
+    "wm.DojoMenu.MENU_DESIGNER_TITLE": "Edit Menu",
+    "wm.PopupMenu.DEFAULT_STRUCTURE": 
+        '[{label: "File",	children: [{label: "Save"},{label: "Close"}]},' +
+	'{label: "Edit",	children: [{label: "Cut"}, {label: "Copy"},{label: "Paste"}]},' +
+        '{label: "Help"}]',
+
+    /* wm.ContextMenuDialog */
     "wm.ContextMenuDialog.DELETE_LABEL": 'Delete', 
     "wm.ContextMenuDialog.SHOW_MORE": 'Show Advanced Properties >>',
     "wm.ContextMenuDialog.SHOW_LESS": '<< Hide Advanced Properties',
+
+    /* wm.Dashboard */
     "wm.Dashboard.CONTEXT_MENU_TITLE": "Configure Portlets",
     "wm.Dashboard.CONFIG_DIALOG_OPEN_FIELD": "Default",
     "wm.Dashboard.CONFIG_DIALOG_TITLE_FIELD": "Title",
     "wm.Dashboard.CONFIG_DIALOG_PAGE_FIELD": "Page",
     "wm.Dashboard.CONFIG_DIALOG_CLOSE_FIELD": "Closable",
+
+    /* wm.ListViewer */
+    "wm.ListViewer.NO_DATASET": "Please select a dataSet before creating a new page",
+    "wm.ListViewer.CONFIRM_SAVE_CHANGES": "Can we save this page before moving on to the next page?", 
+
+     /* wm.DojoGrid */
+    "wm.DojoGrid.HELP_TEXT": '* To re-arrange columns close dialog box and drag columns on grid to desired position.<br>* You can right click on grid to open this dialog.',
+    "wm.DojoGrid.CONFIG_ID": "Field",
+    "wm.DojoGrid.CONFIG_TITLE": "Title",
+    "wm.DojoGrid.CONFIG_WIDTH": "Width",
+    "wm.DojoGrid.CONFIG_ALIGN": "Alignment",
+    "wm.DojoGrid.CONFIG_FORMAT": "Format",
+    "wm.DojoGrid.CONFIG_TYPE": "Edit Field Type",
+    "wm.DojoGrid.CONFIG_EXPR": "Data Expression",
+    "wm.DojoGrid.ADD_COLUMN_LABEL": "Add Column",
+    "wm.DojoGrid.EDIT_COLUMNS_DIALOG_TITLE": "DojoGrid Column Properties",
+    "wm.DojoGrid.ADD_FORMATTER": '- Add Formatter',
+    "wm.DojoGrid.COLUMN_ALIGN_RIGHT": "Right",
+    "wm.DojoGrid.COLUMN_ALIGN_LEFT": "Left",
+    "wm.DojoGrid.COLUMN_ALIGN_CENTER": "Center",
+
+
+    /* Studio Service Tabs */
     "wm.LiveView.TAB_CAPTION": "Live View",
     "wm.Security.TAB_CAPTION": "Security",
     "wm.Query.TAB_CAPTION": "Query",
     "wm.DataModel.TAB_CAPTION": "Data Model",
-    "wm.ListViewer.NO_DATASET": "Please select a dataSet before creating a new page",
+
+    
+    /* LivePanel, LiveForm, EditPanel, RelatedEditor */
     "wm.RelatedEditor.BAD_EDIT_MODE": "For this editor to be editable, its parent editor must have an editingMode of editable.",
     "wm.RelatedEditor.LOOKUP_CAPTION": "${fieldName} (lookup)",
-    "wm.PageContainer.OPEN_PAGE": "Open Page",
-    "wm.PageContainer.NEW_PAGE": "New Page",
-    "wm.PageContainer.NEW_PAGE_OPTION": "-New Page",
-    "wm.PageContainer.CONFIRM_SAVE_CHANGES": "Can we save your current page before moving on to the next page? This will save your pageContainer's pageName.",
-    "wm.ListViewer.CONFIRM_SAVE_CHANGES": "Can we save this page before moving on to the next page?", 
-    "wm.DojoGrid.HELP_TEXT": '* To re-arrange columns close dialog box and drag columns on grid to desired position.<br>* You can right click on grid to open this dialog.',
     "wm.LivePanel.CHOOSER_TITLE": "Pick LivePanel Layout",
     "wm.LivePanel.DETAILS_PANEL_TITLE": "Details",
     "wm.LiveForm.GENERATE_BUTTONS_TITLE": "Generate Form Buttons",
@@ -253,46 +195,14 @@
     "wm.EditPanel.NEW_CAPTION": "New",
     "wm.EditPanel.UPDATE_CAPTION": "Update",
     "wm.EditPanel.DELETE_CAPTION": "Delete",
-    "wm.DojoGrid.CONFIG_ID": "Field",
-    "wm.DojoGrid.CONFIG_TITLE": "Title",
-    "wm.DojoGrid.CONFIG_WIDTH": "Width",
-    "wm.DojoGrid.CONFIG_ALIGN": "Alignment",
-    "wm.DojoGrid.CONFIG_FORMAT": "Format",
-    "wm.DojoGrid.CONFIG_TYPE": "Edit Field Type",
-    "wm.DojoGrid.CONFIG_EXPR": "Data Expression",
-    "wm.DojoGrid.ADD_COLUMN_LABEL": "Add Column",
-    "wm.DojoGrid.EDIT_COLUMNS_DIALOG_TITLE": "DojoGrid Column Properties",
-    "wm.DojoGrid.ADD_FORMATTER": '- Add Formatter',
-    "wm.DojoGrid.COLUMN_ALIGN_RIGHT": "Right",
-    "wm.DojoGrid.COLUMN_ALIGN_LEFT": "Left",
-    "wm.DojoGrid.COLUMN_ALIGN_CENTER": "Center",
+
+
     "wm.EditArea": "Enter line number"    ,
+
+    /* Editors */
     "wm.ResizeableEditor.SET_MAX_HEIGHT": "Your maxHeight must be larger than ${minHeight}",
-/*
-    "wm.ColorPickerDialog.CANCEL": "Cancel",
-    "wm.ColorPickerDialog.OK": "OK",
-    "wm.ColorPickerDialog.BRIGHTEN": "Bright",
-    "wm.ColorPickerDialog.DARKEN": "Dark",
-    */
-    "wm.DojoMenu.MENU_DESIGNER_TITLE": "Edit Menu",
-    "wm.PopupMenu.DEFAULT_STRUCTURE": 
-        '[{label: "File",	children: [{label: "Save"},{label: "Close"}]},' +
-	'{label: "Edit",	children: [{label: "Cut"}, {label: "Copy"},{label: "Paste"}]},' +
-        '{label: "Help"}]',
-    "wm.Component.DOCUMENTATION_DIALOG_TITLE": "Document ${name}",
-    "wm.Component.GENERATE_DOCUMENTATION_TOPNOTE": "Generated Documentation",
-    "wm.Component.GENERATE_DOCUMENTATION_EVENT_HEADER": "<h4>${eventName}</h4>\n executes ",
-    "wm.Component.GENERATE_DOCUMENTATION_EVENT_TARGET_TYPE": "<b>Type:</b>: ${componentType}",
-    "wm.Component.GENERATE_DOCUMENTATION_EVENT_TARGET_OPERATION": "<b>Operation:</b>: ${operation}",
-    "wm.Component.GENERATE_DOCUMENTATION_EVENT_FUNCTION": "${propvalue} (Function)",
-    "wm.Component.GENERATE_DOCUMENTATION_NO_EVENT_HANDLER": "No event handlers",
-    "wm.Component.GENERATE_DOCUMENTATION_EVENT_SECTION": "<h4>Event Handlers</h4><div style='margin-left:15px;'>${eventHtml}</div>",
-    "wm.Component.GENERATE_DOCUMENTATION_EVENT_HANDLERS_HEADER": "<h4>The following object event handlers activate this component</h4><ul  style='padding-left:0px;list-style-position: inside;margin-left: 15px;'>\n${eventHtml}</ul>",
-    "wm.Component.GENERATE_DOCUMENTATION_BINDING": "<li><b>${property}</b> is bound to <i>${source}</i></li>\n",
-    "wm.Component.GENERATE_DOCUMENTATION_NO_BINDING": "No bindings",
-    "wm.Component.GENERATE_DOCUMENTATION_BINDING_SECTION": "<h4>This object has the following bindings</h4><ul  style='padding-left:0px;list-style-position: inside;margin-left: 15px;'>\n${bindingHtml}</ul>",
-    "wm.Component.GENERATE_DOCUMENTATION_BOUND_TO": "<li>${targetComponent}.${targetProperty} is bound to <i>${source}</i></li>\n",
-    "wm.Component.GENERATE_DOCUMENTATION_BOUND_TO_SECTION": "<h4>The following objects are bound to this</h4><ul  style='padding-left:0px;list-style-position: inside;margin-left: 15px;'>\n${bindHtml}</ul>",
+
+    /* Context Menus */
     "wm.Component.CONTEXT_MENU_LAYERS": "${parentName} Layers",
     "wm.Component.CONTEXT_MENU_HELP": "${className} docs...",
     "wm.Component.CLASS_NOT_FOUND": 'Component type "${type}" is not available.',
@@ -300,12 +210,18 @@
     "wm.Palette.MENU_ITEM_DOCS": "${className} docs...",
     "wm.Palette.URL_CLASS_DOCS": "http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/${shortName}",
     "wm.Palette.TIP_DOCS": "Click for docs",
+
+    /* action.js/clipboard.js: undo/redo */
     "UNDO_MOUSEOVER_HINT": "Undo ${hint}",
     "UNDO_DELETE_HINT": "Delete ${className}",
     "UNDO_DROP_HINT": "Drop ${className}",
     "UNDO_ADD_HINT": "Add ${className}",
+
+
     "ALERT_PASTE_FAILED_PANEL_LOCKED": "Unable to paste.  All containers are either locked or frozen."    ,
     "CONFIRM_GENERIC_DISCARD_UNSAVED": 'Discard unsaved changes?',
+
+    
     WAIT_BUILDING_WAR: "Building WAR file. It may take several minutes. Please wait.",
     ALERT_LIVE_LAYOUT_SECURITY_WARNING: "In order for Live Layout to work, project security needs to be disabled.\nPlease uncheck the 'Enable Security' check box in the Security Editor to disable security.\nTo disable Live Layout, launch Studio in 'nolive' mode.",
     ALERT_BUILDING_WAR_SUCCESS: "Successfully exported project to zip file at ${inResponse}.\n\nTo import this project unzip it into the projects directory of another studio.",
@@ -322,6 +238,8 @@
     TITLE_CODE_VALIDATION_DIALOG: "Compiler Results",
     TITLE_IMPORT_JAVASCRIPT: "Script Importer",
     TITLE_IMPORT_CSS: "CSS Importer",
+
+    /* Auto Completion */
     AUTOCOMPLETE_ALERT_SELECT_TEXT: "Please select text, such as 'this.button1', or 'button1', and if your page has a button1 in it, we will list suitable methods you can call on that object",
     AUTOCOMPLETE_ALERT_NOT_FOUND: "\"${text}\" not found. Please select text, such as 'this.button1', or 'button1', and if your page has a button1 in it, we will list suitable methods you can call on that object",
     AUTOCOMPLETION_LABEL_PAGE_COMPONENTS: "Page Components",
@@ -337,6 +255,8 @@
     AUTOCOMPLETION_TYPE_NOT_SUPPORTED: "We do not provide information on this kind of object",
     AUTOCOMPLETION_HTML: "Select a term to see description; double click to add it to your code",
     AUTOCOMPLETION_LABEL_DESCRIPTION: "Description",
+
+    /* Event Editor */
     "wm.EventEditor.NO_EVENTS": " - No Event",
     "wm.EventEditor.NEW_JAVASCRIPT": " - Javascript...",
     "wm.EventEditor.NEW_JAVASCRIPT_SHARED": " - Javascript Shared...",
@@ -349,6 +269,8 @@
     "wm.EventEditor.LIST_DIALOGS": "Dialogs:",
     "wm.EventEditor.LIST_DASHBOARDS": "Dashboard Add Widget:",
     "wm.EventEditor.LIST_TIMERS": "TIMERS:",
+
+    /* Inspectors */
     "wm.DataInspector.TOAST_EXPRESSION_FAILED": "This value failed to compile; please try again.  Most common problem: lack of quotes",    
     "wm.ComponentInpsectorPanel.PROPERTY_NODE_CAPTION": "Properties",
     "wm.ComponentInpsectorPanel.EVENT_NODE_CAPTION": "Events",
@@ -360,10 +282,13 @@
     "wm.StyleInspector.CUSTOM_LAYER_CAPTION": "Custom Styles",
     "wm.StyleInspector.CUSTOM_CLASS_CAPTION": "Custom",
     "wm.StyleInspector.CUSTOM_BUTTON_CAPTION": "Apply",
+
+    /* Model/Services */
     "MODELTREE_NODE_PAGE_HEADING": "Page (${className})",
     "MODELTREE_NODE_PROJECT_HEADING": "Project (${projectName})",
     "MODELTREE_CONTEXTMENU_NEW": "New ${className}",
     "MODELTREE_CONTEXTMENU_DOC": "docs...",
+
     POPUP_BLOCKER_MESSAGE: "Popup Blocker Detected - Manually Launch",
     "wm.studio.Project.TOAST_RESERVED_NAME": "That is a reserved javascript name",
     "wm.studio.Project.WAIT_CREATING_PROJECT": "Setting up new project",
@@ -401,10 +326,5 @@
     "WAIT_BUILD_PREVIEW": "Building Preview...",
     "CONFIRM_UNSAVEDTAB_HEADER": "You have unsaved changes:",
     "CONFIRM_UNSAVEDTAB_CLOSEANYWAY": "Close anyway?",
-    "CONFIRM_REFRESH_SCRIPT": "Are you sure you want to reload this file file from disk ? Unsaved changes will be lost",
-
-
-    "wm.WebService.JAR_INSTRUCTIONS": "<p>To use web services, you'll need to download and install wsdl4j.jar</p><p>Go to <a target='_New' href='http://sourceforge.net/projects/wsdl4j/'>SourceForge</a> and download wsdl4j-bin-1.6.2.</p><p>Open the zip file and find wsdl4j.jar within the lib folder.  When you find it, hit this dialog's \"Next\" button.",
-    "wm.DataModel.ORACLE_JAR_INSTRUCTIONS": "<p>To use Oracle databases, you'll need to download and install ojdbc14.jar</p><p>Go to <a target='_New' href='http://www.oracle.com/technetwork/database/enterprise-edition/jdbc-10201-088211.html'>Oracle</a> and download ojdbc14.jar (or whatever the latest version number is).</p><p>Hit the \"Next\" button below when finished.</p>",
-    "wm.DataModel.DB2_JAR_INSTRUCTIONS":  "<p>To use DB2 databases, you'll need to download and install db2jcc.jar</p><p>Go to <a target='_New' href='https://www14.software.ibm.com/webapp/iwm/web/reg/pick.do?source=swg-idsjs11'>IBM</a> and download their driver.</p><p>Open the zip file and find db2jcc.jar (you can ignore the file named db2jcc4.jar)</p><p>Hit the \"Next\" button below when finished.</p>"
+    "CONFIRM_REFRESH_SCRIPT": "Are you sure you want to reload this file file from disk ? Unsaved changes will be lost"
 }
