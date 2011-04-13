@@ -114,7 +114,9 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
     // handle fitToContentHeight adjustments
     reflow: function() {
         try {
-            if (!this._settingHeight) {
+	    if (this._userSized) {
+                return this.inherited(arguments);
+	    } else if (!this._settingHeight) {
                 var height = this.getPreferredFitToContentHeight();
 		if (dojo.isChrome) height--; // stupid chrome bug...
                 this._settingHeight = true;

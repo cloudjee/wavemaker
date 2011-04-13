@@ -20,8 +20,8 @@ dojo.provide("wm.base.widget.Dialogs.Dialog");
 dojo.require("wm.base.widget.Container");
 dojo.require("wm.base.widget.Picture");
 dojo.require("wm.base.widget.Button");
+dojo.require("wm.base.drag.drag");
 dojo.require("dojo.dnd.Moveable");
-
 
 wm.dialog = {showingList: []};
 
@@ -88,6 +88,23 @@ dojo.addOnLoad(function() {
 		wm.bgIframe.create();
 });
 
+
+dojo.declare("wm.DialogResize", wm.MouseDrag, {
+	beginResize: function(e, inSplitter) {
+		this.dialog = inSplitter;
+		this.mousedown(e);
+	},
+	drag: function() {
+		this.inherited(arguments);
+		this.dialog.drag(this.dx, this.dy);
+	},
+	finish: function() {
+		this.inherited(arguments);
+		this.dialog.drop();
+	}
+});
+
+
 dojo.declare("wm.Dialog", wm.Container, {
     containerClass: "MainContent",
     corner: "cc", // center vertical, center horizontal; this is almost always the desired default... but for some nonmodal dialogs, its useful to have other options
@@ -119,6 +136,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 	showing: false,
         dialogScrim: null,
 	modal: true,
+    constructor: function() {
+	wm.Dialog.resizer = wm.Dialog.resizer || new wm.DialogResize();
+    },
     init: function() {
         this.inherited(arguments);
 	if (this._isDesignLoaded) {
@@ -133,6 +153,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 	this.dialogScrim = new wm.Scrim({owner: this, _classes: {domNode: ["wmdialog-scrim"]}, waitCursor: false});
 
 	this.createTitle();
+	if (!this._isDesignLoaded)
+	    this.connectEvents(this.domNode, ["mousedown"]);
     },
 	postInit: function() {
 		this.inherited(arguments);
@@ -353,7 +375,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	},
  	renderBounds: function() {
 		if (this.showing) {
-		    if (this.fitToContentHeight) 
+		    if (this.fitToContentHeight && !this._userSized) 
 			this.bounds.h = this.getPreferredFitToContentHeight();
 
 		    if (this._minified) {
@@ -368,21 +390,25 @@ dojo.declare("wm.Dialog", wm.Container, {
 			//// center within parent
 			//var parentBox = dojo.contentBox(this.domNode.parentNode);
 			//var bounds = this.getBounds();
-                        if (this.fixPositionNode) {
-                            this.renderBoundsByPositionNode();
-                        } else if (!this._fixPosition) {
-                            this.renderBoundsByCorner();
-/*
-			    var t = (parentBox.h - bounds.h) / 2;
-			    var l = (parentBox.w - bounds.w) / 2;
-			    this.setBounds(l, t);
-			    this.domNode.style.top = t + "px";
-			    this.domNode.style.left = l + "px";
-                            */
+			if (this._userSized) {
+			    this.insureDialogVisible();
                         } else {
-                            this.insureDialogVisible();
-                        }
-		        wm.bgIframe.size();
+                            if (this.fixPositionNode) {
+				this.renderBoundsByPositionNode();
+                            } else if (!this._fixPosition) {
+				this.renderBoundsByCorner();
+				/*
+				  var t = (parentBox.h - bounds.h) / 2;
+				  var l = (parentBox.w - bounds.w) / 2;
+				  this.setBounds(l, t);
+				  this.domNode.style.top = t + "px";
+				  this.domNode.style.left = l + "px";
+				*/
+                            } else {
+				this.insureDialogVisible();
+                            }
+		            wm.bgIframe.size();
+			}
 		    }
 /*
 		    if (this.isDesignedComponent()) 
@@ -787,5 +813,83 @@ dojo.declare("wm.Dialog", wm.Container, {
     // design only; fired when dialog is selected; we want it to autohide when deselected in the designer
     deactivate: function() {
 	this.hide();
-    }
+    },
+
+
+    /* Resizing */
+	mousedown: function(e) {
+	    /* Can only target the dialog's node if hitting the border or if some bad rendering of content */
+	    if (!this.modal && e.target == this.domNode) {
+		this._userSized = true;
+		this._initialPosition = dojo.clone(this.bounds);
+
+		var targetX = e.clientX - this.marginExtents.l - this.borderExtents.l;
+		var targetY = e.clientY - this.marginExtents.t - this.borderExtents.t;
+		if (targetX - 12 <= this.bounds.l && targetX + 12 >= this.bounds.l) {
+		    this._dragBorderX = "left";
+		} else if (targetX - 12 <= this.bounds.r && targetX + 12 >= this.bounds.r) {
+		    this._dragBorderX = "right";
+		} else {
+		    this._dragBorderX = "";
+		}
+		if (targetY - 12 <= this.bounds.t && targetY + 12 >= this.bounds.t) {
+		    this._dragBorderY = "top";
+		} else if (targetY - 12 <= this.bounds.b && targetY + 12 >= this.bounds.b) {
+		    this._dragBorderY = "bottom";
+		} else {
+		    this._dragBorderY = "";
+		}
+		switch(this._dragBorderX + this._dragBorderY) {
+		case "lefttop":
+		    wm.Dialog.resizer.setCursor("nw-resize");
+		    break;
+		case "leftbottom":
+		    wm.Dialog.resizer.setCursor("sw-resize");
+		    break;
+		case "righttop":
+		    wm.Dialog.resizer.setCursor("ne-resize");
+		    break;
+		case "rightbottom":
+		    wm.Dialog.resizer.setCursor("se-resize");
+		    break;
+		case "top":
+		    wm.Dialog.resizer.setCursor("n-resize");
+		    break;
+		case "bottom":
+		    wm.Dialog.resizer.setCursor("s-resize");
+		    break;
+		case "left":
+		    wm.Dialog.resizer.setCursor("w-resize");
+		    break;
+		case "right":
+		    wm.Dialog.resizer.setCursor("e-resize");
+		    break;
+		}
+		this._userSized = true;
+		wm.Dialog.resizer.beginResize(e, this);
+	    }
+	},
+	drag: function(inDx, inDy) {
+	    //console.log(inDx);
+	    if (this._dragBorderX == "left") {
+		this.setBounds(this._initialPosition.l + inDx, NaN, this._initialPosition.w - inDx, NaN);
+	    } else if (this._dragBorderX == "right") {
+		this.setBounds(NaN, NaN, this._initialPosition.r - this._initialPosition.l + inDx, NaN);
+	    }
+
+
+	    if (this._dragBorderY == "top") {
+		this.setBounds(NaN, this._initialPosition.t + inDy, NaN, this._initialPosition.h - inDy, NaN);
+	    } else if (this._dragBorderY == "bottom") {
+		this.setBounds(NaN, NaN, NaN, this._initialPosition.b - this._initialPosition.t + inDy);
+	    }
+
+
+	    this.renderBounds();
+	    if (!dojo.isIE || dojo.isIE >= 9)
+		this.reflow();
+	},
+	drop: function() {
+	    this.reflow();
+	}
 });

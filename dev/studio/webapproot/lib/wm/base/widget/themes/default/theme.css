@@ -18,7 +18,15 @@
  */
 
 /* button */
-
+.nonmodaldialog { 
+ cursor: crosshair;   
+}
+.nonmodaldialog > div {
+    cursor: default;
+}
+.nonmodaldialog .dialogtitlebar {
+    cursor: move;
+}
 .dj_ie button, .dj_ie .wmbutton {
 	font-size: 100%;
 }
@@ -218,7 +226,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	border-bottom: 4px solid #000000;
 	/*overflow: visible !important;*/
 	overflow: hidden;
-	white-space: no-wrap;
+	white-space: nowrap;
 	height: 27px;		
 }
 
@@ -232,7 +240,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	float: left;	
 	font-size: 11px;
 	zoom:1;
-	*display:inline;
+	display:inline;
 	-webkit-user-select:none;
 	-moz-user-select:none;		
 }
@@ -244,7 +252,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	height: 27px;
 	width: 12px;
 	zoom:1;
-	*display:inline;	
+	display:inline;	
 }
 
 .wmtablayers-roundedtab-center {
@@ -255,7 +263,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	padding: 8px 5px 0px 5px;		
 	font-family: Verdana;
 	zoom:1;
-	*display:inline;	
+	display:inline;	
 }
 
 .wmtablayers-roundedtab-right {
@@ -265,7 +273,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	height: 27px;
 	width: 12px;
 	zoom:1;
-	*display:inline;	
+	display:inline;	
 }
 
 .wmtablayers-roundedtabbar .wmtablayers-selected{
@@ -317,7 +325,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	height: 32px;
 	padding-top: 9px;
 	zoom:1;
-	*display:inline;	
+	display:inline;	
 }
 .button-gray-center { 
 	display: inline-block;
@@ -329,7 +337,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	white-space:normal;
 	color: #333333;
 	zoom:1;
-	*display:inline;	
+	display:inline;	
 }
 .button-gray-right { 
 	display: inline-block;
@@ -338,7 +346,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	height: 32px;
 	padding-top: 9px;
 	zoom:1;
-	*display:inline;	
+	display:inline;	
 }
 
 /* END GRAY BUTTONS */
@@ -358,7 +366,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	height: 32px;
 	padding-top: 9px;
 	zoom:1;
-	*display:inline;	
+	display:inline;	
 }
 .button-blue-center { 
 	display: inline-block;
@@ -369,7 +377,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	font-weight:bold;
 	white-space:normal;
 	zoom:1;
-	*display:inline;	
+	display:inline;	
 }
 .button-blue-right { 
 	display: inline-block;
@@ -378,7 +386,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	height: 32px;
 	padding-top: 9px;
 	zoom:1;
-	*display:inline;	
+	display:inline;	
 }
 
 /* END BLUE BUTTONS */
@@ -393,7 +401,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	height: 30px;
 	padding-top: 9px;
 	zoom:1;
-	*display:inline;	
+	display:inline;	
 }
 .button-green-center { 
 	display: inline-block;
@@ -405,7 +413,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	white-space:normal;
 	color: #333333;
 	zoom:1;
-	*display:inline;	
+	display:inline;	
 }
 .button-green-right { 
 	display: inline-block;
@@ -414,7 +422,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	height: 30px;
 	padding-top: 9px;
 	zoom:1;
-	*display:inline;	
+	display:inline;	
 }
 
 /* END GREEN BUTTONS */
@@ -647,7 +655,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 }
 
 .wmlist-item {
-	cursor: pointer; cursor: hand;
+	cursor: pointer;
 	padding: 0.2em 0.5em;
 	margin: 0;
 }
@@ -811,9 +819,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	background-color: #EEEEEE;
 }
 
-.nonmodaldialog .wmdialogtitlebar {
-    cursor: hand;
-}
+
  .dialogtitlebar, .dialogfooter {
     background-color: #555555;	   
     color: white;
@@ -1419,11 +1425,11 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 }
 
 .gridActionButtonDisabled{
-	background: none repeat scroll 0 0 #C9C9C9
+	background: none repeat scroll 0 0 #C9C9C9;
 }
 
 .gridActionButtonDisabled:hover{
-	background: none repeat scroll 0 0 #C9C9C9
+	background: none repeat scroll 0 0 #C9C9C9;
 	cursor:default;
 }
 
