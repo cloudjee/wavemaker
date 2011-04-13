@@ -1859,10 +1859,13 @@ background-color: transparent;
     white-space:pre;
     color: white;
 }
-
+.Studio  .Studio-autoCompletionHtml .SynopsisNavButtons {
+    padding: 10px;
+    text-align: center;
+}
 #studio_autoCompletionDialog a {
    text-decoration: underline;
-   color: rgb(220,220,240);
+   color: #444;
    font-weight: bold;
 }
 
