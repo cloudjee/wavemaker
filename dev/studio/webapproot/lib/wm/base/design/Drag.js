@@ -25,7 +25,21 @@ dojo['require']('wm.base.drag.drag');
 dojo.declare("wm.design.Mover", wm.DragDropper, {
 	constructor: function() {
 		this.info = {};
+	    this.domNodes = [];
 	},
+/* This is a very useful debugging section; do not delete!
+    getDomNode: function(i) {
+	if (!this.domNodes[i]) {
+	    var node = document.createElement("span");
+	    node.id = "Tracker" + i;
+	    node.style.position = "absolute";
+	    node.style.backgroundColor = ["red", "blue", "green", "yellow", "black", "orange", "purple", "gray", "white"][i];
+	    node.style.zIndex = 1000;
+	    this.domNodes[i] = node;
+	}
+	return this.domNodes[i];
+    },
+    */
 	beginDrag: function(inEvent, inInfo) {
 		this.info = inInfo || this.info;
 		if (this.info && this.info.control){
@@ -98,6 +112,9 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 		if (this.target && this.target.layout.removeEdges)
 			this.target.layout.removeEdges(this.target);
 		this.inherited(arguments);
+	    for (var i = 0; i < this.domNodes.length; i++)
+		if (this.domNodes[i].parentNode)
+		    this.domNodes[i].parentNode.removeChild(this.domNodes[i]);
 	},
 	setTarget: function(inTarget){
 		if (this.target && this.target.layout.removeEdges)
@@ -137,10 +154,10 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 		if (this.targetInDialog(inHit, d)) {
 		    inHit.l -= d.bounds.l;
 		    inHit.t -= d.bounds.t;
-		    t = (this.designable ? this._findTarget(inHit, d) : d.containerWidget);
+		    t = (this.designable ? this._findTarget(inHit, d, 0) : d.containerWidget);
 		}
 	    } else if (this.targetInRoot(inHit)) {
-		t = (this.designable ? this._findTarget(inHit, this.root) : this.root);
+		t = (this.designable ? this._findTarget(inHit, this.root, 0) : this.root);
 	    } 
 	    if (!t)
 		kit._setMarginBox(this.markNode, 0, 0, 0, 0);
@@ -149,7 +166,16 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 	    }
 	},
 	_findTarget: function(inHit, inWidget, inMargin) {
+/* This is a very useful debugging section; do not delete!
+	    var node = this.getDomNode(inMargin);
+	    console.log("Place " + node.id + "|" + inMargin);
+	    if (node.parentNode) node.parentNode.removeChild(node);
+	    inWidget.domNode.appendChild(node);
+	    node.style.left = inHit.l + "px";
+	    node.style.top = inHit.t + "px";
+	    node.innerHTML = inMargin + ": " + inWidget.toString();
             //console.log("_findTarget: " + inWidget.toString());
+	    */
 		var h = inHit, dn = inWidget.domNode, w, b, o;
 		var sl = dn.scrollLeft, st = dn.scrollTop;
 		var ws = inWidget.widgets;
@@ -157,8 +183,9 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 		for (var i in ws) {
 			w = ws[i];
                     //console.log("_test: " + w.toString());
+
 			if (w != this.info.control && w.container && !w.getLock()) {
-				b = kit._getMarginBox(w.domNode);
+			    b = kit._getMarginBox(w.domNode);
 				if (w.domNode.parentNode != inWidget.domNode){
 					// offset from target rect to hit frame
 					o = wm.calcOffset(w.domNode.parentNode, inWidget.domNode);
@@ -168,13 +195,15 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 					b.l -= sl; 
 					b.t -= st;
 				}
+
 				// must be well inside
 				b.r = b.l + b.w; 
 				b.b = b.t + b.h;
+
 				if (h.l-b.l>m && b.r-h.l>m && h.t-b.t>m && b.b-h.t>m) {
-					h.l -= b.l; 
-					h.t -= b.t;
-				    var result = this._findTarget(h, w, m+1);
+				    h.l -= b.l + w.marginExtents.l + w.borderExtents.l; 
+				    h.t -= b.t + w.marginExtents.t + w.borderExtents.t;
+				    var result = this._findTarget(h, w, m+1);//(w.marginExtents.l && w.marginExtents.t && w.marginExtents.r && w.marginExtents.b) ? m : m+1);
                                     //console.log("RESULT " + w.toString() + ": " + result);
                                     return result;
 				}
