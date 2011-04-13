@@ -44,9 +44,12 @@ Studio.extend({
             this.renamedDuringPaste =  {}; // set in Component.js.createComponent()
 
 	    var	isLayer = (inClass == "wm.Layer");
-	    var p = inParent || this.findContainer(this.selected, inClass) || studio.page.root.findContainer(inClass);
-	    if (p instanceof wm.Dialog) 
-		p = p.containerWidget;
+	    var p;
+	    if (studio.selected instanceof wm.Dialog || studio.selected instanceof wm.FancyPanel) {
+		p = studio.selected.containerWidget;
+	    } else {
+		p = inParent || this.findContainer(this.selected, inClass) || studio.page.root.findContainer(inClass);
+	    }
 
 			// FIXME: layer must be pasted only into layers
 			// could also generalize beyond layers and intercept this in createComponents
