@@ -436,17 +436,30 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		this.doOnblur();
 	},
 	focused: function() {
-        dojo.publish("wm.AbstractEditor-focused", [this]);
-		this.doOnfocus();
+            dojo.publish("wm.AbstractEditor-focused", [this]);
+	    this.doOnfocus();	    
 	},
     doOnblur: function() {
-		if (!this.disabled)
-		    this.onblur();
+	if (!this.disabled) {
+	    /* Sometimes values don't update before the event fires; build in a delay before the event handler so 
+	     * values have time to update before firing the handler.
+	     */
+	    wm.onidle(this, function() {
+		this.onblur();
+	    });
+	}
     },
     onblur: function() {},
     doOnfocus: function() {
-		if (!this.disabled)
+	if (!this.disabled) {
+
+	    /* Sometimes values don't update before the event fires; build in a delay before the event handler so 
+	     * values have time to update before firing the handler.
+	     */
+	    wm.onidle(this, function() {
 		    this.onfocus();
+	    });
+	}
     },
     onfocus: function() {},
     changed: function() {

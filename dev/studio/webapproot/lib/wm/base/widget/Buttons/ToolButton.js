@@ -68,9 +68,15 @@ dojo.declare("wm.ToolButton", wm.Control, {
 		this.imageListChanged();
 	},
 	click: function(inEvent) {
-	        if (!this.clicked) 
-		    this.setProp("clicked", true);
+	    if (!this.clicked) 
+		this.setProp("clicked", true);
+
+	    /* Sometimes users go from an editor to clicking a button and some browsers don't update the editor value in time for
+	     * our onclick handler to see it.  So build in a delay before firing onclick handlers
+	     */
+	    wm.onidle(this, function() {
 	        this.onclick(inEvent, this);
+	    });
 	},
         onclick: function() {
 	},

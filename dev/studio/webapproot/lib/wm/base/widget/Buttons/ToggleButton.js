@@ -39,7 +39,13 @@ dojo.declare("wm.ToggleButton", wm.ToolButton, {
 	},
         click: function() {
 	    this.setProp("clicked", !this.clicked);
-	    this.onclick();
+
+	    /* Sometimes users go from an editor to clicking a button and some browsers don't update the editor value in time for
+	     * our onclick handler to see it.  So build in a delay before firing onclick handlers
+	     */
+	    wm.onidle(this, function() {
+	        this.onclick(inEvent, this);
+	    });
 	},
     /* Sets the state, updates the css, does not fire events; useful in a set of toggle buttons where clicking one updates the states of the others, but firing events on each one would be bad */
     setClicked: function(inClicked) {
