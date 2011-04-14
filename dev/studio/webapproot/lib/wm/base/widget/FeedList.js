@@ -38,6 +38,10 @@ dojo.declare("wm.FeedList", wm.List, {
 			this.getFeed();
 		}
 	},
+    postInit: function() {
+	this.inherited(arguments);
+	this._createGetFeedServiceVariable();
+    },
 	prepare: function() {
 		this.inherited(arguments);
 		this.className = 'wmfeedlist';
@@ -55,8 +59,6 @@ dojo.declare("wm.FeedList", wm.List, {
 			studio.webService.requestAsync("registerFeedService", null, 
 						       dojo.hitch(this, "registerFeedServiceSuccess"));
 		    }
-		} else {
-			this._createGetFeedServiceVariable();
 		}
 	},
 	createListNode: function() {
@@ -133,10 +135,14 @@ dojo.declare("wm.FeedList", wm.List, {
 		return wm.theme.getImagesPath() + (isCollapsed ? "feedlist_open.gif" : "feedlist_closed.gif");
 	},
 	_createGetFeedServiceVariable: function() {
+	    if (this.$.getFeedServiceVariable) {
+		this.getFeedServiceVariable = this.$.getFeedServiceVariable;
+	    } else {
 		this.getFeedServiceVariable = new wm.ServiceVariable(
 			{name: "getFeedServiceVariable", owner: this, service: "FeedService", operation: "getFeed"});
-		this.getFeedServiceVariable["setData"] = function() {};
-		this.getFeedServiceVariable["onSuccess"] = dojo.hitch(this, "getFeedServiceVariableSuccess");
+	    }
+	    this.getFeedServiceVariable["setData"] = function() {};
+	    this.getFeedServiceVariable["onSuccess"] = dojo.hitch(this, "getFeedServiceVariableSuccess");
 	},
 	registerFeedServiceSuccess: function(inResult) {
 		this._createGetFeedServiceVariable();
