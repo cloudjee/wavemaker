@@ -326,5 +326,6 @@
     "WAIT_BUILD_PREVIEW": "Building Preview...",
     "CONFIRM_UNSAVEDTAB_HEADER": "You have unsaved changes:",
     "CONFIRM_UNSAVEDTAB_CLOSEANYWAY": "Close anyway?",
-    "CONFIRM_REFRESH_SCRIPT": "Are you sure you want to reload this file file from disk ? Unsaved changes will be lost"
+    "CONFIRM_REFRESH_SCRIPT": "Are you sure you want to reload this file file from disk ? Unsaved changes will be lost",
+    "TITLE_PREFERENCES": "WaveMaker Preferences"
 }

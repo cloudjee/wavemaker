@@ -19,11 +19,13 @@ PreferencesPane.widgets = {
 	layoutBox1: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", width: "100%"}, {}, {
 		prefsDialog: ["wm.Panel", {height: "100%", width: "100%", layoutKind: "left-to-right"}, {}, {
 			prefsDialogInner: ["wm.Panel", {_classes: {domnode: ["wm-darksnazzy", "dialogTitleBar"]}, height: "100%", width: "100%"}, {}, {
+/*
 				titleBar: ["wm.Panel", {height: "29px", layoutKind: "left-to-right"}, {}, {
 					dialogLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_TextAlign_Center", "wm_Padding_4px", "wm_FontColor_White"]}, height: "100%", width: "100%", caption: "WaveMaker Preferences", border: "0"}, {}, {
 						format: ["wm.DataFormatter", {}, {}]
 					}]
 				}],
+				*/
 				prefsPanel: ["wm.Panel", {height: "100%", width: "100%", padding: "10"}, {}, {
 					panel2: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]}, margin: "0,0,5,0", height: "100%", width: "100%", verticalAlign: "middle", horizontalAlign: "left"}, {}, {
 						wavemakerFolderEditor: ["wm.Editor", {_classes: {captionNode: ["wm_FontColor_White"]}, caption: "WaveMaker Folder", width: "100%"}, {}, {

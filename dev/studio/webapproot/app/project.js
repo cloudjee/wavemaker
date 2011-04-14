@@ -1454,7 +1454,13 @@ Studio.extend({
 		if (d) {
 			d.page.update();
 		} else {
-			this.preferencesDialog = d = new wm.PageDialog({pageName: "PreferencesPane", owner: studio, hideControls: true, contentHeight: 250, contentWidth: 500});
+			this.preferencesDialog = d = new wm.PageDialog({pageName: "PreferencesPane", 
+									title: this.getDictionaryItem("TITLE_PREFERENCES"),
+									modal: false,
+									owner: studio, 
+									hideControls: true, 
+									contentHeight: 250, 
+									contentWidth: 500});
 			d.onClose = function(inWhy) {
 			    /* Removal of projects tab
 				if (inWhy == "OK")
