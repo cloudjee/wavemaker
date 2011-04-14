@@ -20,6 +20,7 @@
         <path location="${classes.testsupport.dir}"/>
         <path location="${test.classes.common.dir}"/>
         <path location="${test.classes.json.dir}"/>
+	<pathelement location="${junit.jar}"/>
         <filelist refid="common.testsupport.jars"/>
     </path>
 

@@ -10,6 +10,7 @@
         <filelist refid="common.common.jars"/>
         <filelist refid="common.testsupport.jars"/>
         <pathelement location="${classes.common.dir}"/>
+	<pathelement location="${junit.jar}"/>
         <!-- REVIEW 10-Sep-08 stoens@activegrid.com -->
         <!-- Circular dependency - we have to build runtime before we can build 
              testsupport, before we can build runtime tests -->

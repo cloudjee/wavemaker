@@ -114,6 +114,7 @@ To bundle in a new module, change the project name and the version.
                 <fileset refid="module.libraries.fileset"/>
                 <pathelement location="${classes.module.dir}"/>
                 <pathelement location="${test.classes.module.dir}"/>
+		<pathelement location="${junit.jar}"/>
             </classpath>
             <formatter type="plain" usefile="false"/>
             <formatter type="xml" usefile="true"/>

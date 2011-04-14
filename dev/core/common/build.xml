@@ -14,6 +14,7 @@
         <path refid="build.classpath"/>
         <pathelement location="${classes.common.dir}"/>
         <pathelement location="${classes.json.dir}"/>
+	<pathelement location="${junit.jar}"/>
     </path>
 
     <target name="help" depends="common.projecthelp" 
@@ -57,6 +58,8 @@
 
     <target name="buildtest" depends="build" description="Compile tests">
         <mkdir dir="${test.classes.common.dir}"/>
+	<property name="myclasspath" refid="test.build.classpath"/>
+	<echo message="Classpath = ${myclasspath}"/>
         <javac srcdir="${test.src.common.dir}" 
                destdir="${test.classes.common.dir}" 
                target="${javac.target}"

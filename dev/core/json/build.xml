@@ -26,6 +26,7 @@
         <path refid="build.classpath"/>
         <pathelement location="${classes.json.dir}"/>
         <path location="${test.classes.common.dir}"/>
+	<pathelement location="${junit.jar}"/>
     </path>
 
     <target name="help" depends="common.projecthelp" 

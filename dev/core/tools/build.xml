@@ -22,6 +22,7 @@
         <path location="${classes.testsupport.dir}"/>
         <path location="${test.classes.common.dir}"/>
         <path location="${test.classes.json.dir}"/>
+	<pathelement location="${junit.jar}"/>
         <filelist refid="common.testsupport.jars"/>
     </path>
 
@@ -41,6 +42,7 @@
         <path location="${test.classes.tools.dir}"/>
         <path location="${test.runtime.infra.jar}"/>
         <path location="${test.classes.common.dir}"/>
+	<pathelement location="${junit.jar}"/>
     </path>
 
     <target name="help" depends="common.projecthelp" 

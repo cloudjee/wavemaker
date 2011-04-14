@@ -36,6 +36,7 @@
         <pathelement location="${test.classes.common.dir}"/>
         <pathelement location="${test.classes.runtime.dir}"/>
         <pathelement location="${test.classes.tools.dir}"/>
+	<pathelement location="${junit.jar}"/>
     </path>
     
     <target name="clean" description="Delete WEB-INF/classes">
