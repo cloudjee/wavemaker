@@ -314,8 +314,8 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 		// for very small controls we cannot differentiate operations well,
 		// so we prioritize moving
 		if (result == dh.client) {
-			var d = this.control.domNode, n = m*3;
-			if (d.offsetHeight<n || d.offsetWidth<n)
+			var d = this.control.bounds, n = m*2;
+			if (d.h<n || d.h<n)
 				return result;
 		}
 		/*if (!this.control.isSizeable()){
@@ -323,23 +323,31 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 			if (d.offsetHeight<n || d.offsetWidth<n)
 				return result;
 		}*/
-		var w = e.target.offsetWidth-m, h = e.target.offsetHeight-m, ps="previousSibling", ns="nextSibling", hs=this.handles.handles;
+	    var w = e.target.offsetWidth-m;
+	    var h = e.target.offsetHeight-m;
+	    var ps="previousSibling";
+	    var ns="nextSibling";
+	    var hs=this.handles.handles;
+	    studio.statusBarLabel.setCaption(e.target.id + "; layerX:" + e.layerX + "; offsetX: " + e.offsetX + "; pageX:" + e.pageX);
+	    var mouseX = e.offsetX || e.layerX;
+	    var mouseY = e.offsetY || e.layerY;
 		if (e.target == hs[0]) {
 			if (!this.canSize('h', ps) || !this.canSize('flow')) return dh.not;
-			return (e.layerX < m ? dh.leftTop : (e.layerX > w ? dh.rightTop : dh.middleTop));
+			return (mouseX < m ? dh.leftTop : (mouseX > w ? dh.rightTop : dh.middleTop));
 		}
 		if (e.target == hs[1]) {
 			if (!this.canSize('v', ns)) return dh.not;
-			return (e.layerY < m ? dh.rightTop : (e.layerY > h ? dh.rightBottom : dh.rightMiddle));
+			return (mouseY < m ? dh.rightTop : (mouseY > h ? dh.rightBottom : dh.rightMiddle));
 		}
 		if (e.target == hs[2]) {
 			if (!this.canSize('h', ns)) return dh.not;
-			return (e.layerX < m ? dh.leftBottom : (e.layerX > w ? dh.rightBottom : dh.middleBottom));
+			return (mouseX < m ? dh.leftBottom : (mouseX > w ? dh.rightBottom : dh.middleBottom));
 		}
 		if (e.target == hs[3]) {
 			if (!this.canSize('v', ps) || !this.canSize('flow')) return dh.not;
-			return (e.layerY < m ? dh.leftTop : (e.layerY > h ? dh.leftBottom : dh.leftMiddle));
+			return (mouseY < m ? dh.leftTop : (mouseY > h ? dh.leftBottom : dh.leftMiddle));
 		}
+	    studio.statusBarLabel.setCaption(studio.statusBarLabel.caption + " (NONE)");
 		return result;
 	},
 	showHideHandles: function(inShow) {
