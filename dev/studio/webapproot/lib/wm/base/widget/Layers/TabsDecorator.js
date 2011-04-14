@@ -250,7 +250,7 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 					     parent: this.decoree,
 					     owner: this.decoree,
 					     layoutKind: "left-to-right",
-					     height: "40px",
+					     height: wm.Button.prototype.height,
 					     width: "100%",
                                              freeze: true,
                                              lock: true,
