@@ -583,7 +583,7 @@ wm.Component.extend({
 		if (parent instanceof wm.Layers) {
 		    var layersOptions = {//iconClass: parent.declaredClass.toLowerCase().replace(/\./g,"_"),
 			                 iconClass: "Studio_silkIconImageList_83",
-			label: studio.getDictionaryItem("wm.Component.CONTEXT_MENU_LAYERS", {paretName: parent.name}),
+			label: studio.getDictionaryItem("wm.Component.CONTEXT_MENU_LAYERS", {parentName: parent.name}),
 					 children: []};
 		    parent.createDesignContextMenu(menuObj, layersOptions.children);
 		    var layersMenu = menuObj.addAdvancedMenuChildren(menuObj.dojoObj, layersOptions);
