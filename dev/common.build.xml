@@ -337,9 +337,10 @@ or the ant property build.dir</echo>
     <target name="common.generate-best-license" depends="common.generate-full-version, common.generate-license" />
 
     <target name="common.generate-license" unless="license.generated">
-        <copy file="${src.buildsupport.dir}/${project.type}_license.txt"
+    	<!-- Always use community license -->
+    	<copy file="${src.buildsupport.dir}/community_license.txt"
                 tofile="${license.file}"/>
-        <property name="license.generated" value="true"/>
+                <property name="license.generated" value="true"/>
     </target>
 
     <target name="-common.init.version">
