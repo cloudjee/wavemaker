@@ -560,7 +560,7 @@ dojo.declare("Studio", wm.Page, {
                         return true;
                     } else {
 		        if (result.dojoType != "cancel" && (!app.toastDialog.showing || app.toastDialog._toastType != "Warning" && app.toastDialog._toastType != "Error"))
-			    this.toastError(this.getDictionaryItem("TOAST_RUN_FAILED", {error: result.message}));
+			    app.toastError(this.getDictionaryItem("TOAST_RUN_FAILED", {error: result.message}));
 			this._deploying = false;
 			this._runRequested = false;
 			return result;
