@@ -105,8 +105,9 @@ dojo.declare("wm.Variable", wm.Component, {
 		if (wm.isListType(t)) {
 			this.isList = true;
 			t = t.slice(1, -1);
-		// don't reset isList if we have data
-		} else if (!(this.data && this.data.list))
+		// don't reset isList if we have data; also don't reset isList if we're in postInit; the setType call in postInit should 
+		// not lose the user's isList setting
+		} else if (!(this.data && this.data.list) && !this._inPostInit)
 			this.isList = false;
 
             var hasChanged;
