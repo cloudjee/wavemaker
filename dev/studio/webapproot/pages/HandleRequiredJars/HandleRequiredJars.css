@@ -40,7 +40,28 @@
 	cursor: pointer !important;
 }
 
-.HandleRequiredJars .wmbutton:hover {
+.HandleRequiredJars .wmbutton:hover,
+.HandleRequiredJars .wmDojoFileUpload-button:hover {
     background-color: silver !important;
     background-image:url(images/wmbutton_bg.png) !important;
+}
+
+#studio_jarDownloadDialog_handleRequiredJars_layers_buttonPanel {
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	border-bottom:1px #363b44 solid;
+	color: #FFF;
+	padding: 4px;
+	border-left: 1px solid #c0c4ca;
+	border-right: 1px solid #363b44;
+}
+
+.HandleRequiredJars .wmWizardLayers-buttonPanel button,
+.HandleRequiredJars .wmDojoFileUpload-button {
+    pointer: cursor;
+	background-image:url(images/dark_btn_bg.gif);
+	background-repeat:repeat-x;
+	color: #FFF;
+	font-weight:bold;
+	border: solid 1px #353a44;
 }

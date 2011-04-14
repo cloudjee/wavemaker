@@ -20,7 +20,11 @@ dojo.provide("wm.studio.pages.HandleRequiredJars.HandleRequiredJars");
 
 dojo.declare("HandleRequiredJars", wm.Page, {
     start: function() {
-
+/*
+	this.layers.decorator.buttonPanel.setHeight("42px")
+	this.layers.decorator.buttonPanel.setMargin("10,0,0,0");
+	*/
+	this.layers.decorator.buttonPanel.setParent(this.root);
     },
     onShow: function() {
 	this.layer2.invalid = this.layer4.invalid = this.layer6.invalid = true;
@@ -38,6 +42,10 @@ dojo.declare("HandleRequiredJars", wm.Page, {
 		break;
 	    }
 	}
+    },
+    done: function() {
+	this.close();
+	window.location.reload(true);
     },
     close: function() {
 	this.layer3.hide();
