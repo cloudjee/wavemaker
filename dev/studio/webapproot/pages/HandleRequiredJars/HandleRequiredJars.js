@@ -25,6 +25,7 @@ dojo.declare("HandleRequiredJars", wm.Page, {
 	this.layers.decorator.buttonPanel.setMargin("10,0,0,0");
 	*/
 	this.layers.decorator.buttonPanel.setParent(this.root);
+	this.layers.decorator.doneCaption = "Reload";
     },
     onShow: function() {
 	this.layer2.invalid = this.layer4.invalid = this.layer6.invalid = true;
