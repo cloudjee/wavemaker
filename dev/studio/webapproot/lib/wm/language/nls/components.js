@@ -1,8 +1,8 @@
 {
 "wm.Component.toString_DESTROYED": "DESTROYED",
 "wm.Control.toString_HIDDEN": "hidden",
-"wm.Varaible.toString_TYPE": "Type: ${type}",
-"wm.Varaible.toString_ISEMPTY": "isEmpty: ${isEmpty}",
+"wm.Variable.toString_TYPE": "Type: ${type}",
+"wm.Variable.toString_ISEMPTY": "isEmpty: ${isEmpty}",
 "wm.ServiceVariable.toString_FIRING": "isFiring: ${isFiring}",
 
 "wm.Component.CLASS_NOT_FOUND": "Component type ${type} not found (name: ${name}!",
@@ -58,5 +58,8 @@
 "wm.WizardDecorator.TOAST_INVALID": "Invalid value for ${name}",
 "wm.WizardDecorator.ALERT_INCOMPLETE":"This step is incomplete",
 "wm.WizardDecorator.TOAST_PLEASE_FILL": "Please fill out \"${name}\" first",
-"wm.WizardDecorator.TOAST_SKIP_LAYER": "Please review \"${name}\" first"
+"wm.WizardDecorator.TOAST_SKIP_LAYER": "Please review \"${name}\" first",
+
+"wm.LiveVariable.SCREWED_UP": "You screwed up!"
+
 }
