@@ -15,6 +15,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
+/* Don't touch djConfig.locale if the user isn't overriding its behavior via the URL; leave it to system default behavior */
+if (location.search.indexOf("dojo.locale=") != -1) {
+    djConfig.locale = location.search.indexOf("dojo.locale=") + "dojo.locale=".length; // avoid unlocalized variables
+    djConfig.locale = location.search.substr(djConfig.locale,2);
+}
+
 wm = window["wm"] || {};
 
 // loading via append element
