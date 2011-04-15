@@ -107,13 +107,13 @@
     </target>
 
     <target name="setup-js-html">
-        <replaceregexp file="${webapproot.studio.dir}/app/config.js" match="studioVersion\: '(.*)'," replace="studioVersion: '${version.number} - ${project.type}'," />
+        <replaceregexp file="${webapproot.studio.dir}/app/config.js" match="studioVersion\: '(.*)'," replace="studioVersion: '${version.number}'," />
 
         <copy file="${studio.dir}/webapproot/pages/Studio/Studio.html.template"
                 tofile="${studio.dir}/webapproot/pages/Studio/Studio.html"
                 overwrite="true">
             <filterset>
-                <filter token="VERSION" value="${version.number} - ${project.type}"/>
+                <filter token="VERSION" value="${version.number}"/>
             </filterset>
         </copy>
     </target>

@@ -8,7 +8,7 @@
     <!-- must be inside of build.installer.dir -->
     <property name="buildroot" value="${build.installer.dir}/buildroot"/>
     <property name="wm.spec" value="${build.installer.dir}/wavemaker.spec"/>
-    <property name="prefix-nojdk" value="/opt/wavemaker-${project.type}-${version.number}" />
+    <property name="prefix-nojdk" value="/opt/wavemaker-${version.number}" />
     <property name="installer.wm.nojdk.root" value="${buildroot}/NoJDK/${prefix-nojdk}"/>
 
     <!-- Default properties -->

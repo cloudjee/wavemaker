@@ -328,9 +328,10 @@
             <arg value="-projecthelp"/>
         </java>
         <echo>
-$${build.dir} resolves to "${build.dir}"
-It can set using the environment variable BUILDDIR, 
-or the ant property build.dir</echo>
+        	$${build.dir} resolves to "${build.dir}"
+        	It can set using the environment variable BUILDDIR,
+        	or the ant property build.dir
+        </echo>
     </target>
 
     <target name="common.generate-best-license" depends="common.generate-full-version, common.generate-license" />
@@ -387,19 +388,17 @@ or the ant property build.dir</echo>
 
      <echo>Version: ${version.number} WRITTEN TO FILE: ${version.file}</echo>
      <echo file="${version.file}">Version: ${version.number}
-Build type: ${project.type}
-SVN version: ${gfv.svn.revision.range}
-Build number: ${env.BUILD_NUMBER}
-Job name: ${env.JOB_NAME}
-SVN ${gfv.svn.repository.url}
-</echo>
+     	SVN version: ${gfv.svn.revision.range}
+     	Build number: ${env.BUILD_NUMBER}
+     	Job name: ${env.JOB_NAME}
+     	SVN ${gfv.svn.repository.url}
+     	</echo>
 
      <echo>Version: ${version.number} WRITTEN TO FILE: ${version.project.file}</echo>
      <echo file="${version.project.file}">Version: ${version.number}
-Build type: ${project.type}
-SVN version: ${gfv.svn.revision.range}
-</echo>
-        <property name="version.full"
-                value="Version: ${version.number}\nSVN url: ${generate-full-version.svn.url}\nSVN version: ${generate-full-version.svn.rev}"/>
+     	SVN version: ${gfv.svn.revision.range}
+     </echo>
+     <property name="version.full"
+     	value="Version: ${version.number}\nSVN url: ${generate-full-version.svn.url}\nSVN version: ${generate-full-version.svn.rev}"/>
     </target>
 </project>

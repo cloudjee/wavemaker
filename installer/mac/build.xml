@@ -14,7 +14,7 @@
     <property name="mac.template" value="${basedir}/${mac.template.name}"/>
     <property name="installer.wm.root" value="${buildroot}/${mac.app.name}"/>
     <property name="versionString"
-            value="wavemaker-${project.type}-${version.number}"/>
+            value="wavemaker-${version.number}"/>
     <property name="mac.dmg.file"
             value="${build.installer.dir}/${versionString}.dmg"/>
 
