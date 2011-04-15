@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 dojo.provide("wm.base.drag.drag");
-
+dojo.require("wm.base.drag.capture");
 /**
 	@class
 	@name wm.Drag
