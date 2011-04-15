@@ -95,7 +95,7 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
 	var t = inText || "";
 	t += "; " + wm.getDictionaryItem("wm.ServiceVariable.toString_FIRING", {isFiring: Boolean(this._requester)})
 	return this.inherited(arguments, [t]);
-    },
+    }
 });
 
 wm.Object.extendSchema(wm.ServiceVariable, {
