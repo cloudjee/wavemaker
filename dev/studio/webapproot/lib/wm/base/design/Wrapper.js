@@ -328,7 +328,7 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 	    var ps="previousSibling";
 	    var ns="nextSibling";
 	    var hs=this.handles.handles;
-	    studio.statusBarLabel.setCaption(e.target.id + "; layerX:" + e.layerX + "; offsetX: " + e.offsetX + "; pageX:" + e.pageX);
+
 	    var mouseX = e.offsetX || e.layerX;
 	    var mouseY = e.offsetY || e.layerY;
 		if (e.target == hs[0]) {
@@ -347,7 +347,7 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 			if (!this.canSize('v', ps) || !this.canSize('flow')) return dh.not;
 			return (mouseY < m ? dh.leftTop : (mouseY > h ? dh.leftBottom : dh.leftMiddle));
 		}
-	    studio.statusBarLabel.setCaption(studio.statusBarLabel.caption + " (NONE)");
+
 		return result;
 	},
 	showHideHandles: function(inShow) {
