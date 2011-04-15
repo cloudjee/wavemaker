@@ -19,6 +19,8 @@
 dojo.registerModulePath("studio", wm.basePath);
 dojo.registerModulePath("lib", wm.libPath);
 dojo.registerModulePath("wm", wm.libPath + "/wm");
+dojo.registerModulePath("wm.language", wm.libPath + "/wm/language");
+dojo.registerModulePath("language", window.location.pathname.replace(/[^\/]*$/,"language"));
 
 wm.locale = {};
 dojo.requireLocalization("wm.language", "components");

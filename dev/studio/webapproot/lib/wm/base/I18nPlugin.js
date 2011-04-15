@@ -42,7 +42,6 @@ wm.Plugin.plugin("i18nPageLoader", wm.PageLoader, {
     loadPageCode: function(inName) {
 	var ctor = this.i18nPageLoaderSocket(arguments);
 	try {
-	    dojo.registerModulePath("language", window.location.pathname.replace(/[^\/]*$/,"language"));
 	    dojo.requireLocalization("language", inName);
 	    ctor.prototype._i18nDictionary = dojo.i18n.getLocalization("language", inName);
 	} catch(e) {}
@@ -53,7 +52,6 @@ wm.Plugin.plugin("i18nPageLoader", wm.PageLoader, {
 wm.Plugin.plugin("i18nApplication", wm.Application, {
     init: function() {
 	try {
-	    dojo.registerModulePath("language", window.location.pathname.replace(/[^\/]*$/,"language"));
 	    dojo.requireLocalization("language", "app");
 	    this._i18nDictionary = dojo.i18n.getLocalization("language", "app");
 	} catch(e){}

@@ -22,12 +22,22 @@ try
         wm.libPath = wm.libPath.replace(/\/$/,""); // please remove this after we've gotten a few versions past 6.2
 
 	dojo.registerModulePath("lib", wm.libPath);
-	dojo.registerModulePath(
+	wm.registerPaths(
 		["wm", wm.libPath + "/wm"],
 		["wm.packages", wm.libPath + "/wm/common/packages"],
 		["common", wm.libPath + "/wm/common"],
-		["wm.modules", wm.basePath + "modules/ep"]
+	    ["wm.modules", wm.basePath + "modules/ep"],
+	    ["wm.language", wm.libPath + "/wm/language"],
+	    ["language", window.location.pathname.replace(/[^\/]*$/,"language")]
 	);	
+
+	    wm.locale = {};
+	    dojo.requireLocalization("wm.language", "components");
+	    wm.locale.phrases = dojo.i18n.getLocalization("wm.language", "components");
+	    
+	    dojo.requireLocalization("wm.language", "properties");
+	    wm.locale.props = dojo.i18n.getLocalization("wm.language", "properties");
+
 
 	// Load minified built version of libraries when not booting in debug mode
 	if (!djConfig.debugBoot) 
@@ -63,13 +73,6 @@ try
 	{
 		// Load lib manifest, ensuring anything not included in build will be loaded explicitly
 		dojo.require("lib.manifest", true);
-
-	    wm.locale = {};
-	    dojo.requireLocalization("wm.language", "components");
-	    wm.locale.phrases = dojo.i18n.getLocalization("wm.language", "components");
-	    
-	    dojo.requireLocalization("wm.language", "properties");
-	    wm.locale.props = dojo.i18n.getLocalization("wm.language", "properties");
 	}
 
 
