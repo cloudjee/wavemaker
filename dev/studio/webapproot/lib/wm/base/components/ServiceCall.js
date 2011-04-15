@@ -206,22 +206,18 @@ dojo.declare("wm.ServiceCall", null, {
     },
 	request: function(inArgs) {
             if (this.downloadFile) {
-		var useGET = true;
 	        var args = inArgs || this.input.getArgsHash();
                 this.replaceAllDateObjects(args);
-
-		if (useGET) {
-                    var argString = "method=" + this.operation;
-                    for (i in args) {
-			argString += "&" + i + "=" + escape(args[i]);
-                    }
-		}
+                var argString = "method=" + this.operation;
+                for (i in args) {
+                    argString += "&" + i + "=" + escape(args[i]);
+                }
 		      var iframe = dojo.byId("downloadFrame");
 		      if (iframe) iframe.parentNode.removeChild(iframe);
 
 		      iframe = document.createElement("iframe");
 		      dojo.attr(iframe, {id: "downloadFrame",
-					 name: "downloadFrame"});
+					 name: "downloadFrame"}); 
 		      dojo.style(iframe, {top: "1px",
 					  left: "1px",
 					  width: "1px",
@@ -229,28 +225,9 @@ dojo.declare("wm.ServiceCall", null, {
 					  visibility: "hidden"}); 
 		      dojo.body().appendChild(iframe);
 
-		if (!useGET) {
-		    var form = document.createElement("form");
-		    dojo.attr(form, {id: "downloadForm",
-				     target: "downloadFrame",
-				     method: "POST",
-				     action: "runtimeService.download"});
-		    var method = document.createElement("input");
-		    dojo.attr(method, {name: "method",
-				       value: this.operation});
-		    form.appendChild(method);
-                    for (i in args) {
-			var input = document.createElement("input");
-			dojo.attr(method, {name: i,
-					   value: args[i]});		    
-			form.appendChild(input);
-                    }
-		    dojo.body().appendChild(form);
-		    form.submit();
-		} else {
-                    var baseurl = window.location.href;
-                    baseurl = baseurl.replace(/\?.*$/,"");
-                    baseurl = baseurl.replace(/\/[^\/]*$/,"/");
+                var baseurl = window.location.href;
+                baseurl = baseurl.replace(/\?.*$/,"");
+                baseurl = baseurl.replace(/\/[^\/]*$/,"/");
 				//iframe.src = baseurl + this._service._service.serviceUrl.replace(/\.json$/,".download") + "?" + argString;
 				var urlStr = baseurl + this._service._service.serviceUrl.replace(/\.json$/,".download");
 				var iframedoc= iframe.contentDocument || iframe.contentWindow.document;
@@ -269,7 +246,7 @@ dojo.declare("wm.ServiceCall", null, {
 				iframedoc.getElementById('fileName').value= args.fileName; 
 				iframedoc.getElementById('method').value= this.operation; 
 				iframedoc.getElementsByTagName('form')[0].submit();
-		}
+
             } else {
 	        var args = inArgs || this.getArgs();
                 //this.replaceAllDateObjects(args);
