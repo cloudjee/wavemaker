@@ -116,7 +116,7 @@
         </property>
 
         <!-- controller configuration -->
-        <property name="supportedMethods" value="GET" />
+        <!--property name="supportedMethods" value="GET" /-->
 	</bean>
 
 	<bean id="wmModuleController"
@@ -163,7 +163,7 @@
         </property>
 
         <!-- controller configuration -->
-        <property name="supportedMethods" value="GET" />
+        <!--property name="supportedMethods" value="GET" /-->
     </bean>
 
 </beans>
