@@ -235,6 +235,9 @@ dojo.declare("wm.ServiceCall", null, {
 
 
 		var iframedoc= iframe.contentDocument || iframe.contentWindow.document;
+		iframedoc.open("text/html"); // required by ie8 and earlier so that iframedoc.body exists
+		iframedoc.close();
+
 		var form =  iframedoc.createElement("form");
 		dojo.attr(form, {id: "downloadForm",
 				 method: "POST",
@@ -249,6 +252,7 @@ dojo.declare("wm.ServiceCall", null, {
 				       value: args[i]});		    
 		    form.appendChild(input);
                 }
+
 		iframedoc.body.appendChild(form);
 		form.submit();
 
