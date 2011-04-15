@@ -208,11 +208,19 @@ dojo.declare("wm.ServiceCall", null, {
             if (this.downloadFile) {
 	        var args = inArgs || this.input.getArgsHash();
                 this.replaceAllDateObjects(args);
+/*
                 var argString = "method=" + this.operation;
                 for (i in args) {
                     argString += "&" + i + "=" + escape(args[i]);
                 }
-		      var iframe = dojo.byId("downloadFrame");
+		*/
+
+                var baseurl = window.location.href;
+                baseurl = baseurl.replace(/\?.*$/,"");
+                baseurl = baseurl.replace(/\/[^\/]*$/,"/");
+		var urlStr = baseurl + this._service._service.serviceUrl.replace(/\.json$/,".download");
+
+		var iframe = dojo.byId("downloadFrame");
 		      if (iframe) iframe.parentNode.removeChild(iframe);
 
 		      iframe = document.createElement("iframe");
@@ -225,11 +233,27 @@ dojo.declare("wm.ServiceCall", null, {
 					  visibility: "hidden"}); 
 		      dojo.body().appendChild(iframe);
 
-                var baseurl = window.location.href;
-                baseurl = baseurl.replace(/\?.*$/,"");
-                baseurl = baseurl.replace(/\/[^\/]*$/,"/");
-				//iframe.src = baseurl + this._service._service.serviceUrl.replace(/\.json$/,".download") + "?" + argString;
-				var urlStr = baseurl + this._service._service.serviceUrl.replace(/\.json$/,".download");
+
+		var iframedoc= iframe.contentDocument || iframe.contentWindow.document;
+		var form =  iframedoc.createElement("form");
+		dojo.attr(form, {id: "downloadForm",
+				 method: "POST",
+				 action: urlStr});
+		var method = iframedoc.createElement("input");
+		dojo.attr(method, {name: "method",
+				   value: this.operation});
+		form.appendChild(method);
+                for (i in args) {
+		    var input = iframedoc.createElement("input");
+		    dojo.attr(input, {name: i,
+				       value: args[i]});		    
+		    form.appendChild(input);
+                }
+		iframedoc.body.appendChild(form);
+		form.submit();
+
+/*
+
 				var iframedoc= iframe.contentDocument || iframe.contentWindow.document;
 				iframedoc.open(); 
 				iframedoc.write('<form method="post" action="');
@@ -246,7 +270,7 @@ dojo.declare("wm.ServiceCall", null, {
 				iframedoc.getElementById('fileName').value= args.fileName; 
 				iframedoc.getElementById('method').value= this.operation; 
 				iframedoc.getElementsByTagName('form')[0].submit();
-
+				*/
             } else {
 	        var args = inArgs || this.getArgs();
                 //this.replaceAllDateObjects(args);
