@@ -301,15 +301,19 @@ dojo.declare("wm.studio.Project", null, {
 		    throw this.getDictionaryItem("THROW_PROJECT_NOT_FOUND", {projectPath: "projects/" + this.projectName + "/" + this.projectName + ".js"});
 		} else {
 		    var src = this.projectData.js;
-		    var extendIndex = src.indexOf(this.projectName + ".extend");
+		    var endIndex = src.indexOf("_end: 0");
 
-                    // project created prior to our enabling editting of the project.js file
-                    if (extendIndex == -1) {
+		    // this may happen with older projects
+		    if (endIndex != -1) 
+			endIndex = src.indexOf(";", endIndex);
+		    
+                    if (endIndex == -1) {
 		        this.projectData.js = src;
 		        this.projectData.jscustom = this.projectName + ".extend({\n\n\t_end: 0});";
                     } else {
-		        this.projectData.js = dojo.trim(src.substring(0,extendIndex));
-		        this.projectData.jscustom = dojo.trim(src.substring(extendIndex)) || this.projectName + ".extend({\n\n\t_end: 0});";
+			endIndex++;
+		        this.projectData.js = dojo.trim(src.substring(0,endIndex));
+		        this.projectData.jscustom = dojo.trim(src.substring(endIndex)) || this.projectName + ".extend({\n\n\t_end: 0});";
                     }
 		}
 		eval(this.projectData.js);
