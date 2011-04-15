@@ -276,7 +276,7 @@ dojo.declare("wm.studio.Project", null, {
 		        studio.pageSelect.setDataValue(inName);
 		} catch(e) {
 		    console.debug(e);
-		    this.loadError(this.getDictionaryItem("wm.studio.Project.TOAST_OPEN_PAGE_FAILED",
+		    this.loadError(studio.getDictionaryItem("wm.studio.Project.TOAST_OPEN_PAGE_FAILED",
 							  {pageName:+ this.pageName, error: e}));
 			this.pageName = "";
 			studio.page = null;
@@ -298,7 +298,7 @@ dojo.declare("wm.studio.Project", null, {
 		        documentation: dojo.fromJson(this.loadProjectData(this.projectName + ".documentation.json"))
 		};
 		if (!this.projectData.js) {
-		    throw this.getDictionaryItem("THROW_PROJECT_NOT_FOUND", {projectPath: "projects/" + this.projectName + "/" + this.projectName + ".js"});
+		    throw studio.getDictionaryItem("THROW_PROJECT_NOT_FOUND", {projectPath: "projects/" + this.projectName + "/" + this.projectName + ".js"});
 		} else {
 		    var src = this.projectData.js;
 		    var endIndex = src.indexOf("_end: 0");
@@ -362,7 +362,7 @@ dojo.declare("wm.studio.Project", null, {
 				owner: studio,
 				_designer: studio.designer
 			});
-		    if (!studio.page.root) throw this.getDictionaryItem("wm.studio.Project.THROWS_INVALID_PAGE");
+		    if (!studio.page.root) throw studio.getDictionaryItem("wm.studio.Project.THROWS_INVALID_PAGE");
 			studio.page.root.parent = studio.designer;
 		        for (var i in this.pageData.documentation) {
                             if (i == "wip")
@@ -660,7 +660,7 @@ dojo.declare("wm.studio.Project", null, {
 				this.pagesChanged();
 			}),
 			function(inError) {
-			    app.alert(this.getDictionaryItem("wm.studio.Project.ALERT_DELETE_PAGE_FAILED", 
+			    app.alert(studio.getDictionaryItem("wm.studio.Project.ALERT_DELETE_PAGE_FAILED", 
 							     {pageName: inName, error: inError}));
 			}
 		);
@@ -687,12 +687,12 @@ dojo.declare("wm.studio.Project", null, {
 	// Project info / util
 	//=========================================================================
 	showUpgradeMessage: function(inMessages) {
-	        var message = this.getDictionaryItem("ALERT_BACKUP_OLD_PROJECT", {filePath: inMessages.backupExportFile});
+	        var message = studio.getDictionaryItem("ALERT_BACKUP_OLD_PROJECT", {filePath: inMessages.backupExportFile});
 		if (inMessages.messages) {
 			var firstElem = true;
 			for (var key in inMessages.messages) {
 				if (firstElem) {
-				    message += this.getDictionaryItem("ALERT_UPGRADE_HEADING");
+				    message += studio.getDictionaryItem("ALERT_UPGRADE_HEADING");
 				    firstElem = false;
 				}
 				message += "\t" + inMessages.messages[key] + "\n";
@@ -763,7 +763,10 @@ dojo.declare("wm.studio.Project", null, {
 	pageChanged: function() {
 		studio.pageChanged(this.pageName, this.pageData || {});
 	},
-        getDirty: function() {return studio.updateProjectDirty();}
+    getDirty: function() {return studio.updateProjectDirty();},
+    getDictionaryItem: function() {
+	studio.getDictionaryItem(arguments);
+    }
 });
 
 //=========================================================================
