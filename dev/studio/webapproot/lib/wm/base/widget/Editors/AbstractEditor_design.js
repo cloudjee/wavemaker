@@ -49,6 +49,8 @@ wm.AbstractEditor.extend({
 		var f = wm.getParentForm(this);
 		props.formField.ignoretmp = !Boolean(f);
 		props.displayValue.readonly = this.formField;
+	    props.defaultInsert.ignoretmp = !this.isAncestorInstanceOf(wm.LiveFormBase);
+
 		return props;
 	},
 	set_formField: function(inFieldName) {
@@ -104,7 +106,7 @@ wm.Object.extendSchema(wm.AbstractEditor, {
     changeOnKey: {ignore: 1},
     onEnterKeyPress: {ignore: 1},
     display:{ignore:1},
-    defaultInsert:{type: "String", bindable: 1, group: "editData", order: 10, dependency: '${parent.declaredClass} == "wm.LiveForm" || ${parent.declaredClass} == "wm.RelatedEditor"'},
+    defaultInsert:{type: "String", bindable: 1, group: "editData", order: 10},
     setCaption: {group: "method", doc: 1},
     setCaptionSize: {group: "method", doc: 1},
     setCaptionAlign: {group: "method",doc: 1},

@@ -526,8 +526,6 @@ dojo.declare("wm.GroupInspector", wm.Inspector, {
 		for (var i=0, p, n; (p=props[i]); i++){
 			if (p.hidden)
 				continue;
-			if (p.dependency && !wm.expression.getValue(p.dependency, this.owner.inspected))
-				continue;
 						
 			n = p.name;
 			rows.push(

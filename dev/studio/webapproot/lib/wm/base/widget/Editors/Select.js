@@ -708,7 +708,7 @@ wm.Object.extendSchema(wm.SelectMenu, {
   dataFieldWire: { ignore: 1},
   optionsVar: {ignore:1},
 	_allFields: {ignore:1},
-    defaultInsert:{ignore:1, bindTarget: 1, type:'wm.Variable', group: "editData", order: 10, dependency: '${parent.declaredClass} == "wm.LiveForm" || ${parent.declaredClass} == "wm.RelatedEditor"'},
+    defaultInsert:{ignore:1, bindTarget: 1, type:'wm.Variable', group: "editData", order: 10},
     setRestrictValues: {group: "method", doc: 1},
     setDataSet: {group: "method", doc: 1},
     setOptions: {group: "method", doc: 1},
