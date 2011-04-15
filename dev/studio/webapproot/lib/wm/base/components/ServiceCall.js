@@ -251,7 +251,24 @@ dojo.declare("wm.ServiceCall", null, {
                     var baseurl = window.location.href;
                     baseurl = baseurl.replace(/\?.*$/,"");
                     baseurl = baseurl.replace(/\/[^\/]*$/,"/");
-		    iframe.src = baseurl + this._service._service.serviceUrl.replace(/\.json$/,".download") + "?" + argString;
+				//iframe.src = baseurl + this._service._service.serviceUrl.replace(/\.json$/,".download") + "?" + argString;
+				var urlStr = baseurl + this._service._service.serviceUrl.replace(/\.json$/,".download");
+				var iframedoc= iframe.contentDocument || iframe.contentWindow.document;
+				iframedoc.open(); 
+				iframedoc.write('<form method="post" action="');
+				iframedoc.write(urlStr);
+				iframedoc.write('">');
+				iframedoc.write('    <textarea name="contents" id="contents"></textarea>');
+				iframedoc.write('    <input type="text" name="fileType" id="fileType" />');
+				iframedoc.write('    <input type="text" name="fileName" id="fileName" />');
+				iframedoc.write('    <input type="text" name="method" id="method" />');
+				iframedoc.write('</form>'); 
+				iframedoc.close(); 
+				iframedoc.getElementById('contents').value= args.contents; 
+				iframedoc.getElementById('fileType').value= args.fileType; 
+				iframedoc.getElementById('fileName').value= args.fileName; 
+				iframedoc.getElementById('method').value= this.operation; 
+				iframedoc.getElementsByTagName('form')[0].submit();
 		}
             } else {
 	        var args = inArgs || this.getArgs();
