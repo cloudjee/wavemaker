@@ -129,10 +129,12 @@ dojo.declare("LiveViewEditor", wm.Page, {
 		var s, st, ti, ts = [];
 		// show all simple properties
 		for (var i in inSchema) {
-			s = inSchema[i];
+		    s = inSchema[i];
+		    if (s.type && s.fieldOrder !== undefined && s.exclude !== undefined) { // if its a field from types.js rather than a schema type, then these properties should exist
 			st = wm.typeManager.isStructuredType(s.type);
 			if (inAllow(st, s))
-				ts.push({name: i, info: s});
+			    ts.push({name: i, info: s});
+		    }
 		}
 		ts.sort(function(a, b) {
 			//return wm.compareStrings(a.name, b.name);
