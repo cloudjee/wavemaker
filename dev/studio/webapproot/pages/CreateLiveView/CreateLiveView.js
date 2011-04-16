@@ -49,6 +49,9 @@ dojo.declare("CreateLiveView", wm.Page, {
 		var i = '<img src="images/wm/data.png" height="16" width="16" align="absmiddle"> ', d = ioData.data;
 		ioData.data = d ? i + d : d;
 	},
+    onListDblClick: function(inSender) {
+	wm.fire(this.owner, "dismiss", ["OK"]);
+    },
 	okButtonClick: function(inSender, inEvent) {
 		wm.fire(this.owner, "dismiss", [inEvent]);
 	},

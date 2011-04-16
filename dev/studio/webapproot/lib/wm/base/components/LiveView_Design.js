@@ -33,6 +33,8 @@ wm.LiveView.extend({
 	getCreateLiveViewDialog: function() {
 		if (!wm.LiveView.newLiveViewDialog) {
 			var props = {
+			    modal: false,
+			    title: studio.getDictionaryItem("TITLE_CREATE_LIVE_VIEW"),
 				owner: studio,
 				pageName: "CreateLiveView",
 				hideControls: true,
