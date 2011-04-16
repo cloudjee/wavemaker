@@ -224,12 +224,13 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 	},
 	schemaFileRadioInputChange: function(inSender, inDisplayValue, inDataValue) {
 		var b = this.isSchemaFileRadioSelected();
-		this.pathTypeInput.setDisabled(b);
-		this.xmlSchemaFileInput.fileNode.disabled = b;
-		this.xmlSchemaUrlInput.setDisabled(b);
-		this.xmlSchemaTextInput.setDisabled(!b);
-		this.xml2SchemaButton.setDisabled(!b);
+		this.pathTypeInput.setDisabled(!b);
+		this.xmlSchemaFileInput.fileNode.disabled = !b;
+		this.xmlSchemaUrlInput.setDisabled(!b);
+		this.xmlSchemaTextInput.setDisabled(b);
+		this.xml2SchemaButton.setDisabled(b);
 	},
+/*
 	schemaTextRadioInputChange: function(inSender, inDisplayValue, inDataValue) {
 		var b = this.isSchemaFileRadioSelected();
 		this.pathTypeInput.setDisabled(!b);
@@ -238,6 +239,7 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 		this.xmlSchemaTextInput.setDisabled(b);
 		this.xml2SchemaButton.setDisabled(b);
 	},
+	*/
 	importXmlSchemaButtonClick: function(inSender) {
 		this.getSchemaElementTypes();
 	},

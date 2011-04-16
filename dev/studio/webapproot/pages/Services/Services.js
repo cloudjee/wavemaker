@@ -219,7 +219,8 @@ dojo.declare("Services", wm.Page, {
 				pageName: "ImportWebService",
 				owner: studio,
 				hideControls: true,
-			    height: "612px",
+			    //height: "612px",
+			    height: "597px",
 			    width: "800px",
 			    title: studio.getDictionaryItem("wm.WebService.IMPORT_TITLE")
 			});

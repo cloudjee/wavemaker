@@ -47,7 +47,7 @@ RestServiceBuilder.widgets = {
 				}]
 			}]
 		}],
-		restParamsPanelSpacer: ["wm.Panel", {border: "0", height: "200%", padding: "4,10"}, {}, {
+		restParamsPanelSpacer: ["wm.Panel", {border: "0", height: "150px", padding: "4,10"}, {}, {
 			restParamsLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, caption: "Input Parameters", height: "18px", border: "0"}, {}, {
 				format: ["wm.DataFormatter", {}, {}]
 			}],
@@ -69,7 +69,7 @@ RestServiceBuilder.widgets = {
 				}]
 			}]
 		}],
-		restOutputPanelSpacer: ["wm.Panel", {border: "0", height: "100%", padding: "4,10"}, {}, {
+		restOutputPanelSpacer: ["wm.Panel", {border: "0", height: "60px", padding: "4,10"}, {}, {
 			restOutputLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, caption: "Service Output", height: "18px", border: "0"}, {}, {
 				format: ["wm.DataFormatter", {}, {}]
 			}],
@@ -84,7 +84,7 @@ RestServiceBuilder.widgets = {
 				}]
 			}],
 		}],
-		restSchemaPanelSpacer: ["wm.Panel", {border: "0", height: "200%", padding: "4,10"}, {}, {
+		restSchemaPanelSpacer: ["wm.Panel", {border: "0", height: "150px", padding: "4,10"}, {}, {
 			restSchemaLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, caption: "XML Schema", height: "18px", border: "0"}, {}, {
 				format: ["wm.DataFormatter", {}, {}]
 			}],
@@ -110,7 +110,7 @@ RestServiceBuilder.widgets = {
 				}],
 				panel13: ["wm.Panel", {border: "0", height: "100%", layoutKind: "left-to-right"}, {}, {
 					panel14: ["wm.Panel", {border: "0", width: "133px"}, {}],
-					schemaTextRadioInput: ["wm.RadioButtonEditor", {width: "24px", layoutKind: "left-to-right", padding: "", displayValue: "2"}, {onchange: "schemaTextRadioInputChange"}, {
+					schemaTextRadioInput: ["wm.RadioButtonEditor", {width: "24px", layoutKind: "left-to-right", padding: "", displayValue: "2"}, {onchange: "schemaFileRadioInputChange"}, {
 						editor: ["wm._RadioButtonEditor", {radioGroup: "schemaInputType"}, {}]
 					}],
 					xmlSchemaTextInput: ["wm.TextAreaEditor", {width: "100%", layoutKind: "left-to-right"}, {}, {

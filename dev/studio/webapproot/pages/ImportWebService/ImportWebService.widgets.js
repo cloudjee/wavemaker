@@ -16,8 +16,8 @@
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */ 
 ImportWebService.widgets = {
-	layoutBox1: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%"}, {}, {
-		dialog: ["wm.Panel", {height: "565px", border: "0", width: "100%"}, {}, {
+    layoutBox1: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", autoScroll: false}, {}, {
+		dialog: ["wm.Panel", {height: "100%", border: "0", width: "100%"}, {}, {
 			panel: ["wm.Panel", {height: "100%", border: "0"}, {}, {
 				typePanel: ["wm.Panel", {height: "30px", border: "0", padding: "4,0,4,0"}, {}, {
 					panel4: ["wm.Panel", {height: "24px", border: "0", layoutKind: "left-to-right", contentAlign: "center", horizontalAlign: "center"}, {}, {
@@ -28,7 +28,7 @@ ImportWebService.widgets = {
 				}],
 				layersSpacerPanel: ["wm.Panel", {_classes: {domNode: ["wm_Padding_8px"]}, height: "100%", border: "0"}, {}, {
 					layers: ["wm.Layers", {border: "0", width: "100%", height: "100%"}, {}, {
-						wsdlLayer: ["wm.Layer", {caption: "layer1", padding: "10"}, {}, {
+					    wsdlLayer: ["wm.Layer", {caption: "layer1", padding: "10"}, {}, {
 							wsdlGroupLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, caption: "WSDL Information", border: "0", height: "24px"}, {}, {
 								format: ["wm.DataFormatter", {}, {}]
 							}],
@@ -89,10 +89,10 @@ ImportWebService.widgets = {
 								}]
 							}]
 						}],
-						restBuilderLayer: ["wm.Layer", {caption: "layer2"}, {}, {
+					    restBuilderLayer: ["wm.Layer", {caption: "layer2"}, {}, {
 							restServiceBuilderPage: ["wm.PageContainer", {pageName: "RestServiceBuilder", height: "100%", border: "0"}, {}]
 						}],
-						feedLayer: ["wm.Layer", {caption: "layer1", padding: "10"}, {}, {
+					    feedLayer: ["wm.Layer", {caption: "layer1", padding: "10"}, {}, {
 							feedGroupLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, caption: "Feed Service Information", border: "0", height: "24px"}, {}, {
 								format: ["wm.DataFormatter", {}, {}]
 							}],
@@ -103,7 +103,7 @@ ImportWebService.widgets = {
 								}]
 							}]
 						}],
-						restUrlLayer: ["wm.Layer", {caption: "layer1", padding: "10"}, {}, {
+					    restUrlLayer: ["wm.Layer", {caption: "layer1", padding: "10"}, {}, {
 							restUrlPage: ["wm.PageContainer", {pageName: "RestUrlDialog", height: "100%", border: "0"}, {}]
 						}]
 					}]
