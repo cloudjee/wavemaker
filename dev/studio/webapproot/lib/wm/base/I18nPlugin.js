@@ -33,8 +33,13 @@ wm.Plugin.plugin("i18n", wm.Component, {
 	}
 	if (params == undefined)
 	    return this._i18nDictionary[name];
-	else 
-	    return dojo.string.substitute(this._i18nDictionary[name],params);
+	else {
+	    // undefined as a value can throw errors:
+	    var newparams = {};
+	    for (var i in params)
+		newparams[i] = (params[i] === undefined || params[i] === null) ? "" : params[i];
+	    return dojo.string.substitute(this._i18nDictionary[name],newparams);
+	}
     }
 });
 

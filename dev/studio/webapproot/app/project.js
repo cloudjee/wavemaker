@@ -66,7 +66,7 @@ dojo.declare("wm.studio.Project", null, {
 			     this.saveProject(false);
 			     this.projectChanged();
 			     this.projectsChanged();
-			     studio.beginWait(studio.getDictionaryItem("wm.studio.Project.WAIT_CREATING_PROJECT"));
+			     studio.endWait(studio.getDictionaryItem("wm.studio.Project.WAIT_CREATING_PROJECT"));
 			 }));
 		//studio.deploy("Configuring Project...");
 	},
