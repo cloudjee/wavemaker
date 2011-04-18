@@ -64,7 +64,7 @@ Studio.widgets = {
 		
 	    navigationBar: ["wm.Panel", {_classes: {domNode: ["wm-darksnazzy"]}, width: "100%", height: "29px", border: "0", layoutKind: "left-to-right"}, {}, {
 			navBtnHolder: ["wm.Panel", {width: "100%", border: "0", layoutKind: "left-to-right", imageList: "navImageList", horizontalAlign: "left"}, {}, {
-			  navigationMenu: ["wm.DojoMenu", {height: "29px", width: "450px",
+			  navigationMenu: ["wm.DojoMenu", {height: "29px", width: "420px",
 						      "fullStructure": 
 						      [
 							  {"label" :"File",
@@ -233,7 +233,7 @@ Studio.widgets = {
 				navTestBtn: ["wm.ToolButton", {width: "75px", hint: bundleStudio.T_TestTip, caption: "<img src=\"images/runapp_24.png\"/><span style=\"font-weight:bold\"> Test </span>", height: "29px"}, {onclick: "runProjectPopupClick"}],
 				navRunBtn: ["wm.ToolButton", {width: "75px", hint: bundleStudio.T_RunTip, caption: "<img src=\"images/runapp_24.png\"/><span style=\"font-weight:bold\"> Run </span>", height: "29px"}, {onclick: "runProjectClick"}],
 				*/
-			    projectNameLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, width: "150px", margin: "0,0,0,20",autoSizeWidth: true}, {}],
+			    projectNameLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, width: "150px", margin: "0,0,0,20",autoSizeWidth: true, caption: ""}, {}],
 			    navBarSpacer7: ["wm.Spacer", {width: "100%", border: "0"}, {}],
 			    userLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, width: "250px", autoSizeWidth: true, margin: "0,0,0,20", caption: ""}, {}],
 			    navEditAccountBtn: ["wm.ToolButton", {showing: false, width: "150px", margin: "0,0,0,20", hint: "Edit Account", caption: "<img src=\"images/cloud_user_settings.png\"/><span style=\"font-weight:bold\"> Edit Account </span>", height: "29px"}, {onclick: "editAccountClick"}],

@@ -1896,7 +1896,7 @@ color: rgb(0,270,0);
 }
 
 .InsertMenuAdvanced {
-    background: transparent url(http://localhost:8080/wavemaker/images/wm/component_16.png) no-repeat;
+    background: transparent url(/wavemaker/images/wm/component_16.png) no-repeat;
 }
 
 .Studio-scriptRibbon, 
