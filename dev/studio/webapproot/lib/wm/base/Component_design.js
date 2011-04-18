@@ -623,6 +623,6 @@ wm.Component.extend({
 	       */
 		   this.editProp(inPropName);
 	   })});
-       },
+       }
 
 });
