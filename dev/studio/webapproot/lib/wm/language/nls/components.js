@@ -36,7 +36,7 @@
 "wm.DojoGrid.TOAST_DELETE_LATER": "Please wait until all edits are saved before deleting",
 
 "wm.DojoFileUpload.MESSAGE_NO_FILES": "<i>No files selected</i>",
-"wm.DojoFileUpload.TOAST_ONERROR": "File failed to upload: {$error}",
+"wm.DojoFileUpload.TOAST_ONERROR": "File failed to upload: ${error}",
 
 "wm.DojoFlashFileUpload.CAPTION_UPLOAD": "Upload",
 "wm.DojoFlashFileUpload.CAPTION_SELECT": "Select Files...",
