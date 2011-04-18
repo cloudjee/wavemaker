@@ -1603,6 +1603,10 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
 	cursor: pointer;
 }
 
+html body.tundra .dijitMenuItem {
+font-family: "Nimbus Sans L", sans-serif;
+}
+
 .tundra .dojoMenu .dijitMenu,
 .tundra .dojoMenu .dijitMenuBar {
 	border-width: 0px;
