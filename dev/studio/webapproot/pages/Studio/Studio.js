@@ -541,7 +541,7 @@ dojo.declare("Studio", wm.Page, {
 
 	/* This gets triggered if/when the user hits run/test when the app has just been loaded and is still deploying in order to enable livedata */
 			if (this._runRequested) {
-			  var isTest = (this._runRequested == "Test");
+			    var isTest = (this.runPopup.iconClass == "studioProjectTest");
 			  this._runRequested = false;
 			  wm.openUrl(this.getPreviewUrl(isTest), this.project.projectName, "_wmPreview");
                         }
