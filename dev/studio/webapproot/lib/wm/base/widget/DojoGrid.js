@@ -991,6 +991,17 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 				if (!col.show)
 					return;
 				var value = obj[col.id];
+			    if (!value) {
+				var value = obj;
+				var colid = col.id;
+				while(colid.indexOf(".") != -1) {
+				    var index = colid.indexOf(".");
+				    value = value[colid.substring(0,index)];
+				    colid = colid.substring(index+1);
+
+				}
+				value = value[colid];
+			    }
 				if (col.expression){
 					value = this.getExpressionValue(col.expression, idx, obj, true);
 				} else if (col.formatFunc){
