@@ -19,7 +19,8 @@
 dojo.provide("wm.base.widget.Dialogs.Dialog");
 dojo.require("wm.base.widget.Container");
 dojo.require("wm.base.widget.Picture");
-dojo.require("wm.base.widget.Button");
+dojo.require("wm.base.widget.Buttons.ToolButton");
+dojo.require("wm.base.widget.Buttons.Button");
 dojo.require("wm.base.drag.drag");
 dojo.require("dojo.dnd.Moveable");
 
