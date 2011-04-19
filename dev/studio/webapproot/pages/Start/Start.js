@@ -78,6 +78,7 @@ dojo.declare("Start", wm.Page, {
 		this.existingProjectList.renderData(list);
 		for (var i = 0; i < list.length; i++) 
 		    this.existingProjectList.items[i].projectName = list[i];	    
+	    this._showingList = list;
 	},
 	// Open Existing Project tab
 	openProject: function(inSender) {
@@ -150,5 +151,11 @@ dojo.declare("Start", wm.Page, {
     projectsTabOnShow: function() {
 	this.projectSearch.setDataValue("");
 	this.projectSearch.focus();
+    },
+    openFirstProject: function() {
+	if (this._showingList && this._showingList.length) {
+	    this.existingProjectList.selectByIndex(0);
+	    this.openProject();
+	}
     }
 });
