@@ -136,6 +136,8 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 		}
 	},
 	setGroupValue: function(inValue) {
+	    this.setEditorValue(inValue);
+/*
 		var group = this.getGroup();
 	    for (var i=0, v; (v=group[i]); i++) {
 		    var o = v.owner;
@@ -155,6 +157,7 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 		    return;
 		}
 	    }
+	    */
 	},
 	getGroupValue: function() {
 		var group = this.getGroup();
