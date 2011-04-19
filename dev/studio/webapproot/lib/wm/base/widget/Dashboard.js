@@ -120,8 +120,8 @@ dojo.declare("wm.Dashboard", wm.Control, {
 		this.closeDialog();
 	},
 	update: function(e){
-		if (e && e.currentTarget)
-			this.openDialog(e.currentTarget);
+	    if (e && (e.currentTarget||e.target))
+			this.openDialog(e.currentTarget||e.target);
 	},
 	closeDialog: function(){
 		dijit.popup.close(this.addDialog);
