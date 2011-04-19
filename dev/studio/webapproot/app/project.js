@@ -257,8 +257,16 @@ dojo.declare("wm.studio.Project", null, {
 		layers[i].hide();
 	    }
     },
+    closeAllDialogs: function() {
+	for (var i = wm.dialog.showingList.length-1; i >= 0; i--) {
+	    var d = wm.dialog.showingList[i];
+	    if (d._isDesignLoaded || d.owner && d.owner._isDesignLoaded || d instanceof wm.ContextMenuDialog)
+		d.hide();
+	}
+    },
     openPage: function(inName, unsavedChanges) {
 	this.closeAllServicesTabs();
+	this.closeAllDialogs();
 	if (studio.bindDialog.showing && !studio.bindDialog._hideAnimation) 
 	    studio.bindDialog.dismiss();
 	
@@ -674,6 +682,7 @@ dojo.declare("wm.studio.Project", null, {
 	    if (studio.bindDialog.showing && !studio.bindDialog._hideAnimation) 
 		studio.bindDialog.dismiss();
 	    this.closeAllServicesTabs();
+	    this.closeAllDialogs();
 		wm.fire(studio._deployer, "cancel");
 		this.pageChanging();
 		this.projectChanging();
