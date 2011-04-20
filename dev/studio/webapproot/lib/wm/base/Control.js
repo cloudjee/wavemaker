@@ -1330,7 +1330,7 @@ this.label.enable();
 	toString: function(inText) {   
 	    var t = inText || "";
 	    if (!this.showing)
-		t += "(" + wm.getDictionaryItem("wm.Control.toString_HIDDEN") + ")";
+		t += " (" + wm.getDictionaryItem("wm.Control.toString_HIDDEN") + ")";
 	    return this.inherited(arguments, [t]);
 	},
 	//===========================================================================
