@@ -611,13 +611,13 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		//new wm.ComponentTypeSourceTreeNode(inParent, {content: "ServiceVariables", className: "wm.ServiceVariable", image: "images/wm/serviceData.png"});
 		// variables
 	    new wm.ComponentTypeSourceTreeNode(inParent, {page: studio.page, 
-							  content: this.getDictionaryItem("wm.BinderSource.NON_VISUAL"),
+							  content: this.getDictionaryItem("NON_VISUAL"),
 							  className: "wm.Variable", 
 							  canSelect: false, 
 							  image: "images/wm/variable_16.png"});
 		// widgets
 	        new wm.WidgetContainerSourceTreeNode(inParent, {page: studio.page, 
-								content: this.getDictionaryItem("wm.BinderSource.VISUAL"),
+								content: this.getDictionaryItem("VISUAL"),
 								object: studio.page.root, 
 								hasSchema: true, 
 								canSelect: false});
@@ -924,13 +924,13 @@ dojo.declare("wm.BindTreeNode", wm.TreeNode, {
 			var page = this.object[pagePropertyName];
 			if (page) {
 			    new wm.ComponentTypeSourceTreeNode(inParent, {page: page, 
-									  content:  this.getDictionaryItem("wm.BinderSource.NON_VISUAL"),
+									  content:  this.getDictionaryItem("NON_VISUAL"),
 									  className: "wm.Variable", 
 									  canSelect: false, 
 									  image: "images/wm/variable_16.png"});
 			// widgets
 			    new wm.WidgetContainerSourceTreeNode(inParent, {page: page, 
-									    content: this.getDictionaryItem("wm.BinderSource.VISUAL"),
+									    content: this.getDictionaryItem("VISUAL"),
 									    object: page.root, 
 									    hasSchema: true, 
 									    canSelect: false});			
