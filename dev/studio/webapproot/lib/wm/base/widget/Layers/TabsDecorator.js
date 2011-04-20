@@ -400,7 +400,7 @@ dojo.declare("wm.TabsControl", wm.Control, {
 	        //var _currHeight = dojo.marginBox(this.domNode).h;  these two lines are invoked by the caller before doing a short delay so that IE 6 can update its dom structure
 		//this.domNode.style.height = 'auto';
 		var domHeight = dojo.marginBox(this.domNode).h;
-	    return domHeight;		    c
+	    return domHeight;
 		if (domHeight != _currHeight){
 			dojo.marginBox(this.domNode, {h:_currHeight});
 			return domHeight;
