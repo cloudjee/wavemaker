@@ -30,7 +30,8 @@ dojo.declare("wm.StyleInspector", [wm.Layers, wm.InspectorBase], {
 		}],
 
 		classes: ["wm.Layer", {flex: 1, caption: "", box: "v"}, {}, {
-			classTree: ["wm.Tree", {flex: 1}, {}, {}],
+			//classTree: ["wm.Tree", {flex: 1}, {}, {}],
+		        classListPanel: ["wm.Panel", {height: "100%", width: "100%", layoutKind: "top-to-bottom", padding: "4", margin: "0", autoScroll: true}],
 			bevel1: ["wm.Bevel", {}, {}, {}],
 		        classEdit: ["wm.Text", {changeOnEnter: true, caption: "", captionSize: "60px", height: "22px"}, {}, {}]
 		}],
@@ -61,29 +62,64 @@ dojo.declare("wm.StyleInspector", [wm.Layers, wm.InspectorBase], {
 		dojo.addClass(this.layers[1].domNode, "wmstyleinspector");
 		dojo.addClass(this.layers[2].domNode, "wmstyleinspector");
 
+	    
 	    this.layers[0].setCaption(studio.getDictionaryItem("wm.StyleInspector.BASIC_STYLE_LAYER_CAPTION"));
 	    this.layers[1].setCaption(studio.getDictionaryItem("wm.StyleInspector.CLASSES_LAYER_CAPTION"));
 	    this.layers[2].setCaption(studio.getDictionaryItem("wm.StyleInspector.CUSTOM_LAYER_CAPTION"));
 	    this.layers[1].c$[2].setCaption(studio.getDictionaryItem("wm.StyleInspector.CUSTOM_CLASS_CAPTION"));
 	    this.layers[2].c$[1].c$[0].setCaption(studio.getDictionaryItem("wm.StyleInspector.CUSTOM_BUTTON_CAPTION"));
+
+	    dojo.connect(this.layers[1], "onShow", this, function() {
+			 this.classListPanel.reflow();
+	    });
 	},
 	initClasses: function() {
+	        this.classEdit = this.$.client.widgets.classes.widgets.classEdit;
+	        this.classListPanel = this.$.client.widgets.classes.widgets.classListPanel;
+	        this.classListPanel.removeAllControls();
+	    /*
 		this.classTree = this.$.client.widgets.classes.widgets.classTree;
-		this.classEdit = this.$.client.widgets.classes.widgets.classEdit;
 		this.classTree.clear();
+		*/
 		this.connect(this.classEdit.domNode, "onmousedown", this, "textMousedown");
 		this.connect(this.classEdit, "onchange", this, "classEditChange");
-		this.connect(this.classTree, "oncheckboxclick", this, "classCheckboxClick");
+	    //this.connect(this.classTree, "oncheckboxclick", this, "classCheckboxClick");
 		var n = defaultCssClasses;
 		for (var i in n) {
 			if (!(i in Array.prototype)) {
+			    this.addStyleEditor(i, n);
+/*
 				var node = new wm.TreeNode(this.classTree.root, {content: i, name: i, isCategory: true});
 				for (var j=0, g=n[i], c; (c=g[j]); j++) {
 					new wm.TreeCheckNode(node, {content: c, closed: true, name: c});
 				}
+				*/
 			}
 		}
+	    this.classListPanel.reflow();
 	},
+    addStyleEditor: function(i,n) {
+			    var s = new wm.SelectMenu({owner: this,
+						       parent: this.classListPanel,
+						       caption: i,
+						       name: i,
+						       dataField: "dataValue",
+						       displayField: "dataValue",
+						       captionPosition: "top",
+						       captionAlign: "left",
+						       captionSize: "20px",
+						       height: "40px",
+						       width: "100%"});
+			    s.connect(s, "onchange", this, function() {
+				this.classChange(s);
+			    });
+			    var options = "";
+			    for (var j=0, g=n[i], c; (c=g[j]); j++) {
+				if (options) options += ",";
+				options += c;
+			    }
+			    s.setOptions(options);
+    },
 	initStyles: function() {
 	    this.text = this.getLayer(this.indexOfLayerName("custom")).c$[0];
 	    this.text.connect(this.text, "onchange", this, function(inValue) {
@@ -103,7 +139,8 @@ dojo.declare("wm.StyleInspector", [wm.Layers, wm.InspectorBase], {
 		var ins = inInspected, def = "domNode";
 		var isWidget = ins instanceof wm.Widget;
 		//
-		this.classTree.setShowing(isWidget);
+	        //this.classTree.setShowing(isWidget);
+	        this.classListPanel.setShowing(isWidget);
 		if (!isWidget)
 			return;
 		//
@@ -116,6 +153,21 @@ dojo.declare("wm.StyleInspector", [wm.Layers, wm.InspectorBase], {
 			return;
 		}
 		this.extraClasses = [].concat(c);
+	    dojo.forEach(this.classListPanel.c$, dojo.hitch(this, function(editor) {
+		var prefix = "wm_" + editor.caption + "_";
+		var data = editor.dataSet.getData();
+		for (var i = 0; i < data.length; i++) {
+		    var className = prefix + data[i].dataValue;
+		    if (ins._classes.domNode && dojo.indexOf(ins._classes.domNode, className) != -1) {
+			editor.setDataValue(data[i].dataValue);
+			this.extraClasses.splice(dojo.indexOf(this.extraClasses, className), 1);
+			return;
+		    }
+		}
+		editor.setDataValue("");
+
+	    }));
+/*
 		this.classTree.forEachNode(dojo.hitch(this, function(inNode) {
 			if (inNode.setChecked) {
 				var
@@ -127,6 +179,7 @@ dojo.declare("wm.StyleInspector", [wm.Layers, wm.InspectorBase], {
 					this.extraClasses.splice(dojo.indexOf(this.extraClasses, nc), 1);
 			}
 		}));
+		*/
 		this.classEdit.beginEditUpdate();
 		this.classEdit.setDataValue(this.extraClasses.join(' '));
 		this.classEdit.endEditUpdate();
@@ -136,6 +189,22 @@ dojo.declare("wm.StyleInspector", [wm.Layers, wm.InspectorBase], {
 	},
 	classFromNode: function(inNode) {
 		return ["wm", inNode.parent.name, inNode.name].join("_");
+	},
+        classChange: function(inSender) {
+	    var inspected = this.owner.inspected;
+	    var data = inSender.dataSet.getData();
+	    var value = inSender.getDataValue();
+	    var prefix = "wm_" + inSender.caption + "_";
+	    for (var i = 0; i < data.length; i++) {
+		var v = data[i].dataValue;
+		if (v == value) {
+		    if (!inspected._classes.domNode || dojo.indexOf(inspected._classes.domNode, prefix+v) == -1)
+			inspected.addUserClass(prefix + v);
+		} else {
+		    inspected.removeUserClass(prefix + v);
+		}
+	    }
+	    inspected.reflowParent();	    
 	},
 	classCheckboxClick: function(inNode) {
 		//dojo.stopEvent(inEvent);

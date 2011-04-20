@@ -1788,3 +1788,71 @@ Overriding dijit's progress bar properties to enable height changes to progress 
     border-left: 0px;
     border-right: 0px;
 }
+
+
+
+/* Moved here for backwards compatability */
+.wm_Border_TopStyleCurved4px {
+        -moz-border-radius-topleft: 4px !important;
+        -moz-border-radius-topright: 4px !important;
+        -webkit-border-top-left-radius: 4px !important;
+        -webkit-border-top-right-radius: 4px !important;
+         border-radius-topleft: 4px !important;
+         border-radius-topright: 4px !important;    
+}
+
+.wm_Border_TopStyleCurved8px {
+        -moz-border-radius-topleft: 8px !important;
+        -moz-border-radius-topright: 8px !important;
+        -webkit-border-top-left-radius: 8px !important;
+        -webkit-border-top-right-radius: 8px !important;
+         border-radius-topright: 8px !important;    
+}
+
+.wm_Border_TopStyleCurved12px {
+        -moz-border-radius-topleft: 12px !important;
+        -moz-border-radius-topright: 12px !important;
+        -webkit-border-top-left-radius: 12px !important;
+        -webkit-border-top-right-radius: 12px !important;
+         border-radius-topleft: 12px !important;
+         border-radius-topright: 12px !important;    
+}
+
+.wm_Border_BottomStyleCurved4px {
+        -moz-border-radius-bottomleft: 4px !important;
+        -moz-border-radius-bottomright: 4px !important;
+        -webkit-border-bottom-right-radius: 4px !important;
+        -webkit-border-bottom-left-radius: 4px !important;
+         border-radius-bottomleft: 4px !important;
+         border-radius-bottomright: 4px !important;    
+}
+
+.wm_Border_BottomStyleCurved8px {
+        -moz-border-radius-bottomleft: 8px !important;
+        -moz-border-radius-bottomright: 8px !important;
+        -webkit-border-bottom-right-radius: 8px !important;
+        -webkit-border-bottom-left-radius: 8px !important;
+         border-radius-bottomleft: 8px !important;
+         border-radius-bottomright: 8px !important;    
+}
+
+.wm_Border_BottomStyleCurved12px {
+        -moz-border-radius-bottomleft: 12px !important;
+        -moz-border-radius-bottomright: 12px !important;
+        -webkit-border-bottom-right-radius: 12px !important;
+        -webkit-border-bottom-left-radius: 12px !important;
+         border-radius-bottomleft: 12px !important;
+         border-radius-bottomright: 12px !important;    
+}
+
+.wm_Border_DropShadow {
+     -moz-box-shadow: 2px 2px 4px #888 !important; /* FF3.5+ */
+     -webkit-box-shadow: 2px 2px 4px #888 !important; /* Saf3.0+, Chrome */
+     box-shadow: 2px 2px 4px #888 !important; /* Opera 10.5, IE 9.0 */
+}
+
+.wm_Border_StrongDropShadow {
+     -moz-box-shadow: 5px 5px 4px #888 !important; /* FF3.5+ */
+     -webkit-box-shadow: 5px 5px 4px #888 !important; /* Saf3.0+, Chrome */
+     box-shadow: 5px 5px 4px #888 !important; /* Opera 10.5, IE 9.0 */
+}

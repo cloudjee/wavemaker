@@ -150,7 +150,16 @@
 }
 
 
-.wm_Border_TopStyleCurved4px {
+.wm_BorderTopStyle_NoCurve {
+        -moz-border-radius-topleft: 0px !important;
+        -moz-border-radius-topright: 0px !important;
+        -webkit-border-top-left-radius: 0px !important;
+        -webkit-border-top-right-radius: 0px !important;
+         border-radius-topleft: 0px !important;
+         border-radius-topright: 0px !important;    
+}
+
+.wm_BorderTopStyle_Curved4px {
         -moz-border-radius-topleft: 4px !important;
         -moz-border-radius-topright: 4px !important;
         -webkit-border-top-left-radius: 4px !important;
@@ -159,7 +168,7 @@
          border-radius-topright: 4px !important;    
 }
 
-.wm_Border_TopStyleCurved8px {
+.wm_BorderTopStyle_Curved8px {
         -moz-border-radius-topleft: 8px !important;
         -moz-border-radius-topright: 8px !important;
         -webkit-border-top-left-radius: 8px !important;
@@ -167,7 +176,7 @@
          border-radius-topright: 8px !important;    
 }
 
-.wm_Border_TopStyleCurved12px {
+.wm_BorderTopStyle_Curved12px {
         -moz-border-radius-topleft: 12px !important;
         -moz-border-radius-topright: 12px !important;
         -webkit-border-top-left-radius: 12px !important;
@@ -176,7 +185,16 @@
          border-radius-topright: 12px !important;    
 }
 
-.wm_Border_BottomStyleCurved4px {
+.wm_BorderBottomStyle_NoCurve {
+        -moz-border-radius-bottomleft: 0px !important;
+        -moz-border-radius-bottomright: 0px !important;
+        -webkit-border-bottom-right-radius: 0px !important;
+        -webkit-border-bottom-left-radius: 0px !important;
+         border-radius-bottomleft: 0px !important;
+         border-radius-bottomright: 0px !important;    
+}
+
+.wm_BorderBottomStyle_Curved4px {
         -moz-border-radius-bottomleft: 4px !important;
         -moz-border-radius-bottomright: 4px !important;
         -webkit-border-bottom-right-radius: 4px !important;
@@ -185,7 +203,7 @@
          border-radius-bottomright: 4px !important;    
 }
 
-.wm_Border_BottomStyleCurved8px {
+.wm_BorderBottomStyle_Curved8px {
         -moz-border-radius-bottomleft: 8px !important;
         -moz-border-radius-bottomright: 8px !important;
         -webkit-border-bottom-right-radius: 8px !important;
@@ -194,7 +212,7 @@
          border-radius-bottomright: 8px !important;    
 }
 
-.wm_Border_BottomStyleCurved12px {
+.wm_BorderBottomStyle_Curved12px {
         -moz-border-radius-bottomleft: 12px !important;
         -moz-border-radius-bottomright: 12px !important;
         -webkit-border-bottom-right-radius: 12px !important;
@@ -203,13 +221,19 @@
          border-radius-bottomright: 12px !important;    
 }
 
-.wm_Border_DropShadow {
+.wm_BorderShadow_NoShadow {
+     -moz-box-shadow: 0px 0px 0px #888 !important; /* FF3.5+ */
+     -webkit-box-shadow: 0px 0px 0px #888 !important; /* Saf3.0+, Chrome */
+     box-shadow: 0px 0px 0px #888 !important; /* Opera 10.5, IE 9.0 */
+}
+
+.wm_BorderShadow_WeakShadow {
      -moz-box-shadow: 2px 2px 4px #888 !important; /* FF3.5+ */
      -webkit-box-shadow: 2px 2px 4px #888 !important; /* Saf3.0+, Chrome */
      box-shadow: 2px 2px 4px #888 !important; /* Opera 10.5, IE 9.0 */
 }
 
-.wm_Border_StrongDropShadow {
+.wm_BorderShadow_StrongShadow {
      -moz-box-shadow: 5px 5px 4px #888 !important; /* FF3.5+ */
      -webkit-box-shadow: 5px 5px 4px #888 !important; /* Saf3.0+, Chrome */
      box-shadow: 5px 5px 4px #888 !important; /* Opera 10.5, IE 9.0 */
