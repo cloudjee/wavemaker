@@ -69,10 +69,12 @@ dojo.declare("wm.DojoFlashFileUpload", wm.DojoFileUpload, {
     },
     setUploadImmediately: function(inVal) {
         this.uploadImmediately = inVal;
-	if (this.uploadImmediately) {
-            this.setButtonCaption(wm.getDictionaryItem("wm.DojoFlashFileUpload.CAPTION_UPLOAD")); //"Upload..." : "Select Files");
-	} else {
-            this.setButtonCaption(wm.getDictionaryItem("wm.DojoFlashFileUpload.CAPTION_SELECT")); //"Upload..." : "Select Files");
+	if (this._isDesignLoaded) {
+	    if (this.uploadImmediately) {
+		this.setButtonCaption(studio.getDictionaryItem("wm.DojoFlashFileUpload.CAPTION_UPLOAD")); //"Upload..." : "Select Files");
+	    } else {
+		this.setButtonCaption(studio.getDictionaryItem("wm.DojoFlashFileUpload.CAPTION_SELECT")); //"Upload..." : "Select Files");
+	    }
 	}
     },
     createButton: function() {
