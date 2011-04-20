@@ -45,6 +45,8 @@ dojo.declare("PreferencesPane", wm.Page, {
         'demoHome': this.demoFolderEditor.getDataValue()
       }], dojo.hitch(this, "okButtonClickResult"),
       dojo.hitch(this, "okButtonClickError"));
+      if (studio.startPageDialog.page)
+	  studio.startPageDialog.page.refreshProjectList();
   },
   okButtonClickResult: function(inSender) {
     wm.fire(this.owner, "dismiss", ["OK"]);
