@@ -29,15 +29,7 @@ dojo.declare("wm.PopupMenuButton", wm.Button, {
 
     afterPaletteDrop: function() {
 	this.inherited(arguments);
-	/* TODO: Localize This?? */
-	this.setFullStructure([{label: "File",
-				children: [{label: "Save"},
-					   {label: "Close"}]},
-			       {label: "Edit",
-				children: [{label: "Cut"},
-					   {label: "Copy"},
-					   {label: "Paste"}]},
-			       {label: "Help"}]);
+	this.setFullStructureStr(studio.getDictionaryItem("wm.PopupMenu.DEFAULT_STRUCTURE"));
     },
 
     onclick:function() {},

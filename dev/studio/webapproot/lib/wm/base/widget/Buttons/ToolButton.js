@@ -103,28 +103,28 @@ dojo.declare("wm.ToolButton", wm.Control, {
 		this.caption = inCaption;
 	        if (!this._cupdating) {
 	            this.invalidCss = true;
-		    this.render();
+		    this.render(true,true);
 		}
 	},
 	setIconUrl: function(inUrl) {
 		this.iconUrl = inUrl;
 	        this.invalidCss = true;
-		this.render();
+	    this.render(true,true);
 	},
 	setIconWidth: function(w) {
 	        this.iconWidth = w;
 	        this.invalidCss = true;
-		this.render();
+	    this.render(true,true);
 	},
 	setIconHeight: function(h) {
 	        this.iconHeight = h;
 	        this.invalidCss = true;
-		this.render();
+	    this.render(true,true);
 	},
 	setIconMargin: function(m) {
 	        this.iconMargin = m;
 	        this.invalidCss = true;
-		this.render();
+	    this.render(true,true);
 	},
 	setContent: function(inContent) { // BC
 		this.setCaption(inContent);
@@ -147,7 +147,7 @@ dojo.declare("wm.ToolButton", wm.Control, {
 		var iln = this.findImageList();
 		this._imageList = iln ? iln instanceof wm.ImageList ? iln : this.owner.getValueById(iln) : null;
 	        this.invalidCss = true;
-		this.render();
+	    this.render(true,true);
 	},
     render: function(forceRender, noInherited) {
 	    if (!forceRender && (!this.invalidCss || !this.isReflowEnabled())) return;
