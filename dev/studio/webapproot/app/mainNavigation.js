@@ -204,7 +204,7 @@ Studio.extend({
 	    inLayer.hide();
 	    this.updateServicesDirtyTabIndicators(); // remove unsaved indicator from the tab now that it has no layers
 	} else {
-	    var message = this.getDictionayrItem("CONFIRM_UNSAVEDTAB_HEADER") + "<ul>"
+	    var message = this.getDictionaryItem("CONFIRM_UNSAVEDTAB_HEADER") + "<ul>"
 	    for (var i = 0; i < unsavedPages.length; i++)
 		message += "<li>" + unsavedPages[i].owner.parent.caption.replace(/^\<.*?\>\s*/,"") + "</li>";
 		//message += (i == unsavedPages.length-1 ? " and " : i ? ", " : "") + unsavedPages[i].owner.parent.caption.replace(/^\<.*?\>\s*/,"");
