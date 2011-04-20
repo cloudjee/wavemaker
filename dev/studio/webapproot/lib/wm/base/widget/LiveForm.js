@@ -380,10 +380,26 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 			e.setCaptionAlign(inAlign);
 		});
 	},
-	setCaptionPosition: function(inPosition) {
-		this.captionPosition = inPosition;
+	setCaptionPosition: function(pos) {
+	    var oldPos = this.captionPosition;
+	    this.captionPosition = pos;
+
+	    if ((oldPos == "left" || oldPos == "right") && (pos == "bottom" || pos == "top")) {
+		if (this.editorHeight.match(/px/) && parseInt(this.editorHeight) < 48)
+		    this.editorHeight = "48px";
+		this.captionSize = "28px";
+	    } else if ((pos == "left" || pos == "right") && (oldPos == "bottom" || oldPos == "top")) {
+		if (this.editorHeight.match(/px/) && parseInt(this.editorHeight) >= 48)
+		    this.editorHeight = wm.AbstractEditor.prototype.height;
+	    
+		if (this.captionSize.match(/px/) && parseInt(this.captionSize) < 100) {
+		    this.captionSize = "100px";
+		}
+	    }
+
+
 		dojo.forEach(this.getEditorsArray(), function(e) {
-			e.setCaptionPosition(inPosition);
+		    e.setCaptionPositionLF(pos);
 		});
 	},
 	setEditorWidth: function(inEditorWidth) {

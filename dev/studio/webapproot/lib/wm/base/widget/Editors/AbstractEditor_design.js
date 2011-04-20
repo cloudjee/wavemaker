@@ -40,7 +40,21 @@ wm.AbstractEditor.extend({
 		    dojo.removeClass(this.captionNode, inClass);
 	},
 	afterPaletteDrop: function() {
-		this.setCaption(this.name);
+	    this.setCaption(this.name);
+	    var liveform = this.isAncestorInstanceOf(wm.LiveFormBase);
+	    if (liveform) {
+		this.setCaptionPosition(liveform.captionPosition);
+		this.setCaptionAlign(liveform.captionAlign);
+		this.setCaptionSize(liveform.captionSize);
+
+		// don't set the height if the editor uses a custom height
+		if (this.constructor.prototype.height == wm.AbstractEditor.prototype.height)
+		    this.setHeight(liveform.editorHeight);
+
+		if (this.constructor.prototype.width == wm.AbstractEditor.prototype.width)
+		    this.setWidth(liveform.editorWidth);
+		this.setReadonly(liveform.readonly);
+	    }
 	},
 	// adds ability to merge in editor properties intended to be presented in owner.
 	// note: these editor properties must be serialized in the editor.
@@ -64,7 +78,6 @@ wm.AbstractEditor.extend({
 		    if (!this.caption) this.setCaption(inFieldName);
 		}
 	},
-
 	makePropEdit: function(inName, inValue, inDefault) {
 		switch (inName) {
 			case "formField":

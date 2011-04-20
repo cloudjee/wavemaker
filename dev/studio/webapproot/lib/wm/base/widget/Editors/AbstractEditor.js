@@ -145,12 +145,29 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
     setCaptionPosition: function(pos) {
 	var oldPos = this.captionPosition;
 	this.captionPosition = pos;
-	if ((oldPos == "left" || oldPos == "right") && (pos == "bottom" || pos == "top"))
+	if ((oldPos == "left" || oldPos == "right") && (pos == "bottom" || pos == "top")) {
 	    if (this.height.match(/px/) && parseInt(this.height) < 48)
 		this.setHeight("48px");
-	else if ((pos == "left" || pos == "right") && (oldPos == "bottom" || oldPos == "top"))
-	    if (this.captionSize.match(/px/) && parseInt(this.captionSize) < 100)
+	    this.captionSize = "28px";
+	} else if ((pos == "left" || pos == "right") && (oldPos == "bottom" || oldPos == "top")) {
+	    if (this.bounds.h >= 48) {
+		this.setHeight(this.constructor.prototype.height);
+	    }
+	    if (this.captionSize.match(/px/) && parseInt(this.captionSize) < 100) {
 		this.captionSize = "100px";
+	    }
+	}
+	this.sizeEditor();
+    },
+    setCaptionPositionLF: function(inPosition) {
+	var liveform = this.isAncestorInstanceOf(wm.LiveFormBase);
+	if (liveform) {
+	    this.setCaptionPosition(liveform.captionPosition);
+	    this.setCaptionSize(liveform.captionSize);
+	    this.setCaptionAlign(liveform.captionAlign);
+	    if (this.constructor.prototype.height == wm.AbstractEditor.prototype.height)
+		this.setHeight(liveform.editorHeight);  // don't set height for large text areas/richtext areas based on editorHeight.
+	}
 	this.sizeEditor();
     },
     setSingleLine: function(inSingleLine) {
