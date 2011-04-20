@@ -528,14 +528,6 @@ dojo.declare("wm.PopupMenu", wm.DojoMenu, {
 	if (inShowing) 
 	    this.dojoObj._scheduleOpen(inNode);
     },
-    afterPaletteDrop: function() {
-	this.inherited(arguments);
-	this.setParent(null);
-	studio.designer.domNode.appendChild(this.domNode);
-	this.setFullStructureStr(studio.getDictionaryItem("wm.PopupMenu.DEFAULT_STRUCTURE"));
-	this.renderDojoObj();
-	this.activate();
-    },
     setLabel: function(inIndex, inText) {
 	this.dojoObj.getChildren()[inIndex].set("label", inText);
     },
