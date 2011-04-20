@@ -138,9 +138,11 @@ dojo.declare("wm.Dashboard", wm.Control, {
 	    wm.job(this.getRuntimeId() + ".updatePageContainerBounds", 10, dojo.hitch(this, function() {
 		for (var i = 0; i < this.dijitPortlets.length; i++) {
 		    var p = this.dijitPortlets[i];
-		    var c = dojo.coords(p.wm_pageContainer.domNode.parentNode);
-		    p.wm_pageContainer.setBounds(null,null,c.w-2, c.h-4);
-		    p.wm_pageContainer.reflow();
+		    if (p.wm_pageContainer && p.wm_pageContainer.domNode && p.wm_pageContainer.domNode.parentNode) {
+			var c = dojo.coords(p.wm_pageContainer.domNode.parentNode);
+			p.wm_pageContainer.setBounds(null,null,c.w-2, c.h-4);
+			p.wm_pageContainer.reflow();
+		    }
 		}
 	    }));
 	},
