@@ -201,7 +201,8 @@ dojo.declare("wm.Variable", wm.Component, {
 	clearData: function() {
 		this._clearData();
 	        this.setType(this.type, true);
-		this.notify();
+	        if (this.type && this.type != this.declaredClass)
+		    this.notify();
 	},
 	_clearData: function() {
 		this._isNull = false;
@@ -706,6 +707,8 @@ dojo.declare("wm.Variable", wm.Component, {
 	},
 	// id-based notification
 	valueChanged: function(inProp, inValue) {
+	    if (!this.type || this.type == this.declaredClass) return; // if it doesn't yet have any type information, then nobody wants to listen to changes to this component
+
 		// Code exists to deal with collisions between component props and data props in this class.
 		// However, the distinction is lost in change notifications. Likely, data props should have
 		// special ids to distinguish them. Until then, we simply avoid sending change notification
@@ -861,7 +864,7 @@ dojo.declare("wm.Variable", wm.Component, {
 
     toString: function(inText) {   
 	var t = inText || "";
-	var hasData = this.data.isList ? this.data && this.data.list && this.data.list.length : wm.isEmpty(this.data);
+	var hasData =  this.data && this.data.list && this.data.list.length ? this.data.length : wm.isEmpty(this.data);
 	t += "; " + wm.getDictionaryItem("wm.Variable.toString_TYPE", {type: this.type}) + "; " + wm.getDictionaryItem("wm.Variable.toString_ISEMPTY", {isEmpty: !hasData}); 
 	return this.inherited(arguments, [t]);
     },

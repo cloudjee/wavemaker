@@ -630,7 +630,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		delete this._typeChangedConnect;
 	    }
 
-		this.variable = inValue;
+	    this.variable = inValue;
+	    var updatedColumns = false;
 	    if (this.variable) {
 		this.dataSetToSelectedItem();
 
@@ -643,10 +644,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			this.renderDojoObj();
 		    });
 		    this.updateColumnData();
+		    updatedColumns = true;
 		}
 	    }
-		if (this._isDesignLoaded && !this._loading)
-			this.setColumnData();
+		if (this._isDesignLoaded && !this._loading && !updatedColumns)
+		    this.setColumnData();
 		this.setDojoStore();
                 if (inValue && inValue instanceof wm.Variable)
                     this.selectedItem.setType(inValue.type); // broadcasts a message to all who are bound to the selectedItem
