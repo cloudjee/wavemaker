@@ -387,9 +387,9 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 
 		var ds = this.dataSet = new wm.Variable({name: "optionsVar",
 							 owner: this,
-							 type: "EntryData"});
+							 type: "StringData"});
 		ds.setData(opts);
-		this.displayField = "name";
+		this.displayField = "dataValue";
 		this.dataField    = "dataValue";
 	},
 	setOptions: function(inOptions) {		
