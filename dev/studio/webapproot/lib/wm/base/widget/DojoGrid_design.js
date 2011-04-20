@@ -298,9 +298,11 @@ wm.DojoGrid.extend({
 	    }			
 	},
 	updateGridStructure: function(){
-		this.columns = this.contextMenu.getUpdatedDataSet();
+	    this.columns = this.contextMenu.getUpdatedDataSet();
+	    if (this.dojoObj) {
 		this.dojoObj.attr('structure', this.getStructure());
 		this.dojoObj.render();
+	    }
 	},
 	_onResizeColumn: function(idx, inDrag, delta){
 		var sArray = this.contextMenu.getUpdatedDataSet();
