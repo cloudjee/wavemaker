@@ -414,21 +414,13 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 	getViewDataIndex: function(inFormField) {
 		return inFormField;
 	},
+    // Deprecated
        validateData: function() {
-	 var result = true;
-	        dojo.forEach(this.getFormEditorsArray(), function(e) {
-		  if (wm.isInstanceType(e, wm.RelatedEditor)) {
-		    if (!e.validateData()) result = false;
-		    return result;
-		  }
-		  var val = e.dataValue;
-		  if (e.editor && e.editor.required && (val === null || val === undefined || val === "")) {
-		      /* TODO: Localize this */
-		      app.alert(wm.getDictionaryItem("wm.LiveForm.INVALID_EDITOR", {caption: e.caption}));
-		    result = false;
-		  }
-		});
-		return result;
+	   var widget = this.getInvalidWidget();
+	   if (!widget) return true;
+	   app.alert(wm.getDictionaryItem("wm.LiveForm.INVALID_EDITOR", {caption: widget.caption}));
+	       
+	   return true;
        },
 	//===========================================================================
 	// Data Navigation API
@@ -915,11 +907,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	onError: function(inError) {
 	    wm.logging && console.error(inError);
 	    if (this.displayErrors) {
-		if (dojo.isString(inError)) {
-		    app.alert(m);
-		} else {
-		    app.alert(wm.getDictionaryItem("wm.LiveForm.ONERROR", {error: inError || "??"}));
-		}
+		app.alert(wm.getDictionaryItem("wm.LiveForm.ONERROR", {error: dojo.isString(inError) ? inError : inError.message || "??"}));
 	    }
 	}
 });
