@@ -443,7 +443,6 @@ wm.LiveFormBase.extend({
             if (!editPanel.isCustomized && editPanel.lock) {
                 this.setName2(inName);
             } else {
-                editPanel.setName(this.name + "EditPanel");
                 app.confirm(studio.getDictionaryItem("wm.LiveForm.SET_NAME_CONFIRM"), false, 
                             dojo.hitch(this, function() {
                                 this.setName2(inName);
