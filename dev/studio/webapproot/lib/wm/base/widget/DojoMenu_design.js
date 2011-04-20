@@ -45,15 +45,19 @@ wm.DojoMenu.extend({
     themeableStyles: [{name: "wm.DojoMenu-Right_Margin", displayName: "Right Margin"},
 		      {name: "wm.DojoMenu-Down_Image", displayName: "Drop Icon (MenuBar)"},
 		      {name: "wm.DojoMenu-Right_Image", displayName: "Drop Icon (SubMenu)"}],
+    afterPaletteDrop: function() {
+	this.inherited(arguments);
+	this.setParent(null);
+	studio.designer.domNode.appendChild(this.domNode);
+	this.setFullStructureStr(studio.getDictionaryItem("wm.PopupMenu.DEFAULT_STRUCTURE"));
+	this.renderDojoObj();
+	this.activate();
+    },
 	designCreate: function() {
 		// if this is being created in studio, supply a default caption
 		if (this._studioCreating)
 			this.studioCreate();
 		this.inherited(arguments);
-	},
-	afterPaletteDrop: function() {
-		this.caption = this.caption || this.name;
-		this.renderDojoObj();
 	},
 	makePropEdit: function(inName, inValue, inDefault) {
 		switch (inName) {
