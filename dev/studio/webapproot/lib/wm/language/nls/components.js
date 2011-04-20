@@ -5,7 +5,7 @@
 "wm.Variable.toString_ISEMPTY": "isEmpty: ${isEmpty}",
 "wm.ServiceVariable.toString_FIRING": "isFiring: ${isFiring}",
 
-"wm.Component.CLASS_NOT_FOUND": "Component type ${type} not found (name: ${name}!",
+"wm.Component.CLASS_NOT_FOUND": "Component type ${type} not found (component name: ${name})!",
 
 "wm.Application.ALERT_MISSING_THEME": "The theme '${name}' was not found.  This can happen when importing a project that uses a theme that is not in your library.  You can download that theme and copy it into your WaveMaker/common/themes folder or go to your model, select 'Project', and pick a new theme",
 "wm.Application.ALERT_MISSING_NOTHEME": "Fatal error loading theme wm_notheme.  If you see this, please contact WaveMaker support.",
@@ -38,12 +38,9 @@
 "wm.DojoFileUpload.MESSAGE_NO_FILES": "<i>No files selected</i>",
 "wm.DojoFileUpload.TOAST_ONERROR": "File failed to upload: ${error}",
 
-"wm.DojoFlashFileUpload.CAPTION_UPLOAD": "Upload",
-"wm.DojoFlashFileUpload.CAPTION_SELECT": "Select Files...",
+"wm.LiveForm.INVALID_EDITOR": "${caption} Needs a value", /* Deprecated */
 
-"wm.LiveForm.INVALID_EDITOR": "${caption} Needs a value",
-
-"wm.LiveForm.ONERROR": "Error: {$error}",
+"wm.LiveForm.ONERROR": "Error: ${error}",
 
 "wm.Dialog.HINT_CLOSE": "Close dialog",
 "wm.Dialog.HINT_MINIFY": "Minify dialog (Puts it into a taskbar on the bottom of the screen)",

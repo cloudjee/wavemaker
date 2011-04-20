@@ -63,15 +63,19 @@
     "wm.Component.GENERATE_DOCUMENTATION_EVENT_HEADER": "<h4>${eventName}</h4>\n executes ",
     "wm.Component.GENERATE_DOCUMENTATION_EVENT_TARGET_TYPE": "<b>Type:</b>: ${componentType}",
     "wm.Component.GENERATE_DOCUMENTATION_EVENT_TARGET_OPERATION": "<b>Operation:</b>: ${operation}",
-    "wm.Component.GENERATE_DOCUMENTATION_EVENT_FUNCTION": "${propvalue} (Function)",
+    "wm.Component.GENERATE_DOCUMENTATION_EVENT_FUNCTION": "${functionName} (Function)",
     "wm.Component.GENERATE_DOCUMENTATION_NO_EVENT_HANDLER": "No event handlers",
     "wm.Component.GENERATE_DOCUMENTATION_EVENT_SECTION": "<h4>Event Handlers</h4><div style='margin-left:15px;'>${eventHtml}</div>",
     "wm.Component.GENERATE_DOCUMENTATION_EVENT_HANDLERS_HEADER": "<h4>The following object event handlers activate this component</h4><ul  style='padding-left:0px;list-style-position: inside;margin-left: 15px;'>\n${eventHtml}</ul>",
     "wm.Component.GENERATE_DOCUMENTATION_BINDING": "<li><b>${property}</b> is bound to <i>${source}</i></li>\n",
     "wm.Component.GENERATE_DOCUMENTATION_NO_BINDING": "No bindings",
     "wm.Component.GENERATE_DOCUMENTATION_BINDING_SECTION": "<h4>This object has the following bindings</h4><ul  style='padding-left:0px;list-style-position: inside;margin-left: 15px;'>\n${bindingHtml}</ul>",
-    "wm.Component.GENERATE_DOCUMENTATION_BOUND_TO": "<li>${targetComponent}.${targetProperty} is bound to <i>${source}</i></li>\n",
+    "wm.Component.GENERATE_DOCUMENTATION_BOUND_TO": "<li><b>${targetComponent}.${targetProperty}</b> is bound to <i>${source}</i></li>\n",
     "wm.Component.GENERATE_DOCUMENTATION_BOUND_TO_SECTION": "<h4>The following objects are bound to this</h4><ul  style='padding-left:0px;list-style-position: inside;margin-left: 15px;'>\n${bindHtml}</ul>",
+
+    "wm.DojoFlashFileUpload.CAPTION_UPLOAD": "Upload",
+    "wm.DojoFlashFileUpload.CAPTION_SELECT": "Select Files...",
+
 
 
     JSON_PENDING: "Pending Request: ${name}",
@@ -197,7 +201,7 @@
     "wm.EditPanel.DELETE_CAPTION": "Delete",
 
 
-    "wm.EditArea": "Enter line number"    ,
+    "wm.EditArea.ENTER_LINE_NUMBER": "Enter line number"    ,
 
     /* Editors */
     "wm.ResizeableEditor.SET_MAX_HEIGHT": "Your maxHeight must be larger than ${minHeight}",
