@@ -173,7 +173,7 @@ dojo.declare("wm.PageContainer", wm.Box, {
 	setPageName: function(inPageName) {
 		if (this._pageLoading)
 			return;
-	    if (inPageName == "-New Page" && this.isDesignLoaded()) {
+	    if (this._isDesignLoaded && inPageName == studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION")) {
 	        return this.createNewPage();
 	    }
 
