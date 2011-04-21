@@ -176,6 +176,19 @@ dojo.declare("Studio", wm.Page, {
 		}
 
 	    }));
+
+/*
+	    this.pageSelect.setParent(null);
+	    this.tabs.decorator.tabsControl.domNode.appendChild(this.pageSelect.domNode)
+	    var s = this.pageSelect.domNode.style;
+	    s.left = "0px";
+	    s.top = "0px";
+	    s.margin = "0";
+	    s.padding = "0";
+	    s.position = "relative";	    
+	    s.display = "inline-block";
+	    this.pageSelect.renderBounds = function() {};
+		*/
 	},
 /*
 	 startPageOnStart: function() {
@@ -1286,13 +1299,15 @@ dojo.declare("Studio", wm.Page, {
 	updateCutPasteUi: function() {
 		var 
 			klass = this.clipboardClass,
-			needsLayer = (klass == "wm.Layer"),
+	    //needsLayer = (klass == "wm.Layer"),
 			disabled = !this.clipboard;
-		if (!disabled && needsLayer) {
-			var rp = dojo.getObject(wm.getClassProp(klass, "_requiredParent"));
-			disabled = rp && !(this.selected instanceof rp);
-		}
-		this.pasteBtn.setDisabled(disabled);
+/* we used to require a layer only be pasted into wm.Layers; no more.  No we replace the layer with a panel at need
+	    if (!disabled && needsLayer) {
+		var rp = dojo.getObject(wm.getClassProp(klass, "_requiredParent"));
+		disabled = rp && !(this.selected instanceof rp);
+	    }
+	    */
+	    this.pasteBtn.setDisabled(disabled);
 	},
 	copyClick: function() {
 		if (!this.copyBtn.disabled)
