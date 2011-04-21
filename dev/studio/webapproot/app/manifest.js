@@ -52,6 +52,7 @@ wm.loadLibs([
 	"wm.base.widget.Spacer_design",
 	"wm.base.widget.Ticker_design",
 	"wm.base.widget.Editors.AbstractEditor_design",
+	"wm.base.widget.Editors.Select_design",
 	"wm.base.widget.RelatedEditor_design",
 	"wm.base.widget.EditArea_design",
 	"wm.base.widget.Splitter_design",

@@ -164,12 +164,14 @@ dependencies = {
 
 
 				"wm.base.widget.Editors.AbstractEditor",
+				"wm.base.widget.Editors.AbstractEditor_design",
 				"wm.base.widget.Editors.Text",
 				"wm.base.widget.Editors.Number",
 				"wm.base.widget.Editors.Date",
 				"wm.base.widget.Editors.Checkbox",
 				"wm.base.widget.Editors.Radiobutton",
 				"wm.base.widget.Editors.Select",
+				"wm.base.widget.Editors.Select_design",
 
 				//"wm.base.widget.Box",
 				//"wm.base.widget.Box_design",
