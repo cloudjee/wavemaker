@@ -710,44 +710,42 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 			targetProperty: [targetId, inTargetProps.targetProperty].join('.')}))
 	},*/
 	applyBinding: function(inTargetProps) {
-		var
-	    blankMessage = this.getDictionaryItem("ALERT_BLANK_MESSAGE"),
-	    errorMessage = this.getDictionaryItem("ALERT_BIND_ERROR"),
-		        isExpression = this.isExpression(),
-		        isResource = this.isResource(),
-			s = !isExpression && !isResource && this.bindEditor.getValue("dataValue"),
-			ex = isExpression && this.expressionEditor.getValue("dataValue") || isResource && this.bindEditor.getValue("dataValue"),
-			tp = inTargetProps;
-		if (isResource) {
-                    tp.object.setValue(tp.targetProperty, ex);
-                    wm.data.clearBinding(tp.object, tp.targetProperty);
-                    studio.inspector.reinspect();
-                    return true;
-		}
-		if (!(s || ex))
-			alert(blankMessage);
-		// FIXME: avoid limiting binding and prompt until we can make sure it will not be misleading.
-		else /*if (this.canBind(tp, {object: sourceObject, source: s, expression: ex}) 
-			|| this.promptToForceBinding(tp, s, isExpression)) */ {
-			try {
-				wm.data.clearBinding(tp.object, tp.targetProperty);
-				var
-				    info = this._getBindingInfo(tp.object, tp.targetProperty,  s, ex);
-					wp = info.wireProps;
-				//
-				if (info.binding && wp.targetProperty && (wp.source || wp.expression)) {
-					info.binding.addWire(wp.targetId, wp.targetProperty, wp.source, wp.expression);					
-					wm.logging && console.log("binding created:", info.targetId, wp.source || wp.expression);
-                                    this._applyingBinding = true;
-					studio.inspector.reinspect();
-                                     this._applyingBinding = false;
-				} else
-					wm.logging && console.debug('no binding owner or nothing to bind');
-			} catch(e) {
-				wm.data.clearBinding(tp.object, tp.targetProperty);
-				alert(errorMessage + e);
-				return;
-			}
+	    var isExpression = this.isExpression();
+	    var isResource = this.isResource();
+	    var s = !isExpression && !isResource && this.bindEditor.getValue("dataValue");
+	    var ex = isExpression && this.expressionEditor.getValue("dataValue") || isResource && this.bindEditor.getValue("dataValue");
+	    var tp = inTargetProps;
+	    if (isResource) {
+                tp.object.setValue(tp.targetProperty, ex);
+                wm.data.clearBinding(tp.object, tp.targetProperty);
+                studio.inspector.reinspect();
+                return true;
+	    }
+	    if (!(s || ex)) {
+		app.alert(this.getDictionaryItem("ALERT_BLANK_MESSAGE"));
+		return false;
+	    // FIXME: avoid limiting binding and prompt until we can make sure it will not be misleading.
+	    } else /*if (this.canBind(tp, {object: sourceObject, source: s, expression: ex}) 
+		   || this.promptToForceBinding(tp, s, isExpression)) */ {
+		       try {
+			   wm.data.clearBinding(tp.object, tp.targetProperty);
+			   var
+			   info = this._getBindingInfo(tp.object, tp.targetProperty,  s, ex);
+			   wp = info.wireProps;
+			   //
+			   if (info.binding && wp.targetProperty && (wp.source || wp.expression)) {
+			       info.binding.addWire(wp.targetId, wp.targetProperty, wp.source, wp.expression);					
+			       wm.logging && console.log("binding created:", info.targetId, wp.source || wp.expression);
+                               this._applyingBinding = true;
+			       studio.inspector.reinspect();
+                               this._applyingBinding = false;
+			   } else
+			       wm.logging && console.debug('no binding owner or nothing to bind');
+		       } catch(e) {
+			   wm.data.clearBinding(tp.object, tp.targetProperty);
+			   app.alert(this.getDictionaryItem("ALERT_BIND_ERROR", {error: e}));
+			   return;
+		       }
 		}
 		return true;
 	},
