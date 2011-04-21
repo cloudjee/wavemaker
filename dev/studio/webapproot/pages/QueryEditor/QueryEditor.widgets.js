@@ -22,7 +22,7 @@ QueryEditor.widgets = {
 			toolbarBtnHolder: ["wm.Panel", {border: "0", height: "100%", layoutKind: "left-to-right", width: "100%", padding: "0,4"}, {}, {
 				saveQueryBtn: ["wm.ToolButton", {imageIndex: 8, width: "24px", height: "100%", margin: "0", border: "0", disabled: true, hint: "Save Query"}, {onclick: "saveQuery"}],
 				toolbarspacer1: ["wm.Spacer", {height: "24px", width: "12px", margin: "0,5"}, {}],
-				newQueryBtn: ["wm.ToolButton", {imageIndex: 25, width: "24px", height: "100%", margin: "0", border: "0", hint: "New Query"}, {onclick: "addQuery"}],
+				newQueryBtn: ["wm.ToolButton", {imageIndex: 25, width: "24px", height: "100%", margin: "0", border: "0", hint: "New Query"}, {onclick: "newQuery"}],
 				delQueryBtn: ["wm.ToolButton", {imageIndex: 0, width: "24px", height: "100%",  margin: "0", border: "0", disabled: true, hint: "Delete Query"}, {onclick: "removeQuery"}]
 			}],
 			logoBtmHolder: ["wm.Panel", {border: "0", width: "221px"}, {}]

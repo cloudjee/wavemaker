@@ -28,7 +28,7 @@ dojo.declare("wm.Query", wm.ServerComponent, {
 	dataModelName: "",
 	queryName: "",
 	afterPaletteDrop: function() {
-	    var c = studio.navGotoEditor("QueryEditor",  studio.databaseTab, this.getLayerName(), this.getLayerCaption());
+	    var c = studio.navGotoEditor("QueryEditor",  studio.databaseTab, this.getLayerName(), this.getLayerCaption(), true);
 		c.pageLoadedDeferred.addCallback(dojo.hitch(this, function() {
 			c.page.addQuery();
 			studio.navGotoComponentsTreeClick();

@@ -90,6 +90,11 @@ dojo.declare("QueryEditor", wm.Page, {
 			REMOVE_QUERY_OP, [this.dataModelName, name],
 			dojo.hitch(this, "_removedQuery"));
 	},
+    newQuery: function(inSender) {
+	    var c = new wm.Query({queryName: "New_Query",
+				  dataModelName: this.query && this.query.dataModelName || ""});
+	c.afterPaletteDrop();
+    },
 	addQuery: function(inSender) {
             if (!this._startCalled) this.start(); // fixes IE sequencing problem where selectQuery is called prior to page.start()
 		this.query = null;

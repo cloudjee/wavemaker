@@ -102,12 +102,12 @@ Studio.extend({
 		this.leftToolbarButtons.setDisabled(inDisable);
 		this.leftToolbarButtons.reflow();
 	},
-    navGotoEditor: function(inEditorName, parentLayer, layerName, layerCaption) {
+    navGotoEditor: function(inEditorName, parentLayer, layerName, layerCaption, forceNew) {
 		//this.disableCanvasOnlyMenuItems(true);
 	        //this.toggleCanvasSourceBtns(false, false);
-	return this.getEditor(inEditorName, parentLayer, true, layerName, layerCaption);
+	return this.getEditor(inEditorName, parentLayer, true, layerName, layerCaption, forceNew);
 	},
-    getEditor: function(inEditorName, parentLayer, inNav, layerName, layerCaption) {
+    getEditor: function(inEditorName, parentLayer, inNav, layerName, layerCaption, forceNew) {
 	var tabs;
 	if (parentLayer) {
 	    parentLayer.show();
@@ -120,6 +120,11 @@ Studio.extend({
 
 	    //var n = wm.decapitalize(inEditorName);
 	    var i = tabs.indexOfLayerName(layerName);
+	    while (forceNew && i >= 0) {
+		layerName += "1";
+		i = tabs.indexOfLayerName(layerName);
+	    }
+
 		if (i < 0) {
 		    return this.addEditor(inEditorName, parentLayer, inNav, layerName, layerCaption);
 		} else {
