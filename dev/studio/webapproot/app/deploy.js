@@ -42,16 +42,18 @@ Studio.extend({
 		studio.beginWait(msg);
 		var _this = this;
 
-		studio.deploymentService.requestAsync("buildWar", [jndiNames], 
-						      function(inResponse) {
-			studio.endWait(msg);
-			optionalCallback();
-						      });
+	    studio.deploymentService.requestAsync("buildWar", [jndiNames], 
+						  function(inResponse) {
+						      studio.endWait(msg);
+						      app.alert(this.getDictionaryItem("ALERT_BUILDING_WAR_SUCCESS", {inResponse: inResponse}));
+						      app.alertDialog.setWidth("100%");
+						      optionalCallback();
+						  });
 
 	},
 	deployClickError: function(inError) {
-		studio.endWait();
-		alert("Error occurred while building WAR File!\n" + inError.message);
+	    studio.endWait();
+	    app.alert(this.getDictionaryItem("ALERT_BUILDING_WAR_FAILED", {error: inError.message}));
 	},
 	//=====================================================================
 	// Live Data
@@ -135,15 +137,16 @@ Studio.extend({
 	    	},			  
 	exportClickCallback: function(inResponse) {
 	    studio.endWait("Building ZIP File...");
-	    if (!studio.isCloud()) 
-		app.alert(this.getDictionaryItem("ALERT_BUILDING_WAR_SUCCESS", {inResponse: inResponse}));
-	    else {
+	    if (!studio.isCloud()) {
+		app.alert(this.getDictionaryItem("ALERT_BUILDING_ZIP_SUCCESS", {inResponse: inResponse}));
+		app.alertDialog.setWidth("100%");
+	    } else {
 		this.downloadInIFrame("services/deploymentService.download?method=downloadProjectZip");
 	    }
 	},
 	exportClickError: function(inError) {
-		studio.endWait();
-		alert("Error occurred while exporting project!\n" + inError.message);
+	    studio.endWait();
+	    app.alert(this.getDictionaryItem("ALERT_BUILDING_ZIP_FAILED", {error: inError.message}));
 	},
 
 	//=====================================================================
@@ -161,28 +164,9 @@ Studio.extend({
 	  }
 	    return this.importProjectDialog;
 	},
+/*
 	getImportFileDialog: function() {
 	  if (!this.importFileDialog) {
-/*
-		var
-		    props = {
-			owner: this,
-			pageName: "ImportFile",
-			scrimBackground: true,
-			hideOnClick: false,
-                        hideControls: false,
-                        title: "Import Project",
-                        width: 500,
-                        height: 120
-		    };
-		    this.importFileDialog = new wm.PageDialog(props);
-		    var page = this.importFileDialog.importFile;
-		    page.setUploadService("deploymentService");
-		    page.setUploadOperation("uploadProjectZipFile");
-		    page.setTitle("Import Project");
-		    page.setCaption("Select Zip File");
-	      //this.importFileDialog.setContainerOptions(true, 500, 120);
-              */
               this.importFileDialog = new wm.FileUploadDialog({title: this.getDictionaryItem("TITLE_IMPORT_PROJECT"), 
                                                                noEscape: false,
                                                                uploadService: "deploymentService",
@@ -195,6 +179,7 @@ Studio.extend({
 	  }
 	  return this.importFileDialog;
     },
+    */
     importClick: function(inSender) {
       if (this.project.projectName) {
 	  this.confirmAppChange(this.getDictionaryItem("CONFIRM_CLOSE_PROJECT_LOSE_UNSAVED",{projectName: this.project.projectName}),
@@ -207,6 +192,7 @@ Studio.extend({
 	  this.getImportProjectDialog().show();
           //this.importFileDialog = this.getImportFileDialog().show();
     },
+/*
    importProjectClickCallback: function(inSource, inResponse) {
       studio.endWait();
       var d = studio.startPageDialog.page.refreshProjectList();
@@ -214,16 +200,13 @@ Studio.extend({
        app.toastDialog.showToast(this.getDictionaryItem("TOAST_IMPORT_PROJECT", {inResponse: inResponse}), 3000, "Success");		
       wm.fire(this.owner, "dismiss");
       studio.project.openProject(inResponse);
-      /*
-     studio.startEditor.page.openProjectTab();
-      studio.startEditor.page.selectProjectInList(inResponse);
-      */
-    },
+      },
+
    importProjectClickError: function(inSource,inError) {
       studio.endWait();
        app.alert(this.getDictionaryItem("ALERT_IMPORT_PROJECT_FAILED", {error: inError}));
     },
-
+      */
 	//=====================================================================
 	// Widget Deploy
 	//=====================================================================
@@ -257,6 +240,7 @@ Studio.extend({
 			console.debug(e);
 		}
 	    app.alert(this.getDictionaryItem("ALERT_DEPLOY_FAILED", {error: inError}));
+	    app.alertDialog.setWidth("100%");
 	},
 	//=====================================================================
 	// Widget Undeploy
