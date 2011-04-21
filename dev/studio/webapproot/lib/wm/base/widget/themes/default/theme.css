@@ -725,7 +725,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 /**/
 
 .wmlist .wmlist-list {
-    overflowY: auto;
+    overflow-y: auto;
     height: 100%;
 }
 
