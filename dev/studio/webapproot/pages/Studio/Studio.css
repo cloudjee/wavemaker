@@ -1703,7 +1703,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
     background-color: #5D6678;
 }
 
-#studio_inspectorLayers_Properties_bindSourceDialog_propList {
+.BindSourceDialog .wmlist {
     background-color: #424A5A;
 }
 
