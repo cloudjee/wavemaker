@@ -606,7 +606,7 @@ dojo.declare("wm.Application", wm.Component, {
 							     owner: this,
 							     title: wm.getDictionaryItem("wm.Application.TITLE_ALERT"),
 							     noEscape: false,
-							     width: "300px",
+							     width: "400px",
 							     height: "180px",
 							     button1Caption: wm.getDictionaryItem("wm.Application.CAPTION_ALERT_OK"),
 							     button1Close: true,
@@ -615,7 +615,7 @@ dojo.declare("wm.Application", wm.Component, {
 
             }
 
-
+	    if (this.alertDialog.width != "400px") this.alertDialog.setWidth("400px"); // reset any width changes made by users
 	    if (dojo.isObject(inText))
 		inText = inText.toString();
 	    nonmodal = Boolean(nonmodal);
