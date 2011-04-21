@@ -434,7 +434,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		    if (selectedIndex != this.propList.getSelectedIndex())
 			this.propList.select(this.propList.getItem(selectedIndex));
                     this.owner.applyStayButton.show();
-	    this.propListLabel.setCaption(this.owner.getDictionaryItem("wm.BinderSource.propListLabel.caption", {componentName: object.name}));
+		    this.propListLabel.setCaption(this.owner.getDictionaryItem("wm.BinderSource.propListLabel.caption", {componentName: wm.capitalize(object.name)}));
 		    this.propList.show();
 		    this.propListLabel.show();
 		} else {
