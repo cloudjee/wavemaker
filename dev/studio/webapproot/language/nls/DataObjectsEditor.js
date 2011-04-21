@@ -1,6 +1,6 @@
 {
 TITLE_IMPORT_DATABASE: "New Data Model",
-CONFIRM_NO_SAVE: "If you leave this page, your changes will not be saved; Leave anyway?",
+CONFIRM_NO_SAVE: "Current changes will not be saved; Leave anyway?",
 ALERT_SELECT_KEY: "Please select a column to use as foreign key first",
 MESSAGE_RELATED_FAILED: "Failed to update related",
 MESSAGE_UPDATE_FAILED: "Failed to update entity: {$error}",
