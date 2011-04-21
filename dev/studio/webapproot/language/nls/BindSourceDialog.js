@@ -10,7 +10,7 @@ TOAST_FAILED: "Bind Failed",
 "wm.BinderSource.expressionRb.caption": "Expression",
 "wm.BinderSource.bindEditor.caption": "Bound to: ${boundTo}",
 ALERT_BLANK_MESSAGE: "Please select a bind value or expression.",
-ALERT_BIND_ERROR: "Binding aborted due to the following error: ",
+ALERT_BIND_ERROR: "Binding aborted due to the following error: ${error}",
 VISUAL: "Visual Components",
 NON_VISUAL: "Non-visual Components"
 }
