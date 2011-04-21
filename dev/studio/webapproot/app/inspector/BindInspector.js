@@ -201,8 +201,16 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
 		   //readonly.style.display = "block";
 		   //edit.style.display = "none";
 	       } else if (!prop.ignore && !prop.tmpignore) {
-	       	   var newval = this.owner.inspected.getProp(inName); // get its nonbind value if it has one
+
+		    // get its nonbind value if it has one
+	       	   var newval;
+		   if (this.owner.inspected instanceof wm.Variable)
+		       newval = this.owner.inspected._getDataValue(inName);
+		   else
+		       newval = this.owner.inspected.getProp(inName);
 		   if (newval === null || newval === undefined) newval = "";
+		   if (this.owner.inspected.owner instanceof wm.Variable && newval instanceof wm.Variable && newval.owner == this.owner.inspected)
+		       newval = "";
 		   var editor = dijit.byId(dojo.attr(edit,"widgetid"));
 		   editor.set("value", newval, false);
 		   if (newval === "")
