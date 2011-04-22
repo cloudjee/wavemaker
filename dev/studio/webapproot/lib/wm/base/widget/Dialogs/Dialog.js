@@ -509,12 +509,13 @@ dojo.declare("wm.Dialog", wm.Container, {
         var left = this.corner.substring(1,2);
 	var showingList = [];
 	var thisownerapp = this.getOwnerApp();
-	for (var i = 0; i < wm.dialog.showingList.length; i++)
-	    if (wm.dialog.showingList[i] != this && wm.dialog.showingList[i].getOwnerApp() == thisownerapp && (!window["studio"] || this != window["studio"].dialog))
-		showingList.push(wm.dialog.showingList[i]);
+	if (!this._percEx.h && !this._percEx.w) {
+	    for (var i = 0; i < wm.dialog.showingList.length; i++)
+		if (wm.dialog.showingList[i] != this && wm.dialog.showingList[i].getOwnerApp() == thisownerapp && (!window["studio"] || this != window["studio"].dialog))
+		    showingList.push(wm.dialog.showingList[i]);
 	    h = parseInt(h);
-	var last = wm.Array.last(showingList);
-
+	    var last = wm.Array.last(showingList);
+	}
         switch(left) {
         case "l":
             l = buffer;
