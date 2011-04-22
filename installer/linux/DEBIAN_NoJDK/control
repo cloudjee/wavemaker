@@ -1,4 +1,4 @@
-Package: wavemaker-@PROJECTTYPE@
+Package: wavemaker
 Version: @VERSION@
 Section: devel 
 Priority: optional
