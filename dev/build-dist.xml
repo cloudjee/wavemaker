@@ -97,7 +97,7 @@ NEXT: exit "build"</echo>
 	<echo>DEBUG VERSION.TXT: build.dir == ${build.dir} PREFIX = ${tarroot}, version.file.name = ${version.file.name}</echo>
 		<property name="tempsrc.root" value="${build.dir}/tempsrcroot"/>
         <property name="tarroot"
-                value="wavemaker-source-${project.type}-${version.number}"/>
+                value="wavemaker-source-${version.number}"/>
         <mkdir dir="${build.dir}"/>
 		<delete dir="${tempsrc.root}"/>
 		<mkdir dir="${tempsrc.root}"/>
@@ -130,16 +130,16 @@ NEXT: exit "build"</echo>
                 <exclude name="dev/studio/services/dummyService/**"/>
                 <exclude name="dev/studio/services/registrationService/**"/>
                 <exclude name="dev/studio/services/UserService/**"/>
-				<exclude name="dev/studio/webapproot/WEB-INF/lib/db2jcc.jar"/>
-				<exclude name="dev/studio/webapproot/WEB-INF/lib/ojdbc14.jar"/>
-				<exclude name="dev/studio/webapproot/WEB-INF/lib/wsdl4j.jar"/>
-				<exclude name="dev/core/runtime/lib/wsdl4j-1_6_2/wsdl4j.jar"/>
-				<exclude name="dev/core/runtime/lib/wsdl4j-1_6_2/wsdl4j-src-1.6.2.zip"/>
-        	<exclude name="**/RbacPlugin.js" unless="common.modules.isEnterprise"/>
+                <exclude name="dev/studio/webapproot/WEB-INF/lib/db2jcc.jar"/>
+                <exclude name="dev/studio/webapproot/WEB-INF/lib/ojdbc14.jar"/>
+                <exclude name="dev/studio/webapproot/WEB-INF/lib/wsdl4j.jar"/>
+                <exclude name="dev/core/runtime/lib/wsdl4j-1_6_2/wsdl4j.jar"/>
+                <exclude name="dev/core/runtime/lib/wsdl4j-1_6_2/wsdl4j-src-1.6.2.zip"/>
+                <exclude name="**/RbacPlugin.js" unless="common.modules.isEnterprise"/>
             </tarfileset>
             <tarfileset dir="${build.dir}" prefix="${tarroot}">
-		<include name="${version.file.name}"/>
-                <include name="${license.file.name}"/>
+            	<include name="${version.file.name}"/>
+            	<include name="${license.file.name}"/>
             </tarfileset>
             <tarfileset dir="${src.buildsupport.dir}" prefix="${tarroot}">
                 <exclude name="*_license.txt"/>
