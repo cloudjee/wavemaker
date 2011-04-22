@@ -18,17 +18,17 @@
 DeploymentPage.widgets = {
     webServerListVar: ["wm.Variable", {type: "EntryData", json: "[{name: 'Tomcat', value: 'tomcat'}]"}],		    
     layoutBox1: ["wm.Layout", {height: "100%"}, {}, {
-	MainPanel: ["wm.Panel", {width: "100%", height: "100%", padding: "5, 10, 5, 10", layoutKind: "top-to-bottom"},{},{
-	    MainDeploymentLayers: ["wm.AccordionLayers", {width: "100%", height: "100%", border: "3", borderColor: "#B0BDD4"}, {}, {
-		GenerateAppLayer: ["wm.Layer", {width: "100%", height: "100%", caption: "Generate Application"}, {}, {
+	MainPanel: ["wm.Panel", {border: "10", borderColor: "#424A5A", width: "100%", height: "100%", padding: "5, 10, 5, 10", layoutKind: "top-to-bottom", backgroundColor: "#8B93A1"},{},{
+	    MainDeploymentLayers: ["wm.TabLayers", {headerHeight: "32px", width: "100%", height: "100%", border: "0", clientBorder: "3", borderColor: "#808DA4"}, {}, {
+		GenerateAppLayer: ["wm.Layer", {width: "100%", height: "100%", caption: "Generate Application", backgroundColor: "white"}, {}, {
 		    GenerateAppPageContainer: ["wm.PageContainer", {width: "100%", height: "100%", pageName: "DeploymentPage_AppGeneration", deferLoad: true},
 					       {onShow: "reset"}]
 		}],
-		ManageCloudLayer: ["wm.Layer", {width: "100%", height: "100%", caption: "Manage Cloud Servers"}, {}, {
+		ManageCloudLayer: ["wm.Layer", {width: "100%", height: "100%", caption: "Manage Cloud Servers", backgroundColor: "white"}, {}, {
 		    ManageCloudPageContainer: ["wm.PageContainer", {width: "100%", height: "100%", pageName: "DeploymentPage_Cloud", deferLoad: true},
 					       {onShow: "reset"}]		
 		}],
-		ManageWebServersLayer: ["wm.Layer", {width: "100%", height: "100%", caption: "Deploy to Servers"}, {}, {
+		ManageWebServersLayer: ["wm.Layer", {width: "100%", height: "100%", caption: "Deploy to Servers", backgroundColor: "white"}, {}, {
 		    ManageWebServersPageContainer: ["wm.PageContainer", {width: "100%", height: "100%", pageName: "DeploymentPage_WebServer", deferLoad: true},
 						    {onShow: "reset"}]		
 		}]

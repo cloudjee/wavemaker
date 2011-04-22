@@ -1470,7 +1470,8 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #studio_securitySubTab > .wmtablayers-tabbar,
 #app_importDatabase_panel1 > .wmtablayers-tabbar,
 #studio_inspectorLayers_Styles > .wmtablayers-tabbar,
-#studio_sourceTabs .wmtablayers-tabbar {
+#studio_sourceTabs .wmtablayers-tabbar
+ {
    /*
         background: -webkit-gradient(linear, left top, left bottom, from(#222222), to(#5D6778));
 	background: -moz-linear-gradient(top,  #222222,  #5D6778);
@@ -1491,7 +1492,8 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #studio_securitySubTab > .wmtablayers-tabbar,
 #app_importDatabase_panel1 > .wmtablayers-tabbar,
 #studio_inspectorLayers_Styles > .wmtablayers-tabbar,
-#studio_sourceTabs {
+#studio_sourceTabs,
+.DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-tabbar {
 	border-bottom: 1px solid #c0c4ca;
 	background-repeat:repeat-x;
 	padding-top: 8px;
@@ -1505,7 +1507,8 @@ body.wm-darksnazzy .wmToolbar button:hover {
 }
 */
 
-.Studio-tabs > .wmtablayers-tabbar > .wmtablayers-tab {
+.Studio-tabs > .wmtablayers-tabbar > .wmtablayers-tab,
+.DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-tab {
     font-size: 14px;
     height: 24px;
 }
@@ -1524,7 +1527,8 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #studio_securitySubTab > .wmtablayers-tabbar > .wmtablayers-tab,
 #app_importDatabase_panel1 > .wmtablayers-tabbar > .wmtablayers-tab,
 #studio_inspectorLayers_Styles > .wmtablayers-tabbar > .wmtablayers-tab,
-#studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-tab {
+#studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-tab,
+.DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-tab {
 	-moz-border-radius-topleft: 4px; 
 	-moz-border-radius-topright: 4px; 
 	-webkit-border-top-left-radius: 4px; 
@@ -1555,7 +1559,8 @@ body.wm-darksnazzy .wmToolbar button:hover {
 .df_ff3 #studio_securitySubTab > .wmtablayers-tabbar > .wmtablayers-tab,
 .df_ff3 #app_importDatabase_panel1 > .wmtablayers-tabbar > .wmtablayers-tab,
 .df_ff3 #studio_inspectorLayers_Styles > .wmtablayers-tabbar > .wmtablayers-tab,
-.df_ff3 .JavaEditor-logTabs .wmtablayers-tabbar {
+.df_ff3 .JavaEditor-logTabs .wmtablayers-tabbar,
+.DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-tabbar {
     padding: 2px 2px 3px 2px;
 }
 
@@ -1570,7 +1575,8 @@ body.wm-darksnazzy .wmToolbar button:hover {
  #studio_securitySubTab > .wmtablayers-tabbar > .wmtablayers-selected,
 #app_importDatabase_panel1 > .wmtablayers-tabbar > .wmtablayers-selected,
 #studio_inspectorLayers_Styles > .wmtablayers-tabbar > .wmtablayers-selected,
-#studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-selected {
+#studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-selected,
+.DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-selected {
 	border-top: 1px solid #c0c4ca;
 	border-right: 1px solid #363b44;
 	border-left: 1px solid #c0c4ca;

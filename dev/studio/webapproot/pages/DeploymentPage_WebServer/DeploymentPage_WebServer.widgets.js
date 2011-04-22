@@ -30,7 +30,7 @@ DeploymentPage_WebServer.widgets = {
 	amFileListVar: ["wm.Variable", {type: "com.wavemaker.tools.cloudmgr.CloudFile"}, {}],
 	rsFileListVar: ["wm.Variable", {type: "com.wavemaker.tools.cloudmgr.CloudFile"}, {}],
 
-    layoutBox1: ["wm.Layout", {height: "100%", border: "3", borderColor: "#B0BDD4", margin: "10"}, {}, {
+    layoutBox1: ["wm.Layout", {height: "100%", border: "0", borderColor: "#B0BDD4", margin: "10"}, {}, {
 	MainLayers: ["wm.Layers", {width: "100%", height: "100%"}, {}, {
 		DepTargetListLayer: ["wm.Layer", {}, {onShow: "depTargetShow"}, {
 		DepTargetListLabel: ["wm.Label", {_classes: {domNode: ["wm_FontSizePx_14px", "DeploymentHeader"]}, height: "38px", width: "100%", caption: "Select the server", margin: "0,0,5,0"}],

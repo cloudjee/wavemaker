@@ -26,13 +26,16 @@ dojo.declare("DeploymentPage_AppGeneration", wm.Part, {
   appTimestamp: 0,
 
   start: function() {
+/*
 	dojo.query("#" + this.archiveType.domNode.id + " .wmlist-item:nth-child(odd)").addClass("Odd");
 	dojo.query("#" + this.archiveType.domNode.id + " .wmlist-item:nth-child(even)").addClass("Even");
+	*/
   },
   setup: function() {      
       this.reset();      
       this.JNDIDialog = this.getJNDIDialog();
-      this.archiveType.eventSelect(this.archiveType.getItem(0));
+      //this.archiveType.eventSelect(this.archiveType.getItem(0));
+/*
       studio.deploymentService.requestAsync("getWarDate", 
 					    [], 
 					    dojo.hitch(this, function(inResult) {
@@ -45,16 +48,18 @@ dojo.declare("DeploymentPage_AppGeneration", wm.Part, {
 								this.downloadAppButton.setDisabled(false);
 							}				
 					    }));
+					    */
   },
 	reset: function() {
 		this.generateAppButton.setDisabled(false);
 	    var showJNDI =  (studio.isModuleEnabled("security-driver", "wm.josso"));
 	    this.jndiRowPanel.setShowing(showJNDI);
 	},
+/*
 	archiveTypeSelectionChange: function() {
 	//this.generatePanel.show();
 	},
-
+	*/
    /* Event handler for this.Generate_WAR; generates the war file and optionally downloads it after completion */  
   generateAppButtonClick: function(inSender) {
       var _this = this;
@@ -75,17 +80,45 @@ dojo.declare("DeploymentPage_AppGeneration", wm.Part, {
       // We now have an up-to-date WAR file, so the user no longer needs to click on the generate war button
       var d = new Date();
       this.appTimestamp = d.getTime();
-      this.lastGeneratedLabel.setCaption(this.getDictionaryItem("LABEL_LAST_GENERATED_NEVER", {timestamp: d}));
-      this.downloadAppButton.setDisabled(false);
+      //this.lastGeneratedLabel.setCaption(this.getDictionaryItem("LABEL_LAST_GENERATED_NEVER", {timestamp: d}));
+      //this.downloadAppButton.setDisabled(false);
       studio.trackerImage.setSource("http://wavemaker.com/img/blank.gif?op=generateWar&v=" + escape(wm.studioConfig.studioVersion) + "&r=" + String(Math.random(new Date().getTime())).replace(/\D/,"").substring(0,8));
+
+      if (this._downloadWar)
+	  this.downloadWarClick();
+      else if (this._downloadEar)
+	  this.downloadEarClick();
+
+      if (this._downloadWar || this._downloadEar) app.alert("Your file is being downloaded");
+      delete this._downloadWar;
+      delete this._downloadEar;
+
   },
 
+/*
 	downloadAppClick: function() {
 		if (this.archiveType.selectedItem.getData().dataValue == "earfile") {
 			studio.downloadInIFrame("services/deploymentService.download?method=downloadProjectEar");
 		} else {
 			studio.downloadInIFrame("services/deploymentService.download?method=downloadProjectWar");
 		}
+	},
+		*/
+	downloadWarClick: function() {
+	    if (_fileExists("dist/" + studio.project.projectName +".war"))
+		studio.downloadInIFrame("services/deploymentService.download?method=downloadProjectWar");
+	    else {
+		this.generateAppButtonClick();
+		this._downloadWar = true;
+	    }
+	},
+	downloadEarClick: function() {
+	    if (_fileExists("dist/" + studio.project.projectName +".ear"))
+		studio.downloadInIFrame("services/deploymentService.download?method=downloadProjectEar");
+	    else {
+		this.generateAppButtonClick();
+		this._downloadEar = true;
+	    }
 	},
      useAppBackButtonClick: function() {
 	 this.MainLayers.setLayer("GenerateAppLayer");
@@ -105,12 +138,17 @@ dojo.declare("DeploymentPage_AppGeneration", wm.Part, {
 	  pageName: "DeploymentJNDIDialog",
 	  scrimBackground: true,
 	  hideOnClick: false,
-	  positionLocation: " l"
+	    positionLocation: " l",
+	    width: "500px",
+	    height: "450px",
+	    modal: true
 	},
-	d = studio.JNDIDialog = new wm.PagePopup(props);
+	d = studio.JNDIDialog = new wm.PageDialog(props);
+/*
 	d.setContainerOptions(true, 500, 450);
 	d.setPositionLeft(400);
 	d.setPositionTop(200);
+	*/
 	this.dataModelList = d.page.dataModelList;
 	this.dataModelNameEditor = d.page.dataModelNameEditor;
 	this.jndiEditor = d.page.jndiEditor;

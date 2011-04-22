@@ -74,3 +74,17 @@
 	font-weight:bold;
 	border: solid 1px #353a44;
 }
+
+.DeploymentPage .wmbutton.wmbutton-disabled {
+    background-color: #CCCCCC;
+    color: #888888;
+}
+.DeploymentPage .wmbutton {
+    background-color: #97A3B6;
+    color: #FFF;
+}
+
+.DeploymentPage .wmbutton:hover {
+    background-color: #B0C0D0;
+    color: #FFF;
+}

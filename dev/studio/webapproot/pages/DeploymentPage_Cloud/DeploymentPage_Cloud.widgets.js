@@ -18,7 +18,7 @@
 DeploymentPage_Cloud.widgets = {
     cloudListVar: ["wm.Variable", {type: "EntryData", 
 		json: "[{name: 'Amazon EC2', dataValue: 'amazonec2'}, {name: 'Amazon S3', dataValue: 'amazons3'}, {name: 'Eucalyptus Cloud', dataValue: 'eucalyptusec2'}, {name: 'OpSource', dataValue: 'opsource'}, {name: 'RackSpace Servers', dataValue: 'rackspaceserver'}, {name: 'RackSpace Storage', dataValue: 'rackspacestorage'}]"}],
-    layoutBox1: ["wm.Layout", {height: "100%", border: "3", borderColor: "#B0BDD4", margin: "10"}, {}, {
+    layoutBox1: ["wm.Layout", {height: "100%", border: "0", borderColor: "#B0BDD4", margin: "10"}, {}, {
 	chooseCloudHeader: ["wm.Label", {_classes: {domNode: ["wm_FontSizePx_14px", "DeploymentHeader"]}, height: "38px", width: "96px", caption: "Which cloud service provider do you want to use?", margin: "0,0,5,0"}],
 	WhatToDoLayerPanel: ["wm.Panel", {height: "100%", width: "100%", margin: "6"},{}, {	    
 	WhatToDoPanel:  ["wm.Panel", {height: "210px", width: "450px", layoutKind: "top-to-bottom"}, {}, {
