@@ -26,13 +26,15 @@ dojo.require("dojo.dnd.Moveable");
 
 wm.dialog = {showingList: []};
 
-wm.dialog.getNextZIndex = function(isDesignLoaded) {
+wm.dialog.getNextZIndex = function(isDesignLoaded, optionalThis) {
     var index = 30;
     if (!wm.dialog.showingList.length) return index;
 
     for (var i = 0; i < wm.dialog.showingList.length; i++) {
-	if (!isDesignLoaded || isDesignLoaded && wm.dialog.showingList[i]._isDesignLoaded)
-	    index = Math.max(index, wm.dialog.showingList[i].domNode.style.zIndex);
+	if (!isDesignLoaded || isDesignLoaded && wm.dialog.showingList[i]._isDesignLoaded) {
+	    if (!optionalThis || wm.dialog.showingList[i] != this)
+		index = Math.max(index, wm.dialog.showingList[i].domNode.style.zIndex);
+	}
     }
     return index+5;
 }
@@ -292,12 +294,13 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    this.dojoMoveable.destroy();
 	    this.dojoMoveable = null;
 	}
-	if (!inModal) {
+	if (!inModal && !this.dojoMoveable) {
 	    this.dojoMoveable = new dojo.dnd.Moveable(this.domNode, {handle: this.titleLabel.domNode});
 	    this.connect(this.dojoMoveable, "onMouseDown", this, function() {
-		var zindex =  wm.dialog.getNextZIndex(this._isDesignLoaded);
+		var zindex =  wm.dialog.getNextZIndex(this._isDesignLoaded, this);
 		this.domNode.style.zIndex = zindex;
 	    });
+
 	}
 	if (this.showing  && !this._isDesignLoaded) {
 	    this.dialogScrim.setShowing(this.modal);
@@ -825,6 +828,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 
     /* Resizing */
 	mousedown: function(e) {
+	    var zindex =  wm.dialog.getNextZIndex(this._isDesignLoaded, this);
+	    this.domNode.style.zIndex = zindex;
+
 	    /* Can only target the dialog's node if hitting the border or if some bad rendering of content */
 	    if (!this.modal && e.target == this.domNode) {
 		this._userSized = true;
