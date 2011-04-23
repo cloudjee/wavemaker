@@ -292,8 +292,13 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    this.dojoMoveable.destroy();
 	    this.dojoMoveable = null;
 	}
-	if (!inModal) 
+	if (!inModal) {
 	    this.dojoMoveable = new dojo.dnd.Moveable(this.domNode, {handle: this.titleLabel.domNode});
+	    this.connect(this.dojoMoveable, "onMouseDown", this, function() {
+		var zindex =  wm.dialog.getNextZIndex(this._isDesignLoaded);
+		this.domNode.style.zIndex = zindex;
+	    });
+	}
 	if (this.showing  && !this._isDesignLoaded) {
 	    this.dialogScrim.setShowing(this.modal);
 	    wm.bgIframe.setShowing(!this.modal && !this.isDesignedComponent());
