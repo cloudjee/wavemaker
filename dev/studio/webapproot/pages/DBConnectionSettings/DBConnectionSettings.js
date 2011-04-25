@@ -53,7 +53,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 		var dmn = this._getSelectedDataModelName();
 	    app.confirm(this.getDictionaryItem("CONFIRM_REIMPORT", {modelName: dmn}), false,
                         dojo.hitch(this, function() {
-			    studio.beginWait(this.getDictionaryItem("WAIT_REIMPORT"), {modelName: dmn});
+			    studio.beginWait(this.getDictionaryItem("WAIT_REIMPORT", {modelName: dmn}));
 		studio.dataService.requestAsync(REIMPORT_DB_OP, [
 				dmn, 
 				this.conUserInput.getInputValue(),
@@ -72,30 +72,28 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 	},
 	exportBtnClick: function(inSender) {
 		if (this.overrideFlagInput.getDataValue()) {
-		    if (!confirm(this.getDictionaryItem("CONFIRM_EXPORT")))  
-			{
-				return;
-			}
-
-			//if (!confirm('Export operation will delete contents from all tables if database exists. Are you sure you want to Export?'))
-			//{
-			//	return;
-			//}
+		    app.confirm(this.getDictionaryItem("CONFIRM_EXPORT"), false, dojo.hitch(this, function() {
+			this.exportBtnClick2();
+		    }));
+		} else {
+		    this.exportBtnClick2();
 		}
-
-	    studio.beginWait(this.getDictionaryItem("WAIT_LOADING_DDL"));
-		studio.dataService.requestAsync(LOAD_DDL_OP, [
-				this._getSelectedDataModelName(),
-				this.conUserInput.getInputValue(),
-				this.conPasswordInput.getInputValue(),
-				this.conConnectionUrlInput.getInputValue(),
-				this.conSchemaPatternInput.getInputValue(),
-				this.conDriverClassInput.getInputValue(),
-				this.conDialectInput.getInputValue(),
-				this.overrideFlagInput.getDataValue()
-			],
-			dojo.hitch(this, "_getDDLResult"), 
-			dojo.hitch(this, "_getDDLError"));
+	},
+        exportBtnClick2: function() {
+			studio.beginWait(this.getDictionaryItem("WAIT_LOADING_DDL"));
+			studio.dataService.requestAsync(LOAD_DDL_OP, 
+							[
+							    this._getSelectedDataModelName(),
+							    this.conUserInput.getInputValue(),
+							    this.conPasswordInput.getInputValue(),
+							    this.conConnectionUrlInput.getInputValue(),
+							    this.conSchemaPatternInput.getInputValue(),
+							    this.conDriverClassInput.getInputValue(),
+							    this.conDialectInput.getInputValue(),
+							    this.overrideFlagInput.getDataValue()
+							],
+							dojo.hitch(this, "_getDDLResult"), 
+							dojo.hitch(this, "_getDDLError"));
 	},
 	saveBtnClick: function(inSender) {
 		var input = 
