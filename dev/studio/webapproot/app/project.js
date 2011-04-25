@@ -286,7 +286,7 @@ dojo.declare("wm.studio.Project", null, {
 		} catch(e) {
 		    console.debug(e);
 		    this.loadError(studio.getDictionaryItem("wm.studio.Project.TOAST_OPEN_PAGE_FAILED",
-							  {pageName:+ this.pageName, error: e}));
+							  {pageName: this.pageName, error: e}));
 			this.pageName = "";
 			studio.page = null;
 		    if (studio.application && studio.application.main && studio.application.main != inName)
@@ -371,7 +371,7 @@ dojo.declare("wm.studio.Project", null, {
 				owner: studio,
 				_designer: studio.designer
 			});
-		    if (!studio.page.root) throw studio.getDictionaryItem("wm.studio.Project.THROWS_INVALID_PAGE");
+		    if (!studio.page.root) throw studio.getDictionaryItem("wm.studio.Project.THROW_INVALID_PAGE");
 			studio.page.root.parent = studio.designer;
 		        for (var i in this.pageData.documentation) {
                             if (i == "wip")
@@ -1335,14 +1335,14 @@ Studio.extend({
 			this.deleteProject(n.project);
 	},
 
-       /* Method appears to be obsolete; from the days when we had a project list that also listed all pages and let users open any project of any page */
+       /* Method appears to be obsolete; from the days when we had a project list that also listed all pages and let users open any project of any page 
 	openSelectedProjectPageClick: function(inSender) {
 	    var n = this.projectsTree.selected;
 	    if (!n)
 		return;
 	    var
 	    page = n.page, project = n.project,
-	    warnPage = this.getDictionaryItem("CONFIRM_OPEN_PAGE_LOSE_UNSAVED", {newPage: page, oldPage: this.project.pageName}),
+	    warnPage = this.getDictionaryItem("CONFIRM_OPEN_PAGE_LOSE_UNSAVED", {newPage: page, oldPage: this.project.pageName}), // dictionary term used in Studio.js also
 	    warnProject = bundleDialog.M_AreYouSureCloseProject;
 	    if (project == this.project.projectName) {
 		    if (page && page != this.project.pageName)
@@ -1358,6 +1358,7 @@ Studio.extend({
                     }));
 		}
 	},
+*/
 	openProjectClick: function() {
 	        //this.navGotoEditor(this.startLayer.name);
 	    if (studio.application) {
@@ -1406,7 +1407,7 @@ Studio.extend({
 	},
 	deletePage: function(inName) {
 		if (this.application.main == inName) {
-		    alert(this.getDictionaryItem("ALERT_CANT_DELETE_HOME_PAGE", {pageName: inName}));
+		    app.alert(this.getDictionaryItem("ALERT_CANT_DELETE_HOME_PAGE", {pageName: inName}));
 		    return;
 		}
 	    app.confirm(this.getDictionaryItem("CONFIRM_DELETE_PAGE", {pageName: inName}), false,
@@ -1536,13 +1537,16 @@ Studio.extend({
 			       }
 			   if (exists) {
                                app.toastDialog.showToast(this.getDictionaryItem("TOAST_TARGET_EXISTS", {pageName: name, target: inTarget}),
-                                                         5000, "Warning", "cc");
+                                                         5000, "Warning", "tc");
 			       return wm.onidle(this, function() {
                                    this.promptForName(inTarget, name, inExistingList, onSuccess);
                                });
-			   } else if (window[name] || wm.getValidJsName(name) != name) {
+			   } 
+
+			   /* I think this stopped being a problem once we required page names start with upper case */
+			   else if (window[name] || wm.getValidJsName(name) != name) {
                                app.toastDialog.showToast(this.getDictionaryItem("TOAST_INVALID_TARGET_NAME", {target: inTarget, name: name}),
-                                                         5000, "Warning");
+                                                         5000, "Warning", "tc");
 			       return wm.onidle(this, function() {
 			            this.promptForName(inTarget, name, inExistingList, onSuccess);
                                });
