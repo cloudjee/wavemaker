@@ -101,7 +101,8 @@ dojo.declare("wm.studio.Project", null, {
 	        ctor.widgets = this.getPageTemplate(pageType, argHash);
 	        //this.pageData.widgets = this.getWidgets();
 	        var functionTemplate = this.getScriptTemplate(pageType, argHash);
-	        studio.setScript(pageScript(this.pageName, functionTemplate));
+	        studio.setScript(this.pageData.js = pageScript(this.pageName, functionTemplate));
+	    this.pageData.css = this.pageData.html = "";
 	},
         getPageTemplate: function(pageType, argHash) {
             var template_def = argHash.template;
@@ -378,8 +379,7 @@ dojo.declare("wm.studio.Project", null, {
                             else
 			        studio.page.components[i].documentation = this.pageData.documentation[i];
 			}
-		    studio.setCleanPage();
-		    this.pageData = dojo.clone(studio._cleanPageData);
+		    this.pageData.widgets = studio.getWidgets();
 		}
 	},
 	loadError: function(inMessage) {
