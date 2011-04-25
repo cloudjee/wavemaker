@@ -532,10 +532,11 @@ dojo.declare("wm.Dialog", wm.Container, {
             l = W - w - buffer;
             break;
         case "c":
+	    l = Math.floor((W - w)/2);
 	    if (last && last.corner == this.corner)
-		l = last.bounds.l + 15;
-	    else
-		l = Math.floor((W - w)/2);
+		l += 25; // offset it if its over another dialog so that there's a better (though not certain) chance of the dialog below being visible
+
+
 
             break;
         }
@@ -548,10 +549,9 @@ dojo.declare("wm.Dialog", wm.Container, {
             t = H - h - buffer;
             break;
         case "c":
+	    t = Math.floor((H - h)/2);
 	    if (last && last.corner == this.corner)
-		t = last.bounds.t + 15;
-	    else
-		t = Math.floor((H - h)/2);
+		t += 25;
             break;
         }
 
