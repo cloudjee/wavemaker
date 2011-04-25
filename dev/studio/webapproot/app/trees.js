@@ -454,6 +454,7 @@ Studio.extend({
 	    if (inClassName != "wm.DataModel") 
 	    menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
 					    {label: this.getDictionaryItem("MODELTREE_CONTEXTMENU_NEW", {className: inClassName}),
+					     iconClass: "StudioAddIcon",
 					     onClick: dojo.hitch(this, function() {
 						 var props = {owner: studio.page,
 							      _designer: studio.page._designer,
@@ -484,6 +485,7 @@ Studio.extend({
 					    });
 	    menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
 					    {label: this.getDictionaryItem("wm.Palette.MENU_ITEM_DOCS", {className: inClassName}),
+						 iconClass: "StudioHelpIcon", 
 					     onClick: dojo.hitch(this, function() {
 						 window.open(this.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {className: inClassName.replace(/^.*\./,"")}));
 					     })

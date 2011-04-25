@@ -1372,7 +1372,7 @@ dojo.declare("Studio", wm.Page, {
     pageSelectChanged: function(inSender, optionalPageName) {
 	if (!studio.page) return;
 	var page = optionalPageName || inSender.getDataValue();
-	if (page == this.project.pageName) return;
+	if (page == this.project.pageName || !page) return;
 
 	var warnPage = this.getDictionaryItem("CONFIRM_OPEN_PAGE_LOSE_UNSAVED", {newPage: page, oldPage: this.project.pageName});
         this.confirmPageChange(warnPage, page, 

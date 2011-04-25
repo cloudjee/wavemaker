@@ -29,7 +29,7 @@ dojo.declare("wm.studio.Project", null, {
 	    eval(inName); // should do nothing, but if attempting to evaluate the name throws an error then its an invalid name
 	} catch(e) {
 	    app.toastError(studio.getDictionaryItem("wm.studio.Project.TOAST_RESERVED_NAME"));
-	    return;
+	    throw "Reserved Keyword";
 	}
 
 	if (this.projectName) {
@@ -98,10 +98,10 @@ dojo.declare("wm.studio.Project", null, {
                 if (!argHash) argHash = {};
 		var ctor = dojo.declare(this.pageName, wm.Page);
 		this.pageData = {};
-	        this.pageData.widgets = ctor.widgets = this.getPageTemplate(pageType, argHash);
+	        ctor.widgets = this.getPageTemplate(pageType, argHash);
+	        //this.pageData.widgets = this.getWidgets();
 	        var functionTemplate = this.getScriptTemplate(pageType, argHash);
-	        studio.setScript(this.pageData.js = pageScript(this.pageName, functionTemplate));
-		this.pageData.css = this.pageData.html = "";
+	        studio.setScript(pageScript(this.pageName, functionTemplate));
 	},
         getPageTemplate: function(pageType, argHash) {
             var template_def = argHash.template;
@@ -302,7 +302,7 @@ dojo.declare("wm.studio.Project", null, {
 	loadApplication: function() {
 		this.projectData = {
 			js: this.loadProjectData(this.projectName + ".js"),
-		    css: this.loadProjectData("app.css").replace(/^\@import.*theme.css.*/,"").replace(/^\s*\n*/,""), // remove theme import from editable part of app.css
+		    css: String(this.loadProjectData("app.css")).replace(/^\@import.*theme.css.*/,"").replace(/^\s*\n*/,""), // remove theme import from editable part of app.css
 		        documentation: dojo.fromJson(this.loadProjectData(this.projectName + ".documentation.json"))
 		};
 		if (!this.projectData.js) {
@@ -378,6 +378,8 @@ dojo.declare("wm.studio.Project", null, {
                             else
 			        studio.page.components[i].documentation = this.pageData.documentation[i];
 			}
+		    studio.setCleanPage();
+		    this.pageData = dojo.clone(studio._cleanPageData);
 		}
 	},
 	loadError: function(inMessage) {

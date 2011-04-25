@@ -212,7 +212,7 @@
     "wm.Component.CLASS_NOT_FOUND": 'Component type "${type}" is not available.',
     "wm.Palette.MENU_ITEM_COPY": "Copy New ${className}",
     "wm.Palette.MENU_ITEM_DOCS": "${className} docs...",
-    "wm.Palette.URL_CLASS_DOCS": "http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/${shortName}",
+    "wm.Palette.URL_CLASS_DOCS": "http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/${className}",
     "wm.Palette.TIP_DOCS": "Click for docs",
 
     /* action.js/clipboard.js: undo/redo */

@@ -1205,6 +1205,11 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
     margin-right: 3px;
     width: 19px;
 }
+.StudioAddIcon {
+    background-image: url(/wavemaker/images/add.png);
+    width: 16px;
+    height: 16px;
+}
 .StudioHelpIcon, .wminspector-help {
     background-image: url(/wavemaker/images/grayhelp.png);
     background-repeat: no-repeat;

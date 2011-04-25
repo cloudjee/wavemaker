@@ -151,7 +151,7 @@ Studio.extend({
     },
 
     validate: function(inText, inEditor, inButton) {
-	var imageIndex = inButton.imageIndex;
+	var imageIndex = 28;//inButton.imageIndex;
 	inButton.setImageIndex(-1);
 	inButton.domNode.style.background = "url(images/loadingThrobber.gif) no-repeat 0% 50%";
 	if (!this.jsvalidateService)
@@ -408,14 +408,7 @@ Studio.extend({
 	/* See if the text refers to a component */
 	var object = this._autoCompletionObject = this.getListCompletionObject(text);
 
-
-	if (!object) {
-	    if (!text)
-		app.alert(this.getDictionaryItem("AUTOCOMPLETE_ALERT_SELECT_TEXT"));
-	    else
-		app.alert(this.getDictionaryItem("AUTOCOMPLETE_ALERT_NOT_FOUND", {text: text}));
-	    return;
-	} else if (object == "-") {	    
+	if (object == "-") {	    
 	    this._autoCompletionOriginalText = this._autoCompletionOriginalText.replace(/\.[^\.]*$/,"");
 	    return;
 	}
@@ -641,7 +634,7 @@ Studio.extend({
 		if (!this.editArea.isAncestorHidden())
 		    this.editArea.focus();
 	    });
-
+	
 	    this.autoCompletionList.connect(this.autoCompletionList,"onselect", this, function() {
 		var item =  this.autoCompletionList.selectedItem.getData();
 		var itemDef = this._autoCompletionObject.listProperties()[item.name];
@@ -667,7 +660,7 @@ Studio.extend({
 		    }));
 		}
 	    });
-
+	
 	    this.autoCompletionList.connect(this.autoCompletionList,"ondblclick", this, function() {
 		var data = this.autoCompletionList.selectedItem.getData();
 		if (data.description == "__") return;
@@ -687,6 +680,7 @@ Studio.extend({
 						       name: "autoCompletionVariable",
 						       type: "com.wavemaker.editor.completions"});
 	}
+	this.autoCompletionHtml.setHtml(this.getDictionaryItem("AUTOCOMPLETION_HTML"));
 	//this.autoCompletionDialog.setTitle(object.toString().replace(/[\[\]]/g,""));
 	this.autoCompletionVariable.setData(showprops);
 	this.autoCompletionList.setDataSet(this.autoCompletionVariable);
