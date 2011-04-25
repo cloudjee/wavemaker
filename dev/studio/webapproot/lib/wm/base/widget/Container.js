@@ -27,12 +27,12 @@ wm.define("wm.Container", wm.Control, {
 	/** @lends wm.Container.prototype */
 	published: {
 		invalid: { ignore: 1, bindSource: 1, readonly: 1, type: "Boolean" },
-		lock: { order: 0 },
-		freeze: { order: 5 },
+	    lock: { order: 0, type: "Boolean" },
+		freeze: { order: 5, type: "Boolean" },
 		box: { ignore: 1 },
 		boxPosition: { ignore: 1},
-		disabled: { ignore: 1 },
-	        autoScroll: {group: "scrolling", order: 100, ignore: 0}
+		disabled: { ignore: 1, type: "Boolean" },
+	        autoScroll: {group: "scrolling", order: 100, ignore: 0, type: "Boolean"}
 	},
     touchScrolling: false,
 	imageList: "",
@@ -669,24 +669,3 @@ wm.Container.extend({
 	}
 });
 
-wm.Object.extendSchema(wm.Container, {
-    layoutKind:         {group: "layout", order: 100, doc: 1},
-    horizontalAlign:    {group: "layout", order: 110, doc: 1, options: ["left","center","right"]},
-    verticalAlign:      {group: "layout", order: 120, doc: 1, options: ["top","middle","bottom"]},
-    fitToContent:       {ignore: true},
-    fitToContentWidth:  {group: "advanced layout", order: 90, shortname: "Auto Width"},
-    fitToContentHeight: {group: "advanced layout", order: 91, shortname: "Auto Height"},
-    autoScroll: {group: "scrolling", order: 100, ignore: 0},
-    scrollX: {group: "scrolling", order: 101, ignore: 0},
-    scrollY: {group: "scrolling", order: 102, ignore: 0},
-    touchScrolling: {group: "scrolling", order: 103, ignore: 0},
-    isMajorContent: {group: "style", order: 150, ignore: 1}, // obsolete
-    themeStyleType: {ignore: true, group: "style", order: 150},
-    setThemeStyleType: {group: "method"},
-    getThemeStyleType: {group: "method", returns: "String"},
-    reflow: {group: "method"},
-    getInvalidWidget: {group: "method", returns: "wm.Control"},
-    setHorizontalAlign:    {group: "method"},
-    setVerticalAlign:      {group: "method"},
-    customGetValidate:     {group: "customMethods"}
-});

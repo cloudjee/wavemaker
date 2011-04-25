@@ -78,3 +78,25 @@ wm.Container.extend({
 
 _end: 0
 });
+
+wm.Object.extendSchema(wm.Container, {
+    layoutKind:         {group: "layout", order: 100, doc: 1},
+    horizontalAlign:    {group: "layout", order: 110, doc: 1, options: ["left","center","right"]},
+    verticalAlign:      {group: "layout", order: 120, doc: 1, options: ["top","middle","bottom"]},
+    fitToContent:       {ignore: true},
+    fitToContentWidth:  {group: "advanced layout", order: 90, shortname: "Auto Width", type: "Boolean"},
+    fitToContentHeight: {group: "advanced layout", order: 91, shortname: "Auto Height", type: "Boolean"},
+    autoScroll: {group: "scrolling", order: 100, ignore: 0, type: "Boolean"},
+    scrollX: {group: "scrolling", order: 101, ignore: 0, type: "Boolean"},
+    scrollY: {group: "scrolling", order: 102, ignore: 0, type: "Boolean"},
+    touchScrolling: {group: "scrolling", order: 103, ignore: 0},
+    isMajorContent: {group: "style", order: 150, ignore: 1}, // obsolete
+    themeStyleType: {ignore: true, group: "style", order: 150},
+    setThemeStyleType: {group: "method"},
+    getThemeStyleType: {group: "method", returns: "String"},
+    reflow: {group: "method"},
+    getInvalidWidget: {group: "method", returns: "wm.Control"},
+    setHorizontalAlign:    {group: "method"},
+    setVerticalAlign:      {group: "method"},
+    customGetValidate:     {group: "customMethods"}
+});
