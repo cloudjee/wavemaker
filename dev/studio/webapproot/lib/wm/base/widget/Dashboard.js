@@ -180,6 +180,18 @@ dojo.declare("wm.Dashboard", wm.Control, {
 			return;
 		this.dojoObj.startup();
 	},
+    customGetPortletsCookie: function() {
+	return dojo.cookie(this.getId() + '_portlets');
+    },
+    customSavePortletsCookie: function(data, options) {
+	dojo.cookie(this.getId() + '_portlets',data, options);
+    },
+    customGetClosedPortletsCookie: function() {
+	return dojo.cookie(this.getId() + '_closed_portlets') || '[]';
+    },
+    customSaveClosedPortletsCookie: function(data, options) {
+	dojo.cookie(this.getId() + '_closed_portlets',data, options);
+    },
 	renderPortlets: function(){
 		var visiblePortlets = {}, opened = [], closed = [];
 		dojo.forEach(this.portlets, function(p){
@@ -188,7 +200,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 		}, this);
 
 		if (!this.isDesignLoaded() && this.saveInCookie){
-			var strPortletList = dojo.cookie(this.getId() + '_portlets');
+		    var strPortletList = this.customGetPortletsCookie();
 			if (strPortletList && strPortletList != ''){
 				opened = dojo.fromJson(strPortletList);
 				this.bcPortlets(opened);
@@ -200,7 +212,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 				}, this);
 			}
 
-			var strClosedList = dojo.cookie(this.getId() + '_closed_portlets');
+		        var strClosedList = this.customGetClosedPortletsCookie();
 			if (strClosedList && strClosedList != ''){
 				closed = dojo.fromJson(strClosedList);
 				dojo.forEach(closed, function(pId){
@@ -299,7 +311,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 		if (!this.saveInCookie)
 			return;
 		if (!this.closedList){
-			var strClosedList = dojo.cookie(this.getId() + '_closed_portlets') || '[]';
+		        var strClosedList = this.customGetClosedPortletsCookie();
 			this.closedList = dojo.fromJson(strClosedList);
 		}
 
@@ -314,17 +326,16 @@ dojo.declare("wm.Dashboard", wm.Control, {
 				this.closedList.splice(idx, 1);
 			}
 		}
-		
-		dojo.cookie(this.getId() + '_closed_portlets', dojo.toJson(this.closedList), {expires:5});
+	    this.customSaveClosedPortletsCookie( dojo.toJson(this.closedList), {expires:5});
 	},
 	_onDashboardChange: function(e){
-		var pList = this.updatePortletXY();
-		console.info('saving in cookie....', pList);
-		if (this.saveInCookie)
-      dojo.cookie(this.getId() + '_portlets', dojo.toJson(pList), {expires:5});
-    else
-      dojo.cookie(this.getId() + '_portlets', null, {expires:-1});
-		this.onDashboardChange(pList);
+	    var pList = this.updatePortletXY();
+	    console.info('saving in cookie....', pList);
+	    if (this.saveInCookie)
+		this.customSavePortletsCookie(dojo.toJson(pList), {expires:5});
+	    else
+		this.customSavePortletsCookie(null, {expires:-1});
+	    this.onDashboardChange(pList);
 	},
 	onDashboardChange: function(activePortlets){
 	},
