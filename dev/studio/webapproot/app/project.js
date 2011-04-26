@@ -307,7 +307,7 @@ dojo.declare("wm.studio.Project", null, {
 		        documentation: dojo.fromJson(this.loadProjectData(this.projectName + ".documentation.json"))
 		};
 		if (!this.projectData.js) {
-		    throw studio.getDictionaryItem("THROW_PROJECT_NOT_FOUND", {projectPath: "projects/" + this.projectName + "/" + this.projectName + ".js"});
+		    throw studio.getDictionaryItem("THROW_PROJECT_NOT_FOUND", {projectPath: "projects/" + this.projectName + "/webapproot/" + this.projectName + ".js"});
 		} else {
 		    var src = this.projectData.js;
 		    var endIndex = src.indexOf("_end: 0");
