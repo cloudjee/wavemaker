@@ -122,10 +122,11 @@ public class ResourceFileService {
 
     	File dest =  new File(resourceDir, to);
     	if (!overwrite) {
-	    String to1 = (to.lastIndexOf(".") != -1) ? to.substring(0, to.lastIndexOf(".")) : to;
-	    String to_ext = (to.lastIndexOf(".") != -1) ? to.substring(to.lastIndexOf(".") + 1) : "";
+	    int lastIndexOfPeriod = to.lastIndexOf(".");
+	    String to1 = (lastIndexOfPeriod != -1) ? to.substring(0, to.lastIndexOf(".")) : to;
+	    String to_ext = (lastIndexOfPeriod != -1) ? to.substring(to.lastIndexOf(".") + 1) : "";
     		for (int i = 0; i < 1000 && dest.exists(); i++)
-		    dest= new File(resourceDir, to1 + i + "." + to_ext);
+		    dest= new File(resourceDir, to1 + i + ((lastIndexOfPeriod != -1) ? "." : "") + to_ext);
 	}
 
     	try {
