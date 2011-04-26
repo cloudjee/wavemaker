@@ -186,6 +186,7 @@ dojo.declare("ImportDatabase", wm.Page, {
 	_connectionFailed: function(inError) {
 	    studio.endWait();
 	    app.alert(this.getDictionaryItem("ALERT_CONNECTION_FAILED", {error: inError.message}));
+	    app.alertDialog.setWidth("600px");
 	},
 	_importResult: function() {
 		studio.endWait();
@@ -210,6 +211,7 @@ dojo.declare("ImportDatabase", wm.Page, {
 		    msg = ": " + inError.message;
 		}
 	    app.alert(this.getDictionaryItem("ALERT_IMPORT_FAILED", {error: inError.message}));
+	    app.alertDialog.setWidth("600px");
 	},
 	_loadedIP: function(inData) {
 		this.ip = inData;

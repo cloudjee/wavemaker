@@ -146,21 +146,21 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 			}
 		}
 	},
-	importDBButtonClick: function() {
-		if (!studio.importDBDialog) {
-			var d = studio.importDBDialog = new wm.PageDialog({
-			owner: app,
-			pageName: "ImportDatabase",
-			hideControls: true,
-			width: 700,
+        importDBButtonClick: function() {
+	    if (!studio.importDBDialog) {
+		var d = studio.importDBDialog = new wm.PageDialog({
+		    owner: app,
+		    pageName: "ImportDatabase",
+		    hideControls: true,
+		    width: 700,
 		    height: 340,
-			    title: this.getDictionaryItem("TITLE_IMPORT_DATABASE")
-			});
-			d.onPageReady = dojo.hitch(d, function() {
-				d.onShow = dojo.hitch(d.page, "update");
-			})
-		}
-		studio.importDBDialog.show();
+		    title: this.getDictionaryItem("TITLE_IMPORT_DATABASE")
+		});
+		d.onPageReady = dojo.hitch(d, function() {
+		    d.onShow = dojo.hitch(d.page, "update");
+		})
+	    }
+	    studio.importDBDialog.show();
 	},
 	dbSettingsButtonClick: function() {
 		//studio.dbConnectionsClick();
@@ -172,7 +172,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 				owner: app,
 				pageName: "DBConnectionSettings", 
 				hideControls: true,
-				width:700,
+				width:720,
 				height:510
 			});
 			this.connect(d, "onPageReady", dojo.hitch(d.page, "setup"));
@@ -942,7 +942,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
                                 }));
 		} else {
 			var n = c.entityName;
-		    app.confirm(this.getDictionaryItem("WAIT_DELETE_ENTITY", {entityName: n}), false, 
+		    app.confirm(this.getDictionaryItem("CONFIRM_DELETE_ENTITY", {entityName: n}), false, 
                                 dojo.hitch(this, function() {
 			var types = this.getDataModelTypeNodes();
 			if (types == null) {
