@@ -200,8 +200,8 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    var f = this.items&&this.items[0];
 	    var n = f&&f.domNode.firstChild;
 	    var b = n&&dojo.marginBox(n);
-		if (b && this.headerNode.firstChild)
-			dojo.marginBox(this.headerNode.firstChild, {w: b.w});
+	    if (b && this.headerNode.firstChild && b.w)
+		dojo.marginBox(this.headerNode.firstChild, {w: b.w});
 	},
 	_render: function() {
 		this.renderData(this._data);
