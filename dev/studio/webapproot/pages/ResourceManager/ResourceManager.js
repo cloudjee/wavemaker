@@ -812,7 +812,7 @@ wm.FolderResourceItem.extend({
     addNewFolder: function(inName) {
       var manager = studio.resourcesPage.getComponent("resourceManager");
       if (this.hasFileWithName(inName)) {
-	  app.alert(studio.resourcesPage.page.getDictionaryItem("ALERT_NAME_EXISTS"));
+	  app.toastWarning(studio.resourcesPage.page.getDictionaryItem("ALERT_NAME_EXISTS")); // changed to toast so that it won't overlap app.prompt dialog
 	return manager.addNewFolder();
       }
 
