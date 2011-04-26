@@ -228,7 +228,6 @@ dojo.declare("ResourceManager", wm.Page, {
                                                    function(rootfolder) {_this.initResourcesData(rootfolder);},
                                                    dojo.hitch(app, "toastWarning"));	
     },
-
   initResourcesData: function(rootfolder) {
 
     this.loadingResourceStart = new Date().getTime(); // update this value in case it took multiple seconds to load the resources
@@ -267,7 +266,7 @@ dojo.declare("ResourceManager", wm.Page, {
 						   function(response) {
 						     try {
 						       if (!response) {
-							   app.alert(this.getDictionaryItem("ALERT_RENAME_FAILED"));
+							   app.alert(_this.getDictionaryItem("ALERT_RENAME_FAILED"));
 						       } else {
 							 var oldparent = moveNode.parent;
 							 oldparent._remove(moveNode);
@@ -531,7 +530,7 @@ dojo.declare("wm.ResourceMover", wm.DragDropper, {
 	  this.showHideAvatar(Boolean(this.target));	  
 	  if (this.target) {
 	    var dn = this.target.data.getItemName();
-	      this.setAvatarContent(this.getDictionaryItem("AVATAR_DROP", {caption: this.info.caption, target: dn}));
+	      this.setAvatarContent(studio.resourcesPage.page.getDictionaryItem("AVATAR_DROP", {caption: this.info.caption, target: dn}));
 	  }
 	},
 
@@ -644,7 +643,7 @@ wm.ResourceItem.extend({
     deleteItem: function() {
 	var manager = studio.resourcesPage.getComponent("resourceManager");
 
-	app.confirm(this.getDictionaryItem("CONFIRM_DELETE", {type: this instanceof wm.FolderResourceItem ? "folder" : "file",
+	app.confirm(studio.resourcesPage.page.getDictionaryItem("CONFIRM_DELETE", {type: this instanceof wm.FolderResourceItem ? "folder" : "file",
 							      name: this.getItemName()}), false,
                     dojo.hitch(this, function() {
 
@@ -652,7 +651,7 @@ wm.ResourceItem.extend({
                              dojo.hitch(this, function(result) { 
 		                 try {
 		                     if (!result) {
-			                 app.alert(this.getDictionaryItem("ALERT_DELETE_FAILED", {fileName: this.getItemName()}));
+			                 app.alert(studio.resourcesPage.page.getDictionaryItem("ALERT_DELETE_FAILED", {fileName: this.getItemName()}));
 			                 return;
 		                     }
 		                     var parent = this.treeNode.parent;
@@ -681,10 +680,10 @@ wm.ResourceItem.extend({
 						   function(result) {
 						     try {
 						       if (!result) {
-							   app.alert(this.getDictionaryItem("ALERT_RENAME_FAILED"));
+							   app.alert(studio.resourcesPage.page.getDictionaryItem("ALERT_RENAME_FAILED"));
 							   return;
 						       } else if (result != inName)
-							   app.alert(this.getDictionaryItem("ALERT_RENAME_SUCCESS", {fileName: result}));
+							   app.alert(studio.resourcesPage.page.getDictionaryItem("ALERT_RENAME_SUCCESS", {fileName: result}));
 						       _this.setItemName(result,true);
 						       manager.forceShowPropertiesPanel();
 						       manager.updateModifiedDate();
@@ -725,9 +724,9 @@ wm.ResourceItem.extend({
 	this.treeNode.tree.deselect();
     },
     hasFileWithName: function(name) {
-      this.treeNode.hasDescendant(function() {
-	return this.data.getItemName() == name;
-      });
+	return this.treeNode.findChild(function(node) {
+	return node.content == name;
+	});
     },
     getParent: function() {
       return this.treeNode.parent.data;
@@ -758,7 +757,7 @@ wm.ZipResourceItem.extend({
 						   function(result) {
 						     try {
 						       if (!result) {
-							   app.alert(this.getDictionaryItem("ALERT_UNZIP_FAILED"));
+							   app.alert(studio.resourcesPage.page.getDictionaryItem("ALERT_UNZIP_FAILED"));
 							   return;
 						       }
 						       manager.loadResourcesData(true);
@@ -776,13 +775,15 @@ wm.ZipResourceItem.extend({
 wm.JarResourceItem.extend({
     checkbox: null,
     addCustomDataToPropertiesPanel: function(propertiesPanel) {
-	this.checkbox = new wm.CheckBoxEditor({caption: this.getDictionaryItem("CAPTION_CLASSPATH"),
+	this.checkbox = new wm.Checkbox({caption: studio.resourcesPage.page.getDictionaryItem("CAPTION_CLASSPATH"),
 					    name: "inClassPathCheckbox",
-					    width: "100px",
-					    captionSize: "80px",
+					    width: "120px",
+					    captionSize: "100px",
 					    height: "28px",			
-					    parent: propertiesPanel});
-       this.checkbox.setChecked(this.isInClassPath);
+					       startChecked: this.isInClassPath,
+					       parent: propertiesPanel,
+					       owner: studio.resourcesPage.page});
+
       var manager = studio.resourcesPage.getComponent("resourceManager");
       manager.connect(this.checkbox, "onchange", this, "changeIsClassPath");
     },
@@ -793,14 +794,14 @@ wm.JarResourceItem.extend({
 						       function(result) {
 							   if (!result) {
 							     if (isChecked)
-								 app.alert(this.getDictionaryItem("ALERT_ADDJAR_FAILED"));
+								 app.alert(studio.resourcesPage.page.getDictionaryItem("ALERT_ADDJAR_FAILED"));
 							     else
-								 app.alert(this.getDictionaryItem("ALERT_REMOVEJAR_FAILED"));
+								 app.alert(studio.resourcesPage.page.getDictionaryItem("ALERT_REMOVEJAR_FAILED"));
 							   } else {
 							     if (isChecked)
-								 app.alert(this.getDictionaryItem("ALERT_ADDJAR_SUCCESS"));
+								 app.alert(studio.resourcesPage.page.getDictionaryItem("ALERT_ADDJAR_SUCCESS"));
 							     else
-								 app.alert(this.getDictionaryItem("ALERT_REMOVEJAR_SUCCESS"));
+								 app.alert(studio.resourcesPage.page.getDictionaryItem("ALERT_REMOVEJAR_SUCCESS"));
 							   }
 						       },
                                                  dojo.hitch(app, "toastWarning"));
@@ -811,16 +812,16 @@ wm.FolderResourceItem.extend({
     addNewFolder: function(inName) {
       var manager = studio.resourcesPage.getComponent("resourceManager");
       if (this.hasFileWithName(inName)) {
-	  app.alert(this.getDictionaryItem("ALERT_NAME_EXISTS"));
+	  app.alert(studio.resourcesPage.page.getDictionaryItem("ALERT_NAME_EXISTS"));
 	return manager.addNewFolder();
       }
 
       var newFolder = new wm.FolderResourceItem({itemName: inName});
       newFolder.treeNode = new wm.ResourceTreeNode(this.treeNode, {file: {file: inName, files: [], type: "folder"},
 							      content: inName,
-							      data: this,
 							      closed: false,
 							      image: this.iconSrc});
+	newFolder.treeNode.data = newFolder;
       manager.setSelectedItem(newFolder);
       newFolder.mkdir();
       
@@ -834,7 +835,10 @@ wm.FolderResourceItem.extend({
 						       function(result) {
 							 try {
 							   if (!result) {
-							       app.alert(this.getDictionaryItem("ALERT_CREATE_FOLDER_FAILED"));
+							       manager.selectedItem.treeNode.destroy();
+							       delete manager.selectedItem.treeNode
+							       manager.selectedItem = null;
+							       app.alert(studio.resourcesPage.page.getDictionaryItem("ALERT_CREATE_FOLDER_FAILED"));
 							       return;
 							   }
 							   manager.forceShowPropertiesPanel();

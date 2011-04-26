@@ -258,6 +258,7 @@ public class ResourceFileService {
     public boolean changeClassPath(String inPath, boolean isInClassPath) {
 	  try {
 	      if (inPath.indexOf("/") == 0) inPath = inPath.substring(1);
+	      String inFileName = inPath.substring(inPath.lastIndexOf("/") != -1 ? inPath.lastIndexOf("/")+1 : 0);
 	      File f = new File(this.getResourcesDir(), ".includeJars");
 	      String fileContents;
 	      StringBuffer newFile = new StringBuffer("");
@@ -285,9 +286,15 @@ public class ResourceFileService {
 		  }
 		  
 	      }
+
+	      File destFile = new File(getProjectDir(), "WEB-INF/lib/" +  inFileName);
 	      if (isInClassPath && !found) {
 		      if (newFile.length() > 0) newFile.append("\n");
 		      newFile.append(inPath);
+		      File sourceFile = new File(this.getResourcesDir(), inPath);
+		      IOUtils.copy(sourceFile,destFile);
+	      } else if (!isInClassPath) {
+		      destFile.delete();
 	      }
 	      
 	      IOUtils.write(f,newFile.toString());
