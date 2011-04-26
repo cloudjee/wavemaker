@@ -296,13 +296,16 @@
     "MODELTREE_CONTEXTMENU_NEW": "New ${className}",
     "MODELTREE_CONTEXTMENU_DOC": "docs...",
 
-    POPUP_BLOCKER_MESSAGE: "Popup Blocker Detected - Manually Launch",
+    "POPUP_BLOCKER_MESSAGE": "Popup Blocker Detected - Manually Launch",
     "wm.studio.Project.TOAST_RESERVED_NAME": "That is a reserved javascript name",
     "wm.studio.Project.WAIT_CREATING_PROJECT": "Setting up new project",
     "wm.studio.Project.WAIT_OPEN_PROJECT": "Openning...",
     "wm.studio.Project.TOAST_OPEN_PROJECT_FAILED": "Failed to open project ${projectName}: ${error}",
+
+    /* These next two seem to indicate the same thing, but come up from different types of errors */
     "wm.studio.Project.TOAST_OPEN_PAGE_FAILED": "Failed to open page ${pageName}: ${error}",
-    "wm.studio.Project.THROWS_INVALID_PAGE": "Invalid Page",
+    "wm.studio.Project.THROW_INVALID_PAGE": "Invalid Page",
+
     "wm.studio.Project.WAIT_COPY_PROJECT": "Copying...",
     "wm.studio.Project.TOAST_COPY_PROJECT_SUCCESS": "${oldName} saved as ${newName}; you are still editting ${oldName}",
     "wm.studio.Project.ALERT_DELETE_PAGE_FAILED": "Page ${pageName} could not be deleted: ${error}",
