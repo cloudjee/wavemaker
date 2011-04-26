@@ -179,8 +179,14 @@ dojo.declare("QueryEditor", wm.Page, {
 	},
 	runQuery: function(inSender) {
 		//this.bindValue();
-		if (this._getQueryValue() == "") {
-		    app.alert(this.getDictionaryItem("ALERT_NO_QUERY"));
+
+	    // if its all white space, then no query is here
+	       if (!this._getQueryValue().match(/\S/)) {
+		    app.alert(this.getDictionaryItem("ERROR_NO_QUERY"));
+		    return;
+		}
+	        if (!this.queryDataModelInput.getDataValue()) {
+		    app.alert(this.getDictionaryItem("ERROR_NO_DATAMODEL"));
 		    return;
 		}
 		this.emptyResultSetLabel.setShowing(false);
@@ -237,9 +243,10 @@ dojo.declare("QueryEditor", wm.Page, {
 				names.push(c.id);
 			}
 		}
-		this.queryDataModelInput.editor.setOptions(names.join());
-		if (names.length)
-			this.queryDataModelInput.setDataValue(this.dataModelName || names[0]);
+	    this.queryDataModelInput.editor.allowNone = (names.length > 1);
+	    this.queryDataModelInput.editor.setOptions(names.join());
+	    if (names.length == 1)
+		this.queryDataModelInput.setDataValue(this.dataModelName || names[0]);
 	    this._cachedData = this.getCachedData();
 	},
     getCachedData: function() {
@@ -259,7 +266,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		for (var i in cs) {
 			var c = cs[i];
 			if (c.declaredClass == "wm.Query" && c != this.query && c.queryName == name) {
-                            app.confirm(this.getDictionaryItem("CONFIRM_RUN", {name: name}), false, 
+                            app.confirm(this.getDictionaryItem("CONFIRM_OVERWRITE", {name: name}), false, 
 					dojo.hitch(this, function() {
 					    studio.dataService.requestSync(
 						REMOVE_QUERY_OP, [c.dataModelName, c.queryName],
@@ -647,16 +654,22 @@ dojo.declare("QueryEditor", wm.Page, {
 		this.queryTextArea.setDataValue(inData.query);
 	},
 	_canSaveQuery: function() {
-		var qn = this.queryNameInput.getDataValue();
-		var q = this._getQueryValue();
-	    if (dojo.string.trim(qn || "") == "") {
+	    var qn = this.queryNameInput.getDataValue();
+	    var q = this._getQueryValue();
+	    var dm = this.queryDataModelInput.getDataValue();
+	    if (!qn.match(/\S/)) {
 		studio._saveErrors.push({owner: this,
-					 message: this.getDictionaryItem("ALERT_NO_NAME")});
+					 message: this.getDictionaryItem("ERROR_NO_NAME")});
 		return false;
 	    }
-	    if (dojo.string.trim(q||"") == "") {
+	    if (!q.match(/\S/)) {
 		studio._saveErrors.push({owner: this,
-					 message: this.getDictionaryItem("ALERT_NO_QUERY")});
+					 message: this.getDictionaryItem("ERROR_NO_QUERY")});
+		return false;
+	    }
+	    if (!dm.match(/\S/)) {
+		studio._saveErrors.push({owner: this,
+					 message: this.getDictionaryItem("ERROR_NO_DATAMODEL")});
 		return false;
 	    }
 	    return true;

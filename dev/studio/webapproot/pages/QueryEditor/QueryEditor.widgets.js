@@ -32,13 +32,13 @@ QueryEditor.widgets = {
 				panel1: ["wm.Panel", {border: "0", height: "100%", width: "869px"}, {}, {
 				    panelTopLayout: ["wm.Panel", {height: "100px", width: "100px", layoutKind: "left-to-right"}, {}, {
 					    queryPropsPanel: ["wm.Panel", {border: "1,0,0,0", borderColor: "#000000", height: "100px", width: "400px", padding: "4", verticalAlign: "top", horizontalAlign: "left"}, {}, {
-						    queryDataModelInput: ["wm.Editor", {layoutKind: "left-to-right", caption: "Data Model", display: "Select", width: "100%", height: "24px", disabled: true}, {onchange: "queryDataModelInputChange"}, {
+						    queryDataModelInput: ["wm.Editor", {layoutKind: "left-to-right", caption: "Data Model", display: "Select", width: "100%", height: "24px", disabled: true,emptyValue: "emptyString"}, {onchange: "queryDataModelInputChange"}, {
 							    editor: ["wm._SelectEditor", {}, {}]
 							}],
-						    queryNameInput: ["wm.Editor", {layoutKind: "left-to-right", caption: "Name", width: "100%", height: "24px"}, {onchange: "queryNameChanged"}, {
+						queryNameInput: ["wm.Editor", {layoutKind: "left-to-right", caption: "Name", width: "100%", height: "24px",emptyValue: "emptyString"}, {onchange: "queryNameChanged"}, {
 							    editor: ["wm._TextEditor", {changeOnKey: true}, {}]
 							}],
-						    queryCommentInput: ["wm.Editor", {layoutKind: "left-to-right", caption: "Comment", width: "100%", height: "24px"}, {onchange: "queryCommentChanged"}, {
+						    queryCommentInput: ["wm.Editor", {layoutKind: "left-to-right", caption: "Comment", width: "100%", height: "24px",emptyValue: "emptyString"}, {onchange: "queryCommentChanged"}, {
 							    editor: ["wm._TextEditor", {changeOnKey: true}, {}]
 							}]
 						}],
