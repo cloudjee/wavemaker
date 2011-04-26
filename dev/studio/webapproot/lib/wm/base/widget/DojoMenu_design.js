@@ -51,7 +51,6 @@ wm.DojoMenu.extend({
 	studio.designer.domNode.appendChild(this.domNode);
 	this.setFullStructureStr(studio.getDictionaryItem("wm.PopupMenu.DEFAULT_STRUCTURE"));
 	this.renderDojoObj();
-	this.activate();
     },
 	designCreate: function() {
 		// if this is being created in studio, supply a default caption
@@ -222,6 +221,13 @@ wm.DojoMenu.extend({
     }
 });
 
+
+wm.PopupMenu.extend({
+    afterPaletteDrop: function() {
+	this.inherited(arguments);
+	this.activate();
+    }
+});
 
 wm.Object.extendSchema(wm.PopupMenu, {
     vertical: {ignore:true},
