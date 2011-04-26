@@ -471,10 +471,14 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		this.selectedItem.setData(v);
                 this._selectedData = v;
 	},
+    getSelectedIndex: function() {
+	return this.getItemIndex(this.selectedItem.getData());
+    },
         getItemIndex: function(item) {
+	    if (!item) return -1;
             var data = this.editor.store.data;
             for (var i = 0; i < data.length; i++)
-                if (item == data[i]) return i;
+                if (item == data[i] || item[this.dataField] == data[i][this.dataField]) return i;
             return -1;
         },
 	isAllDataFields: function() {
