@@ -1,0 +1,161 @@
+# This program may be used, executed, copied, modified and distributed
+# without royalty for the purpose of developing, using, marketing, or distribution
+
+#---------------------------------------------------
+# Security procs
+#---------------------------------------------------
+#
+# checkuserpw - this takes a user and password as 
+#               arguments and checks with the MBean server to see 
+#               if they are valid. 
+# 
+#---------------------------------------------------
+
+proc checkuserpw {user pw} {
+  global AdminControl
+
+  # find the SecurityAdmin MBean.  If there is more than one,
+  # we just take the first.  This probably needs to be fine-tuned
+  # for a distributed environment.
+  set secadm [lindex [$AdminControl queryNames type=SecurityAdmin,*] 0]
+  if {[llength $secadm] == 0} {
+     return false
+  } else {
+     set plist  [list $user $pw {}]
+
+     # the following command throws an exception and exits the
+     # script if the password doesn't match.
+     set result [$AdminControl invoke $secadm checkPassword $plist]
+     return $result
+  }
+}
+
+#---------------------------------------------------
+#
+# securityon -- this takes a user and password as 
+#               arguments and enables security.  If no password is
+#               supplied, then only the userid is set.  If no userid
+#               or password is supplied, then we only set the enable
+#               flag.
+#
+#               This proc only deals with LocalOS security
+# 
+#---------------------------------------------------
+
+proc securityon {args} {
+  global AdminConfig
+  global AdminControl
+  global env
+  if {[regexp help [lindex $args 0]]} {
+     puts "Syntax: securityon user password"
+     return
+  }
+  if {[llength $args] < 2} {
+     puts "Syntax: securityon user password"
+     return
+  }
+
+  
+  # the following assumes we have but one cell
+  set cell [lindex [$AdminConfig list Cell] 0]
+  set secObject [lindex [$AdminConfig list Security $cell] 0]
+
+  # if we have any userid or password, set them.
+  if {[llength $args] > 0} {
+     set user [lindex $args 0]
+     set userattr [list serverId $user] 
+     set attrs [list $userattr]
+
+     if {[llength $args] > 1} {
+        set pw [lindex $args 1]
+        set pwattr [list serverPassword $pw]
+        lappend attrs $pwattr
+        
+        # set the useRegistryServerId flag
+        set ursidattr [list useRegistryServerId true]
+	lappend attrs $ursidattr
+ 
+        # Before proceeding, we confirm with the security server that the userid/password
+        # pair are valid. 
+        
+        set ok [checkuserpw $user $pw]
+        if {[string compare $ok false] == 0} {
+           puts "Cannot contact SecurityAdmin to verify password."
+           return 
+        }
+     }
+
+     # get the REALM 
+     set secadm [lindex [$AdminControl queryNames type=SecurityAdmin,*] 0]
+     if {[llength $secadm] != 0} {
+        set plist  [list  {}]
+        set realm [$AdminControl invoke $secadm getRealm $plist]
+        set realmattr [list realm $realm]
+        lappend attrs $realmattr
+     } 
+  
+     # get a list of the userRegistry contents
+     
+     set registryList [lindex [lindex [$AdminConfig show $secObject userRegistries] 0] 1]
+     set found 0
+     foreach reg $registryList {
+        if {[regexp LocalOSUserRegistry $reg]} {
+           set found 1  
+           $AdminConfig modify $reg $attrs
+           break;
+         }
+     }
+     if {$found == 0} {
+        puts "Cannot find local OS user registry."
+     } 
+  }
+  set attrs [list [list enabled true]]
+  $AdminConfig modify $secObject $attrs 
+  set attrs [list [list activeUserRegistry $reg]]
+  $AdminConfig modify $secObject $attrs 
+  $AdminConfig save
+
+  puts stdout "\n\nPLEASE READ BELOW:"
+  puts stdout "Done with LOCAL OS security turning on process, now you need to restart server1 to make it affected." 
+  puts stdout "Then you can start using the client with SOAP, RMI, JSR160RMI and IPC connector.\n"
+  puts stdout "If you are using SOAP Connector to connect to the server, you need to modify soap.client.props file in your <profile_root>/properties directory.\n"
+  puts stdout "Update as below for SOAP connector:"
+  puts stdout "com.ibm.SOAP.securityEnabled=true"
+  puts stdout "com.ibm.SOAP.loginSource=properties"
+  puts stdout "com.ibm.SOAP.loginUserid=$user"
+  puts stdout "com.ibm.SOAP.loginPassword=$pw\n\n"
+  puts stdout "If you are using RMI or JSR160RMI Connector to connect to the server, you will be prompted to enter the \"userid\" and the \"password\". If you want to by pass the login process, you can modify sas.client.props file in your <profile_root>/properties directory.\n"
+  puts stdout "Update as below for RMI or JSR160RMI connector:"
+  puts stdout "com.ibm.CORBA.loginSource=properties"
+  puts stdout "com.ibm.CORBA.loginUserid=$user"
+  puts stdout "com.ibm.CORBA.loginPassword=$pw\n\n"
+  puts stdout "If you are using IPC Connector to connect to the server, you need to modify ipc.client.props file in your <profile_root>/properties directory.\n"
+  puts stdout "Update as below for IPC connector:"
+  puts stdout "com.ibm.IPC.securityEnabled=true"
+  puts stdout "com.ibm.IPC.loginSource=properties"
+  puts stdout "com.ibm.IPC.loginUserid=$user"
+  puts stdout "com.ibm.IPC.loginPassword=$pw\n\n"
+}
+
+#---------------------------------------------------
+#
+# securityoff --  disables security "enabled" flag
+# 
+#---------------------------------------------------
+
+proc securityoff {args} {
+  global AdminConfig
+  if {[regexp help [lindex $args 0]]} {
+     puts "Syntax: securityoff"
+     return
+  }
+
+  # the following assumes we have but one cell
+  set cell [lindex [$AdminConfig list Cell] 0]
+  set secObject [lindex [$AdminConfig list Security $cell] 0]
+
+  $AdminConfig modify $secObject [list [list enabled false]]
+  $AdminConfig save
+
+  puts stdout "LOCAL OS security is off now but you need to restart server1 to make it affected.\n"
+}

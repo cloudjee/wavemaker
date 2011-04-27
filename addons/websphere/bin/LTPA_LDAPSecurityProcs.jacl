@@ -1,0 +1,497 @@
+# This program may be used, executed, copied, modified and distributed
+# without royalty for the purpose of developing, using, marketing, or distribution
+
+#---------------------------------------------------
+# LTPA_LDAPSecurity procs
+#---------------------------------------------------
+# This script is used to turn on LTPA/LDAP Security
+#
+# Note:  LTPA keys are now automatically generated during server startup
+#        when keySetGroup is specified in the LPTA object.  This is the
+#        default configuration.  There is no need to generate/export keys
+#        from this script to enable security.
+
+#-------------------------------------------------------------------------------
+# initialize ldap server required attributes and values
+#-------------------------------------------------------------------------------
+set ldapServer null
+set ldapServerId null
+set ldapPassword null
+set ldapPort null
+set domainHostname null
+
+#-------------------------------------------------------------------------------
+# variables to save the return values
+#-------------------------------------------------------------------------------
+set cellName null
+set nodeName null
+set flag null
+set securityId null
+set ltpaId null
+set ldapUserRegistryId null
+set secMbean null
+
+#-------------------------------------------------------------------------------
+# check if base or nd environment
+#-------------------------------------------------------------------------------
+proc whatEnv {} {
+	global AdminControl cellName nodeName flag
+	set nodeName [$AdminControl getNode]
+	set cellName [$AdminControl getCell]
+	set server [lindex [$AdminControl queryNames type=Server,node=$nodeName,cell=$cellName,*] 0]
+	set processType [$AdminControl getAttribute $server processType]
+	# find out what environment
+	if {$processType == "DeploymentManager"} {
+		# nd environment
+		set flag nd
+	} elseif {$processType == "ManagedProcess" || $processType == "NodeAgent"} {
+		puts stdout "This script was not run by connecting to dmgr process"
+		puts stdout "Please rerun the script connecting to dmgr process"
+		return
+        } elseif {$processType == "AdminAgent"} {
+                # admin agent environment
+	        set flag adminagent
+        } else {
+		# base environment
+		set flag base
+	} 
+}
+
+#-------------------------------------------------------------------------------
+# get Security id
+#-------------------------------------------------------------------------------
+proc getSecId {} {
+    	global AdminControl AdminConfig securityId cellName 
+	if {[catch {$AdminConfig getid /Cell:$cellName/Security:/} result]} {
+		puts stdout "\$AdminConfig list Security caught an exception $result\n"
+		return 
+	} else {
+		if {$result != {}} {
+			# incase more than one, just get the first one
+			set securityId [lindex $result 0]
+			puts stdout "Got Security ConfigId is $securityId\n"
+		} else {
+			puts stdout "Security ConfigId was not found\n"
+		}
+	}
+}
+
+
+#-------------------------------------------------------------------------------
+# get LTPA config id
+#-------------------------------------------------------------------------------
+proc getLTPAId {} {
+    	global AdminConfig ltpaId 
+	if {[catch {$AdminConfig list LTPA} result]} {
+		puts stdout "\$AdminConfig list LTPA caught an exception $result\n"
+		return 
+	} else {
+		if {$result != {}} {
+			# incase more than one, just get the first one
+			set ltpaId [lindex $result 0]
+			puts stdout "Got LTPA ConfigId is $ltpaId\n"
+		} else {
+			puts stdout "LTPA ConfigId was not found\n"
+		}
+	}
+}
+
+
+#-------------------------------------------------------------------------------
+# get LDAPUserRegistry id
+#-------------------------------------------------------------------------------
+proc getLDAPUserRegistryId {} {
+    	global AdminConfig ldapUserRegistryId 
+	if {[catch {$AdminConfig list LDAPUserRegistry} result]} {
+		puts stdout "\$AdminConfig list LDAPUserRegistry caught an exception $result\n"
+		return 
+	} else {
+		if {$result != {}} {
+			# incase more than one, just get the first one
+			set ldapUserRegistryId [lindex $result 0]
+			puts stdout "Got LDAPUserRegistry ConfigId is $ldapUserRegistryId\n"
+		} else {
+			puts stdout "LDAPUserRegistry ConfigId was not found\n"
+		}
+	}
+}
+
+
+#-------------------------------------------------------------------------------
+# get the SecurityAdmin mbean
+#-------------------------------------------------------------------------------
+proc getSecurityAdminMbean {} {
+    	global AdminControl secMbean flag cellName nodeName
+        if {$flag == "nd"} {
+	    if {[catch {$AdminControl queryNames WebSphere:type=SecurityAdmin,cell=$cellName,node=$nodeName,*} result]} {
+		puts stdout "\$AdminControl queryNames WebSphere:type=SecurityAdmin,cell=$cellName,node=$nodeName,* caught an exception $result\n"
+		return 
+	    } else {
+		if {$result != {}} {
+			# incase more than one, just get the first one
+			set secMbean [lindex $result 0]
+			puts stdout "Got Security mbean is $secMbean\n"
+		} else {
+			puts stdout "Security Mbean was not found\n"
+		}
+            }
+	} else {
+ 	    if {[catch {$AdminControl queryNames WebSphere:type=SecurityAdmin,*} result]} {
+		puts stdout "\$AdminControl queryNames WebSphere:type=SecurityAdmin,* caught an exception $result\n"
+		return 
+	    } else {
+		if {$result != {}} {
+			# incase more than one, just get the first one
+			set secMbean [lindex $result 0]
+			puts stdout "Got Security mbean is $secMbean\n"
+		} else {
+			puts stdout "Security Mbean was not found\n"
+		}
+            }
+        }
+}
+
+#-------------------------------------------------------------------------------
+# generate LTPA keys - deprecated
+#-------------------------------------------------------------------------------
+proc generateLTPAKeys {} {
+        puts stdout "generateLTPAKeys has been deprecated in IBM WebSphere v6.1\n"
+}
+
+#-------------------------------------------------------------------------------
+# exportLTPAKeys to get the key value to set private, public and shared key - deprecated
+#-------------------------------------------------------------------------------
+proc exportLTPAKey {} {
+        puts stdout "exportLTPAKeys has been deprecated in IBM WebSphere v6.1\n"
+}
+
+
+#-------------------------------------------------------------------------------
+# setup attribute values for AuthenticationMechanism using LTPA ConfigId
+#-------------------------------------------------------------------------------
+proc doAuthenticationMechanism {} {
+    	global AdminConfig domainHostname ltpaId 
+	set Attrs1 [list [list singleSignon [list [list requiresSSL false] [list domainName $domainHostname] [list enabled true]]]]
+	if {$ltpaId != "null" || $ltpaId != {}} {
+		if {[catch {$AdminConfig modify $ltpaId $Attrs1} result]} {
+			puts stdout "\$AdminConfig modify $ltpaId $Attrs1 caught an exception $result\n"
+			return
+		} else {
+			# save the update
+			if {[catch {$AdminConfig save} saveResult]} {
+				puts stdout "\$AdminConfig save caught an exception $saveResult\n"
+			} else {
+				puts stdout "Done setting up attributes values for AuthenticationMechanism"
+				#puts stdout "Attributes values being set up is $Attrs1"
+				puts stdout "Updated was saved successfully\n"
+			}
+		}
+	} else {
+		puts stdout "LTPA ConfigId was not found\n"
+	}
+}
+
+
+#-------------------------------------------------------------------------------
+# setup attribute values for LDAPUserRegistry using LDAPUserRegistry ConfigId
+#-------------------------------------------------------------------------------
+proc doLDAPUserRegistry {} {
+    	global AdminConfig ldapServer ldapServerId ldapPassword ldapPort domainHostname ldapUserRegistryId 
+	set Attrs2 [list [list serverId $ldapServerId] [list serverPassword $ldapPassword] [list realm $ldapServer:$ldapPort] [list type IBM_DIRECTORY_SERVER] [list baseDN o=ibm,c=us] [list reuseConnection true] [list useRegistryServerId true] [list hosts [list [list [list host $ldapServer] [list port $ldapPort]]]]]
+	if {$ldapUserRegistryId != "null" || $ldapUserRegistryId != {}} {
+		# do this first to make sure not other host or port in security.xml
+		# otherwise it will failed to start the server after security on
+		set temp [catch {$AdminConfig showAttribute $ldapUserRegistryId hosts} hostIdList]
+		if {$hostIdList != {}} {
+			foreach hostId $hostIdList {
+				set temp [catch {$AdminConfig remove $hostId} result]
+				puts stdout "Removed hostId $hostId\n"
+				set temp [catch {$AdminConfig save} saveResult]
+				puts stdout "Saved the change\n"
+			}
+		}
+		if {[catch {$AdminConfig modify $ldapUserRegistryId $Attrs2} result]} {
+			puts stdout "\$AdminConfig modify $ldapUserRegistryId $Attrs2 caught an exception $result\n"
+			return
+		} else {
+			# save the update
+			if {[catch {$AdminConfig save} saveResult]} {
+				puts stdout "\$AdminConfig save caught an exception $saveResult\n"
+			} else {
+				puts stdout "Done setting up attributes values for LDAP User Registry"
+				#puts stdout "Attributes values being set up is $Attrs2"
+				puts stdout "Updated was saved successfully\n"
+			}
+		}
+	} else {
+		puts stdout "LDAPUserRegistry ConfigId was not found\n"
+	}
+}
+
+#-------------------------------------------------------------------------------
+# add the LDAP admin user to the administrator and adminsecuritymanager roles
+# in admin-authz.xml
+#-------------------------------------------------------------------------------
+proc addToAdminAuthz {} {
+    	global AdminConfig AdminTask ldapServer ldapServerId ldapPassword ldapPort domainHostname ldapUserRegistryId 
+        if {$ldapServerId != "null" || $ldapServerId != {}} {
+                if {[catch {$AdminTask addToAdminAuthz "-adminUser $ldapServerId"} result]} {
+                        puts stdout "\addtoAdminAuthz -adminUser $ldapServerId caught an exception $result\n"
+                        return
+                } else {
+                        # save the update
+                        if {[catch {$AdminConfig save} saveResult]} {
+                                puts stdout "\$AdminConfig save caught an exception $saveResult\n"
+                        } else {
+                                puts stdout "Done adding $ldapServerId to admin-authz.xml"
+                                puts stdout "Update was saved successfully\n"
+                        }
+                }
+        } else {
+                puts stdout "ldapServerId was not found\n"
+        }
+}
+
+
+
+
+#-------------------------------------------------------------------------------
+# setup attribute values to enable security using Security ConfigId
+#-------------------------------------------------------------------------------
+proc doGlobalSecurity {} {
+    	global AdminConfig securityId ltpaId ldapUserRegistryId 
+	set Attrs3 [list [list activeAuthMechanism $ltpaId] [list activeUserRegistry $ldapUserRegistryId] [list enabled true] [list enforceJava2Security true]]
+	if {$securityId != "null" || $securityId != {} || $ltpaId != "null" || $ltpaId != {} || $ldapUserRegistryId != "null" || $ldapUserRegistryId != {}} {
+		if {[catch {$AdminConfig modify $securityId $Attrs3} result]} {
+			puts stdout "\$AdminConfig modify $securityId $Attrs3 caught an exception $result\n"
+			return
+		} else {
+			# save the update
+			if {[catch {$AdminConfig save} saveResult]} {
+				puts stdout "\$AdminConfig save caught an exception $saveResult\n"
+			} else {
+				puts stdout "Done setting up attributes values for Global Security done"
+				#puts stdout "Attributes values being set up is $Attrs3"
+				puts stdout "Updated was saved successfully\n"
+			}
+		}
+	} else {
+		puts stdout "Any of the Security, LTPA or LDAPUserRegistry ConfigId was not found\n"
+	}
+}
+
+#-------------------------------------------------------------------------------
+# setup attribute values to disable security using Security ConfigId
+#-------------------------------------------------------------------------------
+proc doGlobalSecurityDisable {} {
+    	global AdminConfig securityId 
+	set Attrs4 [list [list enabled false]]
+	if {$securityId != "null" || $securityId != {}} {
+		if {[catch {$AdminConfig modify $securityId $Attrs4} result]} {
+			puts stdout "\$AdminConfig modify $securityId $Attrs4 caught an exception $result\n"
+			return
+		} else {
+			# save the update
+			if {[catch {$AdminConfig save} saveResult]} {
+				puts stdout "\$AdminConfig save caught an exception $saveResult\n"
+			} else {
+				puts stdout "Done setting up attributes values for Global Security"
+				#puts stdout "Attributes values being set up is $Attrs4"
+				puts stdout "Updated was saved successfully\n"
+			}
+		}
+	} else {
+		puts stdout "Any of the Security ConfigId was not found\n"
+	}
+}
+
+#-------------------------------------------------------------------------------
+# force to do the sync here and put in wait to give time for sync to finish
+#-------------------------------------------------------------------------------
+proc forceSync {} {
+    	global AdminControl 
+	if {[catch {$AdminControl queryNames type=NodeSync,*} result]} {
+		puts stdout "\$AdminControl queryNames type=NodeSync,* caught an exception $result"
+	} else {
+		if {$result != {}} {
+			foreach nsync $result {
+				set syncResult false
+                                set indx 0
+				while {$syncResult != "true" && $indx < 5} {
+					puts stdout "Force NodeSync on $nsync"
+					if {[catch {$AdminControl invoke $nsync sync ""} syncResult]} {
+						puts stdout "\$AdminControl invoke $nsync sync \"\" caught an exception $syncResult"
+						return
+					} else {
+						puts stdout "Sync Result on $nsync is $syncResult"
+					}
+                                        incr indx
+				}
+                                if {$syncResult != "true"} {
+                                        puts stdout "Unable to sync $nsync"
+                                }
+			}
+			# wait for 1 minutes to make sure sync done
+			puts stdout "Time out for 1 minute to make sure sync is done"
+			after 60000 
+		}
+	}
+}
+
+
+#-----------------------------------------------------------------------
+#
+# LTPA_LDAPSecurityon -- this takes the LDAP server, user, password, 
+#               port, and domain as argumnets to setup and turn on LTPA 
+#               and LDAP security.
+#
+#-----------------------------------------------------------------------
+proc LTPA_LDAPSecurityOn {args} {
+	global ldapServer ldapServerId ldapPassword ldapPort domainHostname flag
+	if {[regexp help [lindex $args 0]]} {
+		puts "Syntax: LTPA_LDAPSecurityOn server user password port domain"
+		return
+	}
+	if {[llength $args] != 5} {
+		puts "Syntax: LTPA_LDAPSecurityOn server user password port domain"
+		return
+	}
+
+	# setup server, user, password, port and domain
+	set ldapServer [lindex $args 0]
+	set ldapServerId [lindex $args 1]
+	set ldapPassword [lindex $args 2]
+	set ldapPort [lindex $args 3]
+	set domainHostname [lindex $args 4]
+
+	whatEnv
+
+    if {$flag == "nd" || $flag == "base" || $flag == "adminagent"} {
+	getSecId
+	getLTPAId
+	getLDAPUserRegistryId
+	getSecurityAdminMbean
+	doAuthenticationMechanism
+	doLDAPUserRegistry 
+	doGlobalSecurity
+        addToAdminAuthz
+	forceSync
+
+	puts stdout "\n\nPLEASE READ BELOW:"
+	puts stdout "Done with LTPA/LDAP security turning on process, now you need to restart all the processes to make it affected. Then you can start using the client with SOAP, RMI, JSR160RMI or IPC connector.\n"
+	puts stdout "If you are using SOAP Connector to connect to the server, you need to modify soap.client.props file in your <profile_root>/properties directory.\n"
+	puts stdout "Update as below for SOAP connector:"
+	puts stdout "com.ibm.SOAP.securityEnabled=true"
+	puts stdout "com.ibm.SOAP.loginSource=properties"
+	puts stdout "com.ibm.SOAP.loginUserid=$ldapServerId"
+	puts stdout "com.ibm.SOAP.loginPassword=$ldapPassword\n\n"
+	puts stdout "If you are using RMI or JSR160RMI Connector to connect to the server, you will be prompted to enter the \"userid\" and the \"password\". If you want to by pass the login process, you can modify sas.client.props file in your <profile_root>/properties directory.\n"
+	puts stdout "Update as below for RMI or JSR160RMI connector:"
+	puts stdout "com.ibm.CORBA.loginSource=properties"
+	puts stdout "com.ibm.CORBA.loginUserid=$ldapServerId"
+	puts stdout "com.ibm.CORBA.loginPassword=$ldapPassword\n\n"
+	puts stdout "If you are using IPC Connector to connect to the server, you need to modify ipc.client.props file in your <profile_root>/properties directory.\n"
+	puts stdout "Update as below for IPC connector:"
+	puts stdout "com.ibm.IPC.securityEnabled=true"
+	puts stdout "com.ibm.IPC.loginSource=properties"
+	puts stdout "com.ibm.IPC.loginUserid=$ldapServerId"
+	puts stdout "com.ibm.IPC.loginPassword=$ldapPassword\n\n"
+    }
+}
+
+#-----------------------------------------------------------------------
+#
+# LTPA_LDAPSecurityOff -- this disables the LTPA/LDAP security.
+#
+#-----------------------------------------------------------------------
+proc LTPA_LDAPSecurityOff {} {
+        global flag
+	whatEnv
+
+    if {$flag == "nd" || $flag == "base"} {
+	getSecId
+	doGlobalSecurityDisable
+	forceSync
+
+	puts stdout "LTPA/LDAP security is off now but you need to restarted all the processes to make it affected.\n"
+    }
+}
+
+#-------------------------------------------------------------------------
+#
+# change run time bind DN and bind password
+# This takes new BIND DN and password, verify against LDAP servers, save, sync and push it to run time
+#
+#-------------------------------------------------------------------------
+proc LDAPReBind {args} {
+	global AdminConfig AdminControl ldapBindDn ldapBindPassword 
+	if {[regexp help [lindex $args 0]]} {
+		puts "Syntax: LDAPBind ldapBindDn ldapBindPassword"
+		return
+	}
+        
+	if {[llength $args] != 2} {
+		puts "Syntax: LDAPBind ldapBindDn ldapBindPassword"
+		return
+	}
+
+	# setup bind DN and password
+	set ldapBindDn [lindex $args 0]
+	set ldapBindPassword [lindex $args 1]        
+        
+        set secMBeans [$AdminControl queryNames type=SecurityAdmin,*]
+
+        set plist  [list $ldapBindDn $ldapBindPassword]        
+                                            
+        foreach secMBean $secMBeans {
+               set result [$AdminControl invoke $secMBean resetLdapBindInfo $plist] 
+               # set result [$AdminControl invoke $secMBean updateLdapRegistry $plist] 
+        }                   
+}
+#---------------------------------------------------
+#
+#  Add backup LDAP for failover: it takes backup ldap host name, and port number
+#  The new LDAP is added to the bottom of list, and failover starts from top to bottom
+#  Check security.xml to see how many LDAPs in failover LDAP list
+#
+#----------------------------------------------------
+proc LDAPAdd {args} {
+	global AdminConfig AdminControl ldapServer ldapPort 
+	if {[regexp help [lindex $args 0]]} {
+		puts "Syntax: LDAPAdd LdapServer port"
+		return
+	}
+	if {[llength $args] != 2} {
+		puts "Syntax: LDAPAdd LdapServer port"
+		return
+	}
+
+	# setup server, user, password, port and domain
+	set ldapServer [lindex $args 0]
+        set ldapPort [lindex $args 1]
+        
+    	global ldapUserRegistryId 
+	if {[catch {$AdminConfig list LDAPUserRegistry} result]} {
+		puts stdout "\$AdminConfig list LDAPUserRegistry caught an exception $result\n"
+		return 
+	} else {
+		if {$result != {}} {
+			# incase more than one, just get the first one
+			set ldapUserRegistryId [lindex $result 0]
+			puts stdout "Got LDAPUserRegistry ConfigId is $ldapUserRegistryId\n"
+		} else {
+			puts stdout "LDAPUserRegistry ConfigId was not found\n"
+		}
+	}       
+        
+
+        set secMbean [$AdminControl queryNames type=SecurityAdmin,*]
+       
+	#set Attrs2 [list [list bindDN $ldapBindDn] [list bindPassword $ldapBindPassword]]        
+	set Attrs2 [list [list hosts [list [list [list host $ldapServer] [list port $ldapPort]]]]]
+        $AdminConfig modify $ldapUserRegistryId $Attrs2
+        $AdminConfig save 
+        forceSync
+}
+
+
