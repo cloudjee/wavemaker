@@ -291,7 +291,9 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 	    if (i == this.decoree.layers.length-1) {
 		this.decoree.onDoneClick();
 	    } else {
-		this.decoree.setLayerIndex(i+1);
+		for (i = i+1; i < this.decoree.layers.length; i++)
+		    if (this.decoree.layers[i].showing) break;
+		this.decoree.setLayerIndex(i);
 		var layer = this.decoree.getActiveLayer();
 		layer.focusFirstEditor();
 	    }
@@ -341,8 +343,11 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 	var i = this.decoree.layerIndex;
 	if (i == 0)
 	    this.decoree.onCancelClick();
-	else
-	    this.decoree.setLayerIndex(i-1);
+	else {
+	    for (i = i-1; i >= 0; i--)
+		if (this.decoree.layers[i].showing) break;
+	    this.decoree.setLayerIndex(i);
+	}
     },
     tabClicked: function(inLayer, e) {
 	if (this.decoree.isDesignLoaded()) return this.inherited(arguments);
