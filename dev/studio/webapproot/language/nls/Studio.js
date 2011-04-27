@@ -23,11 +23,11 @@
     /* Documentation; Help Menu */
     URL_TUTORIALS: "http://dev.wavemaker.com/wiki/bin/wmdoc/Tutorials",
     URL_DOCS: "http://dev.wavemaker.com/wiki/bin/wmdoc/",
-    URL_PROPDOCS: "http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/PropertyDocumentation",
+    URL_PROPDOCS: "http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/",
     URL_FORUMS: "http://dev.wavemaker.com/forums",
-    "MENU_ITEM_Tutorials" : "Tutorials",
+    "MENU_ITEM_TUTORIALS" : "Tutorials",
     "MENU_ITEM_DOCS" : "Documentation",
-    "MENU_ITEM_COMMUNITY" : "Community",
+    "MENU_ITEM_COMMUNITY" : "Forums",
     "MENU_ITEM_PROPDOCS" : "JavaScript (Client) Docs",
 
 
@@ -50,8 +50,6 @@
     SHORTCUTS_B: "Toggle layoutKind between left-to-right and top-to-bottom",
     SHORTCUTS_Z: "Undo",
 
-
-    DIALOG_WAIT_MESSAGE: 'Please wait...',
 
     /* Generate documentation */
     GENERATE_DOCUMENTATION_HEADER: "<i>Note: this page is for reviewing documentation; to edit documentation you must go to the component in the model and select its documentation property</i>",
@@ -79,7 +77,7 @@
 
 
     JSON_PENDING: "Pending Request: ${name}",
-    CONFIRM_LOGOUT: 'Are you sure you want to logout? Unsaved changes will be lost.',
+    CONFIRM_LOGOUT: 'Are you sure you want to logout? Unsaved changes will be lost.', /* Cloud version only */
     CONFIRM_OPEN_PAGE_LOSE_UNSAVED : "Are you sure you want to open page ${newPage}? Unsaved changes to ${oldPage} will be lost.",
     CONFIRM_CLOSE_PROJECT_LOSE_UNSAVED : "Are you sure you want to close project \"${projectName}\"? Unsaved changes will be lost.",
     WAIT_OPENING_PAGE: "Opening page: ${pageName}",

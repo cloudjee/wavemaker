@@ -936,7 +936,7 @@ dojo.declare("Studio", wm.Page, {
 			'<table class="wmWaitDialog"><tr><td>',
 				inNoThrobber ? '' : '<div class="wmWaitThrobber">&nbsp;</div>',
 				'<div class="wmWaitMessage">',
-		    inMsg || this.getDictionaryItem("DIALOG_WAIT_MESSAGE"),
+		    inMsg,//inMsg || this.getDictionaryItem("DIALOG_WAIT_MESSAGE"),
 				'</div>',
 				'<br />',
 			'</td></tr></table>',
