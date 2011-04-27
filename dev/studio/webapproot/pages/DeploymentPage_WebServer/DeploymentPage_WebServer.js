@@ -518,6 +518,7 @@ dojo.declare("DeploymentPage_WebServer", wm.Page, {
 		} else {
 			this.MainLayers.setLayer("RSCredentialLayer");
 		}
+		this.deploymentTarget = currentTarget.server;
     },
 
 	setTargetProperties: function() {
