@@ -134,6 +134,7 @@ wm.loadLibs([
 	"wm.base.widget.Layers.TabsDecorator",
 	"wm.base.widget.Layers.AccordionDecorator",
 	"wm.base.widget.Layers",
+	"wm.base.widget.Buttons.ToolButton",
 	"wm.base.widget.Buttons.Button",
 	"wm.base.widget.Buttons.ToggleButton",
 	"wm.base.widget.Buttons.RoundedButton",
