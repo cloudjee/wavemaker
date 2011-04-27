@@ -911,7 +911,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			params.rowNode = evt.target.parentNode.parentNode.parentNode.parentNode;
 			params.rowId = evt.target.parentNode.parentNode.parentNode.parentNode.gridRowIndex;
 			params.selectedItem = this.selectedItem;
-			params.fieldId = this.dojoObj.structure[0][evt.target.cellIndex].field;
+			params.fieldId = this.dojoObj.structure[0][evt.target.idx].field;
 			return params;
 		}
 		params.cellNode = evt.cellNode;
