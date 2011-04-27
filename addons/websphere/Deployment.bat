@@ -1,26 +1,28 @@
 @ECHO OFF
 
 echo ----
-echo action   = %1
-echo app name = %2
-echo ear file = %3
-echo host     = %4
-echo port     = %5
-echo user     = %6
-echo passwd   = %7
+echo action		= %1
+echo app name	= %2
+echo ear file	= %3
+echo host		= %4
+echo port		= %5
+echo user		= %6
+echo passwd		= %7
+echo jsr88 home = %8
 echo ----
 
-set DEBUG_OPT=-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
+@rem set DEBUG_OPT=-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
 
 set path=C:/IBMJava/java/bin;%path%
+set WSPATH=C:/src/dev/studio/webapproot/websphere
 
-set C_PATH=.;C:/JSR88/classes;C:/JSR88/properties;C:/JSR88/com.ibm.ws.admin.client_7.0.0.jar;C:/JSR88/com.ibm.ws.security.crypto.jar;
+set C_PATH=.;%WSPATH%/classes;%WSPATH%/properties;%WSPATH%/lib/com.ibm.ws.admin.client_7.0.0.jar;%WSPATH%/lib/com.ibm.ws.security.crypto.jar;
 
 set TRACE=-DtraceSettingsFile=TraceSettings.properties -Djava.util.logging.manager=com.ibm.ws.bootstrap.WsLogManager -Djava.util.logging.configureByServer=true
 
-set SOAPURL=-Dcom.ibm.SOAP.ConfigURL=file:C:/JSR88/properties/soap.client.props
-set SSLURL=-Dcom.ibm.SSL.ConfigURL=file:C:/JSR88/properties/ssl.client.props
+set SOAPURL=-Dcom.ibm.SOAP.ConfigURL=file:%WSPATH%/properties/soap.client.props
+set SSLURL=-Dcom.ibm.SSL.ConfigURL=file:%WSPATH%/properties/ssl.client.props
 
 java -version
 
-java -classpath "%C_PATH%" %SSLURL% %DEBUG_OPT% %TRACE% %SOAPURL% com.ec2was.clients.DeployEarFile %1 %2 %3 %4 %5 %6 %7
+java -classpath "%C_PATH%" %SSLURL% %TRACE% %SOAPURL% com.ec2was.clients.DeployEarFile %1 %2 %3 %4 %5 %6 %7 %8

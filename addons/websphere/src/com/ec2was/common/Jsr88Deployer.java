@@ -25,11 +25,12 @@ public class Jsr88Deployer {
     private String host;
 
 
-    public Jsr88Deployer(String host, String port, String userId, String password) {
+    public Jsr88Deployer(String host, String port, String userId, String password, String jsr88Home) {
 
         try {
             // Get the DeploymentFactory implementation class from the MANIFEST.MF file.
-            File jsr88Jar = new File("C:/JSR88/com.ibm.ws.admin.client_7.0.0.jar");
+            //File jsr88Jar = new File("C:/JSR88/com.ibm.ws.admin.client_7.0.0.jar");
+            File jsr88Jar = new File(jsr88Home + "/lib", "com.ibm.ws.admin.client_7.0.0.jar");
             JarFile jarFile = new JarFile(jsr88Jar);
             Manifest manifest = jarFile.getManifest();
             Attributes attributes = manifest.getMainAttributes();

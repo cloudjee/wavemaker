@@ -35,13 +35,14 @@ public class DeployEarFile {
         String port     = args[4]; // soap port number
         String userId   = args[5]; // WAS user id
         String password = args[6]; // WAS password
+        String jsr88Home = args[7]; // jsr88 home
 
         String saction = action.substring(0, 1).toUpperCase() + action.substring(1);
         System.out.println("Starting " + saction + " in a separate process...");
 
        // start deployment
 
-        Jsr88Deployer deployer = new Jsr88Deployer(host, port, userId, password);
+        Jsr88Deployer deployer = new Jsr88Deployer(host, port, userId, password, jsr88Home);
 
         if (action.equalsIgnoreCase("deploy")) {
             stateType = deployer.deploy(target, earFile);
