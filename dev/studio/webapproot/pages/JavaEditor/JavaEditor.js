@@ -60,6 +60,7 @@ dojo.declare("JavaEditor", wm.Page, {
 	this.saveComplete();
     },
     onSaveError: function() {
+	studio.endWait();
 	studio.project.setMetaDataFlag("service_invalid_" + this.javaService.getRuntimeId(), true);
 
 	dojo.addClass(this.javaService._studioTreeNode.domNode, "Error");
@@ -202,6 +203,7 @@ dojo.declare("JavaEditor", wm.Page, {
 		}
 	},
 	refreshButtonCallback: function(inData) {
+	    studio.endWait(this.getDictionaryItem("WAIT_RELOAD"));
 		this.openJavaClassCallback(inData);
             wm.onidle(this, function() {
 		studio.javaService.requestAsync("saveClass",
