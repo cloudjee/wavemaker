@@ -19,6 +19,8 @@ dojo.provide("wm.studio.app.mainNavigation");
 
 Studio.extend({
 	navGotoDesignerClick: function() {
+	    if (!this.tabs) return;
+
 		this.disableMenuBar(false);
 	        //this.disableCanvasOnlyMenuItems(false);
 	        //this.toggleCanvasSourceBtns(true, false);
