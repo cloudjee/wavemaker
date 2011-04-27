@@ -17,7 +17,6 @@ ALERT_ROLE_EXISTS: "Role already exists, please type in another one!",
 ALERT_JOSSO_ONLY_ONE_ROLE: "JOSSO only allows one role.  Delete existing role before entering new one.",
 
 ALERT_ROLE_EMPTY: "Role field cannot be empty!",
-JOSSO_DETAILS: "<%--\n  ~ JOSSO: Java Open Single Sign-On\n  ~\n  ~ Copyright 2004-2009, Atricore, Inc.\n  ~\n  ~ This is free software; you can redistribute it and/or modify it\n  ~ under the terms of the GNU Lesser General Public License as\n  ~ published by the Free Software Foundation; either version 2.1 of  \n~ the License, or (at your option) any later version.  \n~  \n~ This software is distributed in the hope that it will be useful,  \n~ but WITHOUT ANY WARRANTY; without even the implied warranty of  \n~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU  \n~ Lesser General Public License for more details.  \n~  ~ You should have received a copy of the GNU Lesser General Public  \n~ License along with this software; if not, write to the Free  \n~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  \n~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.  \n~  \n--%>\n\n<%@page contentType=\"text/html; charset=UTF-8\" language=\"java\" session=\"true\" %>\n<%\n response.sendRedirect(request.getContextPath() + \"/josso_login/\");\n%>",
 DEMO_USER_USERNAME: "Username",
 DEMO_USER_PASSWORD: "Password",
 DEMO_USER_ROLE: "Role"
