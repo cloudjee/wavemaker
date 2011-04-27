@@ -32,8 +32,10 @@ wm.dialog.getNextZIndex = function(isDesignLoaded, optionalThis) {
 
     for (var i = 0; i < wm.dialog.showingList.length; i++) {
 	if (!isDesignLoaded || isDesignLoaded && wm.dialog.showingList[i]._isDesignLoaded) {
-	    if (!optionalThis || wm.dialog.showingList[i] != this)
-		index = Math.max(index, wm.dialog.showingList[i].domNode.style.zIndex);
+	    if (wm.dialog.showingList[i] instanceof wm.Toast == false) {
+		if (!optionalThis || wm.dialog.showingList[i] != this)
+		    index = Math.max(index, wm.dialog.showingList[i].domNode.style.zIndex);
+	    }
 	}
     }
     return index+5;

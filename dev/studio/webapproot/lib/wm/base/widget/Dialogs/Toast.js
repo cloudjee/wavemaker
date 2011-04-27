@@ -65,8 +65,10 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
 	}
 
         this.inherited(arguments);
-        if (inShow)
+        if (inShow) {
             this.renderBounds();
+	    this.domNode.style.zIndex = 1000;
+	}
     },
     renderBounds: function() {
         this.renderBoundsByCorner();
