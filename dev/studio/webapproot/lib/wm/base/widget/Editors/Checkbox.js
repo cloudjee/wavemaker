@@ -75,12 +75,21 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 	    else
 		return Boolean(this.dataValue);
 	},
+
+    // pass in the false parameer so that there is no delayed firing of side-effects to the checking of the checkbox; fire our own changed event
+    // handler instead so that it onchange fires now.
 	setChecked: function(inChecked) {
-		this.editor.set('checked',inChecked);
+	    this.editor.set('checked',inChecked, false);
+	    if (!this._cupdating)
+		this.changed();
 	},
 	captionClicked: function() {
-	        if (!this.readonly && !this.disabled && !this.isDesignLoaded())
-			this.setChecked(!this.getChecked());
+	    if (!this.readonly && !this.disabled && !this.isDesignLoaded()) {
+		var isChecked = this.getChecked();
+		wm.onidle(this, function() {
+		    this.setChecked(!isChecked);
+		});
+	    }
 	},
 	getDisplayValue: function() {
 		return this.getTypedValue(this.displayValue);
