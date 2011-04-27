@@ -28,7 +28,7 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 		this.updateSelect(this.pathTypeInput, [this.IMPORT_TYPE_URL]);
 		this.pathTypeInput.setValue("displayValue", this.IMPORT_TYPE_URL);
 		this.schemaFileRadioInputChange();
-		this.schemaTextRadioInputChange();
+	    //this.schemaTextRadioInputChange();
 	},
 	updateSelect: function(inSelect, inData) {
 		var s = inSelect, o;
@@ -215,7 +215,7 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 			this.xml2SchemaButton.setDisabled(b);
 		} else {
 			this.schemaFileRadioInputChange();
-			this.schemaTextRadioInputChange();
+		    //this.schemaTextRadioInputChange();
 		}
 	},
 	isSchemaFileRadioSelected: function() {
