@@ -587,6 +587,9 @@ wm.Array.removeElement = function(inArray, inElement) {
     return inArray; 
 }
 
+wm.Array.insertElementAt = function(inArray, inElement, inIndex) {
+    inArray.splice(inIndex, 0, inElement);
+}
 
 wm.Array.equals = function(a, b,optionalCallback) {
     if (a == b) return true;
