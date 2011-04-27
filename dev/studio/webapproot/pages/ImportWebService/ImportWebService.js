@@ -23,12 +23,12 @@ dojo.declare("ImportWebService", wm.Page, {
 	TYPE_REST_WSDL: "REST (WSDL / WADL)",
         TYPE_REST_BUILDER: null,
 	TYPE_FEED: "Feed",
-	TYPE_SALESFORCE: "SOAP-Salesforce", //xxx
+    //TYPE_SALESFORCE: "SOAP-Salesforce", //xxx
 	IMPORT_TYPE_URL: "URL",
 	IMPORT_TYPE_FILE: "File",
 	start: function() {
 	        this.TYPE_REST_BUILDER = this.getDictionaryItem("REST_BUILDER");
-		this.updateSelect(this.typeInput, [this.TYPE_SOAP, this.TYPE_REST_WSDL, this.TYPE_REST_BUILDER, this.TYPE_FEED, this.TYPE_SALESFORCE]); //xxx
+		this.updateSelect(this.typeInput, [this.TYPE_SOAP, this.TYPE_REST_WSDL, this.TYPE_REST_BUILDER, this.TYPE_FEED/*, this.TYPE_SALESFORCE*/]); //xxx
 		this.typeInput.setValue("displayValue", this.TYPE_SOAP);
 		this.updateSelect(this.wsdlPathTypeInput, [this.IMPORT_TYPE_URL, this.IMPORT_TYPE_FILE]);
 		this.wsdlPathTypeInput.setValue("displayValue", this.IMPORT_TYPE_URL);
@@ -66,6 +66,7 @@ dojo.declare("ImportWebService", wm.Page, {
 			this.serviceIdAutoYesRadio.components.editor.setChecked(true);
 			this.serviceIdInput.clear();
 			//this.serviceIdInput.setDisabled(true);
+/*
 		} else if (inValue == this.TYPE_SALESFORCE) { //xxx
 			this.layers.setLayer("wsdlLayer");
 			this.wsdlPathTypeInput.setCaption("WSDL");
@@ -77,6 +78,7 @@ dojo.declare("ImportWebService", wm.Page, {
 			this.serviceIdAutoNoRadio.components.editor.setChecked(true);
 			this.serviceIdInput.setDataValue("salesforceService");
 			this.serviceIdInput.setDisabled(true);
+			*/
 		} else if (inValue == this.TYPE_REST_WSDL) {
 			this.layers.setLayer("wsdlLayer");
 			this.wsdlPathTypeInput.setCaption("WSDL / WADL");
@@ -97,7 +99,7 @@ dojo.declare("ImportWebService", wm.Page, {
 	importButtonClick: function(inSender) {
 		this.serviceId = null;
 		var t = this.typeInput.getValue("displayValue");
-		if (t == this.TYPE_SOAP || t == this.TYPE_REST_WSDL || t == this.TYPE_SALESFORCE) {
+		if (t == this.TYPE_SOAP || t == this.TYPE_REST_WSDL/* || t == this.TYPE_SALESFORCE*/) {
 			this.importWSDL(false);
 		} else if (t == this.TYPE_FEED) {
 			if (wm.services.byName["FeedService"]) {
@@ -190,9 +192,10 @@ dojo.declare("ImportWebService", wm.Page, {
 		this.wsdlUrlInput.setShowing(b);
 	},
 	serviceIdAutoYesRadioChange: function(inSender, inDisplayValue, inDataValue) {
-		if (this.typeInput.getValue("displayValue") != this.TYPE_SALESFORCE) { //xxx
+	    /*if (this.typeInput.getValue("displayValue") != this.TYPE_SALESFORCE) { //xxx
 			this.serviceIdInput.setDisabled(inDataValue == 1);
-		}
+		}*/
+			this.serviceIdInput.setDisabled(inDataValue == 1);
 	},
 	_end: 0
 });
