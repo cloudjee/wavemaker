@@ -33,7 +33,7 @@ HandleRequiredJars.widgets = {
 							   buttonCaption: "Upload",
 							   service: "studioService",
 							   operation: "uploadJar"},
-				   {onSuccess: "onSuccess"}],
+				   {onSuccess: "onSuccess", onError: "onError"}],
 		}],
 
 

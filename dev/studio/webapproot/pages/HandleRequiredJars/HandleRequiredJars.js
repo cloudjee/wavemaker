@@ -44,6 +44,9 @@ dojo.declare("HandleRequiredJars", wm.Page, {
 	    }
 	}
     },
+    onError: function(inSender) {
+	app.alert(this.getDictionaryItem("ONERROR"));
+    },
     done: function() {
 	this.close();
 	window.location.reload(true);
