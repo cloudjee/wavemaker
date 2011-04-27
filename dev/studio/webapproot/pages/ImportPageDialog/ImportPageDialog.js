@@ -63,6 +63,8 @@ dojo.declare("ImportPageDialog", wm.Page, {
 		this.projectList.deselectAll();
 		this.panesList.clear();
 		wm.fire(this.owner, "dismiss", ["OK"]);
+	    app.toastSuccess(this.getDictionaryItem("TOAST_SUCCESS", {pageName: this.destPageName.getDataValue(),
+								      currentPageName: studio.project.pageName}));
 		return inResponse;
 	},
 	copyPaneError: function(error) {
