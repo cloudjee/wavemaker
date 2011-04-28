@@ -70,7 +70,8 @@ wm.loadLibs([
 	"wm.base.components.DataModel",
 	"wm.base.components.Query",
 	"wm.base.components.JavaService",
-	"wm.base.components.WebService"
+    "wm.base.components.WebService",
+    "wm.base.widget.AceEditor"
 ]);
 
 // Designer

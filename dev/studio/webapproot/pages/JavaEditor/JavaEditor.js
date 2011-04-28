@@ -276,19 +276,13 @@ dojo.declare("JavaEditor", wm.Page, {
 	this.javaCodeEditor.showHelp();
     },
     toggleWrapClick: function() {
-	this._editAreaWrapping = (this._editAreaWrapping == undefined) ? false : !this._editAreaWrapping;
-	this.javaCodeEditor.setWordWrap(this._editAreaWrapping);
+	this.javaCodeEditor.toggleWordWrap();
     },
     findClick: function() {
 	this.javaCodeEditor.showSearch();
     },
     formatClick: function() {
-	try {
-	    wm.conditionalRequire("lib.github.beautify", true);
-	} catch(e){}
-	var start = editAreaLoader.getSelectionRange(this.javaCodeEditor.area.textarea.id).start;
-	this.javaCodeEditor.setText(js_beautify(this.javaCodeEditor.getText()));
-	this.javaCodeEditor.setSelectionRange(start, start);
+	studio.formatScript(this.javaCodeEditor);
     },
     onCtrlKey: function(inSender, letter) {
 	switch(letter.toLowerCase()) {

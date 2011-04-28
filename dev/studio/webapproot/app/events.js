@@ -152,12 +152,12 @@ eventCopy = function(editor,oldName, newName) {
 
 
 caretToEvent = function(name, editor) {
-	var r = new RegExp("[\\s\\S]*" + name + ": function\\([\\s\\S]*?{[\\s\\S]*?\\n[^\\n\\r\\S]*(try[\\s\\n]*{[\\s\\n]*)?", "m");
+	var r = new RegExp("[\\s\\S]*" + name + ": function\\([\\s\\S]*?{[\\s\\S]*?\\n[^\\n\\r\\S]*(try[\\s\\n]*{\\s*?\\n)?", "m");
 
 	var t = editor.getText();
 	var m = t.match(r);
 	if (m)
-		editor.setSelectionRange(m[0].length);
+	    editor.setCursorPositionInText(m[0].length);
 }
 
 /*setCaretPosition = function(ctrl, pos){

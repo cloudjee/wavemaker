@@ -93,8 +93,9 @@ Studio.extend({
     },
 	    getTreeComponents: function(inComponents, inExcludeTypes, inIncludeTypes) {
 		var list = {}, c;
-		for (var i in inComponents) {
+		for (var i in inComponents) { 
 			c = inComponents[i];
+		    if (typeof(c) == "function") continue; // The ACE editor changed how IE sees some objects; must filter out non-properties
 			//if (!(inExcludeType && (c instanceof inExcludeType)))
 		    if (inExcludeTypes) {
 			if (!(this._instanceOf(c, inExcludeTypes)))
@@ -310,7 +311,7 @@ Studio.extend({
 	return false;
     },
 	componentToTree: function(inNode, inComponent, inType) {
-		if (inComponent && !inComponent.flags.notInspectable && (!inType || inComponent instanceof inType)) {
+	    if (inComponent && (!inComponent.flags || !inComponent.flags.notInspectable) && (!inType || inComponent instanceof inType)) {
 		    var props = {};
 		    props.closed = true;
 		    inNode = wm.fire(inComponent, "preNewComponentNode", [inNode, props]) || inNode;
@@ -338,12 +339,12 @@ Studio.extend({
 	componentsToTree: function(inNode, inComponents, inType) {
 	    var n = [], cn;
 	    if (!this.useHierarchy) {
-		for (cn in inComponents) { n.push(cn); }
+		for (cn in inComponents) { if (typeof(inComponents[cn] != "function")) n.push(cn); } // The ACE editor changed how IE sees some objects; must filter out non-properties
 		n.sort();
 		for (var i=0; (cn=n[i]); i++)
 		    this.componentToTree(inNode, inComponents[cn], inType);
 	    } else {
-		for (cn in inComponents) { n.push(inComponents[cn]); }
+		for (cn in inComponents) { if (typeof(inComponents[cn] != "function")) n.push(inComponents[cn]); }// The ACE editor changed how IE sees some objects; must filter out non-properties
 		n.sort(function(a,b) {
 		    if (a.declaredClass > b.declaredClass) return 1;
 		    if (a.declaredClass < b.declaredClass) return -1;
@@ -369,7 +370,7 @@ Studio.extend({
 	},
 	componentsToTree_rev: function(inNode, inComponents, inTypes, inType) {
 		var n = [], cn;
-		for (cn in inComponents) { n.push(cn); }
+	    for (cn in inComponents) { if (typeof(inComponents[cn]) != "function") n.push(cn); } // The ACE editor changed how IE sees some objects; must filter out non-properties
 		n.sort();
 		for (var i=0; (cn=n[i]); i++) {
 			var comp = inComponents[cn];

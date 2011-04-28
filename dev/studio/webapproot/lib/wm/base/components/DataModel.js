@@ -243,6 +243,7 @@ dojo.declare("wm.DataModelLoader", null, {
 		var cs = [];
 		studio.dataService.requestSync("getDataModelNames", null, function(inData) {
 			for (var i in inData) {
+			    if (typeof(inData[i]) != "function") { /* Fixes bug introduced by changes to JS objects by the ACE editor; affects IE 8 only */
 				var n = inData[i];
 			        studio.dataService.requestSync(LOAD_CONNECTION_PROPS_OP, [n], function(inResponse) {
 				    if (inResponse.driverClassName == "oracle.jdbc.driver.OracleDriver" && studio.isJarMissing("ojdbc.jar")) {
@@ -253,6 +254,7 @@ dojo.declare("wm.DataModelLoader", null, {
 				});
 				var c = new wm.DataModel({name: n, dataModelName: n});
 				cs.push(c);
+			    }
 			}
 		});
 		return cs;

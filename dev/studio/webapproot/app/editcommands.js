@@ -32,55 +32,59 @@ Studio.extend({
 	studio.markupEditArea.showHelp();
     },
 
+/*
     validateScriptCheckboxChange: function(inSender) {
 	dojo.cookie(this.scriptPageCompileChkBtn.getRuntimeId(), inSender.getChecked());
     },
-
+    */
 
 	saveScriptClick: function() {
+/*
 	    if (this.scriptPageCompileChkBtn.getChecked()) 
 		this.validateScriptClick();
+		*/
 	    studio.saveAll(studio.project);
 	    //this.waitForCallback(bundleDialog.M_SavingScript + this.project.projectName, dojo.hitch(this.project, "saveScript"));
 	},
         saveAppSrcClick: function() {
+/*
 	    if (this.appsrcPageCompileChkBtn.getChecked()) 
 		this.validateAppScriptClick();
+		*/
 	    //this.waitForCallback(bundleDialog.M_SavingAppScript + this.project.projectName, dojo.hitch(this.project, "saveAppScript"));
 	    studio.saveAll(studio.project);
 	},
 
 
     toggleWrapScriptClick: function() {
-	this._editAreaScriptWrapping = (this._editAreaScriptWrapping == undefined) ? false : !this._editAreaScriptWrapping;
-	this.editArea.setWordWrap(this._editAreaScriptWrapping);
+	this.editArea.toggleWordWrap();
     },
     toggleWrapAppScriptClick: function() {
-	this._editAreaAppScriptWrapping = (this._editAreaAppScriptWrapping == undefined) ? false : !this._editAreaAppScriptWrapping;
-	this.appsourceEditor.setWordWrap(this._editAreaAppScriptWrapping);
+	this.appsourceEditor.toggleWordWrap();
     },
     toggleWrapCssClick: function() {
-	this._editAreaCssWrapping = (this._editAreaCssWrapping == undefined) ? false : !this._editAreaCssWrapping;
-	this.cssEditArea.setWordWrap(this._editAreaCssWrapping);
-	this.appCssEditArea.setWordWrap(this._editAreaCssWrapping);
+	this.cssEditArea.toggleWordWrap();
+	this.appCssEditArea.toggleWordWrap();
     },
     toggleWrapMarkupClick: function() {
-	this._editAreaMarkupWrapping = (this._editAreaMarkupWrapping == undefined) ? false : !this._editAreaMarkupWrapping;
-	this.markupEditArea.setWordWrap(this._editAreaMarkupWrapping);
+	this.markupEditArea.toggleWordWrap();
     },
 
     scriptEditorCtrlKey: function(inSender, letter) {
 	switch(letter.toLowerCase()) {
 	case "s":
 	    return this.saveScriptClick();
-	case "e":
-	    return this.validateScriptClick();
+/*	case "e":
+	    return this.validateScriptClick();*/
 	case "i":
 	    return this.formatScriptClick();
+/*
 	case "o":
 	    return this.toggleWrapScriptClick();
+
 	case "g":
 	    return this.editArea.promptGotoLine();
+	    */
 	case ".":
 	    return this.listCompletions();
 	}
@@ -89,14 +93,18 @@ Studio.extend({
 	switch(letter.toLowerCase()) {
 	case "s":
 	    return this.saveAppSrcClick();
+/*
 	case "e":
 	    return this.validateAppScriptClick();
+	    */
 	case "i":
 	    return this.formatAppScriptClick();
+/*
 	case "o":
 	    return this.toggleWrapAppScriptClick();
 	case "g":
 	    return this.appsourceEditor.promptGotoLine();
+	    */
 	}
     },
     cssEditorCtrlKey: function(inSender, letter) {
@@ -107,10 +115,12 @@ Studio.extend({
 	    break;
 	case "i":
 	    break;
+/*
 	case "o":
 	    return this.toggleWrapCssClick();
 	case "g":
 	    return this.cssEditArea.promptGotoLine();
+	    */
 	}
     },
     markupEditorCtrlKey: function(inSender, letter) {
@@ -122,9 +132,9 @@ Studio.extend({
 	case "i":
 	    break;
 	case "o":
-	    return this.toggleWrapMarkupClick();
+	    break;
 	case "g":
-	    return this.markupEditArea.promptGotoLine();
+	    break;
 	}
     },
 
@@ -143,6 +153,7 @@ Studio.extend({
 	studio.markupEditArea.showSearch();
     },
 
+/*
     validateScriptClick: function() {
 	this.validate(this.editArea.getText(), this.editArea, this.scriptPageCompileBtn);
     },
@@ -213,49 +224,40 @@ Studio.extend({
 					    });
 
     },
-
-
-
+    */
     formatScriptClick: function() {
+	this.formatScript(this.editArea);
+    },
+    formatAppScriptClick: function() {
+	this.formatScript(this.appsourceEditor);
+    },
+
+    formatScript: function(inEditor) {
 	try {
 	    wm.conditionalRequire("lib.github.beautify", true); 
 	} catch(e){}
-	var start = editAreaLoader.getSelectionRange(this.editArea.area.textarea.id).start;
-	var end = editAreaLoader.getSelectionRange(this.editArea.area.textarea.id).end;
-	var seltext = this.editArea.getSelectedText() ;
-	var text = this.editArea.getText();
 
-	// If selected text, select all the way to the start of the line
+	var seltext = inEditor.getSelectedText();
 	if (seltext) {
-	    for (var i = start; i >=0; i--) {
-		if (text.charAt(i) == "\n") {
-		    i++;
-		    break;
-		}
-	    }
-	    this.editArea.setSelectionRange(i,end);
-	    seltext = this.editArea.getSelectedText();
+	    var selRange = inEditor.getSelectionRange();
+	    selRange.start.column = 0;
+	    selRange.end.column = 1000; // will go to the last available column
+	    inEditor.setSelectionRange(selRange.start.row,selRange.start.column,selRange.end.row,selRange.end.column);
+	    seltext = inEditor.getSelectedText();
+	    var text = inEditor.getText();
+
+	    // get the amount of space currently at the start of the line so we can maintain that spacing
 	    var spaces = seltext.match(/^\s*/);
 	    spaces = spaces[0] || "";
 	    seltext = js_beautify(seltext);
 	    seltext = spaces + seltext.replace(/\n/g, "\n" + spaces);
-	    this.editArea.replaceSelectedText(seltext);	    
+	    inEditor.replaceSelectedText(seltext);	    
 	} else {
-	    text = js_beautify(text);
-	    this.editArea.setText(text);
-	    this.editArea.setSelectionRange(start, start);
+	    var text = js_beautify(inEditor.getDataValue());
+	    inEditor.setText(text);
+	    inEditor.setCursorPosition(0,0);
 	}
     },
-    formatAppScriptClick: function() {
-	try {
-	    wm.conditionalRequire("lib.github.beautify", true); 
-	} catch(e){}
-	var start = editAreaLoader.getSelectionRange(this.appsourceEditor.area.textarea.id).start;
-	this.appsourceEditor.setText(js_beautify(this.appsourceEditor.getText()));
-	this.appsourceEditor.setSelectionRange(start, start);
-    },
-
-
 
     refreshScriptClick: function() {
 	app.confirm(this.getDictionaryItem("CONFIRM_REFRESH_SCRIPT"), false, dojo.hitch(this, function() {
@@ -279,10 +281,11 @@ Studio.extend({
 	this.beginBind(this.getDictionaryItem("TITLE_IMPORT_JAVASCRIPT"), studio.cssEditArea, "css");
     },
 
+/*
     cssShow: function() {
 	this.appCssEditArea.render();
     },
-
+    */
 /*
     getListCompletionTestObject: function(text) {
 	console.log("TEST:" + text);
@@ -303,7 +306,6 @@ Studio.extend({
     },
     */
     getListCompletionTestObject: function(text) {
-	console.log("TEST:" + text);
 	if (text.match(/^this\.?$/)) return studio.page;
 	text = text.replace(/^this\./,"");
 	return studio.page.getValue(text);
@@ -670,8 +672,13 @@ Studio.extend({
 		var data = this.autoCompletionList.selectedItem.getData();
 		text = text.replace(/\.?\s*$/, "." + data.name + (data.params || ""));
 
-		if (!this.editArea.getSelectedText())
-		    this.editArea.getTextBeforeCursor(true);
+		if (!this.editArea.getSelectedText()) {
+		    var pos = this.editArea.getCursorPosition();
+		    this.editArea.setSelectionRange(pos.row, 0, pos.row,pos.column);
+		    var replaceText = this.editArea.getSelectedText();
+		    var replaceTextTrim = replaceText.replace(/^\s*/,"");
+		    this.editArea.setSelectionRange(pos.row, replaceText.length-replaceTextTrim.length, pos.row,pos.column);
+		}
 
 		this.editArea.replaceSelectedText(text);
 		this.listCompletions();

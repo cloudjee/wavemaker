@@ -153,8 +153,8 @@ dojo.declare("Studio", wm.Page, {
 	    this.helpDialog.containerWidget.c$[0].setPadding("0");
 	    this.helpDialog.containerWidget.c$[0].setBorder("10");
 	    this.helpDialog.containerWidget.c$[0].setBorderColor("#424959");
-	    this.scriptPageCompileChkBtn.setChecked(dojo.cookie(this.scriptPageCompileChkBtn.getRuntimeId()) == "true");
-	    this.appsrcPageCompileChkBtn.setChecked(dojo.cookie(this.scriptPageCompileChkBtn.getRuntimeId()) == "true");
+	    //this.scriptPageCompileChkBtn.setChecked(dojo.cookie(this.scriptPageCompileChkBtn.getRuntimeId()) == "true");
+	    //this.appsrcPageCompileChkBtn.setChecked(dojo.cookie(this.scriptPageCompileChkBtn.getRuntimeId()) == "true");
 
 	    // attempt to allow autoscroll while killing the left-to-right scrolling
 	    dojo.connect(studio.tree, "renderCss", studio.tree, function() {

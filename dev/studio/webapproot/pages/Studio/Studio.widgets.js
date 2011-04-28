@@ -391,7 +391,7 @@ Studio.widgets = {
 						sourceLogoBottomHolder: ["wm.Panel", {width: "221px", border: "0"}, {}]
 					}],*/
 					sourceTabs: ["wm.TabLayers", {border: "0", width: "100%", height: "100%",clientBorder: "4,0,0,0", clientBorderColor: "#959DAB"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {
-					    scriptLayer: ["wm.Layer", {caption: "Script"}, {}, {
+					    scriptLayer: ["wm.Layer", {caption: "Script"}, {onShow: "editArea.focus"}, {
 						scriptRibbon: ["wm.Panel", {height: "29px", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#000000"}, {}, {
 						    scriptPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Save", imageIndex: 8}, {onclick: "saveScriptClick"}],
 						    scriptPageFindBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findScriptClick"}],
@@ -399,15 +399,15 @@ Studio.widgets = {
 						    scriptPageRefreshBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Refresh from Server", imageIndex: 27}, {onclick: "refreshScriptClick"}],
 						    scriptPageFormatBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Reformat Code", imageIndex: 29}, {onclick: "formatScriptClick"}],
 						    scriptPageWordWrapBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Toggle Line Wrapping", imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapScriptClick"}],
-						    scriptPageCompileBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Validation", imageIndex: 28}, {onclick: "validateScriptClick"}],
+						    /*scriptPageCompileBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Validation", imageIndex: 28}, {onclick: "validateScriptClick"}],*/
 						    scriptPageCompletionsBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Auto Completion", imageIndex: 7, imageList: "canvasToolbarImageList16"}, {onclick: "listCompletions"}],
 						    scriptPageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Help", imageIndex: 26}, {onclick: "showEditorHelp"}],
-						    scriptToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
-						    scriptPageCompileChkBtn: ["wm.Checkbox", {caption: "Validate on Save", width: "120px"}, {onchange: "validateScriptCheckboxChange"}]
+						    scriptToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}]/*,
+						    scriptPageCompileChkBtn: ["wm.Checkbox", {caption: "Validate on Save", width: "120px"}, {onchange: "validateScriptCheckboxChange"}]*/
 						}],
-						editArea: ["wm.EditArea", {width: "100%", height: "100%"}, {onCtrlKey: "scriptEditorCtrlKey", onKeyDown: "setEditAreaDirty"}]
+						editArea: ["wm.AceEditor", {width: "100%", height: "100%"}, {onCtrlKey: "scriptEditorCtrlKey", onKeyDown: "setEditAreaDirty"}]
 					    }],
-					    cssLayer: ["wm.Layer", {caption: "CSS"}, {onShow: "cssShow"}, {
+					    cssLayer: ["wm.Layer", {caption: "CSS"}, {onShow: "cssEditArea.focus"}, {
 						cssRibbon: ["wm.Panel", {height: "29px", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4"}, {}, {
 						    cssPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Save", imageIndex: 8}, {onclick: "saveCssClick"}],
 						    cssPageFindBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findCssClick"}],
@@ -420,16 +420,16 @@ Studio.widgets = {
 						cssPageLabel: ["wm.Label", {caption: "Page CSS", height: "18px", border: 0}, {}, {
 						    format: ["wm.DataFormatter", {}, {}]
 						}],
-						cssEditArea: ["wm.EditArea", {width: "100%", height: "100%", syntax: "css"}, {onCtrlKey: "cssEditorCtrlKey", onKeyDown: "setEditAreaDirty"}],
+						cssEditArea: ["wm.AceEditor", {width: "100%", height: "100%", syntax: "css"}, {onCtrlKey: "cssEditorCtrlKey", onKeyDown: "setEditAreaDirty"}],
 						cssSplitter: ["wm.Splitter", {layout: "bottom"}, {}],
 						cssInnerPanel: ["wm.Panel", {width: "100%", height: "300px", layoutKind: "top-to-bottom"},{}, {
 						cssAppLabel: ["wm.Label", {caption: "Application CSS", height: "18px", border: 0}, {}, {
 						    format: ["wm.DataFormatter", {}, {}]
 						}],
-						appCssEditArea: ["wm.EditArea", {width: "100%", height: "100%", syntax: "css"}, {onCtrlKey: "cssEditorCtrlKey", onKeyDown: "setEditAreaDirty"}]
+						appCssEditArea: ["wm.AceEditor", {width: "100%", height: "100%", syntax: "css"}, {onCtrlKey: "cssEditorCtrlKey", onKeyDown: "setEditAreaDirty"}]
 					    }]
                                         }],
-						markupLayer: ["wm.Layer", {caption: "Markup"}, {}, {
+						markupLayer: ["wm.Layer", {caption: "Markup"}, {onShow: "markupEditArea.focus"}, {
 							markupRibbon: ["wm.Panel", {height: "29px", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4"}, {}, {
 							    markupPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Save", imageIndex: 8}, {onclick: "saveMarkupClick"}],
 							    markupPageFindBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findMarkupClick"}],
@@ -438,28 +438,28 @@ Studio.widgets = {
 							    markupToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
 							    markupLogoBottomHolder: ["wm.Panel", {width: "221px", border: "0"}, {}]
 							}],
-							markupEditArea: ["wm.EditArea", {width: "100%", height: "100%", syntax: "html"}, {onCtrlKey: "markupEditorCtrlKey", onKeyDown: "setEditAreaDirty"}]
+							markupEditArea: ["wm.AceEditor", {width: "100%", height: "100%", syntax: "html"}, {onCtrlKey: "markupEditorCtrlKey", onKeyDown: "setEditAreaDirty"}]
 						}],
 					    widgets: ["wm.Layer", {caption: "Widgets"}, {}, {
 							widgetsHtml: ["wm.Html", {width: "100%", height: "100%", border: 0, padding: "4, 0, 0, 4"}, {}]
 						}],
-						appsource: ["wm.Layer", {caption: "Application"}, {}, {
+						appsource: ["wm.Layer", {caption: "Application"}, {onShow: "appsourceEditor.focus"}, {
 						    appsrcRibbon: ["wm.Panel", {height: "29px", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#000000"}, {}, {
 							appsrcPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Save", imageIndex: 8}, {onclick: "saveAppSrcClick"}],
 							appsrcPageFindBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findAppScriptClick"}],
 							appsrcPageImportBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Import JS Resource", imageIndex: 25}, {onclick: "importAppJavascriptLibrary"}],
 						    appsrcPageFormatBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Reformat Code", imageIndex: 29}, {onclick: "formatAppScriptClick"}],
 						    appsrcPageWordWrapBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Toggle Line Wrapping", imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapAppScriptClick"}],
-							appsrcPageCompileBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Validation", imageIndex: 28,iconWidth: "20px", iconHeight: "20px"}, {onclick: "validateAppScriptClick"}],
+							/*appsrcPageCompileBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Validation", imageIndex: 28,iconWidth: "20px", iconHeight: "20px"}, {onclick: "validateAppScriptClick"}],*/
 						    appsrcPageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Help", imageIndex: 26}, {onclick: "showAppScriptEditorHelp"}],
-						    scriptToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
-						    appsrcPageCompileChkBtn: ["wm.Checkbox", {caption: "Validate on Save", width: "120px"}, {onchange: "validateScriptCheckboxChange"}]
+						    scriptToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}]/*,
+							appsrcPageCompileChkBtn: ["wm.Checkbox", {caption: "Validate on Save", width: "120px"}, {onchange: "validateScriptCheckboxChange"}]*/
 
 						}],
 
 						        appsourceHtml: ["wm.Html", {width: "100%", height: "300px", border: 0, padding: "4, 0, 0, 4"}, {}],
 						        appsourceSplitter: ["wm.Splitter", {layout: "bottom"}, {}],
-						        appsourceEditor: ["wm.EditArea", {width: "100%", height: "100%"}, {onCtrlKey: "appScriptEditorCtrlKey", onKeyDown: "setEditAreaDirty"}]
+						        appsourceEditor: ["wm.AceEditor", {width: "100%", height: "100%"}, {onCtrlKey: "appScriptEditorCtrlKey", onKeyDown: "setEditAreaDirty"}]
 
 						}],
                                             themeLayer: ["wm.Layer", {_classes: {domNode: ["wm-darksnazzy"]}, caption: "Themes", width: "100%", height: "100%"}, {}, {

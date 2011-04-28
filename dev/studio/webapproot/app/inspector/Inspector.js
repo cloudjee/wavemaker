@@ -590,8 +590,11 @@ dojo.declare("wm.GroupInspector", wm.Inspector, {
 		    if (name != "method")
 			g.push(p);
 		}));
-		for (var i in groups)
+	    for (var i in groups) {
+		if (typeof(groups[i]) != "function") {
 			groupsArray.push({name: i, props: groups[i]});
+		}
+	    }
 		return groupsArray;
 	},
 	sortGroups: function(inGroups) {

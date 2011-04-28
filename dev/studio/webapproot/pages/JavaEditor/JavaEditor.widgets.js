@@ -40,7 +40,7 @@ JavaEditor.widgets = {
 		editorContainer: ["wm.Panel", {border: "0", width: "100%", layoutKind: "left-to-right", height: "100%"}, {}, {
 			panel6: ["wm.Panel", {border: "0", width: "100%", height: "100%"}, {}, {
 				javaServicePanel: ["wm.Panel", {border: "0", width: "100%", height: "100%"}, {}, {
-				    javaCodeEditor: ["wm.EditArea", {height: "100%", width: "100%", border: "0", syntax: "java"}, {onCtrlKey: "onCtrlKey", onKeyDown: "setDirty"}],
+				    javaCodeEditor: ["wm.AceEditor", {height: "100%", width: "100%", border: "0", syntax: "java"}, {onCtrlKey: "onCtrlKey", onKeyDown: "setDirty"}],
 					javaCodeSplitter: ["wm.Splitter", {layout: "bottom", border: "0"}, {}],
 				    logTabs: ["wm.TabLayers", {width: "100%", height: "200px",clientBorder: "2,0,0,0", clientBorderColor: "#959DAB"}, {onchange: "changeLogTab"}, {
 					    complierTab: ["wm.Layer", {caption: "Compiler Messages"}, {}, {

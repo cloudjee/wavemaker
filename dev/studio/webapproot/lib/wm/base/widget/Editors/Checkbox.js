@@ -148,7 +148,14 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 	    if (!this.readOnlyNode) this.readOnlyNode = this.editor;
 	    if (inReadonly || !this.disabled)
 		this.editor.set("disabled",inReadonly);
-	}
+	},
+	getMinWidthProp: function() {
+		if (this.minWidth) return this.minWidth;
+		if (this.captionPosition == "top" || this.captionPosition == "bottom" || !this.caption) return 40;
+		else if (this.captionSize.match(/\%/)) return 80;
+		else return 20 + parseInt(this.captionSize);
+	},
+
 });
 
 

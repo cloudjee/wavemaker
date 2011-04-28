@@ -242,8 +242,9 @@ dependencies = {
 				"wm.base.widget.Dialogs.Dialog_design",
 				"wm.base.widget.Editor",
 				"wm.base.widget.FileUpload",
-				"wm.base.widget.EditArea",
-				"wm.base.widget.EditArea_design",
+			    "wm.base.widget.AceEditor",
+			    /*"wm.base.widget.EditArea",
+				"wm.base.widget.EditArea_design",*/
 				/*"wm.base.widget.Popup",*/
 				"wm.base.widget.IFrame",
 				"wm.base.widget.LayoutBox",

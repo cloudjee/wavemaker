@@ -1,4 +1,4 @@
-dojo.provide("lib.githumb.beautify");
+dojo.provide("lib.github.beautify");
 
 /*jslint onevar: false, plusplus: false */
 /*
@@ -35,8 +35,7 @@ dojo.provide("lib.githumb.beautify");
 
 */
 
-
-function js_beautify(js_source_text, options) {
+window.js_beautify = function(js_source_text, options) {
 
     var input, output, token_text, last_type, last_text, last_last_text, last_word, flags, flag_store, indent_string;
     var whitespace, wordchar, punct, parser_pos, line_starters, digits;
@@ -1079,4 +1078,3 @@ function js_beautify(js_source_text, options) {
     return output.join('').replace(/[\n ]+$/, '');
 
 }
-
