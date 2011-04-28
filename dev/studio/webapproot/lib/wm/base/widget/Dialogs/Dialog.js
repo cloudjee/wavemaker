@@ -299,8 +299,10 @@ dojo.declare("wm.Dialog", wm.Container, {
 	if (!inModal && !this.dojoMoveable) {
 	    this.dojoMoveable = new dojo.dnd.Moveable(this.domNode, {handle: this.titleLabel.domNode});
 	    this.connect(this.dojoMoveable, "onMouseDown", this, function() {
-		var zindex =  wm.dialog.getNextZIndex(this._isDesignLoaded, this);
-		this.domNode.style.zIndex = zindex;
+		if (!this.modal) {
+		    var zindex =  wm.dialog.getNextZIndex(this._isDesignLoaded, this);
+		    this.domNode.style.zIndex = zindex;
+		}
 	    });
 
 	}
@@ -830,8 +832,10 @@ dojo.declare("wm.Dialog", wm.Container, {
 
     /* Resizing */
 	mousedown: function(e) {
-	    var zindex =  wm.dialog.getNextZIndex(this._isDesignLoaded, this);
-	    this.domNode.style.zIndex = zindex;
+	    if (!this.modal) {
+		var zindex =  wm.dialog.getNextZIndex(this._isDesignLoaded, this);
+		this.domNode.style.zIndex = zindex;
+	    }
 
 	    /* Can only target the dialog's node if hitting the border or if some bad rendering of content */
 	    if (!this.modal && e.target == this.domNode) {
