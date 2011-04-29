@@ -33,6 +33,7 @@ wm.componentList = {
 	'wm.DojoMenu': ['build.Gzipped.wm_menus'],
       //'wm.PopupMenu': ['build.Gzipped.wm_menus'],
 	'wm.DojoChart': ['build.Gzipped.wm_charts'],
+	'wm.DojoGauge': ['build.Gzipped.wm_charts'],
 	'wm.Dashboard':['wm.base.widget.Dashboard'],
 	'wm.DojoFisheye': ['wm.base.widget.DojoFisheye'],
 	'wm.DojoLightbox': ['wm.base.widget.DojoLightbox'],

@@ -61,6 +61,7 @@ wm.loadLibs([
 	"wm.base.Plugin",
 	"wm.base.widget.DojoGrid",
 	"wm.base.widget.DojoChart",
+	"wm.base.widget.DojoGauge",
 
 	"wm.base.widget.Dashboard",
 	"wm.base.widget.DojoFisheye",

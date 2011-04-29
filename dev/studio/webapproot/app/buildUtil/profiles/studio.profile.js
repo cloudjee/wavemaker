@@ -282,6 +282,7 @@ dependencies = {
 				"wm.base.widget.Dashboard",
 				"wm.base.widget.Dashboard_design",
 				"wm.base.widget.DojoChart",
+				"wm.base.widget.DojoGauge",
 			    "wm.base.widget.DojoFisheye",
 			/*	*/
 				"wm.base.widget.DojoGrid",

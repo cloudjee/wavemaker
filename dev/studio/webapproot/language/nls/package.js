@@ -73,7 +73,9 @@
 	"Fisheye" : "Fisheye",
 	"Lightbox" : "Lightbox",
 
-	"Form_Tools" : "Form Tools",
+    //"Form_Tools" : "Form Tools",
+    FormsEditors: "Forms &amp; Editors",
+    Misc: "Misc",
 	"DataNavigator" : "DataNavigator",
 	"LiveForm" : "Form",
 	"RelatedEditor" : "RelatedEditor",
@@ -90,8 +92,10 @@
 	"DojoFlashFileUpload" : "FlashFileUpload",
 	"ListViewer" : "ListViewer",
 	"ProgressBar" : "ProgressBar",
-
+    Gauge: "Gauge",
 	"Templates" : "Templates",
+    PageLayoutTemplates: "Page Layouts",
+    PanelLayoutTemplates: "Panel Layouts",
 	"FancyTemplate" : "Fancy Template",
 	"FancyCentered" : "FancyCentered",
 	"SideMenu" : "Menu on Side",
@@ -146,7 +150,9 @@
 	"Template_Publisher" : "Template Publisher",
 
 	"Services" : "Services",
-    "DataWidget": "Data Set Widgets",
+    "DataWidget": "Data Widgets",
+    DataWidgetSingle: "Single Data Point",
+    DataWidgetMultiple: "Multiple Data Points",
     "Database": "Database Widgets",
 	"Database_Service" : "Import Database",
 	"Database_Design" : "Design Database", 
@@ -240,6 +246,7 @@
     "descFisheye": "Widget for zooming into images as the mouse moves over them",
     "descLightbox": "Popup for showing a set of photos",
     "descProgressBar": "Widget for showing a progress indicator",
+    "descGauge": "Widget for graphically displaying the current numeric value of something",
     "descJsonStatus": "Widget for indicating that json calls are in progress",
     "descTicker": "Panel that contains widgets and scrolls them across the screen",
 
