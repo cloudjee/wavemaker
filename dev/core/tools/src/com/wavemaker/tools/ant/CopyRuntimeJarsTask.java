@@ -174,10 +174,12 @@ public class CopyRuntimeJarsTask extends Task {
                 List<String> referencedJars = getReferencedClassPathJars(file, false);
                 for (String ref: referencedJars) {
                     File refFile = new File(file.getParentFile(), ref);
-                    FileList.FileName refFileName = new FileList.FileName();
-                    refFileName.setName(refFile.getAbsolutePath());
-                    jarsFileList.addConfiguredFile(refFileName);
-                    moduleJarNames.add(ref);
+                    if (refFile.exists()) {
+                        FileList.FileName refFileName = new FileList.FileName();
+                        refFileName.setName(refFile.getAbsolutePath());
+                        jarsFileList.addConfiguredFile(refFileName);
+                        moduleJarNames.add(ref);
+                    }
                 }
             }
         }
