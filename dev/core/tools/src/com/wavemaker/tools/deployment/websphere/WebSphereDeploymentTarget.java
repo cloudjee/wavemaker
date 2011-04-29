@@ -22,9 +22,9 @@ import java.util.*;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.CommonConstants;
-import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.tools.deployment.DeploymentTarget;
 import com.wavemaker.tools.deployment.AppInfo;
+import com.wavemaker.runtime.WMAppContext;
 
 /**
  * @author slee
@@ -48,8 +48,19 @@ public class WebSphereDeploymentTarget implements DeploymentTarget {
     }
 
     private List<AppInfo> appInfoList;
+    private boolean listCompleted = false;
+    private boolean deployCompleted = false;
+    private boolean undeployCompleted = false;
+    private boolean listErrCompleted = false;
+    private boolean deployErrCompleted = false;
+    private boolean undeployErrCompleted = false;
+    private int listCount = 0;
+    private int deployCount = 0;
+    private int undeployCount = 0;
     private String DEPLOYMENT_COMMAND
             = (org.apache.commons.lang.SystemUtils.IS_OS_WINDOWS ? "Deployment.bat" : "Deployment.sh");
+    private String studioHome = WMAppContext.getInstance().getAppContextRoot();
+    private String jsr88Home = studioHome + "/" + CommonConstants.IBMWAS_DIR;
 
     public Map<String, String> getConfigurableProperties() {
 
@@ -67,22 +78,17 @@ public class WebSphereDeploymentTarget implements DeploymentTarget {
 
     public String deploy(File f, String contextRoot,
                          Map<String, String> props) {
-        String host = props.get(HOST_PROPERTY_NAME);
-        String port = props.get(PORT_PROPERTY_NAME);
-        String userId = props.get(MANAGER_USER_PROPERTY_NAME);
-        String passwd = props.get(MANAGER_PASSWORD_PROPERTY_NAME);
         String earFileName = f.getAbsolutePath();
         String appName = extractAppName(f);
-        
-        String cmd = SystemUtils.getWavemakerRoot() + "/" + CommonConstants.IBMWAS_DIR + "/bin" +
-                "/" + DEPLOYMENT_COMMAND + " deploy " + appName + " " + earFileName + " " + host + " " +
-                port + " " + userId + " " + passwd;
 
-        System.out.println("\ncommand = " + cmd + "\n");
+        String[] cmd = setParams("deploy", props, earFileName, appName);
         
         try {
             Process proc = Runtime.getRuntime().exec(cmd);
 
+            deployCompleted = false;
+            deployErrCompleted = false;
+            deployCount = 0;
             StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), "[StdErr]");
 
             StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream(), "[StdOut]");
@@ -96,7 +102,9 @@ public class WebSphereDeploymentTarget implements DeploymentTarget {
             if (exitVal != 0) {
                 throw new WMRuntimeException("Deploy to WebSphere failed.  The exit value is " + exitVal + ".");
             }
-            
+
+            waitAndCompleteDeploy();
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new WMRuntimeException(e);
@@ -106,24 +114,17 @@ public class WebSphereDeploymentTarget implements DeploymentTarget {
     }
 
     public String undeploy(String contextRoot, Map<String, String> props) {
-        String host = props.get(HOST_PROPERTY_NAME);
-        String port = props.get(PORT_PROPERTY_NAME);
-        String userId = props.get(MANAGER_USER_PROPERTY_NAME);
-        String passwd = props.get(MANAGER_PASSWORD_PROPERTY_NAME);
         String earFileName = "dummy";
         String appName = contextRoot.substring(1);
 
-        String cmd = SystemUtils.getWavemakerRoot() + "/" + CommonConstants.IBMWAS_DIR + "/bin" +
-                "/" + DEPLOYMENT_COMMAND + " undeploy " + appName + " " + earFileName + " " + host + " " +
-                port + " " + userId + " " + passwd;
-
-        System.out.println("\ncommand = " + cmd + "\n");
-
-
+        String[] cmd = setParams("undeploy", props, earFileName, appName);
 
         try {
             Process proc = Runtime.getRuntime().exec(cmd);
 
+            undeployCompleted = false;
+            undeployErrCompleted = false;
+            undeployCount = 0;
             StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), "[StdErr]");
 
             StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream(), "[StdOut]");
@@ -138,6 +139,8 @@ public class WebSphereDeploymentTarget implements DeploymentTarget {
                 throw new WMRuntimeException("Undeploy from WebSphere failed.  The exit value is " + exitVal + ".");
             }
 
+            waitAndCompleteUndeploy();
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new WMRuntimeException(e);
@@ -147,22 +150,16 @@ public class WebSphereDeploymentTarget implements DeploymentTarget {
     }
 
     public List<AppInfo> listDeploymentNames(Map<String, String> props) {
-        String host = props.get(HOST_PROPERTY_NAME);
-        String port = props.get(PORT_PROPERTY_NAME);
-        String userId = props.get(MANAGER_USER_PROPERTY_NAME);
-        String passwd = props.get(MANAGER_PASSWORD_PROPERTY_NAME);
         String earFileName = "dummy";
         String appName = "dummy";
 
-        String cmd = SystemUtils.getWavemakerRoot() + "/" + CommonConstants.IBMWAS_DIR + "/bin" +
-                "/" + DEPLOYMENT_COMMAND + " list " + appName + " " + earFileName + " " + host + " " +
-                port + " " + userId + " " + passwd;
+        String[] cmd = setParams("list", props, earFileName, appName);
 
-        System.out.println("\ncommand = " + cmd + "\n");
-
-        try {
+        try {           
             Process proc = Runtime.getRuntime().exec(cmd);
 
+            listCompleted = false;
+            listCount = 0;
             StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), "[StdErr]");
 
             StreamGobblerForList outputGobbler = new StreamGobblerForList(proc.getInputStream(), "[StdOut]");
@@ -177,12 +174,11 @@ public class WebSphereDeploymentTarget implements DeploymentTarget {
                 throw new WMRuntimeException("Accessing WebSphere failed.  The exit value is " + exitVal + ".");
             }
 
+            return waitAndGetAppInfoList();
         } catch (Exception e) {
             e.printStackTrace();
             throw new WMRuntimeException(e);
         }
-
-        return appInfoList;
     }
 
     public String redeploy(String contextRoot,
@@ -193,6 +189,69 @@ public class WebSphereDeploymentTarget implements DeploymentTarget {
     private String extractAppName(File earFile) {
         String fileName = earFile.getName();
         return fileName.substring(0, fileName.length()-4);
+    }
+
+    private void waitAndCompleteDeploy() throws InterruptedException {
+        if (deployCount > 1800)
+            throw new WMRuntimeException("Time out");
+
+        if (!deployCompleted || !deployErrCompleted) {
+            Thread.sleep(100);
+            deployCount++;
+            waitAndCompleteDeploy();
+        }
+    }
+
+    private void waitAndCompleteUndeploy() throws InterruptedException {
+        if (undeployCount > 1800)
+            throw new WMRuntimeException("Time out");
+
+        if (!undeployCompleted || !undeployErrCompleted) {
+            Thread.sleep(100);
+            undeployCount++;
+            waitAndCompleteUndeploy();
+        }
+    }
+
+    private List<AppInfo> waitAndGetAppInfoList() throws InterruptedException {
+        if (listCount > 1800)
+            throw new WMRuntimeException("Time out");
+
+        if (!listCompleted || !listErrCompleted) {
+            Thread.sleep(100);
+            listCount++;
+            return waitAndGetAppInfoList();
+        } else {
+            return appInfoList;
+        }
+    }
+
+    private String[] setParams(String action, Map<String, String> props, String earFile, String app) {
+        String host = props.get(HOST_PROPERTY_NAME);
+        String port = props.get(PORT_PROPERTY_NAME);
+        String userId = props.get(MANAGER_USER_PROPERTY_NAME) == null ?
+                "null" : props.get(MANAGER_USER_PROPERTY_NAME);
+        String passwd = props.get(MANAGER_PASSWORD_PROPERTY_NAME) == null ?
+                "null" : props.get(MANAGER_PASSWORD_PROPERTY_NAME);
+
+        String cmdstr = jsr88Home +
+               "/" + DEPLOYMENT_COMMAND + " list " + app + " " + earFile + " " + host + " " +
+               port + " " + userId + " " + passwd + " " + jsr88Home;
+
+        String[] cmd = new String[9];
+        cmd[0] = jsr88Home + "/" + DEPLOYMENT_COMMAND;
+        cmd[1] = action;
+        cmd[2] = app;
+        cmd[3] = earFile;
+        cmd[4] = host;
+        cmd[5] = port;
+        cmd[6] = userId;
+        cmd[7] = passwd;
+        cmd[8] = jsr88Home;
+
+        System.out.println("\ncommand = " + cmdstr + "\n");
+
+        return cmd;
     }
 
     class StreamGobbler extends Thread
@@ -216,8 +275,18 @@ public class WebSphereDeploymentTarget implements DeploymentTarget {
                     System.out.println(type + " " + line);
             } catch (IOException ioe) {
                 ioe.printStackTrace();
+            } finally {
+                if (type.equals("[StdOut]")) {
+                    deployCompleted = true;
+                    undeployCompleted = true;
+                } else {
+                    deployErrCompleted = true;
+                    undeployErrCompleted = true;
+                    listErrCompleted = true;
+                }
             }
         }
+
     }
 
     class StreamGobblerForList extends Thread
@@ -247,6 +316,8 @@ public class WebSphereDeploymentTarget implements DeploymentTarget {
 
             } catch (IOException ioe) {
                 ioe.printStackTrace();
+            } finally {
+                listCompleted = true;
             }
         }
 
