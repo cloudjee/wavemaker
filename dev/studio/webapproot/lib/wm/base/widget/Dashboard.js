@@ -319,15 +319,17 @@ dojo.declare("wm.Dashboard", wm.Control, {
 		        var strClosedList = this.customGetClosedPortletsCookie();
 			this.closedList = dojo.fromJson(strClosedList);
 		}
+	    if (!this.closedList)
+		this.closedList = [];
 
-		if ( (isClosed && this.closedList.indexOf(id) != -1) || (!isClosed && this.closedList.indexOf(id) == -1))
+	    if ( (isClosed && dojo.indexOf(this.closedList, id) != -1) || (!isClosed && dojo.indexOf(this.closedList,id) == -1))
 			return;
 		
 		if (isClosed){
 				this.closedList.push(id);
 		} else {
-			while (this.closedList.indexOf(id) != -1){
-				var idx = this.closedList.indexOf(id);
+		    while (dojo.indexOf(this.closedList,id) != -1){
+			var idx = dojo.indexOf(this.closedList,id);
 				this.closedList.splice(idx, 1);
 			}
 		}
