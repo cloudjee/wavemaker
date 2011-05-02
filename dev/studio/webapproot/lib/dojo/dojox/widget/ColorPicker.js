@@ -495,7 +495,10 @@ dojo.require("dojo.i18n");
 		_setHuePoint: function(/* Event */evt){ 
 			// summary: set the hue picker handle on relative y coordinates
 			var selCenter = (this.PICKER_HUE_SELECTOR_H/2);
-			var ypos = evt.layerY - selCenter;
+		        //var ypos = evt.layerY - selCenter;
+		    var coor = dojo.coords(this.colorUnderlay);
+		    var ypos = evt.pageY - coor.y - 2;
+
 			if(this.animatePoint){
 				d.fx.slideTo({ 
 					node: this.hueCursorNode, 
@@ -515,8 +518,9 @@ dojo.require("dojo.i18n");
 			//  evt.preventDefault();
 			var satSelCenterH = this.PICKER_SAT_SELECTOR_H/2;
 			var satSelCenterW = this.PICKER_SAT_SELECTOR_W/2;
-			var newTop = evt.layerY - satSelCenterH;
-			var newLeft = evt.layerX - satSelCenterW;
+		    var coor = dojo.coords(this.colorUnderlay);
+		    var newTop = evt.pageY - coor.y;
+		    var newLeft = evt.pageX - coor.x;
 			
 			if(evt){ dijit.focus(evt.target); }
 
