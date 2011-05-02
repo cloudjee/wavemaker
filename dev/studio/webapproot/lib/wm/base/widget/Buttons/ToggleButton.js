@@ -37,7 +37,7 @@ dojo.declare("wm.ToggleButton", wm.ToolButton, {
             if (this.clicked)
                 this.setClicked(true);
 	},
-        click: function() {
+	click: function(inEvent) {
 	    this.setProp("clicked", !this.clicked);
 
 	    /* Sometimes users go from an editor to clicking a button and some browsers don't update the editor value in time for
