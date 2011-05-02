@@ -1973,3 +1973,19 @@ color: rgb(0,270,0);
 }
 
 
+#app_AceHelpDialog table {
+    border-spacing: 0px;
+}
+
+#app_AceHelpDialog td {
+    padding: 3px;
+    border-bottom: solid 1px #444;
+}
+#app_AceHelpDialog td:first-child {
+    border-right: solid 1px #444;
+}
+
+
+#app_AceHelpDialog tr:last-child td {
+    border-bottom: solid 0px #444 !important;
+}
