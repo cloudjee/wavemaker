@@ -164,9 +164,9 @@ dojo.declare("wm.DateTime", wm.Text, {
 		    {
 			calendar: ["wm.dijit.Calendar", {useLocalTime: true, "border":"0", height: "180px", width: "100%"}, {onValueSelected: "handleDateChange"}],
 			panel1: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"bottom","width":"100%"}, {}, {
-			    hours: ["wm.Number", {"caption":"Hour","captionAlign":"left","captionPosition":"top","captionSize":"20px","changeOnKey":true,"displayValue":"","height":"43px","maximum":12,"minimum":1,"padding":"2","spinnerButtons":true,"width":"56px"}, {onchange: "handleDateChange"}],
-			    minutes: ["wm.Number", {"caption":"Minute","captionAlign":"left","captionPosition":"top","captionSize":"20px","changeOnKey":true,"displayValue":"","height":"43px","maximum":59,"minimum":0,"padding":"2","spinnerButtons":true,"width":"56px"}, {onchange: "handleDateChange"}],
-			    ampm: ["wm.ToggleButton", {"captionDown":"PM","captionUp":"AM","height":"21px",width: "50px", "margin":"0,0,2,0"}, {onclick: "handleDateChange"}]
+			    hours: ["wm.Number", {"caption":"Hour","captionAlign":"left","captionPosition":"top","captionSize":"20px","changeOnKey":true,"displayValue":"","height":"43px","maximum":12,"minimum":1,"padding":"2","spinnerButtons":true,"width":"56px"}, {}],
+			    minutes: ["wm.Number", {"caption":"Minute","captionAlign":"left","captionPosition":"top","captionSize":"20px","changeOnKey":true,"displayValue":"","height":"43px","maximum":59,"minimum":0,"padding":"2","spinnerButtons":true,"width":"56px"}, {}],
+			    ampm: ["wm.ToggleButton", {"captionDown":"PM","captionUp":"AM","height":"21px",width: "50px", "margin":"0,0,2,0"}, {}]
 			}],
 			label: ["wm.Label", {"border":"0","caption":"","padding":"4","width":"100%"}]
 		    }, dialog);

@@ -35,6 +35,7 @@ wm.componentList = {
 	'wm.DojoChart': ['build.Gzipped.wm_charts'],
 	'wm.DojoGauge': ['build.Gzipped.wm_charts'],
 	'wm.Dashboard':['wm.base.widget.Dashboard'],
+    'wm.ColorPickerDialog': ['wm.base.widget.Dialogs.ColorPickerDialog'],
 	'wm.DojoFisheye': ['wm.base.widget.DojoFisheye'],
 	'wm.DojoLightbox': ['wm.base.widget.DojoLightbox'],
 	'wm.TwitterFeed':['wm.base.widget.TwitterFeed'],
@@ -81,7 +82,8 @@ wm.componentList = {
 
 
 	'wm.dijit.ProgressBar':['wm.base.widget.dijit.ProgressBar'],
-	'wm.BusyButton':['wm.base.widget.ButtonsBusyButton'],
+	'wm.RoundedButton':['wm.base.widget.Buttons.RoundedButton'],    
+	'wm.BusyButton':['wm.base.widget.Buttons.BusyButton'],
 	'wm.PopupMenuButton':['build.Gzipped.wm_menus'],
 	'wm.ToggleButton':['build.Gzipped.wm_editors'],
 	'wm.Timer':['wm.base.components.Timer'],

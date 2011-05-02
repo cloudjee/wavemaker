@@ -19,6 +19,7 @@ dojo.provide("wm.base.widget.Editors.Number");
 dojo.require("wm.base.widget.Editors.Text");
 dojo.require("dijit.form.VerticalSlider");
 dojo.require("dijit.form.HorizontalSlider");
+dojo.require("dijit.form.NumberSpinner");
 
 
 

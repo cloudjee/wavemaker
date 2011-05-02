@@ -527,6 +527,7 @@ dojo.declare("wm.ColorPicker", wm.Text, {
         this.setNodeColors(v);
     },
     createColorPicker: function() {
+	wm.getComponentStructure("wm.ColorPickerDialog");
         this.colorPickerDialog = new wm.ColorPickerDialog({owner: this});
         this.colorPickerDialog.connect(this.colorPickerDialog, "onChange", this, function(inValue) {
 	    if (this.colorPickerDialog.showing)
