@@ -1082,13 +1082,11 @@ dojo.declare("Studio", wm.Page, {
 	tabsCanChange: function(inSender, inChangeInfo) {
 	    var newLayer = inSender.layers[inChangeInfo.newIndex];
 	    if (!newLayer) return;
-	    switch (newLayer.name) {
-	    case "sourceTab":
+	    if (this.tabs.getActiveLayer().name == "sourceTab") {
 		setTimeout(dojo.hitch(this, function() {
 		    this.cssChanged();
 		    this.markupChanged();
 		}), 100);
-		break;
 	    }
 	    switch (newLayer.name) {
 	    case "sourceTab":
