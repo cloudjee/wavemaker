@@ -384,6 +384,7 @@ dojo.declare("Studio", wm.Page, {
 	},
     setupDefaultContextMenu: function() {
 	var f = function(e) {
+	    if (e.target.tagName == "TEXTAREA") return;
 		dojo.stopEvent(e);		
 		var menuObj = studio.contextualMenu;
 		menuObj.removeAllChildren();
