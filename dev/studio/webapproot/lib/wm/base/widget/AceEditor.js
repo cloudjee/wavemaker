@@ -227,7 +227,32 @@ dojo.declare("wm.AceEditor", wm.Control, {
     },
 
     showHelp: function() {
-	alert("TODO: Need to make a new help page for using the editor; ALSO see how CTRL- keys are handled on each browser");
+	if (!wm.AceEditor.helpDialog) {
+	    var d = wm.AceEditor.helpDialog = new wm.Dialog({owner: app,
+							     name: "AceHelpDialog",
+							     title: "Editor Help",
+							     corner: "tl",
+							     width: "220px",
+							     height: "350px",
+							     useContainerWidget: true,
+							     modal: false});
+	    var helpHtml = new wm.Html({owner: d,
+					parent: d.containerWidget,
+					width: "100%",
+					height: "100%"});
+	    helpHtml.setHtml("<table>" +
+			     "<tr><td>Ctrl-L</td><td>Goto Line</td></tr>" +
+			     "<tr><td>Ctrl-7</td><td>Toggle Comment Selected Line</td></tr>" +
+			     "<tr><td>Ctrl-L</td><td>Goto Line</td></tr>" +
+			     "<tr><td>Ctrl-F</td><td>Find</td></tr>" +
+			     "<tr><td>Ctrl-R</td><td>Replace</td></tr>" +
+			     "<tr><td>Alt-UP</td><td>Move Line Up</td></tr>" +
+			     "<tr><td>Alt-DOWN</td><td>Move Line Down</td></tr>" +
+			     "<tr><td>CTRL-S</td><td>Save project</td></tr>" +
+			     "<tr><td>CTRL-I</td><td>Reformat code (adjusts indentation)</td></tr>" +
+			     "<tr><td nowrap>CTRL-PERIOD</td><td>Open autocompletion dialog (when editting javascript only)</td></tr>");
+	}
+	wm.AceEditor.helpDialog.show();
     },
 
     showSearch: function() {
