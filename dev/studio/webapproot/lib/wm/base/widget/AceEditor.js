@@ -74,10 +74,13 @@ dojo.declare("wm.AceEditor", wm.Control, {
 	this.inherited(arguments);
 	this.connect(this.domNode, "onkeydown", this, "handleKeyDown");
     },
+    reservedCtrlKeys: ["a","c","v","x"],
     handleKeyDown: function(e) {
 	if (e.ctrlKey && app._keys[e.keyCode] != "CTRL") {
-	    this.onCtrlKey(app._keys[e.keyCode]);
-	    dojo.stopEvent(e);
+	    if (dojo.indexOf(this.reservedCtrlKeys, app._keys[e.keyCode]) == -1) {
+		this.onCtrlKey(app._keys[e.keyCode]);
+		dojo.stopEvent(e);
+	    }
 	}
     },
         onCtrlKey: function(letter) {
