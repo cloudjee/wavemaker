@@ -53,6 +53,9 @@ dojo.declare("NewProjectDialog", wm.Page, {
         dojo.query(".SelectableTemplate", this.templatesInsertPanel.domNode).connect("onclick", this, "templateClicked");
         dojo.query(".SelectableTemplate", this.templatesInsertPanel.domNode).connect("dblclick", this, "templateDblClicked");
 	this.templateClicked2(firstimgpanel);
+	wm.onidle(this, function() {
+	    this.reflow();
+	});
     },
     reset: function() {
         var projectNames = {};
