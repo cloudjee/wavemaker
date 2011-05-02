@@ -115,7 +115,7 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
                     }],
                     endContainer: ["wm.Panel", {height: "20px", width: "100%", layoutKind: "left-to-right", horizontalAlign: "left", verticalAlign: "top"},{},{
                         endHeading:  ["wm.Label", {width: "40px", height: "100%", caption: "TO:"}],
-                        endDate:  ["wm.Label", {width: "100%", height: "100%"}],
+                        endDate:  ["wm.Label", {width: "100%", height: "100%"}]
                     }],
                     description: ["wm.Label", {width: "100%", height: "20px", autoSizeHeight: true, singleLine: false}]}
             });    
