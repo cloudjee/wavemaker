@@ -540,6 +540,7 @@ dojo.declare("dojox.widget.FisheyeList", [dijit._Widget, dijit._Templated, dijit
 	},
 
 	_positionLabel: function(itm){
+	    if (!itm.lblNode.parentNode) return;
 		var x = 0;
 		var y = 0;
 		
