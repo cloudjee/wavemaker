@@ -388,6 +388,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 	_connectionFailed: function(inError) {
 	    studio.endWait();
 	    app.alert(this.getDictionaryItem("ALERT_CONNECTION_FAILED", {error: inError.message})); 
+	    app.alertDialog.setWidth("600px");
 	},
 	_propWriteOk: function(inData) {
 	    app.alert(this.getDictionaryItem("ALERT_CONNECTION_PROPS_SUCCESS"));
