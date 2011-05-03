@@ -18,6 +18,7 @@
 dojo.provide("wm.studio.pages.NavigationDialog.NavigationDialog");
 
 dojo.declare("NavigationDialog", wm.Page, {
+        i18n: true,
 //===========================================================================
 // Inititialization
 //===========================================================================

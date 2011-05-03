@@ -16,19 +16,15 @@
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */ 
 
-dojo.declare("EC2Dialog", wm.Page, {
-	connHandle: null,
-
-	start: function() {
-
-	},
-	okButtonClick: function(inSender, inEvent) {
-		if (this.accessKeyId.getDataValue() == undefined || this.accessKeyId.getDataValue() == null || this.accessKeyId.getDataValue() == "" ||
-			this.secretAccessKey.getDataValue() == undefined || this.secretAccessKey.getDataValue() == null 
-			|| this.secretAccessKey.getDataValue() == "") return;
-	},
-	cancelButtonClick: function(inSender, inEvent) {
-		this.owner.owner.dismiss();	
-	},
-	_end: 0
+dojo.declare("S3BucketDialog", wm.Page, {
+    i18n: true,
+  start: function() {
+    
+  },
+  okButtonClick: function(inSender, inEvent) {
+  },
+  cancelButtonClick: function(inSender, inEvent) {
+	this.owner.owner.dismiss();  
+  },
+  _end: 0
 });

@@ -21,7 +21,8 @@ dojo.provide("wm.studio.pages.ResourceManager.ResourceManager");
 
 
 dojo.declare("ResourceManager", wm.Page, {
-  loadingResourceStart: 0,
+    i18n: true,
+    loadingResourceStart: 0,
     dndElements: null,
     selectedItem: null,
     propertiesPanel: null,

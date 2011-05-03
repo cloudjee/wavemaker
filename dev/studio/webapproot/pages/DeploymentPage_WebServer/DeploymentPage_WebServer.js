@@ -19,6 +19,8 @@
 dojo.provide("wm.studio.pages.DeploymentPage_WebServer.DeploymentPage_WebServer");
 
 dojo.declare("DeploymentPage_WebServer", wm.Page, { 
+        i18n: true,
+
 	deploymentTarget: "tomcat",
 	currentTarget: "",
 	currentAction: "",

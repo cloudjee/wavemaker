@@ -19,6 +19,7 @@
 dojo.provide("wm.studio.pages.DataRelationshipsDialog.DataRelationshipsDialog");
 
 dojo.declare("DataRelationshipsDialog", wm.Page, {
+        i18n: true,
 	infoTemplate: "<div><strong>${formName}</strong> is displaying a <strong>${rootName}</strong> object. How would you like to display the <strong>${rootName}'s ${relatedName}</strong> relationship?</div><div>Note, automatic server processing is available only when a select editor is chosen.</div>",
 	start: function() {
 		// ug, access dialog

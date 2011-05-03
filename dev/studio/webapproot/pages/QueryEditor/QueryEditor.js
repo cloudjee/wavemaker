@@ -18,7 +18,7 @@
 dojo.provide("wm.studio.pages.QueryEditor.QueryEditor");
 
 dojo.declare("QueryEditor", wm.Page, {
-
+        i18n: true,
 	EOL: "\n",
 	QUERY_COMMENT: "--",
 

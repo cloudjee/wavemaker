@@ -16,6 +16,7 @@
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */ 
 dojo.declare("LogViewer", wm.Page, {
+  i18n: true,
   lastTimeStamp: "",
   lastProjectName: null,
   logName: "project.log",

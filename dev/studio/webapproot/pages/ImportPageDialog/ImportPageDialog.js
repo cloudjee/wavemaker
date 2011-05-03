@@ -18,6 +18,7 @@
 dojo.provide("wm.studio.pages.ImportPageDialog.ImportPageDialog");
 
 dojo.declare("ImportPageDialog", wm.Page, {
+        i18n: true,
 	start: function() {
 		this.update();
 	},

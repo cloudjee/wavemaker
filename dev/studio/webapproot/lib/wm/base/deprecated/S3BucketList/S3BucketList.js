@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2011 WaveMaker Software, Inc.
+ * Copyright (C) 2010-2011 WaveMaker Software, Inc.
  *
  * This file is part of WaveMaker Studio.
  *
@@ -15,21 +15,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */ 
-dojo.declare("SyntaxEditor", wm.Page, {
+
+dojo.declare("S3BucketList", wm.Page, {
+        i18n: true,
   start: function() {
+  },
+  copyWarButtonClick: function(inSender, inEvent) {
+  },
+  cancelButtonClick: function(inSender, inEvent) {
+    this.owner.owner.dismiss();
+  },
+  dismissThis: function() {
+    this.owner.owner.dismiss();   
+  },
+  deleteButtonClick: function(inSender, inEvent) {
     
   },
-  update: function(inText, inSyntax) {
-		if (!this.editArea.isStarted())
-			this.editArea.initEdit();
-		this.editArea.setText(inText);
-		this.editArea.setSyntax(inSyntax);
+  deleteWarButtonClick: function(inSender, inEvent) {
+    
   },
-  getEditorText: function() {
-		return this.editArea.getText();
-  },
-  closeEditor: function(inSender, e) {
-		wm.dismiss(this, e);
+  newButtonClick: function(inSender, inEvent) {
+    
   },
   _end: 0
 });

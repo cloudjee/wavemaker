@@ -18,6 +18,7 @@
 dojo.provide("wm.studio.pages.Dashboard");
 
 dojo.declare("Dashboard", wm.Page, {
+        i18n: true,
 	start: function() {
 		// list cell formatting (no longer an event so must connect manually)
 		this.paneList.connect(this.paneList, "onformat", this, "listPanesFormatCell");

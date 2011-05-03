@@ -18,6 +18,7 @@
 dojo.provide("wm.studio.pages.QueueDialog.QueueDialog");
 
 dojo.declare("QueueDialog", wm.Page, {
+        i18n: true,
 	start: function() {
 		this.list.toggleSelect = true;
 		this.update();

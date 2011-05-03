@@ -43,6 +43,7 @@ wm.Plugin.plugin("i18n", wm.Component, {
     }
 });
 
+/*
 wm.Plugin.plugin("i18nPageLoader", wm.PageLoader, {
     loadPageCode: function(inName) {
 	var ctor = this.i18nPageLoaderSocket(arguments);
@@ -53,7 +54,7 @@ wm.Plugin.plugin("i18nPageLoader", wm.PageLoader, {
 	return ctor;
     }
 });
-
+*/
 wm.Plugin.plugin("i18nApplication", wm.Application, {
     init: function() {
 	try {

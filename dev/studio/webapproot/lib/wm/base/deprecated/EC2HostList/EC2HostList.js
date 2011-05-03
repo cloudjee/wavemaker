@@ -17,6 +17,7 @@
  */ 
 
 dojo.declare("EC2HostList", wm.Page, {
+    i18n: true,
   connHandle: null,
 
   start: function() {

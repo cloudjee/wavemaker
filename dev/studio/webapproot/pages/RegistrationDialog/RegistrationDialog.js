@@ -18,6 +18,7 @@
 dojo.provide("wm.studio.pages.RegistrationDialog.RegistrationDialog");
 
 dojo.declare("RegistrationDialog", wm.Page, {
+        i18n: true,
 	dialogReference: null,
 	start: function() {
 		

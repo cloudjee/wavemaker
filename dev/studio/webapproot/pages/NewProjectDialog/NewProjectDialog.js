@@ -17,6 +17,7 @@
  */ 
 
 dojo.declare("NewProjectDialog", wm.Page, {
+    i18n: true,
     selectedTemplate: null,
     start: function() {
         this.themesListVar.setData(studio.themesListVar);

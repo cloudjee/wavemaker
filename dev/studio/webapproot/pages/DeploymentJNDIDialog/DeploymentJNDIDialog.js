@@ -19,6 +19,7 @@
 dojo.provide("wm.studio.pages.DeploymentJNDIDialog.DeploymentJNDIDialog");
 
 dojo.declare("DeploymentJNDIDialog", wm.Part, {
+        i18n: true,
 
 	// has to match constant in DataModelDeploymentConfiguration
 	JNDI_NAME_PROPERTY: ".jndi.dsname",

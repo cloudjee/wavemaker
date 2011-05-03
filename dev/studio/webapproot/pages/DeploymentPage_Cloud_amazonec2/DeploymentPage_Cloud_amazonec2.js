@@ -19,6 +19,8 @@
 dojo.provide("wm.studio.pages.DeploymentPage_Cloud_amazonec2.DeploymentPage_Cloud_amazonec2");
 
 dojo.declare("DeploymentPage_Cloud_amazonec2", wm.Page, { 
+        i18n: true,
+
 	signatureVersion: "2",
 	serviceURL: "https://ec2.amazonaws.com",
 	loginError: false,

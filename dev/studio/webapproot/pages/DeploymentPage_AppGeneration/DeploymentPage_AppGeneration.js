@@ -19,6 +19,7 @@
 dojo.provide("wm.studio.pages.DeploymentPage_AppGeneration.DeploymentPage_AppGeneration");
 
 dojo.declare("DeploymentPage_AppGeneration", wm.Part, { 
+  i18n: true,
 
   // has to match constant in DataModelDeploymentConfiguration
   JNDI_NAME_PROPERTY: ".jndi.dsname",

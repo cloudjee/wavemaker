@@ -17,6 +17,7 @@
  */ 
 
 dojo.declare("NewLivePanelDialog", wm.Page, {
+    i18n: true,
     selectedTemplate: null,
     options: null,
     start: function() {

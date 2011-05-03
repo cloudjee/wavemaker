@@ -19,7 +19,7 @@
 dojo.provide("wm.studio.pages.DataObjectsEditor.DataObjectsEditor");
 
 dojo.declare("DataObjectsEditor", wm.Page, {
-
+        i18n: true,
 	PK_ATTR: "isPk",
 	FK_ATTR: "isFk",
 	GENERATOR_ATTR: "generator",

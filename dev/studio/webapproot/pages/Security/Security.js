@@ -18,6 +18,7 @@
 dojo.provide("wm.studio.pages.Security.Security");
 
 dojo.declare("Security", wm.Page, {
+        i18n: true,
 	start: function() {
 	    this.SELECT_ONE = this.getDictionaryItem("MENU_SELECT_ONE");
 	    this.NO_VALUE   = this.getDictionaryItem("MENU_NO_VALUE");

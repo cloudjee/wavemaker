@@ -42,6 +42,8 @@ wm.disEnableButton = function(inBtn, inDisEnable) {
 }
 
 dojo.declare("Studio", wm.Page, {
+        i18n: true,
+
 	// FIXME: flag for testing if we're actual studio class
 	// used for automatic studio page unloading.
 	_isWaveMakerStudio: true,

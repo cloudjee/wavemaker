@@ -19,7 +19,7 @@
 dojo.provide("wm.studio.pages.DBConnectionSettings.DBConnectionSettings");
 
 dojo.declare("DBConnectionSettings", wm.Page, {
-
+        i18n: true,
 	msgDialog: null,
 	ip: null,
 

@@ -18,6 +18,7 @@
 dojo.provide("wm.studio.pages.Services.Services");
 
 dojo.declare("Services", wm.Page, {
+        i18n: true,
 	start: function() {
 		this.tree.initNodeChildren = dojo.hitch(this.tree, "treeInitNodeChildren");
 	        /* WM-2518: now that each web service gets its own editor, no longer monitor for changes to what the user has selected or to definitions for any types */

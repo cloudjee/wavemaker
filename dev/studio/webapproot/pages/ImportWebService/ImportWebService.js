@@ -19,6 +19,7 @@ dojo.provide("wm.studio.pages.ImportWebService.ImportWebService");
 
 
 dojo.declare("ImportWebService", wm.Page, {
+        i18n: true,
 	TYPE_SOAP: "SOAP",
 	TYPE_REST_WSDL: "REST (WSDL / WADL)",
         TYPE_REST_BUILDER: null,

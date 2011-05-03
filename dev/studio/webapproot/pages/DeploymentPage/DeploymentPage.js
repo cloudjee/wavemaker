@@ -19,6 +19,7 @@
 dojo.provide("wm.studio.pages.DeploymentPage.DeploymentPage");
 
 dojo.declare("DeploymentPage", wm.Part, { 
+  i18n: true,
   start: function() {
       this.setup();
   },

@@ -21,6 +21,7 @@ dojo.require("wm.base.components.Binding");
 dojo.require("wm.studio.app.binding");
 
 dojo.declare("BindSourceDialog", wm.Page, {
+    i18n: true,
 	start: function() {
 	    this.connect(this.owner.parent, "onClose", this, "onClose");
 	},

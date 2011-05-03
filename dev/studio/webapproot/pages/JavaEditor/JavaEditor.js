@@ -18,6 +18,7 @@
 dojo.provide("wm.studio.pages.JavaEditor.JavaEditor");
 
 dojo.declare("JavaEditor", wm.Page, {
+        i18n: true,
 	start: function() {
             /*
             if (dojo.isFF > 4 || dojo.isWebKit || dojo.isIE >= 9)

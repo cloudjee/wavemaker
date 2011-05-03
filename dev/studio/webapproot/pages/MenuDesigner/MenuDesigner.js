@@ -17,11 +17,12 @@
  */ 
 
 dojo.declare("MenuDesigner", wm.Page, {
+    i18n: true,
     //defaultItem: null,
     //defaultItemEnabled: false,
-  start: function() {
+    start: function() {
     
-  },
+    },
     setMenu: function(inMenu/*, inDefaultItem, inDefaultItemEnabled*/) {
 	this.editMenu = inMenu;
 /*

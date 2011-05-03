@@ -18,6 +18,7 @@
 dojo.provide("wm.studio.pages.PreferencesPane.PreferencesPane");
 
 dojo.declare("PreferencesPane", wm.Page, {
+  i18n: true,
   start: function() {
     this.update();
     if (studio.isCloud()) {

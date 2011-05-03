@@ -19,6 +19,7 @@
 dojo.provide("wm.studio.pages.ImportFile.ImportFile");
 
 dojo.declare("ImportFile", wm.Page, {
+    i18n: true,
     start: function() {
 	this.filename.editor.set("placeHolder", this.getDictionaryItem("PLACEHOLDER"));
     },

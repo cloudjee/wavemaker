@@ -21,6 +21,8 @@ dojo.require("wm.base.components.Binding");
 dojo.require("wm.studio.app.binding");
 
 dojo.declare("Binder", wm.Page, {
+    i18n: true,
+
 	//===========================================================================
 	// Initialization / setup
 	//===========================================================================

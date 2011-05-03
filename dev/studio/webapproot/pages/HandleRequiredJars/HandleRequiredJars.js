@@ -19,6 +19,7 @@
 dojo.provide("wm.studio.pages.HandleRequiredJars.HandleRequiredJars");
 
 dojo.declare("HandleRequiredJars", wm.Page, {
+    i18n: true,
     start: function() {
 /*
 	this.layers.decorator.buttonPanel.setHeight("42px")

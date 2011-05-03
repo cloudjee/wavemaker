@@ -18,6 +18,7 @@
 dojo.provide("wm.studio.pages.RestServiceBuilder.RestServiceBuilder");
 
 dojo.declare("RestServiceBuilder", wm.Page, {
+        i18n: true,
 	IMPORT_TYPE_URL: "URL",
 	IMPORT_TYPE_FILE: "File",
 	start: function() {

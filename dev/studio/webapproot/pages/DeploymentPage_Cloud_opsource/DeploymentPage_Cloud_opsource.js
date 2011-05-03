@@ -19,6 +19,8 @@
 dojo.provide("wm.studio.pages.DeploymentPage_Cloud_opsource.DeploymentPage_Cloud_opsource");
 
 dojo.declare("DeploymentPage_Cloud_opsource", wm.Page, { 
+    i18n: true,
+
     usernameValue: null,
     passwordValue: null,
 	loginError: false,

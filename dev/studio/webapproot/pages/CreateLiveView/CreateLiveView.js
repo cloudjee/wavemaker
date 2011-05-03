@@ -18,6 +18,7 @@
 dojo.provide("wm.studio.pages.CreateLiveView.CreateLiveView");
 
 dojo.declare("CreateLiveView", wm.Page, {
+        i18n: true,
 	start: function() {
 		this.update();
 	},

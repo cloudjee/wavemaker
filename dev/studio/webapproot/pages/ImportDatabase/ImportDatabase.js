@@ -19,7 +19,7 @@
 dojo.provide("wm.studio.pages.ImportDatabase.ImportDatabase");
 
 dojo.declare("ImportDatabase", wm.Page, {
-
+        i18n: true,
 	ip: null,
 
 	start: function() {

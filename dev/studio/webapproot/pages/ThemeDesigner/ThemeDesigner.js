@@ -34,6 +34,7 @@ dojo.provide("wm.studio.pages.ThemeDesigner.ThemeDesigner");
 
 
 dojo.declare("ThemeDesigner", wm.Page, {
+        i18n: true,
     userLevel: 0,
     currentTheme: "",
     panelTypes: ["Document", "MainContent", "EmphasizedContent", "HeaderContent"],

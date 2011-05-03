@@ -19,6 +19,8 @@
 dojo.provide("wm.studio.pages.DeploymentPage_Cloud_rackspaceserver.DeploymentPage_Cloud_rackspaceserver");
 
 dojo.declare("DeploymentPage_Cloud_rackspaceserver", wm.Page, {
+    i18n: true,
+
     usernameValue: null,
     passwordValue: null,	
 	loginError: false,

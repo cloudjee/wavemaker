@@ -18,6 +18,7 @@
 dojo.provide("wm.studio.pages.NewJavaService.NewJavaService");
 
 dojo.declare("NewJavaService", wm.Page, {
+        i18n: true,
 	start: function() {
 		this.newServiceId = null;
 		this.newJavaCode = null;

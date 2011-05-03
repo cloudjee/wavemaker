@@ -118,8 +118,15 @@ dojo.declare("wm.PageLoader", wm.Component, {
 		
 		var path = this.getPath() + wm.pagesFolder + inName + "/" + inName;
 		var ctor = this.loadController(inName, path);
-		if (ctor)
-			this.loadSupport(ctor, path);
+	        if (ctor) {
+		    this.loadSupport(ctor, path);
+		    if (ctor.prototype.i18n) {
+			try {
+			    dojo.requireLocalization("language", inName);
+			    ctor.prototype._i18nDictionary = dojo.i18n.getLocalization("language", inName);
+			} catch(e) {}
+		    }
+		}
 		return ctor;
 	},
         loadPage: function(inClassName, inName) {

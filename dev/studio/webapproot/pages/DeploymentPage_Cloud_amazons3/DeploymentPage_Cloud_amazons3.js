@@ -19,6 +19,8 @@
 dojo.provide("wm.studio.pages.DeploymentPage_Cloud_storage.DeploymentPage_Cloud_amazons3");
 
 dojo.declare("DeploymentPage_Cloud_amazons3", wm.Page, { 
+    i18n: true,
+
     accessKeyIdValue: null,
     secretAccessKeyValue: null,
 	serviceURL: "s3.amazonaws.com",

@@ -16,6 +16,7 @@
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */ 
 dojo.declare("Start", wm.Page, {
+        i18n: true,
 	start: function() {
 		this.subscribe("wm-project-changed", this, "update");
 		this.existingProjectList.connect(this.existingProjectList, "onformat", this, "existingProjectListFormatCell");

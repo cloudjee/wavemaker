@@ -19,6 +19,7 @@
 dojo.provide("wm.studio.pages.UserSettings.UserSettings");
 
 dojo.declare("UserSettings", wm.Page, {
+        i18n: true,
 	start: function() {
 		this.connect(this.domNode, "keydown", this, "keydown");
 		this.oldPasswordEditor.focus();

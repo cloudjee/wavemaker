@@ -19,6 +19,7 @@
 dojo.provide("wm.studio.pages.DeploymentPage_Cloud.DeploymentPage_Cloud");
 
 dojo.declare("DeploymentPage_Cloud", wm.Page, { 
+    i18n: true,
     start: function() {
 	dojo.query("#" + this.chooseCloudList.domNode.id + " .wmlist-item:nth-child(odd)").addClass("Odd");
 	dojo.query("#" + this.chooseCloudList.domNode.id + " .wmlist-item:nth-child(even)").addClass("Even");

@@ -19,7 +19,7 @@
 dojo.provide("wm.studio.pages.DDLDialog.DDLDialog");
 
 dojo.declare("DDLDialog", wm.Page, {
-
+        i18n: true,
 	showDDL: false,
 
 	start: function() {

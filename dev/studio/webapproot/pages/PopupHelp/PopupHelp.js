@@ -19,6 +19,7 @@ dojo.provide("wm.studio.pages.PopupHelp.PopupHelp");
 
 
 dojo.declare("PopupHelp", wm.Page, {
+        i18n: true,
 	//===========================================================================
 	// Initialization / setup
 	//===========================================================================

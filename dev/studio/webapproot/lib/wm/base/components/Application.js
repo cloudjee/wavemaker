@@ -25,6 +25,7 @@ wm.registerComponentLoader = function(inType, inLoader){
 };
 
 dojo.declare("wm.Application", wm.Component, {
+    i18n: false,
 	main: "Main",
         deletionDisabled: 1,
         projectSubVersion: 1,
@@ -39,6 +40,14 @@ dojo.declare("wm.Application", wm.Component, {
 		app = wm.application = wm.application || this;
 		this.connectList = [];
 		this.app = this;
+
+	        if (this.i18n) {
+		    try {
+			dojo.requireLocalization("language", "app");
+			this._i18nDictionary = dojo.i18n.getLocalization("language", "app");
+		    } catch(e){}
+		}
+
 		this.inherited(arguments);
 		wm.typeManager.initTypes();
 
@@ -843,6 +852,7 @@ wm.Object.extendSchema(wm.Application, {
     name: {ignore: 1}, // at some point, we might provide this as a way to rename the project... but renaming is really a server side op, so requires confirmation. 
     main: {shortname: "mainPageName"},
     promptChromeFrame: {shortname: "chromeFrame (NA)", ignore: 1},
+    i18n: {type: "boolean"},
     theme: {type: "string"},
     //IERoundedCorners: {ignore: true},
     studioVersion: {writeonly: true, type: "string"},

@@ -17,7 +17,8 @@
  */ 
 
 dojo.declare("Login", wm.Page, {
-    form: null,
+        i18n: true,
+        form: null,
 	start: function() {
 	    //this.connect(this.domNode, "keydown", this, "keydown");
 

@@ -23,6 +23,7 @@ dojo.declare("DeploymentPage_Cloud_eucalyptusec2", wm.Page, {
 	serviceURL: null,
 	loginError: false,
     start: function() {
+        i18n: true,
 	wm.typeManager.addType("com.wavemaker.tools.cloudmgr.CloudSecurityGroup", {internal: true, 			
 									     "fields": {
 											"description": {

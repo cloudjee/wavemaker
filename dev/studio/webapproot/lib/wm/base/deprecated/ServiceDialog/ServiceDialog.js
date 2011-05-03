@@ -18,6 +18,7 @@
 dojo.provide("wm.studio.pages.ServiceDialog.ServiceDialog");
 
 dojo.declare("ServiceDialog", wm.Page, {
+        i18n: true,
 	start: function() {
 		this.update();
 	},

@@ -31,7 +31,8 @@ wm.forAllEditors = function(inParent, inFn) {
 }
 
 dojo.declare("LiveViewEditor", wm.Page, {
-    orderOffset: 0,
+        i18n: true,
+        orderOffset: 0,
 	start: function() {
 		this.clearFieldForm();
 	},
