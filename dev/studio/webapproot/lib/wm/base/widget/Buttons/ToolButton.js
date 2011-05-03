@@ -68,14 +68,18 @@ dojo.declare("wm.ToolButton", wm.Control, {
 		this.imageListChanged();
 	},
 	click: function(inEvent) {
-	    if (!this.clicked) 
-		this.setProp("clicked", true);
-
 	    /* Sometimes users go from an editor to clicking a button and some browsers don't update the editor value in time for
-	     * our onclick handler to see it.  So build in a delay before firing onclick handlers
+	     * our onclick handler to see it.  So build in a delay before firing onclick handlers.  Also sometimes a user enters a value,
+	     * and that value enables the save button, but only onblur.  So, we need an onidle to determine if the button is disabled or enabled.
+	     * Making matters worse, we had to remove the dom-level disabling of the button so that the click method can still fire, do an onidle,
+	     * and THEN test if its disabled
 	     */
 	    wm.onidle(this, function() {
-	        this.onclick(inEvent, this);
+		if (!this.disabled) {
+		    if (!this.clicked) 
+			this.setProp("clicked", true);
+	            this.onclick(inEvent, this);
+		}
 	    });
 	},
         onclick: function() {
@@ -88,16 +92,24 @@ dojo.declare("wm.ToolButton", wm.Control, {
 		return t ? t.imageList : null;
 	},
 	setDisabled: function(inDisabled) {
+	    if (inDisabled != this.disabled) {
 		this.inherited(arguments);
 		this.btnNode.disabled = inDisabled ? "disabled" : "";
 		dojo[inDisabled ? "addClass" : "removeClass"](this.domNode, "wmbutton-disabled");
-	        this.invalidCss = true;
-	    this.render(false, true);
+
+		/* Used to always call render, which destroys and recreates the button. Unfortunately,
+		 * it had an annoying tendency to do this while the user is trying to click on it, which often
+		 * means the user's click fails.  Example: I go from an editor to a button.  Editor's onchange is bound to this button's
+		 * disabled state.  Call to setDisabled rerendered the button while I click on it. Click fails. */
+		if (this._imageList && this.imageIndex && this.declaredClass == "wm.ToolButton") 
+		    this.updateImageListButtonHtml();
+	    }
 	},
 	setSelected: function(inSelected) {
-		this.selected = inSelected;
-	        this.invalidCss = true;
-		this.render();
+	    this.selected = inSelected;
+	    if (this._imageList && this.imageIndex && this.declaredClass == "wm.ToolButton") {
+		this.updateImageListButtonHtml();
+	    }
 	},
 	setCaption: function(inCaption) {
 		this.caption = inCaption;
@@ -149,18 +161,32 @@ dojo.declare("wm.ToolButton", wm.Control, {
 	        this.invalidCss = true;
 	    this.render(true,true);
 	},
+    getCurrentImageIndex: function() {
+	if (this.declaredClass != "wm.ToolButton")
+	    return this.imageIndex;
+
+	// straight up toolbutton uses state to adjust the imageIndex; this requires imageLists to have multiple rows of icons, each row representing 
+	// a different state.  This is a pain for users, so is not a part of any of the subclasses.
+	if (this.disabled)
+	    return this.imageIndex + this._imageList.colCount * 2;
+	if (this.selected)
+	    return this.imageIndex + this._imageList.colCount;
+	return this.imageIndex;
+    },
+    updateImageListButtonHtml: function() {
+	var sl = this.singleLine ? "line-height: " + this.height + "; " : "";
+	var captionHtml = this.caption ? '<span style="padding-left: 2px; ' + sl +'">' + this.caption + '</span>' : "";
+	var ii = this.getCurrentImageIndex();
+	this.btnNode.innerHTML = this._imageList.getImageHtml(ii) + captionHtml;
+    },
     render: function(forceRender, noInherited) {
 	    if (!forceRender && (!this.invalidCss || !this.isReflowEnabled())) return;
             if (!noInherited)
 	        this.inherited(arguments);
 	    var il = this._imageList;
 		if (il && il.getImageHtml && this.imageIndex >= 0) {
-			var ii = this.imageIndex + (this.disabled && this.declaredClass == "wm.ToolButton" ? il.colCount * 2 : 0) + (this.selected ? il.colCount : 0);
-			var sl = this.singleLine ? "line-height: " + this.height + "; " : "";
-			var captionHtml = this.caption ? '<span style="padding-left: 2px; ' + sl +'">' + this.caption + '</span>' : "";
-			this.btnNode.innerHTML = il.getImageHtml(ii) + captionHtml;
-			this.btnNode.style.padding = "0px";
-
+		    this.btnNode.style.padding = "0px";
+		    this.updateImageListButtonHtml();
 		} else if (this.iconUrl) {
                     var url = this.iconUrl;
                     var root;
