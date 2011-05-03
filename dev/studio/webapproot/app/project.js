@@ -1259,6 +1259,30 @@ Studio.extend({
 	    app.toastSuccess(this.getDictionaryItem("TOAST_SAVE_PROJECT_SUCCESS"));
 	    this.saveProjectSuccess();
 	}
+	var activeLayer = this.tabs.getActiveLayer();
+	while (activeLayer.c$[0] instanceof wm.Layers)
+	    activeLayer = activeLayer.c$[0].getActiveLayer();
+	switch(activeLayer.name) {
+	case "scriptLayer":
+	    this.editArea.focus();
+	    break;
+	case "cssLayer":
+	    this.cssEditArea.focus();
+	    break;
+	case "markupLayer":
+	    this.markupEditArea.focus();
+	    break;
+	case "appsource":
+	    this.appsourceEditor.focus();
+	    break;
+	default:
+	    switch(activeLayer.parent.name) {
+	    case "JavaEditorSubTab":
+		activeLayer.c$[0].page.javaCodeEditor.focus();
+		break;
+	    }
+	    break;
+	}
     },
     saveProjectSuccess: function() {}, // for dojo.connect
     beginBind: function(inPropName, editArea, type) {
