@@ -48,7 +48,8 @@ dojo.declare("wm.AceEditor", wm.Control, {
 	if (!wm.AceEditor.libraryLoading) {
 	    wm.AceEditor.libraryLoading = true;
 	    var script = document.createElement("script");
-	    script.src = "/wavemaker/app/lib/ace/build/src/" + (djConfig.isDebug ? "ace-uncompressed.js" : "ace.js");
+	    //script.src = "/wavemaker/app/lib/ace/build/src/" + (djConfig.isDebug ? "ace-uncompressed.js" : "ace.js");
+	    script.src = "/wavemaker/app/lib/ace/" + (djConfig.isDebug ? "ace-uncompressed.js" : "ace.js");
 	    head.appendChild(script);
 	}
 	this.inherited(arguments);
