@@ -12,8 +12,11 @@ dojo.require("wm.base.Plugin");
 wm.getDictionaryItem = function(name, params) {
     if (params == undefined)
 	return wm.locale.phrases[name];
-    else
-	    return dojo.string.substitute(wm.locale.phrases[name],params);	
+    
+    var newparams = {};
+    for (var i in params)
+	newparams[i] = (params[i] === undefined || params[i] === null) ? "" : params[i];
+	    return dojo.string.substitute(wm.locale.phrases[name],newparams);	
 }
 
 wm.Plugin.plugin("i18n", wm.Component, {
@@ -54,7 +57,7 @@ wm.Plugin.plugin("i18nPageLoader", wm.PageLoader, {
 	return ctor;
     }
 });
-*/
+
 wm.Plugin.plugin("i18nApplication", wm.Application, {
     init: function() {
 	try {
@@ -64,3 +67,4 @@ wm.Plugin.plugin("i18nApplication", wm.Application, {
 	this.i18nApplicationSocket(arguments);
     }
 });
+*/
