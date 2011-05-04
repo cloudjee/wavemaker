@@ -86,7 +86,7 @@ dojo.declare("wm.RelatedEditor", wm.LiveFormBase, {
 			this.dataSet.beginUpdate();
 			this.dataSet.setData(this._lookupCache);
 			this.dataSet.endUpdate();
-			this._lookupCache = null;
+			this._lookupCache = undefined;
 		}
 		this.inherited(arguments);
 	}
