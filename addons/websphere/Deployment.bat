@@ -7,7 +7,7 @@ echo ear file	= %3
 echo host		= %4
 echo port		= %5
 echo user		= %6
-echo passwd		= %7
+@rem echo passwd	= %7
 echo jsr88 home = %8
 echo ----
 
