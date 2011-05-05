@@ -338,7 +338,7 @@ dependencies = {
 				"wm.studio.app.dataconstants",
 				"wm.studio.app.datautils",
 				"wm.studio.app.servicesTree",
-				"wm.studio.pages.Binder.Binder",
+			    //"wm.studio.pages.Binder.Binder",
 				"wm.studio.pages.BindSourceDialog.BindSourceDialog",
 				/* Load on demand
 				"wm.studio.pages.ImportPageDialog.ImportPageDialog",
