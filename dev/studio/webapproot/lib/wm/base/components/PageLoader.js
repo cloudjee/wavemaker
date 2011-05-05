@@ -122,7 +122,7 @@ dojo.declare("wm.PageLoader", wm.Component, {
 		    this.loadSupport(ctor, path);
 		    if (ctor.prototype.i18n) {
 			try {
-			    dojo.requireLocalization("language", inName);
+			    dojo["requireLocalization"]("language", inName);
 			    ctor.prototype._i18nDictionary = dojo.i18n.getLocalization("language", inName);
 			} catch(e) {}
 		    }

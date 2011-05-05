@@ -43,7 +43,7 @@ dojo.declare("wm.Application", wm.Component, {
 
 	        if (this.i18n) {
 		    try {
-			dojo.requireLocalization("language", "app");
+			dojo["requireLocalization"]("language", "app");
 			this._i18nDictionary = dojo.i18n.getLocalization("language", "app");
 		    } catch(e){}
 		}

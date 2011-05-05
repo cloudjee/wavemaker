@@ -46,25 +46,3 @@ wm.Plugin.plugin("i18n", wm.Component, {
     }
 });
 
-/*
-wm.Plugin.plugin("i18nPageLoader", wm.PageLoader, {
-    loadPageCode: function(inName) {
-	var ctor = this.i18nPageLoaderSocket(arguments);
-	try {
-	    dojo.requireLocalization("language", inName);
-	    ctor.prototype._i18nDictionary = dojo.i18n.getLocalization("language", inName);
-	} catch(e) {}
-	return ctor;
-    }
-});
-
-wm.Plugin.plugin("i18nApplication", wm.Application, {
-    init: function() {
-	try {
-	    dojo.requireLocalization("language", "app");
-	    this._i18nDictionary = dojo.i18n.getLocalization("language", "app");
-	} catch(e){}
-	this.i18nApplicationSocket(arguments);
-    }
-});
-*/
