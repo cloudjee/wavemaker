@@ -117,6 +117,10 @@ dojo.declare("wm.DebugTree", wm.Tree, {
 	this.componentEventImage = "<img src='" + dojo.moduleUrl("lib.images.silkIcons") + "bullet_go.png' /> ";
 	this.commands = [];
     },
+    clear: function() {
+	this.inherited(arguments);
+	this.tmpRoot = this.root;
+    },
     // used like console.log
     log: function(args,parent) {
 	new wm.JSObjTreeNode(parent || this.tmpRoot, {prefix: "",
