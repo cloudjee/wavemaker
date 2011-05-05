@@ -142,7 +142,8 @@ dojo.declare("DeploymentPage_AppGeneration", wm.Part, {
 	    positionLocation: " l",
 	    width: "500px",
 	    height: "450px",
-	    modal: true
+	    modal: true,
+	    hideControls: true
 	},
 	d = studio.JNDIDialog = new wm.PageDialog(props);
 /*
