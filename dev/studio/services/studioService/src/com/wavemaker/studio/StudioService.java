@@ -484,7 +484,7 @@ System.out.println("F");
 
     @ExposeToClient
     public String getContent(String inUrl) throws IOException {
-	System.out.println("URL:"+inUrl);
+	//System.out.println("URL:"+inUrl);
 	URL url = new URL(inUrl);
 	  String str = "";
 	  try {
@@ -629,7 +629,6 @@ System.out.println("F");
     	IOUtils.copy(file.getInputStream(), fos);
     	file.getInputStream().close();
     	fos.close();
-
 	ret.setPath(outputFile.getName());
 	ret.setError("");
 	ret.setWidth("");
