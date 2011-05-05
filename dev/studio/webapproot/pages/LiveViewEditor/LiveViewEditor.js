@@ -477,11 +477,11 @@ dojo.declare("LiveViewEditor", wm.Page, {
 		studio.select(this.clientLiveView);
 	        //studio.project.saveProject();
 	        studio.saveAll(studio.project);
-	    dojo.connect(studio.project, "saveComplete", this, function() {
-	        this._cachedData = this.clientLiveView.write("");
-	        this.setDirty();
-	        this.saveComplete();
-	    });
+	        this.connect(studio.project, "saveComplete", this, function() {
+	            this._cachedData = this.clientLiveView.write("");
+	            this.setDirty();
+	            this.saveComplete();
+		});
 	},
 	delLiveViewBtnClick: function(inSender) {
 		var v = this.clientLiveView;
