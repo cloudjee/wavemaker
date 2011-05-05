@@ -92,7 +92,7 @@ NEXT: exit "build"</echo>
     </target>
 
     <target name="build-source" description="Creates a source tarball"
-        depends="common.generate-best-license" if="buildSrc"  unless="skip.build-source">
+        depends="common.generate-best-license" if="buildSrc" unless="skip.build-source">
 		
 	<echo>DEBUG VERSION.TXT: build.dir == ${build.dir} PREFIX = ${tarroot}, version.file.name = ${version.file.name}</echo>
 		<property name="tempsrc.root" value="${build.dir}/tempsrcroot"/>
@@ -130,11 +130,21 @@ NEXT: exit "build"</echo>
                 <exclude name="dev/studio/services/dummyService/**"/>
                 <exclude name="dev/studio/services/registrationService/**"/>
                 <exclude name="dev/studio/services/UserService/**"/>
+		<exclude name="dev/studio/webapproot/app/lib/ace/**"/>
+		<exclude name="dev/studio/webapproot/app/lib/ace-build/**"/>
+		<exclude name="dev/studio/webapproot/WEB-INF/lib/hibernate-tools.jar"/>
+		<exclude name="dev/studio/webapproot/WEB-INF/lib/hibernate3.jar"/>
                 <exclude name="dev/studio/webapproot/WEB-INF/lib/db2jcc.jar"/>
                 <exclude name="dev/studio/webapproot/WEB-INF/lib/ojdbc14.jar"/>
                 <exclude name="dev/studio/webapproot/WEB-INF/lib/wsdl4j.jar"/>
                 <exclude name="dev/core/runtime/lib/wsdl4j-1_6_2/wsdl4j.jar"/>
                 <exclude name="dev/core/runtime/lib/wsdl4j-1_6_2/wsdl4j-src-1.6.2.zip"/>
+		<exclude name="dev/core/runtime/lib/jaxb-ri-2.1.9/src"/>
+		<exclude name="dev/core/runtime/lib/jaxb-ri-2.1.9/jaxb-xjc.src.jar"/>
+		<exclude name="dev/core/runtime/lib/jaxb-ri-2.1.9/jaxb-api-src.jar"/>
+		<exclude name="dev/core/runtime/lib/jaxb-ri-2.1.9/jaxb-impl.src.jar"/>
+		<exclude name="dev/core/runtime/lib/hibernate-3.2/**"/>
+		<exclude name="dev/core/tools/lib/HibernateTools-3.2.0.GA/**"/>
                 <exclude name="**/RbacPlugin.js" unless="common.modules.isEnterprise"/>
             </tarfileset>
             <tarfileset dir="${build.dir}" prefix="${tarroot}">
