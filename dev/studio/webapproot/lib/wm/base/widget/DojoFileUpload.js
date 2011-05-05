@@ -692,8 +692,8 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
 },
     onSuccess: function(fileList) {
     },
-    onError: function(evt) {
-        app.toastError(wm.getDictionaryItem("wm.DojoFileUpload.TOAST_ONERROR", {error: evt}));
+    onError: function(inErrorMsg) {
+        app.toastError(wm.getDictionaryItem("wm.DojoFileUpload.TOAST_ONERROR", {error: inErrorMsg}));
         this.progressBar.hide();
         if (this.useList) {
             this.updateHtml();
