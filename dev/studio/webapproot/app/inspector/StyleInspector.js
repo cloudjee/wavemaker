@@ -103,6 +103,7 @@ dojo.declare("wm.StyleInspector", [wm.Layers, wm.InspectorBase], {
 						       parent: this.classListPanel,
 						       caption: i,
 						       name: i,
+						       allowNone: true,
 						       dataField: "dataValue",
 						       displayField: "dataValue",
 						       captionPosition: "top",
