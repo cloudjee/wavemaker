@@ -15,7 +15,7 @@ import com.wavemaker.studio.clouddb.data.User;
 
 /**
  *  Operations for service "CloudDB"
- *  02/01/2011 11:28:42
+ *  05/04/2011 13:13:20
  * 
  */
 @SuppressWarnings("unchecked")

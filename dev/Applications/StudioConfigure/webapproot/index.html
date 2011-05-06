@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=8" />	
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="cache-control" content="must-revalidate" />
+<meta name="description" content="A WaveMaker Ajax JavaScript Java Spring Web Application" />
+<meta name="keywords" content=StudioConfigure />
+<meta name="generator" content="WaveMaker Visual Ajax Studio" />
+<title>StudioConfigure</title>
+<link rel="shortcut icon" href="/wavemaker/lib/boot/images/favicon.ico" />
+<style type="text/css">
+#_wm_loading.studio_loader {
+background-image: url("images/wm-splash-screen.gif");
+background-repeat: no-repeat;
+background-position: 50% 50%;
+}
+body {
+        background: -webkit-gradient(linear, left top, left bottom, from(#444444), to(#9EA6B3));
+	background: -moz-linear-gradient(top,  #444444,  #9EA6B3);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#444444', endColorstr='#9EA6B3');
+}
+</style>
+<style type="text/css">
+	@import "/wavemaker/lib/boot/boot.css";
+	@import "app.css";
+	
+	/* styling for the wavemaker application element */
+	#wavemakerNode {
+		height: 100%;
+		overflow: hidden;
+		position: relative;
+	}
+</style>
+
+<!-- Boot Wavemaker -->
+<script type="text/javascript" src="config.js"></script>
+<script type="text/javascript" src="/wavemaker/lib/boot/boot.js"></script>
+</head>
+<body class="tundra">
+	<!-- Begin StudioConfigure -->
+	<div id="wavemakerNode">
+		<div id="_wm_googleChromeDialog" class='chromeFramePrompt' style='display:none;'>
+			<div style='float:right' onclick='closeChromeFramePrompt()'>
+				<img src='/wavemaker/images/delete_24.png' style='cursor:pointer;'>
+			</div>
+			<table><tr><td><div id='googleChromeFrameDiv' style='z-index:999;'></div></td></tr></table>
+		</div>
+	<div id="_wm_loading" class="studio_loader" style="z-index: 100;">
+		<table><tr><td></td></tr></table>
+	</div>
+
+	</div>
+	<script type="text/javascript" src="/wavemaker/lib/runtimeLoader.js"></script>
+	<script type="text/javascript" src="lib_project.js"></script>
+	<script type="text/javascript" src="types.js"></script>
+	<script type="text/javascript" src="StudioConfigure.js"></script>
+	<script type="text/javascript">
+		function promptGoogleFrame()
+		{
+			dojo.byId('_wm_googleChromeDialog').style.display = 'block';
+			//alert('Please install Google Chrome Frame');
+		}
+
+		function closeChromeFramePrompt()
+		{
+			dojo.byId('_wm_googleChromeDialog').style.display = 'none';
+			dojo.cookie("stopChromeFramePrompt",true,{expires: 365});
+		}
+
+		if (wm.checkGoogleFrame && !dojo.cookie("stopChromeFramePrompt"))
+		{
+			CFInstall.check({node:'googleChromeFrameDiv', preventPrompt:false, onmissing: dojo.hitch(window, 'promptGoogleFrame')});
+		}
+
+		new StudioConfigure({domNode: "wavemakerNode"}).run();
+	</script>
+	<!-- End StudioConfigure -->
+</body>
+</html>

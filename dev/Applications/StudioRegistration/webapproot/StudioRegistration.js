@@ -1,9 +1,10 @@
 dojo.declare("StudioRegistration", wm.Application, {
 	"dialogAnimationTime": 350, 
+	"i18n": false, 
 	"main": "Main", 
-	"projectSubVersion": 23, 
+	"projectSubVersion": 24, 
 	"projectVersion": 1, 
-	"studioVersion": "6.3.0DevBuild - community", 
+	"studioVersion": "6.3.1Beta", 
 	"theme": "wm_notheme", 
 	"toastPosition": "br",
 	"widgets": {
