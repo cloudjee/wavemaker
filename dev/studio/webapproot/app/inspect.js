@@ -251,6 +251,7 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 		navigations: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_NAVIGATION"), list: "navigationCall"},
 		existingCalls: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_SHARED_JAVASCRIPT"), list: "sharedEventHandlers"},
 		dialogs: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_DIALOGS"), list: "dialogs"},
+		layers: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_LAYERS"), list: "layers"},
 		dashboards: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_DASHBOARDS"), list: "dashboards"},
 		timers: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_TIMERS"), list: "timers"}
 	    };
@@ -272,6 +273,10 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 	    dialogList = dialogList.concat(wm.listComponents([studio.application, studio.page], wm.DojoLightbox));
 	    dialogList = dialogList.concat(wm.listComponents([studio.application, studio.page], wm.PopupMenu));
 	    dialogList = dialogList.sort();
+
+
+	    var layerList = wm.listComponents([studio.page], wm.Layer);
+	    layerList = layerList.sort();
 
 	    var dashboardList = wm.listComponents([studio.application, studio.page], wm.Dashboard).sort();
 	    //var lf = wm.listComponents([studio.application, studio.page], wm.LiveForm);
@@ -300,6 +305,11 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 								if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "dialog") == -1) return;
 								a = dialogList;
 								break;
+				            case "layers":
+								if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "layer") == -1) return;
+								a = layerList;
+								break;
+
 					    case "lightboxes":
 								if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "lightbox") == -1) return;
 								a = lightboxList;

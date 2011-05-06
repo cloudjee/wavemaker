@@ -66,6 +66,10 @@ dojo.declare("wm.Layer", wm.Container, {
 		if (p && this.showing && !this.isActive())
 			p.setLayer(this);
 	},
+    /* Called when the layer is the event handler */
+        update: function() {
+	    this.activate();
+	},
 	isActive: function() {
 		return this.active;
 	},
