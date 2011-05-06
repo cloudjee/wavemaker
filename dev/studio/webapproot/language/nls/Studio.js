@@ -272,6 +272,7 @@
     "wm.EventEditor.LIST_SERVICE": "Service Variables:",
     "wm.EventEditor.LIST_SHARED_JAVASCRIPT": "Service Event Handlers:",
     "wm.EventEditor.LIST_DIALOGS": "Dialogs:",
+    "wm.EventEditor.LIST_LAYERS": "Layers:",
     "wm.EventEditor.LIST_DASHBOARDS": "Dashboard Add Widget:",
     "wm.EventEditor.LIST_TIMERS": "TIMERS:",
 
