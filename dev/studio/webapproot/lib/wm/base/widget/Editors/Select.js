@@ -509,6 +509,7 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 	dataField: "All Fields",
 	autoDataSet: true,
 	startUpdate: true,
+        maxResults: 500,
 	init: function() {
 		this.inherited(arguments);
 		if (this.autoDataSet)
@@ -527,7 +528,8 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 				autoUpdate: false,
 				startUpdate: false,
 				_rootField: ff,
-				liveView: v
+			        liveView: v,
+			        maxResults: this.maxResults
 			});
 			this.selectedItem.setType(this.dataSet.type);
 			this.createDataSetWire(lv);

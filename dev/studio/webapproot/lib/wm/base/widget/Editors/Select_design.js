@@ -150,6 +150,7 @@ wm.Object.extendSchema(wm.SelectMenu, {
 
 wm.Object.extendSchema(wm.Lookup, {
 	autoDataSet: {group: "data", order: 3},
+    maxResults: {group: "editor", order: 100},
 	options: {ignore: 1},
 	dataField: {ignore: 1}
 });
@@ -160,6 +161,7 @@ wm.Lookup.extend({
 		var props = this.inherited(arguments);
 		props.dataSet.ignoretmp = this.autoDataSet;
 		props.dataSet.bindTarget = !props.dataSet.ignoretmp;
+	        props.maxResults.ignoretmp = !this.autoDataSet;
 		return props;
 	}
 });
