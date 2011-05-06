@@ -45,7 +45,7 @@ dojo.declare("wm.PopupMenuButton", wm.Button, {
 		var obj = dojo.cookie(this.getRuntimeId());
 		if (obj) obj = dojo.fromJson(obj);
 		if (obj && typeof obj == "object") {
-		    this.caption = obj.caption;
+		    this.setProp("caption", obj.caption);
 		    this.iconClass = obj.iconClass;
 		    this.iconWidth = obj.iconWidth;
 		    this.iconHeight = obj.iconHeight;
@@ -79,7 +79,7 @@ dojo.declare("wm.PopupMenuButton", wm.Button, {
 	this.inherited(arguments);	
     },
     menuChange: function(inLabel, inIconClass, inEvent) {
-	this.caption = inLabel;
+	this.setProp("caption", inLabel);
 	this.iconClass = inIconClass;
 	if (inIconClass) {
 	    var img = dojo.query(".dijitIcon." + inIconClass, this.dojoMenu.dojoObj.domNode)[0];
@@ -96,6 +96,7 @@ dojo.declare("wm.PopupMenuButton", wm.Button, {
 	    }
 	}
 	    this.render(true);
+
 	this.onchange(inLabel,inIconClass,inEvent);
 	this.onchangeNoInit(inLabel,inIconClass,inEvent);
 	if (this.rememberWithCookie) {
@@ -251,6 +252,10 @@ dojo.declare("wm.PopupMenuButton", wm.Button, {
 	    this.fullStructureStr = dojo.toJson(inObj);
 	this.dojoMenu.setFullStructure(inObj);
 	this.dojoMenu.renderDojoObj();
+    },
+    setCaption: function(inCaption) {
+	this.inherited(arguments);
+	this.valueChanged("caption", inCaption);
     },
 /*
     setDefaultItem: function(inData) {
