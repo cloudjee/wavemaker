@@ -26,7 +26,7 @@ Main.widgets = {
 			}]
 		}],
 		pie: ["wm.Template", {"_classes":{"domNode":["wm_Attribution_centerRight","wm_SilverBlueTheme_ToolBar"]},"width":"100%","height":"36px","verticalAlign":"middle","horizontalAlign":"center","border":"1","borderColor":"#ffffff"}, {}, {
-			footerLabel: ["wm.Label", {"_classes":{"domNode":["wm_TextAlign_Center","wm_Attribution_centerRight","wm_FontColor_Blue"]},"caption":"Copyright (C) 2011 WaveMaker","height":"100%","width":"100%","border":"0","borderColor":"#3976B5","padding":""}, {}, {
+			footerLabel: ["wm.Label", {"_classes":{"domNode":["wm_TextAlign_Center","wm_Attribution_centerRight","wm_FontColor_Blue"]},"caption":"Copyright (C) 2011 VMWare, Inc.","height":"100%","width":"100%","border":"0","borderColor":"#3976B5","padding":""}, {}, {
 				format: ["wm.DataFormatter", {}, {}]
 			}]
 		}]
