@@ -1,0 +1,30 @@
+{
+    "name": "cockpit",
+    "description": "Command line component for Skywriter/Ace/Cloud9/etc",
+    "version": "0.1.1",
+    "homepage" : "http://github.com/joewalker/cockpit",
+    "engines": {
+        "node": ">= 0.1.102",
+        "teleport": ">=0.2.0"
+    },
+    "dependencies": {
+        "pilot": ">=0.1.1"
+    },
+    "overlay": {
+        "teleport": {
+            "directories": {
+                "lib": "lib/cockpit"
+            }
+        }
+    },
+    "author": "Joe Walker <jwalker@mozilla.com>",
+    "main": "lib/cockpit",
+    "repository" : {
+        "type" : "git",
+         "url" : "http://github.com/joewalker/cockpit.git"
+    },
+    "licenses": [{
+        "type": "LGPLv3",
+        "url": "http://www.gnu.org/licenses/lgpl-3.0.txt"
+    }]
+}
