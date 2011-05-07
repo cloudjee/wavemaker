@@ -23,10 +23,6 @@ wm.registerPaths(
 wm.loadLibs([ 
 	// Wavemaker
 	"lib.wm.manifest",
-	// Kana
-	//"lib.Kana.manifest",
-	// Palm
-	//"lib.Palm.manifest",
 	// User
 	"common.manifest"
 ]);

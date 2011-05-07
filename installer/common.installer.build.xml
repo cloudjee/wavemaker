@@ -50,6 +50,11 @@
 				<exclude name="**/DojoFlashFileUpload.js" unless="isEnterprise"/>
 			</fileset>
         </copy>
+        
+        <mkdir dir="${installer.wm.root}/studioConfig"/>
+        <copy todir="${installer.wm.root}/studioConfig">
+            <fileset dir="${dist.studioConfig.dir}"/>
+        </copy>
 
         <copy todir="${installer.wm.root}">
             <fileset dir="${build.dir}">
@@ -87,6 +92,11 @@
 					</fileset>
         </copy>
 
+        <mkdir dir="${installer.wm.root}/studioConfig"/>
+        <copy todir="${installer.wm.root}/studioConfig">
+            <fileset dir="${dist.studioConfig.dir}"/>
+        </copy>
+        
         <copy todir="${installer.wm.nojdk.root}">
             <fileset dir="${build.dir}">
               <include name="VERSION"/>

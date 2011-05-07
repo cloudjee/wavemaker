@@ -86,6 +86,13 @@ NEXT: copy the build files into ${dist.studio.dir}</echo>
 				<exclude name="**/wsdl4j.jar" />
             </fileset>
         </copy>
+        
+        <mkdir dir="${dist.studioConfig.dir}"/>
+        <copy todir="${dist.studioConfig.dir}">
+            <fileset dir="${webapproot.studioConfig.dir}">
+                <exclude name="**/.svn*" />
+            </fileset>
+        </copy>
 
 	<echo>Step 6 (dev/build-dist.xml "build"): 
 FINISEHD: copy files into ${dist.studio.dir};
@@ -144,21 +151,21 @@ NEXT: exit "build"</echo>
                 <exclude name="dev/studio/services/dummyService/**"/>
                 <exclude name="dev/studio/services/registrationService/**"/>
                 <exclude name="dev/studio/services/UserService/**"/>
-		<exclude name="dev/studio/webapproot/app/lib/ace/**"/>
-		<exclude name="dev/studio/webapproot/app/lib/ace-build/**"/>
-		<exclude name="dev/studio/webapproot/WEB-INF/lib/hibernate-tools.jar"/>
-		<exclude name="dev/studio/webapproot/WEB-INF/lib/hibernate3.jar"/>
+                <exclude name="dev/studio/webapproot/app/lib/ace/**"/>
+                <exclude name="dev/studio/webapproot/app/lib/ace-build/**"/>
+                <exclude name="dev/studio/webapproot/WEB-INF/lib/hibernate-tools.jar"/>
+                <exclude name="dev/studio/webapproot/WEB-INF/lib/hibernate3.jar"/>
                 <exclude name="dev/studio/webapproot/WEB-INF/lib/db2jcc.jar"/>
                 <exclude name="dev/studio/webapproot/WEB-INF/lib/ojdbc14.jar"/>
                 <exclude name="dev/studio/webapproot/WEB-INF/lib/wsdl4j.jar"/>
                 <exclude name="dev/core/runtime/lib/wsdl4j-1_6_2/wsdl4j.jar"/>
                 <exclude name="dev/core/runtime/lib/wsdl4j-1_6_2/wsdl4j-src-1.6.2.zip"/>
-		<exclude name="dev/core/runtime/lib/jaxb-ri-2.1.9/src"/>
-		<exclude name="dev/core/runtime/lib/jaxb-ri-2.1.9/jaxb-xjc.src.jar"/>
-		<exclude name="dev/core/runtime/lib/jaxb-ri-2.1.9/jaxb-api-src.jar"/>
-		<exclude name="dev/core/runtime/lib/jaxb-ri-2.1.9/jaxb-impl.src.jar"/>
-		<exclude name="dev/core/runtime/lib/hibernate-3.2/**"/>
-		<exclude name="dev/core/tools/lib/HibernateTools-3.2.0.GA/**"/>
+                <exclude name="dev/core/runtime/lib/jaxb-ri-2.1.9/src"/>
+                <exclude name="dev/core/runtime/lib/jaxb-ri-2.1.9/jaxb-xjc.src.jar"/>
+                <exclude name="dev/core/runtime/lib/jaxb-ri-2.1.9/jaxb-api-src.jar"/>
+                <exclude name="dev/core/runtime/lib/jaxb-ri-2.1.9/jaxb-impl.src.jar"/>
+                <exclude name="dev/core/runtime/lib/hibernate-3.2/**"/>
+                <exclude name="dev/core/tools/lib/HibernateTools-3.2.0.GA/**"/>
                 <exclude name="**/RbacPlugin.js" unless="common.modules.isEnterprise"/>
             </tarfileset>
             <tarfileset dir="${build.dir}" prefix="${tarroot}">
