@@ -20,8 +20,10 @@ dojo.declare("wm.Html", wm.Control, {
 	init: function() {
 		dojo.addClass(this.domNode, "wmhtml");
 		this.inherited(arguments);
-		this.connect(this.domNode, "onclick", this, "onclick");
-		this.setHtml(this.html);
+	    this.connect(this.domNode, "onclick", this, function(evt) {
+		wm.onidle(this, "onclick", evt);
+	    });
+	    this.setHtml(this.html);
 	},
 	getHtml: function() {
 		return this.domNode.innerHTML;
