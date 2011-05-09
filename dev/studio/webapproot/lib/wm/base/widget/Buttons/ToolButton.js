@@ -65,8 +65,8 @@ dojo.declare("wm.ToolButton", wm.Control, {
 
 	init: function() {
 	    this.inherited(arguments);
-	    this.connect(this.btnNode, "onclick", this, function() {
-		window.setTimeout(dojo.hitch(this, "click"), 5);
+	    this.connect(this.btnNode, "onclick", this, function(evt) {
+		window.setTimeout(dojo.hitch(this, "click",evt), 5);
 	    });
 	    this.setHint(this.title || this.hint);
 	    this.imageListChanged();
