@@ -35,8 +35,12 @@ dojo.declare("wm.VirtualListItem", null, {
 		this.connections = [
 			dojo.connect(this.domNode, 'mouseover', this, 'mouseover'),
 			dojo.connect(this.domNode, 'mouseout', this, 'mouseout'),
-			dojo.connect(this.domNode, 'click', this, 'click'),
-			dojo.connect(this.domNode, 'dblclick', this, 'dblclick')
+		        dojo.connect(this.domNode, 'click', this, function(evt) {
+			    wm.onidle(this,'click',evt);
+			}),
+		       dojo.connect(this.domNode, 'dblclick', this, function(evt) {
+			   wm.onidle(this, 'dblclick',evt);
+		       })
 		];
 	},
 	setContent: function(inContent) {
@@ -315,6 +319,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 		var selectInfo = {canSelect: true};
 		this._oncanselect(inItem, selectInfo);
 		if (selectInfo.canSelect) {
+			/* candidate for a wm.onidle, but unfortunately, that will make javascript calls that use this async and will likely fail */
 			this.addToSelection(inItem);
 			this.onselect(inItem);
 		}
