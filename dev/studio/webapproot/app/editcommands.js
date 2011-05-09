@@ -36,6 +36,9 @@ Studio.extend({
     */
 
 	saveScriptClick: function() {
+	    var errors = studio.editArea.hasJavascriptErrors();
+	    if (errors)
+		app.alert(errors);
 /*
 	    if (this.scriptPageCompileChkBtn.getChecked()) 
 		this.validateScriptClick();
@@ -44,6 +47,10 @@ Studio.extend({
 	    //this.waitForCallback(bundleDialog.M_SavingScript + this.project.projectName, dojo.hitch(this.project, "saveScript"));
 	},
         saveAppSrcClick: function() {
+	    var errors = studio.appsourceEditor.hasJavascriptErrors();
+	    if (errors)
+		app.alert(errors);
+
 /*
 	    if (this.appsrcPageCompileChkBtn.getChecked()) 
 		this.validateAppScriptClick();

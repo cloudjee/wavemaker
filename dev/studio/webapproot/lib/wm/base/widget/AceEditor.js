@@ -227,6 +227,18 @@ dojo.declare("wm.AceEditor", wm.Control, {
 	    this._editor.getSession().setUseWrapMode(!this._editor.getSession().getUseWrapMode());
     },
 
+    hasJavascriptErrors: function() {
+	if (!this._editor || !this._editor.session || !this._editor.session.$annotations) return false;
+	for (lines in this._editor.session.$annotations) {
+	    var line = this._editor.session.$annotations[lines];
+	    for (annotation in line) {
+		if (line[annotation].type == "error")
+		    return line[annotation].text;
+	    }
+	}
+	return false;
+    },
+
     showHelp: function() {
 	if (!wm.AceEditor.helpDialog) {
 	    var d = wm.AceEditor.helpDialog = new wm.Dialog({owner: app,
