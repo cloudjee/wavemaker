@@ -221,6 +221,10 @@ dojo.declare("DeploymentPage_WebServer", wm.Page, {
     },
 
 	targetPropertiesOKClick: function() {
+		if (this.serverPassword1.getDataValue() != this.serverPassword2.getDataValue()) {
+			app.alert("Error: Passwords do not match!");
+			return;
+		}
 		studio.deploymentService.requestAsync("updateDeploymentTarget", 
 			 [this.targetName.getDataValue(),
 			  this.targetDescription.getDataValue(),
@@ -233,7 +237,7 @@ dojo.declare("DeploymentPage_WebServer", wm.Page, {
 			  this.privateIP.getDataValue() == undefined ?  "" : this.privateIP.getDataValue(),
 			  this.portNumber.getDataValue() == undefined ?  "" : this.portNumber.getDataValue(),
 			  this.serverUser.getDataValue() == undefined ? "" : this.serverUser.getDataValue(),
-			  this.serverPassword1.getDataValue() == undefined ? "" : this.serverUser.getDataValue(),
+			  this.serverPassword1.getDataValue() == undefined ? "" : this.serverPassword1.getDataValue(),
 			  this.currentAction == "Add" ? false : true],
 			 dojo.hitch(this,function(inResult) {
 				 app.alert(inResult.toString());
