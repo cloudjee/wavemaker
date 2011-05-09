@@ -92,8 +92,8 @@
 					</fileset>
         </copy>
 
-        <mkdir dir="${installer.wm.root}/studioConfig"/>
-        <copy todir="${installer.wm.root}/studioConfig">
+        <mkdir dir="${installer.wm.nojdk.root}/studioConfig"/>
+        <copy todir="${installer.wm.nojdk.root}/studioConfig">
             <fileset dir="${dist.studioConfig.dir}"/>
         </copy>
         
