@@ -1,0 +1,23 @@
+{
+	"methods": [{
+		"name": "DownloadPackages",
+		"parameters": null,
+		"returnType": null
+	}, {
+		"name": "unzipFile",
+		"parameters": [{
+			"name": "zipfile",
+			"type": "java.io.File"
+		}],
+		"returnType": "java.io.File"
+	}, {
+		"name": "uploadPackage",
+		"parameters": [{
+			"name": "file",
+			"type": "org.springframework.web.multipart.MultipartFile"
+		}],
+		"returnType": "com.wavemaker.runtime.server.FileUploadResponse"
+	}],
+	"serviceType": "JSON-RPC",
+	"serviceURL": "InstallService.json"
+}
