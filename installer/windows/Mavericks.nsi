@@ -213,10 +213,14 @@ Section WaveMaker main
     Pop $0
     */
 
+    ; Extract Studio Config App
+    ClearErrors
+    File /r /x .svn "${SOURCEDIR}\studioConfig"
+
     ; Extract Demo Directory
     ClearErrors
     File /r /x .svn /x *doc.jar /x *src.jar /x *sources.jar "${SOURCEDIR}\Samples"
-
+    
     ; Configure Demos
     /*
     DetailPrint "Configuring Sample Projects Database Properties..."
