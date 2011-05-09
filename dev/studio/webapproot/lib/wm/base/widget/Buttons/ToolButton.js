@@ -58,26 +58,25 @@ dojo.declare("wm.ToolButton", wm.Control, {
 
 		this.inherited(arguments);
 	},
-	init: function() {
-		this.inherited(arguments);
-		this.connectEvents(this.btnNode, ["click"]);
-		this.setHint(this.title || this.hint);
-		this.imageListChanged();
-	},
-	click: function(inEvent) {
+
 	    /* Sometimes users go from an editor to clicking a button and some browsers don't update the editor value in time for
-	     * our onclick handler to see it.  So build in a delay before firing onclick handlers.  Also sometimes a user enters a value,
-	     * and that value enables the save button, but only onblur.  So, we need an onidle to determine if the button is disabled or enabled.
-	     * Making matters worse, we had to remove the dom-level disabling of the button so that the click method can still fire, do an onidle,
-	     * and THEN test if its disabled
+	     * our onclick handler to see it.  So build in a delay before firing onclick handlers.
 	     */
-	    wm.onidle(this, function() {
-		if (!this.disabled) {
-		    if (!this.clicked) 
-			this.setProp("clicked", true);
-	            this.onclick(inEvent, this);
-		}
+
+	init: function() {
+	    this.inherited(arguments);
+	    this.connect(this.btnNode, "onclick", this, function() {
+		window.setTimeout(dojo.hitch(this, "click"), 5);
 	    });
+	    this.setHint(this.title || this.hint);
+	    this.imageListChanged();
+	},
+        click: function(inEvent) {
+	    if (!this.disabled) {
+		if (!this.clicked) 
+		    this.setProp("clicked", true);
+	        this.onclick(inEvent, this);
+	    }
 	},
         onclick: function() {
 	},
