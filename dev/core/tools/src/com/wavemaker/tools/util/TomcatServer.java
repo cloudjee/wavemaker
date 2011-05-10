@@ -154,6 +154,24 @@ public class TomcatServer extends Server {
                 getPathParam(contextRoot))), "");
     }
 
+	public String start(String contextRoot) {
+
+        contextRoot = checkContextRoot(contextRoot);
+
+        return ObjectUtils.toString(
+            getResponse(getManagerGetConnection("start?" + 
+                getPathParam(contextRoot))), "");
+    }
+
+    public String stop(String contextRoot) {
+
+        contextRoot = checkContextRoot(contextRoot);
+
+        return ObjectUtils.toString(
+            getResponse(getManagerGetConnection("stop?" + 
+                getPathParam(contextRoot))), "");
+    }
+
     public List<Tuple.Two<String, String>> listDeployments() {
         return listDeployments(true);
     }
