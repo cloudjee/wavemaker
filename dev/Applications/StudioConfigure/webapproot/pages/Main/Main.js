@@ -29,7 +29,7 @@ dojo.declare("Main", wm.Page, {
   },
   downloadAndInstallServiceVarError: function(inSender, inError) {
       try {
-        if (inError.message.match(/Operation timed out/i)) {
+        if (inError.message.match(/timed out/i)) {
             this.bypassFirewallLabel.hide();
             this.label2.show();
             this.fileUploadLayer.activate();
