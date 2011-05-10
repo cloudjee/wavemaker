@@ -11,4 +11,30 @@ and is an ideal location for end-users to put any code they need.
 			http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
 			http://www.springframework.org/schema/aop
 			http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+	<bean id="tomcatDeploymentTarget"
+            class="com.wavemaker.tools.deployment.tomcat.TomcatDeploymentTarget"
+            scope="singleton"
+            lazy-init="true"/>
+	
+	<bean id="websphereDeploymentTarget"
+			class="com.wavemaker.tools.deployment.websphere.WebSphereDeploymentTarget"
+			scope="singleton"
+			lazy-init="true"/>
+
+    <bean id="deploymentTargetManager"
+            class="com.wavemaker.tools.deployment.DeploymentTargetManager"
+            scope="singleton"
+            lazy-init="true">
+        <property name="deploymentTargets">
+            <map>
+                <entry key="tomcat">
+                    <ref bean="tomcatDeploymentTarget"/>
+                </entry>
+					
+                <entry key="websphere">
+					<ref bean="websphereDeploymentTarget"/>    
+                </entry>
+            </map>
+        </property>
+    </bean>
 </beans>
