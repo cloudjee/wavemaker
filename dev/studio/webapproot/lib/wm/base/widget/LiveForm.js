@@ -488,9 +488,10 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	/**
 		@lends wm.LiveForm.prototype
 	*/
+    saveOnEnterKey: true,
     alwaysPopulateEditors: false,
         margin: "0",
-	defaultButton: "",
+	defaultButton: "", /* deprecated */
 	displayErrors: true,
 	// process editing via liveData API
 	// if this setting is off, users can manually handle editing events
@@ -508,11 +509,11 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	},
 	_controlSubForms: false,
 	destroy: function() {
-		this._cancelDefaultButton();
+		this._cancelOnEnterKey();
 		this.inherited(arguments);	    
 	},
-	init: function() {
-		this.connect(this.domNode, "keyup", this, "keyup");
+	init: function() {	    
+		this.connect(this.domNode, "keypress", this, "formkeypress");
 		// bc
 		this.canBeginEdit = this.hasEditableData;
 		this.inherited(arguments);
@@ -555,7 +556,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 		return;
 	    if (this.liveVariable && inDataSet && inDataSet.type)
 		this.liveVariable.setLiveSource(inDataSet.type);
-	    this._cancelDefaultButton();
+	    this._cancelOnEnterKey();
 	    this.inherited(arguments, [inDataSet]);
 
 	    if (!this.readonly) {
@@ -829,25 +830,33 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 		});
 		this.validate();
 	},
-	keyup: function(e) {
+        formkeypress: function(e) {
 		// don't process enter for textareas
-		if (e.keyCode == dojo.keys.ENTER && e.target.tagName != "TEXTAREA") {
-			this._defaultButtonHandle = setTimeout(dojo.hitch(this, "_doDefaultButton"), 50);
+		if (e.keyCode == dojo.keys.ENTER && e.target.tagName != "TEXTAREA") {  
+		    this._onEnterKeyHandle = setTimeout(dojo.hitch(this, function() {
+			this._onEnterKeyHandle = null;
+			this._doOnEnterKey();
+		    }), 50); 
 		}
 	},
-	_doDefaultButton: function() {
-		this._defaultButtonHandle = null;
-		var d = this.defaultButton;
-		if (d) {
-			this.forceValidation();
-			if (!d.disabled)
-				wm.fire(d, "onclick");
-		}
+	_doOnEnterKey: function() {
+
+	    /* Deprecated */
+	    var d = this.defaultButton;
+	    if (d) {
+		this.forceValidation();
+		if (!d.disabled)
+		    wm.fire(d, "onclick");
+	    }
+	    /* END Deprecated */
+
+	    if (this.saveOnEnterKey)
+		this.saveDataIfValid();
 	},
-	_cancelDefaultButton: function() {
-		if (this._defaultButtonHandle) {
-			clearTimeout(this._defaultButtonHandle);
-			this._defaultButtonHandle = null;
+        _cancelOnEnterKey: function() {
+		if (this._onEnterKeyHandle) {
+			clearTimeout(this._onEnterKeyHandle);
+			this._onEnterKeyHandle = null;
 		}
 	},
 

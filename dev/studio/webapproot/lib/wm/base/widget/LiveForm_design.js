@@ -191,7 +191,8 @@ wm.LiveFormBase.extend({
 					readonly: true,
 					name: wm.makeNameForProp(ff, "Editor")
 				}),
-		    e = this.createEditor(f, props, {onEnterKeyPress: this.getId() + ".saveDataIfValid"}, wm.getEditorClassName(f.displayType));
+/*		    e = this.createEditor(f, props, {onEnterKeyPress: this.getId() + ".saveDataIfValid"}, wm.getEditorClassName(f.displayType));*/
+		    e = this.createEditor(f, props, {}, wm.getEditorClassName(f.displayType));
 			if (e)
 			this._bindEditor(e);
 			return true;
@@ -579,10 +580,11 @@ wm.LiveForm.description = "Displays a detailed form.";
 wm.Object.extendSchema(wm.LiveForm, {
 	liveVariable: {ignore: 1},
 	liveEditing: { group: "editor", order: 5, type: "Boolean"},
+        saveOnEnterKey: { group: "editor", order: 10, type: "Boolean"},
         alwaysPopulateEditors: { group: "editor", order: 15, type: "Boolean"},
 	liveSaving:{ ignore: 1},
 	operation: { ignore: 1},
-	defaultButton: { ignore: 1, group: "data", order: 5, bindTarget: 1, type: "wm.Button"},
+	defaultButton: { ignore: 1, group: "Deprecated", order: 5, bindTarget: 1, type: "wm.Button"},
         displayErrors: { group: "data", order: 15},
     //noButtonPanel: {group: "display", order: 8, type: "Boolean", ignore: 1},
     //editPanelStyle: {group: "display", order: 9, type: "String"},

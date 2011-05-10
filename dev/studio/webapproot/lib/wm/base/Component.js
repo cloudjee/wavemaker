@@ -786,6 +786,8 @@ this.panel1.createComponent("custom", "wm.Panel", {
 					inComponent.onMouseOut(e);
 				    });
 				});
+			    } else if (n == "onEnterKeyPress") {
+				inComponent.connectOnEnterKey();
 			    }
 			}
 		}

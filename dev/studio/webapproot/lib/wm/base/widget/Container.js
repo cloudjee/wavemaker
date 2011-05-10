@@ -75,6 +75,19 @@ wm.define("wm.Container", wm.Control, {
                 this.setThemeStyleType(this.themeStyleType);
                 */
 	},
+        /* Called from Component.makeEvents or by end user*/
+        connectOnEnterKey: function() {
+	    this.connect(this.domNode, "onkeypress", this, "keypress");
+	},
+        keypress: function(evt) {
+	    var self = this; 
+	    if (evt.keyCode == dojo.keys.ENTER && evt.target.tagName != "TEXTAREA") {
+		wm.job(this.getRuntimeId() + ".enterkeypress", 50, dojo.hitch(this, function() {
+		    if (!this.isDestroyed)
+			this.onEnterKeyPress(evt);
+		}));
+	    }
+	},
         setThemeStyleType: function(inType) {
 	    var oldType = this.getThemeStyleType();
 	    if (oldType)
@@ -598,7 +611,10 @@ wm.Container.extend({
 	// bc
 	clearEditors: function(){
 		return this.clearData();
-	}
+	},
+
+    // events
+    onEnterKeyPress: function(inEvent){}
 });
 
 // this stuff is layout specific
