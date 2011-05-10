@@ -28,6 +28,14 @@ dojo.declare("HandleRequiredJars", wm.Page, {
     onShow: function() {
 	this.layer2.invalid = this.layer4.invalid = this.layer6.invalid = true;
 	this.layer1.activate();
+
+	if (dojo.isIE <= 8) {
+	    var layers = this.layers;
+	    for (var i = 0; i < layers.layers.length; i++) {
+		if (!layers.layers[i].active)
+			layers.layers[i].domNode.style.display = "none";
+		}
+	    }
     },
 
     onSuccess: function(inSender) {
@@ -42,8 +50,14 @@ dojo.declare("HandleRequiredJars", wm.Page, {
 	    }
 	}
     },
-    onError: function(inSender) {
-	app.alert(this.getDictionaryItem("ONERROR"));
+    onError: function(inSender, inError) {
+	if (inError == "Please upload a jar file")
+	    app.alert(this.getDictionaryItem("UPLOAD_A_JAR"));
+	else if (inError.match(/Please upload a jar file, not a (.*) file/)) {
+	    var result = inError.match(/Please upload a jar file, not a (.*) file/);
+	    app.alert(this.getDictionaryItem("UPLOAD_A_JAR_NOT_A", {fileType: result[1]}));
+	} else
+	    app.alert(this.getDictionaryItem("ONERROR"));
     },
     done: function() {
 	this.close();

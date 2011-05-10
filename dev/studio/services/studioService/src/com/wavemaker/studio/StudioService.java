@@ -614,6 +614,15 @@ System.out.println("F");
 	public FileUploadResponse uploadJar(MultipartFile file) {
         FileUploadResponse ret = new FileUploadResponse();
 	try {
+	    String filename = file.getOriginalFilename();
+	    int dotindex = filename.lastIndexOf(".");
+	    String ext = (dotindex == -1) ? "" : filename.substring(dotindex+1);
+	    if (dotindex == -1) 
+		throw new IOException("Please upload a jar file");
+	    else if (!ext.equals("jar")) {
+		throw new IOException("Please upload a jar file, not a " + ext + " file");
+	    }
+
 
 	File destDir = new File(WMAppContext.getInstance().getAppContextRoot());
 	destDir = new File(destDir, "WEB-INF/lib");

@@ -24,7 +24,7 @@ HandleRequiredJars.widgets = {
 		layer2: ["wm.Layer", {_classes: {domNode: ["wmGroupBox"]}, caption: "Step 2", padding: "5", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 		    labelc1: ["wm.Label", {singleLine: false, width: "100%", autoSizeHeight: true, height: "100%", caption: "Now upload the jar into studio"}],
 		    fileUploader: ["wm.DojoFileUpload", {  width: "80px",
-							   height: "40px",
+							   height: "35px",
 							   margin: "2",
 							   useList: false,
 							   buttonCaption: "Upload",
@@ -34,13 +34,13 @@ HandleRequiredJars.widgets = {
 		}],
 
 
-		layer3: ["wm.Layer", {_classes: {domNode: ["wmGroupBox"]}, showing: false, caption: "Step 3", padding: "5", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+		layer3: ["wm.Layer", {_classes: {domNode: ["wmGroupBox"]}, showing: false, caption: "Step 3", padding: "5", verticalAlign: "top", horizontalAlign: "left", showing: false}, {}, {
 		    html2: ["wm.Html", {width: "100%", height: "100%"}]
 		}],
-		layer4: ["wm.Layer", {_classes: {domNode: ["wmGroupBox"]}, showing: false, caption: "Step 4", padding: "5", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+		layer4: ["wm.Layer", {_classes: {domNode: ["wmGroupBox"]}, showing: false, caption: "Step 4", padding: "5", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left", showing: false}, {}, {
 		    labelc4: ["wm.Label", {singleLine: false, width: "100%", autoSizeHeight: true, height: "100%", caption: "Now upload the jar into studio"}],
 		    fileUploader2: ["wm.DojoFileUpload", {  width: "80px",
-							   height: "40px",
+							   height: "35px",
 							   margin: "2",
 							   useList: false,
 							   buttonCaption: "Upload",
@@ -50,13 +50,13 @@ HandleRequiredJars.widgets = {
 		}],
 
 
-		layer5: ["wm.Layer", {_classes: {domNode: ["wmGroupBox"]}, showing: false, caption: "Step 5", padding: "5", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+		layer5: ["wm.Layer", {_classes: {domNode: ["wmGroupBox"]}, showing: false, caption: "Step 5", padding: "5", verticalAlign: "top", horizontalAlign: "left", showing: false}, {}, {
 		    html3: ["wm.Html", {width: "100%", height: "100%"}]
 		}],
-		layer6: ["wm.Layer", {_classes: {domNode: ["wmGroupBox"]}, showing: false, caption: "Step 6", padding: "5", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+		layer6: ["wm.Layer", {_classes: {domNode: ["wmGroupBox"]}, showing: false, caption: "Step 6", padding: "5", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left", showing: false}, {}, {
 		    labelc5: ["wm.Label", {singleLine: false, width: "100%", autoSizeHeight: true, height: "100%", caption: "Now upload the jar into studio"}],
 		    fileUploader3: ["wm.DojoFileUpload", {  width: "80px",
-							   height: "40px",
+							   height: "35px",
 							   margin: "2",
 							   useList: false,
 							   buttonCaption: "Upload",
