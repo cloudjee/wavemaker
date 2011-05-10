@@ -33,11 +33,11 @@ import com.wavemaker.tools.deployment.AppInfo;
  */
 public class TomcatDeploymentTarget implements DeploymentTarget {
 
-    protected static final String HOST_PROPERTY_NAME = "host";
-    protected static final String PORT_PROPERTY_NAME = "port";
-    protected static final String MANAGER_USER_PROPERTY_NAME = "username";
-    protected static final String MANAGER_PASSWORD_PROPERTY_NAME = "password";
-    protected static final Map<String, String> CONFIGURABLE_PROPERTIES;  
+    public static final String HOST_PROPERTY_NAME = "host";
+    public static final String PORT_PROPERTY_NAME = "port";
+    public static final String MANAGER_USER_PROPERTY_NAME = "username";
+    public static final String MANAGER_PASSWORD_PROPERTY_NAME = "password";
+    public static final Map<String, String> CONFIGURABLE_PROPERTIES;  
 
     static {
         Map<String, String> m = new LinkedHashMap<String, String>(4);
@@ -63,6 +63,16 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
     public String redeploy(String contextRoot, Map<String, String> props) {
         TomcatServer tomcat = initTomcat(props);
         return tomcat.redeploy(contextRoot);
+    }
+
+    public String start(String contextRoot, Map<String, String> props) {
+        TomcatServer tomcat = initTomcat(props);
+        return tomcat.start(contextRoot);
+    }
+
+    public String stop(String contextRoot, Map<String, String> props) {
+        TomcatServer tomcat = initTomcat(props);
+        return tomcat.stop(contextRoot);
     }
 
     public List<AppInfo> listDeploymentNames(Map<String, String> props) {

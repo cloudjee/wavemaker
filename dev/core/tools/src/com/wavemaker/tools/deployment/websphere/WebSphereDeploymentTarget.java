@@ -183,6 +183,16 @@ public class WebSphereDeploymentTarget implements DeploymentTarget {
         return null;
     }
 
+    public String start(String contextRoot,
+                    Map<String, String> configuredProperties) {
+        return null;
+    }
+
+    public String stop(String contextRoot,
+                    Map<String, String> configuredProperties) {
+        return null;
+    }
+
     private String extractAppName(File earFile) {
         String fileName = earFile.getName();
         return fileName.substring(0, fileName.length()-4);

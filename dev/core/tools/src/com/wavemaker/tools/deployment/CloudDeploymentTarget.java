@@ -62,6 +62,16 @@ public class CloudDeploymentTarget implements DeploymentTarget {
         throw new NotYetImplementedException();
     }
 
+	public String start(String contextRoot,
+                    Map<String, String> configuredProperties) {
+        return null;
+    }
+
+    public String stop(String contextRoot,
+                    Map<String, String> configuredProperties) {
+        return null;
+    }
+
     public List<AppInfo> listDeploymentNames(Map<String, String> props) {
         throw new NotYetImplementedException();
     }

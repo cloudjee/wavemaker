@@ -59,6 +59,26 @@ public interface DeploymentTarget {
                     Map<String, String> configuredProperties);
 
     /**
+     * start a deployed app.
+     *
+     * @param contextRoot The context root of the app to undeploy
+     * @param configuredProperties  Deployment target specific settings
+     * @return status message
+     */
+    String start(String contextRoot,
+                    Map<String, String> configuredProperties);
+
+    /**
+     * stop a deployed app.
+     *
+     * @param contextRoot The context root of the app to undeploy
+     * @param configuredProperties  Deployment target specific settings
+     * @return status message
+     */
+    String stop(String contextRoot,
+                    Map<String, String> configuredProperties);
+
+    /**
      * @param configuredProperties  Deployment target specific settings 
      * @return  current deployments
      */
