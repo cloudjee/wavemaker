@@ -30,7 +30,9 @@ dojo.declare("wm.Picture", wm.Control, {
 		this.img = this.linkNode.firstChild;
 		dojo.addClass(this.img, "wmpicture-image");
 		//this.connect(this.img, "load", this, "imageLoaded");
-		this.connect(this.img, "click", this, "onclick");
+	        this.connect(this.img, "click", this, function(evt) {
+		    wm.onidle(this,"onclick",evt);
+		});
 		this.setSource(this.source);
 		this.setAspect(this.aspect);
 		this.setLink(this.link);
