@@ -407,7 +407,9 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 		s.right = "1px";
 		result.domNode.appendChild(this._resetButtonNode);
 		this._resetButtonConnect = dojo.connect(this._resetButtonNode, "onclick", this, function() {
-		    this.setDataValue("");
+		    wm.onidle(this, function() {
+			this.setDataValue("");
+		    });
 		});
 	    }
 	    return result;
