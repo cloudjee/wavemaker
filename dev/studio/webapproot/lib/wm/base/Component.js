@@ -786,7 +786,7 @@ this.panel1.createComponent("custom", "wm.Panel", {
 					inComponent.onMouseOut(e);
 				    });
 				});
-			    } else if (n == "onEnterKeyPress") {
+			    } else if (n == "onEnterKeyPress" && inComponent instanceof wm.Container) {
 				inComponent.connectOnEnterKey();
 			    }
 			}
