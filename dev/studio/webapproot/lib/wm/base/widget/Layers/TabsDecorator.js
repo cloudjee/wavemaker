@@ -38,7 +38,11 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 	        //b.style.outline = "none";
 		b.style.display = inLayer.showing ? "" : "none";
 	    this.setBtnText(b, inCaption, inLayer.closable || inLayer.destroyable);
-		this.decoree.connect(b, "onclick", dojo.hitch(this, "tabClicked", inLayer));
+	    this.decoree.connect(b, "onclick", dojo.hitch(this, function(evt) {
+		wm.onidle(this, function() {
+		    this.tabClicked(inLayer,evt);
+		});
+	    }));
 	    b.className=this.decorationClass + "-tab" +  (inLayer.closable || inLayer.destroyable ? " " + this.decorationClass + "-closabletab" : "");
 	    if (!inCaption) b.style.display = "none";
 	    this.tabsControl.domNode.appendChild(b);
