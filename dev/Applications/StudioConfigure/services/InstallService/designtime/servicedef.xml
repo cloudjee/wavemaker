@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" springFile="InstallService.spring.xml" type="JavaService" CRUDService="false" class="com.wavemaker.StudioInstallService" id="InstallService">
+    <operation name="DownloadPackages"/>
     <operation name="unzipFile">
         <parameter isList="false" typeRef="java.io.File" name="zipfile"/>
         <return isList="false" typeRef="java.io.File"/>
     </operation>
-    <operation name="DownloadPackages"/>
     <operation name="uploadPackage">
         <parameter isList="false" typeRef="org.springframework.web.multipart.MultipartFile" name="file"/>
         <return isList="false" typeRef="com.wavemaker.runtime.server.FileUploadResponse"/>

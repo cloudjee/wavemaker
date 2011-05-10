@@ -56,10 +56,10 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
           if (!outputFile.exists())
             throw new IOException("Insufficient permissions to save zip file");
           File zipFolder = unzipFile(outputFile);
-          if (!moveFiles(zipFolder)) 
+          if (!moveFiles(zipFolder, outputFile)) 
             throw new IOException("Insufficient permissions to copy");;
     }  
-    private boolean moveFiles(File zipFolder) {
+    private boolean moveFiles(File zipFolder, File zipFile) {
          boolean result = true;
          File webapproot = new File(RuntimeAccess.getInstance().getSession().getServletContext().getRealPath(""));
 
@@ -69,29 +69,28 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
          if (!newAce.exists()) {
             result = false;
             System.out.println("FAILED TO WRITE: " + newAce.getAbsolutePath());
-         }
-         System.out.println("A " + result);
-            
+         }            
             
          File h1 = new File(zipFolder, "hibernate-tools.jar");
          if (!h1.renameTo(new File(webapproot, "../../studio/WEB-INF/lib/hibernate-tools.jar"))) {
             result = false;
              System.out.println("FAILED TO WRITE: " + new File("../../studio/WEB-INF/lib/hibernate-tools.jar").getAbsolutePath());
          }
-         System.out.println("B " + result);
-         File h2 = new File(zipFolder, "hibernate3.jar");
+
+        File h2 = new File(zipFolder, "hibernate3.jar");
          if (!h2.renameTo(new File(webapproot, "../../studio/WEB-INF/lib/hibernate3.jar"))) {
             result = false;
             System.out.println("FAILED TO WRITE: " + new File("../../studio/WEB-INF/lib/hibernate3.jar").getAbsolutePath());
          }
-         System.out.println("C " + result);
+         
          File jtds = new File(zipFolder, "jtds-1.2.1.jar");
          if (!jtds.renameTo(new File(webapproot, "../../studio/WEB-INF/lib/jtds-1.2.1.jar"))) {
             result = false;
                          System.out.println("FAILED TO WRITE: " + new File("../../studio/WEB-INF/lib/jtds-1.2.1.jar").getAbsolutePath());
          }
          
-         System.out.println("D " + result);
+         
+    		zipFile.renameTo(new File(webapproot, "../../studio/installed_bundle.zip"));
          /*
         try {
           IOUtils.deleteRecursive(zipFolder);
@@ -119,7 +118,7 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
             if (!outputFile.exists())
                 throw new IOException("Insufficient permissions to copy");
             File zipFolder = unzipFile(outputFile);
-            if (!moveFiles(zipFolder)) 
+            if (!moveFiles(zipFolder, outputFile)) 
                 throw new IOException("Insufficient permissions to copy");            
             /* Setup the return object */
             ret.setPath(outputFile.getPath());
@@ -181,8 +180,7 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
 				}
 			}
 			zis.close();
-
-			zipfile.delete();        
+                   
 			File[] currentDirFiles = currentDir.listFiles();
 		    
 			return currentDir;
