@@ -199,7 +199,6 @@ NEXT: exit "build"</echo>
                 <include name="dev/core/runtime/lib/jaxb-ri-2.1.9/jaxb-impl.src.jar"/>
                 <include name="dev/core/runtime/lib/hibernate-3.2/**"/>
                 <include name="dev/core/tools/lib/HibernateTools-3.2.0.GA/**"/>
-                <exclude name="**/RbacPlugin.js" unless="common.modules.isEnterprise"/>
             </tarfileset>
         </tar>
     	
