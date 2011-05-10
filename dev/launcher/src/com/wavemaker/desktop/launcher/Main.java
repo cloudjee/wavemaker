@@ -50,6 +50,7 @@ public class Main
     public static final String STUDIO_DIR = "studio";
     public static final String studioWebApp = "wavemaker";
     public static final String STUDIO_CONFIG_DIR = "studioConfig";
+	public static final String studioConfigApp = "StudioConfigure";
     public static final String studioConfigWebApp = "ConfigurationTool";
     public static final String SRC_DEMOS_DIR = "Samples";
     public static final String DEST_DEMOS_DIR = "samples";
@@ -813,5 +814,19 @@ public class Main
             result = new File(path);
         }
         return result;
+    }
+
+	//Few critic jars must exists.
+    //This method tests if hibernate-tools.jar is missing to tell if jars are missing.
+    public static boolean jarsAreMissing() throws URISyntaxException {
+        boolean missing = false;
+        File studioDir = getStudioDir();
+        File hibToolsJar = new File(studioDir, "WEB-INF/lib/hibernate-tools.jar");
+        if (!hibToolsJar.exists())
+        {
+            missing = true;
+        }
+
+        return missing;
     }
 }
