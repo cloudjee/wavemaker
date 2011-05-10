@@ -1,8 +1,7 @@
 package com.wavemaker;
 import java.net.*;
 import java.io.*;
-import java.util.Date;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -12,6 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.wavemaker.runtime.server.FileUploadResponse;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.runtime.service.annotations.HideFromClient;
+import com.wavemaker.tools.deployment.DeploymentTargetManager;
+import com.wavemaker.tools.deployment.tomcat.TomcatDeploymentTarget;
 
 
 /**
@@ -29,7 +31,11 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
     /* Pass in one of FATAL, ERROR, WARN,  INFO and DEBUG to modify your log level;
      *  recommend changing this to FATAL or ERROR before deploying.  For info on these levels, look for tomcat/log4j documentation
      */
-    public StudioInstallService() {
+    
+	private DeploymentTargetManager deploymentTargetManager;
+    private static final String studioContextName = "/wavemaker";
+
+	public StudioInstallService() {
        super(INFO);
     }
     public void DownloadPackages() throws IOException {
@@ -119,7 +125,10 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
                 throw new IOException("Insufficient permissions to copy");
             File zipFolder = unzipFile(outputFile);
             if (!moveFiles(zipFolder, outputFile)) 
-                throw new IOException("Insufficient permissions to copy");            
+                throw new IOException("Insufficient permissions to copy"); 
+			
+			restartStudioApp();
+
             /* Setup the return object */
             ret.setPath(outputFile.getPath());
             ret.setError("");
@@ -190,4 +199,32 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
 		return (File)null;
 
 	}
+
+	@HideFromClient
+    public void setDeploymentTargetManager(
+            DeploymentTargetManager deploymentTargetManager) {
+        this.deploymentTargetManager = deploymentTargetManager;
+    }
+
+    private void restartStudioApp() throws Exception {
+        String result;
+
+        Map<String, String> m = new LinkedHashMap<String, String>(4);
+        m.put(TomcatDeploymentTarget.HOST_PROPERTY_NAME, "localhost");
+        String port = Integer.toString(RuntimeAccess.getInstance().getRequest().getServerPort());
+        m.put(TomcatDeploymentTarget.PORT_PROPERTY_NAME, port);
+        m.put(TomcatDeploymentTarget.MANAGER_USER_PROPERTY_NAME, "manager");
+        m.put(TomcatDeploymentTarget.MANAGER_PASSWORD_PROPERTY_NAME, "manager");
+        Map<String, String> props = Collections.unmodifiableMap(m);
+
+        result = deploymentTargetManager.getDeploymentTarget("tomcat")
+            .stop(studioContextName, props);
+
+        System.out.println(result);
+
+        result = deploymentTargetManager.getDeploymentTarget("tomcat")
+            .start(studioContextName, props);
+
+        System.out.println(result);
+    }
 }
