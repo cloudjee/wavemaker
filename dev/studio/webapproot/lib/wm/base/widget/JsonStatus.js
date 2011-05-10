@@ -42,7 +42,9 @@ dojo.declare("wm.JsonStatus", wm.Control, {
 	this.inherited(arguments);
 	this.connect(wm.inflight, "add", this, "add");
 	this.connect(wm.inflight, "remove", this, "remove");
-	this.connect(this.domNode, "onclick", this, "onclick");
+	this.connect(this.domNode, "onclick", this, function(evt) {
+	    window.setTimeout(dojo.hitch(this, "onclick",evt), 5);
+	});
 	this.argsList = [];
     },
     add: function(inDeferred, inService, optName, inArgs, inMethod, invoker) {
