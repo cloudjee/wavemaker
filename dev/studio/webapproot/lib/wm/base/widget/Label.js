@@ -27,9 +27,12 @@ dojo.declare("wm.Label", wm.Control, {
 	singleLine: true,
 	align: "none",
 	init: function() {
-		dojo.addClass(this.domNode, "wmlabel");
-		this.inherited(arguments);
-		this.connectEvents(this.domNode, ["click"]);            
+	    dojo.addClass(this.domNode, "wmlabel");
+	    this.inherited(arguments);
+	    this.connect(this.domNode, "onclick", this, function(evt) {
+		window.setTimeout(dojo.hitch(this, "click",evt), 5);
+	    });
+
 		// this.connectEvents(this.domNode, ["dblclick"]);  WAVEMAKER: Uncomment this if we find a good use for this...
 	},
 	click: function(e) {
