@@ -544,8 +544,9 @@ public class MainConsole extends javax.swing.JFrame
     //            pbStatus.setVisible(false);
                 if (Main.jarsAreMissing()) {
                     openBrowser(Main.studioConfigApp);
-                }
-                openBrowser(Main.studioWebApp);
+                } else {
+					openBrowser(Main.studioWebApp);
+				}
             }
             else
             {
