@@ -99,7 +99,6 @@ copy({
                 "ace/mode/css",
                 "ace/mode/html",
                 "ace/mode/xml",
-                'ace/mode/javascript_worker',
                 "ace/mode/matching_brace_outdent", 
                 "ace/virtual_renderer"
             ]
