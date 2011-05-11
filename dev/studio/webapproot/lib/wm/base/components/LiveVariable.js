@@ -140,12 +140,16 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	/** Set the LiveView or LiveTable from which we will get data information */
 	/* valid input: LiveView full id or LiveTable full name */
 	setLiveSource: function(inLiveSource) {
-		var
-			s =this.liveSource = inLiveSource,
-			v = this.getRoot().app.getValueById(s) || this.createLiveView(s);
-		if (v)
-			this.setLiveView(v);
-		this.doAutoUpdate();
+	    var s = this.liveSource = inLiveSource;
+	    var v;
+	    try {
+		v = this.getRoot().app.getValueById(s);
+	    } catch(e) {}
+	    if (!v)
+		v = this.createLiveView(s);
+	    if (v)
+		this.setLiveView(v);
+	    this.doAutoUpdate();
 	},
 		     /*
 	setLiveSource: function(inLiveSource) {
