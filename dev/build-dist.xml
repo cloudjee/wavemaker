@@ -160,6 +160,7 @@ NEXT: exit "build"</echo>
                 <exclude name="dev/studio/webapproot/WEB-INF/lib/db2jcc.jar"/>
                 <exclude name="dev/studio/webapproot/WEB-INF/lib/ojdbc14.jar"/>
                 <exclude name="dev/studio/webapproot/WEB-INF/lib/wsdl4j.jar"/>
+                <exclude name="dev/core/runtime/lib/jdbc/mysql-connector-java-5.1.11-src/**"/>
                 <exclude name="dev/core/runtime/lib/wsdl4j-1_6_2/wsdl4j.jar"/>
                 <exclude name="dev/core/runtime/lib/wsdl4j-1_6_2/wsdl4j-src-1.6.2.zip"/>
                 <exclude name="dev/core/runtime/lib/jaxb-ri-2.1.9/src"/>
@@ -191,8 +192,7 @@ NEXT: exit "build"</echo>
             <tarfileset dir="${tempsrc.root}" prefix="${disclosureroot}">
                 <include name="dev/studio/webapproot/app/lib/ace/**"/>
                 <include name="dev/studio/webapproot/app/lib/ace-build/**"/>
-                <include name="dev/studio/webapproot/WEB-INF/lib/hibernate-tools.jar"/>
-                <include name="dev/studio/webapproot/WEB-INF/lib/hibernate3.jar"/>
+                <include name="dev/core/runtime/lib/jdbc/mysql-connector-java-5.1.11-src/**"/>
                 <include name="dev/core/runtime/lib/jaxb-ri-2.1.9/src"/>
                 <include name="dev/core/runtime/lib/jaxb-ri-2.1.9/jaxb-xjc.src.jar"/>
                 <include name="dev/core/runtime/lib/jaxb-ri-2.1.9/jaxb-api-src.jar"/>
