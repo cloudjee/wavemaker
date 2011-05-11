@@ -70,7 +70,7 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
          File webapproot = new File(RuntimeAccess.getInstance().getSession().getServletContext().getRealPath(""));
 
          File ace = new File(zipFolder, "ace");
-         File newAce = new File(webapproot, "../../studio/app/lib/ace"); 
+         File newAce = new File(webapproot, "../studio/app/lib/ace"); 
          ace.renameTo(newAce);
          if (!newAce.exists()) {
             result = false;
@@ -78,25 +78,25 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
          }            
             
          File h1 = new File(zipFolder, "hibernate-tools.jar");
-         if (!h1.renameTo(new File(webapproot, "../../studio/WEB-INF/lib/hibernate-tools.jar"))) {
+         if (!h1.renameTo(new File(webapproot, "../studio/WEB-INF/lib/hibernate-tools.jar"))) {
             result = false;
-             System.out.println("FAILED TO WRITE: " + new File("../../studio/WEB-INF/lib/hibernate-tools.jar").getAbsolutePath());
+             System.out.println("FAILED TO WRITE: " + new File(webapproot, "../studio/WEB-INF/lib/hibernate-tools.jar").getAbsolutePath());
          }
 
         File h2 = new File(zipFolder, "hibernate3.jar");
-         if (!h2.renameTo(new File(webapproot, "../../studio/WEB-INF/lib/hibernate3.jar"))) {
+         if (!h2.renameTo(new File(webapproot, "../studio/WEB-INF/lib/hibernate3.jar"))) {
             result = false;
-            System.out.println("FAILED TO WRITE: " + new File("../../studio/WEB-INF/lib/hibernate3.jar").getAbsolutePath());
+            System.out.println("FAILED TO WRITE: " + new File(webapproot, "../studio/WEB-INF/lib/hibernate3.jar").getAbsolutePath());
          }
          
          File jtds = new File(zipFolder, "jtds-1.2.1.jar");
-         if (!jtds.renameTo(new File(webapproot, "../../studio/WEB-INF/lib/jtds-1.2.1.jar"))) {
+         if (!jtds.renameTo(new File(webapproot, "../studio/WEB-INF/lib/jtds-1.2.1.jar"))) {
             result = false;
-                         System.out.println("FAILED TO WRITE: " + new File("../../studio/WEB-INF/lib/jtds-1.2.1.jar").getAbsolutePath());
+                         System.out.println("FAILED TO WRITE: " + new File(webapproot, "../studio/WEB-INF/lib/jtds-1.2.1.jar").getAbsolutePath());
          }
          
          
-    		zipFile.renameTo(new File(webapproot, "../../studio/installed_bundle.zip"));
+    		zipFile.renameTo(new File(webapproot, "../studio/installed_bundle.zip"));
          /*
         try {
           IOUtils.deleteRecursive(zipFolder);
