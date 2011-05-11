@@ -1627,7 +1627,17 @@ font-family: "Nimbus Sans L", sans-serif;
     width: 100% !important;
     left: 0px !important;
 }
+.wmdojofileupload form, 
+.wmdojofileupload form > .dijitFileInputReal,
+.wmdojofileupload .wmbutton {
+    cursor: pointer;
+}
 
+.wmdojofileupload form, 
+.wmdojofileupload form > .dijitFileInputReal:hover,
+.wmdojofileupload .wmbutton:hover {
+    color: red !important;
+}
 
 .wmdojofileupload .wmfileuploaderListItem {
     overflow: hidden;
