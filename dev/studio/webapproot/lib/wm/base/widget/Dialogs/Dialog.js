@@ -380,7 +380,13 @@ dojo.declare("wm.Dialog", wm.Container, {
 			// Dialog is responsible for rendering itself.
 			this.renderBounds();
 			this.inherited(arguments);
-			this.dialogScrim.reflowParent();
+	// annoying hack
+		    if (dojo.isChrome && this.buttonBar) {
+			this.buttonBar.bounds.h++;
+			this.buttonBar.renderBounds();
+		    }
+
+		    this.dialogScrim.reflowParent();
 		}
 	},
  	renderBounds: function() {
