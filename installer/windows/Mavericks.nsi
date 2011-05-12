@@ -102,6 +102,7 @@ Var ProjectsDialog
 #Page custom ProjectsDirectoryPage ProjectsDirectoryPageLeave
 !insertmacro MUI_PAGE_STARTMENU Application $StartMenuGroup
 !insertmacro MUI_PAGE_INSTFILES
+Page custom RunLauncherPageFunction
 !define MUI_FINISHPAGE_TEXT "Do you need to clear your browser's cache ? $\r$\n$\r$\nIf this is not your first time running ${PRODUCT_NAME} on this machine, it is strongly suggested that you clear your browser's cache before running ${PRODUCT_NAME} again."
 # !define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\${PRODUCT_NAME}.lnk"
 # !define MUI_FINISHPAGE_SHOWREADME_TEXT "Run ${PRODUCT_NAME}"
@@ -616,6 +617,12 @@ Function DirectoryChanged
     Pop $2
     Pop $1
 FunctionEnd
+
+Function RunLauncherPageFunction
+		MessageBox MB_USERICON|MB_TOPMOST|MB_OK 'Launching configuration tool. The configuration tool will help you install dependencies required to complete installation '
+		Exec '"$INSTDIR\jdk-1.6.0_24\bin\javaw.exe" -Xms256m -Xmx512m -XX:MaxPermSize=256m  -jar "$TomcatDir\launcher.jar"'
+FunctionEnd
+
 
 Function ProjectsDirectoryPageLeave
     Push $0
