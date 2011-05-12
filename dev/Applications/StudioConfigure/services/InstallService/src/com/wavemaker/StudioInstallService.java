@@ -96,19 +96,25 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
          }
          
          
-    		zipFile.renameTo(new File(webapproot, "../studio/installed_bundle.zip"));
+    	zipFile.renameTo(new File(webapproot, "../studio/installed_bundle.zip"));
+
+        try {
+            restartStudioApp();
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = false;
+        }
          /*
         try {
           IOUtils.deleteRecursive(zipFolder);
         } catch(Exception e){}
         */
-    return result;
+        return result;
     }
      public FileUploadResponse uploadPackage(MultipartFile file) throws IOException
     {
-                 File webapproot = new File(RuntimeAccess.getInstance().getSession().getServletContext().getRealPath(""));
+        File webapproot = new File(RuntimeAccess.getInstance().getSession().getServletContext().getRealPath(""));
 
-        
         // Create our return object
         FileUploadResponse ret = new FileUploadResponse();
         try {
@@ -126,8 +132,6 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
             File zipFolder = unzipFile(outputFile);
             if (!moveFiles(zipFolder, outputFile)) 
                 throw new IOException("Insufficient permissions to copy"); 
-			
-			restartStudioApp();
 
             /* Setup the return object */
             ret.setPath(outputFile.getPath());
