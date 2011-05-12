@@ -28,7 +28,7 @@ wm.define("wm.Container", wm.Control, {
 		freeze: { order: 5, type: "Boolean" },
 		box: { ignore: 1 },
 		boxPosition: { ignore: 1},
-		disabled: { ignore: 1, type: "Boolean" },
+	    disabled: { group: "common", type: "Boolean" },
 	        autoScroll: {group: "scrolling", order: 100, ignore: 0, type: "Boolean"}
 	},
     touchScrolling: false,
