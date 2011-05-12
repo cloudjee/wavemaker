@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <beans xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <bean lazy-init="true" scope="singleton" class="com.wavemaker.StudioInstallService" id="InstallService"/>
+    <bean lazy-init="true" scope="singleton" class="com.wavemaker.StudioInstallService" id="InstallService">
+		<property name="deploymentTargetManager">
+            <ref bean="deploymentTargetManager"/>
+        </property>
+	</bean>
     <bean lazy-init="false" scope="singleton" class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
         <property value="InstallService" name="serviceId"/>
         <property ref="JavaService" name="serviceType"/>
