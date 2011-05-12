@@ -288,16 +288,18 @@ wm.addRemoveClass = function(node, classn, addRemove) {
 wm.onidle = function(/*hitch args*/) {
 	return setTimeout(dojo.hitch.apply(dojo, arguments), 1);
 }
-wm.onidleChain = function(functionList) {
-	    var f2 = function(methods) {
-		window.setTimeout(function() {
-		    var f = methods.shift();
-		    if (f) f();
-		    if (methods.length)
-			f2(methods);
-		}, 1);
-	    }
-	    f2(functionList);
+wm.onidleChain = function(functionList, stateObj) {
+    if (!stateObj) stateObj = {};
+    var f2 = function(methods) {
+	window.setTimeout(function() {
+	    var f = methods.shift();
+	    if (f) f();
+	    if (methods.length && !stateObj.canceled)
+		f2(methods);
+	}, 1);
+    }
+    if (!stateObj.canceled)
+        f2(functionList,stateObj);
 
 }
 wm.job = function(inName, inDelay, inJob) {

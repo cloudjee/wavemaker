@@ -589,52 +589,65 @@ dojo.declare("wm.studio.Project", null, {
 	},
 	savePage: function(callback) {
 	    var f = [];
+	    var self = this;
 
 	    f.push(dojo.hitch(this, function() {
 		studio.setSaveProgressBarMessage(this.pageName + ".js");
-		this.savePageData(this.pageName + ".js", studio.getScript());
-		studio.incrementSaveProgressBar(1);
+		var def = this.savePageData(this.pageName + ".js", studio.getScript());
 	    }));
 
 	    f.push(dojo.hitch(this, function() {
 		studio.setSaveProgressBarMessage(this.pageName + ".widgets.js");
 		this.savePageData(this.pageName + ".widgets.js", studio.getWidgets());
-		studio.incrementSaveProgressBar(1);
 	    }));
 
 	    f.push(dojo.hitch(this, function() {	    
 		studio.setSaveProgressBarMessage(this.pageName + ".css");
 		this.savePageData(this.pageName + ".css", studio.getCss());
-		studio.incrementSaveProgressBar(1);
 	    }));
 
 	    f.push(dojo.hitch(this, function() {
 		studio.setSaveProgressBarMessage(this.pageName + ".html");
 		this.savePageData(this.pageName + ".html", studio.getMarkup());
-		studio.incrementSaveProgressBar(1);
 	    }));
 
 	    f.push(dojo.hitch(this, function() {
 		studio.setSaveProgressBarMessage(this.pageName + ".documentation");
 		var documentation = studio.page.getDocumentationHash();
-		this.savePageData(this.pageName + ".documentation.json", dojo.toJson(documentation, true));
-		studio.incrementSaveProgressBar(1);
-		studio.setCleanPage();
+		var def = this.savePageData(this.pageName + ".documentation.json", dojo.toJson(documentation, true));
+
+		// if there are no errors, set the page to clean
+		def.addCallback(function() {
+		    studio.setCleanPage();
+		});
 	    }));
 	    
 	    f.push(callback);
 
 	    // In order to update the progress bar, we need a moment of idle time between each step.  For the cost of some 
 	    // extra code and 12 extra miliseconds, we get a progres bar.
-	    wm.onidleChain(f);
+	    this.saveStateObj = {};
+	    wm.onidleChain(f, this.saveStateObj);
 
 	},
 	saveProjectData: function(inPath, inData, inNoOverwrite) {
 		return studio.studioService.requestSync("writeWebFile", [inPath, inData, inNoOverwrite||false]);
 	},
 	savePageData: function(inPath, inData, inNoOverwrite) {
+	        var self = this;
 		var path = wm.pagesFolder + this.pageName + "/" + inPath;
-		return studio.studioService.requestSync("writeWebFile", [path, inData, inNoOverwrite||false]);
+		var def = studio.studioService.requestSync("writeWebFile", [path, inData, inNoOverwrite||false]);
+		def.addCallback(
+		    function() {
+			studio.incrementSaveProgressBar(1);
+		    });
+	        def.addErrback(
+		    function(inError) {
+			app.toastError(inError.message);
+			self.saveStateObj.canceled = true;
+			studio.progressDialog.hide();
+		    });
+	    return def;
 	},
 	copyProject: function(inName, inNewName) {
 		if (inName && inNewName)
