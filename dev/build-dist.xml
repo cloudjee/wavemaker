@@ -81,9 +81,12 @@ NEXT: copy the build files into ${dist.studio.dir}</echo>
                 <exclude name="**/tests*" />
                 <exclude name="**/php*" />
                 <exclude name="**/*.war"/>
-				<exclude name="**/db2jcc.jar" />
-				<exclude name="**/ojdbc14.jar" />
-				<exclude name="**/wsdl4j.jar" />
+             		<exclude name="**/lib/ace/**"/>
+		        		<exclude name="**/jtds*.jar"/>
+		        		<exclude name="**/hibernate*.jar"/>
+		        		<exclude name="**/db2jcc.jar" />
+		        		<exclude name="**/ojdbc14.jar" />
+		        		<exclude name="**/wsdl4j.jar" />
             </fileset>
         </copy>
         
@@ -91,6 +94,12 @@ NEXT: copy the build files into ${dist.studio.dir}</echo>
         <copy todir="${dist.studioConfig.dir}">
             <fileset dir="${webapproot.studioConfig.dir}">
                 <exclude name="**/.svn*" />
+                <exclude name="**/lib/ace/**"/>
+		        		<exclude name="**/jtds*.jar"/>
+		        		<exclude name="**/hibernate*.jar"/>
+		        		<exclude name="**/db2jcc.jar" />
+		        		<exclude name="**/ojdbc14.jar" />
+		        		<exclude name="**/wsdl4j.jar" />
             </fileset>
         </copy>
 
