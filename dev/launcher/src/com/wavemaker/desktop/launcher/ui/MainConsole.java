@@ -234,7 +234,7 @@ public class MainConsole extends javax.swing.JFrame
             URL target = new URL(
                 "http://localhost:"
                 + this.tomcatConfig.getServicePort()
-                + "/" + Main.studioWebApp
+                + "/" + appName
                 + "/" + attributes);
 
             String browser = prefs.get(OPTION_STUDIO_BROWSER, VAL_SYS_DEF_BROWSER);
@@ -543,7 +543,7 @@ public class MainConsole extends javax.swing.JFrame
                 btnStart.setEnabled(false);
     //            pbStatus.setVisible(false);
                 if (Main.jarsAreMissing()) {
-                    openBrowser(Main.studioConfigApp);
+                    openBrowser(Main.studioConfigWebApp);
                 } else {
 					openBrowser(Main.studioWebApp);
 				}

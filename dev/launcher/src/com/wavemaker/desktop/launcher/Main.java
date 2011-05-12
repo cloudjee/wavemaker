@@ -50,7 +50,6 @@ public class Main
     public static final String STUDIO_DIR = "studio";
     public static final String studioWebApp = "wavemaker";
     public static final String STUDIO_CONFIG_DIR = "studioConfig";
-	public static final String studioConfigApp = "StudioConfigure";
     public static final String studioConfigWebApp = "ConfigurationTool";
     public static final String SRC_DEMOS_DIR = "Samples";
     public static final String DEST_DEMOS_DIR = "samples";
@@ -202,6 +201,7 @@ public class Main
     public static void main(String[] args) throws InterruptedException,
             URISyntaxException, IOException
     {
+        Thread.sleep(5000);
         if (GraphicsEnvironment.isHeadless())
         {
             // Run silently
