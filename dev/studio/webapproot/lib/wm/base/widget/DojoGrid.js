@@ -989,6 +989,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			dojo.forEach(this.columns, function(col, idx){
 				if (!col.show)
 					return;
+			    try {
 				var value = obj[col.id];
 			    if (!value) {
 				var value = obj;
@@ -1026,7 +1027,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 							break;
 					}
 				}
-
+			    } catch(e){value = "";}
 				this.addColumnToCSV(csvData, value);
 			}, this);
 			this.addBreakToCSV(csvData);
