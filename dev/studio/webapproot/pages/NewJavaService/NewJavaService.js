@@ -20,13 +20,21 @@ dojo.declare("NewJavaService", wm.Page, {
 		this.newServiceId = null;
 		this.newJavaCode = null;
 	},
+    onShow: function() {
+	this.newJavaServiceIdInput.focus();
+    },
 	clearAll: function() {
 		this.newJavaServiceIdInput.clear();
 		this.newJavaClassNameInput.clear();
 	},
 	okButtonClick: function(inSender) {
-		var srvid = this.newJavaServiceIdInput.getValue("displayValue");
-		var cls = this.newJavaClassNameInput.getValue("displayValue");
+	    var srvid = dojo.trim(this.newJavaServiceIdInput.getValue("displayValue"));
+	    var cls = dojo.trim(this.newJavaClassNameInput.getValue("displayValue"));
+
+	    if (!cls.match(/^\w[\w\d_.]*[\w\d]$/)) {
+		app.alert(this.getDictionaryItem("ALERT_INVALID_CLASSNAME"));
+		return;
+	    }
 		this.newServiceId = null;
 		this.newJavaCode = null;
 		if (srvid && cls) {

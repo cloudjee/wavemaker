@@ -12,6 +12,7 @@
  *  limitations under the License.
  */
 {
-WAIT_CREATING: "Creating new Java service...",
-ALERT_NEED_INPUT: "Service ID and Class Name cannot be empty!"
+    WAIT_CREATING: "Creating new Java service...",
+    ALERT_NEED_INPUT: "Service ID and Class Name cannot be empty!",
+    ALERT_INVALID_CLASSNAME: "Classnames can include package names, but must consist of characters a-z, A-Z, 0-9, -, _ and '.' and can not end in '.'"
 }
