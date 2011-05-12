@@ -385,9 +385,10 @@ dojo.declare("wm.Dialog", wm.Container, {
 	},
  	renderBounds: function() {
 		if (this.showing) {
-		    if (this.fitToContentHeight && !this._userSized) 
+		    if (this.fitToContentHeight && !this._userSized) {
 			this.bounds.h = this.getPreferredFitToContentHeight();
-
+			this.height = this.bounds.h + "px";
+		    }
 		    if (this._minified) {
 			var parentBox = dojo.contentBox(window.document.body);
 			var t = parentBox.h - 30;
