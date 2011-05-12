@@ -1,0 +1,14 @@
+#!/bin/sh
+
+#
+# An example showing how to use the commandline tools included in this
+# package.
+#
+
+mkdir -p ./gen-src
+
+../../bin/wadl2java \
+    -o ./gen-src \
+    -p com.yahoo.search \
+    -c ../share/binding.xjb \
+    ../share/YahooSearch.wadl
