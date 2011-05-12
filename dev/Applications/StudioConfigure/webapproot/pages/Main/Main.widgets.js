@@ -11,17 +11,14 @@ Main.widgets = {
 	}],
 	layoutBox: ["wm.Layout", {"border":"0","height":"100%","horizontalAlign":"center","width":"100%"}, {}, {
 		panel5: ["wm.Panel", {"_classes":{"domNode":["wm_Attribution_new"]},"border":"0","height":"48px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"266px"}, {}],
-		loginMainPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"center","padding":"20","verticalAlign":"middle","width":"100%"}, {}, {
-			label1: ["wm.Label", {"border":"0","caption":"TODO: 1.Test from installer; 2. mouse-overs for file upload button","padding":"4","width":"100%"}, {}, {
-				format: ["wm.DataFormatter", {}, {}]
-			}],
+		loginMainPanel: ["wm.Panel", {"border":"0","height":"520","horizontalAlign":"center","padding":"20","verticalAlign":"middle","width":"100%"}, {}, {
 			wmTitle: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_14px","wm_TextDecoration_Bold"]},"align":"center","border":"0","caption":"Complete Installation","height":"20px","padding":"4","width":"350px"}, {}, {
 				format: ["wm.DataFormatter", {}, {}]
 			}],
-			loginInputPanel: ["wm.EmphasizedContentPanel", {"_classes":{"domNode":["wm_BorderTopStyle_Curved8px","wm_BorderBottomStyle_Curved8px"]},"border":"2","height":"654px","horizontalAlign":"center","padding":"0","verticalAlign":"center","width":"948px"}, {}, {
+			loginInputPanel: ["wm.EmphasizedContentPanel", {"_classes":{"domNode":["wm_BorderTopStyle_Curved8px","wm_BorderBottomStyle_Curved8px"]},"border":"2","height":"500px","horizontalAlign":"center","padding":"0","verticalAlign":"center","width":"948px"}, {}, {
 				layers1: ["wm.Layers", {"margin":"20","transition":"fade"}, {}, {
 					layer1: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"right","verticalAlign":"top"}, {}, {
-						html2: ["wm.Html", {"border":"0","height":"67px","html":"This is derek's content","margin":"10,20","width":"100%"}, {}],
+						html2: ["wm.Html", {"border":"0","height":"67px","html":"This is derek's content goes here; TODO: 1.Test from installer; 2. mouse-overs for file upload button","margin":"10,20","width":"100%"}, {}],
 						iFrame1: ["wm.IFrame", {"_classes":{"domNode":["wm_BackgroundColor_LightGray"]},"border":"0","height":"100%","source":"https://github.com/wavemaker/WaveMaker-LGPL-Resources/raw/master/license.txt","width":"100%"}, {}],
 						panel3: ["wm.Panel", {"border":"0","height":"48px","horizontalAlign":"center","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 							spacer1: ["wm.Spacer", {"height":"50px","width":"326px"}, {}],
