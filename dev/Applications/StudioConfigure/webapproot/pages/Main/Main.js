@@ -33,7 +33,7 @@ dojo.declare("Main", wm.Page, {
             this.bypassFirewallLabel.hide();
             this.label2.show();
             this.fileUploadLayer.activate();
-        } else if (inError.message.match(/permissions/i)) {            
+        } else if (inError.message.match(/permissions/i) || inError.message.match(/access is denied/i)) {
             this.permissionsLayer.activate();
         }
       } catch(e) {
