@@ -156,6 +156,20 @@ public class Main
     {
         return new File(new File(getCatalinaHome(), ".."), STUDIO_CONFIG_DIR);
     }
+
+    public static boolean noWritePermission() throws URISyntaxException {
+        boolean result = false;
+        File temp = new File(getStudioDir(), "WEB-INF/lib/temptestjar");
+        try {
+            temp.createNewFile();
+        } catch (IOException e) {
+            result = true;
+        }
+
+        temp.delete();
+
+        return result;
+    }
     
     protected static void createDefaultContextXml(File contextDir)
             throws IOException
