@@ -150,8 +150,13 @@ public class ProgressDialog extends JDialog {
 		GraphicsEnvironment ge = GraphicsEnvironment
 		.getLocalGraphicsEnvironment();
 		DisplayMode display = ge.getDefaultScreenDevice().getDisplayMode();
-		this.setLocation(display.getWidth() / 2 - this.getWidth() / 2,
+		if(display != null){
+			this.setLocation(display.getWidth() / 2 - this.getWidth() / 2,
 				display.getHeight() / 2 - this.getHeight() / 2);
+		}
+		else{	
+			this.setLocation(300,300);
+		}
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		this.cancelButton.setCursor(Cursor.getDefaultCursor());
 		// Event Handling

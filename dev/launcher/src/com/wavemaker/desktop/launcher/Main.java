@@ -240,6 +240,7 @@ public class Main
         {
             // Run graphically
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+	    //display could be Null, see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6921661	
             DisplayMode display = ge.getDefaultScreenDevice().getDisplayMode();
             // Check for Studio Upgrade
             if (isStudioUpgrade())
@@ -249,9 +250,13 @@ public class Main
                     getWaveMakerHome(), getNewDefaultWMHome(),
                     isMajorUpgrade());
                 
-                sud.setLocation(display.getWidth() / 2 - sud.getWidth() / 2,
-                    display.getHeight() / 2 - sud.getHeight() / 2);
-                
+                if(display != null) {
+                	sud.setLocation(display.getWidth() / 2 - sud.getWidth() / 2,
+                			display.getHeight() / 2 - sud.getHeight() / 2);
+                }
+                else{
+                	sud.setLocation(300,300);
+                } 
                 sud.setVisible(true);
                 // Perform new installation
                 ProgressDialog progress = new ProgressDialog("Studio Upgrade:",
@@ -274,9 +279,13 @@ public class Main
             // MainLauncherUI ui = new MainLauncherUI(getCurrentVersionString(), tomcatConfig);
             MainConsole ui = new MainConsole(getCurrentVersionString(), tomcatConfig);
             ui.pack();
-            ui.setLocation(display.getWidth() / 2 - ui.getWidth() / 2,
+            if(display != null){
+            	ui.setLocation(display.getWidth() / 2 - ui.getWidth() / 2,
                     display.getHeight() / 2 - ui.getHeight() / 2);
-            
+            }
+            else{
+            	ui.setLocation(300,300);
+            } 
             ui.begin();
         }
     }
