@@ -543,10 +543,16 @@ public class MainConsole extends javax.swing.JFrame
                 btnStart.setEnabled(false);
     //            pbStatus.setVisible(false);
                 if (Main.jarsAreMissing()) {
-                    openBrowser(Main.studioConfigWebApp);
+                    if (Main.noWritePermission()) {
+                        JOptionPane.showMessageDialog(getParent(), bundle.getString("STATUS_MSG_NO_ADMIN_CAPA"));
+                        appServer.stop();
+                        this.dispose();
+                    } else {
+                        openBrowser(Main.studioConfigWebApp);
+                    }
                 } else {
-					openBrowser(Main.studioWebApp);
-				}
+                    openBrowser(Main.studioWebApp);
+                }
             }
             else
             {
