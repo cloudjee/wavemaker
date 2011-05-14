@@ -705,7 +705,7 @@ dojo.declare("wm.Tree", wm.Box, {
 	onmousedown: function(inNode) {},
 	onselect: function(inNode) {},
 	ondeselect: function(inNode) {},
-//	oncheckboxclick: function(inNode) {}, // since we don't expose checkbox, don't expose the event
+	oncheckboxclick: function(inNode) {}, // since we don't expose checkbox, don't expose the event
 	ondblclick: function(inNode) {},
 	oninitchildren: function(inNode) {
 	}
