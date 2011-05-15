@@ -11,7 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package com.wavemaker.tools.ws;
 
 import java.io.File;
@@ -34,6 +33,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.activation.DataSource;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -463,24 +463,47 @@ public class WebServiceToolsManager {
         }
     }
 
+    public List<String> invokeRestCall(String endpointAddress) {
+        return this.invokeRestCall(endpointAddress, "GET", null, null, false, null, null);
+    }
+
+    public List<String> invokeRestCall(String endpointAddress, boolean basicAuth, String userName, String password) {
+        return this.invokeRestCall(endpointAddress, "GET", null, null, basicAuth, userName, password);
+    }
+
     /**
      * Invokes a HTTP GET for the given endpoint address.
      * 
      * @param endpointAddress
      *                The service endpoint.
+     * @param method Request method (GET, POST)
+     * @param contentType Mime content type
+     * @param postData post data
      * @return A list of string with list[0] represents the service response and
      *         list[1] represents the optional error message.
      */
-    public List<String> invokeRestCall(String endpointAddress) {
+    public List<String> invokeRestCall(String endpointAddress, String method, String contentType,
+                                       String postData, boolean basicAuth, String userName, String password) {
         QName serviceQName = new QName(constructNamespace(endpointAddress),
                 "TestService");
 
         String responseString = null;
         String errorMessage = null;
+
         try {
+            //TODO: For now, we only support the xml contenty type.  It should be extended to cover other content
+            //TODO: types such as text/plain.
+            DataSource postSource = HTTPBindingSupport.createDataSource("text/xml; charset=UTF-8", postData);
+
+            BindingProperties bp = null;
+            if (basicAuth) {
+                bp = new BindingProperties();
+                bp.setHttpBasicAuthUsername(userName);
+                bp.setHttpBasicAuthPassword(password);
+            }
             responseString = HTTPBindingSupport.getResponseString(serviceQName,
-                    serviceQName, endpointAddress, HTTPRequestMethod.GET, null,
-                    null);
+                    serviceQName, endpointAddress, HTTPRequestMethod.valueOf(method), postSource,
+                    bp);
             try {
                 // validate XML
                 XmlObject.Factory.parse(responseString);
@@ -488,6 +511,7 @@ public class WebServiceToolsManager {
                 errorMessage = "The response is not in a valid XML format.";
             }
         } catch (Throwable e) {
+            e.printStackTrace();
             errorMessage = e.toString();
         }
         
@@ -499,18 +523,34 @@ public class WebServiceToolsManager {
         return rtn;
     }
 
+    public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress)
+            throws WebServiceException, IOException, XmlException{
+        return this.generateRESTWsdlSettings(endpointAddress, false, null, null);
+    }
+
+    public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress,
+               boolean basicAuth, String userName, String password)
+            throws WebServiceException, IOException, XmlException{
+        return this.generateRESTWsdlSettings(endpointAddress, "GET", null, null,
+                basicAuth, userName, password);
+    }
+
     /**
      * Generates the REST settings using the given request URL. This method
      * will make a HTTP GET call using the request URL and by using the
      * XML response, it will then try to generate the REST settings.
      * 
      * @param endpointAddress The actual request URL.
+     * @param method Request method (GET, POST)
+     * @param contentType Mime content type
+     * @param postData post data
      * @return
      * @throws WebServiceException
      * @throws IOException
      * @throws XmlException
      */
-    public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress)
+    public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress, String method, String contentType,
+                       String postData, boolean basicAuth, String userName, String password)
             throws WebServiceException, IOException, XmlException {
         RESTWsdlSettings settings = new RESTWsdlSettings();
 
@@ -521,9 +561,20 @@ public class WebServiceToolsManager {
         QName serviceQName = new QName(constructNamespace(endpointAddress),
                 serviceName);
 
+        //TODO: For now, we only support the xml contenty type.  It should be extended to cover other content
+        //TODO: types such as text/plain.
+        DataSource postSource = HTTPBindingSupport.createDataSource("text/xml; charset=UTF-8", postData);
+
+        BindingProperties bp = null;
+        if (basicAuth) {
+            bp = new BindingProperties();
+            bp.setHttpBasicAuthUsername(userName);
+            bp.setHttpBasicAuthPassword(password);
+        }
+
         String responseString = HTTPBindingSupport.getResponseString(
                 serviceQName, serviceQName, endpointAddress,
-                HTTPRequestMethod.GET, null, null);
+                HTTPRequestMethod.valueOf(method), postSource, bp);
 
         String outputType = null;
         String xmlSchemaText = null;
