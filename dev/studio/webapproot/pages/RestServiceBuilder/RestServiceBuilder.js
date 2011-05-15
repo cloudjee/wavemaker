@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 dojo.provide("wm.studio.pages.RestServiceBuilder.RestServiceBuilder");
 
 dojo.declare("RestServiceBuilder", wm.Page, {
@@ -122,12 +122,25 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 	},
 	populate: function() {
 		var url = this.owner.owner.restUrlPage.page.url;
+		var method = this.owner.owner.restUrlPage.page.method;
+		var contentType = this.owner.owner.restUrlPage.page.contentType;
+		var postData = this.owner.owner.restUrlPage.page.postData;
+		var basicAuth = this.owner.owner.restUrlPage.page.basicAuth;
+		var userId = this.owner.owner.restUrlPage.page.userId;
+		var password = this.owner.owner.restUrlPage.page.password;
 		if (url) {
 			studio.beginWait("Populating...");
-			studio.webService.requestAsync("generateRESTWsdlSettings", 
-				[url], 
-				dojo.hitch(this, "generateRESTWsdlSettingsSuccess"), 
-				dojo.hitch(this, "generateRESTWsdlSettingsError"));
+			if (method == "GET") {
+				studio.webService.requestAsync("generateRESTWsdlSettings", 
+					[url, basicAuth, userId, password], 
+					dojo.hitch(this, "generateRESTWsdlSettingsSuccess"), 
+					dojo.hitch(this, "generateRESTWsdlSettingsError"));
+			} else { //POST
+				studio.webService.requestAsync("generateRESTWsdlSettings", 
+					[url, method, contentType, postData, basicAuth, userId, password], 
+					dojo.hitch(this, "generateRESTWsdlSettingsSuccess"), 
+					dojo.hitch(this, "generateRESTWsdlSettingsError"));
+			}
 		}
 	},
 	generateRESTWsdlSettingsSuccess: function(inResponse) {
