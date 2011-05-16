@@ -215,7 +215,6 @@ public class Main
     public static void main(String[] args) throws InterruptedException,
             URISyntaxException, IOException
     {
-        Thread.sleep(5000);
         if (GraphicsEnvironment.isHeadless())
         {
             // Run silently
