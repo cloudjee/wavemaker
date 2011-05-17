@@ -4,6 +4,10 @@
 		"parameters": null,
 		"returnType": null
 	}, {
+		"name": "restartStudioApp",
+		"parameters": null,
+		"returnType": null
+	}, {
 		"name": "unzipFile",
 		"parameters": [{
 			"name": "zipfile",

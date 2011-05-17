@@ -210,7 +210,7 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
         this.deploymentTargetManager = deploymentTargetManager;
     }
 
-    private void restartStudioApp() throws Exception {
+    public void restartStudioApp() throws Exception {
         String result;
 
         Map<String, String> m = new LinkedHashMap<String, String>(4);
