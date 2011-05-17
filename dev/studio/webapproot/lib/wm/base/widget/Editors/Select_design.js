@@ -103,6 +103,7 @@ wm.SelectMenu.extend({
 			case "updateNow":
 				return this.update();
 		}
+	    return this.inherited(arguments);
 	},
 	setHasDownArrow: function(inValue){
 		this.hasDownArrow = inValue;
