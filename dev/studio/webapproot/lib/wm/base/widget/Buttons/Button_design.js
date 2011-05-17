@@ -58,6 +58,7 @@ wm.Object.extendSchema(wm.PopupMenuButton, {
     imageIndex: {ignore: true},
     iconMargin: {ignore: true},
     dojoMenu: {ignore: true, doc: 1},
+    editImageIndex: {ignore: 1},
     setIconClass: {group: "method", doc: 1}
 
 });   
