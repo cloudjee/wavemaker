@@ -122,6 +122,7 @@
     <target name="setup-js-html">
         <replaceregexp file="${webapproot.studio.dir}/app/config.js" match="studioVersion\: '(.*)'," replace="studioVersion: '${version.number}'," />
 
+<!--
         <copy file="${studio.dir}/webapproot/pages/Studio/Studio.html.template"
                 tofile="${studio.dir}/webapproot/pages/Studio/Studio.html"
                 overwrite="true">
@@ -129,8 +130,8 @@
                 <filter token="VERSION" value="${version.number}"/>
             </filterset>
         </copy>
+-->
     </target>
-
     <target name="build" depends="refresh, setup-webinf-xml, setup-js-html">
 	  <echo>* Start of dev/studio/build.xml target="build"; 
 	    depends on "refresh" and "setup-webinf-xml" and "setup-js-html".  
