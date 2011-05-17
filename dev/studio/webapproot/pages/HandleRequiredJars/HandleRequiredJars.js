@@ -23,7 +23,7 @@ dojo.declare("HandleRequiredJars", wm.Page, {
 	this.layers.decorator.buttonPanel.setMargin("10,0,0,0");
 	*/
 	this.layers.decorator.buttonPanel.setParent(this.root);
-	this.layers.decorator.doneCaption = "Reload";
+	this.layers.decorator.doneCaption = this.getDictionaryItem("DONE_CAPTION");
     },
     onShow: function() {
 	this.layer2.invalid = this.layer4.invalid = this.layer6.invalid = true;
@@ -61,7 +61,18 @@ dojo.declare("HandleRequiredJars", wm.Page, {
     },
     done: function() {
 	this.close();
-	window.location.reload(true);
+
+
+	var def = dojo.rawXhrPost({url: "/ConfigurationTool/InstallService.download",
+				   postData: "method=restartStudioApp",
+				   handleAs: "json",
+				   sync: false});
+	def.addCallback(function() {
+	    window.location.reload(true);
+	});
+	def.addErrback(function(inError) {
+	    app.toastError(inError);
+	});
     },
     close: function() {
 	this.layer3.hide();

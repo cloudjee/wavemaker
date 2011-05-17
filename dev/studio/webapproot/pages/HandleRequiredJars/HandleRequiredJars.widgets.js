@@ -67,8 +67,7 @@ HandleRequiredJars.widgets = {
 
 
 		layer7: ["wm.Layer", {_classes: {domNode: ["wmGroupBox"]}, caption: "End", padding: "5", verticalAlign: "top", horizontalAlign: "left"}, {}, {
-		    labeld1: ["wm.Label", {singleLine: false, width: "100%", height: "30px", caption: "Now restart studio"}],
-		    labeld2: ["wm.Html", {width: "100%",height: "100%", html: "<ol><li>Restart the studio server using the studio application you launched from you computer's file system</li><li>After you've restarted your server, reload studio in your browser</li></ol>"}]
+		    label7: ["wm.Html", {width: "100%",height: "100%", html: "Before we can use the new jar files, we need to restart studio.  Hit the Restart button when you are ready."}]
 		}]
 
 	    }]
