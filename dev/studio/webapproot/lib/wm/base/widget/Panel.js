@@ -507,7 +507,7 @@ wm.FancyPanel.extend({
     themeable: true,
     themeableProps: ["innerBorder","borderColor","labelHeight"],
     getOrderedWidgets: function() {
-	return [this.containerWidget];
+	return this.containerWidget.getOrderedWidgets();
     },
 	makePropEdit: function(inName, inValue, inDefault) {
 		switch (inName) {
