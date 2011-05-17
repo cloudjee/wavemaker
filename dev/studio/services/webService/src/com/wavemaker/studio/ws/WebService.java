@@ -1,5 +1,5 @@
 /*
-  * Copyright (C) 2007-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2007-2011 VMWare, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
+ 
 package com.wavemaker.studio.ws;
 
 import java.io.IOException;
@@ -135,38 +135,12 @@ public class WebService {
     }
 
     public List<String> invokeRestCall(String endpointAddress) {
-        List<String> rtn = getWSToolsMgr().invokeRestCall(endpointAddress);
-        return rtn;
-    }
-
-    public List<String> invokeRestCall(String endpointAddress, boolean basicAuth, String userName, String password) {
-        List<String> rtn = getWSToolsMgr().invokeRestCall(endpointAddress, basicAuth, userName, password);
-        return rtn;
-    }
-    
-    public List<String> invokeRestCall(String endpointAddress, String method, String contentType,
-                                       String postData, boolean basicAuth, String userName, String password) {
-        return getWSToolsMgr().invokeRestCall(endpointAddress, method, contentType, postData, basicAuth,
-                userName, password);
+        return getWSToolsMgr().invokeRestCall(endpointAddress);
     }
 
     public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress)
             throws WebServiceException, IOException, XmlException {
         return getWSToolsMgr().generateRESTWsdlSettings(endpointAddress);
-    }
-
-    public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress,
-                               boolean basicAuth, String userName, String password)
-            throws WebServiceException, IOException, XmlException {
-        return getWSToolsMgr().generateRESTWsdlSettings(endpointAddress, basicAuth,
-                                                userName, password);
-    }
-
-    public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress, String method, String contentType,
-                                 String postData, boolean basicAuth, String userName, String password)
-            throws WebServiceException, IOException, XmlException {
-        return getWSToolsMgr().generateRESTWsdlSettings(endpointAddress, method, contentType,
-                postData, basicAuth, userName, password);
     }
 
     public String registerFeedService() throws JAXBException, IOException {
