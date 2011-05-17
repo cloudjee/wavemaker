@@ -38,7 +38,7 @@
 dojo.provide("wm.base.widget.Trees.ObjectTree");
 dojo.require("wm.base.widget.Trees.Tree");
 dojo.require("wm.base.widget.Trees.JSObjTreeNode");
-dojo.declare("wm.ObjectBrowserTree", wm.Tree, {
+dojo.declare("wm.ObjectTree", wm.Tree, {
     data: null,
     postInit: function() {
 	this.inherited(arguments);

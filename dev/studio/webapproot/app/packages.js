@@ -91,7 +91,8 @@
 [ bundlePackage.DataWidget + "/" + bundlePackage.DataWidgetMultiple, bundlePackage.List, "wm.List", "wm.base.widget.List", "Studio_paletteImageList_7",bundlePackage.descList, false],
 [ bundlePackage.DataWidget + "/" + bundlePackage.DataWidgetMultiple, bundlePackage.ListViewer, "wm.ListViewer", "wm.base.widget.ListViewer", "Studio_paletteImageList_7",bundlePackage.descListViewer, true],
 [ bundlePackage.DataWidget + "/" + bundlePackage.DataWidgetMultiple, bundlePackage.Tree, "wm.PropertyTree", "wm.base.widget.Trees.PropertyTree", "Studio_paletteImageList_25",bundlePackage.descPropertyTree, false],
-[ bundlePackage.DataWidget + "/" + bundlePackage.DataWidgetMultiple, bundlePackage.Tree + "Object", "wm.ObjectBrowserTree", "wm.base.widget.Trees.ObjectTree", "Studio_paletteImageList_25",bundlePackage.descPropertyTree, false],
+[ bundlePackage.DataWidget + "/" + bundlePackage.DataWidgetMultiple, bundlePackage.ObjectTree, "wm.ObjectTree", "wm.base.widget.Trees.ObjectTree", "Studio_paletteImageList_25",bundlePackage.descPropertyObjectTree, true],
+
 [ bundlePackage.DataWidget + "/" + bundlePackage.DataWidgetMultiple, bundlePackage.DraggableTree, "wm.DraggableTree", "wm.base.widget.Trees.DraggableTree", "Studio_paletteImageList_25",bundlePackage.descDraggableTree, true],
 [ bundlePackage.DataWidget + "/" + bundlePackage.DataWidgetMultiple, bundlePackage.Calendar, "wm.dijit.Calendar", "wm.base.widget.dijit.Calendar", "Studio_paletteImageList_24",bundlePackage.descCalendar, false],
 
@@ -160,6 +161,7 @@
 
 
 
+/*[bundlePackage.Non_Visual_Components, "AdaptorVariable", "wm.AdaptorVariable", "wm.base.components.AdaptorVariable",  "images/wm/button.png", "An example custom button widget.", false],*/
 [ bundlePackage.Non_Visual_Components, bundlePackage.Variable, "wm.Variable", "wm.base.components.Variable", "Studio_paletteImageList_42", "", false],
 [ bundlePackage.Non_Visual_Components, bundlePackage.ServiceVariable, "wm.ServiceVariable", "wm.base.components.ServiceVariable", "Studio_paletteImageList_43", "", false],
 [ bundlePackage.Non_Visual_Components, bundlePackage.LiveVariable, "wm.LiveVariable", "wm.base.components.LiveVariable", "Studio_paletteImageList_37", "", false],

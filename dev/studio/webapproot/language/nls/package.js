@@ -126,6 +126,7 @@
 	"Advanced" : "Advanced",
 	"Variables" : "Prebuilt Variables",
 	"Tree" : "Tree",
+	"ObjectTree" : "ObjectTree",
 	"DraggableTree" : "DraggableTree",
 	"SimpleForm" : "Form Generator",
 
@@ -221,6 +222,7 @@
     "descList": "A very simple grid for tabular data and picking from options",
     "descListViewer": "Generates a row per data item, where row can contain any arrangement of widgets",
     "descPropertyTree": "Builds a tree from a LiveVariable",
+    "descPropertyObjectTree": "Builds a tree from a javascript hash",
     "descDraggableTree": "Builds a tree where nodes can be moved by the user",
     
     "descFancyTemplate": "Premade page for showing how a number of widgets can work together",
