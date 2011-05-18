@@ -284,7 +284,7 @@ public class ResourceFileService {
 		  
 	      }
 
-	      File destFile = new File(getProjectDir(), "WEB-INF/lib/" +  inFileName);
+	      File destFile = new File(getProjectDir(), "../lib/" +  inFileName);
 	      if (isInClassPath && !found) {
 		      if (newFile.length() > 0) newFile.append("\n");
 		      newFile.append(inPath);
