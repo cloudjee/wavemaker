@@ -1636,7 +1636,7 @@ font-family: "Nimbus Sans L", sans-serif;
 .wmdojofileupload form, 
 .wmdojofileupload form > .dijitFileInputReal:hover,
 .wmdojofileupload .wmbutton:hover {
-    color: red !important;
+/*    color: red !important;*/
 }
 
 .wmdojofileupload .wmfileuploaderListItem {
