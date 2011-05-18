@@ -67,7 +67,7 @@ dojo.declare("wm.ObjectTree", wm.Tree, {
 	if (this.selected != inNode) {
 	    this.deselect();
 	    this.addToSelection(inNode);
-	    this.onselect(inNode, inNode.object);
+	    this.onselect(inNode, inNode.object || inNode.content);
 	}
     }
 });
