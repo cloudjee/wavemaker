@@ -143,6 +143,12 @@ public final class FileController extends AbstractController {
             if (reqPath.contains(WM_CONFIG_URL)) {
                 String content = IOUtils.toString(is);
                 content += "\r\n" + "wm.serverTimeOffset = " + ServerUtils.getServerTimeOffset() + ";";
+		String language = request.getHeader("accept-language");
+		if (language != null && language.length() > 0) {
+		    language = language.substring(0,language.indexOf(","));
+		    content += "\r\n" + "wm.localeString = '" + language + "';";
+		}
+
                 IOUtils.write(content, os);
             } else {
                 IOUtils.copy(is, os);

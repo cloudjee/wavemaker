@@ -17,6 +17,8 @@
 if (location.search.indexOf("dojo.locale=") != -1) {
     djConfig.locale = location.search.indexOf("dojo.locale=") + "dojo.locale=".length; // avoid unlocalized variables
     djConfig.locale = location.search.substr(djConfig.locale,2);
+} else if (wm.localeString) {
+    djConfig.locale = wm.localeString; // wm.localeString is added to config.js by FileController.java using the "accept-language" header.
 }
 
 wm = window["wm"] || {};
