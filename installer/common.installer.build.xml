@@ -37,6 +37,7 @@
         <copy todir="${installer.wm.root}/Samples">
             <fileset dir="${root.dir}/demos">
                 <exclude name="**/.svn"/>
+ 		<exclude name="**/WebServicesExample/**"/>
             </fileset>
         </copy>
 
@@ -70,7 +71,7 @@
         <copy todir="${installer.wm.nojdk.root}/Support">
           <fileset dir="${root.dir}/../Support">
              <exclude name="**/.svn"/>
-					   <exclude name="**/Batchbuild/**" unless="isEnterprise"/>
+	     <exclude name="**/Batchbuild/**" unless="isEnterprise"/>
           </fileset>
         </copy>
 
@@ -78,6 +79,7 @@
         <copy todir="${installer.wm.nojdk.root}/Samples">
           <fileset dir="${root.dir}/demos">
             <exclude name="**/.svn"/>
+	    <exclude name="**/WebServicesExample/**"/>
           </fileset>
         </copy>
 
@@ -87,9 +89,9 @@
 
         <copy todir="${installer.wm.nojdk.root}/studio">
           <fileset dir="${dist.studio.dir}">
-						<exclude name="**/RbacPlugin.js" unless="isEnterprise"/>
-						<exclude name="**/DojoFlashFileUpload.js" unless="isEnterprise"/>
-					</fileset>
+	     	<exclude name="**/RbacPlugin.js" unless="isEnterprise"/>
+		<exclude name="**/DojoFlashFileUpload.js" unless="isEnterprise"/>
+	  </fileset>
         </copy>
 
         <mkdir dir="${installer.wm.nojdk.root}/studioConfig"/>
