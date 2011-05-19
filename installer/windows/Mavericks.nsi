@@ -219,8 +219,8 @@ Section WaveMaker main
     File /r /x .svn "${SOURCEDIR}\studioConfig"
 
     ; Extract Demo Directory
-    ClearErrors
-    File /r /x .svn /x *doc.jar /x *src.jar /x *sources.jar "${SOURCEDIR}\Samples"
+    ;ClearErrors
+    ;File /r /x .svn /x *doc.jar /x *src.jar /x *sources.jar "${SOURCEDIR}\Samples"
     
     ; Configure Demos
     /*
