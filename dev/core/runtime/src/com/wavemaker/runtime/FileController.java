@@ -145,7 +145,8 @@ public final class FileController extends AbstractController {
                 content += "\r\n" + "wm.serverTimeOffset = " + ServerUtils.getServerTimeOffset() + ";";
 		String language = request.getHeader("accept-language");
 		if (language != null && language.length() > 0) {
-		    language = language.substring(0,language.indexOf(","));
+		    int index = language.indexOf(",");
+		    language = index == -1 ? language : language.substring(0,index);
 		    content += "\r\n" + "wm.localeString = '" + language + "';";
 		}
 
