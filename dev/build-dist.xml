@@ -157,6 +157,7 @@ NEXT: exit "build"</echo>
                 <exclude name="dev/modules/**"/>
                 <exclude name="dev/Applications/**"/>
                 <exclude name="dev/map.txt"/>
+		<exclude name="installer/windows/jdk1.6.0_24.zip"/>
                 <exclude name="dev/studio/webapproot/*.war"/>
                 <exclude name="dev/studio/services/CloudDB/**"/>
                 <exclude name="dev/studio/services/dummyService/**"/>
