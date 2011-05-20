@@ -2,7 +2,7 @@ dojo.declare("StudioConfigure", wm.Application, {
 	"dialogAnimationTime": 350, 
 	"i18n": false, 
 	"main": "Main", 
-	"projectSubVersion": 127, 
+	"projectSubVersion": 132, 
 	"projectVersion": 1, 
 	"studioVersion": "6.3.1Beta", 
 	"theme": "wm_studio", 
