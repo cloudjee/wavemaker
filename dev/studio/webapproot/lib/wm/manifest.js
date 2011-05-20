@@ -72,6 +72,7 @@ wm.loadLibs([
 	"wm.base.components.Application",
 	"wm.base.components.ImageList",
 	"wm.base.components.Variable",
+	"wm.base.components.AdaptorVariable", 
 	"wm.base.components.Binding",
 	"wm.base.components.Service",
 	"wm.base.components.ServiceCall",

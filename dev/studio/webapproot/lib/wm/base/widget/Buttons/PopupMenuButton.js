@@ -24,10 +24,6 @@ dojo.declare("wm.PopupMenuButton", wm.Button, {
     fullStructureStr: "",
     iconClass: "", // alternative to iconUrl which allows for the icon to be loaded the same way as the icons in the menu itself
 
-    afterPaletteDrop: function() {
-	this.inherited(arguments);
-	this.setFullStructureStr(studio.getDictionaryItem("wm.PopupMenu.DEFAULT_STRUCTURE"));
-    },
 
     onclick:function() {},
     onchange: function(inLabel,inIconClass,inEvent) {}, // fired when the user changes the button's caption (reselects also fires)
@@ -79,7 +75,9 @@ dojo.declare("wm.PopupMenuButton", wm.Button, {
 	this.setProp("caption", inLabel);
 	this.iconClass = inIconClass;
 	if (inIconClass) {
-	    var img = dojo.query(".dijitIcon." + inIconClass, this.dojoMenu.dojoObj.domNode)[0];
+	    /* Grab the image from the menu itself so we can figure out what the prefered size is */
+	    var img = dojo.query(".dijitIcon." + inIconClass)[0]; 
+
 	    if (img) {
 		var computed = dojo.getComputedStyle(img);
 		var width = computed.width;
@@ -178,61 +176,6 @@ dojo.declare("wm.PopupMenuButton", wm.Button, {
 	    this.render(true);
     },
 
-    set_caption: function(inCaption) {
-	for (var i = 0; i < this.dojoMenu.fullStructure.length; i++) {
-	    if (!inCaption || inCaption == this.dojoMenu.fullStructure[i].label) {
-		this.setIconClass(this.dojoMenu.fullStructure[i].iconClass);
-		return this.setCaption(inCaption);
-	    }
-	}
-    },
-
-    editMenuItems: "(Edit Menu Items)",
-    makePropEdit: function(inName, inValue, inDefault) {
-	switch (inName) {
-	case "editMenuItems":
-	    return makeReadonlyButtonEdit(inName, inValue, inDefault);
-	case "caption":
-	    var list = [];
-	    dojo.forEach(this.dojoMenu.fullStructure, function(struct) {
-		list.push(struct.label);
-	    });
-	    return makeSelectPropEdit("caption", this.caption, list, list[0]);
-	}
-	return this.inherited(arguments);
-    },
-    setPropEdit: function(inName) {
-	switch (inName) {
-	case "caption":
-	    var editor = dijit.byId("studio_propinspect_caption");
-	    var store = editor.store.root;
-	    while (store.firstChild) store.removeChild(store.firstChild);
-	    dojo.forEach(this.dojoMenu.fullStructure, function(struct) {
-		var node = document.createElement("option");
-		node.innerHTML = struct.label;
-		store.appendChild(node);
-	    });
-	    return true;
-	}
-	return this.inherited(arguments);
-    },
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-		case "editMenuItems":
-		    if (!studio.menuDesignerDialog) {
-			studio.menuDesignerDialog = new wm.PageDialog({pageName: "MenuDesigner", 
-								       name: "MenuDesignerDialog",
-								       title: studio.getDictionaryItem("wm.PopupMenuButton.MENU_DESIGNER_TITLE"),
-								       hideControls: true,
-								       owner: studio,
-								       width: "250px",
-								       height: "350px"});
-		    }
-		    studio.menuDesignerDialog.page.setMenu(this,{content: this.caption,
-								 iconClass: this.iconClass},true);
-		    studio.menuDesignerDialog.show();
-		}
-	},
     setFullStructureStr: function(inStr, inSetByDesigner) {
 	this.fullStructureStr = inStr;
 	this.dojoMenu.setFullStructureStr(inStr);

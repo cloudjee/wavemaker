@@ -61,7 +61,7 @@ dojo.declare("wm.LayersDecorator", null, {
 	    inLayer.active = inActive;
 
 	    var page = inLayer.getParentPage();
-	    if (!this.decoree._cupdating && page && !page._loadingPage && !window["studio"] && this.decoree.transition && this.decoree.transition != "none") {
+	    if (!(dojo.isIE <= 8) && !this.decoree._cupdating && page && !page._loadingPage && !window["studio"] && this.decoree.transition && this.decoree.transition != "none") {
 		if (!inActive) {
 		    /* FADE OUT */
 		    this["anim" + wm.capitalize(this.decoree.transition)](inLayer, false);

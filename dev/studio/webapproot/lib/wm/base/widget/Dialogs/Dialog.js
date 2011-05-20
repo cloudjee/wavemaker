@@ -381,7 +381,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 			this.renderBounds();
 			this.inherited(arguments);
 	// annoying hack
-		    if (dojo.isChrome && this.buttonBar) {
+		    if (dojo.isChrome && this.buttonBar && !this._chromeButtonBarHack) {
+			this._chromeButtonBarHack = true;
 			this.buttonBar.bounds.h++;
 			this.buttonBar.renderBounds();
 		    }

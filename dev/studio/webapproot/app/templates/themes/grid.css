@@ -125,7 +125,7 @@
 
     .wm_template div.dojoxGridContent .dojoxGridCellFocus,
     .wm_template div.dojoxGridContent .dojoxGrid-cell-focus {
-	border-width: 1px dashed transparent !important;
+	border: 1px dashed transparent !important;
     }
 
     /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
@@ -215,7 +215,7 @@
 
     .wm_template .MainContent div.dojoxGridContent .dojoxGridCellFocus,
     .wm_template .MainContent div.dojoxGridContent .dojoxGrid-cell-focus {
-	border-width: 1px dashed transparent !important;
+	border: 1px dashed transparent !important;
     }
 }
 
@@ -260,7 +260,7 @@
 
     .wm_template .EmphasizedContent div.dojoxGridContent .dojoxGridCellFocus,
     .wm_template .EmphasizedContent div.dojoxGridContent .dojoxGrid-cell-focus {
-	border-width: 1px dashed transparent !important;
+	border: 1px dashed transparent !important;
     }
 }
 
@@ -306,7 +306,7 @@
 
     .wm_template .HeaderContent div.dojoxGridContent .dojoxGridCellFocus,
     .wm_template .HeaderContent div.dojoxGridContent .dojoxGrid-cell-focus {
-	border-width: 1px dashed transparent !important;
+	border: 1px dashed transparent !important;
     }
 
     /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */

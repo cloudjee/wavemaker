@@ -443,7 +443,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 
         getInvalid: function() {
 	    var valid;
-	    if (this.editor._focused) {
+	    if (!this.editor) {
 		valid = true;
 	    } else {
 

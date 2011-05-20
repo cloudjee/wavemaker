@@ -294,6 +294,9 @@ wm.Object.extendSchema(wm.AccordionLayers, {
     scrollY: {group: "scrolling", order: 102, ignore: 0}
 });
 
+wm.Object.extendSchema(wm.TabLayers, {
+    conditionalTabButtons: {group: "layout"}
+});
 wm.TabLayers.extend({
     themeable: true,
     themeableProps: ["border", "borderColor", "clientBorder", "clientBorderColor", "headerHeight"],

@@ -1147,7 +1147,7 @@ body .wm_default .dialogfooter .wmbutton:hover {
     }
     .wm_default div.dojoxGridContent .dojoxGridCellFocus,
     .wm_default div.dojoxGridContent .dojoxGrid-cell-focus {
-	border-width: 1px dashed transparent !important;
+	border: 1px dashed transparent !important;
     }
     /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
     .wm_default div.dojoxGrid-header .dojoxGrid-cell,
@@ -1223,7 +1223,7 @@ body .wm_default .dialogfooter .wmbutton:hover {
     }
     .wm_default .MainContent div.dojoxGridContent .dojoxGridCellFocus,
     .wm_default .MainContent div.dojoxGridContent .dojoxGrid-cell-focus {
-	border-width: 1px dashed transparent !important;
+	border: 1px dashed transparent !important;
     }
 }
 @media screen { /* EmphasizedContent-Level */ 
@@ -1259,7 +1259,7 @@ body .wm_default .dialogfooter .wmbutton:hover {
     }
     .wm_default .EmphasizedContent div.dojoxGridContent .dojoxGridCellFocus,
     .wm_default .EmphasizedContent div.dojoxGridContent .dojoxGrid-cell-focus {
-	border-width: 1px dashed transparent !important;
+	border: 1px dashed transparent !important;
     }
 }
 @media screen { /* HeaderContent-Level */ 
@@ -1296,7 +1296,7 @@ body .wm_default .dialogfooter .wmbutton:hover {
     }
     .wm_default .HeaderContent div.dojoxGridContent .dojoxGridCellFocus,
     .wm_default .HeaderContent div.dojoxGridContent .dojoxGrid-cell-focus {
-	border-width: 1px dashed transparent !important;
+	border: 1px dashed transparent !important;
     }
     /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
     .wm_default .HeaderContent div.dojoxGrid-header .dojoxGrid-cell,
