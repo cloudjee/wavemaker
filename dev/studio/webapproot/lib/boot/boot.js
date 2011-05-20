@@ -19,6 +19,7 @@ if (location.search.indexOf("dojo.locale=") != -1) {
     djConfig.locale = location.search.substr(djConfig.locale,2);
 } else if (wm.localeString) {
     djConfig.locale = wm.localeString; // wm.localeString is added to config.js by FileController.java using the "accept-language" header.
+    djConfig.locale = djConfig.locale.replace(/^en\-.*$/, "en"); // there is something wrong with the en-us and possibly other en- language codes and how they are built into the dojo build; just use "en"
 }
 
 wm = window["wm"] || {};
