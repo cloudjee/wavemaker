@@ -19,7 +19,7 @@ dojo.declare("wm.DataNavigator", wm.Panel, {
         classNames: "wmdatanavigator",
 	box: "h",
 	lock: true,
-	byPage: false,
+        byPage: true,
 	border: 0,
 	height: "36px",
 	_buttonWidth: "46px",
