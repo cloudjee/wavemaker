@@ -18,9 +18,10 @@ dojo.require("wm.base.widget.FeedList");
 dojo.declare("wm.TwitterFeed", wm.FeedList, {
 	width:'100%',
 	twitterId:'',
+        classNames: 'wmfeedlist wmtwitterlist',
 	init: function() {
 		this.inherited(arguments);
-		this.url = '';
+/*		this.url = '';*/
 	},
 	setTwitterId: function(inValue){
 		this.twitterId = inValue;

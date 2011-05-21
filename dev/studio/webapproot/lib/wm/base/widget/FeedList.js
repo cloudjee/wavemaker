@@ -27,21 +27,20 @@ dojo.declare("wm.FeedList", wm.List, {
 	totalItems: "",
 	onselect: null,
 	ondeselect: null,
-
+        classNames: 'wmfeedlist',
 	init: function() {
 		this.inherited(arguments);
-		dojo.addClass(this.domNode, "wmfeedlist");
-		if (!this.isDesignLoaded()) {
-			this.getFeed();
-		}
 	},
     postInit: function() {
 	this.inherited(arguments);
 	this._createGetFeedServiceVariable();
+	if (!this.isDesignLoaded()) {
+	    this.getFeed();
+	}
+
     },
 	prepare: function() {
 		this.inherited(arguments);
-		this.className = 'wmfeedlist';
 		if (this.isDesignLoaded() && !wm.services.byName["FeedService"]) {
 		    if (studio.isJarMissing("wsdl4j.jar")) {
 			wm.WebService.prototype.showJarDialog();
@@ -92,7 +91,7 @@ dojo.declare("wm.FeedList", wm.List, {
 		var info = {column: inCol, data: d, header: inHeader};
 		this.onformat(info, inCol, d, inHeader);
 		
-		var html = ['<img src="' + this._getImageSrc(this.expand) + '"/>'];
+		var html = ['<img class="feedlistexpander" src="' + this._getImageSrc(this.expand) + '"/>'];
 		html.push(this.getFeedItemTitleContent(titleData, linkData));
 		html.push('<br>');
 		html.push('<div class="wmfeedlist-row-desc" style="display: ' + 

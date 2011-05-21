@@ -1863,3 +1863,8 @@ Overriding dijit's progress bar properties to enable height changes to progress 
      -webkit-box-shadow: 5px 5px 4px #888 !important; /* Saf3.0+, Chrome */
      box-shadow: 5px 5px 4px #888 !important; /* Opera 10.5, IE 9.0 */
 }
+
+
+.wmtwitterlist .feedlistexpander {
+    display: none;
+}
