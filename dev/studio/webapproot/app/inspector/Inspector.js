@@ -431,12 +431,23 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 	      bd.sourceNode = inNode;
 	      //bd.positionNode = inNode.parentNode;
 	      bd.fixPositionNode = inNode.parentNode;
-	      bd.page.setContent(""); // clear previous content before showing
-	      bd.show();
+	    var url = "http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/" + inType.replace(/^.*\./,"") + "_" + inPropName;
+
+	    // clear previous content before showing.
+	    bd.page.setContent("");
+	    this._loadingContent = true;
+	    bd.show();
 	    studio.loadHelp(inType, inPropName, function(inResponse) {
+		wm.cancelJob("PropDoc");
+		this._loadingContent = false;
 		bd.page.setContent(inResponse);
 	    });
 
+	    //  And in case of proxy problems, show the link so the user can open it themselves
+	    wm.job("PropDoc", 1700, dojo.hitch(this, function() {
+		if (this._loadingContent)
+		    bd.page.setContent("<a href='" + url + "' target='docs'>Open Docs</a><br/>If docs fail to show here, this may be due to a proxy server; just click the link to open it in a new page"); 
+	    }));
 	      /*
 	      dojo.xhrGet({
 		    url: "http://dev.wavemaker.com/wiki/bin/view/WM5_Documentation/",
