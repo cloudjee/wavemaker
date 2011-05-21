@@ -1608,7 +1608,9 @@ font-family: "Nimbus Sans L", sans-serif;
 .tundra .dojoMenu .dijitMenuBar {
 	border-width: 0px;
 }
-
+.tundra .dojoMenu .dijitMenu .dijitMenuItem {
+display:block;
+}
 .accordionArrowNode {
     display: none;
     background-repeat: no-repeat;

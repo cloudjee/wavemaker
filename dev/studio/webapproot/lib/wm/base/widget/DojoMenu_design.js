@@ -44,8 +44,6 @@ wm.DojoMenu.extend({
 		      {name: "wm.DojoMenu-Right_Image", displayName: "Drop Icon (SubMenu)"}],
     afterPaletteDrop: function() {
 	this.inherited(arguments);
-	this.setParent(null);
-	studio.designer.domNode.appendChild(this.domNode);
 	this.setFullStructureStr(studio.getDictionaryItem("wm.PopupMenu.DEFAULT_STRUCTURE"));
 	this.renderDojoObj();
     },
@@ -221,6 +219,9 @@ wm.DojoMenu.extend({
 
 wm.PopupMenu.extend({
     afterPaletteDrop: function() {
+	this.setParent(null);
+	studio.designer.domNode.appendChild(this.domNode);
+
 	this.inherited(arguments);
 	this.activate();
     }
