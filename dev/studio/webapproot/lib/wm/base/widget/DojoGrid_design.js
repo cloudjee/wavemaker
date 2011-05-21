@@ -402,5 +402,9 @@ wm.Object.extendSchema(wm.DojoGrid, {
     setDataSet: {group: "method"},
     showCSVData: {group: "method"},
     setSortIndex:{group: "method"},
-    setSortField:{group: "method"}
+    setSortField:{group: "method"},
+
+    onMouseOver: {ignore: 1},
+    onMouseOut: {ignore: 1},
+    onRightClick: {ignore: 1}
 });
