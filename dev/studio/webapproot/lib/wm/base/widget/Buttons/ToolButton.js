@@ -88,7 +88,7 @@ dojo.declare("wm.ToolButton", wm.Control, {
 		return t ? t.imageList : null;
 	},
 	setDisabled: function(inDisabled) {
-	    if (inDisabled != this.disabled) {
+	    if (inDisabled != this.disabled || this._firstCall === undefined) {
 		this.inherited(arguments);
 		this.btnNode.disabled = inDisabled ? "disabled" : "";
 		dojo[inDisabled ? "addClass" : "removeClass"](this.domNode, "wmbutton-disabled");
@@ -100,6 +100,7 @@ dojo.declare("wm.ToolButton", wm.Control, {
 		if (this._imageList && this.imageIndex && this.declaredClass == "wm.ToolButton") 
 		    this.updateImageListButtonHtml();
 	    }
+	    this._firstCall = false; // either false or undefined; if undefined, then this is our first call to setDisabled, which means inDisabled is always == this.disabled because its initial properties... but dom state hasn't been set to disabled yet
 	},
 	setSelected: function(inSelected) {
 	    this.selected = inSelected;
