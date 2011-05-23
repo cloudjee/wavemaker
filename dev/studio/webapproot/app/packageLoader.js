@@ -15,7 +15,7 @@
 dojo.provide("wm.studio.app.packageLoader");
 
 wm.packageImages = {};
-_import = function(inTab, inName, inClass, inModule, inImage, inDescription, isBeta, inProps) {
+_import = function(inTab, inName, inClass, inModule, inImage, inDescription, inProps, isBeta) {
 	var
 		n=inName,
 		c=inClass,
