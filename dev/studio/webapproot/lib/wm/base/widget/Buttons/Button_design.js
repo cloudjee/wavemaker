@@ -72,37 +72,50 @@ wm.PopupMenuButton.extend({
     },
 
     set_caption: function(inCaption) {
-	for (var i = 0; i < this.dojoMenu.fullStructure.length; i++) {
-	    if (!inCaption || inCaption == this.dojoMenu.fullStructure[i].label) {
-		this.setIconClass(this.dojoMenu.fullStructure[i].iconClass);
+	var list = this.buildCaptionList(this.dojoMenu.fullStructure, true);
+	for (var i = 0; i < list.length; i++) {
+	    if (!inCaption || inCaption == list[i].label) {
+		this.setIconClass(list[i].iconClass);
 		return this.setCaption(inCaption);
 	    }
 	}
+    },
+    buildCaptionList: function(inNode, returnObj) {
+	var list = [];
+	dojo.forEach(inNode, dojo.hitch(this, function(struct) {
+	    if (struct.children && struct.children.length) {
+		list = list.concat(this.buildCaptionList(struct.children, returnObj));
+	    } else {
+		list.push(returnObj ? struct : struct.label);
+	    }
+	}));
+	return list;
     },
     makePropEdit: function(inName, inValue, inDefault) {
 	switch (inName) {
 	case "editMenuItems":
 	    return makeReadonlyButtonEdit(inName, inValue, inDefault);
 	case "caption":
-	    var list = [];
-	    dojo.forEach(this.dojoMenu.fullStructure, function(struct) {
-		list.push(struct.label);
-	    });
+	    var list = this.buildCaptionList(this.dojoMenu.fullStructure, false);
 	    return makeSelectPropEdit("caption", this.caption, list, list[0]);
 	}
 	return this.inherited(arguments);
     },
-    setPropEdit: function(inName) {
+    setPropEdit: function(inName, inValue, inDefault) {
 	switch (inName) {
 	case "caption":
 	    var editor = dijit.byId("studio_propinspect_caption");
 	    var store = editor.store.root;
 	    while (store.firstChild) store.removeChild(store.firstChild);
-	    dojo.forEach(this.dojoMenu.fullStructure, function(struct) {
+	    var list = this.buildCaptionList(this.dojoMenu.fullStructure, false);
+	    for (var i = 0; i < list.length; i++) {
 		var node = document.createElement("option");
-		node.innerHTML = struct.label;
+		node.innerHTML = list[i];
+		var editor = dijit.byId("studio_propinspect_operation");
+		if (editor) editor.set(inValue, false);
 		store.appendChild(node);
-	    });
+	    }
+	    editor.set(inValue, false);
 	    return true;
 	}
 	return this.inherited(arguments);
