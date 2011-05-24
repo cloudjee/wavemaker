@@ -402,7 +402,7 @@ Studio.widgets = {
 						    scriptToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}]/*,
 						    scriptPageCompileChkBtn: ["wm.Checkbox", {caption: "Validate on Save", width: "120px"}, {onchange: "validateScriptCheckboxChange"}]*/
 						}],
-						editArea: ["wm.AceEditor", {width: "100%", height: "100%"}, {onCtrlKey: "scriptEditorCtrlKey", onKeyDown: "setEditAreaDirty"}]
+						editArea: ["wm.AceEditor", {width: "100%", height: "100%"}, {onCtrlKey: "scriptEditorCtrlKey", onChange: "setEditAreaDirty"}]
 					    }],
 					    cssLayer: ["wm.Layer", {caption: "CSS"}, {onShow: "cssEditArea.focus"}, {
 						cssRibbon: ["wm.Panel", {height: "29px", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4"}, {}, {
@@ -417,13 +417,13 @@ Studio.widgets = {
 						cssPageLabel: ["wm.Label", {caption: "Page CSS", height: "18px", border: 0}, {}, {
 						    format: ["wm.DataFormatter", {}, {}]
 						}],
-						cssEditArea: ["wm.AceEditor", {width: "100%", height: "100%", syntax: "css"}, {onCtrlKey: "cssEditorCtrlKey", onKeyDown: "setEditAreaDirty"}],
+						cssEditArea: ["wm.AceEditor", {width: "100%", height: "100%", syntax: "css"}, {onCtrlKey: "cssEditorCtrlKey", onChange: "setEditAreaDirty"}],
 						cssSplitter: ["wm.Splitter", {layout: "bottom"}, {}],
 						cssInnerPanel: ["wm.Panel", {width: "100%", height: "300px", layoutKind: "top-to-bottom"},{}, {
 						cssAppLabel: ["wm.Label", {caption: "Application CSS", height: "18px", border: 0}, {}, {
 						    format: ["wm.DataFormatter", {}, {}]
 						}],
-						appCssEditArea: ["wm.AceEditor", {width: "100%", height: "100%", syntax: "css"}, {onCtrlKey: "cssEditorCtrlKey", onKeyDown: "setEditAreaDirty"}]
+						appCssEditArea: ["wm.AceEditor", {width: "100%", height: "100%", syntax: "css"}, {onCtrlKey: "cssEditorCtrlKey", onChange: "setEditAreaDirty"}]
 					    }]
                                         }],
 						markupLayer: ["wm.Layer", {caption: "Markup"}, {onShow: "markupEditArea.focus"}, {
@@ -435,7 +435,7 @@ Studio.widgets = {
 							    markupToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
 							    markupLogoBottomHolder: ["wm.Panel", {width: "221px", border: "0"}, {}]
 							}],
-							markupEditArea: ["wm.AceEditor", {width: "100%", height: "100%", syntax: "html"}, {onCtrlKey: "markupEditorCtrlKey", onKeyDown: "setEditAreaDirty"}]
+							markupEditArea: ["wm.AceEditor", {width: "100%", height: "100%", syntax: "html"}, {onCtrlKey: "markupEditorCtrlKey", onChange: "setEditAreaDirty"}]
 						}],
 					    widgets: ["wm.Layer", {caption: "Widgets"}, {}, {
 							widgetsHtml: ["wm.Html", {width: "100%", height: "100%", border: 0, padding: "4, 0, 0, 4"}, {}]
@@ -456,7 +456,7 @@ Studio.widgets = {
 
 						        appsourceHtml: ["wm.Html", {width: "100%", height: "300px", border: 0, padding: "4, 0, 0, 4"}, {}],
 						        appsourceSplitter: ["wm.Splitter", {layout: "bottom"}, {}],
-						        appsourceEditor: ["wm.AceEditor", {width: "100%", height: "100%"}, {onCtrlKey: "appScriptEditorCtrlKey", onKeyDown: "setEditAreaDirty"}]
+						        appsourceEditor: ["wm.AceEditor", {width: "100%", height: "100%"}, {onCtrlKey: "appScriptEditorCtrlKey", onChange: "setEditAreaDirty"}]
 
 						}],
                                             themeLayer: ["wm.Layer", {_classes: {domNode: ["wm-darksnazzy"]}, caption: "Themes", width: "100%", height: "100%"}, {}, {
