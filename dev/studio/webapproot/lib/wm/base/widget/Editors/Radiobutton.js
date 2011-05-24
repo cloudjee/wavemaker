@@ -179,6 +179,7 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 		return l;
 	},
 	setDataType: function(inType) {
+	    this.inherited(arguments); // do this so that warnings of type mismatches can fire
 		var group = this.getGroup();
 		for (var i=0, v; (v=group[i]); i++)
 			v.dataType = inType;

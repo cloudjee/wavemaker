@@ -133,6 +133,26 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 		this.dataType = inDataType;
 		if (inDataType == "boolean")
 			this.displayValue = true;
+
+	    switch(inDataType) {
+		/* Anything can convert to a string */
+	    case "string":
+		break;
+	    case "number":
+		if (typeof this.checkedValue == "number") {
+		} else if (String(this.checkedValue).match(/^[0-9.]+$/)) {
+		} else {
+		    app.toastWarning(studio.getDictionaryItem("wm.Checkbox.TOAST_WARN_CHECKED_VALUE_NOT_A_NUMBER"));
+		}
+		break;
+	    case "boolean":
+		if (typeof this.checkedValue == "boolean") {
+		} else if (this.checkedValue == "true" || this.checkedValue == "false") {
+		} else {
+		    app.toastWarning(studio.getDictionaryItem("wm.Checkbox.TOAST_WARN_CHECKED_VALUE_NOT_A_BOOLEAN"));
+		}
+		break;
+	    }
 	},
 	setDisabled: function(inDisabled) {
 	    this.inherited(arguments);
@@ -178,5 +198,14 @@ wm.Checkbox.extend({
 				return makeSelectPropEdit(inName, inValue, ["string", "boolean", "number"], inDefault);
 		}
 		return this.inherited(arguments);
+	},
+        setPropEdit: function(inName, inValue, inDefault) {
+	    switch (inName) {
+	    case "dataType":
+		var editor = dijit.byId("studio_propinspect_dataType");
+		if (editor) editor.set(inValue, false);
+		return true;
+	    }
+	    return this.inherited(arguments);
 	}
 });
