@@ -810,6 +810,16 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	expressionNodeSelected: function(inNode) {
 		if (inNode.isProperty && inNode.source) {
 		    var source = this.owner.getBindNodeSource(inNode);
+		    /* Expressions must bind to values not objects; see if there's a simpleBindProp we can bind to if no property is specified */
+		    if (inNode.isProperty == "object") {
+			var props = inNode.object.listProperties();
+			for (var p in props) {
+			    if (props[p].simpleBindProp) {
+				source += "." + p;
+				break;
+			    }
+			}
+		    }
 		    this.addValueToExpressionEditor(["${", source, "}"].join(""));
 		}
 	},
@@ -959,7 +969,7 @@ dojo.declare("wm.BindTreeNode", wm.TreeNode, {
 				schema = this.listDataProperties(o);
 		}
 		dojo.mixin(inNodeProps, {
-			isProperty: true,
+			isProperty: "property",
 			owner: this,
 			object: object,
 			name: n,
@@ -1046,7 +1056,8 @@ dojo.declare("wm.BindSourceTreeNode", wm.BindTreeNode, {
 
 	    // not sure yet what this is, but looks like its only for navigating the advanced tree
 	    inNodeProps.source = this.buildSourceProp(inNodeProps);
-	    inNodeProps.isProperty = true;
+	    if (!inNodeProps.isProperty)
+		inNodeProps.isProperty = "object"; 
 	}
 });
 
