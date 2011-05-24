@@ -1870,3 +1870,7 @@ Overriding dijit's progress bar properties to enable height changes to progress 
 .wmtwitterlist .feedlistexpander {
     display: none;
 }
+
+.wmGenericDialog-userQuestionLabel {
+    word-wrap: break-word;
+}

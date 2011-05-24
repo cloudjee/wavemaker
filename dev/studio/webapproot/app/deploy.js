@@ -43,7 +43,7 @@ Studio.extend({
 						  function(inResponse) {
 						      studio.endWait(msg);
 						      app.alert(this.getDictionaryItem("ALERT_BUILDING_WAR_SUCCESS", {inResponse: inResponse}));
-						      app.alertDialog.setWidth("100%");
+						      app.alertDialog.setWidth("600px");
 						      optionalCallback();
 						  });
 
@@ -136,7 +136,7 @@ Studio.extend({
 	    studio.endWait("Building ZIP File...");
 	    if (!studio.isCloud()) {
 		app.alert(this.getDictionaryItem("ALERT_BUILDING_ZIP_SUCCESS", {inResponse: inResponse}));
-		app.alertDialog.setWidth("100%");
+		app.alertDialog.setWidth("600px");
 	    } else {
 		this.downloadInIFrame("services/deploymentService.download?method=downloadProjectZip");
 	    }
@@ -237,7 +237,7 @@ Studio.extend({
 			console.debug(e);
 		}
 	    app.alert(this.getDictionaryItem("ALERT_DEPLOY_FAILED", {error: inError}));
-	    app.alertDialog.setWidth("100%");
+	    app.alertDialog.setWidth("600px");
 	},
 	//=====================================================================
 	// Widget Undeploy
