@@ -39,31 +39,37 @@ wm.LivePanel.extend({
 		});
 
 	    studio.LivePanelTypeOKConnection = 
-		studio.LivePanelTypeChooserDialog.page.connect(studio.LivePanelTypeChooserDialog.page,"onOkClick",this,function(inName) {
-							    dojo.disconnect(studio.LivePanelTypeOKConnection);
-							    dojo.disconnect(studio.LivePanelTypeCancelConnection);
-							    delete studio.LivePanelTypeCancelConnection;
-							    delete studio.LivePanelTypeOKConnection;
-
-							    switch(inName) {
-							    case "Traditional":
-								this.createTraditionalLivePanel(inName.match(/Paging$/));
-								break;
-							    case "Dialog":
-							    	this.createPopupLivePanel(inName.match(/Paging$/));
-								break;
-							    case "Editable Grid":
-							    	this.createEditableGrid();
-								break;
-							    case "Live Form Only":
-							    	this.createLiveForm();
-								break;
-							    case "Grid Only":
-							    	this.createGrid();
-								break;
-							    }
-							    this.reflow();
-							    studio.refreshWidgetsTree();
+		studio.LivePanelTypeChooserDialog.page.connect(
+		    studio.LivePanelTypeChooserDialog.page,
+		    "onOkClick",
+		    this,
+		    function(inName) {
+			dojo.disconnect(studio.LivePanelTypeOKConnection);
+			dojo.disconnect(studio.LivePanelTypeCancelConnection);
+			delete studio.LivePanelTypeCancelConnection;
+			delete studio.LivePanelTypeOKConnection;
+			studio.beginWait(studio.getDictionaryItem("wm.LivePanel.WAIT_GENERATING"));
+			wm.onidle(this, function() {
+			    switch(inName) {
+			    case "Traditional":
+				this.createTraditionalLivePanel(inName.match(/Paging$/));
+				break;
+			    case "Dialog":
+				this.createPopupLivePanel(inName.match(/Paging$/));
+				break;
+			    case "Editable Grid":
+				this.createEditableGrid();
+				break;
+			    case "Live Form Only":
+				this.createLiveForm();
+				break;
+			    case "Grid Only":
+				this.createGrid();
+				break;
+			    }
+			    this.reflow();
+			    studio.refreshWidgetsTree();
+			});
 		});
 	},
     createPopupLivePanel: function(usePaging) {

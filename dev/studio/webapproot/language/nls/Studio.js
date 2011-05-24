@@ -175,6 +175,7 @@
     "wm.RelatedEditor.LOOKUP_CAPTION": "${fieldName} (lookup)",
     "wm.LivePanel.CHOOSER_TITLE": "Pick LivePanel Layout",
     "wm.LivePanel.DETAILS_PANEL_TITLE": "Details",
+    "wm.LivePanel.WAIT_GENERATING": "Generating...",
     "wm.LiveForm.GENERATE_BUTTONS_TITLE": "Generate Form Buttons",
     "wm.LiveForm.GENERATE_BUTTONS_PROMPT": "What kind of buttons do you want? EditPanel manages the buttons for you; basic buttons gives you a starting point for creating your own button panel",
     "wm.LiveForm.GENERATE_BUTTONS_CAPTION1": "Edit Panel",
