@@ -1542,6 +1542,11 @@ dojo.declare("Studio", wm.Page, {
 	    this.splitter3b.show();
 	    this.PIPanel.reflow();
 	}
+	for (var i = 0; i < wm.dialog.showingList.length; i++) {
+	    var d = wm.dialog.showingList[i];
+	    if (d._isDesignLoaded)
+		d.reflow();
+	}
     },
 
     togglePaletteDialog: function() {
@@ -1561,6 +1566,11 @@ dojo.declare("Studio", wm.Page, {
 	    this.panel2.show();
 	    this.splitter1.show();
 	    this.panel2.reflow();
+	}
+	for (var i = 0; i < wm.dialog.showingList.length; i++) {
+	    var d = wm.dialog.showingList[i];
+	    if (d._isDesignLoaded)
+		d.reflow();
 	}
     }
 
