@@ -142,9 +142,33 @@ makeInputPropEdit = function(inName, inValue, inDefault, inReadonly) {
 	].join('');
 }
 */
+/*
 makeTextPropEdit = function(inName, inValue, inDefault, inRows) {
 	return [
 	    '<textarea  id="studio_propinspect_'+inName+'" dojoType="dijit.form.SimpleTextarea" onChange="wm.inspectOnChange(\''+inName+'\')" name="', inName, '"', ' wrap="soft" rows="', inRows||8, '"',  (inValue==inDefault ? ' class="prop-default"' : ''), '">', inValue, '</textarea>'
+	].join('');
+}
+*/
+makeTextPropEdit = function(inName, inValue, inDefault, inRows, isBound) {
+    if (!inRows) inRows = 10;
+	inValue = inValue === undefined ? "" : inValue;
+	// FIXME: need more escaping here likely. just doing quotes for now
+
+	return [
+	    '<table class="studio_propinspect_innertable"><tr><td class="studio_propinspect_editcell">',
+	    '<textarea id="studio_propinspect_'+inName+'" dojoType="dijit.form.SimpleTextarea" name="', inName, '"',
+	    " rows='" + inRows + "'",
+	    ' onChange="wm.inspectOnChange(\''+inName+'\')"',
+		(inValue==inDefault ? ' class="prop-default wminspector-edit"' : 'class="wminspector-edit"'),	   
+	    ' >',
+	    String(inValue).replace(/\"/g,"'"),
+	    "</textarea>",
+	    '<textarea class="wminspector-readonly"  readonly="true"',
+	    ' rows="' + inRows + '"',
+	    '>',
+	    inValue,
+	    "</textarea>",
+	    '</td><td class="bound-prop-button">&nbsp;</td></tr></table>'
 	].join('');
 }
 /*

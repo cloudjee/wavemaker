@@ -135,11 +135,14 @@ dojo.declare("wm.Html", wm.Control, {
 	            this.doAutoSize(1,1);	
         },
 	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-                        case "autoSize": 
-		                return makeSelectPropEdit(inName, (this.autoSizeHeight) ? "height" : (this.autoSizeWidth) ? "width" : "none", ["none", "width", "height"], inDefault);
-		}
-		return this.inherited(arguments);
+	    switch (inName) {
+                case "autoSize": 
+		    return makeSelectPropEdit(inName, (this.autoSizeHeight) ? "height" : (this.autoSizeWidth) ? "width" : "none", ["none", "width", "height"], inDefault);
+		case "html":
+		var wire = wm.data.getPropWire(this, "html");
+		return makeTextPropEdit(inName, inValue, inDefault, 10, Boolean(wire));
+	    }
+	    return this.inherited(arguments);
 	},
     getAutoSize: function() {
 	if (this.autoSizeWidth) return "width";

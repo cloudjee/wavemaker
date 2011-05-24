@@ -44,7 +44,8 @@ wm.Object.extendSchema(wm.Tree, {
     select: {group: "method"},
     forEachNode: {group: "method"},
     findNodeByCallback: {group: "method", returns: "wm.TreeNode"},
-    root: {type: "wm.TreeNode", doc: 1, ignore: 1}
+    root: {type: "wm.TreeNode", doc: 1, ignore: 1},
+    connectors: {group: "display", order: 100}
 
 });
 wm.Tree.extend({
@@ -55,7 +56,8 @@ wm.Tree.extend({
 
 wm.Object.extendSchema(wm.PropertyTree, {
     dataSet: { readonly: true, group: "data", order: 1, bindTarget: 1, type: "wm.Variable", isList: true},
-    selectedItem: { ignore: 1, bindSource: 1, isObject: true, simpleBindProp: true }
+    selectedItem: { ignore: 1, bindSource: 1, isObject: true, simpleBindProp: true },
+    configJson: {group: "data", order: 10},
 });
 
 

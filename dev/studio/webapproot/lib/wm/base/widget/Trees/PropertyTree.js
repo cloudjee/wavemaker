@@ -183,7 +183,7 @@ dojo.declare("wm.PropertyTree", wm.Tree, {
     makePropEdit: function(inName, inValue, inDefault) {
 	switch (inName) {
 	case "configJson":
-	    return makeTextPropEdit(inName, inValue, inDefault)
+	    return makeTextPropEdit(inName, inValue, inDefault, 15)
 	}
 	return this.inherited(arguments);
     },
