@@ -294,7 +294,8 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 	    dialogList = dialogList.concat(wm.listComponents([studio.application, studio.page], wm.DojoLightbox));
 	    dialogList = dialogList.concat(wm.listComponents([studio.application, studio.page], wm.PopupMenu));
 	    dialogList = dialogList.sort();
-
+	    if (wm.PopupMenu && this.inspected instanceof wm.PopupMenu)
+		wm.Array.removeElement(dialogList, this.inspected);
 
 	    var layerList = wm.listComponents([studio.page], wm.Layer);
 	    layerList = layerList.sort();
