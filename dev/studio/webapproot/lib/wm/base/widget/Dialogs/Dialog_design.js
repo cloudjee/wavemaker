@@ -162,3 +162,36 @@ wm.Object.extendSchema(wm.DesignableDialog, {
 /*    owner: {ignore: true} */ // See JIRA-2118: Can't drag and drop to an app level container
     createButtonBar: {group: "operation", order: 20}
 });
+
+
+wm.DesignableDialog.extend({
+    set_owner: function(inOwner) {
+        var oldOwner = this.owner;
+        this.inherited(arguments);
+        var owner = this.owner;
+        wm.forEachWidget(this, function(w) {
+            if (w.owner == oldOwner)
+                w.setOwner(owner);
+        });
+    },
+    afterPaletteDrop: function() {
+	this.inherited(arguments);
+        this.createButtonBar();
+    },
+	makePropEdit: function(inName, inValue, inDefault) {
+		switch (inName) {
+                case "createButtonBar":
+				return makeReadonlyButtonEdit(inName, inValue, inDefault);
+                }
+		return this.inherited(arguments);
+        },
+	editProp: function(inName, inValue, inInspector) {
+		switch (inName) {
+                case "createButtonBar":
+                    this.createButtonBar();
+                    this.reflow();
+                    return;
+                }
+		return this.inherited(arguments);
+        }
+});

@@ -32,34 +32,5 @@ dojo.declare("wm.DesignableDialog", wm.Dialog, {
     postInit: function() {
 	this.inherited(arguments);
 	delete this.containerNode; // containerNode is where child nodes get added to when appending children; just let the normal parent/child relationships prevail...
-    },
-    set_owner: function(inOwner) {
-        var oldOwner = this.owner;
-        this.inherited(arguments);
-        var owner = this.owner;
-        wm.forEachWidget(this, function(w) {
-            if (w.owner == oldOwner)
-                w.setOwner(owner);
-        });
-    },
-    afterPaletteDrop: function() {
-	this.inherited(arguments);
-        this.createButtonBar();
-    },
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-                case "createButtonBar":
-				return makeReadonlyButtonEdit(inName, inValue, inDefault);
-                }
-		return this.inherited(arguments);
-        },
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-                case "createButtonBar":
-                    this.createButtonBar();
-                    this.reflow();
-                    return;
-                }
-		return this.inherited(arguments);
-        }
+    }
 });
