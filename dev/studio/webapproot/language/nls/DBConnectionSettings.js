@@ -24,5 +24,6 @@ ALERT_CONNECTION_PROPS_FAILED: "Failed to update connection properties",
 ALERT_REIMPORT_FAILED: "Re-Import failed: ${error}",
 ALERT_LOAD_DDL_FAILED: "Unable to load DDL: ${error}",
 ALERT_EXPORT_FAILED: "Unable to export: {$error}",
-WAIT_TEST_CONNECTION: "Test Connection: ${url}"
+WAIT_TEST_CONNECTION: "Test Connection: ${url}",
+CONFIRM_SAVE_MODEL_FIRST: "If you have unsaved changes to your data model which will NOT be exported. Export anyways?"
 }

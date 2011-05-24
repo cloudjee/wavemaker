@@ -68,6 +68,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
                         }));
 	},
 	exportBtnClick: function(inSender) {
+	    var f = dojo.hitch(this, function() {
 		if (this.overrideFlagInput.getDataValue()) {
 		    app.confirm(this.getDictionaryItem("CONFIRM_EXPORT"), false, dojo.hitch(this, function() {
 			this.exportBtnClick2();
@@ -75,6 +76,13 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 		} else {
 		    this.exportBtnClick2();
 		}
+	    });
+
+	    if (this.modelIsDirty) {
+		app.confirm(this.getDictionaryItem("CONFIRM_SAVE_MODEL_FIRST"), false, f);
+	    } else {
+		f();
+	    }
 	},
         exportBtnClick2: function() {
 			studio.beginWait(this.getDictionaryItem("WAIT_LOADING_DDL"));

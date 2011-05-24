@@ -175,6 +175,8 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 			this.connect(d, "onPageReady", dojo.hitch(d.page, "setup"));
 		}
 		d.show();
+	    d.page.modelIsDirty = this.dirty;
+	    d.page.openner = this;
 	},
 	resetPropertyEdit: function() {
 		this.propertyName.setInputValue("");
