@@ -36,6 +36,8 @@ dojo.declare("HandleRequiredJars", wm.Page, {
 			layers.layers[i].domNode.style.display = "none";
 		}
 	    }
+	this.saveButton.setShowing(Boolean(studio.project && studio.project.projectName) && studio.isProjectDirty());
+	this.label7b.setShowing(Boolean(studio.project && studio.project.projectName) && studio.isProjectDirty());
     },
 
     onSuccess: function(inSender) {
@@ -80,6 +82,9 @@ dojo.declare("HandleRequiredJars", wm.Page, {
 	this.layer5.hide();
 	this.layer6.hide();
 	this.owner.owner.hide();
+    },
+    saveProject: function() {
+	studio.saveAll(null);
     },
     _end: 0
 });

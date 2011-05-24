@@ -66,8 +66,10 @@ HandleRequiredJars.widgets = {
 		}],
 
 
-		layer7: ["wm.Layer", {_classes: {domNode: ["wmGroupBox"]}, caption: "End", padding: "5", verticalAlign: "top", horizontalAlign: "left"}, {}, {
-		    label7: ["wm.Html", {width: "100%",height: "100%", html: "Before we can use the new jar files, we need to restart studio.  Hit the Restart button when you are ready."}]
+		layer7: ["wm.Layer", {_classes: {domNode: ["wmGroupBox"]}, caption: "End", padding: "5", verticalAlign: "top", horizontalAlign: "center"}, {}, {
+		    label7: ["wm.Html", {width: "100%",height: "100%", html: "Before we can use the new jar files, we need to restart studio.  Hit the Restart button when you are ready."}],
+		    label7b: ["wm.Html", {width: "100%", height: "35px", html: "Note that if you have unsaved changes, you should hit save before you restart"}],
+		    saveButton: ["wm.Button", {width: "100px", caption: "Save"},{onclick: "saveProject"}]
 		}]
 
 	    }]
