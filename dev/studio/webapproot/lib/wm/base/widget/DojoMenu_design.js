@@ -240,5 +240,9 @@ wm.Object.extendSchema(wm.PopupMenu, {
     margin: {ignore:true},
     padding: {ignore:true},
     scrollX: {ignore:true},
-    scrollY: {ignore:true}
+    scrollY: {ignore:true},
+    onclick: {ignore: true},
+    onRightClick: {ignore: true},
+    onMouseOver: {ignore: true},
+    onMouseOut: {ignore: true}
 });
