@@ -174,8 +174,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 
 		this.domNode.style.display = "none";		
 		this._connections.push(this.connect(document, "keydown", this, "keydown"));
-		this._subscriptions.push(dojo.subscribe("window-resize", this, "reflow"));	    
-
+	        this._subscriptions.push(dojo.subscribe("window-resize", this, "reflow"));
 
 	    this.setModal(this.modal);
 
@@ -496,7 +495,7 @@ dojo.declare("wm.Dialog", wm.Container, {
         var w = this.width;
         var h = this.height;
 
-        var isDesigned =  (this.domNode.parentNode != document.body);
+        var isDesigned = this._isDesignLoaded;
         var W = (isDesigned) ? studio.designer.bounds.w : this.domNode.parentNode.clientWidth;
         var H = (isDesigned) ? studio.designer.bounds.h : this.domNode.parentNode.clientHeight;
 
