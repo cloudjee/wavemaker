@@ -171,17 +171,20 @@ dojo.declare("wm.Palette", wm.Tree, {
 		dojo.stopEvent(e);		
 		var menuObj = studio.contextualMenu;
 		menuObj.removeAllChildren();
-		menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
-						{label: studio.getDictionaryItem("wm.Palette.MENU_ITEM_COPY", {className: inNode.klass}),
-						 iconClass: "Studio_canvasToolbarImageList16_3",
-						 onClick: dojo.hitch(this, function() {
-						     studio.clipboard = "{" + inNode.klass.replace(/^.*\./,"") + "1: ['" + inNode.klass + "'," + (inNode.props ? dojo.toJson(inNode.props) : "{}") + "]}";
-						     console.log(studio.clipboard);
-						     studio.clipboardClass = inNode.klass;
-						     studio.updateCutPasteUi();
-						 })
-						});
-
+		var ctor = dojo.getObject(inNode.klass);
+		if (ctor)
+		    var prototype = ctor.prototype;
+		if (prototype && !prototype._noPaletteCopy) {
+ 		    menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
+						    {label: studio.getDictionaryItem("wm.Palette.MENU_ITEM_COPY", {className: inNode.klass}),
+						     iconClass: "Studio_canvasToolbarImageList16_3",
+						     onClick: dojo.hitch(this, function() {
+							 studio.clipboard = "{" + inNode.klass.replace(/^.*\./,"") + "1: ['" + inNode.klass + "'," + (inNode.props ? dojo.toJson(inNode.props) : "{}") + "]}";
+							 studio.clipboardClass = inNode.klass;
+							 studio.updateCutPasteUi();
+						     })
+						    });
+		}
 		menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
 						{label: studio.getDictionaryItem("wm.Palette.MENU_ITEM_DOCS", {className: inNode.klass}),
 						 iconClass: "StudioHelpIcon", 

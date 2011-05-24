@@ -37,6 +37,7 @@ dojo.declare("wm.Template", wm.Panel, {
 });
 wm.Template.extend({
     themeable: false,
+    _noPaletteCopy: true,
     // block wm.Panel's afterPaletteDrop
     afterPaletteDrop: function() {
         wm.Container.prototype.afterPaletteDrop.call(this); 
