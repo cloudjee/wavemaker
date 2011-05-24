@@ -495,13 +495,11 @@ dojo.declare("wm.Dialog", wm.Container, {
 	if (!this.showing) return;
         var w = this.width;
         var h = this.height;
-/*
+
         var isDesigned =  (this.domNode.parentNode != document.body);
-        var W = (isDesigned) ? studio.designer.bounds.w : app._page.root.bounds.w;
-        var H = (isDesigned) ? studio.designer.bounds.h : app._page.root.bounds.h;
-        */
-        var W = this.domNode.parentNode.clientWidth;
-        var H = this.domNode.parentNode.clientHeight;
+        var W = (isDesigned) ? studio.designer.bounds.w : this.domNode.parentNode.clientWidth;
+        var H = (isDesigned) ? studio.designer.bounds.h : this.domNode.parentNode.clientHeight;
+
 
 	if (String(w).match(/\%/)) {
 	    w = W * parseInt(w)/100;
@@ -515,10 +513,10 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    h = parseInt(h);
 	}
 
-	if (!this._isDesignLoaded) {
+	//if (!this._isDesignLoaded) {
 	    if (w + 2 > W) w = W-2;
 	    if (h + 2 > H) h = H-2;
-	}
+	//}
         var buffer = 10;
         var t,l;
         
