@@ -20,6 +20,9 @@ dojo.declare("ImportFile", wm.Page, {
     start: function() {
 	this.filename.editor.set("placeHolder", this.getDictionaryItem("PLACEHOLDER"));
     },
+    onShow: function() {
+	this.filename.setDataValue("");
+    },
     openProject: function() {
 	this.owner.dismiss();
 	studio.project.openProject(this.fileUploader.variable.getData()[0].path);
