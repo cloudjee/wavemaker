@@ -22,7 +22,7 @@ dojo.declare("wm.AceEditor", wm.Control, {
     scrim: true,
 
     minWidth: "300",
-    minHeight: "300",
+    minHeight: "120",
 
     // Access to bespin objects
     _editor: null,
