@@ -72,18 +72,20 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 	},
 
 	getCreateDataModelDialog: function() {
-		if (studio.importDBDialog) {
-			return studio.importDBDialog;
-		}
+	    if (!studio.importDBDialog) {
 		var props = {
-			owner: app,
-			pageName: "ImportDatabase",
-			hideControls: true,
-			width: 700,
+		    owner: app,
+		    pageName: "ImportDatabase",
+		    hideControls: true,
+		    width: 700,
 		    height: 340,
 		    title: studio.getDictionaryItem("wm.DataModel.IMPORT_DATABASE_TITLE")
 		};
 		var d = studio.importDBDialog = new wm.PageDialog(props);
+	    } else {
+		var d = studio.importDBDialog;
+	    }
+
 		d.onPageReady = dojo.hitch(d, function() {
 			d.onShow = dojo.hitch(d.page, "update", this);
 		});
@@ -94,6 +96,7 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 		return d;
 	},
 	completeNewDataModel: function() {
+	    
 		var p = this.getCreateDataModelDialog().page;
 		if (this._dataModelName || p.dataModelName) {
 			var n = this._dataModelName || p.dataModelName;
@@ -130,6 +133,7 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 			app.toastSuccess(studio.getDictionaryItem("wm.DataModel.TOAST_IMPORT_SUCCESS", {dataModel: n}));
 		    }
 		}
+	   
 	},
 	editView: function() {
 	    var c = studio.navGotoEditor("DataObjectsEditor", studio.databaseTab, this.getLayerName(), this.getLayerCaption());
