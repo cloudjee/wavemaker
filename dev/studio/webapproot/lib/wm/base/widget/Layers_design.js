@@ -19,8 +19,8 @@ dojo.require("wm.base.widget.Layers");
 wm.Object.extendSchema(wm.Layer, {
 	title: { ignore: 1 },
 	disabled: { ignore: 1 },
-	moveNext: { group: "operation", order: 1 },
-	movePrevious: { group: "operation", order: 2 },
+    moveNext: { group: "operation", order: 1, contextMenu: false },
+	movePrevious: { group: "operation", order: 2, contextMenu: false },
 	flex: {ignore: 1},
 	sizeUnits: {ignore: 1},
 	size: {ignore: 1},
@@ -84,19 +84,27 @@ wm.Layer.extend({
 				this.inherited(arguments);
 				return;
 		}
-	}/*,
+	},
 
     createDesignContextMenu: function(menuObj) {
-	var result = this.parent.createDesignContextMenu(menuObj);
-	menuObj.addAdvancedMenuChildren(menuObj.dojoObj, {label: "add", 
-						  iconClass: "Studio_silkIconImageList_30",
-						  onClick: dojo.hitch(this, function() {
-						      this.parent.addLayer();
-						  })
-						 });
-	
+	var data = {label: "Move Layer",
+		    iconClass: "Studio_silkIconImageList_30",
+		    children: []};
+
+	data.children.push({label: "Previous", 
+			    iconClass: "Studio_silkIconImageList_30",
+			    onClick: dojo.hitch(this, function() {
+				this.editProp("movePrevious");
+			    })
+			   });
+	data.children.push({label: "Next", 
+			    iconClass: "Studio_silkIconImageList_30",
+			    onClick: dojo.hitch(this, function() {
+				this.editProp("moveNext");
+			    })
+			   });
+		var submenu = menuObj.addAdvancedMenuChildren(menuObj.dojoObj, data);	
     }
-    */
 });
 
 wm.Object.extendSchema(wm.Layers, {
