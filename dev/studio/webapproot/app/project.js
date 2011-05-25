@@ -1470,6 +1470,7 @@ Studio.extend({
                                      }));
 		}
 	},
+    /* WARNING: Should have been named importPageClick */
 	importProjectClick: function(inSender) {
 		var d = this.importPageDialog;
 		if (d) {
