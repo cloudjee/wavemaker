@@ -294,17 +294,15 @@ Section -post SEC0001
     WriteRegStr HKLM "${REGKEY}" Path $INSTDIR
     SetOutPath $INSTDIR
     File /r /x .svn "${SOURCEDIR}\Support"
-    ;File /oname=${PRODUCT_NAME}.exe WaveMakerStudio.exe
     File /oname=${PRODUCT_NAME}.ico wavemaker.ico
     File "${BUILDSUPPORTDIR}\apache-license.txt"
     File "${BUILDSUPPORTDIR}\CDDL+GPL-license.txt"
     File "${BUILDSUPPORTDIR}\NOTICES.txt"
     File "${LICENSEFILE}"
-    ;File "releasenotes.txt"
     
     ; Create version.txt file
     ClearErrors
-    CopyFiles "${BUILDSUPPORTDIR}\VERSION" "$INSTDIR\version.txt"
+    File "${BUILDSUPPORTDIR}\VERSION.txt" 
     IfErrors error
     error:
 

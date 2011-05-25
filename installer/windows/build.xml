@@ -68,7 +68,7 @@
         </pathconvert>
 
 
-				<copy file="${buildroot}\VERSION" tofile="${src.buildsupport.dir}\VERSION"/>
+				<copy file="${buildroot}\VERSION" tofile="${src.buildsupport.dir}\VERSION.txt"/>
 				
         <exec executable="${compiler.path}\makensis.exe" osfamily="Windows"
                 failonerror="true">
