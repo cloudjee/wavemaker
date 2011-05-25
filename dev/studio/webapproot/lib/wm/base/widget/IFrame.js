@@ -31,6 +31,13 @@ dojo.declare("wm.IFrame", wm.Control, {
 		this.inherited(arguments);
 		this.setSource(this.source);
 	},
+        buildCssSetterObj: function() {
+	    var obj = this.inherited(arguments);
+	    obj.overflow = "";
+	    obj.overflowX = "";
+	    obj.overflowY = "";
+	    return obj;
+	},
 	setSource: function(inSource) {
 		if (!dojo.isString(inSource) || inSource == "undefined")
 			inSource = "";
