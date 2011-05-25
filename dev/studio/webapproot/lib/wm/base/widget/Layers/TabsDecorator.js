@@ -39,6 +39,9 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 		b.style.display = inLayer.showing ? "" : "none";
 	    this.setBtnText(b, inCaption, inLayer.closable || inLayer.destroyable);
 	    this.decoree.connect(b, "onclick", dojo.hitch(this, function(evt) {
+		// prevent designer click
+		if (this.decoree.isDesignLoaded())
+			dojo.stopEvent(e);
 		wm.onidle(this, function() {
 		    this.tabClicked(inLayer,evt);
 		});
@@ -49,9 +52,7 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 	},
 	tabClicked: function(inLayer, e) {
 		var d = this.decoree;
-		// prevent designer click
-		if (d.isDesignLoaded())
-			dojo.stopEvent(e);
+
 	    var close = dojo.hasClass(e.target, "TabCloseIcon");
 	    if (!close && (inLayer.closable || inLayer.destroyable)) {
 		var closeIcon = dojo.coords(e.target.firstChild);
