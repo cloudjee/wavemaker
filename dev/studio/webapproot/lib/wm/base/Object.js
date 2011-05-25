@@ -317,6 +317,9 @@ wm.Object.extend({
 			type: v && v.type || typeof v,
 			isObject: v instanceof wm.Object
 		}
+	        if (t.type == "number" && isNaN(v)) {
+		    t.type = "string"; // don't know the correct type, but string being converted to number is how we get NaN, so don't convert!
+		}
 		this.getPropFlags(inName, t);
 		var s = this.schema[inName] || {
 		    noprop: Boolean((v === undefined) || (v === null) || inName.charAt(0)=='_' || (dojo.isFunction(v) || dojo.isObject(v)) && !t.isCustomMethod)
