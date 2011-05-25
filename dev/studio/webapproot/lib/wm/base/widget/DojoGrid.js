@@ -616,6 +616,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		    dojo.connect(this.dojoObj, "onApplyCellEdit", this, "cellEditted");
 		    dojo.connect(this.dojoObj, 'onClick', this, '_onClick');
 		    dojo.connect(this.dojoObj,'onCellDblClick', this,'_onCellDblClick');
+		    dojo.connect(this.dojoObj, "sort", this, "_onSort");
                 }
 	},
 	getDataSet: function() {
@@ -917,6 +918,17 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		params.selectedItem = this.selectedItem;
 		params.fieldId = evt.cell.field;
 		return params;
+	},
+        _onSort: function() {
+		var selectedData = this.selectedItem.getData();
+		if (selectedData)
+			this.selectItemOnGrid(this.selectedItem);
+
+	    var structure = this.dojoObj.structure[0];
+	    var fieldName = structure[this.dojoObj.sortInfo-1].field;
+	    this.onSort(fieldName);
+	},
+        onSort: function(inSortField) {
 	},
 	_onClick: function(evt){
 		var params = this._onGridEvent(evt);
