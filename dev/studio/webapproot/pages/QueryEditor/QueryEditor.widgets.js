@@ -83,25 +83,25 @@ QueryEditor.widgets = {
 								addBindParamLabel: ["wm.Label", {caption: "Add bind parameter:", border: "0", height: "100%", width: "125px"}, {}, {
 								    format: ["wm.DataFormatter", {}, {}]
 								}],
-								bindNameInput: ["wm.Editor", {layoutKind: "left-to-right", caption: "Name", padding: "", captionSize: "50px", width: "200px", height: "20px"}, {onchange: "parameterPropEdit"}, {
+								bindNameInput: ["wm.Editor", {layoutKind: "left-to-right", caption: "Name", padding: "", captionSize: "50px", width: "150px", height: "20px"}, {onchange: "parameterPropEdit"}, {
                                                                     binding: ["wm.Binding", {}, {}, {
 					                                wire: ["wm.Wire", {"targetProperty":"disabled","source":"queryInputsList.emptySelection"}, {}]
 				                                    }],
 								    editor: ["wm._TextEditor", {}, {}]
 								}],
-								bindTypeInput: ["wm.Editor", {layoutKind: "left-to-right", caption: "Type", display: "Select", padding: "", captionSize: "50px", width: "220px", height: "20px"}, {onchange: "parameterPropEdit"}, {
+								bindTypeInput: ["wm.Editor", {layoutKind: "left-to-right", caption: "Type", display: "Select", padding: "", captionSize: "50px", width: "150px", height: "20px"}, {onchange: "parameterPropEdit"}, {
                                                                     binding: ["wm.Binding", {}, {}, {
 					                                wire: ["wm.Wire", {"targetProperty":"disabled","source":"queryInputsList.emptySelection"}, {}]
 				                                    }],
 								    editor: ["wm._SelectEditor", {}, {}]
 								}],
-								isInputListCheckBox: ["wm.Editor", {layoutKind: "left-to-right", caption: "List", display: "CheckBox", padding: "2,0,0,0", captionSize: "60px", width: "100px", height: "20px"}, {onchange: "parameterPropEdit"}, {
+								isInputListCheckBox: ["wm.Editor", {layoutKind: "left-to-right", caption: "List", display: "CheckBox", padding: "2,0,0,0", captionSize: "60px", width: "80px", height: "20px"}, {onchange: "parameterPropEdit"}, {
                                                                     binding: ["wm.Binding", {}, {}, {
 					                                wire: ["wm.Wire", {"targetProperty":"disabled","source":"queryInputsList.emptySelection"}, {}]
 				                                    }],
 								    editor: ["wm._CheckBoxEditor", {padding: "1,0,0,0"}, {}]
 								}],
-						                bindParamInput: ["wm.Editor", {layoutKind: "left-to-right", caption: "Test Value:", width: "250px", captionSize: "100px"}, {onchange: "parameterPropEdit"}, {
+						                bindParamInput: ["wm.Editor", {layoutKind: "left-to-right", caption: "Test Value:", width: "100%", minWidth: "180px", captionSize: "100px"}, {onchange: "parameterPropEdit"}, {
                                                                     binding: ["wm.Binding", {}, {}, {
 					                                wire: ["wm.Wire", {"targetProperty":"disabled","source":"queryInputsList.emptySelection"}, {}]
 				                                    }],
