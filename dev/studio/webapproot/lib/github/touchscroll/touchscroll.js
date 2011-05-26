@@ -532,6 +532,15 @@ TouchScroll.handleEvent = function handleEvent(event){
 	}else if(event.type === events.move){ // always cancel move events at this point
 		event.preventDefault();
 	}
+    if (event.type == "mouseup" || event.type == "touchend") {
+	if (event.target.tagName == "INPUT")
+	    event.target.focus();
+	else {
+	    try {
+		event.target.click();
+	    } catch(e){}
+	}
+    }
 };
 
 /*

@@ -50,6 +50,19 @@ wm.getDefaultView = function(inTypeName, inPropertyPath) {
 	return v;
 }
 
+wm.getStructuredView = function(inTypeName, inPropertyPath) {
+	inPropertyPath = inPropertyPath || "";
+	var
+		v = [], tm = wm.typeManager,
+		schema = tm.getTypeSchema(inTypeName),
+		propSchema = inPropertyPath ? tm.getTypeSchema(tm.getPropertyInfoFromSchema(schema, inPropertyPath).type) : schema,
+                fields = wm.typeManager.getStructuredPropNames(propSchema);
+		wm.forEach(fields, function(f) {
+			v.push(wm.getViewField(schema, (inPropertyPath ? inPropertyPath + "." : "") + f));
+		});
+	return v;
+}
+
 /**
 	Component that provides information about live service, datatype,
 	related objects, and field information.
@@ -67,9 +80,13 @@ dojo.declare("wm.LiveView", wm.Component, {
 	related: [],
 	/** Fields to display */
 	view: [],
+    
+	/* New property added for the EditLivePanel page which edits the LiveView and in so doing designs the LivePanel */
+        activities: null,
 	constructor: function() {
-		this.related = [];
-		this.view = [];
+	    this.related = [];
+	    this.view = [];
+	    this.activities = {};
 	},
 	init: function() {
 		this.inherited(arguments);
@@ -90,6 +107,7 @@ dojo.declare("wm.LiveView", wm.Component, {
 			this.related = this.getRequiredRelatedFields();
 		return this.related || [];
 	},
+
 	getRequiredRelatedFields: function(){
 		try
 		{
@@ -100,9 +118,54 @@ dojo.declare("wm.LiveView", wm.Component, {
 				var isRelatedField = wm.typeManager.isStructuredType(field.type);
 				if (isRelatedField && field.required)
 				{
-					if (field.type == "com.sforce.soap.enterprise.salesforceservice.QueryResultType") 
-						continue; //xxx
 					this.addRelated(i);
+					ts.push(i);
+				}
+			}
+			
+			return ts;
+		}
+		catch(e)
+		{
+			console.info('error finding required fields.', e);
+		}
+		
+		return [];
+	},
+	addAllRelatedFields: function(){
+		try
+		{
+			var ts = [];
+			var schema = wm.typeManager.getTypeSchema(this.dataType);
+			for (var i in schema) {
+				var field = schema[i];
+				var isRelatedField = wm.typeManager.isStructuredType(field.type);
+				if (isRelatedField)
+				{
+					this.addRelated(i);
+					ts.push(i);
+				}
+			}
+			
+			return ts;
+		}
+		catch(e)
+		{
+			console.info('error finding required fields.', e);
+		}
+		
+		return [];
+	},
+        getAllRelatedFields: function(){
+		try
+		{
+			var ts = [];
+			var schema = wm.typeManager.getTypeSchema(this.dataType);
+			for (var i in schema) {
+				var field = schema[i];
+				var isRelatedField = wm.typeManager.isStructuredType(field.type);
+				if (isRelatedField)
+				{
 					ts.push(i);
 				}
 			}
@@ -325,5 +388,6 @@ wm.Object.extendSchema(wm.LiveView, {
 	related: { ignore: 1, writeonly: 1 },
 	view: { ignore: 1, writeonly: 1 },
 	service: { ignore: 1, writeonly: 1 },
-	dataType: {ignore: 1, writeonly: 1}
+    dataType: {ignore: 1, writeonly: 1},
+    activities: {ignore: 1, writeonly: 1}
 });

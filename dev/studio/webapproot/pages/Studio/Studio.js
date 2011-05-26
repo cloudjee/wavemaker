@@ -56,6 +56,15 @@ dojo.declare("Studio", wm.Page, {
 	// initialization
 	//=========================================================================
 	start: function() {
+
+	    if (wm.studioConfig.isMobileApp) {
+		dojo.removeClass(document.body.parentNode, "mobile"); // mobile projects require this; desktop not harmed...
+		this.designerSpacer1.show();
+		this.designerSpacer2.show();
+		this.canvasSizeSelect.show();
+		this.canvasSizeSelect.setDataValue(dojo.cookie("DeignerSreenResolution") || "320x480 (iphone)");
+		this.projectNameLabel.hide();
+	    }
 	    if (dojo.isIE && dojo.isIE < 8) {
 		app.alert(this.getDictionaryItem("ALERT_OLD_IE_BAD"));
 		app.alertDialog.setButton1Caption("");
@@ -538,7 +547,11 @@ dojo.declare("Studio", wm.Page, {
 			wm.forEach(l, function(d) {
 				var liveDataName = d.caption.toLowerCase();
 				var name = liveDataName + "LivePanel1";
+			    if (wm.studioConfig.isMobileApp) {
+				palette.addItem(caption, d.caption + " (" + i + ")", desc, image, "wm.mobile.LivePanel", {name: name, liveDataName: liveDataName, liveSource: d.type});
+			    } else {
 				palette.addItem(caption, d.caption + " (" + i + ")", desc, image, "wm.LivePanel", {name: name, liveDataName: liveDataName, liveSource: d.type});
+			    }
 			});
 		});
 	},
@@ -1368,6 +1381,15 @@ dojo.declare("Studio", wm.Page, {
     },
     revertThemeClick: function(inSender) {
 	this.themesPage.page.revertTheme();
+    },
+    canvasSelectChanged: function(inSender) {
+	var val = inSender.getDataValue();
+	var matches = val.match(/(\d+)x(\d+)/);
+	var x = matches[1];
+	var y = matches[2];
+	this.designer.setHeight(y + "px");
+	this.designer.setWidth(x + "px");
+	dojo.cookie("DeignerSreenResolution", val);
     },
     pageSelectChanged: function(inSender, optionalPageName) {
 	if (!studio.page) return;

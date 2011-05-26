@@ -19,6 +19,7 @@ dojo.require("wm.base.widget.Trees.Tree");
 dojo.declare("wm.DraggableTree", wm.Tree, {
     classNames: "wmtree wmdraggabletree",
     dropBetweenNodes: false,
+    keepInParent: false,
     init: function() {
 	this.inherited(arguments);
 	this.connect(this.domNode, "onmouseup", this, "treeMouseUp");
@@ -43,6 +44,8 @@ dojo.declare("wm.DraggableTree", wm.Tree, {
     getNoDrop: function(inNode) {
 	if (inNode == this.root)
 	    return dojo.hasClass(inNode.domNode, "noDrop");
+	else if (this.keepInParent && inNode != this.draggedItem.parent)
+	    return true;
 	else
 	    return dojo.hasClass(inNode.contentNode, "noDrop");
     },
@@ -114,7 +117,7 @@ dojo.declare("wm.DraggableTree", wm.Tree, {
 	    }
 	    moveNode.parentIndex = index;
 	}
-
+	if (this.keepInParent && targetNode != moveNode.parent) return;
 	var oldparent = moveNode.parent;
 	oldparent._remove(moveNode);
 	moveNode.addParent(targetNode);
@@ -230,27 +233,33 @@ dojo.declare("wm.DraggableTreeMover", wm.DragDropper, {
 	this.hoverStyleNodes = [];
 	switch(inTargetArea) {
 	case "top":
-	    dojo.addClass(this.target.domNode, "dndHover");
-	    dojo.addClass(this.target.domNode, "dndHoverTop");
-	    this.hoverStyleNodes.push(this.target.domNode);
+	    if (!this.keepInParent || this.target.parent != this.draggedItem.parent) {
+		dojo.addClass(this.target.domNode, "dndHover");
+		dojo.addClass(this.target.domNode, "dndHoverTop");
+		this.hoverStyleNodes.push(this.target.domNode);
+	    }
 	    break;
 	case "bot":
-	    if (!this.target.closed && this.target.kids && this.target.kids.length && !this.manager.getNoDrop(this.target)) {
-		dojo.removeClass(this.target.domNode, "dndHover");
-		dojo.addClass(this.target.kids[0].domNode, "dndHoverTop");
-		this.hoverStyleNodes.push(this.target.kids[0].domNode);
-	    } else {
-		dojo.addClass(this.target.domNode, "dndHover");
-		dojo.addClass(this.target.domNode, "dndHoverBottom");
-		this.hoverStyleNodes.push(this.target.domNode);
-	    }
+		if (!this.keepInParent && !this.target.closed && this.target.kids && this.target.kids.length && !this.manager.getNoDrop(this.target)) {
+		    dojo.removeClass(this.target.domNode, "dndHover");
+		    dojo.addClass(this.target.kids[0].domNode, "dndHoverTop");
+		    this.hoverStyleNodes.push(this.target.kids[0].domNode);
+		} else {
+		    if (!this.keepInParent || this.target.parent != this.draggedItem.parent) {
+			dojo.addClass(this.target.domNode, "dndHover");
+			dojo.addClass(this.target.domNode, "dndHoverBottom");
+			this.hoverStyleNodes.push(this.target.domNode);
+		    }
+		}
 	    break;
 	case "mid":
-	    dojo.addClass(this.target.domNode, "dndHover");
-	    if (this.manager.getNoDrop(this.target)) {
-		dojo.addClass(this.target.domNode, "dndHoverBottom");
-		this.hoverStyleNodes.push(this.target.domNode);
-	    }
+		if (!this.keepInParent) {
+		    dojo.addClass(this.target.domNode, "dndHover");
+		    if (this.manager.getNoDrop(this.target)) {
+			dojo.addClass(this.target.domNode, "dndHoverBottom");
+			this.hoverStyleNodes.push(this.target.domNode);
+		    }
+		}
 	}
     },
 	updateAvatar: function() {
@@ -369,6 +378,7 @@ dojo.declare("wm.DraggableTreeMover", wm.DragDropper, {
 	    var target =  this.root.findDomNode(match);
 
 	    console.log("TARGET:" + (target ? target.content : "null"));
+
 	    return target;
 
 	},

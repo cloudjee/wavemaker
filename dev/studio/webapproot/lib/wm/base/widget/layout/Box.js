@@ -1,17 +1,20 @@
 /*
- *  Copyright (C) 2009-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2009-2011 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 dojo.provide("wm.base.widget.layout.Box");
 
 dojo.declare("wm.layout.Box", wm.layout.Base, {
@@ -171,7 +174,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 		    b[inFitOrd] = fitOrd;  // bounds["l" or "t"] = the "l" or "t" inContainer.
 		    switch (inFitAlign) {
 		    case "justified": // no longer supported
-            		if (djConfig.isDebug && !wm.isInstanceType(inContainer, wm.Editor) && inContainer.isDesignedComponent() && inFitAxis == "w" && !wm.isInstanceType(inContainer, wm.Layers) && !wm.isInstanceType(inContainer.owner, wm.Layers))
+            		if (djConfig.isDebug && (!wm.Editor || !wm.isInstanceType(inContainer, wm.Editor)) && inContainer.isDesignedComponent() && inFitAxis == "w" && !wm.isInstanceType(inContainer, wm.Layers) && !wm.isInstanceType(inContainer.owner, wm.Layers))
                 	dojo.deprecated("justified", inContainer.owner.toString() + ":" + inContainer.toString() + "'s " + ((inFitAxis == "w") ? "horizontalAlign" : "verticalAlign") + " is set to 'justified', which may yield unexpected behaviors; please change this alignment in the property editor");
 			b[inFitAxis] = fitBound;
 			break;
@@ -217,7 +220,9 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 		}
             }
 
-	    if (inContainer._touchScroll && inContainer instanceof wm.ListViewer == false) {
+	    /* Block for use of the TouchScroll library (deprecated) */
+	    if (inContainer._touchScroll && (!wm.ListViewer || inContainer instanceof wm.ListViewer == false)) {
+		var domNode = inContainer._touchScroll.scrollers ? inContainer._touchScroll.scrollers.inner : inContainer.domNode.firstChild;
 		var touchScrollChanged = false;
 		if (inFlowAxis == "h") {
 		    var scrollRequiredHeight = b.t;
@@ -227,15 +232,15 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 		    var scrollRequiredWidth = b.l;
 		}
 		if (
-		    scrollRequiredHeight + "px" != inContainer._touchScroll.scrollers.inner.style.height) {
-		    inContainer._touchScroll.scrollers.inner.style.height = scrollRequiredHeight + "px";
+		    scrollRequiredHeight + "px" != domNode.style.height) {
+		    domNode.style.height = scrollRequiredHeight + "px";
 		    touchScrollChanged = true;
 		}
-		if (scrollRequiredWidth + "px" != inContainer._touchScroll.scrollers.inner.style.width) {
-		    inContainer._touchScroll.scrollers.inner.style.width = scrollRequiredWidth + "px";
+		if (scrollRequiredWidth + "px" != domNode.style.width) {
+		    domNode.style.width = scrollRequiredWidth + "px";
 		    touchScrollChanged = true;
 		}
-		if (touchScrollChanged)
+		if (touchScrollChanged && inContainer._touchScroll.scrollers)
 		    inContainer._touchScroll.setupScroller();
 	    }
 

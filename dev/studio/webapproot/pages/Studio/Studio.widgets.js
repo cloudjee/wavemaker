@@ -231,6 +231,7 @@ Studio.widgets = {
 				navRunBtn: ["wm.ToolButton", {width: "75px", hint: bundleStudio.T_RunTip, caption: "<img src=\"images/runapp_24.png\"/><span style=\"font-weight:bold\"> Run </span>", height: "29px"}, {onclick: "runProjectClick"}],
 				*/
 			    projectNameLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, width: "150px", margin: "0,0,0,20",autoSizeWidth: true, caption: ""}, {}],
+			    canvasSizeSelect: ["wm.SelectMenu", {showing: false, caption: "Canvas", margin:"4,0,4,20", width: "250px", height: "24px", captionSize: "70px", displayField: "dataValue", dataField: "dataValue", options: "320x480 (iphone), 480x320 (iphone), 640x960 (iphone 4), 960x640 (iphone 4), 480x800 (HTC Desire), 800x480 (HTC Desire), 1024x768 (ipad), 768x1024 (ipad)" },{onchange: "canvasSelectChanged"}],
 			    navBarSpacer7: ["wm.Spacer", {width: "100%", border: "0"}, {}],
 			    userLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, width: "250px", autoSizeWidth: true, margin: "0,0,0,20", caption: ""}, {}],
 			    navEditAccountBtn: ["wm.ToolButton", {showing: false, width: "150px", margin: "0,0,0,20", hint: "Edit Account", caption: "<img src=\"images/cloud_user_settings.png\"/><span style=\"font-weight:bold\"> Edit Account </span>", height: "29px"}, {onclick: "editAccountClick"}],
@@ -332,8 +333,10 @@ Studio.widgets = {
 						    }]
 						}]
 					}],
-			    bench: ["wm.Panel", {width: "100%", height: "100%", border: "1, 0, 0, 0", backgroundColor: "silver", borderColor: "#666E80"}, {}, {
+				bench: ["wm.Panel", {width: "100%", height: "100%", border: "1, 0, 0, 0", backgroundColor: "silver", borderColor: "#666E80", verticalAlign: "middle", horizontalAlign: "center"}, {}, {
+				    designerSpacer1: ["wm.Spacer", {showing: false, height: "100%"}],
 							designer: ["wm.Designer", {height: "100%", width: "100%", backgroundColor: "white", borderColor: "black", border: ""}, {onselect: "designerSelect", onmove: "designerMove"}],
+				    designerSpacer2: ["wm.Spacer", {showing: false, height: "100%"}],
 							benchbevel: ["wm.Bevel", {border: ""}, {}],
 						    statusPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "24px", border: "1,0,0,0", borderColor: "#666E80", backgroundColor: "#424A5A", horizontalAlign: "left", verticalAlign: "top"},{}, {
 							statusBarLabel: ["wm.Label", {width: "100%", height: "100%", caption: ""}],

@@ -1,0 +1,33 @@
+/*
+ * Copyright (C) 2011 WaveMaker Software, Inc.
+ *
+ * This file is part of WaveMaker Studio.
+ *
+ * WaveMaker Studio is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, version 3 of the License, only.
+ *
+ * WaveMaker Studio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+
+#studio_MenuDesignerDialog_menuDesigner_menuItemImageListBtn {
+        cursor: pointer;
+	-moz-border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-moz-box-shadow: 2px 2px 2px #666666; /* Document-ClickablesDefault-BorderStyle_Shadow */
+	-webkit-box-shadow: 2px 2px 2px #666666; /* Document-ClickablesDefault-BorderStyle_Shadow */
+	box-shadow: 2px 2px 2px #666666; /* Document-ClickablesDefault-BorderStyle_Shadow */
+}
+
+#studio_MenuDesignerDialog_menuDesigner_menuItemImageListBtn:hover {
+	-moz-box-shadow: 1px 1px 1px #999999; /* Document-ClickablesDefault-BorderStyle_Shadow */
+	-webkit-box-shadow: 1px 1px 1px #999999; /* Document-ClickablesDefault-BorderStyle_Shadow */
+	box-shadow: 1px 1px 1px #999999; /* Document-ClickablesDefault-BorderStyle_Shadow */
+}

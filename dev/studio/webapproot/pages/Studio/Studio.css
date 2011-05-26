@@ -1903,7 +1903,7 @@ color: rgb(0,270,0);
      background: transparent url(images/wm/picture_16.png) no-repeat;`    
 }
 
-.InsertMenuAdvanced {
+.InsertMenuAdvanced, .InsertMenuPrebuilt {
     background: transparent url(/wavemaker/images/wm/component_16.png) no-repeat;
 }
 

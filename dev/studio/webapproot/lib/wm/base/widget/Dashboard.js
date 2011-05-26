@@ -66,19 +66,19 @@ dojo.declare("wm.Dashboard", wm.Control, {
 						   isRelativePositioned:true});
 		dom.appendChild(this.selectEditor.domNode);
 		var panel = dojo.create('div', {style:'text-align:center'}, dom);
-	    /* TODO: Localize */
+
 	    this.okButton = new wm.Button({owner: this, 
 					   "height":"100%",
 					   "width":"60px",
 					   "caption": wm.getDictionaryItem("wm.Dashboard.ADD_DIALOG_ADD_CAPTION"),
 					   isRelativePositioned:true}); //{"onclick":'onOkClick'}
 	    this.connect(this.selectEditor, "onEnterKeyPress", this, "_onOkClick");
-	    /* TODO: Localize */
 	    this.cancelButton = new wm.Button({owner: this,
 					       "height":"100%",
 					       "width":"60px",
 					       "caption": wm.getDictionaryItem("wm.Dashboard.ADD_DIALOG_CANCEL_CAPTION"),
 					       isRelativePositioned:true}); //, {"onclick":'onCancelClick'});
+
 		panel.appendChild(this.okButton.domNode);
 		panel.appendChild(this.cancelButton.domNode);
 	},

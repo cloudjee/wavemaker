@@ -578,6 +578,10 @@ wm.Array.removeElementAt = function(inArray, inIndex) {
     return inArray;
 }
 
+wm.Array.insertElementAt = function(inArray, inElement, inIndex) {
+    inArray.splice(inIndex, 0, inElement);
+}
+
 /* Side effect: alters input inArray Object.  Returns inArray Object; Return is mostly used for chaining operations together */
 wm.Array.removeElement = function(inArray, inElement) {
     var index = dojo.indexOf(inArray, inElement);

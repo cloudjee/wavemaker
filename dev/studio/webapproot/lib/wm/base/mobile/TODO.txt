@@ -1,0 +1,23 @@
+WORK TO BE DONE:
+
+
+1. Move title from Layout to Page?
+2. Dialogs all need touch scrolling
+3. Support hardware Back button: 1. dismiss open dialogs; 2. Traverse a history of layer and page changes; software back button just does #2
+4: Investigate BasicList for how it handles some items being turned into wm.Variables and some not turned.  Goal is to turn permanently into wm.Variable anything that gets displayed... or at least displayExpressioned.  Especially nice would be to use the original ServiceVariable.data as its item store
+5. Form navigation; its hard to move around forms when your software keyboard is showing; android phones tend not to have a good tab key; therefore its up to us to provide UI buttons for going to the next form input
+6. Verify when wm.mobile.Lookup fires its LiveVariable. 
+
+Animation
+1. Apply new animation techniques
+2. Apply endAnim css callback to Layer Decorator
+
+
+
+4. SelectMenu: 
+4.1 User should be able to tab to it
+4.2 After closing, advance to the next tabbable element?
+
+Future Plans:
+1. PhoneGap/installable apps
+2. minisql; Variables that let you store and retrieve data to local datastore

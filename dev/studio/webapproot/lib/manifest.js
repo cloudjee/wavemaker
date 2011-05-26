@@ -20,9 +20,14 @@ wm.registerPaths(
 	["wm.modules", wm.basePath + "modules/ep"]
 );
 
+
+if (wm.studioConfig || !wm.isMobileApp)
+    wm.loadLibs([ "lib.wm.manifest"]);
+if (wm.isMobileApp || wm.studioConfig && wm.studioConfig.isMobileApp) 
+    wm.loadLibs([ "lib.wm.manifestmobile" ]);
+
+
 wm.loadLibs([ 
-	// Wavemaker
-	"lib.wm.manifest",
 	// User
 	"common.manifest"
 ]);

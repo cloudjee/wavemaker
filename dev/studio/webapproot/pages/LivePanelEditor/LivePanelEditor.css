@@ -1,0 +1,57 @@
+/*
+ *  Copyright (C) 2010-2011 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/*
+.LiveViewEditor .LiveViewEditor-managerToolbar {
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+
+}
+*/
+.LiveViewEditor .LiveViewEditor-logoBtmHolder {
+	/*background: url(images/wmbug_bot.gif) bottom no-repeat;*/
+}
+
+.LiveViewEditor .LiveViewEditor-titleLabel1, .LiveViewEditor .LiveViewEditor-fieldLabel {
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+	background-color: #949cab;
+	border-left: solid 1px #c0c4ca;
+	border-top-width: 0px;
+	border-right: solid 1px #363b44;
+	border-bottom: solid 1px #363b44;
+}
+
+.LiveViewEditor .LiveViewEditor-toolbarspacer1 {
+	background-image:url(images/toolbarspacer.gif);
+}
+
+.LiveViewEditor .LiveViewEditor-toolbarBtnHolder button {
+/*
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
+       */
+	height: 24px;
+	text-align: center;
+}
+
+.LiveViewEditor .LiveViewEditor-toolbarBtnHolder button:hover {
+	background-image:url(images/dark_toolbar_btn_sm_on.gif);
+	background-repeat:no-repeat;
+	height: 24px;
+}

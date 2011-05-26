@@ -247,12 +247,15 @@ wm.Object.extendSchema(wm.MyButton, {
 });
 	*/
 	extendSchema: function(inClass, inSchema) {
-	    if (!wm.extendSchemaDictionary && wm.studioConfig) {
-		dojo.requireLocalization("language", "schema");
-		wm.extendSchemaDictionary = dojo.i18n.getLocalization("language", "schema");
-	    }
-	    if (!wm.extendSchemaDictionary) 
-		wm.extendSchemaDictionary = {};
+	    if (!wm.studioConfig) return;
+	    if (!wm.extendSchemaDictionary) {
+		try {
+		  dojo.requireLocalization("language", "schema");
+		  wm.extendSchemaDictionary = dojo.i18n.getLocalization("language", "schema");
+		} catch(e){}	
+		if (!wm.extendSchemaDictionary) 
+		  wm.extendSchemaDictionary = {};
+	      }
 	    var className = inClass.prototype.declaredClass;
 	    var dictionary = wm.extendSchemaDictionary[className];
 	    if (dictionary) {
@@ -264,6 +267,7 @@ wm.Object.extendSchema(wm.MyButton, {
 		    }
 		}
 	    }
+
 		dojo.extend(wm.Object.getSchemaClass(inClass), inSchema);
 		// expunge memoized property information
 		delete inClass._publishedProps;

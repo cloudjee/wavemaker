@@ -34,6 +34,10 @@ dojo.declare("BindSourceDialog", wm.Page, {
 	    studio.select(object); 
     },
     update: function(inTargetProps, noRegen) {
+	this.binderSource.pageSelect._cupdating = true;
+	        this.binderSource.pageSelect.setDataValue(studio.project.pageName);
+	this.binderSource.pageSelect._cupdating = false;
+
 		this.targetType = this._getTargetType(inTargetProps);
 		var
 			tp = this.targetProps = inTargetProps,
@@ -101,7 +105,13 @@ dojo.declare("BindSourceDialog", wm.Page, {
 
 		    }
 		}
-		return ownerString + inNode.source;
+
+		var source = inNode.source;
+		var tmpPageContainer = "studioApplication.studio.bindSourceDialog.pageContainer.";
+		if (source.indexOf(tmpPageContainer) == 0) {
+		    source = source.substring(tmpPageContainer.length);
+		}
+		return ownerString + source;
 	    }
        },
 	bindNodeSelected: function(inSender, inNode) {

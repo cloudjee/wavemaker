@@ -36,9 +36,12 @@ dojo.declare("wm.dijit.ProgressBar", wm.Dijit, {
 	reflowDijit: function() {
 		var b = dojo.contentBox(this.domNode);
 		if (this.dijit) {
-			dojo.marginBox(this.dijit.domNode, {h: b.h});
+		    dojo.marginBox(this.dijit.domNode, {h: b.h});
+		    /* Label appears to no longer exist in dojo 1.6 */
+		    if (this.dijit.label) {
 			dojo.marginBox(this.dijit.label, {h: b.h});
 			this.dijit.label.style.lineHeight = b.h + "px";
+		    }
 		}
 	},
 	setProgress: function(inProgress) {

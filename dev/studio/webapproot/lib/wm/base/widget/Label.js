@@ -91,6 +91,7 @@ dojo.declare("wm.Label", wm.Control, {
         return wm.job(this.getRuntimeId() + ": doAutoSize", 10,  dojo.hitch(this, function() {this.doAutoSize(true,false);}));
     },
         doAutoSize: function(setSize, force) {
+	    if (this.isDestroyed) return;
             if (this._doingAutoSize || !this.autoSizeHeight && !this.autoSizeWidth) return;
 	    if (!force && !this._needsAutoSize) return;
 

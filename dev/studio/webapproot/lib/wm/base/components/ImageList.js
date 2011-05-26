@@ -72,7 +72,7 @@ dojo.declare("wm.ImageList", wm.Component, {
 	} else if (this.owner instanceof wm.Page) {
 	    id += this.owner.declaredClass; // name: "main", declaredClass: "Main"; don't use name
 	} else {
-	    id += this.owner.getRuntimeId().replace(/\./g,"_");
+	    id += this.owner.getRuntimeId("").replace(/\./g,"_");
 	}
 	id += "_" + this.name;
 	if (inIndex == undefined)
@@ -89,7 +89,7 @@ dojo.declare("wm.ImageList", wm.Component, {
 	        else if(this.isDesignLoaded() && this.owner != studio) {
 		    url = "/" + studio.projectPrefix + studio.project.getProjectPath() + "/" + url;
 		}
-		return '<image src="' + wm.theme.getImagesPath() + 'blank.gif"' +
+		return '<image class="ImageListIcon" src="' + wm.theme.getImagesPath() + 'blank.gif"' +
 			' width="' + this.width + '"' + 
 			' height="' + this.height + '"' + 
 			' style="' +
