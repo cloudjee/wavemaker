@@ -91,7 +91,8 @@ wm.define("wm.Container", wm.Control, {
 	    var oldType = this.getThemeStyleType();
 	    if (oldType)
 		this.removeUserClass(oldType);
-	    this.addUserClass(inType);
+	    if (inType)
+		this.addUserClass(inType);
 	},
         getThemeStyleType: function() {
 	    var types = ["MainContent", "EmphasizedContent", "HeaderContent"];
