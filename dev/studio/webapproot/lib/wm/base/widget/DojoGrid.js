@@ -232,12 +232,13 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    if (selectedIndex == -1) {
 		this.selectedItem.clearData();
 	    } else {
+/*
 		var newdata = this.itemToJSONObject(this.store, this.getRowData(selectedIndex));
 		for (prop in newdata){
 		    if (newdata[prop] instanceof Date)
 			newdata[prop] = newdata[prop].getTime();
-		}
-		this.selectedItem.setData(newdata);
+		}*/
+		this.selectedItem.setDataSet(this.getRowData(selectedIndex)._wmVariable[0]);
 	    }
 	    this.setValue("emptySelection", !this.hasSelection());
 	    this.setValue("isRowSelected", this.hasSelection());
@@ -675,6 +676,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 		var storeData = {'items':[]};
 		var dataList = this.variable.getData();
+	    if (dataList) {
+		for (var i = 0; i < dataList.length; i++)
+		    dataList[i]._wmVariable = this.variable.getItem(i);
+	    }
 
 	    // If the user has provided a customSort method, use it
 	    // if its designtime, customSort will be the name of the method rather
@@ -925,20 +930,21 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			this.selectItemOnGrid(this.selectedItem);
 
 	    var structure = this.dojoObj.structure[0];
-	    var fieldName = structure[this.dojoObj.sortInfo-1].field;
+	    var fieldName = structure[Math.abs(this.dojoObj.sortInfo)-1].field;
 	    this.onSort(fieldName);
 	},
         onSort: function(inSortField) {
 	},
 	_onClick: function(evt){
 		var params = this._onGridEvent(evt);
+
     // This will happen if user clicks on empty area of grid.
 		if (!params.rowId && params.rowId != 0)
 			return;
 		if (params.rowId == -1){
-		  this.onHeaderClick(evt, params.selectedItem, params.rowId, params.fieldId, params.rowNode, params.cellNode);	
+		    this.onHeaderClick(evt, params.selectedItem, params.rowId, params.fieldId, params.rowNode, params.cellNode);	
 		} else {
-      this.onClick(evt, params.selectedItem, params.rowId, params.fieldId, params.rowNode, params.cellNode);
+		    this.onClick(evt, params.selectedItem, params.rowId, params.fieldId, params.rowNode, params.cellNode);
 		}
 	},
 	_onCellDblClick: function(evt){
