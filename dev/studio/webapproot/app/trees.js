@@ -47,11 +47,11 @@ Studio.extend({
 	            this.regex = new RegExp(this._searchText.toLowerCase());
 
 		if (this.page) {
-		    var dialogs = this.getTreeComponents(this.application.components, null, [wm.Dialog, wm.PopupMenu]);
+		    var dialogs = this.getTreeComponents(this.application.components, null, wm.studioConfig.isMobileApp ? [wm.mobile.Dialog] : [wm.Dialog, wm.PopupMenu]);
 		    for (var d in dialogs) {
 			this.widgetToTree(this.widgetsTree.root, dialogs[d]);
 		    }
-		    dialogs = this.getTreeComponents(this.page.components, null, [wm.Dialog, wm.PopupMenu]);
+		    dialogs = this.getTreeComponents(this.page.components, null, wm.studioConfig.isMobileApp ? [wm.mobile.Dialog] : [wm.Dialog, wm.PopupMenu]);
 		    for (var d in dialogs) {
 			this.widgetToTree(this.widgetsTree.root, dialogs[d]);
 		    }
@@ -254,7 +254,7 @@ Studio.extend({
 	    if (inComponent) {
 		n.component = inComponent;
 		inComponent._studioTreeNode = n;
-		if (n.tree == this.widgetsTree && (inComponent.flags.noModelDrop || inComponent instanceof wm.Container == false)) {
+		if (n.tree == this.widgetsTree && (inComponent.flags.noModelDrop || (wm.studioConfig.isMobileApp ? inComponent instanceof wm.mobile.Container == false : inComponent instanceof wm.Container == false))) {
 		    n.tree.setNoDrop(n, true);
 		}
 
@@ -280,8 +280,8 @@ Studio.extend({
 		    if (inWidget.flags.notInspectable || inWidget.isParentLocked())
 				return;		    
 		    // create a new node if we are displaying this widget, else pass in the parent node.  If we're in search mode, then all widgets get added to the root node
-		    var n = (this._searchText && !inWidget.name.toLowerCase().match(this.regex)) ? inNode : this.newComponentNode(inNode, inWidget, null, null, {closed: inWidget instanceof wm.Dialog});
-		    if (inWidget instanceof wm.Dialog == false || inWidget instanceof wm.DesignableDialog)
+		    var n = (this._searchText && !inWidget.name.toLowerCase().match(this.regex)) ? inNode : this.newComponentNode(inNode, inWidget, null, null, {closed: wm.studioConfig.isMobileApp ? inWidget instanceof wm.mobile.Dialog : inWidget instanceof wm.Dialog});
+		    if (wm.studioConfig.isMobileApp ? inWidget instanceof wm.mobile.Dialog == false || inWidget instanceof wm.mobile.DesignableDialog : inWidget instanceof wm.Dialog == false || inWidget instanceof wm.DesignableDialog)
 			this.subWidgetsToTree(n, inWidget);
 		}
 	},
@@ -405,7 +405,7 @@ Studio.extend({
 				n.tree.select(n);
 				// find and goto layer on which tree resides
 				var p = n.parent;
-				while (p && (p != this.page.root) && !(p instanceof wm.Layer))
+			    while (p && (p != this.page.root) && !(wm.studioConfig.isMobileApp ? p instanceof wm.mobile.Layer : p instanceof wm.Layer))
 					p = p.parent;
 				if (p)
 					p.show();

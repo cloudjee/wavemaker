@@ -638,14 +638,14 @@ dojo.declare("wm.NavigationInspector", wm.DataInspector, {
 					})).getHtml();
 			case "layer":
 				return (new wm.propEdit.WidgetsSelect({
-						widgetType: wm.Layer, 
+				                widgetType: wm.studioConfig.isMobileApp ? wm.mobile.Layer : wm.Layer, 
 						component: this, 
 						name: inName, 
 						value: ins && ins.name
 					})).getHtml();
 			case "layers":
 				return (new wm.propEdit.WidgetsSelect({
-						widgetType: wm.Layers, 
+				                widgetType: wm.studioConfig.isMobileApp ? wm.mobile.Layers : wm.Layers, 
 						component: this, 
 						name: inName, 
 						value: ins && ins.name

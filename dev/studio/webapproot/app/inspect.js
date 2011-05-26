@@ -289,7 +289,7 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 	    var sc = wm.listComponents([studio.application, studio.page], wm.ServiceVariable).sort();
 			var lightboxList = wm.listComponents([studio.application, studio.page], wm.DojoLightbox);
 	    var nc = wm.listComponents([studio.application, studio.page], wm.NavigationCall).sort();
-      var sharedEventHandlers = eventList(this.inspected.getSharedEventLookupName(this.propName), wm.isInstanceType(studio.selected.owner, wm.Application) ? studio.appsourceEditor : studio.editArea);
+      var sharedEventHandlers = eventList(this.inspected.getSharedEventLookupName(this.propName), wm.isInstanceType(studio.selected.owner, wm.BasicApplication) ? studio.appsourceEditor : studio.editArea);
 	    var dialogList = wm.listComponents([studio.application, studio.page], wm.Dialog);
 	    dialogList = dialogList.concat(wm.listComponents([studio.application, studio.page], wm.DojoLightbox));
 	    dialogList = dialogList.concat(wm.listComponents([studio.application, studio.page], wm.PopupMenu));

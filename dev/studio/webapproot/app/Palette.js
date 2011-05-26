@@ -79,8 +79,10 @@ dojo.declare("wm.Palette", wm.Tree, {
 			return;
 		var info = this.dragger.info;
 		var props = dojo.clone(info.props || {});
-	        if (props.name)
+	        if (props.name) {
 	            props.name = props.name.replace(/\s/g,"");
+		    props.name.replace(/^mobile/,"");
+		}
 		var ctor = dojo.getObject(info.type);
                 var owner = this.dragger.target.owner;
                 while (owner != studio.page && owner != studio.application)

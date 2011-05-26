@@ -104,7 +104,7 @@ getAllEventsInCode = function() {
 }
 
 eventEdit = function(ctrl, name, value, noInSenderInArgs) {
-    var appLevel = ctrl instanceof wm.Application || ctrl.owner instanceof wm.Application;
+    var appLevel = ctrl instanceof wm.BasicApplication || ctrl.owner instanceof wm.BasicApplication;
     var code = (appLevel) ? studio.getAppScript() : studio.getScript();
 
     if (wm.isInstanceType(ctrl, wm.Page))

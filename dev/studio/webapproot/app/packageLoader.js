@@ -66,7 +66,8 @@ loadPackages = function() {
     dojo.require("wm.studio.app.templates.widgetTemplates");
 
 	//studio.palette.beginUpdate();
-	loadData(dojo.moduleUrl("wm.studio.app") + "packages.js", _loadPackages);
+        var packageName = wm.studioConfig.isMobileApp ? "packages_mobile.js" : "packages.js";
+	loadData(dojo.moduleUrl("wm.studio.app") + packageName, _loadPackages);
 	loadData(dojo.moduleUrl("wm.packages") + "packages.js", _loadPackages);
 
 	if (!studio.isCloud()) 

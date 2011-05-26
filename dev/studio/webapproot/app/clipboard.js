@@ -104,7 +104,7 @@ Studio.extend({
                     if (isFunction && isFunctionForOldCopy) {
                         var oldname = comp.eventBindings[event];
                         var newname = oldname.replace(new RegExp("^" + i), comp.name);
-                        eventCopy(wm.isInstanceType(comp.owner, wm.Application) ? studio.appsourceEditor : studio.editArea, oldname, newname);
+                        eventCopy(wm.isInstanceType(comp.owner, wm.BasicApplication) ? studio.appsourceEditor : studio.editArea, oldname, newname);
                         comp.eventBindings[event] = newname;
                     }
                 }

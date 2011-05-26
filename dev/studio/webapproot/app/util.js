@@ -18,6 +18,17 @@ dojo.provide("wm.studio.app.util");
 // Utility functions to iterate through widgets and components and produce lists
 //===========================================================================
 
+wm.listOfWidgetTypeInParent = function(inType, inParent) {
+	var list = [];
+    wm.forEachWidget(inParent, function(w) {
+	if (w instanceof inType && !(w.owner instanceof wm.Composite))
+	    list.push(w);
+    }, true);
+    
+    return list;
+};
+
+
 // produce a name ordered list of widgets of a given class,
 // don't include widgets that are owned by Composite
 wm.listOfWidgetType = function(inType, inIgnoreBuiltin, ignoreDialogs) {
@@ -52,6 +63,7 @@ wm.listOfWidgetTypes = function(inTypes) {
 	});
 	return list;
 };
+
 
 // list components (not widgets) within owners by types
 wm.listMatchingComponents = function(inOwners, inMatch, inRecurse) {
@@ -127,16 +139,16 @@ wm.listComponentIds = function(inOwners, inClass, inStrict) {
 }
 
 // open a url and present user with a dialog if popups are blocked.
-wm.openUrl = function(inUrl, inTitle, inWindowName) {
-	var w = window.open(inUrl, inWindowName);
+wm.openUrl = function(inUrl, inTitle, inWindowName, inOptions) {
+        var w = (inOptions ? window.open(inUrl, inWindowName, inOptions) : window.open(inUrl, inWindowName));
         if (dojo.isChrome) {
 	    wm.job(inWindowName, 3000, function() {
 		if (w.closed) return;
 		if (w.document.body && w.outerWidth == 0)
-		    wm.openUrlDialog(inUrl,inTitle,inWindowName+1);
+		    wm.openUrlDialog(inUrl,inTitle,inWindowName+1, inOptions);
 	    });
 	} else if (!w) {
-	    wm.openUrlDialog(inUrl,inTitle,inWindowName);
+	    wm.openUrlDialog(inUrl,inTitle,inWindowName, inOptions);
 	}
 }
 wm.openUrlDialog = function(inUrl, inTitle, inWindowName) {
