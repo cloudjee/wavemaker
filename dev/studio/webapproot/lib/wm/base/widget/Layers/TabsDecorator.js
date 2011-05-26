@@ -41,7 +41,7 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 	    this.decoree.connect(b, "onclick", dojo.hitch(this, function(evt) {
 		// prevent designer click
 		if (this.decoree.isDesignLoaded())
-			dojo.stopEvent(e);
+			dojo.stopEvent(evt);
 		wm.onidle(this, function() {
 		    this.tabClicked(inLayer,evt);
 		});
