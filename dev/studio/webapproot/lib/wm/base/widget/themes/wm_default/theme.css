@@ -1730,8 +1730,8 @@ body.tundra .wm_default  div.wmheader,
    *
    * DESCRIPTION: An optional set of styles for giving the document itself a square or rounded border
    ************************************************************************************************/
-.wm_default  #wavemakerNode  .wmlayout,
-#studio_designer.wm_default .wmlayout, 
+.wm_default  #wavemakerNode > .wmlayout,
+#studio_designer.wm_default > .wmlayout, 
 #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wmlayout {
     /* Document-Styles-Border */
     -moz-border-radius: 0px; /* Document-Styles-BorderStyle_Radius */
