@@ -130,10 +130,20 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		    this.setFullStructureStr(this.fullStructureStr, 0);
 
 	    // This block will upgrade menus built using the freetext "menu" property to use
-	    // the new format
-	        if (!this.fullStructure) {
+	    // the new format.  This is for upgrading projects from 6.2.5
+	        if (!this.fullStructure && this.structure) {
 		    var structure = this.getStructure();
 		    this.fullStructure = structure.items;
+		    for (var i = 0; i < this.eventList.length; i++) {
+			var eventItem = this.eventList[i];
+			if (eventItem.onClick) {
+			    var menuItem = this.findCaptionInStructure(this.fullStructure, eventItem.label);
+			    if (menuItem)
+				menuItem.onClick = eventItem.onClick;
+			}
+		    }
+		    delete this.eventList;
+		    delete this.structure;
 		}
 		if (this.fullStructure  && this.fullStructure.length > 0) {
 			var structure = dojo.clone(this.fullStructure); // don't operate on original as we delete stuff that dojo shouldn't see from the datastructure
@@ -157,6 +167,18 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 	    this.blockRightClickOnMenu(this.dojoObj.domNode);
 
 	},
+    /* This is for upgrading projects from 6.2.5, and should be moved to design-time in a future release */
+    findCaptionInStructure: function(inStructure, inCaption) {
+	for (var i = 0; i < inStructure.length; i++) {
+	    var item = inStructure[i];
+	    if (item.label == inCaption)
+		return item;
+	    else if (item.children) {
+		var result = this.findCaptionInStructure(item.children, inCaption);
+		if (result) return result;
+	    }
+	}
+    },
     blockRightClickOnMenu: function(node) {
 	    try {
 		if (dojo.isFF) {
