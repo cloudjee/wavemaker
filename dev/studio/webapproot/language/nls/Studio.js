@@ -201,6 +201,8 @@
 
     /* Editors */
     "wm.ResizeableEditor.SET_MAX_HEIGHT": "Your maxHeight must be larger than ${minHeight}",
+    "wm.Checkbox.TOAST_WARN_CHECKED_VALUE_NOT_A_BOOLEAN": "You have changed your dataType to Boolean; your checkedValue should be updated to be true/false",
+    "wm.Checkbox.TOAST_WARN_CHECKED_VALUE_NOT_A_NUMBER": "You have changed your dataType to Number; your checkedValue should be updated to be a number",
 
     /* Context Menus */
     "wm.Component.CONTEXT_MENU_LAYERS": "${parentName} Layers",
