@@ -429,6 +429,7 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 			this.inspected.setProp(this.propName, value);
 		}
 	  }
+	    wm.job("studio.updateDirtyBit",10, function() {studio.updateProjectDirty();});
 	},
 
 	doEventAction: function(inEventName) {
