@@ -298,7 +298,7 @@
     "POPUP_BLOCKER_MESSAGE": "Popup Blocker Detected - Manually Launch",
     "wm.studio.Project.TOAST_RESERVED_NAME": "That is a reserved javascript name",
     "wm.studio.Project.WAIT_CREATING_PROJECT": "Setting up new project",
-    "wm.studio.Project.WAIT_OPEN_PROJECT": "Openning...",
+    "wm.studio.Project.WAIT_OPEN_PROJECT": "Opening...",
     "wm.studio.Project.TOAST_OPEN_PROJECT_FAILED": "Failed to open project ${projectName}: ${error}",
 
     /* These next two seem to indicate the same thing, but come up from different types of errors */
