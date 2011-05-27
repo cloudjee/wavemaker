@@ -92,11 +92,11 @@ Security.widgets = {
 							dbPasswordInput: ["wm.Editor", {"caption":"Password Field","emptyValue":"null","height":"20px","display":"Select"}, {onchange: "setDirty"}, {
 								editor: ["wm._SelectEditor", {}, {}]
 							}],
-							dbRoleInput: ["wm.Editor", {"caption":"Role Field (Enterprise users only)","emptyValue":"null","height":"20px","display":"Select"}, {onchange: "setDirty"}, {
+							dbRoleInput: ["wm.Editor", {"caption":"Role Field","emptyValue":"null","height":"20px","display":"Select"}, {onchange: "setDirty"}, {
 								editor: ["wm._SelectEditor", {}, {}]
 							}],
 							spacer30: ["wm.Spacer", {"width":"96px","height":"10px"}, {}],
-							labelmt: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold","wm_Padding_4px"]},"caption":"Multitenant Configuration (Enterprise users only)","border":"0","height":"24px"}, {}, {
+							labelmt: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold","wm_Padding_4px"]},"caption":"Multitenant Configuration","border":"0","height":"24px"}, {}, {
 								format: ["wm.DataFormatter", {}, {}]
 								}],
 							tenantIdField: ["wm.Editor", {"captionSize":"211px","caption":"Tenant ID Field Name","emptyValue":"null","layoutKind":"left-to-right","height":"20px","width":"100px","display":"Select"}, {onchange: "setDirty"}, {
@@ -185,7 +185,7 @@ Security.widgets = {
 		        spacer8a: ["wm.Spacer", {showing: false, "width":"100%","height":"100%"}, {}],
 			spacer8b: ["wm.Spacer", {"width":"57px","height":"100%"}, {}],
 			panelRoles: ["wm.Panel", {"width":"638px","height":"100%"}, {}, {
-				label2a: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold","wm_Padding_4px"]},"caption":"Role Configuration (Enterprise users only)","border":"0","height":"24px"}, {}, {
+				label2a: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold","wm_Padding_4px"]},"caption":"Role Configuration","border":"0","height":"24px"}, {}, {
 					format: ["wm.DataFormatter", {}, {}]
 				}],
 				panela2: ["wm.Panel", {"height":"100%","horizontalAlign":"left"}, {}, {
