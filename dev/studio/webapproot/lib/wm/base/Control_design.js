@@ -18,7 +18,7 @@ wm.isDesignable = function(inControl) {
 	// inControl is designable if it has a non-Widget owner
         // return inControl.owner && !(inControl.owner instanceof wm.Control);
     // warning: can't use inControl.owner == studio.application as studio.application may not have been set yet if we're still creating app level dialogs and components
-    return inControl.owner && inControl.owner == studio.page || inControl.owner instanceof wm.BasicApplication && (inControl instanceof wm.Dialog || inControl.isAncestorInstanceOf(wm.DesignableDialog));
+    return inControl.owner && inControl.owner == studio.page || inControl.owner instanceof wm.Application && (inControl instanceof wm.Dialog || inControl.isAncestorInstanceOf(wm.DesignableDialog));
 }
 
 wm.Control.extend({
@@ -314,12 +314,7 @@ wm.Control.extend({
 	*/
 	writeChildren: function(inNode, inIndent, inOptions) {
 		return [];
-	}/*,
-        generateLoadingHtml: function() {
-	    var cssText = this.domNode.style.cssText;
-	    var html = "<div style='" + cssText + "' class='" + this.domNode.className + "'>" + this.domNode.innerHTML + "</div>";
-	    return [html];
-	}*/
+	}
 	// EXPERIMENTAL: use property ui to do binding...
 	// NOTE: does not currently handle app bindings or Expressions
 	/*makePropEdit: function(inName, inValue, inDefault) {

@@ -166,7 +166,7 @@ dojo.declare("wm.Page", wm.Component, {
 		try {
 	            this._loadingPage = false;
 		    if (this.root) {
-			this.root.leafFirstRenderCss();
+			//this.root.leafFirstRenderCss();
 			this.reflow();
 		    }
 		    this.start();
@@ -195,7 +195,7 @@ dojo.declare("wm.Page", wm.Component, {
 	},
 	addComponent: function(inComponent) {
 		this[inComponent.name] = inComponent;
-		if (inComponent instanceof wm.Control) {
+		if (inComponent instanceof wm.Widget) {
 			// FIXME: hack to resolve clickability problem on IE at design-time
 			// nodes must have some background or content to receive mouse events
 			// on IE.
@@ -234,7 +234,7 @@ dojo.declare("wm.Page", wm.Component, {
 		return this.components[inName] || this[inName] || this.owner && this.owner.getComponent(inName);
 	},
 	_create: function(ctor, props) {
-		if (dijit._Widget && ctor.prototype instanceof dijit._Widget && window.dijit){
+		if (ctor.prototype instanceof dijit._Widget && window.dijit){
 			return new wm.DijitWrapper(dojo.mixin(props||{}, { dijitClass: ctor, publishClass: p.declaredClass }));
 		}
 		return this.inherited(arguments);
@@ -242,7 +242,7 @@ dojo.declare("wm.Page", wm.Component, {
 	loadComponent: function(inName, inParent, inType, inProps, inEvents, inChildren, isSecond) {
 		// Some code for debugging performance; normally skipped
 		if (wm.debugPerformance) {
-			if (inType == "wm.Layout" || inType == "wm.mobile.Layout") {
+			if (inType == "wm.Layout") {
 				if (dojo.isFF)
 					console.groupCollapsed("LOAD COMPONENT " + inType + ": " + inName);
 				else
@@ -277,7 +277,7 @@ dojo.declare("wm.Page", wm.Component, {
 		// FIXME: this check really needs to go
 		// yuk
 		var props = {};
-		isWidget = (ctor.prototype instanceof wm.Control || dijit._Widget && ctor.prototype instanceof dijit._Widget);
+		isWidget = (ctor.prototype instanceof wm.Widget || ctor.prototype instanceof dijit._Widget);
 		if (isWidget){
 			var parentNode = (inParent ? inParent.containerNode || inParent.domNode : this.domNode);
 			props = {
@@ -290,7 +290,7 @@ dojo.declare("wm.Page", wm.Component, {
 	    
         // props.name should overwrite getUniqueName(inName), which should overwrite inProps.
             var newOwner;
-            if (inParent && (wm.Layout && inParent instanceof wm.Layout || wm.mobile && wm.mobile.Layout && inParent instanceof wm.mobile.Layout))
+            if (inParent && inParent instanceof wm.Layout)
                 newOwner = inParent.owner;
             else if (inParent)
                 newOwner = inParent;
@@ -304,7 +304,7 @@ dojo.declare("wm.Page", wm.Component, {
 		}, props);
 
 
-	    if (this.isRelativePositioned && (inType == "wm.Layout" || inType == "wm.mobile.Layout")){ 
+		if (this.isRelativePositioned && inType == "wm.Layout"){ 
 			props.isRelativePositioned = true;	
 		}
 
@@ -342,7 +342,7 @@ dojo.declare("wm.Page", wm.Component, {
 
 	                var timeToLoad = this.stopTimerWithName("LoadComponent", inType);
 	        if (wm.debugPerformance) {
-		  if (inType == "wm.Layout" || inType == "wm.mobile.Layout") {
+		  if (inType == "wm.Layout") {
 		    console.log(inType + ": " + inName + " TOOK "+ timeToLoad + " ms");
 		    console.groupEnd();
 		    this.printPagePerformanceData();
@@ -463,20 +463,6 @@ dojo.declare("wm.Page", wm.Component, {
 		if (!hasHtmlLoader)
 			this.loadComponent("htmlLoader", null, "wm.HtmlLoader", {owner: this, url: path + ".html"});
 	},*/
-    listAllWidgetsInPage: function(inTypeList) {
-	var list = [];
-	wm.forEachWidget(this.root, function(w) {
-	    for (var i = 0; i < inTypeList.length; i++) {
-		if (inTypeList[i] && w instanceof inTypeList[i]) {
-		    list.push(w);
-		    return;
-		}
-	    }
-	}, true);
-    
-    return list;
-    },
-
 	_end: 0
 });
 
@@ -485,16 +471,6 @@ wm.Page.extend({
 		this.inherited(arguments);
 		this.app = this.isDesignLoaded() ? studio.application : app;
 	},
-/*        generateLoadingHtml: function() {
-	    var was = dojo.hasClass(studio.designer.domNode, studio._outlineClass);
-	    if (was)
-		studio.outlinedClick();
-	    var tags = this.root.generateLoadingHtml();
-	    if (was)
-		studio.outlinedClick();
-	    return tags.join("\n");
-	},*/
-
 	// FIXME: unload support for parts that are specifically loaded into our development environment
 	// this is so that they do not conflict with user named parts with the same names.
 	// the "_isWaveMakerStudio" flag is set in studio and is specifically to detect if we're in the real studio.

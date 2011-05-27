@@ -97,4 +97,3 @@ wm.Object.extendSchema(wm.Container, {
     setVerticalAlign:      {group: "method"},
     customGetValidate:     {group: "customMethods"}
 });
-

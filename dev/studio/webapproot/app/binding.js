@@ -61,11 +61,8 @@ addComponentTypeBinderNodes = function(inParent, inClass, inStrict, includePageC
 }
 
 addWidgetBinderNodes = function(inParent, optionalWidgets) {
-    if (wm.studioConfig.isMobileApp) {
-	var types = [wm.mobile.AbstractEditor, wm.mobile.BasicList, wm.mobile.ToggleButton, wm.mobile.LiveForm ];
-    } else {
-	var types = [wm.AbstractEditor, wm.Composite, wm.DataGrid, wm.DojoGrid, wm.Editor, wm.List, wm.ToggleButton, wm.LiveForm ];
-    }
+
+    var types = [wm.AbstractEditor, wm.Composite, wm.DataGrid, wm.DojoGrid, wm.Editor, wm.List, wm.ToggleButton, wm.LiveForm ];
     var widgets = optionalWidgets || wm.listOfWidgetTypes(types);
     var page = inParent.page;   
 
@@ -277,12 +274,6 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	    bindPanelOuter: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right"}, {}, {
 		bindPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom"}, {}, {
 		    searchPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "25px"}, {}, {
-			pageSelect: ["wm.SelectMenu", {height: "100%", width: "110px", caption: "", dataField: "dataValue", displayField: "dataValue"}, {}, {
-			    binding: ["wm.Binding", {}, {}, {
-				wire: ["wm.Wire", {"source":"app.pagesListVar","targetProperty":"dataSet", displayField: "dataValue", dataField: "dataValue"}, {}]
-			    }]			    
-			}],
-			pageContainer: ["wm.PageContainer", {showing: false}],
 			searchBar: ["wm.Text", {height: "25px", width: "100%", captionSize: "60px", caption: "Search", changeOnKey: true, changeOnEnter: true, resetButton: true, placeHolder: "Enter Name or Class", margin: "0,20,0,0"}],
 			validLabel: ["wm.Picture", {height: "100%", width: "20px", source: "images/active.png", showing: false}, {}],
 			invalidLabel: ["wm.Picture", {height: "100%", width: "20px", source: "images/inactive.png", showing: false}, {}],
@@ -343,7 +334,6 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	    this.mixinWidgets(this.widgets);
 		// connections
 
-
 	    /* New localization section */
 	    this.searchBar.setCaption(this.getDictionaryItem("wm.BinderSource.searchBar.caption"));
 	    this.searchBar.setPlaceHolder(this.getDictionaryItem("wm.BinderSource.searchBar.placeHolder"));
@@ -354,13 +344,6 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	    this.expressionRb.setCaption(this.getDictionaryItem("wm.BinderSource.expressionRb.caption"));
 	    this.bindEditor.setCaption(this.getDictionaryItem("wm.BinderSource.bindEditor.caption", {boundTo: ""}));
 	    /* End localization section */
-
-
-	    this.pageContainer._isDesignLoaded = true;
-	    this.pageContainer._pageLoader._isDesignLoaded = true;
-	    this.pageSelect.connect(this.pageSelect, "onchange", this, function() {
-		this.updateBindSourceUi(this.simpleRb.getValue("groupValue"));
-	    });
 
 
 	    this.propList.connect(this.propList, "onselect", this,  function() {
@@ -506,20 +489,11 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	    var t = this.tree;
 	    t.clear();
 	    var r = t.root;
-
-	    var page;
-	    if (this.pageSelect.getDataValue() == studio.project.pageName ||
-	       gv == "simple") 
-		page = studio.page;
-	    else {
-		this.pageContainer.setPageName(this.pageSelect.getDataValue());
-		page = this.pageContainer.page;
-	    }
-	    r.page = page;
+	    r.page = studio.page;
             var t2 = this.expressionTree;
             t2.clear();
             var r2 = t2.root;
-            r2.page = page;
+            r2.page = studio.page;
 
 	    if (gv != "resources" && this.searchBar.getDataValue())
 		gv = "search";
@@ -541,21 +515,18 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		    });
 				break;
 			case "simple":
-		                this.pageSelect.hide();
 		                this.searchBar.setDisabled(false);
 				this.treeLayer.activate();
 		                this.bindEditor.show();
 				this._buildSimpleTree(r);
 				break;
 			case "advanced":
-		                this.pageSelect.show();
 		                this.searchBar.setDisabled(false);
 				this.treeLayer.activate();
 		                this.bindEditor.show();
 				this._buildAdvancedTree(r);
 				break;
 			case "expression":
-		                this.pageSelect.show();
 		                this.searchBar.setDisabled(false);
 				this.expressionLayer.activate();
 		                this.bindEditor.hide();
@@ -564,7 +535,6 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 				this.invalidLabel.setShowing(false);
 				break;
 			case "resources":
-		                this.pageSelect.hide();
 		                this.searchBar.setDisabled(true);
 				this.treeLayer.activate();
 		                this.bindEditor.show();
@@ -637,19 +607,17 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		// servicecalls
 		//new wm.ComponentTypeSourceTreeNode(inParent, {content: "ServiceVariables", className: "wm.ServiceVariable", image: "images/wm/serviceData.png"});
 		// variables
-
-	    new wm.ComponentTypeSourceTreeNode(inParent, {page: inParent.page,
+	    new wm.ComponentTypeSourceTreeNode(inParent, {page: studio.page, 
 							  content: this.getDictionaryItem("NON_VISUAL"),
 							  className: "wm.Variable", 
 							  canSelect: false, 
 							  image: "images/wm/variable_16.png"});
 		// widgets
-	        new wm.WidgetContainerSourceTreeNode(inParent, {page: inParent.page, 
+	        new wm.WidgetContainerSourceTreeNode(inParent, {page: studio.page, 
 								content: this.getDictionaryItem("VISUAL"),
-								object: inParent.page.root, 
+								object: studio.page.root, 
 								hasSchema: true, 
 								canSelect: false});
-
 	},
 	_buildResourceTree: function(inParent) {	    	    
 	    var _this = this;

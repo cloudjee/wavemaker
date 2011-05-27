@@ -42,7 +42,6 @@ wm.componentList = {
 	'wm.ObjectTree': ['wm.base.widget.Trees.ObjectTree'],
 	'wm.Gadget': ['build.Gzipped.wm_gadgets'],
 	'wm.gadget.YouTube': ['build.Gzipped.wm_gadgets'],
-	'wm.gadget.Facebook': ['build.Gzipped.wm_gadgets'],
 	'wm.gadget.Stocks': ['build.Gzipped.wm_gadgets'],
 	'wm.gadget.Weather': ['build.Gzipped.wm_gadgets'],
 	'wm.ImageList':['wm.base.components.ImageList'],
@@ -137,11 +136,10 @@ wm.getComponentStructure = function(inType){
 		// this is done for custom widgets.
 		if (inType.indexOf('wm.') == 0)
 		{
-		    inType = inType.substring(3);
-		    requireList = [inType];
-		} else {
-		    requireList = ['wm.base.widget.Composite', 'wm.packages.' + inType];
+			inType = inType.substring(3);
 		}
+
+		var requireList = ['wm.base.widget.Composite', 'wm.packages.' + inType];
 		//console.info('Trying to load composite: ' + requireList);
 	}
 

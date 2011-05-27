@@ -28,7 +28,7 @@ wm.getDictionaryItem = function(name, params) {
 
 wm.Plugin.plugin("i18n", wm.Component, {
     prepare: function(inProps) {
-	if (inProps && inProps.owner && inProps.owner.getDictionaryItem)
+	if (inProps && inProps.owner)
 	    var entry = inProps.owner.getDictionaryItem(inProps.name);
 	if (entry) 
 	    inProps = dojo.mixin(inProps, entry);
@@ -36,14 +36,13 @@ wm.Plugin.plugin("i18n", wm.Component, {
     },
     getDictionaryItem: function(name, params) {
 	if (!this._i18nDictionary) {
-	    if (this.owner && this.owner.getDictionaryItem)
+	    if (this.owner)
 		return this.owner.getDictionaryItem(name,params);
 	    else 
 		return "";
 	}
 	if (params == undefined)
 	    return this._i18nDictionary[name];
-
 	else {
 	    // undefined as a value can throw errors:
 	    var newparams = {};

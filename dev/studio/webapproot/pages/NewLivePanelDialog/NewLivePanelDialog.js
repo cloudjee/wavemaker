@@ -22,17 +22,13 @@ dojo.declare("NewLivePanelDialog", wm.Page, {
 	var options = this.options = [{name: "Traditional",
 				       img: "images/GridLiveForm.png"},
 				      {name: "Dialog",
-				       img: "images/GridLiveFormDialog.png"},
-				      {name: "ComboBox",
-				       img: "images/SelectLiveForm.png"},
-				      {name: "ComboDialog",
-				       img: "images/SelectDialogLiveForm.png"}];
+				       img: "images/GridLiveFormDialog.png"}];
 	
         var i = 0; 
 
 	for (var i = 0; i < options.length; i++) {
             var option = options[i];
-            if (i % 4 == 0) {
+            if (i % 3 == 0) {
                 var panel = new wm.Panel({width: "100%", height: "128px", layoutKind: "left-to-right", parent: this.templatesInsertPanel, owner: this, name: "templateRow" + i});
             }
             var imgpanel = new wm.Panel({_classes: {domNode: ["SelectableTemplate"]}, 

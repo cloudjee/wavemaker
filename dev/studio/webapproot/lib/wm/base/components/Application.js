@@ -21,8 +21,7 @@ wm.registerComponentLoader = function(inType, inLoader){
 	wm.componentLoaders[inType] = inLoader;
 };
 
-
-dojo.declare("wm.BasicApplication", wm.Component, {
+dojo.declare("wm.Application", wm.Component, {
     i18n: false,
 	main: "Main",
         deletionDisabled: 1,
@@ -30,7 +29,10 @@ dojo.declare("wm.BasicApplication", wm.Component, {
         projectVersion: 1,
         studioVersion: "",
         dialogAnimationTime: 350,
-
+        theme: "wm_notheme",
+        toastPosition: "br",
+        _lastTheme: "",
+    //IERoundedCorners: false,
 	init: function() {
 		app = wm.application = wm.application || this;
 		this.connectList = [];
@@ -46,537 +48,24 @@ dojo.declare("wm.BasicApplication", wm.Component, {
 		this.inherited(arguments);
 		wm.typeManager.initTypes();
 
+	        var themematch = window.location.search.match(/theme\=(.*?)\&/) ||
+		                 window.location.search.match(/theme\=(.*?)$/);
+
+	        this.setTheme(themematch ? themematch[1] : this.theme, true);
 	        if (dojo.isIE && dojo.isIE < 8 || dojo.isIE == 9) this.dialogAnimationTime = 0;
 
-		this.createPageLoader();
-		this.components = {};
-
-	    //this.scrim = new wm.Scrim();
-		this.loadComponents(this.constructor.widgets || this.widgets);
-
-	},
-
-	destroy: function() {
-		wm.fire(this.scrim, "destroy");
-		wm.fire(this._runtimeService, "destroy");
-		this.inherited(arguments);
-		dojo.forEach(this.connectList, dojo.disconnect);
-		this.connectList = null;
-		delete this._page;
-		if (this._pageLoader)
-		{
-			this._pageLoader.destroy();
-			this._pageLoader = null;
-		}	
-		
-		if (this.domNode)
-		{
-			dojo.destroy(this.domNode);
-			this.domNode = null;
-		}		
-		
-                if (this.scrim)
-		    this.scrim.destroy();
-		delete this.scrim;
-		delete this.app;
-		//dojo.publish('applicationDestroyed',[]);
-	},
-	createPageLoader: function() {
-		this._pageLoader = new wm.PageLoader({owner: this});
-		this.connectList[this.connectList.length] = this.connect(this._pageLoader, "onBeforeCreatePage", this, "beforeCreatePage");
-		this.connectList[this.connectList.length] = this.connect(this._pageLoader, "onPageChanged", this, "pageChanged");
-	},
-	// avoid unique names when loading components
-	loadComponents: function(inChildren) {
-		this._loading = true;
-		this.createComponents(inChildren);
-		// bc only
-		//this.createComponent("cssLoader", "wm.CssLoader", {owner: this, url: "app.css"});
-		this._loading = false;
-	},
-	qualifyName: function(inName) {
-		return inName;
-	},
-	addComponent: function(inComponent) {
-		this.inherited(arguments);
-		this[inComponent.name] = inComponent;
-	},
-	removeComponent: function(inComponent) {
-		delete this[inComponent.name];
-		this.inherited(arguments);
-	},
-	getRuntimeService: function(owner) {
-		if (!this._runtimeService)
-		    this._runtimeService = new wm.JsonRpcService({service: "runtimeService",
-								  owner: owner});
-		return this._runtimeService;
-	},
-
-	//The following lines are not being used now.  They may be used in the future to differenciate requests from Studio from
-	//requests deployed application.
-	getRuntimeServiceDesignTime: function(owner) {
-		if (!this._runtimeService)
-		    this._runtimeService = new wm.JsonRpcService({service: "runtimeService",
-								  owner: owner, designTime: true});
-		return this._runtimeService;
-	},
-
-	getRoot: function() {
-		return this;
-	},
-
-	getRuntimeId: function(inId) {
-		return inId;
-	},
-	getId: function(inId) {
-	    if (inId)
-		return "app." + inId;
-	    else
-		return "app";
-	},
-	reflow: function() {
-		var d = this.domNode;
-		d.scrollTop = 0;
-	},
-	reflowParent: function() {
-		this.reflow();
-	},
-	hideLoadingIndicator: function() {
-		dojo._destroyElement("_wm_loading");
-	},
-	run: function() {
-		// highlander when running
-		app = wm.application = this;
-		dojo.addOnLoad(dojo.hitch(this, "runOnLoad"));
-	},
-	runOnLoad: function() {
-		// In IE6 addOnLoad is sometimes called before the dom is actually ready (bad Dojo)
-		// correct here by adding a small delay.
-		setTimeout(dojo.hitch(this, "doRun"), dojo.isIE < 7 ? 100 : 1);
-	},
-	doRun: function() {
-		this._pageLoader.domNode = this.domNode = dojo.byId(this.domNode) || document.body;
-		this.loadPage(app.main);
-	},
-	start: function() {
-		//this.hideLoadingIndicator();
-	},
-	getServerComponents: function() {
-		if (this.serverComponents === undefined) {
-			this.loadServerComponents();
-		}
-		return this.serverComponents;
-	},
-	loadServerComponents: function(inComponentType) {
-		if (inComponentType && this.serverComponents) {
-			for (var i=0, c; c=this.serverComponents[i]; i++) {
-				if (c.type == inComponentType)
-					this.serverComponents.splice(i--, 1);
-			}
-			var cl = wm.componentLoaders[inComponentType];
-			if (cl)
-				this.serverComponents = this.serverComponents.concat(cl.getComponents());
-		} else {
-			this.serverComponents = [];
-			for (var i in wm.componentLoaders) {
-				this.serverComponents = this.serverComponents.concat(wm.componentLoaders[i].getComponents());
-			}
-		}
-	},
-	addServerComponent: function(inComponent) {
-		this.serverComponents.push(inComponent);
-	},
-	removeServerComponent: function(inComponent) {
-		for (var i=0, c; c=this.serverComponents[i]; i++){
-			if (c == inComponent) {
-				this.serverComponents.splice(i, 1);
-				return i;
-			}
-		}
-	},
-	removeServerComponentByName: function(inComponentName, inComponentType) {
-		for (var i=0, c; c=this.serverComponents[i]; i++){
-			if (c.type == inComponentType && c.name == inComponentName) {
-				this.serverComponents.splice(i, 1);
-				return i;
-			}
-		}
-	},
-	beforeCreatePage: function() {
-		this._pageLoader.pageConnect("start", this, "start");
-		this.pageLoadedDeferred = new dojo.Deferred()
-	},
-	pageChanged: function(inPage, inPreviousPage) {
-		// establish page reference
-		this._page = inPage;
-		var n = inPage.name, o = (inPreviousPage || 0).name;
-		// clean up previous reference
-		if (o) {
-		    // delete window[o]; Kana reported problems with this in IE so replacing with setting it to undefined
-		    window[o] = undefined;
-		    delete this[o];
-		}
-		window[n] = this[n] = this._page;
-		// change callback / event
-		if (this.pageLoadedDeferred)
-			this.pageLoadedDeferred.callback({page: inPage, previousPage: inPreviousPage});
-
-			this.onPageChanged(inPage, inPreviousPage);
-	},
-	loadPage: function(inName) {
-            this._pageName = inName;
-		//this._pageLoader.unloadSupport();
-		try 
-		{
-			this._pageLoader.loadPage(inName, inName.toLowerCase());
-		}
-		catch (e)
-		{
-			// do nothing
-		  if (djConfig.isDebug)
-		    console.error("loadPage error: " + e);
-		}
-		finally 
-		{
-			this.hideLoadingIndicator();
-		}
-	},
-        // Provided for use in debugging. Note that when we do a better job of caching pages from server, we will need to deallocate them in this call
-        forceReloadPage: function() {
-            this.loadPage(this._pageName);
-        },
-	onPageChanged: function(inNewPage, inPreviousPage) {
-	},
-        getFullVersionNumber: function() {
-	    return this.projectVersion + "." + this.projectSubVersion;
-	},
-	subPageUnloaded: function(inPage) {
-	},
-	subPageLoaded: function(inPage) {
-	}
-
-    // This sends a synchronous request. I don't like it, but a user calling
-    // this expects to get a result.
-});
-
-wm.BasicApplication.extend({
-	write: function(inIndent) {
-	    var props = dojo.toJson(this.writeProps(),true);
-	    props = props.substring(1,props.length-2);
-
-
-	    var compsArray = this.writeComponents(inIndent);
-
-	    var classOrdering = ["wm.TypeDefinition", "wm.LiveView"];
-
-	    compsArray = compsArray.sort(function(a,b) {
-		var alist = a.match(/^(.*?)\:\s*\[\"(.*?)\"/);
-		var blist = b.match(/^(.*?)\:\s*\[\"(.*?)\"/);
-		var aindex = dojo.indexOf(classOrdering, alist[2]);
-		var bindex = dojo.indexOf(classOrdering, blist[2]);
-		if (aindex == -1) aindex = classOrdering.length;
-		if (bindex == -1) bindex = classOrdering.length;
-		if (aindex == bindex)
-		    return (alist[1] <= blist[1]) ? -1 : 1;
-		else
-		    return (aindex < bindex) ? -1 : 1;
-
-	    });
-
-	    var comps = compsArray.join(", " + sourcer_nl);
-	
-	    var customsrc = dojo.trim(String(studio.getAppScript())) || studio.project.projectName + ".extend({\n\n\t" + terminus + "\n});";
-	    var src = 'dojo.declare("' + this.declaredClass + '", ' + (this instanceof wm.MobileApplication ? "wm.MobileApplication" : "wm.Application") + ', {' +
-		props + ",\n\t" + 
-		    '"widgets": {\n' +  (comps || "") + '\n\t},\n\t' +
-		terminus + "\n});\n\n" + // terminus is defined in events.js
-		customsrc;
-
-	    return src;
-	},
-
-    makePropEdit: function(inName, inValue, inDefault) {
-	switch (inName) {
-	case "main":
-	    return new wm.propEdit.PagesSelect({component: this, name: inName, value: inValue, currentPageOK: true});
-	}
-	return this.inherited(arguments);
-    },
-    setMain: function(inMain) {
-	this.main = inMain;
-	studio.setProjectMainPage(inMain);
-    },
-    incSubversionNumber: function() {
-	if (dojo.isString(this.projectSubVersion)) {
-	    if (parseInt(this.projectSubVersion) + "" == this.projectSubVersion)
-		this.projectSubVersion = parseInt(this.projectSubVersion) + 1;
-	    else {
-		var result = this.projectSubVersion.match(/\d+$/);
-		if (result) {
-		    this.projectSubVersion = this.projectSubVersion.replace(/\d+$/, "");
-		    result = parseInt(result[0]) + 1;
-		    this.projectSubVersion += result;
-		} else {
-		    this.projectSubVersion += "0";
-		}
-	    }
-	} else
-	    this.projectSubVersion++;
-    }
-});
-
-dojo.declare("wm.MobileApplication", wm.BasicApplication, {
-    init: function() {
-	this.inherited(arguments);
-	//this._touchEnabled = true; using the TouchScroll library did not yield better results than dojo's library, except perhaps for managing the scrollable area
-	if (!window["studio"])
-	    this.toastDialog = new wm.mobile.Toast({name: "toastDialog", owner: this});
-        this.connect(dojo.global, "onorientationchange", this, function() {
-	    if (this._page) this._page.reflow();
-	});
-	this._testFocusInterval = window.setInterval(dojo.hitch(this, "testFocus"), 1000);
-	this.commandMenu = new wm.mobile.SelectMenu({showing: false, 
-						     owner: this, 
-						     parent: null,
-						     disabled: this._isDesignLoaded,
-						     width: "80px",
-						     height: "35px",
-						     margin: "4,5,4,0",
-						     border: "2",
-						     borderColor: "black",
-						     name: "commandMenu",
-						     caption: "Menu",
-						     captionSize: "45px",
-						     showSearchBar: false,
-						     _dialogAnimation: "topDropdown",
-						     displayField: "name",
-						     dataField: "dataValue",
-						     onchange: dojo.hitch(this, "commandMenuChange")});
-	this.commandMenu.destroy = dojo.hitch(this.commandMenu, function() {this.setParent(null);}); // don't destroy it when swapping pages
-	this.commandVar = new wm.Variable({owner: this, 
-					   type: "EntryData", 
-					   name: "commandVar", 
-					   isList: true})
-	if (this._isDesignLoaded) {
-	    studio.designer.domNode.appendChild(this.commandMenu.domNode);
-	} else {
-	    document.body.appendChild(this.commandMenu.domNode);
-	}
-	this.addCommand("Cut", this);
-	this.addCommand("Copy", this);
-	this.addCommand("Paste", this);
-    },
-    testFocus: function() {
-/*
-	if (this._focusedEditor && document.activeElement.tagName == "BODY")
-	    this._focusedEditor.blurred();
-	    */
-    },
-    alert: function(inText) {
-        if (!this.alertDialog) {
-	    this.alertDialog = new wm.mobile.Dialog({name: "alertDialog",
-						     owner: this,
-						     title: "Alert!",
-						     width: "100%",
-						     height: "180px",
-						     fitToContentHeight: true});
-	    this.alertDialog.containerWidget.setHorizontalAlign("center");
-	    var label = this._alertLabel = new wm.mobile.Label({name: "alertLabel",
-								owner: this.alertDialog,
-								parent: this.alertDialog.containerWidget,
-								caption: inText,
-								width: "100%",
-								autoSizeHeight: true});
-	    var OKButton = new wm.mobile.Button({caption: "OK",
-						 width: "100px",
-						 owner: this.alertDialog,
-						 parent: this.alertDialog.containerWidget,
-						 onclick: dojo.hitch(this, "onAlertOK")});
-	    this.alertDialog.containerWidget.setFitToContentHeight(true);
-        }
-
-
-	if (dojo.isObject(inText))
-	    inText = inText.toString();
-
-	
-	this._alertLabel.setCaption(inText);
-	this.alertDialog.show();
-    },
-    onAlertOK: function() {
-	this.alertDialog.hide();
-    },
-    confirmOKFunc: null,
-    confirmCancelFunc: null,
-    createConfirmDialog: function() {
-	this.confirmDialog = new wm.mobile.Dialog({name: "confirmDialog",
-						   owner: this,
-						   title: "Confirm?",
-						   width: "100%",
-						   height: "180px",
-						   fitToContentHeight: true});
-	var label = this._confirmLabel = new wm.mobile.Label({name: "confirmLabel",
-							      owner: this.confirmDialog,
-							      parent: this.confirmDialog.containerWidget,
-							      caption: "",
-							      width: "100%",
-							      autoSizeHeight: true});
-	var input = this._confirmInput = new wm.mobile.Text({name: "confirmInput",
-							     owner: this.confirmDialog,
-							     parent: this.confirmDialog.containerWidget,
-							     caption: "",
-							     border: "0",
-							     width: "100%"});
-	var buttonBar = new wm.mobile.Panel({name: "confirmButtons",
-					     owner: this.confirmDialog,
-					     parent: this.confirmDialog.containerWidget,
-					     layoutKind: "left-to-right",
-					     width: "100%",
-					     horizontalAlign: "center",
-					     height: wm.mobile.Button.prototype.height + "8",
-					     margin: "8,0,0,0"});
-	
-	var OKButton = new wm.mobile.Button({caption: "OK",
-					     width: "120px",
-					     margin: "0,20,4,0",
-					     owner: this.confirmDialog,
-					     parent: buttonBar,
-					     onclick: dojo.hitch(this, function() {
-						 this.confirmDialog.hide();
-						 if (this.confirmOKFunc)
-						     this.confirmOKFunc(this._confirmInput.getDataValue());
-					     })
-					    });
-	var CancelButton = new wm.mobile.Button({caption: "Cancel",
-						 width: "120px",
-					     margin: "0,2,4,20",
-						 owner: this.confirmDialog,
-						 parent: buttonBar,
-						 onclick: dojo.hitch(this, function() {
-						     this.confirmDialog.hide();
-						     if (this.confirmCancelFunc)
-							 this.confirmCancelFunc();
-						 })
-						});
-	this.confirmDialog.containerWidget.setFitToContentHeight(true);
-    },
-    confirm: function(inText, onOKFunc, onCancelFunc) {
-        if (!this.confirmDialog) {
-	    this.createConfirmDialog();
-	}
-
-	this.confirmDialog.setTitle("Confirm..."),
-	this._confirmInput.setShowing(false);
-	this.confirmOKFunc = onOKFunc;
-	this.confirmCancelFunc = onCancelFunc;
-	
-	if (dojo.isObject(inText))
-	    inText = inText.toString();
-	
-	
-	this._confirmLabel.setCaption(inText);
-	this.confirmDialog.show();
-    },
-    prompt: function(inText, inDefaultValue, onOKFunc, onCancelFunc) {
-        this.confirm(inText, onOKFunc, onCancelFunc);
-        this._confirmInput.setShowing(true);
-        this._confirmInput.setDataValue(inDefaultValue || "");
-	this.confirmDialog.setTitle("Prompt...");
-    },
-    toastError: function(inMsg, optionalDuration) {
-        this.toastDialog.showToast(inMsg, optionalDuration || 10000, "Error");
-    },
-    toastWarning: function(inMsg, optionalDuration) {
-        this.toastDialog.showToast(inMsg, optionalDuration || 10000, "Warning");
-    },
-    toastSuccess: function(inMsg, optionalDuration) {
-        this.toastDialog.showToast(inMsg, optionalDuration || 8000, "Success");
-    },
-    toastInfo: function(inMsg, optionalDuration) {
-        this.toastDialog.showToast(inMsg, optionalDuration || 8000, "Info");
-    },
-    loadThemePrototypeForClass: function(ctor, optionalWidget) {},
-
-    focusNextEditor: function() {
-	var editors = app._page.listAllWidgetsInPage([wm.AbstractEditor]);
-	wm.Array.removeElement(editors, app._page.headerEditor);
-	var index = editors.indexOf(app._focusedEditor);
-	var newIndex = index + 1 % editors.length;
-	console.log("FOCUS NEXT");
-	editors[newIndex].highlightFocus();
-    },
-    focusPrevEditor: function() {
-	var editors = app._page.listAllWidgetsInPage([wm.AbstractEditor]);
-	wm.Array.removeElement(editors, app._page.headerEditor);
-	var index = editors.indexOf(app._focusedEditor);
-	var newIndex = index - 1;
-	if (newIndex < 0) newIndex = editors.length-1;
-	var e = editors[newIndex];
-	e.highlightFocus();
-    },
-    addCommand: function(text, component) {
-	var d = {name: text,
-		 dataValue: component};
-	if (this.commandVar.isEmpty()) {
-	    this.commandVar.setData([d]);
-	} else {
-	    this.commandVar.addItem(d);
-	}
-	this.commandMenu.setDataSet(this.commandVar);
-	this.commandMenu.setShowing(this.commandVar.getCount());
-
-	component.connect(component, "_onDestroy", this, function() {
-	    var count = this.commandVar.getCount();
-	    for (var i = count - 1; i >= 0; i--) {
-		var c = this.commandVar.getItem(i).getValue("dataValue");
-		if (c && c == component) {
-		    this.commandVar.removeItem(i);
-		}
-	    }
-	});
-    },
-    commandMenuChange: function() {
-	var component = this.commandMenu.dataValue;
-	var commandName = this.commandMenu.displayValue;
-	try {
-	    component.handleAppMenu(commandName);
-	} catch(e) {}
-	this.commandMenu.setDisplayValue("");
-    },
-    loadPage: function(inName) {
-	this.inherited(arguments);
-	var headerPanel = this._page.root.headerPanel;
-	if (!this._isDesignLoaded)
-	    this.commandMenu.setParent(headerPanel);
-	var titleIndex = headerPanel.indexOfControl(this._page.root.header);
-	headerPanel.moveControl(this.commandMenu, titleIndex + 1);
-	this._page.root.reflow();
-	//headerPanel.reflow();
-
-    },
-    handleAppMenu: function(inText) {
-	alert(inText);
-    }
-});
-dojo.declare("wm.Application", wm.BasicApplication, {
-        theme: "wm_notheme",
-        toastPosition: "br",
-        _lastTheme: "",
-	init: function() {
-	    this.inherited(arguments);
-	    var themematch = window.location.search.match(/theme\=(.*?)\&/) ||
-		window.location.search.match(/theme\=(.*?)$/);	    
-	    this.setTheme(themematch ? themematch[1] : this.theme, true);
 	    if (djConfig.isDebug && !this.debugDialog) 
 		this.createDebugDialog();
 
-	    if (this._touchEnabled === undefined)
-		this._touchEnabled = navigator.userAgent.match(/AppleWebKit/) &&
+		this.pageDialog = new wm.PageDialog({name: "pageDialog", owner: this});
+		this.toastDialog = new wm.Toast({name: "toastDialog", owner: this});
+		this.createPageLoader();
+		this.components = {};
+	        if (this._touchEnabled === undefined)
+		    this._touchEnabled = navigator.userAgent.match(/AppleWebKit/) &&
 		navigator.userAgent.match(/Mobile/);
-
-
-	    this.pageDialog = new wm.PageDialog({name: "pageDialog", owner: this});
-	    this.toastDialog = new wm.Toast({name: "toastDialog", owner: this});
+	    //this.scrim = new wm.Scrim();
+		this.loadComponents(this.constructor.widgets || this.widgets);
 
 	    this._keys = {
 		8:'BACKSPACE',
@@ -869,12 +358,51 @@ dojo.declare("wm.Application", wm.BasicApplication, {
 		wm.headAppend(wm.createElement("link", {rel: "stylesheet", type: "text/css", href: path}));
 	    }
 	},
-    destroy: function() {
-	this.inherited(arguments);
-        if (this.pageDialog)
-	    this.pageDialog.destroy();
-	delete this.pageDialog;
-    },
+	postInit: function() {
+		this.inherited(arguments);
+		//this.getRuntimeService();
+	},
+	destroy: function() {
+		wm.fire(this.scrim, "destroy");
+		wm.fire(this._runtimeService, "destroy");
+		this.inherited(arguments);
+		dojo.forEach(this.connectList, dojo.disconnect);
+		this.connectList = null;
+		delete this._page;
+		if (this._pageLoader)
+		{
+			this._pageLoader.destroy();
+			this._pageLoader = null;
+		}	
+		
+		if (this.domNode)
+		{
+			dojo.destroy(this.domNode);
+			this.domNode = null;
+		}		
+		
+                if (this.pageDialog)
+		    this.pageDialog.destroy();
+		delete this.pageDialog;
+                if (this.scrim)
+		    this.scrim.destroy();
+		delete this.scrim;
+		delete this.app;
+		//dojo.publish('applicationDestroyed',[]);
+	},
+	createPageLoader: function() {
+		this._pageLoader = new wm.PageLoader({owner: this});
+		this.connectList[this.connectList.length] = this.connect(this._pageLoader, "onBeforeCreatePage", this, "beforeCreatePage");
+		this.connectList[this.connectList.length] = this.connect(this._pageLoader, "onPageChanged", this, "pageChanged");
+	},
+	// avoid unique names when loading components
+	loadComponents: function(inChildren) {
+		this._loading = true;
+		this.createComponents(inChildren);
+		// bc only
+		//this.createComponent("cssLoader", "wm.CssLoader", {owner: this, url: "app.css"});
+		this._loading = false;
+	},
 	subPageLoaded: function(inPage) {
 	  if (djConfig.isDebug) {
 	    if (this.debugSubPageList === undefined) 	this.debugSubPageList = {};
@@ -887,6 +415,167 @@ dojo.declare("wm.Application", wm.BasicApplication, {
 	      delete(this.debugSubPageList[inPage.name]);
 	  }
 	},
+	qualifyName: function(inName) {
+		return inName;
+	},
+	addComponent: function(inComponent) {
+		this.inherited(arguments);
+		this[inComponent.name] = inComponent;
+	},
+	removeComponent: function(inComponent) {
+		delete this[inComponent.name];
+		this.inherited(arguments);
+	},
+	getRuntimeService: function(owner) {
+		if (!this._runtimeService)
+		    this._runtimeService = new wm.JsonRpcService({service: "runtimeService",
+								  owner: owner});
+		return this._runtimeService;
+	},
+
+	//The following lines are not being used now.  They may be used in the future to differenciate requests from Studio from
+	//requests deployed application.
+	getRuntimeServiceDesignTime: function(owner) {
+		if (!this._runtimeService)
+		    this._runtimeService = new wm.JsonRpcService({service: "runtimeService",
+								  owner: owner, designTime: true});
+		return this._runtimeService;
+	},
+
+	getRoot: function() {
+		return this;
+	},
+
+	getRuntimeId: function(inId) {
+		return inId;
+	},
+	getId: function(inId) {
+	    if (inId)
+		return "app." + inId;
+	    else
+		return "app";
+	},
+	reflow: function() {
+		var d = this.domNode;
+		d.scrollTop = 0;
+	},
+	reflowParent: function() {
+		this.reflow();
+	},
+	hideLoadingIndicator: function() {
+	    var l = dojo.byId("_wm_loading");
+	    if (l)
+		dojo._destroyElement(l);
+	},
+	run: function() {
+		// highlander when running
+		app = wm.application = this;
+		dojo.addOnLoad(dojo.hitch(this, "runOnLoad"));
+	},
+	runOnLoad: function() {
+		// In IE6 addOnLoad is sometimes called before the dom is actually ready (bad Dojo)
+		// correct here by adding a small delay.
+		setTimeout(dojo.hitch(this, "doRun"), dojo.isIE < 7 ? 100 : 1);
+	},
+	doRun: function() {
+		this._pageLoader.domNode = this.domNode = dojo.byId(this.domNode) || document.body;
+		this.loadPage(app.main);
+	        this.hideLoadingIndicator();
+	},
+	start: function() {
+		//this.hideLoadingIndicator();
+	},
+	getServerComponents: function() {
+		if (this.serverComponents === undefined) {
+			this.loadServerComponents();
+		}
+		return this.serverComponents;
+	},
+	loadServerComponents: function(inComponentType) {
+		if (inComponentType && this.serverComponents) {
+			for (var i=0, c; c=this.serverComponents[i]; i++) {
+				if (c.type == inComponentType)
+					this.serverComponents.splice(i--, 1);
+			}
+			var cl = wm.componentLoaders[inComponentType];
+			if (cl)
+				this.serverComponents = this.serverComponents.concat(cl.getComponents());
+		} else {
+			this.serverComponents = [];
+			for (var i in wm.componentLoaders) {
+				this.serverComponents = this.serverComponents.concat(wm.componentLoaders[i].getComponents());
+			}
+		}
+	},
+	addServerComponent: function(inComponent) {
+		this.serverComponents.push(inComponent);
+	},
+	removeServerComponent: function(inComponent) {
+		for (var i=0, c; c=this.serverComponents[i]; i++){
+			if (c == inComponent) {
+				this.serverComponents.splice(i, 1);
+				return i;
+			}
+		}
+	},
+	removeServerComponentByName: function(inComponentName, inComponentType) {
+		for (var i=0, c; c=this.serverComponents[i]; i++){
+			if (c.type == inComponentType && c.name == inComponentName) {
+				this.serverComponents.splice(i, 1);
+				return i;
+			}
+		}
+	},
+	beforeCreatePage: function() {
+		this._pageLoader.pageConnect("start", this, "start");
+		this.pageLoadedDeferred = new dojo.Deferred()
+	},
+	pageChanged: function(inPage, inPreviousPage) {
+		// establish page reference
+		this._page = inPage;
+		var n = inPage.name, o = (inPreviousPage || 0).name;
+		// clean up previous reference
+		if (o) {
+		    // delete window[o]; Kana reported problems with this in IE so replacing with setting it to undefined
+		    window[o] = undefined;
+		    delete this[o];
+		}
+		window[n] = this[n] = this._page;
+		// change callback / event
+		if (this.pageLoadedDeferred)
+			this.pageLoadedDeferred.callback({page: inPage, previousPage: inPreviousPage});
+
+            // Insures only the main page gets the keydown events unless end user hacks their own
+	    this.connect(document, "keydown", inPage, "keydown");
+
+		this.onPageChanged(inPage, inPreviousPage);
+	},
+	loadPage: function(inName) {
+            this._pageName = inName;
+		//this._pageLoader.unloadSupport();
+		try 
+		{
+			this._pageLoader.loadPage(inName, inName.toLowerCase());
+		}
+		catch (e)
+		{
+			// do nothing
+		  if (djConfig.isDebug)
+		    console.error("loadPage error: " + e);
+		}		
+	},
+        // Provided for use in debugging. Note that when we do a better job of caching pages from server, we will need to deallocate them in this call
+        forceReloadPage: function() {
+            this.loadPage(this._pageName);
+        },
+	onPageChanged: function(inNewPage, inPreviousPage) {
+	},
+        getFullVersionNumber: function() {
+	    return this.projectVersion + "." + this.projectSubVersion;
+	},
+
+    // This sends a synchronous request. I don't like it, but a user calling
+    // this expects to get a result.
         getSessionId: function() {
 	    if (!this.sessionId) {
 		var a = new wm.JsonRpcService({service: "runtimeService", sync: true});
@@ -1054,23 +743,74 @@ dojo.declare("wm.Application", wm.BasicApplication, {
 		 h: 25};
 	this.wmMinifiedDialogPanel.setBounds(b);
 	this.wmMinifiedDialogPanel.renderBounds();
-    },
-    pageChanged: function(inPage, inPreviousPage) {
-	this.inherited(arguments);
-	// Insures only the main page gets the keydown events unless end user hacks their own
-	if (inPage)
-	    this.connect(document, "keydown", inPage, "keydown");
     }
 });
 
-
 wm.Application.extend({
+    firstThemeChange: true,
+/*
+    set_theme: function(inTheme) {
+        if (this.firstThemeChange) {
+            app.confirm("Sometimes data can be lost when changing themes.  Do you want to save your project before changing themes?", true,
+			dojo.hitch(this, function() {
+			    studio.project.saveProject();
+			    this.firstThemeChange = false;
+			    this.setTheme(inTheme);
+			}),
+			dojo.hitch(this, function() {
+			    this.firstThemeChange = false;
+			    this.setTheme(inTheme);
+			}),
+			"Save and Change",
+			"Change Only");
 
+	} else {
+	    this.setTheme(inTheme);
+	}
+    },
+*/
+
+	write: function(inIndent) {
+	    var props = dojo.toJson(this.writeProps(),true);
+	    props = props.substring(1,props.length-2);
+
+
+	    var compsArray = this.writeComponents(inIndent);
+
+	    var classOrdering = ["wm.TypeDefinition", "wm.LiveView"];
+
+	    compsArray = compsArray.sort(function(a,b) {
+		var alist = a.match(/^(.*?)\:\s*\[\"(.*?)\"/);
+		var blist = b.match(/^(.*?)\:\s*\[\"(.*?)\"/);
+		var aindex = dojo.indexOf(classOrdering, alist[2]);
+		var bindex = dojo.indexOf(classOrdering, blist[2]);
+		if (aindex == -1) aindex = classOrdering.length;
+		if (bindex == -1) bindex = classOrdering.length;
+		if (aindex == bindex)
+		    return (alist[1] <= blist[1]) ? -1 : 1;
+		else
+		    return (aindex < bindex) ? -1 : 1;
+
+	    });
+
+	    var comps = compsArray.join(", " + sourcer_nl);
+	
+	    var customsrc = dojo.trim(String(studio.getAppScript())) || studio.project.projectName + ".extend({\n\n\t" + terminus + "\n});";
+	    var src = 'dojo.declare("' + this.declaredClass + '", wm.Application, {' +
+		props + ",\n\t" + 
+		    '"widgets": {\n' +  (comps || "") + '\n\t},\n\t' +
+		terminus + "\n});\n\n" + // terminus is defined in events.js
+		customsrc;
+
+	    return src;
+	},
     setToastPosition: function(inPosition) {
         this.toastPosition = inPosition.replace(/top/, "t").replace(/bottom/,"b").replace(/left/,"l").replace(/right/,"r").replace(/center/,"c").replace(/ /,"");
     },
     makePropEdit: function(inName, inValue, inDefault) {
 	switch (inName) {
+	case "main":
+	    return new wm.propEdit.PagesSelect({component: this, name: inName, value: inValue, currentPageOK: true});
 	case "theme":
             var options = [];
             var data = studio.themesListVar.getData();
@@ -1080,37 +820,46 @@ wm.Application.extend({
             inValue = inValue.replace(/^c/, "center ").replace(/^t/, "top ").replace(/^b/, "bottom ").replace(/l$/, "left").replace(/r$/, "right").replace(/c$/, "center");
 	    /* TODO: Localize */
             return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["top left", "top center", "top right", "center left", "center center", "center right", "bottom left", "bottom center", "bottom right"]});
-
 	}
+	return this.inherited(arguments);
+    },
+    setMain: function(inMain) {
+	this.main = inMain;
+	studio.setProjectMainPage(inMain);
+    },
+    incSubversionNumber: function() {
+	if (dojo.isString(this.projectSubVersion)) {
+	    if (parseInt(this.projectSubVersion) + "" == this.projectSubVersion)
+		this.projectSubVersion = parseInt(this.projectSubVersion) + 1;
+	    else {
+		var result = this.projectSubVersion.match(/\d+$/);
+		if (result) {
+		    this.projectSubVersion = this.projectSubVersion.replace(/\d+$/, "");
+		    result = parseInt(result[0]) + 1;
+		    this.projectSubVersion += result;
+		} else {
+		    this.projectSubVersion += "0";
+		}
+	    }
+	} else
+	    this.projectSubVersion++;
     }
 });
-
-
-wm.Object.extendSchema(wm.MobileApplication, {
-    commandMenu: {ignore: 1}
-});
-wm.Object.extendSchema(wm.BasicApplication, {
+wm.Object.extendSchema(wm.Application, {
     name: {ignore: 1}, // at some point, we might provide this as a way to rename the project... but renaming is really a server side op, so requires confirmation. 
     main: {shortname: "mainPageName"},
+    promptChromeFrame: {shortname: "chromeFrame (NA)", ignore: 1},
+    i18n: {type: "boolean"},
+    theme: {type: "string"},
+    //IERoundedCorners: {ignore: true},
     studioVersion: {writeonly: true, type: "string"},
+    dialogAnimationTime: {type: "number"},
     projectVersion: {type: "string"},
     projectSubVersion: {type: "string"},
+    firstThemeChange: {ignore: true},
     documentation: {ignore: true},
     generateDocumentation: {ignore: true}
 });
-
-wm.Object.extendSchema(wm.Application, {
-    //promptChromeFrame: {shortname: "chromeFrame (NA)", ignore: 1},
-    theme: {type: "string"},
-    //IERoundedCorners: {ignore: true},
-    i18n: {type: "boolean"},
-
-    dialogAnimationTime: {type: "number"},
-
-    firstThemeChange: {ignore: true}
-
-});
-
 
 
 wm.Application.themePrototypeData = {};

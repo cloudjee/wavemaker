@@ -127,7 +127,7 @@ wm.Component.extend({
 		for (var i = 0; i < propList.length; i++) {
 			var n = propList[i];
 			if (this.isWriteableProp(props[n])) {
-			 if (src instanceof wm.BasicApplication && src[n] !== undefined)
+			 if (wm.isInstanceType(src, wm.Application) && src[n] !== undefined)
 			   out[n] = src[n];
 			 else if (n in src && !(src[n] instanceof wm.Variable) && (n == "_classes" && src[n] && src[n].domNode && src[n].domNode.length > 0 || n != "_classes" && src[n] !== p[n]))
 			   out[n] = src[n];
@@ -368,7 +368,7 @@ wm.Component.extend({
 	},
 	generateEventName: function(inEventName) {
 		var n = inEventName;
-	    return (this instanceof wm.BasicApplication) ? inEventName :  this.name + n.slice(2, 3).toUpperCase() + n.slice(3)
+	    return (this instanceof wm.Application) ? inEventName :  this.name + n.slice(2, 3).toUpperCase() + n.slice(3)
 	},
 	generateSharedEventName: function(inEventName) {
 		var n = inEventName;
@@ -577,7 +577,7 @@ wm.Component.extend({
 						  iconClass: wm.packageImages[parent.declaredClass] || "Studio_paletteImageList_0",
 						  onClick: this._makeSelectComponentMethod(parent)});
 
-		if (wm.studioConfig.isMobileApp ? parent instanceof wm.mobile.Layers : parent instanceof wm.Layers) {
+		if (parent instanceof wm.Layers) {
 		    var layersOptions = {//iconClass: parent.declaredClass.toLowerCase().replace(/\./g,"_"),
 			                 iconClass: "Studio_silkIconImageList_83",
 			label: studio.getDictionaryItem("wm.Component.CONTEXT_MENU_LAYERS", {parentName: parent.name}),

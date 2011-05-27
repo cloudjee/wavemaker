@@ -86,12 +86,7 @@ dojo.declare("wm.studio.Project", null, {
 	}));
 	},
 	createApplicationArtifacts: function() {
-	    if (wm.studioConfig.isMobileApp) {
-		var ctor = dojo.declare(this.projectName, wm.MobileApplication);
-		alert("Change config.js to have wm.isMobileApp = true;");
-	    } else {
 		var ctor = dojo.declare(this.projectName, wm.Application);
-	    }
 	    this.projectData = {css: "",
 				jscustom: this.projectName + ".extend({\n\n\t" + terminus + "\n});"};
 	    studio.setAppScript(this.projectData.jscustom); // this gets set elsewhere; but if not set here, then a project may get the previously open project's jscustom section because writeApplication takes whatever is currently in the script editor
@@ -115,19 +110,12 @@ dojo.declare("wm.studio.Project", null, {
                 delete template._template;
                 var hasLayout = false;
                 for (var i in widgets)
-                    if (widgets[i][0] == "wm.Layout" || widgets[i][0] == "wm.mobile.Layout")
+                    if (widgets[i][0] == "wm.Layout")
                         hasLayout = true;
 
                 var widgets_js;
                 if (hasLayout) {
                     widgets_js = widgets;
-		} else if (wm.studioConfig.isMobileApp) {
-                    widgets_js =  {layoutBox1: ["wm.mobile.Layout", {name: "layout1"}, {}, {}]};
-                    for (var i in template) {
-                        widgets_js.layoutBox1[1][i] = template[i];
-                    }
-                    widgets_js.layoutBox1[3] = widgets;
-		    
                 } else {
                     widgets_js =  {layoutBox1: ["wm.Layout", {name: "layout1"}, {}, {}]};
                     for (var i in template) {
@@ -139,11 +127,7 @@ dojo.declare("wm.studio.Project", null, {
                     argHash.editTemplate(widgets_js);
                 return widgets_js;
             } else {
-	     if (wm.studioConfig.isMobileApp) {
-	         return {layoutBox1: ["wm.mobile.Layout", {title: this.pageName, height: "100%", width: "100%", horizontalAlign: "left", verticalAlign: "top"}, {}, {}]};
-	     } else {
-	         return {layoutBox1: ["wm.Layout", {height: "100%", width: "100%", horizontalAlign: "left", verticalAlign: "top"}, {}, {}]};
-	     }
+	        return {layoutBox1: ["wm.Layout", {height: "100%", width: "100%", horizontalAlign: "left", verticalAlign: "top"}, {}, {}]};
 	    }
 	},
 /*
@@ -1136,19 +1120,11 @@ Studio.extend({
 		dojo.forEach(projects, function(p) {
 			l[p] = true;
 		});
-
-		if (!studio.newProjectDialog.pageName)
-                    studio.newProjectDialog.setPageName("NewProjectDialog");
-		studio.newProjectDialog.page.projectName.setDataValue("Project");
-		studio.newProjectDialog.page.reset();
-	    if (wm.studioConfig.isMobileApp) {
-		studio.newProjectDialog.page.templatesPanel.hide();
-		studio.newProjectDialog.page.themeName.hide();
-		studio.newProjectDialog.setHeight("150px");
-	    }
-		
-		studio.newProjectDialog.show();
-	    
+            if (!studio.newProjectDialog.pageName)
+                studio.newProjectDialog.setPageName("NewProjectDialog");
+            studio.newProjectDialog.page.projectName.setDataValue("Project");
+            studio.newProjectDialog.page.reset();
+            studio.newProjectDialog.show();
 /*            
 	    this.promptForName("project", wm.findUniqueName('Project', [l]), projects,
                                dojo.hitch(this, function(n) {
@@ -1658,17 +1634,8 @@ Studio.extend({
 
 		this.deploy(this.getDictionaryItem("WAIT_BUILD_PREVIEW"), dojo.hitch(this, function(result) {
 		    this._runRequested = false;
-		    if (operation != "studioProjectCompile") {
-			var options = undefined;
-			if (wm.studioConfig.isMobileApp) {
-			    	var val = studio.canvasSizeSelect.getDataValue();
-			    var matches = val.match(/(\d+)x(\d+)/);
-			    var x = matches[1];
-			    var y = matches[2];
-			    options = "width="+x+",height="+y;
-			}
-			wm.openUrl(this.getPreviewUrl(operation == "studioProjectTest"), this.project.projectName, "_wmPreview", options);
-		    }
+		    if (operation != "studioProjectCompile") 
+			wm.openUrl(this.getPreviewUrl(operation == "studioProjectTest"), this.project.projectName, "_wmPreview");
 		    studio.endWait();
 		    return result;
 		}));

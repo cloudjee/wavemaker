@@ -97,7 +97,6 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
 
 wm.Object.extendSchema(wm.ServiceVariable, {
         downloadFile: {},
-        saveInCookie: {ignore: 1},
         isList: {ignore: 1},
 	operation: { group: "common", order: 24},
 	clearInput: { group: "operation", order: 30},

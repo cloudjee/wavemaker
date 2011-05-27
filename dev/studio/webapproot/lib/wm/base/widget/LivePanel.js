@@ -21,7 +21,6 @@ dojo.declare("wm.LivePanel", wm.Panel, {
 	layoutKind: "top-to-bottom",
 	liveDataName: "",
         autoScroll: true,
-
     /* Whenever the LiveForm gets a successful response from the server, dismiss the dialog
      * and update the grid's data
      */
@@ -70,20 +69,7 @@ dojo.declare("wm.LivePanel", wm.Panel, {
 
 
 
-    createComboBoxPopupLivePanel: function(usePaging) {
-	this.setLayoutKind("left-to-right");
-	this.comboBox = new wm.SelectMenu({
-	    name: studio.page.getUniqueName(this.liveDataName + "Select"),
-	    owner: this.owner,
-	    width:'100%',
-	    height: wm.Button.prototype.height,
-	    margin: wm.Button.prototype.margin,
-	    padding: wm.Button.prototype.padding,
-	    caption: "Select " + this.liveDataName,
-	    captionSize: "250px",
-	    parent: this,
-	});
-    },
+
     editableGridNew: function() {
 	this.dataGrid.addEmptyRow(true);
 	wm.onidle(this, function() {

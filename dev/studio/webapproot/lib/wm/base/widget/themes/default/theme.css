@@ -816,12 +816,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	background-color: #EEEEEE;
 }
 
-.nonmodaldialog > div {
-    cursor: default;
-}
-.nonmodaldialog div.dialogtitlebar {
-    cursor: move;
-}
+
  .dialogtitlebar, .dialogfooter {
     background-color: #555555;	   
     color: white;
@@ -1803,7 +1798,6 @@ Overriding dijit's progress bar properties to enable height changes to progress 
     border-top: 0px;
     border-left: 0px;
     border-right: 0px;
-
 }
 
 

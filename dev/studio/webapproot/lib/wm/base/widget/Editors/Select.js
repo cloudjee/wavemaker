@@ -579,7 +579,6 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 					this.dataSet.cursor = i;
 			}
 			s.setData(v);
-		    s.endUpdate();
 			this.endEditUpdate();
 			//wm.fire(f, "populateEditors");
 		}

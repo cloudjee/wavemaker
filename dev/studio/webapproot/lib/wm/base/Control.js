@@ -190,11 +190,9 @@ dojo.declare("wm.Bounds", null, {
 		return b;
 	},
 	getStyleBounds: function() {
-/*
 		if (this.isRelativePositioned){
 			return {w: this.width, h: this.height};
 		}
-		*/
 		
 		var pbm = (this.dom.node.tagName.toLowerCase() == "button") ? this.marginExtents : this.padBorderMargin;
 		var b = {
@@ -224,9 +222,6 @@ dojo.declare("wm.DomNode", null, {
 	append: function(inDomNode) {
 		this.node.appendChild(inDomNode.node);
 	},
-        insert: function(inDomNode, inIndex) {
-	    this.node.appendChild(inDomNode.node, this.node.childNodes[inIndex]);
-	},
 	remove: function(inDomNode) {
 		this.node.removeChild(inDomNode.node);
 	},
@@ -240,8 +235,8 @@ dojo.declare("wm.DomNode", null, {
 		var s = this.node.style;
 //		var style = {};
 		if (this.isRelativePositioned){
-		    s.width = inBox.w + "px";	
-		    s.height = inBox.h + "px";
+			s.width = inBox.w;	
+			s.height = inBox.h;
 			return;	
 		}
 		
@@ -411,13 +406,13 @@ this.label.enable();
 	    _designer: owner._designer,
 	    _loading:false}); // should be changing this to true... but need to do something about calling postInit in a second pass before we change this
 	var result = new ctor(params);
-	if (!params.parent && (ctor.prototype.declaredClass == "wm.Layout" || ctor.prototype.decalredClass == "wm.mobile.Layout"))
+	if (!params.parent && ctor.prototype.declaredClass == "wm.Layout")
 	    result.owner.root = result;
 	return result;
     },
     prepare: function(inProps) {
 	try {
-	if (inProps && app instanceof wm.BasicApplication) {
+	if (inProps) {
             var owner = inProps.owner;
             if (owner) owner = owner.getOwnerApp();
             if (owner)
@@ -444,10 +439,9 @@ this.label.enable();
 		if (!this.dom) {
 			this.dom = new wm.DomNode(this.domNode, this.isRelativePositioned);
 			if (!this.isRelativePositioned)
-			    this.domNode.style.position = "absolute";
+				this.domNode.style.position = "absolute";
                         else
-				this.domNode.style.position = "";				
-/*				this.domNode.style.position = "relative";				*/
+				this.domNode.style.position = "relative";				
 			this.setParent(this.parent);
 			this.setDomNode(this.domNode);
 		}
@@ -571,7 +565,7 @@ this.label.enable();
 		//this.updateBounds();
 	},
 
-    
+
     isAncestorHiddenLayer: function() {
 	  if (this instanceof wm.Layout && this.owner == app._page) return false;
 	  if (this instanceof wm.Layer && this.parent && this.parent.getActiveLayer() != this) return true;
@@ -690,12 +684,8 @@ this.label.enable();
 	addWidget: function(inWidget){
 	    this.widgets[inWidget.name] = inWidget;
 	    var p = this.containerNode || this.domNode;
-	    if (this._touchScroll) {
-		if (this._touchScroll.scroller && p.childNodes[1] && p.childNodes[1].firstChild)
-		    p = p.childNodes[1].firstChild;
-		else
-		    p = p.firstChild;
-	    }
+	    if (this._touchScroll && p.childNodes[1] && p.childNodes[1].firstChild)
+		p = p.childNodes[1].firstChild;
   	    if (inWidget.domNode.parentNode != p) {
 		p.appendChild(inWidget.domNode);
 	    }
@@ -1088,16 +1078,15 @@ this.label.enable();
 	renderCss: function() {
 	    if (!this.invalidCss) return;
 	    this.invalidCss = false;
-	    if (!this._dontRenderCss) { // some widgets prefer to be styled via CSS
-		// these should be called only once per object
-		var cssObj = this.buildCssSetterObj();
-		// some browsers are faster to set via cssText... but its NOT faster to reset them via cssText using our method of appending to the css string after an initial set of values have been stored.  
-		if (!this.renderedOnce && (dojo.isFF || dojo.isSafari || dojo.isChrome)) {
-		    this.setCssViaCssText(cssObj);
-		    this.renderedOnce = 1;
-		} else {
-		    this.setCssViaDom(cssObj);
-		}
+
+	    // these should be called only once per object
+	    var cssObj = this.buildCssSetterObj();
+	    // some browsers are faster to set via cssText... but its NOT faster to reset them via cssText using our method of appending to the css string after an initial set of values have been stored.  
+	    if (!this.renderedOnce && (dojo.isFF || dojo.isSafari || dojo.isChrome)) {
+		this.setCssViaCssText(cssObj);
+		this.renderedOnce = 1;
+	    } else {
+		this.setCssViaDom(cssObj);
 	    }
 
 	    // handles special case where a call to render bounds neesd to call render which calls renderCss which should NOT
@@ -1239,11 +1228,9 @@ this.label.enable();
 	    if (this.dom) {
 		var b = this.getStyleBounds();
 		this.dom.setBox(b, wm.AbstractEditor && this.singleLine && this instanceof wm.AbstractEditor == false);
-		if (this._touchScroll && this._touchScroll.scrollers) {
+		if (this._touchScroll) {
 		    this._touchScroll.scrollers.outer.style.width = b.w + "px";
 		    this._touchScroll.scrollers.outer.style.height = b.h + "px";
-		} else if (this._touchScroll) {
-		    this.updateScroller();
 		}
 	    }
 		// bc
@@ -1360,7 +1347,7 @@ this.label.enable();
 			oldParent.removeWidget(this);
 			// BC: we still have non-container parents (e.g. wm.Dialog)
 			if (oldParent.removeControl)
-			    oldParent.removeControl(this, inParent == null);
+				oldParent.removeControl(this);
 		}
 
 		if (!this._cupdating)
@@ -1409,8 +1396,6 @@ this.label.enable();
 			this.domNode.style.display = inShowing ? '' : 'none';
 		        this.reflowParent();
 		}
-	    if (inShowing && this._touchScroller && !this._touchScroller.scroller)
-		this.updateScroller();
 	},
 	/**
 		Set disabled property for this widget.<br/>

@@ -99,7 +99,6 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
 			handleAs: "json",
 			sync: this.sync
 		}
-	    console.log("POSTING");console.log(props);
 		var def = dojo.rawXhrPost(props);
 		def.addCallbacks(this.resultCallback(deferredRequestHandler), this.errorCallback(deferredRequestHandler));
 	},

@@ -46,8 +46,8 @@ if (!djConfig.debugBoot) {
 }
 // Load all required runtime libraries.
 // Note: anything not included in build will be loaded.
-
 dojo.require("lib.manifest", true);
+
 // Load studio code and design extensions
 dojo.require("studio.app.manifest", true);
 

@@ -347,7 +347,6 @@ dependencies = {
 				"wm.base.widget.gadget.Stocks",
 				"wm.base.widget.gadget.Weather",
 				"wm.base.widget.gadget.YouTube",
-				"wm.base.widget.gadget.Facebook",
 			]		
 		},
 		

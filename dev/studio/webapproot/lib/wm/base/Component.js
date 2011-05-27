@@ -70,7 +70,7 @@ dojo.declare("wm.Component", wm.Object, {
 	return null;
     },
     getParentPage: function() {
-	if (this instanceof wm.Page || wm.PageDialog && this instanceof wm.PageDialog || wm.mobile && this instanceof wm.mobile.PageDialog) 
+	if (this instanceof wm.Page || this instanceof wm.PageDialog) 
 	    return this;
 	if (this.owner)
 	    return this.owner.getParentPage();
@@ -94,7 +94,7 @@ dojo.declare("wm.Component", wm.Object, {
             return false;
     },
     getOwnerApp: function() {
-        if (wm.isInstanceType(this, wm.BasicApplication)) return this;
+        if (wm.isInstanceType(this, wm.Application)) return this;
 
         if (!this.isDesignLoaded()) {
             return window.app;
@@ -144,13 +144,11 @@ dojo.declare("wm.Component", wm.Object, {
 		Remove this component from the system and clean up
 		all resources.
 	*/
-    _onDestroy: function() {},
 	destroy: function() {
 		if (this.isDestroyed)
 			return;
 		try
 		{
-		    this._onDestroy(); // unfortunately, you can't connect to destroy because destroy removes all connections
 			this._disconnect();
 			this._unsubscribe();
 			wm.fire(this, "designDestroy");
@@ -788,7 +786,7 @@ this.panel1.createComponent("custom", "wm.Panel", {
 					inComponent.onMouseOut(e);
 				    });
 				});
-			    } else if (n == "onEnterKeyPress" && (wm.Container && inComponent instanceof wm.Container || wm.mobile.Container && inComponent instanceof wm.mobile.Container)) {
+			    } else if (n == "onEnterKeyPress" && inComponent instanceof wm.Container) {
 				inComponent.connectOnEnterKey();
 			    }
 			}

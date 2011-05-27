@@ -21,9 +21,6 @@ wm.registerPaths(
 	["wm.modules", wm.basePath + "modules/ep"]
 );
 
-
-
-
 wm.loadLibs([ 
 	// Dijit
     (djConfig.isDebug) ? "css.dijit.themes.tundra.tundra" : "css.dijit.themes.tundra.t",
@@ -37,8 +34,7 @@ wm.loadLibs([
 	//"dijit.form.FilteringSelect",
 	//"dojox.html.styles",
 	// WM
-    !wm.isMobileApp || wm.studioConfig ? "css.wm.base.widget.themes.default.theme" : "", 
-    wm.isMobileApp || wm.studioConfig && wm.studioConfig.isMobileApp ? "css.wm.base.mobile.themes.default.theme" : "",
+    "css.wm.base.widget.themes.default.theme", 
     "css.wm.base.styles.wavemaker",
     //"css.wm.base.styles.progressBar", moved into default.theme
 	// wm utility libs
@@ -173,3 +169,9 @@ wm.loadLibs([
        "wm.base.I18nPlugin"
 ]);
 
+if (dojo.isIE)
+{
+	wm.loadLibs([ 
+	  "wm.base.lib.Silverlight"
+	]);
+}

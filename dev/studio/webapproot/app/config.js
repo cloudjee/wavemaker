@@ -35,8 +35,7 @@ wm.studioConfig = {
 	previewPopup: false,
 	preventLiveData: (location.search.indexOf("nolive") >= 0),
 	preventSubPages: (location.search.indexOf("nopages") >= 0),
-        isPalmApp: location.search.indexOf("palm") >= 0,
-        isMobileApp: location.search.indexOf("mobile") >= 0
+	isPalmApp: location.search.indexOf("palm") >= 0
 };
 
 wm.basePath = "../../../";

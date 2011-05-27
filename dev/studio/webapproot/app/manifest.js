@@ -15,22 +15,11 @@
 //
 // Studio module manifest
 // all loads except for css should be nop in production mode.
-
 wm.registerPaths(
 	["wm.studio.app", wm.basePath + "app"],
 	["wm.studio.pages", wm.basePath + "pages"]
 );
 
-
-if (wm.studioConfig.isMobileApp) {
-wm.loadLibs([
-    "wm.base.mobile.Layers_design",
-    "wm.base.mobile.LiveForm_design",
-    "wm.base.mobile.RelatedEditor_design",
-    "wm.base.mobile.LivePanel_design",
-    "wm.studio.pages.LivePanelEditor.LivePanelEditor",
-]);
-}
 
 // Design Support Extensions
 wm.loadLibs([

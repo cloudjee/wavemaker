@@ -494,9 +494,10 @@ wm.define("wm.Container", wm.Control, {
 		}
 		else
 			return this.bounds.h - this.padBorderMargin.t - this.padBorderMargin.b;
-	},
+	}
+});
 
-
+wm.Container.extend({
 
     /* Get the preferred width of this container, for use if this is a fitToContentWidth container.
      * left-to-right container: width is the sum of the widths of all px sized children and the sum of all minWidths for % sized children.

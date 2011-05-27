@@ -52,7 +52,6 @@ dojo.declare("wm.Layout", wm.Container, {
 			document.body.scrollTop = 0;
 		}
 		var pn = this.domNode.parentNode;
-
 		if (pn && !wm.isEmpty(this.fit)) {
 			pn.scrollTop = 0;
 			var n = dojo.contentBox(pn), b = {}, f = this.fit;
@@ -72,13 +71,9 @@ dojo.declare("wm.Layout", wm.Container, {
 	},
 	updateBounds: function() {
 		this._percEx = {w:100, h: 100};
-		if (!this.parent) {		   
+		if (!this.parent) {
 			var pn = this.domNode.parentNode;
-		    if (pn == window.document.body) {
-			this.setBounds(0,0,window.innerWidth, window.innerHeight);
-		    } else {
 			this.setBounds(0, 0, pn.offsetWidth, pn.offsetHeight);
-		    }
 			//this.setBounds(dojo.contentBox(pn));
 		} else {
 			this.setBounds(this.parent.getContentBounds());

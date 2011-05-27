@@ -69,13 +69,12 @@ dojo.declare("wm.Wire", wm.Component, {
 		return true;
 	},
     debugBindingEvent: function(inValue) {
-	if (app.debugTree)
-	    app.debugTree.newLogEvent({type: "bindingEvent",
-				       component: this.target,
-				       property: this.targetProperty,
-				       value: inValue,
-				       source: this.expression ? null : this.source,
-				       expression: this.expression});
+			app.debugTree.newLogEvent({type: "bindingEvent",
+						   component: this.target,
+						   property: this.targetProperty,
+						   value: inValue,
+						   source: this.expression ? null : this.source,
+						   expression: this.expression});
     },
 	_sourceValueChanged: function(inValue) {
 		if (wm.bindingsDisabled)
