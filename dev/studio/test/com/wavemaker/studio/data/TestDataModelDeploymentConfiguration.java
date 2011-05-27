@@ -57,7 +57,7 @@ public class TestDataModelDeploymentConfiguration extends StudioTestCase {
         Map<String, String> m = new HashMap<String, String>(1);
         m.put(DataModelDeploymentConfiguration.JNDI_NAME_PROPERTY, jndiName);
         DataModelDeploymentConfiguration cfg = new DataModelDeploymentConfiguration();
-        cfg.prepare(serviceId, m, designMgr);
+        cfg.prepare(serviceId, m, designMgr, 1);
 
         DataServiceTestUtils.verifyJNDIDataSource(serviceId, designMgr,
                 jndiName);
@@ -70,7 +70,7 @@ public class TestDataModelDeploymentConfiguration extends StudioTestCase {
         Map<String, String> m = new HashMap<String, String>(1);
         m.put(DataModelDeploymentConfiguration.JNDI_NAME_PROPERTY, jndiName);
         DataModelDeploymentConfiguration cfg = new DataModelDeploymentConfiguration();
-        cfg.prepare(serviceId, m, designMgr);
+        cfg.prepare(serviceId, m, designMgr, 1);
 
         DataServiceTestUtils.verifyJNDIDataSource(serviceId, designMgr,
                 jndiName);
