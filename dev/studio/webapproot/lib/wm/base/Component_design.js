@@ -20,7 +20,7 @@ dojo.require('wm.base.Component');
 //===========================================================================
 wm.Object.extendSchema(wm.Component, {
         documentation: {group: "docs", readonly: true, order: 1},
-    generateDocumentation: {group: "docs", readonly: true, order: 2},
+    generateDocumentation: {group: "docs", readonly: true, order: 2, shortname: "Generate Docs"},
         themeable: {ignore: 1},
         theme: {ignore: 1},
         isDestroyed: {ignore: 1},
