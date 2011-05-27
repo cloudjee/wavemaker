@@ -75,6 +75,10 @@ public class Project extends AbstractFileService {
         return new File(getWebInf(), ProjectConstants.WEB_XML);
     }
 
+    public File getWsBindingsFile() {
+        return new File(getWebInf(), ProjectConstants.WS_BINDINGS_FILE);
+    }
+
     public File getSecurityXml() {
         return new File(getWebInf(), ProjectConstants.SECURITY_XML);
     }

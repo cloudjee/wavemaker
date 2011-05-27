@@ -37,6 +37,8 @@ public class ProjectConstants {
 
     public static final String WEB_XML = "web.xml";
 
+    public static final String WS_BINDINGS_FILE = "ibm-web-bnd.xmi";
+
     public static final String SECURITY_XML = "project-security.xml";
 
     public static final String USER_WEB_XML = "user-web.xml";

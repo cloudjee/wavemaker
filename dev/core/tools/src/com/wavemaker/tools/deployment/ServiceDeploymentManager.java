@@ -333,8 +333,11 @@ public class ServiceDeploymentManager {
             Map<String, String> m = getServiceProperties(properties, service
                     .getId());
 
+
+            int indx = 0;
             for (ServiceDeployment sd : serviceDeployments) {
-                sd.prepare(service.getId(), m, mgr);
+                indx++;
+                sd.prepare(service.getId(), m, mgr, indx);
             }
         }
     }

@@ -66,7 +66,7 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
     private static final String WEB_XML_INSERT_BEFORE = "</web-app>";
 
     public void prepare(String serviceName, Map<String, String> properties,
-            DesignServiceManager mgr) {
+            DesignServiceManager mgr, int indx) {
 
         if (!properties.containsKey(JNDI_NAME_PROPERTY)) {
             // nothing to configure
@@ -84,7 +84,34 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
 
         configureJNDI(cfg, jndiName);
         configureProperties(cfg);
+        modifyWebSphereBindings(mgr, jndiName, indx);
         configureResourceRef(mgr, jndiName);
+    }
+
+    private void modifyWebSphereBindings(DesignServiceManager mgr, String jndiName, int indx) {
+
+        if (!jndiName.contains(COMP_ENV)) {
+            return;
+        }
+        String dsrcName = jndiName.substring(COMP_ENV.length());
+        File wsBindings = mgr.getProjectManager().getCurrentProject().getWsBindingsFile();
+        if (!wsBindings.exists()) {
+            return;
+        }
+
+        String fromStr = "</com.ibm.ejs.models.base.bindings.webappbnd:WebAppBinding>";
+        String toStr = "\t<resRefBindings xmi:id=\"ResourceRefBinding_" + indx + "\" jndiName=\"" + jndiName + "\">" +
+                "\r\n\t\t<bindingResourceRef href=\"WEB-INF/web.xml#" + dsrcName + "\"/>" +
+                "\r\n\t</resRefBindings>" +
+                "\r\n" + fromStr;
+
+        try {
+            String content = FileUtils.readFileToString(wsBindings, ServerConstants.DEFAULT_ENCODING);
+            content = content.replace(fromStr, toStr);
+            FileUtils.writeStringToFile(wsBindings, content, ServerConstants.DEFAULT_ENCODING);
+        } catch (IOException ex) {
+            throw new ConfigurationException(ex);
+        }
     }
 
     private void configureJNDI(DataServiceSpringConfiguration cfg,
