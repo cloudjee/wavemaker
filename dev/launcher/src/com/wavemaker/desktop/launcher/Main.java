@@ -220,11 +220,9 @@ public class Main
             // Run silently
             if (0 == args.length)
             {
-                args = new String[]
-                        {
-                            "start"
-                        };
+                args = new String[]{"start"};
             }
+            
             boolean starting = Arrays.asList(args).contains("start");
             if (starting)
             {
@@ -304,7 +302,6 @@ public class Main
     public static Launcher start(String[] args, TomcatConfig config,
             boolean noStdoutRedirect) throws IOException, URISyntaxException
     {
-
         AppServer server = getServerInstance(args, config, noStdoutRedirect);
         server.start();
         return server.getLauncher();

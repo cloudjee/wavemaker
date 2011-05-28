@@ -27,9 +27,9 @@ package com.wavemaker.desktop.launcher.ui;
 
 import com.wavemaker.desktop.launcher.Main;
 import java.io.File;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ResourceBundle;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -39,6 +39,9 @@ import javax.swing.JOptionPane;
  */
 public class LauncherAdvOptsDialog extends javax.swing.JDialog
 {
+    private static final ResourceBundle bundle = 
+        ResourceBundle.getBundle("com/wavemaker/desktop/launcher/ui/Bundle");
+    
     private MainConsole console;
     private String folder = null;
 
@@ -50,7 +53,7 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
         initComponents();
         initOptions();
     }
-
+    
     private void initOptions()
     {
         ckbAutoLaunch.setSelected(console.prefs.getBoolean(MainConsole.OPTION_AUTO_LAUNCH, false));
@@ -61,6 +64,17 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
         tfNewServerPort.setText(String.valueOf(console.tomcatConfig.getServicePort()));
         tfNewShutdownPort.setText(String.valueOf(console.tomcatConfig.getShutdownPort()));
 
+        ckbProxyEnabled.setSelected(console.prefs.getBoolean(MainConsole.OPTION_PROXY_ENABLED, false));
+        tfNewProxyServer.setText(console.prefs.get(MainConsole.OPTION_PROXY_SERVER, null));
+        tfNewProxyPort.setText(console.prefs.get(MainConsole.OPTION_PROXY_PORT, null));
+        tfNewProxyUsername.setText(console.prefs.get(MainConsole.OPTION_PROXY_USERNAME, null));
+
+//        String pwd = console.prefs.get(MainConsole.OPTION_PROXY_PASSWORD, null);
+//        if (pwd != null)
+//        {
+//            tfNewProxyPassword.setText("********");
+//        }
+        
         console.optionsSave.put(MainConsole.OPTION_AUTO_LAUNCH,
             String.valueOf(console.prefs.getBoolean(MainConsole.OPTION_AUTO_LAUNCH, true)));
 
@@ -81,6 +95,23 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
 
         console.optionsSave.put(MainConsole.OPTION_SHUTDOWN_PORT,
             String.valueOf(console.tomcatConfig.getShutdownPort()));
+
+        console.optionsSave.put(MainConsole.OPTION_PROXY_ENABLED,
+            String.valueOf(console.prefs.getBoolean(MainConsole.OPTION_PROXY_ENABLED, true)));
+
+        console.optionsSave.put(MainConsole.OPTION_PROXY_SERVER, 
+            String.valueOf(console.prefs.get(MainConsole.OPTION_PROXY_SERVER, "")));
+
+        console.optionsSave.put(MainConsole.OPTION_PROXY_PORT, 
+            String.valueOf(console.prefs.get(MainConsole.OPTION_PROXY_PORT, "")));
+
+        console.optionsSave.put(MainConsole.OPTION_PROXY_USERNAME, 
+            String.valueOf(console.prefs.get(MainConsole.OPTION_PROXY_USERNAME, "")));
+
+        console.optionsSave.put(MainConsole.OPTION_PROXY_PASSWORD, 
+            String.valueOf(console.prefs.get(MainConsole.OPTION_PROXY_PASSWORD, "")));
+        
+        configureProxyFields(ckbProxyEnabled.isSelected());
     }
 
     /** This method is called from within the constructor to
@@ -110,6 +141,16 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
         pnlButtons = new javax.swing.JPanel();
         btnCancel = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
+        pnlProxy = new javax.swing.JPanel();
+        lblNewProxyServer = new javax.swing.JLabel();
+        tfNewProxyServer = new javax.swing.JTextField();
+        lblNewProxyPort = new javax.swing.JLabel();
+        tfNewProxyPort = new javax.swing.JTextField();
+        lblNewProxyUsername = new javax.swing.JLabel();
+        tfNewProxyUsername = new javax.swing.JTextField();
+        lblNewProxyPassword = new javax.swing.JLabel();
+        tfNewProxyPassword = new javax.swing.JPasswordField();
+        ckbProxyEnabled = new javax.swing.JCheckBox();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/wavemaker/desktop/launcher/ui/Bundle"); // NOI18N
         btnReset.setText(bundle.getString("LauncherAdvOptsDialog.btnReset.text")); // NOI18N
@@ -184,9 +225,9 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
                     .add(lblNewShutdownPort, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(lblNewServerPort, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(pnlPortsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(tfNewShutdownPort, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(tfNewServerPort, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE))
+                .add(pnlPortsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                    .add(tfNewShutdownPort, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, tfNewServerPort))
                 .addContainerGap())
         );
         pnlPortsLayout.setVerticalGroup(
@@ -200,7 +241,7 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
                 .add(pnlPortsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(lblNewShutdownPort)
                     .add(tfNewShutdownPort, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(37, Short.MAX_VALUE))
+                .addContainerGap(85, Short.MAX_VALUE))
         );
 
         pnlCheckboxes.setBackground(new java.awt.Color(255, 255, 255));
@@ -241,7 +282,7 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
                 .add(ckbSubPageDisplay, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(ckbStudioDebug, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(55, Short.MAX_VALUE))
         );
 
         pnlButtons.setBackground(new java.awt.Color(255, 255, 255));
@@ -271,7 +312,7 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
         pnlButtonsLayout.setHorizontalGroup(
             pnlButtonsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, pnlButtonsLayout.createSequentialGroup()
-                .addContainerGap(249, Short.MAX_VALUE)
+                .addContainerGap(544, Short.MAX_VALUE)
                 .add(btnSave, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 80, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(18, 18, 18)
                 .add(btnCancel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 80, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -287,6 +328,115 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        pnlProxy.setBackground(new java.awt.Color(255, 255, 255));
+        pnlProxy.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("LauncherAdvOptsDialog.pnlProxy.border.title"))); // NOI18N
+
+        lblNewProxyServer.setLabelFor(tfNewProxyServer);
+        lblNewProxyServer.setText(bundle.getString("LauncherAdvOptsDialog.lblNewProxyServer.text")); // NOI18N
+
+        tfNewProxyServer.setText(bundle.getString("")); // NOI18N
+        tfNewProxyServer.setToolTipText(bundle.getString("LauncherAdvOptsDialog.tfNewProxyServer.toolTipText")); // NOI18N
+        tfNewProxyServer.setEnabled(false);
+        tfNewProxyServer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfNewProxyServerActionPerformed(evt);
+            }
+        });
+        tfNewProxyServer.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfNewProxyServerFocusLost(evt);
+            }
+        });
+
+        lblNewProxyPort.setLabelFor(tfNewProxyPort);
+        lblNewProxyPort.setText(bundle.getString("LauncherAdvOptsDialog.lblNewProxyPort.text")); // NOI18N
+
+        tfNewProxyPort.setText(bundle.getString("")); // NOI18N
+        tfNewProxyPort.setToolTipText(bundle.getString("LauncherAdvOptsDialog.tfNewProxyPort.toolTipText")); // NOI18N
+        tfNewProxyPort.setEnabled(false);
+        tfNewProxyPort.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfNewProxyPortFocusLost(evt);
+            }
+        });
+
+        lblNewProxyUsername.setLabelFor(tfNewProxyPort);
+        lblNewProxyUsername.setText(bundle.getString("LauncherAdvOptsDialog.lblNewProxyUsername.text")); // NOI18N
+
+        tfNewProxyUsername.setText(bundle.getString("")); // NOI18N
+        tfNewProxyUsername.setToolTipText(bundle.getString("LauncherAdvOptsDialog.tfNewProxyUsername.toolTipText")); // NOI18N
+        tfNewProxyUsername.setEnabled(false);
+        tfNewProxyUsername.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfNewProxyUsernameFocusLost(evt);
+            }
+        });
+
+        lblNewProxyPassword.setLabelFor(tfNewProxyPort);
+        lblNewProxyPassword.setText(bundle.getString("LauncherAdvOptsDialog.lblNewProxyPassword.text")); // NOI18N
+
+        tfNewProxyPassword.setText(bundle.getString("")); // NOI18N
+        tfNewProxyPassword.setToolTipText(bundle.getString("LauncherAdvOptsDialog.tfNewProxyPassword.toolTipText")); // NOI18N
+        tfNewProxyPassword.setEnabled(false);
+
+        ckbProxyEnabled.setBackground(new java.awt.Color(255, 255, 255));
+        ckbProxyEnabled.setText(bundle.getString("LauncherAdvOptsDialog.ckbProxyEnabled.text")); // NOI18N
+        ckbProxyEnabled.setToolTipText(bundle.getString("LauncherAdvOptsDialog.ckbProxyEnabled.toolTipText")); // NOI18N
+        ckbProxyEnabled.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ckbProxyEnabledActionPerformed(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout pnlProxyLayout = new org.jdesktop.layout.GroupLayout(pnlProxy);
+        pnlProxy.setLayout(pnlProxyLayout);
+        pnlProxyLayout.setHorizontalGroup(
+            pnlProxyLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnlProxyLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(pnlProxyLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, pnlProxyLayout.createSequentialGroup()
+                        .add(pnlProxyLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                            .add(lblNewProxyPassword, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .add(lblNewProxyUsername, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .add(lblNewProxyPort, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 77, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(org.jdesktop.layout.GroupLayout.TRAILING, lblNewProxyServer, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                        .add(pnlProxyLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                            .add(tfNewProxyPassword)
+                            .add(tfNewProxyUsername, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
+                            .add(org.jdesktop.layout.GroupLayout.TRAILING, tfNewProxyServer, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
+                            .add(tfNewProxyPort, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())
+                    .add(pnlProxyLayout.createSequentialGroup()
+                        .add(ckbProxyEnabled, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
+                        .add(14, 14, 14))))
+        );
+        pnlProxyLayout.setVerticalGroup(
+            pnlProxyLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, pnlProxyLayout.createSequentialGroup()
+                .add(ckbProxyEnabled, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 5, Short.MAX_VALUE)
+                .add(pnlProxyLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(lblNewProxyServer)
+                    .add(tfNewProxyServer, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnlProxyLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(lblNewProxyPort)
+                    .add(tfNewProxyPort, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnlProxyLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(lblNewProxyUsername)
+                    .add(tfNewProxyUsername, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnlProxyLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(lblNewProxyPassword)
+                    .add(tfNewProxyPassword, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        tfNewProxyPort.getAccessibleContext().setAccessibleDescription(bundle.getString("LauncherAdvOptsDialog.tfNewProxyPort.AccessibleContext.accessibleDescription")); // NOI18N
+
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -294,23 +444,24 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
             .add(layout.createSequentialGroup()
                 .addContainerGap()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, ckbAutoLaunch, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
+                    .add(pnlButtons, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(layout.createSequentialGroup()
                         .add(lblBrowser, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 108, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                             .add(btnDefBrowser, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 200, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                             .add(layout.createSequentialGroup()
-                                .add(tfBrowser, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)
+                                .add(tfBrowser, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 584, Short.MAX_VALUE)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                 .add(btnFileChooser, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 30, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
                     .add(layout.createSequentialGroup()
                         .add(pnlCheckboxes, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                         .add(pnlPorts, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(pnlButtons, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(8, 8, 8))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                        .add(pnlProxy, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .add(ckbAutoLaunch, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 164, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -325,12 +476,13 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(btnDefBrowser, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 27, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(pnlProxy, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(pnlPorts, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(pnlCheckboxes, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(20, 20, 20)
+                    .add(pnlCheckboxes, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnlButtons, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -342,11 +494,19 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
 //                "Save current Studio launch options for future sessions?",
 //                "Save Launch Options", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
 //        {
+        
         console.prefs.putBoolean(MainConsole.OPTION_AUTO_LAUNCH, ckbAutoLaunch.isSelected());
         console.prefs.put(MainConsole.OPTION_STUDIO_BROWSER, tfBrowser.getText());
         console.prefs.putBoolean(MainConsole.OPTION_ENABLE_LIVELAYOUT, ckbLiveLayout.isSelected());
         console.prefs.putBoolean(MainConsole.OPTION_ENABLE_SUBPAGES, ckbSubPageDisplay.isSelected());
         console.prefs.putBoolean(MainConsole.OPTION_ENABLE_DEBUG, ckbStudioDebug.isSelected());
+        
+        console.prefs.putBoolean(MainConsole.OPTION_PROXY_ENABLED, ckbProxyEnabled.isSelected());
+        console.prefs.put(MainConsole.OPTION_PROXY_SERVER, tfNewProxyServer.getText());
+        console.prefs.put(MainConsole.OPTION_PROXY_PORT, tfNewProxyPort.getText());
+        console.prefs.put(MainConsole.OPTION_PROXY_USERNAME, tfNewProxyUsername.getText());
+        console.prefs.putByteArray(MainConsole.OPTION_PROXY_PASSWORD, 
+            new String(tfNewProxyPassword.getPassword()).getBytes());
 
         try
         {
@@ -362,6 +522,19 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
                 console.tomcatConfig.setShutdownPort(newPort);
             }
 
+/* 
+            newPort = Integer.parseInt(tfNewProxyPort.getText());
+            if (newPort != console.tomcatConfig.getProxyPort())
+            {
+                console.tomcatConfig.setProxyPort(newPort);
+            }
+
+            byte[] newPwd = new String(tfNewProxyPassword.getPassword()).getBytes();
+            if (newPort != console.tomcatConfig.getProxyPassword())
+            {
+                console.tomcatConfig.setProxyPassword(newPwd);
+            }
+*/
             Main.setDefaultTomcatConfiguration(console.tomcatConfig);
         }
         catch (IOException e)
@@ -405,6 +578,21 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
 
         console.tomcatConfig.setShutdownPort(Integer.parseInt(
             console.optionsSave.get(MainConsole.OPTION_SHUTDOWN_PORT)));
+
+        console.prefs.putBoolean(MainConsole.OPTION_PROXY_ENABLED, Boolean.parseBoolean(
+            console.optionsSave.get(MainConsole.OPTION_PROXY_ENABLED)));
+
+        console.prefs.put(MainConsole.OPTION_PROXY_SERVER,
+            console.optionsSave.get(MainConsole.OPTION_PROXY_SERVER));
+
+        console.prefs.put(MainConsole.OPTION_PROXY_PORT,
+            console.optionsSave.get(MainConsole.OPTION_PROXY_PORT));
+
+        console.prefs.put(MainConsole.OPTION_PROXY_USERNAME,
+            console.optionsSave.get(MainConsole.OPTION_PROXY_USERNAME));
+
+        console.prefs.put(MainConsole.OPTION_PROXY_PASSWORD,
+            console.optionsSave.get(MainConsole.OPTION_PROXY_PASSWORD));
 
         initOptions();
 }//GEN-LAST:event_btnResetActionPerformed
@@ -463,6 +651,34 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
         if (evt.isControlDown()) btnReset.doClick();
     }//GEN-LAST:event_pnlButtonsMouseClicked
 
+    private void tfNewProxyServerFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfNewProxyServerFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfNewProxyServerFocusLost
+
+    private void tfNewProxyServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfNewProxyServerActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfNewProxyServerActionPerformed
+
+    private void tfNewProxyPortFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfNewProxyPortFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfNewProxyPortFocusLost
+
+    private void tfNewProxyUsernameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfNewProxyUsernameFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfNewProxyUsernameFocusLost
+
+    private void ckbProxyEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckbProxyEnabledActionPerformed
+        configureProxyFields(ckbProxyEnabled.isSelected());
+        
+    }//GEN-LAST:event_ckbProxyEnabledActionPerformed
+
+    private void configureProxyFields(boolean enabled)
+    {
+        tfNewProxyServer.setEnabled(enabled);
+        tfNewProxyPort.setEnabled(enabled);
+        tfNewProxyUsername.setEnabled(enabled);
+        tfNewProxyPassword.setEnabled(enabled);
+    }
     /**
      * @param args the command line arguments
      */
@@ -494,16 +710,27 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
     private javax.swing.JButton btnSave;
     private javax.swing.JCheckBox ckbAutoLaunch;
     private javax.swing.JCheckBox ckbLiveLayout;
+    private javax.swing.JCheckBox ckbProxyEnabled;
     private javax.swing.JCheckBox ckbStudioDebug;
     private javax.swing.JCheckBox ckbSubPageDisplay;
     private javax.swing.JLabel lblBrowser;
+    private javax.swing.JLabel lblNewProxyPassword;
+    private javax.swing.JLabel lblNewProxyPort;
+    private javax.swing.JLabel lblNewProxyServer;
+    private javax.swing.JLabel lblNewProxyUsername;
     private javax.swing.JLabel lblNewServerPort;
     private javax.swing.JLabel lblNewShutdownPort;
     private javax.swing.JPanel pnlButtons;
     private javax.swing.JPanel pnlCheckboxes;
     private javax.swing.JPanel pnlPorts;
+    private javax.swing.JPanel pnlProxy;
     private javax.swing.JTextField tfBrowser;
+    private javax.swing.JPasswordField tfNewProxyPassword;
+    private javax.swing.JTextField tfNewProxyPort;
+    private javax.swing.JTextField tfNewProxyServer;
+    private javax.swing.JTextField tfNewProxyUsername;
     private javax.swing.JTextField tfNewServerPort;
     private javax.swing.JTextField tfNewShutdownPort;
     // End of variables declaration//GEN-END:variables
+
 }

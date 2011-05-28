@@ -73,6 +73,11 @@ public class MainConsole extends javax.swing.JFrame
     public static String OPTION_SERVER_PORT = "serverport";
     public static String OPTION_SHUTDOWN_PORT = "shutdownport";
     public static String OPTION_STUDIO_BROWSER = "studioBrowser";
+    public static String OPTION_PROXY_ENABLED = "proxyEnabled";
+    public static String OPTION_PROXY_SERVER = "proxyServer";
+    public static String OPTION_PROXY_PORT = "proxyPort";
+    public static String OPTION_PROXY_USERNAME = "proxyUsername";
+    public static String OPTION_PROXY_PASSWORD = "proxyPassword";
     
     public final static String VAL_SYS_DEF_BROWSER = bundle.getString("SYSTEM_DEFAULT_BROWSER");
 
@@ -121,47 +126,6 @@ public class MainConsole extends javax.swing.JFrame
         tomcatConfig = config;
 //        initPropertyListeners();
     }
-
-//    static private boolean hasSplashScreen()
-//    {
-//        try
-//        {
-//            Class clazz = Class.forName("SplashScreen");
-//            Method meth = clazz.getMethod("getSplashScreen");
-//            return meth.invoke(null, new Object(){}) != null;
-//        }
-//        catch (IllegalAccessException ex)
-//        {
-//            Logger.getLogger(MainConsole.class.getName()).log(Level.SEVERE, null, ex);
-//            return false;
-//        }
-//        catch (IllegalArgumentException ex)
-//        {
-//            Logger.getLogger(MainConsole.class.getName()).log(Level.SEVERE, null, ex);
-//            return false;
-//        }
-//        catch (InvocationTargetException ex)
-//        {
-//            Logger.getLogger(MainConsole.class.getName()).log(Level.SEVERE, null, ex);
-//            return false;
-//        }        
-//        catch (NoSuchMethodException ex)
-//        {
-//            Logger.getLogger(MainConsole.class.getName()).log(Level.SEVERE, null, ex);
-//            return false;
-//        }
-//        catch (SecurityException ex)
-//        {
-//            Logger.getLogger(MainConsole.class.getName()).log(Level.SEVERE, null, ex);
-//            return false;
-//        }        
-//        catch (ClassNotFoundException ex)
-//        {
-//            Logger.getLogger(MainConsole.class.getName()).log(Level.SEVERE, null, ex);
-//            return false;
-//        }
-//    }
-
 
     private void initPropertyListeners()
     {
@@ -419,8 +383,8 @@ public class MainConsole extends javax.swing.JFrame
                 btnStart.setEnabled(false);
                 btnAdvOpts.setEnabled(false);
                 btnStop.setEnabled(true);
-//                pbStatus.setIndeterminate(true);
-//                pbStatus.setVisible(true);
+                pbStatus.setIndeterminate(true);
+                pbStatus.setVisible(true);
             }
         };
         SwingUtilities.invokeLater(runner);
@@ -441,7 +405,7 @@ public class MainConsole extends javax.swing.JFrame
                             if (Lifecycle.INIT_EVENT.equals(event.getType()))
                             {
 //                                        updateSplashProgress(25,"Initializing");
-                                        lblStatus.setText(bundle.getString("STATUS_MSG_INITIALIZING"));
+                                lblStatus.setText(bundle.getString("STATUS_MSG_INITIALIZING"));
 //                                        pbStatus.setIndeterminate(false);
 //                                        pbStatus.setValue(1);
                             }
@@ -462,27 +426,27 @@ public class MainConsole extends javax.swing.JFrame
 //                                        updateSplashProgress(90,"STARTED");
 //                                        pbStatus.setVisible(false);
 //                                        pbStatus.setValue(4);
-                                        lblStatus.setText(bundle.getString("STATUS_MSG_RUNNING"));
-                                        if (!isVisible())
-                                        {
-                                            setVisible(true);
-                                        }
+                                lblStatus.setText(bundle.getString("STATUS_MSG_RUNNING"));
+                                if (!isVisible())
+                                {
+                                    setVisible(true);
+                                }
                             }
                             else if (Lifecycle.BEFORE_STOP_EVENT.equals(event.getType()))
                             {
-                                        lblStatus.setText(bundle.getString("STATUS_MSG_STOPPING"));
-                                        btnStop.setEnabled(false);
-                                        pbStatus.setVisible(true);
-                                        pbStatus.setIndeterminate(true);
+                                lblStatus.setText(bundle.getString("STATUS_MSG_STOPPING"));
+                                btnStop.setEnabled(false);
+                                pbStatus.setVisible(true);
+                                pbStatus.setIndeterminate(true);
                             }
                             else if (Lifecycle.AFTER_STOP_EVENT.equals(event.getType()))
                             {
-                                        lblStatus.setText(bundle.getString("STATUS_MSG_STOPPED"));
-                                        pbStatus.setVisible(false);
-                                        pbStatus.setIndeterminate(false);
-                                        btnStart.setEnabled(true);
-                                        btnStop.setEnabled(false);
-                                        btnAdvOpts.setEnabled(true);
+                                lblStatus.setText(bundle.getString("STATUS_MSG_STOPPED"));
+                                pbStatus.setVisible(false);
+                                pbStatus.setIndeterminate(false);
+                                btnStart.setEnabled(true);
+                                btnStop.setEnabled(false);
+                                btnAdvOpts.setEnabled(true);
                             }
                         }
                     }
@@ -517,6 +481,8 @@ public class MainConsole extends javax.swing.JFrame
             // Start Server
 //            updateSplashProgress(25,"Starting WaveMaker... Please Wait.");
             // lblStatus.setText("STARTING");
+            
+            configureProxySettings();
             appServer.start();
 
             // Wait for server
@@ -586,4 +552,45 @@ public class MainConsole extends javax.swing.JFrame
     private javax.swing.JProgressBar pbStatus;
     // End of variables declaration//GEN-END:variables
 
+    protected void configureProxySettings() 
+    {
+        if (prefs.getBoolean(OPTION_PROXY_ENABLED, false))
+        {
+            // proxy settings are enabled
+            System.getProperties().put("proxySet", "true");
+
+            Object prop = prefs.get(OPTION_PROXY_SERVER, null);
+            System.getProperties().put("http.proxyHost", prop);
+
+            if (prop != null) 
+            {
+                prop = prefs.get(OPTION_PROXY_PORT, null);
+                if (prop != null) 
+                {
+                    System.getProperties().put("http.proxyPort", prop);
+                }
+
+                prop = prefs.get(OPTION_PROXY_USERNAME, null);
+                if (prop != null) 
+                {
+                    System.getProperties().put("http.proxyUser", prop);
+
+                    prop = prefs.get(OPTION_PROXY_PASSWORD, null);
+                    if (prop != null) 
+                    {
+                        System.getProperties().put("http.proxyPassword", prop);
+                    }
+                }
+            }
+        }
+        else
+        {
+            // proxy settings are NOT enabled
+            System.getProperties().remove("proxySet");
+            System.getProperties().remove("http.proxyHost");
+            System.getProperties().remove("http.proxyPort");
+            System.getProperties().remove("http.proxyUser");
+            System.getProperties().remove("http.proxyPassword");
+        }
+    }
 }

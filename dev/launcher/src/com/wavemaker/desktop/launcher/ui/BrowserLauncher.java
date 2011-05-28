@@ -24,8 +24,8 @@ public class BrowserLauncher
     public static void main(String[] args)
     {
         final String b1 = "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe";
-        final String b2 = "C:\\Users\\cconover\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe";
-        openURL("http://www.wavemaker.com", b1);
+        final String b2 = "C:\\Documents and Settings\\cconover\\Local Settings\\Application Data\\Google\\Chrome\\Application\\chrome.exe";
+        openURL("http://localhost:8094/wavemaker/", b2);
     }
 
     public static void openURL(String url)
