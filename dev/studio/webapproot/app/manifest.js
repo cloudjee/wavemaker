@@ -147,7 +147,8 @@ wm.loadLibs([
 	"wm.studio.pages.PreferencesPane.PreferencesPane",
 	"wm.studio.pages.ThemeDesigner.ThemeDesigner",
 	"wm.studio.pages.RegistrationDialog.RegistrationDialog",
-	"wm.studio.pages.Start.Start"
+        "wm.studio.pages.Start.Start",
+	"wm.studio.pages.HandleRequiredJars.HandleRequiredJars"
 ]);
 
 // Kana

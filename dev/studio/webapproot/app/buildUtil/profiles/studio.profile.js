@@ -361,7 +361,8 @@ dependencies = {
 				"wm.studio.pages.ServiceDialog.ServiceDialog",
 				"wm.studio.pages.Services.Services",
 				*/
-				"wm.studio.pages.Start.Start"
+			    "wm.studio.pages.Start.Start",
+			    "wm.studio.pages.HandleRequiredJars.HandleRequiredJars"
 			]
 		}
 	],
