@@ -847,6 +847,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    // if the column already exists, skip it
 	    if (dojo.some(this.columns, function(item) {return item.id == f.dataIndex;})) return;
 
+	    // don't show one-to-many subentities in the grid
+	    if (wm.typeManager.isPropInList(wm.typeManager.getType(this.variable.type).fields, f.dataIndex))
+		return;
+
 	    var align = 'left';
 	    var width = '100%';
 	    var formatFunc = '';
