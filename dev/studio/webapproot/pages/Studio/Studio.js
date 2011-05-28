@@ -558,7 +558,7 @@ dojo.declare("Studio", wm.Page, {
 			  this._runRequested = false;
 			  wm.openUrl(this.getPreviewUrl(isTest), this.project.projectName, "_wmPreview");
                         }
-
+	this.endWait();
     },
         deploy: function(inMsg, inCallback, noWait) {
            	if (this._deploying) {
