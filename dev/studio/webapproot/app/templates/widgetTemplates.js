@@ -143,7 +143,7 @@ wm.fullTemplates.fancyTemplate = {
 			label2: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"border":"0","caption":"Powered By Wavemaker","height":"100%","width":"100%"}, {}, {
 				format: ["wm.DataFormatter", {}, {}]
 			}],
-			label3: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright [company name] 2010","height":"100%","width":"300px"}, {}, {
+			label3: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright [company name] 2011","height":"100%","width":"300px"}, {}, {
 				format: ["wm.DataFormatter", {}, {}]
 			}]
 		}]
@@ -184,7 +184,7 @@ wm.fullTemplates.sideMenuTemplate = {
 			label2: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"border":"0","caption":"Powered by WaveMaker","height":"100%"}, {}, {
 				format: ["wm.DataFormatter", {}, {}]
 			}],
-			label1: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright [company name] 2010","height":"100%","width":"100%"}, {}, {
+			label1: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright [company name] 2011","height":"100%","width":"100%"}, {}, {
 				format: ["wm.DataFormatter", {}, {}]
 			}]
 		}]	
@@ -228,7 +228,7 @@ wm.fullTemplates.tabTemplate = {
 			label2: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"border":"0","caption":"Powered by WaveMaker","height":"100%"}, {}, {
 				format: ["wm.DataFormatter", {}, {}]
 			}],
-			label1: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright [company name] 2010","height":"100%","width":"100%"}, {}, {
+			label1: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright [company name] 2011","height":"100%","width":"100%"}, {}, {
 				format: ["wm.DataFormatter", {}, {}]
 			}]
 		}]	
@@ -273,7 +273,7 @@ wm.fullTemplates.topMenuTemplate = {
 			label1: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"border":"0","caption":"Powered by WaveMaker","height":"100%"}, {}, {
 				format: ["wm.DataFormatter", {}, {}]
 			}],
-			edFooterLabel: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright [company name] 2010","height":"100%","width":"100%"}, {}, {
+			edFooterLabel: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright [company name] 2011","height":"100%","width":"100%"}, {}, {
 				format: ["wm.DataFormatter", {}, {}]
 			}]
 		}]	
