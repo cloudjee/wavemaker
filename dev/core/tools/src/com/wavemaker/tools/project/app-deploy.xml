@@ -179,6 +179,7 @@
 
 		<war basedir="${build.app.webapproot.dir}" destfile="${war.file.name}">
 			<exclude name="**/application.xml"/>
+			<exclude name="**/*.documentation.json"/>
 		</war>
     </target>
 
