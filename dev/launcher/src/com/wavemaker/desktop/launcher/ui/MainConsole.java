@@ -35,12 +35,15 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -122,7 +125,6 @@ public class MainConsole extends javax.swing.JFrame
             System.out.println("*****   exception: " + e.getMessage());
             e.printStackTrace();
         }
-
         tomcatConfig = config;
         updatePortValues();
 //        initPropertyListeners();
