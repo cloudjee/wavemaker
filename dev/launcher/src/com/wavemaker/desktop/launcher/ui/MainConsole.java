@@ -341,11 +341,15 @@ public class MainConsole extends javax.swing.JFrame
             .add(layout.createSequentialGroup()
                 .addContainerGap()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, lblWMTitleLogo, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 566, Short.MAX_VALUE)
-                    .add(lblStatus, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 566, Short.MAX_VALUE)
-                    .add(pnlAdvOpts, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(pbStatus, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 566, Short.MAX_VALUE)
-                    .add(pnlServerOps, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(layout.createSequentialGroup()
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(org.jdesktop.layout.GroupLayout.TRAILING, lblWMTitleLogo, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 566, Short.MAX_VALUE)
+                            .add(lblStatus, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 566, Short.MAX_VALUE)
+                            .add(pnlServerOps, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())
+                    .add(layout.createSequentialGroup()
+                        .add(pnlAdvOpts, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
                     .add(layout.createSequentialGroup()
                         .add(lblCurrentServerPort, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 73, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -354,8 +358,10 @@ public class MainConsole extends javax.swing.JFrame
                         .add(lblCurrentShutdownPort, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 112, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(lblCurrentShutdownPortVal, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 37, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(4, 4, 4)))
-                .addContainerGap())
+                        .add(14, 14, 14))
+                    .add(layout.createSequentialGroup()
+                        .add(pbStatus, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 566, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -366,19 +372,19 @@ public class MainConsole extends javax.swing.JFrame
                 .add(pnlServerOps, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(lblStatus, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 26, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(pbStatus, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(33, 33, 33)
+                .add(18, 18, 18)
                 .add(pnlAdvOpts, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(18, 18, 18)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                         .add(lblCurrentShutdownPort, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
                         .add(lblCurrentShutdownPortVal, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
                         .add(org.jdesktop.layout.GroupLayout.LEADING, lblCurrentServerPortVal, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(org.jdesktop.layout.GroupLayout.LEADING, lblCurrentServerPort, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)))
-                .addContainerGap(11, Short.MAX_VALUE))
+                        .add(org.jdesktop.layout.GroupLayout.LEADING, lblCurrentServerPort, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 22, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .add(18, 18, 18)
+                .add(pbStatus, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -414,170 +420,19 @@ public class MainConsole extends javax.swing.JFrame
 //            // set property to prevent showing this dialog in the future
 //        }
 
+        btnStart.setEnabled(false);
+        btnAdvOpts.setEnabled(false);
+        pbStatus.setIndeterminate(true);
+        pbStatus.setVisible(true);
+
         Runnable runner = new Runnable() 
         {
             public void run()
             {
-                btnStart.setEnabled(false);
-                btnAdvOpts.setEnabled(false);
-                btnStop.setEnabled(true);
-                pbStatus.setIndeterminate(true);
-                pbStatus.setVisible(true);
+                startServer();
             }
         };
         SwingUtilities.invokeLater(runner);
-
-        if (appServer == null)
-        {
-            try
-            {
-                Main.printlnToLog(bundle.getString("STATUS_MSG_STARTING"));
-                com.wavemaker.desktop.launcher.Server.ValidateConfig(tomcatConfig);
-                appServer = Main.getServerInstance(tomcatConfig, false);
-
-                appServer.getLauncher().addLifecycleListener(
-                    new LifecycleListener()
-                    {
-                        public void lifecycleEvent(LifecycleEvent event)
-                        {
-                            if (Lifecycle.INIT_EVENT.equals(event.getType()))
-                            {
-//                                        updateSplashProgress(25,"Initializing");
-                                lblStatus.setText(bundle.getString("STATUS_MSG_INITIALIZING"));
-//                                        pbStatus.setIndeterminate(false);
-//                                        pbStatus.setValue(1);
-                            }
-                            else if (Lifecycle.BEFORE_START_EVENT.equals(event.getType()))
-                            {
-//                                        updateSplashProgress(50,"Starting...");
-//                                        lblStatus.setText("Preparing to start... please wait");
-//                                        pbStatus.setValue(2);
-                            }
-                            else if (Lifecycle.START_EVENT.equals(event.getType()))
-                            {
-//                                        updateSplashProgress(75,"Starting...");
-//                                        lblStatus.setText("Starting...");
-//                                        pbStatus.setValue(3);
-                            }
-                            else if (Lifecycle.AFTER_START_EVENT.equals(event.getType()))
-                            {
-//                                        updateSplashProgress(90,"STARTED");
-//                                        pbStatus.setVisible(false);
-//                                        pbStatus.setValue(4);
-                                lblStatus.setText(bundle.getString("STATUS_MSG_RUNNING"));
-                                if (!isVisible())
-                                {
-                                    setVisible(true);
-                                }
-                            }
-                            else if (Lifecycle.BEFORE_STOP_EVENT.equals(event.getType()))
-                            {
-                                lblStatus.setText(bundle.getString("STATUS_MSG_STOPPING"));
-                                btnStop.setEnabled(false);
-                                pbStatus.setVisible(true);
-                                pbStatus.setIndeterminate(true);
-                            }
-                            else if (Lifecycle.AFTER_STOP_EVENT.equals(event.getType()))
-                            {
-                                lblStatus.setText(bundle.getString("STATUS_MSG_STOPPED"));
-                                pbStatus.setVisible(false);
-                                pbStatus.setIndeterminate(false);
-                                btnStart.setEnabled(true);
-                                btnStop.setEnabled(false);
-                                btnAdvOpts.setEnabled(true);
-                            }
-                        }
-                    }
-                );
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-            catch (URISyntaxException e)
-            {
-                e.printStackTrace();
-            }
-            catch (InvalidServerConfigurationException e)
-            {
-                JOptionPane.showMessageDialog(getParent(),
-                    bundle.getString("STATUS_MSG_NO_PORTS_FOUND"));
-
-                Main.printlnToLog(e.getMessage());
-                if (Main.logOut != null)
-                {
-                    e.printStackTrace(Main.logOut);
-                }
-                else
-                {
-                    e.printStackTrace();
-                }
-            }
-        }
-        if ((appServer != null) && (appServer.getStatus() != SERVER_STATUS.RUNNING))
-        {
-            // Start Server
-//            updateSplashProgress(25,"Starting WaveMaker... Please Wait.");
-            // lblStatus.setText("STARTING");
-            
-            configureProxySettings();
-            appServer.start();
-
-            // Wait for server
-            for (int i = 0; (i < 600) && (appServer.getStatus() != SERVER_STATUS.RUNNING); i++)
-            {
-                try
-                {
-                    Thread.sleep(100);
-                }
-                catch (InterruptedException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-            if (appServer.getStatus() != SERVER_STATUS.RUNNING)
-            {
-                JOptionPane.showMessageDialog(getParent(),
-                    bundle.getString("STATUS_MSG_DID_NOT_START") + appServer.getStatus());
-            }
-        }
-
-        try {
-            if ((appServer != null) && (appServer.getStatus() == SERVER_STATUS.RUNNING))
-            {
-                btnStart.setEnabled(false);
-    //            pbStatus.setVisible(false);
-                if (Main.jarsAreMissing()) 
-                {
-                    if (Main.noWritePermission()) 
-                    {
-                        JOptionPane.showMessageDialog(getParent(), bundle.getString("STATUS_MSG_NO_ADMIN_CAPA"));
-                        appServer.stop();
-                        this.dispose();
-                    } 
-                    else 
-                    {
-                        openBrowser(Main.studioConfigWebApp);
-                    }
-                } 
-                else 
-                {
-                    openBrowser(Main.studioWebApp);
-                }
-            }
-            else
-            {
-                btnStart.setEnabled(true);
-    //            pbStatus.setVisible(false);
-            }
-        } 
-        catch (Exception ex) 
-        {
-            ex.printStackTrace();
-        }
-
-//        pbStatus.setVisible(false);
-        //btnStart.setEnabled(true);
     }//GEN-LAST:event_btnStartActionPerformed
 
     private void btnStopActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnStopActionPerformed
@@ -587,6 +442,155 @@ public class MainConsole extends javax.swing.JFrame
             appServer.stop();
         }
     }//GEN-LAST:event_btnStopActionPerformed
+    
+    
+    
+    private void startServer() {
+        if (appServer == null) {
+            try 
+            {
+                btnStart.setEnabled(false);
+                btnAdvOpts.setEnabled(false);
+                // btnStop.setEnabled(true);
+                pbStatus.setIndeterminate(false);
+                pbStatus.setValue(0);
+                pbStatus.setVisible(true);
+                
+                Main.printlnToLog(bundle.getString("STATUS_MSG_STARTING"));
+                com.wavemaker.desktop.launcher.Server.ValidateConfig(tomcatConfig);
+                appServer = Main.getServerInstance(tomcatConfig, false);
+
+                appServer.getLauncher().addLifecycleListener(
+                        new LifecycleListener() 
+                        {
+                            public void lifecycleEvent(LifecycleEvent event) 
+                            {
+                                if (Lifecycle.INIT_EVENT.equals(event.getType())) 
+                                {
+                                    btnStart.setEnabled(false);
+                                    lblStatus.setText(bundle.getString("STATUS_MSG_INITIALIZING"));
+                                    pbStatus.setIndeterminate(true);
+                                    // pbStatus.setValue(1);
+                                }
+                                else if (Lifecycle.BEFORE_START_EVENT.equals(event.getType())) 
+                                {
+                                    lblStatus.setText(bundle.getString("STATUS_MSG_ABOUT_TO_START"));
+                                    // pbStatus.setValue(2);
+                                }
+                                else if (Lifecycle.START_EVENT.equals(event.getType())) 
+                                {
+                                    lblStatus.setText(bundle.getString("STATUS_MSG_STARTING"));
+                                    // pbStatus.setValue(3);
+                                }
+                                else if (Lifecycle.AFTER_START_EVENT.equals(event.getType())) 
+                                {
+                                    lblStatus.setText(bundle.getString("STATUS_MSG_RUNNING"));
+                                    btnStart.setEnabled(false);
+                                    btnAdvOpts.setEnabled(false);
+                                    btnStop.setEnabled(true);
+                                    // pbStatus.setValue(4);
+                                    pbStatus.setVisible(false);
+                                } 
+                                else if (Lifecycle.BEFORE_STOP_EVENT.equals(event.getType())) 
+                                {
+                                    lblStatus.setText(bundle.getString("STATUS_MSG_STOPPING"));
+                                    btnStop.setEnabled(false);
+                                    pbStatus.setVisible(true);
+                                    pbStatus.setIndeterminate(true);
+                                }
+                                else if (Lifecycle.AFTER_STOP_EVENT.equals(event.getType())) 
+                                {
+                                    lblStatus.setText(bundle.getString("STATUS_MSG_STOPPED"));
+                                    pbStatus.setVisible(false);
+                                    pbStatus.setIndeterminate(false);
+                                    btnStart.setEnabled(true);
+                                    btnStop.setEnabled(false);
+                                    btnAdvOpts.setEnabled(true);
+                                }
+                            }
+                        });
+            } 
+            catch (IOException e) 
+            {
+                e.printStackTrace();
+            }
+            catch (URISyntaxException e) 
+            {
+                e.printStackTrace();
+            }
+            catch (InvalidServerConfigurationException e) 
+            {
+                JOptionPane.showMessageDialog(getParent(),
+                        bundle.getString("STATUS_MSG_NO_PORTS_FOUND"));
+
+                Main.printlnToLog(e.getMessage());
+                
+                if (Main.logOut != null) 
+                {
+                    e.printStackTrace(Main.logOut);
+                }
+                else 
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+        
+        if ((appServer != null) && (appServer.getStatus() != SERVER_STATUS.RUNNING)) 
+        {
+            // Start Server
+            configureProxySettings();
+            appServer.start();
+
+            // Wait for server
+//            for (int i = 0; (i < 600) && (appServer.getStatus() != SERVER_STATUS.RUNNING); i++) {
+//                try {
+//                    Thread.sleep(100);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            if (appServer.getStatus() != SERVER_STATUS.RUNNING) {
+//                JOptionPane.showMessageDialog(getParent(),
+//                        bundle.getString("STATUS_MSG_DID_NOT_START") + appServer.getStatus());
+//            }
+        }
+
+        try 
+        {
+            if ((appServer != null) && (appServer.getStatus() == SERVER_STATUS.RUNNING)) 
+            {
+                btnStart.setEnabled(false);
+                //            pbStatus.setVisible(false);
+                if (Main.jarsAreMissing()) 
+                {
+                    if (Main.noWritePermission()) 
+                    {
+                        JOptionPane.showMessageDialog(getParent(), bundle.getString("STATUS_MSG_NO_ADMIN_CAPA"));
+                        appServer.stop();
+                        //this.dispose();
+                    } 
+                    else
+                    {
+                        openBrowser(Main.studioConfigWebApp);
+                    }
+                } 
+                else 
+                {
+                    openBrowser(Main.studioWebApp);
+                }
+            } 
+            else 
+            {
+                btnStart.setEnabled(true);
+//                pbStatus.setVisible(false);
+            }
+        } 
+        catch (Exception ex) 
+        {
+            ex.printStackTrace();
+        }
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdvOpts;
