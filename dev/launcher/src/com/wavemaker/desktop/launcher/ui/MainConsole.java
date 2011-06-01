@@ -447,17 +447,12 @@ public class MainConsole extends javax.swing.JFrame
     
     
     
-    private void startServer() {
-        if (appServer == null) {
+    private void startServer() 
+    {
+        if (appServer == null) 
+        {
             try 
             {
-                btnStart.setEnabled(false);
-                btnAdvOpts.setEnabled(false);
-                // btnStop.setEnabled(true);
-                pbStatus.setIndeterminate(false);
-                pbStatus.setValue(0);
-                pbStatus.setVisible(true);
-                
                 Main.printlnToLog(bundle.getString("STATUS_MSG_STARTING"));
                 com.wavemaker.desktop.launcher.Server.ValidateConfig(tomcatConfig);
                 appServer = Main.getServerInstance(tomcatConfig, false);
@@ -492,6 +487,7 @@ public class MainConsole extends javax.swing.JFrame
                                     btnStop.setEnabled(true);
                                     // pbStatus.setValue(4);
                                     pbStatus.setVisible(false);
+                                    doLaunch();
                                 } 
                                 else if (Lifecycle.BEFORE_STOP_EVENT.equals(event.getType())) 
                                 {
@@ -511,7 +507,7 @@ public class MainConsole extends javax.swing.JFrame
                                 }
                             }
                         });
-            } 
+            }
             catch (IOException e) 
             {
                 e.printStackTrace();
@@ -557,7 +553,12 @@ public class MainConsole extends javax.swing.JFrame
 //                        bundle.getString("STATUS_MSG_DID_NOT_START") + appServer.getStatus());
 //            }
         }
+        
+        doLaunch();
+    }
 
+    private void doLaunch()
+    {
         try 
         {
             if ((appServer != null) && (appServer.getStatus() == SERVER_STATUS.RUNNING)) 
@@ -582,11 +583,11 @@ public class MainConsole extends javax.swing.JFrame
                     openBrowser(Main.studioWebApp);
                 }
             } 
-            else 
-            {
-                btnStart.setEnabled(true);
+//            else 
+//            {
+//                btnStart.setEnabled(true);
 //                pbStatus.setVisible(false);
-            }
+//            }
         } 
         catch (Exception ex) 
         {
