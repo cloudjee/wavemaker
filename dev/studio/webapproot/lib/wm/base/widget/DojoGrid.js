@@ -629,7 +629,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		delete this._typeChangedConnect;
 	    }
 
-	    this.variable = inValue;
+	    this.dataSet = this.variable = inValue;
 	    var updatedColumns = false;
 	    if (this.variable) {
 		this.dataSetToSelectedItem();
