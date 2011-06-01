@@ -806,6 +806,10 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 			end = this.expressionEditor.editor.editor.focusNode.selectionEnd,
 			e = this.expressionEditor.getDataValue() || "";
 		this.expressionEditor.setDataValue(e.slice(0, start) + v + e.slice(end));
+	    try {
+		this.expressionEditor.focus();
+		this.expressionEditor.editor.editor.focusNode.selectionStart = start + v.length;
+	    } catch(e) {}
 	},
 	expressionNodeSelected: function(inNode) {
 		if (inNode.isProperty && inNode.source) {
