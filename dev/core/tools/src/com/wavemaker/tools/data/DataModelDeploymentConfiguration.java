@@ -94,14 +94,15 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
             return;
         }
         String dsrcName = jndiName.substring(COMP_ENV.length());
+        String drefName = dsrcName.replace("/", "_");
         File wsBindings = mgr.getProjectManager().getCurrentProject().getWsBindingsFile();
         if (!wsBindings.exists()) {
             return;
         }
 
         String fromStr = "</com.ibm.ejs.models.base.bindings.webappbnd:WebAppBinding>";
-        String toStr = "\t<resRefBindings xmi:id=\"ResourceRefBinding_" + indx + "\" jndiName=\"" + jndiName + "\">" +
-                "\r\n\t\t<bindingResourceRef href=\"WEB-INF/web.xml#" + dsrcName + "\"/>" +
+        String toStr = "\t<resRefBindings xmi:id=\"ResourceRefBinding_" + indx + "\" jndiName=\"" + dsrcName + "\">" +
+                "\r\n\t\t<bindingResourceRef href=\"WEB-INF/web.xml#" + drefName + "\"/>" +
                 "\r\n\t</resRefBindings>" +
                 "\r\n" + fromStr;
 
