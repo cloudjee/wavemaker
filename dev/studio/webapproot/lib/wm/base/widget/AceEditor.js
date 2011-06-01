@@ -72,8 +72,14 @@ dojo.declare("wm.AceEditor", wm.Control, {
 	this.connect(this.domNode, "onkeydown", this, "handleKeyDown");
     },
     reservedCtrlKeys: ["a","c","v","x"],
+
     handleKeyDown: function(e) {
-	if (e.ctrlKey && app._keys[e.keyCode] != "CTRL") {
+
+	/* !e.altKey because on italian keyboards, "}" is Alt-Shift-"]", which comes up in the dom
+	 * event as e.ctrlKey: true, e.altKey: true, and then we call stopEvent on it and user's can't
+	 * type "}"
+	 */
+	if (e.ctrlKey && app._keys[e.keyCode] != "CTRL" && !e.altKey) {
 	    if (dojo.indexOf(this.reservedCtrlKeys, app._keys[e.keyCode]) == -1) {
 		this.onCtrlKey(app._keys[e.keyCode]);
 		dojo.stopEvent(e);
