@@ -124,6 +124,7 @@ public class MainConsole extends javax.swing.JFrame
         }
 
         tomcatConfig = config;
+        updatePortValues();
 //        initPropertyListeners();
     }
 
@@ -230,11 +231,15 @@ public class MainConsole extends javax.swing.JFrame
         lblStatus = new javax.swing.JLabel();
         pbStatus = new javax.swing.JProgressBar();
         lblWMTitleLogo = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
+        pnlServerOps = new javax.swing.JPanel();
         btnStart = new javax.swing.JButton();
         btnStop = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
+        pnlAdvOpts = new javax.swing.JPanel();
         btnAdvOpts = new javax.swing.JButton();
+        lblCurrentServerPort = new javax.swing.JLabel();
+        lblCurrentServerPortVal = new javax.swing.JLabel();
+        lblCurrentShutdownPort = new javax.swing.JLabel();
+        lblCurrentShutdownPortVal = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/wavemaker/desktop/launcher/ui/Bundle"); // NOI18N
@@ -251,7 +256,7 @@ public class MainConsole extends javax.swing.JFrame
         lblWMTitleLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/wavemaker/desktop/launcher/ui/wm_title.png"))); // NOI18N
         lblWMTitleLogo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        pnlServerOps.setBackground(new java.awt.Color(255, 255, 255));
 
         btnStart.setText(bundle.getString("MainConsole.btnStart.text")); // NOI18N
         btnStart.addActionListener(new java.awt.event.ActionListener() {
@@ -268,28 +273,28 @@ public class MainConsole extends javax.swing.JFrame
             }
         });
 
-        org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
-                .add(62, 62, 62)
+        org.jdesktop.layout.GroupLayout pnlServerOpsLayout = new org.jdesktop.layout.GroupLayout(pnlServerOps);
+        pnlServerOps.setLayout(pnlServerOpsLayout);
+        pnlServerOpsLayout.setHorizontalGroup(
+            pnlServerOpsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnlServerOpsLayout.createSequentialGroup()
+                .add(156, 156, 156)
                 .add(btnStart, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 100, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(106, 106, 106)
+                .add(58, 58, 58)
                 .add(btnStop, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 100, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(75, Short.MAX_VALUE))
+                .addContainerGap(152, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
+        pnlServerOpsLayout.setVerticalGroup(
+            pnlServerOpsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, pnlServerOpsLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(btnStop, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 27, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(btnStart, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 27, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(pnlServerOpsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(btnStart, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 27, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(btnStop, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 27, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        pnlAdvOpts.setBackground(new java.awt.Color(255, 255, 255));
 
         btnAdvOpts.setText(bundle.getString("MainConsole.btnAdvOpts.text")); // NOI18N
         btnAdvOpts.addActionListener(new java.awt.event.ActionListener() {
@@ -298,22 +303,36 @@ public class MainConsole extends javax.swing.JFrame
             }
         });
 
-        org.jdesktop.layout.GroupLayout jPanel2Layout = new org.jdesktop.layout.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel2Layout.createSequentialGroup()
-                .add(128, 128, 128)
-                .add(btnAdvOpts, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 186, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(129, Short.MAX_VALUE))
+        org.jdesktop.layout.GroupLayout pnlAdvOptsLayout = new org.jdesktop.layout.GroupLayout(pnlAdvOpts);
+        pnlAdvOpts.setLayout(pnlAdvOptsLayout);
+        pnlAdvOptsLayout.setHorizontalGroup(
+            pnlAdvOptsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnlAdvOptsLayout.createSequentialGroup()
+                .add(192, 192, 192)
+                .add(btnAdvOpts, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 188, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(186, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel2Layout.createSequentialGroup()
+        pnlAdvOptsLayout.setVerticalGroup(
+            pnlAdvOptsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnlAdvOptsLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(btnAdvOpts, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 27, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        lblCurrentServerPort.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblCurrentServerPort.setLabelFor(lblCurrentServerPortVal);
+        lblCurrentServerPort.setText(bundle.getString("LauncherAdvOptsDialog.lblNewServerPort.text")); // NOI18N
+
+        lblCurrentServerPortVal.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblCurrentServerPortVal.setText(bundle.getString("MainConsole.lblCurrentServerPortVal.text")); // NOI18N
+
+        lblCurrentShutdownPort.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblCurrentShutdownPort.setLabelFor(lblCurrentShutdownPortVal);
+        lblCurrentShutdownPort.setText(bundle.getString("LauncherAdvOptsDialog.lblNewShutdownPort.text")); // NOI18N
+
+        lblCurrentShutdownPortVal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblCurrentShutdownPortVal.setText(bundle.getString("MainConsole.lblCurrentShutdownPortVal.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -322,11 +341,20 @@ public class MainConsole extends javax.swing.JFrame
             .add(layout.createSequentialGroup()
                 .addContainerGap()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(lblWMTitleLogo, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 443, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(lblStatus, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
-                    .add(pbStatus, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 443, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, lblWMTitleLogo, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 566, Short.MAX_VALUE)
+                    .add(lblStatus, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 566, Short.MAX_VALUE)
+                    .add(pnlAdvOpts, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(pbStatus, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 566, Short.MAX_VALUE)
+                    .add(pnlServerOps, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(layout.createSequentialGroup()
+                        .add(lblCurrentServerPort, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 73, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(lblCurrentServerPortVal, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 51, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 277, Short.MAX_VALUE)
+                        .add(lblCurrentShutdownPort, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 112, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(lblCurrentShutdownPortVal, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 37, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(4, 4, 4)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -335,13 +363,22 @@ public class MainConsole extends javax.swing.JFrame
                 .addContainerGap()
                 .add(lblWMTitleLogo, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 31, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(15, 15, 15)
-                .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(pnlServerOps, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(lblStatus, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 26, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(pbStatus, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 33, Short.MAX_VALUE)
-                .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(33, 33, 33)
+                .add(pnlAdvOpts, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                        .add(lblCurrentShutdownPort, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
+                        .add(lblCurrentShutdownPortVal, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+                        .add(org.jdesktop.layout.GroupLayout.LEADING, lblCurrentServerPortVal, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(org.jdesktop.layout.GroupLayout.LEADING, lblCurrentServerPort, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
 
         pack();
@@ -356,6 +393,7 @@ public class MainConsole extends javax.swing.JFrame
             optsDlg.getContentPane().setBackground(Color.WHITE);
             optsDlg.setLocationRelativeTo(this);
             optsDlg.setVisible(true);
+            updatePortValues();
             Main.printlnToLog("--- end btnAdvOptsActionPerformed");
         }
         catch (Exception e)
@@ -494,6 +532,7 @@ public class MainConsole extends javax.swing.JFrame
                 }
                 catch (InterruptedException e)
                 {
+                    e.printStackTrace();
                 }
             }
             if (appServer.getStatus() != SERVER_STATUS.RUNNING)
@@ -508,15 +547,21 @@ public class MainConsole extends javax.swing.JFrame
             {
                 btnStart.setEnabled(false);
     //            pbStatus.setVisible(false);
-                if (Main.jarsAreMissing()) {
-                    if (Main.noWritePermission()) {
+                if (Main.jarsAreMissing()) 
+                {
+                    if (Main.noWritePermission()) 
+                    {
                         JOptionPane.showMessageDialog(getParent(), bundle.getString("STATUS_MSG_NO_ADMIN_CAPA"));
                         appServer.stop();
                         this.dispose();
-                    } else {
+                    } 
+                    else 
+                    {
                         openBrowser(Main.studioConfigWebApp);
                     }
-                } else {
+                } 
+                else 
+                {
                     openBrowser(Main.studioWebApp);
                 }
             }
@@ -525,7 +570,9 @@ public class MainConsole extends javax.swing.JFrame
                 btnStart.setEnabled(true);
     //            pbStatus.setVisible(false);
             }
-        } catch (Exception ex) {
+        } 
+        catch (Exception ex) 
+        {
             ex.printStackTrace();
         }
 
@@ -545,11 +592,15 @@ public class MainConsole extends javax.swing.JFrame
     private javax.swing.JButton btnAdvOpts;
     private javax.swing.JButton btnStart;
     private javax.swing.JButton btnStop;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel lblCurrentServerPort;
+    private javax.swing.JLabel lblCurrentServerPortVal;
+    private javax.swing.JLabel lblCurrentShutdownPort;
+    private javax.swing.JLabel lblCurrentShutdownPortVal;
     private javax.swing.JLabel lblStatus;
     private javax.swing.JLabel lblWMTitleLogo;
     private javax.swing.JProgressBar pbStatus;
+    private javax.swing.JPanel pnlAdvOpts;
+    private javax.swing.JPanel pnlServerOps;
     // End of variables declaration//GEN-END:variables
 
     protected void configureProxySettings() 
@@ -586,11 +637,17 @@ public class MainConsole extends javax.swing.JFrame
         else
         {
             // proxy settings are NOT enabled
-            System.getProperties().remove("proxySet");
-            System.getProperties().remove("http.proxyHost");
-            System.getProperties().remove("http.proxyPort");
-            System.getProperties().remove("http.proxyUser");
-            System.getProperties().remove("http.proxyPassword");
+            System.getProperties().setProperty("proxySet", "");
+            System.getProperties().setProperty("http.proxyHost", "");
+            System.getProperties().setProperty("http.proxyPort", "");
+            System.getProperties().setProperty("http.proxyUser", "");
+            System.getProperties().setProperty("http.proxyPassword", "");
         }
+    }
+    
+    private void updatePortValues()
+    {
+        lblCurrentServerPortVal.setText(String.valueOf(tomcatConfig.getServicePort()));
+        lblCurrentShutdownPortVal.setText(String.valueOf(tomcatConfig.getShutdownPort()));
     }
 }

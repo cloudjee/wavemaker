@@ -334,7 +334,7 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
         lblNewProxyServer.setLabelFor(tfNewProxyServer);
         lblNewProxyServer.setText(bundle.getString("LauncherAdvOptsDialog.lblNewProxyServer.text")); // NOI18N
 
-        tfNewProxyServer.setText(bundle.getString("")); // NOI18N
+        tfNewProxyServer.setText("");
         tfNewProxyServer.setToolTipText(bundle.getString("LauncherAdvOptsDialog.tfNewProxyServer.toolTipText")); // NOI18N
         tfNewProxyServer.setEnabled(false);
         tfNewProxyServer.addActionListener(new java.awt.event.ActionListener() {
@@ -351,7 +351,7 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
         lblNewProxyPort.setLabelFor(tfNewProxyPort);
         lblNewProxyPort.setText(bundle.getString("LauncherAdvOptsDialog.lblNewProxyPort.text")); // NOI18N
 
-        tfNewProxyPort.setText(bundle.getString("")); // NOI18N
+        tfNewProxyPort.setText("");
         tfNewProxyPort.setToolTipText(bundle.getString("LauncherAdvOptsDialog.tfNewProxyPort.toolTipText")); // NOI18N
         tfNewProxyPort.setEnabled(false);
         tfNewProxyPort.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -363,7 +363,7 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
         lblNewProxyUsername.setLabelFor(tfNewProxyPort);
         lblNewProxyUsername.setText(bundle.getString("LauncherAdvOptsDialog.lblNewProxyUsername.text")); // NOI18N
 
-        tfNewProxyUsername.setText(bundle.getString("")); // NOI18N
+        tfNewProxyUsername.setText("");
         tfNewProxyUsername.setToolTipText(bundle.getString("LauncherAdvOptsDialog.tfNewProxyUsername.toolTipText")); // NOI18N
         tfNewProxyUsername.setEnabled(false);
         tfNewProxyUsername.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -375,7 +375,7 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
         lblNewProxyPassword.setLabelFor(tfNewProxyPort);
         lblNewProxyPassword.setText(bundle.getString("LauncherAdvOptsDialog.lblNewProxyPassword.text")); // NOI18N
 
-        tfNewProxyPassword.setText(bundle.getString("")); // NOI18N
+        tfNewProxyPassword.setText("");
         tfNewProxyPassword.setToolTipText(bundle.getString("LauncherAdvOptsDialog.tfNewProxyPassword.toolTipText")); // NOI18N
         tfNewProxyPassword.setEnabled(false);
 
@@ -490,6 +490,7 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnSaveActionPerformed
     {//GEN-HEADEREND:event_btnSaveActionPerformed
+        System.out.println("*** start btnSaveActionPerformed");
 //        if (JOptionPane.showConfirmDialog(JOptionPane.getRootFrame(),
 //                "Save current Studio launch options for future sessions?",
 //                "Save Launch Options", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
@@ -505,8 +506,7 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
         console.prefs.put(MainConsole.OPTION_PROXY_SERVER, tfNewProxyServer.getText());
         console.prefs.put(MainConsole.OPTION_PROXY_PORT, tfNewProxyPort.getText());
         console.prefs.put(MainConsole.OPTION_PROXY_USERNAME, tfNewProxyUsername.getText());
-        console.prefs.putByteArray(MainConsole.OPTION_PROXY_PASSWORD, 
-            new String(tfNewProxyPassword.getPassword()).getBytes());
+        console.prefs.putByteArray(MainConsole.OPTION_PROXY_PASSWORD, new String(tfNewProxyPassword.getPassword()).getBytes());
 
         try
         {
@@ -552,7 +552,9 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
         }
 
         initOptions();
+        System.out.println("    about to dispose of advanced dialog");
         dispose();
+        System.out.println("--- end btnSaveActionPerformed");
 //        }
 }//GEN-LAST:event_btnSaveActionPerformed
 
