@@ -360,6 +360,7 @@ wm.DojoGrid.extend({
 });
 
 wm.Object.extendSchema(wm.DojoGrid, {
+    rendering: {ignore: 1},
 	variable: { ignore: 1 },
 	caption:{ignore:1},
 	scrollX:{ignore:1},
