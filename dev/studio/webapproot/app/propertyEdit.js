@@ -48,8 +48,7 @@ dojo.declare("wm.propEdit.Base", null, {
         setPropEdit: function(propName, value) {
 	    var editor = dijit.byId("studio_propinspect_" + propName);
 	    editor.set("value", value, false);
-	    if (!value)
-		delete editor._lastValueReported;
+	    editor._lastValueReported = value;
 	},
 	_getPropValue: function() {
 		var v = this.component.getProp(this.name);
