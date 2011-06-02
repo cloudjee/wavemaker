@@ -217,9 +217,12 @@ dojo.declare("wm.AceEditor", wm.Control, {
     },
 
 
-    getTextBeforeCursor: function() {
+    getTextBeforeCursor: function(getSingleTerm) {
 	var position = this.getCursorPosition();
 	var text = dojo.trim(this.getDataValue().split(/\n/)[position.row].substring(0,position.column))
+	if (getSingleTerm) {
+	    text = text.replace(/^.*[^a-zA-Z0-9.]/,"");
+	}
 	return text;
     },
 

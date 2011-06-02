@@ -460,10 +460,11 @@ Studio.extend({
 		    superPrototype.constructor.superclass.constructor.prototype;
 	    }
 
-	    var newshowprops = [];
-	    dojo.forEach(showprops, function(p) {
+	    var newshowprops = [];	    
+	    dojo.forEach(showprops, dojo.hitch(this, function(p) {
 		if (p.prototype) {
-		    newshowprops.push(p);
+		    if (!this._autoCompletionRemainder || p.name.indexOf(this._autoCompletionRemainder) == 0) 
+			newshowprops.push(p);
 		    return;
 		}
 		for (var i = classList.length-1; i >= 0; i--) {
@@ -471,11 +472,12 @@ Studio.extend({
 			if (classList[i].declaredClass == "wm.Bounds")
 			    i--;
 			p.prototype = classList[i];
-			newshowprops.push(p);			
+			if (!this._autoCompletionRemainder || p.name.indexOf(this._autoCompletionRemainder) == 0) 
+			    newshowprops.push(p);			
 			break;
 		    }
 		}
-	    });
+	    }));
 	    showprops = newshowprops.sort(function(a,b) {
 		var indexA;
 		indexA = !a.prototype ? 0 : wm.Array.indexOf(classList,a.prototype, function(a,b) { if (a.declaredClass == b.declaredClass) return true;});
@@ -512,7 +514,8 @@ Studio.extend({
 			if (!this._autoCompletionRemainder || i.indexOf(this._autoCompletionRemainder) == 0) {
 			    if (moreprops.length == 0)
 				moreprops.push({name: "<b>" + this.getDictionaryItem("AUTOCOMPLETION_LABEL_PAGE_COMPONENTS") + "</b>"});
-			    moreprops.push({name: i});
+			    if (!this._autoCompletionRemainder || i.indexOf(this._autoCompletionRemainder) == 0) 
+				moreprops.push({name: i});
 					    //description: object[i].declaredClass});
 			}
 		    }
@@ -528,6 +531,8 @@ Studio.extend({
 		showprops.push({name: "<b>" + this.getDictionaryItem("AUTOCOMPLETION_LABEL_TYPE_BOOLEAN") + "</b>"});
 	    } else if (object instanceof String || typeof object == "string") {
 		showprops.push({name: "<b>" + this.getDictionaryItem("AUTOCOMPLETION_LABEL_TYPE_STRING") + "</b>"});
+	    } else if (dojo.isFunction(object)) {
+	   	;
 
 	    } else {
 		try {
@@ -678,10 +683,11 @@ Studio.extend({
 
 		if (!this.editArea.getSelectedText()) {
 		    var pos = this.editArea.getCursorPosition();
-		    this.editArea.setSelectionRange(pos.row, 0, pos.row,pos.column);
+		    this.editArea.setSelectionRange(pos.row, Math.max(0,pos.column - this._autoCompletionOriginalText.length), pos.row,pos.column);
 		    var replaceText = this.editArea.getSelectedText();
 		    var replaceTextTrim = replaceText.replace(/^\s*/,"");
-		    this.editArea.setSelectionRange(pos.row, replaceText.length-replaceTextTrim.length, pos.row,pos.column);
+		    var range = this.editArea.getSelectionRange();
+		    this.editArea.setSelectionRange(range.start.row, range.start.column + replaceText.length-replaceTextTrim.length, range.end.row,range.end.column);
 		}
 
 		this.editArea.replaceSelectedText(text);
@@ -691,7 +697,7 @@ Studio.extend({
 						       name: "autoCompletionVariable",
 						       type: "com.wavemaker.editor.completions"});
 	}
-	this.autoCompletionHtml.setHtml(this.getDictionaryItem("AUTOCOMPLETION_HTML"));
+	this.autoCompletionHtml.setHtml("<b>" + this.getDictionaryItem("AUTOCOMPLETION_HTML") + "</b>");
 	//this.autoCompletionDialog.setTitle(object.toString().replace(/[\[\]]/g,""));
 	this.autoCompletionVariable.setData(showprops);
 	this.autoCompletionList.setDataSet(this.autoCompletionVariable);
