@@ -117,7 +117,7 @@
     "wm.PageContainer.OPEN_PAGE": "Open Page",
     "wm.PageContainer.NEW_PAGE": "New Page",
     "wm.PageContainer.NEW_PAGE_OPTION": "-New Page",
-    "wm.PageContainer.CONFIRM_SAVE_CHANGES": "Can we save your current page before moving on to the next page? This will save your pageContainer's pageName.",
+    "wm.PageContainer.CONFIRM_SAVE_CHANGES": "In order to set a new page for your container, we must save your project. Save and procede?",
 
     /* wm.Property/Composite/Publisher */
     "wm.Property.SELECT_PROPERTY": "Select Property to publish as <b>${propertyName}</b>",

@@ -36,6 +36,14 @@ wm.PageContainer.extend({
 	        if (!studio.isPageDirty()) {
 		    studio.project.openPage(this.pageName);
 		} else {
+		    var warnPage = studio.getDictionaryItem("CONFIRM_OPEN_PAGE_LOSE_UNSAVED", {newPage: this.pageName, oldPage: studio.project.pageName});
+		    studio.confirmPageChange(warnPage, this.pageName, 
+			       dojo.hitch(this, function(noChanges) {
+				   studio.waitForCallback(studio.getDictionaryItem("WAIT_OPENING_PAGE", {pageName: this.pageName}), dojo.hitch(studio.project, "openPage", this.pageName, !noChanges));
+			       }));
+
+/*
+
 		    app.confirm(studio.getDictionaryItem("wm.PageContainer.CONFIRM_SAVE_CHANGES"), false,
 				dojo.hitch(this,function() {
 				    this.connect(studio, "saveProjectComplete", this, function() {				
@@ -46,6 +54,7 @@ wm.PageContainer.extend({
 				dojo.hitch(this, function() {
 					studio.project.openPage(this.pageName);
 				}));
+				*/
 		}
             } else {
                 this.createNewPage();
@@ -55,8 +64,12 @@ wm.PageContainer.extend({
     },
 
     createNewPage: function() {
+	app.confirm(studio.getDictionaryItem("wm.PageContainer.CONFIRM_SAVE_CHANGES"), 
+					     false, 
+		    dojo.hitch(this, "createNewPage2"));
+    },
+    createNewPage2: function() {
 	var pages = studio.project.getPageList();
-
 	var l = {};
 	dojo.forEach(pages, function(p) {
 	    l[p] = true;
@@ -68,18 +81,11 @@ wm.PageContainer.extend({
 				     this.owner.pageName = n;
 				 else
 				     this.pageName = n;
-				 app.confirm(studio.getDictionaryItem("wm.PageContainer.CONFIRM_SAVE_CHANGES"), 
-					     false,
-					     dojo.hitch(this,function() {
-
-						 this.connect(studio, "saveProjectComplete", studio.project, function() {
-						     this.newPage(n);
-						 });
-						 studio.saveAll(studio.project);
-					     }),
-					     dojo.hitch(this,function() {
-						 studio.project.newPage(n);
-					     }));
+				 this.connect(studio, "saveProjectComplete", studio.project, function() {
+				     this.newPage(n);
+				     // should disconnect, but page.destroy will be called as soon as we load the new page and it will disconnect for us...
+				 });
+				 studio.saveAll(studio.project);
 			     }));
     },
 	designCreate: function() {
