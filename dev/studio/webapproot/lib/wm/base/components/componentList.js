@@ -66,6 +66,7 @@ wm.componentList = {
 	'wm.Date':['build.Gzipped.wm_editors'],
 	'wm.DateTime':['build.Gzipped.wm_editors'],
 	'wm.SelectMenu':['build.Gzipped.wm_editors'],
+	'wm.Lookup':['build.Gzipped.wm_editors'],
 	'wm.Number':['build.Gzipped.wm_editors'],
 	'wm.Checkbox':['build.Gzipped.wm_editors'],
 	'wm.RadioButton':['build.Gzipped.wm_editors'],
