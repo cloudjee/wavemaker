@@ -54,8 +54,9 @@ dojo.declare("wm.Variable", wm.Component, {
 	_greedyLoadProps: false,
 	_allowLazyLoad: true,
 	cursor: 0,
-	constructor: function() {
-		this.subscribe("wmtypes-changed", this, "wmTypesChanged");
+	constructor: function(inProps) {
+	    if (!inProps._subNard && window["studio"])
+		this._subscriptions.push(dojo.subscribe("wmtypes-changed", this, "wmTypesChanged"));
 	},
 	postInit: function() {
 		this.inherited(arguments);
@@ -236,6 +237,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	*/
 	// NB: input can be a POJSO or a Variable
 	setData: function(inData) {
+	    
 	        this.onPrepareSetData(inData);
 		if (inData instanceof wm.Variable)
 			this._setVariableData(inData);
@@ -441,7 +443,7 @@ dojo.declare("wm.Variable", wm.Component, {
 			// unless override data iss provided
 			data = inData || item;
 			// create a new Variable to represent this data
-			item = this.createVariable({/*name: "itemProxy",*/ type: this.type, _subNard: true, itemIndex: inIndex});
+		    item = this.createVariable({/*name: "itemProxy",*/ type: this.type, _subNard: true, itemIndex: inIndex});
 			this.data.list[inIndex] = item;
 		}
 		if (data !== undefined) {
@@ -755,6 +757,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	// Data Marshalling / Lazy Loading
 	//===========================================================================
 	createVariable: function(inProps, inPropName) {
+	        inProps._temporaryComponent = 1;
 		var v = new wm.Variable(inProps);
 		v.owner = this;
 		return v;
@@ -764,7 +767,7 @@ dojo.declare("wm.Variable", wm.Component, {
 			p = inPropName, v = inVariable,
 			t = inTypeInfo.isList ? '[' + inTypeInfo.type + ']' : inTypeInfo.type;
 		if (!(v instanceof wm.Variable)) {
-			v = this.createVariable({name: p, type: t, _subNard: true}, p);
+		    v = this.createVariable({name: p, type: t, _subNard: true}, p);
 			if (inVariable || inVariable === null) {
 				v.beginUpdate();
 				v.setData(inVariable);
