@@ -55,7 +55,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	_allowLazyLoad: true,
 	cursor: 0,
 	constructor: function(inProps) {
-	    if (!inProps._subNard && window["studio"])
+	    if (window["studio"])
 		this._subscriptions.push(dojo.subscribe("wmtypes-changed", this, "wmTypesChanged"));
 	},
 	postInit: function() {
@@ -886,12 +886,13 @@ wm.Variable.extend({
 	_includeListProps: false,
 	createVariable: function(inProps, inPropName) {
 		inProps = inProps || {};
+	        inProps._temporaryComponent = 1;
 		inProps.liveView = this.liveView;
 		var r = this._rootField, n = inPropName;
 		inProps._rootField = r && inPropName ? r + "." + inPropName : (inPropName || "");
 		var v = new wm.Variable(inProps);
 		//v.owner = this;
-	    v.setOwner(this, true);
+	        v.setOwner(this, true);
 		return v;
 	},
 	setDataSet: function(inDataSet) {
