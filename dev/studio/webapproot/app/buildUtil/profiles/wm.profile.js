@@ -80,6 +80,7 @@ dependencies = {
 				"wm.base.Plugin",
 				//"wm.modules.rbac.RbacPlugin",
 				"wm.base.RbacPlugin",
+				"wm.base.I18nPlugin",
 				// components
 				"wm.base.components.Page",
 				"wm.base.components.HtmlLoader",
