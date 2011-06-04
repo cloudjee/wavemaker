@@ -215,10 +215,6 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		this.error = null;
 
 		var d = this._service.callRemote(inMethod, inArgs || []);
-		d.addBoth(dojo.hitch(this, function(r) {
-			this.inflight = false;
-			return r;
-		}));
 		d.addCallbacks(dojo.hitch(this, "onResult"), dojo.hitch(this, "onError"));
 	    //wm.inflight.add(d, this.service == "runtimeService" ? (inArgs[0] ? inArgs[0] : "LazyLoad Data") + ": " + inArgs[1] : this.name + "." + inMethod, inMethod, inArgs, invoker);
 	    wm.inflight.add(d, this.service, this.name, inArgs, inMethod, invoker);
@@ -269,6 +265,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		return d.results[0];
 	},
 	onResult: function(inResult) {
+	        this.inflight = false;
 		var r = this.fullResult = inResult;
 		this.result = (r || 0).result;
 /*
@@ -285,6 +282,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		return this.result;
 	},
 	onError: function(inError) {
+	    this.inflight = false;
 	    var message = inError != null && dojo.isObject(inError) ? inError.message : inError;
 	    try {
 		if (!inError || message.match(/No ServiceWire found/) && !djConfig.isDebug)
