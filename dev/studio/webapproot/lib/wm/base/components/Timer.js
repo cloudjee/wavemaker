@@ -92,5 +92,8 @@ dojo.declare("wm.Timer", wm.Component, {
 
 wm.Object.extendSchema(wm.Timer, {
     delay: {bindTarget: true},
-    count: {bindSource: true, ignore: true}
+    count: {bindSource: true, ignore: true},
+    startTimer: {group: "method", doc: 1},
+    stopTimer: {group: "method", doc: 1},
+    setDelay: {group: "method", doc: 1}
 });
