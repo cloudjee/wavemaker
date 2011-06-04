@@ -171,7 +171,7 @@ dojo.declare("wm.ServiceCall", null, {
 		to monitor the outcome of the service call.
 	*/
 	update: function() {
-		return this.isDesignLoaded() ? this.doDesigntimeUpdate() : this._update();
+		return this._isDesignLoaded ? this.doDesigntimeUpdate() : this._update();
 	},
 	_update: function() {
 		if (this.canUpdate()) {
@@ -285,13 +285,11 @@ dojo.declare("wm.ServiceCall", null, {
 	processRequest: function(inDeferred) {
 		var d = inDeferred;
 		if (d) {
-			d.canceller = function(inDeferred) {
-				inDeferred.fired = 1;
-			}
-			d.addBoth(dojo.hitch(this, function(r) {
-				this._requester = false;
-				return r;
-			}));
+/*
+		    d.canceller = function(inDeferred) {
+			inDeferred.fired = 1;
+		    }
+		    */
 			d.addCallbacks(dojo.hitch(this, "result"), dojo.hitch(this, "error"));
 			return d;
 		}
@@ -300,6 +298,7 @@ dojo.declare("wm.ServiceCall", null, {
 	// Result Processing
 	//=======================================================
 	result: function(inResult) {
+	        this._requester = false;
 		var tmp = [];
 		var max = this.isDesignLoaded() ? this.designMaxResults : this.maxResults;
 		if ((this instanceof wm.ServiceVariable) && !(this instanceof wm.LiveVariable) && inResult 
@@ -328,6 +327,7 @@ dojo.declare("wm.ServiceCall", null, {
 		this.$.queue.update();
 	},
 	error: function(inError) {
+	        this._requester = false;
 		this.processError(inError);
 		return inError;
 	},
