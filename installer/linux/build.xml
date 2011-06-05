@@ -118,14 +118,26 @@
             </filterset>
         </copy>
         <exec executable="cp"> 
-        	<arg value="-r" />
+        	<arg value="-R" />
         	<arg value="${buildroot}/NoJDK/opt" />
           <arg value="${buildroot}/NoJDK/amd64/opt" />
         </exec>
     </target>
 
-    <target name="build-deb-nojdk" depends="init-deb-nojdk" if="deb.build">
-        <exec executable="dpkg"  logerror="true" failonerror="true">
+   <target name="build-deb-nojdk" depends="init-deb-nojdk" if="deb.build">
+    	  <exec executable="chown" failonerror="true">
+	    <arg line="-R" />
+            <arg line="root"/>
+            <arg line="${buildroot}/NoJDK/amd64/opt"/>
+        </exec>
+
+        <exec executable="chgrp" failonerror="true">
+	    <arg line="-R" />
+            <arg line="root"/>
+            <arg line="${buildroot}/NoJDK/amd64/opt"/>
+        </exec>
+
+	<exec executable="dpkg"  logerror="true" failonerror="true">
             <arg line="--build" />
             <arg line="${buildroot}/NoJDK/amd64" />
             <arg line="${build.installer.dir}" />
@@ -144,7 +156,7 @@
             </filterset>
         </copy>
  	 <exec executable="cp">
-  	   <arg value="-r" /> 
+  	   <arg value="-R" /> 
        	   <arg value="${buildroot}/NoJDK/opt" />
            <arg value="${buildroot}/NoJDK/i386/opt" />
         </exec>
@@ -152,6 +164,18 @@
     </target>
 
     <target name="build-debi386-nojdk" depends="init-debi386-nojdk" if="deb.build">
+         <exec executable="chown" failonerror="true">
+	    <arg line="-R" />
+            <arg value="root"/>
+            <arg value="${buildroot}/NoJDK/i386/opt"/>
+        </exec>
+
+        <exec executable="chgrp" failonerror="true">
+	    <arg line="-R" />
+            <arg value="root"/>
+            <arg value="${buildroot}/NoJDK/i386/opt"/>
+        </exec>
+
         <exec executable="dpkg"  logerror="true" failonerror="true">
             <arg line="--build" />
             <arg line="${buildroot}/NoJDK/i386" />
@@ -164,6 +188,13 @@
     </target>
 
     <target name="clean" depends="common-installer.clean">
+         <exec executable="whoami" failonerror="false" outputproperty="userID"/>
+         <exec executable="chown" failonerror="false">
+	    <arg line ="-R" />
+            <arg line="${userID}" />
+            <arg line="${build.installer.dir}"/>
+        </exec>
+        <echo>${userID}</echo>
         <delete dir="${build.installer.dir}"/>
     </target>
 </project>
