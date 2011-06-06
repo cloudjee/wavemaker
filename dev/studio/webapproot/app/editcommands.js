@@ -425,7 +425,7 @@ Studio.extend({
 	    for (var i in props) {
 		var p = props[i];
 		var params = "";
-		if (p.group == "method" || !p.ignore && !p.tmpignore || p.doc) {
+		if (p.group != "operation" && (p.group == "method" || !p.ignore && !p.tmpignore || p.doc)) {
 		    if (p.group == "method") {
 			if (!this._autoCompletionRemainder || i.indexOf(this._autoCompletionRemainder) == 0) {
 			    var methodstring = object[i].toString();
