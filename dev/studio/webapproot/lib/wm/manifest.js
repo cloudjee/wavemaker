@@ -178,7 +178,7 @@ wm.loadLibs([
 	"wm.base.widget.Editors.RichText",
 	"wm.base.widget.RelatedEditor",
 	"wm.base.widget.FileUpload",
-	"wm.base.widget.EditArea",
+/*	"wm.base.widget.EditArea",*/
 	"wm.base.widget.EditPanel",
 	"wm.base.widget.Ticker",
 	"wm.base.widget.Composite",
