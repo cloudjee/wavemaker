@@ -52,7 +52,7 @@ wm.loadLibs([
 	"wm.base.widget.Editors.AbstractEditor_design",
 	"wm.base.widget.Editors.Select_design",
 	"wm.base.widget.RelatedEditor_design",
-	"wm.base.widget.EditArea_design",
+/*	"wm.base.widget.EditArea_design",*/
 	"wm.base.widget.Splitter_design",
 	"wm.base.widget.Dialogs.Dialog_design",
 	"wm.base.widget.Dialogs.RichTextDialog",
@@ -82,7 +82,7 @@ wm.loadLibs([
 ]);
 
 // EditArea (must always be loaded explicitly)
-wm.loadScript(dojo.moduleUrl("wm.studio.app") + "edit_area/edit_area_loader.js", true);
+/*wm.loadScript(dojo.moduleUrl("wm.studio.app") + "edit_area/edit_area_loader.js", true);*/
 
 // Studio
 wm.loadLibs([
