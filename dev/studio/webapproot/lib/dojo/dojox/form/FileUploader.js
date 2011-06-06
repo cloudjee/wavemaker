@@ -480,30 +480,31 @@ dojo.declare("dojox.form.FileUploader", [dijit._Widget, dijit._Templated, dijit.
 		//		Internal.
 		//		Set up internal dom nodes for button construction.
 		//
+	    /* WaveMaker changes: Wrapped all width/height/lineHeight styles in Max(0,x) to avoid IE 8 errors */
 		dojo.style(this.domNode, {
-			width:this.fhtml.nr.w+"px",
-			height:(this.fhtml.nr.h)+"px",
+		        width:Math.max(0,this.fhtml.nr.w)+"px",
+		        height:Math.max(0,(this.fhtml.nr.h))+"px",
 			padding:"0px",
 			lineHeight: "normal",
 			position:"relative"
 		});
 		if(this.uploaderType == "html" && this.norm.va == "middle"){
-			dojo.style(this.domNode, "lineHeight", this.norm.lh + "px");
+		    dojo.style(this.domNode, "lineHeight", Math.max(0,this.norm.lh) + "px");
 		}
 		if(this.showProgress){
 			this.progTextNode.innerHTML = this.progressMessage;
 			dojo.style(this.progTextNode, {
-				width:this.fhtml.nr.w+"px",
-				height:(this.fhtml.nr.h+0)+"px",
+			        width: Math.max(0,this.fhtml.nr.w)+"px",
+			        height:Math.max(0,(this.fhtml.nr.h+0))+"px",
 				padding:"0px",
 				margin:"0px",
 				left:"0px",
-				lineHeight:(this.fhtml.nr.h+0)+"px",
+			    lineHeight:Math.max(0,(this.fhtml.nr.h+0))+"px",
 				position:"absolute"
 			});
 			dojo.style(this.progNode, {
-				width:this.fhtml.nr.w+"px",
-				height:(this.fhtml.nr.h+0)+"px",
+			        width: Math.max(0,this.fhtml.nr.w)+"px",
+			        height:Math.max(0,(this.fhtml.nr.h+0))+"px",
 				padding:"0px",
 				margin:"0px",
 				left:"0px",
@@ -1096,8 +1097,8 @@ dojo.declare("dojox.form.FileUploader", [dijit._Widget, dijit._Templated, dijit.
 		var o = this.fhtml.nr;
 
 		dojo.style(this.insideNode, {
-			width:o.w+"px",
-			height:o.va == "middle"?o.h+"px":"auto",
+		    width:Math.max(0,o.w)+"px",
+		    height:o.va == "middle"?Math.max(0,o.h)+"px":"auto",
 			textAlign:o.ta,
 			paddingTop:o.p[0]+"px",
 			paddingRight:o.p[1]+"px",
