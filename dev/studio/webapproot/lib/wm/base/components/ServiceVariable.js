@@ -124,7 +124,8 @@ wm.Object.extendSchema(wm.ServiceVariable, {
     getPageCount: {group: "method", returns: "Number"},
     setNextPage: {group: "method"},
     setPreviousPage: {group: "method"},
-    setLastPage: {group: "method"}
+    setLastPage: {group: "method"},
+    update: {group: "method"}
 
 });
 

@@ -17,7 +17,6 @@ dojo.require("wm.base.components.LiveVariable");
 
 wm.Object.extendSchema(wm.LiveVariable, {
         downloadFile: {ignore: 1},
-	update: {ignore: 1, publicEvent: 1},
 	related: { ignore: 1},
 	view: { ignore: 1},
 	service: { ignore: 1},

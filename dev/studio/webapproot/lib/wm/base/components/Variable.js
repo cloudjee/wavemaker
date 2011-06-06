@@ -1013,6 +1013,7 @@ wm.Object.extendSchema(wm.Variable, {
     setItem: {group: "method"},
     setJson: {group: "method"},
     removeItem: {group: "method"},
+    clearData: {group: "method"},
     sort: {group: "method"},
     getCount: {group: "method", returns: "Number"},
     getData: {group: "method", returns: "Any"},
