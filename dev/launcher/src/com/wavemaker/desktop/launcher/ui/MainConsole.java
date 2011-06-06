@@ -127,7 +127,7 @@ public class MainConsole extends javax.swing.JFrame
         }
         tomcatConfig = config;
         updatePortValues();
-//        initPropertyListeners();
+        initPropertyListeners();
     }
 
     private void initPropertyListeners()
@@ -139,12 +139,12 @@ public class MainConsole extends javax.swing.JFrame
             {
                 if (evt.getPropertyName().equals(TomcatConfig.PROPERTY_SHUTDOWN_PORT))
                 {
-                    //lblCurShutdownPortVal.setText(Integer.toString(tomcatConfig.getShutdownPort()));
-                    //tfNewShutdownPort.setText(Integer.toString(tomcatConfig.getShutdownPort()));
+                    lblCurrentServerPortVal.setText(Integer.toString(tomcatConfig.getShutdownPort()));
+                    // tfNewShutdownPort.setText(Integer.toString(tomcatConfig.getShutdownPort()));
                 }
                 else if (evt.getPropertyName().equals(TomcatConfig.PROPERTY_SERVICE_PORT))
                 {
-                    //lblCurServerPortVal.setText(Integer.toString(tomcatConfig.getServicePort()));
+                    lblCurrentServerPortVal.setText(Integer.toString(tomcatConfig.getServicePort()));
                     //tfNewServerPort.setText(Integer.toString(tomcatConfig.getServicePort()));
                 }
             }
@@ -426,7 +426,7 @@ public class MainConsole extends javax.swing.JFrame
         btnAdvOpts.setEnabled(false);
         pbStatus.setIndeterminate(true);
         pbStatus.setVisible(true);
-
+        
         Runnable runner = new Runnable() 
         {
             public void run()
@@ -434,7 +434,8 @@ public class MainConsole extends javax.swing.JFrame
                 startServer();
             }
         };
-        SwingUtilities.invokeLater(runner);
+        Thread thread = new Thread(runner);
+        thread.start();
     }//GEN-LAST:event_btnStartActionPerformed
 
     private void btnStopActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnStopActionPerformed
