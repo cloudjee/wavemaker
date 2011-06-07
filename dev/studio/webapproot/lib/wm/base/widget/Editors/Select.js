@@ -291,7 +291,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
             if (wm.isInstanceType(inObj, wm.Variable))
                 inVariable = inObj;
             else {
-                inVariable = new wm.Variable();
+                inVariable = new wm.Variable({_temporaryComponent: true});
                 inVariable.setType(this.dataSet.type);
                 inVariable.setData(inObj);
                 inVariable.data[this._storeNameField]  = String(this._getDisplayData(inVariable));
