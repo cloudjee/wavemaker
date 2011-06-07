@@ -114,7 +114,7 @@ dojo.declare("wm.Component", wm.Object, {
 		}
 		this._designee = this;
 		this.isDestroyed = false;
-	    if (!inProps._temporaryComponent) // don't add pointers to this object if its temporary; temporary components may not have destroy called on them properly
+	    if (!inProps || !inProps._temporaryComponent) // don't add pointers to this object if its temporary; temporary components may not have destroy called on them properly
 		this._subscriptions.push(dojo.subscribe('applicationDestroyed', this, 'destroy'));
 	},
 	postscript: function(inProps) {
