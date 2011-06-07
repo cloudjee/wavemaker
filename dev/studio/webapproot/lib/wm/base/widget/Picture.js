@@ -43,7 +43,7 @@ dojo.declare("wm.Picture", wm.Control, {
 		this.valueChanged("source", this.source);
 		this.img.style.display = this.source ? "" : "none";
 	    var root;
-	    if (this.source.slice(0, 4) == "http" && this.source.slice(0, 1) == "/") {
+	    if (this.source.slice(0, 4) == "http" || this.source.slice(0, 1) == "/") {
 		root = "";
 	    } else if (this.source.indexOf("lib/") == 0) {
 		root = dojo.moduleUrl("lib").path.replace(/lib\/$/, "");
