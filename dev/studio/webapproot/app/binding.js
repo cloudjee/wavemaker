@@ -417,7 +417,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		    propPrefix += ".";
 		}
 
-		if (propPrefix) {
+		if (propPrefix && !object.isDestroyed) {		    
 		    var propList = object.listDataProperties("bindTarget");
 		    var list = [];
 		    var selectedIndex = -1;
