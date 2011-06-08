@@ -1389,11 +1389,12 @@ this.label.enable();
 		return true;
 	},
 	setShowing: function(inShowing,forceChange) {
+	    var s = Boolean(inShowing);
 		if (!this.canChangeShowing())
 			return;
-		if (forceChange || this.showing != inShowing) {
-			this.showing = inShowing;
-			this.domNode.style.display = inShowing ? '' : 'none';
+		if (forceChange || this.showing != s) {
+			this.showing = s;
+			this.domNode.style.display = s ? '' : 'none';
 		        this.reflowParent();
 		}
 	},
@@ -1404,10 +1405,11 @@ this.label.enable();
 		@param {Boolean} inDisabled True to set disabled.
 	*/
 	setDisabled: function(inDisabled) {
-		for (var i in this.widgets) {
-			this.widgets[i].setDisabled(inDisabled);
-		}
-		this.disabled = inDisabled;
+	    var d = Boolean(inDisabled);
+	    for (var i in this.widgets) {
+		this.widgets[i].setDisabled(d);
+	    }
+	    this.disabled = d;
 	},
 	setGroup: function(inGroup) {
 		this.group = inGroup;
