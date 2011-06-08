@@ -223,6 +223,15 @@ wm.LiveFormBase.extend({
 		var props = this.getFormEditorProps();
 		props.formField = inFormField;
                 props.width = this.editorWidth;
+
+	        var lv = this.getLiveVariable(),
+	        var typeDef = wm.typeManager.getType(lv.type);
+	        if (typeDef)
+		    var fieldDef = typeDef.fields[inFormField];
+	        if (fieldDef)
+		    var relatedTypeDef = wm.typeManager.getType(fieldDef.type);
+	        if (relatedTypeDef && !relatedTypeDef.liveService)
+		    props.editingMode = "editable subform";
 		return this.owner.loadComponent(wm.makeNameForProp(inFormField, "RelatedEditor"), this, "wm.RelatedEditor", props);
 	},
 	// formField that should be included here. not returned if should not included
