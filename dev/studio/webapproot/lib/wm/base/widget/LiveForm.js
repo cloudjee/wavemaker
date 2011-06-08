@@ -228,7 +228,10 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 		var i = this.getItemData(), data = i ? i.getData() : null;
 	    dojo.forEach(this.getFormEditorsArray(), dojo.hitch(this, function(e) {
 			if (wm.isInstanceType(e, wm.LiveFormBase)) {
-				wm.fire(e, "populateEditors");
+			    /* Don't populate lookup related editors if we're in the middle of the owner's operationSucceeded method because
+			     * this populates the editor with value="" which is invalid and shows the invalid indicator */
+			        if (e.editingMode != "lookup" || !this._operationSucceeded)
+				    wm.fire(e, "populateEditors");
 			} else {
                             if (e instanceof wm.Lookup && (!e.dataSet || !e.dataSet.type)) 
                                 e.setAutoDataSet(e.autoDataSet);
@@ -764,7 +767,11 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 			this.dataSet.cursor = 0;
 		if (op == "insert" || op == "update") {
 			var item = this.getItemData();
-			wm.fire(item, "setData", [inResult]);
+		        this._operationSucceeded = true;
+		        try {
+			    wm.fire(item, "setData", [inResult]);
+			} catch(e) {}
+		        delete this._operationSucceeded;
 			// PV: If item is equal to this.dataSet that means by calling setData on it, setData will have already called notify.
 			// Therefore, there's no need to call an extra notify.
 			if (item != this.dataSet)
