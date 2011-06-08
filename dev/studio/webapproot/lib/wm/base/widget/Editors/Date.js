@@ -327,6 +327,26 @@ dojo.declare("wm.DateTime", wm.Text, {
 	}
 	return null;
     },
+    setDisabled: function(inDisabled) {
+	this.inherited(arguments);
+	if (this.disabled && wm.DateTime.dialog && wm.DateTime.dialog._currentEditor == this)
+	    wm.DateTime.dialog.hide();
+    },
+    setShowing: function(inDisabled) {
+	this.inherited(arguments);
+	if (!this.showing && wm.DateTime.dialog && wm.DateTime.dialog._currentEditor == this)
+	    wm.DateTime.dialog.hide();
+    },
+    setReadonly: function(inDisabled) {
+	this.inherited(arguments);
+	if (this.readonly && wm.DateTime.dialog && wm.DateTime.dialog._currentEditor == this)
+	    wm.DateTime.dialog.hide();
+    },
+    destroy: function(inDisabled) {
+	if (wm.DateTime.dialog && wm.DateTime.dialog._currentEditor == this)
+	    wm.DateTime.dialog.hide();
+	this.inherited(arguments);
+    },
     okClicked: function() {
 	wm.DateTime.dialog.hide();
 	this.changed();
