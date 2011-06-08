@@ -93,8 +93,10 @@ dojo.declare("wm.InspectorBase", null, {
 
 		if (!this.owner.inspected)
 			return;
-		var type = this.owner.inspected.getPropertyType(inProp);
-		switch ((type || 0).type) {
+		var type = this.owner.inspected.getPropertyType(inProp) || "";
+	        if (type && type.type)
+		    type = type.type.toLowerCase();
+	        switch (type) {
 			case "number":
 		                inValue = (inValue === "" && type.emptyOK) ? "" : Number(inValue);
 				break;
