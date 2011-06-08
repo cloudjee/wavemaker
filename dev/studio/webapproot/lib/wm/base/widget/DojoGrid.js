@@ -32,11 +32,14 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	selectionMode: "single",
 	addDialogName:'',
 	addFormName:'',
-	columns:[],
+	columns:null,
 	selectFirstRow: false,
 	caseSensitiveSort:true,
 	
 	init: function() {
+	    if (!this.columns)
+		this.columns = [];
+
 		dojo['require']("dojox.grid.DataGrid");
 		dojo['require']("dojox.grid.cells.dijit");
 		dojo['require']("dojo.data.ItemFileWriteStore");
