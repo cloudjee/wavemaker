@@ -136,9 +136,21 @@ wm.average = function(list) {
 wm.nop = function() {};
 
 wm.isEmpty = function(inObj) {
+    /* ACE Editor's libraries changed fundamental aspects of javascript objects in IE such that our default handling here is invalid */
+    if (window["studio"] && dojo.isIE == 8) {
+	if (dojo.isArray(inObj) && inObj.length == 0) return true;
+	if (typeof inObj == "object") {
+	    for (var i in inObj) {
+		if (!dojo.isFunction(inObj[i])) {
+		    return false;
+		}
+	    }
+	}
+
+    } else {
 	for (var i in inObj)
 		return false;
-
+    }
     // for (var i in inObj) finds no properties 
     if (typeof inObj == "object" && inObj instanceof Date)
         return false;
