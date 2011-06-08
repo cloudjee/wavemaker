@@ -313,6 +313,9 @@ dojo.declare("wm.DateTime", wm.Text, {
 	this.inherited(arguments, [displayValue]);
 	this.dataValue = d;
     },
+    setDefaultOnInsert:function(){
+	this.setDataValue(this.defaultInsert);
+    },
     getEditorValue: function() {
 	var value = this.getDisplayValue();
 	var date = dojo.date.locale.parse(value, {formatLength: this.formatLength, selector: this.dateMode.toLowerCase()});
