@@ -51,12 +51,14 @@ wm.SelectMenu.extend({
 		switch (inName) {
 			case "displayField":
 				var values = this._listFields();
-		                return new wm.propEdit.Select({component: this, name: inName, value: inValue, options: values});
+		                //return new wm.propEdit.Select({component: this, name: inName, value: inValue, options: values});
+				return makeSelectPropEdit(inName, inValue, values, inDefault);
 			case "dataField":
 				var values = this._listFields();
 		                if (values.length) values[0] = this._allFields;
 		                if (!inValue) inValue = this._allFields;
-		                return new wm.propEdit.Select({component: this, name: inName, value: inValue, options: values});
+		                //return new wm.propEdit.Select({component: this, name: inName, value: inValue, options: values});
+				return makeSelectPropEdit(inName, inValue, values, inDefault);
 
 			case "displayType":
 				return makeSelectPropEdit(inName, inValue, wm.selectDisplayTypes, inDefault);
