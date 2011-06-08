@@ -387,7 +387,7 @@ wm.Object.extendSchema(wm.Control, {
     domNode: { ignore: 1, doc: 1 },
 	parentNode: { ignore: 1 },
 	widgets: { ignore: 1 },
-    showing: { bindTarget: true, group: "common", order: 30, doc: 1},
+    showing: { bindTarget: true, group: "common", order: 30, doc: 1, type: "Boolean"},
     disabled: { bindTarget: true, type: "Boolean", group: "common", order: 40, doc: 1},
 	size: { ignore: true },
         sizeUnits: { ignore: true },
