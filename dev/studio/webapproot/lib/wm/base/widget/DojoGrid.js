@@ -482,10 +482,12 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	getEmptySelection: function() {
 		return !this.hasSelection();
 	},
+/*
 	getEmptySelection: function() {
-	  var result = Boolean(!this.selectedItem.getData() || this.getSelectedIndex() == -1);
+	  var result = Boolean(!this.selectedItem || !this.selectedItem.getData() || this.getSelectedIndex() == -1);
 	  return result;
 	},
+	*/
 	getIsRowSelected: function(){
 		return !this.getEmptySelection();
 	},
