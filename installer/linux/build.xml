@@ -142,6 +142,12 @@
             <arg line="${buildroot}/NoJDK/amd64" />
             <arg line="${build.installer.dir}" />
         </exec>
+         <exec executable="whoami" failonerror="false" outputproperty="userID"/>
+         <exec executable="chown" failonerror="false">
+            <arg line ="-R" />
+            <arg line="${userID}" />
+            <arg line="${buildroot}/NoJDK/amd64/opt"/>
+        </exec>
     </target>
 
     <target name="init-debi386-nojdk" depends="init-nojdk" if="deb.build">
@@ -181,6 +187,12 @@
             <arg line="${buildroot}/NoJDK/i386" />
             <arg line="${build.installer.dir}" />
         </exec>
+        <exec executable="whoami" failonerror="false" outputproperty="userID"/>
+        <exec executable="chown" failonerror="false">
+            <arg line ="-R" />
+            <arg line="${userID}" />
+            <arg line="${buildroot}/NoJDK/i386/opt"/>
+        </exec>
     </target>
     
     <target name="build"
@@ -188,13 +200,6 @@
     </target>
 
     <target name="clean" depends="common-installer.clean">
-         <exec executable="whoami" failonerror="false" outputproperty="userID"/>
-         <exec executable="chown" failonerror="false">
-	    <arg line ="-R" />
-            <arg line="${userID}" />
-            <arg line="${build.installer.dir}"/>
-        </exec>
-        <echo>${userID}</echo>
         <delete dir="${build.installer.dir}"/>
     </target>
 </project>
