@@ -285,13 +285,15 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
 			b = this.getBinding(),
 			tp = this.getTargetProperty(inPropName),
 			w = wm.data.getPropWire(b.owner, tp);
+	    
+	    var newValue =  (inPropName == "showing" && this.owner.inspected instanceof wm.Control) ? true : "";
 		if (tp && w) {
 			var wireOwner = w.owner;
 			//wireOwner.removeWire(wireOwner.getWireId(w));
 			wireOwner.removeWire(w.getWireId());
-			this._setInspectedProp(tp, "");
+			this._setInspectedProp(tp, newValue);
 		} else {
-		    this._setPropEdit(inPropName, "","");
+		    this._setPropEdit(inPropName, newValue,"");
 		}
 	},
 	isBindable: function(inProp) {
