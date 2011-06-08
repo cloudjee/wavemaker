@@ -224,7 +224,7 @@ wm.LiveFormBase.extend({
 		props.formField = inFormField;
                 props.width = this.editorWidth;
 
-	        var lv = this.getLiveVariable(),
+	        var lv = this.getLiveVariable();
 	        var typeDef = wm.typeManager.getType(lv.type);
 	        if (typeDef)
 		    var fieldDef = typeDef.fields[inFormField];
