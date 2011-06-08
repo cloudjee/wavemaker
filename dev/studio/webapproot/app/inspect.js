@@ -124,8 +124,10 @@ makeInputPropEdit = function(inName, inValue, inDefault, inReadonly, isBound) {
 }
 setInputPropEdit = function(inName, inValue) {
     var editor = dijit.byId("studio_propinspect_"+inName);
-    if (editor)
+    if (editor) {
 	editor.set("value", inValue, false);
+	editor._lastValueReported = inValue ? inValue : "";
+    }
     return editor;
 }
 /*
