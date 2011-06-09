@@ -35,19 +35,15 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 import org.apache.catalina.Lifecycle;
 import org.apache.catalina.LifecycleEvent;
@@ -65,6 +61,7 @@ import org.apache.catalina.LifecycleListener;
  */
 public class MainConsole extends javax.swing.JFrame
 {
+    private Thread appServerThread = null;
     private static final long serialVersionUID = 1L;
     private static final ResourceBundle bundle = 
         ResourceBundle.getBundle("com/wavemaker/desktop/launcher/ui/Bundle");
@@ -427,21 +424,27 @@ public class MainConsole extends javax.swing.JFrame
         pbStatus.setIndeterminate(true);
         pbStatus.setVisible(true);
         
-        Runnable runner = new Runnable() 
+        if (appServerThread == null) 
         {
-            public void run()
+            Runnable runner = new Runnable() 
             {
-                startServer();
-            }
-        };
-        Thread thread = new Thread(runner);
-        thread.start();
+                public void run()
+                {
+                    startServer();
+                }
+            };        
+            appServerThread = new Thread(runner);
+        }
+        
+        appServerThread.start();
     }//GEN-LAST:event_btnStartActionPerformed
 
     private void btnStopActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnStopActionPerformed
     {//GEN-HEADEREND:event_btnStopActionPerformed
         if (appServer != null)
         {
+            appServerThread.stop();
+            appServerThread = null;
             appServer.stop();
         }
     }//GEN-LAST:event_btnStopActionPerformed
@@ -452,6 +455,10 @@ public class MainConsole extends javax.swing.JFrame
     {
         if (appServer == null) 
         {
+            btnStart.setEnabled(false);
+            lblStatus.setText(bundle.getString("STATUS_MSG_INITIALIZING"));
+            pbStatus.setIndeterminate(true);
+            
             try 
             {
                 Main.printlnToLog(bundle.getString("STATUS_MSG_STARTING"));
