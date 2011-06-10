@@ -18,9 +18,9 @@
     TOOLTIP_SECURITY_ERROR: "A security error shown here has no effect on the project you are designing.  It does indicate that we are unable to show your data within the designer.  You can typically fix this problem by running your application, logging in to your application, and then the data should show up in the designer",
 
     /* Documentation; Help Menu */
-    URL_TUTORIALS: "http://dev.wavemaker.com/wiki/bin/wmdoc/Tutorials",
-    URL_DOCS: "http://dev.wavemaker.com/wiki/bin/wmdoc/",
-    URL_PROPDOCS: "http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/",
+    URL_TUTORIALS: "http://dev.wavemaker.com/wiki/bin/wmdoc_6.3/Tutorials",
+    URL_DOCS: "http://dev.wavemaker.com/wiki/bin/wmdoc_6.3/",
+    URL_PROPDOCS: "http://dev.wavemaker.com/wiki/bin/wmjsref_6.3/",
     URL_FORUMS: "http://dev.wavemaker.com/forums",
     "MENU_ITEM_TUTORIALS" : "Tutorials",
     "MENU_ITEM_DOCS" : "Documentation",
@@ -210,7 +210,7 @@
     "wm.Component.CLASS_NOT_FOUND": 'Component type "${type}" is not available.',
     "wm.Palette.MENU_ITEM_COPY": "Copy New ${className}",
     "wm.Palette.MENU_ITEM_DOCS": "${className} docs...",
-    "wm.Palette.URL_CLASS_DOCS": "http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/${className}",
+    "wm.Palette.URL_CLASS_DOCS": "http://dev.wavemaker.com/wiki/bin/wmjsref_6.3/${className}",
     "wm.Palette.TIP_DOCS": "Click for docs",
 
     /* action.js/clipboard.js: undo/redo */

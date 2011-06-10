@@ -433,7 +433,7 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 	      bd.sourceNode = inNode;
 	      //bd.positionNode = inNode.parentNode;
 	      bd.fixPositionNode = inNode.parentNode;
-	    var url = "http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/" + inType.replace(/^.*\./,"") + "_" + inPropName;
+	    var url = studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {className: inType.replace(/^.*\./,"") + "_" + inPropName});
 
 	    // clear previous content before showing.
 	    bd.page.setContent("");
@@ -442,6 +442,8 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 	    studio.loadHelp(inType, inPropName, function(inResponse) {
 		wm.cancelJob("PropDoc");
 		this._loadingContent = false;
+		if (inResponse.indexOf("No documentation found for this topic") != -1 || !inResponse)
+		    inResponse = "<a href='" + url + "' target='docs'>Open Docs</a><br/>" + inResponse;
 		bd.page.setContent(inResponse);
 	    });
 

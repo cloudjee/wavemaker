@@ -452,7 +452,7 @@ System.out.println("F");
 	  URL help_url;
 	  String s = "";
 	  try {
-		help_url = new URL("http://dev.wavemaker.com/wiki/bin/view/PropertyDocumentation/" + url);
+		help_url = new URL("http://dev.wavemaker.com/wiki/bin/view/wmjsref_6.3/" + url);
     
 		// Read all the text returned by the server
 		BufferedReader in = new BufferedReader(new InputStreamReader(help_url.openStream()));
@@ -465,14 +465,23 @@ System.out.println("F");
 		str = sbuf.toString();
 
 		in.close();
+		/*
 		int startDiv = str.indexOf("<div class=\"main layoutsubsection\">");
+		*/
+		System.out.println("STR:" + str);
+		String startDivStr = "</h2><p/>";
+		int startDiv = str.indexOf(startDivStr);
+		if (startDiv == -1) return "";
+		startDiv += startDivStr.length();
+
 		int endDivID = str.indexOf("\"xwikidata\"");
 		int endDiv   = str.lastIndexOf("<div", endDivID);
+		
 		s = str.substring(startDiv,endDiv);
 		s = s.replaceAll("<a ", "<a target='wiki' ");
 		s = s.replaceAll("/wiki/bin/", "http://dev.wavemaker.com/wiki/bin/");
 	  } catch(Exception e) {
-		s += "  " + e.getMessage() + ": No documentation found for this topic";
+		s += "No documentation found for this topic";
 	  }
 
 	  return s;
