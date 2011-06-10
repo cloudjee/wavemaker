@@ -66,10 +66,31 @@ dojo.declare("wm.ToolButton", wm.Control, {
 	init: function() {
 	    this.inherited(arguments);
 	    this.connect(this.btnNode, "onclick", this, function(evt) {
-		window.setTimeout(dojo.hitch(this, "click",evt), 5);
+		/* IE 8 loses the event after our setTimeout; to access data about the event, we have to copy it and pass on the copy.
+		 * Users should not see this pseudoevent and most definitely should not try to call stopEvent on this event
+		 * You can change this behavior if your not supporing IE 8 by removing the setTimeout.
+		 * Be sure to test for timing issues when going from editting/focus on an editor to clicking on a save button;
+		 * Timing issue: focus leaves editor; editor validates; save button's disabled state is updated based on validation; did click happen before or after button's state was updated?
+		 */
+		var pseudoEvt = {clientX: evt.clientX,
+				 clientY: evt.clientY,
+				 offsetX: evt.offsetX,
+				 offsetY: evt.offsetY,
+				 screenX: evt.screenX,
+				 screenY: evt.screenY,
+				 pageX: evt.pageX,
+				 pageY: evt.pageY,
+				 x: evt.x,
+				 y: evt.y,
+				 target: evt.target,
+				 currentTarget: evt.currentTarget,
+				 "type": evt.type};
+
+		window.setTimeout(dojo.hitch(this, "click",pseudoEvt), 5);
 	    });
 	    this.setHint(this.title || this.hint);
 	    this.imageListChanged();
+
 	},
         click: function(inEvent) {
 	    if (!this.disabled) {

@@ -143,7 +143,8 @@ dojo.declare("wm.PopupMenuButton", wm.Button, {
 	if (this.disabled) return;
 	var coords = dojo.coords(dojo.query(".popupIcon", this.domNode)[0]);
 	var popupX = coords.x-2;
-	if (inEvent.pageX >= popupX) {
+	if (inEvent.clientX >= popupX) {
+	    /* NOTE: in IE8, inEvent is undefined due to click being called within wm.onidle; however, inEvent isn't currently used by update */
 	    this.dojoMenu.update(inEvent, this, true);
 	} else {	    
 	    this.onclick(inEvent, this);

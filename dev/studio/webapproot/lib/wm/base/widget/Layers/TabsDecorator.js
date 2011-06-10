@@ -42,8 +42,16 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 		// prevent designer click
 		if (this.decoree.isDesignLoaded())
 			dojo.stopEvent(evt);
+		/* IE 8 does not gaurentee that evt will still have its properties after a delay, so 
+		 * we capture the event properties we need and pass that rather than the event object itself.
+		 * Other browsers don't require this, but it seems like a good practice regardless.
+		 */
+		var pseudoEvent = {target: evt.target,
+				   clientX: evt.clientX,
+				   clientY: evt.clientY};
+				   
 		wm.onidle(this, function() {
-		    this.tabClicked(inLayer,evt);
+		    this.tabClicked(inLayer,pseudoEvent);
 		});
 	    }));
 	    b.className=this.decorationClass + "-tab" +  (inLayer.closable || inLayer.destroyable ? " " + this.decorationClass + "-closabletab" : "");
