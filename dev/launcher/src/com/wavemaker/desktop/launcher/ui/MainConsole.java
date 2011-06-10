@@ -150,13 +150,11 @@ public class MainConsole extends javax.swing.JFrame
        
     public void begin()
     {
+        setVisible(true);
+        
         if (prefs.getBoolean(OPTION_AUTO_LAUNCH, true)) 
         {
             btnStart.doClick();
-        }
-        else 
-        {
-            setVisible(true);
         }
     }
 
