@@ -116,7 +116,7 @@ dojo.declare("wm.Number", wm.Text, {
 	getFormatProps: function() {
 		var formatProps = {};
 		if (this.places && this.places != '')
-			formatProps.places = Number(this.places);
+			formatProps.places = parseInt(this.places);
 		return formatProps;
 	},
     setSpinnerButtons: function(inSpinner) {
@@ -161,7 +161,7 @@ dojo.declare("wm.Currency", wm.Number, {
 		return new dijit.form.CurrencyTextBox(this.getEditorProps(inNode, inProps));
 	},
 	_getReadonlyValue: function() {
-	    return dojo.currency.format( this.dataValue, {currency: this.currency, places: this.places});
+	    return dojo.currency.format( this.dataValue, {currency: this.currency, places: parseInt(this.places)});
 	},
 	_getPlaces: function() {
 		return this.places;
