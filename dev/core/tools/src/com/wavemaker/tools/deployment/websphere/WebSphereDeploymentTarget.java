@@ -40,7 +40,7 @@ public class WebSphereDeploymentTarget implements DeploymentTarget {
         m.put(HOST_PROPERTY_NAME, "localhost");
         m.put(PORT_PROPERTY_NAME, "8880");
         m.put(MANAGER_USER_PROPERTY_NAME, "virtuser");
-        m.put(MANAGER_PASSWORD_PROPERTY_NAME, "chris1keene");
+        m.put(MANAGER_PASSWORD_PROPERTY_NAME, "mypass");
         CONFIGURABLE_PROPERTIES = Collections.unmodifiableMap(m);
     }
 
