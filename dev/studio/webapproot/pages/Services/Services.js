@@ -23,6 +23,18 @@ dojo.declare("Services", wm.Page, {
 		this.subscribe("wm-project-changed", this, "update");
 		this.update();
 	    this._cachedData = this.getCachedData();
+
+	    if (dojo.isIE <= 8) {
+		wm.onidle(this, function() {
+		    this.webServiceSaveBtn.setBorder("1");
+		    this.webServiceSaveBtn.setBorder("0");
+		    this.importWebServiceBtn.setBorder("1");
+		    this.importWebServiceBtn.setBorder("0");
+		    this.delWebServiceBtn.setBorder("1");
+		    this.delWebServiceBtn.setBorder("0");
+		});
+	    }
+
 	},
 	update: function() {
 		studio.updateServices();

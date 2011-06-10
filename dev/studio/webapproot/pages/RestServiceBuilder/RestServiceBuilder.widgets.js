@@ -79,7 +79,7 @@ RestServiceBuilder.widgets = {
 						editor: ["wm._CheckBoxEditor", {}, {}]
 					}]
 				}]
-			}],
+			}]
 		}],
 		restSchemaPanelSpacer: ["wm.Panel", {border: "0", height: "150px", padding: "4,10"}, {}, {
 			restSchemaLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, caption: "XML Schema", height: "18px", border: "0"}, {}, {

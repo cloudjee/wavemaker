@@ -61,6 +61,22 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		}
 		});
 	    });
+
+	    if (dojo.isIE <= 8) {
+		wm.onidle(this, function() {
+		    this.saveButton1.setBorder("1");
+		    this.saveButton1.setBorder("0");
+		    this.addEntityButton.setBorder("1");
+		    this.addEntityButton.setBorder("0");
+		    this.removeButton.setBorder("1");
+		    this.removeButton.setBorder("0");
+		    this.importDBButton.setBorder("1");
+		    this.importDBButton.setBorder("0");
+		    this.dbSettingsButton.setBorder("1");
+		    this.dbSettingsButton.setBorder("0");
+		});
+	    }
+
 	},
 	update: function() {
 		this.setSchemas();

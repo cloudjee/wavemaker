@@ -41,6 +41,15 @@ dojo.declare("QueryEditor", wm.Page, {
 		    b.click();
 		});
 	    });
+
+	    if (dojo.isIE <= 8) {
+		wm.onidle(this, function() {
+		    dojo.forEach(buttons, function(b) {
+			b.setBorder("1");
+			b.setBorder("0");
+		    });
+		});
+	    }
 	},
 	update: function() {
 		//this.selectedNode = null;

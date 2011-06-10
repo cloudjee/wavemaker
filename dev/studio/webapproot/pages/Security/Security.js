@@ -26,6 +26,13 @@ dojo.declare("Security", wm.Page, {
 		this.update();
 		dojo.connect(dojo.byId("HelpUID1"), "onclick", this, "showUIDHelp1");
 		dojo.connect(dojo.byId("HelpUID2"), "onclick", this, "showUIDHelp2");
+
+	    if (dojo.isIE <= 8) {
+		wm.onidle(this, function() {
+		    this.saveButton.setBorder("1");
+		    this.saveButton.setBorder("0");
+		});
+	    }
 	},
 
 	showUIDHelp1: function() {

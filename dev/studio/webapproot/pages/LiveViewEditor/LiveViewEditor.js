@@ -32,6 +32,15 @@ dojo.declare("LiveViewEditor", wm.Page, {
         orderOffset: 0,
 	start: function() {
 		this.clearFieldForm();
+	    if (dojo.isIE <= 8) {
+		wm.onidle(this, function() {
+		    var btns = [this.saveLiveViewBtn, this.newLiveViewBtn, this.delLiveViewBtn];
+		    for (var i = 0; i < btns.length; i++) {
+			btns[i].setBorder("1");
+			btns[i].setBorder("0");
+		    }
+		});
+	    }
 	},
 	setLiveView: function(inLiveView) {
 		this.clientLiveView = inLiveView;
