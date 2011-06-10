@@ -38,7 +38,9 @@ dojo.declare("ImportWebService", wm.Page, {
 		this.wsdlFileInput.fileNode.value = "";
 		this.serviceIdAutoYesRadio.components.editor.setChecked(true);
 		this.serviceIdInput.clear();
-		this.restServiceBuilderPage.page.clearAll();
+	        if (this.restServiceBuilderPage.page) {
+		    this.restServiceBuilderPage.page.clearAll();
+		}
 		this.usernameInput.setInputValue("");
 		this.passwordInput.setInputValue("");
 	},
