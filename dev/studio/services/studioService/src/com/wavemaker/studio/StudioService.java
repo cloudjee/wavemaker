@@ -468,7 +468,7 @@ System.out.println("F");
 		/*
 		int startDiv = str.indexOf("<div class=\"main layoutsubsection\">");
 		*/
-		System.out.println("STR:" + str);
+
 		String startDivStr = "</h2><p/>";
 		int startDiv = str.indexOf(startDivStr);
 		if (startDiv == -1) return "";
