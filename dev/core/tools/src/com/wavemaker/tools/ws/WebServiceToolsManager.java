@@ -33,7 +33,9 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
+import javax.xml.transform.*;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.dom.DOMSource;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -43,9 +45,7 @@ import org.apache.ws.commons.schema.XmlSchemaObjectTable;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.springframework.web.multipart.MultipartFile;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -279,6 +279,7 @@ public class WebServiceToolsManager {
         try {
             File wsdlFile = new File(tempDir, fileName);
             file.transferTo(wsdlFile);
+            modifyServiceName(wsdlFile);
             if (isWSDL) {
                 return importWSDL(wsdlFile.getCanonicalPath(), serviceId,
                         Boolean.valueOf(overwrite), username, password);
@@ -286,6 +287,8 @@ public class WebServiceToolsManager {
                 return importWADL(wsdlFile.getCanonicalPath(), serviceId,
                         Boolean.valueOf(overwrite));
             }
+        } catch (Exception ex) {
+            throw new WSDLException(ex);    
         } finally {
             IOUtils.deleteRecursive(tempDir);
         }
@@ -794,5 +797,76 @@ public class WebServiceToolsManager {
         WebServiceSpringSupport.setBindingProperties(
                 projectMgr.getCurrentProject(), designServiceMgr, serviceId,
                 bindingProperties);
+    }
+
+    //If the service name happens to be the same as one of the operation names, append "Svc" at the
+    //end of the service name to prevent the operation Java source file from being overwritten
+    //by the service Java source file.
+    private void modifyServiceName(File wsdlf) throws IOException,
+            ParserConfigurationException, SAXException, TransformerException {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
+        DocumentBuilder docBuilder = dbf.newDocumentBuilder();
+        Document doc = docBuilder.parse (wsdlf);
+        NodeList nlistOp = doc.getElementsByTagNameNS("*", "operation");
+        NodeList nlistSvc = doc.getElementsByTagNameNS("*", "service");
+
+        if (nlistOp == null || nlistOp.getLength() == 0 ||
+            nlistSvc == null || nlistSvc.getLength() == 0) {
+            return;
+        }
+
+        String[] opList = new String[nlistOp.getLength()];
+        for(int i=0; i<nlistOp.getLength() ; i++) {
+            Node nodeOp = nlistOp.item(i);
+            NamedNodeMap nMap = nodeOp.getAttributes();
+            nMap.getLength();
+            for (int j=0; j<nMap.getLength(); j++) {
+                Node attr = nMap.item(j);
+                if (attr.getNodeName().equals("name")) {
+                    opList[i] = attr.getNodeValue();
+                    break;
+                }
+            }
+        }
+
+        String svcName = null;
+
+        Node nodeSvc = nlistSvc.item(0); //assumes there is only once service name defined in a WSDL
+        Node svcNameAttr = null;
+        NamedNodeMap nMap = nodeSvc.getAttributes();
+        nMap.getLength();
+        for (int j=0; j<nMap.getLength(); j++) {
+            svcNameAttr = nMap.item(j);
+            if (svcNameAttr.getNodeName().equals("name")) {
+                svcName = svcNameAttr.getNodeValue();
+                break;
+            }
+        }
+
+        if (opList.length == 0 || svcName == null) {
+            return;
+        }
+
+        boolean sameName = false;
+        for (String opName : opList) {
+            if (opName.equals(svcName)) {
+                sameName = true;
+                break;
+            }
+        }
+
+        if (!sameName) {
+            return;
+        }
+
+        svcNameAttr.setNodeValue(svcName + "Svc");
+
+        TransformerFactory tFactory = TransformerFactory.newInstance();
+        Transformer tFormer = tFactory.newTransformer();
+
+        Source source = new DOMSource(doc);
+        Result dest = new StreamResult(wsdlf);
+        tFormer.transform(source, dest);
     }
 }
