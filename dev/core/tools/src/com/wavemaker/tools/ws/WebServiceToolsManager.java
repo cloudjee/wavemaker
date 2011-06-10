@@ -850,7 +850,7 @@ public class WebServiceToolsManager {
 
         boolean sameName = false;
         for (String opName : opList) {
-            if (opName.equals(svcName)) {
+            if (opName != null && opName.equals(svcName)) {
                 sameName = true;
                 break;
             }
