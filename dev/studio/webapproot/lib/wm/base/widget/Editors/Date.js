@@ -138,6 +138,17 @@ dojo.declare("wm.DateTime", wm.Text, {
     timePanelHeight: 38,
     formatLength: "short",
     dateMode: "Date and Time",
+    init: function( ){
+	this.inherited(arguments);
+        this.subscribe("wm.AbstractEditor-focused", this, function(inEditor) {
+	    var dialog = wm.DateTime.dialog;
+	    if (dialog) {
+		if (this != inEditor && dialog.$.hours != inEditor && dialog.$.minutes != inEditor && dialog._currentEditor == this && inEditor instanceof wm.DateTime == false) {
+                    wm.DateTime.dialog.dismiss();
+		}
+            }
+        });
+    },
     doOnblur: function() {
 	this.inherited(arguments);
 
@@ -182,14 +193,16 @@ dojo.declare("wm.DateTime", wm.Text, {
 	    }
 	    
 	    var dialog = wm.DateTime.dialog;
-	    dialog._disconnect();
-	    dialog.connect(dialog.$.calendar, "onValueSelected", this,"handleDateChange");
-	    dialog.connect(dialog.$.hours, "onchange", this, "handleDateChange");
-	    dialog.connect(dialog.$.minutes, "onchange", this, "handleDateChange");
+	    /* So as to not screw with default dialog connections such as keydown, we're going to connect everything to the containerWidget */
+	    var containerWidget = dialog.containerWidget;
+	    containerWidget._disconnect();
+	    containerWidget.connect(dialog.$.calendar, "onValueSelected", this,"handleDateChange");
+	    containerWidget.connect(dialog.$.hours, "onchange", this, "handleDateChange");
+	    containerWidget.connect(dialog.$.minutes, "onchange", this, "handleDateChange");
 	    dialog.$.minutes.editor.set("smallDelta", 5);
-	    dialog.connect(dialog.$.ampm, "onclick", this, "handleDateChange");
-	    dialog.connect(dialog.$.okButton, "onclick", this, "okClicked");
-	    dialog.connect(dialog.$.cancelButton, "onclick", this, "cancelClicked");
+	    containerWidget.connect(dialog.$.ampm, "onclick", this, "handleDateChange");
+	    containerWidget.connect(dialog.$.okButton, "onclick", this, "okClicked");
+	    containerWidget.connect(dialog.$.cancelButton, "onclick", this, "cancelClicked");
 	    wm.DateTime.dialog.fixPositionNode = this.editor.domNode;
 	    this._initialDisplayValue = this.getDisplayValue();
 	    dialog._currentEditor = this;
