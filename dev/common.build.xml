@@ -351,8 +351,8 @@
     <target name="common.generate-best-license" depends="common.generate-full-version, common.generate-license" />
 
     <target name="common.generate-license" unless="license.generated">
-    	<!-- Always use community license -->
-    	<copy file="${src.buildsupport.dir}/community_license.txt"
+    	<!-- Use LICENSE.txt -->
+    	<copy file="${src.buildsupport.dir}/LICENSE.txt"
                 tofile="${license.file}"/>
                 <property name="license.generated" value="true"/>
     </target>
