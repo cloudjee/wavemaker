@@ -295,8 +295,7 @@ Section -post SEC0001
     SetOutPath $INSTDIR
     File /r /x .svn "${SOURCEDIR}\Support"
     File /oname=${PRODUCT_NAME}.ico wavemaker.ico
-    File "${BUILDSUPPORTDIR}\apache-license.txt"
-    File "${BUILDSUPPORTDIR}\CDDL+GPL-license.txt"
+    File "${BUILDSUPPORTDIR}\LICENSE.txt"
     File "${BUILDSUPPORTDIR}\NOTICES.txt"
     File "${LICENSEFILE}"
     
