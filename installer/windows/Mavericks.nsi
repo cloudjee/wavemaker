@@ -296,7 +296,7 @@ Section -post SEC0001
     File /r /x .svn "${SOURCEDIR}\Support"
     File /oname=${PRODUCT_NAME}.ico wavemaker.ico
     File "${BUILDSUPPORTDIR}\LICENSE.txt"
-    File "${BUILDSUPPORTDIR}\NOTICES.txt"
+    File "${BUILDSUPPORTDIR}\NOTICE.txt"
     File "${LICENSEFILE}"
     
     ; Create version.txt file
