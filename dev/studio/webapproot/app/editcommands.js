@@ -428,7 +428,7 @@ Studio.extend({
 		if (p.group != "operation" && (p.group == "method" || !p.ignore && !p.tmpignore || p.doc)) {
 		    if (p.group == "method") {
 			if (!this._autoCompletionRemainder || i.indexOf(this._autoCompletionRemainder) == 0) {
-			    var methodstring = object[i].toString();
+			    var methodstring = String(object[i]).toString();
 			    var methodstringmatch = methodstring.match(/function\s*\(([^)]*)/);
 			    params = "()";
 			    if (methodstringmatch) 
