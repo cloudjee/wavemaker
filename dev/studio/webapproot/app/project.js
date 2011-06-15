@@ -207,7 +207,7 @@ dojo.declare("wm.studio.Project", null, {
 						      dojo.hitch(this, function(err) {
 							  studio.endWait(studio.getDictionaryItem("wm.studio.Project.WAIT_OPEN_PROJECT"));
 							  /* Localization: I assume we'll always have an error message */
-							  app.alert(err || "Failed to open project");
+							  app.alert(err.toString() || "Failed to open project");
 							  this.closeProject();
 						      }));
 /*
