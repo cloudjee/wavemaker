@@ -48,7 +48,8 @@
 .tundra .wm-darksnazzy .dijitMenu, .tundra .wm-darksnazzy .dijitMenuBar .dijitMenuItem.dijitMenuItemDisabled {
   background-image: none;
  }
-.tundra .wm-darksnazzy .dijitMenu, .tundra .wm-darksnazzy .dijitMenuBar .dijitMenuItem {
+.tundra .wm-darksnazzy .dijitMenu, 
+.tundra .wm-darksnazzy .dijitMenuBar .dijitMenuItem {
    border: solid 1px transparent;
    background-image: url("images/dropArrow.png");
    background-position: 90% 50%;
@@ -56,7 +57,10 @@
    padding: 4px 20px 4px 5px;
    margin-right: 20px;
 }
-
+.tundra .wm-darksnazzy .dijitMenuBar .dijitMenuItem:last-child {
+   margin-right: 2px;
+   padding-right: 2px;
+}
 .tundra .wm-darksnazzy .dijitMenu, .tundra .wm-darksnazzy .dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
 .tundra .wm-darksnazzy .dijitMenu, .tundra .wm-darksnazzy .dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
    border: solid 1px rgb(40,40,40);
