@@ -244,7 +244,7 @@ dojo.declare("wm.ServiceCall", null, {
 				   value: this.operation});
 		form.appendChild(method);
                 for (i in args) {
-		    var input = iframedoc.createElement("input");
+		    var input = iframedoc.createElement("textarea");
 		    dojo.attr(input, {name: i,
 				       value: args[i]});		    
 		    form.appendChild(input);
