@@ -42,7 +42,7 @@
  	background-color: transparent;
 	color: white;
 	font-weight: bold;
-	font-size: 10pt;
+	font-size: 12px;
 }
 
 .tundra .wm-darksnazzy .dijitMenu, .tundra .wm-darksnazzy .dijitMenuBar .dijitMenuItem.dijitMenuItemDisabled {
@@ -58,8 +58,8 @@
    margin-right: 20px;
 }
 .tundra .wm-darksnazzy .dijitMenuBar .dijitMenuItem:last-child {
-   margin-right: 2px;
-   padding-right: 2px;
+   margin-right: 0px;
+   padding-right: 20px;
 }
 .tundra .wm-darksnazzy .dijitMenu, .tundra .wm-darksnazzy .dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
 .tundra .wm-darksnazzy .dijitMenu, .tundra .wm-darksnazzy .dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
