@@ -138,7 +138,8 @@ dojo.declare("wm.Component", wm.Object, {
 			this.postInit();
 		}
 		
-		dojo.addOnWindowUnload(this, 'destroy');
+	        if (!this._temporaryComponent) 
+	            dojo.addOnWindowUnload(this, 'destroy');
 		if (wm.debugPerformance) this.stopTimerWithName("create",this.declaredClass);
 	},
 	/**
@@ -934,7 +935,7 @@ dojo.mixin(wm.Component, {
     byShortId: {},
     timingByComponent: {},
     add: function(inComponent){
-	if (!inComponent._temporaryComponent) return;
+	if (inComponent._temporaryComponent) return;
 	var rid = inComponent.getRuntimeId();
 	wm.Component.byId[rid] = inComponent;
     },
