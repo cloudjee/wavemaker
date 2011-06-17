@@ -130,7 +130,10 @@ dojo.declare("wm.PageContainer", wm.Box, {
 
 	        // If the design is loaded, then page loading of the container is handled elsewhere.
 		if (pageName) {
-		    if (!d && this.loadParentFirst && this.getParentPage()._loadingPage) {
+		    if (!d && this.loadParentFirst) {
+			var parentPage =  this.getParentPage();
+		    }
+		    if (!d && this.loadParentFirst && parentPage && parentPage._loadingPage) {
 			// Prevent this from being connected multiple times
 			if (!this._pageLoaderConnectedToOwnerStart) {
 				if (this._currentPageConnect)
