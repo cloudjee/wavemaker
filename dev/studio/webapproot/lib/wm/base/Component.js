@@ -437,6 +437,8 @@ dojo.declare("wm.Component", wm.Object, {
 	*/
 	// get a value under root using an id
 	getValueById: function(inId) {
+	    /* Not sure if there aren't times when we have a sort of valid ID of 0, "" or false... */
+	    if (inId === null || inId === undefined) return null;
 		var r = this.getRoot();
 		r = r && r.getValue(inId);
 		var result;
