@@ -46,8 +46,8 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
     /* Formating */
 	height: "24px",
 	width: "300px",
-	padding: 2,
-	border: 0,
+	padding: "2",
+	border: "0",
 	editorBorder: true,
 
     /* Editor */
