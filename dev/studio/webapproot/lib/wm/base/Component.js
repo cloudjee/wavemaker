@@ -462,7 +462,7 @@ dojo.declare("wm.Component", wm.Object, {
 		    return page.getValueById(remainder);
 		}
 	    }
-	    return "";
+	    return null;
 	},
 	/* 
   	LiveForm does not work with the impovement changes below.
