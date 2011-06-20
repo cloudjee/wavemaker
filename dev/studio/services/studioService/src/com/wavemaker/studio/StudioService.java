@@ -479,7 +479,7 @@ System.out.println("F");
 		
 		s = str.substring(startDiv,endDiv);
 		s = s.replaceAll("<a ", "<a target='wiki' ");
-		s = s.replaceAll("/wiki/bin/", "http://dev.wavemaker.com/wiki/bin/");
+		//s = s.replaceAll("/wiki/bin/", "http://dev.wavemaker.com/wiki/bin/");
 	  } catch(Exception e) {
 		s += "No documentation found for this topic";
 	  }
