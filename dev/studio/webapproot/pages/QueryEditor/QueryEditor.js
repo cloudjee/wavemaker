@@ -176,6 +176,8 @@ dojo.declare("QueryEditor", wm.Page, {
 	queryTextAreaChanged: function(inSender) {
 		this.setDirty();
 		this.runQueryBtn.setDisabled(false);
+	    var text = this.queryTextArea.getDataValue();
+	    this.joinWarningLabel.setShowing(text.match(/\bjoin\b/i));
 	},
 	singleResultKeyPress: function(inSender) {
 		setTimeout(dojo.hitch(this, "singleResultChanged"), 0);		

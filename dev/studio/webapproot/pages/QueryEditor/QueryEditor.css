@@ -100,3 +100,7 @@
 .QueryEditor-toolbarspacer1 {
 	background-image:url(images/toolbarspacer.gif);
 }
+
+.QueryEditor-joinWarningLabel {
+    color: red;
+}

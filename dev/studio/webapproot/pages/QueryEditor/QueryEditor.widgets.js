@@ -61,7 +61,8 @@ QueryEditor.widgets = {
 								queryOptionsPanel: ["wm.Panel", {border: "0", height: "22px", layoutKind: "left-to-right"}, {}, {
 									returnsSingleResultCheckBox: ["wm.Editor", {layoutKind: "left-to-right", caption: "Returns single result", display: "CheckBox", captionSize: "150px", width: "200px"}, {onchange: "singleResultChanged"}, {
 										editor: ["wm._CheckBoxEditor", {}, {}]
-									}]
+									}],
+								    joinWarningLabel: ["wm.Label", {width: "100%", height: "100%", caption: "TIP: JOIN queries should specify fields to select: 'SELECT field1,field2 FROM...'"}]
 								}]
 							}]
 						}],
