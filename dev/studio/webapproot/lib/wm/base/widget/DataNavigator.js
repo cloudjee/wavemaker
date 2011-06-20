@@ -135,7 +135,7 @@ dojo.declare("wm.DataNavigator", wm.Panel, {
 		this.inherited(arguments);
 		// this widget is owner so that children are not in part space
 		dojo.mixin(inProps, {owner: this});
-	},
+	}
 	/*writeComponents: function(inIndent, inOptions) {
 		return [this.components.binding.write(inIndent, inOptions)];
 	},*/
