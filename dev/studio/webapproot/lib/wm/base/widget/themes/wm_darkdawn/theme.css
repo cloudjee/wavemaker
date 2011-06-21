@@ -864,7 +864,7 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     .wm_darkdawn .MainContent .dijitTimePickerItem,
     .wm_darkdawn .MainContent .wmeditor .RichTextEditable iframe {
 	/* MainContent-EditorsDefault-Border */
-	border-color: #f7cf8a; /* MainContent-EditorsDefault-Border_Color */
+	border-color: #9AB9FA; /* MainContent-EditorsDefault-Border_Color */
 	border-width: 1px; /* MainContent-EditorsDefault-Border_BorderSize */
 	/* MainContent-EditorsDefault-Font */
 	font-family: Arial; /* MainContent-EditorsDefault-Font_Family */
@@ -872,8 +872,8 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
 	color: #000000; /* MainContent-EditorsDefault-Font_Color */
 	font-weight: normal; /* MainContent-EditorsDefault-Font_Weight */
 	/* MainContent-EditorsDefault-Background */
-	background-color: #dddddd; /* MainContent-EditorsDefault-Background_Color */
-	background-image: url(images/repeatx/brightEdge2.png); /* MainContent-EditorsDefault-Background_Image */
+	background-color: #fff; /* MainContent-EditorsDefault-Background_Color */
+	background-image: url(images/repeatx/greyEdge2.png); /* MainContent-EditorsDefault-Background_Image */
 	background-position: top left; /* MainContent-EditorsDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-EditorsDefault-Background_Image-Repeat */
     }

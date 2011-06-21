@@ -656,13 +656,13 @@
 		"Image": "url(images/repeatx/brightEdge3.png)"
 	}, 
 	"MainContent-EditorsDefault-Border": {
-		"Color": "#f7cf8a"
+		"Color": "#9AB9FA"
 	}, 
 	"MainContent-EditorsDefault-Background": {
-		"Color": "#dddddd", 
+		"Color": "#fff", 
 		"Image-Repeat": "repeat-x", 
 		"Image-Position": "top left", 
-		"Image": "url(images/repeatx/brightEdge2.png)"
+		"Image": "url(images/repeatx/greyEdge2.png)"
 	}, 
 	"MainContent-EditorsDefault-Font": {
 		"Family": "Arial", 
