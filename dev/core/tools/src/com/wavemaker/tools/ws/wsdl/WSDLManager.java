@@ -15,6 +15,7 @@
 package com.wavemaker.tools.ws.wsdl;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -115,7 +116,7 @@ public class WSDLManager {
      * @param file The file to wirte the XML to.
      * @throws WSDLException
      */
-    public static void writeWSDL(WSDL wsdl, File file) throws WSDLException {
+    public static void writeWSDL(WSDL wsdl, File file) throws WSDLException, IOException {
         WSDLUtils.writeDefinition(wsdl.getDefinition(), file);
     }
 

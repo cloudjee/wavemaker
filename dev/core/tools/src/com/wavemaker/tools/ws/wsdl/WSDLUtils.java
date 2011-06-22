@@ -95,15 +95,18 @@ public class WSDLUtils {
      * @throws WSDLException
      */
     public static void writeDefinition(Definition definition, File wsdlFile)
-            throws WSDLException {
+            throws WSDLException, IOException {
+        FileWriter out = null;
         try {
-            FileWriter out = new FileWriter(wsdlFile);
+            out = new FileWriter(wsdlFile);
             WSDLWriter writer = WSDLFactory.newInstance().newWSDLWriter();
             writer.writeWSDL(definition, out);
         } catch (javax.wsdl.WSDLException e) {
             throw new WSDLException(e);
         } catch (IOException e) {
             throw new WSDLException(e);
+        } finally {
+            out.close();
         }
     }
 

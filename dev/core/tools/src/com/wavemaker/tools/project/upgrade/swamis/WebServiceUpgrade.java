@@ -18,6 +18,8 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.IOUtils;
@@ -30,6 +32,7 @@ import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.ws.FeedServiceDefinition;
 import com.wavemaker.tools.ws.WebServiceToolsManager;
 import com.wavemaker.tools.ws.wsdl.WSDLException;
+import org.xml.sax.SAXException;
 
 /**
  * This upgrade task will perform the followings:
@@ -68,12 +71,18 @@ public class WebServiceUpgrade implements UpgradeTask {
             throw new WMRuntimeException(e);
         } catch (NoSuchMethodException e) {
             throw new WMRuntimeException(e);
+        } catch (ParserConfigurationException e) {
+            throw new WMRuntimeException(e);
+        } catch (SAXException e) {
+            throw new WMRuntimeException(e);
+        } catch (TransformerException e) {
+            throw new WMRuntimeException(e);
         }
     }
     
     private void upgradeWebServices(WebServiceToolsManager wstm,
             UpgradeInfo upgradeInfo) throws IOException, JAXBException,
-            WSDLException, NoSuchMethodException {
+            WSDLException, NoSuchMethodException, ParserConfigurationException, SAXException, TransformerException {
         for (String serviceId : dsm.getServiceIds()) {
             Service service = dsm.getService(serviceId);
             if (service != null

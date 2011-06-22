@@ -115,19 +115,31 @@ public class WebServiceToolsManager {
      * @throws JAXBException
      */
     public String importWSDL(String wsdlPath, String serviceId,  //salesforce
-            boolean overwrite, String username, String password) throws WSDLException, IOException, JAXBException {
+            boolean overwrite, String username, String password) throws WSDLException, IOException, JAXBException,
+                                                                 ParserConfigurationException, SAXException, TransformerException {
         
         logger.info("Importing " + wsdlPath);
+        String srcPath;
         
-        boolean isLocal = true;
+       // boolean isLocal = true;
+        //create temp wsdl file if the URI is a web address
+        File tmpWsdlFile = null;
         if (wsdlPath.startsWith("http")) {
-            isLocal = false;
+            //isLocal = false;
+            WSDL tmpWsdl = WSDLManager.processWSDL(wsdlPath, serviceId);
+            File tempDir = IOUtils.createTempDirectory();
+            tmpWsdlFile = new File(tempDir, tmpWsdl.getServiceId() + Constants.WSDL_EXT);
+            WSDLUtils.writeDefinition(tmpWsdl.getDefinition(), tmpWsdlFile);
+             modifyServiceName(tmpWsdlFile);
+            srcPath = tmpWsdlFile.getCanonicalPath();
+        } else {
+            srcPath = wsdlPath;
         }
 
         WSDL origWsdl = null;
         File origWsdlFile = null;
-        if (isLocal) {
-            origWsdlFile = new File(wsdlPath);
+        //if (isLocal) {
+            origWsdlFile = new File(srcPath);
             if (origWsdlFile.isDirectory()) {
                 String srvId = null;
                 File[] listFiles = origWsdlFile.listFiles();
@@ -140,9 +152,9 @@ public class WebServiceToolsManager {
             }
             origWsdl = WSDLManager.processWSDL(origWsdlFile.toURI().toString(),
                     serviceId);
-        } else {
-            origWsdl = WSDLManager.processWSDL(wsdlPath, serviceId);
-        }
+        //} else {
+        //    origWsdl = WSDLManager.processWSDL(wsdlPath, serviceId);
+        //}
         
         if (!overwrite && designServiceMgr.serviceExists(origWsdl.getServiceId())) {
             return SERVICE_ID_ALREADY_EXISTS + origWsdl.getServiceId();
@@ -163,11 +175,12 @@ public class WebServiceToolsManager {
             packageDir.mkdirs();
         }
         
+        File wsdlFile;
         String wsdlUri = null;
-        if (isLocal) {
+        //if (isLocal) {
             // copy user-specified WSDL file to the package folder
-            File wsdlFile = new File(packageDir, origWsdlFile.getName());
-            wsdlUri = wsdlFile.toURI().toString();
+            wsdlFile = new File(packageDir, origWsdlFile.getName());
+            //wsdlUri = wsdlFile.toURI().toString();
             if (!wsdlFile.getCanonicalFile().equals(
                     origWsdlFile.getCanonicalFile())) {
                 IOUtils.copy(origWsdlFile, wsdlFile);
@@ -183,11 +196,15 @@ public class WebServiceToolsManager {
                     }
                 }
             }
-        } else {
-            wsdlUri = wsdlPath;
-            WSDLUtils.writeDefinition(origWsdl.getDefinition(), new File(
-                    packageDir, origWsdl.getServiceId() + Constants.WSDL_EXT));
-        }
+        //} else {
+        //    //wsdlUri = wsdlPath;
+        //    wsdlFile = new File(packageDir, origWsdl.getServiceId() + Constants.WSDL_EXT);
+        //    WSDLUtils.writeDefinition(origWsdl.getDefinition(), wsdlFile);
+        //}
+
+        //modifyServiceName(wsdlFile);
+
+        wsdlUri = wsdlFile.toURI().toString();
         
         // do the import which would generate service Java files and resource files
         ImportWS importWS = new ImportWS();
@@ -231,7 +248,8 @@ public class WebServiceToolsManager {
      * @throws JAXBException
      */
     public String importWADL(String wadlPath, String serviceId,
-            boolean overwrite) throws WSDLException, IOException, JAXBException {
+            boolean overwrite) throws WSDLException, IOException, JAXBException,
+                            ParserConfigurationException, SAXException, TransformerException {
         File tempDir = IOUtils.createTempDirectory();
         try {
             File wsdlFile = generateWsdlFromWadl(wadlPath, tempDir);
