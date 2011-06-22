@@ -443,6 +443,7 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 				var name = node.klass.replace(/^.*\./,"");
 				if (dojo.indexOf(classList, name) == -1)
 				    classList.push(name);
+			    }
 			} catch(e){}
 		    }
 		});
