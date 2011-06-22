@@ -595,7 +595,11 @@ wm.Component.extend({
 
 	menuObj.addAdvancedMenuChildren(menuObj.dojoObj, {iconClass: "StudioHelpIcon", 
 							  label: studio.getDictionaryItem("wm.Component.CONTEXT_MENU_HELP", {"className": this.declaredClass}),
-							  onClick: dojo.hitch(this, function() {window.open("http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/" + this.declaredClass.replace(/^.*\./,""));})});
+							  onClick: dojo.hitch(this, function() {
+							      var url = studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {className: this.declaredClass.replace(/^.*\./,"")});
+							      window.open(url);
+							  })
+							 });
 	    
 	    menuObj.update(e, this.domNode);
     },
