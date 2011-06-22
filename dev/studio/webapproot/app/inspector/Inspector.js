@@ -439,8 +439,10 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 		    if (node.klass) {
 			try {
 			    var prototype = dojo.getObject(node.klass).prototype;
-			    if (prototype[inPropName] !== undefined || prototype["get" + wm.capitalize(inPropName)] !== undefined)
-				classList.push(node.klass.replace(/^.*\./,""));
+			    if (prototype[inPropName] !== undefined || prototype["get" + wm.capitalize(inPropName)] !== undefined) {
+				var name = node.klass.replace(/^.*\./,"");
+				if (dojo.indexOf(classList, name) == -1)
+				    classList.push(name);
 			} catch(e){}
 		    }
 		});
