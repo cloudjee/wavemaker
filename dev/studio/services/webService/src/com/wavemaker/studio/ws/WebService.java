@@ -92,7 +92,7 @@ public class WebService {
     }*/
 
     public String importWSDL(String path, String serviceId, boolean overwrite, String username, String password)
-            throws WSDLException, IOException, JAXBException { //salesforce
+            throws WSDLException, IOException, JAXBException, ParserConfigurationException, SAXException, TransformerException { //salesforce
         if (path.toLowerCase().endsWith("wadl")) {
             return getWSToolsMgr().importWADL(path, serviceId, overwrite);
         }
