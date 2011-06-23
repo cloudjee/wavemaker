@@ -105,7 +105,6 @@
             <fileset dir="apache-tomcat-${tomcat.version}-embed"/>
         </copy>
         <copy todir="${dist.launcher.dir}" file="${lib.launcher.dir}/launcher.jar"/>
-        <copy todir="${dist.launcher.dir}/lib" file="${basedir}/lib/swing-layout-1.0.4.jar"/>
 
         <!-- overwrite entries in dist/conf with stuff from conf -->
         <copy todir="${dist.launcher.dir}/conf" overwrite="true">

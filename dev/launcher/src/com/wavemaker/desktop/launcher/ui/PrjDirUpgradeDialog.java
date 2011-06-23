@@ -88,6 +88,7 @@ public class PrjDirUpgradeDialog extends javax.swing.JFrame
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         rbgPrjDir = new javax.swing.ButtonGroup();
         lblCongrats = new javax.swing.JLabel();
@@ -105,23 +106,44 @@ public class PrjDirUpgradeDialog extends javax.swing.JFrame
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/wavemaker/desktop/launcher/ui/Bundle"); // NOI18N
         setTitle(bundle.getString("PrjDirUpgradeDialog.title")); // NOI18N
         setBackground(new java.awt.Color(255, 255, 255));
+        getContentPane().setLayout(new java.awt.GridBagLayout());
 
         lblCongrats.setBackground(new java.awt.Color(255, 255, 255));
         lblCongrats.setText(bundle.getString("PrjDirUpgradeDialog.lblCongrats.text")); // NOI18N
         lblCongrats.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 342;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(11, 10, 0, 10);
+        getContentPane().add(lblCongrats, gridBagConstraints);
 
         lblClearCache.setBackground(new java.awt.Color(255, 255, 255));
         lblClearCache.setText(bundle.getString("PrjDirUpgradeDialog.lblClearCache.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.ipadx = 331;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 10, 0, 10);
+        getContentPane().add(lblClearCache, gridBagConstraints);
 
         rbUseCurDir.setBackground(new java.awt.Color(255, 255, 255));
         rbgPrjDir.add(rbUseCurDir);
-        rbUseCurDir.setSelected(true);
         rbUseCurDir.setText(bundle.getString("PrjDirUpgradeDialog.rbUseCurDir.text")); // NOI18N
         rbUseCurDir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rbUseCurDirActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.ipadx = 313;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(18, 10, 0, 10);
+        getContentPane().add(rbUseCurDir, gridBagConstraints);
 
         rbUseNewDir.setBackground(new java.awt.Color(255, 255, 255));
         rbgPrjDir.add(rbUseNewDir);
@@ -131,12 +153,27 @@ public class PrjDirUpgradeDialog extends javax.swing.JFrame
                 rbUseNewDirActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.ipadx = 309;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 10, 0, 10);
+        getContentPane().add(rbUseNewDir, gridBagConstraints);
 
         pnlNewDirFields.setBackground(new java.awt.Color(255, 255, 255));
         pnlNewDirFields.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        pnlNewDirFields.setLayout(new java.awt.GridBagLayout());
 
         lblChooseDir.setLabelFor(tfNewPrjDir);
         lblChooseDir.setText(bundle.getString("PrjDirUpgradeDialog.lblChooseDir.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = -37;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(16, 12, 0, 0);
+        pnlNewDirFields.add(lblChooseDir, gridBagConstraints);
 
         tfNewPrjDir.setEditable(false);
         tfNewPrjDir.setText("c:\\dev\\wavemaker");
@@ -145,6 +182,14 @@ public class PrjDirUpgradeDialog extends javax.swing.JFrame
                 tfNewPrjDirActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = 307;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(13, 4, 0, 0);
+        pnlNewDirFields.add(tfNewPrjDir, gridBagConstraints);
 
         btnFileChooser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/wavemaker/desktop/launcher/ui/folder.png"))); // NOI18N
         btnFileChooser.setText(bundle.getString("PrjDirUpgradeDialog.btnFileChooser.text")); // NOI18N
@@ -153,38 +198,34 @@ public class PrjDirUpgradeDialog extends javax.swing.JFrame
                 btnFileChooserActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = -238;
+        gridBagConstraints.ipady = -5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(13, 6, 0, 12);
+        pnlNewDirFields.add(btnFileChooser, gridBagConstraints);
 
         ckbCopyProjects.setBackground(new java.awt.Color(255, 255, 255));
         ckbCopyProjects.setText(bundle.getString("PrjDirUpgradeDialog.ckbCopyProjects.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.ipadx = 267;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(7, 12, 9, 12);
+        pnlNewDirFields.add(ckbCopyProjects, gridBagConstraints);
 
-        org.jdesktop.layout.GroupLayout pnlNewDirFieldsLayout = new org.jdesktop.layout.GroupLayout(pnlNewDirFields);
-        pnlNewDirFields.setLayout(pnlNewDirFieldsLayout);
-        pnlNewDirFieldsLayout.setHorizontalGroup(
-            pnlNewDirFieldsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnlNewDirFieldsLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(pnlNewDirFieldsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(ckbCopyProjects, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 512, Short.MAX_VALUE)
-                    .add(pnlNewDirFieldsLayout.createSequentialGroup()
-                        .add(lblChooseDir, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 162, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(tfNewPrjDir, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(btnFileChooser, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 27, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        pnlNewDirFieldsLayout.setVerticalGroup(
-            pnlNewDirFieldsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnlNewDirFieldsLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(pnlNewDirFieldsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(tfNewPrjDir, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(lblChooseDir)
-                    .add(btnFileChooser, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(ckbCopyProjects)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.ipadx = 267;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 10, 0, 10);
+        getContentPane().add(pnlNewDirFields, gridBagConstraints);
 
         btnOk.setText(bundle.getString("PrjDirUpgradeDialog.btnOk.text")); // NOI18N
         btnOk.addActionListener(new java.awt.event.ActionListener() {
@@ -192,39 +233,14 @@ public class PrjDirUpgradeDialog extends javax.swing.JFrame
                 btnOkActionPerformed(evt);
             }
         });
-
-        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
-                .addContainerGap()
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(lblClearCache, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 536, Short.MAX_VALUE)
-                    .add(lblCongrats, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 536, Short.MAX_VALUE)
-                    .add(pnlNewDirFields, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(rbUseCurDir, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 536, Short.MAX_VALUE)
-                    .add(rbUseNewDir, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 536, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, btnOk, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 63, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
-                .addContainerGap()
-                .add(lblCongrats)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(lblClearCache)
-                .add(18, 18, 18)
-                .add(rbUseCurDir)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(rbUseNewDir)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnlNewDirFields, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(18, 18, 18)
-                .add(btnOk, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 27, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.ipadx = -138;
+        gridBagConstraints.ipady = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(18, 483, 11, 10);
+        getContentPane().add(btnOk, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

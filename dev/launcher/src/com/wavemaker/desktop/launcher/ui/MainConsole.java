@@ -224,6 +224,7 @@ public class MainConsole extends javax.swing.JFrame
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         lblStatus = new javax.swing.JLabel();
         pbStatus = new javax.swing.JProgressBar();
@@ -233,27 +234,54 @@ public class MainConsole extends javax.swing.JFrame
         btnStop = new javax.swing.JButton();
         pnlAdvOpts = new javax.swing.JPanel();
         btnAdvOpts = new javax.swing.JButton();
-        lblCurrentServerPort = new javax.swing.JLabel();
+        pnlPorts1 = new javax.swing.JPanel();
+        lblCurrentServerPort1 = new javax.swing.JLabel();
+        lblCurrentShutdownPort1 = new javax.swing.JLabel();
+        pnlPorts = new javax.swing.JPanel();
         lblCurrentServerPortVal = new javax.swing.JLabel();
-        lblCurrentShutdownPort = new javax.swing.JLabel();
         lblCurrentShutdownPortVal = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/wavemaker/desktop/launcher/ui/Bundle"); // NOI18N
         setTitle(bundle.getString("MainConsole.title")); // NOI18N
         setBackground(new java.awt.Color(255, 255, 255));
+        getContentPane().setLayout(new java.awt.GridBagLayout());
 
         lblStatus.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblStatus.setText(bundle.getString("STATUS_MSG_STOPPED")); // NOI18N
         lblStatus.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipady = 8;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.ABOVE_BASELINE;
+        gridBagConstraints.insets = new java.awt.Insets(17, 10, 0, 0);
+        getContentPane().add(lblStatus, gridBagConstraints);
 
         pbStatus.setMaximum(4);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.ABOVE_BASELINE;
+        gridBagConstraints.insets = new java.awt.Insets(11, 10, 11, 10);
+        getContentPane().add(pbStatus, gridBagConstraints);
 
         lblWMTitleLogo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblWMTitleLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/wavemaker/desktop/launcher/ui/wm_title.png"))); // NOI18N
         lblWMTitleLogo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.ABOVE_BASELINE;
+        gridBagConstraints.insets = new java.awt.Insets(11, 10, 0, 0);
+        getContentPane().add(lblWMTitleLogo, gridBagConstraints);
 
         pnlServerOps.setBackground(new java.awt.Color(255, 255, 255));
+        pnlServerOps.setLayout(new java.awt.GridBagLayout());
 
         btnStart.setText(bundle.getString("MainConsole.btnStart.text")); // NOI18N
         btnStart.addActionListener(new java.awt.event.ActionListener() {
@@ -261,6 +289,14 @@ public class MainConsole extends javax.swing.JFrame
                 btnStartActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 43;
+        gridBagConstraints.ipady = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 150, 0, 0);
+        pnlServerOps.add(btnStart, gridBagConstraints);
 
         btnStop.setText(bundle.getString("MainConsole.btnStop.text")); // NOI18N
         btnStop.setEnabled(false);
@@ -269,29 +305,26 @@ public class MainConsole extends javax.swing.JFrame
                 btnStopActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 45;
+        gridBagConstraints.ipady = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 70, 0, 148);
+        pnlServerOps.add(btnStop, gridBagConstraints);
 
-        org.jdesktop.layout.GroupLayout pnlServerOpsLayout = new org.jdesktop.layout.GroupLayout(pnlServerOps);
-        pnlServerOps.setLayout(pnlServerOpsLayout);
-        pnlServerOpsLayout.setHorizontalGroup(
-            pnlServerOpsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnlServerOpsLayout.createSequentialGroup()
-                .add(156, 156, 156)
-                .add(btnStart, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 100, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(58, 58, 58)
-                .add(btnStop, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 100, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(152, Short.MAX_VALUE))
-        );
-        pnlServerOpsLayout.setVerticalGroup(
-            pnlServerOpsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, pnlServerOpsLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(pnlServerOpsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(btnStart, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 27, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(btnStop, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 27, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.ABOVE_BASELINE;
+        gridBagConstraints.insets = new java.awt.Insets(15, 10, 0, 0);
+        getContentPane().add(pnlServerOps, gridBagConstraints);
 
         pnlAdvOpts.setBackground(new java.awt.Color(255, 255, 255));
+        pnlAdvOpts.setLayout(new java.awt.GridBagLayout());
 
         btnAdvOpts.setText(bundle.getString("MainConsole.btnAdvOpts.text")); // NOI18N
         btnAdvOpts.addActionListener(new java.awt.event.ActionListener() {
@@ -299,90 +332,88 @@ public class MainConsole extends javax.swing.JFrame
                 btnAdvOptsActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 55;
+        gridBagConstraints.ipady = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 190, 0, 180);
+        pnlAdvOpts.add(btnAdvOpts, gridBagConstraints);
 
-        org.jdesktop.layout.GroupLayout pnlAdvOptsLayout = new org.jdesktop.layout.GroupLayout(pnlAdvOpts);
-        pnlAdvOpts.setLayout(pnlAdvOptsLayout);
-        pnlAdvOptsLayout.setHorizontalGroup(
-            pnlAdvOptsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnlAdvOptsLayout.createSequentialGroup()
-                .add(192, 192, 192)
-                .add(btnAdvOpts, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 188, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(186, Short.MAX_VALUE))
-        );
-        pnlAdvOptsLayout.setVerticalGroup(
-            pnlAdvOptsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnlAdvOptsLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(btnAdvOpts, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 27, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(18, 10, 0, 0);
+        getContentPane().add(pnlAdvOpts, gridBagConstraints);
 
-        lblCurrentServerPort.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblCurrentServerPort.setLabelFor(lblCurrentServerPortVal);
-        lblCurrentServerPort.setText(bundle.getString("LauncherAdvOptsDialog.lblNewServerPort.text")); // NOI18N
+        pnlPorts1.setBackground(new java.awt.Color(255, 255, 255));
+        pnlPorts1.setPreferredSize(new java.awt.Dimension(558, 20));
+        pnlPorts1.setLayout(new java.awt.GridBagLayout());
+
+        lblCurrentServerPort1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblCurrentServerPort1.setLabelFor(lblCurrentServerPortVal);
+        lblCurrentServerPort1.setText(bundle.getString("MainConsole.lblCurrentServerPort1.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = 40;
+        gridBagConstraints.ipady = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        pnlPorts1.add(lblCurrentServerPort1, gridBagConstraints);
+
+        lblCurrentShutdownPort1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblCurrentShutdownPort1.setLabelFor(lblCurrentShutdownPortVal);
+        lblCurrentShutdownPort1.setText(bundle.getString("MainConsole.lblCurrentShutdownPort1.text")); // NOI18N
+        lblCurrentShutdownPort1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lblCurrentShutdownPort1.setPreferredSize(new java.awt.Dimension(60, 14));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 40;
+        gridBagConstraints.ipady = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 310, 0, 0);
+        pnlPorts1.add(lblCurrentShutdownPort1, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(18, 10, 0, 10);
+        getContentPane().add(pnlPorts1, gridBagConstraints);
+
+        pnlPorts.setBackground(new java.awt.Color(255, 255, 255));
+        pnlPorts.setPreferredSize(new java.awt.Dimension(558, 20));
+        pnlPorts.setLayout(new java.awt.GridBagLayout());
 
         lblCurrentServerPortVal.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblCurrentServerPortVal.setText(bundle.getString("MainConsole.lblCurrentServerPortVal.text")); // NOI18N
-
-        lblCurrentShutdownPort.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblCurrentShutdownPort.setLabelFor(lblCurrentShutdownPortVal);
-        lblCurrentShutdownPort.setText(bundle.getString("LauncherAdvOptsDialog.lblNewShutdownPort.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 60;
+        gridBagConstraints.ipady = 15;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        pnlPorts.add(lblCurrentServerPortVal, gridBagConstraints);
 
         lblCurrentShutdownPortVal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblCurrentShutdownPortVal.setText(bundle.getString("MainConsole.lblCurrentShutdownPortVal.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 60;
+        gridBagConstraints.ipady = 15;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 340, 0, 0);
+        pnlPorts.add(lblCurrentShutdownPortVal, gridBagConstraints);
 
-        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
-                .addContainerGap()
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(layout.createSequentialGroup()
-                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, lblWMTitleLogo, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 566, Short.MAX_VALUE)
-                            .add(lblStatus, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 566, Short.MAX_VALUE)
-                            .add(pnlServerOps, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap())
-                    .add(layout.createSequentialGroup()
-                        .add(pnlAdvOpts, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .add(layout.createSequentialGroup()
-                        .add(lblCurrentServerPort, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 73, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(lblCurrentServerPortVal, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 51, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 277, Short.MAX_VALUE)
-                        .add(lblCurrentShutdownPort, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 112, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(lblCurrentShutdownPortVal, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 37, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(14, 14, 14))
-                    .add(layout.createSequentialGroup()
-                        .add(pbStatus, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 566, Short.MAX_VALUE)
-                        .addContainerGap())))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
-                .addContainerGap()
-                .add(lblWMTitleLogo, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 31, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(15, 15, 15)
-                .add(pnlServerOps, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(lblStatus, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 26, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(18, 18, 18)
-                .add(pnlAdvOpts, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(18, 18, 18)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                        .add(lblCurrentShutdownPort, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
-                        .add(lblCurrentShutdownPortVal, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                        .add(org.jdesktop.layout.GroupLayout.LEADING, lblCurrentServerPortVal, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(org.jdesktop.layout.GroupLayout.LEADING, lblCurrentServerPort, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 22, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                .add(18, 18, 18)
-                .add(pbStatus, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 5;
+        getContentPane().add(pnlPorts, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -605,14 +636,16 @@ public class MainConsole extends javax.swing.JFrame
     private javax.swing.JButton btnAdvOpts;
     private javax.swing.JButton btnStart;
     private javax.swing.JButton btnStop;
-    private javax.swing.JLabel lblCurrentServerPort;
+    private javax.swing.JLabel lblCurrentServerPort1;
     private javax.swing.JLabel lblCurrentServerPortVal;
-    private javax.swing.JLabel lblCurrentShutdownPort;
+    private javax.swing.JLabel lblCurrentShutdownPort1;
     private javax.swing.JLabel lblCurrentShutdownPortVal;
     private javax.swing.JLabel lblStatus;
     private javax.swing.JLabel lblWMTitleLogo;
     private javax.swing.JProgressBar pbStatus;
     private javax.swing.JPanel pnlAdvOpts;
+    private javax.swing.JPanel pnlPorts;
+    private javax.swing.JPanel pnlPorts1;
     private javax.swing.JPanel pnlServerOps;
     // End of variables declaration//GEN-END:variables
 

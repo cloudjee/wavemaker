@@ -122,6 +122,7 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         btnReset = new javax.swing.JButton();
         ckbAutoLaunch = new javax.swing.JCheckBox();
@@ -129,19 +130,17 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
         tfBrowser = new javax.swing.JTextField();
         btnFileChooser = new javax.swing.JButton();
         btnDefBrowser = new javax.swing.JButton();
+        pnlCheckboxes = new javax.swing.JPanel();
+        ckbLiveLayout = new javax.swing.JCheckBox();
+        ckbSubPageDisplay = new javax.swing.JCheckBox();
+        ckbStudioDebug = new javax.swing.JCheckBox();
         pnlPorts = new javax.swing.JPanel();
         lblNewServerPort = new javax.swing.JLabel();
         tfNewServerPort = new javax.swing.JTextField();
         lblNewShutdownPort = new javax.swing.JLabel();
         tfNewShutdownPort = new javax.swing.JTextField();
-        pnlCheckboxes = new javax.swing.JPanel();
-        ckbLiveLayout = new javax.swing.JCheckBox();
-        ckbSubPageDisplay = new javax.swing.JCheckBox();
-        ckbStudioDebug = new javax.swing.JCheckBox();
-        pnlButtons = new javax.swing.JPanel();
-        btnCancel = new javax.swing.JButton();
-        btnSave = new javax.swing.JButton();
         pnlProxy = new javax.swing.JPanel();
+        ckbProxyEnabled = new javax.swing.JCheckBox();
         lblNewProxyServer = new javax.swing.JLabel();
         tfNewProxyServer = new javax.swing.JTextField();
         lblNewProxyPort = new javax.swing.JLabel();
@@ -150,7 +149,9 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
         tfNewProxyUsername = new javax.swing.JTextField();
         lblNewProxyPassword = new javax.swing.JLabel();
         tfNewProxyPassword = new javax.swing.JPasswordField();
-        ckbProxyEnabled = new javax.swing.JCheckBox();
+        pnlButtons = new javax.swing.JPanel();
+        btnCancel = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/wavemaker/desktop/launcher/ui/Bundle"); // NOI18N
         btnReset.setText(bundle.getString("LauncherAdvOptsDialog.btnReset.text")); // NOI18N
@@ -164,16 +165,41 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
         setTitle(bundle.getString("LauncherAdvOptsDialog.title")); // NOI18N
         setAlwaysOnTop(true);
         setName("LaunchAdvOptsDlg"); // NOI18N
+        getContentPane().setLayout(new java.awt.GridBagLayout());
 
         ckbAutoLaunch.setBackground(new java.awt.Color(255, 255, 255));
         ckbAutoLaunch.setSelected(true);
         ckbAutoLaunch.setText(bundle.getString("LauncherAdvOptsDialog.ckbAutoLaunch.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.ipadx = 23;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(7, 10, 0, 0);
+        getContentPane().add(ckbAutoLaunch, gridBagConstraints);
 
         lblBrowser.setLabelFor(tfBrowser);
         lblBrowser.setText(bundle.getString("LauncherAdvOptsDialog.lblBrowser.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.ipadx = 32;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 10, 0, 0);
+        getContentPane().add(lblBrowser, gridBagConstraints);
 
         tfBrowser.setEditable(false);
         tfBrowser.setText(bundle.getString("SYSTEM_DEFAULT_BROWSER")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 9;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = 650;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 4, 0, 0);
+        getContentPane().add(tfBrowser, gridBagConstraints);
 
         btnFileChooser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/wavemaker/desktop/launcher/ui/folder.png"))); // NOI18N
         btnFileChooser.setText(bundle.getString("LauncherAdvOptsDialog.btnFileChooser.text")); // NOI18N
@@ -182,6 +208,15 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
                 btnFileChooserActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 18;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = -19;
+        gridBagConstraints.ipady = -5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 6, 0, 10);
+        getContentPane().add(btnFileChooser, gridBagConstraints);
 
         btnDefBrowser.setText(bundle.getString("LauncherAdvOptsDialog.btnDefBrowser.text")); // NOI18N
         btnDefBrowser.addActionListener(new java.awt.event.ActionListener() {
@@ -189,12 +224,76 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
                 btnDefBrowserActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.ipadx = 31;
+        gridBagConstraints.ipady = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 4, 0, 0);
+        getContentPane().add(btnDefBrowser, gridBagConstraints);
+
+        pnlCheckboxes.setBackground(new java.awt.Color(255, 255, 255));
+        pnlCheckboxes.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("LauncherAdvOptsDialog.pnlCheckboxes.border.title"))); // NOI18N
+        pnlCheckboxes.setLayout(new java.awt.GridBagLayout());
+
+        ckbLiveLayout.setBackground(new java.awt.Color(255, 255, 255));
+        ckbLiveLayout.setSelected(true);
+        ckbLiveLayout.setText(bundle.getString("LauncherAdvOptsDialog.ckbLiveLayout.text")); // NOI18N
+        ckbLiveLayout.setToolTipText(bundle.getString("LauncherAdvOptsDialog.ckbLiveLayout.toolTipText")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 62;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(29, 14, 0, 14);
+        pnlCheckboxes.add(ckbLiveLayout, gridBagConstraints);
+
+        ckbSubPageDisplay.setBackground(new java.awt.Color(255, 255, 255));
+        ckbSubPageDisplay.setSelected(true);
+        ckbSubPageDisplay.setText(bundle.getString("LauncherAdvOptsDialog.ckbSubPageDisplay.text")); // NOI18N
+        ckbSubPageDisplay.setToolTipText(bundle.getString("LauncherAdvOptsDialog.ckbSubPageDisplay.toolTipText")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.ipadx = 12;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 14, 0, 14);
+        pnlCheckboxes.add(ckbSubPageDisplay, gridBagConstraints);
+
+        ckbStudioDebug.setBackground(new java.awt.Color(255, 255, 255));
+        ckbStudioDebug.setText(bundle.getString("LauncherAdvOptsDialog.ckbStudioDebug.text")); // NOI18N
+        ckbStudioDebug.setToolTipText(bundle.getString("LauncherAdvOptsDialog.ckbStudioDebug.toolTipText")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.ipadx = 86;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 14, 63, 14);
+        pnlCheckboxes.add(ckbStudioDebug, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.ipady = -30;
+        gridBagConstraints.insets = new java.awt.Insets(11, 10, 0, 0);
+        getContentPane().add(pnlCheckboxes, gridBagConstraints);
 
         pnlPorts.setBackground(new java.awt.Color(255, 255, 255));
         pnlPorts.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("LauncherAdvOptsDialog.pnlPorts.border.title"))); // NOI18N
+        pnlPorts.setLayout(new java.awt.GridBagLayout());
 
         lblNewServerPort.setLabelFor(tfNewServerPort);
         lblNewServerPort.setText(bundle.getString("LauncherAdvOptsDialog.lblNewServerPort.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 39;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(31, 18, 0, 0);
+        pnlPorts.add(lblNewServerPort, gridBagConstraints);
 
         tfNewServerPort.setText("8194");
         tfNewServerPort.setToolTipText(bundle.getString("LauncherAdvOptsDialog.tfNewServerPort.toolTipText")); // NOI18N
@@ -203,9 +302,24 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
                 tfNewServerPortFocusLost(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = 34;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(28, 10, 0, 18);
+        pnlPorts.add(tfNewServerPort, gridBagConstraints);
 
         lblNewShutdownPort.setLabelFor(tfNewShutdownPort);
         lblNewShutdownPort.setText(bundle.getString("LauncherAdvOptsDialog.lblNewShutdownPort.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.ipadx = 20;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(9, 18, 0, 0);
+        pnlPorts.add(lblNewShutdownPort, gridBagConstraints);
 
         tfNewShutdownPort.setText("8119");
         tfNewShutdownPort.setToolTipText(bundle.getString("LauncherAdvOptsDialog.tfNewShutdownPort.toolTipText")); // NOI18N
@@ -214,127 +328,56 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
                 tfNewShutdownPortFocusLost(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = 34;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 10, 93, 18);
+        pnlPorts.add(tfNewShutdownPort, gridBagConstraints);
 
-        org.jdesktop.layout.GroupLayout pnlPortsLayout = new org.jdesktop.layout.GroupLayout(pnlPorts);
-        pnlPorts.setLayout(pnlPortsLayout);
-        pnlPortsLayout.setHorizontalGroup(
-            pnlPortsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnlPortsLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(pnlPortsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                    .add(lblNewShutdownPort, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(lblNewServerPort, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(pnlPortsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                    .add(tfNewShutdownPort, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, tfNewServerPort))
-                .addContainerGap())
-        );
-        pnlPortsLayout.setVerticalGroup(
-            pnlPortsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnlPortsLayout.createSequentialGroup()
-                .add(6, 6, 6)
-                .add(pnlPortsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(lblNewServerPort)
-                    .add(tfNewServerPort, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnlPortsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(lblNewShutdownPort)
-                    .add(tfNewShutdownPort, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(85, Short.MAX_VALUE))
-        );
-
-        pnlCheckboxes.setBackground(new java.awt.Color(255, 255, 255));
-        pnlCheckboxes.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("LauncherAdvOptsDialog.pnlCheckboxes.border.title"))); // NOI18N
-
-        ckbLiveLayout.setBackground(new java.awt.Color(255, 255, 255));
-        ckbLiveLayout.setSelected(true);
-        ckbLiveLayout.setText(bundle.getString("LauncherAdvOptsDialog.ckbLiveLayout.text")); // NOI18N
-        ckbLiveLayout.setToolTipText(bundle.getString("LauncherAdvOptsDialog.ckbLiveLayout.toolTipText")); // NOI18N
-
-        ckbSubPageDisplay.setBackground(new java.awt.Color(255, 255, 255));
-        ckbSubPageDisplay.setSelected(true);
-        ckbSubPageDisplay.setText(bundle.getString("LauncherAdvOptsDialog.ckbSubPageDisplay.text")); // NOI18N
-        ckbSubPageDisplay.setToolTipText(bundle.getString("LauncherAdvOptsDialog.ckbSubPageDisplay.toolTipText")); // NOI18N
-
-        ckbStudioDebug.setBackground(new java.awt.Color(255, 255, 255));
-        ckbStudioDebug.setText(bundle.getString("LauncherAdvOptsDialog.ckbStudioDebug.text")); // NOI18N
-        ckbStudioDebug.setToolTipText(bundle.getString("LauncherAdvOptsDialog.ckbStudioDebug.toolTipText")); // NOI18N
-
-        org.jdesktop.layout.GroupLayout pnlCheckboxesLayout = new org.jdesktop.layout.GroupLayout(pnlCheckboxes);
-        pnlCheckboxes.setLayout(pnlCheckboxesLayout);
-        pnlCheckboxesLayout.setHorizontalGroup(
-            pnlCheckboxesLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnlCheckboxesLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(pnlCheckboxesLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, ckbStudioDebug, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, ckbLiveLayout, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, ckbSubPageDisplay, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        pnlCheckboxesLayout.setVerticalGroup(
-            pnlCheckboxesLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnlCheckboxesLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(ckbLiveLayout, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(ckbSubPageDisplay, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(ckbStudioDebug, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(55, Short.MAX_VALUE))
-        );
-
-        pnlButtons.setBackground(new java.awt.Color(255, 255, 255));
-        pnlButtons.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                pnlButtonsMouseClicked(evt);
-            }
-        });
-
-        btnCancel.setText(bundle.getString("LauncherAdvOptsDialog.btnCancel.text")); // NOI18N
-        btnCancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelActionPerformed(evt);
-            }
-        });
-
-        btnSave.setText(bundle.getString("LauncherAdvOptsDialog.btnSave.text")); // NOI18N
-        btnSave.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnSave.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSaveActionPerformed(evt);
-            }
-        });
-
-        org.jdesktop.layout.GroupLayout pnlButtonsLayout = new org.jdesktop.layout.GroupLayout(pnlButtons);
-        pnlButtons.setLayout(pnlButtonsLayout);
-        pnlButtonsLayout.setHorizontalGroup(
-            pnlButtonsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, pnlButtonsLayout.createSequentialGroup()
-                .addContainerGap(544, Short.MAX_VALUE)
-                .add(btnSave, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 80, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(18, 18, 18)
-                .add(btnCancel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 80, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        pnlButtonsLayout.setVerticalGroup(
-            pnlButtonsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnlButtonsLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(pnlButtonsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(btnCancel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 27, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(btnSave, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 27, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.ipadx = 24;
+        gridBagConstraints.ipady = -30;
+        gridBagConstraints.insets = new java.awt.Insets(11, 10, 0, 0);
+        getContentPane().add(pnlPorts, gridBagConstraints);
 
         pnlProxy.setBackground(new java.awt.Color(255, 255, 255));
         pnlProxy.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("LauncherAdvOptsDialog.pnlProxy.border.title"))); // NOI18N
+        pnlProxy.setLayout(new java.awt.GridBagLayout());
+
+        ckbProxyEnabled.setBackground(new java.awt.Color(255, 255, 255));
+        ckbProxyEnabled.setText(bundle.getString("LauncherAdvOptsDialog.ckbProxyEnabled.text")); // NOI18N
+        ckbProxyEnabled.setToolTipText(bundle.getString("LauncherAdvOptsDialog.ckbProxyEnabled.toolTipText")); // NOI18N
+        ckbProxyEnabled.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ckbProxyEnabledActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.ipadx = 114;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(22, 14, 0, 0);
+        pnlProxy.add(ckbProxyEnabled, gridBagConstraints);
 
         lblNewProxyServer.setLabelFor(tfNewProxyServer);
         lblNewProxyServer.setText(bundle.getString("LauncherAdvOptsDialog.lblNewProxyServer.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.ipadx = 10;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(8, 18, 0, 0);
+        pnlProxy.add(lblNewProxyServer, gridBagConstraints);
 
-        tfNewProxyServer.setText("");
+        tfNewProxyServer.setText("null");
         tfNewProxyServer.setToolTipText(bundle.getString("LauncherAdvOptsDialog.tfNewProxyServer.toolTipText")); // NOI18N
         tfNewProxyServer.setEnabled(false);
         tfNewProxyServer.addActionListener(new java.awt.event.ActionListener() {
@@ -347,11 +390,27 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
                 tfNewProxyServerFocusLost(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = 156;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 10, 0, 18);
+        pnlProxy.add(tfNewProxyServer, gridBagConstraints);
 
         lblNewProxyPort.setLabelFor(tfNewProxyPort);
         lblNewProxyPort.setText(bundle.getString("LauncherAdvOptsDialog.lblNewProxyPort.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.ipadx = 19;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(9, 18, 0, 0);
+        pnlProxy.add(lblNewProxyPort, gridBagConstraints);
 
-        tfNewProxyPort.setText("");
+        tfNewProxyPort.setText("null");
         tfNewProxyPort.setToolTipText(bundle.getString("LauncherAdvOptsDialog.tfNewProxyPort.toolTipText")); // NOI18N
         tfNewProxyPort.setEnabled(false);
         tfNewProxyPort.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -359,11 +418,27 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
                 tfNewProxyPortFocusLost(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = 34;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 10, 0, 0);
+        pnlProxy.add(tfNewProxyPort, gridBagConstraints);
+        tfNewProxyPort.getAccessibleContext().setAccessibleDescription(bundle.getString("LauncherAdvOptsDialog.tfNewProxyPort.AccessibleContext.accessibleDescription")); // NOI18N
 
         lblNewProxyUsername.setLabelFor(tfNewProxyPort);
         lblNewProxyUsername.setText(bundle.getString("LauncherAdvOptsDialog.lblNewProxyUsername.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.ipadx = 25;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(9, 18, 0, 0);
+        pnlProxy.add(lblNewProxyUsername, gridBagConstraints);
 
-        tfNewProxyUsername.setText("");
+        tfNewProxyUsername.setText("null");
         tfNewProxyUsername.setToolTipText(bundle.getString("LauncherAdvOptsDialog.tfNewProxyUsername.toolTipText")); // NOI18N
         tfNewProxyUsername.setEnabled(false);
         tfNewProxyUsername.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -371,119 +446,94 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
                 tfNewProxyUsernameFocusLost(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = 156;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 10, 0, 18);
+        pnlProxy.add(tfNewProxyUsername, gridBagConstraints);
 
         lblNewProxyPassword.setLabelFor(tfNewProxyPort);
         lblNewProxyPassword.setText(bundle.getString("LauncherAdvOptsDialog.lblNewProxyPassword.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.ipadx = 27;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(9, 18, 0, 0);
+        pnlProxy.add(lblNewProxyPassword, gridBagConstraints);
 
-        tfNewProxyPassword.setText("");
+        tfNewProxyPassword.setText("null");
         tfNewProxyPassword.setToolTipText(bundle.getString("LauncherAdvOptsDialog.tfNewProxyPassword.toolTipText")); // NOI18N
         tfNewProxyPassword.setEnabled(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = 156;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 10, 19, 18);
+        pnlProxy.add(tfNewProxyPassword, gridBagConstraints);
 
-        ckbProxyEnabled.setBackground(new java.awt.Color(255, 255, 255));
-        ckbProxyEnabled.setText(bundle.getString("LauncherAdvOptsDialog.ckbProxyEnabled.text")); // NOI18N
-        ckbProxyEnabled.setToolTipText(bundle.getString("LauncherAdvOptsDialog.ckbProxyEnabled.toolTipText")); // NOI18N
-        ckbProxyEnabled.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ckbProxyEnabledActionPerformed(evt);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 9;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 10;
+        gridBagConstraints.ipadx = -42;
+        gridBagConstraints.ipady = -30;
+        gridBagConstraints.insets = new java.awt.Insets(11, 10, 0, 10);
+        getContentPane().add(pnlProxy, gridBagConstraints);
+
+        pnlButtons.setBackground(new java.awt.Color(255, 255, 255));
+        pnlButtons.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                pnlButtonsMouseClicked(evt);
             }
         });
+        pnlButtons.setLayout(new java.awt.GridBagLayout());
 
-        org.jdesktop.layout.GroupLayout pnlProxyLayout = new org.jdesktop.layout.GroupLayout(pnlProxy);
-        pnlProxy.setLayout(pnlProxyLayout);
-        pnlProxyLayout.setHorizontalGroup(
-            pnlProxyLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnlProxyLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(pnlProxyLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, pnlProxyLayout.createSequentialGroup()
-                        .add(pnlProxyLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                            .add(lblNewProxyPassword, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(lblNewProxyUsername, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(lblNewProxyPort, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 77, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, lblNewProxyServer, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(pnlProxyLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                            .add(tfNewProxyPassword)
-                            .add(tfNewProxyUsername, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, tfNewProxyServer, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
-                            .add(tfNewProxyPort, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap())
-                    .add(pnlProxyLayout.createSequentialGroup()
-                        .add(ckbProxyEnabled, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
-                        .add(14, 14, 14))))
-        );
-        pnlProxyLayout.setVerticalGroup(
-            pnlProxyLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, pnlProxyLayout.createSequentialGroup()
-                .add(ckbProxyEnabled, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 5, Short.MAX_VALUE)
-                .add(pnlProxyLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(lblNewProxyServer)
-                    .add(tfNewProxyServer, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnlProxyLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(lblNewProxyPort)
-                    .add(tfNewProxyPort, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnlProxyLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(lblNewProxyUsername)
-                    .add(tfNewProxyUsername, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnlProxyLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(lblNewProxyPassword)
-                    .add(tfNewProxyPassword, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
+        btnCancel.setText(bundle.getString("LauncherAdvOptsDialog.btnCancel.text")); // NOI18N
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 15;
+        gridBagConstraints.ipady = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(11, 18, 11, 10);
+        pnlButtons.add(btnCancel, gridBagConstraints);
 
-        tfNewProxyPort.getAccessibleContext().setAccessibleDescription(bundle.getString("LauncherAdvOptsDialog.tfNewProxyPort.AccessibleContext.accessibleDescription")); // NOI18N
+        btnSave.setText(bundle.getString("LauncherAdvOptsDialog.btnSave.text")); // NOI18N
+        btnSave.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 23;
+        gridBagConstraints.ipady = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(11, 544, 11, 0);
+        pnlButtons.add(btnSave, gridBagConstraints);
 
-        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
-                .addContainerGap()
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(pnlButtons, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(layout.createSequentialGroup()
-                        .add(lblBrowser, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 108, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(btnDefBrowser, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 200, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(layout.createSequentialGroup()
-                                .add(tfBrowser, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 584, Short.MAX_VALUE)
-                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                .add(btnFileChooser, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 30, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
-                    .add(layout.createSequentialGroup()
-                        .add(pnlCheckboxes, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(pnlPorts, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(pnlProxy, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .add(ckbAutoLaunch, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 164, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
-                .addContainerGap()
-                .add(ckbAutoLaunch)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE, false)
-                    .add(lblBrowser)
-                    .add(tfBrowser, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(btnFileChooser, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(btnDefBrowser, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 27, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(pnlProxy, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(pnlPorts, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(pnlCheckboxes, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnlButtons, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 19;
+        gridBagConstraints.ipadx = 72;
+        gridBagConstraints.insets = new java.awt.Insets(18, 10, 11, 10);
+        getContentPane().add(pnlButtons, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
