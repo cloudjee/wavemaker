@@ -164,7 +164,7 @@ dojo.declare("wm.TreeNode", null, {
 	    }
 	},
 	formatContent: function() {
-		i = this.formatImage();
+		var i = this.formatImage();
 		return [i, i ? '&nbsp;' : '', this.content].join('');
 	},
 	createNode: function() {
