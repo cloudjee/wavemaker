@@ -44,7 +44,7 @@ QueryEditor.widgets = {
 							helpPanel: ["wm.Panel", { width: "100%", height: "100%", layoutKind: "top-to-bottom"}, {}, {
 							    helpCaption1: ["wm.Label", {width: "100%", height: "28px", caption: "1. Remember to save your query before leaving the editor"}],
 							    helpCaption2: ["wm.Label", {width: "100%", height: "30px", singleLine: false, caption: "2. After you finish creating your query, create a new service variable to use it"}],						    
-							    helpLink: ["wm.Label", {width: "100%", height: "25px", link: "http://dev.wavemaker.com/wiki/bin/view/Dev/HqlTutorial", caption: "Details on query syntax"}]
+							    helpLink: ["wm.Label", {width: "100%", height: "25px", link: "http://dev.wavemaker.com/wiki/bin/view/wmdoc_6.3/HqlTutorial", caption: "Details on query syntax"}]
 							    
 							}]
 						}]
