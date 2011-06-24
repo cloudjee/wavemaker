@@ -753,9 +753,12 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	        //e.set("value",e.get("value"));
 	    this.changed();
 	},
+
 	setDefaultOnInsert:function(){
-		if (this.editor && this.defaultInsert)
+	        if (this.editor && this.defaultInsert) {
 		    this.editor.set('value', this.defaultInsert, false);
+		    this.invalidate();
+		}
 	},
     onEnterKeyPress: function() {}
 });
