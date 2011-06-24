@@ -492,6 +492,13 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		props.selectedItem.simpleBindProp = false;
 	    }
 	    return props;
+	},
+
+	setDefaultOnInsert:function(){
+		if (this.editor && this.defaultInsert){
+			this.setEditorValue(this.defaultInsert);
+			this.changed();
+		}
 	}
 });
 
@@ -581,13 +588,6 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 			s.setData(v);
 			this.endEditUpdate();
 			//wm.fire(f, "populateEditors");
-		}
-	},
-
-	setDefaultOnInsert:function(){
-		if (this.editor && this.defaultInsert){
-			this.setEditorValue(this.defaultInsert);
-			this.changed();
 		}
 	}
 });
