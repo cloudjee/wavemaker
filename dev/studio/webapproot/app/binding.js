@@ -410,7 +410,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		var prop = this.owner.targetProps.targetProperty;
 		var propPrefix = "";
 
-		if (prop.indexOf(".") != -1) {
+		if (prop.indexOf(".") != -1 && !object.isDestroyed) {
 		    propPrefix = prop.replace(/\..*?$/,"");
 		    prop = prop.replace(/^.*\./,"");
 		    object = object.getValue(propPrefix) || object;
