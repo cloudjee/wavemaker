@@ -29,10 +29,14 @@ dojo.declare("wm.Dashboard", wm.Control, {
 	minColWidth:10,
 
 	saveInCookie:true,
-	portlets:[],
-	dijitPortlets:[],
+        portlets:null,
+        dijitPortlets:null,
 	
 	init: function() {
+	        if (!this.portlets) 
+		    this.portlets = [];
+	        if (!this.dijitPortlets)
+		    this.dijitPortlets = [];
 		dojo['require']("dojox.layout.GridContainer");
 		dojo['require']("dojox.widget.Portlet");
 		dojo['require']("dijit.TooltipDialog");
