@@ -255,7 +255,6 @@ public class MainConsole extends javax.swing.JFrame
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipady = 8;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.ABOVE_BASELINE;
         gridBagConstraints.insets = new java.awt.Insets(17, 10, 0, 0);
         getContentPane().add(lblStatus, gridBagConstraints);
 
@@ -265,7 +264,6 @@ public class MainConsole extends javax.swing.JFrame
         gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.ABOVE_BASELINE;
         gridBagConstraints.insets = new java.awt.Insets(11, 10, 11, 10);
         getContentPane().add(pbStatus, gridBagConstraints);
 
@@ -276,7 +274,6 @@ public class MainConsole extends javax.swing.JFrame
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.ABOVE_BASELINE;
         gridBagConstraints.insets = new java.awt.Insets(11, 10, 0, 0);
         getContentPane().add(lblWMTitleLogo, gridBagConstraints);
 
@@ -319,7 +316,6 @@ public class MainConsole extends javax.swing.JFrame
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.ABOVE_BASELINE;
         gridBagConstraints.insets = new java.awt.Insets(15, 10, 0, 0);
         getContentPane().add(pnlServerOps, gridBagConstraints);
 
@@ -345,7 +341,6 @@ public class MainConsole extends javax.swing.JFrame
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(18, 10, 0, 0);
         getContentPane().add(pnlAdvOpts, gridBagConstraints);
 
