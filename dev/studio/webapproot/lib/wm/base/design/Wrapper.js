@@ -398,9 +398,10 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 	},
 	mousedown: function(e) {
 		if (wm.inScrollbar(e)) {
+		    if (!dojo.isIE <= 8)
 			this.click(e);
-			dojo.stopEvent(e);
-			return;
+		    dojo.stopEvent(e);
+		    return;
 		}
 		this.selectDragMode(e);
 		switch (this.dragMode) {
