@@ -92,19 +92,19 @@ public class RESTService {
             String method, String contentType, String endpoint,
             Class<T> responseType) {
         String endpointAddress = null;
-        Object postData = null;
-        
+
         if (endpoint != null) {
             endpointAddress = endpoint;
         } else {
             endpointAddress = parameterizedURI;
         }
         
+        String postData = "";
         if (method != null && method.equals(Constants.HTTP_METHOD_POST)) {
             httpRequestMethod = HTTPRequestMethod.POST;
             if (inputs.size() == 1) {
                 for (Object o : inputs.values()) {
-                    postData = o;
+                    postData = (String)o;
                 }
             } else if (inputs.size() > 1) {
                 throw new WebServiceInvocationException(

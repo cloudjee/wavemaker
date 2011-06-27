@@ -11,12 +11,20 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
 dojo.provide("wm.studio.pages.RestUrlDialog.RestUrlDialog");
 
 dojo.declare("RestUrlDialog", wm.Page, {
 	start: function() {
 		this.url = null;
+		this.method = null;
+		this.contentType = null;
+		this.postData = null;
+		this.basicAuth = null;
+		this.userId = null;
+		this.password = null;
+		this.userIdInput.setDisabled(true);
+		this.passwordInput.setDisabled(true);
+		this.basicAuthCheckbox.components.editor.setChecked(false)
 	},
 	clearAll: function() {
 		this.urlInput.clear();
@@ -26,11 +34,23 @@ dojo.declare("RestUrlDialog", wm.Page, {
 	},
 	testBtnClick: function(inSender) {
 		var u = this.urlInput.getValue("displayValue");
+		var m = this.methodInput.getDataValue();
+		var t = this.contentTypeInput.getDataValue();
+		var p = this.requestTextArea.getDataValue();
+		var b = this.basicAuthCheckbox.components.editor.getChecked();
+		var i = (this.userIdInput.getDataValue() == undefined ? "" : this.userIdInput.getDataValue());
+		var w = (this.passwordInput.getInputValue() == undefined ? "" : this.passwordInput.getInputValue());
 		if (u) {
 		    studio.beginWait(this.getDictionaryItem("WAIT_TEST_CLICK"));
-			studio.webService.requestAsync("invokeRestCall", [u], 
-				dojo.hitch(this, "invokeRestCallSuccess"), 
-				dojo.hitch(this, "invokeRestCallError"));
+			if (m == "GET") {
+				studio.webService.requestAsync("invokeRestCall", [u, b, i, w], 
+					dojo.hitch(this, "invokeRestCallSuccess"), 
+					dojo.hitch(this, "invokeRestCallError"));
+			} else { //POST
+				studio.webService.requestAsync("invokeRestCall", [u, m, t, p, b, i, w], 
+					dojo.hitch(this, "invokeRestCallSuccess"), 
+					dojo.hitch(this, "invokeRestCallError"));
+			}
 		}
 	},
 	invokeRestCallSuccess: function(inResponse) {
@@ -49,7 +69,13 @@ dojo.declare("RestUrlDialog", wm.Page, {
 	populateBtnClick: function(inSender) {
 		var u = this.urlInput.getValue("displayValue");
 		if (u) {
-			this.url = u
+			this.url = u;
+			this.method = this.methodInput.getDataValue();
+			this.contentType = this.contentTypeInput.getDataValue();
+			this.postData = this.requestTextArea.getDataValue();
+			this.basicAuth = this.basicAuthCheckbox.components.editor.getChecked();
+			this.userId = (this.userIdInput.getDataValue() == undefined ? "" : this.userIdInput.getDataValue());
+			this.password = (this.passwordInput.getInputValue() == undefined ? "" : this.passwordInput.getInputValue());
 			this.owner.owner.layers.setLayer("restBuilderLayer");
 			this.owner.owner.importButton.setDisabled(false);
 			this.owner.owner.restServiceBuilderPage.page.populate();
@@ -62,5 +88,11 @@ dojo.declare("RestUrlDialog", wm.Page, {
 		this.owner.owner.importButton.setDisabled(false);
 		//wm.fire(this.owner, "dismiss");
 	},
+
+	basicAuthCheckboxChange: function(inSender, inDisplayValue, inDataValue) {
+		this.userIdInput.setDisabled(!inDataValue);
+		this.passwordInput.setDisabled(!inDataValue);
+    },
+
 	_end: 0
 });

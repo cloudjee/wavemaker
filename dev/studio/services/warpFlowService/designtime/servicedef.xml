@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" springFile="warpFlowService.spring.xml" type="JavaService" CRUDService="false" class="com.wavemaker.studio.warp.FlowService" id="warpFlowService">
+    <operation name="listFlows">
+        <parameter isList="false" typeRef="java.lang.String" name="host"/>
+        <parameter isList="false" typeRef="java.lang.String" name="port"/>
+        <parameter isList="false" typeRef="java.lang.String" name="projectName"/>
+        <parameter isList="false" typeRef="java.lang.String" name="sessionId"/>
+        <return isList="false" typeRef="java.lang.String"/>
+    </operation>
+    <operation name="listAllFlows">
+        <parameter isList="false" typeRef="java.lang.String" name="host"/>
+        <parameter isList="false" typeRef="java.lang.String" name="port"/>
+        <parameter isList="false" typeRef="java.lang.String" name="sessionId"/>
+        <return isList="false" typeRef="java.lang.String"/>
+    </operation>
+    <operation name="listProjects">
+        <parameter isList="false" typeRef="java.lang.String" name="host"/>
+        <parameter isList="false" typeRef="java.lang.String" name="port"/>
+        <parameter isList="false" typeRef="java.lang.String" name="sessionId"/>
+        <return isList="false" typeRef="java.lang.String"/>
+    </operation>
+    <dataobjects/>
+</service>
