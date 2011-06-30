@@ -1,4 +1,4 @@
-dojo.provide("dojox.grid.cells.dijit");
+dojo.provide("dojox.grid.cells.dijit"); 
 
 dojo.require("dojox.grid.cells");
 
