@@ -330,7 +330,10 @@ Studio.widgets = {
 							binding: ["wm.Binding",{},{}, {
 							    wire: ["wm.Wire", {"source":"app.pagesListVar","targetProperty":"dataSet"}, {}]
 							}]
+						    }],
+						    languageSelect: ["wm.SelectMenu", {caption: "Language", margin:"4,0,4,20", width: "180px", height: "24px", captionSize: "70px", displayField: "dataValue", dataField: "dataValue", dataValue: "default", options: "default, ens, ja, es, it, cn, other", restrictValues: false},{onchange: "languageSelectChanged"},{
 						    }]
+
 						}]
 					}],
 				bench: ["wm.Panel", {width: "100%", height: "100%", border: "1, 0, 0, 0", backgroundColor: "silver", borderColor: "#666E80", verticalAlign: "middle", horizontalAlign: "center"}, {}, {

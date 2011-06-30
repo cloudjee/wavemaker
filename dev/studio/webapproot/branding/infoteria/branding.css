@@ -1,0 +1,19 @@
+body {
+background: url(images/bg.gif) repeat-x left top !important;
+}
+
+.wm-darksnazzy .wm-palette {
+    background: url(images/bg.gif) repeat-x left top !important;
+    color: black !important;
+}
+
+.wm-darksnazzy .wm-palette .wmtree {
+    background-color: transparent !important;
+    background-image: url(images/logo.gif);
+    background-position: 0% 100%;
+    background-repeat: no-repeat;
+}
+
+.wm-darksnazzy .wmtree .wmtree-root-leaf, .wm-darksnazzy .wmtree .wmtree-root-last-leaf, .wm-darksnazzy .wmtree .wmtree-last-item, .wm-darksnazzy .wmtree .wmtree-root-leaf, .wm-darksnazzy .wmtree .wmtree-root-last-leaf, .wmtree .wm-darksnazzy .wmtree-last-item {
+    background-color: transparent !important;
+}

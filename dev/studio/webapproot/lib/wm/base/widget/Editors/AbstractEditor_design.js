@@ -76,6 +76,10 @@ wm.AbstractEditor.extend({
 	},
 	makePropEdit: function(inName, inValue, inDefault) {
 		switch (inName) {
+			case "formatter":
+		                var funcName = this.generateEventName("onReadOnlyNodeFormat");
+		                var customFunction = (this.formatter == funcName) ? funcName : "Custom Function";
+		                return makeSelectPropEdit(inName, inValue, ["", customFunction].concat(wm.formatters), inDefault);
 			case "formField":
 				return new wm.propEdit.FormFieldSelect({component: this, name: inName, value: inValue});
 			case "captionAlign":
@@ -92,10 +96,28 @@ wm.AbstractEditor.extend({
 				return makeReadonlyButtonEdit(inName, inValue, inDefault);
 		}
 		return this.inherited(arguments);
+	},
+	setFormatter: function(inDisplay) {
+	    if (this.formatter == inDisplay)
+		return;
+	    this.formatter = inDisplay;
+	    if (this.components.format)
+		this.components.format.destroy();
+	    var funcName = this.generateEventName("onReadOnlyNodeFormat");
+	    if (this.formatter == "Custom Function" || this.formatter == funcName) {
+		this.formatter = funcName;
+		eventEdit(this, "onReadOnlyNodeFormat", funcName, this.owner == studio.application, "inValue");
+	    } else {
+		var ctor = wm.getFormatter(this.formatter);
+		new ctor({name: "format", owner: this});
+	    }
 	}
+
 });
 
 wm.Object.extendSchema(wm.AbstractEditor, {
+    formatter: { group: "format", order: 20 },
+    format: { ignore: 1, writeonly: 1, categoryParent: "Properties", categoryProps: {component: "format"}},
     formField: {writeonly: 1, group: "common", order: 500},
     caption: {group: "Labeling", order: 1, bindTarget:true, doc: 1},
     captionPosition: {group: "Labeling", order: 2, doc: 1},
@@ -106,15 +128,17 @@ wm.Object.extendSchema(wm.AbstractEditor, {
 
     displayValue: {group: "editData", order: 2}, // use getDisplayValue()
     dataValue: {ignore: 1, bindable: 1, group: "editData", order: 3, simpleBindProp: true, type: "String"}, // use getDataValue()
+    isDirty: {ignore: 1, bindable: 1, group: "editData", order: 10, type: "boolean"}, 
     emptyValue: {group: "editData", order: 4, doc: 1},
     required: {group: "validation", order: 1, doc: 1},
     editorBorder: {group: "style", order: 100},
     scrollX: {ignore:1},
     scrollY: {ignore:1},
+    display: {ignore:1},
     changeOnEnter: {ignore: 1},
     changeOnKey: {ignore: 1},
     onEnterKeyPress: {ignore: 1},
-    display:{ignore:1},
+
     defaultInsert:{type: "String", bindable: 1, group: "editData", order: 10},
     setCaption: {group: "method", doc: 1},
     setCaptionSize: {group: "method", doc: 1},

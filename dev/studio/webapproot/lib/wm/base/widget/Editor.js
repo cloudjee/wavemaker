@@ -159,7 +159,7 @@ dojo.declare("wm.Editor", wm.Container, {
 	createCaption: function() {
 		var cs = String(this.captionSize);
 		var classNames = {domNode: ["wmeditor-caption"].concat(this._classes.captionNode)};
-		this.captionLabel = new wm.Label({parent: this, width: cs, height: cs, _classes: classNames, singleLine: this.singleLine, caption: this.caption, showing: Boolean(this.caption), margin: "0,4,0,0", border: 0});
+	    this.captionLabel = new wm.Label({parent: this, width: cs, height: cs, _classes: classNames, singleLine: this.singleLine, caption: this.caption, showing: Boolean(this.caption), margin: "0,4,0,0", border: 0, owner: this});
 		this.setCaptionAlign(this.captionAlign);
 	},
 	getRequiredHtml: function() {

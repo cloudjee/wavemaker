@@ -36,9 +36,11 @@ dojo.declare("wm.dijit.ProgressBar", wm.Dijit, {
 	reflowDijit: function() {
 		var b = dojo.contentBox(this.domNode);
 		if (this.dijit) {
-			dojo.marginBox(this.dijit.domNode, {h: b.h});
-			dojo.marginBox(this.dijit.label, {h: b.h});
-			this.dijit.label.style.lineHeight = b.h + "px";
+		    dojo.marginBox(this.dijit.domNode, {h: b.h});
+		    if (this.dijit.labelNode) {
+			dojo.marginBox(this.dijit.labelNode, {h: b.h});
+			this.dijit.labelNode.style.lineHeight = b.h + "px";
+		    }
 		}
 	},
 	setProgress: function(inProgress) {

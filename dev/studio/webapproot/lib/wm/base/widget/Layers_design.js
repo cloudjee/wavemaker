@@ -58,11 +58,13 @@ wm.Layer.extend({
 		l.moveLayerIndex(this, i + inDelta);
 	},
 	makePropEdit: function(inName, inValue, inDefault) {
+	        var prop = this.schema ? this.schema[inName] : null;
+	        var name =  (prop && prop.shortname) ? prop.shortname : inName;
 		switch (inName) {
 			case "moveNext":
-				return makeReadonlyButtonEdit(inName, inValue, inDefault, '&raquo;');
+				return makeReadonlyButtonEdit(name, inValue, inDefault, '&raquo;');
 			case "movePrevious":
-				return makeReadonlyButtonEdit(inName, inValue, inDefault, '&laquo;');
+				return makeReadonlyButtonEdit(name, inValue, inDefault, '&laquo;');
 		}
 		return this.inherited(arguments);
 	},
@@ -208,12 +210,14 @@ wm.Layers.extend({
 		}, this);
 	},
 	makePropEdit: function(inName, inValue, inDefault) {
+	        var prop = this.schema ? this.schema[inName] : null;
+	        var name =  (prop && prop.shortname) ? prop.shortname : inName;
 		switch (inName) {
 		        case "transition":
 		                return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["none", "fade", "slide"]});
 
 			case "add":
-				return makeReadonlyButtonEdit(inName, inValue, inDefault);
+				return makeReadonlyButtonEdit(name, inValue, inDefault);
 			case "layersType":
 				return makeSelectPropEdit(inName, inValue, ["Layers", "RoundedTabs", "Tabs", "Accordion"], inDefault);
 			case "defaultLayer":
@@ -301,7 +305,15 @@ wm.Object.extendSchema(wm.AccordionLayers, {
     autoScroll: {group: "scrolling", order: 100, ignore: 0}, // Accordion should support vertical scrolling
     scrollY: {group: "scrolling", order: 102, ignore: 0}
 });
-
+wm.Object.extendSchema(wm.TabLayers, {
+    conditionalTabButtons: {group: "layout"}
+});
+wm.Object.extendSchema(wm.TabLayers, {
+    conditionalTabButtons: {group: "layout"}
+});
+wm.Object.extendSchema(wm.TabLayers, {
+    conditionalTabButtons: {group: "layout"}
+});
 wm.Object.extendSchema(wm.TabLayers, {
     conditionalTabButtons: {group: "layout"}
 });

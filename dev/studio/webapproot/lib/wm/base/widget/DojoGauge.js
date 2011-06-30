@@ -58,7 +58,7 @@ dojo.declare("wm.DojoGauge", wm.Control, {
 	    cy: 169,
 	    radius: 125,
 	    background: gFill,
-	    image: dojo.isIE || !this.useOverlayImage ? "" : gImage, // TODO: Test in chrome and IE for both values of useOverlayImage
+	    image: dojo.isIE && dojo.isIE <= 8 || !this.useOverlayImage ? "" : gImage, // TODO: Test in chrome and IE for both values of useOverlayImage
 	    ranges: ranges,
 	    useRangeStyles: 0,
 	    majorTicks: gMajorTick

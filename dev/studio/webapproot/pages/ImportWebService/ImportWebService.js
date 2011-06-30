@@ -35,7 +35,8 @@ dojo.declare("ImportWebService", wm.Page, {
 		this.typeInput.setValue("displayValue", this.TYPE_SOAP);
 		this.wsdlPathTypeInput.setValue("displayValue", this.IMPORT_TYPE_URL);
 		this.wsdlUrlInput.clear();
-		this.wsdlFileInput.fileNode.value = "";
+	        if (this.wsdlFileInput.fileNode)
+		    this.wsdlFileInput.fileNode.value = "";
 		this.serviceIdAutoYesRadio.components.editor.setChecked(true);
 		this.serviceIdInput.clear();
 	        if (this.restServiceBuilderPage.page) {

@@ -425,6 +425,9 @@ dojo.declare("Studio", wm.Page, {
 		wm.undo.clear();
 		if (!this.page)
 			return;
+	        this.languageSelect.beginEditUpdate();
+	        this.languageSelect.setDisplayValue("default");
+	        this.languageSelect.endEditUpdate();
 		this.select(null);
 		this.setScript("");
 		var c = this.page.declaredClass;
@@ -1368,6 +1371,30 @@ dojo.declare("Studio", wm.Page, {
     },
     revertThemeClick: function(inSender) {
 	this.themesPage.page.revertTheme();
+    },
+    languageSelectChanged: function(inSender, optionalPageName) {
+	var lang = this.languageSelect.getDisplayValue();
+	if (lang == "other") {
+	    app.prompt("Enter code", "",
+		       function(inResult) {
+			   studio.languageSelect.setDisplayValue(inResult);
+		       },
+		       function() {
+			   studio.languageSelect.setDisplayValue("default");
+		       });
+	    return;
+	}
+	if (lang != "default") {
+	    var data = wm.load("projects/" + studio.project.projectName + "/language/nls/" + lang + "/" + studio.project.pageName + ".js");
+	    try {
+		data = dojo.fromJson(data);
+		this.page.installDesignDictionary(data);
+	    } catch(e){
+		console.error("Failed to load dictionary " + lang + "/" + studio.project.pageName);
+	    }
+	} else {
+	    this.page.installDesignDictionary({});
+	}
     },
     pageSelectChanged: function(inSender, optionalPageName) {
 	if (!studio.page) return;

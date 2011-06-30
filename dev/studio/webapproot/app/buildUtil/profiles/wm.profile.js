@@ -183,6 +183,7 @@ dependencies = {
 				"wm.base.widget.Dialogs.GenericDialog",
 				"wm.base.widget.Dialogs.PageDialog",
 				"wm.base.widget.Dialogs.DesignableDialog",
+				"wm.base.widget.Dialogs.LoadingDialog",
 				//"wm.base.widget.Editor",
 				//"wm.base.widget.RelatedEditor",
 				//"wm.base.widget.FileUpload",
@@ -348,6 +349,8 @@ dependencies = {
 				"wm.base.widget.gadget.Stocks",
 				"wm.base.widget.gadget.Weather",
 				"wm.base.widget.gadget.YouTube",
+			        "wm.base.widget.gadget.Facebook",
+			        "wm.base.widget.gadget.GoogleMap"
 			]		
 		},
 		

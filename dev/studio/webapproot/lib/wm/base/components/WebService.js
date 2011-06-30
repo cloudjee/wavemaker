@@ -44,19 +44,20 @@ dojo.declare("wm.WebService", wm.JavaService, {
 		d.show();
 	},
 	getCreateWebServiceDialog: function() {
-		if (wm.WebService.newWebServiceDialog) {
-			return wm.WebService.newWebServiceDialog;
-		}
+	    var pageName = this.pageName || "";
+	    if (wm.WebService["newWebServiceDialog" + pageName]) {
+		return wm.WebService["newWebServiceDialog" + pageName];
+	    }
 		var props = {
 			owner: studio,
-			pageName: "ImportWebService",
+			pageName: pageName || "ImportWebService",
 			hideControls: true,
-			width: "800px",
+			width: this.width || "800px",
 		    //height: "612px",
-		    height: "597px",
-		    title: studio.getDictionaryItem("wm.WebService.IMPORT_TITLE")
+		    height: this.height || "597px",
+		    title: this.pageTitle || studio.getDictionaryItem("wm.WebService.IMPORT_TITLE")
 		};
-		var d = wm.WebService.newWebServiceDialog = new wm.PageDialog(props);
+		var d = wm.WebService["newWebServiceDialog" + pageName] = new wm.PageDialog(props);
 		d.onClose = dojo.hitch(this, function(inWhy) {
 			if (inWhy == "Import")
 				this.completeNewWebService();

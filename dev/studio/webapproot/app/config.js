@@ -22,6 +22,7 @@ djConfig.isDebug = djConfig.debugBoot;
 djConfig.gfxRenderer = 'svg,silverlight';
 djConfig.modulePaths = {language : '../../../language'};
 
+
 if (djConfig.isDebug) {
 	djConfig.debugBase = true;
 	djConfig.noFirebugLite = false;
@@ -30,7 +31,7 @@ if (djConfig.isDebug) {
 wm = {};
 
 wm.studioConfig = {
-        studioVersion: '6.3.1Beta',
+        studioVersion: '6.4.0DevBuild',
 	preventUnloadWarning: true,
 	previewPopup: false,
 	preventLiveData: (location.search.indexOf("nolive") >= 0),
@@ -43,3 +44,4 @@ wm.libPath = wm.basePath + "lib";
 wm.relativeLibPath = "lib/";
 wm.logging = (location.search.indexOf("logging") >= 0)
 wm.checkGoogleFrame = true;
+//wm.branding = "infoteria";

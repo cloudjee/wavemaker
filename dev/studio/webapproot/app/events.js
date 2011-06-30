@@ -103,14 +103,14 @@ getAllEventsInCode = function() {
   return results;
 }
 
-eventEdit = function(ctrl, name, value, noInSenderInArgs) {
+eventEdit = function(ctrl, name, value, noInSenderInArgs, optionalArgList) {
     var appLevel = ctrl instanceof wm.Application || ctrl.owner instanceof wm.Application;
     var code = (appLevel) ? studio.getAppScript() : studio.getScript();
 
     if (wm.isInstanceType(ctrl, wm.Page))
 	value = name;
     if (!getEvent( value, code)) {
-	var a = getArgs(ctrl, name);
+	var a = (optionalArgList) ? ", " + optionalArgList : getArgs(ctrl, name);
 	if (wm.isInstanceType(ctrl, wm.Page) || noInSenderInArgs)
 	    a = a.substring(1);
 	else

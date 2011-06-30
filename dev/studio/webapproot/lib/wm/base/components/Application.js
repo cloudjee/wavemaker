@@ -24,6 +24,7 @@ wm.registerComponentLoader = function(inType, inLoader){
 dojo.declare("wm.Application", wm.Component, {
     i18n: false,
 	main: "Main",
+        disableDirtyEditorTracking: false,
         deletionDisabled: 1,
         projectSubVersion: 1,
         projectVersion: 1,
@@ -45,6 +46,14 @@ dojo.declare("wm.Application", wm.Component, {
 		    } catch(e){}
 		}
 
+	    if (wm.branding) {
+		this._brandingDictionary = dojo.fromJson(wm.load("branding/" + wm.branding + "/branding.js"));
+		var style = document.createElement("link");
+		style.type = "text/css";
+		style.rel = "stylesheet";
+		style.href = "branding/" + wm.branding + "/branding.css";
+		document.getElementsByTagName("head")[0].appendChild(style);	
+	    }
 		this.inherited(arguments);
 		wm.typeManager.initTypes();
 
@@ -52,7 +61,7 @@ dojo.declare("wm.Application", wm.Component, {
 		                 window.location.search.match(/theme\=(.*?)$/);
 
 	        this.setTheme(themematch ? themematch[1] : this.theme, true);
-	        if (dojo.isIE && dojo.isIE < 8 || dojo.isIE == 9) this.dialogAnimationTime = 0;
+	        if (dojo.isIE && dojo.isIE < 8) this.dialogAnimationTime = 0;
 
 	    if (djConfig.isDebug && !this.debugDialog) 
 		this.createDebugDialog();
@@ -715,14 +724,19 @@ dojo.declare("wm.Application", wm.Component, {
 	    this.toolTipDialog.bounds.l = event.mouseX;
 	    this.toolTipDialog.bounds.t = event.mouseY;
 	}
-	this.toolTipDialog.setUserPrompt(message);
+	this.toolTipDialog.setUserPrompt(message);	
 	this.toolTipDialog.show();
+    },
+    getToolTip: function() {
+	if (this.toolTipDialog)
+	    return this.toolTipDialog.userPrompt;
+	return "";
     },
     hideToolTip: function() {
 	this.toolTipDialog.hide();
     },
     createMinifiedDialogPanel: function() {
-	this.wmMinifiedDialogPanel = new wm.Panel({name: "wmMinifiedDialogPanel", width: this._page.root.bounds.w + "px", height: "25px", border: "2,0,0,0", padding: "2", autoScroll: true, verticalAlign: "top", horizontalAlign: "left", layoutKind: "left-to-right"});
+	this.wmMinifiedDialogPanel = new wm.Panel({name: "wmMinifiedDialogPanel", width: this._page.root.bounds.w + "px", height: "25px", border: "2,0,0,0", padding: "2", autoScroll: true, verticalAlign: "top", horizontalAlign: "left", layoutKind: "left-to-right", owner: this});
 	document.body.appendChild(this.wmMinifiedDialogPanel.domNode);
 	this.wmMinifiedDialogPanel.subscribe("window-resize", this, "resizeMinifiedDialogPanel");
 	this.resizeMinifiedDialogPanel();

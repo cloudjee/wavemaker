@@ -101,9 +101,11 @@ wm.Dashboard.extend({
 		}
 	},
 	makePropEdit: function(inName, inValue, inDefault) {
+	        var prop = this.schema ? this.schema[inName] : null;
+	        var name =  (prop && prop.shortname) ? prop.shortname : inName;
 		switch (inName) {
 		case "configPortlets":
-			return makeReadonlyButtonEdit(inName, inValue, inDefault);
+			return makeReadonlyButtonEdit(name, inValue, inDefault);
 		}
 		return this.inherited(arguments);
 	},

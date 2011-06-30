@@ -1,6 +1,4 @@
-dojo.provide("dijit.MenuBar");
-
-dojo.require("dijit.Menu");
+define("dijit/MenuBar", ["dojo", "dijit", "text!dijit/templates/MenuBar.html", "dijit/Menu"], function(dojo, dijit) {
 
 dojo.declare("dijit.MenuBar", dijit._MenuBase, {
 	// summary:
@@ -9,6 +7,8 @@ dojo.declare("dijit.MenuBar", dijit._MenuBase, {
 	templateString: dojo.cache("dijit", "templates/MenuBar.html"),
 
 	baseClass: "dijitMenuBar",
+
+    /* WaveMaker added openOnHover */
   openOnHover: false,
 	
 	// _isMenuBar: [protected] Boolean
@@ -33,6 +33,7 @@ dojo.declare("dijit.MenuBar", dijit._MenuBase, {
 		var prev_item = this.focusedChild,
 			showpopup = prev_item && prev_item.popup && prev_item.popup.isShowingNow;
 		this.inherited(arguments);
+		/* WaveMaker added openOnHover */
 		if(this.openOnHover || (showpopup && item.popup && !item.disabled)){
 			this._openPopup();		// TODO: on down arrow, _openPopup() is called here and in onItemClick()
 		}
@@ -64,4 +65,8 @@ dojo.declare("dijit.MenuBar", dijit._MenuBase, {
 			this.inherited(arguments);
 		}
 	}
+});
+
+
+return dijit.MenuBar;
 });

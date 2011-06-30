@@ -402,7 +402,24 @@ wm.Object.extendSchema(wm.Control, {
     setHeight: {group: "method", doc: 1},
 
     isAncestorHidden: {group: "method", doc: 1, returns: "Boolean"},
-    setParent: {group: "method", doc: 1}
+    setParent: {group: "method", doc: 1},
+
+
+
+	        invalidCss: {ignore: 1},
+	        renderedOnce: {ignore: 1},
+		bounds: {ignore: 1},
+	    border: {group: "style", doc: 1},
+	    borderColor: {group: "style", doc: 1},
+		//backgroundColor: {group: "style"},
+		backgroundColor: {ignore: 1},
+	    margin: {group: "style", doc: 1},
+	    padding: {group: "style", doc: 1},
+	    autoScroll: {group: "scrolling", order: 100, ignore: 1, writeonly: 1},
+	    scrollX: {group: "scrolling", order: 101, ignore: 1, writeonly: 1},
+	    scrollY: {group: "scrolling", order: 102, ignore: 1, writeonly: 1},
+		left: {writeonly: 1, ignore: 1},
+		top: {writeonly: 1, ignore: 1}
 
     
     

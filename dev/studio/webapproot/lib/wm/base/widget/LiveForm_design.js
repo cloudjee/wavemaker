@@ -417,12 +417,14 @@ wm.LiveFormBase.extend({
 	// Inspector implementations
 	//===========================================================================
 	makePropEdit: function(inName, inValue, inDefault) {
+	var prop = this.schema ? this.schema[inName] : null;
+	var name =  (prop && prop.shortname) ? prop.shortname : inName;
 		switch (inName) {
 			case "addEditors":
 			case "removeEditors":
 			case "clearData":
 		        case "generateButtons":
-				return makeReadonlyButtonEdit(inName, inValue, inValue);
+				return makeReadonlyButtonEdit(name, inValue, inValue);
 			case "editorWidth":
 			case "editorHeight":
 			case "captionSize":

@@ -406,7 +406,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		return this.inherited(arguments) && this.hasValues();
 	},
 	clear: function() {
-		this.reset();
+		this.resetState(); 
 		// note: hack to call internal dijit function to ensure we can
 		// set a blank value even if this is not a valid value
 		if (this.editor && this.hasValues()) {
@@ -443,7 +443,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 
         getInvalid: function() {
 	    var valid;
-	    if (!this.editor) {
+	    if (!this.editor || this.editor._focused) {
 		valid = true;
 	    } else {
 

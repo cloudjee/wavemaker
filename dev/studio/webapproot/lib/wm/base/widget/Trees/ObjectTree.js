@@ -138,3 +138,4 @@ dojo.declare("wm.JSPrettyObjTreeNode", wm.JSObjTreeNode, {
 });
 
 dojo.declare("wm.JSPrettyObjTreeRootNode", [wm.JSPrettyObjTreeNode, wm.TreeRoot],{});
+wm.ObjectBrowserTree = wm.ObjectTree;

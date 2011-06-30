@@ -163,7 +163,6 @@ wm.Object.extendSchema(wm.DesignableDialog, {
     createButtonBar: {group: "operation", order: 20}
 });
 
-
 wm.DesignableDialog.extend({
     set_owner: function(inOwner) {
         var oldOwner = this.owner;
@@ -179,9 +178,11 @@ wm.DesignableDialog.extend({
         this.createButtonBar();
     },
 	makePropEdit: function(inName, inValue, inDefault) {
+	var prop = this.schema ? this.schema[inName] : null;
+	var name =  (prop && prop.shortname) ? prop.shortname : inName;
 		switch (inName) {
                 case "createButtonBar":
-				return makeReadonlyButtonEdit(inName, inValue, inDefault);
+				return makeReadonlyButtonEdit(name, inValue, inDefault);
                 }
 		return this.inherited(arguments);
         },
@@ -194,4 +195,77 @@ wm.DesignableDialog.extend({
                 }
 		return this.inherited(arguments);
         }
+});
+
+
+
+wm.LoadingDialog.extend({
+    set_widgetToCover: function(inWidget) {
+	if (inWidget && !(inWidget instanceof wm.Component)) {
+	    var ds = this.getValueById(inWidget);
+	    if (ds)
+		this.components.binding.addWire("", "widgetToCover", ds.getId());
+	} else
+	    this.widgetToCover = inWidget;
+    },
+    set_serviceVariableToTrack: function(inWidget) {
+	if (inWidget && !(inWidget instanceof wm.Component)) {
+	    var ds = this.getValueById(inWidget);
+	    if (ds)
+		this.components.binding.addWire("", "serviceVariableToTrack", ds.getId());
+	} else
+	    this.serviceVariableToTrack = inWidget;
+    },
+    makePropEdit: function(inName, inValue, inDefault) {
+	switch(inName) {
+	case "widgetToCover":
+	    return new wm.propEdit.WidgetsSelect({component: this, 
+						  value: inValue, 
+						  name: inName,
+						  widgetType: wm.Control});
+	case "serviceVariableToTrack":
+            return new wm.propEdit.WidgetsSelect({component: this, 
+						  value: inValue, 
+						  name: inName,
+						  widgetType: wm.ServiceVariable});
+
+	}
+	return this.inherited(arguments);
+    }
+
+
+});
+
+wm.Object.extendSchema(wm.LoadingDialog, {
+    widgetToCover: {readonly: 1, bindTarget: 1, group: "edit"},
+    serviceVariableToTrack: {readonly: 1, bindTarget: 1, group: "edit"},
+    width: {ignore: 1},
+    height: {ignore: 1},
+    autoScroll: {ignore: 1},
+    scrollX: {ignore: 1},
+    scrollY: {ignore: 1},
+    touchScroll: {ignore: 1},
+    border: {ignore: 1},
+    borderColor: {ignore: 1},
+    margin: {ignore: 1},
+    padding: {ignore: 1},
+    layoutKind: {ignore: 1},
+    verticalAlign: {ignore: 1},
+    horizontalAlign: {ignore: 1},
+    lock: {ignore: 1},
+    freeze: {ignore: 1},
+
+    title: {ignore: 1},
+    modal: {ignore: 1},
+    noEscape: {ignore: 1},
+    noMinify: {ignore: 1},
+    noMaxify: {ignore: 1},
+    corner: {ignore: 1},
+    disabled: {ignore: 1},
+
+    titlebarBorder: {ignore: 1},
+    titlebarBorderColor: {ignore: 1},
+    titlebarHeight: {ignore: 1},
+    footerBorder: {ignore: 1},
+    footerBorderColor: {ignore: 1},
 });

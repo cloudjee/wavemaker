@@ -129,7 +129,13 @@ dojo.declare("wm.Wire", wm.Component, {
 	_watch: function(inSource, inRid) {
 		wm.logging && console.info("Wire._watch: ", this.target.getId() + "." + this.targetProperty, "watching", inSource);
 		// Rule 1: listen to "changed" on our source
+	    if (inSource.match(/^\[.*\]\./)) {
+		var pre = "";
+		inSource = inSource.replace(/^\[(.*?)\]/, "$1");
+	    } else {
 		var pre = inSource.indexOf("app.") == 0 ? "" : inRid;
+	    }
+
 		var topic = pre + inSource + "-changed";
 	    this.subscribe(topic, this, "sourceValueChanged");
 		wm.logging && console.info("***", " subscribed to [", topic, "]");

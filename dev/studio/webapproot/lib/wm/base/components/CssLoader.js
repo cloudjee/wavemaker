@@ -12,6 +12,8 @@
  *  limitations under the License.
  */
 
+/* dojo.isIE Notes: This code has been tested in IE 9; all dojo.isIE tests are still needed for IE 9 */
+
 dojo.provide("wm.base.components.CssLoader");
 
 dojo.declare("wm.CssLoader", wm.Component, {

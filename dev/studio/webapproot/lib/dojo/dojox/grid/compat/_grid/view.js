@@ -271,7 +271,7 @@ dojo.declare('dojox.GridView',
 					this.headerNodeContainer.style.width = s.w - this.getScrollbarWidth() + 'px';
 					//this.headerNodeContainer.style.width = s.w + 'px';
 					//set scroll to right in FF
-					if(!isLtr){
+					if(isLtr){
 						this.scrollboxNode.scrollLeft = this.scrollboxNode.scrollWidth - this.scrollboxNode.clientWidth;
 					}else{
 						this.scrollboxNode.scrollLeft = this.scrollboxNode.clientWidth - this.scrollboxNode.scrollWidth;

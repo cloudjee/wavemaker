@@ -15,10 +15,10 @@
 dojo.provide("wm.base.widget.dijit.Calendar");
 dojo.require("wm.base.lib.date");
 dojo.require("wm.base.widget.dijit.Dijit");
-dojo.require("dijit._Calendar");
+dojo.require("dijit.Calendar");
 dojo.require("dojo.date.locale");
 
-dojo.extend(dijit._Calendar, {
+dojo.extend(dijit.Calendar, {
     specialDates: null,
     getClassForDate: function(date) {
         if (!this.specialDates) return;
@@ -36,7 +36,7 @@ dojo.extend(dijit._Calendar, {
 dojo.declare("wm.dijit.Calendar", wm.Dijit, {
         useLocalTime: false,
 	displayDate: "",
-	dijitClass: dijit._Calendar,
+	dijitClass: dijit.Calendar,
 	width: "360px",
 	height: "160px",
         dialog: null,
@@ -132,7 +132,9 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
 	    this.dijit.set("value",d);
 	},
 	getDisplayDate: function() {
-		return dojo.date.locale.format(this.dijit.value, { selector: "date"});
+	    if (!this.dijit || this.dijit.value instanceof Date == false)
+		return "";
+	    return dojo.date.locale.format(this.dijit.value, { selector: "date"});
 	},
 	setDisplayDate: function(inValue) {
 		this.setDate(inValue);

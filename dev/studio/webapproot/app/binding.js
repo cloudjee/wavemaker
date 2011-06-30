@@ -274,6 +274,12 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	    bindPanelOuter: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right"}, {}, {
 		bindPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom"}, {}, {
 		    searchPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "25px"}, {}, {
+			pageSelect: ["wm.SelectMenu", {height: "100%", width: "110px", caption: "", dataField: "dataValue", displayField: "dataValue"}, {}, {
+			    binding: ["wm.Binding", {}, {}, {
+				wire: ["wm.Wire", {"source":"app.pagesListVar","targetProperty":"dataSet", displayField: "dataValue", dataField: "dataValue"}, {}]
+			    }]			    
+			}],
+			pageContainer: ["wm.PageContainer", {showing: false}],
 			searchBar: ["wm.Text", {height: "25px", width: "100%", captionSize: "60px", caption: "Search", changeOnKey: true, changeOnEnter: true, resetButton: true, placeHolder: "Enter Name or Class", margin: "0,20,0,0"}],
 			validLabel: ["wm.Picture", {height: "100%", width: "20px", source: "images/active.png", showing: false}, {}],
 			invalidLabel: ["wm.Picture", {height: "100%", width: "20px", source: "images/inactive.png", showing: false}, {}],
@@ -293,13 +299,16 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 			expressionRb: ["wm.Editor", {display: "RadioButton", displayValue: "expression", caption: "Expression", width: "100px", captionSize: "74px", captionPosition: "right", captionAlign: "left"}, {}, {
 			    editor: ["wm._RadioButtonEditor", {radioGroup: "_bindInspector"}, {}]
 			}],
+			displayExpressionRb: ["wm.Editor", {display: "RadioButton", displayValue: "displayExpression", caption: "Expression", showing: false, width: "100px", captionSize: "74px", captionPosition: "right", captionAlign: "left"}, {}, {
+			    editor: ["wm._RadioButtonEditor", {radioGroup: "_bindInspector"}, {}]
+			}],
 			spacer2: ["wm.Spacer", {height: "100%", width: "40px"}, {}]
 		    }],
 		    bindLeftToRight: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "100%"},{}, {
 			propList: ["wm.List", {width: "100%", height: "100%", headerVisible: false, dataFields: "name", width: "147px", border: "0,5,0,1", borderColor: "#5D6678"}],			
 		    bindLayers: ["wm.Layers", {border: 0, height: "100%", layoutKind: "top-to-bottom"}, {}, {
 			treeLayer: ["wm.Layer", {border: 0, caption: "tree"}, {}, {
-			    tree: ["wm.Tree", {border: 0, padding: 2, height: "100%", width: "100%"}, {}, {}],
+			    tree: ["wm.Tree", {border: 0, padding: 2, height: "100%", width: "100%"}, {}, {}]
 			}],
 			expressionLayer: ["wm.Layer", {border: 0, caption: "expression"}, {}, {
 			    expressionEditor: ["wm.Editor", {display: "TextArea", padding: 0, width: "100%", height: "100px"}, {}, {
@@ -315,7 +324,22 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 				}],
 				expressionTree: ["wm.Tree", {margin: 2, border: 0, padding: 2, height: "100%", width: "100%"}, {}, {}]
 			    }]
-			}]
+			}],
+			displayExpressionLayer: ["wm.Layer", {border: 0, caption: "expression"}, {}, {
+			    displayExpressionEditor: ["wm.Editor", {display: "TextArea", padding: 0, width: "100%", height: "100px"}, {}, {
+				editor: ["wm._TextAreaEditor", {}, {}]
+			    }],
+			    displayExprSplitter: ["wm.Splitter", {}],
+			    displayExpressionBuilderPanel: ["wm.Panel", {height: "100%", width: "100%", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+				displayExpressionButtons: ["wm.Panel", {height: "25px", width: "100%", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+				    displayButton1: ["wm.Button", {caption: "+", margin: 2, width: "24px", height: "100%"}, {}],
+				    displayButton2: ["wm.Button", {caption: "-", margin: 2, width: "24px", height: "100%"}, {}],
+				    displayButton3: ["wm.Button", {caption: "/", margin: 2, width: "24px", height: "100%"}, {}],
+				    displayButton4: ["wm.Button", {caption: "*", margin: 2, width: "24px", height: "100%"}, {}]
+				}],
+				displayExpressionTree: ["wm.Tree", {margin: 2, border: 0, padding: 2, height: "100%", width: "100%"}, {}, {}]
+			    }]
+			}],
 		    }]
 		    }],
 		    bindEditor: ["wm.Text", { readonly:true, caption: "Bound to", captionSize: "65px", captionAlign: "left", width: "100%", padding: "4,0"}, {}, {}]
@@ -344,6 +368,13 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	    this.expressionRb.setCaption(this.getDictionaryItem("wm.BinderSource.expressionRb.caption"));
 	    this.bindEditor.setCaption(this.getDictionaryItem("wm.BinderSource.bindEditor.caption", {boundTo: ""}));
 	    /* End localization section */
+
+
+	    this.pageContainer._isDesignLoaded = true;
+	    this.pageContainer._pageLoader._isDesignLoaded = true;
+	    this.pageSelect.connect(this.pageSelect, "onchange", this, function() {
+		this.updateBindSourceUi(this.simpleRb.getValue("groupValue"));
+	    });
 
 
 	    this.propList.connect(this.propList, "onselect", this,  function() {
@@ -389,6 +420,14 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		    this.connect(c, "onclick", this, "expressionButtonClicked");
 		}
 	    }
+
+	    this.displayExpressionTree.connect(this.displayExpressionTree, "onselect", this, "expressionNodeSelected");
+	    for (var i=0, c; c=this.displayExpressionButtons.c$[i]; i++){
+		if (c instanceof wm.Button) {
+		    this.connect(c, "onclick", this, "displayExpressionButtonClicked");
+		}
+	    }
+
 		//
 		this.inherited(arguments);
 	},
@@ -431,7 +470,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		    if (selectedIndex != this.propList.getSelectedIndex())
 			this.propList.select(this.propList.getItem(selectedIndex));
                     this.owner.applyStayButton.show();
-		    this.propListLabel.setCaption(this.owner.getDictionaryItem("wm.BinderSource.propListLabel.caption", {componentName: wm.capitalize(object.name)}));
+		    this.propListLabel.setCaption(this.getDictionaryItem("wm.BinderSource.propListLabel.caption", {componentName: wm.capitalize(object.name)}));
 		    this.propList.show();
 		    this.propListLabel.show();
 		} else {
@@ -452,11 +491,15 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		this.expressionRb.endEditUpdate();
 		this.resourceRb.endEditUpdate();
 	},
+
 	isSimpleTree: function() {
 		return Boolean(this.simpleRb.getValue("groupValue") == "simple");
 	},
 	isExpression: function() {
-		return Boolean(this.expressionRb.getValue("groupValue") == "expression");
+	    return Boolean(this.expressionRb.getValue("groupValue") == "expression");
+	},
+        isDisplayExpression: function() {
+	    return Boolean(this.expressionRb.getValue("groupValue") == "displayExpression");
 	},
 	isResource: function() {
 		return Boolean(this.simpleRb.getValue("groupValue") == "resources");
@@ -486,14 +529,25 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	},
 	updateBindSourceUi: function(gv) {
 	  //var gv = this.simpleRb.getValue("groupValue"),
+	    this.treeControlsPanel.show();
+	    this.searchBar.show();
 	    var t = this.tree;
 	    t.clear();
 	    var r = t.root;
-	    r.page = studio.page;
+
+	    var page;
+	    if (this.pageSelect.getDataValue() == studio.project.pageName ||
+	       gv == "simple") 
+		page = studio.page;
+	    else {
+		this.pageContainer.setPageName(this.pageSelect.getDataValue());
+		page = this.pageContainer.page;
+	    }
+	    r.page = page;
             var t2 = this.expressionTree;
             t2.clear();
             var r2 = t2.root;
-            r2.page = studio.page;
+            r2.page = page;
 
 	    if (gv != "resources" && this.searchBar.getDataValue())
 		gv = "search";
@@ -515,18 +569,21 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		    });
 				break;
 			case "simple":
+		                this.pageSelect.hide();
 		                this.searchBar.setDisabled(false);
 				this.treeLayer.activate();
 		                this.bindEditor.show();
 				this._buildSimpleTree(r);
 				break;
 			case "advanced":
+		                this.pageSelect.show();
 		                this.searchBar.setDisabled(false);
 				this.treeLayer.activate();
 		                this.bindEditor.show();
 				this._buildAdvancedTree(r);
 				break;
 			case "expression":
+		                this.pageSelect.show();
 		                this.searchBar.setDisabled(false);
 				this.expressionLayer.activate();
 		                this.bindEditor.hide();
@@ -534,7 +591,21 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 				this.validLabel.setShowing(false);
 				this.invalidLabel.setShowing(false);
 				break;
+			case "displayExpression":
+		                this.treeControlsPanel.hide();
+		                this.searchBar.hide();
+		                this.displayExpressionTree.clear();
+		                this.pageSelect.hide();
+		                this.searchBar.setDisabled(true);
+				this.displayExpressionLayer.activate();
+		                this.bindEditor.hide();
+				this._buildDisplayExpressionTree(this.displayExpressionTree.root);
+				this.validLabel.setShowing(false);
+				this.invalidLabel.setShowing(false);
+				break;
+
 			case "resources":
+		                this.pageSelect.hide();
 		                this.searchBar.setDisabled(true);
 				this.treeLayer.activate();
 		                this.bindEditor.show();
@@ -607,17 +678,31 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		// servicecalls
 		//new wm.ComponentTypeSourceTreeNode(inParent, {content: "ServiceVariables", className: "wm.ServiceVariable", image: "images/wm/serviceData.png"});
 		// variables
-	    new wm.ComponentTypeSourceTreeNode(inParent, {page: studio.page, 
+
+	    new wm.ComponentTypeSourceTreeNode(inParent, {page: inParent.page,
 							  content: this.getDictionaryItem("NON_VISUAL"),
 							  className: "wm.Variable", 
 							  canSelect: false, 
 							  image: "images/wm/variable_16.png"});
 		// widgets
-	        new wm.WidgetContainerSourceTreeNode(inParent, {page: studio.page, 
+	        new wm.WidgetContainerSourceTreeNode(inParent, {page: inParent.page, 
 								content: this.getDictionaryItem("VISUAL"),
-								object: studio.page.root, 
+								object: inParent.page.root, 
 								hasSchema: true, 
 								canSelect: false});
+	},
+        _buildDisplayExpressionTree: function(inParent) {
+	    new wm.BindSourceTreeNode(inParent, {object: this.owner.targetProps.displayExpressionObject, 
+						 closed: false});
+/*
+	    addComponentTypeBinderNodes(inParent, dojo.getObject(
+	    new wm.ComponentTypeSourceTreeNode(inParent, {page: studio.page,
+							  content: this.owner.targetProps.displayExpressionObject.name,
+							  object: this.owner.targetProps.displayExpressionObject,
+							  hasSchema: true, 
+							  className: this.owner.targetProps.displayExpressionObject.declaredClass,
+							  canSelect: false});	    
+							  */
 	},
 	_buildResourceTree: function(inParent) {	    	    
 	    var _this = this;
@@ -707,12 +792,20 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 			targetProperty: [targetId, inTargetProps.targetProperty].join('.')}))
 	},*/
 	applyBinding: function(inTargetProps) {
-	    var isExpression = this.isExpression();
-	    var isResource = this.isResource();
-	    var s = !isExpression && !isResource && this.bindEditor.getValue("dataValue");
-	    var ex = isExpression && this.expressionEditor.getValue("dataValue") || isResource && this.bindEditor.getValue("dataValue");
+	    var isExpression        = this.isExpression();
+	    var isDisplayExpression =  this.isDisplayExpression();
+	    var isResource = this.isResource();	    
+	    var s = !isExpression && !isDisplayExpression && !isResource && this.bindEditor.getValue("dataValue");
+	    if (isExpression) {
+		var ex = this.expressionEditor.getValue("dataValue");
+	    } else if (isDisplayExpression) {
+		var ex = this.displayExpressionEditor.getValue("dataValue");
+	    } else if (isResource) {
+		var ex = this.bindEditor.getValue("dataValue");
+	    }
+	
 	    var tp = inTargetProps;
-	    if (isResource) {
+	    if (isResource || isDisplayExpression) {
                 tp.object.setValue(tp.targetProperty, ex);
                 wm.data.clearBinding(tp.object, tp.targetProperty);
                 studio.inspector.reinspect();
@@ -799,13 +892,17 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 //	    }
 	},
 	// expression builder
-	addValueToExpressionEditor: function(inValue) {
+    addValueToExpressionEditor: function(inValue, inEditor) {
 		var 
 			v = inValue,
-			start = this.expressionEditor.editor.editor.focusNode.selectionStart,
-			end = this.expressionEditor.editor.editor.focusNode.selectionEnd,
-			e = this.expressionEditor.getDataValue() || "";
-		this.expressionEditor.setDataValue(e.slice(0, start) + v + e.slice(end));
+			start = inEditor.editor.editor.focusNode.selectionStart,
+			end = inEditor.editor.editor.focusNode.selectionEnd,
+			e = inEditor.getDataValue() || "";
+	        inEditor.setDataValue(e.slice(0, start) + v + e.slice(end));
+	    try {
+		this.expressionEditor.focus();
+		this.expressionEditor.editor.editor.focusNode.selectionStart = start + v.length;
+	    } catch(e) {}
 	    try {
 		this.expressionEditor.focus();
 		this.expressionEditor.editor.editor.focusNode.selectionStart = start + v.length;
@@ -813,7 +910,10 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	},
 	expressionNodeSelected: function(inNode) {
 		if (inNode.isProperty && inNode.source) {
+		    var gv = this.simpleRb.getValue("groupValue");
 		    var source = this.owner.getBindNodeSource(inNode);
+		    if (gv == "displayExpression")
+			source = source.replace(/^.*?\./,"");
 		    /* Expressions must bind to values not objects; see if there's a simpleBindProp we can bind to if no property is specified */
 		    if (inNode.isProperty == "object") {
 			var props = inNode.object.listProperties();
@@ -824,12 +924,17 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 			    }
 			}
 		    }
-		    this.addValueToExpressionEditor(["${", source, "}"].join(""));
+
+		    this.addValueToExpressionEditor(["${", source, "}"].join(""), gv == "displayExpression" ? this.displayExpressionEditor : this.expressionEditor);
 		}
 	},
 	expressionButtonClicked: function(e) {
-		this.addValueToExpressionEditor(e.target.innerHTML);
+	    this.addValueToExpressionEditor(e.target.innerHTML, this.expressionEditor);
 	},
+        displayExpressionButtonClicked: function(e) {
+	    this.addValueToExpressionEditor(e.target.innerHTML, this.displayExpressionEditor);
+	},
+
         doSearch: function(owner) {
 
 	    var search = this.searchBar.getDataValue();
@@ -915,9 +1020,13 @@ dojo.declare("wm.BindTreeNode", wm.TreeNode, {
 	namelist.push(inNodeProps.objectId);
 	var owner = inNodeProps.object.owner;
         if (owner instanceof wm.Page) {
-	    while (owner && owner != studio.page) {
+	    while (owner && owner != studio.page && owner != studio.bindDialog.bindSourceDialog.pageContainer) {
 	        if (!(owner instanceof wm.PageContainer && owner.owner instanceof wm.PageDialog) && owner.name)
-		    namelist.push(owner.name);
+		    if (owner.owner == studio.bindDialog.bindSourceDialog.pageContainer) {
+			namelist.push("[" + owner.name + "]");
+		    } else {
+			namelist.push(owner.name);
+		    }
 	        owner = owner.owner;
 	    }
         }
@@ -933,13 +1042,13 @@ dojo.declare("wm.BindTreeNode", wm.TreeNode, {
 			var page = this.object[pagePropertyName];
 			if (page) {
 			    new wm.ComponentTypeSourceTreeNode(inParent, {page: page, 
-									  content:  this.getDictionaryItem("NON_VISUAL"),
+									  content:  this.tree.owner.getDictionaryItem("NON_VISUAL"),
 									  className: "wm.Variable", 
 									  canSelect: false, 
 									  image: "images/wm/variable_16.png"});
 			// widgets
 			    new wm.WidgetContainerSourceTreeNode(inParent, {page: page, 
-									    content: this.getDictionaryItem("VISUAL"),
+									    content: this.tree.owner.getDictionaryItem("VISUAL"),
 									    object: page.root, 
 									    hasSchema: true, 
 									    canSelect: false});			

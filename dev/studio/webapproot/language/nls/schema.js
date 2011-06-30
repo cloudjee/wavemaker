@@ -13,7 +13,14 @@
  */
 {
 /*
+    "wm.Dashboard": {configPortlets: "ConfigyPortlety"},
+    "wm.Layer": {moveNext: "NextNext"},
+    "wm.Layers": {add: "Pluss"},
+    "wm.TabLayers": {conditionalTabButtons: "condTabsClick"},
+    "wm.DesignableDialog": {createButtonBar: "c b r"},
+    "wm.LiveForm": {addEditors: "adddd", removeEditors:"rem", clearData: "clearrrr", generateButtons: "gengengen"},
 "wm.Button": {caption: "a big caption",
+		  editImageIndex: "EDiT",
 	      iconUrl: "URL FOR Icon",
 	      onclick: "onPush"},
 "wm.Control": {width: "length",
@@ -23,6 +30,8 @@
 "GROUP_OkDokie": "My Special Group",
 "GROUP_display": "Show me what you've got",
 
-"NODE_Styles": "I got no style"
-*/
+    "NODE_Styles": "I got no style",
+    "NODE_CustomMethods": "HEY",
+    "NODE_Properties.format": "PropForm"
+    */
 }

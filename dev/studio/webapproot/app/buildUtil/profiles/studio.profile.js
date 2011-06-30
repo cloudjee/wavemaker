@@ -250,6 +250,7 @@ dependencies = {
 				"wm.base.widget.Dialogs.DesignableDialog",
 				"wm.base.widget.Dialogs.ColorPickerDialog",
 				"wm.base.widget.Dialogs.RichTextDialog",
+				"wm.base.widget.Dialogs.LoadingDialog",
 				"wm.base.widget.Dialogs.Dialog_design",
 				"wm.base.widget.Editor",
 				"wm.base.widget.FileUpload",

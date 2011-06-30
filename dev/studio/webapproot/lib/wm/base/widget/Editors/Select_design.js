@@ -48,6 +48,8 @@ wm.SelectMenu.extend({
 		return list;
 	},
 	makePropEdit: function(inName, inValue, inDefault) {  
+	        var prop = this.schema ? this.schema[inName] : null;
+	        var name =  (prop && prop.shortname) ? prop.shortname : inName;
 		switch (inName) {
 			case "displayField":
 				var values = this._listFields();
@@ -65,7 +67,7 @@ wm.SelectMenu.extend({
 			case "dataSet":
 				return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.dataSet ? this.dataSet.getId() : "", allowAllTypes: true, listMatch: true});
 			case "updateNow":
-				return makeReadonlyButtonEdit(inName, inValue, inDefault);
+				return makeReadonlyButtonEdit(name, inValue, inDefault);
 		}
 		return this.inherited(arguments);
 	},
@@ -132,7 +134,7 @@ wm.Object.extendSchema(wm.SelectMenu, {
         dataValue: {ignore: 1, bindable: 1, group: "editData", order: 3, simpleBindProp: true, type: "any"}, // use getDataValue()
 	dataField: {group: "editor", order: 10, doc: 1},
 	displayField: {group: "editor", order: 15,doc: 1},
-	displayExpression: {group: "editor", order: 20, doc: 1},
+    displayExpression: {group: "editor", order: 20, doc: 1, displayExpression: "dataSet"},
 	displayType:{group: "editor", order: 21},
   autoComplete: {group: "editor", order: 25},
 	hasDownArrow: {group: "editor", order: 26},

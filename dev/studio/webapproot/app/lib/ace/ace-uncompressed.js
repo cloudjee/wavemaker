@@ -62,15 +62,15 @@
  
 (function() {
     
-if (window.require) {
-    require.packaged = true;
+if (window.requireace) {
+    requireace.packaged = true;
     return;
 }
     
-var _define = function(module, deps, payload) {
+var _defineace = function(module, deps, payload) {
     if (typeof module !== 'string') {
-        if (_define.original)
-            _define.original.apply(window, arguments);
+        if (_defineace.original)
+            _defineace.original.apply(window, arguments);
         else {
             console.error('dropping module because define wasn\'t a string.');
             console.trace();
@@ -81,27 +81,27 @@ var _define = function(module, deps, payload) {
     if (arguments.length == 2)
         payload = deps;
 
-    if (!define.modules)
-        define.modules = {};
+    if (!defineace.modules)
+        defineace.modules = {};
         
-    define.modules[module] = payload;
+    defineace.modules[module] = payload;
 };
-if (window.define)
-    _define.original = window.define;
+if (window.defineace)
+    _defineace.original = window.defineace;
     
-window.define = _define;
+window.defineace = _defineace;
 
 
 /**
  * Get at functionality define()ed using the function above
  */
-var _require = function(module, callback) {
+var _requireace = function(module, callback) {
     if (Object.prototype.toString.call(module) === "[object Array]") {
         var params = [];
         for (var i = 0, l = module.length; i < l; ++i) {
             var dep = lookup(module[i]);
-            if (!dep && _require.original)
-                return _require.original.apply(window, arguments);
+            if (!dep && _requireace.original)
+                return _requireace.original.apply(window, arguments);
             params.push(dep);
         }
         if (callback) {
@@ -110,8 +110,8 @@ var _require = function(module, callback) {
     }
     else if (typeof module === 'string') {
         var payload = lookup(module);
-        if (!payload && _require.original)
-            return _require.original.apply(window, arguments);
+        if (!payload && _requireace.original)
+            return _requireace.original.apply(window, arguments);
         
         if (callback) {
             callback();
@@ -120,23 +120,23 @@ var _require = function(module, callback) {
         return payload;
     }
     else {
-        if (_require.original)
-            return _require.original.apply(window, arguments);
+        if (_requireace.original)
+            return _requireace.original.apply(window, arguments);
     }
 };
 
-if (window.require)
-    _require.original = window.require;
+if (window.requireace)
+    _requireace.original = window.requireace;
     
-window.require = _require;
-require.packaged = true;
+window.requireace = _requireace;
+requireace.packaged = true;
 
 /**
  * Internal function to lookup moduleNames and resolve them by calling the
  * definition function if needed.
  */
 var lookup = function(moduleName) {
-    var module = define.modules[moduleName];
+    var module = defineace.modules[moduleName];
     if (module == null) {
         console.error('Missing module: ' + moduleName);
         return null;
@@ -144,9 +144,9 @@ var lookup = function(moduleName) {
 
     if (typeof module === 'function') {
         var exports = {};
-        module(require, exports, { id: moduleName, uri: '' });
+        module(requireace, exports, { id: moduleName, uri: '' });
         // cache the resulting module object for next time
-        define.modules[moduleName] = exports;
+        defineace.modules[moduleName] = exports;
         return exports;
     }
 
@@ -165,7 +165,7 @@ var lookup = function(moduleName) {
     MIT License. http://github.com/280north/narwhal/blob/master/README.md
 */
 
-define('pilot/fixoldbrowsers', ['require', 'exports', 'module' ], function(require, exports, module) {
+defineace('pilot/fixoldbrowsers', ['requireace', 'exports', 'module' ], function(requireace, exports, module) {
 
 /**
  * Brings an environment as close to ECMAScript 5 compliance
@@ -850,9 +850,9 @@ if (!Date.prototype.toJSON) {
         // NOTE 1 The argument is ignored.
 
         // NOTE 2 The toJSON function is intentionally generic; it does not
-        // require that its this value be a Date object. Therefore, it can be
+        // requireace that its this value be a Date object. Therefore, it can be
         // transferred to other kinds of objects for use as a method. However,
-        // it does require that any such object have a toISOString method. An
+        // it does requireace that any such object have a toISOString method. An
         // object is free to use the argument key to filter its
         // stringification.
     };
@@ -1021,36 +1021,36 @@ if (!String.prototype.trim) {
  * under the terms of either the GPL or the LGPL, and not to allow others to
  * use your version of this file under the terms of the MPL, indicate your
  * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
+ * and other provisions requireaced by the GPL or the LGPL. If you do not delete
  * the provisions above, a recipient may use your version of this file under
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/index', ['require', 'exports', 'module' , 'pilot/fixoldbrowsers', 'pilot/types/basic', 'pilot/types/command', 'pilot/types/settings', 'pilot/commands/settings', 'pilot/commands/basic', 'pilot/settings/canon', 'pilot/canon'], function(require, exports, module) {
+defineace('pilot/index', ['requireace', 'exports', 'module' , 'pilot/fixoldbrowsers', 'pilot/types/basic', 'pilot/types/command', 'pilot/types/settings', 'pilot/commands/settings', 'pilot/commands/basic', 'pilot/settings/canon', 'pilot/canon'], function(requireace, exports, module) {
 
 exports.startup = function(data, reason) {
-    require('pilot/fixoldbrowsers');
+    requireace('pilot/fixoldbrowsers');
 
-    require('pilot/types/basic').startup(data, reason);
-    require('pilot/types/command').startup(data, reason);
-    require('pilot/types/settings').startup(data, reason);
-    require('pilot/commands/settings').startup(data, reason);
-    require('pilot/commands/basic').startup(data, reason);
-    // require('pilot/commands/history').startup(data, reason);
-    require('pilot/settings/canon').startup(data, reason);
-    require('pilot/canon').startup(data, reason);
+    requireace('pilot/types/basic').startup(data, reason);
+    requireace('pilot/types/command').startup(data, reason);
+    requireace('pilot/types/settings').startup(data, reason);
+    requireace('pilot/commands/settings').startup(data, reason);
+    requireace('pilot/commands/basic').startup(data, reason);
+    // requireace('pilot/commands/history').startup(data, reason);
+    requireace('pilot/settings/canon').startup(data, reason);
+    requireace('pilot/canon').startup(data, reason);
 };
 
 exports.shutdown = function(data, reason) {
-    require('pilot/types/basic').shutdown(data, reason);
-    require('pilot/types/command').shutdown(data, reason);
-    require('pilot/types/settings').shutdown(data, reason);
-    require('pilot/commands/settings').shutdown(data, reason);
-    require('pilot/commands/basic').shutdown(data, reason);
-    // require('pilot/commands/history').shutdown(data, reason);
-    require('pilot/settings/canon').shutdown(data, reason);
-    require('pilot/canon').shutdown(data, reason);
+    requireace('pilot/types/basic').shutdown(data, reason);
+    requireace('pilot/types/command').shutdown(data, reason);
+    requireace('pilot/types/settings').shutdown(data, reason);
+    requireace('pilot/commands/settings').shutdown(data, reason);
+    requireace('pilot/commands/basic').shutdown(data, reason);
+    // requireace('pilot/commands/history').shutdown(data, reason);
+    requireace('pilot/settings/canon').shutdown(data, reason);
+    requireace('pilot/canon').shutdown(data, reason);
 };
 
 
@@ -1087,15 +1087,15 @@ exports.shutdown = function(data, reason) {
  * under the terms of either the GPL or the LGPL, and not to allow others to
  * use your version of this file under the terms of the MPL, indicate your
  * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
+ * and other provisions requireaced by the GPL or the LGPL. If you do not delete
  * the provisions above, a recipient may use your version of this file under
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/types/basic', ['require', 'exports', 'module' , 'pilot/types'], function(require, exports, module) {
+defineace('pilot/types/basic', ['requireace', 'exports', 'module' , 'pilot/types'], function(requireace, exports, module) {
 
-var types = require("pilot/types");
+var types = requireace("pilot/types");
 var Type = types.Type;
 var Conversion = types.Conversion;
 var Status = types.Status;
@@ -1418,13 +1418,13 @@ exports.shutdown = function() {
  * under the terms of either the GPL or the LGPL, and not to allow others to
  * use your version of this file under the terms of the MPL, indicate your
  * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
+ * and other provisions requireaced by the GPL or the LGPL. If you do not delete
  * the provisions above, a recipient may use your version of this file under
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/types', ['require', 'exports', 'module' ], function(require, exports, module) {
+defineace('pilot/types', ['requireace', 'exports', 'module' ], function(requireace, exports, module) {
 
 /**
  * Some types can detect validity, that is to say they can distinguish between
@@ -1701,17 +1701,17 @@ exports.getType = function(typeSpec) {
  * under the terms of either the GPL or the LGPL, and not to allow others to
  * use your version of this file under the terms of the MPL, indicate your
  * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
+ * and other provisions requireaced by the GPL or the LGPL. If you do not delete
  * the provisions above, a recipient may use your version of this file under
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/types/command', ['require', 'exports', 'module' , 'pilot/canon', 'pilot/types/basic', 'pilot/types'], function(require, exports, module) {
+defineace('pilot/types/command', ['requireace', 'exports', 'module' , 'pilot/canon', 'pilot/types/basic', 'pilot/types'], function(requireace, exports, module) {
 
-var canon = require("pilot/canon");
-var SelectionType = require("pilot/types/basic").SelectionType;
-var types = require("pilot/types");
+var canon = requireace("pilot/canon");
+var SelectionType = requireace("pilot/types/basic").SelectionType;
+var types = requireace("pilot/types");
 
 
 /**
@@ -1775,25 +1775,25 @@ exports.shutdown = function() {
  * under the terms of either the GPL or the LGPL, and not to allow others to
  * use your version of this file under the terms of the MPL, indicate your
  * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
+ * and other provisions requireaced by the GPL or the LGPL. If you do not delete
  * the provisions above, a recipient may use your version of this file under
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/canon', ['require', 'exports', 'module' , 'pilot/console', 'pilot/stacktrace', 'pilot/oop', 'pilot/useragent', 'pilot/keys', 'pilot/event_emitter', 'pilot/typecheck', 'pilot/catalog', 'pilot/types', 'pilot/lang'], function(require, exports, module) {
+defineace('pilot/canon', ['requireace', 'exports', 'module' , 'pilot/console', 'pilot/stacktrace', 'pilot/oop', 'pilot/useragent', 'pilot/keys', 'pilot/event_emitter', 'pilot/typecheck', 'pilot/catalog', 'pilot/types', 'pilot/lang'], function(requireace, exports, module) {
 
-var console = require('pilot/console');
-var Trace = require('pilot/stacktrace').Trace;
-var oop = require('pilot/oop');
-var useragent = require('pilot/useragent');
-var keyUtil = require('pilot/keys');
-var EventEmitter = require('pilot/event_emitter').EventEmitter;
-var typecheck = require('pilot/typecheck');
-var catalog = require('pilot/catalog');
-var Status = require('pilot/types').Status;
-var types = require('pilot/types');
-var lang = require('pilot/lang');
+var console = requireace('pilot/console');
+var Trace = requireace('pilot/stacktrace').Trace;
+var oop = requireace('pilot/oop');
+var useragent = requireace('pilot/useragent');
+var keyUtil = requireace('pilot/keys');
+var EventEmitter = requireace('pilot/event_emitter').EventEmitter;
+var typecheck = requireace('pilot/typecheck');
+var catalog = requireace('pilot/catalog');
+var Status = requireace('pilot/types').Status;
+var types = requireace('pilot/types');
+var lang = requireace('pilot/lang');
 
 /*
 // TODO: this doesn't belong here - or maybe anywhere?
@@ -2063,7 +2063,7 @@ function defaultArgsProvider(request, callback) {
                 paramPrompt += " (optional)";
             }
             var value = prompt(paramPrompt, param.defaultValue || "");
-            // No value but required -> nope.
+            // No value but requireaced -> nope.
             if (!value) {
                 callback();
                 return;
@@ -2080,7 +2080,7 @@ function defaultArgsProvider(request, callback) {
  * a command. A new request object is created and a check performed, if the
  * passed in arguments are VALID/INVALID or INCOMPLETE. If they are INCOMPLETE
  * the ArgumentProvider on the sender is called or otherwise the default 
- * ArgumentProvider to get the still required arguments.
+ * ArgumentProvider to get the still requireaced arguments.
  * If they are valid (or valid after the ArgumentProvider is done), the command
  * is executed.
  * 
@@ -2428,7 +2428,7 @@ exports.Request = Request;
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
-define('pilot/console', ['require', 'exports', 'module' ], function(require, exports, module) {
+defineace('pilot/console', ['requireace', 'exports', 'module' ], function(requireace, exports, module) {
     
 /**
  * This object represents a "safe console" object that forwards debugging
@@ -2466,10 +2466,10 @@ if (typeof(window) === 'undefined') {
 }
 
 });
-define('pilot/stacktrace', ['require', 'exports', 'module' , 'pilot/useragent', 'pilot/console'], function(require, exports, module) {
+defineace('pilot/stacktrace', ['requireace', 'exports', 'module' , 'pilot/useragent', 'pilot/console'], function(requireace, exports, module) {
     
-var ua = require("pilot/useragent");
-var console = require('pilot/console');
+var ua = requireace("pilot/useragent");
+var console = requireace('pilot/console');
 
 // Changed to suit the specific needs of running within Skywriter
 
@@ -2835,7 +2835,7 @@ exports.Trace.prototype.log = function(lines) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/useragent', ['require', 'exports', 'module' ], function(require, exports, module) {
+defineace('pilot/useragent', ['requireace', 'exports', 'module' ], function(requireace, exports, module) {
 
 var os = (navigator.platform.match(/mac|win|linux/i) || ["other"])[0].toLowerCase();
 var ua = navigator.userAgent;
@@ -2926,13 +2926,13 @@ exports.getOS = function() {
  * under the terms of either the GPL or the LGPL, and not to allow others to
  * use your version of this file under the terms of the MPL, indicate your
  * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
+ * and other provisions requireaced by the GPL or the LGPL. If you do not delete
  * the provisions above, a recipient may use your version of this file under
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/oop', ['require', 'exports', 'module' ], function(require, exports, module) {
+defineace('pilot/oop', ['requireace', 'exports', 'module' ], function(requireace, exports, module) {
 
 exports.inherits = (function() {
     var tempCtor = function() {};
@@ -2988,9 +2988,9 @@ For more information about SproutCore, visit http://www.sproutcore.com
 
 // Most of the following code is taken from SproutCore with a few changes.
 
-define('pilot/keys', ['require', 'exports', 'module' , 'pilot/oop'], function(require, exports, module) {
+defineace('pilot/keys', ['requireace', 'exports', 'module' , 'pilot/oop'], function(requireace, exports, module) {
 
-var oop = require("pilot/oop");
+var oop = requireace("pilot/oop");
 
 /**
  * Helper functions and hashes for key handling.
@@ -3112,7 +3112,7 @@ exports.keyCodeToString = function(keyCode) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/event_emitter', ['require', 'exports', 'module' ], function(require, exports, module) {
+defineace('pilot/event_emitter', ['requireace', 'exports', 'module' ], function(requireace, exports, module) {
 
 var EventEmitter = {};
 
@@ -3202,7 +3202,7 @@ exports.EventEmitter = EventEmitter;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/typecheck', ['require', 'exports', 'module' ], function(require, exports, module) {
+defineace('pilot/typecheck', ['requireace', 'exports', 'module' ], function(requireace, exports, module) {
 
 var objectToString = Object.prototype.toString;
 
@@ -3281,7 +3281,7 @@ exports.isFunction = function(it) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/catalog', ['require', 'exports', 'module' ], function(require, exports, module) {
+defineace('pilot/catalog', ['requireace', 'exports', 'module' ], function(requireace, exports, module) {
 
 
 var extensionSpecs = {};
@@ -3346,7 +3346,7 @@ exports.getExtensionSpecs = function() {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/lang', ['require', 'exports', 'module' ], function(require, exports, module) {
+defineace('pilot/lang', ['requireace', 'exports', 'module' ], function(requireace, exports, module) {
 
 exports.stringReverse = function(string) {
     return string.split("").reverse().join("");
@@ -3470,12 +3470,12 @@ exports.deferredCall = function(fcn) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/types/settings', ['require', 'exports', 'module' , 'pilot/types/basic', 'pilot/types', 'pilot/settings'], function(require, exports, module) {
+defineace('pilot/types/settings', ['requireace', 'exports', 'module' , 'pilot/types/basic', 'pilot/types', 'pilot/settings'], function(requireace, exports, module) {
 
-var SelectionType = require('pilot/types/basic').SelectionType;
-var DeferredType = require('pilot/types/basic').DeferredType;
-var types = require('pilot/types');
-var settings = require('pilot/settings').settings;
+var SelectionType = requireace('pilot/types/basic').SelectionType;
+var DeferredType = requireace('pilot/types/basic').DeferredType;
+var types = requireace('pilot/types');
+var settings = requireace('pilot/settings').settings;
 
 
 /**
@@ -3612,17 +3612,17 @@ exports.shutdown = function(data, reason) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/settings', ['require', 'exports', 'module' , 'pilot/console', 'pilot/oop', 'pilot/types', 'pilot/event_emitter', 'pilot/catalog'], function(require, exports, module) {
+defineace('pilot/settings', ['requireace', 'exports', 'module' , 'pilot/console', 'pilot/oop', 'pilot/types', 'pilot/event_emitter', 'pilot/catalog'], function(requireace, exports, module) {
 
 /**
  * This plug-in manages settings.
  */
 
-var console = require('pilot/console');
-var oop = require('pilot/oop');
-var types = require('pilot/types');
-var EventEmitter = require('pilot/event_emitter').EventEmitter;
-var catalog = require('pilot/catalog');
+var console = requireace('pilot/console');
+var oop = requireace('pilot/oop');
+var types = requireace('pilot/types');
+var EventEmitter = requireace('pilot/event_emitter').EventEmitter;
+var catalog = requireace('pilot/catalog');
 
 var settingExtensionSpec = {
     name: 'setting',
@@ -3935,7 +3935,7 @@ exports.CookiePersister = CookiePersister;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/commands/settings', ['require', 'exports', 'module' , 'pilot/canon'], function(require, exports, module) {
+defineace('pilot/commands/settings', ['requireace', 'exports', 'module' , 'pilot/canon'], function(requireace, exports, module) {
 
 
 var setCommandSpec = {
@@ -4019,7 +4019,7 @@ var unsetCommandSpec = {
     }
 };
 
-var canon = require('pilot/canon');
+var canon = requireace('pilot/canon');
 
 exports.startup = function(data, reason) {
     canon.addCommand(setCommandSpec);
@@ -4070,11 +4070,11 @@ exports.shutdown = function(data, reason) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/commands/basic', ['require', 'exports', 'module' , 'pilot/typecheck', 'pilot/canon'], function(require, exports, module) {
+defineace('pilot/commands/basic', ['requireace', 'exports', 'module' , 'pilot/typecheck', 'pilot/canon'], function(requireace, exports, module) {
 
 
-var checks = require("pilot/typecheck");
-var canon = require('pilot/canon');
+var checks = requireace("pilot/typecheck");
+var canon = requireace('pilot/canon');
 
 /**
  * 
@@ -4289,7 +4289,7 @@ var messages = [
 ];
 
 
-var canon = require('pilot/canon');
+var canon = requireace('pilot/canon');
 
 exports.startup = function(data, reason) {
     canon.addCommand(helpCommandSpec);
@@ -4344,7 +4344,7 @@ exports.shutdown = function(data, reason) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/settings/canon', ['require', 'exports', 'module' ], function(require, exports, module) {
+defineace('pilot/settings/canon', ['requireace', 'exports', 'module' ], function(requireace, exports, module) {
 
 
 var historyLengthSetting = {
@@ -4401,9 +4401,9 @@ exports.shutdown = function(data, reason) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/plugin_manager', ['require', 'exports', 'module' , 'pilot/promise'], function(require, exports, module) {
+defineace('pilot/plugin_manager', ['requireace', 'exports', 'module' , 'pilot/promise'], function(requireace, exports, module) {
 
-var Promise = require("pilot/promise").Promise;
+var Promise = requireace("pilot/promise").Promise;
 
 exports.REASONS = {
     APP_STARTUP: 1,
@@ -4438,7 +4438,7 @@ exports.Plugin.prototype = {
             pr.resolve(this);
             return pr;
         }
-        require([this.name], function(pluginModule) {
+        requireace([this.name], function(pluginModule) {
             if (pluginModule.install) {
                 pluginModule.install(data, reason);
             }
@@ -4454,7 +4454,7 @@ exports.Plugin.prototype = {
             pr.resolve(this);
             return pr;
         }
-        require([this.name], function(pluginModule) {
+        requireace([this.name], function(pluginModule) {
             if (pluginModule.register) {
                 pluginModule.register(data, reason);
             }
@@ -4471,7 +4471,7 @@ exports.Plugin.prototype = {
             pr.resolve(this);
             return pr;
         }
-        require([this.name], function(pluginModule) {
+        requireace([this.name], function(pluginModule) {
             if (pluginModule.startup) {
                 pluginModule.startup(data, reason);
             }
@@ -4485,7 +4485,7 @@ exports.Plugin.prototype = {
         if (this.status != this.STARTED) {
             return;
         }
-        pluginModule = require(this.name);
+        pluginModule = requireace(this.name);
         if (pluginModule.shutdown) {
             pluginModule.shutdown(data, reason);
         }
@@ -4560,10 +4560,10 @@ exports.catalog = new exports.PluginCatalog();
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/promise', ['require', 'exports', 'module' , 'pilot/console', 'pilot/stacktrace'], function(require, exports, module) {
+defineace('pilot/promise', ['requireace', 'exports', 'module' , 'pilot/console', 'pilot/stacktrace'], function(requireace, exports, module) {
 
-var console = require("pilot/console");
-var Trace = require('pilot/stacktrace').Trace;
+var console = requireace("pilot/console");
+var Trace = requireace('pilot/stacktrace').Trace;
 
 /**
  * A promise can be in one of 2 states.
@@ -4817,16 +4817,16 @@ exports._recent = _recent;
  * under the terms of either the GPL or the LGPL, and not to allow others to
  * use your version of this file under the terms of the MPL, indicate your
  * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
+ * and other provisions requireaced by the GPL or the LGPL. If you do not delete
  * the provisions above, a recipient may use your version of this file under
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/environment', ['require', 'exports', 'module' , 'pilot/settings'], function(require, exports, module) {
+defineace('pilot/environment', ['requireace', 'exports', 'module' , 'pilot/settings'], function(requireace, exports, module) {
 
 
-var settings = require("pilot/settings").settings;
+var settings = requireace("pilot/settings").settings;
 
 /**
  * Create an environment object
@@ -4881,22 +4881,22 @@ exports.create = create;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/editor', ['require', 'exports', 'module' , 'pilot/fixoldbrowsers', 'pilot/oop', 'pilot/event', 'pilot/lang', 'pilot/useragent', 'ace/keyboard/textinput', 'ace/mouse_handler', 'ace/keyboard/keybinding', 'ace/edit_session', 'ace/search', 'ace/range', 'pilot/event_emitter'], function(require, exports, module) {
+defineace('ace/editor', ['requireace', 'exports', 'module' , 'pilot/fixoldbrowsers', 'pilot/oop', 'pilot/event', 'pilot/lang', 'pilot/useragent', 'ace/keyboard/textinput', 'ace/mouse_handler', 'ace/keyboard/keybinding', 'ace/edit_session', 'ace/search', 'ace/range', 'pilot/event_emitter'], function(requireace, exports, module) {
 
-require("pilot/fixoldbrowsers");
+requireace("pilot/fixoldbrowsers");
 
-var oop = require("pilot/oop");
-var event = require("pilot/event");
-var lang = require("pilot/lang");
-var useragent = require("pilot/useragent");
-var TextInput = require("ace/keyboard/textinput").TextInput;
-var MouseHandler = require("ace/mouse_handler").MouseHandler;
-//var TouchHandler = require("ace/touch_handler").TouchHandler;
-var KeyBinding = require("ace/keyboard/keybinding").KeyBinding;
-var EditSession = require("ace/edit_session").EditSession;
-var Search = require("ace/search").Search;
-var Range = require("ace/range").Range;
-var EventEmitter = require("pilot/event_emitter").EventEmitter;
+var oop = requireace("pilot/oop");
+var event = requireace("pilot/event");
+var lang = requireace("pilot/lang");
+var useragent = requireace("pilot/useragent");
+var TextInput = requireace("ace/keyboard/textinput").TextInput;
+var MouseHandler = requireace("ace/mouse_handler").MouseHandler;
+//var TouchHandler = requireace("ace/touch_handler").TouchHandler;
+var KeyBinding = requireace("ace/keyboard/keybinding").KeyBinding;
+var EditSession = requireace("ace/edit_session").EditSession;
+var Search = requireace("ace/search").Search;
+var Range = requireace("ace/range").Range;
+var EventEmitter = requireace("pilot/event_emitter").EventEmitter;
 
 var Editor =function(renderer, session) {
     var container = renderer.getContainerElement();
@@ -5991,11 +5991,11 @@ exports.Editor = Editor;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/event', ['require', 'exports', 'module' , 'pilot/keys', 'pilot/useragent', 'pilot/dom'], function(require, exports, module) {
+defineace('pilot/event', ['requireace', 'exports', 'module' , 'pilot/keys', 'pilot/useragent', 'pilot/dom'], function(requireace, exports, module) {
 
-var keys = require("pilot/keys");
-var useragent = require("pilot/useragent");
-var dom = require("pilot/dom");
+var keys = requireace("pilot/keys");
+var useragent = requireace("pilot/useragent");
+var dom = requireace("pilot/dom");
 
 exports.addListener = function(elem, type, callback) {
     if (elem.addEventListener) {
@@ -6299,7 +6299,7 @@ exports.addCommandKeyListener = function(el, callback) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/dom', ['require', 'exports', 'module' ], function(require, exports, module) {
+defineace('pilot/dom', ['requireace', 'exports', 'module' ], function(requireace, exports, module) {
 
 var XHTML_NS = "http://www.w3.org/1999/xhtml";
 
@@ -6397,7 +6397,7 @@ exports.setCssClass = function(node, className, include) {
 exports.importCssString = function(cssText, doc){
     doc = doc || document;
 
-    if (doc.createStyleSheet) {
+    if (doc.createStyleSheet && !dojo.isIE) {
         var sheet = doc.createStyleSheet();
         sheet.cssText = cssText;
     }
@@ -6589,11 +6589,11 @@ exports.setSelectionEnd = function(textarea, end) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/keyboard/textinput', ['require', 'exports', 'module' , 'pilot/event', 'pilot/useragent', 'pilot/dom'], function(require, exports, module) {
+defineace('ace/keyboard/textinput', ['requireace', 'exports', 'module' , 'pilot/event', 'pilot/useragent', 'pilot/dom'], function(requireace, exports, module) {
 
-var event = require("pilot/event");
-var useragent = require("pilot/useragent");
-var dom = require("pilot/dom");
+var event = requireace("pilot/event");
+var useragent = requireace("pilot/useragent");
+var dom = requireace("pilot/dom");
 
 var TextInput = function(parentNode, host) {
 
@@ -6836,10 +6836,10 @@ exports.TextInput = TextInput;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mouse_handler', ['require', 'exports', 'module' , 'pilot/event', 'pilot/dom'], function(require, exports, module) {
+defineace('ace/mouse_handler', ['requireace', 'exports', 'module' , 'pilot/event', 'pilot/dom'], function(requireace, exports, module) {
 
-var event = require("pilot/event");
-var dom = require("pilot/dom");
+var event = requireace("pilot/event");
+var dom = requireace("pilot/dom");
 
 var STATE_UNKNOWN = 0;
 var STATE_SELECT = 1;
@@ -7125,14 +7125,14 @@ exports.MouseHandler = MouseHandler;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/keyboard/keybinding', ['require', 'exports', 'module' , 'pilot/useragent', 'pilot/keys', 'pilot/event', 'pilot/settings', 'pilot/canon', 'ace/commands/default_commands'], function(require, exports, module) {
+defineace('ace/keyboard/keybinding', ['requireace', 'exports', 'module' , 'pilot/useragent', 'pilot/keys', 'pilot/event', 'pilot/settings', 'pilot/canon', 'ace/commands/default_commands'], function(requireace, exports, module) {
 
-var useragent = require("pilot/useragent");
-var keyUtil  = require("pilot/keys");
-var event = require("pilot/event");
-var settings  = require("pilot/settings").settings;
-var canon = require("pilot/canon");
-require("ace/commands/default_commands");
+var useragent = requireace("pilot/useragent");
+var keyUtil  = requireace("pilot/keys");
+var event = requireace("pilot/event");
+var settings  = requireace("pilot/settings").settings;
+var canon = requireace("pilot/canon");
+requireace("ace/commands/default_commands");
 
 var KeyBinding = function(editor) {
     this.$editor = editor;
@@ -7239,10 +7239,10 @@ exports.KeyBinding = KeyBinding;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/commands/default_commands', ['require', 'exports', 'module' , 'pilot/lang', 'pilot/canon'], function(require, exports, module) {
+defineace('ace/commands/default_commands', ['requireace', 'exports', 'module' , 'pilot/lang', 'pilot/canon'], function(requireace, exports, module) {
 
-var lang = require("pilot/lang");
-var canon = require("pilot/canon");
+var lang = requireace("pilot/lang");
+var canon = requireace("pilot/canon");
 
 function bindKey(win, mac) {
     return {
@@ -7629,16 +7629,16 @@ canon.addCommand({
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/edit_session', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/lang', 'pilot/event_emitter', 'ace/selection', 'ace/mode/text', 'ace/range', 'ace/document', 'ace/background_tokenizer'], function(require, exports, module) {
+defineace('ace/edit_session', ['requireace', 'exports', 'module' , 'pilot/oop', 'pilot/lang', 'pilot/event_emitter', 'ace/selection', 'ace/mode/text', 'ace/range', 'ace/document', 'ace/background_tokenizer'], function(requireace, exports, module) {
 
-var oop = require("pilot/oop");
-var lang = require("pilot/lang");
-var EventEmitter = require("pilot/event_emitter").EventEmitter;
-var Selection = require("ace/selection").Selection;
-var TextMode = require("ace/mode/text").Mode;
-var Range = require("ace/range").Range;
-var Document = require("ace/document").Document;
-var BackgroundTokenizer = require("ace/background_tokenizer").BackgroundTokenizer;
+var oop = requireace("pilot/oop");
+var lang = requireace("pilot/lang");
+var EventEmitter = requireace("pilot/event_emitter").EventEmitter;
+var Selection = requireace("ace/selection").Selection;
+var TextMode = requireace("ace/mode/text").Mode;
+var Range = requireace("ace/range").Range;
+var Document = requireace("ace/document").Document;
+var BackgroundTokenizer = requireace("ace/background_tokenizer").BackgroundTokenizer;
 
 var EditSession = function(text, mode) {
     this.$modified = true;
@@ -7976,7 +7976,7 @@ var EditSession = function(text, mode) {
         if (this.$worker)
             this.$worker.terminate();
 
-        if (this.$useWorker && typeof Worker !== "undefined" && !require.noWorker)
+        if (this.$useWorker && typeof Worker !== "undefined" && !requireace.noWorker)
             this.$worker = mode.createWorker(this);
         else
             this.$worker = null;
@@ -8975,12 +8975,12 @@ exports.EditSession = EditSession;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/selection', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/lang', 'pilot/event_emitter', 'ace/range'], function(require, exports, module) {
+defineace('ace/selection', ['requireace', 'exports', 'module' , 'pilot/oop', 'pilot/lang', 'pilot/event_emitter', 'ace/range'], function(requireace, exports, module) {
 
-var oop = require("pilot/oop");
-var lang = require("pilot/lang");
-var EventEmitter = require("pilot/event_emitter").EventEmitter;
-var Range = require("ace/range").Range;
+var oop = requireace("pilot/oop");
+var lang = requireace("pilot/lang");
+var EventEmitter = requireace("pilot/event_emitter").EventEmitter;
+var Range = requireace("ace/range").Range;
 
 var Selection = function(session) {
     this.session = session;
@@ -9389,7 +9389,7 @@ exports.Selection = Selection;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/range', ['require', 'exports', 'module' ], function(require, exports, module) {
+defineace('ace/range', ['requireace', 'exports', 'module' ], function(requireace, exports, module) {
 
 var Range = function(startRow, startColumn, endRow, endColumn) {
     this.start = {
@@ -9558,10 +9558,10 @@ exports.Range = Range;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/text', ['require', 'exports', 'module' , 'ace/tokenizer', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+defineace('ace/mode/text', ['requireace', 'exports', 'module' , 'ace/tokenizer', 'ace/mode/text_highlight_rules'], function(requireace, exports, module) {
 
-var Tokenizer = require("ace/tokenizer").Tokenizer;
-var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
+var Tokenizer = requireace("ace/tokenizer").Tokenizer;
+var TextHighlightRules = requireace("ace/mode/text_highlight_rules").TextHighlightRules;
 
 var Mode = function() {
     this.$tokenizer = new Tokenizer(new TextHighlightRules().getRules());
@@ -9703,7 +9703,7 @@ exports.Mode = Mode;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/tokenizer', ['require', 'exports', 'module' ], function(require, exports, module) {
+defineace('ace/tokenizer', ['requireace', 'exports', 'module' ], function(requireace, exports, module) {
 
 var Tokenizer = function(rules) {
     this.rules = rules;
@@ -9833,7 +9833,7 @@ exports.Tokenizer = Tokenizer;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/text_highlight_rules', ['require', 'exports', 'module' ], function(require, exports, module) {
+defineace('ace/mode/text_highlight_rules', ['requireace', 'exports', 'module' ], function(requireace, exports, module) {
 
 var TextHighlightRules = function() {
 
@@ -9913,12 +9913,12 @@ exports.TextHighlightRules = TextHighlightRules;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/document', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/event_emitter', 'ace/range', 'ace/anchor'], function(require, exports, module) {
+defineace('ace/document', ['requireace', 'exports', 'module' , 'pilot/oop', 'pilot/event_emitter', 'ace/range', 'ace/anchor'], function(requireace, exports, module) {
 
-var oop = require("pilot/oop");
-var EventEmitter = require("pilot/event_emitter").EventEmitter;
-var Range = require("ace/range").Range;
-var Anchor = require("ace/anchor").Anchor;
+var oop = requireace("pilot/oop");
+var EventEmitter = requireace("pilot/event_emitter").EventEmitter;
+var Range = requireace("ace/range").Range;
+var Anchor = requireace("ace/anchor").Anchor;
 
 var Document = function(text) {
     this.$lines = [];
@@ -10314,10 +10314,10 @@ exports.Document = Document;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/anchor', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/event_emitter'], function(require, exports, module) {
+defineace('ace/anchor', ['requireace', 'exports', 'module' , 'pilot/oop', 'pilot/event_emitter'], function(requireace, exports, module) {
 
-var oop = require("pilot/oop");
-var EventEmitter = require("pilot/event_emitter").EventEmitter;
+var oop = requireace("pilot/oop");
+var EventEmitter = requireace("pilot/event_emitter").EventEmitter;
 
 /**
  * An Anchor is a floating pointer in the document. Whenever text is inserted or
@@ -10505,10 +10505,10 @@ var Anchor = exports.Anchor = function(doc, row, column) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/background_tokenizer', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/event_emitter'], function(require, exports, module) {
+defineace('ace/background_tokenizer', ['requireace', 'exports', 'module' , 'pilot/oop', 'pilot/event_emitter'], function(requireace, exports, module) {
 
-var oop = require("pilot/oop");
-var EventEmitter = require("pilot/event_emitter").EventEmitter;
+var oop = requireace("pilot/oop");
+var EventEmitter = requireace("pilot/event_emitter").EventEmitter;
 
 var BackgroundTokenizer = function(tokenizer, editor) {
     this.running = false;    
@@ -10676,11 +10676,11 @@ exports.BackgroundTokenizer = BackgroundTokenizer;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/search', ['require', 'exports', 'module' , 'pilot/lang', 'pilot/oop', 'ace/range'], function(require, exports, module) {
+defineace('ace/search', ['requireace', 'exports', 'module' , 'pilot/lang', 'pilot/oop', 'ace/range'], function(requireace, exports, module) {
 
-var lang = require("pilot/lang");
-var oop = require("pilot/oop");
-var Range = require("ace/range").Range;
+var lang = requireace("pilot/lang");
+var oop = requireace("pilot/oop");
+var Range = requireace("ace/range").Range;
 
 var Search = function() {
     this.$options = {
@@ -11010,7 +11010,7 @@ exports.Search = Search;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/undomanager', ['require', 'exports', 'module' ], function(require, exports, module) {
+defineace('ace/undomanager', ['requireace', 'exports', 'module' ], function(requireace, exports, module) {
 
 var UndoManager = function() {
     this.reset();
@@ -11094,9 +11094,9 @@ exports.UndoManager = UndoManager;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/theme/clouds', ['require', 'exports', 'module' , 'pilot/dom'], function(require, exports, module) {
+defineace('ace/theme/clouds', ['requireace', 'exports', 'module' , 'pilot/dom'], function(requireace, exports, module) {
 
-    var dom = require("pilot/dom");
+    var dom = requireace("pilot/dom");
 
     var cssText = ".ace-clouds .ace_editor {\
   border: 2px solid rgb(159, 159, 159);\
@@ -11288,15 +11288,15 @@ define('ace/theme/clouds', ['require', 'exports', 'module' , 'pilot/dom'], funct
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/javascript', ['require', 'exports', 'module' , 'pilot/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/javascript_highlight_rules', 'ace/mode/matching_brace_outdent', 'ace/range', 'ace/worker/worker_client'], function(require, exports, module) {
+defineace('ace/mode/javascript', ['requireace', 'exports', 'module' , 'pilot/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/javascript_highlight_rules', 'ace/mode/matching_brace_outdent', 'ace/range', 'ace/worker/worker_client'], function(requireace, exports, module) {
 
-var oop = require("pilot/oop");
-var TextMode = require("ace/mode/text").Mode;
-var Tokenizer = require("ace/tokenizer").Tokenizer;
-var JavaScriptHighlightRules = require("ace/mode/javascript_highlight_rules").JavaScriptHighlightRules;
-var MatchingBraceOutdent = require("ace/mode/matching_brace_outdent").MatchingBraceOutdent;
-var Range = require("ace/range").Range;
-var WorkerClient = require("ace/worker/worker_client").WorkerClient;
+var oop = requireace("pilot/oop");
+var TextMode = requireace("ace/mode/text").Mode;
+var Tokenizer = requireace("ace/tokenizer").Tokenizer;
+var JavaScriptHighlightRules = requireace("ace/mode/javascript_highlight_rules").JavaScriptHighlightRules;
+var MatchingBraceOutdent = requireace("ace/mode/matching_brace_outdent").MatchingBraceOutdent;
+var Range = requireace("ace/range").Range;
+var WorkerClient = requireace("ace/worker/worker_client").WorkerClient;
 
 var Mode = function() {
     this.$tokenizer = new Tokenizer(new JavaScriptHighlightRules().getRules());
@@ -11452,18 +11452,18 @@ exports.Mode = Mode;
  * under the terms of either the GPL or the LGPL, and not to allow others to
  * use your version of this file under the terms of the MPL, indicate your
  * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
+ * and other provisions requireaced by the GPL or the LGPL. If you do not delete
  * the provisions above, a recipient may use your version of this file under
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/javascript_highlight_rules', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/lang', 'ace/mode/doc_comment_highlight_rules', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+defineace('ace/mode/javascript_highlight_rules', ['requireace', 'exports', 'module' , 'pilot/oop', 'pilot/lang', 'ace/mode/doc_comment_highlight_rules', 'ace/mode/text_highlight_rules'], function(requireace, exports, module) {
 
-var oop = require("pilot/oop");
-var lang = require("pilot/lang");
-var DocCommentHighlightRules = require("ace/mode/doc_comment_highlight_rules").DocCommentHighlightRules;
-var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
+var oop = requireace("pilot/oop");
+var lang = requireace("pilot/lang");
+var DocCommentHighlightRules = requireace("ace/mode/doc_comment_highlight_rules").DocCommentHighlightRules;
+var TextHighlightRules = requireace("ace/mode/text_highlight_rules").TextHighlightRules;
 
 var JavaScriptHighlightRules = function() {
 
@@ -11636,10 +11636,10 @@ exports.JavaScriptHighlightRules = JavaScriptHighlightRules;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/doc_comment_highlight_rules', ['require', 'exports', 'module' , 'pilot/oop', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+defineace('ace/mode/doc_comment_highlight_rules', ['requireace', 'exports', 'module' , 'pilot/oop', 'ace/mode/text_highlight_rules'], function(requireace, exports, module) {
 
-var oop = require("pilot/oop");
-var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
+var oop = requireace("pilot/oop");
+var TextHighlightRules = requireace("ace/mode/text_highlight_rules").TextHighlightRules;
 
 var DocCommentHighlightRules = function() {
 
@@ -11721,9 +11721,9 @@ exports.DocCommentHighlightRules = DocCommentHighlightRules;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/matching_brace_outdent', ['require', 'exports', 'module' , 'ace/range'], function(require, exports, module) {
+defineace('ace/mode/matching_brace_outdent', ['requireace', 'exports', 'module' , 'ace/range'], function(requireace, exports, module) {
 
-var Range = require("ace/range").Range;
+var Range = requireace("ace/range").Range;
 
 var MatchingBraceOutdent = function() {};
 
@@ -11773,27 +11773,27 @@ exports.MatchingBraceOutdent = MatchingBraceOutdent;
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
 
-define('ace/worker/worker_client', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/event_emitter'], function(require, exports, module) {
+defineace('ace/worker/worker_client', ['requireace', 'exports', 'module' , 'pilot/oop', 'pilot/event_emitter'], function(requireace, exports, module) {
 
-var oop = require("pilot/oop");
-var EventEmitter = require("pilot/event_emitter").EventEmitter;
+var oop = requireace("pilot/oop");
+var EventEmitter = requireace("pilot/event_emitter").EventEmitter;
 
 var WorkerClient = function(topLevelNamespaces, packagedJs, module, classname) {
 
     this.callbacks = [];
 
-    if (require.packaged) {
+    if (requireace.packaged) {
         var base = this.$guessBasePath();
         var worker = this.$worker = new Worker(base + packagedJs);
     }
     else {
-        var workerUrl = require.nameToUrl("ace/worker/worker", null, "_");
+        var workerUrl = requireace.nameToUrl("ace/worker/worker", null, "_");
         var worker = this.$worker = new Worker(workerUrl);
 
         var tlns = {};
         for (var i=0; i<topLevelNamespaces.length; i++) {
             var ns = topLevelNamespaces[i];
-            tlns[ns] = require.nameToUrl(ns, null, "_").replace(/.js$/, "");
+            tlns[ns] = requireace.nameToUrl(ns, null, "_").replace(/.js$/, "");
         }
     }
 
@@ -11839,8 +11839,8 @@ var WorkerClient = function(topLevelNamespaces, packagedJs, module, classname) {
     oop.implement(this, EventEmitter);
 
     this.$guessBasePath = function() {
-        if (require.aceBaseUrl)
-            return require.aceBaseUrl;
+        if (requireace.aceBaseUrl)
+            return requireace.aceBaseUrl;
         
         var scripts = document.getElementsByTagName("script");
         for (var i=0; i<scripts.length; i++) {
@@ -11883,13 +11883,13 @@ var WorkerClient = function(topLevelNamespaces, packagedJs, module, classname) {
 exports.WorkerClient = WorkerClient;
 
 });
-define('ace/mode/java', ['require', 'exports', 'module' , 'pilot/oop', 'ace/mode/javascript', 'ace/tokenizer', 'ace/mode/java_highlight_rules', 'ace/mode/matching_brace_outdent'], function(require, exports, module) {
+defineace('ace/mode/java', ['requireace', 'exports', 'module' , 'pilot/oop', 'ace/mode/javascript', 'ace/tokenizer', 'ace/mode/java_highlight_rules', 'ace/mode/matching_brace_outdent'], function(requireace, exports, module) {
 
-var oop = require("pilot/oop");
-var JavaScriptMode = require("ace/mode/javascript").Mode;
-var Tokenizer = require("ace/tokenizer").Tokenizer;
-var JavaHighlightRules = require("ace/mode/java_highlight_rules").JavaHighlightRules;
-var MatchingBraceOutdent = require("ace/mode/matching_brace_outdent").MatchingBraceOutdent;
+var oop = requireace("pilot/oop");
+var JavaScriptMode = requireace("ace/mode/javascript").Mode;
+var Tokenizer = requireace("ace/tokenizer").Tokenizer;
+var JavaHighlightRules = requireace("ace/mode/java_highlight_rules").JavaHighlightRules;
+var MatchingBraceOutdent = requireace("ace/mode/matching_brace_outdent").MatchingBraceOutdent;
 
 var Mode = function() {
     this.$tokenizer = new Tokenizer(new JavaHighlightRules().getRules());
@@ -11907,12 +11907,12 @@ oop.inherits(Mode, JavaScriptMode);
 
 exports.Mode = Mode;
 });
-define('ace/mode/java_highlight_rules', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/lang', 'ace/mode/doc_comment_highlight_rules', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+defineace('ace/mode/java_highlight_rules', ['requireace', 'exports', 'module' , 'pilot/oop', 'pilot/lang', 'ace/mode/doc_comment_highlight_rules', 'ace/mode/text_highlight_rules'], function(requireace, exports, module) {
 
-var oop = require("pilot/oop");
-var lang = require("pilot/lang");
-var DocCommentHighlightRules = require("ace/mode/doc_comment_highlight_rules").DocCommentHighlightRules;
-var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
+var oop = requireace("pilot/oop");
+var lang = requireace("pilot/lang");
+var DocCommentHighlightRules = requireace("ace/mode/doc_comment_highlight_rules").DocCommentHighlightRules;
+var TextHighlightRules = requireace("ace/mode/text_highlight_rules").TextHighlightRules;
 
 var JavaHighlightRules = function() {
 
@@ -12111,13 +12111,13 @@ exports.JavaHighlightRules = JavaHighlightRules;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/css', ['require', 'exports', 'module' , 'pilot/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/css_highlight_rules', 'ace/mode/matching_brace_outdent'], function(require, exports, module) {
+defineace('ace/mode/css', ['requireace', 'exports', 'module' , 'pilot/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/css_highlight_rules', 'ace/mode/matching_brace_outdent'], function(requireace, exports, module) {
 
-var oop = require("pilot/oop");
-var TextMode = require("ace/mode/text").Mode;
-var Tokenizer = require("ace/tokenizer").Tokenizer;
-var CssHighlightRules = require("ace/mode/css_highlight_rules").CssHighlightRules;
-var MatchingBraceOutdent = require("ace/mode/matching_brace_outdent").MatchingBraceOutdent;
+var oop = requireace("pilot/oop");
+var TextMode = requireace("ace/mode/text").Mode;
+var Tokenizer = requireace("ace/tokenizer").Tokenizer;
+var CssHighlightRules = requireace("ace/mode/css_highlight_rules").CssHighlightRules;
+var MatchingBraceOutdent = requireace("ace/mode/matching_brace_outdent").MatchingBraceOutdent;
 
 var Mode = function() {
     this.$tokenizer = new Tokenizer(new CssHighlightRules().getRules());
@@ -12194,11 +12194,11 @@ exports.Mode = Mode;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/css_highlight_rules', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/lang', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+defineace('ace/mode/css_highlight_rules', ['requireace', 'exports', 'module' , 'pilot/oop', 'pilot/lang', 'ace/mode/text_highlight_rules'], function(requireace, exports, module) {
 
-var oop = require("pilot/oop");
-var lang = require("pilot/lang");
-var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
+var oop = requireace("pilot/oop");
+var lang = requireace("pilot/lang");
+var TextHighlightRules = requireace("ace/mode/text_highlight_rules").TextHighlightRules;
 
 var CssHighlightRules = function() {
 
@@ -12422,20 +12422,20 @@ exports.CssHighlightRules = CssHighlightRules;
  * under the terms of either the GPL or the LGPL, and not to allow others to
  * use your version of this file under the terms of the MPL, indicate your
  * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
+ * and other provisions requireaced by the GPL or the LGPL. If you do not delete
  * the provisions above, a recipient may use your version of this file under
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/html', ['require', 'exports', 'module' , 'pilot/oop', 'ace/mode/text', 'ace/mode/javascript', 'ace/mode/css', 'ace/tokenizer', 'ace/mode/html_highlight_rules'], function(require, exports, module) {
+defineace('ace/mode/html', ['requireace', 'exports', 'module' , 'pilot/oop', 'ace/mode/text', 'ace/mode/javascript', 'ace/mode/css', 'ace/tokenizer', 'ace/mode/html_highlight_rules'], function(requireace, exports, module) {
 
-var oop = require("pilot/oop");
-var TextMode = require("ace/mode/text").Mode;
-var JavaScriptMode = require("ace/mode/javascript").Mode;
-var CssMode = require("ace/mode/css").Mode;
-var Tokenizer = require("ace/tokenizer").Tokenizer;
-var HtmlHighlightRules = require("ace/mode/html_highlight_rules").HtmlHighlightRules;
+var oop = requireace("pilot/oop");
+var TextMode = requireace("ace/mode/text").Mode;
+var JavaScriptMode = requireace("ace/mode/javascript").Mode;
+var CssMode = requireace("ace/mode/css").Mode;
+var Tokenizer = requireace("ace/tokenizer").Tokenizer;
+var HtmlHighlightRules = requireace("ace/mode/html_highlight_rules").HtmlHighlightRules;
 
 var Mode = function() {
     this.$tokenizer = new Tokenizer(new HtmlHighlightRules().getRules());
@@ -12529,12 +12529,12 @@ exports.Mode = Mode;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/html_highlight_rules', ['require', 'exports', 'module' , 'pilot/oop', 'ace/mode/css_highlight_rules', 'ace/mode/javascript_highlight_rules', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+defineace('ace/mode/html_highlight_rules', ['requireace', 'exports', 'module' , 'pilot/oop', 'ace/mode/css_highlight_rules', 'ace/mode/javascript_highlight_rules', 'ace/mode/text_highlight_rules'], function(requireace, exports, module) {
 
-var oop = require("pilot/oop");
-var CssHighlightRules = require("ace/mode/css_highlight_rules").CssHighlightRules;
-var JavaScriptHighlightRules = require("ace/mode/javascript_highlight_rules").JavaScriptHighlightRules;
-var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
+var oop = requireace("pilot/oop");
+var CssHighlightRules = requireace("ace/mode/css_highlight_rules").CssHighlightRules;
+var JavaScriptHighlightRules = requireace("ace/mode/javascript_highlight_rules").JavaScriptHighlightRules;
+var TextHighlightRules = requireace("ace/mode/text_highlight_rules").TextHighlightRules;
 
 var HtmlHighlightRules = function() {
 
@@ -12730,12 +12730,12 @@ exports.HtmlHighlightRules = HtmlHighlightRules;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/xml', ['require', 'exports', 'module' , 'pilot/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/xml_highlight_rules'], function(require, exports, module) {
+defineace('ace/mode/xml', ['requireace', 'exports', 'module' , 'pilot/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/xml_highlight_rules'], function(requireace, exports, module) {
 
-var oop = require("pilot/oop");
-var TextMode = require("ace/mode/text").Mode;
-var Tokenizer = require("ace/tokenizer").Tokenizer;
-var XmlHighlightRules = require("ace/mode/xml_highlight_rules").XmlHighlightRules;
+var oop = requireace("pilot/oop");
+var TextMode = requireace("ace/mode/text").Mode;
+var Tokenizer = requireace("ace/tokenizer").Tokenizer;
+var XmlHighlightRules = requireace("ace/mode/xml_highlight_rules").XmlHighlightRules;
 
 var Mode = function() {
     this.$tokenizer = new Tokenizer(new XmlHighlightRules().getRules());
@@ -12790,10 +12790,10 @@ exports.Mode = Mode;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/xml_highlight_rules', ['require', 'exports', 'module' , 'pilot/oop', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+defineace('ace/mode/xml_highlight_rules', ['requireace', 'exports', 'module' , 'pilot/oop', 'ace/mode/text_highlight_rules'], function(requireace, exports, module) {
 
-var oop = require("pilot/oop");
-var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
+var oop = requireace("pilot/oop");
+var TextHighlightRules = requireace("ace/mode/text_highlight_rules").TextHighlightRules;
 
 var XmlHighlightRules = function() {
 
@@ -12935,20 +12935,20 @@ exports.XmlHighlightRules = XmlHighlightRules;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/virtual_renderer', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/dom', 'pilot/event', 'pilot/useragent', 'ace/layer/gutter', 'ace/layer/marker', 'ace/layer/text', 'ace/layer/cursor', 'ace/scrollbar', 'ace/renderloop', 'pilot/event_emitter', 'text/ace/css/editor.css'], function(require, exports, module) {
+defineace('ace/virtual_renderer', ['requireace', 'exports', 'module' , 'pilot/oop', 'pilot/dom', 'pilot/event', 'pilot/useragent', 'ace/layer/gutter', 'ace/layer/marker', 'ace/layer/text', 'ace/layer/cursor', 'ace/scrollbar', 'ace/renderloop', 'pilot/event_emitter', 'text/ace/css/editor.css'], function(requireace, exports, module) {
 
-var oop = require("pilot/oop");
-var dom = require("pilot/dom");
-var event = require("pilot/event");
-var useragent = require("pilot/useragent");
-var GutterLayer = require("ace/layer/gutter").Gutter;
-var MarkerLayer = require("ace/layer/marker").Marker;
-var TextLayer = require("ace/layer/text").Text;
-var CursorLayer = require("ace/layer/cursor").Cursor;
-var ScrollBar = require("ace/scrollbar").ScrollBar;
-var RenderLoop = require("ace/renderloop").RenderLoop;
-var EventEmitter = require("pilot/event_emitter").EventEmitter;
-var editorCss = require("text/ace/css/editor.css");
+var oop = requireace("pilot/oop");
+var dom = requireace("pilot/dom");
+var event = requireace("pilot/event");
+var useragent = requireace("pilot/useragent");
+var GutterLayer = requireace("ace/layer/gutter").Gutter;
+var MarkerLayer = requireace("ace/layer/marker").Marker;
+var TextLayer = requireace("ace/layer/text").Text;
+var CursorLayer = requireace("ace/layer/cursor").Cursor;
+var ScrollBar = requireace("ace/scrollbar").ScrollBar;
+var RenderLoop = requireace("ace/renderloop").RenderLoop;
+var EventEmitter = requireace("pilot/event_emitter").EventEmitter;
+var editorCss = requireace("text/ace/css/editor.css");
 
 // import CSS once
 dom.importCssString(editorCss);
@@ -13650,7 +13650,7 @@ var VirtualRenderer = function(container, theme) {
         var _self = this;
         if (!theme || typeof theme == "string") {
             theme = theme || "ace/theme/clouds";
-            require([theme], function(theme) {
+            requireace([theme], function(theme) {
                 afterLoad(theme);
             });
         } else {
@@ -13730,9 +13730,9 @@ exports.VirtualRenderer = VirtualRenderer;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/layer/gutter', ['require', 'exports', 'module' , 'pilot/dom'], function(require, exports, module) {
+defineace('ace/layer/gutter', ['requireace', 'exports', 'module' , 'pilot/dom'], function(requireace, exports, module) {
 
-var dom = require("pilot/dom");
+var dom = requireace("pilot/dom");
 
 var Gutter = function(parentEl) {
     this.element = dom.createElement("div");
@@ -13847,16 +13847,16 @@ exports.Gutter = Gutter;
  * under the terms of either the GPL or the LGPL, and not to allow others to
  * use your version of this file under the terms of the MPL, indicate your
  * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
+ * and other provisions requireaced by the GPL or the LGPL. If you do not delete
  * the provisions above, a recipient may use your version of this file under
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/layer/marker', ['require', 'exports', 'module' , 'ace/range', 'pilot/dom'], function(require, exports, module) {
+defineace('ace/layer/marker', ['requireace', 'exports', 'module' , 'ace/range', 'pilot/dom'], function(requireace, exports, module) {
 
-var Range = require("ace/range").Range;
-var dom = require("pilot/dom");
+var Range = requireace("ace/range").Range;
+var dom = requireace("pilot/dom");
 
 var Marker = function(parentEl) {
     this.element = dom.createElement("div");
@@ -14028,18 +14028,18 @@ exports.Marker = Marker;
  * under the terms of either the GPL or the LGPL, and not to allow others to
  * use your version of this file under the terms of the MPL, indicate your
  * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
+ * and other provisions requireaced by the GPL or the LGPL. If you do not delete
  * the provisions above, a recipient may use your version of this file under
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/layer/text', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/dom', 'pilot/lang', 'pilot/event_emitter'], function(require, exports, module) {
+defineace('ace/layer/text', ['requireace', 'exports', 'module' , 'pilot/oop', 'pilot/dom', 'pilot/lang', 'pilot/event_emitter'], function(requireace, exports, module) {
 
-var oop = require("pilot/oop");
-var dom = require("pilot/dom");
-var lang = require("pilot/lang");
-var EventEmitter = require("pilot/event_emitter").EventEmitter;
+var oop = requireace("pilot/oop");
+var dom = requireace("pilot/dom");
+var lang = requireace("pilot/lang");
+var EventEmitter = requireace("pilot/event_emitter").EventEmitter;
 
 var Text = function(parentEl) {
     this.element = dom.createElement("div");
@@ -14407,9 +14407,9 @@ exports.Text = Text;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/layer/cursor', ['require', 'exports', 'module' , 'pilot/dom'], function(require, exports, module) {
+defineace('ace/layer/cursor', ['requireace', 'exports', 'module' , 'pilot/dom'], function(requireace, exports, module) {
 
-var dom = require("pilot/dom");
+var dom = requireace("pilot/dom");
 
 var Cursor = function(parentEl) {
     this.element = dom.createElement("div");
@@ -14545,12 +14545,12 @@ exports.Cursor = Cursor;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/scrollbar', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/dom', 'pilot/event', 'pilot/event_emitter'], function(require, exports, module) {
+defineace('ace/scrollbar', ['requireace', 'exports', 'module' , 'pilot/oop', 'pilot/dom', 'pilot/event', 'pilot/event_emitter'], function(requireace, exports, module) {
 
-var oop = require("pilot/oop");
-var dom = require("pilot/dom");
-var event = require("pilot/event");
-var EventEmitter = require("pilot/event_emitter").EventEmitter;
+var oop = requireace("pilot/oop");
+var dom = requireace("pilot/dom");
+var event = requireace("pilot/event");
+var EventEmitter = requireace("pilot/event_emitter").EventEmitter;
 
 var ScrollBar = function(parent) {
     this.element = dom.createElement("div");
@@ -14631,9 +14631,9 @@ exports.ScrollBar = ScrollBar;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/renderloop', ['require', 'exports', 'module' , 'pilot/event'], function(require, exports, module) {
+defineace('ace/renderloop', ['requireace', 'exports', 'module' , 'pilot/event'], function(requireace, exports, module) {
 
-var event = require("pilot/event");
+var event = requireace("pilot/event");
 
 var RenderLoop = function(onRender) {
     this.onRender = onRender;
@@ -14689,7 +14689,7 @@ var RenderLoop = function(onRender) {
 
 exports.RenderLoop = RenderLoop;
 });
-define("text/ace/css/editor.css", [], ".ace_editor {" +
+defineace("text/ace/css/editor.css", [], ".ace_editor {" +
   "    position: absolute;" +
   "    overflow: hidden;" +
   "" +
@@ -14849,7 +14849,7 @@ define("text/ace/css/editor.css", [], ".ace_editor {" +
   "}" +
   "");
 
-define("text/styles.css", [], "html {" +
+defineace("text/styles.css", [], "html {" +
   "    height: 100%;" +
   "    overflow: hidden;" +
   "}" +
@@ -14946,17 +14946,17 @@ var deps = [
     "ace/theme/clouds"
 ];
 
-require(deps, function() {
-    var catalog = require("pilot/plugin_manager").catalog;
+requireace(deps, function() {
+    var catalog = requireace("pilot/plugin_manager").catalog;
     catalog.registerPlugins([ "pilot/index" ]);
 
-    var Dom = require("pilot/dom");
-    var Event = require("pilot/event");
+    var Dom = requireace("pilot/dom");
+    var Event = requireace("pilot/event");
 
-    var Editor = require("ace/editor").Editor;
-    var EditSession = require("ace/edit_session").EditSession;
-    var UndoManager = require("ace/undomanager").UndoManager;
-    var Renderer = require("ace/virtual_renderer").VirtualRenderer;
+    var Editor = requireace("ace/editor").Editor;
+    var EditSession = requireace("ace/edit_session").EditSession;
+    var UndoManager = requireace("ace/undomanager").UndoManager;
+    var Renderer = requireace("ace/virtual_renderer").VirtualRenderer;
 
     window.ace = {
         edit: function(el) {
@@ -14971,7 +14971,7 @@ require(deps, function() {
             var editor = new Editor(new Renderer(el, "ace/theme/clouds"));
             editor.setSession(doc);
 
-            var env = require("pilot/environment").create();
+            var env = requireace("pilot/environment").create();
             catalog.startupPlugins({ env: env }).then(function() {
                 env.document = doc;
                 env.editor = editor;

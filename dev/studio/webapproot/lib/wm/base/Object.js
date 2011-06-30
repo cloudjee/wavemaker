@@ -246,7 +246,19 @@ wm.Object.extendSchema(wm.MyButton, {
 	confirmPrompt: { writeonly: 1} // configure flags for confirmPrompt property
 });
 	*/
-	extendSchema: function(inClass, inSchema) {
+    extendSchema: function(inClass, inSchema, skipDictionary) {
+/* Generates a list of properties that need to be localized
+	    console.group(inClass.prototype.declaredClass);
+	    for (var prop in inSchema) {
+		if (inSchema[prop].group == "method" || inSchema[prop].ignore && !inSchema[prop].bindable || inSchema[prop].writeonly && !inSchema[prop].bindable) {
+		    ;
+		} else {
+		    console.log(prop);
+		}
+	    }
+	    console.groupEnd();
+		*/
+	if (!skipDictionary && inSchema) {
 	    if (!wm.extendSchemaDictionary && wm.studioConfig) {
 		dojo.requireLocalization("language", "schema");
 		wm.extendSchemaDictionary = dojo.i18n.getLocalization("language", "schema");
@@ -264,6 +276,8 @@ wm.Object.extendSchema(wm.MyButton, {
 		    }
 		}
 	    }
+	}
+
 		dojo.extend(wm.Object.getSchemaClass(inClass), inSchema);
 		// expunge memoized property information
 		delete inClass._publishedProps;
@@ -381,6 +395,6 @@ wm.define = function(inClass, inSuperclasses, inProperties) {
 	var schema = inProperties.published;
 	delete inProperties.published;
 	var ctor = dojo.declare(inClass, inSuperclasses, inProperties);
-	wm.Object.extendSchema(ctor, schema);
+        wm.Object.extendSchema(ctor, schema);
 	return ctor;
 }

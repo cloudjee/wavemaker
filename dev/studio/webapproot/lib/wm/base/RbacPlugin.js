@@ -97,4 +97,4 @@ wm.Plugin.plugin("rbacLayer", wm.Layer, {
 wm.Object.extendSchema(wm.Widget, {
 	roles: {ignore: 1, writeonly: 1, category: "Security",
 	categoryProps: {content: "Security", image: "images/lock_16.png", inspector: "Security"}}
-});
+}, true);

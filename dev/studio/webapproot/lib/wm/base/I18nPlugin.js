@@ -32,6 +32,28 @@ wm.Plugin.plugin("i18n", wm.Component, {
 	    var entry = inProps.owner.getDictionaryItem(inProps.name);
 	if (entry) 
 	    inProps = dojo.mixin(inProps, entry);
+	if (wm.branding) {
+	    var app =  inProps.owner ? inProps.owner.getOwnerApp() : null;
+	    if (app && app._brandingDictionary) {
+		var owner = inProps.owner;
+		var ownerName;
+		if (owner == app)
+		    ownerName = "app";
+		else if (owner instanceof wm.Page)
+		    ownerName = owner.declaredClass;
+		if (ownerName && app._brandingDictionary[ownerName] && app._brandingDictionary[ownerName][inProps.name]) {
+		    var componentProps = app._brandingDictionary[ownerName][inProps.name];
+		    var locale = dojo.locale;
+		    for (prop in componentProps) {
+			var propHash = componentProps[prop];
+			if (propHash[locale] !== undefined)
+			    inProps[prop] = propHash[locale];
+			else if (propHash["default"] !== undefined)
+			    inProps[prop] = propHash["default"];
+		    }
+		}
+	    }
+	}
 	this.i18nSocket(arguments);
     },
     getDictionaryItem: function(name, params) {

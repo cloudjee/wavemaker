@@ -40,7 +40,7 @@ dojo.declare("wm.Splitter", wm.Bevel, {
 	className: "wmsplitter",
 	minimum: -1,
 	maximum: -1,
-	mode: dojo.isMoz || dojo.isIE ? 2 : 0,
+	mode: dojo.isMoz < 4 || dojo.isIE < 9 ? 2 : 0,
 	layout: "",
 	constructor: function() {
 		wm.Splitter.resizer = wm.Splitter.resizer || new wm.SplitterResize();

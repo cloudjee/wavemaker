@@ -65,17 +65,24 @@ wm.expression.getValue(exp, app.main);
 		//return inExpression.replace(wm.expression._getSourceRegEx(), function(){
 		return inExpression.replace(wm.expression._getSourceRegEx, function(){
 			try {
-				if (inRoot.getValue){
-					var v = inRoot.getValue(arguments[1]);
-				}
-				else if (arguments[1].indexOf('.') != -1){
-					var arr = arguments[1].split('.');
+			    var inSource = arguments[1];
+			    if (inSource.match(/^\[.*\]/)) {
+				var matches = inSource.match(/^\[(.*?)\]/);
+				inSource = inSource.replace(/^\[(.*?)\]\./, "");
+				var roots = wm.Page.byName[matches[1]];
+				var root = (roots) ? roots[0] : "";
+				var v = root ? root.getValue(inSource) : "";
+			    } else if (inRoot.getValue){
+				var v = inRoot.getValue(inSource);
+			    }
+			    else if (inSource.indexOf('.') != -1){
+					var arr = inSource.split('.');
 					var v = inRoot;		
 					dojo.forEach(arr, function(prop){
 						v = v[prop];
 					});
 				} else {
-					var v = inRoot[arguments[1]];
+				    var v = inRoot[inSource];
 				}
 				// objects cannot be returned directly since they are eval'd.
 				if (v instanceof wm.Object || v === undefined)

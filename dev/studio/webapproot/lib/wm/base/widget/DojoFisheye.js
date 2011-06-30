@@ -93,7 +93,7 @@ dojo.declare("wm.DojoFisheye", wm.Control, {
 	},
 	updateDOMStyle: function(){
 		this.domNode.style.overflow = 'visible';
-		if (dojo.isIE)
+		if (dojo.isIE && dojo.isIE <= 8)
 		{
 			this.domNode.style.overflowX = 'visible';
 			this.domNode.style.overflowY = 'visible';
@@ -102,7 +102,7 @@ dojo.declare("wm.DojoFisheye", wm.Control, {
 		if (this.parent && this.parent instanceof wm.Panel)
 		{
 			this.parent.domNode.style.overflow = 'visible';
-			if (dojo.isIE)
+			if (dojo.isIE && dojo.isIE <= 8)
 			{
 				this.parent.domNode.style.overflowX = 'visible';
 				this.parent.domNode.style.overflowY = 'visible';

@@ -22,6 +22,7 @@ dojo.provide("wm.base.widget.Container");
 */
 wm.define("wm.Container", wm.Control, {
 	/** @lends wm.Container.prototype */
+/*
 	published: {
 		invalid: { ignore: 1, bindSource: 1, readonly: 1, type: "Boolean" },
 	    lock: { order: 0, type: "Boolean" },
@@ -30,6 +31,7 @@ wm.define("wm.Container", wm.Control, {
 		boxPosition: { ignore: 1},
 	        autoScroll: {group: "scrolling", order: 100, ignore: 0, type: "Boolean"}
 	},
+	*/
     touchScrolling: false,
 	imageList: "",
 	border: 0,
@@ -44,6 +46,7 @@ wm.define("wm.Container", wm.Control, {
         fitToContentHeight: false, // Container automatically resizes itself to match the height of its content, or minHeight if % sized content      
         fitToContent: false,       // shortcut for (fitToContentWidth || fitToContentHeight)
         _needsFitToContent: false, // Init time flag that signals that this fitToContent container has not yet been fit to its content
+
 
 	constructor: function() {
 		this.c$ = [];
@@ -318,6 +321,21 @@ wm.define("wm.Container", wm.Control, {
 		this.imageList = inImageList;
 		this.imageListChanged();
 	},
+
+    updateIsDirty: function() {
+	this.setValue("isDirty", this.getIsDirty());
+	wm.fire(this.parent, "updateIsDirty");
+    },
+    getIsDirty: function() {
+	for (var i in this.widgets) {
+	    var w = this.widgets[i];
+	    if (w.isDirty)
+		return true;
+            else if (w.isDirty === undefined && w.getIsDirty && w.getIsDirty())
+                return true;
+	}
+    },
+
 	//
 	// validation
 	//

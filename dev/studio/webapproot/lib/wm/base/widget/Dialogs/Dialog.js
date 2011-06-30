@@ -619,6 +619,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 
 	    if (inShowing && this._hideAnimation) {
 		this._hideAnimation.stop();
+		this.domNode.style.opacity = 1;
+		wasShowing = true; // its still showing, skip animating showing it again and just show it
 		delete this._hideAnimation;
 
 	    } else if (!inShowing && this._showAnimation) {

@@ -199,7 +199,7 @@ dojo.declare("wm.Page", wm.Component, {
 			// FIXME: hack to resolve clickability problem on IE at design-time
 			// nodes must have some background or content to receive mouse events
 			// on IE.
-			if (this._designer && dojo.isIE) {
+			if (this._designer && dojo.isIE <= 8) {
 				var s = inComponent.domNode && dojo.getComputedStyle(inComponent.domNode);
 				if (s && s.backgroundImage=="none"){
 					inComponent.domNode.style.backgroundImage = "url(images/blank.gif)";
@@ -487,7 +487,74 @@ wm.Page.extend({
 	    if (window["studio"] && this == studio.page && this.isEventProp(n))
 		return (getEvent(n,studio.getScript())) ? n : "";
 	    return this.inherited(arguments);
+	},
+
+    /* LOCALIZATION TODO:
+       1. If there's a dictionary being written, the page must be set to i18n: true
+       2. Must handle app level dictionary and i18n:true as well
+       3. Need dictionary for terms used in scripts, and prompt to remind users when a given language they are editting does not yet have a term entered
+       3. Remind user to save when changing languages
+       4. Handle subcomponents
+       */
+    installDesignDictionary: function(inDictionary) {
+	var lang = studio.languageSelect.getDisplayValue();
+	var isDefaultLang = lang == "" || lang == "default"
+
+	this._editLanguage = lang
+
+	/* 1. Restore the default language so we're editting a fresh copy in the new language
+	 * 2. Create a new set of cache values to store the default language in 
+	 */
+	    var compList = wm.listComponents([this], wm.Component, false);
+	    for (var i = 0; i < compList.length; i++) {
+		var c = compList[i];
+		var props = c.listWriteableProperties();
+		for (var prop in props) {
+		    var value = c.getProp(prop);
+		    if (typeof value == "string" || typeof value == "boolean" || typeof value == "number") {
+			/* Restore the default values any time we change languages and clear the cache */
+			if (c["_original_i18n_" + prop] !== undefined && c["_original_i18n_" + prop] != value) {
+			    c.setProp(prop, c["_original_i18n_" + prop]);
+			    value = c["_original_i18n_" + prop]; 
+			    delete c["_original_i18n_" + prop]; 
+			}
+			if (!isDefaultLang) {
+			    c["_original_i18n_" + prop] = value;
+			}
+		    }
+		}
+	    }
+
+
+	this._designDictionary = inDictionary;
+	console.log(inDictionary);
+	for (var component in inDictionary) {
+	    /* TODO: component may be a subcomponent, and we may have to parse out the "." */
+	    var c = this[component];
+	    if (c instanceof wm.Component) {
+		var compDesc = inDictionary[component];
+		for (var prop in compDesc) {
+		    c.setProp(prop, compDesc[prop]);
+		}
+	    }
 	}
+    },
+    getLanguageWidgets: function() {
+	var result = {};
+	var compList = wm.listComponents([this], wm.Component, false);
+	for (var i = 0; i < compList.length; i++) {
+	    var c = compList[i];
+	    var props = c.listWriteableProperties();
+	    for (var prop in props) {
+		if (c["_original_i18n_" + prop] !== undefined && c["_original_i18n_" + prop] != c.getProp(prop)) {
+		    if (!result[c.name])
+			result[c.name] = {};
+		    result[c.name][prop] = c.getProp(prop);
+		}
+	    }
+	}
+	return result;
+    }
 });
 
 wm.Object.extendSchema(wm.Page, {

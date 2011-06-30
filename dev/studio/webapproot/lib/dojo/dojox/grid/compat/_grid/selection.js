@@ -1,5 +1,5 @@
 dojo.provide('dojox.grid.compat._grid.selection');
-dojo.require("dojo.dnd.common");
+
 dojo.declare("dojox.grid.selection",
 	null,
 	{
@@ -199,7 +199,7 @@ dojo.declare("dojox.grid.selection",
 	},
 
 	clickSelectEvent: function(e){
-		this.clickSelect(e.rowIndex, dojo.dnd.getCopyKeyState(e), e.shiftKey);
+		this.clickSelect(e.rowIndex, dojo.isCopyKey(e), e.shiftKey);
 	},
 
 	clear: function(){

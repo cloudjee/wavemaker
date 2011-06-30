@@ -25,5 +25,6 @@ TOAST_FAILED: "Bind Failed",
 ALERT_BLANK_MESSAGE: "Please select a bind value or expression.",
 ALERT_BIND_ERROR: "Binding aborted due to the following error: ${error}",
 VISUAL: "Visual Components",
-NON_VISUAL: "Non-visual Components"
+    NON_VISUAL: "Non-visual Components",
+    NEED_DATASET_FOR_DISPLAY_EXPR: "Please set a dataSet before editting your display expression"
 }

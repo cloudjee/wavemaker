@@ -157,6 +157,10 @@ dojo.declare("wm.propEdit.WidgetsSelect", wm.propEdit.Select, {
 		for (var i=0, l; l = layers[i]; i++) { 
 			options.push(l.name);
 		}
+	    var components = wm.listComponents([studio.page, studio.application], this.widgetType);
+		for (var i=0, l; l = components[i]; i++) { 
+			options.push(l.name);
+		}
 		return [""].concat(options);
 	}
 });

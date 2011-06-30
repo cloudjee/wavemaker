@@ -60,12 +60,14 @@
 	"PageDialog" : "PageDialog",
 	"RichTextDialog" : "RichTextDialog",
 	"DesignableDialog" : "DesignableDialog",
+	"LoadingDialog" : "LoadingDialog",
 
 	"Dojo_Widgets" : "Dojo Widgets",
 	"Grid" : "Grid",
 	"Chart" : "Chart",
 	"Dashboard" : "Dashboard",
 	"Menu" : "Menu",
+	"Menus" : "Menus",
 	"PopupMenu" : "PopupMenu",
 	"Fisheye" : "Fisheye",
 	"Lightbox" : "Lightbox",
@@ -115,9 +117,11 @@
 	"Twitter_Feed" : "Twitter Feed",
 	"Weather" : "Weather",
 	"YouTube" : "YouTube",
+        "GoogleMap": "Google Maps",
 	"FacebookLikeButton" : "FacebookLikeButton",
 	"FacebookActivityFeed" : "FacebookActivityFeed",
-
+         BasicWidgets: "Basic Widgets",
+ 
 	"Beta" : "Beta",
 	"ColorPicker" : "ColorPicker",
 	"BusyButton" : "BusyButton",
@@ -146,7 +150,7 @@
 	"Composite_Publisher" : "Composite Publisher",
 	"Property" : "Property",
 	"Template_Publisher" : "Template Publisher",
-
+ 
 	"Services" : "Services",
     "DataWidget": "Data Widgets",
     DataWidgetSingle: "Single Data Point",
@@ -159,6 +163,7 @@
 	"Query" : "Query",
 	"Security" : "Security",
 	"Web_Service" : "Web Service",
+	"Infoteria_Web_Service" : "Infoteria Services",
 
 	"Example" : "Example",
 	"Example_Button" : "Example Button",
@@ -196,6 +201,7 @@
     "descGenericDialog": "Simple dialog with one label, one optional text input, and up to 4 buttons",
     "descPageDialog": "Dialog for showing a page",
     "descDesignableDialog": "Dialog you can drag new widgets into",
+    "descLoadingDialog": "Covers a widget/panel in your page with a loading icon",
 
     "descLiveForm": "A container for managing editors and writing changes to server",
     "descCheckbox": "A checkbox editor",

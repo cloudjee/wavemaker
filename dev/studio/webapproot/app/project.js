@@ -598,7 +598,11 @@ dojo.declare("wm.studio.Project", null, {
 
 	    f.push(dojo.hitch(this, function() {
 		studio.setSaveProgressBarMessage(this.pageName + ".widgets.js");
-		this.savePageData(this.pageName + ".widgets.js", studio.getWidgets());
+		if (studio.languageSelect.getDataValue() == "default") {
+		    this.savePageData(this.pageName + ".widgets.js", studio.getWidgets());
+		} else {
+		    studio.studioService.requestSync("writeWebFile", ["language/nls/" + studio.languageSelect.getDisplayValue() + "/" + studio.project.pageName + ".js", studio.page.getLanguageWidgets(), false]);
+		}
 	    }));
 
 	    f.push(dojo.hitch(this, function() {	    
@@ -1608,6 +1612,8 @@ Studio.extend({
 		s.push("debug");
 	    if (c.previewPopup)
 		s.push("popup");
+	    if (studio.languageSelect.getDisplayValue() != "default")
+		s.push("dojo.locale=" + studio.languageSelect.getDisplayValue());
 	    var projectPrefix = studio.projectPrefix;
 	    return "/" + projectPrefix + this.project.projectName + (s.length ? "/?" + s.join("&") : "");
 	},
@@ -1615,8 +1621,9 @@ Studio.extend({
     runProjectChange: function(inSender, inLabel, inIconClass, inEvent) {
 	if (inLabel == "Compile")
 	    inSender.setWidth("100px");
-	else
+	else if (inLabel == "Test" || inLabel == "Run")
 	    inSender.setWidth("75px");
+	// else its in another language, and don't try tweaking the width at all
     },
 	runProjectClick: function(inSender) {	    
 

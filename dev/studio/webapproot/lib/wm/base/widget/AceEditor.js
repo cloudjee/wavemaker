@@ -53,10 +53,10 @@ dojo.declare("wm.AceEditor", wm.Control, {
 	this.waitForLibraryLoad();
     },
     waitForLibraryLoad: function() {
-	if (window.ace && window.require) {
+	if (window.ace && window.requireace) {
 	    this._editor = ace.edit(this.domNode.id);
 	    this._editor.owner = this;
-	    var mode = window.require("ace/mode/" + this.syntax).Mode;
+	    var mode = window.requireace("ace/mode/" + this.syntax).Mode;
 	    this._editor.getSession().setMode(new mode());
 	    this._editor.getSession().on('change', dojo.hitch(this, "_change"));
 	    this._editor.getSession().on('changeSelection', dojo.hitch(this, "_changeSelection"));
@@ -102,7 +102,7 @@ dojo.declare("wm.AceEditor", wm.Control, {
     setSyntax: function(inSyntax) {
 	this.syntax = inSyntax;
 	if (this._editor) {
-	    var mode = window.require("ace/mode/" + this.syntax).Mode;
+	    var mode = window.requireace("ace/mode/" + this.syntax).Mode;
 	    this._editor.getSession().setMode(new mode());
 	}
     },

@@ -48,6 +48,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		True if this variable contains a list (aka array).
 		@type Boolean
 	*/
+        saveInCookie: false,
 	isList: false,
 	_updating: 0,
 	_dataSchema: {},
@@ -65,6 +66,11 @@ dojo.declare("wm.Variable", wm.Component, {
 		if (!this._subNard && !this.$.binding)
 			new wm.Binding({name: "binding", owner: this});
 	        this.setType(this.type, true);
+	        if (this.saveInCookie) {
+		    var textdata = dojo.cookie(this.getRuntimeId());
+		    if (textdata)
+			this.json = textdata;
+		}
 		if (this.json)
 			this.setJson(this.json);
 		else
@@ -249,6 +255,10 @@ dojo.declare("wm.Variable", wm.Component, {
 			this._setObjectData(inData);
 		this.notify();
 		this.onSetData();
+	        if (this.saveInCookie) {
+		    var datatext = dojo.toJson(this.getData() );
+		    dojo.cookie(this.getRuntimeId(), datatext);
+		}
 	},
 	onPrepareSetData: function(inData) {
 	},
@@ -420,6 +430,12 @@ dojo.declare("wm.Variable", wm.Component, {
 	  return 1;
 	},
 
+    isEmpty: function() {
+	if (this.data.list)
+	    return !Boolean(this.data.list.length);
+	else
+	    return wm.isEmpty(this.data);
+    },
 	_isEmpty: function(obj) {
 		for (var prop in obj) {
 			if(obj.hasOwnProperty(prop)) return false;
@@ -748,7 +764,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	},
 	_setValue: function(n, v) {
 		// if setting to default, then don't do data setting
-		if ((this.schema[n]||0).defaultBindTarget || !this.isDataProp(n))
+		if ((this._isDesignLoaded && this.schema[n]||0).defaultBindTarget || !this.isDataProp(n))
 			this.inherited(arguments);
 		else
 			this._setDataValue(n, v);
@@ -1005,6 +1021,7 @@ wm.Object.extendSchema(wm.Variable, {
     cursor: { ignore: 1},
     isPrimitive: { ignore: 1},
     type: { ignore: 0, group: "common", order: 1},
+    saveInCookie: {group: "data", order: 20},
     json: { group: "data", order: 5},
     dataSet: { readonly: 1, bindable: 1, group: "data", order: 0, defaultBindTarget: 1, isObject: true, categoryParent: "Properties", categoryProps: {content: "dataSet", inspector: "Data"} },
     removeItem: {group: "method"},

@@ -77,7 +77,7 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
 			n = inName,
 			bindable = this.isBindable(inProp),
 			wire = bindable && this.getPropWire(inProp),
-			c = " wminspector-bindProp" + (bindable ? "" : "-disabled"),
+			c = " wminspector-bindProp" + (bindable || inProp.displayExpression ? "" : "-disabled"),
 			bc = wire ? " wminspector-boundProp" : "",
 			b = '';
 
@@ -98,7 +98,8 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
     getRowClasses: function(inName, inProp) {
 	var bindable = this.isBindable(inProp);
 	var wire = bindable && this.getPropWire(inProp);
-	if (wire)
+	var displayExpression = inProp.displayExpression && this.owner.inspected.getProp(inProp.displayExpression);
+	if (wire || displayExpression)
 	    return "isBound";
 	else
 	    return "";
@@ -132,7 +133,7 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
      * we know its bindable; see getProps())
      */
 	canMakeDefaultPropEdit: function(inProp) {
-		return !inProp.ignore;
+		return !inProp.ignore && !inProp.displayExpression;
 	},
 	makePropEdit: function(inName, inProp, inWire) {
 /*
@@ -157,9 +158,18 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
 			      type == "java.lang.string" || type == "java.lang.boolean" || type == "java.lang.integer" || 
 			      type == "java.lang.boolean" || type == "java.lang.byte" || type == "java.lang.double" ||
 			      type == "java.lang.float" || type == "java.lang.number" || type == "java.lang.short");
-	    return makeInputPropEdit(inName, 
-				     inWire && inWire instanceof wm.Wire ? this.getFormattedValue(inProp, inWire.source, inWire.expression) : "",
-				     "", !isEditable, Boolean(inWire && inWire instanceof wm.Wire));
+
+	    if (inProp.displayExpression) {
+		var expression = this.owner.inspected.getProp(inName);
+		return makeInputPropEdit(inName, 
+					 expression ? this.getFormattedValue(inProp, null, expression) : "",
+					 "", !isEditable || Boolean(expression) , Boolean(expression));
+		
+	    } else {
+		return makeInputPropEdit(inName, 
+					 inWire && inWire instanceof wm.Wire ? this.getFormattedValue(inProp, inWire.source, inWire.expression) : "",
+					 "", !isEditable, Boolean(inWire && inWire instanceof wm.Wire));
+	    }
 	},
 /*
         makeBindPropEdit: function(inName, inReadOnly) {
@@ -184,8 +194,10 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
 	   var wire = bindable && this.getPropWire(prop);
 	   var row = dojo.byId("propinspect_row_" + prop.name);
 	   var value = wire ? this.getFormattedValue(inName,wire.source, wire.expression) : "";
-	   if (row && bindable) {
+	    if (row && (bindable || prop.displayExpression)) {
 	       if (value)
+		   dojo.addClass(row, "isBound");
+		else if (prop.displayExpression && this.owner.inspected.getProp(inName))
 		   dojo.addClass(row, "isBound");
 	       else
 		   dojo.removeClass(row, "isBound");
@@ -292,8 +304,13 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
 			//wireOwner.removeWire(wireOwner.getWireId(w));
 			wireOwner.removeWire(w.getWireId());
 			this._setInspectedProp(tp, newValue);
-		} else {
-		    this._setPropEdit(inPropName, newValue,"");
+		} else { 
+		    var propDef = this.owner.inspected.listProperties()[inPropName];
+		    if (propDef.displayExpression) {
+			this._setInspectedProp(tp, "");			
+		    } else {
+			this._setPropEdit(inPropName, "","");
+		    }
 		}
 	},
 	isBindable: function(inProp) {
@@ -321,7 +338,7 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
 			o = this.owner.inspected,
 			tp = this.getTargetProperty(inPropName),
 			prop = this.props[tp];
-		if (this.isBindable(prop))
+		if (this.isBindable(prop) || prop.displayExpression)
 			return dojo.mixin({object: o, targetProperty: tp}, prop || {});
 	},
 

@@ -1868,6 +1868,24 @@ Overriding dijit's progress bar properties to enable height changes to progress 
      box-shadow: 5px 5px 4px #888 !important; /* Opera 10.5, IE 9.0 */
 }
 
+.wmeditor .EditorHelpIcon {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background-image: url(images/grayhelp.png);
+}
+
+
+.wmloadingdialog {
+    opacity: 0.7;
+    filter: alpha(opacity=70);
+    background-color: black;
+}
+
+.dijitCalendarMonthContainer .dijitButtonText {
+    width: 100%;
+}
+
 
 .wmtwitterlist .feedlistexpander {
     display: none;

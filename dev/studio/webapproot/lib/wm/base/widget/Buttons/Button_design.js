@@ -3,6 +3,76 @@ dojo.require("wm.base.widget.Buttons.ToggleButton");
 dojo.require("wm.base.widget.Buttons.RoundedButton");
 dojo.require("wm.base.widget.Buttons.PopupMenuButton");
 
+wm.Object.extendSchema(wm.ToolButton, {
+	scrollX:  { ignore: 1 },
+	scrollY:  { ignore: 1 },
+        clicked: {ignore: 1, bindSource: true, type: "Boolean"},
+        iconUrl: {group: "format", bindable: true, type: "String", subtype: "File"},
+	iconWidth: {group: "format"},
+	iconHeight: {group: "format"},
+        iconMargin: {group: "format"}
+});
+
+wm.ToolButton.extend({
+        scrim: true,
+
+    showImageListDialog: function() {
+	var imageList = this._imageList
+	if (!imageList) {
+	    var imageListName = studio.getImageLists()[0];
+	    if (imageListName) {
+		this.setImageList(imageListName);
+		imageList = this._imageList;
+	    }
+	}
+	if (imageList) {
+	    var popupDialog = imageList.getPopupDialog();
+	    popupDialog.fixPositionNode = dojo.query(".wminspector-prop-button",dojo.byId("propinspect_row_editImageIndex"))[0];
+	    
+	    this._designImageListSelectCon = dojo.connect(imageList._designList, "onselect", this, function() {		    
+		    this.setImageIndex(imageList._designList.getSelectedIndex());
+		    studio.inspector.reinspect();
+	    });
+
+	    popupDialog.show();
+	    this._designImageListPopupCloseCon = dojo.connect(popupDialog, "setShowing", this, function(inShowing) {
+		if (!inShowing || studio.selected != this) {
+		    dojo.disconnect(this._designImageListPopupCloseCon);
+		    delete this._designImageListPopupCloseCon;
+		    dojo.disconnect(this._designImageListSelectCon);
+		    delete this._designImageListSelectCon;
+		}
+	    });
+	}
+    },
+    editProp: function(inName, inValue) {
+	switch (inName) {
+	case "editImageIndex":
+	    this.showImageListDialog();
+	    return;
+	}
+	return this.inherited(arguments);
+    },
+	makePropEdit: function(inName, inValue, inDefault) {
+	    var prop = this.schema ? this.schema[inName] : null;
+	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
+		switch (inName) {
+		        case "editImageIndex":
+		                return makeReadonlyButtonEdit(name, inValue, inDefault);		    
+			case "iconWidth":
+			case "iconHeight":
+				return new wm.propEdit.UnitValue({
+					component: this,
+					name: inName,
+					value: inValue,
+					options: this._sizeUnits
+				});
+		}
+		return this.inherited(arguments);
+	}
+});
+
+
 wm.Object.extendSchema(wm.ToggleButton, {
     captionUp: { group: "display", bindTarget: 1, order: 10, focus: 1, doc: 1},
     captionDown: { group: "display", bindTarget: 1, order: 11, doc: 1},

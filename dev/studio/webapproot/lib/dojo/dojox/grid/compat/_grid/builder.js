@@ -74,7 +74,7 @@ dojo.declare("dojox.grid.Builder",
 	
 	findCellTarget: function(inSourceNode, inTopNode){
 		var n = inSourceNode;
-		while(n && (!this.isCellNode(n) || ( n.offsetParent && dojox.grid.gridViewTag in n.offsetParent.parentNode && n.offsetParent.parentNode[dojox.grid.gridViewTag] != this.view.id)) && (n!=inTopNode)){
+		while(n && (!this.isCellNode(n) || (dojox.grid.gridViewTag in n.offsetParent.parentNode && n.offsetParent.parentNode[dojox.grid.gridViewTag] != this.view.id)) && (n!=inTopNode)){
 			n = n.parentNode;
 		}
 		return n!=inTopNode ? n : null 

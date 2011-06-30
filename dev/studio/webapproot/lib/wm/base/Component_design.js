@@ -84,6 +84,17 @@ wm.Component.extend({
 	    }
 		return props;
 	},
+	listWriteableProperties: function() {
+	    var results = {};
+	    var props = this.listProperties();
+	    for (var i in props) {
+		p = props[i];
+		if (this.isWriteableProp(p)) {
+		    results[i] = p;
+		}
+	    }
+	    return results;
+	},
 	listDataProperties: function(inType) {
 		var props = this.listProperties(), p, list = {};
 		for (var i in props) {
@@ -110,8 +121,10 @@ wm.Component.extend({
 				inProps[pf + n] = target[n];
 	},
 	isWriteableProp: function(inPropSchema) {
-		var ps = inPropSchema;
-		return !ps || ((ps.writeonly || !(ps.ignore || ps.ignoretmp || ps.readonly)) && !ps.isEvent &&  !ps.componentonly);
+	    var ps = inPropSchema;
+	    if (!ps) return true;
+	    if (ps.group == "method") return false;
+	    return ((ps.writeonly || !(ps.ignore || ps.ignoretmp || ps.readonly)) && !ps.isEvent &&  !ps.componentonly);
 	},
 	writeProps: function() {
 	    // make sure the proper prototype is loaded so we correctly write the properties that are different from default
@@ -119,7 +132,7 @@ wm.Component.extend({
 		this.owner.loadThemePrototypeForClass(this.constructor, this);
 
 		// iterates over all props and checks it's writeable via isWriteableProp
-		// NOTE: previously used listWriteableProps, which was eliminated as unnecessary.
+		// NOTE: previously used listWriteableProps, which was eliminated as unnecessary.  [MK: Added back for use in localization]
 		var props = this.listProperties(), src = this._designee, p = src.constructor.prototype, out = {};
 		var propList = [];
 		for (var n in props) propList.push(n);
@@ -518,10 +531,10 @@ wm.Component.extend({
 
 	},
 	editProp: function(inName, inValue) {
-	switch (inName) {
+	    switch (inName) {
 	        case "documentation":
 	            studio.documentationDialog.setHtml(this.documentation);
-	    studio.documentationDialog.setTitle(studio.getDictionaryItem("wm.Component.DOCUMENTATION_DIALOG_TITLE", {name: this.getId()}))
+		    studio.documentationDialog.setTitle(studio.getDictionaryItem("wm.Component.DOCUMENTATION_DIALOG_TITLE", {name: this.getId()}))
 	            studio.documentationDialog.editComponent = this;
 	            studio.documentationDialog.show();
 	            return;

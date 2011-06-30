@@ -282,6 +282,7 @@ wm.aligns = [
 */
 wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	/** @lends wm.Control.prototype */
+/*
 	published: {
 	        invalidCss: {ignore: 1},
 	        renderedOnce: {ignore: 1},
@@ -298,6 +299,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		left: {writeonly: 1, ignore: 1},
 		top: {writeonly: 1, ignore: 1}
 	},
+	*/
         renderedOnce: 0,
         invalidCss: 1,
 	autoScroll: false,
@@ -551,7 +553,7 @@ this.label.enable();
 	},
 	setDomNode: function(inDomNode) {
 		var n = this.domNode = inDomNode;
-		if (dojo.isIE) {
+		if (dojo.isIE <= 8) {
 			// forcing a size on the node now seems to help IE
 			// honor auto sizing later
 			n.style.width = "0px";

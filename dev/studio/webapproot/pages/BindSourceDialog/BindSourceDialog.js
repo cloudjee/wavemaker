@@ -34,13 +34,17 @@ dojo.declare("BindSourceDialog", wm.Page, {
 	    studio.select(object); 
     },
     update: function(inTargetProps, noRegen) {
-		this.targetType = this._getTargetType(inTargetProps);
-		var
-			tp = this.targetProps = inTargetProps,
-			w = wm.data.getPropWire(tp.object, tp.targetProperty);
-		this.binderSource.initBinding(noRegen);
-		this.binderSource.updateUiForWire(w);
+	this.binderSource.pageSelect._cupdating = true;
+	this.binderSource.pageSelect.setDataValue(studio.project.pageName);
+	this.binderSource.pageSelect._cupdating = false;
 
+	this.targetType = this._getTargetType(inTargetProps);
+	var
+	tp = this.targetProps = inTargetProps,
+	w = wm.data.getPropWire(tp.object, tp.targetProperty);
+	this.binderSource.initBinding(noRegen);
+	this.binderSource.updateUiForWire(w);
+	
 	    //this.bindTargetLabel.setValue("caption", [(tp.object|| 0).getId(), tp.targetProperty].join('.'));
 	    this.owner.owner.setTitle("Binding: " +  [(tp.object|| 0).getId(), tp.targetProperty].join('.'));
 		var bindname = wm.getFriendlyTypeName(this.targetType.type, this.targetType.isList) ;
@@ -49,6 +53,13 @@ dojo.declare("BindSourceDialog", wm.Page, {
 
 		if (tp.subtype == "File") {
 		    this.resourceRb.editor.setChecked(true);
+		} else if (tp.displayExpression) {
+		    tp.displayExpressionObject = tp.object.getProp(tp.displayExpression);
+		    if (!tp.displayExpressionObject) 
+			return app.toastWarning(this.getDictionaryItem("NEED_DATASET_FOR_DISPLAY_EXPR"));
+		    this.displayExpressionRb.editor.setChecked(true);
+		    this.binderSource.displayExpressionLayer.activate();
+		    this.binderSource.updateBindSourceUi("displayExpression");
 		}
 	},
 	_getTargetType: function(inTargetProps) {
@@ -101,7 +112,13 @@ dojo.declare("BindSourceDialog", wm.Page, {
 
 		    }
 		}
-		return ownerString + inNode.source;
+
+		var source = inNode.source;
+		var tmpPageContainer = "studioApplication.studio.bindSourceDialog.pageContainer.";
+		if (source.indexOf(tmpPageContainer) == 0) {
+		    source = source.substring(tmpPageContainer.length);
+		}
+		return ownerString + source;
 	    }
        },
 	bindNodeSelected: function(inSender, inNode) {
