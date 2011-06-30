@@ -12,7 +12,6 @@
  *  limitations under the License.
  */
  
-//dojo.provide("wm.modules.rbac.RbacPlugin");
 dojo.provide("wm.base.RbacPlugin");
 dojo.require("wm.base.Control");
 dojo.require("wm.base.widget.Layers");
