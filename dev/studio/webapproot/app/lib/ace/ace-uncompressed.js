@@ -6624,7 +6624,9 @@ var TextInput = function(parentNode, host) {
 
         // Safari doesn't fire copy events if no text is selected
         text.value = PLACEHOLDER;
-        text.select();
+	try {
+            text.select();
+	} catch(e){}
     }
 
     var onTextInput = function(e) {
@@ -6665,7 +6667,9 @@ var TextInput = function(parentNode, host) {
             text.value = copyText;
         else
             e.preventDefault();
-        text.select();
+	try {
+            text.select();
+	} catch(e){}
         setTimeout(function () {
             sendText();
         }, 0);
@@ -6679,7 +6683,9 @@ var TextInput = function(parentNode, host) {
             host.onCut();
         } else
             e.preventDefault();
-        text.select();
+	try {
+            text.select();
+	} catch(e){}
         setTimeout(function () {
             sendText();
         }, 0);
@@ -6755,12 +6761,16 @@ var TextInput = function(parentNode, host) {
 
     event.addListener(text, "focus", function() {
         host.onFocus();
-        text.select();
+	try {
+            text.select();
+	} catch(e){}
     });
 
     this.focus = function() {
         host.onFocus();
-        text.select();
+	try {
+            text.select();
+	} catch(e){}
         text.focus();
     };
 
