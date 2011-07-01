@@ -285,6 +285,7 @@ dojo.declare("wm.AceEditor", wm.Control, {
 						title: "Search and Replace",
 						corner: "tc",
 						useContainerWidget: true,
+						useButtonBar: true,
 						modal: false,
 						onClose: dojo.hitch(this, "focus")}); // this could cause trouble if closing dialog when viewing another layer
 	    this._searchEditor = new wm.Text({owner: this,
@@ -324,6 +325,7 @@ dojo.declare("wm.AceEditor", wm.Control, {
 						 captionAlign: "left",
 					       width: "100%",
 					      onEnterKeyPress: dojo.hitch(this, "onReplaceClick")});
+/*
 	    var buttonPanel =  new wm.Panel({owner: this,
 					     parent: this._searchDialog.containerWidget,
 					     name: "buttonPanel",
@@ -332,23 +334,24 @@ dojo.declare("wm.AceEditor", wm.Control, {
 					     width: "100%",
 					     horizontalAlign: "right",
 					     verticalAlign: "bottom"});
+					     */
 	    this._findButton = new wm.Button({owner: this,
-					      parent: buttonPanel,
+					      parent: this._searchDialog.buttonBar,
 					      name: "findButton",
 					      caption: "Find",
-					      width: "80px",
+					      width: "100px",
 					      onclick: dojo.hitch(this, "onFindClick")});
 	    this._replaceButton = new wm.Button({owner: this,
-					      parent: buttonPanel,
+					      parent: this._searchDialog.buttonBar,
 					      name: "replaceButton",
 					      caption: "Replace",
-						 width: "80px",
+						 width: "100px",
 					      onclick: dojo.hitch(this, "onReplaceClick")});
 	    this._replaceAllButton = new wm.Button({owner: this,
-					      parent: buttonPanel,
+					      parent: this._searchDialog.buttonBar,
 					      name: "replaceAllButton",
 					      caption: "Replace All",
-					      width: "80px",
+					      width: "100px",
 						    onclick: dojo.hitch(this, "onReplaceAllClick")});
 	}
 	this._searchDialog.show();
