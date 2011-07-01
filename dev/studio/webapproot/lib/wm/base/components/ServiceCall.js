@@ -160,8 +160,9 @@ dojo.declare("wm.ServiceCall", null, {
 		}
 	},
 	doAutoUpdate: function() {
-	        if (this.autoUpdate && !this._loading && (!this.startUpdate || this.startUpdateComplete || this.isDesignLoaded())) 
-			this.update();
+	    if (this.autoUpdate && !this._loading && (!this.startUpdate || this.startUpdateComplete || this.isDesignLoaded())) {
+		wm.job(this.getRuntimeId() + ".doAutoUpdate", 1, dojo.hitch(this, "update"));
+	    }
 	},
 	/**
 		Invoke the service.
@@ -176,6 +177,7 @@ dojo.declare("wm.ServiceCall", null, {
 	_update: function() {
 		if (this.canUpdate()) {
 			this.onBeforeUpdate(this.input);
+		        wm.cancelJob(this.getRuntimeId() + ".doAutoUpdate"); // just in case there's a job already scheduled
 			return this.request();
 		}
 	},
