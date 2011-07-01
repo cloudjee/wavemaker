@@ -21,7 +21,7 @@ dojo.declare("NewLivePanelDialog", wm.Page, {
 
 	var options = this.options = [{name: this.getDictionaryItem("TRADITIONAL"),
 				       img: "images/GridLiveForm.png"},
-				      {name: this.getDictionaryItem("DIALOG")
+				      {name: this.getDictionaryItem("DIALOG"),
 				       img: "images/GridLiveFormDialog.png"}];
 	
         var i = 0; 
