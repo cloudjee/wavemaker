@@ -171,6 +171,8 @@ dojo.declare("wm.DojoFlashFileUpload", wm.DojoFileUpload, {
 });
 
 wm.Object.extendSchema(wm.DojoFlashFileUpload, {
-    
+    fileMaskLabel: {group: "edit"},
+    fileMaskList: {group: "edit"},
+    uploadImmediately: {group: "edit"}
 });
 

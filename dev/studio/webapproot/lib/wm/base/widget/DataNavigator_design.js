@@ -46,12 +46,14 @@ wm.DataNavigator.extend({
 		return [];
 	},
 	makePropEdit: function(inName, inValue, inDefault) {
+	        var prop = this.schema ? this.schema[inName] : null;
+	        var name =  (prop && prop.shortname) ? prop.shortname : inName;
 		switch (inName) {
 			case "firstRecord":
 			case "previousRecord":
 			case "nextRecord":
 			case "lastRecord":
-				return makeReadonlyButtonEdit(inName, inValue, inDefault);
+				return makeReadonlyButtonEdit(name, inValue, inDefault);
 			case "liveSource":
 				return new wm.propEdit.DataSetSelect({component: this, name: inName, widgetDataSets: true, listMatch: true});
 		}

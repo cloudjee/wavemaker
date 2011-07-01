@@ -186,9 +186,13 @@ wm.Object.extendSchema(wm.FeedList, {
 	columnWidths: {ignore: 1},
 	dataFields: {ignore: 1},
 	title: {ignore: 1},
-	url: {type: "String", bindTarget: 1},
+        url: {group: "display", type: "String", bindTarget: 1},
 	selectedLink: {ignore:1, bindSource: 1, type: "String"},
-	selectedItem: {ignore: 1}
+    selectedItem: {ignore: 1},
+    showLink: {group: "display"},
+    totalItems: {group: "display"},
+    headerVisible: {group: "display"},
+    expand: {group: "display"}
 });
 
 wm.FeedList.description = "A feed list.";

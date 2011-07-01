@@ -80,3 +80,11 @@ dojo.declare("wm.JsonStatus", wm.Control, {
 	    app.debugDialog.show();
     }
 });
+
+wm.Object.extendSchema(wm.JsonStatus, {
+    iconWidth: {group: "display"},
+    iconHeight: {group: "display"},
+    minimize: {group: "display"},
+    statusBar: {group: "display"},
+    disabled: {ignore: 1}
+});

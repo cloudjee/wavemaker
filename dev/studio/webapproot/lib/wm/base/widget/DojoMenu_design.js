@@ -54,9 +54,11 @@ wm.DojoMenu.extend({
 		this.inherited(arguments);
 	},
 	makePropEdit: function(inName, inValue, inDefault) {
+	    var prop = this.schema ? this.schema[inName] : null;
+	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
 		switch (inName) {
 		case "editMenuItems":
-		    return makeReadonlyButtonEdit(inName, inValue, inDefault);
+		    return makeReadonlyButtonEdit(name, inValue, inDefault);
 		case "menu":
 				return makeTextPropEdit(inName, inValue, inDefault);
 		case "transparent":

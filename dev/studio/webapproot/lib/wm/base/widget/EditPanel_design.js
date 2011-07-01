@@ -160,10 +160,12 @@ wm.EditPanel.extend({
 		return ((!op || op.parent == this) && (!sp || sp.parent == this));
 	},
 	makePropEdit: function(inName, inValue, inDefault) {
+	    var prop = this.schema ? this.schema[inName] : null;
+	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
 		switch (inName) {
 			case "addControls":
 			case "removeControls":
-				return makeReadonlyButtonEdit(inName, inValue, inDefault);
+				return makeReadonlyButtonEdit(name, inValue, inDefault);
 			case "liveForm":
 				return makeSelectPropEdit(inName, inValue, this.getLiveFormNames(inValue), inDefault);
 		}

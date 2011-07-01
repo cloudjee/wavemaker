@@ -17,6 +17,7 @@ dojo.require("wm.base.widget.Layers");
 
 // design-time
 wm.Object.extendSchema(wm.Layer, {
+    transition: {group: "display"},
 	title: { ignore: 1 },
 	disabled: { ignore: 1 },
     moveNext: { group: "operation", order: 1, contextMenu: false },
@@ -126,9 +127,8 @@ wm.Object.extendSchema(wm.Layers, {
 	fitToContent: { ignore: 1},
         headerHeight: { group: "layout", order: 50},
     
-        clientBorder: {group: "style", order: "100", doc: 1},
-        clientBorderColor: {group: "style", order: "101", doc: 1},
-
+    clientBorder: {group: "style", order: "100", doc: 1, shortname: "layerBorder"},
+    clientBorderColor: {group: "style", order: "101", doc: 1, shortname: "layerBorderColor"},
     addLayer: {group: "method"},
     getLayer: {group: "method", returns: "wm.Layer"},
     removeLayer:{group: "method"},
@@ -297,13 +297,18 @@ wm.AccordionLayers.extend({
     themeable: true,
     themeableProps: ["border","borderColor","layerBorder","captionHeight"],
     themeableStyles: [{name: "wm.AccordionLayers-Open_Image", displayName: "Open Arrow Icon"},
-		      {name: "wm.AccordionLayers-Closed_Image", displayName: "Closed Arrow Icon"}],
-    transition: {ignore: true}
+		      {name: "wm.AccordionLayers-Closed_Image", displayName: "Closed Arrow Icon"}]
 });
 wm.Object.extendSchema(wm.AccordionLayers, {
+    transition: {ignore: true}
     captionBorder: {ignore: 1},
     autoScroll: {group: "scrolling", order: 100, ignore: 0}, // Accordion should support vertical scrolling
-    scrollY: {group: "scrolling", order: 102, ignore: 0}
+    scrollY: {group: "scrolling", order: 102, ignore: 0},
+    multiActive: {group: "display"},
+    captionHeight: {group: "display"},
+    multiActive: {group: "display"},
+    layerBorder: {group: "style", order: 1},
+    clientBorder: {ignore: 1}
 });
 wm.Object.extendSchema(wm.TabLayers, {
     conditionalTabButtons: {group: "layout"}

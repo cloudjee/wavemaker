@@ -14,6 +14,7 @@
  
 
 {
+
 	"Frequent_Category" : "Frequently Used",
     "Button_Category": "Buttons",
     "Formatting_Category": "Formatting",

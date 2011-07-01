@@ -600,7 +600,9 @@ wm.Object.extendSchema(wm.Text, {
     onEnterKeyPress: {ignore: 0},
     setPlaceHolder: {group: "method", doc: 1},
     setPassword: {group: "method", doc: 1},
-    setRegExp: {group: "method", doc: 1}
+    setRegExp: {group: "method", doc: 1},
+    resetButton: {group: "editor"},
+    
 });
 
 

@@ -37,8 +37,7 @@
 		"border": "0", 
 		"borderColor": "#999999", 
 		"innerBorder": "2", 
-		"labelHeight": "24", 
-		"innerBorderColor": "#333333"
+		"labelHeight": "24"
 	}, 
 	"wm.TabLayers": {
 		"layersType": "Tabs", 

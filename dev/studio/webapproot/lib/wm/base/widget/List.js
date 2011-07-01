@@ -338,9 +338,11 @@ wm.List.extend({
 			this.setDataSet(inDataSet);
 	},
 	makePropEdit: function(inName, inValue, inDefault) {
+	        var prop = this.schema ? this.schema[inName] : null;
+	        var name =  (prop && prop.shortname) ? prop.shortname : inName;
 		switch (inName) {
 			case "updateNow":
-				return makeReadonlyButtonEdit(inName, inValue, inDefault);
+				return makeReadonlyButtonEdit(name, inValue, inDefault);
 			case "dataSet":
 				return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.dataSet ? this.dataSet.getId() : "", allowAllTypes: true, listMatch: true});
 		}

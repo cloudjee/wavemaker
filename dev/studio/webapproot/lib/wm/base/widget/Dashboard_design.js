@@ -161,6 +161,14 @@ wm.Object.extendSchema(wm.Dashboard, {
         configPortlets: { group: "edit", order: 10, contextMenu: 1 },
         autoScroll: {group: "style", order: 100, ignore: 0},
     allowAutoScroll: {group: "style", order: 101, ignore: 0},
+    hasResizableColumns: {group: "display"},
+    minChildWidth: {group: "display"},
+    minColWidth: {group: "display"},
+    nbZones: {group: "display"},
+    opacity: {group: "display"},
+    saveInCookie: {group: "edit", order: 1},
+    withHandles: {group: "display"},
+
     openDialog: {group: "method"},
     initAddDialog: {group: "method"},
     addPortlet: {group: "method"}

@@ -25,7 +25,14 @@ wm.Object.extendSchema(wm.Ticker, {
     fitToContentWidth: {ignore: 1},
     scrollY: {ignore: true, writeonly: 1},
     touchScrolling: {ignore: true, writeonly: 1},
-    scrollX: {ignore: true, writeonly: 1}
+    scrollX: {ignore: true, writeonly: 1},
+    lock: {ignore: 1},
+    freeze: {ignore: 1},
+    delay: {group: "display"},
+    imageList: {ignore: 1},
+    motion: {group: "display"},
+    rewindDelay: {group: "display"},
+    autoScroll: {ignore: 1}
 });
 
 wm.Ticker.extend({
@@ -37,10 +44,12 @@ wm.Ticker.extend({
 		this.stop();
 	},
 	makePropEdit: function(inName, inValue, inDefault) {
+	        var prop = this.schema ? this.schema[inName] : null;
+	        var name =  (prop && prop.shortname) ? prop.shortname : inName;
 		switch (inName) {
 			case "startNow":
 			case "stopNow":
-				return makeReadonlyButtonEdit(inName, inValue, inDefault);
+				return makeReadonlyButtonEdit(name, inValue, inDefault);
 		}
 		return this.inherited(arguments);
 	},

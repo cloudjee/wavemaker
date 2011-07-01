@@ -12,13 +12,16 @@
  *  limitations under the License.
  */
 {
+
+
+
+    "wm.Dashboard": {configPortlets: "ConfigyPortlety", minChildWidth: "MINYWID"}
 /*
-    "wm.Dashboard": {configPortlets: "ConfigyPortlety"},
     "wm.Layer": {moveNext: "NextNext"},
     "wm.Layers": {add: "Pluss"},
     "wm.TabLayers": {conditionalTabButtons: "condTabsClick"},
     "wm.DesignableDialog": {createButtonBar: "c b r"},
-    "wm.LiveForm": {addEditors: "adddd", removeEditors:"rem", clearData: "clearrrr", generateButtons: "gengengen"},
+
 "wm.Button": {caption: "a big caption",
 		  editImageIndex: "EDiT",
 	      iconUrl: "URL FOR Icon",

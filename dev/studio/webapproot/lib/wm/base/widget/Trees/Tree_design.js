@@ -65,3 +65,8 @@ wm.Object.extendSchema(wm.PropertyTree, {
 wm.Object.extendSchema(wm.ObjectTree, {
     data: {group: "data", order: 1, type: "Object"}
 });
+
+
+wm.Object.extendSchema(wm.DraggableTree, {
+    dropBetweenNodes: {group: "display"}
+});

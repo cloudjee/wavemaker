@@ -22,7 +22,9 @@ wm.Object.extendSchema(wm.Content, {
     resource: {type: "String", subtype: "File", bindable: true, extensionMatch: ["html","txt"] },
     disabled: {ignore: 1},
     allowDuplicateContent: {ignore: 1},
-    autoScroll: {group: "scrolling", order: 100}
+    autoScroll: {group: "scrolling", order: 100},
+    content: {group: "display"},
+    resource: {group: "display"}
 });
 
 wm.Content.extend({

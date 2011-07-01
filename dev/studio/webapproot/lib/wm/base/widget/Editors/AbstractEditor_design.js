@@ -116,6 +116,7 @@ wm.AbstractEditor.extend({
 });
 
 wm.Object.extendSchema(wm.AbstractEditor, {
+    imageList: {ignore: 1},
     formatter: { group: "format", order: 20 },
     format: { ignore: 1, writeonly: 1, categoryParent: "Properties", categoryProps: {component: "format"}},
     formField: {writeonly: 1, group: "common", order: 500},
@@ -124,6 +125,7 @@ wm.Object.extendSchema(wm.AbstractEditor, {
     captionAlign: {group: "Labeling", order: 3, doc: 1},
     captionSize: {group: "layout", order: 4, doc: 1},
     singleLine: {group: "Labeling", order: 5},
+    helpText: {group: "Labeling", order: 10},
     readonly: {group: "editor", order: 1, doc: 1},
 
     displayValue: {group: "editData", order: 2}, // use getDisplayValue()
@@ -132,6 +134,8 @@ wm.Object.extendSchema(wm.AbstractEditor, {
     emptyValue: {group: "editData", order: 4, doc: 1},
     required: {group: "validation", order: 1, doc: 1},
     editorBorder: {group: "style", order: 100},
+
+
     scrollX: {ignore:1},
     scrollY: {ignore:1},
     display: {ignore:1},

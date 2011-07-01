@@ -146,7 +146,8 @@ wm.Object.extendSchema(wm.PageDialog, {
     pageName: {group: "display", bindable: 1, type: "string", order: 54, pageProperty: "page"},
     deferLoad:{group: "display", type: "boolean", order: 55},
     footerBorder: {group: "style", order: 100},
-    footerBorderColor:  {group: "style", order: 101}
+    footerBorderColor:  {group: "style", order: 101},
+    hideControl: {group: "display"}
 });
 // design-time
 wm.Dialog.description = "Popup dialog.";

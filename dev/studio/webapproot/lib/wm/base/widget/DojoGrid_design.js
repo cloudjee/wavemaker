@@ -318,6 +318,8 @@ wm.DojoGrid.extend({
 
 
 	makePropEdit: function(inName, inValue, inDefault) {
+	    var prop = this.schema ? this.schema[inName] : null;
+	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
 		switch (inName) {
 			case "dataSet":
 				return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.variable ? this.variable.getId() : "", allowAllTypes: true, listMatch: true});
@@ -326,9 +328,9 @@ wm.DojoGrid.extend({
 			return makeSelectPropEdit(inName, inValue, ["single", "multiple", "extended", "none"], inDefault);
 			*/
 		case "editColumns":
-			return makeReadonlyButtonEdit(inName, inValue, inDefault);
+			return makeReadonlyButtonEdit(name, inValue, inDefault);
 		   case "showAddDialog":
-		       return makeReadonlyButtonEdit(inName, inValue, inDefault);
+		       return makeReadonlyButtonEdit(name, inValue, inDefault);
 		}
 		return this.inherited(arguments);
 	},

@@ -247,6 +247,7 @@ wm.Control.extend({
 	//_sizeUnits: [ "px", "em", "pt", "flex" ],
 	_sizeUnits: [ "px", "%" ],
 	makePropEdit: function(inName, inValue, inDefault) {
+
 		switch (inName) {
 			case "styles":
 				return makeTextPropEdit(inName, inValue, inDefault)
@@ -259,7 +260,7 @@ wm.Control.extend({
 			case "height":
 				return new wm.propEdit.UnitValue({
 					component: this,
-					name: inName,
+				    name: inName,
 					value: inValue,
 					options: this._sizeUnits
 				});
@@ -359,6 +360,7 @@ wm.Control.extend({
 });
 
 wm.Object.extendSchema(wm.Control, {
+        imageList: {},
         noInspector: {ignore: 1}, // obsolete property, but still don't want it showing in property panels
         numTabbableWidgets: {ignore: 1},
         internalTabIndex: {writeonly: 1, ignore: 1},
