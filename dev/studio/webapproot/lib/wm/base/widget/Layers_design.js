@@ -300,7 +300,7 @@ wm.AccordionLayers.extend({
 		      {name: "wm.AccordionLayers-Closed_Image", displayName: "Closed Arrow Icon"}]
 });
 wm.Object.extendSchema(wm.AccordionLayers, {
-    transition: {ignore: true}
+    transition: {ignore: true},
     captionBorder: {ignore: 1},
     autoScroll: {group: "scrolling", order: 100, ignore: 0}, // Accordion should support vertical scrolling
     scrollY: {group: "scrolling", order: 102, ignore: 0},
