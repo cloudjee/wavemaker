@@ -471,6 +471,9 @@ dojo.declare("wm.Application", wm.Component, {
 	reflowParent: function() {
 		this.reflow();
 	},
+    loadComponent: function(inName, inParent, inType, inProps, inEvents, inChildren, isSecond) {
+	return inParent.createComponent(inName, inType, inProps, inEvents, inChildren, this);
+    },
 	hideLoadingIndicator: function() {
 	    var l = dojo.byId("_wm_loading");
 	    if (l)
