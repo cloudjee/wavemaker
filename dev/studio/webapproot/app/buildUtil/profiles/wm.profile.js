@@ -15,6 +15,22 @@
 
 dependencies = {
 	layers: [
+		{
+			name: "dojo.js",
+			dependencies: [
+			    "dojo._base.declare",
+			    "dojo._base.lang",
+				"dojo._base.array",
+				"dojo._base.event",
+				"dojo._base.connect",
+				"dojo._base.html",
+				"dijit._WidgetBase",
+			    "dojo.i18n",
+			    "dojo.rpc.JsonService",
+			    "dojo.rpc.RpcService",
+			    "dojo.cookie"
+			]
+		},
 		// runtime
 		{
 			name: "lib_build.js",

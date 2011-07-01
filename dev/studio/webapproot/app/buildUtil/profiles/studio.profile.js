@@ -16,9 +16,35 @@
 dependencies = {
 	layers: [
 		{
+			name: "dojo.js",
+			dependencies: [
+			    "dojo._base.declare",
+			    "dojo._base.lang",
+				"dojo._base.array",
+				"dojo._base.event",
+				"dojo._base.connect",
+				"dojo._base.html",
+				"dijit._WidgetBase",
+			    "dojo.i18n",
+			    "dojo.rpc.JsonService",
+			    "dojo.rpc.RpcService",
+			    "dojo.cookie"
+			]
+		},
+		{
 			name: "studio_base.js",
 			resourceName: "studio_base",
 			dependencies: [
+			    "dojo.number",
+			    "dojo.currency",
+			    "dojo.fx",			    
+			    "dojo.io.iframe",
+			    "dojo.string",
+			    "dojo.date.stamp",
+			    "dojo.date.locale",
+			    "dojo.date",
+			    "dojo.data.util.simpleFetch",
+
 				"wm.studio.app.packageLoader",
 			    'wm.base.components.componentList',
 				"wm.base.lib.util",
@@ -65,19 +91,11 @@ dependencies = {
 				"dijit._base.typematic",
 				"dijit._base.wai",
 				"dijit._Templated",
-				"dojo.string",
-				"dojo.parser",
-				"dojo.date.stamp",
 				"dijit.Tooltip",
 				"dijit.form.ComboBox",
-				"dojo.date.locale",
-				"dojo.date",
-				"dojo.regexp",
-				"dojo.data.util.simpleFetch",
-				"dojo.data.util.sorter",
-				"dojo.rpc.JsonService",
-				"dojo.rpc.RpcService",
-				"dojo.cookie",
+
+				"dojo.parser",
+
 				"dijit.form.CheckBox",
 /* load on demand */
 				"dijit.form.Button",
@@ -93,13 +111,8 @@ dependencies = {
 				"dijit.form.HorizontalSlider",
 				"dijit.form.VerticalSlider",
 				/*	*/
-				"dojo.number",
-				"dojo.currency",
 
-				"dojo.io.iframe",
 				"dijit.ProgressBar",
-				"dojo.fx",			    
-				"dojo.i18n",
 				"dijit.form._Spinner"/*,  Load on demand
 			    ,"dojox.charting.Chart2D",
 				"dojox.charting.Theme",
