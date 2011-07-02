@@ -118,11 +118,13 @@ wm.RelatedEditor.extend({
 	},
 	_hasAncestorEditingMode: function(inModes) {
 		var p = this.parent;
-		while (p && p instanceof wm.RelatedEditor) {
-			if (dojo.indexOf(inModes || [], p.editingMode) != -1)
-				return true;
-			p = p.parent;
-		}
+	    while (p && (p instanceof wm.RelatedEditor || p instanceof wm.Container)) {
+		if (p instanceof wm.RelatedEditor) {
+		    if (dojo.indexOf(inModes || [], p.editingMode) != -1)
+			return true;
+		} 
+		p = p.parent;
+	    }
 	},
 	//===========================================================================
 	// Editor management / creation
@@ -195,7 +197,8 @@ wm.RelatedEditor.extend({
 		if (this._getEditorForField(""))
 			return;
 
-		var lv = wm.getFormLiveView(this.parent);
+	        var liveForm = wm.getParentForm(this);
+		var lv = wm.getFormLiveView(liveForm);
 		var relatedFields = wm.getDefaultView(lv.dataType, this.formField);
 		var ff = "";
 		if (relatedFields.length > 1)
