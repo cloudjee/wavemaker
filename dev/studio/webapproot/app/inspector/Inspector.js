@@ -455,6 +455,8 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 				      i * 1000);
 		});
 	    } else {
+		if (inType == studio.application.declaredClass)
+		    inType = "wm.Application";
 		var url = studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {className: inType.replace(/^.*\./,"") + "_" + inPropName});
 
 		// clear previous content before showing.
