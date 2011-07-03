@@ -360,6 +360,11 @@ dojo.declare("wm.Application", wm.Component, {
 		    if (results[1])
 		        throw results[1];
 		    themecss = results[0] || "";
+
+		    var results = dojo.xhrGet({url:path.replace(/theme\.css/, "custom.css"), sync:true, preventCache:false}).results;
+		    if (!results[1]) {
+			themecss += results[0] || "";
+		    }
                 }
 		themecss = themecss.replace(/url\s*\(\s*images/g,"url(" + imagepath);
 		setCss("theme_ss", themecss);
