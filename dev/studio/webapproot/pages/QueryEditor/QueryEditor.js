@@ -265,7 +265,31 @@ dojo.declare("QueryEditor", wm.Page, {
 		+ "|" + this.returnsSingleResultCheckBox.editor.getChecked()
 	    + "|" + dojo.toJson(this._getQueryInputs());
     },
+
+/* This finds all double quotes that aren't inside of single quoted strings and replaces them with single quotes.
+ * It does not correctly fix expressions such as:
+ *     from Employee where firstname="'michael'"
+ * which becomes
+ *     from Employee where firstname=''michael''
+ */
+    fixDoubleQuotes: function() {
+	var query = this.queryTextArea.getDataValue();
+	parts = query.split(/\'/);
+	for (var i = 0; i < parts.length; i++) {
+	    var p = parts[i];
+	    if (p.indexOf('"') != -1) {
+		/* If we see a double quote, and we are not between two single quotes, then change it into a single quote */
+		if (i % 2 == 0) {
+		    parts[i] = parts[i].replace(/\"/g,"'");
+		}
+	    }
+	}
+	query = parts.join("'");
+	this.queryTextArea.setDataValue(query);
+    },
 	_saveQuery: function() {
+	    this.fixDoubleQuotes();
+
 		var name = dojo.string.trim(this.queryNameInput.getDataValue());
 		
 		// check existing query with the same name
