@@ -582,6 +582,9 @@ dojo.declare("wm.Application", wm.Component, {
         },
 	onPageChanged: function(inNewPage, inPreviousPage) {
 	},
+    onSessionExpiration: function() {
+
+    },
         getFullVersionNumber: function() {
 	    return this.projectVersion + "." + this.projectSubVersion;
 	},

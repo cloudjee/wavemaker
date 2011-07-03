@@ -302,7 +302,9 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		// (happens when a project accesses the server while running within studio), then tell the user to log back in.
 		// Also don't repeat this alert more than once every 3 minutes (it takes 4 server accesses to open a page, so thats 4 alerts in a row!)
 		if (errCode == 403) {
-		      dojo.publish("session-expiration", []);
+		    dojo.publish("session-expiration", []);
+		    if (app && app.onSessionExpiration)
+			app.onSessionExpiration();
 		} 	       
 	    } catch(e) {		
 		if (wm.logging) {
