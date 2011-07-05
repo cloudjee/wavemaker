@@ -102,7 +102,7 @@ dojo.declare("wm.ComponentInspector", wm.Layers, {
 	case "Navigation":
 	    return this._inspectors.Navigation;
 	case "Styles":
-	    if (this._inspectors.Styles.getActiveLayer().caption == "Basic")
+	    if (this._inspectors.Styles.getActiveLayer().name == "properties")
 		return this._inspectors.Properties;
 	    else
 		return this._inspectors.Styles;
