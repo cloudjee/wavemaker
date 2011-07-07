@@ -81,6 +81,9 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
         this.inherited(arguments);
         this.dijit._setStyleAttr({width: this.bounds.w + "px", height: this.bounds.h + "px"})
     },
+    focus: function() {
+	this.dijit.focus();
+    },
     refreshCalendar: function() {
             this.dijitProps.specialDates = this.specialDates;
             if (this.dijit) {
