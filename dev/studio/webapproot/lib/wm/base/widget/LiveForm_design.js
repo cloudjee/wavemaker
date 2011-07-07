@@ -16,6 +16,7 @@ dojo.provide("wm.base.widget.LiveForm_design");
 dojo.require("wm.base.widget.LiveForm");
 
 wm.Object.extendSchema(wm.LiveFormBase, {
+    themeStyleType: {group: "style", order: 150},
 	dataSet: { readonly: 1, group: "data", order: 1, bindTarget: 1, type: "wm.Variable"},
 	dataOutput: { ignore: 1, group: "data", order: 2, bindable: 1, type: "wm.Variable", simpleBindProp: true, categoryParent: "Properties", categoryProps: {component: "dataOutput", inspector: "Data"} },
 	clearData: { group: "operation", order: 2},

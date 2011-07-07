@@ -17,6 +17,7 @@ dojo.require("wm.base.widget.Layers");
 
 // design-time
 wm.Object.extendSchema(wm.Layer, {
+    themeStyleType: {group: "style", order: 150},
     transition: {group: "display"},
 	title: { ignore: 1 },
 	disabled: { ignore: 1 },
