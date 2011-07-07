@@ -166,10 +166,10 @@ dojo.declare("wm.Variable", wm.Component, {
 		this.json = inJson;
 		try { 
 			var d = eval("(" + inJson + ")");
-			this.setData(d);
 		} catch(e) {
 		  console.error("Json error in " + this.name + ": " + e);
 		}
+	        this.setData(d);
 	},
 	hasList: function() {
 		return this.data && ("list" in this.data);
