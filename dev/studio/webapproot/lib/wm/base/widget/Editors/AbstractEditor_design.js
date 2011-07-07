@@ -143,7 +143,7 @@ wm.Object.extendSchema(wm.AbstractEditor, {
     changeOnKey: {ignore: 1},
     onEnterKeyPress: {ignore: 1},
 
-    defaultInsert:{type: "String", bindable: 1, group: "editData", order: 10},
+    defaultInsert:{type: "String", bindTarget: 1, group: "editData", order: 10},
     setCaption: {group: "method", doc: 1},
     setCaptionSize: {group: "method", doc: 1},
     setCaptionAlign: {group: "method",doc: 1},
