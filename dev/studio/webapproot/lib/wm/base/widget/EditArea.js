@@ -17,6 +17,7 @@ dojo.provide("wm.base.widget.EditArea");
 //wm.loadModule("edit_area/edit_area_loader");
 
 dojo.declare("wm.EditArea", wm.Control, {
+    wordWrap: true,
     _forceShowing: true,
 	scrim: true,
 	syntax: "js",
@@ -100,7 +101,7 @@ dojo.declare("wm.EditArea", wm.Control, {
 		editAreaLoader.init({
 			id: id, // id of the textarea to transform
 			start_highlight: true, // if start with highlight
-			word_wrap:true,
+		    word_wrap:this.wordWrap,
 			allow_resize: "no",
 			allow_toggle: false,
 			language: "en",
@@ -146,14 +147,18 @@ dojo.declare("wm.EditArea", wm.Control, {
 			setTimeout(dojo.hitch(this, "resize"), 100);*/
 	},
         focus: function() {
-	    this.area.textarea.focus();
+	    if (this.area && this.area.textarea)
+		this.area.textarea.focus();
 	},
+        blur: function() {},
+        getDataValue: function() {return this.getText();},
 	getText: function() {
 		if (this.isStarted())
 			return editAreaLoader.getValue(this.area.textarea.id);
 		else
 			return this.textAreaNode.value;
 	},
+        setDataValue: function(inText) {this.setText(inText);},
 	setText: function(inText) {
 		if (this.isStarted()) {
 		    // FIXME: get exception due to editArea focuswe attempt when setting text and
@@ -281,7 +286,16 @@ dojo.declare("wm.EditArea", wm.Control, {
 	this.setSelectionRange(start,start+newtext.length);
 
     },
+    setCursorPosition: function(row, column) {
+	this.gotoLine(row, false);
+	/* Column doesn't yet work */
+    },
+    toggleWordWrap: function() {
+	this.wordWrap = !this.wordWrap;
+	editAreaLoader.execCommand(this.area.textarea.id, "set_word_wrap", this.wordWrap);
+    },
     setWordWrap: function(inWrap) {
+	this.wordWrap = inWrap;
 	editAreaLoader.execCommand(this.area.textarea.id, "set_word_wrap", inWrap);
     },
     showHelp: function() {
@@ -307,12 +321,13 @@ dojo.declare("wm.EditArea", wm.Control, {
 	    } else {
 		if (this._keydownTimeout) window.clearTimeout(this._keydownTimeout);
 		this._keydownTimeout = wm.job(this.getRuntimeId() + "onKeyDown", 100, dojo.hitch(this, function() {
-		    this.onKeyDown(e);
+		    this.onChange();
 		}));
 
 	    }
 	    
 	},
+    onChange: function() {},
         onCtrlKey: function(letter) {
 
 	},
