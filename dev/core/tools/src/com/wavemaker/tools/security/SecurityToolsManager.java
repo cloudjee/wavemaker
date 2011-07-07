@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -66,9 +67,9 @@ import com.wavemaker.tools.webapp.schema.WebResourceCollectionType;
 import com.wavemaker.tools.webapp.schema.UrlPatternType;
 
 /**
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author $Author$
+ * @version $Revision$
+ * Last changed: $LastChangedDate$
  */
 public class SecurityToolsManager {
     
@@ -638,4 +639,44 @@ public class SecurityToolsManager {
 		wat.getDescriptionAndDisplayNameAndIcon().remove(secRole);
         WebXmlSupport.writeWebXml(wat, webXml);	
         }
+	
+	/**
+	 * Returns the security filter object definition source map 
+	 * @return The projects security filter object definition source map 
+	 */
+	
+	public Map<String, List<String>> getSecurityFilterODS() {
+		Beans beans = null;
+		try {
+			beans = getAcegiSpringBeans(false);
+		} catch (Exception e) {
+			return null;
+		}
+		if (beans == null || beans.getBeanList().isEmpty()) {
+			return null;
+		} else {
+			return SecuritySpringSupport.getObjectDefinitionSource(beans);
+		}
+	}
+
+	/**
+	 * Sets the project security filter object definition source map 
+	 * @param urlMap The new object definition source map. Replaces existing map
+	 * @throws IOException
+	 * @throws JAXBException
+	 */
+	public void setSecurityFilterODS(Map<String, List<String>> urlMap)
+			throws IOException, JAXBException {
+		Beans beans = null;
+		try {
+			beans = getAcegiSpringBeans(false);
+		} catch (Exception e) {
+		}
+		if (beans == null || beans.getBeanList().isEmpty()) {
+		} else {
+			SecuritySpringSupport.setObjectDefinitionSource(beans, urlMap);
+			saveAcegiSpringBeans(beans);
+		}
+	}
+
 }

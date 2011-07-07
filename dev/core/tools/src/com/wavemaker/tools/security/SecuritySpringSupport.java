@@ -42,8 +42,9 @@ import com.wavemaker.tools.spring.beans.Ref;
 import com.wavemaker.tools.spring.beans.Value;
 
 /**
- * @author ffu
- * @version $Rev$ - $Date$
+ * @author $Author$
+ * @version $Revision$
+ * Last changed: $LastChangedDate$
  *
  */
 public class SecuritySpringSupport {
@@ -181,6 +182,31 @@ public class SecuritySpringSupport {
         return authzList;
     }
 
+    
+    static Map<String, List<String>> getObjectDefinitionSource(Beans beans) {
+    	Map<String, List<String>> urlMap = new LinkedHashMap<String, List<String>>();
+    	System.out.println("getSecurityResourceAttrs");
+    	Bean bean = beans.getBeanById(FILTER_SECURITY_INTERCEPTOR_BEAN_ID);    	
+    	String odspFull = getPropertyValueString(bean,OBJECT_DEFINITION_SOURCE_PROPERTY);
+    	String odspBody = "";
+    	if (odspFull.startsWith(OBJECT_DEFINITION_SOURCE_PREFIX)){
+    		odspBody = odspFull.substring(OBJECT_DEFINITION_SOURCE_PREFIX.length()).trim();	
+    	}
+    	String delim = "[=, \n]";
+    	String[] odspArray = odspBody.split(delim);
+    	List<String> odspList = new ArrayList<String>(Arrays.asList(odspArray));
+    	Iterator<String> itr = odspList.iterator();
+    	if (itr != null) {
+    		while(itr.hasNext()){
+    			String key = itr.next().trim();
+    			List<String> authzList = new ArrayList<String>();
+    			authzList.add(itr.next().trim());
+    			urlMap.put(key, authzList);
+    			}
+    		}
+       	return urlMap;
+    }
+    
     static boolean isSecurityEnforced(Beans beans) {
         return !getSecurityResourceAttrs(beans, "/index.html").isEmpty();
     }
@@ -190,6 +216,32 @@ public class SecuritySpringSupport {
                 IS_AUTHENTICATED_FULLY);
     }
 
+    static void setObjectDefinitionSource(Beans beans, Map<String, List<String>> urlMap) {
+        Bean bean = beans.getBeanById(FILTER_SECURITY_INTERCEPTOR_BEAN_ID);
+            Property property = bean.getProperty(OBJECT_DEFINITION_SOURCE_PROPERTY);
+            StringBuilder objectDefSource = new StringBuilder();
+            objectDefSource.append(OBJECT_DEFINITION_SOURCE_PREFIX);
+                for (String url : urlMap.keySet()) {
+                    objectDefSource.append(SPACES_16);
+                    objectDefSource.append(url);
+                    objectDefSource.append("=");
+                    List<String> authzList = urlMap.get(url);
+                    if (authzList.size() > 0) {
+                        objectDefSource.append(authzList.get(0));
+                        for (int i = 1; i < authzList.size(); i++) {
+                            objectDefSource.append(",");
+                            objectDefSource.append(authzList.get(i));
+                        }
+                    }
+                    objectDefSource.append("\n");
+                }
+            System.out.print("SSS: setODS: " + objectDefSource.toString());    
+            objectDefSource.append(SPACES_12);
+            List<String> newContent = new ArrayList<String>();
+            newContent.add(objectDefSource.toString());
+            property.getValueElement().setContent(newContent);
+        }
+    
     static void setSecurityResources(Beans beans, boolean enforceSecurity,
             boolean enforceIndexHtml) {
         Bean bean = beans.getBeanById(FILTER_SECURITY_INTERCEPTOR_BEAN_ID);

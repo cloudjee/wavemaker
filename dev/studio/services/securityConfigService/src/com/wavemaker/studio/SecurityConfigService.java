@@ -15,8 +15,12 @@
 package com.wavemaker.studio;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.bind.JAXBException;
@@ -43,9 +47,9 @@ import com.wavemaker.runtime.data.util.DataServiceConstants;
 /**
  * This service provides methods to config security settings for the project.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author $Author$
+ * @version $Revision$
+ * Last changed: $LastChangedDate$
  */
 public class SecurityConfigService {
 
@@ -337,5 +341,56 @@ public class SecurityConfigService {
 	
 	public void setJOSSORoles(List<String> roles) throws IOException, JAXBException {
 		getSecToolsMgr().setJOSSORoles(roles);
+	}
+	
+	public List<SecurityURLMap> getSecurityFilterODS()throws JAXBException, IOException {
+		Map<String, List<String>> urlMap = getSecToolsMgr()
+				.getSecurityFilterODS();
+		List<SecurityURLMap> securityURLMap = new ArrayList<SecurityURLMap>();
+		for (String url : urlMap.keySet()) {
+			SecurityURLMap secMap = new SecurityURLMap();
+			secMap.setURL(url);
+			secMap.setAttributes(urlMap.get(url));
+			securityURLMap.add(secMap);
+		}
+		return securityURLMap;
+	}
+
+	 public void setSecurityFilterODS(List<SecurityURLMap> securityURLMap)
+	 throws JAXBException, IOException {
+		Map<String, List<String>> urlMap = new LinkedHashMap<String, List<String>>();
+		Iterator<SecurityURLMap> itr = securityURLMap.iterator();
+		while (itr.hasNext()) {
+			SecurityURLMap thisEntry = itr.next();
+			urlMap.put(thisEntry.getURL(), thisEntry.getAttributes());
+			System.out.println("URL: " + thisEntry.getURL());
+			Iterator<String> iter = thisEntry.getAttributes().iterator();
+			while (iter.hasNext()) {
+				System.out.println("Attribute: " + iter.next());
+			}
+		}
+		getSecToolsMgr().setSecurityFilterODS(urlMap);
+	}
+	
+	public class SecurityURLMap {
+		private String URL;
+		private List<String> Attributes;
+
+		public String getURL() {
+			return URL;
+		}
+
+		public void setURL(String URL) {
+			this.URL = URL;
+		}
+
+		public List<String> getAttributes() {
+			return Attributes;
+		}
+
+		public void setAttributes(List<String> Attributes) {
+			this.Attributes = Attributes;
+		}
+
 	}
 }
