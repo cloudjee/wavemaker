@@ -49,6 +49,11 @@ wm.locale.props = dojo.i18n.getLocalization("wm.language", "properties");
 dojo.requireLocalization("language", "package");
 window.bundlePackage = dojo.i18n.getLocalization("language", "package");
 
+dojo.requireLocalization("language", "schema");
+wm.extendSchemaDictionary = dojo.i18n.getLocalization("language", "schema");
+if (!wm.extendSchemaDictionary) 
+    wm.extendSchemaDictionary = {};
+
 // make sure package registration is available up front
 dojo.require("studio.app.packageLoader", true);
 

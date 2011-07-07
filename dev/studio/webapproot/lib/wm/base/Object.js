@@ -259,20 +259,24 @@ wm.Object.extendSchema(wm.MyButton, {
 	    console.groupEnd();
 		*/
 	if (!skipDictionary && inSchema) {
+/* moved to studioLoader where build can process it better
 	    if (!wm.extendSchemaDictionary && wm.studioConfig) {
 		dojo.requireLocalization("language", "schema");
 		wm.extendSchemaDictionary = dojo.i18n.getLocalization("language", "schema");
 	    }
 	    if (!wm.extendSchemaDictionary) 
 		wm.extendSchemaDictionary = {};
+		*/
 	    var className = inClass.prototype.declaredClass;
-	    var dictionary = wm.extendSchemaDictionary[className];
-	    if (dictionary) {
-		for (var i in dictionary) {
-		    if (inSchema[i]) {
-			inSchema[i].shortname = dictionary[i];
-		    } else {
-			inSchema[i] = {shortname: dictionary[i]};
+	    if (wm.extendSchemaDictionary) {
+		var dictionary = wm.extendSchemaDictionary[className];
+		if (dictionary) {
+		    for (var i in dictionary) {
+			if (inSchema[i]) {
+			    inSchema[i].shortname = dictionary[i];
+			} else {
+			    inSchema[i] = {shortname: dictionary[i]};
+			}
 		    }
 		}
 	    }
