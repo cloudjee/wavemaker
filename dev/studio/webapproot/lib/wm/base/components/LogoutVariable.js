@@ -33,6 +33,7 @@ dojo.declare("wm.LogoutVariable", wm.ServiceVariable, {
       clearDataOnLogout: true,
       logoutNavCall: null,
       init: function() {
+	  this.inherited(arguments);
           if (!this.clearDataOnLogout) {
               this.logoutNavCall = new wm.NavigationCall({
 	          name: "logoutNavCall",
