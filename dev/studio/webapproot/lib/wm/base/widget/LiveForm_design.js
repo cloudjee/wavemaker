@@ -34,7 +34,8 @@ wm.Object.extendSchema(wm.LiveFormBase, {
     setDataSet: {group: "method"},
     beginEditUpdate: {group: "method"},
     clearData: {group: "method"},
-    setReadonly: {group: "method"}
+    setReadonly: {group: "method"},
+
 
 });
 
@@ -595,7 +596,7 @@ wm.Object.extendSchema(wm.LiveForm, {
         saveOnEnterKey: { group: "editor", order: 10, type: "Boolean"},
         alwaysPopulateEditors: { group: "editor", order: 15, type: "Boolean"},
 	liveSaving:{ ignore: 1},
-	operation: { ignore: 1},
+    operation: { ignore: 1, doc: 1},
 	defaultButton: { ignore: 1, group: "Deprecated", order: 5, bindTarget: 1, type: "wm.Button"},
         displayErrors: { group: "data", order: 15},
     //noButtonPanel: {group: "display", order: 8, type: "Boolean", ignore: 1},
