@@ -21,6 +21,12 @@ dojo.require("wm.base.widget.Editors.Select");
 wm.SelectMenu.extend({
     themeableStyles: ["wm.SelectMenu-Down-Arrow_Image", "wm.SelectMenu-Inner_Radius"],
 	updateNow: "(updateNow)",
+    /* Don't show optionsVar in the dataSet property field */
+        get_dataSet: function() {
+	    if (this.dataSet == this.$.optionsVar)
+		return null;
+	    return this.dataSet;
+	},
 	set_dataSet: function(inDataSet) {
 		// support setting dataSet via id from designer
 		if (inDataSet && !(inDataSet instanceof wm.Variable)) {

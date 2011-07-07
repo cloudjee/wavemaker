@@ -74,6 +74,8 @@ wm.inspectOnEnter = function(event) {
 	@returns {String} Html string for the Select property editor.
 */
 makeSelectPropEdit = function(inName, inValue, inOptions, inDefault, inValues, inReadonly, isBound) {
+    if (inValue instanceof wm.Component)
+	inValue = "bind: " + inValue.getId();
     var html = [
 	'<table class="studio_propinspect_innertable"><tr><td class="studio_propinspect_editcell">',
 	'<select class="wminspector-edit" id="studio_propinspect_'+inName+'" dojoType="dijit.form.ComboBox"  name="', inName, '" id="studio-prop-panel-' + inName + '" ',
@@ -95,6 +97,8 @@ makeSelectPropEdit = function(inName, inValue, inOptions, inDefault, inValues, i
 }
 
 makeCheckPropEdit = function(inName, inValue, inDefault, inReadonly, isBound) {
+    if (inValue instanceof wm.Component)
+	inValue = "bind: " + inValue.getId();
 	return [ 
 	    '<table class="studio_propinspect_innertable"><tr><td class="studio_propinspect_editcell">',
 	    '<input id="studio_propinspect_'+inName+'" ',
@@ -107,6 +111,8 @@ makeCheckPropEdit = function(inName, inValue, inDefault, inReadonly, isBound) {
 	].join('');
 }
 makeInputPropEdit = function(inName, inValue, inDefault, inReadonly, isBound) {
+    if (inValue instanceof wm.Component)
+	inValue = "bind: " + inValue.getId();
 	inValue = inValue === undefined ? "" : inValue;
 	// FIXME: need more escaping here likely. just doing quotes for now
 
@@ -123,6 +129,8 @@ makeInputPropEdit = function(inName, inValue, inDefault, inReadonly, isBound) {
 	].join('');
 }
 setInputPropEdit = function(inName, inValue) {
+    if (inValue instanceof wm.Component)
+	inValue = "bind: " + inValue.getId();
     var editor = dijit.byId("studio_propinspect_"+inName);
     if (editor) {
 	editor.set("value", inValue, false);
@@ -152,6 +160,8 @@ makeTextPropEdit = function(inName, inValue, inDefault, inRows) {
 }
 */
 makeTextPropEdit = function(inName, inValue, inDefault, inRows, isBound) {
+    if (inValue instanceof wm.Component)
+	inValue = "bind: " + inValue.getId();
     if (!inRows) inRows = 10;
 	inValue = inValue === undefined ? "" : inValue;
 	// FIXME: need more escaping here likely. just doing quotes for now
