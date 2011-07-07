@@ -185,7 +185,6 @@ public class SecuritySpringSupport {
     
     static Map<String, List<String>> getObjectDefinitionSource(Beans beans) {
     	Map<String, List<String>> urlMap = new LinkedHashMap<String, List<String>>();
-    	System.out.println("getSecurityResourceAttrs");
     	Bean bean = beans.getBeanById(FILTER_SECURITY_INTERCEPTOR_BEAN_ID);    	
     	String odspFull = getPropertyValueString(bean,OBJECT_DEFINITION_SOURCE_PROPERTY);
     	String odspBody = "";
