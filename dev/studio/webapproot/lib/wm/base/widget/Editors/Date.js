@@ -138,6 +138,16 @@ dojo.declare("wm.DateTime", wm.Text, {
     timePanelHeight: 38,
     formatLength: "short",
     dateMode: "Date and Time",
+    _createEditor: function(inNode, inProps) {
+	var e = this.inherited(arguments);
+	var node = document.createElement("div");
+	node.innerHTML = "<div class='dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton dijitArrowButtonContainer' role='presentation' ><input class='dijitReset dijitInputField dijitArrowButtonInner' value='▼ ' type='text' tabindex='-1' readonly='readonly' role='presentation'></div>";
+	e.domNode.appendChild(node.firstChild);
+	e.domNode.appendChild(e.domNode.firstChild); // make the first child the last child
+	dojo.destroy(node);
+	dojo.addClass(e.domNode, "dijitComboBox");
+	return e;
+    },
     init: function( ){
 	this.inherited(arguments);
         this.subscribe("wm.AbstractEditor-focused", this, function(inEditor) {
@@ -160,7 +170,7 @@ dojo.declare("wm.DateTime", wm.Text, {
 		wm.DateTime.dialog.hide();
 	}
     },
-    doOnfocus: function() {
+    doOnfocus: function() {	
 	this.inherited(arguments);
 	wm.onidle(this, function() {
 	    if (!wm.DateTime.dialog) {	    
@@ -193,6 +203,7 @@ dojo.declare("wm.DateTime", wm.Text, {
 	    }
 	    
 	    var dialog = wm.DateTime.dialog;
+
 	    /* So as to not screw with default dialog connections such as keydown, we're going to connect everything to the containerWidget */
 	    var containerWidget = dialog.containerWidget;
 	    containerWidget._disconnect();
@@ -267,6 +278,13 @@ dojo.declare("wm.DateTime", wm.Text, {
 	    this._setupDialogValues = true;
 	    this.handleDateChange();
 	    delete this._setupDialogValues;
+	    var editor = this.editor;
+	    wm.job(this.getRuntimeId() + ".blur", 50, dojo.hitch(this, function() {
+		if (wm.DateTime.dialog.$.calendar.showing)
+		    wm.DateTime.dialog.$.calendar.focus();
+		else
+		    wm.DateTime.dialog.$.hours.focus();
+	    }));
 	});
     },
     handleDateChange: function() {
