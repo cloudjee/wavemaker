@@ -601,7 +601,7 @@ wm.Object.extendSchema(wm.Text, {
     setPlaceHolder: {group: "method", doc: 1},
     setPassword: {group: "method", doc: 1},
     setRegExp: {group: "method", doc: 1},
-    resetButton: {group: "editor"},
+    resetButton: {group: "editor"}
     
 });
 
