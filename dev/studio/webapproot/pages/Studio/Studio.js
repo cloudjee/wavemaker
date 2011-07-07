@@ -55,12 +55,19 @@ dojo.declare("Studio", wm.Page, {
 	//=========================================================================
 	// initialization
 	//=========================================================================
-	start: function() {
+	start: function() {   
 	    if (dojo.isIE && dojo.isIE < 8) {
 		app.alert(this.getDictionaryItem("ALERT_OLD_IE_BAD"));
 		app.alertDialog.setButton1Caption("");
 		return;
 	    }
+
+	    if (wm.EditArea && this.editArea instanceof wm.EditArea) {
+		this.scriptPageCompletionsBtn.hide();
+		this.scriptPageFormatBtn.hide();
+		this.appsrcPageFormatBtn.hide();
+	    }
+
 	    app._page = this;// not sure why this was failing to set, but I don't have time to investigate...
 	    this.neededJars = {};
 		try{
