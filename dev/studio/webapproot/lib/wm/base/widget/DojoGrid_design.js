@@ -191,11 +191,10 @@ wm.DojoGrid.extend({
 	    fArray.push({name: studio.getDictionaryItem("wm.DojoGrid.ADD_FORMATTER"), value:'- Add Formatter'});
 
 		var data = {identifier: 'value', items: fArray};
-		if (!this.formatterStore){
-			this.formatterStore = new dojo.data.ItemFileReadStore({data: data});
-		} else {
-			this.formatterStore.reload(data);
-		}
+		if (this.formatterStore)
+		    delete this.formatterStore; // no destroy method
+	        this.formatterStore = new dojo.data.ItemFileReadStore({data: data});
+
 	},
 	updateFieldTypeList: function(options){
 		if (!this.fieldTypeStore){
