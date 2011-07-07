@@ -6397,7 +6397,7 @@ exports.setCssClass = function(node, className, include) {
 exports.importCssString = function(cssText, doc){
     doc = doc || document;
 
-    if (doc.createStyleSheet && !dojo.isIE) {
+    if (doc.createStyleSheet && (!dojo.isIE || dojo.isIE < 9)) {
         var sheet = doc.createStyleSheet();
         sheet.cssText = cssText;
     }
