@@ -1647,6 +1647,12 @@ display:block;
 }
 
 
+.dj_ie9 .wmeditor .dijitTextBox,
+.dj_ie9 .wmeditor .dijitTextArea,
+.dj_ie9 .wmeditor .dijitComboBox {
+    border-radius: 0px !important;
+}
+
 .wmeditor.wmreseteditor .dijitTextBox {
      -moz-border-radius: 16px; 
      -webkit-border-radius: 16px;
