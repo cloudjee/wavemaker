@@ -341,6 +341,7 @@ dependencies = {
 				"wm.base.design.Wrapper",
 				"wm.base.design.Designer",
 				"wm.base.components.Application",
+			        "wm.base.components.Application_design",
 				"wm.studio.app.StudioApplication",
 				"wm.studio.pages.Studio.Studio",
 				"wm.studio.app.util",

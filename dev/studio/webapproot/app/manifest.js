@@ -28,6 +28,7 @@ wm.loadLibs([
 	"wm.base.Widget_design",
 	"wm.base.Control_design",
 	"wm.base.components.LiveView_Design",
+	"wm.base.components.Application_design",
 	"wm.base.widget.Box_design",
 	"wm.base.widget.Content_design",
 	"wm.base.widget.Layers_design",
