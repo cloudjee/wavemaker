@@ -593,7 +593,19 @@ dojo.declare("wm.studio.Project", null, {
 
 	    f.push(dojo.hitch(this, function() {
 		studio.setSaveProgressBarMessage(this.pageName + ".js");
-		var def = this.savePageData(this.pageName + ".js", studio.getScript());
+		var text = studio.getScript();
+
+		/* Change the page's i18n property to true if saving with non-default language */
+		if (studio.languageSelect.getDataValue() != "default") {
+		    if (text.match(/"i18n"\:\s*(true|false)\s*,/)) {
+			text = text.replace(/"i18n"\:\s*(true|false)\s*,/, '"i18n": true,');
+			studio.setScript(text);
+		    } else {
+			text = text.replace(/\{(.*?)\n/, '{$1\n\t"i18n": true,\n');
+			studio.setScript(text);
+		    }
+		}
+		var def = this.savePageData(this.pageName + ".js", text);
 	    }));
 
 	    f.push(dojo.hitch(this, function() {
