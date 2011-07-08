@@ -46,8 +46,6 @@ dojo.declare("wm.Label", wm.Control, {
 	}, */
 	postInit: function() {
 		this.inherited(arguments);
-		if (!this.$.format)
-			new wm.DataFormatter({name: "format", owner: this});
 		this.caption = this.label || this.content || this.caption;
 		// bc
 		delete this.content;
@@ -59,7 +57,18 @@ dojo.declare("wm.Label", wm.Control, {
 	renderLabel: function() {
 		if (this._loading)
 			return;
-		var c = this.$.format.format(this.caption);
+
+	    var c = this.caption;
+	    if (this.$.format) {
+		c = this.$.format.format(c);
+	    } else if (this.display && dojo.isFunction(this.owner[this.display])) {
+		try {
+		    c = this.owner[this.display](this, c);
+		} catch(e) {
+		    console.error("Formatter error in " + this.toString() + ": " + e);
+		}
+	    }
+
 		if (this.link)
 			c = ['<a ', (this.link.indexOf("#") == -1 && this.link.indexOf("javascript") == -1)? 'target="_blank" ' : '', 'href="', this.link, '">', c, '</a>'].join('');
 		if (this.domNode.innerHTML != c)

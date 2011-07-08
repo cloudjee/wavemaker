@@ -56,9 +56,18 @@ wm.Label.extend({
 			return;
 		this.display = inDisplay;
 		var ctor = wm.getFormatter(this.display);
-		this.components.format.destroy();
+	        if (this.components.format)
+		    this.components.format.destroy();
+
+	    var funcName = this.generateEventName("onReadOnlyNodeFormat");
+	    if (this.display == "Custom Function" || this.display == funcName) {
+		this.display = funcName;
+		eventEdit(this, "onFormat", funcName, this.owner == studio.application, "inValue");
+	    } else {
+		var ctor = wm.getFormatter(this.display);
 		new ctor({name: "format", owner: this});
 		this.renderLabel();
+	    }
 	},
 /*
 	resizeLabel: function(){
@@ -78,7 +87,11 @@ wm.Label.extend({
 	makePropEdit: function(inName, inValue, inDefault) {
 		switch (inName) {
 			case "display":
-				return makeSelectPropEdit(inName, inValue, [""].concat(wm.formatters), inDefault);
+			case "formatter":
+		                var funcName = this.generateEventName("onReadOnlyNodeFormat");
+		                var customFunction = (this.formatter == funcName) ? funcName : "Custom Function";
+		                return makeSelectPropEdit(inName, inValue, ["", customFunction].concat(wm.formatters), inDefault);
+
 /*
 			case "resizeToFit":
 				return makeReadonlyButtonEdit(inName, inValue, inDefault);
