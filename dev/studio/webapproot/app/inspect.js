@@ -78,7 +78,7 @@ makeSelectPropEdit = function(inName, inValue, inOptions, inDefault, inValues, i
 	inValue = "bind: " + inValue.getId();
     var html = [
 	'<table class="studio_propinspect_innertable"><tr><td class="studio_propinspect_editcell">',
-	'<select class="wminspector-edit" id="studio_propinspect_'+inName+'" dojoType="dijit.form.ComboBox"  name="', inName, '" id="studio-prop-panel-' + inName + '" ',
+	'<select invalidMessage="" class="wminspector-edit" id="studio_propinspect_'+inName+'" invalidMessage="" dojoType="dijit.form.ComboBox"  name="', inName, '" id="studio-prop-panel-' + inName + '" ',
 	'onKeyPress="wm.inspectOnEnter" ',
 	'onChange="wm.inspectOnChange(\'' +inName + '\')">' ];
 	for (var i=0, l=inOptions.length, o, v; (o=inOptions[i])||(i<l); i++) {
@@ -118,7 +118,7 @@ makeInputPropEdit = function(inName, inValue, inDefault, inReadonly, isBound) {
 
 	return [
 	    '<table class="studio_propinspect_innertable"><tr><td class="studio_propinspect_editcell">',
-	    '<input id="studio_propinspect_'+inName+'" dojoType="dijit.form.TextBox" name="', inName, '"',
+	    '<input id="studio_propinspect_'+inName+'" invalidMessage="" dojoType="dijit.form.TextBox" name="', inName, '"',
 	    'onKeyPress="wm.inspectOnEnter" ',
 	    'onChange="wm.inspectOnChange(\''+inName+'\')"',
 		(inValue==inDefault ? ' class="prop-default wminspector-edit"' : 'class="wminspector-edit"'),
@@ -168,7 +168,7 @@ makeTextPropEdit = function(inName, inValue, inDefault, inRows, isBound) {
 
 	return [
 	    '<table class="studio_propinspect_innertable"><tr><td class="studio_propinspect_editcell">',
-	    '<textarea id="studio_propinspect_'+inName+'" dojoType="dijit.form.SimpleTextarea" name="', inName, '"',
+	    '<textarea id="studio_propinspect_'+inName+'" invalidMessage="" dojoType="dijit.form.SimpleTextarea" name="', inName, '"',
 	    " rows='" + inRows + "'",
 	    ' onChange="wm.inspectOnChange(\''+inName+'\')"',
 		(inValue==inDefault ? ' class="prop-default wminspector-edit"' : 'class="wminspector-edit"'),	   
