@@ -199,7 +199,8 @@ wm.DojoMenu.extend({
             else return inProp;
 	},
     renameComponentEvents: function(originalId, newId) {
-	this.renameComponentEventsMenu(this.eventList,originalId, newId);
+	this.inherited(arguments); // handles non-menu-item events
+	this.renameComponentEventsMenu(this.fullStructure,originalId, newId);
     },
     renameComponentEventsMenu: function(children,originalId, newId) {
 	    for (var i = 0; i < children.length; i++)
