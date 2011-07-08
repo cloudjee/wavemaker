@@ -58,6 +58,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	emptyValue: "unset",
 	required: false,
 	readonly: false,
+        ignoreParentReadonly: false,
         editorNode: null,
         isDirty: false,
         _lastValue: "",

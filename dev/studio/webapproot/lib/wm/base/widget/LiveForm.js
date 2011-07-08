@@ -340,6 +340,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 	// Editor setters
 	//===========================================================================
 	canChangeEditorReadonly: function(inEditor, inReadonly, inCanChangeFunc) {
+	    if (inEditor.ignoreParentReadonly) return false;
 		var c = dojo.isFunction(inCanChangeFunc);
 		return !c || inCanChangeFunc(inEditor, this, inReadonly);
 	},
@@ -825,7 +826,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 		this.inherited(arguments);
 		if (this._controlSubForms)
 			dojo.forEach(this.getSubFormsArray(), function(f) {
-				f.setReadonly(inReadonly);
+				f.setReadonly(inReadonly);			    
 			});
 	},
 	//===========================================================================

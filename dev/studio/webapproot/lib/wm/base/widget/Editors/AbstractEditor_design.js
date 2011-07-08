@@ -60,7 +60,7 @@ wm.AbstractEditor.extend({
 		props.formField.ignoretmp = !Boolean(f);
 		props.displayValue.readonly = this.formField;
 	    props.defaultInsert.ignoretmp = !this.isAncestorInstanceOf(wm.LiveFormBase);
-
+	    props.ignoreParentReadonly.ignoretmp = props.defaultInsert.ignoretmp;
 		return props;
 	},
 	set_formField: function(inFieldName) {
@@ -127,7 +127,7 @@ wm.Object.extendSchema(wm.AbstractEditor, {
     singleLine: {group: "Labeling", order: 5},
     helpText: {group: "Labeling", order: 10},
     readonly: {group: "editor", order: 1, doc: 1},
-
+    ignoreParentReadonly: {group: "editor", order: 2, doc: 1},
     displayValue: {group: "editData", order: 2}, // use getDisplayValue()
     dataValue: {ignore: 1, bindable: 1, group: "editData", order: 3, simpleBindProp: true, type: "String"}, // use getDataValue()
     isDirty: {ignore: 1, bindable: 1, group: "editData", order: 10, type: "boolean"}, 
