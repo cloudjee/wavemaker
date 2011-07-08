@@ -130,7 +130,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		this.selectedItem.setType(this.dataSet instanceof wm.Variable ? this.dataSet.type : "AnyData");
 	        var dataValue = this.dataValue;
 	        var displayValue = this.displayValue;
-		if (wm.propertyIsChanged(dataValue, "dataValue", wm._BaseEditor))
+		if (this.dataValue !== null && wm.propertyIsChanged(dataValue, "dataValue", wm._BaseEditor))
 			this.setEditorValue(dataValue)
 		else
 			this.setDisplayValue(displayValue);
