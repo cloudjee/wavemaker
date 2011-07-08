@@ -16,13 +16,14 @@ dojo.provide("wm.base.widget.LiveForm_design");
 dojo.require("wm.base.widget.LiveForm");
 
 wm.Object.extendSchema(wm.LiveFormBase, {
+    liveSaving:{ ignore: 1},
     themeStyleType: {group: "style", order: 150},
 	dataSet: { readonly: 1, group: "data", order: 1, bindTarget: 1, type: "wm.Variable"},
 	dataOutput: { ignore: 1, group: "data", order: 2, bindable: 1, type: "wm.Variable", simpleBindProp: true, categoryParent: "Properties", categoryProps: {component: "dataOutput", inspector: "Data"} },
 	clearData: { group: "operation", order: 2},
 	addEditors: { group: "operation", order: 5},
 	removeEditors: { group: "operation", order: 10},
-	readonly: { group: "editor", order: 5},
+	readonly: { group: "editor", order: 6},
     //validateBeforeSave: {group: "display", order: 7, type: "Boolean"},
 	editorWidth: {group: "display", order: 200},
 	editorHeight: {group: "display", order: 201},
@@ -34,7 +35,7 @@ wm.Object.extendSchema(wm.LiveFormBase, {
     setDataSet: {group: "method"},
     beginEditUpdate: {group: "method"},
     clearData: {group: "method"},
-    setReadonly: {group: "method"},
+    setReadonly: {group: "method"}
 
 
 });
@@ -78,6 +79,7 @@ wm.LiveFormBase.extend({
 		var p = this.inherited(arguments);
 		p.editorWidth.ignoretmp = p.editorWidth.writeonly = (this.box == "v");
 		p.editorHeight.ignoretmp = p.editorHeight.writeonly = (this.box == "h");
+	    p.operation.ignoretmp = this.liveEditing;
 		return p;
 	},
 	//===========================================================================
@@ -593,10 +595,11 @@ wm.LiveForm.description = "Displays a detailed form.";
 wm.Object.extendSchema(wm.LiveForm, {
 	liveVariable: {ignore: 1},
 	liveEditing: { group: "editor", order: 5, type: "Boolean"},
+    operation: {group: "editor", order: 6, options: ["insert", "update", "delete"], type: "String"},     
         saveOnEnterKey: { group: "editor", order: 10, type: "Boolean"},
         alwaysPopulateEditors: { group: "editor", order: 15, type: "Boolean"},
-	liveSaving:{ ignore: 1},
-    operation: { ignore: 1, doc: 1},
+
+
 	defaultButton: { ignore: 1, group: "Deprecated", order: 5, bindTarget: 1, type: "wm.Button"},
         displayErrors: { group: "data", order: 15},
     //noButtonPanel: {group: "display", order: 8, type: "Boolean", ignore: 1},
