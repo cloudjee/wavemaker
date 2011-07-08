@@ -79,7 +79,6 @@ wm.LiveFormBase.extend({
 		var p = this.inherited(arguments);
 		p.editorWidth.ignoretmp = p.editorWidth.writeonly = (this.box == "v");
 		p.editorHeight.ignoretmp = p.editorHeight.writeonly = (this.box == "h");
-	    p.operation.ignoretmp = this.liveEditing;
 		return p;
 	},
 	//===========================================================================
@@ -595,7 +594,7 @@ wm.LiveForm.description = "Displays a detailed form.";
 wm.Object.extendSchema(wm.LiveForm, {
 	liveVariable: {ignore: 1},
 	liveEditing: { group: "editor", order: 5, type: "Boolean"},
-    operation: {group: "editor", order: 6, options: ["insert", "update", "delete"], type: "String"},     
+        operation: {group: "editor", order: 6, options: ["insert", "update", "delete"], type: "String"},     
         saveOnEnterKey: { group: "editor", order: 10, type: "Boolean"},
         alwaysPopulateEditors: { group: "editor", order: 15, type: "Boolean"},
 
@@ -621,6 +620,11 @@ wm.LiveForm.extend({
 	//===========================================================================
 	// Form initialization / binding
 	//===========================================================================
+    listProperties: function() {
+	var p = this.inherited(arguments);
+	p.operation.ignoretmp = this.liveEditing;
+	return p;
+    },
 	addEditors: function() {
 		this._generateDeferred = new dojo.Deferred();
 		//console.log("addEditors", this._generateDeferred);
