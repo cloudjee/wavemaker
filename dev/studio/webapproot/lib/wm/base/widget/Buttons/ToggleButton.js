@@ -55,6 +55,12 @@ dojo.declare("wm.ToggleButton", wm.ToolButton, {
     },
     setCaptionUp: function(inCaption) {
         this.captionUp = inCaption;
-        this.setCaption(inCaption);
+	if (!this.clicked)
+            this.setCaption(inCaption);
+    },
+    setCaptionDown: function(inCaption) {
+        this.captionDown = inCaption;
+	if (this.clicked)
+            this.setCaption(inCaption);
     }
 });

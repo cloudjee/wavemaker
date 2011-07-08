@@ -78,7 +78,9 @@ wm.Object.extendSchema(wm.ToggleButton, {
     captionDown: { group: "display", bindTarget: 1, order: 11, doc: 1},
     clicked: { group: "display", type: "Boolean", bindTarget: 1, bindSource: 1, order: 12, simpleBindProp: true,doc: 1},
     caption: {ignore: 1},
-    setClicked: {group: "method", params: "(inClicked)", doc: 1}
+    setClicked: {group: "method", params: "(inClicked)", doc: 1},
+    setCaptionUp: {group: "method"},
+    setCaptionDown: {group: "method"}
 });
 
 wm.Object.extendSchema(wm.Button, {
