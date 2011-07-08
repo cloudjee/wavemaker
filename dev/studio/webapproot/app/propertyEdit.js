@@ -272,9 +272,27 @@ dojo.declare("wm.propEdit.DataSetSelect", wm.propEdit.Select, {
 		var all = this.allowAllTypes, list = this.listMatch;
 		return wm.listMatchingComponentIds(inOwners, function(c) {
 			return (c instanceof wm.Variable &&
+				c.name && c.name.indexOf("_") != 0 &&
 				(all || wm.typeManager.isStructuredType(c.type)) &&
 				(list !== undefined ? list == wm.fire(c, "isListBindable") : true)
 			);
+		});
+	}
+});
+
+dojo.declare("wm.propEdit.LiveDataSetSelect", wm.propEdit.DataSetSelect, {
+	getDataSets: function(inOwners) {
+		var all = this.allowAllTypes, list = this.listMatch;
+		return wm.listMatchingComponentIds(inOwners, function(c) {
+		    if (c instanceof wm.Variable &&
+			c.name && c.name.indexOf("_") != 0 &&
+			(all || wm.typeManager.isStructuredType(c.type)) &&
+			(list !== undefined ? list == wm.fire(c, "isListBindable") : true)
+		       ) {
+			var type = wm.typeManager.getType(c.type);
+			return type.liveService;
+		    }
+		    
 		});
 	}
 });

@@ -445,7 +445,7 @@ wm.LiveFormBase.extend({
 				var p = wm.getParentForm(this);
 				return p ?
 					new wm.propEdit.Select({component: this, name: inName, options: [""].concat(this.getFormSubDataSetNames(p))}) : 
-					new wm.propEdit.DataSetSelect({component: this, name: inName, widgetDataSets: true});
+					new wm.propEdit.LiveDataSetSelect({component: this, name: inName, widgetDataSets: true});
 		}
 		return this.inherited(arguments);
 	},
