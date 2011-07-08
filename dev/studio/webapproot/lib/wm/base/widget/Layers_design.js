@@ -17,8 +17,9 @@ dojo.require("wm.base.widget.Layers");
 
 // design-time
 wm.Object.extendSchema(wm.Layer, {
+    closable: {group: "display", order: 250},
+    destroyable: {group: "display", order: 251},
     themeStyleType: {group: "style", order: 150},
-    transition: {group: "display"},
 	title: { ignore: 1 },
 	disabled: { ignore: 1 },
     moveNext: { group: "operation", order: 1, contextMenu: false },
@@ -108,10 +109,17 @@ wm.Layer.extend({
 			    })
 			   });
 		var submenu = menuObj.addAdvancedMenuChildren(menuObj.dojoObj, data);	
-    }
+    },
+	listProperties: function() {
+	    var props = this.inherited(arguments);
+	    props.closable.ignoretmp = (this.parent.layersType != 'Tabs');
+	    props.destroyable.ignoretmp = (this.parent.layersType != 'Tabs');
+	    return props;
+	},
 });
 
 wm.Object.extendSchema(wm.Layers, {
+    transition: {group: "display"},
 	lock: {ignore: 1},
 	freeze: {ignore: 1},
 	box: {ignore: 1},
