@@ -45,7 +45,16 @@
 
 .wm_wireframe .isDirty .dijitTextBox,
 .wm_wireframe .isDirty .dijitComboBox,
-.wm_wireframe .isDirty .dijitComboArea {
+.wm_wireframe .isDirty .dijitTextArea {
     border: solid 2px black !important;
 
+}
+
+.wm_wireframe .dijitError.dijitTextBox,
+.wm_wireframe .dijitError.dijitComboBox,
+.wm_wireframe .dijitError.dijitTextArea,
+.wm_wireframe .isDirty .dijitError.dijitTextBox,
+.wm_wireframe .isDirty .dijitError.dijitComboBox,
+.wm_wireframe .isDirty .dijitError.dijitTextArea {
+    border: solid 2px red !important;
 }
