@@ -180,6 +180,11 @@ dojo.declare("wm.Currency", wm.Number, {
 	this.displayValue = this._getReadonlyValue();
 	this.valueChanged("dataValue", this.dataValue);
 	this.valueChanged("displayValue", this.displayValue);
+	    if (this._inPostInit) {		
+		this._lastValue = this.dataValue;
+	    }
+	    this.updateIsDirty();
+
     }
 
 });
