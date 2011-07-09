@@ -42,3 +42,10 @@
 .wm_wireframe .EmphasizedContent:nth-child(5)  {
     -webkit-transform: skew(2deg,0deg);
 }
+
+.wm_wireframe .isDirty .dijitTextBox,
+.wm_wireframe .isDirty .dijitComboBox,
+.wm_wireframe .isDirty .dijitComboArea {
+    border: solid 2px black !important;
+
+}
