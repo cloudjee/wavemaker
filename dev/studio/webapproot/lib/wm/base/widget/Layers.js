@@ -24,6 +24,8 @@ dojo.declare("wm.Layer", wm.Container, {
 	caption: "",
 	layoutKind: "top-to-bottom",
 	moveable: false,
+        closable: false,
+        destroyable: false,
 	_requiredParent: "wm.Layers",
 	destroy: function() {
 		//console.info('layer destroy called');
