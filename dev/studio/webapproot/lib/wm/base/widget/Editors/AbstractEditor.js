@@ -751,7 +751,10 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	this.updateIsDirty();
     },
     updateIsDirty: function() {
+	var wasDirty = this.isDirty;
 	this.valueChanged("isDirty", this.isDirty = (this.dataValue != this._lastValue));
+	if (wasDirty != this.isDirty)
+	    dojo.toggleClass(this.domNode, "isDirty", this.isDirty);
 	if (!app.disableDirtyEditorTracking)
 	    wm.fire(this.parent, "updateIsDirty");
     },
