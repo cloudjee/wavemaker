@@ -596,7 +596,7 @@ dojo.declare("wm.studio.Project", null, {
 		var text = studio.getScript();
 
 		/* Change the page's i18n property to true if saving with non-default language */
-		if (studio.languageSelect.getDataValue() != "default") {
+		if (studio.languageSelect.getDisplayValue() != "default") {
 		    if (text.match(/"i18n"\:\s*(true|false)\s*,/)) {
 			text = text.replace(/"i18n"\:\s*(true|false)\s*,/, '"i18n": true,');
 			studio.setScript(text);
@@ -610,10 +610,23 @@ dojo.declare("wm.studio.Project", null, {
 
 	    f.push(dojo.hitch(this, function() {
 		studio.setSaveProgressBarMessage(this.pageName + ".widgets.js");
-		if (studio.languageSelect.getDataValue() == "default") {
+		var lang = studio.languageSelect.getDisplayValue();
+		if (lang == "default") {
 		    this.savePageData(this.pageName + ".widgets.js", studio.getWidgets());
 		} else {
-		    studio.studioService.requestSync("writeWebFile", ["language/nls/" + studio.languageSelect.getDisplayValue() + "/" + studio.project.pageName + ".js", studio.page.getLanguageWidgets(), false]);
+		    var dictionary = studio.page.getLanguageWidgets();
+		    var oldDictionaryStr = wm.load("projects/" + studio.project.projectName + "/language/nls/" + lang + "/" + studio.project.pageName + ".js");
+		    try {
+			var oldDictionary = dojo.fromJson(oldDictionaryStr);
+			for (var term in oldDictionary) {
+			    /* Copy only strings... script terms; all properties are in objects/hashes */
+			    if (typeof oldDictionary[term] == "string" && dictionary[term] === undefined)
+				dictionary[term] = oldDictionary[term];
+			}
+		    } catch(e){
+			console.error("Failed to load dictionary " + lang + "/" + studio.project.pageName);
+		    }		    
+		    studio.studioService.requestSync("writeWebFile", ["language/nls/" + studio.languageSelect.getDisplayValue() + "/" + studio.project.pageName + ".js", dictionary, false]);
 		}
 	    }));
 

@@ -87,6 +87,19 @@ public class PagesService {
     }
     
     
+    /**
+     * Return a list of dictionaries in the current application.  Currently, this is
+     * every directory in the dictionaries directory.
+     * @return
+     * @throws FileAccessException
+     */
+    @ExposeToClient
+    public SortedSet<String> listDictionaries() throws FileAccessException {
+        
+        return pagesManager.listDictionaries();
+    }
+
+
     // spring-controlled bean properties
     PagesManager pagesManager;
 

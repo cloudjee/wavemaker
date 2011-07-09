@@ -285,6 +285,14 @@ Studio.extend({
 	this.beginBind(this.getDictionaryItem("TITLE_IMPORT_JAVASCRIPT"), studio.cssEditArea, "css");
     },
 
+    editDictionary: function() {
+	if (studio.dictionaryDialog.page) {
+	    studio.dictionaryDialog.page.reset();
+	    studio.dictionaryDialog.show();
+	} else {
+	    studio.dictionaryDialog.show();
+	}
+    },
 /*
     cssShow: function() {
 	this.appCssEditArea.render();

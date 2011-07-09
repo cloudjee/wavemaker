@@ -182,6 +182,51 @@ public class PagesManager {
         return new File(getPagesDir(projectName), pageName);
     }
 
+    public File getDictionariesDir(String projectName) throws FileAccessException {
+        
+        File projectRoot = projectManager.getProjectDir(projectName, false);
+        return new File(new File(projectRoot, ProjectConstants.WEB_DIR),
+                ProjectConstants.I18N_DIR);
+    }
+
+
+    /**
+     * List all dictionaries in the current project
+     * @return
+     * @throws FileAccessException
+     */
+    public SortedSet<String> listDictionaries() throws FileAccessException {
+        return listDictionaries(
+                getProjectManager().getCurrentProject().getProjectName());
+    }
+    
+    /**
+     * Return a list of all dictionaries in the specified project.
+     * @param projectName
+     * @return
+     * @throws FileAccessException
+     */
+    public SortedSet<String> listDictionaries(String projectName) throws FileAccessException {
+        
+        SortedSet<String> ret = new TreeSet<String>();
+        
+        File dictionariesDir = getDictionariesDir(projectName);
+        
+        File[] children = dictionariesDir.listFiles();
+        if (null!=children) {
+            for (File child: children) {
+                if (child.isDirectory() &&
+                        !IOUtils.DEFAULT_EXCLUSION.contains(child.getName())) {
+                    ret.add(child.getName());
+                }
+            }
+        }
+        
+        return ret;
+    }
+
+
+
     // spring-controlled bean properties
     ProjectManager projectManager;
 
