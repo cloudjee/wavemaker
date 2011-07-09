@@ -884,7 +884,7 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 	padding: 2px;
 }
 
-.MenuDesignerDialog .wmbutton,
+.I18nDictionaryEditor .wmbutton,
 .Studio-dataObjectsPane_dataObjectsEditor_pageContainer_queryEditor_panel button, .Studio-dataObjectsPane_dataObjectsEditor_pageContainer_queryEditor_panel3 button, .Studio-dataObjectsPane_dataObjectsEditor_pageContainer_queryEditor_addInput, .Studio-dataObjectsPane_dataObjectsEditor_pageContainer_queryEditor_removeInput {
 	margin: 1px 2px 1px 2px;
 	background-image:url(images/toolbar_btn_bg.gif);

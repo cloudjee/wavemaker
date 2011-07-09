@@ -405,7 +405,7 @@ Studio.widgets = {
 						    scriptPageWordWrapBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Toggle Line Wrapping", imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapScriptClick"}],
 						    /*scriptPageCompileBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Validation", imageIndex: 28}, {onclick: "validateScriptClick"}],*/
 						    scriptPageCompletionsBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Auto Completion", imageIndex: 7, imageList: "canvasToolbarImageList16"}, {onclick: "listCompletions"}],
-						    scriptPageDictionaryBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Auto Completion", imageIndex: 8, imageList: "canvasToolbarImageList16"}, {onclick: "editDictionary"}],
+						    scriptPageDictionaryBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Edit Localization Dictionary", imageIndex: 8, imageList: "canvasToolbarImageList16"}, {onclick: "editDictionary"}],
 						    scriptPageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Help", imageIndex: 26}, {onclick: "showEditorHelp"}],
 						    scriptToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}]/*,
 						    scriptPageCompileChkBtn: ["wm.Checkbox", {caption: "Validate on Save", width: "120px"}, {onchange: "validateScriptCheckboxChange"}]*/
