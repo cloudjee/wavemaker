@@ -42,7 +42,7 @@ dojo.declare("wm.NavigationCall", [wm.Component, wm.ServiceCall], {
 });
 
 wm.Object.extendSchema(wm.NavigationCall,{
-	owner: { group: "common", order: 1, readonly: true, options: ["Page", "Application"], ignore: 1 },
+	owner: { group: "common", order: 1, readonly: true, options: ["Page", "Application"]},
 	autoUpdate: {ignore: 1},
         startUpdateComplete: { ignore: 1},
 	startUpdate: {ignore: 1},
