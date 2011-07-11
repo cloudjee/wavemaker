@@ -54,7 +54,7 @@ wm.getFieldEditorProps = function(inFieldInfo) {
 	var
 		f = inFieldInfo,
 		props = {
-			caption: f.caption,
+		    caption: f.caption || wm.capitalize(f.name),
 			display: wm.getEditorType(f.displayType || f.type),
 			readonly: f.readonly,
 			editorInitProps: {required: f.required},

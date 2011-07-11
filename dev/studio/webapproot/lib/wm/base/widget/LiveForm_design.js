@@ -233,9 +233,15 @@ wm.LiveFormBase.extend({
 		    var fieldDef = typeDef.fields[inFormField];
 	        if (fieldDef)
 		    var relatedTypeDef = wm.typeManager.getType(fieldDef.type);
-	        if (relatedTypeDef && !relatedTypeDef.liveService)
+	        if (relatedTypeDef && !relatedTypeDef.liveService) {
 		    props.editingMode = "editable subform";
-		return this.owner.loadComponent(wm.makeNameForProp(inFormField, "RelatedEditor"), this, "wm.RelatedEditor", props);
+		    return this.owner.loadComponent(wm.makeNameForProp(inFormField, "RelatedEditor"), this, "wm.RelatedEditor", props);
+		} else if (relatedTypeDef) {
+		    props.name = wm.makeNameForProp(inFormField, "Lookup")
+		    return wm.createFieldEditor(this.getEditorParent(), fieldDef, props, {}, "wm.Lookup");
+		} else {
+		    return this.owner.loadComponent(wm.makeNameForProp(inFormField, "RelatedEditor"), this, "wm.RelatedEditor", props);
+		}
 	},
 	// formField that should be included here. not returned if should not included
 	_getFormField: function(inField) {

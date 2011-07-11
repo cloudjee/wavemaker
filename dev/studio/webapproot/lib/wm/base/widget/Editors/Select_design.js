@@ -166,6 +166,14 @@ wm.Object.extendSchema(wm.Lookup, {
 
 
 wm.Lookup.extend({
+	makePropEdit: function(inName, inValue, inDefault) {
+		switch (inName) {
+			case "formField":
+				return new wm.propEdit.FormFieldSelect({component: this, name: inName, value: inValue, relatedFields: true});
+		}
+		return this.inherited(arguments);
+	},
+
 	listProperties: function() {
 		var props = this.inherited(arguments);
 		props.dataSet.ignoretmp = this.autoDataSet;

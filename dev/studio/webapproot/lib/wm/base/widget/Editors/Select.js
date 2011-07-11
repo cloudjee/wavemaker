@@ -558,11 +558,18 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		}
 	},
 	_getFormSource: function(inForm) {
+	    if (this.isAncestorInstanceOf(wm.RelatedEditor)) {
 		var w = wm.data.getPropWire(inForm, "dataSet");
 		return w && w.source && this.getRoot().getValueById(w.source);
 		/*var o = this.owner, w = wm.data.getPropWire(o, "dataValue");
 		return w && w.source && this.getRoot().getValueById(w.source);*/
-	},
+	    } else {
+		var lf = this.isAncestorInstanceOf(wm.LiveForm);
+		if (lf && this.formField) {
+		    return lf.dataSet.getValue(this.formField);
+		}
+	    }
+	},	
 	// NOTE: lookups automatically push data back to their source
 	changed: function() {
 		// When loopup editor is changed by user only then we should change liveForms field values.
