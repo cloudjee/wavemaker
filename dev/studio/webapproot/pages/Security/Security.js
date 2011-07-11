@@ -749,7 +749,26 @@ dojo.declare("Security", wm.Page, {
 		if (this.secProviderInput.getDataValue() == this.SELECT_ONE) {
 			return;
 		}
-		var t = this.layers.getLayer().caption;
+	/* Localization changes the caption, so get the english version of the caption from the layer name
+	 * so that we don't have to change all code to use layer name instead of caption */
+		var t = this.layers.getLayer().name;
+                switch (t) {
+		case "demoLayer":
+		    t = "Demo";
+		    break;
+		case "emptyLayer":
+		    t = "Empty";
+		    break;
+		case "databaseLayer":
+		    t = "Database";
+		    break;
+		case "ldapLayer":
+		    t = "LDAP";
+		    break;
+		case "jossoLayer":
+		    t = "JOSSO";
+		    break;
+		}
 		var err = this.checkErrorOnInputFields(t)
 		if (err) {
 		    studio._saveErrors.push({owner: this,
