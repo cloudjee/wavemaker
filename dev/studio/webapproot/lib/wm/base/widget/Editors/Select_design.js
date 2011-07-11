@@ -180,5 +180,9 @@ wm.Lookup.extend({
 		props.dataSet.bindTarget = !props.dataSet.ignoretmp;
 	        props.maxResults.ignoretmp = !this.autoDataSet;
 		return props;
+	},
+	set_formField: function(inFieldName) {
+	    this.inherited(arguments);
+	    this.setDataSet(this._getFormSource());
 	}
 });
