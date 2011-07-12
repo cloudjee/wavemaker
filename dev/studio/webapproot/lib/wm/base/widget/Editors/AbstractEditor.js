@@ -787,6 +787,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    this.setDataValue(this._lastValue);
 	},
 	resetState: function() {
+	    this.invalidate();
 		var e = this.editor;
 		if (e) {
 			e._hasBeenBlurred = false;
