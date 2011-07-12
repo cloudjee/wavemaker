@@ -234,7 +234,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	getEditorValue: function(getFullDataObj) {
 		var v;
 		if (this.editor && this.hasValues()) {
-		    var displayed = this.editor.get('value');
+		    var displayed = this.editor.get('displayedValue');
 		    var v = displayed && this.getStoreItem(displayed, this._storeNameField);
 		}
 
@@ -410,12 +410,15 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		// note: hack to call internal dijit function to ensure we can
 		// set a blank value even if this is not a valid value
 		if (this.editor && this.hasValues()) {
-                    var valueWas = this.editor.get("value");
+                    var valueWas = this.editor.get("displayedValue");
 			if (this.restrictValues) {
 				this.editor.set('value', '', false);
 			} else {
 				this.editor.set("value", undefined, false);
 			}
+		    this.displayValue = "";
+		    this.dataValue = null;
+
                         // because we passed in false above so as to fire out own SYNCRHONOUS onchange
                         // _lastValueReported is not cleared, which means that trying to changing the value
                         // back to _lastValueReported will fail to fire an onchange event
@@ -440,7 +443,14 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		this.updateSelectedItem();
 	    }
 	},
-
+        blurred: function() {
+	    this.inherited(arguments);
+	    var displayValue = this.displayValue;
+	    console.log("D1: " + displayValue + "; D2: " + this.getDisplayValue());
+	    if (this.getDisplayValue() != displayValue) {
+		this.doOnchange();
+	    }
+	},
         getInvalid: function() {
 	    var valid;
 	    if (!this.editor || this.editor._focused) {
@@ -448,7 +458,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	    } else {
 
 		// always valid if !this.restrictValue
-		// always valid if !this.displayValue, but if there is a displayValue there must be a dataValue
+		// always valid if !this.displayValue, but if there is a displayValue there must be a dataValue /* May not be true in dojo 1.6 */
 		var display = this.getDisplayValue();
 		this._isValid = (!this.restrictValues || (display && this.dataValue || !display) );
 		//console.log("_isValid:" + this._isValid + "; display="+display + "; data:"+this.dataValue);
@@ -581,6 +591,7 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 
 		this.inherited(arguments);
 		var f = wm.getParentForm(this);
+	    if (f instanceof wm.RelatedEditor) {
 		var s = this._getFormSource(f);
 		if (s) {
                         s.beginUpdate();
@@ -598,6 +609,7 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 			this.endEditUpdate();
 			//wm.fire(f, "populateEditors");
 		}
+	    }
 	}
 });
 
