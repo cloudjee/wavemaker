@@ -346,6 +346,7 @@ dojo.declare("wm.DateTime", wm.Text, {
     },
     setDefaultOnInsert:function(){
 	this.setDataValue(this.defaultInsert);
+	this.invalidate();
     },
     getEditorValue: function() {
 	var value = this.getDisplayValue();
