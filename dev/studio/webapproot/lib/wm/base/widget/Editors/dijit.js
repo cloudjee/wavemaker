@@ -159,6 +159,17 @@ dijit.form.FilteringSelect.prototype._onKeyPress = function(evt) {
 };
 
 // dojo customization:
+/*
 dijit.form.FilteringSelect.prototype.isValid = function(isFocused){
 	return !this.required || this._isvalid;
+}
+*/
+
+
+dijit.form.FilteringSelect.prototype.isValid = function(isFocused){
+    if (!this.required && this.get('displayedValue') == "")
+	return true;
+    else if (this.item && this.get('displayedValue'))
+	return true;
+    return false;
 }
