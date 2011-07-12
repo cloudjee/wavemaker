@@ -390,11 +390,12 @@ public class SecurityConfigService {
 	 */
 	public void deleteODSMapEntry(String deleteURL) throws
 	JAXBException, IOException {
-			List<SecurityURLMap> odsMap = getSecurityFilterODS();
-			SecurityURLMap newMap = new SecurityURLMap(deleteURL);
-			odsMap.remove(newMap);
-			setSecurityFilterODS(odsMap);
-		
+		Map<String, List<String>> urlMap = getSecToolsMgr().getSecurityFilterODS();
+		if(urlMap.containsKey(deleteURL)){
+			System.out.println("Deleting " + deleteURL);
+			urlMap.remove(deleteURL);
+			getSecToolsMgr().setSecurityFilterODS(urlMap);
+		}	
 	}
 	/**
 	 * Set a new Object Definition Source Filter. Replaces previous definition.
@@ -415,12 +416,10 @@ public class SecurityConfigService {
 			attributes.add(thisEntry.getAttributes());
 			urlMap.put(thisEntry.getURL().trim(), attributes);
 		}
-		//ensure *.json is last if present unless preserve oder specified 
+		//ensure '/*.json' is last if present unless preserve oder specified 
 		if(preserveOrder.booleanValue() == false && (urlMap.get("/*.json") != null)){ 
-			System.out.println("Moving /*.json entry");
 			List<String> jsonEntry = urlMap.remove("/*.json");
 			urlMap.put("/*.json", jsonEntry);
-			//TODO: Ensure puts in correct place
 		}
 		getSecToolsMgr().setSecurityFilterODS(urlMap);
 	}

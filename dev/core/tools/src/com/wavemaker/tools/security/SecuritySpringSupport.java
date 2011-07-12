@@ -234,7 +234,6 @@ public class SecuritySpringSupport {
                     }
                     objectDefSource.append("\n");
                 }
-            System.out.print("SSS: setODS: " + objectDefSource.toString());    
             objectDefSource.append(SPACES_12);
             List<String> newContent = new ArrayList<String>();
             newContent.add(objectDefSource.toString());
