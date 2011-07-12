@@ -191,7 +191,7 @@ public class SecuritySpringSupport {
     	if (odspFull.startsWith(OBJECT_DEFINITION_SOURCE_PREFIX)){
     		odspBody = odspFull.substring(OBJECT_DEFINITION_SOURCE_PREFIX.length()).trim();	
     	}
-    	String delim = "[=, \n]";
+    	String delim = "[=,\n]";
     	String[] odspArray = odspBody.split(delim);
     	List<String> odspList = new ArrayList<String>(Arrays.asList(odspArray));
     	Iterator<String> itr = odspList.iterator();

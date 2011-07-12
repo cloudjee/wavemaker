@@ -30,7 +30,7 @@ import com.wavemaker.tools.spring.beans.Beans;
 
 /**
  * @author ffu
- * @version $Rev$ - $Date$
+ * @version $Version$
  * 
  */
 public class SpringConfigSupport {

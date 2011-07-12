@@ -32,5 +32,9 @@ ALERT_JOSSO_ONLY_ONE_ROLE: "JOSSO only allows one role.  Delete existing role be
 ALERT_ROLE_EMPTY: "Role field cannot be empty!",
 DEMO_USER_USERNAME: "Username",
 DEMO_USER_PASSWORD: "Password",
-DEMO_USER_ROLE: "Role"
+DEMO_USER_ROLE: "Role",
+
+WARN_NO_ROLES: "No Roles Found",
+WARN_NO_SERVICES: "No Project Services Found",
+INFO_ABOUT_ADVSECROLES: "Server side role access configuration <br> First matching rule is used."
 }

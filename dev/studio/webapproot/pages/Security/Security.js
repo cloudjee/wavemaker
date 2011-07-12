@@ -17,8 +17,8 @@ dojo.provide("wm.studio.pages.Security.Security");
 dojo.declare("Security", wm.Page, {
         i18n: true,
 	start: function() {
-	    this.SELECT_ONE = this.getDictionaryItem("MENU_SELECT_ONE");
-	    this.NO_VALUE   = this.getDictionaryItem("MENU_NO_VALUE");
+    this.SELECT_ONE = this.getDictionaryItem("MENU_SELECT_ONE");
+    this.NO_VALUE   = this.getDictionaryItem("MENU_NO_VALUE");
 		this.loginTemplateFolder = dojo.moduleUrl("wm.studio.app") + "templates/security/";
 		this.loginPageTemplateFolder = this.loginTemplateFolder + "pages/Login/";
 		this.populatingOptions = false;
@@ -33,6 +33,7 @@ dojo.declare("Security", wm.Page, {
 		    this.saveButton.setBorder("0");
 		});
 	    }
+ 		this._setDataTypes();   
 	},
 
 	showUIDHelp1: function() {
@@ -583,10 +584,7 @@ dojo.declare("Security", wm.Page, {
 		}
 	},
 	populateRolesSetup: function() {
-		if(this.isJOSSO())
-		  studio.securityConfigService.requestAsync("getJOSSORoles", null, dojo.hitch(this, "getRolesResult"));	
-		else
-		  studio.securityConfigService.requestAsync("getRoles", null, dojo.hitch(this, "getRolesResult"));	
+		  studio.securityConfigService.requestAsync("getRoles", this.isJOSSO(), dojo.hitch(this, "getRolesResult"));	
 	},
 	getRolesResult: function(inResponse) {
 		this.roleList.renderData(inResponse);
@@ -642,10 +640,7 @@ dojo.declare("Security", wm.Page, {
 		}
 	},
 	updateRoles: function() {
-		if (this.isJOSSO())
-		  studio.securityConfigService.requestSync("getJOSSORoles", [], dojo.hitch(this, "getRolesUpdateResult"));
-	  else
-	   	studio.securityConfigService.requestSync("getRoles", [], dojo.hitch(this, "getRolesUpdateResult"));
+   	studio.securityConfigService.requestSync("getRoles", this.isJOSSO(), dojo.hitch(this, "getRolesUpdateResult"));
 	},
 	getRolesUpdateResult: function(inData) {
 		wm.roles = inData || [];
@@ -852,5 +847,104 @@ dojo.declare("Security", wm.Page, {
 	return 5; //  1 tick is very fast; this is 5 times slower than that
     },
 
-	_end: 0
+	buttonAdvancedClick: function(inSender) {
+	try {
+		  this.layersBottom.setLayerByName("layerAdvanced");		  
+	  } catch(e) {
+		  console.error('ERROR IN buttonAdvancedClick: ' + e); 
+	  } 
+  },
+  layerAdvancedShow: function(inSender) {
+	  try {
+	  	var msg = "Server side role access configuration <br> First matching rule is used.";
+	  	this.labAdvInfo.setCaption(msg);
+    	studio.securityConfigService.requestSync("getSecurityFilterODS", null, 
+    		dojo.hitch(this, "getSecurityFilterODSResult"));	  
+        studio.servicesService.requestSync("listServices", null, dojo.hitch(this, "listServicesResult"));    
+	      studio.securityConfigService.requestAsync("getRoles", this.isJOSSO(), dojo.hitch(this, "getAdvRolesResult"));			  
+	  } catch(e) {
+		  console.error('ERROR IN layerAdvancedShow: ' + e); 
+	  } 
+  },
+  getSecurityFilterODSResult: function(inResponse){
+  	//to entry data
+  	//varURLMap entry Data
+  	
+  	  this.varUrlMap.setData(inResponse);
+  }, 
+  getAdvRolesResult: function(inResponse){
+  	var roleData = [];
+  	var numRoles = inResponse.length;
+  	if( numRoles > 0){
+	  	for(i=0; i<numRoles; i++){
+  			roleData.push({name: inResponse[i], dataValue: "ROLE_" + inResponse[i]});
+  		}
+  		// Add anon and fully authenticated
+  		roleData.push({name: "Anonymous Users", dataValue: "IS_AUTHENTICATED_ANONYMOUSLY"}); 
+  		roleData.push({name: "Only Authenticated Users", dataValue: "IS_AUTHENTICATED_FULLY"}); 
+  		this.varRoleList.setData(roleData);
+  	}
+  	else{ //no roles returned
+  		app.toastInfo(this.getDictionaryItem("WARN_NO_ROLES"), 1000);
+  	}
+  },
+  listServicesResult: function(inResponse){
+  	var servData = [];
+  	var numServ = inResponse.length;
+  	if( numServ > 0 ) {
+  		for(i=0; i<numServ; i++){
+  			servData.push({name: inResponse[i], dataValue: "/" + inResponse[i] + ".json"});
+  		}
+  		//Add default *.json option
+			servData.push({name: "All other Services", dataValue: "/*.json"});
+	    this.varServList.setData(servData);
+ 	   	}
+  	else {
+  		app.toastInfo(this.getDictionaryItem("WARN_NO_SERVICES"), 1000);
+  		}
+  },
+  buttonAddRuleClick: function(inSender) {
+	  try {
+     studio.securityConfigService.requestAsync("addODSMapEntry", [this.selectService.selectedItem.data.dataValue,
+     		this.selectAccess.selectedItem.data.dataValue], dojo.hitch(this, "addRuleResult"));			  
+	  } catch(e) {
+		  console.error('ERROR IN buttonAddRuleClick: ' + e); 
+	  } 
+  },
+  addRuleResult: function(inResponse) {
+   	studio.securityConfigService.requestSync("getSecurityFilterODS", null, 
+    		dojo.hitch(this, "getSecurityFilterODSResult"));	
+  },
+  buttonDelRuleClick: function(inSender) {
+	  try {
+	  	studio.securityConfigService.requestAsync("deleteODSMapEntry", [this.listURLMap.selectedItem.data.URL], dojo.hitch(this, "delRuleResult"));
+	  } catch(e) {
+		  console.error('ERROR IN buttonDelRuleClick: ' + e); 
+	  } 
+  },
+  delRuleResult: function(inResponse) {
+   	studio.securityConfigService.requestSync("getSecurityFilterODS", null, 
+    		dojo.hitch(this, "getSecurityFilterODSResult"));	
+  },
+  buttonAdvExitClick: function(inSender) {
+	  try {
+	  	//exit, NO save
+		  this.layersBottom.setLayerByName("layerRoles");		  
+	  } catch(e) {
+		  console.error('ERROR IN buttonAdvExitClick: ' + e); 
+	  } 
+  },
+  listURLMapSelect: function(inSender) {
+		this.buttonDelRule.setDisabled(false); 
+  },
+  listURLMapDeselect: function(inSender) {
+		this.buttonDelRule.setDisabled(true); 
+  },
+  _setDataTypes: function() {
+		wm.typeManager.addType("com.wavemaker.studio.SecurityConfigService$SecurityURLMap", {internal: true, fields: {
+			URL: {type: "java.lang.String", isObject: false, isList: false},
+			attributes: {type: "java.lang.String", isObject: false, isList: false}
+			}}
+		)},
+  _end: 0
 });

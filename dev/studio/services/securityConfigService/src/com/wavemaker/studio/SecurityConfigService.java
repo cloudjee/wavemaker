@@ -327,6 +327,14 @@ public class SecurityConfigService {
     	}
     }
     
+    public List<String> getRoles(Boolean isJoSSO) throws IOException, JAXBException {
+        if(Boolean.valueOf("true")){
+      	 return getSecToolsMgr().getJOSSORoles();
+        }
+        else
+    	return getSecToolsMgr().getRoles();
+    }
+    
     public List<String> getRoles() throws IOException, JAXBException {
         return getSecToolsMgr().getRoles();
     }
@@ -343,6 +351,13 @@ public class SecurityConfigService {
 		getSecToolsMgr().setJOSSORoles(roles);
 	}
 	
+	/**
+	 * Get the current Object Definition Map.
+	 * Only the first attribute per URL is returned.
+	 * @return The projects Object Definition Source URL Map
+	 * @throws JAXBException
+	 * @throws IOException
+	 */
 	public List<SecurityURLMap> getSecurityFilterODS()throws JAXBException, IOException {
 		Map<String, List<String>> urlMap = getSecToolsMgr()
 				.getSecurityFilterODS();
@@ -350,32 +365,86 @@ public class SecurityConfigService {
 		for (String url : urlMap.keySet()) {
 			SecurityURLMap secMap = new SecurityURLMap();
 			secMap.setURL(url);
-			secMap.setAttributes(urlMap.get(url));
+			List<String> attributes = urlMap.get(url);
+			secMap.setAttributes(attributes.get(0));
 			securityURLMap.add(secMap);
 		}
 		return securityURLMap;
 	}
 
-	 public void setSecurityFilterODS(List<SecurityURLMap> securityURLMap)
+	/**
+	 * Adds a new URL Rule to the ODS Filter Map. New entries go after all entries except the default entry.
+	 * @param newEntry SecurityURLMap to be added to top of Filter Map
+	 */
+	public void addODSMapEntry(String URL, String attributes) throws
+	JAXBException, IOException {
+		SecurityURLMap newEntry = new SecurityURLMap(URL, attributes);
+		List<SecurityURLMap> odsMap = getSecurityFilterODS();
+		odsMap.add(newEntry);
+		setSecurityFilterODS(odsMap);
+	}
+	
+	/**
+	 * Remove the first rule matching the URL passed from the ODS Filter Map 
+	 * @param deleteMe
+	 */
+	public void deleteODSMapEntry(String deleteURL) throws
+	JAXBException, IOException {
+			List<SecurityURLMap> odsMap = getSecurityFilterODS();
+			SecurityURLMap newMap = new SecurityURLMap(deleteURL);
+			odsMap.remove(newMap);
+			setSecurityFilterODS(odsMap);
+		
+	}
+	/**
+	 * Set a new Object Definition Source Filter. Replaces previous definition.
+	 * Only a single attribute per URL is supported by this interface.
+	 * @param securityURLMap The new Object Definition Source URL map
+	 * @param preserveOrder Preserve map order
+	 * @throws JAXBException
+	 * @throws IOException
+	 */
+
+	 public void setSecurityFilterODS(List<SecurityURLMap> securityURLMap, Boolean preserveOrder)
 	 throws JAXBException, IOException {
 		Map<String, List<String>> urlMap = new LinkedHashMap<String, List<String>>();
 		Iterator<SecurityURLMap> itr = securityURLMap.iterator();
 		while (itr.hasNext()) {
 			SecurityURLMap thisEntry = itr.next();
-			urlMap.put(thisEntry.getURL(), thisEntry.getAttributes());
-			System.out.println("URL: " + thisEntry.getURL());
-			Iterator<String> iter = thisEntry.getAttributes().iterator();
-			while (iter.hasNext()) {
-				System.out.println("Attribute: " + iter.next());
-			}
+			List<String> attributes = new ArrayList<String>();
+			attributes.add(thisEntry.getAttributes());
+			urlMap.put(thisEntry.getURL().trim(), attributes);
+		}
+		//ensure *.json is last if present unless preserve oder specified 
+		if(preserveOrder.booleanValue() == false && (urlMap.get("/*.json") != null)){ 
+			System.out.println("Moving /*.json entry");
+			List<String> jsonEntry = urlMap.remove("/*.json");
+			urlMap.put("/*.json", jsonEntry);
+			//TODO: Ensure puts in correct place
 		}
 		getSecToolsMgr().setSecurityFilterODS(urlMap);
 	}
+	 
+	 public void setSecurityFilterODS(List<SecurityURLMap> securityURLMap)
+	 throws JAXBException, IOException {
+		 setSecurityFilterODS(securityURLMap, Boolean.valueOf("false"));
+	 }
 	
 	public class SecurityURLMap {
 		private String URL;
-		private List<String> Attributes;
+		private String Attributes;
 
+		public SecurityURLMap()
+		{
+			
+		}
+		public SecurityURLMap(String URL){
+			this.URL = URL;
+		}
+		public SecurityURLMap(String URL, String Attributes){
+			this.URL = URL;
+			this.Attributes = Attributes;
+		}
 		public String getURL() {
 			return URL;
 		}
@@ -384,11 +453,11 @@ public class SecurityConfigService {
 			this.URL = URL;
 		}
 
-		public List<String> getAttributes() {
+		public String getAttributes() {
 			return Attributes;
 		}
 
-		public void setAttributes(List<String> Attributes) {
+		public void setAttributes(String Attributes) {
 			this.Attributes = Attributes;
 		}
 
