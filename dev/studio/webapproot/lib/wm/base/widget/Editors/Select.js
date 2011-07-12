@@ -459,7 +459,9 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		else if (this.restrictValues && display && !this.dataValue) valid = false;
 		else valid = true;
 	    }
-	    this.validatorNode.style.display = !valid ? "block" : "none";
+	    /* Clear invalid flag if its now valid; don't set invalid flag until dojo decides its time to set it */
+	    if (valid)
+		this.validatorNode.style.display = "none";
 	    return !valid;
 	},
 
