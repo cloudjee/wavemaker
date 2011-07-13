@@ -15,6 +15,7 @@
 dojo.provide("wm.studio.pages.Security.Security");
 
 dojo.declare("Security", wm.Page, {
+    
         i18n: true,
 	start: function() {
     this.SELECT_ONE = this.getDictionaryItem("MENU_SELECT_ONE");
@@ -34,6 +35,15 @@ dojo.declare("Security", wm.Page, {
 		});
 	    }
  		this._setDataTypes();   
+
+	    if (!wm.typeManager.types["com.wavemaker.studio.SecurityServiceMap"]) {
+		wm.typeManager.addType("com.wavemaker.studio.SecurityServiceMap", {internal: true, fields: {
+		    URL: {type: "java.lang.String", isObject: false, isList: false},
+		    name: {type: "java.lang.String", isObject: false, isList: false},
+		    attributes: {type: "java.lang.String", isObject: false, isList: false}
+		}});
+	    }
+
 	},
 
 	showUIDHelp1: function() {
@@ -830,6 +840,7 @@ dojo.declare("Security", wm.Page, {
 					return;			
 		}
 			this.saveRolesSetup();
+			this.saveServicesSetup();
 			studio.application.loadServerComponents();
 			studio.refreshServiceTree();
 		    });
@@ -847,6 +858,7 @@ dojo.declare("Security", wm.Page, {
 	return 5; //  1 tick is very fast; this is 5 times slower than that
     },
 
+/*
 	buttonAdvancedClick: function(inSender) {
 	try {
 		  this.layersBottom.setLayerByName("layerAdvanced");		  
@@ -854,24 +866,72 @@ dojo.declare("Security", wm.Page, {
 		  console.error('ERROR IN buttonAdvancedClick: ' + e); 
 	  } 
   },
-  layerAdvancedShow: function(inSender) {
-	  try {
-	  	var msg = "Server side role access configuration <br> First matching rule is used.";
-	  	this.labAdvInfo.setCaption(msg);
-    	studio.securityConfigService.requestSync("getSecurityFilterODS", null, 
-    		dojo.hitch(this, "getSecurityFilterODSResult"));	  
-        studio.servicesService.requestSync("listServices", null, dojo.hitch(this, "listServicesResult"));    
-	      studio.securityConfigService.requestAsync("getRoles", this.isJOSSO(), dojo.hitch(this, "getAdvRolesResult"));			  
-	  } catch(e) {
-		  console.error('ERROR IN layerAdvancedShow: ' + e); 
-	  } 
+  */
+  servicesLayerShow: function(inSender) {
+      try {	  
+	  studio.beginWait(this.getDictionaryItem("WAIT_SERVICE_LIST"));
+/*
+	  var msg = "Server side role access configuration <br> First matching rule is used.";
+	  this.labAdvInfo.setCaption(msg);
+	  */
+	  wm.onidle(this, function() {
+    	      studio.securityConfigService.requestSync("getSecurityFilterODS", null, 
+    						       dojo.hitch(this, "getSecurityFilterODSResult"));	  
+              //studio.servicesService.requestSync("listServices", null, dojo.hitch(this, "listServicesResult"));    
+	      var serviceList = [{name: this.getDictionaryItem("SERVICE_DATABASE_SERVICES_NAME"),
+				  URL: "/runtimeServices.json",
+				  attributes: this.findServiceSecurityForService("runtimeServices")}];
+
+	      studio.tree.forEachNode(dojo.hitch(this, function(node) {
+		  if (node.component instanceof wm.ServerComponent && node.component instanceof wm.DataModel == false) 
+		      serviceList.push({name: node.component.name,
+					URL: "/" + wm.decapitalize(node.component.name) + ".json",
+					attributes: this.findServiceSecurityForService(node.component.name)});
+	      }));
+
+	      serviceList.push({name: "All other Services", URL: "/*.json", attributes: "IS_AUTHENTICATED_ANONYMOUSLY"});
+	      this.varServList.setData(serviceList);
+
+	      /* Get the role list */
+	      var d = this.roleList._data;
+	      if (d == null) {
+		  d = [];
+	      }
+	      var data = [{name: this.getDictionaryItem("SERVICE_DEFAULT_SETTING"), dataValue: ""},
+			  {name: this.getDictionaryItem("SERVICE_ANONYMOUS_USERS"), dataValue: "IS_AUTHENTICATED_ANONYMOUSLY"},
+			  {name: this.getDictionaryItem("SERVICE_AUTHENTICATED_USERS"), dataValue: "IS_AUTHENTICATED_FULLY"}];
+	      for (var i = 0; i < d.length; i++) {
+		  data.push({name: d[i], dataValue: "ROLE_" + d[i]});
+	      }
+	      this.varRoleList.setData(data);
+
+	      //studio.securityConfigService.requestSync("getRoles", this.isJOSSO(), dojo.hitch(this, "getAdvRolesResult"));			  
+	      studio.endWait();
+	      this.serviceListSelect(this.serviceList);
+	  });
+
+      } catch(e) {
+	  console.error('ERROR IN layerAdvancedShow: ' + e); 
+      } 
   },
+    serviceListSelect: function(inSender) {
+	var selectedData = inSender.selectedItem.getData();
+	if (selectedData) {
+	    this.servicesSettingsPanel.show();
+	    this.servicesInnerHeader.setCaption(this.getDictionaryItem("SERVICE_TITLE_AND_NAME", {serviceName: selectedData.name}));
+	} else {
+	    this.servicesInnerHeader.setCaption(this.getDictionaryItem("SERVICE_TITLE"));
+	    this.servicesSettingsPanel.hide();
+	}
+    },
   getSecurityFilterODSResult: function(inResponse){
   	//to entry data
   	//varURLMap entry Data
   	
-  	  this.varUrlMap.setData(inResponse);
+      this._urlMap = dojo.clone(inResponse);
+      this.varUrlMap.setData(inResponse);
   }, 
+/*
   getAdvRolesResult: function(inResponse){
   	var roleData = [];
   	var numRoles = inResponse.length;
@@ -880,29 +940,46 @@ dojo.declare("Security", wm.Page, {
   			roleData.push({name: inResponse[i], dataValue: "ROLE_" + inResponse[i]});
   		}
   		// Add anon and fully authenticated
-  		roleData.push({name: "Anonymous Users", dataValue: "IS_AUTHENTICATED_ANONYMOUSLY"}); 
-  		roleData.push({name: "Only Authenticated Users", dataValue: "IS_AUTHENTICATED_FULLY"}); 
   		this.varRoleList.setData(roleData);
   	}
   	else{ //no roles returned
   		app.toastInfo(this.getDictionaryItem("WARN_NO_ROLES"), 1000);
   	}
   },
+  */
+    findServiceSecurityForService: function(inName) {
+	for (var i = 0; i < this._urlMap.length; i++) {
+	    var str = this._urlMap[i];
+	    var realName;
+	    if (str.URL.indexOf("/") == 0 && str.URL.match(/\.(json|download|upload)$/)) {
+		realName = str.URL.substring(1, str.URL.indexOf("."));
+	    }
+	    if (realName == inName) {
+		return str.attributes;
+	    }
+	}
+    },
+/*
   listServicesResult: function(inResponse){
   	var servData = [];
   	var numServ = inResponse.length;
   	if( numServ > 0 ) {
   		for(i=0; i<numServ; i++){
-  			servData.push({name: inResponse[i], dataValue: "/" + inResponse[i] + ".json"});
+		    
+  		    servData.push({attributes: this.findServiceSecurityForService(inResponse[i]),
+				   name: inResponse[i], 
+				   URL: "/" + inResponse[i] + ".json"});
   		}
   		//Add default *.json option
-			servData.push({name: "All other Services", dataValue: "/*.json"});
+	    servData.push({name: "All other Services", URL: "/*.json", attributes: "IS_AUTHENTICATED_ANONYMOUSLY"});
 	    this.varServList.setData(servData);
  	   	}
   	else {
   		app.toastInfo(this.getDictionaryItem("WARN_NO_SERVICES"), 1000);
   		}
   },
+  */
+/*
   buttonAddRuleClick: function(inSender) {
 	  try {
      studio.securityConfigService.requestAsync("addODSMapEntry", [this.selectService.selectedItem.data.dataValue,
@@ -934,6 +1011,77 @@ dojo.declare("Security", wm.Page, {
 		  console.error('ERROR IN buttonAdvExitClick: ' + e); 
 	  } 
   },
+  */
+
+/* When the settings are changed, update the data in varServList; varServList should
+ * 1. Store all data we read from the server
+ * 2. Store all changes to the data we read from the server
+ * 3. Be used to generate the data we write back to the server
+ */
+    serviceSettingsChange: function(inSender) {
+	var value = inSender.getDataValue();
+	var index = this.serviceList.getSelectedIndex();
+	if (index >= 0) {
+	    var oldValue = this.serviceList.dataSet.getItem(index).getValue("attributes");
+	    if (oldValue != value) {
+		this.serviceList.dataSet.getItem(index).setValue("attributes", value);
+		this.serviceList.selectByIndex(index);
+	    }
+	}
+    },
+    saveServicesSetup: function() {
+	/* TODO: Remove from submission any "DEFAULT" values */
+	var databaseServiceURL = "/runtimeServices.json"; // don't use the name as it will be localized
+	var data = this.varServList.getData();
+	var sendData = [];
+	var databaseAttributes = "";
+
+	/* This block determines the logic for setting /*.json security (default security) */
+	var starAttributes;
+	if (!this.secEnableInput.editor.getChecked()) {
+	    starAttributes = "IS_AUTHENTICATED_ANONYMOUSLY";
+	} else if (!this.showLoginPageInput.editor.getChecked()) {
+	    starAttributes = "IS_AUTHENTICATED_FULLY";
+	} else {
+	    starAttributes = "IS_AUTHENTICATED_FULLY";
+	}
+
+	for (var i = 0; i < data.length; i++) {
+	    if (data[i].attributes) {
+		sendData.push(data[i].URL + ":" + data[i].attributes);
+		if (data[i].URL == databaseServiceURL) {
+		    databaseAttributes = data[i].attributes;
+/*
+		} else if (data[i].URL == "/*.json") {
+		    starAttributes = data[i].attributes
+		    */
+		}
+	    }
+	}
+	/* Add in all database services */
+	if (databaseAttributes) {
+	    var components = studio.application.getServerComponents();
+	    for (var i = 0; i < components.length; i++) {
+		if (components[i] instanceof wm.DataModel) {
+		    sendData.push("/" + components[i].name + ".json:" + databaseAttributes);		
+		}
+	    }
+	}
+
+	sendData.push("/*.json:" + starAttributes);
+	sendData.push("/*.upload:" + starAttributes);
+	sendData.push("/*.download:" + starAttributes);
+
+	studio.securityConfigService.requestSync("setSecurityFilterODS", [sendData], 
+				       dojo.hitch(this, "saveServicesSetupSuccess"),
+				       dojo.hitch(this, "saveServicesSetupError"));
+    },
+    saveServicesSetupSuccess: function() {
+    },
+    saveServicesSetupError: function(inError) {
+	studio._saveErrors.push({owner: this,
+				 message: inError.message});
+    },
   listURLMapSelect: function(inSender) {
 		this.buttonDelRule.setDisabled(false); 
   },

@@ -62,7 +62,7 @@
 	background-position: center;
 }
 
-.Security .Security-demoUserList, .Security .Security-roleList .Security .Security-listURLMap {
+.Security .Security-demoUserList, .Security .Security-roleList, .Security .Security-listURLMap, .Security .Security-serviceList {
 	background-color: #FFFFFF;
 	color: #000000;
 }

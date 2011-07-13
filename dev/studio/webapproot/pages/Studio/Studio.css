@@ -1467,6 +1467,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 	color: #FFF;
 }
 
+.Studio .Security-tabs > .wmtablayers-tabbar,
 #studio_left > .wmtablayers-tabbar,
 #studio_tabs > .wmtablayers-tabbar,
 #studio_themesPage_themeDesigner_demoPanelTabLayers .wmtablayers-tabbar,
@@ -1489,6 +1490,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#5D6778', endColorstr='#BDC7D8');
 }
 
+.Studio .Security-tabs > .wmtablayers-tabbar,
 #studio_left > .wmtablayers-tabbar,
 #studio_tabs > .wmtablayers-tabbar,
 #studio_themesPage_themeDesigner_demoPanelTabLayers .wmtablayers-tabbar,
@@ -1524,6 +1526,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
     margin-top: 5px !important;
 }
 
+.Studio .Security-tabs > .wmtablayers-tabbar > .wmtablayers-tab,
 #studio_left > .wmtablayers-tabbar >  .wmtablayers-tab,
 #studio_themesPage_themeDesigner_demoPanelTabLayers > .wmtablayers-tabbar > .wmtablayers-tab,
 .JavaEditor-logTabs .wmtablayers-tab,
@@ -1556,6 +1559,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
     padding: 2px 5px 3px 5px;
 }
 
+.dj_ff3 .Studio .Security-tabs > .wmtablayers-tabbar,
 .dj_ff3 #studio_tabs > .wmtablayers-tab,
 .dj_ff3 #studio_left > .wmtablayers-tab,
 .dj_ff3 .#studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-tab,
@@ -1572,6 +1576,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 }
 
 
+.Studio .Security-tabs > .wmtablayers-tabbar > .wmtablayers-selected,
 #studio_left > .wmtablayers-tabbar > .wmtablayers-selected,
 #studio_tabs > .wmtablayers-tabbar >  .wmtablayers-selected,
 #studio_themesPage_themeDesigner_demoPanelTabLayers > .wmtablayers-tabbar > .wmtablayers-selected,

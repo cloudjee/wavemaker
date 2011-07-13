@@ -36,5 +36,12 @@ DEMO_USER_ROLE: "Role",
 
 WARN_NO_ROLES: "No Roles Found",
 WARN_NO_SERVICES: "No Project Services Found",
-INFO_ABOUT_ADVSECROLES: "Server side role access configuration <br> First matching rule is used."
+    INFO_ABOUT_ADVSECROLES: "Server side role access configuration <br> First matching rule is used.",
+    WAIT_SERVICE_LIST: "Loading service list",
+    SERVICE_ANONYMOUS_USERS: "Anonymous Users",
+    SERVICE_AUTHENTICATED_USERS: "Only Authenticated Users" ,
+    SERVICE_TITLE_AND_NAME: "Service <b>${serviceName}</b> Settings",
+    SERVICE_TITLE: "Service Settings",
+    SERVICE_DEFAULT_SETTING: "Default",
+    SERVICE_DATABASE_SERVICES_NAME: "Database Services"
 }

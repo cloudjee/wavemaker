@@ -287,10 +287,10 @@ Security.widgets = {
 			    servicesInnerHeader: ["wm.Label", {caption: "", width: "100%", height: "24px"}],
 			    servicesBevel: ["wm.Bevel", {}],
 			    servicesSettingsPanel: ["wm.Panel", {width: "100%", height: "100%",verticalAlign: "top", horizontalAlign: "left", layoutKind: "top-to-bottom"},{},{
-				selectAccess: ["wm.SelectMenu", {"caption":"Who can access","width":"260px", displayField: "name", dataField: "dataValue"}, {}, {
+				selectAccess: ["wm.SelectMenu", {"caption":"Who can access","width":"260px", displayField: "name", dataField: "dataValue"}, {onchange: "serviceSettingsChange"}, {
 				    binding: ["wm.Binding", {}, {}, {
 					wire: ["wm.Wire", {"expression":undefined,"source":"varRoleList","targetProperty":"dataSet"}, {}],
-					wire2: ["wm.Wire", {"expression":undefined,"expression":"${serviceList.selectedItem.attributes} || 'IS_AUTHENTICATED_FULLY'","targetProperty":"dataValue"}, {}]
+					wire2: ["wm.Wire", {"expression":undefined,"expression":"${serviceList.selectedItem.attributes} || ''","targetProperty":"dataValue"}, {}]
 				    }]
 				}]
 			    }]
