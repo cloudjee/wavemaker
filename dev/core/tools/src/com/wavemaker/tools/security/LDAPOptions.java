@@ -37,6 +37,20 @@ public class LDAPOptions {
     
     private String groupSearchFilter;
 
+    private String roleModel;
+    
+    private String roleEntity;
+    
+    private String roleTable;
+    
+    private String roleUsername;
+    
+    private String roleProperty;
+    
+    private String roleQuery;
+    
+    private String roleProvider;    
+    
     public String getLdapUrl() {
         return ldapUrl;
     }
@@ -100,4 +114,61 @@ public class LDAPOptions {
     public void setGroupSearchFilter(String groupSearchFilter) {
         this.groupSearchFilter = groupSearchFilter;
     }
+
+	public String getRoleModel() {
+		return roleModel;
+	}
+
+	public void setRoleModel(String roleModel) {
+		this.roleModel = roleModel;
+	}
+
+	public String getRoleEntity() {
+		return roleEntity;
+	}
+
+	public void setRoleEntity(String roleEntity) {
+		this.roleEntity = roleEntity;
+	}
+	
+	public String getRoleTable() {
+		return roleTable;
+	}
+
+	public void setRoleTable(String roleTable) {
+		this.roleTable = roleTable;
+	}
+
+	public String getRoleUsername() {
+		return roleUsername;
+	}
+
+	public void setRoleUsername(String roleUsername) {
+		this.roleUsername = roleUsername;
+	}
+
+	public String getRoleProperty() {
+		return roleProperty;
+	}
+
+	public void setRoleProperty(String roleProperty) {
+		this.roleProperty = roleProperty;
+	}
+	
+	public String getRoleQuery() {
+		return roleQuery;
+	}
+
+	public void setRoleQuery(String roleQuery) {
+		this.roleQuery = roleQuery;
+	}
+
+	public String getRoleProvider() {
+		return roleProvider;
+	}
+
+	public void setRoleProvider(String roleProvider) {
+		this.roleProvider = roleProvider;
+	}
+    
 }

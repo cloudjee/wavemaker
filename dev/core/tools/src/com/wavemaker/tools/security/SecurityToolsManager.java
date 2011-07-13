@@ -223,8 +223,8 @@ public class SecurityToolsManager {
         Beans beans = null;
         try {
             beans = getAcegiSpringBeans(false);
-        } catch (UnmarshalException e) {
-            return null; // project-security.xml must be setting to DTD
+        }catch (UnmarshalException e) {
+        	return null; // project-security.xml must be setting to DTD
         }
         if (beans == null || beans.getBeanList().isEmpty()) { // project-security.xml is empty
         	if(this.getJOSSORoles().isEmpty())
@@ -240,16 +240,13 @@ public class SecurityToolsManager {
         GeneralOptions options = new GeneralOptions();
         options.setEnforceSecurity(SecuritySpringSupport.isSecurityEnforced(beans));
         options.setEnforceIndexHtml(SecuritySpringSupport.isIndexHtmlEnforced(beans));
-        options.setDataSourceType(
-                SecuritySpringSupport.getDataSourceType(beans));
+        options.setDataSourceType(SecuritySpringSupport.getDataSourceType(beans));
         return options;
     }
 
-    public void setGeneralOptions(boolean enforceSecurity, boolean enforceIndexHtml)
-            throws IOException, JAXBException {
+    public void setGeneralOptions(boolean enforceSecurity, boolean enforceIndexHtml) throws IOException, JAXBException {
         Beans beans = getAcegiSpringBeans(true);
-        SecuritySpringSupport.setSecurityResources(beans, enforceSecurity,
-                enforceIndexHtml);
+        SecuritySpringSupport.setSecurityResources(beans, enforceSecurity,enforceIndexHtml);
         saveAcegiSpringBeans(beans);
     }
     
@@ -414,8 +411,7 @@ public class SecurityToolsManager {
         saveAcegiSpringBeans(beans);
     }
 
-    public DatabaseOptions getDatabaseOptions() throws IOException,
-            JAXBException {
+    public DatabaseOptions getDatabaseOptions() throws IOException,JAXBException {
         Beans beans = getAcegiSpringBeans(false);
         return SecuritySpringSupport.constructDatabaseOptions(beans);
     }
@@ -426,11 +422,8 @@ public class SecurityToolsManager {
             String roleColumnName, String rolesByUsernameQuery)
             throws JAXBException, IOException {
         Beans beans = getAcegiSpringBeans(true);
-        SecuritySpringSupport.updateAuthProviderUserDetailsService(beans,
-                SecuritySpringSupport.JDBC_DAO_IMPL_BEAN_ID);
-        SecuritySpringSupport.updateJdbcDaoImpl(beans, modelName, tableName,
-                unameColumnName, uidColumnName, uidColumnSqlType, pwColumnName,
-                roleColumnName, rolesByUsernameQuery);
+        SecuritySpringSupport.updateAuthProviderUserDetailsService(beans,SecuritySpringSupport.JDBC_DAO_IMPL_BEAN_ID);
+        SecuritySpringSupport.updateJdbcDaoImpl(beans, modelName, tableName, unameColumnName, uidColumnName, uidColumnSqlType, pwColumnName,roleColumnName, rolesByUsernameQuery);
         saveAcegiSpringBeans(beans);
     }
 
@@ -481,20 +474,41 @@ public class SecurityToolsManager {
         return SecuritySpringSupport.constructLDAPOptions(beans);
     }
 
+    /**
+     * Function for backwards compatibility (for functions that call this function without the DB authorization parameters)
+     * @param ldapUrl
+     * @param managerDn
+     * @param managerPassword
+     * @param userDnPattern
+     * @param groupSearchDisabled
+     * @param groupSearchBase
+     * @param groupRoleAttribute
+     * @param groupSearchFilter
+     * @throws IOException
+     * @throws JAXBException
+     */
     public void configLDAP(String ldapUrl, String managerDn,
             String managerPassword, String userDnPattern,
             boolean groupSearchDisabled, String groupSearchBase,
             String groupRoleAttribute, String groupSearchFilter)
             throws IOException, JAXBException {
+    	configLDAP(ldapUrl, managerDn, managerPassword, userDnPattern, groupSearchDisabled, groupSearchBase, groupRoleAttribute, groupSearchFilter, "", "", "","","","","");    	
+    }
+    
+    
+    public void configLDAP(String ldapUrl, String managerDn,
+            String managerPassword, String userDnPattern,
+            boolean groupSearchDisabled, String groupSearchBase,
+            String groupRoleAttribute, String groupSearchFilter,
+            String roleModel, String roleEntity, String roleTable,
+            String roleUsername, String roleProperty,
+            String roleQuery, String roleProvider)
+            throws IOException, JAXBException {
         Beans beans = getAcegiSpringBeans(true);
-        SecuritySpringSupport.setAuthManagerProviderBeanId(beans,
-                SecuritySpringSupport.LDAP_AUTH_PROVIDER_BEAN_ID);
-        SecuritySpringSupport.updateLDAPDirContext(beans, ldapUrl, managerDn,
-                managerPassword);
-        SecuritySpringSupport.updateLDAAuthProvider(beans, userDnPattern,
-                groupSearchDisabled, groupSearchBase, groupRoleAttribute,
-                groupSearchFilter);
-        SecuritySpringSupport.resetJdbcDaoImpl(beans);
+        SecuritySpringSupport.setAuthManagerProviderBeanId(beans, SecuritySpringSupport.LDAP_AUTH_PROVIDER_BEAN_ID);
+        SecuritySpringSupport.updateLDAPDirContext(beans, ldapUrl, managerDn, managerPassword);
+    	SecuritySpringSupport.updateLDAAuthProvider(beans, userDnPattern, groupSearchDisabled, groupSearchBase, groupRoleAttribute, groupSearchFilter, roleModel, roleEntity, roleTable, roleUsername, roleProperty, roleQuery, roleProvider);
+		SecuritySpringSupport.resetJdbcDaoImpl(beans);
         saveAcegiSpringBeans(beans);
     }
 
