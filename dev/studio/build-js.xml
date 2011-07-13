@@ -88,7 +88,7 @@
        		<arg value="releaseDir=${dojo.release.dir}"/>
        		<arg value="profileFile=${basedir}/webapproot/app/buildUtil/profiles/wm.profile.js"/>
        		<arg value="copyTests=false"/>
-       		<arg value="version=1.5.0.pro"/>
+       		<arg value="version=1.6.1.24595"/>
        		<arg value="action=clean,release"/>
        		<arg value="optimize=shrinksafe"/>
        		<arg value="layerOptimize=shrinksafe.keepLines"/>
@@ -160,7 +160,7 @@
 			<arg value="${dojo.script-path-param}"/>
        		<arg value="releaseDir=${dojo.release.dir}"/>
        		<arg value="profileFile=${basedir}/webapproot/app/buildUtil/profiles/studio.profile.js"/>
-       		<arg value="version=1.5.0.pro"/>
+       		<arg value="version=1.6.1.24595"/>
        		<arg value="copyTests=false"/>
        		<arg value="action=clean,release"/>
        		<arg value="optimize=comments"/>
