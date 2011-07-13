@@ -44,6 +44,8 @@ public class FlowService {
     }
 
     public void importFlows(String host, String port, String userName, String password, String projectName, String sessionId) throws Exception {
+        sessionId = warpLoginService.logIn(host, port, userName, password);
+
         flowSupport.importFlows(host, port, userName, password, projectName, sessionId);
     }
 
