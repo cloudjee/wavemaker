@@ -19,7 +19,10 @@ CustomWebServiceImporter.widgets = {
 	    importLabel: ["wm.Label", {width: "100%", height: "20px", caption: "Step 1. Import list of projects and flows"}],
 	    importPanel: ["wm.Panel", {layoutKind: "top-to-bottom", width: "100%", height: "165px", padding: "10",margin:"0,0,10,0", horizontalAlign: "right", verticalAlign: "middle"}, {onEnterKeyPress: "scanClick"}, {
 		serviceName: ["wm.Text", {width: "100%", caption: "Service Name", captionAlign: "right", captionSize: "120px", dataValue: "InfoteriaFlows",emptyValue: "emptyString"}],
-		importURL: ["wm.Text", {width: "100%", caption: "Import URL", captionAlign: "right", captionSize: "120px", dataValue: "10.18.63.147:21381",emptyValue: "emptyString"}],
+		importHostPanel: ["wm.Panel", {layoutKind: "left-to-right", height: "24px", width: "100%"}, {}, {
+		    importHost: ["wm.Text", {width: "100%", caption: "Import URL", captionAlign: "right", captionSize: "120px", dataValue: "10.18.63.147",emptyValue: "emptyString"}],
+		    importPort: ["wm.Number", {width: "150px", caption: "Port", captionAlign: "right", captionSize: "40px", dataValue: "21381",emptyValue: "emptyString"}]
+		}],
 		userInput: ["wm.Text", {width: "100%", caption: "Username", captionAlign: "right", captionSize: "120px",emptyValue: "emptyString"}],
 		passInput: ["wm.Text", {width: "100%", caption: "Password", captionAlign: "right", captionSize: "120px",emptyValue: "emptyString"}],
 		scanButton: ["wm.Button", {width: "120px", caption: "Read Service"}, {onclick: "scanClick"}]

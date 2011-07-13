@@ -83,11 +83,9 @@ dojo.declare("CustomWebServiceImporter", wm.Page, {
 	    user = "/" + user;
 
 	var pass = this.passInput.getDataValue();
-	var url = this.importURL.getDataValue();
-	var matches = url.split(/\:/);
-	var domain = matches[0];
-	var port = matches[1];
-	var d = this.flowListService.requestAsync("listAllFlows", [domain, port, user, pass]);
+	var host = this.importHost.getDataValue();
+	var port = this.importPort.getDataValue();
+	var d = this.flowListService.requestAsync("listAllFlows", [host, port, user, pass]);
 	d.addCallback(dojo.hitch(this, "listAllFlowsSuccess"));
 	d.addErrback(dojo.hitch(this, "listAllFlowsError"));
     },
@@ -166,6 +164,22 @@ dojo.declare("CustomWebServiceImporter", wm.Page, {
     },
     cancelClick: function() {
 	this.owner.owner.hide();
+    },
+    importClick: function() {
+	var user = this.userInput.getDataValue();
+	if (user.indexOf("/") != 0)
+	    user = "/" + user;
+
+	var pass = this.passInput.getDataValue();
+	var host = this.importHost.getDataValue();
+	var port = this.importPort.getDataValue();
+
+	var projectList = [];
+	this.tree.forEachNode(dojo.hitch(this, function(node) {
+	    if (node.data && node.data.flows !== undefined && node.getChecked())
+		projectList.push(node.data.name)
+	}));
+	var d = this.flowListService.requestAsync("importFlows", [host, port, user, pass, projectList[0], null]);	
     },
     _end: 0
 });
