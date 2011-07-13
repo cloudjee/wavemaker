@@ -29,6 +29,8 @@ public class ProjectConstants {
 
     public static final String PAGES_DIR = "pages";
 
+    public static final String I18N_DIR = "language/nls";
+
     public static final String WEB_INF = "WEB-INF";
 
     public static final String LIB_DIR = "lib";
