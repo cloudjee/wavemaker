@@ -26,13 +26,13 @@ public class LoginService {
 
     //private String sessionId = null;
 
-    public String logIn(String host, String port, String userName, String password/*, String domain*/)
+    public String logIn(String host, String port, String userName, String password, String domain)
             throws Exception {
         String result;
         String sessionId;
 
         String endPointAddress = "http://" + host + ":" + port + "/flow-rest/auth/login.json?user="
-                /*+ domain*/ + userName + "&password=" + password;
+                + domain + userName + "&password=" + password;
         QName thisQName = new QName(endPointAddress, "asteriaServer");
 
         String method = "GET";

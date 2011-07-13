@@ -6,6 +6,7 @@
         <parameter isList="false" typeRef="java.lang.String" name="projectName"/>
         <parameter isList="false" typeRef="java.lang.String" name="userName"/>
         <parameter isList="false" typeRef="java.lang.String" name="password"/>
+        <parameter isList="false" typeRef="java.lang.String" name="domain"/>
         <return isList="false" typeRef="java.lang.String"/>
     </operation>
     <operation name="importFlows">
@@ -13,6 +14,7 @@
         <parameter isList="false" typeRef="java.lang.String" name="port"/>
         <parameter isList="false" typeRef="java.lang.String" name="userName"/>
         <parameter isList="false" typeRef="java.lang.String" name="password"/>
+        <parameter isList="false" typeRef="java.lang.String" name="domain"/>
         <parameter isList="false" typeRef="java.lang.String" name="projectName"/>
         <parameter isList="false" typeRef="java.lang.String" name="sessionId"/>
     </operation>
@@ -21,6 +23,7 @@
         <parameter isList="false" typeRef="java.lang.String" name="port"/>
         <parameter isList="false" typeRef="java.lang.String" name="userName"/>
         <parameter isList="false" typeRef="java.lang.String" name="password"/>
+        <parameter isList="false" typeRef="java.lang.String" name="domain"/>
         <return isList="false" typeRef="java.lang.String"/>
     </operation>
     <operation name="listProjects">
@@ -28,6 +31,7 @@
         <parameter isList="false" typeRef="java.lang.String" name="port"/>
         <parameter isList="false" typeRef="java.lang.String" name="userName"/>
         <parameter isList="false" typeRef="java.lang.String" name="password"/>
+        <parameter isList="false" typeRef="java.lang.String" name="domain"/>
         <return isList="false" typeRef="java.lang.String"/>
     </operation>
     <dataobjects/>

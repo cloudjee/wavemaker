@@ -11,6 +11,7 @@
         <parameter isList="false" typeRef="java.lang.String" name="port"/>
         <parameter isList="false" typeRef="java.lang.String" name="userName"/>
         <parameter isList="false" typeRef="java.lang.String" name="password"/>
+        <parameter isList="false" typeRef="java.lang.String" name="domain"/>
         <return isList="false" typeRef="java.lang.String"/>
     </operation>
     <dataobjects/>

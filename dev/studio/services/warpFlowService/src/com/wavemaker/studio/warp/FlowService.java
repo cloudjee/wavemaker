@@ -24,29 +24,29 @@ public class FlowService {
     private LoginService warpLoginService;
     private FlowSupport flowSupport;
 
-    public String listProjects(String host, String port, String userName, String password) throws Exception {
-        String sessionId = warpLoginService.logIn(host, port, userName, password);
+    public String listProjects(String host, String port, String userName, String password, String domain) throws Exception {
+        String sessionId = warpLoginService.logIn(host, port, userName, password, domain);
 
         return flowSupport.listProjects(host, port, sessionId);
     }
 
-    public String listFlows(String host, String port, String projectName, String userName, String password)
+    public String listFlows(String host, String port, String projectName, String userName, String password, String domain)
             throws Exception {
-        String sessionId = warpLoginService.logIn(host, port, userName, password);
+        String sessionId = warpLoginService.logIn(host, port, userName, password, domain);
 
         return flowSupport.listFlows(host, port, projectName, sessionId);
     }
 
-    public String listAllFlows(String host, String port, String userName, String password) throws Exception {
-        String sessionId = warpLoginService.logIn(host, port, userName, password);
+    public String listAllFlows(String host, String port, String userName, String password, String domain) throws Exception {
+        String sessionId = warpLoginService.logIn(host, port, userName, password, domain);
 
         return flowSupport.listAllFlows(host, port, sessionId);
     }
 
-    public void importFlows(String host, String port, String userName, String password, String projectName, String sessionId) throws Exception {
-        sessionId = warpLoginService.logIn(host, port, userName, password);
+    public void importFlows(String host, String port, String userName, String password, String domain, String projectName, String sessionId) throws Exception {
+        sessionId = warpLoginService.logIn(host, port, userName, password, domain);
 
-        flowSupport.importFlows(host, port, userName, password, projectName, sessionId);
+        flowSupport.importFlows(host, port, userName, password, domain, projectName, sessionId);
     }
 
     @HideFromClient
