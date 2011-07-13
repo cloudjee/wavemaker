@@ -23,6 +23,7 @@ import java.io.StringReader;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.ArrayList;
 
 import javax.wsdl.Definition;
 import javax.wsdl.Input;
@@ -77,7 +78,7 @@ public class RESTWsdlGenerator {
 
     private String namespace;
 
-    private String operationName;
+    private List<String> operationName_list;
 
     private String parameterizedUrl;
 
@@ -85,7 +86,7 @@ public class RESTWsdlGenerator {
 
     private List<Element> schemaElements;
 
-    private List<RESTInputParam> inputParts;
+    private List<List<RESTInputParam>> inputParts_list;
 
     private boolean isStringOutput;
 
@@ -106,19 +107,24 @@ public class RESTWsdlGenerator {
      *                The namespace for this service. This is mainly used for
      *                generating Java package.
      * @param operationName
-     *                The name of the operation.
+     *                The operation name.
      * @param parameterizedUrl
      *                The URL with parameters.
-     * @param inputParts
-     *                Map of input parameters and their types.
-     * @param outputElementType
-     *                The response element.
      */
     public RESTWsdlGenerator(String serviceName, String namespace,
             String operationName, String parameterizedUrl) {
         this.serviceName = serviceName;
         this.namespace = namespace;
-        this.operationName = operationName;
+        this.operationName_list = new ArrayList<String>();
+        this.operationName_list.add(operationName);
+        this.parameterizedUrl = parameterizedUrl;
+    }
+
+    public RESTWsdlGenerator(String serviceName, String namespace,
+            List<String> operationName_list, String parameterizedUrl) {
+        this.serviceName = serviceName;
+        this.namespace = namespace;
+        this.operationName_list = operationName_list;
         this.parameterizedUrl = parameterizedUrl;
     }
 
@@ -131,7 +137,12 @@ public class RESTWsdlGenerator {
     }
 
     public void setInputParts(List<RESTInputParam> inputParts) {
-        this.inputParts = inputParts;
+        this.inputParts_list = new ArrayList<List<RESTInputParam>>();
+        inputParts_list.add(inputParts);
+    }
+
+    public void setInputParts_list(List<List<RESTInputParam>> inputParts_list) {
+        this.inputParts_list = inputParts_list;
     }
 
     public void setOutputElementType(QName outputElementType) {
@@ -167,23 +178,35 @@ public class RESTWsdlGenerator {
 
         definition.setTypes(generateTypes());
 
-        Message inputMessage = generateInputMessage();
-        Message outputMessage = generateOutputMessage();
+        Message inputMessage;
+        Message outputMessage;
+        int indx = 0;
+        for (String operationName : operationName_list) {
+            inputMessage = generateInputMessage(operationName, inputParts_list.get(indx));
+            outputMessage = generateOutputMessage(operationName);
         
-        for (QName q : additionalNamespaces) {
-            if (q.getNamespaceURI() != null && q.getNamespaceURI().length() > 0) {
-                definition.addNamespace(q.getPrefix(), q.getNamespaceURI());
+            for (QName q : additionalNamespaces) {
+                if (q.getNamespaceURI() != null && q.getNamespaceURI().length() > 0) {
+                    definition.addNamespace(q.getPrefix(), q.getNamespaceURI());
+                }
             }
+
+            definition.addMessage(inputMessage);
+            definition.addMessage(outputMessage);
+
+            definition.addPortType(generatePortType(operationName, inputMessage, outputMessage));
+            indx++;
         }
-
-        definition.addMessage(inputMessage);
-        definition.addMessage(outputMessage);
-
-        definition.addPortType(generatePortType(inputMessage, outputMessage));
         return definition;
     }
 
-    private void fixInputParamNames() {
+    private void fixInputParamNames() { //xxx
+        for (List<RESTInputParam> inputParts : inputParts_list) {
+            fixInputParamNamesForOper(inputParts);
+        }        
+    }
+
+    private void fixInputParamNamesForOper(List<RESTInputParam> inputParts) { //xxx
         if (inputParts != null) {
             for (RESTInputParam param : inputParts) {
                 String paramName = param.getName();
@@ -245,10 +268,10 @@ public class RESTWsdlGenerator {
         return types;
     }
 
-    private Message generateInputMessage() {
+    private Message generateInputMessage(String operName, List<RESTInputParam> inputParts) {
         Message message = new MessageImpl();
         message.setUndefined(false);
-        message.setQName(new QName(namespace, "RequestMsg"));
+        message.setQName(new QName(namespace, operName + "RequestMsg"));
         if (inputParts != null) {
             for (RESTInputParam entry : inputParts) {
                 Part part = new PartImpl();
@@ -275,10 +298,10 @@ public class RESTWsdlGenerator {
         return message;
     }
 
-    private Message generateOutputMessage() {
+    private Message generateOutputMessage(String operName) {
         Message message = new MessageImpl();
         message.setUndefined(false);
-        message.setQName(new QName(namespace, "ResponseMsg"));
+        message.setQName(new QName(namespace, operName + "ResponseMsg"));
 
         Part part = new PartImpl();
         part.setName("body");
@@ -303,14 +326,14 @@ public class RESTWsdlGenerator {
         }
     }
 
-    private PortType generatePortType(Message inputMessage,
+    private PortType generatePortType(String operName, Message inputMessage,
             Message outputMessage) throws ParserConfigurationException {
         PortType portType = new PortTypeImpl();
         portType.setUndefined(false);
         portType.setQName(new QName(serviceName));
         Operation operation = new OperationImpl();
         operation.setUndefined(false);
-        operation.setName(operationName);
+        operation.setName(operName);
         if (httpMethod != null && httpMethod.equals("POST")) {
             String content = "POST";
             if (contentType != null && contentType.length() > 0) {

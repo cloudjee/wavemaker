@@ -331,17 +331,35 @@ public class WebServiceToolsManager {
         return serviceId;
     }
 
+     public String buildRestService(String serviceName, String operationName, //xxx
+            List<RESTInputParam> inputs, String parameterizedUrl,
+            String method, String contentType, String outputType,
+            String xmlSchemaText, String xmlSchemaPath, boolean overwrite)
+            throws IOException, javax.wsdl.WSDLException, SAXException,
+            ParserConfigurationException, WSDLException, JAXBException,
+            TransformerException {
+         List<String> operationName_list = new ArrayList<String>();
+         operationName_list.add(operationName);
+         List<List<RESTInputParam>> inputParms_list = new ArrayList<List<RESTInputParam>>();
+         inputParms_list.add(inputs);
+
+         String result = buildRestService(serviceName, operationName_list, inputParms_list, parameterizedUrl,
+                 method, contentType, outputType, xmlSchemaText, xmlSchemaPath, overwrite);
+
+         return result;
+     }
+
     /**
      * Builds a REST WSDL and imports it.
      * 
      * @param serviceName
      *                The name of this service.
-     * @param operationName
-     *                The name of this operation.
-     * @param inputs
-     *                The input parameters.
+     * @param operationName_list
+     *                The list of operation names
+     * @param inputs_list
+     *                The list of input parameters (per operations).
      * @param parameterizedUrl
-     *                The parameterized service URL.
+     *                The parameterized service URLs (per operations).
      * @param method
      *                The HTTP method, valid values are "GET" and "POST".
      * @param contentType
@@ -367,15 +385,18 @@ public class WebServiceToolsManager {
      * @throws JAXBException
      * @throws TransformerException
      */
-    public String buildRestService(String serviceName, String operationName,
-            List<RESTInputParam> inputs, String parameterizedUrl,
+    public String buildRestService(String serviceName, List<String> operationName_list, //xxx
+            List<List<RESTInputParam>> inputs_list, String parameterizedUrl,
             String method, String contentType, String outputType,
             String xmlSchemaText, String xmlSchemaPath, boolean overwrite)
             throws IOException, javax.wsdl.WSDLException, SAXException,
             ParserConfigurationException, WSDLException, JAXBException,
             TransformerException {
+
+        int operCnt = operationName_list.size();
+
         RESTWsdlGenerator restWsdlGenerator = new RESTWsdlGenerator(
-                serviceName, constructNamespace(parameterizedUrl), operationName,
+                serviceName, constructNamespace(parameterizedUrl), operationName_list,
                 parameterizedUrl);
         restWsdlGenerator.setHttpMethod(method);
         restWsdlGenerator.setContentType(contentType);
@@ -384,12 +405,22 @@ public class WebServiceToolsManager {
         //In this case, let's create an input parameter on the fly. We are assuming that POST method always
         //requires a parameter to be passed because there is no reason to create a POST method service if no
         //input arguments need to be passed when calling the service.
-        if (method.equals("POST") && inputs.size() == 0) {
-            RESTInputParam parm = new RESTInputParam("postData", "string");
-            inputs.add(parm);
+        //if (method.equals("POST") && inputs.size() == 0) {
+        //    RESTInputParam parm = new RESTInputParam("postData", "string");
+        //    inputs.add(parm);
+        //}
+
+        if (method.equals("POST")) {
+            inputs_list = new ArrayList<List<RESTInputParam>>();
+            for (int i=0; i<operCnt; i++) {
+                List<RESTInputParam> inputs = new ArrayList<RESTInputParam>();
+                RESTInputParam parm = new RESTInputParam("postData", "string");
+                inputs.add(parm);
+                inputs_list.add(inputs);     
+            }
         }
 
-        restWsdlGenerator.setInputParts(inputs);
+        restWsdlGenerator.setInputParts_list(inputs_list);
         if (outputType != null) {
             if (outputType.equals("string")) {
                 restWsdlGenerator.setStringOutput(true);
@@ -782,6 +813,19 @@ public class WebServiceToolsManager {
     /**
      * Constructs a namespace for the given URL.
      */
+    /*private static List<String> constructNamespace(List<String> urls) { //xxx
+        if (urls == null) {
+            return null;
+        }
+
+        List<String> rtn = new ArrayList<String>();
+        for (String url : urls) {
+            url = constructNamespaceForSingleUrl(url);
+            rtn.add(url);
+        }
+
+        return rtn;
+    }*/
     private static String constructNamespace(String url) {
         String namespace = getUrlOmitQuery(url);
         namespace = namespace.replace('{', 'x');
@@ -903,7 +947,6 @@ public class WebServiceToolsManager {
         for(int i=0; i<nlistOp.getLength() ; i++) {
             Node nodeOp = nlistOp.item(i);
             NamedNodeMap nMap = nodeOp.getAttributes();
-            nMap.getLength();
             for (int j=0; j<nMap.getLength(); j++) {
                 Node attr = nMap.item(j);
                 if (attr.getNodeName().equals("name")) {
