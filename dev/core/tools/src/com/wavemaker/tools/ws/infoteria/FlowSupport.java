@@ -83,6 +83,7 @@ public class FlowSupport {
     private static final String WARP_PORT = ".password";
     private static final String WARP_USERNAME = ".username";
     private static final String WARP_PASS = ".password";
+    private static final String WARP_DOMAIN = ".domain";
 
     public String listProjects(String host, String port, String sessionId) throws Exception {
         String result;
@@ -193,7 +194,8 @@ public class FlowSupport {
     }
 
     //Imports Flow metadata, creates WSDL and generate service (service = project, flows = operations)
-    public void importFlows(String host, String port, String userName, String password, String projectName, String sessionId) throws Exception {
+    public void importFlows(String host, String port, String userName, String password, String domain, String projectName,
+                            String sessionId) throws Exception {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
         DocumentBuilder docBuilder = dbf.newDocumentBuilder();
@@ -222,11 +224,11 @@ public class FlowSupport {
         wstMgr.buildRestService(projectName, flowNames, inputParms, url, "POST", "application/x-www-form-urlencoded",
                 "result", xsd, null, true);
 
-        createWarpPropertyFile(projectName, host, port, userName, password);
+        createWarpPropertyFile(projectName, host, port, userName, password, domain);
     }
 
-    private void createWarpPropertyFile(String projectName, String host, String port, String userName, String password)
-                                        throws Exception {
+    private void createWarpPropertyFile(String projectName, String host, String port, String userName, String password,
+                                        String domain) throws Exception {
         Properties p = new Properties();
 
         p.put(projectName+WARP_HOST, host);
@@ -237,6 +239,7 @@ public class FlowSupport {
             password = SystemUtils.encrypt(password);
         }
         p.put(projectName+WARP_PASS, password);
+        p.put(projectName+WARP_DOMAIN, domain);
 
         String comment = "Properties for " + projectName;
 

@@ -388,7 +388,7 @@ public class WebServiceToolsManager {
     public String buildRestService(String serviceName, List<String> operationName_list, //xxx
             List<List<RESTInputParam>> inputs_list, String parameterizedUrl,
             String method, String contentType, String outputType,
-            String xmlSchemaText, String xmlSchemaPath, boolean overwrite)
+            String xmlSchemaTextx, String xmlSchemaPath, boolean overwrite)
             throws IOException, javax.wsdl.WSDLException, SAXException,
             ParserConfigurationException, WSDLException, JAXBException,
             TransformerException {
