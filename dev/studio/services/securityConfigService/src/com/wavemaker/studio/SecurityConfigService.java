@@ -113,8 +113,7 @@ public class SecurityConfigService {
         getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml);
     }
 
-    public DatabaseOptions getDatabaseOptions() throws IOException,
-            JAXBException {
+    public DatabaseOptions getDatabaseOptions() throws IOException, JAXBException {
         DatabaseOptions options = getSecToolsMgr().getDatabaseOptions();
         options = populateJavaSpecificDatabaseParams(options);
         options = setMultiTenancyParms(options);
@@ -134,8 +133,7 @@ public class SecurityConfigService {
         DataModelConfiguration dataModel = dataModelMgr.getDataModel(modelName);
         EntityInfo entity = dataModel.getEntity(entityName);
         String tableName = entity.getTableName();
-        String qualifiedTablePrefix = entity.getSchemaName() == null ? 
-                entity.getCatalogName() : entity.getSchemaName();
+        String qualifiedTablePrefix = entity.getSchemaName() == null ? entity.getCatalogName() : entity.getSchemaName();
         if (qualifiedTablePrefix != null && qualifiedTablePrefix.length() > 0) {
             tableName = qualifiedTablePrefix + "." + tableName;
         }
@@ -254,10 +252,8 @@ public class SecurityConfigService {
         return null;
     }
 
-    private DatabaseOptions populateJavaSpecificDatabaseParams (
-            DatabaseOptions options) {
-        DataModelConfiguration dataModel = dataModelMgr.getDataModel(options
-                .getModelName());
+    private DatabaseOptions populateJavaSpecificDatabaseParams (DatabaseOptions options) {
+        DataModelConfiguration dataModel = dataModelMgr.getDataModel(options.getModelName());
         Collection<EntityInfo> entities = dataModel.getEntities();
         for (EntityInfo entity : entities) {
             if (entity.getTableName().equals(options.getTableName())) {
@@ -265,21 +261,16 @@ public class SecurityConfigService {
                 break;
             }
         }
-        Collection<PropertyInfo> properties = dataModel.getProperties(options
-                .getEntityName());
-        PropertyInfo unameProp = getProperty(properties, options
-                .getUnameColumnName());
+        Collection<PropertyInfo> properties = dataModel.getProperties(options.getEntityName());
+        PropertyInfo unameProp = getProperty(properties, options.getUnameColumnName());
         if (unameProp != null) {
             options.setUnamePropertyName(unameProp.getName());
         }
-        PropertyInfo uidProp = getProperty(properties, options
-                .getUidColumnName());
+        PropertyInfo uidProp = getProperty(properties, options.getUidColumnName());
         if (uidProp != null) {
             options.setUidPropertyName(uidProp.getName());
         }
-        //System.out.println("PW:" + options.getPwColumnName());
         String pw = options.getPwColumnName().replace(", 1","");
-        //System.out.println("PW2:" + pw);
         PropertyInfo pwProp = getProperty(properties, pw);
         if (pwProp != null) {
             options.setPwPropertyName(pwProp.getName());
@@ -293,21 +284,80 @@ public class SecurityConfigService {
         }
         return options;
     }
-
-    public LDAPOptions getLDAPOptions() throws IOException, JAXBException {
-        return getSecToolsMgr().getLDAPOptions();
+    
+    /**
+     * Function to get the entity name from the table name that's stored in the query
+     * @param options
+     * @return
+     */
+    public LDAPOptions populateJavaSpecificLDAPParams(LDAPOptions options){
+        DataModelConfiguration dataModel = dataModelMgr.getDataModel(options.getRoleModel());
+        Collection<EntityInfo> entities = dataModel.getEntities();
+        for (EntityInfo entity : entities) {
+            if (entity.getTableName().equals(options.getRoleTable())) {
+                options.setRoleEntity(entity.getEntityName());
+                break;
+            }
+        }
+        return options;
     }
 
+    public LDAPOptions getLDAPOptions() throws IOException, JAXBException {
+    	LDAPOptions options = getSecToolsMgr().getLDAPOptions();
+    	options = populateJavaSpecificLDAPParams(options);
+    	return options;
+    }
+
+    /**
+     * 
+     * @param ldapUrl
+     * @param managerDn
+     * @param managerPassword
+     * @param userDnPattern
+     * @param groupSearchingDisabled
+     * @param groupSearchBase
+     * @param groupRoleAttribute
+     * @param groupSearchFilter
+     * @param roleModel- added to provide ability to either use LDAP or DB as authorization provider
+     * @param roleEntity - added to provide ability to either use LDAP or DB as authorization provider
+     * @param roleProperty - added to provide ability to either use LDAP or DB as authorization provider
+     * @param roleProvider - this provides the value "LDAP" or "Database" so we know what to use as the authorization provider
+     * @param enforceSecurity
+     * @param enforceIndexHtml
+     * @throws IOException
+     * @throws JAXBException
+     */
+    
     public void configLDAP(String ldapUrl, String managerDn,
             String managerPassword, String userDnPattern,
             boolean groupSearchingDisabled, String groupSearchBase,
             String groupRoleAttribute, String groupSearchFilter,
+            String roleModel, String roleEntity,
+            String roleUsername, String roleProperty,
+            String roleQuery, String roleProvider,
             boolean enforceSecurity, boolean enforceIndexHtml)
             throws IOException, JAXBException {
-        getSecToolsMgr().configLDAP(ldapUrl, managerDn, managerPassword,
+    
+    	//GD: Get the schema name, if any, for the entity/table
+    	// Probably have to do this only if "roleProvider" == "Database"
+    	
+    	String roleTable = null;
+    	
+    	if(roleProvider.equals("Database")){
+            DataModelConfiguration dataModel = dataModelMgr.getDataModel(roleModel);
+            EntityInfo entity = dataModel.getEntity(roleEntity);
+            roleTable = entity.getTableName();
+            String qualifiedTablePrefix = entity.getSchemaName() == null ? entity.getCatalogName() : entity.getSchemaName();
+            if (qualifiedTablePrefix != null && qualifiedTablePrefix.length() > 0) {
+            	roleTable = qualifiedTablePrefix + "." + roleTable;
+            }    		
+    	}
+    	    	
+    	getSecToolsMgr().configLDAP(ldapUrl, managerDn, managerPassword,
                 userDnPattern, groupSearchingDisabled, groupSearchBase,
-                groupRoleAttribute, groupSearchFilter);
-        getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml);
+                groupRoleAttribute, groupSearchFilter, roleModel, roleEntity, roleTable, roleUsername, roleProperty, roleQuery, roleProvider);
+        
+    	getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml);
     }
 
     public void testLDAPConnection(String ldapUrl, String managerDn,
