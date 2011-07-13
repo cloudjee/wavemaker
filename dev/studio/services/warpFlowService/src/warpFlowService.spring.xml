@@ -4,9 +4,21 @@
 		<property name="warpLoginService">
             <ref bean="warpLoginService"/>
         </property>
+		<property name="flowSupport">
+            <ref bean="flowSupport"/>
+        </property>
 	</bean>
     <bean lazy-init="false" scope="singleton" class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
         <property value="warpFlowService" name="serviceId"/>
         <property ref="JavaService" name="serviceType"/>
+    </bean>
+
+	<bean id="flowSupport" scope="singleton" class="com.wavemaker.tools.ws.infoteria.FlowSupport">
+        <property name="projectManager">
+            <ref bean="projectManager"/>
+        </property>
+        <property name="designServiceManager">
+            <ref bean="designServiceManager"/>
+        </property>
     </bean>
 </beans>

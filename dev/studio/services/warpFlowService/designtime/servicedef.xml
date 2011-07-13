@@ -4,19 +4,30 @@
         <parameter isList="false" typeRef="java.lang.String" name="host"/>
         <parameter isList="false" typeRef="java.lang.String" name="port"/>
         <parameter isList="false" typeRef="java.lang.String" name="projectName"/>
-        <parameter isList="false" typeRef="java.lang.String" name="sessionId"/>
+        <parameter isList="false" typeRef="java.lang.String" name="userName"/>
+        <parameter isList="false" typeRef="java.lang.String" name="password"/>
         <return isList="false" typeRef="java.lang.String"/>
+    </operation>
+    <operation name="importFlows">
+        <parameter isList="false" typeRef="java.lang.String" name="host"/>
+        <parameter isList="false" typeRef="java.lang.String" name="port"/>
+        <parameter isList="false" typeRef="java.lang.String" name="userName"/>
+        <parameter isList="false" typeRef="java.lang.String" name="password"/>
+        <parameter isList="false" typeRef="java.lang.String" name="projectName"/>
+        <parameter isList="false" typeRef="java.lang.String" name="sessionId"/>
     </operation>
     <operation name="listAllFlows">
         <parameter isList="false" typeRef="java.lang.String" name="host"/>
         <parameter isList="false" typeRef="java.lang.String" name="port"/>
-        <parameter isList="false" typeRef="java.lang.String" name="sessionId"/>
+        <parameter isList="false" typeRef="java.lang.String" name="userName"/>
+        <parameter isList="false" typeRef="java.lang.String" name="password"/>
         <return isList="false" typeRef="java.lang.String"/>
     </operation>
     <operation name="listProjects">
         <parameter isList="false" typeRef="java.lang.String" name="host"/>
         <parameter isList="false" typeRef="java.lang.String" name="port"/>
-        <parameter isList="false" typeRef="java.lang.String" name="sessionId"/>
+        <parameter isList="false" typeRef="java.lang.String" name="userName"/>
+        <parameter isList="false" typeRef="java.lang.String" name="password"/>
         <return isList="false" typeRef="java.lang.String"/>
     </operation>
     <dataobjects/>
