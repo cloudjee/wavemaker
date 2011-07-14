@@ -160,6 +160,7 @@ dojo.declare("wm.EditArea", wm.Control, {
 	},
         setDataValue: function(inText) {this.setText(inText);},
 	setText: function(inText) {
+	    this._cachedDataValue = inText;
 		if (this.isStarted()) {
 		    // FIXME: get exception due to editArea focuswe attempt when setting text and
 			// not really showing
@@ -180,6 +181,12 @@ dojo.declare("wm.EditArea", wm.Control, {
 		} else
 		    this.textAreaNode.value = inText;
 	},
+    isDirty: function() {
+	return this.getDataValue() != this._cachedDataValue;
+    },
+    clearDirty: function() {
+	this._cachedDataValue = this.getDataValue();
+    },
 	setSelectionRange: function(inStart, inEnd) {
 		if (this.isStarted()) {
 			inStart = inStart || 0;
