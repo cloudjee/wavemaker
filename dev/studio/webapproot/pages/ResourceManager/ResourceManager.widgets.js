@@ -40,6 +40,11 @@ ResourceManager.widgets = {
 		    }],
 		    resourceProperties: ["wm.Panel", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", width: "100%", verticalAlign: "top", horizontalAlign: "left", margin: 4, padding: 6, layoutKind: "top-to-bottom"}, {}, {}]
 		}]
+	    }],
+	    splitter: ["wm.Splitter", {}],
+	    editorPanel: ["wm.Panel", {width: "100%", height: "100%", verticalAlign: "top", horizontalAlign: "left", layoutKind: 'left-to-right'}, {}, {
+		editor: ["wm.AceEditor", {width: "100%", height: "300px", dataValue: "", syntax: "text"}, {onChange: "editorChange"}],
+		saveButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, width: "100px", caption: "Save"},{onclick: "saveTextEditor"}]
 	    }]
 	}]
 }

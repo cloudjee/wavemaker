@@ -211,6 +211,7 @@ dojo.declare("ResourceManager", wm.Page, {
     },
     
     loadResources: function() {
+	this.editorPanel.hide();
 	// I'd rather this was in this.start, but start gets called when the studio loads, not when this page shows. Waste of time loading this stuff before knowing if the user will navigate here.
 	//this.loadResourcesData(false);
         ;
@@ -360,6 +361,21 @@ dojo.declare("ResourceManager", wm.Page, {
     },
 
     itemSelected: function() {
+	var item = this.tree.selected.data;
+	if (item != this._lastSelectedItem && this._lastSelectedItem && this.editorPanel.showing && this.editor.isDirty()) {
+	    app.confirm(this.getDictionaryItem("LOSE_FILE_EDITS", {fileName: this._lastSelectedItem.itemName}), false,
+			dojo.hitch(this, function() {
+			    this.editor.clearDirty();
+			    this.itemSelected();
+			}),
+			dojo.hitch(this, function() {
+			    if (this._lastSelectedItem)
+				this.setSelectedItem(this._lastSelectedItem);
+			}));
+	    return;
+	} else if (this.editorPanel.showing && this.editor.isDirty())
+	    return;
+
       this.selectedItem = this.tree.selected.data;
         var folder = (this.selectedItem instanceof wm.FolderResourceItem) ? this.selectedItem : this.tree.selected.parent.data;
             
@@ -367,8 +383,47 @@ dojo.declare("ResourceManager", wm.Page, {
       this.showPropertiesPanel();
         this.addFileButton.input.setType("AnyData");
         this.addFileButton.input.setData({dataValue: {path: folder.getResourcelessFilePath()}});
+	if (this.selectedItem instanceof wm.HTMLResourceItem ||
+	    this.selectedItem instanceof wm.MiscResourceItem ||
+	    this.selectedItem instanceof wm.CSSResourceItem ||
+	    this.selectedItem instanceof wm.JSResourceItem) {
+	    this.editorPanel.show();
+	    var text = wm.load("projects/" + studio.project.projectName + "/resources" + this.selectedItem.getResourcelessFilePath());
+	    this.editor.setText(text);
+	    if (this.selectedItem instanceof wm.HTMLResourceItem) {
+		this.editor.setSyntax("html");
+	    } else if (this.selectedItem instanceof wm.MiscResourceItem) {
+		this.editor.setSyntax("text");
+	    } else if (this.selectedItem instanceof wm.CSSResourceItem) {
+		this.editor.setSyntax("css");
+	    } else if (this.selectedItem instanceof wm.JSResourceItem) {
+		this.editor.setSyntax("javascript");
+	    } else {
+		this.editor.setSyntax("text");
+	    }
+	    wm.onidle(this, function() {
+		this.editor.setLineNumber(0);
+	    });
+	} else {
+	    this.editorPanel.hide();
+	}
     },
-
+    saveTextEditor: function() {	
+	var self = this;
+	studio.studioService.requestSync("writeWebFile", ["resources/" + this.selectedItem.getResourcelessFilePath(), this.editor.getDataValue(), false],
+					 function() {
+					     app.toastSuccess(self.getDictionaryItem("EDITS_SAVED"));
+					     selef.editor.clearDirty();
+					 },
+					 function() {
+					     app.toastError(self.getDictionaryItem("EDITS_FAILED"));
+					 }
+					 					 
+					);
+    },
+    editorChange: function(inSender) {
+	this.saveButton.setDisabled(!this.editor.isDirty());
+    },
     setSelectedItem: function(item) {
       if (item == null) {
 	this.clearSelectedItem();
@@ -381,6 +436,7 @@ dojo.declare("ResourceManager", wm.Page, {
     },
 
     clearSelectedItem: function() {
+	this._lastSelectedItem = this.selectedItem;
         this.selectedItem = null;
 	this.updateToolbar();
 	this.hidePropertiesPanel();
