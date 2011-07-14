@@ -34,16 +34,8 @@ dojo.declare("Security", wm.Page, {
 		    this.saveButton.setBorder("0");
 		});
 	    }
- 		this._setDataTypes();   
-
-	    if (!wm.typeManager.types["com.wavemaker.studio.SecurityServiceMap"]) {
-		wm.typeManager.addType("com.wavemaker.studio.SecurityServiceMap", {internal: true, fields: {
-		    URL: {type: "java.lang.String", isObject: false, isList: false},
-		    name: {type: "java.lang.String", isObject: false, isList: false},
-		    attributes: {type: "java.lang.String", isObject: false, isList: false}
-		}});
-	    }
-
+ 	    this._setDataTypes();   
+	    this.setupServicesLayer();
 	},
 
 	showUIDHelp1: function() {
@@ -92,6 +84,7 @@ dojo.declare("Security", wm.Page, {
 		this.initSecProviderInput();
 		this.databaseOptions = {};
 		this.secEnableInput.setChecked(true);
+	    this.servicesLayer.setShowing(true);
 		this.showLoginPageInput.setChecked(true);
 		this.ldapSearchRoleCheckbox.setChecked(false);
 		this.ldapSearchRoleCheckboxChange(this.ldapSearchRoleCheckbox);
@@ -200,6 +193,7 @@ dojo.declare("Security", wm.Page, {
 			this.securityCheckboxChange();
 		} else if (inValue == "JOSSO") {
 			this.layers.setLayer("jossoLayer");
+		     this.servicesLayer.setShowing(false);
 			//this.disableAll(false);
 			this.secEnableInput.setShowing(true);
 			this.securityCheckboxChange();
@@ -208,6 +202,7 @@ dojo.declare("Security", wm.Page, {
 			this.layers.setLayer("emptyLayer");
 			//this.disableAll(true);
 			this.secEnableInput.editor.setChecked(false);
+		     this.servicesLayer.setShowing(false);
 			this.securityCheckboxChange();
 			this.secEnableInput.setShowing(false);			
 		 }
@@ -221,6 +216,7 @@ dojo.declare("Security", wm.Page, {
 		if (inResponse) {
 		    //this.disableAll(false);
 			this.secEnableInput.setChecked(inResponse.enforceSecurity);
+		     this.servicesLayer.setShowing(inResponse.enforceSecurity);
 			this.showLoginPageInput.setChecked(inResponse.enforceIndexHtml);
 			var t = inResponse.dataSourceType;
 			this.populatingOptions = true;
@@ -658,6 +654,7 @@ dojo.declare("Security", wm.Page, {
   
 	showJossoLayer: function() {
 	    this.secEnableInput.editor.setChecked(true);
+	    this.servicesLayer.setShowing(false);
 	    this.securityCheckboxChange();
 
 	    var roles = this.roleList._data;
@@ -679,7 +676,7 @@ dojo.declare("Security", wm.Page, {
 	},
 	securityCheckboxChange: function() {
 	    var enabled = this.secEnableInput.editor.getChecked();
-
+	    this.servicesLayer.setShowing(enabled);
 	    this.showLoginPageInput.setShowing(enabled);
 	    this.panel4a.setShowing(enabled);
 	    this.panelBottom.setShowing(enabled);
@@ -722,7 +719,8 @@ dojo.declare("Security", wm.Page, {
 		      !this.ldapSearchRoleCheckbox.getChecked(),
 		      this.ldapGroupSearchBaseInput.getDataValue(),
 		      this.ldapGroupRoleAttributeInput.getDataValue(),
-		      this.ldapGroupSearchFilterInput.getDataValue()];
+		      this.ldapGroupSearchFilterInput.getDataValue(),
+		      dojo.toJson(this.varServList.getData())];
 	return result.join("|");
     },
 
@@ -867,30 +865,10 @@ dojo.declare("Security", wm.Page, {
 	  } 
   },
   */
-  servicesLayerShow: function(inSender) {
+    setupServicesLayer: function() {
       try {	  
-	  studio.beginWait(this.getDictionaryItem("WAIT_SERVICE_LIST"));
-/*
-	  var msg = "Server side role access configuration <br> First matching rule is used.";
-	  this.labAdvInfo.setCaption(msg);
-	  */
-	  wm.onidle(this, function() {
     	      studio.securityConfigService.requestSync("getSecurityFilterODS", null, 
     						       dojo.hitch(this, "getSecurityFilterODSResult"));	  
-              //studio.servicesService.requestSync("listServices", null, dojo.hitch(this, "listServicesResult"));    
-	      var serviceList = [{name: this.getDictionaryItem("SERVICE_DATABASE_SERVICES_NAME"),
-				  URL: "/runtimeServices.json",
-				  attributes: this.findServiceSecurityForService("runtimeServices")}];
-
-	      studio.tree.forEachNode(dojo.hitch(this, function(node) {
-		  if (node.component instanceof wm.ServerComponent && node.component instanceof wm.DataModel == false) 
-		      serviceList.push({name: node.component.name,
-					URL: "/" + wm.decapitalize(node.component.name) + ".json",
-					attributes: this.findServiceSecurityForService(node.component.name)});
-	      }));
-
-	      serviceList.push({name: "All other Services", URL: "/*.json", attributes: "IS_AUTHENTICATED_ANONYMOUSLY"});
-	      this.varServList.setData(serviceList);
 
 	      /* Get the role list */
 	      var d = this.roleList._data;
@@ -905,14 +883,34 @@ dojo.declare("Security", wm.Page, {
 	      }
 	      this.varRoleList.setData(data);
 
-	      //studio.securityConfigService.requestSync("getRoles", this.isJOSSO(), dojo.hitch(this, "getAdvRolesResult"));			  
-	      studio.endWait();
-	      this.serviceListSelect(this.serviceList);
-	  });
+	  /* Get the service list and generate  */
+	  var attributes = this.findServiceSecurityForService("runtimeServices");
+	      var serviceList = [{name: this.getDictionaryItem("SERVICE_DATABASE_SERVICES_NAME"),
+				  URL: "/runtimeServices.json",
+				  attributes: attributes,
+				  Settings: this.getAttributesDisplay(attributes)}];
+
+	      studio.tree.forEachNode(dojo.hitch(this, function(node) {
+		  if (node.component instanceof wm.ServerComponent && node.component instanceof wm.DataModel == false) {
+		      var attributes = this.findServiceSecurityForService(node.component.name)
+		      serviceList.push({name: node.component.name,
+					URL: "/" + wm.decapitalize(node.component.name) + ".json",
+					attributes: attributes,
+					Settings: this.getAttributesDisplay(attributes)});
+		  }
+	      }));
+
+	  serviceList.push({name: "All other Services", URL: "/*.json", attributes: "IS_AUTHENTICATED_ANONYMOUSLY", Settings: this.getAttributesDisplay("IS_AUTHENTICATED_ANONYMOUSLY")});
+	      this.varServList.setData(serviceList);
+
 
       } catch(e) {
-	  console.error('ERROR IN layerAdvancedShow: ' + e); 
+	  console.error('ERROR IN setupServicesLayer: ' + e); 
       } 
+  },
+  servicesLayerShow: function(inSender) {
+      this.setupServicesLayer();
+      this.serviceListSelect(this.serviceList);
   },
     serviceListSelect: function(inSender) {
 	var selectedData = inSender.selectedItem.getData();
@@ -947,6 +945,15 @@ dojo.declare("Security", wm.Page, {
   	}
   },
   */
+    getAttributesDisplay: function(inAttribute) {
+	if (!inAttribute)
+	    inAttribute = "";
+	var data = this.varRoleList.getData();
+	for (var i = 0; i < data.length; i++) {
+	    if (data[i].dataValue == inAttribute)
+		return data[i].name;
+	}
+    },
     findServiceSecurityForService: function(inName) {
 	for (var i = 0; i < this._urlMap.length; i++) {
 	    var str = this._urlMap[i];
@@ -1025,7 +1032,9 @@ dojo.declare("Security", wm.Page, {
 	    var oldValue = this.serviceList.dataSet.getItem(index).getValue("attributes");
 	    if (oldValue != value) {
 		this.serviceList.dataSet.getItem(index).setValue("attributes", value);
+		this.serviceList.dataSet.getItem(index).setValue("Settings", this.getAttributesDisplay(value));
 		this.serviceList.selectByIndex(index);
+		this.setDirty();
 	    }
 	}
     },
@@ -1089,10 +1098,21 @@ dojo.declare("Security", wm.Page, {
 		this.buttonDelRule.setDisabled(true); 
   },
   _setDataTypes: function() {
+	    if (!wm.typeManager.types["com.wavemaker.studio.SecurityServiceMap"]) {
+		wm.typeManager.addType("com.wavemaker.studio.SecurityServiceMap", {internal: true, fields: {
+		    URL: {type: "java.lang.String", isObject: false, isList: false},
+		    name: {type: "java.lang.String", isObject: false, isList: false},
+		    attributes: {type: "java.lang.String", isObject: false, isList: false},
+		    Settings:{type: "java.lang.String", isObject: false, isList: false}
+		}});
+	    }
+	    if (!wm.typeManager.types["com.wavemaker.studio.SecurityConfigService$SecurityURLMap"]) {
 		wm.typeManager.addType("com.wavemaker.studio.SecurityConfigService$SecurityURLMap", {internal: true, fields: {
 			URL: {type: "java.lang.String", isObject: false, isList: false},
 			attributes: {type: "java.lang.String", isObject: false, isList: false}
-			}}
-		)},
+		}});
+	    }
+
+},
   _end: 0
 });

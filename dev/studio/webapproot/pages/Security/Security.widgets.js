@@ -25,7 +25,7 @@ Security.widgets = {
 			}],
 			logoBtmHolder: ["wm.Panel", {"border":"0","width":"221px"}, {}]
 		    }],
-	    tabs: ["wm.TabLayers", {width: "100%", height: "100%", clientBorder: "3,0,0,0",clientBorderColor: "#959DAB"}, {}, {
+	    tabs: ["wm.TabLayers", {width: "100%", height: "100%", clientBorder: "3,0,0,0",clientBorderColor: "#959DAB", "conditionalTabButtons":true}, {}, {
 		securityLayer: ["wm.Layer", {caption: "Setup Security"}, {}, {
 		    label1a: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold","wm_Padding_4px"]},"border":"0","caption":"Security Configuration","padding":"4"}, {}, {
 			format: ["wm.DataFormatter", {}, {}]
@@ -278,7 +278,7 @@ Security.widgets = {
 		}],
 		servicesLayer: ["wm.Layer", {caption: "Setup Services"}, {"onShow":"servicesLayerShow"}, {
 		    servicesOuterPanel: ["wm.Panel", {border: "3", borderColor: "#959DAB",  margin: "10", width: "100%", height: "100%", layoutKind: "left-to-right"}, {}, {
-			serviceList: ["wm.List", {width: "150px", headerVisible: false, height: "100%", dataFields: "name", border: "0,2,0,0", borderColor:  "#959DAB"}, {onselect: "serviceListSelect"}, {
+			serviceList: ["wm.List", {width: "300px", headerVisible: true, height: "100%", dataFields: "name, Settings", border: "0,2,0,0", borderColor:  "#959DAB"}, {onselect: "serviceListSelect"}, {
 			    binding: ["wm.Binding", {}, {}, {
 				wire: ["wm.Wire", {"expression":undefined,"source":"varServList","targetProperty":"dataSet"}, {}]
 			    }]

@@ -67,6 +67,11 @@
 	color: #000000;
 }
 
+.Security .wmlist-list .wmlist-cell {
+    border-bottom: solid 1px #AAA;
+}
+
+
 .Security .Security-benchbevel4 {
 	background-color: #959dab;
 	border-top: 1px solid #c0c4ca;
