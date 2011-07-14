@@ -390,7 +390,8 @@ dojo.declare("Studio", wm.Page, {
 	},
     setupDefaultContextMenu: function() {
 	var f = function(e) {
-	    if (e.target.tagName == "TEXTAREA") return;
+
+	    if (e.target.tagName == "TEXTAREA" || dojo.hasClass(e.target, "ace_layer")) return true;
 		dojo.stopEvent(e);		
 		var menuObj = studio.contextualMenu;
 		menuObj.removeAllChildren();
@@ -421,7 +422,7 @@ dojo.declare("Studio", wm.Page, {
 		menuObj.update(e);
 	};
 	dojo.connect(this.domNode, "oncontextmenu", this, f);
-	if (dojo.isFF) {
+	if (dojo.isFF < 5) {
 	    dojo.connect(this.domNode, "onmousedown", this, function(e) {
 	    if (e.button == 2 || e.ctrlKey) 
 		dojo.hitch(this, f)(e);
