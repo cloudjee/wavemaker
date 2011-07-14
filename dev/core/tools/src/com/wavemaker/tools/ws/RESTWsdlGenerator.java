@@ -82,7 +82,7 @@ public class RESTWsdlGenerator {
 
     private String parameterizedUrl;
 
-    private List<String> schemaStringsx;
+    private List<String> schemaStrings;
 
     private List<Element> schemaElements;
 
