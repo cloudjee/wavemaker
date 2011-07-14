@@ -25,7 +25,7 @@ CustomWebServiceImporter.widgets = {
 		}],
 		userInput: ["wm.Text", {width: "100%", caption: "Username", captionAlign: "right", captionSize: "120px",emptyValue: "emptyString"}],
 		passInput: ["wm.Text", {width: "100%", caption: "Password", captionAlign: "right", captionSize: "120px",emptyValue: "emptyString"}],
-		scanButton: ["wm.Button", {width: "120px", caption: "Read Service"}, {onclick: "scanClick"}]
+		scanButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},width: "120px", caption: "Read Service"}, {onclick: "scanClick"}]
 	    }],
 	    resultLabel: ["wm.Label", {width: "100%", height: "20px", caption: "Step 2. Select the flows for your project"}],
 	    resultPanel: ["wm.Panel", {layoutKind: "top-to-bottom", width: "100%", height: "100%", horizontalAlign: "right", verticalAlign: "middle"}, {}, {	    
@@ -34,8 +34,8 @@ CustomWebServiceImporter.widgets = {
 	    }]
 	}],
 	buttonBar: ["wm.Panel", {_classes: {domNode:["wmDialogFooter"]}, layoutKind: "left-to-right", width: "100%", height: "35px", horizontalAlign: "right", verticalAlign: "middle"}, {}, {
-	    importButton: ["wm.Button", {width: "100px", caption: "Import"}, {onclick: "importClick"}],
-	    cancelButton: ["wm.Button", {width: "100px", caption: "Cancel"}, {onclick: "cancelClick"}]
+	    importButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},width: "100px", caption: "Import"}, {onclick: "importClick"}],
+	    cancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},width: "100px", caption: "Cancel"}, {onclick: "cancelClick"}]
 
 	}]
     }]

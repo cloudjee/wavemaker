@@ -20,7 +20,7 @@ PopupHelp.widgets = {
 		    moreButton: ["wm.Button", {caption: "More...", width: "70px"}, {onclick: "moreButtonClick"}],
 		    examplesButton: ["wm.Button", {caption: "Examples...", width: "85px"}, {onclick: "examplesButtonClick"}],
 			      */
-		    closeButton: ["wm.Button", {caption: "Close", width: "70px"}, {onclick: "cancelButtonClick"}]
+		    closeButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Close", width: "70px"}, {onclick: "cancelButtonClick"}]
 	      }]
 	}]
 }

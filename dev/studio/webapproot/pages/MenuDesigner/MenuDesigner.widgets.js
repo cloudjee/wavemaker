@@ -25,8 +25,8 @@ MenuDesigner.widgets = {
 		    menuItemIconClass: ["wm.Text", {"caption":"Icon Class","captionSize":"130px","displayValue":"",width:"100%"}, {"onEnterKeyPress":"onTextEnterKeyPress"}]
 		}],
 		buttonBar: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-			menuItemCancelButton: ["wm.Button", {"caption":"Cancel"}, {"onclick":"menuItemCancelButtonClick"}],
-			menuItemOKButton: ["wm.Button", {"caption":"OK"}, {"onclick":"menuItemOKButtonClick"}]
+			menuItemCancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},"caption":"Cancel"}, {"onclick":"menuItemCancelButtonClick"}],
+			menuItemOKButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},"caption":"OK"}, {"onclick":"menuItemOKButtonClick"}]
 		}]
 	}],
 	smallToolbarImageList: ["wm.ImageList", {width: 16, height: 16, colCount: 32, url: "images/smallToolbarBtns.png"}, {}],
@@ -48,8 +48,8 @@ MenuDesigner.widgets = {
 			sample: ["wm.DojoMenu", {"eventList":[{"label":"File","children":[{"label":"New"},{"label":"Open"},{"label":"Save"},{"label":"Close"}],"onClick":undefined},{"label":"Edit"},{"label":"Zoom"}],"height":"100%","structure":"{\"items\":[{\"label\":\"File\"},{\"label\":\"Edit\"},{\"label\":\"Zoom\"}]}","vertical":true,"width":"115px"}, {}]*/
 		}],
 	    buttonBar: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, height: "20px", "horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%", padding: "2,0,2,0", border: "1,0,0,0", height: "34px", horizontalAlign: "right"}, {}, {
-			 CancelButton: ["wm.Button", {caption: "Cancel"}, {onclick: "mainCancelClick"}],
-			 OKButton: ["wm.Button", {caption: "OK"}, {onclick: "mainOKClick"}]
+			 CancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Cancel"}, {onclick: "mainCancelClick"}],
+			 OKButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "OK"}, {onclick: "mainOKClick"}]
 		     }]
 	}]
 }

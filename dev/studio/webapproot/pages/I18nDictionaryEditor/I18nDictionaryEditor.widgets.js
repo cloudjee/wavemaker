@@ -24,9 +24,9 @@ I18nDictionaryEditor.widgets = {
 			}]
 		    }],
 		    dictionaryListButtonPanel: ["wm.Panel", {layoutKind: "top-to-bottom", width: "120px", height: "100px", verticalAlign: "top", horizontalAlign: "left"},{}, {
-			addTermButton: ["wm.Button", {caption: "Add Term", width: "100%"}, {onclick: "addTermClick"}],
-			deleteTermButton: ["wm.Button", {caption: "Remove Term", width: "100%"}, {onclick: "deleteTermClick"}],
-			insertScriptButton: ["wm.Button", {caption: "Add to Script", width: "100%"}, {onclick: "insertScriptClick"}],
+			addTermButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Add Term", width: "100%"}, {onclick: "addTermClick"}],
+			deleteTermButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Remove Term", width: "100%"}, {onclick: "deleteTermClick"}],
+			insertScriptButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Add to Script", width: "100%"}, {onclick: "insertScriptClick"}],
 		    }]
 		}],
 		termName: ["wm.Text", {caption: "Name", width: "100%"}, {onchange: "termNameChange"},{
@@ -43,8 +43,8 @@ I18nDictionaryEditor.widgets = {
 	    }],
 		     
 	    buttonBar: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, height: "20px", "horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%", padding: "2,0,2,0", border: "1,0,0,0", height: "34px", horizontalAlign: "right"}, {}, {
-		cancelButton: ["wm.Button", {caption: "Cancel"}, {onclick: "cancelClick"}],
-		saveButton: ["wm.Button", {caption: "Save"}, {onclick: "saveClick"}]
+		cancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Cancel"}, {onclick: "cancelClick"}],
+		saveButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Save"}, {onclick: "saveClick"}]
 	    }]
 	}]
 }

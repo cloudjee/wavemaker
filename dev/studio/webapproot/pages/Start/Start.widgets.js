@@ -65,13 +65,13 @@ Start.widgets = {
 								existingProjectList: ["wm.List", {width: "100%", border: "0"}, {onselect: "projectListSelect", ondeselect: "projectListDeselect", ondblclick: "openProject"}]
 							}],
 							panel9: ["wm.Panel", {height: "34px", width: "100%", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "center"}, {}, {
-							    openProjectBtn: ["wm.Button", {caption: "Open Project", width: "160px", height: "100%"}, {onclick: "openProject"}],
-							    deleteProjectBtn: ["wm.Button", {caption: "Delete Project", width: "160px", height: "100%"}, {onclick: "deleteProject"}, {
+							    openProjectBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Open Project", width: "160px", height: "100%"}, {onclick: "openProject"}],
+							    deleteProjectBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Delete Project", width: "160px", height: "100%"}, {onclick: "deleteProject"}, {
 								binding: ["wm.Binding",{},{}, {
 								    wire: ["wm.Wire", {"targetProperty":"disabled", "expression": "${existingProjectList.emptySelection}"}, {}]
 								}]
 							    }],
-							    newProjectBtn: ["wm.Button", {caption: "New Project", width: "180px", height: "100%"}, {onclick: "newProjectClick"}]
+							    newProjectBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "New Project", width: "180px", height: "100%"}, {onclick: "newProjectClick"}]
 							}]
 						}]
 					}]

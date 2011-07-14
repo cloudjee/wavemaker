@@ -29,8 +29,8 @@ NewProjectDialog.widgets = {
             }]
         }],
             buttonPanel: ["wm.Panel", {_classes: {domNode: ["wmDialogFooter"]}, width: "100%", height: "35px", layoutKind: "left-to-right", horizontalAlign: "right", verticalAlign: "top"},{}, {
-                CancelButton: ["wm.Button", {caption: "Cancel", width: "100px", height: "100%"}, {onclick: "onCancelClick"}],
-                OKButton: ["wm.Button", {caption: "OK", width: "100px", height: "100%"}, {onclick: "onOkClick"}]
+                CancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Cancel", width: "100px", height: "100%"}, {onclick: "onCancelClick"}],
+                OKButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "OK", width: "100px", height: "100%"}, {onclick: "onOkClick"}]
         }]
 }]
 }

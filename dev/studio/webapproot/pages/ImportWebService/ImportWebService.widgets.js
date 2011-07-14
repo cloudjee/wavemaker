@@ -107,9 +107,9 @@ ImportWebService.widgets = {
 				}]
 			}],
 			footer: ["wm.Panel", {height: "30px", border: "0", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
-				importButton: ["wm.Button", {width: "96px", caption: "Import", margin: "4"}, {onclick: "importButtonClick"}],
+				importButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},width: "96px", caption: "Import", margin: "4"}, {onclick: "importButtonClick"}],
 				spacer6: ["wm.Spacer", {width: "10px"}, {}],
-				cancelButton: ["wm.Button", {width: "96px", caption: "Cancel", margin: "4"}, {onclick: "cancelButtonClick"}]
+				cancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},width: "96px", caption: "Cancel", margin: "4"}, {onclick: "cancelButtonClick"}]
 			}]
 		}]
 	}]

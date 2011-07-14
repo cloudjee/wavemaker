@@ -48,13 +48,6 @@
 	border-right: 1px solid #363b44;
 }
 
-.NewJavaService .NewJavaService-footer button {
-	background-image:url(images/dark_btn_bg.gif);
-	background-repeat:repeat-x;
-	color: #FFF;
-	font-weight:bold;
-	border: solid 1px #353a44;
-}
 
 .NewJavaService .NewJavaService-newJavaServiceIdInput {
 	padding-bottom: 16px;

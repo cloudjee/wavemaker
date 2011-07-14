@@ -884,6 +884,7 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 	padding: 2px;
 }
 
+
 .I18nDictionaryEditor .wmbutton,
 .Studio-dataObjectsPane_dataObjectsEditor_pageContainer_queryEditor_panel button, .Studio-dataObjectsPane_dataObjectsEditor_pageContainer_queryEditor_panel3 button, .Studio-dataObjectsPane_dataObjectsEditor_pageContainer_queryEditor_addInput, .Studio-dataObjectsPane_dataObjectsEditor_pageContainer_queryEditor_removeInput {
 	margin: 1px 2px 1px 2px;
@@ -1391,8 +1392,7 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
 }
 
 body.wm-darksnazzy  button.wmbutton {
-	/*background-image:url(images/wmbutton_bg.png);
-	background-repeat:repeat-x;*/
+/*
         background-image:none !important;
 	background-color: transparent !important;
 	color: #FFF;
@@ -1401,6 +1401,21 @@ body.wm-darksnazzy  button.wmbutton {
 	border-top: 1px solid #c0c4ca;
 	border-bottom: 1px solid #363b44;
 	cursor: pointer;
+*/
+}
+
+
+body .StudioButton {
+	background-image:url(images/dark_btn_bg.gif);
+	background-repeat:repeat-x;
+	color: #FFF;
+	font-weight:bold;
+	border: solid 1px #353a44;
+
+}
+body .StudioButton:hover {
+	background-image:url(images/dark_btn_bg.gif);
+        opacity: 0.8;
 }
 
 .wm-darksnazzy .wmToolbar button {

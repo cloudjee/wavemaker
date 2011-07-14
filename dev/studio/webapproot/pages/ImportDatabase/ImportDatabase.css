@@ -44,13 +44,6 @@
 	border-right: 1px solid #363b44;
 }
 
-#app_importDatabase_footer button, #app_importDatabase_footer1 button {
-	background-image:url(images/dark_btn_bg.gif);
-	background-repeat:repeat-x;
-	color: #FFF;
-	font-weight:bold;
-	border: solid 1px #353a44;
-}
 
 #app_importDatabase_benchbevel4, #app_importDatabase_benchbevel5, #app_importDatabase_benchbevel6, #app_importDatabase_benchbevel7 {
 	background-color: #959dab;

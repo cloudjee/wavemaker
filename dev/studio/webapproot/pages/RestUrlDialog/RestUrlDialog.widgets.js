@@ -76,11 +76,11 @@ RestUrlDialog.widgets = {
 					}]
 				}],
 				footer: ["wm.Panel", {border: "0", height: "26px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
-					testBtn: ["wm.Button", {caption: "Test", border: "0", margin: "4", width: "96px"}, {onclick: "testBtnClick"}],
+					testBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Test", border: "0", margin: "4", width: "96px"}, {onclick: "testBtnClick"}],
 					spacer1: ["wm.Spacer", {width: "10px"}, {}],
-					populateBtn: ["wm.Button", {caption: "Populate", border: "0", margin: "4", width: "96px"}, {onclick: "populateBtnClick"}],
+					populateBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Populate", border: "0", margin: "4", width: "96px"}, {onclick: "populateBtnClick"}],
 					spacer4: ["wm.Spacer", {width: "10px"}, {}],
-					cancelBtn: ["wm.Button", {caption: "Back", border: "0", margin: "4", width: "96px"}, {onclick: "cancelBtnClick"}]
+					cancelBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Back", border: "0", margin: "4", width: "96px"}, {onclick: "cancelBtnClick"}]
 				}]
 			}]
 		}]

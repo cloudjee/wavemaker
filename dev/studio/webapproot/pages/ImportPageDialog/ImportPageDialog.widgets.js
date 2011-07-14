@@ -40,9 +40,9 @@ ImportPageDialog.widgets = {
 				}]
 			}],
 			panel4: ["wm.Panel", {_classes: {domNode: ["wmDialogFooter"]}, height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
-				copyButton: ["wm.Button", {caption: "OK", width: "70px", padding: "0"}, {onclick: "copyButtonClick"}],
+				copyButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "OK", width: "70px", padding: "0"}, {onclick: "copyButtonClick"}],
 				spacer1: ["wm.Spacer", {width: "4px"}, {}],
-				cancelButton: ["wm.Button", {caption: "Cancel", width: "70px", padding: "0"}, {onclick: "cancelButtonClick"}]
+				cancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Cancel", width: "70px", padding: "0"}, {onclick: "cancelButtonClick"}]
 			}]
 		}]
 	}]

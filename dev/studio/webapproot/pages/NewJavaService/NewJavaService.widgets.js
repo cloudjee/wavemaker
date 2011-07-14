@@ -25,9 +25,9 @@ NewJavaService.widgets = {
 					}]
 				}],
 				footer: ["wm.Panel", {border: "0", height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
-					okButton: ["wm.Button", {caption: "OK", width: "96px", margin: "4"}, {onclick: "okButtonClick"}],
+					okButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "OK", width: "96px", margin: "4"}, {onclick: "okButtonClick"}],
 					spacer4: ["wm.Spacer", {width: "10px"}, {}],
-					cancelButton: ["wm.Button", {caption: "Cancel", width: "96px", margin: "4"}, {onclick: "cancelButtonClick"}]
+					cancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Cancel", width: "96px", margin: "4"}, {onclick: "cancelButtonClick"}]
 				}]
 			}]
 		}]

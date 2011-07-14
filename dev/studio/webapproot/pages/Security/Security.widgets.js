@@ -128,7 +128,7 @@ Security.widgets = {
 						    dbTestSQLInput: ["wm.Editor", {"border":"0","caption":"User ID","emptyValue":"null","padding":"2","width":"250px"}, {"onchange":"setDirty"}, {
 							editor: ["wm._TextEditor", {}, {}]
 						    }],
-						    dbTestSQLButton: ["wm.Button", {"caption":"Test Query","margin":"2","width":"100px"}, {"onclick":"dbTestSQLButtonClick"}]
+						    dbTestSQLButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, "caption":"Test Query","margin":"2","width":"100px"}, {"onclick":"dbTestSQLButtonClick"}]
 						}],
 						panel18: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_2px","wm_Padding_LeftNone","wm_Padding_TopNone"]},"border":"0","height":"48px","layoutKind":"left-to-right"}, {}, {
 						    spacer5: ["wm.Spacer", {"width":"206px"}, {}],
@@ -171,7 +171,7 @@ Security.widgets = {
 					spacer6: ["wm.Spacer", {"height":"2px"}, {}],
 					panel5: ["wm.Panel", {"border":"0","height":"24px","layoutKind":"left-to-right"}, {}, {
 					    spacer7: ["wm.Spacer", {"width":"100%"}, {}],
-					    ldapConnectionButton: ["wm.Button", {"caption":"Test Connection","margin":"2","width":"150px"}, {"onclick":"ldapConnectionButtonClick"}],
+					    ldapConnectionButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, "caption":"Test Connection","margin":"2","width":"150px"}, {"onclick":"ldapConnectionButtonClick"}],
 					    spacer4: ["wm.Spacer", {"width":"2px"}, {}]
 					}],
 					ldapConnectionResultLabel: ["wm.Label", {"border":"0","caption":"ldapConnectionResultLabel","padding":"4"}, {}, {

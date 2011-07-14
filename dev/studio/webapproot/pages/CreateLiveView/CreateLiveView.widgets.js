@@ -28,8 +28,8 @@ CreateLiveView.widgets = {
 					}]
 				}],
 				footer: ["wm.Panel", {border: "0", horizontalAlign: "right", height: "32px", layoutKind: "left-to-right", border: "1,0,0,0", borderColor: "#363b44"}, {}, {
-					okButton: ["wm.Button", {caption: "OK", disabled: true, width: "64px", height: "100%"}, {onclick: "okButtonClick"}],
-					cancelButton: ["wm.Button", {caption: "Cancel", width: "64px", height: "100%"}, {onclick: "cancelButtonClick"}]
+					okButton: ["wm.Button", {domNode: ["StudioButton"]},caption: "OK", disabled: true, width: "64px", height: "100%"}, {onclick: "okButtonClick"}],
+					cancelButton: ["wm.Button", {domNode: ["StudioButton"]},caption: "Cancel", width: "64px", height: "100%"}, {onclick: "cancelButtonClick"}]
 				}]
 			}]
 		}]

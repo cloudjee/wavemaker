@@ -23,14 +23,6 @@
 	color: #FFF;
 }
 
-.BindSourceDialog .BindSourceDialog-bindPanel1 button {
-	background-image:url(images/dark_btn_bg.gif);
-	background-repeat:repeat-x;
-	color: #FFF;
-	font-weight:bold;
-	border: solid 1px #353a44;
-}
-
 .BindSourceDialog .BindSourceDialog-bindTargetLabel, .BindSourceDialog .BindSourceDialog-bindEditor {
 	font-weight: bold;
 	font-size: 110%;

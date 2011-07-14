@@ -120,11 +120,11 @@ ImportDatabase.widgets = {
 
 						}],
 						footer: ["wm.Panel", {height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
-							testConnectionBtn: ["wm.Button", {caption: "Test Connection", width: "160px"}, {onclick: "testConnectionBtnClick"}],
+							testConnectionBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Test Connection", width: "160px"}, {onclick: "testConnectionBtnClick"}],
 							spacer1: ["wm.Spacer", {width: "10px"}, {}],
-							importBtn: ["wm.Button", {caption: "Import", width: "96px", hint: "Import Database"}, {onclick: "importBtnClick"}],
+							importBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Import", width: "96px", hint: "Import Database"}, {onclick: "importBtnClick"}],
 							spacer2: ["wm.Spacer", {width: "10px"}, {}],
-							cancelBtn: ["wm.Button", {caption: "Close", width: "96px"}, {onclick: "cancelBtnClick"}]
+							cancelBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Close", width: "96px"}, {onclick: "cancelBtnClick"}]
 						}]
 
 		}]

@@ -30,21 +30,6 @@
 	backgroud-color: #FFFFFF;
 }
 
-.RestServiceBuilder .RestServiceBuilder-saveButton {
-	background-image:url(images/proj_btn_bg.gif);
-	background-repeat:repeat-x;
-	border: 1px solid #586981;
-	height: 23px;
-	color: #FFFFFF;
-}
-
-.RestServiceBuilder .RestServiceBuilder-saveButton:hover {
-	background-image:url(images/proj_btn_bg_hover.gif);
-	background-repeat:repeat-x;
-	border: 1px solid #586981;
-	height: 23px;
-	color: #FFFFFF;
-}
 
 .RestServiceBuilder .RestServiceBuilder-inputParamsLabel, .RestServiceBuilder .RestServiceBuilder-xmlSchemaLabel {
 	text-align: right;
@@ -76,17 +61,6 @@
 #studio_importWebService_restServiceBuilderPage_restServiceBuilder_removeInParamButton, #studio_importWebService_restServiceBuilderPage_restServiceBuilder_addInParamButton {
 	background: none;
 	border: none;
-	cursor: pointer;
-}
-
-#studio_importWebService_restServiceBuilderPage_restServiceBuilder_populateButton {
-	background-image:url(images/wmbutton_bg.png);
-	background-repeat:repeat-x;
-	color: #FFF;
-	border-left: 1px solid #c0c4ca;
-	border-right: 1px solid #363b44;
-	border-top: 1px solid #c0c4ca;
-	border-bottom: 1px solid #363b44;
 	cursor: pointer;
 }
 

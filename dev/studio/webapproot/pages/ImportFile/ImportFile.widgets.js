@@ -40,7 +40,8 @@ ImportFile.widgets = {
 								   wire: ["wm.Wire", {"targetProperty":"dataValue", source: "fileUploader.variable.name"}, {}]
 							       }]
 							   }],
-					 openButton: ["wm.Button", { caption: "Open Project",
+					 openButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},
+								    caption: "Open Project",
 								     height: "32px",
 								     padding: "0",
 								     margin: "2",

@@ -34,9 +34,9 @@ UserSettings.widgets = {
 				}]
 			}],
 			footer: ["wm.Panel", {layoutKind: "left-to-right",  horizontalAlign: "right", verticalAligh: "bottom", height: "26px", width: "100%"}, {}, {
-			    okButton: ["wm.Button", {caption: "OK", width: "100px", height: "100%"}, {onclick: "okButtonClick"}],
+			    okButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "OK", width: "100px", height: "100%"}, {onclick: "okButtonClick"}],
 				spacer4: ["wm.Spacer", {height: "100%", width: "10px", height: "100%"}, {}],
-			    cancelButton: ["wm.Button", {caption: "Cancel", width: "100px", height: "100%"}, {onclick: "cancelButtonClick"}]
+			    cancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Cancel", width: "100px", height: "100%"}, {onclick: "cancelButtonClick"}]
 			}]
 		}]
 	}]

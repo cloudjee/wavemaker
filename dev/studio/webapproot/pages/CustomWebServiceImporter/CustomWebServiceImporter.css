@@ -28,15 +28,3 @@
     font-weight: bold;
 }
 
-.CustomWebServiceImporter .wmbutton {
-	background-image:url(images/dark_btn_bg.gif);
-	background-repeat:repeat-x;
-	color: #FFF;
-	font-weight:bold;
-	border: solid 1px #353a44;
-}
-
-.CustomWebServiceImporter .wmbutton:hover {
-	background-image:url(images/dark_btn_bg.gif);
-        opacity: 0.8;
-}

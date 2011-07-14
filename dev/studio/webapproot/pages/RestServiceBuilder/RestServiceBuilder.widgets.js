@@ -15,7 +15,7 @@
 RestServiceBuilder.widgets = {
 	layoutBox1: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%"}, {}, {
 		restBuilderToolbar: ["wm.Panel", {border: "0", height: "29px", layoutKind: "left-to-right", contentAlign: "center", padding: "2", horizontalAlign: "center"}, {}, {
-			populateButton: ["wm.Button", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, caption: "Populate From Sample Call", border: "0", margin: "0", hint: "Populate this dialog using a sample REST call", width: "200px"}, {onclick: "populateButtonClick"}]
+			populateButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, caption: "Populate From Sample Call", border: "0", margin: "0", hint: "Populate this dialog using a sample REST call", width: "200px"}, {onclick: "populateButtonClick"}]
 		}],
 		restPropsPanelSpacer: ["wm.Panel", {border: "0", height: "110px", padding: "4,10"}, {}, {
 			restPropsLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, caption: "Web Service Properties", height: "18px", border: "0"}, {}, {
@@ -40,7 +40,7 @@ RestServiceBuilder.widgets = {
 					urlInput: ["wm.Editor", {caption: "Service URL", captionSize: "120px", width: "100%", layoutKind: "left-to-right"}, {}, {
 						editor: ["wm._TextEditor", {}, {}]
 					}],
-					parameterizedButton: ["wm.Button", {caption: "Add Parameter to URL", border: "0", margin: "2", width: "200px"}, {onclick: "parameterizedButtonClick"}]
+					parameterizedButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Add Parameter to URL", border: "0", margin: "2", width: "200px"}, {onclick: "parameterizedButtonClick"}]
 				}]
 			}]
 		}],
@@ -103,7 +103,7 @@ RestServiceBuilder.widgets = {
 					xmlSchemaUrlInput: ["wm.Editor", {caption: "URL or File Path", captionSize: "100px", width: "100%", layoutKind: "left-to-right", showing: false}, {}, {
 						editor: ["wm._TextEditor", {}, {}]
 					}],
-					importXmlSchemaButton: ["wm.Button", {caption: "Refresh", border: "0", margin: "2", width: "100px"}, {onclick: "importXmlSchemaButtonClick"}]
+					importXmlSchemaButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Refresh", border: "0", margin: "2", width: "100px"}, {onclick: "importXmlSchemaButtonClick"}]
 				}],
 				panel13: ["wm.Panel", {border: "0", height: "100%", layoutKind: "left-to-right"}, {}, {
 					panel14: ["wm.Panel", {border: "0", width: "133px"}, {}],
@@ -116,7 +116,7 @@ RestServiceBuilder.widgets = {
 				}],
 				panel11: ["wm.Panel", {showing: true, border: "0", height: "24px", layoutKind: "left-to-right"}, {}, {
 					spacer8: ["wm.Spacer", {width: "100%"}, {}],
-					xml2SchemaButton: ["wm.Button", {caption: "Sample XML Response -> XML Schema", border: "0", margin: "2", width: "250px"}, {onclick: "xml2SchemaButtonClick"}]
+					xml2SchemaButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Sample XML Response -> XML Schema", border: "0", margin: "2", width: "250px"}, {onclick: "xml2SchemaButtonClick"}]
 				}]
 			}]
 		}]

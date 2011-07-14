@@ -115,15 +115,15 @@ DBConnectionSettings.widgets = {
 					}]
 				}],
 				footer: ["wm.Panel", {border: "0", height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
-					testConnectionBtn: ["wm.Button", {caption: "Test Connection", autoSize: false, width: "130px", margin: "4"}, {onclick: "testConnectionBtnClick"}],
+					testConnectionBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Test Connection", autoSize: false, width: "130px", margin: "4"}, {onclick: "testConnectionBtnClick"}],
 					spacer1: ["wm.Spacer", {width: "10px", border: "0"}, {}],
-					saveBtn: ["wm.Button", {caption: "Save", autoSize: false, width: "80px", margin: "4"}, {onclick: "saveBtnClick"}],
+					saveBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Save", autoSize: false, width: "80px", margin: "4"}, {onclick: "saveBtnClick"}],
 					spacer2: ["wm.Spacer", {width: "10px", border: "0"}, {}],
-					reimportBtn: ["wm.Button", {caption: "Re-Import", autoSize: false, width: "100px", margin: "4"}, {onclick: "reimportBtnClick"}],
+					reimportBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Re-Import", autoSize: false, width: "100px", margin: "4"}, {onclick: "reimportBtnClick"}],
 					spacer3: ["wm.Spacer", {width: "10px", border: "0"}, {}],
-					exportBtn: ["wm.Button", {caption: "Export", autoSize: false, width: "80px", margin: "4"}, {onclick: "exportBtnClick"}],
+					exportBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Export", autoSize: false, width: "80px", margin: "4"}, {onclick: "exportBtnClick"}],
 					spacer4: ["wm.Spacer", {width: "10px", border: "0"}, {}],
-					cancelBtn: ["wm.Button", {caption: "Close", autoSize: false, width: "80px", margin: "4"}, {onclick: "cancelBtnClick"}]
+					cancelBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Close", autoSize: false, width: "80px", margin: "4"}, {onclick: "cancelBtnClick"}]
 				}]
 			}]
 		}]
