@@ -65,6 +65,7 @@ dojo.declare("wm.studio.Project", null, {
 			     this.projectsChanged();
 			     studio.endWait(studio.getDictionaryItem("wm.studio.Project.WAIT_CREATING_PROJECT"));
 			 }));
+	    studio.resourceManagerService.requestAsync("getResourceFolder", []);
 		//studio.deploy("Configuring Project...");
 	},
     // pageType and argHash are typically empty
