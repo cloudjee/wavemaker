@@ -121,11 +121,17 @@ dojo.declare("wm.AceEditor", wm.Control, {
     }, 
     setDataValue: function(inValue) {
 	this.dataValue = inValue || ""; // we use this.dataValue in case we get a value before the editor has loaded/initialized
+	this._cachedDataValue = this.dataValue;
 	if (this._editor) {
 	    this._editor.getSession().setValue(this.dataValue);
 	}
     },
-
+    isDirty: function() {
+	return this.getDataValue() != this._cachedDataValue;
+    },
+    clearDirty: function() {
+	this._cachedDataValue = this.dataValue;
+    },
     getText: function() {return this.getDataValue();}, // for EditArea compatibility
     getDataValue: function() {
 	if (this._editor) 
