@@ -132,6 +132,9 @@ dojo.declare("wm.AceEditor", wm.Control, {
     clearDirty: function() {
 	this._cachedDataValue = this.dataValue;
     },
+    reset: function() {
+	this.setDataValue(this._cachedDataValue);
+    },
     getText: function() {return this.getDataValue();}, // for EditArea compatibility
     getDataValue: function() {
 	if (this._editor) 

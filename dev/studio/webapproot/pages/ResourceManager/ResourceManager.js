@@ -362,15 +362,15 @@ dojo.declare("ResourceManager", wm.Page, {
 
     itemSelected: function() {
 	var item = this.tree.selected.data;
-	if (item != this._lastSelectedItem && this._lastSelectedItem && this.editorPanel.showing && this.editor.isDirty()) {
-	    app.confirm(this.getDictionaryItem("LOSE_FILE_EDITS", {fileName: this._lastSelectedItem.itemName}), false,
+	if (this._editorItem && item != this._editorItem && this.editorPanel.showing && this.editor.isDirty()) {
+	    app.confirm(this.getDictionaryItem("LOSE_FILE_EDITS", {fileName: this._editorItem.itemName}), false,
 			dojo.hitch(this, function() {
-			    this.editor.clearDirty();
+			    this.editor.reset();
 			    this.itemSelected();
 			}),
 			dojo.hitch(this, function() {
-			    if (this._lastSelectedItem)
-				this.setSelectedItem(this._lastSelectedItem);
+			    if (this._editorItem)
+				this.setSelectedItem(this._editorItem);
 			}));
 	    return;
 	} else if (this.editorPanel.showing && this.editor.isDirty())
@@ -390,6 +390,7 @@ dojo.declare("ResourceManager", wm.Page, {
 	    this.editorPanel.show();
 	    var text = wm.load("projects/" + studio.project.projectName + "/resources" + this.selectedItem.getResourcelessFilePath());
 	    this.editor.setText(text);
+	    this._editorItem = this.selectedItem;
 	    if (this.selectedItem instanceof wm.HTMLResourceItem) {
 		this.editor.setSyntax("html");
 	    } else if (this.selectedItem instanceof wm.MiscResourceItem) {
@@ -410,10 +411,10 @@ dojo.declare("ResourceManager", wm.Page, {
     },
     saveTextEditor: function() {	
 	var self = this;
-	studio.studioService.requestSync("writeWebFile", ["resources/" + this.selectedItem.getResourcelessFilePath(), this.editor.getDataValue(), false],
+	studio.studioService.requestSync("writeWebFile", ["resources/" + this._editorItem.getResourcelessFilePath(), this.editor.getDataValue(), false],
 					 function() {
 					     app.toastSuccess(self.getDictionaryItem("EDITS_SAVED"));
-					     selef.editor.clearDirty();
+					     self.editor.clearDirty();
 					 },
 					 function() {
 					     app.toastError(self.getDictionaryItem("EDITS_FAILED"));

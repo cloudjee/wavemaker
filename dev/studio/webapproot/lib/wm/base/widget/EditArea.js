@@ -187,6 +187,9 @@ dojo.declare("wm.EditArea", wm.Control, {
     clearDirty: function() {
 	this._cachedDataValue = this.getDataValue();
     },
+    reset: function() {
+	this.setDataValue(this._cachedDataValue);
+    },
 	setSelectionRange: function(inStart, inEnd) {
 		if (this.isStarted()) {
 			inStart = inStart || 0;
