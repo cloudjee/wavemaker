@@ -34,7 +34,7 @@ dojo.declare("wm.Layer", wm.Container, {
 		parent.setCaptionMapLayer(this.caption, null);	    
 	    this.inherited(arguments);
 	    if (parent && parent.conditionalTabButtons)
-		parent.decorator.tabsControl.setShowing(parent.layers.length > 1);
+		parent.decorator.tabsControl.setShowing(parent.getVisibleLayerCount() > 1);
 	},
 	init: function() {
 		this.inherited(arguments);
@@ -75,14 +75,16 @@ dojo.declare("wm.Layer", wm.Container, {
 	setShowing: function(inShowing) {
 		if (!this.canChangeShowing())
 			return;
+	        var p = this.parent;
 		if (this.showing != inShowing) {
 			this.showing = inShowing;
 			this.decorator.setLayerShowing(this, inShowing);
-			var p = this.parent;
 			if (!inShowing && p.layerIndex == this.getIndex()) {
 				p.setNext();
 			}
 		}
+	    if (p && p.conditionalTabButtons)
+		p.decorator.tabsControl.setShowing(p.getVisibleLayerCount() > 1);
 	},
         show: function() {
 	    this.setShowing(true);
@@ -198,6 +200,15 @@ dojo.declare("wm.Layers", wm.Container, {
 		if (dl)
 			this._setLayerIndex(dl.getIndex());
 	},
+    getVisibleLayerCount: function() {
+	var count = 0;
+	for (var i = 0; i < this.layers.length; i++) {
+	    if (this.layers[i].showing) {
+		count++;
+	    }
+	}
+	return count;
+    },
 	createLayer: function(inCaption) {
 		var
 			defName = this.owner.getUniqueName(inCaption || "layer1"),
@@ -552,13 +563,13 @@ dojo.declare("wm.TabLayers", wm.Layers, {
 	    if (!this._cupdating && !this.owner._loadingPage)
 		this.renderBounds();
 	    if (this.conditionalTabButtons)
-		this.decorator.tabsControl.setShowing(this.layers.length > 1);
+		this.decorator.tabsControl.setShowing(this.getVisibleLayerCount() > 1);
 	    return result;
 	},
 	removeLayer: function(inIndex) {
 	    this.inherited(arguments);
 	    if (this.conditionalTabButtons)
-		this.decorator.tabsControl.setShowing(this.layers.length > 1);
+		this.decorator.tabsControl.setShowing(this.getVisibleLayerCount() > 1);
 	},
     // onClose handles both destroy and close as long as it came from clicking the close icon in the tab button
     onClose: function(inLayer) {
