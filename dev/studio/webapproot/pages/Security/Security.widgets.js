@@ -156,27 +156,74 @@ Security.widgets = {
 					ldapUserDnPatternInput: ["wm.Editor", {"border":"0","caption":"User DN Pattern","emptyValue":"null","height":"20px","padding":"2"}, {"onchange":"setDirty"}, {
 					    editor: ["wm._TextEditor", {}, {}]
 					}],
-					ldapSearchRoleCheckbox: ["wm.CheckBoxEditor", {"border":"0","caption":"Search User Role","displayValue":"1","emptyValue":"null","height":"20px","padding":"2"}, {"onchange":"ldapSearchRoleCheckboxChange"}, {
-					    editor: ["wm._CheckBoxEditor", {}, {}]
+					panel5: ["wm.Panel", {"height":"24px","layoutKind":"left-to-right"}, {}, {
+						spacer7: ["wm.Spacer", {"width":"100%"}, {}],
+						ldapConnectionButton: ["wm.Button", {"caption":"Test Connection","margin":"2","width":"150px"}, {"onclick":"ldapConnectionButtonClick"}],
+						spacer4: ["wm.Spacer", {"width":"2px"}, {}]
 					}],
-					ldapGroupSearchBaseInput: ["wm.Editor", {"border":"0","caption":"Group Search Base","emptyValue":"null","height":"20px","padding":"2"}, {"onchange":"setDirty"}, {
-					    editor: ["wm._TextEditor", {}, {}]
+					ldapConnectionResultLabel: ["wm.Label", {"caption":"ldapConnectionResultLabel","border":"0","height":"24px"}, {}, {
+						format: ["wm.DataFormatter", {}, {}]
+					}],							
+					ldapSearchRoleCheckbox: ["wm.CheckBoxEditor", {"caption":"Search User Role","height":"20px","width":"100%","emptyValue":"null"}, {"onchange":"ldapSearchRoleCheckboxChange"}, {
+						editor: ["wm._CheckBoxEditor", {}, {}]
 					}],
-					ldapGroupRoleAttributeInput: ["wm.Editor", {"border":"0","caption":"Group Role Attribute","emptyValue":"null","height":"20px","padding":"2"}, {"onchange":"setDirty"}, {
-					    editor: ["wm._TextEditor", {}, {}]
+					ldapRoleProviderInput: ["wm.Editor", {"caption":"Select User Role Provider","emptyValue":"null","height":"20px","display":"Select"}, {"onchange":"ldapRoleProviderInputChange"}, {
+						editor: ["wm._SelectEditor", {}, {}]
 					}],
-					ldapGroupSearchFilterInput: ["wm.Editor", {"border":"0","caption":"Group Search Filter","emptyValue":"null","height":"20px","padding":"2"}, {"onchange":"setDirty"}, {
-					    editor: ["wm._TextEditor", {}, {}]
+					ldapRoleLdapPanel: ["wm.Panel", {"width":"100%", "height":"100px"},{},{
+						ldapGroupSearchBaseInput: ["wm.Editor", {"caption":"Group Search Base","emptyValue":"null","height":"20px"}, {onchange: "setDirty"}, {
+							editor: ["wm._TextEditor", {}, {}]
+						}],
+						ldapGroupRoleAttributeInput: ["wm.Editor", {"caption":"Group Role Attribute","emptyValue":"null","height":"20px"}, {onchange: "setDirty"}, {
+							editor: ["wm._TextEditor", {}, {}]
+						}],
+						ldapGroupSearchFilterInput: ["wm.Editor", {"caption":"Group Search Filter","emptyValue":"null","height":"20px"}, {onchange: "setDirty"}, {
+							editor: ["wm._TextEditor", {}, {}]
+						}]								
 					}],
-					spacer6: ["wm.Spacer", {"height":"2px"}, {}],
-					panel5: ["wm.Panel", {"border":"0","height":"24px","layoutKind":"left-to-right"}, {}, {
-					    spacer7: ["wm.Spacer", {"width":"100%"}, {}],
-					    ldapConnectionButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, "caption":"Test Connection","margin":"2","width":"150px"}, {"onclick":"ldapConnectionButtonClick"}],
-					    spacer4: ["wm.Spacer", {"width":"2px"}, {}]
-					}],
-					ldapConnectionResultLabel: ["wm.Label", {"border":"0","caption":"ldapConnectionResultLabel","padding":"4"}, {}, {
-					    format: ["wm.DataFormatter", {}, {}]
-					}]
+					ldapRoleDBPanel: ["wm.Panel", {"width":"100%", "height":"200px"},{},{
+						ldapRoleDbDataModelInput: ["wm.Editor", {"caption":"Data Model","emptyValue":"null","height":"20px","display":"Select"}, {"onchange":"ldapRoleDbDataModelInputChange"}, {
+							editor: ["wm._SelectEditor", {}, {}]
+						}],
+						ldapRoleDbEntityInput: ["wm.Editor", {"caption":"Entity","emptyValue":"null","height":"20px","display":"Select"}, {"onchange":"ldapRoleDbEntityInputChange"}, {
+							editor: ["wm._SelectEditor", {}, {}]
+						}],
+						ldapRoleDbUsernameInput: ["wm.Editor", {"caption":"Username Field","emptyValue":"null","height":"20px","display":"Select"}, {onchange: "setDirty"}, {
+							editor: ["wm._SelectEditor", {}, {}]
+						}],																
+						ldapRoleDbRoleInput: ["wm.Editor", {"caption":"Role Field","emptyValue":"null","height":"20px","display":"Select"}, {onchange: "setDirty"}, {
+							editor: ["wm._SelectEditor", {}, {}]
+						}],
+						ldapRoleBySQLPanel: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_RightNone","wm_Padding_LeftNone","wm_Padding_BottomNone","wm_Padding_4px"]},"height":"150px"}, {}, {
+							panel26: ["wm.Panel", {"height":"24px","layoutKind":"left-to-right"}, {}, {
+								ldapRoleBySQLCheckbox: ["wm.CheckBoxEditor", {"captionSize":"380px","caption":"Roles By SQL Query","width":"100%","captionAlign":"left","captionPosition":"right"}, {"onchange":"ldapRoleBySQLCheckboxChange"}, {
+									editor: ["wm._CheckBoxEditor", {}, {}]
+								}]
+							}],
+							ldapRoleBySQLEnablePanel: ["wm.Panel", {"height":"150px","width":"100%"}, {}, {
+								ldapRoleBySQLInput: ["wm.Editor", {"width":"100%","caption":" ","emptyValue":"null","height":"48px","display":"TextArea"}, {onchange: "setDirty"}, {
+									editor: ["wm._TextAreaEditor", {}, {}]
+								}],
+								panel23: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_2px"]},"height":"24px","layoutKind":"left-to-right"}, {}, {
+									spacer26: ["wm.Spacer", {"width":"100%"}, {}],
+									ldapTestSQLInput: ["wm.Editor", {"caption":"User ID","emptyValue":"null","width":"250px"}, {onchange: "setDirty"}, {
+										editor: ["wm._TextEditor", {}, {}]
+									}],
+									ldapTestSQLButton: ["wm.Button", {"caption":"Test Query","margin":"2","width":"100px"}, {"onclick":"ldapTestSQLButtonClick"}]
+								}],
+								panel24: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_2px","wm_Padding_LeftNone","wm_Padding_TopNone"]},"height":"48px","layoutKind":"left-to-right"}, {}, {
+									spacer25: ["wm.Spacer", {"width":"206px"}, {}],
+									ldapTestSQLResultList: ["wm.List", {"_classes":{"domNode":["wm_Border_Size1px","wm_Border_StyleSolid","wm_Border_ColorLightGray"]},"width":"100%","border":"0"}, {}]
+								}],
+								panel25: ["wm.Panel", {"height":"30px","layoutKind":"left-to-right"}, {}, {
+									spacer24: ["wm.Spacer", {"width":"206px"}, {}],
+									ldapTestSQLErrorLabel: ["wm.Label", {"caption":"dbTestSQLErrorLabel","border":"0","width":"100%"}, {}, {
+										format: ["wm.DataFormatter", {}, {}]
+									}]
+								}]
+							}]
+						}]								
+					}]	
 				    }],
 				    jossoLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"JOSSO"}, {"onShow":"showJossoLayer"}, {
 					userNotice: ["wm.Html", {"border":"0","height":"142px","html":"<h3> Edit web.xml <BR> Register as partner app in agent config <BR> Copy jsp to webapproot</h3>","width":"359px"}, {}]
