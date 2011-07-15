@@ -28,5 +28,8 @@ ALERT_UNZIP_FAILED:  "Failed to unzip the file",
 ALERT_ADDJAR_FAILED: "Failed to add jar to classpath",
 ALERT_REMOVEJAR_FAILED: "Failed to remove jar from classpath",
 ALERT_ADDJAR_SUCCESS:  "File added to classpath",
-ALERT_REMOVEJAR_SUCCESS: "File removed from classpath"
+    ALERT_REMOVEJAR_SUCCESS: "File removed from classpath",
+    EDITS_FAILED: "Save Failed!",
+    EDITS_SAVED: "Changes Saved",
+    LOSE_FILE_EDITS: "Changing files will cause changes to ${fileName} to be lost; continue?"
 }
