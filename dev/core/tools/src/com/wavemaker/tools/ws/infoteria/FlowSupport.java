@@ -50,24 +50,24 @@ public class FlowSupport {
 
     private final String baseXsd = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<xs:schema attributeFormDefault=\"unqualified\" elementFormDefault=\"qualified\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">\n" +
-                "  <xs:element name=\"result\" type=\"resultType\"/>\n" +
-                "  <xs:complexType name=\"dataType\">\n" +
+                "  <xs:element name=\"result\" type=\"operation_name_ResultType\"/>\n" +
+                "  <xs:complexType name=\"operation_name_DataType\">\n" +
                 "    <xs:sequence>\n" +
-                "      <xs:element type=\"recordType\" name=\"record\"/>\n" +
+                "      <xs:element type=\"operation_name_RecordType\" name=\"record\"/>\n" +
                 "    </xs:sequence>\n" +
                 "  </xs:complexType>\n" +
-                "  <xs:complexType name=\"streamType\">\n" +
+                "  <xs:complexType name=\"operation_name_StreamType\">\n" +
                 "    <xs:sequence>\n" +
-                "      <xs:element type=\"dataType\" name=\"data\"/>\n" +
+                "      <xs:element type=\"operation_name_DataType\" name=\"data\"/>\n" +
                 "    </xs:sequence>\n" +
                 "  </xs:complexType>\n" +
-                "  <xs:complexType name=\"resultType\">\n" +
+                "  <xs:complexType name=\"operation_name_ResultType\">\n" +
                 "    <xs:sequence>\n" +
-                "      <xs:element type=\"streamType\" name=\"stream\"/>\n" +
+                "      <xs:element type=\"operation_name_StreamType\" name=\"stream\"/>\n" +
                 "      <xs:element type=\"xs:string\" name=\"id\"/>\n" +
                 "    </xs:sequence>\n" +
                 "  </xs:complexType>\n" +
-                "  <xs:complexType name=\"recordType\">\n" +
+                "  <xs:complexType name=\"operation_name_RecordType\">\n" +
                 "    <xs:sequence>\n" +
                 "    </xs:sequence>\n" +
                 "  </xs:complexType>\n" +
@@ -196,16 +196,16 @@ public class FlowSupport {
     //Imports Flow metadata, creates WSDL and generate service (service = project, flows = operations)
     public void importFlows(String host, String port, String userName, String password, String domain, String projectName,
                             String sessionId) throws Exception {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        /*DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
         DocumentBuilder docBuilder = dbf.newDocumentBuilder();
         InputStream is = new ByteArrayInputStream(baseXsd.getBytes());
 
-        Document doc = docBuilder.parse (is);
+        Document doc = docBuilder.parse (is);*/
 
         JSONArray flowList = getFlowList(host, port, projectName, sessionId);
 
-        doc = completeXsd(doc, flowList);
+        /*doc = completeXsd(doc, flowList);
 
         TransformerFactory tFactory = TransformerFactory.newInstance();
         Transformer tFormer = tFactory.newTransformer();
@@ -213,18 +213,46 @@ public class FlowSupport {
         Source source = new DOMSource(doc);
         ByteArrayOutputStream ost = new ByteArrayOutputStream();
         Result dest = new StreamResult(ost);
-        tFormer.transform(source, dest);
+        tFormer.transform(source, dest);*/
 
         WebServiceToolsManager wstMgr = this.getWSToolsMgr();
         List<String> flowNames = getFlowNames(flowList);
         List<List<RESTInputParam>> inputParms = getInputParms(flowList);
         String url = getUrl(host, port);
-        String xsd = ost.toString();
+        //String xsd = ost.toString();
+        List<String> xsds = buildXsds(flowList);
 
         wstMgr.buildRestService(projectName, flowNames, inputParms, url, "POST", "application/x-www-form-urlencoded",
-                "result", xsd, null, true);
+                "result", xsds, null, true);
 
         createWarpPropertyFile(projectName, host, port, userName, password, domain);
+    }
+
+    private List<String> buildXsds(JSONArray flowList) throws Exception {
+        List<String> xsds = new ArrayList<String>();
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
+        DocumentBuilder docBuilder = dbf.newDocumentBuilder();
+
+        for (int i=0; i<flowList.length(); i++) {
+            InputStream is = new ByteArrayInputStream(baseXsd.getBytes());
+            Document doc = docBuilder.parse (is);
+
+            JSONObject flow = (JSONObject)flowList.get(i);
+
+            doc = completeXsd(doc, flow);
+
+            TransformerFactory tFactory = TransformerFactory.newInstance();
+            Transformer tFormer = tFactory.newTransformer();
+            Source source = new DOMSource(doc);
+            ByteArrayOutputStream ost = new ByteArrayOutputStream();
+            Result dest = new StreamResult(ost);
+            tFormer.transform(source, dest);
+
+            xsds.add(ost.toString());
+        }
+
+        return xsds;
     }
 
     private void createWarpPropertyFile(String projectName, String host, String port, String userName, String password,
@@ -311,7 +339,7 @@ public class FlowSupport {
         return restParms;
     }
 
-    private Document completeXsd(Document doc, JSONArray flowList) throws Exception {
+    private Document completeXsd(Document doc, JSONObject flow) throws Exception {
         NodeList complexTypes = doc.getElementsByTagNameNS("*", "complexType");
 
         Node recordTypeNode = null;
@@ -332,24 +360,16 @@ public class FlowSupport {
         }
 
         Node sequenceNode = recordTypeNode.getFirstChild();
+        JSONObject stream = (JSONObject)flow.get("stream");
+        JSONArray fields = (JSONArray)stream.get("field");
 
-        //Now traverse the flow list and insert output fields and types into xsd
+        for (int j=0; j<fields.length(); j++) {
+            JSONObject field = (JSONObject)fields.get(j);
+            Element elem = doc.createElementNS("xs", "element");
+            elem.setAttribute("name", (String)field.get("name"));
+            elem.setAttribute("type", (String)field.get("type"));
 
-        for (int i=0; i<flowList.length(); i++) {
-            List<RESTInputParam> flowParms = new ArrayList<RESTInputParam>();
-
-            JSONObject flow = (JSONObject)flowList.get(i);
-            JSONObject stream = (JSONObject)flow.get("stream");
-            JSONArray fields = (JSONArray)stream.get("field");
-
-            for (int j=0; j<fields.length(); j++) {
-                JSONObject field = (JSONObject)fields.get(j);
-                Element elem = doc.createElementNS("xs", "element");
-                elem.setAttribute("name", (String)field.get("name"));
-                elem.setAttribute("type", (String)field.get("type"));
-                
-                sequenceNode.appendChild(elem);
-            }
+            sequenceNode.appendChild(elem);
         }
 
         return doc;

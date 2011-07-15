@@ -342,9 +342,13 @@ public class WebServiceToolsManager {
          operationName_list.add(operationName);
          List<List<RESTInputParam>> inputParms_list = new ArrayList<List<RESTInputParam>>();
          inputParms_list.add(inputs);
+         List<String> xmlSchema_list = new ArrayList<String>();
+         xmlSchema_list.add(xmlSchemaText);
+         List<String> xmlSchemaPath_list = new ArrayList<String>();
+         xmlSchemaPath_list.add(xmlSchemaPath);
 
          String result = buildRestService(serviceName, operationName_list, inputParms_list, parameterizedUrl,
-                 method, contentType, outputType, xmlSchemaText, xmlSchemaPath, overwrite);
+                 method, contentType, outputType, xmlSchema_list, xmlSchemaPath_list, overwrite);
 
          return result;
      }
@@ -367,10 +371,10 @@ public class WebServiceToolsManager {
      *                "application/json-rpc".
      * @param outputType
      *                The XML qualified name of the ouput type.
-     * @param xmlSchemaText
-     *                Represents a XML schema or multipe XML schemas using
+     * @param xmlSchema_list Each element of this list
+     *                represents a XML schema or multipe XML schemas using
      *                <code>XML_SCHEMA_TEXT_SEPERATOR</code>
-     * @param xmlSchemaPath
+     * @param xmlSchemaPath_list
      *                The path (either URL or file) to the XML schema.
      * @param overwrite
      *                true to overwrite the service with the same service ID;
@@ -388,7 +392,7 @@ public class WebServiceToolsManager {
     public String buildRestService(String serviceName, List<String> operationName_list, //xxx
             List<List<RESTInputParam>> inputs_list, String parameterizedUrl,
             String method, String contentType, String outputType,
-            String xmlSchemaText, String xmlSchemaPath, boolean overwrite)
+            List<String> xmlSchema_list, List<String> xmlSchemaPath_list, boolean overwrite)
             throws IOException, javax.wsdl.WSDLException, SAXException,
             ParserConfigurationException, WSDLException, JAXBException,
             TransformerException {
@@ -397,7 +401,7 @@ public class WebServiceToolsManager {
 
         RESTWsdlGenerator restWsdlGenerator = new RESTWsdlGenerator(
                 serviceName, constructNamespace(parameterizedUrl), operationName_list,
-                parameterizedUrl);
+                parameterizedUrl, xmlSchema_list, xmlSchemaPath_list);
         restWsdlGenerator.setHttpMethod(method);
         restWsdlGenerator.setContentType(contentType);
 
@@ -436,7 +440,8 @@ public class WebServiceToolsManager {
                 restWsdlGenerator.setOutputElementType(outType);
             }
         }
-        if (xmlSchemaText != null && xmlSchemaText.length() > 0) {
+
+        /*if (xmlSchemaText != null && xmlSchemaText.length() > 0) {
             List<String> schemaStrings = seperateXmlSchemaText(xmlSchemaText);
             restWsdlGenerator.setSchemaStrings(schemaStrings);
         }
@@ -447,7 +452,7 @@ public class WebServiceToolsManager {
                 schemaElements.add(schemaDocument.getDocumentElement());
             }
             restWsdlGenerator.setSchemaElements(schemaElements);
-        }
+        }*/
         File tempDir = IOUtils.createTempDirectory();
         try {
             File wsdlFile = new File(tempDir, serviceName + Constants.WSDL_EXT);
@@ -785,7 +790,7 @@ public class WebServiceToolsManager {
      * schemaText represents an XML schema or mulitple XML schemas using <code>
      * XML_SCHEMA_TEXT_SEPERATOR</code>.
      */
-    private static List<String> seperateXmlSchemaText(String schemaText) {
+    public static List<String> seperateXmlSchemaText(String schemaText) {
         if (schemaText == null) {
             return Collections.emptyList();
         }
@@ -858,7 +863,7 @@ public class WebServiceToolsManager {
     /**
      * Constructs an <code>XmlSchema</code> object for the given schema path.
      */
-    private static XmlSchema constructXmlSchema(String schemaPath)
+    public static XmlSchema constructXmlSchema(String schemaPath)
             throws IOException {
         URL url = null;
         if (schemaPath.startsWith("http")) {

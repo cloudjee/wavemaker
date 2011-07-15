@@ -52,6 +52,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.apache.ws.commons.schema.XmlSchema;
 
 import com.ibm.wsdl.InputImpl;
 import com.ibm.wsdl.MessageImpl;
@@ -98,6 +99,10 @@ public class RESTWsdlGenerator {
     
     private String contentType;
 
+    private List<String> xmlSchema_list = null;
+
+    private List<String> xmlSchemaPath_list = null;
+
     /**
      * Constructor.
      * 
@@ -106,25 +111,32 @@ public class RESTWsdlGenerator {
      * @param namespace
      *                The namespace for this service. This is mainly used for
      *                generating Java package.
-     * @param operationName
-     *                The operation name.
+     * @param operationName_list
+     *                The list of the operation names.
      * @param parameterizedUrl
      *                The URL with parameters.
+     * @param xmlSchema_list
+     *                The list of the xml schemas.
+     * @param xmlSchemaPath_list
+     *                The list of the xml schema paths.
      */
+    public RESTWsdlGenerator(String serviceName, String namespace,
+            List<String> operationName_list, String parameterizedUrl, List<String> xmlSchema_list,
+            List<String> xmlSchemaPath_list) {
+        this.serviceName = serviceName;
+        this.namespace = namespace;
+        this.operationName_list = operationName_list;
+        this.parameterizedUrl = parameterizedUrl;
+        this.xmlSchema_list = xmlSchema_list;
+        this.xmlSchemaPath_list = xmlSchemaPath_list;
+    }
+
     public RESTWsdlGenerator(String serviceName, String namespace,
             String operationName, String parameterizedUrl) {
         this.serviceName = serviceName;
         this.namespace = namespace;
         this.operationName_list = new ArrayList<String>();
         this.operationName_list.add(operationName);
-        this.parameterizedUrl = parameterizedUrl;
-    }
-
-    public RESTWsdlGenerator(String serviceName, String namespace,
-            List<String> operationName_list, String parameterizedUrl) {
-        this.serviceName = serviceName;
-        this.namespace = namespace;
-        this.operationName_list = operationName_list;
         this.parameterizedUrl = parameterizedUrl;
     }
 
@@ -176,7 +188,12 @@ public class RESTWsdlGenerator {
                 generateDocumentation(Constants.REST_ENDPOINT_LOCATION_PREFIX
                         + parameterizedUrl));
 
-        definition.setTypes(generateTypes());
+        if (xmlSchema_list == null && xmlSchemaPath_list == null) {
+            Types types = new TypesImpl();
+            definition.setTypes(generateTypes(types, this.schemaStrings, this.schemaElements));
+        } else {
+            definition.setTypes(generateTypes());
+        }
 
         Message inputMessage;
         Message outputMessage;
@@ -242,6 +259,60 @@ public class RESTWsdlGenerator {
     private Types generateTypes() throws SAXException, IOException,
             ParserConfigurationException {
         Types types = new TypesImpl();
+        int i = 0;
+        for (String operationName : operationName_list) {
+            String xmlSchemaText = xmlSchema_list.get(i);
+            String xmlSchemaPath = xmlSchemaPath_list.get(i);
+
+            xmlSchemaText = xmlSchemaText.replaceAll("operation_name_", operationName);
+
+            List<String> schemaStrings = null;
+            if (xmlSchemaText != null && xmlSchemaText.length() > 0) {
+                schemaStrings = WebServiceToolsManager.seperateXmlSchemaText(xmlSchemaText);
+            }
+
+            List<Element> schemaElements = null;
+            if (xmlSchemaPath != null && xmlSchemaPath.length() > 0) {
+                XmlSchema xmlSchema = WebServiceToolsManager.constructXmlSchema(xmlSchemaPath);
+                schemaElements = new ArrayList<Element>();
+                for (Document schemaDocument : xmlSchema.getAllSchemas()) {
+                    schemaElements.add(schemaDocument.getDocumentElement());
+                }
+            }
+
+            /*if (schemaStrings != null) {
+                for (String schemaString : schemaStrings) {
+                    Schema schema = new SchemaImpl();
+                    schema.setElementType(new QName(Constants.XSD_NS, "schema"));
+
+                    DocumentBuilderFactory dbf = DocumentBuilderFactory
+                            .newInstance();
+                    DocumentBuilder db = dbf.newDocumentBuilder();
+                    Reader reader = new StringReader(schemaString);
+                    Document doc = db.parse(new InputSource(reader));
+
+                    schema.setElement(doc.getDocumentElement());
+                    types.addExtensibilityElement(schema);
+                }
+            }
+            if (schemaElements != null) {
+                for (Element schemaElement : schemaElements) {
+                    Schema schema = new SchemaImpl();
+                    schema.setElementType(new QName(Constants.XSD_NS, "schema"));
+                    schema.setElement(schemaElement);
+                    types.addExtensibilityElement(schema);
+                }
+            }*/
+
+            types = generateTypes(types, schemaStrings, schemaElements);
+        }
+        return types;
+    }
+
+    private Types generateTypes(Types types, List<String> schemaStrings, List<Element> schemaElements) 
+            throws SAXException, IOException,
+            ParserConfigurationException {
+        //Types types = new TypesImpl();
         if (schemaStrings != null) {
             for (String schemaString : schemaStrings) {
                 Schema schema = new SchemaImpl();
