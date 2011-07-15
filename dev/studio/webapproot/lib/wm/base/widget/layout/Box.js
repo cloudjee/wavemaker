@@ -423,12 +423,15 @@ dojo.declare("wm.layout.HBox", wm.layout.Box, {
 					break;
 				}
 				x = c.bounds.r;
+			    ioRect.control = c;
 			}
 		}
-		var b = inContainer.getContentBounds();
-		ioRect.l = x;
-		ioRect.t = b.t;
-		ioRect.h = b.h;
+	        var containercoords = dojo.coords(inContainer.domNode);
+	        var coords = dojo.coords(ioRect.control.domNode);
+	    var styleBounds = inContainer.getStyleBounds();
+	        ioRect.l = coords.x + coords.w;
+		ioRect.t = containercoords.y;
+		ioRect.h = styleBounds.h;
 		ioRect.i = i;
 	}
 });
@@ -444,13 +447,17 @@ dojo.declare("wm.layout.VBox", wm.layout.Box, {
 					break;
 				}
 				y = c.bounds.b;
+			    ioRect.control = c;
 			}
 		}
-		var b = inContainer.getContentBounds();
-		ioRect.l = b.l;
-		ioRect.t = y;
-		ioRect.w = b.w;
+	        var containercoords = dojo.coords(inContainer.domNode);
+	        var coords = dojo.coords(ioRect.control.domNode);
+	    var styleBounds = inContainer.getStyleBounds();
+		ioRect.l = containercoords.x;
+	        ioRect.t = coords.y + coords.h;
+		ioRect.w = styleBounds.w;
 		ioRect.i = i;
+
 	}
 });
 

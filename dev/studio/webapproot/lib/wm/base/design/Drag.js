@@ -79,14 +79,16 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 		if (this.target && this.designable) {
 			// calculate suggested drop rect
 			var r = { l: this.pxp - this.targetOff.x, t: this.pyp - this.targetOff.y, w:0, h: 0, dx: this.dx, dy: this.dy};
+		    //console.log(this.target.toString() + ": " + r.t + ", " + r.dy);
 			this.target.suggestDropRect(this.info.control, r);
 
 
 			// position the drop marker
 		    var designerBounds = dojo.coords(studio.designer.domNode);
-		    kit._setMarginBox(this.markNode, r.l + this.targetOff.x, r.t + this.targetOff.y, 
-				      Math.min(r.w, designerBounds.x+designerBounds.w - r.l-this.targetOff.x),
-				      Math.min(r.h, designerBounds.y+designerBounds.h - r.t - this.targetOff.y));
+		    kit._setMarginBox(this.markNode, r.l,r.t,/*r.l + this.targetOff.x, r.t + this.targetOff.y, */
+				      Math.min(r.w, designerBounds.x+designerBounds.w - r.l),
+				      Math.min(r.h, designerBounds.y+designerBounds.h - r.t));		    
+		    //console.log("MARKER: Width:" + r.w + "; designerBounds.x:"+designerBounds.x +  "; designerBounds.w:"+designerBounds.w + " - r.l: " + r.l + " = " + this.markNode.style.width);
 			// position the snap markers
 			wm.showHideNode(this.hSnapNode, Boolean(r.hSnap));
 			if (r.hSnap) {
@@ -121,6 +123,7 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 			this.setCursor("default");
 			this.targetNode = this.target.containerNode || this.target.domNode;
 			this.targetOff = wm.calcOffset(this.targetNode, this.scrimNode, true);
+		    console.log("targetNode:"+this.targetNode.id + "; " + this.scrimNode.id);
 		} else {
 			this.setCursor("no-drop");
 			this.targetNode = null;
