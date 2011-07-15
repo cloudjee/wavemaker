@@ -1966,6 +1966,10 @@ color: rgb(0,270,0);
     position: relative;
     top: 2px;
 }
+.dj_ie9 .StudioDirtyIcon {
+	border-radius: 0px;
+}
+
 #studio_sourceTabs .StudioDirtyIcon,
 #studio_JavaEditorSubTab .StudioDirtyIcon,
 #studio_databaseSubTab .StudioDirtyIcon,
