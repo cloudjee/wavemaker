@@ -60,13 +60,13 @@ dojo.declare("Security", wm.Page, {
 			//scrimBackground: true,
 			//hideOnClick: false,
 			//positionLocation: " l",
-                        width: "500px",
-                        height: "200px",
-                        useContainerWidget: false,
-                        modal: false,
-                        noEscape: false,
-                        hideControls: true,
-                        corner: "tr"
+			width: "500px",
+			height: "200px",
+			useContainerWidget: false,
+			modal: false,
+			noEscape: false,
+			hideControls: true,
+			corner: "tr"
 			};
 		    var d = this.helpDialog = new wm.PageDialog(props);
 		}
@@ -82,7 +82,9 @@ dojo.declare("Security", wm.Page, {
 		// 2) retrieve project Security settings and populate those settings in the Editor.
 		this.clearSelectInput(this.secProviderInput);
 		this.initSecProviderInput();
+		this.initLdapRoleProviderInput(); // added by Girish
 		this.databaseOptions = {};
+		this.ldapOptions = {};
 		this.secEnableInput.setChecked(true);
 	    this.servicesLayer.setShowing(true);
 		this.showLoginPageInput.setChecked(true);
@@ -90,6 +92,8 @@ dojo.declare("Security", wm.Page, {
 		this.ldapSearchRoleCheckboxChange(this.ldapSearchRoleCheckbox);
 		this.dbRoleBySQLCheckbox.setChecked(false);
 		this.dbRoleBySQLCheckboxChange(this.dbRoleBySQLCheckbox);
+		this.ldapRoleBySQLCheckbox.setChecked(false);
+		this.ldapRoleBySQLCheckboxChange(this.ldapRoleBySQLCheckbox);		
 		this.demoUserList.renderData([{userid: "demo", password: "demo"}]);
 		this.resetDatabaseInputs();
 		this.resetLDAPInputs();
@@ -105,6 +109,14 @@ dojo.declare("Security", wm.Page, {
 			l.push("JOSSO");
 		this.updateSelect(this.secProviderInput, l);
 		this.secProviderInputChange(this.secProviderInput, this.secProviderInput.editor.getEditorValue());
+	},
+	/**
+	 * Added by Girish
+	 */
+	initLdapRoleProviderInput: function(){
+		var l = [this.SELECT_ONE, "LDAP", "Database"];
+		this.updateSelect(this.ldapRoleProviderInput, l);
+		this.ldapRoleProviderInput.setDataValue(this.SELECT_ONE);
 	},
 	updateSelect: function(inSelect, inData) {
 		var s = inSelect, o;
@@ -165,13 +177,18 @@ dojo.declare("Security", wm.Page, {
 		this.ldapGroupRoleAttributeInput.setDataValue("cn");
 		this.ldapGroupSearchFilterInput.setDataValue("(member={0})");
 		this.ldapConnectionResultLabel.setCaption("");
+		// Added by Girish
+		this.clearSelectInput(this.ldapRoleDbDataModelInput);
+		this.clearSelectInput(this.ldapRoleDbEntityInput);
+		this.clearSelectInput(this.ldapRoleDbRoleInput);
+		this.clearSelectInput(this.ldapRoleDbUsernameInput);
 	},
 	resetJOSSOInputs: function() {
   //TODO 		
 	},	
 	
 	secProviderInputChange: function(inSender, inValue) {
-		if (inValue == "Demo") {
+		if(inValue == "Demo") {
 			this.layers.setLayer("demoLayer");
 			//this.disableAll(false);
 			this.secEnableInput.setShowing(true);
@@ -191,6 +208,10 @@ dojo.declare("Security", wm.Page, {
 			//this.disableAll(false);
 			this.secEnableInput.setShowing(true);
 			this.securityCheckboxChange();
+			//GD (we need to get the data model list too, since they can use DB to get roles)
+			if(!this.populatingOptions){
+				this.getDataModelList();
+			}
 		} else if (inValue == "JOSSO") {
 			this.layers.setLayer("jossoLayer");
 		     this.servicesLayer.setShowing(false);
@@ -209,8 +230,7 @@ dojo.declare("Security", wm.Page, {
 	    this.setDirty();
 	},
 	populateGeneralOptions: function() {
-		studio.securityConfigService.requestSync("getGeneralOptions", null, 
-			dojo.hitch(this, "getGeneralOptionsResult"));
+		studio.securityConfigService.requestSync("getGeneralOptions", null, dojo.hitch(this, "getGeneralOptionsResult"));
 	},
 	getGeneralOptionsResult: function(inResponse) {
 		if (inResponse) {
@@ -245,26 +265,24 @@ dojo.declare("Security", wm.Page, {
 		this.roleList.renderData(inResponse);
   },
 	populateDemoOptions: function() {
-		studio.securityConfigService.requestSync("getDemoOptions", null, 
-			dojo.hitch(this, "getDemoOptionsResult"));
+		studio.securityConfigService.requestSync("getDemoOptions", null, dojo.hitch(this, "getDemoOptionsResult"));
 	},
 	getDemoOptionsResult: function(inResponse) {
 		this.demoUserList.renderData(inResponse.users);
 	},
 	populateDatabaseOptions: function() {
-		studio.securityConfigService.requestSync("getDatabaseOptions", null, 
-			dojo.hitch(this, "getDatabaseOptionsResult"));
+		studio.securityConfigService.requestSync("getDatabaseOptions", null, dojo.hitch(this, "getDatabaseOptionsResult"));
 	},
 	getDatabaseOptionsResult: function(inResponse) {
 		this.databaseOptions = inResponse;
 		this.dbDataModelInput.setDataValue(inResponse.modelName);
-                this.dbDataModelInput.editor.changed();
+		this.dbDataModelInput.editor.changed();
 	},
 	populateLDAPOptions: function() {
-		studio.securityConfigService.requestSync("getLDAPOptions", null, 
-			dojo.hitch(this, "getLDAPOptionsResult"));
+		studio.securityConfigService.requestSync("getLDAPOptions", null, dojo.hitch(this, "getLDAPOptionsResult"));
 	},
 	getLDAPOptionsResult: function(inResponse) {
+		this.ldapOptions = inResponse; //GD: Added this since I need to refer to the response later on (database security has a similar databaseOptions page level variable)
 		this.ldapUrlInput.setDataValue(inResponse.ldapUrl);
 		this.ldapManagerDnInput.setDataValue(inResponse.managerDn);
 		this.ldapManagerPasswordInput.setDataValue(inResponse.managerPassword);
@@ -273,40 +291,43 @@ dojo.declare("Security", wm.Page, {
 		this.ldapGroupSearchBaseInput.setDataValue(inResponse.groupSearchBase);
 		this.ldapGroupRoleAttributeInput.setDataValue(inResponse.groupRoleAttribute);
 		this.ldapGroupSearchFilterInput.setDataValue(inResponse.groupSearchFilter);
+		//GD
+		this.ldapRoleProviderInput.setDataValue(inResponse.roleProvider);
+		this.ldapRoleDbDataModelInput.setDataValue(inResponse.roleModel);
+		this.ldapRoleDbEntityInput.setDataValue(inResponse.roleEntity);
+		this.ldapRoleDbUsernameInput.setDataValue(inResponse.roleUsername);
+		this.ldapRoleDbRoleInput.setDataValue(inResponse.roleProperty);		
 	},
 	saveButtonClick: function(inSender) {
 	    studio.saveAll(this);
 	},
-        toastToSuccess: function() {
-/*
+	toastToSuccess: function() {
+		/*
 	    studio.endWait("Saving Security Settings");
-            app.toastDialog.showToast("Security settings saved; Security is " + 
-				      (this.secEnableInput.getChecked() ? "ON" : "OFF"),
-                                      5000,
-                                      "Success");
-				      */
+		app.toastDialog.showToast("Security settings saved; Security is " + 
+			(this.secEnableInput.getChecked() ? "ON" : "OFF"), 5000,"Success");
+		 */
 	    this.onSaveSuccess();
-        },
-        saveError: function(inError) {
-	    studio._saveErrors.push({owner: this,
-				     message: inError.message});
+	},
+	saveError: function(inError) {
+		studio._saveErrors.push({owner: this, message: inError.message});
 	    this.saveComplete();
 	},
 	configDemoResult: function(inResponse) {
 		this.updateStudioServices();
-               this.toastToSuccess();
+		this.toastToSuccess();
 	},
 	configDatabaseResult: function(inResponse) {
 		this.updateStudioServices();
-               this.toastToSuccess();
+		this.toastToSuccess();
 	},
 	configLDAPResult: function(inResponse) {
 		this.updateStudioServices();
-               this.toastToSuccess();
+		this.toastToSuccess();
 	},
 	configJOSSOResult: function(inResponse) {
 		this.updateStudioServices();
-               this.toastToSuccess();
+		this.toastToSuccess();
 	},
 	updateStudioServices: function() {
 		studio.updateServices();
@@ -387,16 +408,23 @@ dojo.declare("Security", wm.Page, {
 		}
 	},
 	dbDataModelInputChange: function(inSender, inValue) {
-		this.getTableList();
-	        this.setDirty();
+		this.getTableList("db"); // GD: Pass in that we are getting property list for DB Security			
+		this.setDirty();
+	},
+	ldapRoleDbDataModelInputChange: function(inSender, inValue){
+		this.getTableList("ldap"); // GD: Pass in that we are getting property list for LDAP Security			
+		this.setDirty();		
 	},
 	dbEntityInputChange: function(inSender, inValue) {
-		this.getPropertyList();
-	        this.setDirty();
+		this.getPropertyList("db"); // GD: Pass in that we are getting the property list for DB Security
+		this.setDirty();
+	},
+	ldapRoleDbEntityInputChange: function(inSender, inValue){
+		this.getPropertyList("ldap"); // GD: Pass in that we are getting the property list for LDAP Security
+		this.setDirty();
 	},
 	getDataModelList: function() {
-		studio.dataService.requestSync("getDataModelNames", null, 
-			dojo.hitch(this, "getDataModelListResult"));
+		studio.dataService.requestSync("getDataModelNames", null, dojo.hitch(this, "getDataModelListResult"));
 	},
 	getDataModelListResult: function(inResponse) {
 		if (inResponse) {
@@ -405,37 +433,72 @@ dojo.declare("Security", wm.Page, {
 				this.databaseOptions.entityName = t;
 			}
 			this.updateSelect(this.dbDataModelInput, inResponse);
+			// GD: Populate the data models for LDAP/DB Security/Role as well
+			this.updateSelect(this.ldapRoleDbDataModelInput, inResponse);
 		}
 	},
-	getTableList: function() {
-		var d = this.dbDataModelInput.getDataValue();
-		if (d) {
-			studio.dataService.requestSync("getEntityNames", [d], 
-				dojo.hitch(this, "getTableListResult"));
+	getTableList: function(inType) {
+		// Refer to the right select box to get list of tables in that data model
+		if(inType == "db"){
+			var d = this.dbDataModelInput.getDataValue();
+		}else{
+			var d = this.ldapRoleDbDataModelInput.getDataValue();
+		}	
+		
+		if (d) {			
+			//studio.dataService.requestSync("getEntityNames", [d], dojo.hitch(this, "getTableListResult"));
+			// GD: Replaced the line above with the one at the bottom that actually calls getTableListResult with the response and with another param (db or ldap)
+			var scope = this;
+			studio.dataService.requestSync("getEntityNames", [d], function(inResponse){scope.getTableListResult(inResponse, inType)});
 		} else {
-			this.updateSelect(this.dbEntityInput, null);
+			// null out the right entityInput (could be DB or LDAP)
+			if(inType == "db"){
+				this.updateSelect(this.dbEntityInput, null);			
+			}else if(inType == "ldap"){
+				this.updateSelect(this.ldapRoleDbEntityInput, null);
+			}			
 		}
 	},
-	getTableListResult: function(inResponse) {
+	getTableListResult: function(inResponse, inType) {
 		if (inResponse) {
-			this.updateSelect(this.dbEntityInput, inResponse);
-			this.dbEntityInput.setDataValue(this.databaseOptions.entityName);
+			//GD: Either populate the table listing for DB or LDAP
+			if(inType == "db"){
+				this.updateSelect(this.dbEntityInput, inResponse);
+				this.dbEntityInput.setDataValue(this.databaseOptions.entityName);			
+			}else if(inType == "ldap"){
+				this.updateSelect(this.ldapRoleDbEntityInput, inResponse);
+				this.ldapRoleDbEntityInput.setDataValue(this.ldapOptions.roleEntity);
+			}
 		}
 	},
-	getPropertyList: function() {
-		var d = this.dbDataModelInput.getDataValue();
-		var t = this.dbEntityInput.getDataValue();
+	getPropertyList: function(inType) {
+		//GD Need to differentiate between Database settings vs LDAP settings with DB roles
+		if(inType == "db"){
+			var d = this.dbDataModelInput.getDataValue();
+			var t = this.dbEntityInput.getDataValue();			
+		}else if(inType == "ldap"){
+			var d = this.ldapRoleDbDataModelInput.getDataValue();
+			var t = this.ldapRoleDbEntityInput.getDataValue();			
+		}
+		
 		if (d && t) {
-			studio.securityConfigService.requestSync("getDatabaseProperties", [d, t], 
-				dojo.hitch(this, "getDatabasePropertiesResult"));
+			// studio.securityConfigService.requestSync("getDatabaseProperties", [d, t], dojo.hitch(this, "getDatabasePropertiesResult"));
+			// GD: Need to pass in inType
+			var scope = this;
+			studio.securityConfigService.requestSync("getDatabaseProperties", [d, t], function(inResponse){scope.getDatabasePropertiesResult(inResponse, inType)});
 		} else {
-			this.updateSelect(this.dbUsernameInput, null);
-			this.updateSelect(this.dbUseridInput, null);
-			this.updateSelect(this.dbPasswordInput, null);
-			this.updateSelect(this.dbRoleInput, null);
+			if(inType == "db"){
+				this.updateSelect(this.dbUsernameInput, null);
+				this.updateSelect(this.dbUseridInput, null);
+				this.updateSelect(this.dbPasswordInput, null);
+				this.updateSelect(this.dbRoleInput, null);				
+			}else if(inType == "ldap"){
+				this.updateSelect(this.ldapRoleDbRoleInput, null);
+				this.updateSelect(this.ldapRoleDbUsernameInput, null);
+			}
 		}
 	},
-	getDatabasePropertiesResult: function(inResponse) {
+	getDatabasePropertiesResult: function(inResponse, inType) {
 		if (inResponse) {
 			var pnames = [];
 			for (var i = 0, p; p = inResponse[i]; i++) {
@@ -448,41 +511,64 @@ dojo.declare("Security", wm.Page, {
 				}
 			}
 			pnames.push(this.NO_VALUE);
-			var u = this.getEditorDisplayValue(this.dbUsernameInput);
-			var id = this.getEditorDisplayValue(this.dbUseridInput);
-			var p = this.getEditorDisplayValue(this.dbPasswordInput);
-			var r = this.getEditorDisplayValue(this.dbRoleInput);
-			var tid = this.getEditorDisplayValue(this.tenantIdField);
-			if (u) {
-				this.databaseOptions.unamePropertyName = u;
-			}
-			if (id) {
-				this.databaseOptions.uidPropertyName = id;
-			}
-			if (p) {
-				this.databaseOptions.pwPropertyName = p;
-			}
-			if (r) {
-				this.databaseOptions.rolePropertyName = r;
-			}
-			if (tid) {
-				this.databaseOptions.tenantIdField = tid;
-			}
-			this.updateSelect(this.dbUsernameInput, pnames);
-			this.updateSelect(this.dbUseridInput, pnames);
-			this.updateSelect(this.dbPasswordInput, pnames);
-			this.updateSelect(this.dbRoleInput, pnames);
-			this.updateSelect(this.tenantIdField, pnames);
-			this.dbUsernameInput.setDataValue(this.databaseOptions.unamePropertyName);
-			this.dbUseridInput.setDataValue(this.databaseOptions.uidPropertyName);
-		    this.dbPasswordInput.setDataValue(this.databaseOptions.pwPropertyName || this.databaseOptions.pwColumnName.replace(/,.*$/,""));
-			this.dbRoleInput.setDataValue(this.databaseOptions.rolePropertyName);
-			this.tenantIdField.setDataValue(this.databaseOptions.tenantIdField); //xxx
-			this.defTenantId.setDataValue(this.databaseOptions.defTenantId || ""); //xxx
-			this.dbRoleBySQLCheckbox.setChecked(this.databaseOptions.useRolesQuery);
-			this.dbRoleBySQLCheckboxChange(this.dbRoleBySQLCheckbox);
-			if (this.databaseOptions.rolesByUsernameQuery) {
-				this.dbRoleBySQLInput.setDataValue(this.databaseOptions.rolesByUsernameQuery);
+			//GD: Lot of stuff going on here which is only applicable to when Database security is being used
+			// For LDAP security with DB roles, it's slightly different..hence the if/else
+			if(inType == "db"){
+				var u = this.getEditorDisplayValue(this.dbUsernameInput);
+				var id = this.getEditorDisplayValue(this.dbUseridInput);
+				var p = this.getEditorDisplayValue(this.dbPasswordInput);
+				var r = this.getEditorDisplayValue(this.dbRoleInput);
+				var tid = this.getEditorDisplayValue(this.tenantIdField);
+				if (u) {
+					this.databaseOptions.unamePropertyName = u;
+				}
+				if (id) {
+					this.databaseOptions.uidPropertyName = id;
+				}
+				if (p) {
+					this.databaseOptions.pwPropertyName = p;
+				}
+				if (r) {
+					this.databaseOptions.rolePropertyName = r;
+				}
+				if (tid) {
+					this.databaseOptions.tenantIdField = tid;
+				}
+				this.updateSelect(this.dbUsernameInput, pnames);
+				this.updateSelect(this.dbUseridInput, pnames);
+				this.updateSelect(this.dbPasswordInput, pnames);
+				this.updateSelect(this.dbRoleInput, pnames);
+				this.updateSelect(this.tenantIdField, pnames);
+				this.dbUsernameInput.setDataValue(this.databaseOptions.unamePropertyName);
+				this.dbUseridInput.setDataValue(this.databaseOptions.uidPropertyName);
+				// TODO this pwColumnName is causing an error sometimes cause it's trying to do a replace on a null value. Need to find out more about this
+				// GD: Inserting a temporary try/catch to gracefully catch the error and carry on
+				try{
+					this.dbPasswordInput.setDataValue(this.databaseOptions.pwPropertyName || this.databaseOptions.pwColumnName.replace(/,.*$/,""));	
+				}catch (e){
+					console.error("Error while trying to set dbPasswordInput: " + e);
+				}			    
+				this.dbRoleInput.setDataValue(this.databaseOptions.rolePropertyName);
+				this.tenantIdField.setDataValue(this.databaseOptions.tenantIdField); //xxx
+				this.defTenantId.setDataValue(this.databaseOptions.defTenantId || ""); //xxx
+				this.dbRoleBySQLCheckbox.setChecked(this.databaseOptions.useRolesQuery);
+				this.dbRoleBySQLCheckboxChange(this.dbRoleBySQLCheckbox);
+				if (this.databaseOptions.rolesByUsernameQuery) {
+					this.dbRoleBySQLInput.setDataValue(this.databaseOptions.rolesByUsernameQuery);
+				}				
+			}else if(inType == "ldap"){
+				var r = this.getEditorDisplayValue(this.ldapRoleDbRoleInput);
+				var u = this.getEditorDisplayValue(this.ldapRoleDbUsernameInput);
+				if(r){
+					this.ldapOptions.roleProperty = r;
+				}
+				if(u){
+					this.ldapOptions.usernameProperty = u;
+				}
+				this.updateSelect(this.ldapRoleDbRoleInput, pnames);
+				this.updateSelect(this.ldapRoleDbUsernameInput, pnames);
+//				this.ldapRoleDbRoleInput.setDataValue(this.ldapOptions.roleProperty);
+//				this.ldapRoleDbUsernameInput.setDataValue(this.ldapOptions.usernameProperty);
 			}
 		}
 	},
@@ -491,8 +577,16 @@ dojo.declare("Security", wm.Page, {
 		this.dbRoleInput.setDisabled(c);
 		this.dbRoleBySQLInput.setShowing(c);
 		this.dbRoleBySQLEnablePanel.setShowing(c);
-	        this.setDirty();
+		this.setDirty();
 	},
+	ldapRoleBySQLCheckboxChange: function(inSender, inDisplayValue, inDataValue) {
+		var c = inSender.components.editor.editor.checked;
+		this.ldapRoleDbRoleInput.setDisabled(c);
+		this.ldapRoleBySQLInput.setShowing(c);
+		this.ldapRoleBySQLEnablePanel.setShowing(c);
+		this.setDirty();
+	},
+	
 	dbTestSQLButtonClick: function(inSender) {
 	    studio.beginWait(this.getDictionaryItem("WAIT_TEST_SQL"));
 		studio.securityConfigService.requestAsync(
@@ -504,6 +598,28 @@ dojo.declare("Security", wm.Page, {
 			dojo.hitch(this, "testRolesByUsernameQueryError"));
 			
 	},
+	ldapTestSQLButtonClick: function(inSender) {
+	    studio.beginWait(this.getDictionaryItem("WAIT_TEST_SQL"));
+		studio.securityConfigService.requestAsync(
+			"testRolesByUsernameQuery",
+			[this.ldapRoleDbDataModelInput.getDataValue(),
+			this.ldapRoleBySQLInput.getDataValue(),
+			this.ldapTestSQLInput.getDataValue()],
+			dojo.hitch(this, "ldapTestRolesByUsernameQueryResult"),
+			dojo.hitch(this, "ldapTestRolesByUsernameQueryError"));
+			
+	},
+	ldapTestRolesByUsernameQueryResult: function(inResponse) {
+		studio.endWait();
+		console.log(inResponse);
+		this.ldapTestSQLErrorLabel.setCaption("");
+		this.ldapTestSQLResultList.renderData(inResponse);
+	},
+	ldapTestRolesByUsernameQueryError: function(inResponse) {
+		studio.endWait();
+		this.ldapTestSQLResultList.renderData([]);
+		this.ldapTestSQLErrorLabel.setCaption(inResponse.message);
+	},	
 	testRolesByUsernameQueryResult: function(inResponse) {
 		studio.endWait();
 		this.dbTestSQLErrorLabel.setCaption("");
@@ -516,10 +632,20 @@ dojo.declare("Security", wm.Page, {
 	},
 	ldapSearchRoleCheckboxChange: function(inSender, inDisplayValue, inDataValue) {
 		var c = inSender.components.editor.editor.checked;
-		this.ldapGroupSearchBaseInput.setShowing(c);
-		this.ldapGroupRoleAttributeInput.setShowing(c);
-		this.ldapGroupSearchFilterInput.setShowing(c);
-	        this.setDirty();
+		this.ldapRoleProviderInput.setShowing(c);
+		if(!c){
+			this.ldapRoleProviderInput.setDataValue(this.SELECT_ONE);
+		}
+		var ldapRoleProvider = this.ldapRoleProviderInput.getDataValue();
+		
+//		this.ldapGroupSearchBaseInput.setShowing(c);
+//		this.ldapGroupRoleAttributeInput.setShowing(c);
+//		this.ldapGroupSearchFilterInput.setShowing(c);
+		this.setDirty();
+	},
+	ldapRoleProviderInputChange: function(inSender, inDisplayValue, inDataValue){
+		this.ldapRoleLdapPanel.setShowing(inDataValue == "LDAP");
+		this.ldapRoleDBPanel.setShowing(inDataValue == "Database");		
 	},
 	ldapConnectionButtonClick: function(inSender) {
 	    studio.beginWait(this.getDictionaryItem("WAIT_TEST_LDAP"));
@@ -684,7 +810,7 @@ dojo.declare("Security", wm.Page, {
 
 	    
 	    if (this.isJOSSO())  this.showLoginPageInput.setShowing(false);
-	    this.panel1a.setHeight((this.isJOSSO()) ? "70px" : "350px");
+	    this.panel1a.setHeight((this.isJOSSO()) ? "70px" : "450px");
 	    this.setDirty();
 	},
 	isJOSSO: function() {
@@ -813,6 +939,10 @@ dojo.declare("Security", wm.Page, {
 				);
 			    
 			} else if (t == "LDAP") {
+				var rolesQuery = null;
+				if(this.ldapRoleBySQLCheckbox.getChecked()){
+					rolesQuery = this.ldapRoleBySQLInput.getDataValue();
+				}
 				studio.securityConfigService.requestSync(
 					"configLDAP",
 					[this.ldapUrlInput.getDataValue(),
@@ -823,6 +953,13 @@ dojo.declare("Security", wm.Page, {
 					this.ldapGroupSearchBaseInput.getDataValue(),
 					this.ldapGroupRoleAttributeInput.getDataValue(),
 					this.ldapGroupSearchFilterInput.getDataValue(),
+					// Added by Girish
+					this.ldapRoleDbDataModelInput.getDataValue(),
+					this.ldapRoleDbEntityInput.getDataValue(),
+					this.ldapRoleDbUsernameInput.getDataValue(),
+					this.ldapRoleDbRoleInput.getDataValue(),
+					rolesQuery,
+					this.ldapRoleProviderInput.getDataValue(),
 					this.secEnableInput.getChecked(),
 					this.showLoginPageInput.getChecked()],
 				    dojo.hitch(this, "configLDAPResult"),
