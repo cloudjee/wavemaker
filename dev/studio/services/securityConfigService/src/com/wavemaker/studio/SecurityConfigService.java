@@ -16,6 +16,7 @@ package com.wavemaker.studio;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -53,6 +54,12 @@ import com.wavemaker.runtime.data.util.DataServiceConstants;
  */
 public class SecurityConfigService {
 
+    private static final String IS_AUTHENTICATED_ANONYMOUSLY = 
+        "IS_AUTHENTICATED_ANONYMOUSLY";
+
+    private static final String IS_AUTHENTICATED_FULLY = 
+        "IS_AUTHENTICATED_FULLY";
+    
     private ProjectManager projectMgr;
 
     private DesignServiceManager designServiceMgr;
@@ -423,61 +430,68 @@ public class SecurityConfigService {
 	}
 
 	/**
-	 * Adds a new URL Rule to the ODS Filter Map. New entries go after all entries except the default entry.
-	 * @param newEntry SecurityURLMap to be added to top of Filter Map
-	 */
-	public void addODSMapEntry(String URL, String attributes) throws
-	JAXBException, IOException {
-		SecurityURLMap newEntry = new SecurityURLMap(URL, attributes);
-		List<SecurityURLMap> odsMap = getSecurityFilterODS();
-		odsMap.add(newEntry);
-		setSecurityFilterODS(odsMap);
-	}
-	
-	/**
-	 * Remove the first rule matching the URL passed from the ODS Filter Map 
-	 * @param deleteMe
-	 */
-	public void deleteODSMapEntry(String deleteURL) throws
-	JAXBException, IOException {
-		Map<String, List<String>> urlMap = getSecToolsMgr().getSecurityFilterODS();
-		if(urlMap.containsKey(deleteURL)){
-			System.out.println("Deleting " + deleteURL);
-			urlMap.remove(deleteURL);
-			getSecToolsMgr().setSecurityFilterODS(urlMap);
-		}	
-	}
-	/**
 	 * Set a new Object Definition Source Filter. Replaces previous definition.
 	 * Only a single attribute per URL is supported by this interface.
 	 * @param securityURLMap The new Object Definition Source URL map
-	 * @param preserveOrder Preserve map order
+	 * @param preserveMap Preserve map order, do not modify based on settings
 	 * @throws JAXBException
 	 * @throws IOException
 	 */
 
-	 public void setSecurityFilterODS(List<SecurityURLMap> securityURLMap, Boolean preserveOrder)
-	 throws JAXBException, IOException {
+	public void setSecurityFilterODS(List<SecurityURLMap> securityURLMap, Boolean preserveMap, Boolean enforceSecurity, Boolean enforceIndexHtml)
+	throws JAXBException, IOException {
 		Map<String, List<String>> urlMap = new LinkedHashMap<String, List<String>>();
 		Iterator<SecurityURLMap> itr = securityURLMap.iterator();
 		while (itr.hasNext()) {
 			SecurityURLMap thisEntry = itr.next();
 			List<String> attributes = new ArrayList<String>();
 			attributes.add(thisEntry.getAttributes());
-			urlMap.put(thisEntry.getURL().trim(), attributes);
+			urlMap.put(thisEntry.getURL().toLowerCase().trim(), attributes);
 		}
-		//ensure '/*.json' is last if present unless preserve oder specified 
-		if(preserveOrder.booleanValue() == false && (urlMap.get("/*.json") != null)){ 
-			List<String> jsonEntry = urlMap.remove("/*.json");
-			urlMap.put("/*.json", jsonEntry);
+		//ensure '/*.json' is last if present, setup for login, unless preserve set
+		if (enforceSecurity && !preserveMap) {
+			String indexHtmlAuthz = null;
+			if (enforceIndexHtml) {
+				indexHtmlAuthz = IS_AUTHENTICATED_FULLY;
+			} else {
+				indexHtmlAuthz = IS_AUTHENTICATED_ANONYMOUSLY;
+			}
+			urlMap.put("/index.html", Arrays.asList(
+					(new String[] { indexHtmlAuthz })));
+			urlMap.put("/", Arrays.asList(
+					(new String[] { indexHtmlAuthz })));
+			if(urlMap.get("/*.json") != null){ 
+				List<String> jsonEntry = urlMap.remove("/*.json");
+				urlMap.put("/*.json", jsonEntry);
+			}
 		}
 		getSecToolsMgr().setSecurityFilterODS(urlMap);
 	}
-	 
-	 public void setSecurityFilterODS(List<SecurityURLMap> securityURLMap)
-	 throws JAXBException, IOException {
-		 setSecurityFilterODS(securityURLMap, Boolean.valueOf("false"));
+
+	 /**
+	  * Set a new Object Definition Source Filter. Replaces previous definition.
+	  * Only a single attribute per URL is supported
+	  * Format is URL:Attributes
+	  * @param securityURLMap List of colon delimited url, attribute pairs
+	  * @throws JAXBException
+	  * @throws IOException
+	  */
+	 public void setSecurityFilterODS(List<String> securityURLList, Boolean enforceSecurity,
+			 Boolean enforceIndexHtml
+	 )
+	 throws JAXBException, IOException { 
+		 List<SecurityURLMap> securityURLMap = new ArrayList<SecurityURLMap>();
+		 Iterator<String> itr = securityURLList.iterator();
+		 String delim = "[:]";
+		 while(itr.hasNext()){
+			 String rulePair = itr.next();
+			 String[] ruleArray = rulePair.split(delim);
+			 SecurityURLMap secURLRule = new SecurityURLMap(ruleArray[0],ruleArray[1]);
+			 securityURLMap.add(secURLRule);
+		 }	
+		 setSecurityFilterODS(securityURLMap, false, enforceSecurity, enforceIndexHtml);
 	 }
+
 	
 	public class SecurityURLMap {
 		private String URL;

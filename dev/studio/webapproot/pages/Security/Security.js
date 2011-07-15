@@ -1218,7 +1218,8 @@ dojo.declare("Security", wm.Page, {
 	sendData.push("/*.upload:" + starAttributes);
 	sendData.push("/*.download:" + starAttributes);
 
-	studio.securityConfigService.requestSync("setSecurityFilterODS", [sendData], 
+	studio.securityConfigService.requestSync("setSecurityFilterODS", [sendData,this.secEnableInput.getChecked(),
+							 this.showLoginPageInput.getChecked()], 
 				       dojo.hitch(this, "saveServicesSetupSuccess"),
 				       dojo.hitch(this, "saveServicesSetupError"));
     },
