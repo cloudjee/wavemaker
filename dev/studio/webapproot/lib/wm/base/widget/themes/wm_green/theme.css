@@ -14,7 +14,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 @import url("custom.css"); /* Edit this file if your editting by hand and don't want the themedesigner to overwrite your changes */
   /**************************************************************************************************
    * TYPE:        Button Focus for wm.Button and TabControls
@@ -88,6 +87,19 @@ body .wm_green input:focus,
 /*****************************************
  * FILE: buttons.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.Button
    *
@@ -193,7 +205,7 @@ body .wm_green input:focus,
 	-webkit-box-shadow: 1px 1px 1px #444444; /* MainContent-ClickablesDefault-BorderStyle_Shadow */
 	box-shadow: 1px 1px 1px #444444; /* MainContent-ClickablesDefault-BorderStyle_Shadow */
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #eeeeee; /* MainContent-ClickablesDefault-Background_Color */
+	background-color: #cccccc; /* MainContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyThickEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
@@ -393,6 +405,19 @@ body .wm_green input:focus,
 /*****************************************
  * FILE: calendar.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.Calendar and the popup from wm.Date
    *
@@ -499,6 +524,19 @@ body .wm_green input:focus,
 /*****************************************
  * FILE: dialog.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.Dialog main styles
    *
@@ -678,6 +716,19 @@ body .wm_green .dialogfooter .wmbutton:hover {
 /*****************************************
  * FILE: editors.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.AbstractEditor / wm._BaseEditor
    *
@@ -851,7 +902,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
    ************************************************************************************************/
 .wm_green .MainContent .wmeditor .dijitSpinner .dijitArrowButton,
 .wm_green .MainContent .wmeditor .dijitComboBox .dijitArrowButton {
-    background-color: #eeeeee; /* MainContent-ClickablesDefault-Background_Color */
+    background-color: #cccccc; /* MainContent-ClickablesDefault-Background_Color */
     background-image: none;
 }
     .wm_green .MainContent .wmeditor .dijitTextBox,
@@ -1051,6 +1102,19 @@ body .wm_green .dialogfooter .wmbutton:hover {
 /*****************************************
  * FILE: grid.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        Grid rows (Even rows and odd rows)
    *
@@ -1147,7 +1211,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
     }
     .wm_green div.dojoxGridContent .dojoxGridCellFocus,
     .wm_green div.dojoxGridContent .dojoxGrid-cell-focus {
-	border-width: 1px dashed transparent !important;
+	border: 1px dashed transparent !important;
     }
     /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
     .wm_green div.dojoxGrid-header .dojoxGrid-cell,
@@ -1223,7 +1287,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
     }
     .wm_green .MainContent div.dojoxGridContent .dojoxGridCellFocus,
     .wm_green .MainContent div.dojoxGridContent .dojoxGrid-cell-focus {
-	border-width: 1px dashed transparent !important;
+	border: 1px dashed transparent !important;
     }
 }
 @media screen { /* EmphasizedContent-Level */ 
@@ -1259,7 +1323,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
     }
     .wm_green .EmphasizedContent div.dojoxGridContent .dojoxGridCellFocus,
     .wm_green .EmphasizedContent div.dojoxGridContent .dojoxGrid-cell-focus {
-	border-width: 1px dashed transparent !important;
+	border: 1px dashed transparent !important;
     }
 }
 @media screen { /* HeaderContent-Level */ 
@@ -1296,7 +1360,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
     }
     .wm_green .HeaderContent div.dojoxGridContent .dojoxGridCellFocus,
     .wm_green .HeaderContent div.dojoxGridContent .dojoxGrid-cell-focus {
-	border-width: 1px dashed transparent !important;
+	border: 1px dashed transparent !important;
     }
     /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
     .wm_green .HeaderContent div.dojoxGrid-header .dojoxGrid-cell,
@@ -1339,6 +1403,19 @@ body .wm_green .dialogfooter .wmbutton:hover {
 /*****************************************
  * FILE: menus.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.DojoMenu
    *
@@ -1418,7 +1495,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
 }
     .wm_green .MainContent .dojoMenu.ClickableDojoMenu {
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #eeeeee; /* MainContent-ClickablesDefault-Background_Color */
+	background-color: #cccccc; /* MainContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyThickEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
@@ -1603,6 +1680,19 @@ body .wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
 /*****************************************
  * FILE: panels.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 /* NOTE: Shadows don't currently work on fancy panel or Layers */
   /**************************************************************************************************
    * TYPE:        Tab Buttons
@@ -2004,7 +2094,7 @@ body.wm_green {
 	font-family: Verdana; /* MainContent-ClickablesDefault-Font_Family */
 	font-size: 8pt; /* MainContent-ClickablesDefault-Font_TextSize */
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #eeeeee; /* MainContent-ClickablesDefault-Background_Color */
+	background-color: #cccccc; /* MainContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyThickEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
@@ -2045,7 +2135,7 @@ body.wm_green {
 	color: #333333; /* MainContent-ClickablesDefault-Font_Color */
 	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #eeeeee; /* MainContent-ClickablesDefault-Background_Color */
+	background-color: #cccccc; /* MainContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyThickEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
@@ -2073,7 +2163,7 @@ body.wm_green {
 	background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
     }
     .dj_ie6 .MainContent .wmtablayers-tab, .dj_ie7 .MainContent .wmtablayers-tab {
-        border-bottom-color: #eeeeee !important; /* MainContent-ClickablesDefault-Background_Color */
+        border-bottom-color: #cccccc !important; /* MainContent-ClickablesDefault-Background_Color */
     }
     /* END SECTION wm.TabLayers / wm.TabDecorator */
     /* END ESCTION wm.TabLayers / wm.WizardLayers */
@@ -2471,6 +2561,19 @@ body.wm_green {
 /*****************************************
  * FILE: progressbar.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.dijit.ProgressBar
    *
@@ -2529,7 +2632,7 @@ body.wm_green {
 	color: #333333; /* MainContent-ClickablesDefault-Font_Color */
 	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
 	/* MainContent-ClickablesDefault-Background */
-	background-color: #eeeeee; /* MainContent-ClickablesDefault-Background_Color */
+	background-color: #cccccc; /* MainContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/greyThickEdge2.png); /* MainContent-ClickablesDefault-Background_Image */
 	background-position: top left; /* MainContent-ClickablesDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
@@ -2605,6 +2708,19 @@ body.wm_green {
 /*****************************************
  * FILE: splitterbevel.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.Splitter / wm.Bevel
    *
