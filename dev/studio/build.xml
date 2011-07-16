@@ -159,9 +159,9 @@
         invocations of javac/servicedefc -->
         <buildservice servicename="CloudDB" 
                       serviceclass="com.wavemaker.studio.clouddb.CloudDB"/>
-    		<buildservice servicename="cloudServerService" 
+    	<buildservice servicename="cloudServerService" 
                       serviceclass="com.wavemaker.studio.CloudServerService"/>
-	    	<buildservice servicename="cloudStorageService" 
+	   	<buildservice servicename="cloudStorageService" 
                       serviceclass="com.wavemaker.studio.CloudStorageService"/>
         <buildservice servicename="deploymentService" 
                       serviceclass="com.wavemaker.studio.DeploymentService"/>
@@ -195,7 +195,8 @@
                       serviceclass="com.wavemaker.studio.warp.LoginService"/>
 		<buildservice servicename="warpFlowService" 
                       serviceclass="com.wavemaker.studio.warp.FlowService"/>	
- 
+		<buildservice servicename="waveMakerService" 
+                      serviceclass="com.wavemaker.runtime.service.WaveMakerService"/> 
         <configc projectroot="${studio.dir}" verbose="false">
             <resources>
                 <fileset dir="${studio.dir}">
