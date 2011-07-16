@@ -33,7 +33,7 @@ dojo.declare("wm.Layer", wm.Container, {
 	    if (parent) 
 		parent.setCaptionMapLayer(this.caption, null);	    
 	    this.inherited(arguments);
-	    if (parent && parent.conditionalTabButtons)
+	    if (parent && parent.conditionalTabButtons && !parent.decorator.tabsControl.isDestroyed)
 		parent.decorator.tabsControl.setShowing(parent.getVisibleLayerCount() > 1);
 	},
 	init: function() {
@@ -83,7 +83,7 @@ dojo.declare("wm.Layer", wm.Container, {
 				p.setNext();
 			}
 		}
-	    if (p && p.conditionalTabButtons)
+	    if (p && p.conditionalTabButtons && !p.decorator.tabsControl.isDestroyed)
 		p.decorator.tabsControl.setShowing(p.getVisibleLayerCount() > 1);
 	},
         show: function() {
@@ -96,7 +96,8 @@ dojo.declare("wm.Layer", wm.Container, {
 		this.caption = inCaption;
 		if (this.parent)
 			this.parent.setCaptionMapLayer(inCaption, this);
-		this.decorator.applyLayerCaption(this);
+	        if (this.decorator)
+		    this.decorator.applyLayerCaption(this);
 	},
 	getIndex: function() {
 		var p = this.parent;
@@ -568,7 +569,7 @@ dojo.declare("wm.TabLayers", wm.Layers, {
 	},
 	removeLayer: function(inIndex) {
 	    this.inherited(arguments);
-	    if (this.conditionalTabButtons)
+	    if (this.conditionalTabButtons && !this.isDestroyed)
 		this.decorator.tabsControl.setShowing(this.getVisibleLayerCount() > 1);
 	},
     // onClose handles both destroy and close as long as it came from clicking the close icon in the tab button
