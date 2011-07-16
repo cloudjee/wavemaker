@@ -339,7 +339,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 				}],
 				displayExpressionTree: ["wm.Tree", {margin: 2, border: 0, padding: 2, height: "100%", width: "100%"}, {}, {}]
 			    }]
-			}],
+			}]
 		    }]
 		    }],
 		    bindEditor: ["wm.Text", { readonly:true, caption: "Bound to", captionSize: "65px", captionAlign: "left", width: "100%", padding: "4,0"}, {}, {}]
