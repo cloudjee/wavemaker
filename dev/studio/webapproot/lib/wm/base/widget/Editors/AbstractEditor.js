@@ -207,7 +207,8 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	this._helpTextOverConnect =
 	    this.connect(this.helpNode, "onmouseover", this, function(e) {
 		wm.job(this.getRuntimeId() + ".helpText", 100, dojo.hitch(this, function() {
-		    app.createToolTip(this.helpText, this.helpNode, e);
+		    var coords = dojo.coords(this.helpNode);
+		    app.createToolTip(this.helpText, null, {mouseX: coords.x, mouseY: coords.y + coords.h});
 		}));
 	    });
 	this._helpTextOutConnect =
