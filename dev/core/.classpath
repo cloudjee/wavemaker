@@ -12,8 +12,8 @@
 	<classpathentry excluding="**/.DS_Store|**/.svn/**" kind="src" path="tools/test"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="runtime/lib/acegi-1.0.7/acegi-security-1.0.7.jar" sourcepath="runtime/lib/acegi-1.0.7/acegi-security-1.0.7-sources.jar"/>
-	<classpathentry kind="lib" path="/Users/jgrelle/workspace-wm/wavemaker-git/dev/core/runtime/lib/apache-ant-1.8.1/lib/ant.jar" sourcepath="runtime/lib/apache-ant-1.7.0/lib/apache-ant-1.7.0-src.jar"/>
-	<classpathentry kind="lib" path="/Users/jgrelle/workspace-wm/wavemaker-git/dev/core/runtime/lib/apache-ant-1.8.1/lib/ant-launcher.jar" sourcepath="runtime/lib/apache-ant-1.7.0/lib/apache-ant-1.7.0-src.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/jgrelle/workspace-wm/wavemaker-git/dev/core/runtime/lib/apache-ant-1.8.1/lib/ant.jar" sourcepath="runtime/lib/apache-ant-1.7.0/lib/apache-ant-1.7.0-src.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/jgrelle/workspace-wm/wavemaker-git/dev/core/runtime/lib/apache-ant-1.8.1/lib/ant-launcher.jar" sourcepath="runtime/lib/apache-ant-1.7.0/lib/apache-ant-1.7.0-src.jar"/>
 	<classpathentry exported="true" kind="lib" path="json/lib/antlr/antlr-2.7.7.jar"/>
 	<classpathentry exported="true" kind="lib" path="json/lib/antlr/antlr-3.1.1-runtime.jar" sourcepath="json/lib/antlr/antlr-3.1.1-runtime-src.zip"/>
 	<classpathentry kind="lib" path="/Users/jgrelle/workspace-wm/wavemaker-git/dev/core/runtime/lib/servlet-api-2.5.jar" sourcepath="/launcher/lib/apache-tomcat/apache-tomcat-5.5.26-src.zip"/>
