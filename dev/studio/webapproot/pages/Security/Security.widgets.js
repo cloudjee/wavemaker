@@ -46,43 +46,41 @@ Security.widgets = {
 				layers: ["wm.Layers", {"LayersType":"Layers","_classes":{"domNode":["wm_Padding_2px"]}}, {}, {
 				    emptyLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"Empty"}, {}],
 				    demoLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"Demo","imageList":"smallToolbarImageList"}, {"onShow":"showDemoLayer"}, {
-					panel1: ["wm.Panel", {"border":"0","height":"86px","layoutKind":"left-to-right"}, {}, {
-					    spacer11: ["wm.Spacer", {"width":"96px"}, {}],
-					    panel6: ["wm.Panel", {"border":"0","width":"360px"}, {}, {
-						demoUsernameInput: ["wm.Text", {"border":"0","caption":"Username","emptyValue":"null","padding":"2"}],						demoPasswordInput: ["wm.Text", {"border":"0","caption":"Password","emptyValue":"null","padding":"2"}],
-						demoRoleInput: ["wm.SelectMenu", {"border":"0","caption":"Role","display":"Select","emptyValue":"null","padding":"2"}]
+					panel1: ["wm.Panel", {"border":"0","height":"86px","layoutKind":"left-to-right", horizontalAlign: "left", verticalAlign: "top"}, {}, {
+					    panel6: ["wm.Panel", {"border":"0","width":"500px", height: "75px"}, {}, {
+						demoUsernameInput: ["wm.Text", {captionSize: "150px",width: "100%","border":"0","caption":"Username","emptyValue":"null","padding":"2"}],	
+						demoPasswordInput: ["wm.Text", {captionSize: "150px",width: "100%","border":"0","caption":"Password","emptyValue":"null","padding":"2"}],
+						demoRoleInput: ["wm.SelectMenu", {captionSize: "150px",width: "100%", "border":"0","caption":"Role","display":"Select","emptyValue":"null","padding":"2"}]
 					    }],
 					    spacer2: ["wm.Spacer", {"width":"4px"}, {}],
-					    panel8: ["wm.Panel", {"border":"0","width":"40px"}, {}, {
-						spacer13: ["wm.Spacer", {"height":"34px"}, {}],
+					    panel8: ["wm.Panel", {"border":"0","width":"40px", height: "100%", verticalAlign: "top"}, {}, {
 						demoAddUserButton: ["wm.ToolButton", {"border":"0","height":"28px","hint":"Add User","imageIndex":25,"margin":"0","width":"24px"}, {"onclick":"demoAddUserButtonClick"}]
 					    }]
 					}],
-					panel2: ["wm.Panel", {"border":"0","height":"140px","layoutKind":"left-to-right"}, {}, {
-					    spacer12: ["wm.Spacer", {"width":"96px"}, {}],
-					    demoUserList: ["wm.List", {"border":"0","dataFields":"userid,password,roles","width":"358px"}, {"onformat":"demoUserListFormat"}],
-					    spacer3: ["wm.Spacer", {"width":"6px"}, {}],
-					    panel7: ["wm.Panel", {"border":"0","width":"40px"}, {}, {
+					panel2: ["wm.Panel", {"border":"0","height":"140px","layoutKind":"left-to-right", width: "100%", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+					    demoUserList: ["wm.List", {"border":"0","dataFields":"userid,password,roles","width":"500px", height: "100%", margin: "0,2,0,90"}, {"onformat":"demoUserListFormat"}],
+					    spacer3: ["wm.Spacer", {"width":"4px"}, {}],
+					    panel7: ["wm.Panel", {"border":"0","width":"40px", height: "100%"}, {}, {
 						demoDeleteUserButton: ["wm.ToolButton", {"border":"0","height":"28px","hint":"Remove User","imageIndex":0,"margin":"0","width":"24px"}, {"onclick":"demoDeleteUserButtonClick"}]
 					    }]
 					}]
 				    }],
 				    databaseLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"Database",autoScroll:true}, {"onShow":"showDBLayer"}, {
 					databasePanel: ["wm.Panel", {width: "100%", height: "300px", fitToContentHeight: true, margin: "10,50,0,50", horizontalAlign: "left", verticalAlign: "top"}, {}, {
-					    dbDataModelInput: ["wm.SelectMenu", {required: true, captionSize: "150px", width: "400px", "border":"0","caption":"Data Model","display":"Select","emptyValue":"null","padding":"2", helpText: "Pick from one of the databases you have imported"}, {"onchange":"dbDataModelInputChange"}],
-					    dbEntityInput: ["wm.SelectMenu", {required: true,captionSize: "150px", width: "400px", "border":"0","caption":"Entity","display":"Select","emptyValue":"null","padding":"2", helpText: "Pick a table from your database that contains your registered users"}, {"onchange":"dbEntityInputChange"}],
-					    dbUsernameInput: ["wm.SelectMenu", {required: true,captionSize: "150px", width: "400px", "border":"0","caption":"Username Field","display":"Select","emptyValue":"null","padding":"2", helpText: "Select the user name that the user will type in to log in.  Typically an email address or identifier that is based on the user's personal name.  You can find the value of the logged in user's username in your application by <ol><li>creating a new ServiceVariable</li><li>set its 'service' to 'securityService'</li><li>select the operation 'getUserName'</li></ol>"}, {"onchange":"setDirty"}],
-					    dbUseridInput: ["wm.SelectMenu", {required: true,captionSize: "150px", width: "400px", "border":"0","caption":"User ID Field","display":"Select","emptyValue":"null","padding":"2", helpText: "Select the user ID that uniquely identifies the user in the database.  This is typically a number that the database has assigned to the user's entry in the database.  While you can use an email address, this tends to result in a database that bogs down badly as the size of your database goes up as this value is used by other database tables to identify the user account the data is associated with. You can  find out the ID when your project is running by <ol><li>creating a new ServiceVariable</li><li>set its 'service' to 'securityService'</li><li>select the operation 'getUserId'</li></ol>"}, {"onchange":"setDirty"}],
-					    dbPasswordInput: ["wm.SelectMenu", {required: true,captionSize: "150px", width: "400px", "border":"0","caption":"Password Field","display":"Select","emptyValue":"null","padding":"2", helpText: "Select the field that contains the user's password"}, {"onchange":"setDirty"}],
-					    dbRoleInput: ["wm.SelectMenu", {captionSize: "150px", width: "400px", "border":"0","caption":"Role Field","display":"Select","emptyValue":"null","padding":"2", helpText: "Select the field that contains the user's role.  This is optional if you aren't using roles"}, {"onchange":"setDirty"}]
+					    dbDataModelInput: ["wm.SelectMenu", {required: true, captionSize: "150px", width: "500px", "border":"0","caption":"Data Model","display":"Select","emptyValue":"null","padding":"2", helpText: "Pick from one of the databases you have imported"}, {"onchange":"dbDataModelInputChange"}],
+					    dbEntityInput: ["wm.SelectMenu", {required: true,captionSize: "150px", width: "500px", "border":"0","caption":"Entity","display":"Select","emptyValue":"null","padding":"2", helpText: "Pick a table from your database that contains your registered users"}, {"onchange":"dbEntityInputChange"}],
+					    dbUsernameInput: ["wm.SelectMenu", {required: true,captionSize: "150px", width: "500px", "border":"0","caption":"Username Field","display":"Select","emptyValue":"null","padding":"2", helpText: "Select the user name that the user will type in to log in.  Typically an email address or identifier that is based on the user's personal name.  You can find the value of the logged in user's username in your application by <ol><li>creating a new ServiceVariable</li><li>set its 'service' to 'securityService'</li><li>select the operation 'getUserName'</li></ol>"}, {"onchange":"setDirty"}],
+					    dbUseridInput: ["wm.SelectMenu", {required: true,captionSize: "150px", width: "500px", "border":"0","caption":"User ID Field","display":"Select","emptyValue":"null","padding":"2", helpText: "Select the user ID that uniquely identifies the user in the database.  This is typically a number that the database has assigned to the user's entry in the database.  While you can use an email address, this tends to result in a database that bogs down badly as the size of your database goes up as this value is used by other database tables to identify the user account the data is associated with. You can  find out the ID when your project is running by <ol><li>creating a new ServiceVariable</li><li>set its 'service' to 'securityService'</li><li>select the operation 'getUserId'</li></ol>"}, {"onchange":"setDirty"}],
+					    dbPasswordInput: ["wm.SelectMenu", {required: true,captionSize: "150px", width: "500px", "border":"0","caption":"Password Field","display":"Select","emptyValue":"null","padding":"2", helpText: "Select the field that contains the user's password"}, {"onchange":"setDirty"}],
+					    dbRoleInput: ["wm.SelectMenu", {captionSize: "150px", width: "500px", "border":"0","caption":"Role Field","display":"Select","emptyValue":"null","padding":"2", helpText: "Select the field that contains the user's role.  This is optional if you aren't using roles"}, {"onchange":"setDirty"}]
 					}],
 					spacer30: ["wm.Spacer", {"height":"10px","width":"96px"}, {}],
 					labelmt: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold","wm_Padding_4px"]},"border":"0","caption":"Multitenant Configuration","padding":"4"}, {}, {
 					    format: ["wm.DataFormatter", {}, {}]
 					}],
 					tenantPanel: ["wm.Panel", {width: "100%", height: "300px", fitToContentHeight: true, margin: "10,50,0,50", verticalAlign: "top", horizontalAlign: "left"}, {}, {
-					    tenantIdField: ["wm.SelectMenu", {captionSize: "150px", width: "400px", "border":"0","caption":"Tenant ID Field Name","display":"Select","emptyValue":"null","padding":"2",helpText: "If your creating a multi-tenanted application, specify which field of the user's table contains that user's tenant id"}, {"onchange":"setDirty"}],
-					    defTenantId: ["wm.Text", {captionSize: "150px", width: "400px", "border":"0","caption":"Default Tenant ID Value","emptyValue":"null","padding":"2", helpText: "The default tenant ID value is the value used when querying the database while you are in design; this has no effect on running your application"}, {"onchange":"setDirty"}],
+					    tenantIdField: ["wm.SelectMenu", {captionSize: "150px", width: "500px", "border":"0","caption":"Tenant ID Field Name","display":"Select","emptyValue":"null","padding":"2",helpText: "If your creating a multi-tenanted application, specify which field of the user's table contains that user's tenant id"}, {"onchange":"setDirty"}],
+					    defTenantId: ["wm.Text", {captionSize: "150px", width: "500px", "border":"0","caption":"Default Tenant ID Value","emptyValue":"null","padding":"2", helpText: "The default tenant ID value is the value used when querying the database while you are in design; this has no effect on running your application"}, {"onchange":"setDirty"}],
 					    spacer31: ["wm.Spacer", {"height":"10px","width":"96px"}, {}],
 					}],
 					dbRoleBySQLPanel: ["wm.Panel", {"border":"0","height":"100%", margin: "10,50,0,50", verticalAlign: "top", horizontalAlign: "left"}, {}, {
@@ -111,11 +109,11 @@ Security.widgets = {
 					}]
 				    }],
 				    ldapLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"LDAP"}, {"onShow":"showLDAPLayer"}, {
-					ldapMainPanel: ["wm.Panel", {width: "100%", height: "300px", fitToContentHeight: true, margin: "10,50,0,50"}, {}, {
-					    ldapUrlInput: ["wm.Text", {width: "60%", captionSize: "150px", "border":"0","caption":"LDAP URL","emptyValue":"null","padding":"2"}, {"onchange":"setDirty"}],
-					    ldapManagerDnInput: ["wm.Text", {width: "60%", captionSize: "150px", "border":"0","caption":"Manager DN","emptyValue":"null","padding":"2"}, {"onchange":"setDirty"}],
-					    ldapManagerPasswordInput: ["wm.Text", {width: "60%", captionSize: "150px", "border":"0","caption":"Manager Password","emptyValue":"null","padding":"2", password: true}, {"onchange":"setDirty"}],
-					    ldapUserDnPatternInput: ["wm.Text", {width: "60%", captionSize: "150px", "border":"0","caption":"User DN Pattern","emptyValue":"null","padding":"2"}, {"onchange":"setDirty"}],
+					ldapMainPanel: ["wm.Panel", {width: "100%", height: "300px", fitToContentHeight: true, margin: "10,50,0,50", horizontalAlign: "left", verticalAlign: "top"}, {}, {
+					    ldapUrlInput: ["wm.Text", {width: "500px", captionSize: "150px", "border":"0","caption":"LDAP URL","emptyValue":"null","padding":"2"}, {"onchange":"setDirty"}],
+					    ldapManagerDnInput: ["wm.Text", {width: "500px", captionSize: "150px", "border":"0","caption":"Manager DN","emptyValue":"null","padding":"2"}, {"onchange":"setDirty"}],
+					    ldapManagerPasswordInput: ["wm.Text", {width: "500px", captionSize: "150px", "border":"0","caption":"Manager Password","emptyValue":"null","padding":"2", password: true}, {"onchange":"setDirty"}],
+					    ldapUserDnPatternInput: ["wm.Text", {width: "500px", captionSize: "150px", "border":"0","caption":"User DN Pattern","emptyValue":"null","padding":"2"}, {"onchange":"setDirty"}],
 					    panel5: ["wm.Panel", {"height":"24px","layoutKind":"left-to-right"}, {}, {
 						spacer7: ["wm.Spacer", {"width":"100%"}, {}],
 						ldapConnectionButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},"caption":"Test Connection","margin":"2","width":"150px"}, {"onclick":"ldapConnectionButtonClick"}],
@@ -124,18 +122,18 @@ Security.widgets = {
 					    ldapConnectionResultLabel: ["wm.Label", {"caption":"ldapConnectionResultLabel","border":"0","height":"24px"}, {}, {
 						format: ["wm.DataFormatter", {}, {}]
 					    }],							
-					    ldapSearchRoleCheckbox: ["wm.Checkbox", {width: "60%", captionSize: "150px", "caption":"Search User Role","emptyValue":"null"}, {"onchange":"ldapSearchRoleCheckboxChange"}],
-					    ldapRoleProviderInput: ["wm.SelectMenu", {width: "60%", captionSize: "150px", "caption":"Select User Role Provider","emptyValue":"null","display":"Select"}, {"onchange":"ldapRoleProviderInputChange"}],
-					    ldapRoleLdapPanel: ["wm.Panel", {"width":"100%", "height":"100px"},{},{
-						ldapGroupSearchBaseInput: ["wm.Text", {width: "60%", captionSize: "150px", "caption":"Group Search Base","emptyValue":"null"}, {onchange: "setDirty"}],
-						ldapGroupRoleAttributeInput: ["wm.Text", {width: "60%", captionSize: "150px", "caption":"Group Role Attribute","emptyValue":"null"}, {onchange: "setDirty"}],
-						ldapGroupSearchFilterInput: ["wm.Text", {width: "60%", captionSize: "150px", "caption":"Group Search Filter","emptyValue":"null"}, {onchange: "setDirty"}]
+					    ldapSearchRoleCheckbox: ["wm.Checkbox", {width: "500px", captionSize: "150px", "caption":"Search User Role","emptyValue":"null"}, {"onchange":"ldapSearchRoleCheckboxChange"}],
+					    ldapRoleProviderInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Select User Role Provider","emptyValue":"null","display":"Select"}, {"onchange":"ldapRoleProviderInputChange"}],
+					    ldapRoleLdapPanel: ["wm.Panel", {"width":"100%", "height":"100px", horizontalAlign: "left", verticalAlign: "top"},{},{
+						ldapGroupSearchBaseInput: ["wm.Text", {width: "500px", captionSize: "150px", "caption":"Group Search Base","emptyValue":"null"}, {onchange: "setDirty"}],
+						ldapGroupRoleAttributeInput: ["wm.Text", {width: "500px", captionSize: "150px", "caption":"Group Role Attribute","emptyValue":"null"}, {onchange: "setDirty"}],
+						ldapGroupSearchFilterInput: ["wm.Text", {width: "500px", captionSize: "150px", "caption":"Group Search Filter","emptyValue":"null"}, {onchange: "setDirty"}]
 					    }],
-					    ldapRoleDBPanel: ["wm.Panel", {"width":"100%", "height":"200px"},{},{
-						ldapRoleDbDataModelInput: ["wm.SelectMenu", {width: "60%", captionSize: "150px", "caption":"Data Model","emptyValue":"null","height":"20px"}, {"onchange":"ldapRoleDbDataModelInputChange"}],
-						ldapRoleDbEntityInput: ["wm.SelectMenu", {width: "60%", captionSize: "150px", "caption":"Entity","emptyValue":"null","height":"20px"}, {"onchange":"ldapRoleDbEntityInputChange"}],
-						ldapRoleDbUsernameInput: ["wm.SelectMenu", {width: "60%", captionSize: "150px", "caption":"Username Field","emptyValue":"null","height":"20px"}, {onchange: "setDirty"}],
-						ldapRoleDbRoleInput: ["wm.SelectMenu", {width: "60%", captionSize: "150px", "caption":"Role Field","emptyValue":"null","height":"20px"}, {onchange: "setDirty"}],
+					    ldapRoleDBPanel: ["wm.Panel", {"width":"100%", "height":"200px", horizontalAlign: "left", verticalAlign: "top"},{},{
+						ldapRoleDbDataModelInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Data Model","emptyValue":"null","height":"20px"}, {"onchange":"ldapRoleDbDataModelInputChange"}],
+						ldapRoleDbEntityInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Entity","emptyValue":"null","height":"20px"}, {"onchange":"ldapRoleDbEntityInputChange"}],
+						ldapRoleDbUsernameInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Username Field","emptyValue":"null","height":"20px"}, {onchange: "setDirty"}],
+						ldapRoleDbRoleInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Role Field","emptyValue":"null","height":"20px"}, {onchange: "setDirty"}],
 						ldapRoleBySQLPanel: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_RightNone","wm_Padding_LeftNone","wm_Padding_BottomNone","wm_Padding_4px"]},"height":"150px"}, {}, {
 						    panel26: ["wm.Panel", {"height":"24px","layoutKind":"left-to-right"}, {}, {
 							ldapRoleBySQLCheckbox: ["wm.Checkbox", {"captionSize":"380px","caption":"Roles By SQL Query","width":"100%","captionAlign":"left","captionPosition":"right"}, {"onchange":"ldapRoleBySQLCheckboxChange"}]
