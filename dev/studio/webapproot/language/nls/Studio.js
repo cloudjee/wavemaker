@@ -336,5 +336,11 @@
     "CONFIRM_UNSAVEDTAB_HEADER": "You have unsaved changes:",
     "CONFIRM_UNSAVEDTAB_CLOSEANYWAY": "Close anyway?",
     "CONFIRM_REFRESH_SCRIPT": "Are you sure you want to reload this file file from disk ? Unsaved changes will be lost",
-    "TITLE_PREFERENCES": "WaveMaker Preferences"
+    "TITLE_PREFERENCES": "WaveMaker Preferences",
+
+
+    "DATA_UTILS_DATABASE": "Database",
+    "DATA_UTILS_FILE": "File",
+    "DATA_UTILS_DATABASE_HELP": "Enter the name of the database on your database server",
+    "DATA_UTILS_FILE_HELP": "Enter the name of the file in your project's webapproot/data folder. If the name is hrdb.script, just enter hrdb.",
 }

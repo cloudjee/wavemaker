@@ -13,105 +13,34 @@
  */
  
 DBConnectionSettings.widgets = {
-	layoutBox1: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "1flex", border: "0", layoutFlex: 1, width: "1flex"}, {}, {
-		importDBDialog: ["wm.Panel", {border: "0", height: "1flex", layoutKind: "left-to-right", layoutFlex: 1, width: "1flex"}, {}, {
-			importDBDialogInner: ["wm.Panel", {border: "0", height: "1flex", layoutFlex: 1, width: "1flex"}, {}, {
+	layoutBox1: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", border: "0",  width: "100%"}, {}, {
+		importDBDialog: ["wm.Panel", {border: "0", height: "100%", layoutKind: "left-to-right", width: "100%"}, {}, {
+			importDBDialogInner: ["wm.Panel", {border: "0", height: "100%", width: "100%"}, {}, {
 				titleBar: ["wm.Panel", {border: "0", height: "29px", layoutKind: "left-to-right"}, {}, {
-					dialogLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_TextAlign_Center", "wm_Padding_4px", "wm_FontColor_White"]}, caption: "Database Connection Settings", layoutFlex: 1, width: "1flex", height: "1flex", border: "0"}, {}, {
+					dialogLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_TextAlign_Center", "wm_Padding_4px", "wm_FontColor_White"]}, caption: "Database Connection Settings", width: "100%", height: "100%", border: "0"}, {}, {
 						format: ["wm.DataFormatter", {}, {}]
 					}]
 				}],
-				connectionSettingsPanel: ["wm.Panel", {padding: "10", border: "0", height: "1flex", layoutKind: "left-to-right", layoutFlex: 1, width: "1flex"}, {}, {
-					panel1: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]}, padding: "5", height: "12flex", layoutFlex: 12, width: "12flex"}, {}, {
-						dataModelList: ["wm.List", {_classes: {domNode: ["wm_Border_StyleSolid", "wm_Border_Size1px"]}, layoutFlex: 1, width: "1flex", height: "1flex"}, {onselect: "dataModelListSelect"}]
+				connectionSettingsPanel: ["wm.Panel", {padding: "10", border: "0", height: "100%", layoutKind: "left-to-right", width: "100%"}, {}, {
+					panel1: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]}, padding: "5", height: "100%", width: "50%"}, {}, {
+						dataModelList: ["wm.List", {_classes: {domNode: ["wm_Border_StyleSolid", "wm_Border_Size1px"]}, width: "100%", height: "100%"}, {onselect: "dataModelListSelect"}]
 					}],
-					panel2: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]}, padding: "5", border: "0", height: "20flex", layoutFlex: 20, width: "20flex"}, {}, {
-						panel101: ["wm.Panel", {border: "0", height: "24px", layoutKind: "left-to-right"}, {}, {
-							label101: ["wm.Label", {caption: "Username:", width: "200px", border: "0"}, {}, {
-								format: ["wm.DataFormatter", {}, {}]
-							}],
-							conUserInput: ["wm.Input", {checked: true, width: "200px", border: "0"}, {onkeypress: "onConUsernameKeyPress", onchange: "conUsernameChanged"}]
-						}],
-						panel104: ["wm.Panel", {border: "0", height: "24px", layoutKind: "left-to-right"}, {}, {
-							label102: ["wm.Label", {caption: "Password:", width: "200px", border: "0"}, {}, {
-								format: ["wm.DataFormatter", {}, {}]
-							}],
-							conPasswordInput: ["wm.Input", {checked: true, width: "200px", border: "0", inputType: "password"}, {onkeypress: "onConPasswordKeyPress", onchange: "conPasswordChanged"}]
-						}],
-						conpanel501: ["wm.Panel", {border: "0", height: "24px", layoutKind: "left-to-right"}, {}, {
-							conlabel301: ["wm.Label", {caption: "RDBMS:", width: "200px", border: "0"}, {}, {
-								format: ["wm.DataFormatter", {}, {}]
-							}],
-							conDBdropdown: ["wm.SelectMenu", {display: "Select", height: "20px", width: "200px", layoutKind: "left-to-right"}, {onchange: "conDBdropdownChanged"}, {}]
-						}],
-						conpanel601: ["wm.Panel", {border: "0", height: "24px", layoutKind: "left-to-right"}, {}, {
-							conHostLabel: ["wm.Label", {caption: "Hostname:", width: "200px", border: "0"}, {}, {
-								format: ["wm.DataFormatter", {}, {}]
-							}],
-							conHostInput: ["wm.Input", {checked: true, width: "200px", border: "0"}, {onkeypress: "onConHostKeyPress", onchange: "conHostChanged"}]
-						}],
-						conpanel602: ["wm.Panel", {border: "0", height: "24px", layoutKind: "left-to-right"}, {}, {
-							conPortLabel: ["wm.Label", {caption: "Port:", width: "200px", border: "0"}, {}, {
-								format: ["wm.DataFormatter", {}, {}]
-							}],
-							conPortInput: ["wm.Input", {checked: true, width: "200px", border: "0"}, {onkeypress: "onConPortKeyPress", onchange: "conPortChanged"}]
-						}],
-						conpanel701: ["wm.Panel", {border: "0", height: "24px", layoutKind: "left-to-right"}, {}, {
-							conExtraInputLabel: ["wm.Label", {caption: "conExtraInputLabel", width: "200px", border: "0", showing: false}, {}, {
-								format: ["wm.DataFormatter", {}, {}]
-							}],
-							conExtraInput: ["wm.Input", {checked: true, width: "200px", border: "0", showing: false}, {onkeypress: "onConExtraKeyPress", onchange: "conExtraChanged"}]
-						}],
-						conextra2Panel: ["wm.Panel", {border: "0", height: "24px", layoutKind: "left-to-right"}, {}, {
-							conExtra2InputLabel: ["wm.Label", {caption: "Instance", width: "200px", border: "0"}, {}, {
-								format: ["wm.DataFormatter", {}, {}]
-							}],
-							conExtra2Input: ["wm.Input", {checked: true, width: "200px", border: "0"}, {onkeypress: "onConExtra2KeyPress", onchange: "conExtra2Changed"}]
-						}],
-						panel102: ["wm.Panel", {border: "0", height: "24px", layoutKind: "left-to-right"}, {}, {
-							label103: ["wm.Label", {caption: "Connection URL:", width: "200px", border: "0"}, {}, {
-								format: ["wm.DataFormatter", {}, {}]
-							}],
-							conConnectionUrlInput: ["wm.Input", {checked: true, width: "200px", border: "0", inputValue: "jdbc:mysql://localhost:3306"}, {onkeypress: "onConConnectionUrlKeyPress", onchange: "conConnectionUrlChanged"}]
-						}],
-						conpanel1802: ["wm.Panel", {border: "0", height: "24px", layoutKind: "left-to-right"}, {}, {
-							conlabel8: ["wm.Label", {caption: "Table Filter:", width: "200px", border: "0"}, {}, {
-								format: ["wm.DataFormatter", {}, {}]
-							}],
-							conTablePatternInput: ["wm.Input", {checked: true, width: "200px", border: "0"}, {onkeypress: "onConTablePatternKeyPress", onchange: "conTablePatternChanged"}]
-						}],
-						conpanel1801: ["wm.Panel", {border: "0", height: "24px", layoutKind: "left-to-right"}, {}, {
-							conlabel7: ["wm.Label", {caption: "Schema Filter:", width: "200px", border: "0"}, {}, {
-								format: ["wm.DataFormatter", {}, {}]
-							}],
-							conSchemaPatternInput: ["wm.Input", {checked: true, width: "200px", border: "0"}, {onkeypress: "onConSchemaPatternKeyPress", onchange: "conSchemaPatternChanged"}]
-						}],
-						conpanel20: ["wm.Panel", {border: "0", height: "24px", layoutKind: "left-to-right"}, {}, {
-							conlabel16: ["wm.Label", {caption: "Driver Class:", width: "200px", border: "0"}, {}, {
-								format: ["wm.DataFormatter", {}, {}]
-							}],
-							conDriverClassInput: ["wm.Input", {checked: true, width: "200px", border: "0"}, {onkeypress: "onConDriverClassKeyPress", onchange: "conDriverClassChanged"}]
-						}],
-						conpanel201: ["wm.Panel", {border: "0", height: "24px", layoutKind: "left-to-right"}, {}, {
-							conlabel27: ["wm.Label", {caption: "Dialect:", width: "200px", border: "0"}, {}, {
-								format: ["wm.DataFormatter", {}, {}]
-							}],
-							conDialectInput: ["wm.Input", {checked: true, width: "200px", border: "0"}, {onkeypress: "onConDialectKeyPress", onchange: "conDialectChanged"}]
-						}],
-						conpanel202: ["wm.Panel", {border: "0", height: "24px", layoutKind: "left-to-right"}, {}, {
-							conlabel28: ["wm.Label", {caption: "Reverse Naming Strategy:", width: "200px", border: "0"}, {}, {
-								format: ["wm.DataFormatter", {}, {}]
-							}],
-							conRevengNamingStrategyInput: ["wm.Input", {checked: true, width: "200px", border: "0"}, {onkeypress: "onConRevengKeyPress", onchange: "conRevengChanged"}]
-						}],
-						//newDatabaseInput: ["wm.CheckBoxEditor", {captionSize: "360px", caption: "New Database?", width: "100%", layoutKind: "left-to-right", 
-						//		displayValue: true, emptyValue: "false"}, {onchange: "newDatabaseInputChanged"}, {
-						//		editor: ["wm._CheckBoxEditor", {dataType: "boolean"}, {}]
-						//}],
-						overrideFlagInput: ["wm.CheckBoxEditor", {captionSize: "380px", caption: "If Exporting, Create New Database or Re-create Existing Database", width: "100%", layoutKind: "left-to-right", 
-								displayValue: true, emptyValue: "false"}, {onchange: "overrideFlagInputChanged"}, {
-								editor: ["wm._CheckBoxEditor", {dataType: "boolean"}, {}]
-						}],
+					panel2: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]}, padding: "5,50,5,50", border: "0", height: "100%", width: "100%"}, {}, {
+					    conUserInput: ["wm.Text", {captionSize: "150px", caption: "Username", width: "100%", border: "0", changeOnKey:true, helpText: "Enter the username for connecting to the database server"}, {onchange: "conUsernameChanged"}],
+					    conPasswordInput: ["wm.Text", {captionSize: "150px", caption: "Password", password: true, width: "100%", border: "0", changeOnKey:true, helpText: "Enter the password for connecting to the database server"}, {onchange: "conPasswordChanged"}],
+					    conDBdropdown: ["wm.SelectMenu", {captionSize: "150px", caption: "RDBMS", width: "100%", changeOnKey:true, helpText: "Choose what type of database server you are connecting to"}, {onchange: "conDBdropdownChanged"}, {}],
+					    conHostInput: ["wm.Text", {captionSize: "150px", caption: "Hostname", width: "100%", border: "0", changeOnKey:true, helpText: "The network host for the database. The default value is localhost, meaning that the database is located on the same computer that WaveMaker studio is running on."}, {onchange: "conHostChanged"}],
+					    conPortInput: ["wm.Text", {captionSize: "150px", caption: "Port", width: "100%", border: "0", changeOnKey:true, helpText: "The port number for the database. Typically this is set automatically when the database type is selected and should not be changed."}, {onchange: "conPortChanged"}],
+					    conExtraInput: ["wm.Text", {captionSize: "150px", caption: "Caption set in datautils", width: "100%", border: "0", showing: false, changeOnKey:true, helpText: "Help set in datautils.js"}, {onchange: "conExtraChanged"}],
+					    conExtra2Input: ["wm.Text", {captionSize: "150px", caption: "Instance", width: "100%", border: "0", changeOnKey:true, helpText: "Normally, this should be set to the value 'SQLExpress' if you are using SQL Server Express Edition."}, {onchange: "conExtra2Changed"}],
+					    conConnectionUrlInput: ["wm.Text", {captionSize: "150px", caption: "Connection URL", width: "100%", border: "0", dataValue: "jdbc:mysql://localhost:3306", changeOnKey:true, helpText: "When you import a database using the standard configuration options on the Import Database screen, WaveMaker Studio creates a JDBC URL for you. This URL is shown here in the Connection URL field. If you know what you are doing and want to change this JDBC URL, you can do it here."}, {onchange: "conConnectionUrlChanged"}],
+					    conTablePatternInput: ["wm.Text", {captionSize: "150px", caption: "Table Filter", width: "100%", border: "0", changeOnKey:true, helpText: "By default WaveMaker Studio imports all the tables in the database. If you want to import only a subset of the tables, type in a comma-delimited list of regular expressions here."}, {onchange: "conTablePatternChanged"}],
+					    conSchemaPatternInput: ["wm.Text", {captionSize: "150px", caption: "Schema Filter", width: "100%", border: "0", changeOnKey:true, helpText: "When you are importing a database that supports schemas, WaveMaker Studio imports only the tables for the default schema. If you want to import tables from other schemas, add the schema names in this field."}, {onchange: "conSchemaPatternChanged"}],
+					    conDriverClassInput: ["wm.Text", {captionSize: "150px", caption: "Driver Class", width: "100%", border: "0", changeOnKey:true, helpText: "JDBC driver class name. WaveMaker Studio creates a JAR file for each database that uses a specified driver. If you want to use a different JAR file for connecting, specify it here (the JAR file must be in the Application Server's class path)."}, {onchange: "conDriverClassChanged"}],
+					    conDialectInput: ["wm.Text", {captionSize: "150px", caption: "Dialect", width: "100%", border: "0", changeOnKey:true,helpText:"Hibernate dialect.  Most users should leave this blank.  For more information go to http://docs.jboss.org/hibernate/core/3.3/reference/en/html/session-configuration.html#configuration-optional-dialects"}, {onchange: "conDialectChanged"}],
+					    conRevengNamingStrategyInput: ["wm.Text", {captionSize: "150px", caption: "Reverse Naming Strategy", width: "100%", border: "0", changeOnKey:true, helpText: "Most users should leave this blank.  Enter the name of a java class you created for handling the naming strategy."}, {onchange: "conRevengChanged"}],
+					    executeAsMenu: ["wm.SelectMenu", {captionAlign: "left", captionSize: "120px", caption: "Execute as", options: "Database credentials, Logged in user", dataValue: "Database credentials", width: "65%", helpText: "Typically your database connections will just use the username and password configured above.  If you need the connection to do an 'Execute As' and use the currently logged in user's credentials (i.e. the user who has logged into your deployed application), you can set that here."}, {onchange: "importDBdropdownChanged"}],
+					    overrideFlagInput: ["wm.Checkbox", {captionSize: "150px", caption: "Overwrite database", width: "100%", dataType: "boolean", displayValue: true, emptyValue: "false", helpText: "If you are using the \"Export\" button and this is checked, then the database already exists, all tables and data will be dropped and deleted. A new database will be created whether or not there is an existing database."}, {onchange: "overrideFlagInputChanged"}]
 					}]
 				}],
 				footer: ["wm.Panel", {border: "0", height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
@@ -128,4 +57,5 @@ DBConnectionSettings.widgets = {
 			}]
 		}]
 	}]
+
 }

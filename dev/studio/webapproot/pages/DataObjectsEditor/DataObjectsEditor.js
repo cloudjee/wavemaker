@@ -191,6 +191,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 			this.connect(d, "onPageReady", dojo.hitch(d.page, "setup"));
 		}
 		d.show();
+	    d.page.setSelectedModel(this.currentDataModelName);
 	    d.page.modelIsDirty = this.dirty;
 	    d.page.openner = this;
 	},

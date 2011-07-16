@@ -28,20 +28,20 @@ dojo.declare("ImportDatabase", wm.Page, {
 	update: function(inImportDataModel) {
 		var d = inImportDataModel;
 		if (d) {
-			this.serviceNameInput.setInputValue(d.dataModelName || "");
+			this.serviceNameInput.setDataValue(d.dataModelName || "");
 			this.serviceNameChanged();
-			this.usernameInput.setInputValue(d.userName || "");
+			this.usernameInput.setDataValue(d.userName || "");
 			this.usernameChanged();
-			this.passwordInput.setInputValue(d.password || "");
+			this.passwordInput.setDataValue(d.password || "");
 			if (d.dbtype) {
 				this.dbdropdown.setDisplayValue(d.dbtype);
 				this.importDBdropdownChanged();
 			}
-			this.hostInput.setInputValue(d.host || ((studio.isCloud()) ? "mysql.wavemaker.com" : "localhost"));
+			this.hostInput.setDataValue(d.host || ((studio.isCloud()) ? "mysql.wavemaker.com" : "localhost"));
 			this.importHostChanged();
-			this.portInput.setInputValue(d.port || "3306");
+			this.portInput.setDataValue(d.port || "3306");
 			this.importPortChanged()
-			this.extraInput.setInputValue(d.dbName || "");
+			this.extraInput.setDataValue(d.dbName || "");
 			this.importExtraChanged();
 			if (d.noPrompt)
 				setTimeout(dojo.hitch(this, "importBtnClick"), 100);
@@ -50,18 +50,22 @@ dojo.declare("ImportDatabase", wm.Page, {
 	cancelBtnClick: function(inSender) {
 		this._close();
 	},
+/*
 	onServiceNameKeyPress: function() {
 		setTimeout(dojo.hitch(this, "serviceNameChanged"), 0);
 	},
+	*/
 	serviceNameChanged: function() {
 		this._updatePackage();
 	},
+/*
 	onUsernameKeyPress: function() {
 		setTimeout(dojo.hitch(this, "usernameChanged"), 0);
 	},
+	*/
 	usernameChanged: function() {
 		var db = this.dbdropdown.getDisplayValue();
-		this._updateSchemaFilter(db, this.usernameInput.getInputValue(),
+		this._updateSchemaFilter(db, this.usernameInput.getDataValue(),
 					this.schemaPatternInput);
 	},
 
@@ -78,96 +82,105 @@ dojo.declare("ImportDatabase", wm.Page, {
 
 		setupWidgetsForDatabaseType(inValue,
 					    this.ip,
-					    this.hostLabel,
+					    //this.hostLabel,
 					    this.hostInput,
-					    this.portLabel,
+					    //this.portLabel,
 					    this.portInput,
-					    this.extraInputLabel,
+					    //this.extraInputLabel,
 					    this.extraInput,
-					    this.extra2InputLabel,
+					    //this.extra2InputLabel,
 					    this.extra2Input,
 					    this.tablePatternInput,
 					    this.schemaPatternInput,
 					    this.usernameInput,
-					    this.passwordInput);
+					    this.passwordInput,
+					    this.executeAsMenu);
 							 
 		this._updateImportConnectionUrl();
 		this.usernameChanged(); 
 	},
+/*
 	onImportHostKeyPress: function(inSender) {
 		setTimeout(dojo.hitch(this, "importHostChanged", inSender), 0);
 	},
+	*/
 	importHostChanged: function(inSender) {
 		this._updateImportConnectionUrl();
 	},
+/*
 	onImportPortKeyPress: function() {
 		setTimeout(dojo.hitch(this, "importPortChanged"), 0);
 	},
+	*/
 	importPortChanged: function() {
 		this._updateImportConnectionUrl();
 	},
+/*
 	onImportExtraKeyPress: function() {
 		setTimeout(dojo.hitch(this, "importExtraChanged"), 0);
 	},
+	*/
 	importExtraChanged: function() {
 		this._updateServiceName();
 		this._updateImportConnectionUrl();
 	},
+/*
 	onImportExtra2KeyPress: function() {
 		setTimeout(dojo.hitch(this, "importExtra2Changed"), 0);
 	},
+	*/
 	importExtra2Changed: function() {
 		this._updateImportConnectionUrl();
 	},
 	testConnectionBtnClick: function(inSender) {
-		this._testConnection(this.connectionUrlInput.getInputValue(),
-					this.usernameInput.getInputValue(),
-					this.passwordInput.getInputValue(),
-					this.driverClassInput.getInputValue());
+		this._testConnection(this.connectionUrlInput.getDataValue(),
+					this.usernameInput.getDataValue(),
+					this.passwordInput.getDataValue(),
+					this.driverClassInput.getDataValue());
 	},
 	importBtnClick: function(inSender) {
 		this.dataModelName = null;
 	    studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING"));
 		studio.dataService.requestAsync(IMPORT_DB_OP,
-					[this.serviceNameInput.getInputValue(),
-					this.packageInput.getInputValue(),
-					this.usernameInput.getInputValue(),
-					this.passwordInput.getInputValue(),
-					this.connectionUrlInput.getInputValue(),
-					this.tablePatternInput.getInputValue(),
-					this.schemaPatternInput.getInputValue(),
-					this.driverClassInput.getInputValue(),
-					this.dialectInput.getInputValue(),
-					this.revengNamingStrategyInput.getInputValue()],
+					[this.serviceNameInput.getDataValue(),
+					this.packageInput.getDataValue(),
+					this.usernameInput.getDataValue(),
+					this.passwordInput.getDataValue(),
+					this.connectionUrlInput.getDataValue(),
+					this.tablePatternInput.getDataValue(),
+					this.schemaPatternInput.getDataValue(),
+					this.driverClassInput.getDataValue(),
+					this.dialectInput.getDataValue(),
+					this.revengNamingStrategyInput.getDataValue()],
 					dojo.hitch(this, "_importResult"), 
 					dojo.hitch(this, "_importError"));
 	},
 
 	_updatePackage: function() {
-		this.packageInput.setInputValue("");
-		var s = this.serviceNameInput.getInputValue().toLowerCase();
-		this.packageInput.setInputValue(DEFAULT_PACKAGE_ROOT + s);
+		this.packageInput.setDataValue("");
+		var s = this.serviceNameInput.getDataValue().toLowerCase();
+		this.packageInput.setDataValue(DEFAULT_PACKAGE_ROOT + s);
 	},
 	_updateSchemaFilter: function(dbtype, username, schemaFilterInput) {
 		if (isOracle(dbtype) || isDB2(dbtype)) {
-			schemaFilterInput.setInputValue(username.toUpperCase());
+			schemaFilterInput.setDataValue(username.toUpperCase());
 		}
 	},
 	_updateImportConnectionUrl: function() {
 		var dbtype = this.dbdropdown.getDisplayValue();
-		var h = this.hostInput.getInputValue();
-		var p = this.portInput.getInputValue();
-		var e = this.extraInput.getInputValue();
-		var e2 = this.extra2Input.getInputValue();
+		var h = this.hostInput.getDataValue();
+		var p = this.portInput.getDataValue();
+		var e = this.extraInput.getDataValue();
+		var e2 = this.extra2Input.getDataValue();
 
 		var s = buildConnectionUrl(dbtype, h, p, e, e2);
 
-		this.connectionUrlInput.setInputValue(s);
+		this.connectionUrlInput.setDataValue(s);
 	},
 	_updateServiceName: function() {
-		var e = this.extraInput.getInputValue();
+		var e = this.extraInput.getDataValue();
 		this.serviceNameChanged();
-		this.serviceNameInput.setInputValue(e);
+		this.serviceNameInput.setDataValue(e);
 	},
 	_testConnection: function(url, username, password, driverClassName) {
 		studio.beginWait("Test Connection: " + url);
@@ -187,7 +200,7 @@ dojo.declare("ImportDatabase", wm.Page, {
 	},
 	_importResult: function() {
 		studio.endWait();
-		this.dataModelName = this.serviceNameInput.getInputValue();
+		this.dataModelName = this.serviceNameInput.getDataValue();
 		studio.updateServices();
 /*
 	        var layers = studio.databaseSubTab.layers;

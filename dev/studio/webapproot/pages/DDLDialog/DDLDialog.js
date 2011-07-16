@@ -12,7 +12,7 @@
  *  limitations under the License.
  */
  
-
+/* Used when doing export operation from DBConnectionSettings dialog */
 dojo.provide("wm.studio.pages.DDLDialog.DDLDialog");
 
 dojo.declare("DDLDialog", wm.Page, {

@@ -213,14 +213,26 @@ removeConnectionUrlParams = function(inConnectionUrl) {
 }
 
 setupWidgetsForDatabaseType = function(
-		inDBType, ip, hostLabel, hostInput, portLabel, portInput, 
-		extraLabel, extraInput, extraLabel2, extraInput2, 
-		tableFilterInput, schemaFilterInput,
-		usernameInput, passwordInput) {
+    inDBType, 
+    ip,
+    //hostLabel,
+    hostInput,
+    //portLabel,
+    portInput, 
+    //extraLabel,
+    extraInput,
+    //extraLabel2,
+    extraInput2, 
+    tableFilterInput,
+    schemaFilterInput,
+    usernameInput,
+    passwordInput,
+    executeAs) {
 
 	var h = "localhost";
 	var p = null;
-	var e = "Database";
+        var e = studio.getDictionaryItem("DATA_UTILS_DATABASE");
+        var eHelp = studio.getDictionaryItem("DATA_UTILS_DATABASE_HELP");
 	var e2 = null;
 
 	var tableFilter = DEFAULT_TABLE_FILTER;
@@ -230,6 +242,7 @@ setupWidgetsForDatabaseType = function(
 	var password = "";
         var extraInputValue = "";
         var extraInput2Value = "";
+        var executeAsShowing = false;
 	if (isMySQL(inDBType)) {
 		p = 3306;
 		if (studio.isCloud()) 
@@ -237,7 +250,8 @@ setupWidgetsForDatabaseType = function(
 	} else if (isHSQLDB(inDBType)) {
 		h = null;
 	        p = null;
-		e = "File ";
+	        e = studio.getDictionaryItem("DATA_UTILS_FILE");
+                eHelp = studio.getDictionaryItem("DATA_UTILS_FILE_HELP");
 		username = "sa";
 	    // before this works, we'll need to properly fire all event changes that occur when the user types in "hrdb"
 	        //extraInputValue = "hrdb";
@@ -254,53 +268,57 @@ setupWidgetsForDatabaseType = function(
 		p = 1433;
 		e2 = "Instance";
 		schemaFilter = SQL_SERVER_DEFAULT_SCHEMA;
+	        executeAsShowing = true;
 	} else if (isDB2(inDBType)) {
 		p = 50000;
 	}
 
-	hostInput.setInputValue("");
+	hostInput.setDataValue("");
 	if (h == null) {
-		hostLabel.setCaption("");
-		hostInput.parent.setShowing(false);
+		hostInput.setCaption("");
+		hostInput.setShowing(false);
 	} else {
-		hostLabel.setCaption("Host");
-		hostInput.parent.setShowing(true);
-		hostInput.setInputValue(h);
+		hostInput.setCaption("Host");
+		hostInput.setShowing(true);
+		hostInput.setDataValue(h);
 	}
 
-	portInput.setInputValue("");
+	portInput.setDataValue("");
 	if (p == null) {
-		portLabel.setCaption("");
-		portInput.parent.setShowing(false);
+		portInput.setCaption("");
+		portInput.setShowing(false);
 	} else {
-		portLabel.setCaption("Port");
-		portInput.parent.setShowing(true);
-		portInput.setInputValue(p);
+		portInput.setCaption("Port");
+		portInput.setShowing(true);
+		portInput.setDataValue(p);
 	}
 
-	extraInput.setInputValue(extraInputValue);
+	extraInput.setDataValue(extraInputValue);
 	extraInput.setShowing(e != null);
-	extraLabel.setShowing(e != null);
 	if (e != null) {
-		extraLabel.setCaption(e);
+		extraInput.setCaption(e);
+	        extraInput.helpText = eHelp;
 	}
 
-	extraInput2.setInputValue("");
+	extraInput2.setDataValue("");
 	extraInput2.setShowing(e2 != null);
-	extraLabel2.setShowing(e2 != null);
 
-	if (usernameInput) usernameInput.setInputValue(username);
+	if (usernameInput) usernameInput.setDataValue(username);
 	if (e2 != null) {
-		extraLabel2.setCaption(e2);
+		extraInput2.setCaption(e2);
 	}
 
 	if (tableFilter != null) {
-		tableFilterInput.setInputValue(tableFilter);
+		tableFilterInput.setDataValue(tableFilter);
 	}
 
 	if (schemaFilter != null) {
-		schemaFilterInput.setInputValue(schemaFilter);
+		schemaFilterInput.setDataValue(schemaFilter);
 	}
+
+    if (executeAs) {
+	executeAs.setShowing(executeAsShowing);
+    }
 }
 
 getDataModelTypeNodes = function(dataModelTree, dataModelName) {
