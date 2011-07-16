@@ -15,8 +15,23 @@
 		<password>manager</password>
         <OS>windows</OS>
     </Target>
-	<Target>
+    <Target>
         <name>target2</name>
+        <description>CloudFoundry</description>
+        <destType>server</destType>
+        <serviceProvider>CloudFoundry</serviceProvider>
+        <server>cloudfoundry</server>
+        <container></container>
+        <dnsHost>api.cloudfoundry.com</dnsHost>
+        <publicIp></publicIp>
+        <privateIp></privateIp>
+        <port></port>
+        <user></user>
+        <password></password>
+        <OS>linux</OS>
+    </Target>
+	<Target>
+        <name>target3</name>
         <description>local websphere</description>
 		<destType>server</destType>
 		<serviceProvider>local</serviceProvider>
@@ -29,20 +44,5 @@
 		<user></user>
 		<password></password>
         <OS>windows</OS>
-    </Target>
-	<Target>
-        <name>target3</name>
-        <description>RackSpace container</description>
-		<destType>storage</destType>
-		<serviceProvider>rackspace</serviceProvider>
-        <server></server>
-		<container>wm46</container>
-		<dnsHost></dnsHost>
-		<publicIp></publicIp>
-		<privateIp></privateIp>
-        <port></port>
-		<user></user>
-		<password></password>
-        <OS>linux</OS>
     </Target>
 </Targets>

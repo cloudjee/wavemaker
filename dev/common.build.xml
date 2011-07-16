@@ -13,7 +13,7 @@
 -->
 
 <project name="shared" default="" basedir=".">
-	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
     <description>
 
         This ant script is a repository of common tasks and resource.  
@@ -81,58 +81,59 @@
       <file name="${log4j.jar}"/>
       <file name="${spring01.jar}"/>
       <file name="${spring02.jar}"/>
- 	<file name="${spring03.jar}"/>
-  	<file name="${spring04.jar}"/>
-  	<file name="${spring05.jar}"/>
-  	<file name="${spring06.jar}"/>
-  	<file name="${spring07.jar}"/>
-  	<file name="${spring08.jar}"/>
-  	<file name="${spring09.jar}"/>
-  	<file name="${spring10.jar}"/>
-  	<file name="${spring11.jar}"/>
-  	<file name="${spring12.jar}"/>
-  	<file name="${spring13.jar}"/>
-  	<file name="${spring14.jar}"/>
-  	<file name="${spring15.jar}"/>
+    <file name="${spring03.jar}"/>
+    <file name="${spring04.jar}"/>
+    <file name="${spring05.jar}"/>
+    <file name="${spring06.jar}"/>
+    <file name="${spring07.jar}"/>
+    <file name="${spring08.jar}"/>
+    <file name="${spring09.jar}"/>
+    <file name="${spring10.jar}"/>
+    <file name="${spring11.jar}"/>
+    <file name="${spring12.jar}"/>
+    <file name="${spring13.jar}"/>
+    <file name="${spring14.jar}"/>
+    <file name="${spring15.jar}"/>
         <file name="${spring16.jar}"/>
-  	<file name="${spring17.jar}"/>
-  	<file name="${spring18.jar}"/>
-  	<file name="${spring19.jar}"/>
-  	<file name="${spring20.jar}"/>
-  	<file name="${aopalliance.jar}"/>
+    <file name="${spring17.jar}"/>
+    <file name="${spring18.jar}"/>
+    <file name="${spring19.jar}"/>
+    <file name="${spring20.jar}"/>
+    <file name="${aopalliance.jar}"/>
     </filelist>
 
     <filelist id="common.testsupport.jars">
-      <file name="${spring01.jar}"/>
-  		<file name="${spring02.jar}"/>
-  		<file name="${spring03.jar}"/>
-  		<file name="${spring04.jar}"/>
-  		<file name="${spring05.jar}"/>
-  		<file name="${spring06.jar}"/>
-  		<file name="${spring07.jar}"/>
-  		<file name="${spring08.jar}"/>
-  		<file name="${spring09.jar}"/>
-  		<file name="${spring10.jar}"/>
-  		<file name="${spring11.jar}"/>
-  		<file name="${spring12.jar}"/>
-  		<file name="${spring13.jar}"/>
-  		<file name="${spring14.jar}"/>
-  		<file name="${spring15.jar}"/>
-  		<file name="${spring16.jar}"/>
-  		<file name="${spring17.jar}"/>
-  		<file name="${spring18.jar}"/>
-  		<file name="${spring19.jar}"/>
-  		<file name="${spring20.jar}"/>
-  		<file name="${aopalliance.jar}"/>
+        <file name="${spring01.jar}"/>
+        <file name="${spring02.jar}"/>
+        <file name="${spring03.jar}"/>
+        <file name="${spring04.jar}"/>
+        <file name="${spring05.jar}"/>
+        <file name="${spring06.jar}"/>
+        <file name="${spring07.jar}"/>
+        <file name="${spring08.jar}"/>
+        <file name="${spring09.jar}"/>
+        <file name="${spring10.jar}"/>
+        <file name="${spring11.jar}"/>
+        <file name="${spring12.jar}"/>
+        <file name="${spring13.jar}"/>
+        <file name="${spring14.jar}"/>
+        <file name="${spring15.jar}"/>
+        <file name="${spring16.jar}"/>
+        <file name="${spring17.jar}"/>
+        <file name="${spring18.jar}"/>
+        <file name="${spring19.jar}"/>
+        <file name="${spring20.jar}"/>
+        <file name="${aopalliance.jar}"/>
+        <file name="${mockito.jar}"/>
     </filelist>
     
     <if>
-    	<equals arg1="${java.version}" arg2="${java.version.java5}"/>
-    	<then>
-	    	<echo> "Java 5 build" </echo>
+        <equals arg1="${java.version}" arg2="${java.version.java5}"/>
+        <then>
+            <echo> "Java 5 build" </echo>
         <filelist id="common.runtime.jars">
-        	<file name="${jaxb-api.jar}"/>
-        	<!-- below is same as java6 -->
+            <file name="${jaxb-api.jar}"/>
+            <!-- below is same as java6 -->
           <file name="${acegi.jar}"/>
           <file name="${activation.jar}"/>
           <file name="${apache-collections.jar}"/>
@@ -155,26 +156,26 @@
           <file name="${saaj-api.jar}"/>
           <file name="${saaj-impl.jar}"/>
           <file name="${spring01.jar}"/>
-      		<file name="${spring02.jar}"/>
-      		<file name="${spring03.jar}"/>
-      		<file name="${spring04.jar}"/>
-      		<file name="${spring05.jar}"/>
-      		<file name="${spring06.jar}"/>
-      		<file name="${spring07.jar}"/>
-      		<file name="${spring08.jar}"/>
-      		<file name="${spring09.jar}"/>
-      		<file name="${spring10.jar}"/>
-      		<file name="${spring11.jar}"/>
-      		<file name="${spring12.jar}"/>
-      		<file name="${spring13.jar}"/>
-      		<file name="${spring14.jar}"/>
-      		<file name="${spring15.jar}"/>
-      		<file name="${spring16.jar}"/>
-      		<file name="${spring17.jar}"/>
-      		<file name="${spring18.jar}"/>
-      		<file name="${spring19.jar}"/>
-      		<file name="${spring20.jar}"/>
-      		<file name="${aopalliance.jar}"/>
+            <file name="${spring02.jar}"/>
+            <file name="${spring03.jar}"/>
+            <file name="${spring04.jar}"/>
+            <file name="${spring05.jar}"/>
+            <file name="${spring06.jar}"/>
+            <file name="${spring07.jar}"/>
+            <file name="${spring08.jar}"/>
+            <file name="${spring09.jar}"/>
+            <file name="${spring10.jar}"/>
+            <file name="${spring11.jar}"/>
+            <file name="${spring12.jar}"/>
+            <file name="${spring13.jar}"/>
+            <file name="${spring14.jar}"/>
+            <file name="${spring15.jar}"/>
+            <file name="${spring16.jar}"/>
+            <file name="${spring17.jar}"/>
+            <file name="${spring18.jar}"/>
+            <file name="${spring19.jar}"/>
+            <file name="${spring20.jar}"/>
+            <file name="${aopalliance.jar}"/>
           <file name="${stax-ex.jar}"/>
           <file name="${stax.jar}"/>
           <file name="${streambuffer.jar}"/>
@@ -182,99 +183,102 @@
           <file name="${wsdl4j.jar}"/>
           <file name="${xmlschema.jar}"/>
           <file name="${paranamer.jar}"/>
-		  <file name="${json-org.jar}"/>
+          <file name="${json-org.jar}"/>
         </filelist>
     </then>    
     <else> <!-- Default -->     
         <filelist id="common.runtime.jars">
-        	<!-- including in jdk6 builds for jdk5 deployments -->
-        	<file name="${jaxb-api.jar}"/>
-        	<!-- below is same as java5 -->
-          <file name="${acegi.jar}"/>
-          <file name="${activation.jar}"/>
-          <file name="${apache-collections.jar}"/>
-          <file name="${apache-fileupload.jar}"/>
-          <file name="${asm.jar}"/>
-          <file name="${cglib.jar}"/>
-          <file name="${dom4j.jar}"/>
-          <file name="${FastInfoset.jar}"/>
-          <file name="${hibernate.jar}"/>
-          <file name="${hsql.jar}"/>
-          <file name="${jaxb-impl.jar}"/>
-          <file name="${jaxws-rt.jar}"/>
-          <file name="${jdom.jar}"/>
-          <file name="${jta.jar}"/>
-          <file name="${mysql-connector.jar}"/>
-          <file name="${postgresql.jar}"/>
-          <file name="${resolver.jar}"/>
-          <file name="${rome.jar}"/>
-          <file name="${saaj-api.jar}"/>
-          <file name="${saaj-impl.jar}"/>
-          <file name="${spring01.jar}"/>
-      		<file name="${spring02.jar}"/>
-      		<file name="${spring03.jar}"/>
-      		<file name="${spring04.jar}"/>
-      		<file name="${spring05.jar}"/>
-      		<file name="${spring06.jar}"/>
-      		<file name="${spring07.jar}"/>
-      		<file name="${spring08.jar}"/>
-      		<file name="${spring09.jar}"/>
-      		<file name="${spring10.jar}"/>
-      		<file name="${spring11.jar}"/>
-      		<file name="${spring12.jar}"/>
-      		<file name="${spring13.jar}"/>
-      		<file name="${spring14.jar}"/>
-      		<file name="${spring15.jar}"/>
-      		<file name="${spring16.jar}"/>
-      		<file name="${spring17.jar}"/>
-      		<file name="${spring18.jar}"/>
-      		<file name="${spring19.jar}"/>
-      		<file name="${spring20.jar}"/>
-      		<file name="${aopalliance.jar}"/>
-          <file name="${stax-ex.jar}"/>
-          <file name="${stax.jar}"/>
-          <file name="${streambuffer.jar}"/>
-          <file name="${wadl-core.jar}"/>
-          <file name="${wsdl4j.jar}"/>
-          <file name="${xmlschema.jar}"/>
-          <file name="${paranamer.jar}"/>
-		  <file name="${json-org.jar}"/>
+            <!-- including in jdk6 builds for jdk5 deployments -->
+            <file name="${jaxb-api.jar}"/>
+            <!-- below is same as java5 -->
+            <file name="${acegi.jar}"/>
+            <file name="${activation.jar}"/>
+            <file name="${apache-collections.jar}"/>
+            <file name="${apache-fileupload.jar}"/>
+            <file name="${asm.jar}"/>
+            <file name="${cglib.jar}"/>
+            <file name="${dom4j.jar}"/>
+            <file name="${FastInfoset.jar}"/>
+            <file name="${hibernate.jar}"/>
+            <file name="${hsql.jar}"/>
+            <file name="${jaxb-impl.jar}"/>
+            <file name="${jaxws-rt.jar}"/>
+            <file name="${jdom.jar}"/>
+            <file name="${jta.jar}"/>
+            <file name="${mysql-connector.jar}"/>
+            <file name="${postgresql.jar}"/>
+            <file name="${resolver.jar}"/>
+            <file name="${rome.jar}"/>
+            <file name="${saaj-api.jar}"/>
+            <file name="${saaj-impl.jar}"/>
+            <file name="${spring01.jar}"/>
+            <file name="${spring02.jar}"/>
+            <file name="${spring03.jar}"/>
+            <file name="${spring04.jar}"/>
+            <file name="${spring05.jar}"/>
+            <file name="${spring06.jar}"/>
+            <file name="${spring07.jar}"/>
+            <file name="${spring08.jar}"/>
+            <file name="${spring09.jar}"/>
+            <file name="${spring10.jar}"/>
+            <file name="${spring11.jar}"/>
+            <file name="${spring12.jar}"/>
+            <file name="${spring13.jar}"/>
+            <file name="${spring14.jar}"/>
+            <file name="${spring15.jar}"/>
+            <file name="${spring16.jar}"/>
+            <file name="${spring17.jar}"/>
+            <file name="${spring18.jar}"/>
+            <file name="${spring19.jar}"/>
+            <file name="${spring20.jar}"/>
+            <file name="${aopalliance.jar}"/>
+            <file name="${stax-ex.jar}"/>
+            <file name="${stax.jar}"/>
+            <file name="${streambuffer.jar}"/>
+            <file name="${wadl-core.jar}"/>
+            <file name="${wsdl4j.jar}"/>
+            <file name="${xmlschema.jar}"/>
+            <file name="${paranamer.jar}"/>
+            <file name="${json-org.jar}"/>
         </filelist>
-			</else>
-			</if>
-			
+            </else>
+            </if>
+            
     
 
     <fileset id="common.modules.jars" dir="${allmodules.build.dir}">
         <include name="**/*.jar"/>
     </fileset>
 
-	<filelist id="common.tools.jars">
-      <file name="${ant-launcher.jar}"/>
-      <file name="${ant-nodeps.jar}"/>
-      <file name="${ant.jar}"/>
-      <file name="${catalina-ant.jar}"/>
-      <file name="${collection-setter-injector.jar}"/>
-      <file name="${comresrcgen.jar}"/>
-      <file name="${freemaker.jar}"/>
-      <file name="${hibernate-ext.jar}"/>
-      <file name="${jaxb-xjc.jar}"/>
-      <file name="${jaxws-tools.jar}"/>
-      <file name="${jtidy.jar}"/>
-      <file name="${localizer.jar}"/>
-      <file name="${servlet.api.jar}"/>
-      <file name="${wadl-ant.jar}"/>
-      <file name="${wadl-cmdline.jar}"/>
-      <file name="${xbean.jar}"/>
-      <file name="${xmltask.jar}"/>
-  		<file name="${amazonec2.jar}"/>
-  		<file name="${amazons3.jar}"/>
-  		<file name="${commons-codec.jar}"/>
-  		<file name="${commons-httpclient.jar}"/>
-  		<file name="${rs-jar1.jar}"/>
-  		<file name="${rs-jar2.jar}"/>
-  		<file name="${rs-jar3.jar}"/>
-  		<file name="${rs-jar4.jar}"/>
+    <filelist id="common.tools.jars">
+        <file name="${ant-launcher.jar}"/>
+        <file name="${ant-nodeps.jar}"/>
+        <file name="${ant.jar}"/>
+        <file name="${catalina-ant.jar}"/>
+        <file name="${cf-client.jar}"/>
+        <file name="${collection-setter-injector.jar}"/>
+        <file name="${comresrcgen.jar}"/>
+        <file name="${freemaker.jar}"/>
+        <file name="${hibernate-ext.jar}"/>
+        <file name="${jackson-core.jar}"/>
+        <file name="${jackson-mapper.jar}"/>
+        <file name="${jaxb-xjc.jar}"/>
+        <file name="${jaxws-tools.jar}"/>
+        <file name="${jtidy.jar}"/>
+        <file name="${localizer.jar}"/>
+        <file name="${servlet.api.jar}"/>
+        <file name="${wadl-ant.jar}"/>
+        <file name="${wadl-cmdline.jar}"/>
+        <file name="${xbean.jar}"/>
+        <file name="${xmltask.jar}"/>
+        <file name="${amazonec2.jar}"/>
+        <file name="${amazons3.jar}"/>
+        <file name="${commons-codec.jar}"/>
+        <file name="${commons-httpclient.jar}"/>
+        <file name="${rs-jar1.jar}"/>
+        <file name="${rs-jar2.jar}"/>
+        <file name="${rs-jar3.jar}"/>
+        <file name="${rs-jar4.jar}"/>
     </filelist>
 
     <condition property="common.modules.isCloud">
@@ -311,7 +315,7 @@
                 if="common.modules.isEnterprise"/>
         <include name="${module.wm.josso.name}/**"
                 if="common.modules.isEnterprise"/>
-		<include name="${module.wm.multitenant.name}/**"
+        <include name="${module.wm.multitenant.name}/**"
                 if="common.modules.isEnterprise"/>
     </patternset>
 
@@ -342,17 +346,17 @@
             <arg value="-projecthelp"/>
         </java>
         <echo>
-        	$${build.dir} resolves to "${build.dir}"
-        	It can set using the environment variable BUILDDIR,
-        	or the ant property build.dir
+            $${build.dir} resolves to "${build.dir}"
+            It can set using the environment variable BUILDDIR,
+            or the ant property build.dir
         </echo>
     </target>
 
     <target name="common.generate-best-license" depends="common.generate-full-version, common.generate-license" />
 
     <target name="common.generate-license" unless="license.generated">
-    	<!-- Use LICENSE.txt -->
-    	<copy file="${src.buildsupport.dir}/LICENSE.txt"
+        <!-- Use LICENSE.txt -->
+        <copy file="${src.buildsupport.dir}/LICENSE.txt"
                 tofile="${license.file}"/>
                 <property name="license.generated" value="true"/>
     </target>
@@ -406,13 +410,13 @@ SVN version: ${gfv.svn.revision.range}
 Build number: ${env.BUILD_NUMBER}
 Job name: ${env.JOB_NAME}
 SVN ${gfv.svn.repository.url}
-     	</echo>
+        </echo>
 
      <echo>Version: ${version.number} WRITTEN TO FILE: ${version.project.file}</echo>
      <echo file="${version.project.file}">Version: ${version.number}
 SVN version: ${gfv.svn.revision.range}
      </echo>
      <property name="version.full"
-     	value="Version: ${version.number}\nSVN url: ${generate-full-version.svn.url}\nSVN version: ${generate-full-version.svn.rev}"/>
+        value="Version: ${version.number}\nSVN url: ${generate-full-version.svn.url}\nSVN version: ${generate-full-version.svn.rev}"/>
     </target>
 </project>

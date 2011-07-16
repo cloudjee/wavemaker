@@ -233,6 +233,8 @@ public abstract class BaseDataModelSetup {
     protected Properties properties = new Properties();
 
     protected boolean initialized = false;
+    
+    protected boolean impersonateUser = false;
 
     private List<File> tmpFiles = new ArrayList<File>();
 
@@ -336,6 +338,10 @@ public abstract class BaseDataModelSetup {
     public String getCatalogName() {
         return catalogName;
     }
+    
+    public boolean isImpersonateUser() {
+    	return impersonateUser;
+    }
 
     public void setCatalogName(String catalogName) {
         this.catalogName = catalogName;
@@ -390,6 +396,10 @@ public abstract class BaseDataModelSetup {
 
     public void setProperties(Properties additionalProperties) {
         properties.putAll(additionalProperties);
+    }
+    
+    public void setImpersonateUser(boolean impersonateUser) {
+    	this.impersonateUser = impersonateUser;
     }
 
     protected void registerTmpFileForCleanup(File f) {

@@ -4,11 +4,11 @@
 	<classpathentry excluding="**/.svn/**" kind="src" path="services/securityServiceJOSSO/src"/>
 	<classpathentry excluding="**/.svn/**" kind="src" path="services/UserService/src"/>
 	<classpathentry excluding="**/.svn/**" kind="src" path="services/warpFlowService/src"/>
-	<classpathentry kind="src" path="services/cloudServerService/src"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="services/cloudServerService/src"/>
 	<classpathentry excluding="**/.svn/**" kind="src" path="services/securityService/src"/>
-	<classpathentry kind="src" path="services/cloudStorageService/src"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="services/cloudStorageService/src"/>
 	<classpathentry excluding="**/.svn/**" kind="src" path="services/warpLoginService/src"/>
-	<classpathentry excluding="**/*.svn/**" kind="src" path="services/resourceFileService/src"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="services/resourceFileService/src"/>
 	<classpathentry excluding="**/.svn/**" kind="src" path="services/CloudDB/src"/>
 	<classpathentry excluding="**/.svn/**" kind="src" path="services/deploymentService/src"/>
 	<classpathentry excluding="**/.svn/**" kind="src" path="services/javaService/src"/>
@@ -28,5 +28,6 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="webapproot/WEB-INF/classes"/>
 </classpath>

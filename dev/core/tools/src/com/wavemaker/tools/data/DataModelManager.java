@@ -100,7 +100,7 @@ public class DataModelManager {
             String connectionUrl, String serviceId, String packageName,
             String tableFilter, String schemaFilter, String catalogName,
             String driverClassName, String dialectClassName,
-            String revengNamingStrategyClassName) {
+            String revengNamingStrategyClassName, boolean impersonateUser) {
 
         serviceManager.validateServiceId(serviceId);
 
@@ -232,7 +232,7 @@ public class DataModelManager {
     public void reImport(String dataModelName, String username,
             String password, String connectionUrl, String tableFilter,
             String schemaFilter, String driverClassName,
-            String dialectClassName, String revengNamingStrategyClassName) {
+            String dialectClassName, String revengNamingStrategyClassName, boolean impersonateUser) {
 
         reImport(getDataModel(dataModelName), username, password,
                 connectionUrl, dataModelName, tableFilter, schemaFilter,

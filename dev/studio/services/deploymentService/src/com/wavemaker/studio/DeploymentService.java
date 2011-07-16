@@ -238,14 +238,17 @@ public class DeploymentService {
             .undeploy(contextRoot, props);        
     }
 
-    public String redeploy(String targetServerType, String contextRoot,
-                           Map<String, String> props) throws IOException
-    {
-     try {
-	 undeploy(targetServerType, contextRoot, props) ;
-     } catch(Exception e) {}
-     return deploy(targetServerType, contextRoot, props) ;
-    }
+	public String redeploy(String targetServerType, String contextRoot,
+			Map<String, String> props) throws IOException {
+		try {
+			if (!targetServerType.equals(CommonConstants.SERVER_TYPE_CLOUDFOUNDRY)) {
+				undeploy(targetServerType, contextRoot, props);
+			}
+		} catch (Exception e) {
+			//no-op
+		}
+		return deploy(targetServerType, contextRoot, props);
+	}
 
     public void deployClientComponent(String className, String folder,
             String data) throws IOException {

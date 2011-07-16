@@ -185,7 +185,7 @@ public class DataService {
     public void importDatabase(String serviceId, String packageName,
             String username, String password, String connectionUrl,
             String tableFilter, String schemaFilter, String driverClassName,
-            String dialectClassName, String revengNamingStrategyClassName) {
+            String dialectClassName, String revengNamingStrategyClassName, boolean impersonateUser) {
         
     	if (connectionUrl.contains(DataModelManager.HSQLDB))
     	{
@@ -201,7 +201,7 @@ public class DataService {
     	dataModelMgr.importDatabase(username, password, connectionUrl,
                     serviceId, packageName, tableFilter, schemaFilter, null,
                     driverClassName, dialectClassName,
-                    revengNamingStrategyClassName);
+                    revengNamingStrategyClassName, impersonateUser);
     	
         return;
     }
@@ -262,7 +262,7 @@ public class DataService {
     public void reImportDatabase(String dataModelName, String username,
             String password, String connectionUrl, String tableFilter,
             String schemaFilter, String driverClassName,
-            String dialectClassName, String revengNamingStrategyClassName) {
+            String dialectClassName, String revengNamingStrategyClassName, boolean impersonateUser) {
     	
     	if (connectionUrl.contains(DataModelManager.HSQLDB))
     	{
@@ -277,7 +277,7 @@ public class DataService {
          
     	dataModelMgr.reImport(dataModelName, username, password, connectionUrl,
             tableFilter, schemaFilter, driverClassName, dialectClassName,
-            revengNamingStrategyClassName);    
+            revengNamingStrategyClassName, impersonateUser);    
     }
     
     public void testConnection(String username, String password,

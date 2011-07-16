@@ -88,6 +88,11 @@ Server-side manager bean definitions.  These are only to be used at runtime.
             class="com.wavemaker.tools.deployment.tomcat.TomcatDeploymentTarget"
             scope="singleton"
             lazy-init="true"/>
+            
+    <bean id="cloudFoundryDeploymentTarget"
+            class="com.wavemaker.tools.deployment.cloudfoundry.VmcDeploymentTarget"
+            scope="singleton"
+            lazy-init="true"/>
 	
 	<bean id="websphereDeploymentTarget"
 			class="com.wavemaker.tools.deployment.websphere.WebSphereDeploymentTarget"
@@ -100,18 +105,14 @@ Server-side manager bean definitions.  These are only to be used at runtime.
             lazy-init="true">
         <property name="deploymentTargets">
             <map>
-                <entry key="tomcat">
-                    <ref bean="tomcatDeploymentTarget"/>
-                </entry>
-					
-                <entry key="websphere">
-					<ref bean="websphereDeploymentTarget"/>    
-                </entry>
+                <entry key="tomcat" value-ref="tomcatDeploymentTarget"/>
+                <entry key="cloudfoundry" value-ref="cloudFoundryDeploymentTarget"/>
+                <entry key="websphere" value-ref="websphereDeploymentTarget"/>
             </map>
         </property>
     </bean>
 
-	<bean id="amazonEC2ServerMgr"
+	<!--  <bean id="amazonEC2ServerMgr"
             class="com.wavemaker.tools.cloudmgr.amazon.AmazonEC2ServerMgr"
             scope="singleton"
             lazy-init="true"/>
@@ -186,7 +187,7 @@ Server-side manager bean definitions.  These are only to be used at runtime.
                 </entry>
             </map>
         </property>
-    </bean>
+    </bean>-->
 
     <bean id="designServiceManager"
             class="com.wavemaker.tools.service.DesignServiceManager"

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="studio">
+        <wb-resource deploy-path="/" source-path="/webapproot"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/services/dataService/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/services/securityServiceJOSSO/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/services/UserService/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/services/warpFlowService/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/services/cloudServerService/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/services/securityService/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/services/cloudStorageService/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/services/warpLoginService/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/services/resourceFileService/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/services/CloudDB/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/services/deploymentService/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/services/javaService/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/services/pagesService/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/services/registrationService/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/services/securityConfigService/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/services/servicesService/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/services/studioService/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/services/webService/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/test"/>
+        <property name="java-output-path" value="/studio/webapproot/WEB-INF/classes"/>
+        <property name="context-root" value="wavemaker"/>
+    </wb-module>
+</project-modules>

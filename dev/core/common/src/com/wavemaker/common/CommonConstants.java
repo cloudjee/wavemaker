@@ -30,6 +30,7 @@ public class CommonConstants {
 
     public static final String SERVER_TYPE_TOMCAT = "tomcat";
     public static final String SERVER_TYPE_WEBSPHERE = "websphere";
+    public static final String SERVER_TYPE_CLOUDFOUNDRY = "cloudfoundry";
     public static final String DEPLOYMENT_TARGETS_XML = "deploymentTargets.xml";
 
     public static final String SALESFORCE_SERVICE = "salesforceService"; //salesforce
