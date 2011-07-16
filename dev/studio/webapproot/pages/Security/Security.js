@@ -18,6 +18,8 @@ dojo.declare("Security", wm.Page, {
     
         i18n: true,
 	start: function() {
+	    this._defaultPanel1aHeight = this.panel1a.height;
+	    this._defaultPanelBottomHeight = this.panelBottom.height;
     this.SELECT_ONE = this.getDictionaryItem("MENU_SELECT_ONE");
     this.NO_VALUE   = this.getDictionaryItem("MENU_NO_VALUE");
 		this.loginTemplateFolder = dojo.moduleUrl("wm.studio.app") + "templates/security/";
@@ -25,8 +27,7 @@ dojo.declare("Security", wm.Page, {
 		this.populatingOptions = false;
 		this.subscribe("wm-project-changed", this, "studioProjectChanged");
 		this.update();
-		dojo.connect(dojo.byId("HelpUID1"), "onclick", this, "showUIDHelp1");
-		dojo.connect(dojo.byId("HelpUID2"), "onclick", this, "showUIDHelp2");
+
 
 	    if (dojo.isIE <= 8) {
 		wm.onidle(this, function() {
@@ -38,20 +39,6 @@ dojo.declare("Security", wm.Page, {
 	    this.setupServicesLayer();
 	},
 
-	showUIDHelp1: function() {
-	    var bd = this.getHelpDialog();
-	    bd.page.setHeader("",this.getDictionaryItem("HELP_DIALOG_HEADER_USERNAME"));
-	    bd.sourceNode = this.databaseLayer.domNode;
-	    bd.page.setContent(this.getDictionaryItem("HELP_DIALOG_CONTENT_USERNAME"));
-	    bd.show();
-	},
-	showUIDHelp2: function() {
-	    var bd = this.getHelpDialog();
-	    bd.page.setHeader("",this.getDictionaryItem("HELP_DIALOG_HEADER_USERID"));
-	    bd.sourceNode = this.databaseLayer.domNode;
-	    bd.page.setContent(this.getDictionaryItem("HELP_DIALOG_CONTENT_USERID"));	  
-	    bd.show();
-	},
 	getHelpDialog: function() {
 		if (!this.helpDialog) {
 		    var props = {
@@ -108,7 +95,7 @@ dojo.declare("Security", wm.Page, {
 		if (studio.isModuleEnabled("security-driver", "wm.josso"))
 			l.push("JOSSO");
 		this.updateSelect(this.secProviderInput, l);
-		this.secProviderInputChange(this.secProviderInput, this.secProviderInput.editor.getEditorValue());
+		this.secProviderInputChange(this.secProviderInput, this.secProviderInput.getDataValue());
 	},
 	/**
 	 * Added by Girish
@@ -126,11 +113,11 @@ dojo.declare("Security", wm.Page, {
 			o = inData.join(",");
 		}
 		s.displayValue = "";
-		s.editor.setOptions(o);
+		s.setOptions(o);
 	},
 	clearSelectInput: function(inSelect) {
 		inSelect.beginEditUpdate();
-		inSelect.components.editor.options = null;
+		inSelect.components.options = null;
 		inSelect.clear();
 		inSelect.endEditUpdate();
 	},
@@ -222,7 +209,7 @@ dojo.declare("Security", wm.Page, {
 		 else {
 			this.layers.setLayer("emptyLayer");
 			//this.disableAll(true);
-			this.secEnableInput.editor.setChecked(false);
+			this.secEnableInput.setChecked(false);
 		     this.servicesLayer.setShowing(false);
 			this.securityCheckboxChange();
 			this.secEnableInput.setShowing(false);			
@@ -256,7 +243,7 @@ dojo.declare("Security", wm.Page, {
 			// set to default
 			this.secProviderInput.setDataValue(this.SELECT_ONE);
 		}
-		this.secProviderInputChange(this.secProviderInput, this.secProviderInput.editor.getEditorValue());
+		this.secProviderInputChange(this.secProviderInput, this.secProviderInput.getDataValue());
 	},
 	populateJOSSOOptions: function(){
 	  studio.securityConfigService.requestAsync("getJOSSOOptions", null, dojo.hitch(this, "getJOSSOOptionsResult"));	
@@ -276,7 +263,7 @@ dojo.declare("Security", wm.Page, {
 	getDatabaseOptionsResult: function(inResponse) {
 		this.databaseOptions = inResponse;
 		this.dbDataModelInput.setDataValue(inResponse.modelName);
-		this.dbDataModelInput.editor.changed();
+		this.dbDataModelInput.changed();
 	},
 	populateLDAPOptions: function() {
 		studio.securityConfigService.requestSync("getLDAPOptions", null, dojo.hitch(this, "getLDAPOptionsResult"));
@@ -573,14 +560,15 @@ dojo.declare("Security", wm.Page, {
 		}
 	},
 	dbRoleBySQLCheckboxChange: function(inSender, inDisplayValue, inDataValue) {
-		var c = inSender.components.editor.editor.checked;
+	    var c = inSender.getChecked();
 		this.dbRoleInput.setDisabled(c);
 		this.dbRoleBySQLInput.setShowing(c);
+	    this.dbRoleBySQLPanel.setHeight(c ? "210px" : "50px");
 		this.dbRoleBySQLEnablePanel.setShowing(c);
 		this.setDirty();
 	},
 	ldapRoleBySQLCheckboxChange: function(inSender, inDisplayValue, inDataValue) {
-		var c = inSender.components.editor.editor.checked;
+	    var c = inSender.getChecked();
 		this.ldapRoleDbRoleInput.setDisabled(c);
 		this.ldapRoleBySQLInput.setShowing(c);
 		this.ldapRoleBySQLEnablePanel.setShowing(c);
@@ -631,7 +619,7 @@ dojo.declare("Security", wm.Page, {
 		this.dbTestSQLErrorLabel.setCaption(inResponse.message);
 	},
 	ldapSearchRoleCheckboxChange: function(inSender, inDisplayValue, inDataValue) {
-		var c = inSender.components.editor.editor.checked;
+	    var c = inSender.getChecked();
 		this.ldapRoleProviderInput.setShowing(c);
 		if(!c){
 			this.ldapRoleProviderInput.setDataValue(this.SELECT_ONE);
@@ -779,7 +767,7 @@ dojo.declare("Security", wm.Page, {
 	},
   
 	showJossoLayer: function() {
-	    this.secEnableInput.editor.setChecked(true);
+	    this.secEnableInput.setChecked(true);
 	    this.servicesLayer.setShowing(false);
 	    this.securityCheckboxChange();
 
@@ -801,7 +789,7 @@ dojo.declare("Security", wm.Page, {
 	    this.showLoginPageInput.setShowing(true);
 	},
 	securityCheckboxChange: function() {
-	    var enabled = this.secEnableInput.editor.getChecked();
+	    var enabled = this.secEnableInput.getChecked();
 	    this.servicesLayer.setShowing(enabled);
 	    this.showLoginPageInput.setShowing(enabled);
 	    this.panel4a.setShowing(enabled);
@@ -810,11 +798,12 @@ dojo.declare("Security", wm.Page, {
 
 	    
 	    if (this.isJOSSO())  this.showLoginPageInput.setShowing(false);
-	    this.panel1a.setHeight((this.isJOSSO()) ? "70px" : "450px");
+	    //this.panel1a.setHeight((this.isJOSSO()) ? "70px" : this._defaultPanel1aHeight);
+	    this.panelBottom.setHeight(this.isJOSSO() ? "300px" : this._defaultPanelBottomHeight);
 	    this.setDirty();
 	},
 	isJOSSO: function() {
-	    return this.secProviderInput.editor.getEditorValue() == "JOSSO";
+	    return this.secProviderInput.getDataValue() == "JOSSO";
 	},
 
 
@@ -1184,7 +1173,7 @@ dojo.declare("Security", wm.Page, {
 
 	/* This block determines the logic for setting /*.json security (default security) */
 	var starAttributes;
-	if (!this.secEnableInput.editor.getChecked()) {
+	if (!this.secEnableInput.getChecked()) {
 	    starAttributes = "IS_AUTHENTICATED_ANONYMOUSLY";
 	} else if (!this.showLoginPageInput.editor.getChecked()) {
 	    starAttributes = "IS_AUTHENTICATED_FULLY";
