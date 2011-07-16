@@ -78,7 +78,7 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 		    pageName: "ImportDatabase",
 		    hideControls: true,
 		    width: 700,
-		    height: 340,
+		    height: 365,
 		    title: studio.getDictionaryItem("wm.DataModel.IMPORT_DATABASE_TITLE")
 		};
 		var d = studio.importDBDialog = new wm.PageDialog(props);

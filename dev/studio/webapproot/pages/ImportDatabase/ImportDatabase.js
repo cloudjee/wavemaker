@@ -151,7 +151,8 @@ dojo.declare("ImportDatabase", wm.Page, {
 					this.schemaPatternInput.getDataValue(),
 					this.driverClassInput.getDataValue(),
 					this.dialectInput.getDataValue(),
-					this.revengNamingStrategyInput.getDataValue()],
+					 this.revengNamingStrategyInput.getDataValue(),
+					 this.executeAsMenu.getDataValue() == "Logged in user"],
 					dojo.hitch(this, "_importResult"), 
 					dojo.hitch(this, "_importError"));
 	},

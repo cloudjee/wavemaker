@@ -70,7 +70,8 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 				this.conSchemaPatternInput.getDataValue(),
 				this.conDriverClassInput.getDataValue(),
 				this.conDialectInput.getDataValue(),
-				this.conRevengNamingStrategyInput.getDataValue()
+		                this.conRevengNamingStrategyInput.getDataValue(),
+		                this.executeAsMenu.getDataValue() == "Logged in user"
 			],
 			dojo.hitch(this, "_reImportResult"), 
 			dojo.hitch(this, "_reImportError")
@@ -119,7 +120,8 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 			dialect:this.conDialectInput.getDataValue(),
 			tableFilter:this.conTablePatternInput.getDataValue(),
 			schemaFilter:this.conSchemaPatternInput.getDataValue(),
-			reverseNamingStrategy:this.conRevengNamingStrategyInput.getDataValue()};
+			 reverseNamingStrategy:this.conRevengNamingStrategyInput.getDataValue(),
+			 executeAs: this.executeAsMenu.getDataValue() == "Logged in user"};
 		studio.setLiveLayoutReady(false);
 		studio.dataService.requestAsync(SAVE_CONNECTION_PROPS_OP,
 			[this._getSelectedDataModelName(), input],
@@ -163,6 +165,8 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 						this.conExtra2Input,
 						this.conTablePatternInput,
 						this.conSchemaPatternInput,
+					    this.conUserInput,
+					    this.conPasswordInput,
 					    this.executeAsMenu
 						//this.overrideFlagInput
 						);
@@ -330,8 +334,8 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 		if (l == null) {
 			this.conDBdropdown.setDisplayValue(" ");
 
-			this.conHostInput.parent.setShowing(false);
-			this.conPortInput.parent.setShowing(false);
+			this.conHostInput.setShowing(false);
+			this.conPortInput.setShowing(false);
 
 			this.conExtraInput.setCaption("");
 			this.conExtraInput.setShowing(false);
@@ -357,6 +361,8 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 				this.conExtra2Input, 
 				this.conTablePatternInput,
 				this.conSchemaPatternInput,
+					    this.conUserInput,
+					    this.conPasswordInput,
 					    this.executeAsMenu
 				//this.newDatabaseInput
 				);	
@@ -381,6 +387,11 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 			} else {
 				this.conExtra2Input.setDataValue(l[4]);
 			}
+		    if (inData.executeAs == null) {
+			this.executeAsMenu.setDataValue("Database credentials");
+		    } else {
+			this.executeAsMenu.setDataValue(inData.executeAs ? "Logged in user" : "Database credentials");
+		    }
 		}
 		
 		this.conUserInput.setDataValue(inData.username);
