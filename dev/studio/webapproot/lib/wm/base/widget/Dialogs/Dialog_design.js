@@ -51,6 +51,18 @@ wm.Dialog.extend({
 						  widgetType: wm.Control});
                 }
 		return this.inherited(arguments);
+    },
+    set_owner: function(inOwner) {
+	var oldOwner = this.owner;
+	this.inherited(arguments);
+	var self = this;
+
+	wm.forEachWidget(this,function(w) {
+	    if (w != self && w.owner == oldOwner) {
+		w.set_owner(inOwner);
+	    }
+	});
+	studio.refreshDesignTrees();
     }
 });
 

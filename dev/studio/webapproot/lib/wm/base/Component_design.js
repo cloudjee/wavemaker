@@ -252,8 +252,12 @@ wm.Component.extend({
 		var id = this.getId(), rtId = this.getRuntimeId();
 		this.setOwner(inOwner);
 		dojo.publish("wmwidget-idchanged", [id, this.getId(), rtId, this.getRuntimeId(), this]);
-		studio.refreshDesignTrees();
-		inspect(this, true);
+	    /* This is false if changing the owner of a dialog and all its contents; don't refresh the design trees
+	     * once per widget within the dialog; */
+	        if (this == studio.selected) {
+		    studio.refreshDesignTrees();
+		    inspect(this, true);
+		}
 	},
 	get_owner: function() {
 		return this.owner == (studio && studio.application) ? "Application" : "Page";
