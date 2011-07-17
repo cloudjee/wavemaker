@@ -46,7 +46,12 @@ wm.publishProperty = function(ctor, name, id, schema) {
 		// build getter/setter
 		var capP = name.slice(0, 1).toUpperCase() + name.slice(1);
 		pt["get" + capP] = function(inValue) {
+		    var t = this.getValue(target);
+		    if (property == "dataSet" && t instanceof wm.Variable) {
+			return t;
+		    } else {
 			return this[name] = this.getValue(target).getValue(property);
+		    }
 		}
 		pt["set" + capP] = function(inValue) {
 			this.getValue(target).setValue(property, this[name] = inValue);
