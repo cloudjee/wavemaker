@@ -22,6 +22,7 @@ dojo.declare("wm.Property", wm.Component, {
 	readonly: false,
 	init: function() {
 		this.inherited(arguments);
+	    this.type = '';
 	},
 	listProperties: function() {
 		var p = this.inherited(arguments);
@@ -51,22 +52,33 @@ dojo.declare("wm.Property", wm.Component, {
 	selectProperty: function(inId) {
 		studio.onSelectProperty = null;
 		var id = inId.replace("studio.wip.", "");
-		this.setValue("property", id);
+	        this.property = id;
 		// FIXME: this split/shift/join thing happens in Composite too, unify
 		var ids = id.split("."), c = ids.shift(), prop = ids.join(".");
 		// FIXME: this also happens in Composite, a couple different ways
 		var c = studio.wip.getValue(c);
-		if (c) {
-			if (c.isEventProp(prop))
-				this.setValue("isEvent", true);
-			if (c.schema[prop] && c.schema[prop].readonly)
-				this.setValue("readonly", true);
+
+	    
+	    if (c) {
+		if (c instanceof wm.Variable && (!prop || prop == "dataSet")) {
+		    this.type = c.type;
 		}
+		if (c.isEventProp(prop))
+		    this.setValue("isEvent", true);
+		if (c.schema[prop] && c.schema[prop].readonly) 
+		    this.setValue("readonly", true);
+	    }
 	},
+    setProperty: function(inId) {
+	this.selectProperty(inId);
+    },
 	write: function() {
 		return wm.Property.deploy ? "" : this.inherited(arguments);
 	},
 	publish: function() {
+	    try {
+		this.selectProperty(this.property); // updates type field
+	    } catch(e){}
 		return '[' +
 			'"' + this.name + '", ' + 
 			'"' + this.property + '", ' + 
@@ -75,7 +87,8 @@ dojo.declare("wm.Property", wm.Component, {
 					this.isEvent ? ', isEvent: true' :
 						(this.readonly ? ', readonly: true' : '') +
 						(this.bindSource ? ', bindSource: true' : '') +
-						(this.bindTarget ? ', bindTarget: true' : '')) +
+					(this.bindTarget ? ', bindTarget: true' : '') +
+					(this.type ? ', type: "' + this.type + '"' : '')) +
 			'}' +
 		']';
 	}
