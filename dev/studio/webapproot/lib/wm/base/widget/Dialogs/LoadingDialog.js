@@ -86,6 +86,10 @@ dojo.declare("wm.LoadingDialog", wm.Dialog, {
     }, 
     renderBounds: function() {
 	if (this.widgetToCover) {
+	    if (dojo.isString(this.widgetToCover))
+		this.widgetToCover = this.owner.getValueById(this.widgetToCover);
+	}
+	if (this.widgetToCover) {
 	    try {
 	    var parentNode = this.widgetToCover.domNode.parentNode;
 	    if (this.domNode.parentNode != parentNode)
