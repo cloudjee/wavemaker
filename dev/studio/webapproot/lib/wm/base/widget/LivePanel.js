@@ -45,6 +45,8 @@ dojo.declare("wm.LivePanel", wm.Panel, {
     popupLivePanelEdit: function() {
 	this.liveForm.beginDataUpdate();
 	dojo.forEach(this.liveForm.getFormEditorsArray(), dojo.hitch(this.liveForm, function(e) {
+	    if (e.ignoreParentReadonly)
+		return;
 	    if (this._canChangeEditorReadonly(["update"], e, this, false)) {
 		if (e.readonly) e.setReadonly(false);
 	    } else {
@@ -58,6 +60,8 @@ dojo.declare("wm.LivePanel", wm.Panel, {
     popupLivePanelInsert: function() {
 	this.liveForm.beginDataInsert();
 	dojo.forEach(this.liveForm.getFormEditorsArray(), dojo.hitch(this.liveForm, function(e) {
+	    if (e.ignoreParentReadonly)
+		return;
 	    if (this._canChangeEditorReadonly(["insert"], e, this, false)) {
 		if (e.readonly) e.setReadonly(false);
 	    } else {
