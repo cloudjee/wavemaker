@@ -34,7 +34,13 @@ wm.SelectMenu.extend({
 			if (ds)
 				this.components.binding.addWire("", "dataSet", ds.getId());
 		} else {
-			this.setDataSet(inDataSet);
+		    /* Clear the dataField/displayField if changing dataTypes */
+		    if (inDataSet && this.dataSet && inDataSet.type != this.dataSet.type) 
+			this.dataField = this.displayField = "";
+		    /* Clear the options property if setting a new dataSet */
+		    if (this.options && inDataSet != this.$.optionsVar)
+			this.options == "";
+		    this.setDataSet(inDataSet);
 		}
 	},
 	// FIXME: for simplicity, allow only top level , non-list, non-object fields.
@@ -71,7 +77,7 @@ wm.SelectMenu.extend({
 			case "displayType":
 				return makeSelectPropEdit(inName, inValue, wm.selectDisplayTypes, inDefault);
 			case "dataSet":
-				return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.dataSet ? this.dataSet.getId() : "", allowAllTypes: true, listMatch: true});
+		    return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.dataSet ? this.dataSet.getId() : "", allowAllTypes: true, listMatch: true, value: inValue});
 			case "updateNow":
 				return makeReadonlyButtonEdit(name, inValue, inDefault);
 		}

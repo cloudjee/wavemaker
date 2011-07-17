@@ -379,6 +379,12 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		this.createEditor();
             if (inDataSet && inDataSet.type && inDataSet.type != "any" && inDataSet.type != this.selectedItem.type)
                 this.selectedItem.setType(inDataSet.type);
+	    try {
+		/* If this is design time and we've cleared the dataSet, clear the fields as well */
+		if (this._isDesignLoaded && !inDataSet) {
+		    this.dataField = this.displayField = "";
+		}
+	    } catch(e) {}
 	},
 	setOptionsVariable: function() {
 		var opts = this._getOptionsData();
