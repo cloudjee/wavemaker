@@ -419,12 +419,14 @@ public class SecurityConfigService {
 		Map<String, List<String>> urlMap = getSecToolsMgr()
 				.getSecurityFilterODS();
 		List<SecurityURLMap> securityURLMap = new ArrayList<SecurityURLMap>();
+		if(!securityURLMap.isEmpty()){
 		for (String url : urlMap.keySet()) {
 			SecurityURLMap secMap = new SecurityURLMap();
 			secMap.setURL(url);
 			List<String> attributes = urlMap.get(url);
 			secMap.setAttributes(attributes.get(0));
 			securityURLMap.add(secMap);
+		}
 		}
 		return securityURLMap;
 	}
@@ -460,6 +462,7 @@ public class SecurityConfigService {
 					(new String[] { indexHtmlAuthz })));
 			urlMap.put("/", Arrays.asList(
 					(new String[] { indexHtmlAuthz })));
+			urlMap.put("/securityservice.json", Arrays.asList(new String[] {IS_AUTHENTICATED_ANONYMOUSLY}));
 			if(urlMap.get("/*.json") != null){ 
 				List<String> jsonEntry = urlMap.remove("/*.json");
 				urlMap.put("/*.json", jsonEntry);

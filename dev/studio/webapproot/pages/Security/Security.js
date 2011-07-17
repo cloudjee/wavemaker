@@ -1025,8 +1025,6 @@ dojo.declare("Security", wm.Page, {
 					Settings: this.getAttributesDisplay(attributes)});
 		  }
 	      }));
-
-	  serviceList.push({name: "All other Services", URL: "/*.json", attributes: "IS_AUTHENTICATED_ANONYMOUSLY", Settings: this.getAttributesDisplay("IS_AUTHENTICATED_ANONYMOUSLY")});
 	      this.varServList.setData(serviceList);
 
 
@@ -1175,7 +1173,7 @@ dojo.declare("Security", wm.Page, {
 	var starAttributes;
 	if (!this.secEnableInput.getChecked()) {
 	    starAttributes = "IS_AUTHENTICATED_ANONYMOUSLY";
-	} else if (!this.showLoginPageInput.editor.getChecked()) {
+	} else if (!this.showLoginPageInput.getChecked()) {
 	    starAttributes = "IS_AUTHENTICATED_FULLY";
 	} else {
 	    starAttributes = "IS_AUTHENTICATED_FULLY";
