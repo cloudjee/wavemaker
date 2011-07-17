@@ -749,6 +749,11 @@ dojo.declare("wm.Variable", wm.Component, {
 		}
 		this.setData(inDataSet);
 	},
+        getDataSet: function() {
+	    if (this.dataSet) return this.dataSet;
+	    else if (!this._isDesignLoaded)
+		return this;
+	},
 	//===========================================================================
 	// Property API
 	//===========================================================================
