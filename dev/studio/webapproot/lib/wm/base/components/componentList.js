@@ -28,7 +28,7 @@ wm.componentList = {
 	'wm.DataGrid': ['build.Gzipped.wm_dojo_grid'],
 	'wm.DojoGrid': ['build.Gzipped.wm_dojo_grid', 'wm.base.widget.DojoGrid'],
 	'wm.DojoMenu': ['build.Gzipped.wm_menus'],
-      //'wm.PopupMenu': ['build.Gzipped.wm_menus'],
+        'wm.PopupMenu': ['build.Gzipped.wm_menus'],
 	'wm.DojoChart': ['build.Gzipped.wm_charts'],
 	'wm.DojoGauge': ['build.Gzipped.wm_charts'],
 	'wm.Dashboard':['wm.base.widget.Dashboard'],
