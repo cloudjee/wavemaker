@@ -412,6 +412,10 @@ dojo.declare("wm.Dialog", wm.Container, {
 			if (this._userSized) {
 			    this.insureDialogVisible();
                         } else {
+			    if (!this.fixPositionNode && this.positionNear) {
+				var widget = this.owner.getValueById(this.positionNear);
+				if (widget) this.fixPositionNode = widget.domNode;
+			    }
                             if (this.fixPositionNode) {
 				this.renderBoundsByPositionNode();
                             } else if (!this._fixPosition) {
@@ -476,8 +480,32 @@ dojo.declare("wm.Dialog", wm.Container, {
     renderBoundsByPositionNode: function() {
         if (!this.fixPositionNode) return;
 	var o = dojo._abs(this.fixPositionNode);
-        this.bounds.t = o.y + o.h; // position it directly under the specified node
-        this.bounds.l = o.x;
+	var corner = this.corner || "bc";
+        var top  = corner.substring(0,1);
+        var left = corner.substring(1,2);
+
+	switch(left) {
+	case "l":
+	    this.bounds.l = o.x - this.bounds.w;
+	    break;
+	case "r":
+	    this.bounds.l = o.x + o.w;
+	    break;
+	case "c":
+	    this.bounds.l = o.x + (o.w-this.bounds.w)/2;
+	}
+	switch(top) {
+	case "t":
+	    this.bounds.t = o.y - this.bounds.h;
+	    break;
+	case "b":
+            this.bounds.t = o.y + o.h;
+	    break;
+	case "c":
+	    this.bounds.t = o.y + (o.h-this.bounds.h)/2;
+	}
+        this.insureDialogVisible();
+/*
         if (!this.insureDialogVisible(true)) {
             this.bounds.t = o.y - this.bounds.h;
             if (!this.insureDialogVisible(true)) {
@@ -490,7 +518,9 @@ dojo.declare("wm.Dialog", wm.Container, {
                 }
             }
         }
+
 	wm.Control.prototype.renderBounds.call(this);
+	*/
     },
     renderBoundsByCorner: function() {
 	if (!this.showing) return;

@@ -39,8 +39,19 @@ wm.Dialog.extend({
             return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["top left", "top center", "top right", "center left", "center center", "center right", "bottom left", "bottom center", "bottom right"]});
 	}
 	return this.inherited(arguments);
+    },
+    makePropEdit: function(inName, inValue, inDefault) {
+	var prop = this.schema ? this.schema[inName] : null;
+	var name =  (prop && prop.shortname) ? prop.shortname : inName;
+		switch (inName) {
+		case "positionNear":
+	    return new wm.propEdit.WidgetsSelect({component: this, 
+						  value: inValue, 
+						  name: inName,
+						  widgetType: wm.Control});
+                }
+		return this.inherited(arguments);
     }
-
 });
 
 
@@ -61,7 +72,8 @@ wm.Object.extendSchema(wm.Dialog, {
     noMinify: {group: "display", order: 51},
     noMaxify: {group: "display", order: 51},
     corner: {group: "layout", order: 52},
-
+    positionNear: {group: "layout", order: 53},
+    fixPositionNode: {ignore: 1},
     noBevel: {ignore: 1},
     imageList: {ignore: 1},
     fitToContentWidth: {ignore: 1},
@@ -183,7 +195,7 @@ wm.DesignableDialog.extend({
 	var name =  (prop && prop.shortname) ? prop.shortname : inName;
 		switch (inName) {
                 case "createButtonBar":
-				return makeReadonlyButtonEdit(name, inValue, inDefault);
+		    return makeReadonlyButtonEdit(name, inValue, inDefault);
                 }
 		return this.inherited(arguments);
         },
