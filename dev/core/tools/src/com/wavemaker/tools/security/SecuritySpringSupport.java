@@ -704,7 +704,7 @@ public class SecuritySpringSupport {
                         setPropertyValueString(authzBean, LDAP_ROLE_USERNAME, roleUsername);
                         setPropertyValueString(authzBean, LDAP_ROLE_PROPERTY, roleProperty);                    
                         setPropertyValueString(authzBean, LDAP_ROLE_QUERY, roleQuery);
-                        if(roleModel != null && !roleModel.isEmpty()){
+                        if(roleModel != null && !(roleModel.length()==0)){
                         	// GD: Need to have a reference to the dataSource as well, but only if the dataModel is selected
                         	Property dataSourceProperty = authzBean.getProperty(DATA_SOURCE_PROPERTY);
     	                    if (dataSourceProperty == null) {
