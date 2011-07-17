@@ -1903,3 +1903,7 @@ Overriding dijit's progress bar properties to enable height changes to progress 
 .wmGenericDialog-userQuestionLabel {
     word-wrap: break-word;
 }
+
+.DirtyTab {
+   color: red;
+}

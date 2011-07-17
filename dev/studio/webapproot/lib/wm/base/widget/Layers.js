@@ -26,6 +26,7 @@ dojo.declare("wm.Layer", wm.Container, {
 	moveable: false,
         closable: false,
         destroyable: false,
+        showDirtyFlag: false,
 	_requiredParent: "wm.Layers",
 	destroy: function() {
 		//console.info('layer destroy called');
@@ -98,6 +99,18 @@ dojo.declare("wm.Layer", wm.Container, {
 			this.parent.setCaptionMapLayer(inCaption, this);
 	        if (this.decorator)
 		    this.decorator.applyLayerCaption(this);
+	},
+        setIsDirty: function(inDirty) {
+	    if (this.isDirty != inDirty) {
+		this.isDirty = inDirty;
+		if (this.showDirtyFlag) {
+		    var caption = this.caption;
+		    caption = caption.replace(/^\<span class="DirtyTab"\>\*\<\/span\>\s*/, "");
+		    if (inDirty)
+			caption = '<span class="DirtyTab">*</span> ' + caption;
+		    this.setCaption(caption);
+		}
+	    }
 	},
 	getIndex: function() {
 		var p = this.parent;

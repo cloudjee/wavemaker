@@ -19,6 +19,7 @@ dojo.require("wm.base.widget.Layers");
 wm.Object.extendSchema(wm.Layer, {
     closable: {group: "display", order: 250},
     destroyable: {group: "display", order: 251},
+    showDirtyFlag: {group: "display", order: 252},
     themeStyleType: {group: "style", order: 150},
 	title: { ignore: 1 },
 	disabled: { ignore: 1 },
@@ -114,6 +115,7 @@ wm.Layer.extend({
 	    var props = this.inherited(arguments);
 	    props.closable.ignoretmp = (this.parent.layersType != 'Tabs');
 	    props.destroyable.ignoretmp = (this.parent.layersType != 'Tabs');
+	    props.showDirtyFlag.ignoretmp = (this.parent.layersType != 'Tabs');
 	    return props;
 	},
 });
