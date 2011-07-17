@@ -37,8 +37,8 @@ wm.Object.extendSchema(wm.Container, {
     getInvalidWidget: {group: "method", returns: "wm.Control"},
     setHorizontalAlign:    {group: "method"},
     setVerticalAlign:      {group: "method"},
+    clearData: {group: "method"},
     customGetValidate:     {group: "customMethods"},
-
 		invalid: { ignore: 1, bindSource: 1, readonly: 1, type: "Boolean" },
 		isDirty: { ignore: 1, bindSource: 1, readonly: 1, type: "Boolean" },
 	    lock: { order: 0, type: "Boolean" },

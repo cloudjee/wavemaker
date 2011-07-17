@@ -322,6 +322,7 @@ wm.define("wm.Container", wm.Control, {
 		this.imageListChanged();
 	},
 
+
     updateIsDirty: function() {
 	this.setValue("isDirty", this.getIsDirty());
 	wm.fire(this.parent, "updateIsDirty");
@@ -460,7 +461,7 @@ wm.define("wm.Container", wm.Control, {
 	},
 	clearData: function() {
 		var clear = function(w) {
-			if (w instanceof wm.Editor)
+			if (w instanceof wm.Editor || w instanceof wm.AbstractEditor)
 				w.clear();
 		}
 
