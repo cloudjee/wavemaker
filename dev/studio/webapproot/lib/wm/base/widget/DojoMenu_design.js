@@ -36,7 +36,7 @@ wm.Object.extendSchema(wm.DojoMenu, {
 wm.DojoMenu.description = "A dojo menu.";
 
 wm.DojoMenu.extend({
-
+    scrim: true,
     editMenuItems: "(Edit Menu Items)",
 
     themeableStyles: [{name: "wm.DojoMenu-Right_Margin", displayName: "Right Margin"},
