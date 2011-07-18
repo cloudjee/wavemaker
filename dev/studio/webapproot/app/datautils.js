@@ -227,7 +227,8 @@ setupWidgetsForDatabaseType = function(
     schemaFilterInput,
     usernameInput,
     passwordInput,
-    executeAs) {
+    executeAs,
+    activeDirectoryDomain) {
 
 	var h = "localhost";
 	var p = null;
@@ -318,6 +319,8 @@ setupWidgetsForDatabaseType = function(
 
     if (executeAs) {
 	executeAs.setShowing(executeAsShowing);
+	activeDirectoryDomain.setShowing(executeAsShowing);
+	activeDirectoryDomain.setDisabled(executeAs.getDataValue() != "Logged in user");
     }
 }
 

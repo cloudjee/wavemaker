@@ -71,7 +71,8 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 				this.conDriverClassInput.getDataValue(),
 				this.conDialectInput.getDataValue(),
 		                this.conRevengNamingStrategyInput.getDataValue(),
-		                this.executeAsMenu.getDataValue() == "Logged in user"
+		                this.executeAsMenu.getDataValue() == "Logged in user",
+		                this.activeDirectoryDomain.getDataValue()
 			],
 			dojo.hitch(this, "_reImportResult"), 
 			dojo.hitch(this, "_reImportError")
@@ -121,7 +122,8 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 			tableFilter:this.conTablePatternInput.getDataValue(),
 			schemaFilter:this.conSchemaPatternInput.getDataValue(),
 			 reverseNamingStrategy:this.conRevengNamingStrategyInput.getDataValue(),
-			 executeAs: this.executeAsMenu.getDataValue() == "Logged in user"};
+			 executeAs: this.executeAsMenu.getDataValue() == "Logged in user",
+			 activeDirectoryDomain: this.activeDirectoryDomain.getDataValue()};
 		studio.setLiveLayoutReady(false);
 		studio.dataService.requestAsync(SAVE_CONNECTION_PROPS_OP,
 			[this._getSelectedDataModelName(), input],
@@ -167,7 +169,8 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 						this.conSchemaPatternInput,
 					    this.conUserInput,
 					    this.conPasswordInput,
-					    this.executeAsMenu
+					    this.executeAsMenu,
+					    this.activeDirectoryDomain
 						//this.overrideFlagInput
 						);
 
@@ -363,7 +366,8 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 				this.conSchemaPatternInput,
 					    this.conUserInput,
 					    this.conPasswordInput,
-					    this.executeAsMenu
+			    this.executeAsMenu,
+					    this.activeDirectoryDomain
 				//this.newDatabaseInput
 				);	
 
@@ -527,5 +531,8 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 		this.reimportBtn.setDisabled(!enable);
 		this.exportBtn.setDisabled(!enable);
 	},
+    executeAsMenuChange: function(inSender) {
+	this.activeDirectoryDomain.setDisabled(this.executeAsMenu.getDataValue() != "Logged in user");
+    },
 	_end: 0
 });

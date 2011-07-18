@@ -94,7 +94,8 @@ dojo.declare("ImportDatabase", wm.Page, {
 					    this.schemaPatternInput,
 					    this.usernameInput,
 					    this.passwordInput,
-					    this.executeAsMenu);
+					    this.executeAsMenu,
+					   this.activeDirectoryDomain);
 							 
 		this._updateImportConnectionUrl();
 		this.usernameChanged(); 
@@ -152,7 +153,8 @@ dojo.declare("ImportDatabase", wm.Page, {
 					this.driverClassInput.getDataValue(),
 					this.dialectInput.getDataValue(),
 					 this.revengNamingStrategyInput.getDataValue(),
-					 this.executeAsMenu.getDataValue() == "Logged in user"],
+					 this.executeAsMenu.getDataValue() == "Logged in user",
+					 this.activeDirectoryDomain.getDataValue()],
 					dojo.hitch(this, "_importResult"), 
 					dojo.hitch(this, "_importError"));
 	},
@@ -250,5 +252,8 @@ dojo.declare("ImportDatabase", wm.Page, {
 	_close: function(inWhy) {
 		wm.fire(this.owner, "dismiss", [inWhy]);
 	},
+    executeAsMenuChange: function(inSender) {
+	this.activeDirectoryDomain.setDisabled(this.executeAsMenu.getDataValue() != "Logged in user");
+    },
   _end: 0
 });
