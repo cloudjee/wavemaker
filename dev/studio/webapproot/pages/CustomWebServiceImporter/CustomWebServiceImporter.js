@@ -176,12 +176,22 @@ dojo.declare("CustomWebServiceImporter", wm.Page, {
 	var port = this.importPort.getDataValue();
 	var domain = "/";
 
-	var projectList = [];
+	var projects = {};
+	var firstProjectName;
 	this.tree.forEachNode(dojo.hitch(this, function(node) {
-	    if (node.data && node.data.flows !== undefined && node.getChecked())
-		projectList.push(node.data.name)
+	    if (node.data && node.data.flows !== undefined && node.getChecked()) {
+		projects[node.data.name] = [];
+		if (!firstProjectName)
+		    firstProjectName = node.data.name;
+	    }
 	}));
-	var d = this.flowListService.requestAsync("importFlows", [host, port, user, pass, domain, projectList[0], null]);	
+
+	this.tree.forEachNode(dojo.hitch(this, function(node) {
+	    if (node.data && !wm.isEmpty(node.data) && node.data.flows === undefined && node.getChecked())
+		projects[node.parent.data.name].push(node.data.name);
+	}));
+
+	var d = this.flowListService.requestAsync("importFlows", [host, port, user, pass, domain, firstProjectName, projects[firstProjectName],null]);
     },
     _end: 0
 });
