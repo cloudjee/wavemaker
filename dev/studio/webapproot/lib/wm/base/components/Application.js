@@ -442,7 +442,7 @@ dojo.declare("wm.Application", wm.Component, {
 	},
 	getRuntimeService: function(owner) {
 		if (!this._runtimeService)
-		    this._runtimeService = new wm.JsonRpcService({service: "runtimeService",
+		    this._runtimeService = new wm.JsonRpcService({service: "waveMakerService",
 								  owner: owner});
 		return this._runtimeService;
 	},
@@ -451,7 +451,7 @@ dojo.declare("wm.Application", wm.Component, {
 	//requests deployed application.
 	getRuntimeServiceDesignTime: function(owner) {
 		if (!this._runtimeService)
-		    this._runtimeService = new wm.JsonRpcService({service: "runtimeService",
+		    this._runtimeService = new wm.JsonRpcService({service: "waveMakerService",
 								  owner: owner, designTime: true});
 		return this._runtimeService;
 	},
