@@ -1010,9 +1010,9 @@ dojo.declare("Security", wm.Page, {
 	      this.varRoleList.setData(data);
 
 	  /* Get the service list and generate  */
-	  var attributes = this.findServiceSecurityForService("runtimeServices");
+	  var attributes = this.findServiceSecurityForService("runtimeService");
 	      var serviceList = [{name: this.getDictionaryItem("SERVICE_DATABASE_SERVICES_NAME"),
-				  URL: "/runtimeServices.json",
+				  URL: "/runtimeService.json",
 				  attributes: attributes,
 				  Settings: this.getAttributesDisplay(attributes)}];
 
@@ -1164,7 +1164,7 @@ dojo.declare("Security", wm.Page, {
     },
     saveServicesSetup: function() {
 	/* TODO: Remove from submission any "DEFAULT" values */
-	var databaseServiceURL = "/runtimeServices.json"; // don't use the name as it will be localized
+	var databaseServiceURL = "/runtimeService.json"; // don't use the name as it will be localized
 	var data = this.varServList.getData();
 	var sendData = [];
 	var databaseAttributes = "";
