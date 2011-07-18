@@ -16,6 +16,8 @@ package com.wavemaker.studio.warp;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.ws.infoteria.FlowSupport;
 
+import java.util.List;
+
 /**
  * Login service class for Asteria Flow Designer Server
  */
@@ -43,10 +45,16 @@ public class FlowService {
         return flowSupport.listAllFlows(host, port, sessionId);
     }
 
-    public void importFlows(String host, String port, String userName, String password, String domain, String projectName, String sessionId) throws Exception {
+    public void importFlows(String host, String port, String userName, String password, String domain, String projectName,
+                            String sessionId) throws Exception {
+        importFlows(host, port, userName, password, domain, projectName, null, sessionId);
+    }
+
+    public void importFlows(String host, String port, String userName, String password, String domain, String projectName,
+                            List<String> flows, String sessionId) throws Exception {
         sessionId = warpLoginService.logIn(host, port, userName, password, domain);
 
-        flowSupport.importFlows(host, port, userName, password, domain, projectName, sessionId);
+        flowSupport.importFlows(host, port, userName, password, domain, projectName, flows, sessionId);
     }
 
     @HideFromClient

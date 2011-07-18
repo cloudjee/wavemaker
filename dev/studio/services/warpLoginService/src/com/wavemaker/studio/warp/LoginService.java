@@ -15,6 +15,8 @@
 package com.wavemaker.studio.warp;
 
 import com.wavemaker.runtime.ws.HTTPBindingSupport;
+import com.wavemaker.runtime.ws.util.Constants;
+
 import javax.xml.namespace.QName;
 
 import org.json.JSONObject;
@@ -24,21 +26,17 @@ import org.json.JSONObject;
  */
 public class LoginService {
 
-    //private String sessionId = null;
-
     public String logIn(String host, String port, String userName, String password, String domain)
             throws Exception {
         String result;
         String sessionId;
 
-        String endPointAddress = "http://" + host + ":" + port + "/flow-rest/auth/login.json?user="
-                + domain + userName + "&password=" + password;
+        String endPointAddress = "http://" + host + ":" + port + "/flow-rest/auth/login.json";
+        String postData = "user=" + domain + userName + "&password=" + password;
         QName thisQName = new QName(endPointAddress, "asteriaServer");
 
-        String method = "GET";
-
-        result = HTTPBindingSupport.getResponseString(thisQName, thisQName, endPointAddress,
-                HTTPBindingSupport.HTTPRequestMethod.valueOf(method), null, null);
+        result = HTTPBindingSupport.getResponseObject(thisQName, thisQName, endPointAddress, HTTPBindingSupport.HTTPRequestMethod.POST,
+                    Constants.MIME_TYPE_FORM, postData, String.class, null);
 
         JSONObject returnObj = new JSONObject(result);
 
@@ -53,26 +51,6 @@ public class LoginService {
         return sessionId;
     }
 
-    /*public String getSessionId() {
-        return this.sessionId;
-    }*/
-
-    /*public String acquireSessionId() throws Exception {
-        if (this.sessionId == null) {
-            this.sessionId = logIn("10.18.63.147", "21381", "/guest", "guest");
-        }
-
-        return this.sessionId;  
-    }*/
-
-    /*public String logOut(String host, String port) throws Exception {
-        if (sessionId == null) {
-            throw new Exception("You must log in first.");
-        }
-
-        return this.logOut(host, port, sessionId);
-    }*/
-
     //This method logs out the user/password passed in and returns the session id that is invalidated.
     public String logOut(String host, String port, String sessId) throws Exception {
         String result;
@@ -82,14 +60,12 @@ public class LoginService {
             throw new Exception("Null session id is passed.");
         }
 
-        String endPointAddress = "http://" + host + ":" + port + "/flow-rest/auth/logout.json?sessionid="
-                + sessId;
+        String endPointAddress = "http://" + host + ":" + port + "/flow-rest/auth/logout.json";
+        String postData = "sessionid=" + sessId;
         QName thisQName = new QName(endPointAddress, "asteriaServer");
 
-        String method = "GET";
-
-        result = HTTPBindingSupport.getResponseString(thisQName, thisQName, endPointAddress,
-                HTTPBindingSupport.HTTPRequestMethod.valueOf(method), null, null);
+        result = HTTPBindingSupport.getResponseObject(thisQName, thisQName, endPointAddress, HTTPBindingSupport.HTTPRequestMethod.POST,
+                    Constants.MIME_TYPE_FORM, postData, String.class, null);
 
         JSONObject returnObj = new JSONObject(result);
 
