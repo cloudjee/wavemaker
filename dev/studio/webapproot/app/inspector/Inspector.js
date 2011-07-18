@@ -87,6 +87,7 @@ dojo.declare("wm.InspectorBase", null, {
 	},
 
 	_setInspectedProp: function(inProp, inValue) {
+	    new wm.PropTask(this.owner.inspected, inProp, this._getInspectedProp(inProp));
 	    if (this instanceof wm.StyleInspector)
 		return this.owner._inspectors.Properties._setInspectedProp(inProp,inValue);
 

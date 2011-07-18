@@ -172,3 +172,23 @@ dojo.declare("wm.AddTask", wm.ComponentTaskMixin, {
 		studio._deleteControl(this.getComponent());
 	}
 });
+
+dojo.declare("wm.PropTask", wm.ComponentTaskMixin, {
+	hint: "Property Change",
+        constructor: function(inComponent,inPropName, oldValue) {
+	    this.setComponent(inComponent);
+	    this.propertyName = inPropName;
+	    this.oldValue = oldValue;
+	    this.hint = studio.getDictionaryItem("UNDO_PROP_HINT", {propName: this.propertyName, oldValue: this.oldValue});
+	    wm.undo.push(this);
+	},
+	undo: function() {
+	    var c = this.getComponent();
+	    if (c) {
+		c.setProp(this.propertyName, this.oldValue);
+		if (studio.selected == c) {
+		    studio.inspector.reinspect();
+		}
+	    }
+	}
+});

@@ -1223,6 +1223,7 @@ dojo.declare("Studio", wm.Page, {
 	//=========================================================================
 	toggleControlSize: function(inControl, inDimension) {
             if (!inControl.canResize(inDimension)) return;
+	    new wm.PropTask(inControl, inDimension, inControl[inDimension]);
 	    var d = String(inControl.getProp(inDimension));
             if (d.indexOf("%") >= 0) {
                 d = Math.max(parseInt(d), inControl["getMin" + wm.capitalize(inDimension) + "Prop"]()) + "px";
@@ -1261,6 +1262,7 @@ dojo.declare("Studio", wm.Page, {
 	toggleVerticalAlignClick: function() {
 		var s = this.selected;
 		if (s) {
+		    new wm.PropTask(s, "verticalAlign", s.verticalAlign);
 		    this.toggleControlPosition(s, "verticalAlign", ["top", "middle", "bottom"]);
                     this.inspector.reinspect();
 		}
@@ -1268,6 +1270,7 @@ dojo.declare("Studio", wm.Page, {
 	toggleHorizontalAlignClick: function() {
 		var s = this.selected;
 		if (s) {
+		    new wm.PropTask(s, "horizontalAlign", s.horizontalAlign);
 		    this.toggleControlPosition(s, "horizontalAlign", ["left", "center", "right"]);
                     this.inspector.reinspect();
 		}
@@ -1276,6 +1279,7 @@ dojo.declare("Studio", wm.Page, {
 		var s = this.selected;
 		if (s) {
 		    var v = "top-to-bottom", h = "left-to-right";
+		    new wm.PropTask(s, "layoutKind", s.layoutKind);
 		    s.setLayoutKind(s.layoutKind == v ? h : v);
                     this.inspector.reinspect();
 		}
