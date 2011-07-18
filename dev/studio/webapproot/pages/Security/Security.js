@@ -1012,7 +1012,7 @@ dojo.declare("Security", wm.Page, {
 	  /* Get the service list and generate  */
 	  var attributes = this.findServiceSecurityForService("runtimeService");
 	      var serviceList = [{name: this.getDictionaryItem("SERVICE_DATABASE_SERVICES_NAME"),
-				  URL: "/runtimeService.json",
+				  URL: "/runtimeservice.json",
 				  attributes: attributes,
 				  Settings: this.getAttributesDisplay(attributes)}];
 
@@ -1079,6 +1079,7 @@ dojo.declare("Security", wm.Page, {
 	}
     },
     findServiceSecurityForService: function(inName) {
+    	inName = inName.toLowerCase();
 	for (var i = 0; i < this._urlMap.length; i++) {
 	    var str = this._urlMap[i];
 	    var realName;
