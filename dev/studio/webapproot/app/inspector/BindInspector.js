@@ -408,7 +408,6 @@ dojo.declare("wm.DataInspector", wm.BindInspector, {
 
 	constructor: function() {
 		this.initNodeChildren = dojo.hitch(this, this.initNodeChildren);	    
-	    // connect to parent's onShow and delete properties html
 	},
 	inspect: function(inComponent) {
 	    var ip = this.parent.parent.inspectorProps;
