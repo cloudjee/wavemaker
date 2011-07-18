@@ -43,21 +43,6 @@ dojo.declare("wm.ToolButton", wm.Control, {
 		}	
 		this.btnNode = this.domNode;
 	},
-	destroy: function(){
-		if (this.btnNode)
-		{
-			dojo.destroy(this.btnNode);
-			this.btnNode = null;
-		}
-
-		if (this.domNode)
-		{
-			dojo.destroy(this.domNode);
-			this.domNode = null;
-		}
-
-		this.inherited(arguments);
-	},
 
 	    /* Sometimes users go from an editor to clicking a button and some browsers don't update the editor value in time for
 	     * our onclick handler to see it.  So build in a delay before firing onclick handlers.
