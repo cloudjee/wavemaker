@@ -34,9 +34,9 @@ dojo.declare("BindSourceDialog", wm.Page, {
 	    studio.select(object); 
     },
     update: function(inTargetProps, noRegen) {
-	this.binderSource.pageSelect._cupdating = true;
+	this.binderSource.pageSelect.beginEditUpdate();
 	this.binderSource.pageSelect.setDataValue(studio.project.pageName);
-	this.binderSource.pageSelect._cupdating = false;
+	this.binderSource.pageSelect.endEditUpdate();
 
 	this.targetType = this._getTargetType(inTargetProps);
 	var
