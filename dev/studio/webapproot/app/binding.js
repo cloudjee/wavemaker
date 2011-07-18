@@ -803,7 +803,20 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	    } else if (isResource) {
 		var ex = this.bindEditor.getValue("dataValue");
 	    }
-	
+	    if (isExpression || isDisplayExpression) {
+		var ex2 = ex.replace(/\$\{.*?}/g, 1); // replace all ${...} with the value 1 for a quick and easy test to validate the expression
+		try {
+		    var result = eval(ex2);
+		    if (typeof result == "object") {
+			app.toastError("<" + ex2 + "> does not compile to a string value. Perhaps you need quotes?");
+			return;
+		    }
+		} catch(e) {
+		    app.toastError("Unable to compile this expression: " + e);
+		    return;
+		}
+	    }
+
 	    var tp = inTargetProps;
 	    if (isResource || isDisplayExpression) {
                 tp.object.setValue(tp.targetProperty, ex);

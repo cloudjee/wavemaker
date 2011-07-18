@@ -127,7 +127,24 @@ wm.SelectMenu.extend({
 		if (this.editor.downArrowNode){
 			this.editor.downArrowNode.style.display = this.hasDownArrow ? "" : "none";
 		}
+	},
+    set_displayExpression: function(inExpr) {
+	if (inExpr) {
+		var ex2 = inExpr.replace(/\$\{.*?}/g, 1); // replace all ${...} with the value 1 for a quick and easy test to validate the expression
+		try {
+		    var result = eval(ex2);
+		    if (typeof result == "object") {
+			app.toastError("<" + ex2 + "> does not compile to a string value. Perhaps you need quotes?");
+			return;
+		    }
+			
+		} catch(e) {
+		    app.toastError("Unable to compile this expression: " + e);
+		    return;
+		}
 	}
+	this.displayExpression = inExpr;
+    },
 });
 
 

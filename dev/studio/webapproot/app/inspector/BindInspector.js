@@ -193,7 +193,11 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
 	   var bindable = this.isBindable(prop);
 	   var wire = bindable && this.getPropWire(prop);
 	   var row = dojo.byId("propinspect_row_" + prop.name);
-	   var value = wire ? this.getFormattedValue(inName,wire.source, wire.expression) : "";
+	    if (prop.displayExpression) {
+		var value = this.owner.inspected[inName];
+	    } else {
+		var value = wire ? this.getFormattedValue(inName,wire.source, wire.expression) : "";
+	    }
 	    if (row && (bindable || prop.displayExpression)) {
 	       if (value)
 		   dojo.addClass(row, "isBound");
