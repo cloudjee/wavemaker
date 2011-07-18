@@ -196,7 +196,7 @@ dojo.declare("CustomWebServiceImporter", wm.Page, {
 						  dojo.hitch(this, "importFlowsError"));
     },
     importFlowsSuccess: function() {
-	studio.refreshServiceTree();
+	studio.updateServices();
 	this.owner.owner.hide();
     },
     importFlowsError: function(inError) {
