@@ -118,7 +118,7 @@ dojo.declare("wm.ToolButton", wm.Control, {
 		 * it had an annoying tendency to do this while the user is trying to click on it, which often
 		 * means the user's click fails.  Example: I go from an editor to a button.  Editor's onchange is bound to this button's
 		 * disabled state.  Call to setDisabled rerendered the button while I click on it. Click fails. */
-		if (this._imageList && this.imageIndex && this.declaredClass == "wm.ToolButton") 
+		if (this._imageList && parseInt(this.imageIndex) != NaN && this.imageIndex != -1 && this.declaredClass == "wm.ToolButton") 
 		    this.updateImageListButtonHtml();
 	    }
 	    this._firstCall = false; // either false or undefined; if undefined, then this is our first call to setDisabled, which means inDisabled is always == this.disabled because its initial properties... but dom state hasn't been set to disabled yet
