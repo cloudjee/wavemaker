@@ -19,7 +19,7 @@ Studio.extend({
 	// Clipboard
 	//=========================================================================
 	copyControl: function(inControl) {
-		var c = inControl || this.designer.selected;
+		var c = inControl || this.designer.selected || this.selected;
 		if (!c)
 			return;
 		this.clipboard = c.serialize({styles: true});
@@ -27,7 +27,7 @@ Studio.extend({
 		this.updateCutPasteUi();
 	},
 	cutControl: function(inControl) {
-		var c = inControl || this.designer.selected;
+		var c = inControl || this.designer.selected || this.selected
 		if (!c)
 			return;
 	        new wm.DeleteTask({cutAction: true});
@@ -35,7 +35,7 @@ Studio.extend({
 		this._deleteControl(c);
 	},
 	pasteControl: function(inParent) {
-		if (this.clipboard)
+		if (this.clipboard) 
 			this._pasteControl(inParent, this.clipboard, this.clipboardClass);
 	},
 	_pasteControl: function(inParent, inClip, inClass) {
@@ -65,26 +65,33 @@ Studio.extend({
 		}
 
 		// findContainer will not return a locked panel
-		p = inParent || this.findContainer(this.selected, inClass) || studio.page.root.findContainer(inClass);
+		if (rootPasteCtor.prototype instanceof wm.Control)
+		    p = inParent || this.findContainer(this.selected, inClass) || studio.page.root.findContainer(inClass);
 	    }
 
 		/* This might happen if the wm.Layout is locked; something one might do for a composite perhaps... */
-	    if (!p) {
+	    if (!p && rootPasteCtor.prototype instanceof wm.Control) {
 		app.alert(studio.getDictionaryItem("ALERT_PASTE_FAILED_PANEL_LOCKED"))
 		return;
 	    }
 
 		// start pasting: set global pasting flag
 		wm.pasting = true;
-		var comps = p.readComponents(inClip);
+	        if (p) {
+		    var comps = p.readComponents(inClip);
+		} else {
+		    var inClipStruct = dojo.fromJson(inClip);
+		    var comps = studio.page.createComponents(inClipStruct);
+		}
 		var comp = comps.length && comps.pop();
 	        if (comp)
 	            for (var prop in newProps) comp.setProp(prop, newProps[prop]);
 	        if (comp instanceof wm.Layer)
 		    comp.parent._setLayerIndex(comp.getIndex());
 		this.refreshDesignTrees();
-		this.page.reflow();
-
+                if (rootPasteCtor.prototype instanceof wm.Control) {
+		    this.page.reflow();
+		}
 		this.select(comp);
 
                 this.updateEventsForRenamedComponents();
@@ -92,6 +99,7 @@ Studio.extend({
                 
 		// done pasting: set global pasting flag
 		wm.pasting = false;
+	        new wm.AddTask(comp);
 		return comp;
 	    },
         updateEventsForRenamedComponents: function() {
