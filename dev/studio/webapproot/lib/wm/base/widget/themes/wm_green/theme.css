@@ -1183,6 +1183,8 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .wm_green div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
     .wm_green div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_green div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_green div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver, 
+    .wm_green div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
     .wm_green .wmlist-item.wmlist-item-selected,
     .wm_green .wmlist-item.wmlist-item-selected.wmlist-item-over,
     .dj_ie6 .wm_green .wmlist-item.wmlist-item-selected.wmlist-item-over {
@@ -1202,7 +1204,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .wm_green .dojoxGridRowOver td.dojoxGridCell
     {
 	/* Document-ClickablesHover-Background */
-	background-color: #d7d1d5 !important; /* Document-ClickablesHover-Background_Color */
+	background-color: #d7d1d5; /* Document-ClickablesHover-Background_Color */
 	/* Document-ClickablesHover-Font */
 	color: #000000; /* Document-ClickablesHover-Font_Color */
     }
@@ -1260,11 +1262,13 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .wm_green .MainContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
     .wm_green .MainContent div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_green .MainContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_green .MainContent div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver, 
+    .wm_green .MainContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
     .wm_green .MainContent .wmlist-item.wmlist-item-selected,
     .wm_green .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over, 
     .dj_ie6 .wm_green .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* MainContent-ClickablesActive-Background */
-	background-color: #5e7f11 !important; /* MainContent-ClickablesActive-Background_Color */
+	background-color: #5e7f11  !important; /* MainContent-ClickablesActive-Background_Color */
 	/* MainContent-ClickablesActive-Font */
 	color: #ffffff; /* MainContent-ClickablesActive-Font_Color */
     }
@@ -1278,7 +1282,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .wm_green .MainContent .dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* MainContent-ClickablesHover-Background */
-	background-color: #444444 !important; /* MainContent-ClickablesHover-Background_Color */
+	background-color: #444444; /* MainContent-ClickablesHover-Background_Color */
 	/* MainContent-ClickablesHover-Font */
 	color: #ffffff; /* MainContent-ClickablesHover-Font_Color */
     }
@@ -1301,7 +1305,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .wm_green .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over,
     .dj_ie6 .wm_green .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* EmphasizedContent-ClickablesActive-Background */
-	background-color: #9c9b46 !important; /* EmphasizedContent-ClickablesActive-Background_Color */
+	background-color: #9c9b46  !important; /* EmphasizedContent-ClickablesActive-Background_Color */
 	/* EmphasizedContent-ClickablesActive-Font */
 	color: #ffffff; /* EmphasizedContent-ClickablesActive-Font_Color */
     }
@@ -1314,7 +1318,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .wm_green .EmphasizedContent .dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* EmphasizedContent-ClickablesHover-Background */
-	background-color: #666666 !important; /* EmphasizedContent-ClickablesHover-Background_Color */
+	background-color: #666666; /* EmphasizedContent-ClickablesHover-Background_Color */
 	/* EmphasizedContent-ClickablesHover-Font */
 	color: #ffffff; /* EmphasizedContent-ClickablesHover-Font_Color */
     }
@@ -1337,7 +1341,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .wm_green .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over,
     .dj_ie6 .wm_green .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* HeaderContent-ClickablesActive-Background */
-	background-color: #999999 !important; /* HeaderContent-ClickablesActive-Background_Color */
+	background-color: #999999  !important; /* HeaderContent-ClickablesActive-Background_Color */
 	/* HeaderContent-ClickablesActive-Font */
 	color: #000000; /* HeaderContent-ClickablesActive-Font_Color */
     }
@@ -1351,7 +1355,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .wm_green #wavemakerNode .wmlayout .HeaderContent .dojoxGridRowOver a
     {
 	/* HeaderContent-ClickablesHover-Background */
-	background-color: #333333 !important; /* HeaderContent-ClickablesHover-Background_Color */
+	background-color: #333333; /* HeaderContent-ClickablesHover-Background_Color */
 	/* HeaderContent-ClickablesHover-Font */
 	color: #ffffff; /* HeaderContent-ClickablesHover-Font_Color */
     }

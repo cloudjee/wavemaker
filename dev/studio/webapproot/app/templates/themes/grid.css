@@ -91,6 +91,8 @@
     .wm_template div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
     .wm_template div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_template div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_template div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver, 
+    .wm_template div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
     .wm_template .wmlist-item.wmlist-item-selected,
     .wm_template .wmlist-item.wmlist-item-selected.wmlist-item-over,
     .dj_ie6 .wm_template .wmlist-item.wmlist-item-selected.wmlist-item-over {
@@ -112,7 +114,7 @@
     .wm_template .dojoxGridRowOver td.dojoxGridCell
     {
 	/* Document-ClickablesHover-Background */
-	background-color: #333333 !important; /* Document-ClickablesHover-Background_Color */
+	background-color: #333333; /* Document-ClickablesHover-Background_Color */
 
 	/* Document-ClickablesHover-Font */
 	color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
@@ -182,6 +184,8 @@
     .wm_template .MainContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
     .wm_template .MainContent div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_template .MainContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_template .MainContent div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver, 
+    .wm_template .MainContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
     .wm_template .MainContent .wmlist-item.wmlist-item-selected,
     .wm_template .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over, 
     .dj_ie6 .wm_template .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
@@ -202,7 +206,7 @@
     .wm_template .MainContent .dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* MainContent-ClickablesHover-Background */
-	background-color: #333333 !important; /* MainContent-ClickablesHover-Background_Color */
+	background-color: #333333; /* MainContent-ClickablesHover-Background_Color */
 
 	/* MainContent-ClickablesHover-Font */
 	color: #FFFFFF; /* MainContent-ClickablesHover-Font_Color */
@@ -228,6 +232,8 @@
     .wm_template .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
     .wm_template .EmphasizedContent div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_template .EmphasizedContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_template .EmphasizedContent div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver, 
+    .wm_template .EmphasizedContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
     .wm_template .EmphasizedContent .wmlist-item.wmlist-item-selected,
     .wm_template .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over,
     .dj_ie6 .wm_template .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
@@ -247,7 +253,7 @@
     .wm_template .EmphasizedContent .dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* EmphasizedContent-ClickablesHover-Background */
-	background-color: #333333 !important; /* EmphasizedContent-ClickablesHover-Background_Color */
+	background-color: #333333; /* EmphasizedContent-ClickablesHover-Background_Color */
 
 	/* EmphasizedContent-ClickablesHover-Font */
 	color: #FFFFFF; /* EmphasizedContent-ClickablesHover-Font_Color */
@@ -273,6 +279,8 @@
     .wm_template .HeaderContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
     .wm_template .HeaderContent div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_template .HeaderContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_template .HeaderContent div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver, 
+    .wm_template .HeaderContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
     .wm_template .HeaderContent .wmlist-item.wmlist-item-selected,
     .wm_template .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over,
     .dj_ie6 .wm_template .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
@@ -293,7 +301,7 @@
     .wm_template #wavemakerNode .wmlayout .HeaderContent .dojoxGridRowOver a
     {
 	/* HeaderContent-ClickablesHover-Background */
-	background-color: #333333 !important; /* HeaderContent-ClickablesHover-Background_Color */
+	background-color: #333333; /* HeaderContent-ClickablesHover-Background_Color */
 
 	/* HeaderContent-ClickablesHover-Font */
 	color: #FFFFFF; /* HeaderContent-ClickablesHover-Font_Color */
