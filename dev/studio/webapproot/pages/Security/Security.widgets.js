@@ -65,7 +65,7 @@ Security.widgets = {
 					    }]
 					}]
 				    }],
-				    databaseLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"Database",autoScroll:true}, {"onShow":"showDBLayer"}, {
+				    databaseLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"Database",autoScroll:true, verticalAlign: "top", horizontalAlign: "left"}, {"onShow":"showDBLayer"}, {
 					databasePanel: ["wm.Panel", {width: "100%", height: "300px", fitToContentHeight: true, margin: "10,50,0,50", horizontalAlign: "left", verticalAlign: "top"}, {}, {
 					    dbDataModelInput: ["wm.SelectMenu", {required: true, captionSize: "150px", width: "500px", "border":"0","caption":"Data Model","display":"Select","emptyValue":"null","padding":"2", helpText: "Pick from one of the databases you have imported"}, {"onchange":"dbDataModelInputChange"}],
 					    dbEntityInput: ["wm.SelectMenu", {required: true,captionSize: "150px", width: "500px", "border":"0","caption":"Entity","display":"Select","emptyValue":"null","padding":"2", helpText: "Pick a table from your database that contains your registered users"}, {"onchange":"dbEntityInputChange"}],
@@ -83,26 +83,28 @@ Security.widgets = {
 					    defTenantId: ["wm.Text", {captionSize: "150px", width: "500px", "border":"0","caption":"Default Tenant ID Value","emptyValue":"null","padding":"2", helpText: "The default tenant ID value is the value used when querying the database while you are in design; this has no effect on running your application"}, {"onchange":"setDirty"}],
 					    spacer31: ["wm.Spacer", {"height":"10px","width":"96px"}, {}],
 					}],
-					dbRoleBySQLPanel: ["wm.Panel", {"border":"0","height":"100%", margin: "10,50,0,50", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+					dbRoleBySQLPanel: ["wm.Panel", {"border":"0","height":"100px", fitToContentHeight: true, width: "100%", margin: "10,50,0,50", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 					    panel14: ["wm.Panel", {"border":"0","height":"24px",width: "100%","layoutKind":"left-to-right"}, {}, {
 						spacer1: ["wm.Spacer", {"width":"202px"}, {}],
 						dbRoleBySQLCheckbox: ["wm.Checkbox", {"border":"0","caption":"Roles By SQL Query","captionAlign":"left","captionPosition":"right","captionSize":"380px","displayValue":"1","padding":"2","width":"100%"}, {"onchange":"dbRoleBySQLCheckboxChange"}]
 					    }],
-					    dbRoleBySQLEnablePanel: ["wm.Panel", {"border":"0","height":"100%", verticalAlign: "top", horizontalAlign: "left", width: "100%", margin: "5,50,0,50"}, {}, {
+					    dbRoleBySQLEnablePanel: ["wm.Panel", {"border":"0","height":"100px", fitToContentHeight: true, verticalAlign: "top", horizontalAlign: "left", width: "100%", margin: "5,50,0,50"}, {}, {
 						dbRoleBySQLInput: ["wm.LargeTextArea", {"border":"0","caption":"","emptyValue":"null","height":"48px", width:"100%"}, {"onchange":"setDirty"}],
-						panel22: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_2px"]},"border":"0","height":"24px","layoutKind":"left-to-right"}, {}, {
+						panel22: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_2px"]},"border":"0","height":"24px",width: "100%", "layoutKind":"left-to-right"}, {}, {
 						    spacer20: ["wm.Spacer", {"width":"100%"}, {}],
 						    dbTestSQLInput: ["wm.Text", {"border":"0","caption":"User ID","emptyValue":"null","padding":"2","width":"250px"}, {"onchange":"setDirty"}],
 						    dbTestSQLButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, "caption":"Test Query","margin":"2","width":"100px"}, {"onclick":"dbTestSQLButtonClick"}]
 						}],
-						panel18: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_2px","wm_Padding_LeftNone","wm_Padding_TopNone"]},"border":"0","height":"48px","layoutKind":"left-to-right"}, {}, {
-						    spacer5: ["wm.Spacer", {"width":"206px"}, {}],
-						    dbTestSQLResultList: ["wm.List", {"_classes":{"domNode":["wm_Border_Size1px","wm_Border_StyleSolid","wm_Border_ColorLightGray"]},"border":"0","width":"100%"}, {}]
-						}],
-						panel17: ["wm.Panel", {"border":"0","height":"30px","layoutKind":"left-to-right"}, {}, {
-						    spacer15: ["wm.Spacer", {"width":"206px"}, {}],
-						    dbTestSQLErrorLabel: ["wm.Label", {"border":"0","caption":"dbTestSQLErrorLabel","padding":"4","width":"100%"}, {}, {
-							format: ["wm.DataFormatter", {}, {}]
+					    	panel18: ["wm.Panel", {padding: "0,0,4,0", "border":"0","height":"100px",width: "100%", "layoutKind":"left-to-right"}, {}, {
+						    spacer5: ["wm.Spacer", {"width":"20px"}, {}],
+						    dbTestSQLResultListPanel: ["wm.Panel", {verticalAlign: "top", horizontalAlign: "left", layoutKind: "top-to-bottom", width: "100%", height: "100%"}, {}, {
+							dbTestSQLResultLabel: ["wm.Label", {caption: "Roles from query:", width: "100%", height: "18px"}],
+							dbTestSQLResultList: ["wm.List", {"border":"1","width":"100%", height: "100%"}, {}],
+						    }],
+						    spacer15: ["wm.Spacer", {"width":"100px"}, {}],
+						    dbTestSQLErrorPanel: ["wm.Panel", {verticalAlign: "top", horizontalAlign: "left", layoutKind: "top-to-bottom", width: "100px", height: "100%"}, {}, {
+							dbTestSQLErrorPanelLabel: ["wm.Label", {caption: "Errors from Query:", width: "100%", height: "18px"}],
+							dbTestSQLErrorLabel: ["wm.Label", {"border":"1","caption":"dbTestSQLErrorLabel","padding":"4","width":"100%", height: "100%"}]
 						    }]
 						}]
 					    }]
@@ -129,10 +131,10 @@ Security.widgets = {
 						ldapGroupSearchFilterInput: ["wm.Text", {width: "500px", captionSize: "150px", "caption":"Group Search Filter","emptyValue":"null"}, {onchange: "setDirty"}]
 					    }],
 					    ldapRoleDBPanel: ["wm.Panel", {"width":"100%", "height":"200px", horizontalAlign: "left", verticalAlign: "top"},{},{
-						ldapRoleDbDataModelInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Data Model","emptyValue":"null","height":"20px"}, {"onchange":"ldapRoleDbDataModelInputChange"}],
-						ldapRoleDbEntityInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Entity","emptyValue":"null","height":"20px"}, {"onchange":"ldapRoleDbEntityInputChange"}],
-						ldapRoleDbUsernameInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Username Field","emptyValue":"null","height":"20px"}, {onchange: "setDirty"}],
-						ldapRoleDbRoleInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Role Field","emptyValue":"null","height":"20px"}, {onchange: "setDirty"}],
+						ldapRoleDbDataModelInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Data Model","emptyValue":"null"}, {"onchange":"ldapRoleDbDataModelInputChange"}],
+						ldapRoleDbEntityInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Entity","emptyValue":"null"}, {"onchange":"ldapRoleDbEntityInputChange"}],
+						ldapRoleDbUsernameInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Username Field","emptyValue":"null"}, {onchange: "setDirty"}],
+						ldapRoleDbRoleInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Role Field","emptyValue":"null"}, {onchange: "setDirty"}],
 						ldapRoleBySQLPanel: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_RightNone","wm_Padding_LeftNone","wm_Padding_BottomNone","wm_Padding_4px"]},"height":"150px", width: "100%"}, {}, {
 						    panel26: ["wm.Panel", {"height":"24px","layoutKind":"left-to-right"}, {}, {
 							ldapRoleBySQLCheckbox: ["wm.Checkbox", {"captionSize":"150px","caption":"Roles By SQL Query","width":"500px"}, {"onchange":"ldapRoleBySQLCheckboxChange"}]
@@ -164,11 +166,32 @@ Security.widgets = {
 				    }]
 				}]
 			    }]
+			}]
+		    }]
+		}],
+		servicesLayer: ["wm.Layer", {caption: "Setup Services"}, {"onShow":"servicesLayerShow"}, {
+		    servicesOuterPanel: ["wm.Panel", {border: "3", borderColor: "#959DAB",  margin: "10", width: "100%", height: "100%", layoutKind: "left-to-right"}, {}, {
+			serviceList: ["wm.List", {width: "300px", headerVisible: true, height: "100%", dataFields: "name, Settings", border: "0,2,0,0", borderColor:  "#959DAB"}, {onselect: "serviceListSelect"}, {
+			    binding: ["wm.Binding", {}, {}, {
+				wire: ["wm.Wire", {"expression":undefined,"source":"varServList","targetProperty":"dataSet"}, {}]
+			    }]
 			}],
-			panel10a: ["wm.Panel", {"border":"0","height":"1px","layoutKind":"left-to-right","width":"100%"}, {}]
-		    }],
-		    splitter1a: ["wm.Splitter", {"height":"10px","width":"100%"}, {}],
-		    panelBottom: ["wm.Panel", {"border":"0","height":"175px","horizontalAlign":"center","layoutKind":"left-to-right","width":"500px"}, {}, {
+			servicesInnerPanel: ["wm.Panel", {width: "100%", height: "100%", verticalAlign: "top", horizontalAlign: "left", layoutKind: "top-to-bottom"}, {}, {
+			    servicesInnerHeader: ["wm.Label", {caption: "", width: "100%", height: "24px"}],
+			    servicesBevel: ["wm.Bevel", {}],
+			    servicesSettingsPanel: ["wm.Panel", {width: "100%", height: "100%",verticalAlign: "top", horizontalAlign: "left", layoutKind: "top-to-bottom"},{},{
+				selectAccess: ["wm.SelectMenu", {"caption":"Who can access","width":"260px", displayField: "name", dataField: "dataValue"}, {onchange: "serviceSettingsChange"}, {
+				    binding: ["wm.Binding", {}, {}, {
+					wire: ["wm.Wire", {"expression":undefined,"source":"varRoleList","targetProperty":"dataSet"}, {}],
+					wire2: ["wm.Wire", {"expression":undefined,"expression":"${serviceList.selectedItem.attributes} || ''","targetProperty":"dataValue"}, {}]
+				    }]
+				}]
+			    }]
+			}]
+		    }]
+		}],
+		rolesLayer: ["wm.Layer", {caption: "Roles"}, {}, {
+		panelBottom: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"center","layoutKind":"left-to-right","width":"500px"}, {}, {
 			spacer8a: ["wm.Spacer", {"height":"100%","showing":false,"width":"100%"}, {}],
 			spacer8b: ["wm.Spacer", {"height":"100%","width":"57px"}, {}],
 				panelRoles: ["wm.Panel", {"border":"0","height":"100%","width":"100%"}, {}, {
@@ -178,7 +201,7 @@ Security.widgets = {
 				    panela2: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left"}, {}, {
 					panel8a: ["wm.Panel", {"border":"0","height":"1px","layoutKind":"left-to-right","width":"100%"}, {}],
 					panel11a: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"center",verticalAlign: "top", "layoutKind":"left-to-right","padding":"4","width":"100%"}, {}, {
-					    panel14a: ["wm.Panel", {"border":"0","width":"638px", height: "100%", padding: "4"}, {}, {
+					    panel14a: ["wm.Panel", {"border":"0","width":"638px", height: "100%", padding: "8"}, {}, {
 						rolePanel: ["wm.Panel", {"border":"0","height":"100%","imageList":"smallToolbarImageList"}, {}, {
 						    panel9: ["wm.Panel", {"border":"0","height":"38px","layoutKind":"left-to-right"}, {}, {
 							spacer17: ["wm.Spacer", {"width":"96px"}, {}],
@@ -190,7 +213,7 @@ Security.widgets = {
 							    addRoleButton: ["wm.ToolButton", {"border":"0","height":"24px","hint":"Add Role","imageIndex":25,"margin":"0,0,0,2","width":"30px"}, {"onclick":"addRoleButtonClick"}]
 							}]
 						    }],
-						    panel10: ["wm.Panel", {"border":"0","height":"280px","layoutKind":"left-to-right"}, {}, {
+						    panel10: ["wm.Panel", {"border":"0","height":"100%","layoutKind":"left-to-right"}, {}, {
 							spacer19: ["wm.Spacer", {"width":"96px"}, {}],
 							roleList: ["wm.List", {"_classes":{"domNode":["wm_BackgroundColor_White"]},"border":"0","columnWidths":"100%","headerVisible":false,"height":"100%","width":"360px"}, {}],
 							panel11: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_RightNone","wm_Padding_TopNone","wm_Padding_24px"]},"border":"0","width":"40px"}, {}, {
@@ -215,28 +238,6 @@ Security.widgets = {
 			    spacer9: ["wm.Spacer", {"height":"30px","width":"96px"}, {}],
 			    label2: ["wm.Label", {"border":"0","caption":"The username/password here will be the account used by live layout to log on and access your database and javaservices","height":"93px","padding":"4","singleLine":false,"width":"96px"}, {}, {
 				format: ["wm.DataFormatter", {}, {}]
-			    }]
-			}]
-		    }],
-		    benchbevel4: ["wm.Bevel", {"height":"10px","width":"100%"}, {}]
-		}],
-		servicesLayer: ["wm.Layer", {caption: "Setup Services"}, {"onShow":"servicesLayerShow"}, {
-		    servicesOuterPanel: ["wm.Panel", {border: "3", borderColor: "#959DAB",  margin: "10", width: "100%", height: "100%", layoutKind: "left-to-right"}, {}, {
-			serviceList: ["wm.List", {width: "300px", headerVisible: true, height: "100%", dataFields: "name, Settings", border: "0,2,0,0", borderColor:  "#959DAB"}, {onselect: "serviceListSelect"}, {
-			    binding: ["wm.Binding", {}, {}, {
-				wire: ["wm.Wire", {"expression":undefined,"source":"varServList","targetProperty":"dataSet"}, {}]
-			    }]
-			}],
-			servicesInnerPanel: ["wm.Panel", {width: "100%", height: "100%", verticalAlign: "top", horizontalAlign: "left", layoutKind: "top-to-bottom"}, {}, {
-			    servicesInnerHeader: ["wm.Label", {caption: "", width: "100%", height: "24px"}],
-			    servicesBevel: ["wm.Bevel", {}],
-			    servicesSettingsPanel: ["wm.Panel", {width: "100%", height: "100%",verticalAlign: "top", horizontalAlign: "left", layoutKind: "top-to-bottom"},{},{
-				selectAccess: ["wm.SelectMenu", {"caption":"Who can access","width":"260px", displayField: "name", dataField: "dataValue"}, {onchange: "serviceSettingsChange"}, {
-				    binding: ["wm.Binding", {}, {}, {
-					wire: ["wm.Wire", {"expression":undefined,"source":"varRoleList","targetProperty":"dataSet"}, {}],
-					wire2: ["wm.Wire", {"expression":undefined,"expression":"${serviceList.selectedItem.attributes} || ''","targetProperty":"dataValue"}, {}]
-				    }]
-				}]
 			    }]
 			}]
 		    }]

@@ -563,7 +563,6 @@ dojo.declare("Security", wm.Page, {
 	    var c = inSender.getChecked();
 		this.dbRoleInput.setDisabled(c);
 		this.dbRoleBySQLInput.setShowing(c);
-	    this.dbRoleBySQLPanel.setHeight(c ? "210px" : "50px");
 		this.dbRoleBySQLEnablePanel.setShowing(c);
 		this.setDirty();
 	},
@@ -701,6 +700,8 @@ dojo.declare("Security", wm.Page, {
 			this.roleList.renderData(nd);
 			this.updateSelect(this.demoRoleInput, nd);
 		    this.setDirty();
+		    if (this.roleList._data.length > deletedIndex)
+			this.roleList.selectByIndex(deletedIndex);
 		}
 	},
 	populateRolesSetup: function() {
@@ -798,8 +799,6 @@ dojo.declare("Security", wm.Page, {
 
 	    
 	    if (this.isJOSSO())  this.showLoginPageInput.setShowing(false);
-	    //this.panel1a.setHeight((this.isJOSSO()) ? "70px" : this._defaultPanel1aHeight);
-	    this.panelBottom.setHeight(this.isJOSSO() ? "300px" : this._defaultPanelBottomHeight);
 	    this.setDirty();
 	},
 	isJOSSO: function() {
