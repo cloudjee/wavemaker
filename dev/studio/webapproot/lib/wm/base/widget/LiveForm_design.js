@@ -33,7 +33,7 @@ wm.Object.extendSchema(wm.LiveFormBase, {
 	captionAlign: { group: "display", order: 230},
     captionPosition: { group: "display", order: 240},
     setDataSet: {group: "method"},
-    beginEditUpdate: {group: "method"},
+    beginDataUpdate: {group: "method"},
     clearData: {group: "method"},
     setReadonly: {group: "method"}
 
