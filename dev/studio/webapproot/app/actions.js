@@ -90,7 +90,7 @@ dojo.declare("wm.ComponentTaskMixin", null, {
 });
 
 dojo.declare("wm.DeleteTask", wm.ComponentTaskMixin, {
-	constructor: function() {
+	constructor: function(inProps) {	    
 		var comp = studio.selected;
 		if (!comp)
 			return;
@@ -101,7 +101,7 @@ dojo.declare("wm.DeleteTask", wm.ComponentTaskMixin, {
 		this.owner = comp.owner;
 		this.isWidget = comp instanceof wm.Widget;
 		this.parent = comp.parent;
-		this.redo();
+	        this.redo(inProps && inProps.cutAction);
 	},
 	cachePlacement: function() {
 		var comp = this.getComponent();
@@ -115,10 +115,11 @@ dojo.declare("wm.DeleteTask", wm.ComponentTaskMixin, {
 	restorePlacement: function() {
 		studio.designer.replace(this.getComponent(), this.originalTarget, this.originalRect, this.originalSibling);
 	},
-	redo: function() {
+	redo: function(cutAction) {
 		if (this.isWidget)
 			this.cachePlacement();
-		if (studio._deleteControl(this.getComponent())) {
+	    /* Don't delete here if its a cut action, but we still want to push this onto the undo stack */
+		if (cutAction || studio._deleteControl(this.getComponent())) {
 			this.clearComponent();
 			wm.undo.push(this);
 		}

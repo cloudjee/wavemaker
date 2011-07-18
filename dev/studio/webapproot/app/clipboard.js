@@ -30,6 +30,7 @@ Studio.extend({
 		var c = inControl || this.designer.selected;
 		if (!c)
 			return;
+	        new wm.DeleteTask({cutAction: true});
 		this.copyControl(c);
 		this._deleteControl(c);
 	},
