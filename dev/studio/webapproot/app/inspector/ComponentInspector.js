@@ -64,7 +64,15 @@ dojo.declare("wm.ComponentInspector", wm.Layers, {
 	    } else if (inspector) {
 
 		// If we have any dijits, we'll need to destroy them all as we'll be reusing those IDs
-		if (this.dijits) dojo.forEach(this.dijits,function(d) {d.destroy();});
+		if (this.dijits) dojo.forEach(this.dijits,function(d) {
+		    var node = d.domNode;
+		    while (node && node.id.match(/^propinspect_row/) == null) {
+			node = node.parentNode;
+		    }
+		    d.destroy();
+		    if (node)
+			dojo.destroy(node); // we need to clean up these node IDs so that data fields in the data inspector can use these names as well
+		});
 
 		// Cache the current inspector
 		this._currentInspector = inspector;
