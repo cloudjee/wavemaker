@@ -91,6 +91,7 @@ wm.Object.extendSchema(wm.Picture, {
 
 // design-time 
 dojo.extend(wm.Picture, {
+        scrim: true,
         themeable: false,
         themeableDemoProps: {source: "images/add.png"},
 	makePropEdit: function(inName, inValue, inDefault) {
