@@ -17,6 +17,7 @@ package com.wavemaker.runtime.ws;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
@@ -107,8 +108,12 @@ public class RESTService {
                     postData = (String)o;
                 }
             } else if (inputs.size() > 1) {
-                throw new WebServiceInvocationException(
+                if (contentType.equalsIgnoreCase(Constants.MIME_TYPE_FORM)) {
+                    postData = createFormData(inputs);
+                } else {
+                    throw new WebServiceInvocationException(
                         "REST service call with HTTP POST should not have more than 1 input.");
+                }
             }
         } else {
             httpRequestMethod = HTTPRequestMethod.GET;
@@ -122,6 +127,19 @@ public class RESTService {
         } catch (WebServiceException e) {
             throw new WebServiceInvocationException(e);
         }
+    }
+
+    private String createFormData(Map<String, Object> inputs) {
+        StringBuffer sb = new StringBuffer();
+        Set<Entry<String, Object>> entries = inputs.entrySet();
+        for (Map.Entry<String, Object> entry : entries) {
+            sb.append(entry.getKey());
+            sb.append("=");
+            sb.append((String)entry.getValue());
+            sb.append("&");
+        }
+
+        return sb.toString();
     }
 
     private static String parameterize(String parameterizedURI,

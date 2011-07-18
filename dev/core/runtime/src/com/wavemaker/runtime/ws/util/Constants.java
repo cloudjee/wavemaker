@@ -68,4 +68,7 @@ public class Constants {
     public static final String REST_ENDPOINT_LOCATION_PREFIX = "endpoint=";
     
     public static final String HTTP_METHOD_POST = "POST";
+
+    public static final String MIME_TYPE_TEXT_XML = "text/xml";
+    public static final String MIME_TYPE_FORM = "application/x-www-form-urlencoded";
 }
