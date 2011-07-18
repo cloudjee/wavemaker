@@ -185,7 +185,11 @@ dojo.declare("wm.PropTask", wm.ComponentTaskMixin, {
 	undo: function() {
 	    var c = this.getComponent();
 	    if (c) {
-		c.setProp(this.propertyName, this.oldValue);
+		if (this.propertyName == "bounds") {
+		    c.designResize(this.oldValue, true);
+		} else {
+		    c.setProp(this.propertyName, this.oldValue);
+		}
 		if (studio.selected == c) {
 		    studio.inspector.reinspect();
 		}

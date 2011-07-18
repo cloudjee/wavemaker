@@ -218,7 +218,7 @@
     "UNDO_DELETE_HINT": "Delete ${className}",
     "UNDO_DROP_HINT": "Drop ${className}",
     "UNDO_ADD_HINT": "Add ${className}",
-
+    "UNDO_PROP_HINT": "Change ${propName} back to ${oldValue}",
 
     "ALERT_PASTE_FAILED_PANEL_LOCKED": "Unable to paste.  All containers are either locked or frozen."    ,
     "CONFIRM_GENERIC_DISCARD_UNSAVED": 'Discard unsaved changes?',

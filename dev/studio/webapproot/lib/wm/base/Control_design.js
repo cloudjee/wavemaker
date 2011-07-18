@@ -74,7 +74,10 @@ wm.Control.extend({
 
 	        this._needsAutoResize = true; 
 	},
-	designResize: function(inBounds) {
+    designResize: function(inBounds, isUndo) {
+	        if (!isUndo) {
+	            new wm.PropTask(this, "bounds", dojo.clone(this.bounds));
+		}
 		// Remove entries from inBounds that match DOM values
 		this._removeStaticBounds(inBounds);
 		// Make bounds changes
