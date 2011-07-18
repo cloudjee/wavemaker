@@ -1911,3 +1911,12 @@ Overriding dijit's progress bar properties to enable height changes to progress 
 .DirtyTab {
    color: red;
 }
+
+.wmpicture img.NoImage {
+    display: none;
+}
+.wmpicture a {
+    width: 100%;
+    height: 100%;
+    display: block;
+}

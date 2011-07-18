@@ -24,14 +24,19 @@ dojo.declare("wm.Picture", wm.Control, {
 	init: function() {
 		this.inherited(arguments);
 		var d=this.domNode;
-		d.innerHTML = '<a><img></a>';
+		d.innerHTML = '<a><img class="NoImage"></a>';
 		dojo.addClass(d, "wmpicture");
 		this.linkNode = d.firstChild;
 		this.img = this.linkNode.firstChild;
 		dojo.addClass(this.img, "wmpicture-image");
 		//this.connect(this.img, "load", this, "imageLoaded");
 	        this.connect(this.img, "click", this, function(evt) {
-		    wm.onidle(this,"onclick",evt);
+		    dojo.stopEvent(evt);
+		    wm.onidle(this,"onclick"); // don't pass evt which after a delay will become undefined in some browsers
+		});
+	        this.connect(this.linkNode, "click", this, function(evt) {
+		    dojo.stopEvent(evt);
+		    wm.onidle(this,"onclick"); // don't pass evt which after a delay will become undefined in some browsers
 		});
 		this.setSource(this.source);
 		this.setAspect(this.aspect);
@@ -39,9 +44,10 @@ dojo.declare("wm.Picture", wm.Control, {
 		this.setHint(this.hint);
 	},
 	setSource: function(inSource) {
-		this.source = inSource || "";
-		this.valueChanged("source", this.source);
-		this.img.style.display = this.source ? "" : "none";
+	    this.source = inSource || "";
+	    this.valueChanged("source", this.source);
+	    dojo.toggleClass(this.img, "NoImage", !this.source);
+	    //this.img.style.display = this.source ? "" : "none"; // hiding now done by className
 	    var root;
 	    if (this.source.slice(0, 4) == "http" || this.source.slice(0, 1) == "/") {
 		root = "";
