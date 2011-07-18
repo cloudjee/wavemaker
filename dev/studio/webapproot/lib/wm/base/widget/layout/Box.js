@@ -426,6 +426,9 @@ dojo.declare("wm.layout.HBox", wm.layout.Box, {
 			    ioRect.control = c;
 			}
 		}
+	    if (!ioRect.control)
+		return;
+
 	        var containercoords = dojo.coords(inContainer.domNode);
 	        var coords = dojo.coords(ioRect.control.domNode);
 	    var styleBounds = inContainer.getStyleBounds();
@@ -439,6 +442,7 @@ dojo.declare("wm.layout.HBox", wm.layout.Box, {
 dojo.declare("wm.layout.VBox", wm.layout.Box, {
 	direction: "v",
 	suggest: function(inContainer, inControl, ioRect) {
+
 		var y = 0;
 		for (var i=0, c; c=inContainer.c$[i]; i++) {
 			if (this.inFlow(c)) {
@@ -450,6 +454,9 @@ dojo.declare("wm.layout.VBox", wm.layout.Box, {
 			    ioRect.control = c;
 			}
 		}
+	    if (!ioRect.control)
+		return;
+
 	        var containercoords = dojo.coords(inContainer.domNode);
 	        var coords = dojo.coords(ioRect.control.domNode);
 	    var styleBounds = inContainer.getStyleBounds();
