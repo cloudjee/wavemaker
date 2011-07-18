@@ -126,7 +126,7 @@ dojo.declare("wm.DeleteTask", wm.ComponentTaskMixin, {
 	},
 	undo: function() {
 		var p = this.isWidget ? (this.parent.owner ? this.parent : null) : this.owner;
-		var c = studio._pasteControl(p, this.clip, this.classType);
+	    var c = studio._pasteControl(p, this.clip, this.classType);
 		this.setComponent(c);
 		if (this.isWidget)
 			this.restorePlacement();

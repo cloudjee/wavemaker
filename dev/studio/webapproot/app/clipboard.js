@@ -35,10 +35,12 @@ Studio.extend({
 		this._deleteControl(c);
 	},
 	pasteControl: function(inParent) {
-		if (this.clipboard) 
-			this._pasteControl(inParent, this.clipboard, this.clipboardClass);
+	    if (this.clipboard) {
+		var comp = this._pasteControl(inParent, this.clipboard, this.clipboardClass);
+		new wm.AddTask(comp);
+	    }
 	},
-	_pasteControl: function(inParent, inClip, inClass) {
+        _pasteControl: function(inParent, inClip, inClass) {
             this.renamedDuringPaste =  {}; // set in Component.js.createComponent()
 
 	    var p;
@@ -98,8 +100,7 @@ Studio.extend({
                 this.renamedDuringPaste = {}; // clean up memory usage/unneeded pointers
                 
 		// done pasting: set global pasting flag
-		wm.pasting = false;
-	        new wm.AddTask(comp);
+		wm.pasting = false;	    
 		return comp;
 	    },
         updateEventsForRenamedComponents: function() {
