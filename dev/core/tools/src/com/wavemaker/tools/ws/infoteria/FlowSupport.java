@@ -15,6 +15,7 @@
 package com.wavemaker.tools.ws.infoteria;
 
 import com.wavemaker.runtime.ws.HTTPBindingSupport;
+import com.wavemaker.runtime.ws.util.Constants;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.ws.WebServiceToolsManager;
 import com.wavemaker.tools.ws.RESTInputParam;
@@ -100,14 +101,12 @@ public class FlowSupport {
             throw new Exception("Null session id is passed.");
         }
 
-        String endPointAddress = "http://" + host + ":" + port + "/flow-rest/project/list.json?sessionid="
-                + sessionId;
+        String endPointAddress = "http://" + host + ":" + port + "/flow-rest/project/list.json";
+        String postData = "sessionid=" + sessionId;
         QName thisQName = new QName(endPointAddress, "asteriaServer");
 
-        String method = "GET";
-
-        result = HTTPBindingSupport.getResponseString(thisQName, thisQName, endPointAddress,
-                HTTPBindingSupport.HTTPRequestMethod.valueOf(method), null, null);
+        result = HTTPBindingSupport.getResponseObject(thisQName, thisQName, endPointAddress, HTTPBindingSupport.HTTPRequestMethod.POST,
+                    Constants.MIME_TYPE_FORM, postData, String.class, null);
 
         JSONObject returnObj = new JSONObject(result);
 
@@ -127,24 +126,22 @@ public class FlowSupport {
     }
 
     public String listFlows(String host, String port, String projectName, String sessionId) throws Exception {
-        return getFlowList(host, port, projectName, sessionId).toString();
+        return getFlowList(host, port, projectName, null, sessionId).toString();
     }
 
-    public JSONArray getFlowList(String host, String port, String projectName, String sessionId) throws Exception {
+    public JSONArray getFlowList(String host, String port, String projectName, List<String> selectedFlows, String sessionId) throws Exception {
         String result;
 
         if (sessionId == null) {
             throw new Exception("Null session id is passed.");
         }
 
-        String endPointAddress = "http://" + host + ":" + port + "/flow-rest/flow/list.json?name="
-                + projectName + "&sessionid="+ sessionId;
+        String endPointAddress = "http://" + host + ":" + port + "/flow-rest/flow/list.json";
+        String postData = "name=" + projectName + "&sessionid=" + sessionId;
         QName thisQName = new QName(endPointAddress, "asteriaServer");
 
-        String method = "GET";
-
-        result = HTTPBindingSupport.getResponseString(thisQName, thisQName, endPointAddress,
-                HTTPBindingSupport.HTTPRequestMethod.valueOf(method), null, null);
+        result = HTTPBindingSupport.getResponseObject(thisQName, thisQName, endPointAddress, HTTPBindingSupport.HTTPRequestMethod.POST,
+                    Constants.MIME_TYPE_FORM, postData, String.class, null);
 
         JSONObject returnObj = new JSONObject(result);
 
@@ -169,7 +166,33 @@ public class FlowSupport {
             flowList = convertToJSONArray(listObj.get("flow"));
         }
 
+        if (selectedFlows != null) {
+            JSONArray newFlowList = new JSONArray();
+            for (int i=0; i<flowList.length(); i++) {
+                Object o = flowList.get(i);
+                if (inSelected(o, selectedFlows)) {
+                    newFlowList.put(o);
+                }
+            }
+
+            return newFlowList;
+        }
+
         return flowList;
+    }
+
+    private boolean inSelected(Object obj, List<String> selectedFlows) throws JSONException {
+        JSONObject flow = (JSONObject) obj;
+        String flowName = (String)flow.get("name");
+        boolean found = false;
+        for (String fn : selectedFlows) {
+            if (fn.equals(flowName)) {
+                found = true;
+                break;
+            }
+        }
+
+        return found;
     }
 
     public static JSONArray convertToJSONArray (Object obj) {
@@ -215,9 +238,9 @@ public class FlowSupport {
 
     //Imports Flow metadata, creates WSDL and generate service (service = project, flows = operations)
     public void importFlows(String host, String port, String userName, String password, String domain, String projectName,
-                            String sessionId) throws Exception {
+                            List<String> selectedFlows, String sessionId) throws Exception {
 
-        JSONArray flowList = getFlowList(host, port, projectName, sessionId);
+        JSONArray flowList = getFlowList(host, port, projectName, selectedFlows, sessionId);
 
         WebServiceToolsManager wstMgr = this.getWSToolsMgr();
         List<String> flowNames = getFlowNames(flowList);
@@ -396,7 +419,7 @@ public class FlowSupport {
 
     private String getUrl(String host, String port) {
         //http://infoteria:21381/flow-rest/flow/exec.xml
-        String url = "http://" + host + ":" + port + "/flow-rest/exec.json";
+        String url = "http://" + host + ":" + port + "/flow-rest/flow/exec.xml";
 
         return url;
     }
