@@ -1611,6 +1611,10 @@ font-family: "Nimbus Sans L", sans-serif;
 .tundra .dojoMenu .dijitMenu .dijitMenuItem {
 display:block;
 }
+.tundra .dijitMenuBar .dijitMenuItem:last-child {
+   margin-right: 0px;
+   padding-right: 20px;
+}
 .accordionArrowNode {
     display: none;
     background-repeat: no-repeat;
