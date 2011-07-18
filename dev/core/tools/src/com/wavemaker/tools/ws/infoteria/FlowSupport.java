@@ -69,9 +69,17 @@ public class FlowSupport {
                 "  </xs:complexType>\n" +
                 "  <xs:complexType name=\"operation_name_RecordType\">\n" +
                 "    <xs:sequence>\n" +
+                "      record_content_\n" +
                 "    </xs:sequence>\n" +
                 "  </xs:complexType>\n" +
                 "</xs:schema>";
+
+    private final String recElement = "<xs:element type=\"xs:elem_type_\" name=\"elem_name_\"/>";
+
+    private enum FlowDataTypes {
+        String, Integer
+    }
+
 
     private WebServiceToolsManager wsToolsMgr;
 
@@ -158,10 +166,22 @@ public class FlowSupport {
         if (listObj.isNull("flow")) {
             return new JSONArray("[]");
         } else {
-            flowList = (JSONArray)listObj.get("flow");
+            flowList = convertToJSONArray(listObj.get("flow"));
         }
 
         return flowList;
+    }
+
+    public static JSONArray convertToJSONArray (Object obj) {
+        JSONArray rtn;
+        if (obj instanceof JSONArray) {
+            rtn = (JSONArray)obj;
+        } else { //JSONObject
+            rtn = new JSONArray();
+            rtn.put(obj);
+        }
+
+        return rtn;
     }
 
     public String listAllFlows(String host, String port, String sessionId) throws Exception {
@@ -196,24 +216,8 @@ public class FlowSupport {
     //Imports Flow metadata, creates WSDL and generate service (service = project, flows = operations)
     public void importFlows(String host, String port, String userName, String password, String domain, String projectName,
                             String sessionId) throws Exception {
-        /*DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setNamespaceAware(true);
-        DocumentBuilder docBuilder = dbf.newDocumentBuilder();
-        InputStream is = new ByteArrayInputStream(baseXsd.getBytes());
-
-        Document doc = docBuilder.parse (is);*/
 
         JSONArray flowList = getFlowList(host, port, projectName, sessionId);
-
-        /*doc = completeXsd(doc, flowList);
-
-        TransformerFactory tFactory = TransformerFactory.newInstance();
-        Transformer tFormer = tFactory.newTransformer();
-
-        Source source = new DOMSource(doc);
-        ByteArrayOutputStream ost = new ByteArrayOutputStream();
-        Result dest = new StreamResult(ost);
-        tFormer.transform(source, dest);*/
 
         WebServiceToolsManager wstMgr = this.getWSToolsMgr();
         List<String> flowNames = getFlowNames(flowList);
@@ -235,12 +239,12 @@ public class FlowSupport {
         DocumentBuilder docBuilder = dbf.newDocumentBuilder();
 
         for (int i=0; i<flowList.length(); i++) {
-            InputStream is = new ByteArrayInputStream(baseXsd.getBytes());
-            Document doc = docBuilder.parse (is);
-
             JSONObject flow = (JSONObject)flowList.get(i);
-
-            doc = completeXsd(doc, flow);
+            String flowName = (String)flow.get("name");
+            //String flowXsd = baseXsd.replaceAll("operation_name_", flowName);
+            String flowXsd = completeXsd(baseXsd, flow);
+            InputStream is = new ByteArrayInputStream(flowXsd.getBytes());
+            Document doc = docBuilder.parse (is);
 
             TransformerFactory tFactory = TransformerFactory.newInstance();
             Transformer tFormer = tFactory.newTransformer();
@@ -307,30 +311,36 @@ public class FlowSupport {
             List<RESTInputParam> flowParms = new ArrayList<RESTInputParam>();
 
             JSONObject flow = (JSONObject)flowList.get(i);
-            JSONObject args = (JSONObject)flow.get("args");
-            JSONArray fields = (JSONArray)args.get("field");
 
-            param = new RESTInputParam();
-            param.setName("sessionid");
-            param.setType("string");
-            flowParms.add(param);
+            try {
+                JSONObject args = (JSONObject)flow.get("args");
+                JSONArray fields = convertToJSONArray(args.get("field"));
 
-            param = new RESTInputParam();
-            param.setName("project");
-            param.setType("string");
-            flowParms.add(param);
-
-            param = new RESTInputParam();
-            param.setName("flow");
-            param.setType("string");
-            flowParms.add(param);
-
-            for (int j=0; j<fields.length(); j++) {
-                JSONObject field = (JSONObject)fields.get(j);
                 param = new RESTInputParam();
-                param.setName((String)field.get("name"));
-                param.setType((String)field.get("type"));
+                param.setName("sessionid");
+                param.setType("string");
                 flowParms.add(param);
+
+                param = new RESTInputParam();
+                param.setName("project");
+                param.setType("string");
+                flowParms.add(param);
+
+                param = new RESTInputParam();
+                param.setName("flow");
+                param.setType("string");
+                flowParms.add(param);
+
+                for (int j=0; j<fields.length(); j++) {
+                    JSONObject field = (JSONObject)fields.get(j);
+                    param = new RESTInputParam();
+                    param.setName((String)field.get("name"));
+                    String ftype = (String)field.get("type");
+                    ftype = convertToSchemaType(ftype);
+                    param.setType(ftype);
+                    flowParms.add(param);
+                }
+            } catch (JSONException ex) {
             }
 
             restParms.add(flowParms);
@@ -339,40 +349,49 @@ public class FlowSupport {
         return restParms;
     }
 
-    private Document completeXsd(Document doc, JSONObject flow) throws Exception {
-        NodeList complexTypes = doc.getElementsByTagNameNS("*", "complexType");
-
-        Node recordTypeNode = null;
-        for(int i=0; i<complexTypes.getLength() ; i++) {
-            Node nodeOp = complexTypes.item(i);
-            NamedNodeMap nMap = nodeOp.getAttributes();
-            for (int j=0; j<nMap.getLength(); j++) {
-                Node attr = nMap.item(j);
-                if (attr.getNodeName().equals("recordType")) {
-                    recordTypeNode = nodeOp;
-                    break;
-                }
-            }
+    private static String convertToSchemaType (String type) {
+        String rtn;
+        FlowDataTypes ftype = FlowDataTypes.valueOf(type);
+        switch (ftype) {
+            case String:
+                rtn = "string";
+                break;
+            case Integer:
+                rtn = "int";
+                break;
+            default:
+                rtn = "string";
+                break;
         }
 
-        if (recordTypeNode == null) {
-            return doc;
-        }
+        return rtn;
+    }
 
-        Node sequenceNode = recordTypeNode.getFirstChild();
+    private String completeXsd(String xsd, JSONObject flow) throws Exception {
+        String flowName = (String)flow.get("name");
+        xsd = xsd.replaceAll("operation_name_", flowName);
+
+        //Node sequenceNode = recordTypeNode.getFirstChild().getNextSibling().getFirstChild();
         JSONObject stream = (JSONObject)flow.get("stream");
-        JSONArray fields = (JSONArray)stream.get("field");
+        JSONArray fields = convertToJSONArray(stream.get("field"));
 
+        StringBuffer sb = new StringBuffer();
         for (int j=0; j<fields.length(); j++) {
             JSONObject field = (JSONObject)fields.get(j);
-            Element elem = doc.createElementNS("xs", "element");
-            elem.setAttribute("name", (String)field.get("name"));
-            elem.setAttribute("type", (String)field.get("type"));
-
-            sequenceNode.appendChild(elem);
+            String name = (String)field.get("name");
+            String type = convertToSchemaType((String)field.get("type"));
+            String rec = recElement.replaceAll("elem_name_", name);
+            rec = rec.replaceAll("elem_type_", type);
+            if (j > 0) {
+                sb.append("\n");
+                sb.append("\t  ");
+            }
+            sb.append(rec);
         }
 
-        return doc;
+        xsd = xsd.replaceAll("record_content_", sb.toString());
+
+        return xsd;
     }
 
     private String getUrl(String host, String port) {

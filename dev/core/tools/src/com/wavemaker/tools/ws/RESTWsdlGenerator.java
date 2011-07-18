@@ -258,13 +258,19 @@ public class RESTWsdlGenerator {
 
     private Types generateTypes() throws SAXException, IOException,
             ParserConfigurationException {
+        String xmlSchemaText = null;
+        String xmlSchemaPath = null;
         Types types = new TypesImpl();
         int i = 0;
         for (String operationName : operationName_list) {
-            String xmlSchemaText = xmlSchema_list.get(i);
-            String xmlSchemaPath = xmlSchemaPath_list.get(i);
-
-            xmlSchemaText = xmlSchemaText.replaceAll("operation_name_", operationName);
+            if (xmlSchema_list != null) {
+                xmlSchemaText = xmlSchema_list.get(i);
+                //if (xmlSchemaText != null)
+                //    xmlSchemaText = xmlSchemaText.replaceAll("operation_name_", operationName);
+            }
+            if (xmlSchemaPath_list != null) {
+                xmlSchemaPath = xmlSchemaPath_list.get(i);
+            }
 
             List<String> schemaStrings = null;
             if (xmlSchemaText != null && xmlSchemaText.length() > 0) {

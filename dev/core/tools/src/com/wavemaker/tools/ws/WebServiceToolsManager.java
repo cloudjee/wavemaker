@@ -341,7 +341,9 @@ public class WebServiceToolsManager {
          List<String> operationName_list = new ArrayList<String>();
          operationName_list.add(operationName);
          List<List<RESTInputParam>> inputParms_list = new ArrayList<List<RESTInputParam>>();
-         inputParms_list.add(inputs);
+         if (inputs != null && inputs.size() > 0) {
+             inputParms_list.add(inputs);
+         }
          List<String> xmlSchema_list = new ArrayList<String>();
          xmlSchema_list.add(xmlSchemaText);
          List<String> xmlSchemaPath_list = new ArrayList<String>();
@@ -414,7 +416,7 @@ public class WebServiceToolsManager {
         //    inputs.add(parm);
         //}
 
-        if (method.equals("POST")) {
+        if (method.equals("POST") && (inputs_list == null || inputs_list.size() == 0)) {
             inputs_list = new ArrayList<List<RESTInputParam>>();
             for (int i=0; i<operCnt; i++) {
                 List<RESTInputParam> inputs = new ArrayList<RESTInputParam>();
