@@ -69,11 +69,14 @@ dojo.declare("HandleRequiredJars", wm.Page, {
 				   postData: "method=restartStudioApp",
 				   handleAs: "json",
 				   sync: false});
+	studio.beginWait(this.getDictionaryItem("RESTARTING"));
 	def.addCallback(function() {
+	    studio.endWait();
 	    window.location.reload(true);
 	});
 	def.addErrback(function(inError) {
-	    app.toastError(inError);
+	    studio.endWait();
+	    app.toastError(inError.message);
 	});
     },
     close: function() {
