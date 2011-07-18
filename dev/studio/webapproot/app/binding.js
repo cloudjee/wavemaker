@@ -558,6 +558,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		    // give text time to finish being entered before rebuilding the tree
 		    wm.onidle(this, function() {
 			this.treeLayer.activate();
+		        this.pageSelect.setShowing(this.simpleRb.getGroupValue() == "expression" || this.simpleRb.getGroupValue() == "advanced");
 			if (this.simpleRb.getGroupValue() == "expression") {
 			    this.expressionLayer.activate();
 		            this._buildSearchTree(this.expressionTree.root);
@@ -621,8 +622,13 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		    this.updateBindSourceUi(this.simpleRb.getGroupValue());
 		    return;
 		}
+	    if (this.pageSelect.getDataValue() != studio.project.pageName && this.simpleRb.getGroupValue() != "simple") {
+		var pagecomps = this.doSearch(this.pageContainer.page);
+		var appcomps = [];
+	    } else {
 		var appcomps = this.doSearch(studio.application);
 		var pagecomps = this.doSearch(inParent.page);
+	    }
 	    if (this.simpleRb.getGroupValue() == "simple") {
 		addWidgetBinderNodes(inParent, appcomps);
 		addWidgetBinderNodes(inParent, pagecomps);
@@ -1035,8 +1041,9 @@ dojo.declare("wm.BindTreeNode", wm.TreeNode, {
         if (owner instanceof wm.Page) {
 	    while (owner && owner != studio.page && owner != studio.bindDialog.bindSourceDialog.pageContainer) {
 	        if (!(owner instanceof wm.PageContainer && owner.owner instanceof wm.PageDialog) && owner.name)
-		    if (owner.owner == studio.bindDialog.bindSourceDialog.pageContainer) {
+		    if (owner.owner == studio.bindDialog.bindSourceDialog.pageContainer) {			
 			namelist.push("[" + owner.name + "]");
+			break;
 		    } else {
 			namelist.push(owner.name);
 		    }

@@ -108,7 +108,7 @@ dojo.declare("BindSourceDialog", wm.Page, {
 			if (nodeIsAppLevel)
 			    ownerString == "app.";
 			else
-			    ownerString = wm.decapitalize(studio.project.pageName) + ".";
+			    ownerString = "[" + wm.decapitalize(studio.project.pageName) + "].";
 
 		    }
 		}
