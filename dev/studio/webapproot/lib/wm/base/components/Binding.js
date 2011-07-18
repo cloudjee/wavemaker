@@ -327,6 +327,17 @@ dojo.declare("wm.Binding", wm.Component, {
 		var wires = this.findWiresByProps(inProps);
 		this.removeWiresList(wires);
 	},
+	removeWireByProp: function(inPropName) {
+	    var result = false;
+	    wm.forEachProperty(this.wires, dojo.hitch(this, function(w) { 
+		    if (w.targetProperty == inPropName) {
+			delete this.wires[inPropName];
+			w.destroy(); 
+			result = true;
+		    }
+	    }));
+	    return result;
+	},
 	removeWireList: function(inWires) {
 		dojo.forEach(inWires, dojo.hitch(this, function(w) {
 			this.removeWire(w.getWireId());
