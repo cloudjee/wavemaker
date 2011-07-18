@@ -108,20 +108,19 @@ Security.widgets = {
 					    }]
 					}]
 				    }],
-				    ldapLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"LDAP"}, {"onShow":"showLDAPLayer"}, {
+				    ldapLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"LDAP", autoScroll:true}, {"onShow":"showLDAPLayer"}, {
 					ldapMainPanel: ["wm.Panel", {width: "100%", height: "300px", fitToContentHeight: true, margin: "10,50,0,50", horizontalAlign: "left", verticalAlign: "top"}, {}, {
 					    ldapUrlInput: ["wm.Text", {width: "500px", captionSize: "150px", "border":"0","caption":"LDAP URL","emptyValue":"null","padding":"2"}, {"onchange":"setDirty"}],
 					    ldapManagerDnInput: ["wm.Text", {width: "500px", captionSize: "150px", "border":"0","caption":"Manager DN","emptyValue":"null","padding":"2"}, {"onchange":"setDirty"}],
 					    ldapManagerPasswordInput: ["wm.Text", {width: "500px", captionSize: "150px", "border":"0","caption":"Manager Password","emptyValue":"null","padding":"2", password: true}, {"onchange":"setDirty"}],
 					    ldapUserDnPatternInput: ["wm.Text", {width: "500px", captionSize: "150px", "border":"0","caption":"User DN Pattern","emptyValue":"null","padding":"2"}, {"onchange":"setDirty"}],
-					    panel5: ["wm.Panel", {"height":"24px","layoutKind":"left-to-right"}, {}, {
+					    panel5: ["wm.Panel", {"height":"24px", width: "500px", "layoutKind":"left-to-right"}, {}, {
+						ldapConnectionResultLabel: ["wm.Label", {"caption":"ldapConnectionResultLabel","border":"0","height":"24px", width: "100%"}],
 						spacer7: ["wm.Spacer", {"width":"100%"}, {}],
 						ldapConnectionButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},"caption":"Test Connection","margin":"2","width":"150px"}, {"onclick":"ldapConnectionButtonClick"}],
 						spacer4: ["wm.Spacer", {"width":"2px"}, {}]
+
 					    }],
-					    ldapConnectionResultLabel: ["wm.Label", {"caption":"ldapConnectionResultLabel","border":"0","height":"24px"}, {}, {
-						format: ["wm.DataFormatter", {}, {}]
-					    }],							
 					    ldapSearchRoleCheckbox: ["wm.Checkbox", {width: "500px", captionSize: "150px", "caption":"Search User Role","emptyValue":"null"}, {"onchange":"ldapSearchRoleCheckboxChange"}],
 					    ldapRoleProviderInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Select User Role Provider","emptyValue":"null","display":"Select"}, {"onchange":"ldapRoleProviderInputChange"}],
 					    ldapRoleLdapPanel: ["wm.Panel", {"width":"100%", "height":"100px", horizontalAlign: "left", verticalAlign: "top"},{},{
@@ -134,13 +133,13 @@ Security.widgets = {
 						ldapRoleDbEntityInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Entity","emptyValue":"null","height":"20px"}, {"onchange":"ldapRoleDbEntityInputChange"}],
 						ldapRoleDbUsernameInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Username Field","emptyValue":"null","height":"20px"}, {onchange: "setDirty"}],
 						ldapRoleDbRoleInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Role Field","emptyValue":"null","height":"20px"}, {onchange: "setDirty"}],
-						ldapRoleBySQLPanel: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_RightNone","wm_Padding_LeftNone","wm_Padding_BottomNone","wm_Padding_4px"]},"height":"150px"}, {}, {
+						ldapRoleBySQLPanel: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_RightNone","wm_Padding_LeftNone","wm_Padding_BottomNone","wm_Padding_4px"]},"height":"150px", width: "100%"}, {}, {
 						    panel26: ["wm.Panel", {"height":"24px","layoutKind":"left-to-right"}, {}, {
-							ldapRoleBySQLCheckbox: ["wm.Checkbox", {"captionSize":"380px","caption":"Roles By SQL Query","width":"100%","captionAlign":"left","captionPosition":"right"}, {"onchange":"ldapRoleBySQLCheckboxChange"}]
+							ldapRoleBySQLCheckbox: ["wm.Checkbox", {"captionSize":"150px","caption":"Roles By SQL Query","width":"500px"}, {"onchange":"ldapRoleBySQLCheckboxChange"}]
 						    }],
-						    ldapRoleBySQLEnablePanel: ["wm.Panel", {"height":"150px","width":"100%"}, {}, {
-							ldapRoleBySQLInput: ["wm.LargeTextArea", {"width":"100%","caption":" ","emptyValue":"null","height":"48px","display":"TextArea"}, {onchange: "setDirty"}],
-							panel23: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_2px"]},"height":"24px","layoutKind":"left-to-right"}, {}, {
+						    ldapRoleBySQLEnablePanel: ["wm.Panel", {"height":"150px","width":"100%", fitContentToHeight: true, verticalAlign: "top", horizontalAlign: "left"}, {}, {
+							ldapRoleBySQLInput: ["wm.LargeTextArea", {"width":"100%","caption":"","emptyValue":"null","height":"48px","display":"TextArea"}, {onchange: "setDirty"}],
+							panel23: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_2px"]},"height":"24px",width: "100%", "layoutKind":"left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 							    spacer26: ["wm.Spacer", {"width":"100%"}, {}],
 							    ldapTestSQLInput: ["wm.Text", {"caption":"User ID","emptyValue":"null","width":"250px"}, {onchange: "setDirty"}],
 							    ldapTestSQLButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},"caption":"Test Query","margin":"2","width":"100px"}, {"onclick":"ldapTestSQLButtonClick"}]
