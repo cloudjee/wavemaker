@@ -94,9 +94,11 @@ wm.SelectMenu.extend({
 
 
 	    var displayFields = this.makePropEdit("displayField");
+	    displayFields = displayFields.replace(/selected="selected"/,"");
 	    displayFields = displayFields.replace(/^.*?\<option/,"<option");
 	    displayFields = displayFields.replace(/\<\/select.*/,"");
 	    store1.innerHTML = displayFields;
+	    editor1.set("value", inValue, false);
 	    return true;
 	case "dataField":
 	    var editor1 = dijit.byId("studio_propinspect_dataField");
@@ -107,9 +109,11 @@ wm.SelectMenu.extend({
 
 
 	    var dataFields = this.makePropEdit("dataField");
+	    dataFields = dataFields.replace(/selected="selected"/,"");
 	    dataFields = dataFields.replace(/^.*?\<option/,"<option");
 	    dataFields = dataFields.replace(/\<\/select.*/,"");
 	    store1.innerHTML = dataFields;
+	    editor1.set("value", inValue, false);
 	    return true;
 	}
 	return this.inherited(arguments);

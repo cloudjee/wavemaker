@@ -179,7 +179,11 @@ dojo.declare("wm.PropTask", wm.ComponentTaskMixin, {
 	    this.setComponent(inComponent);
 	    this.propertyName = inPropName;
 	    this.oldValue = oldValue;
-	    this.hint = studio.getDictionaryItem("UNDO_PROP_HINT", {propName: this.propertyName, oldValue: this.oldValue});
+	    if (inPropName == "bounds") {
+		this.hint = studio.getDictionaryItem("UNDO_PROP_HINT", {propName: "width/height", oldValue: "width:" + this.oldValue.w + ", height: " + this.oldValue.h});
+	    } else {
+		this.hint = studio.getDictionaryItem("UNDO_PROP_HINT", {propName: this.propertyName, oldValue: this.oldValue});
+	    }
 	    wm.undo.push(this);
 	},
 	undo: function() {
