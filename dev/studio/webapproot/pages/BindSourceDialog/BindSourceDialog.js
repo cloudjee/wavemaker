@@ -89,7 +89,9 @@ dojo.declare("BindSourceDialog", wm.Page, {
     // a variant on 
     isAppLevel: function(inComponent) {
 	var c = inComponent.getRoot();
-	
+	while(c.owner) {
+	    c = c.owner;
+	}
 	while(c && c != studio.page && c != studio.application) {
 	    var tmpc = c.getRoot();
 	    c = (c == tmpc) ? c.parent : tmpc;
@@ -98,29 +100,31 @@ dojo.declare("BindSourceDialog", wm.Page, {
 
     },
     getBindNodeSource: function(inNode) {
-	    if (inNode) {
-		var targetOwner = this.targetProps.object.getRoot();		
-		var ownerString = "";
-		if (inNode.object) {
-		    var nodeIsAppLevel = this.isAppLevel(inNode.object);
-		    var targetIsAppLevel = this.isAppLevel(this.targetProps.object);
-		    if (nodeIsAppLevel != targetIsAppLevel) {
-			if (nodeIsAppLevel)
-			    ownerString == "app.";
-			else
-			    ownerString = "[" + wm.decapitalize(studio.project.pageName) + "].";
+	if (inNode) {
+	    var targetOwner = this.targetProps.object.getRoot();		
+	    var ownerString = "";
+	    if (inNode.object) {
+		var nodeIsAppLevel = this.isAppLevel(inNode.object);
+		var targetIsAppLevel = this.isAppLevel(this.targetProps.object);
+		if (nodeIsAppLevel != targetIsAppLevel) {
+		    if (nodeIsAppLevel)
+			ownerString == "app.";
+		    else
+			ownerString = "[" + wm.decapitalize(studio.project.pageName) + "].";
 
-		    }
+		} else if (nodeIsAppLevel) {
+		    ownerString = "app.";
 		}
-
-		var source = inNode.source;
-		var tmpPageContainer = "studioApplication.studio.bindSourceDialog.pageContainer.";
-		if (source.indexOf(tmpPageContainer) == 0) {
-		    source = source.substring(tmpPageContainer.length);
-		}
-		return ownerString + source;
 	    }
-       },
+
+	    var source = inNode.source;
+	    var tmpPageContainer = "studioApplication.studio.bindSourceDialog.pageContainer.";
+	    if (source.indexOf(tmpPageContainer) == 0) {
+		source = source.substring(tmpPageContainer.length);
+	    }
+	    return ownerString + source;
+	}
+    },
 	bindNodeSelected: function(inSender, inNode) {
 	    if (inNode) {
 		this.binderSource.bindEditor.setValue("dataValue",this.getBindNodeSource(inNode));
