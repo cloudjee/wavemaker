@@ -1323,6 +1323,7 @@ Studio.extend({
 	    }
 	    break;
 	}
+	dojo.publish("Page-Saved");
     },
     saveProjectSuccess: function() {}, // for dojo.connect
     beginBind: function(inPropName, editArea, type) {
