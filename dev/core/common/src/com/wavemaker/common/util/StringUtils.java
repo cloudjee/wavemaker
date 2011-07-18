@@ -398,6 +398,22 @@ public class StringUtils {
         }
     }
 
+    public static String removeSpaces(String str) {
+        char last = str.charAt(0);
+        StringBuffer argBuf = new StringBuffer();
+
+        for (int cIdx = 0 ; cIdx < str.length(); cIdx++) {
+            char ch = str.charAt(cIdx);
+            if (ch != ' ' || last != ' ') {           
+                argBuf.append(ch);
+                last = ch;
+            }
+        }
+
+        return argBuf.toString();
+
+    }
+
     private static String substring(String s, int i, String substring,
             int direction) {
         if (direction >= 0) {

@@ -23,6 +23,7 @@ import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.common.util.SystemUtils;
+import com.wavemaker.common.util.StringUtils;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -51,7 +52,7 @@ public class FlowSupport {
 
     private final String baseXsd = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<xs:schema attributeFormDefault=\"unqualified\" elementFormDefault=\"qualified\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">\n" +
-                "  <xs:element name=\"result\" type=\"operation_name_ResultType\"/>\n" +
+                "  <xs:element name=\"operation_name_result\" type=\"operation_name_ResultType\"/>\n" +
                 "  <xs:complexType name=\"operation_name_DataType\">\n" +
                 "    <xs:sequence>\n" +
                 "      <xs:element type=\"operation_name_RecordType\" name=\"record\"/>\n" +
@@ -78,7 +79,7 @@ public class FlowSupport {
     private final String recElement = "<xs:element type=\"xs:elem_type_\" name=\"elem_name_\"/>";
 
     private enum FlowDataTypes {
-        String, Integer
+        String, Integer, Double, Decimal, Boolean, DateTime, Binary
     }
 
 
@@ -373,6 +374,7 @@ public class FlowSupport {
     }
 
     private static String convertToSchemaType (String type) {
+        type = StringUtils.removeSpaces(type);
         String rtn;
         FlowDataTypes ftype = FlowDataTypes.valueOf(type);
         switch (ftype) {
@@ -381,6 +383,21 @@ public class FlowSupport {
                 break;
             case Integer:
                 rtn = "int";
+                break;
+            case Double:
+                rtn = "double";
+                break;
+            case Decimal:
+                rtn = "decimal";
+                break;
+            case Boolean:
+                rtn = "boolean";
+                break;
+            case DateTime:
+                rtn = "dateTime";
+                break;
+            case Binary:
+                rtn = "byte";
                 break;
             default:
                 rtn = "string";

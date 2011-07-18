@@ -261,15 +261,15 @@ public class RESTWsdlGenerator {
         String xmlSchemaText = null;
         String xmlSchemaPath = null;
         Types types = new TypesImpl();
-        int i = 0;
+        int indx = 0;
         for (String operationName : operationName_list) {
             if (xmlSchema_list != null) {
-                xmlSchemaText = xmlSchema_list.get(i);
+                xmlSchemaText = xmlSchema_list.get(indx);
                 //if (xmlSchemaText != null)
                 //    xmlSchemaText = xmlSchemaText.replaceAll("operation_name_", operationName);
             }
             if (xmlSchemaPath_list != null) {
-                xmlSchemaPath = xmlSchemaPath_list.get(i);
+                xmlSchemaPath = xmlSchemaPath_list.get(indx);
             }
 
             List<String> schemaStrings = null;
@@ -311,6 +311,7 @@ public class RESTWsdlGenerator {
             }*/
 
             types = generateTypes(types, schemaStrings, schemaElements);
+            indx++;
         }
         return types;
     }
