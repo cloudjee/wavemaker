@@ -396,6 +396,9 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 		    } else {
 			this.executeAsMenu.setDataValue(inData.executeAs ? "Logged in user" : "Database credentials");
 		    }
+		    if (inData.activeDirectoryDomain) {
+			this.activeDirectoryDomain.setDataValue(inData.activeDirectoryDomain);
+		    }
 		}
 		
 		this.conUserInput.setDataValue(inData.username);
