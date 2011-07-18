@@ -85,7 +85,7 @@ dojo.declare("CustomWebServiceImporter", wm.Page, {
 	var pass = this.passInput.getDataValue();
 	var host = this.importHost.getDataValue();
 	var port = this.importPort.getDataValue();
-	var domain = "/";
+	var domain = this.domainEditor.getDataValue();
 	var d = this.flowListService.requestAsync("listAllFlows", [host, port, user, pass, domain]);
 	d.addCallback(dojo.hitch(this, "listAllFlowsSuccess"));
 	d.addErrback(dojo.hitch(this, "listAllFlowsError"));
@@ -174,7 +174,7 @@ dojo.declare("CustomWebServiceImporter", wm.Page, {
 	var pass = this.passInput.getDataValue();
 	var host = this.importHost.getDataValue();
 	var port = this.importPort.getDataValue();
-	var domain = "/";
+	var domain = this.domainEditor.getDataValue();
 
 	var projects = {};
 	var firstProjectName;
@@ -191,7 +191,16 @@ dojo.declare("CustomWebServiceImporter", wm.Page, {
 		projects[node.parent.data.name].push(node.data.name);
 	}));
 
-	var d = this.flowListService.requestAsync("importFlows", [host, port, user, pass, domain, firstProjectName, projects[firstProjectName],null]);
+	var d = this.flowListService.requestAsync("importFlows", [host, port, user, pass, domain, firstProjectName, projects[firstProjectName],null],
+						  dojo.hitch(this, "importFlowsSuccess"),
+						  dojo.hitch(this, "importFlowsError"));
+    },
+    importFlowsSuccess: function() {
+	studio.refreshServiceTree();
+	this.owner.owner.hide();
+    },
+    importFlowsError: function(inError) {
+	app.toastError(inError.message);
     },
     _end: 0
 });

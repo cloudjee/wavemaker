@@ -25,6 +25,7 @@ CustomWebServiceImporter.widgets = {
 		}],
 		userInput: ["wm.Text", {width: "100%", caption: "Username", captionAlign: "right", captionSize: "120px",emptyValue: "emptyString"}],
 		passInput: ["wm.Text", {width: "100%", caption: "Password", captionAlign: "right", captionSize: "120px",emptyValue: "emptyString"}],
+		domainEditor: ["wm.Text", {width: "100%", caption: "User Domain", captionAlign: "right", captionSize: "120px", dataValue: "/", emptyValue: "emptyString"}],
 		scanButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},width: "120px", caption: "Read Service"}, {onclick: "scanClick"}]
 	    }],
 	    resultLabel: ["wm.Label", {width: "100%", height: "20px", caption: "Step 2. Select the flows for your project"}],
