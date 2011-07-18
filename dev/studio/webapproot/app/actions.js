@@ -173,6 +173,7 @@ dojo.declare("wm.AddTask", wm.ComponentTaskMixin, {
 	}
 });
 
+/* WARNING: There is also a wm.SetPropTask in propertyEdit.js for undoing the specialized property editors */
 dojo.declare("wm.PropTask", wm.ComponentTaskMixin, {
 	hint: "Property Change",
         constructor: function(inComponent,inPropName, oldValue) {
@@ -192,7 +193,7 @@ dojo.declare("wm.PropTask", wm.ComponentTaskMixin, {
 		if (this.propertyName == "bounds") {
 		    c.designResize(this.oldValue, true);
 		} else {
-		    c.setProp(this.propertyName, this.oldValue);
+		    c.setProp(this.propertyName, this.oldValue instanceof wm.Component ? this.oldValue.getId() : this.oldValue);
 		}
 		if (studio.selected == c) {
 		    studio.inspector.reinspect();

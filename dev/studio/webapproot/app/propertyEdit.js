@@ -30,7 +30,7 @@ dojo.declare("wm.SetPropTask", null, {
 		wm.undo.push(this);
 	},
 	undo: function() {
-		this._do(this.oldValue);
+	    this._do(this.oldValue instanceof wm.Component ? this.oldValue.getId() : this.oldValue);
 	}
 });
 
@@ -58,7 +58,7 @@ dojo.declare("wm.propEdit.Base", null, {
 		return this.component.constructor.prototype[this.name];
 	},
 	_setPropValue: function(inValue) {
-		new wm.SetPropTask(this.component, this.name, this.value, inValue);
+	    new wm.SetPropTask(this.component, this.name, this.value, inValue);
 	}
 });
 
