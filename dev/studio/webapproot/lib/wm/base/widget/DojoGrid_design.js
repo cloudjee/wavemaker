@@ -51,8 +51,12 @@ wm.DojoGrid.extend({
 			var ds = this.getValueById(inDataSet);
 			if (ds)
 				this.components.binding.addWire("", "dataSet", ds.getId());
-		} else
-			this.setDataSet(inDataSet);
+		} else if (!inDataSet) {
+		    this.components.binding.removeWireByProp("dataSet");
+		    this.setDataSet(inDataSet);
+		} else {
+		    this.setDataSet(inDataSet);
+		}
 	},
 	listProperties: function() {
 	    var props = this.inherited(arguments);

@@ -30,16 +30,21 @@ wm.SelectMenu.extend({
 	set_dataSet: function(inDataSet) {
 		// support setting dataSet via id from designer
 		if (inDataSet && !(inDataSet instanceof wm.Variable)) {
-			var ds = this.getValueById(inDataSet);
-			if (ds)
-				this.components.binding.addWire("", "dataSet", ds.getId());
+		    var ds = this.getValueById(inDataSet);
+		    if (ds) {
+			this.components.binding.addWire("", "dataSet", ds.getId());
+		    }
+		} else if (!inDataSet) {
+		    this.components.binding.removeWireByProp("dataSet");
+		    this.options = this.dataField = this.displayField = "";
+		    this.setDataSet(inDataSet);
 		} else {
 		    /* Clear the dataField/displayField if changing dataTypes */
 		    if (inDataSet && this.dataSet && inDataSet.type != this.dataSet.type) 
 			this.dataField = this.displayField = "";
 		    /* Clear the options property if setting a new dataSet */
 		    if (this.options && inDataSet != this.$.optionsVar)
-			this.options == "";
+			this.options = "";
 		    this.setDataSet(inDataSet);
 		}
 	},
