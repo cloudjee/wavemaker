@@ -29,7 +29,7 @@
         <copy todir="${installer.wm.root}/Support">
             <fileset dir="${root.dir}/../Support">
                 <exclude name="**/.svn"/>
-				<exclude name="**/Batchbuild/**" unless="isEnterprise"/>
+		<exclude name="**/Batchbuild/**" unless="isEnterprise"/>
             </fileset>
         </copy>
 
@@ -47,9 +47,10 @@
 
         <copy todir="${installer.wm.root}/studio">
             <fileset dir="${dist.studio.dir}">
-				<exclude name="**/RbacPlugin.js" unless="isEnterprise"/>
-				<exclude name="**/DojoFlashFileUpload.js" unless="isEnterprise"/>
-			</fileset>
+		<exclude name="**/RbacPlugin.js" unless="isEnterprise"/>
+		<exclude name="**/DojoFlashFileUpload.js" unless="isEnterprise"/>
+		<exclude name="**/dojo/util/**"/>	
+	</fileset>
         </copy>
         
         <mkdir dir="${installer.wm.root}/studioConfig"/>
@@ -91,6 +92,7 @@
           <fileset dir="${dist.studio.dir}">
 	     	<exclude name="**/RbacPlugin.js" unless="isEnterprise"/>
 		<exclude name="**/DojoFlashFileUpload.js" unless="isEnterprise"/>
+		<exclude name="**/dojo/util/**"/>
 	  </fileset>
         </copy>
 
