@@ -25,7 +25,7 @@ dojo.declare("wm.DebugDialog", wm.Dialog, {
     useButtonBar: true,
     modal: false,
     title: "Debugger",
-
+    connectors: false,
     commands: null,
     commandPointer: null,
     postInit: function() {
@@ -218,7 +218,7 @@ dojo.declare("wm.DebugTreeJsonNode", wm.TreeNode, {
 	} else if (inProps.name) {
 	    this.description = inProps.name + "." + inProps.method;
 	} else if (inProps.args[0]) {
-	    this.description = inProps.args[0] + ": " + inProps.args[1];
+	    this.description = inProps.args[0] + ": " + inProps.args[1] + " (" + inProps.method + ")";
 	} else {
 	    this.description = "LazyLoad: " + inProps.args[1];
 	}
@@ -232,12 +232,12 @@ dojo.declare("wm.DebugTreeJsonNode", wm.TreeNode, {
     jsonResult: function(inResponse) {
 	this.jsonFiring = false;
 	this.result = "Success";
-	this.response = inResponse;
+	var response = dojo.clone(inResponse);
 	this.setContent("<img src='" + dojo.moduleUrl("lib.images.boolean.Signage") + "OK.png'/> " + this.description);
 	if (this.responseNode)
-	    this.responseNode.setObject(inResponse);
+	    this.responseNode.setObject(response);
 	else
-	    this.responseData = inResponse;
+	    this.responseData = response;
     },
     jsonError: function(inResponse) {
 	this.jsonFiring = false;
