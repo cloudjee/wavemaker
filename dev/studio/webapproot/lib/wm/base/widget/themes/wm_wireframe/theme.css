@@ -681,6 +681,8 @@ body .wm_wireframe .dialogtitlebar .wmbutton:hover {
     -webkit-box-shadow: 1px 1px 1px #000000; /* Dialogs-TitleButtonsHover-BorderStyle_Shadow */
     box-shadow: 1px 1px 1px #000000; /* Dialogs-TitleButtonsHover-BorderStyle_Shadow */
 }
+body.wm_wireframe .dialogfooter .wmbutton.toggleButtonDown,
+body .wm_wireframe .dialogfooter .wmbutton.toggleButtonDown,
 body.wm_wireframe .dialogfooter .wmbutton:hover,
 body .wm_wireframe .dialogfooter .wmbutton:hover {
     /* Dialogs-FooterButtonsHover-Font */

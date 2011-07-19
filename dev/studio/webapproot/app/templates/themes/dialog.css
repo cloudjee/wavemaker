@@ -183,6 +183,8 @@ body .wm_template .dialogtitlebar .wmbutton:hover {
     box-shadow: 4px 4px 4px black; /* Dialogs-TitleButtonsHover-BorderStyle_Shadow */
 }
 
+body.wm_template .dialogfooter .wmbutton.toggleButtonDown,
+body .wm_template .dialogfooter .wmbutton.toggleButtonDown,
 body.wm_template .dialogfooter .wmbutton:hover,
 body .wm_template .dialogfooter .wmbutton:hover {
     /* Dialogs-FooterButtonsHover-Font */
@@ -198,8 +200,6 @@ body .wm_template .dialogfooter .wmbutton:hover {
     -webkit-box-shadow: 4px 4px 4px black; /* Dialogs-FooterButtonsHover-BorderStyle_Shadow */
     box-shadow: 4px 4px 4px black; /* Dialogs-FooterButtonsHover-BorderStyle_Shadow */
 }
-
-
 
 /* Including dialogtitlebar should make it more specific than wm_studio/theme.css,
 * so don't add this level of specificity to wm_studio

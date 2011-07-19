@@ -646,6 +646,8 @@ body .wm_darkdawn .dialogtitlebar .wmbutton:hover {
     -webkit-box-shadow: 0px 0px 0px #444444; /* Dialogs-TitleButtonsHover-BorderStyle_Shadow */
     box-shadow: 0px 0px 0px #444444; /* Dialogs-TitleButtonsHover-BorderStyle_Shadow */
 }
+body.wm_darkdawn .dialogfooter .wmbutton.toggleButtonDown,
+body .wm_darkdawn .dialogfooter .wmbutton.toggleButtonDown,
 body.wm_darkdawn .dialogfooter .wmbutton:hover,
 body .wm_darkdawn .dialogfooter .wmbutton:hover {
     /* Dialogs-FooterButtonsHover-Font */
