@@ -25,7 +25,6 @@ dojo.declare("wm.DebugDialog", wm.Dialog, {
     useButtonBar: true,
     modal: false,
     title: "Debugger",
-    connectors: false,
     commands: null,
     commandPointer: null,
     postInit: function() {
