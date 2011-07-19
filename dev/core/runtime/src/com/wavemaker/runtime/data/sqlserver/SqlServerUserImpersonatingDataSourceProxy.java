@@ -6,14 +6,16 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.sql.DataSource;
 
 import org.acegisecurity.Authentication;
+import org.acegisecurity.context.SecurityContext;
 import org.acegisecurity.context.SecurityContextHolder;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.ConnectionProxy;
 import org.springframework.jdbc.datasource.DelegatingDataSource;
+import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -39,8 +41,6 @@ import org.springframework.util.StringUtils;
  */
 public class SqlServerUserImpersonatingDataSourceProxy extends DelegatingDataSource {
 
-	private JdbcTemplate template;
-	
 	private String activeDirectoryDomain = "";
 	
 	public SqlServerUserImpersonatingDataSourceProxy() {
@@ -49,14 +49,12 @@ public class SqlServerUserImpersonatingDataSourceProxy extends DelegatingDataSou
 
 	public SqlServerUserImpersonatingDataSourceProxy(DataSource targetDataSource) {
 		super(targetDataSource);
-		this.template = new JdbcTemplate(targetDataSource);
 	}
 
 	@Override
 	public Connection getConnection() throws SQLException {
 		DataSource ds = getTargetDataSource();
 		Assert.state(ds != null, "'targetDataSource' is required");
-		prepareConnection();
 		return getAuditingConnectionProxy(getTargetDataSource().getConnection());
 	}
 
@@ -72,23 +70,9 @@ public class SqlServerUserImpersonatingDataSourceProxy extends DelegatingDataSou
 	@Override
 	public void setTargetDataSource(DataSource targetDataSource) {
 		super.setTargetDataSource(targetDataSource);
-		this.template = new JdbcTemplate(targetDataSource);
 	}
 
-	private void prepareConnection() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth != null) {
-			StringBuilder query = new StringBuilder();
-			query.append("EXECUTE AS USER='");
-			if (StringUtils.hasText(activeDirectoryDomain)) {
-				query.append(activeDirectoryDomain+"\\");
-			}
-			query.append(auth.getName()+"'");
-			template.execute(query.toString());
-		}
-	}
-
-	private Connection getAuditingConnectionProxy(Connection connection) {
+	private Connection getAuditingConnectionProxy(Connection connection) throws SQLException {
 		return (Connection) Proxy.newProxyInstance(
 				ConnectionProxy.class.getClassLoader(),
 				new Class[] {ConnectionProxy.class},
@@ -99,8 +83,18 @@ public class SqlServerUserImpersonatingDataSourceProxy extends DelegatingDataSou
 
 		private final Connection target;
 
-		public AuditingInvocationHandler(Connection targetConnection) {
-			this.target = targetConnection;
+		public AuditingInvocationHandler(Connection targetConnection) throws SQLException {
+			target = targetConnection;
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			if (auth != null) {
+				StringBuilder query = new StringBuilder();
+				query.append("EXECUTE AS USER='");
+				if (StringUtils.hasText(activeDirectoryDomain)) {
+					query.append(activeDirectoryDomain+"\\");
+				}
+				query.append(auth.getName()+"'");
+				executeStatement(query.toString());
+			}
 		}
 
 		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -127,11 +121,8 @@ public class SqlServerUserImpersonatingDataSourceProxy extends DelegatingDataSou
 			else if (method.getName().equals("close")) {
 				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 				if (auth != null) {
-					template.execute("REVERT");
+					executeStatement("REVERT");
 				}
-			}
-			else if (method.getName().equals("isClosed")) {
-				return false;
 			}
 			else if (method.getName().equals("getTargetConnection")) {
 				// Handle getTargetConnection method: return underlying Connection.
@@ -144,6 +135,16 @@ public class SqlServerUserImpersonatingDataSourceProxy extends DelegatingDataSou
 			}
 			catch (InvocationTargetException ex) {
 				throw ex.getTargetException();
+			}
+		}
+		
+		private void executeStatement(String sql) throws SQLException {
+			Statement statement = null;
+			try {
+				statement = target.createStatement();
+				statement.execute(sql);
+			} finally {
+				JdbcUtils.closeStatement(statement);
 			}
 		}
 	}
