@@ -442,7 +442,7 @@ dojo.declare("wm.Application", wm.Component, {
 	},
 	getRuntimeService: function(owner) {
 		if (!this._runtimeService)
-		    this._runtimeService = new wm.JsonRpcService({service: "waveMakerService",
+		    this._runtimeService = new wm.JsonRpcService({service: "runtimeService",
 								  owner: owner});
 		return this._runtimeService;
 	},
@@ -451,7 +451,7 @@ dojo.declare("wm.Application", wm.Component, {
 	//requests deployed application.
 	getRuntimeServiceDesignTime: function(owner) {
 		if (!this._runtimeService)
-		    this._runtimeService = new wm.JsonRpcService({service: "waveMakerService",
+		    this._runtimeService = new wm.JsonRpcService({service: "runtimeService",
 								  owner: owner, designTime: true});
 		return this._runtimeService;
 	},
@@ -598,7 +598,7 @@ dojo.declare("wm.Application", wm.Component, {
     // this expects to get a result.
         getSessionId: function() {
 	    if (!this.sessionId) {
-		var a = new wm.JsonRpcService({service: "runtimeService", sync: true});
+		var a = new wm.JsonRpcService({service: "waveMakerService", sync: true});
 		a.requestSync("getSessionId", []);
 		this.sessionId = a.result;
 	    }
@@ -610,7 +610,7 @@ dojo.declare("wm.Application", wm.Component, {
 		    new wm.ServiceVariable({owner: app, 
 					    name: "echoFileService", 
 					    downloadFile: true, 
-					    service: "runtimeService", 
+					    service: "waveMakerService", 
 					    operation: "echo"})
 		this.echoFileService.input.setType("");
 		wm.typeManager.addType("echoInputs", 
