@@ -21,6 +21,8 @@ if (location.search.indexOf("dojo.locale=") != -1) {
     if (djConfig.locale.indexOf("&") != -1) {
 	djConfig.locale = djConfig.locale.substring(0, djConfig.locale.indexOf("&"));
     }
+} else if (wm.language) {
+    djConfig.locale = wm.language.toLowerCase(); // wm.language is provided so that developers can override wm.localeString by putting it in config.js
 } else if (wm.localeString) {
     djConfig.locale = wm.localeString.toLowerCase(); // wm.localeString is added to config.js by FileController.java using the "accept-language" header.
 }
