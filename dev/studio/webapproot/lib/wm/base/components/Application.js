@@ -456,6 +456,23 @@ dojo.declare("wm.Application", wm.Component, {
 		return this._runtimeService;
 	},
 
+	getWaveMakerService: function(owner) {
+		if (!this._waveMakerService)
+		    this._waveMakerService = new wm.JsonRpcService({service: "waveMakerService",
+								  owner: owner});
+		return this._waveMakerService;
+	},
+
+	//The following lines are not being used now.  They may be used in the future to differenciate requests from Studio from
+	//requests deployed application.
+	getwaveMakerServiceDesignTime: function(owner) {
+		if (!this._waveMakerService)
+		    this._waveMakerService = new wm.JsonRpcService({service: "waveMakerService",
+								  owner: owner, designTime: true});
+		return this._waveMakerService;
+	},
+
+
 	getRoot: function() {
 		return this;
 	},
