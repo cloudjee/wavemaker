@@ -91,7 +91,7 @@ public class RESTWsdlGenerator {
 
     private boolean isStringOutput;
 
-    private QName outputElementType;
+    private QName outputElementType = null;
 
     private Set<QName> additionalNamespaces = new HashSet<QName>();
     
@@ -99,9 +99,7 @@ public class RESTWsdlGenerator {
     
     private String contentType;
 
-    private List<String> xmlSchema_list = null;
-
-    private List<String> xmlSchemaPath_list = null;
+    private String outputType = null;
 
     /**
      * Constructor.
@@ -115,20 +113,13 @@ public class RESTWsdlGenerator {
      *                The list of the operation names.
      * @param parameterizedUrl
      *                The URL with parameters.
-     * @param xmlSchema_list
-     *                The list of the xml schemas.
-     * @param xmlSchemaPath_list
-     *                The list of the xml schema paths.
      */
     public RESTWsdlGenerator(String serviceName, String namespace,
-            List<String> operationName_list, String parameterizedUrl, List<String> xmlSchema_list,
-            List<String> xmlSchemaPath_list) {
+            List<String> operationName_list, String parameterizedUrl) {
         this.serviceName = serviceName;
         this.namespace = namespace;
         this.operationName_list = operationName_list;
         this.parameterizedUrl = parameterizedUrl;
-        this.xmlSchema_list = xmlSchema_list;
-        this.xmlSchemaPath_list = xmlSchemaPath_list;
     }
 
     public RESTWsdlGenerator(String serviceName, String namespace,
@@ -166,6 +157,10 @@ public class RESTWsdlGenerator {
         this.isStringOutput = isStringOutput;
     }
 
+    public void setOutputType(String outputType) {
+        this.outputType = outputType;
+    }
+
     public void setHttpMethod(String httpMethod) {
         this.httpMethod = httpMethod;
     }
@@ -188,12 +183,14 @@ public class RESTWsdlGenerator {
                 generateDocumentation(Constants.REST_ENDPOINT_LOCATION_PREFIX
                         + parameterizedUrl));
 
-        if (xmlSchema_list == null && xmlSchemaPath_list == null) {
+        /*if (xmlSchema_list == null && xmlSchemaPath_list == null) {
             Types types = new TypesImpl();
             definition.setTypes(generateTypes(types, this.schemaStrings, this.schemaElements));
         } else {
             definition.setTypes(generateTypes());
-        }
+        }*/
+
+        definition.setTypes(generateTypes());
 
         Message inputMessage;
         Message outputMessage;
@@ -217,13 +214,13 @@ public class RESTWsdlGenerator {
         return definition;
     }
 
-    private void fixInputParamNames() { //xxx
+    private void fixInputParamNames() {
         for (List<RESTInputParam> inputParts : inputParts_list) {
             fixInputParamNamesForOper(inputParts);
         }        
     }
 
-    private void fixInputParamNamesForOper(List<RESTInputParam> inputParts) { //xxx
+    private void fixInputParamNamesForOper(List<RESTInputParam> inputParts) {
         if (inputParts != null) {
             for (RESTInputParam param : inputParts) {
                 String paramName = param.getName();
@@ -258,68 +255,8 @@ public class RESTWsdlGenerator {
 
     private Types generateTypes() throws SAXException, IOException,
             ParserConfigurationException {
-        String xmlSchemaText = null;
-        String xmlSchemaPath = null;
         Types types = new TypesImpl();
-        int indx = 0;
-        for (String operationName : operationName_list) {
-            if (xmlSchema_list != null) {
-                xmlSchemaText = xmlSchema_list.get(indx);
-                //if (xmlSchemaText != null)
-                //    xmlSchemaText = xmlSchemaText.replaceAll("operation_name_", operationName);
-            }
-            if (xmlSchemaPath_list != null) {
-                xmlSchemaPath = xmlSchemaPath_list.get(indx);
-            }
 
-            List<String> schemaStrings = null;
-            if (xmlSchemaText != null && xmlSchemaText.length() > 0) {
-                schemaStrings = WebServiceToolsManager.seperateXmlSchemaText(xmlSchemaText);
-            }
-
-            List<Element> schemaElements = null;
-            if (xmlSchemaPath != null && xmlSchemaPath.length() > 0) {
-                XmlSchema xmlSchema = WebServiceToolsManager.constructXmlSchema(xmlSchemaPath);
-                schemaElements = new ArrayList<Element>();
-                for (Document schemaDocument : xmlSchema.getAllSchemas()) {
-                    schemaElements.add(schemaDocument.getDocumentElement());
-                }
-            }
-
-            /*if (schemaStrings != null) {
-                for (String schemaString : schemaStrings) {
-                    Schema schema = new SchemaImpl();
-                    schema.setElementType(new QName(Constants.XSD_NS, "schema"));
-
-                    DocumentBuilderFactory dbf = DocumentBuilderFactory
-                            .newInstance();
-                    DocumentBuilder db = dbf.newDocumentBuilder();
-                    Reader reader = new StringReader(schemaString);
-                    Document doc = db.parse(new InputSource(reader));
-
-                    schema.setElement(doc.getDocumentElement());
-                    types.addExtensibilityElement(schema);
-                }
-            }
-            if (schemaElements != null) {
-                for (Element schemaElement : schemaElements) {
-                    Schema schema = new SchemaImpl();
-                    schema.setElementType(new QName(Constants.XSD_NS, "schema"));
-                    schema.setElement(schemaElement);
-                    types.addExtensibilityElement(schema);
-                }
-            }*/
-
-            types = generateTypes(types, schemaStrings, schemaElements);
-            indx++;
-        }
-        return types;
-    }
-
-    private Types generateTypes(Types types, List<String> schemaStrings, List<Element> schemaElements) 
-            throws SAXException, IOException,
-            ParserConfigurationException {
-        //Types types = new TypesImpl();
         if (schemaStrings != null) {
             for (String schemaString : schemaStrings) {
                 Schema schema = new SchemaImpl();
@@ -381,13 +318,27 @@ public class RESTWsdlGenerator {
         message.setUndefined(false);
         message.setQName(new QName(namespace, operName + "ResponseMsg"));
 
+        QName outType = null;
+        if (outputType != null) { //called from WebServiceToolsManager
+            int i = outputType.lastIndexOf(':');
+            if (i > -1) {
+                outType = new QName(outputType.substring(0, i),
+                        outputType.substring(i + 1));
+            } else {
+                outType = new QName(operName + outputType);
+            }
+            additionalNamespaces.add(outType);
+        } else if (outputElementType != null) { //callled from Wadl2Wsdl
+            outType = outputElementType;
+        }
+
         Part part = new PartImpl();
         part.setName("body");
         if (isStringOutput) {
             part.setTypeName(new QName(Constants.XSD_NS, "string"));
             message.addPart(part);
-        } else if (outputElementType != null) {
-            part.setElementName(outputElementType);
+        } else if (outType != null) {
+            part.setElementName(outType);
             message.addPart(part);
         }
 

@@ -50,8 +50,10 @@ import java.util.Properties;
  */
 public class FlowSupport {
 
-    private final String baseXsd = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<xs:schema attributeFormDefault=\"unqualified\" elementFormDefault=\"qualified\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">\n" +
+    private final String xsdHeader =
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<xs:schema attributeFormDefault=\"unqualified\" elementFormDefault=\"qualified\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">\n";
+    private final String xsdBody =
                 "  <xs:element name=\"operation_name_result\" type=\"operation_name_ResultType\"/>\n" +
                 "  <xs:complexType name=\"operation_name_DataType\">\n" +
                 "    <xs:sequence>\n" +
@@ -73,7 +75,8 @@ public class FlowSupport {
                 "    <xs:sequence>\n" +
                 "      record_content_\n" +
                 "    </xs:sequence>\n" +
-                "  </xs:complexType>\n" +
+                "  </xs:complexType>";
+    private final String xsdTrailer =
                 "</xs:schema>";
 
     private final String recElement = "<xs:element type=\"xs:elem_type_\" name=\"elem_name_\"/>";
@@ -122,7 +125,6 @@ public class FlowSupport {
             projList = (org.json.JSONArray)listObj.get("project");
         }
 
-        //return convertOrgArrayToWm(projList);
         return projList.toString();
     }
 
@@ -247,40 +249,27 @@ public class FlowSupport {
         List<String> flowNames = getFlowNames(flowList);
         List<List<RESTInputParam>> inputParms = getInputParms(flowList);
         String url = getUrl(host, port);
-        //String xsd = ost.toString();
-        List<String> xsds = buildXsds(flowList);
+        String xsd = buildXsd(flowList);
 
         wstMgr.buildRestService(projectName, flowNames, inputParms, url, "POST", "application/x-www-form-urlencoded",
-                "result", xsds, null, true);
+                "result", xsd, null, true);
 
         createWarpPropertyFile(projectName, host, port, userName, password, domain);
     }
 
-    private List<String> buildXsds(JSONArray flowList) throws Exception {
-        List<String> xsds = new ArrayList<String>();
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setNamespaceAware(true);
-        DocumentBuilder docBuilder = dbf.newDocumentBuilder();
+    private String buildXsd(JSONArray flowList) throws Exception {
+        StringBuffer sb = new StringBuffer(xsdHeader);
 
         for (int i=0; i<flowList.length(); i++) {
             JSONObject flow = (JSONObject)flowList.get(i);
-            String flowName = (String)flow.get("name");
-            //String flowXsd = baseXsd.replaceAll("operation_name_", flowName);
-            String flowXsd = completeXsd(baseXsd, flow);
-            InputStream is = new ByteArrayInputStream(flowXsd.getBytes());
-            Document doc = docBuilder.parse (is);
-
-            TransformerFactory tFactory = TransformerFactory.newInstance();
-            Transformer tFormer = tFactory.newTransformer();
-            Source source = new DOMSource(doc);
-            ByteArrayOutputStream ost = new ByteArrayOutputStream();
-            Result dest = new StreamResult(ost);
-            tFormer.transform(source, dest);
-
-            xsds.add(ost.toString());
+            String flowXsd = completeXsd(xsdBody, flow);
+            sb.append(flowXsd);
+            sb.append("\n");
         }
 
-        return xsds;
+        sb.append(xsdTrailer);
+
+        return sb.toString();
     }
 
     private void createWarpPropertyFile(String projectName, String host, String port, String userName, String password,
@@ -407,11 +396,10 @@ public class FlowSupport {
         return rtn;
     }
 
-    private String completeXsd(String xsd, JSONObject flow) throws Exception {
+    private String completeXsd(String xsdBody, JSONObject flow) throws Exception {
         String flowName = (String)flow.get("name");
-        xsd = xsd.replaceAll("operation_name_", flowName);
+        xsdBody = xsdBody.replaceAll("operation_name_", flowName);
 
-        //Node sequenceNode = recordTypeNode.getFirstChild().getNextSibling().getFirstChild();
         JSONObject stream = (JSONObject)flow.get("stream");
         JSONArray fields = convertToJSONArray(stream.get("field"));
 
@@ -429,9 +417,9 @@ public class FlowSupport {
             sb.append(rec);
         }
 
-        xsd = xsd.replaceAll("record_content_", sb.toString());
+        xsdBody = xsdBody.replaceAll("record_content_", sb.toString());
 
-        return xsd;
+        return xsdBody;
     }
 
     private String getUrl(String host, String port) {

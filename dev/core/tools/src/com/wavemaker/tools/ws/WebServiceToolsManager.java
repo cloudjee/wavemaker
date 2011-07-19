@@ -331,7 +331,7 @@ public class WebServiceToolsManager {
         return serviceId;
     }
 
-     public String buildRestService(String serviceName, String operationName, //xxx
+     public String buildRestService(String serviceName, String operationName,
             List<RESTInputParam> inputs, String parameterizedUrl,
             String method, String contentType, String outputType,
             String xmlSchemaText, String xmlSchemaPath, boolean overwrite)
@@ -344,13 +344,9 @@ public class WebServiceToolsManager {
          if (inputs != null && inputs.size() > 0) {
              inputParms_list.add(inputs);
          }
-         List<String> xmlSchema_list = new ArrayList<String>();
-         xmlSchema_list.add(xmlSchemaText);
-         List<String> xmlSchemaPath_list = new ArrayList<String>();
-         xmlSchemaPath_list.add(xmlSchemaPath);
 
          String result = buildRestService(serviceName, operationName_list, inputParms_list, parameterizedUrl,
-                 method, contentType, outputType, xmlSchema_list, xmlSchemaPath_list, overwrite);
+                 method, contentType, outputType, xmlSchemaText, xmlSchemaPath, overwrite);
 
          return result;
      }
@@ -373,10 +369,9 @@ public class WebServiceToolsManager {
      *                "application/json-rpc".
      * @param outputType
      *                The XML qualified name of the ouput type.
-     * @param xmlSchema_list Each element of this list
-     *                represents a XML schema or multipe XML schemas using
+     * @param xmlSchemaText The XML schema or multipe XML schemas using
      *                <code>XML_SCHEMA_TEXT_SEPERATOR</code>
-     * @param xmlSchemaPath_list
+     * @param xmlSchemaPath
      *                The path (either URL or file) to the XML schema.
      * @param overwrite
      *                true to overwrite the service with the same service ID;
@@ -391,10 +386,10 @@ public class WebServiceToolsManager {
      * @throws JAXBException
      * @throws TransformerException
      */
-    public String buildRestService(String serviceName, List<String> operationName_list, //xxx
+    public String buildRestService(String serviceName, List<String> operationName_list,
             List<List<RESTInputParam>> inputs_list, String parameterizedUrl,
             String method, String contentType, String outputType,
-            List<String> xmlSchema_list, List<String> xmlSchemaPath_list, boolean overwrite)
+            String xmlSchemaText, String xmlSchemaPath, boolean overwrite)
             throws IOException, javax.wsdl.WSDLException, SAXException,
             ParserConfigurationException, WSDLException, JAXBException,
             TransformerException {
@@ -403,7 +398,7 @@ public class WebServiceToolsManager {
 
         RESTWsdlGenerator restWsdlGenerator = new RESTWsdlGenerator(
                 serviceName, constructNamespace(parameterizedUrl), operationName_list,
-                parameterizedUrl, xmlSchema_list, xmlSchemaPath_list);
+                parameterizedUrl);
         restWsdlGenerator.setHttpMethod(method);
         restWsdlGenerator.setContentType(contentType);
 
@@ -431,7 +426,8 @@ public class WebServiceToolsManager {
             if (outputType.equals("string")) {
                 restWsdlGenerator.setStringOutput(true);
             } else {
-                int i = outputType.lastIndexOf(':');
+                restWsdlGenerator.setOutputType(outputType);
+                /*int i = outputType.lastIndexOf(':');
                 QName outType = null;
                 if (i > -1) {
                     outType = new QName(outputType.substring(0, i), 
@@ -439,11 +435,11 @@ public class WebServiceToolsManager {
                 } else {
                     outType = new QName(outputType);
                 }
-                restWsdlGenerator.setOutputElementType(outType);
+                restWsdlGenerator.setOutputElementType(outType);*/
             }
         }
 
-        /*if (xmlSchemaText != null && xmlSchemaText.length() > 0) {
+        if (xmlSchemaText != null && xmlSchemaText.length() > 0) {
             List<String> schemaStrings = seperateXmlSchemaText(xmlSchemaText);
             restWsdlGenerator.setSchemaStrings(schemaStrings);
         }
@@ -454,7 +450,7 @@ public class WebServiceToolsManager {
                 schemaElements.add(schemaDocument.getDocumentElement());
             }
             restWsdlGenerator.setSchemaElements(schemaElements);
-        }*/
+        }
         File tempDir = IOUtils.createTempDirectory();
         try {
             File wsdlFile = new File(tempDir, serviceName + Constants.WSDL_EXT);
@@ -564,7 +560,6 @@ public class WebServiceToolsManager {
             //TODO: For now, we only support the xml contenty type.  It should be extended to cover other content
             //TODO: types such as text/plain.
             String cType = contentType + "; charset=UTF-8";
-            //DataSource postSource = HTTPBindingSupport.createDataSource("text/xml; charset=UTF-8", postData);
             DataSource postSource = HTTPBindingSupport.createDataSource(cType, postData);
 
             BindingProperties bp = null;
@@ -817,22 +812,6 @@ public class WebServiceToolsManager {
         return namespace;
     }
 
-    /**
-     * Constructs a namespace for the given URL.
-     */
-    /*private static List<String> constructNamespace(List<String> urls) { //xxx
-        if (urls == null) {
-            return null;
-        }
-
-        List<String> rtn = new ArrayList<String>();
-        for (String url : urls) {
-            url = constructNamespaceForSingleUrl(url);
-            rtn.add(url);
-        }
-
-        return rtn;
-    }*/
     private static String constructNamespace(String url) {
         String namespace = getUrlOmitQuery(url);
         namespace = namespace.replace('{', 'x');
