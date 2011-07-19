@@ -146,37 +146,37 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 	// it seems unnecessary to have more than one JsonRpc per service
 	// and it may be unnecessary to have more than one JsonRpcService (ever) per service 
 	// JsonRpcService has a few properties that make collapsing the number of them non-trivial (e.g. sync, timeout)
-	initService: function() {
-		var
-			n = this.service || this.name,
-		    url = this.url || (n && (this.getServiceRoot() + n + ".smd?rand=" + Math.floor(Math.random()*1000000)));
-		this._service = null;
-		if (url) {
-			try{
-			    this._service = wm.JsonRpcService.smdCache[url];
-			    if (this._service) {
-				this.listOperations();
-			    } else {
+    initService: function() {
+	var n = this.service || this.name;
+	var rand = this.owner && this.isDesignLoaded() ? studio.application.getFullVersionNumber() : (app && !window["studio"] ? app.getFullVersionNumber() : Math.floor(Math.random()*1000000));
+	var url = this.url || (n && (this.getServiceRoot() + n + ".smd?rand=" + rand));
+	this._service = null;
+	if (url) {
+	    try{
+		this._service = wm.JsonRpcService.smdCache[url];
+		if (this._service) {
+		    this.listOperations();
+		} else {
 
-				this._service = new wm.JsonRpc(url);
+		    this._service = new wm.JsonRpc(url);
 
-				//The following lines are not being used now.  They may be used in the future to differenciate requests from Studio from
-				//requests deployed application.
-				if (this._designTime)
-					this._service._designTime = true;
+		    //The following lines are not being used now.  They may be used in the future to differenciate requests from Studio from
+		    //requests deployed application.
+		    if (this._designTime)
+			this._service._designTime = true;
 
-				this._service.timeout = this.timeout;
-				this.ready = Boolean(this._service && this._service.smd);
-				if (this.ready) {
-				    this._service.serviceUrl = this.getJsonPath() + this._service.serviceUrl;
-				    this.listOperations();
-				}
-			    }
-			}catch(e){
-				console.debug(e);
-			}
+		    this._service.timeout = this.timeout;
+		    this.ready = Boolean(this._service && this._service.smd);
+		    if (this.ready) {
+			this._service.serviceUrl = this.getJsonPath() + this._service.serviceUrl;
+			this.listOperations();
+		    }
 		}
-	},
+	    }catch(e){
+		console.debug(e);
+	    }
+	}
+    },
 	setName: function(inName) {
 		this.inherited(arguments);
 		if (!this.url)

@@ -48,7 +48,7 @@ wm.gzScriptLoader = function(name){
 
 dojo.declare("wm.PageLoader", wm.Component, {
 	init: function() {
-		this.randomNum = new Date().valueOf();
+	        this.randomNum = this.owner && this.isDesignLoaded() ? studio.application.getFullVersionNumber() : (app && !window["studio"] ? app.getFullVersionNumber() : Math.floor(Math.random()*1000000));
 		this.inherited(arguments);
 		this._pageConnections = [];
 		this.pageProps = {};
@@ -72,7 +72,7 @@ dojo.declare("wm.PageLoader", wm.Component, {
 	loadController: function(inName, inPath) {
 		var ctor = dojo.getObject(inName);
 		if (!ctor) {
-			wm.dojoScriptLoader(inPath + ".js?dojo.preventCache="+ new Date().valueOf());
+		    wm.dojoScriptLoader(inPath + ".js?dojo.preventCache="+ this.randomNum);
 		        ctor = dojo.getObject(inName);
                 }
                 if (!ctor) {
@@ -86,9 +86,9 @@ dojo.declare("wm.PageLoader", wm.Component, {
 	},
 	loadSupport: function(inCtor, inPath) {
 		if (!inCtor._supported) {
-		    this.cssLoader.setUrl(inPath + ".css");
+		    this.cssLoader.setUrl(inPath + ".css?rand="+this.randomNum);
 			inCtor.css = this.cssLoader.css;
-			this.htmlLoader.setUrl(inPath + ".html");
+		    this.htmlLoader.setUrl(inPath + ".html?rand="+this.randomNum);
 			inCtor.html = this.htmlLoader.html;
 			inCtor.html = inCtor.css = "";
 			
@@ -96,7 +96,7 @@ dojo.declare("wm.PageLoader", wm.Component, {
 			// we delete it from memory.  But dojoScriptLoader assumes we keep it in memory and refuses to reload it.
 			// By deleting it from its list of loaded urls, it should always reload.
 			delete dojo._loadedUrls[inPath + ".widgets.js"];
-			wm.dojoScriptLoader(inPath + ".widgets.js?rand=" + new Date().valueOf());
+		    wm.dojoScriptLoader(inPath + ".widgets.js?rand=" + this.randomNum);
 			inCtor._supported = true;
 		}
 	},
