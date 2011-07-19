@@ -337,7 +337,7 @@ Studio.widgets = {
 
 						}]
 					}],
-				bench: ["wm.Panel", {_classes: {domNode: "WMApp"}], width: "100%", height: "100%", border: "1, 0, 0, 0", backgroundColor: "silver", borderColor: "#666E80", verticalAlign: "middle", horizontalAlign: "center"}, {}, {
+				bench: ["wm.Panel", {_classes: {domNode: "WMApp"}, width: "100%", height: "100%", border: "1, 0, 0, 0", backgroundColor: "silver", borderColor: "#666E80", verticalAlign: "middle", horizontalAlign: "center"}, {}, {
 				    designerSpacer1: ["wm.Spacer", {showing: false, height: "100%"}],
 							designer: ["wm.Designer", {height: "100%", width: "100%", backgroundColor: "white", borderColor: "black", border: ""}, {onselect: "designerSelect", onmove: "designerMove"}],
 				    designerSpacer2: ["wm.Spacer", {showing: false, height: "100%"}],
