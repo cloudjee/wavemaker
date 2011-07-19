@@ -38,7 +38,6 @@ dojo.declare("wm.Application", wm.Component, {
 		app = wm.application = wm.application || this;
 		this.connectList = [];
 		this.app = this;
-
 	        if (this.i18n) {
 		    try {
 			dojo["requireLocalization"]("language", "app");
@@ -56,6 +55,21 @@ dojo.declare("wm.Application", wm.Component, {
 	    }
 		this.inherited(arguments);
 		wm.typeManager.initTypes();
+
+	    this._isDesignLoaded = (window["studio"] && this != app);
+
+	    /* There are times when we need to access studio.application before we've finished initializing the app in design mode;
+	     * this gives us early access to it without mucking up existing logic for when its set/cleared
+	     */
+	    if (this._isDesignLoaded) {
+		studio._application = this;
+	    }
+
+	    /* All Apps get a .WMApp parent class except for studio; this gives us extra hooks for styling apps without touching studio */
+	    var node = this._isDesignLoaded ? null : document.body.parentNode;
+	    if (node) {
+		dojo.addClass(node, "WMApp");
+	    }
 
 	        var themematch = window.location.search.match(/theme\=(.*?)\&/) ||
 		                 window.location.search.match(/theme\=(.*?)$/);
@@ -189,8 +203,7 @@ dojo.declare("wm.Application", wm.Component, {
 		this.debugTree = this.debugDialog.debugTree;
     },
     setTheme: function(inTheme, isInit, optionalCss, optionalPrototype, noRegen, forceUpdate) {
-	    var isDesigned = (window["studio"] && this != app);
-	    var node = isDesigned ? studio.designer.domNode : document.body;
+	    var node = this._isDesignLoaded ? studio.designer.domNode : document.body;
 	    dojo.removeClass(node, this.theme);
             this._lastTheme = this.theme;
 	    this.theme = inTheme;
@@ -199,16 +212,16 @@ dojo.declare("wm.Application", wm.Component, {
 	var themematch = window.location.search.match(/theme\=(.*?)\&/) ||
 	    window.location.search.match(/theme\=(.*?)$/);
 
-	    if (isDesigned || !isInit || themematch) {
+	    if (this._isDesignLoaded || !isInit || themematch) {
 		try {
-		    this.loadThemeCss(this.theme, isDesigned, optionalCss);
+		    this.loadThemeCss(this.theme, this._isDesignLoaded, optionalCss);
 		    // write before we change the prototype so defaults are left blank
-		    if (isDesigned && !isInit) {
+		    if (this._isDesignLoaded && !isInit) {
 			this._themeChanged = true;
 			this.cacheWidgets();
 		    }
 		    this.loadThemePrototype(this.theme, optionalPrototype);
-		    if (isDesigned && !isInit && !noRegen) {
+		    if (this._isDesignLoaded && !isInit && !noRegen) {
 			this.useWidgetCache();
 		    }
 		} catch(e) {
@@ -455,23 +468,6 @@ dojo.declare("wm.Application", wm.Component, {
 								  owner: owner, designTime: true});
 		return this._runtimeService;
 	},
-
-	getWaveMakerService: function(owner) {
-		if (!this._waveMakerService)
-		    this._waveMakerService = new wm.JsonRpcService({service: "waveMakerService",
-								  owner: owner});
-		return this._waveMakerService;
-	},
-
-	//The following lines are not being used now.  They may be used in the future to differenciate requests from Studio from
-	//requests deployed application.
-	getwaveMakerServiceDesignTime: function(owner) {
-		if (!this._waveMakerService)
-		    this._waveMakerService = new wm.JsonRpcService({service: "waveMakerService",
-								  owner: owner, designTime: true});
-		return this._waveMakerService;
-	},
-
 
 	getRoot: function() {
 		return this;

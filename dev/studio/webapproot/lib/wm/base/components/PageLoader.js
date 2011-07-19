@@ -48,7 +48,7 @@ wm.gzScriptLoader = function(name){
 
 dojo.declare("wm.PageLoader", wm.Component, {
 	init: function() {
-	        this.randomNum = this.owner && this.isDesignLoaded() ? studio.application.getFullVersionNumber() : (app && !window["studio"] ? app.getFullVersionNumber() : Math.floor(Math.random()*1000000));
+	    this.randomNum = this.owner && this.isDesignLoaded() ? (studio.application || studio._application).getFullVersionNumber() : (app && !window["studio"] ? app.getFullVersionNumber() : Math.floor(Math.random()*1000000));
 		this.inherited(arguments);
 		this._pageConnections = [];
 		this.pageProps = {};

@@ -345,6 +345,7 @@ dojo.declare("wm.studio.Project", null, {
 	    var ctor = dojo.getObject(this.projectName);
 	    if (ctor) {
 		studio.application = new ctor(dojo.mixin({ _designer: studio.designer }, inProps));
+		delete studio._application; // temporary property set in Application.init as placeholder for studio.application until the app has finished creating
 		for (var i in this.projectData.documentation) {
                     if (studio.application.components[i])
 			studio.application.components[i].documentation = this.projectData.documentation[i];
