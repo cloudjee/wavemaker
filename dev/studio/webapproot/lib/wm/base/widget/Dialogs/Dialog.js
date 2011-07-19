@@ -874,7 +874,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    }
 
 	    /* Can only target the dialog's node if hitting the border or if some bad rendering of content */
-	    if (!this.modal && e.target == this.domNode) {
+	    /* noMaxify is taken to mean that the dialog isn't designed to be resized, either to max size or any custom size */
+	    if (!this.modal && !this.noMaxify && e.target == this.domNode) {
 		this._userSized = true;
 		this._initialPosition = dojo.clone(this.bounds);
 
