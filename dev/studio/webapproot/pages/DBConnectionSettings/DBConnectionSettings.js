@@ -327,6 +327,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 		this.conDriverClassInput.setDataValue("");
 		this.conDialectInput.setDataValue("");
 		this.conRevengNamingStrategyInput.setDataValue("");
+		this.activeDirectoryDomain.setDataValue("");
 
 		if (inData == null || inData.length == 0) {
 			return;

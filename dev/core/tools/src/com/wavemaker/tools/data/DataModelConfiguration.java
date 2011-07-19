@@ -830,7 +830,7 @@ public class DataModelConfiguration {
     }
 
     public synchronized Properties readConnectionProperties(boolean removePrefix) {
-        return springConfiguration.readProperties(removePrefix);
+        return springConfiguration.readCombinedProperties(removePrefix);
     }
 
     public synchronized void writeConnectionProperties(Properties props) {

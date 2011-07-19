@@ -36,9 +36,21 @@ Configuration for '${agcontext.serviceName}' database service
         </property>
     </bean>
 
-
+<#if agcontext.impersonateUser>
     <bean 
-        id="${agcontext.serviceName}DataSource" 
+        id="${agcontext.serviceName}DataSource"
+        class="com.wavemaker.runtime.data.sqlserver.SqlServerUserImpersonatingDataSourceProxy"
+        lazy-init="true">
+        <constructor-arg ref="${agcontext.serviceName}TargetDataSource"/>
+        <property name="activeDirectoryDomain" value="${agcontext.activeDirectoryDomain}"/>
+    </bean>
+    
+    <bean 
+        id="${agcontext.serviceName}TargetDataSource"
+<#else>
+    <bean 
+        id="${agcontext.serviceName}DataSource"
+</#if> 
         class="org.springframework.jdbc.datasource.DriverManagerDataSource" 
         lazy-init="true">
         <property name="driverClassName" value="${agcontext.propref}${agcontext.serviceName}.driverClassName}"/>

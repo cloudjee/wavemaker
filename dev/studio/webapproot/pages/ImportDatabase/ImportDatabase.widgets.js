@@ -40,7 +40,7 @@ ImportDatabase.widgets = {
 		    /* Do not localize the options property; any change to options requires change to ImportDatabase.js */
 		    executeAsMenu: ["wm.SelectMenu", {captionAlign: "left", captionSize: "120px", caption: "Execute as", options: "Database credentials, Logged in user", dataValue: "Database credentials", width: "65%", helpText: "Typically your database connections will just use the username and password configured above.  If you need the connection to do an 'Execute As' and use the currently logged in user's credentials (i.e. the user who has logged into your deployed application), you can set that here."}, {onchange: "executeAsMenuChange"}],
 
-		    activeDirectoryDomain: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "Active Directory Domain", width: "65%", showing: false, disabled: true, helpText: "If specified, the Active Directory Domain name will be prefixed to the authenticated user's name when running the \"EXECUTE AS\" statement against the active DB connection."}]
+		    activeDirectoryDomain: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "Active Directory Domain", width: "65%", showing: false, disabled: true, emptyValue: "emptyString", helpText: "If specified, the Active Directory Domain name will be prefixed to the authenticated user's name when running the \"EXECUTE AS\" statement against the active DB connection."}]
 		}],
 	    }],
 	    footer: ["wm.Panel", {height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {

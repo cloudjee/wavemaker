@@ -131,7 +131,10 @@
 
 	<listener>
         <listener-class>com.wavemaker.runtime.server.CleanupListener</listener-class>
-		<listener-class>com.wavemaker.tools.common.StartupTools</listener-class>
+    </listener>
+    
+    <listener>
+        <listener-class>com.wavemaker.tools.common.StartupTools</listener-class>
     </listener>
 
     <listener>

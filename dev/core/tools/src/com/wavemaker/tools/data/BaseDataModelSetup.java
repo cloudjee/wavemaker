@@ -235,6 +235,8 @@ public abstract class BaseDataModelSetup {
     protected boolean initialized = false;
     
     protected boolean impersonateUser = false;
+    
+    protected String activeDirectoryDomain = null;
 
     private List<File> tmpFiles = new ArrayList<File>();
 
@@ -343,7 +345,11 @@ public abstract class BaseDataModelSetup {
     	return impersonateUser;
     }
 
-    public void setCatalogName(String catalogName) {
+    public String getActiveDirectoryDomain() {
+		return activeDirectoryDomain;
+	}
+
+	public void setCatalogName(String catalogName) {
         this.catalogName = catalogName;
     }
 
@@ -402,7 +408,11 @@ public abstract class BaseDataModelSetup {
     	this.impersonateUser = impersonateUser;
     }
 
-    protected void registerTmpFileForCleanup(File f) {
+    public void setActiveDirectoryDomain(String activeDirectoryDomain) {
+		this.activeDirectoryDomain = activeDirectoryDomain;
+	}
+
+	protected void registerTmpFileForCleanup(File f) {
         f.deleteOnExit(); // we really want this file to go away
         tmpFiles.add(f);
     }
@@ -469,7 +479,6 @@ public abstract class BaseDataModelSetup {
         return getProperties(true);
     }
 
-    @SuppressWarnings("unchecked")
     private Properties getProperties(boolean strip) {
 
         Properties p = new Properties();
@@ -500,7 +509,7 @@ public abstract class BaseDataModelSetup {
 
         if (strip) {
             rtn = new Properties();
-            for (Iterator iter = p.keySet().iterator(); iter.hasNext();) {
+            for (Iterator<Object> iter = p.keySet().iterator(); iter.hasNext();) {
                 String key = (String) iter.next();
                 String value = p.getProperty(key);
                 rtn.setProperty(strip(key), value);
@@ -879,7 +888,8 @@ public abstract class BaseDataModelSetup {
             public Exporter createExporter() {
                 return new HibernateSpringConfigExporter(serviceName,
                         packageName, dataPackage, className,
-                        getUseIndividualCRUDOperations());
+                        getUseIndividualCRUDOperations(), 
+                        impersonateUser, activeDirectoryDomain);
             };
         };
     }

@@ -1,4 +1,4 @@
-package com.wavemaker.tools.data;
+package com.wavemaker.runtime.data.sqlserver;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -33,6 +33,7 @@ import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.orm.hibernate3.HibernateTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
+
 
 public class TestSqlServerUserImpersonatingDataSourceProxy {
 	

@@ -100,7 +100,7 @@ public class DataModelManager {
             String connectionUrl, String serviceId, String packageName,
             String tableFilter, String schemaFilter, String catalogName,
             String driverClassName, String dialectClassName,
-            String revengNamingStrategyClassName, boolean impersonateUser) {
+            String revengNamingStrategyClassName, boolean impersonateUser, String activeDirectoryDomain) {
 
         serviceManager.validateServiceId(serviceId);
 
@@ -114,7 +114,7 @@ public class DataModelManager {
             importer = runImporter(username, password, connectionUrl,
                     serviceId, packageName, tableFilter, schemaFilter,
                     catalogName, driverClassName, dialectClassName,
-                    revengNamingStrategyClassName, outputDir, classesDir);
+                    revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain, outputDir, classesDir);
 
             registerService(serviceId, importer);
             
@@ -232,19 +232,20 @@ public class DataModelManager {
     public void reImport(String dataModelName, String username,
             String password, String connectionUrl, String tableFilter,
             String schemaFilter, String driverClassName,
-            String dialectClassName, String revengNamingStrategyClassName, boolean impersonateUser) {
+            String dialectClassName, String revengNamingStrategyClassName, 
+            boolean impersonateUser, String activeDirectoryDomain) {
 
         reImport(getDataModel(dataModelName), username, password,
                 connectionUrl, dataModelName, tableFilter, schemaFilter,
                 driverClassName, dialectClassName,
-                revengNamingStrategyClassName, null);
+                revengNamingStrategyClassName, null, impersonateUser, activeDirectoryDomain);
     }
 
     public void reImport(DataModelConfiguration cfg, String username,
             String password, String connectionUrl, String serviceId,
             String tableFilter, String schemaFilter, String driverClassName,
             String dialectClassName, String revengNamingStrategyClassName,
-            String catalogName) {
+            String catalogName, boolean impersonateUser, String activeDirectoryDomain) {
 
         ImportDB importer = null;
 
@@ -274,7 +275,7 @@ public class DataModelManager {
             importer = runImporter(username, password, connectionUrl,
                     serviceId, packageName, tableFilter, schemaFilter,
                     catalogName, driverClassName, dialectClassName,
-                    revengNamingStrategyClassName, tmpServiceRoot,
+                    revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain, tmpServiceRoot,
                     tmpServiceRoot);
 
             File tmpCfgFile = new File(tmpServiceRoot, serviceId
@@ -824,7 +825,8 @@ public class DataModelManager {
             String connectionUrl, String serviceId, String packageName,
             String tableFilter, String schemaFilter, String catalogName,
             String driverClassName, String dialectClassName,
-            String revengNamingStrategyClassName, File outputDir,
+            String revengNamingStrategyClassName, boolean impersonateUser, 
+            String activeDirectoryDomain, File outputDir,
             File classesDir) {
 
     	//
@@ -860,6 +862,8 @@ public class DataModelManager {
         importer.setCatalogName(catalogName);
         importer.setPackage(packageName);
         importer.setJavaDir(javaDir);
+        importer.setImpersonateUser(impersonateUser);
+        importer.setActiveDirectoryDomain(activeDirectoryDomain);
 
         String dataPackage = packageName;
         if (!dataPackage.endsWith("." + DataServiceConstants.DATA_PACKAGE_NAME)) {

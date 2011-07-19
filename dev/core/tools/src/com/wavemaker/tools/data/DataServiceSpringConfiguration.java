@@ -32,6 +32,7 @@ import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.runtime.data.spring.ConfigurationAndSessionFactoryBean;
 import com.wavemaker.runtime.data.spring.SpringDataServiceManager;
+import com.wavemaker.runtime.data.sqlserver.SqlServerUserImpersonatingDataSourceProxy;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.util.DataServiceUtils;
@@ -39,6 +40,7 @@ import com.wavemaker.tools.service.FileService;
 import com.wavemaker.tools.spring.beans.Bean;
 import com.wavemaker.tools.spring.beans.Beans;
 import com.wavemaker.tools.spring.beans.ConstructorArg;
+import com.wavemaker.tools.spring.beans.DefaultableBoolean;
 import com.wavemaker.tools.spring.beans.Entry;
 import com.wavemaker.tools.spring.beans.Map;
 import com.wavemaker.tools.spring.beans.Property;
@@ -128,8 +130,24 @@ public class DataServiceSpringConfiguration {
             throw new ConfigurationException(ex);
         }
     }
+    
+    Properties readCombinedProperties(boolean removePrefix) {
+    	Properties props = readProperties(removePrefix);
+    	readExecuteAsProperties(props);
+    	return props;
+    }
 
-    boolean useIndividualCRUDperations() {
+    void readExecuteAsProperties(Properties props) {
+		List<Bean> dsProxyBeans = beans.getBeansByType(SqlServerUserImpersonatingDataSourceProxy.class);
+		if (dsProxyBeans.size() == 0) {
+			return;
+		}
+		props.put("executeAs", "true");
+		Bean proxyBean = dsProxyBeans.get(0);
+		props.put("activeDirectoryDomain", proxyBean.getProperty("activeDirectoryDomain").getValue());
+	}
+
+	boolean useIndividualCRUDperations() {
         String s = getPropertyValue(DataServiceConstants.GENERATE_OLD_STYLE_OPRS_PROPERTY);
         return Boolean.valueOf(s);
     }
@@ -155,7 +173,8 @@ public class DataServiceSpringConfiguration {
     public void writeProperties(Properties props, boolean validate) {
 
         if (!validate) {
-            writeProps(props);
+        	updateSpringConfigIfNecessary(props);
+            writeProps(filterProps(props));
             return;
         }
 
@@ -194,7 +213,7 @@ public class DataServiceSpringConfiguration {
             props.setProperty(key, value);
         }
 
-        Properties org = readProperties(false);
+        Properties org = readCombinedProperties(false);
 
         DataServiceUtils.removePrefix(org);
 
@@ -206,10 +225,21 @@ public class DataServiceSpringConfiguration {
             return;
         }
 
-        writeProps(DataServiceUtils.addPrefix(serviceId, props));
+        updateSpringConfigIfNecessary(props);
+        writeProps(DataServiceUtils.addPrefix(serviceId, filterProps(props)));
     }
 
-    void addMapping(String path) {
+    private Properties filterProps(Properties props) {
+    	Properties filtered = new Properties();
+    	filtered.putAll(props);
+    	filtered.remove("executeAs");
+    	filtered.remove(serviceId+".executeAs");
+    	filtered.remove("activeDirectoryDomain");
+    	filtered.remove(serviceId+".activeDirectoryDomain");
+		return filtered;
+	}
+
+	void addMapping(String path) {
         Property p = getMappingFilesProperty();
         List<String> l = new ArrayList<String>(p.getListValue());
         l.add(path);
@@ -333,7 +363,52 @@ public class DataServiceSpringConfiguration {
         }
     }
 
-    private Property getMappingFilesProperty() {
+    private void updateSpringConfigIfNecessary(Properties props) {
+		if (Boolean.parseBoolean(props.getProperty("executeAs", "false"))) {
+			Bean proxyBean;
+			List<Bean> dsProxyBeans = beans.getBeansByType(SqlServerUserImpersonatingDataSourceProxy.class);
+			if (dsProxyBeans.size() > 0) {
+				proxyBean = dsProxyBeans.get(0);
+			} else {
+				Bean dsBean = beans.getBeanById(serviceId+"DataSource");
+				dsBean.setId(serviceId+"TargetDataSource");
+				
+				proxyBean = new Bean();
+				proxyBean.setId(serviceId+"DataSource");
+				proxyBean.setClazz(SqlServerUserImpersonatingDataSourceProxy.class.getName());
+				proxyBean.setLazyInit(DefaultableBoolean.TRUE);
+				Property targetDataSourceProp = new Property();
+				targetDataSourceProp.setName("targetDataSource");
+				targetDataSourceProp.setRef(serviceId+"TargetDataSource");
+				proxyBean.addProperty(targetDataSourceProp);
+				beans.addBean(proxyBean);
+				isDirty = true;
+			}
+			String adDomain = props.getProperty("activeDirectoryDomain", "");
+			Property adDomainProp = proxyBean.getProperty("activeDirectoryDomain");
+			if (adDomainProp == null) {
+				adDomainProp = new Property();
+				adDomainProp.setName("activeDirectoryDomain");
+				adDomainProp.setValue("");
+				proxyBean.addProperty(adDomainProp);
+			}
+			if (!adDomain.equals(adDomainProp.getValue())) {
+				adDomainProp.setValue(adDomain);
+				isDirty = true;
+			}
+		} else {
+			List<Bean> dsProxyBeans = beans.getBeansByType(SqlServerUserImpersonatingDataSourceProxy.class);
+			if (dsProxyBeans.size() > 0) {
+				beans.removeBeanById(dsProxyBeans.get(0).getId());
+				Bean dsBean = beans.getBeanById(serviceId+"TargetDataSource");
+				dsBean.setId(serviceId+"DataSource");
+				isDirty=true;
+			}
+		}
+		write();
+	}
+
+	private Property getMappingFilesProperty() {
         return getSessionFactoryBean().getProperty(
                 DataServiceConstants.SPRING_CFG_MAPPINGS_ATTR);
     }

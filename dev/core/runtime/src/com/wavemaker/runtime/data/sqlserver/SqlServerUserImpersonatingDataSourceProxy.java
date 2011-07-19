@@ -1,4 +1,4 @@
-package com.wavemaker.tools.data;
+package com.wavemaker.runtime.data.sqlserver;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.ConnectionProxy;
 import org.springframework.jdbc.datasource.DelegatingDataSource;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * DataSource proxy implementation that will allow impersonation of the currently authenticated user 
@@ -23,19 +24,24 @@ import org.springframework.util.Assert;
  * <p>
  * Impersonation of the current user is achieved by executing a SQLServer-specific <code>EXECUTE AS USER='{username}'</code>
  * statement, where {username} is the username for the currently authenticated user as provided by the {@link SecurityContext}.  
- * For this to work successfully, the user must be a valid ActiveDirectory LDAP user.
+ * For this to work successfully, the user must be a valid ActiveDirectory LDAP user.  Optionally, an Active Directory Domain 
+ * name may be configured that will be prepended to the username.  If the {@link #setActiveDirectoryDomain(String) activeDirectoryDomain} property is set with a 
+ * non-empty value, the statement executed to prepare the connection will be in the form of 
+ * <code>EXECUTE AS USER='{activeDirectoryDomain}\{username}'</code>.
  * 
  * <p>
  * The <code>EXECUTE AS</code> statement will only be run when a connection is first requested at the 
  * start of a Spring-managed transaction.  When the transaction is completed and the connection is closed, 
- * a compensating <code>REVERT</code> statement will be executed that will return the connection to 
- * its original state.
+ * (or released back to a pool) a compensating <code>REVERT</code> statement will be executed that will return 
+ * the connection to its original state.
  * 
  * @author Jeremy Grelle
  */
 public class SqlServerUserImpersonatingDataSourceProxy extends DelegatingDataSource {
 
 	private JdbcTemplate template;
+	
+	private String activeDirectoryDomain = "";
 	
 	public SqlServerUserImpersonatingDataSourceProxy() {
 		super();
@@ -46,11 +52,21 @@ public class SqlServerUserImpersonatingDataSourceProxy extends DelegatingDataSou
 		this.template = new JdbcTemplate(targetDataSource);
 	}
 
+	@Override
 	public Connection getConnection() throws SQLException {
 		DataSource ds = getTargetDataSource();
 		Assert.state(ds != null, "'targetDataSource' is required");
 		prepareConnection();
 		return getAuditingConnectionProxy(getTargetDataSource().getConnection());
+	}
+
+	/**
+	 * Sets an Active Directory Domain name to be used as a prefix to the username when running an
+	 * <code>EXECUTE AS</code> statement to prepare a connection.
+	 * @param activeDirectoryDomain the Active Directory Domain name
+	 */
+	public void setActiveDirectoryDomain(String activeDirectoryDomain) {
+		this.activeDirectoryDomain = activeDirectoryDomain;
 	}
 
 	@Override
@@ -62,7 +78,13 @@ public class SqlServerUserImpersonatingDataSourceProxy extends DelegatingDataSou
 	private void prepareConnection() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth != null) {
-			template.execute("EXECUTE AS USER='"+auth.getName()+"'");
+			StringBuilder query = new StringBuilder();
+			query.append("EXECUTE AS USER='");
+			if (StringUtils.hasText(activeDirectoryDomain)) {
+				query.append(activeDirectoryDomain+"\\");
+			}
+			query.append(auth.getName()+"'");
+			template.execute(query.toString());
 		}
 	}
 

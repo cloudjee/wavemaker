@@ -58,15 +58,22 @@ public class HibernateSpringConfigExporter extends GenericExporter {
     private final String serviceClass;
 
     private final boolean useIndividualCRUDOperations;
+    
+    private final boolean impersonateUser;
+    
+    private final String activeDirectoryDomain;
 
     public HibernateSpringConfigExporter(String serviceName,
             String packageName, String dataPackage, String serviceClass,
-            boolean useIndividualCRUDOperations) {
+            boolean useIndividualCRUDOperations, boolean impersonateUser, 
+            String activeDirectoryDomain) {
 
         this.serviceName = serviceName;
         this.dataPackage = dataPackage;
         this.serviceClass = StringUtils.fq(packageName, serviceClass);
         this.useIndividualCRUDOperations = useIndividualCRUDOperations;
+        this.impersonateUser = impersonateUser;
+        this.activeDirectoryDomain = activeDirectoryDomain;
 
         setTemplateName(TEMPLATE);
     }
@@ -82,7 +89,7 @@ public class HibernateSpringConfigExporter extends GenericExporter {
 
         Map<String, Context> additionalContext = new HashMap<String, Context>(1);
 
-        Context ctx = new Context(serviceName, serviceClass);
+        Context ctx = new Context(serviceName, serviceClass, impersonateUser, activeDirectoryDomain);
 
         try {
 
@@ -104,11 +111,17 @@ public class HibernateSpringConfigExporter extends GenericExporter {
     public class Context extends GenerationContext {
 
         private final String serviceClass;
+        
+        private final boolean impersonateUser;
+        
+        private final String activeDirectoryDomain;
 
-        Context(String serviceName, String serviceClass) {
+        Context(String serviceName, String serviceClass, boolean impersonateUser, String activeDirectoryDomain) {
 
             super(serviceName, getConfiguration(), useIndividualCRUDOperations);
             this.serviceClass = XMLUtils.escape(serviceClass);
+            this.impersonateUser = impersonateUser;
+            this.activeDirectoryDomain = activeDirectoryDomain;
         }
 
         public String getServiceClass() {
@@ -127,8 +140,16 @@ public class HibernateSpringConfigExporter extends GenericExporter {
             return getFileList(entityClasses, DataServiceConstants.QUERY_EXT,
                     true);
         }
+        
+        public boolean isImpersonateUser() {
+        	return this.impersonateUser;
+        }
 
-        private String getFileList(List<Class<?>> entityClasses, String ext,
+        public String getActiveDirectoryDomain() {
+			return activeDirectoryDomain != null ? activeDirectoryDomain : "";
+		}
+
+		private String getFileList(List<Class<?>> entityClasses, String ext,
                 boolean addDefaultQueryFile) {
 
             Collection<String> fileNames = new HashSet<String>(entityClasses
