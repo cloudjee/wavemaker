@@ -49,7 +49,8 @@
             <fileset dir="${dist.studio.dir}">
 		<exclude name="**/RbacPlugin.js" unless="isEnterprise"/>
 		<exclude name="**/DojoFlashFileUpload.js" unless="isEnterprise"/>
-		<exclude name="**/dojo/util/**"/>	
+		<exclude name="**/dojo/util/**"/>
+		<exclude name="**/infoteria/**"/>	
 	</fileset>
         </copy>
         
@@ -93,6 +94,7 @@
 	     	<exclude name="**/RbacPlugin.js" unless="isEnterprise"/>
 		<exclude name="**/DojoFlashFileUpload.js" unless="isEnterprise"/>
 		<exclude name="**/dojo/util/**"/>
+		<exclude name="**/infoteria/**"/>
 	  </fileset>
         </copy>
 
