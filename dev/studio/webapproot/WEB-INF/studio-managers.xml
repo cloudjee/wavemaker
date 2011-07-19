@@ -537,6 +537,12 @@ Server-side manager bean definitions.  These are only to be used at runtime.
                         </bean>
                     </list>
                 </entry>
+         <entry key="0.46">
+                    <list>
+                        <bean class="com.wavemaker.tools.project.upgrade.six_dot_four.ProjSpringServicesXmlUpgradeTask">
+                        </bean>
+                    </list>
+                </entry>
             </map>
         </property>
         <property name="deploymentManager">
