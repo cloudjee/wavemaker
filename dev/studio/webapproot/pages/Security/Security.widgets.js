@@ -69,9 +69,9 @@ Security.widgets = {
 					databasePanel: ["wm.Panel", {width: "100%", height: "300px", fitToContentHeight: true, margin: "10,50,0,50", horizontalAlign: "left", verticalAlign: "top"}, {}, {
 					    dbDataModelInput: ["wm.SelectMenu", {required: true, captionSize: "150px", width: "500px", "border":"0","caption":"Data Model","display":"Select","emptyValue":"null","padding":"2", helpText: "Pick from one of the databases you have imported"}, {"onchange":"dbDataModelInputChange"}],
 					    dbEntityInput: ["wm.SelectMenu", {required: true,captionSize: "150px", width: "500px", "border":"0","caption":"Entity","display":"Select","emptyValue":"null","padding":"2", helpText: "Pick a table from your database that contains your registered users"}, {"onchange":"dbEntityInputChange"}],
-					    dbUsernameInput: ["wm.SelectMenu", {required: true,captionSize: "150px", width: "500px", "border":"0","caption":"Username Field","display":"Select","emptyValue":"null","padding":"2", helpText: "Select the user name that the user will type in to log in.  Typically an email address or identifier that is based on the user's personal name.  You can find the value of the logged in user's username in your application by <ol><li>creating a new ServiceVariable</li><li>set its 'service' to 'securityService'</li><li>select the operation 'getUserName'</li></ol>"}, {"onchange":"setDirty"}],
-					    dbUseridInput: ["wm.SelectMenu", {required: true,captionSize: "150px", width: "500px", "border":"0","caption":"User ID Field","display":"Select","emptyValue":"null","padding":"2", helpText: "Select the user ID that uniquely identifies the user in the database.  This is typically a number that the database has assigned to the user's entry in the database.  While you can use an email address, this tends to result in a database that bogs down badly as the size of your database goes up as this value is used by other database tables to identify the user account the data is associated with. You can  find out the ID when your project is running by <ol><li>creating a new ServiceVariable</li><li>set its 'service' to 'securityService'</li><li>select the operation 'getUserId'</li></ol>"}, {"onchange":"setDirty"}],
-					    dbPasswordInput: ["wm.SelectMenu", {required: true,captionSize: "150px", width: "500px", "border":"0","caption":"Password Field","display":"Select","emptyValue":"null","padding":"2", helpText: "Select the field that contains the user's password"}, {"onchange":"setDirty"}],
+					    dbUsernameInput: ["wm.SelectMenu", {required: true,captionSize: "150px", width: "500px", "border":"0","caption":"Username Field","display":"Select","emptyValue":"null","padding":"2", helpText: "Select the column containing the username data. This will be the user name required for login"}, {"onchange":"setDirty"}],
+					    dbUseridInput: ["wm.SelectMenu", {required: true,captionSize: "150px", width: "500px", "border":"0","caption":"User ID Field","display":"Select","emptyValue":"null","padding":"2", helpText: "Select the the column contaning the user id data"}, {"onchange":"setDirty"}],
+					    dbPasswordInput: ["wm.SelectMenu", {required: true,captionSize: "150px", width: "500px", "border":"0","caption":"Password Field","display":"Select","emptyValue":"null","padding":"2", helpText: "Select the field that contains the user's password required for login"}, {"onchange":"setDirty"}],
 					    dbRoleInput: ["wm.SelectMenu", {captionSize: "150px", width: "500px", "border":"0","caption":"Role Field","display":"Select","emptyValue":"null","padding":"2", helpText: "Select the field that contains the user's role.  This is optional if you aren't using roles"}, {"onchange":"setDirty"}]
 					}],
 					spacer30: ["wm.Spacer", {"height":"10px","width":"96px"}, {}],
@@ -112,10 +112,10 @@ Security.widgets = {
 				    }],
 				    ldapLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"LDAP", autoScroll:true}, {"onShow":"showLDAPLayer"}, {
 					ldapMainPanel: ["wm.Panel", {width: "100%", height: "300px", fitToContentHeight: true, margin: "10,50,0,50", horizontalAlign: "left", verticalAlign: "top"}, {}, {
-					    ldapUrlInput: ["wm.Text", {width: "500px", captionSize: "150px", "border":"0","caption":"LDAP URL","emptyValue":"null","padding":"2"}, {"onchange":"setDirty"}],
-					    ldapManagerDnInput: ["wm.Text", {width: "500px", captionSize: "150px", "border":"0","caption":"Manager DN","emptyValue":"null","padding":"2"}, {"onchange":"setDirty"}],
-					    ldapManagerPasswordInput: ["wm.Text", {width: "500px", captionSize: "150px", "border":"0","caption":"Manager Password","emptyValue":"null","padding":"2", password: true}, {"onchange":"setDirty"}],
-					    ldapUserDnPatternInput: ["wm.Text", {width: "500px", captionSize: "150px", "border":"0","caption":"User DN Pattern","emptyValue":"null","padding":"2"}, {"onchange":"setDirty"}],
+					    ldapUrlInput: ["wm.Text", {width: "500px", captionSize: "150px", "border":"0","caption":"LDAP URL","emptyValue":"null","padding":"2",helpText: "The URL of the LDAP server to be used as the root node"}, {"onchange":"setDirty"}],
+					    ldapManagerDnInput: ["wm.Text", {width: "500px", captionSize: "150px", "border":"0","caption":"Manager DN","emptyValue":"null","padding":"2",helpText: "Manager account DN, used only for testing conection"}, {"onchange":"setDirty"}],
+					    ldapManagerPasswordInput: ["wm.Text", {width: "500px", captionSize: "150px", "border":"0","caption":"Manager Password","emptyValue":"null","padding":"2", password: true,helpText: "Manager account password"}, {"onchange":"setDirty"}],
+					    ldapUserDnPatternInput: ["wm.Text", {width: "500px", captionSize: "150px", "border":"0","caption":"User DN Pattern","emptyValue":"null","padding":"2",helpText: "Replace {0} with username and combine with root node to form user DN"}, {"onchange":"setDirty"}],
 					    panel5: ["wm.Panel", {"height":"24px", width: "500px", "layoutKind":"left-to-right"}, {}, {
 						ldapConnectionResultLabel: ["wm.Label", {"caption":"ldapConnectionResultLabel","border":"0","height":"24px", width: "100%"}],
 						spacer7: ["wm.Spacer", {"width":"100%"}, {}],
@@ -126,15 +126,15 @@ Security.widgets = {
 					    ldapSearchRoleCheckbox: ["wm.Checkbox", {width: "500px", captionSize: "150px", "caption":"Search User Role","emptyValue":"null"}, {"onchange":"ldapSearchRoleCheckboxChange"}],
 					    ldapRoleProviderInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Select User Role Provider","emptyValue":"null","display":"Select"}, {"onchange":"ldapRoleProviderInputChange"}],
 					    ldapRoleLdapPanel: ["wm.Panel", {"width":"100%", "height":"100px", horizontalAlign: "left", verticalAlign: "top"},{},{
-						ldapGroupSearchBaseInput: ["wm.Text", {width: "500px", captionSize: "150px", "caption":"Group Search Base","emptyValue":"null"}, {onchange: "setDirty"}],
-						ldapGroupRoleAttributeInput: ["wm.Text", {width: "500px", captionSize: "150px", "caption":"Group Role Attribute","emptyValue":"null"}, {onchange: "setDirty"}],
-						ldapGroupSearchFilterInput: ["wm.Text", {width: "500px", captionSize: "150px", "caption":"Group Search Filter","emptyValue":"null"}, {onchange: "setDirty"}]
+						ldapGroupSearchBaseInput: ["wm.Text", {width: "500px", captionSize: "150px", "caption":"Group Search Base","emptyValue":"null",helpText: "Base from which group membership is searched"}, {onchange: "setDirty"}],
+						ldapGroupRoleAttributeInput: ["wm.Text", {width: "500px", captionSize: "150px", "caption":"Group Role Attribute","emptyValue":"null",helpText: "Attribute containg role data in group base"}, {onchange: "setDirty"}],
+						ldapGroupSearchFilterInput: ["wm.Text", {width: "500px", captionSize: "150px", "caption":"Group Search Filter","emptyValue":"null",helpText: "Filter used to find user's roles. {0} is replacd with user DN"}, {onchange: "setDirty"}]
 					    }],
 					    ldapRoleDBPanel: ["wm.Panel", {"width":"100%", "height":"200px", horizontalAlign: "left", verticalAlign: "top"},{},{
-						ldapRoleDbDataModelInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Data Model","emptyValue":"null"}, {"onchange":"ldapRoleDbDataModelInputChange"}],
-						ldapRoleDbEntityInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Entity","emptyValue":"null"}, {"onchange":"ldapRoleDbEntityInputChange"}],
-						ldapRoleDbUsernameInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Username Field","emptyValue":"null"}, {onchange: "setDirty"}],
-						ldapRoleDbRoleInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Role Field","emptyValue":"null"}, {onchange: "setDirty"}],
+						ldapRoleDbDataModelInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Data Model","emptyValue":"null",helpText: "The datamodel to be used for roles"}, {"onchange":"ldapRoleDbDataModelInputChange"}],
+						ldapRoleDbEntityInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Entity","emptyValue":"null",helpText: "The table of the datamodel containing the user info"}, {"onchange":"ldapRoleDbEntityInputChange"}],
+						ldapRoleDbUsernameInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Username Field","emptyValue":"null",helpText: "The table column containing the username, must match LDAP username"}, {onchange: "setDirty"}],
+						ldapRoleDbRoleInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Role Field","emptyValue":"null",helpText: "The table column containing the user role(s) to be used for access control"}, {onchange: "setDirty"}],
 						ldapRoleBySQLPanel: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_RightNone","wm_Padding_LeftNone","wm_Padding_BottomNone","wm_Padding_4px"]},"height":"150px", width: "100%"}, {}, {
 						    panel26: ["wm.Panel", {"height":"24px","layoutKind":"left-to-right"}, {}, {
 							ldapRoleBySQLCheckbox: ["wm.Checkbox", {"captionSize":"150px","caption":"Roles By SQL Query","width":"500px"}, {"onchange":"ldapRoleBySQLCheckboxChange"}]
