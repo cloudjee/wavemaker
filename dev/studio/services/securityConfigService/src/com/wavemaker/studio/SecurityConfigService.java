@@ -422,7 +422,7 @@ public class SecurityConfigService {
 		Map<String, List<String>> urlMap = getSecToolsMgr()
 				.getSecurityFilterODS();
 		List<SecurityURLMap> securityURLMap = new ArrayList<SecurityURLMap>();
-		if(!urlMap.isEmpty()){
+		if(!(urlMap==null)){
 		for (String url : urlMap.keySet()) {
 			SecurityURLMap secMap = new SecurityURLMap();
 			secMap.setURL(url);
