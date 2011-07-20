@@ -62,10 +62,10 @@ try
 		dojo.registerModulePath("dojo.nls", wm.libPath + "/build/nls");
 	    //dojo.registerModulePath("dijit.themes.tundra", wm.libPath + "build/themes/tundra");
 		dojo.registerModulePath("build", wm.libPath + "/build");
-
-	    dojo.require("build.Gzipped.lib_build", true);	
-		//dojo.require("build.lib_build_uncompressed", true);	
+		
+		dojo.require("build.Gzipped.lib_build", true);	
 		// START: The comments here are for debugging in non-debug mode. Please do not remove these comments
+		// To use lib_build_uncompressed, uncomment the next two lines AND comment out the above dojo.require for Gzipped.lib_build
 		//dojo.require("build.lib_build_uncompressed", true);
 		//wm.writeJsTag(wm.relativeLibPath + '/build/lib_build_uncompressed.js');
 		// END: The comments here are for debugging in non-debug mode. Please do not remove these comments
