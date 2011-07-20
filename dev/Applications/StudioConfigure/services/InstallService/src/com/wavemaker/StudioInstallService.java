@@ -41,7 +41,7 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
     public void DownloadPackages() throws IOException {
         File webapproot = new File(RuntimeAccess.getInstance().getSession().getServletContext().getRealPath(""));
 
-     URL url = new URL("https://github.com/wavemaker/WaveMaker-LGPL-Resources/blob/master/repo.zip?raw=true");
+     URL url = new URL("https://github.com/wavemaker/WaveMaker-LGPL-Resources-6-4/blob/master/repo.zip?raw=true");
       URLConnection urlC = url.openConnection();
           // Copy resource to local file, use remote file
           // if no local file name specified
