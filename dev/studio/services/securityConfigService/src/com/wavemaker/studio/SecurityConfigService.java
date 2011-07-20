@@ -294,18 +294,21 @@ public class SecurityConfigService {
     
     /**
      * Function to get the entity name from the table name that's stored in the query
+     * If we do not have a model (db) for the role selected, then ignore this
      * @param options
      * @return
      */
     public LDAPOptions populateJavaSpecificLDAPParams(LDAPOptions options){
-        DataModelConfiguration dataModel = dataModelMgr.getDataModel(options.getRoleModel());
-        Collection<EntityInfo> entities = dataModel.getEntities();
-        for (EntityInfo entity : entities) {
-            if (entity.getTableName().equals(options.getRoleTable())) {
-                options.setRoleEntity(entity.getEntityName());
-                break;
-            }
-        }
+    	if(options.getRoleModel() != null){
+            DataModelConfiguration dataModel = dataModelMgr.getDataModel(options.getRoleModel());
+            Collection<EntityInfo> entities = dataModel.getEntities();
+            for (EntityInfo entity : entities) {
+                if (entity.getTableName().equals(options.getRoleTable())) {
+                    options.setRoleEntity(entity.getEntityName());
+                    break;
+                }
+            }    		
+    	}
         return options;
     }
 

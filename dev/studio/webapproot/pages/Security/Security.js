@@ -281,9 +281,9 @@ dojo.declare("Security", wm.Page, {
 		//GD
 		this.ldapRoleProviderInput.setDataValue(inResponse.roleProvider);
 		this.ldapRoleDbDataModelInput.setDataValue(inResponse.roleModel);
-		this.ldapRoleDbEntityInput.setDataValue(inResponse.roleEntity);
-		this.ldapRoleDbUsernameInput.setDataValue(inResponse.roleUsername);
-		this.ldapRoleDbRoleInput.setDataValue(inResponse.roleProperty);		
+		this.ldapRoleDbDataModelInput.changed();
+		this.ldapRoleBySQLCheckbox.setChecked(inResponse.roleQuery);
+		this.ldapRoleBySQLInput.setDataValue(inResponse.roleQuery);
 	},
 	saveButtonClick: function(inSender) {
 	    studio.saveAll(this);
@@ -554,8 +554,8 @@ dojo.declare("Security", wm.Page, {
 				}
 				this.updateSelect(this.ldapRoleDbRoleInput, pnames);
 				this.updateSelect(this.ldapRoleDbUsernameInput, pnames);
-//				this.ldapRoleDbRoleInput.setDataValue(this.ldapOptions.roleProperty);
-//				this.ldapRoleDbUsernameInput.setDataValue(this.ldapOptions.usernameProperty);
+				this.ldapRoleDbRoleInput.setDataValue(this.ldapOptions.roleProperty);
+				this.ldapRoleDbUsernameInput.setDataValue(this.ldapOptions.roleUsername);
 			}
 		}
 	},
@@ -585,28 +585,6 @@ dojo.declare("Security", wm.Page, {
 			dojo.hitch(this, "testRolesByUsernameQueryError"));
 			
 	},
-	ldapTestSQLButtonClick: function(inSender) {
-	    studio.beginWait(this.getDictionaryItem("WAIT_TEST_SQL"));
-		studio.securityConfigService.requestAsync(
-			"testRolesByUsernameQuery",
-			[this.ldapRoleDbDataModelInput.getDataValue(),
-			this.ldapRoleBySQLInput.getDataValue(),
-			this.ldapTestSQLInput.getDataValue()],
-			dojo.hitch(this, "ldapTestRolesByUsernameQueryResult"),
-			dojo.hitch(this, "ldapTestRolesByUsernameQueryError"));
-			
-	},
-	ldapTestRolesByUsernameQueryResult: function(inResponse) {
-		studio.endWait();
-		console.log(inResponse);
-		this.ldapTestSQLErrorLabel.setCaption("");
-		this.ldapTestSQLResultList.renderData(inResponse);
-	},
-	ldapTestRolesByUsernameQueryError: function(inResponse) {
-		studio.endWait();
-		this.ldapTestSQLResultList.renderData([]);
-		this.ldapTestSQLErrorLabel.setCaption(inResponse.message);
-	},	
 	testRolesByUsernameQueryResult: function(inResponse) {
 		studio.endWait();
 		this.dbTestSQLErrorLabel.setCaption("");
@@ -623,11 +601,7 @@ dojo.declare("Security", wm.Page, {
 		if(!c){
 			this.ldapRoleProviderInput.setDataValue(this.SELECT_ONE);
 		}
-		var ldapRoleProvider = this.ldapRoleProviderInput.getDataValue();
-		
-//		this.ldapGroupSearchBaseInput.setShowing(c);
-//		this.ldapGroupRoleAttributeInput.setShowing(c);
-//		this.ldapGroupSearchFilterInput.setShowing(c);
+		var ldapRoleProvider = this.ldapRoleProviderInput.getDataValue();		
 		this.setDirty();
 	},
 	ldapRoleProviderInputChange: function(inSender, inDisplayValue, inDataValue){

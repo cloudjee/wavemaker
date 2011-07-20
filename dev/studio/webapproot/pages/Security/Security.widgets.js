@@ -140,22 +140,7 @@ Security.widgets = {
 							ldapRoleBySQLCheckbox: ["wm.Checkbox", {"captionSize":"150px","caption":"Roles By SQL Query","width":"500px"}, {"onchange":"ldapRoleBySQLCheckboxChange"}]
 						    }],
 						    ldapRoleBySQLEnablePanel: ["wm.Panel", {"height":"150px","width":"100%", fitContentToHeight: true, verticalAlign: "top", horizontalAlign: "left"}, {}, {
-							ldapRoleBySQLInput: ["wm.LargeTextArea", {"width":"100%","caption":"","emptyValue":"null","height":"48px","display":"TextArea"}, {onchange: "setDirty"}],
-							panel23: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_2px"]},"height":"24px",width: "100%", "layoutKind":"left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
-							    spacer26: ["wm.Spacer", {"width":"100%"}, {}],
-							    ldapTestSQLInput: ["wm.Text", {"caption":"User ID","emptyValue":"null","width":"250px"}, {onchange: "setDirty"}],
-							    ldapTestSQLButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},"caption":"Test Query","margin":"2","width":"100px"}, {"onclick":"ldapTestSQLButtonClick"}]
-							}],
-							panel24: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_2px","wm_Padding_LeftNone","wm_Padding_TopNone"]},"height":"48px","layoutKind":"left-to-right"}, {}, {
-							    spacer25: ["wm.Spacer", {"width":"206px"}, {}],
-							    ldapTestSQLResultList: ["wm.List", {"_classes":{"domNode":["wm_Border_Size1px","wm_Border_StyleSolid","wm_Border_ColorLightGray"]},"width":"100%","border":"0"}, {}]
-							}],
-							panel25: ["wm.Panel", {"height":"30px","layoutKind":"left-to-right"}, {}, {
-							    spacer24: ["wm.Spacer", {"width":"206px"}, {}],
-							    ldapTestSQLErrorLabel: ["wm.Label", {"caption":"dbTestSQLErrorLabel","border":"0","width":"100%"}, {}, {
-								format: ["wm.DataFormatter", {}, {}]
-							    }]
-							}]
+							ldapRoleBySQLInput: ["wm.LargeTextArea", {"width":"100%","caption":"","emptyValue":"null","height":"48px","display":"TextArea"}, {onchange: "setDirty"}]
 						    }]
 						}]								
 					    }]	
