@@ -38,4 +38,9 @@
         </property>
         <property name="alwaysUseFullPath" value="true" />
     </bean>
+	<bean id="infoteriaAutoLoginSvc" 
+		class="com.wavemaker.runtime.ws.infoteria.AutoLoginService"
+		scope="session" 
+		lazy-init="true">
+	</bean>
 </beans>

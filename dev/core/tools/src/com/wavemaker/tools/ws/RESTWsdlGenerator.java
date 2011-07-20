@@ -194,6 +194,11 @@ public class RESTWsdlGenerator {
 
         Message inputMessage;
         Message outputMessage;
+
+        PortType portType = new PortTypeImpl();
+        portType.setUndefined(false);
+        portType.setQName(new QName(serviceName));
+
         int indx = 0;
         for (String operationName : operationName_list) {
             inputMessage = generateInputMessage(operationName, inputParts_list.get(indx));
@@ -208,9 +213,29 @@ public class RESTWsdlGenerator {
             definition.addMessage(inputMessage);
             definition.addMessage(outputMessage);
 
-            definition.addPortType(generatePortType(operationName, inputMessage, outputMessage));
+            Operation operation = new OperationImpl();
+            operation.setUndefined(false);
+            operation.setName(operationName);
+            if (httpMethod != null && httpMethod.equals("POST")) {
+                String content = "POST";
+                if (contentType != null && contentType.length() > 0) {
+                    content += " " + contentType;
+                }
+                operation.setDocumentationElement(generateDocumentation(content));
+            }
+            Input input = new InputImpl();
+            input.setMessage(inputMessage);
+            operation.setInput(input);
+            Output output = new OutputImpl();
+            output.setMessage(outputMessage);
+            operation.setOutput(output);
+
+            portType.addOperation(operation);
             indx++;
         }
+
+        definition.addPortType(portType);
+        
         return definition;
     }
 
@@ -355,28 +380,32 @@ public class RESTWsdlGenerator {
         }
     }
 
-    private PortType generatePortType(String operName, Message inputMessage,
+    private PortType generatePortType(List<String> operList, Message inputMessage,
             Message outputMessage) throws ParserConfigurationException {
         PortType portType = new PortTypeImpl();
         portType.setUndefined(false);
         portType.setQName(new QName(serviceName));
-        Operation operation = new OperationImpl();
-        operation.setUndefined(false);
-        operation.setName(operName);
-        if (httpMethod != null && httpMethod.equals("POST")) {
-            String content = "POST";
-            if (contentType != null && contentType.length() > 0) {
-                content += " " + contentType;
+
+        for (String operName : operList) {
+            Operation operation = new OperationImpl();
+            operation.setUndefined(false);
+            operation.setName(operName);
+            if (httpMethod != null && httpMethod.equals("POST")) {
+                String content = "POST";
+                if (contentType != null && contentType.length() > 0) {
+                    content += " " + contentType;
+                }
+                operation.setDocumentationElement(generateDocumentation(content));
             }
-            operation.setDocumentationElement(generateDocumentation(content));
+            Input input = new InputImpl();
+            input.setMessage(inputMessage);
+            operation.setInput(input);
+            Output output = new OutputImpl();
+            output.setMessage(outputMessage);
+            operation.setOutput(output);
+            portType.addOperation(operation);
         }
-        Input input = new InputImpl();
-        input.setMessage(inputMessage);
-        operation.setInput(input);
-        Output output = new OutputImpl();
-        output.setMessage(outputMessage);
-        operation.setOutput(output);
-        portType.addOperation(operation);
+        
         return portType;
     }
 

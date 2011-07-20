@@ -1,6 +1,5 @@
-
 /*
- * Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,21 +12,18 @@
  *  limitations under the License.
  */
 
-package com.wavemaker.tools.ws.infoteria;
+package com.wavemaker.runtime.ws.util;
 
-public class WarpException extends RuntimeException {
-    private String reason;
-    public WarpException(String message, String reason) {
-        super("Warp Error: " + message);
-        this.reason = reason;
-    }
+/**
+ * @author slee
+ */
+public class WebServiceUtils {
 
-    public String getReason() {
-        return this.reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
+    public static String getServiceProvider(String endpointAddress) {
+        if (endpointAddress.contains("/flow-rest/flow/")) {
+            return Constants.SERVICE_PROVIDER_INFOTERIA;
+        } else {
+            return "";
+        }
     }
 }
-

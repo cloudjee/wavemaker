@@ -14,13 +14,7 @@
 
 package com.wavemaker.runtime.ws;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -42,9 +36,14 @@ import javax.xml.ws.http.HTTPBinding;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.io.IOUtils;
 
 import com.sun.xml.ws.developer.JAXWSProperties;
 import com.sun.xml.ws.encoding.xml.XMLMessage;
+import com.wavemaker.runtime.ws.util.WebServiceUtils;
+import com.wavemaker.runtime.ws.util.Constants;
+import com.wavemaker.runtime.ws.infoteria.WarpException;
+import com.wavemaker.runtime.ws.infoteria.WarpHelper;
 
 /**
  * This class provides helper methods for HTTP binding.
@@ -71,6 +70,8 @@ public class HTTPBindingSupport {
                         : convertToXMLString(postData));
 
         DataSource postSource = null;
+        ByteArrayInputStream inputStream = null;
+        byte[] bytes = null;
         if (method == HTTPRequestMethod.POST) {
             postSource = createDataSource(contentType, msg);
         }
@@ -78,7 +79,10 @@ public class HTTPBindingSupport {
                 endpointAddress, method, postSource, bindingProperties,
                 DataSource.class);
         try {
-            InputStream inputStream = response.getInputStream();
+            InputStream is = new BufferedInputStream(response.getInputStream());
+            bytes = IOUtils.toByteArray(is);
+            inputStream = new ByteArrayInputStream(bytes);
+            
             if (responseType == Void.class) {
                 return null;
             } else if (responseType == String.class) {
@@ -93,7 +97,21 @@ public class HTTPBindingSupport {
         } catch (IOException e) {
             throw new WebServiceException(e);
         } catch (JAXBException e) {
-            throw new WebServiceException(e);
+            boolean authError;
+            if (WebServiceUtils.getServiceProvider(endpointAddress).equals(Constants.SERVICE_PROVIDER_INFOTERIA)) {
+                try {
+                    authError = WarpHelper.authenticationError(bytes);
+                } catch (Exception e1) {
+                    throw new WebServiceException(e1);
+                }
+                if (authError) {
+                    throw new WarpException("Authorization error", "Auth");
+                } else {
+                    throw new WebServiceException(e);
+                }
+            } else {
+                throw new WebServiceException(e);
+            }
         }
     }
 

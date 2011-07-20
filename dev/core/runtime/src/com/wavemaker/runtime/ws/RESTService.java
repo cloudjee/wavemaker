@@ -34,15 +34,15 @@ import com.wavemaker.runtime.ws.util.Constants;
  */
 public class RESTService {
 
-    private String serviceId;
+    protected String serviceId;
 
-    private QName serviceQName;
+    protected QName serviceQName;
 
-    private String parameterizedURI;
+    protected String parameterizedURI;
 
-    private BindingProperties bindingProperties;
+    protected BindingProperties bindingProperties;
 
-    private HTTPRequestMethod httpRequestMethod;
+    protected HTTPRequestMethod httpRequestMethod;
 
     /**
      * Constructs a REST style Web service.

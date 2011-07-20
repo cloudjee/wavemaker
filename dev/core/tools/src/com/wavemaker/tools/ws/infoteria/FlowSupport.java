@@ -15,6 +15,8 @@
 package com.wavemaker.tools.ws.infoteria;
 
 import com.wavemaker.runtime.ws.HTTPBindingSupport;
+import com.wavemaker.runtime.ws.infoteria.WarpHelper;
+import com.wavemaker.runtime.ws.infoteria.WarpException;
 import com.wavemaker.runtime.ws.util.Constants;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.ws.WebServiceToolsManager;
@@ -26,19 +28,10 @@ import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.common.util.StringUtils;
 
 import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.Source;
-import javax.xml.transform.Result;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.dom.DOMSource;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
-import org.w3c.dom.*;
 
 import java.io.*;
 import java.util.List;
@@ -91,12 +84,6 @@ public class FlowSupport {
     private ProjectManager projectManager;
 
     private DesignServiceManager designServiceManager;
-
-    private static final String WARP_HOST = ".username";
-    private static final String WARP_PORT = ".password";
-    private static final String WARP_USERNAME = ".username";
-    private static final String WARP_PASS = ".password";
-    private static final String WARP_DOMAIN = ".domain";
 
     public String listProjects(String host, String port, String sessionId) throws Exception {
         String result;
@@ -276,15 +263,15 @@ public class FlowSupport {
                                         String domain) throws Exception {
         Properties p = new Properties();
 
-        p.put(projectName+WARP_HOST, host);
-        p.put(projectName+WARP_PORT, port);
-        p.put(projectName+WARP_USERNAME, userName);
+        p.put(projectName + WarpHelper.WARP_HOST, host);
+        p.put(projectName + WarpHelper.WARP_PORT, port);
+        p.put(projectName + WarpHelper.WARP_USERNAME, userName);
 
         if (password != null && !SystemUtils.isEncrypted(password)) {
             password = SystemUtils.encrypt(password);
         }
-        p.put(projectName+WARP_PASS, password);
-        p.put(projectName+WARP_DOMAIN, domain);
+        p.put(projectName + WarpHelper.WARP_PASS, password);
+        p.put(projectName + WarpHelper.WARP_DOMAIN, domain);
 
         String comment = "Properties for " + projectName;
 
@@ -324,26 +311,31 @@ public class FlowSupport {
             List<RESTInputParam> flowParms = new ArrayList<RESTInputParam>();
 
             JSONObject flow = (JSONObject)flowList.get(i);
+            JSONObject args = null;
+            JSONArray fields = null;
+            //JSONArray variables = null;
 
-            try {
-                JSONObject args = (JSONObject)flow.get("args");
-                JSONArray fields = convertToJSONArray(args.get("field"));
+            if (flow.has("args")) args = (JSONObject)flow.get("args");
 
-                param = new RESTInputParam();
-                param.setName("sessionid");
-                param.setType("string");
-                flowParms.add(param);
+            if (args != null && args.has("field")) fields = convertToJSONArray(args.get("field"));
+            //if (args != null && args.has("variable")) variables = convertToJSONArray(args.get("variable"));
 
-                param = new RESTInputParam();
-                param.setName("project");
-                param.setType("string");
-                flowParms.add(param);
+            param = new RESTInputParam();
+            param.setName("sessionid");
+            param.setType("string");
+            flowParms.add(param);
 
-                param = new RESTInputParam();
-                param.setName("flow");
-                param.setType("string");
-                flowParms.add(param);
+            param = new RESTInputParam();
+            param.setName("project");
+            param.setType("string");
+            flowParms.add(param);
 
+            param = new RESTInputParam();
+            param.setName("flow");
+            param.setType("string");
+            flowParms.add(param);
+
+            if (fields != null) {
                 for (int j=0; j<fields.length(); j++) {
                     JSONObject field = (JSONObject)fields.get(j);
                     param = new RESTInputParam();
@@ -353,8 +345,19 @@ public class FlowSupport {
                     param.setType(ftype);
                     flowParms.add(param);
                 }
-            } catch (JSONException ex) {
             }
+
+            /*if (variables != null) {
+                for (int j=0; j<variables.length(); j++) {
+                    JSONObject variable = (JSONObject)variables.get(j);
+                    param = new RESTInputParam();
+                    param.setName((String)variable.get("name"));
+                    String ftype = (String)variable.get("type");
+                    ftype = convertToSchemaType(ftype);
+                    param.setType(ftype);
+                    flowParms.add(param);
+                }
+            }*/
 
             restParms.add(flowParms);
         }
@@ -386,7 +389,7 @@ public class FlowSupport {
                 rtn = "dateTime";
                 break;
             case Binary:
-                rtn = "byte";
+                rtn = "base64Binary";
                 break;
             default:
                 rtn = "string";
@@ -404,6 +407,7 @@ public class FlowSupport {
         JSONArray fields = convertToJSONArray(stream.get("field"));
 
         StringBuffer sb = new StringBuffer();
+
         for (int j=0; j<fields.length(); j++) {
             JSONObject field = (JSONObject)fields.get(j);
             String name = (String)field.get("name");

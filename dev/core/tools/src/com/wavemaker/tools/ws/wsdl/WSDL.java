@@ -393,6 +393,10 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
         return new ArrayList<String>(operationMap.keySet());
     }
 
+    public Map<String, Operation> getOperationMap() {
+        return this.operationMap;
+    }
+
     /**
      * Returns the specifed operation.
      * 
