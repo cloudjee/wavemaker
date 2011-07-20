@@ -63,13 +63,13 @@ public class ServicesService {
      * Return a list of services registered with the current application.
      * 
      * @return The set of all service ids associated with the current
-     *         application.
+     *         application. Removes runtime and wavemaker services from return.
      */
     @ExposeToClient
     public Set<String> listServices() {
-        
         Set<String> services = designServiceManager.getServiceIds();
         services.remove(DesignServiceManager.RUNTIME_SERVICE_ID);
+        services.remove(DesignServiceManager.RUNTIME_DATA_SERVICE_ID);
         return services;
     }
 
