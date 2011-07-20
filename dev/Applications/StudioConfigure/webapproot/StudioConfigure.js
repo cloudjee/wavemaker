@@ -1,10 +1,11 @@
 dojo.declare("StudioConfigure", wm.Application, {
 	"dialogAnimationTime": 350, 
+	"disableDirtyEditorTracking": false, 
 	"i18n": false, 
 	"main": "Main", 
-	"projectSubVersion": 132, 
+	"projectSubVersion": 133, 
 	"projectVersion": 1, 
-	"studioVersion": "6.3.1Beta", 
+	"studioVersion": "6.4.0DevBuild", 
 	"theme": "wm_studio", 
 	"toastPosition": "br",
 	"widgets": {
