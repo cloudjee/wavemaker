@@ -26,7 +26,7 @@ dojo.provide('wm.base.components.componentList');
  ************************************************************************************/
 wm.componentList = {
 	'wm.DataGrid': ['build.Gzipped.wm_dojo_grid'],
-	'wm.DojoGrid': ['build.Gzipped.wm_dojo_grid', 'wm.base.widget.DojoGrid'],
+	'wm.DojoGrid': ['build.Gzipped.wm_dojo_grid'],
 	'wm.DojoMenu': ['build.Gzipped.wm_menus'],
         'wm.PopupMenu': ['build.Gzipped.wm_menus'],
 	'wm.DojoChart': ['build.Gzipped.wm_charts'],
@@ -47,7 +47,7 @@ wm.componentList = {
 	'wm.gadget.GoogleMap': ['build.Gzipped.wm_gadgets'],
 	'wm.gadget.Stocks': ['build.Gzipped.wm_gadgets'],
 	'wm.gadget.Weather': ['build.Gzipped.wm_gadgets'],
-	'wm.ImageList':['wm.base.components.ImageList'],
+	//'wm.ImageList':['wm.base.components.ImageList'],
 	'wm.Splitter': ['wm.base.drag.capture','wm.base.drag.drag','wm.base.widget.Splitter'],
 
 	'wm.RichText':['build.Gzipped.wm_editors','build.Gzipped.wm_richTextEditor'],
@@ -96,7 +96,7 @@ wm.componentList = {
 	'wm.DataNavigator':  ['build.Gzipped.wm_livepanel'],
 
 
-	'wm.Picture': ["wm.base.widget.Picture"],
+	//'wm.Picture': ["wm.base.widget.Picture"],
 	'wm.dijit.Calendar':["wm.base.widget.dijit.Calendar"],
 	'wm.Html':['wm.base.widget.Html'],
 	'wm.NavigationCall':["wm.base.components.NavigationCall"],

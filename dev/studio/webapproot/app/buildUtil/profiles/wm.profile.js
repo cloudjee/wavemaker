@@ -124,7 +124,7 @@ dependencies = {
 				"wm.base.components.FunctionService",
 				*/
 				"wm.base.components.Security",
-				//"wm.base.components.ImageList",
+				"wm.base.components.ImageList",
 				//"wm.base.components.DomMacro",
 				// widgets
 				//"wm.base.widget.Formatters",
