@@ -332,7 +332,7 @@ Studio.widgets = {
 							    wire: ["wm.Wire", {"source":"app.pagesListVar","targetProperty":"dataSet"}, {}]
 							}]
 						    }],
-						    languageSelect: ["wm.SelectMenu", {caption: "Language", margin:"4,0,4,20", width: "50%", maxWidth: "180", height: "24px", captionSize: "70px", displayField: "dataValue", dataField: "dataValue", dataValue: "default", options: "default, ens, ja, es, it, cn, other", restrictValues: false},{onchange: "languageSelectChanged"},{
+						    languageSelect: ["wm.SelectMenu", {caption: "Language", margin:"4,0,4,20", width: "50%", maxWidth: "180", height: "24px", captionSize: "70px", displayField: "dataValue", dataField: "dataValue", dataValue: "default", options: "default, en, ja, es, it, cn, other", restrictValues: false},{onchange: "languageSelectChanged"},{
 						    }]
 
 						}]
