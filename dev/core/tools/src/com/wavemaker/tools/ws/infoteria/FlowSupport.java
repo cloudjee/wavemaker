@@ -308,32 +308,32 @@ public class FlowSupport {
         RESTInputParam param = null;
 
         for (int i=0; i<flowList.length(); i++) {
-            List<RESTInputParam> flowParms = new ArrayList<RESTInputParam>();
+            List<RESTInputParam> flowParams = new ArrayList<RESTInputParam>();
 
             JSONObject flow = (JSONObject)flowList.get(i);
             JSONObject args = null;
             JSONArray fields = null;
-            //JSONArray variables = null;
+            JSONArray variables = null;
 
             if (flow.has("args")) args = (JSONObject)flow.get("args");
 
             if (args != null && args.has("field")) fields = convertToJSONArray(args.get("field"));
-            //if (args != null && args.has("variable")) variables = convertToJSONArray(args.get("variable"));
+            if (args != null && args.has("variable")) variables = convertToJSONArray(args.get("variable"));
 
             param = new RESTInputParam();
             param.setName("sessionid");
             param.setType("string");
-            flowParms.add(param);
+            flowParams.add(param);
 
             param = new RESTInputParam();
             param.setName("project");
             param.setType("string");
-            flowParms.add(param);
+            flowParams.add(param);
 
             param = new RESTInputParam();
             param.setName("flow");
             param.setType("string");
-            flowParms.add(param);
+            flowParams.add(param);
 
             if (fields != null) {
                 for (int j=0; j<fields.length(); j++) {
@@ -343,26 +343,41 @@ public class FlowSupport {
                     String ftype = (String)field.get("type");
                     ftype = convertToSchemaType(ftype);
                     param.setType(ftype);
-                    flowParms.add(param);
+                    flowParams.add(param);
                 }
             }
 
-            /*if (variables != null) {
+            if (variables != null) {
                 for (int j=0; j<variables.length(); j++) {
                     JSONObject variable = (JSONObject)variables.get(j);
-                    param = new RESTInputParam();
-                    param.setName((String)variable.get("name"));
-                    String ftype = (String)variable.get("type");
-                    ftype = convertToSchemaType(ftype);
-                    param.setType(ftype);
-                    flowParms.add(param);
+                    String paramName = (String)variable.get("name");
+                    if (newParam(paramName, flowParams)) {
+                        param = new RESTInputParam();
+                        param.setName(paramName);
+                        String ftype = (String)variable.get("type");
+                        ftype = convertToSchemaType(ftype);
+                        param.setType(ftype);
+                        flowParams.add(param);
+                    }
                 }
-            }*/
+            }
 
-            restParms.add(flowParms);
+            restParms.add(flowParams);
         }
 
         return restParms;
+    }
+
+    private boolean newParam(String name, List<RESTInputParam> flowParms) {
+        boolean rtn = true;
+        for (RESTInputParam param : flowParms) {
+            if (name.equals(param.getName())) {
+                rtn = false;
+                break;
+            }
+        }
+
+        return rtn;
     }
 
     private static String convertToSchemaType (String type) {
