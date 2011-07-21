@@ -389,7 +389,7 @@ public class FlowSupport {
                 rtn = "string";
                 break;
             case Integer:
-                rtn = "int";
+                rtn = "long";
                 break;
             case Double:
                 rtn = "double";
