@@ -184,6 +184,10 @@ public class TomcatUndeployer {//extends Server {
             while ((line = br.readLine()) != null) {
                 if (isFirst) {
                     if (!line.startsWith("OK")) {
+                    	if(line.startsWith("FAIL - No context exists")){
+                    	//Context not deployed
+                    	}
+                    	else
                         throw new RuntimeException(line);
                     }
                 }
