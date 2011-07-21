@@ -60,7 +60,7 @@ public class LdapAuthoritiesPopulator extends DefaultLdapAuthoritiesPopulator {
         		HashSet roles = new HashSet();
 				Connection con = getDataSource().getConnection();
 				String sqlStatement = "";
-				if(roleQuery != null){
+				if(roleQuery != null && !roleQuery.equals("")){
 					sqlStatement = roleQuery;
 				}else{
 					sqlStatement = "SELECT " + roleProperty.toLowerCase() + " FROM " + roleTable + " WHERE " + roleUsername + " = ?";	
