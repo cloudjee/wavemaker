@@ -196,6 +196,7 @@ dojo.declare("CustomWebServiceImporter", wm.Page, {
 						  dojo.hitch(this, "importFlowsError"));
     },
     importFlowsSuccess: function() {
+	studio.updateServices();
 	studio.application.loadServerComponents();
 	studio.refreshServiceTree(); 
 	app.toastSuccess(this.getDictionaryItem("TOAST_IMPORT_SUCCESS"));
