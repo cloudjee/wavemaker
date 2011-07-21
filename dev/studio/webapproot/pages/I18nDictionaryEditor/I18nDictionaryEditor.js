@@ -158,14 +158,14 @@ dojo.declare("I18nDictionaryEditor", wm.Page, {
 	var value = this.dictionaryHash.default[name];
 	var results = value.match(/\$\{(.*?)\}/g);
 	if (results) {
-	    var text = "this.getDictionaryItem(\"SCRIPT_" + name + "\",{"
+	    var text = "this.getDictionaryItem(\"" + name + "\",{"
 	    for (var i = 0; i < results.length; i++) {
 		if (i) text += ", ";
 		text += '"' + results[i].replace(/\$\{(.*)\}/, "$1") + '": ""';
 	    }
 	    text += "})";
 	} else {
-	    var text = "this.getDictionaryItem(\"SCRIPT_" + name + "\")";
+	    var text = "this.getDictionaryItem(\"" + name + "\")";
 	}
 	studio.editArea.replaceSelectedText(text);
     },
