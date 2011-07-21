@@ -63,6 +63,8 @@ dojo.declare("I18nDictionaryEditor", wm.Page, {
 	}
 	if (isUnique) {
 	    this.dictionaryTermListVar.addItem({dataValue: newName});
+	    if (!this.dictionaryHash.default)
+		this.dictionaryHash.default = {};
 	    this.dictionaryHash.default[newName] = "";
 	}
     },
@@ -155,12 +157,16 @@ dojo.declare("I18nDictionaryEditor", wm.Page, {
 	var name = this.dictionaryItemList.selectedItem.getValue("dataValue");	
 	var value = this.dictionaryHash.default[name];
 	var results = value.match(/\$\{(.*?)\}/g);
-	var text = "this.getDictionaryItem(\"SCRIPT_" + name + "\",{"
-	for (var i = 0; i < results.length; i++) {
-	    if (i) text += ", ";
-	    text += '"' + results[i].replace(/\$\{(.*)\}/, "$1") + '": ""';
+	if (results) {
+	    var text = "this.getDictionaryItem(\"SCRIPT_" + name + "\",{"
+	    for (var i = 0; i < results.length; i++) {
+		if (i) text += ", ";
+		text += '"' + results[i].replace(/\$\{(.*)\}/, "$1") + '": ""';
+	    }
+	    text += "})";
+	} else {
+	    var text = "this.getDictionaryItem(\"SCRIPT_" + name + "\")";
 	}
-	text += "})";
 	studio.editArea.replaceSelectedText(text);
     },
     _end: 0
