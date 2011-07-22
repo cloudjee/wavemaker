@@ -393,7 +393,7 @@ dojo.declare("wm.TreeCheckNode", wm.TreeNode, {
 		].join("");
 		this.btnNode = li.firstChild;
 		this.checkboxNode = this.btnNode.nextSibling;
-		this.contentNode = this.checkboxNode.nextSibling;
+		this.contentNode = this.checkboxNode.nextSibling;	    
 	},
 	click: function(e) {
 		if (e.target == this.checkboxNode)
@@ -413,6 +413,29 @@ dojo.declare("wm.TreeCheckNode", wm.TreeNode, {
 	toggleChecked: function() {
 		this.setChecked(!this.checkBoxNode.checked);
 	}
+});
+
+dojo.declare("wm.TreeRadioNode", wm.TreeCheckNode, {
+	createNode: function() {
+		var li = this.domNode = document.createElement("li");
+		li.innerHTML = [
+		    '<img/><input type="radio" name="' + this.tree.name + '" style="margin: 0 4px 0 0; padding:0;"',
+			this.checked ? ' checked="yes"' : "",
+			'><span>' + this.formatContent() + '</span>'
+		].join("");
+		this.btnNode = li.firstChild;
+		this.checkboxNode = this.btnNode.nextSibling;
+		this.contentNode = this.checkboxNode.nextSibling;
+	},
+	click: function(e) {
+	    if (e.target == this.checkboxNode)
+		this.checkboxClick(e);
+	    else {
+		this.checkboxNode.checked = true;
+		this.checkboxClick(e);
+		this.inherited(arguments);
+	    }
+	},
 });
 
 dojo.declare("wm.TreeRoot", wm.TreeNode, {

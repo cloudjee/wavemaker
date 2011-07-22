@@ -17,63 +17,10 @@ dojo.provide("wm.studio.pages.CustomWebServiceImporter.CustomWebServiceImporter"
 dojo.declare("CustomWebServiceImporter", wm.Page, {
     i18n: true,
     start: function() {
-	this.testData = {"project1": {"cache":"true",
-				      "name":"Project1",
-				      "owner":"/guest",
-				      "flow": [
-					  {"name":"test"},
-					  {"name":"sample",
-					   "args":{
-					       "variable":[
-						   {"name":"var1","type":"String"},
-						   {"name":"var2","type":"Integer"}
-					       ]},
-					   "stream":{
-					       "field":[
-						   {"name":"field1","type":"String"},
-						   {"name":"field2","type":"Integer"}
-					       ]}
-					  }
-				      ]
-				     },
-			 "project2": {"cache":"true","name":"Project2","owner":"/guest",
-				      "flow": [
-					  {"name":"test"},
-					  {"name":"sample",
-					   "args":{
-					       "variable":[
-						   {"name":"var1","type":"String"},
-						   {"name":"var2","type":"Integer"}
-					       ]},
-					   "stream":{
-					       "field":[
-						   {"name":"field1","type":"String"},
-						   {"name":"field2","type":"Integer"}
-					       ]}
-					  }
-				      ]
-				     },				      
-			 "project3": {"cache":"true","name":"Project3","owner":"/guest",
-				      "flow": [
-					  {"name":"test"},
-					  {"name":"sample",
-					   "args":{
-					       "variable":[
-						   {"name":"var1","type":"String"},
-						   {"name":"var2","type":"Integer"}
-					       ]},
-					   "stream":{
-					       "field":[
-						   {"name":"field1","type":"String"},
-						   {"name":"field2","type":"Integer"}
-					       ]}
-					  }
-				      ]
-				     }};
-
 
     },
     onShow: function() {
+	studio.componentModel.activate();
     },
     reset: function() {
     },
@@ -119,7 +66,7 @@ dojo.declare("CustomWebServiceImporter", wm.Page, {
 	    var project = this.data[i].project;
 	    project.flows = this.data[i].flows;
 	    delete this.data[i].flows;
-	    var node = new wm.TreeCheckNode(this.tree.root, {
+	    var node = new wm.TreeRadioNode(this.tree.root, {
 		content: project.name + " (" + project.owner + ")",
 		checked: false,
 		closed: true,
@@ -155,6 +102,12 @@ dojo.declare("CustomWebServiceImporter", wm.Page, {
 	}
 	for (var i = 0; i < inNode.kids.length; i++) {
 	    inNode.kids[i].setChecked(inNode.getChecked());
+	}
+	for (var i = 0; i < this.tree.root.kids.length; i++) {
+	    if (this.tree.root.kids[i].getChecked() == false) {
+		dojo.forEach(this.tree.root.kids[i].kids, function(kid) {kid.setChecked(false);});
+		this.tree.root.kids[i].setOpen(false);
+	    }
 	}
     },
     flowChecked: function(inNode) {
