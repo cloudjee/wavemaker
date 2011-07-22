@@ -100,11 +100,13 @@ public class RESTServiceGenerator extends WebServiceGenerator {
                 String fileName = entry.getKey().substring(0, 1).toUpperCase() + entry.getKey().substring(1)
                         + "result" + StringUtils.JAVA_SRC_EXT;
                 File targetFile = new File(fpath, fileName);
-                String content = FileUtils.readFileToString(targetFile, ServerConstants.DEFAULT_ENCODING);
-                String fromStr = "@XmlRootElement(name = \"" + entry.getValue().getName() + "result\")";
-                String toStr = "@XmlRootElement(name = \"result\")";
-                content = content.replace(fromStr, toStr);
-                FileUtils.writeStringToFile(targetFile, content, ServerConstants.DEFAULT_ENCODING);
+                if (targetFile.exists()) {
+                    String content = FileUtils.readFileToString(targetFile, ServerConstants.DEFAULT_ENCODING);
+                    String fromStr = "@XmlRootElement(name = \"" + entry.getValue().getName() + "result\")";
+                    String toStr = "@XmlRootElement(name = \"result\")";
+                    content = content.replace(fromStr, toStr);
+                    FileUtils.writeStringToFile(targetFile, content, ServerConstants.DEFAULT_ENCODING);
+                }
             }
         } catch (IOException ex) {
             throw new GenerationException(ex);

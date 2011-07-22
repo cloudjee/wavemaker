@@ -52,7 +52,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.apache.ws.commons.schema.XmlSchema;
 
 import com.ibm.wsdl.InputImpl;
 import com.ibm.wsdl.MessageImpl;
@@ -64,6 +63,7 @@ import com.ibm.wsdl.TypesImpl;
 import com.ibm.wsdl.extensions.schema.SchemaImpl;
 import com.sun.tools.ws.processor.util.IndentingWriter;
 import com.wavemaker.runtime.ws.util.Constants;
+import com.wavemaker.runtime.ws.util.WebServiceUtils;
 import com.wavemaker.tools.ws.RESTInputParam.InputType;
 
 /**
@@ -311,24 +311,28 @@ public class RESTWsdlGenerator {
     private Message generateInputMessage(String operName, List<RESTInputParam> inputParts) {
         Message message = new MessageImpl();
         message.setUndefined(false);
-        message.setQName(new QName(namespace, operName + "RequestMsg"));
+        if (WebServiceUtils.getServiceProvider(parameterizedUrl).equals(Constants.SERVICE_PROVIDER_INFOTERIA)) {
+            message.setQName(new QName(namespace, operName + "RequestMsg"));
+        } else {
+            message.setQName(new QName(namespace, "RequestMsg"));
+        }
         if (inputParts != null) {
             for (RESTInputParam entry : inputParts) {
                 Part part = new PartImpl();
                 part.setName(entry.getName());
                 InputType type = entry.toType();
                 if (type == InputType.OTHER) {
-                    String outputType = entry.getType();
-                    int i = outputType.lastIndexOf(':');
-                    QName outType = null;
+                    String inputType = entry.getType();
+                    int i = inputType.lastIndexOf(':');
+                    QName inType = null;
                     if (i > -1) {
-                        outType = new QName(outputType.substring(0, i), 
-                                outputType.substring(i + 1));
+                        inType = new QName(inputType.substring(0, i),
+                                inputType.substring(i + 1));
                     } else {
-                        outType = new QName(outputType);
+                        inType = new QName(inputType);
                     }
-                    part.setElementName(outType);
-                    additionalNamespaces.add(outType);
+                    part.setElementName(inType);
+                    additionalNamespaces.add(inType);
                 } else {
                     part.setTypeName(constructInputSimpleTypeQName(type));
                 }
@@ -341,7 +345,11 @@ public class RESTWsdlGenerator {
     private Message generateOutputMessage(String operName) {
         Message message = new MessageImpl();
         message.setUndefined(false);
-        message.setQName(new QName(namespace, operName + "ResponseMsg"));
+        if (WebServiceUtils.getServiceProvider(parameterizedUrl).equals(Constants.SERVICE_PROVIDER_INFOTERIA)) {
+            message.setQName(new QName(namespace, operName + "ResponseMsg"));
+        } else {
+            message.setQName(new QName(namespace, "ResponseMsg"));
+        }
 
         QName outType = null;
         if (outputType != null) { //called from WebServiceToolsManager
@@ -350,7 +358,11 @@ public class RESTWsdlGenerator {
                 outType = new QName(outputType.substring(0, i),
                         outputType.substring(i + 1));
             } else {
-                outType = new QName(operName + outputType);
+                if (WebServiceUtils.getServiceProvider(parameterizedUrl).equals(Constants.SERVICE_PROVIDER_INFOTERIA)) {
+                    outType = new QName(operName + outputType);
+                } else {
+                    outType = new QName(outputType);
+                }
             }
             additionalNamespaces.add(outType);
         } else if (outputElementType != null) { //callled from Wadl2Wsdl
