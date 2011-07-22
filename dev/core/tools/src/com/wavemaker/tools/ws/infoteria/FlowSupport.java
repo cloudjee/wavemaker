@@ -50,7 +50,7 @@ public class FlowSupport {
                 "  <xs:element name=\"operation_name_result\" type=\"operation_name_ResultType\"/>\n" +
                 "  <xs:complexType name=\"operation_name_DataType\">\n" +
                 "    <xs:sequence>\n" +
-                "      <xs:element type=\"operation_name_RecordType\" name=\"record\"/>\n" +
+                "      <xs:element type=\"operation_name_RecordType\" name=\"record\" maxOccurs=\"unbounded\" minOccurs=\"0\"/>\n" +
                 "    </xs:sequence>\n" +
                 "  </xs:complexType>\n" +
                 "  <xs:complexType name=\"operation_name_StreamType\">\n" +
