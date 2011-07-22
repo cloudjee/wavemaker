@@ -957,8 +957,12 @@ dojo.declare("Security", wm.Page, {
 
     setupServicesLayer: function() {
       try {	  
+	  var success = true;
     	      studio.securityConfigService.requestSync("getSecurityFilterODS", null, 
-    						       dojo.hitch(this, "getSecurityFilterODSResult"));	  
+    						       dojo.hitch(this, "getSecurityFilterODSResult"),
+						       dojo.hitch(this, function(inError) {
+							   this._urlMap = [];
+						       }));	  
 
 	      /* Get the role list */
 	      var d = this.roleList._data;
@@ -981,7 +985,7 @@ dojo.declare("Security", wm.Page, {
 				  Settings: this.getAttributesDisplay(attributes)}];
 
 	      studio.tree.forEachNode(dojo.hitch(this, function(node) {
-		  if (node.component instanceof wm.ServerComponent && node.component instanceof wm.DataModel == false) {       	
+		  if (node.component instanceof wm.ServerComponent && node.component instanceof wm.DataModel == false && node.component instanceof wm.Security == false) {       	
 		      var attributes = this.findServiceSecurityForService(node.component.name)
 		      serviceList.push({name: node.component.name,
 					URL: "/" + wm.decapitalize(node.component.name) + ".json",
