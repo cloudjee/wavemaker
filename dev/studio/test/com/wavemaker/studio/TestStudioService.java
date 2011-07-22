@@ -437,7 +437,7 @@ public class TestStudioService extends StudioTestCase {
         bw.write("<?xml version=\"1.0\" ?>\n"
                         + "<beans xmlns=\"http://www.springframework.org/schema/beans\"\n"
                         + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-                        + "xsi:schemaLocation=\"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd\">\n"
+                        + "xsi:schemaLocation=\"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd\">\n"
                         + "<bean id=\"book1\"\n"
                         + "class=\"com.wavemaker.tools.spring.Book\"\n"
                         + "lazy-init=\"true\"/>" + "</beans>");
