@@ -341,9 +341,7 @@ public class WebServiceToolsManager {
          List<String> operationName_list = new ArrayList<String>();
          operationName_list.add(operationName);
          List<List<RESTInputParam>> inputParms_list = new ArrayList<List<RESTInputParam>>();
-         if (inputs != null && inputs.size() > 0) {
-             inputParms_list.add(inputs);
-         }
+         inputParms_list.add(inputs);
 
          String result = buildRestService(serviceName, operationName_list, inputParms_list, parameterizedUrl,
                  method, contentType, outputType, xmlSchemaText, xmlSchemaPath, overwrite);
