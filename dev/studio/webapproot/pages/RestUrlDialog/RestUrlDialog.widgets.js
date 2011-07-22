@@ -13,76 +13,47 @@
  */
 RestUrlDialog.widgets = {
 	layoutBox1: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%"}, {}, {
-		dialog: ["wm.Panel", {border: "0", height: "100%", width: "100%", layoutKind: "left-to-right"}, {}, {
-			dialogInner: ["wm.Panel", {border: "0", height: "100%", width: "100%"}, {}, {
-				titleBar: ["wm.Panel", {border: "0", height: "25px", layoutKind: "left-to-right"}, {}, {
-					dialogLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_TextAlign_Center", "wm_Padding_4px", "wm_FontColor_White"]}, caption: "REST Service Call", height: "100%", border: "0", width: "100%"}, {}, {
-						format: ["wm.DataFormatter", {}, {}]
-					}]
+	    dialog: ["wm.Panel", {border: "2", borderColor: "black", height: "100%", width: "100%", layoutKind: "top-to-bottom"}, {}, {
+		mainPanel: ["wm.Panel", {border: "0", height: "100%", width: "100%", padding: "10,0", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+		    spacer5: ["wm.Spacer", {height: "10px"}, {}],
+		    urlPanel: ["wm.Panel", {border: "0", height: "28px", width: "100%", verticalAlign: "top", horizontalAlign: "left", layoutKind: "left-to-right"}, {}, {
+			urlInput: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, caption: "URL", captionSize: "100px", width: "100%", layoutKind: "left-to-right"}],
+			advancedButton: ["wm.ToggleButton", {_classes: {domNode: ["StudioButton"]},captionDown: "Basic Settings", captionUp: "Advanced Settings", width: "150px", height: "100%"}]
+		    }],
+		    rowTwoPanel: ["wm.Panel", {showing: "false",width: "100%", height: "140px", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+			    binding: ["wm.Binding", {}, {}, {
+				wire: ["wm.Wire", {"targetProperty":"showing","expression":"${advancedButton.clicked}"}, {}]
+			    }],
+			    authPanel: ["wm.Panel", {width: "250px", height: "100%", horizontalAlign: "left", verticalAlign: "top", layoutKind: "top-to-bottom"}, {}, {
+				basicAuthCheckbox: ["wm.Checkbox", {caption: "HTTP Basic Auth", displayValue: "0", width: "100%", captionSize: "100px"}, {onchange: "basicAuthCheckboxChange"}],
+				userIdInput: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, caption: "User Id", captionSize: "100px", width: "100%", layoutKind: "left-to-right"}],
+				passwordInput: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "100px", width: "100%", border: "0", caption: "Password"}]
+			    }],
+			    contentTypePanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left", padding: "0,0,0,10"}, {}, {
+				methodInput: ["wm.SelectMenu", {options: "GET,POST", caption: "Method", captionSize: "80px", width: "100%", dataValue: "GET", layoutKind: "left-to-right"}],
+				contentTypeInput: ["wm.SelectMenu", {options: "text/xml,application/x-www-form-urlencoded", caption: "Content Type", captionSize: "80px", width: "100%", dataValue: "text/xml"}, {}, {
+				    binding: ["wm.Binding", {}, {}, {
+					wire: ["wm.Wire", {"targetProperty":"disabled","expression":"${methodInput.dataValue} == 'GET'"}, {}]
+				    }]
 				}],
-				mainPanel: ["wm.Panel", {border: "0", height: "100%", width: "100%", padding: "10,0"}, {}, {
-					spacer5: ["wm.Spacer", {height: "10px"}, {}],
-					panel01: ["wm.Panel", {border: "0", height: "50px"}, {}, {
-						panel1: ["wm.Panel", {border: "0", height: "22px", layoutKind: "left-to-right"}, {}, {
-							//spacer2: ["wm.Spacer", {height: "100%", width: "100%"}, {}],
-							urlInput: ["wm.Editor", {_classes: {captionNode: ["wm_FontColor_White"]}, caption: "URL", captionSize: "50px", width: "430px", layoutKind: "left-to-right"}, {}, {
-								editor: ["wm._TextEditor", {}, {}]
-							}],
-							//spacer3: ["wm.Spacer", {height: "100%", width: "100%"}, {}]
-							//spacer3: ["wm.Spacer", {height: "100%", width: "10px"}, {}],
-							methodInput: ["wm.Editor", {caption: "Method", captionSize: "80px", width: "150px", dataValue: "GET", layoutKind: "left-to-right"}, {}, {
-								editor: ["wm._SelectEditor", {options: "GET,POST"}, {}]
-							}],
-							contentTypeInput: ["wm.Editor", {caption: "Content Type", captionSize: "80px", width: "200px", dataValue: "text/xml", layoutKind: "left-to-right"}, {}, {
-								binding: ["wm.Binding", {}, {}, {
-									wire: ["wm.Wire", {"targetProperty":"disabled","expression":"${methodInput.dataValue} == 'GET'"}, {}]
-								}],
-								
-								editor: ["wm._SelectEditor", {options: "text/xml,application/x-www-form-urlencoded"}, {}]
-							}]
-						}],
-						panel11: ["wm.Panel", {border: "0", height: "22px", layoutKind: "left-to-right"}, {}, {
-							//spacer2: ["wm.Spacer", {height: "100%", width: "100%"}, {}],
-							basicAuthCheckbox: ["wm.Editor", {caption: "Basic Auth", displayValue: "0", height: "100%", captionSize: "80px", layoutKind: "left-to-right"}, {onchange: "basicAuthCheckboxChange"}, {
-								editor: ["wm._CheckBoxEditor", {layoutFlex: 10}, {}]
-							}],
-							userIdInput: ["wm.Editor", {_classes: {captionNode: ["wm_FontColor_White"]}, caption: "User Id", captionSize: "60px", width: "200px", layoutKind: "left-to-right"}, {}, {
-								editor: ["wm._TextEditor", {}, {}]
-							}],
-							spacer31: ["wm.Spacer", {height: "100%", width: "20px"}, {}],
-							label1: ["wm.Label", {width: "100px", border: "0", caption: "Password"}, {}, {
-								format: ["wm.DataFormatter", {}, {}]
-							}],
-							passwordInput: ["wm.Input", {checked: true, width: "200px", border: "0", inputType: "password"}, {}]
-							//password: ["wm.Editor", {_classes: {captionNode: ["wm_FontColor_White"]}, caption: "Password", captionSize: "60px", width: //"200px", layoutKind: "left-to-right"}, {}, {
-							//	editor: ["wm._TextEditor", {}, {}]
-							//}]							
-						}],
-					}],
-					spacer6: ["wm.Spacer", {height: "10px"}, {}],
-					requestTextArea: ["wm.Editor", {width: "100%", layoutKind: "left-to-right", padding: "0", height: "100px", singleLine: false, display: "TextArea"}, {}, {
-							binding: ["wm.Binding", {}, {}, {
-								wire: ["wm.Wire", {"targetProperty":"disabled","expression":"${methodInput.dataValue} == 'GET'"}, {}]
-							}]}, 
-						{
-						editor: ["wm._TextAreaEditor", {}, {}]
-					}],
-					spacer61: ["wm.Spacer", {height: "5px"}, {}],
-					responseTextArea: ["wm.Editor", {width: "100%", layoutKind: "left-to-right", padding: "0", height: "100%", singleLine: false, display: "TextArea"}, {}, {
-						editor: ["wm._TextAreaEditor", {}, {}]
-					}],
-					errorMessageTextArea: ["wm.Editor", {width: "96px", layoutKind: "left-to-right", padding: "0", height: "100px", singleLine: false, display: "TextArea", showing: false}, {}, {
-						editor: ["wm._TextAreaEditor", {}, {}]
-					}]
-				}],
-				footer: ["wm.Panel", {border: "0", height: "26px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
-					testBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Test", border: "0", margin: "4", width: "96px"}, {onclick: "testBtnClick"}],
-					spacer1: ["wm.Spacer", {width: "10px"}, {}],
-					populateBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Populate", border: "0", margin: "4", width: "96px"}, {onclick: "populateBtnClick"}],
-					spacer4: ["wm.Spacer", {width: "10px"}, {}],
-					cancelBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Back", border: "0", margin: "4", width: "96px"}, {onclick: "cancelBtnClick"}]
+				requestTextArea: ["wm.LargeTextArea", {caption: "Sample POST Data", captionSize: "80px", captionPosition: "left", width: "100%", height: "100%"}, {}, {
+				    binding: ["wm.Binding", {}, {}, {
+					wire: ["wm.Wire", {"targetProperty":"disabled","expression":"${methodInput.dataValue} == 'GET'"}, {}]
+				    }]
 				}]
-			}]
+			    }]
+			}],
+		    spacer61: ["wm.Spacer", {height: "10px"}, {}],
+		    responseTextArea: ["wm.LargeTextArea", {width: "100%", layoutKind: "left-to-right", padding: "0", height: "100%", singleLine: false, display: "TextArea"}],
+		    errorMessageTextArea: ["wm.LargeTextArea", {width: "100%", layoutKind: "left-to-right", padding: "0", height: "100%", singleLine: false, display: "TextArea", showing: false}]
+		}],
+		footer: ["wm.Panel", {border: "0", width: "100%", height: "26px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
+		    testBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Test", border: "0", margin: "4", width: "96px"}, {onclick: "testBtnClick"}],
+		    spacer1: ["wm.Spacer", {width: "10px"}, {}],
+		    populateBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Populate", border: "0", margin: "4", width: "96px"}, {onclick: "populateBtnClick"}],
+		    spacer4: ["wm.Spacer", {width: "10px"}, {}],
+		    cancelBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Back", border: "0", margin: "4", width: "96px"}, {onclick: "cancelBtnClick"}]
 		}]
+	    }]
 	}]
 }

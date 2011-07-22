@@ -24,7 +24,7 @@ dojo.declare("RestUrlDialog", wm.Page, {
 		this.password = null;
 		this.userIdInput.setDisabled(true);
 		this.passwordInput.setDisabled(true);
-		this.basicAuthCheckbox.components.editor.setChecked(false)
+		this.basicAuthCheckbox.setChecked(false)
 	},
 	clearAll: function() {
 		this.urlInput.clear();
@@ -37,9 +37,9 @@ dojo.declare("RestUrlDialog", wm.Page, {
 		var m = this.methodInput.getDataValue();
 		var t = this.contentTypeInput.getDataValue();
 		var p = this.requestTextArea.getDataValue();
-		var b = this.basicAuthCheckbox.components.editor.getChecked();
+		var b = this.basicAuthCheckbox.getChecked();
 		var i = (this.userIdInput.getDataValue() == undefined ? "" : this.userIdInput.getDataValue());
-		var w = (this.passwordInput.getInputValue() == undefined ? "" : this.passwordInput.getInputValue());
+		var w = (this.passwordInput.getDataValue() == undefined ? "" : this.passwordInput.getDataValue());
 		if (u) {
 		    studio.beginWait(this.getDictionaryItem("WAIT_TEST_CLICK"));
 			if (m == "GET") {
@@ -57,7 +57,8 @@ dojo.declare("RestUrlDialog", wm.Page, {
 		studio.endWait();
 		if (inResponse && inResponse.length > 0) {
 			this.responseTextArea.setValue("displayValue", inResponse[0]);
-			this.errorMessageTextArea.setShowing((inResponse.length > 1));
+		    this.errorMessageTextArea.setShowing((inResponse.length > 1));
+		    this.responseTextArea.setShowing(!this.errorMessageTextArea.showing);
 			if (inResponse.length > 1) {
 				this.errorMessageTextArea.setValue("displayValue", inResponse[1]);
 			}
@@ -73,9 +74,9 @@ dojo.declare("RestUrlDialog", wm.Page, {
 			this.method = this.methodInput.getDataValue();
 			this.contentType = this.contentTypeInput.getDataValue();
 			this.postData = this.requestTextArea.getDataValue();
-			this.basicAuth = this.basicAuthCheckbox.components.editor.getChecked();
+			this.basicAuth = this.basicAuthCheckbox.getChecked();
 			this.userId = (this.userIdInput.getDataValue() == undefined ? "" : this.userIdInput.getDataValue());
-			this.password = (this.passwordInput.getInputValue() == undefined ? "" : this.passwordInput.getInputValue());
+			this.password = (this.passwordInput.getDataValue() == undefined ? "" : this.passwordInput.getDataValue());
 			this.owner.owner.layers.setLayer("restBuilderLayer");
 			this.owner.owner.importButton.setDisabled(false);
 			this.owner.owner.restServiceBuilderPage.page.populate();
