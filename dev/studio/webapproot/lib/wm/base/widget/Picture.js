@@ -24,7 +24,7 @@ dojo.declare("wm.Picture", wm.Control, {
 	init: function() {
 		this.inherited(arguments);
 		var d=this.domNode;
-		d.innerHTML = '<a><img class="NoImage"></a>';
+		d.innerHTML = '<a><img></a>';
 		dojo.addClass(d, "wmpicture");
 		this.linkNode = d.firstChild;
 		this.img = this.linkNode.firstChild;
@@ -46,8 +46,7 @@ dojo.declare("wm.Picture", wm.Control, {
 	setSource: function(inSource) {
 	    this.source = inSource || "";
 	    this.valueChanged("source", this.source);
-	    dojo.toggleClass(this.img, "NoImage", !this.source);
-	    //this.img.style.display = this.source ? "" : "none"; // hiding now done by className
+	    this.img.style.display = this.source ? "" : "none"; // hiding now done by className
 	    var root;
 	    if (this.source.slice(0, 4) == "http" || this.source.slice(0, 1) == "/") {
 		root = "";
@@ -76,9 +75,6 @@ dojo.declare("wm.Picture", wm.Control, {
 			this.linkNode.removeAttribute("href");
 	},
 	onclick: function() {
-	    /* IE 8 does a bad job of supporting our scrim property, making calls like this necessary for that browser only */
-	    if (this._isDesignLoaded)
-		studio.select(this);
 	}
 });
 
