@@ -76,6 +76,9 @@ dojo.declare("wm.Picture", wm.Control, {
 			this.linkNode.removeAttribute("href");
 	},
 	onclick: function() {
+	    /* IE 8 does a bad job of supporting our scrim property, making calls like this necessary for that browser only */
+	    if (this._isDesignLoaded)
+		studio.select(this);
 	}
 });
 
