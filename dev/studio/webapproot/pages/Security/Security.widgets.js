@@ -154,28 +154,7 @@ Security.widgets = {
 			}]
 		    }]
 		}],
-		servicesLayer: ["wm.Layer", {caption: "Setup Services"}, {"onShow":"servicesLayerShow"}, {
-		    servicesOuterPanel: ["wm.Panel", {border: "3", borderColor: "#959DAB",  margin: "10", width: "100%", height: "100%", layoutKind: "left-to-right"}, {}, {
-			serviceList: ["wm.List", {width: "300px", headerVisible: true, height: "100%", dataFields: "name, Settings", border: "0,2,0,0", borderColor:  "#959DAB"}, {onselect: "serviceListSelect"}, {
-			    binding: ["wm.Binding", {}, {}, {
-				wire: ["wm.Wire", {"expression":undefined,"source":"varServList","targetProperty":"dataSet"}, {}]
-			    }]
-			}],
-			servicesInnerPanel: ["wm.Panel", {width: "100%", height: "100%", verticalAlign: "top", horizontalAlign: "left", layoutKind: "top-to-bottom"}, {}, {
-			    servicesInnerHeader: ["wm.Label", {caption: "", width: "100%", height: "24px"}],
-			    servicesBevel: ["wm.Bevel", {}],
-			    servicesSettingsPanel: ["wm.Panel", {width: "100%", height: "100%",verticalAlign: "top", horizontalAlign: "left", layoutKind: "top-to-bottom"},{},{
-				selectAccess: ["wm.SelectMenu", {"caption":"Who can access","width":"260px", displayField: "name", dataField: "dataValue"}, {onchange: "serviceSettingsChange"}, {
-				    binding: ["wm.Binding", {}, {}, {
-					wire: ["wm.Wire", {"expression":undefined,"source":"varRoleList","targetProperty":"dataSet"}, {}],
-					wire2: ["wm.Wire", {"expression":undefined,"expression":"${serviceList.selectedItem.attributes} || ''","targetProperty":"dataValue"}, {}]
-				    }]
-				}]
-			    }]
-			}]
-		    }]
-		}],
-		rolesLayer: ["wm.Layer", {caption: "Roles"}, {}, {
+				rolesLayer: ["wm.Layer", {caption: "Roles"}, {}, {
 		panelBottom: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"center","layoutKind":"left-to-right","width":"500px"}, {}, {
 			spacer8a: ["wm.Spacer", {"height":"100%","showing":false,"width":"100%"}, {}],
 			spacer8b: ["wm.Spacer", {"height":"100%","width":"57px"}, {}],
@@ -223,6 +202,27 @@ Security.widgets = {
 			    spacer9: ["wm.Spacer", {"height":"30px","width":"96px"}, {}],
 			    label2: ["wm.Label", {"border":"0","caption":"The username/password here will be the account used by live layout to log on and access your database and javaservices","height":"93px","padding":"4","singleLine":false,"width":"96px"}, {}, {
 				format: ["wm.DataFormatter", {}, {}]
+			    }]
+			}]
+		    }]
+		}],
+		servicesLayer: ["wm.Layer", {caption: "Setup Services"}, {"onShow":"servicesLayerShow"}, {
+		    servicesOuterPanel: ["wm.Panel", {border: "3", borderColor: "#959DAB",  margin: "10", width: "100%", height: "100%", layoutKind: "left-to-right"}, {}, {
+			serviceList: ["wm.List", {width: "300px", headerVisible: true, height: "100%", dataFields: "name, Settings", border: "0,2,0,0", borderColor:  "#959DAB"}, {onselect: "serviceListSelect"}, {
+			    binding: ["wm.Binding", {}, {}, {
+				wire: ["wm.Wire", {"expression":undefined,"source":"varServList","targetProperty":"dataSet"}, {}]
+			    }]
+			}],
+			servicesInnerPanel: ["wm.Panel", {width: "100%", height: "100%", verticalAlign: "top", horizontalAlign: "left", layoutKind: "top-to-bottom"}, {}, {
+			    servicesInnerHeader: ["wm.Label", {caption: "", width: "100%", height: "24px"}],
+			    servicesBevel: ["wm.Bevel", {}],
+			    servicesSettingsPanel: ["wm.Panel", {width: "100%", height: "100%",verticalAlign: "top", horizontalAlign: "left", layoutKind: "top-to-bottom"},{},{
+				selectAccess: ["wm.SelectMenu", {"caption":"Who can access","width":"260px", displayField: "name", dataField: "dataValue"}, {onchange: "serviceSettingsChange"}, {
+				    binding: ["wm.Binding", {}, {}, {
+					wire: ["wm.Wire", {"expression":undefined,"source":"varRoleList","targetProperty":"dataSet"}, {}],
+					wire2: ["wm.Wire", {"expression":undefined,"expression":"${serviceList.selectedItem.attributes} || ''","targetProperty":"dataValue"}, {}]
+				    }]
+				}]
 			    }]
 			}]
 		    }]

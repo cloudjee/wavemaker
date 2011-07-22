@@ -955,15 +955,6 @@ dojo.declare("Security", wm.Page, {
 	return 5; //  1 tick is very fast; this is 5 times slower than that
     },
 
-/*
-	buttonAdvancedClick: function(inSender) {
-	try {
-		  this.layersBottom.setLayerByName("layerAdvanced");		  
-	  } catch(e) {
-		  console.error('ERROR IN buttonAdvancedClick: ' + e); 
-	  } 
-  },
-  */
     setupServicesLayer: function() {
       try {	  
     	      studio.securityConfigService.requestSync("getSecurityFilterODS", null, 
@@ -990,13 +981,14 @@ dojo.declare("Security", wm.Page, {
 				  Settings: this.getAttributesDisplay(attributes)}];
 
 	      studio.tree.forEachNode(dojo.hitch(this, function(node) {
-		  if (node.component instanceof wm.ServerComponent && node.component instanceof wm.DataModel == false) {
+		  if (node.component instanceof wm.ServerComponent && node.component instanceof wm.DataModel == false) {       	
 		      var attributes = this.findServiceSecurityForService(node.component.name)
 		      serviceList.push({name: node.component.name,
 					URL: "/" + wm.decapitalize(node.component.name) + ".json",
 					attributes: attributes,
 					Settings: this.getAttributesDisplay(attributes)});
 		  }
+		  // Entries not in Services tree were not put in the serviceList
 	      }));
 	      this.varServList.setData(serviceList);
 
@@ -1020,28 +1012,9 @@ dojo.declare("Security", wm.Page, {
 	}
     },
   getSecurityFilterODSResult: function(inResponse){
-  	//to entry data
-  	//varURLMap entry Data
-  	
       this._urlMap = dojo.clone(inResponse);
       this.varUrlMap.setData(inResponse);
   }, 
-/*
-  getAdvRolesResult: function(inResponse){
-  	var roleData = [];
-  	var numRoles = inResponse.length;
-  	if( numRoles > 0){
-	  	for(i=0; i<numRoles; i++){
-  			roleData.push({name: inResponse[i], dataValue: "ROLE_" + inResponse[i]});
-  		}
-  		// Add anon and fully authenticated
-  		this.varRoleList.setData(roleData);
-  	}
-  	else{ //no roles returned
-  		app.toastInfo(this.getDictionaryItem("WARN_NO_ROLES"), 1000);
-  	}
-  },
-  */
     getAttributesDisplay: function(inAttribute) {
 	if (!inAttribute)
 	    inAttribute = "";
@@ -1064,59 +1037,6 @@ dojo.declare("Security", wm.Page, {
 	    }
 	}
     },
-/*
-  listServicesResult: function(inResponse){
-  	var servData = [];
-  	var numServ = inResponse.length;
-  	if( numServ > 0 ) {
-  		for(i=0; i<numServ; i++){
-		    
-  		    servData.push({attributes: this.findServiceSecurityForService(inResponse[i]),
-				   name: inResponse[i], 
-				   URL: "/" + inResponse[i] + ".json"});
-  		}
-  		//Add default *.json option
-	    servData.push({name: "All other Services", URL: "/*.json", attributes: "IS_AUTHENTICATED_ANONYMOUSLY"});
-	    this.varServList.setData(servData);
- 	   	}
-  	else {
-  		app.toastInfo(this.getDictionaryItem("WARN_NO_SERVICES"), 1000);
-  		}
-  },
-  */
-/*
-  buttonAddRuleClick: function(inSender) {
-	  try {
-     studio.securityConfigService.requestAsync("addODSMapEntry", [this.selectService.selectedItem.data.dataValue,
-     		this.selectAccess.selectedItem.data.dataValue], dojo.hitch(this, "addRuleResult"));			  
-	  } catch(e) {
-		  console.error('ERROR IN buttonAddRuleClick: ' + e); 
-	  } 
-  },
-  addRuleResult: function(inResponse) {
-   	studio.securityConfigService.requestSync("getSecurityFilterODS", null, 
-    		dojo.hitch(this, "getSecurityFilterODSResult"));	
-  },
-  buttonDelRuleClick: function(inSender) {
-	  try {
-	  	studio.securityConfigService.requestAsync("deleteODSMapEntry", [this.listURLMap.selectedItem.data.URL], dojo.hitch(this, "delRuleResult"));
-	  } catch(e) {
-		  console.error('ERROR IN buttonDelRuleClick: ' + e); 
-	  } 
-  },
-  delRuleResult: function(inResponse) {
-   	studio.securityConfigService.requestSync("getSecurityFilterODS", null, 
-    		dojo.hitch(this, "getSecurityFilterODSResult"));	
-  },
-  buttonAdvExitClick: function(inSender) {
-	  try {
-	  	//exit, NO save
-		  this.layersBottom.setLayerByName("layerRoles");		  
-	  } catch(e) {
-		  console.error('ERROR IN buttonAdvExitClick: ' + e); 
-	  } 
-  },
-  */
 
 /* When the settings are changed, update the data in varServList; varServList should
  * 1. Store all data we read from the server
@@ -1138,12 +1058,13 @@ dojo.declare("Security", wm.Page, {
     },
     saveServicesSetup: function() {
 	/* TODO: Remove from submission any "DEFAULT" values */
-	var databaseServiceURL = "/runtimeService.json"; // don't use the name as it will be localized
+	var databaseServiceURL = "/runtimeservice.json"; // don't use the name as it will be localized
 	var data = this.varServList.getData();
 	var sendData = [];
 	var databaseAttributes = "";
 
-	/* This block determines the logic for setting /*.json security (default security) */
+	/* This block determines the logic for setting 
+	// /*.json security (default security) */
 	var starAttributes;
 	if (!this.secEnableInput.getChecked()) {
 	    starAttributes = "IS_AUTHENTICATED_ANONYMOUSLY";
@@ -1155,26 +1076,22 @@ dojo.declare("Security", wm.Page, {
 
 	for (var i = 0; i < data.length; i++) {
 	    if (data[i].attributes) {
-		sendData.push(data[i].URL + ":" + data[i].attributes);
-		if (data[i].URL == databaseServiceURL) {
-		    databaseAttributes = data[i].attributes;
-/*
-		} else if (data[i].URL == "/*.json") {
-		    starAttributes = data[i].attributes
-		    */
-		}
+	    	sendData.push(data[i].URL + ":" + data[i].attributes);
+	    	if (data[i].URL == databaseServiceURL) {
+	    	databaseAttributes = data[i].attributes;
+	    	}
 	    }
 	}
-	/* Add in all database services */
 	if (databaseAttributes) {
 	    var components = studio.application.getServerComponents();
 	    for (var i = 0; i < components.length; i++) {
-		if (components[i] instanceof wm.DataModel) {
-		    sendData.push("/" + components[i].name + ".json:" + databaseAttributes);		
-		}
+				if (components[i] instanceof wm.DataModel) {
+		    	sendData.push("/" + components[i].name + ".json:" + databaseAttributes);		
+				}
 	    }
 	}
-
+	// this._urlMap contains non displayed entries
+	
 	sendData.push("/*.json:" + starAttributes);
 	sendData.push("/*.upload:" + starAttributes);
 	sendData.push("/*.download:" + starAttributes);
@@ -1196,6 +1113,9 @@ dojo.declare("Security", wm.Page, {
   listURLMapDeselect: function(inSender) {
 		this.buttonDelRule.setDisabled(true); 
   },
+  
+  // Make SecurityURLMap type available to studio
+  // Cleanup required ?
   _setDataTypes: function() {
 	    if (!wm.typeManager.types["com.wavemaker.studio.SecurityServiceMap"]) {
 		wm.typeManager.addType("com.wavemaker.studio.SecurityServiceMap", {internal: true, fields: {
