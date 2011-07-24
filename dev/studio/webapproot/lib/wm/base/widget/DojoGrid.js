@@ -202,9 +202,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    if (oldObj[inFieldName] == inValue)
 		return;
 
-
 	    // A bug in dojox.grid editting causes it to set "user.name" but read from "user: {name: currentname}" so we copy in the data to compenate
-	    if (inFieldName.indexOf(".")) {
+	    if (inFieldName.indexOf(".") != -1) {
 		var elements = inFieldName.split(".");
 		var firstElement = elements.shift();
 		var obj = this.getCell(inRowIndex, firstElement);
@@ -214,7 +213,16 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		    obj[elements.join(".")] = [inValue];                
 	    }
 
-		this.updateSelectedItem( this.getSelectedIndex());
+	    // update the _wmVariable object
+	    var wmvar = this.getRowData(inRowIndex)._wmVariable;
+	    if (wmvar) {
+		wmvar = wmvar[0];
+		if (wmvar) {
+		    wmvar.setValue(inFieldName, inValue);
+		}
+	    }
+
+		this.updateSelectedItem( rowIdx);
 	        if (this.liveEditing)
 		    this.writeSelectedItem();
 
