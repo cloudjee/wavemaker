@@ -35,7 +35,7 @@ CustomWebServiceImporter.widgets = {
 	    }]
 	}],
 	buttonBar: ["wm.Panel", {_classes: {domNode:["wmDialogFooter"]}, layoutKind: "left-to-right", width: "100%", height: "35px", horizontalAlign: "right", verticalAlign: "middle"}, {}, {
-	    importButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},width: "100px", caption: "Import"}, {onclick: "importClick"}],
+	    importButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},width: "100px", caption: "Import", disabled: true}, {onclick: "importClick"}],
 	    cancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},width: "100px", caption: "Cancel"}, {onclick: "cancelClick"}]
 
 	}]

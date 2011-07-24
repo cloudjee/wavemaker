@@ -109,12 +109,22 @@ dojo.declare("CustomWebServiceImporter", wm.Page, {
 		this.tree.root.kids[i].setOpen(false);
 	    }
 	}
+	this.updateImportDisabled();
     },
     flowChecked: function(inNode) {
 	if (inNode.getChecked() && !inNode.parent.getChecked())
 	    inNode.parent.setChecked(true);
 	else if (!inNode.getChecked() && dojo.every(inNode.parent.kids, function(node) {return !node.getChecked();}))
 	    inNode.parent.setChecked(false);
+	this.updateImportDisabled();
+    },
+    updateImportDisabled: function() {
+	var disabled = true;
+	this.tree.forEachNode(dojo.hitch(this, function(node) {
+	    if (node.data && !wm.isEmpty(node.data) && node.data.flows === undefined && node.getChecked())
+		disabled = false;
+	}));
+	this.importButton.setDisabled(disabled);
     },
     cancelClick: function() {
 	this.owner.owner.hide();
