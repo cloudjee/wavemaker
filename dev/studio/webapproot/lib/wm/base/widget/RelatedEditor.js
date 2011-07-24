@@ -38,8 +38,8 @@ dojo.declare("wm.RelatedEditor", wm.LiveFormBase, {
 	findLookup: function() {
 		var editors = this.getFormEditorsArray();
 		for (var i = 0, e; (e=editors[i]); i++)
-			if (e.display == "Lookup" || e instanceof wm.Lookup) // added e instanceof because e.display == undefined for my test case; not even clear where display is set.
-				return e;
+		    if (wm.Lookup && (e.display == "Lookup" || e instanceof wm.Lookup)) // added e instanceof because e.display == undefined for my test case; not even clear where display is set.
+			return e;
 	},
 	//===========================================================================
 	// LiveVariable / View info

@@ -233,7 +233,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 			        if (e.editingMode != "lookup" || !this._operationSucceeded)
 				    wm.fire(e, "populateEditors");
 			} else {
-                            if (e instanceof wm.Lookup && (!e.dataSet || !e.dataSet.type)) 
+                            if (wm.Lookup && e instanceof wm.Lookup && (!e.dataSet || !e.dataSet.type)) 
                                 e.setAutoDataSet(e.autoDataSet);
 
 			    wm.fire(e, "setDataValue", [e.formField && data ? data[e.formField] : data]);
