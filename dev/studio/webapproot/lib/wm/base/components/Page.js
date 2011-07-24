@@ -289,16 +289,16 @@ dojo.declare("wm.Page", wm.Component, {
 		}
 	    
         // props.name should overwrite getUniqueName(inName), which should overwrite inProps.
-            var newOwner;
-            if (inParent && inParent instanceof wm.Layout)
-                newOwner = inParent.owner;
-            else if (inParent)
-                newOwner = inParent;
-            else
-                newOwner = this;
+	    if (!props.owner) {
+		if (inParent && inParent instanceof wm.Layout)
+                    props.owner = inParent.owner;
+		else if (inParent)
+                    props.owner = inParent;
+		else
+                    props.owner = this;
+	    }
         props = dojo.mixin({}, inProps, {
-			name: this.getUniqueName(inName),
-	                owner: newOwner,
+			name: props.owner.getUniqueName(inName),
 			_designer: this._designer,
 			_loading: true
 		}, props);

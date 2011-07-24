@@ -306,7 +306,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	backgroundColor: "",
 	//border: 1,
 	borderColor: "#F0F0F0",
-        binding: '(data binding)',
+        //binding: '(data binding)',
 	classNames: '',
 	id: '',
 	autoSizeWidth: false,
