@@ -190,7 +190,16 @@ dojo.declare("wm.Dialog", wm.Container, {
 
             // If the dialog has only a single widget inside of it, thats the titlebar, and the rest of it hasn't yet been created and needs creating.
             // If the dialog has more than one widget inside of it, then its safe to assume everything this dialog needs has been created
-            if (this.c$.length == 1) {
+
+	    /* containerWidgetId is undefined if the page was last saved prior to adding support for this property. Currently the
+	    * id is only used by designabledialog*/
+	    if (this.containerWidgetId !== undefined) {
+		// if its defined and empty, then there is no containerWidget
+		if (this.containerWidgetId) {
+		    containerWidget = this.owner.getValueById(this.containerWidgetId);
+		    containerNode = containerWidget.domNode;
+		} 
+	    } else if (this.c$.length == 1) {
 	        if (this.useContainerWidget) {
 	            containerWidget = this.containerWidget ||  new wm.Container({
 			_classes: {domNode: ["wmdialogcontainer", this.containerClass]}, 
@@ -210,23 +219,33 @@ dojo.declare("wm.Dialog", wm.Container, {
 		    containerNode = containerWidget.domNode;
 	        } else {
 		    containerNode = this.domNode;
-	        }
-            }
+	        }		
+            } else {
+		containerWidget = this.c$[1]; // could be undefined
+	    }
 
-            if (this.c$.length < 3) {
+
+	    /* buttonBarId is undefined if the page was last saved prior to adding support for this property. Currently the
+	    * id is only used by designabledialog */
+	    if (this.buttonBarId !== undefined) {
+		if (this.buttonBarId) {
+		    this.buttonBar = this.owner.getValueById(this.buttonBarId);
+		}
+	    } else if (this.c$.length < 3) {
                 // use of buttonbar is only accepted if useContainerWidget is true
                	if (this.useButtonBar && this.useContainerWidget) {		  
                     this.createButtonBar();
                 }
-            }
+            } else {
+		this.buttonBar = this.c$[2];       // could be undefined
+	    }
 
-
-            this.containerWidget = this.c$[1]; // could be undefined
-            this.buttonBar = this.c$[2];       // could be undefined
+/*
             if (this.containerWidget)
                 this.containerWidget.noInspector = true;
             if (this.buttonBar)
                 this.buttonBar.noInspector = true;
+		*/
 
 	    // must set this AFTER creating the button bar, or the button
 	    // bar will be ADDED to the containerWidget
@@ -257,7 +276,6 @@ dojo.declare("wm.Dialog", wm.Container, {
 				       horizontalAlign: "right",
 				       verticalAlign: "top",
 				       layoutKind: "left-to-right",
-                                       noInspector: true,
 				       border: this.footerBorder,
 				       borderColor: this.titlebarBorderColor});
     },

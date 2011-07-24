@@ -219,7 +219,13 @@ wm.DesignableDialog.extend({
                     return;
                 }
 		return this.inherited(arguments);
-        }
+        },
+    writeProps: function() {
+	var out = this.inherited(arguments);
+	out.containerWidgetId = this.containerWidget && !this.containerWidget.isDestroyed ? this.containerWidget.getId() : "";
+	out.buttonBarId = this.buttonBar && !this.buttonBar.isDestroyed ? this.buttonBar.getId() : "";
+	return out;
+    }
 });
 
 
