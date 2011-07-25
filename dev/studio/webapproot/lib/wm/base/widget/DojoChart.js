@@ -16,15 +16,21 @@ dojo.provide("wm.base.widget.DojoChart");
 
 
 dojo.declare("wm.DojoChart", wm.Control, {
+    chartTitle: "",
+    yAxisTitle: "",
+    hideLegend: false,
+    verticalLegend: false,
 	padding: 4,
 	width:'200px',
 	height:'200px',
 	legendHeight:'50px',
+	legendWidth:'150px',
 	variable:null,
 	dataSet:null,
 	dojoObj:null,
 	theme: 'CubanShirts',
 	xAxis:'wmDefaultX',
+    xAxisLabelLength: 0,
     //isTimeXAxis: "",
 	maxTimePoints:15,
 	xMajorTickStep: 5,
@@ -39,7 +45,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	enableAnimation:true,
 	chartType: 'Columns',
 	includeGrid:false,
-	gap:2,
+	gap:200,
 	defaultXY:[{'wmDefaultX':'Jan', 'wmDefaultY':3}, {'wmDefaultX':'Feb', 'wmDefaultY':5}, {'wmDefaultX':'Mar', 'wmDefaultY':8}, {'wmDefaultX':'Apr', 'wmDefaultY':2}],
 	addedSeries:{},
 	aniHighlight:null,
@@ -54,6 +60,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	
 		dojo['require']("dojox.charting.Chart2D");
 		dojo['require']("dojox.charting.widget.Legend");
+	        dojo['require']("dojox.charting.widget.SelectableLegend");
 		dojo['require']("dojox.charting.action2d.Highlight");
 		dojo['require']("dojox.charting.action2d.Magnify");
 		dojo['require']("dojox.charting.action2d.MoveSlice");
@@ -81,8 +88,9 @@ dojo.declare("wm.DojoChart", wm.Control, {
 		
 		this.dojoDiv = dojo.doc.createElement('div');
 		this.updateChartDivHeight();
+		this.updateChartDivWidth();
 		this.domNode.appendChild(this.dojoDiv);
-		this.dojoObj = new dojox.charting.Chart2D(this.dojoDiv);
+	    this.dojoObj = new dojox.charting.Chart2D(this.dojoDiv, {title: this.chartTitle, titlePos: "top", titleGap: 5, margins: {l:0,t:5,r:5,b:15}});
 		this.setChartTheme();
 		this.updateChartType();
 		this.addXAxis();
@@ -113,20 +121,42 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	createLegend: function(){
 		if (this.legend && this.legend != null)
 			this.legend.destroy();
-
+	        if (this.hideLegend) return;
 		this.legendDiv = dojo.doc.createElement('div');
 		dojo.attr(this.legendDiv,'align','center');
-		this.domNode.appendChild(this.legendDiv);
+
+	    //dojo.place(this.legendDiv, this.domNode, "first");
+	    this.domNode.appendChild(this.legendDiv);
             try {
-		this.legend = new dojox.charting.widget.Legend({chart: this.dojoObj}, this.legendDiv);
+		if (this.xAxis.match(/,/) || this.yAxis.match(/,/)) {
+		    this.legend = new dojox.charting.widget.SelectableLegend({chart: this.dojoObj, horizontal:!this.verticalLegend}, this.legendDiv);
+		} else {
+		    this.legend = new dojox.charting.widget.Legend({chart: this.dojoObj, horizontal:!this.verticalLegend}, this.legendDiv);
+		}
             } catch(e) {}
+	    wm.onidle(this, function() {
+		var newLegendNode = dojo.query(".dojoxLegendNode", this.domNode)[0];
+		if (newLegendNode) {
+		    var s = newLegendNode.style;
+		    if (this.verticalLegend) {
+			s.position = "absolute";
+			s.left = Math.max(0, this.getContentBounds().w-parseInt(this.legendWidth)) + "px";
+			s.width = this.legendWidth;
+			s.top = "0px";
+		    } 
+		}
+	    });
 	},
 	updateChartDivHeight: function(){
 		if (!this.dojoDiv)
 			return;
 		var h = dojo.coords(this.domNode).h;
-		var lh = wm.splitUnits(this.legendHeight);
-		var l = lh.value;
+	        if (!this.verticalLegend) {
+		    var lh = wm.splitUnits(this.legendHeight);
+		    var l = lh.value;
+		} else {
+		    l = 0;
+		}
 	    if (l == 0) {
 		var reducedHeight = h + 10; // if no legend desired, get rid of unnecessary margin set aside for the legend
 	    } else {
@@ -135,15 +165,24 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	    if (reducedHeight > 0 )
 		{
 			// For IE8(Compatibility mode(IE7) height cannot be negetive else it throws js error)
-			this.dojoDiv.style.width = this.width;
 			this.dojoDiv.style.height = reducedHeight + 'px';
 		}
+	},
+	updateChartDivWidth: function(){
+	    if (!this.dojoDiv)
+		return;
+	    var width = this.getContentBounds().w
+	    if (this.verticalLegend) {
+		width -= parseInt(this.legendWidth);
+	    }
+	    if (width < 0) width = 0;
+	    this.dojoDiv.style.width = width + "px";
 	},
 	dojoRenderer: function (){
 		if (!this.dojoObj)
 			return;
 		try{this.dojoObj.render();}catch(e){/*do nothing since some object might now have render method*/}
-		this.createLegend();
+		this.createLegend();	    
 	},
 	connectDojoEvents: function(){
 		this.dojoObj.connectToPlot("default", dojo.hitch(this, 'dojoChartEvent'));		
@@ -333,7 +372,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 			xParams.majorTickStep = this.xMajorTickStep;
 		if (this.xMinorTickStep)
 			xParams.minorTickStep = this.xMinorTickStep;
-		this.dojoObj.addAxis("x", xParams);
+	    this.dojoObj.addAxis("x", xParams);
 	},
 	addYAxis: function(){
 		if(this.includeY){
@@ -347,6 +386,8 @@ dojo.declare("wm.DojoChart", wm.Control, {
 				yProp.max = this.yUpperRange;
 			if (this.yMajorTickStep)
 				yProp.majorTickStep = this.yMajorTickStep;
+		        if (this.yAxisTitle)
+		            yProp.title = this.yAxisTitle;
 			this.dojoObj.addAxis("y", yProp);
 		}
 	},
@@ -553,7 +594,10 @@ dojo.declare("wm.DojoChart", wm.Control, {
 			value = 1;
 		else
 			value = labels[labels.length -1].value + 1;
-		labels.push({value: value, text: label+''});
+	    label = label + '';
+	    if (this.xAxisLabelLength)
+		label = label.substring(0,this.xAxisLabelLength);
+		labels.push({value: value, text: label});
 		xAxis.labels = labels;
 		this.dojoObj.addAxis("x", xAxis);
 		return value;

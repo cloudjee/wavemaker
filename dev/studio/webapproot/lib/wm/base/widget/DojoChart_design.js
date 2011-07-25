@@ -94,6 +94,23 @@ wm.DojoChart.description = "A dojo chart.";
 
 wm.DojoChart.extend({
     themeable: false,
+    set_hideLegend: function(inHide) {
+	this.hideLegend = inHide;
+	this.legendHeight = inHide ? "0px" : "50px";
+	this.renderDojoObj();
+    },
+    set_yAxisTitle: function(inTitle) {
+	this.yAxisTitle = inTitle;
+	this.renderDojoObj();
+    },
+    set_chartTitle: function(inTitle) {
+	this.chartTitle = inTitle;
+	this.renderDojoObj();
+    },
+    set_verticalLegend: function(inVert) {
+	this.verticalLegend = inVert;
+	this.renderDojoObj();
+    },
 	designCreate: function() {
 		// if this is being created in studio, supply a default caption
 		if (this._studioCreating)
@@ -136,6 +153,12 @@ wm.DojoChart.extend({
 			this.chartColor = inValue;
 		this.renderDojoObj();
 	},
+    listProperties: function() {
+	var p = this.inherited(arguments);
+	p.legendHeight.ignoretmp = this.verticalLegend;
+	p.legendWidth.ignoretmp =  !this.verticalLegend;
+	return p;
+    },
 	setTheme:function(inValue){
 		this.theme = inValue;
 		this.setChartTheme();
@@ -153,6 +176,14 @@ wm.DojoChart.extend({
 		this.legendHeight = inValue;
 		this.updateChartSize();
 	},
+	setLegendWidth: function(inValue){
+		this.legendWidth = inValue;
+		this.renderDojoObj();
+	},
+    setXAxisLabelLength: function(inLen) {
+	this.xAxisLabelLength = inLen;
+	this.renderDojoObj();
+    },
 	addUserClass: function(arg1, arg2){
 		this.inherited(arguments);
 		this.updateStyle();
