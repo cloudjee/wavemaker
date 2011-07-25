@@ -295,7 +295,9 @@
     "MODELTREE_CONTEXTMENU_NEW": "New ${className}",
     "MODELTREE_CONTEXTMENU_DOC": "docs...",
 
-    "POPUP_BLOCKER_MESSAGE": "Popup Blocker Detected - Manually Launch",
+    "POPUP_BLOCKER_TITLE": "Popup Blocker",
+    "POPUP_BLOCKER_MESSAGE": "Popup Blocker Detected, run application using Manual Launch link",
+    "POPUP_BLOCKER_LAUNCH_CAPTION": "Manual Launch",
     "wm.studio.Project.TOAST_RESERVED_NAME": "That is a reserved javascript name",
     "wm.studio.Project.WAIT_CREATING_PROJECT": "Setting up new project",
     "wm.studio.Project.WAIT_OPEN_PROJECT": "Opening...",
