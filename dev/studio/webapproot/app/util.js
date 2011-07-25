@@ -141,20 +141,30 @@ wm.openUrl = function(inUrl, inTitle, inWindowName) {
 }
 wm.openUrlDialog = function(inUrl, inTitle, inWindowName) {
     var d = wm.openUrl.dialog;
-    if (!d)
-	d = wm.openUrl.dialog = new wm.Dialog({owner: studio, width: 320, height: 95});
-    var
-    target = ' target="' + (inWindowName || "_blank") + '"',
-    link = ['<a href="', inUrl , ,'"', target, 
-	    'style="color:#FFF" onclick="javascript:wm.openUrl.dialog.dismiss();">',
-	    studio.getDictionaryItem("POPUP_BLOCKER_MESSAGE"), 
-	    ' ', inTitle || inUrl, '</a>'].join('');
-    d.containerNode.innerHTML = [
-	'<table class="wmWaitDialog" width="100%" height="100%" style="border: 1px solid #363b44;">',
-	'<tr><td align="center" valign="middle">',
-	link,
-	'</td></tr></table>'
-    ].join('');
+    if (!d) {
+	d = wm.openUrl.dialog = new wm.Dialog({title: studio.getDictionaryItem("POPUP_BLOCKER_TITLE"),
+					       owner: studio, 
+					       width: 320, 
+					       height: 110,
+					       modal: false,
+					       useContainerWidget: true});
+	var container = d.containerWidget;
+	new wm.Label({parent: container,
+		      width: "100%",
+		      height: "100%",
+		      caption: studio.getDictionaryItem("POPUP_BLOCKER_MESSAGE"), 
+		      singleLine: false,
+		      align: "center"});
+	new wm.Label({
+	    parent: container,
+	    caption: studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"),
+	    width: "100%",
+	    align: "center"
+	});
+    }
+    var link = d.containerWidget.c$[1];
+	link.setLink(inUrl);
+    dojo.query("a", link.domNode)[0].target = (inWindowName || "_blank");
     d.show();
 }
 
