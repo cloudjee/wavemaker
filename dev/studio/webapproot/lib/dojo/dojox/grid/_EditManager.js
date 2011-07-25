@@ -167,9 +167,15 @@ dojo.declare("dojox.grid._EditManager", null, {
 			c[inMethod](this.info.rowIndex);
 		}
 	},
-
+    /* WaveMaker Changes: if errors are thrown trying to edit this, catch the error; no need for console.error logs (WM-2744)
+     * and revert to last valid value (otherwise it enters undefined state)
+     */
 	editorApply: function(){
+	    try {
 		this._editorDo("apply");
+	    } catch(e){
+		this._editorDo("cancel");		
+	    }
 	},
 
 	editorCancel: function(){
