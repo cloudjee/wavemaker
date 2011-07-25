@@ -106,7 +106,6 @@ dojo.declare("CustomWebServiceImporter", wm.Page, {
 	for (var i = 0; i < this.tree.root.kids.length; i++) {
 	    if (this.tree.root.kids[i].getChecked() == false) {
 		dojo.forEach(this.tree.root.kids[i].kids, function(kid) {kid.setChecked(false);});
-		this.tree.root.kids[i].setOpen(false);
 	    }
 	}
 	this.updateImportDisabled();
