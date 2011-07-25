@@ -130,7 +130,7 @@ Studio.extend({
 	//=====================================================================
 	exportClick: function(inSender) {
 		studio.beginWait("Building ZIP File...");
-	    studio.deploymentService.requestAsync("exportProject", null, dojo.hitch(this, "exportClickCallback"), dojo.hitch(this, "exportClickError"));
+	    studio.deploymentService.requestAsync("exportProject", [studio.project.projectName + "." + studio.application.getFullVersionNumber() + ".zip"], dojo.hitch(this, "exportClickCallback"), dojo.hitch(this, "exportClickError"));
 	    	},			  
 	exportClickCallback: function(inResponse) {
 	    studio.endWait("Building ZIP File...");
