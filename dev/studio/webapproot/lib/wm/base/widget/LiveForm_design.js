@@ -224,6 +224,7 @@ wm.LiveFormBase.extend({
 	},*/
 	createRelatedEditor: function(inFormField) {
 		var props = this.getFormEditorProps();
+	        props.caption = wm.capitalize(inFormField);
 		props.formField = inFormField;
                 props.width = this.editorWidth;
 
