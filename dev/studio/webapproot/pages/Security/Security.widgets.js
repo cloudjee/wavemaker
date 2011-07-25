@@ -88,8 +88,8 @@ Security.widgets = {
 						spacer1: ["wm.Spacer", {"width":"202px"}, {}],
 						dbRoleBySQLCheckbox: ["wm.Checkbox", {"border":"0","caption":"Roles By SQL Query","captionAlign":"left","captionPosition":"right","captionSize":"380px","displayValue":"1","padding":"2","width":"100%"}, {"onchange":"dbRoleBySQLCheckboxChange"}]
 					    }],
-					    dbRoleBySQLEnablePanel: ["wm.Panel", {"border":"0","height":"100px", fitToContentHeight: true, verticalAlign: "top", horizontalAlign: "left", width: "100%", margin: "5,50,0,50"}, {}, {
-						dbRoleBySQLInput: ["wm.LargeTextArea", {"border":"0","caption":"","emptyValue":"null","height":"48px", width:"100%"}, {"onchange":"setDirty"}],
+					    dbRoleBySQLEnablePanel: ["wm.Panel", {"border":"0","height":"100px", fitToContentHeight: true, verticalAlign: "top", horizontalAlign: "left", width: "100%", margin: "5"}, {}, {
+						dbRoleBySQLInput: ["wm.LargeTextArea", {"border":"0","caption":"Enter Query",captionSize: "100px", captionPosition: "left", "emptyValue":"null","height":"48px", width:"100%", helpText: "Enter helptext here"}, {"onchange":"setDirty"}],
 						panel22: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_2px"]},"border":"0","height":"24px",width: "100%", "layoutKind":"left-to-right"}, {}, {
 						    spacer20: ["wm.Spacer", {"width":"100%"}, {}],
 						    dbTestSQLInput: ["wm.Text", {"border":"0","caption":"User ID","emptyValue":"null","padding":"2","width":"250px"}, {"onchange":"setDirty"}],
@@ -101,11 +101,11 @@ Security.widgets = {
 							dbTestSQLResultLabel: ["wm.Label", {caption: "Roles from query:", width: "100%", height: "18px"}],
 							dbTestSQLResultList: ["wm.List", {"border":"1","width":"100%", height: "100%"}, {}],
 						    }],
-						    spacer15: ["wm.Spacer", {"width":"100px"}, {}],
-						    dbTestSQLErrorPanel: ["wm.Panel", {verticalAlign: "top", horizontalAlign: "left", layoutKind: "top-to-bottom", width: "100px", height: "100%"}, {}, {
+						    dbTestSQLErrorPanel: ["wm.Panel", {verticalAlign: "top", horizontalAlign: "left", layoutKind: "top-to-bottom", width: "100%", height: "100%"}, {}, {
 							dbTestSQLErrorPanelLabel: ["wm.Label", {caption: "Errors from Query:", width: "100%", height: "18px"}],
 							dbTestSQLErrorLabel: ["wm.Label", {"border":"1","caption":"dbTestSQLErrorLabel","padding":"4","width":"100%", height: "100%"}]
-						    }]
+						    }],
+						    spacer569: ["wm.Spacer", {"width":"20px"}, {}],
 						}]
 					    }]
 					}]
@@ -140,7 +140,7 @@ Security.widgets = {
 							ldapRoleBySQLCheckbox: ["wm.Checkbox", {"captionSize":"150px","caption":"Roles By SQL Query","width":"500px"}, {"onchange":"ldapRoleBySQLCheckboxChange"}]
 						    }],
 						    ldapRoleBySQLEnablePanel: ["wm.Panel", {"height":"150px","width":"100%", fitContentToHeight: true, verticalAlign: "top", horizontalAlign: "left"}, {}, {
-							ldapRoleBySQLInput: ["wm.LargeTextArea", {"width":"100%","caption":"","emptyValue":"null","height":"48px","display":"TextArea"}, {onchange: "setDirty"}]
+							ldapRoleBySQLInput: ["wm.LargeTextArea", {"width":"500px","emptyValue":"null","height":"68px","display":"TextArea", caption: "Enter Query", captionSize: "150px", captionPosition: "left", helpText: "Enter help here"}, {onchange: "setDirty"}]
 						    }]
 						}]								
 					    }]	

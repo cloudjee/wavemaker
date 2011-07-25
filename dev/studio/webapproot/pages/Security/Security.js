@@ -586,14 +586,18 @@ dojo.declare("Security", wm.Page, {
 			
 	},
 	testRolesByUsernameQueryResult: function(inResponse) {
-		studio.endWait();
-		this.dbTestSQLErrorLabel.setCaption("");
-		this.dbTestSQLResultList.renderData(inResponse);
+	    studio.endWait();
+	    this.dbTestSQLErrorPanel.hide();
+	    this.dbTestSQLErrorLabel.setCaption("");
+	    this.dbTestSQLResultList.renderData(inResponse);
+	    this.dbTestSQLResultListPanel.show();
 	},
 	testRolesByUsernameQueryError: function(inResponse) {
-		studio.endWait();
-		this.dbTestSQLResultList.renderData([]);
-		this.dbTestSQLErrorLabel.setCaption(inResponse.message);
+	    studio.endWait();
+	    this.dbTestSQLResultList.renderData([]);
+	    this.dbTestSQLResultListPanel.hide();
+	    this.dbTestSQLErrorLabel.setCaption(inResponse.message);
+	    this.dbTestSQLErrorPanel.show();
 	},
 	ldapSearchRoleCheckboxChange: function(inSender, inDisplayValue, inDataValue) {
 	    var c = inSender.getChecked();
