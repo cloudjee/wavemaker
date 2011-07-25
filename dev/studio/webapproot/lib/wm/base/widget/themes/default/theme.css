@@ -1912,3 +1912,18 @@ Overriding dijit's progress bar properties to enable height changes to progress 
    color: red;
 }
 
+.dijitEditorIconReplace {
+    background-image: url(../../../../../images/silkIcons/magnifier_zoom_in.png);
+    background-repeat: no-repeat;
+    width: 16px;
+}
+.dijitEditorIconReplaceAll {
+    background-image: url(../../../../../images/silkIcons/bullet_go.png);
+    background-repeat: no-repeat;
+    width: 16px;
+}
+.dijitEditorIconFind, .dijitEditorIconFindString {
+    background-image: url(../../../../../images/silkIcons/magnifier.png);
+    background-repeat: no-repeat;
+    width: 16px;
+}
