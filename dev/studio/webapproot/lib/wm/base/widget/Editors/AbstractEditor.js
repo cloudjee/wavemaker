@@ -342,7 +342,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		    var helpIconSize = 16;
 		    var helpIconMargin = 4;
 		    if (this.helpText) {
-			if (this.captionPosition == "left") {
+			if (this.captionPosition == "left" || !this.caption) {
 			    editorWidth -= helpIconSize + helpIconMargin;
 			} else {
 			    labelWidth -= helpIconSize + helpIconMargin;
