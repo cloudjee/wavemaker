@@ -46,7 +46,8 @@ dojo.declare("wm.ToggleButton", wm.ToolButton, {
 	},
     /* Sets the state, updates the css, does not fire events; useful in a set of toggle buttons where clicking one updates the states of the others, but firing events on each one would be bad */
     setClicked: function(inClicked) {
-	if (inClicked != this.clicked) {
+	/* this._cupdating occurs when initializing a togglebutton whose clicked value is true */
+	if (inClicked != this.clicked || this._cupdating) {
 	    this.clicked = inClicked;
 	    this.valueChanged("clicked", inClicked);
 	    this.setCaption(this.clicked ? this.captionDown : this.captionUp);
