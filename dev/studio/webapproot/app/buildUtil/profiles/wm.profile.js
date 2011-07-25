@@ -341,7 +341,13 @@ dependencies = {
 			resourceName: "wm.compressed.wm_richTextEditor",
 			layerDependencies: ["lib_build.js", "wm_editors.js"],
 			dependencies: [
-			   "wm.base.widget.Editors.RichText"
+			    "wm.base.widget.Editors.RichText",
+			    "dijit._editor.plugins.AlwaysShowToolbar",
+			    "dijit._editor.plugins.FontChoice",
+			    "dijit._editor.plugins.TextColor",
+			    "dijit._editor.plugins.LinkDialog",
+			    "dojox.editor.plugins.FindReplace",
+			    "dojox.editor.plugins.AutoUrlLink"
 			]		
 		},
 		{

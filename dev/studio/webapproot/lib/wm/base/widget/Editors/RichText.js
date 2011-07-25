@@ -19,10 +19,12 @@ dojo.provide("wm.base.widget.Editors.RichText");
 dojo.require("wm.base.widget.Editors.Text");
 
 dojo.require("dijit.Editor");
+dojo.require("dojox.editor.plugins.AutoUrlLink");
 dojo.require("dijit._editor.plugins.AlwaysShowToolbar");
 dojo.require("dijit._editor.plugins.FontChoice");
 dojo.require("dijit._editor.plugins.TextColor");
 dojo.require("dijit._editor.plugins.LinkDialog");
+dojo.require("dojox.editor.plugins.FindReplace");
 
 //===========================================================================
 // Rich Text Editor  
@@ -40,6 +42,7 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	toolbarUndo: true,
 	toolbarStyle: true,
 	toolbarStyleAll: false,
+        toolbarFind: false,
 	toolbarAlign: true,
 	toolbarList: true,
 	toolbarLink: false,
@@ -65,7 +68,7 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	},
 	*/
 	updatePlugins: function() {
-	  this.plugins = ["dijit._editor.plugins.AlwaysShowToolbar", "dijit._editor.plugins.EnterKeyHandling"];
+	    this.plugins = ["dijit._editor.plugins.AlwaysShowToolbar", "dijit._editor.plugins.EnterKeyHandling", "autourllink"];
 	  if (this.toolbarUndo) {
 	      this.plugins.push("undo");
 	      this.plugins.push("redo");
@@ -89,7 +92,9 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	      this.plugins.push("justifyFull");
 	      this.plugins.push("|");
 	  }
-	
+	    if (this.toolbarFind) {
+		this.plugins.push("findreplace")
+	    }
 	  if (this.toolbarList) {
 	      this.plugins.push("insertOrderedList");
 	      this.plugins.push("insertUnorderedList");
@@ -119,6 +124,9 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	  if (this.toolbarFormatName) {
 	      this.plugins.push("formatBlock");
 	  }
+	    if (this.customAddPlugins) {
+		this.plugins = this.plugins.concat(this.customAddPlugins());
+	    }
 	},
 	setReadonly: function(inReadonly) {
 		if (this.readonly && !inReadonly) {
@@ -168,7 +176,7 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 		this.connect(this.editor, "onBlur", this, function() {dojo.removeClass(this.editorNode, "Focused");});
 		this.editor.set("value", this.dataValue || "");
 		if (this.editor.focusNode) {
-      this.updateFocusNode();
+		    this.updateFocusNode();
 		} else {
 			this.connect(this.editor, "onLoad", this, "updateFocusNode");
 		}
@@ -176,6 +184,13 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	updateFocusNode: function(){
 	    //this.editor.focusNode.style.lineHeight = "12px"; // needed for safari... 
 		this.editor.focusNode.style.overflow = "auto";
+	    if (this._isDesignLoaded) {
+		wm.onidle(this, function() {
+		    var toolbar = dojo.query(".dijitToolbar", this.domNode)[0];
+		    toolbar.style.lineHeight = "24px";
+
+		});
+	    }
 	},
 	isReady: function() {
   	return Boolean(this._ready && this.editor && this.editor.focusNode);
@@ -237,6 +252,7 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
      toolbarFormatName: {group: "toolbar", order: 8, shortname: "formatName", doc: 1},
      toolbarSize: {group: "toolbar", order: 9, shortname: "size",  doc: 1},
      toolbarColor: {group: "toolbar", order: 11, shortname: "color", doc: 1},
+     toolbarFind: {group: "toolbar", order: 12, shortname: "find & replace", doc: 1},
      setToolbarUndo: {group: "method",  doc: 1},
      setToolbarStyle: {group: "method",  doc: 1},
      setToolbarStyleAll: {group: "method", doc: 1},
