@@ -64,15 +64,19 @@ Studio.extend({
 		    inClip = inClip.replace(/\["(.*?)"/, "[\"wm.Panel\"");
 		    newProps.width = "100%";
 		    newProps.height = "100%";
-		}
+		} 
 
 		// findContainer will not return a locked panel
 		if (rootPasteCtor.prototype instanceof wm.Control)
 		    p = inParent || this.findContainer(this.selected, inClass) || studio.page.root.findContainer(inClass);
+
+		if (rootPasteCtor.prototype instanceof wm.Dialog)
+		    p = studio.page;
+
 	    }
 
 		/* This might happen if the wm.Layout is locked; something one might do for a composite perhaps... */
-	    if (!p && rootPasteCtor.prototype instanceof wm.Control) {
+	    if (!p && rootPasteCtor.prototype && rootPasteCtor.prototype instanceof wm.Control) {
 		app.alert(studio.getDictionaryItem("ALERT_PASTE_FAILED_PANEL_LOCKED"))
 		return;
 	    }
