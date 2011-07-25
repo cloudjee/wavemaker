@@ -156,8 +156,13 @@ public class DeploymentService {
 	}
     */
 
-    public void exportProject(String zipFileName) {
-        deploymentManager.exportProject(zipFileName);
+    public String exportProject(String zipFileName) {
+	System.out.println("ZIP FILE NAME SERVCIE:" + zipFileName);     
+	File f = new File(deploymentManager.getExportPath());
+	f = new File(f.getParentFile(), zipFileName);
+	String path = f.getAbsolutePath();
+        deploymentManager.exportProject(path);
+	return path;
     }
     public FileUploadResponse uploadProjectZipFile(
             @ParamName(name="file") MultipartFile file) throws IOException {

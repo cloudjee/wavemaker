@@ -290,7 +290,7 @@ public class DeploymentManager {
     }
 
     public String exportProject(String projectDir, String zipFileName) {
-        
+	System.out.println("ZIP FILE NAME:" + zipFileName);     
         File zipFile = new File(zipFileName);
         if (!zipFile.getParentFile().exists()) {
             zipFile.getParentFile().mkdir();
@@ -377,11 +377,19 @@ public class DeploymentManager {
     		File testExistenceFile = new File(projectFolder, "webapproot/pages");
     		if (!testExistenceFile.exists()) throw new WMRuntimeException("That didn't look like a project folder; if it was, files were missing");
 
+		File indexhtml = new File(projectFolder, "webapproot/index.html");
+		String indexstring = IOUtils.read(indexhtml);
+		int endIndex = indexstring.lastIndexOf("({domNode: \"wavemakerNode\"");
+		int startIndex = indexstring.lastIndexOf(" ", endIndex);
+		String newProjectName = indexstring.substring(startIndex+1, endIndex);
+
+
     		// Get a File to point to where we're going to place this imported project
     		finalProjectFolder = new File(projectManager.getBaseProjectDir(), 
-    				projectManager.getUserProjectPrefix() + projectFolder.getName());
+					      projectManager.getUserProjectPrefix() + newProjectName);
 		String finalname = finalProjectFolder.getName();
-
+		String originalFinalname = finalname;
+		System.out.println("FINAL NAME: " + finalname);
     		// If there is already a project at that location, rename the project
     		int i = -1;
     		do {    	 
@@ -395,29 +403,31 @@ public class DeploymentManager {
     		
     		// Move the project into the project folder
     		projectFolder.renameTo(finalProjectFolder);              
-    		
+    		System.out.println("PROJECT MOVED TO " + finalProjectFolder.toString());
     		// If we renamed the project (i.e. if i got incremented) then we need to make some corrections
     		if (i > 0) {
     			
     			// Correction 1: Rename the js file
     			File jsFile = 
-    				new File(finalProjectFolder, "webapproot/" + projectFolder.getName() + ".js");
+    				new File(finalProjectFolder, "webapproot/" + originalFinalname + ".js");
     			File newJsFile = 
-    				new File(finalProjectFolder, "webapproot/" + projectFolder.getName() + i + ".js");
+    				new File(finalProjectFolder, "webapproot/" + finalname + ".js");
+    			System.out.println("Rename " + jsFile.getAbsolutePath() + " TO " + newJsFile.getAbsolutePath());
     			jsFile.renameTo(newJsFile);
-    			
+
     			// Correction 2: Change the class name in the js file
-    			com.wavemaker.tools.project.ResourceManager.ReplaceTextInFile(newJsFile, projectFolder.getName(), projectFolder.getName() + i);
+    			com.wavemaker.tools.project.ResourceManager.ReplaceTextInFile(newJsFile, originalFinalname, finalname);
     			File index_html = new File(finalProjectFolder, "webapproot/index.html");
     			
     			// Corection3: Change the constructor in index.html
-    			com.wavemaker.tools.project.ResourceManager.ReplaceTextInFile(index_html, "new " + projectFolder.getName() + "\\(\\{domNode", "new " + projectFolder.getName() + i + "({domNode");
-    			
+    			com.wavemaker.tools.project.ResourceManager.ReplaceTextInFile(index_html, "new " + originalFinalname + "\\(\\{domNode", "new " + finalname + "({domNode");
+			System.out.println("REPLACE " + originalFinalname + " WITH " + finalname);
+
     			// Correction 4: Change the pointer to the js script read in by index.html
-    			com.wavemaker.tools.project.ResourceManager.ReplaceTextInFile(index_html, "\\\"" + projectFolder.getName() + "\\.js\\\"", '"' + projectFolder.getName() + i + ".js\"");
+    			com.wavemaker.tools.project.ResourceManager.ReplaceTextInFile(index_html, "\\\"" + originalFinalname + "\\.js\\\"", '"' + finalname + ".js\"");
     			
     			// Correction 5: Change the title
-    			com.wavemaker.tools.project.ResourceManager.ReplaceTextInFile(index_html, "\\<title\\>" + projectFolder.getName() + "\\<\\/title\\>", "<title>" + projectFolder.getName() + i + "</title>");
+    			com.wavemaker.tools.project.ResourceManager.ReplaceTextInFile(index_html, "\\<title\\>" + originalFinalname + "\\<\\/title\\>", "<title>" + finalname + "</title>");
     			
     		}
     	} finally {
