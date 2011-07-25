@@ -75,6 +75,7 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
 	this._infoWindow = new google.maps.InfoWindow();
 
     },
+/*
     setSizeProp: function() {
 	var h = this.bounds.h;
 	var w = this.bounds.w;
@@ -82,7 +83,13 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
 	if (this._map && h != this.bounds.h || w != this.bounds.w)
 	    this._map.resize();
     },
+    */
+    renderBounds: function() {
+	if (this.inherited(arguments) && this._map) {
+	    google.maps.event.trigger(this._map, "resize");
+	}
 
+    },
     setZoom: function(inZoom) {
 	this.zoom = inZoom;
 	if (this._map)
