@@ -232,34 +232,40 @@ dojo.declare("wm.DomNode", null, {
 		return this.node.offsetHeight;
 	},
 	setBox: function(inBox, inSingleLine) {
+	        var isChanged = false;
 		var s = this.node.style;
 //		var style = {};
 		if (this.isRelativePositioned){
 			s.width = inBox.w;	
 			s.height = inBox.h;
-			return;	
+			return true;	
 		}
 		
 		var bl = inBox.l + "px";
 		if (!isNaN(inBox.l) && s.left != bl) {
 			s.left = bl;
+		        isChanged = true;
 		}
 		var bt = inBox.t + "px";
 		if (!isNaN(inBox.t) && s.top != bt) {
 			s.top = bt;
+		        isChanged = true;
 		}
 		var bw = inBox.w + "px";
 		if (inBox.w >=0 && s.width != bw) {
 			s.width = bw;
+		        isChanged = true;
 		}
 		var bh = inBox.h + "px";
 		if (inBox.h >= 0) {
 			//if (s.height != bh)
 			s.height = bh;
 			s.lineHeight = inSingleLine ? bh : "normal";
+		        isChanged = true;
 		} 
 
 		//dojo.style(this.node, style);  proven to be very slow
+	    return isChanged;
 	},
 	setCssText: function(inText) {
 		this.node.style.cssText += ";" + inText;
@@ -1227,9 +1233,10 @@ this.label.enable();
 		return splitter;
 	},
 	renderBounds: function() {
+	    var isChanged = false;
 	    if (this.dom) {
 		var b = this.getStyleBounds();
-		this.dom.setBox(b, wm.AbstractEditor && this.singleLine && this instanceof wm.AbstractEditor == false);
+		isChanged = this.dom.setBox(b, wm.AbstractEditor && this.singleLine && this instanceof wm.AbstractEditor == false);
 		if (this._touchScroll) {
 		    this._touchScroll.scrollers.outer.style.width = b.w + "px";
 		    this._touchScroll.scrollers.outer.style.height = b.h + "px";
@@ -1240,6 +1247,7 @@ this.label.enable();
 			this.designWrapper.controlBoundsChange();
 			this.designWrapper.renderBounds();			
 		}
+	    return isChanged;
 	},
 	//===========================================================================
 	// Flow
