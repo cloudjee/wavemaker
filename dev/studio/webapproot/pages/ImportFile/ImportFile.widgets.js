@@ -30,7 +30,7 @@ ImportFile.widgets = {
 										buttonCaption: "Select Zipfile",
 										service: "deploymentService",
 										operation: "uploadProjectZipFile"},
-							{onChange: "onChange"}],
+							{onChange: "onChange", onSuccess: "onSuccess"}],
 				     filename: ["wm.Text", {width: "100%",
 							    height: "32px",
 							    disabled: true,
@@ -39,7 +39,7 @@ ImportFile.widgets = {
 							       binding: ["wm.Binding", {}, {}, {
 								   wire: ["wm.Wire", {"targetProperty":"dataValue", source: "fileUploader.variable.name"}, {}]
 							       }]
-							   }],
+							   }]/*,
 					 openButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},
 								    caption: "Open Project",
 								     height: "32px",
@@ -51,7 +51,7 @@ ImportFile.widgets = {
 							  binding: ["wm.Binding", {}, {}, {
 							      wire: ["wm.Wire", {"targetProperty":"disabled", expression: "!${filename.dataValue}"}, {}]
 							  }]
-						      }]
+						      }]*/
 
 				 }]
 	}]

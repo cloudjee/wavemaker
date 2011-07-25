@@ -41,5 +41,8 @@ dojo.declare("ImportFile", wm.Page, {
 	}
 	
     },
+    onSuccess: function() {
+	    this.openProject();
+    },
     _end: 0
 });
