@@ -174,6 +174,16 @@ dojo.require("dijit.Editor");
 		dgc._Widget.markupFactory(node, cell);
 	};
 
+
+    /* WaveMaker added this class */
+	dojo.declare("dojox.grid.cells.NumberTextBox", dgc._Widget, {
+		widgetClass: dijit.form.NumberTextBox,
+	});
+	dgc.NumberTextBox.markupFactory = function(node, cell){
+		dgc._Widget.markupFactory(node, cell);
+	};
+
+
 	dojo.declare("dojox.grid.cells.CheckBox", dgc._Widget, {
 		widgetClass: dijit.form.CheckBox,
 		getValue: function(){
