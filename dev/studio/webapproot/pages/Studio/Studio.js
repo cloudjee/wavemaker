@@ -567,15 +567,18 @@ dojo.declare("Studio", wm.Page, {
 			if (this._runRequested) {
 			    var isTest = (this.runPopup.iconClass == "studioProjectTest");
 			  this._runRequested = false;
-			  wm.openUrl(this.getPreviewUrl(isTest), this.project.projectName, "_wmPreview");
+			  wm.openUrl(this.getPreviewUrl(isTest), studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"), "_wmPreview");
                         }
 	this.endWait();
     },
         deploy: function(inMsg, inCallback, noWait) {
+	    // IE 8 appears to need this skipped...
+	    if (!dojo.isIE == 8) {
            	if (this._deploying) {
 		        studio.beginWait(inMsg);
 			return;
 		}
+	    }
 		this._deploying = true;
 		var d = this._deployer = studio.deploymentService.requestAsync("testRunStart");
 		d.addErrback(dojo.hitch(this, function(result) {
