@@ -1670,7 +1670,7 @@ Studio.extend({
 		this.deploy(this.getDictionaryItem("WAIT_BUILD_PREVIEW"), dojo.hitch(this, function(result) {
 		    this._runRequested = false;
 		    if (operation != "studioProjectCompile") 
-			wm.openUrl(this.getPreviewUrl(operation == "studioProjectTest"), this.project.projectName, "_wmPreview");
+			wm.openUrl(this.getPreviewUrl(operation == "studioProjectTest"), studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"), "_wmPreview");
 		    studio.endWait();
 		    return result;
 		}));
