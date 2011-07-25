@@ -18,7 +18,7 @@ RestUrlDialog.widgets = {
 		    spacer5: ["wm.Spacer", {height: "10px"}, {}],
 		    urlPanel: ["wm.Panel", {border: "0", height: "28px", width: "100%", verticalAlign: "top", horizontalAlign: "left", layoutKind: "left-to-right"}, {}, {
 			urlInput: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, caption: "URL", captionSize: "100px", width: "100%", layoutKind: "left-to-right"}],
-			advancedButton: ["wm.ToggleButton", {_classes: {domNode: ["StudioButton"]},captionDown: "Basic Settings", captionUp: "Advanced Settings", width: "150px", height: "100%"}]
+			advancedButton: ["wm.ToggleButton", {_classes: {domNode: ["StudioButton"]},captionDown: "Hide Settings", captionUp: "More Settings", width: "150px", height: "100%", margin: "2,4,6,4"}]
 		    }],
 		    rowTwoPanel: ["wm.Panel", {showing: "false",width: "100%", height: "140px", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 			    binding: ["wm.Binding", {}, {}, {
@@ -30,13 +30,13 @@ RestUrlDialog.widgets = {
 				passwordInput: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "100px", width: "100%", border: "0", caption: "Password"}]
 			    }],
 			    contentTypePanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left", padding: "0,0,0,10"}, {}, {
-				methodInput: ["wm.SelectMenu", {options: "GET,POST", caption: "Method", captionSize: "80px", width: "100%", dataValue: "GET", layoutKind: "left-to-right"}],
-				contentTypeInput: ["wm.SelectMenu", {options: "text/xml,application/x-www-form-urlencoded", caption: "Content Type", captionSize: "80px", width: "100%", dataValue: "text/xml"}, {}, {
+				methodInput: ["wm.SelectMenu", {options: "GET,POST", caption: "Method", captionSize: "80px", width: "200px", dataValue: "GET", layoutKind: "left-to-right"}],
+				contentTypeInput: ["wm.SelectMenu", {options: "text/xml,application/x-www-form-urlencoded", caption: "Content Type", captionSize: "80px", width: "200px", dataValue: "text/xml"}, {}, {
 				    binding: ["wm.Binding", {}, {}, {
 					wire: ["wm.Wire", {"targetProperty":"disabled","expression":"${methodInput.dataValue} == 'GET'"}, {}]
 				    }]
 				}],
-				requestTextArea: ["wm.LargeTextArea", {caption: "Sample POST Data", captionSize: "80px", captionPosition: "left", width: "100%", height: "100%"}, {}, {
+				requestTextArea: ["wm.LargeTextArea", {captionAlign: "right", caption: "Sample POST Data", captionSize: "80px", captionPosition: "left", width: "100%", height: "100%"}, {}, {
 				    binding: ["wm.Binding", {}, {}, {
 					wire: ["wm.Wire", {"targetProperty":"disabled","expression":"${methodInput.dataValue} == 'GET'"}, {}]
 				    }]
