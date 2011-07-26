@@ -810,7 +810,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		var ex = this.bindEditor.getValue("dataValue");
 	    }
 	    if (isExpression || isDisplayExpression) {
-		var ex2 = ex.replace(/\$\{.*?}/g, 1); // replace all ${...} with the value 1 for a quick and easy test to validate the expression
+		var ex2 = ex.replace(/\$\{.*?}/g, '""'); // replace all ${...} with the value 1 for a quick and easy test to validate the expression
 		try {
 		    var result = eval(ex2);
 		    if (typeof result == "object") {
