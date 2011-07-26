@@ -20,7 +20,7 @@ import org.apache.commons.io.FileUtils;
 public class ProjSpringServicesXmlUpgradeTask implements UpgradeTask {
 
 	private static String fromStr ="</beans>";
-	private static String toStr = "<import resource='\"classpath:com/wavemaker/runtime/service/waveMakerServiceBean.xml'\"/>\r\n</beans>";
+	private static String toStr = "    <import resource=\"classpath:com/wavemaker/runtime/service/waveMakerServiceBean.xml\"/>\r\n</beans>";
     private boolean error = false;
 	
 	/* (non-Javadoc)
