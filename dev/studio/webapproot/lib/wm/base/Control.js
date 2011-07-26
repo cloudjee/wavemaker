@@ -1420,6 +1420,7 @@ this.label.enable();
 		this.widgets[i].setDisabled(d);
 	    }
 	    this.disabled = d;
+	    dojo.toggleClass(this.domNode, "Disabled", inDisabled);
 	},
 	setGroup: function(inGroup) {
 		this.group = inGroup;
