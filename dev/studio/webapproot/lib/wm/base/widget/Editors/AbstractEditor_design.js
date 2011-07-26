@@ -61,8 +61,13 @@ wm.AbstractEditor.extend({
 		props.displayValue.readonly = this.formField;
 	    props.defaultInsert.ignoretmp = !this.isAncestorInstanceOf(wm.LiveFormBase);
 	    props.ignoreParentReadonly.ignoretmp = props.defaultInsert.ignoretmp;
+	    props.minEditorWidth.ignoretmp = this.captionPosition == "top" || this.captionPosition == "bottom" || this.captionSize.match(/px/);
 		return props;
 	},
+    set_minEditorWidth: function(inWidth) {
+	this.minEditorWidth = inWidth;
+	this.sizeEditor();
+    },
 	set_formField: function(inFieldName) {
 		if (!inFieldName)
 			delete this.formField;
@@ -124,6 +129,7 @@ wm.Object.extendSchema(wm.AbstractEditor, {
     captionPosition: {group: "Labeling", order: 2, doc: 1},
     captionAlign: {group: "Labeling", order: 3, doc: 1},
     captionSize: {group: "layout", order: 4, doc: 1},
+    minEditorWidth: {group: "layout", order: 5, doc: 1},
     singleLine: {group: "Labeling", order: 5},
     helpText: {group: "Labeling", order: 10},
     readonly: {group: "editor", order: 1, doc: 1},

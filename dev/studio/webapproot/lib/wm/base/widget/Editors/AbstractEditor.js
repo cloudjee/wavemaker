@@ -321,8 +321,14 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 			editorWidth = w;
 			editorHeight = h;
 		    } else if (position == "left" || position == "right") {			
-			labelWidth = (this.captionSize.match(/px/)) ? parseInt(this.captionSize) : Math.floor(parseInt(this.captionSize) * w/100);						
-			editorWidth = w - labelWidth;			
+			var tmpWidth = (this.captionSize.match(/px/)) ? parseInt(this.captionSize) : Math.floor(parseInt(this.captionSize) * w/100);
+			if (w - tmpWidth < (this.minEditorWidth || 16)) {
+			    editorWidth = this.minEditorWidth || 16;
+			    labelWidth = w - editorWidth;
+			} else {
+			    labelWidth = tmpWidth;
+			    editorWidth =  w - labelWidth;			
+			}
 //			if (labelWidth) editorWidth -=  18; // TODO: number 18 is a random number that worked out in FF, but needs testing elsewhere
 			labelHeight = (height) ? height : "";
 			editorHeight = labelHeight;			
