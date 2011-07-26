@@ -89,7 +89,7 @@ Security.widgets = {
 						dbRoleBySQLCheckbox: ["wm.Checkbox", {"border":"0","caption":"Roles By SQL Query","captionAlign":"left","captionPosition":"right","captionSize":"380px","displayValue":"1","padding":"2","width":"100%"}, {"onchange":"dbRoleBySQLCheckboxChange"}]
 					    }],
 					    dbRoleBySQLEnablePanel: ["wm.Panel", {"border":"0","height":"100px", fitToContentHeight: true, verticalAlign: "top", horizontalAlign: "left", width: "100%", margin: "5"}, {}, {
-						dbRoleBySQLInput: ["wm.LargeTextArea", {"border":"0","caption":"Enter Query",captionSize: "100px", captionPosition: "left", "emptyValue":"null","height":"48px", width:"100%", helpText: "Enter helptext here"}, {"onchange":"setDirty"}],
+						dbRoleBySQLInput: ["wm.LargeTextArea", {"border":"0","caption":"Enter Query",captionSize: "100px", captionPosition: "left", "emptyValue":"null","height":"48px", width:"100%", helpText: "Enter the SQL query that returns the user id and roles, e.g. 'select role.user_id, role.rolename from role where role.user_id = ?' "}, {"onchange":"setDirty"}],
 						panel22: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_2px"]},"border":"0","height":"24px",width: "100%", "layoutKind":"left-to-right"}, {}, {
 						    spacer20: ["wm.Spacer", {"width":"100%"}, {}],
 						    dbTestSQLInput: ["wm.Text", {"border":"0","caption":"User ID","emptyValue":"null","padding":"2","width":"250px"}, {"onchange":"setDirty"}],
@@ -140,7 +140,7 @@ Security.widgets = {
 							ldapRoleBySQLCheckbox: ["wm.Checkbox", {"captionSize":"150px","caption":"Roles By SQL Query","width":"500px"}, {"onchange":"ldapRoleBySQLCheckboxChange"}]
 						    }],
 						    ldapRoleBySQLEnablePanel: ["wm.Panel", {"height":"150px","width":"100%", fitContentToHeight: true, verticalAlign: "top", horizontalAlign: "left"}, {}, {
-							ldapRoleBySQLInput: ["wm.LargeTextArea", {"width":"500px","emptyValue":"null","height":"68px","display":"TextArea", caption: "Enter Query", captionSize: "150px", captionPosition: "left", helpText: "Enter help here"}, {onchange: "setDirty"}]
+							ldapRoleBySQLInput: ["wm.LargeTextArea", {"width":"500px","emptyValue":"null","height":"68px","display":"TextArea", caption: "Enter Query", captionSize: "150px", captionPosition: "left", helpText: "Enter the SQL query that returns the user id and roles, e.g. 'select role.user_id, role.rolename from role where role.user_id = ?' "}, {onchange: "setDirty"}]
 						    }]
 						}]								
 					    }]	
