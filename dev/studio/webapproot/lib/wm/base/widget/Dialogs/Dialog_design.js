@@ -33,17 +33,12 @@ wm.Dialog.extend({
 	    this.show();
 	},
     makePropEdit: function(inName, inValue, inDefault) {
-	switch (inName) {
-        case "corner":
-            inValue = inValue.replace(/^c/, "center ").replace(/^t/, "top ").replace(/^b/, "bottom ").replace(/l$/, "left").replace(/r$/, "right").replace(/c$/, "center");
-            return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["top left", "top center", "top right", "center left", "center center", "center right", "bottom left", "bottom center", "bottom right"]});
-	}
-	return this.inherited(arguments);
-    },
-    makePropEdit: function(inName, inValue, inDefault) {
 	var prop = this.schema ? this.schema[inName] : null;
 	var name =  (prop && prop.shortname) ? prop.shortname : inName;
 		switch (inName) {
+        case "corner":
+            inValue = inValue.replace(/^c/, "center ").replace(/^t/, "top ").replace(/^b/, "bottom ").replace(/l$/, "left").replace(/r$/, "right").replace(/c$/, "center");
+            return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["top left", "top center", "top right", "center left", "center center", "center right", "bottom left", "bottom center", "bottom right"]});
 		case "positionNear":
 	    return new wm.propEdit.WidgetsSelect({component: this, 
 						  value: inValue, 
