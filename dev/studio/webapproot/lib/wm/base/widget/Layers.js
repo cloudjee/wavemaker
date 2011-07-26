@@ -197,6 +197,12 @@ dojo.declare("wm.Layers", wm.Container, {
 		if (wm.widgetIsShowing(this))
 			this._fireLayerOnShow();
 	},
+	getPreferredFitToContentHeight: function() {
+	    return this.getActiveLayer().getPreferredFitToContentHeight();
+	},
+	getPreferredFitToContentWidth: function() {
+	    return this.getActiveLayer().getPreferredFitToContentWidth();
+	},
         afterPaletteDrop: function(){
 	    this.inherited(arguments);
 	    this.setClientBorder(this.clientBorder);

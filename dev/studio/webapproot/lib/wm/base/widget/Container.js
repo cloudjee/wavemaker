@@ -532,7 +532,7 @@ wm.Container.extend({
 		var v;
 		for (var i=0, c; c=this.c$[i]; i++) {		    
 			if (this.layout.inFlow(c)) {
-				if (c.fitToContentWidth) {
+			        if (c.fitToContentWidth || c instanceof wm.Container && c._percEx.w == 100) {
 					v =  c.getPreferredFitToContentWidth();
 				} else if (!c._percEx.w) {
 					v =  c.bounds.w;
@@ -573,7 +573,7 @@ wm.Container.extend({
 	    var v;
 		for (var i=0, c; c=this.c$[i]; i++) {
 			if (this.layout.inFlow(c)) {
-				 if (c.fitToContentHeight) {
+			        if (c.fitToContentHeight || c instanceof wm.Container && c._percEx.h == 100) {
 					v = c.getPreferredFitToContentHeight();
 				} else if (!c._percEx.h) {
 					v = c.bounds.h;
