@@ -179,3 +179,37 @@
 .wm_notheme .dijitSpinner .dijitArrowButton.dijitUpArrowButton .dijitArrowButtonInner {
 	background-image: url(images/comboArrowUpDark.png); 
 }
+
+.wm_notheme .wmFancyPanel-labelWidget {
+        font-size: 16px;
+	background: #00357d url(images/panel-header.png) repeat-x center top;	
+        -moz-border-radius-topleft: 12px;
+        -moz-border-radius-topright: 12px;
+        -webkit-border-top-left-radius: 12px;
+        -webkit-border-top-right-radius: 12px;
+         border-radius-topleft: 12px;
+         border-radius-topright: 12px;    
+         color: white;
+         font-weight: bold;         
+}
+
+.wm_notheme .wmfancypanel {
+        -moz-border-radius-topleft: 16px;
+        -moz-border-radius-topright: 16px;
+        -webkit-border-top-left-radius: 16px;
+        -webkit-border-top-right-radius: 16px;
+         border-radius-topleft: 16px;
+         border-radius-topright: 16px;    
+
+        -moz-border-radius-bottomleft: 4px;
+        -moz-border-radius-bottomright: 4px;
+        -webkit-border-bottom-right-radius: 4px;
+        -webkit-border-bottom-left-radius: 4px;
+         border-radius-bottomleft: 4px;
+         border-radius-bottomright: 4px;    
+
+
+     -moz-box-shadow: 2px 2px 4px #888; /* FF3.5+ */
+     -webkit-box-shadow: 2px 2px 4px #888; /* Saf3.0+, Chrome */
+     box-shadow: 2px 2px 4px #888; /* Opera 10.5, IE 9.0 */
+}
