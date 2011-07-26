@@ -877,9 +877,6 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	padding: 4px 8px 4px 4px;
 }
 
-.wmeditor-caption-disabled {
-	color: gray;
-}
 
 .wmeditor-readonly {
 	padding: 4px 8px 4px 4px;
@@ -929,7 +926,8 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 
 /* fix dijit disabled classes */
 .tundra .dijitTextBoxDisabled,
-.tundra .dijitComboBoxDisabled {
+.tundra .dijitComboBoxDisabled,
+.tundra .Disabled .wmeditor-caption {
 /*
 	background:#E4E4E4 url(images/buttonDisabled.png) repeat-x scroll center top !important;
 	border-color:#D5D5D5;
