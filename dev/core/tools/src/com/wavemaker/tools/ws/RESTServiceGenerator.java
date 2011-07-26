@@ -166,40 +166,34 @@ public class RESTServiceGenerator extends WebServiceGenerator {
     protected void generateOperationMethodBody(JMethod method, JBlock body,
             String operationName, Map<String, JType> inputJTypeMap, ElementType outputType1, //salesforce
             JType outputJType, Integer overloadCount) throws GenerationException {
-        super.generateOperationMethodBody(method, body, operationName, 
+        super.generateOperationMethodBody(method, body, operationName,
                 inputJTypeMap, outputType1, outputJType, overloadCount);
-        
+
         // [RESULT]
         // Map<String,Object> inputMap = new HashMap<String,Object>();
         inputMapVar = body.decl(parseType("java.util.Map<String,Object>"),
                 "inputMap", JExpr._new(parseType("java.util.HashMap<String,Object>")));
 
+        for (String paramName : inputJTypeMap.keySet()) {
+            // [RESULT]
+            // inputMap.put("<paramName>", <paramName>);
+            JInvocation invocation = inputMapVar.invoke("put");
+            invocation.arg(JExpr.lit(paramName));
+            invocation.arg(JExpr.ref(paramName));
+            body.add(invocation);
+        }
+
         if (WebServiceUtils.getServiceProvider(wsdl.getEndpointLocation()).equals(Constants.SERVICE_PROVIDER_INFOTERIA)) {
+            JInvocation invocation = inputMapVar.invoke("put");
             String projectName = serviceInfo.getName();
-            String operName = wsdl.getOperation(operationName).getName();
-            for (String paramName : inputJTypeMap.keySet()) {
-                // [RESULT]
-                // inputMap.put("<paramName>", <paramName>);
-                JInvocation invocation = inputMapVar.invoke("put");
-                invocation.arg(JExpr.lit(paramName));
-                if (paramName.equals("project")) {
-                    invocation.arg(JExpr.lit(projectName));
-                } else if (paramName.equals("flow")) {
-                    invocation.arg(JExpr.lit(operName));
-                } else {
-                    invocation.arg(JExpr.ref(paramName));
-                }
-                body.add(invocation);
-            }
-        } else {
-            for (String paramName : inputJTypeMap.keySet()) {
-                // [RESULT]
-                // inputMap.put("<paramName>", <paramName>);
-                JInvocation invocation = inputMapVar.invoke("put");
-                invocation.arg(JExpr.lit(paramName));
-                invocation.arg(JExpr.ref(paramName));
-                body.add(invocation);
-            }
+            invocation.arg(JExpr.lit("project"));
+            invocation.arg(JExpr.lit(projectName));
+            body.add(invocation);
+            invocation = inputMapVar.invoke("put");
+            String flowName = wsdl.getOperation(operationName).getName();
+            invocation.arg(JExpr.lit("flow"));
+            invocation.arg(JExpr.lit(flowName));
+            body.add(invocation);
         }
 
         ElementType outputType = wsdl.getOutputType(operationName);

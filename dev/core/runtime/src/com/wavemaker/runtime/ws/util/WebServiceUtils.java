@@ -20,7 +20,7 @@ package com.wavemaker.runtime.ws.util;
 public class WebServiceUtils {
 
     public static String getServiceProvider(String endpointAddress) {
-        if (endpointAddress.contains("/flow-rest/flow/")) {
+        if (endpointAddress != null && endpointAddress.contains("/flow-rest/flow/")) {
             return Constants.SERVICE_PROVIDER_INFOTERIA;
         } else {
             return "";

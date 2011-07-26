@@ -320,7 +320,7 @@ public class FlowSupport {
             if (args != null && args.has("field")) fields = convertToJSONArray(args.get("field"));
             if (args != null && args.has("variable")) variables = convertToJSONArray(args.get("variable"));
 
-            param = new RESTInputParam();
+            /*param = new RESTInputParam();
             param.setName("sessionid");
             param.setType("string");
             flowParams.add(param);
@@ -333,7 +333,7 @@ public class FlowSupport {
             param = new RESTInputParam();
             param.setName("flow");
             param.setType("string");
-            flowParams.add(param);
+            flowParams.add(param);*/
 
             if (fields != null) {
                 for (int j=0; j<fields.length(); j++) {
