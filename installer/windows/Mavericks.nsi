@@ -309,8 +309,8 @@ Section -post SEC0001
     WriteUninstaller $INSTDIR\uninstall.exe
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
     SetOutPath '$SMPROGRAMS\$StartMenuGroup'
-    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\${PRODUCT_NAME}.lnk" "$INSTDIR\jdk-1.6.0_24\bin\javaw.exe" '-Xms256m -Xmx512m -XX:MaxPermSize=256m  -jar "$TomcatDir\launcher.jar"' "$INSTDIR\${PRODUCT_NAME}.ico" "" SW_SHOWNORMAL "" "${PRODUCT_NAME}: Web-Fast™ development of CIO-Safe™ applications."
-    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\Uninstall ${PRODUCT_NAME}.lnk" $INSTDIR\uninstall.exe
+    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\${PRODUCT_NAME}-${Version}.lnk" "$INSTDIR\jdk-1.6.0_24\bin\javaw.exe" '-Xms256m -Xmx512m -XX:MaxPermSize=256m  -jar "$TomcatDir\launcher.jar"' "$INSTDIR\${PRODUCT_NAME}.ico" "" SW_SHOWNORMAL "" "${PRODUCT_NAME}: Web-Fast™ development of CIO-Safe™ applications."
+    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\Uninstall ${PRODUCT_NAME}-${Version}.lnk" $INSTDIR\uninstall.exe
     !insertmacro MUI_STARTMENU_WRITE_END
     WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}-${VERSION}" DisplayName "${PRODUCT_NAME}"
     WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}-${VERSION}" DisplayVersion "${VERSION}"
