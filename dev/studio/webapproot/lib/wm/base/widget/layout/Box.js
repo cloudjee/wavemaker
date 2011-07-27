@@ -217,7 +217,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 		}
             }
 
-	    if (inContainer._touchScroll && inContainer instanceof wm.ListViewer == false) {
+	    if (inContainer._touchScroll && (!wm.ListViewer || inContainer instanceof wm.ListViewer == false)) {
 		var touchScrollChanged = false;
 		if (inFlowAxis == "h") {
 		    var scrollRequiredHeight = b.t;
