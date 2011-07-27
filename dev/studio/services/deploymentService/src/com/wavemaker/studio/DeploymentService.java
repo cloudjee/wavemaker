@@ -190,11 +190,11 @@ public class DeploymentService {
 */
     
     public String deploy(DeploymentInfo deploymentInfo) throws IOException {
-        deploymentManager.buildWar();
-        File f = serviceDeploymentManager.getWarFile();
-        if (!f.exists()) {
-            throw new AssertionError("Application archive file doesn't exist at " + f.getAbsolutePath());
-        }
+        //deploymentManager.buildWar();
+        //File f = serviceDeploymentManager.getWarFile();
+        //if (!f.exists()) {
+        //    throw new AssertionError("Application archive file doesn't exist at " + f.getAbsolutePath());
+        //}
         return "SUCCESS"; //Stubbed for now
         //return deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType().toString()).deploy(f, contextRoot, deploymentInfo);
     }
