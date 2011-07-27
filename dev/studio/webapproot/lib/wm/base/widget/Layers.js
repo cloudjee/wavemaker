@@ -198,10 +198,10 @@ dojo.declare("wm.Layers", wm.Container, {
 			this._fireLayerOnShow();
 	},
 	getPreferredFitToContentHeight: function() {
-	    return this.getActiveLayer().getPreferredFitToContentHeight();
+	    return this.padBorderMargin.t + this.padBorderMargin.b + this.getActiveLayer().getPreferredFitToContentHeight();
 	},
 	getPreferredFitToContentWidth: function() {
-	    return this.getActiveLayer().getPreferredFitToContentWidth();
+	    return  this.padBorderMargin.l +  this.padBorderMargin.r + this.getActiveLayer().getPreferredFitToContentWidth();
 	},
         afterPaletteDrop: function(){
 	    this.inherited(arguments);
