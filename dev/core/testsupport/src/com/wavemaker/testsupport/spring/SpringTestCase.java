@@ -63,6 +63,8 @@ import org.apache.commons.lang.ArrayUtils;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -118,6 +120,22 @@ public abstract class SpringTestCase extends
 
         String[] defaultLocs = DEFAULT_LOCATIONS;
         String[] webappLocs = getWebAppConfigLocations();
+        
+        for (int x=0; x < webappLocs.length; x++) {
+            ClassPathResource cpResource = new ClassPathResource(webappLocs[x]);
+            if (!cpResource.exists()) {
+                FileSystemResource fileResource = new FileSystemResource(webappLocs[x]);
+                if (!fileResource.exists()) {
+                    fail("The web app config location '"+webappLocs[x]+"' could not be loaded because it does not exist.");
+                } else {
+                    try {
+                        webappLocs[x] = fileResource.getURL().toString();
+                    } catch (IOException e) {
+                        fail("Unable to convert the web app config location '"+webappLocs[x]+"' into a URL suitable for loading.");
+                    }
+                }
+            }
+        }
 
         return (String[]) ArrayUtils.addAll(defaultLocs, webappLocs);
     }

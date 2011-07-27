@@ -25,6 +25,8 @@ import java.util.Properties;
 import java.util.HashMap;
 
 import org.json.JSONObject;
+import org.springframework.core.io.Resource;
+import org.springframework.web.context.support.ServletContextResource;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -32,7 +34,7 @@ import org.apache.commons.io.IOUtils;
  * application context.
  *
  * @author S Lee
- *
+ * @author Jeremy Grelle
  */
 public class WMAppContext
 {
@@ -55,12 +57,9 @@ public class WMAppContext
         //In Studio, the tenant field and def tenant ID is injected by ProjectManager when a project opens
         if (!appName.equals(DataServiceConstants.WAVEMAKER_STUDIO)) {
             //Store types.js contents in memory
-            FileInputStream is;
             try {
-                String path = context.getRealPath("");
-                path = path + "/types.js";
-                is = new FileInputStream(path);
-                String s = IOUtils.toString(is);
+                Resource typesResource = new ServletContextResource(context, "/types.js");
+                String s = IOUtils.toString(typesResource.getInputStream());
                 typesObj = new JSONObject(s.substring(11));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -68,13 +67,9 @@ public class WMAppContext
             }
 
             //Set up multi-tenant info
-            FileInputStream fis;
+            Resource appPropsResource = null;
             try {
-                String path = context.getRealPath("");
-                path = path + "/WEB-INF/classes/" + CommonConstants.APP_PROPERTY_FILE;
-                fis = new FileInputStream(path);
-            } catch (FileNotFoundException ne) {
-                return;
+                appPropsResource = new ServletContextResource(context, "/WEB-INF/classes/"+CommonConstants.APP_PROPERTY_FILE);
             } catch (WMRuntimeException re) {
                 return;
             } catch (Exception e) {
@@ -82,11 +77,15 @@ public class WMAppContext
                 return;
             }
 
+            if (!appPropsResource.exists()) {
+                return;
+            }
+            
             Properties props;
 
             try {
                 props = new Properties();
-                props.load(fis);
+                props.load(appPropsResource.getInputStream());
             } catch (IOException ioe) {
                 ioe.printStackTrace();
                 return;

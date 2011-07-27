@@ -20,16 +20,23 @@ package com.wavemaker.studio.infra;
 import java.io.File;
 import java.io.IOException;
 
+import javax.servlet.ServletContextEvent;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.mock.web.MockServletContext;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.testsupport.spring.SpringTestCase;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.project.StudioConfiguration;
@@ -95,6 +102,10 @@ public abstract class StudioTestCase extends SpringTestCase {
         assertTrue(config.getWaveMakerHome().exists());
         assertEquals(wmHome, config.getWaveMakerHome());
         assertTrue(config.getProjectsDir().exists());
+        
+        MockServletContext mockContext = new MockServletContext(new TestResourceLoader(ctx));
+        mockContext.setServletContextName("wavemaker");
+        WMAppContext.getInstance(new ServletContextEvent(mockContext));
 
         this.httpSession = new MockHttpSession();
     }
@@ -183,5 +194,31 @@ public abstract class StudioTestCase extends SpringTestCase {
         RuntimeAccess.getInstance().setRequest(req);
 
         return expectedPath;
+    }
+    
+    private static final class TestResourceLoader implements ResourceLoader {
+
+        private final ApplicationContext context;
+        
+        private final FileSystemResource webapproot = new FileSystemResource("webapproot/");
+        
+        public TestResourceLoader(GenericApplicationContext ctx) {
+            this.context = ctx;
+        }
+
+        public ClassLoader getClassLoader() {
+            return this.context.getClassLoader();
+        }
+
+        public Resource getResource(String resource) {
+            //Try to load from webapproot first, otherwise fall back to ApplicationContext
+            FileSystemResource resourceToLoad = (FileSystemResource) webapproot.createRelative(resource.replaceFirst("/", ""));
+            if (resourceToLoad.exists()) {
+                return resourceToLoad;
+            } else {
+                return context.getResource(resource);
+            }
+        }
+
     }
 }

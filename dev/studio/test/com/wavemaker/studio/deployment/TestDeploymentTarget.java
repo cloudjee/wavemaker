@@ -31,7 +31,6 @@ import com.wavemaker.studio.infra.StudioTestCase;
 public class TestDeploymentTarget extends StudioTestCase {
 
     private static final String DPL_TARGET_MGR = "deploymentTargetManager";
-    //private static final String TOMCAT_DPL_TARGET = "deploy2Tomcat";
     private static final String TOMCAT_DPL_TARGET = "tomcat";
 
 

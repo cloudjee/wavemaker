@@ -14,15 +14,26 @@
 
 package com.wavemaker.tools.deployment;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import com.wavemaker.common.util.IOUtils;
-import com.wavemaker.common.WMRuntimeException;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+
 import com.wavemaker.common.CommonConstants;
+import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.data.DataServiceType;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.DataModelDeploymentConfiguration;
+import com.wavemaker.tools.deployment.xmlhandlers.Targets;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
@@ -31,12 +42,6 @@ import com.wavemaker.tools.project.StudioConfiguration;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.util.DesignTimeUtils;
-import com.wavemaker.tools.cloudmgr.opsource.deployserver.response.Status;
-import com.wavemaker.tools.deployment.xmlhandlers.Targets;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.Marshaller;
 
 /**
  * @author Simon Toens
@@ -137,6 +142,57 @@ public class ServiceDeploymentManager {
 
     public ProjectManager getProjectManager() {
         return this.projectMgr;
+    }
+    
+    public List<DeploymentInfo> getDeploymentInfo() {
+        List<DeploymentInfo> deployments = new ArrayList<DeploymentInfo>();
+        
+        DeploymentInfo deployment1 = new DeploymentInfo();
+        deployment1.setApplicationName("stubby1");
+        deployment1.setDeploymentType(DeploymentType.TOMCAT);
+        deployment1.setName("Stubby 1 Tomcat Deployment");
+        deployment1.setHost("localhost");
+        deployment1.setPort(8080);
+        
+        List<DeploymentDB> dbs1 = new ArrayList<DeploymentDB>();
+        DeploymentDB db1 = new DeploymentDB();
+        db1.setDataModelId("foo");
+        db1.setConnectionUrl("jdbc\\:mysql\\://localhost\\:3306/foo");
+        db1.setUserName("marty");
+        db1.setPassword("mcfly");
+        dbs1.add(db1);
+        deployment1.setDatabases(dbs1);
+        
+        deployments.add(deployment1);
+        
+        DeploymentInfo deployment2 = new DeploymentInfo();
+        deployment2.setApplicationName("stubby1");
+        deployment2.setDeploymentType(DeploymentType.CLOUD_FOUNDRY);
+        deployment2.setName("Stubby 1 CloudFoundry Deployment");
+        deployment2.setTarget("api.cloudfoundry.com");
+        
+        List<DeploymentDB> dbs2 = new ArrayList<DeploymentDB>();
+        DeploymentDB db2 = new DeploymentDB();
+        db2.setDataModelId("foo");
+        db2.setServiceName("mysql-4b710");
+        dbs2.add(db2);
+        deployment2.setDatabases(dbs2);
+        
+        deployments.add(deployment2);
+        
+        DeploymentInfo deployment3 = new DeploymentInfo();
+        deployment3.setApplicationName("stubby1");
+        deployment3.setDeploymentType(DeploymentType.FILE);
+        deployment3.setName("Stubby 1 WAR Deployment");
+        deployment3.setArchiveType("WAR");
+        
+        List<DeploymentDB> dbs3 = new ArrayList<DeploymentDB>();
+        DeploymentDB db3 = new DeploymentDB();
+        db3.setDataModelId("foo");
+        db3.setJndiName("/foo/bar/db");
+        deployment3.setDatabases(dbs3);
+        
+        return deployments;
     }
 
     /**

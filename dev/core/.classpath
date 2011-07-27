@@ -78,7 +78,7 @@
 	<classpathentry exported="true" kind="lib" path="runtime/lib/spring/org.springframework.jdbc-3.0.4.RELEASE.jar" sourcepath="/Users/jgrelle/.m2/repository/org/springframework/spring-jdbc/3.0.5.RELEASE/spring-jdbc-3.0.5.RELEASE-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="runtime/lib/spring/org.springframework.orm-3.0.4.RELEASE.jar" sourcepath="/Users/jgrelle/.m2/repository/org/springframework/spring-orm/3.0.5.RELEASE/spring-orm-3.0.5.RELEASE-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="runtime/lib/spring/org.springframework.oxm-3.0.4.RELEASE.jar"/>
-	<classpathentry exported="true" kind="lib" path="runtime/lib/spring/org.springframework.test-3.0.4.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="runtime/lib/spring/org.springframework.test-3.0.4.RELEASE.jar" sourcepath="/Users/jgrelle/.m2/repository/org/springframework/spring-test/3.0.5.RELEASE/spring-test-3.0.5.RELEASE-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="runtime/lib/spring/org.springframework.transaction-3.0.4.RELEASE.jar" sourcepath="/Users/jgrelle/.m2/repository/org/springframework/spring-tx/3.0.5.RELEASE/spring-tx-3.0.5.RELEASE-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="runtime/lib/spring/org.springframework.web-3.0.4.RELEASE.jar"/>
 	<classpathentry exported="true" kind="lib" path="runtime/lib/spring/org.springframework.web.servlet-3.0.4.RELEASE.jar"/>
