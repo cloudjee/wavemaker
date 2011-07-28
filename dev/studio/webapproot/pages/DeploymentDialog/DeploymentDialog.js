@@ -21,6 +21,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     TC_DEPLOY: "TOMCAT",
     FILE_DEPLOY: "FILE",
     currentDatabaseBoxes: [],
+    cfDatabaseNameList: [],
     databaseBox: {
 	databasePanel1: ["wm.FancyPanel", {"borderColor":"black","innerBorder":"1", "fitToContentHeight":true,"height":"149px","margin":"10","title":"Database 1"}, {}, {	    
 	    databaseInnerPanel1: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left", margin: "5,50,5,50"},{}, {
@@ -30,7 +31,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 			databaseTypeEditor1: ["wm.Text", {"border":"0","caption":"Type","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","readonly":true,"width":"100%"}, {}],
 			databaseUserEditor1: ["wm.Text", {"border":"0","caption":"User name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {}],
 			databasePasswordEditor1: ["wm.Text", {"border":"0","caption":"Password","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","password":true,"width":"100%", required: true}, {}],
-			databaseHostEditor1: ["wm.Text", {"border":"0","caption":"Host/IP Address","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%"}, {onchange: "updateDbConnectionUrl"}],
+			databaseHostEditor1: ["wm.Text", {"border":"0","caption":"Host/IP Address","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", emptyValue: "emptyString"}, {onchange: "updateDbConnectionUrl"}],
 			databasePortEditor1: ["wm.Text", {"border":"0","caption":"Port","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%"}, {onchange: "updateDbConnectionUrl"}],
 			databaseNameEditor1: ["wm.Text", {"border":"0","caption":"Database Name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%"}, {onchange: "updateDbConnectionUrl"}],
 			databaseURLEditor1: ["wm.Text", {"border":"0","caption":"Connection URL","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {}]
@@ -40,8 +41,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		    }],
 		    databaseCloudFoundryLayer1: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
 			databaseCloudFoundryType1: ["wm.Text", {"border":"0","caption":"Type","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"MYSQL","readonly":true,"width":"100%"}, {}],
-			databaseCloudFoundryHostEditor1: ["wm.SelectMenu", {restrictValues: false, "caption":"Service name","captionAlign":"left","captionSize":"140px","dataField":"dataValue","displayField":"dataValue","displayValue":"","width":"100%", required: true}, {}],
-			databaseCloudFoundryNameEditor1: ["wm.Text", {"border":"0","caption":"Database Name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {}]
+			databaseCloudFoundryHostEditor1: ["wm.SelectMenu", {"caption":"Service name","captionAlign":"left","captionSize":"140px","dataField":"dataValue","displayField":"dataValue","displayValue":"","width":"100%", required: true}, {}],
+			databaseCloudFoundryNameEditor1: ["wm.Text", {"border":"0","caption":"Database Name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true/*, helpText: "Rename your database if you already have a database of that name on CloudFoundry and don't want to reuse that database.  Note: each database is on its own cloud server and counts against your quota"*/}, {}]
 		    }]
 		}]
 	    }]
@@ -110,7 +111,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	  app.confirm(this.getDictionaryItem("CONFIRM_UNSAVED_CHANGES"), false, 
 		      dojo.hitch(this, function() {			  
 			  var selectedIndex = this.deploymentList.getSelectedIndex();
-			  if (wm.isEmpty(this.deploymentListVar.getItem(selectedIndex).getValue("dataValue")))
+			  if (!this.deploymentListVar.getItem(selectedIndex).getValue("dataValue").deploymentId)
 			      this.deploymentListVar.removeItem(selectedIndex);			  
 			  this.editPanel.clearDirty()
 			  this.owner.owner.hide();
@@ -124,14 +125,122 @@ dojo.declare("DeploymentDialog", wm.Page, {
       } 
   },
 
-  saveButtonClick: function(inSender) {
+    generateCurrentDeploymentDataStruct: function() {
+	switch (this.deploymentList.selectedItem.getValue("dataValue").deploymentType) {
+	case this.TC_DEPLOY:
+	    return this.generateTomcatDeploymentStruct();
+	case this.CF_DEPLOY:
+	    return this.generateCloudFoundryDeploymentStruct();
+	case this.FILE_DEPLOY:
+	    return this.generateFileDeploymentStruct();
+	}
+    },
+    generateTomcatDeploymentStruct: function() {
+	/* Start from the  original data as it contains the deploymentId and perhaps other data we haven't bothered to put into the form */
+	var data = this.deploymentList.selectedItem.getValue("dataValue");
+	data.name = this.tcDeploymentNameEditor.getDataValue();
+	data.applicationName = this.tcNameEditor.getDataValue();
+	data.host = this.tcHostEditor.getDataValue();
+	data.port = this.tcPortEditor.getDataValue();
+	data.username = this.tcUserEditor.getDataValue();
+	data.password = this.tcPasswordEditor.getDataValue();
+	
+	/* Delete the old databases and replace it with a new databases structure */
+	data.databases = this.generateStandardDatabaseStruct();
+	return data;
+    },
+    generateCloudFoundryDeploymentStruct: function() {
+	/* Start from the  original data as it contains the deploymentId and perhaps other data we haven't bothered to put into the form */
+	var data = this.deploymentList.selectedItem.getValue("dataValue");
+	data.applicationName = this.cfNameEditor.getDataValue();
+	data.name = this.cfDeploymentNameEditor.getDataValue();
+	data.target = this.cfHostEditor.getDataValue();
+
+	/* Delete the old databases and replace it with a new databases structure */
+	var databases = data.databases = []
+
+	dojo.forEach(this.currentDatabaseBoxes, dojo.hitch(this, function(box,i) {
+		databases.push({
+		    dataModelId: box.dataModel.name,
+		    dbName: this["databaseCloudFoundryNameEditor" + (i+1)].getDataValue(),
+		    connectionUrl:null,
+		    username: null,
+		    password: null,
+		    jndiName: null,
+		    serviceName: this["databaseCloudFoundryHostEditor" + (i+1)].getDataValue()
+		});
+	}));
+	return data;
+    },
+
+    generateFileDeploymentStruct: function() {
+	/* Start from the  original data as it contains the deploymentId and perhaps other data we haven't bothered to put into the form */
+	var data = this.deploymentList.selectedItem.getValue("dataValue");
+	data.name = this.fileDeploymentNameEditor.getDataValue();
+	data.archiveType = this.warRadioButton.getGroupValue();
+
+	/* Delete the old databases and replace it with a new databases structure */
+	data.databases = this.generateStandardDatabaseStruct();
+	return data;
+    },
+    generateStandardDatabaseStruct: function() {
+	var databases = [];
+	dojo.forEach(this.currentDatabaseBoxes, dojo.hitch(this, function(box,i) {
+	    switch(this["databaseLayers" + (i+1)].layerIndex) {
+		/* Database Connections */
+	    case 0:
+		databases.push({
+		    dataModelId: box.dataModel.name,
+		    dbName: this["databaseNameEditor" + (i+1)].getDataValue(),
+		    connectionUrl:this["databaseURLEditor" + (i+1)].getDataValue(),
+		    username: this["databaseUserEditor" + (i+1)].getDataValue(),
+		    password: this["databasePasswordEditor" + (i+1)].getDataValue(),
+		    jndiName: null,
+		    serviceName: null
+		});
+
+		break;
+		/* JNDI */
+	    case 1:
+		databases.push({
+		    dataModelId: box.dataModel.name,
+		    jndiName: this["databaseJNDINameEditor" + (i+1)].getDataValue()
+		});
+		break;
+
+		/* CloudFoundry won't occur if we're doing a tomcat deployment*/
+	    case 2:
+
+		break;
+	    }
+
+	}));
+	return databases;
+    },
+    saveButtonClick: function(inSender) {
       try {
-          
+	  
+          var data = this.generateCurrentDeploymentDataStruct();
+	  studio.beginWait(this.getDictionaryItem("WAIT_SAVE"));
+	  studio.deploymentService.requestAsync("save", [data], dojo.hitch(this, "saveSuccess"), dojo.hitch(this, "saveFailed"));
           
       } catch(e) {
           console.error('ERROR IN saveButtonClick: ' + e); 
       } 
   },
+    saveSuccess: function(inResult) {
+	var selectedIndex = this.deploymentList.getSelectedIndex();
+        var data = this.generateCurrentDeploymentDataStruct();
+	data.deploymentId = inResult;
+	this.deploymentListVar.setValue("dataValue", data);
+	this.editPanel.clearDirty();
+	studio.endWait();
+	app.toastSuccess(this.getDictionaryItem("TOAST_SAVE_SUCCESS"));
+    },
+    saveFailed: function(inError) {
+	studio.endWait();
+	app.toastError(this.getDictionaryItem("TOAST_SAVE_FAILED", {error: inError.message}));
+    },
   deployButtonClick: function(inSender) {
       try {
           
@@ -146,7 +255,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		      dojo.hitch(this, function() {			  
 			  var selectedIndex = this.deploymentList.getSelectedIndex();
 			  this.copyDeployment();
-			  if (wm.isEmpty(this.deploymentListVar.getItem(selectedIndex).getValue("dataValue"))) {
+			  if (!this.deploymentListVar.getItem(selectedIndex).getValue("dataValue").deploymentId) {
 			      this.deploymentListVar.removeItem(selectedIndex);
 			      this.deploymentList.selectByIndex(this.deploymentListVar.getCount()-1);
 			  }
@@ -173,7 +282,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	  }
 	  var name = nameEditor.getDataValue() + " Copy";
 	  
-	  this.setUniqueDeploymentName(name, nameEditor);
+	  this.setUniqueDeploymentName(name, nameEditor, this.deploymentList.selectedItem.getValue("dataValue").deploymentType);
       } catch(e) {
           console.error('ERROR IN copyButtonClick: ' + e); 
       } 
@@ -228,7 +337,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	  app.confirm(this.getDictionaryItem("CONFIRM_UNSAVED_CHANGES"), false, 
 		      dojo.hitch(this, function() {
 			  var selectedIndex = this.deploymentList.getSelectedIndex();
-			  if (wm.isEmpty(this.deploymentListVar.getItem(selectedIndex).getValue("dataValue"))) {
+			  if (!this.deploymentListVar.getItem(selectedIndex).getValue("dataValue").deploymentId) {
 			      this.deploymentListVar.removeItem(selectedIndex);
 			      this.deploymentList.selectByIndex(this.deploymentListVar.getCount()-1);
 			  }
@@ -290,7 +399,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	}
 
     },
-    setUniqueDeploymentName: function(inName, inEditor) {
+    setUniqueDeploymentName: function(inName, inEditor, inType) {
 	this.deploymentList.deselectAll();
 	var match = false;
 	var data = this.deploymentListVar.getData() || [];
@@ -310,12 +419,23 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		inName = inName.replace(/\s*$/, " " + number);
 	    }
 
-	    return this.setUniqueDeploymentName(inName, inEditor);
+	    return this.setUniqueDeploymentName(inName, inEditor, inType);
 	} else {
 	    inEditor.setDataValue(inName);
 	    if (this.deploymentListVar.getCount() == 0)
 		this.initDeploymentListVar();
-	    this.deploymentListVar.addItem({name: inName, dataValue: {}});
+	    var deploymentDescriptor = {
+		"applicationName": studio.project.projectName,
+		"archiveType": null,
+		"databases": [],
+		"deploymentId": null,
+		"deploymentType": inType,
+		"host": null,
+		"name": name,
+		"port": 0,
+		"target": null
+	    };
+	    this.deploymentListVar.addItem({name: inName, dataValue: deploymentDescriptor});
 	    this._selectingListItem = true;
 	    this.deploymentList.selectByIndex(this.deploymentListVar.getCount()-1);
 	    this._currentDeploymentIndex = this.deploymentList.getSelectedIndex();
@@ -387,15 +507,20 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		}
 	    }
 	    if (!inData) return;
-	    var l = parseConnectionUrl(inData.connectionUrl.replace(/\\/g,""), inData);
-	    var connection = {dbtype: l[0],
-			      host: l[1],
-			      port: l[2],
-			      db: l[3]};
+
+	    var connection;
+	    if (inData.connectionUrl) {
+		var l = parseConnectionUrl(inData.connectionUrl.replace(/\\/g,""), inData);
+		connection = {dbtype: l[0],
+				  host: l[1],
+				  port: l[2],
+				  db: l[3]};
+	    }
 	    
 	    if (inData.jndiName) {
-		this["databaseConnectionEditor" + (i+1)].setDataValue("JNDI");
+		this["databaseConnectionEditor" + (i+1)].setDataValue("JNDI");		
 		this["databaseLayers" + (i+1)].setLayerIndex(1);
+		this["databaseJNDINameEditor" + (i+1)].setDataValue(inData.jndiName);
 	    } else {
 		this["databaseConnectionEditor" + (i+1)].setDataValue("Standard");
 		this["databaseLayers" + (i+1)].setLayerIndex(0);
@@ -403,7 +528,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 
 	    if (l) {
 		this["databaseTypeEditor" + (i+1)].setDataValue(connection.dbtype);
-		this["databaseUserEditor" + (i+1)].setDataValue(inData.userName);
+		this["databaseUserEditor" + (i+1)].setDataValue(inData.username);
 		this["databasePasswordEditor" + (i+1)].setDataValue(inData.password);
 		if (connection.dbtype == "HSQLDB") {
 		    this["databaseHostEditor" + (i+1)].hide();
@@ -423,7 +548,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     newTomcatDeploy: function() {
 	this.editPanel.show();
 	this.tomcatLayer.activate();
-	var targetName = this.setUniqueDeploymentName("New Tomcat Deployment", this.tcDeploymentNameEditor);
+	var targetName = this.setUniqueDeploymentName("New Tomcat Deployment", this.tcDeploymentNameEditor, this.TC_DEPLOY);
 	this.tcHostEditor.setDataValue("localhost");
 	this.tcPortEditor.setDataValue(window.location.port); // good values for deploying to localhost, bad for deploying to almost anything else
 	this.tcNameEditor.setDataValue(studio.project.projectName);
@@ -453,15 +578,20 @@ dojo.declare("DeploymentDialog", wm.Page, {
     newAppFileDeploy: function() {
 	this.editPanel.show();
 	this.appFileLayer.activate();
-	var targetName = this.setUniqueDeploymentName("New File Deployment", this.fileDeploymentNameEditor);
-
+	var targetName = this.setUniqueDeploymentName("New File Deployment", this.fileDeploymentNameEditor, this.FILE_DEPLOY);
+	this.warRadioButton.setChecked(true);
 	var boxes = this.generateDataModelBoxes();
 	this.populateDataModelBoxesStandard();
 
     },
-
-
-
+    populateAppFileDeploy: function(inData) {
+	this.editPanel.show();
+	this.appFileLayer.activate();
+	this.fileDeploymentNameEditor.setDataValue(inData.name);
+	this.warRadioButton.setGroupValue(inData.archiveType);
+	var boxes = this.generateDataModelBoxes();
+	this.populateDataModelBoxes(inData.databases);
+    },
     newCloudFoundryDeploy: function() {
 	this.cfLoginDialog.show();
 	this.onCFCloudLoginSuccess = dojo.hitch(this, "newCloudFoundryDeploy2");
@@ -470,7 +600,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	this.editPanel.show();
 	this.owner.owner.show();
 	this.cloudFoundryLayer.activate();
-	var targetName = this.setUniqueDeploymentName("New CloudFoundry Deployment", this.cfDeploymentNameEditor);
+	var targetName = this.setUniqueDeploymentName("New CloudFoundry Deployment", this.cfDeploymentNameEditor, this.CF_DEPLOY);
 	this.cfHostEditor.setDataValue("api.cloudfoundry.com");
 	this.cfNameEditor.setDataValue(studio.project.projectName);
 
@@ -491,6 +621,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	this.cfDeploymentNameEditor.setDataValue(inData.name);
 
 	this.cfNameEditor.setDataValue(inData.applicationName);
+	this.cfHostEditor.setDataValue(inData.target);
 
 	var boxes = this.generateDataModelBoxes();
 	dojo.forEach(boxes, dojo.hitch(this, function(b, i) {
@@ -502,8 +633,12 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	    }));
 	    this["databaseLayers" + (i+1)].setLayerIndex(2);
 	    if (inDbData) {
-		this["databaseCloudFoundryNameEditor" + (i+1)].setDataValue(inDbData.dataModelId); // TODO Check if there is a separate datamodel name and wmServiceName
-		this["databaseCloudFoundryHostEditor" + (i+1)].setDataValue(inDbData.serviceName);
+		this["databaseCloudFoundryNameEditor" + (i+1)].setDataValue(inDbData.dbName); // TODO Check if there is a separate datamodel name and wmServiceName
+		if (this.cfDatabaseNameList.length) {
+		    this["databaseCloudFoundryHostEditor" + (i+1)].setDataValue(inDbData.serviceName);
+		} else {
+		    this["databaseCloudFoundryHostEditor" + (i+1)].hide();
+		}
 		this["databaseConnectionEditor" + (i+1)].hide();
 	    } else {
 		this["databaseCloudFoundryNameEditor" + (i+1)].setDataValue(dataModel.name);
@@ -514,7 +649,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
     
     getIsDirty: function() {
-	return this.editPanel.getIsDirty() || this.deploymentList.getSelectedIndex() != -1 && wm.isEmpty(this.deploymentListVar.getItem(this._currentDeploymentIndex).getValue("dataValue"));
+	return this.editPanel.getIsDirty() || this.deploymentList.getSelectedIndex() != -1 && !this.deploymentListVar.getItem(this._currentDeploymentIndex).getValue("dataValue").deploymentId;
     },
     deploymentListSelect: function(inSender, inItem, forceSelect) {
 	if (inItem)
@@ -527,7 +662,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 				var oldSelectedIndex = this._currentDeploymentIndex;
 				this._currentDeploymentIndex = this.deploymentList.getSelectedIndex();
 				this.openDeployment(inSender.selectedItem.getData().dataValue);
-				if (wm.isEmpty(this.deploymentListVar.getItem(oldSelectedIndex).getValue("dataValue"))) {
+				if (!this.deploymentListVar.getItem(oldSelectedIndex).getValue("dataValue").deploymentId) {
 				    this.deploymentListVar.removeItem(oldSelectedIndex);
 				    this.deploymentList.selectByIndex(this._currentDeploymentIndex);
 				}
@@ -554,7 +689,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		this.populateCloudFoundryDeploy(data);
 		break;
 	    case this.FILE_DEPLOY:
-		this.populateFileDeploy(data);
+		this.populateAppFileDeploy(data);
 		break;
 	    }
     },

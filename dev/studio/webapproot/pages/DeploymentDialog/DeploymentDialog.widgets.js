@@ -81,8 +81,8 @@ DeploymentDialog.widgets = {
 							appFileTypePanel: ["wm.Panel", {"border":"0","height":"48px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 								appFileTypeLabel: ["wm.Label", {"_classes":{"domNode":["wmeditor-caption"]},"border":"0","caption":"Type","height":"100%","padding":"4","singleLine":false,"width":"140px"}, {}],
 								appFileTypeRadioPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
-									warRadioButton: ["wm.RadioButton", {"caption":"WAR File","captionAlign":"left","captionPosition":"right","captionSize":"100%","displayValue":"","minEditorWidth":"","width":"100%"}, {}],
-									earRadioButton: ["wm.RadioButton", {"caption":"EAR File","captionAlign":"left","captionPosition":"right","captionSize":"100%","displayValue":"","minEditorWidth":"","width":"100%"}, {}]
+									warRadioButton: ["wm.RadioButton", {"caption":"WAR File","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"WAR","minEditorWidth":"","width":"100%"}, {}],
+									earRadioButton: ["wm.RadioButton", {"caption":"EAR File","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"EAR","minEditorWidth":"","width":"100%"}, {}]
 								}]
 							}]
 						}]
@@ -91,11 +91,12 @@ DeploymentDialog.widgets = {
 			}]
 	}],
 		buttonBar: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-			buttonBarMarginSpacer: ["wm.Spacer", {"height":"48px","width":"150px"}, {}],
+			buttonBarMarginSpacer: ["wm.Spacer", {"height":"48px","width":"196px"}, {}],
 			deployButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Deploy Now","margin":"4","width":"120px"}, {"onclick":"deployButtonClick"}],
 			buttonBarMarginSpacer1: ["wm.Spacer", {"height":"48px","width":"100%"}, {}],
 			saveButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Save","margin":"4"}, {"onclick":"saveButtonClick"}],
-			closeButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Close","margin":"4"}, {"onclick":"closeButtonClick"}]
+		    closeButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Close","margin":"4"}, {"onclick":"closeButtonClick"}],
+			buttonBarMarginSpacer3: ["wm.Spacer", {"height":"48px","width":"42px"}, {}]
 		}]
     }]
 };
