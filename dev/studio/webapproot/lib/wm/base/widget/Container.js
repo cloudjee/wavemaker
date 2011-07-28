@@ -467,6 +467,22 @@ wm.define("wm.Container", wm.Control, {
 
 		wm.forEachWidget(this,clear);
 	},
+	resetData: function() {
+		var reset = function(w) {
+			if (w instanceof wm.AbstractEditor)
+				w.reset();
+		}
+
+		wm.forEachWidget(this,reset);
+	},
+        clearDirty: function() {
+		var dirty = function(w) {
+			if (w instanceof wm.AbstractEditor)
+				w.clearDirty();
+		}
+
+		wm.forEachWidget(this,dirty);
+	},
     /* What is the maximum width that this container can achieve given its parents and assuming we aren't planning on using scrollbars? 
      * The answer is a function of the parent's getCurrentMaxWidth and the sizes of this container's siblings.
      */
