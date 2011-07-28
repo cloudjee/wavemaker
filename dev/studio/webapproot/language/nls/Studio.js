@@ -234,6 +234,7 @@
     TITLE_CREATE_LIVE_VIEW: "New LiveView",
     //TOAST_IMPORT_PROJECT: "Successfully imported project ${inResponse}",
     //ALERT_IMPORT_PROJECT_FAILED: "Error occurred while importing project!\n${error}",
+    MENU_REDEPLOY: "Redeploy ${deploymentName}...",
     ALERT_DEPLOY_SUCCESS: "Deployment successful.",
     ALERT_DEPLOY_FAILED: "Deployment error: <ul><li>${error}</li></ul>",
     ALERT_UNDEPLOY_COMPONENT_SUCCESS: "Undeployment successful.",
