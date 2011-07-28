@@ -165,7 +165,6 @@
 	"Query" : "Query",
 	"Security" : "Security",
 	"Web_Service" : "Web Service",
-	"Infoteria_Web_Service" : "Infoteria Services",
 
 	"Example" : "Example",
 	"Example_Button" : "Example Button",

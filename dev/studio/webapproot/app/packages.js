@@ -199,7 +199,6 @@
 [ bundlePackage.Services, bundlePackage.Query, "wm.Query", "wm.base.components.Query", "images/wm/operation.png", "", {}, false],
 [ bundlePackage.Services, bundlePackage.Security, "wm.Security", "wm.base.components.Security", "images/lock_16.png", "", {}, false],
 [ bundlePackage.Services, bundlePackage.Web_Service, "wm.WebService", "wm.base.components.WebService", "images/wm/service.png", "", {}, false],
-[ bundlePackage.Services, bundlePackage.Infoteria_Web_Service, "wm.WebService", "wm.base.components.WebService", "images/wm/service.png", "", {pageName: "CustomWebServiceImporter", pageTitle: "Import Infoteria Project", width: "500px"}, false],
 
 // hidden (don't show up in palette, but images are defined)
 [ "", bundlePackage.Layer, "wm.Layer", "wm.base.widget.Layers", "Studio_paletteImageList_21", "", {}, false],

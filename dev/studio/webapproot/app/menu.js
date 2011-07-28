@@ -15,7 +15,27 @@
 dojo.provide("wm.studio.app.menu");
 
 Studio.extend({
-
+    addPartnerServices: function() {
+	      if (!this._serviceMenuStructure) {
+		  var menus = this.navigationMenu.fullStructure;
+		  for (var i = 0; i < menus.length; i++) {
+		      if (menus[i].idInPage == "servicesPopupBtn")
+			  this._serviceMenuStructure = menus[i];
+		      else if (menus[i].idInPage == "insertPopupBtn")
+			  this._insertMenuStructure = menus[i];
+		  }
+	      }
+	var menu = this._serviceMenuStructure;
+	menu.children.push({separator: true});
+	this._partnerServicesStructure = {
+	    label: "Partner Services",
+	    children: [
+		{label: "Import...",
+		 onClick: "importPartnerService"}
+	    ]
+	};
+	menu.children.push(this._partnerServicesStructure);
+    },
 		  // called by packageLoader.js for anything that is not an instanceof wm.Control
 	addComponentMenuItem: function(inTab, inName, inDescription, inImage, inClass, inProps) {
 
@@ -39,6 +59,9 @@ Studio.extend({
 			 iconClass: inImage.indexOf(".") == -1 ? inImage : inImage.substring(inImage.lastIndexOf("/")+1,inImage.indexOf("."))};
 
 	      var menu = (inTab == bundlePackage.Non_Visual_Components) ? this._insertMenuStructure : this._serviceMenuStructure;
+	      if (inProps.partnerService)
+		  menu = this._partnerServicesStructure;
+
 	      if (inProps && inProps.parentMenu) {
 		  var submenu;
 		  for (var i = 0; i < menu.children.length; i++) {

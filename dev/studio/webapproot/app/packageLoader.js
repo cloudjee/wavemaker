@@ -65,9 +65,10 @@ loadPackages = function() {
 
     dojo.require("wm.studio.app.templates.widgetTemplates");
 
-	//studio.palette.beginUpdate();
-	loadData(dojo.moduleUrl("wm.studio.app") + "packages.js", _loadPackages);
-	loadData(dojo.moduleUrl("wm.packages") + "packages.js", _loadPackages);
+    //studio.palette.beginUpdate();
+    loadData(dojo.moduleUrl("wm.studio.app") + "packages.js", _loadPackages);
+    studio.addPartnerServices();
+    loadData(dojo.moduleUrl("wm.packages") + "packages.js", _loadPackages);
 
 	if (!studio.isCloud()) 
 	    loadData(dojo.moduleUrl("wm.studio.app") + "packages.noncloud.js", _loadPackages);
