@@ -404,8 +404,11 @@ public class ServiceDeploymentManager {
                 deploymentsResource.getFile().createNewFile();
                 return new Deployments();
             } else {
-                JSON result = JSONUnmarshaller.unmarshal(FileCopyUtils.copyToString(new FileReader(deploymentsResource.getFile())));
-                Assert.isTrue(result instanceof JSONObject, "deployments.js is in an unexpected format.");
+		String s = FileCopyUtils.copyToString(new FileReader(deploymentsResource.getFile()));
+		if (s.length() == 0)
+		    s = "{}";
+                JSON result = JSONUnmarshaller.unmarshal(s);
+                Assert.isTrue(result instanceof JSONObject, deploymentsResource.getFile().getAbsolutePath() + " is in an unexpected format.");
                 return (Deployments) JSONUtils.toBean((JSONObject) result, Deployments.class);
             }
         } catch (IOException e) {
