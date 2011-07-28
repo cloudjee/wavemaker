@@ -243,12 +243,26 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
   deployButtonClick: function(inSender) {
       try {
-          
-          
+          var data = this.generateCurrentDeploymentDataStruct();
+	  studio.beginWait(this.getDictionaryItem("WAIT_DEPLOY"));
+	  studio.deploymentService.requestAsync("deploy", [data], dojo.hitch(this, "deploySuccess"), dojo.hitch(this, "deployFailed"));                    
       } catch(e) {
           console.error('ERROR IN deployButtonClick: ' + e); 
       } 
   },
+    deploySuccess: function(inResult) {
+	var selectedIndex = this.deploymentList.getSelectedIndex();
+        var data = this.generateCurrentDeploymentDataStruct();
+	data.deploymentId = inResult;
+	this.deploymentListVar.setValue("dataValue", data);
+	this.editPanel.clearDirty();
+	studio.endWait();
+	app.toastSuccess(this.getDictionaryItem("TOAST_DEPLOY_SUCCESS"));
+    },
+    deployFailed: function(inError) {
+	studio.endWait();
+	app.toastError(this.getDictionaryItem("TOAST_DEPLOY_FAILED", {error: inError.message}));
+    },
   copyButtonClick: function(inSender) {
       if (this.getIsDirty()) {
 	  app.confirm(this.getDictionaryItem("CONFIRM_UNSAVED_CHANGES"), false, 

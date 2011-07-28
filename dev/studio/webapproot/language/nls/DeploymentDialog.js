@@ -10,5 +10,7 @@ CONFIRM_DELETE_DATABASE: "Database:",
 CONFIRM_UNSAVED_CHANGES: "You have unsaved changes that will be lost; continue?",
 WAIT_SAVE: "Saving...",
 TOAST_SAVE_SUCCESS: "Deployment saved",
-TOAST_SAVE_FAILED: "Error saving deployment: ${error}"
+TOAST_SAVE_FAILED: "Error saving deployment: ${error}",
+TOAST_DEPLOY_SUCCESS: "Project deployed",
+TOAST_DEPLOY_FAILED: "Error deploying: ${error}"
 }
