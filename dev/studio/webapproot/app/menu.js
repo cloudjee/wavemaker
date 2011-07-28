@@ -29,6 +29,7 @@ Studio.extend({
 	menu.children.push({separator: true});
 	this._partnerServicesStructure = {
 	    label: "Partner Services",
+	    iconClass: "PartnerService",
 	    children: [
 		{label: "Import...",
 		 onClick: "importPartnerService"}

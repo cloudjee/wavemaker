@@ -291,7 +291,9 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.lock_16 {
    background: transparent url(images/lock_16.png) no-repeat;
 }
 
-table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service {
+table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service,
+table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
+ {
    background: transparent url(images/wm/service_16.png) no-repeat;
 }
 
