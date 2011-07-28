@@ -14,16 +14,20 @@
 
 package com.wavemaker.tools.deployment;
 
+import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 /**
- * Describes a deployment target.
+ * Describes a deployment.
  * 
- * @author slee
  * @author Jeremy Grelle
  * 
  */
-public class DeploymentInfo implements Comparable<DeploymentInfo> {
+public class DeploymentInfo {
+
+    private String deploymentId;
 
     private String name;
 
@@ -40,6 +44,14 @@ public class DeploymentInfo implements Comparable<DeploymentInfo> {
     private String target;
 
     private String archiveType;
+
+    public String getDeploymentId() {
+        return deploymentId;
+    }
+
+    public void setDeploymentId(String deploymentId) {
+        this.deploymentId = deploymentId;
+    }
 
     public String getName() {
         return name;
@@ -105,11 +117,64 @@ public class DeploymentInfo implements Comparable<DeploymentInfo> {
         this.archiveType = archiveType;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public int compareTo(DeploymentInfo o) {
-        // TODO Auto-generated method stub
-        return 0;
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((applicationName == null) ? 0 : applicationName.hashCode());
+        result = prime * result + ((archiveType == null) ? 0 : archiveType.hashCode());
+        result = prime * result + ((databases == null) ? 0 : databases.hashCode());
+        result = prime * result + ((deploymentType == null) ? 0 : deploymentType.hashCode());
+        result = prime * result + ((host == null) ? 0 : host.hashCode());
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + port;
+        result = prime * result + ((target == null) ? 0 : target.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        DeploymentInfo other = (DeploymentInfo) obj;
+        if (applicationName == null) {
+            if (other.applicationName != null)
+                return false;
+        } else if (!applicationName.equals(other.applicationName))
+            return false;
+        if (archiveType == null) {
+            if (other.archiveType != null)
+                return false;
+        } else if (!archiveType.equals(other.archiveType))
+            return false;
+        if (databases == null) {
+            if (other.databases != null)
+                return false;
+        } else if (!databases.equals(other.databases))
+            return false;
+        if (deploymentType != other.deploymentType)
+            return false;
+        if (host == null) {
+            if (other.host != null)
+                return false;
+        } else if (!host.equals(other.host))
+            return false;
+        if (name == null) {
+            if (other.name != null)
+                return false;
+        } else if (!name.equals(other.name))
+            return false;
+        if (port != other.port)
+            return false;
+        if (target == null) {
+            if (other.target != null)
+                return false;
+        } else if (!target.equals(other.target))
+            return false;
+        return true;
     }
 }

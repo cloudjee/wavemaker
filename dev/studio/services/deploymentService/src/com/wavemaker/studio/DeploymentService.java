@@ -200,7 +200,7 @@ public class DeploymentService {
     }
     
     public String save(DeploymentInfo deploymentInfo) {
-        return "SUCCESS"; //Stubbed for now
+        return serviceDeploymentManager.saveDeploymentInfo(deploymentInfo);
     }
     
 /*

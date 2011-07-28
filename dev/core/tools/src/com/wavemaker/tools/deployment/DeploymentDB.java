@@ -23,6 +23,8 @@ public class DeploymentDB {
 
     private String dataModelId;
 
+    private String dbName;
+
     private String userName;
 
     private String password;
@@ -39,6 +41,14 @@ public class DeploymentDB {
 
     public void setDataModelId(String dataModelId) {
         this.dataModelId = dataModelId;
+    }
+
+    public String getDbName() {
+        return dbName;
+    }
+
+    public void setDbName(String dbName) {
+        this.dbName = dbName;
     }
 
     public String getUserName() {
@@ -79,5 +89,66 @@ public class DeploymentDB {
 
     public void setConnectionUrl(String connectionUrl) {
         this.connectionUrl = connectionUrl;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((connectionUrl == null) ? 0 : connectionUrl.hashCode());
+        result = prime * result + ((dataModelId == null) ? 0 : dataModelId.hashCode());
+        result = prime * result + ((dbName == null) ? 0 : dbName.hashCode());
+        result = prime * result + ((jndiName == null) ? 0 : jndiName.hashCode());
+        result = prime * result + ((password == null) ? 0 : password.hashCode());
+        result = prime * result + ((serviceName == null) ? 0 : serviceName.hashCode());
+        result = prime * result + ((userName == null) ? 0 : userName.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        DeploymentDB other = (DeploymentDB) obj;
+        if (connectionUrl == null) {
+            if (other.connectionUrl != null)
+                return false;
+        } else if (!connectionUrl.equals(other.connectionUrl))
+            return false;
+        if (dataModelId == null) {
+            if (other.dataModelId != null)
+                return false;
+        } else if (!dataModelId.equals(other.dataModelId))
+            return false;
+        if (dbName == null) {
+            if (other.dbName != null)
+                return false;
+        } else if (!dbName.equals(other.dbName))
+            return false;
+        if (jndiName == null) {
+            if (other.jndiName != null)
+                return false;
+        } else if (!jndiName.equals(other.jndiName))
+            return false;
+        if (password == null) {
+            if (other.password != null)
+                return false;
+        } else if (!password.equals(other.password))
+            return false;
+        if (serviceName == null) {
+            if (other.serviceName != null)
+                return false;
+        } else if (!serviceName.equals(other.serviceName))
+            return false;
+        if (userName == null) {
+            if (other.userName != null)
+                return false;
+        } else if (!userName.equals(other.userName))
+            return false;
+        return true;
     }
 }
