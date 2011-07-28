@@ -42,6 +42,7 @@ import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.json.JSON;
 import com.wavemaker.json.JSONMarshaller;
 import com.wavemaker.json.JSONObject;
+import com.wavemaker.json.JSONState;
 import com.wavemaker.json.JSONUnmarshaller;
 import com.wavemaker.runtime.data.DataServiceType;
 import com.wavemaker.runtime.server.json.JSONUtils;
@@ -378,7 +379,7 @@ public class ServiceDeploymentManager {
 
             deploymentsResource = new FileSystemResource(studioConfiguration.getCommonDir().getPath() + "/").createRelative(DEPLOYMENTS_FILE);
             writer = new FileWriter(deploymentsResource.getFile(), false);
-            JSONMarshaller.marshal(writer, deployments);
+            JSONMarshaller.marshal(writer, deployments, new JSONState(), false, true);
             writer.flush();
         } catch (IOException e) {
             throw new WMRuntimeException("An error occurred while trying to save deployment.", e);

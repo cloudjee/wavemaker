@@ -68,11 +68,6 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
     public void prepare(String serviceName, Map<String, String> properties,
             DesignServiceManager mgr, int indx) {
 
-        if (!properties.containsKey(JNDI_NAME_PROPERTY)) {
-            // nothing to configure
-            return;
-        }
-
         String rootPath = DesignServiceManager
                 .getRuntimeRelativeDir(serviceName);
         String cfgFile = DataServiceUtils.getCfgFileName(serviceName);
@@ -80,12 +75,17 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
         DataServiceSpringConfiguration cfg = new DataServiceSpringConfiguration(
                 fs, rootPath, cfgFile, serviceName);
 
-        String jndiName = properties.get(JNDI_NAME_PROPERTY);
-
-        configureJNDI(cfg, jndiName);
-        configureProperties(cfg);
-        modifyWebSphereBindings(mgr, jndiName, indx);
-        configureResourceRef(mgr, jndiName);
+        if (properties.containsKey(JNDI_NAME_PROPERTY)) {
+           
+            String jndiName = properties.get(JNDI_NAME_PROPERTY);
+    
+            configureJNDI(cfg, jndiName);
+            configureProperties(cfg);
+            modifyWebSphereBindings(mgr, jndiName, indx);
+            configureResourceRef(mgr, jndiName);
+        } else {
+            
+        }
     }
 
     private void modifyWebSphereBindings(DesignServiceManager mgr, String jndiName, int indx) {

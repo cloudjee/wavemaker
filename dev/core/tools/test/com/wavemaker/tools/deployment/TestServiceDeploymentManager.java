@@ -203,6 +203,8 @@ public class TestServiceDeploymentManager {
     private DeploymentInfo stubDeployment1() {
         DeploymentInfo deployment1 = new DeploymentInfo();
         deployment1.setApplicationName("stubby1");
+        deployment1.setUsername("manager");
+        deployment1.setPassword("manager");
         deployment1.setDeploymentType(DeploymentType.TOMCAT);
         deployment1.setName("Stubby 1 Tomcat Deployment");
         deployment1.setHost("localhost");
@@ -213,7 +215,7 @@ public class TestServiceDeploymentManager {
         db1.setDataModelId("foo");
         db1.setDbName("foo");
         db1.setConnectionUrl("jdbc:mysql://localhost:3306/foo");
-        db1.setUserName("marty");
+        db1.setUsername("marty");
         db1.setPassword("mcfly");
         dbs1.add(db1);
         deployment1.setDatabases(dbs1);
@@ -224,6 +226,8 @@ public class TestServiceDeploymentManager {
     private DeploymentInfo stubDeployment2() {
         DeploymentInfo deployment2 = new DeploymentInfo();
         deployment2.setApplicationName("stubby1");
+        deployment2.setUsername("joe@vmware.com");
+        deployment2.setPassword("cfLoginToken");
         deployment2.setDeploymentType(DeploymentType.CLOUD_FOUNDRY);
         deployment2.setName("Stubby 1 CloudFoundry Deployment");
         deployment2.setTarget("api.cloudfoundry.com");

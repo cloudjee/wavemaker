@@ -45,6 +45,7 @@ import com.wavemaker.runtime.service.definition.ServiceDefinition;
 import com.wavemaker.runtime.ws.WebServiceType;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.util.DataServiceUtils;
+import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.service.ClassLoaderFactory;
@@ -94,6 +95,10 @@ public class DataModelManager {
 
     public void setDesignServiceManager(DesignServiceManager serviceManager) {
         this.serviceManager = serviceManager;
+    }
+    
+    public void prepareForDeployment(DeploymentInfo deployment) {
+        
     }
 
     public void importDatabase(String username, String password,

@@ -14,6 +14,14 @@
 
 package com.wavemaker.tools.deployment;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.util.StringUtils;
+
+import com.wavemaker.runtime.data.util.DataServiceConstants;
+import com.wavemaker.tools.project.ProjectConstants;
+
 /**
  * Deployment-specific database settings to be applied when generating a WAR or EAR for deployment.
  * 
@@ -25,7 +33,7 @@ public class DeploymentDB {
 
     private String dbName;
 
-    private String userName;
+    private String username;
 
     private String password;
 
@@ -51,12 +59,12 @@ public class DeploymentDB {
         this.dbName = dbName;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -90,6 +98,15 @@ public class DeploymentDB {
     public void setConnectionUrl(String connectionUrl) {
         this.connectionUrl = connectionUrl;
     }
+    
+    public Map<String, String> asProperties() {
+        String prefix = this.dataModelId + ProjectConstants.PROP_SEP;
+        Map<String, String> props = new HashMap<String, String>();
+        if (StringUtils.hasText(jndiName)) {
+            //props.put(prefix+DataServiceConstants., arg1)
+        } 
+        return props;
+    }
 
     @Override
     public int hashCode() {
@@ -101,7 +118,7 @@ public class DeploymentDB {
         result = prime * result + ((jndiName == null) ? 0 : jndiName.hashCode());
         result = prime * result + ((password == null) ? 0 : password.hashCode());
         result = prime * result + ((serviceName == null) ? 0 : serviceName.hashCode());
-        result = prime * result + ((userName == null) ? 0 : userName.hashCode());
+        result = prime * result + ((username == null) ? 0 : username.hashCode());
         return result;
     }
 
@@ -144,10 +161,10 @@ public class DeploymentDB {
                 return false;
         } else if (!serviceName.equals(other.serviceName))
             return false;
-        if (userName == null) {
-            if (other.userName != null)
+        if (username == null) {
+            if (other.username != null)
                 return false;
-        } else if (!userName.equals(other.userName))
+        } else if (!username.equals(other.username))
             return false;
         return true;
     }
