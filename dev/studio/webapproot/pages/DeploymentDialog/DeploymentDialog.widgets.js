@@ -1,0 +1,102 @@
+DeploymentDialog.widgets = {
+    deploymentListVar: ["wm.Variable", {type: "EntryData", isList:true}],
+    newDeploymentDialog: ["wm.DesignableDialog", {"buttonBarId":"buttonBar","containerWidgetId":"containerWidget2",width: "510px", "height":"280px","title":"Choose Deployment Type"}, {}, {
+	containerWidget2: ["wm.Container", {"_classes":{"domNode":["wmdialogcontainer","MainContent"]},"autoScroll":true,"border":"0","height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","margin":"0","padding":"0","verticalAlign":"top","width":"100%"}, {}, {
+	    iconOrMarginPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"96px"}, {}],
+	    chooseDeploymentPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","padding":"5,40,5,0","verticalAlign":"top","width":"100%"}, {}, {
+		chooseDeploymentLabel: ["wm.Label", {"align":"center","border":"0","caption":"Choose the target for this deployment","padding":"4","width":"100%"}, {}],
+		tomcatRadio: ["wm.RadioButton", {"caption":"Tomcat/TC Server","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"tc","displayValue":"","minEditorWidth":"50","radioGroup":"deploymentType","startChecked":true,"width":"100%"}, {onchange: "newDeploymentRadioChange"}],
+		cloudfoundryRadio: ["wm.RadioButton", {"caption":"CloudFoundry","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"cf","displayValue":"","minEditorWidth":"50","radioGroup":"deploymentType","width":"100%"}, {onchange: "newDeploymentRadioChange"}],
+		panel2: ["wm.Panel", {"border":"0","disabled":true,"height":"81px","horizontalAlign":"left","verticalAlign":"top","width":"100%", margin: "0,0,0,80"}, {}, {
+		    cloudFoundaryLoginLabel: ["wm.Label", {"border":"0","caption":"Enter your CloudFoundry Account Info","padding":"4","width":"100%"}, {}],
+		    cfUserEditor: ["wm.Text", {captionAlign: "left", "caption":"Account name","captionSize":"120px","disabled":true,"displayValue":"","width":"100%"}, {}],
+		    cfPasswordEditor: ["wm.Text", {captionAlign: "left", "caption":"Password","captionSize":"120px","disabled":true,"displayValue":"","password":true,"width":"100%"}, {}]
+		}],
+		appfilesRadio: ["wm.RadioButton", {"caption":"Application Files (WAR/EAR)","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"files","displayValue":"","minEditorWidth":"50","radioGroup":"deploymentType","width":"100%"}, {onchange: "newDeploymentRadioChange"}]
+	    }]
+	}],
+	buttonBar1: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+	    cancelButton: ["wm.Button", {"caption":"Cancel","margin":"4"}, {onclick: "onNewDeployCancel"}],
+	    okButton: ["wm.Button", {"caption":"OK","margin":"4"}, {onclick: "onNewDeployOk"}]
+	}]
+    }],
+    cfLoginDialog: ["wm.DesignableDialog", {"height":"150px","title":"CloudFoundry Account Info","width":"400px","containerWidgetId":"containerWidget3","buttonBarId":"buttonBar2"}, {}, {
+	containerWidget3: ["wm.Container", {"_classes":{"domNode":["wmdialogcontainer","MainContent"]},"autoScroll":true,"border":"0","height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","margin":"0","padding":"0","verticalAlign":"top","width":"100%"}, {}, {
+	    loginDialogIconSpacerPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"96px"}, {}],
+	    loginMainPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","margin":"5,20,5,0","verticalAlign":"top","width":"100%"}, {}, {
+		loginDialogInstructionLabel: ["wm.Label", {"align":"center","border":"0","caption":"Enter your CloudFoundry Account Info","padding":"4","width":"100%"}, {}],
+		loginDialogUserEditor: ["wm.Text", {"caption":"Account name","captionAlign":"left","displayValue":"","width":"100%"}, {}],
+		loginDialogPasswordEditor: ["wm.Text", {"caption":"Password","captionAlign":"left","displayValue":"","password":true,"width":"100%"}, {}]
+	    }]
+	}],
+	buttonBar2: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+	    cfLoginCancelButton: ["wm.Button", {"caption":"Cancel","margin":"4"}, {onclick: "cfLoginCancelClick"}],
+	    cfLogonOkButton: ["wm.Button", {"caption":"OK","margin":"4"}, {onclick: "cfLoginOkClick"}]	    
+	}]
+    }],
+    layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
+	deploymentMainPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", layoutKind: "left-to-right", padding: "20"}, {}, {
+			deploymentListPanel: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]},"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"150px"}, {}, {
+				listButtonPanel: ["wm.Panel", {"border":"0","height":"25px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+					addButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Add","height":"100%","margin":"1","width":"40px"}, {"onclick":"addButtonClick"}],
+					deleteButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Delete","height":"100%","margin":"1","width":"100%"}, {"onclick":"deleteButtonClick"}],
+					copyButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Copy","height":"100%","margin":"1","width":"45px"}, {"onclick":"copyButtonClick"}]
+				}],
+			    deploymentList: ["wm.List", {dataFields: "name", headerVisible: false, innerBorder:"1",borderColor:"black","height":"100%","width":"100%"}, {onselect: "deploymentListSelect"}, {
+				binding: ["wm.Binding", {}, {}, {
+				    wire: ["wm.Wire", {"source":"deploymentListVar","targetProperty":"dataSet"}, {}]
+				}]
+			    }]
+			}],
+	    editPanel: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]},"autoScroll":true,"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", margin: "0,0,0,20"}, {}, {
+				settingsPanel: ["wm.FancyPanel", {"borderColor":"black","fitToContentHeight":true,"height":"166px","innerBorder":"1","labelHeight":"24","margin":"10","title":"Settings"}, {}, {
+				    settingLayers: ["wm.Layers", {margin: "5,50,5,50", height: "100%", width: "100%"}, {}, {
+						tomcatLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
+						    tcDeploymentNameEditor: ["wm.Text", {"border":"0","caption":"Deployment name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"New Tomcat Deployment","width":"100%", required: true}, {onchange: "deploymentNameChange"}],
+							tcDeploymentTypeEditor: ["wm.Text", {"border":"0","caption":"Type","captionAlign":"left","captionSize":"140px","displayValue":"Tomcat/TC Server","readonly":true,"width":"100%", required: true}, {}],
+							tcHostEditor: ["wm.Text", {"border":"0","caption":"Host name/IP addr","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"localhost","width":"100%", required: true}, {}],
+							tcPortEditor: ["wm.Text", {"border":"0","caption":"Port","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"80","width":"100%", required: true}, {}],
+							tcNameEditor: ["wm.Text", {"border":"0","caption":"Application name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {}],
+							tcUrlEditor: ["wm.Text", {"border":"0","caption":"URL","captionAlign":"left","captionSize":"140px","displayValue":"http://localhost:80/","readonly":true,"width":"100%"}, {}, {
+								binding: ["wm.Binding", {}, {}, {
+									wire: ["wm.Wire", {"expression":"\"http://\" + ${tcHostEditor.dataValue} + \":\" + ${tcPortEditor.dataValue} + \"/\" + ${tcNameEditor.dataValue}","source":false,"targetProperty":"dataValue"}, {}]
+								}]
+							}],
+							tcUserEditor: ["wm.Text", {"border":"0","caption":"User name","captionAlign":"left","captionSize":"140px","displayValue":"","width":"100%", required: true}, {}],
+						    tcPasswordEditor: ["wm.Text", {"border":"0","caption":"Password","captionAlign":"left","captionSize":"140px","displayValue":"","width":"100%", required: true, password: true}, {}]
+						}],
+						cloudFoundryLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
+							cfDeploymentNameEditor: ["wm.Text", {"border":"0","caption":"Deployment name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"New CloudFoundry Deployment","width":"100%", required: true}, {onchange: "deploymentNameChange"}],
+							cfDeploymentTypeEditor: ["wm.Text", {"border":"0","caption":"Type","captionAlign":"left","captionSize":"140px","displayValue":"CloudFoundry","readonly":true,"width":"100%"}, {}],
+							cfHostEditor: ["wm.Text", {"border":"0","caption":"CloudFoundry target","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"api.cloudfoundry.com","width":"100%", required: true}, {}],
+							cfNameEditor: ["wm.Text", {"border":"0","caption":"Application name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {}],
+							cfUrlEditor: ["wm.Text", {"border":"0","caption":"URL","captionAlign":"left","captionSize":"140px","displayValue":"http://.cloudfoundry.com/","readonly":true,"width":"100%"}, {}, {
+								binding: ["wm.Binding", {}, {}, {
+									wire: ["wm.Wire", {"expression":"\"http://\" + ${cfNameEditor.dataValue} + \".\" + ${cfHostEditor.dataValue}.replace(/^api\\./,\"\") + \"/\"","source":false,"targetProperty":"dataValue"}, {}]
+								}]
+							}]
+						}],
+						appFileLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
+							fileDeploymentNameEditor: ["wm.Text", {"border":"0","caption":"Deployment name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"New Generate File","width":"100%"}, {onchange: "deploymentNameChange"}],
+							appFileTypePanel: ["wm.Panel", {"border":"0","height":"48px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+								appFileTypeLabel: ["wm.Label", {"_classes":{"domNode":["wmeditor-caption"]},"border":"0","caption":"Type","height":"100%","padding":"4","singleLine":false,"width":"140px"}, {}],
+								appFileTypeRadioPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
+									warRadioButton: ["wm.RadioButton", {"caption":"WAR File","captionAlign":"left","captionPosition":"right","captionSize":"100%","displayValue":"","minEditorWidth":"","width":"100%"}, {}],
+									earRadioButton: ["wm.RadioButton", {"caption":"EAR File","captionAlign":"left","captionPosition":"right","captionSize":"100%","displayValue":"","minEditorWidth":"","width":"100%"}, {}]
+								}]
+							}]
+						}]
+					}]
+				}]
+			}]
+	}],
+		buttonBar: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+			buttonBarMarginSpacer: ["wm.Spacer", {"height":"48px","width":"150px"}, {}],
+			deployButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Deploy Now","margin":"4","width":"120px"}, {"onclick":"deployButtonClick"}],
+			buttonBarMarginSpacer1: ["wm.Spacer", {"height":"48px","width":"100%"}, {}],
+			saveButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Save","margin":"4"}, {"onclick":"saveButtonClick"}],
+			closeButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Close","margin":"4"}, {"onclick":"closeButtonClick"}]
+		}]
+    }]
+};
+

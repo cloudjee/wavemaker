@@ -261,5 +261,19 @@ Studio.extend({
 	undeployComponentError: function(inError) {
 	    app.alert(this.getDictionaryItem("ALERT_UNDEPLOY_COMPONENT_FAILED2", {error: inError}));
 
-	}
+	},
+
+
+
+    /* Methods added here are new for the 6.4 deployment dialog */
+    newDeployClick: function() {
+	this.deploymentDialog.setPage("DeploymentDialog"); // insures the dialog is initialized, but does not show it
+	this.deploymentDialog.page.addButtonClick();
+    },
+
+    settingsDeployClick: function() {
+	this.deploymentDialog.show();
+	this.deploymentDialog.page.selectFirst();
+    },
+    _end: 0
 });

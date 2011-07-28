@@ -127,7 +127,7 @@ wm.loadLibs([
 	"wm.studio.pages.RestUrlDialog.RestUrlDialog",
 	"wm.studio.pages.Security.Security",
 	"wm.studio.pages.QueryEditor.QueryEditor",
-	"wm.studio.pages.DeploymentPage.DeploymentPage",
+	"wm.studio.pages.DeploymentDialog.DeploymentDialog",
 	//"wm.studio.pages.DeploymentJNDIDialog.DeploymentJNDIDialog",
 	"wm.studio.pages.DBConnectionSettings.DBConnectionSettings",
 	"wm.studio.pages.DataObjectsEditor.DataObjectsEditor",

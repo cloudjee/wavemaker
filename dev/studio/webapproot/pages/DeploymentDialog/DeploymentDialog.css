@@ -1,0 +1,54 @@
+.DeploymentDialog  .dijitError.dijitTextBox,
+.DeploymentDialog  .dijitError.dijitComboBox,
+.DeploymentDialog  .dijitError.dijitTextArea,
+.DeploymentDialog  .isDirty .dijitError.dijitTextBox,
+.DeploymentDialog  .isDirty .dijitError.dijitComboBox,
+.DeploymentDialog  .isDirty .dijitError.dijitTextArea {
+    background-color: #FFE !important;
+    border: solid 1px black !important;
+}
+
+.DeploymentDialog  .isDirty .dijitTextBox,
+.DeploymentDialog  .isDirty .dijitComboBox,
+.DeploymentDialog  .isDirty .dijitTextArea {
+    background-color: #DDD !important;
+
+}
+
+.DeploymentDialog-newDeploymentDialog .Disabled .wmlabel {
+	opacity:0.5;
+}
+
+.DeploymentDialog .wmlist-list .wmlist-cell {
+    border-bottom: solid 1px #AAA;
+}
+
+.DeploymentDialog .DeploymentDialog-deploymentMainPanel {
+background-color: #424A5A;
+color: white;
+}
+
+.DeploymentDialog .DeploymentDialog-deploymentListPanel,
+.DeploymentDialog .DeploymentDialog-editPanel .wmFancyPanel-containerWidget {
+background-color: #959DAB;
+color: black;
+}
+
+.DeploymentDialog .wmFancyPanel-containerWidget  .dijitError.dijitTextBox,
+.DeploymentDialog .wmFancyPanel-containerWidget  .dijitError.dijitComboBox,
+.DeploymentDialog .wmFancyPanel-containerWidget  .dijitError.dijitTextArea,
+.DeploymentDialog .wmFancyPanel-containerWidget  .dijitError.dijitTextBox:hover,
+.DeploymentDialog .wmFancyPanel-containerWidget  .dijitError.dijitComboBox:hover,
+.DeploymentDialog .wmFancyPanel-containerWidget  .dijitError.dijitTextArea:hover,
+.DeploymentDialog .wmFancyPanel-containerWidget  .dijitError.dijitTextBox.dijitFocused,
+.DeploymentDialog .wmFancyPanel-containerWidget  .dijitError.dijitComboBox.dijitFocused,
+.DeploymentDialog .wmFancyPanel-containerWidget  .dijitError.dijitTextArea.dijitFocused{
+
+    color: black;
+
+}
+
+.DeploymentDialog .wmFancyPanel-labelWidget {
+background-color: black;
+color: white;
+}
