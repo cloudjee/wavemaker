@@ -67,8 +67,16 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 		if (this.editor) {
 		    this.editor.set('checked',true);
 		    this.updateGroupValue();
+		    this._lastValue = this.checkedValue;
 		} else {
 		    this.groupValue = this.checkedValue;
+		    this._lastValue = this.checkedValue;
+		}
+		var group = this.getGroup();
+		for (var i=0, v, o; (v=group[i]); i++) {
+		    if (v.owner && v.owner != this) {
+			v.owner._lastValue = this.makeEmptyValue();
+		    }
 		}
 	    } else {
 		var found = false;
@@ -78,8 +86,11 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 			o = v.owner;// v.owner refers to a wm.RadioButton (dijit's owner)
 			if (o.checkedValue == inValue) {
 			    o.setEditorValue(inValue);
+			    o._lastValue = inValue;
 			    found = true;
 			    break;
+			} else {
+			    o._lastValue = this.makeEmptyValue();
 			}
 		    }
 		}

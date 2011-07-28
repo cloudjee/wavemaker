@@ -227,7 +227,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		    this.editor._lastValueReported = "";
 	},
 	getDisplayValue: function() {
-		if (this.hasValues())
+		if (!this.restrictValues || this.hasValues())
 			return this.inherited(arguments);
 	},
         // STORE ACCESS (DONE?)
@@ -412,16 +412,16 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		return this.inherited(arguments) && this.hasValues();
 	},
 	clear: function() {
-		this.resetState(); 
 		// note: hack to call internal dijit function to ensure we can
 		// set a blank value even if this is not a valid value
 		if (this.editor && this.hasValues()) {
                     var valueWas = this.editor.get("displayedValue");
 			if (this.restrictValues) {
-				this.editor.set('value', '', false);
+			    this.editor.set('value', '', false);
 			} else {
-				this.editor.set("value", undefined, false);
+			    this.editor.set("value", undefined, false);
 			}
+		    this._lastValue = this.makeEmptyValue();
 		    this.displayValue = "";
 		    this.dataValue = null;
 
@@ -430,8 +430,11 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
                         // back to _lastValueReported will fail to fire an onchange event
                         this.editor._lastValueReported = "";
 			this.updateReadonlyValue();
+		    this.resetState(); 
                     if (valueWas)
                         this.changed();
+		} else {
+		    this.resetState(); 
 		}
 	},
 	_getValidatorNode: function() {

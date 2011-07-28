@@ -476,6 +476,7 @@ wm.define("wm.Container", wm.Control, {
 		wm.forEachWidget(this,reset);
 	},
         clearDirty: function() {
+	    	this.setValue("isDirty", false);
 		var dirty = function(w) {
 			if (w instanceof wm.AbstractEditor)
 				w.clearDirty();

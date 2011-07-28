@@ -754,7 +754,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		//wm.fire(this.editor, "ownerEditorChanged");
 	},    
     clearDirty: function() {
-	this._lastValue = this.dataValue;
+	this._lastValue = this.dataValue == null ? this.makeEmptyValue() : this.dataValue;
 	this.updateIsDirty();
     },
     updateIsDirty: function() {
@@ -769,11 +769,13 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		return this.isReady() ? this.getEditorValue() : this.dataValue;
 	},
 	setDataValue: function(inValue) {
-		// for simplicity, treat undefined as null
-		if (inValue === undefined)
-			inValue = null;
-	        this._lastValue = this.dataValue = inValue instanceof wm.Variable ? inValue.getData() : inValue;
-	        this.setEditorValue(inValue);
+	    // for simplicity, treat undefined as null
+	    if (inValue === undefined)
+		inValue = null;
+	    this._lastValue = this.dataValue = inValue instanceof wm.Variable ? inValue.getData() : inValue;
+	    if (this._lastValue == null)
+	        this._lastValue = this.makeEmptyValue();
+	    this.setEditorValue(inValue);
 	},
 	isUpdating: function() {
 		return this._updating > 0;
@@ -794,7 +796,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    this.setDataValue(this._lastValue);
 	},
 	resetState: function() {
-	    this.invalidate();
+	    this.invalidate();	    
 		var e = this.editor;
 		if (e) {
 			e._hasBeenBlurred = false;
@@ -809,6 +811,8 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	clear: function() {
 		this.beginEditUpdate();
 		//this.setEditorValue(null);
+	        this._lastValue = this.makeEmptyValue();
+
 	        this.setDataValue(null);  // changed from setEditorValue because setEditorValue does not handle readonly editor
 		this.resetState();
 		this.endEditUpdate();
