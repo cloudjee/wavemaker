@@ -126,8 +126,6 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 			if (o) {
 				// avoid setter since we just want to process the update
 				o.groupValue = gv;
-			    if (djConfig.isDebug)
-				console.log(o.toString() + " has group value " + gv);
 			    o.valueChanged("groupValue", gv);
 			}
 		    }
