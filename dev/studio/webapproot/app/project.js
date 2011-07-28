@@ -1113,6 +1113,37 @@ Studio.extend({
 		    }));
 		    this.navigationMenu.renderDojoObj();
     },
+    updateDeploymentsMenu: function() {
+
+		    var children = this.navigationMenu.fullStructure;
+		    var fileMenu;
+		    for (var i = 0; i < children.length; i++) {
+			if (children[i].idInPage == "projectPopupBtn") {
+			    fileMenu = children[i];
+			    break;
+			}
+		    }
+		    children = fileMenu.children;
+		    var deployMenu;
+		    for (var i = 0; i < children.length; i++) {
+			if (children[i].idInPage == "deployProjectItem") {
+			    deployMenu = children[i];
+			    break;
+			}
+		    }
+
+	            while(deployMenu.children.length > 3) deployMenu.children.shift();
+	            dojo.forEach(this._deploymentData, dojo.hitch(this, function(deployment,i) {
+			deployMenu.children.unshift({label: this.getDictionaryItem("MENU_REDEPLOY", {deploymentName: deployment.name}),
+						     onClick: function() {
+							 this.deploymentDialog.show();
+							 this.deploymentDialog.page.deploymentList.selectByIndex(i);
+							 this.deploymentDialog.page.deploy();
+						     }
+						    });
+		    }));
+		    this.navigationMenu.renderDojoObj();
+    },
 
     newPageClick: function(inSender, inEvent, optionalPageType, optionalPageName) {
 	   var pageName = optionalPageName || "Page";

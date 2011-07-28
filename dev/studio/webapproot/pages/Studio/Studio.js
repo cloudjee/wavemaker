@@ -360,6 +360,7 @@ dojo.declare("Studio", wm.Page, {
 		       this.navGotoDesignerClick();
 		       this.mlpal.activate();
 			 this.paletteSearch.focus(); // this is done to help FF contextual menus work; else we get crazy stupid errors
+			 this.deploymentService.requestAsync("getDeploymentInfo", [], dojo.hitch(this, "getDeploymentInfoSuccess"));
 		     } else if (!this.isLoginShowing()) {
 			 studio.startPageDialog.show();
 			 if (app.alertDialog && app.alertDialog.showing && !app.alertDialog._hideAnimation)
@@ -388,6 +389,12 @@ dojo.declare("Studio", wm.Page, {
 
 	    this.setupDefaultContextMenu();
 	},
+    getDeploymentInfoSuccess: function(inResult) {
+	console.log("DEPLOYMENT DATA:");
+	console.log(inResult);
+	this._deploymentData = inResult;
+	this.updateDeploymentsMenu();
+    },
     setupDefaultContextMenu: function() {
 	var f = function(e) {
 
