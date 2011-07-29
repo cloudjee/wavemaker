@@ -270,26 +270,33 @@ dojo.declare("DeploymentDialog", wm.Page, {
   },
     deploy: function(inSave) {
       try {
-	  app.confirm(this.getDictionaryItem("CONFIRM_DEPLOY_HEADER") + this.generateDeploymentHTMLSynopsis(), false, dojo.hitch(this, function() {
-	      if (inSave) {
-		  var data = this.generateCurrentDeploymentDataStruct();
-		  studio.beginWait(this.getDictionaryItem("WAIT_DEPLOY"));
-		  studio.deploymentService.requestAsync("save", [data], 
-							dojo.hitch(this, function(inResult) {
-							    this.saveSuccess(inResult,true);
-							    this.deploy2();
-							}));
-	      } else {
-		  this.deploy2();
-	      }
-	  }));
+	  if (this.deploymentList.selectedItem.getValue("dataValue").deploymentType == this.FILE_DEPLOY) {
+	      this.deploy2(inSave);
+	  } else {
+	      app.confirm(this.getDictionaryItem("CONFIRM_DEPLOY_HEADER") + this.generateDeploymentHTMLSynopsis(), false, dojo.hitch(this, function() {
+		  this.deploy2(inSave);
+	      }));
+	  }
 	  app.confirmDialog.setWidth("450px");
       } catch(e) {
           console.error('ERROR IN deployButtonClick: ' + e); 
       } 
   },
-    deploy2: function() {
-	studio.beginWait(this.getDictionaryItem("WAIT_DEPLOY"));
+    deploy2: function(inSave) {
+	if (inSave) {
+	    var data = this.generateCurrentDeploymentDataStruct();
+	    studio.beginWait(this.getDictionaryItem("WAIT_DEPLOY", {deploymentName: this.deploymentList.selectedItem.getValue("name")}));
+	    studio.deploymentService.requestAsync("save", [data], 
+						  dojo.hitch(this, function(inResult) {
+						      this.saveSuccess(inResult,true);
+						      this.deploy2();
+						  }));
+	} else {
+	    this.deploy3();
+	}
+    },
+    deploy3: function() {
+	studio.beginWait(this.getDictionaryItem("WAIT_DEPLOY", {deploymentName: this.deploymentList.selectedItem.getValue("name")}));
 	var data = this.generateCurrentDeploymentDataStruct();
 	studio.deploymentService.requestAsync("deploy", [data],
 					      dojo.hitch(this, "deploySuccess"),
@@ -297,7 +304,21 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
     deploySuccess: function(inResult) {
 	studio.endWait();
-	app.toastSuccess(this.getDictionaryItem("TOAST_DEPLOY_SUCCESS"));
+	switch (this.deploymentList.selectedItem.getValue("dataValue").deploymentType) {
+	case this.TC_DEPLOY:
+	    app.alert("<p>" + this.getDictionaryItem("TOAST_DEPLOY_SUCCESS") +"</p><p><a target='_NewWindow' href='" + this.tcUrlEditor.getDataValue() + "'>" + this.tcUrlEditor.getDataValue() + "</a></p>");
+	    return;
+	case this.CF_DEPLOY:
+	    app.alert("<p>" + this.getDictionaryItem("TOAST_DEPLOY_SUCCESS") +"</p><p><a href='" + this.cfUrlEditor.getDataValue() + "'>" + this.tcUrlEditor.getDataValue() + "</a></p>");
+	    return;
+	case this.FILE_DEPLOY:
+	    if (this.deploymentList.selectedItem.getValue("dataValue").archiveType == "WAR") {
+		studio.downloadInIFrame("services/deploymentService.download?method=downloadProjectWar");
+	    } else {
+		studio.downloadInIFrame("services/deploymentService.download?method=downloadProjectEar");
+	    }
+	    return;
+	}
     },
     deployFailed: function(inError) {
 	studio.endWait();
@@ -546,7 +567,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		this.initDeploymentListVar();
 	    var deploymentDescriptor = {
 		"applicationName": studio.project.projectName,
-		"archiveType": null,
+		"archiveType": "WAR",
 		"databases": [],
 		"deploymentId": null,
 		"deploymentType": inType,
@@ -622,7 +643,6 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	    var dataModel = b.dataModel;
 
 	    for (var k = 0; k < inDatabases.length; k++) {
-		/* TODO: dataModelId may be renamed to wmServiceName */
 		if (inDatabases[k].dataModelId == dataModel.name) {
 		    var inData = inDatabases[k];
 		}
@@ -688,8 +708,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	this.tcHostEditor.setDataValue(inData.host);
 	this.tcPortEditor.setDataValue(inData.port);
 	this.tcNameEditor.setDataValue(inData.applicationName);
-	this.tcUserEditor.setDataValue("TODO: Need to get this from server");
-	this.tcPasswordEditor.setDataValue("TODO: Need to get this from server");
+	this.tcUserEditor.setDataValue(inData.username);
+	this.tcPasswordEditor.setDataValue(inData.password);
 
 	var boxes = this.generateDataModelBoxes();
 	this.populateDataModelBoxes(inData.databases);
