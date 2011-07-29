@@ -271,7 +271,7 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 		}
 	},
 	processResult: function(inResult) {
-		this.dataSetCount = this._service.fullResult.dataSetSize;
+	        this.dataSetCount = this._service.fullResult ? this._service.fullResult.dataSetSize : 0;
 		this.inherited(arguments);
 	},
 	//===========================================================================
