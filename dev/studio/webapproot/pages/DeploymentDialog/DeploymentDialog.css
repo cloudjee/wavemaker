@@ -21,6 +21,7 @@
 
 .DeploymentDialog .wmlist-list .wmlist-cell {
     border-bottom: solid 1px #AAA;
+    white-space:nowrap;
 }
 
 .DeploymentDialog .DeploymentDialog-deploymentMainPanel {
@@ -51,4 +52,14 @@ color: black;
 .DeploymentDialog .wmFancyPanel-labelWidget {
 background-color: black;
 color: white;
+}
+
+.DeploymentDialog .DeploymentDialog-splitter1 {
+	background:#959dab url(images/v_splitter_handle.gif) no-repeat scroll 1px center;
+	border-left: 1px solid #c0c4ca;
+	border-right: 1px solid #363b44;
+	cursor:e-resize;
+	overflow:hidden;
+	width:5px;
+	z-index:9;
 }
