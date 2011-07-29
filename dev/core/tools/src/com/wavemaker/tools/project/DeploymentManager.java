@@ -209,7 +209,7 @@ public class DeploymentManager {
     }
     
     public void buildWar(String projectDir, String buildDir,
-            String warFileName) {
+            String warFileName, boolean includeEar) {
         
         int len = warFileName.length();
         String earFileName = warFileName.substring(0, len-4) + EAR_EXTENSION;
@@ -228,32 +228,35 @@ public class DeploymentManager {
         properties.put(DEPLOY_NAME_PROPERTY, getDeployName(f.getParentFile().getParentFile()));
 
         antExecute(projectDir, BUILD_WAR_OPERATION, properties);
-        antExecute(projectDir, BUILD_EAR_OPERATION, properties);
+        
+        if (includeEar) {
+            antExecute(projectDir, BUILD_EAR_OPERATION, properties);
+        }
     }
     
     public String buildWar() throws IOException {
         File dist = new File(getProjectDir(), DIST_DIR_DEFAULT);
         File warFile = new File(dist, getDeployName() + WAR_EXTENSION);
-        return buildWar(warFile);
+        return buildWar(warFile, false);
     }
     
-    public String buildWar(File warFile) throws IOException {      
+    public String buildWar(File warFile, boolean includeEar) throws IOException {      
         File f = warFile.getParentFile();
         if (!f.exists()) {
             f.mkdirs();
         }
         String warFileName = warFile.getAbsolutePath();
-        buildWar(warFileName);
+        buildWar(warFileName, includeEar);
         return warFileName;
     }
 
-    public void buildWar(String warFileName) 
+    public void buildWar(String warFileName, boolean includeEar) 
         throws IOException 
     {
         File tempDir = IOUtils.createTempDirectory();
         try {
             buildWar(getProjectDir().getAbsolutePath(),
-                    tempDir.getAbsolutePath(), warFileName);
+                    tempDir.getAbsolutePath(), warFileName, includeEar);
         } finally {
             IOUtils.deleteRecursive(tempDir);
         }

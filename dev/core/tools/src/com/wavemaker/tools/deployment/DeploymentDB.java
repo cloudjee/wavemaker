@@ -20,6 +20,7 @@ import java.util.Map;
 import org.springframework.util.StringUtils;
 
 import com.wavemaker.runtime.data.util.DataServiceConstants;
+import com.wavemaker.tools.data.DataModelDeploymentConfiguration;
 import com.wavemaker.tools.project.ProjectConstants;
 
 /**
@@ -100,11 +101,15 @@ public class DeploymentDB {
     }
     
     public Map<String, String> asProperties() {
-        String prefix = this.dataModelId + ProjectConstants.PROP_SEP;
+        String prefix = this.dataModelId;
         Map<String, String> props = new HashMap<String, String>();
         if (StringUtils.hasText(jndiName)) {
-            //props.put(prefix+DataServiceConstants., arg1)
-        } 
+            props.put(prefix+ProjectConstants.PROP_SEP+DataModelDeploymentConfiguration.JNDI_NAME_PROPERTY, jndiName);
+        } else {
+            if (StringUtils.hasText(username)) props.put(prefix+DataServiceConstants.DB_USERNAME, username);
+            if (StringUtils.hasText(password)) props.put(prefix+DataServiceConstants.DB_PASS, password);
+            if (StringUtils.hasText(connectionUrl)) props.put(prefix+DataServiceConstants.DB_URL, connectionUrl);
+        }
         return props;
     }
 

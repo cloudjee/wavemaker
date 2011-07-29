@@ -27,6 +27,7 @@ import org.apache.commons.io.FileUtils;
 import com.wavemaker.studio.infra.StudioTestCase;
 import com.wavemaker.tools.data.DataModelDeploymentConfiguration;
 import com.wavemaker.tools.data.util.DataServiceTestUtils;
+import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.util.DesignTimeUtils;
 

@@ -4,111 +4,151 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.cloudfoundry.client.lib.CloudApplication;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
-import org.junit.Before;
+import org.cloudfoundry.client.lib.CloudFoundryException;
+import org.cloudfoundry.client.lib.CloudService;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.PropertyAccessorUtils;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.style.StylerUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
 
-import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.deployment.AppInfo;
-import com.wavemaker.tools.deployment.cloudfoundry.VmcDeploymentTarget;
+import com.wavemaker.tools.deployment.DeploymentDB;
+import com.wavemaker.tools.deployment.DeploymentInfo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @IfProfileValue(name="spring.profiles", value="cloud-test")
 @TestExecutionListeners({})
 public class TestVmcDeploymentTarget {
 	
-	@Mock
-	RuntimeAccess runtimeAccessBean;
+	private static File testapp;
 	
-	private File testapp;
+	private static CloudFoundryClient testClient;
 	
-	private CloudFoundryClient testClient;
+	private static String token;
 	
-	private MockHttpServletRequest request = new MockHttpServletRequest();
-	
-	private static final Map<String, String> defaultProps = new HashMap<String, String>();
 	private static final String TEST_USER_EMAIL = System.getProperty("vcap.email");
 	private static final String TEST_USER_PASS = System.getProperty("vcap.passwd");
 	
-	static {
-		defaultProps.put(VmcDeploymentTarget.VMC_USERNAME_PROPERTY, TEST_USER_EMAIL);
-		defaultProps.put(VmcDeploymentTarget.VMC_PASSWORD_PROPERTY, TEST_USER_PASS);
-	}
-	
-	@Before
-	public void setUp() throws Exception {
-		if (!StringUtils.hasText(TEST_USER_EMAIL)) {
-			fail("System property vcap.email must be specified, supply -Dvcap.email=<email>");
-		}
-		if (!StringUtils.hasText(TEST_USER_PASS)) {
-			fail("System property vcap.passwd must be specified, supply -Dvcap.passwd=<password>");
-		}
-		
-		testClient = new CloudFoundryClient(TEST_USER_EMAIL, TEST_USER_PASS, "https://api.cloudfoundry.com");
-		testapp = new ClassPathResource("com/wavemaker/tools/deployment/cloudfoundry/wmcftest.war").getFile();
-		
-		MockitoAnnotations.initMocks(this);
-		when(runtimeAccessBean.getSession()).thenReturn(request.getSession(true));
-		RuntimeAccess.setRuntimeBean(runtimeAccessBean);
+	@BeforeClass
+	public static void init() throws Exception {
+	    if (!StringUtils.hasText(TEST_USER_EMAIL)) {
+            fail("System property vcap.email must be specified, supply -Dvcap.email=<email>");
+        }
+        if (!StringUtils.hasText(TEST_USER_PASS)) {
+            fail("System property vcap.passwd must be specified, supply -Dvcap.passwd=<password>");
+        }
+        
+        testClient = new CloudFoundryClient(TEST_USER_EMAIL, TEST_USER_PASS, "https://api.cloudfoundry.com");
+        testapp = new ClassPathResource("com/wavemaker/tools/deployment/cloudfoundry/wmcftest.war").getFile();
+        
+        token = testClient.loginIfNeeded();
+        
 	}
 	
 	@Test
-	public void testDeployWarNullContextRoot() {
+	public void testUnknownServiceLookup() {
+	    try {
+	    testClient.getService("foo");
+	    } catch (CloudFoundryException ex) {
+	        if (ex.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+	            //success
+	        } else {
+	            fail("Unexpected result when querying for unknown service.");
+	        }
+	    }
+	}
+	
+	@Test
+	public void testServiceCreation() {
+	    CloudService service = new CloudService();
+	    service.setType("database");
+	    service.setVendor("mysql");
+	    service.setTier("free");
+	    service.setVersion("5.1");
+	    service.setName("test-service");
+	    
+	    try {
+	        testClient.createService(service);
+	    } catch(CloudFoundryException ex) {
+	        ex.printStackTrace();
+	    }
+	        
+	    CloudService result = testClient.getService("test-service");
+	    assertNotNull(result);
+	    
+	    testClient.deleteService("test-service");
+	}
+	
+	
+	@Test
+	public void testFullAppLifecycle() {
+	    DeploymentInfo deployment1 = new DeploymentInfo();
+	    deployment1.setPassword(token);
+	    deployment1.setTarget("https://api.cloudfoundry.com");
+	    deployment1.setApplicationName("wmcftest");
+	    DeploymentDB db1 = new DeploymentDB();
+	    db1.setDbName("wmcftestdb");
+	    deployment1.getDatabases().add(db1);
+	    
+	    DeploymentInfo deployment2 = new DeploymentInfo();
+        deployment2.setPassword(token);
+        deployment2.setTarget("https://api.cloudfoundry.com");
+        deployment2.setApplicationName("wmcftest2");
+        DeploymentDB db2 = new DeploymentDB();
+        db2.setDbName("wmcftestdb");
+        deployment2.getDatabases().add(db2);
+	    
 		String result;
 		CloudApplication app;
 		VmcDeploymentTarget target = new VmcDeploymentTarget();
 		
-		result = target.deploy(testapp, null, defaultProps);
+		result = target.deploy(testapp, deployment1);
 		assertEquals("SUCCESS", result);
 		app = testClient.getApplication("wmcftest");
 		assertNotNull(app);
 		assertEquals(CloudApplication.AppState.STARTED, app.getState());
 		
-		result = target.redeploy("wmcftest", defaultProps);
+		result = target.redeploy(deployment1);
 		assertEquals("SUCCESS", result);
 		app = testClient.getApplication("wmcftest");
 		assertNotNull(app);
 		assertEquals(CloudApplication.AppState.STARTED, app.getState());
 		
-		result = target.deploy(testapp, "wmcftest2", defaultProps);
+		result = target.deploy(testapp, deployment2);
 		assertEquals("SUCCESS", result);
 		app = testClient.getApplication("wmcftest2");
 		assertNotNull(app);
 		assertEquals(CloudApplication.AppState.STARTED, app.getState());
 		
-		result = target.stop("wmcftest2", defaultProps);
+		result = target.stop(deployment2);
 		assertEquals("SUCCESS", result);
 		app = testClient.getApplication("wmcftest2");
 		assertNotNull(app);
 		assertEquals(CloudApplication.AppState.STOPPED, app.getState());
 		
-		result = target.start("wmcftest2", defaultProps);
+		result = target.start(deployment2);
 		assertEquals("SUCCESS", result);
 		app = testClient.getApplication("wmcftest2");
 		assertNotNull(app);
 		assertEquals(CloudApplication.AppState.STARTED, app.getState());
 		
-		List<AppInfo> apps = target.listDeploymentNames(defaultProps);
+		List<AppInfo> apps = target.listDeploymentNames(deployment1);
 		List<String> appNames = new ArrayList<String>();
 		for (AppInfo appInfo : apps) {
 			assertTrue(appInfo.getHref().contains("http://"+appInfo.getName()+".cloudfoundry.com"));
@@ -117,7 +157,7 @@ public class TestVmcDeploymentTarget {
 		assertTrue(appNames.contains("wmcftest"));
 		assertTrue(appNames.contains("wmcftest2"));
 		
-		result = target.undeploy("wmcftest2", defaultProps);
+		result = target.undeploy(deployment2);
 		assertEquals("SUCCESS", result);
 		try {
 			app = testClient.getApplication("wmcftest2");
@@ -129,6 +169,7 @@ public class TestVmcDeploymentTarget {
 		}
 		
 		testClient.deleteApplication("wmcftest");
+		testClient.deleteService("wmcftestdb");
 	}
 
 }

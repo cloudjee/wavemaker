@@ -14,8 +14,10 @@
 
 package com.wavemaker.tools.deployment;
 
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,13 +35,11 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.BeanUtils;
-import org.springframework.context.MessageSource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 
@@ -248,7 +248,7 @@ public class TestServiceDeploymentManager {
         deployment3.setApplicationName("stubby1");
         deployment3.setDeploymentType(DeploymentType.FILE);
         deployment3.setName("Stubby 1 WAR Deployment");
-        deployment3.setArchiveType("WAR");
+        deployment3.setArchiveType(ArchiveType.EAR);
 
         List<DeploymentDB> dbs3 = new ArrayList<DeploymentDB>();
         DeploymentDB db3 = new DeploymentDB();

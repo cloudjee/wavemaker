@@ -20,6 +20,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
@@ -32,6 +33,7 @@ import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.deployment.ServiceDeployment;
+import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.FileService;
 
@@ -80,11 +82,11 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
             String jndiName = properties.get(JNDI_NAME_PROPERTY);
     
             configureJNDI(cfg, jndiName);
-            configureProperties(cfg);
+            configureJNDIProperties(cfg);
             modifyWebSphereBindings(mgr, jndiName, indx);
             configureResourceRef(mgr, jndiName);
         } else {
-            
+            configureDeploymentProperties(cfg, properties);
         }
     }
 
@@ -121,7 +123,7 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
         cfg.write();
     }
 
-    private void configureProperties(DataServiceSpringConfiguration cfg) {
+    private void configureJNDIProperties(DataServiceSpringConfiguration cfg) {
         // remove properties. only ones still referenced in spring file are:
         // - ${dialect}
 
@@ -136,6 +138,14 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
         }
 
         cfg.writeProperties(newProps, false);
+    }
+    
+    private void configureDeploymentProperties(DataServiceSpringConfiguration cfg, Map<String, String> deploymentProperties) {
+        Properties existingProps = cfg.readProperties(true);
+        for (Entry<String, String> prop : deploymentProperties.entrySet()) {
+            existingProps.setProperty(prop.getKey(), prop.getValue());
+        }
+        cfg.writeProperties(existingProps, true);
     }
 
     private void configureResourceRef(DesignServiceManager mgr, String jndiName) {

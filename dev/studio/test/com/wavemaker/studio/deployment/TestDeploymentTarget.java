@@ -21,6 +21,7 @@ import java.util.Map;
 
 import com.wavemaker.tools.deployment.DeploymentTarget;
 import com.wavemaker.tools.deployment.DeploymentTargetManager;
+import com.wavemaker.tools.deployment.DeploymentType;
 import com.wavemaker.studio.infra.StudioTestCase;
 
 /**
@@ -31,12 +32,11 @@ import com.wavemaker.studio.infra.StudioTestCase;
 public class TestDeploymentTarget extends StudioTestCase {
 
     private static final String DPL_TARGET_MGR = "deploymentTargetManager";
-    private static final String TOMCAT_DPL_TARGET = "tomcat";
 
 
     public void testConfigurableProperties() {
         DeploymentTargetManager dpl = getDeploymentTargetManager();
-        DeploymentTarget tomcat = dpl.getDeploymentTarget(TOMCAT_DPL_TARGET);
+        DeploymentTarget tomcat = dpl.getDeploymentTarget(DeploymentType.TOMCAT);
         assertTrue("Cannot find Tomcat DeploymentTarget impl", tomcat != null);
         Map<String, String> props = tomcat.getConfigurableProperties();
         assertTrue("No properties", !props.isEmpty());

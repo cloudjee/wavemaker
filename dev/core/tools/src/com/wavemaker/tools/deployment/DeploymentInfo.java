@@ -14,9 +14,7 @@
 
 package com.wavemaker.tools.deployment;
 
-import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,7 +35,7 @@ public class DeploymentInfo {
 
     private DeploymentType deploymentType;
 
-    private List<DeploymentDB> databases;
+    private List<DeploymentDB> databases = new ArrayList<DeploymentDB>();
 
     private String applicationName;
 
@@ -47,7 +45,7 @@ public class DeploymentInfo {
 
     private String target;
 
-    private String archiveType;
+    private ArchiveType archiveType = ArchiveType.WAR;
 
     public String getDeploymentId() {
         return deploymentId;
@@ -129,11 +127,11 @@ public class DeploymentInfo {
         this.target = target;
     }
 
-    public String getArchiveType() {
+    public ArchiveType getArchiveType() {
         return archiveType;
     }
 
-    public void setArchiveType(String archiveType) {
+    public void setArchiveType(ArchiveType archiveType) {
         this.archiveType = archiveType;
     }
 

@@ -19,9 +19,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.util.SystemUtils;
 
 /**
  * TODO Document Deployments
@@ -62,6 +64,16 @@ public class Deployments {
     }
 
     public void save(String projectName, DeploymentInfo deployment) {
+        if (!SystemUtils.isEncrypted(deployment.getPassword())) {
+            deployment.setPassword(SystemUtils.encrypt(deployment.getPassword()));
+        }
+        if (!CollectionUtils.isEmpty(deployment.getDatabases())) {
+            for (DeploymentDB db : deployment.getDatabases()) {
+                if (!SystemUtils.isEncrypted(db.getPassword())) {
+                    db.setPassword(SystemUtils.encrypt(db.getPassword()));
+                }
+            }
+        }
         List<DeploymentInfo> deployments = forProject(projectName);
         if (!StringUtils.hasText(deployment.getDeploymentId())) {
             deployment.setDeploymentId(projectName+deployments.size());

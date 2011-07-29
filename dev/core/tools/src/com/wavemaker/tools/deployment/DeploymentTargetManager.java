@@ -16,7 +16,9 @@ package com.wavemaker.tools.deployment;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.wavemaker.common.Resource;
 import com.wavemaker.common.util.SpringUtils;
@@ -29,29 +31,33 @@ import com.wavemaker.tools.common.ConfigurationException;
  */
 public class DeploymentTargetManager {
 
-    private Map<String, DeploymentTarget>
-        deploymentTargets = new HashMap<String, DeploymentTarget>();
+    private Map<DeploymentType, DeploymentTarget>
+        deploymentTargets = new HashMap<DeploymentType, DeploymentTarget>();
 
 
     public Collection<String> getDeploymentTargetNames() {
-        return deploymentTargets.keySet();
+        Set<String> names = new HashSet<String>();
+        for (DeploymentType type : DeploymentType.values()) {
+            names.add(type.toString());
+        }
+        return names;
     }
     
-    public DeploymentTarget getDeploymentTarget(String targetServerName) {
+    public DeploymentTarget getDeploymentTarget(DeploymentType deploymentType) {
         
         if (deploymentTargets == null) {
             SpringUtils.throwSpringNotInitializedError(this.getClass());
         }
         
-        if (!deploymentTargets.containsKey(targetServerName)) {
+        if (!deploymentTargets.containsKey(deploymentType)) {
             throw new ConfigurationException(
-                Resource.UNKNOWN_DEPLOYMENT_TARGET, targetServerName);
+                Resource.UNKNOWN_DEPLOYMENT_TARGET, deploymentType);
         }
         
-        return deploymentTargets.get(targetServerName);
+        return deploymentTargets.get(deploymentType);
     }
 
-    public void setDeploymentTargets(Map<String, DeploymentTarget> 
+    public void setDeploymentTargets(Map<DeploymentType, DeploymentTarget> 
                                      deploymentTargets) {
         this.deploymentTargets = deploymentTargets;
 

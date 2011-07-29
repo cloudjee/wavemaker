@@ -30,59 +30,49 @@ public interface DeploymentTarget {
      * Deploy an app. 
      *
      * @param webapp  Either exploded or archived webapp to deploy
-     * @param contextRoot  Context root to deploy app under
-     * @param configuredProperties  Deployment settings, property names with configured values
+     * @param deploymentInfo TODO
      * @return status message
      */
     String deploy(File webapp, 
-                  String contextRoot, 
-                  Map<String, String> configuredProperties);
+                  DeploymentInfo deploymentInfo);
 
     /**
      * Undeploy an app.
+     * @param deploymentInfo TODO
      *
-     * @param contextRoot The context root of the app to undeploy
-     * @param configuredProperties  Deployment target specific settings
      * @return status message
      */
-    String undeploy(String contextRoot, 
-                    Map<String, String> configuredProperties);
+    String undeploy(DeploymentInfo deploymentInfo);
 
     /**
      * Redeploy an already deployed app.
+     * @param deploymentInfo TODO
      *
-     * @param contextRoot  Context root of app to redeploy
-     * @param configuredProperties  Deployment settings, property names with configured values
      * @return status message
      */
-    String redeploy(String contextRoot, 
-                    Map<String, String> configuredProperties);
+    String redeploy(DeploymentInfo deploymentInfo);
 
     /**
      * start a deployed app.
+     * @param deploymentInfo TODO
      *
-     * @param contextRoot The context root of the app to undeploy
-     * @param configuredProperties  Deployment target specific settings
      * @return status message
      */
-    String start(String contextRoot,
-                    Map<String, String> configuredProperties);
+    String start(DeploymentInfo deploymentInfo);
 
     /**
      * stop a deployed app.
+     * @param deploymentInfo TODO
      *
-     * @param contextRoot The context root of the app to undeploy
-     * @param configuredProperties  Deployment target specific settings
      * @return status message
      */
-    String stop(String contextRoot,
-                    Map<String, String> configuredProperties);
+    String stop(DeploymentInfo deploymentInfo);
 
     /**
-     * @param configuredProperties  Deployment target specific settings 
+     * @param deploymentInfo TODO
      * @return  current deployments
      */
-    List<AppInfo> listDeploymentNames(Map<String, String> configuredProperties); 
+    List<AppInfo> listDeploymentNames(DeploymentInfo deploymentInfo); 
 
     /**
      * @return Properties that can be configured for this DeploymentTarget,

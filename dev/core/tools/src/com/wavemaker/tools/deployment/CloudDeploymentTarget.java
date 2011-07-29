@@ -49,30 +49,27 @@ public class CloudDeploymentTarget implements DeploymentTarget {
         return null;
     }
 
-    public String deploy(File f, String contextRoot,
-                         Map<String, String> props) {
+    public String deploy(File f, DeploymentInfo deploymentInfo) {
         throw new NotYetImplementedException();
     }
 
-    public String undeploy(String contextRoot, Map<String, String> props) {
+    public String undeploy(DeploymentInfo deploymentInfo) {
         throw new NotYetImplementedException();
     }
 
-    public String redeploy(String contextRoot, Map<String, String> props) {
+    public String redeploy(DeploymentInfo deploymentInfo) {
         throw new NotYetImplementedException();
     }
 
-	public String start(String contextRoot,
-                    Map<String, String> configuredProperties) {
+	public String start(DeploymentInfo deploymentInfo) {
         return null;
     }
 
-    public String stop(String contextRoot,
-                    Map<String, String> configuredProperties) {
+    public String stop(DeploymentInfo deploymentInfo) {
         return null;
     }
 
-    public List<AppInfo> listDeploymentNames(Map<String, String> props) {
+    public List<AppInfo> listDeploymentNames(DeploymentInfo deploymentInfo) {
         throw new NotYetImplementedException();
     }
 

@@ -23,6 +23,7 @@ import java.util.Map;
 
 import com.wavemaker.common.util.Tuple;
 import com.wavemaker.tools.util.TomcatServer;
+import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.deployment.DeploymentTarget;
 import com.wavemaker.tools.deployment.AppInfo;
 
@@ -48,41 +49,40 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
         CONFIGURABLE_PROPERTIES = Collections.unmodifiableMap(m);
     }
 
-    public String deploy(File f, String contextRoot,
-                         Map<String, String> props) 
+    public String deploy(File f, DeploymentInfo deploymentInfo) 
     {
-        TomcatServer tomcat = initTomcat(props);
-        return tomcat.deploy(f, contextRoot);
+        TomcatServer tomcat = initTomcat(deploymentInfo);
+        return tomcat.deploy(f, deploymentInfo.getApplicationName());
     }
 
-    public String undeploy(String contextRoot, Map<String, String> props) {
-        TomcatServer tomcat = initTomcat(props);
-        return tomcat.undeploy(contextRoot);
+    public String undeploy(DeploymentInfo deploymentInfo) {
+        TomcatServer tomcat = initTomcat(deploymentInfo);
+        return tomcat.undeploy(deploymentInfo.getApplicationName());
     }
 
-    public String redeploy(String contextRoot, Map<String, String> props) {
-        TomcatServer tomcat = initTomcat(props);
-        return tomcat.redeploy(contextRoot);
+    public String redeploy(DeploymentInfo deploymentInfo) {
+        TomcatServer tomcat = initTomcat(deploymentInfo);
+        return tomcat.redeploy(deploymentInfo.getApplicationName());
     }
 
-    public String start(String contextRoot, Map<String, String> props) {
-        TomcatServer tomcat = initTomcat(props);
-        return tomcat.start(contextRoot);
+    public String start(DeploymentInfo deploymentInfo) {
+        TomcatServer tomcat = initTomcat(deploymentInfo);
+        return tomcat.start(deploymentInfo.getApplicationName());
     }
 
-    public String stop(String contextRoot, Map<String, String> props) {
-        TomcatServer tomcat = initTomcat(props);
-        return tomcat.stop(contextRoot);
+    public String stop(DeploymentInfo deploymentInfo) {
+        TomcatServer tomcat = initTomcat(deploymentInfo);
+        return tomcat.stop(deploymentInfo.getApplicationName());
     }
 
-    public List<AppInfo> listDeploymentNames(Map<String, String> props) {
-        TomcatServer tomcat = initTomcat(props);
+    public List<AppInfo> listDeploymentNames(DeploymentInfo deploymentInfo) {
+        TomcatServer tomcat = initTomcat(null);
         List<Tuple.Two<String, String>> apps = tomcat.listDeployments();
         List<AppInfo> rtn = new ArrayList<AppInfo>(apps.size());
         for (Tuple.Two<String, String> t : apps) {
             StringBuilder url = new StringBuilder();
-            url.append("http://").append(getHostName(props)).append(":")
-                .append(getPort(props)).append(t.v1);
+            url.append("http://").append(deploymentInfo.getHost()).append(":")
+                .append(deploymentInfo.getPort()).append(t.v1);
             StringBuilder href = new StringBuilder();
             href.append("<a href=\"")
                 .append(url)
@@ -101,28 +101,12 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
         return CONFIGURABLE_PROPERTIES;
     }
 
-    private String getHostName(Map<String, String> props) {
-        return props.get(HOST_PROPERTY_NAME);
-    }
-
-    private int getPort(Map<String, String> props) {
-        return Integer.parseInt(props.get(PORT_PROPERTY_NAME));
-    }
-
-    private String getUsername(Map<String, String> props) {
-        return props.get(MANAGER_USER_PROPERTY_NAME);
-    }
-
-    private String getPassword(Map<String, String> props) {
-        return props.get(MANAGER_PASSWORD_PROPERTY_NAME);
-    }
-
-    private TomcatServer initTomcat(Map<String, String> props) {
+    private TomcatServer initTomcat(DeploymentInfo deploymentInfo) {
         TomcatServer rtn = new TomcatServer();
-        rtn.setHost(getHostName(props));
-        rtn.setPort(getPort(props));
-        rtn.setUsername(getUsername(props));
-        rtn.setPassword(getPassword(props));
+        rtn.setHost(deploymentInfo.getHost());
+        rtn.setPort(deploymentInfo.getPort());
+        rtn.setUsername(deploymentInfo.getUsername());
+        rtn.setPassword(deploymentInfo.getPassword());
         return rtn;
     }
 }

@@ -20,24 +20,38 @@ package com.wavemaker.studio.deployment;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.util.StringUtils;
+
 import com.wavemaker.common.util.IOUtils;
+import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.runtime.data.DataServiceType;
 import com.wavemaker.studio.infra.StudioTestCase;
 import com.wavemaker.tools.data.DataModelDeploymentConfiguration;
 import com.wavemaker.tools.data.util.DataServiceTestUtils;
 import com.wavemaker.tools.data.util.DataServiceUtils;
+import com.wavemaker.tools.deployment.DeploymentDB;
+import com.wavemaker.tools.deployment.DeploymentInfo;
+import com.wavemaker.tools.deployment.DeploymentType;
 import com.wavemaker.tools.deployment.ServiceDeploymentManager;
 import com.wavemaker.tools.service.AbstractFileService;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.FileService;
 import com.wavemaker.tools.service.definitions.DataObjects;
 import com.wavemaker.tools.service.definitions.Service;
+import com.wavemaker.tools.spring.beans.Bean;
 import com.wavemaker.tools.spring.beans.Beans;
+import com.wavemaker.tools.spring.beans.Property;
 import com.wavemaker.tools.util.AntUtils;
 
 /**
@@ -80,17 +94,21 @@ public class TestServiceDeploymentManager extends StudioTestCase {
         marshaller.marshal(service, serviceDef);
     }
 
-    public void testGenerateWebapp() throws IOException {
+    /*public void testGenerateWebappWithJNDI() throws IOException {
         
         ServiceDeploymentManager mgr = (ServiceDeploymentManager) getBean("serviceDeploymentManager");
         assertTrue(mgr != null);
         String jndiName = "java:/comp/eng/blah";
-        Map<String, String> m = new HashMap<String, String>(1);
-        m.put(serviceId + "."
-                        + DataModelDeploymentConfiguration.JNDI_NAME_PROPERTY,
-                        jndiName);
+        DeploymentInfo deployment = new DeploymentInfo();
+        deployment.setApplicationName(projectName);
+        deployment.setDeploymentType(DeploymentType.FILE);
+        DeploymentDB db = new DeploymentDB();
+        db.setDataModelId("sakila");
+        db.setDbName("sakila");
+        db.setJndiName(jndiName);
+        deployment.getDatabases().add(db);
 
-        File war = mgr.generateWebapp(rootDir, m);
+        File war = mgr.generateWebapp(deployment);
         
         assertEquals(projectName + ".war", war.getName());
 
@@ -111,6 +129,51 @@ public class TestServiceDeploymentManager extends StudioTestCase {
             IOUtils.deleteRecursive(tmp);
         }
 
+    }*/
+    
+    public void testGenerateWebappWithDeploymentDBSettings() throws IOException {
+        ServiceDeploymentManager mgr = (ServiceDeploymentManager) getBean("serviceDeploymentManager");
+        assertTrue(mgr != null);
+        DeploymentInfo deployment = new DeploymentInfo();
+        deployment.setApplicationName(projectName);
+        deployment.setDeploymentType(DeploymentType.FILE);
+        DeploymentDB db = new DeploymentDB();
+        db.setDataModelId("sakila");
+        db.setDbName("sakila");
+        db.setUsername("jimminy");
+        db.setPassword(SystemUtils.encrypt("cricket"));
+        db.setConnectionUrl("jdbc:mysql://187.1.2.3:3306/foo");
+        deployment.getDatabases().add(db);
+
+        File war = mgr.generateWebapp(deployment);
+        
+        assertEquals(projectName + ".war", war.getName());
+
+        // verify that war has spring file with jndi ds
+        final File tmp = IOUtils.createTempDirectory();
+        try {
+            AntUtils.unjar(war, tmp);
+            FileService fileService = new AbstractFileService() {
+                public File getFileServiceRoot() {
+                    return new File(tmp, "WEB-INF/classes");
+                }
+
+            };
+            Beans beans = DataServiceUtils.readBeans(fileService,
+                    DataServiceUtils.getCfgFileName(serviceId));
+            List<Bean> dataSourceBeans = beans.getBeansByType(DriverManagerDataSource.class);
+            assertEquals(1, dataSourceBeans.size());
+            Resource propsFileResource = new FileSystemResource(new File(fileService.getFileServiceRoot(), "mysql_sakila.properties"));
+            Properties deploymentProps = DataServiceUtils.readProperties(propsFileResource.getInputStream());
+            assertNotNull(deploymentProps);
+            Map<String, String> dbSettings = db.asProperties();
+            for (Entry<String, String> prop : dbSettings.entrySet()){
+                assertTrue(StringUtils.hasText(deploymentProps.getProperty(prop.getKey())));
+                assertEquals(prop.getValue(), deploymentProps.getProperty(prop.getKey()));
+            }
+        } finally {
+            IOUtils.deleteRecursive(tmp);
+        }
     }
 
 }

@@ -33,7 +33,6 @@ import javax.xml.bind.Unmarshaller;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.FileCopyUtils;
 
 import com.wavemaker.common.CommonConstants;
@@ -77,12 +76,20 @@ public class ServiceDeploymentManager {
         // hack: these should be managed by Spring
         serviceDeployments.add(new DataModelDeploymentConfiguration());
     }
-
-    public File generateWebapp(Map<String, String> properties) {
-        return generateWebapp(getProjectRoot(), properties);
+    
+    public File generateWebapp(DeploymentInfo info) {
+        Map<String, String> allDbProps = new HashMap<String, String>();
+        for (DeploymentDB db : info.getDatabases()) {
+            allDbProps.putAll(db.asProperties());
+        }
+        return generateWebapp(getProjectRoot(), allDbProps, info.getArchiveType().equals(ArchiveType.EAR));
     }
 
-    public File generateWebapp(File projectRoot, Map<String, String> properties) {
+    public File generateWebapp(Map<String, String> properties) {
+        return generateWebapp(getProjectRoot(), properties, false);
+    }
+
+    public File generateWebapp(File projectRoot, Map<String, String> properties, boolean includeEar) {
         File stagingProjectDir = null;
 
         try {
@@ -90,7 +97,7 @@ public class ServiceDeploymentManager {
             IOUtils.copy(projectRoot, stagingProjectDir);
             DesignServiceManager mgr = DesignTimeUtils.getDSMForProjectRoot(stagingProjectDir);
             prepareForDeployment(mgr, properties);
-            return buildWar(mgr.getProjectManager(), getWarFile());
+            return buildWar(mgr.getProjectManager(), getWarFile(), includeEar);
         } catch (IOException ex) {
             throw new ConfigurationException(ex);
         } finally {
@@ -292,7 +299,6 @@ public class ServiceDeploymentManager {
 
             inputStream.close();
 
-            Targets.Target targetFound = null;
             for (Targets.Target target : tlist) {
                 String key = target.getName();
                 if (targetName.equals(key)) {
@@ -317,13 +323,13 @@ public class ServiceDeploymentManager {
         return projectMgr.getCurrentProject().getProjectRoot();
     }
 
-    private File buildWar(ProjectManager projectMgr, File warFile) throws IOException {
+    private File buildWar(ProjectManager projectMgr, File warFile, boolean includeEar) throws IOException {
         // call into existing deployment code to generate war
         // would be super nice to refactor this
         DeploymentManager deploymentMgr = new DeploymentManager();
         deploymentMgr.setProjectManager(projectMgr);
         deploymentMgr.setStudioConfiguration(studioConfiguration);
-        String war = deploymentMgr.buildWar(warFile);
+        String war = deploymentMgr.buildWar(warFile, includeEar);
         return new File(war);
     }
 

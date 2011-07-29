@@ -16,13 +16,18 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cloudfoundry.client.lib.CloudApplication;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
+import org.cloudfoundry.client.lib.CloudFoundryException;
+import org.cloudfoundry.client.lib.CloudService;
 import org.cloudfoundry.client.lib.UploadStatusCallback;
+import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.HttpClientErrorException;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.util.StringUtils;
-import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.deployment.AppInfo;
+import com.wavemaker.tools.deployment.DeploymentDB;
+import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.deployment.DeploymentTarget;
 
 public class VmcDeploymentTarget implements DeploymentTarget {
@@ -34,12 +39,18 @@ public class VmcDeploymentTarget implements DeploymentTarget {
 	public static final String VMC_URL_PROPERTY = "url";
 	
 	public static final Map<String, String> CONFIGURABLE_PROPERTIES;
-	
-	private static final String TOKEN_ATTR = "wm_cf_token";
 
 	private static final String DEFAULT_URL = "https://api.cloudfoundry.com";
 	
 	private static final String HREF_TEMPLATE = "<a href=\"url\" target=\"_blank\">url</a>";
+	
+	private static final String SERVICE_TYPE = "database";
+	
+	private static final String SERVICE_VENDOR = "mysql";
+	
+	private static final String SERVICE_TIER = "free";
+	
+	private static final String SERVICE_VERSION = "5.1";
 	
 	private static final Log log = LogFactory.getLog(VmcDeploymentTarget.class);
 	
@@ -52,77 +63,111 @@ public class VmcDeploymentTarget implements DeploymentTarget {
 	}
 
 	
-	public String deploy(File webapp, String contextRoot,
-			Map<String, String> configuredProperties) {
+	public String deploy(File webapp, DeploymentInfo deploymentInfo) {
 		
-		CloudFoundryClient client = getClient(configuredProperties);
+		CloudFoundryClient client = getClient(deploymentInfo);
 		
 		validateWar(webapp);
-		String appName = contextRoot == null ? StringUtils.fromFirstOccurrence(webapp.getName(), ".", -1) : contextRoot; 
-		appName = prepareAppName(appName);
 		
 		List<String> uris = new ArrayList<String>();
-		String url = configuredProperties.get(VMC_URL_PROPERTY);
+		String url = deploymentInfo.getTarget();
 		if (!hasText(url)){
 			url = DEFAULT_URL;
 		}
-		uris.add(url.replace("api", appName));
+		uris.add(url.replace("api", deploymentInfo.getApplicationName()));
 		
-		client.createApplication(appName, CloudApplication.SPRING, client.getDefaultApplicationMemory(CloudApplication.SPRING), uris, null, true);
+		client.createApplication(deploymentInfo.getApplicationName(), CloudApplication.SPRING, client.getDefaultApplicationMemory(CloudApplication.SPRING), uris, null, true);
+		
+		setupServices(client, deploymentInfo);
+		
 		Timer timer = new Timer();
 		try {
-			client.uploadApplication(appName, webapp, new LoggingStatusCallback(timer));
+			client.uploadApplication(deploymentInfo.getApplicationName(), webapp, new LoggingStatusCallback(timer));
 		} catch (IOException ex) {
 			throw new WMRuntimeException("Error ocurred while trying to upload WAR file.", ex);
 		}
 		
 		log.info("Application upload completed in " + timer.stop() + "ms");
 		
-		CloudApplication application = client.getApplication(appName);
+		CloudApplication application = client.getApplication(deploymentInfo.getApplicationName());
 		if(application.getState().equals(CloudApplication.AppState.STARTED)) {
-			doRestart(appName, client);
+			doRestart(deploymentInfo, client);
 		} else {
-			doStart(appName, client);
+			doStart(deploymentInfo, client);
 		}
 		return "SUCCESS";
 	}
 
-	public String undeploy(String contextRoot, Map<String, String> configuredProperties) {
-		CloudFoundryClient client = getClient(configuredProperties);
-		String appName = prepareAppName(contextRoot);
-		log.info("Deleting application "+appName);
+	/**
+     * @param deploymentInfo
+     */
+    private void setupServices(CloudFoundryClient client, DeploymentInfo deploymentInfo) {
+        if (CollectionUtils.isEmpty(deploymentInfo.getDatabases())) {
+            return;
+        }
+        
+        for (DeploymentDB db : deploymentInfo.getDatabases()) {
+            try {
+                CloudService service = client.getService(db.getDbName());
+                Assert.state(SERVICE_VENDOR.equals(service.getVendor()), "There is already a service provisioned with the name '"+db.getDbName()+"' but it is not a MySQL service.");
+            } catch (CloudFoundryException ex) {
+                if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
+                    throw ex;
+                }
+                client.createService(createMySqlService(db));
+            }
+            client.bindService(deploymentInfo.getApplicationName(), db.getDbName());
+        }
+    }
+
+    /**
+     * @param db
+     * @return
+     */
+    private CloudService createMySqlService(DeploymentDB db) {
+        CloudService mysql = new CloudService();
+        mysql.setType(SERVICE_TYPE);
+        mysql.setVendor(SERVICE_VENDOR);
+        mysql.setTier(SERVICE_TIER);
+        mysql.setVersion(SERVICE_VERSION);
+        mysql.setName(db.getDbName());
+        return mysql;
+    }
+
+    public String undeploy(DeploymentInfo deploymentInfo) {
+		CloudFoundryClient client = getClient(deploymentInfo);
+		log.info("Deleting application "+deploymentInfo.getApplicationName());
 		Timer timer = new Timer();
 		timer.start();
-		client.deleteApplication(appName);
-		log.info("Application "+appName+" deleted successfully in "+timer.stop()+"ms");
+		client.deleteApplication(deploymentInfo.getApplicationName());
+		log.info("Application "+deploymentInfo.getApplicationName()+" deleted successfully in "+timer.stop()+"ms");
 		return "SUCCESS";
 	}
 
-	public String redeploy(String contextRoot, Map<String, String> configuredProperties) {
-		CloudFoundryClient client = getClient(configuredProperties);
-		doRestart(prepareAppName(contextRoot), client);
+	public String redeploy(DeploymentInfo deploymentInfo) {
+		CloudFoundryClient client = getClient(deploymentInfo);
+		doRestart(deploymentInfo, client);
 		return "SUCCESS";
 	}
 
-	public String start(String contextRoot, Map<String, String> configuredProperties) {
-		CloudFoundryClient client = getClient(configuredProperties);
-		doStart(prepareAppName(contextRoot), client);
+	public String start(DeploymentInfo deploymentInfo) {
+		CloudFoundryClient client = getClient(deploymentInfo);
+		doStart(deploymentInfo, client);
 		return "SUCCESS";
 	}
 
-	public String stop(String contextRoot, Map<String, String> configuredProperties) {
-		CloudFoundryClient client = getClient(configuredProperties);
-		String appName = prepareAppName(contextRoot);
-		log.info("Stopping application "+appName);
+	public String stop(DeploymentInfo deploymentInfo) {
+		CloudFoundryClient client = getClient(deploymentInfo);
+		log.info("Stopping application "+deploymentInfo.getApplicationName());
 		Timer timer = new Timer();
 		timer.start();
-		client.stopApplication(appName);
-		log.info("Application "+appName+" stopped successfully in "+timer.stop()+"ms");
+		client.stopApplication(deploymentInfo.getApplicationName());
+		log.info("Application "+deploymentInfo.getApplicationName()+" stopped successfully in "+timer.stop()+"ms");
 		return "SUCCESS";
 	}
 
-	public List<AppInfo> listDeploymentNames(Map<String, String> configuredProperties) {
-		CloudFoundryClient client = getClient(configuredProperties);
+	public List<AppInfo> listDeploymentNames(DeploymentInfo deploymentInfo) {
+		CloudFoundryClient client = getClient(deploymentInfo);
 		List<AppInfo> infoList = new ArrayList<AppInfo>();
 		List<CloudApplication> cloudApps = client.getApplications();
 		for(CloudApplication app : cloudApps) {
@@ -136,51 +181,38 @@ public class VmcDeploymentTarget implements DeploymentTarget {
 		return CONFIGURABLE_PROPERTIES;
 	}
 	
-	private void doRestart(String appName, CloudFoundryClient client) {
-		log.info("Restarting application "+appName);
+	private void doRestart(DeploymentInfo deploymentInfo, CloudFoundryClient client) {
+		log.info("Restarting application "+deploymentInfo.getApplicationName());
 		Timer timer = new Timer();
 		timer.start();
-		client.restartApplication(appName);
-		log.info("Application "+appName+" restarted successfully in "+timer.stop()+"ms");
+		client.restartApplication(deploymentInfo.getApplicationName());
+		log.info("Application "+deploymentInfo.getApplicationName()+" restarted successfully in "+timer.stop()+"ms");
 	}
 	
-	private void doStart(String appName, CloudFoundryClient client) {
-		log.info("Starting application "+appName);
+	private void doStart(DeploymentInfo deploymentInfo, CloudFoundryClient client) {
+		log.info("Starting application "+deploymentInfo.getApplicationName());
 		Timer timer = new Timer();
 		timer.start();
-		client.startApplication(appName);
-		log.info("Application "+appName+" started successfully in "+timer.stop()+"ms");
+		client.startApplication(deploymentInfo.getApplicationName());
+		log.info("Application "+deploymentInfo.getApplicationName()+" started successfully in "+timer.stop()+"ms");
 	}
 	
-	private CloudFoundryClient getClient(Map<String, String> configuredProperties) {
-		Assert.hasText(configuredProperties.get(VMC_USERNAME_PROPERTY));
-		Assert.hasText(configuredProperties.get(VMC_PASSWORD_PROPERTY));
+	private CloudFoundryClient getClient(DeploymentInfo deploymentInfo) {
+		Assert.hasText(deploymentInfo.getPassword());
 		
-		String userName = configuredProperties.get(VMC_USERNAME_PROPERTY);
-		String password = configuredProperties.get(VMC_PASSWORD_PROPERTY);
-		String url = configuredProperties.get(VMC_URL_PROPERTY);
+		String token = deploymentInfo.getPassword();
+		String url = deploymentInfo.getTarget();
 		
 		if (!hasText(url)){
 			url = DEFAULT_URL;
 		}
 		
 		try {
-			if (RuntimeAccess.getInstance().getSession().getAttribute(TOKEN_ATTR) != null) {
-				String token = RuntimeAccess.getInstance().getSession().getAttribute(TOKEN_ATTR).toString();
-				return new CloudFoundryClient(token, url);
-			} else {
-				CloudFoundryClient client = new CloudFoundryClient(userName, password, url);
-				String token = client.login();
-				RuntimeAccess.getInstance().getSession().setAttribute(TOKEN_ATTR, token);
-				return client;
-			}
+			CloudFoundryClient client = new CloudFoundryClient(token, url);
+			return client;
 		} catch (MalformedURLException ex) {
 			throw new WMRuntimeException("CloudFoundry target URL is invalid", ex);
 		}
-	}
-	
-	private String prepareAppName(String contextRoot) {
-		return contextRoot.replaceFirst("/", "");
 	}
 	
 	private void validateWar(File war) {

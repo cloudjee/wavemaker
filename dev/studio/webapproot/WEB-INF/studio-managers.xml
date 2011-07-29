@@ -93,11 +93,6 @@ Server-side manager bean definitions.  These are only to be used at runtime.
             class="com.wavemaker.tools.deployment.cloudfoundry.VmcDeploymentTarget"
             scope="singleton"
             lazy-init="true"/>
-	
-	<bean id="websphereDeploymentTarget"
-			class="com.wavemaker.tools.deployment.websphere.WebSphereDeploymentTarget"
-			scope="singleton"
-			lazy-init="true"/>
 
     <bean id="deploymentTargetManager"
             class="com.wavemaker.tools.deployment.DeploymentTargetManager"
@@ -105,89 +100,11 @@ Server-side manager bean definitions.  These are only to be used at runtime.
             lazy-init="true">
         <property name="deploymentTargets">
             <map>
-                <entry key="tomcat" value-ref="tomcatDeploymentTarget"/>
-                <entry key="cloudfoundry" value-ref="cloudFoundryDeploymentTarget"/>
-                <entry key="websphere" value-ref="websphereDeploymentTarget"/>
+                <entry key="TOMCAT" value-ref="tomcatDeploymentTarget"/>
+                <entry key="CLOUD_FOUNDRY" value-ref="cloudFoundryDeploymentTarget"/>
             </map>
         </property>
     </bean>
-
-	<!--  <bean id="amazonEC2ServerMgr"
-            class="com.wavemaker.tools.cloudmgr.amazon.AmazonEC2ServerMgr"
-            scope="singleton"
-            lazy-init="true"/>
-
-	<bean id="eucalyptusEC2ServerMgr"
-            class="com.wavemaker.tools.cloudmgr.amazon.AmazonEC2ServerMgr"
-            scope="singleton"
-            lazy-init="true"/>
-	
-	<bean id="opSourceServerMgr"
-            class="com.wavemaker.tools.cloudmgr.opsource.OpSourceServerMgr"
-            scope="singleton"
-            lazy-init="true"/>
-	
-	<bean id="rackSpaceServerMgr"
-            class="com.wavemaker.tools.cloudmgr.rackspace.RackSpaceServerMgr"
-            scope="singleton"
-            lazy-init="true"/>
-
-    <bean id="cloudServerMgrBeans"
-            class="com.wavemaker.tools.cloudmgr.CloudServerMgrBeans"
-            scope="singleton"
-            lazy-init="true">
-        <property name="cloudServerMgrs">
-            <map>
-                <entry key="amazon">
-                    <ref bean="amazonEC2ServerMgr"/>
-                </entry>
-				<entry key="eucalyptus">
-                    <ref bean="eucalyptusEC2ServerMgr"/>
-                </entry>
-                <entry key="opsource">
-					<ref bean="opSourceServerMgr"/>    
-                </entry>
-
-				<entry key="rackspace">
-					<ref bean="rackSpaceServerMgr"/>	    
-                </entry>
-            </map>
-        </property>
-    </bean>
-
-	<bean id="amazonS3StorageMgr"
-            class="com.wavemaker.tools.cloudmgr.amazon.AmazonS3StorageMgr"
-            scope="singleton"
-            lazy-init="true"/>
-
-	<bean id="eucalyptusS3StorageMgr"
-            class="com.wavemaker.tools.cloudmgr.amazon.AmazonS3StorageMgr"
-            scope="singleton"
-            lazy-init="true"/>
-	
-	<bean id="rackSpaceStorageMgr"
-            class="com.wavemaker.tools.cloudmgr.rackspace.RackSpaceStorageMgr"
-            scope="singleton"
-            lazy-init="true"/>
-
-    <bean id="cloudStorageMgrBeans"
-            class="com.wavemaker.tools.cloudmgr.CloudStorageMgrBeans"
-            scope="singleton"
-            lazy-init="true">
-        <property name="cloudStorageMgrs">
-            <map>
-                <entry key="amazon">
-                    <ref bean="amazonS3StorageMgr"/>
-                </entry>
-				<entry key="eucalyptus">
-                    <ref bean="eucalyptusS3StorageMgr"/>
-                </entry>
-				<entry key="rackspace">
-					<ref bean="rackSpaceStorageMgr"/>	    
-                </entry>
-            </map>
-        </property>
-    </bean>-->
 
     <bean id="designServiceManager"
             class="com.wavemaker.tools.service.DesignServiceManager"
