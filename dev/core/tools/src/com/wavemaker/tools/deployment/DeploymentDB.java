@@ -40,8 +40,6 @@ public class DeploymentDB {
 
     private String jndiName;
 
-    private String serviceName;
-
     private String connectionUrl;
 
     public String getDataModelId() {
@@ -84,14 +82,6 @@ public class DeploymentDB {
         this.jndiName = jndiName;
     }
 
-    public String getServiceName() {
-        return serviceName;
-    }
-
-    public void setServiceName(String serviceName) {
-        this.serviceName = serviceName;
-    }
-
     public String getConnectionUrl() {
         return connectionUrl;
     }
@@ -99,16 +89,19 @@ public class DeploymentDB {
     public void setConnectionUrl(String connectionUrl) {
         this.connectionUrl = connectionUrl;
     }
-    
+
     public Map<String, String> asProperties() {
         String prefix = this.dataModelId;
         Map<String, String> props = new HashMap<String, String>();
         if (StringUtils.hasText(jndiName)) {
-            props.put(prefix+ProjectConstants.PROP_SEP+DataModelDeploymentConfiguration.JNDI_NAME_PROPERTY, jndiName);
+            props.put(prefix + ProjectConstants.PROP_SEP + DataModelDeploymentConfiguration.JNDI_NAME_PROPERTY, jndiName);
         } else {
-            if (StringUtils.hasText(username)) props.put(prefix+DataServiceConstants.DB_USERNAME, username);
-            if (StringUtils.hasText(password)) props.put(prefix+DataServiceConstants.DB_PASS, password);
-            if (StringUtils.hasText(connectionUrl)) props.put(prefix+DataServiceConstants.DB_URL, connectionUrl);
+            if (StringUtils.hasText(username))
+                props.put(prefix + DataServiceConstants.DB_USERNAME, username);
+            if (StringUtils.hasText(password))
+                props.put(prefix + DataServiceConstants.DB_PASS, password);
+            if (StringUtils.hasText(connectionUrl))
+                props.put(prefix + DataServiceConstants.DB_URL, connectionUrl);
         }
         return props;
     }
@@ -122,7 +115,6 @@ public class DeploymentDB {
         result = prime * result + ((dbName == null) ? 0 : dbName.hashCode());
         result = prime * result + ((jndiName == null) ? 0 : jndiName.hashCode());
         result = prime * result + ((password == null) ? 0 : password.hashCode());
-        result = prime * result + ((serviceName == null) ? 0 : serviceName.hashCode());
         result = prime * result + ((username == null) ? 0 : username.hashCode());
         return result;
     }
@@ -161,11 +153,6 @@ public class DeploymentDB {
                 return false;
         } else if (!password.equals(other.password))
             return false;
-        if (serviceName == null) {
-            if (other.serviceName != null)
-                return false;
-        } else if (!serviceName.equals(other.serviceName))
-            return false;
         if (username == null) {
             if (other.username != null)
                 return false;
@@ -173,4 +160,5 @@ public class DeploymentDB {
             return false;
         return true;
     }
+
 }

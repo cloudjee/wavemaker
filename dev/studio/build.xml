@@ -159,6 +159,8 @@
         invocations of javac/servicedefc -->
         <buildservice servicename="CloudDB" 
                       serviceclass="com.wavemaker.studio.clouddb.CloudDB"/>
+    	<buildservice servicename="cloudFoundryService" 
+    	                      serviceclass="com.wavemaker.studio.CloudFoundryService"/>
     	<buildservice servicename="cloudServerService" 
                       serviceclass="com.wavemaker.studio.CloudServerService"/>
 	   	<buildservice servicename="cloudStorageService" 

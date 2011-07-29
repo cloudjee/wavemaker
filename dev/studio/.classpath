@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry excluding="**/.svn/**" kind="src" path="services/dataService/src"/>
+	<classpathentry kind="src" path="services/cloudFoundryService/src"/>
 	<classpathentry excluding="**/.svn/**" kind="src" path="services/waveMakerService/src"/>
 	<classpathentry excluding="**/.svn/**" kind="src" path="services/securityServiceJOSSO/src"/>
 	<classpathentry excluding="**/.svn/**" kind="src" path="services/UserService/src"/>

@@ -33,6 +33,8 @@ public class DeploymentInfo {
 
     private String password;
 
+    private String token;
+
     private DeploymentType deploymentType;
 
     private List<DeploymentDB> databases = new ArrayList<DeploymentDB>();
@@ -77,6 +79,14 @@ public class DeploymentInfo {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public DeploymentType getDeploymentType() {
@@ -145,8 +155,11 @@ public class DeploymentInfo {
         result = prime * result + ((deploymentType == null) ? 0 : deploymentType.hashCode());
         result = prime * result + ((host == null) ? 0 : host.hashCode());
         result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + ((password == null) ? 0 : password.hashCode());
         result = prime * result + port;
         result = prime * result + ((target == null) ? 0 : target.hashCode());
+        result = prime * result + ((token == null) ? 0 : token.hashCode());
+        result = prime * result + ((username == null) ? 0 : username.hashCode());
         return result;
     }
 
@@ -164,10 +177,7 @@ public class DeploymentInfo {
                 return false;
         } else if (!applicationName.equals(other.applicationName))
             return false;
-        if (archiveType == null) {
-            if (other.archiveType != null)
-                return false;
-        } else if (!archiveType.equals(other.archiveType))
+        if (archiveType != other.archiveType)
             return false;
         if (databases == null) {
             if (other.databases != null)
@@ -186,6 +196,11 @@ public class DeploymentInfo {
                 return false;
         } else if (!name.equals(other.name))
             return false;
+        if (password == null) {
+            if (other.password != null)
+                return false;
+        } else if (!password.equals(other.password))
+            return false;
         if (port != other.port)
             return false;
         if (target == null) {
@@ -193,6 +208,17 @@ public class DeploymentInfo {
                 return false;
         } else if (!target.equals(other.target))
             return false;
+        if (token == null) {
+            if (other.token != null)
+                return false;
+        } else if (!token.equals(other.token))
+            return false;
+        if (username == null) {
+            if (other.username != null)
+                return false;
+        } else if (!username.equals(other.username))
+            return false;
         return true;
     }
+
 }

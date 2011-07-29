@@ -227,7 +227,8 @@ public class TestServiceDeploymentManager {
         DeploymentInfo deployment2 = new DeploymentInfo();
         deployment2.setApplicationName("stubby1");
         deployment2.setUsername("joe@vmware.com");
-        deployment2.setPassword("cfLoginToken");
+        deployment2.setPassword("foobar");
+        deployment2.setToken("cflogintoken");
         deployment2.setDeploymentType(DeploymentType.CLOUD_FOUNDRY);
         deployment2.setName("Stubby 1 CloudFoundry Deployment");
         deployment2.setTarget("api.cloudfoundry.com");
@@ -236,7 +237,6 @@ public class TestServiceDeploymentManager {
         DeploymentDB db2 = new DeploymentDB();
         db2.setDataModelId("foo");
         db2.setDbName("foo");
-        db2.setServiceName("mysql-4b710");
         dbs2.add(db2);
         deployment2.setDatabases(dbs2);
         

@@ -31,6 +31,10 @@ import com.wavemaker.tools.deployment.DeploymentTarget;
 
 public class VmcDeploymentTarget implements DeploymentTarget {
 
+    public static final String SUCCESS_RESULT = "SUCCESS";
+    
+    public static final String TOKEN_EXPIRED_RESULT = "ERROR: CloudFoundry login token expired";
+    
 	public static final String VMC_USERNAME_PROPERTY = "username";
 	
 	public static final String VMC_PASSWORD_PROPERTY = "password";
@@ -75,7 +79,13 @@ public class VmcDeploymentTarget implements DeploymentTarget {
 		}
 		uris.add(url.replace("api", deploymentInfo.getApplicationName()));
 		
-		client.createApplication(deploymentInfo.getApplicationName(), CloudApplication.SPRING, client.getDefaultApplicationMemory(CloudApplication.SPRING), uris, null, true);
+		try {
+		    client.createApplication(deploymentInfo.getApplicationName(), CloudApplication.SPRING, client.getDefaultApplicationMemory(CloudApplication.SPRING), uris, null, true);
+		} catch (CloudFoundryException ex) {
+		    if (HttpStatus.FORBIDDEN == ex.getStatusCode()) {
+		        return TOKEN_EXPIRED_RESULT;
+		    }
+		}
 		
 		setupServices(client, deploymentInfo);
 		
@@ -94,7 +104,7 @@ public class VmcDeploymentTarget implements DeploymentTarget {
 		} else {
 			doStart(deploymentInfo, client);
 		}
-		return "SUCCESS";
+		return SUCCESS_RESULT;
 	}
 
 	/**
@@ -146,19 +156,19 @@ public class VmcDeploymentTarget implements DeploymentTarget {
 		timer.start();
 		client.deleteApplication(deploymentInfo.getApplicationName());
 		log.info("Application "+deploymentInfo.getApplicationName()+" deleted successfully in "+timer.stop()+"ms");
-		return "SUCCESS";
+		return SUCCESS_RESULT;
 	}
 
 	public String redeploy(DeploymentInfo deploymentInfo) {
 		CloudFoundryClient client = getClient(deploymentInfo);
 		doRestart(deploymentInfo, client);
-		return "SUCCESS";
+		return SUCCESS_RESULT;
 	}
 
 	public String start(DeploymentInfo deploymentInfo) {
 		CloudFoundryClient client = getClient(deploymentInfo);
 		doStart(deploymentInfo, client);
-		return "SUCCESS";
+		return SUCCESS_RESULT;
 	}
 
 	public String stop(DeploymentInfo deploymentInfo) {
@@ -168,7 +178,7 @@ public class VmcDeploymentTarget implements DeploymentTarget {
 		timer.start();
 		client.stopApplication(deploymentInfo.getApplicationName());
 		log.info("Application "+deploymentInfo.getApplicationName()+" stopped successfully in "+timer.stop()+"ms");
-		return "SUCCESS";
+		return SUCCESS_RESULT;
 	}
 
 	public List<AppInfo> listDeploymentNames(DeploymentInfo deploymentInfo) {
@@ -203,9 +213,7 @@ public class VmcDeploymentTarget implements DeploymentTarget {
 	}
 	
 	private CloudFoundryClient getClient(DeploymentInfo deploymentInfo) {
-		Assert.hasText(deploymentInfo.getPassword());
-		
-		String token = deploymentInfo.getPassword();
+		Assert.hasText(deploymentInfo.getToken(), "CloudFoundry login token not supplied.");
 		String url = deploymentInfo.getTarget();
 		
 		if (!hasText(url)){
@@ -213,7 +221,7 @@ public class VmcDeploymentTarget implements DeploymentTarget {
 		}
 		
 		try {
-			CloudFoundryClient client = new CloudFoundryClient(token, url);
+			CloudFoundryClient client = new CloudFoundryClient(deploymentInfo.getToken(), url);
 			return client;
 		} catch (MalformedURLException ex) {
 			throw new WMRuntimeException("CloudFoundry target URL is invalid", ex);
