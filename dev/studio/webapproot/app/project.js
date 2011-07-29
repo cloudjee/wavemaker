@@ -1135,11 +1135,14 @@ Studio.extend({
 	            while(deployMenu.children.length > 3) deployMenu.children.shift();
 	            dojo.forEach(this._deploymentData, dojo.hitch(this, function(deployment,i) {
 			deployMenu.children.unshift({label: this.getDictionaryItem("MENU_REDEPLOY", {deploymentName: deployment.name}),
-						     onClick: function() {
-							 this.deploymentDialog.show();
-							 this.deploymentDialog.page.deploymentList.selectByIndex(i);
-							 this.deploymentDialog.page.deploy();
-						     }
+						     onClick: dojo.hitch(this, function() {
+							 if (!this.deploymentDialog.page) {
+							     this.deploymentDialog.setPage("DeploymentDialog");
+							 }
+							 this.deploymentDialog.page.initDeploymentListVar();
+							 this.deploymentDialog.page.deploymentList.eventSelect(this.deploymentDialog.page.deploymentList.getItem(i));
+							 this.deploymentDialog.page.deploy(false);
+						     })
 						    });
 		    }));
 		    this.navigationMenu.renderDojoObj();
