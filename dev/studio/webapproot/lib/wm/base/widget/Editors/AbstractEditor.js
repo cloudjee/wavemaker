@@ -597,6 +597,11 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 			if (this._isValid === undefined)
 				this._isValid = this.editor.isValid();
 			return !(this.readonly || this._isValid);
+		} else if (this.required && !this.readonly) {
+		    var value = this.getDataValue();
+		    if (value === undefined || value === null || value === "") {
+			return true;
+		    }
 		}
 	},
 	_getReadonlyValue: function() {
