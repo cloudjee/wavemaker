@@ -1,4 +1,5 @@
 DeploymentDialog.widgets = {
+    cloudFoundryService: ["wm.JsonRpcService", {service: "Service", sync: true}, {}],
     deploymentListPopupMenu: ["wm.PopupMenu", {"fullStructure":[{'label':'Deploy', 'onClick':"contextDeploy",'children':[]},
 								{'label':'Delete','onClick':"contextDelete",'children':[]}
 							       ]
@@ -16,14 +17,14 @@ DeploymentDialog.widgets = {
 	}]
     }],
 
-    newDeploymentDialog: ["wm.DesignableDialog", {"buttonBarId":"buttonBar","containerWidgetId":"containerWidget2",width: "510px", "height":"280px","title":"Choose Deployment Type"}, {}, {
+    newDeploymentDialog: ["wm.DesignableDialog", {"buttonBarId":"buttonBar","containerWidgetId":"containerWidget2",width: "400px", "height":"200px","title":"Choose Deployment Type"}, {}, {
 	containerWidget2: ["wm.Container", {"_classes":{"domNode":["wmdialogcontainer","MainContent"]},"autoScroll":true,"border":"0","height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","margin":"0","padding":"0","verticalAlign":"top","width":"100%"}, {}, {
 	    iconOrMarginPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"96px"}, {}],
 	    chooseDeploymentPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","padding":"5,40,5,0","verticalAlign":"top","width":"100%"}, {}, {
 		chooseDeploymentLabel: ["wm.Label", {"align":"center","border":"0","caption":"Choose the target for this deployment","padding":"4","width":"100%"}, {}],
-		tomcatRadio: ["wm.RadioButton", {"caption":"Tomcat/TC Server","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"tc","displayValue":"","minEditorWidth":"50","radioGroup":"deploymentType","startChecked":true,"width":"100%"}, {}],
-		cloudfoundryRadio: ["wm.RadioButton", {"caption":"CloudFoundry","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"cf","displayValue":"","minEditorWidth":"50","radioGroup":"deploymentType","width":"100%"}, {}],
-		appfilesRadio: ["wm.RadioButton", {"caption":"Application Files (WAR/EAR)","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"files","displayValue":"","minEditorWidth":"50","radioGroup":"deploymentType","width":"100%"}, {}]
+		tomcatRadio: ["wm.RadioButton", {"caption":"Tomcat/TC Server","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"tc","displayValue":"","minEditorWidth":"30","radioGroup":"deploymentType","startChecked":true,"width":"100%"}, {}],
+		cloudfoundryRadio: ["wm.RadioButton", {"caption":"CloudFoundry","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"cf","displayValue":"","minEditorWidth":"30","radioGroup":"deploymentType","width":"100%"}, {}],
+		appfilesRadio: ["wm.RadioButton", {"caption":"Application Files (WAR/EAR)","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"files","displayValue":"","minEditorWidth":"30","radioGroup":"deploymentType","width":"100%"}, {}]
 	    }]
 	}],
 	buttonBar1: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
@@ -36,8 +37,8 @@ DeploymentDialog.widgets = {
 	    loginDialogIconSpacerPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"96px"}, {}],
 	    loginMainPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","margin":"5,20,5,0","verticalAlign":"top","width":"100%"}, {}, {
 		loginDialogInstructionLabel: ["wm.Label", {"align":"center","border":"0","caption":"Enter your CloudFoundry Account Info","padding":"4","width":"100%"}, {}],
-		loginDialogUserEditor: ["wm.Text", {"caption":"Account name","captionAlign":"left","displayValue":"","width":"100%"}, {}],
-		loginDialogPasswordEditor: ["wm.Text", {"caption":"Password","captionAlign":"left","displayValue":"","password":true,"width":"100%"}, {}]
+		loginDialogUserEditor: ["wm.Text", {"caption":"Account name","captionAlign":"left","displayValue":"","width":"100%"}, {onEnterKeyPress: "cfLoginOkClick"}],
+		loginDialogPasswordEditor: ["wm.Text", {"caption":"Password","captionAlign":"left","displayValue":"","password":true,"width":"100%"}, {onEnterKeyPress: "cfLoginOkClick"}]
 	    }]
 	}],
 	buttonBar2: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
