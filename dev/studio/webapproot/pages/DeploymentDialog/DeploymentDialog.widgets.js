@@ -1,5 +1,5 @@
 DeploymentDialog.widgets = {
-    cloudFoundryService: ["wm.JsonRpcService", {service: "Service", sync: true}, {}],
+    cloudFoundryService: ["wm.JsonRpcService", {service: "cloudFoundryService", sync: true}, {}],
     deploymentListPopupMenu: ["wm.PopupMenu", {"fullStructure":[{'label':'Deploy', 'onClick':"contextDeploy",'children':[]},
 								{'label':'Delete','onClick':"contextDelete",'children':[]}
 							       ]
