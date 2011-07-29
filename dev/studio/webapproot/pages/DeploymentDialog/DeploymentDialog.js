@@ -560,7 +560,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	    break;
 	case "cf":
 	    this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
-	    this.newCloudFoundryDeploy2();
+	    this.newCloudFoundryDeploy();
 	    break;
 	case "files":
 	    this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
