@@ -347,6 +347,8 @@ wm.define("wm.Container", wm.Control, {
 	getInvalid: function() {
 	    for (var i in this.widgets) {
 		var w = this.widgets[i];
+		if (this.owner && this.owner.validateVisibleOnly && !w.showing || wm.Layer && w instanceof wm.Layer && !w.isActive())
+		    continue;
 		if (w.invalid)
 		    return true;
                 else if (w.invalid === undefined && w.getInvalid && w.getInvalid())
@@ -363,6 +365,8 @@ wm.define("wm.Container", wm.Control, {
 	getInvalidWidget: function() {
 	    for (var i in this.widgets) {
 		var w = this.widgets[i];
+		if (this.owner && this.owner.validateVisibleOnly && !w.showing || wm.Layer && w instanceof wm.Layer && !w.isActive())
+		    continue;
 		if (wm.isInstanceType(w,wm.Editor) ||
 		    wm.isInstanceType(w,wm.AbstractEditor)) {
 		    if (w.getInvalid()) return w;
