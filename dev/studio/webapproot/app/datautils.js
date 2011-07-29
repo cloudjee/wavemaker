@@ -114,7 +114,11 @@ parseHSQLDBUrl = function(inConnectionUrl, inData) {
 	var c = removeConnectionUrlParams(inConnectionUrl);
 	var i = c.indexOf("file:");
 	var path = c.substring(i+5);
-	var fileName = inData.hsqldbFile;
+        if (inData && inData.hsqldbFile) {
+	    var fileName = inData.hsqldbFile;
+	} else {
+	    var fileName = inConnectionUrl.substring(6, inConnectionUrl.indexOf(";"));
+	}
 	return [HSQL_DB_TYPE, null, null, fileName, null];
 }
 
