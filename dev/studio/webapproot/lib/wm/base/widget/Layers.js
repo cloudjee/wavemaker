@@ -399,11 +399,16 @@ dojo.declare("wm.Layers", wm.Container, {
 			this.onchange(this.layerIndex);
 	},
 	_setLayerIndex: function(inIndex) {
-		this.lastLayerIndex = this.layerIndex;
-		this.layerIndex = inIndex;
-		var l = this.getLayer(inIndex);
-		if (l)
-			this.decorator.activateLayer(l);
+	    this.lastLayerIndex = this.layerIndex;
+	    this.layerIndex = inIndex;
+	    var l = this.getLayer(inIndex);
+	    if (l) {
+		this.decorator.activateLayer(l);
+		var page = this.getParentPage();
+		if (page && page.validateVisibleOnly) {
+		    this.validate();
+		}
+	    }
 	},
 	setDecoratorClass: function(inClass) {
 		this.decoratorClass = inClass;
