@@ -16,10 +16,7 @@ import org.cloudfoundry.client.lib.CloudService;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.PropertyAccessorUtils;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.style.StylerUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.context.TestExecutionListeners;
@@ -123,6 +120,12 @@ public class TestVmcDeploymentTarget {
 		app = testClient.getApplication("wmcftest");
 		assertNotNull(app);
 		assertEquals(CloudApplication.AppState.STARTED, app.getState());
+		
+		result = target.deploy(testapp, deployment1);
+        assertEquals("SUCCESS", result);
+        app = testClient.getApplication("wmcftest");
+        assertNotNull(app);
+        assertEquals(CloudApplication.AppState.STARTED, app.getState());
 		
 		result = target.redeploy(deployment1);
 		assertEquals("SUCCESS", result);

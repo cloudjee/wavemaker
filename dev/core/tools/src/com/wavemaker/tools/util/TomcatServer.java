@@ -111,6 +111,10 @@ public class TomcatServer extends Server {
         }
 
         contextRoot = checkContextRoot(contextRoot);
+        
+        if (isDeployed(contextRoot)) {
+            undeploy(contextRoot);
+        }
 
         String uri = getManagerUri() + "/deploy?" + getPathParam(contextRoot);
 
@@ -134,6 +138,20 @@ public class TomcatServer extends Server {
         } 
 
         return ObjectUtils.toString(getResponse(con), "");
+    }
+
+    /**
+     * @param contextRoot
+     * @return
+     */
+    private boolean isDeployed(String contextRoot) {
+        List<Tuple.Two<String, String>> deployments = listDeployments();
+        for (Tuple.Two<String, String> deployment : deployments) {
+            if (deployment.v1.equals(contextRoot)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public String undeploy(String contextRoot) {

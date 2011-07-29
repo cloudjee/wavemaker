@@ -21,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.common.util.Tuple;
 import com.wavemaker.tools.util.TomcatServer;
 import com.wavemaker.tools.deployment.DeploymentInfo;
@@ -76,7 +77,7 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
     }
 
     public List<AppInfo> listDeploymentNames(DeploymentInfo deploymentInfo) {
-        TomcatServer tomcat = initTomcat(null);
+        TomcatServer tomcat = initTomcat(deploymentInfo);
         List<Tuple.Two<String, String>> apps = tomcat.listDeployments();
         List<AppInfo> rtn = new ArrayList<AppInfo>(apps.size());
         for (Tuple.Two<String, String> t : apps) {
@@ -102,6 +103,10 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
     }
 
     private TomcatServer initTomcat(DeploymentInfo deploymentInfo) {
+        if(SystemUtils.isEncrypted(deploymentInfo.getPassword())) {
+            deploymentInfo.setPassword(SystemUtils.decrypt(deploymentInfo.getPassword()));
+        }
+        
         TomcatServer rtn = new TomcatServer();
         rtn.setHost(deploymentInfo.getHost());
         rtn.setPort(deploymentInfo.getPort());

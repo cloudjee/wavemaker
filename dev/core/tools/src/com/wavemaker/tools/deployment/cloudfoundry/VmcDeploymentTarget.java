@@ -22,7 +22,6 @@ import org.cloudfoundry.client.lib.UploadStatusCallback;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.client.HttpClientErrorException;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.deployment.AppInfo;
@@ -106,7 +105,13 @@ public class VmcDeploymentTarget implements DeploymentTarget {
             return;
         }
         
+        CloudApplication app = client.getApplication(deploymentInfo.getApplicationName());
+        
         for (DeploymentDB db : deploymentInfo.getDatabases()) {
+            if (app.getServices().contains(db.getDbName())) {
+                //service binding already exists
+                continue;
+            }
             try {
                 CloudService service = client.getService(db.getDbName());
                 Assert.state(SERVICE_VENDOR.equals(service.getVendor()), "There is already a service provisioned with the name '"+db.getDbName()+"' but it is not a MySQL service.");

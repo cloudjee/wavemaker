@@ -76,7 +76,7 @@ public class ServiceDeploymentManager {
         // hack: these should be managed by Spring
         serviceDeployments.add(new DataModelDeploymentConfiguration());
     }
-    
+
     public File generateWebapp(DeploymentInfo info) {
         Map<String, String> allDbProps = new HashMap<String, String>();
         for (DeploymentDB db : info.getDatabases()) {
@@ -410,12 +410,14 @@ public class ServiceDeploymentManager {
                 deploymentsResource.getFile().createNewFile();
                 return new Deployments();
             } else {
-		String s = FileCopyUtils.copyToString(new FileReader(deploymentsResource.getFile()));
-		if (s.length() == 0)
-		    s = "{}";
-                JSON result = JSONUnmarshaller.unmarshal(s);
-                Assert.isTrue(result instanceof JSONObject, deploymentsResource.getFile().getAbsolutePath() + " is in an unexpected format.");
-                return (Deployments) JSONUtils.toBean((JSONObject) result, Deployments.class);
+                String s = FileCopyUtils.copyToString(new FileReader(deploymentsResource.getFile()));
+                if (s.length() > 0) {
+                    JSON result = JSONUnmarshaller.unmarshal(s);
+                    Assert.isTrue(result instanceof JSONObject, deploymentsResource.getFile().getAbsolutePath() + " is in an unexpected format.");
+                    return (Deployments) JSONUtils.toBean((JSONObject) result, Deployments.class);
+                } else {
+                    return new Deployments();
+                }
             }
         } catch (IOException e) {
             throw new WMRuntimeException("Failed to read stored deployments configuration.");
