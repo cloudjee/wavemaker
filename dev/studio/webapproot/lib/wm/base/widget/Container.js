@@ -345,9 +345,10 @@ wm.define("wm.Container", wm.Control, {
 		wm.fire(this.parent, "validate");
 	},
 	getInvalid: function() {
+	    var p = this.getParentPage();
 	    for (var i in this.widgets) {
 		var w = this.widgets[i];
-		if (this.owner && this.owner.validateVisibleOnly && !w.showing || wm.Layer && w instanceof wm.Layer && !w.isActive())
+		if (p && p.validateVisibleOnly && (!w.showing || wm.Layer && w instanceof wm.Layer && !w.isActive()))
 		    continue;
 		if (w.invalid)
 		    return true;
@@ -363,9 +364,10 @@ wm.define("wm.Container", wm.Control, {
 	    return true;
         },
 	getInvalidWidget: function() {
+	    var p = this.getParentPage();
 	    for (var i in this.widgets) {
 		var w = this.widgets[i];
-		if (this.owner && this.owner.validateVisibleOnly && !w.showing || wm.Layer && w instanceof wm.Layer && !w.isActive())
+		if (p && p.validateVisibleOnly && (!w.showing || wm.Layer && w instanceof wm.Layer && !w.isActive()))
 		    continue;
 		if (wm.isInstanceType(w,wm.Editor) ||
 		    wm.isInstanceType(w,wm.AbstractEditor)) {
