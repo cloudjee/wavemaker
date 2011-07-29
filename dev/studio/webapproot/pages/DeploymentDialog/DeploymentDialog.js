@@ -464,6 +464,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		  w.destroy();
 	      });
 	      this.defaultLayer.activate();
+	      this._currentDeploymentIndex = -1;
+	      studio.updateDeploymentsMenu();
 	  }));
       } catch(e) {
           console.error('ERROR IN deleteButtonClick: ' + e); 
@@ -479,11 +481,15 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	      dojo.forEach(this.currentDatabaseBoxes, function(w) {
 		  w.destroy();
 	      });
+		this._currentDeploymentIndex = -1;
 	    } else if (selectedIndex > this._contextMenuIndex) {
 		this.deploymentList.selectByIndex(selectedIndex-1);
+		this._currentDeploymentIndex = selectedIndex-1;
 	    } else {
 		this.deploymentList.selectByIndex(selectedIndex);
+		this._currentDeploymentIndex = selectedIndex;
 	    }
+	    studio.updateDeploymentsMenu();
 	}));
     },
   addButtonClick: function(inSender) {
