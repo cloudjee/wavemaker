@@ -28,6 +28,7 @@ import com.wavemaker.runtime.server.ParamName;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.deployment.DeploymentTargetManager;
+import com.wavemaker.tools.deployment.DeploymentType;
 import com.wavemaker.tools.deployment.ServiceDeploymentManager;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.ProjectManager;
@@ -193,6 +194,9 @@ public class DeploymentService {
         File f = serviceDeploymentManager.generateWebapp(deploymentInfo);
         if (!f.exists()) {
             throw new AssertionError("Application archive file doesn't exist at " + f.getAbsolutePath());
+        }
+        if (deploymentInfo.getDeploymentType() == DeploymentType.FILE) {
+            return "SUCCESS";
         }
         return deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).deploy(f, deploymentInfo);
     }
