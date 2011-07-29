@@ -1139,9 +1139,7 @@ Studio.extend({
 							 if (!this.deploymentDialog.page) {
 							     this.deploymentDialog.setPage("DeploymentDialog");
 							 }
-							 this.deploymentDialog.page.initDeploymentListVar();
-							 this.deploymentDialog.page.deploymentList.eventSelect(this.deploymentDialog.page.deploymentList.getItem(i));
-							 this.deploymentDialog.page.deploy(false);
+							 this.deploymentDialog.page.deploy(deployment);
 						     })
 						    });
 		    }));

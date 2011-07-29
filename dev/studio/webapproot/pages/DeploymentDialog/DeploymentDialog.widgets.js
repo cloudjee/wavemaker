@@ -1,4 +1,8 @@
 DeploymentDialog.widgets = {
+    deploymentListPopupMenu: ["wm.PopupMenu", {"fullStructure":[{'label':'Deploy', 'onClick':"contextDeploy",'children':[]},
+								{'label':'Delete','onClick':"contextDelete",'children':[]}
+							       ]
+					      }],
     deploymentListVar: ["wm.Variable", {type: "EntryData", isList:true}],
     confirmSaveDialog: ["wm.DesignableDialog", {"border":"1","height":"110px","title":"Save Changes","width":"400px","containerWidgetId":"containerWidget4","buttonBarId":"buttonBar4"}, {}, {
 	containerWidget4: ["wm.Container", {"_classes":{"domNode":["wmdialogcontainer","MainContent"]},"autoScroll":true,"border":"0","height":"100%","horizontalAlign":"left","margin":"0","verticalAlign":"top","width":"100%"}, {}, {
@@ -17,14 +21,9 @@ DeploymentDialog.widgets = {
 	    iconOrMarginPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"96px"}, {}],
 	    chooseDeploymentPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","padding":"5,40,5,0","verticalAlign":"top","width":"100%"}, {}, {
 		chooseDeploymentLabel: ["wm.Label", {"align":"center","border":"0","caption":"Choose the target for this deployment","padding":"4","width":"100%"}, {}],
-		tomcatRadio: ["wm.RadioButton", {"caption":"Tomcat/TC Server","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"tc","displayValue":"","minEditorWidth":"50","radioGroup":"deploymentType","startChecked":true,"width":"100%"}, {onchange: "newDeploymentRadioChange"}],
-		cloudfoundryRadio: ["wm.RadioButton", {"caption":"CloudFoundry","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"cf","displayValue":"","minEditorWidth":"50","radioGroup":"deploymentType","width":"100%"}, {onchange: "newDeploymentRadioChange"}],
-		panel2: ["wm.Panel", {"border":"0","disabled":true,"height":"81px","horizontalAlign":"left","verticalAlign":"top","width":"100%", margin: "0,0,0,80"}, {}, {
-		    cloudFoundaryLoginLabel: ["wm.Label", {"border":"0","caption":"Enter your CloudFoundry Account Info","padding":"4","width":"100%"}, {}],
-		    cfUserEditor: ["wm.Text", {captionAlign: "left", "caption":"Account name","captionSize":"120px","disabled":true,"displayValue":"","width":"100%"}, {}],
-		    cfPasswordEditor: ["wm.Text", {captionAlign: "left", "caption":"Password","captionSize":"120px","disabled":true,"displayValue":"","password":true,"width":"100%"}, {}]
-		}],
-		appfilesRadio: ["wm.RadioButton", {"caption":"Application Files (WAR/EAR)","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"files","displayValue":"","minEditorWidth":"50","radioGroup":"deploymentType","width":"100%"}, {onchange: "newDeploymentRadioChange"}]
+		tomcatRadio: ["wm.RadioButton", {"caption":"Tomcat/TC Server","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"tc","displayValue":"","minEditorWidth":"50","radioGroup":"deploymentType","startChecked":true,"width":"100%"}, {}],
+		cloudfoundryRadio: ["wm.RadioButton", {"caption":"CloudFoundry","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"cf","displayValue":"","minEditorWidth":"50","radioGroup":"deploymentType","width":"100%"}, {}],
+		appfilesRadio: ["wm.RadioButton", {"caption":"Application Files (WAR/EAR)","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"files","displayValue":"","minEditorWidth":"50","radioGroup":"deploymentType","width":"100%"}, {}]
 	    }]
 	}],
 	buttonBar1: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
@@ -54,7 +53,7 @@ DeploymentDialog.widgets = {
 		    deleteButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Delete","height":"100%","margin":"1","width":"100%"}, {"onclick":"deleteButtonClick"}],
 		    copyButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Copy","height":"100%","margin":"1","width":"45px"}, {"onclick":"copyButtonClick"}]
 		}],
-		deploymentList: ["wm.List", {dataFields: "name", headerVisible: false, innerBorder:"1",borderColor:"black","height":"100%","width":"100%"}, {onselect: "deploymentListSelect"}, {
+		deploymentList: ["wm.List", {dataFields: "name", headerVisible: false, innerBorder:"1",borderColor:"black","height":"100%","width":"100%"}, {onselect: "deploymentListSelect", onRightClick: "deploymentListPopupMenuOpen"}, {
 		    binding: ["wm.Binding", {}, {}, {
 			wire: ["wm.Wire", {"source":"deploymentListVar","targetProperty":"dataSet"}, {}]
 		    }]
@@ -66,7 +65,7 @@ DeploymentDialog.widgets = {
 		    defaultHtml: ["wm.Html", {width: "100%", height: "100%", html: "<p>No deployment targets are selected for this project.</p><p>Click the New button to create a new deployment target</p><p>If there are deployment targets listed to the left, select one to begin editing</p>"}]
 		}],
 		editLayer: ["wm.Layer", {}, {}, {
-		    editPanel: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]},"autoScroll":true,"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
+		    editPanel: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]},"autoScroll":true,"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", borderColor: "#525A6A", border: "2,0,2,0"}, {}, {
 			settingsPanel: ["wm.FancyPanel", {"borderColor":"black","fitToContentHeight":true,"height":"166px","innerBorder":"1","labelHeight":"24","margin":"10,10,10,0","title":"Settings"}, {}, {
 			    settingLayers: ["wm.Layers", {margin: "5,50,5,50", height: "100%", width: "100%"}, {}, {
 				tomcatLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
@@ -111,7 +110,7 @@ DeploymentDialog.widgets = {
 	    }]
 	}],
 	buttonBar: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-	    buttonBarMarginSpacer: ["wm.Spacer", {"height":"48px","width":"196px"}, {}],
+	    buttonBarMarginSpacer: ["wm.Spacer", {"height":"48px","width":"184px"}, {}],
 	    deployButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Deploy Now","margin":"4","width":"120px"}, {"onclick":"deployButtonClick"}, {
 		binding: ["wm.Binding", {}, {}, {
 		    wire: ["wm.Wire", {"source":"editPanel.invalid","targetProperty":"disabled"}, {}]

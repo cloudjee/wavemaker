@@ -265,53 +265,63 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	studio.endWait();
 	app.toastError(this.getDictionaryItem("TOAST_SAVE_FAILED", {error: inError.message}));
     },
+    deploymentListPopupMenuOpen: function(inSender,inEvent) {
+	var target = inEvent.target;
+	while (target && target.tagName != "BODY" && !dojo.hasClass(target,"wmlist-item"))
+	    target = target.parentNode;
+	if (!target) return;
+	var index = dojo.indexOf(target.parentNode.childNodes, target);
+	if (index != -1) {
+	    this._contextMenuIndex = index;
+	    this.deploymentListPopupMenu.update(inEvent);
+	}
+    }, 
+    contextDeploy: function() {
+	this.deploy(this.deploymentListVar.getItem(this._contextMenuIndex).getValue("dataValue"));
+    },
   deployButtonClick: function(inSender) {
-      this.deploy(true);
+      var data = this.generateCurrentDeploymentDataStruct();
+      studio.beginWait(this.getDictionaryItem("WAIT_DEPLOY", {deploymentName: this.deploymentList.selectedItem.getValue("name")}));
+      studio.deploymentService.requestAsync("save", [data], 
+					    dojo.hitch(this, function(inResult) {
+						this.saveSuccess(inResult,true);
+						var selectedIndex = this.deploymentList.getSelectedIndex();
+ 						var dataAfterSave = this.deploymentListVar.getItem(selectedIndex).getValue("dataValue");
+						this.deploy(dataAfterSave);
+					    }),
+					    dojo.hitch(this, "saveFailed"));
   },
-    deploy: function(inSave) {
+  deploy: function(inData) {
       try {
-	  if (this.deploymentList.selectedItem.getValue("dataValue").deploymentType == this.FILE_DEPLOY) {
-	      this.deploy2(inSave);
+	  if (inData.deploymentType == this.FILE_DEPLOY) {
+	      this.deploy2(inData);
 	  } else {
-	      app.confirm(this.getDictionaryItem("CONFIRM_DEPLOY_HEADER") + this.generateDeploymentHTMLSynopsis(), false, dojo.hitch(this, function() {
-		  this.deploy2(inSave);
+	      app.confirm(this.getDictionaryItem("CONFIRM_DEPLOY_HEADER") + this.generateDeploymentHTMLSynopsis(inData), false, dojo.hitch(this, function() {
+		  this.deploy2(inData);
 	      }));
+	      app.confirmDialog.setWidth("450px");
 	  }
-	  app.confirmDialog.setWidth("450px");
       } catch(e) {
           console.error('ERROR IN deployButtonClick: ' + e); 
       } 
   },
-    deploy2: function(inSave) {
-	if (inSave) {
-	    var data = this.generateCurrentDeploymentDataStruct();
-	    studio.beginWait(this.getDictionaryItem("WAIT_DEPLOY", {deploymentName: this.deploymentList.selectedItem.getValue("name")}));
-	    studio.deploymentService.requestAsync("save", [data], 
-						  dojo.hitch(this, function(inResult) {
-						      this.saveSuccess(inResult,true);
-						      this.deploy2();
-						  }));
-	} else {
-	    this.deploy3();
-	}
-    },
-    deploy3: function() {
-	studio.beginWait(this.getDictionaryItem("WAIT_DEPLOY", {deploymentName: this.deploymentList.selectedItem.getValue("name")}));
-	var data = this.generateCurrentDeploymentDataStruct();
-	studio.deploymentService.requestAsync("deploy", [data],
-					      dojo.hitch(this, "deploySuccess"),
+    deploy2: function(inData) {
+	studio.beginWait(this.getDictionaryItem("WAIT_DEPLOY", {deploymentName: inData.name}));
+	studio.deploymentService.requestAsync("deploy", [inData],
+					      dojo.hitch(this, function(inResult) {
+						  this.deploySuccess(inResult,inData);
+					      }),
 					      dojo.hitch(this, "deployFailed"));
     },
-    deploySuccess: function(inResult) {
+    deploySuccess: function(inResult, inData) {
 	studio.endWait();
-	switch (this.deploymentList.selectedItem.getValue("dataValue").deploymentType) {
+	switch (inData.deploymentType) {
 	case this.TC_DEPLOY:
-	    app.alert("<p>" + this.getDictionaryItem("TOAST_DEPLOY_SUCCESS") +"</p><p><a target='_NewWindow' href='" + this.tcUrlEditor.getDataValue() + "'>" + this.tcUrlEditor.getDataValue() + "</a></p>");
-	    return;
 	case this.CF_DEPLOY:
-	    app.alert("<p>" + this.getDictionaryItem("TOAST_DEPLOY_SUCCESS") +"</p><p><a href='" + this.cfUrlEditor.getDataValue() + "'>" + this.tcUrlEditor.getDataValue() + "</a></p>");
+	    app.alert("<p>" + this.getDictionaryItem("TOAST_DEPLOY_SUCCESS") +"</p><p><a target='_NewWindow' href='" + this.getTargetUrl(inData) + "'>" + this.getTargetUrl() + "</a></p>");
 	    return;
 	case this.FILE_DEPLOY:
+	    app.toastSuccess(this.getDictionaryItem("TOAST_FILE_GENERATION_SUCCESS"));
 	    if (this.deploymentList.selectedItem.getValue("dataValue").archiveType == "WAR") {
 		studio.downloadInIFrame("services/deploymentService.download?method=downloadProjectWar");
 	    } else {
@@ -396,16 +406,37 @@ dojo.declare("DeploymentDialog", wm.Page, {
           console.error('ERROR IN copyButtonClick: ' + e); 
       } 
   },
-    generateDeploymentHTMLSynopsis: function() {
-	var i = this.deploymentList.getSelectedIndex();
-	var name = this.deploymentListVar.getItem(i).getValue("name");
-	var data = this.deploymentListVar.getItem(i).getValue("dataValue");
-	var target = data.deploymentType == this.CF_DEPLOY ? this.cfUrlEditor.getDataValue() : this.tcUrlEditor.getDataValue();
-	var type   = data.deploymentType == this.CF_DEPLOY ? "CloudFoundry" : "Tomcat";
+    getTargetUrl: function(inData) {
+	if (inData.deploymentType == this.CF_DEPLOY) {
+	    return "http://" + inData.applicationName + "." + inData.target + "/";
+	} else if (inData.deploymentType == this.TC_DEPLOY) {
+	    return "http://" + inData.host + ":" + inData.port + "/" + inData.applicationName;
+	} else {
+	    return "";
+	}
+    },
+    generateDeploymentHTMLSynopsis: function(inData) {
+	if (!inData) {
+	    var i = this.deploymentList.getSelectedIndex();
+	    var data = this.deploymentListVar.getItem(i).getValue("dataValue");
+	} else {
+	    data = inData;
+	}
+	var name = data.name;
+	var target = this.getTargetUrl(inData);
+	var type = "";
+	if (data.deploymentType == this.CF_DEPLOY) {
+	    type = "CloudFoundry";
+	} else if (data.deploymentType == this.TC_DEPLOY) {
+	    type = "Tomcat";
+	} else if (data.deploymentType == this.FILE_DEPLOY) {
+	    type = "File Generation";
+	}
 	var html = "";
 	html += "<table style='margin-left: 30px;margin-top:15px;'>";
 	html += "<tr><td style='width:100px;vertical-align:top'>" + this.getDictionaryItem("SYNOPSIS_NAME") + "</td><td>" + name + "</td></tr>";
-	html += "<tr><td>" + this.getDictionaryItem("SYNOPSIS_TARGET") + "</td><td>" + target + "</td></tr>";
+	if (target)
+	    html += "<tr><td>" + this.getDictionaryItem("SYNOPSIS_TARGET") + "</td><td>" + target + "</td></tr>";
 	html += "<tr><td>" + this.getDictionaryItem("SYNOPSIS_TYPE") + "</td><td>" + type + "</td></tr>";
 	dojo.forEach(data.databases, dojo.hitch(this, function(database,i) {
 	    var connection;
@@ -438,6 +469,23 @@ dojo.declare("DeploymentDialog", wm.Page, {
           console.error('ERROR IN deleteButtonClick: ' + e); 
       } 
   },
+    contextDelete: function() {
+	var data = this.deploymentListVar.getItem(this._contextMenuIndex).getValue("dataValue");
+	app.confirm(this.getDictionaryItem("CONFIRM_DELETE_HEADER") + this.generateDeploymentHTMLSynopsis(data), false, dojo.hitch(this, function() {
+	    var selectedIndex = this.deploymentList.getSelectedIndex();
+            this.deploymentListVar.removeItem(this._contextMenuIndex);
+	    app.toastWarning("TODO: Delete from server");
+	    if (selectedIndex == this._contextMenuIndex) {
+	      dojo.forEach(this.currentDatabaseBoxes, function(w) {
+		  w.destroy();
+	      });
+	    } else if (selectedIndex > this._contextMenuIndex) {
+		this.deploymentList.selectByIndex(selectedIndex-1);
+	    } else {
+		this.deploymentList.selectByIndex(selectedIndex);
+	    }
+	}));
+    },
   addButtonClick: function(inSender) {
       if (this.getIsDirty()) {
 /*
@@ -509,10 +557,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     onNewDeployCancel: function() {
 	this.newDeploymentDialog.hide();
     },
-    newDeploymentRadioChange: function(inSender) {
-	var groupvalue = this.tomcatRadio.getGroupValue();
-	this.panel2.setDisabled(groupvalue != "cf");
-    },
+
 
 
 
