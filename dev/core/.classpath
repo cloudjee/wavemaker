@@ -86,5 +86,6 @@
 	<classpathentry exported="true" kind="lib" path="tools/lib/jackson/jackson-core-asl-1.8.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="tools/lib/jackson/jackson-mapper-asl-1.8.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="runtime/lib/cloudfoundry-runtime-0.7.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

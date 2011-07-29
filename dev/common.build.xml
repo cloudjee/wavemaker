@@ -196,6 +196,7 @@
             <file name="${apache-collections.jar}"/>
             <file name="${apache-fileupload.jar}"/>
             <file name="${asm.jar}"/>
+            <file name="${cf-runtime.jar}"/>
             <file name="${cglib.jar}"/>
             <file name="${dom4j.jar}"/>
             <file name="${FastInfoset.jar}"/>
