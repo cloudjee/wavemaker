@@ -312,7 +312,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	    switch (inData.deploymentType) {
 	    case this.TC_DEPLOY:
 	    case this.CF_DEPLOY:
-		app.alert("<p>" + this.getDictionaryItem("TOAST_DEPLOY_SUCCESS") +"</p><p><a target='_NewWindow' href='" + this.getTargetUrl(inData) + "'>" + this.getTargetUrl(inData) + "</a></p>");
+		app.alert(this.getDictionaryItem("TOAST_DEPLOY_SUCCESS", {url: this.getTargetUrl(inData)}));
 		return;
 	    case this.FILE_DEPLOY:
 		app.toastSuccess(this.getDictionaryItem("TOAST_FILE_GENERATION_SUCCESS"));
