@@ -11,7 +11,7 @@ WAIT_SAVE: "Saving...",
 WAIT_DEPLOY: "Deploying ${deploymentName}; this may take a few minutes...",
 TOAST_SAVE_SUCCESS: "Deployment saved",
 TOAST_SAVE_FAILED: "Error saving deployment: ${error}",
-TOAST_DEPLOY_SUCCESS: "Project deployed",
+TOAST_DEPLOY_SUCCESS: "<center>Project deployed to<br/><br/><a target='_NewWindow' href='${url}'>${url}</a></center>",
 TOAST_DEPLOY_FAILED: "Error deploying: ${error}",
 TOAST_FILE_GENERATION_SUCCESS: "Your files have been generated and will not be downloaded by your browser.",
 WAIT_LOGGING_IN: "Logging in..."

@@ -394,6 +394,8 @@ dojo.declare("Studio", wm.Page, {
 	console.log(inResult);
 	this._deploymentData = inResult;
 	this.updateDeploymentsMenu();
+	if (this.deploymentDialog.page)
+	    this.deploymentDialog.page.reset();
     },
     setupDefaultContextMenu: function() {
 	var f = function(e) {

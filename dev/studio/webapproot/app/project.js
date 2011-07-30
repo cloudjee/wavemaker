@@ -1136,6 +1136,7 @@ Studio.extend({
 	            dojo.forEach(this._deploymentData, dojo.hitch(this, function(deployment,i) {
 			deployMenu.children.unshift({label: this.getDictionaryItem("MENU_REDEPLOY", {deploymentName: deployment.name}),
 						     onClick: dojo.hitch(this, function() {
+							 this.project.saveProject(true);
 							 if (!this.deploymentDialog.page) {
 							     this.deploymentDialog.setPage("DeploymentDialog");
 							 }

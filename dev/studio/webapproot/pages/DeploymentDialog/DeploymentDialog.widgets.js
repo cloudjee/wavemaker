@@ -86,11 +86,11 @@ DeploymentDialog.widgets = {
 				cloudFoundryLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
 				    cfDeploymentNameEditor: ["wm.Text", {"border":"0","caption":"Deployment name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"New CloudFoundry Deployment","width":"100%", required: true}, {onchange: "deploymentNameChange"}],
 				    cfDeploymentTypeEditor: ["wm.Text", {"border":"0","caption":"Type","captionAlign":"left","captionSize":"140px","displayValue":"CloudFoundry","readonly":true,"width":"100%"}, {}],
-				    cfHostEditor: ["wm.Text", {"border":"0","caption":"CloudFoundry target","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"api.cloudfoundry.com","width":"100%", required: true}, {}],
+				    cfHostEditor: ["wm.Text", {"border":"0","caption":"CloudFoundry target","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"https://api.cloudfoundry.com","width":"100%", required: true}, {}],
 				    cfNameEditor: ["wm.Text", {"border":"0","caption":"Application name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {}],
 				    cfUrlEditor: ["wm.Text", {"border":"0","caption":"URL","captionAlign":"left","captionSize":"140px","displayValue":"http://.cloudfoundry.com/","readonly":true,"width":"100%"}, {}, {
 					binding: ["wm.Binding", {}, {}, {
-					    wire: ["wm.Wire", {"expression":"\"http://\" + ${cfNameEditor.dataValue} + \".\" + ${cfHostEditor.dataValue}.replace(/^api\\./,\"\") + \"/\"","source":false,"targetProperty":"dataValue"}, {}]
+					    wire: ["wm.Wire", {"expression":"\"http://\" + ${cfNameEditor.dataValue} + \".\" + ${cfHostEditor.dataValue}.replace(/^https\\:\\/\\/api\\./,\"\") + \"/\"","source":false,"targetProperty":"dataValue"}, {}]
 					}]
 				    }]
 				}],

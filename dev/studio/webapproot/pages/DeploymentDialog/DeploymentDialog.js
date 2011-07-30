@@ -25,6 +25,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     CF_DEPLOY: "CLOUD_FOUNDRY",
     TC_DEPLOY: "TOMCAT",
     FILE_DEPLOY: "FILE",
+    CFTOKEN_COOKIE: "Studio.DeploymentDialog.CFTOKEN",
 
     /* Page caches and state */
     currentDatabaseBoxes: [],
@@ -85,22 +86,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	    this.deploymentListVar.addItem({name: deployment.name, dataValue: deployment});
 	}));
     },
-    loginCancelButtonClick: function(inSender) {
-      try {
-          
-          
-      } catch(e) {
-          console.error('ERROR IN loginCancelButtonClick: ' + e); 
-      } 
-  },
-  loginOKButtonClick: function(inSender) {
-      try {
-          
-          
-      } catch(e) {
-          console.error('ERROR IN loginOKButtonClick: ' + e); 
-      } 
-  },
+
   cancelButtonClick: function(inSender) {
       try {
           
@@ -297,6 +283,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	      this.deploy2(inData);
 	  } else {
 	      app.confirm(this.getDictionaryItem("CONFIRM_DEPLOY_HEADER") + this.generateDeploymentHTMLSynopsis(inData), false, dojo.hitch(this, function() {
+		  inData.token = dojo.cookie(this.CFTOKEN_COOKIE);
 		  if (!inData.token) {
 		      this.cfLoginDialog.show();
 		      this.loginDialogUserEditor.focus();
@@ -321,19 +308,27 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
     deploySuccess: function(inResult, inData) {
 	studio.endWait();
-	switch (inData.deploymentType) {
-	case this.TC_DEPLOY:
-	case this.CF_DEPLOY:
-	    app.alert("<p>" + this.getDictionaryItem("TOAST_DEPLOY_SUCCESS") +"</p><p><a target='_NewWindow' href='" + this.getTargetUrl(inData) + "'>" + this.getTargetUrl() + "</a></p>");
-	    return;
-	case this.FILE_DEPLOY:
-	    app.toastSuccess(this.getDictionaryItem("TOAST_FILE_GENERATION_SUCCESS"));
-	    if (this.deploymentList.selectedItem.getValue("dataValue").archiveType == "WAR") {
-		studio.downloadInIFrame("services/deploymentService.download?method=downloadProjectWar");
-	    } else {
-		studio.downloadInIFrame("services/deploymentService.download?method=downloadProjectEar");
+	if (inResult == "SUCCESS") {
+	    switch (inData.deploymentType) {
+	    case this.TC_DEPLOY:
+	    case this.CF_DEPLOY:
+		app.alert("<p>" + this.getDictionaryItem("TOAST_DEPLOY_SUCCESS") +"</p><p><a target='_NewWindow' href='" + this.getTargetUrl(inData) + "'>" + this.getTargetUrl(inData) + "</a></p>");
+		return;
+	    case this.FILE_DEPLOY:
+		app.toastSuccess(this.getDictionaryItem("TOAST_FILE_GENERATION_SUCCESS"));
+		if (this.deploymentList.selectedItem.getValue("dataValue").archiveType == "WAR") {
+		    studio.downloadInIFrame("services/deploymentService.download?method=downloadProjectWar");
+		} else {
+		    studio.downloadInIFrame("services/deploymentService.download?method=downloadProjectEar");
+		}
+		return;
 	    }
-	    return;
+	} else if (inResult.match(/^ERROR\:.*token expired/)){
+	    this.cfLoginDialog.show();
+	    this.loginDialogUserEditor.focus();
+	    this._deployData = inData;	    
+	} else {
+	    this.deployFailed({message: inResult});
 	}
     },
     deployFailed: function(inError) {
@@ -415,7 +410,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
   },
     getTargetUrl: function(inData) {
 	if (inData.deploymentType == this.CF_DEPLOY) {
-	    return "http://" + inData.applicationName + "." + inData.target + "/";
+	    return "http://" + inData.applicationName + "." + inData.target.replace(/^https:\/\/api\./,"") + "/";
 	} else if (inData.deploymentType == this.TC_DEPLOY) {
 	    return "http://" + inData.host + ":" + inData.port + "/" + inData.applicationName;
 	} else {
@@ -801,7 +796,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	this.owner.owner.show();
 	this.cloudFoundryLayer.activate();
 	var targetName = this.setUniqueDeploymentName("New CloudFoundry Deployment", this.cfDeploymentNameEditor, this.CF_DEPLOY);
-	this.cfHostEditor.setDataValue("api.cloudfoundry.com");
+	this.cfHostEditor.setDataValue("https://api.cloudfoundry.com");
 	this.cfNameEditor.setDataValue(studio.project.projectName);
 
 	var boxes = this.generateDataModelBoxes();
@@ -913,7 +908,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	}
     },
     openDeployment: function(data) {	     
-
+	this._openningDeployment = true;
 	    this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
 	    switch(data.deploymentType) {
 	    case this.TC_DEPLOY:
@@ -926,8 +921,10 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		this.populateAppFileDeploy(data);
 		break;
 	    }
+	this._openningDeployment = false;
     },
     deploymentNameChange: function(inSender) {
+	if (this._openningDeployment) return;
 	var value = inSender.getDisplayValue();
 	var i = this.deploymentList.getSelectedIndex();
 	this.deploymentListVar.getItem(i).setValue("name", value);
@@ -947,8 +944,9 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	    "login",
 	    [this.loginDialogUserEditor.getDataValue(), this.loginDialogPasswordEditor.getDataValue(), this._deployData.target],
 	    dojo.hitch(this, function(inData) {
+		this._deployData.token = inData;
+		dojo.cookie(this.CFTOKEN_COOKIE, inData, {expires: 1});
 		studio.endWait();
-		console.log(inData);
 		this.cfLoginDialog.hide();
 		this.deploy2(this._deployData);
 	    }),
