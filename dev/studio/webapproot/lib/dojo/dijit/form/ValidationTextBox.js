@@ -160,7 +160,9 @@ dojo.declare(
 			}else if(isEmpty){
 				message = this.getPromptMessage(isFocused); // show the prompt whenever there's no error and no text
 			}
-			this.set("message", message);
+		    /* VMware.WaveMaker added because messages were firing on hidden editors, showing messages that the user could not deal with */
+		        if (message && wm.isDomShowing(this.domNode))
+			    this.set("message", message);
 
 			return isValid;
 		},

@@ -171,6 +171,9 @@ dojo.declare("dijit.form._FormWidget", [dijit._Widget, dijit._Templated, dijit._
 		//		onChange is only called form priorityChange=true events.
 		// tags:
 		//		private
+
+	        /* VMware.WaveMaker changed because onChange was firing and causing side-effects when in fact nothing had changed */
+	        if (newValue === this._lastValueReported) return;
 		if(this._lastValueReported == undefined && (priorityChange === null || !this._onChangeActive)){
 			// this block executes not for a change, but during initialization,
 			// and is used to store away the original value (or for ToggleButton, the original checked state)
