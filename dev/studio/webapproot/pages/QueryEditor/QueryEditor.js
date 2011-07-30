@@ -186,6 +186,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		this.setDirty();
 	},
 	runQuery: function(inSender) {
+	    wm.onidle(this, function() {
 		//this.bindValue();
 
 	    // if its all white space, then no query is here
@@ -224,18 +225,36 @@ dojo.declare("QueryEditor", wm.Page, {
 		studio.dataService.requestAsync(RUN_QUERY_OP, runQueryInput, 
 			dojo.hitch(this, "_runQueryResult"), 
 			dojo.hitch(this, "_runQueryError"));
+	    });
 	},
 	_buildBindParms: function() {
 		var parms = "";
 		for (var i = 0; i <	this.queryInputsList._data.length; i++) {
-			var list = this.queryInputsList._data[i].list;
-			var val = this.queryInputsList._data[i].value;
-
-			if (val == null || val == undefined || val.length == 0) continue;
+		    var list = this.queryInputsList._data[i].list;
+		    var val = this.queryInputsList._data[i].value;
+		    var type = this.queryInputsList._data[i].type;
+		    if (val === null || val === undefined || val.length == 0) {
+			switch(type) {
+			case "Integer":
+			case "Short":
+			case "Long":
+			case "Double":
+			case "Float":
+			case "BigInteger":
+			case "BigDecimal":
+			case "Byte":
+			case "Date":
+			case "Time":
+			    val = "0";
+			    break;
+			default:
+			    val = " ";
+			}
+		    }
 			if (list) val = "[" + val + "]";
 			(i == 0) ? (parms = parms + val) : (parms = parms + ", " + val);
 		}
-		if (parms.length == 0)
+		if (i == 0)
 			return null;
 		else
 			return parms;
@@ -607,7 +626,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		this.bindNameInput.setDataValue(s.list._data[sIndex].name);
 		this.bindTypeInput.setDataValue(s.list._data[sIndex].type);
 		this.bindTypeInput.setDataValue(s.list._data[sIndex].type);
-                this.isInputListCheckBox.editor.setChecked(s.list._data[sIndex].list);
+                this.isInputListCheckBox.setChecked(s.list._data[sIndex].list);
 	        this.bindParamInput.setDataValue(s.list._data[sIndex].value);
             this._paramSelecting = false;
 	},
@@ -615,7 +634,7 @@ dojo.declare("QueryEditor", wm.Page, {
        	if (this._paramSelecting) return;
 	    var bp = {name:this.bindNameInput.getDataValue(), 
 		      type:this.bindTypeInput.getDisplayValue(), 
-		      list:this.isInputListCheckBox.editor.getChecked(),
+		      list:this.isInputListCheckBox.getChecked(),
 		      value: this.bindParamInput.getDataValue()};
         var selectedIndex = this.queryInputsList.getSelectedIndex();
 	    this.queryInputsList._data[selectedIndex] = bp;
