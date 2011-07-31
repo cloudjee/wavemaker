@@ -137,14 +137,23 @@ wm.Component.extend({
 		var propList = [];
 		for (var n in props) propList.push(n);
 		propList = propList.sort();
-		for (var i = 0; i < propList.length; i++) {
-			var n = propList[i];
-			if (this.isWriteableProp(props[n])) {
-			 if (wm.isInstanceType(src, wm.Application) && src[n] !== undefined)
-			   out[n] = src[n];
-			 else if (n in src && !(src[n] instanceof wm.Variable) && (n == "_classes" && src[n] && src[n].domNode && src[n].domNode.length > 0 || n != "_classes" && src[n] !== p[n]))
-			   out[n] = src[n];
+	        for (var i = 0; i < propList.length; i++) {
+		    var n = propList[i];		    
+		    if (this.isWriteableProp(props[n])) {
+			var value = src[n];
+			if (value instanceof Date) value = value.getTime();
+			if (wm.isInstanceType(src, wm.Application) && value !== undefined) {
+			    out[n] = value;
+			} else if (n in src && !(value instanceof wm.Variable) && (n == "_classes" && value && value.domNode && value.domNode.length > 0 || n != "_classes" && value !== p[n])) {
+			    if (value instanceof Date) {
+				try {
+				    out[n] = value.getTime();
+				} catch(e) {}
+			    } else {
+				out[n] = value;
+			    }
 			}
+		    }
 		}
 		
 		return out;
