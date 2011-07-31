@@ -73,6 +73,7 @@ dojo.declare("wm.Dijit", wm.Control, {
 	},
 	initDijit: function(inDomNode) {
 	    if (this.dijitClass) {
+		dojo.require(this.dijitClass);
 		var n = document.createElement('div');
 		inDomNode.appendChild(n);
 		var p = dojo.mixin({srcNodeRef: n}, this.getProperties());
