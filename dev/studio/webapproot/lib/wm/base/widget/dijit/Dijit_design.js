@@ -315,3 +315,10 @@ wm.Object.extendSchema(wm.DijitDesigner, {
     deployDijit: {group: "operation", order: 10},
     undeployDijit: {group: "operation", order: 20}
 });
+
+
+/* basically, I'm listing all properties of dijit._Widget as suitable for ignoring; dijit._Widget's functionality is overridden by wm.Control;
+ * also skipping any property that says its dependent on the dijit being in a specific type of container.
+ * ignore value because calling setValue is causes infinite recursion errors */
+wm.DijitDesigner.ignorelist = ["declaredClass", "baseClass", "class", "closable", "colspan", "column", "dir", "dndType", "dojoAttachEvent", "dojoAttachPoint", "dragRestriction", "iconClass", "id", "lang", "layoutAlign", "layoutPriority", "minSize", "nodesWithKeyClick", "observer", "params", "region", "selected", "showTitle", "sizeMin", "sizeShare", "slideFrom", "spanLabel", "splitter", "srcNodeRef", "style", "toggleSplitterClosedThreshold", "waiRole", "waiState", "tabIndex", "templateString", "onShow", "onHide", "onClose", "title", "tooltip", "widgetsInTemplate", "hovering", "focused","active", "containerNode","templatePath", "currentFocus"];
+
