@@ -97,6 +97,7 @@ dojo.declare("wm.InspectorBase", null, {
 		var type = this.owner.inspected.getPropertyType(inProp) || "";
 	        if (type && type.type)
 		    type = type.type.toLowerCase();
+
 	        switch (type) {
 			case "number":
 		                inValue = (inValue === "" && type.emptyOK) ? "" : Number(inValue);
@@ -272,7 +273,7 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 		this.props = this.getProps();
 	},
 	shouldShowProp: function(inName, inProp) {
-		return !inProp.ignore;
+		return !inProp.ignore && !inProp.writeonly;
 	},
 	_inspect: function() {
 		this._editors = {};
