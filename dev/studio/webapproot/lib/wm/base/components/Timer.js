@@ -50,6 +50,10 @@ dojo.declare("wm.Timer", wm.Component, {
 	    this._intervalId = 0;
 	}
     },
+    destroy: function() {
+	this.stopTimer();
+	this.inherited(arguments);
+    },
 
     // event that gets called each time the timer fires; this is what fires
     // the developer's real code.
