@@ -175,7 +175,7 @@ wm.DijitDesigner.extend({
 	var packageName = "common.packages.wmdijit." + className;
 
 	var extendSchema = ["wm.Object.extendSchema(" + fullClassName + ", {"];
-
+	extendSchema.push("\tdijitClass: {ignore: true},");
 
 	result.push("dojo.provide('" + packageName + "');");
 	result.push("dojo.declare('" + fullClassName + "', wm.CustomDijit, {");
@@ -234,12 +234,6 @@ wm.DijitDesigner.extend({
 	    }
 	    result.push("\t\t\tif (this._isDesignLoaded)");
 	    result.push("\t\t\t\tthis." + propName + " = this.makeWritableValue(this.get" + wm.capitalize(propName) + "(), inValue);");
-	    result.push("\t\tvar " + propName + " = this.get" + wm.capitalize(propName) + "();");
-	    result.push("\t\tif (" + propName + " instanceof Date) {");
-	    result.push("\t\t\tthis." + propName + " = " + propName + ".getTime();");
-	    result.push("\t\t} else if (typeof " + propName + " != 'object') {");	    
-	    result.push("\t\t\tthis." + propName + " = " + propName + ";");
-	    result.push("\t\t}");
 	    result.push("\t\t} catch(e) {}");
 	    result.push("\t},");
 	}
@@ -280,7 +274,7 @@ wm.DijitDesigner.extend({
 	result.push("");
 	result.push("/* Design time information on properties */");
 	result = result.concat(extendSchema);
-	result.push("wm.registerPackage(['bundlePackage.Dijits','" + className + "','" + fullClassName + "','" + packageName + "','images/wm/widget.png','',false,{}])");
+	result.push("wm.registerPackage([bundlePackage.Dijits,'" + className + "','" + fullClassName + "','" + packageName + "','images/wm/widget.png','',false,{}])");
 	return result.join("\n");
 
     },
