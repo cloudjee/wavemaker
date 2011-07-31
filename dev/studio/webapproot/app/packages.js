@@ -99,6 +99,7 @@
 
 [ bundlePackage.DataWidget + "/" + bundlePackage.DataWidgetMultiple, bundlePackage.DraggableTree, "wm.DraggableTree", "wm.base.widget.Trees.DraggableTree", "Studio_paletteImageList_25",bundlePackage.descDraggableTree, {}, true],
 [ bundlePackage.DataWidget + "/" + bundlePackage.DataWidgetMultiple, bundlePackage.Calendar, "wm.dijit.Calendar", "wm.base.widget.dijit.Calendar", "Studio_paletteImageList_24",bundlePackage.descCalendar, {}, false],
+[ bundlePackage.Dijits, "wm.Dijit", "wm.DijitDesigner", "wm.base.widget.dijit.Dijit", "Studio_paletteImageList_24","Add your own dijit", {}, true],
 
 
 /*[ "Dojo Widgets", "Test", "wm.DojoWidget", "wm.base.widget.DojoWidget", "Studio_paletteImageList_4", "A button with a progress indicator"],*/

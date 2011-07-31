@@ -30,7 +30,7 @@
 	"Picture" : "Picture",
 	"Spacer" : "Spacer",
 	"Splitter" : "Splitter",
-
+        "Dijits": "Dijits",
 	"Containers" : "Containers",
 	"Accordion" : "Accordion",
 	"Layers" : "Layers",

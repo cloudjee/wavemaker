@@ -122,19 +122,10 @@ wm.Object.extendSchema(wm.Dijit, {
 dojo.declare("wm.DijitWrapper", wm.Dijit, {
 });
 
-
-dojo.declare("wm.DijitControl", wm.Dijit, {
+dojo.declare("wm.CustomDijit", wm.Dijit, {
     scrim: true,
     renderBoundsX: true,
     renderBoundsY: true,
-    dijitClass: "",    
-    setDijitClass: function(inClass) {
-	this.dijitClass = inClass;
-	if (this.dijit) {
-	    this.dijit.destroy();
-	}
-	this.initDijit(this.domNode);
-    },
     renderBounds: function() {
 	this.inherited(arguments);
 	if (this.dijit) {
@@ -146,62 +137,93 @@ dojo.declare("wm.DijitControl", wm.Dijit, {
 	    
 	    dojo.marginBox(this.dijit.domNode, b);
 	}
-    },
+    }
+});
+
+
+dojo.declare("wm.DijitDesigner", wm.CustomDijit, {
+    dijitPropList: "",
+    dijitClass: "",
+
     setProp: function(inName, inValue) {
-	this.inherited(arguments);
-	var parentPrototype = this.constructor.superclass.constructor.superclass;
-	if (parentPrototype[inName] === undefined && this.dijit) {
-	    if (this.dijit["set" + wm.capitalize(inName)])
-		this.dijit["set" + wm.capitalize(inName)](inValue);
-	    else
-		this.dijit.set(inName, inValue);
+	if (inName.indexOf("wmdijit") == 0) {
+	    this[inName] = inValue;
+	    this.dijitSet(inName,inValue);	    	    
+	} else {
+	    this.inherited(arguments); 
 	}
     },
+    dijitSet: function(inName, inValue) {
+	if (inName.indexOf("wmdijit") == 0) {
+	    inName = wm.decapitalize(inName.substring(7));
+	}
+	if (this.dijit["set" + wm.capitalize(inName)]) {
+		this.dijit["set" + wm.capitalize(inName)](inValue);
+	} else {
+	    this.dijit.set(inName, inValue);
+	}
+    },
+    getProp: function(inName) {
+	if (inName.indexOf("wmdijit") == 0) {
+	    return this.dijitGet(inName);
+	} else {
+	    return this.inherited(arguments); 
+	}
+    },
+    dijitGet: function(inName) {
+	var value = null;
+	try {
+	if (inName.indexOf("wmdijit") == 0) {
+	    inName = wm.decapitalize(inName.substring(7));
+	}
+	if (this.dijit["get" + wm.capitalize(inName)]) {
+	    value = this.dijit["get" + wm.capitalize(inName)]();
+	} else {
+	    value = this.dijit.get(inName);
+	}
+	if (value instanceof Date)
+	    value = this._isDesignLoaded ? dojo.date.locale.format(value, {formatLength: "short"}) : value.getTime();
+	else if (value instanceof Node)
+	    value = value.id;
+	} catch(e) {}
+	return value;
+    },
+
     getProperties: function() {
-	return {};
-    },
-    setEvent: function() {},
-    setRenderBoundsX: function(bind) {
-	this.renderBoundsX = bind;
-	if (!bind && this.dijit)
-	    this.dijit.domNode.style.width = "";
-    },
-    setRenderBoundsY: function(bind) {
-	this.renderBoundsY = bind;
-	if (!bind && this.dijit)
-	    this.dijit.domNode.style.height = "";
-    },
-    listProperties: function() {
-	var props = dojo.clone(this.inherited(arguments));
-	if(this.dijit)
-	    this.addToPropList(this.dijit, props);
-	return props;
-    },
-    addToPropList: function(obj, props) {
-	for (var propName in obj) {
-	    if (props[propName]) continue; // don't overwrite wavemaker props with dojo props no matter how important they might be
-	    if (propName.indexOf("_") == 0) continue; // private prop
-	    if (dojo.indexOf(wm.DijitControl.ignorelist, propName) != -1) continue;
-	    if (propName.indexOf("on") == 0) {
-		props[propName] = {isEvent: true};
-	    } else if (typeof obj[propName] == "number") {
-		props[propName] = {isEvent: false,
-				   type: "number"};
-	    } else if (typeof obj[propName] == "string") {
-		props[propName] = {isEvent: false,
-				   type: "string"};
+	var props = {};
+	var dijitPropList = this.dijitPropList.split(/,/);
+	for (var i = 0; i < dijitPropList.length; i++) {
+	    var propName = dijitPropList[i];
+	    /* This if statement should capture all dijit properties now */
+	    if (propName.indexOf("wmdijit") == 0) {
+		props[wm.decapitalize(propName.substring(7))] = this[propName];
+	    } else {
+		props[propName] = this[propName];
 	    }
 	}
-    }
 
+	return props;
+    },
+    /* We no longer need the parent classes handling of events */
+    setEvents: function() {
+	for (var propName in this.dijit) {
+	    if (propName.indexOf("on") == 0 && !propName.match(/(Mouse|Key)/)) {
+		var eventName = "onDijit" + propName.substring(2);
+		if (!this[eventName]) {
+		    this[eventName] = function() {};
+		}
+		this.connect(this.dijit, propName, this, eventName);
+	    }
+	}
+    }, 
+
+
+
+    _end: 0
 });
 
 /* basically, I'm listing all properties of dijit._Widget as suitable for ignoring; dijit._Widget's functionality is overridden by wm.Control;
  * also skipping any property that says its dependent on the dijit being in a specific type of container.
  * ignore value because calling setValue is causes infinite recursion errors */
-wm.DijitControl.ignorelist = ["value", "baseClass", "class", "closable", "colspan", "column", "dir", "dndType", "dojoAttachEvent", "dojoAttachPoint", "dragRestriction", "iconClass", "id", "label", "lang", "layoutAlign", "layoutPriority", "minSize", "nodesWithKeyClick", "observer", "params", "region", "selected", "showTitle", "sizeMin", "sizeShare", "slideFrom", "spanLabel", "splitter", "srcNodeRef", "style", "toggleSplitterClosedThreshold", "waiRole", "waiState", "tabIndex", "templateString", "onShow", "onHide", "onClose"];
+wm.DijitDesigner.ignorelist = ["declaredClass", "baseClass", "class", "closable", "colspan", "column", "dir", "dndType", "dojoAttachEvent", "dojoAttachPoint", "dragRestriction", "iconClass", "id", "label", "lang", "layoutAlign", "layoutPriority", "minSize", "nodesWithKeyClick", "observer", "params", "region", "selected", "showTitle", "sizeMin", "sizeShare", "slideFrom", "spanLabel", "splitter", "srcNodeRef", "style", "toggleSplitterClosedThreshold", "waiRole", "waiState", "tabIndex", "templateString", "onShow", "onHide", "onClose", "title", "tooltip", "widgetsInTemplate", "hovering", "focused","active", "containerNode","templatePath", "currentFocus"];
 
-wm.Object.extendSchema(wm.DijitControl, {
-    onMouseOver: {ignore: true},
-    onMouseOut: {ignore: true}
-});
