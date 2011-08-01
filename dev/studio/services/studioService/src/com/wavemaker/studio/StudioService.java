@@ -304,6 +304,58 @@ System.out.println("F");
     public boolean fileExists(String path) {
         return projectManager.getCurrentProject().fileExists(projectManager.getUserProjectPrefix()  + path);
     }
+
+    @ExposeToClient
+    public void writeCommonFile(String path, String data)
+            throws IOException {
+	File commonDir = studioConfiguration.getCommonDir();
+        File writeFile = new File(commonDir, path);
+	if (writeFile.exists()) {
+	    String original = com.wavemaker.common.util.IOUtils.read(writeFile);
+	    if (original.equals(data)) return;
+	} else {
+	    com.wavemaker.common.util.IOUtils.makeDirectories(writeFile.getParentFile(),
+							      commonDir);
+	}
+        FileUtils.writeStringToFile(writeFile, data);
+    }
+
+    @ExposeToClient
+    public String getLatestPatches() {
+	URL patch_url;
+	  String s = "";
+	  try {
+	      patch_url = new URL("http://dev.wavemaker.com/wiki/bin/Dev/patchtest");
+    
+		// Read all the text returned by the server
+		BufferedReader in = new BufferedReader(new InputStreamReader(patch_url.openStream()));
+		String str;
+		StringBuffer sbuf = new StringBuffer();
+		while ((str = in.readLine()) != null) {
+		      sbuf.append(str + "\n");
+		      // str is one line of text; readLine() strips the newline character(s)
+		}
+		str = sbuf.toString();
+		in.close();
+		/*
+		int startDiv = str.indexOf("<div class=\"main layoutsubsection\">");
+		*/
+
+		String startDivStr = "<code>";
+		int startDiv = str.indexOf(startDivStr);
+		if (startDiv == -1) return "";
+		startDiv += startDivStr.length();
+
+		int endDiv = str.indexOf("</code>");
+		s = str.substring(startDiv,endDiv);
+	  } catch(Exception e) {
+	      System.out.println("ERROR:" + e.toString());
+	      s += "Could not find patches";
+	  }
+
+	  return s;
+    }
+
     
     /**
      * Write arbitrary data to a file in this project's web directory.
