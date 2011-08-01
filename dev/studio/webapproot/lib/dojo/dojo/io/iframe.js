@@ -143,7 +143,8 @@ dojo.io.iframe = {
 		if(!this["_frame"]){
 			this._frame = this.create(this._iframeName, dojo._scopeName + ".io.iframe._iframeOnload();");
 		}
-	    /* Added by wavemaker; somehow dojox's file uploader is removing
+	    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+	     * Added by wavemaker; somehow dojox's file uploader is removing
 	     * this from the parent node, the result of using this parentless
 	     * frame to load data is that firefox shows it in a new window
 	     */

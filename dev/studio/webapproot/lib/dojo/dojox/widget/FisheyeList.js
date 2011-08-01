@@ -544,8 +544,11 @@ dojo.declare("dojox.widget.FisheyeList", [dijit._Widget, dijit._Templated, dijit
 	},
 
 	_positionLabel: function(itm){
-	    /* Added by WaveMaker */
+	    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+	     * Added by WaveMaker to avoid errors that were thrown */
 	    if (!itm.lblNode.parentNode) return;
+
+
 		var x = 0;
 		var y = 0;
 		

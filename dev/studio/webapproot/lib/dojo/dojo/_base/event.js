@@ -503,7 +503,8 @@ define("dojo/_base/event", ["dojo/lib/kernel", "dojo/_base/connect"], function(d
 		});
 				
 		// override stopEvent for IE
-	    /* WaveMaker: IE9 does NOT support the calls in the original stopEvent method; dojo.isIE < 9 replaced with just dojo.isIE */
+	    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+	     * WaveMaker: IE9 does NOT support the calls in the original stopEvent method; dojo.isIE < 9 replaced with just dojo.isIE */
 	    dojo.stopEvent = (dojo.isIE || dojo.isQuirks) ? function(evt){
 			evt = evt || window.event;
 			del._stopPropagation.call(evt);

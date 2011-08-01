@@ -166,9 +166,7 @@ dojo.provide("dojox.html.styles");
 		if(!styleSheetName){ styleSheetName="default"; }
 
 		if(!dynamicStyleMap[styleSheetName]){
-		    /* WaveMaker added the isIE test here; this was supposed to work in IE 9, but my version of IE 9 throws errors
-		     * on this method for both dojo and ACE Editor */
-			if(dojo.doc.createStyleSheet && !dojo.isIE){ //IE
+			if(dojo.doc.createStyleSheet){ //IE
 
 				dynamicStyleMap[styleSheetName] = dojo.doc.createStyleSheet();
 				if(dojo.isIE < 9) {

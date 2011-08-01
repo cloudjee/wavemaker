@@ -93,7 +93,10 @@ dojo.declare("dijit._MenuBase",
 		// Don't do anything unless user has "activated" the menu by:
 		//		1) clicking it
 		//		2) opening it from a parent menu (which automatically focuses it)
-	    /* WaveMaker added all references to openOnHover  */
+
+	    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+	     * WaveMaker added all references to openOnHover  
+	     */
 		if(this.isActive || this.openOnHover){
 			this.focusChild(item);
 			if(this.openOnHover || (this.focusedChild.popup && !this.focusedChild.disabled && !this.hover_timer)){

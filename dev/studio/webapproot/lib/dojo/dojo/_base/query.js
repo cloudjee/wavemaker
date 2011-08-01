@@ -1188,7 +1188,8 @@ var defineQuery= function(d){
 					//	the query parser when we might not need to
 					if(!((9 == root.nodeType) || nospace)){ 
 					    //throw ""; 
-					    /* WaveMaker Change: Get rid of dojo's 'throw ""' which drives break-on-error nuts, and just
+					    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+					     * WaveMaker Change: Get rid of dojo's 'throw ""' which drives break-on-error nuts, and just
 					     * call the same thing as the error handler
 					     */
 					}

@@ -40,7 +40,8 @@
 @import url("ColorPalette.css");
 @import url("tundra_rtl.css");
 
-/* WAVEMAKER */
+/* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+ * WAVEMAKER */
 @import url("../../../dojox/grid/resources/tundraGrid.css");
 @import url("../../../dojox/grid/resources/Grid.css");
 @import url("../../../dojox/widget/FisheyeList/FisheyeList.css"); /* not much used, but its small */

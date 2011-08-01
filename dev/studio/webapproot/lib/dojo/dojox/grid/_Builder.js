@@ -622,7 +622,8 @@ dojo.require("dojo.dnd.Moveable");
 			this._skipBogusClicks = true;
 			inDrag.view.update();
 			this._skipBogusClicks = false;
-		    /* WaveMaker addes inDrag and data parameters */
+		    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		     * WaveMaker addes inDrag and data parameters */
 			this.grid.onResizeColumn(inDrag.index, inDrag, data);
 		},
 		doResizeNow: function(inDrag, data){

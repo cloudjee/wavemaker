@@ -99,7 +99,8 @@ dojo.declare("dojox.grid._EditManager", null, {
 		// inCell: Object
 		//		Grid cell object
 		if(!this.isEditCell(inRowIndex, inCell.index) && this.grid.canEdit && this.grid.canEdit(inCell, inRowIndex)){
-		    /* this.start call changed  by WaveMaker; -r30164: "Dojo TreeGrid had a bug where editing child nodes was not working. Fixed." */
+		    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		     * this.start call changed  by WaveMaker; -r30164: "Dojo TreeGrid had a bug where editing child nodes was not working. Fixed." */
 			this.start(inCell, inRowIndex, inCell.editable || this.isEditRow(inRowIndex));
 		      //this.start(inCell, inRowIndex, this.isEditRow(inRowIndex) || inCell.editable);
 		}
@@ -167,7 +168,8 @@ dojo.declare("dojox.grid._EditManager", null, {
 			c[inMethod](this.info.rowIndex);
 		}
 	},
-    /* WaveMaker Changes: if errors are thrown trying to edit this, catch the error; no need for console.error logs (WM-2744)
+    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+     * WaveMaker Changes: if errors are thrown trying to edit this, catch the error; no need for console.error logs (WM-2744)
      * and revert to last valid value (otherwise it enters undefined state)
      */
 	editorApply: function(){

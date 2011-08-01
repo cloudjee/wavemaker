@@ -270,8 +270,10 @@ if(typeof window != 'undefined'){
 					var err = Error("Unable to load "+uri+" status:"+ http.status);
 					err.status = http.status;
 					err.responseText = http.responseText;
-				    /* Added by WaveMaker because throwing an error serves no purpose beyond making debugging harder */
+				        /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+					 * Added by WaveMaker because throwing an error serves no purpose beyond making debugging harder */
 				        if (fail_ok) return null;
+
 					throw err;
 				}
 			}catch(e){

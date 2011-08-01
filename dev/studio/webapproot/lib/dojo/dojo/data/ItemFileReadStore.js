@@ -143,7 +143,8 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 		this._assertIsAttribute(attribute);
 		// Clone it before returning.  refs: #10474
 
-	    /* Wavemaker Addition helps getValues to treate "." as a subproperty rather than part of the item name */
+	    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+	     * Wavemaker Addition helps getValues to treate "." as a subproperty rather than part of the item name */
 	    if (attribute.indexOf(".") != -1) {
 		var parts = attribute.split(/\./);
 		var value = item;
@@ -159,6 +160,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 		if (value !== null)
 		    return value;
 	    }
+	    /* End WaveMaker added code */
 
 		return (item[attribute] || []).slice(0); // Array
 	},

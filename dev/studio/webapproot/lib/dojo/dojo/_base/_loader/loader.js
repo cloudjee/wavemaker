@@ -116,7 +116,8 @@
 			}
 			if(!d.isIE){ contents += "\r\n//@ sourceURL=" + uri; } // debugging assist for Firebug
 
-		    /* WaveMaker wrapped the var value statement in try/catch and provides the body of the catch */
+		    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		     * WaveMaker wrapped the var value statement in try/catch and provides the body of the catch */
 			try{
 			        var value = d["eval"](contents);
 			}
@@ -125,6 +126,8 @@
 				console.info('Error: ' + e.message);
 				//return false;
 			}
+		    /* End WaveMaker changes */
+
 			if(cb){ cb(value); }
 		}
 		// Check to see if we need to call _callLoaded() due to an addOnLoad() that arrived while we were busy downloading
@@ -176,12 +179,14 @@
 		d._loaders = [];
 
 		for(var x = 0; x < mll.length; x++){
-		    /* WaveMaker added the try/catch block */
+		    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		     * WaveMaker added the try/catch block */
 			try {
 				mll[x]();
 			} catch (e) {
 				console.error(e);
 			}
+		    /* End WaveMaker changes */
 		}
 
 		d._loadNotifying = false;
@@ -425,7 +430,8 @@
 		//		the required namespace object
 		omitModuleCheck = d._global_omit_module_check || omitModuleCheck;
 
-	    /* WaveMaker: Added this because for some reason, i18n! is added to all localization requests and isn't properly handled */
+	    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+	     * WaveMaker: Added this because for some reason, i18n! is added to all localization requests and isn't properly handled */
 		moduleName = moduleName.replace(/i18n\!/,"");
 
 
@@ -863,7 +869,8 @@
 				var exclamationIndex = depName.indexOf("!");
 				if(exclamationIndex > -1){
 					//fool the build system
-				    /* BEFORE WAVEMAKER 
+				    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+				    * BEFORE WAVEMAKER 
 					if(depName.substring(0, exclamationIndex) == "i18n"){
 						var match = depName.match(/^?i18n\!(.+)\.nls\.([^\.]+)$/);
 						dojo["requireLocalization"](match[1], match[2]);
@@ -874,6 +881,7 @@
 						var match = depName.match(/^(\.\.\/)?i18n\!(.+)\.nls\.([^\.]+)$/);
 						dojo["requireLocalization"](match[2], match[3]);
 					}
+				    /* End WaveMaker changes */
 					arg = null;
 				}else{
 					var arg;

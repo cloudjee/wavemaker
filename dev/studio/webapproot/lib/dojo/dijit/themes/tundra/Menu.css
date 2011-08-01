@@ -19,7 +19,8 @@
 	padding: 4px 5px;
 }
 
-/* WaveMaker added this rule to allow indentation in ComboBoxes */
+/* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+ * WaveMaker added this rule to allow indentation in ComboBoxes */
 .tundra .indentOption{
   padding-left: 15px;
 }

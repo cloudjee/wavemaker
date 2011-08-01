@@ -64,7 +64,8 @@ dojo.i18n.getLocalization = dojo.i18n.getLocalization || function(/*String*/pack
 			return new clazz(); // Object
 		}
 	}
-    /* WaveMaker: commented out because it got really annoying */
+    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+     * WaveMaker: commented out because it got really annoying */
     //throw new Error("Bundle not found: " + bundleName + " in " + packageName+" , locale=" + locale);
 };
 

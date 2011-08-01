@@ -496,10 +496,13 @@ dojo.require("dojo.i18n");
 			// summary: set the hue picker handle on relative y coordinates
 			var selCenter = (this.PICKER_HUE_SELECTOR_H/2);
 
-		    /* WaveMaker: Got more reliable results from these calculations than the commented out var ypos = calc */
+		    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		     * WaveMaker: Got more reliable results from these calculations than the commented out var ypos = calc */
 		        var coor = dojo.coords(this.colorUnderlay);
 		        var ypos = evt.pageY - coor.y - 2;
 			//var ypos = evt.layerY - selCenter;
+		    /* End WaveMaker modification */
+
 			if(this.animatePoint){
 				d.fx.slideTo({
 					node: this.hueCursorNode,
@@ -520,14 +523,16 @@ dojo.require("dojo.i18n");
 			var satSelCenterH = this.PICKER_SAT_SELECTOR_H/2;
 			var satSelCenterW = this.PICKER_SAT_SELECTOR_W/2;
 
-/* WaveMaker: Got better results from these calucations than the commented out newTop/newLeft calcs */
+		    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		     * WaveMaker: Got better results from these calucations than the commented out newTop/newLeft calcs */
 		    var coor = dojo.coords(this.colorUnderlay);
 		    var newTop = evt.pageY - coor.y;
 		    var newLeft = evt.pageX - coor.x;
-/*
+		    /*
 			var newTop = evt.layerY - satSelCenterH;
 			var newLeft = evt.layerX - satSelCenterW;
-			*/		
+		    End WaveMaker Modification */		
+
 			if(evt){ dijit.focus(evt.target); }
 
 			if(this.animatePoint){

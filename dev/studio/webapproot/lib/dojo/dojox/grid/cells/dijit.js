@@ -175,7 +175,8 @@ dojo.require("dijit.Editor");
 	};
 
 
-    /* WaveMaker added this class */
+    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+     * WaveMaker added this class */
 	dojo.declare("dojox.grid.cells.NumberTextBox", dgc._Widget, {
 		widgetClass: dijit.form.NumberTextBox,
 	});

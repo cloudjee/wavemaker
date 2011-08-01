@@ -128,8 +128,10 @@ if(dojo.isIE){
 
 		node = byId(node);
 
-	    /* WaveMaker: Added to avoid unnecessary errors */
+	    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+	     * WaveMaker: Added to avoid unnecessary errors */
 	        if (!node) return;
+
 		try{
 			var doc = node.ownerDocument;
 			// cannot use _destroyContainer.ownerDocument since this can throw an exception on IE
@@ -397,13 +399,15 @@ if(dojo.isIE){
 	}else if(d.isIE){
 		gcs = function(node){
 			// IE (as of 7) doesn't expose Element like sane browsers
-		    /* WaveMaker added the "node &&" because this is sometimes called without a node */
+		    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		     * WaveMaker added the "node &&" because this is sometimes called without a node */
 			return node && node.nodeType == 1 /* ELEMENT_NODE*/ ? node.currentStyle : {};
 		};
 	}else{
 		gcs = function(node){
 			return node.nodeType == 1 ?
-			/* WaveMaker: Added parenthesis; don't recall why */
+			/* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+			 * WaveMaker: Added parenthesis; don't recall why */
 				(node.ownerDocument.defaultView.getComputedStyle(node, null) || {}) : {};
 		};
 	}
