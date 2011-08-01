@@ -30,6 +30,7 @@ Studio.widgets = {
 	resourceManagerService: ["wm.JsonRpcService", {service: "resourceFileService", sync: true}, {}],
         jarListService: ["wm.JsonRpcService", {service: "studioService", sync: false}, {}],
     jarListVariable: ["wm.Variable", {type: "StringData"}, {}],
+    addPatchDialog: ["wm.PageDialog", {pageName: "AddPatch", width: "90%", height: "90%", hideControls: true, modal: false, title: "Load patch for studio", deferLoad: true}],
     jarDownloadDialog: ["wm.PageDialog", {pageName: "HandleRequiredJars", width: "400px", height: "340px", hideControls: true, modal: false, title: "Import Jar File"}],
     dictionaryDialog: ["wm.PageDialog", {pageName: "I18nDictionaryEditor", width: "400px", height: "80%", hideControls: true, modal: false, title: "Dictionary Editor", deferLoad: true, corner: "cr"}],
 
@@ -115,7 +116,12 @@ Studio.widgets = {
                                                               {"label": "Preferences...",
 							       idInPage: "preferencesItem",
 							       onClick: "projectSettingsClick",
-							       iconClass: "preferencesItem"}
+							       iconClass: "preferencesItem"},
+                                                             {"label": "Upload Studio Patches...",
+							       idInPage: "uploadStudioPatchesItem",
+							       onClick: "uploadStudioPatches",
+							       iconClass: "importProjectItem"}
+
 							 ]},
 							  {"label": "Edit",
 								idInPage: "editPopupBtn",

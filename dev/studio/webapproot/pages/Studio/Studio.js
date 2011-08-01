@@ -1623,6 +1623,9 @@ dojo.declare("Studio", wm.Page, {
 	    if (d._isDesignLoaded)
 		d.reflow();
 	}
+    },
+    uploadStudioPatches: function() {
+	this.addPatchDialog.show();
     }
 
 });
