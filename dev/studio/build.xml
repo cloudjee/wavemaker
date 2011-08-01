@@ -121,6 +121,7 @@
 
     <target name="setup-js-html">
         <replaceregexp file="${webapproot.studio.dir}/app/config.js" match="studioVersion\: '(.*)'," replace="studioVersion: '${version.number}'," />
+        <replaceregexp file="${webapproot.studio.dir}/lib/boot/boot.js" match="wm\.version \= '(.*)';" replace="wm.version = '${version.number}';" />
 
 <!--
         <copy file="${studio.dir}/webapproot/pages/Studio/Studio.html.template"
