@@ -452,14 +452,17 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 
 		dojo.forEach(classList, function(className,i) {
 		    window.setTimeout(function() {
-			window.open("http://dev.wavemaker.com/wiki/bin/inline/wmjsref_6.3/" + className + "_" + inPropName + "?parent=wmjsref_6.3&template=wmjsref_6.3.PropertyClassTemplate&name=" + className + "_" + inPropName + "&component=" + className + "&property=" + inPropName, "HelpEdit " + i);
+			window.open(studio.getDictionaryItem("URL_PROPDOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) + 
+				    className + "_" + inPropName + 
+				    "?parent=wmjsref_6.3&template=wmjsref_6.3.PropertyClassTemplate&name=" + className + "_" + inPropName + "&component=" + className + "&property=" + inPropName, "HelpEdit " + i);
 		    },
 				      i * 1000);
 		});
 	    } else {
 		if (inType == studio.application.declaredClass)
 		    inType = "wm.Application";
-		var url = studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {className: inType.replace(/^.*\./,"") + "_" + inPropName});
+		var url = studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1"),
+										 className: inType.replace(/^.*\./,"") + "_" + inPropName});
 
 		// clear previous content before showing.
 		bd.page.setContent("");

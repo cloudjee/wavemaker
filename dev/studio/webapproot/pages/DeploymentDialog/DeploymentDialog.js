@@ -60,7 +60,15 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
 
     start: function() {
-
+	this.helpButton = new wm.ToolButton({_classes: {domNode: ["StudioHelpIcon"]},
+					     width: "20px",
+					     height: "20px",
+					     parent: this.owner.owner.titleBar,
+					     onclick: function() {
+						 window.open(this.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}));
+					     }});
+	this.owner.owner.titleBar.reflow();
+					     
 
     },
     onShow: function() {

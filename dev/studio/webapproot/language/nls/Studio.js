@@ -18,14 +18,18 @@
     TOOLTIP_SECURITY_ERROR: "A security error shown here has no effect on the project you are designing.  It does indicate that we are unable to show your data within the designer.  You can typically fix this problem by running your application, logging in to your application, and then the data should show up in the designer",
 
     /* Documentation; Help Menu */
-    URL_TUTORIALS: "http://dev.wavemaker.com/wiki/bin/wmdoc_6.3/Tutorials",
-    URL_DOCS: "http://dev.wavemaker.com/wiki/bin/wmdoc_6.3/",
-    URL_PROPDOCS: "http://dev.wavemaker.com/wiki/bin/wmjsref_6.3/",
+    URL_TUTORIALS: "http://dev.wavemaker.com/wiki/bin/wmdoc_${studioVersionNumber}/Tutorials",
+    URL_DOCS: "http://dev.wavemaker.com/wiki/bin/wmdoc_${studioVersionNumber}/",
+    URL_PROPDOCS: "http://dev.wavemaker.com/wiki/bin/wmjsref_${studioVersionNumber}/",
     URL_FORUMS: "http://dev.wavemaker.com/forums",
     "MENU_ITEM_TUTORIALS" : "Tutorials",
     "MENU_ITEM_DOCS" : "Documentation",
     "MENU_ITEM_COMMUNITY" : "Forums",
     "MENU_ITEM_PROPDOCS" : "JavaScript (Client) Docs",
+
+    URL_SCREENCAST: "http://www.wavemaker.com/product/screencasts.html",
+    URL_DEMO: "http://www.wavemaker.com/product/demos.html",
+    URL_COMMUNITY: "http://dev.wavemaker.com/",
 
 
     TOAST_RUN_FAILED: 'Run failed: ${error}',
@@ -210,7 +214,7 @@
     "wm.Component.CLASS_NOT_FOUND": 'Component type "${type}" is not available.',
     "wm.Palette.MENU_ITEM_COPY": "Copy New ${className}",
     "wm.Palette.MENU_ITEM_DOCS": "${className} docs...",
-    "wm.Palette.URL_CLASS_DOCS": "http://dev.wavemaker.com/wiki/bin/wmjsref_6.3/${className}",
+    "wm.Palette.URL_CLASS_DOCS": "http://dev.wavemaker.com/wiki/bin/wmjsref_${studioVersionNumber}/${className}",
     "wm.Palette.TIP_DOCS": "Click for docs",
 
     /* action.js/clipboard.js: undo/redo */

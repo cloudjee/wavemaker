@@ -32,12 +32,13 @@ dojo.declare("AddPatch", wm.Page, {
 
 	this.editor.setDataValue(this.patchText);
     },
+    patchUrl: studio.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) + "patches",
     loadPatchesClick: function() {
-	var patches = 	studio.studioService.requestSync("getLatestPatches", []).results[0];
+	var patches = 	studio.studioService.requestSync("getLatestPatches", [this.patchUrl]).results[0];
 	this.editor.setDataValue(patches);
     },
     findCodeButtonClick: function() {
-	wm.openUrl("http://dev.wavemaker.com/wiki/bin/Dev/patchtest", "Studio Patches", "StudioPatches");
+	wm.openUrl(this.patchUrl);
     },
     saveButtonClick: function() {
 	var editorValue = this.editor.getDataValue();

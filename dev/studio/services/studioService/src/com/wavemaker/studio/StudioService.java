@@ -321,11 +321,11 @@ System.out.println("F");
     }
 
     @ExposeToClient
-    public String getLatestPatches() {
+    public String getLatestPatches(String url) {
 	URL patch_url;
 	  String s = "";
 	  try {
-	      patch_url = new URL("http://dev.wavemaker.com/wiki/bin/Dev/patchtest");
+	      patch_url = new URL(url);
     
 		// Read all the text returned by the server
 		BufferedReader in = new BufferedReader(new InputStreamReader(patch_url.openStream()));
@@ -504,7 +504,7 @@ System.out.println("F");
 	  URL help_url;
 	  String s = "";
 	  try {
-		help_url = new URL("http://dev.wavemaker.com/wiki/bin/view/wmjsref_6.3/" + url);
+	      help_url = new URL(url);
     
 		// Read all the text returned by the server
 		BufferedReader in = new BufferedReader(new InputStreamReader(help_url.openStream()));

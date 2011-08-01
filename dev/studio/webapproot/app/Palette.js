@@ -189,7 +189,7 @@ dojo.declare("wm.Palette", wm.Tree, {
 						{label: studio.getDictionaryItem("wm.Palette.MENU_ITEM_DOCS", {className: inNode.klass}),
 						 iconClass: "StudioHelpIcon", 
 						 onClick: dojo.hitch(this, function() {
-						     window.open(studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {className: inNode.klass.replace(/^.*\./,""), shortName: inNode.klass.replace(/^.*\./,"")}));
+						     window.open(studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1"), className: inNode.klass.replace(/^.*\./,""), shortName: inNode.klass.replace(/^.*\./,"")}));
 						 })
 						});
 
@@ -261,7 +261,7 @@ dojo.declare("wm.Palette", wm.Tree, {
 	    app.hideToolTip();
 	});
 	dojo.connect(node, "onclick", this, function(e) {
-	    window.open(studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {className: inNode.klass.replace(/^.*\./,""), shortName: inNode.klass.replace(/^.*\./,"")}));
+	    window.open(studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1"), className: inNode.klass.replace(/^.*\./,""), shortName: inNode.klass.replace(/^.*\./,"")}));
 	});
 
     },

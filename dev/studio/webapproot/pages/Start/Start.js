@@ -46,22 +46,22 @@ dojo.declare("Start", wm.Page, {
 		studio.newProjectClick();
 	},
 	screencastClick: function() {
-	    window.open(this.getDictionaryItem("URL_SCREENCAST"));
+	    window.open(studio.getDictionaryItem("URL_SCREENCAST"));
 	},
 	demoClick: function() {
-		window.open(this.getDictionaryItem("URL_DEMO"));
+		window.open(studio.getDictionaryItem("URL_DEMO"));
 	},
 	communityClick: function() {
-		window.open(this.getDictionaryItem("URL_COMMUNITY"));
+		window.open(studio.getDictionaryItem("URL_COMMUNITY"));
 	},
 	userGuideClick: function() {
-		window.open(this.getDictionaryItem("URL_USERGUIDE"));
+	    window.open(studio.getDictionaryItem("URL_USERGUIDE", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}));
 	},
 	tutorialClick: function() {
-		window.open(this.getDictionaryItem("URL_TUTORIAL"));
+	    window.open(studio.getDictionaryItem("URL_TUTORIALS",  {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}));
 	},
 	documentationClick: function() {
-		window.open(this.getDictionaryItem("URL_DOCS"));
+	    window.open(studio.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}));
 	},	
 	registerClick: function() {
 		window.open(this.getDictionaryItem("URL_REGISTER"));

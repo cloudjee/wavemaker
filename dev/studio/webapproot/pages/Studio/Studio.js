@@ -408,17 +408,17 @@ dojo.declare("Studio", wm.Page, {
 		menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
 						{"label": this.getDictionaryItem("MENU_ITEM_TUTORIALS"),
 						 iconClass: "StudioHelpIcon", 
-						 onClick: function() {window.open(this.getDictionaryItem("URL_TUTORIALS"), "Docs");}
+						 onClick: function() {window.open(this.getDictionaryItem("URL_TUTORIALS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}), "Docs");}
 						});
 		menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
 						{"label": this.getDictionaryItem("MENU_ITEM_DOCS"),
 						 iconClass: "StudioHelpIcon", 
-						 onClick: function() {window.open(this.getDictionaryItem("URL_DOCS"), "Docs");}
+						 onClick: function() {window.open(this.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}), "Docs");}
 						});
 		menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
 						{"label": this.getDictionaryItem("MENU_ITEM_PROPDOCS"),
 						 iconClass: "StudioHelpIcon", 
-						 onClick: function() {window.open(this.getDictionaryItem("URL_PROPDOCS"), "Docs");}
+						 onClick: function() {window.open(this.getDictionaryItem("URL_PROPDOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}), "Docs");}
 						});
 
 	    menuObj.dojoObj.addChild(new dijit.MenuSeparator());
@@ -1539,11 +1539,11 @@ dojo.declare("Studio", wm.Page, {
                 d.addCallback(optionalCallback);
         },
     loadHelp: function(inType, inPropName, onSuccess) {
+	      var url = studio.getDictionaryItem("URL_PROPDOCS", {studioVersionNumber:  wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")});
 	      if (inType == studio.project.projectName) inType = "wm.Application";
 
 	      inType = inType.substring(inType.indexOf(".")+1);
 	
-
 	      if (inType.indexOf("gadget.") == 0)
 		  inType = inType.substring(inType.indexOf(".")+1);
 
@@ -1553,14 +1553,14 @@ dojo.declare("Studio", wm.Page, {
 
 	      inType = inType.replace(/\./g, "_");
 
-	studio.studioService.requestAsync("getPropertyHelp", [inType + "_" + inPropName + "?synopsis"], onSuccess);
+	studio.studioService.requestAsync("getPropertyHelp", [url + inType + "_" + inPropName + "?synopsis"], onSuccess);
     },
     startPageIFrameLoaded: function() {
 	if (this.startPageDialog.page)
 	    this.startPageDialog.page.iframe.show();
     },
     menuBarHelpClick: function() {
-	window.open(this.getDictionaryItem("URL_DOCS"));
+	window.open(this.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}));
     },
 /*
     mouseOverMenuBarHelp: function(inSender) {
