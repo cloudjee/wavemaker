@@ -738,6 +738,7 @@ dojo.declare("wm.Application", wm.Component, {
 						       height: "100px",
 						       fitToContentHeight: true,
 						       owner: this,
+						       corner: "tr",
 						       _fixPosition: true});
 	    this.toolTipDialog.$.genericInfoPanel.setPadding("2,5,2,5");
 	}
