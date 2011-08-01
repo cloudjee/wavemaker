@@ -14,6 +14,7 @@
 {
 PROMPT_NAME: "Rename '${oldName}' to:",
 PROMPT_FOLDER_NAME: "Choose a folder name",
+PROMPT_FILE_NAME: "Choose a file name",
 LOADING: "Loading...",
 AVATAR_DROP: "Drop <b>${caption}</b> into <b>${target}</b>",
 CONFIRM_DELETE: "Are you sure you want to delete the ${type} named ${name}?",

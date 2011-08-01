@@ -14,7 +14,28 @@
  
 
 ResourceManager.widgets = {  
-	layoutBox1: ["wm.Layout", {height: "100%", width: "100%", horizontalAlign: "left", verticalAlign: "top", layoutKind: "top-to-bottom"}, {}, {
+    addFileDialog: ["wm.DesignableDialog", {title: "Add File", modal: false, "height":"120px",width: "350px", "containerWidgetId":"containerWidget"}, {}, {
+	containerWidget: ["wm.Container", {"_classes":{"domNode":["wmdialogcontainer","MainContent"]},"autoScroll":true,"border":"0","height":"100%","horizontalAlign":"left","margin":"0","padding":"0","verticalAlign":"top","width":"100%"}, {}, {
+	    addFileOption1Panel: ["wm.Panel", {"border":"0","height":"42px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%", borderColor: "#333333", border: "0,0,1,0"}, {}, {
+		addFileOption1Label: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold"]},"border":"0","caption":"Option 1: Upload a file","padding":"4"}, {}],
+		addFileOption1Spacer: ["wm.Spacer", {"height":"48px","width":"100%"}, {}],
+
+		    uploadButton: ["wm.DojoFileUpload", {_classes: {domNode: ["StudioButton"]},
+							 operation: "uploadFile", service: "resourceFileService", 
+							 buttonCaption: "Upload", height: "32px", width: "100px", 
+							 uploadImmediately: true, useList: false, margin: "4"},
+				   {onSuccess: "fileUploadCompleted"}]
+	    }],
+		addFileOption2Panel: ["wm.Panel", {"border":"0","height":"42px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+		    addFileOption2Label: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold"]},"border":"0","caption":"Option 2: Create an empty file","padding":"4"}, {}],
+		addFileOption2Spacer: ["wm.Spacer", {"height":"48px","width":"100%"}, {}],
+		addFileOption1Button: ["wm.Button", {_classes: {domNode: ["StudioButton"]},
+						      width: "100px", 
+						     "caption":"Create"}, {onclick: "addNewFile"}]
+		}]
+	}]
+    }],
+    layoutBox1: ["wm.Layout", {height: "100%", width: "100%", horizontalAlign: "left", verticalAlign: "top", layoutKind: "top-to-bottom"}, {}, {
 	    buttonPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "46px",padding: "2,10,2,10"}, {}, {
 	    resourcesFolderToolBar: ["wm.Panel", { height: "46px", width: "600px", border: "", layoutKind: "left-to-right"}, {}, {
 	      renameFolderButton: ["wm.Button", {disabled: true, caption: "<img src='/wavemaker/images/resourceManagerIcons/rename32.png'> Rename", height: "36px", width: "150px"},{onclick: "renameItem"}],
@@ -28,7 +49,7 @@ ResourceManager.widgets = {
 	      downloadFileButton: ["wm.Button", {caption: "<img src='/wavemaker/images/resourceManagerIcons/d_download32.png'> Download", height: "36px", width: "150px"},{onclick: "downloadItem"}]/*,
 	      updateFileButton: ["wm.Button", {caption: "<img src='/wavemaker/images/resourceManagerIcons/d_update32.png'> Replace", height: "36px", width: "150px"},{onclick: "updateItem"}]*/
   	    }],
-	    addFileButton: ["wm.DojoFileUpload", {disabled: true, operation: "uploadFile", service: "resourceFileService", buttonCaption: "<img src='/wavemaker/images/resourceManagerIcons/d_add32.png'> Add File", height: "36px", width: "150px", uploadImmediately: true, useList: false, margin: 4}, {onSuccess: "fileUploadCompleted"}]
+		openAddFileDialogButton: ["wm.Button", {caption: "<img src='/wavemaker/images/resourceManagerIcons/d_add32.png'> Add File", height: "36px", width: "150px"}, {onclick: "addFileDialog"}]
             }],
 
 	    mainPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "100%"}, {}, {

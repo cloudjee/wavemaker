@@ -54,6 +54,17 @@ dojo.declare("ResourceManager", wm.Page, {
         */
     },
 
+    addNewFile: function() {
+	var selectedItem = this.selectedItem;
+	if (selectedItem && !(selectedItem instanceof wm.FolderResourceItem)) {
+	  selectedItem = selectedItem.getParent();
+	} else if (!selectedItem) {
+	    selectedItem = this.resourcesFolder;
+	}
+	this.setSelectedItem(selectedItem);
+        app.prompt(this.getDictionaryItem("PROMPT_FILE_NAME"), "", dojo.hitch(this.selectedItem, "addNewFile"));
+    },
+
     addNewFolder: function() {
 	var selectedItem = this.selectedItem;
 	if (selectedItem && !(selectedItem instanceof wm.FolderResourceItem)) {
@@ -143,6 +154,7 @@ dojo.declare("ResourceManager", wm.Page, {
     },
     */
     fileUploadCompleted: function(inSender, fileList) {
+	this.addFileDialog.hide();
 	var filename = fileList[0].name;
 	var selectedItem = this.selectedItem || this.resourcesFolder;
 	if (selectedItem && !(selectedItem instanceof wm.FolderResourceItem)) {
@@ -381,8 +393,8 @@ dojo.declare("ResourceManager", wm.Page, {
             
       this.updateToolbar();
       this.showPropertiesPanel();
-        this.addFileButton.input.setType("AnyData");
-        this.addFileButton.input.setData({dataValue: {path: folder.getResourcelessFilePath()}});
+        this.uploadButton.input.setType("AnyData");
+        this.uploadButton.input.setData({dataValue: {path: folder.getResourcelessFilePath()}});
 	if (this.selectedItem instanceof wm.HTMLResourceItem ||
 	    this.selectedItem instanceof wm.MiscResourceItem ||
 	    this.selectedItem instanceof wm.CSSResourceItem ||
@@ -489,7 +501,7 @@ dojo.declare("ResourceManager", wm.Page, {
 	this.renameFolderButton.setDisabled(true);
 	this.downloadFolderButton.setDisabled(true);
 	this.downloadFolderButton.setDisabled(true);
-	this.addFileButton.setDisabled(true);
+	this.openAddFileDialogButton.setDisabled(true);
 	this.addFolderButton.setDisabled(true);
       } else if (this.selectedItem instanceof wm.FolderResourceItem) {
 	this.resourcesFileToolBar.hide();
@@ -499,14 +511,14 @@ dojo.declare("ResourceManager", wm.Page, {
 	  this.renameFolderButton.setDisabled(true);
 	  this.downloadFolderButton.setDisabled(false);
 	  this.downloadFolderButton.setDisabled(false);
-	  this.addFileButton.setDisabled(false);
+	  this.openAddFileDialogButton.setDisabled(false);
 	  this.addFolderButton.setDisabled(false);
 	} else {
 	  this.deleteFolderButton.setDisabled(false);
 	  this.renameFolderButton.setDisabled(false);
 	  this.downloadFolderButton.setDisabled(false);
 	  this.downloadFolderButton.setDisabled(false);
-	  this.addFileButton.setDisabled(false);
+	  this.openAddFileDialogButton.setDisabled(false);
 	  this.addFolderButton.setDisabled(false);
 	}
       } else {
@@ -628,6 +640,22 @@ dojo.declare("wm.ResourceMover", wm.DragDropper, {
 
 
 wm.ResourceItem.extend({
+    makeEmptyFile: function() {
+
+	studio.studioService.requestSync("writeWebFile", ["resources/" + this.getResourcelessFilePath(), " ", false],
+					 function() {
+					     var manager = studio.resourcesPage.getComponent("resourceManager");
+					     manager.updateModifiedDate();
+					 },
+					 dojo.hitch(this, function() {
+					     app.toastError(self.getDictionaryItem("EDITS_FAILED"));
+					     this.loadResourcesData(true);
+					 })
+					 					 
+					);
+    },
+
+
     addCustomDataToPropertiesPanel: function(propertiesPanel) {},
 /*
     finishFileUpload2: function(uploadedName, newName, isNewFile) {
@@ -881,6 +909,38 @@ wm.FolderResourceItem.extend({
       newFolder.mkdir();
       
     },
+    addNewFile: function(inName) {
+      var manager = studio.resourcesPage.getComponent("resourceManager");
+      if (this.hasFileWithName(inName)) {
+	  app.toastWarning(studio.resourcesPage.page.getDictionaryItem("ALERT_NAME_EXISTS")); // changed to toast so that it won't overlap app.prompt dialog
+	return manager.addNewFile();
+      }
+
+	var newFile;
+	switch(inName.replace(/^.*\./,"")) {
+	case "js":
+	    newFile = new wm.JSResourceItem({itemName: inName});
+	    break;
+	case "css":
+	    newFile = new wm.CSSResourceItem({itemName: inName});
+	    break;
+	case "html":
+	    newFile = new wm.HTMLResourceItem({itemName: inName});
+	    break;
+	default:
+	    newFile = new wm.MiscResourceItem({itemName: inName});
+	}
+
+      newFile.treeNode = new wm.ResourceTreeNode(this.treeNode, {file: {file: inName, files: [], type: "file"},
+							      content: inName,
+							      closed: true,
+							      image: newFile.iconSrc});
+	newFile.treeNode.data = newFile;
+      manager.setSelectedItem(newFile);
+      newFile.makeEmptyFile();
+	    manager.addFileDialog.hide();
+    },
+
     mkdir: function() {
 	var _this = this;
 	var manager = studio.resourcesPage.getComponent("resourceManager");
@@ -906,6 +966,7 @@ wm.FolderResourceItem.extend({
                                                    dojo.hitch(app, "toastWarning"));	
 
     },
+
     buildOpenFolderStateHash: function() {
 
 	var result = {};
