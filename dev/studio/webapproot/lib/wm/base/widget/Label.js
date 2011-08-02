@@ -21,7 +21,6 @@ dojo.declare("wm.Label", wm.Control, {
 	caption: 'Label',
 	link: '',
 	display: '',
-	format: '(details)',
 	//resizeToFit: "(Resize to Fit)",
 	padding: 4,
 	singleLine: true,
