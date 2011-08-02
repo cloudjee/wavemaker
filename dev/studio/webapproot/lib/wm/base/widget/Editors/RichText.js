@@ -156,8 +156,9 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 		if (this.editor.focusNode) {
   		this.editor.focusNode.style.height =  (h-toolh) + "px";
 		}
-	    dojo.query(".dijitComboBox input", this.domNode).forEach(function(node) {
-		node.style.height = node.style.lineHeight = "";
+	    dojo.query(".dijitComboBox input, .dijitToolbar", this.domNode).forEach(function(node) {
+		node.style.lineHeight = "normal";
+		node.style.height = "";
 	    });
 	},
 	_createEditor: function(inNode, inProps) {
