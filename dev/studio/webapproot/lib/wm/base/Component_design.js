@@ -89,7 +89,7 @@ wm.Component.extend({
 	    var props = this.listProperties();
 	    for (var i in props) {
 		p = props[i];
-		if (this.isWriteableProp(p)) {
+		if (this.isWriteableProp(p,i)) {
 		    results[i] = p;
 		}
 	    }
@@ -120,10 +120,15 @@ wm.Component.extend({
 			if ((n in target) && (target[n]!=p[n]))
 				inProps[pf + n] = target[n];
 	},
-	isWriteableProp: function(inPropSchema) {
+        isWriteableProp: function(inPropSchema, inName) {
 	    var ps = inPropSchema;
 	    if (!ps) return true;
 	    if (ps.group == "method") return false;
+
+	    /* Its not writable if its bound; the binding is the source of the value */
+	    if (inName && this.$.binding && this.$.binding.wires[inName])
+		return false;
+
 	    return ((ps.writeonly || !(ps.ignore || ps.ignoretmp || ps.readonly)) && !ps.isEvent &&  !ps.componentonly);
 	},
 	writeProps: function() {
@@ -139,7 +144,7 @@ wm.Component.extend({
 		propList = propList.sort();
 	        for (var i = 0; i < propList.length; i++) {
 		    var n = propList[i];		    
-		    if (this.isWriteableProp(props[n])) {
+		    if (this.isWriteableProp(props[n],n)) {
 			var value = src[n];
 			if (value instanceof Date) value = value.getTime();
 			if (wm.isInstanceType(src, wm.Application) && value !== undefined) {
