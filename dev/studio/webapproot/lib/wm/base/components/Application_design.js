@@ -122,6 +122,7 @@ wm.Object.extendSchema(wm.Application, {
     promptChromeFrame: {shortname: "chromeFrame (NA)", ignore: 1},
     i18n: {type: "boolean"},
     theme: {type: "string"},
+    currencyLocale: {type: "string"},
     //IERoundedCorners: {ignore: true},
     studioVersion: {writeonly: true, type: "string"},
     dialogAnimationTime: {type: "number"},

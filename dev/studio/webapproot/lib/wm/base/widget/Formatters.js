@@ -69,7 +69,7 @@ dojo.declare("wm.NumberFormatter", wm.DataFormatter, {
 });
 
 dojo.declare("wm.CurrencyFormatter", wm.NumberFormatter, {
-	currency: "$",
+	currency: "",
 	format: function(inDatum) {
 		return (inDatum == undefined) ? '-' : dojo.currency.format(inDatum, this.getFormatProps());
 	},
@@ -77,7 +77,7 @@ dojo.declare("wm.CurrencyFormatter", wm.NumberFormatter, {
 		var p = this.inherited(arguments);
 		// Dojo uses an iso4217 currency code, but let's allow $ to mean U.S. dollars (see http://www.xe.com/iso4217.php)
 		this.digits = 2;
-		p.currency = this.currency == "$" ? "USD" : this.currency;
+	        p.currency = this.currency == "$" ? "USD" : this.currency || (this._isDesignLoaded ? studio.application.currencyLocale : app.currencyLocale) || "USD";
 		return p;
 	}
 });

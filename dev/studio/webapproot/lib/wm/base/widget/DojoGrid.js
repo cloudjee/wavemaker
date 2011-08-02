@@ -1108,7 +1108,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		return dojo.number.format(inValue);
 	},
 	currencyFormatter: function(inValue){
-		return dojo.currency.format(inValue, {currency:wm.getLocaleCurrency()});
+	    return dojo.currency.format(inValue, {currency: (this._isDesignLoaded ? studio.application.currencyLocale : app.currencyLocale) || wm.getLocaleCurrency()});
 	},
 	imageFormatter: function(inValue){
 		if (inValue && inValue != '')

@@ -147,14 +147,14 @@ wm.Object.extendSchema(wm.Number, {
 // Currency Editor
 //===========================================================================
 dojo.declare("wm.Currency", wm.Number, {
-	currency: "USD",
+	currency: "",
 	getEditorProps: function(inNode, inProps) {
 		var prop = this.inherited(arguments);
 		if (prop.constraints)
 			delete prop.constraints.pattern;
 
 		return dojo.mixin(prop, {
-			currency: this.currency
+		    currency: this.currency || (this._isDesignLoaded ? studio.application.currencyLocale : app.currencyLocale) || "USD"
 		}, inProps || {});
 	},
 	_createEditor: function(inNode, inProps) {
