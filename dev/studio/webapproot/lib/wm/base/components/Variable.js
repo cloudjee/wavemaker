@@ -778,6 +778,9 @@ dojo.declare("wm.Variable", wm.Component, {
 	// Data Marshalling / Lazy Loading
 	//===========================================================================
 	createVariable: function(inProps, inPropName) {
+	    if ((window["studio"] || djConfig.isDebug) && inProps.type && !wm.typeManager.getType(inProps.type)) {
+		app.toastWarning("A variable of type " + inProps.type + " has been created, but that type does not exist");
+	    }
 	        inProps._temporaryComponent = 1;
 		var v = new wm.Variable(inProps);
 		v.owner = this;
@@ -907,6 +910,12 @@ wm.Variable.extend({
 	_includeListProps: false,
 	createVariable: function(inProps, inPropName) {
 		inProps = inProps || {};
+
+	    /* If  we're either in design or debug mode, and the type just doesn't exist, warn the user */
+	    if ((window["studio"] && this.isDesignLoaded() || !window["studio"] && djConfig.isDebug) && inProps.type && !wm.typeManager.getType(inProps.type.replace(/[\[\]]/g,""))) {
+		app.alert(wm.getDictionaryItem("wm.Variable.TYPE_INVALID", {type: inProps.type.replace(/[\[\]]/g,"")}));
+	    }
+
 	        inProps._temporaryComponent = 1;
 		inProps.liveView = this.liveView;
 		var r = this._rootField, n = inPropName;
