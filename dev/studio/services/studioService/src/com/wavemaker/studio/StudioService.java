@@ -341,12 +341,12 @@ System.out.println("F");
 		int startDiv = str.indexOf("<div class=\"main layoutsubsection\">");
 		*/
 
-		String startDivStr = "<code>";
+		String startDivStr = "PATCHCODE'>";
 		int startDiv = str.indexOf(startDivStr);
 		if (startDiv == -1) return "";
 		startDiv += startDivStr.length();
 
-		int endDiv = str.indexOf("</code>");
+		int endDiv = str.indexOf("</textarea>");
 		s = str.substring(startDiv,endDiv);
 	  } catch(Exception e) {
 	      System.out.println("ERROR:" + e.toString());

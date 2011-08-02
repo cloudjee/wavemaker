@@ -15,14 +15,13 @@
 
 AddPatch.widgets = {  
     layoutBox1: ["wm.Layout", {height: "100%", width: "100%", horizontalAlign: "left", verticalAlign: "top", layoutKind: "top-to-bottom"}, {}, {
-	editor: ["wm.AceEditor", {syntax: "javascript", width: "100%", height: "100%"}],
+	html: ["wm.Html", {width: "100%", height: "120px", margin: "10,50,5,50", html: "<p>Click the <b>Load Patches</b> button to automatically retrieve and load the latest <i>recommended</i> patches.  If you are behind a firewall, or the patches do not load automatically, click <b>Get matches manually</b> to open a page from which you can copy the patches into the editor below.</p><p>Click Apply to apply the patches to your installation of Studio</p>"}],
+	editor: ["wm.AceEditor", {syntax: "javascript", width: "100%", height: "100%", border: "1,0,0,0", borderColor: "#cccccc", margin: "0"}],
 	buttonBar: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, width: "100%", height: "34px", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
-	    loadPatchesLabel: ["wm.Label", {caption: "If you are NOT behind a firewall:", align: "right", singleLine: false,height: "100%", width: "120px"}],
 	    loadPatchesButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, width: "120px", caption: "Load Patches", hint: "Don't use if behind firewall"}, {onclick: "loadPatchesClick"}],
-	    findCodeLabel: ["wm.Label", {caption: "If you ARE behind a firewall:", align: "right",singleLine: false,height: "100%", width: "130px", margin: "0,0,0,20"}],
-	    findCodeButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, width: "120px", caption: "Find Patches", hint: "Use this if behind a firewall"}, {onclick: "findCodeButtonClick"}],
+	    findCodeLabel: ["wm.Label", {caption: "Get patches manually", align: "right",singleLine: true,height: "100%", width: "160px", margin: "0,0,0,20", link:"#"},{onclick: "findCodeButtonClick"}],
 	    spacer1: ["wm.Spacer", {width: "100%"}],
-	    saveButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, caption: "Save"}, {onclick: "saveButtonClick"}],
+	    saveButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, caption: "Apply"}, {onclick: "saveButtonClick"}],
 	    cancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, caption: "Cancel"}, {onclick: "cancelButtonClick"}]
 	}]
     }]

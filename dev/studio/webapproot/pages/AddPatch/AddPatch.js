@@ -34,8 +34,19 @@ dojo.declare("AddPatch", wm.Page, {
     },
     patchUrl: studio.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) + "patches",
     loadPatchesClick: function() {
-	var patches = 	studio.studioService.requestSync("getLatestPatches", [this.patchUrl]).results[0];
-	this.editor.setDataValue(patches);
+	studio.studioService.requestAsync("getLatestPatches", [this.patchUrl], 
+					  dojo.hitch(this,function(inData) {
+					      studio.endWait();
+					      if (inData == "Could not find patches")
+						  app.alert(this.getDictionaryItem("ALERT_LOAD_PATCH_FAILED"));
+					      else
+						  this.editor.setDataValue(inData);
+					  }),
+					  dojo.hitch(this, function() {
+					      studio.endWait();
+					      app.alert(this.getDictionaryItem("ALERT_LOAD_PATCH_FAILED"));
+					  }));
+	studio.beginWait(this.getDictionaryItem("WAIT_LOAD_PATCHES"));
     },
     findCodeButtonClick: function() {
 	wm.openUrl(this.patchUrl);
