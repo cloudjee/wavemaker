@@ -67,6 +67,8 @@ dojo.declare("I18nDictionaryEditor", wm.Page, {
 		this.dictionaryHash.default = {};
 	    this.dictionaryHash.default[newName] = "";
 	}
+	this.dictionaryItemList.selectByIndex(this.dictionaryTermListVar.getCount()-1);
+	this.dictionaryItemSelect(this.dictionaryItemList);
     },
     deleteTermClick: function(inSender) {
 	var index = this.dictionaryItemList.getSelectedIndex();
@@ -148,6 +150,7 @@ dojo.declare("I18nDictionaryEditor", wm.Page, {
 	}
 	if (!this.errors)
 	    this.owner.owner.hide();
+	studio.setPageI18n();
 	studio.endWait();
     },
     cancelClick: function() {
