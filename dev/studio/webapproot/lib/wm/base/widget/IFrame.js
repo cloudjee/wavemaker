@@ -44,6 +44,7 @@ dojo.declare("wm.IFrame", wm.Control, {
 		this.source = inSource;
 		var root = this.source.slice(0, 4) != "http" && this.source.slice(0, 1) != "/" ? this.getPath() : "";
 		this.frame.src = this.source ? root + this.source : this.source;
+	    this.valueChanged("source", this.source);
 	}
 });
 

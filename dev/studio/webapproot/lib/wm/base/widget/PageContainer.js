@@ -197,6 +197,7 @@ dojo.declare("wm.PageContainer", wm.Box, {
 	    this.pageLoadedDeferred = new dojo.Deferred();
             if (o != this.pageName)
 		this.loadPage(this.pageName);
+	    this.valueChanged("pageName", this.pageName);
 	},
 
         // Provided for use in debugging. Note that when we do a better job of caching pages from server, we will need to deallocate them in this call

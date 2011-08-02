@@ -48,6 +48,7 @@ dojo.declare("wm.dijit.ProgressBar", wm.Dijit, {
 		this.progress = isNaN(p) ? 0 : p;
 		this.dijit.progress = this.progress;
 		this.dijit.update();
+	        this.valueChanged("progress", this.progress);
 	},
 	getProgress: function() {
 		return this.dijit.progress;
@@ -56,6 +57,7 @@ dojo.declare("wm.dijit.ProgressBar", wm.Dijit, {
 		this.indeterminate = inIndeterminate;
 		this.dijit.indeterminate = this.indeterminate;
 		this.dijit.update();
+	        this.valueChanged("indeterminate", this.indeterminate);
 	},
 	getIndeterminate: function() {
 		return this.dijit.indeterminate;

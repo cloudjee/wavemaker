@@ -115,11 +115,12 @@ dojo.declare("wm.ToolButton", wm.Control, {
 	    }
 	},
 	setCaption: function(inCaption) {
-		this.caption = inCaption;
+		this.caption = inCaption;	    
 	        if (!this._cupdating) {
 	            this.invalidCss = true;
 		    this.render(true,true);
 		}
+	    this.valueChanged("caption", this.caption);
 	},
 	setIconUrl: function(inUrl) {
 		this.iconUrl = inUrl;

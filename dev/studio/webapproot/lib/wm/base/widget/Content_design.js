@@ -19,7 +19,7 @@ dojo.require("wm.base.widget.Content");
 wm.Content.description = "Displays markup content.";
 
 wm.Object.extendSchema(wm.Content, {
-    resource: {type: "String", subtype: "File", bindable: true, extensionMatch: ["html","txt"] },
+    resource: {type: "String", subtype: "File", bindTarget: true, extensionMatch: ["html","txt"] },
     disabled: {ignore: 1},
     allowDuplicateContent: {ignore: 1},
     autoScroll: {group: "scrolling", order: 100},

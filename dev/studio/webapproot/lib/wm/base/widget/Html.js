@@ -37,6 +37,7 @@ dojo.declare("wm.Html", wm.Control, {
 			this.htmlLoader._htmlNode = this.domNode;
 			this.htmlLoader.setUrl(inHtml);
 			this.html = inHtml;
+		        this.valueChanged("html", inHtml);
                         if ( innerHTML != this.domNode.innerHTML && (this.autoSizeHeight || this.autoSizeWidth)) {
 		            this.scheduleAutoSize();
                         }
@@ -48,6 +49,7 @@ dojo.declare("wm.Html", wm.Control, {
 		if (inHtml && inHtml.value)
 			inHtml = inHtml.value;
 		this.html = this.domNode.innerHTML = (inHtml == undefined ? "" : inHtml);
+	        this.valueChanged("html", this.inHtml);
                 if ( innerHTML != this.domNode.innerHTML && (this.autoSizeHeight || this.autoSizeWidth)) {
                     this.scheduleAutoSize();
                 }
@@ -125,6 +127,7 @@ dojo.declare("wm.Html", wm.Control, {
 		inHtml = inHtml.value;
 	    this.domNode.innerHTML += (inHtml == undefined ? "" : inHtml);
 	    this.html = this.domNode.innerHTML;
+	    this.valueChanged("html", this.inHtml);
 	},
 	onclick: function() {
 	},

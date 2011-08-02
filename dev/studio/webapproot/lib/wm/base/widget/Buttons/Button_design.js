@@ -7,7 +7,7 @@ wm.Object.extendSchema(wm.ToolButton, {
 	scrollX:  { ignore: 1 },
 	scrollY:  { ignore: 1 },
         clicked: {ignore: 1, bindSource: true, type: "Boolean"},
-        iconUrl: {group: "format", bindable: true, type: "String", subtype: "File"},
+        iconUrl: {group: "format", bindTarget: true, type: "String", subtype: "File"},
 	iconWidth: {group: "format"},
 	iconHeight: {group: "format"},
         iconMargin: {group: "format"}

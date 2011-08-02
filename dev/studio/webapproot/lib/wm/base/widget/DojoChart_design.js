@@ -79,7 +79,7 @@ wm.Object.extendSchema(wm.DojoChart, {
 	xLabels:{ignore:1},
 	legendDiv:{ignore:1},
 	legend:{ignore:1},
-	dataSet: {bindable: 1, group: "edit", order: 10, isList: true},
+	dataSet: {bindTarget: 1, group: "edit", order: 10, isList: true},
 	xAxis: {group: "edit", order: 20},
         //isTimeXAxis: {group: "edit", order: 21, type: "string"},
 	maxTimePoints: {group: "edit", order: 22},

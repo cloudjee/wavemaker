@@ -93,6 +93,9 @@ dojo.declare("wm.Label", wm.Control, {
             if ( innerHTML != this.domNode.innerHTML && (this.autoSizeHeight || this.autoSizeWidth)) {
 		this.scheduleAutoSize();
             }
+
+	    /* Make it bindable */
+	    this.valueChanged("caption", inCaption);
 	},
 
     scheduleAutoSize: function() {
@@ -160,8 +163,12 @@ dojo.declare("wm.Label", wm.Control, {
             this._doingAutoSize = false;
 	},
 	setLink: function(inLink) {
-		this.link = inLink;
-		this.renderLabel();
+	    var oldLink = this.link;
+	    this.link = inLink;
+	    this.renderLabel();
+	    
+	    /* Make it bindable */
+	    this.valueChanged("link", inLink);
 	},
 	setSingleLine: function(inSingleLine) {
             var oldSingleLine = this.singleLine;

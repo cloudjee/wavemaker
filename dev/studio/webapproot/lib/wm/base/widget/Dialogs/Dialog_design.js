@@ -127,7 +127,7 @@ wm.Object.extendSchema(wm.GenericDialog, {
 
     userPrompt: {group: "display", order: 54, bindTarget: true},
     showInput: {group: "display", order: 55, bindTarget: true},
-    inputDataValue: {group: "editData", order: 56, bindable: true, simpleBindProp: true},
+    inputDataValue: {group: "editData", order: 56, bindTarget: true},
     regExp: {group: "editData", order: 57},
 
     footerBorder: {group: "style", order: 100},

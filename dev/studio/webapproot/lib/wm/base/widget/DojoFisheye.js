@@ -176,7 +176,7 @@ wm.Object.extendSchema(wm.DojoFisheye, {
 	variable: {ignore: 1},
 	connectEvents:{ignore:1},
 	variableConnectEvents:{ignore:1},
-	dataSet: {bindable: 1, group: "edit", order: 10, isList: true},
+	dataSet: {bindTarget: 1, group: "edit", order: 10, isList: true},
 	imageUrlField:{group: "edit", order: 20},
 	imageLabelField:{group: "edit", order: 30},
 	itemWidth:{group: "edit", order: 40},

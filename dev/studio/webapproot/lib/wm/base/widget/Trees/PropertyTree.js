@@ -155,7 +155,7 @@ dojo.declare("wm.PropertyTree", wm.Tree, {
 							      _nodeConfig: childNodes,
 							      content: content});
 		    if (hasChild) {
-			var blankChild = new wm.TreeNode(node, {close: true,
+			var blankChild = new wm.TreeNode(node, {closed: true,
 								content: "_PLACEHOLDER"});
 		    }
 		}

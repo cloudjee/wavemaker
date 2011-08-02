@@ -56,7 +56,6 @@ dojo.declare("wm.Picture", wm.Control, {
 		root = this.getPath();
 	    }
 		this.img.src = root + this.source;
-
 	},
 	setHint: function(inHint) {
 		this.domNode.title = this.hint = inHint;
@@ -67,12 +66,15 @@ dojo.declare("wm.Picture", wm.Control, {
 		s.height = (a=="h" ? "100%" : "");
 	},
 	setLink: function(inLink) {
-		this.link = inLink;
-		if (inLink) {
-			this.linkNode.target = "_blank";
-			this.linkNode.href = inLink;
-		} else
-			this.linkNode.removeAttribute("href");
+	    this.link = inLink;
+	    if (inLink) {
+		this.linkNode.target = "_blank";
+		this.linkNode.href = inLink;
+	    } else
+		this.linkNode.removeAttribute("href");
+
+	    /* Make it bindable */
+	    this.valueChanged("link", inLink);
 	},
 	onclick: function() {
 	}

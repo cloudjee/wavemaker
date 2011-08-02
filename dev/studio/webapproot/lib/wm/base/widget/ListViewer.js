@@ -561,7 +561,7 @@ wm.ListViewer.extend({
 
 wm.Object.extendSchema(wm.ListViewer, {
     dataSet: { readonly: true, group: "data", order: 1, bindTarget: 1, type: "wm.Variable", isList: true},
-    pageName: {group: "common", bindable: 1, type: "string", order: 50},
+    pageName: {group: "common", type: "string", order: 50},
     customGetValidate:  {ignore: true},
     fitToContentWidth:  {ignore: true},
     fitToContentHeight:  {ignore: true},

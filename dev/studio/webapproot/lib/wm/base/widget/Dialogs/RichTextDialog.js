@@ -56,7 +56,13 @@ dojo.declare("wm.RichTextDialog", wm.WidgetsJsDialog, {
 							{"onclick":"onCancelClick"}]
 	                     }]};
     },
- 
+    postInit: function() {
+	this.inherited(arguments);
+	this.$.documentation.onchange = dojo.hitch(this, function() {
+	    this.valueChanged("html", this.$.documentation.dataValue);
+	});
+    },
+
     setHtml: function(inHtml) {
         this.html = inHtml; // for design mode use only
         if (this.$.documentation)
