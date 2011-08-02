@@ -435,7 +435,7 @@ dojo.declare("wm.TreeRadioNode", wm.TreeCheckNode, {
 		this.checkboxClick(e);
 		this.inherited(arguments);
 	    }
-	},
+	}
 });
 
 dojo.declare("wm.TreeRoot", wm.TreeNode, {
