@@ -455,9 +455,6 @@ this.label.enable();
 		}
 	},
 	init: function() {
-	    if (this.name == "dojoGrid1") {
-		alert("HEY:HO");
-	    }
 
 		this.initDomNode();
 		this.inherited(arguments);
