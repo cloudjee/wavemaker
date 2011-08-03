@@ -38,6 +38,9 @@
         </property>
         <property name="alwaysUseFullPath" value="true" />
     </bean>
+    
+    <bean id="cloudFoundryPostProcessor" class="com.wavemaker.runtime.data.cloudfoundry.CloudFoundryDataServiceBeanFactoryPostProcessor"/>
+    
 	<bean id="infoteriaAutoLoginSvc" 
 		class="com.wavemaker.runtime.ws.infoteria.AutoLoginService"
 		scope="session" 

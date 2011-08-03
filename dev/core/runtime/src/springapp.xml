@@ -165,5 +165,4 @@
         <!-- controller configuration -->
         <!--property name="supportedMethods" value="GET" /-->
     </bean>
-
 </beans>

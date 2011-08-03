@@ -16,33 +16,56 @@ package com.wavemaker.runtime.data.cloudfoundry;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.cloudfoundry.runtime.env.CloudEnvironment;
+import org.cloudfoundry.runtime.env.MysqlServiceInfo;
+import org.cloudfoundry.runtime.service.relational.MysqlServiceCreator;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.util.CollectionUtils;
 
-
 /**
- * {@link BeanFactoryPostProcessor} implementation that replaces all local MySQL datasources with services 
- * provided by CloudFoundry.
- *
+ * {@link BeanFactoryPostProcessor} implementation that replaces all local MySQL datasources with services provided by
+ * CloudFoundry.
+ * 
  * @author Jeremy Grelle
  */
-public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFactoryPostProcessor{
+public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
+
+    private static final Log log = LogFactory.getLog(CloudFoundryDataServiceBeanFactoryPostProcessor.class);
+
+    private static final String DS_BEAN_SUFFIX = "DataSource";
 
     private CloudEnvironment cloudEnvironment = new CloudEnvironment();
-    
-    /** 
+
+    /**
      * {@inheritDoc}
      */
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) beanFactory;
+        
         if (CollectionUtils.isEmpty(cloudEnvironment.getServices())) {
             return;
         }
-        String[] dataSourceBeanNames = beanFactory.getBeanNamesForType(DataSource.class);
-        
-        
+        String[] dataSourceBeanNames = defaultListableBeanFactory.getBeanNamesForType(DataSource.class);
+
+        for (String dsBean : dataSourceBeanNames) {
+            if (!dsBean.endsWith(DS_BEAN_SUFFIX)) {
+                continue;
+            }
+            MysqlServiceInfo service = cloudEnvironment.getServiceInfo(dsBean.substring(0, dsBean.indexOf(DS_BEAN_SUFFIX)), MysqlServiceInfo.class);
+            if (service != null) {
+                defaultListableBeanFactory.removeBeanDefinition(dsBean);
+                MysqlServiceCreator mysqlCreationHelper = new MysqlServiceCreator(cloudEnvironment);
+                DataSource cfDataSource = mysqlCreationHelper.createSingletonService().service;
+                defaultListableBeanFactory.registerSingleton(dsBean, cfDataSource);
+            } else {
+                log.warn("Expected to find a MySql service with the name '"+dsBean.substring(0, dsBean.indexOf(DS_BEAN_SUFFIX))+"' but none was found.");
+            }
+        }
     }
 
 }

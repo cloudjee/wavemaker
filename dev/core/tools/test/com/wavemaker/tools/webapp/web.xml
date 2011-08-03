@@ -14,6 +14,13 @@
             <param-name>namespace</param-name>
             <param-value>studio-springapp</param-value>
         </init-param>
+        
+        <!-- Everything is currently included in the parent context loaded by the ContextLoaderListener, 
+             thus there is no need to have the DispatcherServlet load a child context. -->
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value></param-value>
+        </init-param>
 
         <load-on-startup>1</load-on-startup>
     </servlet>
