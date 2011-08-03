@@ -19,6 +19,7 @@ import java.io.File;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
 import com.wavemaker.runtime.ws.util.Constants;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.ServiceDefinitionFactory;
 import com.wavemaker.tools.service.ServiceGeneratorFactory;
@@ -27,6 +28,7 @@ import com.wavemaker.tools.service.codegen.ServiceGenerator;
 import com.wavemaker.tools.ws.wsdl.WSDL;
 import com.wavemaker.tools.ws.wsdl.WSDLException;
 import com.wavemaker.tools.ws.wsdl.WSDLManager;
+import com.wavemaker.tools.pws.PwsRestServiceGeneratorBeanFactory;
 
 /**
  * 
@@ -60,7 +62,16 @@ public class WebServiceFactory implements ServiceDefinitionFactory,
             if (serviceType == WSDL.WebServiceType.SOAP) {
                 return new SOAPServiceGenerator(cfg);
             } else if (serviceType == WSDL.WebServiceType.REST) {
-                return new RESTServiceGenerator(cfg);
+                String partnerName = cfg.getPartnerName();
+                if (partnerName == null || partnerName.length() == 0) {
+                    return new RESTServiceGenerator(cfg);
+                } else {
+                    PwsRestServiceGeneratorBeanFactory factory = (PwsRestServiceGeneratorBeanFactory) RuntimeAccess.getInstance()
+                            .getSpringBean("pwsRestServiceGeneratorBeanFactory");
+                    ServiceGenerator restServiceGenerator = factory.getPwsRestServiceGenerator(partnerName);
+                    restServiceGenerator.init(cfg);
+                    return restServiceGenerator;
+                }
             }
         }
         return null;

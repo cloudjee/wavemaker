@@ -51,6 +51,8 @@ public class ImportWS {
     
     private String serviceId;
 
+    private String partnerName;
+
     public ImportWS() {
     }
 
@@ -124,6 +126,14 @@ public class ImportWS {
 
     public void setServiceId(String serviceId) {
         this.serviceId = serviceId;
+    }
+
+     public String getPartnerName() {
+        return partnerName;
+    }
+
+    public void setPartnerName(String partnerName) {
+        this.partnerName = partnerName;
     }
 
     public void parseArguments(String[] args) {
@@ -205,6 +215,7 @@ public class ImportWS {
 
         GenerationConfiguration genConfig = new GenerationConfiguration(wsdl,
                 destDir);
+        genConfig.setPartnerName(partnerName);
         ServiceGenerator generator = (new WebServiceFactory())
                 .getServiceGenerator(genConfig);
 

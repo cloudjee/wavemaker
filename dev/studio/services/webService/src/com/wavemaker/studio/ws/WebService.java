@@ -96,7 +96,7 @@ public class WebService {
         if (path.toLowerCase().endsWith("wadl")) {
             return getWSToolsMgr().importWADL(path, serviceId, overwrite);
         }
-        return getWSToolsMgr().importWSDL(path, serviceId, overwrite, username, password);
+        return getWSToolsMgr().importWSDL(path, serviceId, overwrite, username, password, null);
     }
 
     /*public String uploadWSDL(@ParamName(name = "file")

@@ -71,6 +71,8 @@ import com.wavemaker.tools.ws.wsdl.WSDL;
 import com.wavemaker.tools.ws.wsdl.WSDLException;
 import com.wavemaker.tools.ws.wsdl.WSDLManager;
 import com.wavemaker.tools.ws.wsdl.WSDLUtils;
+import com.wavemaker.tools.pws.IPwsRestWsdlGenerator;
+import com.wavemaker.tools.pws.PwsRestWsdlGeneratorBeanFactory;
 
 /**
  * Provides Web service related tooling APIs.
@@ -116,7 +118,7 @@ public class WebServiceToolsManager {
      * @throws JAXBException
      */
     public String importWSDL(String wsdlPath, String serviceId,  //salesforce
-            boolean overwrite, String username, String password) throws WSDLException, IOException, JAXBException,
+            boolean overwrite, String username, String password, String partnerName) throws WSDLException, IOException, JAXBException,
                                                                  ParserConfigurationException, SAXException, TransformerException {
         
         logger.info("Importing " + wsdlPath);
@@ -146,7 +148,7 @@ public class WebServiceToolsManager {
                 File[] listFiles = origWsdlFile.listFiles();
                 for (File f : listFiles) {
                     if (f.getName().toLowerCase().endsWith(Constants.WSDL_EXT)) {
-                        srvId = importWSDL(f.getCanonicalPath(), null, true, username, password); //salesforce
+                        srvId = importWSDL(f.getCanonicalPath(), null, true, username, password, partnerName); //salesforce
                     }
                 }
                 return srvId;
@@ -212,6 +214,7 @@ public class WebServiceToolsManager {
         importWS.setWsdlUri(wsdlUri);
         importWS.setServiceId(serviceId);
         importWS.setDestdir(runtimeDir);
+        importWS.setPartnerName(partnerName);
         WSDL wsdl = importWS.generateServiceClass();
 
         // update DesignServiceManager with the WSDL that contains the
@@ -254,7 +257,7 @@ public class WebServiceToolsManager {
         File tempDir = IOUtils.createTempDirectory();
         try {
             File wsdlFile = generateWsdlFromWadl(wadlPath, tempDir);
-            return importWSDL(wsdlFile.getCanonicalPath(), serviceId, overwrite, null, null);
+            return importWSDL(wsdlFile.getCanonicalPath(), serviceId, overwrite, null, null, null);
         } finally {
             IOUtils.deleteRecursive(tempDir);
         }
@@ -301,7 +304,7 @@ public class WebServiceToolsManager {
             modifyServiceName(wsdlFile);
             if (isWSDL) {
                 return importWSDL(wsdlFile.getCanonicalPath(), serviceId,
-                        Boolean.valueOf(overwrite), username, password);
+                        Boolean.valueOf(overwrite), username, password, null);
             } else {
                 return importWADL(wsdlFile.getCanonicalPath(), serviceId,
                         Boolean.valueOf(overwrite));
@@ -349,6 +352,20 @@ public class WebServiceToolsManager {
          return result;
      }
 
+     public String buildRestService(String serviceName, List<String> operationName_list,
+            List<List<RESTInputParam>> inputs_list, String parameterizedUrl,
+            String method, String contentType, String outputType,
+            String xmlSchemaText, String xmlSchemaPath, boolean overwrite)
+            throws IOException, javax.wsdl.WSDLException, SAXException,
+            ParserConfigurationException, WSDLException, JAXBException,
+            TransformerException {
+
+         String result = buildRestService(serviceName, operationName_list, inputs_list, parameterizedUrl,
+                 method, contentType, outputType, xmlSchemaText, xmlSchemaPath, overwrite, null);
+
+         return result;        
+     }
+
     /**
      * Builds a REST WSDL and imports it.
      * 
@@ -387,16 +404,28 @@ public class WebServiceToolsManager {
     public String buildRestService(String serviceName, List<String> operationName_list,
             List<List<RESTInputParam>> inputs_list, String parameterizedUrl,
             String method, String contentType, String outputType,
-            String xmlSchemaText, String xmlSchemaPath, boolean overwrite)
+            String xmlSchemaText, String xmlSchemaPath, boolean overwrite, String partnerName)
             throws IOException, javax.wsdl.WSDLException, SAXException,
             ParserConfigurationException, WSDLException, JAXBException,
             TransformerException {
 
         int operCnt = operationName_list.size();
 
-        RESTWsdlGenerator restWsdlGenerator = new RESTWsdlGenerator(
-                serviceName, constructNamespace(parameterizedUrl), operationName_list,
-                parameterizedUrl);
+        IPwsRestWsdlGenerator restWsdlGenerator;
+
+        if (partnerName == null || partnerName.length() == 0) {
+            restWsdlGenerator = new RESTWsdlGenerator(
+                    serviceName, constructNamespace(parameterizedUrl), operationName_list,
+                    parameterizedUrl);
+        } else {
+            PwsRestWsdlGeneratorBeanFactory factory = (PwsRestWsdlGeneratorBeanFactory)RuntimeAccess.getInstance()
+                    .getSpringBean("pwsRestWsdlGeneratorBeanFactory");
+            restWsdlGenerator = factory.getPwsRestWsdlGenerator(partnerName);
+            restWsdlGenerator.setServiceName(serviceName);
+            restWsdlGenerator.setNamespace(constructNamespace(parameterizedUrl));
+            restWsdlGenerator.setOperationNameList(operationName_list);
+            restWsdlGenerator.setParameterizedUrl(parameterizedUrl);
+        }
         restWsdlGenerator.setHttpMethod(method);
         restWsdlGenerator.setContentType(contentType);
 
@@ -453,7 +482,7 @@ public class WebServiceToolsManager {
         try {
             File wsdlFile = new File(tempDir, serviceName + Constants.WSDL_EXT);
             restWsdlGenerator.write(wsdlFile);
-            return importWSDL(wsdlFile.getCanonicalPath(), null, overwrite, null, null); //salesforce
+            return importWSDL(wsdlFile.getCanonicalPath(), null, overwrite, null, null, partnerName); //salesforce
         } finally {
             IOUtils.deleteRecursive(tempDir);
         }

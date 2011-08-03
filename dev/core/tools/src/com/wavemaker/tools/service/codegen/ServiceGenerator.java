@@ -37,6 +37,10 @@ import com.sun.codemodel.JType;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
+import com.wavemaker.runtime.ws.util.WebServiceUtils;
+import com.wavemaker.runtime.ws.util.Constants;
+import com.wavemaker.tools.ws.wsdl.WSDL;
+import com.wavemaker.tools.ws.wsdl.SchemaElementType;
 
 /**
  * All service code generators should extend this class.
@@ -60,7 +64,18 @@ public abstract class ServiceGenerator {
 
     protected boolean useNDCLogging = false;
 
+    protected WSDL wsdl;
+
+    public ServiceGenerator() {}
+
     public ServiceGenerator(GenerationConfiguration configuration) {
+        //this.configuration = configuration;
+        //serviceDefinition = configuration.getServiceDefinition();
+        //codeModel = new JCodeModel();
+        this.init(configuration);
+    }
+
+    public void init(GenerationConfiguration configuration) {
         this.configuration = configuration;
         serviceDefinition = configuration.getServiceDefinition();
         codeModel = new JCodeModel();
@@ -290,7 +305,7 @@ public abstract class ServiceGenerator {
 
         ElementType outputType = serviceDefinition.getOutputType(operationName);
 
-        JType outputJType = getJType(outputType);
+        JType outputJType = getAdjustedJType(outputType);
 
         Map<String, JType> inputJTypeMap = new LinkedHashMap<String, JType>();
         JMethod method = serviceCls.method(JMod.PUBLIC, outputJType,
@@ -338,6 +353,24 @@ public abstract class ServiceGenerator {
         }
     }
 
+    protected JType getAdjustedJType(ElementType elementType)
+            throws GenerationException {
+        try {
+            if (elementType == null) {
+                return codeModel.VOID;
+            } else if (elementType.isList()) {
+                //return getGenericListType(elementType.getJavaType());
+                return getGenericListType(getOutputJavaType(elementType));
+            } else {
+                //return codeModel.parseType(elementType.getJavaType());
+                return codeModel.parseType(getOutputJavaType(elementType));
+            }
+        } catch (ClassNotFoundException e) {
+            // this should never get thrown!
+            throw new GenerationException(e);
+        }
+    }
+
     protected JType getGenericListType(String type)
             throws ClassNotFoundException {
         return GenerationUtils.getGenericCollectionType(codeModel, List.class
@@ -348,5 +381,10 @@ public abstract class ServiceGenerator {
         jdoc.add(" Operations for service \""
                 + serviceDefinition.getServiceId() + "\"\n"
                 + StringUtils.getFormattedDate());
+    }
+
+    //If maniopulation of the generated java type is needed, extend this class and override this method.
+    protected String getOutputJavaType(ElementType outputType) {
+        return(outputType.getJavaType());
     }
 }

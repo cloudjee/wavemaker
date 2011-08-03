@@ -44,8 +44,8 @@ import com.wavemaker.tools.ws.salesforce.JAXBTypeMapper_SF;
 public abstract class WebServiceGenerator extends ServiceGenerator {
 
     protected static final String SERVICE_QNAME_VAR_PROP_NAME = "serviceQNameVar";
-    
-    protected WSDL wsdl;
+
+    //protected WSDL wsdl;
 
     protected List<File> jaxbBindingFiles;
     
@@ -53,8 +53,21 @@ public abstract class WebServiceGenerator extends ServiceGenerator {
     
     protected JFieldVar bindingPropertiesVar;
 
+    public WebServiceGenerator() {}
+
     public WebServiceGenerator(GenerationConfiguration configuration) {
-        super(configuration);
+        this.init(configuration);
+        //super(configuration);
+        //if (serviceDefinition instanceof WSDL) {
+        //    wsdl = (WSDL) serviceDefinition;
+        //} else {
+        //    throw new WMRuntimeException(
+        //            "Service Generator can be used with WSDL only!");
+        //}
+    }
+
+    public void init(GenerationConfiguration configuration) {
+        super.init(configuration);
         if (serviceDefinition instanceof WSDL) {
             wsdl = (WSDL) serviceDefinition;
         } else {

@@ -26,15 +26,7 @@ import javax.wsdl.Operation;
 import org.w3c.dom.Element;
 import org.apache.commons.io.FileUtils;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JType;
-import com.sun.codemodel.JVar;
+import com.sun.codemodel.*;
 import com.sun.tools.xjc.api.S2JJAXBModel;
 import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.runtime.ws.RESTService;
@@ -46,6 +38,8 @@ import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.ws.wsdl.PortTypeInfo;
 import com.wavemaker.tools.ws.wsdl.ServiceInfo;
+import com.wavemaker.tools.ws.wsdl.SchemaElementType;
+import com.wavemaker.tools.ws.wsdl.WSDL;
 import com.wavemaker.common.util.StringUtils;
 
 /**
@@ -64,11 +58,19 @@ public class RESTServiceGenerator extends WebServiceGenerator {
     private JVar inputMapVar;
     
     private ServiceInfo serviceInfo;
+
+    public RESTServiceGenerator() {}
     
     public RESTServiceGenerator(GenerationConfiguration configuration) {
-        super(configuration);
+        //super(configuration);
         
         // each REST service should has one and only one ServiceInfo
+        //serviceInfo = wsdl.getServiceInfoList().get(0);
+        this.init(configuration);
+    }
+
+    public void init(GenerationConfiguration configuration) {
+        super.init(configuration);
         serviceInfo = wsdl.getServiceInfoList().get(0);
     }
 
@@ -86,31 +88,12 @@ public class RESTServiceGenerator extends WebServiceGenerator {
         S2JJAXBModel model = ((JAXBTypeMapper) wsdl.getTypeMapper()).getJAXBModel();
         if (model != null) {
             XJCCompiler.generate(model, configuration.getOutputDirectory());
-            if (WebServiceUtils.getServiceProvider(wsdl.getEndpointLocation()).equals(Constants.SERVICE_PROVIDER_INFOTERIA)) {
-                modifyRootElemInResultClasses(jaxbBindingFilePaths.get(0));
-            }
+            afterClassGeneration(jaxbBindingFilePaths.get(0));
         }
     }
 
-    private void modifyRootElemInResultClasses(String path) throws GenerationException {
-        File fpath = (new File(path)).getParentFile();
-        Map<String, Operation> operMap = wsdl.getOperationMap();
-        try {
-            for (Map.Entry<String, Operation> entry : operMap.entrySet()) {
-                String fileName = entry.getKey().substring(0, 1).toUpperCase() + entry.getKey().substring(1)
-                        + "result" + StringUtils.JAVA_SRC_EXT;
-                File targetFile = new File(fpath, fileName);
-                if (targetFile.exists()) {
-                    String content = FileUtils.readFileToString(targetFile, ServerConstants.DEFAULT_ENCODING);
-                    String fromStr = "@XmlRootElement(name = \"" + entry.getValue().getName() + "result\")";
-                    String toStr = "@XmlRootElement(name = \"result\")";
-                    content = content.replace(fromStr, toStr);
-                    FileUtils.writeStringToFile(targetFile, content, ServerConstants.DEFAULT_ENCODING);
-                }
-            }
-        } catch (IOException ex) {
-            throw new GenerationException(ex);
-        }
+    //Extend this class and override this method if generated java classes need to be customized.
+    protected void afterClassGeneration(String path) throws GenerationException {
     }
 
     @Override
@@ -124,18 +107,16 @@ public class RESTServiceGenerator extends WebServiceGenerator {
                 .ref(String.class), "parameterizedURI", JExpr.lit(wsdl
                 .getEndpointLocation()));
 
-        if (WebServiceUtils.getServiceProvider(wsdl.getEndpointLocation()).equals(Constants.SERVICE_PROVIDER_INFOTERIA)) {
-            // [RESULT]
-            // private InfoteriaRESTService restService;
-            restServiceVar = cls.field(JMod.PRIVATE, codeModel
-                    .ref(InfoteriaRESTService.class), "restService");
-        } else {
-            // [RESULT]
-            // private RESTService restService;
-            restServiceVar = cls.field(JMod.PRIVATE, codeModel
-                    .ref(RESTService.class), "restService");
-        }
+        restServiceVar = defineRestServiceVariable(cls, codeModel);
+    }
 
+    protected JFieldVar defineRestServiceVariable(JDefinedClass cls, JCodeModel codeModel) {
+        // [RESULT]
+        // private RESTService restService;
+        JFieldVar var = cls.field(JMod.PRIVATE, codeModel
+                .ref(RESTService.class), "restService");
+
+        return var;
     }
 
     @Override
@@ -143,23 +124,19 @@ public class RESTServiceGenerator extends WebServiceGenerator {
             throws GenerationException {
         JFieldVar serviceQNameVar = serviceInfo.getProperty(
                 SERVICE_QNAME_VAR_PROP_NAME, JFieldVar.class);
-        if (WebServiceUtils.getServiceProvider(wsdl.getEndpointLocation()).equals(Constants.SERVICE_PROVIDER_INFOTERIA)) {
-            // [RESULT]
-            // restService = new InfoteriaRESTService(serviceId, serviceQName, parameterizedURI);
-            JInvocation invocation = JExpr._new(codeModel.ref(InfoteriaRESTService.class));
-            invocation.arg(serviceIdVar);
-            invocation.arg(serviceQNameVar);
-            invocation.arg(parameterizedURIVar);
-            body.assign(restServiceVar, invocation);
-        } else {
-            // [RESULT]
-            // restService = new RESTService(serviceId, serviceQName, parameterizedURI);
-            JInvocation invocation = JExpr._new(codeModel.ref(RESTService.class));
-            invocation.arg(serviceIdVar);
-            invocation.arg(serviceQNameVar);
-            invocation.arg(parameterizedURIVar);
-            body.assign(restServiceVar, invocation);
-        }
+
+        // [RESULT]
+        // restService = new RESTService(serviceId, serviceQName, parameterizedURI);
+        JInvocation invocation = defineServiceInvocation(codeModel);
+        invocation.arg(serviceIdVar);
+        invocation.arg(serviceQNameVar);
+        invocation.arg(parameterizedURIVar);
+        body.assign(restServiceVar, invocation);
+    }
+
+    protected JInvocation defineServiceInvocation(JCodeModel codeModel) {
+        JInvocation invocation = JExpr._new(codeModel.ref(RESTService.class));
+        return invocation;
     }
 
     @Override
@@ -183,18 +160,7 @@ public class RESTServiceGenerator extends WebServiceGenerator {
             body.add(invocation);
         }
 
-        if (WebServiceUtils.getServiceProvider(wsdl.getEndpointLocation()).equals(Constants.SERVICE_PROVIDER_INFOTERIA)) {
-            JInvocation invocation = inputMapVar.invoke("put");
-            String projectName = serviceInfo.getName();
-            invocation.arg(JExpr.lit("project"));
-            invocation.arg(JExpr.lit(projectName));
-            body.add(invocation);
-            invocation = inputMapVar.invoke("put");
-            String flowName = wsdl.getOperation(operationName).getName();
-            invocation.arg(JExpr.lit("flow"));
-            invocation.arg(JExpr.lit(flowName));
-            body.add(invocation);
-        }
+        body = addExtraInputParameters(body, serviceInfo, wsdl, operationName);
 
         ElementType outputType = wsdl.getOutputType(operationName);
 
@@ -240,16 +206,37 @@ public class RESTServiceGenerator extends WebServiceGenerator {
             invocation.arg(codeModel.ref("Void").dotclass());
             body.add(invocation);
         } else {
+            String javaType = getOutputJavaType(outputType);
             // [RESULT]
             // <outputType> result = restService.invoke(inputMap, <outputType>);
-            invocation.arg(codeModel.ref(outputType.getJavaType()).dotclass());
-            JVar var = body.decl(codeModel.ref(outputType.getJavaType()), "result",
+            invocation.arg(codeModel.ref(javaType).dotclass());
+            JVar var = body.decl(codeModel.ref(javaType), "result",
                 invocation);
 
             // [RESULT]
             // return ((<outputType>) result);
-            body._return(JExpr.cast(codeModel.ref(outputType.getJavaType()), var));
+            body._return(JExpr.cast(codeModel.ref(javaType), var));
         }
+    }
+
+    protected JBlock addExtraInputParameters(JBlock body, ServiceInfo serviceInfo, WSDL wsdl, String operationName) {
+        return body;
+    }
+
+    protected JBlock addInputParameters(JBlock body, Map<String, String> paramMap, boolean isRef) {
+        for (Map.Entry<String, String> entry : paramMap.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            JInvocation invocation = inputMapVar.invoke("put");
+            invocation.arg(JExpr.lit(key));
+            if (isRef)
+                invocation.arg(JExpr.ref(value));
+            else
+                invocation.arg(JExpr.lit(value));
+            body.add(invocation);
+        }
+
+        return body;
     }
     
     private InvokeParams extraceInvokeParams(String operationName) {

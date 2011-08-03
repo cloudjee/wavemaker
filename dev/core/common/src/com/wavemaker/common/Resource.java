@@ -382,6 +382,15 @@ public class Resource {
     public final static Resource UNKNOWN_DEPLOYMENT_TARGET= new Resource(
             "com.wavemaker.tools.deployment$UnknownDeploymentTarget");
 
+
+    @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
+    public final static Resource UNKNOWN_PWS_TOOLS_MANAGER= new Resource(
+            "com.wavemaker.tools.pwst$UnknownPwsToolsManager");
+
+    @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
+    public final static Resource UNKNOWN_PWS_LOGIN_MANAGER= new Resource(
+            "com.wavemaker.tools.pwst$UnknownPwsLoginManager");
+
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
     public final static Resource UNKNOWN_CLOUDSERVER_MGR= new Resource(
             "com.wavemaker.tools.cloudmgr$UnknownCloudServerMgr");

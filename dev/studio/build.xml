@@ -199,7 +199,9 @@
 		<buildservice servicename="warpFlowService" 
                       serviceclass="com.wavemaker.studio.warp.FlowService"/>	
 		<buildservice servicename="waveMakerService" 
-                      serviceclass="com.wavemaker.runtime.service.WaveMakerService"/> 
+                      serviceclass="com.wavemaker.runtime.service.WaveMakerService"/>
+		<buildservice servicename="pwsImportService" 
+                      serviceclass="com.wavemaker.studio.pws.PwsImportService"/>
         <configc projectroot="${studio.dir}" verbose="false">
             <resources>
                 <fileset dir="${studio.dir}">

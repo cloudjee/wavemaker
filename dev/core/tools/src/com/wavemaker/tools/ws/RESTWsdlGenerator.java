@@ -65,6 +65,7 @@ import com.sun.tools.ws.processor.util.IndentingWriter;
 import com.wavemaker.runtime.ws.util.Constants;
 import com.wavemaker.runtime.ws.util.WebServiceUtils;
 import com.wavemaker.tools.ws.RESTInputParam.InputType;
+import com.wavemaker.tools.pws.IPwsRestWsdlGenerator;
 
 /**
  * Generates WSDL which describes how to invoke and process REST service.
@@ -73,7 +74,7 @@ import com.wavemaker.tools.ws.RESTInputParam.InputType;
  * @version $Rev$ - $Date$
  * 
  */
-public class RESTWsdlGenerator {
+public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
 
     private String serviceName;
 
@@ -100,6 +101,9 @@ public class RESTWsdlGenerator {
     private String contentType;
 
     private String outputType = null;
+
+     public RESTWsdlGenerator() {
+     }
 
     /**
      * Constructor.
@@ -128,6 +132,22 @@ public class RESTWsdlGenerator {
         this.namespace = namespace;
         this.operationName_list = new ArrayList<String>();
         this.operationName_list.add(operationName);
+        this.parameterizedUrl = parameterizedUrl;
+    }
+
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
+    }
+
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
+    }
+
+    public void setOperationNameList(List<String> operationName_list) {
+        this.operationName_list = operationName_list;
+    }
+
+    public void setParameterizedUrl(String parameterizedUrl) {
         this.parameterizedUrl = parameterizedUrl;
     }
 
@@ -169,7 +189,10 @@ public class RESTWsdlGenerator {
         this.contentType = contentType;
     }
 
-    private Definition generate() throws SAXException, IOException,
+    public void setPartnerName(String partnerName) {
+    }
+
+    protected Definition generate() throws SAXException, IOException,
             ParserConfigurationException, WSDLException {
         Definition definition = WSDLFactory.newInstance().newDefinition();
         definition.addNamespace("wsdl", Constants.WSDL11_NS);
@@ -308,14 +331,11 @@ public class RESTWsdlGenerator {
         return types;
     }
 
-    private Message generateInputMessage(String operName, List<RESTInputParam> inputParts) {
+    protected Message generateInputMessage(String operName, List<RESTInputParam> inputParts) {
         Message message = new MessageImpl();
         message.setUndefined(false);
-        if (WebServiceUtils.getServiceProvider(parameterizedUrl).equals(Constants.SERVICE_PROVIDER_INFOTERIA)) {
-            message.setQName(new QName(namespace, operName + "RequestMsg"));
-        } else {
-            message.setQName(new QName(namespace, "RequestMsg"));
-        }
+        message.setQName(buildQName(namespace, operName, "RequestMsg"));
+        
         if (inputParts != null) {
             for (RESTInputParam entry : inputParts) {
                 Part part = new PartImpl();
@@ -342,14 +362,10 @@ public class RESTWsdlGenerator {
         return message;
     }
 
-    private Message generateOutputMessage(String operName) {
+    protected Message generateOutputMessage(String operName) {
         Message message = new MessageImpl();
         message.setUndefined(false);
-        if (WebServiceUtils.getServiceProvider(parameterizedUrl).equals(Constants.SERVICE_PROVIDER_INFOTERIA)) {
-            message.setQName(new QName(namespace, operName + "ResponseMsg"));
-        } else {
-            message.setQName(new QName(namespace, "ResponseMsg"));
-        }
+        message.setQName(buildQName(namespace, operName, "ResponseMsg"));
 
         QName outType = null;
         if (outputType != null) { //called from WebServiceToolsManager
@@ -358,11 +374,7 @@ public class RESTWsdlGenerator {
                 outType = new QName(outputType.substring(0, i),
                         outputType.substring(i + 1));
             } else {
-                if (WebServiceUtils.getServiceProvider(parameterizedUrl).equals(Constants.SERVICE_PROVIDER_INFOTERIA)) {
-                    outType = new QName(operName + outputType);
-                } else {
-                    outType = new QName(outputType);
-                }
+                outType = buildQName(null, operName, outputType);
             }
             additionalNamespaces.add(outType);
         } else if (outputElementType != null) { //callled from Wadl2Wsdl
@@ -392,33 +404,12 @@ public class RESTWsdlGenerator {
         }
     }
 
-    private PortType generatePortType(List<String> operList, Message inputMessage,
-            Message outputMessage) throws ParserConfigurationException {
-        PortType portType = new PortTypeImpl();
-        portType.setUndefined(false);
-        portType.setQName(new QName(serviceName));
-
-        for (String operName : operList) {
-            Operation operation = new OperationImpl();
-            operation.setUndefined(false);
-            operation.setName(operName);
-            if (httpMethod != null && httpMethod.equals("POST")) {
-                String content = "POST";
-                if (contentType != null && contentType.length() > 0) {
-                    content += " " + contentType;
-                }
-                operation.setDocumentationElement(generateDocumentation(content));
-            }
-            Input input = new InputImpl();
-            input.setMessage(inputMessage);
-            operation.setInput(input);
-            Output output = new OutputImpl();
-            output.setMessage(outputMessage);
-            operation.setOutput(output);
-            portType.addOperation(operation);
+     public QName buildQName(String namespace, String operationName, String suffix) {
+        if (namespace == null || namespace.length() == 0) {
+            return (new QName(suffix));
+        } else {
+            return (new QName(namespace, suffix));
         }
-        
-        return portType;
     }
 
     /**

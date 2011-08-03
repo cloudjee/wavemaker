@@ -30,6 +30,8 @@ public class GenerationConfiguration {
 
     private File outputDirectory;
 
+    private String partnerName;
+
     public GenerationConfiguration(DeprecatedServiceDefinition serviceDefinition,
             File outputDirectory) {
         this.serviceDefinition = serviceDefinition;
@@ -50,6 +52,14 @@ public class GenerationConfiguration {
 
     public void setOuputDirectory(File outputDirectory) {
         this.outputDirectory = outputDirectory;
+    }
+
+    public String getPartnerName() {
+        return partnerName;
+    }
+
+    public void setPartnerName(String partnerName) {
+        this.partnerName = partnerName;
     }
 
 }
