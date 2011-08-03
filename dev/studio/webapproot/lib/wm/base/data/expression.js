@@ -69,8 +69,7 @@ wm.expression.getValue(exp, app.main);
 			    if (inSource.match(/^\[.*\]/)) {
 				var matches = inSource.match(/^\[(.*?)\]/);
 				inSource = inSource.replace(/^\[(.*?)\]\./, "");
-				var roots = wm.Page.byName[matches[1]];
-				var root = (roots) ? roots[0] : "";
+				var root = wm.Page.getPage(matches[1]);
 				var v = root ? root.getValue(inSource) : "";
 			    } else if (inRoot.getValue){
 				var v = inRoot.getValue(inSource);
