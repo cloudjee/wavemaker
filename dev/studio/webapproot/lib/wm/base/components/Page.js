@@ -578,14 +578,21 @@ dojo.mixin(wm.Page, {
      * we destroy the page and remove page5 from this list, that we could no longer access ANY page5.
      */
     byName: {}, 
+    getPage: function(inName, inIndex) {
+	var page = wm.Page.byName[wm.capitalize(inName)];
+	if (page && page.length) {
+	    if (inIndex === undefined) inIndex = page.length-1;
+	    return page[inIndex];
+	}
+    },
     registerPage: function(inPage) {
 	    // We'll need the page to 
-	    if (!wm.Page.byName[inPage.name])
-		wm.Page.byName[inPage.name] = [];
-	    wm.Page.byName[inPage.name].push(inPage);
+	    if (!wm.Page.byName[inPage.declaredClass])
+		wm.Page.byName[inPage.declaredClass] = [];
+	    wm.Page.byName[inPage.declaredClass].push(inPage);
     },
     deregisterPage: function(inPage) {
-	var a = wm.Page.byName[inPage.name || inPage.declaredClass];
+	var a = wm.Page.byName[inPage.declaredClass];
 	if (a)
 	    wm.Array.removeElement(a, inPage);
     }
