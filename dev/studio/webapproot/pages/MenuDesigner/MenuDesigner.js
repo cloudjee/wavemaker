@@ -34,8 +34,11 @@ dojo.declare("MenuDesigner", wm.Page, {
 	if (!s && inMenu.fullStructureStr)
 	    s = dojo.fromJson(inMenu.fullStructureStr);
 	this.tree.clear();
-	if (s)
-	    this.setMenuBuildTree(s, this.tree.root);
+	if (s) {
+	    this.rootNode = new wm.TreeNode(this.tree.root, {closed: false, content: this.getDictionaryItem("YOUR_MENU_NAME"), data: {}});
+	    this.setMenuBuildTree(s, this.rootNode);
+	    this.tree.select(this.rootNode);
+	}
 	this.updateMenu();
 
 	this.menuItemImageList.setOptions(studio.getImageLists().join(","));
@@ -43,6 +46,7 @@ dojo.declare("MenuDesigner", wm.Page, {
 	delete this._defaultClass;
     },
     setMenuBuildTree: function(structure, parentNode) {
+
 	for (var i = 0; i < structure.length; i++) {
 	    var content = structure[i].label;
 	    if (structure[i].iconClass)
@@ -63,9 +67,10 @@ dojo.declare("MenuDesigner", wm.Page, {
           var parent = this.tree.selected || this.tree.root;
 	  var childCount = parent.kids.length;
 	  var content = this.getDictionaryItem("DEFAULT_ITEM_NAME", {index: childCount});
-          new wm.TreeNode(parent, {closed: false, content: content, data: {content: content}});
+          var node = new wm.TreeNode(parent, {closed: false, content: content, data: {content: content}});
           this.updateMenu();
-          
+	  this.tree.select(node);
+          this.EditButtonClick();
       } catch(e) {
           console.error('ERROR IN AddButtonClick: ' + e); 
       } 
@@ -76,7 +81,7 @@ dojo.declare("MenuDesigner", wm.Page, {
           if (!node || node == this.tree.root) return;
           node.destroy();
           this.updateMenu();          
-	  this.tree.selected = null;
+	  this.tree.select(this.rootNode);
       } catch(e) {
           console.error('ERROR IN DeleteButtonClick: ' + e); 
       } 
@@ -144,8 +149,9 @@ dojo.declare("MenuDesigner", wm.Page, {
   },
   treeDblclick: function(inSender, inNode) {
       try {
-          this.EditButtonClick();
-          
+	  if (inNode != this.rootNode) {
+              this.EditButtonClick();
+          }
       } catch(e) {
           console.error('ERROR IN treeDblclick: ' + e); 
       } 
@@ -194,7 +200,16 @@ dojo.declare("MenuDesigner", wm.Page, {
 	    this._iconlistDialog.hide();
 	    delete this._iconlistDialog;
     },
-
+    treeSelect: function(inSender, inNode) {
+	this.EditButton.setShowing(inNode != this.rootNode);
+	this.DeleteButton.setShowing(inNode != this.rootNode);
+    },
+    treeDeselect: function() {
+	wm.job("MenuDesigner", 50, dojo.hitch(this, function() {
+	    if (!this.tree.selected)
+		this.tree.select(this.rootNode);
+	}));
+    },
   updateMenu: function() {
 /*
       this.sample.setFullStructure(this.write());
@@ -203,8 +218,8 @@ dojo.declare("MenuDesigner", wm.Page, {
   },
   write: function() {
     var result = [];
-      for (var i =0; i < this.tree.root.kids.length; i++) {
-        result.push(this.writeNode(this.tree.root.kids[i]));
+      for (var i =0; i < this.rootNode.kids.length; i++) {
+        result.push(this.writeNode(this.rootNode.kids[i]));
    }
 
     return result;
