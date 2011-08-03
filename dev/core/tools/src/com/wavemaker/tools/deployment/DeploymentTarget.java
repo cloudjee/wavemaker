@@ -27,10 +27,17 @@ import java.util.ArrayList;
 public interface DeploymentTarget {
     
     /**
+     * Validate the deployment info prior to WAR generation 
+     * @param deploymentInfo
+     * @return status message
+     */
+    String validateDeployment(DeploymentInfo deploymentInfo);
+    
+    /**
      * Deploy an app. 
      *
      * @param webapp  Either exploded or archived webapp to deploy
-     * @param deploymentInfo TODO
+     * @param deploymentInfo
      * @return status message
      */
     String deploy(File webapp, 
@@ -38,7 +45,7 @@ public interface DeploymentTarget {
 
     /**
      * Undeploy an app.
-     * @param deploymentInfo TODO
+     * @param deploymentInfo
      *
      * @return status message
      */
@@ -46,7 +53,7 @@ public interface DeploymentTarget {
 
     /**
      * Redeploy an already deployed app.
-     * @param deploymentInfo TODO
+     * @param deploymentInfo 
      *
      * @return status message
      */
@@ -54,7 +61,7 @@ public interface DeploymentTarget {
 
     /**
      * start a deployed app.
-     * @param deploymentInfo TODO
+     * @param deploymentInfo 
      *
      * @return status message
      */
@@ -62,14 +69,14 @@ public interface DeploymentTarget {
 
     /**
      * stop a deployed app.
-     * @param deploymentInfo TODO
+     * @param deploymentInfo 
      *
      * @return status message
      */
     String stop(DeploymentInfo deploymentInfo);
 
     /**
-     * @param deploymentInfo TODO
+     * @param deploymentInfo 
      * @return  current deployments
      */
     List<AppInfo> listDeploymentNames(DeploymentInfo deploymentInfo); 

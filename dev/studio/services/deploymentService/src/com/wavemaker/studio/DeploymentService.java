@@ -169,6 +169,12 @@ public class DeploymentService {
     }
     
     public String deploy(DeploymentInfo deploymentInfo) throws IOException {
+        if(deploymentInfo.getDeploymentType() != DeploymentType.FILE) {
+            String validateResult = deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).validateDeployment(deploymentInfo);
+            if (!validateResult.equals("SUCCESS")) {
+                return validateResult;
+            }
+        }
         File f = serviceDeploymentManager.generateWebapp(deploymentInfo);
         if (!f.exists()) {
             throw new AssertionError("Application archive file doesn't exist at " + f.getAbsolutePath());

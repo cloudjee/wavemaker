@@ -77,6 +77,23 @@ public class TestVmcDeploymentTarget {
 	}
 	
 	@Test
+    public void testValidateWithDisallowedAppName() {
+        DeploymentInfo deployment1 = new DeploymentInfo();
+        deployment1.setToken(token);
+        deployment1.setTarget("https://api.cloudfoundry.com");
+        deployment1.setApplicationName("inflickr");
+        DeploymentDB db1 = new DeploymentDB();
+        db1.setDbName("wmcftestdb");
+        deployment1.getDatabases().add(db1);
+        
+        String result;
+        VmcDeploymentTarget target = new VmcDeploymentTarget();
+        
+        result = target.validateDeployment(deployment1);
+        assertEquals("ERROR: The URI: \"inflickr.cloudfoundry.com\" has already been taken or reserved", result);
+    }
+	
+	@Test
 	public void testUnknownServiceLookup() {
 	    try {
 	    testClient.getService("foo");
@@ -127,7 +144,41 @@ public class TestVmcDeploymentTarget {
         assertEquals(VmcDeploymentTarget.TOKEN_EXPIRED_RESULT, result);
 	}
 	
-	//@Test
+	@Test
+    public void testValidateWithExpiredToken() throws MalformedURLException {
+        DeploymentInfo deployment1 = new DeploymentInfo();
+        deployment1.setToken("invalid");
+        deployment1.setTarget("https://api.cloudfoundry.com");
+        deployment1.setApplicationName("wmcftest");
+        DeploymentDB db1 = new DeploymentDB();
+        db1.setDbName("wmcftestdb");
+        deployment1.getDatabases().add(db1);
+        
+        String result;
+        VmcDeploymentTarget target = new VmcDeploymentTarget();
+        
+        result = target.validateDeployment(deployment1);
+        assertEquals(VmcDeploymentTarget.TOKEN_EXPIRED_RESULT, result);
+    }
+	
+	@Test
+	public void testValidateValidDeployment() {
+	    DeploymentInfo deployment1 = new DeploymentInfo();
+        deployment1.setToken(token);
+        deployment1.setTarget("https://api.cloudfoundry.com");
+        deployment1.setApplicationName("wmcftest");
+        DeploymentDB db1 = new DeploymentDB();
+        db1.setDbName("wmcftestdb");
+        deployment1.getDatabases().add(db1);
+        
+        String result;
+        VmcDeploymentTarget target = new VmcDeploymentTarget();
+        
+        result = target.validateDeployment(deployment1);
+        assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);
+	}
+	
+	@Test
 	public void testFullAppLifecycle() {
 	    DeploymentInfo deployment1 = new DeploymentInfo();
 	    deployment1.setToken(token);

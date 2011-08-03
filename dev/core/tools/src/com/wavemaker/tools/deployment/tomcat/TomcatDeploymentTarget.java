@@ -114,4 +114,12 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
         rtn.setPassword(deploymentInfo.getPassword());
         return rtn;
     }
+
+    /** 
+     * {@inheritDoc}
+     */
+    public String validateDeployment(DeploymentInfo deploymentInfo) {
+        //No-op
+        return "SUCCESS";
+    }
 }

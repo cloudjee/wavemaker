@@ -64,7 +64,30 @@ public class VmcDeploymentTarget implements DeploymentTarget {
 		props.put(VMC_URL_PROPERTY, DEFAULT_URL);
 		CONFIGURABLE_PROPERTIES = Collections.unmodifiableMap(props);
 	}
-
+	
+	public String validateDeployment(DeploymentInfo deploymentInfo) {
+	    CloudFoundryClient client = getClient(deploymentInfo);
+	    
+	    List<String> uris = new ArrayList<String>();
+        String url = deploymentInfo.getTarget();
+        if (!hasText(url)){
+            url = DEFAULT_URL;
+        }
+        uris.add(url.replace("api", deploymentInfo.getApplicationName()));
+        
+        try {
+            client.createApplication(deploymentInfo.getApplicationName(), CloudApplication.SPRING, client.getDefaultApplicationMemory(CloudApplication.SPRING), uris, null, true);
+            return "SUCCESS";
+        } catch (CloudFoundryException ex) {
+            if (HttpStatus.FORBIDDEN == ex.getStatusCode()) {
+                return TOKEN_EXPIRED_RESULT;
+            } else if (HttpStatus.BAD_REQUEST == ex.getStatusCode()) {
+                return "ERROR: "+ex.getDescription();
+            } else {
+                throw ex;
+            }
+        }
+	}
 	
 	public String deploy(File webapp, DeploymentInfo deploymentInfo) {
 		
