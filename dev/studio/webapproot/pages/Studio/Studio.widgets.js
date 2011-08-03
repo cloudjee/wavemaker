@@ -455,7 +455,10 @@ Studio.widgets = {
 							    markupToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
 							    markupLogoBottomHolder: ["wm.Panel", {width: "221px", border: "0"}, {}]
 							}],
-							markupEditArea: ["wm.AceEditor", {width: "100%", height: "100%", syntax: "html"}, {onCtrlKey: "markupEditorCtrlKey", onChange: "setEditAreaDirty"}]
+						        markupEditPanel: ["wm.Panel", {height: "100%", border: "0", layoutKind: "left-to-right"}, {}, {
+							    markupEditArea: ["wm.AceEditor", {width: "100%", height: "100%", syntax: "html"}, {onCtrlKey: "markupEditorCtrlKey", onChange: "setEditAreaDirty"}],
+							    markupHtmlDesc: ["wm.Html", {width: "250px", height: "100%", html: "<p>HTML you enter here can be accessed by your wm.Content widgets if your highest level div has an ID.</p><p>To try this, out, copy the following HTML into the markup editor:<br/><pre>&lt;div id='HelloWorld'&gt;\n\tHello World\n&lt;/div&gt;\n\n&lt;div id='GoodbyeWorld'&gt;\n\tGoodbye World\n&lt;/div&gt;</pre><br/><p>Now drag a wm.Content widget onto your canvas, and look at the <b>content</b> property.  Each ID listed here shows up in the list of options for the property.  Selecting the ID shows all of that ID's contents in the wm.Content widget.</p><p>You can put as much HTML as you want within these divs.</p>"}]
+							}]
 						}],
 					    widgets: ["wm.Layer", {caption: "Widgets"}, {}, {
 							widgetsHtml: ["wm.Html", {width: "100%", height: "100%", border: 0, padding: "4, 0, 0, 4"}, {}]
