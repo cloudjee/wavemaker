@@ -292,7 +292,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	  } else {
 	      app.confirm(this.getDictionaryItem("CONFIRM_DEPLOY_HEADER") + this.generateDeploymentHTMLSynopsis(inData), false, dojo.hitch(this, function() {
 		  inData.token = dojo.cookie(this.CFTOKEN_COOKIE);
-		  if (!inData.token) {
+		  if (!inData.token && inData.type == this.CF_DEPLOY) {
 		      this.cfLoginDialog.show();
 		      this.loginDialogUserEditor.focus();
 		      this._deployData = inData;
@@ -313,6 +313,11 @@ dojo.declare("DeploymentDialog", wm.Page, {
 						  this.deploySuccess(inResult,inData);
 					      }),
 					      dojo.hitch(this, "deployFailed"));
+	var type = inData.deploymentType;
+	if (type == this.FILE_DEPLOY)
+	    type = inData.archiveType;
+	studio.trackerImage.setSource("http://wavemaker.com/img/blank.gif?op=" + type + "&v=" + escape(wm.studioConfig.studioVersion) + "&r=" + String(Math.random(new Date().getTime())).replace(/\D/,"").substring(0,8));
+	alert(studio.trackerImage.source);
     },
     deploySuccess: function(inResult, inData) {
 	studio.endWait();
