@@ -292,7 +292,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	  } else {
 	      app.confirm(this.getDictionaryItem("CONFIRM_DEPLOY_HEADER") + this.generateDeploymentHTMLSynopsis(inData), false, dojo.hitch(this, function() {
 		  inData.token = dojo.cookie(this.CFTOKEN_COOKIE);
-		  if (!inData.token && inData.type == this.CF_DEPLOY) {
+		  if (!inData.token && inData.deploymentType == this.CF_DEPLOY) {
 		      this.cfLoginDialog.show();
 		      this.loginDialogUserEditor.focus();
 		      this._deployData = inData;
@@ -317,7 +317,6 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	if (type == this.FILE_DEPLOY)
 	    type = inData.archiveType;
 	studio.trackerImage.setSource("http://wavemaker.com/img/blank.gif?op=" + type + "&v=" + escape(wm.studioConfig.studioVersion) + "&r=" + String(Math.random(new Date().getTime())).replace(/\D/,"").substring(0,8));
-	alert(studio.trackerImage.source);
     },
     deploySuccess: function(inResult, inData) {
 	studio.endWait();
@@ -346,7 +345,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
     deployFailed: function(inError) {
 	studio.endWait();
-	app.toastError(this.getDictionaryItem("TOAST_DEPLOY_FAILED", {error: inError.message}));
+	app.alert(this.getDictionaryItem("TOAST_DEPLOY_FAILED", {error: inError.message}));
     },
   copyButtonClick: function(inSender) {
       if (this.getIsDirty()) {
@@ -474,16 +473,25 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
   deleteButtonClick: function(inSender) {
       try {
-	  app.confirm(this.getDictionaryItem("CONFIRM_DELETE_HEADER") + this.generateDeploymentHTMLSynopsis(), false, dojo.hitch(this, function() {
 	      var i = this.deploymentList.getSelectedIndex();
-              this.deploymentListVar.removeItem(i);
-	      app.toastWarning("TODO: Delete from server");
-	      dojo.forEach(this.currentDatabaseBoxes, function(w) {
-		  w.destroy();
+	      var item = this.deploymentList.selectedItem.getValue("dataValue");
+
+	  app.confirm(this.getDictionaryItem("CONFIRM_DELETE_HEADER") + this.generateDeploymentHTMLSynopsis(item), false, dojo.hitch(this, function() {
+	      var onsuccess = dojo.hitch(this, function() {
+		  dojo.forEach(this.currentDatabaseBoxes, function(w) {
+		      w.destroy();
+		  });
+		  this.defaultLayer.activate();
+		  this._currentDeploymentIndex = -1;
+		  studio.updateDeploymentsMenu();
 	      });
-	      this.defaultLayer.activate();
-	      this._currentDeploymentIndex = -1;
-	      studio.updateDeploymentsMenu();
+
+              this.deploymentListVar.removeItem(i);
+	      if (item.deploymentId) {
+		  studio.deploymentService.requestAsync("delete", [item.deploymentId], onsuccess);
+	      } else {
+		  onsuccess();
+	      }
 	  }));
       } catch(e) {
           console.error('ERROR IN deleteButtonClick: ' + e); 
@@ -655,6 +663,10 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	}
 		
     },
+    getDbProps: function(inDataModel) {
+
+
+    },
     generateDataModelBoxes: function() {
 	dojo.forEach(this.currentDatabaseBoxes, function(w) {
 	    w.destroy();
@@ -663,47 +675,52 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	var components = studio.application.getServerComponents();
 	dojo.forEach(components, dojo.hitch(this, function(c,i) {
 	    if (c instanceof wm.DataModel) {
-		var box = this.editPanel.createComponents(this.databaseBox, this)[0];
-		box.dataModel = c;
-		box.setTitle(this.getDictionaryItem("DATABASE_BOX_TITLE", {databaseName: c.name}));
-		this.currentDatabaseBoxes.push(box);
+
+		studio.dataService.requestSync(
+		    LOAD_CONNECTION_PROPS_OP,
+		    [c.dataModelName], 
+		    dojo.hitch(this, function(inData) {
+			var l = parseConnectionUrl(inData.connectionUrl, inData);
+			if (l)
+			    var connection = {dbtype: l[0],
+					      host: l[1],
+					      port: l[2],
+					      db: l[3]};
+			if (connection.dbtype != "HSQLDB") {
+			    var box = this.editPanel.createComponents(this.databaseBox, this)[0];
+			    box.dataModel = c;
+			    box.dataProperties = inData;
+			    box.dataConnection = connection;
+			    box.setTitle(this.getDictionaryItem("DATABASE_BOX_TITLE", {databaseName: c.name}));
+			    this.currentDatabaseBoxes.push(box);
+			}
+		})
+	    );
 	    }
-	}));
+	    }));
+
 	return this.currentDatabaseBoxes;
     },
     populateDataModelBoxesStandard: function() {
 	dojo.forEach(this.currentDatabaseBoxes, dojo.hitch(this, function(b, i) {
 	    var dataModel = b.dataModel;
+	    var inData = b.dataProperties;
+	    var connection = b.dataConnection;
 	    this["databaseLayers" + (i+1)].setLayerIndex(0);
 	    this["databaseConnectionEditor" + (i+1)].setDataValue("Standard");
-	    studio.dataService.requestSync(
-		LOAD_CONNECTION_PROPS_OP,
-		[dataModel.dataModelName], 
-		dojo.hitch(this, function(inData) {
-		    var l = parseConnectionUrl(inData.connectionUrl, inData);
-		    var connection = {dbtype: l[0],
-				      host: l[1],
-				      port: l[2],
-				      db: l[3]};
-		    if (l) {
-			this["databaseTypeEditor" + (i+1)].setDataValue(connection.dbtype);
-			this["databaseUserEditor" + (i+1)].setDataValue(inData.username);
-			this["databasePasswordEditor" + (i+1)].setDataValue(inData.password);
-			if (connection.dbtype == "HSQLDB") {
-			    this["databaseHostEditor" + (i+1)].hide();
-			    this["databasePortEditor" + (i+1)].hide();
-			    this["databaseNameEditor" + (i+1)].setRequired(true);
-			    this["databaseNameEditor" + (i+1)].setCaption(this.getDictionaryItem("HSQLDB_DATABASE_NAME_CAPTION"));
-			} else {
-			    this["databaseHostEditor" + (i+1)].setDataValue(connection.host);
-			    this["databasePortEditor" + (i+1)].setDataValue(connection.port);
-			}
-			this["databaseNameEditor" + (i+1)].setDataValue(connection.db);
-			this["databaseJNDINameEditor" + (i+1)].setDataValue(connection.db);
-		    }
-		})
-	    );
+
+
+	    if (connection) {
+		this["databaseTypeEditor" + (i+1)].setDataValue(connection.dbtype);
+		this["databaseUserEditor" + (i+1)].setDataValue(inData.username);
+		this["databasePasswordEditor" + (i+1)].setDataValue(inData.password);
+		this["databaseHostEditor" + (i+1)].setDataValue(connection.host);
+		this["databasePortEditor" + (i+1)].setDataValue(connection.port);
+		this["databaseNameEditor" + (i+1)].setDataValue(connection.db);
+		this["databaseJNDINameEditor" + (i+1)].setDataValue(connection.db);
+	    }
 	}));
+
 	this.editPanel.reflow();
     },
 
