@@ -458,7 +458,7 @@ dojo.declare("wm.Component", wm.Object, {
 	    if (index != -1) {
 		var pageName = inId.substring(0,index);
 		var remainder = inId.substring(index+1);
-		var pages = wm.Page.byName[pageName];
+		var pages = wm.Page.getPage(pageName);
 		if (pages && pages.length) {
 		    var page = pages[0]; // If more than one page of the same name, we have know way to know which one to use so just pick the first
 		    return page.getValueById(remainder);
