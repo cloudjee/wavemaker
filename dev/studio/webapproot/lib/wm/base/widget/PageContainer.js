@@ -214,8 +214,12 @@ dojo.declare("wm.PageContainer", wm.Box, {
 		this.revealed();
 	},
 	revealed: function() {
-		if (!this.page)
-			this.loadPage(this.pageName);
+	    if (!this.page)
+		this.loadPage(this.pageName);
+	    else {
+		this.page.onShow();
+		this.page.root.callOnShowParent();
+	    }
 	},
 	flow: function() {
 		if (this._boundsDirty)

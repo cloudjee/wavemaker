@@ -766,6 +766,7 @@ dojo.declare("wm.Dialog", wm.Container, {
         onEnterKeyPress: function(inText) {
         },
 	onShow: function() {
+	    this.callOnShowParent();
 	},
 	onClose: function(inWhy) {
 	},

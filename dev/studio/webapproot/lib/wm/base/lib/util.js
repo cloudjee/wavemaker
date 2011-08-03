@@ -397,6 +397,19 @@ wm.forEachWidget = function(inWidget, inFunc, inIgnoreBuiltin) {
 	}
 }
 
+// if inFunc returns false, do not call on its widgets; unlike wm.forEachWidgets though, it does NOT mean cancel calling on other subtrees
+wm.forEachVisibleWidget = function(inWidget, inFunc, inIgnoreBuiltin) {
+    var result;
+    if (inFunc && inWidget && !inWidget.isAncestorHidden()) 
+	result = inFunc(inWidget);
+
+    if (result !== false) {
+	for (var i=0, ws = inWidget.getOrderedWidgets(), r, w; w=ws[i]; i++) {
+	    w.forEachVisibleWidget && !inIgnoreBuiltin ? w.forEachVisibleWidget(inFunc) : wm.forEachVisibleWidget(w, inFunc, inIgnoreBuiltin);
+	}
+    }
+}
+
 // themes
 wm.theme = {
 	getPath: function() {

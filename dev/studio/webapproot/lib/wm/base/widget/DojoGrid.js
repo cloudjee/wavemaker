@@ -95,8 +95,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			}
 		}
 
-		if (this.variable && this.variable.getData()) 
+	    if (this.variable && this.variable.getData()) {
 			this.renderDojoObj();
+	    }
 	},
 	dataSetToSelectedItem: function() {
 		this.selectedItem.setLiveView((this.variable|| 0).liveView);
@@ -528,14 +529,12 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 		if (!this.variable)
 			return;
-		
-	    if (this.isAncestorHidden()) {
-		if (!this._layerConnections) 
-		    this.connectToAllLayers(this, "renderDojoObj");
+
+	    if (this.isAncestorHidden() && !this._renderHiddenGrid) {
+		this._renderDojoObjSkipped = true;
 		return;
-	    } else if (this._layerConnections) {
-		this.disconnectFromAllLayers();
-	    }
+	    } 
+	        this._renderDojoObjSkipped = false;
 		this.rendering = true;
 		var structure = this.getStructure();
 		if (structure[0].length == 0)
@@ -593,6 +592,13 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			return;
 		this.dojoObj.startup();
 	},
+
+	    _onShowParent: function() {
+		if (this._renderDojoObjSkipped) {
+		    this.renderDojoObj();
+		}
+	    },
+
 	connectDojoEvents: function(){
 		//dojo.connect(this.dojoObj, 'onCellClick', this, 'onCellClick');
 

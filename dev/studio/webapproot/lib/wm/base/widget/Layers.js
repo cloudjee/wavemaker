@@ -118,10 +118,7 @@ dojo.declare("wm.Layer", wm.Container, {
 	},
 	// fired by Layers
 	onShow: function() {
-		// FIXME: remove _onShowParent when no longer used (e.g. PageContainer)
-		wm.forEachProperty(this.widgets, function(w) {
-			wm.fire(w, "_onShowParent");
-		})
+	    this.callOnShowParent();
 	},
     /* Only valid for layers within a TabLayers */
        setClosable: function(isClosable) {
@@ -179,11 +176,6 @@ dojo.declare("wm.Layers", wm.Container, {
             this._isDesign = this.isDesignLoaded();
 	    if (this._isDesign) {
 		this.flags.noModelDrop = true;
-	    } else {
-		this.connectToAllLayers(this.parent, dojo.hitch(this, function() {
-		    this._fireLayerOnShow();
-		}));
-
 	    }
 
 	    

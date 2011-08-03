@@ -455,6 +455,9 @@ this.label.enable();
 		}
 	},
 	init: function() {
+	    if (this.name == "dojoGrid1") {
+		alert("HEY:HO");
+	    }
 
 		this.initDomNode();
 		this.inherited(arguments);
@@ -598,6 +601,15 @@ this.label.enable();
 	  return parent.isAncestorHidden();
 	},
 
+    callOnShowParent: function() {
+	var self = this;
+		wm.forEachVisibleWidget(this, function(w) {
+		    if (self != w && w._onShowParent) {
+			w._onShowParent();
+			return false;
+		    }
+		}, true);
+    },
 
     // OPTIONAL: Maybe handle all parents showing/hiding but thats a lot of connections
     //           and it may be better to just tell people not to show/hide parents of widgets needing these; just use layers
