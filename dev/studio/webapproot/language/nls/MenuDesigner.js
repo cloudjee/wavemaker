@@ -12,5 +12,6 @@
  *  limitations under the License.
  */
 {
-DEFAULT_ITEM_NAME: "Menu Item ${index}"
+    DEFAULT_ITEM_NAME: "Menu Item ${index}",
+    YOUR_MENU_NAME: "Your Menu"
 }
