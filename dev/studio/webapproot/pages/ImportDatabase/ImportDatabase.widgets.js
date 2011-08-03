@@ -19,11 +19,11 @@ ImportDatabase.widgets = {
 		panel2: ["wm.Layer", {caption: "Basic Options", layoutKind: "top-to-bottom", horizontalAlign: "center", verticalAlign: "middle"}, {}, {
 
 
-		    dbdropdown: ["wm.SelectMenu", {captionAlign: "left", captionSize: "120px", caption: "Database System", width: "65%", helpText: "Choose what type of database server you are connecting to"}, {onchange: "importDBdropdownChanged"}],
-		    hostInput: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "Hostname", width: "65%", border: "0", emptyValue: "emptyString", helpText: "The network host for the database. The default value is localhost, meaning that the database is located on the same computer that WaveMaker studio is running on."}, {onchange: "importHostChanged", changeOnKey: true, onEnterKeyPress: "importBtnClick"}],
-		    usernameInput: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "Username", width: "65%", border: "0", emptyValue: "emptyString", helpText: "Enter the username for connecting to the database server"}, {onchange: "usernameChanged", changeOnKey: true, onEnterKeyPress: "importBtnClick"}],
+		    dbdropdown: ["wm.SelectMenu", {captionAlign: "left", captionSize: "120px", caption: "Database System", width: "65%", helpText: "Choose what type of database server you are connecting to", required: true}, {onchange: "importDBdropdownChanged"}],
+		    hostInput: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "Hostname", width: "65%", border: "0", emptyValue: "emptyString", helpText: "The network host for the database. The default value is localhost, meaning that the database is located on the same computer that WaveMaker studio is running on.", required: true}, {onchange: "importHostChanged", changeOnKey: true, onEnterKeyPress: "importBtnClick"}],
+		    usernameInput: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "Username", width: "65%", border: "0", emptyValue: "emptyString", helpText: "Enter the username for connecting to the database server", required: true}, {onchange: "usernameChanged", changeOnKey: true, onEnterKeyPress: "importBtnClick"}],
 		    passwordInput: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "Password", width: "65%", border: "0", password:true, emptyValue: "emptyString", helpText: "Enter the password for connecting to the database server"}, {onEnterKey: "importBtnClick"}],
-		    extraInput: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "extraInput1", width: "65%", border: "0", showing: false, emptyValue: "emptyString", helpText: "This is set in datautils.js"}, {changeOnKey: true, onchange: "importExtraChanged", onEnterKeyPress: "importBtnClick"}],
+		    extraInput: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "extraInput1", width: "65%", border: "0", showing: false, emptyValue: "emptyString", helpText: "This is set in datautils.js", required: true}, {changeOnKey: true, onchange: "importExtraChanged", onEnterKeyPress: "importBtnClick"}],
 		    extra2Input: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "Instance", width: "65%", border: "0", emptyValue: "emptyString", helpText: "Normally, this should be set to the value 'SQLExpress' if you are using SQL Server Express Edition."}, {onchange: "importExtra2Changed", changeOnKey: true, onEnterKeyPress: "importBtnClick"}],
 		}],
 		panel4: ["wm.Layer", {captionAlign: "left", captionSize: "120px", caption: "Advanced Options", horizontalAlign: "center", verticalAlign: "middle", layoutKind: "left-to-right", autoScroll: true, padding: "0"}, {}, {
@@ -46,9 +46,17 @@ ImportDatabase.widgets = {
 		}]
 	    }],
 	    footer: ["wm.Panel", {height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
-		testConnectionBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Test Connection", width: "160px"}, {onclick: "testConnectionBtnClick"}],
+		testConnectionBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Test Connection", width: "160px"}, {onclick: "testConnectionBtnClick"}, {
+		    binding: ["wm.Binding", {}, {}, {
+			wire: ["wm.Wire", {targetProperty: "disabled", source: "panel1.invalid"}]
+		    }]
+		}],
 		spacer1: ["wm.Spacer", {width: "10px"}, {}],
-		importBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Import", width: "96px", hint: "Import Database"}, {onclick: "importBtnClick"}],
+		importBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Import", width: "96px", hint: "Import Database"}, {onclick: "importBtnClick"}, {
+		    binding: ["wm.Binding", {}, {}, {
+			wire: ["wm.Wire", {targetProperty: "disabled", source: "panel1.invalid"}]
+		    }]
+		}],
 		spacer2: ["wm.Spacer", {width: "10px"}, {}],
 		cancelBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Close", width: "96px"}, {onclick: "cancelBtnClick"}]
 	    }]
