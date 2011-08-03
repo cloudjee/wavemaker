@@ -532,7 +532,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
 			  this.newDeploymentDialog.show(); 
 		      }));
 		      */
-	  var addFunc = dojo.hitch(this, function() {
+
+	  var notSavedFunc = dojo.hitch(this, function() {
 			  var selectedIndex = this.deploymentList.getSelectedIndex();
 			  if (!this.deploymentListVar.getItem(selectedIndex).getValue("dataValue").deploymentId) {
 			      this.deploymentListVar.removeItem(selectedIndex);
@@ -542,7 +543,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	      this.confirmSaveDialog.show();
 	      this.saveDialogDontSaveButton.onclick = dojo.hitch(this, function() {
 		  this.confirmSaveDialog.hide();
-		  addFunc();
+		  notSavedFunc();
+		  this.newDeploymentDialog.show(); 
 	      });
 
 	      this.saveDialogCancelButton.onclick = dojo.hitch(this, function() {
@@ -552,9 +554,10 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	      this.saveDialogSaveButton.onclick = dojo.hitch(this, function() {
 		  var c1 = dojo.connect(this, "saveSuccess", this, function() {
 		      this.confirmSaveDialog.hide();
-		      addFunc();
+		      notSavedFunc();
 		      dojo.disconnect(c1);
 		      dojo.disconnect(c2);
+		      this.newDeploymentDialog.show(); 
 		  });
 		  var c2 = dojo.connect(this, "saveFailed", this, function() {
 		      dojo.disconnect(c1);
