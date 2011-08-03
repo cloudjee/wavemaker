@@ -14,6 +14,10 @@
 
 package com.wavemaker.runtime.data.cloudfoundry;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
 import javax.sql.DataSource;
 
 import org.apache.commons.logging.Log;
@@ -22,10 +26,17 @@ import org.cloudfoundry.runtime.env.CloudEnvironment;
 import org.cloudfoundry.runtime.env.MysqlServiceInfo;
 import org.cloudfoundry.runtime.service.relational.MysqlServiceCreator;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.MutablePropertyValues;
+import org.springframework.beans.PropertyValue;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.support.ManagedProperties;
 import org.springframework.util.CollectionUtils;
+
+import com.wavemaker.runtime.data.spring.ConfigurationAndSessionFactoryBean;
 
 /**
  * {@link BeanFactoryPostProcessor} implementation that replaces all local MySQL datasources with services provided by
@@ -46,26 +57,87 @@ public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFact
      */
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) beanFactory;
-        
+
         if (CollectionUtils.isEmpty(cloudEnvironment.getServices())) {
             return;
         }
+        processDataSources(defaultListableBeanFactory);
+        processHibernateProperties(defaultListableBeanFactory);
+    }
+
+    /**
+     * @param beanFactory
+     */
+    private void processHibernateProperties(DefaultListableBeanFactory beanFactory) {
+        String[] sessionFactoryBeanNames = beanFactory.getBeanNamesForType(ConfigurationAndSessionFactoryBean.class);
+
+        for (String sfBean : sessionFactoryBeanNames) {
+            BeanDefinition beanDefinition = getBeanDefinition(beanFactory, sfBean);
+            MutablePropertyValues propertyValues = beanDefinition.getPropertyValues();
+            PropertyValue hibernateProperties = propertyValues.getPropertyValue("hibernateProperties");
+            
+            Properties hibernatePropsPropertyValue = null;
+            if (hibernateProperties != null) {
+                Object value = hibernateProperties.getValue();
+                if (value instanceof Properties) {
+                    hibernatePropsPropertyValue = (Properties) hibernateProperties.getValue();
+                }
+            } else {
+                hibernatePropsPropertyValue = new ManagedProperties();
+            }
+            hibernatePropsPropertyValue.setProperty("hibernate.hbm2ddl.auto", "update");
+        }
+    }
+
+    private BeanDefinition getBeanDefinition(DefaultListableBeanFactory beanFactory, String beanName) {
+        if (beanName.startsWith(BeanFactory.FACTORY_BEAN_PREFIX)) {
+            beanName = beanName.substring(BeanFactory.FACTORY_BEAN_PREFIX.length());
+        }
+        return beanFactory.getBeanDefinition(beanName);
+    }
+
+    /**
+     * @param defaultListableBeanFactory
+     */
+    private void processDataSources(DefaultListableBeanFactory defaultListableBeanFactory) {
         String[] dataSourceBeanNames = defaultListableBeanFactory.getBeanNamesForType(DataSource.class);
 
         for (String dsBean : dataSourceBeanNames) {
             if (!dsBean.endsWith(DS_BEAN_SUFFIX)) {
                 continue;
             }
-            MysqlServiceInfo service = cloudEnvironment.getServiceInfo(dsBean.substring(0, dsBean.indexOf(DS_BEAN_SUFFIX)), MysqlServiceInfo.class);
+
+            String serviceName = dsBean.substring(0, dsBean.indexOf(DS_BEAN_SUFFIX));
+
+            if (!serviceExists(serviceName)) {
+                log.warn("Expected to find a MySql service with the name '" + serviceName + "' but none was found.");
+                continue;
+            }
+
+            MysqlServiceInfo service = cloudEnvironment.getServiceInfo(serviceName, MysqlServiceInfo.class);
             if (service != null) {
                 defaultListableBeanFactory.removeBeanDefinition(dsBean);
                 MysqlServiceCreator mysqlCreationHelper = new MysqlServiceCreator(cloudEnvironment);
                 DataSource cfDataSource = mysqlCreationHelper.createSingletonService().service;
                 defaultListableBeanFactory.registerSingleton(dsBean, cfDataSource);
             } else {
-                log.warn("Expected to find a MySql service with the name '"+dsBean.substring(0, dsBean.indexOf(DS_BEAN_SUFFIX))+"' but none was found.");
+                log.warn("Expected to find a MySql service with the name '" + serviceName + "' but none was found.");
             }
         }
+    }
+
+    /**
+     * @param serviceName
+     * @return
+     */
+    private boolean serviceExists(String serviceName) {
+        List<Map<String, Object>> services = cloudEnvironment.getServices();
+        for (Map<String, Object> serviceProps : services) {
+            if (serviceName.equals(serviceProps.get("name"))) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

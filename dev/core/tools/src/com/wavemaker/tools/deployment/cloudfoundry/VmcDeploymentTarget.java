@@ -84,6 +84,10 @@ public class VmcDeploymentTarget implements DeploymentTarget {
 		} catch (CloudFoundryException ex) {
 		    if (HttpStatus.FORBIDDEN == ex.getStatusCode()) {
 		        return TOKEN_EXPIRED_RESULT;
+		    } else if (HttpStatus.BAD_REQUEST == ex.getStatusCode()) {
+		        return "ERROR: "+ex.getDescription();
+		    } else {
+		        throw ex;
 		    }
 		}
 		
