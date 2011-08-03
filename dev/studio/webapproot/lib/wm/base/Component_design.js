@@ -401,8 +401,9 @@ wm.Component.extend({
 		var n = inEventName;
 	    return (this instanceof wm.Application) ? inEventName :  this.name + n.slice(2, 3).toUpperCase() + n.slice(3)
 	},
+        getSharedEventLookupName: function(inProp) {return inProp;},
 	generateSharedEventName: function(inEventName) {
-		var n = inEventName;
+	        var n = this.getSharedEventLookupName(inEventName);
 		var name = this.declaredClass;
 		name = name.replace(/^.*\./,"");
 		return "on" + name +  n.slice(2, 3).toUpperCase() + n.slice(3);
@@ -577,7 +578,7 @@ wm.Component.extend({
 		this.setEvent(n, v);
 		eventEdit(this, n, v, c == studio.application);
 	},
-    getSharedEventLookupName: function(inProp) {return inProp;},
+
     createDesignContextMenu: function(menuObj) {},
     showContextMenu: function(e) {
 		if (dojo.isFF && !(e.button == 2 || e.ctrlKey)) return;
