@@ -525,6 +525,16 @@ public abstract class BaseDataModelSetup {
 
         Properties rtn = DataServiceUtils
                 .toHibernateConnectionProperties(getProperties(false));
+        
+        if(dbtype.equals(MYSQL_DB_TYPE)) {
+            String defaultCatalog = catalogName;
+            if(defaultCatalog == null && !connectionUrl.endsWith("/")) {
+                defaultCatalog = connectionUrl.substring(connectionUrl.lastIndexOf("/")+1);
+            }
+            if (defaultCatalog != null) {
+                rtn.setProperty("hibernate.default_catalog", defaultCatalog);
+            }
+        }
 
         if (DataServiceLoggers.importLogger.isInfoEnabled()) {
             DataServiceLoggers.importLogger.info("Connection properties: "

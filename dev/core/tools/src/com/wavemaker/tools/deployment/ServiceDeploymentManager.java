@@ -401,6 +401,36 @@ public class ServiceDeploymentManager {
 
         return deploymentInfo.getDeploymentId();
     }
+    
+    /**
+     * @param deploymentInfo
+     * @return
+     */
+    public DeploymentInfo deleteDeploymentInfo(String deploymentId) {
+        Resource deploymentsResource;
+        Writer writer = null;
+        DeploymentInfo deleted = null;
+        try {
+            Deployments deployments = readDeployments();
+            deleted = deployments.remove(projectMgr.getCurrentProject().getProjectName(), deploymentId);
+            deploymentsResource = new FileSystemResource(studioConfiguration.getCommonDir().getPath() + "/").createRelative(DEPLOYMENTS_FILE);
+            writer = new FileWriter(deploymentsResource.getFile(), false);
+            JSONMarshaller.marshal(writer, deployments, new JSONState(), false, true);
+            writer.flush();
+        } catch (IOException e) {
+            throw new WMRuntimeException("An error occurred while trying to save deployment.", e);
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return deleted;
+    }
 
     private Deployments readDeployments() {
         Resource deploymentsResource;
@@ -423,5 +453,4 @@ public class ServiceDeploymentManager {
             throw new WMRuntimeException("Failed to read stored deployments configuration.");
         }
     }
-
 }

@@ -87,4 +87,19 @@ public class Deployments {
             }
         }
     }
+
+    /**
+     * @param projectName
+     * @param deploymentInfo
+     */
+    public DeploymentInfo remove(String projectName, String deploymentId) {
+        List<DeploymentInfo> deployments = forProject(projectName);
+        for (int i=0; i<deployments.size(); i++) {
+            if (deployments.get(i).getDeploymentId().equals(deploymentId)) {
+                return deployments.remove(i);
+            }
+        }
+        throw new WMRuntimeException("/common/deployments.js is in an unexpected state.");
+        
+    }
 }

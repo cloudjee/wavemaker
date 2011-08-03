@@ -167,28 +167,6 @@ public class DeploymentService {
     public List<DeploymentInfo> getDeploymentInfo() {
         return serviceDeploymentManager.getDeploymentInfo();
     }
-
-    /*public synchronized String updateDeploymentTarget(String name, String description, String destType, String servicProvider, String container,
-        String server, String dnsHost, String publicIp, String privateIp, String port, String user, String password, boolean override) {
-
-        Targets.Target target = new Targets.Target();
-
-        target.setName(name);
-        target.setDescription(description);
-        target.setDestType(destType);
-        target.setServiceProvider(servicProvider);
-        target.setServer(server);
-        target.setContainer(container);
-        target.setDnsHost(dnsHost);
-        target.setPublicIp(publicIp);
-        target.setPrivateIp(privateIp);
-        target.setPort(port);
-        target.setUser(user);
-        target.setPassword(password);
-
-        return serviceDeploymentManager.updateDeploymentTarget(target, override);
-    }
-*/
     
     public String deploy(DeploymentInfo deploymentInfo) throws IOException {
         File f = serviceDeploymentManager.generateWebapp(deploymentInfo);
@@ -205,22 +183,14 @@ public class DeploymentService {
         return serviceDeploymentManager.saveDeploymentInfo(deploymentInfo);
     }
     
-/*
-    public String undeploy(String targetServerType, String contextRoot, Map<String, String> props) {
-        return deploymentTargetManager.getDeploymentTarget(targetServerType).undeploy(contextRoot, props);
-    }
-
-    public String redeploy(String targetServerType, String contextRoot, Map<String, String> props) throws IOException {
-        try {
-            if (!targetServerType.equals(CommonConstants.SERVER_TYPE_CLOUDFOUNDRY)) {
-                undeploy(targetServerType, contextRoot, props);
-            }
-        } catch (Exception e) {
-            // no-op
+    public String delete(String deploymentId) {
+        DeploymentInfo deploymentInfo = serviceDeploymentManager.deleteDeploymentInfo(deploymentId);
+        if (deploymentInfo.getDeploymentType() != DeploymentType.FILE) {
+            deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).undeploy(deploymentInfo);
         }
-        return deploy(targetServerType, contextRoot, props);
+        return "SUCCESS";
     }
-*/
+    
     public void deployClientComponent(String className, String folder, String data) throws IOException {
         deploymentManager.deployClientComponent(className, folder, data);
     }
