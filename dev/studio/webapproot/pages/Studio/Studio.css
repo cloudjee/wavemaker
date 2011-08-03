@@ -2026,7 +2026,12 @@ color: rgb(0,270,0);
     border-bottom: solid 0px #444 !important;
 }
 
-.Studio_markupHtmlDesc pre {
+.Studio-markupHtmlDesc pre {
     background-color: #888;
     border: solid 1px #222;
+}
+
+
+.Studio-navigationBar {
+    font-family: "Nimbus Sans L", sans-serif;
 }
