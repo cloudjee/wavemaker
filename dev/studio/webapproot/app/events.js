@@ -129,9 +129,13 @@ eventEdit = function(ctrl, name, value, noInSenderInArgs, optionalArgList) {
 
 eventChange = function(editor, oldName, newName) {
 	if (oldName && newName && oldName!=newName) {
-		var r = new RegExp(oldName + ": function\\(", "m");
-	        var code = editor.getText();
-		editor.setText(code.replace(r, newName + ": function("));
+	    var r  = new RegExp(oldName + ": function\\(", "m");
+
+	    var r2 = new RegExp("console.error\\('ERROR IN " + oldName + ": ", "m")
+	    var code = editor.getText();
+	    code = code.replace(r, newName + ": function(");
+	    code = code.replace(r2, "console.error('ERROR IN " + newName + ": ");
+	    editor.setText(code);
 	}
 }
 
