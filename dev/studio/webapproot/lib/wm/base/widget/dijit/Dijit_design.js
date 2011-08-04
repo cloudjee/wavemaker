@@ -274,7 +274,8 @@ wm.DijitDesigner.extend({
 	result.push("");
 	result.push("/* Design time information on properties */");
 	result = result.concat(extendSchema);
-	result.push("wm.registerPackage([bundlePackage.Dijits,'" + className + "','" + fullClassName + "','" + packageName + "','images/wm/widget.png','',false,{}])");
+	/* I attempted to use bundlePackage.Dijits, but bundlePackage does not exist at runtime only designtime */
+	result.push("wm.registerPackage(['Dijits','" + className + "','" + fullClassName + "','" + packageName + "','images/wm/widget.png','',false,{}])");
 	return result.join("\n");
 
     },
