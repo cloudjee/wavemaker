@@ -287,6 +287,7 @@ setupWidgetsForDatabaseType = function(
 		hostInput.setShowing(true);
 		hostInput.setDataValue(h);
 	}
+        hostInput.setRequired(hostInput.showing);
 
 	portInput.setDataValue("");
 	if (p == null) {
