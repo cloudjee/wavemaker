@@ -396,7 +396,7 @@ dojo.declare("wm.Page", wm.Component, {
 	    // that would allow the user to interact with the page which is deliberately
 	    // blocked
 	    for (var i = 0; i < wm.dialog.showingList.length; i++) {
-		if (wm.dialog.showingList.modal) return;
+		if (wm.dialog.showingList[i].modal) return;
 	    }
 
 	    // only the application's main page should be receiving keyboard events
