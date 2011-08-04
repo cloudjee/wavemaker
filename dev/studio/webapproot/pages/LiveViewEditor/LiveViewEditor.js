@@ -215,7 +215,9 @@ dojo.declare("LiveViewEditor", wm.Page, {
 		                this._checkChildren(inNode, inCheck);
 		                this.runtimeServiceFetch();
 		                this.accept();
-                            }));                                
+                            }), dojo.hitch(this, function() {
+				inNode.setChecked(true);
+			    }));                                
 	    } else {
                 this._checkChildren(inNode, inCheck);
             }
