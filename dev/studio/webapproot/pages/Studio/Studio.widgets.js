@@ -104,7 +104,7 @@ Studio.widgets = {
 							       idInPage: "importProjectItem",
 							       onClick: "importClick",
 							       iconClass: "importProjectItem"},
-                                                              {"label": "Deployment",
+                                                              {"label": "Deploy Project",
 							       idInPage: "deployProjectItem",
 							       children: [
 								   {separator: true},
