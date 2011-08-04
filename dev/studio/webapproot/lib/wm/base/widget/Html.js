@@ -94,7 +94,7 @@ dojo.declare("wm.Html", wm.Control, {
 	    divObj.parentNode.removeChild(divObj);
 
 	    if (this.autoSizeHeight) {
-		var newh = this.padBorderMargin.t + this.padBorderMargin.b +  captionHeight;
+		var newh =  captionHeight;
 		if (newh < 14) newh = 14;
                 if (setSize)
 		    this.setHeight(newh + "px");
@@ -104,7 +104,7 @@ dojo.declare("wm.Html", wm.Control, {
                 }
 	    }
 	    if (this.autoSizeWidth) {
-		var neww = this.padBorderMargin.l + this.padBorderMargin.r +  captionWidth;
+		var neww = captionWidth;
 		if (neww < 80) neww = 80;
                 if (setSize)
 		    this.setWidth(neww + "px");
