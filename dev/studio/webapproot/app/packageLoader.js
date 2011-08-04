@@ -33,6 +33,8 @@ _import = function(inTab, inName, inClass, inModule, inImage, inDescription, inP
 	if (!ctor) {
 		return 'Module "' + m + '" is loaded, but function "' + c + '" was not found.';
 	}
+        if (!dojo.locale.match(/^en/))
+            ctor.prototype.localizedDeclaredClass = n; // save the localized class name in case we need to refer to it later
 	var d = inDescription || ctor.description || inClass;
 	/*var s = inTab.split(".");
 	var p = "";

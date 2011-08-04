@@ -252,7 +252,7 @@ inspect = function(inComponent, inDoFocus) {
 _setInspectedCaption = function(inComponent) {
 	var c = inComponent;
         if (studio.application && studio.page)
-	    studio.inspected.setCaption(c ? c.name  + ': ' + c._designee.declaredClass : "(none)");
+	    studio.inspected.setCaption(c ? c.name  + ': ' + (c._designee.localizedDeclaredClass || c._designee.declaredClass) : "(none)");
 }
 
 _inspect = function(inComponent, inDoFocus) {
