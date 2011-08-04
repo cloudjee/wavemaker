@@ -47,7 +47,6 @@ dojo.declare("wm.PageContainer", wm.Box, {
 		    this.subscribe("Page-Saved", dojo.hitch(this, function() {
 			if (this.pageName == studio.project.pageName) {
 			    this.forceReloadPage();
-			    alert("FORCE RELOAD");
 			}
 		    }));
 		}
