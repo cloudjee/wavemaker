@@ -72,6 +72,8 @@ dojo.declare("HandleRequiredJars", wm.Page, {
 	studio.beginWait(this.getDictionaryItem("RESTARTING"));
 	def.addCallback(function() {
 	    studio.endWait();
+	    studio._forceExit = true;
+	    studio.setUserSettings({reopenProject: studio.project.projectName});
 	    window.location.reload(true);
 	});
 	def.addErrback(function(inError) {

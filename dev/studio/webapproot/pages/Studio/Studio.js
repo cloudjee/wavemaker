@@ -128,7 +128,9 @@ dojo.declare("Studio", wm.Page, {
 		//this.preloadImages();
 		this.requestUserName();
 		var defaultProject = this.getUserSetting("defaultProject");
-
+	        var reopenProject = this.getUserSetting("reopenProject");
+	        if (reopenProject)
+	            this.setUserSettings({reopenProject: ""});
 		/*
 		if (this.isCloud()) {
 		    this.startLayer.activate();
@@ -139,6 +141,8 @@ dojo.declare("Studio", wm.Page, {
 	} else */
 		if (this.getUserSetting("useLop") && defaultProject) {
 			this.project.openProject(defaultProject);
+		} else if (reopenProject) {
+			this.project.openProject(reopenProject);
 		} else { 
 		    studio.disableMenuBar(true);
 		}
@@ -264,6 +268,8 @@ dojo.declare("Studio", wm.Page, {
 	windowUnload: function(e) {
 		if (this._isLogout)
 			return;
+	        if (this._forceExit)
+		    return;
 		var 
 	    u = this.getDictionaryItem("ALERT_UNSAVED_LOST"),
 			s = this.getDictionaryItem("ALERT_NO_UNSAVED"),
