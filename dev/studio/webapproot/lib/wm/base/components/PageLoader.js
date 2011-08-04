@@ -48,7 +48,13 @@ wm.gzScriptLoader = function(name){
 
 dojo.declare("wm.PageLoader", wm.Component, {
 	init: function() {
-	    this.randomNum = this.owner && this.isDesignLoaded() ? (studio.application || studio._application).getFullVersionNumber() : (app && !window["studio"] ? app.getFullVersionNumber() : Math.floor(Math.random()*1000000));
+	    if (this.owner && this.isDesignLoaded()) {
+		this.randomNum = (studio.application || studio._application).getFullVersionNumber();
+	    } else if (app && !window["studio"]) {
+		this.randomNum = app.getFullVersionNumber();
+	    } else {
+		this.randomNum =  Math.floor(Math.random()*1000000);
+	    }
 		this.inherited(arguments);
 		this._pageConnections = [];
 		this.pageProps = {};
@@ -69,21 +75,23 @@ dojo.declare("wm.PageLoader", wm.Component, {
 	getPageCtor: function() {
 		return dojo.getObject(this.className || "");
 	},
-	loadController: function(inName, inPath) {
-		var ctor = dojo.getObject(inName);
-		if (!ctor) {
-		    wm.dojoScriptLoader(inPath + ".js?dojo.preventCache="+ this.randomNum);
-		        ctor = dojo.getObject(inName);
-                }
-                if (!ctor) {
-		    if (!wm.disablePageLoadingToast)
-			app.toastError(wm.getDictionaryItem("wm.Page.PAGE_ERRORS", {name: inName}));
-                    console.error("Error parsing " + inPath + ".js");
-                    this.onError("Error parsing " + inPath + ".js"); // if you localize onError, then developers can't do tests on the return value
-                    ctor = dojo.declare(inName, wm.Page); // so at least we can display widgets.js
-		}
-		return ctor;
-	},
+    loadController: function(inName, inPath) {
+	var ctor = dojo.getObject(inName);
+	if (!ctor) {
+	    var randpath = inPath + ".js?dojo.preventCache="+this.randomNum;
+	    delete dojo._loadedUrls[randpath];
+	    wm.dojoScriptLoader(randpath);
+	    ctor = dojo.getObject(inName);
+        }
+        if (!ctor) {
+	    if (!wm.disablePageLoadingToast)
+		app.toastError(wm.getDictionaryItem("wm.Page.PAGE_ERRORS", {name: inName}));
+            console.error("Error parsing " + inPath + ".js");
+            this.onError("Error parsing " + inPath + ".js"); // if you localize onError, then developers can't do tests on the return value
+            ctor = dojo.declare(inName, wm.Page); // so at least we can display widgets.js
+	}
+	return ctor;
+    },
 	loadSupport: function(inCtor, inPath) {
 		if (!inCtor._supported) {
 		    this.cssLoader.setUrl(inPath + ".css?rand="+this.randomNum);
@@ -95,8 +103,9 @@ dojo.declare("wm.PageLoader", wm.Component, {
 			// We do not propertly cache the widgets.js file after its been loaded... 
 			// we delete it from memory.  But dojoScriptLoader assumes we keep it in memory and refuses to reload it.
 			// By deleting it from its list of loaded urls, it should always reload.
-			delete dojo._loadedUrls[inPath + ".widgets.js"];
-		    wm.dojoScriptLoader(inPath + ".widgets.js?rand=" + this.randomNum);
+		        var randpath = inPath + ".widgets.js?rand=" + this.randomNum;
+		        delete dojo._loadedUrls[randpath];
+		        wm.dojoScriptLoader(randpath);
 			inCtor._supported = true;
 		}
 	},
