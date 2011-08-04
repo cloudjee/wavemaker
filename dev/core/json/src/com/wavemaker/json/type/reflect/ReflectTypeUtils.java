@@ -246,7 +246,7 @@ public class ReflectTypeUtils {
                     } else if (null!=pd.getWriteMethod()) {
                         paramType = pd.getWriteMethod().getGenericParameterTypes()[0];
                     } else {
-                        logger.warn(Resource.JSON_NO_GETTER_IN_TYPE.getMessage(pd.getName()));
+                        logger.warn("No getter in type " + pd.getName());
                         continue;
                     }
 
