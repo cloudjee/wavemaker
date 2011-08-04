@@ -16,7 +16,7 @@
 "wm.Control.toString_HIDDEN": "hidden",
 "wm.Variable.toString_TYPE": "Type: ${type}",
 "wm.Variable.toString_ISEMPTY": "isEmpty: ${isEmpty}",
-"wm.Variable.TYPE_INVALID": "A variable of type ${type} has been created, but that type does not exist. To learn more about how to fix this type of error, please see our <a target='_NewWindow' href='dev.wavemaker.com/wiki/bin/wmdoc_6.3/Advanced+Topics'>documentation</a> on the topic",
+"wm.Variable.TYPE_INVALID": "A variable of type ${type} has been created, but that type does not exist. To learn more about how to fix this type of error, please see our <a target='_NewWindow' href='dev.wavemaker.com/wiki/bin/Types'>documentation</a> on the topic",
 "wm.ServiceVariable.toString_FIRING": "isFiring: ${isFiring}",
 
 "wm.Component.CLASS_NOT_FOUND": "Component type ${type} not found (component name: ${name})!",
