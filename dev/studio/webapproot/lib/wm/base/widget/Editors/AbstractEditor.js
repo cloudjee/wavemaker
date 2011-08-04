@@ -797,8 +797,8 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		wm.fire(this.editor, "focus");
 	},
         reset: function() {
-	    this.resetState();
 	    this.setDataValue(this._lastValue);
+	    this.resetState();
 	},
 	resetState: function() {
 	    this.invalidate();	    
