@@ -211,5 +211,15 @@ dojo.declare("wm.PageDialog", [wm.Dialog, wm.pageContainerMixin], {
 		}
 		
 		this.c$ =[];
+    },
+
+
+	keydown: function(inEvent) {
+	    if (!this.canProcessKeyboardEvent(inEvent))
+		return true;
+	    if (inEvent.keyCode == dojo.keys.ESCAPE && this.page && this.page.onEscapeKey) {
+		this.page.onEscapeKey()
+	    }
+	    this.inherited(arguments);
 	}
 });
