@@ -79,8 +79,6 @@
 
     JSON_PENDING: "Pending Request: ${name}",
     CONFIRM_LOGOUT: 'Are you sure you want to logout? Unsaved changes will be lost.', /* Cloud version only */
-    CONFIRM_OPEN_PAGE_LOSE_UNSAVED : "Are you sure you want to open page ${newPage}? Unsaved changes to ${oldPage} will be lost.",
-    CONFIRM_CLOSE_PROJECT_LOSE_UNSAVED : "Are you sure you want to close project \"${projectName}\"? Unsaved changes will be lost.",
     WAIT_OPENING_PAGE: "Opening page: ${pageName}",
 
 
@@ -148,7 +146,6 @@
 
     /* wm.ListViewer */
     "wm.ListViewer.NO_DATASET": "Please select a dataSet before creating a new page",
-    "wm.ListViewer.CONFIRM_SAVE_CHANGES": "Can we save this page before moving on to the next page?", 
 
      /* wm.DojoGrid */
     "wm.DojoGrid.HELP_TEXT": '* To re-arrange columns close dialog box and drag columns on grid to desired position.<br/>* You can right click on grid to open this dialog.',
@@ -315,9 +312,11 @@
     "wm.studio.Project.WAIT_COPY_PROJECT": "Copying...",
     "wm.studio.Project.TOAST_COPY_PROJECT_SUCCESS": "${oldName} saved as ${newName}; you are still editting ${oldName}",
     "wm.studio.Project.ALERT_DELETE_PAGE_FAILED": "Page ${pageName} could not be deleted: ${error}",
-    "CONFIRM_CLOSE_PROJECT": "Are you sure you want to close project ${projectName}? Unsaved changes will be lost.",
+    "CONFIRM_CLOSE_PROJECT": "Before closing ${projectName}, do you want to save your changes?",
     WAIT_CREATING_PAGE: "Creating page: ${pageName}",
-    CONFIRM_NEW_PAGE: "Are you sure you want to add a new page? Unsaved changes to ${pageName} will be lost.",
+    CONFIRM_NEW_PAGE: "Before adding a new page, do you want to save your changes?",
+    CONFIRM_OPEN_PAGE : "Before opening ${newPage}, do you want to save ${oldPage}?",
+
     ALERT_UPGRADE_HEADING: "\n\nImportant messages regarding your upgrade:\n",
     ALERT_BACKUP_OLD_PROJECT: "Your project has been upgraded.  A backup of your old project is available at:${filePath}\n",
     THROW_PROJECT_NOT_FOUND: "Warning: Could not find ${projectPath}",

@@ -1430,10 +1430,9 @@ dojo.declare("Studio", wm.Page, {
 	var lastValue = this.languageSelect._lastValue;
 	var newValue = this.languageSelect.getDisplayValue();
 	if (lastValue == newValue) return;
-
-	if (this.updateProjectDirty()) {
-	    this.confirmSaveDialog.show();
+	    
 	    this.confirmSaveDialog.page.setup(
+		"",
 		/* User clicks save */
 		dojo.hitch(this, function() {
 		    this._saveConnect = dojo.connect(this,"saveProjectSuccess", this, function() {
@@ -1447,13 +1446,17 @@ dojo.declare("Studio", wm.Page, {
 
 		/* User clicks dont save */
 		dojo.hitch(this, "languageSelectChanged2"),
+
 		/* User clicks cancel */
 		dojo.hitch(this, function() {
 		    delete this._designLanguage;
 		    this._changingLanguage = true;
 		    this.languageSelect.setDisplayValue(lastValue);
 		    this._changingLanguage = false;
-		}));
+		}),
+		
+		/* If project isn't dirty, just run don't save callback */
+		!this.updateProjectDirty());
 /*
 	    app.confirm(this.getDictionaryItem("CONFIRM_SAVE_LANGUAGE"), false,
 			dojo.hitch(this, function() {
@@ -1472,9 +1475,7 @@ dojo.declare("Studio", wm.Page, {
 			    this._changingLanguage = false;
 			}));
 		    */
-	} else {
-	    this.languageSelectChanged2();
-	}
+
     },
     languageSelectChanged2: function() {
 	this.languageSelect.clearDirty();
@@ -1512,7 +1513,7 @@ dojo.declare("Studio", wm.Page, {
 	var page = optionalPageName || inSender.getDataValue();
 	if (page == this.project.pageName || !page) return;
 
-	var warnPage = this.getDictionaryItem("CONFIRM_OPEN_PAGE_LOSE_UNSAVED", {newPage: page, oldPage: this.project.pageName});
+	var warnPage = this.getDictionaryItem("CONFIRM_OPEN_PAGE", {newPage: page, oldPage: this.project.pageName});
         this.confirmPageChange(warnPage, page, 
 			       dojo.hitch(this, function(noChanges) {
 				   this.waitForCallback(this.getDictionaryItem("WAIT_OPENING_PAGE", {pageName: page}), dojo.hitch(this.project, "openPage", page, !noChanges));

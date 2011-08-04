@@ -33,14 +33,21 @@ wm.PageContainer.extend({
 	this._designerOpenPageButton = openPageButton;
 	this.openPageButtonConnect = dojo.connect(openPageButton, "onclick", this, function() {
             if (this.pageName) {
-	        if (!studio.isPageDirty()) {
-		    studio.project.openPage(this.pageName);
-		} else {
-		    var warnPage = studio.getDictionaryItem("CONFIRM_OPEN_PAGE_LOSE_UNSAVED", {newPage: this.pageName, oldPage: studio.project.pageName});
+		    var warnPage = studio.getDictionaryItem("CONFIRM_OPEN_PAGE", {newPage: this.pageName, oldPage: studio.project.pageName});
 		    studio.confirmPageChange(warnPage, this.pageName, 
-			       dojo.hitch(this, function(noChanges) {
-				   studio.waitForCallback(studio.getDictionaryItem("WAIT_OPENING_PAGE", {pageName: this.pageName}), dojo.hitch(studio.project, "openPage", this.pageName, !noChanges));
-			       }));
+					     /* onSave */
+					     dojo.hitch(this, function(noChanges) {
+						 studio.project.saveProject(false, dojo.hitch(this, function() {
+						     studio.project.openPage(this.pageName);
+						 }));
+					     }),
+					     /* onDontSave */
+					     dojo.hitch(this, function() {
+						     studio.project.openPage(this.pageName);
+					     }),
+					     null, /* onCance */
+					     !studio.isPageDirty() /* skip save */
+					     );
 
 /*
 
@@ -55,7 +62,6 @@ wm.PageContainer.extend({
 					studio.project.openPage(this.pageName);
 				}));
 				*/
-		}
             } else {
                 this.createNewPage();
             }
@@ -64,11 +70,6 @@ wm.PageContainer.extend({
     },
 
     createNewPage: function() {
-	app.confirm(studio.getDictionaryItem("wm.PageContainer.CONFIRM_SAVE_CHANGES"), 
-					     false, 
-		    dojo.hitch(this, "createNewPage2"));
-    },
-    createNewPage2: function() {
 	var pages = studio.project.getPageList();
 	var l = {};
 	dojo.forEach(pages, function(p) {
@@ -81,11 +82,21 @@ wm.PageContainer.extend({
 				     this.owner.pageName = n;
 				 else
 				     this.pageName = n;
-				 this.connect(studio, "saveProjectComplete", studio.project, function() {
-				     this.newPage(n);
-				     // should disconnect, but page.destroy will be called as soon as we load the new page and it will disconnect for us...
-				 });
-				 studio.saveAll(studio.project);
+
+				 studio.confirmSaveDialog.page.setup(
+				     studio.getDictionaryItem("CONFIRM_OPEN_PAGE", {oldPage: studio.project.pageName, newPage: this.pageName}),
+				     /* onSave */
+				     dojo.hitch(this, function() {
+					 studio.project.saveProject(false, dojo.hitch(this, function() {
+					     studio.project.newPage(n);
+					 }));
+				     }),
+				     /* onDontSave */
+				     dojo.hitch(this, function() {
+					 studio.project.newPage(n);
+				     }),
+				     null, /* onCancel */
+				     !studio.isPageDirty()); /* skip save */
 			     }));
     },
 	designCreate: function() {

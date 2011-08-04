@@ -179,7 +179,7 @@ Studio.extend({
     */
     importClick: function(inSender) {
       if (this.project.projectName) {
-	  this.confirmAppChange(this.getDictionaryItem("CONFIRM_CLOSE_PROJECT_LOSE_UNSAVED",{projectName: this.project.projectName}),
+	  this.confirmAppChange(this.getDictionaryItem("CONFIRM_CLOSE_PROJECT",{projectName: this.project.projectName}),
                                 undefined, dojo.hitch(this, function() {
 	                            this.project.closeProject();
                                     //this.importFileDialog = this.getImportFileDialog().show();

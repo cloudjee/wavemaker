@@ -1159,8 +1159,8 @@ Studio.extend({
 			return;
 		if (!this.isShowingWorkspace())
 			this.tabs.setLayer("workspace");
-	this.confirmPageChange(this.getDictionaryItem("CONFIRM_NEW_PAGE", {pageName: studio.project.pageName}),
-                                   undefined,
+	this.confirmPageChange(this.getDictionaryItem("CONFIRM_NEW_PAGE"),
+                                   pageName,
                                    dojo.hitch(this, function() {
 		                       var pages = this.project.getPageList();
 		                       var l = {};
@@ -1618,17 +1618,41 @@ Studio.extend({
 	},
         confirmPageChange: function(inMessage, inNewPage, onConfirm, onCancel) {
 	    var inMessage = dojo.string.substitute(inMessage, {page: '"' + this.project.pageName + '"', newPage: inNewPage});
-            if (this.isPageDirty())
-                app.confirm(inMessage, false, onConfirm, onCancel);
-            else if (onConfirm)
-                onConfirm(true);
+	    
+	    this.confirmSaveDialog.page.setup(
+		inMessage,
+		/* Save button followed by onConfirm */
+		dojo.hitch(this, function() {
+		    this._saveConnect = dojo.connect(this,"saveProjectSuccess", this, function() {
+			onConfirm();
+			dojo.disconnect(this._saveConnect);
+		    });
+		    this.saveAll(studio.project);
+		}),
+
+		/* Confirm == dont save */
+		onConfirm,
+		onCancel,
+		!this.isPageDirty());
 	},
         confirmAppChange: function(inMessage, inNewProject, onConfirm, onCancel) {
 	    var inMessage = dojo.string.substitute(inMessage, {project: '"' + this.project.projectName + '"', newProject: inNewProject});
-	    if (this.isProjectDirty())
-                app.confirm(inMessage, false, onConfirm, onCancel);
-            else if (onConfirm)
-                onConfirm();
+
+	    this.confirmSaveDialog.page.setup(
+		inMessage, 
+		/* Save button followed by onConfirm */
+		dojo.hitch(this, function() {
+		    this._saveConnect = dojo.connect(this,"saveProjectSuccess", this, function() {
+			onConfirm();
+			dojo.disconnect(this._saveConnect);
+		    });
+		    this.saveAll(studio.project);
+		}),
+
+		/* onConfirm == dont save */
+		onConfirm,
+		onCancel,
+		!this.isProjectDirty());
 	},
     promptForName: function(inTarget, inDefault, inExistingList, onSuccess) {
 	var newPrompt = this.getDictionaryItem("PROMPT_TARGET_NAME", {target: inTarget});

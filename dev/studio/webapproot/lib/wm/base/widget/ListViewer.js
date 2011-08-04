@@ -545,16 +545,16 @@ wm.ListViewer.extend({
                                  var data = this.dataSet.getData();
                                  if (data && data.length)
                                      this._sample = dojo.toJson(data[0]);
-				 app.confirm(studio.getDictionaryItem("wm.ListViewer.CONFIRM_SAVE_CHANGES"),
-					     false,
-					     dojo.hitch(this,function() {
-						 studio.project.saveProject(false, dojo.hitch(this, function() {
-						     studio.project.newPage(n,"wm.ListViewerRow", {template: wm.widgetSpecificTemplate.ListViewerRow, editTemplate: dojo.hitch(this, "editTemplate")});
-						 }));
-					     }),
-					     dojo.hitch(this,function() {
-						 studio.project.newPage(n,"wm.ListViewerRow", {template: wm.widgetSpecificTemplate.ListViewerRow, editTemplate: dojo.hitch(this, "editTemplate")});
-					     }));
+				 studio.confirmSaveDialog.page.setup(
+				     studio.getDictionaryItem("CONFIRM_OPEN_PAGE", {oldPage: studio.project.pageName, newPage: this.pageName}),
+				     dojo.hitch(this,function() {
+					 studio.project.saveProject(false, dojo.hitch(this, function() {
+					     studio.project.newPage(n,"wm.ListViewerRow", {template: wm.widgetSpecificTemplate.ListViewerRow, editTemplate: dojo.hitch(this, "editTemplate")});
+					 }));
+				     }),
+				     dojo.hitch(this,function() {
+					 studio.project.newPage(n,"wm.ListViewerRow", {template: wm.widgetSpecificTemplate.ListViewerRow, editTemplate: dojo.hitch(this, "editTemplate")});
+				     }));
 			     }));						 
     }
 });

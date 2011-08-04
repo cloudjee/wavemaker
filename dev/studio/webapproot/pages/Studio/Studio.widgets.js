@@ -29,7 +29,7 @@ Studio.widgets = {
 	UserService: ["wm.JsonRpcService", {service: "UserService", sync: true}, {}],
 	resourceManagerService: ["wm.JsonRpcService", {service: "resourceFileService", sync: true}, {}],
         jarListService: ["wm.JsonRpcService", {service: "studioService", sync: false}, {}],
-    confirmSaveDialog: ["wm.PageDialog", {pageName: "ConfirmSaveDialog", deferLoad: true, border: "2", borderColor: "white", width: "400px", height: "120px", hideControls: true}],
+    confirmSaveDialog: ["wm.PageDialog", {pageName: "ConfirmSaveDialog", deferLoad: false, border: "2", borderColor: "white", width: "400px", height: "120px", hideControls: true, noEscape: true}],
     jarListVariable: ["wm.Variable", {type: "StringData"}, {}],
     addPatchDialog: ["wm.PageDialog", {pageName: "AddPatch", width: "90%", height: "90%", hideControls: true, modal: false, title: "Load patch for studio", deferLoad: true}],
     jarDownloadDialog: ["wm.PageDialog", {pageName: "HandleRequiredJars", width: "400px", height: "340px", hideControls: true, modal: false, title: "Import Jar File"}],

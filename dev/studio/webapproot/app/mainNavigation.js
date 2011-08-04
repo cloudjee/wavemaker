@@ -184,16 +184,29 @@ Studio.extend({
     },
         closeServiceTab: function(inLayer) {
 	    var page = inLayer.c$[0].page;
-	    var f = dojo.hitch(this, function() {
-		var index = inLayer.getIndex();
-		var parent = inLayer.parent;
-		inLayer.destroy();
-		this.updateServicesDirtyTabIndicators();
-	    });
-	    if (page && page.getDirty())
-		app.confirm("You have changes that are not saved; Leave anyway?", false, f);
-	    else
-		f();
+
+	    this.confirmSaveDialog.page.setup(
+		"", // juse use the generic message
+
+		/* onSave */
+		/* Save button followed by closing tabs */
+		dojo.hitch(this, function() {
+		    this._saveConnect = dojo.connect(this,"saveProjectSuccess", this, function() {
+			this.confirmSaveDialog.page.dontSaveClick(); // procede to close the tabs
+			dojo.disconnect(this._saveConnect);
+		    });
+		    this.saveAll(studio.project);
+		}),
+
+		/* Close the tabs */
+		dojo.hitch(this, function() {
+		    var index = inLayer.getIndex();
+		    var parent = inLayer.parent;
+		    inLayer.destroy();
+		    this.updateServicesDirtyTabIndicators();
+		}),
+		null, // onCancel, do nothing
+		!page || !page.getDirty()); // if there is no page being closed or if the page is not dirty, then skip this confirm
 	},
     closeServiceParentTab: function(inLayer) {
 	var layers = inLayer.c$[0].layers;
@@ -208,16 +221,33 @@ Studio.extend({
 	    inLayer.hide();
 	    this.updateServicesDirtyTabIndicators(); // remove unsaved indicator from the tab now that it has no layers
 	} else {
-	    var message = this.getDictionaryItem("CONFIRM_UNSAVEDTAB_HEADER") + "<ul>"
+	    var message = this.getDictionaryItem("CONFIRM_UNSAVEDTAB_HEADER") + "<ul style='text-align:left'>"
 	    for (var i = 0; i < unsavedPages.length; i++)
 		message += "<li>" + unsavedPages[i].owner.parent.caption.replace(/^\<.*?\>\s*/,"") + "</li>";
 		//message += (i == unsavedPages.length-1 ? " and " : i ? ", " : "") + unsavedPages[i].owner.parent.caption.replace(/^\<.*?\>\s*/,"");
 	    message += "</ul>" +  this.getDictionaryItem("CONFIRM_UNSAVEDTAB_CLOSEANYWAY");
-	    app.confirm(message, false, dojo.hitch(this, function() {
-		while (layers.length) layers[0].destroy();
-		inLayer.hide();
-		this.updateServicesDirtyTabIndicators(); // remove unsaved indicator from the tab now that it has no layers
-	    }));
+
+	    this.confirmSaveDialog.page.setup(
+		message,
+		/* onSave */
+		/* Save button followed by closing tabs */
+		dojo.hitch(this, function() {
+		    this._saveConnect = dojo.connect(this,"saveProjectSuccess", this, function() {
+			this.confirmSaveDialog.page.dontSaveClick(); // procede to close the tabs
+			dojo.disconnect(this._saveConnect);
+		    });
+		    this.saveAll(studio.project);
+		}),
+
+		/* onDontSave */
+		dojo.hitch(this, function() {
+		    while (layers.length) layers[0].destroy();
+		    inLayer.hide();
+		    this.updateServicesDirtyTabIndicators(); // remove unsaved indicator from the tab now that it has no layers
+		}),
+		null,
+		false);
+
 	}
 
     },
