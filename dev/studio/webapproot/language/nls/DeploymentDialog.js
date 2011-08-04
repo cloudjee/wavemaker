@@ -14,5 +14,7 @@ TOAST_SAVE_FAILED: "Error saving deployment: ${error}",
 TOAST_DEPLOY_SUCCESS: "<center>Project deployed to<br/><br/><a target='_NewWindow' href='${url}'>${url}</a></center>",
 TOAST_DEPLOY_FAILED: "Error deploying: ${error}",
 TOAST_FILE_GENERATION_SUCCESS: "Your files have been generated and will not be downloaded by your browser.",
-WAIT_LOGGING_IN: "Logging in..."
+WAIT_LOGGING_IN: "Logging in...",
+ALERT_CF_NAME_TAKEN:  "${name} is already in use by another user; please pick a new name",
+ALERT_INVALID_DB_TYPE: "Deployment of ${name} databases to CloudFoundry is not supported"
 }
