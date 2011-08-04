@@ -126,7 +126,9 @@ dojo.declare("Studio", wm.Page, {
 		// FIXME: can't we do status updates via dojo.publish?
 	    //setInterval(dojo.hitch(this, "updateStatus"), 2000);
 		//this.preloadImages();
-		this.requestUserName();
+		if (this.isCloud()) {
+		    this.requestUserName();
+		}
 		var defaultProject = this.getUserSetting("defaultProject");
 	        var reopenProject = this.getUserSetting("reopenProject");
 	        if (reopenProject)
@@ -343,7 +345,9 @@ dojo.declare("Studio", wm.Page, {
 		this.paletteDialog.hide();
 		wm.typeManager.clearTypes();
 		wm.services.clear();
-		this.updateServices();
+		if (this._loadingApplication) {
+		    this.updateServices();
+		}
 		wm.roles = [];
 	    this.updateProjectDirty();
 		//

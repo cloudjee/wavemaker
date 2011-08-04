@@ -81,7 +81,7 @@ dojo.declare("wm.studio.Project", null, {
 	this.savePage(dojo.hitch(this, function() {
 	    this.pageChanged();
 	    this.pagesChanged();
-	    this.updatePageList();
+	    this.updatePageList(true);
 	    studio.pageSelect.setDataValue(inName);
 	    if (callback) callback();
 	}));
@@ -172,6 +172,7 @@ dojo.declare("wm.studio.Project", null, {
 	    var o = studio.studioService.requestAsync("openProject", [inProjectName],
 						      dojo.hitch(this, function(o) {
  							  studio.endWait(studio.getDictionaryItem("wm.studio.Project.WAIT_OPEN_PROJECT"));
+							  studio._loadingApplication = true; 
 							  this.projectName = inProjectName;
 							  if (o.upgradeMessages)
 							      this.showUpgradeMessage(o.upgradeMessages);
@@ -201,6 +202,7 @@ dojo.declare("wm.studio.Project", null, {
 							      this.pageName = "";
 							      studio.application = studio.page = null;
 							  } finally {
+							      studio._loadingApplication = false;
 							      this.loadingProject = false;
 							      this.projectChanged();
 							  }
@@ -752,7 +754,8 @@ dojo.declare("wm.studio.Project", null, {
 		}
 		alert(message);
 	},
-	updatePageList: function() {
+	updatePageList: function(hasOpenProject) {
+	    if (hasOpenProject) {
 		var d = studio.pagesService.requestSync("listPages", null);
 		d.addCallback(dojo.hitch(this, function(inResult) {
 			inResult.sort();
@@ -766,6 +769,9 @@ dojo.declare("wm.studio.Project", null, {
 		    return inResult;
 		}));
 		return d;
+	    } else {
+		app.pagesListVar.setData([]);
+	    }
 	},
 	getPageList: function() {
 		return this.pageList || [];
@@ -796,11 +802,11 @@ dojo.declare("wm.studio.Project", null, {
 		studio.projectsChanged();
 	},
 	pagesChanged: function() {
-		this.updatePageList();
+		this.updatePageList(true);
 		studio.pagesChanged();
 	},
 	projectChanging: function() {
-		this.updatePageList();
+		this.updatePageList(studio._loadingApplication);
 		studio.projectChanging();
 	},
 	projectChanged: function(optionalInName) {
