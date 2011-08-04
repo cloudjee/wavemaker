@@ -1422,6 +1422,29 @@ dojo.declare("Studio", wm.Page, {
 	if (lastValue == newValue) return;
 
 	if (this.updateProjectDirty()) {
+	    this.confirmSaveDialog.show();
+	    this.confirmSaveDialog.page.setup(
+		/* User clicks save */
+		dojo.hitch(this, function() {
+		    this._saveConnect = dojo.connect(this,"saveProjectSuccess", this, function() {
+			delete this._designLanguage;
+			this.languageSelectChanged2();
+			dojo.disconnect(this._saveConnect);
+		    });
+		    this._designLanguage = lastValue;
+		    this.saveAll(studio.project);
+		}),
+
+		/* User clicks dont save */
+		dojo.hitch(this, "languageSelectChanged2"),
+		/* User clicks cancel */
+		dojo.hitch(this, function() {
+		    delete this._designLanguage;
+		    this._changingLanguage = true;
+		    this.languageSelect.setDisplayValue(lastValue);
+		    this._changingLanguage = false;
+		}));
+/*
 	    app.confirm(this.getDictionaryItem("CONFIRM_SAVE_LANGUAGE"), false,
 			dojo.hitch(this, function() {
 			    this._saveConnect = dojo.connect(this,"saveProjectSuccess", this, function() {
@@ -1438,6 +1461,7 @@ dojo.declare("Studio", wm.Page, {
 			    this.languageSelect.setDisplayValue(lastValue);
 			    this._changingLanguage = false;
 			}));
+		    */
 	} else {
 	    this.languageSelectChanged2();
 	}
