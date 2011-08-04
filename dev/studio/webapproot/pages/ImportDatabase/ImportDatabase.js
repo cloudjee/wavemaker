@@ -25,6 +25,9 @@ dojo.declare("ImportDatabase", wm.Page, {
 			LOAD_IP_OP, [], dojo.hitch(this, "_loadedIP"));
 		this.update();
 	},
+    onShow: function() {
+	this.panel2.activate();
+    },
 	update: function(inImportDataModel) {
 		var d = inImportDataModel;
 		if (d) {
@@ -183,6 +186,8 @@ dojo.declare("ImportDatabase", wm.Page, {
 	_updateServiceName: function() {
 		var e = this.extraInput.getDataValue();
 		this.serviceNameChanged();
+	        if (!e.match(/db$/i))
+		    e += "DB";
 		this.serviceNameInput.setDataValue(e);
 	},
 	_testConnection: function(url, username, password, driverClassName) {
