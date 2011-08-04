@@ -608,10 +608,13 @@ dojo.declare("wm.studio.Project", null, {
 
 	    f.push(dojo.hitch(this, function() {
 		studio.setSaveProgressBarMessage(this.pageName + ".widgets.js");
-		var lang = studio.languageSelect.getDisplayValue();
-		if (lang == "default") {
-		    this.savePageData(this.pageName + ".widgets.js", studio.getWidgets());
-		} else {
+		var lang = studio._designLanguage || studio.languageSelect.getDisplayValue();
+
+		if (studio._designLanguage === undefined) // hasn't been set by languageSelectChanged
+		    studio._designLanguage = lang;
+		this.savePageData(this.pageName + ".widgets.js", studio.getWidgets());
+
+		if (lang != "default") {
 		    var dictionary = studio.page.getLanguageWidgets();
 		    var oldDictionaryStr = wm.load("projects/" + studio.project.projectName + "/language/nls/" + lang + "/" + studio.project.pageName + ".js");
 		    try {
@@ -624,8 +627,9 @@ dojo.declare("wm.studio.Project", null, {
 		    } catch(e){
 			console.error("Failed to load dictionary " + lang + "/" + studio.project.pageName);
 		    }		    
-		    studio.studioService.requestSync("writeWebFile", ["language/nls/" + studio.languageSelect.getDisplayValue() + "/" + studio.project.pageName + ".js", dictionary, false]);
+		    studio.studioService.requestSync("writeWebFile", ["language/nls/" + lang + "/" + studio.project.pageName + ".js", dictionary, false]);
 		}
+		delete studio._designLanguage;
 	    }));
 
 	    f.push(dojo.hitch(this, function() {	    

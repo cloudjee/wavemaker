@@ -145,7 +145,7 @@ wm.Component.extend({
 	        for (var i = 0; i < propList.length; i++) {
 		    var n = propList[i];		    
 		    if (this.isWriteableProp(props[n],n)) {
-			var value = src[n];
+			var value = (window["studio"] && studio._designLanguage !== undefined && studio._designLanguage != "default") ? src["_original_i18n_" + n] || src[n] : src[n];
 			if (value instanceof Date) value = value.getTime();
 			if (wm.isInstanceType(src, wm.Application) && value !== undefined) {
 			    out[n] = value;

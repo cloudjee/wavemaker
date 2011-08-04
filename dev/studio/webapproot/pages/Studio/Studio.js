@@ -361,6 +361,16 @@ dojo.declare("Studio", wm.Page, {
 		       this.mlpal.activate();
 			 this.paletteSearch.focus(); // this is done to help FF contextual menus work; else we get crazy stupid errors
 			 this.deploymentService.requestAsync("getDeploymentInfo", [], dojo.hitch(this, "getDeploymentInfoSuccess"));
+			 var d = studio.pagesService.requestAsync("listDictionaries", [], dojo.hitch(this, function(inData) {
+			     var options = ["default", "en", "es", "ja", "fr", "it", "nl", "pt", "cn"];
+			     for (var i = 0; i < inData.length; i++) {
+				 if (dojo.indexOf(options, inData[i]) == -1) {
+				     options.push(inData[i]);
+				 }
+			     }
+			     options.push("other");
+			     this.languageSelect.setOptions(options.join(","));
+			 }));
 		     } else if (!this.isLoginShowing()) {
 			 studio.startPageDialog.show();
 			 if (app.alertDialog && app.alertDialog.showing && !app.alertDialog._hideAnimation)
@@ -1406,10 +1416,42 @@ dojo.declare("Studio", wm.Page, {
 	this.themesPage.page.revertTheme();
     },
     languageSelectChanged: function(inSender, optionalPageName) {
+	if (this._changingLanguage) return;	
+	var lastValue = this.languageSelect._lastValue;
+	var newValue = this.languageSelect.getDisplayValue();
+	if (lastValue == newValue) return;
+
+	if (this.updateProjectDirty()) {
+	    app.confirm(this.getDictionaryItem("CONFIRM_SAVE_LANGUAGE"), false,
+			dojo.hitch(this, function() {
+			    this._saveConnect = dojo.connect(this,"saveProjectSuccess", this, function() {
+				delete this._designLanguage;
+			    	this.languageSelectChanged2();
+				dojo.disconnect(this._saveConnect);
+			    });
+			    this._designLanguage = lastValue;
+			    this.saveAll(studio.project);
+			}),
+			dojo.hitch(this, function() {
+			    delete this._designLanguage;
+			    this._changingLanguage = true;
+			    this.languageSelect.setDisplayValue(lastValue);
+			    this._changingLanguage = false;
+			}));
+	} else {
+	    this.languageSelectChanged2();
+	}
+    },
+    languageSelectChanged2: function() {
+	this.languageSelect.clearDirty();
 	var lang = this.languageSelect.getDisplayValue();
 	if (lang == "other") {
 	    app.prompt("Enter code", "",
 		       function(inResult) {
+			   var options = studio.languageSelect.options.split(/,/);
+			   options[options.length-1] = inResult;
+			   options.push("other");
+			   studio.languageSelect.setOptions(options.join(","));
 			   studio.languageSelect.setDisplayValue(inResult);
 		       },
 		       function() {
@@ -1428,6 +1470,8 @@ dojo.declare("Studio", wm.Page, {
 	} else {
 	    this.page.installDesignDictionary({});
 	}
+	this.setCleanPage();
+	studio.inspector.reinspect();
     },
     pageSelectChanged: function(inSender, optionalPageName) {
 	if (!studio.page) return;

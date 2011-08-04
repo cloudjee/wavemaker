@@ -350,4 +350,5 @@
     "DATA_UTILS_FILE": "File",
     "DATA_UTILS_DATABASE_HELP": "Enter the name of the database on your database server",
     "DATA_UTILS_FILE_HELP": "Enter the name of the file in your project's webapproot/data folder. If the name is hrdb.script, just enter hrdb.",
+    "CONFIRM_SAVE_LANGUAGE": "You must save the project before changing the language; save and continue?"
 }
