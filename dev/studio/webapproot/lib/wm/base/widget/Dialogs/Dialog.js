@@ -737,15 +737,21 @@ dojo.declare("wm.Dialog", wm.Container, {
 		this.setContentHeight(inHeight);
 	},
 	*/
-	keydown: function(inEvent) {
-            if (!this.showing) return true;
+    canProcessKeyboardEvent: function(inEvent) {
+        if (!this.showing) return false;
             var dialogs = dojo.query(".wmdialog");
             var zindex = parseInt(this.domNode.style.zIndex);
             for (var i = 0; i < dialogs.length; i++) {
                 if (dialogs[i].style.display != "none" && parseInt(dialogs[i].style.zIndex) > zindex) {
-                    return true; // this isn't the foremost dialog
+                    return false; // this isn't the foremost dialog
                 }
             }
+	return true;
+
+    },
+	keydown: function(inEvent) {
+	    if (!this.canProcessKeyboardEvent(inEvent))
+		return true;
 
 	    if (inEvent.keyCode == dojo.keys.ESCAPE && !this.noEscape) {
 		if (this._isDesignLoaded && studio.selected.getParentDialog() == this) return;
