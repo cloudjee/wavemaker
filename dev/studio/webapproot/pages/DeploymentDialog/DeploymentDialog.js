@@ -34,7 +34,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 
     /* Extra Widgets */
     databaseBox: {
-	databasePanel1: ["wm.FancyPanel", {"borderColor":"black","innerBorder":"1", "fitToContentHeight":true,"height":"149px","margin":"10,10,10,0","title":"Database 1"}, {}, {	    
+	databasePanel1: ["wm.FancyPanel", {"borderColor":"black","innerBorder":"1", "fitToContentHeight":true,"height":"149px","margin":"10,10,10,0","title":"Database 1", labelHeight: "24"}, {}, {	    
 	    databaseInnerPanel1: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left", margin: "5,50,5,50"},{}, {
 		databaseConnectionEditor1: ["wm.SelectMenu", {"caption":"Database Connection","captionAlign":"left","captionSize":"140px","dataField":"dataValue","displayField":"dataValue","displayValue":"","helpText":"<ul><li>Settings: Setup the settings just as you do when importing databases</li><li>JNDI: The Java Naming and Directory Interface is a Java API for a directory service that allows Java clients to discover and lookup data and objects via a name</li></ul>","options":"Standard, JNDI","width":"280px"}, {onchange: "updateDatabaseLayers"}],
 		databaseLayers1: ["wm.Layers", {fitToContentHeight: true}, {}, {
@@ -339,6 +339,9 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	    this.cfLoginDialog.show();
 	    this.loginDialogUserEditor.focus();
 	    this._deployData = inData;	    
+	} else if (inResult.match(/^ERROR\:.*The URI.*has already been taken or reserved/)) {
+	    app.alert(this.getDictionaryItem("ALERT_CF_NAME_TAKEN", {name: inData.applicationName}));
+	    this.cfNameEditor.setInvalid();
 	} else {
 	    this.deployFailed({message: inResult});
 	}
@@ -476,7 +479,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	      var i = this.deploymentList.getSelectedIndex();
 	      var item = this.deploymentList.selectedItem.getValue("dataValue");
 
-	  app.confirm(this.getDictionaryItem("CONFIRM_DELETE_HEADER") + this.generateDeploymentHTMLSynopsis(item), false, dojo.hitch(this, function() {
+	  var deleteFunc = dojo.hitch(this, function() {
 	      var onsuccess = dojo.hitch(this, function() {
 		  dojo.forEach(this.currentDatabaseBoxes, function(w) {
 		      w.destroy();
@@ -485,14 +488,18 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		  this._currentDeploymentIndex = -1;
 		  studio.updateDeploymentsMenu();
 	      });
-
-              this.deploymentListVar.removeItem(i);
+	      
+	      this.deploymentListVar.removeItem(i);
 	      if (item.deploymentId) {
 		  studio.deploymentService.requestAsync("delete", [item.deploymentId], onsuccess);
 	      } else {
 		  onsuccess();
 	      }
-	  }));
+	  });
+	  if (item.deploymentId)
+	      app.confirm(this.getDictionaryItem("CONFIRM_DELETE_HEADER") + this.generateDeploymentHTMLSynopsis(item), false, deleteFunc);
+	  else
+	      deleteFunc();
       } catch(e) {
           console.error('ERROR IN deleteButtonClick: ' + e); 
       } 
@@ -694,7 +701,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 			    box.dataModel = c;
 			    box.dataProperties = inData;
 			    box.dataConnection = connection;
-			    box.setTitle(this.getDictionaryItem("DATABASE_BOX_TITLE", {databaseName: c.name}));
+			    box.setTitle(this.getDictionaryItem("DATABASE_BOX_TITLE", {databaseName: c.dataModelName}));
 			    this.currentDatabaseBoxes.push(box);
 			}
 		})
@@ -793,7 +800,6 @@ dojo.declare("DeploymentDialog", wm.Page, {
     populateTomcatDeploy: function(inData) {
 	this.editLayer.activate();
 	this.tomcatLayer.activate();
-
 	this.tcDeploymentNameEditor.setDataValue(inData.name);
 	this.tcHostEditor.setDataValue(inData.host);
 	this.tcPortEditor.setDataValue(inData.port);
@@ -835,8 +841,11 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	var boxes = this.generateDataModelBoxes();
 	dojo.forEach(boxes, dojo.hitch(this, function(b, i) {
 	    var dataModel = b.dataModel;
+	    var connection = b.dataConnection;
+	    if (connection.dbtype.toLowerCase() != "mysql")
+		app.alert(this.getDictionaryItem("ALERT_INVALID_DB_TYPE", {name: connection.dbtype}));
 	    this["databaseLayers" + (i+1)].setLayerIndex(2);
-	    this["databaseCloudFoundryNameEditor" + (i+1)].setDataValue(dataModel.name);
+	    this["databaseCloudFoundryNameEditor" + (i+1)].setDataValue(connection.db);
 	    this["databaseConnectionEditor" + (i+1)].hide();
 	}));
 	this.editPanel.reflow();

@@ -604,6 +604,11 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		    }
 		}
 	},
+        setInvalid: function() {
+	    this._isValid = false;
+	    this.editor.set("state","Error");
+	    this.valueChanged("invalid", this.getInvalid());
+	},
 	_getReadonlyValue: function() {
 		return this.getDisplayValue() || "";
 	},
