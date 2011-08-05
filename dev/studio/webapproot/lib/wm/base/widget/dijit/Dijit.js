@@ -67,7 +67,7 @@ dojo.declare("wm.Dijit", wm.Control, {
 		this.dijit.destroy();
 		this.inherited(arguments);
 	},
-	setDomNode: function(inDomNode) {
+	setDomNode: function(inDomNode) {	    
 		inDomNode = this.initDijit(inDomNode);
 		this.inherited(arguments);
 	},
@@ -79,8 +79,12 @@ dojo.declare("wm.Dijit", wm.Control, {
 		inDomNode.appendChild(n);
 		var p = dojo.mixin({srcNodeRef: n}, this.getProperties());
 		var newclass = typeof this.dijitClass == "string" ? dojo.getObject(this.dijitClass) : this.dijitClass;
-		this.dijit = newclass ? new newclass(p) : null;
-		this.setEvents();
+		try {
+		    this.dijit = newclass ? new newclass(p) : null;
+		    this.setEvents();
+		} catch(e) {
+		    console.error(e);
+		}
 	    }
 	    return inDomNode;
 	},
