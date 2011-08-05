@@ -124,7 +124,7 @@ wm.Object.extendSchema(wm.AbstractEditor, {
     imageList: {ignore: 1},
     formatter: { group: "format", order: 20 },
     format: { ignore: 1, writeonly: 1, categoryParent: "Properties", categoryProps: {component: "format"}},
-    formField: {writeonly: 1, group: "common", order: 500},
+    formField: {group: "common", order: 500},
     caption: {group: "Labeling", order: 1, bindTarget:true, doc: 1},
     captionPosition: {group: "Labeling", order: 2, doc: 1},
     captionAlign: {group: "Labeling", order: 3, doc: 1},
