@@ -16,5 +16,6 @@ TOAST_DEPLOY_FAILED: "Error deploying: ${error}",
 TOAST_FILE_GENERATION_SUCCESS: "Your files have been generated and will not be downloaded by your browser.",
 WAIT_LOGGING_IN: "Logging in...",
 ALERT_CF_NAME_TAKEN:  "${name} is already in use by another user; please pick a new name",
-ALERT_INVALID_DB_TYPE: "Deployment of ${name} databases to CloudFoundry is not supported"
+ALERT_INVALID_DB_TYPE: "Deployment of ${name} databases to CloudFoundry is not supported",
+DELETING: "Deleting..."
 }
