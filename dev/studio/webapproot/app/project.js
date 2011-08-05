@@ -600,7 +600,7 @@ dojo.declare("wm.studio.Project", null, {
 
 		/* Change the page's i18n property to true if saving with non-default language */
 		if (studio.languageSelect.getDisplayValue() != "default") {
-		    studio.setPageI18n();
+		    studio.page.setI18n(true);
 		}
 
 		var text = studio.getScript();

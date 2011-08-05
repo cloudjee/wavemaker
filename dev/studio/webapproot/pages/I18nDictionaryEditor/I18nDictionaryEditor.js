@@ -150,7 +150,7 @@ dojo.declare("I18nDictionaryEditor", wm.Page, {
 	}
 	if (!this.errors)
 	    this.owner.owner.hide();
-	studio.setPageI18n();
+	studio.page.setI18n(true);
 	studio.endWait();
     },
     cancelClick: function() {

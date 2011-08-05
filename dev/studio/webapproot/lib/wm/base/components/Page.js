@@ -28,6 +28,8 @@ wm.getObject = function(inType){
 }
 
 dojo.declare("wm.Page", wm.Component, {
+        validateVisibleOnly: false,
+        i18n: false,
 	name: '',
         deletionDisabled: 1,
 	create: function() {
@@ -552,6 +554,54 @@ wm.Page.extend({
 	    }
 	}
 	return result;
+    },
+    setPageProperty: function(inPropName, inValue) {
+	if (typeof inValue == "string")
+	    inValue = '"' + inValue + '"';
+	var text = studio.getScript();
+	var regex = new RegExp('"' + inPropName + '": .*,' );
+	if (text.match(regex)) {
+	    text = text.replace(regex, '"' + inPropName + '": ' + inValue + ",")
+	} else {
+	    text = text.replace(/\{(.*?)\n/, '{$1\n\t"' + inPropName + '": ' + inValue + ',\n');
+	}
+	studio.setScript(text);
+	
+    },
+    getPageProperty: function(inPropName) {
+	if (typeof inValue == "string")
+	    inValue = '"' + inValue + '"';
+	var text = studio.getScript();
+	var regex = new RegExp('"' + inPropName + '": (.*),' );
+	var matches = text.match(regex);
+	if (matches) {
+	    var result = matches[1];
+	    result = result.replace(/^\"/,"").replace(/\"$/,"");
+	    if (typeof this[inPropName] == "boolean") {
+		result = (result == "true");
+	    } else if (typeof this[inPropName] == "number") {
+		result = parseInt(result);
+	    }
+	    return result;
+	}
+    },
+    setI18n: function(inValue) {
+	this.i18n = Boolean(inValue);
+	if (this._isDesignLoaded) {
+	    this.setPageProperty("i18n", this.i18n);
+	}
+    },
+    getI18n: function() {
+	return this.getPageProperty("i18n");
+    },
+    setValidateVisibleOnly: function(inValue) {
+	this.validateVisibleOnly = Boolean(inValue);
+	if (this._isDesignLoaded) {
+	    this.setPageProperty("validateVisibleOnly", this.validateVisibleOnly);
+	}
+    },
+    getValidateVisibleOnly: function() {
+	return this.getPageProperty("validateVisibleOnly");
     }
 });
 
@@ -563,7 +613,9 @@ wm.Object.extendSchema(wm.Page, {
     onEscapeKey: {}, // allow all events
     onEnterKey: {}, // allow all events
     onLetterKey: {events: ["js", "disableNoEvent"]},
-    onMiscKey: {events: ["js", "disableNoEvent"]}
+    onMiscKey: {events: ["js", "disableNoEvent"]},
+    i18n: {group: "display"},
+    validateVisibleOnly: {group: "validation"}
 });
 
 // bc

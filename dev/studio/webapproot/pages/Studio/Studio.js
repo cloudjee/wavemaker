@@ -643,15 +643,7 @@ dojo.declare("Studio", wm.Page, {
 	        //this["_cachedEditDataeditArea"] = inScript;
 	    this.editArea.setText(inScript);
 	},
-    setPageI18n: function() {
-	var text = studio.getScript();
-	if (text.match(/"i18n"\:\s*(true|false)\s*,/)) {
-	    text = text.replace(/"i18n"\:\s*(true|false)\s*,/, '"i18n": true,');
-	} else {
-	    text = text.replace(/\{(.*?)\n/, '{$1\n\t"i18n": true,\n');
-	}
-	studio.setScript(text);
-    },
+    
         getAppScript: function() {
 	    return this.appsourceEditor.getText();
 	},
