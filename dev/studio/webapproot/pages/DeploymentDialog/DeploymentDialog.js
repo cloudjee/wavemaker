@@ -320,7 +320,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
     deploySuccess: function(inResult, inData) {
 	studio.endWait();
-	if (inResult == "SUCCESS") {
+	if (inResult == "SUCCESS" || inResult.match(/^OK/)) {
 	    switch (inData.deploymentType) {
 	    case this.TC_DEPLOY:
 	    case this.CF_DEPLOY:
@@ -487,10 +487,12 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		  this.defaultLayer.activate();
 		  this._currentDeploymentIndex = -1;
 		  studio.updateDeploymentsMenu();
+		  studio.endWait();
 	      });
 	      
 	      this.deploymentListVar.removeItem(i);
 	      if (item.deploymentId) {
+		  studio.beginWait(this.getDictionaryItem("DELETING"));
 		  studio.deploymentService.requestAsync("delete", [item.deploymentId], onsuccess);
 	      } else {
 		  onsuccess();
