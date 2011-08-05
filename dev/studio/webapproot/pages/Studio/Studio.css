@@ -1936,6 +1936,11 @@ color: rgb(0,270,0);
 .InsertMenuGraphics {
      background: transparent url(images/wm/picture_16.png) no-repeat;`    
 }
+.Studio .InsertMenuPrebuilt {
+    background-image: url(images/wm/variable_16.png) ;
+   background-color: transparent;
+	background-repeat:no-repeat;
+}
 
 .InsertMenuAdvanced {
     background: transparent url(/wavemaker/images/wm/component_16.png) no-repeat;
