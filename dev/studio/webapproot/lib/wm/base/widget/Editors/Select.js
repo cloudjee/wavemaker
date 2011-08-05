@@ -19,6 +19,7 @@ dojo.require("wm.base.widget.Editors.AbstractEditor");
 // Select Editor
 //===========================================================================
 dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
+        placeHolder: "",
     _storeNameField: "_selectMenuName",
 	options: "",
 	displayField: "",
@@ -31,7 +32,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	startUpdate: false,
 	hasDownArrow: true,
 	binding: '(data binding)',
-    restrictValues: true,
+    restrictValues: false,
 	_allFields: "All Fields",
     selectedItem: null,
     _selectedData: null,
@@ -61,6 +62,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	getEditorProps: function(inNode, inProps) {
 		var store = this.generateStore();
 		return dojo.mixin(this.inherited(arguments), {
+		        placeHolder: this.placeHolder,
 			required: this.required,
 			store: store,
 			autoComplete: this.autoComplete,
@@ -75,6 +77,11 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	    } else {
 		return new dijit.form.ComboBox(this.getEditorProps(inNode, inProps));
 	    }
+	},
+        setPlaceHolder: function(inPlaceHolder) {
+	    this.placeHolder = inPlaceHolder;
+	    if (this.editor)
+		this.editor.attr("placeHolder", inPlaceHolder);
 	},
         setRestrictValues: function(inValue) {
 	    var dataval = this.getEditorValue();
@@ -376,7 +383,11 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		// no data to render
 		if (!ds || !ds.data || !ds.data.list)
 			return;
+	    if (!this.editor) {
 		this.createEditor();
+	    } else {
+		this.editor.store = this.generateStore();		
+	    }
             if (inDataSet && inDataSet.type && inDataSet.type != "any" && inDataSet.type != this.selectedItem.type)
                 this.selectedItem.setType(inDataSet.type);
 	    try {
@@ -536,6 +547,7 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 	autoDataSet: true,
 	startUpdate: true,
         maxResults: 500,
+        ignoreCase: true,
 	init: function() {
 		this.inherited(arguments);
 		if (this.autoDataSet)
@@ -555,7 +567,9 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 				startUpdate: false,
 				_rootField: ff,
 			        liveView: v,
-			        maxResults: this.maxResults
+			    maxResults: this.maxResults,
+			    ignoreCase: this.ignoreCase,
+			    orderBy: this.orderBy // right now, only FilteringSelect provides the orderBy property
 			});
 			this.selectedItem.setType(this.dataSet.type);
 			this.createDataSetWire(lv);
@@ -622,3 +636,65 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 	}
 });
 
+/* ignore displayExpresion and maxResults */
+dojo.declare("wm.FilteringLookup", wm.Lookup, {
+    startUpdate: false,
+    restrictValues: true, // looking up up objects; partial match is useless
+    changeOnKey: true,
+    pageSize: 25,
+    autoComplete: true,
+    hasDownArrow: false,
+    placeHolder: "Start typing to find matches",
+    filterField: "", // right now we only support filtering upon a single field
+    prepare: function() {
+	this.inherited(arguments);
+	this.maxResults = this.pageSize;
+	this.filterField = this.displayField;
+	this.orderBy = "asc: " + this.displayField;
+    },
+    createDataSet: function() {
+	this.inherited(arguments);
+	if (this.dataSet) {
+	    this.dataSet.connect(this.dataSet, "onSuccess", this, "onDataSetSuccess");
+	}
+	
+    },
+    onDataSetSuccess: function() {
+	wm.onidle(this, function() {
+	    this.editor._startSearchFromInput();
+	    this.onchange(); // see if there have been any new characters since our last request was fired
+	});
+    },
+    setPageSize: function(inValue) {
+	this.maxResults = this.pageSize = inValue;
+    },
+    onchange: function() {
+	if (this.disabled || this.readonly) return;
+	var value = this.displayValue;
+	var lastValue = this.dataSet.filter.getValue(this.filterField);
+	/* Don't update the filter if its already firing; keep it at its last value so we'll know when it returns
+	 * what was requested
+	 */
+	if (value != lastValue && !this.dataSet._requester) {
+	    this.dataSet.filter.setValue(this.filterField, value);
+	    if (value === undefined || value === null || value === "") {
+		this.dataSet.setData([]);
+	    } else {
+		this.dataSet.update();
+	    }
+	}
+    },
+    editorChanged: function() {
+	if (this.dataSet) {
+	    wm.AbstractEditor.prototype.editorChanged.call(this);
+	    this.updateSelectedItem();
+	}
+    },
+	getDisplayValue: function() {
+	    if (this.editor)
+		return this.editor.get('displayedValue');	    
+	    else
+		return this.inherited(arguments);
+	},
+    _end: 0
+});

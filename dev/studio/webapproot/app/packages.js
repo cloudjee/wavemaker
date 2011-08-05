@@ -71,6 +71,7 @@
 [ bundlePackage.FormsEditors + "/" +  bundlePackage.Editor, bundlePackage.RadioButton, "wm.RadioButton", "wm.base.widget.Editors.Radiobutton", "Studio_paletteImageList_9", bundlePackage.descRadioButton, {}, false],
 [ bundlePackage.FormsEditors + "/" +  bundlePackage.Editor, bundlePackage.Select, "wm.SelectMenu", "wm.base.widget.Editors.Select", "Studio_paletteImageList_9", bundlePackage.descSelectMenu, {}, false],
 [ bundlePackage.FormsEditors + "/" +  bundlePackage.Editor, bundlePackage.Lookup, "wm.Lookup", "wm.base.widget.Editors.Select", "Studio_paletteImageList_9", bundlePackage.descLookup, {}, false],
+[ bundlePackage.FormsEditors + "/" +  bundlePackage.Editor, bundlePackage.FilteringLookup, "wm.FilteringLookup", "wm.base.widget.Editors.Select", "Studio_paletteImageList_9", bundlePackage.descLookup, {}, false],
 [ bundlePackage.FormsEditors + "/" +  bundlePackage.Editor, bundlePackage.Slider, "wm.Slider", "wm.base.widget.Editors.Number", "Studio_paletteImageList_9",bundlePackage.descSlider, {}, false],
 [ bundlePackage.FormsEditors + "/" +  bundlePackage.Editor, bundlePackage.Text, "wm.Text", "wm.base.widget.Editors.Text", "Studio_paletteImageList_9", bundlePackage.descText, {}, false],
 [ bundlePackage.FormsEditors + "/" +  bundlePackage.Editor, bundlePackage.TextArea, "wm.LargeTextArea", "wm.base.widget.Editors.Text", "Studio_paletteImageList_9", bundlePackage.descTextArea, {}, false],

@@ -159,6 +159,7 @@ wm.SelectMenu.extend({
 
 
 wm.Object.extendSchema(wm.SelectMenu, {
+    placeHolder: {group: "Labeling", doc: 1},
     onEnterKeyPress: {ignore: 0},
     restrictValues: {type: "wm.Boolean", group: "editor", order: 40, doc: 1},
 	changeOnKey: { ignore: 1 },
@@ -217,4 +218,18 @@ wm.Lookup.extend({
 	    this.inherited(arguments);
 	    this.setDataSet(this._getFormSource());
 	}
+});
+
+
+
+wm.Object.extendSchema(wm.FilteringLookup, {
+    orderBy: {ignore: true},
+    ignoreCase: {group: "data"},
+    filterField: {ignore: true}, // for now, this value will always be the same as displayField
+    maxResults: {ignore: true}, // for now, this value will always be the same as pageSize
+    restrictValues: {ignore: true}, // by definition, we must find objects; if no match, no data
+    hasDownArrow: {ignore: true}, // Downarrow will not work with this
+    displayType: {ignore: true}, // can only filter on text
+    displayExpression: {ignore: true}, // can only filter on a single field, can not filter on expression text
+    startUpdate: {ignore: true} // only update when the user types
 });

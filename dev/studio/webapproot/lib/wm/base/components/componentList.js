@@ -70,6 +70,7 @@ wm.componentList = {
 	'wm.DateTime':['build.Gzipped.wm_editors'],
 	'wm.SelectMenu':['build.Gzipped.wm_editors'],
 	'wm.Lookup':['build.Gzipped.wm_editors'],
+	'wm.FilteringLookup':['build.Gzipped.wm_editors'],
 	'wm.Number':['build.Gzipped.wm_editors'],
 	'wm.Checkbox':['build.Gzipped.wm_editors'],
 	'wm.RadioButton':['build.Gzipped.wm_editors'],
@@ -110,6 +111,7 @@ wm.componentList = {
 	'wm.FileUpload':['wm.base.widget.FileUpload'],
 	'wm.DojoFileUpload':['wm.base.widget.DojoFileUpload'],
 	'wm.DojoFlashFileUpload':['wm.base.widget.DojoFlashFileUpload'],
+        'wm.DijitDesigner': ["wm.base.widget.dijit.Dijit"],
 
         //'wm.Popup':['wm.base.widget.Popup'],
 	'wm.Service':['wm.base.components.Service'],

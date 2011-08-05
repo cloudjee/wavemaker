@@ -51,6 +51,7 @@
 	"RadioButton" : "RadioButton",
 	"Select" : "Select",
 	"Lookup" : "Lookup",
+        "FilteringLookup": "Filtering Lookup",
 	"Slider" : "Slider",
 	"Text" : "Text",
 	"TextArea" : "TextArea",
