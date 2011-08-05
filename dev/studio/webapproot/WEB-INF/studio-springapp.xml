@@ -17,5 +17,5 @@
 
     <import resource="studio-controllers.xml" />
     <import resource="studio-security-empty.xml"/>
-	<import resource="studio-partner-beans.xml"/>
+<!--<import resource="studio-partner-beans.xml"/> -->
 </beans>
