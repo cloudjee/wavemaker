@@ -33,15 +33,7 @@ dojo.declare("CustomWebServiceImporter", wm.Page, {
 	var host = this.importHost.getDataValue();
 	var port = this.importPort.getDataValue();
 	var domain = this.domainEditor.getDataValue();
-	var loginInfo = {};
-	loginInfo.host = host;
-	loginInfo.port = port;
-	loginInfo.userName = user;
-	loginInfo.password = pass;
-	loginInfo.miscInfo = domain;
-	loginInfo.partnerName = "asteria";
-	//var d = this.flowListService.requestAsync("listAllFlows", [host, port, user, pass, domain]);
-	var d = this.operationListService.requestAsync("listAllOperations", [loginInfo]);
+	var d = this.flowListService.requestAsync("listAllFlows", [host, port, user, pass, domain]);
 	d.addCallback(dojo.hitch(this, "listAllFlowsSuccess"));
 	d.addErrback(dojo.hitch(this, "listAllFlowsError"));
     },
@@ -114,15 +106,24 @@ dojo.declare("CustomWebServiceImporter", wm.Page, {
 	for (var i = 0; i < this.tree.root.kids.length; i++) {
 	    if (this.tree.root.kids[i].getChecked() == false) {
 		dojo.forEach(this.tree.root.kids[i].kids, function(kid) {kid.setChecked(false);});
-		this.tree.root.kids[i].setOpen(false);
 	    }
 	}
+	this.updateImportDisabled();
     },
     flowChecked: function(inNode) {
 	if (inNode.getChecked() && !inNode.parent.getChecked())
 	    inNode.parent.setChecked(true);
 	else if (!inNode.getChecked() && dojo.every(inNode.parent.kids, function(node) {return !node.getChecked();}))
 	    inNode.parent.setChecked(false);
+	this.updateImportDisabled();
+    },
+    updateImportDisabled: function() {
+	var disabled = true;
+	this.tree.forEachNode(dojo.hitch(this, function(node) {
+	    if (node.data && !wm.isEmpty(node.data) && node.data.flows === undefined && node.getChecked())
+		disabled = false;
+	}));
+	this.importButton.setDisabled(disabled);
     },
     cancelClick: function() {
 	this.owner.owner.hide();
@@ -152,16 +153,7 @@ dojo.declare("CustomWebServiceImporter", wm.Page, {
 		projects[node.parent.data.name].push(node.data.name);
 	}));
 
-	var loginInfo = {};
-	loginInfo.host = host;
-	loginInfo.port = port;
-	loginInfo.userName = user;
-	loginInfo.password = pass;
-	loginInfo.miscInfo = domain;
-	loginInfo.partnerName = "asteria";
-
-	//var d = this.flowListService.requestAsync("importFlows", [host, port, user, pass, domain, firstProjectName, projects[firstProjectName],null],
-	var d = this.operationListService.requestAsync("importOperations", [loginInfo, firstProjectName, projects[firstProjectName]],
+	var d = this.flowListService.requestAsync("importFlows", [host, port, user, pass, domain, firstProjectName, projects[firstProjectName],null],
 						  dojo.hitch(this, "importFlowsSuccess"),
 						  dojo.hitch(this, "importFlowsError"));
     },

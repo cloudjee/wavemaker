@@ -13,19 +13,18 @@
  */
 
 CustomWebServiceImporter.widgets = {
-    //flowListService: ["wm.JsonRpcService", {service: "warpFlowService", sync: false}, {}],
-	operationListService: ["wm.JsonRpcService", {service: "pwsImportService", sync: false}, {}],
+    flowListService: ["wm.JsonRpcService", {service: "warpFlowService", sync: false}, {}],
     layoutBox: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", imageList: "smallToolbarImageList"}, {}, {
 	dialog: ["wm.Panel", {layoutKind: "top-to-bottom",  width: "100%", height: "100%", border: "10",  borderColor: "#424959"}, {}, {
 	    importLabel: ["wm.Label", {width: "100%", height: "20px", caption: "Step 1. Import list of projects and flows"}],
 	    importPanel: ["wm.Panel", {layoutKind: "top-to-bottom", width: "100%", height: "165px", padding: "10",margin:"0,0,10,0", horizontalAlign: "right", verticalAlign: "middle"}, {onEnterKeyPress: "scanClick"}, {
 		serviceName: ["wm.Text", {width: "100%", caption: "Service Name", captionAlign: "right", captionSize: "120px", dataValue: "InfoteriaFlows",emptyValue: "emptyString"}],
 		importHostPanel: ["wm.Panel", {layoutKind: "left-to-right", height: "24px", width: "100%"}, {}, {
-		    importHost: ["wm.Text", {width: "100%", caption: "Import URL", captionAlign: "right", captionSize: "120px", dataValue: "infoteria",emptyValue: "emptyString"}],
+		    importHost: ["wm.Text", {width: "100%", caption: "Import URL", captionAlign: "right", captionSize: "120px", dataValue: "10.18.63.147",emptyValue: "emptyString"}],
 		    importPort: ["wm.Number", {width: "150px", caption: "Port", captionAlign: "right", captionSize: "40px", dataValue: "21381",emptyValue: "emptyString"}]
 		}],
-		userInput: ["wm.Text", {width: "100%", caption: "Username", captionAlign: "right", captionSize: "120px", dataValue: "guest",emptyValue: "emptyString"}],
-		passInput: ["wm.Text", {width: "100%", caption: "Password", captionAlign: "right", captionSize: "120px",dataValue: "guest",emptyValue: "emptyString"}],
+		userInput: ["wm.Text", {width: "100%", caption: "Username", captionAlign: "right", captionSize: "120px",emptyValue: "emptyString"}],
+		passInput: ["wm.Text", {width: "100%", caption: "Password", captionAlign: "right", captionSize: "120px",emptyValue: "emptyString"}],
 		domainEditor: ["wm.Text", {width: "100%", caption: "User Domain", captionAlign: "right", captionSize: "120px", dataValue: "/", emptyValue: "emptyString"}],
 		scanButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},width: "120px", caption: "Read Service"}, {onclick: "scanClick"}]
 	    }],
@@ -36,7 +35,7 @@ CustomWebServiceImporter.widgets = {
 	    }]
 	}],
 	buttonBar: ["wm.Panel", {_classes: {domNode:["wmDialogFooter"]}, layoutKind: "left-to-right", width: "100%", height: "35px", horizontalAlign: "right", verticalAlign: "middle"}, {}, {
-	    importButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},width: "100px", caption: "Import"}, {onclick: "importClick"}],
+	    importButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},width: "100px", caption: "Import", disabled: true}, {onclick: "importClick"}],
 	    cancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},width: "100px", caption: "Cancel"}, {onclick: "cancelClick"}]
 
 	}]
