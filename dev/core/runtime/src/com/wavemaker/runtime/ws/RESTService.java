@@ -92,6 +92,12 @@ public class RESTService {
     public <T extends Object> T invoke(Map<String, Object> inputs,
             String method, String contentType, String endpoint,
             Class<T> responseType) {
+        return invoke(inputs, method, contentType, endpoint, responseType);
+    }
+
+    public <T extends Object> T invoke(Map<String, Object> inputs,
+            String method, String contentType, String endpoint,
+            Class<T> responseType, String partnerName) {
         String endpointAddress = null;
 
         if (endpoint != null) {
@@ -123,7 +129,7 @@ public class RESTService {
         try {
             return HTTPBindingSupport.getResponseObject(serviceQName,
                     serviceQName, endpointAddress, httpRequestMethod,
-                    contentType, postData, responseType, bindingProperties);
+                    contentType, postData, responseType, bindingProperties, partnerName);
         } catch (WebServiceException e) {
             throw new WebServiceInvocationException(e);
         }

@@ -210,6 +210,8 @@ public class CopyRuntimeJarsTask extends Task {
 
         List<String> runtimeJarNames = getReferencedClassPathJars(runtimeJarFile, true);
 
+        runtimeJarNames.add("asteriaRuntime.jar");  //??? delete this line later
+
         FileSet projectJars = getProjectJarFileSet();
         List<String> moduleJars;
         try {

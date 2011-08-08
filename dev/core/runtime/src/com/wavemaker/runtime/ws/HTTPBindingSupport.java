@@ -40,10 +40,9 @@ import org.apache.commons.io.IOUtils;
 
 import com.sun.xml.ws.developer.JAXWSProperties;
 import com.sun.xml.ws.encoding.xml.XMLMessage;
-import com.wavemaker.runtime.ws.util.WebServiceUtils;
-import com.wavemaker.runtime.ws.util.Constants;
-import com.wavemaker.runtime.ws.infoteria.WarpException;
-import com.wavemaker.runtime.ws.infoteria.WarpHelper;
+import com.wavemaker.runtime.pws.IPwsResponseProcessor;
+import com.wavemaker.runtime.pws.PwsResponseProcessorBeanFactory;
+import com.wavemaker.runtime.RuntimeAccess;
 
 /**
  * This class provides helper methods for HTTP binding.
@@ -64,13 +63,20 @@ public class HTTPBindingSupport {
             QName portQName, String endpointAddress, HTTPRequestMethod method,
             String contentType, Object postData, Class<T> responseType,
             BindingProperties bindingProperties) throws WebServiceException {
+        return getResponseObject(serviceQName, portQName, endpointAddress, method, contentType, postData,
+                                responseType, bindingProperties, null);
+    }
+
+    public static <T extends Object> T getResponseObject(QName serviceQName,
+            QName portQName, String endpointAddress, HTTPRequestMethod method,
+            String contentType, Object postData, Class<T> responseType,
+            BindingProperties bindingProperties, String partnerName) throws WebServiceException {
 
         String msg = (postData == null ? null
                 : (postData instanceof String) ? (String) postData
                         : convertToXMLString(postData));
 
         DataSource postSource = null;
-        ByteArrayInputStream inputStream = null;
         byte[] bytes = null;
         if (method == HTTPRequestMethod.POST) {
             postSource = createDataSource(contentType, msg);
@@ -78,41 +84,26 @@ public class HTTPBindingSupport {
         DataSource response = getResponse(serviceQName, portQName,
                 endpointAddress, method, postSource, bindingProperties,
                 DataSource.class);
+
         try {
             InputStream is = new BufferedInputStream(response.getInputStream());
             bytes = IOUtils.toByteArray(is);
-            inputStream = new ByteArrayInputStream(bytes);
-            
-            if (responseType == Void.class) {
-                return null;
-            } else if (responseType == String.class) {
-                String responseString = convertStreamToString(inputStream);
-                return responseType.cast(responseString);
-            } else {
-                JAXBContext context = JAXBContext.newInstance(responseType);
-                Unmarshaller unmarshaller = context.createUnmarshaller();
-                Object object = unmarshaller.unmarshal(inputStream);
-                return responseType.cast(object);
-            }
         } catch (IOException e) {
             throw new WebServiceException(e);
-        } catch (JAXBException e) {
-            boolean authError;
-            if (WebServiceUtils.getServiceProvider(endpointAddress).equals(Constants.SERVICE_PROVIDER_INFOTERIA)) {
-                try {
-                    authError = WarpHelper.authenticationError(bytes);
-                } catch (Exception e1) {
-                    throw new WebServiceException(e1);
-                }
-                if (authError) {
-                    throw new WarpException("Authorization error", "Auth");
-                } else {
-                    throw new WebServiceException(e);
-                }
-            } else {
-                throw new WebServiceException(e);
-            }
         }
+
+        IPwsResponseProcessor respProcessor;
+        if (partnerName == null || partnerName.length() == 0) {
+            respProcessor = new DefaultResponseProcessor();
+        } else {
+            PwsResponseProcessorBeanFactory factory = (PwsResponseProcessorBeanFactory) RuntimeAccess.getInstance()
+                    .getSpringBean("pwsResponseProcessorBeanFactory");
+            respProcessor = factory.getPwsResponseProcessor(partnerName);
+        }
+
+        respProcessor.detectExcetionsBeforeProcess(bytes);
+
+        return respProcessor.processServiceResponse(bytes, responseType);
     }
 
     public static String convertToXMLString(Object o) {
@@ -240,7 +231,7 @@ public class HTTPBindingSupport {
         }
     }
     
-    private static String convertStreamToString(InputStream is)
+    public static String convertStreamToString(InputStream is)
             throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();

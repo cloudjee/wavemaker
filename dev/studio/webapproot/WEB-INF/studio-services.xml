@@ -37,7 +37,6 @@ Server definition of all services;
     <import resource="classpath:javaService.spring.xml"/>
     <import resource="classpath:pagesService.spring.xml"/>
     <import resource="classpath:deploymentService.spring.xml"/>
-    <import resource="classpath:cloudFoundryService.spring.xml"/>
     <import resource="classpath:cloudServerService.spring.xml"/>
     <import resource="classpath:cloudStorageService.spring.xml"/>
     <import resource="classpath:resourceFileService.spring.xml"/>
@@ -51,5 +50,6 @@ Server definition of all services;
 	  <import resource="classpath:warpFlowService.spring.xml"/>
 	  <import resource="classpath:warpLoginService.spring.xml"/>
  	  <import resource="classpath:waveMakerService.spring.xml"/>
+	  
 	<import resource="classpath:pwsImportService.spring.xml"/>
 </beans>
