@@ -15,21 +15,47 @@
 
 package com.wavemaker.runtime.pws;
 
+/**
+ * Exception class for Partner Web Service module
+ * @author slee
+ */
+
 public class PwsException extends RuntimeException {
     private String reason;
 
+    /**
+     * constructor
+     *
+     * @param ex exception object
+     */
     public PwsException(Exception ex) {
         super(ex);
     }
+
+    /**
+     * constructor
+     *
+     * @param message exception message
+     * @param reason exception code
+     */
     public PwsException(String message, String reason) {
         super("PWS Error: " + message);
         this.reason = reason;
     }
 
+    /**
+     * Returns the reason code
+     *
+     * @return the reason code
+     */
     public String getReason() {
         return this.reason;
     }
 
+    /**
+     * Sets the reason code
+     * @param reason reason code
+     */
     public void setReason(String reason) {
         this.reason = reason;
     }

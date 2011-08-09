@@ -21,20 +21,69 @@ import java.util.Map;
 import java.util.ArrayList;
 
 /**
+ * This interface provides methods to log in/out to/from partner web service sites. It also defines methods to manage
+ * session and relevant information.
+ * 
  * @author slee
  *
  */
 public interface IPwsLoginManager {
 
+    /**
+     * Log in to partner web service site
+     *
+     * @param serviceName service name (or id)
+     * @return the session id or equivalence
+     * @throws Exception if the login fails
+     */
     String logIn(String serviceName) throws Exception;
     
+    /**
+     * Log in to partner web service site
+     *
+     * @param loginInfo the object of <tt>PwsLoginInfo<tt> containing information such as host, posrt, user name and
+     * password
+     * @return the session id or equivalence
+     * @throws Exception if the login fails
+     */
     String logIn(PwsLoginInfo loginInfo) throws Exception;
 
-    String logOut(String host, String port, String sessId) throws Exception;
+    /**
+     * Log out from the current connection to a partner web service
+     *
+     * @param host host name for the web sevice
+     * @param port port number for the web sevice
+     * @param sessionId session id
+     * @return the session id that is deactivated as a result of the logout
+     * @throws Exception if the login fails
+     */
+    String logOut(String host, String port, String sessionId) throws Exception;
 
+    /**
+     * Returns the login information object of the current session
+     *
+     * @return the object of <tt>PwsLoginInfo<tt> containing information such as host, posrt, user name and password
+     */
+    PwsLoginInfo getPwsLoginInfo();
+
+    /**
+     * Returns the current session id
+     *
+     * @return the session id
+     */
     String getSessionId();
 
+    /**
+     * Sets the partner name of the current session
+     *
+     * @param partnerName the partner name
+     */
     void setPartnerName(String partnerName);
 
+    /**
+     * Returns the partner name of the current session
+     *
+     * @return the partner name
+     */
     public String getPartnerName();
 }
