@@ -244,6 +244,7 @@
             depends="init, copy-jars" if="sources.available">
         <javac destdir="${build.app.classes.dir}"
                 target="1.5"
+                source="1.5"
                 debug="true"
                 includeantruntime="true"
                 encoding="${project.encoding}"
