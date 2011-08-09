@@ -1,5 +1,6 @@
+
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2011 VMWare, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,27 +15,23 @@
 
 package com.wavemaker.runtime.pws;
 
-import javax.xml.namespace.QName;
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
+public class PwsException extends RuntimeException {
+    private String reason;
 
-/**
- * @author slee
- *
- */
-public interface IPwsLoginManager {
+    public PwsException(Exception ex) {
+        super(ex);
+    }
+    public PwsException(String message, String reason) {
+        super("PWS Error: " + message);
+        this.reason = reason;
+    }
 
-    String logIn(String serviceName) throws Exception;
-    
-    String logIn(PwsLoginInfo loginInfo) throws Exception;
+    public String getReason() {
+        return this.reason;
+    }
 
-    String logOut(String host, String port, String sessId) throws Exception;
-
-    String getSessionId();
-
-    void setPartnerName(String partnerName);
-
-    public String getPartnerName();
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
 }
+

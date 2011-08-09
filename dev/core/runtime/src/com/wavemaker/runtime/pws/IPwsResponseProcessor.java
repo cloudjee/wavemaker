@@ -14,27 +14,16 @@
 
 package com.wavemaker.runtime.pws;
 
-import javax.xml.namespace.QName;
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
+import com.wavemaker.runtime.ws.WebServiceException;
 
 /**
  * @author slee
  *
  */
-public interface IPwsLoginManager {
+public interface IPwsResponseProcessor {
 
-    String logIn(String serviceName) throws Exception;
-    
-    String logIn(PwsLoginInfo loginInfo) throws Exception;
+    public void detectExcetionsBeforeProcess(byte[] bytes) throws WebServiceException, PwsException;
 
-    String logOut(String host, String port, String sessId) throws Exception;
-
-    String getSessionId();
-
-    void setPartnerName(String partnerName);
-
-    public String getPartnerName();
+     public <T extends Object> T processServiceResponse(byte[] bytes, Class<T> responseType)
+                throws WebServiceException;
 }
