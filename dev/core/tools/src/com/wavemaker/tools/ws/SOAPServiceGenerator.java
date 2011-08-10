@@ -23,18 +23,7 @@ import java.util.Map;
 
 import org.springframework.core.io.ClassPathResource;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JCatchBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JTryBlock;
-import com.sun.codemodel.JType;
-import com.sun.codemodel.JVar;
+import com.sun.codemodel.*;
 import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.runtime.ws.jaxws.SOAPBindingResolver;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
@@ -43,6 +32,8 @@ import com.wavemaker.tools.ws.jaxws.JAXWSBuilder;
 import com.wavemaker.tools.ws.jaxws.JAXWSPortTypeInfo;
 import com.wavemaker.tools.ws.jaxws.JAXWSServiceInfo;
 import com.wavemaker.tools.ws.wsdl.SchemaElementType;
+import com.wavemaker.tools.ws.wsdl.ServiceInfo;
+import com.wavemaker.tools.ws.wsdl.WSDL;
 
 /**
  * This class generates SOAP service stubs.
@@ -233,5 +224,20 @@ public class SOAPServiceGenerator extends WebServiceGenerator {
             body.assign(outputVar, soapServiceInvocation);
             body._return(outputVar);
         }
+    }
+
+    protected void afterClassGeneration(String path) throws GenerationException {}
+
+    protected JFieldVar defineRestServiceVariable(JDefinedClass cls, JCodeModel codeModel) {
+        return null;
+    }
+
+    protected JInvocation defineServiceInvocation(JCodeModel codeModel) {
+        return null;
+    }
+
+    protected JBlock addExtraInputParameters(JBlock body, ServiceInfo serviceInfo, WSDL wsdl,
+                                                      String operationName) {
+        return null;
     }
 }
