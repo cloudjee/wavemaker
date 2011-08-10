@@ -33,7 +33,6 @@ import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.deployment.ServiceDeployment;
-import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.FileService;
 
@@ -45,6 +44,8 @@ import com.wavemaker.tools.service.FileService;
 public class DataModelDeploymentConfiguration implements ServiceDeployment {
 
     public static final String JNDI_NAME_PROPERTY = "jndi.dsname";
+    
+    public static final String DB_ALIAS_PROPERTY = "alias";
 
     private static final String COMP_ENV = "java:comp/env/";
 
@@ -146,6 +147,8 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
             existingProps.setProperty(prop.getKey(), prop.getValue());
         }
         cfg.writeProperties(existingProps, true);
+        cfg.configureDbAlias(existingProps.getProperty(DB_ALIAS_PROPERTY));
+        cfg.write();
     }
 
     private void configureResourceRef(DesignServiceManager mgr, String jndiName) {

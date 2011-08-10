@@ -166,7 +166,7 @@ public class Beans {
      * 
      * 
      */
-    public List<Object> getImportsAndAliasAndBeen() {
+    public List<Object> getImportsAndAliasAndBean() {
         if (importsAndAliasAndBeen == null) {
             importsAndAliasAndBeen = new ArrayList<Object>();
         }
@@ -356,7 +356,7 @@ public class Beans {
      * @return The Bean for the specified bean ID.
      */
     public Bean getBeanById(String id) {
-        List<Object> importOrAliasOrBeanList = getImportsAndAliasAndBeen();
+        List<Object> importOrAliasOrBeanList = getImportsAndAliasAndBean();
         for (Object o : importOrAliasOrBeanList) {
             if (o instanceof Bean && id.equals(((Bean) o).getId())) {
                 return (Bean) o;
@@ -372,7 +372,7 @@ public class Beans {
      * @return The Beans for the specified type.
      */
     public List<Bean> getBeansByType(String clazz) {
-        List<Object> importOrAliasOrBeanList = getImportsAndAliasAndBeen();
+        List<Object> importOrAliasOrBeanList = getImportsAndAliasAndBean();
         List<Bean> rtn = new ArrayList<Bean>();
         for (Object o : importOrAliasOrBeanList) {
             if (o instanceof Bean) {
@@ -401,8 +401,18 @@ public class Beans {
      * @param bean The bean to be added.
      */
     public void addBean(Bean bean) {
-        List<Object> importOrAliasOrBeanList = getImportsAndAliasAndBeen();
+        List<Object> importOrAliasOrBeanList = getImportsAndAliasAndBean();
         importOrAliasOrBeanList.add(bean);
+    }
+    
+    /**
+     * Adds an alias to this <code>Beans</code>.
+     * 
+     * @param alias The alias to be added.
+     */
+    public void addAlias(Alias alias) {
+        List<Object> importOrAliasOrBeanList = getImportsAndAliasAndBean();
+        importOrAliasOrBeanList.add(alias);
     }
     
     /**
@@ -413,7 +423,7 @@ public class Beans {
      * bean.
      */
     public boolean removeBeanById(String id) {
-        List<Object> importOrAliasOrBeanList = getImportsAndAliasAndBeen();
+        List<Object> importOrAliasOrBeanList = getImportsAndAliasAndBean();
         for (Object o : importOrAliasOrBeanList) {
             if (o instanceof Bean && id.equals(((Bean) o).getId())) {
                 return importOrAliasOrBeanList.remove(o);
@@ -428,7 +438,7 @@ public class Beans {
      * @return A list of <code>Bean</code>.
      */
     public List<Bean> getBeanList() {
-        List<Object> importOrAliasOrBeanList = getImportsAndAliasAndBeen();
+        List<Object> importOrAliasOrBeanList = getImportsAndAliasAndBean();
         List<Bean> beans = new ArrayList<Bean>();
         for (Object o : importOrAliasOrBeanList) {
             if (o instanceof Bean) {
@@ -445,7 +455,7 @@ public class Beans {
      * <code>Beans</code>.
      */
     public void setBeanList(List<Bean> beans) {
-        List<Object> importOrAliasOrBeanList = getImportsAndAliasAndBeen();
+        List<Object> importOrAliasOrBeanList = getImportsAndAliasAndBean();
         for (Bean bean : beans) {
             if (!importOrAliasOrBeanList.contains(bean)) {
                 importOrAliasOrBeanList.add(bean);
@@ -453,5 +463,4 @@ public class Beans {
         }
     }
 //--simple--preserve
-
 }

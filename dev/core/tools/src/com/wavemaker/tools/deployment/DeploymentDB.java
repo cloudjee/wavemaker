@@ -102,6 +102,8 @@ public class DeploymentDB {
                 props.put(prefix + DataServiceConstants.DB_PASS, password);
             if (StringUtils.hasText(connectionUrl))
                 props.put(prefix + DataServiceConstants.DB_URL, connectionUrl);
+            if (StringUtils.hasText(dbName))
+                props.put(prefix + ProjectConstants.PROP_SEP + DataModelDeploymentConfiguration.DB_ALIAS_PROPERTY, dbName);
         }
         return props;
     }

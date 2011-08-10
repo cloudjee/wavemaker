@@ -122,8 +122,8 @@ public class TestConfigurationCompilerTask extends StudioTestCase {
         Beans actualBeans = SpringConfigSupport.readBeans(actualServices,
                 project);
 
-        assertEquals(3, actualBeans.getImportsAndAliasAndBeen().size());
-        for (Object o : actualBeans.getImportsAndAliasAndBeen()) {
+        assertEquals(3, actualBeans.getImportsAndAliasAndBean().size());
+        for (Object o : actualBeans.getImportsAndAliasAndBean()) {
             if (o instanceof Import) {
                 Import imp = (Import) o;
 

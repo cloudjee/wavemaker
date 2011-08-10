@@ -170,7 +170,7 @@ public /*static*/ class ConfigurationCompiler {
         allServices.addAll(services);
 
         Beans beans = new Beans();
-        List<Object> imports = beans.getImportsAndAliasAndBeen();
+        List<Object> imports = beans.getImportsAndAliasAndBean();
 
         for (Service service: allServices) {
 

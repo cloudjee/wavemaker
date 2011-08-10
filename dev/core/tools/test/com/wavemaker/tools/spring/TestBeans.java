@@ -82,7 +82,7 @@ public class TestBeans extends WMTestCase {
                 .getClasspathFile("com/wavemaker/tools/spring/spring-test1.xml");
         Beans beans = SpringConfigSupport.readBeans(configFile, fileService);
         assertTrue(beans.removeBeanById("book1"));
-        assertEquals(2, beans.getImportsAndAliasAndBeen().size());
+        assertEquals(2, beans.getImportsAndAliasAndBean().size());
     }
     
     public void testGetBeanList() throws Exception {

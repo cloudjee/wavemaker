@@ -52,7 +52,7 @@ public class TestSpringConfigSupport extends WMTestCase {
                 .getClasspathFile("com/wavemaker/tools/spring/spring-test1.xml");
         Project project = new Project(configFile.getParentFile());
         Beans beans = SpringConfigSupport.readBeans(configFile, project);
-        List<Object> beansChildren = beans.getImportsAndAliasAndBeen();
+        List<Object> beansChildren = beans.getImportsAndAliasAndBean();
         assertEquals(3, beansChildren.size());
         for (Object o1 : beansChildren) {
             if (o1 instanceof Bean) {
@@ -82,7 +82,7 @@ public class TestSpringConfigSupport extends WMTestCase {
         Bean bean1 = new Bean();
         bean1.setId("book1");
         bean1.setClazz("com.wavemaker.tools.spring.Book");
-        List<Object> importOrAliasOrBeanList = beans.getImportsAndAliasAndBeen();
+        List<Object> importOrAliasOrBeanList = beans.getImportsAndAliasAndBean();
         importOrAliasOrBeanList.add(bean1);
 
         File configFile = null;

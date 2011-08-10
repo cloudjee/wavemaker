@@ -110,8 +110,18 @@ public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFact
             String serviceName = dsBean.substring(0, dsBean.indexOf(DS_BEAN_SUFFIX));
 
             if (!serviceExists(serviceName)) {
-                log.warn("Expected to find a MySql service with the name '" + serviceName + "' but none was found.");
-                continue;
+                boolean foundAlias = false;
+                for (String alias : defaultListableBeanFactory.getAliases(dsBean)) {
+                    if (serviceExists(alias)) {
+                        serviceName = alias;
+                        foundAlias = true;
+                        break;
+                    }
+                }
+                if (!foundAlias) {
+                    log.warn("Expected to find a service with the name '" + serviceName + "' but none was found.");
+                    continue;
+                }
             }
 
             MysqlServiceInfo service = cloudEnvironment.getServiceInfo(serviceName, MysqlServiceInfo.class);
@@ -121,7 +131,7 @@ public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFact
                 DataSource cfDataSource = mysqlCreationHelper.createSingletonService().service;
                 defaultListableBeanFactory.registerSingleton(dsBean, cfDataSource);
             } else {
-                log.warn("Expected to find a MySql service with the name '" + serviceName + "' but none was found.");
+                log.warn("Service '" + serviceName + "' found, but it is not a MySql service as expected.");
             }
         }
     }

@@ -14,6 +14,8 @@
 
 package com.wavemaker.tools.data;
 
+import static org.springframework.util.StringUtils.hasText;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -37,6 +39,7 @@ import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.service.FileService;
+import com.wavemaker.tools.spring.beans.Alias;
 import com.wavemaker.tools.spring.beans.Bean;
 import com.wavemaker.tools.spring.beans.Beans;
 import com.wavemaker.tools.spring.beans.ConstructorArg;
@@ -50,7 +53,7 @@ import com.wavemaker.tools.spring.beans.Value;
  * Encapsulates access to the Data Model Spring configuration.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  * 
  */
 public class DataServiceSpringConfiguration {
@@ -71,8 +74,7 @@ public class DataServiceSpringConfiguration {
 
     private boolean isDirty = false;
 
-    public DataServiceSpringConfiguration(FileService fileService,
-            String rootPath, String configFile, String serviceName) {
+    public DataServiceSpringConfiguration(FileService fileService, String rootPath, String configFile, String serviceName) {
         this.rootPath = rootPath;
         this.path = rootPath + "/" + configFile;
         this.fileService = fileService;
@@ -90,9 +92,7 @@ public class DataServiceSpringConfiguration {
 
         if (!isDirty) {
             if (DataServiceLoggers.parserLogger.isDebugEnabled()) {
-                DataServiceLoggers.parserLogger
-                        .info("No changes to write to Spring Configuration at "
-                                + path);
+                DataServiceLoggers.parserLogger.info("No changes to write to Spring Configuration at " + path);
             }
             return;
 
@@ -101,8 +101,7 @@ public class DataServiceSpringConfiguration {
         DataServiceUtils.writeBeans(beans, fileService, path);
 
         if (DataServiceLoggers.parserLogger.isInfoEnabled()) {
-            DataServiceLoggers.parserLogger
-                    .info("Wrote Spring Configuration at " + path);
+            DataServiceLoggers.parserLogger.info("Wrote Spring Configuration at " + path);
         }
 
         isDirty = false;
@@ -130,31 +129,30 @@ public class DataServiceSpringConfiguration {
             throw new ConfigurationException(ex);
         }
     }
-    
+
     Properties readCombinedProperties(boolean removePrefix) {
-    	Properties props = readProperties(removePrefix);
-    	readExecuteAsProperties(props);
-    	return props;
+        Properties props = readProperties(removePrefix);
+        readExecuteAsProperties(props);
+        return props;
     }
 
     void readExecuteAsProperties(Properties props) {
-		List<Bean> dsProxyBeans = beans.getBeansByType(SqlServerUserImpersonatingDataSourceProxy.class);
-		if (dsProxyBeans.size() == 0) {
-			return;
-		}
-		props.put("executeAs", "true");
-		Bean proxyBean = dsProxyBeans.get(0);
-		props.put("activeDirectoryDomain", proxyBean.getProperty("activeDirectoryDomain").getValue());
-	}
+        List<Bean> dsProxyBeans = beans.getBeansByType(SqlServerUserImpersonatingDataSourceProxy.class);
+        if (dsProxyBeans.size() == 0) {
+            return;
+        }
+        props.put("executeAs", "true");
+        Bean proxyBean = dsProxyBeans.get(0);
+        props.put("activeDirectoryDomain", proxyBean.getProperty("activeDirectoryDomain").getValue());
+    }
 
-	boolean useIndividualCRUDperations() {
+    boolean useIndividualCRUDperations() {
         String s = getPropertyValue(DataServiceConstants.GENERATE_OLD_STYLE_OPRS_PROPERTY);
         return Boolean.valueOf(s);
     }
 
     void setRefreshEntities(List<String> refreshEntities) {
-        setPropertyValue(DataServiceConstants.REFRESH_ENTITIES_PROPERTY,
-                ObjectUtils.toString(refreshEntities));
+        setPropertyValue(DataServiceConstants.REFRESH_ENTITIES_PROPERTY, ObjectUtils.toString(refreshEntities));
     }
 
     List<String> getRefreshEntities() {
@@ -173,7 +171,7 @@ public class DataServiceSpringConfiguration {
     public void writeProperties(Properties props, boolean validate) {
 
         if (!validate) {
-        	updateSpringConfigIfNecessary(props);
+            updateSpringConfigIfNecessary(props);
             writeProps(filterProps(props));
             return;
         }
@@ -182,15 +180,13 @@ public class DataServiceSpringConfiguration {
         // an api, as some of the tests do, there may be a prefix
         DataServiceUtils.removePrefix(props);
 
-        String key = StringUtils.removeIfStartsWith(
-                DataServiceConstants.DB_URL, ".");
+        String key = StringUtils.removeIfStartsWith(DataServiceConstants.DB_URL, ".");
         String connectionUrl = props.getProperty(key);
         if (connectionUrl == null) {
             throw new IllegalArgumentException(key + " must be set");
         }
 
-        key = StringUtils.removeIfStartsWith(
-                DataServiceConstants.DB_DRIVER_CLASS_NAME, ".");
+        key = StringUtils.removeIfStartsWith(DataServiceConstants.DB_DRIVER_CLASS_NAME, ".");
         String driverClassName = props.getProperty(key);
         if (ObjectUtils.isNullOrEmpty(driverClassName)) {
             String dbtype = BaseDataModelSetup.getDBTypeFromURL(connectionUrl);
@@ -201,8 +197,7 @@ public class DataServiceSpringConfiguration {
             props.setProperty(key, value);
         }
 
-        key = StringUtils.removeIfStartsWith(DataServiceConstants.DB_DIALECT,
-                ".");
+        key = StringUtils.removeIfStartsWith(DataServiceConstants.DB_DIALECT, ".");
         String dialect = props.getProperty(key);
         if (ObjectUtils.isNullOrEmpty(dialect)) {
             String dbtype = BaseDataModelSetup.getDBTypeFromURL(connectionUrl);
@@ -230,16 +225,16 @@ public class DataServiceSpringConfiguration {
     }
 
     private Properties filterProps(Properties props) {
-    	Properties filtered = new Properties();
-    	filtered.putAll(props);
-    	filtered.remove("executeAs");
-    	filtered.remove(serviceId+".executeAs");
-    	filtered.remove("activeDirectoryDomain");
-    	filtered.remove(serviceId+".activeDirectoryDomain");
-		return filtered;
-	}
+        Properties filtered = new Properties();
+        filtered.putAll(props);
+        filtered.remove("executeAs");
+        filtered.remove(serviceId + ".executeAs");
+        filtered.remove("activeDirectoryDomain");
+        filtered.remove(serviceId + ".activeDirectoryDomain");
+        return filtered;
+    }
 
-	void addMapping(String path) {
+    void addMapping(String path) {
         Property p = getMappingFilesProperty();
         List<String> l = new ArrayList<String>(p.getListValue());
         l.add(path);
@@ -272,8 +267,7 @@ public class DataServiceSpringConfiguration {
 
     void configureJNDIDataSource(String jndiName) {
 
-        List<Bean> l = beans.getBeansByType(DriverManagerDataSource.class
-                .getName());
+        List<Bean> l = beans.getBeansByType(DriverManagerDataSource.class.getName());
 
         if (l.size() != 1) {
             throw new AssertionError("Expected one datasource bean");
@@ -284,6 +278,30 @@ public class DataServiceSpringConfiguration {
         ds.removeProperties();
         ds.addProperty(JNDI_NAME_PROPERTY, jndiName);
         isDirty = true;
+    }
+
+    /**
+     * @param property
+     */
+    void configureDbAlias(String dbName) {
+        if (!hasText(dbName)) {
+            return;
+        }
+
+        List<Bean> l = beans.getBeansByType(DriverManagerDataSource.class.getName());
+
+        if (l.size() != 1) {
+            throw new AssertionError("Expected one datasource bean");
+        }
+        
+        Bean ds = l.get(0);
+        if (!ds.getId().equals(dbName+"DataSource")) {
+            Alias dsAlias = new Alias();
+            dsAlias.setName(ds.getId());
+            dsAlias.setAlias(dbName);
+            beans.addAlias(dsAlias);
+            isDirty=true;
+        }
     }
 
     private void setPropertyValue(String key, String value) {
@@ -364,72 +382,66 @@ public class DataServiceSpringConfiguration {
     }
 
     private void updateSpringConfigIfNecessary(Properties props) {
-		if (Boolean.parseBoolean(props.getProperty("executeAs", "false"))) {
-			Bean proxyBean;
-			List<Bean> dsProxyBeans = beans.getBeansByType(SqlServerUserImpersonatingDataSourceProxy.class);
-			if (dsProxyBeans.size() > 0) {
-				proxyBean = dsProxyBeans.get(0);
-			} else {
-				Bean dsBean = beans.getBeanById(serviceId+"DataSource");
-				dsBean.setId(serviceId+"TargetDataSource");
-				
-				proxyBean = new Bean();
-				proxyBean.setId(serviceId+"DataSource");
-				proxyBean.setClazz(SqlServerUserImpersonatingDataSourceProxy.class.getName());
-				proxyBean.setLazyInit(DefaultableBoolean.TRUE);
-				Property targetDataSourceProp = new Property();
-				targetDataSourceProp.setName("targetDataSource");
-				targetDataSourceProp.setRef(serviceId+"TargetDataSource");
-				proxyBean.addProperty(targetDataSourceProp);
-				beans.addBean(proxyBean);
-				isDirty = true;
-			}
-			String adDomain = props.getProperty("activeDirectoryDomain", "");
-			Property adDomainProp = proxyBean.getProperty("activeDirectoryDomain");
-			if (adDomainProp == null) {
-				adDomainProp = new Property();
-				adDomainProp.setName("activeDirectoryDomain");
-				adDomainProp.setValue("");
-				proxyBean.addProperty(adDomainProp);
-			}
-			if (!adDomain.equals(adDomainProp.getValue())) {
-				adDomainProp.setValue(adDomain);
-				isDirty = true;
-			}
-		} else {
-			List<Bean> dsProxyBeans = beans.getBeansByType(SqlServerUserImpersonatingDataSourceProxy.class);
-			if (dsProxyBeans.size() > 0) {
-				beans.removeBeanById(dsProxyBeans.get(0).getId());
-				Bean dsBean = beans.getBeanById(serviceId+"TargetDataSource");
-				dsBean.setId(serviceId+"DataSource");
-				isDirty=true;
-			}
-		}
-		write();
-	}
+        if (Boolean.parseBoolean(props.getProperty("executeAs", "false"))) {
+            Bean proxyBean;
+            List<Bean> dsProxyBeans = beans.getBeansByType(SqlServerUserImpersonatingDataSourceProxy.class);
+            if (dsProxyBeans.size() > 0) {
+                proxyBean = dsProxyBeans.get(0);
+            } else {
+                Bean dsBean = beans.getBeanById(serviceId + "DataSource");
+                dsBean.setId(serviceId + "TargetDataSource");
 
-	private Property getMappingFilesProperty() {
-        return getSessionFactoryBean().getProperty(
-                DataServiceConstants.SPRING_CFG_MAPPINGS_ATTR);
+                proxyBean = new Bean();
+                proxyBean.setId(serviceId + "DataSource");
+                proxyBean.setClazz(SqlServerUserImpersonatingDataSourceProxy.class.getName());
+                proxyBean.setLazyInit(DefaultableBoolean.TRUE);
+                Property targetDataSourceProp = new Property();
+                targetDataSourceProp.setName("targetDataSource");
+                targetDataSourceProp.setRef(serviceId + "TargetDataSource");
+                proxyBean.addProperty(targetDataSourceProp);
+                beans.addBean(proxyBean);
+                isDirty = true;
+            }
+            String adDomain = props.getProperty("activeDirectoryDomain", "");
+            Property adDomainProp = proxyBean.getProperty("activeDirectoryDomain");
+            if (adDomainProp == null) {
+                adDomainProp = new Property();
+                adDomainProp.setName("activeDirectoryDomain");
+                adDomainProp.setValue("");
+                proxyBean.addProperty(adDomainProp);
+            }
+            if (!adDomain.equals(adDomainProp.getValue())) {
+                adDomainProp.setValue(adDomain);
+                isDirty = true;
+            }
+        } else {
+            List<Bean> dsProxyBeans = beans.getBeansByType(SqlServerUserImpersonatingDataSourceProxy.class);
+            if (dsProxyBeans.size() > 0) {
+                beans.removeBeanById(dsProxyBeans.get(0).getId());
+                Bean dsBean = beans.getBeanById(serviceId + "TargetDataSource");
+                dsBean.setId(serviceId + "DataSource");
+                isDirty = true;
+            }
+        }
+        write();
+    }
+
+    private Property getMappingFilesProperty() {
+        return getSessionFactoryBean().getProperty(DataServiceConstants.SPRING_CFG_MAPPINGS_ATTR);
     }
 
     private Bean getSessionFactoryBean() {
 
-        List<Bean> sessionFactoryBean = beans
-                .getBeansByType(ConfigurationAndSessionFactoryBean.class
-                        .getName());
+        List<Bean> sessionFactoryBean = beans.getBeansByType(ConfigurationAndSessionFactoryBean.class.getName());
 
         // package rename
         if (sessionFactoryBean.isEmpty()) {
-            sessionFactoryBean = beans
-                    .getBeansByType(DataServiceConstants.OLD_SESSION_FACTORY_CLASS_NAME);
+            sessionFactoryBean = beans.getBeansByType(DataServiceConstants.OLD_SESSION_FACTORY_CLASS_NAME);
         }
 
         if (sessionFactoryBean.isEmpty()) {
-            throw new ConfigurationException(path
-                    + ": unable to find SessionFactory class \""
-                    + ConfigurationAndSessionFactoryBean.class.getName()
-                    + "\"");
+            throw new ConfigurationException(path + ": unable to find SessionFactory class \"" + ConfigurationAndSessionFactoryBean.class.getName()
+                + "\"");
         }
 
         return sessionFactoryBean.get(0);
@@ -437,23 +449,18 @@ public class DataServiceSpringConfiguration {
 
     private String getConnectionPropertiesFileName() {
 
-        List<Bean> propertyPlaceholders = beans
-                .getBeansByType(WMPropertyPlaceholderConfigurer.class.getName());
+        List<Bean> propertyPlaceholders = beans.getBeansByType(WMPropertyPlaceholderConfigurer.class.getName());
 
         // backward compat
-        propertyPlaceholders.addAll(beans
-                .getBeansByType(PropertyPlaceholderConfigurer.class.getName()));
+        propertyPlaceholders.addAll(beans.getBeansByType(PropertyPlaceholderConfigurer.class.getName()));
 
         String rtn = null;
 
         // only support single prop file for now
         for (Bean b : propertyPlaceholders) {
-            List<String> l = b.getProperty(
-                    DataServiceConstants.SPRING_CFG_LOCATIONS_ATTR)
-                    .getListValue();
+            List<String> l = b.getProperty(DataServiceConstants.SPRING_CFG_LOCATIONS_ATTR).getListValue();
             for (String s : l) {
-                rtn = rootPath + "/"
-                        + StringUtils.fromFirstOccurrence(s, "classpath:");
+                rtn = rootPath + "/" + StringUtils.fromFirstOccurrence(s, "classpath:");
             }
         }
 
@@ -461,12 +468,10 @@ public class DataServiceSpringConfiguration {
     }
 
     private Bean getSpringDataServiceManager() {
-        List<Bean> l = beans.getBeansByType(SpringDataServiceManager.class
-                .getName());
+        List<Bean> l = beans.getBeansByType(SpringDataServiceManager.class.getName());
         if (l.isEmpty()) {
             // backward compat
-            l = beans
-                    .getBeansByType(DataServiceConstants.OLD_SPRING_DATA_SERVICE_MANAGER_NAME);
+            l = beans.getBeansByType(DataServiceConstants.OLD_SPRING_DATA_SERVICE_MANAGER_NAME);
         }
         if (l.size() != 1) {
             throw new SpringDataServiceManagerNotFound();
@@ -476,6 +481,7 @@ public class DataServiceSpringConfiguration {
 
     @SuppressWarnings("serial")
     private class SpringDataServiceManagerNotFound extends RuntimeException {
+
         SpringDataServiceManagerNotFound() {
             super("Could not find SpringDataServiceManager bean");
         }
