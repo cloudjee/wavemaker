@@ -391,6 +391,8 @@ public class WebServiceToolsManager {
      * @param overwrite
      *                true to overwrite the service with the same service ID;
      *                false to simply return the string "$already_exists".
+     * @param partnerName
+     *                The partner name
      * @return The service ID, or the string "$already_exists$" if the service
      *         ID already exists and overwrite is false.
      * @throws IOException
