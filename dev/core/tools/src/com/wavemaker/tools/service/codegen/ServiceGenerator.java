@@ -25,15 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.NDC;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClassAlreadyExistsException;
-import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JDocComment;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JTryBlock;
-import com.sun.codemodel.JType;
+import com.sun.codemodel.*;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
@@ -41,9 +33,15 @@ import com.wavemaker.runtime.ws.util.WebServiceUtils;
 import com.wavemaker.runtime.ws.util.Constants;
 import com.wavemaker.tools.ws.wsdl.WSDL;
 import com.wavemaker.tools.ws.wsdl.SchemaElementType;
+import com.wavemaker.tools.ws.wsdl.ServiceInfo;
 
 /**
- * All service code generators should extend this class.
+ * All service code generators should extend this class. Although all public or protected methods can be overriden or implemented
+ * in subclasses, the following four classes are most frequently implemented to support the partner web service module.
+ *     <p>- addExtraInputParameters</p>
+ *     <p>- afterClassGeneration</p>
+ *     <p>- defineRestServiceVariable</p>
+ *     <p>- defineServiceInvocation</p>
  * 
  * @author Frankie Fu
  */
@@ -387,4 +385,52 @@ public abstract class ServiceGenerator {
     protected String getOutputJavaType(ElementType outputType) {
         return(outputType.getJavaType());
     }
+
+    /**
+     * Implement this method if any Java classes need to be modified after they are generated at the end of the partner
+     * web service import process.
+     *
+     * @param path the full path pointing to the directory where generated Java classes reside
+     * @throws GenerationException if any File IO error or other exceptions are encountered
+     */
+    protected abstract void afterClassGeneration(String path) throws GenerationException;
+
+    /**
+     * One of the most important artifacts generated during partner web service import is the service invocation class.
+     * The name of this class is usually <i>servicename</i>.<code>java</code> (with the first letter upper case, no underscores and
+     * no spaces). In the constructor of this class, the REST service caller must be instantiated. WaveMaker provides
+     * the default service caller (<code>RESTService</code>).  In case that a partner needs to create their own REST caller,
+     * the developer must extend <code>RESTService</code> and override default methods, which in turn, requires the refernce
+     * to the REST service caller in the service invocation class to be changed. This method should be implemented to
+     * instantiate the customized REST service caller in that case.
+     *
+     *
+     * @param cls represents the Java class being generated
+     * @param codeModel the root of the code DOM
+     * @return the field variable for the instantiated REST service caller
+     */
+    protected abstract JFieldVar defineRestServiceVariable(JDefinedClass cls, JCodeModel codeModel);
+
+    /**
+     * In case that a customized RET service caller is used on behalf of the default service caller, the service invoication
+     * line in the service invocation class must properly typed. It can be done by implementing this method.
+     *
+     *
+     * @param codeModel the root of the code DOM
+     * @return the object that represents a method invocation
+     */
+    protected abstract JInvocation defineServiceInvocation(JCodeModel codeModel);
+
+    /**
+     * Deveopers may implement this class to add. modify or delete input parameters in the the default parameter list
+     * for the service call.
+     *
+     * @param body the block of Java code to be modified, which includes input parameter definitions
+     * @param serviceInfo the service information object
+     * @param wsdl represents the current WSDL
+     * @param operationName the operation name
+     * @return the block of Java code modified
+     */
+    protected abstract JBlock addExtraInputParameters(JBlock body, ServiceInfo serviceInfo, WSDL wsdl,
+                                                      String operationName); 
 }
