@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * This class is used to store a web service's login information.  This onbject must be set in the front-end service client
- * when a web servoce is called. Requred fields that must be set vary per different partners and the type of operation.
+ * when a web service is called. Requred fields that must be set vary per different partners and the type of operation.
  *
  * @author slee
  */
