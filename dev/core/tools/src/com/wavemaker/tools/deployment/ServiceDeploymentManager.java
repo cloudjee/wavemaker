@@ -406,13 +406,12 @@ public class ServiceDeploymentManager {
      * @param deploymentInfo
      * @return
      */
-    public DeploymentInfo deleteDeploymentInfo(String deploymentId) {
+    public void deleteDeploymentInfo(String deploymentId) {
         Resource deploymentsResource;
         Writer writer = null;
-        DeploymentInfo deleted = null;
         try {
             Deployments deployments = readDeployments();
-            deleted = deployments.remove(projectMgr.getCurrentProject().getProjectName(), deploymentId);
+            deployments.remove(projectMgr.getCurrentProject().getProjectName(), deploymentId);
             deploymentsResource = new FileSystemResource(studioConfiguration.getCommonDir().getPath() + "/").createRelative(DEPLOYMENTS_FILE);
             writer = new FileWriter(deploymentsResource.getFile(), false);
             JSONMarshaller.marshal(writer, deployments, new JSONState(), false, true);
@@ -428,8 +427,6 @@ public class ServiceDeploymentManager {
                 }
             }
         }
-
-        return deleted;
     }
 
     private Deployments readDeployments() {

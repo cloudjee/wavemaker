@@ -185,15 +185,19 @@ public class DeploymentService {
         return deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).deploy(f, deploymentInfo);
     }
     
+    public String undeploy(DeploymentInfo deploymentInfo) {
+        if(deploymentInfo.getDeploymentType() != DeploymentType.FILE) {
+            deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).undeploy(deploymentInfo);
+        }
+        return "SUCCESS";
+    }
+    
     public String save(DeploymentInfo deploymentInfo) {
         return serviceDeploymentManager.saveDeploymentInfo(deploymentInfo);
     }
     
     public String delete(String deploymentId) {
-        DeploymentInfo deploymentInfo = serviceDeploymentManager.deleteDeploymentInfo(deploymentId);
-        if (deploymentInfo.getDeploymentType() != DeploymentType.FILE) {
-            deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).undeploy(deploymentInfo);
-        }
+        serviceDeploymentManager.deleteDeploymentInfo(deploymentId);
         return "SUCCESS";
     }
     
