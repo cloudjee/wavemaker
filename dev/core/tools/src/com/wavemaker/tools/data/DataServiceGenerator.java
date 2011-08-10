@@ -24,18 +24,7 @@ import java.util.Map;
 
 import org.apache.log4j.NDC;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JConditional;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JTryBlock;
-import com.sun.codemodel.JType;
-import com.sun.codemodel.JVar;
+import com.sun.codemodel.*;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.common.util.StringUtils;
@@ -57,6 +46,9 @@ import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.service.codegen.BeanGenerator;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
+import com.wavemaker.tools.service.codegen.GenerationException;
+import com.wavemaker.tools.ws.wsdl.ServiceInfo;
+import com.wavemaker.tools.ws.wsdl.WSDL;
 
 /**
  * DataService class generation.
@@ -446,5 +438,20 @@ public class DataServiceGenerator extends ServiceGenerator {
             } catch (Exception ignore) {
             }
         }
+    }
+
+    protected void afterClassGeneration(String path) throws GenerationException {}
+
+    protected JFieldVar defineRestServiceVariable(JDefinedClass cls, JCodeModel codeModel) {
+        return null;
+    }
+
+    protected JInvocation defineServiceInvocation(JCodeModel codeModel) {
+        return null;
+    }
+
+    protected JBlock addExtraInputParameters(JBlock body, ServiceInfo serviceInfo, WSDL wsdl,
+                                                      String operationName) {
+        return null;
     }
 }
