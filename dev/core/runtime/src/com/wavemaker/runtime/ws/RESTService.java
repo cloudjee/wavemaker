@@ -26,7 +26,8 @@ import com.wavemaker.runtime.ws.HTTPBindingSupport.HTTPRequestMethod;
 import com.wavemaker.runtime.ws.util.Constants;
 
 /**
- * This class provides interface to call a REST style Web service.
+ * REST service caller. This class provides interface to call a REST style Web service. This class can be extended
+ * and customized to support patrner specific web service requirements.
  * 
  * @author ffu
  * @version $Rev$ - $Date$
@@ -95,6 +96,17 @@ public class RESTService {
         return invoke(inputs, method, contentType, endpoint, responseType);
     }
 
+    /**
+     * invoke a REST style web service
+     *
+     * @param inputs the map containing all input parameters <parameter name, value>
+     * @param method the http request method (<tt>GET</tt>, <tt>POST</tt>, <tt>PUT</tt>, <tt>DELETE</tt> and etc.)
+     * @param contentType the content type of the request body
+     * @param endpoint the service endpoint address
+     * @param responseType the Class object of the output class
+     * @param partnerName the name of the partner
+     * @return the object of <i>responseType</i>
+     */
     public <T extends Object> T invoke(Map<String, Object> inputs,
             String method, String contentType, String endpoint,
             Class<T> responseType, String partnerName) {
