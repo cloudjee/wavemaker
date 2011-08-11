@@ -33,7 +33,15 @@ dojo.declare("CustomWebServiceImporter", wm.Page, {
 	var host = this.importHost.getDataValue();
 	var port = this.importPort.getDataValue();
 	var domain = this.domainEditor.getDataValue();
-	var d = this.flowListService.requestAsync("listAllFlows", [host, port, user, pass, domain]);
+	var loginInfo = {};
+	loginInfo.host = host;
+	loginInfo.port = port;
+	loginInfo.userName = user;
+	loginInfo.password = pass;
+	loginInfo.miscInfo = domain;
+	loginInfo.partnerName = "asteria";
+	//var d = this.flowListService.requestAsync("listAllFlows", [host, port, user, pass, domain]);
+	var d = this.operationListService.requestAsync("listAllOperations", [loginInfo]);
 	d.addCallback(dojo.hitch(this, "listAllFlowsSuccess"));
 	d.addErrback(dojo.hitch(this, "listAllFlowsError"));
     },
@@ -140,6 +148,7 @@ dojo.declare("CustomWebServiceImporter", wm.Page, {
 
 	var projects = {};
 	var firstProjectName;
+	/* Find the first selected service; at this time, we can only handle a single service at a time */
 	this.tree.forEachNode(dojo.hitch(this, function(node) {
 	    if (node.data && node.data.flows !== undefined && node.getChecked()) {
 		projects[node.data.name] = [];
@@ -148,12 +157,25 @@ dojo.declare("CustomWebServiceImporter", wm.Page, {
 	    }
 	}));
 
+	/* Find all selected operations and add them to the import request; note that we are traversing the entire tree in
+	 * hopes of some day supporting import of multiple services, so hopefully there is no way for the user to select
+	 * any operations that are not in the selected service...
+	 */
 	this.tree.forEachNode(dojo.hitch(this, function(node) {
 	    if (node.data && !wm.isEmpty(node.data) && node.data.flows === undefined && node.getChecked())
 		projects[node.parent.data.name].push(node.data.name);
 	}));
 
-	var d = this.flowListService.requestAsync("importFlows", [host, port, user, pass, domain, firstProjectName, projects[firstProjectName],null],
+	var loginInfo = {};
+	loginInfo.host = host;
+	loginInfo.port = port;
+	loginInfo.userName = user;
+	loginInfo.password = pass;
+	loginInfo.miscInfo = domain;
+	loginInfo.partnerName = "asteria";
+
+	//var d = this.flowListService.requestAsync("importFlows", [host, port, user, pass, domain, firstProjectName, projects[firstProjectName],null],
+	var d = this.operationListService.requestAsync("importOperations", [loginInfo, firstProjectName, projects[firstProjectName]],
 						  dojo.hitch(this, "importFlowsSuccess"),
 						  dojo.hitch(this, "importFlowsError"));
     },

@@ -13,7 +13,7 @@
  */
 
 CustomWebServiceImporter.widgets = {
-    flowListService: ["wm.JsonRpcService", {service: "warpFlowService", sync: false}, {}],
+	operationListService: ["wm.JsonRpcService", {service: "pwsImportService", sync: false}, {}],
     layoutBox: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", imageList: "smallToolbarImageList"}, {}, {
 	dialog: ["wm.Panel", {layoutKind: "top-to-bottom",  width: "100%", height: "100%", border: "10",  borderColor: "#424959"}, {}, {
 	    importLabel: ["wm.Label", {width: "100%", height: "20px", caption: "Step 1. Import list of projects and flows"}],
@@ -30,7 +30,7 @@ CustomWebServiceImporter.widgets = {
 	    }],
 	    resultLabel: ["wm.Label", {width: "100%", height: "20px", caption: "Step 2. Select the flows for your project"}],
 	    resultPanel: ["wm.Panel", {layoutKind: "top-to-bottom", width: "100%", height: "100%", horizontalAlign: "right", verticalAlign: "middle"}, {}, {	    
-		searchBox: ["wm.Text", {width: "100%", caption: "Filter Flows", captionAlign: "right", captionSize: "120px", changeOnKey: true, border: "0,0,2,0", borderColor: "#424A5A"}, {onchange: "filterResults"}],
+		searchBox: ["wm.Text", {width: "100%", caption: "Filter Flows", resetButton: true, placeHolder: "Results filter as you type", captionAlign: "right", captionSize: "120px", changeOnKey: true, border: "0,0,2,0", borderColor: "#424A5A"}, {onchange: "filterResults"}],
 		tree: ["wm.Tree", {width: "100%", height: "100%",margin: "10"}, {oncheckboxclick: "nodeChecked"}]
 	    }]
 	}],
