@@ -32,7 +32,7 @@ public interface IPwsLoginManager {
     /**
      * Logs in to partner web service site
      *
-     * @param serviceName service name
+     * @param serviceName the service name
      * @return the session id or equivalence
      * @throws Exception if the login fails
      */
@@ -51,9 +51,9 @@ public interface IPwsLoginManager {
     /**
      * Logs out from the current connection to a partner web service
      *
-     * @param host host name for the web sevice
-     * @param port port number for the web sevice
-     * @param sessionId session id
+     * @param host the host name for the web sevice
+     * @param port the port number for the web sevice
+     * @param sessionId the session id
      * @return the session id that is deactivated as a result of the logout
      * @throws Exception if the login fails
      */

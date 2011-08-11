@@ -17,12 +17,12 @@ package com.wavemaker.runtime.pws;
 import com.wavemaker.runtime.ws.WebServiceException;
 
 /**
- * This interfcae is implemented by a WaveMaker standard class <code>DefaultResponseProcessor</code>. When a web service is
+ * This interface is implemented by WaveMaker standard class <code>DefaultResponseProcessor</code>. When a web service is
  * called (or requested) in the WaveMaker framework, the standard WaveMaker web service module assumes that the response
  * is in XML format and processes the response using JAXB APIs. Developers can change the standard behaviour by extending
  * <code>DefaultResponseProcessor</code>. Usually, developers may want to override the standard implementations for the
  * following reasons.
- *      <p>- The response may need to be manipilated before it is submitted to JAXB APIs or after processed by JAXB.</p>
+ *      <p>- The response may need to be manipulated before it is submitted to JAXB APIs or after processed by JAXB.</p>
  *      <p>- The response is not in XML format.  It can be JSON or something else.</p>
  *      <p>- Exceptions need to be caught explicitly.  For example, authorization errors such as expired session need to
  *        be caught so that a login attempt can be made.</p>
@@ -33,12 +33,12 @@ import com.wavemaker.runtime.ws.WebServiceException;
 public interface IPwsResponseProcessor {
 
     /**
-     * Some exceptios from service calls are embedded in the response object. This method anayzes the response and throws
+     * Some exceptions from service calls are embedded in the response object. This method analyzes the response and throws
      * an exception when the response contains the data of specific concern. The exception should be caught later in the
-     * custom REST service caller which extends the default REST service caller <code>RESTService</code> for proper handling.
+     * custom REST service caller which extends the default REST service caller (<code>RESTService</code>) for proper handling.
      *
      * @param bytes the byte array containing web service response data
-     * @throws PwsException when the response data contains the data of specific concenr
+     * @throws PwsException when the response data contains the data of specific concern
      * @throws WebServiceException any exception encountered while analyzing the response data
      */
     public void detectExcetionsBeforeProcess(byte[] bytes) throws WebServiceException, PwsException;
