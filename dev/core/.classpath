@@ -80,7 +80,7 @@
 	<classpathentry exported="true" kind="lib" path="runtime/lib/spring/org.springframework.oxm-3.0.4.RELEASE.jar"/>
 	<classpathentry exported="true" kind="lib" path="runtime/lib/spring/org.springframework.test-3.0.4.RELEASE.jar" sourcepath="/Users/jgrelle/.m2/repository/org/springframework/spring-test/3.0.5.RELEASE/spring-test-3.0.5.RELEASE-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="runtime/lib/spring/org.springframework.transaction-3.0.4.RELEASE.jar" sourcepath="/Users/jgrelle/.m2/repository/org/springframework/spring-tx/3.0.5.RELEASE/spring-tx-3.0.5.RELEASE-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="runtime/lib/spring/org.springframework.web-3.0.4.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="runtime/lib/spring/org.springframework.web-3.0.4.RELEASE.jar" sourcepath="/Users/jgrelle/.m2/repository/org/springframework/spring-web/3.0.5.RELEASE/spring-web-3.0.5.RELEASE-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="runtime/lib/spring/org.springframework.web.servlet-3.0.4.RELEASE.jar"/>
 	<classpathentry exported="true" kind="lib" path="runtime/lib/spring/aopalliance.jar"/>
 	<classpathentry exported="true" kind="lib" path="tools/lib/jackson/jackson-core-asl-1.8.2.jar"/>
