@@ -87,10 +87,10 @@ public interface IPwsRestWsdlGenerator {
     void setSchemaElements(List<Element> elems);
 
     /**
-     * This is the main mathod in the interface and it generates a WSDL basaed on the populated properties and XSD document.
+     * This is the main mathod in the interface and it generates a WSDL based on the populated properties and XSD document.
      *
      * @param wsdlFile the file where the generated WSDL is stored
-     * @throws WSDLException if a WSDL related error ossure
+     * @throws WSDLException if a WSDL related error occurs
      * @throws IOException if a file IO error occurs
      * @throws SAXException if SAX parser fails
      * @throws ParserConfigurationException if a parser configuration error occurs
@@ -135,7 +135,7 @@ public interface IPwsRestWsdlGenerator {
     void setPartnerName(String partnerName);
 
     /**
-     * Build JDK's <code>QName</code> object. Usually, developers override this method in <code>RESTWsdlGenerator</code> to manipulate
+     * Builds JDK's <code>QName</code> object. Usually, developers override this method in <code>RESTWsdlGenerator</code> to manipulate
      * the local part of <code>QName</code> when building <code>QName</code> for request messages or response messages.
      *
      * @param namespace the name space. pass <tt>null</tt> if no name space is used

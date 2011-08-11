@@ -45,7 +45,7 @@ public interface IPwsRestImporter {
      * @param loginInfo the object of <code>PwsLoginInfo</code> containing information such as host, port number, user name and
      * password
      * @param service the service
-     * @return a Json string that contains the list of operations
+     * @return a JSON string that contains the list of operations
      * @throws Exception if the request fails
      */
     String listOperations(PwsLoginInfo loginInfo, String service) throws Exception;
@@ -55,7 +55,7 @@ public interface IPwsRestImporter {
      *
      * @param loginInfo the object of <code>PwsLoginInfo</code> containing information such as host, posrt, user name and
      * password
-     * @return a Json string that contains the list of all services and operations for a partner
+     * @return a JSON string that contains the list of all services and operations for a partner
      * @throws Exception if the request fails
      */
     String listAllOperations(PwsLoginInfo loginInfo) throws Exception;
@@ -67,7 +67,7 @@ public interface IPwsRestImporter {
      * (if <tt>XSD</tt> ) in <code>WebServiceToolsManager</code> or call <code>importWSDL</code> (if <tt>WSDL</tt> or <tt>WADL</tt>)
      * in the same class.</p>
      *
-     * <p>Artifacts generated include files such as Spring bean configuration files, servicedefinition files, java scripts
+     * <p>Artifacts generated include files such as Spring bean configuration files, service definition files, java scripts
      * to store element types, service invocation Java classes, and Java classes for JAXB.</p>
      *
      * @param loginInfo the object of <code>PwsLoginInfo</code> containing information such as host, posrt, user name and
