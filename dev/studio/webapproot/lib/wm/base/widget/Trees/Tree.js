@@ -428,9 +428,11 @@ dojo.declare("wm.TreeRadioNode", wm.TreeCheckNode, {
 		this.contentNode = this.checkboxNode.nextSibling;
 	},
 	click: function(e) {
-	    if (e.target == this.checkboxNode)
+	    if (e.target == this.checkboxNode) {
 		this.checkboxClick(e);
-	    else {
+	    } else if (e.target == this.btnNode) {
+		this.btnToggled(e)
+	    } else {
 		this.checkboxNode.checked = true;
 		this.checkboxClick(e);
 		this.inherited(arguments);
