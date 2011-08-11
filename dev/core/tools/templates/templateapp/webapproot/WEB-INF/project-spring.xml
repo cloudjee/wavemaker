@@ -11,36 +11,4 @@ and is an ideal location for end-users to put any code they need.
 			http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 			http://www.springframework.org/schema/aop
 			http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
-	<bean id="asteriaLoginManager"
-            class="com.asteria.runtime.flow.AsteriaLoginManager"
-            scope="session"
-            lazy-init="true"/>
-
-	<bean id="pwsLoginManagerBeanFactory"
-		class="com.wavemaker.runtime.pws.PwsLoginManagerBeanFactory"
-		scope="singleton"
-		lazy-init="true">
-		<property name="pwsLoginManagers">
-			<map>
-				<entry key="asteria" value-ref="asteriaLoginManager"/>
-				<!--entry key="xxxxx" value-ref="xxxxxLoginManager"/-->
-			</map>
-		</property>
-	</bean>
-	<bean id="asteriaResponseProcessor"
-            class="com.asteria.runtime.flow.AsteriaResponseProcessor"
-            scope="session"
-            lazy-init="true"/>
-
-	<bean id="pwsResponseProcessorBeanFactory"
-		class="com.wavemaker.runtime.pws.PwsResponseProcessorBeanFactory"
-		scope="singleton"
-		lazy-init="true">
-		<property name="pwsResponseProcessors">
-			<map>
-				<entry key="asteria" value-ref="asteriaResponseProcessor"/>
-				<!--entry key="xxxxx" value-ref="xxxxxResponseProcessor"/-->
-			</map>
-		</property>
-	</bean>
 </beans>
