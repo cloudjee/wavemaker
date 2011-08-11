@@ -38,10 +38,10 @@ import com.wavemaker.tools.ws.wsdl.ServiceInfo;
 /**
  * All service code generators should extend this class. Although all public or protected methods can be overriden or implemented
  * in subclasses, the following four classes are most frequently implemented to support the partner web service module.
- *     <p>- addExtraInputParameters</p>
- *     <p>- afterClassGeneration</p>
- *     <p>- defineRestServiceVariable</p>
- *     <p>- defineServiceInvocation</p>
+ *     <p>- <code>addExtraInputParameters</code></p>
+ *     <p>- <code>afterClassGeneration</code></p>
+ *     <p>- <code>defineRestServiceVariable</code></p>
+ *     <p>- <code>defineServiceInvocation</code></p>
  * 
  * @author Frankie Fu
  */
