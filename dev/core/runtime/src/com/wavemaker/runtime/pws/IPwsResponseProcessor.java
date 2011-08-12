@@ -41,7 +41,7 @@ public interface IPwsResponseProcessor {
      * @throws PwsException when the response data contains the data of specific concern
      * @throws WebServiceException any exception encountered while analyzing the response data
      */
-    public void detectExcetionsBeforeProcess(byte[] bytes) throws WebServiceException, PwsException;
+    public void detectExceptionsBeforeProcess(byte[] bytes) throws WebServiceException, PwsException;
 
     /**
      * Processes response data
