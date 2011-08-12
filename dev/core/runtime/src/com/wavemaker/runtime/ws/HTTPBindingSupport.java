@@ -101,7 +101,7 @@ public class HTTPBindingSupport {
             respProcessor = factory.getPwsResponseProcessor(partnerName);
         }
 
-        respProcessor.detectExcetionsBeforeProcess(bytes);
+        respProcessor.detectExceptionsBeforeProcess(bytes);
 
         return respProcessor.processServiceResponse(bytes, responseType);
     }

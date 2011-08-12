@@ -48,6 +48,6 @@ public class DefaultResponseProcessor implements IPwsResponseProcessor {
         }
     }
 
-    public void detectExcetionsBeforeProcess(byte[] bytes) throws WebServiceException, PwsException {
+    public void detectExceptionsBeforeProcess(byte[] bytes) throws WebServiceException, PwsException {
     }
 }
