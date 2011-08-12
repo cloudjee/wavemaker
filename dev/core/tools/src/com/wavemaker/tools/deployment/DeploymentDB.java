@@ -42,7 +42,7 @@ public class DeploymentDB {
 
     private String connectionUrl;
     
-    private boolean updateSchema = true;
+    private boolean updateSchema = false;
 
     public String getDataModelId() {
         return dataModelId;
