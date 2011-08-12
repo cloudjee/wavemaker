@@ -190,7 +190,7 @@ dojo.declare("CustomWebServiceImporter", wm.Page, {
 	    this.serviceChecked(inNode.parent);
 	} 
 
-	/* If there are no checked children for the parent, uncheck the parent */
+	/* If there are no checked children for the parent, uncheck the parent 
 	 */
 	else if (!inNode.getChecked() && dojo.every(inNode.parent.kids, function(node) {return !node.getChecked();})) {
 	    inNode.parent.setChecked(false);
