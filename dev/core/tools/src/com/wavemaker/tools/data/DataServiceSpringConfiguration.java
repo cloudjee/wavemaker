@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
@@ -46,7 +47,9 @@ import com.wavemaker.tools.spring.beans.ConstructorArg;
 import com.wavemaker.tools.spring.beans.DefaultableBoolean;
 import com.wavemaker.tools.spring.beans.Entry;
 import com.wavemaker.tools.spring.beans.Map;
+import com.wavemaker.tools.spring.beans.Prop;
 import com.wavemaker.tools.spring.beans.Property;
+import com.wavemaker.tools.spring.beans.Props;
 import com.wavemaker.tools.spring.beans.Value;
 
 /**
@@ -293,14 +296,37 @@ public class DataServiceSpringConfiguration {
         if (l.size() != 1) {
             throw new AssertionError("Expected one datasource bean");
         }
-        
+
         Bean ds = l.get(0);
-        if (!ds.getId().equals(dbName+"DataSource")) {
+        if (!ds.getId().equals(dbName + "DataSource")) {
             Alias dsAlias = new Alias();
             dsAlias.setName(ds.getId());
             dsAlias.setAlias(dbName);
             beans.addAlias(dsAlias);
-            isDirty=true;
+            isDirty = true;
+        }
+    }
+
+    void configureHibernateSchemaUpdate(String updateSchema) {
+        if (hasText(updateSchema) && Boolean.parseBoolean(updateSchema)) {
+
+            List<Bean> l = beans.getBeansByType(ConfigurationAndSessionFactoryBean.class);
+
+            if (l.size() != 1) {
+                throw new AssertionError("Expected one session factory bean");
+            }
+
+            Bean sf = l.get(0);
+            Property hibernatePropsProperty = sf.getProperty("hibernateProperties");
+            if (hibernatePropsProperty != null) {
+                Props propValues = hibernatePropsProperty.getProps();
+                Prop ddlProp = new Prop();
+                ddlProp.setKey("hibernate.hbm2ddl.auto");
+                String[] value = { "update" };
+                ddlProp.setContent(Arrays.asList(value));
+                propValues.getProps().add(ddlProp);
+                isDirty = true;
+            }
         }
     }
 

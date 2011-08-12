@@ -41,6 +41,8 @@ public class DeploymentDB {
     private String jndiName;
 
     private String connectionUrl;
+    
+    private boolean updateSchema = true;
 
     public String getDataModelId() {
         return dataModelId;
@@ -90,6 +92,14 @@ public class DeploymentDB {
         this.connectionUrl = connectionUrl;
     }
 
+    public boolean isUpdateSchema() {
+        return updateSchema;
+    }
+
+    public void setUpdateSchema(boolean updateSchema) {
+        this.updateSchema = updateSchema;
+    }
+
     public Map<String, String> asProperties() {
         String prefix = this.dataModelId;
         Map<String, String> props = new HashMap<String, String>();
@@ -104,6 +114,8 @@ public class DeploymentDB {
                 props.put(prefix + DataServiceConstants.DB_URL, connectionUrl);
             if (StringUtils.hasText(dbName))
                 props.put(prefix + ProjectConstants.PROP_SEP + DataModelDeploymentConfiguration.DB_ALIAS_PROPERTY, dbName);
+            if (this.updateSchema)
+                props.put(prefix + ProjectConstants.PROP_SEP + DataModelDeploymentConfiguration.UPDATE_SCHEMA_PROPERTY, "true");
         }
         return props;
     }

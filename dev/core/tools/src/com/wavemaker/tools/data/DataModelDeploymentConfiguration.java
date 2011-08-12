@@ -46,6 +46,8 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
     public static final String JNDI_NAME_PROPERTY = "jndi.dsname";
     
     public static final String DB_ALIAS_PROPERTY = "alias";
+    
+    public static final String UPDATE_SCHEMA_PROPERTY = "updateschema";
 
     private static final String COMP_ENV = "java:comp/env/";
 
@@ -148,6 +150,7 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
         }
         cfg.writeProperties(existingProps, true);
         cfg.configureDbAlias(existingProps.getProperty(DB_ALIAS_PROPERTY));
+        cfg.configureHibernateSchemaUpdate(existingProps.getProperty(UPDATE_SCHEMA_PROPERTY));
         cfg.write();
     }
 

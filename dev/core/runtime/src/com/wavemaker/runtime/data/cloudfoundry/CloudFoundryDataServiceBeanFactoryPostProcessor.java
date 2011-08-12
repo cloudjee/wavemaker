@@ -16,7 +16,6 @@ package com.wavemaker.runtime.data.cloudfoundry;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.sql.DataSource;
 
@@ -26,14 +25,11 @@ import org.cloudfoundry.runtime.env.CloudEnvironment;
 import org.cloudfoundry.runtime.env.MysqlServiceInfo;
 import org.cloudfoundry.runtime.service.relational.MysqlServiceCreator;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.MutablePropertyValues;
-import org.springframework.beans.PropertyValue;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.beans.factory.support.ManagedProperties;
 import org.springframework.util.CollectionUtils;
 
 import com.wavemaker.runtime.data.spring.ConfigurationAndSessionFactoryBean;
@@ -73,19 +69,7 @@ public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFact
 
         for (String sfBean : sessionFactoryBeanNames) {
             BeanDefinition beanDefinition = getBeanDefinition(beanFactory, sfBean);
-            MutablePropertyValues propertyValues = beanDefinition.getPropertyValues();
-            PropertyValue hibernateProperties = propertyValues.getPropertyValue("hibernateProperties");
-            
-            Properties hibernatePropsPropertyValue = null;
-            if (hibernateProperties != null) {
-                Object value = hibernateProperties.getValue();
-                if (value instanceof Properties) {
-                    hibernatePropsPropertyValue = (Properties) hibernateProperties.getValue();
-                }
-            } else {
-                hibernatePropsPropertyValue = new ManagedProperties();
-            }
-            hibernatePropsPropertyValue.setProperty("hibernate.hbm2ddl.auto", "update");
+            beanDefinition.setLazyInit(false);
         }
     }
 
