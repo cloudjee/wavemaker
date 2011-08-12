@@ -5,9 +5,6 @@ import static org.springframework.util.StringUtils.hasText;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -22,14 +19,9 @@ import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.cloudfoundry.client.lib.CloudFoundryException;
 import org.cloudfoundry.client.lib.CloudService;
 import org.cloudfoundry.client.lib.UploadStatusCallback;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.client.ClientHttpRequest;
-import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.client.RestClientException;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.deployment.AppInfo;
@@ -57,15 +49,11 @@ public class VmcDeploymentTarget implements DeploymentTarget {
 	
 	private static final String SERVICE_TYPE = "database";
 	
-    private static final String SERVICE_TIER = "free";
+	private static final String SERVICE_VENDOR = "mysql";
 	
-    private static final String MYSQL_SERVICE_VENDOR = "mysql";
+	private static final String SERVICE_TIER = "free";
 	
-	private static final String MYSQL_SERVICE_VERSION = "5.1";
-	
-	private static final String POSTGRES_SERVICE_VENDOR = "postgres";
-    
-    private static final String POSTGRES_SERVICE_VERSION = "9.0";
+	private static final String SERVICE_VERSION = "5.1";
 	
 	private static final Log log = LogFactory.getLog(VmcDeploymentTarget.class);
 	
@@ -163,7 +151,7 @@ public class VmcDeploymentTarget implements DeploymentTarget {
             }
             try {
                 CloudService service = client.getService(db.getDbName());
-                Assert.state(MYSQL_SERVICE_VENDOR.equals(service.getVendor()), "There is already a service provisioned with the name '"+db.getDbName()+"' but it is not a MySQL service.");
+                Assert.state(SERVICE_VENDOR.equals(service.getVendor()), "There is already a service provisioned with the name '"+db.getDbName()+"' but it is not a MySQL service.");
             } catch (CloudFoundryException ex) {
                 if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
                     throw ex;
@@ -181,9 +169,9 @@ public class VmcDeploymentTarget implements DeploymentTarget {
     private CloudService createMySqlService(DeploymentDB db) {
         CloudService mysql = new CloudService();
         mysql.setType(SERVICE_TYPE);
-        mysql.setVendor(MYSQL_SERVICE_VENDOR);
+        mysql.setVendor(SERVICE_VENDOR);
         mysql.setTier(SERVICE_TIER);
-        mysql.setVersion(MYSQL_SERVICE_VERSION);
+        mysql.setVersion(SERVICE_VERSION);
         mysql.setName(db.getDbName());
         return mysql;
     }
@@ -260,7 +248,7 @@ public class VmcDeploymentTarget implements DeploymentTarget {
 		}
 		
 		try {
-			CloudFoundryClient client = new CloudFoundryClient(null, null, deploymentInfo.getToken(), new URL(url), new ProtocolCheckingClientHttpRequestFactory());
+			CloudFoundryClient client = new CloudFoundryClient(deploymentInfo.getToken(), url);
 			return client;
 		} catch (MalformedURLException ex) {
 			throw new WMRuntimeException("CloudFoundry target URL is invalid", ex);
@@ -306,31 +294,6 @@ public class VmcDeploymentTarget implements DeploymentTarget {
 		public long stop() {
 			return System.currentTimeMillis() - startTime;
 		}
-	}
-	
-	private static final class ProtocolCheckingClientHttpRequestFactory implements ClientHttpRequestFactory {
-
-	    private ClientHttpRequestFactory delegate = new SimpleClientHttpRequestFactory();
-	    
-        /** 
-         * {@inheritDoc}
-         */
-        public ClientHttpRequest createRequest(URI uri, HttpMethod method) throws IOException {
-            try {
-                return delegate.createRequest(uri, method);
-            } catch (RestClientException clientException) {
-                if (uri.getScheme().startsWith("https")) {
-                    try {
-                        URI httpUri = new URI("http", uri.getHost(), uri.getPath(), uri.getFragment());
-                        return delegate.createRequest(httpUri, method);
-                    } catch (URISyntaxException uriException) {
-                        //throw original client exception in this case
-                    }
-                }
-                throw clientException;
-            }
-         }
-	    
 	}
 
 }
