@@ -47,6 +47,8 @@ dojo.declare("wm.LogoutVariable", wm.ServiceVariable, {
           if (!this.clearDataOnLogout) {
               this.logoutNavCall.update();
           } else {
+	      window.location.reload();
+/*
               var path = window.location.pathname;
               if (path.match(/[^\/]*\.html/)) {
                   path = path.replace(/[^\/]*\.html/, "login.html");
@@ -56,6 +58,7 @@ dojo.declare("wm.LogoutVariable", wm.ServiceVariable, {
               }
               
               window.location = window.location.protocol + "//" + window.location.host + path + window.location.search;
+	      */
           }
       },
       onError: function(inError) {
