@@ -20,13 +20,13 @@ CustomWebServiceImporter.widgets = {
 	    importPanel: ["wm.Panel", {layoutKind: "top-to-bottom", width: "100%", height: "165px", padding: "10",margin:"0,0,10,0", horizontalAlign: "right", verticalAlign: "middle"}, {onEnterKeyPress: "scanClick"}, {
 		serviceName: ["wm.Text", {width: "100%", caption: "Service Name", captionAlign: "right", captionSize: "120px", dataValue: "InfoteriaFlows",emptyValue: "emptyString"}],
 		importHostPanel: ["wm.Panel", {layoutKind: "left-to-right", height: "24px", width: "100%"}, {}, {
-		    importHost: ["wm.Text", {width: "100%", caption: "Import URL", captionAlign: "right", captionSize: "120px", dataValue: "10.18.63.147",emptyValue: "emptyString"}],
+		    importHost: ["wm.Text", {width: "100%", caption: "Server Name", captionAlign: "right", captionSize: "120px", dataValue: "10.18.63.147",emptyValue: "emptyString"}],
 		    importPort: ["wm.Number", {width: "150px", caption: "Port", captionAlign: "right", captionSize: "40px", dataValue: "21381",emptyValue: "emptyString"}]
 		}],
 		userInput: ["wm.Text", {width: "100%", caption: "Username", captionAlign: "right", captionSize: "120px",emptyValue: "emptyString"}],
 		passInput: ["wm.Text", {width: "100%", caption: "Password", captionAlign: "right", captionSize: "120px",emptyValue: "emptyString"}],
-		domainEditor: ["wm.Text", {width: "100%", caption: "User Domain", captionAlign: "right", captionSize: "120px", dataValue: "/", emptyValue: "emptyString"}],
-		scanButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},width: "120px", caption: "Read Service"}, {onclick: "scanClick"}]
+		domainEditor: ["wm.Text", {width: "100%", caption: "Domain", captionAlign: "right", captionSize: "120px", dataValue: "/", emptyValue: "emptyString"}],
+		scanButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},width: "120px", caption: "Read Projects"}, {onclick: "scanClick"}]
 	    }],
 	    resultLabel: ["wm.Label", {width: "100%", height: "20px", caption: "Step 2. Select the flows for your project"}],
 	    resultPanel: ["wm.Panel", {layoutKind: "top-to-bottom", width: "100%", height: "100%", horizontalAlign: "right", verticalAlign: "middle"}, {}, {	    
