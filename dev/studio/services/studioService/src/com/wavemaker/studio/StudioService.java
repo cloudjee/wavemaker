@@ -71,7 +71,6 @@ import com.wavemaker.runtime.WMAppContext;
  */
 @HideFromClient
 public class StudioService extends ClassLoader {
-
     @ExposeToClient
     public String closurecompile(String s) {
        String result  = null;
@@ -574,6 +573,148 @@ System.out.println("F");
     @ExposeToClient
     public String getJavaServiceTemplate(String templateName) throws IOException {
         return FileUtils.readFileToString(new File(studioConfiguration.getStudioWebAppRootFile() + "/app/templates/javaservices", templateName));
+    }
+
+
+    @ExposeToClient
+    public FileUploadResponse uploadExtensionZip(MultipartFile file) {
+        FileUploadResponse ret = new FileUploadResponse();
+	try {
+	    File webapproot = new File(WMAppContext.getInstance().getAppContextRoot());
+
+	    String filename = file.getOriginalFilename();
+	    int dotindex = filename.lastIndexOf(".");
+	    String ext = (dotindex == -1) ? "" : filename.substring(dotindex+1);
+	    if (dotindex == -1) 
+		throw new IOException("Please upload a zip file");
+	    else if (!ext.equals("zip")) {
+		throw new IOException("Please upload a zip file, not a " + ext + " file");
+	    }
+
+
+	    String originalName = file.getOriginalFilename();
+	    File tmpDir = new File(webapproot,"tmp");
+	    IOUtils.makeDirectories(tmpDir, webapproot);
+
+	    File outputFile = new File(tmpDir, originalName);
+	    String newName = originalName.replaceAll("[ 0-9()]*.zip$", "");
+	    System.out.println("OLD NAME:" + originalName + "; NEW NAME:" + newName);
+	    FileOutputStream fos = new FileOutputStream(outputFile);
+	    IOUtils.copy(file.getInputStream(), fos);
+	    file.getInputStream().close();
+	    fos.close();
+	    File extFolder = com.wavemaker.tools.project.ResourceManager.unzipFile(outputFile);
+
+	    /* Import the pages from the pages folder
+	     * STATUS: DONE EXCEPT TESTING*/
+	    File webapprootPages = new File(webapproot, "pages");
+	    File pagesFolder = new File(extFolder, "pages");
+	    File[] pages = pagesFolder.listFiles();
+	    for (int i = 0; i < pages.length; i++) {
+		IOUtils.copy(pages[i], new File(webapprootPages, pages[i].getName()));
+	    }
+
+	    /* Import the language files from the dictionaries folder and subfolder
+	     * STATUS: DONE EXCEPT TESTING*/
+	    File dictionaryDest = new File(webapproot, "language/nls");
+	    File dictionarySrc = new File(extFolder, "language/nls");
+	    File[] languages = dictionarySrc.listFiles();
+	    for (int i = 0; i < languages.length; i++) {
+		if (languages[i].isDirectory()) {
+		    System.out.println("GET LISTING OF " + languages[i].getName());
+		    File[] languages2 = languages[i].listFiles();
+		    for (int j = 0; j < languages2.length; j++) {
+			System.out.println("COPY " + languages2[j].getName() + " TO " + new File(dictionaryDest, languages[i].getName()).getAbsolutePath());
+			IOUtils.copy(languages2[j], new File(dictionaryDest, languages[i].getName()));			
+		    }
+		} else {
+		    IOUtils.copy(languages[i], dictionaryDest);
+		}
+	    }
+	    
+
+
+
+	    /* Import the designtime jars 
+	     * STATUS: NEEDS REVIEW BY SEUNG
+	     */
+	    File studioLib = new File(webapproot, "WEB-INF/lib");
+	    File designtimeFolder = new File(extFolder, "designtime");
+	    File[] designJars = designtimeFolder.listFiles();
+	    for (int i = 0; i < designJars.length; i++) {
+		IOUtils.copy(designJars[i], studioLib);
+	    }
+
+	    /* Import the runtime jars 
+	     * STATUS: NEEDS REVIEW BY SEUNG
+	     */
+	    File templatesPwsFolder = new File(webapproot, "app/templates/pws/" + newName);
+	    IOUtils.makeDirectories(templatesPwsFolder, webapproot);
+
+	    File runtimeFolder = new File(extFolder, "runtime");
+	    File[] runJars = runtimeFolder.listFiles();
+	    for (int i = 0; i < runJars.length; i++) {
+		IOUtils.copy(runJars[i], studioLib);
+		IOUtils.copy(runJars[i], templatesPwsFolder);
+	    }
+
+	    /* Import packages.js
+	     * STATUS: NEEDS TESTING
+	     */
+	    String packagesExt = "";
+	    try {
+		packagesExt = IOUtils.read(new File(extFolder, "packages.js"));
+	    } catch(Exception e) {
+		packagesExt = "";
+	    }
+	    /* If there is a packages file provided... */
+	    if (packagesExt.length() > 0) {
+		/* Build the string we're appending to packages.js */
+		String startPackagesExt = "/* START PARTNER " + newName + " */\n";
+		String endPackagesExt = "/* END PARTNER " + newName + " */\n";
+		packagesExt = ",\n" + startPackagesExt + packagesExt + "\n" + endPackagesExt;
+
+		/* Create the packagesDir if needed */
+		File packagesDir = new File(studioConfiguration.getCommonDir(),
+					    "packages");
+		if (!packagesDir.exists()) {
+		    packagesDir.mkdir();
+		}
+		File commonPackagesFile = new File(packagesDir, "packages.js");
+		String packages = IOUtils.read(commonPackagesFile);
+
+		/* Remove previous packages entries for this partner */
+		int packagesStartIndex = packages.indexOf(startPackagesExt);
+		if (packagesStartIndex != -1) {
+		    packagesStartIndex = packages.lastIndexOf(",",  packagesStartIndex);
+		    int packagesEndIndex = packages.indexOf(endPackagesExt);
+		    if (packagesEndIndex != -1) {
+			packagesEndIndex += endPackagesExt.length();
+			packages = packages.substring(0,packagesStartIndex) + packages.substring(packagesEndIndex);
+		    }
+		}
+
+		/* Append the string to packages.js and write it */
+		packages += packagesExt;
+		IOUtils.write(commonPackagesFile, packages);
+	    }
+
+	    /* Import spring config files
+	     * STATUS: NOT DONE
+	     */
+
+
+	    ret.setPath("/tmp");
+	    ret.setError("");
+	    ret.setWidth("");
+	    ret.setHeight("");
+
+	    IOUtils.deleteRecursive(tmpDir);
+	} catch(IOException e) {
+	    ret.setError(e.getMessage());
+	}
+	return ret;
+
     }
 
 
