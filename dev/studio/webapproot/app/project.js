@@ -1138,8 +1138,14 @@ Studio.extend({
 			}
 		    }
 
-	            while(deployMenu.children.length > 3) deployMenu.children.shift();
+	            while(deployMenu.children[0].onClick != "newDeployClick") deployMenu.children.shift();
+	            var deploymentsAdded = false;
 	            dojo.forEach(this._deploymentData, dojo.hitch(this, function(deployment,i) {
+			if (!deploymentsAdded) {
+			    deployMenu.children.unshift({separator: true});
+			    deploymentsAdded = true;
+			}
+
 			deployMenu.children.unshift({label: this.getDictionaryItem("MENU_REDEPLOY", {deploymentName: deployment.name}),
 						     onClick: dojo.hitch(this, function() {
 							 this.project.saveProject(true);
@@ -1830,6 +1836,12 @@ Studio.extend({
 	*/
     contextualMenuClick: function(inSender,inLabel, inIconClass, inEvent) {
 
+    },
+    
+
+    /* User selects the menu item for installing third party extensions */
+    importPartnerService: function() {
+	this.ImportThirdPartyAPIDialog.show();
     }
 });
 
