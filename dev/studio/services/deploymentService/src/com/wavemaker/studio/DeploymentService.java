@@ -185,7 +185,7 @@ public class DeploymentService {
         return deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).deploy(f, deploymentInfo);
     }
     
-    public String undeploy(DeploymentInfo deploymentInfo) {
+    public String undeploy(DeploymentInfo deploymentInfo, boolean deleteServices) {
         if(deploymentInfo.getDeploymentType() != DeploymentType.FILE) {
             deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).undeploy(deploymentInfo);
         }
