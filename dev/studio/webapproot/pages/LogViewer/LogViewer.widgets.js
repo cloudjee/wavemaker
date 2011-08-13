@@ -13,11 +13,17 @@
  */
  
 LogViewer.widgets = {
+    loadingDialog: ["wm.LoadingDialog", {},{}, {
+	binding: ["wm.Binding", {}, {}, {
+	    wire: ["wm.Wire", {targetProperty: "widgetToCover", source: "panel1"}]
+	}]
+    }],
 	layoutBox1: ["wm.Layout", {backgroundColor: "#424A5A", height: "100%", width: "100%", horizontalAlign: "left", verticalAlign: "top"}, {}, {
 	    logArea: ["wm.Html", {height: "100%", width: "100%", border: "0", padding: "4, 0, 0, 4", scrollY: true}, {}],
 	    panel1: ["wm.Panel", {height: "34px", width: "100%", border: "2,0,0,0", borderColor: "white", margin: "2", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "right"}, {}, {
 		button1: ["wm.Button", {_classes: {domNode: ["StudioButton"]},height: "100%", width: "70px", caption: "Clear"}, {onclick: "clearLog"}],
-		button2: ["wm.Button", {_classes: {domNode: ["StudioButton"]},height: "100%", width: "70px", caption: "Update"}, {onclick: "updateLog"}]
+		button2: ["wm.Button", {_classes: {domNode: ["StudioButton"]},height: "100%", width: "70px", caption: "Update"}, {onclick: "updateLog"}],
+		updateCheckbox: ["wm.Checkbox", {caption: "Update every 10 seconds?", startChecked: true, width: "100%", showing: false, captionSize: "100%"}, {onchange: "updateCheckboxChanged"}]
 	    }]
 	}]
 }
