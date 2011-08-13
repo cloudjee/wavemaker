@@ -606,7 +606,7 @@ System.out.println("F");
 	    File extFolder = com.wavemaker.tools.project.ResourceManager.unzipFile(outputFile);
 
 	    /* Import the pages from the pages folder
-	     * STATUS: DONE EXCEPT TESTING*/
+	     * STATUS: DONE */
 	    File webapprootPages = new File(webapproot, "pages");
 	    File pagesFolder = new File(extFolder, "pages");
 	    File[] pages = pagesFolder.listFiles();
@@ -615,7 +615,7 @@ System.out.println("F");
 	    }
 
 	    /* Import the language files from the dictionaries folder and subfolder
-	     * STATUS: DONE EXCEPT TESTING*/
+	     * STATUS: DONE */
 	    File dictionaryDest = new File(webapproot, "language/nls");
 	    File dictionarySrc = new File(extFolder, "language/nls");
 	    File[] languages = dictionarySrc.listFiles();
@@ -633,10 +633,8 @@ System.out.println("F");
 	    }
 	    
 
-
-
 	    /* Import the designtime jars 
-	     * STATUS: NEEDS REVIEW BY SEUNG
+	     * STATUS: DONE
 	     */
 	    File studioLib = new File(webapproot, "WEB-INF/lib");
 	    File designtimeFolder = new File(extFolder, "designtime");
@@ -646,9 +644,13 @@ System.out.println("F");
 	    }
 
 	    /* Import the runtime jars 
-	     * STATUS: NEEDS REVIEW BY SEUNG
+	     * STATUS: DONE
 	     */
 	    File templatesPwsFolder = new File(webapproot, "app/templates/pws/" + newName);
+	    /* Delete any old jars from prior imports */
+	    if (templatesPwsFolder.exists()) {
+		IOUtils.deleteRecursive(templatesPwsFolder);
+	    }
 	    IOUtils.makeDirectories(templatesPwsFolder, webapproot);
 
 	    File runtimeFolder = new File(extFolder, "runtime");
@@ -659,7 +661,7 @@ System.out.println("F");
 	    }
 
 	    /* Import packages.js
-	     * STATUS: NEEDS TESTING
+	     * STATUS: DONE
 	     */
 	    String packagesExt = "";
 	    try {
