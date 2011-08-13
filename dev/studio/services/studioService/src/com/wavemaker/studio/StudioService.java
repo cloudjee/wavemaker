@@ -453,6 +453,17 @@ System.out.println("F");
     }
 
     @ExposeToClient
+    public String getMainLog(int lines) throws IOException {
+	File logDir = new File(studioConfiguration.getWaveMakerHome(),
+			       "logs");
+	if (!logDir.exists()) {
+	    logDir.mkdir();
+	}
+	
+	File logFile = new File(logDir, "wm.log");
+	return IOUtils.tail(logFile, lines);
+    }
+    @ExposeToClient
     public java.util.Hashtable getLogUpdate(String filename, String lastStamp) throws IOException {
 	File logFolder = new File(System.getProperty("catalina.home") + "/logs/ProjectLogs", projectManager.getCurrentProject().getProjectName());
 	//File logFolder =  projectManager.getCurrentProject().getLogFolder();
