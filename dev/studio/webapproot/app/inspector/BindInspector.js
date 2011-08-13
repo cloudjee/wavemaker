@@ -466,8 +466,10 @@ dojo.declare("wm.DataInspector", wm.BindInspector, {
 
 	    var w = wm.data.getPropWire(this.owner.parent.inspected, inProp);
 		if (w) w.destroy();
-	    if (inValue === "") return;
-
+	    if (inValue === "") {
+		this.owner.inspected.setValue(inProp, "");
+		return;
+	    }
 		var type = this.owner.inspected.getPropertyType(inProp);
 		switch ((type || 0).type) {
 			case "number":
@@ -692,7 +694,7 @@ dojo.declare("wm.NavigationInspector", wm.DataInspector, {
 			return;
 		var w = wm.data.getPropWire(this.owner.inspected, inProp);
 		if (w) w.destroy();
-	    switch (inProp) {
+	    switch (inProp && inValue) {
 				case "pageName":
 				case "duration":
 				case "cssClasses":
