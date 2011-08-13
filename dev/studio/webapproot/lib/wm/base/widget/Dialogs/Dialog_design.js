@@ -263,6 +263,7 @@ wm.LoadingDialog.extend({
 });
 
 wm.Object.extendSchema(wm.LoadingDialog, {
+    positionNear: {ignore:1},
     widgetToCover: {readonly: 1, bindTarget: 1, group: "edit"},
     serviceVariableToTrack: {readonly: 1, bindTarget: 1, group: "edit"},
     width: {ignore: 1},
