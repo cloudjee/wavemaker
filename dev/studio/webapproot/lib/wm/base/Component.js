@@ -753,17 +753,22 @@ this.panel1.createComponent("custom", "wm.Panel", {
 			f = inEvents[n];
 			// the target
 			e = this[f] || f;
-			if (this._designer)
-				// if designing, note the eventBinding
-				wm.fire(inComponent, "setProp", [n, f]);
-		        else {
+		        if (this._designer) {
+			    // if designing, it helps to have an actual function of the given name, which events ending in numbers
+			    // should not have
+			    if (n.match(/\d+$/) && !inComponent[n])
+				inComponent[n] = function(){};
+
+			    // if designing, note the eventBinding
+			    wm.fire(inComponent, "setProp", [n, f]);
+		        } else {
 			    // otherwise, connect the named event
-			    this.connect(inComponent._eventSource||inComponent, n, this.makeEvent(e, f, inComponent, n));
+			    this.connect(inComponent._eventSource||inComponent, n.replace(/\d*$/,""), this.makeEvent(e, f, inComponent, n.replace(/\d*$/,"")));
 			    // For most events, doing connections this way is a bad idea; many uses of 
 			    // events are done from code rather than inEvents; however, for performance
 			    // reasons and because dynamically setting onRightClick is something I'm ok not
 			    // suporting, I've made an exception here.
-			    if (n == "onRightClick") {
+			    if (n.match(/^onRightClick\d*$/)) {
 
 				inComponent.connect(inComponent.domNode, "oncontextmenu", inComponent, function(event) {
 				    dojo.stopEvent(event);
@@ -778,19 +783,19 @@ this.panel1.createComponent("custom", "wm.Panel", {
 				    });
 				}
 
-			    } else if (n == "onMouseOver") {
+			    } else if (n.match(/^onMouseOver\d*$/)) {
 				inComponent.connect(inComponent.domNode, "onmouseover", function(e) {
 				    wm.job(inComponent.getRuntimeId + "MouseMoveEvents", 50, function() {
 					inComponent.onMouseOver(e);
 				    });
 				});
-			    } else if (n == "onMouseOut") {
+			    } else if (n.match(/^onMouseOut\d*$/)) {
 				inComponent.connect(inComponent.domNode, "onmouseout", function(e) {
 				    wm.job(inComponent.getRuntimeId + "MouseMoveEvents", 50, function() {
 					inComponent.onMouseOut(e);
 				    });
 				});
-			    } else if (n == "onEnterKeyPress" && inComponent instanceof wm.Container) {
+			    } else if (n.match(/^onEnterKeyPress\d*$/) && inComponent instanceof wm.Container) {
 				inComponent.connectOnEnterKey();
 			    }
 			}

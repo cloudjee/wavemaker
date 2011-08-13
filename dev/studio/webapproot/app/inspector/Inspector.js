@@ -316,16 +316,22 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 		];
 	},
 	generateTableContent: function() {
+	    var propArray = [];
+	    wm.forEachProperty(this.props, function(p) {propArray.push(p);});
+	    propArray = propArray.sort(function(a,b) {
+		return wm.compareStrings(a.name,b.name);
+	    });
 		var rows = []
-		wm.forEachProperty(this.props, dojo.hitch(this, function(p, n) {
-
+	    for (var i = 0; i < propArray.length; i++) {
+		var p = propArray[i];
+		var n = p.name;
 			rows.push(
 			    '<tr id="propinspect_row_' + n + '" ' + (p.ignoretmp ? 'style="position:absolute;visibility:hidden" ' :'') +  'propName="', n, '">',
 				this.generateRowCells(n, p).join(''),
 				'<td class="wminspector-help"></td>',
 				'</tr>'
 			);
-		}));
+	    }
 		return rows.join('');
 	},
 	generateRowCells: function(inName, inProp) {
@@ -387,7 +393,11 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 		var p = inTr.getAttribute("propName");
 		if (p) {
 		      // Dangerous change by michael to add "?" icon undisturbed...
-		      var td = inTr.cells[inTr.cells.length - 2];
+		    var td;
+		    dojo.forEach(inTr.cells, function(c) {
+			if (dojo.hasClass(c, "wminspector-property"))
+			    td = c;
+		    });
 		      //var td = inTr.cells[inTr.cells.length - 1];
 			var n = td&&td.firstChild;
 		        var e = formatPropEdit(this.owner.inspected, p, this._getInspectedProp(p), n, wm.isInstanceType(this, wm.BindInspector));
@@ -419,6 +429,17 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 			return this.beginHelp(propName, e.target, this.owner.inspected.declaredClass);
 		    } else
 			return true;
+		} else if (dojo.hasClass(t, "wminspector-addevent")) {
+		    var t = this.getTargetByClass(t, "wminspector-addevent");
+		    if (t) {
+			var eventName = dojo.attr(t.parentNode, "propname").replace(/\d*$/,"");
+			var inspected = this.owner.inspected;
+			for (var i = 1; inspected.eventBindings[eventName + i] !== undefined; i++) ;
+			inspected.eventBindings[eventName + i] = "-";
+			this.owner.inspected = null;
+			this.owner.inspect(inspected, this.owner.inspectorProps);
+
+		    }
 		} else if (dojo.hasClass(t, "wminspector-prop-button")) {
 			var t = this.getTargetByClass(t, "wminspector-prop-button");
 			if (t) {
@@ -695,7 +716,20 @@ dojo.declare("wm.GroupInspector", wm.Inspector, {
 });
 
 dojo.declare("wm.EventInspector", wm.Inspector, {
-    reinspect: function() {this.inspect();},
+	preinspect: function() {
+	    this.props = this.getProps();
+	    for (var eventName in this.owner.inspected.eventBindings) {
+		if (this.props[eventName] === undefined) {
+		    this.props[eventName] = {isEvent: true, 
+					     name: eventName
+					    };
+		    if (!dojo.isFunction(this.owner.inspected[eventName])) {
+			this.owner.inspected[eventName] = function(){};
+		    }
+		}
+	    }
+	},
+        reinspect: function() {this.inspect();},
 	getProps: function() {
 		var props = this.inherited(arguments);
 		for (var i in props)
@@ -715,7 +749,21 @@ dojo.declare("wm.EventInspector", wm.Inspector, {
 		return !appOwned && this.hasEvents(inProps);
 		*/
 	    return this.hasEvents(inProps);
+	},
+	generateRowCells: function(inName, inProp) {
+	    var editor = this.makePropEdit(inName);
+	    return [
+		'<td class="wminspector-caption">', this.makeRowCaption(inName.match(/\d+$/) ? "and then..." : inName, inProp), '</td>',
+		'<td class="wminspector-property">', editor, '</td>',
+		'<td class="wminspector-addevent">+</td>',
+	    ];
+	},
+	generateHeaderCells: function() {
+		var r = this.inherited(arguments);
+		r.push('<th class="wminspector-header wminspector-addevent"></th>');		
+		return r;
 	}
+
 });
 
 dojo.declare("wm.CustomMethodInspector", wm.Inspector, {

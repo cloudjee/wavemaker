@@ -164,8 +164,12 @@ wm.Component.extend({
 		return out;
 	},
 	writeEvents: function(inEvents) {
-		return this.eventBindings;
-		//dojo.mixin(inEvents, this.eventBindings);
+	    for (var eventName in this.eventBindings) {
+		if (this.eventBindings[eventName] == "-")
+		    delete this.eventBindings[eventName];
+	    }
+	    return this.eventBindings;
+	    //dojo.mixin(inEvents, this.eventBindings);
 	},
 	_isWriteableComponent: function(inName, inProperties) {
 	    var c = this.components[inName];

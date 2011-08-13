@@ -507,6 +507,13 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
 	/*background-color: #F1F1F1;*/
 }
 
+.wminspector-addevent {
+    color: #FFF;
+    font-weight: bold;
+    cursor: pointer;    
+    width: 16px;
+    text-align: center;
+}
 
 .tundra .wminspector-property .dijitInputContainer INPUT,
 .tundra .wminspector-property .dijitTextBox {
