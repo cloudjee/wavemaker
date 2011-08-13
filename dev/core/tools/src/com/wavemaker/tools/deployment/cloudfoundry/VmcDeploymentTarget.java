@@ -22,8 +22,13 @@ import org.cloudfoundry.client.lib.UploadStatusCallback;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.runtime.data.util.DataServiceConstants;
+import com.wavemaker.tools.data.BaseDataModelSetup;
+import com.wavemaker.tools.data.DataModelConfiguration;
+import com.wavemaker.tools.data.DataModelManager;
 import com.wavemaker.tools.deployment.AppInfo;
 import com.wavemaker.tools.deployment.DeploymentDB;
 import com.wavemaker.tools.deployment.DeploymentInfo;
@@ -49,13 +54,19 @@ public class VmcDeploymentTarget implements DeploymentTarget {
 	
 	private static final String SERVICE_TYPE = "database";
 	
-	private static final String SERVICE_VENDOR = "mysql";
+	private static final String MYSQL_SERVICE_VENDOR = "mysql";
 	
-	private static final String SERVICE_TIER = "free";
+    private static final String MYSQL_SERVICE_VERSION = "5.1";
 	
-	private static final String SERVICE_VERSION = "5.1";
-	
-	private static final Log log = LogFactory.getLog(VmcDeploymentTarget.class);
+    private static final String POSTGRES_SERVICE_VENDOR = "postgresql";
+    
+    private static final String POSTGRES_SERVICE_VERSION = "9.0";
+    
+    private static final String SERVICE_TIER = "free";
+    
+    private static final Log log = LogFactory.getLog(VmcDeploymentTarget.class);
+    
+    private DataModelManager dataModelManager;
 	
 	static {
 		Map<String, String> props = new LinkedHashMap<String, String>();
@@ -64,8 +75,12 @@ public class VmcDeploymentTarget implements DeploymentTarget {
 		props.put(VMC_URL_PROPERTY, DEFAULT_URL);
 		CONFIGURABLE_PROPERTIES = Collections.unmodifiableMap(props);
 	}
-	
-	public String validateDeployment(DeploymentInfo deploymentInfo) {
+
+    public void setDataModelManager(DataModelManager dataModelManager) {
+        this.dataModelManager = dataModelManager;
+    }
+
+    public String validateDeployment(DeploymentInfo deploymentInfo) {
 	    CloudFoundryClient client = getClient(deploymentInfo);
 	    
 	    List<String> uris = new ArrayList<String>();
@@ -149,16 +164,38 @@ public class VmcDeploymentTarget implements DeploymentTarget {
                 //service binding already exists
                 continue;
             }
+            
+            String dbType = "NONE";
+            DataModelConfiguration config = dataModelManager.getDataModel(db.getDataModelId());
+            String url = config.readConnectionProperties().getProperty(DataServiceConstants.DB_URL_KEY, "");
+            if (StringUtils.hasText(url)) {
+                dbType = BaseDataModelSetup.getDBTypeFromURL(url);
+            }
+            boolean serviceToBind = false;
             try {
                 CloudService service = client.getService(db.getDbName());
-                Assert.state(SERVICE_VENDOR.equals(service.getVendor()), "There is already a service provisioned with the name '"+db.getDbName()+"' but it is not a MySQL service.");
+                if (dbType.equals(MYSQL_SERVICE_VENDOR)) {
+                    Assert.state(MYSQL_SERVICE_VENDOR.equals(service.getVendor()), "There is already a service provisioned with the name '"+db.getDbName()+"' but it is not a MySQL service.");
+                } else if (dbType.equals(POSTGRES_SERVICE_VENDOR)) {
+                    Assert.state(POSTGRES_SERVICE_VENDOR.equals(service.getVendor()), "There is already a service provisioned with the name '"+db.getDbName()+"' but it is not a PostgreSQL service.");
+                }
+                serviceToBind = true;
             } catch (CloudFoundryException ex) {
                 if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
                     throw ex;
                 }
-                client.createService(createMySqlService(db));
+                
+                if (dbType.equals(MYSQL_SERVICE_VENDOR)) {
+                    client.createService(createMySqlService(db));
+                    serviceToBind=true;
+                } else if (dbType.equals(POSTGRES_SERVICE_VENDOR)) {
+                    client.createService(createPostgresqlService(db));
+                    serviceToBind = true;
+                }
             }
-            client.bindService(deploymentInfo.getApplicationName(), db.getDbName());
+            if (serviceToBind) {
+                client.bindService(deploymentInfo.getApplicationName(), db.getDbName());
+            }
         }
     }
 
@@ -169,13 +206,27 @@ public class VmcDeploymentTarget implements DeploymentTarget {
     private CloudService createMySqlService(DeploymentDB db) {
         CloudService mysql = new CloudService();
         mysql.setType(SERVICE_TYPE);
-        mysql.setVendor(SERVICE_VENDOR);
+        mysql.setVendor(MYSQL_SERVICE_VENDOR);
         mysql.setTier(SERVICE_TIER);
-        mysql.setVersion(SERVICE_VERSION);
+        mysql.setVersion(MYSQL_SERVICE_VERSION);
         mysql.setName(db.getDbName());
         return mysql;
     }
 
+    /**
+     * @param db
+     * @return
+     */
+    private CloudService createPostgresqlService(DeploymentDB db) {
+        CloudService postgresql = new CloudService();
+        postgresql.setType(SERVICE_TYPE);
+        postgresql.setVendor(POSTGRES_SERVICE_VENDOR);
+        postgresql.setTier(SERVICE_TIER);
+        postgresql.setVersion(POSTGRES_SERVICE_VERSION);
+        postgresql.setName(db.getDbName());
+        return postgresql;
+    }
+    
     public String undeploy(DeploymentInfo deploymentInfo) {
 		CloudFoundryClient client = getClient(deploymentInfo);
 		log.info("Deleting application "+deploymentInfo.getApplicationName());

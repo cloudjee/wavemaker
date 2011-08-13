@@ -526,7 +526,7 @@ public abstract class BaseDataModelSetup {
         Properties rtn = DataServiceUtils
                 .toHibernateConnectionProperties(getProperties(false));
         
-        if(dbtype.equals(MYSQL_DB_TYPE)) {
+        if(dbtype.equals(MYSQL_DB_TYPE) || dbtype.equals(POSTGRESQL_DB_TYPE)) {
             String defaultCatalog = catalogName;
             if(defaultCatalog == null && !connectionUrl.endsWith("/")) {
                 defaultCatalog = connectionUrl.substring(connectionUrl.lastIndexOf("/")+1);
