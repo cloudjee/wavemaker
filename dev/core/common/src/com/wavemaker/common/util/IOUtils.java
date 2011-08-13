@@ -77,6 +77,49 @@ public class IOUtils {
         }
     }
 
+    /**
+     * Read the bottom of a File into a String.  This probably isn't the proper way to do this in java
+     * but my goals here were limited to NOT flooding memory with the entire file, but just to grab the last N lines and
+     * never have more than the last N lines in memory
+     */
+    public static String tail(File f, int lines) throws IOException {
+	java.util.ArrayList<String> lineList = new java.util.ArrayList(lines);
+
+        char[] buf = new char[DEFAULT_BUFFER_SIZE];
+
+        BufferedReader br = null;
+
+        try {
+
+            br = new BufferedReader(new FileReader(f));
+
+            while (br.ready()) {
+                String s = br.readLine();
+		if (s == null) {
+		    break;
+		} else {
+		    lineList.add(s);
+		}
+		if (lineList.size() > lines) {
+		    lineList.remove(0);
+		}
+            }
+	    StringBuilder fileSB = new StringBuilder();
+	    for (int i = 0; i < lineList.size(); i++) {
+		fileSB.append(lineList.get(i) + "\n");
+	    }
+            return fileSB.toString();
+
+        } finally {
+
+            try {
+                br.close();
+            } catch (Exception ignore) {
+            }
+        }
+    }
+
+
     public static void write(File f, String s) throws IOException {
         f.getParentFile().mkdirs();
         BufferedWriter br = null;
