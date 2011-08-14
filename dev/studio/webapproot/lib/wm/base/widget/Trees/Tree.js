@@ -289,7 +289,7 @@ dojo.declare("wm.TreeNode", null, {
 		this.closed = !inOpen;
 		if (c != this.closed && this.kidsNode) {
 			(this.closed ? wm.collapseNode : wm.expandNode)(this.kidsNode);
-			this.styleNode();
+
 		}
 	},
 	btnToggled: function(e) {
@@ -439,6 +439,43 @@ dojo.declare("wm.TreeRadioNode", wm.TreeCheckNode, {
 	    }
 	}
 });
+
+dojo.declare("wm.TreeTextNode", wm.TreeNode, {
+	value: "",
+
+	render: function() {
+		this.inherited(arguments);
+	},
+	click: function(e) {
+		if (e.target == this.inputNode)
+		    this.inputNode.focus();
+		else
+		    this.inherited(arguments);
+	},
+
+	createNode: function() {
+		var li = this.domNode = document.createElement("li");
+		li.innerHTML = [
+		    '<img/>',
+		    '<span>' + this.formatContent() + '</span>',
+		    '<input type="text" style="margin: 0 4px 0 0; padding:0;" value="',
+		    this.value,
+		    '">'
+		].join("");
+		this.btnNode = li.firstChild;
+		this.contentNode = this.btnNode.nextSibling;	    
+		this.inputNode = this.contentNode.nextSibling;
+	    dojo.connect(this.inputNode, "onchange", this, "onChange");
+	},
+	getValue: function(inChecked) {
+		return this.inputNode ? this.inputNode.value : this.value;
+	},
+	setValue: function(inValue) {
+		this.inputNode.value = inValue;
+	},
+    onChange: function() {}
+});
+
 
 dojo.declare("wm.TreeRoot", wm.TreeNode, {
 	render: function(inContent) {

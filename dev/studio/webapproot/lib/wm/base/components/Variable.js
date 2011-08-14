@@ -390,7 +390,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		var v = d && d[n], typeInfo = this._dataSchema[n];
 		// FIXME: Encountered a project where _isVariableProp(n) was true, but v was a string
 		if (this._isVariableProp(n) && (!v || (v._isStub && v._isStub()))) {
-			v = d[n] = (f || this).marshallVariable(n, typeInfo, v);
+		    v = d[n] = (f || this).marshallVariable(n, typeInfo, v);
 		}
 		return v;
 	},
@@ -801,7 +801,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		// lazy load!
 		if (v._isStub() && this.canLazyLoad(inTypeInfo)) {
 			this.beginUpdate();
-			this.lazyLoadData(p, v);
+		        this.lazyLoadData(p, v);
 			this.endUpdate();
 		}
 		return v;
@@ -1055,16 +1055,30 @@ wm.Object.extendSchema(wm.Variable, {
 wm.Variable.extend({
 	/** @lends wm.Variable.prototype */
 	makePropEdit: function(inName, inValue, inDefault) {
+	    var prop = this.schema ? this.schema[inName] : null;
+	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
 		switch (inName) {
 			case "type":
 				return new wm.propEdit.DataTypesSelect({component: this, name: inName, value: inValue});
 			case "json":
-				return makeTextPropEdit(inName, inValue, inDefault)
+		                return makeReadonlyButtonEdit(name, inValue, inDefault);
 		}
 		return this.inherited(arguments);
 	},
+	editProp: function(inName, inValue, inInspector) {
+		switch (inName) {
+		case "json":
+		    studio.editVariableDialog.show();
+		    studio.editVariableDialog.page.reset(this);
+		    return;
+		}
+	    return this.inherited(arguments);
+	},
+	    
 	isListBindable: function() {
 		return this.isList;
 	}
 });
 /**#@- @design */
+
+

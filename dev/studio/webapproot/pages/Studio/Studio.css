@@ -1509,7 +1509,8 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #studio_securitySubTab > .wmtablayers-tabbar,
 #app_importDatabase_panel1 > .wmtablayers-tabbar,
 #studio_inspectorLayers_Styles > .wmtablayers-tabbar,
-#studio_sourceTabs .wmtablayers-tabbar
+#studio_sourceTabs .wmtablayers-tabbar,
+.EditVariable .EditVariable-tabs .wmtablayers-tabbar
  {
    /*
         background: -webkit-gradient(linear, left top, left bottom, from(#222222), to(#5D6778));
@@ -1533,6 +1534,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #app_importDatabase_panel1 > .wmtablayers-tabbar,
 #studio_inspectorLayers_Styles > .wmtablayers-tabbar,
 #studio_sourceTabs,
+.EditVariable .EditVariable-tabs .wmtablayers-tabbar,
 .DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-tabbar {
 	border-bottom: 1px solid #c0c4ca;
 	background-repeat:repeat-x;
@@ -1569,6 +1571,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #app_importDatabase_panel1 > .wmtablayers-tabbar > .wmtablayers-tab,
 #studio_inspectorLayers_Styles > .wmtablayers-tabbar > .wmtablayers-tab,
 #studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-tab,
+.EditVariable .EditVariable-tabs .wmtablayers-tab,
 .DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-tab {
 	-moz-border-radius-topleft: 4px; 
 	-moz-border-radius-topright: 4px; 
@@ -1619,6 +1622,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #app_importDatabase_panel1 > .wmtablayers-tabbar > .wmtablayers-selected,
 #studio_inspectorLayers_Styles > .wmtablayers-tabbar > .wmtablayers-selected,
 #studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-selected,
+.EditVariable .EditVariable-tabs .wmtablayers-selected,
 .DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-selected {
 	border-top: 1px solid #c0c4ca;
 	border-right: 1px solid #363b44;
@@ -1962,6 +1966,7 @@ color: rgb(0,270,0);
 .Studio-appdocsRibbon,
 .JavaEditor-editorToolbar,
 #studio_MenuDesignerDialog_menuDesigner_panel1,
+#studio_editVariableDialog_editVariable_panel1,
 .DataObjectsEditor-editorToolbar,
 .QueryEditor-editorToolbar,
 .QueryEditor-editorToolbar2,
