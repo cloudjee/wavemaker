@@ -386,7 +386,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	//===========================================================================
 	// Value API
 	//===========================================================================
-	_getDataValue: function(n) {
+        _getDataValue: function(n, noMarshal) {
 		if (!this.data)
 				this.data = {};
 		var d, f;
@@ -397,7 +397,7 @@ dojo.declare("wm.Variable", wm.Component, {
 			d = this.data;
 		var v = d && d[n], typeInfo = this._dataSchema[n];
 		// FIXME: Encountered a project where _isVariableProp(n) was true, but v was a string
-		if (this._isVariableProp(n) && (!v || (v._isStub && v._isStub()))) {
+		if (this._isVariableProp(n) && (!v || (v._isStub && v._isStub())) && !noMarshal) {
 		    v = d[n] = (f || this).marshallVariable(n, typeInfo, v);
 		}
 		return v;

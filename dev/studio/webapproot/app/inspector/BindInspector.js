@@ -218,7 +218,7 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
 		    // get its nonbind value if it has one
 	       	   var newval;
 		   if (this.owner.inspected instanceof wm.Variable)
-		       newval = this.owner.inspected._getDataValue(inName);
+		       newval = this.owner.inspected._getDataValue(inName,true);
 		   else
 		       newval = this.owner.inspected.getProp(inName);
 		   if (newval === null || newval === undefined) newval = "";
