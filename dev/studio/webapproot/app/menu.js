@@ -32,8 +32,7 @@ Studio.extend({
 	    iconClass: "PartnerService",
 	    children: [
 		{label: "Import...",
-		 onClick: "importPartnerService"},
-		{separator:true}
+		 onClick: "importPartnerService"}
 	    ]
 	};
 	menu.children.push(this._partnerServicesStructure);
@@ -61,8 +60,12 @@ Studio.extend({
 			 iconClass: inImage.indexOf(".") == -1 ? inImage : inImage.substring(inImage.lastIndexOf("/")+1,inImage.indexOf("."))};
 
 	      var menu = (inTab == bundlePackage.Non_Visual_Components) ? this._insertMenuStructure : this._serviceMenuStructure;
-	      if (inProps.partnerService)
+	      if (inProps.partnerService) {
 		  menu = this._partnerServicesStructure;
+		  if (menu.children.length == 1) {
+		      menu.children.push({separator:true});
+		  }
+	      }
 
 	      if (inProps && inProps.parentMenu) {
 		  var submenu;
