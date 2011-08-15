@@ -143,11 +143,15 @@ public class VmcDeploymentTarget implements DeploymentTarget {
 
         log.info("Application upload completed in " + timer.stop() + "ms");
 
-        CloudApplication application = client.getApplication(deploymentInfo.getApplicationName());
-        if (application.getState().equals(CloudApplication.AppState.STARTED)) {
-            doRestart(deploymentInfo, client);
-        } else {
-            doStart(deploymentInfo, client);
+        try {
+            CloudApplication application = client.getApplication(deploymentInfo.getApplicationName());
+            if (application.getState().equals(CloudApplication.AppState.STARTED)) {
+                doRestart(deploymentInfo, client);
+            } else {
+                doStart(deploymentInfo, client);
+            }
+        } catch (CloudFoundryException ex) {
+            return "ERROR: Could not start application. "+ex.getDescription();
         }
         return SUCCESS_RESULT;
     }
