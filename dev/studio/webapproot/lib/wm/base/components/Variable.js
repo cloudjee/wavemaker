@@ -141,7 +141,11 @@ dojo.declare("wm.Variable", wm.Component, {
             if (!noNotify && hasChanged && inType && inType != "any")
 		this.dataChanged();//  this will cause anyone bound to this object to treat a change of type as a change in its dataSet
 	},
-
+    /* Design time only */
+    set_type: function(inType) {
+	this.setType(inType);
+	reinspect();
+    },
 	typeChanged: function(inType) {
 		var t = inType;
 		var primitive = wm.typeManager.getPrimitiveType(t) || !t || t == "wm.Variable";

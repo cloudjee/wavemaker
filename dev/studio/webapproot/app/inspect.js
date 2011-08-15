@@ -249,6 +249,13 @@ inspect = function(inComponent, inDoFocus) {
 		setTimeout(function() { _inspect(inComponent, inDoFocus) }, 1);
 }
 
+reinspect = function() {
+	// call on timeout so IE can blur inspectedEditor before rebuilding inspector
+	//if (inComponent)
+                studio.inspector.inspected = null;
+		setTimeout(function() { _inspect(studio.selected, false) }, 1);
+}
+
 _setInspectedCaption = function(inComponent) {
 	var c = inComponent;
         if (studio.application && studio.page)
