@@ -23,14 +23,20 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cloudfoundry.runtime.env.CloudEnvironment;
 import org.cloudfoundry.runtime.env.MysqlServiceInfo;
+import org.cloudfoundry.runtime.env.PostgresqlServiceInfo;
 import org.cloudfoundry.runtime.service.relational.MysqlServiceCreator;
+import org.cloudfoundry.runtime.service.relational.PostgresqlServiceCreator;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.PropertyValue;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.config.TypedStringValue;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import com.wavemaker.runtime.data.spring.ConfigurationAndSessionFactoryBean;
 
@@ -45,6 +51,10 @@ public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFact
     private static final Log log = LogFactory.getLog(CloudFoundryDataServiceBeanFactoryPostProcessor.class);
 
     private static final String DS_BEAN_SUFFIX = "DataSource";
+    
+    private static final String POSTGRES_DRIVER = "org.postgresql.Driver";
+    
+    private static final String MYSQL_DRIVER = "com.mysql.jdbc.Driver";
 
     private CloudEnvironment cloudEnvironment = new CloudEnvironment();
 
@@ -108,14 +118,35 @@ public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFact
                 }
             }
 
-            MysqlServiceInfo service = cloudEnvironment.getServiceInfo(serviceName, MysqlServiceInfo.class);
-            if (service != null) {
-                defaultListableBeanFactory.removeBeanDefinition(dsBean);
-                MysqlServiceCreator mysqlCreationHelper = new MysqlServiceCreator(cloudEnvironment);
-                DataSource cfDataSource = mysqlCreationHelper.createSingletonService().service;
-                defaultListableBeanFactory.registerSingleton(dsBean, cfDataSource);
-            } else {
-                log.warn("Service '" + serviceName + "' found, but it is not a MySql service as expected.");
+            BeanDefinition dsBeanDef = defaultListableBeanFactory.getBeanDefinition(dsBean);
+            PropertyValue driverProp = dsBeanDef.getPropertyValues().getPropertyValue("driverClassName");
+            log.warn("Processing datasource with driver type: "+driverProp.getValue());
+            if (driverProp.getValue() != null) {
+                Assert.isInstanceOf(TypedStringValue.class, driverProp.getValue(), "driverClassName property value is of an unexpected type.");
+                String driverClassName = ((TypedStringValue)driverProp.getValue()).getValue();
+                if (POSTGRES_DRIVER.equals(driverClassName)) {
+                    PostgresqlServiceInfo service = cloudEnvironment.getServiceInfo(serviceName, PostgresqlServiceInfo.class);
+                    if (service != null) {
+                        defaultListableBeanFactory.removeBeanDefinition(dsBean);
+                        PostgresqlServiceCreator postgresCreationHelper = new PostgresqlServiceCreator(cloudEnvironment);
+                        DataSource cfDataSource = postgresCreationHelper.createSingletonService().service;
+                        defaultListableBeanFactory.registerSingleton(dsBean, cfDataSource);
+                    } else {
+                        log.warn("Service '" + serviceName + "' found, but it is not a PostgreSQL service as expected.");
+                    }
+                } else if (MYSQL_DRIVER.equals(driverClassName)) {
+                    MysqlServiceInfo service = cloudEnvironment.getServiceInfo(serviceName, MysqlServiceInfo.class);
+                    if (service != null) {
+                        defaultListableBeanFactory.removeBeanDefinition(dsBean);
+                        MysqlServiceCreator mysqlCreationHelper = new MysqlServiceCreator(cloudEnvironment);
+                        DataSource cfDataSource = mysqlCreationHelper.createSingletonService().service;
+                        defaultListableBeanFactory.registerSingleton(dsBean, cfDataSource);
+                    } else {
+                        log.warn("Service '" + serviceName + "' found, but it is not a MySQL service as expected.");
+                    }
+                } else {
+                    log.warn("Application contains a DataSource for an unsupported database type.");
+                }
             }
         }
     }
