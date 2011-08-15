@@ -34,6 +34,7 @@ Studio.widgets = {
     jarListVariable: ["wm.Variable", {type: "StringData"}, {}],
     addPatchDialog: ["wm.PageDialog", {pageName: "AddPatch", width: "90%", height: "90%", hideControls: true, modal: false, title: "Load patch for studio", deferLoad: true}],
     jarDownloadDialog: ["wm.PageDialog", {pageName: "HandleRequiredJars", width: "400px", height: "340px", hideControls: true, modal: false, title: "Import Jar File"}],
+    ImportThirdPartyAPIDialog: ["wm.PageDialog", {pageName: "ImportThirdPartyAPI", width: "300px", height: "240px", hideControls: true, modal: false, title: "Import Partner Services", deferLoad: true}],
     dictionaryDialog: ["wm.PageDialog", {pageName: "I18nDictionaryEditor", width: "400px", height: "80%", hideControls: true, modal: false, title: "Dictionary Editor", deferLoad: true, corner: "cr"}],
 
 	//tempData used to show grid on FancyTemplate
@@ -50,7 +51,7 @@ Studio.widgets = {
     propertiesDialog: ["wm.Dialog", {_classes: {domNode: ["wm-darksnazzy"]}, width: "300px", height: "650px", modal: false, title: "Properties", noEscape: true, useContainerWidget:true, corner: "cr", border: "1", borderColor: "#222"}, {onClose: "toggleInspectorDialog"}],
     paletteDialog: ["wm.Dialog", {width: "250px", height: "650px", modal: false, title: "Palette / Model", noEscape: true, useContainerWidget:true, corner: "cl", border: "1", borderColor: "#222"}, {onClose: "togglePaletteDialog"}],
     startPageDialog: ["wm.PageDialog", {width: "764px", height: "460px", title: "", modal: true, hideControls: true, noEscape: true, pageName: "Start", border: "4", borderColor: "#222222", corner: "cc" }],
-    deploymentDialog: ["wm.PageDialog", {width: "900px", height: "680px", title: "Deployment", modal: true, hideControls: true, noEscape: true, pageName: "DeploymentDialog", deferLoad: true, border: "2", borderColor: "white", title: "Deployment"}],
+    deploymentDialog: ["wm.PageDialog", {width: "900px", height: "680px", title: "Deployment", modal: true, hideControls: true, noEscape: true, pageName: "DeploymentDialog", deferLoad: true, border: "2", borderColor: "white"}],
     loginDialog: ["wm.PageDialog", {width: "250px", height: "325px", title: "Login", modal: true, hideControls: true, noEscape: true, pageName: "Login", deferLoad: true}],
     newProjectDialog: ["wm.PageDialog", {width: "492px", height: "430px", title: "New Project", modal: true, hideControls: true, noEscape: false, pageName: "", border: "4", borderColor: "#222222", titlebarBorder: "1"}],
     helpDialog: ["wm.GenericDialog", {"height":"77px","modal":false,"noEscape":false,"title":"Help","userPrompt":"","width":"300px", modal: false,button1Caption: "OK", button1Close: true, corner: "tr"}, {}],
@@ -108,11 +109,12 @@ Studio.widgets = {
                                                               {"label": "Deploy Project",
 							       idInPage: "deployProjectItem",
 							       children: [
-								   {separator: true},
 								   {label: "New Deployment...",
 								    onClick: "newDeployClick"},
 								   {label: "Settings...",
-								    onClick: "settingsDeployClick"}
+								    onClick: "settingsDeployClick"},
+								   {label: "Manage CloudFoundry Apps...",
+								    onClick: "cloudFoundryDeploymentsClick"}
 							       ],
 							       iconClass: "deployProjectItem"},                                      
                                                               {"label": "Preferences...",

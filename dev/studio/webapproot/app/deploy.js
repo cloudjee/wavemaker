@@ -277,5 +277,9 @@ Studio.extend({
 	this.deploymentDialog.show();
 	this.deploymentDialog.page.selectFirst();
     },
+    cloudFoundryDeploymentsClick: function() {
+	this.deploymentDialog.setPage("DeploymentDialog"); // insures the dialog is initialized, but does not show it
+	this.deploymentDialog.page.showCloudFoundryAppListDialog();
+    },
     _end: 0
 });

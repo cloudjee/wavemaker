@@ -1,5 +1,23 @@
 DeploymentDialog.widgets = {
     cloudFoundryService: ["wm.JsonRpcService", {service: "cloudFoundryService", sync: true}, {}],
+    deploymentLoadingDialog: ["wm.LoadingDialog", {}],
+    cloudFoundryAppListDialog: ["wm.DesignableDialog", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", containerWidgetId: "cfAppListPanel", buttonBarId: "buttonBar5", width: "400px", height: "500px"}, {}, {
+	cfAppListPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", layoutKind: "top-to-bottom", padding: "0", border: "20", borderColor: "#424a5a"}, {}, {
+	    cloudFoundryAppList: ["wm.List", {dataFields: "name", headerVisible: true, innerBorder:"1",borderColor:"black","height":"100%","width":"100%", dataFields: "name,state,services"}, {}],
+	    deleteServicesCheckbox: ["wm.Checkbox", {caption: "Delete services too?", width: "100%", captionSize: "100%", startChecked: true}]
+	}],
+	buttonBar5: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+
+	    cloudFoundryUndeployFromListButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Undeploy","margin":"4"}, {"onclick":"cloudFoundryUndeployFromListButtonClick"}, {
+		binding: ["wm.Binding", {}, {}, {
+		    wire: ["wm.Wire", {"source":"cloudFoundryAppList.emptySelection","targetProperty":"disabled"}, {}]
+		}]
+	    }],
+	    cloudFoundryAppListDialogCloseButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Close","margin":"4"}, {"onclick":"cloudFoundryAppListCloseButtonClick"}]
+	}]
+    }],
+
+
     deploymentListPopupMenu: ["wm.PopupMenu", {"fullStructure":[{'label':'Deploy', 'onClick':"contextDeploy",'children':[]},
 								{'label':'Delete','onClick':"contextDelete",'children':[]}
 							       ]
@@ -87,7 +105,7 @@ DeploymentDialog.widgets = {
 				    cfDeploymentNameEditor: ["wm.Text", {"border":"0","caption":"Deployment name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"New CloudFoundry Deployment","width":"100%", required: true}, {onchange: "deploymentNameChange"}],
 				    cfDeploymentTypeEditor: ["wm.Text", {"border":"0","caption":"Type","captionAlign":"left","captionSize":"140px","displayValue":"CloudFoundry","readonly":true,"width":"100%"}, {}],
 				    cfHostEditor: ["wm.Text", {"border":"0","caption":"CloudFoundry target","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"https://api.cloudfoundry.com","width":"100%", required: true}, {}],
-				    cfNameEditor: ["wm.Text", {"border":"0","caption":"Application name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {}],
+				    cfNameEditor: ["wm.Text", {"border":"0","caption":"Application name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {onchange: "cloudFoundryApplicationNameChanged"}],
 				    cfUrlEditor: ["wm.Text", {"border":"0","caption":"URL","captionAlign":"left","captionSize":"140px","displayValue":"http://.cloudfoundry.com/","readonly":true,"width":"100%"}, {}, {
 					binding: ["wm.Binding", {}, {}, {
 					    wire: ["wm.Wire", {"expression":"\"http://\" + ${cfNameEditor.dataValue} + \".\" + ${cfHostEditor.dataValue}.replace(/^https\\:\\/\\/api\\./,\"\") + \"/\"","source":false,"targetProperty":"dataValue"}, {}]
@@ -117,7 +135,7 @@ DeploymentDialog.widgets = {
 		    wire: ["wm.Wire", {"source":"editPanel.invalid","targetProperty":"disabled"}, {}]
 		}]
 	    }],
-	    undeployButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Undeploy","margin":"4","width":"120px", showing: false}, {"onclick":"undeployButtonClick"}],
+	    manageUndeployButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Manage CloudFoundry Apps","margin":"4","width":"200px", showing: false}, {"onclick":"manageCloudFoundryButtonClick"}],
 	    buttonBarMarginSpacer1: ["wm.Spacer", {"height":"48px","width":"100%"}, {}],
 	    saveButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Save","margin":"4"}, {"onclick":"saveButtonClick"}, {
 		binding: ["wm.Binding", {}, {}, {

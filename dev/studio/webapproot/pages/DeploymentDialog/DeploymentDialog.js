@@ -12,8 +12,6 @@
  *  limitations under the License.
  */
  
-// TODO: Waiting indicators
-// TODO: After adding new items, must update the file/deployment menu
 dojo.provide("wm.studio.pages.DeploymentDialog.DeploymentDialog");
 
 dojo.declare("DeploymentDialog", wm.Page, { 
@@ -25,7 +23,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     CF_DEPLOY: "CLOUD_FOUNDRY",
     TC_DEPLOY: "TOMCAT",
     FILE_DEPLOY: "FILE",
-    CFTOKEN_COOKIE: "Studio.DeploymentDialog.CFTOKEN",
+    CFTOKEN_COOKIE: "Studio.DeploymentDialog.CFTOKEN", /* Also used in CloudFoundryAppList */
 
     /* Page caches and state */
     currentDatabaseBoxes: [],
@@ -285,27 +283,81 @@ dojo.declare("DeploymentDialog", wm.Page, {
 					    }),
 					    dojo.hitch(this, "saveFailed"));
   },
+
+    /* When deploy is called, show a confirmation dialog with the deployment settings */
   deploy: function(inData) {
       try {
 	  if (inData.deploymentType == this.FILE_DEPLOY) {
 	      this.deploy2(inData);
 	  } else {
 	      app.confirm(this.getDictionaryItem("CONFIRM_DEPLOY_HEADER") + this.generateDeploymentHTMLSynopsis(inData), false, dojo.hitch(this, function() {
-		  inData.token = dojo.cookie(this.CFTOKEN_COOKIE);
-		  if (!inData.token && inData.deploymentType == this.CF_DEPLOY) {
-		      this.cfLoginDialog.show();
-		      this.loginDialogUserEditor.focus();
-		      this._deployData = inData;
+		  if (inData.deploymentType == this.CF_DEPLOY) {
+		      this.cloudFoundryDeployConfirmed(inData);
 		  } else {
 		      this.deploy2(inData);
 		  }
+
+	      }),
+	      dojo.hitch(this, function() {
+		  if (this._updateSchemaCheckbox) {
+		      this._updateSchemaCheckbox.destroy();
+		      delete this._updateSchemaCheckbox;
+		  }
 	      }));
 	      app.confirmDialog.setWidth("450px");
+	      if (inData.deploymentType == this.CF_DEPLOY) {
+		  this._updateSchemaCheckbox = new wm.Checkbox({owner: this,
+								parent: app.confirmDialog.containerWidget.c$[0],
+								"_classes":{"domNode":["wm_FontColor_White"]},
+								caption: "Update database schemas?",
+								startChecked: true,
+								width: "100%",
+								captionSize: "100%",
+								minEditorWidth: 32,
+								captionAlign: "left",
+								captionPosition: "right",
+								name: "confirmUpdateSchemaCheckbox"});
+		  this._updateSchemaCheckbox.captionNode.style.color = "white";
+	      }
 	  }
       } catch(e) {
           console.error('ERROR IN deployButtonClick: ' + e); 
       } 
   },
+    cloudFoundryDeployConfirmed: function(inData) {
+	this._updateSchema = this._updateSchemaCheckbox.getChecked();
+	if (!inData.databases) inData.databases = [];
+	for (var i = 0; i < inData.databases.length; i++) {
+	    inData.databases[i].updateSchema = this._updateSchema;
+	}
+	this._updateSchemaCheckbox.destroy();
+	delete this._updateSchemaCheckbox;
+	this.confirmToken(inData.token, dojo.hitch(this, function(inToken) {
+	    //inData.token = dojo.cookie(this.CFTOKEN_COOKIE);
+	    inData.token = inToken;
+	    this.deploy2(inData);
+	}));	
+    },
+    confirmToken: function(inToken, inCallback) {
+	if (!inToken) {
+	    studio.endWait(); // in case beginWait was called before confirmToken was called
+	    this.showCFLogin(inCallback);
+	} else {
+	    this.cloudFoundryService.requestAsync("listApps", [inToken,"https://api.cloudfoundry.com"], 
+						  dojo.hitch(this, function(inData) {
+						      inCallback(inToken);
+						  }),
+						  dojo.hitch(this, function(inData) {
+						      studio.endWait(); // in case beginWait was called before confirmToken was called
+						      this.showCFLogin(inCallback);
+						  }));
+	}
+    },
+    showCFLogin: function(inCallback) {
+	this.cfLoginDialog.show();
+	this.loginDialogUserEditor.focus();		
+	this.cfLoginDialogSuccessHandler = inCallback;
+    },
     deploy2: function(inData) {
 	studio.beginWait(this.getDictionaryItem("WAIT_DEPLOY", {deploymentName: inData.name}));
 	studio.deploymentService.requestAsync("deploy", [inData],
@@ -335,10 +387,6 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		}
 		return;
 	    }
-	} else if (inResult.match(/^ERROR\:.*token expired/)){
-	    this.cfLoginDialog.show();
-	    this.loginDialogUserEditor.focus();
-	    this._deployData = inData;	    
 	} else if (inResult.match(/^ERROR\:.*The URI.*has already been taken or reserved/)) {
 	    app.alert(this.getDictionaryItem("ALERT_CF_NAME_TAKEN", {name: inData.applicationName}));
 	    this.cfNameEditor.setInvalid();
@@ -957,12 +1005,15 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	    switch(data.deploymentType) {
 	    case this.TC_DEPLOY:
 		this.populateTomcatDeploy(data);
+		this.manageUndeployButton.hide();
 		break;
 	    case this.CF_DEPLOY:
 		this.populateCloudFoundryDeploy(data);
+		this.manageUndeployButton.show();
 		break;
 	    case this.FILE_DEPLOY:
 		this.populateAppFileDeploy(data);
+		this.manageUndeployButton.hide();
 		break;
 	    }
 	this._openningDeployment = false;
@@ -986,17 +1037,24 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	studio.beginWait(this.getDictionaryItem("WAIT_LOGGING_IN"));
 	this.cloudFoundryService.requestSync(
 	    "login",
-	    [this.loginDialogUserEditor.getDataValue(), this.loginDialogPasswordEditor.getDataValue(), this._deployData.target],
+	    [this.loginDialogUserEditor.getDataValue(), this.loginDialogPasswordEditor.getDataValue(), this._deployData && this._deployData.target ? this._deployData.target : "https://api.cloudfoundry.com"],
 	    dojo.hitch(this, function(inData) {
-		this._deployData.token = inData;
 		dojo.cookie(this.CFTOKEN_COOKIE, inData, {expires: 1});
 		studio.endWait();
 		this.cfLoginDialog.hide();
-		this.deploy2(this._deployData);
+		if (this.cfLoginDialogSuccessHandler) {
+		    this.cfLoginDialogSuccessHandler(inData);
+		}
 	    }),
-	    dojo.hitch(this, function(inData) {
+	    dojo.hitch(this, function(inError) {
 		studio.endWait();
-		app.toastError(inData);
+		var message = inError.message;
+		if (message.match(/^403/)) {
+		    app.toastError(this.getDictionaryItem("INVALID_USER_PASS"));
+		} else {
+		    app.toastError(message);
+		}
+		this.loginDialogUserEditor.focus();
 	    }));
     },
         
@@ -1005,6 +1063,93 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	    var data = this.deploymentList.selectedItem.getData();
 	if (data)
 	    return data.deploymentType;
+    },
+					   
+
+    refreshCloudFoundryAppList: function(optionalCallback) {
+	var token = dojo.cookie(this.CFTOKEN_COOKIE);
+	this.confirmToken(token, dojo.hitch(this, function(inToken) {
+	    token = inToken;
+	    this.deploymentLoadingDialog.widgetToCover = this.cloudFoundryAppList;
+	    this.deploymentLoadingDialog.show();
+	    this.cloudFoundryService.requestAsync("listApps", [token,"https://api.cloudfoundry.com"], 
+						  dojo.hitch(this, function(inResult) {
+						      this.populateCloudFoundryAppList(inResult, optionalCallback);
+						  }),
+						  dojo.hitch(this, function(inError) {
+						      app.alert(inError);
+						      this.deploymentLoadingDialog.hide();
+						  }));
+	}));
+    },
+    populateCloudFoundryAppList: function(inResult, optionalCallback) {
+	var results = [];
+	for (var i = 0; i < inResult.length; i++) {
+	    results.push({name: inResult[i].name, state: inResult[i].state, services: inResult[i].services ? inResult[i].services.join(", ") : ""});
+	}
+	this.cachedCloudFoundryDeploymentList = inResult;
+	this.cloudFoundryAppList.renderData(results);
+	this.deploymentLoadingDialog.hide();
+	if (optionalCallback)
+	    optionalCallback();
+    },
+    cloudFoundryUndeployFromListButtonClick: function() {
+	var selectedItem = this.cloudFoundryAppList._data[this.cloudFoundryAppList.getSelectedIndex()];
+	if (!selectedItem) return;
+	var name = selectedItem.name;
+	if (!name) return;
+	var data = {
+	    "applicationName": name,
+	    "archiveType": null,
+	    "databases": null,
+	    "deploymentId": null,
+	    "deploymentType": this.CF_DEPLOY,
+	    "host": null,
+	    "name": name,
+	    "port": 0,
+	    "target": "https://api.cloudfoundry.com",
+	    "token": dojo.cookie(this.CFTOKEN_COOKIE)
+	    };
+	this.undeploy(data);
+    },
+    undeploy: function(inData) {
+	studio.beginWait(this.getDictionaryItem("WAIT_UNDEPLOY"));
+	this.confirmToken(inData.token, dojo.hitch(this, function(inToken) {
+	    inData.token = inToken;
+	    studio.deploymentService.requestAsync("undeploy", [inData,this.deleteServicesCheckbox.getChecked()], 
+						  dojo.hitch(this, function(inResult) {
+						      studio.endWait();
+						      this.refreshCloudFoundryAppList();
+						  }),
+						  dojo.hitch(this, function(inError) {
+						      studio.endWait();
+						      app.alert(inError);
+						  }));
+	}));
+    },
+    cloudFoundryAppListCloseButtonClick: function() {
+	this.cloudFoundryAppListDialog.hide();
+    },
+    showCloudFoundryAppListDialog: function(optionalCallback) {
+	this.cloudFoundryAppListDialog.show();
+	this.refreshCloudFoundryAppList(optionalCallback);
+    },
+    manageCloudFoundryButtonClick: function() {
+	this.showCloudFoundryAppListDialog(dojo.hitch(this, function() {
+	    var data = this.deploymentList.selectedItem.getValue("dataValue");
+	    if (data) {
+		for (var i = 0; i < this.cachedCloudFoundryDeploymentList.length; i++) {
+		    if (this.cachedCloudFoundryDeploymentList[i].name == data.applicationName) {
+			var item = this.cloudFoundryAppList.getItem(i);
+			this.cloudFoundryAppList.eventSelect(item);
+			break;
+		    }
+		}
+	    }
+	}));
+    },
+    cloudFoundryApplicationNameChanged: function() {
+
     },
     _end:0
 });

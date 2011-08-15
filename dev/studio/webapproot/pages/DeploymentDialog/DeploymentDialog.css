@@ -19,6 +19,7 @@
 	opacity:0.5;
 }
 
+.DeploymentDialog-cloudFoundryAppList .wmlist-list .wmlist-cell, 
 .DeploymentDialog .wmlist-list .wmlist-cell {
     border-bottom: solid 1px #AAA;
     white-space:nowrap;
@@ -63,3 +64,6 @@ color: white;
 	width:5px;
 	z-index:9;
 }
+
+
+
