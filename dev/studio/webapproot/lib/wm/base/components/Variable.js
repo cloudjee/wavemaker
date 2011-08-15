@@ -243,22 +243,26 @@ dojo.declare("wm.Variable", wm.Component, {
 	*/
 	// NB: input can be a POJSO or a Variable
 	setData: function(inData) {
-	    
-	        this.onPrepareSetData(inData);
-		if (inData instanceof wm.Variable)
-			this._setVariableData(inData);
-		else if (dojo.isArray(inData))
-			this._setArrayData(inData);
-		else if (this.isPrimitive)
-			this._setPrimitiveData(inData);
-		else
-			this._setObjectData(inData);
-		this.notify();
-		this.onSetData();
-	        if (this.saveInCookie) {
-		    var datatext = dojo.toJson(this.getData() );
-		    dojo.cookie(this.getRuntimeId(), datatext);
-		}
+	    if (this.saveInCookie) {
+		var ownerPage = this.getParentPage();
+		if (ownerPage._loadingPage && !inData) return;
+	    }
+
+	    this.onPrepareSetData(inData);
+	    if (inData instanceof wm.Variable)
+		this._setVariableData(inData);
+	    else if (dojo.isArray(inData))
+		this._setArrayData(inData);
+	    else if (this.isPrimitive)
+		this._setPrimitiveData(inData);
+	    else
+		this._setObjectData(inData);
+	    this.notify();
+	    this.onSetData();
+	    if (this.saveInCookie) {
+		var datatext = dojo.toJson(this.getData() );
+		dojo.cookie(this.getRuntimeId(), datatext);
+	    }
 	},
 	onPrepareSetData: function(inData) {
 	},
@@ -740,6 +744,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	//===========================================================================
 	// Referencing
 	//===========================================================================
+    /* 
 	setDataSet: function(inDataSet) {
 		this.dataSet = "";
 		if (inDataSet instanceof wm.Variable) {
@@ -749,6 +754,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		}
 		this.setData(inDataSet);
 	},
+	*/
         getDataSet: function() {
 	    if (this.dataSet) return this.dataSet;
 	    else if (!this._isDesignLoaded)
@@ -1081,4 +1087,268 @@ wm.Variable.extend({
 });
 /**#@- @design */
 
+if (0) {
+/******
+ * this extends wm.Variable to implement the dojo.data.api.Read APIs
+ ******/
+wm.Variable.extend({
+    /* http://dojotoolkit.org/reference-guide/dojo/data/api/Read.html#dojo-data-api-read */
+    getFeatures: function() {
+	return {
+	    "dojo.data.api.Read": true
+	};
+    },
 
+    /*
+     * this getValue violates the dojo.data API by not throwin exceptions if inItem is not an item or inAttribute is not a string.
+     * Violation is because getValue calls this.inherited in if its not an item
+     */
+    getValue: function(inItem, inAttribute, defaultValue) {
+	if (this.isItem(inItem)) {
+	    /* This works, but as soon as we get a new dataset from the server, or if the user sorts the variable,
+	     * all IDs change, so really this is bad
+	     */
+	    if (inAttribute == "_id") {
+		return inItem.getIndexInOwner();
+	    }
+	    console.log(inItem);
+	    console.log(inAttribute);
+	    var result = inItem.getValue(inAttribute);
+	    if (result === undefined) 
+		result = defaultValue;
+	    return result;
+	} else {
+	    return this.inherited(arguments);
+	}
+    },
+    getValues: function(inItem, inAttribute) {
+	if (this.isItem(inItem) && typeof inAttribute == "string") {
+	    var result = this.getValue(inItem, inAttribute);
+	    return [result];
+	} else {
+	    throw "getValues must have a wm.Variable as input; and inAttribute must be a String; perhaps you want getValue?";
+	}
+    },
+    getAttributes: function(inItem) {
+	if (this.isItem(inItem)) {
+	    var type = wm.typeManager.getType(inItem.type);
+	    var result = [];
+	    if (type && type.fields) {
+		for (var field in type.fields) {
+		    result.push(field);
+		}
+	    }
+	    if (!this.identity) {
+		result.push("_id");
+	    }
+	    return result;
+	} else {
+	    throw "getAttribute must have a wm.Variable as an input";
+	}
+    },
+    
+    hasAttribute: function(inItem, inAttribute) {
+	if (this.isItem(inItem) && typeof inAttribute == "string") {
+	    var value = inItem.getValue(inItem, inAttribute);
+	    return !(value === undefined || value === null);
+	} else {
+	    throw "getValues must have a wm.Variable as input; and inAttribute must be a String.";
+	}
+    },
+
+    containsValue: function(inItem, inAttribute, inValue) {
+	var values = this.getValues(inItem, inAttribute);
+	return dojo.indexOf(values, inValue) != -1;
+    },
+
+
+    isItem: function(inItem) {
+	return inItem instanceof wm.Variable;
+    },
+
+    /* This is just a placeholder and is not yet implemented */
+    isItemLoaded: function(inSomething) {
+	return false;
+    },
+
+    /* This is just a placeholder and is not yet implemented */
+    loadItem: function(keywordArgs) {
+	return null;
+    },
+
+
+    /* This method was copied from the basic parts of ItemFileReadStore.js _fetchItems method;
+     * I've stripped out the regex stuff which while very cool, would not typically be used and slow things down
+     */
+    _fetchItems: function(	/* Object */ requestArgs,
+	/* Function */ findCallback,
+	/* Function */ errorCallback){
+	//	summary:
+	//		See dojo.data.util.simpleFetch.fetch()
+
+	var opts = requestArgs.queryOptions;
+	var items = [];
+	var i, key;
+	if(requestArgs.query){
+	    /* Uncomment out the regex stuff if we ever have a need for it; this is dojo's code, probably good, but 
+	     * not needed, and therefore just slows things down
+	    var value,
+	    ignoreCase = requestArgs.queryOptions ? requestArgs.queryOptions.ignoreCase : true;
+	    //See if there are any string values that can be regexp parsed first to avoid multiple regexp gens on the
+	    //same value for each item examined.  Much more efficient.
+	    var regexpList = {};
+	    for(key in requestArgs.query){
+		value = requestArgs.query[key];
+		if(typeof value === "string"){
+		    regexpList[key] = dojo.data.util.filter.patternToRegExp(value, ignoreCase);
+		}else if(value instanceof RegExp){
+		    regexpList[key] = value;
+		}
+	    }
+	    */
+	    var count = this.getCount();
+	    for(i = 0; i < count; ++i){
+		var match = true;
+		var candidateItem = this.getItem(i);
+		if(candidateItem instanceof wm.Variable == false){
+		    match = false;
+		}else{
+		    for(key in requestArgs.query){
+			value = requestArgs.query[key];
+			if(value != "*" && !this._containsValue(candidateItem, key, value, opts)){
+			    match = false;
+			}
+		    }
+		}
+		if(match){
+		    items.push(candidateItem);
+		}
+	    }
+	    findCallback(items, requestArgs);
+	} else {
+	    // We want a copy to pass back in case the parent wishes to sort the array.
+	    // We shouldn't allow resort of the internal list, so that multiple callers
+	    // can get lists and sort without affecting each other.  We also need to
+	    // filter out any null values that have been left as a result of deleteItem()
+	    // calls in ItemFileWriteStore.
+	    var count = this.getCount();
+	    for(i = 0; i < count; ++i){
+		var item = this.getItem(i);
+		if(item !== null){
+		    items.push(item);
+		}
+	    }
+	    findCallback(items, requestArgs);
+	}
+    },
+
+    /* This method was copied from the basic parts of ItemFileReadStore.js _fetchItems method;
+     * I've stripped out the regex stuff which while very cool, would not typically be used and slow things down
+     */
+	_containsValue: function(
+	    /* item */ item,
+	    /* attribute-name-string */ attribute,
+	    /* anything */ value,
+	/* Hash with queryOptions */ opts){
+		//	summary:
+		//		Internal function for looking at the values contained by the item.
+		//	description:
+		//		Internal function for looking at the values contained by the item.  This
+		//		function allows for denoting if the comparison should be case sensitive for
+		//		strings or not (for handling filtering cases where string case should not matter)
+		//
+		//	item:
+		//		The data item to examine for attribute values.
+		//	attribute:
+		//		The attribute to inspect.
+		//	value:
+		//		The value to match.
+		//	opts
+		//		The query options; supports exactMatch, ignoreCase; later on should have startsWith, contains and endsWith
+	    var svalue = String(value);
+	    var itemvalue = item.getValue(attribute);
+	    var sitemvalue = String(itemvalue);
+	    if (value === itemvalue) return true; // quick test...
+
+	    if (opts.ignoreCase) {
+		if (svalue.toLowerCase() === sitemvalue.toLowerCase())
+		    return true;
+	    }
+
+	    if (!opts.exactMatch) {
+		if (svalue.indexOf(sitemvalue) != -1)
+		    return true;
+	    }
+	    return false;
+	},
+
+
+    // no-op
+    close: function(inRequestToClose) {},
+
+    // Before getLabel does more than return undefined, we'll need to decide users should get displayField/displayExpression properties 
+    getLabel: function(inItem) {
+	if (this.displayField) {
+	    return inItem.getValue(this.displayField);
+	} else if (this.displayExpression) {
+	    return wm.expression.getValue(this.displayExpression, inItem);
+	} else {
+	    return undefined;
+	}
+    },
+
+
+    getLabelAttributes: function(inItem) {
+	if (this.displayField) {
+	    return [this.displayField];
+	} else if (this.displayExpression) {
+	    var results = this.displayExpression.match(wm.expression._getSourceRegEx);
+	    for (var i = 0; i < results.length; i++) {
+		results[i] = results[i].substring(2, results[i].length-1);
+	    }
+	    return results;
+	} else {
+	    return this.getAttributes();
+	}
+    },
+    _end: 0
+});
+dojo.extend(wm.Variable,dojo.data.util.simpleFetch); // adds in the fetch call
+
+
+/******
+ * this extends wm.Variable to implement the dojo.data.api.Identity APIs
+ ******/
+wm.Variable.extend({
+    getFeatures: function() {
+	return {
+	    "dojo.data.api.Read": true,
+	    "dojo.data.api.Identity": true
+	};
+    },
+    getIdentity: function(inItem) {
+	if (this.identity)
+	    return inItem.getValue(this.identity);
+	else
+	    return inItem.getIndexInOwner();
+    },
+
+    getIdentityAttributes: function(inItem) {
+	if (this.identity) {
+	    return [this.identity];
+	} else {
+	    return ["_id"];
+	}
+    },
+
+    fetchItemByIdentity: function(/* object */ keywordArgs){
+	var item = this.getItem(keywordArgs.identity);
+	if (item) {
+	    keywordArgs.onItem.call(keywordArgs.scope || dojo.global, item, keywordArgs);
+	} else {
+	    keywordArgs.onError.call(keywordArgs.scope || dojo.global, keywordArgs);
+	}
+    },
+    _end: 0
+});
+}
