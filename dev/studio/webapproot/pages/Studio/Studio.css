@@ -1417,10 +1417,12 @@ body .StudioButton.wmbutton-disabled,
 body .StudioButton.wmbutton-disabled:hover {
     cursor: default;
     color: #e0e0e0;
-    background-image: none;
-    background-color: #9CACC8;
-    opacity: 1.0;
+    background-image: none !important;
+    background-color: #9CACC8 !important;
+    opacity: 0.65;
 }
+
+
 body .StudioButton {
 	background-image:url(images/dark_btn_bg.gif);
 	background-repeat:repeat-x;
