@@ -1,3 +1,4 @@
+
 package com.wavemaker.tools.deployment.cloudfoundry;
 
 import static org.springframework.util.StringUtils.hasText;
@@ -37,134 +38,136 @@ import com.wavemaker.tools.deployment.DeploymentTarget;
 public class VmcDeploymentTarget implements DeploymentTarget {
 
     public static final String SUCCESS_RESULT = "SUCCESS";
-    
-    public static final String TOKEN_EXPIRED_RESULT = "ERROR: CloudFoundry login token expired";
-    
-	public static final String VMC_USERNAME_PROPERTY = "username";
-	
-	public static final String VMC_PASSWORD_PROPERTY = "password";
-	
-	public static final String VMC_URL_PROPERTY = "url";
-	
-	public static final Map<String, String> CONFIGURABLE_PROPERTIES;
 
-	private static final String DEFAULT_URL = "https://api.cloudfoundry.com";
-	
-	private static final String HREF_TEMPLATE = "<a href=\"url\" target=\"_blank\">url</a>";
-	
-	private static final String SERVICE_TYPE = "database";
-	
-	private static final String MYSQL_SERVICE_VENDOR = "mysql";
-	
+    public static final String TOKEN_EXPIRED_RESULT = "ERROR: CloudFoundry login token expired";
+
+    public static final String VMC_USERNAME_PROPERTY = "username";
+
+    public static final String VMC_PASSWORD_PROPERTY = "password";
+
+    public static final String VMC_URL_PROPERTY = "url";
+
+    public static final Map<String, String> CONFIGURABLE_PROPERTIES;
+
+    private static final String DEFAULT_URL = "https://api.cloudfoundry.com";
+
+    private static final String HREF_TEMPLATE = "<a href=\"url\" target=\"_blank\">url</a>";
+
+    private static final String SERVICE_TYPE = "database";
+
+    private static final String MYSQL_SERVICE_VENDOR = "mysql";
+
     private static final String MYSQL_SERVICE_VERSION = "5.1";
-	
+
     private static final String POSTGRES_SERVICE_VENDOR = "postgresql";
-    
+
     private static final String POSTGRES_SERVICE_VERSION = "9.0";
-    
+
     private static final String SERVICE_TIER = "free";
-    
+
     private static final Log log = LogFactory.getLog(VmcDeploymentTarget.class);
-    
+
     private DataModelManager dataModelManager;
-	
-	static {
-		Map<String, String> props = new LinkedHashMap<String, String>();
-		props.put(VMC_USERNAME_PROPERTY, "username@mydomain.com");
-		props.put(VMC_PASSWORD_PROPERTY, "password");
-		props.put(VMC_URL_PROPERTY, DEFAULT_URL);
-		CONFIGURABLE_PROPERTIES = Collections.unmodifiableMap(props);
-	}
+
+    static {
+        Map<String, String> props = new LinkedHashMap<String, String>();
+        props.put(VMC_USERNAME_PROPERTY, "username@mydomain.com");
+        props.put(VMC_PASSWORD_PROPERTY, "password");
+        props.put(VMC_URL_PROPERTY, DEFAULT_URL);
+        CONFIGURABLE_PROPERTIES = Collections.unmodifiableMap(props);
+    }
 
     public void setDataModelManager(DataModelManager dataModelManager) {
         this.dataModelManager = dataModelManager;
     }
 
     public String validateDeployment(DeploymentInfo deploymentInfo) {
-	    CloudFoundryClient client = getClient(deploymentInfo);
-	    
-	    List<String> uris = new ArrayList<String>();
+        CloudFoundryClient client = getClient(deploymentInfo);
+
+        List<String> uris = new ArrayList<String>();
         String url = deploymentInfo.getTarget();
-        if (!hasText(url)){
+        if (!hasText(url)) {
             url = DEFAULT_URL;
         }
         uris.add(url.replace("api", deploymentInfo.getApplicationName()));
-        
+
         try {
-            client.createApplication(deploymentInfo.getApplicationName(), CloudApplication.SPRING, client.getDefaultApplicationMemory(CloudApplication.SPRING), uris, null, true);
+            client.createApplication(deploymentInfo.getApplicationName(), CloudApplication.SPRING,
+                client.getDefaultApplicationMemory(CloudApplication.SPRING), uris, null, true);
             return "SUCCESS";
         } catch (CloudFoundryException ex) {
             if (HttpStatus.FORBIDDEN == ex.getStatusCode()) {
                 return TOKEN_EXPIRED_RESULT;
             } else if (HttpStatus.BAD_REQUEST == ex.getStatusCode()) {
-                return "ERROR: "+ex.getDescription();
+                return "ERROR: " + ex.getDescription();
             } else {
                 throw ex;
             }
         }
-	}
-	
-	public String deploy(File webapp, DeploymentInfo deploymentInfo) {
-		
-		CloudFoundryClient client = getClient(deploymentInfo);
-		
-		validateWar(webapp);
-		
-		List<String> uris = new ArrayList<String>();
-		String url = deploymentInfo.getTarget();
-		if (!hasText(url)){
-			url = DEFAULT_URL;
-		}
-		uris.add(url.replace("api", deploymentInfo.getApplicationName()));
-		
-		try {
-		    client.createApplication(deploymentInfo.getApplicationName(), CloudApplication.SPRING, client.getDefaultApplicationMemory(CloudApplication.SPRING), uris, null, true);
-		} catch (CloudFoundryException ex) {
-		    if (HttpStatus.FORBIDDEN == ex.getStatusCode()) {
-		        return TOKEN_EXPIRED_RESULT;
-		    } else if (HttpStatus.BAD_REQUEST == ex.getStatusCode()) {
-		        return "ERROR: "+ex.getDescription();
-		    } else {
-		        throw ex;
-		    }
-		}
-		
-		setupServices(client, deploymentInfo);
-		
-		Timer timer = new Timer();
-		try {
-			client.uploadApplication(deploymentInfo.getApplicationName(), webapp, new LoggingStatusCallback(timer));
-		} catch (IOException ex) {
-			throw new WMRuntimeException("Error ocurred while trying to upload WAR file.", ex);
-		}
-		
-		log.info("Application upload completed in " + timer.stop() + "ms");
-		
-		CloudApplication application = client.getApplication(deploymentInfo.getApplicationName());
-		if(application.getState().equals(CloudApplication.AppState.STARTED)) {
-			doRestart(deploymentInfo, client);
-		} else {
-			doStart(deploymentInfo, client);
-		}
-		return SUCCESS_RESULT;
-	}
+    }
 
-	/**
+    public String deploy(File webapp, DeploymentInfo deploymentInfo) {
+
+        CloudFoundryClient client = getClient(deploymentInfo);
+
+        validateWar(webapp);
+
+        List<String> uris = new ArrayList<String>();
+        String url = deploymentInfo.getTarget();
+        if (!hasText(url)) {
+            url = DEFAULT_URL;
+        }
+        uris.add(url.replace("api", deploymentInfo.getApplicationName()));
+
+        try {
+            client.createApplication(deploymentInfo.getApplicationName(), CloudApplication.SPRING,
+                client.getDefaultApplicationMemory(CloudApplication.SPRING), uris, null, true);
+        } catch (CloudFoundryException ex) {
+            if (HttpStatus.FORBIDDEN == ex.getStatusCode()) {
+                return TOKEN_EXPIRED_RESULT;
+            } else if (HttpStatus.BAD_REQUEST == ex.getStatusCode()) {
+                return "ERROR: " + ex.getDescription();
+            } else {
+                throw ex;
+            }
+        }
+
+        setupServices(client, deploymentInfo);
+
+        Timer timer = new Timer();
+        try {
+            client.uploadApplication(deploymentInfo.getApplicationName(), webapp, new LoggingStatusCallback(timer));
+        } catch (IOException ex) {
+            throw new WMRuntimeException("Error ocurred while trying to upload WAR file.", ex);
+        }
+
+        log.info("Application upload completed in " + timer.stop() + "ms");
+
+        CloudApplication application = client.getApplication(deploymentInfo.getApplicationName());
+        if (application.getState().equals(CloudApplication.AppState.STARTED)) {
+            doRestart(deploymentInfo, client);
+        } else {
+            doStart(deploymentInfo, client);
+        }
+        return SUCCESS_RESULT;
+    }
+
+    /**
      * @param deploymentInfo
      */
     private void setupServices(CloudFoundryClient client, DeploymentInfo deploymentInfo) {
         if (CollectionUtils.isEmpty(deploymentInfo.getDatabases())) {
             return;
         }
-        
+
         CloudApplication app = client.getApplication(deploymentInfo.getApplicationName());
-        
+
         for (DeploymentDB db : deploymentInfo.getDatabases()) {
             if (app.getServices().contains(db.getDbName())) {
-                //service binding already exists
+                // service binding already exists
                 continue;
             }
-            
+
             String dbType = "NONE";
             DataModelConfiguration config = dataModelManager.getDataModel(db.getDataModelId());
             String url = config.readConnectionProperties().getProperty(DataServiceConstants.DB_URL_KEY, "");
@@ -175,19 +178,21 @@ public class VmcDeploymentTarget implements DeploymentTarget {
             try {
                 CloudService service = client.getService(db.getDbName());
                 if (dbType.equals(MYSQL_SERVICE_VENDOR)) {
-                    Assert.state(MYSQL_SERVICE_VENDOR.equals(service.getVendor()), "There is already a service provisioned with the name '"+db.getDbName()+"' but it is not a MySQL service.");
+                    Assert.state(MYSQL_SERVICE_VENDOR.equals(service.getVendor()),
+                        "There is already a service provisioned with the name '" + db.getDbName() + "' but it is not a MySQL service.");
                 } else if (dbType.equals(POSTGRES_SERVICE_VENDOR)) {
-                    Assert.state(POSTGRES_SERVICE_VENDOR.equals(service.getVendor()), "There is already a service provisioned with the name '"+db.getDbName()+"' but it is not a PostgreSQL service.");
+                    Assert.state(POSTGRES_SERVICE_VENDOR.equals(service.getVendor()),
+                        "There is already a service provisioned with the name '" + db.getDbName() + "' but it is not a PostgreSQL service.");
                 }
                 serviceToBind = true;
             } catch (CloudFoundryException ex) {
                 if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
                     throw ex;
                 }
-                
+
                 if (dbType.equals(MYSQL_SERVICE_VENDOR)) {
                     client.createService(createMySqlService(db));
-                    serviceToBind=true;
+                    serviceToBind = true;
                 } else if (dbType.equals(POSTGRES_SERVICE_VENDOR)) {
                     client.createService(createPostgresqlService(db));
                     serviceToBind = true;
@@ -226,125 +231,133 @@ public class VmcDeploymentTarget implements DeploymentTarget {
         postgresql.setName(db.getDbName());
         return postgresql;
     }
-    
+
     public String undeploy(DeploymentInfo deploymentInfo) {
-		CloudFoundryClient client = getClient(deploymentInfo);
-		log.info("Deleting application "+deploymentInfo.getApplicationName());
-		Timer timer = new Timer();
-		timer.start();
-		client.deleteApplication(deploymentInfo.getApplicationName());
-		log.info("Application "+deploymentInfo.getApplicationName()+" deleted successfully in "+timer.stop()+"ms");
-		return SUCCESS_RESULT;
-	}
+        CloudFoundryClient client = getClient(deploymentInfo);
+        log.info("Deleting application " + deploymentInfo.getApplicationName());
+        Timer timer = new Timer();
+        timer.start();
+        try {
+            client.deleteApplication(deploymentInfo.getApplicationName());
+            log.info("Application " + deploymentInfo.getApplicationName() + " deleted successfully in " + timer.stop() + "ms");
+        } catch (CloudFoundryException ex) {
+            if (HttpStatus.FORBIDDEN == ex.getStatusCode()) {
+                return TOKEN_EXPIRED_RESULT;
+            } else {
+                throw ex;
+            }
+        }
+        return SUCCESS_RESULT;
+    }
 
-	public String redeploy(DeploymentInfo deploymentInfo) {
-		CloudFoundryClient client = getClient(deploymentInfo);
-		doRestart(deploymentInfo, client);
-		return SUCCESS_RESULT;
-	}
+    public String redeploy(DeploymentInfo deploymentInfo) {
+        CloudFoundryClient client = getClient(deploymentInfo);
+        doRestart(deploymentInfo, client);
+        return SUCCESS_RESULT;
+    }
 
-	public String start(DeploymentInfo deploymentInfo) {
-		CloudFoundryClient client = getClient(deploymentInfo);
-		doStart(deploymentInfo, client);
-		return SUCCESS_RESULT;
-	}
+    public String start(DeploymentInfo deploymentInfo) {
+        CloudFoundryClient client = getClient(deploymentInfo);
+        doStart(deploymentInfo, client);
+        return SUCCESS_RESULT;
+    }
 
-	public String stop(DeploymentInfo deploymentInfo) {
-		CloudFoundryClient client = getClient(deploymentInfo);
-		log.info("Stopping application "+deploymentInfo.getApplicationName());
-		Timer timer = new Timer();
-		timer.start();
-		client.stopApplication(deploymentInfo.getApplicationName());
-		log.info("Application "+deploymentInfo.getApplicationName()+" stopped successfully in "+timer.stop()+"ms");
-		return SUCCESS_RESULT;
-	}
+    public String stop(DeploymentInfo deploymentInfo) {
+        CloudFoundryClient client = getClient(deploymentInfo);
+        log.info("Stopping application " + deploymentInfo.getApplicationName());
+        Timer timer = new Timer();
+        timer.start();
+        client.stopApplication(deploymentInfo.getApplicationName());
+        log.info("Application " + deploymentInfo.getApplicationName() + " stopped successfully in " + timer.stop() + "ms");
+        return SUCCESS_RESULT;
+    }
 
-	public List<AppInfo> listDeploymentNames(DeploymentInfo deploymentInfo) {
-		CloudFoundryClient client = getClient(deploymentInfo);
-		List<AppInfo> infoList = new ArrayList<AppInfo>();
-		List<CloudApplication> cloudApps = client.getApplications();
-		for(CloudApplication app : cloudApps) {
-			String href = HREF_TEMPLATE.replaceAll("url", "http://"+app.getUris().get(0));
-			infoList.add(new AppInfo(app.getName(), href, app.getState().toString()));
-		}
-		return infoList;
-	}
+    public List<AppInfo> listDeploymentNames(DeploymentInfo deploymentInfo) {
+        CloudFoundryClient client = getClient(deploymentInfo);
+        List<AppInfo> infoList = new ArrayList<AppInfo>();
+        List<CloudApplication> cloudApps = client.getApplications();
+        for (CloudApplication app : cloudApps) {
+            String href = HREF_TEMPLATE.replaceAll("url", "http://" + app.getUris().get(0));
+            infoList.add(new AppInfo(app.getName(), href, app.getState().toString()));
+        }
+        return infoList;
+    }
 
-	public Map<String, String> getConfigurableProperties() {
-		return CONFIGURABLE_PROPERTIES;
-	}
-	
-	private void doRestart(DeploymentInfo deploymentInfo, CloudFoundryClient client) {
-		log.info("Restarting application "+deploymentInfo.getApplicationName());
-		Timer timer = new Timer();
-		timer.start();
-		client.restartApplication(deploymentInfo.getApplicationName());
-		log.info("Application "+deploymentInfo.getApplicationName()+" restarted successfully in "+timer.stop()+"ms");
-	}
-	
-	private void doStart(DeploymentInfo deploymentInfo, CloudFoundryClient client) {
-		log.info("Starting application "+deploymentInfo.getApplicationName());
-		Timer timer = new Timer();
-		timer.start();
-		client.startApplication(deploymentInfo.getApplicationName());
-		log.info("Application "+deploymentInfo.getApplicationName()+" started successfully in "+timer.stop()+"ms");
-	}
-	
-	private CloudFoundryClient getClient(DeploymentInfo deploymentInfo) {
-		Assert.hasText(deploymentInfo.getToken(), "CloudFoundry login token not supplied.");
-		String url = deploymentInfo.getTarget();
-		
-		if (!hasText(url)){
-			url = DEFAULT_URL;
-		}
-		
-		try {
-			CloudFoundryClient client = new CloudFoundryClient(deploymentInfo.getToken(), url);
-			return client;
-		} catch (MalformedURLException ex) {
-			throw new WMRuntimeException("CloudFoundry target URL is invalid", ex);
-		}
-	}
-	
-	private void validateWar(File war) {
-		Assert.notNull(war, "war cannot be null");
-		Assert.isTrue(war.exists(), "war does not exist");
-		Assert.isTrue(!war.isDirectory(), "war cannot be a directory");
-	}
-	
-	private static final class LoggingStatusCallback implements UploadStatusCallback {
+    public Map<String, String> getConfigurableProperties() {
+        return CONFIGURABLE_PROPERTIES;
+    }
 
-		private Timer timer;
-		
-		public LoggingStatusCallback(Timer timer) {
-			this.timer = timer;
-		}
-		
-		public void onCheckResources() {
-			log.info("Preparing to upload to CloudFoundry - comparing resources...");
-		}
+    private void doRestart(DeploymentInfo deploymentInfo, CloudFoundryClient client) {
+        log.info("Restarting application " + deploymentInfo.getApplicationName());
+        Timer timer = new Timer();
+        timer.start();
+        client.restartApplication(deploymentInfo.getApplicationName());
+        log.info("Application " + deploymentInfo.getApplicationName() + " restarted successfully in " + timer.stop() + "ms");
+    }
 
-		public void onMatchedFileNames(Set<String> fileNames) {
-			log.info(fileNames.size()+ " files already cached...");
-		}
+    private void doStart(DeploymentInfo deploymentInfo, CloudFoundryClient client) {
+        log.info("Starting application " + deploymentInfo.getApplicationName());
+        Timer timer = new Timer();
+        timer.start();
+        client.startApplication(deploymentInfo.getApplicationName());
+        log.info("Application " + deploymentInfo.getApplicationName() + " started successfully in " + timer.stop() + "ms");
+    }
 
-		public void onProcessMatchedResources(int length) {
-			log.info("Uploading "+length+" bytes...");
-			timer.start();
-		}	
-	}
-	
-	private static final class Timer {
-		
-		private long startTime;
-		
-		public void start() {
-			startTime = System.currentTimeMillis();
-		}
-		
-		public long stop() {
-			return System.currentTimeMillis() - startTime;
-		}
-	}
+    private CloudFoundryClient getClient(DeploymentInfo deploymentInfo) {
+        Assert.hasText(deploymentInfo.getToken(), "CloudFoundry login token not supplied.");
+        String url = deploymentInfo.getTarget();
+
+        if (!hasText(url)) {
+            url = DEFAULT_URL;
+        }
+
+        try {
+            CloudFoundryClient client = new CloudFoundryClient(deploymentInfo.getToken(), url);
+            return client;
+        } catch (MalformedURLException ex) {
+            throw new WMRuntimeException("CloudFoundry target URL is invalid", ex);
+        }
+    }
+
+    private void validateWar(File war) {
+        Assert.notNull(war, "war cannot be null");
+        Assert.isTrue(war.exists(), "war does not exist");
+        Assert.isTrue(!war.isDirectory(), "war cannot be a directory");
+    }
+
+    private static final class LoggingStatusCallback implements UploadStatusCallback {
+
+        private Timer timer;
+
+        public LoggingStatusCallback(Timer timer) {
+            this.timer = timer;
+        }
+
+        public void onCheckResources() {
+            log.info("Preparing to upload to CloudFoundry - comparing resources...");
+        }
+
+        public void onMatchedFileNames(Set<String> fileNames) {
+            log.info(fileNames.size() + " files already cached...");
+        }
+
+        public void onProcessMatchedResources(int length) {
+            log.info("Uploading " + length + " bytes...");
+            timer.start();
+        }
+    }
+
+    private static final class Timer {
+
+        private long startTime;
+
+        public void start() {
+            startTime = System.currentTimeMillis();
+        }
+
+        public long stop() {
+            return System.currentTimeMillis() - startTime;
+        }
+    }
 
 }
