@@ -87,6 +87,7 @@ dojo.declare("wm.Bounds", null, {
 		return this.setBounds(b);
 	},
 	_parseExtents: function(inExtents) {
+	        inExtents = String(inExtents);
 		var r = {};
 		if (typeof inExtents == "number")
 			r = { l: inExtents, t: inExtents, r: inExtents, b: inExtents };
