@@ -786,6 +786,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 					case 'Image (WaveMaker)':				    
 						obj.formatter = dojo.hitch(this, 'imageFormatter');
 						break;
+					case 'wm_link_formatter':
+					case 'Link (WaveMaker)':				    
+						obj.formatter = dojo.hitch(this, 'linkFormatter');
+						break;
+
 				    break;
 					default:
 						if (!this.isDesignLoaded())
@@ -1062,6 +1067,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 						case 'wm_image_formatter':
 							value = this.imageFormatter(value);	
 							break;
+						case 'wm_link_formatter':
+							value = this.linkFormatter(value);	
+							break;
+
 						default:
 							if (!this.isDesignLoaded())
 								value = dojo.hitch(this.owner, col.formatFunc)(value);
@@ -1120,6 +1129,16 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		if (inValue && inValue != '')
 			return '<img src="'+ inValue +'">';
 		return inValue;
+	},
+	linkFormatter: function(inValue){
+	    if (inValue && inValue != '') {
+		var displayValue = inValue;
+		var linkValue = inValue;
+		if (linkValue.indexOf("://") == -1 && linkValue.charAt(0) != "/")
+		    linkValue = "http://" + linkValue;
+		    return '<a href="'+ linkValue +'" target="_NewWindow">' + displayValue + "</a>";
+	    }
+	    return inValue;
 	},
 	customFormatter: function(formatFunc, inValue, rowIdx, cellObj){
     if (this.owner[formatFunc]) {
