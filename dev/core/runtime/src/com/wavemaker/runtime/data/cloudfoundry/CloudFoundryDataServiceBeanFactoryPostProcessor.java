@@ -36,7 +36,6 @@ import org.springframework.beans.factory.config.TypedStringValue;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import com.wavemaker.runtime.data.spring.ConfigurationAndSessionFactoryBean;
 
@@ -120,7 +119,6 @@ public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFact
 
             BeanDefinition dsBeanDef = defaultListableBeanFactory.getBeanDefinition(dsBean);
             PropertyValue driverProp = dsBeanDef.getPropertyValues().getPropertyValue("driverClassName");
-            log.warn("Processing datasource with driver type: "+driverProp.getValue());
             if (driverProp.getValue() != null) {
                 Assert.isInstanceOf(TypedStringValue.class, driverProp.getValue(), "driverClassName property value is of an unexpected type.");
                 String driverClassName = ((TypedStringValue)driverProp.getValue()).getValue();
