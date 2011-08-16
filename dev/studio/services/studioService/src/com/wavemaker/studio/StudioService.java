@@ -658,17 +658,20 @@ System.out.println("F");
 	     * STATUS: DONE
 	     */
 	    File templatesPwsFolder = new File(webapproot, "app/templates/pws/" + newName);
+	    File templatesPwsWEBINFFolder = new File( templatesPwsFolder, "WEB-INF");
+	    File templatesPwsWEBINFLibFolder = new File( templatesPwsWEBINFFolder, "lib");
 	    /* Delete any old jars from prior imports */
 	    if (templatesPwsFolder.exists()) {
 		IOUtils.deleteRecursive(templatesPwsFolder);
 	    }
-	    IOUtils.makeDirectories(templatesPwsFolder, webapproot);
+
+	    IOUtils.makeDirectories(templatesPwsWEBINFLibFolder, webapproot);
 
 	    File runtimeFolder = new File(extFolder, "runtime");
 	    File[] runJars = runtimeFolder.listFiles();
 	    for (int i = 0; i < runJars.length; i++) {
 		IOUtils.copy(runJars[i], studioLib);
-		IOUtils.copy(runJars[i], templatesPwsFolder);
+		IOUtils.copy(runJars[i], templatesPwsWEBINFLibFolder);
 	    }
 
 	    /* Import packages.js
@@ -715,7 +718,12 @@ System.out.println("F");
 	    /* Import spring config files
 	     * STATUS: NOT DONE
 	     */
-
+	    File webinf = new File(webapproot, "WEB-INF");
+	    File designxml = new File(extFolder, newName + "-designtime-pws.xml");
+	    File runtimexml = new File(extFolder, newName + "-runtime-pws.xml");
+	    IOUtils.copy(designxml, webinf);
+	    IOUtils.copy(runtimexml, webinf);
+	    IOUtils.copy(runtimexml, templatesPwsWEBINFFolder);
 
 	    ret.setPath("/tmp");
 	    ret.setError("");
