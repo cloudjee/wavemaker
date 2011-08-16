@@ -555,11 +555,8 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		return getNodeData(this.getEntityNode(inNode));
 	},
 	removeDataModelCompleted: function(inSender) {
-		studio.endWait();
-		studio.application.removeServerComponent(this.dataModel);
-		studio.application.loadServerComponents("wm.Query");
-		studio.refreshServiceTree();
-
+	    studio.updateFullServiceList();
+	    studio.endWait();
 	    var pageContainer = this.owner;
 	    var subtablayer = pageContainer.parent;
 	    var subtablayers = subtablayer.parent;

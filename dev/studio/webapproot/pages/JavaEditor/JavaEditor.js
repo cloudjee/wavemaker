@@ -69,9 +69,10 @@ dojo.declare("JavaEditor", wm.Page, {
     },
 
 	update: function() {
-		studio.updateServices();
 		this.servicesChanged();
 		this.typesChangedCall();
+	        studio.updateFullServiceList();
+	        dojo.publish("wmtypes-changed");
 		studio.refreshWidgetsTree();
 	},
 	servicesChanged: function() {

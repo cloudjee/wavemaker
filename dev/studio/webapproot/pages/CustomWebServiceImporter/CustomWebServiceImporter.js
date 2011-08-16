@@ -260,9 +260,7 @@ dojo.declare("CustomWebServiceImporter", wm.Page, {
 
     /* After successfully importing services, update studio's services tree */
     importOperationsSuccess: function() {
-	studio.updateServices();
-	studio.application.loadServerComponents();
-	studio.refreshServiceTree(); 
+	studio.updateFullServiceList();
 	app.toastSuccess(this.getDictionaryItem("TOAST_IMPORT_SUCCESS"));
 	this.owner.owner.hide();
     },

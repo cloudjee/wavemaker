@@ -512,6 +512,11 @@ dojo.declare("Studio", wm.Page, {
 		title.push("WaveMaker Studio");
 		window.document.title = title.join(" - ");
 	},
+    updateFullServiceList: function() {
+	studio.updateServices();
+	studio.application.loadServerComponents();
+	studio.refreshServiceTree(); 
+    },
 	updateServices: function() {
 		wm.typeManager.clearTypes();
 		this.setLiveLayoutReady(false);

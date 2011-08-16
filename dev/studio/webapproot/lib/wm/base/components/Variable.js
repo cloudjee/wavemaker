@@ -88,6 +88,9 @@ dojo.declare("wm.Variable", wm.Component, {
 	wmTypesChanged: function() {
 		if (this.isPrimitive || wm.typeManager.isType(this.type))
 			this.setType(this.type);
+	    if (studio.inspector.inspected == this) {
+		inspect(this);
+	    }
 	},
         canSetType: function(inType) {
 		// type is locked to dataSet type if it is set
@@ -1084,7 +1087,6 @@ wm.Variable.extend({
 		}
 	    return this.inherited(arguments);
 	},
-	    
 	isListBindable: function() {
 		return this.isList;
 	}
