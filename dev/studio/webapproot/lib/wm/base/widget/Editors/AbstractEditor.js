@@ -554,10 +554,11 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	this.doOnchange();
     },
     doOnchange: function() {
-	this.editorChanged();
-	var e = this.editor;
-	if (!this._loading && !this.isUpdating() && !this.readonly && e && !this.isLoading())
-	    this.onchange(this.getDisplayValue(), this.getDataValue());
+	if (this.editorChanged()) {
+	    var e = this.editor;
+	    if (!this._loading && !this.isUpdating() && !this.readonly && e && !this.isLoading())
+		this.onchange(this.getDisplayValue(), this.getDataValue());
+	}
     },
     onchange: function() {},
 	_getValidatorNode: function() {
@@ -754,13 +755,33 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    this.setEditorValue(wm.propertyIsChanged(this.dataValue, "dataValue", wm.Editor) ? this.dataValue : this.displayValue);
 	    this.endEditUpdate();
 	},
+
+    /* EditorChanged is called when we think that the editor has changed values.  If it returns false however,
+     * it has concluded that the editor has not in fact changed.
+     * If you need to set this.dataValue/this.displayValue before editorChanged is called, then you should
+     * use a subclass that provides its own editorChanged method, and which returns true.
+     * Added to prevent onblur from firing bindings and onchange events if onKeyPress already fired that change.
+     */
 	editorChanged: function() {
-		this.valueChanged("displayValue", this.displayValue = this.getDisplayValue());
-		this.valueChanged("dataValue", this.dataValue = this.getDataValue());
-	    if (this._inPostInit) {		
-		this._lastValue = this.dataValue;
+	    var displayValue = this.getDisplayValue();
+	    var changed = false;
+	    if (this.displayValue != displayValue) {
+		this.valueChanged("displayValue", this.displayValue = displayValue);
+		changed = true;
 	    }
-	    this.updateIsDirty();
+
+	    var dataValue = this.getDataValue();
+	    if (dataValue != this.dataValue) {		
+		this.valueChanged("dataValue", this.dataValue = dataValue);
+		changed = true;
+	    }
+	    if (changed) {
+		if (this._inPostInit) {		
+		    this._lastValue = this.dataValue;
+		}
+		this.updateIsDirty();
+	    }
+	    return changed;
 		//wm.fire(this.editor, "ownerEditorChanged");
 	},    
     clearDirty: function() {

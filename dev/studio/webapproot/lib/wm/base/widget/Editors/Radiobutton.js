@@ -205,6 +205,7 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 	editorChanged: function() {
 	    this.inherited(arguments);
 	    this.updateGroupValue();
+	    return true;
 	}
 });
 

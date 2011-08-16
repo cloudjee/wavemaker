@@ -176,15 +176,29 @@ dojo.declare("wm.Currency", wm.Number, {
     },
     getDataValue: function() {return this.dataValue;},
     editorChanged: function() {
+	var dataValue = this.dataValue;
 	this.dataValue = this.getEditorValue();
+
+	var displayValue = this.displayValue;
 	this.displayValue = this._getReadonlyValue();
-	this.valueChanged("dataValue", this.dataValue);
-	this.valueChanged("displayValue", this.displayValue);
+	
+	var changed = false;
+
+	if (dataValue != this.dataValue) {
+	    this.valueChanged("dataValue", this.dataValue);
+	    changed = true;
+	}
+	if (displayValue != this.displayValue) {
+	    this.valueChanged("displayValue", this.displayValue);
+	    changed = true;
+	}
+	if (changed) {
 	    if (this._inPostInit) {		
 		this._lastValue = this.dataValue;
 	    }
 	    this.updateIsDirty();
-
+	}
+	return changed;
     }
 
 });

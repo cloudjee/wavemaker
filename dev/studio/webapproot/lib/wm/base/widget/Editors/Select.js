@@ -461,6 +461,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	    if (this.dataSet && this.dataSet.getCount()) {
 		this.inherited(arguments);
 		this.updateSelectedItem();
+		return true;
 	    }
 	},
         blurred: function() {
@@ -688,6 +689,7 @@ dojo.declare("wm.FilteringLookup", wm.Lookup, {
 	if (this.dataSet) {
 	    wm.AbstractEditor.prototype.editorChanged.call(this);
 	    this.updateSelectedItem();
+	    return true;
 	}
     },
 	getDisplayValue: function() {
