@@ -56,7 +56,7 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
         return tomcat.deploy(f, deploymentInfo.getApplicationName());
     }
 
-    public String undeploy(DeploymentInfo deploymentInfo) {
+    public String undeploy(DeploymentInfo deploymentInfo, boolean deleteServices) {
         TomcatServer tomcat = initTomcat(deploymentInfo);
         return tomcat.undeploy(deploymentInfo.getApplicationName());
     }

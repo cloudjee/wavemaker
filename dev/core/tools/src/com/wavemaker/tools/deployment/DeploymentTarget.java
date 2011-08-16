@@ -17,7 +17,6 @@ package com.wavemaker.tools.deployment;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 
 /**
  * @author Simon Toens
@@ -46,10 +45,11 @@ public interface DeploymentTarget {
     /**
      * Undeploy an app.
      * @param deploymentInfo
+     * @param deleteServices 
      *
      * @return status message
      */
-    String undeploy(DeploymentInfo deploymentInfo);
+    String undeploy(DeploymentInfo deploymentInfo, boolean deleteServices);
 
     /**
      * Redeploy an already deployed app.

@@ -236,12 +236,18 @@ public class VmcDeploymentTarget implements DeploymentTarget {
         return postgresql;
     }
 
-    public String undeploy(DeploymentInfo deploymentInfo) {
+    public String undeploy(DeploymentInfo deploymentInfo, boolean deleteServices) {
         CloudFoundryClient client = getClient(deploymentInfo);
         log.info("Deleting application " + deploymentInfo.getApplicationName());
         Timer timer = new Timer();
         timer.start();
         try {
+            if (deleteServices) {
+                CloudApplication app = client.getApplication(deploymentInfo.getApplicationName());
+                for (String service : app.getServices()) {
+                    client.deleteService(service);
+                }
+            }
             client.deleteApplication(deploymentInfo.getApplicationName());
             log.info("Application " + deploymentInfo.getApplicationName() + " deleted successfully in " + timer.stop() + "ms");
         } catch (CloudFoundryException ex) {

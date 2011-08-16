@@ -4,19 +4,24 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.cloudfoundry.client.lib.CloudApplication;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.cloudfoundry.client.lib.CloudFoundryException;
 import org.cloudfoundry.client.lib.CloudService;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.IfProfileValue;
@@ -25,6 +30,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
 
+import com.wavemaker.runtime.data.util.DataServiceConstants;
+import com.wavemaker.tools.data.DataModelConfiguration;
+import com.wavemaker.tools.data.DataModelManager;
 import com.wavemaker.tools.deployment.AppInfo;
 import com.wavemaker.tools.deployment.DeploymentDB;
 import com.wavemaker.tools.deployment.DeploymentInfo;
@@ -43,6 +51,12 @@ public class TestVmcDeploymentTarget {
 	private static final String TEST_USER_EMAIL = System.getProperty("vcap.email");
 	private static final String TEST_USER_PASS = System.getProperty("vcap.passwd");
 	
+	@Mock
+	DataModelManager dmMgr;
+	
+	@Mock
+	DataModelConfiguration config;
+	
 	@BeforeClass
 	public static void init() throws Exception {
 	    if (!StringUtils.hasText(TEST_USER_EMAIL)) {
@@ -56,7 +70,12 @@ public class TestVmcDeploymentTarget {
         testapp = new ClassPathResource("com/wavemaker/tools/deployment/cloudfoundry/wmcftest.war").getFile();
         
         token = testClient.loginIfNeeded();
-        
+	}
+	
+	@Before
+	public void setUp() {
+	    MockitoAnnotations.initMocks(this);
+	    when(dmMgr.getDataModel("wmcftestdb")).thenReturn(config);
 	}
 	
 	@Test
@@ -71,6 +90,7 @@ public class TestVmcDeploymentTarget {
         
         String result;
         VmcDeploymentTarget target = new VmcDeploymentTarget();
+        target.setDataModelManager(dmMgr);
         
         result = target.deploy(testapp, deployment1);
         assertEquals("ERROR: The URI: \"inflickr.cloudfoundry.com\" has already been taken or reserved", result);
@@ -88,6 +108,7 @@ public class TestVmcDeploymentTarget {
         
         String result;
         VmcDeploymentTarget target = new VmcDeploymentTarget();
+        target.setDataModelManager(dmMgr);
         
         result = target.validateDeployment(deployment1);
         assertEquals("ERROR: The URI: \"inflickr.cloudfoundry.com\" has already been taken or reserved", result);
@@ -139,6 +160,7 @@ public class TestVmcDeploymentTarget {
         
         String result;
         VmcDeploymentTarget target = new VmcDeploymentTarget();
+        target.setDataModelManager(dmMgr);
         
         result = target.deploy(testapp, deployment1);
         assertEquals(VmcDeploymentTarget.TOKEN_EXPIRED_RESULT, result);
@@ -156,6 +178,7 @@ public class TestVmcDeploymentTarget {
         
         String result;
         VmcDeploymentTarget target = new VmcDeploymentTarget();
+        target.setDataModelManager(dmMgr);
         
         result = target.validateDeployment(deployment1);
         assertEquals(VmcDeploymentTarget.TOKEN_EXPIRED_RESULT, result);
@@ -173,6 +196,7 @@ public class TestVmcDeploymentTarget {
         
         String result;
         VmcDeploymentTarget target = new VmcDeploymentTarget();
+        target.setDataModelManager(dmMgr);
         
         result = target.validateDeployment(deployment1);
         assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);
@@ -180,11 +204,16 @@ public class TestVmcDeploymentTarget {
 	
 	@Test
 	public void testFullAppLifecycle() {
+	    Properties dbProps = new Properties();
+	    dbProps.setProperty(DataServiceConstants.DB_URL_KEY, "jdbc:mysql://localhost:3306/wmcftestdb");
+	    when(config.readConnectionProperties()).thenReturn(dbProps);
+	    
 	    DeploymentInfo deployment1 = new DeploymentInfo();
 	    deployment1.setToken(token);
 	    deployment1.setTarget("https://api.cloudfoundry.com");
 	    deployment1.setApplicationName("wmcftest");
 	    DeploymentDB db1 = new DeploymentDB();
+	    db1.setDataModelId("wmcftestdb");
 	    db1.setDbName("wmcftestdb");
 	    deployment1.getDatabases().add(db1);
 	    
@@ -193,12 +222,14 @@ public class TestVmcDeploymentTarget {
         deployment2.setTarget("https://api.cloudfoundry.com");
         deployment2.setApplicationName("wmcftest2");
         DeploymentDB db2 = new DeploymentDB();
+        db2.setDataModelId("wmcftestdb");
         db2.setDbName("wmcftestdb");
         deployment2.getDatabases().add(db2);
 	    
 		String result;
 		CloudApplication app;
 		VmcDeploymentTarget target = new VmcDeploymentTarget();
+        target.setDataModelManager(dmMgr);
 		
 		result = target.deploy(testapp, deployment1);
 		assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);
@@ -245,7 +276,11 @@ public class TestVmcDeploymentTarget {
 		assertTrue(appNames.contains("wmcftest"));
 		assertTrue(appNames.contains("wmcftest2"));
 		
-		result = target.undeploy(deployment2);
+		result = target.undeploy(deployment1, false);
+		assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);
+        assertNotNull(testClient.getService("wmcftestdb"));
+		
+		result = target.undeploy(deployment2, true);
 		assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);
 		try {
 			app = testClient.getApplication("wmcftest2");
@@ -256,8 +291,14 @@ public class TestVmcDeploymentTarget {
 			}
 		}
 		
-		testClient.deleteApplication("wmcftest");
-		testClient.deleteService("wmcftestdb");
+		try {
+		    testClient.getService("wmcftestdb");
+		    fail("Service should no longer exist");
+		} catch (HttpClientErrorException e) {
+		    if (e.getStatusCode() != HttpStatus.NOT_FOUND) {
+                throw e;
+            }
+		}
 	}
 
 }
