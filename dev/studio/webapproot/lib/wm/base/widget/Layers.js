@@ -120,6 +120,9 @@ dojo.declare("wm.Layer", wm.Container, {
 	onShow: function() {
 	    this.callOnShowParent();
 	},
+    // called onDeactivate rather than onHide as its not meant to indicate when its no longer visible; only when its no
+    // longer the active Layer in its parent
+        onDeactivate: function() {},
     /* Only valid for layers within a TabLayers */
        setClosable: function(isClosable) {
 	   this.closable = isClosable;
@@ -372,6 +375,7 @@ dojo.declare("wm.Layers", wm.Container, {
 			return;
 		var
 			fireEvents = !this.loading,
+	                oldLayer = this.layers[this.layerIndex];
 			l = this.getLayer(inIndex);
 		if (fireEvents) {
 			var info = {newIndex: inIndex, canChange: l && l.showing};
@@ -386,6 +390,7 @@ dojo.declare("wm.Layers", wm.Container, {
 		this._setLayerIndex(inIndex);
 		if (fireEvents) {
 			l && l.onShow();
+		        oldLayer && oldLayer.onDeactivate();
 		}
 		if (fireEvents && this.lastLayerIndex != this.layerIndex)
 			this.onchange(this.layerIndex);

@@ -19,7 +19,12 @@ dojo.require('wm.base.lib.data');
 
 dojo.declare("wm.BindInspector", wm.GroupInspector, {
 	colCount: 3,
-
+    postInit: function() {
+	this.inherited(arguments);
+	this.connect(this.parent, "onDeactivate", this, function() {
+	    this.tableContainer.innerHTML = ""; // frees up dom ID name space that filters, inputs, etc... may need
+	});
+    },
         /* Properties that can be inspected are all the usual properties except for those that are events or methods */
 	getProps: function() {
 		var props = this.inherited(arguments);
