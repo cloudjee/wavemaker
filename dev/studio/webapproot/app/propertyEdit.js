@@ -196,6 +196,7 @@ dojo.declare("wm.propEdit.DataTypesSelect", wm.propEdit.Select, {
 		this.addOptionValues(this.getDataTypes(), true);
 	},
 	addOptionValues: function(inOptionValues, inSort) {
+	        this.sort = inSort;
 		if (inSort)
 			inOptionValues.sort(function(a, b) { return wm.data.compare(a.option, b.option); });
 		this.options = (this.options || []).concat(dojo.map(inOptionValues, function(d) { return d.option; }));
@@ -208,6 +209,27 @@ dojo.declare("wm.propEdit.DataTypesSelect", wm.propEdit.Select, {
 		for (var i in types)
 			dt.push({option: wm.getFriendlyTypeName(i), value: i});
 		return dt;
+	},
+        setPropEdit: function(propName, value) {
+	    var editor = dijit.byId("studio_propinspect_" + propName);
+	    var store = editor.store.root;
+	    while (store.firstChild) store.removeChild(store.firstChild);
+	    var types = this.liveTypes ? wm.typeManager.getLiveServiceTypes() : wm.typeManager.getPublicTypes();
+	    var options = [];
+	    for (var i in types) {
+		options.push({option: wm.getFriendlyTypeName(i), value: i});
+	    }
+	    if (this.sort)
+		options.sort(function(a, b) { return wm.data.compare(a.option, b.option); });
+	    for (var i = 0; i < options.length; i++) {
+		var node = document.createElement("option");
+		node.innerHTML = options[i].option;
+		node.value = options[i].value;
+		store.appendChild(node);
+	    }
+
+	    editor.set("value", value, false);
+	    editor._lastValueReported = value;
 	}
 });
 
