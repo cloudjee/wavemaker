@@ -719,8 +719,8 @@ System.out.println("F");
 	     * STATUS: DONE
 	     */
 	    File webinf = new File(webapproot, "WEB-INF");
-	    File designxml = new File(extFolder, newName + "-designtime-pws.xml");
-	    File runtimexml = new File(extFolder, newName + "-runtime-pws.xml");
+	    File designxml = new File(extFolder, newName + "-tools-beans.xml");
+	    File runtimexml = new File(extFolder, newName + "-runtime-beans.xml");
 	    IOUtils.copy(designxml, webinf);
 	    IOUtils.copy(runtimexml, webinf);
 	    IOUtils.copy(runtimexml, templatesPwsWEBINFFolder);
