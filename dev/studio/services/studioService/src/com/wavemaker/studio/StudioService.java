@@ -716,7 +716,7 @@ System.out.println("F");
 	    }
 
 	    /* Import spring config files
-	     * STATUS: NOT DONE
+	     * STATUS: DONE
 	     */
 	    File webinf = new File(webapproot, "WEB-INF");
 	    File designxml = new File(extFolder, newName + "-designtime-pws.xml");
