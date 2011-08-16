@@ -19,7 +19,8 @@ dojo.require("wm.base.widget.DojoGrid");
 wm.DojoGrid.extend({
 	editColumns: "(Edit Columns)",
     showAddDialog: "(Show Dialog)",
-	fieldOptions: [	{name:'Text',value:'dojox.grid.cells._Widget'},
+	fieldOptions: [	{name:'',value:''},
+			{name:'Text',value:'dojox.grid.cells._Widget'},
 		           	{name:'Number',value:'dojox.grid.cells.NumberTextBox'},
 	                {name:'Date',value:'dojox.grid.cells.DateTextBox'},
 	                {name:'Checkbox',value:'dojox.grid.cells.Bool'},
