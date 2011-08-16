@@ -671,6 +671,22 @@ dojo.require("dojo.dnd.Manager");
 				rowNode.style.height = '';
 				this.buildRow(inRowIndex, rowNode);
 			}
+
+		    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		     * WaveMaker: WM-3079: This block added for IE; when the row is regenerated, and the target becomes invalid, record
+		     * in IEGridEvent what the replacement target is
+		     */
+		    if (dojo.IEGridEvent && dojo.IEGridEvent.rowIndex !== undefined && dojo.IEGridEvent.cellIndex !== undefined && dojo.IEGridEvent.rowIndex == inRowIndex) {
+			var newTarget = dojo.query("td", rowNode)[dojo.IEGridEvent.cellIndex];
+
+			var inputList = dojo.query("input", newTarget);
+			if (inputList.length) {
+			    dojo.IEGridEvent.target = inputList[0];
+			} else {
+			    dojo.IEGridEvent.target = newTarget;
+			}
+		    }			    
+
 			return rowNode;
 		},
 

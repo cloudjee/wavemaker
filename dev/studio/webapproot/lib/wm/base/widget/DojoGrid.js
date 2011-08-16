@@ -194,14 +194,27 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 	},
 	cellEditted: function(inValue, inRowIndex, inFieldName) {
+	    var wmvar = this.getRowData(inRowIndex)._wmVariable;
+	    if (wmvar) 
+		wmvar = wmvar[0];
+
+	    // when going from one checkbox to another, the onblur
+	    // fires an onchange/cellEditted change for the checkbox
+	    // we're leaving and fires this event twice: once for the
+	    // row we're leaving and once for the row we clicked on.
+	    // I only want this fired if there's an actual change. 
+	    if (wmvar && wmvar.getValue(inFieldName) === inValue) return; 
+
 		// values of the selectedItem must be updated, but do NOT call a selectionChange event, as its the same selected item, just different values
 		var rowIdx = this.getSelectedIndex();
 		if (rowIdx != inRowIndex) {
 			this.setSelectedRow(inRowIndex, true);
+		} else {
+		        this.updateSelectedItem( rowIdx);
 		}
-	    var oldObj = this.selectedItem.getData();
-	    if (oldObj[inFieldName] == inValue)
+	    if (this.selectedItem.getValue(inFieldName) == inValue)
 		return;
+	    this.selectedItem.setValue(inFieldName,inValue);
 
 	    // A bug in dojox.grid editting causes it to set "user.name" but read from "user: {name: currentname}" so we copy in the data to compenate
 	    if (inFieldName.indexOf(".") != -1) {
@@ -215,29 +228,19 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    }
 
 	    // update the _wmVariable object
-	    var wmvar = this.getRowData(inRowIndex)._wmVariable;
-	    if (wmvar) {
-		wmvar = wmvar[0];
-		if (wmvar) {
-		    wmvar.setValue(inFieldName, inValue);
-		}
-	    }
 
-		this.updateSelectedItem( rowIdx);
+		if (wmvar) {
+		    // if we fire a notification, the grid will be regenerated in the middle of processing
+		    // the edit event
+		    wmvar.beginUpdate(); 
+		    wmvar.setValue(inFieldName, inValue);
+		    wmvar.endUpdate();
+		}
+	    
+ 
 	        if (this.liveEditing)
 		    this.writeSelectedItem();
 
-	    // A bug in dojox.grid editting causes it to set "user.name" but read from "user: {name: currentname}" so we copy in the data to compenate
-	    if (inFieldName.indexOf(".")) {
-		var elements = inFieldName.split(".");
-		var firstElement = elements.shift();
-		var obj = this.getCell(inRowIndex, firstElement);
-		if (obj[elements.join(".")])
-		    obj[elements.join(".")][0] = inValue;
-		else
-		    obj[elements.join(".")] = [inValue];
-
-	    }
 		this.onCellEdited(inValue, inRowIndex, inFieldName);
 	},
 	updateSelectedItem: function(selectedIndex) {
@@ -937,14 +940,20 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
 	_onGridEvent: function(evt){
 		var params = {};
+
 		if (!evt.grid){
-			params.cellNode == evt.target;
-			params.rowNode = evt.target.parentNode.parentNode.parentNode.parentNode;
-			params.rowId = evt.target.parentNode.parentNode.parentNode.parentNode.gridRowIndex;
-			params.selectedItem = this.selectedItem;
-			params.fieldId = this.dojoObj.structure[0][evt.target.idx].field;
-			return params;
+		    if (dojo.IEGridEvent) {
+			evt.target = dojo.IEGridEvent.target;
+			evt.grid = dojo.IEGridEvent.grid;
+			evt.cell = dojo.IEGridEvent.cell;
+			evt.cellIndex = dojo.IEGridEvent.cellIndex;
+			evt.rowIndex = dojo.IEGridEvent.rowIndex;
+			evt.rowNode  = dojo.IEGridEvent.rowNode;
+			evt.sourceView = dojo.IEGridEvent.sourceView;
+		    } else 
+			return {};
 		}
+		
 		params.cellNode = evt.cellNode;
 		params.rowNode = evt.rowNode;
 		params.rowId = evt.rowIndex;

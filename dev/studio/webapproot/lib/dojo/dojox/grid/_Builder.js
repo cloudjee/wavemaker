@@ -280,6 +280,12 @@ dojo.require("dojo.dnd.Moveable");
 			e.rowIndex = e.rowNode[rowIndexTag];
 			this.baseDecorateEvent(e);
 			e.cell = this.grid.getCell(e.cellIndex);
+
+		    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		     * WaveMaker: WM-3079: Any time we get a valid grid event, record a copy of it as our next grid event in IE
+		     * (which happens immediately) seems to always fail to call decorateEvent
+		     */
+		        dojo.IEGridEvent = e;
 			return true; // Boolean
 		}
 	});
