@@ -548,6 +548,13 @@ dojo.declare("dojox.grid.DataGrid", dojox.grid._Grid, {
 			onItem: dojo.hitch(this, function(item){
 				var oldValue = this.store.getValue(item, inAttrName);
 				if(typeof oldValue == 'number'){
+				    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+				     * WaveMaker: this if statement added so that checkbox editors are handled
+				     * even if the type in the model not a boolean 
+				     */
+				    if (typeof inValue == 'boolean')
+					inValue = inValue ? 1 : 0;
+				    else
 					inValue = isNaN(inValue) ? inValue : parseFloat(inValue);
 				}else if(typeof oldValue == 'boolean'){
 					inValue = inValue == 'true' ? true : inValue == 'false' ? false : inValue;
