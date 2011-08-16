@@ -2,7 +2,7 @@ DeploymentDialog.widgets = {
     cloudFoundryService: ["wm.JsonRpcService", {service: "cloudFoundryService", sync: true}, {}],
     deploymentLoadingDialog: ["wm.LoadingDialog", {}],
     cloudFoundryAppListDialog: ["wm.DesignableDialog", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", containerWidgetId: "cfAppListPanel", buttonBarId: "buttonBar5", width: "400px", height: "500px"}, {}, {
-	cfAppListPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", layoutKind: "top-to-bottom", padding: "0", border: "20", borderColor: "#424a5a"}, {}, {
+	cfAppListPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", layoutKind: "top-to-bottom", padding: "0", border: "10", borderColor: "#424a5a"}, {}, {
 	    cloudFoundryAppList: ["wm.List", {dataFields: "name", headerVisible: true, innerBorder:"1",borderColor:"black","height":"100%","width":"100%", dataFields: "name,state,services"}, {}],
 	    deleteServicesCheckbox: ["wm.Checkbox", {caption: "Delete services too?", width: "100%", captionSize: "100%", startChecked: true}]
 	}],

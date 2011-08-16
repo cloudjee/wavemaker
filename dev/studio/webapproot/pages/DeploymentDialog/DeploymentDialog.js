@@ -387,6 +387,10 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		}
 		return;
 	    }
+	} else if (inResult.match(/^ERROR\:.*Not enough memory/)) {
+	    var memory = inResult.match(/\d+[MG]/);
+	    this.manageCloudFoundryButtonClick();
+	    app.alert(this.getDictionaryItem("ALERT_CF_OUT_OF_MEMORY", {memory: memory[0] || "unknown"}));
 	} else if (inResult.match(/^ERROR\:.*The URI.*has already been taken or reserved/)) {
 	    app.alert(this.getDictionaryItem("ALERT_CF_NAME_TAKEN", {name: inData.applicationName}));
 	    this.cfNameEditor.setInvalid();
