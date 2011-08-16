@@ -369,6 +369,7 @@ dojo.declare("wm.Layers", wm.Container, {
 	},
 	setLayerInactive: function(inLayer) {
 		wm.fire(inLayer.decorator, "deactivateLayer", [inLayer]);
+	        inLayer.onDeactivate();
 	},
 	setLayerIndex: function(inIndex) {
 		if (inIndex == this.layerIndex)
