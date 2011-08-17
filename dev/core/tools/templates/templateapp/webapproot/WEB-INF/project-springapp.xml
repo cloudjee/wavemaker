@@ -13,6 +13,7 @@
     <import resource="project-managers.xml"/>
     <import resource="project-security.xml"/>
     <import resource="project-spring.xml"/>
+	<import resource="project-partner-beans.xml"/>
 
     <bean id="urlMapping"
         class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
