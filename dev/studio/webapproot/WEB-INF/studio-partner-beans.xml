@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-	Include any partner specific beans
+	Defines bean factory classes and beans for design time
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -11,33 +11,15 @@
 			http://www.springframework.org/schema/aop
 			http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
-	<bean id="asteriaLoginManager"
-            class="com.asteria.runtime.flow.AsteriaLoginManager"
-            scope="singleton"
-            lazy-init="true"/>
-
 	<bean id="pwsLoginManagerBeanFactory"
 		class="com.wavemaker.runtime.pws.PwsLoginManagerBeanFactory"
 		scope="singleton"
 		lazy-init="true">
 		<property name="pwsLoginManagers">
 			<map>
-				<entry key="asteria" value-ref="asteriaLoginManager"/>
 				<!--entry key="xxxxx" value-ref="xxxxxLoginManager"/-->
 			</map>
 		</property>
-	</bean>
-
-	<bean id="asteriaRestImporter"
-            class="com.asteria.tools.flow.AsteriaRestImporter"
-            scope="singleton"
-            lazy-init="true">
-		<property name="projectManager">
-			<ref bean="projectManager"/>
-        </property>
-        <property name="designServiceManager">
-            <ref bean="designServiceManager"/>
-        </property>
 	</bean>
 
 	<bean id="pwsRestImporterBeanFactory"
@@ -46,16 +28,10 @@
 		lazy-init="true">
 		<property name="pwsRestImporters">
 			<map>
-				<entry key="asteria" value-ref="asteriaRestImporter"/>
 				<!--entry key="xxxxx" value-ref="xxxxxRestImporter"/-->
 			</map>
 		</property>
 	</bean>
-
-	<bean id="asteriaRestWsdlGenerator"
-            class="com.asteria.tools.flow.AsteriaRestWsdlGenerator"
-            scope="singleton"
-            lazy-init="true"/>
 
 	<bean id="pwsRestWsdlGeneratorBeanFactory"
 		class="com.wavemaker.tools.pws.PwsRestWsdlGeneratorBeanFactory"
@@ -63,16 +39,10 @@
 		lazy-init="true">
 		<property name="pwsRestWsdlGenerators">
 			<map>
-				<entry key="asteria" value-ref="asteriaRestWsdlGenerator"/>
 				<!--entry key="xxxxx" value-ref="xxxxxRestWsdlGenerator"/-->
 			</map>
 		</property>
 	</bean>
-
-	<bean id="asteriaRestServiceGenerator"
-            class="com.asteria.tools.flow.AsteriaRestServiceGenerator"
-            scope="singleton"
-            lazy-init="true"/>
 
 	<bean id="pwsRestServiceGeneratorBeanFactory"
 		class="com.wavemaker.tools.pws.PwsRestServiceGeneratorBeanFactory"
@@ -80,7 +50,6 @@
 		lazy-init="true">
 		<property name="pwsRestServiceGenerators">
 			<map>
-				<entry key="asteria" value-ref="asteriaRestServiceGenerator"/>
 				<!--entry key="xxxxx" value-ref="xxxxxRestServiceGenerator"/-->
 			</map>
 		</property>
