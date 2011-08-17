@@ -4,7 +4,7 @@ DeploymentDialog.widgets = {
     cloudFoundryAppListDialog: ["wm.DesignableDialog", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", containerWidgetId: "cfAppListPanel", buttonBarId: "buttonBar5", width: "400px", height: "500px"}, {}, {
 	cfAppListPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", layoutKind: "top-to-bottom", padding: "0", border: "10", borderColor: "#424a5a"}, {}, {
 	    cloudFoundryAppList: ["wm.List", {dataFields: "name", headerVisible: true, innerBorder:"1",borderColor:"black","height":"100%","width":"100%", dataFields: "name,state,services"}, {}],
-	    deleteServicesCheckbox: ["wm.Checkbox", {caption: "Delete services too?", width: "100%", captionSize: "100%", startChecked: true}]
+	    deleteServicesCheckbox: ["wm.Checkbox", {caption: "Delete services too?", width: "220px", captionSize: "100%", startChecked: true, helpText: "Deleting services means deleting database services that were generated for your application.  Typically you should delete these databases unless there is another application listed above that is using the database."}]
 	}],
 	buttonBar5: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 
@@ -60,6 +60,8 @@ DeploymentDialog.widgets = {
 	    }]
 	}],
 	buttonBar2: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+	    cloudFoundryRegisterLink: ["wm.Label", {caption: "Get an account", link: "http://cloudfoundry.com/signup", width: "100px", height: "100%"}],
+	    loginSpacer: ["wm.Spacer", {width: "100%"}],
 	    cfLoginCancelButton: ["wm.Button", {"caption":"Cancel","margin":"4"}, {onclick: "cfLoginCancelClick"}],
 	    cfLogonOkButton: ["wm.Button", {"caption":"OK","margin":"4"}, {onclick: "cfLoginOkClick"}]	    
 	}]
