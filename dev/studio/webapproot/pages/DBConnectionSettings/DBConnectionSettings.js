@@ -499,6 +499,8 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 			this.msgDialog.page.setup(false);
 			this.msgDialog.page.ddlEditor.setDataValue(inData);
 			this.msgDialog.show();
+		} else {
+		    app.toastSuccess(this.getDictionaryItem("TOAST_EXPORT_SUCCESS"));
 		}
 	},
 	_exportError: function(inError) {

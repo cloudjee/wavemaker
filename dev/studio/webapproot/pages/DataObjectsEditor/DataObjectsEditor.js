@@ -655,6 +655,8 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	    this.saveComplete();
 	},
 	saveComplete: function() {
+	    if (studio.loadingDialog.widgetToCover.owner == this)
+		studio.loadingDialog.hide();
 	},
         onSaveSuccess: function() {
 		this.clearDetailDisplay();
@@ -845,6 +847,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	},
 
 	entityUpdateError: function(inError) {
+
 		if (inError.message) {
 		    studio._saveErrors.push({owner: this,
 					     message: this.getDictionaryItem("MESSAGE_UPDATE_FAILED", {error: inError.message})});
@@ -895,7 +898,8 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 				           this.getEntityNameFromTableName(t), t);
 			               this.clearDetailDisplay();
 			               this.renderTableDetails(entity);
-                                       
+                                       studio.loadingDialog.widgetToCover = this.objectPages.getActiveLayer();
+				       studio.loadingDialog.show();
 			               this.getEntityOutputChanged(entity);
                                        
 			               // add single column so we have a valid Hibernate 
@@ -939,7 +943,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		var c = studio.tree.selected && studio.tree.selected.component;
 		
 		if (!c) {
-		    app.alert(this.getDictionary("ALERT_SELECT_TO_DELETE"));
+		    app.alert(this.getDictionaryItem("ALERT_SELECT_TO_DELETE"));
 		    return;
 		}
 
