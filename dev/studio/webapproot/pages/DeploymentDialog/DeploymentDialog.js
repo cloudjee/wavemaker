@@ -901,6 +901,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		app.alert(this.getDictionaryItem("ALERT_INVALID_DB_TYPE", {name: connection.dbtype}));
 	    this["databaseLayers" + (i+1)].setLayerIndex(2);
 	    this["databaseCloudFoundryNameEditor" + (i+1)].setDataValue(connection.db);
+	    this["databaseCloudFoundryType" + (i+1)].setDataValue(connection.dbtype);
 	    this["databaseConnectionEditor" + (i+1)].hide();
 	}));
 	this.editPanel.reflow();
