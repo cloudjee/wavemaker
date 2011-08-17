@@ -609,7 +609,8 @@ wm.Object.extendSchema(wm.Text, {
 wm.Object.extendSchema(wm.LargeTextArea, {
 	changeOnEnter: { ignore: 1 },
         onEnterKeyPress: {ignore: 1},
-	password: {ignore: 1}
+        password: {ignore: 1},
+        resetButton: {ignore: 1}
 });
 
 wm.LargeTextArea.extend({
@@ -617,5 +618,6 @@ wm.LargeTextArea.extend({
 });
 
 wm.Object.extendSchema(wm.ColorPicker, {
-    regExp: {ignore: true}
+    regExp: {ignore: true},
+    resetButton: {ignore: 1}
 });

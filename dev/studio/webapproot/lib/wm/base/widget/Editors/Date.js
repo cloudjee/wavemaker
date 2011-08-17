@@ -115,6 +115,7 @@ wm.Object.extendSchema(wm.Date, {
     password: {ignore:1},
     regExp: {ignore:1},
     maxChars: {ignore:1},
+    resetButton: {ignore: 1},
     changeOnKey: {ignore: 1}
 });
 
