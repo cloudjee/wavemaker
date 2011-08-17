@@ -1152,7 +1152,7 @@ Studio.extend({
 							 if (!this.deploymentDialog.page) {
 							     this.deploymentDialog.setPage("DeploymentDialog");
 							 }
-							 this.deploymentDialog.page.deploy(deployment);
+							 this.deploymentDialog.page.deployAfterVerifyingNoChanges(deployment);
 						     })
 						    });
 		    }));

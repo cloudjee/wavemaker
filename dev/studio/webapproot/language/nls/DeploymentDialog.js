@@ -20,5 +20,7 @@ ALERT_INVALID_DB_TYPE: "Deployment of ${name} databases to CloudFoundry is not s
 DELETING: "Deleting...",
 INVALID_USER_PASS: "The username or password was invalid",
 WAIT_UNDEPLOY: "Undeploying...",
-ALERT_CF_OUT_OF_MEMORY: "CloudFoundry only allows ${memory} of running applications.  Your application has been deployed, but won't run until you shutdown some of your CloudFoundry applications and redeploy"
+ALERT_CF_OUT_OF_MEMORY: "CloudFoundry only allows ${memory} of running applications.  Your application has been deployed, but won't run until you shutdown some of your CloudFoundry applications and redeploy",
+CHECKBOX_UPDATE_SCHEMA: "Update database schemas?",
+CHECKBOX_UPDATE_SCHEMA_HELP: "If checked, we will attempt to update your CloudFoundry database schemas.  If your database is used by other applications, you may want to think carefully about whether this is safe."
 }
