@@ -316,6 +316,9 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		    var height = bounds.h; //bounds.h ? bounds.h - ((bounds.h > 20) ? Math.floor(bounds.h * 0.1) : 2) : "";
 		    var labelHeight;
 		    var editorHeight;
+		    var helpIconSize = 16;
+		    var helpIconMargin = 4;
+		    var allocateHelpIconSpace = Boolean(this.helpText);
 		    if (!this.caption) {
 			labelWidth = 0;
 			editorWidth = w;
@@ -324,7 +327,8 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 			var tmpWidth = (this.captionSize.match(/px/)) ? parseInt(this.captionSize) : Math.floor(parseInt(this.captionSize) * w/100);
 			if (w - tmpWidth < (this.minEditorWidth || 16)) {
 			    editorWidth = this.minEditorWidth || 16;
-			    labelWidth = w - editorWidth;
+			    labelWidth = w - editorWidth - (this.helpText ? helpIconSize + helpIconMargin : 0);
+			    allocateHelpIconSpace = false;
 			} else {
 			    labelWidth = tmpWidth;
 			    editorWidth =  w - labelWidth;			
@@ -345,9 +349,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 
 		    labelWidth = Math.round(labelWidth);
 		    editorWidth = Math.round(editorWidth);
-		    var helpIconSize = 16;
-		    var helpIconMargin = 4;
-		    if (this.helpText) {
+		    if (allocateHelpIconSpace) {
 			if (this.captionPosition == "left" || !this.caption) {
 			    editorWidth -= helpIconSize + helpIconMargin;
 			} else {
@@ -366,7 +368,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		     // if height changes, then lineHeight may have to change
 		    s.lineHeight = (s.lineHeight != "normal") ? s.height : "normal";
 		    var captionLeft = (position == "right") ? (bounds.w + bounds.l - labelWidthWithSpacing )  : bounds.l;
-		    if (position != "left" && this.helpText) 
+		    if (position != "left" && allocateHelpIconSpace) 
 			captionLeft -= helpIconSize + helpIconMargin ;
 		    s.left = captionLeft + "px";
 		    s.top  = (position == "bottom") ? (editorHeight + bounds.t - captionEditorSpacing) + "px" : bounds.t + "px"; 
@@ -441,12 +443,15 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    }
 	},
         setHelpText: function(inText) {
+	    var formerText = this.helpText;
 	    this.helpText = inText;
 	    if (inText && !this.helpNode) {
 		this.createHelpNode();
 		this.sizeEditor();
 	    } else if (!inText && this.helpNode) {
 		this.destroyHelpNode();
+		this.sizeEditor();
+	    } else if (inText && !formerText) {
 		this.sizeEditor();
 	    }
 	},
