@@ -54,19 +54,11 @@ DataObjectsEditor.widgets = {
 									tableDetailPackageName: ["wm.Editor", {caption: "Package", height: "26px", layoutKind: "left-to-right", readonly: true}, {onchange: "tableDetailPackageNameChange"}, {
 									    editor: ["wm._TextEditor", {layoutFlex: 10, changeOnKey:true}, {}]
 									}],
-									tableDetailSchemaName: ["wm.Editor", {caption: "Schema", height: "26px", layoutKind: "left-to-right"}, {onchange: "tableDetailSchemaNameChange"}, {
-										editor: ["wm._TextEditor", {layoutFlex: 10, changeOnKey:true}, {}]
-									}],
-									tableDetailCatalogName: ["wm.Editor", {caption: "Catalog", height: "26px", layoutKind: "left-to-right"}, {onchange: "tableDetailCatalogNameChange"}, {
-										editor: ["wm._TextEditor", {layoutFlex: 10, changeOnKey:true}, {}]
-									}],
+								    tableDetailSchemaName: ["wm.Text", {caption: "Schema", height: "26px", layoutKind: "left-to-right",changeOnKey:true}, {onchange: "tableDetailSchemaNameChange"}],
+								    tableDetailCatalogName: ["wm.Text", {caption: "Catalog", height: "26px", layoutKind: "left-to-right",changeOnKey: true}, {onchange: "tableDetailCatalogNameChange"}],
 									spacer1: ["wm.Spacer", {height: "10px", border: ""}, {}],
-									tableDetailTableName: ["wm.Editor", {caption: "Table Name", height: "26px", layoutKind: "left-to-right"}, {onchange: "tableDetailTableNameChange"}, {
-										editor: ["wm._TextEditor", {layoutFlex: 10, changeOnKey:true}, {}]
-									}],
-									tableDetailEntityName: ["wm.Editor", {caption: "Entity Name", height: "26px", layoutKind: "left-to-right"}, {onchange: "tableDetailEntityNameChange"}, {
-										editor: ["wm._TextEditor", {layoutFlex: 10, changeOnKey:true}, {}]
-									}]
+								    tableDetailTableName: ["wm.Text", {caption: "Table Name", height: "26px", layoutKind: "left-to-right", changeOnKey: true}, {onchange: "tableDetailTableNameChange"}],
+								    tableDetailEntityName: ["wm.Text", {caption: "Entity Name", height: "26px", layoutKind: "left-to-right", changeOnKey: true}, {onchange: "tableDetailEntityNameChange"}]
 								}],
 								tableSettingsPanel: ["wm.Panel", {padding: "5,0,0,0", width: "150px"}, {}, {
 									dynamicInsertCheckBox: ["wm.Editor", {caption: "Dynamic Insert", display: "CheckBox", displayValue: "0", height: "26px", captionSize: "115px", layoutKind: "left-to-right"}, {onchange: "dynamicInsertChange"}, {
