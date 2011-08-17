@@ -115,6 +115,11 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	      this.confirmSaveDialog.show();
 	      this.saveDialogDontSaveButton.onclick = dojo.hitch(this, function() {
 		  this.confirmSaveDialog.hide();
+		  var selectedIndex = this.deploymentList.getSelectedIndex();
+		  if (!this.deploymentListVar.getItem(selectedIndex).getValue("dataValue").deploymentId) {
+		      this.deploymentListVar.removeItem(selectedIndex);
+		  }
+		  this._currentDeploymentIndex = -1;
 		  this.editPanel.clearDirty()
 		  this.owner.owner.hide();
 	      });
@@ -284,6 +289,56 @@ dojo.declare("DeploymentDialog", wm.Page, {
 					    dojo.hitch(this, "saveFailed"));
   },
 
+    deployAfterVerifyingNoChanges: function(inData) {
+	debugger;
+	var databases = {};
+	var databaseCount = 0;
+	var components = studio.application.getServerComponents();
+	dojo.forEach(components, dojo.hitch(this, function(c,i) {
+	    if (c instanceof wm.DataModel) {
+
+		studio.dataService.requestSync(
+		    LOAD_CONNECTION_PROPS_OP,
+		    [c.dataModelName], 
+		    dojo.hitch(this, function(inData) {
+			var l = parseConnectionUrl(inData.connectionUrl, inData);
+			if (l)
+			    var connection = {dbtype: l[0],
+					      host: l[1],
+					      port: l[2],
+					      db: l[3]};
+			if (connection.dbtype != "HSQLDB") {
+			    databases[c.name] = c;
+			    databaseCount++;
+			}
+		    }));
+	    }
+	}));
+
+	var invalid = false;
+	if (databaseCount != inData.databases.length) {
+	    invalid = true;
+	} else {
+	    for (var i = 0; i < inData.databases.length; i++) {
+		if (!databases[inData.databases[i].dataModelId]) {
+		    invalid = true;
+		}
+	    }
+	}
+	if (invalid) {
+	    this.initDeploymentListVar();
+	    this.owner.owner.show();
+	    for (var i = 0; i < this.deploymentListVar.getCount(); i++) {
+		if (this.deploymentListVar.getItem(i).getValue("dataValue").deploymentId == inData.deploymentId) {
+		    this.deploymentList.selectByIndex(i);
+		    this.deploymentListSelect(this.deploymentList, this.deploymentList.getItem(i),true);		    
+		}
+	    }
+	} else {
+	    this.deploy(inData);
+	}
+    },
+
     /* When deploy is called, show a confirmation dialog with the deployment settings */
   deploy: function(inData) {
       try {
@@ -297,12 +352,6 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		      this.deploy2(inData);
 		  }
 
-	      }),
-	      dojo.hitch(this, function() {
-		  if (this._updateSchemaCheckbox) {
-		      this._updateSchemaCheckbox.destroy();
-		      delete this._updateSchemaCheckbox;
-		  }
 	      }));
 	      app.confirmDialog.setWidth("450px");
 	      if (inData.deploymentType == this.CF_DEPLOY) {
@@ -312,13 +361,21 @@ dojo.declare("DeploymentDialog", wm.Page, {
 								caption: this.getDictionaryItem("CHECKBOX_UPDATE_SCHEMA"),
 								helpText: this.getDictionaryItem("CHECKBOX_UPDATE_SCHEMA_HELP"),
 								startChecked: true,
-								width: "220px",
+								width: "240px",
 								captionSize: "100%",
 								minEditorWidth: 32,
 								captionAlign: "left",
 								captionPosition: "right",
 								name: "confirmUpdateSchemaCheckbox"});
 		  this._updateSchemaCheckbox.captionNode.style.color = "white";
+		  var deleteCheckboxSubscribe = dojo.connect(app.confirmDialog, "onClose", this, function() {
+		      if (this._updateSchemaCheckbox) {
+			  this._updateSchemaCheckbox.destroy();
+			  delete this._updateSchemaCheckbox;
+		      }
+		      alert("UNSUBSCRIBE " + deleteCheckboxSubscribe);
+		      dojo.disconnect(deleteCheckboxSubscribe);
+		  });
 	      }
 	  }
       } catch(e) {
@@ -331,8 +388,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	for (var i = 0; i < inData.databases.length; i++) {
 	    inData.databases[i].updateSchema = this._updateSchema;
 	}
-	this._updateSchemaCheckbox.destroy();
-	delete this._updateSchemaCheckbox;
+ 
 	this.confirmToken(inData.token, dojo.hitch(this, function(inToken) {
 	    //inData.token = dojo.cookie(this.CFTOKEN_COOKIE);
 	    inData.token = inToken;
