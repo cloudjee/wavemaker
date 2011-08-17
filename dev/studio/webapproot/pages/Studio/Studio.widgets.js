@@ -13,6 +13,7 @@
  */
  
 Studio.widgets = {
+        loadingDialog: ["wm.LoadingDialog", {}],
         themesListVar: ["wm.Variable", {type: "StringData"}],
 	studioService: ["wm.JsonRpcService", {service: "studioService", sync: true}, {}],
 	servicesService: ["wm.JsonRpcService", {service: "servicesService", sync: true}, {}],
