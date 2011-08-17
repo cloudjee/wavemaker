@@ -155,7 +155,7 @@ public class PwsInstall {
         return doc;
     }
 
-    public static void insertEntryKey(File xmlFile, File runtimeJarFile, File toolsJarFile, String partnerName) throws Exception {
+    public static void insertEntryKey(File xmlFile, File[] runtimeJarFiles, File[] toolsJarFiles, String partnerName) throws Exception {
         String content = getTrimmedXML(xmlFile);
 
         String fromStr1 = "<!DOCTYPE";
@@ -175,7 +175,7 @@ public class PwsInstall {
         DocumentBuilder docBuilder = dbf.newDocumentBuilder();
         Document doc = docBuilder.parse (is);
 
-        insertEntryKey(doc, runtimeJarFile, toolsJarFile, partnerName);
+        insertEntryKey(doc, runtimeJarFiles, toolsJarFiles, partnerName);
 
         Transformer t = TransformerFactory.newInstance().newTransformer();
         t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
@@ -191,7 +191,7 @@ public class PwsInstall {
         FileUtils.writeStringToFile(xmlFile, content, "UTF-8");
     }
 
-    private static Document insertEntryKey (Document doc, File runtimeJarFile, File toolsJarFile, String partnerName) throws IOException {
+    private static Document insertEntryKey (Document doc, File[] runtimeJarFiles, File[] toolsJarFiles, String partnerName) throws IOException {
 
         NodeList beans_list = doc.getElementsByTagName("beans");
         Node beans_node = beans_list.item(0);
@@ -263,7 +263,7 @@ public class PwsInstall {
             for (int m=0; m<bean_attributes.getLength(); m++) {
                 Node beanAttr = bean_attributes.item(m);
                 if (beanAttr.getNodeName().equals("id") && beanAttr.getNodeValue().equals("pwsLoginManagerBeanFactory")) {
-                    if (classExistsInJar(runtimeJarFile, partnerName, LOGIN_MANAGER) || classExistsInJar(toolsJarFile, partnerName, LOGIN_MANAGER)) {
+                    if (classExistsInJar(runtimeJarFiles, partnerName, LOGIN_MANAGER) || classExistsInJar(toolsJarFiles, partnerName, LOGIN_MANAGER)) {
                         Element newEntry = doc.createElement("entry");
                         newEntry.setAttribute("key", partnerName);
                         newEntry.setAttribute("value-ref", partnerName + LOGIN_MANAGER);
@@ -271,7 +271,7 @@ public class PwsInstall {
                     }
                     break;
                 } else if (beanAttr.getNodeName().equals("id") && beanAttr.getNodeValue().equals("pwsRestImporterBeanFactory")) {
-                    if (classExistsInJar(runtimeJarFile, partnerName, REST_IMPORTER) || classExistsInJar(toolsJarFile, partnerName, REST_IMPORTER)) {
+                    if (classExistsInJar(runtimeJarFiles, partnerName, REST_IMPORTER) || classExistsInJar(toolsJarFiles, partnerName, REST_IMPORTER)) {
                         Element newEntry = doc.createElement("entry");
                         newEntry.setAttribute("key", partnerName);
                         newEntry.setAttribute("value-ref", partnerName + REST_IMPORTER);
@@ -279,7 +279,7 @@ public class PwsInstall {
                     }
                     break;
                 } else if (beanAttr.getNodeName().equals("id") && beanAttr.getNodeValue().equals("pwsRestWsdlGeneratorBeanFactory")) {
-                    if (classExistsInJar(runtimeJarFile, partnerName, REST_WSDL_GENERATOR) || classExistsInJar(toolsJarFile, partnerName, REST_WSDL_GENERATOR)) {
+                    if (classExistsInJar(runtimeJarFiles, partnerName, REST_WSDL_GENERATOR) || classExistsInJar(toolsJarFiles, partnerName, REST_WSDL_GENERATOR)) {
                         Element newEntry = doc.createElement("entry");
                         newEntry.setAttribute("key", partnerName);
                         newEntry.setAttribute("value-ref", partnerName + REST_WSDL_GENERATOR);
@@ -287,7 +287,7 @@ public class PwsInstall {
                     }
                     break;
                 } else if (beanAttr.getNodeName().equals("id") && beanAttr.getNodeValue().equals("pwsRestServiceGeneratorBeanFactory")) {
-                    if (classExistsInJar(runtimeJarFile, partnerName, REST_SERVICE_IMPORTER) || classExistsInJar(toolsJarFile, partnerName, REST_SERVICE_IMPORTER)) {
+                    if (classExistsInJar(runtimeJarFiles, partnerName, REST_SERVICE_IMPORTER) || classExistsInJar(toolsJarFiles, partnerName, REST_SERVICE_IMPORTER)) {
                         Element newEntry = doc.createElement("entry");
                         newEntry.setAttribute("key", partnerName);
                         newEntry.setAttribute("value-ref", partnerName + REST_SERVICE_IMPORTER);
@@ -295,7 +295,7 @@ public class PwsInstall {
                     }
                     break;
                 } else if (beanAttr.getNodeName().equals("id") && beanAttr.getNodeValue().equals("pwsResponseProcessorBeanFactory")) {
-                    if (classExistsInJar(runtimeJarFile, partnerName, RESPONSE_PROCESSOR) || classExistsInJar(toolsJarFile, partnerName, RESPONSE_PROCESSOR)) {
+                    if (classExistsInJar(runtimeJarFiles, partnerName, RESPONSE_PROCESSOR) || classExistsInJar(toolsJarFiles, partnerName, RESPONSE_PROCESSOR)) {
                         Element newEntry = doc.createElement("entry");
                         newEntry.setAttribute("key", partnerName);
                         newEntry.setAttribute("value-ref", partnerName + RESPONSE_PROCESSOR);
@@ -309,15 +309,21 @@ public class PwsInstall {
         return doc;
     }
 
-    private static boolean classExistsInJar(File jarFile, String partnerName, String type) throws IOException {
+    private static boolean classExistsInJar(File[] jarFiles, String partnerName, String type) throws IOException {
         String className = partnerName.substring(0, 1).toUpperCase() + partnerName.substring(1) + type;
-        JarFile jar = new JarFile(jarFile);
-        Enumeration<JarEntry> entries = jar.entries();
         boolean exists = false;
-        while (entries.hasMoreElements()) {
-            JarEntry entry = entries.nextElement();
-            if (entry.getName().contains(className)) {
-                exists = true;
+        for (File jarF : jarFiles) {
+            JarFile jar = new JarFile(jarF);
+            Enumeration<JarEntry> entries = jar.entries();
+
+            while (entries.hasMoreElements()) {
+                JarEntry entry = entries.nextElement();
+                if (entry.getName().contains(className)) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (exists) {
                 break;
             }
         }
