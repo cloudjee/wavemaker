@@ -897,7 +897,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	dojo.forEach(boxes, dojo.hitch(this, function(b, i) {
 	    var dataModel = b.dataModel;
 	    var connection = b.dataConnection;
-	    if (connection.dbtype.toLowerCase() != "mysql")
+	    if (connection.dbtype.toLowerCase() != "mysql" && connection.dbtype.toLowerCase() != "postgresql")
 		app.alert(this.getDictionaryItem("ALERT_INVALID_DB_TYPE", {name: connection.dbtype}));
 	    this["databaseLayers" + (i+1)].setLayerIndex(2);
 	    this["databaseCloudFoundryNameEditor" + (i+1)].setDataValue(connection.db);
