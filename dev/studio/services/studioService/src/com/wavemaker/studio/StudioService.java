@@ -49,6 +49,7 @@ import com.wavemaker.tools.project.StudioConfiguration;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeManager;
 import com.wavemaker.tools.serializer.FileSerializerException;
+import com.wavemaker.tools.pws.install.PwsInstall;
 
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.common.util.ClassLoaderUtils;
@@ -599,7 +600,7 @@ System.out.println("F");
 	    if (dotindex == -1) 
 		throw new IOException("Please upload a zip file");
 	    else if (!ext.equals("zip")) {
-		throw new IOException("Please upload a zip file, not a " + ext + " file");
+		    throw new IOException("Please upload a zip file, not a " + ext + " file");
 	    }
 
 
@@ -725,14 +726,29 @@ System.out.println("F");
 	    IOUtils.copy(runtimexml, webinf);
 	    IOUtils.copy(runtimexml, templatesPwsWEBINFFolder);
 
-	    ret.setPath("/tmp");
+        /* Modify Spring files to include beans in the partner package.
+         */
+        File studioSpringApp = new File (webinf, "studio-springapp.xml");
+        PwsInstall.insertImport(studioSpringApp, newName);
+
+        File studioPartnerBeans = new File (webinf, "studio-partner-beans.xml");
+        PwsInstall.insertEntryKey(studioPartnerBeans, runJars, designJars, newName);
+
+        File projectSpringApp = new File(templatesPwsWEBINFFolder, "project-springapp.xml");
+        PwsInstall.insertImport(projectSpringApp, newName);
+
+        File projectPartnerBeans = new File (webinf, "project-partner-beans.xml");
+        PwsInstall.insertEntryKey(projectPartnerBeans, runJars, designJars, newName); 
+
+        ret.setPath("/tmp");
 	    ret.setError("");
 	    ret.setWidth("");
 	    ret.setHeight("");
 
 	    IOUtils.deleteRecursive(tmpDir);
-	} catch(IOException e) {
-	    ret.setError(e.getMessage());
+	//} catch(IOException e) {
+    } catch(Exception e) {
+        ret.setError(e.getMessage());
 	}
 	return ret;
 
