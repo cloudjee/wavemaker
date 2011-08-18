@@ -124,7 +124,7 @@ wm.Object.extendSchema(wm.Picture, {
     imageIndex: { group: "display", order: 51, type: "Number",  doc: 1},
     editImageIndex: { group: "display", order: 52, type: "String", doc: 1},
     setCaption: {group: "method",doc: 1},
-    setImageIndex: {group: "method",doc: 1},
+    setImageIndex: {group: "method",doc: 1}
 
 });
 
