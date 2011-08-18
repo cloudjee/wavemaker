@@ -83,7 +83,7 @@ DeploymentDialog.widgets = {
 	    splitter1: ["wm.Splitter", {height: "100%", minimum: "150", maximum: "350"}],
 	    editLayers: ["wm.Layers", {width: "100%", height: "100%", margin: "0,0,0,10"}, {}, {
 		defaultLayer: ["wm.Layer", {padding: "30"}, {}, {
-		    defaultHtml: ["wm.Html", {width: "100%", height: "100%", html: "<p>No deployment targets are selected for this project.</p><p>Click the New button to create a new deployment target</p><p>If there are deployment targets listed to the left, select one to begin editing</p>"}]
+		    defaultHtml: ["wm.Html", {width: "100%", height: "100%", html: "<p>No deployment targets are selected for this project.</p><p>Click the Add button (to the left) to create a new deployment target</p><p>If there are deployment targets listed to the left, select one to begin editing</p>"}]
 		}],
 		editLayer: ["wm.Layer", {}, {}, {
 		    editPanel: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]},"autoScroll":true,"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", borderColor: "#525A6A", border: "2,0,2,0"}, {}, {
