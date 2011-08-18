@@ -30,7 +30,8 @@ wm.Object.extendSchema(wm.DojoMenu, {
         menuItems:{ignore:1},
     editMenuItems: {group: "operation"},
     vertical: {group: "display"},
-    openOnHover: {group: "display"}
+    openOnHover: {group: "display"},
+    setItemDisabled: {group: "method"}
 });
 
 wm.DojoMenu.description = "A dojo menu.";
