@@ -623,7 +623,7 @@ System.out.println("F");
 	    File pagesFolder = new File(extFolder, "pages");
 	    File[] pages = pagesFolder.listFiles();
 	    for (int i = 0; i < pages.length; i++) {
-		IOUtils.copy(pages[i], new File(webapprootPages, pages[i].getName()));
+		    IOUtils.copy(pages[i], new File(webapprootPages, pages[i].getName()));
 	    }
 
 	    /* Import the language files from the dictionaries folder and subfolder
@@ -632,16 +632,16 @@ System.out.println("F");
 	    File dictionarySrc = new File(extFolder, "language/nls");
 	    File[] languages = dictionarySrc.listFiles();
 	    for (int i = 0; i < languages.length; i++) {
-		if (languages[i].isDirectory()) {
-		    System.out.println("GET LISTING OF " + languages[i].getName());
-		    File[] languages2 = languages[i].listFiles();
-		    for (int j = 0; j < languages2.length; j++) {
-			System.out.println("COPY " + languages2[j].getName() + " TO " + new File(dictionaryDest, languages[i].getName()).getAbsolutePath());
-			IOUtils.copy(languages2[j], new File(dictionaryDest, languages[i].getName()));			
-		    }
-		} else {
-		    IOUtils.copy(languages[i], dictionaryDest);
-		}
+            if (languages[i].isDirectory()) {
+                System.out.println("GET LISTING OF " + languages[i].getName());
+                File[] languages2 = languages[i].listFiles();
+                for (int j = 0; j < languages2.length; j++) {
+                    System.out.println("COPY " + languages2[j].getName() + " TO " + new File(dictionaryDest, languages[i].getName()).getAbsolutePath());
+                    IOUtils.copy(languages2[j], new File(dictionaryDest, languages[i].getName()));
+                }
+            } else {
+                IOUtils.copy(languages[i], dictionaryDest);
+            }
 	    }
 	    
 
@@ -652,7 +652,7 @@ System.out.println("F");
 	    File designtimeFolder = new File(extFolder, "designtime");
 	    File[] designJars = designtimeFolder.listFiles();
 	    for (int i = 0; i < designJars.length; i++) {
-		IOUtils.copy(designJars[i], studioLib);
+		    IOUtils.copy(designJars[i], studioLib);
 	    }
 
 	    /* Import the runtime jars 
@@ -663,7 +663,7 @@ System.out.println("F");
 	    File templatesPwsWEBINFLibFolder = new File( templatesPwsWEBINFFolder, "lib");
 	    /* Delete any old jars from prior imports */
 	    if (templatesPwsFolder.exists()) {
-		IOUtils.deleteRecursive(templatesPwsFolder);
+		    IOUtils.deleteRecursive(templatesPwsFolder);
 	    }
 
 	    IOUtils.makeDirectories(templatesPwsWEBINFLibFolder, webapproot);
@@ -671,8 +671,8 @@ System.out.println("F");
 	    File runtimeFolder = new File(extFolder, "runtime");
 	    File[] runJars = runtimeFolder.listFiles();
 	    for (int i = 0; i < runJars.length; i++) {
-		IOUtils.copy(runJars[i], studioLib);
-		IOUtils.copy(runJars[i], templatesPwsWEBINFLibFolder);
+            IOUtils.copy(runJars[i], studioLib);
+            IOUtils.copy(runJars[i], templatesPwsWEBINFLibFolder);
 	    }
 
 	    /* Import packages.js
@@ -680,40 +680,40 @@ System.out.println("F");
 	     */
 	    String packagesExt = "";
 	    try {
-		packagesExt = IOUtils.read(new File(extFolder, "packages.js"));
+		    packagesExt = IOUtils.read(new File(extFolder, "packages.js"));
 	    } catch(Exception e) {
-		packagesExt = "";
+		    packagesExt = "";
 	    }
 	    /* If there is a packages file provided... */
 	    if (packagesExt.length() > 0) {
-		/* Build the string we're appending to packages.js */
-		String startPackagesExt = "/* START PARTNER " + newName + " */\n";
-		String endPackagesExt = "/* END PARTNER " + newName + " */\n";
-		packagesExt = ",\n" + startPackagesExt + packagesExt + "\n" + endPackagesExt;
+            /* Build the string we're appending to packages.js */
+            String startPackagesExt = "/* START PARTNER " + newName + " */\n";
+            String endPackagesExt = "/* END PARTNER " + newName + " */\n";
+            packagesExt = ",\n" + startPackagesExt + packagesExt + "\n" + endPackagesExt;
 
-		/* Create the packagesDir if needed */
-		File packagesDir = new File(studioConfiguration.getCommonDir(),
-					    "packages");
-		if (!packagesDir.exists()) {
-		    packagesDir.mkdir();
-		}
-		File commonPackagesFile = new File(packagesDir, "packages.js");
-		String packages = IOUtils.read(commonPackagesFile);
+            /* Create the packagesDir if needed */
+            File packagesDir = new File(studioConfiguration.getCommonDir(),
+                            "packages");
+            if (!packagesDir.exists()) {
+                packagesDir.mkdir();
+            }
+            File commonPackagesFile = new File(packagesDir, "packages.js");
+            String packages = IOUtils.read(commonPackagesFile);
 
-		/* Remove previous packages entries for this partner */
-		int packagesStartIndex = packages.indexOf(startPackagesExt);
-		if (packagesStartIndex != -1) {
-		    packagesStartIndex = packages.lastIndexOf(",",  packagesStartIndex);
-		    int packagesEndIndex = packages.indexOf(endPackagesExt);
-		    if (packagesEndIndex != -1) {
-			packagesEndIndex += endPackagesExt.length();
-			packages = packages.substring(0,packagesStartIndex) + packages.substring(packagesEndIndex);
-		    }
-		}
+            /* Remove previous packages entries for this partner */
+            int packagesStartIndex = packages.indexOf(startPackagesExt);
+            if (packagesStartIndex != -1) {
+                packagesStartIndex = packages.lastIndexOf(",",  packagesStartIndex);
+                int packagesEndIndex = packages.indexOf(endPackagesExt);
+                if (packagesEndIndex != -1) {
+                    packagesEndIndex += endPackagesExt.length();
+                    packages = packages.substring(0,packagesStartIndex) + packages.substring(packagesEndIndex);
+                }
+            }
 
-		/* Append the string to packages.js and write it */
-		packages += packagesExt;
-		IOUtils.write(commonPackagesFile, packages);
+            /* Append the string to packages.js and write it */
+            packages += packagesExt;
+            IOUtils.write(commonPackagesFile, packages);
 	    }
 
 	    /* Import spring config files
@@ -729,15 +729,18 @@ System.out.println("F");
         /* Modify Spring files to include beans in the partner package.
          */
         File studioSpringApp = new File (webinf, "studio-springapp.xml");
-        PwsInstall.insertImport(studioSpringApp, newName);
+        PwsInstall.insertImport(studioSpringApp, newName + "-tools-beans.xml");
+        PwsInstall.insertImport(studioSpringApp, newName + "-runtime-beans.xml");
 
         File studioPartnerBeans = new File (webinf, "studio-partner-beans.xml");
         PwsInstall.insertEntryKey(studioPartnerBeans, runJars, designJars, newName);
 
-        File projectSpringApp = new File(templatesPwsWEBINFFolder, "project-springapp.xml");
-        PwsInstall.insertImport(projectSpringApp, newName);
+        File templatesPwsRootFolder = new File(webapproot, "app/templates/pws/");
+        File templatesPwsRootWEBINFFolder = new File(templatesPwsRootFolder, "WEB-INF");
+        File projectSpringApp = new File(templatesPwsRootWEBINFFolder, "project-springapp.xml");
+        PwsInstall.insertImport(projectSpringApp, newName + "-runtime-beans.xml");
 
-        File projectPartnerBeans = new File (webinf, "project-partner-beans.xml");
+        File projectPartnerBeans = new File (templatesPwsRootWEBINFFolder, "project-partner-beans.xml");
         PwsInstall.insertEntryKey(projectPartnerBeans, runJars, designJars, newName); 
 
         ret.setPath("/tmp");
