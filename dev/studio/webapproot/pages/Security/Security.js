@@ -715,7 +715,11 @@ dojo.declare("Security", wm.Page, {
 			var loginPageHtml = loadDataSync(this.loginPageTemplateFolder +  "Login.html");
 			var loginPageJs = loadDataSync(this.loginPageTemplateFolder + "Login.js");
 			var loginPageWidgetsJs = loadDataSync(this.loginPageTemplateFolder + "Login.widgets.js");
-			
+
+		    /* WM-3071: Stupid windows/FF4+ only fix */
+		        var regEx = new RegExp(String.fromCharCode(13), "g")
+		        loginPageJs = loginPageJs.replace(regEx, "");
+
 			var n = wm.pagesFolder + "Login/Login";
 			studio.project.saveProjectData(n + ".css", loginPageCss);
 			studio.project.saveProjectData(n + ".html", loginPageHtml);
