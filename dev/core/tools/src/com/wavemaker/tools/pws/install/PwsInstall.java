@@ -344,7 +344,7 @@ public class PwsInstall {
                 if(str1.charAt(0) == '<') {
                     inBracket = true;
                 }
-                System.out.println("*** str1 = " + str1);
+                //System.out.println("*** str1 = " + str1);
                 if(str1.charAt(0) == '<') {
                     inBracket = true;
                     sb.append(str.trim());
