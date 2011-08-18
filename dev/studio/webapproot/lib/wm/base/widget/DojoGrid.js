@@ -35,18 +35,19 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	columns:null,
 	selectFirstRow: false,
 	caseSensitiveSort:true,
-	
+    requiredLibs: ["dojox.grid.DataGrid",
+		  "dojox.grid.cells.dijit",
+		  "dojo.data.ItemFileWriteStore",
+		  "dojo.string",
+		  "wm.base.lib.currencyMappings",
+		  "dijit.Dialog"],
+
 	init: function() {
 	    if (!this.columns)
 		this.columns = [];
-
-		dojo['require']("dojox.grid.DataGrid");
-		dojo['require']("dojox.grid.cells.dijit");
-		dojo['require']("dojo.data.ItemFileWriteStore");
-		dojo['require']("dojo.string");
-		dojo['require']("wm.base.lib.currencyMappings");
-		dojo['require']("dijit.Dialog");
-
+	    for (var i = 0; i < this.requiredLibs.length; i++) {
+		dojo['require'](this.requiredLibs[i]);
+	    }
 		this.inherited(arguments);
 		var varProps = {name: "selectedItem", owner: this, 
 						json: this.selectionMode == 'multiple' ? '[]' : '', 
@@ -543,7 +544,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		if (structure[0].length == 0)
 			structure = {};
 
-	    var props = {escapeHTMLInData:false, structure:structure, store:this.store, singleClickEdit: this.singleClickEdit, columnReordering:true, query: this.query || {}};
+	    var props = {escapeHTMLInData:false, structure:structure, store:this.store, singleClickEdit: this.singleClickEdit, columnReordering:true, query: this.query || {}, updateDelay: 0};
 	    this.addDojoProps(props);
 		this.dojoObj = new dojox.grid.DataGrid(props,dojo.create('div', {style:'width:100%;height:100%'}, this.gridNode));
 		this.connectDojoEvents();
@@ -594,6 +595,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		if (!this.dojoObj)
 			return;
 		this.dojoObj.startup();
+	        this.dojoObj.updateDelay = 1; // reset this after creation; I just want this set to zero to insure that everything is generated promptly when we first create the grid.
 	},
 
 	    _onShowParent: function() {
@@ -673,10 +675,20 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		this.setDojoStore();
                 if (inValue && inValue instanceof wm.Variable)
                     this.selectedItem.setType(inValue.type); // broadcasts a message to all who are bound to the selectedItem
+	    if (this.allLibsLoaded()) {
+		this.renderDojoObj();
+	    } else {
 		var thisObj = this;
 		dojo.addOnLoad(function(){thisObj.renderDojoObj();});
+	    }
 	},
-
+    allLibsLoaded: function() {
+	for (var i = 0; i < this.requiredLibs.length; i++) {
+	    if (!dojo.getObject(this.requiredLibs[i]))
+		return false;
+	}
+	return true;
+    },
         setSortIndex: function(inSortIndex, inAsc) {
 	    this.dojoObj.setSortIndex(inSortIndex, inAsc);
 	},
