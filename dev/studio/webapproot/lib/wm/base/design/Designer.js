@@ -342,5 +342,8 @@ dojo.declare("wm.Designer", wm.Surface, {
 	designMove: function(inControl, inDropInfo) {
 		inControl.designMove(inDropInfo.target, inDropInfo);
 		this.onmove(inControl);
+	},
+        _onShowParent: function() {
+	    studio.page.root.callOnShowParent();
 	}
 });
