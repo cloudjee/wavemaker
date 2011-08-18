@@ -92,6 +92,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 	return this.dojoObj;
     },
     destroy: function() {
+	delete this._dijitHash;
 	dojo.forEach(this._menuConnects, function(c) {dojo.disconnect(c);});
 	delete this._menuConnects;
 	if (this.dojoObj)
@@ -105,7 +106,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 			return;
 		}
 	  */
-
+	    this._dijitHash = {};
 	    dojo.forEach(this._righclickBlocker, function(con) {dojo.disconnect(con);});
 	    this._righclickBlocker = [];
 		if (this.dojoObj) {
@@ -222,9 +223,9 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		    menuObj = new dijit.PopupMenuItem({label: data.label, iconClass: data.iconClass});
 		}
 
-		var evtObj = this.getEventObj(this.getEventName(data.label));
+		var evtObj = this.getEventObj(this.getEventName(data.defaultLabel || data.label));
 		
-			if (!this.isDesignLoaded() && evtObj && evtObj.onClick && evtObj.onClick != '')
+	        if (!this.isDesignLoaded() && evtObj && evtObj.onClick && evtObj.onClick != '')
 		{
 		    if (dojo.isFunction(evtObj.onClick)) {
 			menuObj.onClick = evtObj.onClick;
@@ -269,6 +270,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 	*
 	* Check the docs on dijit.MenuItem for params they support; here are a few...
 	* label: caption for your menu item
+	* defaultLabel: caption for your menu item before localizations are applied to change the label
 	* iconClass: a class to be set for the icon which allows you to specify in CSS what image to place next to the menu.
 	* accelKey: Shortcut key for executing the menu
 	* disabled: if true, disables your menu item
@@ -282,7 +284,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		var onClick = data.onClick;
 		delete data.onClick;
 
-		var idInPage = data.idInPage;;
+		var idInPage = data.idInPage;
 		delete data.idInPage;
 
 		if (isTop && !this._neverIsTop)
@@ -297,6 +299,9 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		{
 		        menuObj = new dijit.MenuItem(data);
 		}
+	        if (data.label || data.defaultLabel) {
+		    this._dijitHash[data.defaultLabel || data.label] = menuObj;
+		}
 
 		if (!this.isDesignLoaded() && this.eventList[data.label] && this.eventList[data.label] != '') 
 		        menuObj.onClick = dojo.hitch(this.eventList[data.label]);
@@ -310,11 +315,11 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		    menuObj.onClick = dojo.hitch(this.owner, onClick, menuObj, data);
 		}
 		this._menuConnects.push(dojo.connect(menuObj, "onClick", this, function(e) {
-		    this.onclick(menuObj.label, menuObj.iconClass, e);
+		    this.onclick(menuObj.defaultLabel || menuObj.label, menuObj.iconClass, e);
 		}));
 	    } else {
 		menuObj.onClick = dojo.hitch(this, function(e) {
-		    this.onclick(menuObj.label, menuObj.iconClass, e);
+		    this.onclick(menuObj.defaultLabel || menuObj.label, menuObj.iconClass, e);
 		});
 	    }
 
@@ -365,9 +370,10 @@ dojo.declare("wm.DojoMenu", wm.Control, {
     setFullStructureStr: function(inStruct, setByDesigner) {
 	    this.fullStructureStr = inStruct;
 	    this.setFullStructure(dojo.fromJson(inStruct));	    
-	if (setByDesigner)
-	    this.renderDojoObj();
-	},
+	    if (setByDesigner)
+		this.renderDojoObj();
+
+    },
 	setFullStructure: function(inStruct) {
 	    this.fullStructure = inStruct;
 	    this.eventList = [];
@@ -494,7 +500,12 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		this.menu = inValue;
 		this.setStructure(inValue);
 		this.renderDojoObj();
-	}
+	},
+	    setItemDisabled: function(inLabel, inDisabled) {
+		if (this._dijitHash[inLabel]) {
+		    this._dijitHash[inLabel].set("disabled", inDisabled);
+		}
+	    }
 });
 
 

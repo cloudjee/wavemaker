@@ -110,7 +110,7 @@ wm.DojoMenu.extend({
 		this.addNodesToPropList(this.fullStructure, props);
 	    } else {
 		dojo.forEach(this.eventList, function(obj){
-			props[this.getEventName(obj.label)] = {isEvent:true, isObject:false, noprop:false, type: 'string', isMenuItem:true};
+			props[this.getEventName(obj.defaultLabel || obj.label)] = {isEvent:true, isObject:false, noprop:false, type: 'string', isMenuItem:true};
 		}, this);
 	    }
 		return props;
@@ -118,7 +118,7 @@ wm.DojoMenu.extend({
     addNodesToPropList: function(struct, props) {
 	for (var i = 0; i < struct.length; i++) {
 	    if (!struct[i].children || struct[i].children.length == 0)
-		props[this.getEventName(struct[i].label)] = {isEvent: true, isObject: false, noprop: false, type: "string", isMenuItem: true};
+		props[this.getEventName(struct[i].defaultLabel || struct[i].label)] = {isEvent: true, isObject: false, noprop: false, type: "string", isMenuItem: true};
 	    if (struct[i].children)// test for children needed on upgraded projects
 		this.addNodesToPropList(struct[i].children,props);
 	}
@@ -139,7 +139,7 @@ wm.DojoMenu.extend({
 	},
         getEventObjFull: function (struct,prop){
 	    for (var i = 0; i < struct.length; i++) {
-		if (this.getEventName(struct[i].label) == prop) return struct[i];
+		if (this.getEventName(struct[i].defaultLabel || struct[i].label) == prop) return struct[i];
 		if (struct[i].children) {// test for children needed on upgraded projects
 		    var result = this.getEventObjFull(struct[i].children,prop);
 		    if (result) return result;
@@ -150,7 +150,7 @@ wm.DojoMenu.extend({
 		prop = this.getCleanText(prop);
 		for (var i = 0; i < this.eventList.length; i++)
 		{
-			if (prop == this.getEventName(this.eventList[i].label))
+			if (prop == this.getEventName(this.eventList[i].defaultLabel || this.eventList[i].label))
 			{
 				return this.eventList[i];
 			}
@@ -216,6 +216,41 @@ wm.DojoMenu.extend({
 	if (this.fullStructure)
 	    this.fullStructureStr = dojo.toJson(this.fullStructure);
 	return this.inherited(arguments);
+    },
+    set_fullStructureStr: function(inStruct) {
+	if (studio.languageSelect.getDisplayValue() != "default") {
+	    var struct = dojo.fromJson(inStructStr);
+	    this.copyLocalizedEvents(struct, this.fullStructure);
+	    inStruct = dojo.toJson(struct);
+	}
+	this.setFullStructureStr(inStruct);
+    },
+    findItemInFullStructure: function(inStruct, inDefaultLabel) {
+	for (var i = 0; i < inStruct.children.length; i++) {
+	    var item = inStruct.children[i];
+	    if (item.defaultLabel == inDefaultLabel)
+		return item;
+	    else if (item.children && item.children.length) {
+		var itemResult = this.findItemInFullStructure(item, inDefaultLabel);
+		if (itemResult)
+		    return itemResult;
+	    }
+	}
+	return null;
+    },
+    copyLocalizedEvents: function(inStruct, inCurrentStruct) {
+	for (var i = 0; i < inCurrentStruct.children.length; i++) {
+	    var item = inCurrentStruct.children[i];
+	    if (item.onClick) {
+		var itemToCopyTo = this.findItemInFullStructure(inStruct, item.defaultLabel || item.label);
+		if (itemToCopyTo) {
+		    itemToCopyTo.onClick = item.onClick;
+		}
+	    }
+	    if (item.children.length) {
+		this.copyLocalizedEvents(inStruct, inCurrentStruct.children[i]);
+	    }
+	}
     }
 });
 

@@ -53,6 +53,7 @@ dojo.declare("MenuDesigner", wm.Page, {
 		content = '<img src="lib/dojo/dojo/resources/blank.gif" alt="" class="dijitIcon dijitMenuItemIcon ' + structure[i].iconClass + '" dojoattachpoint="iconNode">&nbsp;' + content;
 
 	    var n = new wm.TreeNode(parentNode, {closed: false, content: content, data: {content: structure[i].label,
+											 defaultLabel: structure[i].defaultLabel || structure[i].label,
 											 onClick: structure[i].onClick,
 											 iconClass: structure[i].iconClass,
 											 imageList: structure[i].imageList}});
@@ -122,6 +123,7 @@ dojo.declare("MenuDesigner", wm.Page, {
       try {
 	  var olddata = this.tree.selected.data;
           this.tree.selected.data = {content: this.menuItemName.getDataValue(),
+				     defaultLabel:  studio.languageSelect.getDisplayValue() == "default" ? this.menuItemName.getDataValue() : olddata.defaultLabel,
                                      imageList: this.menuItemImageList.getDataValue(),
                                      iconClass: this.menuItemIconClass.getDataValue(),
 				     onClick: olddata.onClick};
@@ -227,8 +229,9 @@ dojo.declare("MenuDesigner", wm.Page, {
   writeNode: function(inNode) {
    
       var obj = {label: inNode.data.content,
-	       iconClass: inNode.data.iconClass,
-	       imageList: inNode.data.imageList,
+		 defaultLabel: inNode.data.defaultLabel,
+		 iconClass: inNode.data.iconClass,
+		 imageList: inNode.data.imageList,
 		 onClick: inNode.data.onClick,
                children: []};
    for (var i =0; i < inNode.kids.length; i++) {
