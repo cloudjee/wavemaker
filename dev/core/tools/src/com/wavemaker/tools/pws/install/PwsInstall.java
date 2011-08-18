@@ -92,6 +92,7 @@ public class PwsInstall {
         t.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
         t.transform(new DOMSource(doc), new StreamResult(xmlFile));
 
+        content = FileUtils.readFileToString(xmlFile, "UTF-8");
         content = content.replace(toStr1, fromStr1);
 
         content = content.replace(toStr2, fromStr2);
