@@ -13,7 +13,6 @@
  */
 
 
-
 dojo.declare("Login", wm.Page, {
 	start: function() {
 		this.connect(this.domNode, "keydown", this, "keydown");
