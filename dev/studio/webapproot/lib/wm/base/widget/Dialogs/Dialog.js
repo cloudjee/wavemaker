@@ -318,7 +318,10 @@ dojo.declare("wm.Dialog", wm.Container, {
 		    this.domNode.style.zIndex = zindex;
 		}
 	    });
-
+	    this.connect(this.dojoMoveable, "onMoveStop", this, function() {
+		this.bounds.l = parseInt(this.domNode.style.left);
+		this.bounds.t = parseInt(this.domNode.style.top);
+	    });
 	}
 	if (this.showing  && !this._isDesignLoaded) {
 	    this.dialogScrim.setShowing(this.modal);
@@ -964,7 +967,6 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    } else if (this._dragBorderY == "bottom") {
 		this.setBounds(NaN, NaN, NaN, this._initialPosition.b - this._initialPosition.t + inDy);
 	    }
-
 
 	    this.renderBounds();
 	    if (!dojo.isIE || dojo.isIE >= 9)
