@@ -264,6 +264,7 @@ public class CopyRuntimeJarsTask extends Task {
 
         copyTask.add(projectJars);
         copyTask.perform();
+        copyPwsFiles(from, wmProject);
     }
     
     protected ClasspathUtils.Delegate getDelegate() {
@@ -276,6 +277,54 @@ public class CopyRuntimeJarsTask extends Task {
     
     protected ClassLoader getClassLoader() {
         return cpDelegate.getClassLoader();
+    }
+
+    private void copyPwsFiles(File libDir, Project wmproject) {
+        File pwsNode = new File(libDir.getParentFile().getParentFile(), "app/templates/pws");
+        File pwsWebInfNode = new File(pwsNode, "WEB-INF");
+        Copy copyTask = new Copy();
+        copyTask.setProject(getProject());
+        copyTask.setPreserveLastModified(isPreserveLastModified());
+        copyTask.setTaskName(TASK_NAME);
+        copyTask.setOverwrite(isOverwrite());
+        copyTask.setVerbose(isVerbose());
+        copyTask.setFlatten(false);
+        copyTask.setTodir(wmproject.getWebInf());
+
+        FileSet srcPwsFileSet = new FileSet();
+        srcPwsFileSet.setDir(pwsWebInfNode);
+        srcPwsFileSet.createInclude().setName("**/*.*");
+        srcPwsFileSet.createExclude().setName("**/.svn/**/*.*");
+
+        copyTask.add(srcPwsFileSet);
+        copyTask.perform();
+
+        String[] partnerNodeList = pwsNode.list();
+
+        if (partnerNodeList == null || partnerNodeList.length == 0) return;
+
+        for (String partnerNodeName : partnerNodeList) {
+            File partnerWebInfNode = new File(pwsNode, partnerNodeName + "/WEB-INF");
+            if (!partnerWebInfNode.exists()) {
+                continue;
+            }
+            copyTask = new Copy();
+            copyTask.setProject(getProject());
+            copyTask.setPreserveLastModified(isPreserveLastModified());
+            copyTask.setTaskName(TASK_NAME);
+            copyTask.setOverwrite(isOverwrite());
+            copyTask.setVerbose(isVerbose());
+            copyTask.setFlatten(false);
+            copyTask.setTodir(wmproject.getWebInf());
+
+            FileSet srcPartnerFileSet = new FileSet();
+            srcPartnerFileSet.setDir(partnerWebInfNode);
+            srcPartnerFileSet.createInclude().setName("**/*.*");
+            srcPartnerFileSet.createExclude().setName("**/.svn/**/*.*");
+
+            copyTask.add(srcPartnerFileSet);
+            copyTask.perform();
+        }
     }
     
     // bean properties
