@@ -465,7 +465,11 @@ dojo.declare("wm.Dialog", wm.Container, {
     // Note that vertical axis must always come before horizontal axis
     setCorner: function(inCorner) {
         this.corner = inCorner.replace(/top/, "t").replace(/bottom/,"b").replace(/left/,"l").replace(/right/,"r").replace(/center/,"c").replace(/ /,"");
-        this.renderBoundsByCorner();
+	if (this.positionNear) {
+	    this.renderBoundsByPositionNode();
+	} else {
+            this.renderBoundsByCorner();
+	}
     },
 /* if the dialog is off the edge of the screen, attempt to compensate */
     insureDialogVisible: function(testOnly) {
@@ -501,6 +505,11 @@ dojo.declare("wm.Dialog", wm.Container, {
     renderBoundsByPositionNode: function() {
         if (!this.fixPositionNode) return;
 	var o = dojo._abs(this.fixPositionNode);
+	if (this._isDesignLoaded) {
+	    var designerO = dojo._abs(studio.designer.domNode);
+	    o.x -= designerO.x;
+	    o.y -= designerO.y;
+	}
 	var corner = this.corner || "bc";
         var top  = corner.substring(0,1);
         var left = corner.substring(1,2);
@@ -974,5 +983,16 @@ dojo.declare("wm.Dialog", wm.Container, {
 	},
 	drop: function() {
 	    this.reflow();
+	},
+    setPositionNear: function(inWidgetOrName) {
+	if (inWidgetOrName instanceof wm.Component) {
+	    this.positionNear = inWidgetOrName.getId();
+	    this.fixPositionNode = inWidgetOrName.domNode;
+	} else {
+	    this.positionNear = inWidgetOrName;
+	    var widget = this.owner.getValueById(inWidgetOrName);
+	    this.fixPositionNode = widget ? widget.domNode : null;
 	}
+	this.renderBounds();
+    }
 });
