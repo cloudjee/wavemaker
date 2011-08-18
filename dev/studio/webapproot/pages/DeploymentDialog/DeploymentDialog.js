@@ -373,7 +373,6 @@ dojo.declare("DeploymentDialog", wm.Page, {
 			  this._updateSchemaCheckbox.destroy();
 			  delete this._updateSchemaCheckbox;
 		      }
-		      alert("UNSUBSCRIBE " + deleteCheckboxSubscribe);
 		      dojo.disconnect(deleteCheckboxSubscribe);
 		  });
 	      }
