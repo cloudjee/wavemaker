@@ -231,8 +231,10 @@ wm.LoadingDialog.extend({
 	    var ds = this.getValueById(inWidget);
 	    if (ds)
 		this.components.binding.addWire("", "widgetToCover", ds.getId());
-	} else
+	} else {
 	    this.widgetToCover = inWidget;
+	    this.renderBounds();
+	}
     },
     set_serviceVariableToTrack: function(inWidget) {
 	if (inWidget && !(inWidget instanceof wm.Component)) {
