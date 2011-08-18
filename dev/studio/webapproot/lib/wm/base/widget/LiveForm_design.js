@@ -297,8 +297,9 @@ wm.LiveFormBase.extend({
 			sa = studio.application,
 			name = inType.split('.').pop().toLowerCase(),
 			lv = new wm.LiveView({owner: sa, name: wm.findUniqueName(name + "LiveView1", [sa]), service: ti.service, dataType: inType, _defaultView: true});
+	                lv.getRelatedFields(); // make sure its calculated its list of related fields before we create/fire a livevar
 		var r = this.getRoot();
-		var d = r.createComponent(name + "LiveVariable1", "wm.LiveVariable", {liveSource: lv.getId()});
+  	        var d = r.createComponent(name + "LiveVariable1", "wm.LiveVariable", {liveSource: lv.getId()});
 		this.set_dataSet(d.name);
 		if (r == studio.page)
 			this.updateDesignTrees();
