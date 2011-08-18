@@ -6,16 +6,25 @@
 #
 
 WAVEMAKER_PATH=@PREFIX@
+WAVEMAKER_PID=${WAVEMAKER_PATH}/wavemaker.pid
 
 # java from JDK, NOT JRE, must be on path 
 
 start() {
     java -Xms256m -Xmx512m -XX:MaxPermSize=256m ${WM_JAVA_OPTS} -jar ${WAVEMAKER_PATH}/launcher/launcher.jar &
+    echo $! > ${WAVEMAKER_PID}
+}
+
+stop() {    
+    if [ -f ${WAVEMAKER_PID} ]; then
+        kill -9 `cat ${WAVEMAKER_PID}`
+        rm ${WAVEMAKER_PID}
+     fi
 }
 
 usage() {
 	echo `basename $0`: ERROR: $* 1>&2
-	echo usage: `basename $0` '{start}' 1>&2
+	echo usage: `basename $0` '{start|stop}' 1>&2
 	exit 1
 }
 
@@ -38,6 +47,9 @@ else
 	case "$1" in
 		"start")
 			start
+			;;
+		"stop")
+			stop
 			;;
 		*)
 			usage
