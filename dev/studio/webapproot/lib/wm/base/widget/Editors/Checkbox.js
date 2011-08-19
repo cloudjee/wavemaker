@@ -18,6 +18,7 @@ dojo.require("wm.base.widget.Editors.AbstractEditor");
 
 dojo.declare("wm.Checkbox", wm.AbstractEditor, {
     /* Formating */
+    classNames: "wmeditor wmeditor-cbeditor",
 	width: "120px",
 
 	dataType: "string",
@@ -31,7 +32,7 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 	connectEditor: function() {
 		this.inherited(arguments);
 		if (this.captionNode)
-			this.addEditorConnect(this.captionNode, "onclick", this, "captionClicked");
+		    this.addEditorConnect(this.domNode, "onclick", this, "captionClicked");
 	},
 	// checkbox cannot be sized, but should be adjusted in container
 	sizeEditor: function() {
@@ -47,10 +48,8 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 
 	styleEditor: function() {
 		this.inherited(arguments);
-		dojo.addClass(this.editor.domNode.parentNode, "wmeditor-cbeditor");
 	        var n = this.captionNode;
 		if (n) {
-			n.style.cursor = "pointer";
 			dojo.setSelectable(n, false);
 		}
 	},
@@ -81,8 +80,8 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 	    if (!this._cupdating)
 		this.changed();
 	},
-	captionClicked: function() {
-	    if (!this.readonly && !this.disabled && !this.isDesignLoaded()) {
+	captionClicked: function(e) {
+	    if (!this.readonly && !this.disabled && !this.isDesignLoaded() && !dojo.isDescendant(e.target, this.editor.domNode)) {
 		var isChecked = this.getChecked();
 		wm.onidle(this, function() {
 		    this.setChecked(!isChecked);

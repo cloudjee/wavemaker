@@ -1890,3 +1890,10 @@ Overriding dijit's progress bar properties to enable height changes to progress 
     background-repeat: no-repeat;
     width: 16px;
 }
+
+.wmeditor-cbeditor, .wmeditor-cbeditor input[type="checkbox"], .wmeditor-cbeditor input[type="radio"] {
+    cursor: pointer;
+}
+.wmeditor-cbeditor.Disabled, .wmeditor-cbeditor.Disabled input[type="checkbox"],  .wmeditor-cbeditor.Disabled input[type="radio"] {
+    cursor: default;
+}

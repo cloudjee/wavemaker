@@ -32,6 +32,13 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 			name: this.radioGroup
 		}, inProps || {});
 	},
+	connectEditor: function() {
+	    this.inherited(arguments);
+	    this.addEditorConnect(this.domNode, "ondblclick", this, function() {
+		this.captionClicked();
+		this.onDblClick();
+	    });
+	},
 	captionClicked: function() {
 		if (!this.readonly && !this.disabled)
 			this.setChecked(true);
@@ -206,7 +213,8 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 	    this.inherited(arguments);
 	    this.updateGroupValue();
 	    return true;
-	}
+	},
+    onDblClick: function() {}
 });
 
 
