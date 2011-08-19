@@ -67,3 +67,6 @@ color: white;
 
 
 
+.DeploymentDialog .HSQLDBHtml {
+    background-color: rgb(255,200,200);
+}

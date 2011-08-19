@@ -26,10 +26,16 @@ dojo.declare("DeploymentDialog", wm.Page, {
 
     /* Page caches and state */
     currentDatabaseBoxes: [],
+    hsqldbDatabaseBoxes: [],
     cfDatabaseNameList: [],
     _currentDeploymentIndex: -1,
 
     /* Extra Widgets */
+    hsqldbBox: {
+	hsqldbPanel1: ["wm.FancyPanel", {"borderColor":"black","innerBorder":"1", "height":"120px","margin":"10,10,10,0","title":"Database 1", labelHeight: "24"}, {}, {	    
+	    html1: ["wm.Html", {padding: "5", width: "100%", height: "100%", _classes: {domNode: ["HSQLDBHtml"]}, html: "While you can deploy HSQLDB databases, there is no good way to update your databases when you deploy updates/fixes to your application. Each time you redeploy, all data in the old database is overwritten/lost and replaced with your current data.  We only recommend using HSQLDB to help design, develop and demo, and not to deploy finished applications"}]
+	}]
+    },
     databaseBox: {
 	databasePanel1: ["wm.FancyPanel", {"borderColor":"black","innerBorder":"1", "fitToContentHeight":true,"height":"149px","margin":"10,10,10,0","title":"Database 1", labelHeight: "24"}, {}, {	    
 	    databaseInnerPanel1: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left", margin: "5,50,5,50"},{}, {
@@ -599,6 +605,10 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		  dojo.forEach(this.currentDatabaseBoxes, function(w) {
 		      w.destroy();
 		  });
+		  dojo.forEach(this.hsqldbDatabaseBoxes, function(w) {
+		      w.destroy();
+		  });
+
 		  this.defaultLayer.activate();
 		  this._currentDeploymentIndex = -1;
 		  studio.updateDeploymentsMenu();
@@ -631,6 +641,10 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	      dojo.forEach(this.currentDatabaseBoxes, function(w) {
 		  w.destroy();
 	      });
+		dojo.forEach(this.hsqldbDatabaseBoxes, function(w) {
+		    w.destroy();
+		});
+
 		this._currentDeploymentIndex = -1;
 	    } else if (selectedIndex > this._contextMenuIndex) {
 		this.deploymentList.selectByIndex(selectedIndex-1);
@@ -798,7 +812,12 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	dojo.forEach(this.currentDatabaseBoxes, function(w) {
 	    w.destroy();
 	});
+	dojo.forEach(this.hsqldbDatabaseBoxes, function(w) {
+	    w.destroy();
+	});
+
 	this.currentDatabaseBoxes = [];
+	this.hsqldbDatabaseBoxes = [];
 	var components = studio.application.getServerComponents();
 	dojo.forEach(components, dojo.hitch(this, function(c,i) {
 	    if (c instanceof wm.DataModel) {
@@ -820,6 +839,10 @@ dojo.declare("DeploymentDialog", wm.Page, {
 			    box.dataConnection = connection;
 			    box.setTitle(this.getDictionaryItem("DATABASE_BOX_TITLE", {databaseName: c.dataModelName}));
 			    this.currentDatabaseBoxes.push(box);
+			} else {
+			    var box = this.editPanel.createComponents(this.hsqldbBox, this)[0];
+			    box.setTitle(this.getDictionaryItem("DATABASE_BOX_TITLE", {databaseName: c.dataModelName}));
+			    this.hsqldbDatabaseBoxes.push(box);
 			}
 		})
 	    );
