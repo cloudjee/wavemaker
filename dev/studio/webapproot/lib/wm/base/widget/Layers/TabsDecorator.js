@@ -70,6 +70,10 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 		    close = true;
 	    }
 	    if (close) {
+		if (inLayer.customCloseOrDestroy != inLayer.constructor.prototype.customCloseOrDestroy)
+		    return inLayer.customCloseOrDestroy(inLayer);
+		inLayer.onCloseOrDestroy();
+
 		if (inLayer.parent.customClose != inLayer.parent.constructor.prototype.customClose)
 		    return inLayer.parent.customClose(inLayer);
 		var currentLayer = inLayer.parent.getActiveLayer();

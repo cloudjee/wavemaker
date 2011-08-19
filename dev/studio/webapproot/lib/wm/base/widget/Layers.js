@@ -123,6 +123,8 @@ dojo.declare("wm.Layer", wm.Container, {
     // called onDeactivate rather than onHide as its not meant to indicate when its no longer visible; only when its no
     // longer the active Layer in its parent
         onDeactivate: function() {},
+        onCloseOrDestroy: function() {},
+        customCloseOrDestroy: function() {},
     /* Only valid for layers within a TabLayers */
        setClosable: function(isClosable) {
 	   this.closable = isClosable;
