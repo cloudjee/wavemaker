@@ -1178,7 +1178,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     populateCloudFoundryAppList: function(inResult, optionalCallback) {
 	var results = [];
 	for (var i = 0; i < inResult.length; i++) {
-	    results.push({name: "<a href='http://" + inResult[i].name + this.loginDialogTargetEditor.getDataValue().replace(/^.*?api/,"") +"' target='_NewWindow'>" + inResult[i].name + "</a>", state: inResult[i].state, services: inResult[i].services ? inResult[i].services.join(", ") : ""});
+	    results.push({id: inResult[i].name, name: "<a href='http://" + inResult[i].name + this.loginDialogTargetEditor.getDataValue().replace(/^.*?api/,"") +"' target='_NewWindow'>" + inResult[i].name + "</a>", state: inResult[i].state, services: inResult[i].services ? inResult[i].services.join(", ") : ""});
 	}
 	this.cachedCloudFoundryDeploymentList = inResult;
 	this.cloudFoundryAppList.renderData(results);
@@ -1189,7 +1189,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     cloudFoundryUndeployFromListButtonClick: function() {
 	var selectedItem = this.cloudFoundryAppList._data[this.cloudFoundryAppList.getSelectedIndex()];
 	if (!selectedItem) return;
-	var name = selectedItem.name;
+	var name = selectedItem.id;
 	if (!name) return;
 	var data = {
 	    "applicationName": name,
