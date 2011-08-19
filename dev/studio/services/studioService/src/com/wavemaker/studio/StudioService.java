@@ -751,7 +751,7 @@ System.out.println("F");
 	    IOUtils.deleteRecursive(tmpDir);
 	//} catch(IOException e) {
     } catch(Exception e) {
-        ret.setError(e.getMessage());
+        //ret.setError(e.getMessage());
 	}
 	return ret;
 
