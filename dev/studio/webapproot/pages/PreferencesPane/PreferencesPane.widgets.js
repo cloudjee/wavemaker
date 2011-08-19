@@ -24,9 +24,9 @@ PreferencesPane.widgets = {
 				}],
 				*/
 				prefsPanel: ["wm.Panel", {height: "100%", width: "100%", padding: "10"}, {}, {
-					panel2: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]}, margin: "0,0,5,0", height: "100%", width: "100%", verticalAlign: "middle", horizontalAlign: "left"}, {}, {
-					    wavemakerFolderEditor: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, caption: "WaveMaker Folder", width: "100%"}, {onEnterKeyPress: "okButtonClick"}, {}],
-						demoFolderEditor: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, caption: "Demos Folder", width: "100%"}, {onEnterKeyPress: "okButtonClick"}, {
+				    panel2: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]}, padding: "10", margin: "0,0,5,0", height: "100%", width: "100%", verticalAlign: "middle", horizontalAlign: "left"}, {}, {
+					    wavemakerFolderEditor: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "130px", caption: "WaveMaker Folder", width: "100%"}, {onEnterKeyPress: "okButtonClick"}, {}],
+						demoFolderEditor: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "130px", caption: "Demos Folder", width: "100%"}, {onEnterKeyPress: "okButtonClick"}, {
 						}]
 					}],
 					panel3: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]}, margin: "5,0,0,0", height: "100%", width: "100%", verticalAlign: "middle", horizontalAlign: "left"}, {}, {
