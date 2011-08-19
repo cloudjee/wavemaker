@@ -23,7 +23,6 @@ dojo.declare("DeploymentDialog", wm.Page, {
     CF_DEPLOY: "CLOUD_FOUNDRY",
     TC_DEPLOY: "TOMCAT",
     FILE_DEPLOY: "FILE",
-    CFTOKEN_COOKIE: "Studio.DeploymentDialog.CFTOKEN", /* Also used in CloudFoundryAppList */
 
     /* Page caches and state */
     currentDatabaseBoxes: [],
@@ -370,6 +369,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		  this._updateSchemaCheckbox.captionNode.style.color = "white";
 		  var deleteCheckboxSubscribe = dojo.connect(app.confirmDialog, "onClose", this, function() {
 		      if (this._updateSchemaCheckbox) {
+			  this._updateSchemaCheckboxValue = this._updateSchemaCheckbox.getChecked();
 			  this._updateSchemaCheckbox.destroy();
 			  delete this._updateSchemaCheckbox;
 		      }
@@ -382,34 +382,41 @@ dojo.declare("DeploymentDialog", wm.Page, {
       } 
   },
     cloudFoundryDeployConfirmed: function(inData) {
-	this._updateSchema = this._updateSchemaCheckbox.getChecked();
+	this._updateSchema = this._updateSchemaCheckbox ? this._updateSchemaCheckbox.getChecked() : this._updateSchemaCheckboxValue;
 	if (!inData.databases) inData.databases = [];
 	for (var i = 0; i < inData.databases.length; i++) {
 	    inData.databases[i].updateSchema = this._updateSchema;
 	}
- 
-	this.confirmToken(inData.token, dojo.hitch(this, function(inToken) {
-	    //inData.token = dojo.cookie(this.CFTOKEN_COOKIE);
+	if (!inData.token)
+	    inData.token = this.getTokenCookie(inData.target);
+	this.confirmToken(inData.token, inData.target, dojo.hitch(this, function(inToken) {
 	    inData.token = inToken;
 	    this.deploy2(inData);
 	}));	
     },
-    confirmToken: function(inToken, inCallback) {
-	if (!inToken) {
+    confirmToken: function(inToken, inTargetUrl,inCallback) {
+	if (!inToken || !inTargetUrl) {
 	    studio.endWait(); // in case beginWait was called before confirmToken was called
-	    this.showCFLogin(inCallback);
+	    this.showCFLogin(inCallback, inTargetUrl);
 	} else {
-	    this.cloudFoundryService.requestAsync("listApps", [inToken,"https://api.cloudfoundry.com"], 
+	    this.cloudFoundryService.requestAsync("listApps", [inToken,inTargetUrl], 
 						  dojo.hitch(this, function(inData) {
 						      inCallback(inToken);
 						  }),
 						  dojo.hitch(this, function(inData) {
 						      studio.endWait(); // in case beginWait was called before confirmToken was called
-						      this.showCFLogin(inCallback);
+						      this.showCFLogin(inCallback, inTargetUrl);
 						  }));
 	}
     },
-    showCFLogin: function(inCallback) {
+    showCFLogin: function(inCallback, inTargetUrl) {
+	if (inTargetUrl) {
+	    this.loginDialogTargetEditor.setDataValue(inTargetUrl);
+	    this.loginDialogTargetEditor.setReadonly(true);
+	} else {
+	    this.loginDialogTargetEditor.setDataValue("https://api.cloudfoundry.com");
+	    this.loginDialogTargetEditor.setReadonly(false);	    
+	}
 	this.cfLoginDialog.show();
 	this.loginDialogUserEditor.focus();		
 	this.cfLoginDialogSuccessHandler = inCallback;
@@ -533,7 +540,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
   },
     getTargetUrl: function(inData) {
 	if (inData.deploymentType == this.CF_DEPLOY) {
-	    return "http://" + inData.applicationName + "." + inData.target.replace(/^https:\/\/api\./,"") + "/";
+	    return "http://" + inData.applicationName + "." + inData.target.replace(/^https?:\/\/api\./,"") + "/";
 	} else if (inData.deploymentType == this.TC_DEPLOY) {
 	    return "http://" + inData.host + ":" + inData.port + "/" + inData.applicationName;
 	} else {
@@ -1098,9 +1105,9 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	studio.beginWait(this.getDictionaryItem("WAIT_LOGGING_IN"));
 	this.cloudFoundryService.requestSync(
 	    "login",
-	    [this.loginDialogUserEditor.getDataValue(), this.loginDialogPasswordEditor.getDataValue(), this._deployData && this._deployData.target ? this._deployData.target : "https://api.cloudfoundry.com"],
+	    [this.loginDialogUserEditor.getDataValue(), this.loginDialogPasswordEditor.getDataValue(), this._deployData && this._deployData.target ? this._deployData.target : this.loginDialogTargetEditor.getDataValue()],
 	    dojo.hitch(this, function(inData) {
-		dojo.cookie(this.CFTOKEN_COOKIE, inData, {expires: 1});
+		this.setTokenCookie(this.loginDialogTargetEditor.getDataValue(), inData);
 		studio.endWait();
 		this.cfLoginDialog.hide();
 		if (this.cfLoginDialogSuccessHandler) {
@@ -1127,13 +1134,16 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
 					   
 
-    refreshCloudFoundryAppList: function(optionalCallback) {
-	var token = dojo.cookie(this.CFTOKEN_COOKIE);
-	this.confirmToken(token, dojo.hitch(this, function(inToken) {
+    refreshCloudFoundryAppList: function(optionalCallback, inOptionalTargetUrl) {
+	if (inOptionalTargetUrl) {
+	    this.loginDialogTargetEditor.setDataValue(inOptionalTargetUrl);
+	}
+	var token = this.getTokenCookie(this.loginDialogTargetEditor.getDataValue());
+	this.confirmToken(inOptionalTargetUrl ? token : null, inOptionalTargetUrl, dojo.hitch(this, function(inToken) {
 	    token = inToken;
 	    this.deploymentLoadingDialog.widgetToCover = this.cloudFoundryAppList;
 	    this.deploymentLoadingDialog.show();
-	    this.cloudFoundryService.requestAsync("listApps", [token,"https://api.cloudfoundry.com"], 
+	    this.cloudFoundryService.requestAsync("listApps", [token,this.loginDialogTargetEditor.getDataValue()],
 						  dojo.hitch(this, function(inResult) {
 						      this.populateCloudFoundryAppList(inResult, optionalCallback);
 						  }),
@@ -1146,7 +1156,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     populateCloudFoundryAppList: function(inResult, optionalCallback) {
 	var results = [];
 	for (var i = 0; i < inResult.length; i++) {
-	    results.push({name: inResult[i].name, state: inResult[i].state, services: inResult[i].services ? inResult[i].services.join(", ") : ""});
+	    results.push({name: "<a href='http://" + inResult[i].name + this.loginDialogTargetEditor.getDataValue().replace(/^.*?api/,"") +"' target='_NewWindow'>" + inResult[i].name + "</a>", state: inResult[i].state, services: inResult[i].services ? inResult[i].services.join(", ") : ""});
 	}
 	this.cachedCloudFoundryDeploymentList = inResult;
 	this.cloudFoundryAppList.renderData(results);
@@ -1168,19 +1178,19 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	    "host": null,
 	    "name": name,
 	    "port": 0,
-	    "target": "https://api.cloudfoundry.com",
-	    "token": dojo.cookie(this.CFTOKEN_COOKIE)
+	    "target": this.loginDialogTargetEditor.getDataValue(),
+	    "token": this.getTokenCookie(this.loginDialogTargetEditor.getDataValue())
 	    };
 	this.undeploy(data);
     },
     undeploy: function(inData) {
 	studio.beginWait(this.getDictionaryItem("WAIT_UNDEPLOY"));
-	this.confirmToken(inData.token, dojo.hitch(this, function(inToken) {
+	this.confirmToken(inData.token, inData.target, dojo.hitch(this, function(inToken) {
 	    inData.token = inToken;
 	    studio.deploymentService.requestAsync("undeploy", [inData,this.deleteServicesCheckbox.getChecked()], 
 						  dojo.hitch(this, function(inResult) {
 						      studio.endWait();
-						      this.refreshCloudFoundryAppList();
+						      this.refreshCloudFoundryAppList(null,this.loginDialogTargetEditor.getDataValue());
 						  }),
 						  dojo.hitch(this, function(inError) {
 						      studio.endWait();
@@ -1191,13 +1201,13 @@ dojo.declare("DeploymentDialog", wm.Page, {
     cloudFoundryAppListCloseButtonClick: function() {
 	this.cloudFoundryAppListDialog.hide();
     },
-    showCloudFoundryAppListDialog: function(optionalCallback) {
+    showCloudFoundryAppListDialog: function(optionalCallback, optionalTargetUrl) {
 	this.cloudFoundryAppListDialog.show();
-	this.refreshCloudFoundryAppList(optionalCallback);
+	this.refreshCloudFoundryAppList(optionalCallback, optionalTargetUrl);
     },
     manageCloudFoundryButtonClick: function() {
-	this.showCloudFoundryAppListDialog(dojo.hitch(this, function() {
-	    var data = this.deploymentList.selectedItem.getValue("dataValue");
+	var data = this.deploymentList.selectedItem.getValue("dataValue");
+	this.showCloudFoundryAppListDialog(dojo.hitch(this, function() {	    
 	    if (data) {
 		for (var i = 0; i < this.cachedCloudFoundryDeploymentList.length; i++) {
 		    if (this.cachedCloudFoundryDeploymentList[i].name == data.applicationName) {
@@ -1207,10 +1217,18 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		    }
 		}
 	    }
-	}));
+	}), data.target);
     },
     cloudFoundryApplicationNameChanged: function() {
 
+    },
+
+    CFTOKEN_COOKIE: "Studio.DeploymentDialog.CFTOKEN",
+    getTokenCookie: function(inTargetUrl) {
+	return 	dojo.cookie(this.CFTOKEN_COOKIE + ":" + inTargetUrl);
+    },
+    setTokenCookie: function(inTargetUrl, inToken) {
+	dojo.cookie(this.CFTOKEN_COOKIE + ":" + inTargetUrl, inToken, {expires: 1});
     },
     _end:0
 });
