@@ -320,5 +320,10 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 		this.toolbarColor = val;
 		this.updatePlugins();
 		this.createEditor();
-	}
+	},
+        setToolbarFind: function(val) {
+		this.toolbarFind = val;
+		this.updatePlugins();
+		this.createEditor();
+	},
  });
