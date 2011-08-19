@@ -68,7 +68,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 					     height: "20px",
 					     parent: this.owner.owner.titleBar,
 					     onclick: function() {
-						 window.open(this.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}));
+						 window.open(studio.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}));
 					     }});
 	this.owner.owner.titleBar.reflow();
 					     
@@ -295,7 +295,6 @@ dojo.declare("DeploymentDialog", wm.Page, {
   },
 
     deployAfterVerifyingNoChanges: function(inData) {
-	debugger;
 	var databases = {};
 	var databaseCount = 0;
 	var components = studio.application.getServerComponents();
