@@ -319,7 +319,7 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 	    var propArray = [];
 	    wm.forEachProperty(this.props, function(p) {propArray.push(p);});
 	    propArray = propArray.sort(function(a,b) {
-		return wm.compareStrings(a.name,b.name);
+		return wm.compareStrings(a.name.toLowerCase(),b.name.toLowerCase());
 	    });
 		var rows = []
 	    for (var i = 0; i < propArray.length; i++) {
