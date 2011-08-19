@@ -6,7 +6,7 @@
 #
 
 WAVEMAKER_PATH=@PREFIX@
-WAVEMAKER_PID=${WAVEMAKER_PATH}/wavemaker.pid
+WAVEMAKER_PID=/tmp/wavemaker.pid
 
 # java from JDK, NOT JRE, must be on path 
 
