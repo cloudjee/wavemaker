@@ -101,7 +101,8 @@ wm.Object.extendSchema(wm.Dialog, {
     verticalAlign: {ignore: 1},
     showing: {ignore: 1},
     setModal: {group: "method"},
-    minify: {group: "method"}
+    minify: {group: "method"},
+    setPositionNear: {group: "method"}
 });
 
 
