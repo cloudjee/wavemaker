@@ -199,6 +199,11 @@ dojo.declare("wm.Currency", wm.Number, {
 	    this.updateIsDirty();
 	}
 	return changed;
+    },
+
+    setCurrency: function(inCurrency) {
+	this.currency = inCurrency;
+	this.createEditor();
     }
 
 });
