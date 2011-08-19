@@ -20,10 +20,18 @@ dojo.declare("PopupHelp", wm.Page, {
 	//===========================================================================
 	// Initialization / setup
 	//===========================================================================
-	     closeButton: null,
+
 	start: function() {
 	},
-
+    onShow: function() {
+	this.deleteExtraButtons();
+    },
+    deleteExtraButtons: function() {
+	for (var i = popuphelp.buttonPanel.c$.length-1; i >= 0;  i--) {
+	    if (!popuphelp.buttonPanel.c$[i].name)
+		popuphelp.buttonPanel.c$[i].destroy();
+	}
+    },
 	moreButtonClick: function() {
 
 	},
@@ -41,7 +49,7 @@ dojo.declare("PopupHelp", wm.Page, {
 	       this.labelBody.setCaption(text);	       
 	       
 	       if (text) {
-		     this.buttonPanel.removeAllControls();
+		   this.deleteExtraButtons();
 	       }
 	       var popuphelp = this;
                dojo.query(".SynopsisNavButtons a").forEach(function(synopsislink) {
@@ -53,9 +61,7 @@ dojo.declare("PopupHelp", wm.Page, {
 	       }).orphan();
 	       dojo.query(".PopupHelp .PopupHelp-labelBody").addContent("&nbsp;"); // force an adequate bottom margin
 
-	       var closeButton = new wm.Button({parent: this.buttonPanel, owner: this, caption: "Close", width: "100px"});
-	       //this.buttonPanel.addControl(closeButton);
-	       dojo.connect(closeButton, "onclick", this, "cancelButtonClick");
+
 	       this.reflow();
 	 }
 	     });
