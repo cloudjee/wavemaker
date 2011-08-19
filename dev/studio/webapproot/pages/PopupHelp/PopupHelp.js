@@ -27,9 +27,9 @@ dojo.declare("PopupHelp", wm.Page, {
 	this.deleteExtraButtons();
     },
     deleteExtraButtons: function() {
-	for (var i = popuphelp.buttonPanel.c$.length-1; i >= 0;  i--) {
-	    if (!popuphelp.buttonPanel.c$[i].name)
-		popuphelp.buttonPanel.c$[i].destroy();
+	for (var i = this.buttonPanel.c$.length-1; i >= 0;  i--) {
+	    if (!this.buttonPanel.c$[i].name)
+		this.buttonPanel.c$[i].destroy();
 	}
     },
 	moreButtonClick: function() {
