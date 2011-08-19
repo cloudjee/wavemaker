@@ -122,11 +122,15 @@ Studio.widgets = {
 							       idInPage: "preferencesItem",
 							       onClick: "projectSettingsClick",
 							       iconClass: "preferencesItem"},
-                                                             {"label": "Upload Studio Patches...",
-							       idInPage: "uploadStudioPatchesItem",
-							       onClick: "uploadStudioPatches",
-							       iconClass: "importProjectItem"}
-
+							     {"label": "Modify Studio",
+							      iconClass: "importProjectItem",
+							      children: [
+								  {"label": "Upload Studio Patches...",
+								   onClick: "uploadStudioPatches"},
+								  {"label": "Import Partner Services...",
+								   onClick: "importPartnerService"}
+							      ]
+							     }
 							 ]},
 							  {"label": "Edit",
 								idInPage: "editPopupBtn",

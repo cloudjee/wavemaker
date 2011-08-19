@@ -31,8 +31,6 @@ Studio.extend({
 	    label: "Partner Services",
 	    iconClass: "PartnerService",
 	    children: [
-		{label: "Import...",
-		 onClick: "importPartnerService"}
 	    ]
 	};
 	menu.children.push(this._partnerServicesStructure);
@@ -61,6 +59,8 @@ Studio.extend({
 
 	      var menu = (inTab == bundlePackage.Non_Visual_Components) ? this._insertMenuStructure : this._serviceMenuStructure;
 	      if (inProps.partnerService) {
+		  if (!this._partnerServicesStructure)
+		      this.addPartnerServices();
 		  menu = this._partnerServicesStructure;
 		  if (menu.children.length == 1) {
 		      menu.children.push({separator:true});

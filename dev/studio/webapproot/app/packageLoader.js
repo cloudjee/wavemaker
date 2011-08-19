@@ -69,7 +69,6 @@ loadPackages = function() {
 
     //studio.palette.beginUpdate();
     loadData(dojo.moduleUrl("wm.studio.app") + "packages.js", _loadPackages);
-    studio.addPartnerServices();
     loadData(dojo.moduleUrl("wm.packages") + "packages.js", _loadPackages);
 
 	if (!studio.isCloud()) 
