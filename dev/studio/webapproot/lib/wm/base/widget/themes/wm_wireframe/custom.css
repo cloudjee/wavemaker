@@ -12,37 +12,6 @@
  *  limitations under the License.
  */
 
-.wm_wireframe .HeaderContent:first-child, 
-.wm_wireframe .MainContent:first-child, 
-.wm_wireframe .EmphasizedContent:first-child {
-    -webkit-transform: skew(-2deg,0deg);
-}
-
-.wm_wireframe .HeaderContent:nth-child(2), 
-.wm_wireframe .MainContent:nth-child(2),
-.wm_wireframe .EmphasizedContent:nth-child(2)  {
-    -webkit-transform: skew(-1deg,0deg);
-}
-
-
-.wm_wireframe .HeaderContent:nth-child(3),  
-.wm_wireframe .MainContent:nth-child(3), 
-.wm_wireframe .EmphasizedContent:nth-child(3)  {
-    -webkit-transform: skew(0deg,0deg);
-}
-
-.wm_wireframe .HeaderContent:nth-child(4), 
-.wm_wireframe .MainContent:nth-child(4),
-.wm_wireframe .EmphasizedContent:nth-child(4)  {
-    -webkit-transform: skew(1deg,0deg);
-}
-
-.wm_wireframe .HeaderContent:nth-child(5), 
-.wm_wireframe .MainContent:nth-child(5),
-.wm_wireframe .EmphasizedContent:nth-child(5)  {
-    -webkit-transform: skew(2deg,0deg);
-}
-
 .wm_wireframe .isDirty .dijitTextBox,
 .wm_wireframe .isDirty .dijitComboBox,
 .wm_wireframe .isDirty .dijitTextArea {
