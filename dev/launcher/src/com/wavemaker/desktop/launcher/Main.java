@@ -192,7 +192,7 @@ public class Main
         Writer writer = new FileWriter(
                 new File(contextDir, webAppName + ".xml"));
         writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
-                + "<Context antiJARLocking=\"false\" antiResourceLocking=\"false\" "
+                + "<Context antiJARLocking=\"true\" antiResourceLocking=\"false\" "
                 + "\t\tdocBase=\""
                 + webAppDir.getAbsolutePath()
                 + "\" path=\"/"
