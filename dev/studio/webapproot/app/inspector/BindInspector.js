@@ -699,19 +699,21 @@ dojo.declare("wm.NavigationInspector", wm.DataInspector, {
 			return;
 		var w = wm.data.getPropWire(this.owner.inspected, inProp);
 		if (w) w.destroy();
-	    switch (inProp && inValue) {
-				case "pageName":
-				case "duration":
-				case "cssClasses":
-				case "dialogPosition":
-					this.owner.inspected.components.binding.addWire("", inProp, "", '"' + inValue + '"');
-					return;
-				case "pageContainer":
-				case "layer":
-				case "layers":
-					this.owner.inspected.components.binding.addWire("", inProp, inValue, "");
-					return;
-			}
+	    if (inValue) {
+		switch (inProp) {
+		case "pageName":
+		case "duration":
+		case "cssClasses":
+		case "dialogPosition":
+		    this.owner.inspected.components.binding.addWire("", inProp, "", '"' + inValue + '"');
+		    return;
+		case "pageContainer":
+		case "layer":
+		case "layers":
+		    this.owner.inspected.components.binding.addWire("", inProp, inValue, "");
+		    return;
+		}
+	    }
 	    return this.inherited(arguments);
 	},
        _setPropEdit: function(inName, inValue, inDefault) {
