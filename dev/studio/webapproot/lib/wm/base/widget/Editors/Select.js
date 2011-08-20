@@ -660,6 +660,10 @@ dojo.declare("wm.FilteringLookup", wm.Lookup, {
 	}
 	
     },
+    setDataValue: function(inData) {
+	this.dataSet.setData([inData]);
+	this.inherited(arguments);
+    },
     onDataSetSuccess: function() {
 	wm.onidle(this, function() {
 	    this.editor._startSearchFromInput();
