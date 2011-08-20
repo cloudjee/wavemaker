@@ -139,16 +139,19 @@ dojo.declare("wm.DateTime", wm.Text, {
     timePanelHeight: 38,
     formatLength: "short",
     dateMode: "Date and Time",
+/*
     _createEditor: function(inNode, inProps) {
 	var e = this.inherited(arguments);
 	var node = document.createElement("div");
 	node.innerHTML = "<div class='dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton dijitArrowButtonContainer' role='presentation' ><input class='dijitReset dijitInputField dijitArrowButtonInner' value='▼ ' type='text' tabindex='-1' readonly='readonly' role='presentation'></div>";
 	e.domNode.appendChild(node.firstChild);
+	this._arrowNode = e.domNode.firstChild;
 	e.domNode.appendChild(e.domNode.firstChild); // make the first child the last child
 	dojo.destroy(node);
 	dojo.addClass(e.domNode, "dijitComboBox");
 	return e;
     },
+    */
     init: function( ){
 	this.inherited(arguments);
         this.subscribe("wm.AbstractEditor-focused", this, function(inEditor) {
