@@ -136,7 +136,7 @@ public class MainConsole extends javax.swing.JFrame
             {
                 if (evt.getPropertyName().equals(TomcatConfig.PROPERTY_SHUTDOWN_PORT))
                 {
-                    lblCurrentServerPortVal.setText(Integer.toString(tomcatConfig.getShutdownPort()));
+                    lblCurrentShutdownPortVal.setText(Integer.toString(tomcatConfig.getShutdownPort()));
                     // tfNewShutdownPort.setText(Integer.toString(tomcatConfig.getShutdownPort()));
                 }
                 else if (evt.getPropertyName().equals(TomcatConfig.PROPERTY_SERVICE_PORT))
@@ -234,10 +234,10 @@ public class MainConsole extends javax.swing.JFrame
         btnStop = new javax.swing.JButton();
         pnlAdvOpts = new javax.swing.JPanel();
         btnAdvOpts = new javax.swing.JButton();
-        pnlPorts1 = new javax.swing.JPanel();
-        lblCurrentServerPort1 = new javax.swing.JLabel();
-        lblCurrentShutdownPort1 = new javax.swing.JLabel();
-        pnlPorts = new javax.swing.JPanel();
+        pnlPortLbls = new javax.swing.JPanel();
+        lblCurrentServerPort = new javax.swing.JLabel();
+        lblCurrentShutdownPort = new javax.swing.JLabel();
+        pnlPortVals = new javax.swing.JPanel();
         lblCurrentServerPortVal = new javax.swing.JLabel();
         lblCurrentShutdownPortVal = new javax.swing.JLabel();
 
@@ -344,13 +344,13 @@ public class MainConsole extends javax.swing.JFrame
         gridBagConstraints.insets = new java.awt.Insets(18, 10, 0, 0);
         getContentPane().add(pnlAdvOpts, gridBagConstraints);
 
-        pnlPorts1.setBackground(new java.awt.Color(255, 255, 255));
-        pnlPorts1.setPreferredSize(new java.awt.Dimension(558, 20));
-        pnlPorts1.setLayout(new java.awt.GridBagLayout());
+        pnlPortLbls.setBackground(new java.awt.Color(255, 255, 255));
+        pnlPortLbls.setPreferredSize(new java.awt.Dimension(558, 20));
+        pnlPortLbls.setLayout(new java.awt.GridBagLayout());
 
-        lblCurrentServerPort1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblCurrentServerPort1.setLabelFor(lblCurrentServerPortVal);
-        lblCurrentServerPort1.setText(bundle.getString("MainConsole.lblCurrentServerPort1.text")); // NOI18N
+        lblCurrentServerPort.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblCurrentServerPort.setLabelFor(lblCurrentServerPortVal);
+        lblCurrentServerPort.setText(bundle.getString("MainConsole.lblCurrentServerPort.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -358,32 +358,32 @@ public class MainConsole extends javax.swing.JFrame
         gridBagConstraints.ipadx = 40;
         gridBagConstraints.ipady = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        pnlPorts1.add(lblCurrentServerPort1, gridBagConstraints);
+        pnlPortLbls.add(lblCurrentServerPort, gridBagConstraints);
 
-        lblCurrentShutdownPort1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblCurrentShutdownPort1.setLabelFor(lblCurrentShutdownPortVal);
-        lblCurrentShutdownPort1.setText(bundle.getString("MainConsole.lblCurrentShutdownPort1.text")); // NOI18N
-        lblCurrentShutdownPort1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        lblCurrentShutdownPort1.setPreferredSize(new java.awt.Dimension(60, 14));
+        lblCurrentShutdownPort.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblCurrentShutdownPort.setLabelFor(lblCurrentShutdownPortVal);
+        lblCurrentShutdownPort.setText(bundle.getString("MainConsole.lblCurrentShutdownPort.text")); // NOI18N
+        lblCurrentShutdownPort.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lblCurrentShutdownPort.setPreferredSize(new java.awt.Dimension(60, 14));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.ipadx = 40;
-        gridBagConstraints.ipady = 1;
+        gridBagConstraints.ipady = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         gridBagConstraints.insets = new java.awt.Insets(0, 310, 0, 0);
-        pnlPorts1.add(lblCurrentShutdownPort1, gridBagConstraints);
+        pnlPortLbls.add(lblCurrentShutdownPort, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(18, 10, 0, 10);
-        getContentPane().add(pnlPorts1, gridBagConstraints);
+        getContentPane().add(pnlPortLbls, gridBagConstraints);
 
-        pnlPorts.setBackground(new java.awt.Color(255, 255, 255));
-        pnlPorts.setPreferredSize(new java.awt.Dimension(558, 20));
-        pnlPorts.setLayout(new java.awt.GridBagLayout());
+        pnlPortVals.setBackground(new java.awt.Color(255, 255, 255));
+        pnlPortVals.setPreferredSize(new java.awt.Dimension(558, 20));
+        pnlPortVals.setLayout(new java.awt.GridBagLayout());
 
         lblCurrentServerPortVal.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblCurrentServerPortVal.setText(bundle.getString("MainConsole.lblCurrentServerPortVal.text")); // NOI18N
@@ -393,7 +393,7 @@ public class MainConsole extends javax.swing.JFrame
         gridBagConstraints.ipadx = 60;
         gridBagConstraints.ipady = 15;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        pnlPorts.add(lblCurrentServerPortVal, gridBagConstraints);
+        pnlPortVals.add(lblCurrentServerPortVal, gridBagConstraints);
 
         lblCurrentShutdownPortVal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblCurrentShutdownPortVal.setText(bundle.getString("MainConsole.lblCurrentShutdownPortVal.text")); // NOI18N
@@ -404,11 +404,11 @@ public class MainConsole extends javax.swing.JFrame
         gridBagConstraints.ipady = 15;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         gridBagConstraints.insets = new java.awt.Insets(0, 340, 0, 0);
-        pnlPorts.add(lblCurrentShutdownPortVal, gridBagConstraints);
+        pnlPortVals.add(lblCurrentShutdownPortVal, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 5;
-        getContentPane().add(pnlPorts, gridBagConstraints);
+        getContentPane().add(pnlPortVals, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -631,16 +631,16 @@ public class MainConsole extends javax.swing.JFrame
     private javax.swing.JButton btnAdvOpts;
     private javax.swing.JButton btnStart;
     private javax.swing.JButton btnStop;
-    private javax.swing.JLabel lblCurrentServerPort1;
+    private javax.swing.JLabel lblCurrentServerPort;
     private javax.swing.JLabel lblCurrentServerPortVal;
-    private javax.swing.JLabel lblCurrentShutdownPort1;
+    private javax.swing.JLabel lblCurrentShutdownPort;
     private javax.swing.JLabel lblCurrentShutdownPortVal;
     private javax.swing.JLabel lblStatus;
     private javax.swing.JLabel lblWMTitleLogo;
     private javax.swing.JProgressBar pbStatus;
     private javax.swing.JPanel pnlAdvOpts;
-    private javax.swing.JPanel pnlPorts;
-    private javax.swing.JPanel pnlPorts1;
+    private javax.swing.JPanel pnlPortLbls;
+    private javax.swing.JPanel pnlPortVals;
     private javax.swing.JPanel pnlServerOps;
     // End of variables declaration//GEN-END:variables
 
