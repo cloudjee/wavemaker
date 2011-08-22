@@ -219,7 +219,7 @@
     </target>
 
     <target name="copy-jars"
-            depends="prepare-webapproot">
+            depends="prepare-webapproot, undeploy">
         <mkdir dir="${build.app.lib.dir}"/>
         <mkdir dir="${build.app.classes.dir}"/>
 
