@@ -110,6 +110,6 @@ dojo.declare("LogViewer", wm.Page, {
     destroy: function() {
 	window.clearTimeout(this._interval);
 	this.inherited(arguments);
-    }
+    },
   _end: 0
 });

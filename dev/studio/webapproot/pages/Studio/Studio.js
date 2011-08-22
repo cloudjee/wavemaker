@@ -1198,10 +1198,7 @@ dojo.declare("Studio", wm.Page, {
 
             // darksnazzy messes with users ability to edit themes
             dojo[(layer.name == "themeLayer") ? "removeClass" : "addClass"](this.sourceTab.domNode, "wm-darksnazzy");
-	    if (layer.name == "logs") {
-		this.logViewer.page.showLogs();
-
-            } else if (layer.name == "appDocs") {
+	    if (layer.name == "appDocs") {
 		this.generateAllDocumentation();
 	    }
 
