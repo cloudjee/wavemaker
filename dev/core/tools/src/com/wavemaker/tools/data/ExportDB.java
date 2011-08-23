@@ -163,7 +163,7 @@ public class ExportDB extends BaseDataModelSetup {
                             classesDir);
                 }
 
-                String extraddl = prepareForExport(exportToDatabase);
+                prepareForExport(exportToDatabase);
 
                 Connection conn = JDBCUtils.getConnection(this.connectionUrl, this.username,
                         this.password, this.driverClassName);
@@ -184,9 +184,6 @@ public class ExportDB extends BaseDataModelSetup {
                 }
                 ddl = sb.toString();
 
-                //if (!ObjectUtils.isNullOrEmpty(extraddl)) {
-                //    ddl = extraddl + "\n\n" + ddl;
-                //}
             }
         } catch (IOException ex) {
             throw new DataServiceRuntimeException(ex);
@@ -264,13 +261,9 @@ public class ExportDB extends BaseDataModelSetup {
             throw new ConfigurationException(Resource.UNSET_SCHEMA, "MySQL");
         }
 
-        if (ObjectUtils.isNullOrEmpty(catalogName)) {
-            throw new ConfigurationException(Resource.CATALOG_SHOULD_BE_SET);
-        }
-
         if (!ObjectUtils.isNullOrEmpty(urlDBName)) {
             url = connectionUrl.substring(0, connectionUrl.indexOf(urlDBName));
-            if (!catalogName.equals(urlDBName)) {
+            if (!ObjectUtils.isNullOrEmpty(catalogName) && !catalogName.equals(urlDBName)) {
                 throw new ConfigurationException(
                     Resource.MISMATCH_CATALOG_DBNAME, urlDBName, catalogName);
             }
