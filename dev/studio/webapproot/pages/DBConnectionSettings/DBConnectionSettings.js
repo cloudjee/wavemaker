@@ -480,10 +480,14 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 	_getDDLError: function(inError) {
 		studio.endWait();
 		var msg = "";
+	    if (inError.message.match(/Unknown database/)) {
+		app.alert(this.getDictionaryItem("ALERT_EXPORT_OVERWRITE_NEEDED"))
+	    } else {
 		if (inError.message) {
 		    msg = ": " + inError.message;
 		}
-	    app.alert(this.getDictionaryItem("ALERT_LOAD_DDL_FAILED", {error: inError.message}));
+		app.alert(this.getDictionaryItem("ALERT_LOAD_DDL_FAILED", {error: inError.message}));
+	    }
 	},
 	_updateDDL: function() {
 		this.msgDialog.page.setup(true);
@@ -508,9 +512,11 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 		var msg = "";
 		if (inError.message) {
 		    msg = ": " + inError.message;
+		} else {
+		    msg = inError;
 		}
-	    app.alert(this.getDictionaryItem("ALERT_EXPORT_FAILED", {error: inError.message}));
-
+		app.alert(this.getDictionaryItem("ALERT_EXPORT_FAILED", {error: msg}));
+	    
 	},
 	_loadConnectionProperties: function(dataModelName) {
 		studio.dataService.requestAsync(
