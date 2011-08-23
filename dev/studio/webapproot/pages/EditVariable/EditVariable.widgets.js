@@ -15,8 +15,9 @@
 
 EditVariable.widgets = {
 	smallToolbarImageList: ["wm.ImageList", {width: 16, height: 16, colCount: 32, url: "images/smallToolbarBtns.png"}, {}],
-	layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
-	    tabs: ["wm.TabLayers", {width: "100%", height: "100%"}, {}, {
+    layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"},{}, {
+	dialog: ["wm.Panel", {width:"100%",height:"100%",border: "10", borderColor: "#424A5A" }, {}, {
+	    tabs: ["wm.TabLayers", {width: "100%", height: "100%", clientBorder: "3,0,0,0",clientBorderColor: "#959DAB"}, {}, {
 		guiLayer: ["wm.Layer", {caption: "Field Editor"}, {onShow: "onGuiShow"}, {
 		    panel1: ["wm.Panel", {"height":"20px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%", padding: "2"}, {}, {
 			AddButton: ["wm.ToolButton", {hint: "Add Menu Item", "caption":"","width":"18px", height: "16px", imageList: "smallToolbarImageList", imageIndex: 25}, {"onclick":"addButtonClick"}],
@@ -24,7 +25,7 @@ EditVariable.widgets = {
 			//DefaultItemButton: ["wm.ToolButton", {hint: "Make selected item the initial button value", "caption":"","width":"16px", height: "16px", imageList: "smallToolbarImageList", imageIndex: 2}, {"onclick":"DefaultButtonClick"}]
 
 		    }],
-		    panel2: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+		    panel2: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%", padding: "10"}, {}, {
 			tree: ["wm.Tree", {"border":"0","dropBetweenNodes":true,"height":"100%"}, {"ondblclick":"treeDblclick", ondeselect: "treeSelect", onselect: "treeSelect"}]/*,
 																						    sample: ["wm.DojoMenu", {"eventList":[{"label":"File","children":[{"label":"New"},{"label":"Open"},{"label":"Save"},{"label":"Close"}],"onClick":undefined},{"label":"Edit"},{"label":"Zoom"}],"height":"100%","structure":"{\"items\":[{\"label\":\"File\"},{\"label\":\"Edit\"},{\"label\":\"Zoom\"}]}","vertical":true,"width":"115px"}, {}]*/
 		    }]
@@ -32,7 +33,8 @@ EditVariable.widgets = {
 		textLayer: ["wm.Layer", {caption: "Text Editor"}, {onShow: "updateText"}, {
 		    text: ["wm.AceEditor", {width: "100%", height: "100%"}, {onChange: "onAceChange"}]
 		}]
-	    }],
+	    }]
+	}],
 	    buttonBar: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, height: "20px", "horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%", padding: "2,0,2,0", border: "1,0,0,0", height: "34px", horizontalAlign: "right"}, {}, {
 			 CancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Cancel"}, {onclick: "cancelClick"}],
 			 OKButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "OK"}, {onclick: "okClick"}]
