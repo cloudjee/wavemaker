@@ -64,8 +64,9 @@ dojo.declare("wm.Dijit", wm.Control, {
 		this.inherited(arguments);
 	},
 	destroy: function() {
+	    if (this.dijit)
 		this.dijit.destroy();
-		this.inherited(arguments);
+	    this.inherited(arguments);
 	},
 	setDomNode: function(inDomNode) {	    
 		inDomNode = this.initDijit(inDomNode);
