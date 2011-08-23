@@ -91,6 +91,15 @@ dojo.declare("wm.Time", wm.Date, {
 	_createEditor: function(inNode, inProps) {
 		return new dijit.form.TimeTextBox(this.getEditorProps(inNode, inProps));
 	},
+	getEditorValue: function() {
+	    var d = wm.Text.prototype.getEditorValue.call(this);
+	    if (d) {
+		if (!this.useLocalTime)
+		    d.setHours(d.getHours()-wm.timezoneOffset,0,0);
+		return d.getTime();
+	    }
+	    return this.makeEmptyValue();
+	},
 	makePropEdit: function(inName, inValue, inDefault) {
 		switch (inName) {
 			case "timePattern":
