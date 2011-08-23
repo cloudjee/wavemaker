@@ -263,11 +263,16 @@ public class ExportDB extends BaseDataModelSetup {
 
         if (!ObjectUtils.isNullOrEmpty(urlDBName)) {
             url = connectionUrl.substring(0, connectionUrl.indexOf(urlDBName));
-            if (!ObjectUtils.isNullOrEmpty(catalogName) && !catalogName.equals(urlDBName)) {
+            if (ObjectUtils.isNullOrEmpty(catalogName)) {
+                catalogName = urlDBName;
+            } else if (!ObjectUtils.isNullOrEmpty(catalogName) && !catalogName.equals(urlDBName)) {
                 throw new ConfigurationException(
                     Resource.MISMATCH_CATALOG_DBNAME, urlDBName, catalogName);
             }
+        } else if (ObjectUtils.isNullOrEmpty(catalogName)) {
+            throw new ConfigurationException(Resource.CATALOG_SHOULD_BE_SET);
         }
+        
 
         String ddl = null;
         if (isMySQL()) {
