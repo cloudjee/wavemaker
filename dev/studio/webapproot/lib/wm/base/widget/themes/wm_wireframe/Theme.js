@@ -1,10 +1,10 @@
 {
 	"wm.ToggleButton": {
-		"border": 1, 
+		"border": "1", 
 		"borderColor": "#444444"
 	}, 
 	"wm.Button": {
-		"border": 1, 
+		"border": "1", 
 		"borderColor": "#444444"
 	}, 
 	"wm.Layout": {
@@ -148,7 +148,7 @@
 	}, 
 	"wm.Panel": {
 		"borderColor": "#444444", 
-		"border": 0
+		"border": "0"
 	}, 
 	"wm.CheckBoxEditor": {
 	}, 
@@ -173,7 +173,7 @@
 		"borderColor": "#444444"
 	}, 
 	"wm.BusyButton": {
-		"border": 1, 
+		"border": "1", 
 		"borderColor": "#444444"
 	}, 
 	"wm.Checkbox": {

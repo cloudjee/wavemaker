@@ -30,11 +30,11 @@
 		"borderColor": "#ABB8CF"
 	}, 
 	"wm.Layout": {
-		"border": 0
+		"border": "0"
 	}, 
 	"wm.Bevel": {
 		"bevelSize": 4, 
-		"border": 0
+		"border": "0"
 	}, 
 	"wm.Splitter": {
 		"bevelSize": "6", 
@@ -55,14 +55,14 @@
 	"wm.TabLayers": {
 		"layersType": "Tabs", 
 		"margin": "0", 
-		"border": 0, 
+		"border": "0", 
 		"borderColor": "", 
 		"clientBorder": "0", 
 		"clientBorderColor": "#FBFBFB"
 	}, 
 	"wm.WizardLayers": {
 		"margin": "0", 
-		"border": 0, 
+		"border": "0", 
 	    "clientBorder": "0",
 		"clientBorderColor": "#FBFBFB"
 	}, 
@@ -71,7 +71,7 @@
             "padding": "0"
 	}, 
 	"wm.Dialog": {
-		"border": 1, 
+		"border": "1", 
 		"titlebarBorder": "0,0,1,0", 
 	    "titlebarBorderColor": "#FBFBFB",
 		"footerBorder": "1,0,0,0", 
@@ -79,21 +79,21 @@
 		"titlebarHeight": "23"
 	}, 
 	"wm.GenericDialog": {
-		"border": 1, 
+		"border": "1", 
 		"titlebarBorder": "0,0,1,0", 
 		"titlebarBorderColor": "#FBFBFB", 
 		"footerBorder": "1,0,0,0", 
 		"footerBorderColor": "#FBFBFB"
 	}, 
 	"wm.RichTextDialog": {
-		"border": 1, 
+		"border": "1", 
 		"titlebarBorder": "0,0,1,0", 
 		"titlebarBorderColor": "#FBFBFB", 
 		"footerBorder": "1,0,0,0", 
 		"footerBorderColor": "#FBFBFB"
 	}, 
 	"wm.PageDialog": {
-		"border": 1, 
+		"border": "1", 
 		"titlebarBorder": "0,0,1,0", 
 		"titlebarBorderColor": "#FBFBFB", 
 		"footerBorder": "1,0,0,0", 
@@ -101,7 +101,7 @@
 		"noBevel": true
 	}, 
 	"wm.DesignableDialog": {
-		"border": 1, 
+		"border": "1", 
 		"titlebarBorder": "0,0,1,0", 
 		"titlebarBorderColor": "#FBFBFB", 
 		"footerBorder": "1,0,0,0", 
@@ -110,7 +110,7 @@
 	}, 
 	"wm.DojoMenu": {
 		"padding": "0", 
-		"border": 0, 
+		"border": "0", 
 		"borderColor": "#000000"
 	}, 
 	"wm.List": {
@@ -118,10 +118,10 @@
 		"border": "0"
 	}, 
 	"wm.dijit.ProgressBar": {
-		"border": 0
+		"border": "0"
 	}, 
 	"wm.RichText": {
-		"border": 0, 
+		"border": "0", 
 		"borderColor": "#B3B3B3"
 	}, 
 	"wm.DataGrid": {

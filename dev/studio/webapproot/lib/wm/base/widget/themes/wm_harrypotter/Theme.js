@@ -143,7 +143,7 @@
 	}, 
 	"wm.Panel": {
 		"borderColor": "#333333", 
-		"border": 0
+		"border": "0"
 	}, 
 	"wm.CheckBoxEditor": {
 	}, 
