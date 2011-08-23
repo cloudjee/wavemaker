@@ -18,7 +18,7 @@ dojo.require("wm.base.widget.RelatedEditor");
 wm.Object.extendSchema(wm.RelatedEditor, {
 	dataSet: {ignore: 1},
 	editingMode: { group: "common", order: 100},
-	formField: {writeonly: 1, group: "common", order: 500},
+	formField: {group: "common", order: 500},
 	caption: {ignore: 1},
 	readonly: {ignore: 1}
 });
