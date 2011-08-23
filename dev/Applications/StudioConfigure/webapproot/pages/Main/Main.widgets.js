@@ -9,7 +9,7 @@ Main.widgets = {
 			}]
 		}]
 	}],
-	layoutBox: ["wm.Layout", {"border":"0","height":"100%","horizontalAlign":"center","width":"100%"}, {}, {
+	layoutBox: ["wm.Layout", {"height":"100%","horizontalAlign":"center","width":"100%"}, {}, {
 		panel5: ["wm.Panel", {"_classes":{"domNode":["wm_Attribution_new"]},"border":"0","height":"48px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"266px"}, {}],
 		loginMainPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"center","minHeight":550,"padding":"20","verticalAlign":"middle","width":"100%"}, {}, {
 			wmTitle: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_14px","wm_TextDecoration_Bold"]},"align":"center","border":"0","caption":"Complete Installation","height":"20px","padding":"4","width":"350px"}, {}, {
@@ -52,6 +52,9 @@ Main.widgets = {
 							dojoFileUpload1: ["wm.DojoFileUpload", {"border":"1","borderColor":"#ABB8CF","height":"100%","margin":"4","operation":"uploadPackage","service":"InstallService","useList":false,"width":"130px"}, {"onSuccess":"dojoFileUpload1Success","onError":"dojoFileUpload1Error"}, {
 								_variable: ["wm.Variable", {"isList":true,"type":"wm.DojoFileUpload.FileData"}, {}],
 								_uploadedVariable: ["wm.Variable", {"isList":true,"type":"wm.DojoFileUpload.FileData"}, {}],
+								_variable1: ["wm.Variable", {"isList":true,"type":"wm.DojoFileUpload.FileData"}, {}],
+								_uploadedVariable1: ["wm.Variable", {"isList":true,"type":"wm.DojoFileUpload.FileData"}, {}],
+								input1: ["wm.ServiceInput", {"type":"uploadPackageInputs"}, {}],
 								input: ["wm.ServiceInput", {"type":"uploadPackageInputs"}, {}]
 							}]
 						}],
@@ -61,8 +64,9 @@ Main.widgets = {
 							}]
 						}]
 					}],
-					permissionsLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer2","horizontalAlign":"left","verticalAlign":"top"}, {}, {
-						html1: ["wm.Html", {"_classes":{"domNode":["wm_BackgroundColor_LightGray","wm_FontColor_Black"]},"border":"0","height":"100%","html":"Unable to upload this file; this typically means that your system requires additional permissions to install. You can install these files yourself into studio/WEB-INF/lib.  For instructions go to <a class=\"wm_FontColor_Black\" href=\"#\" onclick=\"window.open('http://dev.wavemaker.com/wiki/bin/ThirdPartyJars')\">Installing Jars</a> on the wiki","padding":"10","width":"100%"}, {}]
+					permissionsLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer2","horizontalAlign":"right","verticalAlign":"top"}, {}, {
+						html1: ["wm.Html", {"_classes":{"domNode":["wm_BackgroundColor_LightGray","wm_FontColor_Black"]},"border":"0","height":"100%","html":"Unable to upload this file; this typically means that your system requires additional permissions to install. You can install these files yourself into studio/WEB-INF/lib.  For instructions go to <a class=\"wm_FontColor_Black\" href=\"#\" onclick=\"window.open('http://dev.wavemaker.com/wiki/bin/ThirdPartyJars')\">Installing Jars</a> on the wiki","padding":"10","width":"100%"}, {}],
+						button1: ["wm.Button", {"caption":"Try Again","margin":"4","width":"107px"}, {"onclick":"layer1"}]
 					}]
 				}]
 			}]

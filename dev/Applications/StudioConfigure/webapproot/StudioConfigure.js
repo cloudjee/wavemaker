@@ -3,9 +3,9 @@ dojo.declare("StudioConfigure", wm.Application, {
 	"disableDirtyEditorTracking": false, 
 	"i18n": false, 
 	"main": "Main", 
-	"projectSubVersion": 133, 
+	"projectSubVersion": 139, 
 	"projectVersion": 1, 
-	"studioVersion": "6.4.0DevBuild", 
+	"studioVersion": "6.4.1Beta", 
 	"theme": "wm_studio", 
 	"toastPosition": "br",
 	"widgets": {
