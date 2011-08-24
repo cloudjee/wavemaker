@@ -402,7 +402,7 @@ Section -un.post UNSEC0003
         ${EndIf}
     ${EndIf}
     Delete /REBOOTOK "$INSTDIR\Shutdown ${PRODUCT_NAME}.lnk"
-    Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\${PRODUCT_NAME}.lnk"
+    Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\${PRODUCT_NAME}-${Version}.lnk"
     Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\Uninstall ${PRODUCT_NAME}.lnk"
     Delete /REBOOTOK $INSTDIR\uninstall.exe
     DeleteRegValue HKLM "${REGKEY}" StartMenuGroup
