@@ -463,6 +463,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 	_reImportResult: function() {
 		studio.endWait();
 		studio.updateServices();		
+	        app.toastSuccess(this.getDictionaryItem("TOAST_REIMPORT_SUCCESS"));
 	    //studio.application.loadServerComponents("wm.Query");
 /*
 		wm.fire(studio.getEditor("DataObjectsEditor").page, "update");		
