@@ -477,18 +477,31 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	    if (!this.editor || this.editor._focused) {
 		valid = true;
 	    } else {
-
+		var hasValue = this.dataValue !== undefined && this.dataValue !== null && this.dataValue !== "" ;
 		// always valid if !this.restrictValue
 		// always valid if !this.displayValue, but if there is a displayValue there must be a dataValue /* May not be true in dojo 1.6 */
 		var display = this.getDisplayValue();
-		this._isValid = (!this.restrictValues || (display && this.dataValue || !display) );
+		this._isValid = (!this.restrictValues || (display && hasValue || !display) );
 		//console.log("_isValid:" + this._isValid + "; display="+display + "; data:"+this.dataValue);
 
 
 		if (this.readonly) valid = true;
+		else if (this.required) {
+		    if (!this.restrictValues && !display) {
+			valid = false;
+		    } else if (this.restrictValues && !hasValue) {
+			valid = false;
+		    } else {
+			valid = true;
+		    }
+		} else {
+		    valid = true;
+		}
+/*
 		else if (this.required && !this.dataValue) valid = false;
 		else if (this.restrictValues && display && !this.dataValue) valid = false;
 		else valid = true;
+		*/
 	    }
 	    /* Clear invalid flag if its now valid; don't set invalid flag until dojo decides its time to set it */
 	    if (valid)
