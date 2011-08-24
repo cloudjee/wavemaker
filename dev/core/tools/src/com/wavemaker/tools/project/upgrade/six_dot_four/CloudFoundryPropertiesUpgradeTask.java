@@ -37,7 +37,7 @@ public class CloudFoundryPropertiesUpgradeTask implements UpgradeTask {
 	if (error) {
 		upgradeInfo.addMessage("\n *** Error adding CloudFoundry properties in project upgrade task");
 	} else {
-		upgradeInfo.addMessage("\n Successfully added CloudFoundry properties to project");
+		upgradeInfo.addMessage("\nSuccessfully added CloudFoundry properties to project");
 	}
 	
 	}
