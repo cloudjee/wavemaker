@@ -18,7 +18,7 @@ DDLDialog.widgets = {
 			format: ["wm.DataFormatter", {}, {}]
 		}],
 		panel4: ["wm.Panel", {width: "100%", height: "100%", borderColor: ""}, {}, {
-		    ddlEditor: ["wm.LargeTextArea", {caption: "", readonly: true, height: "100%", readOnly: true, border: "0", width: "100%", borderColor: "", scrollY: true}, {}]
+		    ddlEditor: ["wm.LargeTextArea", {caption: "", readonly: true, height: "100%", readOnly: true, border: "0", width: "100%", borderColor: "", scrollY: true, formatter: "formatEditor"}, {}]
 		}],
 		footer: ["wm.Panel", {_classes: {domNode: ["wmDialogFooter"]}, height: "26px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
 			okButton: ["wm.Button", {caption: "OK", width: "96px", border: "0"}, {onclick: "onOk"}],

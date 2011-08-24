@@ -42,5 +42,26 @@ dojo.declare("DDLDialog", wm.Page, {
 			this.dataObjectEditor.onDDLCancelClicked();
 		}
 	},
+    formatEditor: function(inSender, inValue) {
+      try {
+	  var alters = inValue.split(/alter table /);
+	  for (var i = 0; i < alters.length; i++) {
+	      if (i)
+		  alters[i] = "alter table " + alters[i];
+	      alters[i] = dojo.trim(alters[i]);
+	      if (!alters[i].match(/\n/)) {
+		  alters[i] = alters[i].replace(/add constraint /sg,"\n\t\tadd constraint ");
+		  alters[i] = alters[i].replace(/foreign key /sg,"\n\t\tforeign key ");
+		  alters[i] = alters[i].replace(/references /sg,"\n\t\treferences ");
+	      }
+	  }
+          var result = "<pre>" + alters.join("\n") + "</pre>";
+
+          return result;     
+          
+      } catch(e) {
+          console.error('ERROR IN largeTextArea1ReadOnlyNodeFormat: ' + e); 
+      } 
+  },
 	_end: 0
 });
