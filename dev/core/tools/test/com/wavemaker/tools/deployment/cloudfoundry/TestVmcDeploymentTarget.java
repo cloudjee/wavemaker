@@ -69,7 +69,7 @@ public class TestVmcDeploymentTarget {
         testClient = new CloudFoundryClient(TEST_USER_EMAIL, TEST_USER_PASS, "https://api.cloudfoundry.com");
         testapp = new ClassPathResource("com/wavemaker/tools/deployment/cloudfoundry/wmcftest.war").getFile();
         
-        token = testClient.loginIfNeeded();
+        token = testClient.login();
 	}
 	
 	@Before
