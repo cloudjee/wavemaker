@@ -24,7 +24,7 @@ NewProjectDialog.widgets = {
 		}]
             }],
             templatesPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right", horizontalAlign: "left", verticalAlign: "top", autoScroll: true},{}, {
-                templatesPanelLabel: ["wm.Label", {width: "90px", height: "100%", caption: "Templates"}],
+                templatesPanelLabel: ["wm.Label", {width: "90px", height: "100%", caption: "Template"}],
                 templatesInsertPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom", horizontalAlign: "left", verticalAlign: "top", border: "1", borderColor: "#333333"}]
             }]
         }],
