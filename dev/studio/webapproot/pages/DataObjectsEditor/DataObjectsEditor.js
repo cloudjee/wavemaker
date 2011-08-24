@@ -655,7 +655,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	    this.saveComplete();
 	},
 	saveComplete: function() {
-	    if (studio.loadingDialog.widgetToCover.owner == this)
+	    if (studio.loadingDialog.widgetToCover && studio.loadingDialog.widgetToCover.owner == this)
 		studio.loadingDialog.hide();
 	},
         onSaveSuccess: function() {
