@@ -16,18 +16,20 @@ package com.wavemaker.tools.data;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
-import java.util.ArrayList;
-import java.sql.Connection;
-import java.sql.SQLException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.dialect.Dialect;
+import org.hibernate.tool.hbm2ddl.DatabaseMetadata;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.hibernate.tool.hbm2ddl.SchemaUpdate;
-import org.hibernate.tool.hbm2ddl.DatabaseMetadata;
-import org.hibernate.dialect.Dialect;
 
 import com.wavemaker.common.Resource;
 import com.wavemaker.common.util.CastUtils;
@@ -46,6 +48,8 @@ import com.wavemaker.tools.data.parser.HbmParser;
  * 
  */
 public class ExportDB extends BaseDataModelSetup {
+    
+    private static final Log log = LogFactory.getLog(BaseDataModelSetup.class);
 
     private static final String HBM_FILES_DIR_SYSTEM_PROPERTY = 
         SYSTEM_PROPERTY_PREFIX + "hbmFilesDir";
@@ -263,6 +267,9 @@ public class ExportDB extends BaseDataModelSetup {
 
         if (!ObjectUtils.isNullOrEmpty(urlDBName)) {
             url = connectionUrl.substring(0, connectionUrl.indexOf(urlDBName));
+            if (isPostgres()) {
+                url += "postgres";
+            }
             if (ObjectUtils.isNullOrEmpty(catalogName)) {
                 catalogName = urlDBName;
             } else if (!ObjectUtils.isNullOrEmpty(catalogName) && !catalogName.equals(urlDBName)) {
@@ -287,7 +294,9 @@ public class ExportDB extends BaseDataModelSetup {
             if (run) {
                 runDDL(ddl, url);
             }
-        } catch (RuntimeException ignore) {}
+        } catch (RuntimeException ex) {
+            log.warn("Unable to create database "+catalogName+" - it's possible it already exists.", ex);
+        }
 
         return ddl;
     }
