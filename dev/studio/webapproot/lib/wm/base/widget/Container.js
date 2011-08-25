@@ -555,6 +555,7 @@ wm.Container.extend({
 		var v;
 		for (var i=0, c; c=this.c$[i]; i++) {		    
 			if (this.layout.inFlow(c)) {
+			    /* If c is autoScrolling, then its size isn't affected by its contents */
 			        if (c.fitToContentWidth || c instanceof wm.Container && c._percEx.w == 100 && !c.autoScroll) {
 					v =  c.getPreferredFitToContentWidth();
 				} else if (!c._percEx.w) {
@@ -596,6 +597,7 @@ wm.Container.extend({
 	    var v;
 		for (var i=0, c; c=this.c$[i]; i++) {
 			if (this.layout.inFlow(c)) {
+			    /* If c is autoScrolling, then its size isn't affected by its contents */
 			        if (c.fitToContentHeight || c instanceof wm.Container && c._percEx.h == 100 && !c.autoScroll) {
 					v = c.getPreferredFitToContentHeight();
 				} else if (!c._percEx.h) {
