@@ -85,7 +85,14 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 
             /* Step 3: Get the container's bounds; must be done after autoScroll modifies the bounds */
 	    var b = inContainer.getContentBounds();
-
+	    if (inContainer.autoScroll) {
+		if (inContainer._preferredWidth > b.w) {
+		    b.w = inContainer._preferredWidth;
+		}
+		if (inContainer._preferredHeight > b.h) {
+		    b.h = inContainer._preferredHeight;
+		}
+	    }
             /* Step 4: flowEx gives us two points of information:
              *         flowEx.free:  Find out how much free space is available for for % sized widgets.  If the number is negative, 
              *                       then hopefully scrollbars are enabled or widgets will not all be visible.  
@@ -337,7 +344,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
             scrollY = "hidden";
         } else {
 	    //var requiredHeight = (inContainer instanceof wm.Layout) ? inContainer.bounds.h : inContainer.getPreferredFitToContentHeight();
-	    var requiredHeight = inContainer.getPreferredFitToContentHeight();
+	    var requiredHeight = inContainer._preferredHeight = inContainer.getPreferredFitToContentHeight();
             var needsScrollY = requiredHeight > inContainer.bounds.h;
             var scrollY = (needsScrollY) ? "auto" : "hidden";
             inContainer._xscrollY = (scrollY=="auto");
@@ -355,7 +362,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
             inContainer._xscrollX = false;
             scrollX = "hidden";
         } else {
-	    var requiredWidth = inContainer.getPreferredFitToContentWidth();
+	    var requiredWidth = inContainer._preferredWidth = inContainer.getPreferredFitToContentWidth();
             var needsScrollX = requiredWidth > inContainer.bounds.w;
             var scrollX = (needsScrollX) ? "auto" : "hidden";
         }
