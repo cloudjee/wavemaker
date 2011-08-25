@@ -815,10 +815,13 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    // for simplicity, treat undefined as null
 	    if (inValue === undefined)
 		inValue = null;
+
 	    this._lastValue = this.dataValue = inValue instanceof wm.Variable ? inValue.getData() : inValue;
 	    if (this._lastValue == null)
 	        this._lastValue = this.makeEmptyValue();
 	    this.setEditorValue(inValue);
+	    if (inValue === "" || inValue === null) 
+		return this.resetState();
 	},
 	isUpdating: function() {
 		return this._updating > 0;
@@ -857,7 +860,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	        this._lastValue = this.makeEmptyValue();
 
 	        this.setDataValue(null);  // changed from setEditorValue because setEditorValue does not handle readonly editor
-		this.resetState();
+	        //this.resetState();  called by setDataValue now
 		this.endEditUpdate();
 		this.editorChanged();
 	},
