@@ -174,10 +174,11 @@ dojo.declare("QueryEditor", wm.Page, {
 		setTimeout(dojo.hitch(this, "queryTextAreaChanged"), 0);
 	},
 	queryTextAreaChanged: function(inSender) {
-		this.setDirty();
-		this.runQueryBtn.setDisabled(false);
+	    this.setDirty();
+	    this.runQueryBtn.setDisabled(false);
 	    var text = this.queryTextArea.getDataValue();
 	    this.joinWarningLabel.setShowing(text.match(/\bjoin\b/i));
+	    this.updateInputList(inSender.getDataValue());
 	},
 	singleResultKeyPress: function(inSender) {
 		setTimeout(dojo.hitch(this, "singleResultChanged"), 0);		
@@ -248,7 +249,7 @@ dojo.declare("QueryEditor", wm.Page, {
 			    val = "0";
 			    break;
 			default:
-			    val = " ";
+			    val = "a";
 			}
 		    }
 			if (list) val = "[" + val + "]";
@@ -582,6 +583,37 @@ dojo.declare("QueryEditor", wm.Page, {
 		this.bindTypeInput.setDisplayValue(JAVA_INT_TYPE);
 		this.bindTypeInput.endEditUpdate();
 	},
+    updateInputList: function(inText) {
+	var oldData = this.queryInputsList._data;
+	var currentParams = {};
+	var matches = inText.match(/:\w*/g);
+	for (var i = 0; i < matches.length; i++) {
+	    currentParams[matches[i].substring(1)] = true;
+	}
+
+	for (var j = oldData.length-1; j >= 0; j--) {
+	    if (!currentParams[oldData[j].name]) {
+		wm.Array.removeElementAt(oldData,j);
+	    }
+	}
+	
+	for (var name in currentParams) {
+	    var found = false;
+	    for (var i = 0; i < oldData.length; i++) {
+		if (oldData[i].name == name) {
+		    found = true;
+		    break;
+		}
+	    }
+	    if (!found) {
+		oldData.push({"name": name,
+			      type: "Integer",
+			      list: false});
+	    }
+	}
+
+	this.queryInputsList._render();
+    },
 	addBindParam: function(inSender) {
 		if (this.bindNameInput.getDataValue() == "") {
 		    app.alert(this.getDictionaryItem("ALERT_NO_BIND"));
@@ -763,6 +795,7 @@ dojo.declare("QueryEditor", wm.Page, {
 			[], dojo.hitch(this, "_loadedDataTypes"));
 	},
 	_loadedDataTypes: function(inData) {
+
 		this.typeRefTree.renderData(inData.dataObjectsTree);
 		this.valueTypes = inData.valueTypes;
 		this._setTypes();
