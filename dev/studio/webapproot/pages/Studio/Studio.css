@@ -1023,7 +1023,6 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
 	/* FIXME: layout is overriding this without important
 		incredo annoying if these divs don't scroll
 	 */
-	overflow-y: auto !important;
 }
 
 .Studio-pageNameInputLabel {
@@ -1652,7 +1651,6 @@ body.wm-darksnazzy .wmToolbar button:hover {
 .Studio .wmpalette {
 	font-weight: bold;
 	padding-top: 0;
-	overflow-y: auto !important;
 }
 
 /* argh */
