@@ -73,6 +73,7 @@ wm.LivePanel.extend({
 		});
 	},
     createPopupLivePanel: function(usePaging) {
+	this.setAutoScroll(false);
 	this.dataGrid = new wm.DojoGrid({
 	    name: studio.page.getUniqueName(this.liveDataName + "DojoGrid"),
 	    owner: this.owner,
