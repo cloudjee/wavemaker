@@ -50,9 +50,9 @@ dojo.declare("DDLDialog", wm.Page, {
 		  alters[i] = "alter table " + alters[i];
 	      alters[i] = dojo.trim(alters[i]);
 	      if (!alters[i].match(/\n/)) {
-		  alters[i] = alters[i].replace(/add constraint /sg,"\n\t\tadd constraint ");
-		  alters[i] = alters[i].replace(/foreign key /sg,"\n\t\tforeign key ");
-		  alters[i] = alters[i].replace(/references /sg,"\n\t\treferences ");
+		  alters[i] = alters[i].replace(/add constraint /mg,"\n\t\tadd constraint ");
+		  alters[i] = alters[i].replace(/foreign key /mg,"\n\t\tforeign key ");
+		  alters[i] = alters[i].replace(/references /mg,"\n\t\treferences ");
 	      }
 	  }
           var result = "<pre>" + alters.join("\n") + "</pre>";
