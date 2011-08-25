@@ -1233,14 +1233,15 @@ this.label.enable();
 	    }
 	},
 	getCssSplitter: function (value) {
-		var splitter = ",";
+	    var splitter = ",";
+	    if (value) {
 	        value = dojo.string.trim(value);
 		if (value.indexOf(",") == -1 && value.indexOf(" ") != -1)
 		{
 			splitter = " ";
 		}
-		
-		return splitter;
+	    }
+	    return splitter;
 	},
 	renderBounds: function() {
 	    var isChanged = false;
