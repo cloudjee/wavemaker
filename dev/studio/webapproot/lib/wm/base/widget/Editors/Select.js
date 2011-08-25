@@ -162,9 +162,8 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		if (i !== undefined) {
 			this._setEditorValue(this.editor.store.getValue(i, this._storeNameField))
 		} else if (!this.restrictValues) {
-                        this.editor.set("value", inValue);
-		        if (!inValue) 
-			    this.editor._lastValueReported = "";
+                    this.editor.set("value", inValue);		    
+		    this.editor._lastValueReported = inValue;
                 } else {
 			this.clear();
                 }
@@ -213,8 +212,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 				this.clear();
 		        else {
 				this.editor.set("value",i);
-		                if (!i) 
-				    this.editor._lastValueReported = "";
+			    this.editor._lastValueReported = i;
 			}
 		}
 		this.updateReadonlyValue();
@@ -230,8 +228,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		    e.set('displayedValue', inDisplayValue, !this._updating);
 		else
 		    e.set('value', inDisplayValue, !this._updating);
-	        if (!inDisplayValue)
-		    this.editor._lastValueReported = "";
+	        this.editor._lastValueReported = inDisplayValue;
 	},
 	getDisplayValue: function() {
 		if (!this.restrictValues || this.hasValues())
