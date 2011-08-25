@@ -56,8 +56,8 @@ Studio.extend({
 	// Live Data
 	//=====================================================================
 	refreshLiveData: function() {
-		if (!wm.studioConfig.preventLiveData && !this._deploying)
-			this.deploy(""/*"Refreshing Live Layout..."*/, dojo.hitch(this, "isSecurityEnabled"));
+	    if (!wm.studioConfig.preventLiveData && !studio.application._deployStatus)
+		    this.deploy("", "studioProjectCompile", true);
 	},
 	makeLiveDataCall: function(inCallback) {
 		if (this.isLiveLayoutReady()) {
@@ -90,6 +90,7 @@ Studio.extend({
 			}
 		}
 	},
+/*
 	isSecurityEnabled: function() {
 		//With the new enhancement to allow displaying live data in designer regardless the security setup, don't need to
 		//check if security is enabled.
@@ -103,6 +104,7 @@ Studio.extend({
 		    
 		}
 	},
+	*/
         downloadInIFrame: function(url) {
 
 		      var iframe = dojo.byId("downloadFrame");

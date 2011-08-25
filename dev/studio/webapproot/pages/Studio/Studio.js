@@ -588,12 +588,14 @@ dojo.declare("Studio", wm.Page, {
 		});
 	},
 	isLiveLayoutReady: function(inWarn) {
-	    return this._liveLayoutReady;
+	    return this._liveLayoutReady || this.application && this.application._deployStatus == "deployed";
 	},
 	setLiveLayoutReady: function(inReady) {
 		this._liveLayoutReady = inReady;
 	},
     deploySuccess: function() {
+	if (this.application._deployStatus == "deploying")
+	    this.application._deployStatus == "deployed";
 	console.log("DEPLOY SUCCESS!");
 	this.runPopup.setDisabled(false);
 	this.setLiveLayoutReady(true);
@@ -610,6 +612,8 @@ dojo.declare("Studio", wm.Page, {
 	this._runRequested = false;
     },
     deployError: function(result) {
+	if (this.application._deployStatus == "deploying")
+	    this.application._deployStatus = "";
 	    console.log("DEPLOY ERROR: " + result);
 	this.runPopup.setDisabled(false);
         if (result.message && result.message.match(/Application already exists at/)) {
@@ -624,6 +628,8 @@ dojo.declare("Studio", wm.Page, {
         }
     },
         deploy: function(inMsg, deployType, noWait) {
+	    if (!this.application._deployStatus)
+		this.application._deployStatus = "deploying";
 	    console.log("DEPLOY: " + deployType);
 	    this._runRequested = deployType;
 	    this.runPopup.setDisabled(true);
