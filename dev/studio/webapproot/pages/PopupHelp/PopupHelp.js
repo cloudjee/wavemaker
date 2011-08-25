@@ -28,8 +28,9 @@ dojo.declare("PopupHelp", wm.Page, {
     },
     deleteExtraButtons: function() {
 	for (var i = this.buttonPanel.c$.length-1; i >= 0;  i--) {
-	    if (!this.buttonPanel.c$[i].name)
+	    if (!this.buttonPanel.c$[i].name) {
 		this.buttonPanel.c$[i].destroy();
+	    }
 	}
     },
 	moreButtonClick: function() {
@@ -54,7 +55,6 @@ dojo.declare("PopupHelp", wm.Page, {
 	       var popuphelp = this;
                dojo.query(".SynopsisNavButtons a").forEach(function(synopsislink) {
 		     var newButton = new wm.Button({parent: popuphelp.buttonPanel, owner: popuphelp, caption: synopsislink.innerHTML, width: "100px"});
-		     popuphelp.buttonPanel.addControl(newButton);
 		     dojo.connect(newButton, "onclick", null, function() {
 			   window.open(dojo.attr(synopsislink,"href"));
 		     });
