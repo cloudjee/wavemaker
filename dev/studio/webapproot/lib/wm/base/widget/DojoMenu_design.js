@@ -140,7 +140,8 @@ wm.DojoMenu.extend({
 	},
         getEventObjFull: function (struct,prop){
 	    for (var i = 0; i < struct.length; i++) {
-		if (this.getEventName(struct[i].defaultLabel || struct[i].label) == prop) return struct[i];
+		if (if (struct[i].defaultLabel || struct[i].label) && this.getEventName(struct[i].defaultLabel || struct[i].label) == prop) 
+		    return struct[i];
 		if (struct[i].children) {// test for children needed on upgraded projects
 		    var result = this.getEventObjFull(struct[i].children,prop);
 		    if (result) return result;
