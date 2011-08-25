@@ -92,8 +92,8 @@ public class VmcDeploymentTarget implements DeploymentTarget {
         uris.add(url.replace("api", deploymentInfo.getApplicationName()));
 
         try {
-            client.createApplication(deploymentInfo.getApplicationName(), CloudApplication.JAVA_WEB,
-                client.getDefaultApplicationMemory(CloudApplication.JAVA_WEB), uris, null, true);
+            client.createApplication(deploymentInfo.getApplicationName(), CloudApplication.SPRING,
+                client.getDefaultApplicationMemory(CloudApplication.SPRING), uris, null, true);
             return "SUCCESS";
         } catch (CloudFoundryException ex) {
             if (HttpStatus.FORBIDDEN == ex.getStatusCode()) {
@@ -120,8 +120,8 @@ public class VmcDeploymentTarget implements DeploymentTarget {
         uris.add(url.replace("api", deploymentInfo.getApplicationName()));
 
         try {
-            client.createApplication(deploymentInfo.getApplicationName(), CloudApplication.JAVA_WEB,
-                client.getDefaultApplicationMemory(CloudApplication.JAVA_WEB), uris, null, true);
+            client.createApplication(deploymentInfo.getApplicationName(), CloudApplication.SPRING,
+                client.getDefaultApplicationMemory(CloudApplication.SPRING), uris, null, true);
         } catch (CloudFoundryException ex) {
             if (HttpStatus.FORBIDDEN == ex.getStatusCode()) {
                 return TOKEN_EXPIRED_RESULT;

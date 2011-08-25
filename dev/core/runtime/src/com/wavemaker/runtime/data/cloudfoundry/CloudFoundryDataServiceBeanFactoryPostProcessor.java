@@ -95,6 +95,11 @@ public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFact
     private void processDataSources(DefaultListableBeanFactory defaultListableBeanFactory) {
         String[] dataSourceBeanNames = defaultListableBeanFactory.getBeanNamesForType(DataSource.class);
 
+        if (dataSourceBeanNames.length <= 1) {
+            //When there is only 1 DataSource, the provided auto-staging should be sufficient
+            return;
+        }
+        
         for (String dsBean : dataSourceBeanNames) {
             if (!dsBean.endsWith(DS_BEAN_SUFFIX)) {
                 continue;
