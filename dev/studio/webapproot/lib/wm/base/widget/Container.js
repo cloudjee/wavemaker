@@ -34,7 +34,7 @@ wm.define("wm.Container", wm.Control, {
 	*/
     touchScrolling: false,
 	imageList: "",
-	border: 0,
+	border: "0",
 	container: true,
 	lock: false,
 	freeze: false,
