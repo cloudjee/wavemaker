@@ -555,13 +555,13 @@ wm.Container.extend({
 		var v;
 		for (var i=0, c; c=this.c$[i]; i++) {		    
 			if (this.layout.inFlow(c)) {
-			        if (c.fitToContentWidth || c instanceof wm.Container && c._percEx.w == 100) {
+			        if (c.fitToContentWidth || c instanceof wm.Container && c._percEx.w == 100 && !c.autoScroll) {
 					v =  c.getPreferredFitToContentWidth();
 				} else if (!c._percEx.w) {
 					v =  c.bounds.w;
 				} else {
 				    v = parseInt(c.minWidth) || c.getMinWidthProp();
-				    if (c.bounds.w > c.minWidth || this.c$.length == 1) {
+				    if (c.bounds.w > v || this.c$.length == 1) {
 					if (percentUsed < 100)
 					    percentUsed += c._percEx.w;
 				    } else {
@@ -596,13 +596,13 @@ wm.Container.extend({
 	    var v;
 		for (var i=0, c; c=this.c$[i]; i++) {
 			if (this.layout.inFlow(c)) {
-			        if (c.fitToContentHeight || c instanceof wm.Container && c._percEx.h == 100) {
+			        if (c.fitToContentHeight || c instanceof wm.Container && c._percEx.h == 100 && !c.autoScroll) {
 					v = c.getPreferredFitToContentHeight();
 				} else if (!c._percEx.h) {
 					v = c.bounds.h;
 				} else {
 				    v =  parseInt(c.minHeight) || c.getMinHeightProp();
-				    if (c.bounds.w > c.minWidth || this.c$.length == 1) {
+				    if (c.bounds.h > v || this.c$.length == 1) {
 					if (percentUsed < 100)
 					    percentUsed += c._percEx.h;
 				    } else {
