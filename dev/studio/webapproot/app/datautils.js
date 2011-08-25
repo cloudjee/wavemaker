@@ -309,7 +309,7 @@ setupWidgetsForDatabaseType = function(
 	extraInput2.setDataValue("");
 	extraInput2.setShowing(e2 != null);
 
-	if (usernameInput) usernameInput.setDataValue(username);
+	if (usernameInput && username) usernameInput.setDataValue(username);
 	if (e2 != null) {
 		extraInput2.setCaption(e2);
 	}
