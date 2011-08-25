@@ -393,7 +393,7 @@ dojo.declare("Studio", wm.Page, {
 				// somewhere there is code so that live services will autodeploy the project, but this doesn't work for resources; 
 				// at some point a cleanup of that code may be needed.	        
 				if (!wm.studioConfig.preventLiveData && inName != '')
-	            	studio.deploy(null,null, true); 
+	            		    studio.deploy(null,"studioProjectCompile", true); 
 		}
 		this.disableMenuBar(!b);
 	    //this.disableCanvasSourceBtns(!b);
@@ -594,49 +594,45 @@ dojo.declare("Studio", wm.Page, {
 		this._liveLayoutReady = inReady;
 	},
     deploySuccess: function() {
-			this.setLiveLayoutReady(true);
-			this._deploying = false;
-
-	/* This gets triggered if/when the user hits run/test when the app has just been loaded and is still deploying in order to enable livedata */
-			if (this._runRequested) {
-			    var isTest = (this.runPopup.iconClass == "studioProjectTest");
-			  this._runRequested = false;
-			  wm.openUrl(this.getPreviewUrl(isTest), studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"), "_wmPreview");
-                        }
-	this.endWait();
+	console.log("DEPLOY SUCCESS!");
+	this.runPopup.setDisabled(false);
+	this.setLiveLayoutReady(true);
+	switch(this._runRequested) {
+	case "studioProjectCompile":
+	    break;
+	case "studioProjectTest":
+	    wm.openUrl(this.getPreviewUrl(true), studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"), "_wmPreview");
+	    break;
+	case "studioProjectRun":
+	    wm.openUrl(this.getPreviewUrl(false), studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"), "_wmPreview");
+	    break;
+	}
+	this._runRequested = false;
     },
-        deploy: function(inMsg, inCallback, noWait) {
-	    // IE 8 appears to need this skipped...
-	    if (!dojo.isIE == 8) {
-           	if (this._deploying) {
-		        studio.beginWait(inMsg);
-			return;
-		}
-	    }
-		this._deploying = true;
-		var d = this._deployer = studio.deploymentService.requestAsync("testRunStart");
-		d.addErrback(dojo.hitch(this, function(result) {
-                    if (result.message && result.message.match(/Application already exists at/)) {
-                        this.deploySuccess();
-                        return true;
-                    } else {
-		        if (result.dojoType != "cancel" && (!app.toastDialog.showing || app.toastDialog._toastType != "Warning" && app.toastDialog._toastType != "Error"))
-			    app.toastError(this.getDictionaryItem("TOAST_RUN_FAILED", {error: result.message}));
-			this._deploying = false;
-			this._runRequested = false;
-			return result;
-                    }
-		}));
-		if (inCallback)
-			d.addCallback(inCallback);
-		d.addCallback(dojo.hitch(this, function(result) {
-                        this.deploySuccess();
-			return result;
-		}));
+    deployError: function(result) {
+	    console.log("DEPLOY ERROR: " + result);
+	this.runPopup.setDisabled(false);
+        if (result.message && result.message.match(/Application already exists at/)) {
+            this.deploySuccess();
+            return true;
+        } else {
+	    if (result.dojoType != "cancel" && (!app.toastDialog.showing || app.toastDialog._toastType != "Warning" && app.toastDialog._toastType != "Error"))
+		app.toastError(this.getDictionaryItem("TOAST_RUN_FAILED", {error: result.message}));
+	    this._deploying = false;
+	    this._runRequested = false;
+	    return result;
+        }
+    },
+        deploy: function(inMsg, deployType, noWait) {
+	    console.log("DEPLOY: " + deployType);
+	    this._runRequested = deployType;
+	    this.runPopup.setDisabled(true);
+	    var d = this._deployer = studio.deploymentService.requestAsync("testRunStart");
+	    d.addCallback(dojo.hitch(this, "deploySuccess"));
+	    d.addErrback(dojo.hitch(this, "deployError"));
             if (!noWait)
 		this.waitForDeferred(d, inMsg);
 	},
-		 
 
 	//=========================================================================
 	// Source control
