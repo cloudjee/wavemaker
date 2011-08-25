@@ -33,29 +33,29 @@ dojo.declare("DeploymentDialog", wm.Page, {
     /* Extra Widgets */
     hsqldbBox: {
 	hsqldbPanel1: ["wm.FancyPanel", {"borderColor":"black","innerBorder":"1", "height":"120px","margin":"10,10,10,0","title":"Database 1", labelHeight: "24"}, {}, {	    
-	    html1: ["wm.Html", {padding: "5", width: "100%", height: "100%", _classes: {domNode: ["HSQLDBHtml"]}, html: "While you can deploy HSQLDB databases, there is no good way to update your databases when you deploy updates/fixes to your application. Each time you redeploy, all data in the old database is overwritten/lost and replaced with your current data.  We only recommend using HSQLDB to help design, develop and demo, and not to deploy finished applications"}]
+	    html1: ["wm.Html", {padding: "5", width: "100%", height: "100%", _classes: {domNode: ["HSQLDBHtml"]}, html: ""}]
 	}]
     },
     databaseBox: {
 	databasePanel1: ["wm.FancyPanel", {"borderColor":"black","innerBorder":"1", "fitToContentHeight":true,"height":"149px","margin":"10,10,10,0","title":"Database 1", labelHeight: "24"}, {}, {	    
 	    databaseInnerPanel1: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left", margin: "5,50,5,50"},{}, {
-		databaseConnectionEditor1: ["wm.SelectMenu", {"caption":"Database Connection","captionAlign":"left","captionSize":"140px","dataField":"dataValue","displayField":"dataValue","displayValue":"","helpText":"<ul><li>Settings: Setup the settings just as you do when importing databases</li><li>JNDI: The Java Naming and Directory Interface is a Java API for a directory service that allows Java clients to discover and lookup data and objects via a name</li></ul>","options":"Standard, JNDI","width":"280px"}, {onchange: "updateDatabaseLayers"}],
+		databaseConnectionEditor1: ["wm.SelectMenu", {"caption":"","captionAlign":"left","captionSize":"140px","dataField":"dataValue","displayField":"dataValue","displayValue":"","helpText":"","options":"Standard, JNDI","width":"280px"}, {onchange: "updateDatabaseLayers"}],
 		databaseLayers1: ["wm.Layers", {fitToContentHeight: true}, {}, {
 		    databaseConnectionsLayer1: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
-			databaseTypeEditor1: ["wm.Text", {"border":"0","caption":"Type","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","readonly":true,"width":"100%"}, {}],
-			databaseUserEditor1: ["wm.Text", {"border":"0","caption":"User name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {}],
-			databasePasswordEditor1: ["wm.Text", {"border":"0","caption":"Password","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","password":true,"width":"100%", required: true}, {}],
-			databaseHostEditor1: ["wm.Text", {"border":"0","caption":"Host/IP Address","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", emptyValue: "emptyString"}, {onchange: "updateDbConnectionUrl"}],
-			databasePortEditor1: ["wm.Text", {"border":"0","caption":"Port","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%"}, {onchange: "updateDbConnectionUrl"}],
-			databaseNameEditor1: ["wm.Text", {"border":"0","caption":"Database Name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%"}, {onchange: "updateDbConnectionUrl"}],
-			databaseURLEditor1: ["wm.Text", {"border":"0","caption":"Connection URL","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {}]
+			databaseTypeEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","readonly":true,"width":"100%"}, {}],
+			databaseUserEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {}],
+			databasePasswordEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","password":true,"width":"100%", required: true}, {}],
+			databaseHostEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", emptyValue: "emptyString"}, {onchange: "updateDbConnectionUrl"}],
+			databasePortEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%"}, {onchange: "updateDbConnectionUrl"}],
+			databaseNameEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%"}, {onchange: "updateDbConnectionUrl"}],
+			databaseURLEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {}]
 		    }],
 		    databaseJNDILayer1: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
-			databaseJNDINameEditor1: ["wm.Text", {"border":"0","caption":"JNDI Name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {}]
+			databaseJNDINameEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {}]
 		    }],
 		    databaseCloudFoundryLayer1: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
-			databaseCloudFoundryType1: ["wm.Text", {"border":"0","caption":"Type","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"MYSQL","readonly":true,"width":"100%"}, {}],
-			databaseCloudFoundryNameEditor1: ["wm.Text", {"border":"0","caption":"Database Name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true/*, helpText: "Rename your database if you already have a database of that name on CloudFoundry and don't want to reuse that database.  Note: each database is on its own cloud server and counts against your quota"*/}, {}]
+			databaseCloudFoundryType1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"MYSQL","readonly":true,"width":"100%"}, {}],
+			databaseCloudFoundryNameEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true/*, helpText: "Rename your database if you already have a database of that name on CloudFoundry and don't want to reuse that database.  Note: each database is on its own cloud server and counts against your quota"*/}, {}]
 		    }]
 		}]
 	    }]
@@ -71,7 +71,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 						 window.open(studio.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}));
 					     }});
 	this.owner.owner.titleBar.reflow();
-					     
+	this.localizeStuff();
 
     },
     onShow: function() {
@@ -80,6 +80,28 @@ dojo.declare("DeploymentDialog", wm.Page, {
     reset: function() {
 	this._currentDeploymentIndex = -1;
 	this.initDeploymentListVar();
+    },
+    localizeStuff: function() {
+	this.hsqldbBox.hsqldbPanel1[3].html1[1].html = this.getDictionaryItem("DBBOX_HSQLDB_HTML");
+	var innerPanelChildren = this.databaseBox.databasePanel1[3].databaseInnerPanel1[3];
+	innerPanelChildren.databaseConnectionEditor1[1].caption = this.getDictionaryItem("DBBOX_CONNECTION_CAPTION");
+	innerPanelChildren.databaseConnectionEditor1[1].helpText = this.getDictionaryItem("DBBOX_CONNECTION_HELPTEXT");
+	var layersChildren = innerPanelChildren.databaseLayers1[3];
+	var connectionsLayerChildren = layersChildren.databaseConnectionsLayer1[3];
+	connectionsLayerChildren.databaseTypeEditor1[1].caption = this.getDictionaryItem("DBBOX_TYPE_CAPTION");
+	connectionsLayerChildren.databaseUserEditor1[1].caption = this.getDictionaryItem("DBBOX_USERNAME_CAPTION");
+	connectionsLayerChildren.databasePasswordEditor1[1].caption = this.getDictionaryItem("DBBOX_PASSWORD_CAPTION");
+	connectionsLayerChildren.databaseHostEditor1[1].caption = this.getDictionaryItem("DBBOX_HOST_CAPTION");
+	connectionsLayerChildren.databasePortEditor1[1].caption = this.getDictionaryItem("DBBOX_PORT_CAPTION");
+	connectionsLayerChildren.databaseNameEditor1[1].caption = this.getDictionaryItem("DBBOX_NAME_CAPTION");
+	connectionsLayerChildren.databaseURLEditor1[1].caption = this.getDictionaryItem("DBBOX_URL_CAPTION");
+	
+	var jndiLayerChildren =  layersChildren.databaseJNDILayer1[3];
+	jndiLayerChildren.databaseJNDINameEditor1[1].caption = this.getDictionaryItem("DBBOX_JNDINAME_CAPTION");
+
+	var cloudfoundryLayerChildren = layersChildren.databaseCloudFoundryLayer1[3];
+	cloudfoundryLayerChildren.databaseCloudFoundryType1[1].caption = this.getDictionaryItem("DBBOX_CFTYPE_CAPTION");
+	cloudfoundryLayerChildren.databaseCloudFoundryNameEditor1[1].caption = this.getDictionaryItem("DBBOX_CFNAME_CAPTION");
     },
     selectFirst: function() {
 	this.initDeploymentListVar();
