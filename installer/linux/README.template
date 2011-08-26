@@ -1,12 +1,19 @@
-WaveMaker on Linux
+WaveMaker Studio on Linux
 
 To start WaveMaker:
 
-> cd /opt/wavemaker-@VERSION@/bin
-> ./wavemaker.sh start
+Run the wavemaker.sh script to start WaveMaker.
+> /opt/wavemaker-@VERSION@/bin/wavemaker.sh start
+
+A graphical launcher control panel will launch, if using a graphical environment.
 
 
-Top stop WaveMaker:
+To stop WaveMaker:
+
+Run the wavemaker.sh script with the stop parameter.
+> /opt/wavemaker-@VERSION@/bin/wavemaker.sh stop
+
+OR 
 
 Use the "Stop WaveMaker" button in the launcher to stop tomcat.
 Close the launcher to end the launcher process
