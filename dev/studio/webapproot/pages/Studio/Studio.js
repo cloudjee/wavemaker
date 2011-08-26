@@ -628,6 +628,8 @@ dojo.declare("Studio", wm.Page, {
         }
     },
         deploy: function(inMsg, deployType, noWait) {
+	    if (this.application._deployStatus == "deploying")
+		return;
 	    if (!this.application._deployStatus)
 		this.application._deployStatus = "deploying";
 	    console.log("DEPLOY: " + deployType);
