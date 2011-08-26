@@ -64,4 +64,6 @@
 				<!--entry key="xxxxx" value-ref="xxxxxRestServiceGenerator"/-->
 			</map>
 		</property>
+	</bean>
+
 </beans>
