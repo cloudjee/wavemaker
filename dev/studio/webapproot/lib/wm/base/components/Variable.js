@@ -375,7 +375,12 @@ dojo.declare("wm.Variable", wm.Component, {
 				var v = this.data[i];
 				// we may not always want all related junk
 				if (v !== undefined) {
-					v = v instanceof wm.Variable ? v.getData() : v;
+				    if (v instanceof wm.Variable) {
+					if (v.isEmpty()) 
+					    v = null;
+					else
+					    v = v.getData()
+				    } 
 					// don't return undefined or empty, non-null variables properties
 					if (v === undefined || (v !== null && typeof v == "object" && wm.isEmpty(v)))
 						continue;
