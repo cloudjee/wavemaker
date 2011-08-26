@@ -47,6 +47,7 @@
 	"Currency" : "Currency",
 	"Date" : "Date",
 	"DateTime" : "DateTime",
+	"DateTimeGroup" : "Date and Time",
 	"Number" : "Number",
 	"RadioButton" : "RadioButton",
 	"Select" : "Select",
@@ -81,6 +82,7 @@
 	"DataNavigator" : "DataNavigator",
 	"LiveForm" : "Form",
 	"RelatedEditor" : "RelatedEditor",
+	"RelatedEditorGroup" : "Relationship Editors",
 
 	"More_Widgets" : "More Widgets",
 	"JsonStatus": "JsonStatus",
