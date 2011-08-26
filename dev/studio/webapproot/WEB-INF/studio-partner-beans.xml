@@ -54,4 +54,14 @@
 			</map>
 		</property>
 	</bean>
+
+	<bean id="pwsServiceModifierBeanFactory" 
+		class="com.wavemaker.tools.pws.PwsServiceModifierBeanFactory" 
+		lazy-init="true" 
+		scope="singleton">
+		<property name="pwsServiceModifiers">
+			<map>
+				<!--entry key="xxxxx" value-ref="xxxxxRestServiceGenerator"/-->
+			</map>
+		</property>
 </beans>
