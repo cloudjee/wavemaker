@@ -1067,19 +1067,8 @@ this.label.enable();
 
 	// If its chrome, overflow needs to be turned off, then on again for autoScrolling to be enabled but for the scrollbars to be hidden.
 	// Insure that only one onidle is queued per node.
+    // appears to be fixed in chrome 11
 	disruptChromeOverflow: function(propName) {
-		if (dojo.isChrome) {
-			if (!this[propName] || !this[propName].style) 
-				return;
-			if (this["_disruptChromeOverflowPending_" + propName]) 
-				return;
-			this["_disruptChromeOverflowPending_" + propName] = true;
-			this[propName].style.overflow = "none";
-				wm.onidle(this, function() {
-					this[propName].style.overflow = "auto";
-					this["_disruptChromeOverflowPending_" + propName] = false;
-				});
-		}
 	},
 	//===========================================================================
 	// Rendering; forceRender is a way to skip the isReflowEnabled test
