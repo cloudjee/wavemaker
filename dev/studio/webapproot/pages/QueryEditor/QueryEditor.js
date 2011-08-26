@@ -586,7 +586,9 @@ dojo.declare("QueryEditor", wm.Page, {
     updateInputList: function(inText) {
 	var oldData = this.queryInputsList._data;
 	var currentParams = {};
-	var matches = inText.match(/:\w*/g);
+	var matches = inText.match(/:\w+/g);
+	if (!matches)
+	    matches = [];
 	for (var i = 0; i < matches.length; i++) {
 	    currentParams[matches[i].substring(1)] = true;
 	}
