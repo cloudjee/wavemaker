@@ -383,7 +383,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 			b.h = "16";
 		    }
 		    */
-
+		
 		    if (!b.w || b.w < 0) b.w = 0;
 		    if (!b.h || b.h < 0) b.h = 0;
 
@@ -424,9 +424,6 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 			s.height= b.h + "px";
 			s.left  = b.l + "px";
 			s.top   = b.t + "px";			
-			if (e == this.readOnlyNode)
-			    this.updateReadOnlyNodeStyle(b.h);
-
 /*
                         dojo.style(this.editorNode, {width:  b.w + "px",
                                                      height: b.h + "px",
@@ -434,6 +431,8 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
                                                      top:    b.t + "px"});
 						     */
                     }
+		    if (e == this.readOnlyNode)
+			this.updateReadOnlyNodeStyle(b.h);
 
 		}
 	    if (this.helpText && this.helpNode) {
@@ -461,7 +460,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    if (s.overflow != overflow) s.overflow = overflow;
 
 	    var lineHeight = this.getReadOnlyNodeLineHeight();
-	    if(s.lineHeight != lineHeight) s.lineHeight = lineHeight + "px";
+	    if(s.lineHeight != lineHeight) s.lineHeight = (lineHeight == "normal") ? lineHeight : lineHeight + "px";
 
 	    var whiteSpace = this.getReadOnlyNodeWhiteSpace();
 	    if (s.whiteSpace != whiteSpace) s.whiteSpace = whiteSpace;

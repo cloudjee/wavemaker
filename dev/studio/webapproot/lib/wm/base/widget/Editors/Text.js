@@ -51,6 +51,8 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
 	},
         getReadOnlyNodeOverflow: function() {
 		// doAutoResize adjusts this value
+		// scrollbars for a node less than 40px high is pretty much useless; even 40 is questionable
+	        if (dojo.marginBox(this.readOnlyNode).h < 40) return "hidden";
 		if (this.autoSizeHeight || this.autoSizeWidth) 
 		    return (this._autoSizeNeedsOverflow) ? "auto" : "hidden";
 		else
@@ -135,8 +137,8 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
   	    var s = divObj.style;
 	    s.position = "absolute";
 	    
-	    s.paddingLeft = (this.padBorderMargin.l + this.padBorderMargin.r) + "px";
-	    s.paddingTop =  (this.padBorderMargin.t + this.padBorderMargin.b) + "px";
+	    s.paddingRight = "5px";
+	    s.paddingTop =  "5px";
 
 	    // wm.Label sets these, need to make sure they are unset for wm.Html
 	    s.lineHeight = bases.lineHeight;
@@ -150,7 +152,6 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
 		s.height = "";
 		s.width = bases.width;
 
-
 		var readonlyHeight = divObj.clientHeight;
 
                 var newHeight = readonlyHeight;
@@ -160,7 +161,8 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
                 
                 var minHeight = this.getMinHeightProp();
                 if (minHeight > newHeight) newHeight = minHeight;
-                if (this.maxHeight && this.maxHeight < newHeight) {
+		// scrollbars for a node less than 40px high is pretty much useless; even 40 is questionable
+                if (this.maxHeight && this.maxHeight < newHeight && (dojo.marginBox(this.readonlyNode).h > 40)) {
                     newHeight = this.maxHeight;
                     bases.overflow = "auto";
                     this._autoSizeNeedsOverflow = true;
@@ -258,20 +260,15 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
             this.updateReadOnlyNodeStyle();
             this._doingAutoSize = false;
 	},
-    /* This hack should only be called at design time */
+
     setAutoSizeWidth: function(inValue) {
-        if (inValue == "none") {
-            // we don't call this.inherited because arguments contains an inValue that isn't true/false
-            wm.Control.prototype.setAutoSizeWidth.call(this, false);
-            this.setAutoSizeHeight(false);
-        } else if (inValue == "width") {
-            this.setAutoSizeHeight(false);
-            wm.Control.prototype.setAutoSizeWidth.call(this, true);
-        } else if (inValue == "height") {
-            wm.Control.prototype.setAutoSizeWidth.call(this, false);
-            this.setAutoSizeHeight(true);
-        }
-        if (this.readOnlyNode && inValue == "none") // we already updateReadOnlyNodeStyle for any other value
+	this.inherited(arguments);
+        if (this.readOnlyNode && this.readonly) 
+            this.updateReadOnlyNodeStyle();
+    },
+    setAutoSizeHeight: function(inValue) {
+	this.inherited(arguments);
+        if (this.readOnlyNode && this.readonly) 
             this.updateReadOnlyNodeStyle();
     },
     setMaxHeight: function(newMax) {
@@ -298,6 +295,34 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
 	    this.doAutoSize(1,1);
         }
     },
+    getAutoSize: function(inSize) {
+	return this.autoSizeHeight ? "height" : this.autoSizeWidth ? "width" : "none";
+    },
+    setAutoSize: function(inSize) {
+	if (inSize == "none") {
+	    if (this.autoSizeHeight) {
+		this.setAutoSizeHeight(false);
+	    } 
+	    if (this.autoSizeWidth) {
+		this.setAutoSizeWidth(false);
+	    } 
+	} else if (inSize == "width") {
+	    if (this.autoSizeHeight) {
+		this.setAutoSizeHeight(false);
+	    } 
+	    if (!this.autoSizeWidth) {
+		this.setAutoSizeWidth(true);
+	    } 
+	} else if (inSize == "height") {
+	    if (!this.autoSizeHeight) {
+		this.setAutoSizeHeight(true);
+	    } 
+	    if (this.autoSizeWidth) {
+		this.setAutoSizeWidth(false);
+	    } 
+	}
+    }
+/*
 	makePropEdit: function(inName, inValue, inDefault) {
 		switch (inName) {
                         case "autoSizeWidth": 
@@ -305,11 +330,13 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
 		}
 		return this.inherited(arguments);
 	}
+	*/
 });
 
 wm.Object.extendSchema(wm.ResizableEditor, {
-    autoSizeHeight: {type: "Boolean", group: "advanced layout", order: 31, writeonly: true, ignore: true},
-    autoSizeWidth: {type: "Boolean", group: "advanced layout", order: 32, shortname: "Auto Size"},
+    autoSizeHeight: {type: "Boolean", group: "advanced layout", order: 31, writeonly: true},
+    autoSizeWidth: {type: "Boolean", group: "advanced layout", order: 32, writeonly: true},
+    autoSize: {type: "String", options: ["none", "width", "height"], group: "advanced layout"},
     maxHeight:     {type: "Number", group: "advanced layout", order: 60}
 });
 
