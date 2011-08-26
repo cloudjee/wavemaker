@@ -813,12 +813,12 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		var ex2 = ex.replace(/\$\{.*?}/g, '""'); // replace all ${...} with the value 1 for a quick and easy test to validate the expression
 		try {
 		    var result = eval(ex2);
-		    if (typeof result == "object") {
-			app.toastError("<" + ex2 + "> does not compile to a string value. Perhaps you need quotes?");
+		    if (typeof result == "object" && result instanceof Date == false) {
+			app.toastError(this.getDictionaryItem("DOES_NOT_COMPILE", {expr: ex2}));
 			return;
 		    }
 		} catch(e) {
-		    app.toastError("Unable to compile this expression: " + e);
+		    app.toastError(this.getDictionaryItem("UNABLE_TO_COMPILE", {error: e.message}));
 		    return;
 		}
 	    }

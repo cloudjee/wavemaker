@@ -73,6 +73,12 @@ dojo.declare("wm.Date", wm.Text, {
 	    if (!this.useLocalTime && v)
 		v.setHours(v.getHours() + wm.timezoneOffset);
 	    this.inherited(arguments, [v]);
+	},
+        setDefaultOnInsert:function() {
+	    if (this.defaultInsert) {
+		this.setDataValue(this.defaultInsert); // setDataValue knows how to handle Date and long; dijit.set apparently does not.
+		this.invalidate();
+	    }
 	}
 });
 
@@ -358,8 +364,10 @@ dojo.declare("wm.DateTime", wm.Text, {
 	this.dataValue = d;
     },
     setDefaultOnInsert:function(){
-	this.setDataValue(this.defaultInsert);
-	this.invalidate();
+	if (this.defaultInsert) {
+	    this.setDataValue(this.defaultInsert);
+	    this.invalidate();
+	}
     },
     getEditorValue: function() {
 	var value = this.getDisplayValue();
