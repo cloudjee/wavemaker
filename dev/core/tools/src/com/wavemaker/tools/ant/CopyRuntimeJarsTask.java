@@ -289,7 +289,7 @@ public class CopyRuntimeJarsTask extends Task {
         copyTask.setOverwrite(isOverwrite());
         copyTask.setVerbose(isVerbose());
         copyTask.setFlatten(false);
-        copyTask.setTodir(wmproject.getWebInf());
+        copyTask.setTodir(todir.getParentFile());
 
         FileSet srcPwsFileSet = new FileSet();
         srcPwsFileSet.setDir(pwsWebInfNode);
@@ -315,7 +315,7 @@ public class CopyRuntimeJarsTask extends Task {
             copyTask.setOverwrite(isOverwrite());
             copyTask.setVerbose(isVerbose());
             copyTask.setFlatten(false);
-            copyTask.setTodir(wmproject.getWebInf());
+            copyTask.setTodir(todir.getParentFile());
 
             FileSet srcPartnerFileSet = new FileSet();
             srcPartnerFileSet.setDir(partnerWebInfNode);
