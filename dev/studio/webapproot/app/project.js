@@ -1723,6 +1723,7 @@ Studio.extend({
 	// else its in another language, and don't try tweaking the width at all
     },
 	runProjectClick: function(inSender) {	    
+	    this.application._deployStatus == ""; // reset this so we can rerun if the button became enabled but this value failed to clear
 
 	    var operation = inSender.iconClass;
 	    this._runRequested = (operation != "studioProjectCompile") ? operation : false;

@@ -50,7 +50,7 @@ dojo.declare("Studio", wm.Page, {
         projectPrefix: "",
         userName: "",
         resourcesLastUpdate: 0,
-        _deploying: false,
+        _deploying: false, //obsolete?
         _runRequested: false,
 	//=========================================================================
 	// initialization
@@ -392,7 +392,8 @@ dojo.declare("Studio", wm.Page, {
 				// mount project so live services and the resources folder can be accessed; 
 				// somewhere there is code so that live services will autodeploy the project, but this doesn't work for resources; 
 				// at some point a cleanup of that code may be needed.	        
-				if (!wm.studioConfig.preventLiveData && inName != '')
+		    /* deployStatus will probably be set already if any autoUpdate/startUpdate services fire during initialization */
+				if (!wm.studioConfig.preventLiveData && inName != '' && !studio.application._deployStatus)
 	            		    studio.deploy(null,"studioProjectCompile", true); 
 		}
 		this.disableMenuBar(!b);
@@ -595,7 +596,7 @@ dojo.declare("Studio", wm.Page, {
 	},
     deploySuccess: function() {
 	if (this.application._deployStatus == "deploying")
-	    this.application._deployStatus == "deployed";
+	    this.application._deployStatus = "deployed";
 	console.log("DEPLOY SUCCESS!");
 	this.runPopup.setDisabled(false);
 	this.setLiveLayoutReady(true);
@@ -622,14 +623,12 @@ dojo.declare("Studio", wm.Page, {
         } else {
 	    if (result.dojoType != "cancel" && (!app.toastDialog.showing || app.toastDialog._toastType != "Warning" && app.toastDialog._toastType != "Error"))
 		app.toastError(this.getDictionaryItem("TOAST_RUN_FAILED", {error: result.message}));
-	    this._deploying = false;
+	    this._deploying = false; // obsolete?
 	    this._runRequested = false;
 	    return result;
         }
     },
         deploy: function(inMsg, deployType, noWait) {
-	    if (this.application._deployStatus == "deploying")
-		return;
 	    if (!this.application._deployStatus)
 		this.application._deployStatus = "deploying";
 	    console.log("DEPLOY: " + deployType);

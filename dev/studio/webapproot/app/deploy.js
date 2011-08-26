@@ -58,6 +58,7 @@ Studio.extend({
 	refreshLiveData: function() {
 	    if (!wm.studioConfig.preventLiveData && !studio.application._deployStatus)
 		    this.deploy("", "studioProjectCompile", true);
+		    
 	},
 	makeLiveDataCall: function(inCallback) {
 		if (this.isLiveLayoutReady()) {
@@ -65,7 +66,7 @@ Studio.extend({
 		} else {
 			// update live data
 			this.refreshLiveData();
-			if (this._deploying && this._deployer) {
+		    if (this.application && (this._deploying || this.application._deployStatus == "deploying") && this._deployer) {
 				// deferred to return immediately
 				var liveDataDeferred = new dojo.Deferred();
 				// add our callback to deployer handling liveData update
