@@ -186,6 +186,10 @@ public class DataServiceDefinition  extends AbstractDeprecatedServiceDefinition
         return true;
     }
 
+    public String getPartnerName() {
+        return null;
+    }
+
     private Collection<String> getEntityClassNames() {
         Collection<String> rtn = new TreeSet<String>();
         for (String s : dataCfg.getEntityNames()) {

@@ -96,4 +96,8 @@ public abstract class AbstractDeprecatedServiceDefinition implements
     public List<ElementType> getTypes(String username, String password) { //xxx
         return null;
     }
+
+    public String getPartnerName() {
+        return null;
+    }
 }

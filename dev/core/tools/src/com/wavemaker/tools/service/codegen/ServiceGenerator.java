@@ -301,7 +301,8 @@ public abstract class ServiceGenerator {
             String operationName, List<ElementType> inputTypes,
             Integer overloadCount) throws GenerationException {
 
-        ElementType outputType = serviceDefinition.getOutputType(operationName);
+        ElementType outputType1 = serviceDefinition.getOutputType(operationName);
+        ElementType outputType = getAdjustedOutputType(outputType1);
 
         JType outputJType = getAdjustedJType(outputType);
 
@@ -422,7 +423,7 @@ public abstract class ServiceGenerator {
     protected abstract JInvocation defineServiceInvocation(JCodeModel codeModel);
 
     /**
-     * Deveopers may implement this class to add. modify or delete input parameters in the the default parameter list
+     * Developers may implement this method to add. modify or delete input parameters in the the default parameter list
      * for the service call.
      *
      * @param body the block of Java code to be modified, which includes input parameter definitions
@@ -432,5 +433,17 @@ public abstract class ServiceGenerator {
      * @return the block of Java code modified
      */
     protected abstract JBlock addExtraInputParameters(JBlock body, ServiceInfo serviceInfo, WSDL wsdl,
-                                                      String operationName); 
+                                                      String operationName);
+
+
+    /**
+     * Implement this method if the output type of the service invocation method, which is originated from WSDL,
+     * needs to be customized for any reason.
+     *
+     * @param type the output element type to be modified
+     * @return the output element type
+     */
+    protected ElementType getAdjustedOutputType(ElementType type) {
+        return type;
+    }
 }

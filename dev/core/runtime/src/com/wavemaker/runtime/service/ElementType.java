@@ -42,7 +42,7 @@ import com.wavemaker.json.type.reflect.ReflectTypeUtils;
  * @author Frankie Fu
  * @version $Rev$ - $Date$
  */
-public class ElementType {
+public class ElementType implements Cloneable {
 
     private String name;
 
@@ -357,5 +357,14 @@ public class ElementType {
         ret.setSubType(getSubType()); //salesforce
         
         return ret;
+    }
+
+    @Override
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException ex) {
+            throw new AssertionError(ex);
+        }
     }
 }

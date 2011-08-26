@@ -253,4 +253,8 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition
     public boolean isLiveDataService() {
         return true;
     }
+
+    public String getPartnerName() {
+        return null;
+    }
 }

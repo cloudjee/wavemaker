@@ -47,6 +47,7 @@ public class PwsInstall {
     private static final String REST_WSDL_GENERATOR = "RestWsdlGenerator";
     private static final String REST_SERVICE_IMPORTER = "RestServiceGenerator";
     private static final String RESPONSE_PROCESSOR = "ResponseProcessor";
+    private static final String SERVICE_MODIFIER = "ServiceModifier";
 
      public static void setupPwsProject(ProjectManager mgr, String partnerName) {
         File destf;
@@ -284,6 +285,14 @@ public class PwsInstall {
                         Element newEntry = doc.createElement("entry");
                         newEntry.setAttribute("key", partnerName);
                         newEntry.setAttribute("value-ref", partnerName + REST_WSDL_GENERATOR);
+                        map_node.appendChild(newEntry);
+                    }
+                    break;
+                } else if (beanAttr.getNodeName().equals("id") && beanAttr.getNodeValue().equals("pwsServiceModifierBeanFactory")) {
+                    if (classExistsInJar(runtimeJarFiles, partnerName, SERVICE_MODIFIER) || classExistsInJar(toolsJarFiles, partnerName, SERVICE_MODIFIER)) {
+                        Element newEntry = doc.createElement("entry");
+                        newEntry.setAttribute("key", partnerName);
+                        newEntry.setAttribute("value-ref", partnerName + SERVICE_MODIFIER);
                         map_node.appendChild(newEntry);
                     }
                     break;

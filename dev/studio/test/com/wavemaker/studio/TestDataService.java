@@ -101,6 +101,10 @@ public class TestDataService extends StudioTestCase {
         public boolean isLiveDataService() {
             return true;
         }
+
+        public String getPartnerName() {
+        return null;
+    }
     }
 
     @Override

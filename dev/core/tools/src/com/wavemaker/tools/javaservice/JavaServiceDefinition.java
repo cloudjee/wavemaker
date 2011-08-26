@@ -322,4 +322,8 @@ public class JavaServiceDefinition implements ReflectServiceDefinition {
     public List<ServiceOperation> getServiceOperations() {
         return this.operations;
     }
+
+    public String getPartnerName() {
+        return null;
+    }
 }

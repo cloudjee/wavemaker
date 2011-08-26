@@ -105,6 +105,8 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
 
     private String runtimeConfiguration;
 
+    private String partnerName;
+
     @SuppressWarnings("unused")
     private WSDL() {
     }
@@ -769,5 +771,13 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
 
     public boolean isLiveDataService() {
         return false;
+    }
+
+    public String getPartnerName() {
+        return this.partnerName;
+    }
+
+    public void setPartnerName(String partnerName) {
+        this.partnerName = partnerName;
     }
 }

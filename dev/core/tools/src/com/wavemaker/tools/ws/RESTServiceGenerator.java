@@ -162,7 +162,8 @@ public class RESTServiceGenerator extends WebServiceGenerator {
 
         body = addExtraInputParameters(body, serviceInfo, wsdl, operationName);
 
-        ElementType outputType = wsdl.getOutputType(operationName);
+        ElementType type = wsdl.getOutputType(operationName);
+        ElementType outputType = getAdjustedOutputType(type);
 
         if (wsdl.getHttpRequestMethod() != null) {
             // [RESULT]
@@ -206,10 +207,12 @@ public class RESTServiceGenerator extends WebServiceGenerator {
             invocation.arg(codeModel.ref("Void").dotclass());
             body.add(invocation);
         } else {
-            String javaType = getOutputJavaType(outputType);
+            String javaType1 = getOutputJavaType(outputType);
+            String javaType = outputJType.name();
             // [RESULT]
             // <outputType> result = restService.invoke(inputMap, <outputType>);
-            invocation.arg(codeModel.ref(javaType).dotclass());
+            invocation.arg(codeModel.ref(javaType1).dotclass());
+            invocation = addExtraInputArgsInMethodInvocation(invocation, wsdl, operationName);
             JVar var = body.decl(codeModel.ref(javaType), "result",
                 invocation);
 
@@ -287,5 +290,17 @@ public class RESTServiceGenerator extends WebServiceGenerator {
         public String getEndpoint() {
             return endpoint;
         }
+    }
+
+    /**
+     * Implement this method if the output type of the service invocation method, which is originated from WSDL,
+     * needs to be customized for any reason.
+     *
+     * @param invocation the java code object for method invocation
+     * @param wsdl the WSDL object
+     * @return the java code object for method invocation
+     */
+    protected JInvocation addExtraInputArgsInMethodInvocation(JInvocation invocation, WSDL wsdl, String operName) {
+        return invocation;
     }
 }

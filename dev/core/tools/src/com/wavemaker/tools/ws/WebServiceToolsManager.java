@@ -216,6 +216,7 @@ public class WebServiceToolsManager {
         importWS.setDestdir(runtimeDir);
         importWS.setPartnerName(partnerName);
         WSDL wsdl = importWS.generateServiceClass();
+        wsdl.setPartnerName(partnerName);
 
         // update DesignServiceManager with the WSDL that contains the
         // type (TypeMapper) information.

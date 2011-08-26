@@ -99,4 +99,10 @@ public interface ServiceDefinition {
      * @return
      */
     public boolean isLiveDataService();
+
+    /**
+     * Gets the web service partner name
+     * @return the partner name
+     */
+    public String getPartnerName();
 }

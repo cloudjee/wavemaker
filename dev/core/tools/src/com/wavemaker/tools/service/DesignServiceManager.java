@@ -17,17 +17,7 @@ package com.wavemaker.tools.service;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -68,6 +58,8 @@ import com.wavemaker.tools.spring.beans.Beans;
 import com.wavemaker.tools.spring.beans.DefaultableBoolean;
 import com.wavemaker.tools.spring.beans.Property;
 import com.wavemaker.tools.ws.salesforce.SalesforceHelper;
+import com.wavemaker.tools.pws.PwsServiceModifierBeanFactory;
+import com.wavemaker.tools.pws.IPwsServiceModifier;
 
 /**
  * The DesignServiceManager provides design-time access to service descriptor
@@ -987,9 +979,18 @@ public class DesignServiceManager {
 
         if (null!=so.getReturnType()) {
             Operation.Return ret = new Operation.Return();
-            ret.setIsList(so.getReturnType().getDimensions()>0);
-            if (null!=so.getReturnType().getTypeDefinition()) {
-                ret.setTypeRef(so.getReturnType().getTypeDefinition().getTypeName());
+            FieldDefinition retType;
+            if (pwsServiceModifierBeanFactory == null || sd.getPartnerName() == null) {
+                    retType = so.getReturnType();
+            } else {
+                IPwsServiceModifier serviceModifier = pwsServiceModifierBeanFactory.getPwsServiceModifier(sd.getPartnerName());
+                retType = serviceModifier.getOperationReturnType(so);
+            }
+            //FieldDefinition retType = so.getReturnType();
+
+            ret.setIsList(retType.getDimensions()>0);
+            if (null!=retType.getTypeDefinition()) {
+                ret.setTypeRef(retType.getTypeDefinition().getTypeName());
             }
             op.setReturn(ret);
         }
@@ -1157,6 +1158,10 @@ public class DesignServiceManager {
     }
 
     // spring-controlled bean properties
+    private PwsServiceModifierBeanFactory pwsServiceModifierBeanFactory;
+
+    private IPwsServiceModifier defaultServiceModifier;
+
     private ProjectManager projectManager;
 
     private DeploymentManager deploymentManager;
@@ -1177,6 +1182,22 @@ public class DesignServiceManager {
 
     public void setDeploymentManager(DeploymentManager deploymentManager) {
         this.deploymentManager = deploymentManager;
+    }
+
+    public void setPwsServiceModifierBeanFactory(PwsServiceModifierBeanFactory pwsServiceModifierBeanFactory) {
+        this.pwsServiceModifierBeanFactory = pwsServiceModifierBeanFactory;
+    }
+
+    public PwsServiceModifierBeanFactory getPwsServiceModifierBeanFactory() {
+        return this.pwsServiceModifierBeanFactory;
+    }
+
+    public void setDefaultServiceModifier(IPwsServiceModifier defaultServiceModifier) {
+        this.defaultServiceModifier = defaultServiceModifier;
+    }
+
+    public IPwsServiceModifier defaultServiceModifier() {
+        return this.defaultServiceModifier;
     }
 
     public void setDesignServiceTypes(List<DesignServiceType> designServiceTypes) {

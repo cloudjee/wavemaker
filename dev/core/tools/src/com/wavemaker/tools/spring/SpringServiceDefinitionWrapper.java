@@ -118,4 +118,8 @@ public class SpringServiceDefinitionWrapper implements DeprecatedServiceDefiniti
     public boolean isLiveDataService() {
         return delegate.isLiveDataService();
     }
+
+    public String getPartnerName() {
+        return null;
+    }
 }
