@@ -539,8 +539,10 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 
 	setDefaultOnInsert:function(){
 		if (this.editor && this.defaultInsert){
-			this.setEditorValue(this.defaultInsert);
-			this.changed();
+		    if (this.$.binding && this.$.binding.wires.defaultInsert)
+			this.$.binding.wires.defaultInsert.refreshValue();
+		    this.setEditorValue(this.defaultInsert);
+		    this.changed();
 		}
 	}
 });

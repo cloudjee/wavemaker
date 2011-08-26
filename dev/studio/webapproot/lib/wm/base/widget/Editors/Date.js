@@ -76,6 +76,8 @@ dojo.declare("wm.Date", wm.Text, {
 	},
         setDefaultOnInsert:function() {
 	    if (this.defaultInsert) {
+		if (this.$.binding && this.$.binding.wires.defaultInsert)
+		    this.$.binding.wires.defaultInsert.refreshValue();
 		this.setDataValue(this.defaultInsert); // setDataValue knows how to handle Date and long; dijit.set apparently does not.
 		this.invalidate();
 	    }
@@ -365,6 +367,8 @@ dojo.declare("wm.DateTime", wm.Text, {
     },
     setDefaultOnInsert:function(){
 	if (this.defaultInsert) {
+	    if (this.$.binding && this.$.binding.wires.defaultInsert)
+		this.$.binding.wires.defaultInsert.refreshValue();
 	    this.setDataValue(this.defaultInsert);
 	    this.invalidate();
 	}
