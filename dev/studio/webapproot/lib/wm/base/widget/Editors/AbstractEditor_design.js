@@ -75,8 +75,8 @@ wm.AbstractEditor.extend({
 			this.formField = inFieldName;
 		var f = wm.getParentForm(this);
 		if (f) {
-			var fieldInfo = f.addEditorToForm(this);
-		    if (!this.caption) this.setCaption(inFieldName);
+		    var fieldInfo = f.addEditorToForm(this);
+		    this.setCaption(wm.capitalize(inFieldName));
 		}
 	},
 	makePropEdit: function(inName, inValue, inDefault) {

@@ -351,8 +351,10 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		// argh, copy data from variable
 	    for (var i=0, c=dataSet.getCount(), v; i < c && (v = dataSet.getItem(i)); i++) {
                 var d = v.getData();
-                d[this._storeNameField]  = String(this._getDisplayData(v));
-		data.push(d);
+		if (d) {
+                    d[this._storeNameField]  = String(this._getDisplayData(v));
+		    data.push(d);
+		}
             }
 		//console.log("getDataSetData", (new Date()).getTime() - time);
 		return data;
@@ -563,7 +565,7 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
         ignoreCase: true,
 	init: function() {
 		this.inherited(arguments);
-		if (this.autoDataSet)
+		if (this.autoDataSet && this.formField)
 		    this.createDataSet();
             this.dataField = "All Fields"; // just in case someone somehow changed it, this must be all fields to work.
 	},

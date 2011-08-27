@@ -39,13 +39,20 @@ wm.SelectMenu.extend({
 		    this.options = this.dataField = this.displayField = "";
 		    this.setDataSet(inDataSet);
 		} else {
-		    /* Clear the dataField/displayField if changing dataTypes */
-		    if (inDataSet && this.dataSet && inDataSet.type != this.dataSet.type) 
-			this.dataField = this.displayField = "";
+		    /* Clear the dataField/displayField if changing dataTypes; if no this.dataSet yet
+		     * we may still be loading the page so no special treatment if no this.dataSe 
+		     */
+		    if (inDataSet && this.dataSet && inDataSet.type != this.dataSet.type)  {
+			this.dataField = "";
+			this._setDisplayField();
+		    }
 		    /* Clear the options property if setting a new dataSet */
 		    if (this.options && inDataSet != this.$.optionsVar)
 			this.options = "";
 		    this.setDataSet(inDataSet);
+		    if (inDataSet && !this.displayField) {
+			this._setDisplayField();
+		    }
 		}
 	},
 	// FIXME: for simplicity, allow only top level , non-list, non-object fields.
@@ -57,6 +64,57 @@ wm.SelectMenu.extend({
 			}
 		}
 	},
+    /* find a best guess at an initial displayField */
+    _setDisplayField: function() {
+	var dataSet = this.dataSet;
+	if (dataSet && dataSet.type) {
+	    var type = dataSet.type;
+	    var typeDef = wm.typeManager.getType(type);
+	    if (!typeDef) return;
+	    var fields = typeDef.fields;
+	    var stringFields = {};
+	    var literalFields = {};
+	    for (fieldName in fields) {
+		var field = fields[fieldName];
+		if (field.exclude.length == 0) {
+		    if (field.type == "java.lang.String" || field.type == "StringData") {
+			stringFields[fieldName] = field;
+		    } else if (!wm.typeManager.isStructuredType(field.type)) {
+			literalFields[fieldName] = field;
+		    }
+		}
+	    }
+	    
+	    for (var fieldName in stringFields) {
+		var lowestFieldOrder = 100000;
+		var lowestFieldName;
+		if (!dojo.isFunction(stringFields[fieldName])) { // ace damned changes to object prototype
+		    if (stringFields[fieldName].fieldOrder < lowestFieldOrder) {
+			lowestFieldOrder = stringFields[fieldName].fieldOrder;
+			lowestFieldName = fieldName;
+		    }
+		}
+	    }
+	    if (lowestFieldName) {
+		return this.setDisplayField(lowestFieldName);
+	    }
+
+
+	    for (var fieldName in literalFields) {
+		var lowestFieldOrder = 100000;
+		var lowestFieldName;
+		if (!dojo.isFunction(literalFields[fieldName])) { // ace damned changes to object prototype
+		    if (literalFields[fieldName].fieldOrder < lowestFieldOrder) {
+			lowestFieldOrder = literalFields[fieldName].fieldOrder;
+			lowestFieldName = fieldName;
+		    }
+		}
+	    }
+	    if (lowestFieldName) {
+		return this.setDisplayField(lowestFieldName);
+	    }
+	}
+    },
 	_listFields: function() {
 		var list = [ "" ];
 		var schema = this.dataSet instanceof wm.LiveVariable ? wm.typeManager.getTypeSchema(this.dataSet.type) : (this.dataSet||0)._dataSchema;
@@ -199,6 +257,41 @@ wm.Object.extendSchema(wm.Lookup, {
 
 
 wm.Lookup.extend({
+	afterPaletteDrop: function() {
+	    this.inherited(arguments);
+	    var ff = this.getUniqueFormField();	    
+	    if (ff && ff != '') {
+		this.set_formField(ff);
+	    }
+	},
+	getUniqueFormField: function(){
+			var lf = wm.getParentForm(this);
+			if (!lf)
+				return '';
+			var arr = this.getOptions();
+			if (arr.length < 2)
+				return arr[0];
+			for (var i = 0; i < arr.length; i++){
+				if (!lf.isFormFieldInForm(arr[i]))
+					return arr[i];
+			}
+			
+			return arr[1];
+	},
+	getSchemaOptions: function(inSchema) {
+		return wm.typeManager.getFilteredPropNames(inSchema, function(p) {
+			return wm.typeManager.isStructuredType((p || 0).type) && !p.isList;
+		});
+	},
+	getOptions: function() {
+		var f = wm.getParentForm(this), ds = f && f.dataSet;
+		return ds && ds.type ? this.getSchemaOptions(ds._dataSchema) : [""];
+	},
+
+
+
+
+
 	makePropEdit: function(inName, inValue, inDefault) {
 		switch (inName) {
 			case "formField":
@@ -215,8 +308,14 @@ wm.Lookup.extend({
 		return props;
 	},
 	set_formField: function(inFieldName) {
-	    this.inherited(arguments);
-	    this.setDataSet(this._getFormSource());
+	    if (inFieldName) {
+		this.formField = inFieldName;
+		if (this.autoDataSet && this.formField)
+		    this.createDataSet();	    
+		this.inherited(arguments);
+	    } else {
+		delete this.formField; // undefined used in getFormEditorsArray
+	    }
 	}
 });
 

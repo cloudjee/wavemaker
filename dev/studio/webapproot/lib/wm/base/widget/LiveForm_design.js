@@ -743,6 +743,13 @@ wm.LiveForm.extend({
 				return true;
 		}
 		
+		var arr = this.getFormEditorsArray() || [];
+		for(var i = 0; i < arr.length; i++){
+			var e = arr[i];
+			if (e.formField == ff)
+				return true;
+		}
+
 		return false;
 	}
 });
