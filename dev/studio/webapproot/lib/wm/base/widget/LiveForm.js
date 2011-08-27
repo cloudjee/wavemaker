@@ -636,6 +636,9 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	},
 	// editors that should not be changed during an edit should remain readonly
 	_canChangeEditorReadonly: function(inOperations, inEditor, inForm, inReadonly) {
+	    if (inEditor instanceof wm.RelatedEditor && inEditor.editingMode == "editable subform")
+		return false; // devs must set readonly explicitly and must know what they are doing; some danger to editing subforms
+
 	    if ((wm.isInstanceType(inEditor, wm.Editor) || wm.isInstanceType(inEditor, wm.AbstractEditor)) && inEditor.formField) {
 			var
 				f = inEditor.formField,
