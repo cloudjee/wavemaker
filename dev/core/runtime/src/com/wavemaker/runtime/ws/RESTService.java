@@ -93,7 +93,7 @@ public class RESTService {
     public <T extends Object> T invoke(Map<String, Object> inputs,
             String method, String contentType, String endpoint,
             Class<T> responseType) {
-        return invoke(inputs, method, contentType, endpoint, responseType);
+        return invoke(inputs, method, contentType, endpoint, responseType, null);
     }
 
     /**
