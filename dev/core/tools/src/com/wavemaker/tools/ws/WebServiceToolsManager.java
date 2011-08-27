@@ -441,13 +441,16 @@ public class WebServiceToolsManager {
         //    inputs.add(parm);
         //}
 
-        if (method.equals("POST") && (inputs_list == null || inputs_list.size() == 0)) {
-            inputs_list = new ArrayList<List<RESTInputParam>>();
+        //if (method.equals("POST") && (inputs_list == null || inputs_list.size() == 0)) {
+        if (method.equals("POST")) {
+            //inputs_list = new ArrayList<List<RESTInputParam>>();
             for (int i=0; i<operCnt; i++) {
-                List<RESTInputParam> inputs = new ArrayList<RESTInputParam>();
-                RESTInputParam parm = new RESTInputParam("postData", "string");
-                inputs.add(parm);
-                inputs_list.add(inputs);     
+                List<RESTInputParam> inputs = inputs_list.get(i);
+                if (inputs == null || inputs.size() == 0) {
+                    //inputs = new ArrayList<RESTInputParam>();
+                    RESTInputParam parm = new RESTInputParam("postData", "string");
+                    inputs.add(parm);
+                }
             }
         }
 
