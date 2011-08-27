@@ -38,6 +38,8 @@ wm.Object.extendSchema(wm.Container, {
     setHorizontalAlign:    {group: "method"},
     setVerticalAlign:      {group: "method"},
     clearData: {group: "method"},
+    resetData: {group: "method"},
+    clearDirty: {group: "method"},
     customGetValidate:     {group: "customMethods"},
 		invalid: { ignore: 1, bindSource: 1, readonly: 1, type: "Boolean" },
 		isDirty: { ignore: 1, bindSource: 1, readonly: 1, type: "Boolean" },
