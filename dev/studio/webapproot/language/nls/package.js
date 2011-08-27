@@ -42,12 +42,16 @@
 	"Tabs" : "Tabs",
 	"Wizards" : "Wizard/Cards",
 
+        "FormsGroup": "Forms",
+        "EditorsGroup": "Editors",
 	"Editor" : "Editor",
 	"Checkbox" : "Checkbox",
 	"Currency" : "Currency",
 	"Date" : "Date",
 	"DateTime" : "DateTime",
 	"DateTimeGroup" : "Date and Time",
+	"RelatedEditorGroup" : "Relationship Editors",
+
 	"Number" : "Number",
 	"RadioButton" : "RadioButton",
 	"Select" : "Select",
@@ -77,12 +81,12 @@
 	"Lightbox" : "Lightbox",
 
     //"Form_Tools" : "Form Tools",
-    FormsEditors: "Forms &amp; Editors",
+
     Misc: "Misc",
 	"DataNavigator" : "DataNavigator",
 	"LiveForm" : "Form",
 	"RelatedEditor" : "RelatedEditor",
-	"RelatedEditorGroup" : "Relationship Editors",
+
 
 	"More_Widgets" : "More Widgets",
 	"JsonStatus": "JsonStatus",
