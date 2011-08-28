@@ -70,8 +70,10 @@ dojo.declare("wm.Date", wm.Text, {
 	    var v = this.convertValue(inValue); // if inValue is just a date, returns unmodified date
 
 	    // If we assume that this is server time, then we need to add some number of hours to it so that instead of showing the date in local time, we show the date as it is according to the server
-	    if (!this.useLocalTime && v)
+	    if (!this.useLocalTime && v) {
+		v = new Date(v); // don't modify the source data as the called may still need it 
 		v.setHours(v.getHours() + wm.timezoneOffset);
+	    }
 	    this.inherited(arguments, [v]);
 	},
         setDefaultOnInsert:function() {
@@ -81,7 +83,38 @@ dojo.declare("wm.Date", wm.Text, {
 		this.setDataValue(this.defaultInsert); // setDataValue knows how to handle Date and long; dijit.set apparently does not.
 		this.invalidate();
 	    }
+	},
+
+
+    updateIsDirty: function() {
+	var wasDirty = this.isDirty;
+	var isDirty = true;
+	if (this.dataValue) {
+	    var dataValue = new Date(this.dataValue);
+	    dataValue.setHours(0);
+	    dataValue.setMinutes(0);
+	    dataValue.setSeconds(0);
 	}
+	if (this._lastValue) {
+	    var lastValue = new Date(this._lastValue);
+	    lastValue.setHours(0);
+	    lastValue.setMinutes(0);
+	    lastValue.setSeconds(0);
+	}
+
+	if (dataValue && lastValue && dataValue.getTime() == lastValue.getTime()) {
+	    isDirty = false;
+	} else if ((this.dataValue === "" || this.dataValue === null || this.dataValue === undefined) &&
+		   (this._lastValue === "" || this._lastValue === null || this._lastValue === undefined)) {
+	    isDirty = false;
+	}
+	this.valueChanged("isDirty", this.isDirty = isDirty);
+	if (wasDirty != this.isDirty)
+	    dojo.toggleClass(this.domNode, "isDirty", this.isDirty);
+	if (!app.disableDirtyEditorTracking)
+	    wm.fire(this.parent, "updateIsDirty");
+    }
+
 });
 
 //===========================================================================
@@ -89,6 +122,15 @@ dojo.declare("wm.Date", wm.Text, {
 //===========================================================================
 dojo.declare("wm.Time", wm.Date, {
 	timePattern:'HH:mm a',
+    setDataValue: function(inValue) {
+	if (inValue) {
+	    var d = new Date(inValue);
+	    d.setYear(1970);
+	    d.setMonth(0);
+	    d.setDate(1);	    
+	}
+	this.inherited(arguments, [inValue ? d.getTime() : null]);
+    },
 	getEditorProps: function(inNode, inProps) {
 		var prop = dojo.mixin(this.inherited(arguments), {constraints:{timePattern: this.timePattern}}, inProps || {});
 		return prop;
@@ -103,7 +145,7 @@ dojo.declare("wm.Time", wm.Date, {
 	    var d = wm.Text.prototype.getEditorValue.call(this);
 	    if (d) {
 		if (!this.useLocalTime)
-		    d.setHours(d.getHours()-wm.timezoneOffset,0,0);
+		    d.setHours(d.getHours()-wm.timezoneOffset);
 		return d.getTime();
 	    }
 	    return this.makeEmptyValue();
@@ -114,7 +156,11 @@ dojo.declare("wm.Time", wm.Date, {
 			    return makeSelectPropEdit(inName, inValue, ["HH:mm", "HH:mm:ss", "HH:mm a", "HH:mm:ss a"], inDefault);
 		}
 		return this.inherited(arguments);
-	}
+	},
+
+    updateIsDirty: function() {
+	return wm.AbstractEditor.prototype.updateIsDirty.call(this);
+    }
 });
 
 
@@ -243,7 +289,7 @@ dojo.declare("wm.DateTime", wm.Text, {
 	    // or you risk showing the user a date in calendar other than what is shown in text
 	    if (!this.useLocalTime && this.dateMode == "Date") {
 		var value = this.getDisplayValue();
-		var date = dojo.date.locale.parse(value, {formatLength: this.formatLength, selector: this.dateMode.toLowerCase()});
+		var date = dojo.date.locale.parse(value, {formatLength: this.formatLength, fullYear: true, selector: this.dateMode.toLowerCase()});
 	    } else {
 		var date = new Date(this.getDataValue());
 	    }
@@ -326,29 +372,35 @@ dojo.declare("wm.DateTime", wm.Text, {
 	wm.DateTime.dialog.$.label.setCaption(displayValue1);
 
 	if (this.dateMode == "Date") {
-	    var displayValue2 = dojo.date.locale.format(new Date(date.getTime() ), {formatLength: this.formatLength, selector: this.dateMode.toLowerCase()});
+	    var displayValue2 = dojo.date.locale.format(new Date(date.getTime() ), {formatLength: this.formatLength, fullYear: true, selector: this.dateMode.toLowerCase()});
 	    this.setDisplayValue(displayValue2);
 	    if (!this._setupDialogValues)
 		wm.DateTime.dialog.hide();
 	} else {
 
-	    var displayValue2 = dojo.date.locale.format(date, {formatLength: this.formatLength, selector: this.dateMode.toLowerCase()});
+	    var displayValue2 = dojo.date.locale.format(date, {formatLength: this.formatLength, fullYear: true, selector: this.dateMode.toLowerCase()});
 	    this.setDisplayValue(displayValue2);
     }
 
     },
+    calcDisplayValue: function(inDate) {
+	var d = inDate;
+	if (d instanceof Date == false)
+	    d = new Date(inDate);
+	return dojo.date.locale.format(d, {formatLength: this.formatLength, fullYear: true, selector: this.dateMode.toLowerCase()});
+    },	
 	getDisplayValue: function() {
 	    if (this.editor)
 		return this.editor.get("displayedValue");
 	    else if (this.dataValue)
-		return dojo.date.locale.format(this.dataValue, {formatLength: this.formatLength, selector: this.dateMode.toLowerCase()});
+		return this.calcDisplayValue(this.dataValue);
 	    else
 		return "";
 	},
     setEditorValue: function(inValue) {
 	var d;
 	if (inValue instanceof Date) {
-	    d = inValue;
+	    d = new Date(inValue); // else our date calculations modify the input object which can cause ugly side effects
 	} else if (String(inValue).match(/^\d+$/)) {
 	    d = new Date(inValue); // its a long
 	} else if (inValue) {
@@ -359,11 +411,10 @@ dojo.declare("wm.DateTime", wm.Text, {
 	if (d && d.getTime() != NaN) {
 	    if (this.dateMode == "Date" && !this.useLocalTime)
 		d.setHours(d.getHours() + wm.timezoneOffset);
-	    displayValue = dojo.date.locale.format(d, {formatLength: this.formatLength, selector: this.dateMode.toLowerCase()});
+	    displayValue = dojo.date.locale.format(d, {formatLength: this.formatLength, fullYear: true, selector: this.dateMode.toLowerCase()});
 	} else
 	    d = null;
 	this.inherited(arguments, [displayValue]);
-	this.dataValue = d;
     },
     setDefaultOnInsert:function(){
 	if (this.defaultInsert) {
@@ -375,7 +426,7 @@ dojo.declare("wm.DateTime", wm.Text, {
     },
     getEditorValue: function() {
 	var value = this.getDisplayValue();
-	var date = dojo.date.locale.parse(value, {formatLength: this.formatLength, selector: this.dateMode.toLowerCase()});
+	var date = dojo.date.locale.parse(value, {formatLength: this.formatLength, fullYear: true, selector: this.dateMode.toLowerCase()});
 	if (date) {
 	    if (this.dateMode == "Date") {
 		if (!this.useLocalTime)
@@ -386,6 +437,23 @@ dojo.declare("wm.DateTime", wm.Text, {
 	    return date.getTime();
 	}
 	return null;
+    },
+    updateIsDirty: function() {
+	var wasDirty = this.isDirty;
+	var isDirty = true;
+	var dataValue = this.calcDisplayValue(this.dataValue);
+	var lastValue = this.calcDisplayValue(this._lastValue);
+	if (dataValue == lastValue) {
+	    isDirty = false;
+	} else if ((this.dataValue === "" || this.dataValue === null || this.dataValue === undefined) &&
+		   (this._lastValue === "" || this._lastValue === null || this._lastValue === undefined)) {
+	    isDirty = false;
+	}
+	this.valueChanged("isDirty", this.isDirty = isDirty);
+	if (wasDirty != this.isDirty)
+	    dojo.toggleClass(this.domNode, "isDirty", this.isDirty);
+	if (!app.disableDirtyEditorTracking)
+	    wm.fire(this.parent, "updateIsDirty");
     },
     setDisabled: function(inDisabled) {
 	this.inherited(arguments);
