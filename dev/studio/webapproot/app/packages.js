@@ -65,7 +65,7 @@
 [ bundlePackage.FormsGroup, bundlePackage.SimpleForm, "wm.SimpleForm", "wm.base.widget.LiveForm","Studio_paletteImageList_7", bundlePackage.descSimpleForm,{}, true],
 [ bundlePackage.FormsGroup, bundlePackage.RelatedEditor, "wm.RelatedEditor", "wm.base.widget.RelatedEditor", "Studio_paletteImageList_9",bundlePackage.descRelatedEditor, {}, false],
 
-[bundlePackage.EditorsGroup, "wm.Checkbox", "wm.base.widget.Editors.Checkbox", "Studio_paletteImageList_9", bundlePackage.descCheckbox, {}, false],
+[bundlePackage.EditorsGroup, bundlePackage.Checkbox, "wm.Checkbox", "wm.base.widget.Editors.Checkbox", "Studio_paletteImageList_9", bundlePackage.descCheckbox, {}, false],
 [ bundlePackage.EditorsGroup, bundlePackage.ColorPicker, "wm.ColorPicker", "wm.base.widget.Editors.Text", "Studio_paletteImageList_9",bundlePackage.descColorPicker, {}, false],
 [bundlePackage.EditorsGroup, bundlePackage.Currency, "wm.Currency", "wm.base.widget.Editors.Text", "Studio_paletteImageList_9", bundlePackage.descCurrency, {}, false],
 [bundlePackage.EditorsGroup, bundlePackage.Number, "wm.Number", "wm.base.widget.Editors.Number", "Studio_paletteImageList_9", bundlePackage.descNumber, {}, false],
