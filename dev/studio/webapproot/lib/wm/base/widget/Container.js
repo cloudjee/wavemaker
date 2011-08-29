@@ -553,6 +553,7 @@ wm.Container.extend({
 	        var sum = 0;
 	    var percentUsed = 0;
 		var v;
+
 		for (var i=0, c; c=this.c$[i]; i++) {		    
 			if (this.layout.inFlow(c)) {
 			    /* If c is autoScrolling, then its size isn't affected by its contents */
@@ -574,13 +575,14 @@ wm.Container.extend({
 			    
 			}
 		}
+
 	    if (percentUsed && percentUsed < 100) {
 		sum = Math.round(sum * 100/percentUsed);
 		max = Math.round(max * 100/percentUsed);
 	    }
                 // Never return less than 30px wide; mostly this is for design mode where users still need to be able to find and drop widgets into the container.
 	        var result = ((this.layoutKind == "top-to-bottom") ? max : sum) + extra;
-	    return Math.max(result, wm.Control.prototype.getMinWidthProp.call(this));
+	    return Math.max(this.minWidth,Math.max(result, wm.Control.prototype.getMinWidthProp.call(this)));
 	},
 
     /* Get the preferred height of this container, for use if this is a fitToContentHeight container.
@@ -623,7 +625,7 @@ wm.Container.extend({
 
             // never return less than 15px height
             var result =  ((this.layoutKind == "left-to-right") ? max : sum) + extra;
-	    return Math.max(result, wm.Control.prototype.getMinHeightProp.call(this));
+	    return Math.max(this.minHeight,Math.max(result, wm.Control.prototype.getMinHeightProp.call(this)));
 	},
 	getMinWidthProp: function() {
             if (this.fitToContentWidth)
