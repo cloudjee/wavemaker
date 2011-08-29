@@ -382,17 +382,24 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 		for (var i=0, c; c=inC$[i]; i++) {
 			if (this.inFlow(c)) {
 				if (c._percEx[inAxis]) {
+				    var minSize = c[minname]();
+				    var percentSize = (Number(c._percEx[inAxis]) || 0)/100 * inExtent;
+				    if (minSize < percentSize) {
 					flex += Number(c._percEx[inAxis]) || 0;
-				        minSizeSum += c[minname]();
-				} else
-					free -= c.bounds[inAxis];
+				        minSizeSum += minSize;
+				    } else {
+					free -= Math.max(c.bounds[inAxis],c[minname]());
+				    }
+				} else {
+					free -= Math.max(c.bounds[inAxis],c[minname]());
+				}
 			}
 		}
 
 		// If this number is less than 0, then treat all minSized widgets as fixed size and factor in the minSize into the amount of free space
 		if (free - minSizeSum < 0) free -= minSizeSum; 
-		if (flex && flex < 100)
-			flex = 100;
+/*		if (flex && flex < 100)
+			flex = 100;*/
 		return {
 			free: free,
 			ratio: (flex && free>0) ? (free / flex) : 0
