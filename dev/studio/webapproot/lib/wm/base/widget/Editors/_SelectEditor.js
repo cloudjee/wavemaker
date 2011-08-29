@@ -241,7 +241,7 @@ dojo.declare("wm._SelectEditor", wm._BaseEditor, {
 		for (var i=0, opts = this.options.split(','), l=opts.length, d; i<l; i++) {
 			d = dojo.string.trim(opts[i]);
 			if (d != "")
-				data[i] = {name: d, dataValue: d };
+				data[i] = {dataValue: d };
 		}
 		return data;
 	},
@@ -318,9 +318,9 @@ dojo.declare("wm._SelectEditor", wm._BaseEditor, {
 
 		var ds = this.dataSet = new wm.Variable({name: "optionsVar",
 							 owner: this,
-							 type: "EntryData"});
+							 type: "StringData"});
 		ds.setData(opts);
-		this.displayField = "name";
+		this.displayField = "dataValue";
 		this.dataField    = "dataValue";
 	},
 	setOptions: function(inOptions) {		
