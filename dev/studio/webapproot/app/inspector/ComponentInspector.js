@@ -57,7 +57,7 @@ dojo.declare("wm.ComponentInspector", wm.Layers, {
 	    this._lastNodeName = ip._nodeName;
 
 	    // If we're inspecting the same component with the same inspector, call reinspect
-	    if (inspector == this._currentInspector && inComponent == wasInspecting && !changedNode && this.dijits) {
+	    if (inspector == this._currentInspector && inComponent == wasInspecting && !changedNode && this.dijits && inspector.tableContainer.innerHTML) {
 
 		// Update all values in the property inspector UI
 		this._currentInspector.reinspect();
@@ -110,10 +110,11 @@ dojo.declare("wm.ComponentInspector", wm.Layers, {
 	case "Navigation":
 	    return this._inspectors.Navigation;
 	case "Styles":
-	    if (this._inspectors.Styles.getActiveLayer().name == "properties")
+	    if (this._inspectors.Styles.getActiveLayer().name == "properties") {
 		return this._inspectors.Properties;
-	    else
+	    } else {
 		return this._inspectors.Styles;
+	    }
 	}
 
     },
@@ -124,7 +125,7 @@ dojo.declare("wm.ComponentInspector", wm.Layers, {
     reinspect: function() {	    
 	var requiredInspector = this.getInspector();
 	var inspectorProps = this.parent.tree.selected.inspector;
-	if (this._currentInspector != requiredInspector || this.inspectorProps.inspector != inspectorProps)
+	if (this._currentInspector != requiredInspector || this.inspectorProps.inspector != inspectorProps || !requiredInspector.tableContainer.innerHTML)
 	    return this.inspect(this.inspected);
 	if (this.inspected && this.inspectorProps) {
 	    this._currentInspector.reinspect(this.inspected);
