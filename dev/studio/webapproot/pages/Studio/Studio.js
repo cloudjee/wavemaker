@@ -393,7 +393,7 @@ dojo.declare("Studio", wm.Page, {
 				// somewhere there is code so that live services will autodeploy the project, but this doesn't work for resources; 
 				// at some point a cleanup of that code may be needed.	        
 		    /* deployStatus will probably be set already if any autoUpdate/startUpdate services fire during initialization */
-				if (!wm.studioConfig.preventLiveData && inName != '' && !studio.application._deployStatus)
+				if (!wm.studioConfig.preventLiveData && inName != '')
 	            		    studio.deploy(null,"studioProjectCompile", true); 
 		}
 		this.disableMenuBar(!b);
@@ -589,15 +589,15 @@ dojo.declare("Studio", wm.Page, {
 		});
 	},
 	isLiveLayoutReady: function(inWarn) {
-	    return this._liveLayoutReady || this.application && this.application._deployStatus == "deployed";
+	    return this._liveLayoutReady;
 	},
 	setLiveLayoutReady: function(inReady) {
 		this._liveLayoutReady = inReady;
 	},
     deploySuccess: function() {
+	console.log("DEPLOY SUCCESS!");
 	if (this.application._deployStatus == "deploying")
 	    this.application._deployStatus = "deployed";
-	console.log("DEPLOY SUCCESS!");
 	this.runPopup.setDisabled(false);
 	this.setLiveLayoutReady(true);
 	switch(this._runRequested) {
@@ -613,9 +613,9 @@ dojo.declare("Studio", wm.Page, {
 	this._runRequested = false;
     },
     deployError: function(result) {
+	console.log("DEPLOY ERROR: " + result);
 	if (this.application._deployStatus == "deploying")
 	    this.application._deployStatus = "";
-	    console.log("DEPLOY ERROR: " + result);
 	this.runPopup.setDisabled(false);
         if (result.message && result.message.match(/Application already exists at/)) {
             this.deploySuccess();
@@ -629,9 +629,9 @@ dojo.declare("Studio", wm.Page, {
         }
     },
         deploy: function(inMsg, deployType, noWait) {
-	    if (!this.application._deployStatus)
-		this.application._deployStatus = "deploying";
-	    console.log("DEPLOY: " + deployType);
+	    if (this.application._deployStatus == "deploying") return;
+	    this.application._deployStatus = "deploying";
+
 	    this._runRequested = deployType;
 	    this.runPopup.setDisabled(true);
 	    var d = this._deployer = studio.deploymentService.requestAsync("testRunStart");

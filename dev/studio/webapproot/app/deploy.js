@@ -56,7 +56,7 @@ Studio.extend({
 	// Live Data
 	//=====================================================================
 	refreshLiveData: function() {
-	    if (!wm.studioConfig.preventLiveData && !studio.application._deployStatus)
+	    if (!wm.studioConfig.preventLiveData)
 		    this.deploy("", "studioProjectCompile", true);
 		    
 	},
