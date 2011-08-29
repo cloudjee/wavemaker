@@ -35,5 +35,6 @@ DBBOX_NAME_CAPTION: "Database Name",
 DBBOX_URL_CAPTION: "Connection URL",
 DBBOX_JNDINAME_CAPTION: "JNDI Name",
 DBBOX_CFTYPE_CAPTION: "Type",
-DBBOX_CFNAME_CAPTION: "Database Name"
+DBBOX_CFNAME_CAPTION: "Database Name",
+CF_DB_NODATA_WARNING: "Please note: WaveMaker will create the database schema in CloudFoundry.  No data will be included.  Your database will be available but empty."
 }
