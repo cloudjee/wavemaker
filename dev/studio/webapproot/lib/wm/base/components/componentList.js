@@ -90,6 +90,7 @@ wm.componentList = {
 	'wm.ToggleButton':['build.Gzipped.wm_editors'],
 	'wm.Timer':['wm.base.components.Timer'],
 	
+    'wm.SimpleForm': ['build.Gzipped.wm_livepanel'],
     'wm.LiveForm': ['build.Gzipped.wm_livepanel'],
     'wm.RelatedEditor': ['build.Gzipped.wm_livepanel'],
     'wm.LivePanel':  ['build.Gzipped.wm_livepanel'],
