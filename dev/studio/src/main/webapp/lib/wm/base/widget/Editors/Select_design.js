@@ -76,7 +76,7 @@ wm.SelectMenu.extend({
 	    var literalFields = {};
 	    for (fieldName in fields) {
 		var field = fields[fieldName];
-		if (field.exclude.length == 0) {
+		if (!field.exclude || field.exclude.length == 0) {
 		    if (field.type == "java.lang.String" || field.type == "StringData") {
 			stringFields[fieldName] = field;
 		    } else if (!wm.typeManager.isStructuredType(field.type)) {
