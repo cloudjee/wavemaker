@@ -28,35 +28,47 @@ import org.json.JSONObject;
 import org.springframework.core.io.Resource;
 import org.springframework.web.context.support.ServletContextResource;
 import org.apache.commons.io.IOUtils;
+import org.cloudfoundry.runtime.env.CloudEnvironment;
 
 /**
- * This singleton class is to store any properties in the scope of the
- * application context.
- *
+ * This singleton class is to store any properties in the scope of the application context.
+ * 
  * @author S Lee
  * @author Jeremy Grelle
  */
-public class WMAppContext
-{
+public class WMAppContext {
+
     private static WMAppContext instance;
+
     private int defaultTenantID = DataServiceConstants.DEFAULT_TENANT_ID;
+
     private String tenantFieldName = DataServiceConstants.DEFAULT_TENANT_FIELD;
+
     private String tenantColumnName = "";
+
     private HashMap<String, ProjectInfo> hm;
+
     ServletContext context;
+
     private String appName;
+
     private static HashMap<String, Integer> tenantIdMap = new HashMap<String, Integer>();
+
     private static HashMap<String, String> userNameMap = new HashMap<String, String>();
-    private JSONObject typesObj; //salesforce
+
+    private JSONObject typesObj; // salesforce
+    
+    private CloudEnvironment cloudEnvironment = new CloudEnvironment();
 
     private WMAppContext(ServletContextEvent event) {
         context = event.getServletContext();
         appName = context.getServletContextName();
-        if (appName == null) appName = "Project Name";
-        
-        //In Studio, the tenant field and def tenant ID is injected by ProjectManager when a project opens
+        if (appName == null)
+            appName = "Project Name";
+
+        // In Studio, the tenant field and def tenant ID is injected by ProjectManager when a project opens
         if (!appName.equals(DataServiceConstants.WAVEMAKER_STUDIO)) {
-            //Store types.js contents in memory
+            // Store types.js contents in memory
             try {
                 Resource typesResource = new ServletContextResource(context, "/types.js");
                 String s = IOUtils.toString(typesResource.getInputStream());
@@ -66,10 +78,10 @@ public class WMAppContext
                 return;
             }
 
-            //Set up multi-tenant info
+            // Set up multi-tenant info
             Resource appPropsResource = null;
             try {
-                appPropsResource = new ServletContextResource(context, "/WEB-INF/classes/"+CommonConstants.APP_PROPERTY_FILE);
+                appPropsResource = new ServletContextResource(context, "/WEB-INF/classes/" + CommonConstants.APP_PROPERTY_FILE);
             } catch (WMRuntimeException re) {
                 return;
             } catch (Exception e) {
@@ -80,7 +92,7 @@ public class WMAppContext
             if (!appPropsResource.exists()) {
                 return;
             }
-            
+
             Properties props;
 
             try {
@@ -115,8 +127,7 @@ public class WMAppContext
 
     public int getDefaultTenantID() {
         if (appName.equals(DataServiceConstants.WAVEMAKER_STUDIO)) {
-            String p = (String)RuntimeAccess.getInstance().getSession().
-                    getAttribute(DataServiceConstants.CURRENT_PROJECT_NAME);
+            String p = (String) RuntimeAccess.getInstance().getSession().getAttribute(DataServiceConstants.CURRENT_PROJECT_NAME);
             if (hm == null) {
                 return DataServiceConstants.DEFAULT_TENANT_ID;
             } else {
@@ -133,8 +144,7 @@ public class WMAppContext
 
     public String getTenantFieldName() {
         if (appName.equals(DataServiceConstants.WAVEMAKER_STUDIO)) {
-            String p = (String)RuntimeAccess.getInstance().getSession().
-                    getAttribute(DataServiceConstants.CURRENT_PROJECT_NAME);
+            String p = (String) RuntimeAccess.getInstance().getSession().getAttribute(DataServiceConstants.CURRENT_PROJECT_NAME);
             if (hm == null) {
                 return DataServiceConstants.DEFAULT_TENANT_FIELD;
             } else {
@@ -151,8 +161,7 @@ public class WMAppContext
 
     public String getTenantColumnName() {
         if (appName.equals(DataServiceConstants.WAVEMAKER_STUDIO)) {
-            String p = (String)RuntimeAccess.getInstance().getSession().
-                    getAttribute(DataServiceConstants.CURRENT_PROJECT_NAME);
+            String p = (String) RuntimeAccess.getInstance().getSession().getAttribute(DataServiceConstants.CURRENT_PROJECT_NAME);
             if (hm == null) {
                 return "";
             } else {
@@ -168,18 +177,22 @@ public class WMAppContext
     }
 
     public void setTenantInfoForProj(String projName, String val1, int val2, String val3) {
-        if (hm == null) hm = new HashMap<String, ProjectInfo>();
+        if (hm == null)
+            hm = new HashMap<String, ProjectInfo>();
         ProjectInfo pi = new ProjectInfo(val1, val2, val3);
         hm.put(projName, pi);
     }
 
     public boolean isMultiTenant() {
+        if (isCloudFoundry()) {
+            return false;
+        }
+        
         String tf;
         boolean multiTenancy;
 
         if (appName.equals(DataServiceConstants.WAVEMAKER_STUDIO)) {
-            String p = (String)RuntimeAccess.getInstance().getSession().
-                    getAttribute(DataServiceConstants.CURRENT_PROJECT_NAME);
+            String p = (String) RuntimeAccess.getInstance().getSession().getAttribute(DataServiceConstants.CURRENT_PROJECT_NAME);
 
             if (hm == null) {
                 tf = DataServiceConstants.DEFAULT_TENANT_FIELD;
@@ -191,11 +204,11 @@ public class WMAppContext
                     tf = pi.tenantFldName;
                 }
             }
-        } else
+        } else {
             tf = tenantFieldName;
-
-        if (tf.equalsIgnoreCase(DataServiceConstants.DEFAULT_TENANT_FIELD) ||
-                tf.length() == 0 || tf == null) {
+        }
+           
+        if (tf.equalsIgnoreCase(DataServiceConstants.DEFAULT_TENANT_FIELD) || tf.length() == 0 || tf == null) {
             multiTenancy = false;
         } else {
             multiTenancy = true;
@@ -203,16 +216,20 @@ public class WMAppContext
 
         return multiTenancy;
     }
+    
+    public boolean isCloudFoundry() {
+        return cloudEnvironment.getInstanceInfo() != null;
+    }
 
     public void setTenantIdForUser(String userName, int tenantId) {
         tenantIdMap.put(userName, tenantId);
     }
-    
+
     public int getTenantIdForUser(String userName) {
         return tenantIdMap.get(userName);
     }
 
-     public void setUserNameForUserID(String userId, String userName) {
+    public void setUserNameForUserID(String userId, String userName) {
         userNameMap.put(userId, userName);
     }
 
@@ -225,20 +242,23 @@ public class WMAppContext
     }
 
     public String getAppContextRoot() {
-        return context.getRealPath("");    
+        return context.getRealPath("");
     }
 
-    public JSONObject  getTypesObject() { //salesforce
+    public JSONObject getTypesObject() { // salesforce
         return typesObj;
     }
 
-    public void setTypesObject(JSONObject val) { //salesforce
+    public void setTypesObject(JSONObject val) { // salesforce
         this.typesObj = val;
     }
 
     class ProjectInfo {
+
         String tenantFldName;
+
         int defTenantId;
+
         String tenantColName;
 
         private ProjectInfo(String val1, int val2, String val3) {
