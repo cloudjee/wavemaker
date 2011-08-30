@@ -47,7 +47,7 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
 			return "normal";
                 // else, autosize isn't used; revert to default behaviors
 		else
-			return this.inherited(arguments);
+		    return this.singleLine ? "nowrap" : "normal";
 	},
         getReadOnlyNodeOverflow: function() {
 		// doAutoResize adjusts this value
@@ -162,7 +162,7 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
                 var minHeight = this.getMinHeightProp();
                 if (minHeight > newHeight) newHeight = minHeight;
 		// scrollbars for a node less than 40px high is pretty much useless; even 40 is questionable
-                if (this.maxHeight && this.maxHeight < newHeight && (dojo.marginBox(this.readonlyNode).h > 40)) {
+                if (this.maxHeight && this.maxHeight < newHeight && (dojo.marginBox(this.readOnlyNode).h > 40)) {
                     newHeight = this.maxHeight;
                     bases.overflow = "auto";
                     this._autoSizeNeedsOverflow = true;
