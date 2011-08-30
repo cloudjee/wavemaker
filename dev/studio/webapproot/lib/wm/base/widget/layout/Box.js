@@ -391,7 +391,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 					free -= Math.max(c.bounds[inAxis],c[minname]());
 				    }
 				} else {
-					free -= Math.max(c.bounds[inAxis],c[minname]());
+				    free -= c.bounds[inAxis];
 				}
 			}
 		}
