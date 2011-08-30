@@ -9,7 +9,6 @@
   <import resource="project-security.xml"/>
   <import resource="project-spring.xml"/>
   <import resource="project-partner-beans.xml"/>
-  <import resource="asteria-runtime-beans.xml"/>
   <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping" id="urlMapping">
     <property name="mappings">
       <value>
