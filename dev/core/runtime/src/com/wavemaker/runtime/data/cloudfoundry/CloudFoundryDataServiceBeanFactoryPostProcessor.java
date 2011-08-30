@@ -27,6 +27,7 @@ import org.cloudfoundry.runtime.env.PostgresqlServiceInfo;
 import org.cloudfoundry.runtime.service.relational.MysqlServiceCreator;
 import org.cloudfoundry.runtime.service.relational.PostgresqlServiceCreator;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.PropertyValue;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -34,6 +35,7 @@ import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.TypedStringValue;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.support.ManagedProperties;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
@@ -79,6 +81,22 @@ public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFact
         for (String sfBean : sessionFactoryBeanNames) {
             BeanDefinition beanDefinition = getBeanDefinition(beanFactory, sfBean);
             beanDefinition.setLazyInit(false);
+            MutablePropertyValues propertyValues = beanDefinition.getPropertyValues();
+            PropertyValue hibernateProperties = propertyValues.getPropertyValue("hibernateProperties");
+            
+            ManagedProperties hibernatePropsPropertyValue = null;
+            if (hibernateProperties != null) {
+                Object value = hibernateProperties.getValue();
+                if (value instanceof ManagedProperties) {
+                    hibernatePropsPropertyValue = (ManagedProperties) hibernateProperties.getValue();
+                    TypedStringValue dialect = (TypedStringValue) hibernatePropsPropertyValue.get(new TypedStringValue("hibernate.dialect"));
+                    if (dialect != null && dialect.equals(new TypedStringValue("com.wavemaker.runtime.data.dialect.MySQLDialect"))) {
+                        hibernatePropsPropertyValue.put(new TypedStringValue("hibernate.dialect"), new TypedStringValue("org.hibernate.dialect.MySQLDialect"));          
+                    }
+                }
+            } else {
+                hibernatePropsPropertyValue = new ManagedProperties();
+            }
         }
     }
 
