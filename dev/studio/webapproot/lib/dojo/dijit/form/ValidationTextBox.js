@@ -157,7 +157,12 @@ dojo.declare(
 			}else if(this.state == "Incomplete"){
 				message = this.getPromptMessage(isFocused); // show the prompt whenever the value is not yet complete
 				this._maskValidSubsetError = !this._hasBeenBlurred || isFocused; // no Incomplete warnings while focused
-			}else if(isEmpty){
+/*			}else if(isEmpty){ */
+		        /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+			 * WaveMaker added because messages onEmpty should only be shown onFocus, not both onFocus 
+			 * and again onBlur
+			 */
+			} else if (isEmpty && isFocused) {
 				message = this.getPromptMessage(isFocused); // show the prompt whenever there's no error and no text
 			}
 

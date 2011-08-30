@@ -374,6 +374,13 @@ dojo.declare(
 			// (to scroll the TextBox into view), which will affect how _refreshState() positions the tooltip
 			this.inherited(arguments);
 
+		        /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+			 * WaveMaker added because messages were failing to be cleared such that calls to 
+			 * show message came with the same message and were skipped
+			 */
+		    this._message = "";
+
+
 			this._refreshState();
 		},
 
