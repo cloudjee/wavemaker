@@ -186,7 +186,12 @@ dojo.declare("Studio", wm.Page, {
 		for (var i = 0; i < inResult.length; i++) {
 		    this._jarsMissing[inResult[i]] = true;
 		}
-
+		if (this._jarsMissing["hibernate3.jar"]) {
+		    app.confirm(this.getDictionaryItem("STUDIO_CONFIG_TOOL_NOT_RUN"), false,
+				function() {
+				    window.location = "/ConfigurationTool";
+				});
+		}
 	    }));
 
 /*
