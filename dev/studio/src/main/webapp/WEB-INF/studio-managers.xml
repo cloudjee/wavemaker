@@ -466,6 +466,7 @@
 							class="com.wavemaker.tools.project.upgrade.six_dot_four.IE_XUATagUpgradeTask" />
 						<bean
 							class="com.wavemaker.tools.project.upgrade.six_dot_four.ProjSpringServicesXmlUpgradeTask" />
+						<bean class="com.wavemaker.tools.project.upgrade.six_dot_four.RemoveMySQLHBMCatalogUpgradeTask"/>
 					</list>
 				</entry>
 			</map>

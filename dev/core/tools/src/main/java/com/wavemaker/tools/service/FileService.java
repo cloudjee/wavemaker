@@ -124,14 +124,14 @@ public interface FileService {
     Writer getWriter(Resource file) throws UnsupportedEncodingException, FileNotFoundException;
 
     /**
-     * Returns true iff the file exists.
+     * Returns true if the file exists.
      * 
      * @throws IOException
      */
     boolean fileExists(String path) throws IOException;
 
     /**
-     * Return true iff the file exists.
+     * Return true if the file exists.
      */
     boolean fileExists(Resource file);
 
