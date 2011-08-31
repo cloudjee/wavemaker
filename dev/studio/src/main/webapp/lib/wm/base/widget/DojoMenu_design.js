@@ -222,11 +222,11 @@ wm.DojoMenu.extend({
     },
     set_fullStructureStr: function(inStruct) {
 	if (studio.languageSelect.getDisplayValue() != "default") {
-	    var struct = dojo.fromJson(inStructStr);
-	    this.copyLocalizedEvents(struct, this.fullStructure);
+	    var struct = dojo.fromJson(inStruct);
+	    this.copyLocalizedEvents(struct, {children:this.fullStructure});
 	    inStruct = dojo.toJson(struct);
 	}
-	this.setFullStructureStr(inStruct);
+	this.setFullStructureStr(inStruct,true);
     },
     findItemInFullStructure: function(inStruct, inDefaultLabel) {
 	for (var i = 0; i < inStruct.children.length; i++) {
@@ -250,7 +250,7 @@ wm.DojoMenu.extend({
 		    itemToCopyTo.onClick = item.onClick;
 		}
 	    }
-	    if (item.children.length) {
+	    if (item.children && item.children.length) {
 		this.copyLocalizedEvents(inStruct, inCurrentStruct.children[i]);
 	    }
 	}
