@@ -32,6 +32,7 @@ dojo.declare("wm.studio.Project", null, {
 	if (this.projectName) {
 	    this.closeProject(inName);
 	}
+	studio._loadingApplication = true; 
 	var n = inName || this.projectName || "Project";
 	this.projectName = wm.getValidJsName(n);
 	this.pageName = "Main";
@@ -64,6 +65,7 @@ dojo.declare("wm.studio.Project", null, {
 			     this.projectChanged();
 			     this.projectsChanged();
 			     studio.endWait(studio.getDictionaryItem("wm.studio.Project.WAIT_CREATING_PROJECT"));
+			     studio._loadingApplication = false;
 			 }));
 	    studio.resourceManagerService.requestAsync("getResourceFolder", []);
 		//studio.deploy("Configuring Project...");
