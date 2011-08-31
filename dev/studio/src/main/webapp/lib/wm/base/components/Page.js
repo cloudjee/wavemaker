@@ -512,7 +512,8 @@ wm.Page.extend({
 		for (var prop in props) {
 		    var value = c.getProp(prop);
 		    // only do this for non-objects or for objects that aren't dojo objects nor domNodes
-		    if (typeof value != "object" || value.declaredClass === undefined && value instanceof Node == false) {
+		    // typeof null should NOT be "object" :-(
+		    if (value === null || typeof value != "object" || value.declaredClass === undefined && value instanceof Node == false) {
 		    //if (typeof value == "string" || typeof value == "boolean" || typeof value == "number") {
 			/* Restore the default values any time we change languages and clear the cache */
 			if (c["_original_i18n_" + prop] !== undefined && c["_original_i18n_" + prop] != value) {

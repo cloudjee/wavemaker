@@ -42,9 +42,25 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		  "wm.base.lib.currencyMappings",
 		  "dijit.Dialog"],
 
+    setLocalizationStructure: function(inStructure) {
+	this.localizationStructure = inStructure;
+	for (var i = 0; i < this.columns.length; i++) {
+	    var c = this.columns[i];
+	    if (this.localizationStructure[c.id]) {
+		c.title = this.localizationStructure[c.id];
+	    }
+	}
+	if (!this._cupdating && this.dojoObj) {
+	    this.renderDojoObj();
+	}
+	    
+    },
 	init: function() {
-	    if (!this.columns)
+	    if (!this.columns) {
 		this.columns = [];
+	    } else if (this.localizationStructure) {
+		this.setLocalizationStructure(this.localizationStructure);
+	    }
 	    for (var i = 0; i < this.requiredLibs.length; i++) {
 		dojo['require'](this.requiredLibs[i]);
 	    }

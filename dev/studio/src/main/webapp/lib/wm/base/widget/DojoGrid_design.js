@@ -353,6 +353,23 @@ wm.DojoGrid.extend({
 		}
 		return this.inherited(arguments);
 	},
+    get_columns: function() {
+	return this.columns || [];
+	//return this.contextMenu ? this.contextMenu.getUpdatedDataSet() : this.columns || [];
+    },
+    get_localizationStructure: function() {
+	var l = this.localizationStructure = {};
+	if (studio.languageSelect.getDisplayValue() == "default") {
+	    return l;
+	} else {
+	    for (var i = 0; i < this.columns.length; i++) {
+		var c = this.columns[i];
+		l[c.id] = c.title;
+	    }
+	    return l;
+	}	
+    }
+/*
 	writeProps: function(){
 		try{
 		    var props = this.inherited(arguments);
@@ -364,7 +381,7 @@ wm.DojoGrid.extend({
 			console.info('Error while saving dashboard data..............', e);
 		}
 	}
-	
+	*/
 });
 
 wm.Object.extendSchema(wm.DojoGrid, {
@@ -391,11 +408,12 @@ wm.Object.extendSchema(wm.DojoGrid, {
     dataSet: {bindTarget: 1, group: "edit", order: 30, isList: true, simpleBindTarget: true, doc: 1},
 /* TODO: Localize */
     selectionMode: {group: "edit", order: 31, options: ["single", "multiple", "extended", "none"]},
-	rightClickTBody: {ignore:1},
-	addDialogName:{hidden:true},
-	addFormName:{hidden:true},
-	dsType:{hidden:true},
-    columns:{ignore:1},
+    rightClickTBody: {ignore:1},
+    addDialogName:{hidden:true},
+    addFormName:{hidden:true},
+    dsType:{hidden:true},
+    columns:{writeonly:1, nonlocalizable: true},
+    localizationStructure: {hidden:true},
     select: {group: "method"},
     deselectAll: {group: "method"},
     getSelectedIndex:{group: "method", returns: "Number"},
