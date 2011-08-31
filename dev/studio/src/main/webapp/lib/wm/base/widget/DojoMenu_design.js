@@ -245,15 +245,11 @@ wm.DojoMenu.extend({
 	    return l;
 	}
     },
-    write: function() {
-    
 /*
-	if (this.fullStructure)
-	    this.fullStructureStr = dojo.toJson(this.fullStructure);
-	    */
+    write: function() {
 	return this.inherited(arguments);
     },
-/*
+
     set_fullStructureStr: function(inStruct) {
 	if (studio.languageSelect.getDisplayValue() != "default") {
 	    var struct = dojo.fromJson(inStruct);
