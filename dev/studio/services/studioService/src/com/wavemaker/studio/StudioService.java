@@ -844,16 +844,17 @@ public class StudioService extends ClassLoader {
         }
     }
 
-    // db2jcc.jar - com.ibm.db2.app.DB2StructOutput.class
-    // ojdbc.jar - oracle.jdbc.driver.OracleDatabaseMetaData
-    // wsdl4j.jar - javax.wsdl.factory.WSDLFactory.class
+    //db2jcc.jar - com.ibm.db2.app.DB2StructOutput.class
+    //ojdbc.jar - oracle.jdbc.driver.OracleDatabaseMetaData
+    //wsdl4j.jar - javax.wsdl.factory.WSDLFactory.class
+    //hibernate3.jar - org.hibernate.cfg.Environment.class
     @ExposeToClient
     public List<String> getMissingJars() {
         Map<String, String> jarHash = new HashMap<String, String>();
         jarHash.put("db2jcc.jar", "COM.ibm.db2.app.DB2StructOutput");
         jarHash.put("ojdbc.jar", "oracle.jdbc.driver.OracleDatabaseMetaData");
         jarHash.put("wsdl4j.jar", "javax.wsdl.factory.WSDLFactory");
-        // ClassLoader loader = ClassLoaderUtils.getClassLoader();
+        jarHash.put("hibernate3.jar", "org.hibernate.cfg.Environment");
 
         List<String> missingJars = new ArrayList<String>();
 
