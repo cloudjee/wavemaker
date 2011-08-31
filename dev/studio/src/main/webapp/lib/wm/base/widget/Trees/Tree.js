@@ -291,6 +291,7 @@ dojo.declare("wm.TreeNode", null, {
 			(this.closed ? wm.collapseNode : wm.expandNode)(this.kidsNode);
 
 		}
+	    this.styleNode();
 	},
 	btnToggled: function(e) {
 		this.tree.dispatchNodeEvent("Btnclick", this, e);
