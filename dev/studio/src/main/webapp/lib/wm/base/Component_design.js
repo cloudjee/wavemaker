@@ -660,6 +660,9 @@ wm.Component.extend({
 	       */
 		   this.editProp(inPropName);
 	   })});
-       }
-
+    },
+    hasLocalizedProp: function(inName) {
+	if (this.listProperties()[inName].nonlocalizable) return false;
+	return this["_original_i18n_" + inName] !== undefined && this["_original_i18n_" + inName] != this.getProp(inName);
+    }
 });

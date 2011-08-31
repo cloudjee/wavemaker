@@ -159,7 +159,7 @@ dojo.declare("MenuDesigner", wm.Page, {
       } 
   },
     mainOKClick: function() {
-	this.editMenu.setFullStructureStr(dojo.toJson(this.write()), true);
+	this.editMenu.set_fullStructure(this.write(), true);
 /*
 	if (this.defaultItemEnabled && this.defaultItem && this.defaultItem.data) 
 	    this.editMenu.setDefaultItem(this.defaultItem.data);
@@ -199,8 +199,10 @@ dojo.declare("MenuDesigner", wm.Page, {
 		delete this._designImageListSelectCon;
 	    }
 
-	    this._iconlistDialog.hide();
-	    delete this._iconlistDialog;
+	    if (this._iconListDialog) {
+		this._iconlistDialog.hide();
+		delete this._iconlistDialog;
+	    }
     },
     treeSelect: function(inSender, inNode) {
 	this.EditButton.setShowing(inNode != this.rootNode);

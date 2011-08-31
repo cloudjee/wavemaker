@@ -128,9 +128,9 @@
     "wm.PopupMenuButton.MENU_DESIGNER_TITLE":"Edit Menu",
     "wm.DojoMenu.MENU_DESIGNER_TITLE": "Edit Menu",
     "wm.PopupMenu.DEFAULT_STRUCTURE": 
-        '[{label: "File",	children: [{label: "Save"},{label: "Close"}]},' +
-	'{label: "Edit",	children: [{label: "Cut"}, {label: "Copy"},{label: "Paste"}]},' +
-        '{label: "Help"}]',
+        [{label: "File",	children: [{label: "Save"},{label: "Close"}]},
+	{label: "Edit",	children: [{label: "Cut"}, {label: "Copy"},{label: "Paste"}]},
+        {label: "Help"}],
 
     /* wm.ContextMenuDialog */
     "wm.ContextMenuDialog.DELETE_LABEL": 'Delete', 

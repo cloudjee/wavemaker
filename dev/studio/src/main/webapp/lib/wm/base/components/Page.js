@@ -511,7 +511,9 @@ wm.Page.extend({
 		var props = c.listWriteableProperties();
 		for (var prop in props) {
 		    var value = c.getProp(prop);
-		    if (typeof value == "string" || typeof value == "boolean" || typeof value == "number") {
+		    // only do this for non-objects or for objects that aren't dojo objects nor domNodes
+		    if (typeof value != "object" || value.declaredClass === undefined && value instanceof Node == false) {
+		    //if (typeof value == "string" || typeof value == "boolean" || typeof value == "number") {
 			/* Restore the default values any time we change languages and clear the cache */
 			if (c["_original_i18n_" + prop] !== undefined && c["_original_i18n_" + prop] != value) {
 			    c.setProp(prop, c["_original_i18n_" + prop]);
@@ -519,7 +521,7 @@ wm.Page.extend({
 			    delete c["_original_i18n_" + prop]; 
 			}
 			if (!isDefaultLang) {
-			    c["_original_i18n_" + prop] = value;
+			    c["_original_i18n_" + prop] = (typeof value == "object") ? dojo.clone(value) : value;
 			}
 		    }
 		}
@@ -545,8 +547,8 @@ wm.Page.extend({
 	for (var i = 0; i < compList.length; i++) {
 	    var c = compList[i];
 	    var props = c.listWriteableProperties();
-	    for (var prop in props) {
-		if (c["_original_i18n_" + prop] !== undefined && c["_original_i18n_" + prop] != c.getProp(prop)) {
+	    for (var prop in props) {		
+		if (c.hasLocalizedProp(prop)) {
 		    if (!result[c.name])
 			result[c.name] = {};
 		    result[c.name][prop] = c.getProp(prop);
