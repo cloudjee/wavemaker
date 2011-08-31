@@ -149,7 +149,7 @@ public class ProjectManager {
                 project.getWebAppRoot().getURI().toString());
         }
 
-        Resource appPropFile = project.getWebInfClasses().createRelative(CommonConstants.APP_PROPERTY_FILE);
+        Resource appPropFile = project.getWebInf().createRelative(CommonConstants.APP_PROPERTY_FILE);
 
         int defTenantID = DataServiceConstants.DEFAULT_TENANT_ID;
         String tenantFieldName = DataServiceConstants.DEFAULT_TENANT_FIELD;
@@ -157,7 +157,9 @@ public class ProjectManager {
 
         if (appPropFile.exists()) {
             Properties props = new Properties();
-            props.load(appPropFile.getInputStream());
+            InputStream propsStream = appPropFile.getInputStream();
+            props.load(propsStream);
+            propsStream.close();
 
             tenantFieldName = props.getProperty(DataServiceConstants.TENANT_FIELD_PROPERTY_NAME);
             defTenantID = Integer.parseInt(props.getProperty(DataServiceConstants.DEFAULT_TENANT_ID_PROPERTY_NAME));

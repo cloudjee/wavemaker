@@ -83,7 +83,7 @@ public class WMAppContext {
             // Set up multi-tenant info
             Resource appPropsResource = null;
             try {
-                appPropsResource = new ServletContextResource(this.context, "/WEB-INF/classes/" + CommonConstants.APP_PROPERTY_FILE);
+                appPropsResource = new ServletContextResource(context, "/WEB-INF/"+CommonConstants.APP_PROPERTY_FILE);
             } catch (WMRuntimeException re) {
                 return;
             } catch (Exception e) {
@@ -99,7 +99,9 @@ public class WMAppContext {
 
             try {
                 props = new Properties();
-                props.load(appPropsResource.getInputStream());
+                InputStream is = appPropsResource.getInputStream();
+                props.load(is);
+                is.close();
             } catch (IOException ioe) {
                 ioe.printStackTrace();
                 return;

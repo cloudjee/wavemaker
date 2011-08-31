@@ -158,7 +158,7 @@ public class SecurityConfigService {
         // value
         // meaning, if tenantIdField is null then the value for default tenant
         // id will not be stored.
-        if (tenantIdField != null && tenantIdField.length() != 0) {
+        if (tenantIdField != null && tenantIdField.length() != 0 && enforceSecurity) {
             String[] propertyNames = { DataServiceConstants.TENANT_FIELD_PROPERTY_NAME, DataServiceConstants.DEFAULT_TENANT_ID_PROPERTY_NAME,
                 DataServiceConstants.TENANT_COLUMN_PROPERTY_NAME };
 
@@ -178,7 +178,7 @@ public class SecurityConfigService {
             props.setProperty(propNames[i], propValues[i]);
         }
 
-        File appProperties = new File(this.projectMgr.getCurrentProject().getProjectRoot() + "/src", CommonConstants.APP_PROPERTY_FILE);
+        File appProperties = new File(projectMgr.getCurrentProject().getWebInf(), CommonConstants.APP_PROPERTY_FILE);
         if (!appProperties.exists()) {
             appProperties.createNewFile();
         }
@@ -188,7 +188,7 @@ public class SecurityConfigService {
     }
 
     private void deleteAppProperty() throws IOException {
-        File appProperties = new File(this.projectMgr.getCurrentProject().getProjectRoot() + "/src", CommonConstants.APP_PROPERTY_FILE);
+        File appProperties = new File(projectMgr.getCurrentProject().getWebInf(), CommonConstants.APP_PROPERTY_FILE);
         if (appProperties.exists()) {
             appProperties.delete();
         }
@@ -196,7 +196,7 @@ public class SecurityConfigService {
 
     private DatabaseOptions setMultiTenancyParms(DatabaseOptions options) throws IOException {
         Properties props = new Properties();
-        File appProperties = new File(this.projectMgr.getCurrentProject().getProjectRoot() + "/src", CommonConstants.APP_PROPERTY_FILE);
+        File appProperties = new File(projectMgr.getCurrentProject().getWebInf(), CommonConstants.APP_PROPERTY_FILE);
         if (!appProperties.exists()) {
             return options;
         }
