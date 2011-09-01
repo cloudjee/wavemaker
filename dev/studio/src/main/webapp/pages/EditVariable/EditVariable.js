@@ -17,6 +17,18 @@ dojo.declare("EditVariable", wm.Page, {
     i18n:true,
     start: function() {
 
+	this.helpButton = new wm.ToolButton({_classes: {domNode: ["StudioHelpIcon"]},
+					     width: "20px",
+					     height: "20px",
+					     parent: this.owner.owner.titleBar,
+					     onclick: dojo.hitch(this, function() {
+	studio.inspector.inspector._inspectors.Properties.beginHelp("json", this.helpButton.domNode, "wm.Variable");
+						 studio.helpPopup.corner = "tr";
+						 studio.helpPopup.renderBounds();
+					     })
+					    });
+	this.owner.owner.titleBar.reflow();
+
     },
     onGuiShow: function() {
 	this.reset(this.variable);

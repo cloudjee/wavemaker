@@ -78,7 +78,8 @@ dojo.declare("wm.InspectorBase", null, {
                         modal: false,
                         noEscape: false,
                         useContainerWidget: false,
-                        hideControls: true
+                        hideControls: true,
+			corner: "tl"
 		    };
 		    var d = studio.helpPopup = new wm.PageDialog(props);
 		}
@@ -456,6 +457,7 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 	      bd.sourceNode = inNode;
 	      //bd.positionNode = inNode.parentNode;
 	      bd.fixPositionNode = inNode.parentNode;
+	      bd.corner = "tl";
 	    if (window.location.search.match(/editpropdoc/)) {
 		var classList = [];
 		studio.palette.forEachNode(function(node) {
