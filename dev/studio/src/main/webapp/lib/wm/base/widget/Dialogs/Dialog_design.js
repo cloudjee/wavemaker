@@ -298,4 +298,5 @@ wm.Object.extendSchema(wm.LoadingDialog, {
     titlebarHeight: {ignore: 1},
     footerBorder: {ignore: 1},
     footerBorderColor: {ignore: 1},
+    onEnterKeyPress: {ignore: 1}
 });
