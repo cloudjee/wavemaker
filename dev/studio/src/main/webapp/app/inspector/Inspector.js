@@ -464,10 +464,12 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 		    if (node.klass) {
 			try {
 			    var prototype = dojo.getObject(node.klass).prototype;
-			    if (prototype[inPropName] !== undefined || prototype["get" + wm.capitalize(inPropName)] !== undefined) {
-				var name = node.klass.replace(/^.*\./,"");
-				if (dojo.indexOf(classList, name) == -1)
-				    classList.push(name);
+			    if (node.klass.match(/^wm\./) && node.klass != "wm.example.myButton" && prototype instanceof wm._BaseEditor == false && prototype instanceof wm.Editor == false && (!prototype.schema[inPropName] || !prototype.schema[inPropName].ignore)) {
+				if (prototype[inPropName] !== undefined || prototype["get" + wm.capitalize(inPropName)] !== undefined) {
+				    var name = node.klass.replace(/^.*\./,"");
+				    if (dojo.indexOf(classList, name) == -1)
+					classList.push(name);
+				}
 			    }
 			} catch(e){}
 		    }
@@ -475,11 +477,20 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 
 		dojo.forEach(classList, function(className,i) {
 		    window.setTimeout(function() {
-			window.open(studio.getDictionaryItem("URL_PROPDOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) + 
-				    className + "_" + inPropName + 
-				    "?parent=wmjsref_6.3&template=wmjsref_6.3.PropertyClassTemplate&name=" + className + "_" + inPropName + "&component=" + className + "&property=" + inPropName, "HelpEdit " + i);
+			var version = wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1");
+			var url = studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {studioVersionNumber: version,
+											 className: className.replace(/^.*\./,"") + "_" + inPropName});
+
+			app.toastInfo("Testing " + className + "." + inPropName);
+			studio.studioService.requestAsync("getPropertyHelp", [url + "?synopsis"], function(inResponse) {
+			    if (inResponse.indexOf("No documentation found for this topic") != -1 || !inResponse) {
+				window.open(studio.getDictionaryItem("URL_EDIT_PROPDOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) + 
+					    className + "_" + inPropName + 
+					    "?parent=wmjsref_" + version + "&template=wmjsref_" + version + ".PropertyClassTemplate&name=" + className + "_" + inPropName + "&component=" + className + "&property=" + inPropName, "HelpEdit " + i);
+			    }
+			});
 		    },
-				      i * 1000);
+				      i * 1300);
 		});
 	    } else {
 		if (inType == studio.application.declaredClass)
