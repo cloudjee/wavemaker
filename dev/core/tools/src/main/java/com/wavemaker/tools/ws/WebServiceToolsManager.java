@@ -107,23 +107,36 @@ public class WebServiceToolsManager {
         this.designServiceMgr = designServiceMgr;
     }
 
+    public String importWSDL(String wsdlPath, String serviceId,  //salesforce
+            boolean overwrite, String username, String password, String partnerName)
+            throws WSDLException, IOException, JAXBException, ParserConfigurationException, SAXException, TransformerException {
+        return importWSDL(wsdlPath, serviceId, overwrite, username, password, partnerName, null);
+    }
+
     /**
      * Imports the specified WSDL. This will create the service class files and register the service
      * DesignServiceManager.
      * 
-     * @param wsdlPath The path to the WSDL.
-     * @param serviceId The service ID for this WSDL. If this is null, a generated one will be set in the WSDL.
-     * @param overwrite true to overwrite the service with the same service ID; false to simply return the string
-     *        "$already_exists".
-     * @return The service ID, or the string "$already_exists$" if the service ID already exists and overwrite is false.
+     * @param wsdlPath
+     *                The path to the WSDL.
+     * @param serviceId
+     *                The service ID for this WSDL. If this is null, a generated
+     *                one will be set in the WSDL.
+     * @param overwrite
+     *                true to overwrite the service with the same service ID;
+     *                false to simply return the string "$already_exists".
+     * @param serviceAlias
+     *                The alias of the service name
+     * @return The service ID, or the string "$already_exists$" if the service
+     *         ID already exists and overwrite is false.
      * @throws WSDLException
      * @throws IOException
      * @throws JAXBException
      */
-    public String importWSDL(String wsdlPath, String serviceId, // salesforce
-        boolean overwrite, String username, String password, String partnerName) throws WSDLException, IOException, JAXBException,
-        ParserConfigurationException, SAXException, TransformerException {
-
+    public String importWSDL(String wsdlPath, String serviceId,  //salesforce
+            boolean overwrite, String username, String password, String partnerName, String serviceAlias)
+            throws WSDLException, IOException, JAXBException, ParserConfigurationException, SAXException, TransformerException {
+        
         logger.info("Importing " + wsdlPath);
         String srcPath;
 
@@ -144,14 +157,15 @@ public class WebServiceToolsManager {
 
         WSDL origWsdl = null;
         File origWsdlFile = null;
-        // if (isLocal) {
-        origWsdlFile = new File(srcPath);
-        if (origWsdlFile.isDirectory()) {
-            String srvId = null;
-            File[] listFiles = origWsdlFile.listFiles();
-            for (File f : listFiles) {
-                if (f.getName().toLowerCase().endsWith(Constants.WSDL_EXT)) {
-                    srvId = importWSDL(f.getCanonicalPath(), null, true, username, password, partnerName); // salesforce
+        //if (isLocal) {
+            origWsdlFile = new File(srcPath);
+            if (origWsdlFile.isDirectory()) {
+                String srvId = null;
+                File[] listFiles = origWsdlFile.listFiles();
+                for (File f : listFiles) {
+                    if (f.getName().toLowerCase().endsWith(Constants.WSDL_EXT)) {
+                        srvId = importWSDL(f.getCanonicalPath(), null, true, username, password, partnerName, serviceAlias); //salesforce
+                    }
                 }
             }
             return srvId;
@@ -215,7 +229,7 @@ public class WebServiceToolsManager {
         importWS.setServiceId(serviceId);
         importWS.setDestdir(new FileSystemResource(runtimeDir));
         importWS.setPartnerName(partnerName);
-        WSDL wsdl = importWS.generateServiceClass();
+        WSDL wsdl = importWS.generateServiceClass(serviceAlias);
         wsdl.setPartnerName(partnerName);
 
         // update DesignServiceManager with the WSDL that contains the
@@ -251,7 +265,7 @@ public class WebServiceToolsManager {
         File tempDir = IOUtils.createTempDirectory();
         try {
             File wsdlFile = generateWsdlFromWadl(wadlPath, tempDir);
-            return importWSDL(wsdlFile.getCanonicalPath(), serviceId, overwrite, null, null, null);
+            return importWSDL(wsdlFile.getCanonicalPath(), serviceId, overwrite, null, null, null, null);
         } finally {
             IOUtils.deleteRecursive(tempDir);
         }
@@ -291,7 +305,8 @@ public class WebServiceToolsManager {
             file.transferTo(wsdlFile);
             modifyServiceName(wsdlFile);
             if (isWSDL) {
-                return importWSDL(wsdlFile.getCanonicalPath(), serviceId, Boolean.valueOf(overwrite), username, password, null);
+                return importWSDL(wsdlFile.getCanonicalPath(), serviceId,
+                        Boolean.valueOf(overwrite), username, password, null, null);
             } else {
                 return importWADL(wsdlFile.getCanonicalPath(), serviceId, Boolean.valueOf(overwrite));
             }
@@ -338,8 +353,8 @@ public class WebServiceToolsManager {
         String parameterizedUrl, String method, String contentType, String outputType, String xmlSchemaText, String xmlSchemaPath, boolean overwrite)
         throws IOException, javax.wsdl.WSDLException, SAXException, ParserConfigurationException, WSDLException, JAXBException, TransformerException {
 
-        String result = buildRestService(serviceName, operationName_list, inputs_list, parameterizedUrl, method, contentType, outputType,
-            xmlSchemaText, xmlSchemaPath, overwrite, null);
+         String result = buildRestService(serviceName, operationName_list, inputs_list, parameterizedUrl,
+                 method, contentType, outputType, xmlSchemaText, xmlSchemaPath, overwrite, null, null);
 
         return result;
     }
@@ -347,19 +362,34 @@ public class WebServiceToolsManager {
     /**
      * Builds a REST WSDL and imports it.
      * 
-     * @param serviceName The name of this service.
-     * @param operationName_list The list of operation names
-     * @param inputs_list The list of input parameters (per operations).
-     * @param parameterizedUrl The parameterized service URLs (per operations).
-     * @param method The HTTP method, valid values are "GET" and "POST".
-     * @param contentType The content type, examples include "text/xml" and "application/json-rpc".
-     * @param outputType The XML qualified name of the ouput type.
-     * @param xmlSchemaText The XML schema or multipe XML schemas using <code>XML_SCHEMA_TEXT_SEPERATOR</code>
-     * @param xmlSchemaPath The path (either URL or file) to the XML schema.
-     * @param overwrite true to overwrite the service with the same service ID; false to simply return the string
-     *        "$already_exists".
-     * @param partnerName The partner name
-     * @return The service ID, or the string "$already_exists$" if the service ID already exists and overwrite is false.
+     * @param serviceName
+     *                The name of this service.
+     * @param operationName_list
+     *                The list of operation names
+     * @param inputs_list
+     *                The list of input parameters (per operations).
+     * @param parameterizedUrl
+     *                The parameterized service URLs (per operations).
+     * @param method
+     *                The HTTP method, valid values are "GET" and "POST".
+     * @param contentType
+     *                The content type, examples include "text/xml" and
+     *                "application/json-rpc".
+     * @param outputType
+     *                The XML qualified name of the ouput type.
+     * @param xmlSchemaText The XML schema or multipe XML schemas using
+     *                <code>XML_SCHEMA_TEXT_SEPERATOR</code>
+     * @param xmlSchemaPath
+     *                The path (either URL or file) to the XML schema.
+     * @param overwrite
+     *                true to overwrite the service with the same service ID;
+     *                false to simply return the string "$already_exists".
+     * @param partnerName
+     *                The partner name
+     * @param serviceAlias
+     *                The alias of the service name
+     * @return The service ID, or the string "$already_exists$" if the service
+     *         ID already exists and overwrite is false.
      * @throws IOException
      * @throws javax.wsdl.WSDLException
      * @throws SAXException
@@ -368,10 +398,13 @@ public class WebServiceToolsManager {
      * @throws JAXBException
      * @throws TransformerException
      */
-    public String buildRestService(String serviceName, List<String> operationName_list, List<List<RESTInputParam>> inputs_list,
-        String parameterizedUrl, String method, String contentType, String outputType, String xmlSchemaText, String xmlSchemaPath, boolean overwrite,
-        String partnerName) throws IOException, javax.wsdl.WSDLException, SAXException, ParserConfigurationException, WSDLException, JAXBException,
-        TransformerException {
+    public String buildRestService(String serviceName, List<String> operationName_list,
+            List<List<RESTInputParam>> inputs_list, String parameterizedUrl,
+            String method, String contentType, String outputType,
+            String xmlSchemaText, String xmlSchemaPath, boolean overwrite, String partnerName, String serviceAlias)
+            throws IOException, javax.wsdl.WSDLException, SAXException,
+            ParserConfigurationException, WSDLException, JAXBException,
+            TransformerException {
 
         int operCnt = operationName_list.size();
 
@@ -447,7 +480,7 @@ public class WebServiceToolsManager {
         try {
             File wsdlFile = new File(tempDir, serviceName + Constants.WSDL_EXT);
             restWsdlGenerator.write(wsdlFile);
-            return importWSDL(wsdlFile.getCanonicalPath(), null, overwrite, null, null, partnerName); // salesforce
+            return importWSDL(wsdlFile.getCanonicalPath(), null, overwrite, null, null, partnerName, serviceAlias); //salesforce
         } finally {
             IOUtils.deleteRecursive(tempDir);
         }

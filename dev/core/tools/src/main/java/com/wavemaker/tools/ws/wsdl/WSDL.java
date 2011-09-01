@@ -106,6 +106,8 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
 
     private String partnerName;
 
+    private String serviceAlias;
+
     @SuppressWarnings("unused")
     private WSDL() {
     }
@@ -738,5 +740,13 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
 
     public void setPartnerName(String partnerName) {
         this.partnerName = partnerName;
+    }
+
+    public String getServiceAlias() {
+        return this.serviceAlias;
+    }
+
+    public void setServiceAlias(String serviceAlias) {
+        this.serviceAlias = serviceAlias;
     }
 }
