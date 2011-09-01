@@ -14,6 +14,7 @@
  
 
 dojo.declare("EditVariable", wm.Page, {
+    i18n:true,
     start: function() {
 
     },
@@ -124,7 +125,13 @@ dojo.declare("EditVariable", wm.Page, {
 	    var fields = type.fields;
 	    return fields;
 	}
-	app.toastError("Could not find type information to edit this variable");
+	if (!inType || inType == "wm.Variable") {
+	    app.toastError(this.getDictionaryItem("NO_TYPE"));
+	    this.owner.owner.hide();
+	} else if (!type) {
+	    app.toastError(this.getDictionaryItem("INVALID_TYPE"));
+	    this.owner.owner.hide();
+	}
     },
     cancelClick: function() {
 	this.variable.setJson(this.variable.json); // reset its data
