@@ -190,9 +190,6 @@ dojo.declare("wm.PopupMenuButton", wm.Button, {
     },
     // used by users who hand edit their own widgets.js files; used by studio.widgets.js
     setFullStructure: function(inObj) {
-	if (this._isDesignLoaded)
-	    this.fullStructure = inObj;
-
 	this.dojoMenu.setFullStructure(inObj);
 	this.dojoMenu.renderDojoObj();
     },

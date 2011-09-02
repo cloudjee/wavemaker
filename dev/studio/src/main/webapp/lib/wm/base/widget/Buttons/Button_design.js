@@ -140,7 +140,12 @@ wm.PopupMenuButton.extend({
     editMenuItems: "(Edit Menu Items)",
     afterPaletteDrop: function() {
 	this.inherited(arguments);
-	this.setFullStructure(studio.getDictionaryItem("wm.PopupMenu.DEFAULT_STRUCTURE"));
+	this.set_fullStructure(studio.getDictionaryItem("wm.PopupMenu.DEFAULT_STRUCTURE"));
+    },
+
+    set_fullStructure: function(inObj) {
+	this.fullStructure = inObj;
+	this.setFullStructure(inObj);
     },
 
     set_caption: function(inCaption) {
