@@ -45,7 +45,8 @@ wm.Object.extendSchema(wm.Component, {
     toString: {group:"method", doc: 1, returns: "String"},
     getId: {group: "method", doc: 1, returns: "String"},
     getRuntimeId: {group: "method", doc: 1, returns: "String"},
-    $: {ignore: true,doc: 1}
+    $: {ignore: true,doc: 1},
+    localizedDeclaredClass: {ignore:1}
 });
 
 //=======================================================
