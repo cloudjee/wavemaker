@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 Infoteria Corporation and VMWare, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,10 +28,13 @@
 	showing: "表示",
 	disabled: "無効",
 	minWidth: "最小幅",
-	minHeight: "最小高さ"
+	minHeight: "最小高さ",
+	imageList: "画像リスト",
+	localizedDeclaredClass: "ローカライズされた宣言クラス",
 },
 "wm.Container": {
 	pageName: "ページ名",
+	displayName: "表示名",
 	deferLoad: "遅延ロード",
 	loadParentFirst: "親を先にロード",
 	layoutKind: "レイアウト種別",
@@ -46,7 +49,7 @@
 	customGetValidate: "customGetValidate",
 	lock: "ロック",
 	freeze: "固定",
-	imageList: "画像リスト"
+	thumbnail: "サムネイル"
 
 },
 "wm.AbstractEditor": {
@@ -55,29 +58,37 @@
 	captionAlign: "表示名の配置",
 	captionSize: "表示名のサイズ",
 	singleLine: "単一行",
-	readonly: "読み込み専用",
+	readonly: "読込専用",
+	readonlyFormatter: "読込専用時の形式",
 	displayValue: "表示値",
 	dataValue: "データ値",
 	emptyValue: "空のときの値",
-	required: "必須"
+	required: "必須",
+	helpText: "ヘルプ"
 },
 
+"wm.ToolButton": {
+	iconUrl: "アイコンURL",
+	iconWidth: "アイコン幅",
+	iconHeight: "アイコン高さ",
+	iconMargin: "アイコンマージン",
+	hint: "ヒント",
+	imageIndex: "画像インデックス",
+},
 "wm.Button": {
 	caption: "表示名",
 	hint: "ヒント",
 	imageList: "画像リスト",
 	imageIndex: "画像インデックス",
-	iconUrl: "アイコンURL",
-	iconWidth: "アイコン幅",
-	iconHeight: "アイコン高さ",
-	iconMargin: "アイコンマージン",
 	editImageIndex: "画像インデックスを編集"
 },
 "wm.PopupMenuButton": {
 	caption: "表示名",
 	iconClass: "アイコンクラス",
 	editMenuItems: "メニューアイテムを編集",
-	fullStructureStr: "fullStructureStr"
+	fullStructureStr: "fullStructureStr",
+	rememberWithCookie: "Cookieに保存"
+
 },
 "wm.ToggleButton": {
 	captionUp: "表示名(オフ)",
@@ -106,7 +117,10 @@
 	source: "ソース",
 	aspect: "アスペクト比を固定",
 	link: "リンク",
-	hint: "ヒント"
+	hint: "ヒント",
+	imageList: "画像リスト",
+	imageIndex: "画像インデックス",
+	editImageIndex: "画像インデックスを編集"
 },
 "wm.Splitter": {
 	minimum: "最小",
@@ -139,23 +153,23 @@
 
 "wm.Dashboard": {
 	addDialogName: "ダイアログ名",
-	configPortlets: "設定ポートレット",
+	configPortlets: "ポートレット設定",
 	autoScroll: "自動スクロール",
 	allowAutoScroll: "自動スクロールを許可",
-	hasResizableColumns: "カラムをリサイズ可能",
+	hasResizableColumns: "カラムリサイズ",
 	minChildWidth: "子の最小幅",
-	minColWidth: "カラムの最小幅",
-	nbZones: "ゾーンの数",
+	minColWidth: "カラム最小幅",
+	nbZones: "ゾーン数",
 	opacity: "不透明度",
 	saveInCookie: "Cookieに保存",
-	withHandles: "withHandles"
+	withHandles: "ハンドル"
 },
 "wm.PageContainer": {
 	pageName: "ページ名",
 	deferLoad: "遅延ロード",
 	loadParentFirst: "親を先にロード"
 },
-"wm.Panel": {	//TODO
+"wm.Panel": {
 	themeStyleType: "テーマ"
 },
 "wm.FancyPanel": {
@@ -176,6 +190,7 @@
 },
 "wm.Layer": {
 	caption: "表示名"
+
 },
 "wm.Layers": {
 	defaultLayer: "デフォルトレイヤー",
@@ -202,7 +217,8 @@
 	noEscape: "エスケープなし",
 	noMinify: "最小化なし",
 	noMaxify: "最大化なし",
-	corner: "表示位置"
+	corner: "表示位置",
+	positionNear: "近くに表示"
 },
 "wm.GenericDialog": {
 	enterKeyIsButton1: "ボタン１をENTERキーに割り当て",
@@ -226,10 +242,14 @@
 	deferLoad: "遅延ロード",
 	footerBorder: "フッター枠線",
 	footerBorderColor: "フッター枠線色",
-	hideControls: "コントロールを隠す"
+	hideControls: "コントロールを隠す",
 },
 "wm.DesignableDialog": {
 	createButtonBar: "ボタンバーを作成"
+},
+"wm.LoadingDialog": {
+	serviceVariableToTrack: "追跡するサービス変数",
+	widgetToCover: "対象ウィジェット"
 },
 "wm.RichTextDialog": {
 	html: "HTML",
@@ -247,24 +267,29 @@
 	editorHeight: "エディター高さ",
 	captionSize: "キャプションサイズ",
 	captionAlign: "キャプション配置",
-	captionPosition: "キャプション位置"
+	captionPosition: "キャプション位置",
+	themeStyleType: "テーマ"
 },
 "wm.LiveForm": {
 	liveEditing: "ライブ編集",
 	saveOnEnterKey: "ENTERキーで保存",
 	alwaysPopulateEditors: "自動更新",
 	displayErrors: "エラーを表示",
-	generateButtons: "ボタンを作成"
+	generateButtons: "ボタンを作成",
+	defaultButton: "デフォルトボタン"
 },
 "wm.ResizableEditor": {
-	autoSizeWidth: "幅を自動調整",
+	autoSize: "幅を自動調整",
 	maxHeight: "最大高"
 },
 "wm.Checkbox": {
 	dataValue: "データ値",
 	startChecked: "初期状態でチェック",
 	dataType: "データ型",
-	checkedValue: "チェック時の値"
+	checkedValue: "チェック時の値",
+	formField: "フィールド",
+	ignoreParentReadonly: "親の読込専用を無視",
+	defaultInsert: "Insert時の初期値"
 },
 "wm.Currency": {
 	currency: "通貨",
@@ -303,6 +328,7 @@
 	radioGroup: "ラジオグループ"
 },
 "wm.SelectMenu": {
+	placeHolder: "プレースホルダー",
 	onEnterKeyPress: "onEnterKeyPress",
 	restrictValues: "リストからのみ選択",
 	dataSet: "データセット",
@@ -318,6 +344,15 @@
 	hasDownArrow: "矢印",
 	allowNone: "未選択を許可",
 	updateNow: "今すぐ更新"
+},
+"wm.Lookup": {
+	autoDataSet: "自動データ設定",
+	displayExpression: "表示式",
+	maxResults: "結果最大数",
+	ignoreCase: "大文字小文字を無視"
+},
+"wm.filteringLookup": {
+	ignoreCase: "大文字小文字を無視"
 },
 "wm.Slider": {
 	discreteValues: "不連続値",
@@ -357,7 +392,8 @@
 	toolbarFontName: "フォント名",
 	toolbarFormatName: "形式名",
 	toolbarSize: "サイズ",
-	toolbarColor: "色"
+	toolbarColor: "色",
+	toolbarFind: "検索と置換"
 },
 "wm.dijit.Calendar": {
 	specialDates: "特別な日",
@@ -440,23 +476,30 @@
 	chartColor: "チャート色",
 	chartType: "チャート種別",
 	theme: "テーマ",
+	chartTitle: "タイトル",
 	enableAnimation: "アニメーション",
 	gap: "間隔",
 	includeGrid: "グリッドを表示",
 	includeX: "X軸を表示",
 	includeY: "Y軸を表示",
+	hideLegend: "凡例を隠す",
+	verticalLegend: "凡例を横に表示",
 	legendHeight: "凡例の高さ",
+	legendWidth: "凡例の幅",
 	xMajorTickStep: "X軸大目盛幅",
 	xMinorTickStep: "X軸小目盛幅",
 	xMinorTicks: "X軸小目盛表示",
-	yUpperRange: "Y軸最大地"
+	xAxisLabelLength: "X軸ラベル長",
+	yAxisTitle: "Y軸タイトル",
+	yUpperRange: "Y軸最大値"
 },
 "wm.List": {
 	dataSet: "データセット",
 	toggleSelect: "選択状態の切り替え",
 	columnWidths: "カラム幅",
 	dataFields: "データフィールド",
-	headerVisible: "ヘッダー表示"
+	headerVisible: "ヘッダー表示",
+	updateNow: "今すぐ更新"
 },
 "wm.ListViewer": {
 	dataSet: "データセット",
@@ -466,30 +509,68 @@
 	manageLiveVar: "ライブ変数を管理",
 	rowBorder: "行の枠線"
 },
-"wm.PropertyTree": {
-	dataSet: "データセット",
-	configJson: "JSON設定",
+"wm.Tree": {
 	connectors: "コネクター"
 },
-"wm.ObjectBrowserTree": {
-	data: "データ",
-	connectors: "コネクター"
+"wm.PropertyTree": {
+	dataSet: "データセット",
+	configJson: "JSON設定"
+},
+"wm.ObjectTree": {
+	data: "データ"
 },
 
 "wm.DraggableTree": {
-	connectors: "コネクター",
 	dropBetweenNodes: "ノードの間にドロップ"
 },
 
+"wm.Dijit": {
+	dijitClass: "dijitクラス",
+	renderBoundsX: "X軸境界線を描画",
+	renderBoundsY: "Y軸境界線を描画",
+	deployDijit: "Dijitを配布",
+	undeployDijit: "Dijitを配布中止",
+},
+"wm.gadget.GoogleMap": {
+	dataSet: "データセット",
+	latitude: "緯度",
+	longitude: "経度",
+	zoom: "ズーム",
+	mapType: "種別",
+	latitudeField: "緯度フィールド",
+	longitudeField: "経度フィールド",
+	titleField: "タイトルフィールド",
+	descriptionField: "説明フィールド",
+	iconField: "アイコンフィールド"
+},
+"wm.gadget.FacebookLikeButton": {
+	action: "アクション",
+	colorscheme: "色",
+	font: "フォント",
+	href: "ページのURL",
+	layout: "ボタンの種類",
+	ref: "追跡用文字列",
+	show_faces: "写真を表示"
+},
+"wm.gadget.FacebookActivityFeed": {
+	colorscheme: "色",
+	font: "フォント",
+	ref: "追跡用文字列",
+	showHeader: "ヘッダーを表示",
+	showRecommendations: "おすすめを表示",
+	site: "サイト"
+},
 "wm.FeedList": {
 	url: "URL",
 	expand: "展開",
+	headerVisible: "ヘッダーを表示",
 	showLink: "リンクを表示",
 	totalItems: "表示件数",
 	updateNow: "今すぐ更新"
 },
 "wm.TwitterFeed": {
 	twitterId: "Twitter ID",
+	headerVisible: "ヘッダーを表示",
 	updateNow: "今すぐ更新"
 },
 "wm.DojoFisheye": {
@@ -546,6 +627,9 @@
 "GROUP_ungrouped": "その他",
 "GROUP_operation": "操作",
 "GROUP_docs": "ドキュメント",
+"GROUP_toolbar": "ツールバー",
+"GROUP_Map": "地図",
+"GROUP_Marker": "マーカー",
 
 /* group name that come from each component */
 "GROUP_BusyButton": "ビジーボタン",
@@ -554,6 +638,7 @@
 "GROUP_Services": "サービス",
 "GROUP_indicator": "インジケーター",
 "GROUP_gauge": "ゲージ",
+"GROUP_DijitDesigner": "Dijitデザイナー",
 
 
 "NODE_Properties": "プロパティ",
