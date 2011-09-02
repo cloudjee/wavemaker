@@ -22,6 +22,7 @@ dojo.declare("wm.PopupMenuButton", wm.Button, {
     rememberWithCookie: true,
     classNames: "wmbutton wmPopupButton",
     fullStructureStr: "",
+    fullStructure: null,
     iconClass: "", // alternative to iconUrl which allows for the icon to be loaded the same way as the icons in the menu itself
 
 
@@ -190,7 +191,8 @@ dojo.declare("wm.PopupMenuButton", wm.Button, {
     // used by users who hand edit their own widgets.js files; used by studio.widgets.js
     setFullStructure: function(inObj) {
 	if (this._isDesignLoaded)
-	    this.fullStructureStr = dojo.toJson(inObj);
+	    this.fullStructure = inObj;
+
 	this.dojoMenu.setFullStructure(inObj);
 	this.dojoMenu.renderDojoObj();
     },

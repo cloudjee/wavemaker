@@ -124,6 +124,7 @@ wm.Object.extendSchema(wm.PopupMenuButton, {
     iconClass: {hidden: true},
     editMenuItems: {group: "operation"},
     fullStructureStr: {hidden: true},
+    fullStructure: {hidden: true},
     hint: {ignore: true},
     iconUrl: {ignore: true},
     imageList:  {ignore: true},
@@ -132,7 +133,6 @@ wm.Object.extendSchema(wm.PopupMenuButton, {
     dojoMenu: {ignore: true, doc: 1},
     editImageIndex: {ignore: 1},
     setIconClass: {group: "method", doc: 1}
-
 });   
 
 
@@ -140,7 +140,7 @@ wm.PopupMenuButton.extend({
     editMenuItems: "(Edit Menu Items)",
     afterPaletteDrop: function() {
 	this.inherited(arguments);
-	this.setFullStructureStr(studio.getDictionaryItem("wm.PopupMenu.DEFAULT_STRUCTURE"));
+	this.setFullStructure(studio.getDictionaryItem("wm.PopupMenu.DEFAULT_STRUCTURE"));
     },
 
     set_caption: function(inCaption) {
@@ -164,9 +164,11 @@ wm.PopupMenuButton.extend({
 	return list;
     },
     makePropEdit: function(inName, inValue, inDefault) {
+	    var prop = this.schema ? this.schema[inName] : null;
+	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
 	switch (inName) {
 	case "editMenuItems":
-	    return makeReadonlyButtonEdit(inName, inValue, inDefault);
+	    return makeReadonlyButtonEdit(name, inValue, inDefault);
 	case "caption":
 	    var list = this.buildCaptionList(this.dojoMenu.fullStructure, false);
 	    return makeSelectPropEdit("caption", this.caption, list, list[0]);

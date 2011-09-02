@@ -211,7 +211,7 @@ wm.DojoMenu.extend({
 	},
     renameComponentEvents: function(originalId, newId) {
 	this.inherited(arguments); // handles non-menu-item events
-	this.renameComponentEventsMenu(this.fullStructure,originalId, newId);
+	this.renameComponentEventsMenu(this.getFullStructure(),originalId, newId);
     },
     renameComponentEventsMenu: function(children,originalId, newId) {
 	    for (var i = 0; i < children.length; i++)
@@ -222,6 +222,12 @@ wm.DojoMenu.extend({
 		if (item.children)
 		    this.renameComponentEventsMenu(item.children,originalId,newId);
 	    }
+    },
+    getFullStructure: function() {
+	if (!this.fullStructure && this.fullStructureStr) {
+	    this.setFullStructureStr(this.fullStructureStr);
+	}
+	return this.fullStructure;
     },
     setLocalizationStructure: function(inStruct) {
 	this.localizationStructure = inStruct;
