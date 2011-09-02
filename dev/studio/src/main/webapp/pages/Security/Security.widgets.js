@@ -83,7 +83,7 @@ Security.widgets = {
 					    defTenantId: ["wm.Text", {captionSize: "150px", width: "500px", "border":"0","caption":"Default Tenant ID Value","emptyValue":"null","padding":"2", helpText: "The default tenant ID value is the value used when querying the database while you are in design; this has no effect on running your application"}, {"onchange":"setDirty"}],
 					    spacer31: ["wm.Spacer", {"height":"10px","width":"96px"}, {}],
 					}],
-					dbRoleBySQLPanel: ["wm.Panel", {"border":"0","height":"100px", fitToContentHeight: true, width: "100%", margin: "10,50,0,50", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+					dbRoleBySQLPanel: ["wm.Panel", {"border":"0","height":"100px", fitToContentHeight: true, width: "100%", margin: "10,40,0,40", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 					    panel14: ["wm.Panel", {"border":"0","height":"24px",width: "100%","layoutKind":"left-to-right"}, {}, {
 						spacer1: ["wm.Spacer", {"width":"202px"}, {}],
 						dbRoleBySQLCheckbox: ["wm.Checkbox", {"border":"0","caption":"Roles By SQL Query","captionAlign":"left","captionPosition":"right","captionSize":"380px","displayValue":"1","padding":"2","width":"100%"}, {"onchange":"dbRoleBySQLCheckboxChange"}]
