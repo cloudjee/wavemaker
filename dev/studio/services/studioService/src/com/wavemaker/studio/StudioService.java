@@ -690,10 +690,11 @@ public class StudioService extends ClassLoader {
             }
 
             /*
-             * Import packages.js STATUS: DONE
+             * Import packages.js
              */
             String packagesExt = "";
             try {
+				// Get the packages.js file from our extensions.zip file */
                 packagesExt = IOUtils.read(new File(extFolder, "packages.js"));
             } catch (Exception e) {
                 packagesExt = "";
@@ -705,13 +706,7 @@ public class StudioService extends ClassLoader {
                 String endPackagesExt = "/* END PARTNER " + newName + " */\n";
                 packagesExt = ",\n" + startPackagesExt + packagesExt + "\n" + endPackagesExt;
 
-                /* Create the packagesDir if needed */
-                File packagesDir = new File(this.fileSystem.getCommonDir().getFile(), "packages");
-                if (!packagesDir.exists()) {
-                    packagesDir.mkdir();
-                }
-                File commonPackagesFile = new File(packagesDir, "packages.js");
-                String packages = IOUtils.read(commonPackagesFile);
+                String packages = IOUtils.read(packagesFile);
 
                 /* Remove previous packages entries for this partner */
                 int packagesStartIndex = packages.indexOf(startPackagesExt);
@@ -726,7 +721,7 @@ public class StudioService extends ClassLoader {
 
                 /* Append the string to packages.js and write it */
                 packages += packagesExt;
-                IOUtils.write(commonPackagesFile, packages);
+                IOUtils.write(packagesFile, packages);
             }
 
             /*
