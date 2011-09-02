@@ -65,7 +65,17 @@
 				{"label": "環境設定...",
 			       idInPage: "preferencesItem",
 			       onClick: "projectSettingsClick",
-			       iconClass: "preferencesItem"}
+				 iconClass: "preferencesItem"},
+				    {"defaultLabel": "Modify Studio",
+				     iconClass: "importProjectItem",
+				     children: [
+					 {"defaultLabel": "Upload Studio Patches...",
+					  onClick: "uploadStudioPatches"},
+					 {"defaultLabel": "Import Partner Services...",
+					  onClick: "importPartnerService"}
+				     ]
+				    }
+
 			 	]},
 			{"label": "編集",
 				idInPage: "editPopupBtn",
@@ -218,9 +228,9 @@
     TOOLTIP_SECURITY_ERROR: "A security error shown here has no effect on the project you are designing.  It does indicate that we are unable to show your data within the designer.  You can typically fix this problem by running your application, logging in to your application, and then the data should show up in the designer",
 
     /* Documentation; Help Menu */
-    URL_TUTORIALS: "http://dev.wavemaker.com/wiki/bin/wmdoc_${studioVersionNumber}/Tutorials",
-    URL_DOCS: "http://dev.wavemaker.com/wiki/bin/wmdoc_${studioVersionNumber}/",
-    URL_PROPDOCS: "http://dev.wavemaker.com/wiki/bin/wmjsref_${studioVersionNumber}/",
+    URL_TUTORIALS: "http://dev.wavemaker.com/wiki/bin/wmdoc/Tutorials",
+    URL_DOCS: "http://dev.wavemaker.com/wiki/bin/wmdoc/",
+    URL_PROPDOCS: "http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/",
     URL_FORUMS: "http://dev.wavemaker.com/forums",
     "MENU_ITEM_TUTORIALS" : "チュートリアル",
     "MENU_ITEM_DOCS" : "ドキュメント",
@@ -407,7 +417,7 @@
     "wm.Component.CLASS_NOT_FOUND": '"${type}"コンポーネントは利用できません。',
     "wm.Palette.MENU_ITEM_COPY": "新しい${className}をコピー",
     "wm.Palette.MENU_ITEM_DOCS": "${className}のドキュメント...",
-    "wm.Palette.URL_CLASS_DOCS": "http://dev.wavemaker.com/wiki/bin/wmjsref_${studioVersionNumber}/${className}",
+    "wm.Palette.URL_CLASS_DOCS": "http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/${className}",
     "wm.Palette.TIP_DOCS": "ドキュメントを開く",
 
     /* action.js/clipboard.js: undo/redo */

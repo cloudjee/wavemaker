@@ -29,8 +29,7 @@
 	disabled: "無効",
 	minWidth: "最小幅",
 	minHeight: "最小高さ",
-	imageList: "画像リスト",
-	localizedDeclaredClass: "ローカライズされた宣言クラス",
+	imageList: "画像リスト"
 },
 "wm.Container": {
 	pageName: "ページ名",
@@ -59,7 +58,7 @@
 	captionSize: "表示名のサイズ",
 	singleLine: "単一行",
 	readonly: "読込専用",
-	readonlyFormatter: "読込専用時の形式",
+	formatter: "読込専用時の形式",
 	displayValue: "表示値",
 	dataValue: "データ値",
 	emptyValue: "空のときの値",
@@ -348,10 +347,9 @@
 "wm.Lookup": {
 	autoDataSet: "自動データ設定",
 	displayExpression: "表示式",
-	maxResults: "結果最大数",
-	ignoreCase: "大文字小文字を無視"
+	maxResults: "結果最大数"
 },
-"wm.filteringLookup": {
+"wm.FilteringLookup": {
 	ignoreCase: "大文字小文字を無視"
 },
 "wm.Slider": {
@@ -524,7 +522,7 @@
 	dropBetweenNodes: "ノードの間にドロップ"
 },
 
-"wm.Dijit": {
+"wm.DijitDesigner": {
 	dijitClass: "dijitクラス",
 	renderBoundsX: "X軸境界線を描画",
 	renderBoundsY: "Y軸境界線を描画",
