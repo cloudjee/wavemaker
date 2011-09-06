@@ -371,7 +371,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
         this.selectedItem._setArrayData(objList);
 	    this.selectedItem.notify();
-		//this.setValue("emptySelection", !this.hasSelection());
+	    this.setValue("emptySelection", !this.hasSelection());
+	    this.setValue("isRowSelected", this.hasSelection());
 	},
 	getSelectedIndex: function() {
 	  if (!this.dojoObj) return -1; // just in case the dojoObj hasn't been fully created yet
