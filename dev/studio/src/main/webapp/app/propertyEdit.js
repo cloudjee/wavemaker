@@ -180,7 +180,7 @@ dojo.declare("wm.propEdit.FieldSelect", wm.propEdit.Select, {
 dojo.declare("wm.propEdit.FormFieldSelect", wm.propEdit.FieldSelect, {
 	getOptions: function() {
 		var f = wm.getParentForm(this.component), ds = f && f.dataSet;
-		return ds && ds.type ? this.getSchemaOptions(ds._dataSchema) : [""];
+	    return ds && ds.type ? this.component.getSchemaOptions && this.component.getSchemaOptions(ds._dataSchema) || this.getSchemaOptions(ds._dataSchema) : [""];
 	}
 });
 
