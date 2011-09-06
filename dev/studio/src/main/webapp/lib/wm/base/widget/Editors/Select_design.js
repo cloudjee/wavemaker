@@ -38,22 +38,22 @@ wm.SelectMenu.extend({
 		    this.components.binding.removeWireByProp("dataSet");
 		    this.options = this.dataField = this.displayField = "";
 		    this.setDataSet(inDataSet);
-		} else {
-		    /* Clear the dataField/displayField if changing dataTypes; if no this.dataSet yet
-		     * we may still be loading the page so no special treatment if no this.dataSe 
-		     */
-		    if (inDataSet && this.dataSet && inDataSet.type != this.dataSet.type)  {
-			this.dataField = "";
-			this._setDisplayField();
-		    }
+		} else {		    
 		    /* Clear the options property if setting a new dataSet */
 		    if (this.options && inDataSet != this.$.optionsVar)
 			this.options = "";
 		    this.setDataSet(inDataSet);
-		    if (inDataSet && !this.displayField) {
+		    if (inDataSet && (!this.displayField || this._lastType != inDataSet.type))  {
+			if (wm.defaultTypes[inDataSet.type]) {
+			    this.dataField = "dataValue";
+			} else {
+			    this.dataField = "";
+			}
 			this._setDisplayField();
 		    }
 		}
+	    if (inDataSet)
+		this._lastType = inDataSet.type;
 	},
 	// FIXME: for simplicity, allow only top level , non-list, non-object fields.
 	_addFields: function(inList, inSchema) {
@@ -89,7 +89,12 @@ wm.SelectMenu.extend({
 		var lowestFieldOrder = 100000;
 		var lowestFieldName;
 		if (!dojo.isFunction(stringFields[fieldName])) { // ace damned changes to object prototype
-		    if (stringFields[fieldName].fieldOrder < lowestFieldOrder) {
+		    if (stringFields[fieldName].fieldOrder === undefined && !lowestFieldName) {
+			lowestFieldName = fieldName;
+		    }
+		    else if (stringFields[fieldName].fieldOrder !== undefined && 
+			stringFields[fieldName].fieldOrder < lowestFieldOrder) 
+		    {
 			lowestFieldOrder = stringFields[fieldName].fieldOrder;
 			lowestFieldName = fieldName;
 		    }
@@ -104,7 +109,11 @@ wm.SelectMenu.extend({
 		var lowestFieldOrder = 100000;
 		var lowestFieldName;
 		if (!dojo.isFunction(literalFields[fieldName])) { // ace damned changes to object prototype
-		    if (literalFields[fieldName].fieldOrder < lowestFieldOrder) {
+		    if (literalFields[fieldName].fieldOrder === undefined && !lowestFieldName) {
+			lowestFieldName = fieldName;
+		    }
+		    else if (literalFields[fieldName].fieldOrder !== undefined &&
+			     literalFields[fieldName].fieldOrder < lowestFieldOrder) {
 			lowestFieldOrder = literalFields[fieldName].fieldOrder;
 			lowestFieldName = fieldName;
 		    }
@@ -131,11 +140,14 @@ wm.SelectMenu.extend({
 		                //return new wm.propEdit.Select({component: this, name: inName, value: inValue, options: values});
 				return makeSelectPropEdit(inName, inValue, values, inDefault);
 			case "dataField":
+		                var showValue = inValue;
 				var values = this._listFields();
 		                if (values.length) values[0] = this._allFields;
-		                if (!inValue) inValue = this._allFields;
+		                if (!showValue) {
+				    showValue = this._allFields;
+				}
 		                //return new wm.propEdit.Select({component: this, name: inName, value: inValue, options: values});
-				return makeSelectPropEdit(inName, inValue, values, inDefault);
+				return makeSelectPropEdit(inName, showValue, values, inDefault);
 
 			case "displayType":
 				return makeSelectPropEdit(inName, inValue, wm.selectDisplayTypes, inDefault);
@@ -164,6 +176,9 @@ wm.SelectMenu.extend({
 	    editor1.set("value", inValue, false);
 	    return true;
 	case "dataField":
+	    var showValue = inValue;
+	    if (!showValue)
+		showValue = this._allFields;
 	    var editor1 = dijit.byId("studio_propinspect_dataField");
 
 	    var store1 = editor1.store.root;
@@ -176,7 +191,7 @@ wm.SelectMenu.extend({
 	    dataFields = dataFields.replace(/^.*?\<option/,"<option");
 	    dataFields = dataFields.replace(/\<\/select.*/,"");
 	    store1.innerHTML = dataFields;
-	    editor1.set("value", inValue, false);
+	    editor1.set("value", showValue, false);
 	    return true;
 	}
 	return this.inherited(arguments);
@@ -211,7 +226,7 @@ wm.SelectMenu.extend({
 		}
 	}
 	this.displayExpression = inExpr;
-    },
+    }
 });
 
 
@@ -231,7 +246,7 @@ wm.Object.extendSchema(wm.SelectMenu, {
         dataValue: {ignore: 1, bindable: 1, group: "editData", order: 3, simpleBindProp: true, type: "any"}, // use getDataValue()
 	dataField: {group: "editor", order: 10, doc: 1},
 	displayField: {group: "editor", order: 15,doc: 1},
-    displayExpression: {group: "editor", order: 20, doc: 1, displayExpression: "dataSet"},
+    displayExpression: {group: "editor", order: 20, doc: 1, displayExpression: "displayExpression"}, /* last property is the name of the field that is used as a display expression */
 	displayType:{group: "editor", order: 21},
   autoComplete: {group: "editor", order: 25},
 	hasDownArrow: {group: "editor", order: 26},
