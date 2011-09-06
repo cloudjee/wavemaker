@@ -15,6 +15,8 @@
 dojo.provide("wm.base.widget.Html");
 
 dojo.declare("wm.Html", wm.Control, {
+    width: "100%",
+    height: "200px",
 	html: "",
         autoScroll: true,
 	init: function() {
