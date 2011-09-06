@@ -215,11 +215,13 @@
 	}, 
 	"wm.HeaderContentPanel": {
 		"border": "1", 
-		"borderColor": "#444444"
+	    "borderColor": "#444444",
+	    "margin": "4"
 	}, 
 	"wm.EmphasizedContentPanel": {
 		"border": "1", 
-		"borderColor": "#333333"
+	    "borderColor": "#333333",
+	    "margin": "4"
 	}, 
 	"wm.WidgetList": {
 	}, 
