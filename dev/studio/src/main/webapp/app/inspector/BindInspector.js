@@ -633,6 +633,15 @@ dojo.declare("wm.NavigationInspector", wm.DataInspector, {
 	makePropEdit: function(inName, inProp, inWire) {
 		var ins = this.owner.inspected.getValue(inName);
 		switch (inName) {
+			case "showOnlyParentLayer":
+				return (new wm.propEdit.Select({
+						component: this, 
+				                value: ins,
+						name: inName, 
+				                options: ["true", "false"],
+				                values: [true, false]
+					})).getHtml();
+
 			case "pageName":
 				return (new wm.propEdit.PagesSelect({
 						component: this, 
