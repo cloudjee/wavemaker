@@ -83,6 +83,7 @@
     <target name="testrunstart" unless="deploy-uptodate"
             depends="init, build, -check-deploy-uptodate"
             description="Register this application with Tomcat">
+        <echo>tomcat.manager.url=${tomcat.manager.url}</echo>
         <echo>tomcat.port=${tomcat.port}</echo>
         <taskdef name="undeploy"
             classname="org.apache.catalina.ant.UndeployTask"
