@@ -52,7 +52,13 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	toolbarColor: false,
 	classNames: "wmeditor wmrichtext",
 	afterPaletteDrop: function() {
-  	this.setCaption(this.name);
+	    this.inherited(arguments);
+	    if (!this.formField)
+		this.setCaption("");
+	    var lf = wm.getParentForm(this);
+	    if (lf) {
+		this.setPadding(wm.AbstractEditor.prototype.padding);
+	    }
 	},
 	init: function() {
 		this.inherited(arguments);
@@ -146,6 +152,7 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	sizeEditor: function() {
 		if (!this._ready) return;
 		this.inherited(arguments);
+/*
 		var h = parseInt(this.editorNode.style.height);
 		var toolh = this.editorNode.childNodes[0].clientHeight;
 	        if (h <= toolh) {
@@ -160,6 +167,7 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 		node.style.lineHeight = "normal";
 		node.style.height = "";
 	    });
+	    */
 	},
 	_createEditor: function(inNode, inProps) {
 		this._ready = false;
