@@ -19,7 +19,15 @@ dojo.declare("ImportThirdPartyAPI", wm.Page, {
     i18n: true,
     start: function() {
 	this.layers.decorator.buttonPanel.setParent(this.root);
+	dojo.addClass(this.layers.decorator.buttonPanel.domNode, "dialogfooter");
 	this.layers.decorator.doneCaption = this.getDictionaryItem("DONE_CAPTION");
+	if (navigator.platform == "MacIntel") {
+	    this.adminWarningLabel.hide();
+	    this.adminSpacer.hide();
+	}
+	if (!navigator.platform.match(/win/i)) {
+	    this.adminWarningLabel2.hide();
+	}
     },
     onShow: function() {
 	this.layer.invalid = true;
