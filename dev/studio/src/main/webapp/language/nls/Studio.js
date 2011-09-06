@@ -21,6 +21,7 @@
     URL_TUTORIALS: "http://dev.wavemaker.com/wiki/bin/wmdoc_${studioVersionNumber}/Tutorials",
     URL_DOCS: "http://dev.wavemaker.com/wiki/bin/wmdoc_${studioVersionNumber}/",
     URL_PROPDOCS: "http://dev.wavemaker.com/wiki/bin/wmjsref_${studioVersionNumber}/",
+    URL_EDIT_PROPDOCS: "http://dev.wavemaker.com/wiki/bin/inline/wmjsref_${studioVersionNumber}/",
     URL_FORUMS: "http://dev.wavemaker.com/forums",
     "MENU_ITEM_TUTORIALS" : "Tutorials",
     "MENU_ITEM_DOCS" : "Documentation",
@@ -351,5 +352,9 @@
     "DATA_UTILS_FILE_HELP": "Enter the name of the file in your project's webapproot/data folder. If the name is hrdb.script, just enter hrdb.",
     "CONFIRM_SAVE_LANGUAGE": "You must save the project before changing the language; save and continue?",
 
-    "STUDIO_CONFIG_TOOL_NOT_RUN": "It looks like the studio configuration tool was never run; this is an important part of finishing the installation of studio; please click OK to run the configuration tool"
+    "STUDIO_CONFIG_TOOL_NOT_RUN": "It looks like the studio configuration tool was never run; this is an important part of finishing the installation of studio; please click OK to run the configuration tool",
+
+    COMPILE_BUTTON_WIDTH: "100px",
+    RUN_BUTTON_WIDTH: "75px",
+    TEST_BUTTON_WIDTH: "75px"
 }

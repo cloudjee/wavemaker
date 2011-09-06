@@ -1743,10 +1743,13 @@ Studio.extend({
 	},
 
     runProjectChange: function(inSender, inLabel, inIconClass, inEvent) {
-	if (inLabel == "Compile")
-	    inSender.setWidth("100px");
-	else if (inLabel == "Test" || inLabel == "Run")
-	    inSender.setWidth("75px");
+	if (inIconClass == "studioProjectCompile")
+	    inSender.setWidth(this.getDictionaryItem("COMPILE_BUTTON_WIDTH"));
+	else if (inIconClass == "studioProjectTest") {
+	    inSender.setWidth(this.getDictionaryItem("TEST_BUTTON_WIDTH"));
+	} else if (inIconClass == "studioProjectRun") {
+	    inSender.setWidth(this.getDictionaryItem("RUN_BUTTON_WIDTH"));
+	}
 	// else its in another language, and don't try tweaking the width at all
     },
 	runProjectClick: function(inSender) {	    
