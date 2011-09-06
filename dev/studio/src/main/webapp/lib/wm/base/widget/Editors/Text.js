@@ -489,6 +489,7 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 dojo.declare("wm.LargeTextArea", wm.Text, {
         _editorPaddingLeft: 3,
         _editorPaddingRight: 3,
+        showMessages: false,
 	width: "300px",
 	height: "96px",
 	captionSize: "24px",
@@ -637,11 +638,18 @@ wm.Object.extendSchema(wm.LargeTextArea, {
 	changeOnEnter: { ignore: 1 },
         onEnterKeyPress: {ignore: 1},
         password: {ignore: 1},
-        resetButton: {ignore: 1}
+    resetButton: {ignore: 1},
+    regExp: {ignore: 1},
+    invalidMessage: {ignore: 1},
+    showMessages: {ignore: 1},
+    promptMessage: {ignore: 1},
+    tooltipDisplayTime: {ignore: 1},
+    placeHolder: {ignore: 1}
+
 });
 
 wm.LargeTextArea.extend({
-     themeableDemoProps: {height: "100%"}
+    themeableDemoProps: {height: "100%"}
 });
 
 wm.Object.extendSchema(wm.ColorPicker, {
