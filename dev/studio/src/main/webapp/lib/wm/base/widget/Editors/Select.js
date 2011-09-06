@@ -492,6 +492,8 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		    } else {
 			valid = true;
 		    }
+		} else if (this.restrictValues && display && !hasValue){
+		    valid = false;
 		} else {
 		    valid = true;
 		}
