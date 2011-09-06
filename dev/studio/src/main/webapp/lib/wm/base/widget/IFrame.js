@@ -52,7 +52,8 @@ dojo.declare("wm.IFrame", wm.Control, {
 wm.Object.extendSchema(wm.IFrame, {
 	disabled: { ignore: 1 },
     source: { type: "String", bindable: 1 },
-    setSource: {group: "method"}
+    setSource: {group: "method"},
+    imageList: {ignore: true}
 });
 
 wm.IFrame.description = "A frame.";
