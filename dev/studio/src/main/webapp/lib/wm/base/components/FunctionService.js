@@ -45,7 +45,7 @@ dojo.declare("wm.FunctionService", wm.Service, {
 	componentFunction: function(inComponent, inFunction, inArguments) {
 		if (!(inComponent instanceof wm.Component))
 			return;
-		var args = (inArguments || "").split(',');
+		var args = String(inArguments || "").split(',');
 		for (var i=0, l=args.length; i<l; i++)
 			args[i] = dojo.trim(args[i]);
 		var result = wm.fire(inComponent, inFunction, args);
