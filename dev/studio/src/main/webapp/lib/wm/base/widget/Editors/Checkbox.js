@@ -125,9 +125,13 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
         updateReadonlyValue: function(){
 	},
 	setStartChecked: function(inChecked) {
-		this.startChecked = inChecked;
-		this.createEditor();
+	    this.startChecked = inChecked;
+	    this.createEditor();
 	},
+    set_startChecked: function(inChecked) {
+	this.dataValue = Boolean(inChecked);
+	this.setStartChecked(inChecked);
+    },
 	setDataType: function(inDataType) {
 		this.dataType = inDataType;
 		if (inDataType == "boolean")
@@ -179,9 +183,9 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 
 
 wm.Object.extendSchema(wm.Checkbox, {
-    dataValue: {ignore: 1, bindable: 1, group: "editData", order: 3, simpleBindProp: true, type: "Boolean"},
+    dataValue: {bindable: 1, group: "editData", order: 3, simpleBindProp: true, type: "Boolean"},
         readOnlyCheckbox: {ignore: 1},
-        startChecked: { group: "editor", bindTarget: 1, type: "Boolean"},
+        startChecked: { group: "editor", type: "Boolean"},
     dataType:  { group: "editData", doc: 1},
 	displayValue: {ignore: 1, writeonly: 1, type: "any" },
     checkedValue: {group: "editor", bindTarget: 1,order: 40, type: "any", doc: 1},    
