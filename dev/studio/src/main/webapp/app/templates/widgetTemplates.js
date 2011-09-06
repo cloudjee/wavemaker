@@ -60,6 +60,7 @@ wm.fullTemplates.fancyTemplate = {
 	horizontalAlign: "center",
     autoScroll: true,
 	_template: {
+	monthsVar: ["wm.Variable", {"isList":true,"json":"[{name: \"January\", dataValue: 0}, {name: \"February\", dataValue: 1},{name: \"March\", dataValue: 2},{name: \"April\", dataValue: 3},{name: \"May\", dataValue: 4},{name: \"June\", dataValue: 5},{name: \"July\", dataValue: 6},{name: \"August\", dataValue: 7},{name: \"September\", dataValue: 8},{name: \"October\", dataValue: 9},{name: \"November\", dataValue: 10},{name: \"December\", dataValue: 11}]","type":"EntryData"}, {}],
 	varTemplateUsername: ["wm.ServiceVariable", {"autoUpdate":true,"designTime":true,"operation":"getUserName","service":"securityService","startUpdate":true}, {}, {
 		input: ["wm.ServiceInput", {"type":"getUserNameInputs"}, {}]
 	}],
@@ -97,7 +98,7 @@ wm.fullTemplates.fancyTemplate = {
 					fancyPanel1: ["wm.FancyPanel", {"horizontalAlign":"left","innerBorder":"1","labelHeight":"30","verticalAlign":"top"}, {}, {
 						dojoGrid1: ["wm.DojoGrid", {"borderColor":"#666666","dsType":"EntryData","height":"100%","columns":[{"show":true,"id":"name","title":"Name","width":"auto","displayType":undefined,"noDelete":true,"align":"left"},{"show":true,"id":"dataValue","title":"DataValue","width":"auto","displayType":undefined,"noDelete":true,"align":"left"}]}, {}, {
 							binding: ["wm.Binding", {}, {}, {
-								wire: ["wm.Wire", {"source":"studio.varTemplateData","targetProperty":"dataSet"}, {}]
+								wire: ["wm.Wire", {"source":"monthsVar","targetProperty":"dataSet"}, {}]
 							}]
 						}],
 						panel7: ["wm.Panel", {"height":"36px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
