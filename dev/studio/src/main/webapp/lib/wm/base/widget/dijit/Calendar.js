@@ -185,7 +185,7 @@ wm.Object.extendSchema(wm.dijit.Calendar, {
 	disabled: {ignore: 1},
         specialDates: { readonly: true, group: "data", order: 0, type: "wm.Variable", isList: true, bindTarget: true},
     useDialog: {group: "data", order: 1, type: "boolean"},
-    dateValue: { ignore: 1, bindable: 1, type: "Date" },
+    dateValue: { ignore: 1, bindable: 1, type: "Date", simpleBindProp: true },
     setDate: {group: "method"},
     getDateValue: {group: "method"},
     setDisplayDate: {group: "method"},
