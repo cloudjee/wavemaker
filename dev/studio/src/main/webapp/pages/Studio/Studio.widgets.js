@@ -35,7 +35,7 @@ Studio.widgets = {
     jarListVariable: ["wm.Variable", {type: "StringData"}, {}],
     addPatchDialog: ["wm.PageDialog", {pageName: "AddPatch", width: "90%", height: "90%", hideControls: true, modal: false, title: "Load patch for studio", deferLoad: true}],
     jarDownloadDialog: ["wm.PageDialog", {pageName: "HandleRequiredJars", width: "400px", height: "340px", hideControls: true, modal: false, title: "Import Jar File"}],
-    ImportThirdPartyAPIDialog: ["wm.PageDialog", {pageName: "ImportThirdPartyAPI", width: "300px", height: "240px", hideControls: true, modal: false, title: "Import Partner Services", deferLoad: true}],
+    ImportThirdPartyAPIDialog: ["wm.PageDialog", {pageName: "ImportThirdPartyAPI", width: "500px", height: "240px", hideControls: true, modal: false, title: "Import Partner Services", deferLoad: true}],
     dictionaryDialog: ["wm.PageDialog", {pageName: "I18nDictionaryEditor", width: "400px", height: "80%", hideControls: true, modal: false, title: "Dictionary Editor", deferLoad: true, corner: "cr"}],
 
 	//tempData used to show grid on FancyTemplate
