@@ -781,7 +781,7 @@ dojo.declare("wm.EventInspector", wm.Inspector, {
 });
 
 dojo.declare("wm.CustomMethodInspector", wm.Inspector, {
-    reinspect: function() {this.inspect();},
+//    reinspect: function() {this.inspect();},
 	getProps: function() {
 		var props = this.inherited(arguments);
 		for (var i in props)
