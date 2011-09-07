@@ -45,6 +45,15 @@ public interface TypeMapper {
     public String toPropertyName(String name);
 
     /**
+     * Converts a string into an identifier suitable for bean properties.
+     *
+     * @param name The name to be converted.
+     * @param noCaseShift indicates whether the first letter of the property should be shifted to lower case.
+     * @return A string identifier suitable for bean properties.
+     */
+    public String toPropertyName(String name, boolean noCaseShift);
+    
+    /**
      * Returns <code>true</code> if the <code>QName</code> is a simple type.
      * 
      * @return <code>true</code> if the <code>QName</code> is a simple type.

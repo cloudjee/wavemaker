@@ -247,7 +247,7 @@ public abstract class ServiceGenerator {
 
         for (int i = 0; i < operationNames.size(); i++) {
             String operationName = operationNames.get(i);
-            List<ElementType> inputTypes = this.serviceDefinition.getInputTypes(operationName);
+            List<ElementType> inputTypes = getInputTypes(operationName);
             generateOperationMethod(serviceCls, operationName, inputTypes, null);
 
             // add overloaded versions for this method
@@ -270,6 +270,10 @@ public abstract class ServiceGenerator {
         }
 
         postGeneration();
+    }
+
+    protected List<ElementType> getInputTypes(String operName) {
+        return serviceDefinition.getInputTypes(operName);
     }
 
     protected JDefinedClass generateClass() throws GenerationException {

@@ -49,6 +49,7 @@ import com.wavemaker.json.type.TypeDefinition;
 import com.wavemaker.runtime.service.definition.ReflectServiceDefinition;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
 import com.wavemaker.runtime.service.definition.ServiceOperation;
+import com.wavemaker.runtime.pws.IPwsServiceModifier;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.compiler.ProjectCompiler;
 import com.wavemaker.tools.data.DataModelConfiguration;
@@ -332,9 +333,16 @@ public class DesignServiceManager {
         Service service = new Service();
         getCurrentServiceDefinitions().put(serviceDef.getServiceId(), service);
 
+        IPwsServiceModifier serviceModifier;
+        if (pwsServiceModifierBeanFactory == null || serviceDef.getPartnerName() == null) {
+                serviceModifier = null;
+        } else {
+            serviceModifier = pwsServiceModifierBeanFactory.getPwsServiceModifier(serviceDef.getPartnerName());
+        }
+
         try {
-            for (ServiceOperation op : serviceDef.getServiceOperations()) {
-                doUpdateOperation(op, service, serviceDef);
+            for (ServiceOperation op : serviceDef.getServiceOperations(serviceModifier)) {
+                doUpdateOperation(op, service, serviceDef, serviceModifier);
             }
             service.setId(serviceDef.getServiceId());
             service.setType(serviceDef.getServiceType().getTypeName());
@@ -923,7 +931,8 @@ public class DesignServiceManager {
     // -----------------------------------------------------------------------
     // internal ops
     // -----------------------------------------------------------------------
-    protected void doUpdateOperation(ServiceOperation so, Service service, ServiceDefinition sd) {
+    protected void doUpdateOperation(ServiceOperation so, Service service,
+            ServiceDefinition sd, IPwsServiceModifier serviceModifier) {
 
         List<Operation> ops = service.getOperation();
 
@@ -959,10 +968,9 @@ public class DesignServiceManager {
         if (null != so.getReturnType()) {
             Operation.Return ret = new Operation.Return();
             FieldDefinition retType;
-            if (this.pwsServiceModifierBeanFactory == null || sd.getPartnerName() == null) {
-                retType = so.getReturnType();
+            if (serviceModifier == null) {
+                    retType = so.getReturnType();
             } else {
-                IPwsServiceModifier serviceModifier = this.pwsServiceModifierBeanFactory.getPwsServiceModifier(sd.getPartnerName());
                 retType = serviceModifier.getOperationReturnType(so);
             }
 

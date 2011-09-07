@@ -111,7 +111,15 @@ public class JAXBTypeMapper implements TypeMapper {
 
     @Override
     public String toPropertyName(String name) {
-        return CodeGenUtils.toPropertyName(name);
+        return toPropertyName(name, false);
+    }
+
+    public String toPropertyName(String name, boolean noCaseShift) {
+        if (noCaseShift) {
+            return CodeGenUtils.toPropertyNameNoCaseShift(name);    
+        } else {
+            return CodeGenUtils.toPropertyName(name);
+        }
     }
 
     @Override

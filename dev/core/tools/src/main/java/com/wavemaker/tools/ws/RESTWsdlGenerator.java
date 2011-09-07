@@ -270,7 +270,7 @@ public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
         if (inputParts != null) {
             for (RESTInputParam param : inputParts) {
                 String paramName = param.getName();
-                String newParamName = CodeGenUtils.toPropertyName(paramName.replace(" ", ""));
+                String newParamName = toPropertyName(paramName);
                 if (!paramName.equals(newParamName)) {
                     int i = this.parameterizedUrl.indexOf("{" + paramName + "}");
                     if (i > -1) {
@@ -283,7 +283,13 @@ public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
         }
     }
 
-    private Element generateDocumentation(String content) throws ParserConfigurationException {
+    public String toPropertyName(String name) {
+        String newParamName = CodeGenUtils.toPropertyName(name.replace(" ", ""));
+        return newParamName;
+    }
+
+    private Element generateDocumentation(String content)
+            throws ParserConfigurationException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
         DocumentBuilder db = dbf.newDocumentBuilder();

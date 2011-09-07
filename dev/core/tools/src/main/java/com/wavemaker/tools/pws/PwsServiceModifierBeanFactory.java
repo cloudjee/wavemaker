@@ -21,6 +21,7 @@ import java.util.Map;
 import com.wavemaker.common.ConfigurationException;
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.util.SpringUtils;
+import com.wavemaker.runtime.pws.IPwsServiceModifier;
 
 /**
  * @author Seung Lee

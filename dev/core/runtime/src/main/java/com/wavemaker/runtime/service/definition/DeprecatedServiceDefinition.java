@@ -17,6 +17,7 @@ package com.wavemaker.runtime.service.definition;
 import java.util.List;
 
 import com.wavemaker.runtime.service.ElementType;
+import com.wavemaker.runtime.pws.IPwsServiceModifier;
 
 /**
  * @author Matt Small
@@ -39,6 +40,16 @@ public interface DeprecatedServiceDefinition extends ReflectServiceDefinition {
      */
     @Deprecated
     public List<ElementType> getInputTypes(String operationName);
+
+    /**
+     * Returns the input types for the specified operation. The first letter of properties
+     * is NOT shifted to lower case.
+     *
+     * @param operationName The name of the desired operation.
+     * @return The list of inputs.
+     */
+    @Deprecated
+    public List<ElementType> getInputTypesNoCaseShift(String operationName);
 
     /**
      * Returns the output type for the specified operation.

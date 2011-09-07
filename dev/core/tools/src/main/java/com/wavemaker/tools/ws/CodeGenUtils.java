@@ -79,6 +79,24 @@ public class CodeGenUtils {
     }
 
     /**
+     * Converts a string suitable for properties. The first letter of the property is NOT shifted to lower case.
+     *
+     * @param name The name to be converted.
+     * @return A name suitable for properties.
+     */
+    public static String toPropertyNameNoCaseShift(String name) {
+        String s;
+        if (name.length() > 1) {
+            String firstChar = name.substring(0, 1);
+            s = NameConverter.standard.toPropertyName(name);
+            s = firstChar + s.substring(1);
+        } else {
+            s = name;
+        }
+        return s;
+    }
+    
+    /**
      * Converts a string into an identifier suitable for variables.
      * 
      * @param name The name to be converted.
