@@ -721,9 +721,11 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		 * parameter to set("value"); we pass in false so we can maintain an easier to 
 		 * understand syncrhonous setting of values and triggering of side effects */
 		this.editor._lastValueReported = inValue ? inValue : "";
-		this.updateReadonlyValue();
 		if (oldValue != inValue)
 		    this.changed();
+
+		/* If updateReadonlyValue is called before this.changed, then this.dataValue will not yet have been set */
+		this.updateReadonlyValue();
 	    }
 	},
 	setDisplayValue: function(inValue) {
