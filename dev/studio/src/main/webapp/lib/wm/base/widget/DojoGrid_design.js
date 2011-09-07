@@ -333,6 +333,8 @@ wm.DojoGrid.extend({
 		case "selectionMode":
 			return makeSelectPropEdit(inName, inValue, ["single", "multiple", "extended", "none"], inDefault);
 			*/
+		case "updateNow":
+		    return makeReadonlyButtonEdit(name, inValue, inDefault);
 		case "editColumns":
 			return makeReadonlyButtonEdit(name, inValue, inDefault);
 		   case "showAddDialog":
@@ -342,6 +344,8 @@ wm.DojoGrid.extend({
 	},
 	editProp: function(inName, inValue, inInspector) {
 		switch (inName) {
+			case "updateNow":
+				return this.update();
 			case "editColumns":
 				return this.showMenuDialog();
 		        case "showAddDialog":
@@ -353,6 +357,11 @@ wm.DojoGrid.extend({
 		}
 		return this.inherited(arguments);
 	},
+	update: function() {
+		var ds = this.getValueById((this.components.binding.wires["dataSet"] || 0).source);
+		wm.fire(ds, "update");
+	},
+
     get_columns: function() {
 	return this.columns || [];
 	//return this.contextMenu ? this.contextMenu.getUpdatedDataSet() : this.columns || [];
@@ -402,6 +411,7 @@ wm.Object.extendSchema(wm.DojoGrid, {
 	menu:{ignore:1},
 	storeGUID:{ignore:1},
 	dataValue:{ignore:1},
+    updateNow: {group:"operation"},
     selectedItem: {ignore:1, bindSource: 1, simpleBindProp: true, doc: 1},
     emptySelection: { ignore: true, bindSource: 1, type: "Boolean",  doc: 1},
     isRowSelected: { ignore: true, bindSource: 1, type: "Boolean",   doc: 1},
