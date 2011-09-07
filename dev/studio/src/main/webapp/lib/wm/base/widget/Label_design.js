@@ -30,9 +30,9 @@ wm.Object.extendSchema(wm.Label, {
     autoSize: {group: "advanced layout"},
     setAlign: {group: "method"},
     setCaption: {group: "method"},
-    setSingleLine: {group: "method"}
+    setSingleLine: {group: "method"},
 
-    //resizeToFit:{ group: "layout", order: 30 }
+    resizeToFit:{ group: "layout", order: 30 }
 });
 
 wm.Label.description = "A simple label.";
@@ -92,10 +92,9 @@ wm.Label.extend({
 		                var customFunction = (this.formatter == funcName) ? funcName : "Custom Function";
 		                return makeSelectPropEdit(inName, inValue, ["", customFunction].concat(wm.formatters), inDefault);
 
-/*
+
 			case "resizeToFit":
 				return makeReadonlyButtonEdit(inName, inValue, inDefault);
-                                */
                         case "autoSize": 
 		                return makeSelectPropEdit(inName, (this.autoSizeHeight) ? "height" : (this.autoSizeWidth) ? "width" : "none", ["none", "width", "height"], inDefault);
 			case "align":
@@ -103,6 +102,16 @@ wm.Label.extend({
 		}
 		return this.inherited(arguments);
 	},
+    editProp: function(inName, inValue) {
+	switch (inName) {
+	case "resizeToFit":
+	    var was = this.autoSizeWidth;
+	    this.setAutoSizeWidth(true);
+	    this.setAutoSizeWidth(was);
+	    return;
+	}
+	return this.inherited(arguments);
+    },
 
     getAutoSize: function() {
 	if (this.autoSizeWidth) return "width";
