@@ -355,6 +355,9 @@ wm.Component.extend({
 
 	        if (inName.match(/^custom/) && dojo.isFunction(this.constructor.prototype[inName])) {
 		    var funclist =  getAllEventsInCode();
+		    var customName = this.name + wm.capitalize(inName);
+		    if (dojo.indexOf(funclist, customName) == -1)
+			funclist.unshift(customName);
 		    funclist.unshift("");
 		    return new wm.propEdit.Select({component: this, value: inValue, name: inName, defaultValue: inDefault, options:funclist});
 		}

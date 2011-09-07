@@ -578,9 +578,14 @@ dojo.declare("wm.Component", wm.Object, {
 		return n in this._designee ? this._designee[n] : this.components[n];
 	},
 	_setProp: function(n, v) {
-		if (this.isEventProp(n) && this._isDesignLoaded)
-			this.setEvent(n, v);
-		else {
+	    if (this.isEventProp(n) && this._isDesignLoaded) {
+		this.setEvent(n, v);
+	    } else if (this.isCustomMethodProp(n) && this._isDesignLoaded) {
+		this._designee[n] = v;
+		if (v) {
+		    eventEdit(this, n, v, this.owner == studio.application);
+		}
+	    } else {
 			// do we need this?
 			var s = this._getPropWorker(this._designee, n, "set");
 			if (s)
