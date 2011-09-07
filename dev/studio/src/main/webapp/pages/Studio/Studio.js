@@ -1119,10 +1119,10 @@ dojo.declare("Studio", wm.Page, {
 		return true;
 	    
 
-		// only act on CTRL keys (but not SHIFT-CTRL)
-		var 
-			hotkey = (e.ctrlKey && !(e.ctrlKey && e.shiftKey)),
-			kc = e.keyCode,
+		// only act on CTRL keys (but not SHIFT-CTRL); accepts command/alt as alternative to ctrl key.
+	    var ctrlKey = e.ctrlKey || e.metaKey;
+	    var hotkey = (ctrlKey && !(ctrlKey && e.shiftKey));
+	    var         kc = e.keyCode,
                         isEsc = kc == dojo.keys.ESCAPE,
 			chr = String.fromCharCode(kc),
 			normalKey = ((!this.studioKeyPriority && this.allowKeyTarget(e)) || !this.isShowingWorkspace() || wm.dialog.showing),
