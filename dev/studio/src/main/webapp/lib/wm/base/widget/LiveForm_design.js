@@ -191,7 +191,7 @@ wm.LiveFormBase.extend({
 			var
 				props = dojo.mixin(this.getFormEditorProps() || {}, {
 					formField: ff,
-					readonly: true,
+				        readonly: this.readonly,
 					name: wm.makeNameForProp(ff, "Editor")
 				}),
 /*		    e = this.createEditor(f, props, {onEnterKeyPress: this.getId() + ".saveDataIfValid"}, wm.getEditorClassName(f.displayType));*/
