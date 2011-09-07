@@ -563,6 +563,10 @@ public class SecurityToolsManager {
         Beans beans = getAcegiSpringBeans(true);
         SecuritySpringSupport.setRoles(beans, roles);
         saveAcegiSpringBeans(beans);
+        List<String> testRoles = SecuritySpringSupport.getRoles(beans);
+        if( !(testRoles.equals(roles)) && !roles.isEmpty()){
+        	throw new ConfigurationException("Roles not correctly set. Expected: " + roles.toString() + " read: " + testRoles.toString());
+        }
     }
 
     public Resource getLoginHtmlTemplateFile() throws IOException {

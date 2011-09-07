@@ -33,6 +33,7 @@ import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
+import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.ColumnInfo;
 import com.wavemaker.tools.data.DataModelConfiguration;
 import com.wavemaker.tools.data.DataModelManager;
@@ -386,7 +387,7 @@ public class SecurityConfigService {
         return getSecToolsMgr().getJOSSORoles();
     }
 
-    public void setRoles(List<String> roles) throws IOException, JAXBException {
+    public void setRoles(List<String> roles) throws IOException, JAXBException, ConfigurationException {
         getSecToolsMgr().setRoles(roles);
     }
 
