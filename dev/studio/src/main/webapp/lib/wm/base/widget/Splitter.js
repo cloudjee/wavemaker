@@ -80,6 +80,7 @@ dojo.declare("wm.Splitter", wm.Bevel, {
 		switch (this.layout) {
 			case "left":
 			case "top":
+		                this.percentSizeControl = this.parent.nextSibling(this);
 				return this.parent.prevSibling(this);
 				/*var node = this.domNode.previousSibling;
 				while (node && node.nodeType != 1)
@@ -87,6 +88,7 @@ dojo.declare("wm.Splitter", wm.Bevel, {
 				break;*/
 			case "right":
 			case "bottom":
+		                this.percentSizeControl = this.parent.prevSibling(this);
 				return this.parent.nextSibling(this);
 				/*var node = this.domNode.nextSibling;
 				while (node && node.nodeType != 1)
@@ -155,12 +157,38 @@ dojo.declare("wm.Splitter", wm.Bevel, {
 			inValue = Math.max(this.minimum, inValue);
 		if (this.maximum != -1)
 			inValue = Math.min(this.maximum, inValue);
-		this.atLimit = (x != inValue);
-		return inValue;
+
+	    switch(this.layout) {
+	    case "top":
+		var min = this.sizeControl.getMinHeightProp();
+		var max = this.parent.bounds.h - this.percentSizeControl.getMinHeightProp() - this.bounds.h;
+		break;
+	    case "bottom":
+		var min = this.percentSizeControl.getMinHeightProp();
+		var max = this.parent.bounds.h - this.sizeControl.getMinHeightProp() - this.bounds.h;
+		break;
+	    case "left":
+		var min = this.sizeControl.getMinWidthProp();
+		var max = this.parent.bounds.w - this.percentSizeControl.getMinWidthProp() - this.bounds.w;
+		break;
+	    case "right":
+		var min = this.percentSizeControl.getMinWidthProp();
+		var max = this.parent.bounds.w - this.sizeControl.getMinWidthProp() - this.bounds.w;
+		break;
+	    }
+	    if (inValue < min)
+		inValue = min;
+	    else if (inValue > max)
+		inValue = max;
+
+	    this.atLimit = (x != inValue);
+	    return inValue;
 	},
 	adjustSize: function() {
-		var dx = this.position.left - this.initialPosition.left, dy = this.position.top - this.initialPosition.top
-		var w = this.size.w + (this.layout=="right" ? -dx : dx), h = this.size.h + (this.layout=="bottom" ? -dy : dy);
+	    var dx = this.position.left - this.initialPosition.left;
+	    var dy = this.position.top - this.initialPosition.top;
+	    var w = this.size.w + (this.layout=="right" ? -dx : dx);
+	    var h = this.size.h + (this.layout=="bottom" ? -dy : dy);
 		//console.log(w, h, dx, dy);
 		//dojo._setMarginBox(this.sizeNode, NaN, NaN, w, h);
 		this.sizeControl.setBounds(NaN, NaN, w, h);
