@@ -293,7 +293,8 @@ wm.define("wm.Container", wm.Control, {
 	    // this means that autoscroll has a slower rendering execution than non-autoscroll
 	    //if (this.autoScroll && this._xneedReflow || this.fitToContent) this.renderBounds();
 	    for (var i=0, c; c=this.c$[i]; i++) {
-		c.renderBounds();
+		if (c.showing)
+		    c.renderBounds();
 	    }
 	},
         forEachControl: function(inFunc, paramArray) {
