@@ -336,7 +336,7 @@ wm.Object.extendSchema(wm.TabLayers, {
 wm.TabLayers.extend({
     themeable: true,
     themeableProps: ["border", "borderColor", "clientBorder", "clientBorderColor", "headerHeight"],
-    themeableStyles: ["wm.TabLayers-Button_Height", "wm.TabLayers-Button_TextSize", {name: "wm.TabLayers-BorderStyle_Shadow", displayName: "Shadow (Default)"}, {name: "wm.TabLayers-Hover-BorderStyle_Shadow", displayName: "Shadow (Hover)"}, {name: "wm.TabLayers-Active-BorderStyle_Shadow", displayName: "Shadow (Active)"}]
+    themeableStyles: [{name: "wm.TabLayers-Button_Height", displayName: "Tab Button Height"}, {name: "wm.TabLayers-Button_TextSize", displayName: "Tab Font Size"}, {name: "wm.TabLayers-BorderStyle_Shadow", displayName: "Shadow (Default)"}, {name: "wm.TabLayers-Hover-BorderStyle_Shadow", displayName: "Shadow (Hover)"}, {name: "wm.TabLayers-Active-BorderStyle_Shadow", displayName: "Shadow (Active)"}]
 });
 
 wm.WizardLayers.extend({
