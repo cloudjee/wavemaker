@@ -109,7 +109,7 @@ wm.Object.extendSchema(wm.ServiceVariable, {
 	maxResults: {group: "data", order: 17},
 	designMaxResults: {group: "data", order: 18},
 	updateNow: { group: "operation", order: 10},
-	queue: { group: "operation", order: 20},
+	queue: { group: "deprecated", order: 20},
 	json: {ignore: 1},
 	listType: {ignore: 1},
 	isList: {ignore: 1},

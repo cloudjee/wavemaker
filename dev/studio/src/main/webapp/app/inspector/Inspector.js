@@ -40,7 +40,8 @@ wm.addPropertyGroups({
 	columns: {displayName: "Columns", order: 999},
 	ungrouped: {displayName: "Other", order: 1000},
 	operation: {displayName: "Operations", order: 2000},
-	docs: {displayName: "Documentation", order: 3000}
+    docs: {displayName: "Documentation", order: 3000},
+    deprecated: {displayName: "Deprecated", order: 100000}
 });
 
 dojo.declare("wm.InspectorBase", null, {

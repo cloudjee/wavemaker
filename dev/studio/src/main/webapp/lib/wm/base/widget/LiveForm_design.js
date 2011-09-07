@@ -607,7 +607,7 @@ wm.Object.extendSchema(wm.LiveForm, {
         alwaysPopulateEditors: { group: "editor", order: 15, type: "Boolean"},
 
 
-	defaultButton: { ignore: 1, group: "Deprecated", order: 5, bindTarget: 1, type: "wm.Button"},
+	defaultButton: { ignore: 1, group: "deprecated", order: 5, bindTarget: 1, type: "wm.Button"},
         displayErrors: { group: "data", order: 15},
     //noButtonPanel: {group: "display", order: 8, type: "Boolean", ignore: 1},
     //editPanelStyle: {group: "display", order: 9, type: "String"},
