@@ -613,6 +613,12 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			return;
 		this.dojoObj.startup();
 	        this.dojoObj.updateDelay = 1; // reset this after creation; I just want this set to zero to insure that everything is generated promptly when we first create the grid.
+	    if (this._isDesignLoaded) {
+		var self = this;
+		wm.job(this.getRuntimeId() + ".renderBounds", 1, function() {
+		    self.renderBounds();
+		});
+	    }
 	},
 
 	    _onShowParent: function() {
