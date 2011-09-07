@@ -715,7 +715,9 @@ dojo.declare("wm.Variable", wm.Component, {
 		wm.logging && console.group("<== CHANGED [", topic, "] published by Variable.dataChanged");
 		dojo.publish(topic, [this]);
 
-	   var root = this.getRoot().getRuntimeId();
+	    var root = this.getRoot();
+	    if (root)
+		 root = root.getRuntimeId();
 	    if (root && root.indexOf(".") && id.indexOf(root) == 0) {
 	       var tmpn = id.substring(root.length);
 	       tmpn = root.substring(root.lastIndexOf(".")+1) + tmpn;
