@@ -997,7 +997,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		params.rowNode = evt.rowNode;
 		params.rowId = evt.rowIndex;
 		params.selectedItem = this.selectedItem;
-		params.fieldId = evt.cell.field;
+	        if (evt.cell)
+		    params.fieldId = evt.cell.field;
 		return params;
 	},
         _onSort: function() {
