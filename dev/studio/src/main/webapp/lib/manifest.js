@@ -20,9 +20,13 @@ wm.registerPaths(
 	["wm.modules", wm.basePath + "modules/ep"]
 );
 
+    var fileName = wm.version.replace(/[^a-zA-Z0-9]/g,"") + "_patches";
+
 wm.loadLibs([ 
 	// Wavemaker
 	"lib.wm.manifest",
 	// User
-	"common.manifest"
+    "common.manifest",
+    // Patches
+    "common." + fileName
 ]);

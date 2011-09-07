@@ -76,3 +76,5 @@ dojo.require("lib.manifest", true);
 // Load studio code and design extensions
 dojo.require("studio.app.manifest", true);
 
+var fileName = wm.version.replace(/[^a-zA-Z0-9]/g,"") + "_patches";
+dojo["require"]("wm.common." + fileName);

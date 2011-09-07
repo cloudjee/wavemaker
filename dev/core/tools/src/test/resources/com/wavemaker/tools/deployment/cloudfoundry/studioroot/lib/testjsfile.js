@@ -91,9 +91,9 @@ try
 		dojo.require("lib.manifest", true);
 	}
 
-
 }
 catch (e)
 {
 	console.info('error while loading runtime_loader.js file: ' + e.message);
 }
+ 

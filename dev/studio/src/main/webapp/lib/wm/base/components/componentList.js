@@ -24,6 +24,7 @@ dojo.provide('wm.base.components.componentList');
  * If that class is NOT a part of any existing layer, then enter in its standard package name
  * so dojo.require can run normally.  Still working out details of how to create new build layers.
  ************************************************************************************/
+wm.componentFixList = {};
 wm.componentList = {
 	'wm.DataGrid': ['build.Gzipped.wm_dojo_grid'],
 	'wm.DojoGrid': ['build.Gzipped.wm_dojo_grid'],
@@ -172,7 +173,22 @@ wm.getComponentStructure = function(inType){
 			var relpath = dojo._getModuleSymbols(requireList[i]).join("/") + ".js";
 			var uri = ((relpath.charAt(0) == "/" || relpath.match(/^\w+:/)) ? "" : dojo.baseUrl) + relpath;
 			wm.dojoScriptLoader(uri);
+		    if (wm.componentFixList[requireList[i]]) {
+			var fixes = wm.componentFixList[requireList[i]];
+			for (var j = 0; j < fixes.length; j++)
+			    fixes[j]();
+		    }
 		}
 	}
+}
+
+wm.addFrameworkFix = function(gzipName, inFunc) {
+    if (djConfig.isDebug || window["studio"])
+	inFunc();
+    else if (!wm.componentFixList[gzipName]) {
+	wm.componentFixList[gzipName] = [inFunc];
+    } else {
+	wm.componentFixList[gzipName].push(inFunc);
+    }
 }
 
