@@ -20,7 +20,8 @@ wm.Object.extendSchema(wm.RelatedEditor, {
 	editingMode: { group: "common", order: 100},
 	formField: {group: "common", order: 500},
 	caption: {ignore: 1},
-	readonly: {ignore: 1}
+    readonly: {ignore: 1},
+    ignoreParentReadonly: {group: "editor", order: 100, type: "Boolean"}
 });
 
 wm.RelatedEditor.extend({
@@ -72,6 +73,7 @@ wm.RelatedEditor.extend({
 			props =  dojo.mixin({}, this.inherited(arguments)),
 			f = wm.getParentForm(this);
 		props.formField.ignoretmp = !Boolean(f);
+	        props.ignoreParentReadonly.ignoretmp = (this.editingMode != "editable subform");
 		return props;
 	},
 	set_formField: function(inFieldName) {

@@ -16,6 +16,7 @@ dojo.provide("wm.base.widget.RelatedEditor");
 dojo.require("wm.base.widget.LiveForm");
 
 dojo.declare("wm.RelatedEditor", wm.LiveFormBase, {
+        ignoreParentReadonly: true,
 	height:'26px',
 	editingMode: "lookup",
 	_lookupCache: null,
