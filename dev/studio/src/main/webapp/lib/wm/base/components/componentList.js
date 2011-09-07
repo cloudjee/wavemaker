@@ -132,6 +132,17 @@ wm.componentList = {
 	'wm.Service':['wm.base.components.Service']
 }
 
+/* wm.require is the public version of wm.getComponentStructure; inCommon is optional parameter
+ * to use when loading a class from the common folder
+ */
+wm.require = function(inType, inCommon) {
+    var requireList = wm.componentList[inType];
+    if (requireList || inCommon)
+	return wm.getComponentStructure(inType);
+    else
+	dojo["require"](inType);
+}
+
 wm.getComponentStructure = function(inType){
 	//console.info('Loading ' + inType + ' dynamically.');
 	var requireList = wm.componentList[inType];
