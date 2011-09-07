@@ -27,3 +27,7 @@ For project specific widgets, add the wm.loadLibs call to the project javascript
 wm.loadLibs([ 
 	"wm.packages.example.myButton"	
 ]);
+
+/* WARNING: This file is loaded at design time, and when running in debug mode, but is NOT loaded
+ * when running your project without ?debug; do NOT put code in here required by your running projects!
+ */
