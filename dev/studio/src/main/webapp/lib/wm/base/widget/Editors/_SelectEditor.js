@@ -36,7 +36,6 @@ dojo.declare("wm._SelectEditor", wm._BaseEditor, {
 	hasDownArrow: true,
 	startUpdate: false,
 	_allFields: "All Fields",
-	binding: '(data binding)',
         restrictValues: true,
 	init: function() {
 		this.inherited(arguments);

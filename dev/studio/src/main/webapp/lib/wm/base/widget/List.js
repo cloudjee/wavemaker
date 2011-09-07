@@ -61,7 +61,6 @@ dojo.declare("wm.List", wm.VirtualList, {
 	constructor: function() {
 		this._data = [];
 	},
-	binding: "(data)",
 	updateNow: "(update now)",
 	columnWidths: "",
 	dataFields: "",
