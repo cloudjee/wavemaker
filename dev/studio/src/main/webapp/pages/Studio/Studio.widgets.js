@@ -295,7 +295,7 @@ Studio.widgets = {
 					componentPalette: ["wm.Palette", {height: "300px", border: ""}, {}]*/
 				    }],
 				    leftObjects: ["wm.Layer", {caption: "Model"}, {onShow: "resetTreeSearch"}, {
-					treeSearch: ["wm.Text", {caption: "", width: "100%",  height: "27px", placeHolder: "Find Component/Widget", padding: "2,5,2,5", margin: "2,0,2,0", changeOnKey: true, resetButton: true}, {onchange: "treeSearchChange"}],
+					treeSearch: ["wm.Text", {caption: "", width: "100%",  height: "27px", placeHolder: "Widget", padding: "2,5,2,5", margin: "2,0,2,0", changeOnKey: true, resetButton: true}, {onchange: "treeSearchChange"}],
 					benchbevel5_5: ["wm.Bevel", {border: ""}, {}],
 					label12: ["wm.Label", {height: "22px", width: "100%", caption: "Visual Components", border: "", padding: "4"}, {}, {
 					    format: ["wm.DataFormatter", {}, {}]
@@ -303,12 +303,12 @@ Studio.widgets = {
 					widgetsTree: ["wm.DraggableTree", {height: "100%", border: "", padding: "3,0,0,0", dropBetweenNodes: true}, {onselect: "treeSelect", onNodeDrop: "onWidgetTreeNodeDrop"}]
 				    }],
 				    componentModel: ["wm.Layer", {caption: "Services"}, {onShow: "resetCompTreeSearch"}, {
-					compTreeSearch: ["wm.Text", {caption: "", width: "100%",  height: "27px", placeHolder: "Find Component/Widget", padding: "2,5,2,5", margin: "2,0,2,0", changeOnKey: true, resetButton: true}, {onchange: "compTreeSearchChange"}],
+					compTreeSearch: ["wm.Text", {caption: "", width: "100%",  height: "27px", placeHolder: "Find Component", padding: "2,5,2,5", margin: "2,0,2,0", changeOnKey: true, resetButton: true}, {onchange: "compTreeSearchChange"}],
 					benchbevel50_5: ["wm.Bevel", {border: ""}, {}],
 					compLabel11: ["wm.Label", {height: "22px", width: "100%", caption: "Services", border: "", padding: "4"}, {}, {
 					    format: ["wm.DataFormatter", {}, {}]
 					}],
-					tree: ["wm.Tree", {height: "200px", border: "", padding: "4,0,0,0"}, {onselect: "treeSelect"}],
+					tree: ["wm.DraggableTree", {height: "200px", border: "", padding: "4,0,0,0"}, {onselect: "treeSelect", onNodeDrop: "onServiceNodeDrop"}],
 					splitter222: ["wm.Splitter", {border: "0", layout: "top"}, {}],
 					label1222: ["wm.Label", {height: "22px", width: "100%", caption: "Components", border: "", padding: "4"}, {}, {
 					    format: ["wm.DataFormatter", {}, {}]
@@ -368,7 +368,7 @@ Studio.widgets = {
 					}],
 				bench: ["wm.Panel", {_classes: {domNode: ["WMApp"]}, width: "100%", height: "100%", border: "1, 0, 0, 0", backgroundColor: "silver", borderColor: "#666E80", verticalAlign: "middle", horizontalAlign: "center"}, {}, {
 				    designerSpacer1: ["wm.Spacer", {showing: false, height: "100%"}],
-							designer: ["wm.Designer", {height: "100%", width: "100%", backgroundColor: "white", borderColor: "black", border: ""}, {onselect: "designerSelect", onmove: "designerMove"}],
+				    designer: ["wm.Designer", {height: "100%", width: "100%", backgroundColor: "white", borderColor: "black", border: ""}, {onselect: "designerSelect", onmove: "designerMove"}],
 				    designerSpacer2: ["wm.Spacer", {showing: false, height: "100%"}],
 							benchbevel: ["wm.Bevel", {border: ""}, {}],
 						    statusPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "24px", border: "1,0,0,0", borderColor: "#666E80", backgroundColor: "#424A5A", horizontalAlign: "left", verticalAlign: "top"},{}, {

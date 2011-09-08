@@ -1126,7 +1126,8 @@ dojo.declare("Studio", wm.Page, {
                         isEsc = kc == dojo.keys.ESCAPE,
 			chr = String.fromCharCode(kc),
 			normalKey = ((!this.studioKeyPriority && this.allowKeyTarget(e)) || !this.isShowingWorkspace() || wm.dialog.showing),
-			handled = false;               
+			handled = false;
+	    if (e.metaKey && chr.toLowerCase() == "r") return false; // don't block reload commands
 		// hotkey
 		if (hotkey)
 			handled = this.processKey(chr, wm.studioConfig.hotkeyMap, !normalKey);
