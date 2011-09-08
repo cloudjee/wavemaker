@@ -155,26 +155,9 @@ dojo.declare("wm.DojoLightbox", wm.Component, {
 		    if (ds) {
 			this.components.binding.addWire("", "dataSet", ds.getId());
 		    }
-		} else if (!inDataSet) {
-		    this.components.binding.removeWireByProp("dataSet");
-		    this.options = this.dataField = this.displayField = "";
+		} else {
 		    this.setDataSet(inDataSet);
-		} else {		    
-		    /* Clear the options property if setting a new dataSet */
-		    if (this.options && inDataSet != this.$.optionsVar)
-			this.options = "";
-		    this.setDataSet(inDataSet);
-		    if (inDataSet && (!this.displayField || this._lastType != inDataSet.type))  {
-			if (wm.defaultTypes[inDataSet.type]) {
-			    this.dataField = "dataValue";
-			} else {
-			    this.dataField = "";
-			}
-			this._setDisplayField();
-		    }
 		}
-	    if (inDataSet)
-		this._lastType = inDataSet.type;
 	},
 	_listFields: function() {
 		var list = [ "" ];
@@ -204,7 +187,43 @@ dojo.declare("wm.DojoLightbox", wm.Component, {
 		return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.dataSet ? this.dataSet.getId() : "", allowAllTypes: true, listMatch: true, value: inValue});
 	    }
 	    return this.inherited(arguments);
+	},
+    setPropEdit: function(inName, inValue, inDefault) {
+	switch (inName) {
+	case "imageUrlField":
+	    var editor1 = dijit.byId("studio_propinspect_imageUrlField");
+
+	    var store1 = editor1.store.root;
+
+	    while (store1.firstChild) store1.removeChild(store1.firstChild);
+
+
+	    var displayFields = this.makePropEdit("imageUrlField");
+	    displayFields = displayFields.replace(/selected="selected"/,"");
+	    displayFields = displayFields.replace(/^.*?\<option/,"<option");
+	    displayFields = displayFields.replace(/\<\/select.*/,"");
+	    store1.innerHTML = displayFields;
+	    editor1.set("value", inValue, false);
+	    return true;
+	case "imageLabelField":
+	    var editor1 = dijit.byId("studio_propinspect_imageLabelField");
+
+	    var store1 = editor1.store.root;
+
+	    while (store1.firstChild) store1.removeChild(store1.firstChild);
+
+
+	    var displayFields = this.makePropEdit("imageLabelField");
+	    displayFields = displayFields.replace(/selected="selected"/,"");
+	    displayFields = displayFields.replace(/^.*?\<option/,"<option");
+	    displayFields = displayFields.replace(/\<\/select.*/,"");
+	    store1.innerHTML = displayFields;
+	    editor1.set("value", inValue, false);
+	    return true;
+
 	}
+	return this.inherited(arguments);
+    }
 });
 
 // design only...
