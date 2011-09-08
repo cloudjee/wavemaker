@@ -54,11 +54,11 @@ DataObjectsEditor.widgets = {
 									tableDetailPackageName: ["wm.Editor", {caption: "Package", height: "26px", layoutKind: "left-to-right", readonly: true}, {onchange: "tableDetailPackageNameChange"}, {
 									    editor: ["wm._TextEditor", {layoutFlex: 10, changeOnKey:true}, {}]
 									}],
-								    tableDetailSchemaName: ["wm.Text", {caption: "Schema", height: "26px", layoutKind: "left-to-right",changeOnKey:true}, {onchange: "tableDetailSchemaNameChange"}],
-								    tableDetailCatalogName: ["wm.Text", {caption: "Catalog", height: "26px", layoutKind: "left-to-right",changeOnKey: true}, {onchange: "tableDetailCatalogNameChange"}],
+								    tableDetailSchemaName: ["wm.Text", {caption: "Schema", height: "26px", layoutKind: "left-to-right",changeOnKey:true, helpText: "The database schema container for this table such as public or dbo. Not used with all DB systems. "}, {onchange: "tableDetailSchemaNameChange"}],
+								    tableDetailCatalogName: ["wm.Text", {caption: "Catalog", height: "26px", layoutKind: "left-to-right",changeOnKey: true, helpText: "The database catalog for this table. Can be the same as database name. Not used with all DB systems. Do not use when deploying to CloudFoundry with MySQL."}, {onchange: "tableDetailCatalogNameChange"}],
 									spacer1: ["wm.Spacer", {height: "10px", border: ""}, {}],
-								    tableDetailTableName: ["wm.Text", {caption: "Table Name", height: "26px", layoutKind: "left-to-right", changeOnKey: true}, {onchange: "tableDetailTableNameChange"}],
-								    tableDetailEntityName: ["wm.Text", {caption: "Entity Name", height: "26px", layoutKind: "left-to-right", changeOnKey: true}, {onchange: "tableDetailEntityNameChange"}]
+								    tableDetailTableName: ["wm.Text", {caption: "Table Name", height: "26px", layoutKind: "left-to-right", changeOnKey: true, helpText: "The table name in the database. Must match table name in database."}, {onchange: "tableDetailTableNameChange"}],
+								    tableDetailEntityName: ["wm.Text", {caption: "Entity Name", height: "26px", layoutKind: "left-to-right", changeOnKey: true, helpText: "The name of the table in the project datamodel. Can be different from table name in database."}, {onchange: "tableDetailEntityNameChange"}]
 								}],
 								tableSettingsPanel: ["wm.Panel", {padding: "5,0,0,0", width: "150px"}, {}, {
 									dynamicInsertCheckBox: ["wm.Editor", {caption: "Dynamic Insert", display: "CheckBox", displayValue: "0", height: "26px", captionSize: "115px", layoutKind: "left-to-right"}, {onchange: "dynamicInsertChange"}, {
@@ -107,7 +107,7 @@ DataObjectsEditor.widgets = {
 								precision: ["wm.DataGridColumn", {field: "precision", index: 7, columnWidth: "100px", caption: "Precision", editor: dojox.grid.editors.input}, {}, {
 									format: ["wm.DataFormatter", {}, {}]
 								}],
-								generator: ["wm.DataGridColumn", {field: "generator", index: 8, columnWidth: "100px", caption: "Generator", editor: dojox.grid.editors.select, selectOptions: [" ", "assigned","identity","sequence","native"]}, {}, {
+								generator: ["wm.DataGridColumn", {field: "generator", index: 8, columnWidth: "100px", caption: "Generator", editor: dojox.grid.editors.select, selectOptions: [" ", "assigned","identity","sequence","native", "guid"]}, {}, {
 									format: ["wm.DataFormatter", {}, {}]
 								}],
 								param: ["wm.DataGridColumn", {field: "generatorParam", index: 9, columnWidth: "150px", caption: "Params", editor: dojox.grid.editors.input}, {}, {
