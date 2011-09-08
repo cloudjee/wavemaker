@@ -734,6 +734,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
       }
   },
     onNewDeployOk: function() {
+	this._openningDeployment = true;
 	var groupvalue = this.tomcatRadio.getGroupValue();
 	switch(groupvalue) {
 	case "tc":
@@ -751,6 +752,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	}
 	this.newDeploymentDialog.hide();
 	this.owner.owner.show();
+	this._openningDeployment = false;
     },
     onNewDeployCancel: function() {
 	this.newDeploymentDialog.hide();
@@ -784,6 +786,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
 
     },
     setUniqueDeploymentName: function(inName, inEditor, inType) {
+	if (this.deploymentListVar.getCount() == 0)
+	    this.initDeploymentListVar();
 	this.deploymentList.deselectAll();
 	var match = false;
 	var data = this.deploymentListVar.getData() || [];
@@ -806,8 +810,6 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	    return this.setUniqueDeploymentName(inName, inEditor, inType);
 	} else {
 	    inEditor.setDataValue(inName);
-	    if (this.deploymentListVar.getCount() == 0)
-		this.initDeploymentListVar();
 	    var deploymentDescriptor = {
 		"applicationName": studio.project.projectName,
 		"archiveType": "WAR",
@@ -815,7 +817,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		"deploymentId": null,
 		"deploymentType": inType,
 		"host": null,
-		"name": name,
+		"name": inName,
 		"port": 0,
 		"target": null,
 		"token": null
@@ -952,7 +954,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     newTomcatDeploy: function() {
 	this.editLayer.activate();
 	this.tomcatLayer.activate();
-	var targetName = this.setUniqueDeploymentName("New Tomcat Deployment", this.tcDeploymentNameEditor, this.TC_DEPLOY);
+	var targetName = this.setUniqueDeploymentName("Tomcat 1", this.tcDeploymentNameEditor, this.TC_DEPLOY);
 	this.tcHostEditor.setDataValue("localhost");
 	this.tcPortEditor.setDataValue(window.location.port); // good values for deploying to localhost, bad for deploying to almost anything else
 	this.tcNameEditor.setDataValue(studio.project.projectName);
@@ -981,7 +983,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     newAppFileDeploy: function() {
 	this.editLayer.activate();
 	this.appFileLayer.activate();
-	var targetName = this.setUniqueDeploymentName("New File Deployment", this.fileDeploymentNameEditor, this.FILE_DEPLOY);
+	var targetName = this.setUniqueDeploymentName("File 1", this.fileDeploymentNameEditor, this.FILE_DEPLOY);
 	this.warRadioButton.setChecked(true);
 	var boxes = this.generateDataModelBoxes();
 	this.populateDataModelBoxesStandard();
@@ -999,7 +1001,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	this.editLayer.activate();
 	this.owner.owner.show();
 	this.cloudFoundryLayer.activate();
-	var targetName = this.setUniqueDeploymentName("New CloudFoundry Deployment", this.cfDeploymentNameEditor, this.CF_DEPLOY);
+	var targetName = this.setUniqueDeploymentName("CloudFoundry 1", this.cfDeploymentNameEditor, this.CF_DEPLOY);
 	this.cfHostEditor.setDataValue("https://api.cloudfoundry.com");
 	this.cfNameEditor.setDataValue(studio.project.projectName);
 
