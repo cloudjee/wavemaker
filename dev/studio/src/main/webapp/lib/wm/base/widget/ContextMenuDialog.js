@@ -118,13 +118,18 @@ dojo.declare("wm.ContextMenuDialog", wm.Dialog, {
 		this.trObjMap['TR_'+trId] = obj;
 	},
 	getComboBoxValueFromLabel: function(widget, label){
-		var value = label;
-    try {
-			var identifier = widget.store.getIdentityAttributes()[0];
-      value = widget.item[identifier][0];
-    } catch(e) {
-      // do nothing as anything might go wrong in above to statements.
-			// If so, then we will just pass label back.	 	
+	    var value = label;
+	    try {
+		var identifier = widget.store.getIdentityAttributes()[0];
+		
+		if (widget.item) {
+		    value = widget.item[identifier][0];
+		} else {
+		    value = "";
+		}
+	    } catch(e) {
+		// do nothing as anything might go wrong in above to statements.
+		// If so, then we will just pass label back.	 	
 	  }
 	
 		return value;
