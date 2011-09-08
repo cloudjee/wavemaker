@@ -507,10 +507,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	liveDataSourceClass: null, //xxx
         //noButtonPanel: false,
         //editPanelStyle: "wm.Button",
-	_confirmDelete: true,
-	_formMessages: {
-		confirmDelete: "Are you sure you want to delete this data?"
-	},
+    confirmDelete: "Are you sure you want to delete this data?",
 	_controlSubForms: false,
 	destroy: function() {
 		this._cancelOnEnterKey();
@@ -721,10 +718,10 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 		return this.doOperation("delete");
 	    });
 
-	    if (!this._confirmDelete) {
+	    if (!this.confirmDelete) {
 		f();
 	    } else {
-		app.confirm(this._formMessages.confirmDelete, false,
+		app.confirm(this.confirmDelete, false,
 			    f,
 			    dojo.hitch(this,function() {
 				this.cancelEdit();

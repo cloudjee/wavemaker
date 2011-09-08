@@ -609,6 +609,7 @@ wm.Object.extendSchema(wm.LiveForm, {
 
 	defaultButton: { ignore: 1, group: "deprecated", order: 5, bindTarget: 1, type: "wm.Button"},
         displayErrors: { group: "data", order: 15},
+    confirmDelete: {group: "data", order: 12},
     //noButtonPanel: {group: "display", order: 8, type: "Boolean", ignore: 1},
     //editPanelStyle: {group: "display", order: 9, type: "String"},
     beginDataInsert: {group: "method"},
