@@ -80,7 +80,7 @@ QueryEditor.widgets = {
 					    paramsPanel: ["wm.Panel", { border: "0", height: "100%", width:"100%", padding: "4"}, {}, {
 							    queryInputsList: ["wm.List", {height: "100%", width: "100%", border: "0"}, {onselect: "parmSelected"}],
                                                             
-						addNewParamPanel: ["wm.Panel", {border: "0", height: "28px", width:"100%", layoutKind: "left-to-right", padding: "0", verticalAlign: "center"}, {}, {
+						addNewParamPanel: ["wm.Panel", {border: "0", height: "28px", width:"100%", layoutKind: "left-to-right", padding: "0", verticalAlign: "center", horizontalAlign: "left"}, {}, {
 								addBindParamLabel: ["wm.Label", {caption: "Add bind parameter:", border: "0", height: "100%", width: "125px"}, {}, {
 								    format: ["wm.DataFormatter", {}, {}]
 								}],
@@ -100,7 +100,7 @@ QueryEditor.widgets = {
 					                                wire: ["wm.Wire", {"targetProperty":"disabled","source":"queryInputsList.emptySelection"}, {}]
 				                                    }]
 								}],
-						                bindParamInput: ["wm.Text", {caption: "Test Value:", width: "100%", minWidth: "180px", captionSize: "100px"}, {onchange: "parameterPropEdit"}, {
+						                bindParamInput: ["wm.Text", {caption: "Test Value:", width: "100%", minWidth: "180", captionSize: "100px"}, {onchange: "parameterPropEdit"}, {
                                                                     binding: ["wm.Binding", {}, {}, {
 					                                wire: ["wm.Wire", {"targetProperty":"disabled","source":"queryInputsList.emptySelection"}, {}]
 				                                    }]
