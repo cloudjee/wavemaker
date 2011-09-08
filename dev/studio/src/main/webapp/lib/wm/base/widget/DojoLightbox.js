@@ -72,6 +72,8 @@ dojo.declare("wm.DojoLightbox", wm.Component, {
 		this.createDojoObj();	
 	},
 	destroy: function(){
+	    delete this.variable;
+	    delete this.dataSet;
 		this.inherited(arguments);
 		this.destroyDojoObj();
 	},
@@ -127,7 +129,7 @@ dojo.declare("wm.DojoLightbox", wm.Component, {
 		return this.variable;
 	},
 	setDataSet: function (inValue, inDefault){
-		this.variable = inValue;
+		this.variable = this.dataSet = inValue;
 		this.renderDojoObj();
 	},
 	setImageUrlField: function(inValue){
@@ -144,13 +146,71 @@ dojo.declare("wm.DojoLightbox", wm.Component, {
 	},
 	update: function(){
 		this.show();
+	},
+
+	set_dataSet: function(inDataSet) {
+		// support setting dataSet via id from designer
+		if (inDataSet && !(inDataSet instanceof wm.Variable)) {
+		    var ds = this.getValueById(inDataSet);
+		    if (ds) {
+			this.components.binding.addWire("", "dataSet", ds.getId());
+		    }
+		} else if (!inDataSet) {
+		    this.components.binding.removeWireByProp("dataSet");
+		    this.options = this.dataField = this.displayField = "";
+		    this.setDataSet(inDataSet);
+		} else {		    
+		    /* Clear the options property if setting a new dataSet */
+		    if (this.options && inDataSet != this.$.optionsVar)
+			this.options = "";
+		    this.setDataSet(inDataSet);
+		    if (inDataSet && (!this.displayField || this._lastType != inDataSet.type))  {
+			if (wm.defaultTypes[inDataSet.type]) {
+			    this.dataField = "dataValue";
+			} else {
+			    this.dataField = "";
+			}
+			this._setDisplayField();
+		    }
+		}
+	    if (inDataSet)
+		this._lastType = inDataSet.type;
+	},
+	_listFields: function() {
+		var list = [ "" ];
+		var schema = this.dataSet instanceof wm.LiveVariable ? wm.typeManager.getTypeSchema(this.dataSet.type) : (this.dataSet||0)._dataSchema;
+		var schema = (this.dataSet||0)._dataSchema;
+		this._addFields(list, schema);
+		return list;
+	},
+	// FIXME: for simplicity, allow only top level , non-list, non-object fields.
+	_addFields: function(inList, inSchema) {
+		for (var i in inSchema) {
+			var ti = inSchema[i];
+			if (!(ti||0).isList && !wm.typeManager.isStructuredType((ti||0).type)) {
+				inList.push(i);
+			}
+		}
+	},
+	makePropEdit: function(inName, inValue, inDefault) {  
+	    var prop = this.schema ? this.schema[inName] : null;
+	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
+	    switch (inName) {
+	    case "imageUrlField":
+	    case "imageLabelField":
+		var values = this._listFields();
+		return makeSelectPropEdit(inName, inValue, values, inDefault);
+	    case "dataSet":
+		return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.dataSet ? this.dataSet.getId() : "", allowAllTypes: true, listMatch: true, value: inValue});
+	    }
+	    return this.inherited(arguments);
 	}
 });
 
 // design only...
 wm.Object.extendSchema(wm.DojoLightbox, {
 	variable: {ignore: 1},
-	dataSet: {bindable: 1, group: "edit", order: 10, isList: true},
+    dataSet: {bindable: 1, group: "edit", order: 10, isList: true, type: "wm.Variable"},
 	imageUrlField:{group: "edit", order: 20},
 	imageLabelField:{group: "edit", order: 30}
 });
