@@ -159,8 +159,19 @@ dojo.declare("wm.Time", wm.Date, {
 	},
 
     updateIsDirty: function() {
-	return wm.AbstractEditor.prototype.updateIsDirty.call(this);
+	var wasDirty = this.isDirty;
+	var isDirty = true;
+	var dataValue = this.dataValue ? dojo.date.locale.format(new Date(this.dataValue), {timePattern: this.timePattern, selector: "time"}) : null;
+	var lastValue = this._lastValue ? dojo.date.locale.format(new Date(this._lastValue), {timePattern: this.timePattern, selector: "time"}) : null;
+
+	isDirty =  (dataValue != lastValue);
+	this.valueChanged("isDirty", this.isDirty = isDirty);
+	if (wasDirty != this.isDirty)
+	    dojo.toggleClass(this.domNode, "isDirty", this.isDirty);
+	if (!app.disableDirtyEditorTracking)
+	    wm.fire(this.parent, "updateIsDirty");
     }
+
 });
 
 
@@ -178,8 +189,7 @@ wm.Object.extendSchema(wm.Date, {
     password: {ignore:1},
     regExp: {ignore:1},
     maxChars: {ignore:1},
-    resetButton: {ignore: 1},
-    changeOnKey: {ignore: 1}
+    resetButton: {ignore: 1}
 });
 
 wm.Object.extendSchema(wm.Time, {
