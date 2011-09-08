@@ -354,6 +354,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	    }
 	}
 	if (invalid) {
+	    studio.endWait();
 	    this.initDeploymentListVar();
 	    this.owner.owner.show();
 	    for (var i = 0; i < this.deploymentListVar.getCount(); i++) {
@@ -373,6 +374,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	  if (inData.deploymentType == this.FILE_DEPLOY) {
 	      this.deploy2(inData);
 	  } else {
+	      studio.endWait();
 	      app.confirm(this.getDictionaryItem("CONFIRM_DEPLOY_HEADER") + this.generateDeploymentHTMLSynopsis(inData), false, dojo.hitch(this, function() {
 		  if (inData.deploymentType == this.CF_DEPLOY) {
 		      this.cloudFoundryDeployConfirmed(inData);
