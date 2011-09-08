@@ -110,7 +110,17 @@ dojo.declare(
 			//		Can override with your own routine in a subclass.
 			// tags:
 			//		protected
-			return this.validator(this.textbox.value, this.constraints);
+		    
+			//return this.validator(this.textbox.value, this.constraints);
+
+		        /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+			 * WM-3184: WaveMaker replaced above return statement with the caluclation below that says do not show this as invalid
+			 * if its empty and has focus, even if it is invalid
+			 */
+		    var result = this.validator(this.textbox.value, this.constraints);
+		    if (!result && this._isEmpty(this.textbox.value) && this.required && isFocused)
+			return true;
+		    return result;
 		},
 
 		_isEmpty: function(value){
