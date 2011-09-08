@@ -96,13 +96,13 @@ dojo.declare("wm.InspectorBase", null, {
 
 		if (!this.owner.inspected)
 			return;
-		var type = this.owner.inspected.getPropertyType(inProp) || "";
-	        if (type && type.type)
-		    type = type.type.toLowerCase();
+		var typeDef = this.owner.inspected.getPropertyType(inProp) || "";
+	        if (typeDef && typeDef.type)
+		    var type = typeDef.type.toLowerCase();
 
 	        switch (type) {
 			case "number":
-		                inValue = (inValue === "" && type.emptyOK) ? "" : Number(inValue);
+		                inValue = (inValue === "" && typeDef.emptyOK) ? "" : Number(inValue);
 				break;
 			case "boolean":
 				inValue = Boolean(inValue);

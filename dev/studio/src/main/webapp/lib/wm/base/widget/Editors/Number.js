@@ -125,6 +125,7 @@ dojo.declare("wm.Number", wm.Text, {
 	    this.createEditor();
 	}
     },
+
     themeableStyles: [{name: "wm.NumberSpinner-Down-Arrow_Image", displayName: "Down Arrow"}, {name: "wm.NumberSpinner-Up-Arrow_Image", displayName: "Up Arrow"}]
 	
 });
@@ -133,8 +134,8 @@ wm.Object.extendSchema(wm.Number, {
     resetButton: {ignore: 1},
     dataValue: {ignore: 1, bindable: 1, group: "editData", order: 3, simpleBindProp: true, type: "Number"},
     places: {group: "editor", order: 2, doc: 1},
-    minimum:  { group: "editor", order: 3, emptyOK: true, doc: 1},
-    maximum: { group: "editor", order: 4, emptyOK: true, doc: 1},
+    minimum:  { group: "editor", order: 3, emptyOK: true, doc: 1, bindTarget: true},
+    maximum: { group: "editor", order: 4, emptyOK: true, doc: 1, bindTarget: true},
     rangeMessage: {  group: "editor", order: 5},
     spinnerButtons: {group: "editor", order: 6},
     regExp: { ignore: 1 },
