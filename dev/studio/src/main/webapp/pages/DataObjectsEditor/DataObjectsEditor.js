@@ -1083,11 +1083,13 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		this.propertyName.setInputValue(this.currentPropertyName);
 	},
     getSelectedModelNode: function(inName) {
+	try {
 	var databases = this.tree.root.kids[0].kids;
 	for (var i = 0; i < databases.length; i++) {
 	    if (databases[i].content == inName)
 		return databases[i];
 	}
+	} catch(e) {}
 	return null;
     },
     getLiveTablesNode: function(inNode) {
@@ -1100,6 +1102,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
     },
 	_selectNode: function() {
 	    var treeNode = studio.tree.selected;
+	    if (!treeNode) return;
 	    var comp = treeNode.component;
 
 	    while(!comp && treeNode && treeNode.parent) {
