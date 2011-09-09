@@ -38,7 +38,7 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
 	public StudioInstallService() {
        super(INFO);
     }
-    public void DownloadPackages() throws IOException {
+    public void DownloadPackages() throws Exception {
         File webapproot = new File(RuntimeAccess.getInstance().getSession().getServletContext().getRealPath(""));
 
      URL url = new URL("https://github.com/wavemaker/WaveMaker-LGPL-Resources-6-4/blob/master/repo.zip?raw=true");
@@ -62,10 +62,13 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
           if (!outputFile.exists())
             throw new IOException("Insufficient permissions to save zip file");
           File zipFolder = unzipFile(outputFile);
-          if (!moveFiles(zipFolder, outputFile)) 
-            throw new IOException("Insufficient permissions to copy");;
-    }  
-    private boolean moveFiles(File zipFolder, File zipFile) throws IOException {
+          //if (!moveFiles(zipFolder, outputFile))
+          //  throw new IOException("Insufficient permissions to copy");;
+
+            moveFiles(zipFolder, outputFile);
+    }
+    //private boolean moveFiles(File zipFolder, File zipFile) throws IOException {
+    private void moveFiles(File zipFolder, File zipFile) throws Exception {
          boolean result = true;
          File versionFile = new File(zipFolder, "version.txt");         
          if (!versionFile.exists())
@@ -108,16 +111,16 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
             restartStudioApp();
         } catch (Exception e) {
             e.printStackTrace();
-            result = false;
+            throw new Exception("Failed to restart Studio after loading jars.  Please restart Studio manually.");
         }
          /*
         try {
           IOUtils.deleteRecursive(zipFolder);
         } catch(Exception e){}
         */
-        return result;
+        //return result;
     }
-     public FileUploadResponse uploadPackage(MultipartFile file) throws IOException
+     public FileUploadResponse uploadPackage(MultipartFile file) throws Exception
     {
         File webapproot = new File(RuntimeAccess.getInstance().getSession().getServletContext().getRealPath(""));
 
@@ -136,9 +139,10 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
             if (!outputFile.exists())
                 throw new IOException("Insufficient permissions to copy");
             File zipFolder = unzipFile(outputFile);
-            if (!moveFiles(zipFolder, outputFile)) 
-                throw new IOException("Insufficient permissions to copy"); 
-
+            //if (!moveFiles(zipFolder, outputFile))
+            //    throw new IOException("Insufficient permissions to copy");
+            moveFiles(zipFolder, outputFile);
+            
             /* Setup the return object */
             ret.setPath(outputFile.getPath());
             ret.setError("");
