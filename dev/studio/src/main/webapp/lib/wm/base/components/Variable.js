@@ -279,8 +279,12 @@ dojo.declare("wm.Variable", wm.Component, {
 		this.dataChanged();
 	},
 	_setPrimitiveData: function(inValue) {
+	    if (inValue !== null && typeof inValue == "object") {
+		this.data = inValue;
+	    } else {
 		this.data = { dataValue: inValue };
-		this.isList = false;
+	    }
+	    this.isList = false;
 	},
 	_setVariableData: function(inVariable) {
 		this.setData(inVariable.getData());
