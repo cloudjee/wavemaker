@@ -340,9 +340,12 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 	// Editor setters
 	//===========================================================================
 	canChangeEditorReadonly: function(inEditor, inReadonly, inCanChangeFunc) {
-	    if (inEditor.ignoreParentReadonly) return false;
-		var c = dojo.isFunction(inCanChangeFunc);
-		return !c || inCanChangeFunc(inEditor, this, inReadonly);
+	    if (inEditor instanceof wm.AbstractEditor && inEditor.ignoreParentReadonly ||
+		inEditor instanceof wm.RelatedEditor   && inEditor.ignoreParentReadonly && inEditor.editingMode == "editable subform") {
+		return false;
+	    }
+	    var c = dojo.isFunction(inCanChangeFunc);
+	    return !c || inCanChangeFunc(inEditor, this, inReadonly);
 	},
 	_setReadonly: function(inReadonly, inCanChangeFunc) {
 		dojo.forEach(this.getFormEditorsArray(), function(e) {
