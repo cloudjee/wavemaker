@@ -549,7 +549,7 @@ dojo.declare("wm.ServiceInput", wm.Variable, {
 	return args;
     },
 	getArgs: function() {
-		var data= this.getData(), args=[], d;
+		var data= this.getData(true), args=[], d;
 		// convert to array
 		for (var p in this._dataSchema) {
 			if (data !== undefined)
@@ -561,7 +561,7 @@ dojo.declare("wm.ServiceInput", wm.Variable, {
 			}
 			*/
 		}
-		return args;
+	    return args;
 	}
 });
 

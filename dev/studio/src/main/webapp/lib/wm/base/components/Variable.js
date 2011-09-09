@@ -284,6 +284,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	    } else {
 		this.data = { dataValue: inValue };
 	    }
+
 	    this.isList = false;
 	},
 	_setVariableData: function(inVariable) {
@@ -359,7 +360,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		@returns Object
 	*/
 	// NB: output is POJSO
-	getData: function() {
+	getData: function(flattenPrimitives) {
 		if (!this.data)
 			return;
 		if (this._isNull)
@@ -367,11 +368,13 @@ dojo.declare("wm.Variable", wm.Component, {
 		else if (this.isList) {
 			var data = [];
 			for (var i=0, l= this.getCount(), v; i<l; i++) {
-				v = (this.getItem(i) || 0).getData();
+				v = (this.getItem(i) || 0).getData(flattenPrimitives);
 				if (v)
 					data.push(v);
 			}
 			return data;
+		} else if (flattenPrimitives && this.isPrimitive && this.data["dataValue"] !== undefined) {
+		    return this.data.dataValue;
 		} else {
 			var data = {};
 			var props = this.listDataProperties();
@@ -383,7 +386,7 @@ dojo.declare("wm.Variable", wm.Component, {
 					if (v.isEmpty()) 
 					    v = null;
 					else
-					    v = v.getData()
+					    v = v.getData(flattenPrimitives)
 				    } 
 					// don't return undefined or empty, non-null variables properties
 					if (v === undefined || (v !== null && typeof v == "object" && wm.isEmpty(v)))

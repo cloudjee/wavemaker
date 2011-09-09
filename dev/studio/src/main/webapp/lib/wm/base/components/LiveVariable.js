@@ -229,7 +229,7 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	},
 	getArgs: function() {
 		var
-			d = this.sourceData.getData(),
+			d = this.sourceData.getData(true),
 			t = this.sourceData.type || this.type,
 			s = wm.typeManager.getService(this.type),
 			args = [s, t, wm.isEmpty(d) ? null : d];
