@@ -145,6 +145,9 @@ dojo.declare("wm.DojoChart", wm.Control, {
 			s.top = "0px";
 		    } 
 		}
+		while(this.domNode.childNodes[1].childNodes.length > 1) {
+		    dojo.destroy(this.domNode.childNodes[1].childNodes[0]);
+		}
 	    });
 	},
 	updateChartDivHeight: function(){
