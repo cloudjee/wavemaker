@@ -619,6 +619,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	},
         createReadOnlyNode: function() {
 	    var node = dojo.create("div");
+	    dojo.addClass(node, "wmeditor-readonlyNode");
 	    var readstyle = node.style;
 	    readstyle.lineHeight = "normal";
 	    readstyle.position = "absolute";
