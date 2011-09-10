@@ -1,0 +1,4 @@
+Bundle-SymbolicName: com.wavemaker.json
+Bundle-Name: WaveMaker JSON
+Bundle-Vendor: VMware
+Bundle-ManifestVersion: 2

@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.wavemaker</groupId>
+    <artifactId>wavemaker</artifactId>
+    <packaging>pom</packaging>
+    <name>WaveMaker</name>
+    <version>6.4.0.BUILD-SNAPSHOT</version>
+
+    <modules>
+        <module>parent</module>
+        <module>core/common</module>
+        <module>core/testsupport</module>
+        <module>core/json</module>
+        <module>core/runtime</module>
+        <module>core/tools</module>
+        <module>studio</module>
+    </modules>
+
+    <distributionManagement>
+        <repository>
+            <id>spring-milestone</id>
+            <name>Spring Milestone Repository</name>
+            <url>s3://maven.springframework.org/milestone</url>
+        </repository>
+
+        <snapshotRepository>
+            <id>spring-snapshot</id>
+            <name>Spring Snapshot Repository</name>
+            <url>s3://maven.springframework.org/snapshot</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.5</version>
+                        <executions>
+                            <execution>
+                                <id>aggregate</id>
+                                <goals>
+                                    <goal>aggregate</goal>
+                                </goals>
+                                <phase>package</phase>
+                                <configuration>
+                                    <javadoc:aggregate>true</javadoc:aggregate>
+                                    <breakiterator>true</breakiterator>
+                                    <header>WaveMaker</header>
+                                    <source>1.5</source>
+                                    <quiet>true</quiet>
+                                    <javadocDirectory>${project.basedir}/javadoc</javadocDirectory>
+                                    <overview>${project.basedir}/javadoc/overview.html</overview>
+                                    <stylesheetfile>${project.basedir}/javadoc/spring-javadoc.css</stylesheetfile>
+                                    <!-- copies doc-files subdirectory which contains image resources -->
+                                    <docfilessubdirs>true</docfilessubdirs>
+                                    <groups>
+                                        <group>
+                                            <title>WaveMaker</title>
+                                            <packages>com.wavemaker</packages>
+                                        </group>
+                                    </groups>
+                                    <links>
+                                        <link>http://static.springframework.org/spring/docs/3.0.x/javadoc-api</link>
+                                        <link>http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs</link>
+                                        <link>http://java.sun.com/javase/6/docs/api</link>
+                                    </links>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <build>
+        <extensions>
+            <extension>
+                <groupId>org.springframework.build.aws</groupId>
+                <artifactId>org.springframework.build.aws.maven</artifactId>
+                <version>3.0.0.RELEASE</version>
+            </extension>
+        </extensions>
+    </build>
+</project>

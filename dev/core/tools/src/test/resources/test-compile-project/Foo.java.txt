@@ -1,0 +1,12 @@
+public class Foo {
+	
+	private String bar;
+	
+	public String getBar() {
+		return this.bar;
+	}
+	
+	public void setBar(String bar) {
+		this.bar = bar;
+	}
+}

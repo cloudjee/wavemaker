@@ -1,8 +1,9 @@
-#Wed Jul 13 12:37:49 PDT 2011
-eclipse.preferences.version=1
-org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode=enabled
+#Thu Sep 08 15:15:35 PDT 2011
+encoding//src/test/java=UTF-8
 org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.5
-org.eclipse.jdt.core.compiler.compliance=1.5
-org.eclipse.jdt.core.compiler.problem.assertIdentifier=error
-org.eclipse.jdt.core.compiler.problem.enumIdentifier=error
+eclipse.preferences.version=1
+encoding//src/test/resources=UTF-8
 org.eclipse.jdt.core.compiler.source=1.5
+encoding//src/main/java=UTF-8
+encoding//src/main/resources=UTF-8
+org.eclipse.jdt.core.compiler.compliance=1.5

@@ -1,6 +1,0 @@
-#Wed Feb 04 16:52:57 PST 2009
-eclipse.preferences.version=1
-org.eclim.java.doc.version=$Revision$
-org.eclim.java.junit.command=Ant test -Dtest.include\=**/<testcase>.class
-org.eclim.java.junit.output_dir=<project>/../build/testreport
-org.eclim.java.junit.src_dir=<project>/../build
