@@ -1763,7 +1763,7 @@ Studio.extend({
 	    var operation = inSender.iconClass;
 	    this._runRequested = (operation != "studioProjectCompile") ? operation : false;
 	    if (!this._runConnections) this._runConnections = [];
-
+	    console.log("CLICK: " + this._runRequested);
 	    /* Clear any prior connections... esp for runs that don't make it to projectSaveComplete */
 	    for (var i = 0; i < this._runConnections.length; i++) dojo.disconnect(this._runConnections[i]);
 	    this._runConnections.push(dojo.connect(this,"saveProjectSuccess", this, function() {

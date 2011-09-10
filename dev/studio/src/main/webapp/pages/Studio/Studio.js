@@ -616,7 +616,7 @@ dojo.declare("Studio", wm.Page, {
 	console.log("DEPLOY SUCCESS!");
 	if (application._deployStatus == "deploying")
 	    application._deployStatus = "deployed";
-	this.runPopup.setDisabled(false);
+
 	this.setLiveLayoutReady(true);
 	switch(this._runRequested) {
 	case "studioProjectCompile":
@@ -635,7 +635,7 @@ dojo.declare("Studio", wm.Page, {
 	console.log("DEPLOY ERROR: " + result);
 	if (application._deployStatus == "deploying")
 	    application._deployStatus = "";
-	this.runPopup.setDisabled(false);
+
         if (result.message && result.message.match(/Application already exists at/)) {
             this.deploySuccess();
             return true;
@@ -648,12 +648,13 @@ dojo.declare("Studio", wm.Page, {
         }
     },
         deploy: function(inMsg, deployType, noWait) {
+	    console.log("DEPLOY CALLED!");
 	    var application = this.application || this._application;
 	    if (application._deployStatus == "deploying") return;
 	    application._deployStatus = "deploying";
 
 	    this._runRequested = deployType;
-	    this.runPopup.setDisabled(true);
+	    console.log("DEEEEEEPPPPPPPLLLLLLOOOOOOYYYYY");
 	    var d = this._deployer = studio.deploymentService.requestAsync("testRunStart");
 	    d.addCallback(dojo.hitch(this, "deploySuccess"));
 	    d.addErrback(dojo.hitch(this, "deployError"));
