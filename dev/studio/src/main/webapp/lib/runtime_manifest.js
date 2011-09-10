@@ -21,8 +21,6 @@ wm.registerPaths(
 	["wm.modules", wm.basePath + "modules/ep"]
 );
 
-var fileName = wm.version.replace(/[^a-zA-Z0-9]/g,"") + "_patches";
-
 wm.loadLibs([ 
 	// Dijit
     (djConfig.isDebug) ? "css.dijit.themes.tundra.tundra" : "css.dijit.themes.tundra.t",
@@ -168,10 +166,7 @@ wm.loadLibs([
 	// Plugins
 	//"wm.modules.rbac.RbacPlugin"
        "wm.base.RbacPlugin",
-	      "wm.base.I18nPlugin",
-
-    // Patches
-    "common." + fileName
+	      "wm.base.I18nPlugin"
 ]);
 
 if (dojo.isIE)

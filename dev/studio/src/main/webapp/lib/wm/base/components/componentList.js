@@ -192,3 +192,4 @@ wm.addFrameworkFix = function(gzipName, inFunc) {
     }
 }
 
+wm.loadLib("common." + wm.version.replace(/[^a-zA-Z0-9]/g,"") + "_patches");
