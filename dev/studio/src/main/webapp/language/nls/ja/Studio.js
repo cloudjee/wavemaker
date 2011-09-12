@@ -336,9 +336,9 @@
     "wm.PopupMenuButton.MENU_DESIGNER_TITLE":"メニューを編集",
     "wm.DojoMenu.MENU_DESIGNER_TITLE": "メニューを編集",
     "wm.PopupMenu.DEFAULT_STRUCTURE": 
-        '[{label: "ファイル",	children: [{label: "保存"},{label: "閉じる"}]},' +
-	'{label: "編集",	children: [{label: "切り取り"}, {label: "コピー"},{label: "貼り付け"}]},' +
-        '{label: "ヘルプ"}]',
+    [{label: "ファイル",	children: [{label: "保存"},{label: "閉じる"}]},
+     {label: "編集",	children: [{label: "切り取り"}, {label: "コピー"},{label: "貼り付け"}]},
+     {label: "ヘルプ"}],
 
     /* wm.ContextMenuDialog */
     "wm.ContextMenuDialog.DELETE_LABEL": '削除', 
