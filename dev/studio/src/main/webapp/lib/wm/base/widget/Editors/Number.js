@@ -41,13 +41,12 @@ dojo.declare("wm.Number", wm.Text, {
 	if (this.spinnerButtons)
 	    this.addEditorConnect(this.editor, "onClick", this, "changed");
     },
-	getEditorProps: function(inNode, inProps) {
-		var constraints = {}, v = this.displayValue;
+    getEditorConstraints: function() {
+	var constraints = {};
 	    if (!isNaN(parseInt(this.minimum)))
 			constraints.min = Number(this.minimum);
 	    if (!isNaN(parseInt(this.maximum)))
 			constraints.max = Number(this.maximum);
-
 		// NOTE: for constraining decimal places use pattern instead of places
 		// pattern is 'up to' while places is 'must be'
 		if (this.places)
@@ -60,6 +59,13 @@ dojo.declare("wm.Number", wm.Text, {
 		}
 
 		constraints.pattern = this._getPattern();
+
+	return constraints;
+    },
+    getEditorProps: function(inNode, inProps) {
+	var v = this.displayValue;
+	var constraints = this.getEditorConstraints();
+
 		return dojo.mixin(this.inherited(arguments), {
 			constraints: constraints,
 			editPattern: constraints.pattern,
@@ -93,22 +99,24 @@ dojo.declare("wm.Number", wm.Text, {
 		if (this.minimum === "" || this.minimum < v || v === "") {
 			this.maximum = v;
 		        if (this.editor) {
-				this.editor.constraints.max = v;
+			    this.editor._setConstraintsAttr(this.getEditorConstraints());
 			        this.editor.validate();
 			}
-		} else if (this.isDesignLoaded())
+		} else if (this.isDesignLoaded() && !(this.$.binding && this.$.binding.wires.maximum)) {
 		    app.alert(dojo.string.substitute(this._messages.rangeMax, [this.minimum]));
+		}
 	},
 	setMinimum: function(inMin) {
 	        var v = (inMin === "") ? "" :  Number(inMin);
 		if (this.maximum === "" || v < this.maximum || v === "") {
 			this.minimum = v;
 		        if (this.editor) {
-				this.editor.constraints.min = v;
-			        this.editor.validate();
+			    this.editor._setConstraintsAttr(this.getEditorConstraints());
+			    this.editor.validate();
 			}
-		} else if (this.isDesignLoaded())
+		} else if (this.isDesignLoaded() && !(this.$.binding && this.$.binding.wires.minimum)) {
 		    app.alert(dojo.string.substitute(this._messages.rangeMin, [this.maximum]));
+		}
 	},
 	_getReadonlyValue: function() {
 		return dojo.number.format(this.dataValue, this.getFormatProps());
