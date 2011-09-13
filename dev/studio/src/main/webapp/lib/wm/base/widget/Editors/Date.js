@@ -31,12 +31,17 @@ dojo.declare("wm.Date", wm.Text, {
 	//locale: '',
     
 	validationEnabled: function() { return true;},
-	getEditorProps: function(inNode, inProps) {
-		var constraints = {};
+        getEditorConstraints: function() {
+	    var constraints = {};	
 		if (this.minimum)
-		    constraints.min = this.convertValue(this.minimum).getTime();
+		    constraints.min = this.convertValue(this.minimum);
 		if (this.maximum)
-		    constraints.max = this.convertValue(this.maximum).getTime();
+		    constraints.max = this.convertValue(this.maximum);
+	    return constraints;
+	},
+	getEditorProps: function(inNode, inProps) {
+	    var constraints = this.getEditorConstraints();
+
 		var prop = dojo.mixin(this.inherited(arguments), {
 			promptMessage: this.promptMessage,
 			invalidMessage: this.invalidMessage || "$_unset_$",
@@ -84,6 +89,31 @@ dojo.declare("wm.Date", wm.Text, {
 		this.invalidate();
 	    }
 	},
+
+    /* Note that the definition of what are legal values is based on the conversions done by getEditorConstraints */
+	setMaximum: function(inMax) {
+	    if (!inMax) {
+		this.maximum = null;
+	    } else {
+		this.maximum = inMax;
+	    }
+	    if (this.editor) {
+		this.editor._setConstraintsAttr(this.getEditorConstraints());
+		this.editor.validate();
+	    }
+	},
+	setMinimum: function(inMin) {
+	    if (!inMin) {
+		this.minimum = null;
+	    } else {
+		this.minimum = inMin;
+	    }
+	    if (this.editor) {
+		this.editor._setConstraintsAttr(this.getEditorConstraints());
+		this.editor.validate();
+	    }
+	},
+
 
 
     updateIsDirty: function() {
@@ -180,8 +210,8 @@ dojo.declare("wm.Time", wm.Date, {
 
 wm.Object.extendSchema(wm.Date, {
     changeOnKey: { ignore: 1 },
-    minimum: {group: "editor", order: 2,  doc: 1},
-    maximum: {group: "editor", order: 3, doc: 1}, 
+    minimum: {group: "editor", order: 2,  doc: 1, bindTarget: true},
+    maximum: {group: "editor", order: 3, doc: 1, bindTarget: true}, 
     format:  {group: "editor", doc: 0, ignore: 1},
     invalidMessage: {group: "validation", order: 3},
     showMessages: {group: "validation", order: 4},
