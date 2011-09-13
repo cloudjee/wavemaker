@@ -386,7 +386,7 @@
             </plugin>
         </plugins>
     </build>
-
+    
     <dependencies>
         <dependency>
             <groupId>com.wavemaker</groupId>
@@ -416,5 +416,237 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
+
+
+<profiles>
+	<profile>
+		<id>DojoBuild</id>
+		<build>
+			<plugins>
+				<plugin>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.6</version>
+					<executions>
+						<execution>
+							<id>build-js</id>
+							<phase>process-classes</phase>
+							<goals>
+								<goal>run</goal>
+							</goals>
+							<configuration>
+								<target>
+									<echo>********* Dojo Build **************</echo>
+									<!-- properties -->
+									<property name="root.dir" location=".." />								
+									<property name="studio.dir" value="${root.dir}/studio" />
+									<property name="webapproot.studio.dir" value="${studio.dir}/src/main/webapp" />
+									<property name="lib.webapproot.studio.dir" value="${webapproot.studio.dir}/lib" />
+									
+									<property name="dojo.src.dir" value="${lib.webapproot.studio.dir}/dojo" />
+									<property name="dojo.release.dir" value="${dojo.src.dir}/release" />
+									<property name="dojo.release-temp.dir" value="${dojo.src.dir}/release-temp" />
+
+									<property name="dojo.build.file" value="${dojo.src.dir}/dojo/dojo_build.js" />
+									<property name="build.webapproot.studio.dir" value="${webapproot.studio.dir}/build" />
+									<property name="build.lib.webapproot.studio.dir" value="${lib.webapproot.studio.dir}/build" />
+									<property name="compressed.modules" value="${lib.webapproot.studio.dir}/wm/compressed" />
+
+									<!-- check_updtodate -->
+									<uptodate property="jsbuild.uptodate">
+										<srcfiles dir="${webapproot.studio.dir}" includes="**/*.js" />
+										<mapper>
+											<compositemapper>
+												<mergemapper to="${dojo.build.file}" />
+												<mergemapper to="${build.webapproot.studio.dir}/studio.js" />
+												<mergemapper to="${build.webapproot.studio.dir}/studio_base.js" />
+												<mergemapper to="${build.webapproot.studio.dir}/studio_wm.js" />
+												<mergemapper
+													to="${build.lib.webapproot.studio.dir}/lib_build.js" />
+											</compositemapper>
+										</mapper>
+									</uptodate>
+
+									<!-- do-build -->
+									<touch file="${dojo.build.file}" />
+									<mkdir dir="${dojo.release-temp.dir}" />
+									<chmod file="${dojo.src.dir}/util/buildscripts/build.sh"
+										perm="a+x" />
+									<condition property="dojo.executable.cmd" value="cmd"
+										else="${dojo.src.dir}/util/buildscripts/build.sh">
+										<os family="windows" />
+									</condition>
+									<condition property="executable.cmd.variable" value="/c"
+										else="null=null">
+										<os family="windows" />
+									</condition>
+									<condition property="dojo.script-path-param"
+										value="${dojo.src.dir}/util/buildscripts/build.bat" else="null=null">
+										<os family="windows" />
+									</condition>
+
+									<!-- these need to be clean before we build, or it'll interfere -->
+									<delete dir="${lib.webapproot.studio.dir}/wm/build" />
+									<delete dir="${build.webapproot.studio.dir}" />
+
+									<!-- runtime build -->
+									<!-- parameters documented at http://dojotoolkit.org/reference-guide/build/buildScript.html -->
+									<echo>Building dojo using exec: ${dojo.executable.cmd}</echo>
+									<exec dir="${dojo.src.dir}/util/buildscripts/" executable="${dojo.executable.cmd}">
+										<arg value="${executable.cmd.variable}" />
+										<arg value="${dojo.script-path-param}" />
+										<arg value="releaseDir=${dojo.release.dir}" />
+										<arg value="profileFile=${webapproot.studio.dir}/app/buildUtil/profiles/wm.profile.js" />
+										<arg value="copyTests=false" />
+										<arg value="version=1.6.1.24595" />
+										<arg value="action=clean,release" />
+										<arg value="optimize=shrinksafe" />
+										<arg value="layerOptimize=shrinksafe.keepLines" />
+										<arg value="cssOptimize=comments" />
+										<arg value="stripConsole=normal" />
+										<arg value="verbose=true" />
+										<!-- <arg value="cssOptimize=comments.keepLines"/> -->
+									</exec>
+									<echo>Done building dojo using exec</echo>
+									<!-- copy the runtime built files out to the temp directory -->
+									<mkdir dir="${dojo.release-temp.dir}/wm_build" />
+									<copy todir="${dojo.release-temp.dir}/wm_build">
+										<fileset dir="${dojo.release.dir}/dojo/dojo">
+											<include name="dojo.js" />
+											<include name="lib_build.js" />
+											<include name="nls/**" />
+										</fileset>
+										<fileset dir="${dojo.release.dir}/dojo/dijit">
+											<include name="themes/**" />
+										</fileset>
+									</copy>
+
+									<move
+										file="${dojo.release.dir}/dojo/dojo/lib_build.js.uncompressed.js"
+										tofile="${dojo.release-temp.dir}/wm_build/lib_build_uncompressed.js" />
+
+									<!-- copy the runtime built compressed modules to the compressed directory -->
+									<mkdir dir="${compressed.modules}" />
+									<copy todir="${compressed.modules}">
+										<fileset dir="${dojo.release.dir}/dojo/dojo">
+											<include name="wm_charts.js" />
+											<include name="wm_menus.js" />
+											<include name="wm_dojo_grid.js" />
+											<include name="wm_editors.js" />
+											<include name="wm_editors_old.js" />
+											<include name="wm_livepanel.js" />
+											<include name="wm_richTextEditor.js" />
+											<include name="wm_gadgets.js" />
+										</fileset>
+									</copy>
+
+									<mkdir dir="${dojo.release-temp.dir}/wm_build/Gzipped" />
+									<gzip src="${dojo.release-temp.dir}/wm_build/lib_build.js"
+										destfile="${dojo.release-temp.dir}/wm_build/Gzipped/lib_build.js.gz" />
+									<gzip src="${dojo.release.dir}/dojo/dojo/wm_charts.js"
+										destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_charts.js.gz" />
+									<gzip src="${dojo.release.dir}/dojo/dojo/wm_menus.js"
+										destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_menus.js.gz" />
+									<gzip src="${dojo.release.dir}/dojo/dojo/wm_dojo_grid.js"
+										destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_dojo_grid.js.gz" />
+									<gzip src="${dojo.release.dir}/dojo/dojo/wm_editors.js"
+										destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_editors.js.gz" />
+									<gzip src="${dojo.release.dir}/dojo/dojo/wm_editors_old.js"
+										destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_editors_old.js.gz" />
+									<gzip src="${dojo.release.dir}/dojo/dojo/wm_livepanel.js"
+										destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_livepanel.js.gz" />
+									<gzip src="${dojo.release.dir}/dojo/dojo/wm_richTextEditor.js"
+										destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_richTextEditor.js.gz" />
+									<gzip src="${dojo.release.dir}/dojo/dojo/wm_gadgets.js"
+										destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_gadgets.js.gz" />
+
+									<!-- copy files in; required for the studio build -->
+									<mkdir dir="${lib.webapproot.studio.dir}/wm/studio" />
+									<copy todir="${lib.webapproot.studio.dir}/wm/studio/pages">
+										<fileset dir="${webapproot.studio.dir}/pages" />
+									</copy>
+									<copy todir="${lib.webapproot.studio.dir}/wm/studio/app">
+										<fileset dir="${webapproot.studio.dir}/app" />
+									</copy>
+
+									<!-- studio build 1 (compressed) -->
+									<!-- parameters documented at http://dojotoolkit.org/reference-guide/build/buildScript.html 
+										NOTE: We'd like to use optimize=shrinksafe but this mangles parameter names, 
+										impacting all event handlers and autocompletion, so we just use "comments" 
+										and then gzip it. -->
+									<echo>Building studio</echo>
+									<exec dir="${dojo.src.dir}/util/buildscripts/" executable="${dojo.executable.cmd}">
+										<arg value="${executable.cmd.variable}" />
+										<arg value="${dojo.script-path-param}" />
+										<arg value="releaseDir=${dojo.release.dir}" />
+										<arg value="profileFile=${webapproot.studio.dir}/app/buildUtil/profiles/studio.profile.js" />
+										<!-- FixMe: Dojo version reported in gzip mode  -->
+										<arg value="version=1.6.1.24595" />
+										<arg value="copyTests=false" />
+										<arg value="action=clean,release" />
+										<arg value="optimize=comments" />
+										<arg value="layerOptimize=comments" />
+										<arg value="cssOptimize=comments" />
+										<arg value="stripConsole=normal" />
+										<arg value="log=0" />
+										<!-- <arg value="cssOptimize=comments.keepLines"/> -->
+									</exec>
+									<echo>Done building studio</echo>
+
+									<!-- copy the studio 1/compressed built files out to the temp directory -->
+									<mkdir dir="${dojo.release-temp.dir}/build" />
+									<copy todir="${dojo.release-temp.dir}/build">
+										<fileset dir="${dojo.release.dir}/dojo/dojo">
+											<include name="studio_wm.js" />
+										</fileset>
+									</copy>
+									<copy todir="${dojo.release-temp.dir}/build">
+										<fileset dir="${dojo.release.dir}/dojo/dojo">
+											<include name="studio_base.js" />
+											<include name="studio.js" />
+											<include name="nls/**" />
+										</fileset>
+										<fileset dir="${dojo.release.dir}/dojo/dijit">
+											<include name="themes/**" />
+										</fileset>
+									</copy>
+									<gzip src="${dojo.release-temp.dir}/build/studio_base.js"
+										destfile="${dojo.release-temp.dir}/build/studio_base.js.gz" />
+									<gzip src="${dojo.release-temp.dir}/build/studio_base.js"
+										destfile="${dojo.release-temp.dir}/build/studio_base.js.gz" />
+									<gzip src="${dojo.release-temp.dir}/build/studio_wm.js"
+										destfile="${dojo.release-temp.dir}/build/studio_wm.js.gz" />
+									<gzip src="${dojo.release-temp.dir}/build/studio.js"
+										destfile="${dojo.release-temp.dir}/build/studio.js.gz" />
+
+									<!-- copy the built files to their destination -->
+									<mkdir dir="${build.lib.webapproot.studio.dir}" />
+									<copy todir="${build.lib.webapproot.studio.dir}">
+										<fileset dir="${dojo.release-temp.dir}/wm_build" />
+									</copy>
+									<mkdir dir="${build.webapproot.studio.dir}" />
+									<copy todir="${build.webapproot.studio.dir}">
+										<fileset dir="${dojo.release-temp.dir}/build/" />
+									</copy>
+
+									<copy tofile="${dojo.src.dir}/dijit/themes/tundra/t.css"
+										file="${dojo.release-temp.dir}/wm_build/themes/tundra/tundra.css" />
+									<!-- also deleted as part of clean -->
+									<delete dir="${lib.webapproot.studio.dir}/wm/studio" />
+									<delete dir="${dojo.release.dir}" />
+									<delete dir="${dojo.release-temp.dir}" />
+
+									<!-- move dojo build to the source dojo folder -->
+									<!-- <move file="${build.lib.webapproot.studio.dir}/dojo.js" tofile="${dojo.build.file}"/> -->
+									<gzip src="${build.lib.webapproot.studio.dir}/dojo.js"
+										destfile="${dojo.build.file}.gz" />
+								</target>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</build>
+	</profile>
+</profiles>
 
 </project>
