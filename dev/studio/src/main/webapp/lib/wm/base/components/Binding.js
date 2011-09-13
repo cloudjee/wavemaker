@@ -118,6 +118,12 @@ dojo.declare("wm.Wire", wm.Component, {
 	},
 	refreshValue: function() {
 		//wm.logging && console.info("==> (refresh) ", this.source, "=>", this.getFullTarget(), " Wire.refreshValue");
+	    /* If we're in design mode, and the source is on a page that isn't loaded, we may find ourselves
+	     * doing nasty stuff like calling set_dataSet(null) which actually clears the binding
+	     * instead of transmitting binding data
+	     */
+	    if (this._isDesignLoaded && this.source.indexOf("[") == 0 && this.getValueById(this.source) === null)
+		return;
 	    this._sourceValueChanged(this.source ? this.getValueById(this.source) : "");
 		//wm.logging && console.groupEnd();
 	},
