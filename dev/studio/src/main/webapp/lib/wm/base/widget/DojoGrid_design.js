@@ -328,7 +328,7 @@ wm.DojoGrid.extend({
 	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
 		switch (inName) {
 			case "dataSet":
-				return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.variable ? this.variable.getId() : "", allowAllTypes: true, listMatch: true});
+		    return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.$.binding.wires.dataSet ? this.$.binding.wires.dataSet.source : "", allowAllTypes: true, listMatch: true});
 /*
 		case "selectionMode":
 			return makeSelectPropEdit(inName, inValue, ["single", "multiple", "extended", "none"], inDefault);
