@@ -165,8 +165,8 @@ Studio.extend({
 		this.navTestBtn.setDisabled(inDisabled);
 		this.navRunBtn.setDisabled(inDisabled);
 		*/
+	      this.runPopup.setDisabled(inDisabled);
 	      if (inDisabled)
-		  this.runPopup.setDisabled(inDisabled); // enabling is done after we deploy a newly openned project
 		if (studio.isCloud()) {
 		    this.navEditAccountBtn.setDisabled(false);
 		    this.navLogoutBtn.setDisabled(false);
