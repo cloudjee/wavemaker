@@ -1042,9 +1042,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	onHeaderClick: function(evt, selectedItem, rowId, fieldId, rowNode, cellNode){
   }, 
   onSelectionChange: function() {},
-	addColumnToCSV: function(csvArray, value){
-		if (dojo.isString(value))
-			value = value.replace(/\"/g, '\\\"');
+        addColumnToCSV: function(csvArray, value, formatFunc){
+	    if (dojo.isString(value))
+		value = value.replace(/\"/g, '\\\"');
 		csvArray.push("\"" + value + "\"");
 		csvArray.push(',');
 	},
@@ -1070,7 +1070,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		dojo.forEach(this.columns, function(col, idx){
 			if (!col.show)
 				return;
-			this.addColumnToCSV(csvData, col.title);
+		    this.addColumnToCSV(csvData, col.title, col.formatFunc);
 		}, this);
 		
 		if (csvData.length == 0){
@@ -1102,25 +1102,34 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 				} else if (col.formatFunc){
 					switch(col.formatFunc){
 						case 'wm_date_formatter':
+					        case 'Date (WaveMaker)':				    
 							value = this.dateFormatter(value);			
 							break;
 						case 'wm_localdate_formatter':
+					        case 'Local Date (WaveMaker)':				    
 							value = this.localDateFormatter(value);			
 							break;
 						case 'wm_time_formatter':
+					        case 'Time (WaveMaker)':				    
 							value = this.timeFormatter(value);			
 							break;
 						case 'wm_number_formatter':
+					        case 'Number (WaveMaker)':				    
 							value = this.numberFormatter(value);	
 							break;
 						case 'wm_currency_formatter':
+					        case 'Currency (WaveMaker)':				    
 							value = this.currencyFormatter(value);	
 							break;
 						case 'wm_image_formatter':
-							value = this.imageFormatter(value);	
+					        case 'Image (WaveMaker)':				    
+					    // spreadsheet shouldn't be given HTML
+							//value = this.imageFormatter(value);	
 							break;
 						case 'wm_link_formatter':
-							value = this.linkFormatter(value);	
+					        case 'Link (WaveMaker)':				    
+					    // spreadsheet shouldn't be given HTML
+					    //value = this.linkFormatter(value);	
 							break;
 
 						default:
@@ -1158,22 +1167,37 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		return expValue;
 	},
 	dateFormatter: function(inDatum){
-	    if (!inDatum || inDatum instanceof Date == false)
+	    if (!inDatum) {
 		return inDatum;
+	    } else if (typeof inDatum == "number") {
+		inDatum = new Date(inDatum);
+	    } else if (inDatum instanceof Date == false) {
+		return inDatum;
+	    }
 	    inDatum.setHours(inDatum.getHours() + wm.timezoneOffset,0,0);
 
 	    var constraints = {selector:'date', formatLength:'short', locale:dojo.locale};
 	    return dojo.date.locale.format(inDatum, constraints);
 	},
 	localDateFormatter: function(inDatum){
-	    if (!inDatum || inDatum instanceof Date == false)
+	    if (!inDatum) {
 		return inDatum;
+	    } else if (typeof inDatum == "number") {
+		inDatum = new Date(inDatum);
+	    } else if (inDatum instanceof Date == false) {
+		return inDatum;
+	    }
 		var constraints = {selector:'date', formatLength:'short', locale:dojo.locale};
 		return dojo.date.locale.format(inDatum, constraints);
 	},
 	timeFormatter: function(inDatum){
-	    if (!inDatum || inDatum instanceof Date == false)
+	    if (!inDatum) {
 		return inDatum;
+	    } else if (typeof inDatum == "number") {
+		inDatum = new Date(inDatum);
+	    } else if (inDatum instanceof Date == false) {
+		return inDatum;
+	    }
 	    inDatum.setHours(inDatum.getHours() + wm.timezoneOffset,0,0);
 
 	    var constraints = {selector:'time', formatLength:'short', locale:dojo.locale};
