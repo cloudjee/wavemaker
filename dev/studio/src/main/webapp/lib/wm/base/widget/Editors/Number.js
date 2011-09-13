@@ -193,7 +193,7 @@ dojo.declare("wm.Currency", wm.Number, {
 	
 	var changed = false;
 
-	if (dataValue != this.dataValue) {
+	if (dataValue != this._lastValue) {
 	    this.valueChanged("dataValue", this.dataValue);
 	    changed = true;
 	}

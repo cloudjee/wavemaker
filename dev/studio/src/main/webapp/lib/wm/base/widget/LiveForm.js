@@ -218,7 +218,8 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 	},
 	liveFormChanged: function() {
 		dojo.forEach(this.getFormEditorsArray(), function(e) {
-			wm.fire(e, "doOnchange");
+		    wm.fire(e, "doOnchange");
+		    wm.fire(e, "clearDirty");
 		});
 	},
 	//===========================================================================

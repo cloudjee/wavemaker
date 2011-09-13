@@ -778,11 +778,15 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    }
 
 	    var dataValue = this.getDataValue();
-	    if (dataValue != this.dataValue) {		
+	    if (dataValue != this._lastValue) {		
 		this.valueChanged("dataValue", this.dataValue = dataValue);
 		changed = true;
 	    }
 	    if (changed) {
+		/* NOTE: editorChanged is called when the user types OR when setDataValue is called
+		 * _lastValue must NOT be updated if its caused by the user typing, so its cleared from
+		 * setDataValue instead.  But _inPostInit gets special treatment.
+		 */
 		if (this._inPostInit) {		
 		    this._lastValue = this.dataValue;
 		}
@@ -817,13 +821,16 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    // for simplicity, treat undefined as null
 	    if (inValue === undefined)
 		inValue = null;
-
+/*
 	    this._lastValue  = inValue instanceof wm.Variable ? inValue.getData() : inValue;
 	    if (this._lastValue == null)
 	        this._lastValue = this.makeEmptyValue();
+		*/
 	    this.setEditorValue(inValue);
 	    if (inValue === "" || inValue === null) 
 		return this.resetState();
+	    if (!this.isUpdating())
+		this.clearDirty(); // calls to setDataValue should always clear the dirty indicator and assume the input value is "Good"
 	},
 	isUpdating: function() {
 		return this._updating > 0;
