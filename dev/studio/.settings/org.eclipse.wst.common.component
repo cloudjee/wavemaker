@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project-modules id="moduleCoreId" project-version="1.5.0">
+<project-modules id="moduleCoreId" project-version="2.0">
   <wb-module deploy-name="wm-studio">
     <property name="context-root" value="wavemaker"/>
     <wb-resource deploy-path="/" source-path="src/main/webapp"/>
@@ -43,7 +42,7 @@
     <dependent-module archiveName="cglib-2.1_3.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/cglib/cglib/2.1_3/cglib-2.1_3.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="cloudfoundry-client-lib-0.7.0.CI-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/cloudfoundry/cloudfoundry-client-lib/0.7.0.CI-SNAPSHOT/cloudfoundry-client-lib-0.7.0.CI-SNAPSHOT.jar">
+    <dependent-module archiveName="cloudfoundry-client-lib-0.7.0.BUILD-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/cloudfoundry/cloudfoundry-client-lib/0.7.0.BUILD-SNAPSHOT/cloudfoundry-client-lib-0.7.0.BUILD-SNAPSHOT.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
     <dependent-module archiveName="cloudfoundry-runtime-0.7.1.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/cloudfoundry/cloudfoundry-runtime/0.7.1/cloudfoundry-runtime-0.7.1.jar">
@@ -253,7 +252,7 @@
     <dependent-module archiveName="txw2-20090102.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/com/sun/xml/txw2/txw2/20090102/txw2-20090102.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="wadl-core-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/jvnet/ws/wadl/wadl-core/1.0-SNAPSHOT/wadl-core-1.0-SNAPSHOT.jar">
+    <dependent-module archiveName="wadl-core-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/jvnet/ws/wadl/wadl-core/1.0/wadl-core-1.0.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
     <dependent-module archiveName="wm-common-6.4.0.BUILD-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/com/wavemaker/wm-common/6.4.0.BUILD-SNAPSHOT/wm-common-6.4.0.BUILD-SNAPSHOT.jar">

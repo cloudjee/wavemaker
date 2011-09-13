@@ -12,12 +12,12 @@
   <classpathentry kind="var" path="M2_REPO/commons-lang/commons-lang/2.3/commons-lang-2.3.jar" sourcepath="M2_REPO/commons-lang/commons-lang/2.3/commons-lang-2.3-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar" sourcepath="M2_REPO/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/junit/junit/4.7/junit-4.7.jar" sourcepath="M2_REPO/junit/junit/4.7/junit-4.7-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-aop/3.1.0.BUILD-SNAPSHOT/spring-aop-3.1.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/org/springframework/spring-aop/3.1.0.BUILD-SNAPSHOT/spring-aop-3.1.0.BUILD-SNAPSHOT-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-asm/3.1.0.BUILD-SNAPSHOT/spring-asm-3.1.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/org/springframework/spring-asm/3.1.0.BUILD-SNAPSHOT/spring-asm-3.1.0.BUILD-SNAPSHOT-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-beans/3.1.0.BUILD-SNAPSHOT/spring-beans-3.1.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/org/springframework/spring-beans/3.1.0.BUILD-SNAPSHOT/spring-beans-3.1.0.BUILD-SNAPSHOT-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-context/3.1.0.BUILD-SNAPSHOT/spring-context-3.1.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/org/springframework/spring-context/3.1.0.BUILD-SNAPSHOT/spring-context-3.1.0.BUILD-SNAPSHOT-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-context-support/3.1.0.BUILD-SNAPSHOT/spring-context-support-3.1.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/org/springframework/spring-context-support/3.1.0.BUILD-SNAPSHOT/spring-context-support-3.1.0.BUILD-SNAPSHOT-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-core/3.1.0.BUILD-SNAPSHOT/spring-core-3.1.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/org/springframework/spring-core/3.1.0.BUILD-SNAPSHOT/spring-core-3.1.0.BUILD-SNAPSHOT-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-expression/3.1.0.BUILD-SNAPSHOT/spring-expression-3.1.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/org/springframework/spring-expression/3.1.0.BUILD-SNAPSHOT/spring-expression-3.1.0.BUILD-SNAPSHOT-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-aop/3.1.0.BUILD-SNAPSHOT/spring-aop-3.1.0.BUILD-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-asm/3.1.0.BUILD-SNAPSHOT/spring-asm-3.1.0.BUILD-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-beans/3.1.0.BUILD-SNAPSHOT/spring-beans-3.1.0.BUILD-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-context/3.1.0.BUILD-SNAPSHOT/spring-context-3.1.0.BUILD-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-context-support/3.1.0.BUILD-SNAPSHOT/spring-context-support-3.1.0.BUILD-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-core/3.1.0.BUILD-SNAPSHOT/spring-core-3.1.0.BUILD-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-expression/3.1.0.BUILD-SNAPSHOT/spring-expression-3.1.0.BUILD-SNAPSHOT.jar"/>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 </classpath>
