@@ -42,7 +42,7 @@
   <classpathentry kind="var" path="M2_REPO/org/beanshell/bsh/2.0b4/bsh-2.0b4.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/tomcat/catalina/6.0.32/catalina-6.0.32.jar"/>
   <classpathentry kind="var" path="M2_REPO/cglib/cglib/2.1_3/cglib-2.1_3.jar" sourcepath="M2_REPO/cglib/cglib/2.1_3/cglib-2.1_3-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/cloudfoundry/cloudfoundry-client-lib/0.7.0.CI-SNAPSHOT/cloudfoundry-client-lib-0.7.0.CI-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/cloudfoundry/cloudfoundry-client-lib/0.7.0.BUILD-SNAPSHOT/cloudfoundry-client-lib-0.7.0.BUILD-SNAPSHOT.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/cloudfoundry/cloudfoundry-runtime/0.7.1/cloudfoundry-runtime-0.7.1.jar" sourcepath="M2_REPO/org/cloudfoundry/cloudfoundry-runtime/0.7.1/cloudfoundry-runtime-0.7.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/sun/codemodel/codemodel/2.4/codemodel-2.4.jar" sourcepath="M2_REPO/com/sun/codemodel/codemodel/2.4/codemodel-2.4-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/net/java/dev/vcc/thirdparty/collection-setter-injector/0.5.0-1/collection-setter-injector-0.5.0-1.jar" sourcepath="M2_REPO/net/java/dev/vcc/thirdparty/collection-setter-injector/0.5.0-1/collection-setter-injector-0.5.0-1-sources.jar"/>
@@ -88,27 +88,27 @@
   <classpathentry kind="var" path="M2_REPO/rome/rome/0.9/rome-0.9.jar" sourcepath="M2_REPO/rome/rome/0.9/rome-0.9-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/sun/xml/messaging/saaj/saaj-impl/1.3.8/saaj-impl-1.3.8.jar" sourcepath="M2_REPO/com/sun/xml/messaging/saaj/saaj-impl/1.3.8/saaj-impl-1.3.8-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/tomcat/servlet-api/6.0.32/servlet-api-6.0.32.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-aop/3.1.0.BUILD-SNAPSHOT/spring-aop-3.1.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/org/springframework/spring-aop/3.1.0.BUILD-SNAPSHOT/spring-aop-3.1.0.BUILD-SNAPSHOT-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-asm/3.1.0.BUILD-SNAPSHOT/spring-asm-3.1.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/org/springframework/spring-asm/3.1.0.BUILD-SNAPSHOT/spring-asm-3.1.0.BUILD-SNAPSHOT-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-beans/3.1.0.BUILD-SNAPSHOT/spring-beans-3.1.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/org/springframework/spring-beans/3.1.0.BUILD-SNAPSHOT/spring-beans-3.1.0.BUILD-SNAPSHOT-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-context/3.1.0.BUILD-SNAPSHOT/spring-context-3.1.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/org/springframework/spring-context/3.1.0.BUILD-SNAPSHOT/spring-context-3.1.0.BUILD-SNAPSHOT-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-context-support/3.1.0.BUILD-SNAPSHOT/spring-context-support-3.1.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/org/springframework/spring-context-support/3.1.0.BUILD-SNAPSHOT/spring-context-support-3.1.0.BUILD-SNAPSHOT-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-core/3.1.0.BUILD-SNAPSHOT/spring-core-3.1.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/org/springframework/spring-core/3.1.0.BUILD-SNAPSHOT/spring-core-3.1.0.BUILD-SNAPSHOT-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-aop/3.1.0.BUILD-SNAPSHOT/spring-aop-3.1.0.BUILD-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-asm/3.1.0.BUILD-SNAPSHOT/spring-asm-3.1.0.BUILD-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-beans/3.1.0.BUILD-SNAPSHOT/spring-beans-3.1.0.BUILD-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-context/3.1.0.BUILD-SNAPSHOT/spring-context-3.1.0.BUILD-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-context-support/3.1.0.BUILD-SNAPSHOT/spring-context-support-3.1.0.BUILD-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-core/3.1.0.BUILD-SNAPSHOT/spring-core-3.1.0.BUILD-SNAPSHOT.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/springframework/data/spring-data-commons-core/1.1.0.M1/spring-data-commons-core-1.1.0.M1.jar" sourcepath="M2_REPO/org/springframework/data/spring-data-commons-core/1.1.0.M1/spring-data-commons-core-1.1.0.M1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/springframework/data/spring-data-mongodb/1.0.0.M3/spring-data-mongodb-1.0.0.M3.jar" sourcepath="M2_REPO/org/springframework/data/spring-data-mongodb/1.0.0.M3/spring-data-mongodb-1.0.0.M3-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-expression/3.1.0.BUILD-SNAPSHOT/spring-expression-3.1.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/org/springframework/spring-expression/3.1.0.BUILD-SNAPSHOT/spring-expression-3.1.0.BUILD-SNAPSHOT-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-jdbc/3.1.0.BUILD-SNAPSHOT/spring-jdbc-3.1.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/org/springframework/spring-jdbc/3.1.0.BUILD-SNAPSHOT/spring-jdbc-3.1.0.BUILD-SNAPSHOT-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-orm/3.1.0.BUILD-SNAPSHOT/spring-orm-3.1.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/org/springframework/spring-orm/3.1.0.BUILD-SNAPSHOT/spring-orm-3.1.0.BUILD-SNAPSHOT-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-test/3.1.0.BUILD-SNAPSHOT/spring-test-3.1.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/org/springframework/spring-test/3.1.0.BUILD-SNAPSHOT/spring-test-3.1.0.BUILD-SNAPSHOT-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-tx/3.1.0.BUILD-SNAPSHOT/spring-tx-3.1.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/org/springframework/spring-tx/3.1.0.BUILD-SNAPSHOT/spring-tx-3.1.0.BUILD-SNAPSHOT-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-web/3.1.0.BUILD-SNAPSHOT/spring-web-3.1.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/org/springframework/spring-web/3.1.0.BUILD-SNAPSHOT/spring-web-3.1.0.BUILD-SNAPSHOT-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-webmvc/3.1.0.BUILD-SNAPSHOT/spring-webmvc-3.1.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/org/springframework/spring-webmvc/3.1.0.BUILD-SNAPSHOT/spring-webmvc-3.1.0.BUILD-SNAPSHOT-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-expression/3.1.0.BUILD-SNAPSHOT/spring-expression-3.1.0.BUILD-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-jdbc/3.1.0.BUILD-SNAPSHOT/spring-jdbc-3.1.0.BUILD-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-orm/3.1.0.BUILD-SNAPSHOT/spring-orm-3.1.0.BUILD-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-test/3.1.0.BUILD-SNAPSHOT/spring-test-3.1.0.BUILD-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-tx/3.1.0.BUILD-SNAPSHOT/spring-tx-3.1.0.BUILD-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-web/3.1.0.BUILD-SNAPSHOT/spring-web-3.1.0.BUILD-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-webmvc/3.1.0.BUILD-SNAPSHOT/spring-webmvc-3.1.0.BUILD-SNAPSHOT.jar"/>
   <classpathentry kind="var" path="M2_REPO/stax/stax-api/1.0.1/stax-api-1.0.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/jvnet/staxex/stax-ex/1.4/stax-ex-1.4.jar" sourcepath="M2_REPO/org/jvnet/staxex/stax-ex/1.4/stax-ex-1.4-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/sun/xml/stream/buffer/streambuffer/1.2/streambuffer-1.2.jar" sourcepath="M2_REPO/com/sun/xml/stream/buffer/streambuffer/1.2/streambuffer-1.2-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/antlr/stringtemplate/3.2/stringtemplate-3.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/sun/xml/txw2/txw2/20090102/txw2-20090102.jar" sourcepath="M2_REPO/com/sun/xml/txw2/txw2/20090102/txw2-20090102-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/jvnet/ws/wadl/wadl-core/1.0-SNAPSHOT/wadl-core-1.0-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/jvnet/ws/wadl/wadl-core/1.0/wadl-core-1.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/wavemaker/wm-common/6.4.0.BUILD-SNAPSHOT/wm-common-6.4.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/com/wavemaker/wm-common/6.4.0.BUILD-SNAPSHOT/wm-common-6.4.0.BUILD-SNAPSHOT-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/wavemaker/wm-json/6.4.0.BUILD-SNAPSHOT/wm-json-6.4.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/com/wavemaker/wm-json/6.4.0.BUILD-SNAPSHOT/wm-json-6.4.0.BUILD-SNAPSHOT-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/wavemaker/wm-runtime/6.4.0.BUILD-SNAPSHOT/wm-runtime-6.4.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/com/wavemaker/wm-runtime/6.4.0.BUILD-SNAPSHOT/wm-runtime-6.4.0.BUILD-SNAPSHOT-sources.jar"/>
