@@ -118,7 +118,7 @@ public class XJCCompiler {
                 try {
                     InputSource inputSource = new InputSource(
                             new java.io.FileInputStream(file));
-                    inputSource.setSystemId("file:" + file.getAbsolutePath());
+                    inputSource.setSystemId(file.toURI().toString());
                     sc.parseSchema(inputSource);
                 } catch (FileNotFoundException e) {
                     throw new GenerationException(e);
