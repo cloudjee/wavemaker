@@ -112,7 +112,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			}
 		}
 
-	    if (this.variable && this.variable.getData()) {
+	    if (this.variable && this.variable.getData() || this.columns && this.columns.length) {
 			this.renderDojoObj();
 	    }
 	},
@@ -548,8 +548,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			this.dojoObj = null;
 		}
 
-		if (!this.variable)
-			return;
+	    if (!this.variable && (!this.columns || !this.columns.length))
+		return;
 
 	    if (this.isAncestorHidden() && !this._renderHiddenGrid) {
 		this._renderDojoObjSkipped = true;
