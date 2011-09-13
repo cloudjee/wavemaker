@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.lang.Character;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.tools.ant.BuildException;
@@ -113,7 +114,7 @@ public class ServiceDefCompilerTask extends CompilerTask {
                     }
                     
                     if (StringUtils.hasText(mavenClasspath)) {
-                        String[] paths = mavenClasspath.split(":");
+                        String[] paths = mavenClasspath.split(Character.toString(File.pathSeparatorChar));
                         File[] classPathFiles = new File[paths.length];
                         for (int i = 0; i < paths.length; i++) {
                             classPathFiles[i] = new File(paths[i]).getParentFile();
