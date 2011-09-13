@@ -457,13 +457,21 @@ dojo.declare("wm.Component", wm.Object, {
 	    var index = inId.indexOf(".");
 	    if (index != -1) {
 		var pageName = inId.substring(0,index);
+		if (pageName.indexOf("[") == 0)
+		    pageName = pageName.substring(1,pageName.length-1);
 		var remainder = inId.substring(index+1);
-		var pages = wm.Page.getPage(pageName);
-		if (pages && pages.length) {
-		    var page = pages[0]; // If more than one page of the same name, we have know way to know which one to use so just pick the first
+		var page = wm.Page.getPage(pageName);
+		if (page) {
 		    return page.getValueById(remainder);
 		}
+		if (this._isDesignLoaded && wm.decapitalize(String(studio.bindDialog.bindSourceDialog.pageContainer.pageName)) == pageName) {
+		    page = studio.bindDialog.bindSourceDialog.pageContainer.page;
+		    if (page) {
+			return page.getValueById(remainder);
+		    }
+		}
 	    }
+	    
 	    return null;
 	},
 	/* 
