@@ -220,8 +220,6 @@ dojo.declare("wm.Currency", wm.Number, {
 wm.Object.extendSchema(wm.Currency, {
     password: {ignore:1},
     currency: {group: "editor", order: 2, doc: 1},
-    minimum:  { group: "editor", order: 3, emptyOK: true, doc: 1},
-    maximum: { group: "editor", order: 4, emptyOK: true, doc: 1},
     places: {  group: "editor", order: 5, doc: 1},
     rangeMessage: {  group: "editor", order: 6},
     spinnerButtons: {ignore: 1}
@@ -264,6 +262,23 @@ dojo.declare("wm.Slider", wm.AbstractEditor, {
 			value: v
 		}, inProps || {});
 	},
+	setMaximum: function(inMax) {
+	    this.maximum = (inMax === "") ? 100 : Number(inMax);
+	    if (this.editor) {
+		this.editor.maximum = this.maximum;
+		this.editor._setValueAttr(this.dataValue, true);
+	    }
+	},
+
+    setMinimum: function(inMin) {
+	    this.minimum = (inMin === "") ? 0 : Number(inMin);
+	    if (this.editor) {
+		this.editor.minimum = this.minimum;
+		this.editor._setValueAttr(this.dataValue, true);
+	    }
+	},
+
+
 	_createEditor: function(inNode, inProps) {
 		var div = dojo.create('div');
 		var dijitObj;
@@ -320,8 +335,8 @@ dojo.declare("wm.Slider", wm.AbstractEditor, {
 
 wm.Object.extendSchema(wm.Slider, {
     discreteValues: {group: "editor", order: 2},
-    minimum:  { group: "editor", order: 3, doc: 1},
-    maximum: { group: "editor", order: 4, doc: 1},
+    minimum:  { group: "editor", order: 3, doc: 1, bindTarget: true},
+    maximum: { group: "editor", order: 4, doc: 1, bindTarget: true},
     showButtons: {  group: "editor", order: 5},
     verticalSlider: {  group: "editor", order: 6, ignore: 1},
     editorBorder: { ignore: 1 },
