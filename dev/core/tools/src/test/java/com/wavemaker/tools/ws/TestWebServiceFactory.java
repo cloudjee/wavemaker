@@ -18,8 +18,11 @@
 package com.wavemaker.tools.ws;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import org.springframework.util.ResourceUtils;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.ClassLoaderUtils;
@@ -40,14 +43,12 @@ public class TestWebServiceFactory extends WMTestCase {
 
     private static final String YAHOO_STOCKQUOTE_WSDL = "com/wavemaker/tools/ws/YahooStockQuote.wsdl";
 
-    public void testForSOAP() throws MalformedURLException {
-        String resource = ClassLoaderUtils.getResource(STOCKQUOTE_WSDL);
-        URL url = new URL(resource);
+    public void testForSOAP() throws MalformedURLException, FileNotFoundException {
+        File resource = ResourceUtils.getFile("classpath:"+STOCKQUOTE_WSDL);
         WebServiceFactory factory = new WebServiceFactory();
         DeprecatedServiceDefinition serviceDefinition = null;
         try {
-            serviceDefinition = factory.getServiceDefinition(new File(url
-                    .getFile()));
+            serviceDefinition = factory.getServiceDefinition(resource);
             if (!(serviceDefinition instanceof WSDL)) {
                 fail("The service definition should be a WSDL.");
             }
@@ -63,14 +64,12 @@ public class TestWebServiceFactory extends WMTestCase {
         }
     }
 
-    public void testForREST() throws MalformedURLException {
-        String resource = ClassLoaderUtils.getResource(YAHOO_STOCKQUOTE_WSDL);
-        URL url = new URL(resource);
+    public void testForREST() throws MalformedURLException, FileNotFoundException {
+    	File resource = ResourceUtils.getFile("classpath:"+YAHOO_STOCKQUOTE_WSDL);
         WebServiceFactory factory = new WebServiceFactory();
         DeprecatedServiceDefinition serviceDefinition = null;
         try {
-            serviceDefinition = factory.getServiceDefinition(new File(url
-                    .getFile()));
+            serviceDefinition = factory.getServiceDefinition(resource);
             if (!(serviceDefinition instanceof WSDL)) {
                 fail("The service definition should be a WSDL.");
             }
