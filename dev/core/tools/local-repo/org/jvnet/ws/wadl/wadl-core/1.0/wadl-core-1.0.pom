@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.jvnet.ws.wadl</groupId>
+    <artifactId>wadl</artifactId>
+    <version>1.0</version>
+  </parent>
+  <artifactId>wadl-core</artifactId>
+  <name>WADL Core</name>
+  <description>
+    Core WADL classes and interfaces.
+  </description>
+  <dependencies>
+    <dependency>
+      <groupId>com.sun.localizer</groupId>
+      <artifactId>localizer</artifactId>
+      <version>1.0</version>
+      <!--scope>system</scope>
+          <systemPath>${basedir}/lib/localizer.jar</systemPath-->
+    </dependency>
+    <dependency>
+      <groupId>com.sun.localizer</groupId>
+      <artifactId>comresrcgen</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.activation</groupId>
+      <artifactId>activation</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-xjc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-impl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.sun.tools.xjc.maven2</groupId>
+        <artifactId>maven-jaxb-plugin</artifactId>
+        <version>1.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <schemaDirectory>${basedir}/src/main/resources/xsd</schemaDirectory>
+          <generatePackage>org.jvnet.ws.wadl</generatePackage>
+          <catalog>etc/catalog.xml</catalog>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <configuration>
+              <tasks>
+                <!--
+                    Localize resource files.
+                    TODO: Make this a maven plugin sometime.
+                -->
+                <mkdir dir="${basedir}/target/resources"/>
+                <property name="compile_classpath" refid="maven.compile.classpath"/>
+                <taskdef name="resourcegen" classname="com.sun.tools.localizer.resourcegen.ResourceGenTask">
+                  <classpath>
+                    <path refid="maven.compile.classpath"></path>
+                    <path refid="maven.runtime.classpath"></path>
+                  </classpath>
+                </taskdef>
+                <resourcegen destDir="${basedir}/target/generated-sources/resourceGen">
+                  <resource dir="${basedir}/src/main/resources" includes="**/*.properties"/>
+                </resourcegen>
+                <!-- What is this about??
+                     <unzip src="${basedir}/lib/localizer.jar" dest="${basedir}/target/resources"/-->
+              </tasks>
+              <sourceRoot>${basedir}/target/generated-sources/resourceGen</sourceRoot>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <phase>generate-sources</phase>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

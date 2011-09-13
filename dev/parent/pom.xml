@@ -54,7 +54,7 @@
             <id>java.net</id>
             <url>http://download.java.net/maven/2</url>
             <snapshots>
-                <enabled>true</enabled>
+                <enabled>false</enabled>
             </snapshots>
         </repository>
     </repositories>
@@ -212,7 +212,7 @@
             <dependency>
               <groupId>org.jvnet.ws.wadl</groupId>
               <artifactId>wadl-core</artifactId>
-              <version>1.0-SNAPSHOT</version>
+              <version>1.0</version>
             </dependency>
             <dependency>
                 <groupId>net.java.dev.vcc.thirdparty</groupId>
@@ -347,7 +347,7 @@
             <dependency>
                 <groupId>org.cloudfoundry</groupId>
                 <artifactId>cloudfoundry-client-lib</artifactId>
-                <version>0.7.0.CI-SNAPSHOT</version>
+                <version>0.7.0.BUILD-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.cloudfoundry</groupId>

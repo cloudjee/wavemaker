@@ -11,6 +11,19 @@
     <packaging>jar</packaging>
     <name>WaveMaker Tools</name>
 
+    <repositories>
+        <repository>
+            <id>local-repo</id>
+            <url>file://${basedir}/local-repo</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    
     <build>
         <plugins>
             <plugin>
