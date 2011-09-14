@@ -24,7 +24,7 @@ dojo.declare("PopupHelp", wm.Page, {
 	start: function() {
 	},
     onShow: function() {
-	this.deleteExtraButtons();
+
     },
     deleteExtraButtons: function() {
 	for (var i = this.buttonPanel.c$.length-1; i >= 0;  i--) {
@@ -53,6 +53,7 @@ dojo.declare("PopupHelp", wm.Page, {
 		   this.deleteExtraButtons();
 	       }
 	       var popuphelp = this;
+	     this.deleteExtraButtons();
                dojo.query(".SynopsisNavButtons a").forEach(function(synopsislink) {
 		     var newButton = new wm.Button({parent: popuphelp.buttonPanel, owner: popuphelp, caption: synopsislink.innerHTML, width: "100px"});
 		     dojo.connect(newButton, "onclick", null, function() {
