@@ -55,7 +55,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 	  dojo.addOnLoad(dojo.hitch(this, "renderDojoObj"));
 	},
 	createAddDialog: function(){
-		this.addDialog = new dijit.TooltipDialog({}, "tt");
+		this.addDialog = new dijit.TooltipDialog({});
 		this.addDialog.startup();
 		var dom = this.addDialog.containerNode;
                 dojo.require("wm.base.widget.Editors.Select");
