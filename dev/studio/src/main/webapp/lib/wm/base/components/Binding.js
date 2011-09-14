@@ -122,7 +122,7 @@ dojo.declare("wm.Wire", wm.Component, {
 	     * doing nasty stuff like calling set_dataSet(null) which actually clears the binding
 	     * instead of transmitting binding data
 	     */
-	    if (this._isDesignLoaded && this.source.indexOf("[") == 0 && this.getValueById(this.source) === null)
+	    if (this._isDesignLoaded && this.source && this.source.indexOf("[") == 0 && this.getValueById(this.source) === null)
 		return;
 	    this._sourceValueChanged(this.source ? this.getValueById(this.source) : "");
 		//wm.logging && console.groupEnd();
