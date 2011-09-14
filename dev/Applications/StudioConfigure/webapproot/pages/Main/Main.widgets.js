@@ -19,7 +19,7 @@ Main.widgets = {
 				layers1: ["wm.Layers", {"margin":"20","transition":"fade"}, {}, {
 					layer1: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"right","verticalAlign":"top"}, {}, {
 						html2: ["wm.Html", {"autoScroll":false,"border":"0","height":"88px","html":"<p>NOTE: If the box below fails to load or if it takes more than a minute for the install button to run, click on <a href='#' onclick='main.manualLabelClick()'>Proxy Problems?</a>.</p><p>WaveMaker has identified missing system requirements.  These dependencies can be resolved by downloading the WaveMaker System Requirements Bundle.  The WaveMaker System Requirements Bundle includes open source packages.  Your use of the WaveMaker System Requirements Bundle is subject to the following open source license(s):</p>","margin":"0,20","width":"100%"}, {}],
-						iFrame1: ["wm.IFrame", {"_classes":{"domNode":["wm_BackgroundColor_LightGray"]},"border":"0","height":"100%","source":"https://github.com/wavemaker/WaveMaker-LGPL-Resources-6-4/raw/master/license.txt","width":"100%"}, {}],
+					    html: ["wm.html", {"_classes":{"domNode":["wm_BackgroundColor_LightGray"]},"border":"0","height":"100%",html: "resources/dependency_bundle_open_source_licenses.txt","width":"100%"}, {}],
 						panel3: ["wm.Panel", {"border":"0","height":"48px","horizontalAlign":"center","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 							spacer1: ["wm.Spacer", {"height":"50px","width":"326px"}, {}],
 							downloadButton: ["wm.BusyButton", {"caption":"Download and Install","defaultIconUrl":"lib/wm/base/widget/themes/default/images/blank.gif","height":"34px","margin":"4","width":"257px"}, {}, {
