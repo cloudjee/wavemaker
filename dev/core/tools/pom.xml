@@ -23,26 +23,53 @@
             </snapshots>
         </repository>
     </repositories>
-    
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.1</version>
-                <executions>
-                    <execution>
-                        <id>build-classpath</id>
-                        <goals>
-                            <goal>build-classpath</goal>
-                        </goals>
-                        <configuration>
-                            <outputFile>${project.build.testOutputDirectory}/test-cp</outputFile>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.1</version>
+				<executions>
+					<execution>
+						<id>build-classpath</id>
+						<goals>
+							<goal>build-classpath</goal>
+						</goals>
+						<configuration>
+							<outputFile>${project.build.testOutputDirectory}/test-cp</outputFile>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<id>templateApp</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<property name="templateapp.zip.name" value="templateapp.zip" />
+								<property name="templateapp.resource.dir"
+									value="${project.build.outputDirectory}/com/wavemaker/tools/project" />
+								<property name="templateapp.zip"
+									value="${templateapp.resource.dir}/${templateapp.zip.name}" />
+								<echo>BaseDir is: ${basedir} </echo>
+								<zip destfile="${templateapp.zip}">
+									<fileset dir="${basedir}/templates/templateapp" >
+									</fileset>
+								</zip>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 
     <dependencies>
         <dependency>
