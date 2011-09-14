@@ -453,6 +453,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	this.cfLoginDialogSuccessHandler = inCallback;
     },
     deploy2: function(inData) {
+	this._deployData = inData;
 	studio.beginWait(this.getDictionaryItem("WAIT_DEPLOY", {deploymentName: inData.name}));
 	studio.deploymentService.requestAsync("deploy", [inData],
 					      dojo.hitch(this, function(inResult) {
@@ -470,17 +471,27 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	    switch (inData.deploymentType) {
 	    case this.TC_DEPLOY:
 	    case this.CF_DEPLOY:
-		app.alert(this.getDictionaryItem("TOAST_DEPLOY_SUCCESS", {url: this.getTargetUrl(inData)}));
-		return;
+		app.alert(this.getDictionaryItem("ALERT_DEPLOY_SUCCESS", {url: this.getTargetUrl(inData),
+									  version: studio.application.getFullVersionNumber()}));
+		break;
 	    case this.FILE_DEPLOY:
 		app.toastSuccess(this.getDictionaryItem("TOAST_FILE_GENERATION_SUCCESS"));
-		if (this.deploymentList.selectedItem.getValue("dataValue").archiveType == "WAR") {
+		if (this._deployData.archiveType == "WAR") {
 		    studio.downloadInIFrame("services/deploymentService.download?method=downloadProjectWar");
 		} else {
 		    studio.downloadInIFrame("services/deploymentService.download?method=downloadProjectEar");
 		}
-		return;
+		app.alert(this.getDictionaryItem("ALERT_FILE_DEPLOY_SUCCESS", 
+						 {
+						     version: studio.application.getFullVersionNumber()
+						 }));
+		break;
 	    }
+	    studio.application.incSubversionNumber();
+	    var src = studio.project.generateApplicationSource();
+	    studio.project.saveProjectData(this.projectName + ".js", src);
+
+	    return;
 	} else if (inResult.match(/^ERROR\:.*Not enough memory/)) {
 	    var memory = inResult.match(/\d+[MG]/);
 	    this.manageCloudFoundryButtonClick();

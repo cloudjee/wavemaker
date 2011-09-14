@@ -496,8 +496,6 @@ dojo.declare("wm.studio.Project", null, {
 
 	    var f = [];
 
-
-	        studio.application.incSubversionNumber();
 	        try {
 		    studio.application.setValue("studioVersion", wm.studioConfig.studioVersion);
 		}catch(e) {console.error("Failed to write studio version to project file");}

@@ -26,7 +26,7 @@ dojo.declare("wm.Application", wm.Component, {
 	main: "Main",
         disableDirtyEditorTracking: false,
         deletionDisabled: 1,
-        projectSubVersion: 1,
+        projectSubVersion: "Alpha",
         projectVersion: 1,
         studioVersion: "",
         dialogAnimationTime: 350,

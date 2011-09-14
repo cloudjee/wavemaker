@@ -132,7 +132,7 @@ Studio.extend({
 	// Export
 	//=====================================================================
 	exportClick: function(inSender) {
-		studio.beginWait("Building ZIP File...");
+	    studio.beginWait("Building ZIP File...");
 	    studio.deploymentService.requestAsync("exportProject", [studio.project.projectName + "." + studio.application.getFullVersionNumber() + ".zip"], dojo.hitch(this, "exportClickCallback"), dojo.hitch(this, "exportClickError"));
 	    	},			  
 	exportClickCallback: function(inResponse) {
@@ -143,6 +143,10 @@ Studio.extend({
 	    } else {
 		this.downloadInIFrame("services/deploymentService.download?method=downloadProjectZip");
 	    }
+
+	    studio.application.incSubversionNumber();
+	    var src = studio.project.generateApplicationSource();
+	    studio.project.saveProjectData(this.projectName + ".js", src);
 	},
 	exportClickError: function(inError) {
 	    studio.endWait();
