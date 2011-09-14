@@ -282,6 +282,7 @@ dojo.declare("wm.DateTime", wm.Text, {
 	wm.onidle(this, function() {
 	    if (!wm.DateTime.dialog) {	    
 		var dialog = wm.DateTime.dialog = new wm.Dialog({_classes: {domNode: ["wmdatetimedialog"]}, owner: app, "height":"252px","title":"","width":"210px", modal: false, useContainerWidget:true, useButtonBar: true, name: "_DateTimeDialog", corner: "bc"});
+		dialog.containerWidget.setAutoScroll(false);
 		dialog.containerWidget.setPadding("1");
 		dialog.containerWidget.createComponent(	
 		    "mainPanel", "wm.Container", 
