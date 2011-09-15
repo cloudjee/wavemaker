@@ -113,6 +113,7 @@ wm.Object.extendSchema(wm.ServiceVariable, {
 	json: {ignore: 1},
 	listType: {ignore: 1},
 	isList: {ignore: 1},
+        saveInCookie: {ignore: 1},
 	// binding inherited from Variable, keep it and write it but don't show it
 	// potentially needed for source bindings.
 	binding: {ignore: 1, writeonly: 1},
