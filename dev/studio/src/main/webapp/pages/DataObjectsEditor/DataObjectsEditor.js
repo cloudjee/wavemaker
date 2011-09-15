@@ -229,9 +229,9 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	    this.tableDetailEntityName.getDataValue() + "|" +
 	    this.tableDetailTableName.getDataValue() + "|" +
 	    this.tableDetailPackageName.getDataValue() + "|" +
-	    this.dynamicInsertCheckBox.components.editor.getChecked() + "|" +
-	    this.dynamicUpdateCheckBox.components.editor.getChecked() + "|" + 
-	    this.refreshCheckBox.components.editor.getChecked() + "|" + 
+	    this.dynamicInsertCheckBox.getChecked() + "|" +
+	    this.dynamicUpdateCheckBox.getChecked() + "|" + 
+	    this.refreshCheckBox.getChecked() + "|" + 
 	    this.tableDetailTableName.getDataValue() + "|" +
 	    relations + "|" +
 	    columns;
@@ -274,9 +274,9 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	    this.currentTableName = "";
 		this.tableDetailEntityName.setDataValue("");
 		this.tableDetailPackageName.setDataValue("");
-		this.dynamicInsertCheckBox.components.editor.setChecked(false);
-		this.dynamicUpdateCheckBox.components.editor.setChecked(false);
-		this.refreshCheckBox.components.editor.setChecked(false);
+		this.dynamicInsertCheckBox.setChecked(false);
+		this.dynamicUpdateCheckBox.setChecked(false);
+		this.refreshCheckBox.setChecked(false);
 	},
 	renderTableDetails: function(entity) {
 	    this.objectPages.setLayer(this.OBJECT_PAGE);
@@ -286,11 +286,20 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	    this.currentTableName = entity.tableName;
 		this.tableDetailEntityName.setDataValue(entity.entityName);
 		this.tableDetailPackageName.setDataValue(entity.packageName);
-		this.dynamicInsertCheckBox.components.editor.setChecked(entity.dynamicInsert);
-		this.dynamicUpdateCheckBox.components.editor.setChecked(entity.dynamicUpdate);
-		this.refreshCheckBox.components.editor.setChecked(entity.refreshEntity);
+		this.dynamicInsertCheckBox.setChecked(entity.dynamicInsert);
+		this.dynamicUpdateCheckBox.setChecked(entity.dynamicUpdate);
+		this.refreshCheckBox.setChecked(entity.refreshEntity);
 	},
-	tableDetailSchemaNameChange: function(inSender) {
+        isEntityDirty: function() {
+	    return this.tableDetailSchemaName.isDirty ||
+		this.tableDetailCatalogName && this.tableDetailCatalogName.isDirty ||
+		this.tableDetailTableName && this.tableDetailTableName.isDirty ||
+		this.tableDetailPackageName && this.tableDetailPackageName.isDirty ||
+		this.dynamicInsertCheckBox && this.dynamicInsertCheckBox.isDirty ||
+		this.dynamicUpdateCheckBox && this.dynamicUpdateCheckBox.isDirty ||
+		this.refreshCheckBox && this.refreshCheckBox.isDirty;
+	},
+	tableDetailSchemaNameChange: function(inSender) {	    
 	    this.setDirty();
 	},
 	tableDetailCatalogNameChange: function(inSender) {
@@ -804,14 +813,14 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 			schemaName: schemaName,
 			catalogName: catalogName,
 			packageName: this.tableDetailPackageName.getDataValue(),
-			dynamicInsert: this.dynamicInsertCheckBox.components.editor.getChecked(),
-			dynamicUpdate: this.dynamicUpdateCheckBox.components.editor.getChecked(),
-			refreshEntity: this.refreshCheckBox.components.editor.getChecked()};
+			dynamicInsert: this.dynamicInsertCheckBox.getChecked(),
+			dynamicUpdate: this.dynamicUpdateCheckBox.getChecked(),
+			refreshEntity: this.refreshCheckBox.getChecked()};
 	        this.updateEntity(t, isNew);
 	},
     updateEntity: function(entity, isNew) {
 	        // var save = this.onlyEntityIsDirty;
-	var save = !isNew;
+	        var save = this.isEntityDirty();
 		studio.dataService.requestSync("updateEntity", 
 						[this.currentDataModelName, 
 						this.currentEntityName, 

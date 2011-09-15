@@ -51,9 +51,7 @@ DataObjectsEditor.widgets = {
 							}],
 							entityPanel: ["wm.Panel", {border: "0", height: "180px", layoutKind: "left-to-right", width: "800px"}, {}, {
 								tableDetailPanel: ["wm.Panel", {border: "0", width: "400px"}, {}, {
-									tableDetailPackageName: ["wm.Editor", {caption: "Package", height: "26px", layoutKind: "left-to-right", readonly: true}, {onchange: "tableDetailPackageNameChange"}, {
-									    editor: ["wm._TextEditor", {layoutFlex: 10, changeOnKey:true}, {}]
-									}],
+								    tableDetailPackageName: ["wm.Text", {changeOnKey: true, caption: "Package", height: "26px", layoutKind: "left-to-right", readonly: true}, {onchange: "tableDetailPackageNameChange"}],
 								    tableDetailSchemaName: ["wm.Text", {caption: "Schema", height: "26px", layoutKind: "left-to-right",changeOnKey:true, helpText: "The database schema container for this table such as public or dbo. Not used with all DB systems. "}, {onchange: "tableDetailSchemaNameChange"}],
 								    tableDetailCatalogName: ["wm.Text", {caption: "Catalog", height: "26px", layoutKind: "left-to-right",changeOnKey: true, helpText: "The database catalog for this table. Can be the same as database name. Not used with all DB systems. Do not use when deploying to CloudFoundry with MySQL."}, {onchange: "tableDetailCatalogNameChange"}],
 									spacer1: ["wm.Spacer", {height: "10px", border: ""}, {}],
@@ -61,15 +59,9 @@ DataObjectsEditor.widgets = {
 								    tableDetailEntityName: ["wm.Text", {caption: "Entity Name", height: "26px", layoutKind: "left-to-right", changeOnKey: true, helpText: "The name of the table in the project datamodel. Can be different from table name in database."}, {onchange: "tableDetailEntityNameChange"}]
 								}],
 								tableSettingsPanel: ["wm.Panel", {padding: "5,0,0,0", width: "150px"}, {}, {
-									dynamicInsertCheckBox: ["wm.Editor", {caption: "Dynamic Insert", display: "CheckBox", displayValue: "0", height: "26px", captionSize: "115px", layoutKind: "left-to-right"}, {onchange: "dynamicInsertChange"}, {
-										editor: ["wm._CheckBoxEditor", {layoutFlex: 10}, {}]
-									}],
-									dynamicUpdateCheckBox: ["wm.Editor", {caption: "Dynamic Update", display: "CheckBox", displayValue: "0", height: "26px", captionSize: "115px", layoutKind: "left-to-right"}, {onchange: "dynamicUpdateChange"}, {
-										editor: ["wm._CheckBoxEditor", {layoutFlex: 10}, {}]
-									}],
-									refreshCheckBox: ["wm.Editor", {caption: "Refresh Entity", display: "CheckBox", displayValue: "0", height: "26px", captionSize: "115px", layoutKind: "left-to-right"}, {onchange: "refreshChange"}, {
-										editor: ["wm._CheckBoxEditor", {layoutFlex: 10}, {}]
-									}]
+								    dynamicInsertCheckBox: ["wm.Checkbox", {caption: "Dynamic Insert", display: "CheckBox", displayValue: "0", height: "26px", captionSize: "115px", layoutKind: "left-to-right"}, {onchange: "dynamicInsertChange"}],
+								    dynamicUpdateCheckBox: ["wm.Checkbox", {caption: "Dynamic Update", display: "CheckBox", displayValue: "0", height: "26px", captionSize: "115px", layoutKind: "left-to-right"}, {onchange: "dynamicUpdateChange"}],
+								    refreshCheckBox: ["wm.Checkbox", {caption: "Refresh Entity", display: "CheckBox", displayValue: "0", height: "26px", captionSize: "115px", layoutKind: "left-to-right"}, {onchange: "refreshChange"}],
 								}],
 								inlineHelpPanel: ["wm.Panel", {border: "1,0,0,0", borderColor: "#000000", layoutFlex: 1, width: "1flex"}, {}, {
 									inlineHelpText: ["wm.Label", {_classes: {domNode: ["wm_Padding_6px", "wmGroupBox"]}, border: "", caption: "Dynamic Insert: Don't include null values in insert statements<br/><br/>Dynamic Update: Don't include null values in update statements<br/><br/>Refresh Entity: Reload instance from database after insert/update", padding: "4", layoutFlex: 1, singleLine: false, height: "1flex"}, {}, {
