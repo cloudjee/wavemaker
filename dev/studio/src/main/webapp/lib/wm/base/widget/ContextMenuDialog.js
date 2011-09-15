@@ -125,7 +125,7 @@ dojo.declare("wm.ContextMenuDialog", wm.Dialog, {
 		if (widget.item) {
 		    value = widget.item[identifier][0];
 		} else {
-		    value = "";
+		    value = widget.get("value");
 		}
 	    } catch(e) {
 		// do nothing as anything might go wrong in above to statements.
