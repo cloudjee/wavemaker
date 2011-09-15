@@ -613,7 +613,6 @@ dojo.declare("Studio", wm.Page, {
 	},
     deploySuccess: function() {
 	var application = this.application || this._application;
-	console.log("DEPLOY SUCCESS!");
 	if (application._deployStatus == "deploying")
 	    application._deployStatus = "deployed";
 
@@ -648,13 +647,11 @@ dojo.declare("Studio", wm.Page, {
         }
     },
         deploy: function(inMsg, deployType, noWait) {
-	    console.log("DEPLOY CALLED!");
 	    var application = this.application || this._application;
 	    if (application._deployStatus == "deploying") return;
 	    application._deployStatus = "deploying";
 
 	    this._runRequested = deployType;
-	    console.log("DEEEEEEPPPPPPPLLLLLLOOOOOOYYYYY");
 	    var d = this._deployer = studio.deploymentService.requestAsync("testRunStart");
 	    d.addCallback(dojo.hitch(this, "deploySuccess"));
 	    d.addErrback(dojo.hitch(this, "deployError"));
