@@ -438,8 +438,8 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 		this.domNode.style.width = this.domNode.style.height = "100%";
 	},
 	set: function(inName,inValue) {
-	  if (inName == "value" || inName == "item") {
-	  	var value = inName == "value" ? inValue : inValue.name;
+	  if (inName == "displayedValue" || inName == "value" || inName == "item") {
+	      var value = (inName == "value" || inName == "displayedValue") ? inValue : inValue.name;
 		var c = this.inspected, o = c.getValue(this.propName);
 		if (this.isEventAction(value))
 			this.doEventAction(value);

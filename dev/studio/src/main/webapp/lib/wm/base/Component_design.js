@@ -281,10 +281,10 @@ wm.Component.extend({
 	get_owner: function() {
 		return this.owner == (studio && studio.application) ? "Application" : "Page";
 	},
-	setEvent: function(n, v) {
+        setEvent: function(n, v, renameOk) {
 		// events can be components, only update source if event is a function reference
 		var o = this.eventBindings[n], oc = this.getComponent(o), nc = this.getComponent(v);
-	    if (!(nc instanceof wm.Component || oc instanceof wm.Component) && v.indexOf(".") == -1)
+	    if (renameOk && !(nc instanceof wm.Component || oc instanceof wm.Component) && v.indexOf(".") == -1)
 		    eventChange(this.owner instanceof wm.Page ? studio.editArea : studio.appsourceEditor, o, v);
 
 		if (v)
@@ -297,7 +297,7 @@ wm.Component.extend({
 		for (var p in eb) {
 			e = eb[p];
 			if (e && !this.getComponent(e) && e.slice(0, l) == this.name)
-				this.setEvent(p, n + e.slice(l));
+			    this.setEvent(p, n + e.slice(l), true);
 		}
 	},
 	renameComponentEvents: function(originalId, newId) {
@@ -306,14 +306,14 @@ wm.Component.extend({
 		var eventValue = eventBindings[eventName];
 		// If the eventValue is the exact name of the component, change it to the exact new name of the component
 		if (eventValue == originalId) {
-		    this.setEvent(eventName, newId);
+		    this.setEvent(eventName, newId, true);
 		}
 
 		// If the eventValue is a subcomponent of this object, or it is a method of this object, rename
 		// the prefix and keep the postfix unchanged
 		else if (eventValue.indexOf(originalId + ".") == 0) {
 		    newId = newId + "." + eventValue.substring(originalId.length+1);
-		    this.setEvent(eventName, newId);
+		    this.setEvent(eventName, newId, false);
 		}
 	    }
 	},
@@ -583,7 +583,7 @@ wm.Component.extend({
 			return this.editComponentProp(c);
 		// otherwise an event
 		var n=inName, v = inValue || this.generateEventName(n);
-		this.setEvent(n, v);
+	        this.setEvent(n, v, false);
 		eventEdit(this, n, v, c == studio.application);
 	},
 
