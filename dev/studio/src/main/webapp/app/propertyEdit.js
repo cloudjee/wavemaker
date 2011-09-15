@@ -129,6 +129,19 @@ dojo.declare("wm.propEdit.PagesSelect", wm.propEdit.Select, {
             if (this.newPage)
 	        pagelist.push(studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION"));
 	    return pagelist;
+	},
+        setPropEdit: function(propName, value) {
+	    this.options = this.getOptions();
+	    var editor = dijit.byId("studio_propinspect_" + propName);
+	    var store = editor.store.root;
+	    while (store.firstChild) store.removeChild(store.firstChild);
+	    var html = this.getHtml();
+	    html = html.replace(/selected="selected"/,"");
+	    html = html.replace(/^.*?\<option/,"<option");
+	    html = html.replace(/\<\/select.*/,"");
+	    store.innerHTML = html;
+	    editor.set("value", value, false);
+	    editor._lastValueReported = value;
 	}
 });
 

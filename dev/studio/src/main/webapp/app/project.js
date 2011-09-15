@@ -829,6 +829,9 @@ dojo.declare("wm.studio.Project", null, {
 	pagesChanged: function() {
 		this.updatePageList(true);
 		studio.pagesChanged();
+	        if (studio.application && studio.selected && !studio.selected.isDestroyed) {
+		    reinspect();
+		}
 	},
 	projectChanging: function() {
 		this.updatePageList(studio._loadingApplication);
