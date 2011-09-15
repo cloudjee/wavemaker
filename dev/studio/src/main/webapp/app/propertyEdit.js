@@ -67,8 +67,8 @@ dojo.declare("wm.propEdit.Select", wm.propEdit.Base, {
 		this.init();
 	},
 	init: function() {
-		this.options = this.options || this.getOptions();
-		this.values = this.values || this.getValues() || this.options;
+		this.options = this.getOptions();
+		this.values =  this.getValues() || this.options;
 	},
         applyProp: function(propName, value) {
 	    for (var i = 0; i < this.options.length; i++) {
@@ -79,11 +79,35 @@ dojo.declare("wm.propEdit.Select", wm.propEdit.Base, {
 	    }
 	},
 	getValues: function() {
+	    return this.values;
 	},
 	getOptions: function() {
+	    return this.options;
 	},
 	getHtml: function() {
 		return makeSelectPropEdit(this.name, this.value, this.options, this.defaultValue, this.values);
+	},
+        setPropEdit: function(propName, value) {
+	    /* Update the html */
+	    this.options = this.getOptions(); 
+	    this.values = this.getValues();
+	    var html = this.getHtml();
+
+	    /* Filter out garbage from the new html */
+	    html = html.replace(/selected="selected"/,"");
+	    html = html.replace(/^.*?\<option/,"<option");
+	    html = html.replace(/\<\/select.*/,"");
+
+
+	    /* Update the store with the new HTML */
+	    var editor = dijit.byId("studio_propinspect_" + propName);
+	    var store = editor.store.root;
+	    while (store.firstChild) store.removeChild(store.firstChild);
+	    store.innerHTML = html;
+
+	    /* Update the editor value */
+	    editor.set("value", value, false);
+	    editor._lastValueReported = value;
 	}
 });
 
@@ -129,19 +153,6 @@ dojo.declare("wm.propEdit.PagesSelect", wm.propEdit.Select, {
             if (this.newPage)
 	        pagelist.push(studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION"));
 	    return pagelist;
-	},
-        setPropEdit: function(propName, value) {
-	    this.options = this.getOptions();
-	    var editor = dijit.byId("studio_propinspect_" + propName);
-	    var store = editor.store.root;
-	    while (store.firstChild) store.removeChild(store.firstChild);
-	    var html = this.getHtml();
-	    html = html.replace(/selected="selected"/,"");
-	    html = html.replace(/^.*?\<option/,"<option");
-	    html = html.replace(/\<\/select.*/,"");
-	    store.innerHTML = html;
-	    editor.set("value", value, false);
-	    editor._lastValueReported = value;
 	}
 });
 
@@ -208,9 +219,13 @@ dojo.declare("wm.propEdit.DataTypesSelect", wm.propEdit.Select, {
 	options: [""],
 	values: [""],
 	init: function() {
-		this.inherited(arguments);
-		this.addOptionValues(this.getDataTypes(), true);
+		this.inherited(arguments);		
 	},
+    getOptions: function() {
+	this.options = [""];
+	this.addOptionValues(this.getDataTypes(), true);
+	return this.options;
+    },
 	addOptionValues: function(inOptionValues, inSort) {
 	        this.sort = inSort;
 		if (inSort)
@@ -225,11 +240,13 @@ dojo.declare("wm.propEdit.DataTypesSelect", wm.propEdit.Select, {
 		for (var i in types)
 			dt.push({option: wm.getFriendlyTypeName(i), value: i});
 		return dt;
-	},
+	}/*,
+
         setPropEdit: function(propName, value) {
 	    var editor = dijit.byId("studio_propinspect_" + propName);
 	    var store = editor.store.root;
 	    while (store.firstChild) store.removeChild(store.firstChild);
+	    
 	    var types = this.liveTypes ? wm.typeManager.getLiveServiceTypes() : wm.typeManager.getPublicTypes();
 	    var options = [];
 	    for (var i in types) {
@@ -247,6 +264,7 @@ dojo.declare("wm.propEdit.DataTypesSelect", wm.propEdit.Select, {
 	    editor.set("value", value, false);
 	    editor._lastValueReported = value;
 	}
+	*/
 });
 
 dojo.declare("wm.propEdit.AllDataTypesSelect", wm.propEdit.DataTypesSelect, {
@@ -276,9 +294,10 @@ dojo.declare("wm.propEdit.AllDataTypesSelect", wm.propEdit.DataTypesSelect, {
 
 dojo.declare("wm.propEdit.LiveSourcesSelect", wm.propEdit.DataTypesSelect, {
 	liveTypes: true,
-	init: function() {
-		this.addOptionValues(this.getLiveViews(), true);
-		this.inherited(arguments);
+	getOptions: function() {
+	    this.inherited(arguments);
+	    this.addOptionValues(this.getLiveViews(), true);
+	    return this.options;
 	},
 
 	getLiveViews: function() {
