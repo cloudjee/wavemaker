@@ -19,6 +19,7 @@ dojo.require("wm.base.widget.Label");
 // design only...
 wm.Object.extendSchema(wm.Label, {
     disabled: { ignore: 1 },
+    imageList: {ignore: 1},
     caption: { type: "String", bindable: 1, group: "display", order: 100, focus: true, doc: 1},
     display: { group: "format", order: 20 },
     align: { group: "display", order: 25, doc: 1 },
@@ -31,7 +32,6 @@ wm.Object.extendSchema(wm.Label, {
     setAlign: {group: "method"},
     setCaption: {group: "method"},
     setSingleLine: {group: "method"},
-
     resizeToFit:{ group: "layout", order: 30 }
 });
 
