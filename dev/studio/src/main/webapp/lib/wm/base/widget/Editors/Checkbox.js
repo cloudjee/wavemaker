@@ -89,7 +89,7 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 	    }
 	},
 	getDisplayValue: function() {
-		return this.getTypedValue(this.displayValue);
+	    return this.getDataValue();
 	},
 	setDisplayValue: function(inValue) {
 	},
