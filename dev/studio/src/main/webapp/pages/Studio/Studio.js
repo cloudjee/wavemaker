@@ -1132,7 +1132,7 @@ dojo.declare("Studio", wm.Page, {
 
                 // if its not a hotkey, and the target is a text or password field, let the browser handle it
                 if (!hotkey && !isEsc) {
-	            if (e.target && e.target.nodeName.toLowerCase() == "input" && (dojo.attr(e.target, "type") == "text" || dojo.attr(e.target, "type") == "password"))
+	            if (e.target && e.target.nodeName.toLowerCase() == "input" && (dojo.attr(e.target, "type") == "text" || dojo.attr(e.target, "type") == "password") || e.target && e.target.nodeName.toLowerCase() == "textarea")
                         return;
                 }
 
