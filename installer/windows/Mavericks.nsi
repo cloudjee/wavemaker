@@ -499,7 +499,7 @@ Function .onInit
             ${VersionCompare} ${VERSION} $1 $0
             ${If} $0 = 1
                 ; Older Version
-                StrCpy $3 'A previous version of ${PRODUCT_NAME}($1) has been found. Would you like to uninstall the previous version?$\r$\nClick "Yes" to uninstall the previous version.$\r$\nClick "No" to continue installing ${PRODUCT_NAME} ${VERSION}.'
+                StrCpy $3 'A previous version of ${PRODUCT_NAME}($1) has been found. Would you like to uninstall the previous version or retain both versions?$\r$\nClick "Yes" to uninstall the previous version.$\r$\nClick "No" to continue installing ${PRODUCT_NAME} ${VERSION}.'
                 MessageBox MB_YESNO|MB_ICONQUESTION|MB_TOPMOST $3 /SD IDYES IDNO "IgnoreUnInstall"
                    ; Read UninstallString
                    ${If} $5 == "Old"
