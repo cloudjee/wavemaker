@@ -245,6 +245,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
                 if (this.dataSet && this.dataOutput.type != this.dataSet.type)
                     this.dataOutput.setType(this.dataSet.type);
 		var d = this.dataOutput;
+	    d.setIsList(false); // sanity test
 	    dojo.forEach(this.getFormEditorsArray(), dojo.hitch(this, function(e) {
 			if (wm.isInstanceType(e, wm.LiveFormBase)) {
                             wm.fire(e, "populateDataOutput"); // this.dataOutput will be updated via bindings once e has been updated
@@ -557,7 +558,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	// Form data
 	//===========================================================================
 	setDataSet: function(inDataSet) {
-	    if (this.operation && !this.alwaysPopulateEditors)
+	    if (this.dataSet && this.operation && !this.alwaysPopulateEditors)
 		return;
 	    if (this.liveVariable && inDataSet && inDataSet.type)
 		this.liveVariable.setLiveSource(inDataSet.type);
