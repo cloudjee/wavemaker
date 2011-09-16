@@ -1170,3 +1170,5 @@ Source Files to you on a CD or equivalent physical medium.  This
 offer to obtain a copy of the Source Files is valid for three
 years from the date you acquired this Software product. Alternatively, 
 the Source Files may accompany the VMware product.
+
+[DEPENDBUNDLEWAVEMAKER64XKP090111]
