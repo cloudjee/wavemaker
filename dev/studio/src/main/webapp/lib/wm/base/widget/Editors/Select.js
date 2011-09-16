@@ -31,7 +31,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	autoComplete: true,
 	startUpdate: false,
 	hasDownArrow: true,
-    restrictValues: false,
+    restrictValues: true,
 	_allFields: "All Fields",
     selectedItem: null,
     _selectedData: null,
