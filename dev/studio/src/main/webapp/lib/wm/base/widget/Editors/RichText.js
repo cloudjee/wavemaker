@@ -152,7 +152,7 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	sizeEditor: function() {
 		if (!this._ready) return;
 		this.inherited(arguments);
-/*
+/* Tried commenting out this section; don't recall way; removing this breaks Documentation dialog in chrome */
 		var h = parseInt(this.editorNode.style.height);
 		var toolh = this.editorNode.childNodes[0].clientHeight;
 	        if (h <= toolh) {
@@ -167,7 +167,7 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 		node.style.lineHeight = "normal";
 		node.style.height = "";
 	    });
-	    */
+
 	},
 	_createEditor: function(inNode, inProps) {
 		this._ready = false;
