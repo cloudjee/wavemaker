@@ -345,6 +345,8 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 			editorHeight =  (height - labelHeight);
 			labelWidth = (w) ? w  : "";
 			editorWidth = labelWidth;
+			if (this.helpText)
+			    labelWidth -= helpIconSize + helpIconMargin;
 		    }
 
 		    labelWidth = Math.round(labelWidth);
@@ -368,7 +370,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		     // if height changes, then lineHeight may have to change
 		    s.lineHeight = (s.lineHeight != "normal") ? s.height : "normal";
 		    var captionLeft = (position == "right") ? (bounds.w + bounds.l - labelWidthWithSpacing )  : bounds.l;
-		    if (position != "left" && allocateHelpIconSpace) 
+		    if (position == "right" && allocateHelpIconSpace) 
 			captionLeft -= helpIconSize + helpIconMargin ;
 		    s.left = captionLeft + "px";
 		    s.top  = (position == "bottom") ? (editorHeight + bounds.t - captionEditorSpacing) + "px" : bounds.t + "px"; 
