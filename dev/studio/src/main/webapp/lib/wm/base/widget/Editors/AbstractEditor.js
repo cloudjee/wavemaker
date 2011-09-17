@@ -832,7 +832,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		*/
 	    this.setEditorValue(inValue);
 	    if (inValue === "" || inValue === null) 
-		return this.resetState();
+		this.resetState();
 	    if (!this.isUpdating())
 		this.clearDirty(); // calls to setDataValue should always clear the dirty indicator and assume the input value is "Good"
 	},
