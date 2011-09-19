@@ -30,8 +30,11 @@ dojo.declare("BindSourceDialog", wm.Page, {
 
 	// if the user clicked on any other components while binding, reselect the component that we're binding onClose
 	// However, this results in bad behaviors if we try to reselect a subcomponent, like the input of a servicevariable
-	if (object.owner == studio.page)
-	    studio.select(object); 
+	if (object.owner == studio.page) {
+	    if (object != studio.selected) {
+		studio.select(object); 
+	    }
+	}
     },
     update: function(inTargetProps, noRegen) {
 	this.binderSource.pageSelect.beginEditUpdate();
