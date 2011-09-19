@@ -168,6 +168,10 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
         </dependency>
+        <dependency>
+        	<groupId>com.oopsconsultancy</groupId>
+        	<artifactId>xmltask</artifactId>
+        </dependency>
     </dependencies>
 
     <pluginRepositories>

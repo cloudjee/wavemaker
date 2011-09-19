@@ -446,6 +446,11 @@
                 <version>1.0.0.BUILD-SNAPSHOT</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+        		<groupId>com.oopsconsultancy</groupId>
+        		<artifactId>xmltask</artifactId>
+        		<version>1.15</version>
+        	</dependency>
         </dependencies>
     </dependencyManagement>
 
