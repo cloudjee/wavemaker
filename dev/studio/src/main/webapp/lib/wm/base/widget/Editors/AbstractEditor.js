@@ -62,6 +62,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
         editorNode: null,
         isDirty: false,
         _lastValue: "",
+        _lastValueReported: "",
 
     /* Caption */
 	caption: "",
@@ -782,9 +783,9 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    }
 
 	    var dataValue = this.getDataValue();
-	    if (dataValue != this._lastValue) {		
+	    if (this.calcIsDirty(dataValue, this._lastValueReported)) {		
 		this.valueChanged("dataValue", this.dataValue = dataValue);
-		changed = true;
+		changed = true;		
 	    }
 	    if (changed) {
 		/* NOTE: editorChanged is called when the user types OR when setDataValue is called
@@ -799,6 +800,14 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    return changed;
 		//wm.fire(this.editor, "ownerEditorChanged");
 	},    
+
+    calcIsDirty: function(val1, val2) {
+	if (val1 === undefined || val1 === null)
+	    val1 = "";
+	if (val2 === undefined || val2 === null)
+	    val2 = "";
+	return val1 != val2;
+    },
     clearDirty: function() {
 	this._lastValue = this.dataValue == null ? this.makeEmptyValue() : this.dataValue;
 	this.updateIsDirty();
@@ -806,7 +815,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
     updateIsDirty: function() {
 	var wasDirty = this.isDirty;
 	var isDirty = true;
-	if (this.dataValue == this._lastValue) {
+	if (!this.calcIsDirty(this.dataValue, this._lastValue)) {
 	    isDirty = false;
 	} else if ((this.dataValue === "" || this.dataValue === null || this.dataValue === undefined) &&
 		   (this._lastValue === "" || this._lastValue === null || this._lastValue === undefined)) {
@@ -899,7 +908,9 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	valueChanged: function(inProp, inValue) {
 		if (this._updating)
 			return;
-		this.inherited(arguments);
+	    if (inProp == "dataValue")
+		this._lastValueReported = inValue;
+	    this.inherited(arguments);
 		//if (this.isDesignLoaded() && inProp)
 		//	this.createEditor();
 	},

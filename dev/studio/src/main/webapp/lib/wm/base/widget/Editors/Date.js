@@ -115,34 +115,26 @@ dojo.declare("wm.Date", wm.Text, {
 	},
 
 
+    calcIsDirty: function(val1, val2) {
+	if (val1 === undefined || val1 === null)
+	    val1 = 0;
+	if (val2 === undefined || val2 === null)
+	    val2 = 0;
 
-    updateIsDirty: function() {
-	var wasDirty = this.isDirty;
-	var isDirty = true;
-	if (this.dataValue) {
-	    var dataValue = new Date(this.dataValue);
-	    dataValue.setHours(0);
-	    dataValue.setMinutes(0);
-	    dataValue.setSeconds(0);
+	if (val1 instanceof Date == false) {
+	    val1 = new Date(val1);
 	}
-	if (this._lastValue) {
-	    var lastValue = new Date(this._lastValue);
-	    lastValue.setHours(0);
-	    lastValue.setMinutes(0);
-	    lastValue.setSeconds(0);
+	if (val2 instanceof Date == false) {
+	    var val2 = new Date(val2);
 	}
 
-	if (dataValue && lastValue && dataValue.getTime() == lastValue.getTime()) {
-	    isDirty = false;
-	} else if ((this.dataValue === "" || this.dataValue === null || this.dataValue === undefined) &&
-		   (this._lastValue === "" || this._lastValue === null || this._lastValue === undefined)) {
-	    isDirty = false;
+	if (val1 && val2 && val1.getTime() == val2.getTime()) {
+	    return false;
 	}
-	this.valueChanged("isDirty", this.isDirty = isDirty);
-	if (wasDirty != this.isDirty)
-	    dojo.toggleClass(this.domNode, "isDirty", this.isDirty);
-	if (!app.disableDirtyEditorTracking)
-	    wm.fire(this.parent, "updateIsDirty");
+	val1 = dojo.date.locale.format(val1, {formatLength: "short", selector: "date"});
+	val2 = dojo.date.locale.format(val2, {formatLength: "short", selector: "date"});
+
+	return val1 != val2;
     }
 
 });
@@ -188,18 +180,26 @@ dojo.declare("wm.Time", wm.Date, {
 		return this.inherited(arguments);
 	},
 
-    updateIsDirty: function() {
-	var wasDirty = this.isDirty;
-	var isDirty = true;
-	var dataValue = this.dataValue ? dojo.date.locale.format(new Date(this.dataValue), {timePattern: this.timePattern, selector: "time"}) : null;
-	var lastValue = this._lastValue ? dojo.date.locale.format(new Date(this._lastValue), {timePattern: this.timePattern, selector: "time"}) : null;
+    calcIsDirty: function(val1, val2) {
+	if (val1 === undefined || val1 === null)
+	    val1 = 0;
+	if (val2 === undefined || val2 === null)
+	    val2 = 0;
 
-	isDirty =  (dataValue != lastValue);
-	this.valueChanged("isDirty", this.isDirty = isDirty);
-	if (wasDirty != this.isDirty)
-	    dojo.toggleClass(this.domNode, "isDirty", this.isDirty);
-	if (!app.disableDirtyEditorTracking)
-	    wm.fire(this.parent, "updateIsDirty");
+	if (val1 instanceof Date == false) {
+	    val1 = new Date(val1);
+	}
+	if (val2 instanceof Date == false) {
+	    var val2 = new Date(val2);
+	}
+
+	if (val1 && val2 && val1.getTime() == val2.getTime()) {
+	    return false;
+	}
+	val1 = dojo.date.locale.format(val1, {timePattern: this.timePattern, selector: "time"});
+	val2 = dojo.date.locale.format(val2, {timePattern: this.timePattern, selector: "time"});
+
+	return val1 != val2;
     }
 
 });
