@@ -12,6 +12,7 @@
     <name>WaveMaker Studio Web Application</name>
 
     <build>
+      <finalName>wavemaker</finalName>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
