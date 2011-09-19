@@ -25,7 +25,6 @@
                         </goals>
                         <configuration>
                             <sources>
-<!--                            <source>services/CloudDB/src</source> -->
                                 <source>services/cloudFoundryService/src</source>
                                 <source>services/cloudServerService/src</source>
                                 <source>services/cloudStorageService/src</source>
@@ -34,14 +33,12 @@
                                 <source>services/javaService/src</source>
                                 <source>services/pagesService/src</source>
                                 <source>services/pwsImportService/src</source>
-<!--                            <source>services/registrationService/src</source> -->
                                 <source>services/resourceFileService/src</source>
                                 <source>services/securityConfigService/src</source>
                                 <source>services/securityService/src</source>
                                 <source>services/securityServiceJOSSO/src</source>
                                 <source>services/servicesService/src</source>
                                 <source>services/studioService/src</source>
-<!--                            <source>services/UserService/src</source> -->
                                 <source>services/warpFlowService/src</source>
                                 <source>services/warpLoginService/src</source>
                                 <source>services/waveMakerService/src</source>
@@ -284,15 +281,7 @@
                                     <excludes>
                                         <exclude>**/*.java</exclude>
                                     </excludes>
-                                </resource>
-<!--                                
-                                <resource>
-                                    <directory>services/registrationService/src</directory>
-                                    <excludes>
-                                        <exclude>**/*.java</exclude>
-                                    </excludes>
-                                </resource>
--->                                
+                                </resource>                              
                                 <resource>
                                     <directory>services/resourceFileService/src</directory>
                                     <excludes>
@@ -328,15 +317,7 @@
                                     <excludes>
                                         <exclude>**/*.java</exclude>
                                     </excludes>
-                                </resource>
-<!--                                
-                                <resource>
-                                    <directory>services/UserService/src</directory>
-                                    <excludes>
-                                        <exclude>**/*.java</exclude>
-                                    </excludes>
-                                </resource>
--->                                
+                                </resource>                                
                                 <resource>
                                     <directory>services/warpFlowService/src</directory>
                                     <excludes>
