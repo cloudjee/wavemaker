@@ -186,7 +186,7 @@ dojo.declare("wm.propEdit.WidgetsSelect", wm.propEdit.Select, {
 		*/
 	    var components = wm.listComponents([studio.page, studio.application], this.widgetType);
 		for (var i=0, l; l = components[i]; i++) { 
-			options.push(l.name);
+		    options.push(l.getId());
 		}
 		return [""].concat(options);
 	}
