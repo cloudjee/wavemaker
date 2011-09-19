@@ -326,6 +326,7 @@ dojo.declare("wm.ListViewer", wm.Container, {
     updateRowTops: function() {
         if (!this._renderingRows) {
 	    var heightSum = 0;
+	    var length = this.rowRenderers.length;
 	    for (var i = 0; i < length; i++) {
 	        var r = this.rowRenderers[i];
                 r.domNode.style.top = heightSum + "px";
