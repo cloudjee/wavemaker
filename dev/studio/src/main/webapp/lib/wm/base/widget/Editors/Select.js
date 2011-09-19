@@ -174,6 +174,21 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
     // we'll do a lookup by
         // STORE ACCESS (DONE EXCEPT RESTRICT VALUES)
 	setEditorValue: function(inValue) {
+	    if (!this.dataSet || this.dataSet.getCount() == 0) {
+		if (typeof inValue == "object" && this.dataField == this._allFields) {
+		    this.displayValue = this._getDisplayData(inValue);
+		    this.dataValue = inValue;
+		    this._setEditorValue(this.displayValue, inValue);
+		} else if (this.displayField == this.dataField && !this.displayExpression) {
+		    this.dataValue = this.displayValue = inValue;
+		    this._setEditorValue(inValue);
+		} else {
+		    this.dataValue = inValue;
+		}
+		this.updateReadonlyValue();
+		return;
+	    }
+
 		// if the user has selected "all fields", then how and what do we compare inValue to?  
 		// Answer: if we don't have a unique identifier from the user, then we compare on the displayname.
 		var lookupFieldName = this._dataField;
@@ -218,20 +233,30 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	},
 	// Optimization: fast setting of select using internal dijit functionality
 	// avoids re-getting items from store
-	_setEditorValue: function(inDisplayValue) {
+       _setEditorValue: function(inDisplayValue, optionalDataObjValue) {
 		inDisplayValue = String(inDisplayValue);
 		var e = this.editor;
 		delete this._isValid;
 		e._isvalid=true;
+
+	        if (!this.dataSet || this.dataSet.getCount() == 0) {
+		    var item = optionalDataObjValue || {}
+		    item[this._storeNameField] = inDisplayValue;
+		    
+		    this.editor.store.data.push(item);
+		    var addedItem = true;
+		}
+
 		if (this.restrictValues)
 		    e.set('displayedValue', inDisplayValue, !this._updating);
 		else
 		    e.set('value', inDisplayValue, !this._updating);
 	        this.editor._lastValueReported = inDisplayValue;
+	   if (addedItem)
+	       this.editor.store.data.pop();
 	},
 	getDisplayValue: function() {
-		if (!this.restrictValues || this.hasValues())
-			return this.inherited(arguments);
+	    return this.inherited(arguments);
 	},
         // STORE ACCESS (DONE?)
 	getEditorValue: function(getFullDataObj) {
@@ -355,6 +380,8 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		    data.push(d);
 		}
             }
+		    
+
 		//console.log("getDataSetData", (new Date()).getTime() - time);
 		return data;
 	},
@@ -377,6 +404,8 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		return data;
 	},
 	setDataSet: function(inDataSet) {
+	    var oldValue = this.dataValue;
+
 		var ds = this.dataSet = inDataSet;
 		// no data to render
 		if (!ds || !ds.data || !ds.data.list)
@@ -394,6 +423,8 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		    this.dataField = this.displayField = "";
 		}
 	    } catch(e) {}
+	    if (oldValue)
+		this.setEditorValue(oldValue);
 	},
 	setOptionsVariable: function() {
 		var opts = this._getOptionsData();
@@ -475,10 +506,12 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	    if (!this.editor || this.editor._focused) {
 		valid = true;
 	    } else {
-		var hasValue = this.dataValue !== undefined && this.dataValue !== null && this.dataValue !== "" ;
+		var dataValue = this.getDataValue();
+		var hasValue = Boolean(dataValue);
 		// always valid if !this.restrictValue
 		// always valid if !this.displayValue, but if there is a displayValue there must be a dataValue /* May not be true in dojo 1.6 */
 		var display = this.getDisplayValue();
+
 		this._isValid = (!this.restrictValues || (display && hasValue || !display) );
 		//console.log("_isValid:" + this._isValid + "; display="+display + "; data:"+this.dataValue);
 
