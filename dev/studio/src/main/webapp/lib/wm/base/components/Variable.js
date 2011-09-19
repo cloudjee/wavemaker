@@ -55,10 +55,16 @@ dojo.declare("wm.Variable", wm.Component, {
 	_greedyLoadProps: false,
 	_allowLazyLoad: true,
 	cursor: 0,
+/*
 	constructor: function(inProps) {
-	    if (window["studio"])
-		this._subscriptions.push(dojo.subscribe("wmtypes-changed", this, "wmTypesChanged"));
 	},
+	*/
+    init: function() {
+	this.inherited(arguments);
+	if (this._isDesignLoaded) {
+		this._subscriptions.push(dojo.subscribe("wmtypes-changed", this, "wmTypesChanged"));
+	}
+    },
 	postInit: function() {
 		this.inherited(arguments);
 	        this._inPostInit = true;
@@ -86,11 +92,15 @@ dojo.declare("wm.Variable", wm.Component, {
 	// Type Information
 	//===========================================================================
 	wmTypesChanged: function() {
-		if (this.isPrimitive || wm.typeManager.isType(this.type))
-			this.setType(this.type);
+	    if (this.owner instanceof wm.Variable)
+		this.beginUpdate();
+	    if (this.isPrimitive || wm.typeManager.isType(this.type)) 
+		this.setType(this.type);
 	    if (studio.inspector.inspected == this) {
 		inspect(this);
 	    }
+	    if (this.owner instanceof wm.Variable)
+		this.endUpdate();
 	},
         canSetType: function(inType) {
 		// type is locked to dataSet type if it is set
