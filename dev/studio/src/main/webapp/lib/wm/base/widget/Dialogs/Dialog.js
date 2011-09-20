@@ -390,7 +390,8 @@ dojo.declare("wm.Dialog", wm.Container, {
         destroy: function() {
 	    if (this._minified)
 		this.unminify({}, true);
-	    this.dismiss();
+	    if (this.showing)
+		this.dismiss();
 	    if (this.dialogScrim)
                 this.dialogScrim.destroy();
 	    if (this.minifiedLabel)
