@@ -139,6 +139,8 @@ wm.DijitDesigner.extend({
 	this.dijitPropList = dijitPropList.join(",");
     },
     makePropEdit: function(inName, inValue, inDefault) {
+	    var prop = this.schema ? this.schema[inName] : null;
+	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
 	/* Component_design uses a checkbox property if the prototype says to. But the prototype of this class won't have dijit props in it
 	 * so handle boolean dijit props here.
 	 */
@@ -148,7 +150,7 @@ wm.DijitDesigner.extend({
 	    switch(inName) {
 	    case "deployDijit":
 	    case "undeployDijit":
-		return makeReadonlyButtonEdit(inName, inValue, inDefault);
+		return makeReadonlyButtonEdit(name, inValue, inDefault);
 	    }
 	    return this.inherited(arguments);
 	}

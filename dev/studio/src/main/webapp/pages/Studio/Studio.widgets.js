@@ -119,10 +119,13 @@ Studio.widgets = {
 							       idInPage: "deployProjectItem",
 							       children: [
 								   {label: "New Deployment...",
+								    idInPage: "newProjectDeployItem",
 								    onClick: "newDeployClick"},
 								   {label: "Settings...",
+								    idInPage: "deploySettingsItem",
 								    onClick: "settingsDeployClick"},
 								   {label: "Manage CloudFoundry Apps...",
+								    idInPage: "cloudfoundryManagementItem",
 								    onClick: "cloudFoundryDeploymentsClick"}
 							       ],
 							       iconClass: "deployProjectItem"},                                      
@@ -134,8 +137,10 @@ Studio.widgets = {
 							      iconClass: "importProjectItem",
 							      children: [
 								  {"defaultLabel": "Upload Studio Patches...",
+								    idInPage: "studioPatchesItem",
 								   onClick: "uploadStudioPatches"},
 								  {"defaultLabel": "Import Partner Services...",
+								    idInPage: "partnerServicesItem",
 								   onClick: "importPartnerService"}
 							      ]
 							     }
