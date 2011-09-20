@@ -193,10 +193,6 @@ public class WMAppContext {
     }
 
     public boolean isMultiTenant() {
-        if (isCloudFoundry()) {
-            return false;
-        }
-
         String tf;
         boolean multiTenancy;
 
