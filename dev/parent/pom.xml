@@ -210,6 +210,11 @@
                 <version>6.0.32</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.tomcat</groupId>
+                <artifactId>catalina-ant</artifactId>
+                <version>6.0.32</version>
+            </dependency>
+            <dependency>
               <groupId>org.jvnet.ws.wadl</groupId>
               <artifactId>wadl-core</artifactId>
               <version>1.0</version>
