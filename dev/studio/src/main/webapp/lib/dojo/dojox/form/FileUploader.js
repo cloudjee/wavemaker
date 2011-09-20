@@ -731,7 +731,9 @@ dojo.declare("dojox.form.FileUploader", [dijit._Widget, dijit._Templated, dijit.
 			});
 			dojo.style(this.progNode,"display","none");
 		}else{
-			var w = display * this.fhtml.nr.w;
+	    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+	     * WaveMaker changes: To avoid IE 8 bugs, insures that w is never less than 0 */
+		        var w = Math.max(0,display * this.fhtml.nr.w);
 			dojo.style(this.progNode, "width", w + "px");
 		}
 	},
