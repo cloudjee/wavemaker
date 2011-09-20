@@ -582,7 +582,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		}
 	},
     calcIsDirty: function(val1, val2) {
-	if (typeof val1 == "object" && typeof val2 == "object") {
+	if (val1 !== null && val2 !== null && typeof val1 == "object" && typeof val2 == "object") {
 	    return val1[this._storeNameField] != val2[this._storeNameField];
 	} else {
 	    return val1 != val2;
