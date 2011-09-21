@@ -716,7 +716,9 @@ dojo.declare("wm.FilteringLookup", wm.Lookup, {
 	
     },
     setDataValue: function(inData) {
-	this.dataSet.setData([inData]);
+	if (this.dataSet) {
+	    this.dataSet.setData(inData ? [inData] : null);
+	}
 	this.inherited(arguments);
     },
     onDataSetSuccess: function() {
