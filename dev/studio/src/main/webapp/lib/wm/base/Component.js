@@ -740,7 +740,11 @@ this.panel1.createComponent("custom", "wm.Panel", {
 			console.info('error while creating component: ', e);
 		}
 		finally{
+		    try {
 			w.loaded();
+		    } catch(e) {
+			console.error("Error in postInit for " + w.toString() + ": " + e);
+		    }
 		}
 
 	    if (wm.debugPerformance) this.stopTimerWithName("CreateComponent",inType,1);
