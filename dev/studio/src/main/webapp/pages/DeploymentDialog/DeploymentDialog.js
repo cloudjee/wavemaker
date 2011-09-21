@@ -742,6 +742,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
 
       } else {
           this.newDeploymentDialog.show(); 
+	  if (dojo.isIE == 8)
+	      wm.onidle(this.newDeploymentDialog, "reflow");
       }
   },
     onNewDeployOk: function() {
