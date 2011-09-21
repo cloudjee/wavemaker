@@ -16,9 +16,11 @@ package com.wavemaker.tools.ant;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
@@ -46,32 +48,8 @@ import com.wavemaker.tools.project.ProjectConstants;
  */
 public class CopyRuntimeJarsTask extends Task {
     
-    public static String RUNTIME_JAR_NAME;
     public static final String CLASSPATH_ATTR_NAME = "Class-Path";
     public static final String TASK_NAME = "copyRuntimeJarsTask";
-
-    static {
-        try {
-            Class cls = Class.forName("com.wavemaker.runtime.WMAppContext");
-            String cn = cls.getName();
-            String rn = cn.replace('.', '/') + ".class";
-            String path = cls.getClassLoader().getResource(rn).getPath();
-            int ix = path.indexOf("!");
-            if(ix >= 0) {
-                RUNTIME_JAR_NAME = path.substring(0, ix);
-            } else {
-                RUNTIME_JAR_NAME = path;
-            }
-
-            ix = RUNTIME_JAR_NAME.indexOf("wm-runtime");
-            if(ix >= 0) {
-                RUNTIME_JAR_NAME = RUNTIME_JAR_NAME.substring(ix);
-            }
-
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();    
-        }
-    }
 
     /**
      * XXX this is pretty faux - ideally, we'd do something better, instead of
@@ -84,7 +62,6 @@ public class CopyRuntimeJarsTask extends Task {
      * @throws IOException
      */
     protected List<File> getModuleLocations(ClassLoader cl) throws IOException {
-          getClass();
         List<File> ret = new ArrayList<File>();
         
         PathMatchingResourcePatternResolver searcher;
@@ -106,7 +83,34 @@ public class CopyRuntimeJarsTask extends Task {
         
         return ret;
     }
-    
+
+    protected String getRuntimeJarName(){
+    	String runtimeJarName = null;
+    	String propFile = "META-INF/runtimejar.properties";
+    	String key = "runtimejar.name";
+
+    	Properties prop = new Properties();
+    	InputStream in = this.getClass().getClassLoader().getResourceAsStream(propFile);
+    	if (in != null) {
+    		try{
+    			prop.load(in);
+    			runtimeJarName = prop.getProperty(key);
+    		} catch (IOException ioe){
+    			ioe.printStackTrace();
+    		} finally
+    		{
+    			try {in.close();}
+    			catch (Exception e) {e.printStackTrace();}
+    		}
+    	}
+    	else{
+    		throw new IllegalStateException("CopyRuntimeJarsTask could not load " + propFile);
+    	}
+
+    	return runtimeJarName;
+    }
+    	
+    	
     protected List<String> getReferencedClassPathJars(File jarFile, boolean failOnError) {
         
         try {
@@ -125,7 +129,7 @@ public class CopyRuntimeJarsTask extends Task {
             
             List<String> jarNames = new ArrayList<String>(tokens.length+1);
             
-            jarNames.add(RUNTIME_JAR_NAME);
+            jarNames.add(getRuntimeJarName());
             for (String jarName : jarClassPath.split("\\s")) {
                 jarNames.add(jarName);
             }
@@ -226,7 +230,7 @@ public class CopyRuntimeJarsTask extends Task {
             throw new IllegalArgumentException(from + " does not exist");
         }
 
-        File runtimeJarFile = new File(from, RUNTIME_JAR_NAME);
+        File runtimeJarFile = new File(from, getRuntimeJarName());
         if (!runtimeJarFile.exists()) {
             throw new IllegalStateException(runtimeJarFile + " does not exist");
         }
