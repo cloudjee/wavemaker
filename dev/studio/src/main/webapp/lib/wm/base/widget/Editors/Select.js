@@ -320,7 +320,8 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
                 inVariable = inObj;
             else {
                 inVariable = new wm.Variable({_temporaryComponent: true});
-                inVariable.setType(this.dataSet.type);
+		if (this.dataSet)
+                    inVariable.setType(this.dataSet.type);
                 inVariable.setData(inObj);
                 inVariable.data[this._storeNameField]  = String(this._getDisplayData(inVariable));
             }
