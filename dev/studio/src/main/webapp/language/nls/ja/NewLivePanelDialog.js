@@ -14,5 +14,7 @@
 {
 templatesPanelLabel: {caption: "データをどのように見せたいかを選択"},
 CancelButton: {caption: "キャンセル"},
-OKButton: {caption: "OK"}
+OKButton: {caption: "OK"},
+    TRADITIONAL: "トラディショナル",
+    DIALOG: "ダイアログ"
 }

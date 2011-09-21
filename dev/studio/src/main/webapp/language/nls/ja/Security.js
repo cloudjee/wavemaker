@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 Infoteria Corporation and VMWare, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  */
 {
 saveButton: {hint: "セキュリティ設定を保存"},
+securityLayer: {caption: "セキュリティ設定"},
 label1a: {caption: "セキュリティ設定"},
 secProviderInput: {caption: "セキュリティプロバイダー"},
 secEnableInput: {caption: "セキュリティを有効"},
@@ -30,25 +31,38 @@ dbEntityInput: {caption: "エンティティ"},
 dbUsernameInput: {caption: "ユーザー名フィールド <span style='cursor:pointer;font-weight:bold;color: black;' id='HelpUID1'>?</a>"},
 dbUseridInput: {caption: "ユーザーIDフィールド <span style='cursor:pointer;font-weight:bold;color: black;' id='HelpUID2'>?</a>"},
 dbPasswordInput: {caption: "パスワードフィールド"},
-dbRoleInput: {caption: "ロールフィールド（エンタープライズユーザーのみ）"},
-labelmt: {caption: "マルチテナント設定（エンタープライズユーザーのみ）"},
+dbRoleInput: {caption: "ロールフィールド"},
+labelmt: {caption: "マルチテナント設定"},
 tenantIdField: {caption: "テナントIDフィールド名"},
 defTenantId: {caption: "デフォルトテナントID"},
 dbRoleBySQLCheckbox: {caption: "SQLクエリーによるロール"},
+dbRoleBySQLInput: {caption: "クエリーを入力"},
 dbTestSQLInput: {caption: "ユーザーID"},
 dbTestSQLButton: {caption: "クエリーテスト"},
+dbTestSQLResultLabel: {caption: "クエリーからのロール"},
+dbTestSQLErrorPanelLabel: {caption: "クエリーからのエラー"},
 ldapLayer: {caption: "LDAP"},
 ldapUrlInput: {caption: "LDAP URL"},
 ldapManagerDnInput: {caption: "管理者DN"},
 ldapManagerPasswordInput: {caption: "管理者パスワード"},
 ldapUserDnPatternInput: {caption: "ユーザーDNパターン"},
 ldapSearchRoleCheckbox: {caption: "ユーザーロールを検索"},
+ldapRoleProviderInput: {caption: "ユーザーロールプロバイダーを選択"},
 ldapGroupSearchBaseInput: {caption: "グループ検索ベース"},
 ldapGroupRoleAttributeInput: {caption: "グループロール属性"},
 ldapGroupSearchFilterInput: {caption: "グループ検索フィルター"},
+ldapRoleDbDataModelInput: {caption: "データモデル"},
+ldapRoleDbEntityInput: {caption: "エンティティ"},
+ldapRoleDbUsernameInput: {caption: "ユーザー名フィールド"},
+ldapRoleDbRoleInput: {caption: "ロールフィールド"},
+ldapRoleBySQLCheckbox: {caption: "SQLクエリーによるロール"},
+ldapRoleBySQLInput: {caption: "クエリーを入力"},
+
 ldapConnectionButton: {caption: "接続テスト"},
 jossoLayer: {caption: "JOSSO"},
-label2a: {caption: "ロール設定（エンタープライズユーザーのみ）"},
+userNotice: {html: "<h3> web.xmlを編集してください <BR> エージェント設定でパートナーアプリを登録してください <BR> webapprootにjspをコピーしてください</h3>"},
+rolesLayer: {caption: "ロール"},
+label2a: {caption: "ロール設定"},
 addRoleInput: {caption: "ロール"},
 addRoleButton: {hint: "ロールを追加"},
 deleteRoleButton: {hint: "ロールを削除"},
@@ -56,6 +70,8 @@ label1: {caption: "ライブレイアウトログイン"},
 liveLayoutUser: {caption: "ユーザー"},
 liveLayoutPassword: {caption: "パスワード"},
 label2: {caption: "このユーザーとパスワードはライブレイアウトへのログインで使用されるアカウントです。データベースやJavaサービスにアクセスするために使用されます。"},
+servicesLayer: {caption: "サービス設定"},
+selectAccess: {caption: "アクセス可能なユーザー"},
 
 MENU_SELECT_ONE: "- 選択してください -",
 MENU_NO_VALUE: "(なし)",
@@ -77,5 +93,16 @@ ALERT_JOSSO_ONLY_ONE_ROLE: "JOSSOではロールはひとつしか指定でき�
 ALERT_ROLE_EMPTY: "ロールを入力してください！",
 DEMO_USER_USERNAME: "ユーザー名",
 DEMO_USER_PASSWORD: "パスワード",
-DEMO_USER_ROLE: "ロール"
+DEMO_USER_ROLE: "ロール",
+
+WARN_NO_ROLES: "ロールが見つかりません",
+WARN_NO_SERVICES: "プロジェクトサービスが見つかりません",
+    INFO_ABOUT_ADVSECROLES: "サーバー側でのロールアクセス設定 <br> 最初に一致した規則が使用されます。",
+    WAIT_SERVICE_LIST: "サービス一覧を読み込んでいます",
+    SERVICE_ANONYMOUS_USERS: "匿名ユーザー",
+    SERVICE_AUTHENTICATED_USERS: "認証済みユーザーのみ" ,
+    SERVICE_TITLE_AND_NAME: "<b>${serviceName}</b>サービスの設定",
+    SERVICE_TITLE: "サービス設定",
+    SERVICE_DEFAULT_SETTING: "初期値",
+    SERVICE_DATABASE_SERVICES_NAME: "データベースサービスDatabase Services"
 }

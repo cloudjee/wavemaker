@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 Infoteria Corporation and VMWare, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -31,5 +31,7 @@ label7: {html: "新しいjarファイルを使用する前にスタジオを再�
 
     ONERROR: "このファイルをアップロードできません; これは通常、インストールのための権限が足りないときに発生します。これらのファイルはstudio/WEB-INF/libに自分でインストールすることができます。手順については<a href='http://dev.wavemaker.com/wiki/bin/ThirdPartyJars' target='_new'>Installing Jars</a>を参照ください。",
     UPLOAD_A_JAR: "jarファイルをアップロードしてください",
-    UPLOAD_A_JAR_NOT_A: "${fileType}ファイルではなくjarファイルをアップロードしてください"
+    UPLOAD_A_JAR_NOT_A: "${fileType}ファイルではなくjarファイルをアップロードしてください",
+    DONE_CAPTION: "再起動",
+    RESTARTING: "再起動しています..."
 }

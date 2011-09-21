@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 Infoteria Corporation and VMWare, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -37,5 +37,8 @@ ALERT_UNZIP_FAILED:  "ファイルを解凍できませんでした",
 ALERT_ADDJAR_FAILED: "jarをクラスパスに追加できませんでした",
 ALERT_REMOVEJAR_FAILED: "jarをクラスパスから削除できませんでした",
 ALERT_ADDJAR_SUCCESS:  "ファイルがクラスパスに追加されました",
-ALERT_REMOVEJAR_SUCCESS: "ファイルがクラスパスから削除されました"
+ALERT_REMOVEJAR_SUCCESS: "ファイルがクラスパスから削除されました",
+    EDITS_FAILED: "保存に失敗しました！",
+    EDITS_SAVED: "変更が保存されました",
+    LOSE_FILE_EDITS: "ファイルを変更すると${fileName}への変更が失われてしまいます。続けますか？"
 }

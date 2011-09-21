@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2011 Infoteria Corporation All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -12,7 +13,9 @@
  *  limitations under the License.
  */
 {
+	addPatchDialog: {title: "スタジオにパッチを適用"},
 	jarDownloadDialog: {title: "Jarファイルをインポート"},
+	ImportThirdPartyAPIDialog: {title: "パートナーサービスをインポート"},
 	propertiesDialog: {title: "プロパティ"},
 	paletteDialog: {title: "パレット／モデル"},
 	deploymentDialog: {title: "配布"},
@@ -60,22 +63,28 @@
 			       iconClass: "importProjectItem"},
 				{"label": "配布...",
 			       idInPage: "deployProjectItem",
-			       onClick: "deployClick",
+			       children: [
+				   {label: "新規配布...",
+				    onClick: "newDeployClick"},
+				   {label: "設定...",
+				    onClick: "settingsDeployClick"},
+				   {label: "CloudFoundryアプリを管理...",
+				    onClick: "cloudFoundryDeploymentsClick"}
+			       ],
 			       iconClass: "deployProjectItem"},                                      
 				{"label": "環境設定...",
 			       idInPage: "preferencesItem",
 			       onClick: "projectSettingsClick",
-				 iconClass: "preferencesItem"},
-				    {"defaultLabel": "Modify Studio",
-				     iconClass: "importProjectItem",
-				     children: [
-					 {"defaultLabel": "Upload Studio Patches...",
-					  onClick: "uploadStudioPatches"},
-					 {"defaultLabel": "Import Partner Services...",
-					  onClick: "importPartnerService"}
-				     ]
-				    }
-
+			       iconClass: "preferencesItem"},
+			     {"label": "スタジオを更新",
+			      iconClass: "importProjectItem",
+			      children: [
+				  {"label": "スタジオパッチをアップロード...",
+				   onClick: "uploadStudioPatches"},
+				  {"label": "パートナーサービスをインポート...",
+				   onClick: "importPartnerService"}
+			      ]
+			     }
 			 	]},
 			{"label": "編集",
 				idInPage: "editPopupBtn",
@@ -162,6 +171,7 @@
 	undoBtn: {hint: "元に戻す"},
 	outlineBtn: {hint: "アウトライン"},
 	pageSelect: {caption: "ページを開く"},
+	languageSelect: {caption: "言語"},
 
 	/* sourceTab */
 	sourceTab: {caption: "ソース"},
@@ -224,13 +234,14 @@
 	/* securityTab */
 	securityTab: {caption: "セキュリティ"},
 
-    ALERT_OLD_IE_BAD: "<p>WaveMaker applications can run on IE6 or above.</p><p>However, WaveMaker Studio requires Chrome, FireFox or IE8.</p><p>Note: if you are running WaveMaker studio in IE8, you must turn off compatibility mode.</p>",
-    TOOLTIP_SECURITY_ERROR: "A security error shown here has no effect on the project you are designing.  It does indicate that we are unable to show your data within the designer.  You can typically fix this problem by running your application, logging in to your application, and then the data should show up in the designer",
+    ALERT_OLD_IE_BAD: "<p>WaveMaker アプリケーションはIE6以降で動作します。</p><p>しかし、WaveMakerスタジオにはChrome、FireFox、IE8が必要です。</p><p>注意： IE8でWaveMakerスタジオを利用するには互換モードをオフにしてください。</p>",
+    TOOLTIP_SECURITY_ERROR: "ここに表示されるセキュリティエラーは設計中のプロジェクトには影響しません。デザイナーの中でデータを表示できないというエラーです。この問題を解決するには、アプリケーションを起動し、アプリケーションにログインすればデザイナー上にデータが表示されます",
 
     /* Documentation; Help Menu */
-    URL_TUTORIALS: "http://dev.wavemaker.com/wiki/bin/wmdoc/Tutorials",
-    URL_DOCS: "http://dev.wavemaker.com/wiki/bin/wmdoc/",
-    URL_PROPDOCS: "http://dev.wavemaker.com/wiki/bin/PropertyDocumentation/",
+    URL_TUTORIALS: "http://dev.wavemaker.com/wiki/bin/wmdoc_${studioVersionNumber}/Tutorials",
+    URL_DOCS: "http://dev.wavemaker.com/wiki/bin/wmdoc_${studioVersionNumber}/",
+    URL_PROPDOCS: "http://dev.wavemaker.com/wiki/bin/wmjsref_${studioVersionNumber}/",
+    URL_EDIT_PROPDOCS: "http://dev.wavemaker.com/wiki/bin/inline/wmjsref_${studioVersionNumber}/",
     URL_FORUMS: "http://dev.wavemaker.com/forums",
     "MENU_ITEM_TUTORIALS" : "チュートリアル",
     "MENU_ITEM_DOCS" : "ドキュメント",
@@ -265,7 +276,7 @@
     GENERATE_DOCUMENTATION_VISUAL_HEADER: "ページ ${pageName} ビジュアルコンポーネント</h2>",
     "wm.Component.DOCUMENTATION_DIALOG_TITLE": "ドキュメント ${name}",
     "wm.Component.GENERATE_DOCUMENTATION_TOPNOTE": "生成されたドキュメント",
-    "wm.Component.GENERATE_DOCUMENTATION_EVENT_HEADER": "<h4>${eventName}</h4>\n executes ",
+    "wm.Component.GENERATE_DOCUMENTATION_EVENT_HEADER": "<h4>${eventName}</h4>\n 実行 ",
     "wm.Component.GENERATE_DOCUMENTATION_EVENT_TARGET_TYPE": "<b>型:</b>: ${componentType}",
     "wm.Component.GENERATE_DOCUMENTATION_EVENT_TARGET_OPERATION": "<b>操作:</b>: ${operation}",
     "wm.Component.GENERATE_DOCUMENTATION_EVENT_FUNCTION": "${functionName} (関数)",
@@ -336,9 +347,9 @@
     "wm.PopupMenuButton.MENU_DESIGNER_TITLE":"メニューを編集",
     "wm.DojoMenu.MENU_DESIGNER_TITLE": "メニューを編集",
     "wm.PopupMenu.DEFAULT_STRUCTURE": 
-     [{label: "ファイル",	children: [{label: "保存"},{label: "閉じる"}]},
-     {label: "編集",	children: [{label: "切り取り"}, {label: "コピー"},{label: "貼り付け"}]},
-     {label: "ヘルプ"}],
+        [{label: "ファイル",	children: [{label: "保存"},{label: "閉じる"}]},
+         {label: "編集",	children: [{label: "切り取り"}, {label: "コピー"},{label: "貼り付け"}]},
+         {label: "ヘルプ"}],
 
     /* wm.ContextMenuDialog */
     "wm.ContextMenuDialog.DELETE_LABEL": '削除', 
@@ -385,6 +396,7 @@
     "wm.RelatedEditor.LOOKUP_CAPTION": "${fieldName} (検索)",
     "wm.LivePanel.CHOOSER_TITLE": "ライブパネルのレイアウトを選択",
     "wm.LivePanel.DETAILS_PANEL_TITLE": "詳細",
+    "wm.LivePanel.WAIT_GENERATING": "生成中です...",
     "wm.LiveForm.GENERATE_BUTTONS_TITLE": "フォームボタンを生成",
     "wm.LiveForm.GENERATE_BUTTONS_PROMPT": "どのボタンを作成しますか？EditPanelはボタンを管理します; あなた自身のボタンパネルを作成するには基本ボタンから始めることをお勧めします",
     "wm.LiveForm.GENERATE_BUTTONS_CAPTION1": "パネルを編集",
@@ -410,6 +422,8 @@
 
     /* Editors */
     "wm.ResizeableEditor.SET_MAX_HEIGHT": "maxHeightは${minHeight}より大きくなければなりません",
+    "wm.Checkbox.TOAST_WARN_CHECKED_VALUE_NOT_A_BOOLEAN": "データ型がBooleanに変更されました。チェック時の値はtrue/falseでなければなりません",
+    "wm.Checkbox.TOAST_WARN_CHECKED_VALUE_NOT_A_NUMBER": "データ型がNumberに変更されました。チェック時の値は数値でなければなりません",
 
     /* Context Menus */
     "wm.Component.CONTEXT_MENU_LAYERS": "${parentName}のレイヤー",
@@ -425,7 +439,7 @@
     "UNDO_DELETE_HINT": "${className}を削除",
     "UNDO_DROP_HINT": "${className}を削除",
     "UNDO_ADD_HINT": "${className}を追加",
-
+    "UNDO_PROP_HINT": "プロパティ ${propName}; \"${oldValue}\" に戻る",
 
     "ALERT_PASTE_FAILED_PANEL_LOCKED": "貼り付けることができません。すべてのコンテナーがロックされているか固定されています。"    ,
     "CONFIRM_GENERIC_DISCARD_UNSAVED": '保存されていない変更を破棄しますか？',
@@ -441,6 +455,7 @@
     TITLE_CREATE_LIVE_VIEW: "新しいライブビュー",
     //TOAST_IMPORT_PROJECT: "Successfully imported project ${inResponse}",
     //ALERT_IMPORT_PROJECT_FAILED: "Error occurred while importing project!\n${error}",
+    MENU_REDEPLOY: "${deploymentName}へ配布...",
     ALERT_DEPLOY_SUCCESS: "配布が成功しました。",
     ALERT_DEPLOY_FAILED: "配布に失敗しました: ${error}",
     ALERT_UNDEPLOY_COMPONENT_SUCCESS: "配布停止が成功しました。",
@@ -502,7 +517,9 @@
     "MODELTREE_CONTEXTMENU_NEW": "新しい ${className}",
     "MODELTREE_CONTEXTMENU_DOC": "ドキュメント...",
 
+    "POPUP_BLOCKER_TITLE": "ポップアップブロッカー",
     "POPUP_BLOCKER_MESSAGE": "ポップアップブロックが検出されました - 手動で起動",
+    "POPUP_BLOCKER_LAUNCH_CAPTION": "手動起動",
     "wm.studio.Project.TOAST_RESERVED_NAME": "予約されたjavascript名です",
     "wm.studio.Project.WAIT_CREATING_PROJECT": "新しいプロジェクトを設定しています",
     "wm.studio.Project.WAIT_OPEN_PROJECT": "開いています...",
@@ -518,6 +535,8 @@
     "CONFIRM_CLOSE_PROJECT": "プロジェクト ${projectName} を閉じますか？保存されていない変更は破棄されます。",
     WAIT_CREATING_PAGE: "ページを作成しています: ${pageName}",
     CONFIRM_NEW_PAGE: "新しいページを追加しますか？${pageName}の保存されていない変更は破棄されます。",
+    CONFIRM_OPEN_PAGE : "${newPage}を開く前に${oldPage}を保存しますか？",
+
     ALERT_UPGRADE_HEADING: "\n\nアップグレードに関する重要なメッセージ:\n",
     ALERT_BACKUP_OLD_PROJECT: "プロジェクトはアップグレードされました。古いプロジェクトのバックアップは${filePath}にあります\n",
     THROW_PROJECT_NOT_FOUND: "警告: ${projectPath}が見つかりません",
@@ -527,7 +546,7 @@
     "TOAST_SAVE_PROJECT_SUCCESS": "プロジェクトが保存されました",
     "IMPORT_RESOURCE_BUTTON_CAPTION": "インポート",
     "TITLE_BIND_DIALOG": "バインド中...",
-    "WAIT_PROJECT_CLOSING": "とじています...",
+    "WAIT_PROJECT_CLOSING": "閉じています...",
     "WAIT_PROJECT_DELETING": "削除しています...",
     "RUN_BUTTON_CAPTION": "実行",
     "TEST_BUTTON_CAPTION": "実行",
@@ -543,5 +562,18 @@
     "CONFIRM_UNSAVEDTAB_HEADER": "保存していない変更があります:",
     "CONFIRM_UNSAVEDTAB_CLOSEANYWAY": "とにかく閉じますか？",
     "CONFIRM_REFRESH_SCRIPT": "ディスクからリロードしますか？保存されていない変更は破棄されます",
-    "TITLE_PREFERENCES": "WaveMaker設定"
+    "TITLE_PREFERENCES": "WaveMaker設定",
+
+
+    "DATA_UTILS_DATABASE": "データベース",
+    "DATA_UTILS_FILE": "ファイル",
+    "DATA_UTILS_DATABASE_HELP": "データベースサーバーのデータベース名を入力してください",
+    "DATA_UTILS_FILE_HELP": "プロジェクトのwebapproot/dataフォルダーにあるファイル名を入力してください。ファイル名がhrdb.scriptの場合はhrdbと入力してください。",
+    "CONFIRM_SAVE_LANGUAGE": "言語を変更する前にプロジェクトを保存しなければなりません。保存して続けますか？",
+
+    "STUDIO_CONFIG_TOOL_NOT_RUN": "スタジオ設定ツールが実行されていないようです。これを実行しないとスタジオのインストールが完了しません。設定ツールを実行するにはOKボタンをクリックしてください",
+
+    COMPILE_BUTTON_WIDTH: "100px",
+    RUN_BUTTON_WIDTH: "75px",
+    TEST_BUTTON_WIDTH: "75px"
 }

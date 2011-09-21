@@ -464,6 +464,8 @@ wm.ServiceCall.extend({
     },
 
 	makePropEdit: function(inName, inValue, inDefault) {
+	    var prop = this.schema ? this.schema[inName] : null;
+	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
 		switch (inName) {
 			case "service":
 				return makeSelectPropEdit(inName, inValue, this.getServicesList(), inDefault);
@@ -478,12 +480,12 @@ wm.ServiceCall.extend({
 						this.set_operation(inValue);
 				}
 				if (methods)
-					return makeSelectPropEdit(inName, inValue, methods, inDefault);
+					return makeSelectPropEdit(name, inValue, methods, inDefault);
 				break;
 			case "queue":
 			case "updateNow":
 			case "clearInput":
-				return makeReadonlyButtonEdit(inName, inValue, inDefault);
+				return makeReadonlyButtonEdit(name, inValue, inDefault);
 		}
 		return this.inherited(arguments);
 	},

@@ -12,6 +12,9 @@
  *  limitations under the License.
  */
 {
+    "wm.ServiceVariable": {
+	updateNow: "今すぐ更新"
+    },
 "wm.Component": {
 	name: "名前",
 //	owner: "オーナー",
