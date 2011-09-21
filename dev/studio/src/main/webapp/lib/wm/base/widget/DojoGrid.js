@@ -270,7 +270,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		    if (newdata[prop] instanceof Date)
 			newdata[prop] = newdata[prop].getTime();
 		}*/
-		this.selectedItem.setDataSet(this.getRowData(selectedIndex)._wmVariable[0]);
+		if (selectedIndex < this.getRowCount())
+		    this.selectedItem.setDataSet(this.getRowData(selectedIndex)._wmVariable[0]);
+		else 
+		    this.selectedItem.setDataSet(null);
 	    }
 	    this.setValue("emptySelection", !this.hasSelection());
 	    this.setValue("isRowSelected", this.hasSelection());
