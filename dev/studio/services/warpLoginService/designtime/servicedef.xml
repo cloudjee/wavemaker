@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" springFile="warpLoginService.spring.xml" type="JavaService" CRUDService="false" class="com.wavemaker.studio.warp.LoginService" id="warpLoginService">
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" id="warpLoginService" class="com.wavemaker.studio.warp.LoginService" CRUDService="false" type="JavaService" springFile="warpLoginService.spring.xml">
     <operation name="logOut">
-        <parameter isList="false" typeRef="java.lang.String" name="host"/>
-        <parameter isList="false" typeRef="java.lang.String" name="port"/>
-        <parameter isList="false" typeRef="java.lang.String" name="sessId"/>
-        <return isList="false" typeRef="java.lang.String"/>
+        <parameter name="host" typeRef="java.lang.String" isList="false"/>
+        <parameter name="port" typeRef="java.lang.String" isList="false"/>
+        <parameter name="sessId" typeRef="java.lang.String" isList="false"/>
+        <return typeRef="java.lang.String" isList="false"/>
     </operation>
     <operation name="logIn">
-        <parameter isList="false" typeRef="java.lang.String" name="host"/>
-        <parameter isList="false" typeRef="java.lang.String" name="port"/>
-        <parameter isList="false" typeRef="java.lang.String" name="userName"/>
-        <parameter isList="false" typeRef="java.lang.String" name="password"/>
-        <parameter isList="false" typeRef="java.lang.String" name="domain"/>
-        <return isList="false" typeRef="java.lang.String"/>
+        <parameter name="host" typeRef="java.lang.String" isList="false"/>
+        <parameter name="port" typeRef="java.lang.String" isList="false"/>
+        <parameter name="userName" typeRef="java.lang.String" isList="false"/>
+        <parameter name="password" typeRef="java.lang.String" isList="false"/>
+        <parameter name="domain" typeRef="java.lang.String" isList="false"/>
+        <return typeRef="java.lang.String" isList="false"/>
     </operation>
     <dataobjects/>
 </service>

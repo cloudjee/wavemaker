@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" springFile="warpFlowService.spring.xml" type="JavaService" CRUDService="false" class="com.wavemaker.studio.warp.FlowService" id="warpFlowService">
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" id="warpFlowService" class="com.wavemaker.studio.warp.FlowService" CRUDService="false" type="JavaService" springFile="warpFlowService.spring.xml">
     <operation name="listFlows">
-        <parameter isList="false" typeRef="java.lang.String" name="host"/>
-        <parameter isList="false" typeRef="java.lang.String" name="port"/>
-        <parameter isList="false" typeRef="java.lang.String" name="projectName"/>
-        <parameter isList="false" typeRef="java.lang.String" name="userName"/>
-        <parameter isList="false" typeRef="java.lang.String" name="password"/>
-        <parameter isList="false" typeRef="java.lang.String" name="domain"/>
-        <return isList="false" typeRef="java.lang.String"/>
+        <parameter name="host" typeRef="java.lang.String" isList="false"/>
+        <parameter name="port" typeRef="java.lang.String" isList="false"/>
+        <parameter name="projectName" typeRef="java.lang.String" isList="false"/>
+        <parameter name="userName" typeRef="java.lang.String" isList="false"/>
+        <parameter name="password" typeRef="java.lang.String" isList="false"/>
+        <parameter name="domain" typeRef="java.lang.String" isList="false"/>
+        <return typeRef="java.lang.String" isList="false"/>
     </operation>
     <operation name="importFlows">
-        <parameter isList="false" typeRef="java.lang.String" name="host"/>
-        <parameter isList="false" typeRef="java.lang.String" name="port"/>
-        <parameter isList="false" typeRef="java.lang.String" name="userName"/>
-        <parameter isList="false" typeRef="java.lang.String" name="password"/>
-        <parameter isList="false" typeRef="java.lang.String" name="domain"/>
-        <parameter isList="false" typeRef="java.lang.String" name="projectName"/>
-        <parameter isList="false" typeRef="java.lang.String" name="sessionId"/>
+        <parameter name="host" typeRef="java.lang.String" isList="false"/>
+        <parameter name="port" typeRef="java.lang.String" isList="false"/>
+        <parameter name="userName" typeRef="java.lang.String" isList="false"/>
+        <parameter name="password" typeRef="java.lang.String" isList="false"/>
+        <parameter name="domain" typeRef="java.lang.String" isList="false"/>
+        <parameter name="projectName" typeRef="java.lang.String" isList="false"/>
+        <parameter name="sessionId" typeRef="java.lang.String" isList="false"/>
     </operation>
     <operation name="listAllFlows">
-        <parameter isList="false" typeRef="java.lang.String" name="host"/>
-        <parameter isList="false" typeRef="java.lang.String" name="port"/>
-        <parameter isList="false" typeRef="java.lang.String" name="userName"/>
-        <parameter isList="false" typeRef="java.lang.String" name="password"/>
-        <parameter isList="false" typeRef="java.lang.String" name="domain"/>
-        <return isList="false" typeRef="java.lang.String"/>
+        <parameter name="host" typeRef="java.lang.String" isList="false"/>
+        <parameter name="port" typeRef="java.lang.String" isList="false"/>
+        <parameter name="userName" typeRef="java.lang.String" isList="false"/>
+        <parameter name="password" typeRef="java.lang.String" isList="false"/>
+        <parameter name="domain" typeRef="java.lang.String" isList="false"/>
+        <return typeRef="java.lang.String" isList="false"/>
     </operation>
     <operation name="listProjects">
-        <parameter isList="false" typeRef="java.lang.String" name="host"/>
-        <parameter isList="false" typeRef="java.lang.String" name="port"/>
-        <parameter isList="false" typeRef="java.lang.String" name="userName"/>
-        <parameter isList="false" typeRef="java.lang.String" name="password"/>
-        <parameter isList="false" typeRef="java.lang.String" name="domain"/>
-        <return isList="false" typeRef="java.lang.String"/>
+        <parameter name="host" typeRef="java.lang.String" isList="false"/>
+        <parameter name="port" typeRef="java.lang.String" isList="false"/>
+        <parameter name="userName" typeRef="java.lang.String" isList="false"/>
+        <parameter name="password" typeRef="java.lang.String" isList="false"/>
+        <parameter name="domain" typeRef="java.lang.String" isList="false"/>
+        <return typeRef="java.lang.String" isList="false"/>
     </operation>
     <dataobjects/>
 </service>

@@ -46,9 +46,32 @@ import com.wavemaker.tools.project.ProjectConstants;
  */
 public class CopyRuntimeJarsTask extends Task {
     
-    public static final String RUNTIME_JAR_NAME = "wmruntime.jar";
+    public static String RUNTIME_JAR_NAME;
     public static final String CLASSPATH_ATTR_NAME = "Class-Path";
     public static final String TASK_NAME = "copyRuntimeJarsTask";
+
+    static {
+        try {
+            Class cls = Class.forName("com.wavemaker.runtime.WMAppContext");
+            String cn = cls.getName();
+            String rn = cn.replace('.', '/') + ".class";
+            String path = cls.getClassLoader().getResource(rn).getPath();
+            int ix = path.indexOf("!");
+            if(ix >= 0) {
+                RUNTIME_JAR_NAME = path.substring(0, ix);
+            } else {
+                RUNTIME_JAR_NAME = path;
+            }
+
+            ix = RUNTIME_JAR_NAME.indexOf("wm-runtime");
+            if(ix >= 0) {
+                RUNTIME_JAR_NAME = RUNTIME_JAR_NAME.substring(ix);
+            }
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();    
+        }
+    }
 
     /**
      * XXX this is pretty faux - ideally, we'd do something better, instead of
@@ -61,7 +84,7 @@ public class CopyRuntimeJarsTask extends Task {
      * @throws IOException
      */
     protected List<File> getModuleLocations(ClassLoader cl) throws IOException {
-        
+          getClass();
         List<File> ret = new ArrayList<File>();
         
         PathMatchingResourcePatternResolver searcher;
