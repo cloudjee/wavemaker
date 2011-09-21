@@ -152,6 +152,8 @@
 	"ServiceVariable" : "ServiceVariable",
 	"LiveVariable" : "LiveVariable",
 	"ImageList" : "ImageList",
+        "silkIconList": "Silk Icons ImageList",
+        "booleanIconList": "Boolean Icons ImageList",
 	"NavigationCall" : "NavigationCall",
 	"LogoutVariable" : "LogoutVariable",
 	"Timer" : "Timer",

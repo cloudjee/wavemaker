@@ -190,8 +190,8 @@
 
 /*[ "Non-Visual Components", "SalesForceMonitorVariable", "wm.SalesForceMonitorVariable", "wm.base.components.SalesForceMonitorVariable", "images/wm/servicevar_24.png"],*/
 [ bundlePackage.Non_Visual_Components, bundlePackage.ImageList, "wm.ImageList", "wm.base.components.ImageList", "Studio_paletteImageList_17", "", {parentMenu: bundlePackage.Graphics}, false],
-[ bundlePackage.Non_Visual_Components, "Silk Icons ImageList", "wm.ImageList", "wm.base.components.ImageList", "Studio_paletteImageList_17", "", {url: "lib/images/silkIcons/silk.png", width: 16,height: 16, colCount: 35, iconCount: 90, parentMenu: bundlePackage.Graphics }, false],
-[ bundlePackage.Non_Visual_Components, "Boolean Signage ImageList", "wm.ImageList", "wm.base.components.ImageList", "Studio_paletteImageList_17", "", {url: "lib/images/boolean/Signage/set.png", width: 16,height: 16, colCount: 9, parentMenu: bundlePackage.Graphics}, false],
+[ bundlePackage.Non_Visual_Components, bundlePackage.silkIconList, "wm.ImageList", "wm.base.components.ImageList", "Studio_paletteImageList_17", "", {url: "lib/images/silkIcons/silk.png", width: 16,height: 16, colCount: 35, iconCount: 90, parentMenu: bundlePackage.Graphics }, false],
+[ bundlePackage.Non_Visual_Components, bundlePackage.booleanIconList, "wm.ImageList", "wm.base.components.ImageList", "Studio_paletteImageList_17", "", {url: "lib/images/boolean/Signage/set.png", width: 16,height: 16, colCount: 9, parentMenu: bundlePackage.Graphics}, false],
 [ bundlePackage.Non_Visual_Components, bundlePackage.LogoutVariable, "wm.LogoutVariable", "wm.base.components.LogoutVariable", "Studio_paletteImageList_43", "", {parentMenu: bundlePackage.Advanced}, false],
 [ bundlePackage.Non_Visual_Components, bundlePackage.Timer, "wm.Timer", "wm.base.components.Timer", "Studio_paletteImageList_42", "", {parentMenu: bundlePackage.Advanced}, false],
 [ bundlePackage.Non_Visual_Components, bundlePackage.TypeDefinition, "wm.TypeDefinition", "wm.base.components.TypeDefinition", "Studio_paletteImageList_42", "", {parentMenu: bundlePackage.Advanced}, false],
