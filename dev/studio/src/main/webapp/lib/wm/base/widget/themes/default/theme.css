@@ -1898,3 +1898,7 @@ Overriding dijit's progress bar properties to enable height changes to progress 
 .wmeditor-cbeditor.Disabled, .wmeditor-cbeditor.Disabled input[type="checkbox"],  .wmeditor-cbeditor.Disabled input[type="radio"] {
     cursor: default;
 }
+
+.dj_ie9 .dijitComboBox .dijitInputContainer, .dj_ie9 .dijitComboBox .dijitInputContainer input {
+    height: 100%;
+}
