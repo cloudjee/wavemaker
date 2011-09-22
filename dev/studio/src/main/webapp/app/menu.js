@@ -30,7 +30,7 @@ Studio.extend({
 	this._partnerServicesStructure = {
 	    label: "Partner Services",
 	    iconClass: "PartnerService",
-	    idInPage: "partnerServicesItem",
+	    idInPage: "partnerServicesSubmenu",
 	    children: [
 	    ]
 	};
