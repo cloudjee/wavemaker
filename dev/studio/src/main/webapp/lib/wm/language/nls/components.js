@@ -42,6 +42,9 @@
 "wm.Dashboard.ADD_DIALOG_SELECT_CAPTION": "Widget",
 "wm.Dashboard.ADD_DIALOG_ADD_CAPTION": "Add",
 "wm.Dashboard.ADD_DIALOG_CANCEL_CAPTION": "Cancel",
+"wm.Dashboard.ADD_DIALOG_CANCEL_WIDTH": "60px",
+"wm.Dashboard.ADD_DIALOG_ADD_WIDTH": "60px",
+"wm.Dashboard.ADD_DIALOG_SELECT_CAPTION_SIZE": "80px",
 
 "wm.DataNavigator.TOTAL_LABEL": "of ${total}",
 

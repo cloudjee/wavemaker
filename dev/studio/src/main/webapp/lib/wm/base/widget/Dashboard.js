@@ -65,7 +65,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 						   "display":"Select",
 						   "readonly":false,
 						   "width":"250px", 
-						   captionSize:"80px", 
+						   captionSize:wm.getDictionaryItem("wm.Dashboard.ADD_DIALOG_SELECT_CAPTION_SIZE"),
 						   required: true, 
 						   isRelativePositioned:true});
 		dom.appendChild(this.selectEditor.domNode);
@@ -80,7 +80,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 	    /* TODO: Localize */
 	    this.cancelButton = new wm.Button({owner: this,
 					       "height":"100%",
-					       "width":"60px",
+					       "width":wm.getDictionaryItem("wm.Dashboard.ADD_DIALOG_CANCEL_WIDTH"),
 					       "caption": wm.getDictionaryItem("wm.Dashboard.ADD_DIALOG_CANCEL_CAPTION"),
 					       isRelativePositioned:true}); //, {"onclick":'onCancelClick'});
 		panel.appendChild(this.okButton.domNode);

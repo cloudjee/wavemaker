@@ -134,6 +134,7 @@ Studio.widgets = {
 							       onClick: "projectSettingsClick",
 							       iconClass: "preferencesItem"},
 							     {"defaultLabel": "Modify Studio",
+							      idInPage: "modifyStudioItem",
 							      iconClass: "importProjectItem",
 							      children: [
 								  {"defaultLabel": "Upload Studio Patches...",

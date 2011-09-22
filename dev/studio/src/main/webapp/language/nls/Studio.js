@@ -139,6 +139,7 @@
     "wm.ContextMenuDialog.SHOW_LESS": '<< Hide Advanced Properties',
 
     /* wm.Dashboard */
+    "wm.Dashboard.CAPTION_ADD_PORTLET": "Add Portlet",
     "wm.Dashboard.CONTEXT_MENU_TITLE": "Configure Portlets",
     "wm.Dashboard.CONFIG_DIALOG_OPEN_FIELD": "Default",
     "wm.Dashboard.CONFIG_DIALOG_TITLE_FIELD": "Title",

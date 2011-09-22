@@ -36,7 +36,7 @@ wm.Dashboard.extend({
 
 	    }
 		this.headerAttr[2].dataStore = this.pageStore;
-	    this.contextMenu = new wm.ContextMenuDialog({addButtonLabel: 'Add Portlet', 
+	    this.contextMenu = new wm.ContextMenuDialog({addButtonLabel: studio.getDictionaryItem("wm.Dashboard.CAPTION_ADD_PORTLET"), 
 							onAddButtonClick: dojo.hitch(this, 'addNewPortlet'), 
 							headerAttr: this.headerAttr, 
 							dataSet: this.portlets, 
