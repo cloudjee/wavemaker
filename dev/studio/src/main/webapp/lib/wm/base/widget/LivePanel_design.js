@@ -51,10 +51,10 @@ wm.LivePanel.extend({
 			studio.beginWait(studio.getDictionaryItem("wm.LivePanel.WAIT_GENERATING"));
 			wm.onidle(this, function() {
 			    switch(inName) {
-			    case "Traditional":
+			    case studio.LivePanelTypeChooserDialog.page.getDictionaryItem("TRADITIONAL"):
 				this.createTraditionalLivePanel(inName.match(/Paging$/));
 				break;
-			    case "Dialog":
+			    case studio.LivePanelTypeChooserDialog.page.getDictionaryItem("DIALOG"):
 				this.createPopupLivePanel(inName.match(/Paging$/));
 				break;
 			    case "Editable Grid":
