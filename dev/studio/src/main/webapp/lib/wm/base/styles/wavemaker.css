@@ -420,47 +420,47 @@
 }
 
 .wm_Attribution_center {
-	background-image: url(images/wmpoweredby.gif) !important;
+	background-image: url(images/wmpoweredby.png) !important;
 	background-repeat: no-repeat !important;
 	background-position: center center !important;
 }
 .wm_Attribution_centerLeft {
-	background-image: url(images/wmpoweredby.gif) !important;
+	background-image: url(images/wmpoweredby.png) !important;
 	background-repeat: no-repeat !important;
 	background-position: center left !important;
 }
 .wm_Attribution_centerRight {
-	background-image: url(images/wmpoweredby.gif) !important;
+	background-image: url(images/wmpoweredby.png) !important;
 	background-repeat: no-repeat !important;
 	background-position: center right !important;
 }
 .wm_Attribution_topCenter {
-	background-image: url(images/wmpoweredby.gif) !important;
+	background-image: url(images/wmpoweredby.png) !important;
 	background-repeat: no-repeat !important;
 	background-position: top center !important;
 }
 .wm_Attribution_topLeft {
-	background-image: url(images/wmpoweredby.gif) !important;
+	background-image: url(images/wmpoweredby.png) !important;
 	background-repeat: no-repeat !important;
 	background-position: top left !important;
 }
 .wm_Attribution_topRight {
-	background-image: url(images/wmpoweredby.gif) !important;
+	background-image: url(images/wmpoweredby.png) !important;
 	background-repeat: no-repeat !important;
 	background-position: top right !important;
 }
 .wm_Attribution_bottomCenter {
-	background-image: url(images/wmpoweredby.gif) !important;
+	background-image: url(images/wmpoweredby.png) !important;
 	background-repeat: no-repeat !important;
 	background-position: bottom center !important;
 }
 .wm_Attribution_bottomLeft {
-	background-image: url(images/wmpoweredby.gif) !important;
+	background-image: url(images/wmpoweredby.png) !important;
 	background-repeat: no-repeat !important;
 	background-position: bottom left !important;
 }
 .wm_Attribution_bottomRight {
-	background-image: url(images/wmpoweredby.gif) !important;
+	background-image: url(images/wmpoweredby.png) !important;
 	background-repeat: no-repeat !important;
 	background-position: bottom right !important;
 }
