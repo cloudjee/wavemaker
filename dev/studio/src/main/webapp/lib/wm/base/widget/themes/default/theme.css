@@ -1257,17 +1257,6 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	padding-left: 0;
 }
 
-.chromeFramePrompt{
-	position:absolute; 
-	top:5%; 
-	left:10%; 
-	z-index:999; 
-	display:none;
-	border:5px solid #DCDCDC; 
-	width:800px;
-	height:650px;
-	background-color:#FFFFFF;	
-}
 
 .topleft_wm_Border_TopStyleCurved12px {
     position: absolute;

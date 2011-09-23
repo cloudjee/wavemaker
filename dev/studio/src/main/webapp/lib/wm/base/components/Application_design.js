@@ -112,6 +112,17 @@ wm.Application.extend({
 	    }
 	} else
 	    this.projectSubVersion++;
+    },
+    setPromptChromeFrame: function(inValue) {
+	this.promptChromeFrame = inValue;
+	var indexText = studio.project.loadProjectData("index.html");
+	if (inValue == "Allow IE 6 and 7")
+	    inValue = null;
+	else
+	    inValue = '"' + inValue + '"';
+	indexText = indexText.replace(/var\s+wmChromeFramePath.*/, "var wmChromeFramePath = " + inValue + ";")
+	studio.project.saveProjectData("index.html", indexText);
+	studio.saveAll();
     }
 });
 
@@ -119,7 +130,7 @@ wm.Application.extend({
 wm.Object.extendSchema(wm.Application, {
     name: {ignore: 1}, // at some point, we might provide this as a way to rename the project... but renaming is really a server side op, so requires confirmation. 
     main: {shortname: "mainPageName", order: 5},
-    promptChromeFrame: {shortname: "chromeFrame (NA)", ignore: 1},
+    promptChromeFrame: {order: 10, type: "string", options: ["chromeframe.html", "http://google.com/chrome", "Allow IE 6 and 7"]},
     i18n: {type: "boolean", order: 6},
     theme: {type: "string", order: 7},
     currencyLocale: {type: "string", order: 8},

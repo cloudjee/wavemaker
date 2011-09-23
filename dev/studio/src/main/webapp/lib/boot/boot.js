@@ -28,7 +28,7 @@ if (location.search.indexOf("dojo.locale=") != -1) {
 }
     } catch(e) {}
 wm = window["wm"] || {};
-wm.version = '6.4.1Beta';
+wm.version = '6.4.2Beta';
 
 // loading via append element
 wm.createElement = function(inTag, inAttrs) {
@@ -137,7 +137,7 @@ wm.registerPackage = registerPackage = function() {
 };
 
 (function(){
-	wm.writeJsTag(wm.relativeLibPath + 'wm/base/CFInstall.js');
+        if (window["wmChromeFramePath"]) return;
 	// early browser sniff
 	var n = navigator, ua = n.userAgent, av = n.appVersion;
 	wm.isMoz = (ua.indexOf("Gecko")>=0 && av.indexOf("WebKit")<0 && av.indexOf("Safari")<0 && av.indexOf("Konqueror")<0);
