@@ -687,8 +687,9 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 			r.setValue(this.FK_ATTR, false);
 			this.columnListVar._setItem(i, r.getData());
 		}
+	    try {
 		this.columnList.dijit.edit.apply();
-
+	    } catch(e) {}
 
 
 		var columns = this.columnListVar.getData();
