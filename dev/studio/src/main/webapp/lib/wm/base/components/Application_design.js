@@ -122,7 +122,8 @@ wm.Application.extend({
 	    inValue = '"' + inValue + '"';
 	indexText = indexText.replace(/var\s+wmChromeFramePath.*/, "var wmChromeFramePath = " + inValue + ";")
 	studio.project.saveProjectData("index.html", indexText);
-	studio.saveAll();
+	var src = studio.project.generateApplicationSource();
+	studio.project.saveProjectData(studio.project.projectName + ".js", src);
     }
 });
 

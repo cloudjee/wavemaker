@@ -43,9 +43,27 @@ var wmChromeFramePath = "http://google.com/chrome";
 	<!-- Begin {%PROJECT} -->
 	<div id="wavemakerNode">
 <!--[if lt IE 8]>
+<style>
+.BrowserNotSupported {
+    background-color: #aaa;
+    padding: 0px 40px;
+    height: 100%;
+}
+.BrowserNotSupported div {
+    padding-top: 15px;
+    text-align: center;
+    font-size: 16pt;
+    height: 65px;
+}
+.BrowserNotSupported iframe {
+    border: solid 2px #333;
+    height: 80%;
+    width: 100%;
+}
+</style>
 <script type="text/javascript">
     if (window["wmChromeFramePath"]) {
-	  document.writeln('<iframe style="width:100%;height:100%;" id="_wm_googleChromeDialog" class="chromeFramePrompt" src="' + wmChromeFramePath + '"></iframe>');
+	  document.writeln('<div class="BrowserNotSupported"><div>Project6 can not be run in this browser; please review the information below on upgrading your browser</div><iframe id="_wm_googleChromeDialog" class="chromeFramePrompt" src="' + wmChromeFramePath + '"></iframe></div>');
     }
 
 </script>

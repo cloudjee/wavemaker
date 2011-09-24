@@ -106,6 +106,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
                 s.position = "relative";
                 s.top = Math.floor((h-c.h)/2) + "px";
             }
+
 /*
 	    var arrowNode = dojo.query(".dijitArrowButtonInner", this.domNode)[0];
 	    if (arrowNode) arrowNode.style.height = (h-2) + "px";
