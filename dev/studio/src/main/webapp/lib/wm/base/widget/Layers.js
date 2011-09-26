@@ -682,10 +682,10 @@ dojo.declare("wm.WizardLayers", wm.Layers, {
 	}
 	return true;
     },
-    onCancelClick: function(inSender) {
+    onCancelClick: function() {
 
     },
-    onDoneClick: function(inSender) {
+    onDoneClick: function() {
 
     },
     /* This should really be an event of wm.Layer, but we should first discuss whether we want form
