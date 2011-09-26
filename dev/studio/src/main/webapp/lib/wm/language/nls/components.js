@@ -46,8 +46,6 @@
 "wm.Dashboard.ADD_DIALOG_ADD_WIDTH": "60px",
 "wm.Dashboard.ADD_DIALOG_SELECT_CAPTION_SIZE": "80px",
 
-"wm.DataNavigator.TOTAL_LABEL": "of ${total}",
-
 "wm.DojoChart.ALT_PROMPT_SILVERLIGHT": "Get Micsrosoft Silverlight",
 
 "wm.DojoGrid.TOAST_DELETE_LATER": "Please wait until all edits are saved before deleting",

@@ -53,7 +53,7 @@ dojo.declare("wm.DataNavigator", wm.Panel, {
 		'firstButton: ["wm.Button", {caption: "&nbsp&laquo;&nbsp;", width: "',this._buttonWidth,'", height: "100%"}, {}],',
 		'prevButton: ["wm.Button", {caption: "&nbsp&lt;&nbsp;", width: "',this._buttonWidth,'", height: "100%"}, {}],',
 		'recordEditor: ["wm.Number", {caption: "", width: "65px", margin: 4, height: "100%"}],',
-		'totalLabel: ["wm.Label", {caption: "of 0", width: "50px", border: 0, height: "100%"}, {}, {',
+		'totalLabel: ["wm.Label", {caption: "/ 0", width: "50px", border: 0, height: "100%"}, {}, {',
 			'format: ["wm.DataFormatter", {}, {}]',
 		'}],',
 		'nextButton: ["wm.Button", {caption: "&nbsp&gt;&nbsp;", width: "',this._buttonWidth,'", height: "100%"}, {}],',
@@ -96,7 +96,7 @@ dojo.declare("wm.DataNavigator", wm.Panel, {
 		this._updating = c != r.getValue("dataValue");
 		if (c > t) c = t;
 		r.setValue("dataValue", c);
-	       this.totalLabel.setValue("caption", wm.getDictionaryItem("wm.DataNavigator.TOTAL_LABEL", {total: t}))
+	        this.totalLabel.setValue("caption", "/ " + t);
 		this._doSetRecord(d, c);
 	},
 	setLiveSource: function(inLiveSource) {

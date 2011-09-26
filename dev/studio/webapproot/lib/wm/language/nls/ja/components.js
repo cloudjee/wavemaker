@@ -47,7 +47,6 @@
 "wm.Dashboard.ADD_DIALOG_SELECT_CAPTION_SIZE": "120px",
 "wm.Dashboard.CAPTION_ADD_PORTLET": "ポートレット追加",
 
-"wm.DataNavigator.TOTAL_LABEL": "of ${total}",
 
 "wm.DojoChart.ALT_PROMPT_SILVERLIGHT": "Micsrosoft Silverlightを取得",
 
