@@ -335,13 +335,13 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	formatData: function(inValue){
 		try
 		{
-			if (this.formatter){
-				return this.formatter.format(inValue);
+			if (this._formatter){
+				return this._formatter.format(inValue);
 			}
 			else if (this.displayType){
 				var ctor = wm.getFormatter(this.displayType);
-				this.formatter = new ctor({name: "format", owner: this});
-				return this.formatter.format(inValue);
+				this._formatter = new ctor({name: "format", owner: this});
+				return this._formatter.format(inValue);
 			}
 			else
 				return inValue;
