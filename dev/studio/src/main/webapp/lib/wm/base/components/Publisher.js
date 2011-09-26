@@ -73,7 +73,11 @@ dojo.declare("wm.ComponentPublisher", wm.Component, {
 	editProp: function(inName, inValue, inInspector) {
 		switch (inName) {
 			case "deploy":
-				return this.deploy();
+		                var self = this;
+		                studio.project.saveProject(false, function() {
+				    self.deploy();
+				});
+		                return;
 			case "undeploy":
 				return this.undeploy();
 		}

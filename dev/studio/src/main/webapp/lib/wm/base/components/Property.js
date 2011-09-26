@@ -19,10 +19,17 @@ dojo.declare("wm.Property", wm.Component, {
 	bindTarget: true,
 	bindSource: true,
 	isEvent: false,
-	readonly: false,
+	readonly: false,    
 	init: function() {
 		this.inherited(arguments);
 	    this.type = '';
+	    if (this._isDesignLoaded && this.property) {
+		/* onIdle because dojo.connect requires that the component be created, and it won't be created until the page finishes generating */
+		wm.onidle(this, function() {
+			  this.selectProperty(this.property);
+		});
+
+	    }
 	},
 	listProperties: function() {
 		var p = this.inherited(arguments);
@@ -49,7 +56,13 @@ dojo.declare("wm.Property", wm.Component, {
 		studio.onSelectProperty = dojo.hitch(this, "selectProperty");
 	    studio.selectProperty(this, null, studio.getDictionaryItem("wm.Property.SELECT_PROPERTY", {propertyName: this.name}));
 	},
+    /* Design-time only */
 	selectProperty: function(inId) {
+	    if (this._nameChangeConnect) {
+		dojo.disconnect(this._nameChangeConnect);
+		delete this._nameChangeConnect;
+	    }
+
 		studio.onSelectProperty = null;
 		var id = inId.replace("studio.wip.", "");
 	        this.property = id;
@@ -67,7 +80,12 @@ dojo.declare("wm.Property", wm.Component, {
 		    this.setValue("isEvent", true);
 		if (c.schema[prop] && c.schema[prop].readonly) 
 		    this.setValue("readonly", true);
+		
+		this._nameChangeConnect = this.connect(c, "set_name", this, function() {
+		    this.property = c.name + "." + prop;
+		});
 	    }
+
 	},
     setProperty: function(inId) {
 	this.selectProperty(inId);
