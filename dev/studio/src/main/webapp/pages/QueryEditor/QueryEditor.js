@@ -613,8 +613,8 @@ dojo.declare("QueryEditor", wm.Page, {
 			      list: false});
 	    }
 	}
-
-	this.queryInputsList._render();
+	this.queryInputsList.renderData(dojo.clone(oldData));
+	//this.queryInputsList._render();
     },
 	addBindParam: function(inSender) {
 		if (this.bindNameInput.getDataValue() == "") {
