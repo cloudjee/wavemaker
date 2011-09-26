@@ -548,7 +548,8 @@ dojo.declare("Studio", wm.Page, {
 		wm.dataSources.update();
 		this.refreshDataPalette();
 	    }
-	    dojo.publish("wmtypes-changed");
+	    if (this.application || this._application)
+		dojo.publish("wmtypes-changed");
 	},
 	servicesDataChanged: function(inData) {
 		// clear non-client services from registry
@@ -648,7 +649,7 @@ dojo.declare("Studio", wm.Page, {
     },
         deploy: function(inMsg, deployType, noWait) {
 	    var application = this.application || this._application;
-	    if (application._deployStatus == "deploying") return;
+	    if (!application || application._deployStatus == "deploying") return;
 	    application._deployStatus = "deploying";
 
 	    this._runRequested = deployType;
