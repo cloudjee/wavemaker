@@ -137,8 +137,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	selectItemOnGrid: function(obj, pkList){
 		if (!this.store)
 			return;
-		if (obj instanceof wm.Variable)
-			obj = obj.getData();
+	        if (obj instanceof wm.Variable)
+		    obj = obj.getData();
+	        if (obj === undefined || obj === null)
+		    obj = {};
 
 		var dateFields = this.getDateFields();
 		if (!pkList)
@@ -153,12 +155,20 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		var _this = this;
 		var sItem = function(items, request){
 		        if (items.length < 1) {
-                            _this.deselectAll();
+			    if (_this.selectFirstRow) {
+				_this.setSelectedRow(0);
+			    } else {
+				_this.deselectAll();
+			    }
 			    return;
                         }
 		    var idx =  _this.dojoObj.getItemIndex(items[0]);
 		    if (idx == -1)
 			idx = _this.variable.getItemIndexByPrimaryKey(obj, pkList) || -1;
+
+		    if (idx == -1 && this.selectFirstRow)
+			idx = 0;
+
 		    if (idx >= 0)
 			this._setRowTimeout = setTimeout(function(){
 			    _this.dojoObj.scrollToRow(idx);
@@ -571,11 +581,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		this.setSelectionMode(this.selectionMode);
 		this.dojoRenderer();
 		
-		if (!this.selectedItem.getData() && this.selectFirstRow)
-			this.updateSelectedItem(0);
-
 		var selectedData = this.selectedItem.getData();
-		if (selectedData)
+		if (selectedData || this.selectFirstRow)
 			this.selectItemOnGrid(this.selectedItem);
         
 
