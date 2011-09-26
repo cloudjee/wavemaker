@@ -528,6 +528,13 @@ dojo.declare("wm.studio.Project", null, {
 	    }));
 
 	    f.push(dojo.hitch(this, function() {
+		// save html file, config file, and debug loader + css
+	        studio.setSaveProgressBarMessage(c.appChromeFileName);
+	        this.saveProjectData(c.appChromeFileName, c.appChromeTemplate, true);
+	        studio.incrementSaveProgressBar(1);
+	    }));
+
+	    f.push(dojo.hitch(this, function() {
 		/* 
 		// Fix config.js if there is a username associated with this project (projectdir contains username or is empty string)
 		if (window.studio && studio.getProjectDir() &&  c.appConfigTemplate.indexOf('"../wavemaker/') != -1) {

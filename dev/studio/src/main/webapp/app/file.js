@@ -52,6 +52,7 @@ _initProjectTemplates = function() {
 	var c = wm.studioConfig;
 	dojo.mixin(c, {
 		appIndexFileName: "index.html",
+		appChromeFileName: "chromeframe.html",
 		appConfigFileName: "config.js",
 		appCssFileName: "app.css",
 		appDebugBootFileName: "lib_project.js",
@@ -63,6 +64,7 @@ _initProjectTemplates = function() {
 	loadData(t + c.appIndexFileName, function(t){ c.appIndexTemplate = t;});
 	loadData(t + c.appCssFileName, function(t){ c.appCssTemplate = t;});
 	loadData(t + c.appConfigFileName, function(t){ c.appConfigTemplate = t;});
+	loadData(t + c.appChromeFileName, function(t){ c.appChromeTemplate = t;});
 };
 
 _initPalmProjectTemplates = function() {
