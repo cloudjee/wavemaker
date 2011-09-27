@@ -37,5 +37,6 @@ DBBOX_URL_CAPTION: "Connection URL",
 DBBOX_JNDINAME_CAPTION: "JNDI Name",
 DBBOX_CFTYPE_CAPTION: "Type",
 DBBOX_CFNAME_CAPTION: "Database Name",
-CF_DB_NODATA_WARNING: "Please note: WaveMaker will create the database schema in CloudFoundry.  No data will be included.  Your database will be available but empty."
+CF_DB_NODATA_WARNING: "Please note: WaveMaker will create the database schema in CloudFoundry.  No data will be included.  Your database will be available but empty.",
+"CF_MULTIPLE_DB_WARNING": "<div class='DeploymentWarning'>WARNING: Multiple databases may not work reliably on CloudFoundry; This is a CloudFoundry issue that they are working to address</div>"
 }
