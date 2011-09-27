@@ -379,14 +379,25 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 		var free = inExtent;
 		var minSizeSum = 0;
 	        var minname = "getMin" + ((inAxis == "h") ? "Height" : "Width") + "Prop";
+	    var count = 0;
+	    for (var i=0, c; c=inC$[i]; i++) {
+		if (this.inFlow(c)) {
+		    count++;
+		}
+	    }
+
 		for (var i=0, c; c=inC$[i]; i++) {
 			if (this.inFlow(c)) {
+
 				if (c._percEx[inAxis]) {
 				    var minSize = c[minname]();
 				    var percentSize = (Number(c._percEx[inAxis]) || 0)/100 * inExtent;
-				    if (minSize < percentSize) {
-					flex += Number(c._percEx[inAxis]) || 0;
+				    if (count == 1) {
+					flex = 100;
 				        minSizeSum += minSize;
+				    } else if (minSize < percentSize) {
+					flex += Number(c._percEx[inAxis]) || 0;
+				        minSizeSum += minSize;				  
 				    } else {
 					free -= Math.max(c.bounds[inAxis],c[minname]());
 				    }
@@ -400,9 +411,14 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 		if (free - minSizeSum < 0) free -= minSizeSum; 
 /*		if (flex && flex < 100)
 			flex = 100;*/
+	    var ratio;
+	    if (flex && free > 0)
+		ratio = free/flex;
+	    else
+		ratio = 0;
 		return {
 			free: free,
-			ratio: (flex && free>0) ? (free / flex) : 0
+			ratio: ratio
 		};
 	},
         // TODO: This, and perhaps calcFlexRatio should probably use not just minHeight/minWidth, but getMinWidthProp/getMinHeightProp

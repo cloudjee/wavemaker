@@ -554,9 +554,10 @@ wm.Container.extend({
 	        var sum = 0;
 	    var percentUsed = 0;
 		var v;
-
+	    var count = 0;
 		for (var i=0, c; c=this.c$[i]; i++) {		    
 			if (this.layout.inFlow(c)) {
+			    count++;
 			    /* If c is autoScrolling, then its size isn't affected by its contents */
 			        if (c.fitToContentWidth || c instanceof wm.Container && c._percEx.w == 100 && !c.autoScroll) {
 					v =  c.getPreferredFitToContentWidth();
@@ -577,7 +578,8 @@ wm.Container.extend({
 			}
 		}
 
-	    if (percentUsed && percentUsed < 100) {
+	    var dontNormalizeMinPercent = count == 1;
+	    if (!dontNormalizeMinPercent && percentUsed && percentUsed < 100) {
 		sum = Math.round(sum * 100/percentUsed);
 		max = Math.round(max * 100/percentUsed);
 	    }
@@ -598,8 +600,10 @@ wm.Container.extend({
 	    var sum = 0;
 	    var percentUsed = 0;
 	    var v;
+	    var count = 0;
 		for (var i=0, c; c=this.c$[i]; i++) {
 			if (this.layout.inFlow(c)) {
+			    count++;
 			    /* If c is autoScrolling, then its size isn't affected by its contents */
 			        if (c.fitToContentHeight || c instanceof wm.Container && c._percEx.h == 100 && !c.autoScroll) {
 					v = c.getPreferredFitToContentHeight();
@@ -618,8 +622,8 @@ wm.Container.extend({
 				sum += v;
 			}
 		}
-
-	    if (percentUsed && percentUsed < 100) {
+	    var dontNormalizeMinPercent = count == 1;
+	    if (!dontNormalizeMinPercent && percentUsed && percentUsed < 100) {
 		sum = Math.round(sum * 100/percentUsed);
 		max = Math.round(max * 100/percentUsed);
 	    }
