@@ -158,7 +158,9 @@ dojo.declare("wm.FeedList", wm.List, {
 	},
 	getFeed: function() {
 		if (this.url && this.url !== undefined) {
-			this.getFeedServiceVariable.request([this.url]);
+		    if (!this.getFeedServiceVariable)
+			this._createGetFeedServiceVariable();
+		    this.getFeedServiceVariable.request([this.url]);
 		} else
 			this.clear();
 	},
