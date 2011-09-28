@@ -262,6 +262,7 @@ wm.LiveFormBase.extend({
 	},
 	getFormEditorProps: function() {
 		return {
+		        emptyValue: "emptyString",
 			size: this.editorSize,
 			readonly: this.readonly,
 			captionSize: this.captionSize,
