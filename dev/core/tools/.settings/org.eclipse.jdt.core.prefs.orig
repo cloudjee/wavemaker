@@ -1,0 +1,13 @@
+<<<<<<< HEAD
+#Tue Sep 13 08:51:11 PDT 2011
+=======
+#Mon Sep 12 18:04:03 PDT 2011
+>>>>>>> 5b205e1a76615eac0d7b053a714d2d0df0937b23
+encoding//src/test/java=UTF-8
+org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.5
+eclipse.preferences.version=1
+encoding//src/test/resources=UTF-8
+org.eclipse.jdt.core.compiler.source=1.5
+encoding//src/main/java=UTF-8
+encoding//src/main/resources=UTF-8
+org.eclipse.jdt.core.compiler.compliance=1.5
