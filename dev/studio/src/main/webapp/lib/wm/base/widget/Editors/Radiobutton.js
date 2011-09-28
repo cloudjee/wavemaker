@@ -24,7 +24,6 @@ dojo.require("wm.base.widget.Editors.Checkbox");
 //===========================================================================
 dojo.declare("wm.RadioButton", wm.Checkbox, {
 	radioGroup: "default",
-	emptyValue: "unset",
 	_createEditor: function(inNode, inProps) {
 		return new dijit.form.RadioButton(this.getEditorProps(inNode, inProps));
 	},

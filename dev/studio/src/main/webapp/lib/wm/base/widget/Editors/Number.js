@@ -26,7 +26,6 @@ dojo.require("dijit.form.NumberSpinner");
 // Number Editor
 //===========================================================================
 dojo.declare("wm.Number", wm.Text, {
-	emptyValue: "unset",
         spinnerButtons: false,
 	minimum: "",
 	maximum: "",

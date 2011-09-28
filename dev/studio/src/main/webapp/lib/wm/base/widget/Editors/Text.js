@@ -20,7 +20,6 @@ dojo.require("dijit.form.SimpleTextarea");
 /* We may want to move this class to another file */
 dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
 	maxHeight: 96, // only used if autoSizeHeight is enabled; and height is in pixels
-        emptyValue: "emptyString",
 /*
 	sizeEditor: function() {
 		this.inherited(arguments);

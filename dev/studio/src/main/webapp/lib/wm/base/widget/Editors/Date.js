@@ -23,7 +23,6 @@ dojo.require("dijit.form.TimeTextBox");
 // Date Editor
 //===========================================================================
 dojo.declare("wm.Date", wm.Text, {
-	emptyValue: "unset",
         useLocalTime: false,
 	promptMessage: "",
 	invalidMessage: "",
