@@ -55,8 +55,8 @@ public class TestResourceBundle extends TestSpringContextTestCase {
 	@Test
     public void testResolveMessages() throws Exception {
 
-        List<Field> l = ClassUtils.getPublicFields(Resource.class,
-                Resource.class);
+        List<Field> l = ClassUtils.getPublicFields(MessageResource.class,
+                MessageResource.class);
 
         List<String> checkedNames = new ArrayList<String>();
 
@@ -64,7 +64,7 @@ public class TestResourceBundle extends TestSpringContextTestCase {
 
         for (Field f : l) {
 
-            Resource r = (Resource) f.get(null);
+            MessageResource r = (MessageResource) f.get(null);
 
             String resourceName = "\"" + r.getMessageKey() + "\"";
             if (checkedNames.contains(resourceName)) {
@@ -107,7 +107,7 @@ public class TestResourceBundle extends TestSpringContextTestCase {
         }
     }
 
-    private Object[] getArgs(Resource r) {
+    private Object[] getArgs(MessageResource r) {
         Object[] rtn = new Object[r.getNumArgsRequired()];
         for (int i = 0; i < r.getNumArgsRequired(); i++) {
             rtn[i] = "arg-" + i;

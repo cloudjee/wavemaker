@@ -14,12 +14,15 @@
 
 package com.wavemaker.tools.ws;
 
-import java.io.File;
+import java.io.IOException;
+
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
 import com.wavemaker.runtime.ws.util.Constants;
-import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.tools.pws.PwsRestServiceGeneratorBeanFactory;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.ServiceDefinitionFactory;
 import com.wavemaker.tools.service.ServiceGeneratorFactory;
@@ -28,53 +31,55 @@ import com.wavemaker.tools.service.codegen.ServiceGenerator;
 import com.wavemaker.tools.ws.wsdl.WSDL;
 import com.wavemaker.tools.ws.wsdl.WSDLException;
 import com.wavemaker.tools.ws.wsdl.WSDLManager;
-import com.wavemaker.tools.pws.PwsRestServiceGeneratorBeanFactory;
 
 /**
  * 
  * @author ffu
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  * 
  */
 public class WebServiceFactory implements ServiceDefinitionFactory,
-        ServiceGeneratorFactory {
-    
-    public DeprecatedServiceDefinition getServiceDefinition(File f) {
-        return getServiceDefinition(f, null, null);
-    }
+		ServiceGeneratorFactory {
 
-    public DeprecatedServiceDefinition getServiceDefinition(File f, String serviceId,
-            DesignServiceManager serviceMgr) {
-        if (f.getName().endsWith(Constants.WSDL_EXT)) {
-            try {
-                return WSDLManager.processWSDL(f.toURI().toString(), serviceId);
-            } catch (WSDLException e) {
-                throw new WMRuntimeException(e);
-            }
-        }
-        return null;
-    }
+	public DeprecatedServiceDefinition getServiceDefinition(Resource f) {
+		return getServiceDefinition(f, null, null);
+	}
 
-    public ServiceGenerator getServiceGenerator(GenerationConfiguration cfg) {
-        if (cfg.getServiceDefinition() instanceof WSDL) {
-            WSDL wsdl = (WSDL) cfg.getServiceDefinition();
-            WSDL.WebServiceType serviceType = wsdl.getWebServiceType();
-            if (serviceType == WSDL.WebServiceType.SOAP) {
-                return new SOAPServiceGenerator(cfg);
-            } else if (serviceType == WSDL.WebServiceType.REST) {
-                String partnerName = cfg.getPartnerName();
-                if (partnerName == null || partnerName.length() == 0) {
-                    return new RESTServiceGenerator(cfg);
-                } else {
-                    PwsRestServiceGeneratorBeanFactory factory = (PwsRestServiceGeneratorBeanFactory) RuntimeAccess.getInstance()
-                            .getSpringBean("pwsRestServiceGeneratorBeanFactory");
-                    ServiceGenerator restServiceGenerator = factory.getPwsRestServiceGenerator(partnerName);
-                    restServiceGenerator.init(cfg);
-                    return restServiceGenerator;
-                }
-            }
-        }
-        return null;
-    }
+	public DeprecatedServiceDefinition getServiceDefinition(Resource f,
+			String serviceId, DesignServiceManager serviceMgr) {
+		if (f.getFilename().endsWith(Constants.WSDL_EXT)) {
+			try {
+				return WSDLManager.processWSDL(f.getURI().toString(), serviceId);
+			} catch (WSDLException e) {
+				throw new WMRuntimeException(e);
+			} catch (IOException e) {
+				throw new WMRuntimeException(e);
+			}
+		}
+		return null;
+	}
+
+	public ServiceGenerator getServiceGenerator(GenerationConfiguration cfg) {
+		if (cfg.getServiceDefinition() instanceof WSDL) {
+			WSDL wsdl = (WSDL) cfg.getServiceDefinition();
+			WSDL.WebServiceType serviceType = wsdl.getWebServiceType();
+			if (serviceType == WSDL.WebServiceType.SOAP) {
+				return new SOAPServiceGenerator(cfg);
+			} else if (serviceType == WSDL.WebServiceType.REST) {
+				String partnerName = cfg.getPartnerName();
+				if (partnerName == null || partnerName.length() == 0) {
+					return new RESTServiceGenerator(cfg);
+				} else {
+					PwsRestServiceGeneratorBeanFactory factory = (PwsRestServiceGeneratorBeanFactory) RuntimeAccess
+							.getInstance().getSpringBean(
+									"pwsRestServiceGeneratorBeanFactory");
+					ServiceGenerator restServiceGenerator = factory
+							.getPwsRestServiceGenerator(partnerName);
+					restServiceGenerator.init(cfg);
+					return restServiceGenerator;
+				}
+			}
+		}
+		return null;
+	}
 }
-

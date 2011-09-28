@@ -6,7 +6,8 @@ package com.wavemaker.tools.project.upgrade.six_dot_four;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 

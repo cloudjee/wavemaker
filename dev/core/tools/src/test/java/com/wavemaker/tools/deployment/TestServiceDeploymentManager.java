@@ -49,9 +49,9 @@ import com.wavemaker.json.JSON;
 import com.wavemaker.json.JSONObject;
 import com.wavemaker.json.JSONUnmarshaller;
 import com.wavemaker.runtime.server.json.JSONUtils;
+import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
-import com.wavemaker.tools.project.StudioConfiguration;
 
 /**
  * @author Jeremy Grelle
@@ -60,7 +60,7 @@ public class TestServiceDeploymentManager {
 
     private static File homeDir;
     
-    private StudioConfiguration studioConfig;
+    private LocalStudioConfiguration studioConfig;
     
     @Mock 
     private ProjectManager projectManager;
@@ -80,7 +80,7 @@ public class TestServiceDeploymentManager {
         commonDir.mkdir();
         assertTrue(commonDir.exists());
         assertTrue(commonDir.isDirectory());
-        studioConfig = new StudioConfiguration();
+        studioConfig = new LocalStudioConfiguration();
         studioConfig.setTestWaveMakerHome(homeDir);
         MockitoAnnotations.initMocks(this);
         mgr = new ServiceDeploymentManager();
@@ -95,7 +95,7 @@ public class TestServiceDeploymentManager {
         File projectDir = new File(homeDir, "projects/foo");
         projectDir.mkdirs();
         assertTrue(projectDir.isDirectory());
-        Project proj = new Project(projectDir);
+        Project proj = new Project(new FileSystemResource(projectDir), new LocalStudioConfiguration());
         when(projectManager.getCurrentProject()).thenReturn(proj);
     }
     
@@ -132,7 +132,7 @@ public class TestServiceDeploymentManager {
         File projectDir = new File(homeDir, "projects/bar");
         projectDir.mkdirs();
         assertTrue(projectDir.isDirectory());
-        Project proj = new Project(projectDir);
+        Project proj = new Project(new FileSystemResource(projectDir), new LocalStudioConfiguration());
         when(projectManager.getCurrentProject()).thenReturn(proj);
         
         result = mgr.saveDeploymentInfo(deployment4);

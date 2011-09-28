@@ -19,20 +19,32 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.sun.codemodel.*;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JConditional;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JDocComment;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JType;
+import com.sun.codemodel.JVar;
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.common.util.StringUtils;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.data.DataServiceOperation;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.service.ElementType;
-import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.data.DataServiceGenerator;
+import com.wavemaker.tools.project.ProjectManager;
+import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
-import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.util.DesignTimeUtils;
-import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.ws.salesforce.SalesforceHelper;
 
 /**
@@ -107,9 +119,9 @@ public class DataServiceGenerator_SF extends DataServiceGenerator {
         postGenerateClassBody(serviceCls);
 
         try {
-            configuration.getOutputDirectory().mkdirs();
-            codeModel.build(configuration.getOutputDirectory(), configuration
-                    .getOutputDirectory(), null);
+            configuration.getOutputDirectory().getFile().mkdirs();
+            codeModel.build(configuration.getOutputDirectory().getFile(), configuration
+                    .getOutputDirectory().getFile(), null);
         } catch (IOException e) {
             throw new GenerationException("Unable to write service stub", e);
         }

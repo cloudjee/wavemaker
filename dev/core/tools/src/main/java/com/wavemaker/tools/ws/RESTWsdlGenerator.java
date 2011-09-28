@@ -20,10 +20,10 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.ArrayList;
 
 import javax.wsdl.Definition;
 import javax.wsdl.Input;
@@ -63,9 +63,8 @@ import com.ibm.wsdl.TypesImpl;
 import com.ibm.wsdl.extensions.schema.SchemaImpl;
 import com.sun.tools.ws.processor.util.IndentingWriter;
 import com.wavemaker.runtime.ws.util.Constants;
-import com.wavemaker.runtime.ws.util.WebServiceUtils;
-import com.wavemaker.tools.ws.RESTInputParam.InputType;
 import com.wavemaker.tools.pws.IPwsRestWsdlGenerator;
+import com.wavemaker.tools.ws.RESTInputParam.InputType;
 
 /**
  * Generates WSDL which describes how to invoke and process REST service.

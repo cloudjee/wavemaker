@@ -14,19 +14,18 @@
 
 package com.wavemaker.tools.project.upgrade.six_dot_one;
 
-import java.io.File;
 import java.io.IOException;
+
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
-import com.wavemaker.runtime.server.ServerConstants;
-
-import org.apache.commons.io.FileUtils;
 /**
  * Changes for dynamic loading.
  * 
  * @author S Lee
+ * @author Jeremy Grelle
  */
 public class WebXmlUpgradeTask1 implements UpgradeTask {
 
@@ -50,14 +49,12 @@ public class WebXmlUpgradeTask1 implements UpgradeTask {
      * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
      */
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
-        File webxml = project.getWebXml();
+        Resource webxml = project.getWebXml();
 
         try {
-            String content = FileUtils.readFileToString(webxml, ServerConstants.DEFAULT_ENCODING);
-
+            String content = project.readFile(webxml);
             content = content.replace(fromStr, toStr);
-
-            FileUtils.writeStringToFile(webxml, content, ServerConstants.DEFAULT_ENCODING);
+            project.writeFile(webxml, content);
         } catch (IOException ioe) {
             ioe.printStackTrace();
             error = true;

@@ -24,6 +24,7 @@
 package com.wavemaker.tools.cloudmgr.opsource.listimages.response;
 
 import javax.xml.bind.annotation.XmlRegistry;
+
 import com.wavemaker.tools.cloudmgr.opsource.listimages.response.ServerImages.ServerImage;
 import com.wavemaker.tools.cloudmgr.opsource.listimages.response.ServerImages.ServerImage.OperatingSystem;
 

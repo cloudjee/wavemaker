@@ -14,7 +14,7 @@
 
 package com.wavemaker.tools.serializer;
 
-import java.io.File;
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.tools.service.FileService;
 
@@ -22,7 +22,7 @@ import com.wavemaker.tools.service.FileService;
  * This interface describes the project file serializer.
  * 
  * @author ffu
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  * 
  */
 public interface FileSerializer {
@@ -37,7 +37,7 @@ public interface FileSerializer {
      * @return An object representing contents of the file.
      * @throws FileSerializerException
      */
-    public Object readObject(FileService fileService, File file)
+    public Object readObject(FileService fileService, Resource file)
             throws FileSerializerException;
 
     /**
@@ -51,6 +51,6 @@ public interface FileSerializer {
      *            The file.
      * @throws FileSerializerException
      */
-    public void writeObject(FileService fileService, Object object, File file)
+    public void writeObject(FileService fileService, Object object, Resource file)
             throws FileSerializerException;
 }

@@ -30,7 +30,7 @@ import org.apache.commons.lang.SystemUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.Tuple;
 import com.wavemaker.json.JSONArray;
@@ -77,7 +77,7 @@ public class ModuleController extends AbstractController {
             mw = moduleManager.getModuleByName(id);
             path = requestURI.substring(endExtLoc+1);
         } else {
-            throw new WMRuntimeException(Resource.NO_MODULE_LOOKUP,
+            throw new WMRuntimeException(MessageResource.NO_MODULE_LOOKUP,
                     requestURI);
         }
 
@@ -150,7 +150,7 @@ public class ModuleController extends AbstractController {
         } else {
             Tuple.Two<ModuleWire, String> tuple = parseRequestPath(requestURI);
             if (null==tuple.v1) {
-                String message = Resource.NO_MODULE_RESOURCE.getMessage(
+                String message = MessageResource.NO_MODULE_RESOURCE.getMessage(
                         requestURI, tuple.v2);
                 logger.error(message);
                 

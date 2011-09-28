@@ -14,7 +14,7 @@
 
 package com.wavemaker.runtime.security;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 
 /**
  * Thrown if the credentials are invalid.
@@ -35,7 +35,7 @@ public class InvalidCredentialsException extends SecurityException {
         super(cause);
     }    
 
-    public InvalidCredentialsException(Resource resource, Object... args) {
+    public InvalidCredentialsException(MessageResource resource, Object... args) {
         super(resource, args);
     }
 

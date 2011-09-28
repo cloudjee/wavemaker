@@ -24,8 +24,8 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
 import com.wavemaker.tools.service.definitions.DataObject;
 import com.wavemaker.tools.service.definitions.EventNotifier;
 import com.wavemaker.tools.service.definitions.Operation;
-import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.service.definitions.Operation.Parameter;
+import com.wavemaker.tools.service.definitions.Service;
 
 /**
  * @author Simon Toens

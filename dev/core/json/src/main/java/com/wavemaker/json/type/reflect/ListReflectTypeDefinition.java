@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.type.ListTypeDefinition;
 
@@ -57,13 +57,13 @@ public class ListReflectTypeDefinition extends ReflectTypeDefinition implements
                 return new ArrayList<Object>(length);
             } else {
                 throw new WMRuntimeException(
-                        Resource.JSON_FAILEDINSTANCE_COLLECTION, getKlass());
+                        MessageResource.JSON_FAILEDINSTANCE_COLLECTION, getKlass());
             }
         } else if (getKlass().isArray()) {
             Class<?> componentType = getKlass().getComponentType();
             return Array.newInstance(componentType, length);
         } else {
-            throw new WMRuntimeException(Resource.JSON_UNKNOWN_COLL_OR_ARRAY,
+            throw new WMRuntimeException(MessageResource.JSON_UNKNOWN_COLL_OR_ARRAY,
                     getKlass());
         }
     }
@@ -87,7 +87,7 @@ public class ListReflectTypeDefinition extends ReflectTypeDefinition implements
         } else if (list instanceof Collection) {
             ((Collection) list).add(o);
         } else {
-            throw new WMRuntimeException(Resource.JSON_UNKNOWN_COLL_IN_SET,
+            throw new WMRuntimeException(MessageResource.JSON_UNKNOWN_COLL_IN_SET,
                     list, list.getClass());
         }
     }

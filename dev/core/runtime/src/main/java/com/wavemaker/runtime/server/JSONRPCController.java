@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.JsonView;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMException;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.JSONArray;
@@ -75,10 +75,10 @@ public class JSONRPCController extends ControllerBase {
                 getInternalRuntime().getJSONState());
         
         if (null==jsonReq) {
-            throw new WMRuntimeException(Resource.FAILED_TO_PARSE_REQUEST, input);
+            throw new WMRuntimeException(MessageResource.FAILED_TO_PARSE_REQUEST, input);
         } else if ((!jsonReq.containsKey(ServerConstants.METHOD) ||
                 (!jsonReq.containsKey(ServerConstants.ID)))) {
-            throw new WMRuntimeException(Resource.SERVER_NOMETHODORID, input);
+            throw new WMRuntimeException(MessageResource.SERVER_NOMETHODORID, input);
         }
 
         method = (String) jsonReq.get(ServerConstants.METHOD);
@@ -97,12 +97,12 @@ public class JSONRPCController extends ControllerBase {
                     params = new JSONArray();
                 } else {
                     throw new WMRuntimeException(
-                            Resource.JSONRPC_CONTROLLER_BAD_PARAMS_NON_EMPTY,
+                            MessageResource.JSONRPC_CONTROLLER_BAD_PARAMS_NON_EMPTY,
                             tjo, jsonReq);
                 }
             } else {
                 throw new WMRuntimeException(
-                        Resource.JSONRPC_CONTROLLER_BAD_PARAMS_UNKNOWN_TYPE,
+                        MessageResource.JSONRPC_CONTROLLER_BAD_PARAMS_UNKNOWN_TYPE,
                         rawParams.getClass(), jsonReq);
             }
         } else {
@@ -118,7 +118,7 @@ public class JSONRPCController extends ControllerBase {
         
         ServiceWire sw = this.getServiceManager().getServiceWire(serviceName);
         if (null==sw) {
-            throw new WMRuntimeException(Resource.NO_SERVICEWIRE, serviceName);
+            throw new WMRuntimeException(MessageResource.NO_SERVICEWIRE, serviceName);
         }
         TypedServiceReturn reflInvokeRef = invokeMethod(sw, method, params, null);
         

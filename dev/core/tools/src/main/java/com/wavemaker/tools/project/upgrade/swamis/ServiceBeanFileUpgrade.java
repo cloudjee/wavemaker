@@ -14,8 +14,9 @@
 
 package com.wavemaker.tools.project.upgrade.swamis;
 
-import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.project.Project;
@@ -37,74 +39,81 @@ import com.wavemaker.tools.util.DesignTimeUtils;
  * Create separate bean files for all services that don't already have them.
  * 
  * @author small
- * @version $Rev:22689 $ - $Date:2008-05-30 16:49:03 -0700 (Fri, 30 May 2008) $
- *
+ * @author Jeremy Grelle
+ * 
  */
 public class ServiceBeanFileUpgrade implements UpgradeTask {
 
-    private static final JAXBContext definitionsContext;
-    
-    static {
-        try {
-            definitionsContext = JAXBContext
-                    .newInstance("com.wavemaker.tools.service.definitions");
-        } catch (JAXBException e) {
-            throw new WMRuntimeException(e);
-        }
-    }
+	private static final JAXBContext definitionsContext;
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
-    public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
-        
-        DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(
-                project.getProjectRoot());
-        List<String> touchedProjects = new ArrayList<String>();
+	static {
+		try {
+			definitionsContext = JAXBContext
+					.newInstance("com.wavemaker.tools.service.definitions");
+		} catch (JAXBException e) {
+			throw new WMRuntimeException(e);
+		}
+	}
 
-        for (Service service: dsm.getServices()) {
-            if (null == service.getSpringFile()) {
-                // create the service bean file
-                File serviceBeanFile = dsm.getServiceBeanXml(service.getId());
-                if (!serviceBeanFile.getParentFile().exists()) {
-                    serviceBeanFile.getParentFile().mkdir();
-                }
-                if (!serviceBeanFile.exists()) {
-                    try {
-                        DesignServiceManager
-                                .generateSpringServiceConfig(service.getId(),
-                                        service.getClazz(),
-                                        dsm.getDesignServiceType(service.getType()),
-                                        serviceBeanFile, project);
-                    } catch (JAXBException e) {
-                        throw new WMRuntimeException(e);
-                    } catch (IOException e) {
-                        throw new WMRuntimeException(e);
-                    }
-                    
-                }
-                
-                // edit the servicedef
-                File serviceDefFile = dsm.getServiceDefXml(service.getId());
-                service.setSpringFile(serviceBeanFile.getName());
-                
-                Marshaller marshaller;
-                try {
-                    marshaller = definitionsContext.createMarshaller();
-                    marshaller.setProperty("jaxb.formatted.output", true);
-                    marshaller.marshal(service, serviceDefFile);
-                } catch (JAXBException e) {
-                    throw new WMRuntimeException(e);
-                }
-                
-                // finally, add this to the list of modified services
-                touchedProjects.add(service.getId());
-            }
-        }
-        
-        if (!touchedProjects.isEmpty()) {
-            upgradeInfo.addVerbose("Converted bean definitions to a separate file for services: "+
-                    StringUtils.join(touchedProjects, ", "));
-        }
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker
+	 * .tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
+	 */
+	public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
+
+		DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(project
+				.getProjectRoot());
+		List<String> touchedProjects = new ArrayList<String>();
+
+		for (Service service : dsm.getServices()) {
+			if (null == service.getSpringFile()) {
+				// create the service bean file
+				Resource serviceBeanFile = dsm.getServiceBeanXml(service
+						.getId());
+				if (!serviceBeanFile.exists()) {
+					try {
+						DesignServiceManager.generateSpringServiceConfig(
+								service.getId(), service.getClazz(),
+								dsm.getDesignServiceType(service.getType()),
+								serviceBeanFile, project);
+					} catch (JAXBException e) {
+						throw new WMRuntimeException(e);
+					} catch (IOException e) {
+						throw new WMRuntimeException(e);
+					}
+
+				}
+
+				// edit the servicedef
+				Resource serviceDefFile = dsm.getServiceDefXml(service.getId());
+				service.setSpringFile(serviceBeanFile.getFilename());
+
+				Marshaller marshaller;
+				try {
+					marshaller = definitionsContext.createMarshaller();
+					marshaller.setProperty("jaxb.formatted.output", true);
+					marshaller.marshal(service,
+							project.getWriter(serviceDefFile));
+				} catch (JAXBException e) {
+					throw new WMRuntimeException(e);
+				} catch (UnsupportedEncodingException e) {
+					throw new WMRuntimeException(e);
+				} catch (FileNotFoundException e) {
+					throw new WMRuntimeException(e);
+				}
+
+				// finally, add this to the list of modified services
+				touchedProjects.add(service.getId());
+			}
+		}
+
+		if (!touchedProjects.isEmpty()) {
+			upgradeInfo
+					.addVerbose("Converted bean definitions to a separate file for services: "
+							+ StringUtils.join(touchedProjects, ", "));
+		}
+	}
 }

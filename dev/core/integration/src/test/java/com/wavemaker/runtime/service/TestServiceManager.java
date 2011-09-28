@@ -32,7 +32,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.annotation.DirtiesContext;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.javaservice.JavaServiceType;
 import com.wavemaker.runtime.service.reflect.ReflectServiceWire;
@@ -124,7 +124,7 @@ public class TestServiceManager extends TestSpringContextTestCase {
             serviceManager.getService("foo");
             fail("expected exception");
         } catch (WMRuntimeException ex) {
-            assertEquals(Resource.UNKNOWN_SERVICE.getId(), ex.getMessageId());
+            assertEquals(MessageResource.UNKNOWN_SERVICE.getId(), ex.getMessageId());
         }
         
         try {
@@ -132,7 +132,7 @@ public class TestServiceManager extends TestSpringContextTestCase {
             fail("expected exception");
         } catch (WMRuntimeException e) {
             assertEquals(e.getMessage(),
-                    Resource.UNKNOWN_SERVICE_TYPE.getId(), e.getMessageId());
+                    MessageResource.UNKNOWN_SERVICE_TYPE.getId(), e.getMessageId());
         }
         
         assertNull(serviceManager.getServiceWire("foo"));
@@ -146,7 +146,7 @@ public class TestServiceManager extends TestSpringContextTestCase {
             fail("expected exception");
         } catch (WMRuntimeException e) {
             assertEquals(e.getMessage(),
-                    Resource.MULTIPLE_SERVICE_BEANS.getId(), e.getMessageId());
+                    MessageResource.MULTIPLE_SERVICE_BEANS.getId(), e.getMessageId());
         }
     }
     

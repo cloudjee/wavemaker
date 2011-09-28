@@ -21,8 +21,11 @@ import java.io.File;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.infra.WMTestCase;
+import com.wavemaker.tools.project.LocalStudioConfiguration;
+import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.webapp.schema.DisplayNameType;
 import com.wavemaker.tools.webapp.schema.ServletType;
@@ -41,7 +44,7 @@ public class TestWebXmlSupport extends WMTestCase {
                 ProjectConstants.WEB_XML)).getFile();
         assertTrue(f.exists());
         
-        WebAppType wat = WebXmlSupport.readWebXml(f);
+        WebAppType wat = WebXmlSupport.readWebXml(new FileSystemResource(f));
         
         for (Object o: wat.getDescriptionAndDisplayNameAndIcon()) {
             if (o instanceof DisplayNameType) {
@@ -60,13 +63,13 @@ public class TestWebXmlSupport extends WMTestCase {
         fp.deleteOnExit();
         
         try {
-            WebXmlSupport.writeWebXml(wat, fp);
+            WebXmlSupport.writeWebXml(new Project(new FileSystemResource(fp.getParentFile()), new LocalStudioConfiguration()), wat, new FileSystemResource(fp));
             String fpContents = FileUtils.readFileToString(fp);
             
             assertTrue(fpContents.contains("ActiveGrid Studio"));
             assertTrue(fpContents.contains("springapp"));
             
-            WebXmlSupport.readWebXml(fp);
+            WebXmlSupport.readWebXml(new FileSystemResource(fp));
         } finally {
             fp.delete();
         }

@@ -20,7 +20,7 @@ package com.wavemaker.json;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 
 /**
@@ -243,7 +243,7 @@ public class TestJSONUnmarshaller extends TestCase {
             assertTrue(j instanceof JSONObject);
             assertEquals(0, ((JSONObject)j).size());
         } catch (WMRuntimeException e) {
-            assertEquals(Resource.JSON_FAILED_PARSING.getId(), e.getMessageId());
+            assertEquals(MessageResource.JSON_FAILED_PARSING.getId(), e.getMessageId());
             assertTrue(e.getMessage().contains(bad));
         }
     }
@@ -257,7 +257,7 @@ public class TestJSONUnmarshaller extends TestCase {
             assertEquals(1, ((JSONObject)j).size());
             assertNull(((JSONObject)j).get("fd"));
         } catch (WMRuntimeException e) {
-            assertEquals(Resource.JSON_FAILED_PARSING.getId(), e.getMessageId());
+            assertEquals(MessageResource.JSON_FAILED_PARSING.getId(), e.getMessageId());
             assertTrue(e.getMessage().contains(bad));
         }
     }

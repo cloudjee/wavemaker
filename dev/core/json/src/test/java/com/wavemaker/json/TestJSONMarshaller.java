@@ -31,7 +31,7 @@ import java.util.Stack;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.Tuple;
 import com.wavemaker.infra.WMTestCase;
@@ -272,7 +272,7 @@ public class TestJSONMarshaller extends WMTestCase {
             JSONMarshaller.marshal(map, jc, true);
             fail("no exception");
         } catch (WMRuntimeException e) {
-            assertEquals(Resource.JSON_CYCLE_FOUND.getId(), e.getMessageId());
+            assertEquals(MessageResource.JSON_CYCLE_FOUND.getId(), e.getMessageId());
         }
     }
 

@@ -13,23 +13,6 @@
     <name>WaveMaker Runtime</name>
 
 	<build>
-		<resources>
-			<resource>
-				<directory>${basedir}/src/main/resources</directory>
-				<targetPath> ${basedir}/../tools/src/main/resources/META-INF</targetPath>
-				<includes>
-					<include>runtimejar.properties</include>
-				</includes>
-				<filtering>true</filtering>
-			</resource>
-			<resource>
-				<directory>${basedir}/src/main/resources</directory>
-				<filtering>false</filtering>
-				<excludes>
-					<exclude>runtimejar.properties</exclude>
-				</excludes>
-			</resource>
-		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

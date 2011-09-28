@@ -15,8 +15,6 @@
 package com.wavemaker.tools.util;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,8 +32,8 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ResourceUtils;
 
 import com.wavemaker.common.util.ClassLoaderUtils;
-import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.ClassLoaderUtils.TaskNoRtn;
+import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.tools.common.Bootstrap;
 
 /**

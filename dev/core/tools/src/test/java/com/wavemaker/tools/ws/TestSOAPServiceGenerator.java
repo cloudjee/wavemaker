@@ -26,6 +26,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.core.io.FileSystemResource;
+
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.common.util.ClassUtils;
 import com.wavemaker.common.util.IOUtils;
@@ -66,7 +68,7 @@ public class TestSOAPServiceGenerator extends WMTestCase {
         WSDL wsdl = WSDLManager.processWSDL(resource, null);
 
         GenerationConfiguration genConfig = new GenerationConfiguration(wsdl,
-                outputDir);
+                new FileSystemResource(outputDir));
         SOAPServiceGenerator generator = new SOAPServiceGenerator(genConfig);
         generator.generate();
 

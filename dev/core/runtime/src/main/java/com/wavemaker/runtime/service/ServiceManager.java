@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.common.util.SpringUtils;
@@ -67,7 +67,7 @@ public class ServiceManager implements ApplicationContextAware {
         }
         
         if (!getServices().contains(serviceId)) {
-            throw new WMRuntimeException(Resource.UNKNOWN_SERVICE, serviceId);
+            throw new WMRuntimeException(MessageResource.UNKNOWN_SERVICE, serviceId);
         }
 
         return applicationContext.getBean(serviceId);
@@ -96,7 +96,7 @@ public class ServiceManager implements ApplicationContextAware {
                 .getBeansOfType(serviceType));
         
         if (m.isEmpty()) {
-            throw new WMRuntimeException(Resource.UNKNOWN_SERVICE_TYPE,
+            throw new WMRuntimeException(MessageResource.UNKNOWN_SERVICE_TYPE,
                     serviceType.getName());
         }
         
@@ -108,10 +108,10 @@ public class ServiceManager implements ApplicationContextAware {
         }
         
         if (foundServices.isEmpty() || 0==foundServices.size()) {
-            throw new WMRuntimeException(Resource.UNKNOWN_SERVICE_TYPE,
+            throw new WMRuntimeException(MessageResource.UNKNOWN_SERVICE_TYPE,
                     serviceType.getName());
         } else if (foundServices.size() > 1) {
-            throw new WMRuntimeException(Resource.MULTIPLE_SERVICE_BEANS,
+            throw new WMRuntimeException(MessageResource.MULTIPLE_SERVICE_BEANS,
                     serviceType.getName());
         }
         
@@ -130,7 +130,7 @@ public class ServiceManager implements ApplicationContextAware {
                 if (null == ret) {
                     ret = sw;
                 } else {
-                    throw new WMRuntimeException(Resource.SERVICEWIRE_ID_DUP,
+                    throw new WMRuntimeException(MessageResource.SERVICEWIRE_ID_DUP,
                             serviceId);
                 }
             }

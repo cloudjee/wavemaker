@@ -14,26 +14,37 @@
 
 package com.wavemaker.tools.pws.install;
 
-import com.wavemaker.tools.project.ProjectManager;
-import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.util.IOUtils;
-
-
-import java.util.*;
-import java.util.jar.JarFile;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.jar.JarEntry;
-import java.io.*;
+import java.util.jar.JarFile;
 
-import org.w3c.dom.*;
-import org.apache.commons.io.FileUtils;
-
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.apache.commons.io.FileUtils;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.util.IOUtils;
+import com.wavemaker.tools.project.ProjectManager;
 
 /**
  * Provides methods to install partner package and to set up pws when creating a new project
@@ -52,10 +63,10 @@ public class PwsInstall {
      public static void setupPwsProject(ProjectManager mgr, String partnerName) {
         File destf;
         try {
-            File srcf = new File(mgr.getStudioConfiguration().getStudioWebAppRootFile(),
+            File srcf = new File(mgr.getStudioConfiguration().getStudioWebAppRoot().getFile(),
                     "app/templates/pws/" + partnerName);
 
-            destf = mgr.getCurrentProject().getProjectRoot();
+            destf = mgr.getCurrentProject().getProjectRoot().getFile();
 
             IOUtils.copy(srcf, destf);
         }

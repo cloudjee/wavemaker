@@ -14,8 +14,8 @@
 
 package com.wavemaker.tools.ws.wadl;
 
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMException;
-import com.wavemaker.common.Resource;
 
 /**
  * @author ffu
@@ -26,11 +26,11 @@ public class WADLException extends WMException {
 
     private static final long serialVersionUID = 1L;
 
-    public WADLException(Resource resource) {
+    public WADLException(MessageResource resource) {
         super(resource);
     }
 
-    public WADLException(Resource resource, Object... args) {
+    public WADLException(MessageResource resource, Object... args) {
         super(resource, args);
     }
 

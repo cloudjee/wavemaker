@@ -18,7 +18,6 @@
 package com.wavemaker.tools.ws;
 
 import java.io.File;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +26,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.util.ResourceUtils;
 
 import com.wavemaker.common.util.ClassLoaderUtils;
+import com.wavemaker.common.util.ConversionUtils;
 import com.wavemaker.infra.WMTestCase;
-import com.wavemaker.tools.ws.JAXBTypeMapper;
 import com.wavemaker.tools.ws.wsdl.WSDL;
 import com.wavemaker.tools.ws.wsdl.WSDLManager;
 
@@ -59,7 +58,7 @@ public class TestWSDL extends WMTestCase {
                 bindingFiles.add(bindingFile);
             }
         }
-        JAXBTypeMapper mapper = new JAXBTypeMapper(wsdl, bindingFiles);
+        JAXBTypeMapper mapper = new JAXBTypeMapper(wsdl, ConversionUtils.convertToResourceList(bindingFiles));
         return mapper;
     }
 

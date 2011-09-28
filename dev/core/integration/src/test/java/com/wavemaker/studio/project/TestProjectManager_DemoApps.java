@@ -33,7 +33,7 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.studio.infra.StudioTestCase;
 import com.wavemaker.tools.project.ProjectManager;
-import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.project.LocalStudioConfiguration;
 
 /**
  * @author small
@@ -59,7 +59,7 @@ public class TestProjectManager_DemoApps extends StudioTestCase {
         
         pm = (ProjectManager) getBean("projectManager");
         
-        StudioConfiguration sc = (StudioConfiguration) getBean("studioConfiguration");
+        LocalStudioConfiguration sc = (LocalStudioConfiguration) getBean("studioConfiguration");
         demoDir = IOUtils.createTempDirectory();
         sc.setTestDemoDir(demoDir);
         
@@ -77,8 +77,8 @@ public class TestProjectManager_DemoApps extends StudioTestCase {
     @Override
     public void tearDown() throws Exception {
         
-        StudioConfiguration sc =
-            (StudioConfiguration) getBean("studioConfiguration");
+        LocalStudioConfiguration sc =
+            (LocalStudioConfiguration) getBean("studioConfiguration");
         sc.setTestDemoDir(null);
         
         FileUtils.forceDelete(demoDir);

@@ -14,7 +14,7 @@
 
 package com.wavemaker.runtime.data.util;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,7 +44,7 @@ public class LoggingUtils {
     }
 
     public static void logCannotRollbackTx(Log logger, Throwable th) {
-	logger.error(Resource.CANNOT_ROLLBACK_TX.getMessage(), th);
+	logger.error(MessageResource.CANNOT_ROLLBACK_TX.getMessage(), th);
     }
 
 

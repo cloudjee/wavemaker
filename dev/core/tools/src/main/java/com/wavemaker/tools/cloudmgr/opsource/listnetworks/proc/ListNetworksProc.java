@@ -14,25 +14,25 @@
 
 package com.wavemaker.tools.cloudmgr.opsource.listnetworks.proc;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
-import java.io.InputStream;
-import java.io.IOException;
 
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
-import javax.xml.ws.Dispatch;
-import javax.xml.ws.BindingProvider;
-import javax.xml.ws.handler.MessageContext;
-import javax.xml.ws.http.HTTPBinding;
+import javax.activation.DataSource;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import javax.activation.DataSource;
+import javax.xml.namespace.QName;
+import javax.xml.ws.BindingProvider;
+import javax.xml.ws.Dispatch;
+import javax.xml.ws.Service;
+import javax.xml.ws.handler.MessageContext;
+import javax.xml.ws.http.HTTPBinding;
 
-import com.wavemaker.tools.cloudmgr.opsource.listnetworks.response.Networks;
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.tools.cloudmgr.opsource.listnetworks.response.Networks;
 
 /**
  * This class is to manage opSource cloud server instances.

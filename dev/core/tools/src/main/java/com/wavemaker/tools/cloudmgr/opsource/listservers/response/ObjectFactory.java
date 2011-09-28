@@ -24,6 +24,7 @@
 package com.wavemaker.tools.cloudmgr.opsource.listservers.response;
 
 import javax.xml.bind.annotation.XmlRegistry;
+
 import com.wavemaker.tools.cloudmgr.opsource.listservers.response.Servers.Server;
 import com.wavemaker.tools.cloudmgr.opsource.listservers.response.Servers.Server.OperatingSystem;
 

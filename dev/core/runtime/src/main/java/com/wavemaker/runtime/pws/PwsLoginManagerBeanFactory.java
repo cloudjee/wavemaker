@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.common.ConfigurationException;
 
@@ -43,7 +43,7 @@ public class PwsLoginManagerBeanFactory {
         
         if (!pwsLoginManagers.containsKey(partnerName)) {
             throw new ConfigurationException(
-                Resource.UNKNOWN_PWS_LOGIN_MANAGER, partnerName);
+                MessageResource.UNKNOWN_PWS_LOGIN_MANAGER, partnerName);
         }
         
         return pwsLoginManagers.get(partnerName);

@@ -18,9 +18,11 @@ import java.io.File;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.common.util.ClassLoaderUtils.TaskNoRtn;
+import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.util.AntUtils;
@@ -68,7 +70,7 @@ public abstract class CompilerTask extends Task {
 
     public void setProjectRoot(File projectRoot) {
         this.projectRoot = projectRoot;
-        this.agProject = new Project(projectRoot);
+        this.agProject = new Project(new FileSystemResource(projectRoot), new LocalStudioConfiguration());
     }
 
     public void setVerbose(boolean verbose) {
@@ -86,7 +88,7 @@ public abstract class CompilerTask extends Task {
     protected synchronized DesignServiceManager getDesignServiceManager() {
         if (designServiceManager == null) {
             if (projectRoot != null) {
-                designServiceManager = DesignTimeUtils.getDSMForProjectRoot(projectRoot);
+                designServiceManager = DesignTimeUtils.getDSMForProjectRoot(new FileSystemResource(projectRoot));
             }
         }
         return designServiceManager;

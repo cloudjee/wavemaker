@@ -14,8 +14,8 @@
 
 package com.wavemaker.tools.ws.wsdl;
 
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMException;
-import com.wavemaker.common.Resource;
 
 /**
  * This class represents WSDL related exception.
@@ -30,7 +30,7 @@ public class WSDLException extends WMException {
         super(message);
     }
     
-    public WSDLException(Resource resource, Object... args) {
+    public WSDLException(MessageResource resource, Object... args) {
         super(resource, args);
     }
     

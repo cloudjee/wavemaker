@@ -14,7 +14,6 @@
 
 package com.wavemaker.tools.data;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -23,13 +22,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import org.apache.commons.io.FileUtils;
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.common.util.XMLUtils;
 import com.wavemaker.common.util.XMLWriter;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
-import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.deployment.ServiceDeployment;
@@ -38,7 +36,7 @@ import com.wavemaker.tools.service.FileService;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  * 
  */
 public class DataModelDeploymentConfiguration implements ServiceDeployment {
@@ -100,7 +98,8 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
         }
         String dsrcName = jndiName.substring(COMP_ENV.length());
         String drefName = dsrcName.replace("/", "_");
-        File wsBindings = mgr.getProjectManager().getCurrentProject().getWsBindingsFile();
+        com.wavemaker.tools.project.Project project = mgr.getProjectManager().getCurrentProject();
+        Resource wsBindings = mgr.getProjectManager().getCurrentProject().getWsBindingsFile();
         if (!wsBindings.exists()) {
             return;
         }
@@ -112,9 +111,9 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
                 "\r\n" + fromStr;
 
         try {
-            String content = FileUtils.readFileToString(wsBindings, ServerConstants.DEFAULT_ENCODING);
+            String content = project.readFile(wsBindings);
             content = content.replace(fromStr, toStr);
-            FileUtils.writeStringToFile(wsBindings, content, ServerConstants.DEFAULT_ENCODING);
+            project.writeFile(wsBindings, content);
         } catch (IOException ex) {
             throw new ConfigurationException(ex);
         }
@@ -188,11 +187,11 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
 
     private void addToWebXml(DesignServiceManager mgr, String xmlSnippet) {
 
-        File webXml = mgr.getProjectManager().getCurrentProject().getWebXml();
+    	com.wavemaker.tools.project.Project project = mgr.getProjectManager().getCurrentProject();
+        Resource webXml = project.getWebXml();
 
         try {
-            String s = FileUtils.readFileToString(webXml,
-                    ServerConstants.DEFAULT_ENCODING);
+            String s = project.readFile(webXml);
 
             int i = s.indexOf(WEB_XML_INSERT_BEFORE);
 
@@ -203,8 +202,7 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
 
             s = s.substring(0, i) + xmlSnippet + s.substring(i);
 
-            FileUtils.writeStringToFile(webXml, s,
-                    ServerConstants.DEFAULT_ENCODING);
+            project.writeFile(webXml, s);
 
         } catch (IOException ex) {
             throw new ConfigurationException(ex);

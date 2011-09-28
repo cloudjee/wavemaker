@@ -24,7 +24,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMException;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.AlternateJSONTransformer;
@@ -136,7 +136,7 @@ public/* static */class JSONUtils {
                         
                         if (Collection.class.isAssignableFrom(newType)) {
                             throw new WMRuntimeException(
-                                    Resource.JSONUTILS_PARAMTYPEGENERIC, i, m.getName());
+                                    MessageResource.JSONUTILS_PARAMTYPEGENERIC, i, m.getName());
                         }
                         
                         fieldDefinitions.set(i,
@@ -144,7 +144,7 @@ public/* static */class JSONUtils {
                                         typeState, false, null));
                     } catch (ClassNotFoundException e) {
                         throw new WMRuntimeException(
-                                Resource.JSONPARAMETER_COULD_NOTLLOAD_TYPE, e,
+                                MessageResource.JSONPARAMETER_COULD_NOTLLOAD_TYPE, e,
                                 typeString, m.getName(), i);
                     } catch (LinkageError e) {
                         throw new WMRuntimeException(e);

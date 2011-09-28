@@ -20,9 +20,11 @@ package com.wavemaker.tools.project.upgrade.swamis;
 import java.io.File;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.infra.WMTestCase;
+import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
@@ -36,15 +38,15 @@ public class TestPanesRenameUpgrade extends WMTestCase {
 
     public void testUpgrade() throws Exception {
         
-        File root = IOUtils.createTempDirectory("testUpgrade", ".dir");
+        File root = IOUtils.createTempDirectory("testUpgrade", "_dir");
         
-        Project p = new  Project(root);
-        p.getWebAppRoot().mkdir();
-        File panes = new File(p.getWebAppRoot(), "panes");
+        Project p = new  Project(new FileSystemResource(root.getAbsolutePath()+"/"), new LocalStudioConfiguration());
+        p.getWebAppRoot().getFile().mkdir();
+        File panes = new File(p.getWebAppRoot().getFile(), "panes");
         panes.mkdir();
         File panesFile = new File(panes, "foo.txt");
         FileUtils.writeStringToFile(panesFile, "foo");
-        File pages = new File(p.getWebAppRoot(), ProjectConstants.PAGES_DIR);
+        File pages = new File(p.getWebAppRoot().getFile(), ProjectConstants.PAGES_DIR);
         assertFalse(pages.exists());
         
         PanesRenameUpgrade pru = new PanesRenameUpgrade();
@@ -60,12 +62,12 @@ public class TestPanesRenameUpgrade extends WMTestCase {
     
     public void testUpgradeEmpty() throws Exception {
         
-        File root = IOUtils.createTempDirectory("testUpgrade", ".dir");
+        File root = IOUtils.createTempDirectory("testUpgrade", "_dir");
         
-        Project p = new  Project(root);
-        p.getWebAppRoot().mkdir();
-        File panes = new File(p.getWebAppRoot(), "panes");
-        File pages = new File(p.getWebAppRoot(), ProjectConstants.PAGES_DIR);
+        Project p = new  Project(new FileSystemResource(root.getAbsolutePath()+"/"), new LocalStudioConfiguration());
+        p.getWebAppRoot().getFile().mkdir();
+        File panes = new File(p.getWebAppRoot().getFile(), "panes");
+        File pages = new File(p.getWebAppRoot().getFile(), ProjectConstants.PAGES_DIR);
         assertFalse(pages.exists());
         
         PanesRenameUpgrade pru = new PanesRenameUpgrade();

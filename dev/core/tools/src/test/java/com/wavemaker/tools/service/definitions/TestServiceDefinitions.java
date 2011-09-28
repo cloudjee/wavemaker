@@ -56,7 +56,7 @@ public class TestServiceDefinitions extends WMTestCase {
     public void testBasicFoo() throws Exception {
         
         File configFile = ClassLoaderUtils
-                .getClasspathFile("com/wavemaker/tools/service/definitions/sd-testbasic.xml");
+                .getClasspathFile("com/wavemaker/tools/service/definitions/sd-testbasic.xml").getFile();
         Service service = (Service) unmarshaller.unmarshal(configFile);
         
         assertEquals("fooService", service.getId());
@@ -120,7 +120,7 @@ public class TestServiceDefinitions extends WMTestCase {
     public void testBasicBar() throws Exception {
         
         File configFile = ClassLoaderUtils
-                .getClasspathFile("com/wavemaker/tools/service/definitions/sd-testbasic.xml");
+                .getClasspathFile("com/wavemaker/tools/service/definitions/sd-testbasic.xml").getFile();
         Service service = (Service) unmarshaller.unmarshal(configFile);
         
         assertEquals("fooService", service.getId());

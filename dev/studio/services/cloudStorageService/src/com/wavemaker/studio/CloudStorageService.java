@@ -11,133 +11,128 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 package com.wavemaker.studio;
 
 import java.util.Collection;
 import java.io.File;
+import java.io.IOException;
 
+import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.cloudmgr.*;
 import com.wavemaker.tools.deployment.ServiceDeploymentManager;
 
 /**
  * @author slee
- *
+ * @author Jeremy Grelle
+ * 
  */
 public class CloudStorageService {
 
-    private CloudStorageMgrBeans cloudStorageMgrBeans;
-    private ServiceDeploymentManager serviceDeploymentManager;
+	private CloudStorageMgrBeans cloudStorageMgrBeans;
+	private ServiceDeploymentManager serviceDeploymentManager;
 
-    public Collection<CloudContainer> createContainer(String serviceProvider,
-                            String containerName,
-                            String location,
-                            String username,
-                            String password,
-                            String accessKeyId,
-                            String seceretAccessKey,
-                            String serviceURL) {
-        CloudAuth auth = new CloudAuth(username, password, accessKeyId, seceretAccessKey, null, serviceURL);
-        return cloudStorageMgrBeans.getCloudStorageMgr(serviceProvider).
-                createContainer(containerName, location, auth);
-    }
+	public Collection<CloudContainer> createContainer(String serviceProvider,
+			String containerName, String location, String username,
+			String password, String accessKeyId, String seceretAccessKey,
+			String serviceURL) {
+		CloudAuth auth = new CloudAuth(username, password, accessKeyId,
+				seceretAccessKey, null, serviceURL);
+		return cloudStorageMgrBeans.getCloudStorageMgr(serviceProvider)
+				.createContainer(containerName, location, auth);
+	}
 
-    public Collection<CloudContainer> deleteContainer(String serviceProvider,
-                            String containerName,
-                            String username,
-                            String password,
-                            String accessKeyId,
-                            String seceretAccessKey,
-                            String serviceURL) {
-        CloudAuth auth = new CloudAuth(username, password, accessKeyId, seceretAccessKey, null, serviceURL);
-        return cloudStorageMgrBeans.getCloudStorageMgr(serviceProvider).deleteContainer(containerName, auth);
+	public Collection<CloudContainer> deleteContainer(String serviceProvider,
+			String containerName, String username, String password,
+			String accessKeyId, String seceretAccessKey, String serviceURL) {
+		CloudAuth auth = new CloudAuth(username, password, accessKeyId,
+				seceretAccessKey, null, serviceURL);
+		return cloudStorageMgrBeans.getCloudStorageMgr(serviceProvider)
+				.deleteContainer(containerName, auth);
 
-    }
+	}
 
-    public Collection<CloudContainer> getContainerList(String serviceProvider,
-                            String username,
-                            String password,
-                            String accessKeyId,
-                            String seceretAccessKey,
-                            String serviceURL) {
-        CloudAuth auth = new CloudAuth(username, password, accessKeyId, seceretAccessKey, null, serviceURL);
-        return cloudStorageMgrBeans.getCloudStorageMgr(serviceProvider).getContainerList(auth);
+	public Collection<CloudContainer> getContainerList(String serviceProvider,
+			String username, String password, String accessKeyId,
+			String seceretAccessKey, String serviceURL) {
+		CloudAuth auth = new CloudAuth(username, password, accessKeyId,
+				seceretAccessKey, null, serviceURL);
+		return cloudStorageMgrBeans.getCloudStorageMgr(serviceProvider)
+				.getContainerList(auth);
 
-    }
+	}
 
-    public CloudContainer getContainer(String serviceProvider,
-                                String containerName,
-                                String username,
-                                String password,
-                                String accessKeyId,
-                                String seceretAccessKey,
-                                String serviceURL) {
-        CloudAuth auth = new CloudAuth(username, password, accessKeyId, seceretAccessKey, null, serviceURL);
-        return cloudStorageMgrBeans.getCloudStorageMgr(serviceProvider).getContainer(containerName, auth);
+	public CloudContainer getContainer(String serviceProvider,
+			String containerName, String username, String password,
+			String accessKeyId, String seceretAccessKey, String serviceURL) {
+		CloudAuth auth = new CloudAuth(username, password, accessKeyId,
+				seceretAccessKey, null, serviceURL);
+		return cloudStorageMgrBeans.getCloudStorageMgr(serviceProvider)
+				.getContainer(containerName, auth);
 
-    }
+	}
 
-    public Collection<CloudFile> getCloudFiles(String serviceProvider,
-                                String containerName,
-                                String username,
-                                String password,
-                                String accessKeyId,
-                                String seceretAccessKey,
-                                String serviceURL) {
-        CloudAuth auth = new CloudAuth(username, password, accessKeyId, seceretAccessKey, null, serviceURL);
-        return cloudStorageMgrBeans.getCloudStorageMgr(serviceProvider).getCloudFiles(containerName, auth);
+	public Collection<CloudFile> getCloudFiles(String serviceProvider,
+			String containerName, String username, String password,
+			String accessKeyId, String seceretAccessKey, String serviceURL) {
+		CloudAuth auth = new CloudAuth(username, password, accessKeyId,
+				seceretAccessKey, null, serviceURL);
+		return cloudStorageMgrBeans.getCloudStorageMgr(serviceProvider)
+				.getCloudFiles(containerName, auth);
 
-    }
+	}
 
-    public Collection<CloudFile> copyWarFileToCloudStorage(String serviceProvider,
-                                String containerName,
-                                String username,
-                                String password,
-                                String accessKeyId,
-                                String seceretAccessKey,
-                                String serviceURL) {
-        File warFile = serviceDeploymentManager.getWarFile();
-        CloudAuth auth = new CloudAuth(username, password, accessKeyId, seceretAccessKey, null, serviceURL);
-        return cloudStorageMgrBeans.getCloudStorageMgr(serviceProvider).
-                copyFileToCloudStorage(containerName, warFile, auth);     
-    }
+	public Collection<CloudFile> copyWarFileToCloudStorage(
+			String serviceProvider, String containerName, String username,
+			String password, String accessKeyId, String seceretAccessKey,
+			String serviceURL) {
+		try {
+			File warFile = serviceDeploymentManager.getWarFile().getFile();
 
-    public Collection<CloudFile> copyEarFileToCloudStorage(String serviceProvider,
-                                String containerName,
-                                String username,
-                                String password,
-                                String accessKeyId,
-                                String seceretAccessKey,
-                                String serviceURL) {
-        File earFile = serviceDeploymentManager.getEarFile();
-        CloudAuth auth = new CloudAuth(username, password, accessKeyId, seceretAccessKey, null, serviceURL);
-        return cloudStorageMgrBeans.getCloudStorageMgr(serviceProvider).
-                copyFileToCloudStorage(containerName, earFile, auth);     
-    }
+			CloudAuth auth = new CloudAuth(username, password, accessKeyId,
+					seceretAccessKey, null, serviceURL);
+			return cloudStorageMgrBeans.getCloudStorageMgr(serviceProvider)
+					.copyFileToCloudStorage(containerName, warFile, auth);
+		} catch (IOException e) {
+			throw new WMRuntimeException(e);
+		}
+	}
 
-    public Collection<CloudFile> deleteFileInCloudStorage(String serviceProvider,
-                                String containerName,
-                                String fileName,
-                                String username,
-                                String password,
-                                String accessKeyId,
-                                String seceretAccessKey,
-                                String serviceURL) {
-        CloudAuth auth = new CloudAuth(username, password, accessKeyId, seceretAccessKey, null, serviceURL);
-        return cloudStorageMgrBeans.getCloudStorageMgr(serviceProvider).
-                deleteFileInCloudStorage(containerName, fileName, auth);
-    }
+	public Collection<CloudFile> copyEarFileToCloudStorage(
+			String serviceProvider, String containerName, String username,
+			String password, String accessKeyId, String seceretAccessKey,
+			String serviceURL) {
+		try {
+			File earFile = serviceDeploymentManager.getEarFile().getFile();
+			CloudAuth auth = new CloudAuth(username, password, accessKeyId,
+					seceretAccessKey, null, serviceURL);
+			return cloudStorageMgrBeans.getCloudStorageMgr(serviceProvider)
+					.copyFileToCloudStorage(containerName, earFile, auth);
+		} catch (IOException e) {
+			throw new WMRuntimeException(e);
+		}
+	}
 
-    @HideFromClient
-    public void setCloudStorageMgrBeans(
-            CloudStorageMgrBeans cloudStorageMgrBeans) {
-        this.cloudStorageMgrBeans = cloudStorageMgrBeans;
-    }
+	public Collection<CloudFile> deleteFileInCloudStorage(
+			String serviceProvider, String containerName, String fileName,
+			String username, String password, String accessKeyId,
+			String seceretAccessKey, String serviceURL) {
+		CloudAuth auth = new CloudAuth(username, password, accessKeyId,
+				seceretAccessKey, null, serviceURL);
+		return cloudStorageMgrBeans.getCloudStorageMgr(serviceProvider)
+				.deleteFileInCloudStorage(containerName, fileName, auth);
+	}
 
-    @HideFromClient
-    public void setServiceDeploymentManager(
-            ServiceDeploymentManager serviceDeploymentManager) {
-        this.serviceDeploymentManager = serviceDeploymentManager;
-    }
+	@HideFromClient
+	public void setCloudStorageMgrBeans(
+			CloudStorageMgrBeans cloudStorageMgrBeans) {
+		this.cloudStorageMgrBeans = cloudStorageMgrBeans;
+	}
+
+	@HideFromClient
+	public void setServiceDeploymentManager(
+			ServiceDeploymentManager serviceDeploymentManager) {
+		this.serviceDeploymentManager = serviceDeploymentManager;
+	}
 }

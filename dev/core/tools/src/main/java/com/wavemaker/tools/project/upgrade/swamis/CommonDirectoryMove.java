@@ -14,13 +14,13 @@
 
 package com.wavemaker.tools.project.upgrade.swamis;
 
-import java.io.File;
 import java.io.IOException;
 
-import org.apache.commons.io.FileUtils;
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.config.ConfigurationStore;
+import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.project.StudioConfiguration;
 import com.wavemaker.tools.project.upgrade.StudioUpgradeTask;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
@@ -30,56 +30,64 @@ import com.wavemaker.tools.project.upgrade.UpgradeInfo;
  * backup directory.
  * 
  * @author small
- * @version $Rev$ - $Date$
- *
+ * @author Jeremy Grelle
+ * 
  */
 public class CommonDirectoryMove implements StudioUpgradeTask {
-    
-    public static final String UPGRADED_KEY = "COMMON_DIR_UPGRADED";
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
-    public void doUpgrade(UpgradeInfo upgradeInfo) {
-        
-        File commonDir = new File(studioConfiguration.getWaveMakerHome(),
-                StudioConfiguration.COMMON_DIR);
-        boolean isUpgraded = ConfigurationStore.getPreferenceBoolean(getClass(),
-                UPGRADED_KEY, false);
-        
-        if (commonDir.exists() && !isUpgraded) {
-            File commonBakDir = new File(studioConfiguration.getStudioWebAppRootFile(),
-                    "lib/wm/"+StudioConfiguration.COMMON_DIR+".bak");
-            if (commonBakDir.exists()) {
-                upgradeInfo.addMessage("Common backup directory ("+commonBakDir+
-                        ") already exists");
-                return;
-            }
-            
-            try {
-                //FileUtils.copyDirectory(commonDir, commonBakDir);
-                //FileUtils.forceDelete(commonDir);
-                upgradeInfo.addMessage("Common directory is now: ("+commonDir+") ");
-                // force common directory recreation
-                studioConfiguration.getCommonDir();
-            } catch (IOException e) {
-                throw new WMRuntimeException(e);
-            }
-            
-            // if we had an old-style preference key, remove it
-            ConfigurationStore.removePreference(getClass(), UPGRADED_KEY);
-            
-            upgradeInfo.addMessage("Your common directory has been moved to avoid conflicts and the template version copied in; if you have custom widgets, upgrade them manually from the backup at "+commonBakDir+".");
-        }
-    }
-    
-    private StudioConfiguration studioConfiguration;
+	public static final String UPGRADED_KEY = "COMMON_DIR_UPGRADED";
 
-    public StudioConfiguration getStudioConfiguration() {
-        return studioConfiguration;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker
+	 * .tools.project.upgrade.UpgradeInfo)
+	 */
+	public void doUpgrade(UpgradeInfo upgradeInfo) {
 
-    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-        this.studioConfiguration = studioConfiguration;
-    }
+		try {
+			Resource commonDir = studioConfiguration.getCommonDir();
+			boolean isUpgraded = ConfigurationStore.getPreferenceBoolean(
+					getClass(), UPGRADED_KEY, false);
+
+			if (commonDir.exists() && !isUpgraded) {
+				Resource commonBakDir = studioConfiguration
+						.getStudioWebAppRoot().createRelative(
+								"lib/wm/" + LocalStudioConfiguration.COMMON_DIR
+										+ ".bak");
+				if (commonBakDir.exists()) {
+					upgradeInfo.addMessage("Common backup directory ("
+							+ commonBakDir + ") already exists");
+					return;
+				}
+
+				// FileUtils.copyDirectory(commonDir, commonBakDir);
+				// FileUtils.forceDelete(commonDir);
+				upgradeInfo.addMessage("Common directory is now: (" + commonDir
+						+ ") ");
+				// force common directory recreation
+				studioConfiguration.getCommonDir();
+
+				// if we had an old-style preference key, remove it
+				ConfigurationStore.removePreference(getClass(), UPGRADED_KEY);
+
+				upgradeInfo
+						.addMessage("Your common directory has been moved to avoid conflicts and the template version copied in; if you have custom widgets, upgrade them manually from the backup at "
+								+ commonBakDir + ".");
+			}
+		} catch (IOException e) {
+			throw new WMRuntimeException(e);
+		}
+	}
+
+	private StudioConfiguration studioConfiguration;
+
+	public StudioConfiguration getStudioConfiguration() {
+		return studioConfiguration;
+	}
+
+	public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
+		this.studioConfiguration = studioConfiguration;
+	}
 }

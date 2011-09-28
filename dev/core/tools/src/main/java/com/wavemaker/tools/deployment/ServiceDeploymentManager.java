@@ -14,30 +14,20 @@
 
 package com.wavemaker.tools.deployment;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
 
-import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.json.JSON;
 import com.wavemaker.json.JSONMarshaller;
 import com.wavemaker.json.JSONObject;
@@ -47,407 +37,288 @@ import com.wavemaker.runtime.data.DataServiceType;
 import com.wavemaker.runtime.server.json.JSONUtils;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.DataModelDeploymentConfiguration;
-import com.wavemaker.tools.deployment.xmlhandlers.Targets;
 import com.wavemaker.tools.project.DeploymentManager;
+import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.project.ProjectManager;
-import com.wavemaker.tools.project.StudioConfiguration;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.util.DesignTimeUtils;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  * 
  */
 public class ServiceDeploymentManager {
 
-    private static final String DEPLOYMENTS_FILE = "/deployments.js";
+	private static final String DEPLOYMENTS_FILE = "/deployments.js";
 
-    private List<ServiceDeployment> serviceDeployments = new ArrayList<ServiceDeployment>(1);
+	private List<ServiceDeployment> serviceDeployments = new ArrayList<ServiceDeployment>(
+			1);
 
-    private StudioConfiguration studioConfiguration = null;
+	private LocalStudioConfiguration studioConfiguration = null;
 
-    private ProjectManager projectMgr = null;
+	private ProjectManager projectMgr = null;
 
-    public ServiceDeploymentManager() {
-        // hack: these should be managed by Spring
-        serviceDeployments.add(new DataModelDeploymentConfiguration());
-    }
+	public ServiceDeploymentManager() {
+		// hack: these should be managed by Spring
+		serviceDeployments.add(new DataModelDeploymentConfiguration());
+	}
 
-    public File generateWebapp(DeploymentInfo info) {
-        Map<String, String> allDbProps = new HashMap<String, String>();
-        for (DeploymentDB db : info.getDatabases()) {
-            allDbProps.putAll(db.asProperties());
-        }
-        return generateWebapp(getProjectRoot(), allDbProps, info.getArchiveType().equals(ArchiveType.EAR));
-    }
+	public Resource generateWebapp(DeploymentInfo info) {
+		Map<String, String> allDbProps = new HashMap<String, String>();
+		for (DeploymentDB db : info.getDatabases()) {
+			allDbProps.putAll(db.asProperties());
+		}
+		return generateWebapp(getProjectRoot(), allDbProps, info
+				.getArchiveType().equals(ArchiveType.EAR));
+	}
 
-    public File generateWebapp(Map<String, String> properties) {
-        return generateWebapp(getProjectRoot(), properties, false);
-    }
+	public Resource generateWebapp(Map<String, String> properties) {
+		return generateWebapp(getProjectRoot(), properties, false);
+	}
 
-    public File generateWebapp(File projectRoot, Map<String, String> properties, boolean includeEar) {
-        File stagingProjectDir = null;
+	public Resource generateWebapp(Resource projectRoot,
+			Map<String, String> properties, boolean includeEar) {
+		Resource stagingProjectDir = null;
+		try {
+			stagingProjectDir = studioConfiguration.createTempDir();
+			studioConfiguration.copyRecursive(projectRoot, stagingProjectDir,
+					new ArrayList<String>());
+			DesignServiceManager mgr = DesignTimeUtils
+					.getDSMForProjectRoot(stagingProjectDir);
+			prepareForDeployment(mgr, properties);
+			return buildWar(mgr.getProjectManager(), getWarFile(), includeEar);
+		} catch (IOException ex) {
+			throw new ConfigurationException(ex);
+		} finally {
+			try {
+				studioConfiguration.deleteFile(stagingProjectDir);
+			} catch (Exception ignore) {
+			}
+		}
+	}
 
-        try {
-            stagingProjectDir = IOUtils.createTempDirectory("dplstaging", "dir");
-            IOUtils.copy(projectRoot, stagingProjectDir);
-            DesignServiceManager mgr = DesignTimeUtils.getDSMForProjectRoot(stagingProjectDir);
-            prepareForDeployment(mgr, properties);
-            return buildWar(mgr.getProjectManager(), getWarFile(), includeEar);
-        } catch (IOException ex) {
-            throw new ConfigurationException(ex);
-        } finally {
-            try {
-                IOUtils.deleteRecursive(stagingProjectDir);
-            } catch (Exception ignore) {
-            }
-        }
-    }
+	public Resource getWarFile() {
+		Resource projectRoot = getProjectRoot();
+		try {
+			Resource destDir = projectRoot
+					.createRelative(DeploymentManager.DIST_DIR_DEFAULT);
 
-    public File getWarFile() {
-        File projectRoot = getProjectRoot();
-        File destDir = new File(projectRoot, DeploymentManager.DIST_DIR_DEFAULT);
+			// Let's drop the user account info if it is embedded in the war
+			// file name
+			String warFileName = projectRoot.getFilename();
+			String acctInfo = projectMgr.getUserProjectPrefix();
+			if (warFileName.contains(acctInfo)) {
+				int len = acctInfo.length();
+				warFileName = warFileName.substring(len);
+			}
 
-        // Let's drop the user account info if it is embedded in the war file name
-        String warFileName = projectRoot.getName();
-        String acctInfo = projectMgr.getUserProjectPrefix();
-        if (warFileName.contains(acctInfo)) {
-            int len = acctInfo.length();
-            warFileName = warFileName.substring(len);
-        }
+			return destDir.createRelative(warFileName
+					+ DeploymentManager.WAR_EXTENSION);
+		} catch (IOException ex) {
+			throw new WMRuntimeException(ex);
+		}
+	}
 
-        // return new File(destDir, projectRoot.getName()
-        return new File(destDir, warFileName + DeploymentManager.WAR_EXTENSION);
-    }
+	public Resource getEarFile() {
+		Resource projectRoot = getProjectRoot();
+		Resource destDir;
+		try {
+			destDir = projectRoot
+					.createRelative(DeploymentManager.DIST_DIR_DEFAULT);
 
-    public File getEarFile() {
-        File projectRoot = getProjectRoot();
-        File destDir = new File(projectRoot, DeploymentManager.DIST_DIR_DEFAULT);
+			// Let's drop the user account info if it is embedded in the war
+			// file
+			// name
+			String earFileName = projectRoot.getFilename();
+			String acctInfo = projectMgr.getUserProjectPrefix();
+			if (earFileName.contains(acctInfo)) {
+				int len = acctInfo.length();
+				earFileName = earFileName.substring(len);
+			}
 
-        // Let's drop the user account info if it is embedded in the war file name
-        String earFileName = projectRoot.getName();
-        String acctInfo = projectMgr.getUserProjectPrefix();
-        if (earFileName.contains(acctInfo)) {
-            int len = acctInfo.length();
-            earFileName = earFileName.substring(len);
-        }
+			return destDir.createRelative(earFileName
+					+ DeploymentManager.EAR_EXTENSION);
 
-        return new File(destDir, earFileName + DeploymentManager.EAR_EXTENSION);
-    }
+		} catch (IOException ex) {
+			throw new WMRuntimeException(ex);
+		}
+	}
 
-    public void setServiceDeployments(List<ServiceDeployment> serviceDeployments) {
-        this.serviceDeployments = serviceDeployments;
-    }
+	public void setServiceDeployments(List<ServiceDeployment> serviceDeployments) {
+		this.serviceDeployments = serviceDeployments;
+	}
 
-    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-        this.studioConfiguration = studioConfiguration;
-    }
+	public void setStudioConfiguration(
+			LocalStudioConfiguration studioConfiguration) {
+		this.studioConfiguration = studioConfiguration;
+	}
 
-    public void setProjectManager(ProjectManager projectMgr) {
-        this.projectMgr = projectMgr;
-    }
+	public void setProjectManager(ProjectManager projectMgr) {
+		this.projectMgr = projectMgr;
+	}
 
-    public ProjectManager getProjectManager() {
-        return this.projectMgr;
-    }
+	public ProjectManager getProjectManager() {
+		return this.projectMgr;
+	}
 
-    public List<DeploymentInfo> getDeploymentInfo() {
-        Deployments deployments = readDeployments();
-        return deployments.forProject(projectMgr.getCurrentProject().getProjectName());
-    }
+	public List<DeploymentInfo> getDeploymentInfo() {
+		Deployments deployments = readDeployments();
+		return deployments.forProject(projectMgr.getCurrentProject()
+				.getProjectName());
+	}
 
-    /**
-     * @return List of available deployment target information for users to select. for example:
-     *         <ul>
-     *         <li>web server</li>
-     *         <li>cloud service provider</li>
-     *         <li>port</li>
-     *         <li>etc</li>
-     *         </ul>
-     *         The property values are passed into the deployment methods.
-     */
-    public Map<String, Targets.Target> getDeploymentTargetList() {
-        File file = new File(StudioConfiguration.staticGetWaveMakerHome().getAbsolutePath(), CommonConstants.DEPLOYMENT_TARGETS_XML);
-        Targets targets;
-        List<Targets.Target> tlist;
-        Map<String, Targets.Target> rtn = new HashMap<String, Targets.Target>();
-        try {
-            FileInputStream inputStream = new FileInputStream(file);
+	private Resource getProjectRoot() {
+		return projectMgr.getCurrentProject().getProjectRoot();
+	}
 
-            JAXBContext respContext = JAXBContext.newInstance(Targets.class);
-            Unmarshaller unmarshaller = respContext.createUnmarshaller();
+	private Resource buildWar(ProjectManager projectMgr, Resource warFile,
+			boolean includeEar) throws IOException {
+		// call into existing deployment code to generate war
+		// would be super nice to refactor this
+		DeploymentManager deploymentMgr = new DeploymentManager();
+		deploymentMgr.setProjectManager(projectMgr);
+		deploymentMgr.setStudioConfiguration(studioConfiguration);
+		String war = deploymentMgr.buildWar(warFile, includeEar);
+		return studioConfiguration.getResourceForURI(war);
+	}
 
-            Object object = unmarshaller.unmarshal(inputStream);
-            targets = Targets.class.cast(object);
-            tlist = targets.getTarget();
+	private void prepareForDeployment(DesignServiceManager mgr,
+			Map<String, String> properties) {
 
-            for (Targets.Target target : tlist) {
-                String key = target.getName();
-                rtn.put(key, target);
-            }
+		for (Service service : mgr.getServices()) {
+			// hack: only run for dataservices for now
+			if (!service.getType().equals(DataServiceType.TYPE_NAME)) {
+				continue;
+			}
 
-            inputStream.close();
-        } catch (Exception e) {
-            throw new WMRuntimeException(e);
-        }
+			storeProperties(properties);
 
-        return rtn;
-    }
+			Map<String, String> m = getServiceProperties(properties,
+					service.getId());
 
-    /**
-     * @return Get deployment target information for a given target name for example:
-     *         <ul>
-     *         <li>web server</li>
-     *         <li>cloud service provider</li>
-     *         <li>port</li>
-     *         <li>etc</li>
-     *         </ul>
-     */
-    public Targets.Target getDeploymentTarget(String targetName) {
-        Map<String, Targets.Target> targets = getDeploymentTargetList();
-        return targets.get(targetName);
-    }
+			int indx = 0;
+			for (ServiceDeployment sd : serviceDeployments) {
+				indx++;
+				sd.prepare(service.getId(), m, mgr, indx);
+			}
+		}
+	}
 
-    public String updateDeploymentTarget(Targets.Target newTarget, boolean override) {
-        File file = new File(StudioConfiguration.staticGetWaveMakerHome().getAbsolutePath(), CommonConstants.DEPLOYMENT_TARGETS_XML);
-        Targets targets;
-        List<Targets.Target> tlist;
-        boolean exists = false;
+	private void storeProperties(Map<String, String> properties) {
+		Project p = projectMgr.getCurrentProject();
+		p.clearProperties(ServiceDeploymentManager.class);
+		for (Map.Entry<String, String> e : properties.entrySet()) {
+			p.setProperty(ServiceDeploymentManager.class, e.getKey(),
+					e.getValue());
+		}
+	}
 
-        try {
-            FileInputStream inputStream = new FileInputStream(file);
+	private Map<String, String> getServiceProperties(
+			Map<String, String> properties, String serviceName) {
+		Map<String, String> rtn = new HashMap<String, String>();
+		String s = serviceName + ProjectConstants.PROP_SEP;
+		for (Map.Entry<String, String> e : properties.entrySet()) {
+			if (e.getKey().startsWith(s)) {
+				rtn.put(e.getKey().substring(s.length()), e.getValue());
+			}
+		}
+		return rtn;
+	}
 
-            JAXBContext respContext = JAXBContext.newInstance(Targets.class);
-            Unmarshaller unmarshaller = respContext.createUnmarshaller();
+	/**
+	 * @param deploymentInfo
+	 * @return
+	 */
+	public String saveDeploymentInfo(DeploymentInfo deploymentInfo) {
+		Resource deploymentsResource;
+		Writer writer = null;
+		try {
+			Deployments deployments = readDeployments();
+			deployments.save(projectMgr.getCurrentProject().getProjectName(),
+					deploymentInfo);
 
-            Object object = unmarshaller.unmarshal(inputStream);
-            targets = Targets.class.cast(object);
-            tlist = targets.getTarget();
+			deploymentsResource = studioConfiguration.getCommonDir()
+					.createRelative(DEPLOYMENTS_FILE);
+			writer = new OutputStreamWriter(studioConfiguration.getOutputStream(deploymentsResource));
+			JSONMarshaller.marshal(writer, deployments, new JSONState(), false,
+					true);
+			writer.flush();
+		} catch (IOException e) {
+			throw new WMRuntimeException(
+					"An error occurred while trying to save deployment.", e);
+		} finally {
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 
-            inputStream.close();
+		return deploymentInfo.getDeploymentId();
+	}
 
-            Targets.Target targetFound = null;
-            for (Targets.Target target : tlist) {
-                String key = target.getName();
-                if (newTarget.getName().equals(key)) {
-                    exists = true;
-                    targetFound = target;
-                    break;
-                }
-            }
+	/**
+	 * @param deploymentInfo
+	 * @return
+	 */
+	public void deleteDeploymentInfo(String deploymentId) {
+		Resource deploymentsResource;
+		Writer writer = null;
+		try {
+			Deployments deployments = readDeployments();
+			deployments.remove(projectMgr.getCurrentProject().getProjectName(),
+					deploymentId);
+			deploymentsResource = studioConfiguration.getCommonDir()
+					.createRelative(DEPLOYMENTS_FILE);
+			writer = new OutputStreamWriter(studioConfiguration.getOutputStream(deploymentsResource));
+			JSONMarshaller.marshal(writer, deployments, new JSONState(), false,
+					true);
+			writer.flush();
+		} catch (IOException e) {
+			throw new WMRuntimeException(
+					"An error occurred while trying to save deployment.", e);
+		} finally {
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 
-            if (exists) {
-                if (!override) {
-                    return "WARNING: Deployment target " + newTarget.getName() + " already exists. No update is done.";
-                }
-                targetFound.setName(newTarget.getName());
-                targetFound.setDescription(newTarget.getDescription());
-                targetFound.setDestType(newTarget.getDestType());
-                targetFound.setServiceProvider(newTarget.getServiceProvider());
-                targetFound.setServer(newTarget.getServer());
-                targetFound.setContainer(newTarget.getContainer());
-                targetFound.setDnsHost(newTarget.getDnsHost());
-                targetFound.setPublicIp(newTarget.getPublicIp());
-                targetFound.setPrivateIp(newTarget.getPrivateIp());
-                targetFound.setPort(newTarget.getPort());
-                targetFound.setUser(newTarget.getUser());
-                targetFound.setPassword(newTarget.getPassword());
-            } else {
-                tlist.add(newTarget);
-            }
-
-            Marshaller marshaller = respContext.createMarshaller();
-
-            FileOutputStream outputStream = new FileOutputStream(file);
-
-            marshaller.marshal(targets, outputStream);
-
-            outputStream.close();
-        } catch (Exception e) {
-            throw new WMRuntimeException(e);
-        }
-
-        String msg = "";
-
-        if (exists)
-            msg = "Deployment target " + newTarget.getName() + " has been successfully updated.";
-        else
-            msg = "New deployment target " + newTarget.getName() + " has been successfully added.";
-
-        return msg;
-    }
-
-    public void deleteDeploymentTarget(String targetName) {
-        File file = new File(StudioConfiguration.staticGetWaveMakerHome().getAbsolutePath(), CommonConstants.DEPLOYMENT_TARGETS_XML);
-        Targets targets;
-        List<Targets.Target> tlist;
-        boolean deleted = false;
-
-        try {
-            FileInputStream inputStream = new FileInputStream(file);
-
-            JAXBContext respContext = JAXBContext.newInstance(Targets.class);
-            Unmarshaller unmarshaller = respContext.createUnmarshaller();
-
-            Object object = unmarshaller.unmarshal(inputStream);
-            targets = Targets.class.cast(object);
-            tlist = targets.getTarget();
-
-            inputStream.close();
-
-            for (Targets.Target target : tlist) {
-                String key = target.getName();
-                if (targetName.equals(key)) {
-                    tlist.remove(target);
-                    deleted = true;
-                    break;
-                }
-            }
-
-            if (deleted) {
-                Marshaller marshaller = respContext.createMarshaller();
-                FileOutputStream outputStream = new FileOutputStream(file);
-                marshaller.marshal(targets, outputStream);
-                outputStream.close();
-            }
-        } catch (Exception e) {
-            throw new WMRuntimeException(e);
-        }
-    }
-
-    private File getProjectRoot() {
-        return projectMgr.getCurrentProject().getProjectRoot();
-    }
-
-    private File buildWar(ProjectManager projectMgr, File warFile, boolean includeEar) throws IOException {
-        // call into existing deployment code to generate war
-        // would be super nice to refactor this
-        DeploymentManager deploymentMgr = new DeploymentManager();
-        deploymentMgr.setProjectManager(projectMgr);
-        deploymentMgr.setStudioConfiguration(studioConfiguration);
-        String war = deploymentMgr.buildWar(warFile, includeEar);
-        return new File(war);
-    }
-
-    private void prepareForDeployment(DesignServiceManager mgr, Map<String, String> properties) {
-
-        for (Service service : mgr.getServices()) {
-            // hack: only run for dataservices for now
-            if (!service.getType().equals(DataServiceType.TYPE_NAME)) {
-                continue;
-            }
-
-            storeProperties(properties);
-
-            Map<String, String> m = getServiceProperties(properties, service.getId());
-
-            int indx = 0;
-            for (ServiceDeployment sd : serviceDeployments) {
-                indx++;
-                sd.prepare(service.getId(), m, mgr, indx);
-            }
-        }
-    }
-
-    private void storeProperties(Map<String, String> properties) {
-        Project p = projectMgr.getCurrentProject();
-        p.clearProperties(ServiceDeploymentManager.class);
-        for (Map.Entry<String, String> e : properties.entrySet()) {
-            p.setProperty(ServiceDeploymentManager.class, e.getKey(), e.getValue());
-        }
-    }
-
-    private Map<String, String> getServiceProperties(Map<String, String> properties, String serviceName) {
-        Map<String, String> rtn = new HashMap<String, String>();
-        String s = serviceName + ProjectConstants.PROP_SEP;
-        for (Map.Entry<String, String> e : properties.entrySet()) {
-            if (e.getKey().startsWith(s)) {
-                rtn.put(e.getKey().substring(s.length()), e.getValue());
-            }
-        }
-        return rtn;
-    }
-
-    /**
-     * @param deploymentInfo
-     * @return
-     */
-    public String saveDeploymentInfo(DeploymentInfo deploymentInfo) {
-        Resource deploymentsResource;
-        Writer writer = null;
-        try {
-            Deployments deployments = readDeployments();
-            deployments.save(projectMgr.getCurrentProject().getProjectName(), deploymentInfo);
-
-            deploymentsResource = new FileSystemResource(studioConfiguration.getCommonDir().getPath() + "/").createRelative(DEPLOYMENTS_FILE);
-            writer = new FileWriter(deploymentsResource.getFile(), false);
-            JSONMarshaller.marshal(writer, deployments, new JSONState(), false, true);
-            writer.flush();
-        } catch (IOException e) {
-            throw new WMRuntimeException("An error occurred while trying to save deployment.", e);
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return deploymentInfo.getDeploymentId();
-    }
-    
-    /**
-     * @param deploymentInfo
-     * @return
-     */
-    public void deleteDeploymentInfo(String deploymentId) {
-        Resource deploymentsResource;
-        Writer writer = null;
-        try {
-            Deployments deployments = readDeployments();
-            deployments.remove(projectMgr.getCurrentProject().getProjectName(), deploymentId);
-            deploymentsResource = new FileSystemResource(studioConfiguration.getCommonDir().getPath() + "/").createRelative(DEPLOYMENTS_FILE);
-            writer = new FileWriter(deploymentsResource.getFile(), false);
-            JSONMarshaller.marshal(writer, deployments, new JSONState(), false, true);
-            writer.flush();
-        } catch (IOException e) {
-            throw new WMRuntimeException("An error occurred while trying to save deployment.", e);
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private Deployments readDeployments() {
-        Resource deploymentsResource;
-        try {
-            deploymentsResource = new FileSystemResource(studioConfiguration.getCommonDir().getPath() + "/").createRelative(DEPLOYMENTS_FILE);
-            if (!deploymentsResource.exists()) {
-                deploymentsResource.getFile().createNewFile();
-                return new Deployments();
-            } else {
-                String s = FileCopyUtils.copyToString(new FileReader(deploymentsResource.getFile()));
-                if (s.length() > 0) {
-                    JSON result = JSONUnmarshaller.unmarshal(s);
-                    Assert.isTrue(result instanceof JSONObject, deploymentsResource.getFile().getAbsolutePath() + " is in an unexpected format.");
-                    return (Deployments) JSONUtils.toBean((JSONObject) result, Deployments.class);
-                } else {
-                    return new Deployments();
-                }
-            }
-        } catch (IOException e) {
-            throw new WMRuntimeException("Failed to read stored deployments configuration.");
-        }
-    }
+	private Deployments readDeployments() {
+		Resource deploymentsResource;
+		try {
+			deploymentsResource = studioConfiguration.getCommonDir()
+					.createRelative(DEPLOYMENTS_FILE);
+			if (!deploymentsResource.exists()) {
+				deploymentsResource.getFile().createNewFile();
+				return new Deployments();
+			} else {
+				String s = FileCopyUtils.copyToString(new InputStreamReader(
+						deploymentsResource.getInputStream()));
+				if (s.length() > 0) {
+					JSON result = JSONUnmarshaller.unmarshal(s);
+					Assert.isTrue(result instanceof JSONObject,
+							deploymentsResource.getFile().getAbsolutePath()
+									+ " is in an unexpected format.");
+					return (Deployments) JSONUtils.toBean((JSONObject) result,
+							Deployments.class);
+				} else {
+					return new Deployments();
+				}
+			}
+		} catch (IOException e) {
+			throw new WMRuntimeException(
+					"Failed to read stored deployments configuration.");
+		}
+	}
 }

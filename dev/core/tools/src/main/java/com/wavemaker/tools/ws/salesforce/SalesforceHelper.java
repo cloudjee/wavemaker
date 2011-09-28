@@ -14,40 +14,51 @@
 
 package com.wavemaker.tools.ws.salesforce;
 
-import com.wavemaker.runtime.service.ElementType;
-import com.wavemaker.runtime.RuntimeAccess;
-import com.wavemaker.runtime.data.util.DataServiceConstants;
-import com.wavemaker.runtime.ws.BindingProperties;
-import com.wavemaker.runtime.ws.salesforce.SalesforceSupport;
-import com.wavemaker.runtime.ws.salesforce.gen.*;
-import com.wavemaker.tools.service.definitions.DataObject;
-import com.wavemaker.tools.service.definitions.Service;
-import com.wavemaker.tools.service.definitions.Operation;
-import com.wavemaker.tools.service.DesignServiceManager;
-import com.wavemaker.tools.service.codegen.GenerationException;
-import com.wavemaker.tools.project.ProjectManager;
-import com.wavemaker.tools.data.util.DataServiceUtils;
-import com.wavemaker.json.type.OperationEnumeration;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.IOUtils;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.Source;
-import javax.xml.transform.Result;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.JAXBException;
-import java.util.*;
-import java.io.*;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
+import com.wavemaker.json.type.OperationEnumeration;
+import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.runtime.data.util.DataServiceConstants;
+import com.wavemaker.runtime.service.ElementType;
+import com.wavemaker.runtime.ws.BindingProperties;
+import com.wavemaker.runtime.ws.salesforce.SalesforceSupport;
+import com.wavemaker.runtime.ws.salesforce.gen.DescribeSObject;
+import com.wavemaker.runtime.ws.salesforce.gen.DescribeSObjectResponse;
+import com.wavemaker.runtime.ws.salesforce.gen.FieldType;
+import com.wavemaker.runtime.ws.salesforce.gen.Login;
+import com.wavemaker.runtime.ws.salesforce.gen.LoginResponse;
+import com.wavemaker.runtime.ws.salesforce.gen.LoginScopeHeader;
+import com.wavemaker.runtime.ws.salesforce.gen.SessionHeader;
+import com.wavemaker.runtime.ws.salesforce.gen.SforceService;
+import com.wavemaker.tools.data.util.DataServiceUtils;
+import com.wavemaker.tools.project.ProjectManager;
+import com.wavemaker.tools.service.DesignServiceManager;
+import com.wavemaker.tools.service.codegen.GenerationException;
+import com.wavemaker.tools.service.definitions.DataObject;
+import com.wavemaker.tools.service.definitions.Operation;
+import com.wavemaker.tools.service.definitions.Service;
 
 /**
  * Helper class for Salesforce.
@@ -390,7 +401,12 @@ public class SalesforceHelper {
         boolean found = false;
 
         try {
-            File serviceDefXml = dsm.getServiceDefXml(CommonConstants.SALESFORCE_SERVICE);
+            File serviceDefXml;
+			try {
+				serviceDefXml = dsm.getServiceDefXml(CommonConstants.SALESFORCE_SERVICE).getFile();
+			} catch (IOException e) {
+				throw new WMRuntimeException(e);
+			}
             Unmarshaller unmarshaller = dsm.getDefinitionsContext().createUnmarshaller();
             Service svc = (Service) unmarshaller.unmarshal(serviceDefXml);
             List<Operation> operations = svc.getOperation();
@@ -426,11 +442,11 @@ public class SalesforceHelper {
     public static void setupSalesforceSrc(ProjectManager mgr, String username, String password) {
         File destf;
         try {
-            File srcf = new File(mgr.getStudioConfiguration().getStudioWebAppRootFile(),
+            File srcf = new File(mgr.getStudioConfiguration().getStudioWebAppRoot().getFile(),
                     "app/templates/salesforce");
 
             //File destf = new File(mgr.getCurrentProject().getProjectRoot(), "services");
-            destf = mgr.getCurrentProject().getProjectRoot();
+            destf = mgr.getCurrentProject().getProjectRoot().getFile();
 
             IOUtils.copy(srcf, destf);
         }

@@ -34,7 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.thoughtworks.paranamer.AdaptiveParanamer;
 import com.thoughtworks.paranamer.ParameterNamesNotFoundException;
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMException;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.ClassLoaderUtils;
@@ -220,7 +220,7 @@ public/* static */class ServerUtils {
             }
         }
         if (null==method) {
-            throw new WMRuntimeException(Resource.SERVER_NOMETHODORID, params);
+            throw new WMRuntimeException(MessageResource.SERVER_NOMETHODORID, params);
         }
         params.remove(ServerConstants.METHOD);
         

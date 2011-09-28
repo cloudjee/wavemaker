@@ -14,8 +14,8 @@
 
 package com.wavemaker.tools.service;
 
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.Resource;
 
 /**
  * @author Simon Toens
@@ -27,6 +27,6 @@ public class InvalidServiceIdException extends WMRuntimeException {
     private static final long serialVersionUID = 1L;
 
     public InvalidServiceIdException(String serviceId, String reason) {
-        super(Resource.INVALID_SERVICE_ID, serviceId, reason);
+        super(MessageResource.INVALID_SERVICE_ID, serviceId, reason);
     }
 }

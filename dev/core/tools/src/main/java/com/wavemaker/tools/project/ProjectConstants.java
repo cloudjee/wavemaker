@@ -23,21 +23,21 @@ import com.wavemaker.json.AlternateJSONTransformer;
  */
 public class ProjectConstants {
 
-    public static final String LOG_DIR = "logs";
+    public static final String LOG_DIR = "logs/";
 
-    public static final String WEB_DIR = "webapproot";
+    public static final String WEB_DIR = "webapproot/";
 
-    public static final String MAVEN_WEB_DIR = "src/main/webapp";
+    public static final String MAVEN_WEB_DIR = "src/main/webapp/";
 
-    public static final String PAGES_DIR = "pages";
+    public static final String PAGES_DIR = "pages/";
 
-    public static final String I18N_DIR = "language/nls";
+    public static final String I18N_DIR = "language/nls/";
 
-    public static final String WEB_INF = "WEB-INF";
+    public static final String WEB_INF = "WEB-INF/";
 
-    public static final String LIB_DIR = "lib";
+    public static final String LIB_DIR = "lib/";
     
-    public static final String CLASSES_DIR = "classes";
+    public static final String CLASSES_DIR = "classes/";
 
     public static final String WEB_XML = "web.xml";
 

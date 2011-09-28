@@ -28,12 +28,13 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.wavemaker.common.CommonConstants;
+import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.OneToManyMap;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.common.util.SystemUtils;
-import com.wavemaker.common.CommonConstants;
 import com.wavemaker.runtime.client.TreeNode;
 import com.wavemaker.runtime.data.DataServiceDefinition;
 import com.wavemaker.runtime.data.DataServiceInternal;
@@ -110,7 +111,12 @@ public class DataModelManager {
         serviceManager.validateServiceId(serviceId);
 
         File outputDir = getServicePath(serviceId);
-        File classesDir = projectManager.getCurrentProject().getWebInfClasses();
+        File classesDir;
+		try {
+			classesDir = projectManager.getCurrentProject().getWebInfClasses().getFile();
+		} catch (IOException ex) {
+			throw new WMRuntimeException(ex);
+		}
 
         ImportDB importer = null;
 
@@ -316,7 +322,12 @@ public class DataModelManager {
             File serviceRoot = getServicePath(serviceId);
 
             AntUtils.copyDir(tmpServiceRoot, serviceRoot, null, "**/*.class");
-            File classesDir = projectManager.getCurrentProject().getWebInfClasses();;
+            File classesDir;
+			try {
+				classesDir = projectManager.getCurrentProject().getWebInfClasses().getFile();
+			} catch (IOException ex) {
+				throw new WMRuntimeException(ex);
+			}
             AntUtils.copyDir(tmpServiceRoot, classesDir, "**/*.class", null);
 
             registerService(serviceId, importer);
@@ -606,7 +617,12 @@ public class DataModelManager {
         String path = mappingPaths.iterator().next();
         File hbmFiles = new File(serviceDir, new File(path).getParent());
 
-        File classesDir = projectManager.getCurrentProject().getWebInfClasses();
+        File classesDir;
+		try {
+			classesDir = projectManager.getCurrentProject().getWebInfClasses().getFile();
+		} catch (IOException ex) {
+			throw new WMRuntimeException(ex);
+		}
 
         ExportDB exporter = new ExportDB();
         exporter.setHbmFilesDir(hbmFiles);
@@ -710,7 +726,11 @@ public class DataModelManager {
 
     //private File getServicePath(String serviceId) {
     public File getServicePath(String serviceId) {
-        return serviceManager.getServiceRuntimeDirectory(serviceId);
+        try {
+			return serviceManager.getServiceRuntimeDirectory(serviceId).getFile();
+		} catch (IOException ex) {
+			throw new WMRuntimeException(ex);
+		}
     }
 
     private String getProjectName() {
@@ -929,7 +949,11 @@ public class DataModelManager {
 
     public String getWebAppRoot()
     {
-    	return this.projectManager.getCurrentProject().getWebAppRoot().getPath();
+    	try {
+			return this.projectManager.getCurrentProject().getWebAppRoot().getFile().getPath();
+		} catch (IOException ex) {
+			throw new WMRuntimeException(ex);
+		}
     }    
 
     private String reWriteCxnUrlForHsqlDB(String connectionUrl)

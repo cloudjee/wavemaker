@@ -14,19 +14,19 @@
 
 package com.wavemaker.tools.pws;
 
-import com.wavemaker.tools.ws.RESTInputParam;
-
-import java.util.List;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+
+import javax.wsdl.WSDLException;
+import javax.xml.namespace.QName;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import javax.wsdl.WSDLException;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.namespace.QName;
+import com.wavemaker.tools.ws.RESTInputParam;
 
 /**
  * The default implementation of this interface is <code>RESTWsdlGenerator</code>. Developers may extend the default

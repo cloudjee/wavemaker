@@ -14,19 +14,18 @@
 
 package com.wavemaker.tools.project.upgrade.six_dot_zero;
 
-import java.io.File;
 import java.io.IOException;
+
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
-import com.wavemaker.runtime.server.ServerConstants;
-
-import org.apache.commons.io.FileUtils;
 /**
  * Changes the package of WMPropertyPlaceholderConfigurer.
  * 
  * @author S Lee
+ * @author Jeremy Grelle
  */
 public class WebXmlUpgradeTask implements UpgradeTask {
 
@@ -41,18 +40,17 @@ public class WebXmlUpgradeTask implements UpgradeTask {
      * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
      */
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
-        File webxml = project.getWebXml();
+        Resource webxml = project.getWebXml();
 
         try {
-            String content = FileUtils.readFileToString(webxml, ServerConstants.DEFAULT_ENCODING);
+            String content = project.readFile(webxml);
             int indxwm = content.indexOf(wmListenerStr);
             int indxspring = content.indexOf(springListenerStr);
             if (indxwm < indxspring) return;
-            
             content = content.replace(wmListenerStr, dummyStr);
             content = content.replace(springListenerStr, wmListenerStr);
             content = content.replace(dummyStr, springListenerStr);
-            FileUtils.writeStringToFile(webxml, content, ServerConstants.DEFAULT_ENCODING);
+            project.writeFile(webxml, content);
         } catch (IOException ioe) {
             ioe.printStackTrace();
             error = true;

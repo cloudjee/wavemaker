@@ -14,11 +14,12 @@
 
 package com.wavemaker.tools.project.upgrade;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.core.io.Resource;
 
 /**
  * A type describing the return of a series of upgrades.  Messages will always
@@ -53,13 +54,13 @@ public class UpgradeInfo {
     // bean properties
     private Map<String, List<String>> messages = new HashMap<String, List<String>>();
     private Map<String, List<String>> verbose = new HashMap<String, List<String>>();
-    private File backupExportFile;
+    private Resource backupExportFile;
     private double version = -1;
 
-    public File getBackupExportFile() {
+    public Resource getBackupExportFile() {
         return backupExportFile;
     }
-    public void setBackupExportFile(File backupExportFile) {
+    public void setBackupExportFile(Resource backupExportFile) {
         this.backupExportFile = backupExportFile;
     }
 

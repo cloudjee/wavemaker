@@ -32,11 +32,13 @@ import org.apache.tools.ant.types.FileList;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.ClasspathUtils;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.ResourceUtils;
 
 import com.wavemaker.runtime.module.ModuleManager;
+import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
 
@@ -44,378 +46,394 @@ import com.wavemaker.tools.project.ProjectConstants;
  * 
  * @author Matt Small
  * @author Joel Hare
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  */
 public class CopyRuntimeJarsTask extends Task {
-    
-    public static final String CLASSPATH_ATTR_NAME = "Class-Path";
-    public static final String TASK_NAME = "copyRuntimeJarsTask";
 
-    /**
-     * XXX this is pretty faux - ideally, we'd do something better, instead of
-     * this.  Which is search through for all the module config files, and then
-     * getting the beandefs, and brute-forcing names & extension points out.
-     * Spring or OSGi should help us out more.  And a lot of this code is copied
-     * out of ModuleManager & ModuleController, too.  Terrible.
-     * 
-     * @return
-     * @throws IOException
-     */
-    protected List<File> getModuleLocations(ClassLoader cl) throws IOException {
-        List<File> ret = new ArrayList<File>();
-        
-        PathMatchingResourcePatternResolver searcher;
-        searcher = new PathMatchingResourcePatternResolver(cl);
-        
-        Resource resources[] = searcher.getResources(
-                PathMatchingResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX+
-                "/"+ModuleManager.MODULE_CONFIG_FILE);
-        for (Resource resource: resources) {
-            
-            URL url = resource.getURL();
-            if (ResourceUtils.isJarURL(url)) {
-                URL jarURL = ResourceUtils.extractJarFileURL(url);
-                ret.add(ResourceUtils.getFile(jarURL));
-            } else {
-                ret.add(ResourceUtils.getFile(url).getParentFile());
-            }
-        }
-        
-        return ret;
-    }
+	public static final String CLASSPATH_ATTR_NAME = "Class-Path";
+	public static final String TASK_NAME = "copyRuntimeJarsTask";
 
-    protected String getRuntimeJarName(){
-    	String runtimeJarName = null;
-    	String propFile = "META-INF/runtimejar.properties";
-    	String key = "runtimejar.name";
+	/**
+	 * XXX this is pretty faux - ideally, we'd do something better, instead of
+	 * this. Which is search through for all the module config files, and then
+	 * getting the beandefs, and brute-forcing names & extension points out.
+	 * Spring or OSGi should help us out more. And a lot of this code is copied
+	 * out of ModuleManager & ModuleController, too. Terrible.
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
+	protected List<File> getModuleLocations(ClassLoader cl) throws IOException {
+		List<File> ret = new ArrayList<File>();
 
-    	Properties prop = new Properties();
-    	InputStream in = this.getClass().getClassLoader().getResourceAsStream(propFile);
-    	if (in != null) {
-    		try{
-    			prop.load(in);
-    			runtimeJarName = prop.getProperty(key);
-    		} catch (IOException ioe){
-    			ioe.printStackTrace();
-    		} finally
-    		{
-    			try {in.close();}
-    			catch (Exception e) {e.printStackTrace();}
-    		}
-    	}
-    	else{
-    		throw new IllegalStateException("CopyRuntimeJarsTask could not load " + propFile);
-    	}
+		PathMatchingResourcePatternResolver searcher;
+		searcher = new PathMatchingResourcePatternResolver(cl);
 
-    	return runtimeJarName;
-    }
-    	
-    	
-    protected List<String> getReferencedClassPathJars(File jarFile, boolean failOnError) {
-        
-        try {
-            JarFile runtimeJar = new JarFile(jarFile);
-            Manifest manifest = runtimeJar.getManifest();
-            String jarClassPath = manifest.getMainAttributes().getValue(
-                    CLASSPATH_ATTR_NAME);
-            if (failOnError && null == jarClassPath) {
-                throw new IllegalStateException(CLASSPATH_ATTR_NAME +
-                        " attribute is missing from " + jarFile);
-            } else if (null==jarClassPath) {
-                return new ArrayList<String>();
-            }
-            
-            String[] tokens = jarClassPath.split("\\s");
-            
-            List<String> jarNames = new ArrayList<String>(tokens.length+1);
-            
-            jarNames.add(getRuntimeJarName());
-            for (String jarName : jarClassPath.split("\\s")) {
-                jarNames.add(jarName);
-            }
-            return jarNames;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+		Resource resources[] = searcher
+				.getResources(PathMatchingResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX
+						+ "/" + ModuleManager.MODULE_CONFIG_FILE);
+		for (Resource resource : resources) {
 
-    protected FileSet getProjectJarFileSet() {
-        FileSet projectJarSet = new FileSet();
-        projectJarSet.setProject(getProject());
-        projectJarSet.setDir(wmProject.getProjectRoot());
-        projectJarSet.createInclude().setName(ProjectConstants.LIB_DIR+"/**/*.jar");
+			URL url = resource.getURL();
+			if (ResourceUtils.isJarURL(url)) {
+				URL jarURL = ResourceUtils.extractJarFileURL(url);
+				ret.add(ResourceUtils.getFile(jarURL));
+			} else {
+				ret.add(ResourceUtils.getFile(url).getParentFile());
+			}
+		}
 
-	File includeList = new File(wmProject.getWebAppRoot(), "resources/.includeJars");
-	if (includeList.exists()) {
-	    try {
-		String s = com.wavemaker.common.util.IOUtils.read(includeList);
-		String[] filePaths = s.split("\n");
-		for (int i = 0; i < filePaths.length; i++) 
-		    projectJarSet.createInclude().setName("webapproot/resources/" + filePaths[i]);
-	    } catch(Exception e) {
-		e.printStackTrace();
-	    }
+		return ret;
 	}
-        return projectJarSet;
-    }
 
-    protected List<String> copyModules() throws IOException {
-        
-        List<String> moduleJarNames = new ArrayList<String>();
-        List<File> mm = getModuleLocations(getClassLoader());
-        
-        Copy copyJars = new Copy();
-        copyJars.setProject(getProject());
-        copyJars.setPreserveLastModified(false);
-        copyJars.setTaskName(TASK_NAME);
-        copyJars.setFlatten(true);
-        copyJars.setVerbose(verbose);
-        copyJars.setTodir(wmProject.getWebInfLib());
+	protected String getRuntimeJarName() {
+		String runtimeJarName = null;
+		String propFile = "META-INF/runtimejar.properties";
+		String key = "runtimejar.name";
 
+		Properties prop = new Properties();
+		InputStream in = this.getClass().getClassLoader()
+				.getResourceAsStream(propFile);
+		if (in != null) {
+			try {
+				prop.load(in);
+				runtimeJarName = prop.getProperty(key);
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+			} finally {
+				try {
+					in.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		} else {
+			throw new IllegalStateException(
+					"CopyRuntimeJarsTask could not load " + propFile);
+		}
 
-        FileList jarsFileList = new FileList();
+		return runtimeJarName;
+	}
 
-        for (File file: mm) {
-            if (file.isDirectory()) {
-                Copy copyDirs = new Copy();
-                copyDirs.setProject(getProject());
-                copyDirs.setTaskName("copymodules-dir");
-                copyDirs.setFlatten(false);
-                copyDirs.setTodir(new File(wmProject.getWebInfClasses(),
-                            file.getName()));
+	protected List<String> getReferencedClassPathJars(File jarFile,
+			boolean failOnError) {
 
-                FileSet dirsFileSet = new FileSet();
-                dirsFileSet.setDir(file);
-                copyDirs.add(dirsFileSet);
+		try {
+			JarFile runtimeJar = new JarFile(jarFile);
+			Manifest manifest = runtimeJar.getManifest();
+			String jarClassPath = manifest.getMainAttributes().getValue(
+					CLASSPATH_ATTR_NAME);
+			if (failOnError && null == jarClassPath) {
+				throw new IllegalStateException(CLASSPATH_ATTR_NAME
+						+ " attribute is missing from " + jarFile);
+			} else if (null == jarClassPath) {
+				return new ArrayList<String>();
+			}
 
-                copyDirs.execute();
-            } else {
-                FileList.FileName fileName = new FileList.FileName();
-                fileName.setName(file.getAbsolutePath());
-                jarsFileList.addConfiguredFile(fileName);
-                moduleJarNames.add(file.getName());
-                
-                List<String> referencedJars = getReferencedClassPathJars(file, false);
-                for (String ref: referencedJars) {
-                    File refFile = new File(file.getParentFile(), ref);
-                    if (refFile.exists()) {
-                        FileList.FileName refFileName = new FileList.FileName();
-                        refFileName.setName(refFile.getAbsolutePath());
-                        jarsFileList.addConfiguredFile(refFileName);
-                        moduleJarNames.add(ref);
-                    }
-                }
-            }
-        }
+			String[] tokens = jarClassPath.split("\\s");
 
-        copyJars.add(jarsFileList);
-        copyJars.perform();
-        
-        return moduleJarNames;
-    }
+			List<String> jarNames = new ArrayList<String>(tokens.length + 1);
 
-    @Override
-    public void execute() {
-        if (null == todir) {
-            throw new IllegalArgumentException("todir is not set");
-        }
-        if (null == from) {
-            throw new IllegalArgumentException("from is not set");
-        }
+			jarNames.add(getRuntimeJarName());
+			for (String jarName : jarClassPath.split("\\s")) {
+				jarNames.add(jarName);
+			}
+			return jarNames;
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-        if (!todir.exists()) {
-            throw new IllegalArgumentException(todir + " does not exist");
-        }
-        if (!from.exists()) {
-            throw new IllegalArgumentException(from + " does not exist");
-        }
+	protected FileSet getProjectJarFileSet() {
+		FileSet projectJarSet = new FileSet();
+		projectJarSet.setProject(getProject());
+		try {
+			projectJarSet.setDir(wmProject.getProjectRoot().getFile());
 
-        File runtimeJarFile = new File(from, getRuntimeJarName());
-        if (!runtimeJarFile.exists()) {
-            throw new IllegalStateException(runtimeJarFile + " does not exist");
-        }
+			projectJarSet.createInclude().setName(
+					ProjectConstants.LIB_DIR + "/**/*.jar");
 
-        List<String> runtimeJarNames = getReferencedClassPathJars(runtimeJarFile, true);
+			File includeList = new File(wmProject.getWebAppRoot().getFile(),
+					"resources/.includeJars");
+			if (includeList.exists()) {
 
-        FileSet projectJars = getProjectJarFileSet();
-        List<String> moduleJars;
-        try {
-            moduleJars = copyModules();
-        } catch (IOException e) {
-            throw new BuildException(e);
-        }
+				String s = com.wavemaker.common.util.IOUtils.read(includeList);
+				String[] filePaths = s.split("\n");
+				for (int i = 0; i < filePaths.length; i++) {
+					projectJarSet.createInclude().setName(
+							"webapproot/resources/" + filePaths[i]);
+				}
 
-        // Delete all jars not included in these lists
-        Delete deleteTask = new Delete();
-        deleteTask.setProject(getProject());
-        deleteTask.setTaskName(TASK_NAME);
-        deleteTask.setVerbose(isVerbose());
-        FileSet deleteFileSet = new FileSet();
-        deleteFileSet.setProject(getProject());
-        deleteFileSet.setDir(todir);
-        deleteFileSet.createInclude().setName("*.jar");
-        
-        for (String runtimeJarName: runtimeJarNames) {
-            deleteFileSet.createExclude().setName(runtimeJarName);
-        }
-        for (String projectJarName: projectJars.getDirectoryScanner().getIncludedFiles()) {
-            String trimmedJarName = projectJarName.substring(ProjectConstants.LIB_DIR.length()+1);
-            deleteFileSet.createExclude().setName(trimmedJarName);
-        }
-        for (String moduleJarName: moduleJars) {
-            deleteFileSet.createExclude().setName(moduleJarName);
-        }
-        
-        deleteTask.add(deleteFileSet);
-        deleteTask.perform();
+			}
+		} catch (Exception e) {
+			throw new BuildException(e);
+		}
+		return projectJarSet;
+	}
 
-        // Copy all new or out of date jars to the target directory
+	protected List<String> copyModules() throws IOException {
 
-        Copy copyTask = new Copy();
-        copyTask.setProject(getProject());
-        copyTask.setPreserveLastModified(isPreserveLastModified());
-        copyTask.setTaskName(TASK_NAME);
-        copyTask.setOverwrite(isOverwrite());
-        copyTask.setVerbose(isVerbose());
-        copyTask.setFlatten(true);
-        copyTask.setTodir(todir);
+		List<String> moduleJarNames = new ArrayList<String>();
+		List<File> mm = getModuleLocations(getClassLoader());
 
-        if (!todir.equals(from)) {
-            FileSet sourceRuntimeFileSet = new FileSet();
-            sourceRuntimeFileSet.setDir(from);
-            for (String runtimeJarName: runtimeJarNames) {
-                sourceRuntimeFileSet.createInclude().setName(runtimeJarName);
-            }
-            copyTask.add(sourceRuntimeFileSet);
-        }
+		Copy copyJars = new Copy();
+		copyJars.setProject(getProject());
+		copyJars.setPreserveLastModified(false);
+		copyJars.setTaskName(TASK_NAME);
+		copyJars.setFlatten(true);
+		copyJars.setVerbose(verbose);
+		copyJars.setTodir(wmProject.getWebInfLib().getFile());
 
-        copyTask.add(projectJars);
-        copyTask.perform();
-        copyPwsFiles(from, wmProject);
-    }
-    
-    protected ClasspathUtils.Delegate getDelegate() {
-        
-        if (null==cpDelegate) {
-            cpDelegate = ClasspathUtils.getDelegate(this);
-        }
-        return cpDelegate;
-    }
-    
-    protected ClassLoader getClassLoader() {
-        return cpDelegate.getClassLoader();
-    }
+		FileList jarsFileList = new FileList();
 
-    private void copyPwsFiles(File libDir, Project wmproject) {
-        File pwsNode = new File(libDir.getParentFile().getParentFile(), "app/templates/pws");
-        File pwsWebInfNode = new File(pwsNode, "WEB-INF");
-        Copy copyTask = new Copy();
-        copyTask.setProject(getProject());
-        copyTask.setPreserveLastModified(isPreserveLastModified());
-        copyTask.setTaskName(TASK_NAME);
-        copyTask.setOverwrite(true);
-        copyTask.setVerbose(isVerbose());
-        copyTask.setFlatten(false);
-        copyTask.setTodir(todir.getParentFile());
+		for (File file : mm) {
+			if (file.isDirectory()) {
+				Copy copyDirs = new Copy();
+				copyDirs.setProject(getProject());
+				copyDirs.setTaskName("copymodules-dir");
+				copyDirs.setFlatten(false);
+				copyDirs.setTodir(new File(wmProject.getWebInfClasses().getFile(), file
+						.getName()));
 
-        FileSet srcPwsFileSet = new FileSet();
-        srcPwsFileSet.setDir(pwsWebInfNode);
-        srcPwsFileSet.createInclude().setName("**/*.*");
-        srcPwsFileSet.createExclude().setName("**/.svn/**/*.*");
+				FileSet dirsFileSet = new FileSet();
+				dirsFileSet.setDir(file);
+				copyDirs.add(dirsFileSet);
 
-        copyTask.add(srcPwsFileSet);
-        copyTask.perform();
+				copyDirs.execute();
+			} else {
+				FileList.FileName fileName = new FileList.FileName();
+				fileName.setName(file.getAbsolutePath());
+				jarsFileList.addConfiguredFile(fileName);
+				moduleJarNames.add(file.getName());
 
-        String[] partnerNodeList = pwsNode.list();
+				List<String> referencedJars = getReferencedClassPathJars(file,
+						false);
+				for (String ref : referencedJars) {
+					File refFile = new File(file.getParentFile(), ref);
+					if (refFile.exists()) {
+						FileList.FileName refFileName = new FileList.FileName();
+						refFileName.setName(refFile.getAbsolutePath());
+						jarsFileList.addConfiguredFile(refFileName);
+						moduleJarNames.add(ref);
+					}
+				}
+			}
+		}
 
-        if (partnerNodeList == null || partnerNodeList.length == 0) return;
+		copyJars.add(jarsFileList);
+		copyJars.perform();
 
-        for (String partnerNodeName : partnerNodeList) {
-            File partnerWebInfNode = new File(pwsNode, partnerNodeName + "/WEB-INF");
-            if (!partnerWebInfNode.exists()) {
-                continue;
-            }
-            copyTask = new Copy();
-            copyTask.setProject(getProject());
-            copyTask.setPreserveLastModified(isPreserveLastModified());
-            copyTask.setTaskName(TASK_NAME);
-            copyTask.setOverwrite(isOverwrite());
-            copyTask.setVerbose(isVerbose());
-            copyTask.setFlatten(false);
-            copyTask.setTodir(todir.getParentFile());
+		return moduleJarNames;
+	}
 
-            FileSet srcPartnerFileSet = new FileSet();
-            srcPartnerFileSet.setDir(partnerWebInfNode);
-            srcPartnerFileSet.createInclude().setName("**/*.*");
-            srcPartnerFileSet.createExclude().setName("**/.svn/**/*.*");
+	@Override
+	public void execute() {
+		if (null == todir) {
+			throw new IllegalArgumentException("todir is not set");
+		}
+		if (null == from) {
+			throw new IllegalArgumentException("from is not set");
+		}
 
-            copyTask.add(srcPartnerFileSet);
-            copyTask.perform();
-        }
-    }
-    
-    // bean properties
-    private File todir = null;
-    private File from = null;
-    private boolean preserveLastModified = false;
-    private boolean overwrite = false;
-    private boolean verbose = false;
-    private ClasspathUtils.Delegate cpDelegate;
-    private Project wmProject;
+		if (!todir.exists()) {
+			throw new IllegalArgumentException(todir + " does not exist");
+		}
+		if (!from.exists()) {
+			throw new IllegalArgumentException(from + " does not exist");
+		}
 
-    /**
-     * Set the classpathref - this classpath will be used to discover available
-     * modules.
-     * 
-     * @param r
-     *            A reference to a Path structure - this should be a classpath
-     *            or similar.
-     */
-    public void setClasspathRef(Reference r) {
-        getDelegate().setClasspathref(r);
-    }
-    
-    public void setProjectRoot(File projectRoot) {
-        wmProject = new Project(projectRoot);
-    }
-    
-    public File getTodir() {
-        return todir;
-    }
+		File runtimeJarFile = new File(from, getRuntimeJarName());
+		if (!runtimeJarFile.exists()) {
+			throw new IllegalStateException(runtimeJarFile + " does not exist");
+		}
 
-    public void setTodir(File todir) {
-        this.todir = todir;
-    }
+		List<String> runtimeJarNames = getReferencedClassPathJars(
+				runtimeJarFile, true);
 
-    public File getFrom() {
-        return from;
-    }
+		FileSet projectJars = getProjectJarFileSet();
+		List<String> moduleJars;
+		try {
+			moduleJars = copyModules();
+		} catch (IOException e) {
+			throw new BuildException(e);
+		}
 
-    public void setFrom(File from) {
-        this.from = from;
-    }
+		// Delete all jars not included in these lists
+		Delete deleteTask = new Delete();
+		deleteTask.setProject(getProject());
+		deleteTask.setTaskName(TASK_NAME);
+		deleteTask.setVerbose(isVerbose());
+		FileSet deleteFileSet = new FileSet();
+		deleteFileSet.setProject(getProject());
+		deleteFileSet.setDir(todir);
+		deleteFileSet.createInclude().setName("*.jar");
 
-    public boolean isPreserveLastModified() {
-        return preserveLastModified;
-    }
+		for (String runtimeJarName : runtimeJarNames) {
+			deleteFileSet.createExclude().setName(runtimeJarName);
+		}
+		for (String projectJarName : projectJars.getDirectoryScanner()
+				.getIncludedFiles()) {
+			String trimmedJarName = projectJarName
+					.substring(ProjectConstants.LIB_DIR.length() + 1);
+			deleteFileSet.createExclude().setName(trimmedJarName);
+		}
+		for (String moduleJarName : moduleJars) {
+			deleteFileSet.createExclude().setName(moduleJarName);
+		}
 
-    public void setPreserveLastModified(boolean preserveLastModified) {
-        this.preserveLastModified = preserveLastModified;
-    }
+		deleteTask.add(deleteFileSet);
+		deleteTask.perform();
 
-    public boolean isOverwrite() {
-        return overwrite;
-    }
+		// Copy all new or out of date jars to the target directory
 
-    public void setOverwrite(boolean overwrite) {
-        this.overwrite = overwrite;
-    }
+		Copy copyTask = new Copy();
+		copyTask.setProject(getProject());
+		copyTask.setPreserveLastModified(isPreserveLastModified());
+		copyTask.setTaskName(TASK_NAME);
+		copyTask.setOverwrite(isOverwrite());
+		copyTask.setVerbose(isVerbose());
+		copyTask.setFlatten(true);
+		copyTask.setTodir(todir);
 
-    public boolean isVerbose() {
-        return verbose;
-    }
+		if (!todir.equals(from)) {
+			FileSet sourceRuntimeFileSet = new FileSet();
+			sourceRuntimeFileSet.setDir(from);
+			for (String runtimeJarName : runtimeJarNames) {
+				sourceRuntimeFileSet.createInclude().setName(runtimeJarName);
+			}
+			copyTask.add(sourceRuntimeFileSet);
+		}
 
-    public void setVerbose(boolean verbose) {
-        this.verbose = verbose;
-    }
+		copyTask.add(projectJars);
+		copyTask.perform();
+		copyPwsFiles(from, wmProject);
+	}
+
+	protected ClasspathUtils.Delegate getDelegate() {
+
+		if (null == cpDelegate) {
+			cpDelegate = ClasspathUtils.getDelegate(this);
+		}
+		return cpDelegate;
+	}
+
+	protected ClassLoader getClassLoader() {
+		return cpDelegate.getClassLoader();
+	}
+
+	private void copyPwsFiles(File libDir, Project wmproject) {
+		File pwsNode = new File(libDir.getParentFile().getParentFile(),
+				"app/templates/pws");
+		File pwsWebInfNode = new File(pwsNode, "WEB-INF");
+		Copy copyTask = new Copy();
+		copyTask.setProject(getProject());
+		copyTask.setPreserveLastModified(isPreserveLastModified());
+		copyTask.setTaskName(TASK_NAME);
+		copyTask.setOverwrite(true);
+		copyTask.setVerbose(isVerbose());
+		copyTask.setFlatten(false);
+		copyTask.setTodir(todir.getParentFile());
+
+		FileSet srcPwsFileSet = new FileSet();
+		srcPwsFileSet.setDir(pwsWebInfNode);
+		srcPwsFileSet.createInclude().setName("**/*.*");
+		srcPwsFileSet.createExclude().setName("**/.svn/**/*.*");
+
+		copyTask.add(srcPwsFileSet);
+		copyTask.perform();
+
+		String[] partnerNodeList = pwsNode.list();
+
+		if (partnerNodeList == null || partnerNodeList.length == 0)
+			return;
+
+		for (String partnerNodeName : partnerNodeList) {
+			File partnerWebInfNode = new File(pwsNode, partnerNodeName
+					+ "/WEB-INF");
+			if (!partnerWebInfNode.exists()) {
+				continue;
+			}
+			copyTask = new Copy();
+			copyTask.setProject(getProject());
+			copyTask.setPreserveLastModified(isPreserveLastModified());
+			copyTask.setTaskName(TASK_NAME);
+			copyTask.setOverwrite(isOverwrite());
+			copyTask.setVerbose(isVerbose());
+			copyTask.setFlatten(false);
+			copyTask.setTodir(todir.getParentFile());
+
+			FileSet srcPartnerFileSet = new FileSet();
+			srcPartnerFileSet.setDir(partnerWebInfNode);
+			srcPartnerFileSet.createInclude().setName("**/*.*");
+			srcPartnerFileSet.createExclude().setName("**/.svn/**/*.*");
+
+			copyTask.add(srcPartnerFileSet);
+			copyTask.perform();
+		}
+	}
+
+	// bean properties
+	private File todir = null;
+	private File from = null;
+	private boolean preserveLastModified = false;
+	private boolean overwrite = false;
+	private boolean verbose = false;
+	private ClasspathUtils.Delegate cpDelegate;
+	private Project wmProject;
+
+	/**
+	 * Set the classpathref - this classpath will be used to discover available
+	 * modules.
+	 * 
+	 * @param r
+	 *            A reference to a Path structure - this should be a classpath
+	 *            or similar.
+	 */
+	public void setClasspathRef(Reference r) {
+		getDelegate().setClasspathref(r);
+	}
+
+	public void setProjectRoot(File projectRoot) {
+		wmProject = new Project(new FileSystemResource(projectRoot), new LocalStudioConfiguration());
+	}
+
+	public File getTodir() {
+		return todir;
+	}
+
+	public void setTodir(File todir) {
+		this.todir = todir;
+	}
+
+	public File getFrom() {
+		return from;
+	}
+
+	public void setFrom(File from) {
+		this.from = from;
+	}
+
+	public boolean isPreserveLastModified() {
+		return preserveLastModified;
+	}
+
+	public void setPreserveLastModified(boolean preserveLastModified) {
+		this.preserveLastModified = preserveLastModified;
+	}
+
+	public boolean isOverwrite() {
+		return overwrite;
+	}
+
+	public void setOverwrite(boolean overwrite) {
+		this.overwrite = overwrite;
+	}
+
+	public boolean isVerbose() {
+		return verbose;
+	}
+
+	public void setVerbose(boolean verbose) {
+		this.verbose = verbose;
+	}
 }

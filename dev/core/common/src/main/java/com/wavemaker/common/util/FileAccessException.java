@@ -16,7 +16,7 @@ package com.wavemaker.common.util;
 
 import java.io.IOException;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 
 /**
  * @author Matt Small
@@ -27,7 +27,7 @@ public class FileAccessException extends IOException {
 
     private static final long serialVersionUID = 1L;
 
-    public FileAccessException(Resource resource, Object... args) {
+    public FileAccessException(MessageResource resource, Object... args) {
         super(resource.getMessage(args));
     }
 }

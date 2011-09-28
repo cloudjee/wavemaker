@@ -14,8 +14,8 @@
 
 package com.wavemaker.tools.serializer;
 
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMException;
-import com.wavemaker.common.Resource;
 
 /**
  * @author ffu
@@ -34,7 +34,7 @@ public class FileSerializerException extends WMException {
         super(e);
     }
 
-    public FileSerializerException(Resource resource, Object... args) {
+    public FileSerializerException(MessageResource resource, Object... args) {
         super(resource, args);
     }
 }

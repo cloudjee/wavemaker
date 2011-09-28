@@ -19,7 +19,7 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.project.VersionInfo;
 
 /**
@@ -30,12 +30,12 @@ import com.wavemaker.tools.project.VersionInfo;
  * "versioned", the follow behaviour is used.
  *
  * The version information from
- * {@link StudioConfiguration#getCurrentVersionInfo()} is used.  When writing:
+ * {@link LocalStudioConfiguration#getCurrentVersionInfo()} is used.  When writing:
  * 
  * The value is always written to a sub-node of the requested key, with the
  * version information contained.  For instance, if the key is
  * "com/wavemaker/studio/FileLocation", and 
- * {@link StudioConfiguration#getCurrentVersionInfo()} returns 1.2.3, then the
+ * {@link LocalStudioConfiguration#getCurrentVersionInfo()} returns 1.2.3, then the
  * value will be written to
  * "com/wavemaker/studio/FileLocation/1.2.3/FileLocation".
  *
@@ -157,7 +157,7 @@ public class ConfigurationStore {
 
         try {
             return getLessThanEqualVersionedNode(klass, key,
-                    StudioConfiguration.getCurrentVersionInfo());
+                    LocalStudioConfiguration.getCurrentVersionInfo());
         } catch (IOException e) {
             throw new WMRuntimeException(e);
         }
@@ -203,7 +203,7 @@ public class ConfigurationStore {
 
         try {
             return getExactVersionedNode(klass, key,
-                    StudioConfiguration.getCurrentVersionInfo());
+                    LocalStudioConfiguration.getCurrentVersionInfo());
         } catch (IOException e) {
             throw new WMRuntimeException(e);
         }

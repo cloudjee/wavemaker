@@ -15,10 +15,12 @@
 package com.wavemaker.tools.ant;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.tools.ant.BuildException;
+import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.tools.service.ServiceClassGenerator;
 
@@ -64,8 +66,13 @@ public class ServiceCompilerTask extends CompilerTask {
         
         for (String serviceId : getDesignServiceManager().getServiceIds()) {
             
-            File srcDir = getDesignServiceManager().getServiceRuntimeDirectory(
-                    serviceId);
+            File srcDir;
+			try {
+				srcDir = getDesignServiceManager().getServiceRuntimeDirectory(
+				        serviceId).getFile();
+			} catch (IOException ex) {
+				throw new BuildException(ex);
+			}
 
             if (srcDir == null) {
                 throw new BuildException("Could not locate service home for "
@@ -74,12 +81,12 @@ public class ServiceCompilerTask extends CompilerTask {
 
             ServiceClassGenerator generator = new ServiceClassGenerator();
 
-            generator.addService(getServiceFiles(srcDir), serviceId);
+            generator.addServiceFiles(getServiceFiles(srcDir), serviceId);
 
             if (destDir == null) {
-                generator.setOutputDirectory(srcDir);
+                generator.setOutputDirectory(new FileSystemResource(srcDir));
             } else {
-                generator.setOutputDirectory(destDir);
+                generator.setOutputDirectory(new FileSystemResource(destDir));
             }
 
             generator.setDesignServiceManager(getDesignServiceManager());

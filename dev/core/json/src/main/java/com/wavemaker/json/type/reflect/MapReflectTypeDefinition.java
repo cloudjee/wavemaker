@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.type.FieldDefinition;
 import com.wavemaker.json.type.MapTypeDefinition;
@@ -48,7 +48,7 @@ public class MapReflectTypeDefinition extends ReflectTypeDefinition
             } else if (getKlass().isAssignableFrom(SortedMap.class)) {
                 return new TreeMap<Object, Object>();
             } else {
-                throw new WMRuntimeException(Resource.JSON_FAILEDINSTANCE_MAP,
+                throw new WMRuntimeException(MessageResource.JSON_FAILEDINSTANCE_MAP,
                         getKlass());
             }
         } else {

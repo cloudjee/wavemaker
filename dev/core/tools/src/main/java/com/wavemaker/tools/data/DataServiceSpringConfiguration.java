@@ -29,12 +29,12 @@ import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jndi.JndiObjectFactoryBean;
 
-import com.wavemaker.runtime.data.spring.WMPropertyPlaceholderConfigurer;
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.runtime.data.spring.ConfigurationAndSessionFactoryBean;
 import com.wavemaker.runtime.data.spring.SpringDataServiceManager;
+import com.wavemaker.runtime.data.spring.WMPropertyPlaceholderConfigurer;
 import com.wavemaker.runtime.data.sqlserver.SqlServerUserImpersonatingDataSourceProxy;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.common.ConfigurationException;

@@ -17,7 +17,7 @@
  */
 package com.wavemaker.studio;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -37,7 +37,7 @@ import com.wavemaker.studio.infra.StudioTestCase;
 
 /**
  * @author small
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  */
 public class TestPagesService extends StudioTestCase {
     
@@ -110,7 +110,7 @@ public class TestPagesService extends StudioTestCase {
                 "listPages", new Object[]{projectName});
         assertNotNull(o);
         assertTrue(o instanceof SortedSet);
-        SortedSet output2 = (SortedSet) o;
+        SortedSet<?> output2 = (SortedSet<?>) o;
         assertEquals(output.size(), output2.size());
         assertEquals(output, output2);
     }
@@ -135,14 +135,10 @@ public class TestPagesService extends StudioTestCase {
         invokeService_toObject("studioService",
                 "writeWebFile", new Object[] {"pages/pageB/pageB.js", "byebye"});
         
-        File actual = new File(
-                pagesService.getPagesManager().getProjectManager().
-                    getProjectDir(destProject, false),
-                "webapproot/pages/pageA");
-        File expected = new File(
-                pagesService.getPagesManager().getProjectManager().
-                    getProjectDir(sourceProject, false),
-                "webapproot/pages/pageA");
+        File actual = pagesService.getPagesManager().getProjectManager().
+                    getProjectDir(destProject, false).createRelative("webapproot/pages/pageA").getFile();
+        File expected = pagesService.getPagesManager().getProjectManager().
+                    getProjectDir(sourceProject, false).createRelative("webapproot/pages/pageA").getFile();
         assertTrue(!actual.exists());
         assertTrue(expected.exists());
         File expectedSvn = new File(expected, ".svn");

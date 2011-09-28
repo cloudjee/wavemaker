@@ -18,7 +18,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.JSONArray;
 import com.wavemaker.json.JSONState;
@@ -46,7 +46,7 @@ public abstract class ReflectServiceType implements ServiceType {
             String methodName, JSONArray args, JSONState jsonState) {
         
         if (!(serviceWire instanceof ReflectServiceWire)) {
-            throw new WMRuntimeException(Resource.EXPECTED_REFLECT_SW,
+            throw new WMRuntimeException(MessageResource.EXPECTED_REFLECT_SW,
                     serviceWire);
         }
         ReflectServiceWire rsw = (ReflectServiceWire) serviceWire;
@@ -70,7 +70,7 @@ public abstract class ReflectServiceType implements ServiceType {
             String methodName, Map<String, Object[]> args, JSONState jsonState) {
         
         if (!(serviceWire instanceof ReflectServiceWire)) {
-            throw new WMRuntimeException(Resource.EXPECTED_REFLECT_SW,
+            throw new WMRuntimeException(MessageResource.EXPECTED_REFLECT_SW,
                     serviceWire);
         }
         ReflectServiceWire rsw = (ReflectServiceWire) serviceWire;
@@ -103,7 +103,7 @@ public abstract class ReflectServiceType implements ServiceType {
         Object serviceObject;
         if (!(args instanceof ReflectParsedServiceArguments)) {
             if (!(serviceWire instanceof ReflectServiceWire)) {
-                throw new WMRuntimeException(Resource.EXPECTED_REFLECT_SW,
+                throw new WMRuntimeException(MessageResource.EXPECTED_REFLECT_SW,
                         serviceWire);
             }
             ReflectServiceWire rsw = (ReflectServiceWire) serviceWire;
@@ -123,11 +123,11 @@ public abstract class ReflectServiceType implements ServiceType {
         } catch (Exception e) {
             // e.printStackTrace();
             if (null!=e.getCause()) {
-                throw new WMRuntimeException(Resource.JSONUTILS_FAILEDINVOKE,
+                throw new WMRuntimeException(MessageResource.JSONUTILS_FAILEDINVOKE,
                         e.getCause(), method.getName(),
                         method.getDeclaringClass());
             } else {
-                throw new WMRuntimeException(Resource.JSONUTILS_FAILEDINVOKE,
+                throw new WMRuntimeException(MessageResource.JSONUTILS_FAILEDINVOKE,
                         e, method.getName(), method.getDeclaringClass());
             }
         }
@@ -154,7 +154,7 @@ public abstract class ReflectServiceType implements ServiceType {
 
                 if (null!=meth) {
                     throw new WMRuntimeException(
-                            Resource.JSONUTILS_BADMETHODOVERLOAD,
+                            MessageResource.JSONUTILS_BADMETHODOVERLOAD,
                             method, s.getClass());
                 }
                 meth = m;
@@ -163,7 +163,7 @@ public abstract class ReflectServiceType implements ServiceType {
 
         if (null == meth) {
             throw new WMRuntimeException(
-                    Resource.JSONRPC_CONTROLLER_METHOD_NOT_FOUND,
+                    MessageResource.JSONRPC_CONTROLLER_METHOD_NOT_FOUND,
                     method, paramsLength, s.getClass());
         }
         

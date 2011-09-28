@@ -29,7 +29,7 @@ import java.util.List;
 import org.junit.Test;
 import org.springframework.test.annotation.DirtiesContext;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.JSONObject;
 import com.wavemaker.json.TestJSONSerialization.CycleA;
@@ -154,7 +154,7 @@ public class TestRuntimeService extends TestSpringContextTestCase {
             crsbp = rs.getServiceWire("", "com.foo.bar");
             fail("expected exception");
         } catch (WMRuntimeException e) {
-            assertEquals(Resource.NO_SERVICE_FROM_ID_TYPE.getId(),
+            assertEquals(MessageResource.NO_SERVICE_FROM_ID_TYPE.getId(),
                     e.getMessageId());
         }
     }

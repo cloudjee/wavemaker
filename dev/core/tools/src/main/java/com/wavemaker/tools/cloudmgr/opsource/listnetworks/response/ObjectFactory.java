@@ -24,8 +24,8 @@
 package com.wavemaker.tools.cloudmgr.opsource.listnetworks.response;
 
 import javax.xml.bind.annotation.XmlRegistry;
+
 import com.wavemaker.tools.cloudmgr.opsource.listnetworks.response.Networks.Network;
-import com.wavemaker.tools.cloudmgr.opsource.listnetworks.response.Networks;
 
 
 /**

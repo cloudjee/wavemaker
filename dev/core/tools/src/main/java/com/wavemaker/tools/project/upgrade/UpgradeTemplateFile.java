@@ -14,87 +14,88 @@
 
 package com.wavemaker.tools.project.upgrade;
 
-import java.io.File;
-import java.io.Writer;
 import java.io.IOException;
 import java.io.InputStream;
-
+import java.io.Writer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import com.wavemaker.common.WMRuntimeException;
+import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.Resource;
 
+import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
 
-import com.wavemaker.tools.project.upgrade.UpgradeInfo;
-import com.wavemaker.tools.project.upgrade.UpgradeTask;
-
-import org.apache.commons.io.IOUtils;
-
-
 /**
- * Generic upgrade task; reads a file from the template, and writes it into
- * the current project.  The file and any messages are provided through Spring
- * properties.  No backup (beyond the automatic zip) is made of the project
+ * Generic upgrade task; reads a file from the template, and writes it into the
+ * current project. The file and any messages are provided through Spring
+ * properties. No backup (beyond the automatic zip) is made of the project
  * files.
  * 
  * @author small
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  */
 public class UpgradeTemplateFile implements UpgradeTask {
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
-    public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker
+	 * .tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
+	 */
+	public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
-        if (null==relativePath) {
-            throw new WMRuntimeException("No file provided");
-        }
+		if (null == relativePath) {
+			throw new WMRuntimeException("No file provided");
+		}
 
-        File localFile = new File(project.getProjectRoot(), relativePath);
+		try {
+			Resource localFile = project.getProjectRoot().createRelative(
+					relativePath);
 
-        InputStream resourceStream = this.getClass().getClassLoader().
-                getResourceAsStream(ProjectManager._TEMPLATE_APP_RESOURCE_NAME);
-        ZipInputStream resourceZipStream = new ZipInputStream(resourceStream);
+			InputStream resourceStream = this
+					.getClass()
+					.getClassLoader()
+					.getResourceAsStream(
+							ProjectManager._TEMPLATE_APP_RESOURCE_NAME);
+			ZipInputStream resourceZipStream = new ZipInputStream(
+					resourceStream);
 
-        try {
-            ZipEntry zipEntry = null;
+			ZipEntry zipEntry = null;
 
-            while ((zipEntry = resourceZipStream.getNextEntry()) != null) {
-                if (relativePath.equals(zipEntry.getName())) {
-                    Writer writer = project.getWriter(localFile);
-                    IOUtils.copy(resourceZipStream, writer);
-                    writer.close();
-                }
-            }
+			while ((zipEntry = resourceZipStream.getNextEntry()) != null) {
+				if (relativePath.equals(zipEntry.getName())) {
+					Writer writer = project.getWriter(localFile);
+					IOUtils.copy(resourceZipStream, writer);
+					writer.close();
+				}
+			}
 
-            resourceZipStream.close();
-            resourceStream.close();
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
-        }
-        
-        
-        if (null!=message) {
-            upgradeInfo.addMessage(message);
-        }
-    }
+			resourceZipStream.close();
+			resourceStream.close();
+		} catch (IOException e) {
+			throw new WMRuntimeException(e);
+		}
 
-    // bean properties
-    private String relativePath;
-    private String message;
+		if (null != message) {
+			upgradeInfo.addMessage(message);
+		}
+	}
 
-    /**
-     * The relative path (relative to the project root) for the file to
-     * upgrade.
-     */
-    public void setFile(String file) {
-        this.relativePath = file;
-    }
+	// bean properties
+	private String relativePath;
+	private String message;
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+	/**
+	 * The relative path (relative to the project root) for the file to upgrade.
+	 */
+	public void setFile(String file) {
+		this.relativePath = file;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
 }

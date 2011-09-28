@@ -17,10 +17,10 @@
  */
 package com.wavemaker.tools.util;
 
-import java.io.File;
+import org.springframework.core.io.Resource;
 
-import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.infra.WMTestCase;
+import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.service.DesignServiceManager;
 
 /**
@@ -32,11 +32,11 @@ public class TestDesignTimeUtils extends WMTestCase {
 
     public void testGetDSM() throws Exception {
         
-        File tempDir = IOUtils.createTempDirectory();
+        Resource tempDir = new LocalStudioConfiguration().createTempDir();
         assertTrue(tempDir.exists());
         
         DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(tempDir);
-        assertEquals(tempDir, dsm.getProjectManager().getCurrentProject().getProjectRoot());
+        assertEquals(tempDir.getURI(), dsm.getProjectManager().getCurrentProject().getProjectRoot().getURI());
         assertNotNull(dsm.getDesignServiceTypes());
         assertTrue(dsm.getDesignServiceTypes().size() >= 3);
     }

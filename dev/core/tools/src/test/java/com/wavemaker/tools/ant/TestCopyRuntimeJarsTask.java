@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.List;
 
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.infra.WMTestCase;
@@ -37,7 +38,7 @@ public class TestCopyRuntimeJarsTask extends WMTestCase {
         ClassPathResource cpr = new ClassPathResource(this.getClass().getName().replace(".", "/")+".class");
         File jarOne = new File(cpr.getFile().getParentFile(), "copyruntime_module_jar_one.jar");
         assertTrue(jarOne.exists());
-        ClassLoader cl = ClassLoaderUtils.getClassLoaderForFile(jarOne);
+        ClassLoader cl = ClassLoaderUtils.getClassLoaderForResources(new FileSystemResource(jarOne));
         
         CopyRuntimeJarsTask crjt = new CopyRuntimeJarsTask();
         List<File> modules = crjt.getModuleLocations(cl);

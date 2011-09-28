@@ -14,19 +14,18 @@
 
 package com.wavemaker.tools.project.upgrade.six_dot_two;
 
-import java.io.File;
 import java.io.IOException;
+
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
-import com.wavemaker.runtime.server.ServerConstants;
-
-import org.apache.commons.io.FileUtils;
 /**
  * Changes to use custom class in place of InMemoryDaoImpl
  * 
  * @author S Lee
+ * @author Jeremy Grelle
  */
 public class ProjSecurityXmlUpgradeTask1 implements UpgradeTask {
 
@@ -40,12 +39,12 @@ public class ProjSecurityXmlUpgradeTask1 implements UpgradeTask {
      * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
      */
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
-        File secxml = project.getSecurityXml();
+        Resource secxml = project.getSecurityXml();
 
         try {
-            String content = FileUtils.readFileToString(secxml, ServerConstants.DEFAULT_ENCODING);
+            String content = project.readFile(secxml);
             content = content.replace(fromStr, toStr);
-            FileUtils.writeStringToFile(secxml, content, ServerConstants.DEFAULT_ENCODING);
+            project.writeFile(secxml, content);
         } catch (IOException ioe) {
             ioe.printStackTrace();
             error = true;

@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.tools.common.ConfigurationException;
 
 /**
@@ -79,11 +79,11 @@ public class WSDLManager {
      */
     public static WSDL processWSDL(String wsdlURI, String serviceId) throws WSDLException {
         if (wsdlURI == null) {
-            throw new IllegalArgumentException(Resource.WS_NULL_WSDL_URI.getMessage());
+            throw new IllegalArgumentException(MessageResource.WS_NULL_WSDL_URI.getMessage());
         }
         WSDL wsdl = (new WSDLBuilder(wsdlURI)).buildWSDL(serviceId);
         if (wsdl.isRPC() && wsdl.isSOAPEncoded()) {
-            throw new ConfigurationException(Resource.WS_RPC_ENCODED_NOT_SUPPORTED);
+            throw new ConfigurationException(MessageResource.WS_RPC_ENCODED_NOT_SUPPORTED);
         }
         return wsdl;
     }

@@ -14,9 +14,10 @@
 
 package com.wavemaker.tools.service;
 
-import java.io.File;
 
-import com.wavemaker.common.Resource;
+import org.springframework.core.io.Resource;
+
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
@@ -24,6 +25,7 @@ import com.wavemaker.tools.service.codegen.ServiceGenerator;
 
 /**
  * @author Simon Toens
+ * @author Jeremy Grelle
  * 
  */
 public class ServiceUtils {
@@ -31,7 +33,7 @@ public class ServiceUtils {
     private static final ServiceFactoryManager factoryManager = ServiceFactoryManager
             .getInstance();
 
-    public static DeprecatedServiceDefinition getServiceDefinition(File f,
+    public static DeprecatedServiceDefinition getServiceDefinition(Resource f,
             String serviceId, DesignServiceManager serviceMgr) {
 
         if (f == null) {
@@ -67,7 +69,7 @@ public class ServiceUtils {
         ServiceGenerator rtn = factoryManager.getServiceGenerator(cfg);
 
         if (rtn == null) {
-            throw new WMRuntimeException(Resource.NO_SERVICE_GENERATOR, cfg
+            throw new WMRuntimeException(MessageResource.NO_SERVICE_GENERATOR, cfg
                     .getServiceDefinition().getServiceId());
         }
 

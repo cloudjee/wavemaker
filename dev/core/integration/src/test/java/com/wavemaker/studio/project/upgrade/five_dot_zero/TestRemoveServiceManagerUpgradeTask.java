@@ -38,74 +38,81 @@ import com.wavemaker.tools.service.ConfigurationCompiler;
 
 /**
  * @author small
- * @version $Rev$ - $Date$
- *
+ * @author Jeremy Grelle
+ * 
  */
 public class TestRemoveServiceManagerUpgradeTask extends StudioTestCase {
-    
-    private final String FILES_PATH = "com/wavemaker/studio/project/upgrade/five_dot_zero/removeservicemanagerupgrade.files/";
-    
-    @Test public void testRemoveServiceManager() throws Exception {
-        
-        makeProject("testRemoveServiceManager", false);
-        Project project = ((ProjectManager)getBean("projectManager")).getCurrentProject();
-        
-        File managersXml = ConfigurationCompiler.getRuntimeManagersXml(project);
-        File inputManagersXml = (new ClassPathResource(FILES_PATH+
-                "managers-with-servicesmanager.xml")).getFile();
-        FileUtils.copyFile(inputManagersXml, managersXml);
-        
-        UpgradeTask task = new RemoveServiceManagerUpgradeTask();
-        UpgradeInfo info = new UpgradeInfo();
-        task.doUpgrade(project, info);
-        assertEquals(1, info.getMessages().size());
-        assertEquals("Removed servicesManager from "+ConfigurationCompiler.RUNTIME_SERVICES,
-                info.getMessages().entrySet().iterator().next().getValue().get(0));
-        
-        File expected = (new ClassPathResource(FILES_PATH+
-                "managers-with-expected.xml")).getFile();
-//		null expected
-//        assertEquals(StringUtils.deleteWhitespace(FileUtils.readFileToString(expected)),
-//                StringUtils.deleteWhitespace(FileUtils.readFileToString(managersXml)));
-    }
-    
-    
-    @Test public void testDontRemoveServiceManager() throws Exception {
-        
-        makeProject("testRemoveServiceManager", false);
-        Project project = ((ProjectManager)getBean("projectManager")).getCurrentProject();
-        
-        File managersXml = ConfigurationCompiler.getRuntimeManagersXml(project);
-        File inputManagersXml = (new ClassPathResource(FILES_PATH+
-                "managers-without-servicesmanager.xml")).getFile();
-        FileUtils.copyFile(inputManagersXml, managersXml);
-        
-        UpgradeTask task = new RemoveServiceManagerUpgradeTask();
-        UpgradeInfo info = new UpgradeInfo();
-        task.doUpgrade(project, info);
-        assertEquals(0, info.getMessages().size());
-        
-        File expected = (new ClassPathResource(FILES_PATH+
-                "managers-without-expected.xml")).getFile();
-        assertEquals(FileUtils.readFileToString(expected),
-                FileUtils.readFileToString(managersXml));
-    }
-    
-    @Test public void testUpgradeTaskPresent() throws Exception {
-        
-        boolean foundTask = false;
-        
-        UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
-        
-        outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
-            for (UpgradeTask ut : uts) {
-                if (ut instanceof RemoveServiceManagerUpgradeTask) {
-                    foundTask = true;
-                    break outer;
-                }
-            }
-        }
-        
-        assertTrue(foundTask);
-    }
+
+	private final String FILES_PATH = "com/wavemaker/studio/project/upgrade/five_dot_zero/removeservicemanagerupgrade.files/";
+
+	@Test
+	public void testRemoveServiceManager() throws Exception {
+
+		makeProject("testRemoveServiceManager", false);
+		Project project = ((ProjectManager) getBean("projectManager"))
+				.getCurrentProject();
+
+		File managersXml = ConfigurationCompiler.getRuntimeManagersXml(project)
+				.getFile();
+		File inputManagersXml = (new ClassPathResource(FILES_PATH
+				+ "managers-with-servicesmanager.xml")).getFile();
+		FileUtils.copyFile(inputManagersXml, managersXml);
+
+		UpgradeTask task = new RemoveServiceManagerUpgradeTask();
+		UpgradeInfo info = new UpgradeInfo();
+		task.doUpgrade(project, info);
+		assertEquals(1, info.getMessages().size());
+		assertEquals("Removed servicesManager from "
+				+ ConfigurationCompiler.RUNTIME_SERVICES, info.getMessages()
+				.entrySet().iterator().next().getValue().get(0));
+
+		File expected = (new ClassPathResource(FILES_PATH
+				+ "managers-with-expected.xml")).getFile();
+		// null expected
+		// assertEquals(StringUtils.deleteWhitespace(FileUtils.readFileToString(expected)),
+		// StringUtils.deleteWhitespace(FileUtils.readFileToString(managersXml)));
+	}
+
+	@Test
+	public void testDontRemoveServiceManager() throws Exception {
+
+		makeProject("testRemoveServiceManager", false);
+		Project project = ((ProjectManager) getBean("projectManager"))
+				.getCurrentProject();
+
+		File managersXml = ConfigurationCompiler.getRuntimeManagersXml(project)
+				.getFile();
+		File inputManagersXml = (new ClassPathResource(FILES_PATH
+				+ "managers-without-servicesmanager.xml")).getFile();
+		FileUtils.copyFile(inputManagersXml, managersXml);
+
+		UpgradeTask task = new RemoveServiceManagerUpgradeTask();
+		UpgradeInfo info = new UpgradeInfo();
+		task.doUpgrade(project, info);
+		assertEquals(0, info.getMessages().size());
+
+		File expected = (new ClassPathResource(FILES_PATH
+				+ "managers-without-expected.xml")).getFile();
+		assertEquals(FileUtils.readFileToString(expected),
+				FileUtils.readFileToString(managersXml));
+	}
+
+	@Test
+	public void testUpgradeTaskPresent() throws Exception {
+
+		boolean foundTask = false;
+
+		UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
+
+		outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
+			for (UpgradeTask ut : uts) {
+				if (ut instanceof RemoveServiceManagerUpgradeTask) {
+					foundTask = true;
+					break outer;
+				}
+			}
+		}
+
+		assertTrue(foundTask);
+	}
 }

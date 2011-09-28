@@ -14,7 +14,7 @@
 
 package com.wavemaker.tools.service.codegen;
 
-import java.io.File;
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
 
@@ -23,17 +23,18 @@ import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
  * generate service stubs.
  * 
  * @author Frankie Fu
+ * @author Jeremy Grelle
  */
 public class GenerationConfiguration {
 
     private DeprecatedServiceDefinition serviceDefinition;
 
-    private File outputDirectory;
+    private Resource outputDirectory;
 
     private String partnerName;
 
     public GenerationConfiguration(DeprecatedServiceDefinition serviceDefinition,
-            File outputDirectory) {
+            Resource outputDirectory) {
         this.serviceDefinition = serviceDefinition;
         this.outputDirectory = outputDirectory;
     }
@@ -46,11 +47,11 @@ public class GenerationConfiguration {
         this.serviceDefinition = serviceDefinition;
     }
 
-    public File getOutputDirectory() {
+    public Resource getOutputDirectory() {
         return outputDirectory;
     }
 
-    public void setOuputDirectory(File outputDirectory) {
+    public void setOuputDirectory(Resource outputDirectory) {
         this.outputDirectory = outputDirectory;
     }
 

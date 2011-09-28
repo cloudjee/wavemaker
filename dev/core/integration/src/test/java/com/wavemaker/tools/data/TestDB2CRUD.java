@@ -43,137 +43,144 @@ import com.wavemaker.runtime.test.TestSpringContextTestCase;
 
 /**
  * @author stoens
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  * 
  */
 public class TestDB2CRUD extends TestSpringContextTestCase {
 
-    static class TestData {
+	static class TestData {
 
-        private String dependentTestName = null;
+		private String dependentTestName = null;
 
-        private boolean skipRemaining = false;
+		private boolean skipRemaining = false;
 
-        private DB2Sample db2sample = null;
+		private DB2Sample db2sample = null;
 
-        private Employee newEmployee = null;
+		private Employee newEmployee = null;
 
-        void setSkipRemaining(String dependentTestName) {
-            this.skipRemaining = true;
-            this.dependentTestName = dependentTestName;
-        }
+		void setSkipRemaining(String dependentTestName) {
+			this.skipRemaining = true;
+			this.dependentTestName = dependentTestName;
+		}
 
-        boolean skipRemaining() {
-            return skipRemaining;
-        }
+		boolean skipRemaining() {
+			return skipRemaining;
+		}
 
-        String getDependentTestName() {
-            return dependentTestName;
-        }
+		String getDependentTestName() {
+			return dependentTestName;
+		}
 
-    }
+	}
 
-    protected static TestData testData;
+	protected static TestData testData;
 
-    @BeforeClass
-    public static void initData() {
-    	testData = new TestData();
-    }
+	@BeforeClass
+	public static void initData() {
+		testData = new TestData();
+	}
 
-    protected void checkShouldSkip() {
-        if (testData.skipRemaining) {
-            throw new DependentTestFailureException(testData
-                    .getDependentTestName());
-        }
-    }
+	protected void checkShouldSkip() {
+		if (testData.skipRemaining) {
+			throw new DependentTestFailureException(
+					testData.getDependentTestName());
+		}
+	}
 
-    @Test public void testCountEmployees() {
+	@Test
+	public void testCountEmployees() {
 
-        try {
+		try {
 
-            ApplicationContext ctx = getApplicationContext();
+			ApplicationContext ctx = getApplicationContext();
 
-            ServiceManager serviceMgr = (ServiceManager) ctx
-                    .getBean(ServiceConstants.SERVICE_MANAGER_NAME);
-            
-            DB2Sample db2 = (DB2Sample) ((ReflectServiceWire) serviceMgr
-                    .getServiceWire(DataServiceTestConstants.DB2_SAMPLE_BEAN_ID)).getServiceBean();
+			ServiceManager serviceMgr = (ServiceManager) ctx
+					.getBean(ServiceConstants.SERVICE_MANAGER_NAME);
 
-            assertEquals(Integer.valueOf(42), db2.getEmployeeCount());
+			DB2Sample db2 = (DB2Sample) ((ReflectServiceWire) serviceMgr
+					.getServiceWire(DataServiceTestConstants.DB2_SAMPLE_BEAN_ID))
+					.getServiceBean();
 
-            testData.db2sample = db2;
+			assertEquals(Integer.valueOf(42), db2.getEmployeeCount());
 
-        } catch (Error ex) {
-            testData.setSkipRemaining("testCountEmployees");
-            throw ex;
-        }
-    }
+			testData.db2sample = db2;
 
-    @Test public void testAddNewEmployee() {
+		} catch (Error ex) {
+			testData.setSkipRemaining("testCountEmployees");
+			throw ex;
+		}
+	}
 
-        checkShouldSkip();
+	@Test
+	public void testAddNewEmployee() {
 
-        Department department = new Department();
-        department.setDeptno("A00");
+		checkShouldSkip();
 
-        Employee employee = new Employee();
+		Department department = new Department();
+		department.setDeptno("A00");
 
-        employee.setEmpno("555000");
-        employee.setFirstnme("f1");
-        employee.setLastname("l1");
-        employee.setEdlevel(Short.valueOf("1"));
+		Employee employee = new Employee();
 
-        try {
-            testData.db2sample.insertEmployee(employee);
-        } catch (RuntimeException ex) {
-            testData.setSkipRemaining("testAddNewEmployee");
-            throw ex;
-        }
-    }
+		employee.setEmpno("555000");
+		employee.setFirstnme("f1");
+		employee.setLastname("l1");
+		employee.setEdlevel(Short.valueOf("1"));
 
-    @Test public void testFindNewEmployee() {
+		try {
+			testData.db2sample.insertEmployee(employee);
+		} catch (RuntimeException ex) {
+			testData.setSkipRemaining("testAddNewEmployee");
+			throw ex;
+		}
+	}
 
-        checkShouldSkip();
+	@Test
+	public void testFindNewEmployee() {
 
-        Employee qbe = new Employee();
+		checkShouldSkip();
 
-        qbe.setFirstnme("f1");
-        qbe.setLastname("l1");
+		Employee qbe = new Employee();
 
-        try {
+		qbe.setFirstnme("f1");
+		qbe.setLastname("l1");
 
-            List<Employee> l = testData.db2sample.getEmployeeList(qbe);
+		try {
 
-            assertTrue(l.size() == 1);
+			List<Employee> l = testData.db2sample.getEmployeeList(qbe);
 
-            assertEquals("555000", l.get(0).getEmpno());
+			assertTrue(l.size() == 1);
 
-            testData.newEmployee = l.get(0);
+			assertEquals("555000", l.get(0).getEmpno());
 
-        } catch (RuntimeException ex) {
-            testData.setSkipRemaining("testFindNewEmployee");
-            throw ex;
-        }
+			testData.newEmployee = l.get(0);
 
-    }
+		} catch (RuntimeException ex) {
+			testData.setSkipRemaining("testFindNewEmployee");
+			throw ex;
+		}
 
-    @Test public void testDeleteNewEmployee() {
+	}
 
-        checkShouldSkip();
+	@Test
+	public void testDeleteNewEmployee() {
 
-        testData.db2sample.deleteEmployee(testData.newEmployee);
+		checkShouldSkip();
 
-    }
+		testData.db2sample.deleteEmployee(testData.newEmployee);
 
-    @Test public void testConnection() throws IOException {
+	}
 
-        File props = ClassLoaderUtils.getClasspathFile("db2sample.properties");
+	@Test
+	public void testConnection() throws IOException {
 
-        Properties p = DataServiceUtils.loadDBProperties(props);
+		File props = ClassLoaderUtils.getClasspathFile("db2sample.properties")
+				.getFile();
 
-        TestDBConnection t = new TestDBConnection();
-        t.setProperties(p);
-        t.run();
-    }
+		Properties p = DataServiceUtils.loadDBProperties(props);
+
+		TestDBConnection t = new TestDBConnection();
+		t.setProperties(p);
+		t.run();
+	}
 
 }

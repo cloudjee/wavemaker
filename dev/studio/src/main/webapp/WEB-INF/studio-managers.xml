@@ -36,7 +36,7 @@ Server-side manager bean definitions.  These are only to be used at runtime.
         </property>
     </bean>
 
-    <bean id="studioConfiguration" class="com.wavemaker.tools.project.StudioConfiguration"
+    <bean id="studioConfiguration" class="com.wavemaker.tools.project.LocalStudioConfiguration"
             scope="singleton">
         <property name="runtimeAccess">
             <ref bean="runtimeAccess"/>
@@ -112,16 +112,7 @@ Server-side manager bean definitions.  These are only to be used at runtime.
             class="com.wavemaker.tools.service.DesignServiceManager"
             scope="session"
             autowire="byType"
-            lazy-init="true">
-        <property name="projectManager">
-            <ref bean="projectManager"/>
-        </property>
-        <property name="deploymentManager">
-            <ref bean="deploymentManager"/>
-        </property>
-		<property name="pwsServiceModifierBeanFactory">
-            <ref bean="pwsServiceModifierBeanFactory"/>
-        </property>
+            lazy-init="true" >
 
         <aop:scoped-proxy/>
     </bean>
@@ -135,6 +126,9 @@ Server-side manager bean definitions.  These are only to be used at runtime.
             lazy-init="true">
         <property name="projectManager">
             <ref bean="projectManager"/>
+        </property>
+        <property name="studioConfiguration">
+            <ref bean="studioConfiguration"/>
         </property>
     </bean>
 

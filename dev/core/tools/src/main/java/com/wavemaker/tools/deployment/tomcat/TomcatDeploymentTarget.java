@@ -23,103 +23,100 @@ import java.util.Map;
 
 import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.common.util.Tuple;
-import com.wavemaker.tools.util.TomcatServer;
+import com.wavemaker.tools.deployment.AppInfo;
 import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.deployment.DeploymentTarget;
-import com.wavemaker.tools.deployment.AppInfo;
+import com.wavemaker.tools.util.TomcatServer;
 
 /**
  * @author Simon Toens
- * @version $Rev: 28194 $ - $Date: 2009-12-03 14:19:22 -0800 (Thu, 03 Dec 2009) $
- *
+ * @author Jeremy Grelle
+ * 
  */
 public class TomcatDeploymentTarget implements DeploymentTarget {
 
-    public static final String HOST_PROPERTY_NAME = "host";
-    public static final String PORT_PROPERTY_NAME = "port";
-    public static final String MANAGER_USER_PROPERTY_NAME = "username";
-    public static final String MANAGER_PASSWORD_PROPERTY_NAME = "password";
-    public static final Map<String, String> CONFIGURABLE_PROPERTIES;  
+	public static final String HOST_PROPERTY_NAME = "host";
+	public static final String PORT_PROPERTY_NAME = "port";
+	public static final String MANAGER_USER_PROPERTY_NAME = "username";
+	public static final String MANAGER_PASSWORD_PROPERTY_NAME = "password";
+	public static final Map<String, String> CONFIGURABLE_PROPERTIES;
 
-    static {
-        Map<String, String> m = new LinkedHashMap<String, String>(4);
-        m.put(HOST_PROPERTY_NAME, "localhost");
-        m.put(PORT_PROPERTY_NAME, "8080");
-        m.put(MANAGER_USER_PROPERTY_NAME, "manager");
-        m.put(MANAGER_PASSWORD_PROPERTY_NAME, "manager");
-        CONFIGURABLE_PROPERTIES = Collections.unmodifiableMap(m);
-    }
+	static {
+		Map<String, String> m = new LinkedHashMap<String, String>(4);
+		m.put(HOST_PROPERTY_NAME, "localhost");
+		m.put(PORT_PROPERTY_NAME, "8080");
+		m.put(MANAGER_USER_PROPERTY_NAME, "manager");
+		m.put(MANAGER_PASSWORD_PROPERTY_NAME, "manager");
+		CONFIGURABLE_PROPERTIES = Collections.unmodifiableMap(m);
+	}
 
-    public String deploy(File f, DeploymentInfo deploymentInfo) 
-    {
-        TomcatServer tomcat = initTomcat(deploymentInfo);
-        return tomcat.deploy(f, deploymentInfo.getApplicationName());
-    }
+	public String deploy(File f, DeploymentInfo deploymentInfo) {
+		TomcatServer tomcat = initTomcat(deploymentInfo);
+		return tomcat.deploy(f, deploymentInfo.getApplicationName());
+	}
 
-    public String undeploy(DeploymentInfo deploymentInfo, boolean deleteServices) {
-        TomcatServer tomcat = initTomcat(deploymentInfo);
-        return tomcat.undeploy(deploymentInfo.getApplicationName());
-    }
+	public String undeploy(DeploymentInfo deploymentInfo, boolean deleteServices) {
+		TomcatServer tomcat = initTomcat(deploymentInfo);
+		return tomcat.undeploy(deploymentInfo.getApplicationName());
+	}
 
-    public String redeploy(DeploymentInfo deploymentInfo) {
-        TomcatServer tomcat = initTomcat(deploymentInfo);
-        return tomcat.redeploy(deploymentInfo.getApplicationName());
-    }
+	public String redeploy(DeploymentInfo deploymentInfo) {
+		TomcatServer tomcat = initTomcat(deploymentInfo);
+		return tomcat.redeploy(deploymentInfo.getApplicationName());
+	}
 
-    public String start(DeploymentInfo deploymentInfo) {
-        TomcatServer tomcat = initTomcat(deploymentInfo);
-        return tomcat.start(deploymentInfo.getApplicationName());
-    }
+	public String start(DeploymentInfo deploymentInfo) {
+		TomcatServer tomcat = initTomcat(deploymentInfo);
+		return tomcat.start(deploymentInfo.getApplicationName());
+	}
 
-    public String stop(DeploymentInfo deploymentInfo) {
-        TomcatServer tomcat = initTomcat(deploymentInfo);
-        return tomcat.stop(deploymentInfo.getApplicationName());
-    }
+	public String stop(DeploymentInfo deploymentInfo) {
+		TomcatServer tomcat = initTomcat(deploymentInfo);
+		return tomcat.stop(deploymentInfo.getApplicationName());
+	}
 
-    public List<AppInfo> listDeploymentNames(DeploymentInfo deploymentInfo) {
-        TomcatServer tomcat = initTomcat(deploymentInfo);
-        List<Tuple.Two<String, String>> apps = tomcat.listDeployments();
-        List<AppInfo> rtn = new ArrayList<AppInfo>(apps.size());
-        for (Tuple.Two<String, String> t : apps) {
-            StringBuilder url = new StringBuilder();
-            url.append("http://").append(deploymentInfo.getHost()).append(":")
-                .append(deploymentInfo.getPort()).append(t.v1);
-            StringBuilder href = new StringBuilder();
-            href.append("<a href=\"")
-                .append(url)
-                .append("\" target=\"_blank\">")
-                .append(url)
-                .append("</a>");
-            rtn.add(new AppInfo(t.v1, href.toString(), t.v2));
-        }
+	public List<AppInfo> listDeploymentNames(DeploymentInfo deploymentInfo) {
+		TomcatServer tomcat = initTomcat(deploymentInfo);
+		List<Tuple.Two<String, String>> apps = tomcat.listDeployments();
+		List<AppInfo> rtn = new ArrayList<AppInfo>(apps.size());
+		for (Tuple.Two<String, String> t : apps) {
+			StringBuilder url = new StringBuilder();
+			url.append("http://").append(deploymentInfo.getHost()).append(":")
+					.append(deploymentInfo.getPort()).append(t.v1);
+			StringBuilder href = new StringBuilder();
+			href.append("<a href=\"").append(url)
+					.append("\" target=\"_blank\">").append(url).append("</a>");
+			rtn.add(new AppInfo(t.v1, href.toString(), t.v2));
+		}
 
-        Collections.sort(rtn);
+		Collections.sort(rtn);
 
-        return rtn;
-    }
+		return rtn;
+	}
 
-    public Map<String, String> getConfigurableProperties() {
-        return CONFIGURABLE_PROPERTIES;
-    }
+	public Map<String, String> getConfigurableProperties() {
+		return CONFIGURABLE_PROPERTIES;
+	}
 
-    private TomcatServer initTomcat(DeploymentInfo deploymentInfo) {
-        if(SystemUtils.isEncrypted(deploymentInfo.getPassword())) {
-            deploymentInfo.setPassword(SystemUtils.decrypt(deploymentInfo.getPassword()));
-        }
-        
-        TomcatServer rtn = new TomcatServer();
-        rtn.setHost(deploymentInfo.getHost());
-        rtn.setPort(deploymentInfo.getPort());
-        rtn.setUsername(deploymentInfo.getUsername());
-        rtn.setPassword(deploymentInfo.getPassword());
-        return rtn;
-    }
+	private TomcatServer initTomcat(DeploymentInfo deploymentInfo) {
+		if (SystemUtils.isEncrypted(deploymentInfo.getPassword())) {
+			deploymentInfo.setPassword(SystemUtils.decrypt(deploymentInfo
+					.getPassword()));
+		}
 
-    /** 
-     * {@inheritDoc}
-     */
-    public String validateDeployment(DeploymentInfo deploymentInfo) {
-        //No-op
-        return "SUCCESS";
-    }
+		TomcatServer rtn = new TomcatServer();
+		rtn.setHost(deploymentInfo.getHost());
+		rtn.setPort(deploymentInfo.getPort());
+		rtn.setUsername(deploymentInfo.getUsername());
+		rtn.setPassword(deploymentInfo.getPassword());
+		return rtn;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String validateDeployment(DeploymentInfo deploymentInfo) {
+		// No-op
+		return "SUCCESS";
+	}
 }

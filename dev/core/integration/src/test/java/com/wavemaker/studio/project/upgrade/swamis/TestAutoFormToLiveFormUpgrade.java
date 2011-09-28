@@ -38,63 +38,66 @@ import com.wavemaker.tools.project.upgrade.swamis.AutoFormToLiveFormUpgrade;
 
 /**
  * @author small
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  * 
  */
 public class TestAutoFormToLiveFormUpgrade extends StudioTestCase {
 
-    @Test public void testUpgrade() throws Exception {
+	@Test
+	public void testUpgrade() throws Exception {
 
-        makeProject("TestAutoFormToLiveFormUpgrade-TestUpgrade", false);
+		makeProject("TestAutoFormToLiveFormUpgrade-TestUpgrade", false);
 
-        ProjectManager pm = (ProjectManager) getBean("projectManager");
-        Project p = pm.getCurrentProject();
+		ProjectManager pm = (ProjectManager) getBean("projectManager");
+		Project p = pm.getCurrentProject();
 
-        File pagesdir = new File(p.getWebAppRoot(), ProjectConstants.PAGES_DIR);
-        pagesdir.mkdir();
-        File mainPageDir = new File(pagesdir, "Main");
-        mainPageDir.mkdir();
-        File mainWidgetsFile = new File(pm.getCurrentProject().getWebAppRoot(),
-                "pages/Main/Main.widgets.js");
-        FileUtils
-                .writeStringToFile(
-                        mainWidgetsFile,
-                        "Main.widgets = {\n"
-                                + "    layoutBox1: [\"turbo.Layout\", {box: \"v\", size: 1, sizeUnits: \"flex\"}, {}, {\n"
-                                + "        autoForm1: [\"wm.AutoForm\", {box: \"v\", height: \"248px\"}, {}]\n"
-                                + "    }]\n" + "}\n");
-        assertTrue(mainWidgetsFile.exists());
+		File pagesdir = new File(p.getWebAppRoot().getFile(),
+				ProjectConstants.PAGES_DIR);
+		pagesdir.mkdir();
+		File mainPageDir = new File(pagesdir, "Main");
+		mainPageDir.mkdir();
+		File mainWidgetsFile = new File(pm.getCurrentProject().getWebAppRoot()
+				.getFile(), "pages/Main/Main.widgets.js");
+		FileUtils
+				.writeStringToFile(
+						mainWidgetsFile,
+						"Main.widgets = {\n"
+								+ "    layoutBox1: [\"turbo.Layout\", {box: \"v\", size: 1, sizeUnits: \"flex\"}, {}, {\n"
+								+ "        autoForm1: [\"wm.AutoForm\", {box: \"v\", height: \"248px\"}, {}]\n"
+								+ "    }]\n" + "}\n");
+		assertTrue(mainWidgetsFile.exists());
 
-        p.setProjectVersion(0.23);
+		p.setProjectVersion(0.23);
 
-        AutoFormToLiveFormUpgrade upgrade = new AutoFormToLiveFormUpgrade();
-        UpgradeInfo ui = new UpgradeInfo();
-        upgrade.setPagesManager((PagesManager)getBean("pagesManager"));
-        upgrade.doUpgrade(p, ui);
+		AutoFormToLiveFormUpgrade upgrade = new AutoFormToLiveFormUpgrade();
+		UpgradeInfo ui = new UpgradeInfo();
+		upgrade.setPagesManager((PagesManager) getBean("pagesManager"));
+		upgrade.doUpgrade(p, ui);
 
-        assertEquals(
-                "Main.widgets = {\n"
-                        + "    layoutBox1: [\"turbo.Layout\", {box: \"v\", size: 1, sizeUnits: \"flex\"}, {}, {\n"
-                        + "        autoForm1: [\"wm.LiveForm\", {box: \"v\", height: \"248px\"}, {}]\n"
-                        + "    }]\n" + "}\n",
-                        FileUtils.readFileToString(mainWidgetsFile));
-    }
-    
-    @Test public void testUpgradeTaskPresent() throws Exception {
-        
-        boolean foundTask = false;
-        
-        UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
-        
-        outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
-            for (UpgradeTask ut : uts) {
-                if (ut instanceof AutoFormToLiveFormUpgrade) {
-                    foundTask = true;
-                    break outer;
-                }
-            }
-        }
-        
-        assertTrue(foundTask);
-    }
+		assertEquals(
+				"Main.widgets = {\n"
+						+ "    layoutBox1: [\"turbo.Layout\", {box: \"v\", size: 1, sizeUnits: \"flex\"}, {}, {\n"
+						+ "        autoForm1: [\"wm.LiveForm\", {box: \"v\", height: \"248px\"}, {}]\n"
+						+ "    }]\n" + "}\n",
+				FileUtils.readFileToString(mainWidgetsFile));
+	}
+
+	@Test
+	public void testUpgradeTaskPresent() throws Exception {
+
+		boolean foundTask = false;
+
+		UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
+
+		outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
+			for (UpgradeTask ut : uts) {
+				if (ut instanceof AutoFormToLiveFormUpgrade) {
+					foundTask = true;
+					break outer;
+				}
+			}
+		}
+
+		assertTrue(foundTask);
+	}
 }

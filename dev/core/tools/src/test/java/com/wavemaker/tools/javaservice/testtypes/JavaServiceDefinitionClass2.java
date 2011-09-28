@@ -19,14 +19,11 @@ package com.wavemaker.tools.javaservice.testtypes;
 
 import com.wavemaker.json.type.GenericFieldDefinition;
 import com.wavemaker.json.type.TypeDefinition;
-
 import com.wavemaker.runtime.service.LiveDataService;
 import com.wavemaker.runtime.service.PagingOptions;
 import com.wavemaker.runtime.service.PropertyOptions;
 import com.wavemaker.runtime.service.TypedServiceReturn;
-
 import com.wavemaker.runtime.service.response.LiveDataServiceResponse;
-
 import com.wavemaker.tools.javaservice.JavaService_BeanClass;
 
 /**

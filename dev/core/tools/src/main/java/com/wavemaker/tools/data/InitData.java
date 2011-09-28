@@ -14,12 +14,12 @@
 
 package com.wavemaker.tools.data;
 
-import com.wavemaker.runtime.client.TreeNode;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.wavemaker.runtime.client.TreeNode;
 
 /**
  * @author Simon Toens

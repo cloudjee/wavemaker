@@ -14,7 +14,7 @@
 
 package com.wavemaker.tools.data;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.runtime.data.ExternalDataModelConfig;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.service.DesignServiceManager;
@@ -67,7 +67,7 @@ public class DesignExternalDataModelConfig implements ExternalDataModelConfig {
         Operation o = serviceMgr.getOperation(serviceId, operationName);
         
         if (o == null) {
-            throw new ConfigurationException(Resource.OPERATION_NOT_FOUND, serviceId,
+            throw new ConfigurationException(MessageResource.OPERATION_NOT_FOUND, serviceId,
                     operationName, serviceMgr.getOperationNames(serviceId)); 
         }
         

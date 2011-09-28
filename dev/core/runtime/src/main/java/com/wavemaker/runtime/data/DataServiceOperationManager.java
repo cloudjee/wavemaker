@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.common.util.Tuple;
@@ -270,7 +270,7 @@ public class DataServiceOperationManager {
     private void addOperation(DataServiceOperation op) {
 
         if (operations.containsKey(op.getName())) {
-            throw new DataServiceRuntimeException(Resource.DUPLICATE_OPERATION,
+            throw new DataServiceRuntimeException(MessageResource.DUPLICATE_OPERATION,
                     op.getName());
         }
 

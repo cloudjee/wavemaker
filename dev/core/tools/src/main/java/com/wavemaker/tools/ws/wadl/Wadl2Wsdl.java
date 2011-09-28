@@ -63,275 +63,277 @@ import org.xml.sax.SAXException;
 import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.runtime.ws.util.Constants;
 import com.wavemaker.tools.ws.RESTInputParam;
-import com.wavemaker.tools.ws.RESTWsdlGenerator;
 import com.wavemaker.tools.ws.RESTInputParam.InputType;
+import com.wavemaker.tools.ws.RESTWsdlGenerator;
 
 /**
  * Converts WADL to WSDL.
  * 
  * @author ffu
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  * 
  */
 public class Wadl2Wsdl {
 
-    private static final String WADL_PACKAGE = "org.jvnet.ws.wadl";
-    
-    private static final String DEFAULT_OPERATION_NAME = "invoke";
+	private static final String WADL_PACKAGE = "org.jvnet.ws.wadl";
 
-    private static JAXBContext jaxbContext;
+	private static final String DEFAULT_OPERATION_NAME = "invoke";
 
-    private static synchronized JAXBContext getJAXBContext()
-            throws JAXBException {
-        if (jaxbContext == null) {
-            jaxbContext = JAXBContext.newInstance(WADL_PACKAGE);
-        }
-        return jaxbContext;
-    }
+	private static JAXBContext jaxbContext;
 
-    private URI wadlUri;
+	private static synchronized JAXBContext getJAXBContext()
+			throws JAXBException {
+		if (jaxbContext == null) {
+			jaxbContext = JAXBContext.newInstance(WADL_PACKAGE);
+		}
+		return jaxbContext;
+	}
 
-    private Application application;
+	private URI wadlUri;
 
-    /**
-     * Construct a <code>Wadl2Wsdl</code> object.
-     * 
-     * @param wadlUri The URI of the WADL file to process.
-     * @throws JAXBException
-     * @throws MalformedURLException
-     * @throws URISyntaxException
-     */
-    public Wadl2Wsdl(URI wadlUri) throws JAXBException,
-            MalformedURLException, URISyntaxException {
-        Unmarshaller unmarshaller = getJAXBContext().createUnmarshaller();
-        this.wadlUri = wadlUri;
-        application = (Application) unmarshaller.unmarshal(wadlUri.toURL());
-    }
+	private Application application;
 
-    private Resource getResource() {
-        Resource r = application.getResources().getResource().get(0);
-        Resource res = null;
-        while ((res = getChildResource(r)) != null) {
-            r = res;
-        }
-        return r;
-    }
+	/**
+	 * Construct a <code>Wadl2Wsdl</code> object.
+	 * 
+	 * @param wadlUri
+	 *            The URI of the WADL file to process.
+	 * @throws JAXBException
+	 * @throws MalformedURLException
+	 * @throws URISyntaxException
+	 */
+	public Wadl2Wsdl(URI wadlUri) throws JAXBException, MalformedURLException,
+			URISyntaxException {
+		Unmarshaller unmarshaller = getJAXBContext().createUnmarshaller();
+		this.wadlUri = wadlUri;
+		application = (Application) unmarshaller.unmarshal(wadlUri.toURL());
+	}
 
-    private static Resource getChildResource(Resource r) {
-        List<Object> methodOrResource = r.getMethodOrResource();
-        for (Object o : methodOrResource) {
-            if (o instanceof Resource) {
-                return (Resource) o;
-            }
-        }
-        return null;
-    }
+	private Resource getResource() {
+		Resource r = application.getResources().getResource().get(0);
+		Resource res = null;
+		while ((res = getChildResource(r)) != null) {
+			r = res;
+		}
+		return r;
+	}
 
-    private String getServiceURLPath() {
-        Resources resources = application.getResources();
-        StringBuilder sb = new StringBuilder();
-        sb.append(resources.getBase());
-        Resource res = resources.getResource().get(0);
-        sb.append(res.getPath());
-        while ((res = getChildResource(res)) != null) {
-            sb.append("/");
-            sb.append(res.getPath());
-        }
-        return sb.toString();
-    }
+	private static Resource getChildResource(Resource r) {
+		List<Object> methodOrResource = r.getMethodOrResource();
+		for (Object o : methodOrResource) {
+			if (o instanceof Resource) {
+				return (Resource) o;
+			}
+		}
+		return null;
+	}
 
-    private String getServiceName() {
-        String path = getResource().getPath();
-        if (path.indexOf('.') > -1) {
-            return path.substring(0, path.indexOf('.'));
-        } else {
-            return path;
-        }
-    }
+	private String getServiceURLPath() {
+		Resources resources = application.getResources();
+		StringBuilder sb = new StringBuilder();
+		sb.append(resources.getBase());
+		Resource res = resources.getResource().get(0);
+		sb.append(res.getPath());
+		while ((res = getChildResource(res)) != null) {
+			sb.append("/");
+			sb.append(res.getPath());
+		}
+		return sb.toString();
+	}
 
-    private Method getMethod() throws WADLException {
-        List<Object> list1 = application
-                .getResourceTypeOrMethodOrRepresentation();
-        List<Method> allMethods = new ArrayList<Method>();
-        for (Object o : list1) {
-            if (o instanceof Method) {
-                allMethods.add((Method)o);
-            }
-        }
-        List<Object> list2 = getResource().getMethodOrResource();
-        for (Object o : list2) {
-            if (o instanceof Method) {
-                Method m = (Method)o;
-                if (m.getHref() != null) {
-                    for (Method method : allMethods) {
-                        if (method.getId().equals(m.getHref().substring(1))) {
-                            return method;
-                        }
-                    }
-                } else {
-                    return m;
-                }
-            }
-        }
-        throw new WADLException(
-                com.wavemaker.common.Resource.WS_WADL_METHOD_NOT_FOUND);
-    }
+	private String getServiceName() {
+		String path = getResource().getPath();
+		if (path.indexOf('.') > -1) {
+			return path.substring(0, path.indexOf('.'));
+		} else {
+			return path;
+		}
+	}
 
-    /**
-     * Generates the WSDL file in the specified folder.
-     * 
-     * @param outDir The directory in which the WSDL file to be generated.
-     * @return The generated WSDL file.
-     * @throws WSDLException
-     * @throws SAXException
-     * @throws IOException
-     * @throws ParserConfigurationException
-     * @throws WADLException 
-     * @throws TransformerException 
-     */
-    public File generateWSDL(File outDir) throws WSDLException, SAXException,
-            IOException, ParserConfigurationException, WADLException,
-            TransformerException {
-        File wsdlFile = new File(outDir, getServiceName() + Constants.WSDL_EXT);
-        
-        String serviceName = getServiceName();
-        String namespace = getServiceURLPath();
-        String operationName = DEFAULT_OPERATION_NAME;
-        QName outputElement = null;
-        Map<String, InputType> tempInputParts = new LinkedHashMap<String, InputType>();
-        
-        List<Param> initParamList = getResource().getParam();
-        for (Param param : initParamList) {
-            tempInputParts.put(param.getName(), InputType.STRING);
-        }
+	private Method getMethod() throws WADLException {
+		List<Object> list1 = application
+				.getResourceTypeOrMethodOrRepresentation();
+		List<Method> allMethods = new ArrayList<Method>();
+		for (Object o : list1) {
+			if (o instanceof Method) {
+				allMethods.add((Method) o);
+			}
+		}
+		List<Object> list2 = getResource().getMethodOrResource();
+		for (Object o : list2) {
+			if (o instanceof Method) {
+				Method m = (Method) o;
+				if (m.getHref() != null) {
+					for (Method method : allMethods) {
+						if (method.getId().equals(m.getHref().substring(1))) {
+							return method;
+						}
+					}
+				} else {
+					return m;
+				}
+			}
+		}
+		throw new WADLException(
+				com.wavemaker.common.MessageResource.WS_WADL_METHOD_NOT_FOUND);
+	}
 
-        Method method = getMethod();
-        Request request = method.getRequest();
-        List<Param> paramList = request.getParam();
-        for (Param param : paramList) {
-            tempInputParts.put(param.getName(), InputType.STRING);
-        }
-        
-        Response response = method.getResponse();
-        for (JAXBElement<RepresentationType> representationOrFault : response
-                .getRepresentationOrFault()) {
-            if (representationOrFault.getName().getLocalPart().equals(
-                    "representation")) {
-                outputElement = representationOrFault.getValue().getElement();
-                break;
-            }
-        }
-          
-        List<RESTInputParam> inputParts = new ArrayList<RESTInputParam>();
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, InputType> inputPart : tempInputParts.entrySet()) {
-            String paramName = inputPart.getKey();
-            sb.append(URLEncoder.encode(paramName, "UTF-8"));
-            sb.append("={");
-            sb.append(paramName);
-            sb.append("}&");
-            inputParts.add(new RESTInputParam(paramName, inputPart.getValue()));
-        }
-        // remove the last '&'
-        if (sb.length() > 0 && sb.charAt(sb.length() - 1) == '&') {
-            sb.deleteCharAt(sb.length() - 1);
-        }
-        String parameterizedURL = getServiceURLPath() + "?" + sb.toString();
-        
-        Grammars grammars = application.getGrammars();
-        List<Element> schemaElements = new ArrayList<Element>();
-        if(grammars != null) {
-        for (Object any : grammars.getAny()) {
-            	if (any instanceof Element) {
-            		schemaElements.add(checkAndFixUnboundedSequence((Element) any));
-            	}
-        	}
-        	for (Include include : grammars.getInclude()) {
-        		URI includeUri = wadlUri.resolve(include.getHref());
-        		InputSource input = new InputSource(includeUri.toURL().openStream());
-        		XmlSchemaCollection xmlSchemaColl = new XmlSchemaCollection();
-        		XmlSchema xmlSchema = xmlSchemaColl.read(input, null);
-        		for (Document schemaDocument : xmlSchema.getAllSchemas()) {
-        			schemaElements.add(schemaDocument.getDocumentElement());
-            	}
-        	}
-        }
-        RESTWsdlGenerator generator = new RESTWsdlGenerator(serviceName,
-                namespace, operationName, parameterizedURL);
-        generator.setSchemaElements(schemaElements);
-        generator.setInputParts(inputParts);
-        if(outputElement != null){
-        	generator.setOutputElementType(outputElement);
-        }
-        generator.write(wsdlFile);
-        return wsdlFile;
-    }
+	/**
+	 * Generates the WSDL file in the specified folder.
+	 * 
+	 * @param outDir
+	 *            The directory in which the WSDL file to be generated.
+	 * @return The generated WSDL file.
+	 * @throws WSDLException
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws ParserConfigurationException
+	 * @throws WADLException
+	 * @throws TransformerException
+	 */
+	public File generateWSDL(File outDir) throws WSDLException, SAXException,
+			IOException, ParserConfigurationException, WADLException,
+			TransformerException {
+		File wsdlFile = new File(outDir, getServiceName() + Constants.WSDL_EXT);
 
-    /**
-     * Attempts to fix in which if sequence has maxOccurs set to unbounded and
-     * the sequence has more than 1 item, JAXB will generate JAXBElement<T> for
-     * the corresponding property. To avoid having JAXBElement<T> generated, we
-     * modify the maxOccurs to 1. This fix may not be a ideal solution for all
-     * cases, and in such cases, user may need to modiify the generated WSDL and
-     * set the maxOccurs back to unbounded and reimport again. And then the user
-     * will have to deal with the JAXBElement<T> in Java code.
-     */
-    private static Element checkAndFixUnboundedSequence(Element schema) {
-        XmlSchemaCollection xmlSchemaColl = new XmlSchemaCollection();
-        XmlSchema xmlSchema = xmlSchemaColl.read(schema);
-        
-        boolean isModified = false;
+		String serviceName = getServiceName();
+		String namespace = getServiceURLPath();
+		String operationName = DEFAULT_OPERATION_NAME;
+		QName outputElement = null;
+		Map<String, InputType> tempInputParts = new LinkedHashMap<String, InputType>();
 
-        XmlSchemaObjectTable elements = xmlSchema.getElements();
-        Iterator<XmlSchemaObject> elementsIter = 
-            CastUtils.cast(elements.getValues());
-        while (elementsIter.hasNext()) {
-            XmlSchemaObject element = elementsIter.next();
-            if (element instanceof XmlSchemaElement) {
-                XmlSchemaType schemaType = 
-                    ((XmlSchemaElement) element).getSchemaType();
-                isModified = fixIt(schemaType);
-            }
-        }
-        
-        XmlSchemaObjectTable schemaTypes = xmlSchema.getSchemaTypes();
-        Iterator<XmlSchemaObject> schemaTypesIter = 
-            CastUtils.cast(schemaTypes.getValues());
-        while (schemaTypesIter.hasNext()) {
-            XmlSchemaObject schemaType = schemaTypesIter.next();
-            if (schemaType instanceof XmlSchemaType) {
-                isModified = fixIt((XmlSchemaType) schemaType);
-            }
-        }
-        
-        if (isModified) {
-            Document[] allSchemas = xmlSchema.getAllSchemas();
-            if (allSchemas.length > 0) {
-                return allSchemas[0].getDocumentElement();
-            }
-        }
-        return schema;
-    }
+		List<Param> initParamList = getResource().getParam();
+		for (Param param : initParamList) {
+			tempInputParts.put(param.getName(), InputType.STRING);
+		}
 
-    private static boolean fixIt(XmlSchemaType schemaType) {
-        if (schemaType != null) {
-            if (schemaType instanceof XmlSchemaComplexType) {
-                XmlSchemaParticle particle = 
-                    ((XmlSchemaComplexType) schemaType).getParticle();
-                if (particle != null) {
-                    if (particle instanceof XmlSchemaSequence) {
-                        XmlSchemaSequence sequence = 
-                            (XmlSchemaSequence) particle;
-                        XmlSchemaObjectCollection items = sequence.getItems();
-                        if (items.getCount() > 1 && 
-                                sequence.getMaxOccurs() > 1) {
-                            sequence.setMaxOccurs(1);
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
+		Method method = getMethod();
+		Request request = method.getRequest();
+		List<Param> paramList = request.getParam();
+		for (Param param : paramList) {
+			tempInputParts.put(param.getName(), InputType.STRING);
+		}
+
+		Response response = method.getResponse();
+		for (JAXBElement<RepresentationType> representationOrFault : response
+				.getRepresentationOrFault()) {
+			if (representationOrFault.getName().getLocalPart()
+					.equals("representation")) {
+				outputElement = representationOrFault.getValue().getElement();
+				break;
+			}
+		}
+
+		List<RESTInputParam> inputParts = new ArrayList<RESTInputParam>();
+		StringBuilder sb = new StringBuilder();
+		for (Map.Entry<String, InputType> inputPart : tempInputParts.entrySet()) {
+			String paramName = inputPart.getKey();
+			sb.append(URLEncoder.encode(paramName, "UTF-8"));
+			sb.append("={");
+			sb.append(paramName);
+			sb.append("}&");
+			inputParts.add(new RESTInputParam(paramName, inputPart.getValue()));
+		}
+		// remove the last '&'
+		if (sb.length() > 0 && sb.charAt(sb.length() - 1) == '&') {
+			sb.deleteCharAt(sb.length() - 1);
+		}
+		String parameterizedURL = getServiceURLPath() + "?" + sb.toString();
+
+		Grammars grammars = application.getGrammars();
+		List<Element> schemaElements = new ArrayList<Element>();
+		if (grammars != null) {
+			for (Object any : grammars.getAny()) {
+				if (any instanceof Element) {
+					schemaElements
+							.add(checkAndFixUnboundedSequence((Element) any));
+				}
+			}
+			for (Include include : grammars.getInclude()) {
+				URI includeUri = wadlUri.resolve(include.getHref());
+				InputSource input = new InputSource(includeUri.toURL()
+						.openStream());
+				XmlSchemaCollection xmlSchemaColl = new XmlSchemaCollection();
+				XmlSchema xmlSchema = xmlSchemaColl.read(input, null);
+				for (Document schemaDocument : xmlSchema.getAllSchemas()) {
+					schemaElements.add(schemaDocument.getDocumentElement());
+				}
+			}
+		}
+		RESTWsdlGenerator generator = new RESTWsdlGenerator(serviceName,
+				namespace, operationName, parameterizedURL);
+		generator.setSchemaElements(schemaElements);
+		generator.setInputParts(inputParts);
+		if (outputElement != null) {
+			generator.setOutputElementType(outputElement);
+		}
+		generator.write(wsdlFile);
+		return wsdlFile;
+	}
+
+	/**
+	 * Attempts to fix in which if sequence has maxOccurs set to unbounded and
+	 * the sequence has more than 1 item, JAXB will generate JAXBElement<T> for
+	 * the corresponding property. To avoid having JAXBElement<T> generated, we
+	 * modify the maxOccurs to 1. This fix may not be a ideal solution for all
+	 * cases, and in such cases, user may need to modiify the generated WSDL and
+	 * set the maxOccurs back to unbounded and reimport again. And then the user
+	 * will have to deal with the JAXBElement<T> in Java code.
+	 */
+	private static Element checkAndFixUnboundedSequence(Element schema) {
+		XmlSchemaCollection xmlSchemaColl = new XmlSchemaCollection();
+		XmlSchema xmlSchema = xmlSchemaColl.read(schema);
+
+		boolean isModified = false;
+
+		XmlSchemaObjectTable elements = xmlSchema.getElements();
+		Iterator<XmlSchemaObject> elementsIter = CastUtils.cast(elements
+				.getValues());
+		while (elementsIter.hasNext()) {
+			XmlSchemaObject element = elementsIter.next();
+			if (element instanceof XmlSchemaElement) {
+				XmlSchemaType schemaType = ((XmlSchemaElement) element)
+						.getSchemaType();
+				isModified = fixIt(schemaType);
+			}
+		}
+
+		XmlSchemaObjectTable schemaTypes = xmlSchema.getSchemaTypes();
+		Iterator<XmlSchemaObject> schemaTypesIter = CastUtils.cast(schemaTypes
+				.getValues());
+		while (schemaTypesIter.hasNext()) {
+			XmlSchemaObject schemaType = schemaTypesIter.next();
+			if (schemaType instanceof XmlSchemaType) {
+				isModified = fixIt((XmlSchemaType) schemaType);
+			}
+		}
+
+		if (isModified) {
+			Document[] allSchemas = xmlSchema.getAllSchemas();
+			if (allSchemas.length > 0) {
+				return allSchemas[0].getDocumentElement();
+			}
+		}
+		return schema;
+	}
+
+	private static boolean fixIt(XmlSchemaType schemaType) {
+		if (schemaType != null) {
+			if (schemaType instanceof XmlSchemaComplexType) {
+				XmlSchemaParticle particle = ((XmlSchemaComplexType) schemaType)
+						.getParticle();
+				if (particle != null) {
+					if (particle instanceof XmlSchemaSequence) {
+						XmlSchemaSequence sequence = (XmlSchemaSequence) particle;
+						XmlSchemaObjectCollection items = sequence.getItems();
+						if (items.getCount() > 1 && sequence.getMaxOccurs() > 1) {
+							sequence.setMaxOccurs(1);
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 }

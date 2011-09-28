@@ -14,10 +14,9 @@
 
 package com.wavemaker.tools.project.upgrade.swamis;
 
-import java.io.File;
 import java.io.IOException;
 
-import org.apache.commons.io.FileUtils;
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.project.Project;
@@ -29,7 +28,7 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
  * Copies a template app.css into the project.
  * 
  * @author small
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  */
 public class CopyAppCssUpgrade implements UpgradeTask {
 
@@ -39,13 +38,11 @@ public class CopyAppCssUpgrade implements UpgradeTask {
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
         
         try {
-            File appCssTemplate = new File(
-                    studioConfiguration.getStudioWebAppRootFile(),
-                    "app/templates/project/app.css");
-            File destCss = new File(project.getWebAppRoot(), "app.css");
+            Resource appCssTemplate = studioConfiguration.getStudioWebAppRoot().createRelative("app/templates/project/app.css");
+            Resource destCss = project.getWebAppRoot().createRelative("app.css");
             
             if (!destCss.exists()) {
-                FileUtils.copyFile(appCssTemplate, destCss);
+            	project.writeFile(destCss, project.readFile(appCssTemplate));
             }
         } catch (IOException e) {
             throw new WMRuntimeException(e);

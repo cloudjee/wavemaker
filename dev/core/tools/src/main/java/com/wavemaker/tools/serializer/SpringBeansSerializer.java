@@ -14,10 +14,11 @@
 
 package com.wavemaker.tools.serializer;
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.xml.bind.JAXBException;
+
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.tools.service.FileService;
 import com.wavemaker.tools.spring.SpringConfigSupport;
@@ -27,7 +28,7 @@ import com.wavemaker.tools.spring.beans.Beans;
  * File serializer for Spring config file.
  * 
  * @author ffu
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  *
  */
 public class SpringBeansSerializer implements FileSerializer {
@@ -35,7 +36,7 @@ public class SpringBeansSerializer implements FileSerializer {
     /* (non-Javadoc)
      * @see com.wavemaker.tools.serializer.FileSerializer#readObject(com.wavemaker.runtime.service.FileService, java.io.File)
      */
-    public Object readObject(FileService fileService, File file)
+    public Object readObject(FileService fileService, Resource file)
             throws FileSerializerException {
         try {
             return SpringConfigSupport.readBeans(file, fileService);
@@ -49,7 +50,7 @@ public class SpringBeansSerializer implements FileSerializer {
     /* (non-Javadoc)
      * @see com.wavemaker.tools.serializer.FileSerializer#writeObject(com.wavemaker.runtime.service.FileService, java.lang.Object, java.io.File)
      */
-    public void writeObject(FileService fileService, Object object, File file)
+    public void writeObject(FileService fileService, Object object, Resource file)
             throws FileSerializerException {
         try {
             SpringConfigSupport.writeBeans((Beans) object, file, fileService);

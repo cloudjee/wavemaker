@@ -17,12 +17,12 @@ package com.wavemaker.tools.project.upgrade.six_dot_zero;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
+
+import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
-import com.wavemaker.runtime.server.ServerConstants;
-
-import org.apache.commons.io.FileUtils;
 /**
  * Changes the package of WMPropertyPlaceholderConfigurer.
  * 

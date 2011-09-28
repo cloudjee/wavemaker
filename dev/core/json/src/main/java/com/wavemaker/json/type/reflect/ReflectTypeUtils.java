@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 
 import com.wavemaker.common.util.Tuple;
@@ -86,13 +86,13 @@ public class ReflectTypeUtils {
             ParameterizedType pt = (ParameterizedType) type;
             
             if (!(pt.getRawType() instanceof Class)) {
-                throw new WMRuntimeException(Resource.JSON_RAW_TYPE_NOT_CLASS,
+                throw new WMRuntimeException(MessageResource.JSON_RAW_TYPE_NOT_CLASS,
                         pt.getRawType());
             }
             
             Class<?> klass = (Class<?>) pt.getRawType();
             if (!(Collection.class.isAssignableFrom(klass))) {
-                throw new WMRuntimeException(Resource.JSON_EXPECTED_COLLECTION,
+                throw new WMRuntimeException(MessageResource.JSON_EXPECTED_COLLECTION,
                         klass);
             }
 
@@ -104,7 +104,7 @@ public class ReflectTypeUtils {
             lrtd.setKlass(klass);
             lrtd.setTypeName(ReflectTypeUtils.getTypeName(type));
         } else {
-            throw new WMRuntimeException(Resource.JSON_UNKNOWN_TYPE, type);
+            throw new WMRuntimeException(MessageResource.JSON_UNKNOWN_TYPE, type);
         }
         
         // in other methods, this has to happen earlier to deal with cycles.
@@ -155,13 +155,13 @@ public class ReflectTypeUtils {
                     && Map.class.isAssignableFrom((Class<?>) type)
                     && !Properties.class.isAssignableFrom((Class<?>)type)) {
                 if (!JSON.class.isAssignableFrom((Class<?>)type)) {
-                    logger.warn(Resource.JSON_TYPE_NOGENERICS.getMessage(type));
+                    logger.warn(MessageResource.JSON_TYPE_NOGENERICS.getMessage(type));
                 }
                 return null;
             } else if (type instanceof Class
                     && List.class.isAssignableFrom((Class<?>) type)) {
                 if (!JSON.class.isAssignableFrom((Class<?>)type)) {
-                    logger.warn(Resource.JSON_TYPE_NOGENERICS.getMessage(type));
+                    logger.warn(MessageResource.JSON_TYPE_NOGENERICS.getMessage(type));
                 }
                 return null;
             }
@@ -205,13 +205,13 @@ public class ReflectTypeUtils {
             klass = (Class<?>) type;
 
             if (Collection.class.isAssignableFrom(klass)) {
-                throw new WMRuntimeException(Resource.JSON_TYPE_NOGENERICS,
+                throw new WMRuntimeException(MessageResource.JSON_TYPE_NOGENERICS,
                         klass);
             } else if (klass.isArray()) {
-                throw new WMRuntimeException(Resource.JSON_USE_FIELD_FOR_ARRAY,
+                throw new WMRuntimeException(MessageResource.JSON_USE_FIELD_FOR_ARRAY,
                         klass);
             } else if (Map.class.isAssignableFrom(klass)) {
-                throw new WMRuntimeException(Resource.JSON_TYPE_NOGENERICS,
+                throw new WMRuntimeException(MessageResource.JSON_TYPE_NOGENERICS,
                         klass);
             } else if (ClassUtils.isPrimitiveOrWrapper(klass) ||
                     CharSequence.class.isAssignableFrom(klass)) {
@@ -277,11 +277,11 @@ public class ReflectTypeUtils {
                 
                 ret = mtdret;
             } else {
-                throw new WMRuntimeException(Resource.JSON_TYPE_UNKNOWNRAWTYPE,
+                throw new WMRuntimeException(MessageResource.JSON_TYPE_UNKNOWNRAWTYPE,
                         pt.getOwnerType(), pt);
             }
         } else {
-            throw new WMRuntimeException(Resource.JSON_TYPE_UNKNOWNPARAMTYPE,
+            throw new WMRuntimeException(MessageResource.JSON_TYPE_UNKNOWNPARAMTYPE,
                     type, (null!=type)?type.getClass():null);
         }
         
@@ -333,7 +333,7 @@ public class ReflectTypeUtils {
             } else if (!strict &&
                     Collection.class.isAssignableFrom(returnTypeClass)) {
                 if (!JSON.class.isAssignableFrom(returnTypeClass)) {
-                    logger.warn(Resource.JSON_TYPE_NOGENERICS.getMessage(returnTypeClass));
+                    logger.warn(MessageResource.JSON_TYPE_NOGENERICS.getMessage(returnTypeClass));
                 }
 
                 ret.setArrayTypes(new ArrayList<ListTypeDefinition>(1));
@@ -368,10 +368,10 @@ public class ReflectTypeUtils {
             } else {
                 if (strict) {
                     throw new WMRuntimeException(
-                            Resource.JSON_TYPE_UNKNOWNRAWTYPE,
+                            MessageResource.JSON_TYPE_UNKNOWNRAWTYPE,
                             pt.getOwnerType(), pt);
                 } else {
-                    logger.warn(Resource.JSON_TYPE_UNKNOWNRAWTYPE.getMessage(
+                    logger.warn(MessageResource.JSON_TYPE_UNKNOWNRAWTYPE.getMessage(
                                     pt.getOwnerType(), pt));
                 }
             }
@@ -381,7 +381,7 @@ public class ReflectTypeUtils {
             ret.setTypeDefinition(dimAndClass.v1);
             ret.setArrayTypes(dimAndClass.v2);
         } else {
-            throw new WMRuntimeException(Resource.JSON_TYPE_UNKNOWNPARAMTYPE,
+            throw new WMRuntimeException(MessageResource.JSON_TYPE_UNKNOWNPARAMTYPE,
                     type, (null!=type)?type.getClass():null);
         }
         
@@ -441,7 +441,7 @@ public class ReflectTypeUtils {
                         (Class<?>)gat.getGenericComponentType(), 0).getClass();
             }
             if (null==klass) {
-                throw new WMRuntimeException(Resource.JSON_FAILED_GENERICARRAYTYPE,
+                throw new WMRuntimeException(MessageResource.JSON_FAILED_GENERICARRAYTYPE,
                         gat, gat.getGenericComponentType());
             }
             
@@ -463,7 +463,7 @@ public class ReflectTypeUtils {
                     getTypeDefinition(type, typeState, strict),
                     new ArrayList<ListTypeDefinition>());
         } else {
-            throw new WMRuntimeException(Resource.JSON_TYPE_UNKNOWNPARAMTYPE,
+            throw new WMRuntimeException(MessageResource.JSON_TYPE_UNKNOWNPARAMTYPE,
                     type, (null!=type)?type.getClass():null);
         }
     }
@@ -484,7 +484,7 @@ public class ReflectTypeUtils {
         } else if (type instanceof ParameterizedType) {
             return type.toString().replace(" ", "");
         } else {
-            throw new WMRuntimeException(Resource.JSON_TYPE_UNKNOWNPARAMTYPE,
+            throw new WMRuntimeException(MessageResource.JSON_TYPE_UNKNOWNPARAMTYPE,
                     type, (null!=type)?type.getClass():null);
         }
     }

@@ -15,6 +15,7 @@
 package com.wavemaker.tools.javaservice;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -26,8 +27,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.core.io.Resource;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.json.type.FieldDefinition;
@@ -47,7 +49,7 @@ import com.wavemaker.runtime.service.definition.ServiceOperation;
 /**
  * @author Simon Toens
  * @author Matt Small
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  */
 public class JavaServiceDefinition implements ReflectServiceDefinition {
     
@@ -67,17 +69,18 @@ public class JavaServiceDefinition implements ReflectServiceDefinition {
     /**
      * Normal constructor.  Attempts to use reflection (and a custom, very
      * isolated classloader) to read information about the class.
+     * @throws IOException 
      */
     public JavaServiceDefinition(String serviceClassName, String serviceId,
-            File serviceCompiledDir, File serviceLibDir,
+            Resource serviceCompiledDir, Resource serviceLibDir,
             List<String> excludeTypeNames)
-            throws ClassNotFoundException, LinkageError {
+            throws ClassNotFoundException, LinkageError, IOException {
 
         this(serviceClassName, serviceId,
                 (null==serviceCompiledDir)?
-                        null:Arrays.asList(new File[]{serviceCompiledDir}),
+                        null:Arrays.asList(new File[]{serviceCompiledDir.getFile()}),
                 (null==serviceLibDir)?
-                        null:Arrays.asList(new File[]{serviceLibDir}),
+                        null:Arrays.asList(new File[]{serviceLibDir.getFile()}),
                 excludeTypeNames);
     }
 
@@ -86,7 +89,7 @@ public class JavaServiceDefinition implements ReflectServiceDefinition {
      * isolated classloader) to read information about the class.
      */
     @SuppressWarnings("unchecked")
-    public JavaServiceDefinition(String serviceClassName, String serviceId,
+	public JavaServiceDefinition(String serviceClassName, String serviceId,
             List<File> serviceCompiledDirs, List<File> serviceLibDirs,
             List<String> excludeTypeNames)
             throws ClassNotFoundException, LinkageError {
@@ -100,7 +103,7 @@ public class JavaServiceDefinition implements ReflectServiceDefinition {
                 if (!serviceLibDir.exists()) {
                     continue;
                 } else if (!serviceLibDir.isDirectory()) {
-                    throw new WMRuntimeException(Resource.LIB_DIR_NOT_DIR,
+                    throw new WMRuntimeException(MessageResource.LIB_DIR_NOT_DIR,
                             serviceLibDir);
                 }
 

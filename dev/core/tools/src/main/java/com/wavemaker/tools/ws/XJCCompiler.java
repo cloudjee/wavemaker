@@ -14,18 +14,18 @@
 
 package com.wavemaker.tools.ws;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.core.io.Resource;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -50,14 +50,14 @@ import com.wavemaker.tools.ws.wsdl.WSDL.WebServiceType;
  * JAXB binding compiler.
  * 
  * @author ffu
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  * 
  */
 public class XJCCompiler {
 
     private static Log log = LogFactory.getLog(XJCCompiler.class);
 
-    public static void generate(S2JJAXBModel model, File outputDir)
+    public static void generate(S2JJAXBModel model, Resource outputDir)
             throws GenerationException {
         JAXBCompilerErrorListener listener = new JAXBCompilerErrorListener();
         JCodeModel generateCode = model.generateCode(null, listener);
@@ -65,7 +65,8 @@ public class XJCCompiler {
             throw listener.getException();
         }
         try {
-            generateCode.build(outputDir, outputDir, null);
+        	//TODO - Cheating for now, as the com.sun.* stuff will potentially need to be replaced on CF
+            generateCode.build(outputDir.getFile(), outputDir.getFile(), null);
         } catch (IOException e) {
             throw new GenerationException(e);
         }
@@ -76,7 +77,7 @@ public class XJCCompiler {
 
     @SuppressWarnings("deprecation")
     public static S2JJAXBModel createSchemaModel(Map<String, Element> schemas,
-            List<File> bindingFiles, String packageName,
+            List<Resource> bindingFiles, String packageName,
             Set<String> auxiliaryClasses, WebServiceType type)
             throws GenerationException {
         if (schemas == null || schemas.isEmpty()) {
@@ -114,14 +115,15 @@ public class XJCCompiler {
         }
 
         if (bindingFiles != null) {
-            for (File file : bindingFiles) {
+            for (Resource file : bindingFiles) {
                 try {
-                    InputSource inputSource = new InputSource(
-                            new java.io.FileInputStream(file));
-                    inputSource.setSystemId(file.toURI().toString());
+                    InputSource inputSource = new InputSource(file.getInputStream());
+                    inputSource.setSystemId(file.getURI().toString());
                     sc.parseSchema(inputSource);
                 } catch (FileNotFoundException e) {
                     throw new GenerationException(e);
+                } catch (IOException e) {
+                	throw new GenerationException(e);
                 }
             }
         }

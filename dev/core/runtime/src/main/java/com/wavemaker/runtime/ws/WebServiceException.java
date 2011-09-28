@@ -15,7 +15,7 @@
 package com.wavemaker.runtime.ws;
 
 import com.wavemaker.common.WMException;
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 
 /**
  * @author ffu
@@ -34,7 +34,7 @@ public class WebServiceException extends WMException {
         super(cause);
     }
 
-    public WebServiceException(Resource resource, Object... args) {
+    public WebServiceException(MessageResource resource, Object... args) {
         super(resource, args);
     }
 }

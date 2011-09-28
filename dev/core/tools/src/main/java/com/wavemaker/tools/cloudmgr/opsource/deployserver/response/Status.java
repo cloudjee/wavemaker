@@ -23,13 +23,13 @@
 
 package com.wavemaker.tools.cloudmgr.opsource.deployserver.response;
 
-import com.wavemaker.tools.cloudmgr.opsource.ProcStatus;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+
+import com.wavemaker.tools.cloudmgr.opsource.ProcStatus;
 
 
 /**

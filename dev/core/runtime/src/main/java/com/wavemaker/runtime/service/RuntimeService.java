@@ -24,7 +24,7 @@ import java.io.UnsupportedEncodingException;
 import org.apache.commons.beanutils.PropertyUtils;
 
 import com.wavemaker.common.NotYetImplementedException;
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.json.JSONState;
@@ -256,10 +256,10 @@ public class RuntimeService {
         }
 
         if (null==serviceWire && null == enclosedException) {
-            throw new WMRuntimeException(Resource.NO_SERVICE_FROM_ID_TYPE,
+            throw new WMRuntimeException(MessageResource.NO_SERVICE_FROM_ID_TYPE,
                     serviceName, typeName);
         } else if (null==serviceWire) {
-            throw new WMRuntimeException(Resource.NO_SERVICE_FROM_ID_TYPE,
+            throw new WMRuntimeException(MessageResource.NO_SERVICE_FROM_ID_TYPE,
                     enclosedException, serviceName, typeName);
         }
         
