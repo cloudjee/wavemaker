@@ -26,7 +26,6 @@ import java.io.Writer;
 import java.nio.CharBuffer;
 import java.util.Properties;
 
-import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
@@ -100,24 +99,20 @@ public class TestProject extends WMTestCase {
 		String projectName = "foo";
 		File tempDir = IOUtils.createTempDirectory();
 
-		try {
-			Resource projectRoot = new FileSystemResource(tempDir.getPath()
-					+ "/").createRelative(projectName + "/");
-			projectRoot.getFile().mkdir();
-			Project p = new Project(projectRoot, studioConfiguration);
+		Resource projectRoot = new FileSystemResource(tempDir.getPath() + "/")
+				.createRelative(projectName + "/");
+		projectRoot.getFile().mkdir();
+		Project p = new Project(projectRoot, studioConfiguration);
 
-			assertEquals(
-					Double.valueOf(Project.PROPERTY_PROJECT_VERSION_DEFAULT),
-					p.getProjectVersion());
+		assertEquals(Double.valueOf(Project.PROPERTY_PROJECT_VERSION_DEFAULT),
+				p.getProjectVersion());
 
-			Properties props = p.getProperties();
-			props.setProperty(Project.PROPERTY_PROJECT_VERSION, "12.2");
-			p.setProperties(props);
+		Properties props = p.getProperties();
+		props.setProperty(Project.PROPERTY_PROJECT_VERSION, "12.2");
+		p.setProperties(props);
 
-			assertEquals(12.2, p.getProjectVersion());
-		} finally {
-			FileUtils.forceDelete(tempDir);
-		}
+		assertEquals(12.2, p.getProjectVersion());
+
 	}
 
 	public void testGetWebInfClasses() throws Exception {
@@ -138,8 +133,8 @@ public class TestProject extends WMTestCase {
 	public void testProjectBasicEncoding() throws Exception {
 
 		File tempDir = IOUtils.createTempDirectory();
-		FileService fs = new Project(new FileSystemResource(tempDir.getPath()+"/"),
-				studioConfiguration);
+		FileService fs = new Project(new FileSystemResource(tempDir.getPath()
+				+ "/"), studioConfiguration);
 		fs.writeFile("foo.txt", ComplexReturnBean.EXTENDED_CHARS_TEST_STR);
 
 		File expectedFile = new File(tempDir, "foo.txt");
@@ -156,7 +151,8 @@ public class TestProject extends WMTestCase {
 	public void testProjectBasicWriterReaderEncoding() throws Exception {
 
 		File tempDir = IOUtils.createTempDirectory();
-		FileService fs = new Project(new FileSystemResource(tempDir.getPath()+"/"), studioConfiguration);
+		FileService fs = new Project(new FileSystemResource(tempDir.getPath()
+				+ "/"), studioConfiguration);
 
 		Writer writer = fs.getWriter("foo.txt");
 		writer.write(ComplexReturnBean.EXTENDED_CHARS_TEST_STR);

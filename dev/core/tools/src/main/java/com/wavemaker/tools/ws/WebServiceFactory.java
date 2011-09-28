@@ -49,7 +49,7 @@ public class WebServiceFactory implements ServiceDefinitionFactory,
 			String serviceId, DesignServiceManager serviceMgr) {
 		if (f.getFilename().endsWith(Constants.WSDL_EXT)) {
 			try {
-				return WSDLManager.processWSDL(f.getURI().toString(), serviceId);
+				return WSDLManager.processWSDL(f.getURL().toString(), serviceId);
 			} catch (WSDLException e) {
 				throw new WMRuntimeException(e);
 			} catch (IOException e) {

@@ -17,14 +17,12 @@
  */
 package com.wavemaker.tools.ws;
 
-import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URL;
 
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.infra.WMTestCase;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
 import com.wavemaker.tools.project.LocalStudioConfiguration;
@@ -34,58 +32,52 @@ import com.wavemaker.tools.ws.wsdl.WSDL;
 
 /**
  * @author ffu
- * @version $Rev:22673 $ - $Date:2008-05-30 14:45:46 -0700 (Fri, 30 May 2008) $
+ * @author Jeremy Grelle
  * 
  */
 public class TestWebServiceFactory extends WMTestCase {
 
-    private static final String STOCKQUOTE_WSDL = "com/wavemaker/tools/ws/stockquote.wsdl";
+	private static final String STOCKQUOTE_WSDL = "com/wavemaker/tools/ws/stockquote.wsdl";
 
-    private static final String YAHOO_STOCKQUOTE_WSDL = "com/wavemaker/tools/ws/YahooStockQuote.wsdl";
+	private static final String YAHOO_STOCKQUOTE_WSDL = "com/wavemaker/tools/ws/YahooStockQuote.wsdl";
 
-    public void testForSOAP() throws MalformedURLException {
-        String resource = ClassLoaderUtils.getResource(STOCKQUOTE_WSDL);
-        URL url = new URL(resource);
-        WebServiceFactory factory = new WebServiceFactory();
-        DeprecatedServiceDefinition serviceDefinition = null;
-        try {
-            serviceDefinition = factory.getServiceDefinition(new FileSystemResource(new File(url
-                    .getFile())));
-            if (!(serviceDefinition instanceof WSDL)) {
-                fail("The service definition should be a WSDL.");
-            }
-        } catch (WMRuntimeException e) {
-            fail("Exception occurred during getServiceDefiniton." + e);
-        }
-        GenerationConfiguration cfg = new GenerationConfiguration(
-                serviceDefinition, new LocalStudioConfiguration().createTempDir());
-        ServiceGenerator serviceGenerator = factory.getServiceGenerator(cfg);
-        if (!(serviceGenerator instanceof SOAPServiceGenerator)) {
-            fail("ServiceGenerator should be an instance of SOAPServiceGenerator, but was getting "
-                    + serviceGenerator.getClass().getName());
-        }
-    }
+	public void testForSOAP() throws MalformedURLException {
+		Resource wsdl = new ClassPathResource(STOCKQUOTE_WSDL);
+		WebServiceFactory factory = new WebServiceFactory();
+		DeprecatedServiceDefinition serviceDefinition = null;
 
-    public void testForREST() throws MalformedURLException {
-        String resource = ClassLoaderUtils.getResource(YAHOO_STOCKQUOTE_WSDL);
-        URL url = new URL(resource);
-        WebServiceFactory factory = new WebServiceFactory();
-        DeprecatedServiceDefinition serviceDefinition = null;
-        try {
-            serviceDefinition = factory.getServiceDefinition(new FileSystemResource(new File(url
-                    .getFile())));
-            if (!(serviceDefinition instanceof WSDL)) {
-                fail("The service definition should be a WSDL.");
-            }
-        } catch (WMRuntimeException e) {
-            fail("Exception occurred during getServiceDefiniton." + e);
-        }
-        GenerationConfiguration cfg = new GenerationConfiguration(
-                serviceDefinition, null);
-        ServiceGenerator serviceGenerator = factory.getServiceGenerator(cfg);
-        if (!(serviceGenerator instanceof RESTServiceGenerator)) {
-            fail("ServiceGenerator should be an instance of RESTServiceGenerator, but was getting "
-                    + serviceGenerator.getClass().getName());
-        }
-    }
+		serviceDefinition = factory.getServiceDefinition(wsdl);
+		if (!(serviceDefinition instanceof WSDL)) {
+			fail("The service definition should be a WSDL.");
+		}
+		GenerationConfiguration cfg = new GenerationConfiguration(
+				serviceDefinition,
+				new LocalStudioConfiguration().createTempDir());
+		ServiceGenerator serviceGenerator = factory.getServiceGenerator(cfg);
+		if (!(serviceGenerator instanceof SOAPServiceGenerator)) {
+			fail("ServiceGenerator should be an instance of SOAPServiceGenerator, but was getting "
+					+ serviceGenerator.getClass().getName());
+		}
+	}
+
+	public void testForREST() throws MalformedURLException {
+		Resource wsdl = new ClassPathResource(YAHOO_STOCKQUOTE_WSDL);
+		WebServiceFactory factory = new WebServiceFactory();
+		DeprecatedServiceDefinition serviceDefinition = null;
+		try {
+			serviceDefinition = factory.getServiceDefinition(wsdl);
+			if (!(serviceDefinition instanceof WSDL)) {
+				fail("The service definition should be a WSDL.");
+			}
+		} catch (WMRuntimeException e) {
+			fail("Exception occurred during getServiceDefiniton." + e);
+		}
+		GenerationConfiguration cfg = new GenerationConfiguration(
+				serviceDefinition, null);
+		ServiceGenerator serviceGenerator = factory.getServiceGenerator(cfg);
+		if (!(serviceGenerator instanceof RESTServiceGenerator)) {
+			fail("ServiceGenerator should be an instance of RESTServiceGenerator, but was getting "
+					+ serviceGenerator.getClass().getName());
+		}
+	}
 }

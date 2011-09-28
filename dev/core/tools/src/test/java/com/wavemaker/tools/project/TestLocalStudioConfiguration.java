@@ -47,15 +47,15 @@ public class TestLocalStudioConfiguration extends WMTestCase {
 					LocalStudioConfiguration.WMHOME_PROP_KEY, null);
 
 			try {
-				String newWMHome = "/foo";
+				String newWMHome = "foo";
 
 				System.setProperty(LocalStudioConfiguration.WMHOME_PROP_KEY,
-						newWMHome);
+						"/" + newWMHome);
 
 				StudioConfiguration sc = new LocalStudioConfiguration();
 				Resource wmHome = sc.getWaveMakerHome();
 
-				assertEquals(newWMHome, wmHome.getFile().toString());
+				assertEquals(newWMHome, wmHome.getFilename());
 			} finally {
 				if (null == oldWMHome) {
 					Properties props = System.getProperties();
@@ -84,7 +84,8 @@ public class TestLocalStudioConfiguration extends WMTestCase {
 
 					assertTrue(!tempDir.exists());
 
-					LocalStudioConfiguration.setWaveMakerHome(new FileSystemResource(tempDir));
+					LocalStudioConfiguration
+							.setWaveMakerHome(new FileSystemResource(tempDir));
 					assertTrue(tempDir.exists());
 				} finally {
 					if (null != tempDir && tempDir.exists()) {
@@ -165,13 +166,14 @@ public class TestLocalStudioConfiguration extends WMTestCase {
 				assertTrue(
 						"we expected the parent of the home to exist; home: "
 								+ home, home.getFile().getParentFile().exists());
-				assertTrue("unexpected ending of home path: " + home, home
-						.getFile().toString().endsWith("/WaveMaker"));
+				assertEquals("unexpected ending of home path: " + home,
+						home.getFilename(), ("WaveMaker"));
 				assertTrue(home.exists());
 			} finally {
 				if (null != oldStudioHome) {
-					LocalStudioConfiguration.setWaveMakerHome(new FileSystemResource(
-							oldStudioHome));
+					LocalStudioConfiguration
+							.setWaveMakerHome(new FileSystemResource(
+									oldStudioHome));
 				}
 			}
 		}
@@ -181,20 +183,20 @@ public class TestLocalStudioConfiguration extends WMTestCase {
 		if (!"cloud".equals(PROJECT_TYPE)) {
 			File tempDir = null;
 			try {
-			tempDir = IOUtils.createTempDirectory();
-			File tempProjectsDir = new File(tempDir,
-					LocalStudioConfiguration.PROJECTS_DIR);
+				tempDir = IOUtils.createTempDirectory();
+				File tempProjectsDir = new File(tempDir,
+						LocalStudioConfiguration.PROJECTS_DIR);
 
-			assertTrue(!tempProjectsDir.exists());
+				assertTrue(!tempProjectsDir.exists());
 
-			LocalStudioConfiguration sc = new LocalStudioConfiguration();
-			sc.setTestWaveMakerHome(tempDir);
-			sc.setServletContext(servletContext);
-			Resource projects = sc.getProjectsDir();
-			Resource common = sc.getCommonDir();
+				LocalStudioConfiguration sc = new LocalStudioConfiguration();
+				sc.setTestWaveMakerHome(tempDir);
+				sc.setServletContext(servletContext);
+				Resource projects = sc.getProjectsDir();
+				Resource common = sc.getCommonDir();
 
-			assertEquals(projects.getFile().getParentFile(), common.getFile()
-					.getParentFile());
+				assertEquals(projects.getFile().getParentFile(), common
+						.getFile().getParentFile());
 			} finally {
 				if (null != tempDir && tempDir.exists()) {
 					IOUtils.deleteRecursive(tempDir);
