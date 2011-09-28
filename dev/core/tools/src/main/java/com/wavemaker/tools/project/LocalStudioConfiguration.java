@@ -228,8 +228,8 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 		if (null == ret) {
 			String pref = ConfigurationStore.getPreference(
 					LocalStudioConfiguration.class, WMHOME_KEY, null);
-			pref = pref.endsWith("/") ? pref : pref + "/";
 			if (null != pref && 0 != pref.length()) {
+				pref = pref.endsWith("/") ? pref : pref + "/";
 				ret = new FileSystemResource(pref);
 			}
 		}
