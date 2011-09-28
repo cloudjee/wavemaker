@@ -233,7 +233,7 @@ public class TestConfigurationCompilerTask extends StudioTestCase {
 		ConfigurationCompilerTask rcgt = new ConfigurationCompilerTask();
 		rcgt.setVerbose(true);
 		rcgt.setProject(new org.apache.tools.ant.Project());
-		rcgt.setProjectRoot(pm.getCurrentProject().getProjectRoot());
+		rcgt.setProjectRoot(pm.getCurrentProject().getProjectRoot().getFile());
 
 		Resource resource = new FileResource(dsm.getServiceDefXml(
 				sd.getServiceId()).getFile());
@@ -279,8 +279,7 @@ public class TestConfigurationCompilerTask extends StudioTestCase {
 
 		// test writing smds to alternate directories
 		File tempFile = IOUtils.createTempDirectory("alternateSMDDir", "_tmp");
-		rcgt.setDestServicesDir(new FileSystemResource(tempFile
-				.getAbsolutePath() + "/"));
+		rcgt.setDestServicesDir(tempFile);
 		assertEquals(0, tempFile.list().length);
 
 		rcgt.perform();
@@ -310,7 +309,7 @@ public class TestConfigurationCompilerTask extends StudioTestCase {
 		ConfigurationCompilerTask rcgt = new ConfigurationCompilerTask();
 		rcgt.setVerbose(true);
 		rcgt.setProject(new org.apache.tools.ant.Project());
-		rcgt.setProjectRoot(pm.getCurrentProject().getProjectRoot());
+		rcgt.setProjectRoot(pm.getCurrentProject().getProjectRoot().getFile());
 
 		Resource resource = new FileResource(dsm.getServiceDefXml(
 				sd.getServiceId()).getFile());
@@ -386,7 +385,7 @@ public class TestConfigurationCompilerTask extends StudioTestCase {
 		ConfigurationCompilerTask rcgt = new ConfigurationCompilerTask();
 		rcgt.setVerbose(true);
 		rcgt.setProject(new org.apache.tools.ant.Project());
-		rcgt.setProjectRoot(pm.getCurrentProject().getProjectRoot());
+		rcgt.setProjectRoot(pm.getCurrentProject().getProjectRoot().getFile());
 		Resources resources = new Resources();
 		rcgt.add(resources);
 		rcgt.perform();

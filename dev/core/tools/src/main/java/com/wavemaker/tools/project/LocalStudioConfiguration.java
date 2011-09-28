@@ -129,7 +129,8 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 		}
 
 		if (null != projectsProp && 0 != projectsProp.length()) {
-			projectsProp = projectsProp.endsWith("/") ? projectsProp : projectsProp+"/";
+			projectsProp = projectsProp.endsWith("/") ? projectsProp
+					: projectsProp + "/";
 			return new FileSystemResource(projectsProp);
 		}
 
@@ -176,23 +177,24 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 		return isCloud;
 	}
 
-	public static void setWaveMakerHome(Resource wmHome) throws FileAccessException {
+	public static void setWaveMakerHome(Resource wmHome)
+			throws FileAccessException {
 		if (isCloud())
 			return;
-		
+
 		Assert.isInstanceOf(FileSystemResource.class, wmHome,
 				"Expected a FileSystemResource");
 
 		try {
-		ConfigurationStore.setVersionedPreference(
-				LocalStudioConfiguration.class, WMHOME_KEY,
-				wmHome.getURI().toString());
+			ConfigurationStore.setVersionedPreference(
+					LocalStudioConfiguration.class, WMHOME_KEY, wmHome
+							.getFile().getCanonicalPath());
 		} catch (IOException ex) {
 			throw new WMRuntimeException(ex);
 		}
-		
+
 		if (!wmHome.exists()) {
-			((FileSystemResource)wmHome).getFile().mkdirs();
+			((FileSystemResource) wmHome).getFile().mkdirs();
 		}
 	}
 
@@ -226,6 +228,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 		if (null == ret) {
 			String pref = ConfigurationStore.getPreference(
 					LocalStudioConfiguration.class, WMHOME_KEY, null);
+			pref = pref.endsWith("/") ? pref : pref + "/";
 			if (null != pref && 0 != pref.length()) {
 				ret = new FileSystemResource(pref);
 			}
@@ -450,14 +453,15 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 		Map<String, String> prefs = new HashMap<String, String>();
 
 		try {
-			prefs.put(WMHOME_KEY, getWaveMakerHome().getURI().toString());
+			prefs.put(WMHOME_KEY, getWaveMakerHome().getFile()
+					.getCanonicalPath());
 		} catch (IOException ex) {
 			throw new WMRuntimeException(ex);
 		}
 
 		try {
-			prefs.put(DEMOHOME_KEY, (isCloud()) ? null : getDemoDir().getURI()
-					.toString());
+			prefs.put(DEMOHOME_KEY, (isCloud()) ? null : getDemoDir().getFile()
+					.getCanonicalPath());
 			return prefs;
 		} catch (IOException ex) {
 			throw new WMRuntimeException(ex);
@@ -565,8 +569,8 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 					IOUtils.makeDirectories(relativeResource.getFile(),
 							root.getFile());
 				} else {
-					IOUtils.makeDirectories(relativeResource.getFile().getParentFile(),
-							root.getFile());
+					IOUtils.makeDirectories(relativeResource.getFile()
+							.getParentFile(), root.getFile());
 				}
 			}
 			return relativeResource;
@@ -581,7 +585,8 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 		try {
 			FileSystemResource targetFile = (FileSystemResource) root
 					.createRelative(filePath);
-			FileCopyUtils.copy(source, new FileOutputStream(targetFile.getFile()));
+			FileCopyUtils.copy(source,
+					new FileOutputStream(targetFile.getFile()));
 			return targetFile;
 		} catch (IOException ex) {
 			throw new WMRuntimeException(ex);
@@ -606,7 +611,8 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 
 	public OutputStream getOutputStream(Resource file) {
 		try {
-			Assert.isTrue(!file.getFile().isDirectory(), "Cannot get an output stream for an invalid file.");
+			Assert.isTrue(!file.getFile().isDirectory(),
+					"Cannot get an output stream for an invalid file.");
 			prepareForWriting(file);
 			return new FileOutputStream(file.getFile());
 		} catch (FileNotFoundException ex) {
@@ -616,7 +622,8 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 		}
 	}
 
-	public Resource copyRecursive(Resource root, Resource target, List<String> exclusions) {
+	public Resource copyRecursive(Resource root, Resource target,
+			List<String> exclusions) {
 		try {
 			IOUtils.copy(root.getFile(), target.getFile(), exclusions);
 		} catch (IOException ex) {
@@ -627,7 +634,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 
 	public Resource getTomcatHome() {
 		String tomcatHome = System.getProperty("catalina.home");
-		tomcatHome = tomcatHome.endsWith("/") ? tomcatHome : tomcatHome+"/";
+		tomcatHome = tomcatHome.endsWith("/") ? tomcatHome : tomcatHome + "/";
 		return new FileSystemResource(tomcatHome);
 	}
 
@@ -640,30 +647,34 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 	}
 
 	public List<Resource> listChildren(Resource root) {
-		Assert.isInstanceOf(FileSystemResource.class, root,
-				"Expected a FileSystemResource");
-		FileSystemResource fileRoot = (FileSystemResource) root;
 		List<Resource> children = new ArrayList<Resource>();
-		File[] files = fileRoot.getFile().listFiles();
+		File[] files;
+		try {
+			files = root.getFile().listFiles();
+		} catch (IOException e) {
+			throw new WMRuntimeException(e);
+		}
 		if (files == null) {
 			return children;
 		}
-		for (File file: files) {
+		for (File file : files) {
 			children.add(new FileSystemResource(file));
 		}
 		return children;
 	}
-	
+
 	public List<Resource> listChildren(Resource root, ResourceFilter filter) {
-		Assert.isInstanceOf(FileSystemResource.class, root,
-				"Expected a FileSystemResource");
-		FileSystemResource fileRoot = (FileSystemResource) root;
 		List<Resource> children = new ArrayList<Resource>();
-		File[] files = fileRoot.getFile().listFiles();
+		File[] files;
+		try {
+			files = root.getFile().listFiles();
+		} catch (IOException e) {
+			throw new WMRuntimeException(e);
+		}
 		if (files == null) {
 			return children;
 		}
-		for (File file: files) {
+		for (File file : files) {
 			FileSystemResource fileResource = new FileSystemResource(file);
 			if (filter.accept(fileResource)) {
 				children.add(fileResource);
@@ -674,14 +685,14 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 
 	public Resource createTempDir() {
 		try {
-			return new FileSystemResource(IOUtils.createTempDirectory("local", "_tmp"));
+			return new FileSystemResource(IOUtils.createTempDirectory("local",
+					"_tmp"));
 		} catch (IOException ex) {
 			throw new WMRuntimeException(ex);
 		}
 	}
 
 	public Resource getResourceForURI(String resourceURI) {
-		Assert.isTrue(resourceURI.startsWith("file:"), "Expected a local file URI");
 		return new FileSystemResource(resourceURI);
 	}
 

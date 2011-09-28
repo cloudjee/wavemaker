@@ -86,8 +86,7 @@ public class TestServiceDefCompilerTask extends StudioTestCase {
 		ServiceDefCompilerTask sdct = new ServiceDefCompilerTask();
 		sdct.setProject(new Project());
 		sdct.addService(new ServiceDefCompilerTask.NestedService(serviceId));
-		sdct.setProjectRoot(new FileSystemResource(projectRoot
-				.getAbsolutePath() + "/"));
+		sdct.setProjectRoot(projectRoot);
 		sdct.perform();
 
 		assertTrue(serviceDesignDir.exists());

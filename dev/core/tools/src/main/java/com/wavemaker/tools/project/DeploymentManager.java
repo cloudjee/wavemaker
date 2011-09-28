@@ -176,7 +176,7 @@ public class DeploymentManager {
 
 	public String testRunStart() {
 		try {
-			return testRunStart(getProjectDir().getURI().toString(),
+			return testRunStart(getProjectDir().getFile().getCanonicalPath(),
 					getDeployName());
 		} catch (IOException ex) {
 			throw new WMRuntimeException(ex);
@@ -645,7 +645,7 @@ public class DeploymentManager {
 
 		try {
 			newProperties.put(STUDIO_WEBAPPROOT_PROPERTY, studioConfiguration
-					.getStudioWebAppRoot().getURI().toString());
+					.getStudioWebAppRoot().getFile().getCanonicalPath());
 		} catch (IOException ex) {
 			throw new WMRuntimeException(ex);
 		}
@@ -883,7 +883,7 @@ public class DeploymentManager {
 				.listChildren(themesDir);
 
 		Resource themesFolder = studioConfiguration.getStudioWebAppRoot()
-				.createRelative("lib/wm/base/widget/themes");
+				.createRelative("lib/wm/base/widget/themes/");
 
 		List<Resource> widgetThemeFiles = studioConfiguration.listChildren(
 				themesFolder, new ResourceFilter() {
