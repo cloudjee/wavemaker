@@ -1,53 +1,53 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" springFile="resourceManager.spring.xml" type="JavaService" CRUDService="false" class="com.wavemaker.studio.ResourceFileService" id="resourceFileService">
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" id="resourceFileService" class="com.wavemaker.studio.ResourceFileService" CRUDService="false" type="JavaService" springFile="resourceManager.spring.xml">
     <operation name="changeClassPath">
-        <parameter isList="false" typeRef="java.lang.String" name="inPath"/>
-        <parameter isList="false" typeRef="boolean" name="isInClassPath"/>
-        <return isList="false" typeRef="boolean"/>
+        <parameter name="inPath" typeRef="java.lang.String" isList="false"/>
+        <parameter name="isInClassPath" typeRef="boolean" isList="false"/>
+        <return typeRef="boolean" isList="false"/>
     </operation>
     <operation name="uploadFile">
-        <parameter isList="false" typeRef="org.springframework.web.multipart.MultipartFile" name="file"/>
-        <parameter isList="false" typeRef="java.lang.String" name="path"/>
-        <return isList="false" typeRef="com.wavemaker.runtime.server.FileUploadResponse"/>
+        <parameter name="file" typeRef="org.springframework.web.multipart.MultipartFile" isList="false"/>
+        <parameter name="path" typeRef="java.lang.String" isList="false"/>
+        <return typeRef="com.wavemaker.runtime.server.FileUploadResponse" isList="false"/>
     </operation>
     <operation name="renameFile">
-        <parameter isList="false" typeRef="java.lang.String" name="from"/>
-        <parameter isList="false" typeRef="java.lang.String" name="to"/>
-        <parameter isList="false" typeRef="boolean" name="overwrite"/>
-        <return isList="false" typeRef="java.lang.String"/>
+        <parameter name="from" typeRef="java.lang.String" isList="false"/>
+        <parameter name="to" typeRef="java.lang.String" isList="false"/>
+        <parameter name="overwrite" typeRef="boolean" isList="false"/>
+        <return typeRef="java.lang.String" isList="false"/>
     </operation>
     <operation name="unzipAndMoveNewFile">
-        <parameter isList="false" typeRef="java.lang.String" name="file"/>
-        <return isList="false" typeRef="boolean"/>
+        <parameter name="file" typeRef="java.lang.String" isList="false"/>
+        <return typeRef="boolean" isList="false"/>
     </operation>
     <operation name="getResourceFolder">
         <return isList="false"/>
     </operation>
     <operation name="createFolder">
-        <parameter isList="false" typeRef="java.lang.String" name="name"/>
-        <return isList="false" typeRef="boolean"/>
+        <parameter name="name" typeRef="java.lang.String" isList="false"/>
+        <return typeRef="boolean" isList="false"/>
     </operation>
     <operation name="moveNewFile">
-        <parameter isList="false" typeRef="java.lang.String" name="from"/>
-        <parameter isList="false" typeRef="java.lang.String" name="to"/>
-        <parameter isList="false" typeRef="boolean" name="overwrite"/>
-        <return isList="false" typeRef="java.lang.String"/>
+        <parameter name="from" typeRef="java.lang.String" isList="false"/>
+        <parameter name="to" typeRef="java.lang.String" isList="false"/>
+        <parameter name="overwrite" typeRef="boolean" isList="false"/>
+        <return typeRef="java.lang.String" isList="false"/>
     </operation>
     <operation name="downloadFile">
-        <parameter isList="false" typeRef="java.lang.String" name="folder"/>
-        <parameter isList="false" typeRef="java.lang.String" name="filename"/>
-        <return isList="false" typeRef="com.wavemaker.runtime.server.DownloadResponse"/>
+        <parameter name="folder" typeRef="java.lang.String" isList="false"/>
+        <parameter name="filename" typeRef="java.lang.String" isList="false"/>
+        <return typeRef="com.wavemaker.runtime.server.DownloadResponse" isList="false"/>
     </operation>
     <operation name="deleteFile">
-        <parameter isList="false" typeRef="java.lang.String" name="name"/>
-        <return isList="false" typeRef="boolean"/>
+        <parameter name="name" typeRef="java.lang.String" isList="false"/>
+        <return typeRef="boolean" isList="false"/>
     </operation>
     <dataobjects>
-        <dataobject supportsQuickData="false" name="FileUploadResponse" javaType="com.wavemaker.runtime.server.FileUploadResponse">
-            <element allowNull="false" isList="false" typeRef="java.lang.String" name="error"/>
-            <element allowNull="false" isList="false" typeRef="java.lang.String" name="height"/>
-            <element allowNull="false" isList="false" typeRef="java.lang.String" name="path"/>
-            <element allowNull="false" isList="false" typeRef="java.lang.String" name="width"/>
+        <dataobject javaType="com.wavemaker.runtime.server.FileUploadResponse" name="FileUploadResponse" supportsQuickData="false">
+            <element name="error" typeRef="java.lang.String" isList="false" allowNull="false"/>
+            <element name="height" typeRef="java.lang.String" isList="false" allowNull="false"/>
+            <element name="path" typeRef="java.lang.String" isList="false" allowNull="false"/>
+            <element name="width" typeRef="java.lang.String" isList="false" allowNull="false"/>
         </dataobject>
     </dataobjects>
 </service>

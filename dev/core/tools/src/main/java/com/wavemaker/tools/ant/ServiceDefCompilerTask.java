@@ -113,7 +113,7 @@ public class ServiceDefCompilerTask extends CompilerTask {
                     }
                     
                     if (StringUtils.hasText(mavenClasspath)) {
-                        String[] paths = mavenClasspath.split(":");
+                        String[] paths = mavenClasspath.split(File.pathSeparator);
                         File[] classPathFiles = new File[paths.length];
                         for (int i = 0; i < paths.length; i++) {
                             classPathFiles[i] = new File(paths[i]).getParentFile();

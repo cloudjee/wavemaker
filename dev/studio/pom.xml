@@ -6,12 +6,14 @@
         <groupId>com.wavemaker</groupId>
         <artifactId>wm-parent</artifactId>
         <version>6.4.0.BUILD-SNAPSHOT</version>
+		<relativePath>../parent</relativePath>
     </parent>
     <artifactId>wm-studio</artifactId>
     <packaging>war</packaging>
     <name>WaveMaker Studio Web Application</name>
 
     <build>
+      <finalName>wavemaker</finalName>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -25,7 +27,6 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>services/CloudDB/src</source>
                                 <source>services/cloudFoundryService/src</source>
                                 <source>services/cloudServerService/src</source>
                                 <source>services/cloudStorageService/src</source>
@@ -34,14 +35,12 @@
                                 <source>services/javaService/src</source>
                                 <source>services/pagesService/src</source>
                                 <source>services/pwsImportService/src</source>
-                                <source>services/registrationService/src</source>
                                 <source>services/resourceFileService/src</source>
                                 <source>services/securityConfigService/src</source>
                                 <source>services/securityService/src</source>
                                 <source>services/securityServiceJOSSO/src</source>
                                 <source>services/servicesService/src</source>
                                 <source>services/studioService/src</source>
-                                <source>services/UserService/src</source>
                                 <source>services/warpFlowService/src</source>
                                 <source>services/warpLoginService/src</source>
                                 <source>services/waveMakerService/src</source>
@@ -74,13 +73,6 @@
                                     classpathref="maven.compile.classpath" />
 
                                 <echo message="Generating Service Defs" />
-
-                                <servicedefc projectRoot="${basedir}"
-                                    classesDir="${project.build.outputDirectory}"
-                                    mavenClasspath="${compile_classpath}">
-                                    <service serviceId="CloudDB"
-                                        serviceClass="com.wavemaker.studio.clouddb.CloudDB" />
-                                </servicedefc>
 
                                 <servicedefc projectRoot="${basedir}"
                                     classesDir="${project.build.outputDirectory}"
@@ -134,13 +126,6 @@
                                 <servicedefc projectRoot="${basedir}"
                                     classesDir="${project.build.outputDirectory}"
                                     mavenClasspath="${compile_classpath}">
-                                    <service serviceId="registrationService"
-                                        serviceClass="com.wavemaker.studio.RegistrationService" />
-                                </servicedefc>
-
-                                <servicedefc projectRoot="${basedir}"
-                                    classesDir="${project.build.outputDirectory}"
-                                    mavenClasspath="${compile_classpath}">
                                     <service serviceId="securityConfigService"
                                         serviceClass="com.wavemaker.studio.SecurityConfigService" />
                                 </servicedefc>
@@ -171,13 +156,6 @@
                                     mavenClasspath="${compile_classpath}">
                                     <service serviceId="resourceFileService"
                                         serviceClass="com.wavemaker.studio.ResourceFileService" />
-                                </servicedefc>
-
-                                <servicedefc projectRoot="${basedir}"
-                                    classesDir="${project.build.outputDirectory}"
-                                    mavenClasspath="${compile_classpath}">
-                                    <service serviceId="UserService"
-                                        serviceClass="com.wavemaker.studio.cloud.UserService" />
                                 </servicedefc>
 
                                 <servicedefc projectRoot="${basedir}"
@@ -259,12 +237,6 @@
                         <configuration>
                             <resources>
                                 <resource>
-                                    <directory>services/CloudDB/src</directory>
-                                    <excludes>
-                                        <exclude>**/*.java</exclude>
-                                    </excludes>
-                                </resource>
-                                <resource>
                                     <directory>services/cloudFoundryService/src</directory>
                                     <excludes>
                                         <exclude>**/*.java</exclude>
@@ -311,13 +283,7 @@
                                     <excludes>
                                         <exclude>**/*.java</exclude>
                                     </excludes>
-                                </resource>
-                                <resource>
-                                    <directory>services/registrationService/src</directory>
-                                    <excludes>
-                                        <exclude>**/*.java</exclude>
-                                    </excludes>
-                                </resource>
+                                </resource>                              
                                 <resource>
                                     <directory>services/resourceFileService/src</directory>
                                     <excludes>
@@ -353,13 +319,7 @@
                                     <excludes>
                                         <exclude>**/*.java</exclude>
                                     </excludes>
-                                </resource>
-                                <resource>
-                                    <directory>services/UserService/src</directory>
-                                    <excludes>
-                                        <exclude>**/*.java</exclude>
-                                    </excludes>
-                                </resource>
+                                </resource>                                
                                 <resource>
                                     <directory>services/warpFlowService/src</directory>
                                     <excludes>
@@ -409,7 +369,7 @@
             </plugin>
         </plugins>
     </build>
-
+    
     <dependencies>
         <dependency>
             <groupId>com.wavemaker</groupId>
@@ -439,5 +399,34 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
+
+
+<profiles>
+	<profile>
+		<id>DojoBuild</id>
+		<build>
+			<plugins>
+				<plugin>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.6</version>
+					<executions>
+						<execution>
+							<id>build-js</id>
+							<phase>process-classes</phase>
+							<goals>
+								<goal>run</goal>
+							</goals>
+							<configuration>
+								<target>
+								<ant dir="." antfile="build-js.xml" target="dojoBuild"/>
+								</target>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</build>
+	</profile>
+</profiles>
 
 </project>

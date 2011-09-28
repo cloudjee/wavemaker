@@ -6,6 +6,7 @@
         <groupId>com.wavemaker</groupId>
         <artifactId>wm-parent</artifactId>
         <version>6.4.0.BUILD-SNAPSHOT</version>
+		<relativePath>../../parent</relativePath>
     </parent>
     <artifactId>wm-common</artifactId>
     <packaging>jar</packaging>
