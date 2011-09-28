@@ -43,7 +43,7 @@ wm.SelectMenu.extend({
 		    if (this.options && inDataSet != this.$.optionsVar)
 			this.options = "";
 		    this.setDataSet(inDataSet);
-		    if (inDataSet && (!this.displayField || this._lastType != inDataSet.type))  {
+		    if (!this._cupdating && inDataSet && (!this.displayField || this._lastType != inDataSet.type))  {
 			if (wm.defaultTypes[inDataSet.type]) {
 			    this.dataField = "dataValue";
 			} else {
