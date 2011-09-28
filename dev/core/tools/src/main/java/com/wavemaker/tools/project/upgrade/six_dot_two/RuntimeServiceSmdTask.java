@@ -14,51 +14,53 @@
 
 package com.wavemaker.tools.project.upgrade.six_dot_two;
 
-import java.io.*;
+import java.io.IOException;
 
+import org.springframework.core.io.Resource;
+
+import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.project.Project;
+import com.wavemaker.tools.project.StudioConfiguration;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
 /**
  * Delete runtimeService.smd so that it can be re-created reflecting changes (if any) in Runtime Service.
  * 
  * @author S Lee
+ * @author Jeremy Grelle
  */
 public class RuntimeServiceSmdTask implements UpgradeTask {
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
-
-    private boolean processed = false;
-    private boolean error = false;
+    private StudioConfiguration studioConfiguration;
 
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
-        String path = project.getWebAppRoot().getAbsolutePath() + "/services/runtimeService.smd";
-        File rtsmd = new File(path);
+        Resource rtsmd;
+		try {
+			rtsmd = project.getWebAppRoot().createRelative("services/runtimeService.smd");
+		} catch (IOException ex) {
+			throw new WMRuntimeException(ex);
+		}
 
-        boolean success = rtsmd.delete();
-
-        if (success) {
+        if (studioConfiguration.deleteFile(rtsmd)) {
             upgradeInfo.addMessage("runtimeService.smd is successfully deleted for re-creation.");
-            processed = true;
         } else {
             upgradeInfo.addMessage("*** Cannot delete runtimeService.smd. Upgrade has failed ***"); 
-            error = true;
+            return;
         }
 
-        if (error) return;
-
-        File webxml = project.getWebXml();
-
-        success = webxml.delete();
-
-        if (success) {
+        Resource webxml = project.getWebXml();
+        if (studioConfiguration.deleteFile(webxml)) {
             upgradeInfo.addMessage("\r\n\tweb.xml is successfully deleted for re-creation.");
-            processed = true;
         } else {
             upgradeInfo.addMessage("*** Cannot delete web.xml. Upgrade has failed ***");
-            error = true;
         }
     }
+
+	public StudioConfiguration getStudioConfiguration() {
+		return studioConfiguration;
+	}
+
+	public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
+		this.studioConfiguration = studioConfiguration;
+	}
 }

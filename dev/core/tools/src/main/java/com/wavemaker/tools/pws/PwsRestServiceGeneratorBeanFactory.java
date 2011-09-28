@@ -18,9 +18,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.wavemaker.common.Resource;
-import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.common.ConfigurationException;
+import com.wavemaker.common.MessageResource;
+import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
 
 /**
@@ -44,7 +44,7 @@ public class PwsRestServiceGeneratorBeanFactory {
         
         if (!pwsRestServiceGenerators.containsKey(partnerName)) {
             throw new ConfigurationException(
-                Resource.UNKNOWN_PWS_TOOLS_MANAGER, partnerName);
+                MessageResource.UNKNOWN_PWS_TOOLS_MANAGER, partnerName);
         }
         
         return pwsRestServiceGenerators.get(partnerName);

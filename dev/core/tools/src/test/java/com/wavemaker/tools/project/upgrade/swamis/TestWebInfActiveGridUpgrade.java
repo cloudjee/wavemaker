@@ -18,14 +18,18 @@
 package com.wavemaker.tools.project.upgrade.swamis;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.infra.WMTestCase;
+import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
+import com.wavemaker.tools.project.StudioConfiguration;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.service.ConfigurationCompiler;
 
@@ -38,14 +42,17 @@ public class TestWebInfActiveGridUpgrade extends WMTestCase {
 
     public void testWebInfUpgrade() throws Exception {
         
-        File sourceProjectRoot = (new ClassPathResource("com/wavemaker/tools/project/upgrade/swamis/webinfactivegridupgrade")).getFile();
+    	StudioConfiguration config = new LocalStudioConfiguration();
+    	
+        File sourceProjectRoot = (new ClassPathResource("com/wavemaker/tools/project/upgrade/swamis/webinfactivegridupgrade/")).getFile();
         assertTrue(sourceProjectRoot.exists());
         
-        File projectRoot = IOUtils.createTempDirectory("testWebInfUpgrade", ".dir");
-        FileUtils.copyDirectory(sourceProjectRoot, projectRoot);
+        File projectRoot = IOUtils.createTempDirectory("testWebInfUpgrade", "_dir");
+        config.copyRecursive(new FileSystemResource(sourceProjectRoot.getAbsolutePath()), new FileSystemResource(projectRoot.getAbsolutePath()+"/"), new ArrayList<String>());
+        //FileUtils.copyDirectory(sourceProjectRoot, projectRoot);
         
-        Project p = new Project(projectRoot);
-        File webinf = p.getWebInf();
+        Project p = new Project(new FileSystemResource(projectRoot.getAbsolutePath()+"/"), new LocalStudioConfiguration());
+        File webinf = p.getWebInf().getFile();
         assertTrue(webinf.exists());
         
         File servicesConfig = new File(webinf,

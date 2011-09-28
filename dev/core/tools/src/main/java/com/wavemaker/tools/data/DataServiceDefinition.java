@@ -22,11 +22,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TreeSet;
 
-import com.wavemaker.common.Resource;
 import com.wavemaker.common.CommonConstants;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.common.util.Tuple;
-import com.wavemaker.runtime.data.*;
+import com.wavemaker.runtime.data.DataOperationFactory;
+import com.wavemaker.runtime.data.DataServiceInternal;
+import com.wavemaker.runtime.data.DataServiceOperation;
+import com.wavemaker.runtime.data.DataServiceOperationManager;
+import com.wavemaker.runtime.data.DataServiceRuntimeException;
+import com.wavemaker.runtime.data.DataServiceType;
+import com.wavemaker.runtime.data.ExternalDataModelConfig;
+import com.wavemaker.runtime.data.Input;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.data.util.DataServiceUtils;
 import com.wavemaker.runtime.service.ElementType;
@@ -172,7 +179,7 @@ public class DataServiceDefinition  extends AbstractDeprecatedServiceDefinition
     public DataServiceOperation getOperation(String operationName) {
         DataServiceOperation rtn = operationManager.getOperation(operationName);
         if (rtn == null) {
-            throw new DataServiceRuntimeException(Resource.OPERATION_NOT_FOUND,
+            throw new DataServiceRuntimeException(MessageResource.OPERATION_NOT_FOUND,
                     serviceId, operationName, operationManager
                             .getOperationNames());
         }
@@ -243,7 +250,7 @@ public class DataServiceDefinition  extends AbstractDeprecatedServiceDefinition
                         operationName);
                 if (op == null) {
                     throw new ConfigurationException(
-                            Resource.OPERATION_NOT_FOUND, serviceId,
+                            MessageResource.OPERATION_NOT_FOUND, serviceId,
                             operationName, getOperationNames());
                 }
                 if (op.getReturn() != null) {
@@ -274,7 +281,7 @@ public class DataServiceDefinition  extends AbstractDeprecatedServiceDefinition
                         operationName);
                 if (op == null) {
                     throw new ConfigurationException(
-                            Resource.OPERATION_NOT_FOUND, serviceId,
+                            MessageResource.OPERATION_NOT_FOUND, serviceId,
                             operationName, getOperationNames());
                 }
                 if (op.getReturn() == null) {

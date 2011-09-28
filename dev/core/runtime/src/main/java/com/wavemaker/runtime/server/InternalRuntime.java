@@ -16,7 +16,7 @@ package com.wavemaker.runtime.server;
 
 import java.util.List;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.JSONState;
 
@@ -43,7 +43,7 @@ public class InternalRuntime {
     public static InternalRuntime getInstance() {
         
         if (null==InternalRuntime.internalRuntime) {
-            throw new WMRuntimeException(Resource.RUNTIME_UNINITIALIZED);
+            throw new WMRuntimeException(MessageResource.RUNTIME_UNINITIALIZED);
         }
         
         return InternalRuntime.internalRuntime;

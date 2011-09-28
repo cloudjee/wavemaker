@@ -14,8 +14,9 @@
 
 package com.wavemaker.tools.project.upgrade;
 
-import java.io.File;
 import java.io.IOException;
+
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.JSON;
@@ -29,7 +30,7 @@ import com.wavemaker.tools.project.Project;
  * Upgrades the contents of the widgets.js for each page in the current project.
  * 
  * @author small
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  *
  */
 public abstract class AbstractWidgetsJSUpgradeTask implements UpgradeTask {
@@ -45,9 +46,9 @@ public abstract class AbstractWidgetsJSUpgradeTask implements UpgradeTask {
         
         try {
             for (String page: getPagesManager().listPages()) {
-                File pageDir = getPagesManager().getPageDir(
+                Resource pageDir = getPagesManager().getPageDir(
                         project.getProjectName(), page);
-                File widgetsJS = new File(pageDir, page+"."+
+                Resource widgetsJS = pageDir.createRelative(page+"."+
                         PagesManager.PAGE_WIDGETS);
 
                 if (widgetsJS.exists()) {
@@ -55,7 +56,7 @@ public abstract class AbstractWidgetsJSUpgradeTask implements UpgradeTask {
                 }
             }
             
-            File appJs = new File(project.getWebAppRoot(), project.getProjectName()+".js");
+            Resource appJs = project.getWebAppRoot().createRelative(project.getProjectName()+".js");
             if (doUpgradeAppJS() && appJs.exists()) {
                 readAndUpgradeWidgets(project, appJs);
             }
@@ -64,7 +65,7 @@ public abstract class AbstractWidgetsJSUpgradeTask implements UpgradeTask {
         }
     }
     
-    private void readAndUpgradeWidgets(Project project, File widgetsJS)
+    private void readAndUpgradeWidgets(Project project, Resource widgetsJS)
             throws IOException {
         
         String contents = project.readFile(widgetsJS);

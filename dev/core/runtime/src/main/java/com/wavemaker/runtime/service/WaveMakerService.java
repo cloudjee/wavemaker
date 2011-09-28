@@ -18,7 +18,7 @@ import java.io.InputStream;
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.runtime.RuntimeAccess;
@@ -80,10 +80,10 @@ public class WaveMakerService {
         }
 
         if (null==serviceWire && null == enclosedException) {
-            throw new WMRuntimeException(Resource.NO_SERVICE_FROM_ID_TYPE,
+            throw new WMRuntimeException(MessageResource.NO_SERVICE_FROM_ID_TYPE,
                     serviceName, typeName);
         } else if (null==serviceWire) {
-            throw new WMRuntimeException(Resource.NO_SERVICE_FROM_ID_TYPE,
+            throw new WMRuntimeException(MessageResource.NO_SERVICE_FROM_ID_TYPE,
                     enclosedException, serviceName, typeName);
         }
         

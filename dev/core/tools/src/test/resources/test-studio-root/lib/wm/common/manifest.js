@@ -12,25 +12,10 @@
  *  limitations under the License.
  */
 
-package com.wavemaker.tools.common;
+dojo.provide("wm.common.manifest");
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-
-import com.wavemaker.tools.project.StudioConfiguration;
-
-/**
- * This listener that is called when studio starts
- *
- * @author slee
- *
- */
-public class StartupTools implements ServletContextListener {
-
-    public void contextInitialized(ServletContextEvent event) {
-        StudioConfiguration.setupDeploymentTargetXML();
-    }
-
-    public void contextDestroyed(ServletContextEvent event) {}
-
-}
+wm.loadLibs([ 
+	// User extensible lib
+	"css.common.common",
+	"common.packages.lib"
+]);

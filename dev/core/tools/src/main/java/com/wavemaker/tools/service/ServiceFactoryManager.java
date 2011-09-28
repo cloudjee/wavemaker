@@ -14,9 +14,10 @@
 
 package com.wavemaker.tools.service;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
@@ -32,6 +33,7 @@ import com.wavemaker.tools.service.codegen.ServiceGenerator;
  * Could be instantiated and managed by Spring.
  * 
  * @author Simon Toens
+ * @author Jeremy Grelle
  */
 public class ServiceFactoryManager {
 
@@ -56,7 +58,7 @@ public class ServiceFactoryManager {
         sgf.add(f);
     }
 
-    public ServiceDefinition getServiceDefinition(File f, String serviceId,
+    public ServiceDefinition getServiceDefinition(Resource f, String serviceId,
             DesignServiceManager serviceManager) {
         for (ServiceDefinitionFactory fac : sdf) {
             ServiceDefinition rtn = fac.getServiceDefinition(f, serviceId,

@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.common.util.Tuple;
@@ -309,7 +309,7 @@ public class TestAlternateJSONTransformer extends WMTestCase {
             AlternateJSONTransformer.toObject(jc, jo, HasFile.class);
             fail("expected exception");
         } catch (WMRuntimeException e) {
-            assertEquals(Resource.JSON_UNKNOWN_OBJECT_TYPE.getId(),
+            assertEquals(MessageResource.JSON_UNKNOWN_OBJECT_TYPE.getId(),
                     e.getMessageId());
         }
         

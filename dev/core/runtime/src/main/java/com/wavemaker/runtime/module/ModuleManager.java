@@ -31,7 +31,7 @@ import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 
 import com.wavemaker.common.util.Tuple;
@@ -96,7 +96,7 @@ public class ModuleManager {
         List<ModuleWire> modules = getModules(extensionPoint);
         if (modules.size()>1) {
             throw new WMRuntimeException(
-                    Resource.TOO_MANY_MODULES_FOR_EXTENSION_POINT, extensionPoint,
+                    MessageResource.TOO_MANY_MODULES_FOR_EXTENSION_POINT, extensionPoint,
                     modules);
         } else if (modules.size()==1) {
             return modules.get(0);
@@ -157,14 +157,14 @@ public class ModuleManager {
         }
         
         if (null==ur) {
-            throw new WMRuntimeException(Resource.MODULE_NOT_FOUND,
+            throw new WMRuntimeException(MessageResource.MODULE_NOT_FOUND,
                     moduleWire.getName(), moduleWire);
         } else if (moduleLocations.containsKey(moduleWire.getName())) {
             if (moduleLocations.get(moduleWire.getName()).v1.equals(ur)) {
                 logger.debug("Skipping ModuleWire that already exists "+
                         moduleWire.getName()+" (location "+ur+")");
             } else {
-                throw new WMRuntimeException(Resource.MODULE_DUPLICATE,
+                throw new WMRuntimeException(MessageResource.MODULE_DUPLICATE,
                         moduleWire.getName(),
                         moduleLocations.get(moduleWire.getName()).v1, ur);
             }
@@ -247,7 +247,7 @@ public class ModuleManager {
         
         Tuple.Two<URL, ModuleWire> tuple = moduleLocations.get(name);
         if (null==tuple) {
-            throw new WMRuntimeException(Resource.MODULE_UNINITIALIZED, name);
+            throw new WMRuntimeException(MessageResource.MODULE_UNINITIALIZED, name);
         }
         
         URL url = tuple.v1;
@@ -286,20 +286,20 @@ public class ModuleManager {
                     PropertyValue val = props.getPropertyValue("name");
                     String name;
                     if (null==val) {
-                        throw new WMRuntimeException(Resource.MODULEWIRE_MISSING_NAME, ur);
+                        throw new WMRuntimeException(MessageResource.MODULEWIRE_MISSING_NAME, ur);
                     } else if (null!=val.getConvertedValue()) {
                         name = (String) val.getConvertedValue();
                     } else if (val.getValue() instanceof TypedStringValue) {
                         name = ((TypedStringValue)val.getValue()).getValue();
                     } else {
-                        throw new WMRuntimeException(Resource.MODULE_BAD_NAME,
+                        throw new WMRuntimeException(MessageResource.MODULE_BAD_NAME,
                                 val.getValue(),
                                 (null!=val.getValue()?val.getValue().getClass():null),
                                 ur);
                     }
 
                     if (null==name || "".equals(name)) {
-                        throw new WMRuntimeException(Resource.MODULEWIRE_MISSING_NAME, ur);
+                        throw new WMRuntimeException(MessageResource.MODULEWIRE_MISSING_NAME, ur);
                     }
                     
                     if (moduleName.equals(name)) {
@@ -307,7 +307,7 @@ public class ModuleManager {
                     }
                 }
             } else {
-                throw new WMRuntimeException(Resource.MODULE_UNKNOWN_RESOURCE_TYPE,
+                throw new WMRuntimeException(MessageResource.MODULE_UNKNOWN_RESOURCE_TYPE,
                         resource, resource.getClass());
             }
         }

@@ -14,14 +14,10 @@
 
 package com.wavemaker.tools.data.reveng;
 
-import org.hibernate.cfg.reveng.DelegatingReverseEngineeringStrategy;
+import java.sql.Types;
+
 import org.hibernate.cfg.reveng.ReverseEngineeringStrategy;
 import org.hibernate.cfg.reveng.TableIdentifier;
-
-import com.wavemaker.common.util.StringUtils;
-import com.wavemaker.common.util.Tuple;
-
-import java.sql.Types;
 
 /**
  * @author slee

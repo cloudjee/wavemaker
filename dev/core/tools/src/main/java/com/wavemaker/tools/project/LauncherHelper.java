@@ -14,12 +14,13 @@
 
 package com.wavemaker.tools.project;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.ResourceManager;
 import com.wavemaker.common.util.SpringUtils;
@@ -63,8 +64,8 @@ public class LauncherHelper {
 
     public static boolean isStudioUpgrade() throws IOException {
         
-        VersionInfo viRegistered = StudioConfiguration.getRegisteredVersionInfo();
-        VersionInfo viCurrent = StudioConfiguration.getCurrentVersionInfo();
+        VersionInfo viRegistered = LocalStudioConfiguration.getRegisteredVersionInfo();
+        VersionInfo viCurrent = LocalStudioConfiguration.getCurrentVersionInfo();
 
         return viRegistered.compareTo(viCurrent)<0;
     }
@@ -72,8 +73,8 @@ public class LauncherHelper {
     public static boolean isMajorUpgrade() throws IOException {
 
         if (isStudioUpgrade()) {
-            VersionInfo viRegistered = StudioConfiguration.getRegisteredVersionInfo();
-            VersionInfo viCurrent = StudioConfiguration.getCurrentVersionInfo();
+            VersionInfo viRegistered = LocalStudioConfiguration.getRegisteredVersionInfo();
+            VersionInfo viCurrent = LocalStudioConfiguration.getCurrentVersionInfo();
 
             if (viRegistered.getMajor() < viCurrent.getMajor()) {
                 return true;
@@ -83,27 +84,24 @@ public class LauncherHelper {
         return false;
     }
 
-    public static void doUpgrade(File waveMakerHome) throws IOException {
+    public static void doUpgrade(Resource waveMakerHome) throws IOException {
 
-        VersionInfo vi = StudioConfiguration.getCurrentVersionInfo();
-        StudioConfiguration.setRegisteredVersionInfo(vi);
+        VersionInfo vi = LocalStudioConfiguration.getCurrentVersionInfo();
+        LocalStudioConfiguration.setRegisteredVersionInfo(vi);
 
-        File oldWMHome = StudioConfiguration.staticGetWaveMakerHome();
-        if (0!=oldWMHome.compareTo(waveMakerHome)) {
-            FileUtils.copyDirectory(oldWMHome, waveMakerHome);
-            StudioConfiguration.setWaveMakerHome(waveMakerHome);
+        Resource oldWMHome = LocalStudioConfiguration.staticGetWaveMakerHome();
+        if (0!=oldWMHome.getFile().compareTo(waveMakerHome.getFile())) {
+            FileUtils.copyDirectory(oldWMHome.getFile(), waveMakerHome.getFile());
+            LocalStudioConfiguration.setWaveMakerHome(waveMakerHome);
         }
     }
     
     public static String getCurrentVersionString() throws IOException {
-        
-        return StudioConfiguration.getCurrentVersionInfo().toString();
+        return LocalStudioConfiguration.getCurrentVersionInfo().toString();
     }
     
     public static String getNewDefaultWMHome() throws IOException {
-        
-        File oldDefault = StudioConfiguration.getDefaultWaveMakerHome();
-        return (new File(oldDefault.getAbsolutePath()+" "+
-                getCurrentVersionString())).getAbsolutePath();
+        FileSystemResource oldDefault = (FileSystemResource) LocalStudioConfiguration.getDefaultWaveMakerHome();
+        return oldDefault.getFile().getAbsolutePath()+" "+getCurrentVersionString();
     }
 }

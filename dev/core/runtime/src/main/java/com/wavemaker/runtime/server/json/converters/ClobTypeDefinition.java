@@ -22,7 +22,7 @@ import java.sql.SQLException;
 import org.apache.commons.io.IOUtils;
 import org.hibernate.lob.ClobImpl;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.JSONMarshaller;
 import com.wavemaker.json.type.converters.ReadObjectConverter;
@@ -73,7 +73,7 @@ public class ClobTypeDefinition extends PrimitiveReflectTypeDefinition
                 throw new WMRuntimeException(e);
             }
         } else {
-            throw new WMRuntimeException(Resource.JSON_UNHANDLED_TYPE, input,
+            throw new WMRuntimeException(MessageResource.JSON_UNHANDLED_TYPE, input,
                     input.getClass());
         }
     }

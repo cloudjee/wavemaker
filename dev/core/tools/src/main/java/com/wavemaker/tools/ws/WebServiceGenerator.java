@@ -15,39 +15,50 @@
 package com.wavemaker.tools.ws;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import com.sun.codemodel.*;
-import com.wavemaker.common.WMRuntimeException;
+import org.springframework.core.io.Resource;
+
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JType;
+import com.sun.codemodel.JVar;
 import com.wavemaker.common.CommonConstants;
+import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.util.ConversionUtils;
+import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.runtime.ws.BindingProperties;
 import com.wavemaker.runtime.ws.util.Constants;
-import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
-import com.wavemaker.tools.ws.wsdl.ServiceInfo;
-import com.wavemaker.tools.ws.wsdl.WSDL;
-import com.wavemaker.tools.ws.wsdl.TypeMapper;
 import com.wavemaker.tools.ws.salesforce.JAXBTypeMapper_SF;
+import com.wavemaker.tools.ws.wsdl.ServiceInfo;
+import com.wavemaker.tools.ws.wsdl.TypeMapper;
+import com.wavemaker.tools.ws.wsdl.WSDL;
 
 /**
  * Base class for all Web Service generators.
  * 
  * @author ffu
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  * 
  */
 public abstract class WebServiceGenerator extends ServiceGenerator {
 
     protected static final String SERVICE_QNAME_VAR_PROP_NAME = "serviceQNameVar";
 
-    //protected WSDL wsdl;
-
-    protected List<File> jaxbBindingFiles;
+    protected List<Resource> jaxbBindingFiles;
     
     protected JFieldVar serviceIdVar;
     
@@ -57,13 +68,6 @@ public abstract class WebServiceGenerator extends ServiceGenerator {
 
     public WebServiceGenerator(GenerationConfiguration configuration) {
         this.init(configuration);
-        //super(configuration);
-        //if (serviceDefinition instanceof WSDL) {
-        //    wsdl = (WSDL) serviceDefinition;
-        //} else {
-        //    throw new WMRuntimeException(
-        //            "Service Generator can be used with WSDL only!");
-        //}
     }
 
     public void init(GenerationConfiguration configuration) {
@@ -79,41 +83,44 @@ public abstract class WebServiceGenerator extends ServiceGenerator {
     @Override
     protected void preGeneration() throws GenerationException {
         // create package directory if it is not already exists
-        File packageDir = getPackageDir();
-        if (!packageDir.exists()) {
-            packageDir.mkdirs();
-        }
+        getPackageDir();
         
         // generate JAXB binding customization files
         XJBBuilder builder = new XJBBuilder(wsdl);
-        jaxbBindingFiles = builder.generate(configuration.getOutputDirectory(),
-                false);
 
         // set JAXB TypeMapper
         TypeMapper typeMapper = null;
+        
         try {
+            jaxbBindingFiles = ConversionUtils.convertToResourceList(builder.generate(configuration.getOutputDirectory().getFile(),
+                    false));
+        
             typeMapper = new JAXBTypeMapper_SF(wsdl, jaxbBindingFiles);
         } catch (GenerationException e) {
-            // it may due to class/interface names collision, try to put
-            // schemas in seperate packages.
-            jaxbBindingFiles = builder.generate(
-                    configuration.getOutputDirectory(), true);
             try {
+            	// it may due to class/interface names collision, try to put
+                // schemas in seperate packages.
+                jaxbBindingFiles = ConversionUtils.convertToResourceList(builder.generate(
+                        configuration.getOutputDirectory().getFile(), true));
                 typeMapper = new JAXBTypeMapper_SF(wsdl, jaxbBindingFiles);
             } catch (GenerationException ex) {
                 // for some WSDLs, the global binding file causes some issues;
                 // so remove global binding file and try again.
                 removeGlobalBindingFile();
                 typeMapper = new JAXBTypeMapper_SF(wsdl, jaxbBindingFiles);
-            }
-        }
+            } catch (IOException ex) {
+				throw new GenerationException(ex);
+			}
+        } catch (IOException ex) {
+        	throw new GenerationException(ex);
+		}
         wsdl.setTypeMapper(typeMapper);
     }
 
     private void removeGlobalBindingFile() {
         int index = 0;
-        for (File jaxbBindingFile : jaxbBindingFiles) {
-            if (jaxbBindingFile.getName().equals(
+        for (Resource jaxbBindingFile : jaxbBindingFiles) {
+            if (jaxbBindingFile.getFilename().equals(
                     Constants.JAXB_GLOBAL_BINDING_FILE)) {
                 jaxbBindingFiles.remove(index);
                 break;
@@ -215,8 +222,12 @@ public abstract class WebServiceGenerator extends ServiceGenerator {
      * @return The Java package directory for this service.
      */
     protected File getPackageDir() {
-        return CodeGenUtils.getPackageDir(configuration.getOutputDirectory(), 
-                wsdl.getPackageName());
+        try {
+			return CodeGenUtils.getPackageDir(configuration.getOutputDirectory().getFile(), 
+			        wsdl.getPackageName());
+		} catch (IOException e) {
+			throw new WMRuntimeException(e);
+		}
     }
     
     /**

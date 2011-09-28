@@ -30,25 +30,27 @@ import com.wavemaker.tools.project.upgrade.UpgradeManager;
 
 /**
  * @author small
- * @version $Rev$ - $Date$
- *
+ * @autthor Jeremy Grelle
+ * 
  */
 public class TestCopyAppCssUpgrade extends StudioTestCase {
 
-    @Test public void testCopyAppCssUpgrade() throws Exception {
-        
-        ProjectManager pm = (ProjectManager) getBean("projectManager");
-        UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
-        
-        makeProject("testCopyAppCssUpgrade", false);
-        
-        File expectedAppCss = new File(pm.getCurrentProject().getWebAppRoot(), "app.css");
-        expectedAppCss.delete();
-        assertFalse(expectedAppCss.exists());
-        pm.getCurrentProject().setProjectVersion(0.19);
-        
-        um.doUpgrades(pm.getCurrentProject());
-        
-        assertTrue(expectedAppCss.exists());
-    }
+	@Test
+	public void testCopyAppCssUpgrade() throws Exception {
+
+		ProjectManager pm = (ProjectManager) getBean("projectManager");
+		UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
+
+		makeProject("testCopyAppCssUpgrade", false);
+
+		File expectedAppCss = new File(pm.getCurrentProject().getWebAppRoot()
+				.getFile(), "app.css");
+		expectedAppCss.delete();
+		assertFalse(expectedAppCss.exists());
+		pm.getCurrentProject().setProjectVersion(0.19);
+
+		um.doUpgrades(pm.getCurrentProject());
+
+		assertTrue(expectedAppCss.exists());
+	}
 }

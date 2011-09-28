@@ -32,7 +32,7 @@ import com.wavemaker.studio.infra.StudioTestCase;
 import com.wavemaker.studio.project.TestDeploymentManager;
 import com.wavemaker.testsupport.UtilTest;
 import com.wavemaker.tools.project.DeploymentManager;
-import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.util.TomcatServer;
 
 /**
@@ -57,7 +57,7 @@ public class TestTomcat extends StudioTestCase {
         // make a call, just to init the request
         invokeService_toObject("studioService", "listProjects", new Object[]{});
 
-        StudioConfiguration sc = (StudioConfiguration) getBean("studioConfiguration");
+        LocalStudioConfiguration sc = (LocalStudioConfiguration) getBean("studioConfiguration");
         tomcatHost = sc.getTomcatHost();
         tomcatPort = sc.getTomcatPort();
     }

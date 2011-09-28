@@ -17,7 +17,8 @@
  */
 package com.wavemaker.studio.project.upgrade.five_dot_zero;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.List;
@@ -40,166 +41,190 @@ import com.wavemaker.tools.project.upgrade.five_dot_zero.ConvertAutosizeUpgradeT
 
 /**
  * @author small
- * @version $Rev$ - $Date$
- *
+ * @author Jeremy Grelle
+ * 
  */
 public class TestConvertAutosizeUpgradeTask extends StudioTestCase {
 
-    @Test public void testUpgradeWidgets() throws Exception {
+	@Test
+	public void testUpgradeWidgets() throws Exception {
 
-        ConvertAutosizeUpgradeTask caut = new ConvertAutosizeUpgradeTask();
-        JSON j = JSONUnmarshaller.unmarshal("{caption: \"label1\", height: \"15px\", autoSize: true}");
-        caut.upgradeWidgetsJS(j);
+		ConvertAutosizeUpgradeTask caut = new ConvertAutosizeUpgradeTask();
+		JSON j = JSONUnmarshaller
+				.unmarshal("{caption: \"label1\", height: \"15px\", autoSize: true}");
+		caut.upgradeWidgetsJS(j);
 
-        assertEquals("{\n\t\"caption\": \"label1\",\n\t\"height\": \"15px\",\n\t\"width\": \"70px\"\n}",
-                j.toString());
-    }
+		assertEquals(
+				"{\n\t\"caption\": \"label1\",\n\t\"height\": \"15px\",\n\t\"width\": \"70px\"\n}",
+				j.toString());
+	}
 
-    @Test public void testUpgradeWidgets_LargerSample() throws Exception {
+	@Test
+	public void testUpgradeWidgets_LargerSample() throws Exception {
 
-        ConvertAutosizeUpgradeTask caut = new ConvertAutosizeUpgradeTask();
-        JSON j = JSONUnmarshaller.unmarshal("{foo: \"bar\", somethinig: {}, thething: {caption: \"label1\", height: \"15px\", autoSize: true}}");
-        caut.upgradeWidgetsJS(j);
-        assertEquals("{\n\t\"foo\": \"bar\",\n\t\"somethinig\": {\n\t},\n\t\"thething\": {\n\t\t\"caption\": \"label1\",\n\t\t\"height\": \"15px\",\n\t\t\"width\": \"70px\"\n\t}\n}",
-                j.toString());
-    }
+		ConvertAutosizeUpgradeTask caut = new ConvertAutosizeUpgradeTask();
+		JSON j = JSONUnmarshaller
+				.unmarshal("{foo: \"bar\", somethinig: {}, thething: {caption: \"label1\", height: \"15px\", autoSize: true}}");
+		caut.upgradeWidgetsJS(j);
+		assertEquals(
+				"{\n\t\"foo\": \"bar\",\n\t\"somethinig\": {\n\t},\n\t\"thething\": {\n\t\t\"caption\": \"label1\",\n\t\t\"height\": \"15px\",\n\t\t\"width\": \"70px\"\n\t}\n}",
+				j.toString());
+	}
 
-    @Test public void testBasicUpgrade() throws Exception {
+	@Test
+	public void testBasicUpgrade() throws Exception {
 
-        String projectName = "testBasicUpgrade_Autosize";
-        
-        makeProject(projectName, false);
-        ProjectManager pm = (ProjectManager) getBean("projectManager");
-        Project project = pm.getCurrentProject();
+		String projectName = "testBasicUpgrade_Autosize";
 
-        File webapproot = new File(project.getProjectRoot(), "webapproot");
-        assertTrue(webapproot.exists());
-        File pagesdir = new File(webapproot, "pages");
-        pagesdir.mkdir();
+		makeProject(projectName, false);
+		ProjectManager pm = (ProjectManager) getBean("projectManager");
+		Project project = pm.getCurrentProject();
 
-        File autosizeFiles = (new ClassPathResource("com/wavemaker/studio/project/upgrade/five_dot_zero/autosize.files")).getFile();
-        File inputMain = new File(autosizeFiles, "input/Main");
-        assertTrue(inputMain.exists());
+		File webapproot = new File(project.getProjectRoot().getFile(),
+				"webapproot");
+		assertTrue(webapproot.exists());
+		File pagesdir = new File(webapproot, "pages");
+		pagesdir.mkdir();
 
-        File main = new File(pagesdir, "Main");
-        FileUtils.copyDirectory(inputMain, main);
+		File autosizeFiles = (new ClassPathResource(
+				"com/wavemaker/studio/project/upgrade/five_dot_zero/autosize.files"))
+				.getFile();
+		File inputMain = new File(autosizeFiles, "input/Main");
+		assertTrue(inputMain.exists());
 
-        ConvertAutosizeUpgradeTask ut = new ConvertAutosizeUpgradeTask();
-        ut.setPagesManager((PagesManager)getBean("pagesManager"));
-        UpgradeInfo info = new UpgradeInfo();
-        ut.doUpgrade(project, info);
+		File main = new File(pagesdir, "Main");
+		FileUtils.copyDirectory(inputMain, main);
 
-        File expectedMain = new File(autosizeFiles, "expected/Main");
-        assertEquals(4, expectedMain.listFiles().length);
-        boolean gotWidgetsJS = false;
-        for (File file: expectedMain.listFiles()) {
-            File inputFile = new File(main, file.getName());
-            if (inputFile.getName().endsWith(".widgets.js")) {
-                gotWidgetsJS = true;
-            }
-            
-            assertEquals(StringUtils.deleteWhitespace(FileUtils.readFileToString(file)),
-                    StringUtils.deleteWhitespace(FileUtils.readFileToString(inputFile)));
-        }
-        assertTrue(gotWidgetsJS);
-    }
+		ConvertAutosizeUpgradeTask ut = new ConvertAutosizeUpgradeTask();
+		ut.setPagesManager((PagesManager) getBean("pagesManager"));
+		UpgradeInfo info = new UpgradeInfo();
+		ut.doUpgrade(project, info);
 
-    @Test public void testOutOfOrderUpgrade() throws Exception {
+		File expectedMain = new File(autosizeFiles, "expected/Main");
+		assertEquals(4, expectedMain.listFiles().length);
+		boolean gotWidgetsJS = false;
+		for (File file : expectedMain.listFiles()) {
+			File inputFile = new File(main, file.getName());
+			if (inputFile.getName().endsWith(".widgets.js")) {
+				gotWidgetsJS = true;
+			}
 
-        String projectName = "testOutOfOrderUpgrade_Autosize";
-        
-        makeProject(projectName, false);
-        ProjectManager pm = (ProjectManager) getBean("projectManager");
-        Project project = pm.getCurrentProject();
+			assertEquals(StringUtils.deleteWhitespace(FileUtils
+					.readFileToString(file)),
+					StringUtils.deleteWhitespace(FileUtils
+							.readFileToString(inputFile)));
+		}
+		assertTrue(gotWidgetsJS);
+	}
 
-        File webapproot = new File(project.getProjectRoot(), "webapproot");
-        assertTrue(webapproot.exists());
-        File pagesdir = new File(webapproot, "pages");
-        pagesdir.mkdir();
+	@Test
+	public void testOutOfOrderUpgrade() throws Exception {
 
-        File autosizeFiles = (new ClassPathResource("com/wavemaker/studio/project/upgrade/five_dot_zero/autosize.files")).getFile();
-        File inputLogin = new File(autosizeFiles, "input/Login");
-        assertTrue(inputLogin.exists());
+		String projectName = "testOutOfOrderUpgrade_Autosize";
 
-        File main = new File(pagesdir, "Login");
-        FileUtils.copyDirectory(inputLogin, main);
+		makeProject(projectName, false);
+		ProjectManager pm = (ProjectManager) getBean("projectManager");
+		Project project = pm.getCurrentProject();
 
-        ConvertAutosizeUpgradeTask ut = new ConvertAutosizeUpgradeTask();
-        ut.setPagesManager((PagesManager)getBean("pagesManager"));
-        UpgradeInfo info = new UpgradeInfo();
-        ut.doUpgrade(project, info);
+		File webapproot = new File(project.getProjectRoot().getFile(),
+				"webapproot");
+		assertTrue(webapproot.exists());
+		File pagesdir = new File(webapproot, "pages");
+		pagesdir.mkdir();
 
-        File expectedLogin = new File(autosizeFiles, "expected/Login");
-        assertEquals(1, expectedLogin.listFiles().length);
-        boolean gotWidgetsJS = false;
-        for (File file: expectedLogin.listFiles()) {
-            File inputFile = new File(main, file.getName());
-            if (inputFile.getName().endsWith(".widgets.js")) {
-                gotWidgetsJS = true;
-            }
-            
-            assertEquals(StringUtils.deleteWhitespace(FileUtils.readFileToString(file)),
-                    StringUtils.deleteWhitespace(FileUtils.readFileToString(inputFile)));
-        }
-        assertTrue(gotWidgetsJS);
-    }
-    
+		File autosizeFiles = (new ClassPathResource(
+				"com/wavemaker/studio/project/upgrade/five_dot_zero/autosize.files"))
+				.getFile();
+		File inputLogin = new File(autosizeFiles, "input/Login");
+		assertTrue(inputLogin.exists());
 
-    @Test public void testDefaultAutoSizeUpgrade() throws Exception {
+		File main = new File(pagesdir, "Login");
+		FileUtils.copyDirectory(inputLogin, main);
 
-        String projectName = "testDefaultAutoSizeUpgrade";
-        
-        makeProject(projectName, false);
-        ProjectManager pm = (ProjectManager) getBean("projectManager");
-        Project project = pm.getCurrentProject();
+		ConvertAutosizeUpgradeTask ut = new ConvertAutosizeUpgradeTask();
+		ut.setPagesManager((PagesManager) getBean("pagesManager"));
+		UpgradeInfo info = new UpgradeInfo();
+		ut.doUpgrade(project, info);
 
-        File webapproot = new File(project.getProjectRoot(), "webapproot");
-        assertTrue(webapproot.exists());
-        File pagesdir = new File(webapproot, "pages");
-        pagesdir.mkdir();
+		File expectedLogin = new File(autosizeFiles, "expected/Login");
+		assertEquals(1, expectedLogin.listFiles().length);
+		boolean gotWidgetsJS = false;
+		for (File file : expectedLogin.listFiles()) {
+			File inputFile = new File(main, file.getName());
+			if (inputFile.getName().endsWith(".widgets.js")) {
+				gotWidgetsJS = true;
+			}
 
-        File autosizeFiles = (new ClassPathResource("com/wavemaker/studio/project/upgrade/five_dot_zero/autosize.files")).getFile();
-        File inputLogin = new File(autosizeFiles, "input/DefaultAutosize");
-        assertTrue(inputLogin.exists());
+			assertEquals(StringUtils.deleteWhitespace(FileUtils
+					.readFileToString(file)),
+					StringUtils.deleteWhitespace(FileUtils
+							.readFileToString(inputFile)));
+		}
+		assertTrue(gotWidgetsJS);
+	}
 
-        File main = new File(pagesdir, "DefaultAutosize");
-        FileUtils.copyDirectory(inputLogin, main);
+	@Test
+	public void testDefaultAutoSizeUpgrade() throws Exception {
 
-        ConvertAutosizeUpgradeTask ut = new ConvertAutosizeUpgradeTask();
-        ut.setPagesManager((PagesManager)getBean("pagesManager"));
-        UpgradeInfo info = new UpgradeInfo();
-        ut.doUpgrade(project, info);
+		String projectName = "testDefaultAutoSizeUpgrade";
 
-        File expectedLogin = new File(autosizeFiles, "expected/DefaultAutosize");
-        assertEquals(1, expectedLogin.listFiles().length);
-        boolean gotWidgetsJS = false;
-        for (File file: expectedLogin.listFiles()) {
-            File inputFile = new File(main, file.getName());
-            if (inputFile.getName().endsWith(".widgets.js")) {
-                gotWidgetsJS = true;
-            }
-            
-            assertEquals(StringUtils.deleteWhitespace(FileUtils.readFileToString(file)),
-                    StringUtils.deleteWhitespace(FileUtils.readFileToString(inputFile)));
-        }
-        assertTrue(gotWidgetsJS);
-    }
+		makeProject(projectName, false);
+		ProjectManager pm = (ProjectManager) getBean("projectManager");
+		Project project = pm.getCurrentProject();
 
-    @Test public void testUpgradeTaskPresent() throws Exception {
-        
-        boolean foundTask = false;
-        
-        UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
-        
-        outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
-            for (UpgradeTask ut : uts) {
-                if (ut instanceof ConvertAutosizeUpgradeTask) {
-                    foundTask = true;
-                    break outer;
-                }
-            }
-        }
-        
-        assertTrue(foundTask);
-    }
+		File webapproot = new File(project.getProjectRoot().getFile(),
+				"webapproot");
+		assertTrue(webapproot.exists());
+		File pagesdir = new File(webapproot, "pages");
+		pagesdir.mkdir();
+
+		File autosizeFiles = (new ClassPathResource(
+				"com/wavemaker/studio/project/upgrade/five_dot_zero/autosize.files"))
+				.getFile();
+		File inputLogin = new File(autosizeFiles, "input/DefaultAutosize");
+		assertTrue(inputLogin.exists());
+
+		File main = new File(pagesdir, "DefaultAutosize");
+		FileUtils.copyDirectory(inputLogin, main);
+
+		ConvertAutosizeUpgradeTask ut = new ConvertAutosizeUpgradeTask();
+		ut.setPagesManager((PagesManager) getBean("pagesManager"));
+		UpgradeInfo info = new UpgradeInfo();
+		ut.doUpgrade(project, info);
+
+		File expectedLogin = new File(autosizeFiles, "expected/DefaultAutosize");
+		assertEquals(1, expectedLogin.listFiles().length);
+		boolean gotWidgetsJS = false;
+		for (File file : expectedLogin.listFiles()) {
+			File inputFile = new File(main, file.getName());
+			if (inputFile.getName().endsWith(".widgets.js")) {
+				gotWidgetsJS = true;
+			}
+
+			assertEquals(StringUtils.deleteWhitespace(FileUtils
+					.readFileToString(file)),
+					StringUtils.deleteWhitespace(FileUtils
+							.readFileToString(inputFile)));
+		}
+		assertTrue(gotWidgetsJS);
+	}
+
+	@Test
+	public void testUpgradeTaskPresent() throws Exception {
+
+		boolean foundTask = false;
+
+		UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
+
+		outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
+			for (UpgradeTask ut : uts) {
+				if (ut instanceof ConvertAutosizeUpgradeTask) {
+					foundTask = true;
+					break outer;
+				}
+			}
+		}
+
+		assertTrue(foundTask);
+	}
 }

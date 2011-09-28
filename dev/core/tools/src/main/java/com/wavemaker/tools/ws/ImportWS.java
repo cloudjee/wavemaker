@@ -2,7 +2,7 @@
  *  Copyright (C) 2007-2011 VMWare, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
+ *  you may not use this Resource except in compliance with the License.
  *  You may obtain a copy of the License at
  *     http://www.apache.org/licenses/LICENSE-2.0
  *  Unless required by applicable law or agreed to in writing, software
@@ -14,11 +14,15 @@
 
 package com.wavemaker.tools.ws;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.core.io.Resource;
+
+import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.common.ConfigurationException;
+import com.wavemaker.tools.project.StudioConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
@@ -30,12 +34,14 @@ import com.wavemaker.tools.ws.wsdl.WSDLManager;
  * Import Web Service.
  * 
  * @author ffu
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  * 
  */
 public class ImportWS {
 
-    private File destDir;
+	private StudioConfiguration studioConfiguration; 
+	
+    private Resource destDir;
     
     private String packageName;
 
@@ -43,9 +49,9 @@ public class ImportWS {
 
     private boolean skipInternalCustomization;
 
-    private List<File> jaxbCustomizationFiles = new ArrayList<File>();
+    private List<Resource> jaxbCustomizationFiles = new ArrayList<Resource>();
 
-    private List<File> jaxwsCustomizationFiles = new ArrayList<File>();
+    private List<Resource> jaxwsCustomizationFiles = new ArrayList<Resource>();
 
     private String wsdlUri;
     
@@ -53,14 +59,11 @@ public class ImportWS {
 
     private String partnerName;
 
-    public ImportWS() {
-    }
-
-    public File getDestdir() {
+    public Resource getDestdir() {
         return destDir;
     }
 
-    public void setDestdir(File destdir) {
+    public void setDestdir(Resource destdir) {
         this.destDir = destdir;
     }
     
@@ -88,27 +91,27 @@ public class ImportWS {
         this.skipInternalCustomization = skipInternalCustomization;
     }
 
-    public List<File> getJaxbCustomizationFiles() {
+    public List<Resource> getJaxbCustomizationFiles() {
         return jaxbCustomizationFiles;
     }
 
-    public void addJaxbCustomizationFile(File jaxbCustomizationFile) {
+    public void addJaxbCustomizationFile(Resource jaxbCustomizationFile) {
         this.jaxbCustomizationFiles.add(jaxbCustomizationFile);
     }
 
-    public void setJaxbCustomizationFiles(List<File> jaxbCustomizationFiles) {
+    public void setJaxbCustomizationFiles(List<Resource> jaxbCustomizationFiles) {
         this.jaxbCustomizationFiles = jaxbCustomizationFiles;
     }
 
-    public List<File> getJaxwsCustomizationFiles() {
+    public List<Resource> getJaxwsCustomizationFiles() {
         return jaxwsCustomizationFiles;
     }
 
-    public void addJaxwsCustomizationFile(File jaxwsCustomizationFile) {
+    public void addJaxwsCustomizationFile(Resource jaxwsCustomizationFile) {
         this.jaxwsCustomizationFiles.add(jaxwsCustomizationFile);
     }
 
-    public void setJaxwsCustomizationFiles(List<File> jaxwsCustomizationFiles) {
+    public void setJaxwsCustomizationFiles(List<Resource> jaxwsCustomizationFiles) {
         this.jaxwsCustomizationFiles = jaxwsCustomizationFiles;
     }
 
@@ -136,7 +139,15 @@ public class ImportWS {
         this.partnerName = partnerName;
     }
 
-    public void parseArguments(String[] args) {
+    public StudioConfiguration getStudioConfiguration() {
+		return studioConfiguration;
+	}
+
+	public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
+		this.studioConfiguration = studioConfiguration;
+	}
+
+	public void parseArguments(String[] args) {
         for (int i = 0; i < args.length; i++) {
             if (args[i].length() == 0) {
                 throw new ConfigurationException("Empty argument.");
@@ -149,19 +160,23 @@ public class ImportWS {
                 }
                 i += (j-1);
             } else {
-                File wsdlFile = new File(args[i]);
+                Resource wsdlFile = studioConfiguration.getResourceForURI(args[i]);
                 if (!wsdlFile.exists()) {
                     throw new ConfigurationException("This file was not found: "
                             + wsdlFile.toString());
                 }
-                setWsdlUri(wsdlFile.toURI().toString());
+                try {
+					setWsdlUri(wsdlFile.getURI().toString());
+				} catch (IOException ex) {
+					throw new WMRuntimeException(ex);
+				}
             }
         }
     }
     
     protected int parseArguments(String[] args, int i) {
         if (args[i].equals("-d")) {
-            destDir = new File(requireArgument("-d", args, ++i));
+            destDir = studioConfiguration.getResourceForURI(requireArgument("-d", args, ++i));
             return 2;
         } else if (args[i].equals("-p")) {
             packageName = requireArgument("-p", args, ++i);
@@ -173,14 +188,14 @@ public class ImportWS {
             skipInternalCustomization = true;
             return 2;
         } else if (args[i].equals("-jaxb")) {
-            this.addJaxbCustomizationFile(new File(requireArgument("-jaxb", args, ++i)));
+            this.addJaxbCustomizationFile(studioConfiguration.getResourceForURI(requireArgument("-jaxb", args, ++i)));
             return 2;
         } else if (args[i].equals("-jaxws")) {
-            this.addJaxwsCustomizationFile(new File(requireArgument("-jaxws", args, ++i)));
+            this.addJaxwsCustomizationFile(studioConfiguration.getResourceForURI(requireArgument("-jaxws", args, ++i)));
             return 2;
         }
         if (destDir == null) {
-            destDir = new File(".");
+            destDir = studioConfiguration.getResourceForURI(".");
         }
         return 0;
     }

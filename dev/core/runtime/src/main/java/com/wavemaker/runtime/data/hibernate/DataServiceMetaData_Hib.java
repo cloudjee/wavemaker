@@ -35,7 +35,7 @@ import org.hibernate.engine.NamedQueryDefinition;
 import org.hibernate.mapping.*;
 import org.hibernate.type.Type;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.util.*;
 import com.wavemaker.runtime.data.spring.ConfigurationRegistry;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
@@ -328,7 +328,7 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { //salesfor
         DataServiceOperation rtn = operationManager.getOperation(operationName);
         if (rtn == null) {
             throw new DataServiceRuntimeException(
-                Resource.OPERATION_NOT_FOUND,
+                MessageResource.OPERATION_NOT_FOUND,
                 configurationName, 
                 operationName, 
                 operationManager.getOperationNames());

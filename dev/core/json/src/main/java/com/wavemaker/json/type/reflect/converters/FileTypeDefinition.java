@@ -18,7 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.JSONMarshaller;
 import com.wavemaker.json.type.converters.ReadObjectConverter;
@@ -68,7 +68,7 @@ public class FileTypeDefinition extends PrimitiveReflectTypeDefinition
             String abspath = ((File) input).getAbsolutePath();
             JSONMarshaller.marshal(writer, abspath);
         } else {
-            throw new WMRuntimeException(Resource.JSON_UNHANDLED_TYPE, input,
+            throw new WMRuntimeException(MessageResource.JSON_UNHANDLED_TYPE, input,
                     input.getClass());
         }
     }

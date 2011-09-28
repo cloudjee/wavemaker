@@ -27,99 +27,99 @@ import com.wavemaker.runtime.service.definition.ServiceOperation;
 
 /**
  * @author stoens
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  * 
  */
-public class SpringServiceDefinitionWrapper implements DeprecatedServiceDefinition {
+public class SpringServiceDefinitionWrapper implements
+		DeprecatedServiceDefinition {
 
-    private final DeprecatedServiceDefinition delegate;
-    private final GenericApplicationContext ctx;
+	private final DeprecatedServiceDefinition delegate;
+	private final GenericApplicationContext ctx;
 
-    public SpringServiceDefinitionWrapper(DeprecatedServiceDefinition delegate,
-            GenericApplicationContext ctx) {
-        this.delegate = delegate;
-        this.ctx = ctx;
-    }
+	public SpringServiceDefinitionWrapper(DeprecatedServiceDefinition delegate,
+			GenericApplicationContext ctx) {
+		this.delegate = delegate;
+		this.ctx = ctx;
+	}
 
-    public void dispose() {
-        try {
-            delegate.dispose();
-        } finally {
-            ctx.close();
-        }
-    }
+	public void dispose() {
+		try {
+			delegate.dispose();
+		} finally {
+			ctx.close();
+		}
+	}
 
-    @Deprecated
-    public List<String> getEventNotifiers() {
-        return delegate.getEventNotifiers();
-    }
+	@Deprecated
+	public List<String> getEventNotifiers() {
+		return delegate.getEventNotifiers();
+	}
 
-    @Deprecated
-    public List<ElementType> getInputTypes(String operationName) {
-        return delegate.getInputTypes(operationName);
-    }
+	@Deprecated
+	public List<ElementType> getInputTypes(String operationName) {
+		return delegate.getInputTypes(operationName);
+	}
 
-    @Deprecated
-    public List<String> getOperationNames() {
-        return delegate.getOperationNames();
-    }
+	@Deprecated
+	public List<String> getOperationNames() {
+		return delegate.getOperationNames();
+	}
 
-    @Deprecated
-    public ElementType getOutputType(String operationName) {
-        return delegate.getOutputType(operationName);
-    }
-    
-    public List<ServiceOperation> getServiceOperations() {
-        return delegate.getServiceOperations();
-    }
+	@Deprecated
+	public ElementType getOutputType(String operationName) {
+		return delegate.getOutputType(operationName);
+	}
 
-    public String getPackageName() {
-        return delegate.getPackageName();
-    }
+	public List<ServiceOperation> getServiceOperations() {
+		return delegate.getServiceOperations();
+	}
 
-    public String getRuntimeConfiguration() {
-        return delegate.getRuntimeConfiguration();
-    }
+	public String getPackageName() {
+		return delegate.getPackageName();
+	}
 
-    public String getServiceClass() {
-        return delegate.getServiceClass();
-    }
+	public String getRuntimeConfiguration() {
+		return delegate.getRuntimeConfiguration();
+	}
 
-    public String getServiceId() {
-        return delegate.getServiceId();
-    }
+	public String getServiceClass() {
+		return delegate.getServiceClass();
+	}
 
-    public ServiceType getServiceType() {
-        return delegate.getServiceType();
-    }
+	public String getServiceId() {
+		return delegate.getServiceId();
+	}
 
-    @SuppressWarnings("deprecation")
-    public List<ElementType> getTypes() {
-        return delegate.getTypes();
-    }
+	public ServiceType getServiceType() {
+		return delegate.getServiceType();
+	}
 
-    @SuppressWarnings("deprecation")
-    public List<ElementType> getTypes(String username, String password) { //salesforce
-        return null;
-    }
-    
-    public List<TypeDefinition> getLocalTypes() {
-        return delegate.getLocalTypes();
-    }
+	@SuppressWarnings("deprecation")
+	public List<ElementType> getTypes() {
+		return delegate.getTypes();
+	}
 
-    public List<TypeDefinition> getLocalTypes(String username, String password) {
-        return delegate.getLocalTypes(username, password);
-    }
-    
-    public ServiceDefinition unwrap() {
-        return delegate;
-    }
+	public List<ElementType> getTypes(String username, String password) { // salesforce
+		return null;
+	}
 
-    public boolean isLiveDataService() {
-        return delegate.isLiveDataService();
-    }
+	public List<TypeDefinition> getLocalTypes() {
+		return delegate.getLocalTypes();
+	}
 
-    public String getPartnerName() {
-        return null;
-    }
+	public List<TypeDefinition> getLocalTypes(String username, String password) {
+		return delegate.getLocalTypes(username, password);
+	}
+
+	public ServiceDefinition unwrap() {
+		return delegate;
+	}
+
+	public boolean isLiveDataService() {
+		return delegate.isLiveDataService();
+	}
+
+	public String getPartnerName() {
+		return null;
+	}
 }

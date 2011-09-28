@@ -53,7 +53,7 @@ import com.wavemaker.tools.service.definitions.Service;
 
 /**
  * @author small
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  *
  */
 public class TestServicesService extends StudioTestCase {
@@ -90,7 +90,7 @@ public class TestServicesService extends StudioTestCase {
         ServiceDefinition sd = new updateService_SD();
         ServiceDefinition sd2 = new updateService_SD2();
         
-        File expected = dsm.getServiceDefXml(sd.getServiceId());
+        File expected = dsm.getServiceDefXml(sd.getServiceId()).getFile();
         assertFalse(expected.exists());
         
         dsm.defineService(sd);

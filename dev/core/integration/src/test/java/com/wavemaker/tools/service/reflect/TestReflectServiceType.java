@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.junit.Test;
 import org.springframework.util.ClassUtils;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.JSON;
 import com.wavemaker.json.JSONArray;
@@ -151,7 +151,7 @@ public class TestReflectServiceType extends TestSpringContextTestCase {
             
             fail("expected exception");
         } catch (WMRuntimeException e) {
-            assertEquals(Resource.JSONUTILS_FAILEDINVOKE.getId(),
+            assertEquals(MessageResource.JSONUTILS_FAILEDINVOKE.getId(),
                     e.getMessageId());
 
             assertEquals(
@@ -290,7 +290,7 @@ public class TestReflectServiceType extends TestSpringContextTestCase {
             rst.invokeMethod(rsw, "args", serviceArgs, jsonState);
             fail("expected exception");
         } catch (WMRuntimeException e) {
-            assertEquals(Resource.JSONUTILS_BADMETHODOVERLOAD.getId(),
+            assertEquals(MessageResource.JSONUTILS_BADMETHODOVERLOAD.getId(),
                     e.getMessageId());
         }
     }

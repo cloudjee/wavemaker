@@ -30,6 +30,7 @@ import org.junit.Test;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.studio.infra.StudioTestCase;
 import com.wavemaker.tools.config.ConfigurationStore;
+import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.project.StudioConfiguration;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeManager;
@@ -37,76 +38,75 @@ import com.wavemaker.tools.project.upgrade.swamis.CommonDirectoryMove;
 
 /**
  * @author small
- * @version $Rev$ - $Date$
- *
+ * @author Jeremy Grelle
+ * 
  */
 public class TestCommonDirectoryMove extends StudioTestCase {
 
-    @Test public void testCommonDirMove_YesOldKey_NoNewKey() throws Exception {
+	@Test
+	public void testCommonDirMove_YesOldKey_NoNewKey() throws Exception {
 
-        StudioConfiguration sc = (StudioConfiguration) getBean("studioConfiguration");
-        
-        boolean oldIsUpgrade = ConfigurationStore.getPreferenceBoolean(
-                CommonDirectoryMove.class, CommonDirectoryMove.UPGRADED_KEY,
-                false);
-        double oldStudioVersion = UpgradeManager.getStudioVersion();
-        File commonDirBak = new File(sc.getStudioWebAppRootFile(),
-                "lib/wm/"+StudioConfiguration.COMMON_DIR+".bak");
-        File commonDirBakBak = new File(sc.getStudioWebAppRootFile(),
-                "lib/wm/"+StudioConfiguration.COMMON_DIR+".bak.bak");
-        if (commonDirBak.exists()) {
-            FileUtils.copyDirectory(commonDirBak, commonDirBakBak);
-            FileUtils.forceDelete(commonDirBak);
-        }
-            
-        try {
-            UpgradeManager.setStudioVersion(0.0);
-            
-            ConfigurationStore.setPreferenceBoolean(
-                    CommonDirectoryMove.class, CommonDirectoryMove.UPGRADED_KEY,
-                    false);
+		StudioConfiguration sc = (StudioConfiguration) getBean("studioConfiguration");
 
-            File commonDir = sc.getCommonDir();
-            assertTrue(commonDir.exists());
+		boolean oldIsUpgrade = ConfigurationStore.getPreferenceBoolean(
+				CommonDirectoryMove.class, CommonDirectoryMove.UPGRADED_KEY,
+				false);
+		double oldStudioVersion = UpgradeManager.getStudioVersion();
+		File commonDirBak = new File(sc.getStudioWebAppRoot().getFile(),
+				"lib/wm/" + LocalStudioConfiguration.COMMON_DIR + ".bak");
+		File commonDirBakBak = new File(sc.getStudioWebAppRoot().getFile(),
+				"lib/wm/" + LocalStudioConfiguration.COMMON_DIR + ".bak.bak");
+		if (commonDirBak.exists()) {
+			FileUtils.copyDirectory(commonDirBak, commonDirBakBak);
+			FileUtils.forceDelete(commonDirBak);
+		}
 
-            File commonDirFile = new File(commonDir, "foo.txt");
-            IOUtils.touch(commonDirFile);
-            assertTrue(commonDirFile.exists());
+		try {
+			UpgradeManager.setStudioVersion(0.0);
 
-            CommonDirectoryMove cdm = new CommonDirectoryMove();
-            cdm.setStudioConfiguration(sc);
-            UpgradeInfo ui = new UpgradeInfo();
-            cdm.doUpgrade(ui);
+			ConfigurationStore.setPreferenceBoolean(CommonDirectoryMove.class,
+					CommonDirectoryMove.UPGRADED_KEY, false);
 
-            assertTrue(commonDir.exists());
-            assertFalse(commonDirFile.exists());
+			File commonDir = sc.getCommonDir().getFile();
+			assertTrue(commonDir.exists());
 
-            File commonDirFileTwo = new File(commonDir, "foo.2.txt");
-            IOUtils.touch(commonDirFileTwo);
+			File commonDirFile = new File(commonDir, "foo.txt");
+			IOUtils.touch(commonDirFile);
+			assertTrue(commonDirFile.exists());
 
-            // this should work, but the directory won't be updated
-            UpgradeManager.setStudioVersion(0.0);
-            ui = new UpgradeInfo();
-            ui.setVersion(1.0);
-            cdm.doUpgrade(ui);
-            assertEquals(1, ui.getMessages().size());
-            assertTrue(ui.getMessages().containsKey("1.0"));
-            List<String> messages = ui.getMessages().get("1.0");
-            assertEquals(1, messages.size());
-            assertTrue(messages.get(0).endsWith("already exists"));
+			CommonDirectoryMove cdm = new CommonDirectoryMove();
+			cdm.setStudioConfiguration(sc);
+			UpgradeInfo ui = new UpgradeInfo();
+			cdm.doUpgrade(ui);
 
-            assertTrue(commonDirFileTwo.exists());
-        } finally {
-            UpgradeManager.setStudioVersion(oldStudioVersion);
-            
-            ConfigurationStore.setPreferenceBoolean(
-                    CommonDirectoryMove.class, CommonDirectoryMove.UPGRADED_KEY,
-                    oldIsUpgrade);
-            FileUtils.forceDelete(commonDirBak);
-            if (commonDirBakBak.exists()) {
-                FileUtils.copyDirectory(commonDirBakBak, commonDirBak);
-                FileUtils.forceDelete(commonDirBakBak);
-            }
-        }
-    }
+			assertTrue(commonDir.exists());
+			assertFalse(commonDirFile.exists());
+
+			File commonDirFileTwo = new File(commonDir, "foo.2.txt");
+			IOUtils.touch(commonDirFileTwo);
+
+			// this should work, but the directory won't be updated
+			UpgradeManager.setStudioVersion(0.0);
+			ui = new UpgradeInfo();
+			ui.setVersion(1.0);
+			cdm.doUpgrade(ui);
+			assertEquals(1, ui.getMessages().size());
+			assertTrue(ui.getMessages().containsKey("1.0"));
+			List<String> messages = ui.getMessages().get("1.0");
+			assertEquals(1, messages.size());
+			assertTrue(messages.get(0).endsWith("already exists"));
+
+			assertTrue(commonDirFileTwo.exists());
+		} finally {
+			UpgradeManager.setStudioVersion(oldStudioVersion);
+
+			ConfigurationStore.setPreferenceBoolean(CommonDirectoryMove.class,
+					CommonDirectoryMove.UPGRADED_KEY, oldIsUpgrade);
+			FileUtils.forceDelete(commonDirBak);
+			if (commonDirBakBak.exists()) {
+				FileUtils.copyDirectory(commonDirBakBak, commonDirBak);
+				FileUtils.forceDelete(commonDirBakBak);
+			}
+		}
+	}
 }

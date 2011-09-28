@@ -18,7 +18,7 @@
 package com.wavemaker.common.util;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.infra.WMTestCase;
@@ -54,7 +54,7 @@ public class TestSystemUtils extends WMTestCase {
         
 
         Exception wrapped = new WMRuntimeException("foo");
-        e = new WMRuntimeException(Resource.CANNOT_ROLLBACK_TX, wrapped);
+        e = new WMRuntimeException(MessageResource.CANNOT_ROLLBACK_TX, wrapped);
         t = SystemUtils.unwrapInternalException(e);
         assertEquals(wrapped, t);
     }

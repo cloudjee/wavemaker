@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.tools.common.ConfigurationException;
 
@@ -44,7 +44,7 @@ public class CloudServerMgrBeans {
         
         if (!cloudServerMgrs.containsKey(serviceProvider)) {
             throw new ConfigurationException(
-                Resource.UNKNOWN_CLOUDSTORAGE_MGR, serviceProvider);
+                MessageResource.UNKNOWN_CLOUDSTORAGE_MGR, serviceProvider);
         }
         
         return cloudServerMgrs.get(serviceProvider);

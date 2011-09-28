@@ -38,7 +38,7 @@ public class TestHSQLDB extends WMTestCase {
 
         String u = "jdbc:hsqldb:file:%s;shutdown=true;ifexists=true";
 
-        File f = ClassLoaderUtils.getClasspathFile(HSQLDB_PATH);
+        File f = ClassLoaderUtils.getClasspathFile(HSQLDB_PATH).getFile();
 
         File dbdir = new File(f, "rolodexdb");
 
@@ -54,7 +54,7 @@ public class TestHSQLDB extends WMTestCase {
 
         String u = "jdbc:hsqldb:file:%s;shutdown=true;ifexists=true";
 
-        File f = ClassLoaderUtils.getClasspathFile(HSQLDB_PATH);
+        File f = ClassLoaderUtils.getClasspathFile(HSQLDB_PATH).getFile();
 
         File dbdir = new File(f, "rolodexdb_doesnt_exist");
 
@@ -79,7 +79,7 @@ public class TestHSQLDB extends WMTestCase {
         // test that we add "ifexists=true" correctly to the url
         String u = "jdbc:hsqldb:file:%s;shutdown=true";
 
-        File f = ClassLoaderUtils.getClasspathFile(HSQLDB_PATH);
+        File f = ClassLoaderUtils.getClasspathFile(HSQLDB_PATH).getFile();
 
         File dbdir = new File(f, "rolodexdb_doenst_exist");
 
@@ -195,7 +195,7 @@ public class TestHSQLDB extends WMTestCase {
 
         String u = "jdbc:hsqldb:file:%s;shutdown=true;ifexists=true";
 
-        File f = ClassLoaderUtils.getClasspathFile(HSQLDB_PATH);
+        File f = ClassLoaderUtils.getClasspathFile(HSQLDB_PATH).getFile();
 
         File dbdir = new File(f, "rolodexdb");
 
@@ -205,7 +205,7 @@ public class TestHSQLDB extends WMTestCase {
 
         File outputDir = IOUtils.createTempDirectory();
 
-        File lockfile = new File(dbdir, dbname + ".lck");
+        File lockfile = new File(dbdir, dbname + "_lck");
 
         try {
 

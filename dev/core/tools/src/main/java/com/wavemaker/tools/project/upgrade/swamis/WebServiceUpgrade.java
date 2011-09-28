@@ -21,6 +21,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.xml.sax.SAXException;
+
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.ws.WebServiceType;
@@ -32,7 +34,6 @@ import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.ws.FeedServiceDefinition;
 import com.wavemaker.tools.ws.WebServiceToolsManager;
 import com.wavemaker.tools.ws.wsdl.WSDLException;
-import org.xml.sax.SAXException;
 
 /**
  * This upgrade task will perform the followings:

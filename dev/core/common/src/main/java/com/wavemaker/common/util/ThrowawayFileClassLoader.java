@@ -15,8 +15,6 @@
 package com.wavemaker.common.util;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -25,163 +23,164 @@ import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.Resource;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 
 /**
- * A ClassLoader that takes a File (as the root to search in), and searches
- * for classes within that root.  This does everything to avoid ever loading
- * classes into any other classloader.  It takes a parent classloader as an
- * option, but only delegates to it if the class cannot be found in the
- * local paths.
+ * A ClassLoader that takes a File (as the root to search in), and searches for
+ * classes within that root. This does everything to avoid ever loading classes
+ * into any other classloader. It takes a parent classloader as an option, but
+ * only delegates to it if the class cannot be found in the local paths.
  * 
  * @author small
- * @version $Rev$ - $Date$
- *
+ * @author Jeremy Grelle
+ * 
  */
 public class ThrowawayFileClassLoader extends ClassLoader {
 
-    private final List<File> classPath;
-    private final ClassLoader parentClassLoader;
-    
-    public ThrowawayFileClassLoader(List<File> classPath, ClassLoader parent) {
-        
-        super(null);
-        this.classPath = classPath;
-        this.parentClassLoader = parent;
-    }
-    
-    @Override
-    protected Class<?> findClass(String name) throws ClassNotFoundException {
-        
-        if (null==classPath) {
-            throw new ClassNotFoundException("invalid search root: "+
-                    classPath);
-        } else if (null==name) {
-            throw new ClassNotFoundException(Resource.NULL_CLASS.getMessage());
-        }
-        
-        String classNamePath = name.replace('.', '/') + ".class";
+	private final List<Resource> classPath;
+	private final ClassLoader parentClassLoader;
 
-        byte[] fileBytes = null;
-        try {
-            InputStream is = null;
-            JarFile jarFile = null;
-            
-            for (File entry: classPath) {
-                if (entry.getName().toLowerCase().endsWith(".jar")) {
-                    jarFile = new JarFile(entry);
-                    ZipEntry ze = jarFile.getEntry(classNamePath);
-                    
-                    if (null != ze) {
-                        is = jarFile.getInputStream(ze);
-                        break;
-                    } else {
-                        jarFile.close();
-                    }
-                } else {
+	public ThrowawayFileClassLoader(List<Resource> classPath, ClassLoader parent) {
 
-                    File classFile = new File(entry, classNamePath);
-                    if (classFile.exists()) {
-                        is = new FileInputStream(classFile);
-                        break;
-                    }
-                }
-            }
-            
-            if (null!=is) {
-                try {
-                    fileBytes = IOUtils.toByteArray(is);
-                    is.close();
-                } finally {
-                    if (null != jarFile) {
-                        jarFile.close();
-                    }
-                }
-            }
-        } catch (IOException e) {
-            throw new ClassNotFoundException(e.getMessage(), e);
-        }
-        
-        if (name.contains(".")) {
-            String packageName = name.substring(0, name.lastIndexOf('.'));
-            if (null==getPackage(packageName)) {
-                definePackage(packageName, "", "", "", "", "", "", null);
-            }
-        }
+		super(null);
+		this.classPath = classPath;
+		this.parentClassLoader = parent;
+	}
 
-        Class<?> ret;
-        if (null==fileBytes) {
-            ret = ClassLoaderUtils.loadClass(name, this.parentClassLoader);
-        } else {
-            ret = defineClass(name, fileBytes, 0, fileBytes.length);
-        }
-        
-        if (null==ret) {
-            throw new ClassNotFoundException("Couldn't find class "+name+
-                    " in expected classpath: "+this.classPath);
-        }
-        
-        return ret;
-    }
-    
-    @Override
-    protected URL findResource(String name) {
-        
-        URL ret = null;
-        JarFile jarFile = null;
-        
-        try {
-            for (File entry : classPath) {
-                if (entry.getName().toLowerCase().endsWith(".jar")) {
-                    jarFile = new JarFile(entry);
-                    ZipEntry ze = jarFile.getEntry(name);
-                    jarFile.close();
+	@Override
+	protected Class<?> findClass(String name) throws ClassNotFoundException {
 
-                    if (null != ze) {
-                        ret = new URL("jar:" + entry.toURI().toURL() + "!/" + name);
-                        break;
-                    }
-                } else {
-                    File file = new File(entry, name);
-                    if (file.exists()) {
-                        ret = file.toURI().toURL();
-                        break;
-                    }
-                }
-            }
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
-        }
-        
-        return ret;
-    }
-    
-    @Override
-    public InputStream getResourceAsStream(String name) {
-        URL url = getResource(name);
-        if (null==url) {
-            return null;
-        }
-        
-        try {
-            InputStream is = null;
-            byte[] b;
-            try {
-                is = url.openStream();
-                b = IOUtils.toByteArray(is);
-            } finally {
-                if (null!=is) {
-                    is.close();
-                }
-                url = null;
-                is = null;
-            }
-            
-            return new ByteArrayInputStream(b);
-        } catch (IOException e) {
-            return null;
-        }
-    }
+		if (null == classPath) {
+			throw new ClassNotFoundException("invalid search root: "
+					+ classPath);
+		} else if (null == name) {
+			throw new ClassNotFoundException(
+					MessageResource.NULL_CLASS.getMessage());
+		}
+
+		String classNamePath = name.replace('.', '/') + ".class";
+
+		byte[] fileBytes = null;
+		try {
+			InputStream is = null;
+			JarFile jarFile = null;
+
+			for (Resource entry : classPath) {
+				if (entry.getFilename().toLowerCase().endsWith(".jar")) {
+					jarFile = new JarFile(entry.getFile());
+					ZipEntry ze = jarFile.getEntry(classNamePath);
+
+					if (null != ze) {
+						is = jarFile.getInputStream(ze);
+						break;
+					} else {
+						jarFile.close();
+					}
+				} else {
+
+					Resource classFile = entry.createRelative(classNamePath);
+					if (classFile.exists()) {
+						is = classFile.getInputStream();
+						break;
+					}
+				}
+			}
+
+			if (null != is) {
+				try {
+					fileBytes = IOUtils.toByteArray(is);
+					is.close();
+				} finally {
+					if (null != jarFile) {
+						jarFile.close();
+					}
+				}
+			}
+		} catch (IOException e) {
+			throw new ClassNotFoundException(e.getMessage(), e);
+		}
+
+		if (name.contains(".")) {
+			String packageName = name.substring(0, name.lastIndexOf('.'));
+			if (null == getPackage(packageName)) {
+				definePackage(packageName, "", "", "", "", "", "", null);
+			}
+		}
+
+		Class<?> ret;
+		if (null == fileBytes) {
+			ret = ClassLoaderUtils.loadClass(name, this.parentClassLoader);
+		} else {
+			ret = defineClass(name, fileBytes, 0, fileBytes.length);
+		}
+
+		if (null == ret) {
+			throw new ClassNotFoundException("Couldn't find class " + name
+					+ " in expected classpath: " + this.classPath);
+		}
+
+		return ret;
+	}
+
+	@Override
+	protected URL findResource(String name) {
+
+		URL ret = null;
+		JarFile jarFile = null;
+
+		try {
+			for (Resource entry : classPath) {
+				if (entry.getFilename().toLowerCase().endsWith(".jar")) {
+					jarFile = new JarFile(entry.getFile());
+					ZipEntry ze = jarFile.getEntry(name);
+					jarFile.close();
+
+					if (null != ze) {
+						ret = new URL("jar:" + entry.getURL() + "!/" + name);
+						break;
+					}
+				} else {
+					Resource file = entry.createRelative(name);
+					if (file.exists()) {
+						ret = file.getURL();
+						break;
+					}
+				}
+			}
+		} catch (IOException e) {
+			throw new WMRuntimeException(e);
+		}
+
+		return ret;
+	}
+
+	@Override
+	public InputStream getResourceAsStream(String name) {
+		URL url = getResource(name);
+		if (null == url) {
+			return null;
+		}
+
+		try {
+			InputStream is = null;
+			byte[] b;
+			try {
+				is = url.openStream();
+				b = IOUtils.toByteArray(is);
+			} finally {
+				if (null != is) {
+					is.close();
+				}
+				url = null;
+				is = null;
+			}
+
+			return new ByteArrayInputStream(b);
+		} catch (IOException e) {
+			return null;
+		}
+	}
 }

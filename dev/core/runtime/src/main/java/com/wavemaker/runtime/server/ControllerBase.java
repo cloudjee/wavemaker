@@ -32,7 +32,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.mvc.AbstractController;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMException;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.JSONArray;
@@ -97,9 +97,9 @@ public abstract class ControllerBase extends AbstractController {
             HttpServletResponse response) {
         
         if (null == request) {
-            throw new WMRuntimeException(Resource.SERVER_NOREQUEST);
+            throw new WMRuntimeException(MessageResource.SERVER_NOREQUEST);
         } else if (null==response) {
-            throw new WMRuntimeException(Resource.SERVER_NORESPONSE);
+            throw new WMRuntimeException(MessageResource.SERVER_NORESPONSE);
         }
 
         ModelAndView ret;
@@ -245,7 +245,7 @@ public abstract class ControllerBase extends AbstractController {
             throws WMException {
         
         if (null!=jsonArgs && null!=mapParams) {
-            throw new WMRuntimeException(Resource.BOTH_ARGUMENT_TYPES, jsonArgs,
+            throw new WMRuntimeException(MessageResource.BOTH_ARGUMENT_TYPES, jsonArgs,
                     mapParams);
         } else if (null==sw) {
             throw new NullArgumentException("sw");

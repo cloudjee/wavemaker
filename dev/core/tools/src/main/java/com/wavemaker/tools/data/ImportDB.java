@@ -36,6 +36,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.ant.ExporterTask;
 import org.hibernate.tool.ant.Hbm2HbmXmlExporterTask;
 import org.hibernate.tool.ant.Hbm2JavaExporterTask;
+import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.ClassLoaderUtils;
@@ -264,7 +265,7 @@ public class ImportDB extends BaseDataModelSetup {
         // need classloader with compiled classes and property files,
         // which are in destdir by now
         serviceDefinition = (DeprecatedServiceDefinition) ClassLoaderUtils
-                .runInClassLoaderContext(t, destdir, classesdir);
+                .runInClassLoaderContext(t, new FileSystemResource(destdir), new FileSystemResource(classesdir));
 
         if (importDatabase && regenerate) {
             // regenerate java types (and mapping files). this gives us
@@ -416,7 +417,7 @@ public class ImportDB extends BaseDataModelSetup {
     protected void generateServiceClass(DeprecatedServiceDefinition def) {
 
         GenerationConfiguration genconf = new GenerationConfiguration(def,
-                destdir);
+                new FileSystemResource(destdir));
 
         DataServiceGenerator generator = new DataServiceGenerator(genconf);
 

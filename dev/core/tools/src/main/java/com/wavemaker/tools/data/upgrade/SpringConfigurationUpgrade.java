@@ -18,13 +18,15 @@ import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
+import org.springframework.core.io.Resource;
 
-import com.wavemaker.runtime.data.spring.WMPropertyPlaceholderConfigurer;
 import com.wavemaker.runtime.data.DefaultTaskManager;
 import com.wavemaker.runtime.data.spring.ConfigurationAndSessionFactoryBean;
 import com.wavemaker.runtime.data.spring.SpringDataServiceManager;
+import com.wavemaker.runtime.data.spring.WMPropertyPlaceholderConfigurer;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.data.util.DataServiceUtils;
+import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
 import com.wavemaker.tools.service.AbstractFileService;
 import com.wavemaker.tools.service.DesignServiceManager;
@@ -38,7 +40,7 @@ import com.wavemaker.tools.spring.beans.Map;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  * 
  */
 public class SpringConfigurationUpgrade extends BaseDataUpgradeTask implements
@@ -60,8 +62,8 @@ public class SpringConfigurationUpgrade extends BaseDataUpgradeTask implements
 
         final DesignServiceManager mgr = getDesignServiceManager();
 
-        FileService fileService = new AbstractFileService() {
-            public File getFileServiceRoot() {
+        FileService fileService = new AbstractFileService(new LocalStudioConfiguration()) {
+            public Resource getFileServiceRoot() {
                 return mgr.getServiceHome(id);
             }
         };

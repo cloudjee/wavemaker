@@ -14,11 +14,12 @@
 
 package com.wavemaker.tools.project.upgrade;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.project.Project;
 
 /**
@@ -26,7 +27,7 @@ import com.wavemaker.tools.project.Project;
  * All files to remove are relative to the project root.
  * 
  * @author small
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  */
 public class RemoveObsoleteFilesUpgradeTask implements UpgradeTask {
 
@@ -36,8 +37,11 @@ public class RemoveObsoleteFilesUpgradeTask implements UpgradeTask {
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
         for (String file: files) {
-            File f = new File(project.getProjectRoot(), file);
-            f.delete();
+            try {
+				project.deleteFile(file);
+			} catch (IOException ex) {
+				throw new WMRuntimeException(ex);
+			}
         }
         
         upgradeInfo.addMessage("Removed obsolete files: "+

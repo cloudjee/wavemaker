@@ -30,6 +30,8 @@ import javax.xml.bind.Marshaller;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.data.DataServiceType;
@@ -38,6 +40,7 @@ import com.wavemaker.tools.data.DataModelDeploymentConfiguration;
 import com.wavemaker.tools.data.util.DataServiceTestUtils;
 import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.deployment.ServiceDeploymentManager;
+import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.service.AbstractFileService;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.FileService;
@@ -48,76 +51,80 @@ import com.wavemaker.tools.util.AntUtils;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  * 
  */
 public class TestServiceDeploymentManager extends StudioTestCase {
 
-    private static final String projectName = "myproject";
-    private static final String serviceId = "sakila";
+	private static final String projectName = "myproject";
+	private static final String serviceId = "sakila";
 
-    private File rootDir = null;
+	private File rootDir = null;
 
-    @Before
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        rootDir = makeProject(projectName);
-        populateProject(rootDir, true);
-        DataServiceTestUtils.setupSakilaConfiguration(new File(rootDir,
-                DesignServiceManager.getRuntimeRelativeDir(serviceId)));
+	@Before
+	@Override
+	public void setUp() throws Exception {
+		super.setUp();
+		rootDir = makeProject(projectName);
+		populateProject(rootDir, true);
+		DataServiceTestUtils.setupSakilaConfiguration(new File(rootDir,
+				DesignServiceManager.getRuntimeRelativeDir(serviceId)));
 
-        // add dummy servicedef.xml
-        String designDir = DesignServiceManager
-                .getDesigntimeRelativeDir(serviceId);
-        File serviceDef = new File(rootDir, designDir + "/"
-                + DesignServiceManager.getServiceXmlRelative());
-        serviceDef.getParentFile().mkdirs();
+		// add dummy servicedef.xml
+		String designDir = DesignServiceManager
+				.getDesigntimeRelativeDir(serviceId);
+		File serviceDef = new File(rootDir, designDir + "/"
+				+ DesignServiceManager.getServiceXmlRelative());
+		serviceDef.getParentFile().mkdirs();
 
-        JAXBContext definitionsContext = JAXBContext
-                .newInstance("com.wavemaker.tools.service.definitions");
-        Service service = new Service();
-        service.setId(serviceId);
-        service.setType(DataServiceType.TYPE_NAME);
-        service.setSpringFile(DataServiceUtils.getCfgFileName(serviceId));
-        service.setDataobjects(new DataObjects());
+		JAXBContext definitionsContext = JAXBContext
+				.newInstance("com.wavemaker.tools.service.definitions");
+		Service service = new Service();
+		service.setId(serviceId);
+		service.setType(DataServiceType.TYPE_NAME);
+		service.setSpringFile(DataServiceUtils.getCfgFileName(serviceId));
+		service.setDataobjects(new DataObjects());
 
-        Marshaller marshaller = definitionsContext.createMarshaller();
-        marshaller.setProperty("jaxb.formatted.output", true);
-        marshaller.marshal(service, serviceDef);
-    }
+		Marshaller marshaller = definitionsContext.createMarshaller();
+		marshaller.setProperty("jaxb.formatted.output", true);
+		marshaller.marshal(service, serviceDef);
+	}
 
-    @Test public void testGenerateWebapp() throws IOException {
-        
-        ServiceDeploymentManager mgr = (ServiceDeploymentManager) getBean("serviceDeploymentManager");
-        assertTrue(mgr != null);
-        String jndiName = "java:/comp/eng/blah";
-        Map<String, String> m = new HashMap<String, String>(1);
-        m.put(serviceId + "."
-                        + DataModelDeploymentConfiguration.JNDI_NAME_PROPERTY,
-                        jndiName);
+	@Test
+	public void testGenerateWebapp() throws IOException {
 
-        File war = mgr.generateWebapp(rootDir, m, false);
-        
-        assertEquals(projectName + ".war", war.getName());
+		ServiceDeploymentManager mgr = (ServiceDeploymentManager) getBean("serviceDeploymentManager");
+		assertTrue(mgr != null);
+		String jndiName = "java:/comp/eng/blah";
+		Map<String, String> m = new HashMap<String, String>(1);
+		m.put(serviceId + "."
+				+ DataModelDeploymentConfiguration.JNDI_NAME_PROPERTY, jndiName);
 
-        // verify that war has spring file with jndi ds
-        final File tmp = IOUtils.createTempDirectory();
-        try {
-            AntUtils.unjar(war, tmp);
-            FileService fileService = new AbstractFileService() {
-                public File getFileServiceRoot() {
-                    return new File(tmp, "WEB-INF/classes");
-                }
+		File war = mgr.generateWebapp(
+				new FileSystemResource(rootDir.getAbsolutePath() + "/"), m,
+				false).getFile();
 
-            };
-            Beans beans = DataServiceUtils.readBeans(fileService,
-                    DataServiceUtils.getCfgFileName(serviceId));
-            DataServiceTestUtils.verifyJNDIDataSource(beans, jndiName);
-        } finally {
-            IOUtils.deleteRecursive(tmp);
-        }
+		assertEquals(projectName + ".war", war.getName());
 
-    }
+		// verify that war has spring file with jndi ds
+		final File tmp = IOUtils.createTempDirectory();
+		try {
+			AntUtils.unjar(war, tmp);
+			FileService fileService = new AbstractFileService(
+					new LocalStudioConfiguration()) {
+				public Resource getFileServiceRoot() {
+					return new FileSystemResource(tmp.getAbsolutePath() + "/")
+							.createRelative("WEB-INF/classes");
+				}
+
+			};
+			Beans beans = DataServiceUtils.readBeans(fileService,
+					DataServiceUtils.getCfgFileName(serviceId));
+			DataServiceTestUtils.verifyJNDIDataSource(beans, jndiName);
+		} finally {
+			IOUtils.deleteRecursive(tmp);
+		}
+
+	}
 
 }

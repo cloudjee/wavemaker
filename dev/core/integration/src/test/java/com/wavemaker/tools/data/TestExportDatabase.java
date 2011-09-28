@@ -28,40 +28,40 @@ import com.wavemaker.tools.data.util.DataServiceTestUtils;
 
 /**
  * @author stoens
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  * 
  */
 public class TestExportDatabase extends WMTestCase {
 
-    public void testExportNewDB() throws IOException {
+	public void testExportNewDB() throws IOException {
 
-        SpringUtils.initSpringConfig();
+		SpringUtils.initSpringConfig();
 
-        Properties p = DataServiceTestUtils.loadSakilaConnectionProperties();
-            
-        ExportDB e = new ExportDB();
+		Properties p = DataServiceTestUtils.loadSakilaConnectionProperties();
 
-        e.addProperties(p);
+		ExportDB e = new ExportDB();
 
-        String s = "com/wavemaker/tools/data/exporttest/Actor.hbm.xml";
+		e.addProperties(p);
 
-        File f = ClassLoaderUtils.getClasspathFile(s);
-        
-        assertTrue(f.exists());
-        
-        e.setHbmFilesDir(f.getParentFile());
+		String s = "com/wavemaker/tools/data/exporttest/Actor.hbm.xml";
 
-        e.setVerbose(false);
+		File f = ClassLoaderUtils.getClasspathFile(s).getFile();
 
-        e.setOverrideTable(true);
+		assertTrue(f.exists());
 
-        e.init();
+		e.setHbmFilesDir(f.getParentFile());
 
-        e.run();
+		e.setVerbose(false);
 
-        int i = e.getDDL().indexOf("create table sakila.actor (");
+		e.setOverrideTable(true);
 
-        assertTrue(i > -1);
-    }
+		e.init();
+
+		e.run();
+
+		int i = e.getDDL().indexOf("create table sakila.actor (");
+
+		assertTrue(i > -1);
+	}
 
 }

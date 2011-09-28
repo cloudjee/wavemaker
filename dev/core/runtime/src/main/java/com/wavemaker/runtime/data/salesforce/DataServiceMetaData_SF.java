@@ -32,7 +32,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.NamedQueryDefinition;
 import org.hibernate.mapping.Property;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.util.*;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.data.parser.HbmQueryParser;
@@ -205,7 +205,7 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
         DataServiceOperation rtn = operationManager.getOperation(operationName);
         if (rtn == null) {
             throw new DataServiceRuntimeException(
-                Resource.OPERATION_NOT_FOUND,
+                MessageResource.OPERATION_NOT_FOUND,
                 configurationName, 
                 operationName, 
                 operationManager.getOperationNames());

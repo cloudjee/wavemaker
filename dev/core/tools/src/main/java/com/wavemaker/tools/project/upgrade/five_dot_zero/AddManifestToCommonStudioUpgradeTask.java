@@ -14,10 +14,10 @@
 
 package com.wavemaker.tools.project.upgrade.five_dot_zero;
 
-import java.io.File;
 import java.io.IOException;
 
-import org.apache.commons.io.FileUtils;
+import org.springframework.core.io.Resource;
+import org.springframework.util.FileCopyUtils;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.project.StudioConfiguration;
@@ -26,40 +26,43 @@ import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 
 /**
  * @author small
- * @version $Rev$ - $Date$
- *
+ * @author Jeremy Grelle
+ * 
  */
 public class AddManifestToCommonStudioUpgradeTask implements StudioUpgradeTask {
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.tools.project.upgrade.StudioUpgradeTask#doUpgrade(com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
-    public void doUpgrade(UpgradeInfo upgradeInfo) {
-        
-        File commonDir = new File(studioConfiguration.getWaveMakerHome(),
-                StudioConfiguration.COMMON_DIR);
-        File userManifest = new File(commonDir, "manifest.js");
-        
-        if (commonDir.exists() && !userManifest.exists()) {
-            File templateManifest = new File(
-                    studioConfiguration.getStudioWebAppRootFile(), "lib/wm/"
-                    + StudioConfiguration.COMMON_DIR+"/manifest.js");
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.wavemaker.tools.project.upgrade.StudioUpgradeTask#doUpgrade(com.wavemaker
+	 * .tools.project.upgrade.UpgradeInfo)
+	 */
+	public void doUpgrade(UpgradeInfo upgradeInfo) {
 
-            try {
-                FileUtils.copyFile(templateManifest, userManifest);
-            } catch (IOException e) {
-                throw new WMRuntimeException(e);
-            }
-        }
-    }
+		try {
+			Resource commonDir = studioConfiguration.getCommonDir();
+			Resource userManifest = commonDir.createRelative("manifest.js");
 
-    private StudioConfiguration studioConfiguration;
+			if (commonDir.exists() && !userManifest.exists()) {
+				Resource templateManifest = studioConfiguration
+						.getStudioWebAppRoot().createRelative(
+								"lib/wm/common/manifest.js");
+				FileCopyUtils.copy(templateManifest.getInputStream(),
+						studioConfiguration.getOutputStream(userManifest));
+			}
+		} catch (IOException e) {
+			throw new WMRuntimeException(e);
+		}
+	}
 
-    public StudioConfiguration getStudioConfiguration() {
-        return studioConfiguration;
-    }
+	private StudioConfiguration studioConfiguration;
 
-    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-        this.studioConfiguration = studioConfiguration;
-    }
+	public StudioConfiguration getStudioConfiguration() {
+		return studioConfiguration;
+	}
+
+	public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
+		this.studioConfiguration = studioConfiguration;
+	}
 }

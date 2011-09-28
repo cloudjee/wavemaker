@@ -14,124 +14,134 @@
 
 package com.wavemaker.tools.service;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
+import org.springframework.core.io.Resource;
 
 /**
- * Abstraction for reading and writing files.  Each FileService handles encoding
+ * Abstraction for reading and writing files. Each FileService handles encoding
  * issues (reading and writing files using its defined encoding), and it also
  * knows about a root (enabling relative path operations).
- *
+ * 
  * @author Simon Toens
  * @author Matt Small
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  */
 public interface FileService {
-    
-    /**
-     * Return the current encoding for this FileService.
-     */
-    String getEncoding();
-    
-    /**
-     * Return the root for this FileService.
-     */
-    File getFileServiceRoot();
 
-    /**
-     * Write the specified contents to a relative path.
-     * 
-     * @param path
-     *                The relative path (according to the FileService) to write
-     *                to.
-     * @param data
-     *                The data to write (using the FileService's encoding).
-     * @throws IOException
-     */
-    void writeFile(String path, String data)
-        throws IOException;
+	/**
+	 * Return the current encoding for this FileService.
+	 */
+	String getEncoding();
 
-    /**
-     * Write the specified contents to an absolute path.
-     * 
-     * @param file
-     *                The absolute path to write to.
-     * @param data
-     *                The data to write (using the FileService's encoding).
-     * @throws IOException
-     */
-    void writeFile(File file, String data)
-        throws IOException;
-    
-    /**
-     * Read arbitrary data from a file.
-     * 
-     * @param path
-     *                The relative path to read from.
-     * @return
-     *                The data read.
-     * @throws IOException
-     */
-    String readFile(String path)
-        throws IOException;
-    
-    /**
-     * Read arbitrary data from a file.
-     * 
-     * @param path
-     *                The absolute path to read from.
-     * @return
-     *                The data read.
-     * @throws IOException
-     */
-    String readFile(File file)
-        throws IOException;
+	/**
+	 * Return the root for this FileService.
+	 */
+	Resource getFileServiceRoot();
 
-    /**
-     * Delete a file at the specified path.
-     * @param path The path to delete.
-     * @return True iff the file delete was successful.
-     */
-    boolean deleteFile(String path);
-    
-    /**
-     * Get a Reader for the specified relative path, using this FileService's
-     * encoding.
-     */
-    Reader getReader(String path)
-            throws UnsupportedEncodingException, FileNotFoundException;
-    
-    /**
-     * Get a Reader for the specified file, using this FileService's encoding.
-     */
-    Reader getReader(File file)
-            throws UnsupportedEncodingException, FileNotFoundException;
-    
-    /**
-     * Get a Writer for the specified relative path, using this FileService's
-     * encoding.
-     */
-    Writer getWriter(String path)
-            throws UnsupportedEncodingException, FileNotFoundException;
-    
-    /**
-     * Get a Writer for the specified file, using this FileService's encoding.
-     */
-    Writer getWriter(File file)
-            throws UnsupportedEncodingException, FileNotFoundException;
-    
-    /**
-     * Returns true iff the file exists.
-     */
-    boolean fileExists(String path);
-    
-    /**
-     * Return true iff the file exists.
-     */
-    boolean fileExists(File file);
+	/**
+	 * Write the specified contents to a relative path.
+	 * 
+	 * @param path
+	 *            The relative path (according to the FileService) to write to.
+	 * @param data
+	 *            The data to write (using the FileService's encoding).
+	 * @throws IOException
+	 */
+	void writeFile(String path, String data) throws IOException;
+
+	/**
+	 * Write the specified contents to an absolute path.
+	 * 
+	 * @param file
+	 *            The absolute path to write to.
+	 * @param data
+	 *            The data to write (using the FileService's encoding).
+	 * @throws IOException
+	 */
+	void writeFile(Resource file, String data) throws IOException;
+
+	/**
+	 * Read arbitrary data from a file.
+	 * 
+	 * @param path
+	 *            The relative path to read from.
+	 * @return The data read.
+	 * @throws IOException
+	 */
+	String readFile(String path) throws IOException;
+
+	/**
+	 * Read arbitrary data from a file.
+	 * 
+	 * @param path
+	 *            The absolute path to read from.
+	 * @return The data read.
+	 * @throws IOException
+	 */
+	String readFile(Resource file) throws IOException;
+
+	/**
+	 * Delete a file at the specified path.
+	 * 
+	 * @param path
+	 *            The path to delete.
+	 * @return True iff the file delete was successful.
+	 * @throws IOException 
+	 */
+	boolean deleteFile(String path) throws IOException;
+	
+	/**
+	 * Delete a specified file
+	 * 
+	 * @param file
+	 *            The file to delete.
+	 * @return True iff the file delete was successful.
+	 * @throws IOException 
+	 */
+	boolean deleteFile(Resource file) throws IOException;
+
+	/**
+	 * Get a Reader for the specified relative path, using this FileService's
+	 * encoding.
+	 * @throws IOException 
+	 */
+	Reader getReader(String path) throws UnsupportedEncodingException,
+			FileNotFoundException, IOException;
+
+	/**
+	 * Get a Reader for the specified file, using this FileService's encoding.
+	 * @throws IOException 
+	 */
+	Reader getReader(Resource file) throws UnsupportedEncodingException,
+			FileNotFoundException, IOException;
+
+	/**
+	 * Get a Writer for the specified relative path, using this FileService's
+	 * encoding.
+	 * @throws IOException 
+	 */
+	Writer getWriter(String path) throws UnsupportedEncodingException,
+			FileNotFoundException, IOException;
+
+	/**
+	 * Get a Writer for the specified file, using this FileService's encoding.
+	 */
+	Writer getWriter(Resource file) throws UnsupportedEncodingException,
+			FileNotFoundException;
+
+	/**
+	 * Returns true iff the file exists.
+	 * @throws IOException 
+	 */
+	boolean fileExists(String path) throws IOException;
+
+	/**
+	 * Return true iff the file exists.
+	 */
+	boolean fileExists(Resource file);
 }

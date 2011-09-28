@@ -96,7 +96,7 @@ public class SpringService {
                     DataServiceManager.class, true, false);
             if (null==beanNames || 1!=beanNames.length) {
                 throw new WMRuntimeException(
-                        com.wavemaker.common.Resource.NO_DATA_SERVICE_MGR_BEAN_FOUND,
+                        com.wavemaker.common.MessageResource.NO_DATA_SERVICE_MGR_BEAN_FOUND,
                         Arrays.toString(beanNames));
             }
             

@@ -27,7 +27,7 @@ import java.util.Set;
 
 import org.springframework.util.ClassUtils;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.common.util.Tuple;
@@ -548,7 +548,7 @@ public class TestReflectTypeUtils extends WMTestCase {
                     new ReflectTypeState(), true);
             fail("expected exception");
         } catch (WMRuntimeException e) {
-            assertEquals(Resource.JSON_TYPE_NOGENERICS.getId(),
+            assertEquals(MessageResource.JSON_TYPE_NOGENERICS.getId(),
                     e.getMessageId());
         }
     }
@@ -572,7 +572,7 @@ public class TestReflectTypeUtils extends WMTestCase {
                     new ReflectTypeState(), true);
             fail("expected exception");
         } catch (WMRuntimeException e) {
-            assertEquals(Resource.JSON_TYPE_NOGENERICS.getId(),
+            assertEquals(MessageResource.JSON_TYPE_NOGENERICS.getId(),
                     e.getMessageId());
         }
     }

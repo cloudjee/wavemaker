@@ -14,9 +14,10 @@
 
 package com.wavemaker.tools.project.upgrade.swamis;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Set;
+
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.project.PagesManager;
@@ -28,45 +29,48 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
  * Transform wm.AutoForm to wm.LiveForm.
  * 
  * @author small
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  */
 public class AutoFormToLiveFormUpgrade implements UpgradeTask {
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
-    public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
-        
-        try {
-            Set<String> pages = getPagesManager().listPages();
-            
-            for (String page : pages) {
-                File pageDir = getPagesManager().getPageDir(
-                        project.getProjectName(), page);
-                
-                File widgetsJS = new File(pageDir, page + "." +
-                        PagesManager.PAGE_WIDGETS);
-                if (widgetsJS.exists()) {
-                    String contents = project.readFile(widgetsJS);
-                    contents = contents.replace("wm.AutoForm\"",
-                            "wm.LiveForm\"");
-                    project.writeFile(widgetsJS, contents);
-                }
-            }
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
-        }
-    }
-    
-    
-    // bean properties
-    private PagesManager pagesManager;
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker
+	 * .tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
+	 */
+	public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
-    public PagesManager getPagesManager() {
-        return pagesManager;
-    }
+		try {
+			Set<String> pages = getPagesManager().listPages();
 
-    public void setPagesManager(PagesManager pagesManager) {
-        this.pagesManager = pagesManager;
-    }
+			for (String page : pages) {
+				Resource pageDir = getPagesManager().getPageDir(
+						project.getProjectName(), page);
+
+				Resource widgetsJS = pageDir.createRelative(page + "."
+						+ PagesManager.PAGE_WIDGETS);
+				if (widgetsJS.exists()) {
+					String contents = project.readFile(widgetsJS);
+					contents = contents.replace("wm.AutoForm\"",
+							"wm.LiveForm\"");
+					project.writeFile(widgetsJS, contents);
+				}
+			}
+		} catch (IOException e) {
+			throw new WMRuntimeException(e);
+		}
+	}
+
+	// bean properties
+	private PagesManager pagesManager;
+
+	public PagesManager getPagesManager() {
+		return pagesManager;
+	}
+
+	public void setPagesManager(PagesManager pagesManager) {
+		this.pagesManager = pagesManager;
+	}
 }

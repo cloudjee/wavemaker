@@ -17,86 +17,83 @@
  */
 package com.wavemaker.studio.project.upgrade.five_dot_zero;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-
 import java.util.List;
-
-import com.wavemaker.common.util.IOUtils;
-
-import com.wavemaker.studio.infra.StudioTestCase;
-
-import com.wavemaker.tools.project.Project;
-
-import com.wavemaker.tools.project.upgrade.UpgradeInfo;
-import com.wavemaker.tools.project.upgrade.UpgradeManager;
-import com.wavemaker.tools.project.upgrade.UpgradeTask;
-
-import com.wavemaker.tools.project.upgrade.five_dot_zero.WebXmlUpgradeTask;
-
-import com.wavemaker.tools.service.DesignServiceManager;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
+import com.wavemaker.common.util.IOUtils;
+import com.wavemaker.studio.infra.StudioTestCase;
+import com.wavemaker.tools.project.Project;
+import com.wavemaker.tools.project.upgrade.UpgradeInfo;
+import com.wavemaker.tools.project.upgrade.UpgradeManager;
+import com.wavemaker.tools.project.upgrade.UpgradeTask;
+import com.wavemaker.tools.project.upgrade.five_dot_zero.WebXmlUpgradeTask;
+import com.wavemaker.tools.service.DesignServiceManager;
+
 /**
  * @author small
- * @version $Rev$ - $Date$
- *
+ * @author Jeremy Grelle
+ * 
  */
 public class TestWebXmlUpgradeTask extends StudioTestCase {
 
-    @Test public void testUpgradeWebXml() throws Exception {
+	@Test
+	public void testUpgradeWebXml() throws Exception {
 
-        makeProject("testUpgradeWebXml", false);
+		makeProject("testUpgradeWebXml", false);
 
-        DesignServiceManager dsm = (DesignServiceManager) getBean("designServiceManager");
-        Project project = dsm.getProjectManager().getCurrentProject();
+		DesignServiceManager dsm = (DesignServiceManager) getBean("designServiceManager");
+		Project project = dsm.getProjectManager().getCurrentProject();
 
-        File webInf = project.getWebInf();
-        File webXml = new File(webInf, "web.xml");
-        File userWebXml = new File(webInf, "user-web.xml");
-        File bakWebXml = new File(webInf, "web.xml.4_5_bak");
+		File webInf = project.getWebInf().getFile();
+		File webXml = new File(webInf, "web.xml");
+		File userWebXml = new File(webInf, "user-web.xml");
+		File bakWebXml = new File(webInf, "web.xml.4_5_bak");
 
-        // default project
-        assertTrue(userWebXml.exists());
-        assertFalse(webXml.exists());
-        assertFalse(bakWebXml.exists());
+		// default project
+		assertTrue(userWebXml.exists());
+		assertFalse(webXml.exists());
+		assertFalse(bakWebXml.exists());
 
-        userWebXml.delete();
-        IOUtils.touch(webXml);
-        assertFalse(userWebXml.exists());
-        assertTrue(webXml.exists());
-        assertFalse(bakWebXml.exists());
+		userWebXml.delete();
+		IOUtils.touch(webXml);
+		assertFalse(userWebXml.exists());
+		assertTrue(webXml.exists());
+		assertFalse(bakWebXml.exists());
 
-        UpgradeTask ut = new WebXmlUpgradeTask();
-        UpgradeInfo info = new UpgradeInfo();
-        ut.doUpgrade(project, info);
+		UpgradeTask ut = new WebXmlUpgradeTask();
+		UpgradeInfo info = new UpgradeInfo();
+		ut.doUpgrade(project, info);
 
-        assertTrue(userWebXml.exists());
-        assertFalse(webXml.exists());
-        assertTrue(bakWebXml.exists());
+		assertTrue(userWebXml.exists());
+		assertFalse(webXml.exists());
+		assertTrue(bakWebXml.exists());
 
-        String userWebXmlContents = FileUtils.readFileToString(userWebXml);
-        assertTrue(userWebXmlContents.contains("display-name"));
-    }
+		String userWebXmlContents = FileUtils.readFileToString(userWebXml);
+		assertTrue(userWebXmlContents.contains("display-name"));
+	}
 
-    @Test public void testUpgradeTaskPresent() throws Exception {
-        
-        boolean foundTask = false;
-        
-        UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
-        
-        outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
-            for (UpgradeTask ut : uts) {
-                if (ut instanceof WebXmlUpgradeTask) {
-                    foundTask = true;
-                    break outer;
-                }
-            }
-        }
-        
-        assertTrue(foundTask);
-    }
+	@Test
+	public void testUpgradeTaskPresent() throws Exception {
+
+		boolean foundTask = false;
+
+		UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
+
+		outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
+			for (UpgradeTask ut : uts) {
+				if (ut instanceof WebXmlUpgradeTask) {
+					foundTask = true;
+					break outer;
+				}
+			}
+		}
+
+		assertTrue(foundTask);
+	}
 }

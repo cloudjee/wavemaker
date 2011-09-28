@@ -32,11 +32,13 @@ import org.apache.tools.ant.types.FileList;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.ClasspathUtils;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.ResourceUtils;
 
 import com.wavemaker.runtime.module.ModuleManager;
+import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
 
@@ -44,7 +46,7 @@ import com.wavemaker.tools.project.ProjectConstants;
  * 
  * @author Matt Small
  * @author Joel Hare
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  */
 public class CopyRuntimeJarsTask extends Task {
     

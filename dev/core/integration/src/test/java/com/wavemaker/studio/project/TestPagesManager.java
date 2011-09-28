@@ -35,78 +35,82 @@ import com.wavemaker.tools.project.PagesManager;
 
 /**
  * @author small
- * @version $Rev$ - $Date$
- *
+ * @author Jeremy Grelle
+ * 
  */
 public class TestPagesManager extends StudioTestCase {
 
-    PagesManager pagesManager = null;
-    
-    @Before
-    @Override
-    public void setUp() throws Exception {
-        
-        super.setUp();
-        
-        ApplicationContext ac = getApplicationContext();
-        pagesManager = (PagesManager) ac.getBean("pagesManager");
-    }
-    
-    @Test public void testGetPageDir() throws Exception {
-        
-        String projectName = "testGetPageDir";
-        
-        makeProject(projectName);
-        File projectRoot = pagesManager.getProjectManager().getCurrentProject().
-                getProjectRoot();
-        
-        File actualPagesDir = pagesManager.getPagesDir(projectName);
-        File expectedPagesDir = new File(projectRoot, "webapproot/pages");
-        assertEquals(expectedPagesDir, actualPagesDir);
-        
-        File actualPageDir = pagesManager.getPageDir(projectName, "foo");
-        File expectedPageDir = new File(actualPagesDir, "foo");
-        assertEquals(expectedPageDir, actualPageDir);
-    }
+	PagesManager pagesManager = null;
 
-    @Test public void testPagesCopyWithRename() throws Exception {
-        
-        String sourceProject = "testPagesCopy_sourceProject";
-        String destProject = "testPagesCopy_destProject";
-        String sourcePage = "Main";
-        String destPage = "expectedMain";
-        
-        makeProject(destProject);
-        makeProject(sourceProject);
-        
-        File testPagesDir = (new ClassPathResource(
-                "com/wavemaker/tools/project/pages")).getFile();
-        assertTrue(testPagesDir.exists());
-        
-        FileUtils.forceMkdir(pagesManager.getPagesDir(sourceProject));
-        FileUtils.copyDirectory(new File(testPagesDir, sourcePage),
-                new File(pagesManager.getPagesDir(sourceProject), sourcePage));
-        assertTrue(pagesManager.getPageDir(sourceProject, sourcePage).exists());
-        
-        pagesManager.copyPage(sourceProject, sourcePage, destProject, destPage);
-        
-        File actualPageDir = pagesManager.getPageDir(destProject, destPage);
-        assertTrue(actualPageDir.exists());
-        List<File> files = Arrays.asList(actualPageDir.listFiles());
-        assertEquals(4, files.size());
-        
-        List<String> fileNames = Arrays.asList(actualPageDir.list());
-        assertTrue(fileNames.contains(destPage+".html"));
-        assertTrue(fileNames.contains(destPage+".css"));
-        assertTrue(fileNames.contains(destPage+".js"));
-        assertTrue(fileNames.contains(destPage+".widgets.js"));
-        
-        File expectedPagesDir = new File(testPagesDir, destPage);
-        for (File actual: actualPageDir.listFiles()) {
-            File expected = new File(expectedPagesDir, actual.getName());
-            assertTrue("page "+expected+" DNE", expected.exists());
-            assertEquals(FileUtils.readFileToString(expected).trim(),
-                    FileUtils.readFileToString(actual).trim());
-        }
-    }
+	@Before
+	@Override
+	public void setUp() throws Exception {
+
+		super.setUp();
+
+		ApplicationContext ac = getApplicationContext();
+		pagesManager = (PagesManager) ac.getBean("pagesManager");
+	}
+
+	@Test
+	public void testGetPageDir() throws Exception {
+
+		String projectName = "testGetPageDir";
+
+		makeProject(projectName);
+		File projectRoot = pagesManager.getProjectManager().getCurrentProject()
+				.getProjectRoot().getFile();
+
+		File actualPagesDir = pagesManager.getPagesDir(projectName).getFile();
+		File expectedPagesDir = new File(projectRoot, "webapproot/pages");
+		assertEquals(expectedPagesDir, actualPagesDir);
+
+		File actualPageDir = pagesManager.getPageDir(projectName, "foo")
+				.getFile();
+		File expectedPageDir = new File(actualPagesDir, "foo");
+		assertEquals(expectedPageDir, actualPageDir);
+	}
+
+	@Test
+	public void testPagesCopyWithRename() throws Exception {
+
+		String sourceProject = "testPagesCopy_sourceProject";
+		String destProject = "testPagesCopy_destProject";
+		String sourcePage = "Main";
+		String destPage = "expectedMain";
+
+		makeProject(destProject);
+		makeProject(sourceProject);
+
+		File testPagesDir = (new ClassPathResource(
+				"com/wavemaker/tools/project/pages")).getFile();
+		assertTrue(testPagesDir.exists());
+
+		FileUtils.forceMkdir(pagesManager.getPagesDir(sourceProject).getFile());
+		FileUtils.copyDirectory(new File(testPagesDir, sourcePage), new File(
+				pagesManager.getPagesDir(sourceProject).getFile(), sourcePage));
+		assertTrue(pagesManager.getPageDir(sourceProject, sourcePage).exists());
+
+		pagesManager.copyPage(sourceProject, sourcePage, destProject, destPage);
+
+		File actualPageDir = pagesManager.getPageDir(destProject, destPage)
+				.getFile();
+		assertTrue(actualPageDir.exists());
+		List<File> files = Arrays.asList(actualPageDir.listFiles());
+		assertEquals(4, files.size());
+
+		List<String> fileNames = Arrays.asList(actualPageDir.list());
+		assertTrue(fileNames.contains(destPage + ".html"));
+		assertTrue(fileNames.contains(destPage + ".css"));
+		assertTrue(fileNames.contains(destPage + ".js"));
+		assertTrue(fileNames.contains(destPage + ".widgets.js"));
+
+		File expectedPagesDir = new File(testPagesDir, destPage);
+		for (File actual : actualPageDir.listFiles()) {
+			File expected = new File(expectedPagesDir, actual.getName());
+			assertTrue("page " + expected + " DNE", expected.exists());
+			assertEquals(FileUtils.readFileToString(expected).trim(), FileUtils
+					.readFileToString(actual).trim());
+		}
+	}
 }

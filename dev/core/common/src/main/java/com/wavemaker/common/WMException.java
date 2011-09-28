@@ -47,19 +47,19 @@ public abstract class WMException extends Exception {
         this.detailedMessage = detailedMessage;
     }
 
-    public WMException(Resource resource) {
+    public WMException(MessageResource resource) {
         this(resource.getMessage(), resource.getDetailMessage());
     }
     
-    public WMException(Resource resource, Throwable cause) {
+    public WMException(MessageResource resource, Throwable cause) {
         this(resource.getMessage(), resource.getDetailMessage(), cause);
     }
     
-    public WMException(Resource resource, Object... args) {
+    public WMException(MessageResource resource, Object... args) {
         this(resource.getMessage(args), resource.getDetailMessage(args));
     }
     
-    public WMException(Resource resource, Throwable cause, Object... args) {
+    public WMException(MessageResource resource, Throwable cause, Object... args) {
         this(resource.getMessage(args), resource.getDetailMessage(args), cause);
     }
     

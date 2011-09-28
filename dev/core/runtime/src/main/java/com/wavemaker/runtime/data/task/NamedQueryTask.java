@@ -27,7 +27,7 @@ import org.hibernate.engine.NamedQueryDefinition;
 import org.hibernate.engine.NamedSQLQueryDefinition;
 import org.hibernate.type.Type;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.common.util.ObjectAccess;
 import com.wavemaker.common.util.ObjectUtils;
@@ -122,7 +122,7 @@ public class NamedQueryTask extends BaseTask implements Task {
         } else {
             if (paramValues.length == 0) {
                 throw new DataServiceRuntimeException(
-                        Resource.QUERY_REQUIRES_PARAMS, queryName, ObjectUtils
+                        MessageResource.QUERY_REQUIRES_PARAMS, queryName, ObjectUtils
                                 .toString(paramTypes));
             }
 
@@ -144,7 +144,7 @@ public class NamedQueryTask extends BaseTask implements Task {
     private void logExtraParam(String queryName, Object[] bindParams) {
         if (logger.isWarnEnabled()) {
             String val = ObjectUtils.toString(bindParams);
-            logger.warn(Resource.QUERY_NO_PARMS.getMessage(queryName, val));
+            logger.warn(MessageResource.QUERY_NO_PARMS.getMessage(queryName, val));
             if (bindParams.length == 1 && bindParams[0] == null
                     && logger.isDebugEnabled()) {
                 logger.debug(queryName + " invoked with input (Object)null "

@@ -41,11 +41,11 @@ import com.wavemaker.studio.infra.StudioTestCase;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.project.ProjectManager;
-import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.project.LocalStudioConfiguration;
 
 /**
  * @author small
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  *
  */
 public class TestProjectManager extends StudioTestCase {
@@ -60,7 +60,7 @@ public class TestProjectManager extends StudioTestCase {
         
         // disable the demo dirs
         tempDemoDir = IOUtils.createTempDirectory();
-        StudioConfiguration sc = (StudioConfiguration) getBean("studioConfiguration");
+        LocalStudioConfiguration sc = (LocalStudioConfiguration) getBean("studioConfiguration");
         sc.setTestDemoDir(tempDemoDir);
     }
     
@@ -70,7 +70,7 @@ public class TestProjectManager extends StudioTestCase {
 
         super.tearDown();
 
-        StudioConfiguration sc = (StudioConfiguration) getBean("studioConfiguration");
+        LocalStudioConfiguration sc = (LocalStudioConfiguration) getBean("studioConfiguration");
         sc.setTestDemoDir(null);
         
         FileUtils.forceDelete(tempDemoDir);
@@ -81,7 +81,7 @@ public class TestProjectManager extends StudioTestCase {
     @Test public void testNewProject() throws Exception {
         
         File expected = new File(new File(getTestWaveMakerHome(),
-                StudioConfiguration.PROJECTS_DIR), "testNewProject");
+                LocalStudioConfiguration.PROJECTS_DIR), "testNewProject");
         assertTrue(!expected.exists());
         makeProject("testNewProject");
         assertTrue(expected.exists());
@@ -110,9 +110,7 @@ public class TestProjectManager extends StudioTestCase {
         // projectManager requires a session for the aop:scoped-proxy
         setRequestAttributes(new MockHttpServletRequest());
         ProjectManager pm = (ProjectManager) getBean("projectManager");
-        
-        IOUtils.deleteRecursive(
-                pm.getStudioConfiguration().getProjectsDir());
+        pm.getStudioConfiguration().deleteFile(pm.getStudioConfiguration().getProjectsDir());
         assertEquals(0, pm.listProjects("").size());
     }
     
@@ -123,7 +121,7 @@ public class TestProjectManager extends StudioTestCase {
         String projectB = "testProjectCopy_projectB";
         
         makeProject(projectA);
-        File projectAF = pm.getCurrentProject().getProjectRoot();
+        File projectAF = pm.getCurrentProject().getProjectRoot().getFile();
         File projectBF = new File(projectAF.getParentFile(), projectB);
         assertTrue(projectAF.exists());
         assertFalse(projectBF.exists());
@@ -147,7 +145,7 @@ public class TestProjectManager extends StudioTestCase {
         // copy the project
         pm.copyProject(projectA, projectB);
         assertTrue(projectBF.exists());
-        assertEquals(projectAF, pm.getCurrentProject().getProjectRoot());
+        assertEquals(projectAF, pm.getCurrentProject().getProjectRoot().getFile());
         assertTrue(projectB_FooF.exists());
         assertEquals(FileUtils.readFileToString(projectA_FooF),
                 FileUtils.readFileToString(projectB_FooF));
@@ -195,7 +193,7 @@ public class TestProjectManager extends StudioTestCase {
         ProjectManager pm = (ProjectManager) getBean("projectManager");
         
         makeProject("foo");
-        File projectRoot = pm.getCurrentProject().getProjectRoot();
+        File projectRoot = pm.getCurrentProject().getProjectRoot().getFile();
         File expected = new File(projectRoot, "writefile.data");
         makeProject("bar");
         pm.closeProject();
@@ -223,11 +221,11 @@ public class TestProjectManager extends StudioTestCase {
         
         makeProject(projectA);
         
-        File sourceSVNDir = new File(pm.getCurrentProject().getProjectRoot(),
+        File sourceSVNDir = new File(pm.getCurrentProject().getProjectRoot().getFile(),
                 ".svn");
-        File sourceExportDir = new File(pm.getCurrentProject().getProjectRoot(),
+        File sourceExportDir = new File(pm.getCurrentProject().getProjectRoot().getFile(),
                 DeploymentManager.EXPORT_DIR_DEFAULT);
-        File sourceDistDir = new File(pm.getCurrentProject().getProjectRoot(),
+        File sourceDistDir = new File(pm.getCurrentProject().getProjectRoot().getFile(),
                 DeploymentManager.DIST_DIR_DEFAULT);
         
         sourceSVNDir.mkdir();
@@ -236,10 +234,10 @@ public class TestProjectManager extends StudioTestCase {
         
         pm.copyProject(projectA, projectB);
         
-        File destSVNDir = new File(pm.getProjectDir(projectB, false), ".svn");
-        File destExportDir = new File(pm.getProjectDir(projectB, false),
+        File destSVNDir = new File(pm.getProjectDir(projectB, false).getFile(), ".svn");
+        File destExportDir = new File(pm.getProjectDir(projectB, false).getFile(),
                 DeploymentManager.EXPORT_DIR_DEFAULT);
-        File destDistDir = new File(pm.getProjectDir(projectB, false),
+        File destDistDir = new File(pm.getProjectDir(projectB, false).getFile(),
                 DeploymentManager.DIST_DIR_DEFAULT);
         
         assertFalse(destSVNDir.exists());
@@ -253,7 +251,7 @@ public class TestProjectManager extends StudioTestCase {
         ProjectManager pm = (ProjectManager) getBean("projectManager");
         
         makeProject("foo");
-        File projectRoot = pm.getCurrentProject().getProjectRoot();
+        File projectRoot = pm.getCurrentProject().getProjectRoot().getFile();
         File expected = new File(projectRoot, "writefile.data");
         
         MockHttpServletRequest mhr = new MockHttpServletRequest("POST", "/"

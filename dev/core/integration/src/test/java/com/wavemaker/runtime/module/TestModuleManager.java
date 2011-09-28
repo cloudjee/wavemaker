@@ -31,7 +31,7 @@ import java.util.Set;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.Tuple;
 import com.wavemaker.runtime.test.TestSpringContextTestCase;
@@ -77,7 +77,7 @@ public class TestModuleManager extends TestSpringContextTestCase {
         try {
             mm.getModule("conflict");
         } catch (WMRuntimeException e) {
-            assertEquals(Resource.TOO_MANY_MODULES_FOR_EXTENSION_POINT.getId(),
+            assertEquals(MessageResource.TOO_MANY_MODULES_FOR_EXTENSION_POINT.getId(),
                     e.getMessageId());
         }
         assertEquals(2, mm.getModules("conflict").size());

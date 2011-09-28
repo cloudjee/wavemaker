@@ -43,111 +43,114 @@ import com.wavemaker.tools.util.AntUtils;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  * 
  */
 public class TestDataService extends StudioTestCase {
 
-    private static final String serviceName = "aghr";
+	private static final String serviceName = "aghr";
 
-    private class TestDataServiceDefinition  extends AbstractDeprecatedServiceDefinition
-            implements ReflectServiceDefinition {
+	private class TestDataServiceDefinition extends
+			AbstractDeprecatedServiceDefinition implements
+			ReflectServiceDefinition {
 
-        private final String serviceId;
+		private final String serviceId;
 
-        public TestDataServiceDefinition(String serviceId) {
-            this.serviceId = serviceId;
-        }
+		public TestDataServiceDefinition(String serviceId) {
+			this.serviceId = serviceId;
+		}
 
-        public String getRuntimeConfiguration() {
-            return null;
-        }
+		public String getRuntimeConfiguration() {
+			return null;
+		}
 
-        public String getServiceClass() {
-            return "abc";
-        }
+		public String getServiceClass() {
+			return "abc";
+		}
 
-        public String getServiceId() {
-            return serviceId;
-        }
+		public String getServiceId() {
+			return serviceId;
+		}
 
-        public String getPackageName() {
-            return "def";
-        }
+		public String getPackageName() {
+			return "def";
+		}
 
-        public ServiceType getServiceType() {
-            return new DataServiceType();
-        }
+		public ServiceType getServiceType() {
+			return new DataServiceType();
+		}
 
-        public List<String> getOperationNames() {
-            return Collections.emptyList();
-        }
+		public List<String> getOperationNames() {
+			return Collections.emptyList();
+		}
 
-        public List<ElementType> getInputTypes(String operationName) {
-            return Collections.emptyList();
-        }
+		public List<ElementType> getInputTypes(String operationName) {
+			return Collections.emptyList();
+		}
 
-        public ElementType getOutputType(String operationName) {
-            return null;
-        }
+		public ElementType getOutputType(String operationName) {
+			return null;
+		}
 
-        public List<ElementType> getTypes() {
-            return Collections.emptyList();
-        }
+		public List<ElementType> getTypes() {
+			return Collections.emptyList();
+		}
 
-        public void dispose() {
-        }
+		public void dispose() {
+		}
 
-        public List<String> getEventNotifiers() {
-            return new ArrayList<String>();
-        }
+		public List<String> getEventNotifiers() {
+			return new ArrayList<String>();
+		}
 
-        public boolean isLiveDataService() {
-            return true;
-        }
+		public boolean isLiveDataService() {
+			return true;
+		}
 
-        public String getPartnerName() {
-        return null;
-    }
-    }
+		public String getPartnerName() {
+			return null;
+		}
+	}
 
-    @Before
-    @Override
-    public void setUp() throws Exception {
+	@Before
+	@Override
+	public void setUp() throws Exception {
 
-        super.setUp();
-        makeProject("foo");
+		super.setUp();
+		makeProject("foo");
 
-        try {
-            File aghr = ClassLoaderUtils.getClasspathFile("aghr.jar");
-            File sakila = ClassLoaderUtils.getClasspathFile("sakila.jar");
+		try {
+			File aghr = ClassLoaderUtils.getClasspathFile("aghr.jar").getFile();
+			File sakila = ClassLoaderUtils.getClasspathFile("sakila.jar")
+					.getFile();
 
-            DesignServiceManager mgr = (DesignServiceManager) getBean("designServiceManager");
+			DesignServiceManager mgr = (DesignServiceManager) getBean("designServiceManager");
 
-            File aghrSrcDir = mgr.getServiceRuntimeDirectory("aghr");
-            File sakilaSrcDir = mgr.getServiceRuntimeDirectory("sakila");
-            FileUtils.forceMkdir(aghrSrcDir);
-            FileUtils.forceMkdir(sakilaSrcDir);
+			File aghrSrcDir = mgr.getServiceRuntimeDirectory("aghr").getFile();
+			File sakilaSrcDir = mgr.getServiceRuntimeDirectory("sakila")
+					.getFile();
+			FileUtils.forceMkdir(aghrSrcDir);
+			FileUtils.forceMkdir(sakilaSrcDir);
 
-            AntUtils.unjar(aghr, aghrSrcDir);
-            AntUtils.unjar(sakila, sakilaSrcDir);
+			AntUtils.unjar(aghr, aghrSrcDir);
+			AntUtils.unjar(sakila, sakilaSrcDir);
 
-            ServiceDefinition sd = new TestDataServiceDefinition("sakila");
-            mgr.defineService(sd);
-            ServiceDefinition sd2 = new TestDataServiceDefinition("aghr");
-            mgr.defineService(sd2);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
+			ServiceDefinition sd = new TestDataServiceDefinition("sakila");
+			mgr.defineService(sd);
+			ServiceDefinition sd2 = new TestDataServiceDefinition("aghr");
+			mgr.defineService(sd2);
+		} catch (IOException ex) {
+			throw new RuntimeException(ex);
+		}
 
-    }
+	}
 
-    
-    @Test public void testInitDataService() throws Exception {
-        Collection<?> c = (Collection<?>) invokeService_toObject("dataService",
-                "getEntityNames", new String[] { serviceName });
+	@Test
+	public void testInitDataService() throws Exception {
+		Collection<?> c = (Collection<?>) invokeService_toObject("dataService",
+				"getEntityNames", new String[] { serviceName });
 
-        assertTrue(c.contains("Employee") && c.contains("Compkey")
-                && c.size() == 3);
-    }
+		assertTrue(c.contains("Employee") && c.contains("Compkey")
+				&& c.size() == 3);
+	}
 }

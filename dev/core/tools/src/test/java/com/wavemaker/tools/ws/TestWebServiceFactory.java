@@ -18,16 +18,16 @@
 package com.wavemaker.tools.ws;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.springframework.util.ResourceUtils;
+import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.infra.WMTestCase;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
+import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
 import com.wavemaker.tools.ws.wsdl.WSDL;
@@ -43,12 +43,14 @@ public class TestWebServiceFactory extends WMTestCase {
 
     private static final String YAHOO_STOCKQUOTE_WSDL = "com/wavemaker/tools/ws/YahooStockQuote.wsdl";
 
-    public void testForSOAP() throws MalformedURLException, FileNotFoundException {
-        File resource = ResourceUtils.getFile("classpath:"+STOCKQUOTE_WSDL);
+    public void testForSOAP() throws MalformedURLException {
+        String resource = ClassLoaderUtils.getResource(STOCKQUOTE_WSDL);
+        URL url = new URL(resource);
         WebServiceFactory factory = new WebServiceFactory();
         DeprecatedServiceDefinition serviceDefinition = null;
         try {
-            serviceDefinition = factory.getServiceDefinition(resource);
+            serviceDefinition = factory.getServiceDefinition(new FileSystemResource(new File(url
+                    .getFile())));
             if (!(serviceDefinition instanceof WSDL)) {
                 fail("The service definition should be a WSDL.");
             }
@@ -56,7 +58,7 @@ public class TestWebServiceFactory extends WMTestCase {
             fail("Exception occurred during getServiceDefiniton." + e);
         }
         GenerationConfiguration cfg = new GenerationConfiguration(
-                serviceDefinition, null);
+                serviceDefinition, new LocalStudioConfiguration().createTempDir());
         ServiceGenerator serviceGenerator = factory.getServiceGenerator(cfg);
         if (!(serviceGenerator instanceof SOAPServiceGenerator)) {
             fail("ServiceGenerator should be an instance of SOAPServiceGenerator, but was getting "
@@ -64,12 +66,14 @@ public class TestWebServiceFactory extends WMTestCase {
         }
     }
 
-    public void testForREST() throws MalformedURLException, FileNotFoundException {
-    	File resource = ResourceUtils.getFile("classpath:"+YAHOO_STOCKQUOTE_WSDL);
+    public void testForREST() throws MalformedURLException {
+        String resource = ClassLoaderUtils.getResource(YAHOO_STOCKQUOTE_WSDL);
+        URL url = new URL(resource);
         WebServiceFactory factory = new WebServiceFactory();
         DeprecatedServiceDefinition serviceDefinition = null;
         try {
-            serviceDefinition = factory.getServiceDefinition(resource);
+            serviceDefinition = factory.getServiceDefinition(new FileSystemResource(new File(url
+                    .getFile())));
             if (!(serviceDefinition instanceof WSDL)) {
                 fail("The service definition should be a WSDL.");
             }

@@ -35,7 +35,7 @@ import com.wavemaker.tools.project.ProjectManager;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  * 
  */
 public class DataService {
@@ -156,7 +156,7 @@ public class DataService {
             //	DataModelManager.HSQL_SAMPLE_DB_SUB_DIR, cxnUrl);
             ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().
                         getAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER);
-            String projRoot = projMgr.getCurrentProject().getWebAppRoot().getPath();
+            String projRoot = projMgr.getCurrentProject().getWebAppRoot().getFilename();
             cxnUrl = JDBCUtils.reWriteConnectionUrl(cxnUrl, projRoot);
 
             //String projName = RuntimeAccess.getProjectName();
@@ -194,7 +194,7 @@ public class DataService {
             //	    DataModelManager.HSQL_SAMPLE_DB_SUB_DIR, connectionUrl);
             ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().
                         getAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER);
-            String projRoot = projMgr.getCurrentProject().getWebAppRoot().getPath();
+            String projRoot = projMgr.getCurrentProject().getWebAppRoot().getFilename();
             connectionUrl = JDBCUtils.reWriteConnectionUrl(connectionUrl, projRoot);
         }
     	
@@ -272,7 +272,7 @@ public class DataService {
             //	    DataModelManager.HSQL_SAMPLE_DB_SUB_DIR, connectionUrl);
             ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().
                         getAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER);
-            String projRoot = projMgr.getCurrentProject().getWebAppRoot().getPath();
+            String projRoot = projMgr.getCurrentProject().getWebAppRoot().getFilename();
             connectionUrl = JDBCUtils.reWriteConnectionUrl(connectionUrl, projRoot);
         }
          
@@ -300,7 +300,7 @@ public class DataService {
         	//    DataModelManager.HSQL_SAMPLE_DB_SUB_DIR, connectionUrl);
             ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().
                         getAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER);
-            String projRoot = projMgr.getCurrentProject().getWebAppRoot().getPath();
+            String projRoot = projMgr.getCurrentProject().getWebAppRoot().getFilename();
             connectionUrl = JDBCUtils.reWriteConnectionUrl(connectionUrl, projRoot);
         }
         

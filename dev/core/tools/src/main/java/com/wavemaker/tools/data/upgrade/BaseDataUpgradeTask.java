@@ -15,7 +15,9 @@
 package com.wavemaker.tools.data.upgrade;
 
 import java.io.File;
+import java.io.IOException;
 
+import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.data.DataServiceType;
 import com.wavemaker.tools.data.DataModelConfiguration;
 import com.wavemaker.tools.data.util.DataServiceUtils;
@@ -28,48 +30,53 @@ import com.wavemaker.tools.util.DesignTimeUtils;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  * 
  */
 public abstract class BaseDataUpgradeTask implements UpgradeTask {
 
-    private DesignServiceManager mgr = null;
+	private DesignServiceManager mgr = null;
 
-    protected DesignServiceManager getDesignServiceManager() {
-        if (mgr == null) {
-            throw new IllegalStateException("mgr cannot be null");
-        }
-        return mgr;
-    }
+	protected DesignServiceManager getDesignServiceManager() {
+		if (mgr == null) {
+			throw new IllegalStateException("mgr cannot be null");
+		}
+		return mgr;
+	}
 
-    protected File getCfgFile(String serviceId) {
-        return new File(mgr.getServiceRuntimeDirectory(serviceId),
-                DataServiceUtils.getCfgFileName(serviceId));
-    }
-    
-    protected DataModelConfiguration getDataModelConfiguration(Service service) {
-        return new DataModelConfiguration(getCfgFile(service.getId()));
-    }
+	protected File getCfgFile(String serviceId) {
+		try {
+			return new File(
+					mgr.getServiceRuntimeDirectory(serviceId).getFile(),
+					DataServiceUtils.getCfgFileName(serviceId));
+		} catch (IOException ex) {
+			throw new WMRuntimeException(ex);
+		}
+	}
 
-    protected abstract void upgrade(Service service);
-    
-    protected String getUpgradeMsg() {
-        return null;
-    }
+	protected DataModelConfiguration getDataModelConfiguration(Service service) {
+		return new DataModelConfiguration(getCfgFile(service.getId()));
+	}
 
-    public final void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
-        mgr = DesignTimeUtils.getDSMForProjectRoot(project.getProjectRoot());
+	protected abstract void upgrade(Service service);
 
-        for (Service service : mgr.getServices()) {
-            if (0==DataServiceType.TYPE_NAME.compareTo(service.getType())) {
-                upgrade(service);
-            }
-        }
-        
-        String msg = getUpgradeMsg();
-        
-        if (msg != null) {
-            upgradeInfo.addVerbose(msg);
-        }
-    }
+	protected String getUpgradeMsg() {
+		return null;
+	}
+
+	public final void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
+		mgr = DesignTimeUtils.getDSMForProjectRoot(project.getProjectRoot());
+
+		for (Service service : mgr.getServices()) {
+			if (0 == DataServiceType.TYPE_NAME.compareTo(service.getType())) {
+				upgrade(service);
+			}
+		}
+
+		String msg = getUpgradeMsg();
+
+		if (msg != null) {
+			upgradeInfo.addVerbose(msg);
+		}
+	}
 }

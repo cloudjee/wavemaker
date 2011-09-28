@@ -17,7 +17,8 @@
  */
 package com.wavemaker.studio.project.upgrade.swamis;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.List;
@@ -38,54 +39,64 @@ import com.wavemaker.tools.project.upgrade.swamis.CurrencyRenameUpgrade;
 
 /**
  * @author small
- * @version $Rev$ - $Date$
- *
+ * @author Jeremy Grelle
+ * 
  */
 public class TestCurrencyRenameUpgrade extends StudioTestCase {
-    
-    @Test public void testEventUpgrade() throws Exception {
 
-        ProjectManager pm = (ProjectManager) getBean("projectManager");
-        
-        makeProject("testEventUpgrade", false);
-        pm.getCurrentProject().setProjectVersion(0.22);
-        
-        pm.getCurrentProject().getWebAppRoot().mkdir();
-        assertTrue(pm.getCurrentProject().getWebAppRoot().exists());
-        File pages = new File(pm.getCurrentProject().getWebAppRoot(), ProjectConstants.PAGES_DIR);
-        pages.mkdir();
-        File page = new File(pages, "Main");
-        page.mkdir();
-        assertTrue(page.exists());
-        File destWidgets = new File(page, "Main."+PagesManager.PAGE_WIDGETS);
-        
-        File sourceWidgets = (new ClassPathResource("com/wavemaker/tools/project/upgrade/swamis/currencyrename.widgets.js")).getFile();
-        FileUtils.copyFile(sourceWidgets, destWidgets);
-        
-        CurrencyRenameUpgrade cru = new CurrencyRenameUpgrade();
-        cru.setPagesManager((PagesManager)getBean("pagesManager"));
-        UpgradeInfo ui = new UpgradeInfo();
-        cru.doUpgrade(pm.getCurrentProject(), ui);
-        
-        File expectedWidgets = (new ClassPathResource("com/wavemaker/tools/project/upgrade/swamis/currencyrename.widgets.js.expected")).getFile();
-        assertEquals(StringUtils.deleteWhitespace(FileUtils.readFileToString(expectedWidgets)), StringUtils.deleteWhitespace(FileUtils.readFileToString(destWidgets)));
-    }
+	@Test
+	public void testEventUpgrade() throws Exception {
 
-    @Test public void testUpgradeTaskPresent() throws Exception {
-        
-        boolean foundTask = false;
-        
-        UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
-        
-        outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
-            for (UpgradeTask ut : uts) {
-                if (ut instanceof CurrencyRenameUpgrade) {
-                    foundTask = true;
-                    break outer;
-                }
-            }
-        }
-        
-        assertTrue(foundTask);
-    }
+		ProjectManager pm = (ProjectManager) getBean("projectManager");
+
+		makeProject("testEventUpgrade", false);
+		pm.getCurrentProject().setProjectVersion(0.22);
+
+		pm.getCurrentProject().getWebAppRoot().getFile().mkdir();
+		assertTrue(pm.getCurrentProject().getWebAppRoot().exists());
+		File pages = new File(pm.getCurrentProject().getWebAppRoot().getFile(),
+				ProjectConstants.PAGES_DIR);
+		pages.mkdir();
+		File page = new File(pages, "Main");
+		page.mkdir();
+		assertTrue(page.exists());
+		File destWidgets = new File(page, "Main." + PagesManager.PAGE_WIDGETS);
+
+		File sourceWidgets = (new ClassPathResource(
+				"com/wavemaker/tools/project/upgrade/swamis/currencyrename.widgets.js"))
+				.getFile();
+		FileUtils.copyFile(sourceWidgets, destWidgets);
+
+		CurrencyRenameUpgrade cru = new CurrencyRenameUpgrade();
+		cru.setPagesManager((PagesManager) getBean("pagesManager"));
+		UpgradeInfo ui = new UpgradeInfo();
+		cru.doUpgrade(pm.getCurrentProject(), ui);
+
+		File expectedWidgets = (new ClassPathResource(
+				"com/wavemaker/tools/project/upgrade/swamis/currencyrename.widgets.js.expected"))
+				.getFile();
+		assertEquals(StringUtils.deleteWhitespace(FileUtils
+				.readFileToString(expectedWidgets)),
+				StringUtils.deleteWhitespace(FileUtils
+						.readFileToString(destWidgets)));
+	}
+
+	@Test
+	public void testUpgradeTaskPresent() throws Exception {
+
+		boolean foundTask = false;
+
+		UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
+
+		outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
+			for (UpgradeTask ut : uts) {
+				if (ut instanceof CurrencyRenameUpgrade) {
+					foundTask = true;
+					break outer;
+				}
+			}
+		}
+
+		assertTrue(foundTask);
+	}
 }

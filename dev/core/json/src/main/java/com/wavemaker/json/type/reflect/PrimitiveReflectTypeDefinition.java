@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.util.ClassUtils;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.core.JSONUtils;
 import com.wavemaker.json.type.PrimitiveTypeDefinition;
@@ -42,7 +42,7 @@ public class PrimitiveReflectTypeDefinition extends ReflectTypeDefinition
         
         if (!(1==args.length || (2==args.length && args[1] instanceof Class))) {
             throw new IllegalArgumentException(
-                    Resource.JSON_PRIM_NEWINSTANCE_ARG_REQ.getMessage(Arrays.toString(args)));
+                    MessageResource.JSON_PRIM_NEWINSTANCE_ARG_REQ.getMessage(Arrays.toString(args)));
         }
         Object obj = args[0];
         
@@ -82,7 +82,7 @@ public class PrimitiveReflectTypeDefinition extends ReflectTypeDefinition
                     ret = number.doubleValue();
                 } else {
                     throw new WMRuntimeException(
-                            Resource.JSON_UNKNOWN_NUMBER_TYPE, klass, obj);
+                            MessageResource.JSON_UNKNOWN_NUMBER_TYPE, klass, obj);
                 }
             } else {
                 String string = obj.toString();
@@ -105,11 +105,11 @@ public class PrimitiveReflectTypeDefinition extends ReflectTypeDefinition
                         ret = string.charAt(0);
                     } else {
                         throw new WMRuntimeException(
-                                Resource.JSON_UNKNOWN_NUMBER_TYPE, klass, string);
+                                MessageResource.JSON_UNKNOWN_NUMBER_TYPE, klass, string);
                     }
                 } catch (NumberFormatException e) {
                     throw new WMRuntimeException(
-                            Resource.JSON_FAILED_TO_CONVERT, e, string, klass);
+                            MessageResource.JSON_FAILED_TO_CONVERT, e, string, klass);
                 }
             }
         } else if (klass.equals(AtomicInteger.class) && (obj instanceof Number)) {
@@ -157,7 +157,7 @@ public class PrimitiveReflectTypeDefinition extends ReflectTypeDefinition
         } else if ( Class.class.isAssignableFrom(obj.getClass()) ) {
             writer.write(JSONUtils.quote(((Class<?>)obj).getName()));
         } else {
-            throw new WMRuntimeException(Resource.JSON_UNKNOWN_PRIMITIVE_TYPE,
+            throw new WMRuntimeException(MessageResource.JSON_UNKNOWN_PRIMITIVE_TYPE,
                     obj, obj.getClass());
         }
     }

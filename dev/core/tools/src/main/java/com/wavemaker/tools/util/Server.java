@@ -15,7 +15,6 @@
 package com.wavemaker.tools.util;
 
 import java.io.IOException;
-
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.MalformedURLException;

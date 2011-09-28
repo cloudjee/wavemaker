@@ -14,7 +14,6 @@
 
 package com.wavemaker.tools.service.codegen;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -24,16 +23,25 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.NDC;
+import org.springframework.core.io.Resource;
 
-import com.sun.codemodel.*;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClassAlreadyExistsException;
+import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JDocComment;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JTryBlock;
+import com.sun.codemodel.JType;
+import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
-import com.wavemaker.runtime.ws.util.WebServiceUtils;
-import com.wavemaker.runtime.ws.util.Constants;
-import com.wavemaker.tools.ws.wsdl.WSDL;
-import com.wavemaker.tools.ws.wsdl.SchemaElementType;
 import com.wavemaker.tools.ws.wsdl.ServiceInfo;
+import com.wavemaker.tools.ws.wsdl.WSDL;
 
 /**
  * All service code generators should extend this class. Although all public or protected methods can be overriden or implemented
@@ -44,6 +52,7 @@ import com.wavemaker.tools.ws.wsdl.ServiceInfo;
  *     <p>- <code>defineServiceInvocation</code></p>
  * 
  * @author Frankie Fu
+ * @author Jeremy Grelle
  */
 public abstract class ServiceGenerator {
 
@@ -205,13 +214,17 @@ public abstract class ServiceGenerator {
             return false;
         }
 
-        File f = new File(configuration.getOutputDirectory(), StringUtils
-                .classNameToSrcFilePath(getClassName()));
-        if (!f.exists()) {
-            return false;
-        }
-
-        return srcLastModified <= f.lastModified();
+        Resource f;
+		try {
+			f = configuration.getOutputDirectory().createRelative(StringUtils
+			        .classNameToSrcFilePath(getClassName()));
+			if (!f.exists()) {
+	            return false;
+	        }
+			return srcLastModified <= f.lastModified();
+		} catch (IOException ex) {
+			throw new WMRuntimeException(ex);
+		}
     }
 
     protected List<List<ElementType>> getOverloadedVersions(String operationName) {
@@ -266,9 +279,10 @@ public abstract class ServiceGenerator {
         postGenerateClassBody(serviceCls);
 
         try {
-            configuration.getOutputDirectory().mkdirs();
-            codeModel.build(configuration.getOutputDirectory(), configuration
-                    .getOutputDirectory(), null);
+        	//TODO - I suspect this will need to be re-written for CF, so let's cheat for now
+            configuration.getOutputDirectory().getFile().mkdirs();
+            codeModel.build(configuration.getOutputDirectory().getFile(), configuration
+                    .getOutputDirectory().getFile(), null);
         } catch (IOException e) {
             throw new GenerationException("Unable to write service stub", e);
         }

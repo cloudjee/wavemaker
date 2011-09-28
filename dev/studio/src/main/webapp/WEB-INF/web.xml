@@ -139,10 +139,6 @@
 	<listener>
         <listener-class>com.wavemaker.runtime.server.CleanupListener</listener-class>
     </listener>
-    
-    <listener>
-        <listener-class>com.wavemaker.tools.common.StartupTools</listener-class>
-    </listener>
 
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -202,4 +198,9 @@
         <filter-name>Acegi Filter Chain Proxy</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+    
+    <mime-mapping>
+    	<extension>smd</extension>
+    	<mime-type>application/json</mime-type>
+    </mime-mapping>
 </web-app>

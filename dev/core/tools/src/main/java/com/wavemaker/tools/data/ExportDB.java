@@ -30,8 +30,9 @@ import org.hibernate.dialect.Dialect;
 import org.hibernate.tool.hbm2ddl.DatabaseMetadata;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.hibernate.tool.hbm2ddl.SchemaUpdate;
+import org.springframework.core.io.FileSystemResource;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.common.util.IOUtils;
@@ -131,7 +132,7 @@ public class ExportDB extends BaseDataModelSetup {
                     export = (SchemaExport) t.run();
                 } else {
                     export = (SchemaExport) ClassLoaderUtils.runInClassLoaderContext(t,
-                            classesDir);
+                            new FileSystemResource(classesDir));
                 }
 
                 ddlFile = File.createTempFile("ddl", ".sql");
@@ -164,7 +165,7 @@ public class ExportDB extends BaseDataModelSetup {
                     update = (SchemaUpdate) t.run();
                 } else {
                     update = (SchemaUpdate) ClassLoaderUtils.runInClassLoaderContext(t,
-                            classesDir);
+                            new FileSystemResource(classesDir));
                 }
 
                 prepareForExport(exportToDatabase);
@@ -262,7 +263,7 @@ public class ExportDB extends BaseDataModelSetup {
         String url = connectionUrl;
 
         if (isMySQL() && !ObjectUtils.isNullOrEmpty(schemaName)) {
-            throw new ConfigurationException(Resource.UNSET_SCHEMA, "MySQL");
+            throw new ConfigurationException(MessageResource.UNSET_SCHEMA, "MySQL");
         }
 
         if (!ObjectUtils.isNullOrEmpty(urlDBName)) {
@@ -274,10 +275,10 @@ public class ExportDB extends BaseDataModelSetup {
                 catalogName = urlDBName;
             } else if (!ObjectUtils.isNullOrEmpty(catalogName) && !catalogName.equals(urlDBName)) {
                 throw new ConfigurationException(
-                    Resource.MISMATCH_CATALOG_DBNAME, urlDBName, catalogName);
+                    MessageResource.MISMATCH_CATALOG_DBNAME, urlDBName, catalogName);
             }
         } else if (ObjectUtils.isNullOrEmpty(catalogName)) {
-            throw new ConfigurationException(Resource.CATALOG_SHOULD_BE_SET);
+            throw new ConfigurationException(MessageResource.CATALOG_SHOULD_BE_SET);
         }
         
 

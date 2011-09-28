@@ -32,7 +32,7 @@ import org.apache.commons.lang.NullArgumentException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.EntryComparator;
 import com.wavemaker.common.util.Tuple;
@@ -368,7 +368,7 @@ public final class JSONMarshaller {
                     }
                 } else {
                     throw new WMRuntimeException(
-                            Resource.JSON_UNKNOWN_COLL_OR_ARRAY, obj,
+                            MessageResource.JSON_UNKNOWN_COLL_OR_ARRAY, obj,
                             obj.getClass());
                 }
 
@@ -447,16 +447,16 @@ public final class JSONMarshaller {
                     try {
                         value = PropertyUtils.getProperty(obj, name);
                     } catch (IllegalArgumentException e) {
-                        throw new WMRuntimeException(Resource.ERROR_GETTING_PROPERTY,
+                        throw new WMRuntimeException(MessageResource.ERROR_GETTING_PROPERTY,
                                 e, name, obj, obj.getClass().getName());
                     } catch (IllegalAccessException e) {
-                        throw new WMRuntimeException(Resource.ERROR_GETTING_PROPERTY,
+                        throw new WMRuntimeException(MessageResource.ERROR_GETTING_PROPERTY,
                                 e, name, obj, obj.getClass().getName());
                     } catch (InvocationTargetException e) {
-                        throw new WMRuntimeException(Resource.ERROR_GETTING_PROPERTY,
+                        throw new WMRuntimeException(MessageResource.ERROR_GETTING_PROPERTY,
                                 e, name, obj, obj.getClass().getName());
                     } catch (NoSuchMethodException e) {
-                        logger.warn(Resource.JSON_NO_GETTER_IN_TYPE.getMessage(name,
+                        logger.warn(MessageResource.JSON_NO_GETTER_IN_TYPE.getMessage(name,
                                 obj, obj.getClass().getName()));
                         continue;
                     }
@@ -468,7 +468,7 @@ public final class JSONMarshaller {
                 }
             }
         } else {
-            throw new WMRuntimeException(Resource.JSON_BAD_HANDLE_TYPE,
+            throw new WMRuntimeException(MessageResource.JSON_BAD_HANDLE_TYPE,
                     fieldDefinition.getTypeDefinition());
         }
         
@@ -507,13 +507,13 @@ public final class JSONMarshaller {
             // cycle
             if (isCycle(value, touchedObjects, propertyName, js)) {
                 if (logger.isInfoEnabled()) {
-                    logger.info(Resource.JSON_CYCLE_FOUND.getMessage(value,
+                    logger.info(MessageResource.JSON_CYCLE_FOUND.getMessage(value,
                             js.getCycleHandler()));
                 }
                 
                 if (js.getCycleHandler().equals(
                         JSONState.CycleHandler.FAIL)) {
-                    throw new WMRuntimeException(Resource.JSON_CYCLE_FOUND,
+                    throw new WMRuntimeException(MessageResource.JSON_CYCLE_FOUND,
                             value, js.getCycleHandler());
                 } else if (js.getCycleHandler().equals(
                         JSONState.CycleHandler.NULL)) {
@@ -522,7 +522,7 @@ public final class JSONMarshaller {
                         JSONState.CycleHandler.NO_PROPERTY)) {
                     return firstProperty;
                 } else {
-                    throw new WMRuntimeException(Resource.JSON_BAD_CYCLE_HANDLER,
+                    throw new WMRuntimeException(MessageResource.JSON_BAD_CYCLE_HANDLER,
                             js.getCycleHandler());
                 }
             }

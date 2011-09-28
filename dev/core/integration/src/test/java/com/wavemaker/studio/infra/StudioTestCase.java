@@ -39,6 +39,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.util.StringUtils;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.IOUtils;
@@ -46,7 +47,7 @@ import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.test.SpringTestCase;
 import com.wavemaker.tools.project.ProjectConstants;
-import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.project.LocalStudioConfiguration;
 
 /**
  * @author small
@@ -80,18 +81,28 @@ public abstract class StudioTestCase extends SpringTestCase {
 
         try {
             this.wmHome = IOUtils.createTempDirectory("testDirFor_"
-                    + getClass().getName(), ".tmp");
+                    + getClass().getName(), ".tmp/");
         } catch (IOException e) {
             throw new WMRuntimeException(e);
         }
 
-        StudioConfiguration config = (StudioConfiguration) getBean("studioConfiguration");
+        LocalStudioConfiguration config = (LocalStudioConfiguration) getBean("studioConfiguration");
         config.setTestWaveMakerHome(wmHome);
         assertTrue(config.getWaveMakerHome().exists());
-        Assert.assertEquals(wmHome, config.getWaveMakerHome());
+        Assert.assertEquals(wmHome.getPath(), config.getWaveMakerHome().getFile().getPath());
         assertTrue(config.getProjectsDir().exists());
         
-        MockServletContext mockContext = new MockServletContext();
+        MockServletContext mockContext = new MockServletContext(){
+
+			@Override
+			public String getMimeType(String filePath) {
+				if (StringUtils.getFilenameExtension(filePath).equals(".smd")) {
+					return "application/json";
+				}
+				return super.getMimeType(filePath);
+			}
+        	
+        };
         mockContext.setServletContextName("wavemaker");
         WMAppContext.getInstance(new ServletContextEvent(mockContext));
 
@@ -135,7 +146,7 @@ public abstract class StudioTestCase extends SpringTestCase {
             FileUtils.writeStringToFile(serviceFile, FOO_PROPS_CONTENTS);
 
             File wmDir = new File(getTestWaveMakerHome(),
-                    StudioConfiguration.COMMON_DIR);
+                    LocalStudioConfiguration.COMMON_DIR);
             File wmFile = new File(wmDir, "foo.txt");
             wmDir.mkdir();
             FileUtils.writeStringToFile(wmFile, "some data");
@@ -157,7 +168,7 @@ public abstract class StudioTestCase extends SpringTestCase {
             throws Exception {
 
         File expectedPath = new File(new File(getTestWaveMakerHome(),
-                StudioConfiguration.PROJECTS_DIR), projectName);
+                LocalStudioConfiguration.PROJECTS_DIR), projectName);
         assertFalse(expectedPath.exists());
 
         String op = noTemplate ? "newProjectNoTemplate" : "newProject";
@@ -175,7 +186,7 @@ public abstract class StudioTestCase extends SpringTestCase {
 
         // make a dummy request, set our port to 8080 -
         MockHttpServletRequest req = new MockHttpServletRequest();
-        req.setServerPort(StudioConfiguration.TOMCAT_PORT_DEFAULT);
+        req.setServerPort(LocalStudioConfiguration.TOMCAT_PORT_DEFAULT);
         RuntimeAccess.getInstance().setRequest(req);
 
         return expectedPath;

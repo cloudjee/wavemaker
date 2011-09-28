@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.infra.WMTestCase;
@@ -278,7 +278,7 @@ public class TestJSONSerialization extends WMTestCase {
             JSONMarshaller.marshal(a, jc);
             fail("no exception");
         } catch (WMRuntimeException e) {
-            assertEquals(Resource.JSON_CYCLE_FOUND.getId(), e.getMessageId());
+            assertEquals(MessageResource.JSON_CYCLE_FOUND.getId(), e.getMessageId());
         }
         
         jc.setCycleHandler(JSONState.CycleHandler.NULL);

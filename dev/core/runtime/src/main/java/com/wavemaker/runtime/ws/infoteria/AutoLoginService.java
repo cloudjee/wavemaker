@@ -44,7 +44,7 @@ public class AutoLoginService {
         String sessid;
 
         String fname = project + DataServiceConstants.PROPERTIES_FILE_EXT; 
-        File propF = ClassLoaderUtils.getClasspathFile(fname);
+        File propF = ClassLoaderUtils.getClasspathFile(fname).getFile();
 
         InputStream is = new FileInputStream(propF);
 

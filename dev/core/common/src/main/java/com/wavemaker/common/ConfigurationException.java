@@ -15,7 +15,7 @@
 package com.wavemaker.common;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 
 /**
  * @author Simon Toens
@@ -25,11 +25,11 @@ import com.wavemaker.common.Resource;
 @SuppressWarnings("serial")
 public class ConfigurationException extends WMRuntimeException {
     
-    public ConfigurationException(Resource r) {
+    public ConfigurationException(MessageResource r) {
         super(r);
     }
     
-    public ConfigurationException(Resource r, Object... values) {
+    public ConfigurationException(MessageResource r, Object... values) {
         super(r, values);
     }    
     

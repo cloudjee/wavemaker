@@ -14,23 +14,8 @@
 
 package com.wavemaker.tools.pws;
 
-import com.wavemaker.tools.ws.RESTInputParam;
-import com.wavemaker.tools.service.definitions.Service;
-import com.wavemaker.runtime.service.definition.ServiceDefinition;
-import com.wavemaker.runtime.service.definition.ServiceOperation;
 import com.wavemaker.json.type.FieldDefinition;
-
-import java.util.List;
-import java.io.File;
-import java.io.IOException;
-
-import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
-
-import javax.wsdl.WSDLException;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.namespace.QName;
+import com.wavemaker.runtime.service.definition.ServiceOperation;
 
 /**
  * This interface defines methods to modify the service definition before generating the service definition file

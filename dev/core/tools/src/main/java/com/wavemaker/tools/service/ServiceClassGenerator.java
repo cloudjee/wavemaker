@@ -15,6 +15,7 @@
 package com.wavemaker.tools.service;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,9 +23,10 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
@@ -35,18 +37,18 @@ import com.wavemaker.tools.service.codegen.ServiceGenerator;
  * Generic logic for generating Service Classes from Service Definitions.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  */
 public class ServiceClassGenerator {
 
     private Log logger = LogFactory.getLog(ServiceClassGenerator.class);
 
-    private List<File> services = new ArrayList<File>();
+    private List<Resource> services = new ArrayList<Resource>();
 
     // map service file to its service id
-    private Map<File, String> serviceToServiceId = new HashMap<File, String>();
+    private Map<Resource, String> serviceToServiceId = new HashMap<Resource, String>();
 
-    private File outputDirectory = null;
+    private Resource outputDirectory = null;
 
     private DesignServiceManager serviceManager = null;
 
@@ -54,25 +56,34 @@ public class ServiceClassGenerator {
         this.serviceManager = serviceManager;
     }
 
-    public void setOutputDirectory(File outputDirectory) {
+    public void setOutputDirectory(Resource outputDirectory) {
         this.outputDirectory = outputDirectory;
     }
 
-    public void addService(List<File> serviceFiles) {
+    public void addService(List<Resource> serviceFiles) {
         addService(serviceFiles, null);
     }
 
-    public void addService(List<File> serviceFiles, String serviceId) {
-        for (File f : serviceFiles) {
+    public void addService(List<Resource> serviceFiles, String serviceId) {
+        for (Resource f : serviceFiles) {
             addService(f, serviceId);
         }
     }
+    
+    /**
+     * @deprecated - use {@link #addService(List, String) addService} instead
+     */
+    public void addServiceFiles(List<File> serviceFiles, String serviceId) {
+        for (File f : serviceFiles) {
+            addService(new FileSystemResource(f), serviceId);
+        }
+    }
 
-    public void addService(File f) {
+    public void addService(Resource f) {
         addService(f, null);
     }
 
-    public void addService(File f, String serviceId) {
+    public void addService(Resource f, String serviceId) {
         services.add(f);
         if (serviceId != null) {
             serviceToServiceId.put(f, serviceId);
@@ -85,7 +96,7 @@ public class ServiceClassGenerator {
             throw new ConfigurationException("serviceMgr cannot be null");
         }
 
-        for (File f : services) {
+        for (Resource f : services) {
 
             String serviceId = serviceToServiceId.get(f);
             
@@ -101,8 +112,13 @@ public class ServiceClassGenerator {
             
             ServiceGenerator generator = ServiceUtils.getServiceGenerator(cfg);
 
-            File rtdir = serviceManager.getServiceRuntimeDirectory(serviceId);
-            long l = IOUtils.getMostRecentModificationTime(rtdir);
+            Resource rtdir = serviceManager.getServiceRuntimeDirectory(serviceId);
+            long l;
+			try {
+				l = rtdir.lastModified();
+			} catch (IOException ex) {
+				throw new WMRuntimeException(ex);
+			}
             if (generator.isUpToDate(l)) {
                 if (logger.isInfoEnabled()) {
                     logger.info("service " + def.getServiceId()

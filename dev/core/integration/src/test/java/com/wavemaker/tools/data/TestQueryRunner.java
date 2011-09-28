@@ -21,6 +21,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
+import org.springframework.core.io.FileSystemResource;
+
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.infra.WMTestCase;
@@ -31,61 +33,67 @@ import com.wavemaker.runtime.server.InternalRuntime;
 import com.wavemaker.tools.data.spring.SpringService;
 import com.wavemaker.tools.data.util.DataServiceTestUtils;
 
+/**
+ * 
+ * @author Jeremy Grelle
+ *
+ */
 public class TestQueryRunner extends WMTestCase {
 
-    private File f = null;
+	private File f = null;
 
-    private QueryRunner runner = null;
+	private QueryRunner runner = null;
 
-    @Override
-    public void setUp() throws IOException {
-        f = DataServiceTestUtils.setupSakilaConfiguration().getParentFile();
-        ClassLoaderUtils.TaskRtn task = new ClassLoaderUtils.TaskRtn() {
-            public Object run() {
-                return SpringService
-                        .initQueryRunner(DataServiceTestConstants.SAKILA_SPRING_CFG);
-            }
+	@Override
+	public void setUp() throws IOException {
+		f = DataServiceTestUtils.setupSakilaConfiguration().getParentFile();
+		ClassLoaderUtils.TaskRtn task = new ClassLoaderUtils.TaskRtn() {
+			public Object run() {
+				return SpringService
+						.initQueryRunner(DataServiceTestConstants.SAKILA_SPRING_CFG);
+			}
 
-        };
-        runner = (QueryRunner) ClassLoaderUtils.runInClassLoaderContext(task, f);
-    }
+		};
+		runner = (QueryRunner) ClassLoaderUtils.runInClassLoaderContext(task,
+				new FileSystemResource(f.getAbsolutePath() + "/"));
+	}
 
-    @Override
-    public void tearDown() throws IOException {
-        try {
-            runner.dispose();
-        } finally {
-            IOUtils.deleteRecursive(f);
-        }
-    }
+	@Override
+	public void tearDown() throws IOException {
+		try {
+			runner.dispose();
+		} finally {
+			IOUtils.deleteRecursive(f);
+		}
+	}
 
-    public TestQueryRunner() {
-        InternalRuntime.setInternalRuntimeBean(new InternalRuntime());
-        InternalRuntime.getInstance().setJSONState(new JSONState());
-    }
+	public TestQueryRunner() {
+		InternalRuntime.setInternalRuntimeBean(new InternalRuntime());
+		InternalRuntime.getInstance().setJSONState(new JSONState());
+	}
 
-    public void testQueryRunner1() {
+	public void testQueryRunner1() {
 
-        Object o = runner.run("select count(a) from Actor a");
+		Object o = runner.run("select count(a) from Actor a");
 
-        assertTrue(o instanceof Collection);
-        assertTrue(((Collection<?>) o).iterator().next().equals(new Long(200)));
-    }
+		assertTrue(o instanceof Collection);
+		assertTrue(((Collection<?>) o).iterator().next().equals(new Long(200)));
+	}
 
-    public void testQueryRunner2() {
+	public void testQueryRunner2() {
 
-        Object o = runner.run("from Actor");
+		Object o = runner.run("from Actor");
 
-        assertTrue(o instanceof Collection);
-        assertTrue(((Collection<?>) o).size() == 200);
-    }
+		assertTrue(o instanceof Collection);
+		assertTrue(((Collection<?>) o).size() == 200);
+	}
 
-    public void testQueryRunner3() {
+	public void testQueryRunner3() {
 
-        runner.addBindParameter("id", "java.lang.Short", "2");
-        Object o = runner.run("from Actor _a where _a.id=:id");
+		runner.addBindParameter("id", "java.lang.Short", "2");
+		Object o = runner.run("from Actor _a where _a.id=:id");
 
-        assertTrue(o instanceof Collection);
-        assertTrue(((Collection<?>) o).size() == 1);
-    }
+		assertTrue(o instanceof Collection);
+		assertTrue(((Collection<?>) o).size() == 1);
+	}
 }

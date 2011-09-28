@@ -14,10 +14,7 @@
 
 package com.wavemaker.tools.service;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -25,109 +22,159 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
-import org.apache.commons.io.FileUtils;
+import org.springframework.core.io.Resource;
+import org.springframework.util.Assert;
+import org.springframework.util.FileCopyUtils;
 
 import com.wavemaker.runtime.server.ServerConstants;
+import com.wavemaker.tools.project.StudioConfiguration;
 
 /**
- * An abstract version of the FileService.  Provides default implementations of
+ * An abstract version of the FileService. Provides default implementations of
  * some methods, as well as a default encoding that matches
  * ServerConstants.DEFAULT_ENCODING (currently, UTF-8).
  * 
  * @author small
- * @version $Rev$ - $Date$
- *
+ * @author Jeremy Grelle
+ * 
  */
 public abstract class AbstractFileService implements FileService {
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.FileService#getEncoding()
-     */
-    public String getEncoding() {
-        return ServerConstants.DEFAULT_ENCODING;
-    }
+	protected StudioConfiguration studioConfiguration;
+	
+	public AbstractFileService(StudioConfiguration studioConfiguration) {
+		this.studioConfiguration = studioConfiguration;
+	}
+	
+	public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
+		this.studioConfiguration = studioConfiguration;
+	}
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.FileService#readFile(java.lang.String)
-     */
-    public String readFile(String path) throws IOException {
-        
-        return readFile(new File(getFileServiceRoot(), path));
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.wavemaker.runtime.service.FileService#getEncoding()
+	 */
+	public String getEncoding() {
+		return ServerConstants.DEFAULT_ENCODING;
+	}
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.FileService#readFile(java.io.File)
-     */
-    public String readFile(File file) throws IOException {
-        
-        return FileUtils.readFileToString(file, getEncoding());
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.wavemaker.runtime.service.FileService#readFile(java.lang.String)
+	 */
+	public String readFile(String path) throws IOException {
+		return readFile(getFileServiceRoot().createRelative(path));
+	}
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.FileService#writeFile(java.lang.String, java.lang.String)
-     */
-    public void writeFile(String path, String data) throws IOException {
-        
-        writeFile(new File(getFileServiceRoot(), path), data);
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.wavemaker.runtime.service.FileService#readFile(java.io.File)
+	 */
+	public String readFile(Resource file) throws IOException {
+		return FileCopyUtils.copyToString(getReader(file));
+	}
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.FileService#writeFile(java.io.File, java.lang.String)
-     */
-    public void writeFile(File file, String data) throws IOException {
-        FileUtils.writeStringToFile(file, data, getEncoding());
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.wavemaker.runtime.service.FileService#writeFile(java.lang.String,
+	 * java.lang.String)
+	 */
+	public void writeFile(String path, String data) throws IOException {
+		writeFile(getFileServiceRoot().createRelative(path), data);
+	}
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.FileService#deleteFile(java.lang.String)
-     */
-    public boolean deleteFile(String path) {
-        return (new File(getFileServiceRoot(), path)).delete();
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.wavemaker.runtime.service.FileService#writeFile(java.io.File,
+	 * java.lang.String)
+	 */
+	public void writeFile(Resource file, String data) throws IOException {
+		FileCopyUtils.copy(data, getWriter(file));
+	}
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.FileService#getReader(java.io.File)
-     */
-    public Reader getReader(File file)
-            throws UnsupportedEncodingException, FileNotFoundException {
-        return new InputStreamReader(new FileInputStream(file), getEncoding());
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.wavemaker.runtime.service.FileService#deleteFile(java.lang.String)
+	 */
+	public boolean deleteFile(String path) throws IOException{
+		return deleteFile(getFileServiceRoot().createRelative(path));
+	}
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.FileService#getReader(java.lang.String)
-     */
-    public Reader getReader(String path)
-            throws UnsupportedEncodingException, FileNotFoundException {
-        return getReader(new File(getFileServiceRoot(), path));
-    }
+	/*
+	 * (non-Javadoc)
+	 * @see com.wavemaker.tools.service.FileService#deleteFile(org.springframework.core.io.Resource)
+	 */
+	public boolean deleteFile(Resource file) throws IOException {
+		Assert.notNull(studioConfiguration, "Studio Configuration is required.");
+		return studioConfiguration.deleteFile(file);
+	}
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.FileService#getWriter(java.io.File)
-     */
-    public Writer getWriter(File file)
-            throws UnsupportedEncodingException, FileNotFoundException {
-        return new OutputStreamWriter(new FileOutputStream(file), getEncoding());
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.wavemaker.runtime.service.FileService#getReader(java.io.File)
+	 */
+	public Reader getReader(Resource file) throws UnsupportedEncodingException,
+			FileNotFoundException, IOException {
+		return new InputStreamReader(file.getInputStream(), getEncoding());
+	}
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.FileService#getWriter(java.lang.String)
-     */
-    public Writer getWriter(String path)
-            throws UnsupportedEncodingException, FileNotFoundException {
-        return getWriter(new File(getFileServiceRoot(), path));
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.wavemaker.runtime.service.FileService#getReader(java.lang.String)
+	 */
+	public Reader getReader(String path) throws UnsupportedEncodingException,
+			FileNotFoundException, IOException {
+		return getReader(getFileServiceRoot().createRelative(path));
+	}
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.tools.service.FileService#exists(java.lang.String)
-     */
-    public boolean fileExists(String path) {
-        return (new File(getFileServiceRoot(), path)).exists();
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.wavemaker.runtime.service.FileService#getWriter(java.io.File)
+	 */
+	public Writer getWriter(Resource file) throws UnsupportedEncodingException,
+			FileNotFoundException {
+		Assert.notNull(studioConfiguration, "Studio Configuration is required.");
+		return new OutputStreamWriter(studioConfiguration.getOutputStream(file), getEncoding());
+	}
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.tools.service.FileService#exists(java.io.File)
-     */
-    public boolean fileExists(File file) {
-        return file.exists();
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.wavemaker.runtime.service.FileService#getWriter(java.lang.String)
+	 */
+	public Writer getWriter(String path) throws UnsupportedEncodingException,
+			FileNotFoundException, IOException {
+		return getWriter(getFileServiceRoot().createRelative(path));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.wavemaker.tools.service.FileService#exists(java.lang.String)
+	 */
+	public boolean fileExists(String path) throws IOException {
+		return getFileServiceRoot().createRelative(path).exists();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.wavemaker.tools.service.FileService#exists(java.io.File)
+	 */
+	public boolean fileExists(Resource file) {
+		return file.exists();
+	}
 }

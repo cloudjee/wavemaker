@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.runtime.test.TestSpringContextTestCase;
 import com.wavemaker.tools.ws.wsdl.WSDLException;
@@ -60,7 +60,7 @@ public class TestWSDLManager extends TestSpringContextTestCase {
             manager.registerWSDL(null, null);
         } catch (IllegalArgumentException e) {
             assertTrue(e.getMessage().equals(
-                    Resource.WS_NULL_WSDL_URI.getMessage()));
+                    MessageResource.WS_NULL_WSDL_URI.getMessage()));
         }
     }
 }

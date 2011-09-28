@@ -14,7 +14,6 @@
 
 package com.wavemaker.tools.ws;
 
-import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,6 +24,7 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.springframework.core.io.Resource;
 import org.w3c.dom.Element;
 
 import com.sun.tools.xjc.api.Mapping;
@@ -38,7 +38,6 @@ import com.sun.tools.xjc.model.CTypeInfo;
 import com.sun.tools.xjc.model.Model;
 import com.sun.tools.xjc.model.nav.NType;
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.CommonConstants;
 import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.ws.wsdl.TypeMapper;
@@ -49,6 +48,7 @@ import com.wavemaker.tools.ws.wsdl.WSDL.WebServiceType;
  * JAXB specific type mappings.
  * 
  * @author Frankie Fu
+ * @author Jeremy Grelle
  */
 public class JAXBTypeMapper implements TypeMapper {
 
@@ -69,17 +69,17 @@ public class JAXBTypeMapper implements TypeMapper {
     private Map<QName, String> jaxbMappings;
     
     public JAXBTypeMapper(WSDL wsdl) throws GenerationException {
-        this(wsdl, new ArrayList<File>());
+        this(wsdl, new ArrayList<Resource>());
     }
 
-    public JAXBTypeMapper(WSDL wsdl, List<File> bindingFiles)
+    public JAXBTypeMapper(WSDL wsdl, List<Resource> bindingFiles)
             throws GenerationException {
         this(wsdl.getSchemas(), bindingFiles, wsdl.getPackageName(),
                 wsdl.getAuxiliaryClasses(), wsdl.getWebServiceType());
     }
 
     public JAXBTypeMapper(Map<String, Element> schemas,
-            List<File> bindingFiles, String packageName,
+            List<Resource> bindingFiles, String packageName,
             Set<String> auxiliaryClasses, WebServiceType type)
             throws GenerationException {
         jaxbModel = XJCCompiler.createSchemaModel(schemas, bindingFiles,

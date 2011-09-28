@@ -14,7 +14,6 @@
 
 package com.wavemaker.tools.service;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -27,26 +26,24 @@ import java.util.TreeSet;
 
 import javax.xml.bind.JAXBException;
 
-import org.apache.commons.io.FileUtils;
+import org.springframework.core.io.Resource;
 
-import com.wavemaker.common.Resource;
-import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.CommonConstants;
-import com.wavemaker.common.util.IOUtils;
+import com.wavemaker.common.MessageResource;
+import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.JSONMarshaller;
 import com.wavemaker.json.JSONState;
 import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.runtime.service.TypeManager;
 import com.wavemaker.tools.project.Project;
-import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.service.definitions.DataObject;
+import com.wavemaker.tools.service.definitions.DataObject.Element;
 import com.wavemaker.tools.service.definitions.DataObjects;
 import com.wavemaker.tools.service.definitions.Operation;
+import com.wavemaker.tools.service.definitions.Operation.Parameter;
 import com.wavemaker.tools.service.definitions.OperationComparator;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.service.definitions.ServiceComparator;
-import com.wavemaker.tools.service.definitions.DataObject.Element;
-import com.wavemaker.tools.service.definitions.Operation.Parameter;
 import com.wavemaker.tools.service.smd.Method;
 import com.wavemaker.tools.service.smd.Param;
 import com.wavemaker.tools.service.smd.SMD;
@@ -89,7 +86,7 @@ public /*static*/ class ConfigurationCompiler {
     /**
      * Runtime services directory.
      */
-    public static final String RUNTIME_SERVICES_DIR = "services";
+    public static final String RUNTIME_SERVICES_DIR = "services/";
 
     /**
      * Services spring xml configuration.
@@ -124,8 +121,12 @@ public /*static*/ class ConfigurationCompiler {
      * @param p
      * @return
      */
-    public static File getRuntimeServicesXml(Project p) {
-        return new File(p.getWebInf(), RUNTIME_SERVICES);
+    public static Resource getRuntimeServicesXml(Project p) {
+        try {
+			return p.getWebInf().createRelative(RUNTIME_SERVICES);
+		} catch (IOException ex) {
+			throw new WMRuntimeException(ex);
+		}
     }
 
     /**
@@ -133,8 +134,12 @@ public /*static*/ class ConfigurationCompiler {
      * @param p
      * @return
      */
-    public static File getRuntimeManagersXml(Project p) {
-        return new File(p.getWebInf(), RUNTIME_MANAGERS);
+    public static Resource getRuntimeManagersXml(Project p) {
+        try {
+			return p.getWebInf().createRelative(RUNTIME_MANAGERS);
+		} catch (IOException ex) {
+			throw new WMRuntimeException(ex);
+		}
     }
 
     /**
@@ -143,25 +148,35 @@ public /*static*/ class ConfigurationCompiler {
      * @param serviceName service name
      * @return
      */
-    public static File getSmdFile(File servicesDir, String serviceName) {
-        return new File(servicesDir, serviceName+"."+SERVICE_SMD_EXTENSION);
+    public static Resource getSmdFile(Resource servicesDir, String serviceName) {
+        try {
+			return servicesDir.createRelative(serviceName+"."+SERVICE_SMD_EXTENSION);
+		} catch (IOException ex) {
+			throw new WMRuntimeException(ex);
+		}
     }
 
-    public static File getSmdFile(Project currentProject, String serviceName) {
-        return getSmdFile(
-                new File(currentProject.getWebAppRoot(), RUNTIME_SERVICES_DIR),
-                serviceName);
+    public static Resource getSmdFile(Project currentProject, String serviceName) {
+        try {
+			return getSmdFile(currentProject.getWebAppRoot().createRelative(RUNTIME_SERVICES_DIR),serviceName);
+		} catch (IOException ex) {
+			throw new WMRuntimeException(ex);
+		}
     }
     
-    public static File getTypesFile(File webAppRoot) {
-        return new File(webAppRoot, TYPE_RUNTIME_FILE);
+    public static Resource getTypesFile(Resource webAppRoot) {
+        try {
+			return webAppRoot.createRelative(TYPE_RUNTIME_FILE);
+		} catch (IOException ex) {
+			throw new WMRuntimeException(ex);
+		}
     }
     
-    public static File getTypesFile(Project project) {
+    public static Resource getTypesFile(Project project) {
         return getTypesFile(project.getWebAppRoot());
     }
 
-    public static void generateServices(FileService fileService, File servicesXml,
+    public static void generateServices(FileService fileService, Resource servicesXml,
             SortedSet<Service> services) throws JAXBException, IOException {
 
         SortedSet<Service> allServices =
@@ -174,7 +189,7 @@ public /*static*/ class ConfigurationCompiler {
         for (Service service: allServices) {
 
             if (null==service.getSpringFile()) {
-                throw new WMRuntimeException(Resource.NO_EXTERNAL_BEAN_DEF,
+                throw new WMRuntimeException(MessageResource.NO_EXTERNAL_BEAN_DEF,
                         service.getId());
             } else {
                 Import i = new Import();
@@ -184,8 +199,6 @@ public /*static*/ class ConfigurationCompiler {
             }
         }
 
-        // write to file
-        FileUtils.forceMkdir(servicesXml.getParentFile());
         SpringConfigSupport.writeBeans(beans, servicesXml, fileService);
     }
 
@@ -247,7 +260,7 @@ public /*static*/ class ConfigurationCompiler {
                     methodMap.put(methodName, meth);
                 } else if (oldMapParams.size()==curMapParams.size()) {
                     throw new WMRuntimeException(
-                            Resource.JSONUTILS_BADMETHODOVERLOAD,
+                            MessageResource.JSONUTILS_BADMETHODOVERLOAD,
                             serviceName, methodName);
                 } else {
                     // the existing method has fewer parameters than this one,
@@ -282,21 +295,18 @@ public /*static*/ class ConfigurationCompiler {
             SortedSet<Service> services)
             throws IOException, NoSuchMethodException {
         
-        File servicesDir = new File(currentProject.getWebAppRoot(),
-                RUNTIME_SERVICES_DIR);
-
+        Resource servicesDir = currentProject.getWebAppRoot().createRelative(RUNTIME_SERVICES_DIR);
         generateSMDs(currentProject, servicesDir, services);
     }
 
-    public static void generateSMDs(FileService fileService, File servicesDir,
+    public static void generateSMDs(FileService fileService, Resource servicesDir,
             SortedSet<Service> services)
             throws IOException, NoSuchMethodException {
 
-        IOUtils.makeDirectories(servicesDir, fileService.getFileServiceRoot());
         for (Service service: services) {
             SMD smd = getSMD(service);
 
-            File smdFile = getSmdFile(servicesDir, service.getId());
+            Resource smdFile = getSmdFile(servicesDir, service.getId());
 
             JSONState js = new JSONState();
           
@@ -306,7 +316,7 @@ public /*static*/ class ConfigurationCompiler {
         }
     }
 
-    public static void generateManagers(FileService fileService, File managersXml,
+    public static void generateManagers(FileService fileService, Resource managersXml,
             SortedSet<Service> services)
             throws JAXBException, IOException {
 
@@ -351,19 +361,15 @@ public /*static*/ class ConfigurationCompiler {
 
         beans.addBean(tm);
 
-
-        // write to file
-        FileUtils.forceMkdir(managersXml.getParentFile());
         SpringConfigSupport.writeBeans(beans, managersXml, fileService);
     }
     
-    public static void generateTypes(FileService fileService, File typesFile,
+    public static void generateTypes(FileService fileService, Resource typesFile,
             SortedSet<Service> services, List<DataObject> primitiveTypes)
             throws IOException {
         
         Types types = getTypesFromServices(services, primitiveTypes);
         
-        FileUtils.forceMkdir(typesFile.getParentFile());
         Writer writer = fileService.getWriter(typesFile);
         writer.write(WM_TYPES_PREPEND);
         

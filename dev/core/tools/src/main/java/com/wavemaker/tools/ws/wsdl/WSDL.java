@@ -14,7 +14,6 @@
 
 package com.wavemaker.tools.ws.wsdl;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,9 +31,10 @@ import javax.xml.namespace.QName;
 import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaElement;
 import org.apache.ws.commons.schema.XmlSchemaType;
+import org.springframework.core.io.Resource;
 import org.w3c.dom.Element;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.runtime.service.ElementType;
@@ -48,7 +48,7 @@ import com.wavemaker.tools.ws.wsdl.WSDLUtils.SoapHeader;
  * This class represents a Web Service definition.
  * 
  * @author ffu
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  */
 public class WSDL  extends AbstractDeprecatedServiceDefinition
         implements ReflectServiceDefinition {
@@ -93,9 +93,9 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
 
     private boolean skipInternalCustomization;
 
-    private List<File> jaxbCustomizationFiles;
+    private List<Resource> jaxbCustomizationFiles;
 
-    private List<File> jaxwsCustomizationFiles;
+    private List<Resource> jaxwsCustomizationFiles;
 
     private List<String> interceptorClassNames = new ArrayList<String>();
 
@@ -328,7 +328,7 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
      * 
      * @return The additional JAXB customization files.
      */
-    public List<File> getJaxbCustomizationFiles() {
+    public List<Resource> getJaxbCustomizationFiles() {
         return jaxbCustomizationFiles;
     }
 
@@ -337,7 +337,7 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
      * 
      * @param jaxbCustomizationFiles The additional JAXB customization files.
      */
-    public void setJaxbCustomizationFiles(List<File> jaxbCustomizationFiles) {
+    public void setJaxbCustomizationFiles(List<Resource> jaxbCustomizationFiles) {
         this.jaxbCustomizationFiles = jaxbCustomizationFiles;
     }
 
@@ -347,7 +347,7 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
      * 
      * @return The additional JAXWS customization files.
      */
-    public List<File> getJaxwsCustomizationFiles() {
+    public List<Resource> getJaxwsCustomizationFiles() {
         return jaxwsCustomizationFiles;
     }
 
@@ -356,7 +356,7 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
      * 
      * @param jaxwsCustomizationFiles The additional JAXWS customization files.
      */
-    public void setJaxwsCustomizationFiles(List<File> jaxwsCustomizationFiles) {
+    public void setJaxwsCustomizationFiles(List<Resource> jaxwsCustomizationFiles) {
         this.jaxwsCustomizationFiles = jaxwsCustomizationFiles;
     }
 
@@ -689,7 +689,7 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
      */
     public TypeMapper getTypeMapper() {
         if (typeMapper == null) {
-            throw new WMRuntimeException(Resource.WS_MISSING_TYPEMAPPER);
+            throw new WMRuntimeException(MessageResource.WS_MISSING_TYPEMAPPER);
         }
         return this.typeMapper;
     }

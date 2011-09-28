@@ -14,9 +14,9 @@
 
 package com.wavemaker.tools.pws;
 
-import com.wavemaker.runtime.pws.PwsLoginInfo;
-
 import java.util.List;
+
+import com.wavemaker.runtime.pws.PwsLoginInfo;
 
 /**
  * This interface defines methods to render the list of available web services for a partner and a method to import the selected

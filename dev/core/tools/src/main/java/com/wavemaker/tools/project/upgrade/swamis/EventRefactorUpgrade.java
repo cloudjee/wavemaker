@@ -14,10 +14,11 @@
 
 package com.wavemaker.tools.project.upgrade.swamis;
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.xml.bind.JAXBException;
+
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.service.events.EventWire;
@@ -37,112 +38,118 @@ import com.wavemaker.tools.util.DesignTimeUtils;
 
 /**
  * Move event definitions to the new {@link EventWire} beans inside of the
- * service's bean definition file.  This must run after
+ * service's bean definition file. This must run after
+ * 
  * @link ServiceBeanFileUpgrade}.
  * 
  * @author small
- * @version $Rev$ - $Date$
- *
+ * @author Jeremy Grelle
+ * 
  */
 public class EventRefactorUpgrade implements UpgradeTask {
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
-    public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
-        
-        DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(project.getProjectRoot());
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker
+	 * .tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
+	 */
+	public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
-        try {
-            // upgrade events
-            for (Service service : dsm.getServices()) {
-                // ignore runtimeService
-                if (DesignServiceManager.RUNTIME_SERVICE_ID.equals(service
-                        .getId())) {
-                    continue;
-                }
+		DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(project
+				.getProjectRoot());
 
-                if (!service.getEventnotifier().isEmpty()) {
-                    File beansFile = dsm.getServiceBeanXml(service.getId());
-                    Beans beans = SpringConfigSupport.readBeans(beansFile,
-                            project);
-                    
-                    for (EventNotifier event : service.getEventnotifier()) {
-                        
-                        String existingBeanId = null;
-                        for (Service srvc: dsm.getServices()) {
-                            if (srvc.getClazz().equals(event.getName())) {
-                                existingBeanId = srvc.getId();
-                            }
-                        }
+		try {
+			// upgrade events
+			for (Service service : dsm.getServices()) {
+				// ignore runtimeService
+				if (DesignServiceManager.RUNTIME_SERVICE_ID.equals(service
+						.getId())) {
+					continue;
+				}
 
-                        Bean eventWireBean;
-                        if (null!=existingBeanId) {
-                            eventWireBean = getEventWireBean(service.getId(),
-                                    existingBeanId);
-                        } else {
-                            eventWireBean = getEventWireBean_EmbeddedNotifier(
-                                    service.getId(), event.getName());
-                        }
-                        beans.addBean(eventWireBean);
-                    }
+				if (!service.getEventnotifier().isEmpty()) {
+					Resource beansFile = dsm.getServiceBeanXml(service.getId());
+					Beans beans = SpringConfigSupport.readBeans(beansFile,
+							project);
 
-                    service.getEventnotifier().clear();
-                    dsm.defineService(service);
-                    
-                    SpringConfigSupport.writeBeans(beans, beansFile, project);
-                }
-            }
-            
-            // remove eventManager by regenerating project-managers.xml
-            ConfigurationCompiler.generateManagers(project,
-                    ConfigurationCompiler.getRuntimeManagersXml(project),
-                    dsm.getServices());
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
-        } catch (JAXBException e) {
-            throw new WMRuntimeException(e);
-        }
-    }
-    
-    public static Bean getEventWireBean(String serviceId, String eventRef) {
-        
-        Bean bean = new Bean();
-        bean.setClazz(EventWire.class.getCanonicalName());
-        bean.setLazyInit(DefaultableBoolean.TRUE);
-        
-        Property p = new Property();
-        p.setName("eventListener");
-        p.setRef(eventRef);
-        bean.addProperty(p);
-        
-        p = new Property();
-        p.setName("bean");
-        p.setRef(serviceId);
-        bean.addProperty(p);
-        
-        return bean;
-    }
-    
-    public static Bean getEventWireBean_EmbeddedNotifier(String serviceId,
-            String eventNotifierClass) {
-        
-        Bean bean = new Bean();
-        bean.setClazz(EventWire.class.getCanonicalName());
-        bean.setLazyInit(DefaultableBoolean.TRUE);
-        
-        Property p = new Property();
-        p.setName("eventListener");
-        Bean eventListenerBean = new Bean();
-        eventListenerBean.setClazz(eventNotifierClass);
-        p.setBean(eventListenerBean);
-        bean.addProperty(p);
-        
-        p = new Property();
-        p.setName("bean");
-        p.setRef(serviceId);
-        bean.addProperty(p);
-        
-        return bean;
-    }
+					for (EventNotifier event : service.getEventnotifier()) {
+
+						String existingBeanId = null;
+						for (Service srvc : dsm.getServices()) {
+							if (srvc.getClazz().equals(event.getName())) {
+								existingBeanId = srvc.getId();
+							}
+						}
+
+						Bean eventWireBean;
+						if (null != existingBeanId) {
+							eventWireBean = getEventWireBean(service.getId(),
+									existingBeanId);
+						} else {
+							eventWireBean = getEventWireBean_EmbeddedNotifier(
+									service.getId(), event.getName());
+						}
+						beans.addBean(eventWireBean);
+					}
+
+					service.getEventnotifier().clear();
+					dsm.defineService(service);
+
+					SpringConfigSupport.writeBeans(beans, beansFile, project);
+				}
+			}
+
+			// remove eventManager by regenerating project-managers.xml
+			ConfigurationCompiler.generateManagers(project,
+					ConfigurationCompiler.getRuntimeManagersXml(project),
+					dsm.getServices());
+		} catch (IOException e) {
+			throw new WMRuntimeException(e);
+		} catch (JAXBException e) {
+			throw new WMRuntimeException(e);
+		}
+	}
+
+	public static Bean getEventWireBean(String serviceId, String eventRef) {
+
+		Bean bean = new Bean();
+		bean.setClazz(EventWire.class.getCanonicalName());
+		bean.setLazyInit(DefaultableBoolean.TRUE);
+
+		Property p = new Property();
+		p.setName("eventListener");
+		p.setRef(eventRef);
+		bean.addProperty(p);
+
+		p = new Property();
+		p.setName("bean");
+		p.setRef(serviceId);
+		bean.addProperty(p);
+
+		return bean;
+	}
+
+	public static Bean getEventWireBean_EmbeddedNotifier(String serviceId,
+			String eventNotifierClass) {
+
+		Bean bean = new Bean();
+		bean.setClazz(EventWire.class.getCanonicalName());
+		bean.setLazyInit(DefaultableBoolean.TRUE);
+
+		Property p = new Property();
+		p.setName("eventListener");
+		Bean eventListenerBean = new Bean();
+		eventListenerBean.setClazz(eventNotifierClass);
+		p.setBean(eventListenerBean);
+		bean.addProperty(p);
+
+		p = new Property();
+		p.setName("bean");
+		p.setRef(serviceId);
+		bean.addProperty(p);
+
+		return bean;
+	}
 }

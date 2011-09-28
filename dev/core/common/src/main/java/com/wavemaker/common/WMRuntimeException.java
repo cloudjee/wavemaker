@@ -24,22 +24,22 @@ public class WMRuntimeException extends RuntimeException {
 
     private final Integer msgId;
 
-    public WMRuntimeException(Resource resource) {
+    public WMRuntimeException(MessageResource resource) {
         this(resource.getMessage(), resource.getDetailMessage(), resource
                 .getId());
     }
 
-    public WMRuntimeException(Resource resource, Throwable cause) {
+    public WMRuntimeException(MessageResource resource, Throwable cause) {
         this(resource.getMessage(), resource.getDetailMessage(), resource
                 .getId(), cause);
     }
 
-    public WMRuntimeException(Resource resource, Object... args) {
+    public WMRuntimeException(MessageResource resource, Object... args) {
         this(resource.getMessage(args), resource.getDetailMessage(args),
                 resource.getId());
     }
 
-    public WMRuntimeException(Resource resource, Throwable cause,
+    public WMRuntimeException(MessageResource resource, Throwable cause,
             Object... args) {
         this(resource.getMessage(args), resource.getDetailMessage(args),
                 resource.getId(), cause);

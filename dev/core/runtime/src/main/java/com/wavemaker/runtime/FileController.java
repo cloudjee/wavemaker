@@ -36,7 +36,7 @@ import org.springframework.mail.javamail.ConfigurableMimeFileTypeMap;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.module.ModuleManager;
@@ -97,7 +97,7 @@ public final class FileController extends AbstractController {
 		        reqPath.startsWith(WM_STUDIO_BUILD_URL)){
         	addExpiresTag = true;
         } else if (!reqPath.contains(WM_CONFIG_URL)) {
-            throw new WMRuntimeException(Resource.STUDIO_UNKNOWN_LOCATION,
+            throw new WMRuntimeException(MessageResource.STUDIO_UNKNOWN_LOCATION,
                     reqPath, request.getRequestURI());
         }
         

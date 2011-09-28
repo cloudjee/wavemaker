@@ -20,7 +20,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.JSONMarshaller;
 import com.wavemaker.json.type.converters.ReadObjectConverter;
@@ -68,7 +68,7 @@ public class DateTypeDefinition extends PrimitiveReflectTypeDefinition
             } else if (java.sql.Time.class.equals(this.getKlass())) {
                 return new java.sql.Time(num.longValue());
             } else {
-                throw new WMRuntimeException(Resource.JSON_UNHANDLED_TYPE,
+                throw new WMRuntimeException(MessageResource.JSON_UNHANDLED_TYPE,
                         input, input.getClass());
             }
         } else {
@@ -87,7 +87,7 @@ public class DateTypeDefinition extends PrimitiveReflectTypeDefinition
         } else if (java.util.Date.class.isAssignableFrom(input.getClass())) {
             writer.write(""+((java.util.Date) input).getTime());
         } else {
-            throw new WMRuntimeException(Resource.JSON_UNHANDLED_TYPE,
+            throw new WMRuntimeException(MessageResource.JSON_UNHANDLED_TYPE,
                     input, input.getClass());
         }
     }

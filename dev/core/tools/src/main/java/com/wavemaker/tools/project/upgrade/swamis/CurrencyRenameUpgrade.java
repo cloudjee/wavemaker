@@ -14,9 +14,10 @@
 
 package com.wavemaker.tools.project.upgrade.swamis;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Set;
+
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.project.PagesManager;
@@ -31,46 +32,47 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
  * instances of wm.MoneyFormatter become wm.CurrencyFormatter
  * 
  * @author small
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  * 
  */
 public class CurrencyRenameUpgrade implements UpgradeTask {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
-     *      com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
-    public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker
+	 * .tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
+	 */
+	public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
-        try {
-            Set<String> pages = getPagesManager().listPages();
+		try {
+			Set<String> pages = getPagesManager().listPages();
 
-            for (String page : pages) {
-                File pageDir = getPagesManager().getPageDir(
-                        project.getProjectName(), page);
-                File widgetsJs = new File(pageDir, page+"."+
-                        PagesManager.PAGE_WIDGETS);
-                String pageContents = project.readFile(widgetsJs);
-                pageContents = pageContents.replace("\"wm.MoneyFormatter\"",
-                        "\"wm.CurrencyFormatter\"");
-                project.writeFile(widgetsJs, pageContents);
-            }
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
-        }
+			for (String page : pages) {
+				Resource pageDir = getPagesManager().getPageDir(
+						project.getProjectName(), page);
+				Resource widgetsJs = pageDir.createRelative(page + "."
+						+ PagesManager.PAGE_WIDGETS);
+				String pageContents = project.readFile(widgetsJs);
+				pageContents = pageContents.replace("\"wm.MoneyFormatter\"",
+						"\"wm.CurrencyFormatter\"");
+				project.writeFile(widgetsJs, pageContents);
+			}
+		} catch (IOException e) {
+			throw new WMRuntimeException(e);
+		}
 
-    }
-    
-    // bean properties
-    private PagesManager pagesManager;
+	}
 
-    public PagesManager getPagesManager() {
-        return pagesManager;
-    }
+	// bean properties
+	private PagesManager pagesManager;
 
-    public void setPagesManager(PagesManager pagesManager) {
-        this.pagesManager = pagesManager;
-    }
+	public PagesManager getPagesManager() {
+		return pagesManager;
+	}
+
+	public void setPagesManager(PagesManager pagesManager) {
+		this.pagesManager = pagesManager;
+	}
 }

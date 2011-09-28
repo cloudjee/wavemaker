@@ -2,7 +2,7 @@
  *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
+ *  you may not use this Resource except in compliance with the License.
  *  You may obtain a copy of the License at
  *     http://www.apache.org/licenses/LICENSE-2.0
  *  Unless required by applicable law or agreed to in writing, software
@@ -14,13 +14,12 @@
 
 package com.wavemaker.tools.project.upgrade.swamis;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.FileUtils;
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.project.PagesManager;
@@ -34,7 +33,7 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
  * code.
  * 
  * @author small
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  *
  */
 public class ClientSideRefactorUpgrade implements UpgradeTask {
@@ -57,19 +56,17 @@ public class ClientSideRefactorUpgrade implements UpgradeTask {
         
         try {
             String projectJS = project.getProjectName() + ".js";
-            File fProjectJS = new File(project.getWebAppRoot(), projectJS);
+            Resource fProjectJS = project.getWebAppRoot().createRelative(projectJS);
             Set<String> pages = getPagesManager().listPages();
             
             
             // 1. rename /project/index.html to index.bak
-            File webapp = project.getWebAppRoot();
-            File indexhtml = new File(webapp, ProjectConstants.INDEX_HTML);
+            Resource webapp = project.getWebAppRoot();
+            Resource indexhtml = webapp.createRelative(ProjectConstants.INDEX_HTML);
             if (indexhtml.exists()) {
-                File bakIndexhtml = new File(webapp,
-                        ProjectConstants.INDEX_HTML + "." + BACKUP_EXT);
-                FileUtils.copyFile(indexhtml, bakIndexhtml);
-                indexhtml.delete();
-                
+                Resource bakIndexhtml = webapp.createRelative(ProjectConstants.INDEX_HTML + "." + BACKUP_EXT);
+                project.writeFile(bakIndexhtml, project.readFile(indexhtml));
+                project.deleteFile(indexhtml);
                 upgradeInfo.addMessage("(generated) index.html renamed to index.html.bak");
             }
             
@@ -84,10 +81,10 @@ public class ClientSideRefactorUpgrade implements UpgradeTask {
             
             // 2. we need to change all instances of turbo to wm
             for (String page : pages) {
-                File pageDir = getPagesManager().getPageDir(
+                Resource pageDir = getPagesManager().getPageDir(
                         project.getProjectName(), page);
                 
-                File widgetsJS = new File(pageDir, page + "." +
+                Resource widgetsJS = pageDir.createRelative(page + "." +
                         PagesManager.PAGE_WIDGETS);
                 if (widgetsJS.exists()) {
                     String contents = project.readFile(widgetsJS);
@@ -95,7 +92,7 @@ public class ClientSideRefactorUpgrade implements UpgradeTask {
                     project.writeFile(widgetsJS, contents);
                 }
                 
-                File pageJS = new File(pageDir, page + "." +
+                Resource pageJS = pageDir.createRelative(page + "." +
                         PagesManager.PAGE_JS);
                 if (pageJS.exists()) {
                     String contents = project.readFile(pageJS);
@@ -113,10 +110,10 @@ public class ClientSideRefactorUpgrade implements UpgradeTask {
             
             // 3. widget name changes
             for (String page : pages) {
-                File pageDir = getPagesManager().getPageDir(
+                Resource pageDir = getPagesManager().getPageDir(
                         project.getProjectName(), page);
                 
-                File widgetsJS = new File(pageDir, page + "." +
+                Resource widgetsJS = pageDir.createRelative(page + "." +
                         PagesManager.PAGE_WIDGETS);
                 if (widgetsJS.exists()) {
                     String contents = project.readFile(widgetsJS);
@@ -140,10 +137,10 @@ public class ClientSideRefactorUpgrade implements UpgradeTask {
             
             // 4. (hard) rename bindings associated with NavigationCall's
             for (String page:pages) {
-                File pageDir = getPagesManager().getPageDir(
+                Resource pageDir = getPagesManager().getPageDir(
                         project.getProjectName(), page);
 
-                File widgetsJS = new File(pageDir, page + "."
+                Resource widgetsJS = pageDir.createRelative(page + "."
                         + PagesManager.PAGE_WIDGETS);
                 if (widgetsJS.exists()) {
                     String contents = project.readFile(widgetsJS);
@@ -161,10 +158,10 @@ public class ClientSideRefactorUpgrade implements UpgradeTask {
             
             // 7. Expression syntax has changed to Javascript
             for (String page:pages) {
-                File pageDir = getPagesManager().getPageDir(
+                Resource pageDir = getPagesManager().getPageDir(
                         project.getProjectName(), page);
 
-                File widgetsJS = new File(pageDir, page + "."
+                Resource widgetsJS = pageDir.createRelative(page + "."
                         + PagesManager.PAGE_WIDGETS);
                 if (widgetsJS.exists()) {
                     String contents = project.readFile(widgetsJS);
@@ -188,10 +185,10 @@ public class ClientSideRefactorUpgrade implements UpgradeTask {
             // ServiceCall in 3.2.x) need to be changed from "wm.Variable" to
             // "wm.ServiceInputVariable"
             for (String page:pages) {
-                File pageDir = getPagesManager().getPageDir(
+                Resource pageDir = getPagesManager().getPageDir(
                         project.getProjectName(), page);
 
-                File widgetsJS = new File(pageDir, page + "."
+                Resource widgetsJS = pageDir.createRelative(page + "."
                         + PagesManager.PAGE_WIDGETS);
                 if (widgetsJS.exists()) {
                     String contents = project.readFile(widgetsJS);

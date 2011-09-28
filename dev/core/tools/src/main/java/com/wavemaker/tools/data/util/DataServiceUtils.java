@@ -30,6 +30,8 @@ import java.util.Properties;
 
 import javax.xml.bind.JAXBException;
 
+import org.springframework.core.io.FileSystemResource;
+
 import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.StringUtils;
@@ -57,9 +59,9 @@ import com.wavemaker.tools.data.parser.HbmConstants;
 import com.wavemaker.tools.service.FileService;
 import com.wavemaker.tools.service.codegen.GenerationUtils;
 import com.wavemaker.tools.service.definitions.DataObject;
+import com.wavemaker.tools.service.definitions.DataObject.Element;
 import com.wavemaker.tools.service.definitions.DataObjects;
 import com.wavemaker.tools.service.definitions.Service;
-import com.wavemaker.tools.service.definitions.DataObject.Element;
 import com.wavemaker.tools.spring.SpringConfigSupport;
 import com.wavemaker.tools.spring.SpringServiceDefinitionWrapper;
 import com.wavemaker.tools.spring.beans.Beans;
@@ -464,7 +466,7 @@ public class DataServiceUtils {
 
     public static Beans readBeans(File springConfig, FileService fileService) {
         try {
-            return SpringConfigSupport.readBeans(springConfig, fileService);
+            return SpringConfigSupport.readBeans(new FileSystemResource(springConfig), fileService);
         } catch (JAXBException ex) {
             throw new ConfigurationException(ex);
         } catch (IOException ex) {

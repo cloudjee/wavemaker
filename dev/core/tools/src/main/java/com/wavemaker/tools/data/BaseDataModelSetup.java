@@ -36,7 +36,7 @@ import org.hibernate.tool.ant.GenericExporterTask;
 import org.hibernate.tool.hbm2x.Exporter;
 
 import com.wavemaker.common.CommonConstants;
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.common.util.SystemUtils;
@@ -848,7 +848,7 @@ public abstract class BaseDataModelSetup {
             if (destdir.exists()) {
                 if (destdir.isFile()) {
                     throw new ConfigurationException(
-                            Resource.PROPERTY_MUST_BE_DIR,
+                            MessageResource.PROPERTY_MUST_BE_DIR,
                             DESTDIR_SYSTEM_PROPERTY, destdir.getAbsolutePath());
                 }
             }
@@ -1005,7 +1005,7 @@ public abstract class BaseDataModelSetup {
 
     private void checkProperties(Collection<String> requiredProperties) {
         if (!requiredProperties.isEmpty()) {
-            throw new ConfigurationException(Resource.MISSING_SYS_PROPERTIES
+            throw new ConfigurationException(MessageResource.MISSING_SYS_PROPERTIES
                     .getMessage(ObjectUtils.toString(requiredProperties, ", ")));
         }
     }

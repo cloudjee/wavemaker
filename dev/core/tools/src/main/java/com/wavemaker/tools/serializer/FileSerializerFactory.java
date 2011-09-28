@@ -14,11 +14,13 @@
 
 package com.wavemaker.tools.serializer;
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-import com.wavemaker.common.Resource;
+import org.springframework.core.io.Resource;
+import org.springframework.util.StringUtils;
+
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.tools.service.FileService;
 
@@ -30,7 +32,7 @@ import com.wavemaker.tools.service.FileService;
  * serializer map.
  * 
  * @author ffu
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  * 
  */
 public class FileSerializerFactory {
@@ -93,7 +95,7 @@ public class FileSerializerFactory {
      * @return An object representing contents of the file.
      * @throws FileSerializerException
      */
-    public Object readObject(FileService fileService, File file)
+    public Object readObject(FileService fileService, Resource file)
             throws FileSerializerException {
         List<FileSerializer> serializers = getSerializers(file);
         FileSerializerException serializerException = null;
@@ -128,7 +130,7 @@ public class FileSerializerFactory {
      *            The file.
      * @throws FileSerializerException
      */
-    public void writeObject(FileService fileService, Object object, File file)
+    public void writeObject(FileService fileService, Object object, Resource file)
             throws FileSerializerException {
         List<FileSerializer> serializers = getSerializers(file);
         FileSerializerException serializerException = null;
@@ -144,22 +146,19 @@ public class FileSerializerFactory {
         }
     }
 
-    private List<FileSerializer> getSerializers(File file)
+    private List<FileSerializer> getSerializers(Resource file)
             throws FileSerializerException {
         String fileExt = getFileExtension(file);
         List<FileSerializer> serializers = serializerMap.get(fileExt);
         if (serializers == null || serializers.isEmpty()) {
             throw new FileSerializerException(
-                    Resource.STUDIO_PROJECT_UNKNOWN_TYPE + file.getName());
+                    MessageResource.STUDIO_PROJECT_UNKNOWN_TYPE + file.getFilename());
         }
         return serializers;
     }
 
-    private String getFileExtension(File file) {
-        String fileName = file.getName();
-        int dotPos = fileName.lastIndexOf(".");
-        String fileExt = fileName.substring(dotPos + 1);
-        return fileExt;
+    private String getFileExtension(Resource file) {
+        return StringUtils.getFilenameExtension(file.getFilename());
     }
 
     public Map<String, List<FileSerializer>> getSerializerMap() {

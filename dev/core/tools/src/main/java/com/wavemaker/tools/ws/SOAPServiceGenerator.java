@@ -23,7 +23,21 @@ import java.util.Map;
 
 import org.springframework.core.io.ClassPathResource;
 
-import com.sun.codemodel.*;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JCatchBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JTryBlock;
+import com.sun.codemodel.JType;
+import com.sun.codemodel.JVar;
+import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.util.ConversionUtils;
 import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.runtime.ws.jaxws.SOAPBindingResolver;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
@@ -39,205 +53,236 @@ import com.wavemaker.tools.ws.wsdl.WSDL;
  * This class generates SOAP service stubs.
  * 
  * @author ffu
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  */
 public class SOAPServiceGenerator extends WebServiceGenerator {
 
-    protected static final String SOAP_SERVICE_VAR_PROP_NAME = "soapServiceVar";
+	protected static final String SOAP_SERVICE_VAR_PROP_NAME = "soapServiceVar";
 
-    private JAXWSBuilder jaxwsBuilder;
-    
-    private List<JAXWSServiceInfo> serviceInfoList;
+	private JAXWSBuilder jaxwsBuilder;
 
-    private Map<String, JFieldVar> opSoapServiceMap = new HashMap<String, JFieldVar>();
+	private List<JAXWSServiceInfo> serviceInfoList;
 
-    public SOAPServiceGenerator(GenerationConfiguration configuration) {
-        super(configuration);
+	private Map<String, JFieldVar> opSoapServiceMap = new HashMap<String, JFieldVar>();
 
-        jaxwsBuilder = new JAXWSBuilder(wsdl, configuration
-                .getOutputDirectory(), configuration.getOutputDirectory());
-        serviceInfoList = jaxwsBuilder.getServiceInfoList();
-    }
+	public SOAPServiceGenerator(GenerationConfiguration configuration) {
+		super(configuration);
 
-    @Override
-    protected void preGeneration() throws GenerationException {
-        super.preGeneration();
+		try {
+			jaxwsBuilder = new JAXWSBuilder(wsdl, configuration
+					.getOutputDirectory().getFile(), configuration
+					.getOutputDirectory().getFile());
+		} catch (IOException ex) {
+			throw new WMRuntimeException(ex);
+		}
+		serviceInfoList = jaxwsBuilder.getServiceInfoList();
+	}
 
-        // generate JAXB Java files and JAXWS service client Java files
-        jaxwsBuilder.generate(jaxbBindingFiles);
-    }
+	@Override
+	protected void preGeneration() throws GenerationException {
+		super.preGeneration();
 
-    @Override
-    protected void postGeneration() throws GenerationException {
-        super.postGeneration();
+		// generate JAXB Java files and JAXWS service client Java files
+		jaxwsBuilder.generate(ConversionUtils
+				.convertToFileList(jaxbBindingFiles));
+	}
 
-        // delete generated class files
-        for (File file : getPackageDir().listFiles()) {
-            if (file.getName().endsWith(".class")) {
-                file.delete();
-            }
-        }
-    }
+	@Override
+	protected void postGeneration() throws GenerationException {
+		super.postGeneration();
 
-    @Override
-    protected void preGenerateClassBody(JDefinedClass cls)
-            throws GenerationException {
-        super.preGenerateClassBody(cls);
-        
-        for (JAXWSServiceInfo serviceInfo : serviceInfoList) {
-            for (JAXWSPortTypeInfo portTypeInfo : serviceInfo.getPortTypeInfoList()) {
-                String seiVarName = CodeGenUtils.toVariableName(portTypeInfo.getName()) + "Service";
-                // [RESULT]
-                // private <seiClass> <seiVarName>;
-                JClass jclass = codeModel.ref(portTypeInfo.getSeiFQClassName());
-                JFieldVar soapServiceVar = cls.field(JMod.PRIVATE, jclass, seiVarName);
-                portTypeInfo.setProperty(SOAP_SERVICE_VAR_PROP_NAME, soapServiceVar);
-            }
-        }
-        
-        populateOpSoapServiceMap();
-    }
+		// delete generated class files
+		for (File file : getPackageDir().listFiles()) {
+			if (file.getName().endsWith(".class")) {
+				file.delete();
+			}
+		}
+	}
 
-    private void populateOpSoapServiceMap() {
-        for (JAXWSServiceInfo serviceInfo : serviceInfoList) {
-            for (JAXWSPortTypeInfo portTypeInfo : serviceInfo
-                    .getPortTypeInfoList()) {
-                for (String opName : portTypeInfo.getOperationNames()) {
-                    opSoapServiceMap.put(opName, portTypeInfo.getProperty(
-                            SOAP_SERVICE_VAR_PROP_NAME, JFieldVar.class));
-                }
-            }
-        }
-    }
+	@Override
+	protected void preGenerateClassBody(JDefinedClass cls)
+			throws GenerationException {
+		super.preGenerateClassBody(cls);
 
-    @Override
-    protected void generateDefaultConstructorBody(JBlock body)
-            throws GenerationException {
-        for (JAXWSServiceInfo serviceInfo : serviceInfoList) {
-            String serviceClientVarName = CodeGenUtils.toVariableName(serviceInfo.getServiceClientClassName());
-            // [RESULT]
-            // <serviceClientClass> <serviceClientVar>;
-            JClass jclass = codeModel.ref(serviceInfo.getServiceClientFQClassName());
-            JVar serviceClientVar = body.decl(jclass, serviceClientVarName);
-        
-            // [RESULT]
-            // try {
-            JTryBlock tryBlock = body._try();
-            JBlock tryBody = tryBlock.body();
-        
-            // [RESULT]
-            // URL wsdlLocation = new ClassPathResource(<packageWsdlPath>).getURL();
-            JInvocation newClassPathResourceInvoke = JExpr._new(codeModel.ref(
-                    ClassPathResource.class)).arg(getRelativeWSDLPath()).invoke("getURL");
-            JVar wsdlLocationVar = tryBody.decl(codeModel.ref(URL.class), 
-                    "wsdlLocation", newClassPathResourceInvoke);
-        
-            // [RESULT]
-            // <serviceClientVar> = new <serviceClientClass>(wsdlLocation, <serviceQNameVar>);
-            JInvocation newServiceClientInvoke = JExpr._new(jclass).arg(wsdlLocationVar);
-            newServiceClientInvoke.arg(serviceInfo.getProperty(SERVICE_QNAME_VAR_PROP_NAME, JFieldVar.class));
-            tryBody.assign(serviceClientVar, newServiceClientInvoke);
-        
-            // [RESULT]
-            // } catch (IOException e) {
-            JCatchBlock catchBlock = tryBlock._catch(codeModel.ref(IOException.class));
-            catchBlock.param("e");
-        
-            // [RESULT]
-            // <serviceClientVar> = new <serviceClientClass>();
-            catchBlock.body().assign(serviceClientVar, JExpr._new(jclass));
-        
-            for (JAXWSPortTypeInfo portTypeInfo : serviceInfo.getPortTypeInfoList()) {
-                // [RESULT]
-                // <soapServiceVar> = serviceClient.get<portTypeName>();
-                body.assign(portTypeInfo.getProperty(SOAP_SERVICE_VAR_PROP_NAME, JFieldVar.class), serviceClientVar.invoke("get"
-                    + JAXWSBuilder.getJaxwsGeneratedClassName(portTypeInfo.getPortName())));
-            }
-        }
-    }
+		for (JAXWSServiceInfo serviceInfo : serviceInfoList) {
+			for (JAXWSPortTypeInfo portTypeInfo : serviceInfo
+					.getPortTypeInfoList()) {
+				String seiVarName = CodeGenUtils.toVariableName(portTypeInfo
+						.getName()) + "Service";
+				// [RESULT]
+				// private <seiClass> <seiVarName>;
+				JClass jclass = codeModel.ref(portTypeInfo.getSeiFQClassName());
+				JFieldVar soapServiceVar = cls.field(JMod.PRIVATE, jclass,
+						seiVarName);
+				portTypeInfo.setProperty(SOAP_SERVICE_VAR_PROP_NAME,
+						soapServiceVar);
+			}
+		}
 
-    @Override
-    protected void generateOperationMethodBody(JMethod method, JBlock body,
-            String operationName, Map<String, JType> inputJTypeMap, ElementType outputType1, //salesforce
-            JType outputJType, Integer overloadCount) throws GenerationException {
-        super.generateOperationMethodBody(method, body, operationName, 
-                inputJTypeMap, outputType1, outputJType, overloadCount);
-        
-        JFieldVar soapServiceVar = opSoapServiceMap.get(operationName);
-        
-        List<SchemaElementType> exceptionTypes = wsdl.getExceptionTypes(operationName);
-        // for now, if there is any fault(s) defined for the operation, then
-        // have the method throws java.lang.Exception
-        if (exceptionTypes.size() > 0) {
-            method._throws(codeModel.ref(Exception.class));
-        }
+		populateOpSoapServiceMap();
+	}
 
-        List<SchemaElementType> inputTypes = wsdl
-                .getDefinedInputTypes(operationName);
-        ElementType outputType = wsdl.getOutputType(operationName);
+	private void populateOpSoapServiceMap() {
+		for (JAXWSServiceInfo serviceInfo : serviceInfoList) {
+			for (JAXWSPortTypeInfo portTypeInfo : serviceInfo
+					.getPortTypeInfoList()) {
+				for (String opName : portTypeInfo.getOperationNames()) {
+					opSoapServiceMap.put(opName, portTypeInfo.getProperty(
+							SOAP_SERVICE_VAR_PROP_NAME, JFieldVar.class));
+				}
+			}
+		}
+	}
 
-        JVar outputVar = null;
-        if (outputType != null) {
-            // [RESULT]
-            // <outputJType> response;
-            outputVar = body.decl(outputJType, "response");
-        }
+	@Override
+	protected void generateDefaultConstructorBody(JBlock body)
+			throws GenerationException {
+		for (JAXWSServiceInfo serviceInfo : serviceInfoList) {
+			String serviceClientVarName = CodeGenUtils
+					.toVariableName(serviceInfo.getServiceClientClassName());
+			// [RESULT]
+			// <serviceClientClass> <serviceClientVar>;
+			JClass jclass = codeModel.ref(serviceInfo
+					.getServiceClientFQClassName());
+			JVar serviceClientVar = body.decl(jclass, serviceClientVarName);
 
-        // [RESULT]
-        // SOAPBindingResolver.setBindingProperties((BindingProvider)<soapServiceVar>, bindingProperties);
-        JInvocation bindingInvoke = codeModel.ref(SOAPBindingResolver.class)
-                .staticInvoke("setBindingProperties");
-        bindingInvoke.arg(JExpr.cast(
-                parseType("javax.xml.ws.BindingProvider"),
-                soapServiceVar));
-        bindingInvoke.arg(bindingPropertiesVar);
-        body.add(bindingInvoke);
+			// [RESULT]
+			// try {
+			JTryBlock tryBlock = body._try();
+			JBlock tryBody = tryBlock.body();
 
-        List<SchemaElementType> soapHeaderInputTypes = wsdl
-                .getSOAPHeaderInputTypes(operationName);
-        if (soapHeaderInputTypes != null && soapHeaderInputTypes.size() > 0) {
-            // [RESULT]
-            // SOAPBindingResolver.setHeaders((WSBindingProvider)<soapServiceVar>, arg1, ...);
-            JInvocation bindingHeadersInvoke = codeModel.ref(SOAPBindingResolver.class)
-                    .staticInvoke("setHeaders");
-            bindingHeadersInvoke.arg(JExpr.cast(
-                    parseType("com.sun.xml.ws.developer.WSBindingProvider"),
-                    soapServiceVar));
-            for (SchemaElementType soapHeaderInputType : soapHeaderInputTypes) {
-                bindingHeadersInvoke.arg(JExpr.ref(soapHeaderInputType.getName()));
-            }
-            body.add(bindingHeadersInvoke);
-        }
+			// [RESULT]
+			// URL wsdlLocation = new
+			// ClassPathResource(<packageWsdlPath>).getURL();
+			JInvocation newClassPathResourceInvoke = JExpr
+					._new(codeModel.ref(ClassPathResource.class))
+					.arg(getRelativeWSDLPath()).invoke("getURL");
+			JVar wsdlLocationVar = tryBody.decl(codeModel.ref(URL.class),
+					"wsdlLocation", newClassPathResourceInvoke);
 
-        // [RESULT]
-        // response = <soapServiceVar>.<operationMethodName>(arg1, ...);
-        JInvocation soapServiceInvocation = soapServiceVar.invoke(JAXWSBuilder
-                .getJavaMethodName(operationName));
-        if (inputTypes != null) {
-            for (SchemaElementType inputType : inputTypes) {
-                soapServiceInvocation.arg(JExpr.ref(inputType.getName()));
-            }
-        }
-        if (outputVar != null) {
-            // [RESULT]
-            // return response;
-            body.assign(outputVar, soapServiceInvocation);
-            body._return(outputVar);
-        }
-    }
+			// [RESULT]
+			// <serviceClientVar> = new <serviceClientClass>(wsdlLocation,
+			// <serviceQNameVar>);
+			JInvocation newServiceClientInvoke = JExpr._new(jclass).arg(
+					wsdlLocationVar);
+			newServiceClientInvoke.arg(serviceInfo.getProperty(
+					SERVICE_QNAME_VAR_PROP_NAME, JFieldVar.class));
+			tryBody.assign(serviceClientVar, newServiceClientInvoke);
 
-    protected void afterClassGeneration(String path) throws GenerationException {}
+			// [RESULT]
+			// } catch (IOException e) {
+			JCatchBlock catchBlock = tryBlock._catch(codeModel
+					.ref(IOException.class));
+			catchBlock.param("e");
 
-    protected JFieldVar defineRestServiceVariable(JDefinedClass cls, JCodeModel codeModel) {
-        return null;
-    }
+			// [RESULT]
+			// <serviceClientVar> = new <serviceClientClass>();
+			catchBlock.body().assign(serviceClientVar, JExpr._new(jclass));
 
-    protected JInvocation defineServiceInvocation(JCodeModel codeModel) {
-        return null;
-    }
+			for (JAXWSPortTypeInfo portTypeInfo : serviceInfo
+					.getPortTypeInfoList()) {
+				// [RESULT]
+				// <soapServiceVar> = serviceClient.get<portTypeName>();
+				body.assign(
+						portTypeInfo.getProperty(SOAP_SERVICE_VAR_PROP_NAME,
+								JFieldVar.class),
+						serviceClientVar.invoke("get"
+								+ JAXWSBuilder
+										.getJaxwsGeneratedClassName(portTypeInfo
+												.getPortName())));
+			}
+		}
+	}
 
-    protected JBlock addExtraInputParameters(JBlock body, ServiceInfo serviceInfo, WSDL wsdl,
-                                                      String operationName) {
-        return null;
-    }
+	@Override
+	protected void generateOperationMethodBody(JMethod method, JBlock body,
+			String operationName, Map<String, JType> inputJTypeMap,
+			ElementType outputType1, // salesforce
+			JType outputJType, Integer overloadCount)
+			throws GenerationException {
+		super.generateOperationMethodBody(method, body, operationName,
+				inputJTypeMap, outputType1, outputJType, overloadCount);
+
+		JFieldVar soapServiceVar = opSoapServiceMap.get(operationName);
+
+		List<SchemaElementType> exceptionTypes = wsdl
+				.getExceptionTypes(operationName);
+		// for now, if there is any fault(s) defined for the operation, then
+		// have the method throws java.lang.Exception
+		if (exceptionTypes.size() > 0) {
+			method._throws(codeModel.ref(Exception.class));
+		}
+
+		List<SchemaElementType> inputTypes = wsdl
+				.getDefinedInputTypes(operationName);
+		ElementType outputType = wsdl.getOutputType(operationName);
+
+		JVar outputVar = null;
+		if (outputType != null) {
+			// [RESULT]
+			// <outputJType> response;
+			outputVar = body.decl(outputJType, "response");
+		}
+
+		// [RESULT]
+		// SOAPBindingResolver.setBindingProperties((BindingProvider)<soapServiceVar>,
+		// bindingProperties);
+		JInvocation bindingInvoke = codeModel.ref(SOAPBindingResolver.class)
+				.staticInvoke("setBindingProperties");
+		bindingInvoke.arg(JExpr.cast(parseType("javax.xml.ws.BindingProvider"),
+				soapServiceVar));
+		bindingInvoke.arg(bindingPropertiesVar);
+		body.add(bindingInvoke);
+
+		List<SchemaElementType> soapHeaderInputTypes = wsdl
+				.getSOAPHeaderInputTypes(operationName);
+		if (soapHeaderInputTypes != null && soapHeaderInputTypes.size() > 0) {
+			// [RESULT]
+			// SOAPBindingResolver.setHeaders((WSBindingProvider)<soapServiceVar>,
+			// arg1, ...);
+			JInvocation bindingHeadersInvoke = codeModel.ref(
+					SOAPBindingResolver.class).staticInvoke("setHeaders");
+			bindingHeadersInvoke.arg(JExpr.cast(
+					parseType("com.sun.xml.ws.developer.WSBindingProvider"),
+					soapServiceVar));
+			for (SchemaElementType soapHeaderInputType : soapHeaderInputTypes) {
+				bindingHeadersInvoke.arg(JExpr.ref(soapHeaderInputType
+						.getName()));
+			}
+			body.add(bindingHeadersInvoke);
+		}
+
+		// [RESULT]
+		// response = <soapServiceVar>.<operationMethodName>(arg1, ...);
+		JInvocation soapServiceInvocation = soapServiceVar.invoke(JAXWSBuilder
+				.getJavaMethodName(operationName));
+		if (inputTypes != null) {
+			for (SchemaElementType inputType : inputTypes) {
+				soapServiceInvocation.arg(JExpr.ref(inputType.getName()));
+			}
+		}
+		if (outputVar != null) {
+			// [RESULT]
+			// return response;
+			body.assign(outputVar, soapServiceInvocation);
+			body._return(outputVar);
+		}
+	}
+
+	protected void afterClassGeneration(String path) throws GenerationException {
+	}
+
+	protected JFieldVar defineRestServiceVariable(JDefinedClass cls,
+			JCodeModel codeModel) {
+		return null;
+	}
+
+	protected JInvocation defineServiceInvocation(JCodeModel codeModel) {
+		return null;
+	}
+
+	protected JBlock addExtraInputParameters(JBlock body,
+			ServiceInfo serviceInfo, WSDL wsdl, String operationName) {
+		return null;
+	}
 }

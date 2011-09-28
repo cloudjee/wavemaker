@@ -14,8 +14,8 @@
 
 package com.wavemaker.tools.service.types;
 
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.NotYetImplementedException;
-import com.wavemaker.common.Resource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.Tuple;
 import com.wavemaker.common.util.Tuple.Three;
@@ -48,7 +48,7 @@ public class TypeValueTransformer implements ValueTransformer {
             } else if (input instanceof PrimitiveType) {
                 td = typeState.getType(PrimitiveType.class.getName());
             } else {
-                throw new WMRuntimeException(Resource.UNKNOWN_TYPE_OF_TYPE,
+                throw new WMRuntimeException(MessageResource.UNKNOWN_TYPE_OF_TYPE,
                         input, input.getClass());
             }
 

@@ -40,7 +40,7 @@ import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaCollection;
 import org.w3c.dom.Element;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.runtime.ws.HTTPBindingSupport.HTTPRequestMethod;
 import com.wavemaker.runtime.ws.util.Constants;
@@ -137,7 +137,7 @@ public class WSDLBuilder {
             if (restParameterizedURL != null) {
                 wsdl.setEndpointLocation(restParameterizedURL);
             } else {
-                throw new WSDLException(Resource.WS_REST_WSDL_MISSING_URL);
+                throw new WSDLException(MessageResource.WS_REST_WSDL_MISSING_URL);
             }
 
         } else {

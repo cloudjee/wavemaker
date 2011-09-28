@@ -24,7 +24,7 @@ import org.apache.commons.lang.NullArgumentException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.Tuple;
 import com.wavemaker.json.type.FieldDefinition;
@@ -130,7 +130,7 @@ public class AlternateJSONTransformer {
                         fieldDefinition, typeState, arrayLevel,
                         setterQueue);
             } else {
-                throw new WMRuntimeException(Resource.JSON_UNKNOWN_OBJECT_TYPE,
+                throw new WMRuntimeException(MessageResource.JSON_UNKNOWN_OBJECT_TYPE,
                         obj, obj.getClass(), fieldDefinition);
             }
         } catch (InstantiationException e) {
@@ -156,9 +156,9 @@ public class AlternateJSONTransformer {
         if (null==fieldDefinition) {
             throw new NullArgumentException("fieldDefinition");
         } else if (null==fieldDefinition.getTypeDefinition()) {
-            throw new WMRuntimeException(Resource.JSON_TYPEDEF_REQUIRED);
+            throw new WMRuntimeException(MessageResource.JSON_TYPEDEF_REQUIRED);
         } else if (!(fieldDefinition.getTypeDefinition() instanceof ObjectTypeDefinition)) {
-            throw new WMRuntimeException(Resource.JSON_OBJECTTYPEDEF_REQUIRED,
+            throw new WMRuntimeException(MessageResource.JSON_OBJECTTYPEDEF_REQUIRED,
                     fieldDefinition.getTypeDefinition(),
                     fieldDefinition.getTypeDefinition().getClass());
         }
@@ -173,11 +173,11 @@ public class AlternateJSONTransformer {
             
             FieldDefinition nestedFieldDefinition = otd.getFields().get(key);
             if (null==nestedFieldDefinition) {
-                throw new WMRuntimeException(Resource.JSON_NO_PROP_MATCHES_KEY,
+                throw new WMRuntimeException(MessageResource.JSON_NO_PROP_MATCHES_KEY,
                         key, fieldDefinition);
             }
             if (!PropertyUtils.isWriteable(instance, key)) {
-                logger.warn(Resource.JSON_NO_WRITE_METHOD.getMessage(
+                logger.warn(MessageResource.JSON_NO_WRITE_METHOD.getMessage(
                         fieldDefinition, key));
                 continue;
             }
@@ -241,7 +241,7 @@ public class AlternateJSONTransformer {
         // now, convert our object
         if (!(obj instanceof JSONObject)) {
             throw new WMRuntimeException(
-                    Resource.JSON_OBJECT_REQUIRED_FOR_MAP_CONVERSION, obj,
+                    MessageResource.JSON_OBJECT_REQUIRED_FOR_MAP_CONVERSION, obj,
                     (null!=obj)?obj.getClass():obj);
         }
 

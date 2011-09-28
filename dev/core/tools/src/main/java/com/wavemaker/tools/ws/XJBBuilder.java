@@ -38,7 +38,6 @@ import com.wavemaker.tools.ws.wsdl.WSDL;
  * Generates JAXB binding customization files.
  * 
  * @author ffu
- * @version $Rev$ - $Date$
  * 
  */
 public class XJBBuilder {
@@ -150,6 +149,7 @@ public class XJBBuilder {
 
         PrintWriter pw = null;
         try {
+        	globalBindingFile.getParentFile().mkdirs();
             pw = new PrintWriter(new FileWriter(globalBindingFile));
         } catch (IOException ex) {
             throw new BuildException(ex);

@@ -14,14 +14,14 @@
 
 package com.wavemaker.tools.data.spring;
 
+import java.util.Map;
+
 import org.hibernate.Session;
 import org.springframework.context.support.GenericApplicationContext;
 
 import com.wavemaker.runtime.data.DataServiceManager;
 import com.wavemaker.runtime.data.DataServiceMetaData;
 import com.wavemaker.runtime.data.Task;
-
-import java.util.Map;
 
 /**
  * @author stoens

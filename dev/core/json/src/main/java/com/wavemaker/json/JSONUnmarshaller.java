@@ -18,7 +18,7 @@ import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.core.jsonLexer;
 import com.wavemaker.json.core.jsonParser;
@@ -64,7 +64,7 @@ public class JSONUnmarshaller {
         try {
             jsonRet = parser.json();
         } catch (RecognitionException e) {
-            throw new WMRuntimeException(Resource.JSON_FAILED_PARSING, e,
+            throw new WMRuntimeException(MessageResource.JSON_FAILED_PARSING, e,
                     jsonString);
         }
         

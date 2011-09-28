@@ -16,28 +16,11 @@ package com.wavemaker.tools.ant;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.jar.JarFile;
-import java.util.jar.Manifest;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.Copy;
-import org.apache.tools.ant.taskdefs.Delete;
-import org.apache.tools.ant.types.FileList;
-import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.Reference;
-import org.apache.tools.ant.util.ClasspathUtils;
 import org.apache.commons.io.FileUtils;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.util.ResourceUtils;
+import org.apache.tools.ant.Task;
 
-import com.wavemaker.runtime.module.ModuleManager;
 import com.wavemaker.runtime.server.ServerConstants;
-import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
 
 /**

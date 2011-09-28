@@ -26,6 +26,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.core.io.FileSystemResource;
+
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.common.util.ClassUtils;
 import com.wavemaker.common.util.IOUtils;
@@ -46,12 +48,10 @@ public class TestRESTServiceGenerator extends WMTestCase {
 
     private static final String YAHOO_STOCKQUOTE_WSDL = "com/wavemaker/tools/ws/YahooStockQuote.wsdl";
 
-    private String basedir = System.getProperty("basedir");
+    private File outputDir;
 
-    private File outputDir = new File(basedir, "test-output");
-
-    public void setUp() {
-        outputDir.mkdir();
+    public void setUp() throws IOException {
+    	outputDir = IOUtils.createTempDirectory();
     }
 
     public void tearDown() throws IOException {
@@ -66,7 +66,7 @@ public class TestRESTServiceGenerator extends WMTestCase {
         WSDL wsdl = WSDLManager.processWSDL(resource, null);
 
         GenerationConfiguration genConfig = new GenerationConfiguration(wsdl,
-                outputDir);
+                new FileSystemResource(outputDir));
         RESTServiceGenerator generator = new RESTServiceGenerator(genConfig);
         generator.generate();
 

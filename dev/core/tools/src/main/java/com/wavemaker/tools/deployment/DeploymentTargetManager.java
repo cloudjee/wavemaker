@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.tools.common.ConfigurationException;
 
@@ -51,7 +51,7 @@ public class DeploymentTargetManager {
         
         if (!deploymentTargets.containsKey(deploymentType)) {
             throw new ConfigurationException(
-                Resource.UNKNOWN_DEPLOYMENT_TARGET, deploymentType);
+                MessageResource.UNKNOWN_DEPLOYMENT_TARGET, deploymentType);
         }
         
         return deploymentTargets.get(deploymentType);

@@ -22,7 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.OneToManyMap;
 import com.wavemaker.common.util.StringUtils;
@@ -435,7 +435,7 @@ public class EntityInfo implements Cloneable {
         }
         if (!foundId) {
             // We (Hibernate) require a pk column
-            throw new ConfigurationException(Resource.NO_PRIMARY_KEY);
+            throw new ConfigurationException(MessageResource.NO_PRIMARY_KEY);
         }
     }
 

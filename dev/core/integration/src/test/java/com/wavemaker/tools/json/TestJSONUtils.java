@@ -31,7 +31,7 @@ import java.util.List;
 import org.junit.Test;
 import org.springframework.util.ClassUtils;
 
-import com.wavemaker.common.Resource;
+import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.JSON;
 import com.wavemaker.json.JSONArray;
@@ -330,7 +330,7 @@ public class TestJSONUtils extends TestSpringContextTestCase {
             JSONUtils.getParameterTypes(method, params, typeState);
             fail("expected exception");
         } catch (WMRuntimeException e) {
-            assertEquals(Resource.JSONPARAMETER_COULD_NOTLLOAD_TYPE.getId(),
+            assertEquals(MessageResource.JSONPARAMETER_COULD_NOTLLOAD_TYPE.getId(),
                     e.getMessageId());
         }
     }
