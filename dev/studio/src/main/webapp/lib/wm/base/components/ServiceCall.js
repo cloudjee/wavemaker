@@ -204,6 +204,10 @@ dojo.declare("wm.ServiceCall", null, {
         }
     },
 	request: function(inArgs) {
+	    /* Update all parameters to be current before we fire this */
+	    if (this.$.binding) {
+		this.$.binding.refresh();
+	    }
             if (this.downloadFile) {
 	        var args = inArgs || this.input.getArgsHash();
                 this.replaceAllDateObjects(args);
