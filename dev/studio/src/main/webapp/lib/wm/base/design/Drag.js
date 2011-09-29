@@ -39,9 +39,9 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
     */
 	beginDrag: function(inEvent, inInfo) {
 		this.info = inInfo || this.info;
-		if (this.info && this.info.control){
-		  var parentForm = wm.getParentForm(this.info.control);
-			this.info.parentForm = parentForm instanceof wm.LiveFormBase ? parentForm : null;	
+	    if (this.info && this.info.control && (this.info.control instanceof wm.AbstractEditor || this.info.control instanceof wm.EditPanel)){
+		    var parentForm = wm.getParentForm(this.info.control);
+		    this.info.parentForm = parentForm instanceof wm.LiveFormBase ? parentForm : null;	
 		}
 		
 		this.mousedown(inEvent);
