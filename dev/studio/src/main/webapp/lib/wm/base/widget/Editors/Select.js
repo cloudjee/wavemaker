@@ -238,6 +238,10 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		inDisplayValue = String(inDisplayValue);
 		var e = this.editor;
 		delete this._isValid;
+	   if (!e) {
+	       this.displayValue = inDisplayValue;
+	       return;
+	   }
 		e._isvalid=true;
 
 	        if (!this.dataSet || this.dataSet.getCount() == 0) {
