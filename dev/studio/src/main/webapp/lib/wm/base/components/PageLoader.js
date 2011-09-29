@@ -49,9 +49,9 @@ wm.gzScriptLoader = function(name){
 dojo.declare("wm.PageLoader", wm.Component, {
 	init: function() {
 	    if (this.owner && this.isDesignLoaded()) {
-		this.randomNum = (studio.application || studio._application).getFullVersionNumber();
+		this.randomNum = (studio.application || studio._application).saveCounter;
 	    } else if (app && !window["studio"]) {
-		this.randomNum = app.getFullVersionNumber();
+		this.randomNum = app.saveCounter;
 	    } else {
 		this.randomNum =  Math.floor(Math.random()*1000000);
 	    }

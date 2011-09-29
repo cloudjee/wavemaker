@@ -506,6 +506,7 @@ dojo.declare("wm.studio.Project", null, {
 	    var c = wm.studioConfig;
 
 	    f.push(dojo.hitch(this, function() {
+		    studio.application.saveCounter = (studio.application.saveCounter || 0) +1;
 		    var src = this.generateApplicationSource()
 	            studio.setSaveProgressBarMessage(this.projectName + ".js");
 		    this.saveProjectData(this.projectName + ".js", src);
