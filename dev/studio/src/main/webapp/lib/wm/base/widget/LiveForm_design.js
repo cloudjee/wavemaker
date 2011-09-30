@@ -196,6 +196,13 @@ wm.LiveFormBase.extend({
 				}),
 /*		    e = this.createEditor(f, props, {onEnterKeyPress: this.getId() + ".saveDataIfValid"}, wm.getEditorClassName(f.displayType));*/
 		    e = this.createEditor(f, props, {}, wm.getEditorClassName(f.displayType));
+		    if (e) {
+			if (e instanceof wm.Number)
+			    e.emptyValue = "zero";
+			else if (e instanceof wm.Text)
+			    e.emptyValue = "emptyString";
+		    }
+
 			if (e)
 			this._bindEditor(e);
 			return true;
@@ -262,7 +269,6 @@ wm.LiveFormBase.extend({
 	},
 	getFormEditorProps: function() {
 		return {
-		        emptyValue: "emptyString",
 			size: this.editorSize,
 			readonly: this.readonly,
 			captionSize: this.captionSize,
