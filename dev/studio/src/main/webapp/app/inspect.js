@@ -173,7 +173,7 @@ makeTextPropEdit = function(inName, inValue, inDefault, inRows, isBound) {
 	    ' onChange="wm.inspectOnChange(\''+inName+'\')"',
 		(inValue==inDefault ? ' class="prop-default wminspector-edit"' : 'class="wminspector-edit"'),	   
 	    ' >',
-	    String(inValue).replace(/\"/g,"'"),
+	    String(inValue),
 	    "</textarea>",
 	    '<textarea class="wminspector-readonly"  readonly="true"',
 	    ' rows="' + inRows + '"',
