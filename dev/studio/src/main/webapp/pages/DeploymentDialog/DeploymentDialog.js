@@ -56,7 +56,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		    databaseCloudFoundryLayer1: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
 			databaseCloudFoundryType1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"MYSQL","readonly":true,"width":"100%"}, {}],
 			databaseCloudFoundryNameEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true/*, helpText: "Rename your database if you already have a database of that name on CloudFoundry and don't want to reuse that database.  Note: each database is on its own cloud server and counts against your quota"*/}, {}],
-			databaseCloudFoundryTips1: ["wm.Html", {border: "0", margin: "10,0,0,0", width: "100%", height: "50px", caption: ""}],
+			databaseCloudFoundryTips1: ["wm.Html", {border: "0", margin: "10,0,0,0", width: "100%", height: "60px", caption: ""}],
 			databaseCloudFoundryWarnings1: ["wm.Html", {border: "0", margin: "10,0,0,0", padding: "5", border: "1", borderColor: "red", width: "100%", height: "60px", caption: "", showing: false}]
 		    }]
 		}]
@@ -105,6 +105,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	cloudfoundryLayerChildren.databaseCloudFoundryType1[1].caption = this.getDictionaryItem("DBBOX_CFTYPE_CAPTION");
 	cloudfoundryLayerChildren.databaseCloudFoundryNameEditor1[1].caption = this.getDictionaryItem("DBBOX_CFNAME_CAPTION");
 	cloudfoundryLayerChildren.databaseCloudFoundryTips1[1].html = this.getDictionaryItem("CF_DB_NODATA_WARNING");
+	cloudfoundryLayerChildren.databaseCloudFoundryTips1[1].height = this.getDictionaryItem("CF_DB_NODATA_WARNING_HEIGHT");
 	cloudfoundryLayerChildren.databaseCloudFoundryWarnings1[1].html = this.getDictionaryItem("CF_MULTIPLE_DB_WARNING");
     },
     selectFirst: function() {

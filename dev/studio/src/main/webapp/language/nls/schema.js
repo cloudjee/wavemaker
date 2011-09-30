@@ -14,9 +14,9 @@
 {
 
 
-
-    "wm.Dashboard": {configPortlets: "ConfigyPortlety", minChildWidth: "MINYWID"}
 /*
+    "wm.Dashboard": {configPortlets: "ConfigyPortlety", minChildWidth: "MINYWID"}
+
     "wm.Layer": {moveNext: "NextNext"},
     "wm.Layers": {add: "Pluss"},
     "wm.TabLayers": {conditionalTabButtons: "condTabsClick"},
