@@ -135,6 +135,7 @@ wm.Object.extendSchema(wm.Application, {
     i18n: {type: "boolean", order: 6},
     theme: {type: "string", order: 7},
     currencyLocale: {type: "string", order: 8},
+    saveCounter: {writeonly: true},
     //IERoundedCorners: {ignore: true},
     studioVersion: {writeonly: true, type: "string", order: 105},
     dialogAnimationTime: {type: "number", order: 200},
