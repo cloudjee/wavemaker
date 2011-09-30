@@ -136,7 +136,7 @@ public class SpringTestCaseContextSupport extends AbstractContextLoader implemen
 		}
 
 		public void setMajorVersion(int majorVersion) {
-			delegate.setMajorVersion(majorVersion);
+			((MockServletContextWrapper) delegate).setMajorVersion(majorVersion);
 		}
 
 		public int getMajorVersion() {
@@ -152,19 +152,19 @@ public class SpringTestCaseContextSupport extends AbstractContextLoader implemen
 		}
 
 		public void setEffectiveMajorVersion(int effectiveMajorVersion) {
-			delegate.setEffectiveMajorVersion(effectiveMajorVersion);
+			((MockServletContextWrapper) delegate).setEffectiveMajorVersion(effectiveMajorVersion);
 		}
 
 		public int getEffectiveMajorVersion() {
-			return delegate.getEffectiveMajorVersion();
+			return ((MockServletContextWrapper) delegate).getEffectiveMajorVersion();
 		}
 
 		public void setEffectiveMinorVersion(int effectiveMinorVersion) {
-			delegate.setEffectiveMinorVersion(effectiveMinorVersion);
+			((MockServletContextWrapper) delegate).setEffectiveMinorVersion(effectiveMinorVersion);
 		}
 
 		public int getEffectiveMinorVersion() {
-			return delegate.getEffectiveMinorVersion();
+			return ((MockServletContextWrapper) delegate).getEffectiveMinorVersion();
 		}
 
 		public String getMimeType(String filePath) {
@@ -220,7 +220,7 @@ public class SpringTestCaseContextSupport extends AbstractContextLoader implemen
 		}
 
 		public boolean setInitParameter(String name, String value) {
-			return delegate.setInitParameter(name, value);
+			return ((MockServletContextWrapper) delegate).setInitParameter(name, value);
 		}
 
 		public void addInitParameter(String name, String value) {
@@ -244,11 +244,11 @@ public class SpringTestCaseContextSupport extends AbstractContextLoader implemen
 		}
 
 		public ClassLoader getClassLoader() {
-			return delegate.getClassLoader();
+			return ((MockServletContextWrapper) delegate).getClassLoader();
 		}
 
 		public void declareRoles(String... roleNames) {
-			delegate.declareRoles(roleNames);
+			((MockServletContextWrapper) delegate).declareRoles(roleNames);
 		}
 
 		public boolean equals(Object arg0) {
@@ -264,7 +264,7 @@ public class SpringTestCaseContextSupport extends AbstractContextLoader implemen
 		}
 
 		public Set<String> getDeclaredRoles() {
-			return delegate.getDeclaredRoles();
+			return ((MockServletContextWrapper) delegate).getDeclaredRoles();
 		}
 
 		public int hashCode() {
