@@ -127,7 +127,11 @@ dojo.declare("wm.AceEditor", wm.Control, {
 	}
     },
     isDirty: function() {
-	return this.getDataValue() != this._cachedDataValue;
+	var dataValue = this.getDataValue();
+	if (!dataValue && !this._cachedDataValue)
+	    return false;
+	else
+	    return dataValue != this._cachedDataValue;
     },
     clearDirty: function() {
 	this._cachedDataValue = this.dataValue;
