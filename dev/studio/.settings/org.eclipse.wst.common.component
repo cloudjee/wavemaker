@@ -171,7 +171,7 @@
     <dependent-module archiveName="mimepull-1.5.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/jvnet/mimepull/1.5/mimepull-1.5.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="mongo-java-driver-2.5.3.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/mongodb/mongo-java-driver/2.5.3/mongo-java-driver-2.5.3.jar">
+    <dependent-module archiveName="mongo-java-driver-2.6.5.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/mongodb/mongo-java-driver/2.6.5/mongo-java-driver-2.6.5.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
     <dependent-module archiveName="mysql-connector-java-5.1.17.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/mysql/mysql-connector-java/5.1.17/mysql-connector-java-5.1.17.jar">
@@ -204,46 +204,46 @@
     <dependent-module archiveName="servlet-api-6.0.32.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/apache/tomcat/servlet-api/6.0.32/servlet-api-6.0.32.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="spring-aop-3.1.0.BUILD-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-aop/3.1.0.BUILD-SNAPSHOT/spring-aop-3.1.0.BUILD-SNAPSHOT.jar">
+    <dependent-module archiveName="spring-aop-3.1.0.M2.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-aop/3.1.0.M2/spring-aop-3.1.0.M2.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="spring-asm-3.1.0.BUILD-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-asm/3.1.0.BUILD-SNAPSHOT/spring-asm-3.1.0.BUILD-SNAPSHOT.jar">
+    <dependent-module archiveName="spring-asm-3.1.0.M2.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-asm/3.1.0.M2/spring-asm-3.1.0.M2.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="spring-beans-3.1.0.BUILD-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-beans/3.1.0.BUILD-SNAPSHOT/spring-beans-3.1.0.BUILD-SNAPSHOT.jar">
+    <dependent-module archiveName="spring-beans-3.1.0.M2.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-beans/3.1.0.M2/spring-beans-3.1.0.M2.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="spring-context-3.1.0.BUILD-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-context/3.1.0.BUILD-SNAPSHOT/spring-context-3.1.0.BUILD-SNAPSHOT.jar">
+    <dependent-module archiveName="spring-context-3.1.0.M2.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-context/3.1.0.M2/spring-context-3.1.0.M2.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="spring-context-support-3.1.0.BUILD-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-context-support/3.1.0.BUILD-SNAPSHOT/spring-context-support-3.1.0.BUILD-SNAPSHOT.jar">
+    <dependent-module archiveName="spring-context-support-3.1.0.M2.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-context-support/3.1.0.M2/spring-context-support-3.1.0.M2.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="spring-core-3.1.0.BUILD-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-core/3.1.0.BUILD-SNAPSHOT/spring-core-3.1.0.BUILD-SNAPSHOT.jar">
+    <dependent-module archiveName="spring-core-3.1.0.M2.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-core/3.1.0.M2/spring-core-3.1.0.M2.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="spring-data-commons-core-1.1.0.M1.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/data/spring-data-commons-core/1.1.0.M1/spring-data-commons-core-1.1.0.M1.jar">
+    <dependent-module archiveName="spring-data-commons-core-1.2.0.M1.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/data/spring-data-commons-core/1.2.0.M1/spring-data-commons-core-1.2.0.M1.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="spring-data-mongodb-1.0.0.M3.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/data/spring-data-mongodb/1.0.0.M3/spring-data-mongodb-1.0.0.M3.jar">
+    <dependent-module archiveName="spring-data-mongodb-1.0.0.M4.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/data/spring-data-mongodb/1.0.0.M4/spring-data-mongodb-1.0.0.M4.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="spring-expression-3.1.0.BUILD-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-expression/3.1.0.BUILD-SNAPSHOT/spring-expression-3.1.0.BUILD-SNAPSHOT.jar">
+    <dependent-module archiveName="spring-expression-3.1.0.M2.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-expression/3.1.0.M2/spring-expression-3.1.0.M2.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="spring-jdbc-3.1.0.BUILD-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-jdbc/3.1.0.BUILD-SNAPSHOT/spring-jdbc-3.1.0.BUILD-SNAPSHOT.jar">
+    <dependent-module archiveName="spring-jdbc-3.1.0.M2.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-jdbc/3.1.0.M2/spring-jdbc-3.1.0.M2.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="spring-orm-3.1.0.BUILD-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-orm/3.1.0.BUILD-SNAPSHOT/spring-orm-3.1.0.BUILD-SNAPSHOT.jar">
+    <dependent-module archiveName="spring-orm-3.1.0.M2.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-orm/3.1.0.M2/spring-orm-3.1.0.M2.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="spring-tx-3.1.0.BUILD-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-tx/3.1.0.BUILD-SNAPSHOT/spring-tx-3.1.0.BUILD-SNAPSHOT.jar">
+    <dependent-module archiveName="spring-tx-3.1.0.M2.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-tx/3.1.0.M2/spring-tx-3.1.0.M2.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="spring-web-3.1.0.BUILD-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-web/3.1.0.BUILD-SNAPSHOT/spring-web-3.1.0.BUILD-SNAPSHOT.jar">
+    <dependent-module archiveName="spring-web-3.1.0.M2.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-web/3.1.0.M2/spring-web-3.1.0.M2.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="spring-webmvc-3.1.0.BUILD-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-webmvc/3.1.0.BUILD-SNAPSHOT/spring-webmvc-3.1.0.BUILD-SNAPSHOT.jar">
+    <dependent-module archiveName="spring-webmvc-3.1.0.M2.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-webmvc/3.1.0.M2/spring-webmvc-3.1.0.M2.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
     <dependent-module archiveName="stax-1.2.0.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/stax/stax/1.2.0/stax-1.2.0.jar">
