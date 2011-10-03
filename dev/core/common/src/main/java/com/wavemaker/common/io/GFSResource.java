@@ -47,14 +47,14 @@ public class GFSResource implements Resource {
 		Assert.notNull(gfs, "File must not be null");
 		Assert.notNull(path, "Path must not be null");
 		this.file = gfs.createFile();
-		this.path = path; //StringUtils.cleanPath(path);
+		this.path = StringUtils.cleanPath(path);
 	}
 	
 	public GFSResource(GridFSInputFile file, String path) {
 		Assert.notNull(file, "File must not be null");
 		Assert.notNull(path, "Path must not be null");
 		this.file = file;
-		this.path = path; //StringUtils.cleanPath(path);
+		this.path = StringUtils.cleanPath(path);
 	}
 
 	public void save(){
