@@ -96,17 +96,30 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 	getEditorValue: function() {
 	    var c = this.editor && this.editor.checked;
 	    var v = this.checkedValue;
+
 	    if (v === undefined)
 		v = this.getTypedValue(1);
-		return c ? v : this.makeEmptyValue();
+	    else
+		v = this.getTypedValue(v);
+	    return c ? v : this.makeEmptyValue();
 	},
+    makeEmptyValue: function() {
+	return this.getTypedValue(this.inherited(arguments));
+    },
 	getTypedValue: function(inValue) {
 		var v = inValue;
 		switch (this.dataType) {
 			case "string":
 				// return "" for all false values but 0 which is "0"
-				v = v || v === 0 ? v : "";
-				return String(v);
+		    if (v === false) 
+			v = "false";
+		    else if (v === 0)
+			v = "0";
+		    else if (!v)
+			v = "";
+		    else
+			v = String(v);
+		    return v;
 			case "number": 
 				// if not a number, return number value of boolean value
 				var n = Number(v);
@@ -134,8 +147,9 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
     },
 	setDataType: function(inDataType) {
 		this.dataType = inDataType;
-		if (inDataType == "boolean")
-			this.displayValue = true;
+	    if (inDataType == "boolean") {
+		this.displayValue = true;
+	    }
 
 	    switch(inDataType) {
 		/* Anything can convert to a string */
@@ -150,7 +164,10 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 		break;
 	    case "boolean":
 		if (typeof this.checkedValue == "boolean") {
-		} else if (this.checkedValue == "true" || this.checkedValue == "false") {
+		} else if (this.checkedValue == "true") {
+		    this.checkedValue = true;
+		} else if (this.checkedValue == "false") {
+		    this.checkedValue = false;
 		} else {
 		    app.toastWarning(studio.getDictionaryItem("wm.Checkbox.TOAST_WARN_CHECKED_VALUE_NOT_A_BOOLEAN"));
 		}
