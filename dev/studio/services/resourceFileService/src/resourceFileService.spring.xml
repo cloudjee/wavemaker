@@ -7,6 +7,9 @@
         <property name="projectManager">
             <ref bean="projectManager" />
         </property>
+        <property name="studioConfiguration">
+            <ref bean="studioConfiguration" />
+        </property>
      </bean>
 
     <bean lazy-init="false"

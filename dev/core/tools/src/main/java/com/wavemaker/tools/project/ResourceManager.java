@@ -25,20 +25,26 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.server.DownloadResponse;
+import com.wavemaker.runtime.server.ServerConstants;
 
 public class ResourceManager {
 
+	/**
+	 * @deprecated
+	 */
 	public static DownloadResponse downloadFile(File f, String filename,
 			boolean isZip) throws IOException {
 		DownloadResponse ret = new DownloadResponse();
@@ -51,6 +57,20 @@ public class ResourceManager {
 		return ret;
 	}
 
+	public static DownloadResponse downloadFile(Resource f, String filename,
+			boolean isZip) throws IOException {
+		DownloadResponse ret = new DownloadResponse();
+
+		// Setup the DownloadResponse
+		ret.setContents(f.getInputStream());
+		ret.setContentType((isZip) ? "application/zip" : "application/unknown");
+		ret.setFileName(filename);
+		return ret;
+	}
+
+	/**
+	 * @deprecated
+	 */
 	public static File createZipFile(File f, File tmpDir) {
 
 		File destFile = new File(tmpDir, f.getName() + ".zip");
@@ -70,6 +90,26 @@ public class ResourceManager {
 		return (File) null;
 	}
 
+	public static Resource createZipFile(
+			StudioConfiguration studioConfiguration, Resource f, Resource tmpDir) {
+		try {
+			Resource destFile = tmpDir.createRelative(f.getFilename() + ".zip");
+			FileOutputStream dest = new FileOutputStream(destFile.toString());
+			ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(
+					dest));
+
+			addToZipStream(studioConfiguration, f, out, "");
+
+			out.close();
+			return destFile;
+		} catch (Exception e) {
+			throw new WMRuntimeException(e);
+		}
+	}
+
+	/**
+	 * @deprecated
+	 */
 	public static void addToZipStream(File f, ZipOutputStream out, String path) {
 		System.out.println("add to stream: " + path + "/" + f.getName());
 
@@ -109,13 +149,48 @@ public class ResourceManager {
 		}
 	}
 
-	static public String uploadFile(MultipartFile file, File tmpDir)
+	public static void addToZipStream(StudioConfiguration studioConfiguration,
+			Resource dir, ZipOutputStream out, String path) {
+		System.out.println("add to stream: " + path + "/" + dir.getFilename());
+
+		final int BUFFER = 2048;
+		byte data[] = new byte[BUFFER];
+		BufferedInputStream origin = null;
+
+		// get a list of files from current directory
+		List<Resource> files = studioConfiguration.listChildren(dir);
+
+		for (Resource file : files) {
+			if (file.getFilename().startsWith("."))
+				continue;
+			if (StringUtils.getFilenameExtension(file.getFilename()) == null) {
+				System.out.println("PATH:" + path + ", NAME: "
+						+ dir.getFilename());
+				addToZipStream(studioConfiguration, file, out,
+						path + "/" + dir.getFilename());
+			} else {
+				try {
+					origin = new BufferedInputStream(file.getInputStream(),
+							BUFFER);
+					ZipEntry entry = new ZipEntry(path + "/"
+							+ dir.getFilename() + "/" + file.getFilename());
+					System.out.println("Adding: " + path + "/"
+							+ dir.getFilename() + "/" + file.getFilename());
+					out.putNextEntry(entry);
+					int count;
+					while ((count = origin.read(data, 0, BUFFER)) != -1) {
+						out.write(data, 0, count);
+					}
+					origin.close();
+				} catch (Exception e) {
+				}
+			}
+		}
+	}
+
+	public static String uploadFile(MultipartFile file, File tmpDir)
 			throws IOException {
-		DownloadResponse ret = new DownloadResponse();
-
 		File outputFile = new File(tmpDir, file.getOriginalFilename());
-		// System.out.println("writing the content of uploaded file to: "+outputFile);
-
 		FileOutputStream fos = new FileOutputStream(outputFile);
 		IOUtils.copy(file.getInputStream(), fos);
 		file.getInputStream().close();
@@ -123,6 +198,10 @@ public class ResourceManager {
 		return file.getOriginalFilename();
 	}
 
+	/**
+	 * @deprecated
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	static public Hashtable[] getListing(File curdir, File jarListFile) {
 		File[] listing = curdir.listFiles(new java.io.FilenameFilter() {
 			public boolean accept(File dir, String name) {
@@ -143,13 +222,47 @@ public class ResourceManager {
 				if (name.endsWith(".jar"))
 					F.put("isInClassPath",
 							isJarInClassPath(listing[i], jarListFile));
-				// F.mFiles = new MyFile[0];
 			}
 		}
 		return myfiles;
 	}
 
-	static public boolean isJarInClassPath(File resourceFile, File jarListFile) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static Hashtable[] getListing(
+			StudioConfiguration studioConfiguration, Resource curdir,
+			Resource jarListFile) {
+		List<Resource> listings = studioConfiguration.listChildren(curdir,
+				new ResourceFilter() {
+					public boolean accept(Resource resource) {
+						return resource.getFilename().indexOf(".") != 0;
+					}
+				});
+
+		Hashtable[] myfiles = new Hashtable[listings.size()];
+		for (int i = 0; i < listings.size(); i++) {
+			Hashtable F = new Hashtable();
+			String name = listings.get(i).getFilename();
+			F.put("file", name);
+			myfiles[i] = F;
+			if (StringUtils.getFilenameExtension(listings.get(i).getFilename()) == null) {
+				F.put("type", "folder");
+				F.put("files",
+						getListing(studioConfiguration, listings.get(i),
+								jarListFile));
+			} else {
+				F.put("type", "file");
+				if (name.endsWith(".jar"))
+					F.put("isInClassPath",
+							isJarInClassPath(listings.get(i), jarListFile));
+			}
+		}
+		return myfiles;
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public static boolean isJarInClassPath(File resourceFile, File jarListFile) {
 		if (!jarListFile.exists())
 			return false;
 		try {
@@ -165,10 +278,31 @@ public class ResourceManager {
 		return false;
 	}
 
-	public static void ReplaceTextInFile(OutputStream outputStream, Resource file, String findText,
-			String replaceText) {
+	public static boolean isJarInClassPath(Resource resourceFile,
+			Resource jarListFile) {
+		if (!jarListFile.exists())
+			return false;
 		try {
-			String newtext = FileCopyUtils.copyToString(new InputStreamReader(file.getInputStream()));
+			String[] fileList = FileCopyUtils.copyToString(
+					new InputStreamReader(jarListFile.getInputStream(),
+							ServerConstants.DEFAULT_ENCODING)).split("\n");
+			for (int i = 0; i < fileList.length; i++) {
+				if (resourceFile
+						.equals(jarListFile.createRelative(fileList[i]))) {
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public static void ReplaceTextInFile(OutputStream outputStream,
+			Resource file, String findText, String replaceText) {
+		try {
+			String newtext = FileCopyUtils.copyToString(new InputStreamReader(
+					file.getInputStream()));
 			newtext = newtext.replaceAll(findText, replaceText);
 			FileCopyUtils.copy(newtext, new OutputStreamWriter(outputStream));
 		} catch (Exception ex) {
