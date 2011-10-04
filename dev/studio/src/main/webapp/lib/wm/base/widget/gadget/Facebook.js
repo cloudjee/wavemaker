@@ -124,7 +124,7 @@ dojo.declare("wm.gadget.FacebookActivityFeed", wm.gadget.Facebook, {
     width: "200px",
     height: "400px",
     base_source: "http://www.facebook.com/plugins/activity.php",
-    site: "http://wavemaker.com", //URL to like; we may want to control this
+    site: "wavemaker.com", //URL to like; we may want to control this
     showHeader: true, // actual parameter is "header"
     font: "arial",
     colorscheme: "dark",
