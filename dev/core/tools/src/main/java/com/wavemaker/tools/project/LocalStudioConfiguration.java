@@ -562,12 +562,18 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 		Assert.isInstanceOf(FileSystemResource.class, root,
 				"Expected a FileSystemResource");
 		try {
+		    if (!root.exists()) {
+			File rootFile = root.getFile();
+			while (rootFile.getAbsolutePath().length() > 1 && !rootFile.exists())
+			    rootFile = rootFile.getParentFile();
+			IOUtils.makeDirectories(root.getFile(), rootFile);
+		    }
 			FileSystemResource relativeResource = (FileSystemResource) root
 					.createRelative(path);
 			if (!relativeResource.exists()) {
 				if (relativeResource.getPath().endsWith("/")) {
 					IOUtils.makeDirectories(relativeResource.getFile(),
-							root.getFile());
+								root.getFile());
 				} else {
 					IOUtils.makeDirectories(relativeResource.getFile()
 							.getParentFile(), root.getFile());
@@ -608,6 +614,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 			return fileResource.getFile().delete();
 		}
 	}
+
 
 	public OutputStream getOutputStream(Resource file) {
 		try {

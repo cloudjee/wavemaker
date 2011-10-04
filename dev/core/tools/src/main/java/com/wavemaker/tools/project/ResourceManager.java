@@ -91,14 +91,15 @@ public class ResourceManager {
 	}
 
 	public static Resource createZipFile(
-			StudioConfiguration studioConfiguration, Resource f, Resource tmpDir) {
+			StudioConfiguration studioConfig, Resource f, Resource tmpDir) {
 		try {
 			Resource destFile = tmpDir.createRelative(f.getFilename() + ".zip");
-			FileOutputStream dest = new FileOutputStream(destFile.toString());
+			studioConfig.createPath(tmpDir, f.getFilename() + ".zip");
+			OutputStream dest = studioConfig.getOutputStream(destFile);
 			ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(
 					dest));
 
-			addToZipStream(studioConfiguration, f, out, "");
+			addToZipStream(studioConfig, f, out, "");
 
 			out.close();
 			return destFile;
@@ -332,7 +333,9 @@ public class ResourceManager {
 			folderName = zipname.substring(0, extindex);
 
 		try {
+		    System.out.println("UNZIP FILE: " + zipfile.getDescription());
 			Resource zipFolder = zipfile.createRelative(folderName + "/");
+		    System.out.println("UNZIP FOLDER: " + zipFolder.getDescription());
 			for (int i = 0; zipFolder.exists(); i++) {
 				zipFolder = zipfile.createRelative(folderName + i + "/");
 			}
@@ -349,13 +352,15 @@ public class ResourceManager {
 				} else {
 					Resource outputFile = studioConfiguration.createPath(
 							zipFolder, entry.getName());
-					FileCopyUtils.copy(zis,
+					
+					// DO NOT USE FileCopyUtils.copy which closes our zip stream when it finishes
+					IOUtils.copy(zis,
 							studioConfiguration.getOutputStream(outputFile));
 				}
 			}
 			zis.close();
 
-			studioConfiguration.deleteFile(zipfile);
+			studioConfiguration.deleteFile(zipfile);			
 			return zipFolder;
 		} catch (Exception ex) {
 			throw new WMRuntimeException(ex);

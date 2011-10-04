@@ -90,11 +90,10 @@ public class ResourceFileService {
 	public DownloadResponse downloadFile(
 			@ParamName(name = "folder") String folderpath,
 			@ParamName(name = "filename") String filename) throws IOException {
-
 		boolean isZip = false;
 		Resource resourceDir = this.getResourcesDir();
-		Resource parentDir = resourceDir.createRelative(folderpath);
-		Resource localFile = parentDir.createRelative(filename);
+		Resource parentDir = resourceDir.createRelative(folderpath + "/");		
+		Resource localFile = parentDir.createRelative(filename + (filename.indexOf(".") == -1 ? "/" : ""));
 		if (StringUtils.getFilenameExtension(filename) == null) {
 			localFile = com.wavemaker.tools.project.ResourceManager
 					.createZipFile(studioConfiguration, localFile,
