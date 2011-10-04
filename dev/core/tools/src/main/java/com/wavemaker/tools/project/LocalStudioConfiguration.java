@@ -658,7 +658,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 			return children;
 		}
 		for (File file : files) {
-			children.add(new FileSystemResource(file));
+			children.add(new FileSystemResource(file.getAbsolutePath()+"/"));
 		}
 		return children;
 	}
@@ -675,7 +675,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 			return children;
 		}
 		for (File file : files) {
-			FileSystemResource fileResource = new FileSystemResource(file);
+			FileSystemResource fileResource = new FileSystemResource(file.getAbsolutePath()+"/");
 			if (filter.accept(fileResource)) {
 				children.add(fileResource);
 			}
