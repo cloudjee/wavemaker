@@ -1659,7 +1659,7 @@ dojo.declare("Studio", wm.Page, {
     },
     */
     loadResourcesTab: function() {
-	this.resourcesPage.getComponent("resourceManager").loadResources();
+	//this.resourcesPage.getComponent("resourceManager").loadResources();
     },
 
     toggleInspectorDialog: function() {

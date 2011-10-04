@@ -19,7 +19,6 @@ dojo.provide("wm.studio.pages.ResourceManager.ResourceManager");
 
 dojo.declare("ResourceManager", wm.Page, {
     i18n: true,
-    loadingResourceStart: 0,
     dndElements: null,
     selectedItem: null,
     propertiesPanel: null,
@@ -190,6 +189,7 @@ dojo.declare("ResourceManager", wm.Page, {
     },
 
     start: function() {
+	this.subscribe("studio-saveProjectData", dojo.hitch(this, "loadResources"));
 	this.propertiesPanel = this.resourceProperties;
 	this.dragger = new wm.ResourceMover();
 	this.dragger.ondrop = dojo.hitch(this, "dragDropItem");
@@ -219,37 +219,34 @@ dojo.declare("ResourceManager", wm.Page, {
 	    var treeNode = resourcePalette.addItem(i[0],i[1],i[2],i[3]);
 	});	
 	*/
-	//this.loadResourcesData();
+
+	this.shortcutList.selectByIndex(0);
+	this.onShortcutSelect(this.shortcutList);
     },
     
-    loadResources: function() {
+    loadResources: function(optionalRoot) {
 	this.editorPanel.hide();
 	// I'd rather this was in this.start, but start gets called when the studio loads, not when this page shows. Waste of time loading this stuff before knowing if the user will navigate here.
 	//this.loadResourcesData(false);
         ;
 	// If two calls go to loadResources within less than 3 seconds, ignore the second one.
-	if (this.loadingResourceStart + 3000 > new Date().getTime()) return;
 	var t = this.tree;
 	t.clear();
 	this.selectedItem = null;
 	var _this = this;
-	this.loadingResourceStart = new Date().getTime();
-	this.showLoadingIndicator();
-	studio.resourceManagerService.requestAsync("getResourceFolder", [], 
-                                                   function(rootfolder) {_this.initResourcesData(rootfolder);},
+	studio.resourceManagerService.requestAsync("getFolder", [optionalRoot || ""], 
+                                                   function(rootfolder) {_this.initResourcesData(rootfolder, optionalRoot || "");},
                                                    dojo.hitch(app, "toastWarning"));	
     },
-  initResourcesData: function(rootfolder) {
+    initResourcesData: function(rootfolder, optionalRoot) {
 
-    this.loadingResourceStart = new Date().getTime(); // update this value in case it took multiple seconds to load the resources
 
-	  this.resourcesModifiedData = new Date().getTime();
-	  this.resourcesFolder = addResourceBinderNodes(this.tree.root, rootfolder,true);
+	this.resourcesFolder = addResourceBinderNodes(this.tree.root, rootfolder,true, optionalRoot);
+
 /*
 	  if (!this.promptDialog)
 	    this.getAddPromptDialog();
             */
-	this.hideLoadingIndicator();
 	this.showPropertiesPanel();
 	  
   },
@@ -273,7 +270,7 @@ dojo.declare("ResourceManager", wm.Page, {
 	}
 	var _this = this;
 	studio.resourceManagerService.requestAsync("renameFile", 
-                                                   [moveItem.getResourcelessFilePath(), targetItem.getResourcelessFilePath() + "/" + moveItem.getItemName(), false], 
+                                                   [moveItem.getFilePath(), targetItem.getFilePath() + "/" + moveItem.getItemName(), false], 
 						   function(response) {
 						     try {
 						       if (!response) {
@@ -281,15 +278,18 @@ dojo.declare("ResourceManager", wm.Page, {
 						       } else {
 							 var oldparent = moveNode.parent;
 							 oldparent._remove(moveNode);
-							 moveNode.addParent(targetNode);
-							 //oldparent.render();
-							 targetNode.renderChild(moveNode);
-							 _this.updateModifiedDate();							   
-							 _this.showPropertiesPanel(1);
+							   if (targetNode._childrenRendered) {
+							       moveNode.addParent(targetNode);
+							       //oldparent.render();
+							       targetNode.renderChild(moveNode);
+							   } else {
+							       moveNode.destroy();
+							   }
+							   _this.showPropertiesPanel(1);
 						       }
 						     } catch(e) {
 						       console.error("Drag and Drop Move Failed:" + e);
-						       _this.loadResourcesData(true);
+						       _this.loadResources(true);
 						     }
 						   },
                                                    dojo.hitch(app, "toastWarning"));	
@@ -300,42 +300,33 @@ dojo.declare("ResourceManager", wm.Page, {
 	this.dragger.root = root;
     },
     */
-    showLoadingIndicator: function() {
-	var loader = wm.createElement("div", {
-	    id: "_wm_loading",
-	    innerHTML: '<div id="_wm_loading" style="position: absolute; font-weight: bold; font-size: 12pt; z-index: 100; top: 40%; left: 40%;"><img alt="loading" style="vertical-align: middle" src="lib/boot/images/loader.gif" />&nbsp;' + this.getDictionaryItem("LOADING") + '</div>'});
-	document.body.appendChild(loader);
-    },
-    hideLoadingIndicator: function() {
-	dojo._destroyElement("_wm_loading");
-    },
+
     loadResourcesData: function(keepOpenFolders) {
 
 	// var manager = this.getResourceManager();
 	// manager.setOperation("getResourceFolder");
 		     // 	manager.update(); 	
 		     var _this = this;
-
-		     this.showLoadingIndicator();
-		     studio.resourceManagerService.requestAsync("getResourceFolder", [], 
+	var root = this.tree.root.kids[0].data;
+	var rootPath = root.rootPath;
+	var tree = this.tree;
+		     studio.resourceManagerService.requestAsync("getFolder", [rootPath], 
 					     function(rootfolder) { 
 					       var openFolderHash;
 					       if (keepOpenFolders && _this.resourcesFolder) {
-						 openFolderHash = {isOpen: true, children: _this.resourcesFolder.buildOpenFolderStateHash()};
+						   tree.openFolderHash = {isOpen: true, children: _this.resourcesFolder.buildOpenFolderStateHash()};
 					       } else {
-						 openFolderHash = {};
+						   tree.openFolderHash = {};
 					       }
 						 _this.tree.clear();
-						 _this.initResourcesData(rootfolder);
-
+						 _this.initResourcesData(rootfolder,rootPath);
+/*
 						 if (keepOpenFolders) {
 						     _this.resourcesFolder.useOpenFolderStateHash(openFolderHash);
 						 }
-
-						 _this.hideLoadingIndicator();
+						 */
 					     },
 								function(inError) {
-								    _this.hideLoadingIndicator();
                                                                     this.reportError(inError);
 								});
      
@@ -377,7 +368,7 @@ dojo.declare("ResourceManager", wm.Page, {
 	if (this._editorItem && item != this._editorItem && this.editorPanel.showing && this.editor.isDirty()) {
 	    app.confirm(this.getDictionaryItem("LOSE_FILE_EDITS", {fileName: this._editorItem.itemName}), false,
 			dojo.hitch(this, function() {
-			    this.editor.reset();
+			    this.editor.setDataValue("");
 			    this.itemSelected();
 			}),
 			dojo.hitch(this, function() {
@@ -394,17 +385,22 @@ dojo.declare("ResourceManager", wm.Page, {
       this.updateToolbar();
       this.showPropertiesPanel();
         this.uploadButton.input.setType("AnyData");
-        this.uploadButton.input.setData({dataValue: {path: folder.getResourcelessFilePath()}});
+        this.uploadButton.input.setData({dataValue: {path: folder.getFilePath()}});
 	if (this.selectedItem instanceof wm.HTMLResourceItem ||
+	    this.selectedItem instanceof wm.XMLResourceItem ||
 	    this.selectedItem instanceof wm.MiscResourceItem ||
 	    this.selectedItem instanceof wm.CSSResourceItem ||
 	    this.selectedItem instanceof wm.JSResourceItem) {
 	    this.editorPanel.show();
-	    var text = wm.load("projects/" + studio.project.projectName + "/resources" + this.selectedItem.getResourcelessFilePath());
+	    var text;
+	    studio.resourceManagerService.requestSync("readFile", [this.selectedItem.getFilePath()], function(inResult) {text = inResult;});
+	    //var text = wm.load("projects/" + studio.project.projectName +  this.selectedItem.getFilePath());
 	    this.editor.setText(text);
 	    this._editorItem = this.selectedItem;
 	    if (this.selectedItem instanceof wm.HTMLResourceItem) {
 		this.editor.setSyntax("html");
+	    } else if (this.selectedItem instanceof wm.XMLResourceItem) {
+		this.editor.setSyntax("xml");
 	    } else if (this.selectedItem instanceof wm.MiscResourceItem) {
 		this.editor.setSyntax("text");
 	    } else if (this.selectedItem instanceof wm.CSSResourceItem) {
@@ -423,12 +419,17 @@ dojo.declare("ResourceManager", wm.Page, {
     },
     saveTextEditor: function() {	
 	var self = this;
-	studio.studioService.requestSync("writeWebFile", ["resources/" + this._editorItem.getResourcelessFilePath(), this.editor.getDataValue(), false],
+	studio.beginWait("Saving...");
+	studio.resourceManagerService.requestSync("writeFile", [this._editorItem.getFilePath(), this.editor.getDataValue()],
 					 function() {
+					     self.saveButton.setDisabled(true);
+					     studio.endWait("Saving...");
 					     app.toastSuccess(self.getDictionaryItem("EDITS_SAVED"));
 					     self.editor.clearDirty();
+					     self.onFileChange(self._editorItem.getFilePath(), self.editor.getDataValue());
 					 },
 					 function() {
+					     studio.endWait("Saving...");
 					     app.toastError(self.getDictionaryItem("EDITS_FAILED"));
 					 }
 					 					 
@@ -436,6 +437,45 @@ dojo.declare("ResourceManager", wm.Page, {
     },
     editorChange: function(inSender) {
 	this.saveButton.setDisabled(!this.editor.isDirty());
+    },
+    onFileChange: function(inPath, inContents) {
+	if (inPath.match(/\/pages\//)) {
+	    inPath = inPath.replace(/.*?\/pages\//,"");
+	    this.onPageChange(inPath, inContents);
+	} else if (inPath.indexOf("/common/") == 0) {
+	    this.onCommonChange(inPath, inContents);
+	} else {
+	    switch(inPath) {
+		case "/webapproot/" + studio.project.projectName + ".js":
+		this.onProjectChange(inPath, inContents);
+		break;
+		case "/webapproot/app.css":
+		this.onProjectChange(inPath, inContents);
+		break;
+	    }
+	}
+    },
+    onPageChange: function(inPath, inContents) {
+	var matches = inPath.match(/^[^\/]*/);
+	var pageName = matches ? matches[0] : null; // should never be null;
+
+	/* Refresh all components so that page containers are updated */
+	if (pageName != studio.project.pageName) {
+	    var pageContainers = wm.listOfWidgetType(wm.PageContainer, false,false);
+	    for (var i = 0; i < pageContainers.length; i++) {
+		if (pageContainers[i].pageName == pageName)
+		    delete window[pageName];
+		    pageContainers[i].forceReloadPage();
+	    }
+	} else {
+	    studio.project.openPage(pageName);
+	}
+    },
+    onProjectChange: function(inPath, inContents) {
+
+    },
+    onCommonChange: function(inPath, inContents) {
+
     },
     setSelectedItem: function(item) {
       if (item == null) {
@@ -479,12 +519,14 @@ dojo.declare("ResourceManager", wm.Page, {
 	    this.resourcePropertiesHeaderLabel.setCaption(this.selectedItem.type);
 
 	    new wm.Label({parent: this.propertiesPanel,
+			  owner: this,
 			  caption: this.getDictionaryItem("CAPTION_RELATIVE_URL"),
 			  width: "100%",
 			  height: "24px"});
 	    new wm.Label({parent: this.propertiesPanel,
+			  owner: this,
 			  //caption:  "resources/" + this.getFullFilePath(),
-			  caption:   this.selectedItem.getItemPath(),
+			  caption:   this.selectedItem.getFilePath(),
 			  singleLine: false,
 			  padding: "0,0,0,20",
 			  width: "100%",
@@ -525,6 +567,39 @@ dojo.declare("ResourceManager", wm.Page, {
 	this.resourcesFileToolBar.show();
 	this.resourcesFolderToolBar.hide();
       }
+    },
+
+    onShortcutSelect: function(inSender) {
+	var index = inSender.getSelectedIndex();
+	var data = inSender._data[index];
+	this.loadResources(data.path);
+	this.treeLabel.setCaption(data.description);
+
+    },
+
+    setRootResources: function() {
+	this.loadResources("webapproot/resources");
+	this.commonToggle.setClicked(false);
+	this.projectToggle.setClicked(false);
+	this.webinfToggle.setClicked(false);
+    },
+    setRootProject: function() {
+	this.loadResources("");
+	this.commonToggle.setClicked(false);
+	this.resourcesToggle.setClicked(false);
+	this.webinfToggle.setClicked(false);
+    },
+    setRootWEBINF: function() {
+	this.loadResources("webapproot/WEB-INF");
+	this.commonToggle.setClicked(false);
+	this.resourcesToggle.setClicked(false);
+	this.projectToggle.setClicked(false);
+    },
+    setRootCommon: function() {
+	this.loadResources("/common");
+	this.webinfToggle.setClicked(false);
+	this.resourcesToggle.setClicked(false);
+	this.projectToggle.setClicked(false);
     },
   _end: 0
 });
@@ -639,10 +714,11 @@ dojo.declare("wm.ResourceMover", wm.DragDropper, {
 });
 
 
+dojo.require("wm.studio.app.binding");
 wm.ResourceItem.extend({
     makeEmptyFile: function() {
 
-	studio.studioService.requestSync("writeWebFile", ["resources/" + this.getResourcelessFilePath(), " ", false],
+	studio.studioService.requestSync("writeWebFile", [ this.getFilePath(), " ", false],
 					 function() {
 					     var manager = studio.resourcesPage.getComponent("resourceManager");
 					     manager.updateModifiedDate();
@@ -778,21 +854,6 @@ wm.ResourceItem.extend({
                                                    dojo.hitch(app, "toastWarning"));	
     },
 
-    getItemName: function() {
-	return this.itemName;
-    },
-    buildFilePath: function(name) {
-      var result =  this.treeNode.parent.buildPathString(function() {
-	return this.data.getItemName();
-      }) + "/" + name;
-      return result;
-    },
-    getFilePath: function(optName) {
-      if (optName)
-	return this.buildFilePath(optName);
-      else
-	return this.buildFilePath(this.getItemName());
-    },
 
     getResourcelessFilePath: function() {
 	var result =  this.getFilePath();
@@ -824,6 +885,7 @@ wm.ImageResourceItem.extend({
     addCustomDataToPropertiesPanel: function(propertiesPanel) {
 	    new wm.Picture({parent: propertiesPanel,
 			  //caption:  "resources/" + this.getFullFilePath(),
+			    owner: this,
 			    source:   this.getItemPath(),
 			  padding: "0,0,0,20",
 			  width: "100%",
@@ -836,7 +898,7 @@ wm.ZipResourceItem.extend({
 
 	var manager = studio.resourcesPage.getComponent("resourceManager");
 	var _this = this;
-	studio.resourceManagerService.requestAsync("unzipAndMoveNewFile", [  this.getResourcelessFilePath()],
+	studio.resourceManagerService.requestAsync("unzipAndMoveNewFile", [  this.getFilePath()],
 						   function(result) {
 						     try {
 						       if (!result) {
@@ -856,6 +918,7 @@ wm.ZipResourceItem.extend({
 
 
 wm.JarResourceItem.extend({
+/*
     checkbox: null,
     addCustomDataToPropertiesPanel: function(propertiesPanel) {
 	this.checkbox = new wm.Checkbox({caption: studio.resourcesPage.page.getDictionaryItem("CAPTION_CLASSPATH"),
@@ -890,6 +953,7 @@ wm.JarResourceItem.extend({
                                                  dojo.hitch(app, "toastWarning"));
 
     }
+    */
 });
 wm.FolderResourceItem.extend({
     addNewFolder: function(inName) {
@@ -927,6 +991,10 @@ wm.FolderResourceItem.extend({
 	case "html":
 	    newFile = new wm.HTMLResourceItem({itemName: inName});
 	    break;
+	case "xml":
+	    newFile = new wm.XMLResourceItem({itemName: inName});
+	    break;
+
 	default:
 	    newFile = new wm.MiscResourceItem({itemName: inName});
 	}

@@ -62,7 +62,7 @@ addComponentTypeBinderNodes = function(inParent, inClass, inStrict, includePageC
 
 addWidgetBinderNodes = function(inParent, optionalWidgets) {
 
-    var types = [wm.AbstractEditor, wm.Composite, wm.DataGrid, wm.DojoGrid, wm.Editor, wm.List, wm.ToggleButton, wm.LiveForm ];
+    var types = [wm.AbstractEditor, wm.Composite, wm.DataGrid, wm.DojoGrid, wm.Editor, wm.List, wm.ToggleButton, wm.LiveForm, wm.dijit.Calendar ];
     var widgets = optionalWidgets || wm.listOfWidgetTypes(types);
     var page = inParent.page;   
 
@@ -107,10 +107,12 @@ addWidgetBinderNodes = function(inParent, optionalWidgets) {
 	});
 }
 
-    addResourceBinderNodes = function(inParent, inFile, isRoot) {
+/* Only provide rootPath if its the root Node */
+addResourceBinderNodes = function(inParent, inFile, isRoot, rootPath) {
 
       var newfile;
       var filename = inFile.file;
+	var isFolder = false;
 	if (inFile.type == "file") {
 	  var ext = filename.substring(filename.lastIndexOf(".")+1);
 	  var newfile;
@@ -139,11 +141,15 @@ addWidgetBinderNodes = function(inParent, optionalWidgets) {
 	  case "html":
 	    newfile = new wm.HTMLResourceItem({});
 	    break;
+	  case "xml":
+	    newfile = new wm.XMLResourceItem({});
+	    break;
 	  default:
 	    newfile = new wm.MiscResourceItem({});
 	  }
 	} else {
 	  newfile = new wm.FolderResourceItem({});
+	    isFolder = true;
 	}
       newfile.itemName = inFile.file;
 
@@ -156,19 +162,58 @@ addWidgetBinderNodes = function(inParent, optionalWidgets) {
             var props = owner.targetProps;
             extensionMatch = props.extensionMatch;
         }
+
 	var node = new wm.ResourceTreeNode(inParent, {file: inFile,
-						      content: newfile.itemName,
+                                                      hasChildren: isFolder,
+  			                              initNodeChildren: (!isFolder) ? undefined : function(inFolderNode) {
+							  var data  = inFolderNode.data;
+							  var name = data.itemName;
+							  var path = isRoot ? rootPath : data.getFilePath();
+							  var tree = inFolderNode.tree;
+							  if (isRoot) {
+							      newfile.rootPath = path;
+							  }
+							  studio.resourceManagerService.requestAsync("getFolder", [path], function(inResult) {
+							      if (inResult && inResult.files) {
+								  for (var i = 0; i < inResult.files.length; i++) {
+								      var item = addResourceBinderNodes(inFolderNode, inResult.files[i], false);
+								      if (tree.openFolderHash) {
+									  var pathString= item.getFilePath();
+									  pathString = pathString.replace(/^\/common\//,"");
+									  pathString = pathString.replace(/^\//,"");
+									  var path = pathString.split("/");
+
+									  var placeInHash = tree.openFolderHash;
+									  var found = true;
+									  for (var j = 0; j < path.length; j++) {
+									      if (placeInHash.children[path[j]]) {
+										  placeInHash = placeInHash.children[path[j]]
+									      } else {
+										  found = false;
+										  break;
+									      }
+									  }
+									  if (found && placeInHash.isOpen)
+									      item.treeNode.setOpen(true);
+								      }
+								  }
+							      }
+							  });
+						      },
+						      content: newfile.itemName,						      
 						      data: newfile,
-						      closed: !isRoot,
+						      closed: true,
 						      isProperty: true,
 						      isValidBinding: (!extensionMatch || ext && dojo.indexOf(extensionMatch, ext.toLowerCase()) != -1) ? true : false,
 						      source: ((inParent.source) ? inParent.source  + "/" : "")  + escape(inFile.file),
 						      image: newfile.iconSrc});	
 
       newfile.treeNode = node;
+     if (isRoot)
+	 node.setOpen(true);
       return newfile;
 
-}
+    }
 
 
 wm.convertForSimpleBind = function(inNodeProps, optionalSource) {
@@ -269,7 +314,6 @@ wm.isNodeBindable = function(inType, inProps, inIsList, inTargetType, inTargetPr
 dojo.declare("wm.BinderSource", [wm.Panel], {
 	flex: 1,
 	box: 'v',
-	resourcesModifiedData: 0,
 	_source: {
 	    bindPanelOuter: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right"}, {}, {
 		bindPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom"}, {}, {
@@ -384,7 +428,9 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 
 
 	    this.searchBar.connect(this.searchBar, "onchange", this,  function(inDisplayValue, inDataValue) {
-		_this.updateBindSourceUi("search");
+		if (this.simpleRb.getValue("groupValue") != "resources") {
+		    _this.updateBindSourceUi("search");
+		}
 	    });
 
 	    var _this = this;
@@ -713,14 +759,10 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	},
 	_buildResourceTree: function(inParent) {	    	    
 	    var _this = this;
-	    if (this.resourceData && this.resourcesModifiedData >= studio.resourcesModifiedData) {
-		addResourceBinderNodes(inParent, this.resourceData,true);
-		return;
-	    }
-	    studio.resourceManagerService.requestAsync("getResourceFolder", [], function(rootfolder) {	     
+
+	    studio.resourceManagerService.requestAsync("getFolder", ["webapproot/resources"], function(rootfolder) {	     
 		_this.resourceData = rootfolder;
-		_this.resourcesModifiedData = new Date().getTime();
-		addResourceBinderNodes(inParent, rootfolder,true);
+		addResourceBinderNodes(inParent, rootfolder,true,"webapproot/resources");
 	    });
 	},
 	// tree expanding
@@ -1399,12 +1441,32 @@ dojo.declare("wm.ResourceItem", wm.Object, {
     constructor: function(inProps) {
       dojo.mixin(this, inProps);
     },
+    buildFilePath: function(name) {
+	var result = this.treeNode.tree.root.kids[0].data.rootPath  +  this.treeNode.parent.buildPathString(function() {
+	  return this.isRoot() ? "" : this.data.getItemName();
+      }) + "/" + name;
+      return result;
+    },
+    getFilePath: function(optName) {
+	if (this.rootPath !== undefined)
+	    return this.rootPath;
+
+      if (optName)
+	return this.buildFilePath(optName);
+      else
+	return this.buildFilePath(this.getItemName());
+    },
+
+/* You usually will want getFilePath */
     getItemPath: function() {
       if (this.treeNode.parent == this.treeNode.tree.root)
 	return this.itemName;
       else {
 	return this.treeNode.parent.data.getItemPath() + "/" + this.itemName;
       }
+    },
+    getItemName: function() {
+	return this.itemName;
     },
     _end: null
 });
@@ -1443,6 +1505,13 @@ dojo.declare("wm.HTMLResourceItem", wm.ResourceItem, {
     }
 });
 
+dojo.declare("wm.XMLResourceItem", wm.ResourceItem, {
+    iconSrc: "images/resourceManagerIcons/file16.png",
+    init: function() {
+	this.inherited(arguments);
+    }
+});
+
 dojo.declare("wm.ZipResourceItem", wm.ResourceItem, {
     iconSrc: "images/resourceManagerIcons/file16.png",
     init: function() {
@@ -1458,10 +1527,11 @@ dojo.declare("wm.JarResourceItem", wm.ResourceItem, {
 });
 
 dojo.declare("wm.FolderResourceItem", wm.ResourceItem, {
+    rootPath: undefined,
     iconSrc: "images/resourceManagerIcons/folder16.png",
     init: function() {
 	this.inherited(arguments);
-    }
+    } 
 });
 
 /*

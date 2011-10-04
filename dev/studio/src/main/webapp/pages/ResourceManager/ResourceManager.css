@@ -42,3 +42,17 @@
    font-weight: bold;
 }
 
+.wm-darksnazzy .ResourceManager .wmtree,
+.wm-darksnazzy .ResourceManager-treeInnerPanel {
+    background-color: #FFFFFF;
+	color: #000000;
+}
+
+.wm-darksnazzy .ResourceManager .wmtree .wmtree-root-leaf, 
+.wm-darksnazzy .ResourceManager .wmtree .wmtree-root-last-leaf, 
+.wm-darksnazzy .ResourceManager .wmtree .wmtree-last-item, 
+.wm-darksnazzy .ResourceManager .wmtree .wmtree-root-leaf, 
+.wm-darksnazzy .ResourceManager .wmtree .wmtree-root-last-leaf, 
+.wm-darksnazzy .ResourceManager .wmtree-last-item {  
+	background-color: inherit;
+}
