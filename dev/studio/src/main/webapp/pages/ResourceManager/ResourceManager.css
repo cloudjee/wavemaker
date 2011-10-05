@@ -56,3 +56,9 @@
 .wm-darksnazzy .ResourceManager .wmtree-last-item {  
 	background-color: inherit;
 }
+
+.ResourceManager .README {
+   border: solid 1px #333;
+   background-color: #525A6A;
+   padding: 2px;
+}
