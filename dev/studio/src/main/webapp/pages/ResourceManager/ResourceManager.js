@@ -428,17 +428,24 @@ dojo.declare("ResourceManager", wm.Page, {
 	    this._editorItem = this.selectedItem;
 	    if (this.selectedItem instanceof wm.HTMLResourceItem) {
 		this.editor.setSyntax("html");
+		this.scriptPageFormatBtn.hide();
 	    } else if (this.selectedItem instanceof wm.XMLResourceItem) {
+		this.scriptPageFormatBtn.hide();
 		this.editor.setSyntax("xml");
 	    } else if (this.selectedItem instanceof wm.MiscResourceItem) {
+		this.scriptPageFormatBtn.hide();
 		this.editor.setSyntax("text");
 	    } else if (this.selectedItem instanceof wm.CSSResourceItem) {
+		this.scriptPageFormatBtn.hide();
 		this.editor.setSyntax("css");
 	    } else if (this.selectedItem instanceof wm.JSResourceItem) {
+		this.scriptPageFormatBtn.show();
 		this.editor.setSyntax("javascript");
 	    } else if (this.selectedItem instanceof wm.XMLResourceItem) {
+		this.scriptPageFormatBtn.hide();
 		this.editor.setSyntax("xml");
 	    } else {
+		this.scriptPageFormatBtn.hide();
 		this.editor.setSyntax("text");
 	    }
 	    
@@ -449,15 +456,31 @@ dojo.declare("ResourceManager", wm.Page, {
 	    this.editorPanel.hide();
 	}
     },
+    findScriptClick: function() {
+	this.editor.showSearch();
+    },
+    refreshScriptClick: function() {
+	this.editor.reset();
+    },
+    formatScriptClick: function() {
+	studio.formatScript(this.editor);
+    },
+    toggleWrapScriptClick: function() {
+	this.editor.toggleWordWrap();
+    },
+    showEditorHelp: function() {
+	this.editor.showHelp();
+    },
     saveTextEditor: function() {	
 	var self = this;
 	studio.beginWait("Saving...");
 	studio.resourceManagerService.requestSync("writeFile", [this._editorItem.getFilePath(), this.editor.getDataValue()],
 					 function() {
-					     self.saveButton.setDisabled(true);
+					     self.saveBtn.setDisabled(true);
 					     studio.endWait("Saving...");
 					     app.toastSuccess(self.getDictionaryItem("EDITS_SAVED"));
 					     self.editor.clearDirty();
+					     self.editor.focus();
 					     self.onFileChange(self._editorItem.getFilePath(), self.editor.getDataValue());
 					 },
 					 function() {
@@ -468,7 +491,7 @@ dojo.declare("ResourceManager", wm.Page, {
 					);
     },
     editorChange: function(inSender) {
-	this.saveButton.setDisabled(!this.editor.isDirty());
+	this.saveBtn.setDisabled(!this.editor.isDirty());
     },
     onFileChange: function(inPath, inContents) {
 	if (inPath.match(/\/pages\//)) {

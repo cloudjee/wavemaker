@@ -71,9 +71,17 @@ ResourceManager.widgets = {
 		}]
 	    }],
 	    splitter: ["wm.Splitter", {}],
-	    editorPanel: ["wm.Panel", {width: "100%", height: "300px", verticalAlign: "top", horizontalAlign: "left", layoutKind: 'left-to-right'}, {}, {
-		editor: ["wm.AceEditor", {width: "100%", height: "100%", dataValue: "", syntax: "text"}, {onChange: "editorChange"}],
-		saveButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, width: "100px", caption: "Save"},{onclick: "saveTextEditor"}]
+	    editorPanel: ["wm.Panel", {width: "100%", height: "300px", verticalAlign: "top", horizontalAlign: "left", layoutKind: 'top-to-bottom'}, {}, {
+		scriptRibbon: ["wm.Panel", {height: "29px", width: "100%", border: "0", layoutKind: "left-to-right", imageList: "studio.smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#000000"}, {}, {
+		    saveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Save", imageIndex: 8}, {onclick: "saveTextEditor"}],
+		    findBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findScriptClick"}],
+		    refreshBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Refresh from Server", imageIndex: 27}, {onclick: "refreshScriptClick"}],
+		    formatBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Reformat Code", imageIndex: 29}, {onclick: "formatScriptClick"}],
+		    wordWrapBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Toggle Line Wrapping", imageIndex: 15, imageList: "studio.canvasToolbarImageList16"}, {onclick: "toggleWrapScriptClick"}],
+		    editorHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Help", imageIndex: 26}, {onclick: "showEditorHelp"}]
+
+		}],
+		editor: ["wm.AceEditor", {width: "100%", height: "100%", dataValue: "", syntax: "text"}, {onChange: "editorChange"}]
 	    }]
 	}]
 }
