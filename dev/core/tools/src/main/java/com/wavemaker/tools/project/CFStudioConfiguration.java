@@ -15,8 +15,6 @@
 package com.wavemaker.tools.project;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -29,21 +27,23 @@ import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.SystemUtils;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.context.support.ServletContextResource;
+import org.springframework.data.mongodb.MongoDbFactory;
+
+import com.mongodb.gridfs.GridFS;
+import com.mongodb.gridfs.GridFSInputFile;
 
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.io.GFSResource;
+import com.wavemaker.common.io.GFSUtils;
 import com.wavemaker.common.util.FileAccessException;
-import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.config.ConfigurationStore;
 
@@ -53,9 +53,10 @@ import com.wavemaker.tools.config.ConfigurationStore;
  * @author Matt Small
  * @author Joel Hare
  * @author Jeremy Grelle
+ * @author Ed Callahan
  * 
  */
-public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
+public class CFStudioConfiguration implements EmbeddedServerConfiguration,
 		ServletContextAware {
 
 	public static final String MARKER_RESOURCE_NAME = "marker.resource.txt";
@@ -102,6 +103,11 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 	protected static final String VERSION_FILE = "version";
 
 	private ServletContext servletContext;
+	private static GridFS gfs;
+
+	CFStudioConfiguration(MongoDbFactory mongoFactory) {
+		gfs = new GridFS(mongoFactory.getDb());
+	}
 
 	/**
 	 * WaveMaker home override, used for testing. NEVER set this in production.
@@ -131,24 +137,24 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 		if (null != projectsProp && 0 != projectsProp.length()) {
 			projectsProp = projectsProp.endsWith("/") ? projectsProp
 					: projectsProp + "/";
-			return new FileSystemResource(projectsProp);
+			return new GFSResource(gfs, projectsProp);
 		}
 
 		try {
-			Resource projectsDir = getWaveMakerHome().createRelative(
-					PROJECTS_DIR);
+			Resource projectsDir = ((GFSResource) getWaveMakerHome())
+					.createRelative(gfs, PROJECTS_DIR);
+
 			if (!projectsDir.exists()) {
-				IOUtils.makeDirectories(projectsDir.getFile(),
-						getWaveMakerHome().getFile());
+				new GFSResource(gfs, ((GFSResource) projectsDir).getPath());
 			}
 			return projectsDir;
 		} catch (IOException ex) {
+			ex.printStackTrace();
 			throw new WMRuntimeException(ex);
 		}
 	}
 
 	private boolean isRuntime() {
-
 		try {
 			if (RuntimeAccess.getInstance() != null
 					&& RuntimeAccess.getInstance().getRequest() != null)
@@ -177,24 +183,21 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 		return isCloud;
 	}
 
+	public static GridFS getGFS() {
+		return gfs;
+	}
+
 	public static void setWaveMakerHome(Resource wmHome)
-			throws FileAccessException {
+			throws FileAccessException, IOException {
 		if (isCloud())
 			return;
 
-		Assert.isInstanceOf(FileSystemResource.class, wmHome,
-				"Expected a FileSystemResource");
+		Assert.isInstanceOf(Resource.class, wmHome, "GFS: Expected a Resource");
 
-		try {
-			ConfigurationStore.setVersionedPreference(
-					LocalStudioConfiguration.class, WMHOME_KEY, wmHome
-							.getFile().getCanonicalPath());
-		} catch (IOException ex) {
-			throw new WMRuntimeException(ex);
-		}
-
-		if (!wmHome.exists()) {
-			((FileSystemResource) wmHome).getFile().mkdirs();
+		ConfigurationStore.setVersionedPreference(CFStudioConfiguration.class,
+				WMHOME_KEY, ((GFSResource) wmHome).getPath());
+		if (!((GFSResource) wmHome).exists()) {
+			throw new IOException("Failed to create WaveMakerHome");
 		}
 	}
 
@@ -210,7 +213,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 	public Resource getWaveMakerHome() {
 
 		if (null != this.testWMHome) {
-			return new FileSystemResource(this.testWMHome.toString() + "/");
+			return new GFSResource(gfs, this.testWMHome.toString() + "/");
 		}
 
 		return staticGetWaveMakerHome();
@@ -218,34 +221,26 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 
 	public static Resource staticGetWaveMakerHome() {
 
-		Resource ret = null;
+		GFSResource ret = null;
 
 		String env = System.getProperty(WMHOME_PROP_KEY, null);
 		if (null != env && 0 != env.length()) {
-			ret = new FileSystemResource(env);
+			ret = new GFSResource(gfs, env);
 		}
 
 		if (null == ret) {
 			String pref = ConfigurationStore.getPreference(
-					LocalStudioConfiguration.class, WMHOME_KEY, null);
+					CFStudioConfiguration.class, WMHOME_KEY, null);
 			if (null != pref && 0 != pref.length()) {
 				pref = pref.endsWith("/") ? pref : pref + "/";
-				ret = new FileSystemResource(pref);
+				ret = new GFSResource(gfs, pref);
 			}
 		}
 
 		// we couldn't find a test value, a property, or a preference, so use
 		// a default
 		if (null == ret) {
-			ret = getDefaultWaveMakerHome();
-		}
-
-		if (!ret.exists()) {
-			try {
-				ret.getFile().mkdir();
-			} catch (IOException ex) {
-				throw new WMRuntimeException(ex);
-			}
+			ret = (GFSResource) getDefaultWaveMakerHome();
 		}
 
 		return ret;
@@ -253,20 +248,20 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 
 	protected static Resource getDefaultWaveMakerHome() {
 
-		Resource userHome = null;
+		GFSResource userHome = null;
 		if (SystemUtils.IS_OS_WINDOWS) {
 			String userProfileEnvVar = System.getenv("USERPROFILE");
 			if (StringUtils.hasText(userProfileEnvVar)) {
 				userProfileEnvVar = userProfileEnvVar.endsWith("/") ? userProfileEnvVar
 						: userProfileEnvVar + "/";
-				userHome = new FileSystemResource(System.getenv("USERPROFILE"));
+				userHome = new GFSResource(gfs, System.getenv("USERPROFILE"));
 			}
 		}
 		if (null == userHome) {
 			String userHomeProp = System.getProperty("user.home");
 			userHomeProp = userHomeProp.endsWith("/") ? userHomeProp
 					: userHomeProp + "/";
-			userHome = new FileSystemResource(userHomeProp);
+			userHome = new GFSResource(gfs, userHomeProp);
 		}
 
 		String osVersionStr = System.getProperty("os.version");
@@ -280,11 +275,13 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 
 		try {
 			if (SystemUtils.IS_OS_WINDOWS) {
-				userHome = new FileSystemResource(
-						javax.swing.filechooser.FileSystemView
-								.getFileSystemView().getDefaultDirectory());
+				String defaultDir = javax.swing.filechooser.FileSystemView
+						.getFileSystemView().getDefaultDirectory().getPath();
+				defaultDir = defaultDir.endsWith("/") ? defaultDir : defaultDir
+						+ "/";
+				userHome = new GFSResource(gfs, defaultDir);
 			} else if (SystemUtils.IS_OS_MAC) {
-				userHome = userHome.createRelative("Documents/");
+				userHome = userHome.createRelative(gfs, "Documents/");
 			}
 
 			if (!userHome.exists()) {
@@ -292,11 +289,11 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 						MessageResource.PROJECT_USERHOMEDNE, userHome);
 			}
 
-			Resource wmHome = userHome.createRelative(WAVEMAKER_HOME);
+			Resource wmHome = userHome.createRelative(gfs, WAVEMAKER_HOME);
 			if (!wmHome.exists()) {
 				wmHome.getFile().mkdir();
 			}
-			return wmHome;
+			return (Resource) wmHome;
 		} catch (IOException ex) {
 			throw new WMRuntimeException(ex);
 		}
@@ -312,7 +309,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 			return null;
 
 		if (null != testDemoDir) {
-			return new FileSystemResource(this.testDemoDir.toString() + "/");
+			return new GFSResource(gfs, this.testDemoDir.toString() + "/");
 		}
 
 		String location = ConfigurationStore.getPreference(getClass(),
@@ -320,9 +317,10 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 		Resource demo;
 		try {
 			if (null != location) {
-				demo = new FileSystemResource(location);
+				demo = new GFSResource(gfs, location);
 			} else {
-				demo = getStudioWebAppRoot().createRelative("../Samples");
+				demo = ((GFSResource) getStudioWebAppRoot()).createRelative(
+						gfs, "../Samples");
 			}
 			return demo;
 		} catch (IOException ex) {
@@ -351,7 +349,8 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 	 * @see com.wavemaker.tools.project.StudioConfiguration#getCommonDir()
 	 */
 	public Resource getCommonDir() throws IOException {
-		Resource common = getWaveMakerHome().createRelative(COMMON_DIR);
+		Resource common = ((GFSResource) getWaveMakerHome()).createRelative(
+				gfs, COMMON_DIR);
 
 		if (!common.exists() && getWaveMakerHome().exists()) {
 			createCommonDir(common);
@@ -364,11 +363,11 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 			throws IOException {
 
 		if (!common.exists()) {
-			Resource templateFile = getStudioWebAppRoot().createRelative(
-					"lib/wm/" + COMMON_DIR);
+			GFSResource templateFile = ((GFSResource) getStudioWebAppRoot())
+					.createRelative(gfs, "lib/wm/" + COMMON_DIR);
 			if (templateFile.exists()) {
-				IOUtils.copy(templateFile.getFile(), common.getFile(),
-						IOUtils.DEFAULT_EXCLUSION);
+				GFSUtils.copy(gfs, templateFile, (GFSResource)common, 
+						GFSUtils.DEFAULT_EXCLUSION);
 			}
 		}
 	}
@@ -453,17 +452,15 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 		Map<String, String> prefs = new HashMap<String, String>();
 
 		try {
-			prefs.put(WMHOME_KEY, getWaveMakerHome().getFile()
-					.getCanonicalPath());
-		} catch (IOException ex) {
+			prefs.put(WMHOME_KEY, ((GFSResource)getWaveMakerHome()).getPath());
+		} catch (Exception ex) {
 			throw new WMRuntimeException(ex);
 		}
 
 		try {
-			prefs.put(DEMOHOME_KEY, (isCloud()) ? null : getDemoDir().getFile()
-					.getCanonicalPath());
+			prefs.put(DEMOHOME_KEY, (isCloud()) ? null : ((GFSResource)getDemoDir()).getPath());
 			return prefs;
-		} catch (IOException ex) {
+		} catch (Exception ex) {
 			throw new WMRuntimeException(ex);
 		}
 	}
@@ -481,8 +478,8 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 
 		if (prefs.containsKey(WMHOME_KEY) && null != prefs.get(WMHOME_KEY)) {
 			try {
-				setWaveMakerHome(new FileSystemResource(prefs.get(WMHOME_KEY)));
-			} catch (FileAccessException e) {
+				setWaveMakerHome(new GFSResource(gfs, prefs.get(WMHOME_KEY)));
+			} catch (Exception e) {
 				throw new WMRuntimeException(e);
 			}
 		}
@@ -510,10 +507,10 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 
 	public static String getCurrentVersionInfoString() throws IOException {
 
-		String versionFile = LocalStudioConfiguration.class.getPackage()
-				.getName().replace(".", "/")
+		String versionFile = CFStudioConfiguration.class.getPackage().getName()
+				.replace(".", "/")
 				+ "/" + VERSION_FILE;
-		InputStream is = LocalStudioConfiguration.class.getClassLoader()
+		InputStream is = CFStudioConfiguration.class.getClassLoader()
 				.getResourceAsStream(versionFile);
 		String versionFileString = org.apache.commons.io.IOUtils.toString(is);
 
@@ -524,7 +521,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 	 * Set the registry version.
 	 */
 	public static void setRegisteredVersionInfo(VersionInfo vi) {
-		ConfigurationStore.setPreference(LocalStudioConfiguration.class,
+		ConfigurationStore.setPreference(CFStudioConfiguration.class,
 				VERSION_KEY, vi.toString());
 	}
 
@@ -534,7 +531,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 	 */
 	public static VersionInfo getRegisteredVersionInfo() {
 		String versionString = ConfigurationStore.getPreference(
-				LocalStudioConfiguration.class, VERSION_KEY, VERSION_DEFAULT);
+				CFStudioConfiguration.class, VERSION_KEY, VERSION_DEFAULT);
 		return new VersionInfo(versionString);
 	}
 
@@ -559,20 +556,11 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 	}
 
 	public Resource createPath(Resource root, String path) {
-		Assert.isInstanceOf(FileSystemResource.class, root,
-				"Expected a FileSystemResource");
+		Assert.isInstanceOf(Resource.class, root,
+				"GFS: Expected a Resource");
 		try {
-			FileSystemResource relativeResource = (FileSystemResource) root
+			GFSResource relativeResource = (GFSResource) root
 					.createRelative(path);
-			if (!relativeResource.exists()) {
-				if (relativeResource.getPath().endsWith("/")) {
-					IOUtils.makeDirectories(relativeResource.getFile(),
-							root.getFile());
-				} else {
-					IOUtils.makeDirectories(relativeResource.getFile()
-							.getParentFile(), root.getFile());
-				}
-			}
 			return relativeResource;
 		} catch (IOException ex) {
 			throw new WMRuntimeException(ex);
@@ -580,62 +568,58 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 	}
 
 	public Resource copyFile(Resource root, InputStream source, String filePath) {
-		Assert.isInstanceOf(FileSystemResource.class, root,
-				"Expected a FileSystemResource");
+		Assert.isInstanceOf(Resource.class, root, "GFS: Expected a Resource");
 		try {
-			FileSystemResource targetFile = (FileSystemResource) root
-					.createRelative(filePath);
-			FileCopyUtils.copy(source,
-					new FileOutputStream(targetFile.getFile()));
+			Resource targetFile = new GFSResource(gfs,source,root.getFilename(),filePath);
 			return targetFile;
-		} catch (IOException ex) {
+		} catch (Exception ex) {
 			throw new WMRuntimeException(ex);
 		}
 	}
 
 	public boolean deleteFile(Resource file) {
-		Assert.isInstanceOf(FileSystemResource.class, file,
-				"Expected a FileSystemResource");
-		FileSystemResource fileResource = (FileSystemResource) file;
-		if (fileResource.getFile().isDirectory()) {
-			try {
-				FileUtils.forceDelete(fileResource.getFile());
+		Assert.isInstanceOf(Resource.class, file, "GFS: Expected a Resource");
+		GFSResource fileResource = (GFSResource) file;
+		if (fileResource.isDirectory()) {
+			try { 
+				GFSUtils.forceDelete(gfs, fileResource);
 				return true;
-			} catch (IOException ex) {
+			} catch (Exception ex) {
 				throw new WMRuntimeException(ex);
 			}
 		} else {
-			return fileResource.getFile().delete();
+			gfs.remove(file.getFilename());
+			return true;
 		}
 	}
 
 	public OutputStream getOutputStream(Resource file) {
 		try {
-			Assert.isTrue(!file.getFile().isDirectory(),
-					"Cannot get an output stream for an invalid file.");
+			Assert.isTrue(!((GFSResource)file).isDirectory(),
+					"Cannot get an output stream for a directory.");
 			prepareForWriting(file);
-			return new FileOutputStream(file.getFile());
-		} catch (FileNotFoundException ex) {
-			throw new WMRuntimeException(ex);
-		} catch (IOException ex) {
+			return ((GFSResource)file).getGridFSInputFile().getOutputStream();
+		} catch (Exception ex) {
 			throw new WMRuntimeException(ex);
 		}
 	}
 
 	public Resource copyRecursive(Resource root, Resource target,
 			List<String> exclusions) {
+		GFSResource source  = (GFSResource) root;
+		GFSResource destination = (GFSResource) target;
 		try {
-			IOUtils.copy(root.getFile(), target.getFile(), exclusions);
+			GFSUtils.copy(gfs, source, destination, exclusions);
 		} catch (IOException ex) {
 			throw new WMRuntimeException(ex);
 		}
-		return target;
+		return destination;
 	}
-
+	
 	public Resource getTomcatHome() {
 		String tomcatHome = System.getProperty("catalina.home");
 		tomcatHome = tomcatHome.endsWith("/") ? tomcatHome : tomcatHome + "/";
-		return new FileSystemResource(tomcatHome);
+		return new GFSResource(gfs, tomcatHome);
 	}
 
 	public Resource getProjectLogsFolder() {
@@ -648,36 +632,35 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 
 	public List<Resource> listChildren(Resource root) {
 		List<Resource> children = new ArrayList<Resource>();
-		File[] files;
+		GridFSInputFile[] files;
 		try {
-			files = root.getFile().listFiles();
-		} catch (IOException e) {
+			files = ((GFSResource)root).listFiles();
+		} catch (Exception e) {
 			throw new WMRuntimeException(e);
 		}
 		if (files == null) {
 			return children;
 		}
-		for (File file : files) {
-			children.add(new FileSystemResource(file));
+		for (GridFSInputFile file : files) {
+			children.add((Resource)file);
 		}
 		return children;
 	}
 
 	public List<Resource> listChildren(Resource root, ResourceFilter filter) {
 		List<Resource> children = new ArrayList<Resource>();
-		File[] files;
+		GridFSInputFile[] files;
 		try {
-			files = root.getFile().listFiles();
-		} catch (IOException e) {
+			files = ((GFSResource)root).listFiles();
+		} catch (Exception e) {
 			throw new WMRuntimeException(e);
 		}
 		if (files == null) {
 			return children;
 		}
-		for (File file : files) {
-			FileSystemResource fileResource = new FileSystemResource(file);
-			if (filter.accept(fileResource)) {
-				children.add(fileResource);
+		for (GridFSInputFile file : files) {
+			if (filter.accept((Resource)file)) {
+				children.add((Resource)file);
 			}
 		}
 		return children;
@@ -685,48 +668,34 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 
 	public Resource createTempDir() {
 		try {
-			return new FileSystemResource(IOUtils.createTempDirectory("local",
-					"_tmp"));
-		} catch (IOException ex) {
+			return new GFSResource(gfs, "/tmp");
+		} catch (Exception ex) {
 			throw new WMRuntimeException(ex);
 		}
 	}
 
 	public Resource getResourceForURI(String resourceURI) {
-		return new FileSystemResource(resourceURI);
+		return new GFSResource(gfs, resourceURI);
 	}
 
 	public void prepareForWriting(Resource file) {
-		try {
-			if (file.getFile().isDirectory()) {
-				file.getFile().mkdirs();
-			} else {
-				file.getFile().getParentFile().mkdirs();
-			}
-		} catch (IOException ex) {
-			throw new WMRuntimeException(ex);
-		}
+		//no need to pre-create directories here
 	}
 
 	public void rename(Resource oldResource, Resource newResource) {
-		Assert.isInstanceOf(FileSystemResource.class, oldResource,
-				"Expected a FileSystemResource");
-		Assert.isInstanceOf(FileSystemResource.class, newResource,
-				"Expected a FileSystemResource");
+		Assert.isInstanceOf(Resource.class, oldResource,
+				"GFS: Expected a Resource");
+		Assert.isInstanceOf(Resource.class, newResource,
+				"GFS: Expected a Resource");
 		try {
-			oldResource.getFile().renameTo(newResource.getFile());
-		} catch (IOException ex) {
+			((GFSResource)oldResource).getGridFSInputFile().setFilename(((GFSResource)newResource).getGridFSInputFile().getFilename());
+		} catch (Exception ex) {
 			throw new WMRuntimeException(ex);
 		}
 	}
 
 	@Override
 	public String getPath(Resource file) {
-		try{
-			return file.getFile().getPath();
-		}
-		catch (IOException ex){
-			throw new WMRuntimeException(ex);
-		}
+		return ((GFSResource)file).getPath();
 	}
 }

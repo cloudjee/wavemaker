@@ -67,5 +67,7 @@ public interface StudioConfiguration {
 	public abstract void rename(Resource oldResource, Resource newResource);
 
 	public abstract void setPreferencesMap(Map<String, String> prefs);
+	
+	public abstract String getPath(Resource file);
 
 }

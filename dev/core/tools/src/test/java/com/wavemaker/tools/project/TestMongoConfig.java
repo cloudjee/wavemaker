@@ -12,14 +12,7 @@
  *  limitations under the License.
  */
 
-package com.wavemaker.common.io;
-
-/**
- * Mongo Test Env Config 
- * 
- * @author Ed Callahan
- *
- */
+package com.wavemaker.tools.project;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,12 +21,19 @@ import org.springframework.data.mongodb.config.*;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import com.mongodb.Mongo;
 
-public class TestMongoConfig extends AbstractMongoConfiguration {
+/**
+ * Mongo Config
+ * 
+ * @author Ed Callahan
+ *
+ */
+@Configuration
+public class TestMongoConfig  extends AbstractMongoConfiguration {
 
-private static String dbName = "localhost";
+	private static String dbName = "localhost";
 	
 	@Override
-	public @Bean Mongo mongo() throws Exception {
+	public @Bean Mongo mongo() throws Exception { 
 		return new Mongo(dbName);
 	}
  
