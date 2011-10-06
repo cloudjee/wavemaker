@@ -131,6 +131,7 @@ dojo.declare("Start", wm.Page, {
 		data.push({dataValue: this.projectList[i]});
 	    }
 	    app.projectListVar.setData(data);
+	    this.projectSearch.setDataValue("");
 	},
 	existingProjectListFormatCell: function(inDataInfo) {
 		var di = inDataInfo;
