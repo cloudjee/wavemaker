@@ -54,6 +54,7 @@ import com.wavemaker.tools.service.CompileService;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.util.AntUtils;
+import com.wavemaker.tools.compiler.ProjectCompiler;
 
 /**
  * @author Simon Toens
@@ -90,12 +91,18 @@ public class DataModelManager {
 
     private DesignServiceManager serviceManager = null;
 
+    private ProjectCompiler projectCompiler = null;
+
     public void setProjectManager(ProjectManager projectManager) {
         this.projectManager = projectManager;
     }
 
     public void setDesignServiceManager(DesignServiceManager serviceManager) {
         this.serviceManager = serviceManager;
+    }
+
+    public void setProjectCompiler(ProjectCompiler projectCompiler) {
+        this.projectCompiler = projectCompiler;
     }
     
     public void prepareForDeployment(DeploymentInfo deployment) {
@@ -889,6 +896,8 @@ public class DataModelManager {
         importer.setJavaDir(javaDir);
         importer.setImpersonateUser(impersonateUser);
         importer.setActiveDirectoryDomain(activeDirectoryDomain);
+        importer.setProjectCompiler(projectCompiler);
+        importer.setCurrentProjectName(projectManager.getCurrentProject().getProjectName());
 
         String dataPackage = packageName;
         if (!dataPackage.endsWith("." + DataServiceConstants.DATA_PACKAGE_NAME)) {

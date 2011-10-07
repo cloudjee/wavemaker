@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" id="resourceFileService" class="com.wavemaker.studio.ResourceFileService" CRUDService="false" type="JavaService" springFile="resourceManager.spring.xml">
-    <operation name="changeClassPath">
-        <parameter name="inPath" typeRef="java.lang.String" isList="false"/>
-        <parameter name="isInClassPath" typeRef="boolean" isList="false"/>
-        <return typeRef="boolean" isList="false"/>
-    </operation>
     <operation name="uploadFile">
         <parameter name="file" typeRef="org.springframework.web.multipart.MultipartFile" isList="false"/>
         <parameter name="path" typeRef="java.lang.String" isList="false"/>
@@ -20,6 +15,14 @@
         <parameter name="file" typeRef="java.lang.String" isList="false"/>
         <return typeRef="boolean" isList="false"/>
     </operation>
+    <operation name="writeFile">
+        <parameter name="filePath" typeRef="java.lang.String" isList="false"/>
+        <parameter name="filetext" typeRef="java.lang.String" isList="false"/>
+    </operation>
+    <operation name="getFolder">
+        <parameter name="folderName" typeRef="java.lang.String" isList="false"/>
+        <return isList="false"/>
+    </operation>
     <operation name="getResourceFolder">
         <return isList="false"/>
     </operation>
@@ -27,10 +30,8 @@
         <parameter name="name" typeRef="java.lang.String" isList="false"/>
         <return typeRef="boolean" isList="false"/>
     </operation>
-    <operation name="moveNewFile">
-        <parameter name="from" typeRef="java.lang.String" isList="false"/>
-        <parameter name="to" typeRef="java.lang.String" isList="false"/>
-        <parameter name="overwrite" typeRef="boolean" isList="false"/>
+    <operation name="readFile">
+        <parameter name="filePath" typeRef="java.lang.String" isList="false"/>
         <return typeRef="java.lang.String" isList="false"/>
     </operation>
     <operation name="downloadFile">

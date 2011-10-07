@@ -70,6 +70,7 @@ import com.wavemaker.tools.spring.beans.Beans;
 import com.wavemaker.tools.spring.beans.DefaultableBoolean;
 import com.wavemaker.tools.spring.beans.Property;
 import com.wavemaker.tools.ws.salesforce.SalesforceHelper;
+import com.wavemaker.tools.compiler.ProjectCompiler;
 
 /**
  * The DesignServiceManager provides design-time access to service descriptor
@@ -115,7 +116,9 @@ public class DesignServiceManager {
 
 	private DataModelConfiguration cfg; // salesforce
 
-	static {
+    private ProjectCompiler projectCompiler;
+
+    static {
 		try {
 			definitionsContext = JAXBContext
 					.newInstance("com.wavemaker.tools.service.definitions");
@@ -1275,5 +1278,13 @@ public class DesignServiceManager {
 
 	public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
 		this.studioConfiguration = studioConfiguration;
+	}
+
+    public void setProjectCompiler(ProjectCompiler projectCompiler) {
+		this.projectCompiler = projectCompiler;
+	}
+
+    public ProjectCompiler getProjectCompiler() {
+		return this.projectCompiler;
 	}
 }

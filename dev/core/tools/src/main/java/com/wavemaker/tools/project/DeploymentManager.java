@@ -46,6 +46,7 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.server.FileUploadResponse;
 import com.wavemaker.runtime.server.ServerConstants;
+import com.wavemaker.tools.compiler.ProjectCompiler;
 
 /**
  * Main deployment class.
@@ -99,7 +100,14 @@ public class DeploymentManager {
 	public static final String IMPORT_RENAME_UTILS_OPERATION = "import-rename-utils";
 	public static final String GEN_RTFILES_OPERATION = "generate-runtime-files";
 
-	public static final String EXPORT_DIR_DEFAULT = "export/";
+    public static final String COPY_JARS_OPERATION = "copy-jars";
+    public static final String CLEAN_OPERATION = "clean";
+    public static final String BUILD_TEMP_OPERATION = "build-temp";
+    public static final String BUILD_WAR_TEMP_OPERATION = "build-war-temp";
+    public static final String TEST_RUN_START_PREP_OPERATION = "testrunstart-prep";
+    public static final String TEST_RUN_START_TEMP_OPERATION = "testrunstart-temp";
+
+    public static final String EXPORT_DIR_DEFAULT = "export/";
 	public static final String DIST_DIR_DEFAULT = "dist/";
 
 	public static final String WAR_EXTENSION = ".war";
@@ -111,7 +119,7 @@ public class DeploymentManager {
 	public static final String PACKAGES_JS_FILE = "packages.js";
 	public static final String COMMON_MODULE_PREFIX = "common.packages.";
 
-	private static boolean isCloud;
+    private static boolean isCloud;
 	private static boolean isCloudInitialized = false;
 
 	public static boolean isCloud() {
@@ -171,7 +179,10 @@ public class DeploymentManager {
 		if (H != null && H.getAttribute("Unloader") == null)
 			H.setAttribute("Unloader", new Undeployer());
 
-		return antExecute(projectDir, deployName, TEST_RUN_START_OPERATION);
+		antExecute(projectDir, deployName, TEST_RUN_START_PREP_OPERATION);
+        antExecute(projectDir, deployName, BUILD_TEMP_OPERATION);
+        compile();
+        return antExecute(projectDir, deployName, TEST_RUN_START_TEMP_OPERATION);
 	}
 
 	public String testRunStart() {
@@ -188,21 +199,28 @@ public class DeploymentManager {
 	 */
 	public String compile() {
 		try {
-			return antExecute(getProjectDir().getURI().toString(),
-					getDeployName(), COMPILE_OPERATION);
-		} catch (IOException ex) {
+            antExecute(getProjectDir().getFile().getCanonicalPath(),
+					getDeployName(), COPY_JARS_OPERATION);
+            //return antExecute(getProjectDir().getURI().toString(),
+			//		getDeployName(), COMPILE_OPERATION);
+            projectCompiler.compileProject(projectManager.getCurrentProject().getProjectName());
+        } catch (IOException ex) {
 			throw new WMRuntimeException(ex);
 		}
-	}
+        return null;
+    }
 
 	/**
 	 * Clean, then compile java src.
 	 */
 	public String cleanCompile() {
 		try {
-			return antExecute(getProjectDir().getURI().toString(),
-					getDeployName(), CLEAN_COMPILE_OPERATION);
-		} catch (IOException ex) {
+            antExecute(getProjectDir().getURI().toString(),
+					getDeployName(), CLEAN_OPERATION);
+            //return antExecute(getProjectDir().getURI().toString(),
+			//		getDeployName(), CLEAN_COMPILE_OPERATION);
+            return compile();
+        } catch (IOException ex) {
 			throw new WMRuntimeException(ex);
 		}
 	}
@@ -212,9 +230,10 @@ public class DeploymentManager {
 	 */
 	public String build() {
 		try {
-			return antExecute(getProjectDir().getURI().toString(),
-					getDeployName(), BUILD_OPERATION);
-		} catch (IOException ex) {
+            antExecute(getProjectDir().getURI().toString(),
+					getDeployName(), BUILD_TEMP_OPERATION);
+            return compile();
+        } catch (IOException ex) {
 			throw new WMRuntimeException(ex);
 		}
 	}
@@ -236,9 +255,12 @@ public class DeploymentManager {
 	 */
 	public String cleanBuild() {
 		try {
-			return antExecute(getProjectDir().getURI().toString(),
-					getDeployName(), CLEAN_BUILD_OPERATION);
-		} catch (IOException ex) {
+            antExecute(getProjectDir().getURI().toString(),
+					getDeployName(), CLEAN_OPERATION);
+            //return antExecute(getProjectDir().getURI().toString(),
+			//		getDeployName(), CLEAN_BUILD_OPERATION);
+            return build();
+        } catch (IOException ex) {
 			throw new WMRuntimeException(ex);
 		}
 	}
@@ -266,7 +288,9 @@ public class DeploymentManager {
 		properties.put(DEPLOY_NAME_PROPERTY, studioConfiguration
 				.getResourceForURI(projectDir).getFilename());
 
-		antExecute(projectDir, BUILD_WAR_OPERATION, properties);
+        build();
+
+        antExecute(projectDir, BUILD_WAR_TEMP_OPERATION, properties);
 
 		if (includeEar) {
 			antExecute(projectDir, BUILD_EAR_OPERATION, properties);
@@ -1111,8 +1135,9 @@ public class DeploymentManager {
 	// bean properties
 	private LocalStudioConfiguration studioConfiguration;
 	private ProjectManager projectManager;
+    private ProjectCompiler projectCompiler;
 
-	public LocalStudioConfiguration getStudioConfiguration() {
+    public LocalStudioConfiguration getStudioConfiguration() {
 		return studioConfiguration;
 	}
 
@@ -1127,5 +1152,9 @@ public class DeploymentManager {
 
 	public ProjectManager getProjectManager() {
 		return this.projectManager;
+	}
+
+    public void setProjectCompiler(ProjectCompiler projectCompiler) {
+		this.projectCompiler = projectCompiler;
 	}
 }

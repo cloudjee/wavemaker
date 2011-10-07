@@ -18,6 +18,9 @@ Server-side manager bean definitions.  These are only to be used at runtime.
         <property name="projectManager">
             <ref bean="projectManager" />
         </property>
+		<property name="projectCompiler">
+            <ref bean="projectCompiler"/>
+        </property>
         <property name="designServiceManager">
             <ref bean="designServiceManager" />
         </property>
@@ -70,6 +73,9 @@ Server-side manager bean definitions.  These are only to be used at runtime.
         <property name="studioConfiguration">
             <ref bean="studioConfiguration"/>
         </property>
+		<property name="projectCompiler">
+            <ref bean="projectCompiler"/>
+        </property>
     </bean>
 
     <bean id="serviceDeploymentManager"
@@ -115,6 +121,19 @@ Server-side manager bean definitions.  These are only to be used at runtime.
             lazy-init="true" >
 
         <aop:scoped-proxy/>
+    </bean>
+
+	<!-- java compiler -->
+	<bean id="projectCompiler"
+            class="com.wavemaker.tools.compiler.ProjectCompiler"
+            scope="singleton"
+            lazy-init="true">
+        <property name="projectManager">
+            <ref bean="projectManager"/>
+        </property>
+        <property name="studioConfiguration">
+            <ref bean="studioConfiguration"/>
+        </property>
     </bean>
 
     <!-- see comments in the file -->

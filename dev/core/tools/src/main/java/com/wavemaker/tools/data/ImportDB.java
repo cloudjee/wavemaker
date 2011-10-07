@@ -56,6 +56,7 @@ import com.wavemaker.tools.service.DefaultCompileService;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.util.AntUtils;
+import com.wavemaker.tools.compiler.ProjectCompiler;
 
 /**
  * Database import.
@@ -129,6 +130,10 @@ public class ImportDB extends BaseDataModelSetup {
     private String revengMetaDataDialect = null;
 
     private DeprecatedServiceDefinition serviceDefinition = null;
+
+    private String currentProjectName;
+
+    private ProjectCompiler projectCompiler;
 
     /**
      * Main method ctor.
@@ -232,6 +237,14 @@ public class ImportDB extends BaseDataModelSetup {
 
     public void setClassesDir(File classesDir) {
         this.classesdir = classesDir;
+    }
+
+    public void setProjectCompiler(ProjectCompiler projectCompiler) {
+        this.projectCompiler = projectCompiler;
+    }
+
+    public void setCurrentProjectName(String currentProjectName) {
+        this.currentProjectName = currentProjectName;
     }
 
     @Override
@@ -398,11 +411,15 @@ public class ImportDB extends BaseDataModelSetup {
         if (!classesdir.exists()) {
             classesdir.mkdirs();
         }
-        String includes = packageName.replace(".", "/") + "/* ";
+
+        projectCompiler.compileService(currentProjectName, serviceName);
+
+        /*String includes = packageName.replace(".", "/") + "/* ";
         if (!packageName.equals(dataPackage)) {
             includes += dataPackage.replace(".", "/") + "/*";
         }
-        AntUtils.javac(destdir.getAbsolutePath(), classesdir, includes);
+        AntUtils.javac(destdir.getAbsolutePath(), classesdir, includes);*/
+
     }
 
     protected void writePropertiesFile(Configuration cfg) {

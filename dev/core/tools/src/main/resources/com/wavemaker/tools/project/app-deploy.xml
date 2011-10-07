@@ -117,6 +117,47 @@
             failonerror="true" />
     </target>
 
+	<target name="testrunstart-prep" unless="deploy-uptodate"
+            depends="init, -check-deploy-uptodate"
+            description="Preparation for testrunstart-temp">
+	</target>
+
+	<target name="testrunstart-temp" unless="deploy-uptodate"
+            description="Register this application with Tomcat">
+        <echo>tomcat.port=${tomcat.port}</echo>
+        <taskdef name="undeploy"
+            classname="org.apache.catalina.ant.UndeployTask"
+            classpathref="studio.classpath"/>
+<!--            path="/${wavemaker.user.name}/${deploy.name}" -->
+        <undeploy url="${tomcat.manager.url}"
+            username="${tomcat.manager.username}"
+            password="${tomcat.manager.password}"
+            path="/${deploy.name}"
+                failonerror="false" />
+        <taskdef name="xmltask"
+            classname="com.oopsconsultancy.xmltask.ant.XmlTask"
+            classpathref="studio.classpath"/>
+        <xmltask dest="${tomcat.config.xml}" outputter="simple">
+            <insert path="/">
+                <![CDATA[
+                    <Context docBase="${build.app.webapproot.dir}" privileged="true"
+                             antiResourceLocking="false" antiJARLocking="true">
+                    </Context>
+                ]]>
+            </insert>
+        </xmltask>
+        <taskdef name="deploy"
+            classname="org.apache.catalina.ant.DeployTask"
+            classpathref="studio.classpath"/>
+<!--            path="/${wavemaker.user.name}/${deploy.name}"-->
+        <deploy url="${tomcat.manager.url}"
+            username="${tomcat.manager.username}"
+            password="${tomcat.manager.password}"
+             path="/${deploy.name}"
+            config="${tomcat.config.xml}"
+            failonerror="true" />
+    </target>
+
     <target name="undeploy" depends="init">
         <taskdef name="undeploy"
             classname="org.apache.catalina.ant.UndeployTask"
@@ -139,7 +180,59 @@
                  compile">
     </target>
 
+	<target name="build-temp"
+        description="Generate runtime files and compile java sources"
+        depends="init,
+                 copy-jars,
+                 copy-resources,
+                 generate-runtime-files">
+    </target>
+
     <target name="build-war" depends="init,build">
+        <!-- copy js files -->
+        <copy todir="${build.app.webapproot.dir}/lib">
+            <fileset dir="${studio.webapproot.dir}/lib">
+                <exclude name="wm/${custom.wm.dir}/**"/>
+                <exclude name="dojo/util/**"/>
+                <exclude name="dojo/**/tests/**"/>
+            </fileset>
+        </copy>
+
+        <!-- copy in user's custom widgets -->
+		<copy todir="${build.app.webapproot.dir}/lib/wm">
+			<fileset dir="${wavemaker.home}">
+                <include name="${custom.wm.dir}/**"/>
+            </fileset>
+        </copy>
+
+        <replace dir="${build.app.webapproot.dir}">
+            <include name="*.html"/>
+            <replacetoken>"/wavemaker/app/</replacetoken>
+            <replacevalue>"</replacevalue>
+        </replace>
+        <replace dir="${build.app.webapproot.dir}">
+            <include name="*.html"/>
+            <replacetoken>"/wavemaker/</replacetoken>
+            <replacevalue>"</replacevalue>
+        </replace>
+        <replace dir="${build.app.webapproot.dir}">
+          <include name="config.js"/>
+          <replacetoken>"../wavemaker/</replacetoken>
+          <replacevalue>"</replacevalue>
+        </replace>
+        <replace dir="${build.app.webapproot.dir}">
+            <include name="config.js"/>
+            <replacetoken>"/wavemaker/</replacetoken>
+            <replacevalue>"</replacevalue>
+        </replace>
+
+		<war basedir="${build.app.webapproot.dir}" destfile="${war.file.name}">
+			<exclude name="**/application.xml"/>
+			<exclude name="**/*.documentation.json"/>
+		</war>
+    </target>
+
+	<target name="build-war-temp" depends="init">
         <!-- copy js files -->
         <copy todir="${build.app.webapproot.dir}/lib">
             <fileset dir="${studio.webapproot.dir}/lib">

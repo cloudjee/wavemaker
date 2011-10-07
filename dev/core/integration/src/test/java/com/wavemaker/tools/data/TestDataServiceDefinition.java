@@ -49,6 +49,7 @@ import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.ServiceClassGenerator;
 import com.wavemaker.tools.util.AntUtils;
 import com.wavemaker.tools.util.DesignTimeUtils;
+import com.wavemaker.tools.compiler.ProjectCompiler;
 
 /**
  * @author Simon Toens
@@ -552,7 +553,12 @@ public class TestDataServiceDefinition extends WMTestCase {
 
 		assertTrue(new File(f, path).exists());
 
-		AntUtils.javac(f.getAbsolutePath(), f);
+		String projectName = testData.getDesignServiceManager().getProjectManager().getCurrentProject().getProjectName();
+        String serviceName = testData.getServiceName();
+        ProjectCompiler projectCompiler = testData.getDesignServiceManager().getProjectCompiler();
+        projectCompiler.compileService(projectName, serviceName);
+
+        //AntUtils.javac(f.getAbsolutePath(), f);
 
 		ClassLoader cl = ClassLoaderUtils
 				.getClassLoaderForFile(new File[] { f });
