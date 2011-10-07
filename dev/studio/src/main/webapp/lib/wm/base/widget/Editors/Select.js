@@ -231,7 +231,10 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 			}
 		}
 		this.updateReadonlyValue();
+	        this.editorChanged();
 	},
+// we need to call this.editorChanged in here to update dataValue
+
 	// Optimization: fast setting of select using internal dijit functionality
 	// avoids re-getting items from store
        _setEditorValue: function(inDisplayValue, optionalDataObjValue) {
