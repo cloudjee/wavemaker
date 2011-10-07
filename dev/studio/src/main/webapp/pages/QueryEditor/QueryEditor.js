@@ -42,6 +42,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		});
 	    });
 
+/*
 	    if (dojo.isIE <= 8) {
 		wm.onidle(this, function() {
 		    dojo.forEach(buttons, function(b) {
@@ -50,6 +51,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		    });
 		});
 	    }
+	    */
 	},
 	update: function() {
 		//this.selectedNode = null;

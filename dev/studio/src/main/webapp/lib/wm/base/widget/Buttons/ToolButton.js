@@ -214,12 +214,11 @@ dojo.declare("wm.ToolButton", wm.Control, {
     },
     renderBounds: function() {
         this.inherited(arguments);
-        if (!this._IEButtonTrickUsed && dojo.isIE && dojo.isIE < 9 && this.btnNode && this.btnNode.firstChild && this.btnNode.firstChild.tagName) {
-            this._IEButtonTrickUsed = true;
+        if (dojo.isIE && dojo.isIE < 9 && this.btnNode && this.btnNode.firstChild && this.btnNode.firstChild.tagName) {
             this.btnNode.firstChild.style.padding = "1px";
-            wm.onidle(this, function() {
+	    wm.job(this.getRuntimeId() + ".IEButtonTrick", 5, dojo.hitch(this, function() {
                 this.btnNode.firstChild.style.padding = "0px";
-            });
+            }));
         }
     },
 

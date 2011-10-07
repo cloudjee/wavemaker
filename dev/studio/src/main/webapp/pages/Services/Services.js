@@ -24,6 +24,7 @@ dojo.declare("Services", wm.Page, {
 		this.update();
 	    this._cachedData = this.getCachedData();
 
+/*
 	    if (dojo.isIE <= 8) {
 		wm.onidle(this, function() {
 		    this.webServiceSaveBtn.setBorder("1");
@@ -34,7 +35,7 @@ dojo.declare("Services", wm.Page, {
 		    this.delWebServiceBtn.setBorder("0");
 		});
 	    }
-
+	    */
 	},
 	update: function() {
 		studio.updateServices();

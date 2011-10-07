@@ -29,12 +29,14 @@ dojo.declare("Security", wm.Page, {
 		this.update();
 
 
+/*
 	    if (dojo.isIE <= 8) {
 		wm.onidle(this, function() {
 		    this.saveButton.setBorder("1");
 		    this.saveButton.setBorder("0");
 		});
 	    }
+	    */
  	    this._setDataTypes();   
 	    this.setupServicesLayer();
 	},
