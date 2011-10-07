@@ -308,17 +308,19 @@ wm.DojoGrid.extend({
 	    }
 	},
 	_onResizeColumn: function(idx, inDrag, delta){
-		var sArray = this.contextMenu.getUpdatedDataSet();
+	        var sArray = this.columns;
 		sArray[idx].width = delta.w + 'px';
-		this.contextMenu.setDataSet(sArray);
+	        if (this.contextMenu)
+		    this.contextMenu.setDataSet(sArray);
 		wm.fire(studio.inspector, "reinspect");
 	},
 	_onMoveColumn: function(arg1, arg2, oldPos, newPos){
-		var sArray = this.contextMenu.getUpdatedDataSet();
+	        var sArray = this.columns;
 		var tmp=sArray[oldPos];
 		sArray.splice(oldPos,1);
 		sArray.splice(newPos,0,tmp);
-		this.contextMenu.setDataSet(sArray);
+	        if (this.contextMenu)
+		    this.contextMenu.setDataSet(sArray);
 		wm.fire(studio.inspector, "reinspect");
 	},
 
