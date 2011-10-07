@@ -20,7 +20,7 @@ Start.widgets = {
 		}],
 		*/
 		panel5: ["wm.Panel", {height: "100%", width: "100%", verticalAlign: "middle", horizontalAlign: "center"}, {}, {
-			panel1: ["wm.Panel", {height: "450px", width: "750px", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+			panel1: ["wm.Panel", {height: "100%", width: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 				tabLayers1: ["wm.TabLayers", {margin: "4,8,8,8"}, {}, {
 					layer1: ["wm.Layer", {caption: "Welcome", horizontalAlign: "left", verticalAlign: "top", padding: "8"}, {}, {
 						panel3: ["wm.Panel", {height: "100%", width: "100%", verticalAlign: "middle", horizontalAlign: "left", borderColor: ""}, {}, {
@@ -54,7 +54,7 @@ Start.widgets = {
 										format: ["wm.DataFormatter", {}, {}]
 									}]
 								}],
-								iframe: ["wm.IFrame", {source: "/wavemaker/studioService.download?method=getContent&inUrl=http://wavemaker.com/splash", width: "100%", height: "100%", border: "1", borderColor: "#000F19", margin: "0,8,10,0", showing: false}]
+							    iframe: ["wm.IFrame", {source: "/wavemaker/studioService.download?method=getContent&inUrl=http://wavemaker.com/splash", width: "100%", height: "100%", border: "1", borderColor: "#000F19", margin: "0,8,10,0", showing: false}]
 								}]
 							}]
 					}],
