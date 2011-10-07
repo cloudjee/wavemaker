@@ -51,9 +51,17 @@ ResourceManager.widgets = {
   	    }],
 		openAddFileDialogButton: ["wm.Button", {caption: "<img src='/wavemaker/images/resourceManagerIcons/d_add32.png'> Add File", height: "36px", width: "150px"}, {onclick: "addFileDialog"}]
             }],
-
 	    mainPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "100%"}, {}, {
-	      tree: ["wm.Tree", {width: "100%", height: "100%", scrollY: true, scrollX: true, margin: "0,5,10,5"}, {onselect: "itemSelected", ondeselect: "clearSelectedItem", onmousedown: "itemMouseDown"}, {}],
+		shortcutPanel: ["wm.Panel", {width: "150px", height: "100%",layoutKind: "top-to-bottom"}, {}, {
+		    shortcutHeader: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_12px","wm_TextDecoration_Bold"]},padding: "0", margin: "5,0,5,0", align: "center", caption: "Folder Shortcuts", width: "100%", height: "50px"}],
+		    shortcutList: ["wm.List", {_classes: {domNode: ["StudioList"]}, margin: "0,5,10,5", padding: "0", width: "100%", height: "100%",headerVisible:false, dataFields: "name", _data: [{name: "Resources", path: "/webapproot/resources", description: "Use this folder to add your project resources such as images, custom javascript libraries, and html files.  This is the only folder you are likely to need when working with your project"}, {name: "Project", path: "", description: "Access all of your project files"}, {name: "Config Files", path: "/webapproot/WEB-INF", description: "Access your WEB-INF folder where your web.xml, security and other spring files are located; for advanced users only"}, {name: "Pages", path: "/webapproot/pages", description: "You can edit your pages here; be warned that if you edit a page that you have open in studio's designer, that changes you made in the designer will be lost"}, {name: "Common Folder", path: "/common", description: "These files are shared by all of your projects.  Put your custom themes and custom widgets here"}, {name: "Jar Folder", path: "/lib", description: "If you want to add jar files to your project, this is where they go"}]}, {onselect: "onShortcutSelect"}]
+		}],
+		treePanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom"}, {}, {
+		    treeLabel: ["wm.Label", {width: "100%", height: "50px", caption: "", singleLine: false,margin: "5,20,5,20", padding: "0" }],
+		    treeInnerPanel: ["wm.Panel", {width: "100%", height: "100%", margin: "0,5,10,5", padding: "5"}, {}, {
+			tree: ["wm.Tree", {width: "100%", height: "100%", scrollY: true, scrollX: true, margin: "0", padding: "0"}, {onselect: "itemSelected", ondeselect: "clearSelectedItem", onmousedown: "itemMouseDown"}, {}]
+		    }]
+		}],
 		resourcePropertiesContainer: ["wm.Panel", {_classes: {domNode: ["wm_BackgroundColor_Black"]}, height: "100%", width: "260px", verticalAlign: "top", margin: 0, layoutKind: "top-to-bottom"}, {}, {
 		    resourcePropertiesHeader: ["wm.Panel", {height: "17px", width: "100%", verticalAlign: "bottom", layoutKind: "left-to-right", padding: "2,6,0,6", margin: "0,4,0,4"},{},{ 
 			resourcePropertiesHeaderIcon: ["wm.Picture", {height: "15px", width: "15px", source: "", aspect: "h"}],
@@ -63,9 +71,17 @@ ResourceManager.widgets = {
 		}]
 	    }],
 	    splitter: ["wm.Splitter", {}],
-	    editorPanel: ["wm.Panel", {width: "100%", height: "100%", verticalAlign: "top", horizontalAlign: "left", layoutKind: 'left-to-right'}, {}, {
-		editor: ["wm.AceEditor", {width: "100%", height: "300px", dataValue: "", syntax: "text"}, {onChange: "editorChange"}],
-		saveButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, width: "100px", caption: "Save"},{onclick: "saveTextEditor"}]
+	    editorPanel: ["wm.Panel", {width: "100%", height: "300px", verticalAlign: "top", horizontalAlign: "left", layoutKind: 'top-to-bottom'}, {}, {
+		scriptRibbon: ["wm.Panel", {height: "29px", width: "100%", border: "0", layoutKind: "left-to-right", imageList: "studio.smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#000000"}, {}, {
+		    saveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Save", imageIndex: 8}, {onclick: "saveTextEditor"}],
+		    findBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findScriptClick"}],
+		    refreshBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Refresh from Server", imageIndex: 27}, {onclick: "refreshScriptClick"}],
+		    formatBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Reformat Code", imageIndex: 29}, {onclick: "formatScriptClick"}],
+		    wordWrapBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Toggle Line Wrapping", imageIndex: 15, imageList: "studio.canvasToolbarImageList16"}, {onclick: "toggleWrapScriptClick"}],
+		    editorHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Help", imageIndex: 26}, {onclick: "showEditorHelp"}]
+
+		}],
+		editor: ["wm.AceEditor", {width: "100%", height: "100%", dataValue: "", syntax: "text"}, {onChange: "editorChange"}]
 	    }]
 	}]
 }

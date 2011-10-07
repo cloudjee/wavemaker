@@ -14,23 +14,23 @@
 
 package com.wavemaker.studio;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 import org.apache.log4j.Logger;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.runtime.server.FileUploadResponse;
 import com.wavemaker.runtime.server.ParamName;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
-import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.project.ProjectManager;
+import com.wavemaker.tools.project.StudioConfiguration;
 
 /**
  * This is a client-facing service class. All public methods will be exposed to
@@ -43,22 +43,22 @@ public class ResourceFileService {
 
 	private ProjectManager projectManager;
 
+	private StudioConfiguration studioConfiguration;
+
 	// Used by spring
 	@HideFromClient
 	public void setProjectManager(ProjectManager manager) {
 		this.projectManager = manager;
 	}
+	
+	@HideFromClient
+	public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
+		this.studioConfiguration = studioConfiguration;
+	}
 
 	@HideFromClient
-	protected File getProjectDir() {
-		File projectDir;
-		try {
-			projectDir = this.projectManager.getCurrentProject()
-					.getWebAppRoot().getFile();
-		} catch (IOException e) {
-			throw new WMRuntimeException(e);
-		}
-		return projectDir;
+	protected Resource getProjectDir() {
+		return this.projectManager.getCurrentProject().getWebAppRoot();
 	}
 
 	/*
@@ -66,37 +66,68 @@ public class ResourceFileService {
 	 * exist
 	 */
 	@HideFromClient
-	private File getResourcesDir() {
-		File dir = new File(getProjectDir(), "resources");
-		if (!dir.exists()) {
-			dir.mkdir();
-			new File(dir, "images").mkdir();
-			new File(dir, "images/imagelists").mkdir();
-			new File(dir, "images/buttons").mkdir();
-			new File(dir, "images/logos").mkdir();
-			new File(dir, "javascript").mkdir();
-			new File(dir, "css").mkdir();
-			new File(dir, "htmlcontent").mkdir();
+	private Resource getResourcesDir() {
+		Resource resources;
+		try {
+			resources = getProjectDir().createRelative("resources/");
+		} catch (IOException e) {
+			throw new WMRuntimeException(e);
 		}
-		return dir;
+		if (!resources.exists()) {
+			resources = studioConfiguration.createPath(getProjectDir(),
+					"resources/");
+			studioConfiguration.createPath(resources, "images/imagelists/");
+			studioConfiguration.createPath(resources, "images/buttons/");
+			studioConfiguration.createPath(resources, "images/logos/");
+			studioConfiguration.createPath(resources, "javascript/");
+			studioConfiguration.createPath(resources, "css/");
+			studioConfiguration.createPath(resources, "htmlcontent/");
+		}
+		return resources;
 	}
+
+    protected Resource getRequestedFile(String requestedFile, boolean isFolder) throws IOException {
+	return getRequestedFile(requestedFile,isFolder,false);
+    }
+    protected Resource getRequestedFile(String requestedFile, boolean isFolder, boolean create) throws IOException {
+	Resource root;
+	if (requestedFile.startsWith("/common")) {
+	    try {
+		root = studioConfiguration.getCommonDir();
+	    } catch(IOException e) {
+		root = this.projectManager.getCurrentProject().getProjectRoot(); // don't know what to do if exception thrown...
+	    }
+	    requestedFile = requestedFile.substring(7);
+	    System.out.println("requestedFile:" + requestedFile);
+	} else {
+	    root = this.projectManager.getCurrentProject().getProjectRoot();
+	}
+	if (requestedFile != null && requestedFile.length() > 0) {
+	    if (create) {
+		return studioConfiguration.createPath(root, requestedFile + (isFolder ? "/" : ""));
+	    } else {
+		return root.createRelative(requestedFile + (isFolder ? "/" : ""));
+	    }
+	} else {
+	    return root;
+	}
+    }
 
 	/* Respond's to user request to download a resource file */
 	public DownloadResponse downloadFile(
 			@ParamName(name = "folder") String folderpath,
 			@ParamName(name = "filename") String filename) throws IOException {
-
 		boolean isZip = false;
-		File resourceDir = this.getResourcesDir();
-		File parentDir = new File(resourceDir, folderpath);
-		File localFile = new File(parentDir, filename);
-		if (localFile.isDirectory()) {
+		Resource parentDir = getRequestedFile(folderpath, true);
+		Resource localFile = parentDir.createRelative(filename + (filename.indexOf(".") == -1 ? "/" : ""));
+		if (StringUtils.getFilenameExtension(filename) == null) {
 			localFile = com.wavemaker.tools.project.ResourceManager
-					.createZipFile(localFile, projectManager.getTmpDir().getFile());
+					.createZipFile(studioConfiguration, localFile,
+							projectManager.getTmpDir());
 			if (localFile == null)
 				return (DownloadResponse) null;
 			isZip = true;
-			filename = localFile.getName();
+			filename = localFile.getFilename();
 		}
 
 		return com.wavemaker.tools.project.ResourceManager.downloadFile(
@@ -111,69 +142,68 @@ public class ResourceFileService {
 	public String renameFile(@ParamName(name = "from") String from,
 			@ParamName(name = "to") String to,
 			@ParamName(name = "overwrite") boolean overwrite) {
-		File resourceDir = this.getResourcesDir();
-
-		File dest = new File(resourceDir, to);
-		if (!overwrite) {
-			int lastIndexOfPeriod = to.lastIndexOf(".");
-			String to1 = (lastIndexOfPeriod != -1) ? to.substring(0,
-					to.lastIndexOf(".")) : to;
-			String to_ext = (lastIndexOfPeriod != -1) ? to.substring(to
-					.lastIndexOf(".") + 1) : "";
-			for (int i = 0; i < 1000 && dest.exists(); i++)
-				dest = new File(resourceDir, to1 + i
-						+ ((lastIndexOfPeriod != -1) ? "." : "") + to_ext);
-		}
 
 		try {
-			File f = new File(resourceDir, from);
-			if (f.renameTo(dest))
-				return dest.getName();
+		        Resource dest = getRequestedFile(to, to.indexOf(".") == -1);
+			if (!overwrite) {
+				int lastIndexOfPeriod = to.lastIndexOf(".");
+				String to1 = (lastIndexOfPeriod != -1) ? to.substring(0,
+						to.lastIndexOf(".")) : to;
+				String to_ext = (lastIndexOfPeriod != -1) ? to.substring(to
+						.lastIndexOf(".") + 1) : "";
+				for (int i = 0; i < 1000 && dest.exists(); i++) {
+				    dest= getRequestedFile(to1 + i + ((lastIndexOfPeriod != -1) ? "." : "") + to_ext, to.indexOf(".") == -1);
+				}
+			}
+			Resource f = getRequestedFile(from, from.indexOf(".") == -1);
+			System.out.println("RENAME " + f.getDescription() + " TO " + dest.getDescription());
+			studioConfiguration.rename(f, dest);
+			return dest.getFilename();
 		} catch (Exception e) {
+			throw new WMRuntimeException(e);
 		}
-		return "";
 	}
 
 	/*
 	 * Moves a file that was uploaded to the tmp folder to the requested
 	 * destination. All uploads go to tmp folder
-	 */
+	 *
 	public String moveNewFile(@ParamName(name = "from") String from,
 			@ParamName(name = "to") String to,
 			@ParamName(name = "overwrite") boolean overwrite) {
-		File resourceDir = this.getResourcesDir();
+		Resource resourceDir = this.getResourcesDir();
 
-		File dest = new File(resourceDir, to);
-
-		if (!overwrite) {
-			String to1 = (to.lastIndexOf(".") != -1) ? to.substring(0,
-					to.lastIndexOf(".")) : to;
-			String to_ext = (to.lastIndexOf(".") != -1) ? to.substring(to
-					.lastIndexOf(".") + 1) : "";
-			for (int i = 0; i < 1000 && dest.exists(); i++)
-				dest = new File(resourceDir, to1 + i + "." + to_ext);
-		}
 		try {
-			File f = new File(projectManager.getTmpDir().getFile(), from);
-			if (f.renameTo(dest)) {
-				return dest.getName();
-			}
-		} catch (Exception e) {
-		}
-		return "";
-	}
+			Resource dest = resourceDir.createRelative(to);
 
+			if (!overwrite) {
+				String to1 = (to.lastIndexOf(".") != -1) ? to.substring(0,
+						to.lastIndexOf(".")) : to;
+				String to_ext = (to.lastIndexOf(".") != -1) ? to.substring(to
+						.lastIndexOf(".") + 1) : "";
+				for (int i = 0; i < 1000 && dest.exists(); i++) {
+					dest = resourceDir.createRelative(to1 + i + "." + to_ext);
+				}
+			}
+
+			Resource f = projectManager.getTmpDir().createRelative(from);
+			studioConfiguration.rename(f, dest);
+			return dest.getFilename();
+		} catch (Exception e) {
+			throw new WMRuntimeException(e);
+		}
+	}
+	*/
 	/*
 	 * Create a folder; name should have the full relative path within the
 	 * resources folder
 	 */
 	public boolean createFolder(@ParamName(name = "name") String name) {
-		File resourceDir = this.getResourcesDir();
-		try {
-			File f = new File(resourceDir, name);
-			return f.mkdir();
+	    try {
+		Resource newFolder = getRequestedFile(name, true, true);
+		return newFolder.exists();
 		} catch (Exception e) {
-			return false;
+			throw new WMRuntimeException(e);
 		}
 	}
 
@@ -182,14 +212,12 @@ public class ResourceFileService {
 	 * folder
 	 */
 	public boolean deleteFile(@ParamName(name = "name") String name) {
-		File resourceDir = this.getResourcesDir();
 		try {
-			File f = new File(resourceDir, name);
-			IOUtils.deleteRecursive(f);
+		        Resource f = getRequestedFile(name, name.indexOf(".") == -1);
+			studioConfiguration.deleteFile(f);
 			return !f.exists();
 		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
+			throw new WMRuntimeException(e);
 		}
 	}
 
@@ -198,33 +226,58 @@ public class ResourceFileService {
 	 * folder. WARNING: At some point we may want to support larger projects by
 	 * NOT sending it all at once
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Hashtable getResourceFolder() {
-		File resourceDir = this.getResourcesDir();
+		Resource resourceDir = this.getResourcesDir();
 		Hashtable P = new Hashtable();
-		P.put("files", com.wavemaker.tools.project.ResourceManager.getListing(
-				resourceDir, new File(resourceDir, ".includeJars")));
-		P.put("file", resourceDir.getName());
+		try {
+			P.put("files", com.wavemaker.tools.project.ResourceManager
+					.getListing(studioConfiguration, resourceDir,
+							resourceDir.createRelative(".includeJars")));
+		} catch (IOException e) {
+			throw new WMRuntimeException(e);
+		}
+		P.put("file", resourceDir.getFilename());
 		P.put("type", "folder");
 		return P;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+    public Hashtable getFolder(String folderName) {
+	try {
+	Resource folder = getRequestedFile(folderName, true);
+
+       Hashtable P = new Hashtable();
+       P.put("files", com.wavemaker.tools.project.ResourceManager.getListing(studioConfiguration, folder,
+									     folder.createRelative(".includeJars")));
+       P.put("file", folder.getFilename());
+       P.put("type", "folder");
+       return P; 
+	} catch(IOException e) {
+	    throw new WMRuntimeException(e);
+	}
+    }
+
+    public String readFile(String filePath) throws IOException {
+	Resource f = getRequestedFile(filePath, false);
+        return projectManager.getCurrentProject().readFile(f);
+    }
+    public void writeFile(String filePath,String filetext) throws IOException {
+	Resource f = getRequestedFile(filePath, false);
+        projectManager.getCurrentProject().writeFile(f,filetext);
+    }
+
 	public FileUploadResponse uploadFile(
 			@ParamName(name = "file") MultipartFile file, String path)
 			throws IOException {
-		// System.out.println("UPLOAD FILE");
-		// System.out.println("UPLOAD FILE:" + file.getOriginalFilename());
 		FileUploadResponse ret = new FileUploadResponse();
 		try {
-			File dir = new File(getResourcesDir(), path);
-			File outputFile = new File(dir, file.getOriginalFilename()
+		        Resource dir = getRequestedFile(path, true);
+			Resource outputFile = dir.createRelative(file.getOriginalFilename()
 					.replaceAll("[^a-zA-Z0-9.-_ ]", ""));
-			// System.out.println("OUTPUT FILE:" +
-			// outputFile.getAbsolutePath());
-			FileOutputStream fos = new FileOutputStream(outputFile);
-			IOUtils.copy(file.getInputStream(), fos);
-			file.getInputStream().close();
-			fos.close();
-			ret.setPath(outputFile.getAbsolutePath());
+			FileCopyUtils.copy(file.getInputStream(),
+					studioConfiguration.getOutputStream(outputFile));
+			ret.setPath(outputFile.getDescription());
 			ret.setError("");
 			ret.setWidth("");
 			ret.setHeight("");
@@ -235,13 +288,6 @@ public class ResourceFileService {
 		return ret;
 	}
 
-	/*
-	 * public boolean unzipFile(@ParamName(name="file") String file) { File
-	 * zipfile = new File(this.getResourcesDir().getAbsolutePath() + "/" +
-	 * file); File zipfolder =
-	 * com.wavemaker.tools.project.ResourceManager.unzipFile(zipfile); return
-	 * (zipfolder.exists() && zipfolder.isDirectory()); }
-	 */
 	/**
 	 * Unzips a zip file in the tmp folder and moves it to the specified
 	 * location. NOTE: Will not overwrite an existing folder at that location;
@@ -252,31 +298,38 @@ public class ResourceFileService {
 	 *         well as any upgrades that were performed.
 	 */
 	public boolean unzipAndMoveNewFile(@ParamName(name = "file") String path) {
-		File zipfile = new File(getResourcesDir(), path);
-		File zipfolder;
 		try {
-			zipfolder = com.wavemaker.tools.project.ResourceManager
-					.unzipFile(new LocalStudioConfiguration(), new FileSystemResource(zipfile)).getFile();
+		        Resource zipfile = getRequestedFile(path, false);
+			Resource zipfolder = com.wavemaker.tools.project.ResourceManager
+					.unzipFile(studioConfiguration, zipfile);
+			return zipfolder.exists()
+					&& StringUtils
+							.getFilenameExtension(zipfolder.getFilename()) == null;
 		} catch (IOException e) {
 			throw new WMRuntimeException(e);
 		}
-		return zipfolder.exists() && zipfolder.isDirectory();
 	}
 
+    /*
 	public boolean changeClassPath(String inPath, boolean isInClassPath) {
 		try {
+		        Resource root = getRequestedFile(inPath, false);
+			
+			/ *
 			if (inPath.indexOf("/") == 0)
 				inPath = inPath.substring(1);
 			String inFileName = inPath
 					.substring(inPath.lastIndexOf("/") != -1 ? inPath
 							.lastIndexOf("/") + 1 : 0);
-			File f = new File(this.getResourcesDir(), ".includeJars");
+			* /
+			
+			Resource f = getResourcesDir().createRelative(".includeJars");
 			String fileContents;
 			StringBuffer newFile = new StringBuffer("");
 			String[] fileList;
 
 			if (f.exists())
-				fileContents = IOUtils.read(f);
+				fileContents = projectManager.getCurrentProject().readFile(f);
 			else
 				fileContents = "";
 			fileList = fileContents.split("\n");
@@ -299,24 +352,24 @@ public class ResourceFileService {
 
 			}
 
-			File destFile = new File(getProjectDir(), "../lib/" + inFileName);
+			Resource destFile = projectManager.getCurrentProject()
+			    .getProjectRoot().createRelative("lib/" + root.getFilename());
+
 			if (isInClassPath && !found) {
 				if (newFile.length() > 0)
 					newFile.append("\n");
 				newFile.append(inPath);
-				File sourceFile = new File(this.getResourcesDir(), inPath);
-				IOUtils.copy(sourceFile, destFile);
+				Resource sourceFile = getRequestedFile(inPath,false);
+				studioConfiguration.copyRecursive(sourceFile, destFile,
+						new ArrayList<String>());
 			} else if (!isInClassPath) {
-				destFile.delete();
+				studioConfiguration.deleteFile(destFile);
 			}
-
-			IOUtils.write(f, newFile.toString());
-
+			projectManager.getCurrentProject().writeFile(f, newFile.toString());
+			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
+			throw new WMRuntimeException(e);
 		}
-		return true;
 	}
-
+*/
 }

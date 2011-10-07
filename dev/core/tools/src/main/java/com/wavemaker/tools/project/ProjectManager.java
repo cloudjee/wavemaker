@@ -14,6 +14,7 @@
 
 package com.wavemaker.tools.project;
 
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -219,11 +220,9 @@ public class ProjectManager {
 		Resource project = studioConfiguration.getProjectsDir().createRelative(
 				projectName + "/");
 		if (!project.exists()) {
-			if (noTemplate) {
-				studioConfiguration
-						.createPath(studioConfiguration.getProjectsDir(),
-								projectName + "/");
-			} else {
+			studioConfiguration.createPath(
+					studioConfiguration.getProjectsDir(), projectName + "/");
+			if (!noTemplate) {
 				createProjectFromTemplate(project);
 			}
 		}
@@ -247,8 +246,10 @@ public class ProjectManager {
 	public void copyProject(String sourceProjectName,
 			String destinationProjectName) throws IOException {
 
-		Project sourceProject = new Project(getProjectDir(sourceProjectName, false), studioConfiguration);
-		Project destProject = new Project(getProjectDir(destinationProjectName, true), studioConfiguration);
+		Project sourceProject = new Project(getProjectDir(sourceProjectName,
+				false), studioConfiguration);
+		Project destProject = new Project(getProjectDir(destinationProjectName,
+				true), studioConfiguration);
 
 		if (!sourceProject.getProjectRoot().exists()) {
 			throw new WMRuntimeException(
@@ -259,13 +260,13 @@ public class ProjectManager {
 					sourceProjectName);
 		}
 
-		studioConfiguration.copyRecursive(sourceProject.getProjectRoot(), destProject.getProjectRoot(),
-				projectCopyExclusions);
+		studioConfiguration.copyRecursive(sourceProject.getProjectRoot(),
+				destProject.getProjectRoot(), projectCopyExclusions);
 
 		try {
 			// delete the deployment xml
-			Resource tomcatXml = destProject.getProjectRoot().createRelative(sourceProjectName
-					+ ".xml");
+			Resource tomcatXml = destProject.getProjectRoot().createRelative(
+					sourceProjectName + ".xml");
 			if (tomcatXml.exists()) {
 				studioConfiguration.deleteFile(tomcatXml);
 			}
@@ -278,9 +279,11 @@ public class ProjectManager {
 			String serviceStr = "\"service\":\"" + shortSourceName + "\"";
 			String dummyStr = "nothingicandoifyouwanttoscrewup";
 
-			Resource sourceJS = destProject.getWebAppRoot().createRelative(shortSourceName + ".js");
+			Resource sourceJS = destProject.getWebAppRoot().createRelative(
+					shortSourceName + ".js");
 			if (sourceJS.exists()) {
-				Resource destJS = destProject.getWebAppRoot().createRelative(shortDestName + ".js");
+				Resource destJS = destProject.getWebAppRoot().createRelative(
+						shortDestName + ".js");
 				String sourceJSStr = destProject.readFile(sourceJS);
 				sourceJSStr = sourceJSStr.replace(serviceStr, dummyStr);
 				String destJSStr = sourceJSStr.replace("\"" + shortSourceName
@@ -293,7 +296,8 @@ public class ProjectManager {
 			}
 
 			// update the index.html
-			Resource indexHtml = destProject.getWebAppRoot().createRelative(ProjectConstants.INDEX_HTML);
+			Resource indexHtml = destProject.getWebAppRoot().createRelative(
+					ProjectConstants.INDEX_HTML);
 			if (indexHtml.exists()) {
 				String indexHtmlStr = destProject.readFile(indexHtml);
 				indexHtmlStr = indexHtmlStr.replace(": " + shortSourceName
@@ -342,9 +346,10 @@ public class ProjectManager {
 			throw new WMRuntimeException(ex);
 		}
 	}
-	
+
 	public Project getProject(String projectName, boolean ignoreDemos) {
-		return new Project(getProjectDir(projectName, ignoreDemos), studioConfiguration);
+		return new Project(getProjectDir(projectName, ignoreDemos),
+				studioConfiguration);
 	}
 
 	public Resource getBaseProjectDir() throws FileAccessException {
@@ -362,7 +367,7 @@ public class ProjectManager {
 			if (zipEntry.isDirectory()) {
 				studioConfiguration.createPath(projectFile, zipEntry.getName());
 			} else {
-				studioConfiguration.copyFile(projectFile, resourceZipStream,
+				studioConfiguration.copyFile(projectFile, new NoCloseInputStream(resourceZipStream),
 						zipEntry.getName());
 			}
 		}
@@ -385,7 +390,8 @@ public class ProjectManager {
 		}
 
 		if (studioConfiguration instanceof EmbeddedServerConfiguration) {
-			Resource logFolder = ((EmbeddedServerConfiguration)studioConfiguration).getProjectLogsFolder().createRelative(projectName);
+			Resource logFolder = ((EmbeddedServerConfiguration) studioConfiguration)
+					.getProjectLogsFolder().createRelative(projectName);
 			if (logFolder.exists()) {
 				studioConfiguration.deleteFile(logFolder);
 			}
@@ -425,8 +431,10 @@ public class ProjectManager {
 
 		Resource projectsDir = studioConfiguration.getProjectsDir();
 		if (null != projectsDir && projectsDir.exists()) {
-			for (Resource possibleProject : studioConfiguration.listChildren(projectsDir)){
-				if (!possibleProject.getFilename().startsWith(prefix) || !checkProjectName(possibleProject.getFilename())) {
+			for (Resource possibleProject : studioConfiguration
+					.listChildren(projectsDir)) {
+				if (!possibleProject.getFilename().startsWith(prefix)
+						|| !checkProjectName(possibleProject.getFilename())) {
 					continue;
 				}
 				if (studioConfiguration.listChildren(possibleProject).size() > 0) {
@@ -437,7 +445,8 @@ public class ProjectManager {
 
 		Resource demoDir = studioConfiguration.getDemoDir();
 		if (null != demoDir && demoDir.exists()) {
-			for (Resource possibleProject : studioConfiguration.listChildren(demoDir)) {
+			for (Resource possibleProject : studioConfiguration
+					.listChildren(demoDir)) {
 				if (possibleProject.getFilename().startsWith(".")) {
 					continue;
 				}
@@ -461,10 +470,11 @@ public class ProjectManager {
 
 		if (null != studioConfiguration.getDemoDir()) {
 			try {
-				Resource demoProject = studioConfiguration.getDemoDir().createRelative(projectName);
+				Resource demoProject = studioConfiguration.getDemoDir()
+						.createRelative(projectName);
 				if (demoProject.exists()) {
-					throw new WMRuntimeException(MessageResource.PROJECT_CONFLICT,
-							projectName);
+					throw new WMRuntimeException(
+							MessageResource.PROJECT_CONFLICT, projectName);
 				}
 			} catch (IOException ex) {
 				throw new WMRuntimeException(ex);
@@ -586,5 +596,17 @@ public class ProjectManager {
 
 	private void setCurrentProject(Project currentProject) {
 		this.currentProject = currentProject;
+	}
+	
+	private static final class NoCloseInputStream extends FilterInputStream {
+
+		protected NoCloseInputStream(InputStream in) {
+			super(in);
+		}
+
+		@Override
+		public void close() throws IOException {
+			//no-op
+		}
 	}
 }

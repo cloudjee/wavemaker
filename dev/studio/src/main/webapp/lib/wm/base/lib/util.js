@@ -391,9 +391,15 @@ wm.forEachWidget = function(inWidget, inFunc, inIgnoreBuiltin) {
 	if (!inWidget)
 		return false;
 	for (var i=0, ws = inWidget.getOrderedWidgets(), r, w; w=ws[i]; i++) {
-		r = w.forEachWidget && !inIgnoreBuiltin ? w.forEachWidget(inFunc) : wm.forEachWidget(w, inFunc, inIgnoreBuiltin);
-		if (r === false)
-			return false;
+	    if (w.forEachWidget && !inIgnoreBuiltin) {
+		r = inFunc(w);
+		if (r !== false)
+		    r = w.forEachWidget(inFunc);
+	    } else {
+		r = wm.forEachWidget(w, inFunc, inIgnoreBuiltin);
+	    }
+	    if (r === false)
+		return false;
 	}
 }
 

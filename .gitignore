@@ -6,3 +6,5 @@ dev/studio/src/main/webapp/services/
 dev/studio/src/main/webapp/types.js
 
 .DS_Store
+*#*
+*~

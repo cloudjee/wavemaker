@@ -1392,6 +1392,18 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
 	color: #000;
 }
 
+.StudioList.wmlist {
+    background-color: #FFFFFF;
+	color: #000000;
+}
+.StudioList .wmlist-item {
+   padding: 0px;   
+}
+.StudioList.wmlist .wmlist-cell {
+    border-bottom: solid 1px #AAA;
+    padding: 1px 5px;
+}
+
 .wm-darksnazzy .wmToolbar {
 	background-image:url(images/dark_toolbar_bg.gif);
 	background-repeat:repeat-x;
@@ -1421,6 +1433,16 @@ body .StudioButton.wmbutton-disabled:hover {
     opacity: 0.65;
 }
 
+
+body .StudioButton.wmbutton.toggleButtonDown
+ {
+     color: black;
+	font-weight:bold;
+}
+body .StudioButton.wmbutton.toggleButtonUp
+ {
+	font-weight:normal;
+}
 
 body .StudioButton {
 	background-image:url(images/dark_btn_bg.gif);
