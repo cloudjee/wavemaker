@@ -280,11 +280,13 @@ dojo.declare("wm.Layers", wm.Container, {
 	},
 	removeWidget: function(inWidget) {
 		if (inWidget instanceof wm.Layer) {
+		    var isActive = inWidget.isActive();
 			var i = this.indexOfLayer(inWidget);
 			this.layers.splice(i, 1);
 			this.setCaptionMapLayer(inWidget.caption, null);
 			this.decorator.undecorateLayer(inWidget, i);
 			this.client.removeWidget(inWidget);
+		    /*
 		    var found = false;
 		    for (j = 0; j < this.layers.length; j++) {
 			if (this.layers[j].active) {
@@ -294,6 +296,15 @@ dojo.declare("wm.Layers", wm.Container, {
 		    }
 		    if (!found)
 			this.setLayerIndex(this.layers.length == 0 ? -1 : (i > 0 ? i - 1 : 0));
+			*/
+		    if (isActive && !this._isDestroying && this.layers.length) {
+			if (this.layers.length > i) {
+			    this.layerIndex = -1;
+			    this.setLayerIndex(i);
+			} else {
+			    this.setLayerIndex(i-1);
+			}
+		    }
 		} else {
 			this.inherited(arguments);
 		}

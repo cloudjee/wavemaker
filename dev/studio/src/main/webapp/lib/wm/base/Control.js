@@ -512,8 +512,9 @@ this.label.enable();
 
 
 	destroy: function() {
-		if (this.isDestroyed)
+		if (this.isDestroyed || this._isDestroying)
 			return;
+	    this._isDestroying = true;
 		try
 		{
 		    if (this._layerConnections)
