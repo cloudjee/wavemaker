@@ -43,7 +43,7 @@ dojo.declare("AddPatch", wm.Page, {
 					      if (inData == "Could not find patches")
 						  app.alert(this.getDictionaryItem("ALERT_LOAD_PATCH_FAILED"));
 					      else {
-						  inData = inData.replace(/i\&\#91;/g,"[");
+						  inData = inData.replace(/\&\#91;/g,"[").replace(/\&\#36;/g,"$");
 						  inData = inData.replace(/\<p\/\>/g,"");
 						  this.editor.setDataValue(inData);
 					      }
