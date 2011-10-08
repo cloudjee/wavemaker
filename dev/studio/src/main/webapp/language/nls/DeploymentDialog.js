@@ -39,5 +39,5 @@ DBBOX_CFTYPE_CAPTION: "Type",
 DBBOX_CFNAME_CAPTION: "Database Name",
 CF_DB_NODATA_WARNING: "Please note: WaveMaker will create the database schema in CloudFoundry.  No data will be included.  Your database will be available but empty.  If your using database security, this will mean nobody can login.  To copy data into your database, go to <a target='docs' href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.4/Deploying#HPopulatingCloudFoundryDatabase'>Deployment Documentation</a>.",
 CF_DB_NODATA_WARNING_HEIGHT: "65px",
-"CF_MULTIPLE_DB_WARNING": "<div class='DeploymentWarning'>WARNING: Multiple databases may not work reliably on CloudFoundry; This is a CloudFoundry issue that they are working to address</div>"
+"CF_MULTIPLE_DB_WARNING": "<div class='DeploymentWarning'>WARNING: Multiple databases may not work reliably on CloudFoundry</div>"
 }
