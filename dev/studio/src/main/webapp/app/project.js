@@ -176,40 +176,43 @@ dojo.declare("wm.studio.Project", null, {
  							  studio.endWait(studio.getDictionaryItem("wm.studio.Project.WAIT_OPEN_PROJECT"));
 							  studio._loadingApplication = true; 
 							  this.projectName = inProjectName;
-							  if (o.upgradeMessages)
-							      this.showUpgradeMessage(o.upgradeMessages);
-							  this.projectChanging();
-							  try {
-							      this.loadingProject = true;
-							      this.loadApplication();
-							      var ctor = dojo.getObject(this.projectName);
-							      this.pageName = inPageName || (ctor ? ctor.prototype.main : "Main");
-							      this.makeApplication();
-							      this.openPage(this.pageName);
-							      if (!wm.isEmpty(studio.neededJars)) {
-								  /* onidle insures it gets the higher z-index than the start page */
-								  wm.onidle(function() {
-								      studio.jarDownloadDialog.show();
-								  });
-								  throw "Missing Jar files are required for this project";
-							      }
-							      studio.startPageDialog.hide();
-							      
-							  } catch(e) {
-							      console.debug(e);
-							      this.loadError(studio.getDictionaryItem("wm.studio.Project.TOAST_OPEN_PROJECT_FAILED",
-												      {projectName: this.projectName, error: e}));
 
-							      this.editProjectFiles();
-/*
-							      this.projectName = "";
-							      this.pageName = "";
-							      studio.application = studio.page = null;
-*/
-							  } finally {
-							      studio._loadingApplication = false;
-							      this.loadingProject = false;
-							      this.projectChanged();
+							  var f = function() {
+							      this.projectChanging();
+							      try {
+								  this.loadingProject = true;
+								  this.loadApplication();
+								  var ctor = dojo.getObject(this.projectName);
+								  this.pageName = inPageName || (ctor ? ctor.prototype.main : "Main");
+								  this.makeApplication();
+								  this.openPage(this.pageName);
+								  if (!wm.isEmpty(studio.neededJars)) {
+								      /* onidle insures it gets the higher z-index than the start page */
+								      wm.onidle(function() {
+									  studio.jarDownloadDialog.show();
+								      });
+								      throw "Missing Jar files are required for this project";
+								  }
+								  studio.startPageDialog.hide();
+							      } catch(e) {
+								  console.debug(e);
+								  this.loadError(studio.getDictionaryItem("wm.studio.Project.TOAST_OPEN_PROJECT_FAILED",
+													  {projectName: this.projectName, error: e}));
+								  
+								  this.projectName = "";
+								  this.pageName = "";
+								  studio.application = studio.page = null;
+							      } finally {
+								  studio._loadingApplication = false;
+								  this.loadingProject = false;
+								  this.projectChanged();
+							      }
+							  };
+							  if (o.upgradeMessages) {
+							      this.showUpgradeMessage(o.upgradeMessages);
+							      app.alertDialog.connectOnce(app.alertDialog, "onClose", this, f);
+							  } else {
+							      dojo.hitch(this, f)();
 							  }
 						      }),
 						      dojo.hitch(this, function(err) {
@@ -774,18 +777,37 @@ dojo.declare("wm.studio.Project", null, {
 	// Project info / util
 	//=========================================================================
 	showUpgradeMessage: function(inMessages) {
-	        var message = studio.getDictionaryItem("ALERT_BACKUP_OLD_PROJECT", {filePath: inMessages.backupExportFile});
+	    var message = "<p>" + studio.getDictionaryItem("ALERT_BACKUP_OLD_PROJECT", {filePath: inMessages.backupExportFile}) + "</p>";
 		if (inMessages.messages) {
 			var firstElem = true;
 			for (var key in inMessages.messages) {
 				if (firstElem) {
-				    message += studio.getDictionaryItem("ALERT_UPGRADE_HEADING");
+				    message += "<p>" + studio.getDictionaryItem("ALERT_UPGRADE_HEADING")  + "<ul>";
 				    firstElem = false;
 				}
-				message += "\t" + inMessages.messages[key] + "\n";
+
+			    /* TODO: Split the string on \n and if there is a slit, make each one an <li> */
+			    var m1 = inMessages.messages[key];
+
+			    for (var i = 0; i < m1.length; i++) {
+				var m2 = m1[i];
+				m2 = m2.replace(/^\s*/,"");
+				m2 = m2.replace(/\s*$/,"");
+				var m3 = m2.split(/\n+/);
+				for (var j = 0; j < m3.length; j++) {
+				    var m4 = m3[j];
+				    m4 = m4.replace(/^\s*/,"");
+				    m4 = m4.replace(/\n/g,"<br/>");
+				    message += "<li>" + m4 + "</li>";
+				}
+			    }
+
 			}
 		}
-		alert(message);
+	    if (!firstElem)
+		message += "</ul></p>";
+	    app.alert(message);
+	    app.alertDialog.setWidth("500px");
 	},
 	updatePageList: function(hasOpenProject) {
 	    if (hasOpenProject) {

@@ -320,7 +320,7 @@
     CONFIRM_OPEN_PAGE : "Before opening ${newPage}, do you want to save ${oldPage}?",
 
     ALERT_UPGRADE_HEADING: "\n\nImportant messages regarding your upgrade:\n",
-    ALERT_BACKUP_OLD_PROJECT: "Your project has been upgraded.  A backup of your old project is available at:${filePath}\n",
+    ALERT_BACKUP_OLD_PROJECT: "Your project has been upgraded.  A backup of your old project is available at: ${filePath}\n",
     THROW_PROJECT_NOT_FOUND: "Warning: Could not find ${projectPath}",
     SAVE_DIALOG_START_LABEL: "Starting save...",
     SAVE_DIALOG_UPDATE_MESSAGE: "Saving ${componentName}",
