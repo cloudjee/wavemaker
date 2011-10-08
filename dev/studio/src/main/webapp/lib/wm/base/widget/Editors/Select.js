@@ -231,7 +231,6 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 			}
 		}
 		this.updateReadonlyValue();
-	        this.editorChanged();
 	},
 // we need to call this.editorChanged in here to update dataValue
 
@@ -670,6 +669,10 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		}
 	    }
 	},	
+    setEditorValue: function(inValue) {
+	this.inherited(arguments);
+	this.editorChanged();
+    },
 	// NOTE: lookups automatically push data back to their source
 	changed: function() {
 		// When loopup editor is changed by user only then we should change liveForms field values.
