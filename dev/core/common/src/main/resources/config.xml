@@ -7,11 +7,6 @@ definition of configuration; this is shared between runtime and test-time.
 
 <beans>
 
-    <!-- this bean is not wired up, but it is ApplicationContextAware -->
-    <bean id="com.wavemaker.common.ResourceManager"
-          class="com.wavemaker.common.ResourceManager"
-          scope="singleton"/>
-
     <bean id="messageSource"
         class="org.springframework.context.support.ResourceBundleMessageSource">
     <property name="basenames">

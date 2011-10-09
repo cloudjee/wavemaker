@@ -221,9 +221,7 @@ public class ServiceDefCompilerTask extends CompilerTask {
 					}
 					for (Object o : files) {
 						File cF = (File) o;
-						ret = JavaServiceDefinition.getFQClassFromFile(cF, dsm
-								.getServiceRuntimeDirectory(serviceId)
-								.getFile());
+						ret = "";
 					}
 				}
 

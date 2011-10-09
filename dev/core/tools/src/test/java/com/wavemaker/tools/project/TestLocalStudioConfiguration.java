@@ -246,7 +246,7 @@ public class TestLocalStudioConfiguration extends WMTestCase {
 			}
 		}
 	}
-
+	
 	private class CommonDirThread extends Thread {
 
 		int index;

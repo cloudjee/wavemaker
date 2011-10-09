@@ -315,6 +315,15 @@ public /*static*/ class ConfigurationCompiler {
             writer.close();
         }
     }
+    
+    public static void generateSMD(Project project, Service service) throws IOException, NoSuchMethodException {
+    	SMD smd = getSMD(service);
+    	Resource smdFile = getSmdFile(project, service.getId());
+    	JSONState js = new JSONState();
+        Writer writer = project.getWriter(smdFile);
+        JSONMarshaller.marshal(writer, smd, js, true, true);
+        writer.close();
+    }
 
     public static void generateManagers(FileService fileService, Resource managersXml,
             SortedSet<Service> services)

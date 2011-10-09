@@ -1,425 +1,638 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>com.wavemaker</groupId>
-        <artifactId>wm-parent</artifactId>
-        <version>6.4.0.BUILD-SNAPSHOT</version>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.wavemaker</groupId>
+		<artifactId>wm-parent</artifactId>
+		<version>6.4.0.BUILD-SNAPSHOT</version>
 		<relativePath>../parent</relativePath>
-    </parent>
-    <artifactId>wm-studio</artifactId>
-    <packaging>war</packaging>
-    <name>WaveMaker Studio Web Application</name>
+	</parent>
+	<artifactId>wm-studio</artifactId>
+	<packaging>war</packaging>
+	<name>WaveMaker Studio Web Application</name>
 
-    <build>
-      <finalName>wavemaker</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>add-source</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>services/cloudFoundryService/src</source>
-                                <source>services/cloudServerService/src</source>
-                                <source>services/cloudStorageService/src</source>
-                                <source>services/dataService/src</source>
-                                <source>services/deploymentService/src</source>
-                                <source>services/javaService/src</source>
-                                <source>services/pagesService/src</source>
-                                <source>services/pwsImportService/src</source>
-                                <source>services/resourceFileService/src</source>
-                                <source>services/securityConfigService/src</source>
-                                <source>services/securityService/src</source>
-                                <source>services/securityServiceJOSSO/src</source>
-                                <source>services/servicesService/src</source>
-                                <source>services/studioService/src</source>
-                                <source>services/warpFlowService/src</source>
-                                <source>services/warpLoginService/src</source>
-                                <source>services/waveMakerService/src</source>
-                                <source>services/webService/src</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <id>servicedef</id>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <property name="compile_classpath"
-                                    refid="maven.compile.classpath" />
-                                <taskdef name="servicedefc"
-                                    classname="com.wavemaker.tools.ant.ServiceDefCompilerTask"
-                                    classpathref="maven.compile.classpath" />
+	<build>
+		<finalName>wavemaker</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>services/cloudFoundryService/src</source>
+								<source>services/cloudServerService/src</source>
+								<source>services/cloudStorageService/src</source>
+								<source>services/dataService/src</source>
+								<source>services/deploymentService/src</source>
+								<source>services/javaService/src</source>
+								<source>services/pagesService/src</source>
+								<source>services/pwsImportService/src</source>
+								<source>services/resourceFileService/src</source>
+								<source>services/runtimeService/src</source>
+								<source>services/securityConfigService/src</source>
+								<source>services/securityService/src</source>
+								<source>services/securityServiceJOSSO/src</source>
+								<source>services/servicesService/src</source>
+								<source>services/studioService/src</source>
+								<source>services/warpFlowService/src</source>
+								<source>services/warpLoginService/src</source>
+								<source>services/waveMakerService/src</source>
+								<source>services/webService/src</source>
+							</sources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>add-resource</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>add-resource</goal>
+						</goals>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>services/cloudFoundryService/src</directory>
+									<excludes>
+										<exclude>**/*.java</exclude>
+									</excludes>
+								</resource>
+								<resource>
+									<directory>services/cloudServerService/src</directory>
+									<excludes>
+										<exclude>**/*.java</exclude>
+									</excludes>
+								</resource>
+								<resource>
+									<directory>services/cloudStorageService/src</directory>
+									<excludes>
+										<exclude>**/*.java</exclude>
+									</excludes>
+								</resource>
+								<resource>
+									<directory>services/dataService/src</directory>
+									<excludes>
+										<exclude>**/*.java</exclude>
+									</excludes>
+								</resource>
+								<resource>
+									<directory>services/deploymentService/src</directory>
+									<excludes>
+										<exclude>**/*.java</exclude>
+									</excludes>
+								</resource>
+								<resource>
+									<directory>services/javaService/src</directory>
+									<excludes>
+										<exclude>**/*.java</exclude>
+									</excludes>
+								</resource>
+								<resource>
+									<directory>services/pagesService/src</directory>
+									<excludes>
+										<exclude>**/*.java</exclude>
+									</excludes>
+								</resource>
+								<resource>
+									<directory>services/pwsImportService/src</directory>
+									<excludes>
+										<exclude>**/*.java</exclude>
+									</excludes>
+								</resource>
+								<resource>
+									<directory>services/resourceFileService/src</directory>
+									<excludes>
+										<exclude>**/*.java</exclude>
+									</excludes>
+								</resource>
+								<resource>
+									<directory>services/securityConfigService/src</directory>
+									<excludes>
+										<exclude>**/*.java</exclude>
+									</excludes>
+								</resource>
+								<resource>
+									<directory>services/securityService/src</directory>
+									<excludes>
+										<exclude>**/*.java</exclude>
+									</excludes>
+								</resource>
+								<resource>
+									<directory>services/securityServiceJOSSO/src</directory>
+									<excludes>
+										<exclude>**/*.java</exclude>
+									</excludes>
+								</resource>
+								<resource>
+									<directory>services/servicesService/src</directory>
+									<excludes>
+										<exclude>**/*.java</exclude>
+									</excludes>
+								</resource>
+								<resource>
+									<directory>services/studioService/src</directory>
+									<excludes>
+										<exclude>**/*.java</exclude>
+									</excludes>
+								</resource>
+								<resource>
+									<directory>services/warpFlowService/src</directory>
+									<excludes>
+										<exclude>**/*.java</exclude>
+									</excludes>
+								</resource>
+								<resource>
+									<directory>services/warpLoginService/src</directory>
+									<excludes>
+										<exclude>**/*.java</exclude>
+									</excludes>
+								</resource>
+								<resource>
+									<directory>services/waveMakerService/src</directory>
+									<excludes>
+										<exclude>**/*.java</exclude>
+									</excludes>
+								</resource>
+								<resource>
+									<directory>services/webService/src</directory>
+									<excludes>
+										<exclude>**/*.java</exclude>
+									</excludes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.bsc.maven</groupId>
+				<artifactId>maven-processor-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>cloudFoundryService</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<phase>process-classes</phase>
+						<configuration>
+							<sourceDirectory>services/cloudFoundryService/src</sourceDirectory>
+							<processors>
+								<processor>com.wavemaker.tools.apt.ServiceDefProcessor</processor>
+							</processors>
+							<options>
+								<projectRoot>${basedir}</projectRoot>
+								<serviceId>cloudFoundryService</serviceId>
+								<serviceClass>com.wavemaker.studio.CloudFoundryService</serviceClass>
+							</options>
+						</configuration>
+					</execution>
+					<execution>
+						<id>cloudServerService</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<phase>process-classes</phase>
+						<configuration>
+							<sourceDirectory>services/cloudServerService/src</sourceDirectory>
+							<processors>
+								<processor>com.wavemaker.tools.apt.ServiceDefProcessor</processor>
+							</processors>
+							<options>
+								<projectRoot>${basedir}</projectRoot>
+								<serviceId>cloudServerService</serviceId>
+								<serviceClass>com.wavemaker.studio.CloudServerService</serviceClass>
+							</options>
+						</configuration>
+					</execution>
+					<execution>
+						<id>cloudStorageService</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<phase>process-classes</phase>
+						<configuration>
+							<sourceDirectory>services/cloudStorageService/src</sourceDirectory>
+							<processors>
+								<processor>com.wavemaker.tools.apt.ServiceDefProcessor</processor>
+							</processors>
+							<options>
+								<projectRoot>${basedir}</projectRoot>
+								<serviceId>cloudStorageService</serviceId>
+								<serviceClass>com.wavemaker.studio.CloudStorageService</serviceClass>
+							</options>
+						</configuration>
+					</execution>
+					<execution>
+						<id>deploymentService</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<phase>process-classes</phase>
+						<configuration>
+							<sourceDirectory>services/deploymentService/src</sourceDirectory>
+							<processors>
+								<processor>com.wavemaker.tools.apt.ServiceDefProcessor</processor>
+							</processors>
+							<options>
+								<projectRoot>${basedir}</projectRoot>
+								<serviceId>deploymentService</serviceId>
+								<serviceClass>com.wavemaker.studio.DeploymentService</serviceClass>
+							</options>
+						</configuration>
+					</execution>
+					<execution>
+						<id>dataService</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<phase>process-classes</phase>
+						<configuration>
+							<sourceDirectory>services/dataService/src</sourceDirectory>
+							<processors>
+								<processor>com.wavemaker.tools.apt.ServiceDefProcessor</processor>
+							</processors>
+							<options>
+								<projectRoot>${basedir}</projectRoot>
+								<serviceId>dataService</serviceId>
+								<serviceClass>com.wavemaker.studio.data.DataService</serviceClass>
+							</options>
+						</configuration>
+					</execution>
+					<execution>
+						<id>javaService</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<phase>process-classes</phase>
+						<configuration>
+							<sourceDirectory>services/javaService/src</sourceDirectory>
+							<processors>
+								<processor>com.wavemaker.tools.apt.ServiceDefProcessor</processor>
+							</processors>
+							<options>
+								<projectRoot>${basedir}</projectRoot>
+								<serviceId>javaService</serviceId>
+								<serviceClass>com.wavemaker.studio.java.JavaService</serviceClass>
+							</options>
+						</configuration>
+					</execution>
+					<execution>
+						<id>pagesService</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<phase>process-classes</phase>
+						<configuration>
+							<sourceDirectory>services/pagesService/src</sourceDirectory>
+							<processors>
+								<processor>com.wavemaker.tools.apt.ServiceDefProcessor</processor>
+							</processors>
+							<options>
+								<projectRoot>${basedir}</projectRoot>
+								<serviceId>pagesService</serviceId>
+								<serviceClass>com.wavemaker.studio.PagesService</serviceClass>
+							</options>
+						</configuration>
+					</execution>
+					<execution>
+						<id>runtimeService</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<phase>process-classes</phase>
+						<configuration>
+							<processors>
+								<processor>com.wavemaker.tools.apt.ServiceDefProcessor</processor>
+							</processors>
+							<options>
+								<projectRoot>${basedir}</projectRoot>
+								<serviceId>runtimeService</serviceId>
+								<classPathService>true</classPathService>
+								<serviceClass>com.wavemaker.runtime.service.RuntimeService</serviceClass>
+							</options>
+						</configuration>
+					</execution>
+					<execution>
+						<id>securityConfigService</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<phase>process-classes</phase>
+						<configuration>
+							<sourceDirectory>services/securityConfigService/src</sourceDirectory>
+							<processors>
+								<processor>com.wavemaker.tools.apt.ServiceDefProcessor</processor>
+							</processors>
+							<options>
+								<projectRoot>${basedir}</projectRoot>
+								<serviceId>securityConfigService</serviceId>
+								<serviceClass>com.wavemaker.studio.SecurityConfigService</serviceClass>
+							</options>
+						</configuration>
+					</execution>
+					<execution>
+						<id>securityService</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<phase>process-classes</phase>
+						<configuration>
+							<processors>
+								<processor>com.wavemaker.tools.apt.ServiceDefProcessor</processor>
+							</processors>
+							<options>
+								<projectRoot>${basedir}</projectRoot>
+								<serviceId>securityService</serviceId>
+								<classPathService>true</classPathService>
+								<serviceClass>com.wavemaker.runtime.security.SecurityService</serviceClass>
+							</options>
+						</configuration>
+					</execution>
+					<execution>
+						<id>securityServiceJOSSO</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<phase>process-classes</phase>
+						<configuration>
+							<processors>
+								<processor>com.wavemaker.tools.apt.ServiceDefProcessor</processor>
+							</processors>
+							<options>
+								<projectRoot>${basedir}</projectRoot>
+								<serviceId>securityServiceJOSSO</serviceId>
+								<classPathService>true</classPathService>
+								<serviceClass>com.wavemaker.runtime.security.JOSSOSecurityService</serviceClass>
+							</options>
+						</configuration>
+					</execution>
+					<execution>
+						<id>servicesService</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<phase>process-classes</phase>
+						<configuration>
+							<sourceDirectory>services/servicesService/src</sourceDirectory>
+							<processors>
+								<processor>com.wavemaker.tools.apt.ServiceDefProcessor</processor>
+							</processors>
+							<options>
+								<projectRoot>${basedir}</projectRoot>
+								<serviceId>servicesService</serviceId>
+								<serviceClass>com.wavemaker.studio.ServicesService</serviceClass>
+							</options>
+						</configuration>
+					</execution>
+					<execution>
+						<id>resourceFileService</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<phase>process-classes</phase>
+						<configuration>
+							<sourceDirectory>services/resourceFileService/src</sourceDirectory>
+							<processors>
+								<processor>com.wavemaker.tools.apt.ServiceDefProcessor</processor>
+							</processors>
+							<options>
+								<projectRoot>${basedir}</projectRoot>
+								<serviceId>resourceFileService</serviceId>
+								<serviceClass>com.wavemaker.studio.ResourceFileService</serviceClass>
+							</options>
+						</configuration>
+					</execution>
+					<execution>
+						<id>studioService</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<phase>process-classes</phase>
+						<configuration>
+							<sourceDirectory>services/studioService/src</sourceDirectory>
+							<processors>
+								<processor>com.wavemaker.tools.apt.ServiceDefProcessor</processor>
+							</processors>
+							<options>
+								<projectRoot>${basedir}</projectRoot>
+								<serviceId>studioService</serviceId>
+								<serviceClass>com.wavemaker.studio.StudioService</serviceClass>
+							</options>
+						</configuration>
+					</execution>
+					<execution>
+						<id>waveMakerService</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<phase>process-classes</phase>
+						<configuration>
+							<processors>
+								<processor>com.wavemaker.tools.apt.ServiceDefProcessor</processor>
+							</processors>
+							<options>
+								<projectRoot>${basedir}</projectRoot>
+								<serviceId>waveMakerService</serviceId>
+								<classPathService>true</classPathService>
+								<serviceClass>com.wavemaker.runtime.service.WaveMakerService</serviceClass>
+							</options>
+						</configuration>
+					</execution>
+					<execution>
+						<id>webService</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<phase>process-classes</phase>
+						<configuration>
+							<sourceDirectory>services/webService/src</sourceDirectory>
+							<processors>
+								<processor>com.wavemaker.tools.apt.ServiceDefProcessor</processor>
+							</processors>
+							<options>
+								<projectRoot>${basedir}</projectRoot>
+								<serviceId>webService</serviceId>
+								<serviceClass>com.wavemaker.studio.ws.WebService</serviceClass>
+							</options>
+						</configuration>
+					</execution>
+					<execution>
+						<id>warpLoginService</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<phase>process-classes</phase>
+						<configuration>
+							<sourceDirectory>services/warpLoginService/src</sourceDirectory>
+							<processors>
+								<processor>com.wavemaker.tools.apt.ServiceDefProcessor</processor>
+							</processors>
+							<options>
+								<projectRoot>${basedir}</projectRoot>
+								<serviceId>warpLoginService</serviceId>
+								<serviceClass>com.wavemaker.studio.warp.LoginService</serviceClass>
+							</options>
+						</configuration>
+					</execution>
+					<execution>
+						<id>warpFlowService</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<phase>process-classes</phase>
+						<configuration>
+							<sourceDirectory>services/warpFlowService/src</sourceDirectory>
+							<processors>
+								<processor>com.wavemaker.tools.apt.ServiceDefProcessor</processor>
+							</processors>
+							<options>
+								<projectRoot>${basedir}</projectRoot>
+								<serviceId>warpFlowService</serviceId>
+								<serviceClass>com.wavemaker.studio.warp.FlowService</serviceClass>
+							</options>
+						</configuration>
+					</execution>
+					<execution>
+						<id>pwsImportService</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<phase>process-classes</phase>
+						<configuration>
+							<sourceDirectory>services/pwsImportService/src</sourceDirectory>
+							<processors>
+								<processor>com.wavemaker.tools.apt.ServiceDefProcessor</processor>
+							</processors>
+							<options>
+								<projectRoot>${basedir}</projectRoot>
+								<serviceId>pwsImportService</serviceId>
+								<serviceClass>com.wavemaker.studio.pws.PwsImportService</serviceClass>
+							</options>
+						</configuration>
+					</execution>
+					<execution>
+						<id>serviceConfigProcessor</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<phase>process-classes</phase>
+						<configuration>
+							<processors>
+								<processor>com.wavemaker.tools.apt.ServiceConfigurationProcessor</processor>
+							</processors>
+							<options>
+								<projectRoot>${basedir}</projectRoot>
+							</options>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<!--  				<echo message="Generating SMDs" />
 
-                                <taskdef name="configc"
-                                    classname="com.wavemaker.tools.ant.ConfigurationCompilerTask"
-                                    classpathref="maven.compile.classpath" />
+								<configc projectroot="${basedir}" destWebAppRoot="${basedir}/src/main/webapp"
+									destServicesDir="${basedir}/src/main/webapp/services" verbose="false">
+									<resources>
+										<fileset dir="${basedir}">
+											<include name="services/*/designtime/servicedef.xml" />
+										</fileset>
+										<javaresource
+											name="com/wavemaker/runtime/service/runtimeServiceDef.xml"
+											classpathref="maven.compile.classpath" />
+										<javaresource
+											name="com/wavemaker/runtime/service/waveMakerServiceDef.xml"
+											classpathref="maven.compile.classpath" />
+									</resources>
+								</configc>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<webXml>${basedir}/../core/tools/templates/web.xml</webXml>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<configuration>
+					<useProjectReferences>false</useProjectReferences>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>false</downloadJavadocs>
+					<wtpversion>2.0</wtpversion>
+					<wtpContextName>wavemaker</wtpContextName>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
-                                <echo message="Generating Service Defs" />
+	<dependencies>
+		<dependency>
+			<groupId>com.wavemaker</groupId>
+			<artifactId>wm-tools</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
+	</dependencies>
 
-                                <servicedefc projectRoot="${basedir}"
-                                    classesDir="${project.build.outputDirectory}"
-                                    mavenClasspath="${compile_classpath}">
-                                    <service serviceId="cloudFoundryService"
-                                        serviceClass="com.wavemaker.studio.CloudFoundryService" />
-                                </servicedefc>
-
-                                <servicedefc projectRoot="${basedir}"
-                                    classesDir="${project.build.outputDirectory}"
-                                    mavenClasspath="${compile_classpath}">
-                                    <service serviceId="cloudServerService"
-                                        serviceClass="com.wavemaker.studio.CloudServerService" />
-                                </servicedefc>
-
-                                <servicedefc projectRoot="${basedir}"
-                                    classesDir="${project.build.outputDirectory}"
-                                    mavenClasspath="${compile_classpath}">
-                                    <service serviceId="cloudStorageService"
-                                        serviceClass="com.wavemaker.studio.CloudStorageService" />
-                                </servicedefc>
-
-                                <servicedefc projectRoot="${basedir}"
-                                    classesDir="${project.build.outputDirectory}"
-                                    mavenClasspath="${compile_classpath}">
-                                    <service serviceId="deploymentService"
-                                        serviceClass="com.wavemaker.studio.DeploymentService" />
-                                </servicedefc>
-
-                                <servicedefc projectRoot="${basedir}"
-                                    classesDir="${project.build.outputDirectory}"
-                                    mavenClasspath="${compile_classpath}">
-                                    <service serviceId="dataService"
-                                        serviceClass="com.wavemaker.studio.data.DataService" />
-                                </servicedefc>
-
-                                <servicedefc projectRoot="${basedir}"
-                                    classesDir="${project.build.outputDirectory}"
-                                    mavenClasspath="${compile_classpath}">
-                                    <service serviceId="javaService"
-                                        serviceClass="com.wavemaker.studio.java.JavaService" />
-                                </servicedefc>
-
-                                <servicedefc projectRoot="${basedir}"
-                                    classesDir="${project.build.outputDirectory}"
-                                    mavenClasspath="${compile_classpath}">
-                                    <service serviceId="pagesService"
-                                        serviceClass="com.wavemaker.studio.PagesService" />
-                                </servicedefc>
-
-                                <servicedefc projectRoot="${basedir}"
-                                    classesDir="${project.build.outputDirectory}"
-                                    mavenClasspath="${compile_classpath}">
-                                    <service serviceId="securityConfigService"
-                                        serviceClass="com.wavemaker.studio.SecurityConfigService" />
-                                </servicedefc>
-
-                                <servicedefc projectRoot="${basedir}"
-                                    classesDir="${project.build.outputDirectory}"
-                                    mavenClasspath="${compile_classpath}">
-                                    <service serviceId="securityService"
-                                        serviceClass="com.wavemaker.runtime.security.SecurityService" />
-                                </servicedefc>
-
-                                <servicedefc projectRoot="${basedir}"
-                                    classesDir="${project.build.outputDirectory}"
-                                    mavenClasspath="${compile_classpath}">
-                                    <service serviceId="securityServiceJOSSO"
-                                        serviceClass="com.wavemaker.runtime.security.JOSSOSecurityService" />
-                                </servicedefc>
-
-                                <servicedefc projectRoot="${basedir}"
-                                    classesDir="${project.build.outputDirectory}"
-                                    mavenClasspath="${compile_classpath}">
-                                    <service serviceId="servicesService"
-                                        serviceClass="com.wavemaker.studio.ServicesService" />
-                                </servicedefc>
-
-                                <servicedefc projectRoot="${basedir}"
-                                    classesDir="${project.build.outputDirectory}"
-                                    mavenClasspath="${compile_classpath}">
-                                    <service serviceId="resourceFileService"
-                                        serviceClass="com.wavemaker.studio.ResourceFileService" />
-                                </servicedefc>
-
-                                <servicedefc projectRoot="${basedir}"
-                                    classesDir="${project.build.outputDirectory}"
-                                    mavenClasspath="${compile_classpath}">
-                                    <service serviceId="studioService"
-                                        serviceClass="com.wavemaker.studio.StudioService" />
-                                </servicedefc>
-
-                                <servicedefc projectRoot="${basedir}"
-                                    classesDir="${project.build.outputDirectory}"
-                                    mavenClasspath="${compile_classpath}">
-                                    <service serviceId="webService"
-                                        serviceClass="com.wavemaker.studio.ws.WebService" />
-                                </servicedefc>
-
-                                <servicedefc projectRoot="${basedir}"
-                                    classesDir="${project.build.outputDirectory}"
-                                    mavenClasspath="${compile_classpath}">
-                                    <service serviceId="warpLoginService"
-                                        serviceClass="com.wavemaker.studio.warp.LoginService" />
-                                </servicedefc>
-
-                                <servicedefc projectRoot="${basedir}"
-                                    classesDir="${project.build.outputDirectory}"
-                                    mavenClasspath="${compile_classpath}">
-                                    <service serviceId="warpFlowService"
-                                        serviceClass="com.wavemaker.studio.warp.FlowService" />
-                                </servicedefc>
-
-                                <servicedefc projectRoot="${basedir}"
-                                    classesDir="${project.build.outputDirectory}"
-                                    mavenClasspath="${compile_classpath}">
-                                    <service serviceId="waveMakerService"
-                                        serviceClass="com.wavemaker.runtime.service.WaveMakerService" />
-                                </servicedefc>
-
-                                <servicedefc projectRoot="${basedir}"
-                                    classesDir="${project.build.outputDirectory}"
-                                    mavenClasspath="${compile_classpath}">
-                                    <service serviceId="pwsImportService"
-                                        serviceClass="com.wavemaker.studio.pws.PwsImportService" />
-                                </servicedefc>
-
-                                <echo message="Generating SMDs" />
-
-                                <configc projectroot="${basedir}"
-                                    destWebAppRoot="${basedir}/src/main/webapp"
-                                    destServicesDir="${basedir}/src/main/webapp/services"
-                                    verbose="false">
-                                    <resources>
-                                        <fileset dir="${basedir}">
-                                            <include
-                                                name="services/*/designtime/servicedef.xml" />
-                                        </fileset>
-                                        <javaresource
-                                            name="com/wavemaker/runtime/service/runtimeServiceDef.xml"
-                                            classpathref="maven.compile.classpath" />
-                                        <javaresource
-                                            name="com/wavemaker/runtime/service/waveMakerServiceDef.xml"
-                                            classpathref="maven.compile.classpath" />
-                                    </resources>
-                                </configc>
-                            </target>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>add-resource</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>add-resource</goal>
-                        </goals>
-                        <configuration>
-                            <resources>
-                                <resource>
-                                    <directory>services/cloudFoundryService/src</directory>
-                                    <excludes>
-                                        <exclude>**/*.java</exclude>
-                                    </excludes>
-                                </resource>
-                                <resource>
-                                    <directory>services/cloudServerService/src</directory>
-                                    <excludes>
-                                        <exclude>**/*.java</exclude>
-                                    </excludes>
-                                </resource>
-                                <resource>
-                                    <directory>services/cloudStorageService/src</directory>
-                                    <excludes>
-                                        <exclude>**/*.java</exclude>
-                                    </excludes>
-                                </resource>
-                                <resource>
-                                    <directory>services/dataService/src</directory>
-                                    <excludes>
-                                        <exclude>**/*.java</exclude>
-                                    </excludes>
-                                </resource>
-                                <resource>
-                                    <directory>services/deploymentService/src</directory>
-                                    <excludes>
-                                        <exclude>**/*.java</exclude>
-                                    </excludes>
-                                </resource>
-                                <resource>
-                                    <directory>services/javaService/src</directory>
-                                    <excludes>
-                                        <exclude>**/*.java</exclude>
-                                    </excludes>
-                                </resource>
-                                <resource>
-                                    <directory>services/pagesService/src</directory>
-                                    <excludes>
-                                        <exclude>**/*.java</exclude>
-                                    </excludes>
-                                </resource>
-                                <resource>
-                                    <directory>services/pwsImportService/src</directory>
-                                    <excludes>
-                                        <exclude>**/*.java</exclude>
-                                    </excludes>
-                                </resource>                              
-                                <resource>
-                                    <directory>services/resourceFileService/src</directory>
-                                    <excludes>
-                                        <exclude>**/*.java</exclude>
-                                    </excludes>
-                                </resource>
-                                <resource>
-                                    <directory>services/securityConfigService/src</directory>
-                                    <excludes>
-                                        <exclude>**/*.java</exclude>
-                                    </excludes>
-                                </resource>
-                                <resource>
-                                    <directory>services/securityService/src</directory>
-                                    <excludes>
-                                        <exclude>**/*.java</exclude>
-                                    </excludes>
-                                </resource>
-                                <resource>
-                                    <directory>services/securityServiceJOSSO/src</directory>
-                                    <excludes>
-                                        <exclude>**/*.java</exclude>
-                                    </excludes>
-                                </resource>
-                                <resource>
-                                    <directory>services/servicesService/src</directory>
-                                    <excludes>
-                                        <exclude>**/*.java</exclude>
-                                    </excludes>
-                                </resource>
-                                <resource>
-                                    <directory>services/studioService/src</directory>
-                                    <excludes>
-                                        <exclude>**/*.java</exclude>
-                                    </excludes>
-                                </resource>                                
-                                <resource>
-                                    <directory>services/warpFlowService/src</directory>
-                                    <excludes>
-                                        <exclude>**/*.java</exclude>
-                                    </excludes>
-                                </resource>
-                                <resource>
-                                    <directory>services/warpLoginService/src</directory>
-                                    <excludes>
-                                        <exclude>**/*.java</exclude>
-                                    </excludes>
-                                </resource>
-                                <resource>
-                                    <directory>services/waveMakerService/src</directory>
-                                    <excludes>
-                                        <exclude>**/*.java</exclude>
-                                    </excludes>
-                                </resource>
-                                <resource>
-                                    <directory>services/webService/src</directory>
-                                    <excludes>
-                                        <exclude>**/*.java</exclude>
-                                    </excludes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-eclipse-plugin</artifactId>
-                <configuration>
-                    <useProjectReferences>false</useProjectReferences>
-                    <downloadSources>true</downloadSources>
-                    <downloadJavadocs>false</downloadJavadocs>
-                    <wtpversion>2.0</wtpversion>
-                    <wtpContextName>wavemaker</wtpContextName>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-    
-    <dependencies>
-        <dependency>
-            <groupId>com.wavemaker</groupId>
-            <artifactId>wm-tools</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-        </dependency>
-    </dependencies>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>com.springsource.repository.bundles.release</id>
-            <name> SpringSource Enterprise Bundle Repository - SpringSource Bundle Releases</name>
-            <url>http://repository.springsource.com/maven/bundles/release/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>com.springsource.repository.bundles.release</id>
+			<name> SpringSource Enterprise Bundle Repository - SpringSource Bundle Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/release/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
 
 
-<profiles>
-	<profile>
-		<id>DojoBuild</id>
-		<build>
-			<plugins>
-				<plugin>
-					<artifactId>maven-antrun-plugin</artifactId>
-					<version>1.6</version>
-					<executions>
-						<execution>
-							<id>build-js</id>
-							<phase>process-classes</phase>
-							<goals>
-								<goal>run</goal>
-							</goals>
-							<configuration>
-								<target>
-								<ant dir="." antfile="build-js.xml" target="dojoBuild"/>
-								</target>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-			</plugins>
-		</build>
-	</profile>
-</profiles>
+	<profiles>
+		<profile>
+			<id>DojoBuild</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.6</version>
+						<executions>
+							<execution>
+								<id>build-js</id>
+								<phase>process-classes</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<target>
+										<ant dir="." antfile="build-js.xml" target="dojoBuild" />
+									</target>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>

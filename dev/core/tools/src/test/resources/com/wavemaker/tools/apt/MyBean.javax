@@ -1,0 +1,46 @@
+package com.wavemaker.tools.apt;
+
+import java.util.List;
+
+public class MyBean {
+
+	private String foo;
+	
+	private Integer bar;
+	
+	private List<String> bazes;
+	
+	private MyBean sibling;
+
+	public String getFoo() {
+		return foo;
+	}
+
+	public void setFoo(String foo) {
+		this.foo = foo;
+	}
+
+	public Integer getBar() {
+		return bar;
+	}
+
+	public void setBar(Integer bar) {
+		this.bar = bar;
+	}
+
+	public List<String> getBazes() {
+		return bazes;
+	}
+
+	public void setBazes(List<String> bazes) {
+		this.bazes = bazes;
+	}
+
+	public MyBean getSibling() {
+		return sibling;
+	}
+
+	public void setSibling(MyBean sibling) {
+		this.sibling = sibling;
+	}
+}

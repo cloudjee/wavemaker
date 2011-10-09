@@ -438,8 +438,8 @@ public class ComplexReturnBean {
     }
     
     // MAV-2241
-    @SuppressWarnings("unchecked")
-    public String takesUntypedMap(Map foo) {
+    @SuppressWarnings("rawtypes")
+	public String takesUntypedMap(Map foo) {
         
         if (!(foo instanceof JSONObject)) {
             return "fail: "+foo+", "+foo.getClass();

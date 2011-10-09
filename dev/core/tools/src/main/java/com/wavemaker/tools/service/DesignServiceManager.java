@@ -103,16 +103,12 @@ public class DesignServiceManager {
 	private final List<DataObject> primitiveTypes;
 
 	private final Map<String, String> primitivesMap;
-
-	private final Service runtimeService;
-
-	private final Service runtimeDataService;
-
-	public static final String RUNTIME_SERVICE_ID = "waveMakerService";
-
-	public static final String RUNTIME_DATA_SERVICE_ID = "runtimeService";
-
+	
 	private static final String SERVICE_BEAN_XML_POSTFIX = ".spring.xml";
+
+	public static final String RUNTIME_SERVICE_ID = "runtimeService";
+
+	public static final String RUNTIME_DATA_SERVICE_ID = "waveMakerService";
 
 	private DataModelConfiguration cfg; // salesforce
 
@@ -148,17 +144,6 @@ public class DesignServiceManager {
 		}
 
 		primitivesMap = Collections.unmodifiableMap(m);
-
-		ClassPathResource runtimeServiceFile = new ClassPathResource(
-				"com/wavemaker/runtime/service/waveMakerServiceDef.xml");
-		runtimeService = loadServiceDefinition(runtimeServiceFile
-				.getInputStream());
-
-		ClassPathResource runtimeDataServiceFile = new ClassPathResource(
-				"com/wavemaker/runtime/service/runtimeServiceDef.xml");
-
-		runtimeDataService = loadServiceDefinition(runtimeDataServiceFile
-				.getInputStream());
 	}
 
 	// -----------------------------------------------------------------------
@@ -480,7 +465,7 @@ public class DesignServiceManager {
 	 */
 	public Resource getServiceHome(String serviceId) {
 		try {
-			return getServicesDir().createRelative(serviceId+"/");
+			return getServicesDir().createRelative(serviceId + "/");
 		} catch (IOException ex) {
 			throw new WMRuntimeException(ex);
 		}
@@ -524,7 +509,7 @@ public class DesignServiceManager {
 	public Resource getServiceDefXml(String serviceId) {
 		try {
 			return getServiceDesigntimeDirectory(serviceId).createRelative(
-					SERVICE_DEF_XML);
+						SERVICE_DEF_XML);
 		} catch (IOException ex) {
 			throw new WMRuntimeException(ex);
 		}
@@ -591,8 +576,6 @@ public class DesignServiceManager {
 				}
 			}
 		}
-		ret.add(RUNTIME_SERVICE_ID);
-		ret.add(RUNTIME_DATA_SERVICE_ID);
 
 		return ret;
 	}
@@ -1035,7 +1018,6 @@ public class DesignServiceManager {
 						.getPwsServiceModifier(sd.getPartnerName());
 				retType = serviceModifier.getOperationReturnType(so);
 			}
-			// FieldDefinition retType = so.getReturnType();
 
 			ret.setIsList(retType.getDimensions() > 0);
 			if (null != retType.getTypeDefinition()) {
@@ -1068,8 +1050,6 @@ public class DesignServiceManager {
 			ret = serviceDefinitions.get(currentProject);
 		} else {
 			ret = new HashMap<String, Service>();
-			ret.put(RUNTIME_SERVICE_ID, runtimeService);
-			ret.put(RUNTIME_DATA_SERVICE_ID, runtimeDataService);
 			serviceDefinitions.put(currentProject, ret);
 		}
 
@@ -1177,17 +1157,7 @@ public class DesignServiceManager {
 			marshaller.setProperty("jaxb.formatted.output", true);
 			marshaller.marshal(service,
 					studioConfiguration.getOutputStream(serviceDefFile));
-
-			// XXX MAV-569 should do a real build here, or actually outside
-			// this method maybe
-			SortedSet<Service> s = new TreeSet<Service>();
-			s.add(service);
-			generateRuntimeConfiguration(s);
 		} catch (JAXBException e) {
-			throw new WMRuntimeException(e);
-		} catch (IOException e) {
-			throw new WMRuntimeException(e);
-		} catch (NoSuchMethodException e) {
 			throw new WMRuntimeException(e);
 		}
 	}

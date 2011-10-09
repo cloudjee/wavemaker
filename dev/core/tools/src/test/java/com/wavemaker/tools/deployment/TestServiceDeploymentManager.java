@@ -34,8 +34,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.BeanUtils;
-import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -43,7 +41,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 
-import com.wavemaker.common.ResourceManager;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.json.JSON;
 import com.wavemaker.json.JSONObject;
@@ -86,11 +83,6 @@ public class TestServiceDeploymentManager {
         mgr = new ServiceDeploymentManager();
         mgr.setProjectManager(projectManager);
         mgr.setStudioConfiguration(studioConfig);
-        
-        ResourceManager resourceManager = BeanUtils.instantiateClass(ResourceManager.class);
-        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasename("wm_resource");
-        resourceManager.setMessageSource(messageSource);
         
         File projectDir = new File(homeDir, "projects/foo");
         projectDir.mkdirs();

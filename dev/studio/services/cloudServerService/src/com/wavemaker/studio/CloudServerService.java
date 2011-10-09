@@ -17,10 +17,16 @@ package com.wavemaker.studio;
 import java.util.Collection;
 import java.util.List;
 
-import com.wavemaker.runtime.service.annotations.HideFromClient;
-import com.wavemaker.tools.cloudmgr.*;
-import com.wavemaker.tools.deployment.ServiceDeploymentManager;
 import com.wavemaker.common.util.Tuple;
+import com.wavemaker.runtime.service.annotations.HideFromClient;
+import com.wavemaker.tools.cloudmgr.CloudAuth;
+import com.wavemaker.tools.cloudmgr.CloudFlavor;
+import com.wavemaker.tools.cloudmgr.CloudImage;
+import com.wavemaker.tools.cloudmgr.CloudKeyPair;
+import com.wavemaker.tools.cloudmgr.CloudNetwork;
+import com.wavemaker.tools.cloudmgr.CloudSecurityGroup;
+import com.wavemaker.tools.cloudmgr.CloudServer;
+import com.wavemaker.tools.cloudmgr.CloudServerMgrBeans;
 
 /**
  * @author slee

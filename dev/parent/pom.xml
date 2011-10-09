@@ -561,6 +561,11 @@
                 <artifactId>streambuffer</artifactId>
                 <version>1.2</version>
             </dependency>
+            <dependency>
+                <groupId>org.eclipse.jdt.core.compiler</groupId>
+                <artifactId>ecj</artifactId>
+                <version>3.7</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -707,6 +712,11 @@
                             </goals>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.bsc.maven</groupId>
+                    <artifactId>maven-processor-plugin</artifactId>
+                    <version>2.0.5</version>
                 </plugin>
             </plugins>
         </pluginManagement>

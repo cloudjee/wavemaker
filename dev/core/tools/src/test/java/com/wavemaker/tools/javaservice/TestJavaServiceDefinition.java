@@ -35,145 +35,136 @@ import com.wavemaker.runtime.service.definition.ServiceOperation;
 /**
  * @author Simon Toens
  * @author Matt Small
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  */
 public class TestJavaServiceDefinition extends WMTestCase {
 
-    private ServiceDefinition def = null;
-    private final String CLASS_NAME = this.getClass().getPackage().getName()+".JavaServiceDefinitionClass";
+	private ServiceDefinition def = null;
+	private final String CLASS_NAME = this.getClass().getPackage().getName()
+			+ ".JavaServiceDefinitionClass";
 
-    @Override
-    public void setUp() throws Exception {
+	@Override
+	public void setUp() throws Exception {
 
-        super.setUp();
+		super.setUp();
 
-        SpringUtils.initSpringConfig();
+		SpringUtils.initSpringConfig();
 
-        List<File> classRoots = new ArrayList<File>();
-        List<File> libDirs = new ArrayList<File>();
-        
-        File classFile = (new ClassPathResource(
-                CLASS_NAME.replace('.', '/')+".class")).
-                getFile();
-        File classRoot = classFile.getParentFile().getParentFile().
-                getParentFile().getParentFile().getParentFile();
-        classRoots.add(classRoot);
+		List<File> classRoots = new ArrayList<File>();
+		List<File> libDirs = new ArrayList<File>();
 
-        ClassPathResource runtimeServiceResource = new ClassPathResource("com/wavemaker/runtime/service/LiveDataService.class");
-        if (ResourceUtils.isJarURL(runtimeServiceResource.getURL())) {
-        	URL jarUrl = ResourceUtils.extractJarFileURL(runtimeServiceResource.getURL());
-        	libDirs.add(ResourceUtils.getFile(jarUrl).getParentFile());
-        } else {
-	        File runtimeServiceClassFile = runtimeServiceResource.getFile();
-	        File runtimeClassRoot = runtimeServiceClassFile.getParentFile().
-	                getParentFile().getParentFile().getParentFile().getParentFile();
-	        
-	        classRoots.add(runtimeClassRoot);
-        }
-        
-        List<String> exclude = new ArrayList<String>();
-        exclude.add(this.getClass().getPackage().getName()+".JavaServiceDefinitionClass$FooClass");
+		File classFile = (new ClassPathResource(CLASS_NAME.replace('.', '/')
+				+ ".class")).getFile();
+		File classRoot = classFile.getParentFile().getParentFile()
+				.getParentFile().getParentFile().getParentFile();
+		classRoots.add(classRoot);
 
-        def = new JavaServiceDefinition(CLASS_NAME,
-                "serviceId", classRoots, libDirs, exclude);
-    }
+		ClassPathResource runtimeServiceResource = new ClassPathResource(
+				"com/wavemaker/runtime/service/LiveDataService.class");
+		if (ResourceUtils.isJarURL(runtimeServiceResource.getURL())) {
+			URL jarUrl = ResourceUtils.extractJarFileURL(runtimeServiceResource
+					.getURL());
+			libDirs.add(ResourceUtils.getFile(jarUrl).getParentFile());
+		} else {
+			File runtimeServiceClassFile = runtimeServiceResource.getFile();
+			File runtimeClassRoot = runtimeServiceClassFile.getParentFile()
+					.getParentFile().getParentFile().getParentFile()
+					.getParentFile();
 
-    @Override
-    public void tearDown() throws Exception {
-        super.tearDown();
+			classRoots.add(runtimeClassRoot);
+		}
 
-        this.def = null;
-    }
-    
-    public void testOperations() {
+		List<String> exclude = new ArrayList<String>();
+		exclude.add(this.getClass().getPackage().getName()
+				+ ".JavaServiceDefinitionClass$FooClass");
 
-        assertNotNull(getOperation("testOperations"));
-    }
+		def = new JavaServiceDefinition(CLASS_NAME, "serviceId", classRoots,
+				libDirs, exclude);
+	}
 
-    public void testGetFQClassName() {
+	@Override
+	public void tearDown() throws Exception {
+		super.tearDown();
 
-        assertEquals("foo.bar.Baz", JavaServiceDefinition.getFQClassFromFile(
-                new File("services/service/src/foo/bar/Baz.java"),
-                new File("services/service/src")));
-        assertEquals("Baz", JavaServiceDefinition.getFQClassFromFile(
-                new File("services/service/src/Baz.java"),
-                new File("services/service/src")));
-        assertEquals("Baz", JavaServiceDefinition.getFQClassFromFile(
-                new File("services/service/src/Baz.java"),
-                new File("services/service/src/")));
-    }
-    
-    public void testOperation1() {
-        
-        ServiceOperation oper = getOperation("op1");
-        assertEquals(2, oper.getParameterTypes().size());
-        assertEquals(String.class.getName(),
-                oper.getParameterTypes().get(0).getTypeDefinition().getTypeName());
-        assertEquals(int.class.getName(),
-                oper.getParameterTypes().get(1).getTypeDefinition().getTypeName());
-        assertNull(oper.getReturnType());
-    }
+		this.def = null;
+	}
 
-    public void testOperation2() {
-        
-        ServiceOperation so = getOperation("op2");
-        assertEquals(1, so.getParameterTypes().size());
-        assertTrue(so.getParameterTypes().get(0).getDimensions()>0);
-        assertEquals(String.class.getName(),
-                so.getParameterTypes().get(0).getTypeDefinition().getTypeName());
-    }
-    
-    public void testOperation3() {
-        
-        ServiceOperation so = getOperation("op3");
-        assertEquals(0, so.getParameterTypes().size());
-        assertEquals(JavaServiceDefinitionClass.class.getName(),
-                so.getReturnType().getTypeDefinition().getTypeName());
-        assertEquals(0, so.getReturnType().getDimensions());
-    }
+	public void testOperations() {
 
-    public void testOperation4_ReturnList() {
-        
-        ServiceOperation so = getOperation("op4");
-        assertTrue(so.getParameterTypes().isEmpty());
-        assertEquals(JavaServiceDefinitionClass.class.getName(),
-                so.getReturnType().getTypeDefinition().getTypeName());
-        assertTrue(so.getReturnType().getDimensions()>0);
-    }
+		assertNotNull(getOperation("testOperations"));
+	}
 
-    public void testOperation5_ReturnArray() {
-        
-        ServiceOperation so = getOperation("op5");
-        assertTrue(so.getParameterTypes().isEmpty());
-        assertEquals(JavaServiceDefinitionClass.class.getName(),
-                so.getReturnType().getTypeDefinition().getTypeName());
-        assertTrue(so.getReturnType().getDimensions()>0);
-    }
+	public void testOperation1() {
 
-    public void testGetTypes() {
-        List<TypeDefinition> types = def.getLocalTypes();
-        assertEquals("types: "+types, 1, types.size());
-        for (TypeDefinition type: types) {
-            if (type.getTypeName().equals(CLASS_NAME)) {
-                // good
-            } else {
-                fail("unknown type: "+type.getTypeName());
-            }
-        }
-    }
+		ServiceOperation oper = getOperation("op1");
+		assertEquals(2, oper.getParameterTypes().size());
+		assertEquals(String.class.getName(), oper.getParameterTypes().get(0)
+				.getTypeDefinition().getTypeName());
+		assertEquals(int.class.getName(), oper.getParameterTypes().get(1)
+				.getTypeDefinition().getTypeName());
+		assertNull(oper.getReturnType());
+	}
 
-    public void testRuntimeService() {
-        assertFalse(def.isLiveDataService());
-    }
-    
-    private ServiceOperation getOperation(String name) {
+	public void testOperation2() {
 
-        for (ServiceOperation so: def.getServiceOperations()) {
-            if (name.equals(so.getName())) {
-                return so;
-            }
-        }
-        fail("no operation matching "+name);
-        throw new WMRuntimeException("never reached");
-    }
+		ServiceOperation so = getOperation("op2");
+		assertEquals(1, so.getParameterTypes().size());
+		assertTrue(so.getParameterTypes().get(0).getDimensions() > 0);
+		assertEquals(String.class.getName(), so.getParameterTypes().get(0)
+				.getTypeDefinition().getTypeName());
+	}
+
+	public void testOperation3() {
+
+		ServiceOperation so = getOperation("op3");
+		assertEquals(0, so.getParameterTypes().size());
+		assertEquals(JavaServiceDefinitionClass.class.getName(), so
+				.getReturnType().getTypeDefinition().getTypeName());
+		assertEquals(0, so.getReturnType().getDimensions());
+	}
+
+	public void testOperation4_ReturnList() {
+
+		ServiceOperation so = getOperation("op4");
+		assertTrue(so.getParameterTypes().isEmpty());
+		assertEquals(JavaServiceDefinitionClass.class.getName(), so
+				.getReturnType().getTypeDefinition().getTypeName());
+		assertTrue(so.getReturnType().getDimensions() > 0);
+	}
+
+	public void testOperation5_ReturnArray() {
+
+		ServiceOperation so = getOperation("op5");
+		assertTrue(so.getParameterTypes().isEmpty());
+		assertEquals(JavaServiceDefinitionClass.class.getName(), so
+				.getReturnType().getTypeDefinition().getTypeName());
+		assertTrue(so.getReturnType().getDimensions() > 0);
+	}
+
+	public void testGetTypes() {
+		List<TypeDefinition> types = def.getLocalTypes();
+		assertEquals("types: " + types, 1, types.size());
+		for (TypeDefinition type : types) {
+			if (type.getTypeName().equals(CLASS_NAME)) {
+				// good
+			} else {
+				fail("unknown type: " + type.getTypeName());
+			}
+		}
+	}
+
+	public void testRuntimeService() {
+		assertFalse(def.isLiveDataService());
+	}
+
+	private ServiceOperation getOperation(String name) {
+
+		for (ServiceOperation so : def.getServiceOperations()) {
+			if (name.equals(so.getName())) {
+				return so;
+			}
+		}
+		fail("no operation matching " + name);
+		throw new WMRuntimeException("never reached");
+	}
 }

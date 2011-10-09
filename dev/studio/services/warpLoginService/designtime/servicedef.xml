@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" id="warpLoginService" class="com.wavemaker.studio.warp.LoginService" CRUDService="false" type="JavaService" springFile="warpLoginService.spring.xml">
-    <operation name="logOut">
-        <parameter name="host" typeRef="java.lang.String" isList="false"/>
-        <parameter name="port" typeRef="java.lang.String" isList="false"/>
-        <parameter name="sessId" typeRef="java.lang.String" isList="false"/>
-        <return typeRef="java.lang.String" isList="false"/>
-    </operation>
     <operation name="logIn">
         <parameter name="host" typeRef="java.lang.String" isList="false"/>
         <parameter name="port" typeRef="java.lang.String" isList="false"/>
         <parameter name="userName" typeRef="java.lang.String" isList="false"/>
         <parameter name="password" typeRef="java.lang.String" isList="false"/>
         <parameter name="domain" typeRef="java.lang.String" isList="false"/>
+        <return typeRef="java.lang.String" isList="false"/>
+    </operation>
+    <operation name="logOut">
+        <parameter name="host" typeRef="java.lang.String" isList="false"/>
+        <parameter name="port" typeRef="java.lang.String" isList="false"/>
+        <parameter name="sessId" typeRef="java.lang.String" isList="false"/>
         <return typeRef="java.lang.String" isList="false"/>
     </operation>
     <dataobjects/>

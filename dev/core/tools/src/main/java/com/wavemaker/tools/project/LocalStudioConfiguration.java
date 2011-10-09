@@ -693,7 +693,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 	public Resource createTempDir() {
 		try {
 			return new FileSystemResource(IOUtils.createTempDirectory("local",
-					"_tmp"));
+					"_tmp").getAbsolutePath()+"/");
 		} catch (IOException ex) {
 			throw new WMRuntimeException(ex);
 		}

@@ -16,9 +16,8 @@ package com.wavemaker.common;
 
 import java.util.Locale;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 /**
  * Handles the logic for looking up values from resource bundles.
@@ -29,22 +28,19 @@ import org.springframework.context.MessageSource;
  * 
  * @author Simon Toens
  */
-public class ResourceManager implements ApplicationContextAware {
+public class ResourceManager {
 
-    private static ResourceManager resourceManager = null;
+    private static ResourceManager resourceManager = new ResourceManager();
 
-    private MessageSource messageSource = null;
+    private final MessageSource messageSource;
 
     public static ResourceManager getInstance() {
         return resourceManager;
     }
 
     private ResourceManager() {
-        ResourceManager.resourceManager = this;
-    }
-
-    public void setMessageSource(MessageSource messageSource) {
-        this.messageSource = messageSource;
+        messageSource = new ReloadableResourceBundleMessageSource();
+        ((ReloadableResourceBundleMessageSource)messageSource).setBasename("wm_resource");
     }
 
     public String getMessage(String key) {
@@ -55,9 +51,4 @@ public class ResourceManager implements ApplicationContextAware {
         // passing null as default, so null is returned if msg can't be resolved
         return messageSource.getMessage(key, args, null, Locale.getDefault());
     }
-
-    public void setApplicationContext(ApplicationContext messageSource) {
-        this.messageSource = messageSource;
-    }
-
 }

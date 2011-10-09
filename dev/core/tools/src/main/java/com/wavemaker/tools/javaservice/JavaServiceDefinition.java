@@ -52,281 +52,284 @@ import com.wavemaker.runtime.service.definition.ServiceOperation;
  * @author Jeremy Grelle
  */
 public class JavaServiceDefinition implements ReflectServiceDefinition {
-    
-    private final String serviceId;
-    private List<TypeDefinition> typeDefinitions = null;
-    private List<ServiceOperation> operations = null;
-    private final List<String> excludeTypeNames;
-    private boolean implementsCRUDService = false;
-    private String packageName = null;
-    private String serviceClassName = null;
 
-    public JavaServiceDefinition() {
-        serviceId = "";
-        excludeTypeNames = null;
-    }
+	private final String serviceId;
+	private List<TypeDefinition> typeDefinitions = new ArrayList<TypeDefinition>();
+	private List<ServiceOperation> operations = new ArrayList<ServiceOperation>();
+	private final List<String> excludeTypeNames;
+	private boolean implementsCRUDService = false;
+	private String packageName = null;
+	private String serviceClassName = null;
 
-    /**
-     * Normal constructor.  Attempts to use reflection (and a custom, very
-     * isolated classloader) to read information about the class.
-     * @throws IOException 
-     */
-    public JavaServiceDefinition(String serviceClassName, String serviceId,
-            Resource serviceCompiledDir, Resource serviceLibDir,
-            List<String> excludeTypeNames)
-            throws ClassNotFoundException, LinkageError, IOException {
+	public JavaServiceDefinition() {
+		serviceId = "";
+		excludeTypeNames = null;
+	}
 
-        this(serviceClassName, serviceId,
-                (null==serviceCompiledDir)?
-                        null:Arrays.asList(new File[]{serviceCompiledDir.getFile()}),
-                (null==serviceLibDir)?
-                        null:Arrays.asList(new File[]{serviceLibDir.getFile()}),
-                excludeTypeNames);
-    }
-
-    /**
-     * Normal constructor.  Attempts to use reflection (and a custom, very
-     * isolated classloader) to read information about the class.
-     */
-    @SuppressWarnings("unchecked")
+	/**
+	 * Normal constructor. Attempts to use reflection (and a custom, very
+	 * isolated classloader) to read information about the class.
+	 * 
+	 * @throws IOException
+	 */
 	public JavaServiceDefinition(String serviceClassName, String serviceId,
-            List<File> serviceCompiledDirs, List<File> serviceLibDirs,
-            List<String> excludeTypeNames)
-            throws ClassNotFoundException, LinkageError {
+			Resource serviceCompiledDir, Resource serviceLibDir,
+			List<String> excludeTypeNames) throws ClassNotFoundException,
+			LinkageError, IOException {
 
-        List<File> classpath = new ArrayList<File>();
-        if (null!=serviceCompiledDirs) {
-            classpath.addAll(serviceCompiledDirs);
-        }
-        if (null!=serviceLibDirs) {
-            for (File serviceLibDir: serviceLibDirs) {
-                if (!serviceLibDir.exists()) {
-                    continue;
-                } else if (!serviceLibDir.isDirectory()) {
-                    throw new WMRuntimeException(MessageResource.LIB_DIR_NOT_DIR,
-                            serviceLibDir);
-                }
+		this(serviceClassName, serviceId, (null == serviceCompiledDir) ? null
+				: Arrays.asList(new File[] { serviceCompiledDir.getFile() }),
+				(null == serviceLibDir) ? null : Arrays
+						.asList(new File[] { serviceLibDir.getFile() }),
+				excludeTypeNames);
+	}
 
-                classpath.addAll(FileUtils.listFiles(
-                        serviceLibDir, new String[]{"jar"}, false));
-            }
-        }
+	/**
+	 * Normal constructor. Attempts to use reflection (and a custom, very
+	 * isolated classloader) to read information about the class.
+	 */
+	@SuppressWarnings("unchecked")
+	public JavaServiceDefinition(String serviceClassName, String serviceId,
+			List<File> serviceCompiledDirs, List<File> serviceLibDirs,
+			List<String> excludeTypeNames) throws ClassNotFoundException,
+			LinkageError {
 
-        ClassLoader cl = ClassLoaderUtils.getTempClassLoaderForFile(
-                classpath.toArray(new File[]{}));
+		List<File> classpath = new ArrayList<File>();
+		if (null != serviceCompiledDirs) {
+			classpath.addAll(serviceCompiledDirs);
+		}
+		if (null != serviceLibDirs) {
+			for (File serviceLibDir : serviceLibDirs) {
+				if (!serviceLibDir.exists()) {
+					continue;
+				} else if (!serviceLibDir.isDirectory()) {
+					throw new WMRuntimeException(
+							MessageResource.LIB_DIR_NOT_DIR, serviceLibDir);
+				}
 
-        Class<?> serviceClass = ClassLoaderUtils.loadClass(serviceClassName,
-                false, cl);
-        Class<?> runtimeServiceClass = ClassLoaderUtils.loadClass(
-                "com.wavemaker.runtime.service.LiveDataService", cl);
+				classpath.addAll(FileUtils.listFiles(serviceLibDir,
+						new String[] { "jar" }, false));
+			}
+		}
 
-        this.serviceId = serviceId;
-        this.excludeTypeNames = excludeTypeNames;
+		ClassLoader cl = ClassLoaderUtils.getTempClassLoaderForFile(classpath
+				.toArray(new File[] {}));
 
-        init(serviceClass, runtimeServiceClass);
-    }
+		Class<?> serviceClass = ClassLoaderUtils.loadClass(serviceClassName,
+				false, cl);
+		Class<?> runtimeServiceClass = ClassLoaderUtils.loadClass(
+				"com.wavemaker.runtime.service.LiveDataService", cl);
 
-    /**
-     * A constructor that reads information from the serviceClass class
-     * parameter.
-     */
-    public JavaServiceDefinition(Class<?> serviceClass, String serviceId) {
+		this.serviceId = serviceId;
+		this.excludeTypeNames = excludeTypeNames;
 
-        this.serviceId = serviceId;
-        this.excludeTypeNames = new ArrayList<String>();
+		init(serviceClass, runtimeServiceClass);
+	}
 
-        init(serviceClass, LiveDataService.class);
-    }
+	/**
+	 * A constructor that reads information from the serviceClass class
+	 * parameter.
+	 */
+	public JavaServiceDefinition(Class<?> serviceClass, String serviceId) {
 
-    public static String getFQClassFromFile(File javaFile, File srcRoot) {
+		this.serviceId = serviceId;
+		this.excludeTypeNames = new ArrayList<String>();
 
-        String fqClass = javaFile.getAbsolutePath().replace(srcRoot.getAbsolutePath(), "");
+		init(serviceClass, LiveDataService.class);
+	}
 
-        fqClass = fqClass.replaceAll("^[/\\\\]", "");
-        fqClass = fqClass.replaceAll("\\.java$", "");
-        fqClass = fqClass.replace('/', '.');
-        fqClass = fqClass.replace('\\', '.');
+	/**
+	 * A constructor that reads information from the serviceClass class
+	 * parameter.
+	 */
+	public JavaServiceDefinition(String serviceClass, String serviceId) {
+		this.serviceClassName = serviceClass;
+		this.serviceId = serviceId;
+		this.excludeTypeNames = new ArrayList<String>();
+	}
 
-        return fqClass;
-    }
+	public static String getRelPathFromClass(String fqClassName) {
+		return fqClassName.replace('.', '/') + ".java";
+	}
 
-    public static String getRelPathFromClass(String fqClassName) {
-        return fqClassName.replace('.', '/')+".java";
-    }
+	public static String getClass(String fqClassName) {
 
-    public static String getClass(String fqClassName) {
+		String ret;
 
-        String ret;
+		if (fqClassName.contains(".")) {
+			ret = fqClassName.substring(fqClassName.lastIndexOf('.') + 1);
+		} else {
+			ret = fqClassName;
+		}
 
-        if (fqClassName.contains(".")) {
-            ret = fqClassName.substring(fqClassName.lastIndexOf('.')+1);
-        } else {
-            ret = fqClassName;
-        }
+		return ret;
+	}
 
-        return ret;
-    }
+	public static String getPackage(String fqClassName) {
 
-    public static String getPackage(String fqClassName) {
+		String ret = null;
 
-        String ret = null;
+		if (fqClassName.contains(".")) {
+			ret = fqClassName.substring(0, fqClassName.lastIndexOf('.'));
+		}
 
-        if (fqClassName.contains(".")) {
-            ret = fqClassName.substring(0, fqClassName.lastIndexOf('.'));
-        }
+		return ret;
+	}
 
-        return ret;
-    }
+	private void init(Class<?> serviceClass, Class<?> runtimeServiceClass) {
 
-    private void init(Class<?> serviceClass, Class<?> runtimeServiceClass) {
-        
-        operations = new ArrayList<ServiceOperation>();
-        typeDefinitions = new ArrayList<TypeDefinition>();
-        
-        ReflectTypeState typeState = new ReflectTypeState();
+		ReflectTypeState typeState = new ReflectTypeState();
 
-        Collection<Method> methods =
-            filterOverloadedMethods(ServerUtils.getClientExposedMethods(serviceClass));
-        for (Method m: methods) {
-            initOperation(m, typeState);
-        }
+		Collection<Method> methods = filterOverloadedMethods(ServerUtils
+				.getClientExposedMethods(serviceClass));
+		for (Method m : methods) {
+			initOperation(m, typeState);
+		}
 
-        implementsCRUDService =
-            runtimeServiceClass.isAssignableFrom(serviceClass);
-        serviceClassName = serviceClass.getName();
-        
-        if (implementsCRUDService) {
-            for (TypeDefinition td: typeDefinitions) {
-                ((ReflectTypeDefinition)td).setLiveService(implementsCRUDService);
-            }
-        }
-        
-        if (null==serviceClass.getPackage()) {
-            packageName = null;
-        } else {
-            packageName = serviceClass.getPackage().getName();
-        }
-    }
-    
-    private void initOperation(Method method, TypeState typeState) {
-        
-        ServiceOperation so = new ServiceOperation();
-        so.setName(method.getName());
-        
-        if (!method.getReturnType().equals(void.class)) {
-            so.setReturnType(ReflectTypeUtils.getFieldDefinition(method,
-                    typeState, false, null));
-            checkAddType(so.getReturnType().getTypeDefinition());
-        }
+		implementsCRUDService = runtimeServiceClass
+				.isAssignableFrom(serviceClass);
+		serviceClassName = serviceClass.getName();
 
-        List<String> paramNames = ServerUtils.getParameterNames(method);
-        Type[] types = method.getGenericParameterTypes();
-        List<FieldDefinition> params = new ArrayList<FieldDefinition>(types.length);
-        so.setParameterTypes(params);
-        for (int i=0;i<types.length;i++) {
-            params.add(ReflectTypeUtils.getFieldDefinition(types[i], typeState,
-                    false, paramNames.get(i)));
-            checkAddType(params.get(i).getTypeDefinition());
-        }
-        
-        operations.add(so);
-    }
-    
-    private void checkAddType(TypeDefinition td) {
-        
-        if (null==td) {
-            return;
-        }
-        if (typeDefinitions.contains(td)) {
-            return;
-        }
-        if (td instanceof PrimitiveTypeDefinition) {
-            return;
-        }
-        
-        for (TypeDefinition knownType: typeDefinitions) {
-            if (knownType.getTypeName().equals(td.getTypeName())) {
-                return;
-            }
-        }
-        
-        if (excludeTypeNames.contains(td.getTypeName())) {
-            return;
-        }
-        
-        typeDefinitions.add(td);
-    }
-    
-    /**
-     * Get a list of methods, excluding overloaded ones, biased towards the
-     * method with the least number of arguments (in other words, if a method
-     * is overloaded, the instance with the fewest arguments is included in the
-     * return value).
-     * 
-     * @param allMethods
-     * @return
-     */
-    public static Collection<Method> filterOverloadedMethods(List<Method> allMethods) {
-        
-        Map<String, Method> methodsMap = new HashMap<String, Method>();
-        for(Method method: allMethods) {
-            if (methodsMap.containsKey(method.getName())) {
-                if (methodsMap.get(method.getName()).getParameterTypes().length > method.getParameterTypes().length) {
-                    methodsMap.put(method.getName(), method);
-                }
-            } else {
-                methodsMap.put(method.getName(), method);
-            }
-        }
-        
-        return methodsMap.values();
-    }
-    
-    
-    
-    
+		if (implementsCRUDService) {
+			for (TypeDefinition td : typeDefinitions) {
+				((ReflectTypeDefinition) td)
+						.setLiveService(implementsCRUDService);
+			}
+		}
 
-    public String getPackageName() {
-        return this.packageName;
-    }
+		if (null == serviceClass.getPackage()) {
+			packageName = null;
+		} else {
+			packageName = serviceClass.getPackage().getName();
+		}
+	}
 
-    public String getServiceId() {
-        return this.serviceId;
-    }
+	private void initOperation(Method method, TypeState typeState) {
 
-    public ServiceType getServiceType() {
-        return new JavaServiceType();
-    }
+		ServiceOperation so = new ServiceOperation();
+		so.setName(method.getName());
 
-    public String getRuntimeConfiguration() {
-        return null;
-    }
+		if (!method.getReturnType().equals(void.class)) {
+			so.setReturnType(ReflectTypeUtils.getFieldDefinition(method,
+					typeState, false, null));
+			checkAddType(so.getReturnType().getTypeDefinition());
+		}
 
-    public String getServiceClass() {
-        return this.serviceClassName;
-    }
+		List<String> paramNames = ServerUtils.getParameterNames(method);
+		Type[] types = method.getGenericParameterTypes();
+		List<FieldDefinition> params = new ArrayList<FieldDefinition>(
+				types.length);
+		so.setParameterTypes(params);
+		for (int i = 0; i < types.length; i++) {
+			params.add(ReflectTypeUtils.getFieldDefinition(types[i], typeState,
+					false, paramNames.get(i)));
+			checkAddType(params.get(i).getTypeDefinition());
+		}
 
-    public List<String> getEventNotifiers() {
-        return Collections.emptyList();
-    }
+		operations.add(so);
+	}
 
-    public boolean isLiveDataService() {
-        return implementsCRUDService;
-    }
+	private void checkAddType(TypeDefinition td) {
 
-    public List<TypeDefinition> getLocalTypes() {        
-        return typeDefinitions;
-    }
+		if (null == td) {
+			return;
+		}
+		if (typeDefinitions.contains(td)) {
+			return;
+		}
+		if (td instanceof PrimitiveTypeDefinition) {
+			return;
+		}
 
-    public List<TypeDefinition> getLocalTypes(String username, String password) { //salesforce       
-        return null;
-    }
+		for (TypeDefinition knownType : typeDefinitions) {
+			if (knownType.getTypeName().equals(td.getTypeName())) {
+				return;
+			}
+		}
 
-    public List<ServiceOperation> getServiceOperations() {
-        return this.operations;
-    }
+		if (excludeTypeNames.contains(td.getTypeName())) {
+			return;
+		}
 
-    public String getPartnerName() {
-        return null;
-    }
+		typeDefinitions.add(td);
+	}
+
+	/**
+	 * Get a list of methods, excluding overloaded ones, biased towards the
+	 * method with the least number of arguments (in other words, if a method is
+	 * overloaded, the instance with the fewest arguments is included in the
+	 * return value).
+	 * 
+	 * @param allMethods
+	 * @return
+	 */
+	public static Collection<Method> filterOverloadedMethods(
+			List<Method> allMethods) {
+
+		Map<String, Method> methodsMap = new HashMap<String, Method>();
+		for (Method method : allMethods) {
+			if (methodsMap.containsKey(method.getName())) {
+				if (methodsMap.get(method.getName()).getParameterTypes().length > method
+						.getParameterTypes().length) {
+					methodsMap.put(method.getName(), method);
+				}
+			} else {
+				methodsMap.put(method.getName(), method);
+			}
+		}
+
+		return methodsMap.values();
+	}
+
+	public String getPackageName() {
+		return this.packageName;
+	}
+
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
+	}
+
+	public String getServiceId() {
+		return this.serviceId;
+	}
+
+	public ServiceType getServiceType() {
+		return new JavaServiceType();
+	}
+
+	public String getRuntimeConfiguration() {
+		return null;
+	}
+
+	public String getServiceClass() {
+		return this.serviceClassName;
+	}
+
+	public List<String> getEventNotifiers() {
+		return Collections.emptyList();
+	}
+
+	public boolean isLiveDataService() {
+		return implementsCRUDService;
+	}
+
+	public void setLiveDataService(boolean liveDataService) {
+		this.implementsCRUDService = liveDataService;
+	}
+
+	public List<TypeDefinition> getLocalTypes() {
+		return typeDefinitions;
+	}
+
+	public List<TypeDefinition> getLocalTypes(String username, String password) { // salesforce
+		return null;
+	}
+
+	public List<ServiceOperation> getServiceOperations() {
+		return this.operations;
+	}
+
+	public String getPartnerName() {
+		return null;
+	}
 }

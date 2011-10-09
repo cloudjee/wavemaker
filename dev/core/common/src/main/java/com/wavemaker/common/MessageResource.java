@@ -610,9 +610,6 @@ public class MessageResource {
                         + (args == null ? "null" : args.length));
             }
         }
-        if (ResourceManager.getInstance() == null) {
-            SpringUtils.throwSpringNotInitializedError(ResourceManager.class);
-        }
         return ResourceManager.getInstance().getMessage(key, args);
     }
 

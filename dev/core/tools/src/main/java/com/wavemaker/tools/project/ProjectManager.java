@@ -103,7 +103,22 @@ public class ProjectManager {
 	public void openProject(String projectName, boolean noSession)
 			throws IOException {
 		Resource projectDir = getProjectDir(projectName, false);
+		openProject(projectDir, noSession);
+	}
 
+	/**
+	 * Open a new project; if noSession is false, insert it into the session as
+	 * the current project.
+	 * 
+	 * @param projectName
+	 *            The name of the project (this should already be a project in
+	 *            the default project directory).
+	 * @param noSession
+	 *            if this is true, don't insert the project into the current
+	 *            session
+	 */
+	public void openProject(Resource projectDir, boolean noSession) throws IOException {
+		String projectName = projectDir.getFilename();
 		// check the path
 		if (!projectDir.exists()) {
 			throw new WMRuntimeException(MessageResource.PROJECT_DNE,
