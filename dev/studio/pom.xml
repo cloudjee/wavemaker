@@ -533,28 +533,14 @@
 					</execution>
 				</executions>
 			</plugin>
-			
-			<!--  				<echo message="Generating SMDs" />
 
-								<configc projectroot="${basedir}" destWebAppRoot="${basedir}/src/main/webapp"
-									destServicesDir="${basedir}/src/main/webapp/services" verbose="false">
-									<resources>
-										<fileset dir="${basedir}">
-											<include name="services/*/designtime/servicedef.xml" />
-										</fileset>
-										<javaresource
-											name="com/wavemaker/runtime/service/runtimeServiceDef.xml"
-											classpathref="maven.compile.classpath" />
-										<javaresource
-											name="com/wavemaker/runtime/service/waveMakerServiceDef.xml"
-											classpathref="maven.compile.classpath" />
-									</resources>
-								</configc>
-							</target>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>-->
+			<!-- <echo message="Generating SMDs" /> <configc projectroot="${basedir}" 
+				destWebAppRoot="${basedir}/src/main/webapp" destServicesDir="${basedir}/src/main/webapp/services" 
+				verbose="false"> <resources> <fileset dir="${basedir}"> <include name="services/*/designtime/servicedef.xml" 
+				/> </fileset> <javaresource name="com/wavemaker/runtime/service/runtimeServiceDef.xml" 
+				classpathref="maven.compile.classpath" /> <javaresource name="com/wavemaker/runtime/service/waveMakerServiceDef.xml" 
+				classpathref="maven.compile.classpath" /> </resources> </configc> </target> 
+				</configuration> </execution> </executions> </plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
@@ -571,6 +557,16 @@
 					<downloadJavadocs>false</downloadJavadocs>
 					<wtpversion>2.0</wtpversion>
 					<wtpContextName>wavemaker</wtpContextName>
+					<additionalConfig>
+						<file>
+							<name>.settings/org.eclipse.jdt.core.prefs</name>
+							<location>${basedir}/../code-style/eclipse/.settings/org.eclipse.jdt.core.prefs</location>
+						</file>
+						<file>
+							<name>.settings/org.eclipse.jdt.ui.prefs</name>
+							<location>${basedir}/../code-style/eclipse/.settings/org.eclipse.jdt.ui.prefs</location>
+						</file>
+					</additionalConfig>
 				</configuration>
 			</plugin>
 		</plugins>

@@ -608,8 +608,8 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>2.0.2</version>
                     <configuration>
-                        <source>1.5</source>
-                        <target>1.5</target>
+                        <source>1.6</source>
+                        <target>1.6</target>
                         <fork>true</fork>
                         <encoding>UTF-8</encoding>
                     </configuration>
@@ -688,6 +688,16 @@
                     <configuration>
                         <downloadSources>true</downloadSources>
                         <downloadJavadocs>false</downloadJavadocs>
+                        <additionalConfig>
+                            <file>
+                                <name>.settings/org.eclipse.jdt.core.prefs</name>
+                                <location>${basedir}/../../code-style/eclipse/.settings/org.eclipse.jdt.core.prefs</location>
+                            </file>
+                            <file>
+                                <name>.settings/org.eclipse.jdt.ui.prefs</name>
+                                <location>${basedir}/../../code-style/eclipse/.settings/org.eclipse.jdt.ui.prefs</location>
+                            </file>
+                        </additionalConfig>
                     </configuration>
                 </plugin>
                 <plugin>
