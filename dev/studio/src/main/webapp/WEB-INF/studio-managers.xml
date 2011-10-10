@@ -134,6 +134,9 @@ Server-side manager bean definitions.  These are only to be used at runtime.
         <property name="studioConfiguration">
             <ref bean="studioConfiguration"/>
         </property>
+        <property name="designServiceManager">
+        	<ref bean="designServiceManager"/>
+        </property>
     </bean>
 
     <!-- see comments in the file -->

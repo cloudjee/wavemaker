@@ -727,7 +727,6 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration,
 		}
 	}
 
-	@Override
 	public String getPath(Resource file) {
 		try{
 			return file.getFile().getPath();

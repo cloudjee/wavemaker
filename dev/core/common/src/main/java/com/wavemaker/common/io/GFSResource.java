@@ -134,7 +134,6 @@ public class GFSResource implements Resource {
 	 * 
 	 * @see com.mongo.gridfs.GridFSInputFile.getFilename()
 	 */
-	@Override
 	public String getFilename() {
 		return this.filename;
 	}
@@ -275,7 +274,6 @@ public class GFSResource implements Resource {
 	/**
 	 *  Returns the inputStream for the file
 	 */
-	@Override
 	public InputStream getInputStream() throws IOException {
 		Assert.notNull(file,"File can not be null for inputStream");
 		return(gfs.findOne((ObjectId)this.file.getId()).getInputStream());

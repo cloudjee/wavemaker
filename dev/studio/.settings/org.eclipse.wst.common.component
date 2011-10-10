@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project-modules id="moduleCoreId" project-version="1.5.0">
+<project-modules id="moduleCoreId" project-version="2.0">
   <wb-module deploy-name="wm-studio">
     <property name="context-root" value="wavemaker"/>
     <wb-resource deploy-path="/" source-path="src/main/webapp"/>
@@ -325,6 +324,5 @@
     <wb-resource deploy-path="/WEB-INF/classes" source-path="services/waveMakerService/src"/>
     <wb-resource deploy-path="/WEB-INF/classes" source-path="services/webService/src"/>
     <wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/resources"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/services/runtimeService/src"/>
   </wb-module>
 </project-modules>

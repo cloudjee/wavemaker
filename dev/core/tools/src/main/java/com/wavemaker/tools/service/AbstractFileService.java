@@ -17,6 +17,7 @@ package com.wavemaker.tools.service;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
@@ -177,4 +178,14 @@ public abstract class AbstractFileService implements FileService {
 	public boolean fileExists(Resource file) {
 		return file.exists();
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.wavemaker.tools.service.FileService#getOutputStream(org.springframework.core.io.Resource)
+	 */
+	public OutputStream getOutputStream(Resource resource) {
+		return studioConfiguration.getOutputStream(resource);
+	}
+	
+	
 }

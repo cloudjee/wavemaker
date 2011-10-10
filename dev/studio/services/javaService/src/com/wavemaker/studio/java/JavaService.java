@@ -29,7 +29,6 @@ import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
 import com.wavemaker.tools.javaservice.JavaServiceDefinition;
-import com.wavemaker.tools.project.BuildExceptionWithOutput;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.service.DesignServiceManager;
@@ -133,9 +132,8 @@ public class JavaService {
 		bw.newLine();
 		bw.close();
 
-		deploymentManager.build();
-		doServiceDefine(serviceId, fqClassName);
-
+		deploymentManager.compile();
+		
 		return getProjectManager().getCurrentProject().readFile(classFile);
 	}
 
@@ -162,20 +160,13 @@ public class JavaService {
 
 		CompileOutput ret = new CompileOutput();
 		try {
-			String compileOutput = deploymentManager.build();
+			String compileOutput = deploymentManager.compile();
 			ret.setBuildSucceeded(true);
 			ret.setCompileOutput(compileOutput);
-		} catch (BuildExceptionWithOutput e) {
+		} catch (Throwable e) {
 			ret.setBuildSucceeded(false);
-			ret.setCompileOutput(e.getCompilerOutput());
-
-			// we need to break out early; trying to do the servicedef stuff
-			// will (at best) give bad results, and (at worst) totally fail
-			return ret;
+			ret.setCompileOutput(e.getMessage());
 		}
-
-		doServiceDefine(serviceId, klass);
-
 		return ret;
 	}
 
@@ -224,26 +215,6 @@ public class JavaService {
 						.getWebInfLib(), excludeTypeNames);
 
 		return serviceDef;
-	}
-
-	/**
-	 * Java services need to all be refreshed when any one Java service has
-	 * changed, in case they've greedily grabbed each other's classes. So, let's
-	 * step through and do that after we've defined this service.
-	 * 
-	 * @param serviceId
-	 *            The serviceId of the service currently being defined.
-	 * @param sd
-	 *            The class name of the service currently being defined.
-	 * @throws LinkageError
-	 * @throws ClassNotFoundException
-	 * @throws IOException
-	 */
-	protected void doServiceDefine(String serviceId, String className)
-			throws ClassNotFoundException, LinkageError, IOException {
-
-		ServiceDefinition sd = getServiceDefinition(serviceId, className);
-		designServiceManager.defineService(sd);
 	}
 
 	// spring bean attrs

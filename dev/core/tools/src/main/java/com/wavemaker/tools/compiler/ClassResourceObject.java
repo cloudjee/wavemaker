@@ -14,18 +14,15 @@
 
 package com.wavemaker.tools.compiler;
 
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.apache.commons.io.IOUtils;
+import java.io.IOException;
 
 import javax.tools.JavaFileObject;
-import javax.tools.SimpleJavaFileObject;
-import java.io.*;
-import java.net.URI;
-import java.net.MalformedURLException;
+
+import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.Resource;
+import org.springframework.util.Assert;
 
 import com.wavemaker.tools.project.Project;
-import com.wavemaker.tools.project.StudioConfiguration;
 
 /**
  * This class represents a compiled java class file
@@ -34,33 +31,19 @@ import com.wavemaker.tools.project.StudioConfiguration;
  *
  */
 
-public class ClassResourceObject extends SimpleJavaFileObject {
-    private String className;
-    private StudioConfiguration studioConfiguration;
-    private Resource webInfClasses;
-    private Resource outputClass;
+public class ClassResourceObject extends AbstractResourceJavaFileObject {
 
     /**
-    * Byte code created by the compiler will be stored in this
-    * OutputStream.
-    */
-    protected OutputStream os;
-
-    /**
-    * Registers the compiled class object under URI
-    * containing the class full name
-    *
-    * @param name
-    *            Full name of the compiled class
-    * @param kind
-    *            Kind of the data. It will be CLASS in our case
-    */
-    public ClassResourceObject(String name, JavaFileObject.Kind kind, Project project, StudioConfiguration studioConfiguration) {
-        super(URI.create("string:///" + name.replace('.', '/')
-            + kind.extension), kind);
-        this. className = name;
-        this.webInfClasses = project.getWebInfClasses();
-        this.studioConfiguration = studioConfiguration;
+     * Represents a compiled class object
+     * 
+     * @param kind the kind of the resource, required to be CLASS in this case.
+     * @param project the project containing the class
+     * @param classFile the class file resource
+     * @throws IOException 
+     */
+    public ClassResourceObject(JavaFileObject.Kind kind, Project project, Resource classFile) throws IOException {
+    	super(kind, project, classFile);
+        Assert.isTrue(kind == Kind.CLASS, "Expected a to be kind "+Kind.CLASS);
     }
 
     /**
@@ -69,49 +52,19 @@ public class ClassResourceObject extends SimpleJavaFileObject {
     *
     * @return compiled byte code
     */
-    public byte[] getBytes() {
-        byte[] bytes = null;
-        try {
-            bytes = IOUtils.toByteArray(outputClass.getInputStream());
-            return bytes;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return bytes;
+    public byte[] getBytes() throws IOException {
+        return IOUtils.toByteArray(resource.getInputStream());
     }
-
-    /**
-    * Will provide the compiler with an output stream that leads
-    * to java class file.
-    */
+    
     @Override
-    public OutputStream openOutputStream() throws IOException {
-        //return bos;
-        outputClass = webInfClasses.createRelative(className.replace('.', '/') + ".class");
-        os = studioConfiguration.getOutputStream(outputClass);
+    public Kind getKind() {
+		return Kind.CLASS;
+	}
 
-        return os;
-    }
-
-    /**
-    * Returns URI for the class object
-    */
-    public URI getURI() {
-        return uri;
-    }
-
-    /**
-    * Return Spring resource instance for the class object
-    * @return resource
-    */
-    public Resource getResource() throws MalformedURLException {
-        Resource resource = new UrlResource(uri);
-        return resource;
-    }
-
-    public String getClassName() {
-        return className;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		return (obj == this ||
+			    (obj instanceof ClassResourceObject && this.resource.equals(((ClassResourceObject) obj).resource)));
+	}    
 }
 

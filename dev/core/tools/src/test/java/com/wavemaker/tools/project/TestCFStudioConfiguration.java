@@ -14,32 +14,46 @@
 
 package com.wavemaker.tools.project;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.Before;
-
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.io.Resource;
-import org.springframework.mock.web.MockServletContext;
 import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.mock.web.MockServletContext;
+import org.springframework.test.annotation.IfProfileValue;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.common.io.GFSResource;
-import com.wavemaker.infra.WMTestCase;
+import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.tools.config.ConfigurationStore;
 
 /**
- * @author small
  * @author Jeremy Grelle
  * @author Ed Callahan
  * 
  */
-public class TestCFStudioConfiguration extends WMTestCase {
-	private static MongoDbFactory mongoFactory;
+@RunWith(SpringJUnit4ClassRunner.class)
+@IfProfileValue(name="spring.profiles", value="cloud-test")
+@TestExecutionListeners({})
+public class TestCFStudioConfiguration {
+	
+	private Log log = LogFactory.getLog(TestCFStudioConfiguration.class);
+	
+	private MongoDbFactory mongoFactory;
 
 	private static String PROJECT_TYPE = System
 			.getProperty("test.project.type");
@@ -52,7 +66,7 @@ public class TestCFStudioConfiguration extends WMTestCase {
 		ApplicationContext ctx = new AnnotationConfigApplicationContext(
 				TestMongoConfig.class);
 		mongoFactory = (MongoDbFactory) ctx.getBean("mongoFactory");
-		this.info("Connected to: " // ensure mongo is running
+		log.info("Connected to: " // ensure mongo is running
 				+ mongoFactory.getDb().getMongo().getAddress().getHost());
 	}
 
@@ -61,6 +75,7 @@ public class TestCFStudioConfiguration extends WMTestCase {
 		mongoFactory.getDb().dropDatabase();
 	}
 
+	@Test
 	public void testOverrideWMHome() throws Exception {
 		if (!"cloud".equals(PROJECT_TYPE)) {
 			String oldWMHome = System.getProperty(
@@ -89,6 +104,7 @@ public class TestCFStudioConfiguration extends WMTestCase {
 		}
 	}
 
+	@Test
 	public void testWMHomeDirCreation_File() throws Exception {
 		if (!"cloud".equals(PROJECT_TYPE)) {
 			String oldPref = ConfigurationStore.getPreference(
@@ -127,6 +143,7 @@ public class TestCFStudioConfiguration extends WMTestCase {
 		}
 	}
 
+	@Test
 	public void testCommonDirCreation() throws Exception {
 		if (!"cloud".equals(PROJECT_TYPE)) {
 			File tempDir = null;
@@ -159,6 +176,7 @@ public class TestCFStudioConfiguration extends WMTestCase {
 		}
 	}
 
+	@Test
 	public void testGetStudioWebAppRootFile() throws Exception {
 
 		CFStudioConfiguration sc = new CFStudioConfiguration(mongoFactory);
@@ -173,6 +191,7 @@ public class TestCFStudioConfiguration extends WMTestCase {
 		assertTrue(webXmlFile.exists());
 	}
 
+	@Test
 	public void testDefaultStudioHome() throws Exception {
 		if (!"cloud".equals(PROJECT_TYPE)) {
 			String oldStudioHome = ConfigurationStore.getPreference(
@@ -201,6 +220,7 @@ public class TestCFStudioConfiguration extends WMTestCase {
 		}
 	}
 
+	@Test
 	public void testCommonDir() throws Exception {
 		if (!"cloud".equals(PROJECT_TYPE)) {
 			File tempDir = null;
@@ -229,6 +249,7 @@ public class TestCFStudioConfiguration extends WMTestCase {
 	}
 
 	// MAV-1989
+	@Test
 	public void testCommonDirCreation_Threads() throws Exception {
 		if (!"cloud".equals(PROJECT_TYPE)) {
 			File tempDir = null;
@@ -297,6 +318,7 @@ public class TestCFStudioConfiguration extends WMTestCase {
 		}
 	}
 
+	@Test
 	public void testGetCurrentVersionInfo() throws Exception {
 
 		VersionInfo vi = CFStudioConfiguration.getCurrentVersionInfo();
@@ -304,6 +326,7 @@ public class TestCFStudioConfiguration extends WMTestCase {
 		assertTrue(vi.getMajor() > 4);
 	}
 
+	@Test
 	public void testGetRegisteredVersionInfo() throws Exception {
 
 		VersionInfo vi = CFStudioConfiguration.getRegisteredVersionInfo();

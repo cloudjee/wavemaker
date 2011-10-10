@@ -14,23 +14,20 @@
 
 package com.wavemaker.tools.compiler;
 
-import java.io.*;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.net.MalformedURLException;
 
-import org.springframework.core.io.FileSystemResource;
+import javax.tools.JavaFileObject;
+
 import org.springframework.core.io.Resource;
-import org.apache.commons.io.IOUtils;
 
-import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.StudioConfiguration;
-
-import javax.tools.JavaFileObject;
 
 /**
  * Compiler utils
@@ -49,7 +46,7 @@ public class CompilerUtils {
             className = className.substring(0, len - StringUtils.JAVA_SRC_EXT.length());
         }
         InputStream is = resource.getInputStream();
-        JavaFileObject obj = new JavaResourceObject(className, IOUtils.toString(is));
+        JavaFileObject obj = null;//new JavaResourceObject(className, IOUtils.toString(is));
 
         return obj;
     }
@@ -140,20 +137,6 @@ public class CompilerUtils {
         return rtn;
     }
 
-    //Create compiled java class files
-    /*public static void serializeClasses(Map<String, ClassResourceObject> classObjects, Project project, StudioConfiguration config)
-            throws IOException {
-        Resource webInfClasses = project.getWebInfClasses();
-
-        Set<Map.Entry<String, ClassResourceObject>> entries = classObjects.entrySet();
-        for (Map.Entry<String, ClassResourceObject> entry : entries) {
-            ClassResourceObject obj = entry.getValue();
-            Resource outputClass = webInfClasses.createRelative(obj.getClassName().replace('.', '/') + ".class");
-            OutputStream os = config.getOutputStream(outputClass);
-            os.write(obj.getBytes());
-        }
-    }*/
-
     //construct classpath string for all jars in the path passed in
     public static String getClassPath(String path) {
         File libDir = new File(path);
@@ -167,7 +150,7 @@ public class CompilerUtils {
         File[] jars = libDir.listFiles(ft);
 
         String cp = "";
-        if (jars != null || jars.length > 0) {
+        if (jars != null && jars.length > 0) {
             for (File jar : jars) {
                 cp = cp + jar.getAbsolutePath() + ";";
             }

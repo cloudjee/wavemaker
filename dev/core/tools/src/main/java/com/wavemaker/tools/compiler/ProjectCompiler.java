@@ -14,97 +14,206 @@
 
 package com.wavemaker.tools.compiler;
 
-import javax.tools.JavaFileObject;
-import javax.tools.JavaCompiler;
-import javax.tools.ToolProvider;
-import java.util.List;
-import java.util.ArrayList;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.ServiceLoader;
 
-import com.wavemaker.tools.project.ProjectManager;
-import com.wavemaker.tools.project.StudioConfiguration;
-import com.wavemaker.tools.project.Project;
-import org.springframework.core.io.FileSystemResource;
+import javax.annotation.processing.Processor;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileManager;
+import javax.tools.JavaFileObject;
+import javax.tools.JavaFileObject.Kind;
+import javax.tools.StandardLocation;
+
 import org.springframework.core.io.Resource;
+import org.springframework.util.StringUtils;
+
+import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.tools.apt.ServiceConfigurationProcessor;
+import com.wavemaker.tools.apt.ServiceDefProcessor;
+import com.wavemaker.tools.apt.ServiceProcessorConstants;
+import com.wavemaker.tools.project.Project;
+import com.wavemaker.tools.project.ProjectManager;
+import com.wavemaker.tools.project.ResourceFilter;
+import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.service.DesignServiceManager;
 
 /**
- * Compiler main class.  This class compiles all java class source files in a project
+ * Compiler main class. This class compiles all java class source files in a
+ * project and executes annotation processors post-compilation
  * 
  * @author slee
- *
+ * @author Jeremy Grelle
  */
 
 public class ProjectCompiler {
 
-    private StudioConfiguration studioConfiguration;
+	private StudioConfiguration studioConfiguration;
 
-    private ProjectManager projectManager;
-    
-    public void compileProject(String projectName) {
+	private ProjectManager projectManager;
 
-        Project project = projectManager.getProject(projectName, true);
+	private DesignServiceManager designServiceManager;
 
-        List<JavaFileObject> jfiles = null;
+	public void compileProject(String projectName) {
 
-        try {
-            jfiles = CompilerUtils.getProjectJavaFileObjects(project, studioConfiguration);
-        } catch (IOException e) {
-            //continue
-        }
+		Project project = projectManager.getProject(projectName, true);
 
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-        ClassFileManager fileManager = new ClassFileManager(compiler.getStandardFileManager(null, null, null), project, studioConfiguration);
+		JavaCompiler compiler = ServiceLoader.load(JavaCompiler.class)
+				.iterator().next();
+		ClassFileManager projectFileManager;
+		Iterable<JavaFileObject> sourceFiles = null;
+		try {
+			projectFileManager = new ClassFileManager(
+					compiler.getStandardFileManager(null, null, null),
+					studioConfiguration, project, project.getProjectRoot()
+							.createRelative("src/"));
+			sourceFiles = projectFileManager.list(StandardLocation.SOURCE_PATH,
+					"", Collections.singleton(Kind.SOURCE), true);
 
-        List<String> optionList = null;
+		} catch (IOException e) {
+			throw new WMRuntimeException(
+					"Could not create Java file manager for project "
+							+ projectName, e);
+		}
 
-        Resource webInfLibResource = project.getWebInfLib();
-        String cPath = CompilerUtils.getClassPath(studioConfiguration.getPath(webInfLibResource));
+		List<String> options = new ArrayList<String>();
 
-        if (cPath != null && cPath.length() > 0) {
-            optionList = new ArrayList<String>();
-            optionList.add("-classpath");
-            optionList.add(cPath);
-        }
+		Resource webInfLibResource = project.getWebInfLib();
+		String cPath = CompilerUtils.getClassPath(studioConfiguration
+				.getPath(webInfLibResource));
 
-        JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, null, optionList, null, jfiles);
-        task.call();
-    }
+		options.add("-encoding");
+		options.add("utf8");
 
-    public void compileService(String projectName, String serviceName) {
+		if (cPath != null && cPath.length() > 0) {
+			options.add("-classpath");
+			options.add(cPath);
+		}
 
-        Project project = projectManager.getProject(projectName, true);
-        List<JavaFileObject> jfiles = null;
+		if (sourceFiles.iterator().hasNext()) {
+			JavaCompiler.CompilationTask task = compiler.getTask(null,
+					projectFileManager, null, options, null, sourceFiles);
+			if (!task.call()) {
+				return;
+			}
+		}
 
-        try {
-            jfiles = CompilerUtils.getServiceJavaFileObjects(project, serviceName, studioConfiguration);
-        } catch (IOException e) {
-            //continue
-        }
+		try {
+			List<Resource> serviceDirs = studioConfiguration.listChildren(
+					project.getProjectRoot().createRelative("services/"),
+					new ResourceFilter() {
+						public boolean accept(Resource resource) {
+							return StringUtils.getFilenameExtension(resource
+									.getFilename()) == null;
+						}
+					});
+			for (Resource serviceDir : serviceDirs) {
+				compileService(projectName, serviceDir.getFilename());
+			}
+		} catch (IOException e) {
+			throw new WMRuntimeException(e);
+		}
+		executeConfigurationProcessor(compiler, projectFileManager, projectName);
 
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-        ClassFileManager fileManager = new ClassFileManager(compiler.getStandardFileManager(null, null, null), project, studioConfiguration);
+	}
 
-        List<String> optionList = null;
+	public void compileService(String projectName, String serviceId) {
 
-        Resource webInfLibResource = project.getWebInfLib();
-        String cPath = CompilerUtils.getClassPath(studioConfiguration.getPath(webInfLibResource));
+		Project project = projectManager.getProject(projectName, true);
 
-        if (cPath != null && cPath.length() > 0) {
-            optionList = new ArrayList<String>();
-            optionList.add("-classpath");
-            optionList.add(cPath);
-        }
+		JavaCompiler compiler = ServiceLoader.load(JavaCompiler.class)
+				.iterator().next();
+		ClassFileManager projectFileManager;
+		Iterable<JavaFileObject> sourceFiles;
+		try {
+			projectFileManager = new ClassFileManager(
+					compiler.getStandardFileManager(null, null, null),
+					studioConfiguration, project, project.getProjectRoot()
+							.createRelative("services/" + serviceId + "/src/"));
+			sourceFiles = projectFileManager.list(StandardLocation.SOURCE_PATH,
+					"", Collections.singleton(Kind.SOURCE), true);
+		} catch (IOException e) {
+			throw new WMRuntimeException(
+					"Could not create Java file manager for project "
+							+ projectName, e);
+		}
 
-        JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, null, optionList, null, jfiles);
-        task.call();
-    }
+		List<String> options = new ArrayList<String>();
 
-    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-        this.studioConfiguration = studioConfiguration;
-    }
+		Resource webInfLibResource = project.getWebInfLib();
+		String cPath = CompilerUtils.getClassPath(studioConfiguration
+				.getPath(webInfLibResource));
 
-    public void setProjectManager(ProjectManager projectManager) {
-        this.projectManager = projectManager;
-    }
+		options.add("-encoding");
+		options.add("utf8");
+
+		if (cPath != null && cPath.length() > 0) {
+			options.add("-classpath");
+			options.add(cPath);
+		}
+
+		options.add("-A" + ServiceProcessorConstants.PROJECT_NAME_PROP + "="
+				+ projectName);
+		options.add("-A" + ServiceProcessorConstants.SERVICE_ID_PROP + "="
+				+ serviceId);
+
+		if (sourceFiles.iterator().hasNext()) {
+			JavaCompiler.CompilationTask task = compiler.getTask(null,
+					projectFileManager, null, options, null, sourceFiles);
+			task.setProcessors(Collections.singleton(createServiceDefProcessor()));
+			task.call();
+		}
+	}
+
+	public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
+		this.studioConfiguration = studioConfiguration;
+	}
+
+	public void setProjectManager(ProjectManager projectManager) {
+		this.projectManager = projectManager;
+	}
+
+	public void setDesignServiceManager(
+			DesignServiceManager designServiceManager) {
+		this.designServiceManager = designServiceManager;
+	}
+
+	@SuppressWarnings("unchecked")
+	private void executeConfigurationProcessor(JavaCompiler compiler,
+			JavaFileManager projectFileManager, String projectName) {
+		List<String> options = new ArrayList<String>();
+
+		options.add("-encoding");
+		options.add("utf8");
+
+		options.add("-proc:only");
+
+		options.add("-classNames");
+		options.add("java.lang.Object");
+
+		options.add("-A" + ServiceProcessorConstants.PROJECT_NAME_PROP + "="
+				+ projectName);
+
+		JavaCompiler.CompilationTask task = compiler.getTask(null,
+				projectFileManager, null, options, null, Collections.EMPTY_SET);
+		task.setProcessors(Collections
+				.singleton(createServiceConfigProcessor()));
+		task.call();
+	}
+
+	private Processor createServiceConfigProcessor() {
+		ServiceConfigurationProcessor processor = new ServiceConfigurationProcessor();
+		processor.setStudioConfiguration(studioConfiguration);
+		processor.setDesignServiceManager(designServiceManager);
+		return processor;
+	}
+
+	private Processor createServiceDefProcessor() {
+		ServiceDefProcessor processor = new ServiceDefProcessor();
+		processor.setStudioConfiguration(studioConfiguration);
+		processor.setDesignServiceManager(designServiceManager);
+		return processor;
+	}
 }
- 

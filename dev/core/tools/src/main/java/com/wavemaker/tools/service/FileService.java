@@ -16,6 +16,7 @@ package com.wavemaker.tools.service;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
@@ -144,4 +145,6 @@ public interface FileService {
 	 * Return true iff the file exists.
 	 */
 	boolean fileExists(Resource file);
+	
+	OutputStream getOutputStream(Resource resource);
 }

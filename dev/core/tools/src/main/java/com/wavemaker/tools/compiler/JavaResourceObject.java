@@ -14,46 +14,45 @@
 
 package com.wavemaker.tools.compiler;
 
-import javax.tools.JavaFileObject;
-import javax.tools.SimpleJavaFileObject;
-import java.net.URI;
+import java.io.IOException;
+
+import org.springframework.core.io.Resource;
+import org.springframework.util.Assert;
+
+import com.wavemaker.tools.project.Project;
 
 /**
  * This class represents a java class source file
  *
  * @author slee
+ * @author Jeremy Grelle
  *
  */
 
-public class JavaResourceObject extends SimpleJavaFileObject {
-
-    private CharSequence content;
+public class JavaResourceObject extends AbstractResourceJavaFileObject {
 
     /**
-    * This constructor will store the source code in the
-    * internal "content" variable and register it as a
-    * source code, using a URI containing the class full name
-    *
-    * @param className
-    *            name of the public class in the source code
-    * @param content
-    *            source code to compile
-    */
-    public JavaResourceObject(String className,
-        CharSequence content) {
-        super(URI.create("string:///" + className.replace('.', '/')
-            + JavaFileObject.Kind.SOURCE.extension), JavaFileObject.Kind.SOURCE);
-        this.content = content;
+     * Represents a Java source file
+     * 
+     * @param kind the kind of the resource, required to be CLASS in this case.
+     * @param project the project containing the class
+     * @param classFile the class file resource
+     * @throws IOException 
+     */
+    public JavaResourceObject(Kind kind, Project project, Resource javaFile) throws IOException {
+    	super(kind, project, javaFile);
+    	Assert.isTrue(kind == Kind.SOURCE, "Expected a to be kind "+Kind.SOURCE);
     }
-
-    /**
-    * Answers the CharSequence to be compiled. It will give
-    * the source code stored in variable "content"
-    */
+    
     @Override
-    public CharSequence getCharContent(
-        boolean ignoreEncodingErrors) {
-        return content;
-    }
+    public Kind getKind() {
+		return Kind.SOURCE;
+	}
+    
+	@Override
+	public boolean equals(Object obj) {
+		return (obj == this ||
+			    (obj instanceof ClassResourceObject && this.resource.equals(((ClassResourceObject) obj).resource)));
+	}
 }
  

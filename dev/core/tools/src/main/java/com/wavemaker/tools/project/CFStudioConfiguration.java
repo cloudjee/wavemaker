@@ -29,15 +29,14 @@ import javax.servlet.ServletContext;
 
 import org.apache.commons.lang.SystemUtils;
 import org.springframework.core.io.Resource;
+import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.context.support.ServletContextResource;
-import org.springframework.data.mongodb.MongoDbFactory;
 
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSInputFile;
-
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
@@ -694,7 +693,6 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration,
 		}
 	}
 
-	@Override
 	public String getPath(Resource file) {
 		return ((GFSResource)file).getPath();
 	}

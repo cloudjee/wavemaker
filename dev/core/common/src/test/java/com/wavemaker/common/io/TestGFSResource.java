@@ -14,27 +14,35 @@
 
 package com.wavemaker.common.io;
 
-import java.io.StringBufferInputStream;
+import static org.junit.Assert.assertEquals;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
+import org.junit.runner.RunWith;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.test.annotation.IfProfileValue;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSInputFile;
-import com.wavemaker.infra.WMTestCase;
 
 /**
  * @author Ed Callahan
  * 
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@IfProfileValue(name="spring.profiles", value="cloud-test")
+@TestExecutionListeners({})
+public class TestGFSResource {
 
-public class TestGFSResource extends WMTestCase {
-
+	private static final Log log = LogFactory.getLog(TestGFSResource.class);
+	
 	private static GridFS mygridfs;
 	private static MongoDbFactory mongoFactory;
 
@@ -43,7 +51,7 @@ public class TestGFSResource extends WMTestCase {
 		ApplicationContext ctx = new AnnotationConfigApplicationContext(
 				TestMongoConfig.class);
 		mongoFactory = (MongoDbFactory) ctx.getBean("mongoFactory");
-		this.info("Connected to: " // use factory to ensure mongo is running
+		log.info("Connected to: " // use factory to ensure mongo is running
 				+ mongoFactory.getDb().getMongo().getAddress().getHost());
 		mygridfs = new GridFS(mongoFactory.getDb());
 	}
