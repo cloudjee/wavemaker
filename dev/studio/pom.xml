@@ -566,6 +566,10 @@
 							<name>.settings/org.eclipse.jdt.ui.prefs</name>
 							<location>${basedir}/../code-style/eclipse/.settings/org.eclipse.jdt.ui.prefs</location>
 						</file>
+						<file>
+							<name>.settings/org.eclipse.wst.validation.prefs</name>
+							<location>${basedir}/../code-style/eclipse/.settings/org.eclipse.wst.validation.prefs</location>
+						</file>
 					</additionalConfig>
 				</configuration>
 			</plugin>
