@@ -28,9 +28,9 @@ import com.wavemaker.tools.project.Project;
  * This class represents a compiled java class file
  * 
  * @author slee
+ * @author Jeremy Grelle
  *
  */
-
 public class ClassResourceObject extends AbstractResourceJavaFileObject {
 
     /**

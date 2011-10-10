@@ -175,17 +175,14 @@
         description="Generate runtime files and compile java sources"
         depends="init,
                  copy-jars,
-                 copy-resources,
-                 generate-runtime-files,
-                 compile">
+                 copy-resources">
     </target>
 
 	<target name="build-temp"
         description="Generate runtime files and compile java sources"
         depends="init,
                  copy-jars,
-                 copy-resources,
-                 generate-runtime-files">
+                 copy-resources">
     </target>
 
     <target name="build-war" depends="init,build">

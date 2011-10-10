@@ -22,13 +22,12 @@ import org.springframework.util.Assert;
 import com.wavemaker.tools.project.Project;
 
 /**
- * This class represents a java class source file
+ * This class represents a Java source file
  *
  * @author slee
  * @author Jeremy Grelle
  *
  */
-
 public class JavaResourceObject extends AbstractResourceJavaFileObject {
 
     /**

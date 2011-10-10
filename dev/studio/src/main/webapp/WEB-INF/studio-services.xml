@@ -9,10 +9,6 @@ Server definition of all services;
        xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
-    <!-- import runtimeService; eventually, this will be done automatically
-            when this file is generated -->
-    <import resource="classpath:com/wavemaker/runtime/service/runtimeServiceBean.xml" />
-    
     <bean id="fileSerializerFactory"
         class="com.wavemaker.tools.serializer.FileSerializerFactory"
         scope="singleton">
@@ -41,6 +37,7 @@ Server definition of all services;
     <import resource="classpath:cloudServerService.spring.xml"/>
     <import resource="classpath:cloudStorageService.spring.xml"/>
     <import resource="classpath:resourceFileService.spring.xml"/>
+    <import resource="classpath:runtimeService.spring.xml"/>
     <import resource="classpath:webService.spring.xml"/>
     <import resource="classpath:securityConfigService.spring.xml"/>
     <import resource="classpath:servicesService.spring.xml"/>

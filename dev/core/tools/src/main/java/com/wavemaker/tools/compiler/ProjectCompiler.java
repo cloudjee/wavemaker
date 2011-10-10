@@ -80,17 +80,8 @@ public class ProjectCompiler {
 
 		List<String> options = new ArrayList<String>();
 
-		Resource webInfLibResource = project.getWebInfLib();
-		String cPath = CompilerUtils.getClassPath(studioConfiguration
-				.getPath(webInfLibResource));
-
 		options.add("-encoding");
 		options.add("utf8");
-
-		if (cPath != null && cPath.length() > 0) {
-			options.add("-classpath");
-			options.add(cPath);
-		}
 
 		if (sourceFiles.iterator().hasNext()) {
 			JavaCompiler.CompilationTask task = compiler.getTask(null,
@@ -142,17 +133,8 @@ public class ProjectCompiler {
 
 		List<String> options = new ArrayList<String>();
 
-		Resource webInfLibResource = project.getWebInfLib();
-		String cPath = CompilerUtils.getClassPath(studioConfiguration
-				.getPath(webInfLibResource));
-
 		options.add("-encoding");
 		options.add("utf8");
-
-		if (cPath != null && cPath.length() > 0) {
-			options.add("-classpath");
-			options.add(cPath);
-		}
 
 		options.add("-A" + ServiceProcessorConstants.PROJECT_NAME_PROP + "="
 				+ projectName);

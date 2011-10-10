@@ -2,15 +2,20 @@ package com.wavemaker.tools.compiler;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.mock.web.MockServletContext;
+import org.springframework.util.Assert;
 
+import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.project.Project;
@@ -24,11 +29,27 @@ public class TestProjectCompiler {
 	private ProjectManager projectManager;
 	
 	private ProjectCompiler projectCompiler;
+	
+	private static MockServletContext servletContext;
+	
+	private static File webInfLib;
+	
+	@BeforeClass
+	public static void init() throws IOException {
+		File studioWebApp = IOUtils.createTempDirectory();
+		String basePath = studioWebApp.toURI().toURL().toString();
+		servletContext = new MockServletContext(basePath);
+		webInfLib = new File(studioWebApp, "WEB-INF/lib/");
+		webInfLib.mkdirs();
+		Assert.isTrue(webInfLib.exists());
+		Assert.notNull(servletContext.getResource("/WEB-INF/lib/"));
+	}
 
 	@Before
 	public void setUp() throws IOException {
 		RuntimeAccess.setRuntimeBean(new RuntimeAccess());
 		studioConfiguration = new LocalStudioConfiguration();
+		studioConfiguration.setServletContext(servletContext);
 		Resource wmHome = studioConfiguration.createTempDir();
 		studioConfiguration.setTestWaveMakerHome(wmHome.getFile());
 		Resource projectDir = wmHome
@@ -149,5 +170,37 @@ public class TestProjectCompiler {
 		
 		Resource types = project.getWebAppRoot().createRelative("types.js");
 		assertTrue(types.exists());
+	}
+	
+	@Test
+	public void testCompileProjectRequiringExternalClasspath() throws IOException {
+		Project project = projectManager.getCurrentProject();
+
+		Resource fooSrc = project.getProjectRoot().createRelative("src/com/foo/FooSubClass.java");
+		project.writeFile(fooSrc,
+				"package com.foo;\n\npublic class FooSubClass extends com.wavemaker.runtime.javaservice.JavaServiceSuperClass {public int getInt(){return 12;}}");
+		
+		projectCompiler.compileProject("ProjectCompilerProject");
+		
+		Resource fooClass = project.getWebInfClasses().createRelative("com/foo/FooSubclass.class");
+		assertTrue(fooClass.exists());
+	}
+	
+	@Test
+	public void testCompileProjectRequiringExternalClasspathForService() throws IOException {
+		Project project = projectManager.getCurrentProject();
+
+		String serviceId = "serviceA";
+		Resource serviceASrc = project.getProjectRoot().createRelative(DesignServiceManager
+				.getRuntimeRelativeDir(serviceId));
+		Resource javaSrc = serviceASrc.createRelative("com/foo/FooService.java");
+		project.writeFile(
+				javaSrc,
+				"package com.foo;\n\npublic class FooService extends com.wavemaker.runtime.javaservice.JavaServiceSuperClass {public int getInt(){return 12;}}");
+		
+		projectCompiler.compileProject("ProjectCompilerProject");
+		
+		Resource fooClass = project.getWebInfClasses().createRelative("com/foo/FooService.class");
+		assertTrue(fooClass.exists());
 	}
 }
