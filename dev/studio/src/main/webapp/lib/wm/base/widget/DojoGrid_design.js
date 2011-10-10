@@ -54,7 +54,7 @@ wm.DojoGrid.extend({
 			var ds = this.getValueById(inDataSet);
 			if (ds)
 				this.components.binding.addWire("", "dataSet", ds.getId());
-		} else if (!inDataSet) {
+		} else if (!inDataSet && !this._cupdating) {
 		    this.components.binding.removeWireByProp("dataSet");
 		    this.setDataSet(inDataSet);
 		} else {
